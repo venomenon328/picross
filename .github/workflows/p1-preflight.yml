@@ -1,0 +1,40 @@
+name: P1 toolchain preflight
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1-preflight-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Godot 4.7.2 smoke and Windows export
+        env:
+          P1_PREFLIGHT_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          python3 tools/p1_preflight.py
+          --cache-dir "${{ runner.temp }}/p1-preflight-cache"
+          --output-dir "${{ runner.temp }}/p1-preflight-output"
+          --download-timeout-seconds 1200
+          --process-timeout-seconds 300
+      - name: Upload Windows smoke artifact and report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p1-preflight-windows-x86_64-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/p1-preflight-output/
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
