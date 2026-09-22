@@ -2,7 +2,7 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` befindet sich in der Produktkonzeption und Prototypspezifikation. Das Repository enthält Entwicklungsregeln, Projekteinstellungen, die konsolidierte Produktdefinition, ein frühes Gestaltungskonzept, die P1-Spezifikation und eine kleine Dokumentprüfung, noch keine Spielimplementierung. Der [Workflow](dev-rules/WORKFLOW.md) ist die gemeinsame Prozessgrundlage; [AGENTS.md](../AGENTS.md) der Einstieg. Aktueller Lieferumfang und Freigaben stehen im jeweiligen Issue/PR, nicht in einer parallel gepflegten Roadmap.
+`venomenon328/picross` befindet sich in der Produktkonzeption und Prototypspezifikation. Das Repository enthält Entwicklungsregeln, Projekteinstellungen, die konsolidierte Produktdefinition, ein frühes Gestaltungskonzept, die P1-Spezifikation, eine kleine Dokumentprüfung und den isolierten technischen [P1.0-Preflight](P1_PREFLIGHT.md), noch keine Spielimplementierung. Der [Workflow](dev-rules/WORKFLOW.md) ist die gemeinsame Prozessgrundlage; [AGENTS.md](../AGENTS.md) der Einstieg. Aktueller Lieferumfang und Freigaben stehen im jeweiligen Issue/PR, nicht in einer parallel gepflegten Roadmap.
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist die zuständige Quelle für die bisher bestätigte Produktausrichtung. Bei Arbeiten an Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig lesen. Sie unterscheidet bestätigte Entscheidungen, noch zu prüfende Vorschläge und offene Details. Ihr grober Entwicklungsablauf ist keine Implementierungsfreigabe oder eigenständige Fortschrittsverwaltung.
 
@@ -22,7 +22,7 @@ Für P1 bestätigt: Godot als native Windows-Desktopfassung, reduzierter Umfang 
 
 Die endgültige Produktengine/-sprache, gesamte PC-Betriebssystemmatrix, Produktdatenhaltung, genaue Rätsel-/Solververträge, Fehlerzählung, Sternschwellen und Veröffentlichungs-/Lizenzdetails bleiben außerhalb der begrenzten P1-Festlegungen offen. Vor davon abhängiger Implementierung die konkreten Entscheidungen und Abnahmekriterien klären. Bereits ausdrücklich getroffene neue Nutzerentscheidungen nachvollziehbar in ihre zuständigen Quellen übernehmen, statt sie ungefragt neu festzulegen.
 
-Insbesondere keine Java-, Datenbank-, Windows-Werkzeugpfad- oder lokalen Testverbote allein aus anderen Projekten übernehmen. Die Godot-Wahl für P1 beruht auf dem ausdrücklichen Nutzerentscheid, nicht auf dem ursprünglichen Setup. Python ist hier bislang ausschließlich Werkzeug für die Dokumentprüfung.
+Insbesondere keine Java-, Datenbank-, Windows-Werkzeugpfad- oder lokalen Testverbote allein aus anderen Projekten übernehmen. Die Godot-Wahl für P1 beruht auf dem ausdrücklichen Nutzerentscheid, nicht auf dem ursprünglichen Setup. Python dient der Dokumentprüfung und dem isolierten P1.0-Toolchain-Smoke, nicht als Produktstackentscheidung.
 
 ## Branches und Befugnisse
 
@@ -47,6 +47,14 @@ Vor Merge muss [Setup verification](../.github/workflows/setup.yml), Job `docs`,
 
 [check_docs.py](../tools/check_docs.py) und [seine Tests](../tools/test_check_docs.py) sind aus dem in der Herkunftsnotiz genannten dev-rules-Stand abgeleitet und auf `docs/dev-rules/` sowie die tatsächlichen Setup-Dateien angepasst. Sie prüfen erforderliche Dateien, UTF-8/LF/Abschlusszeile, nachgestellte Leerzeichen, Versionsformat und einfache lokale Inline-Markdown-Links einschließlich Paketgrenzen. Keine externe URL-Prüfung, Linkanker-, Referenzlink- oder vollständige Markdownvalidierung. Byteidentität des Regelpakets beim Einführen/Aktualisieren separat gegen den Quellcommit prüfen; der Dokumentvalidator beweist sie nicht.
 
+## Technischer P1.0-Preflight
+
+Issue #7 wird durch `tools/p1_preflight.py`, die ausschließlich technische Probe unter `tools/p1_preflight_smoke/` und den Workflow [P1 toolchain preflight](../.github/workflows/p1-preflight.yml) geprüft. Der Preflight bleibt bei Godot Standard 4.7.2-stable und lädt Editor sowie Standard-Exportvorlagen ausschließlich aus dem offiziellen Release. Live-Release-Metadaten und die vollständigen Archive werden gegen die festgeschriebenen SHA-256-Werte geprüft; Binärarchive werden nicht versioniert oder global installiert.
+
+Der vollständige lokale Befehl und die Speicher-/Timeoutvoraussetzungen stehen im [Preflightbericht](P1_PREFLIGHT.md). Seine Offline-Harnesstests laufen bereits mit dem verbindlichen `unittest discover`-Befehl. Bei Änderungen am Preflight muss zusätzlich der echte Download-/Import-/Test-/Start-/Exportweg lokal oder in der dafür bestimmten CI ausgeführt werden; ein reiner Mock- oder Dokumenttest reicht nicht.
+
+Vor Merge von #7 müssen für den konkreten PR-Head sowohl der Job `preflight` aus `P1 toolchain preflight` als auch der bestehende Job `docs` aus `Setup verification` erfolgreich sein. Das CI-Artefakt ist eine kurzlebige technische Windows-Probe, kein Release und kein Nachweis für sichtbaren GUI-Start, Bedienbarkeit, Controller, Rätselverhalten oder A-07 des späteren Produkts. Der positive P1.0-Nachweis hebt das separate Controller-Planungsgate aus #5/P1 §8.3 nicht auf.
+
 ## Abnahme und spätere Erweiterung
 
 Den vollständigen Diff inhaltlich gegen den Auftrag prüfen: keine versteckten Produktentscheidungen, keine unerreichbaren Pflichtquellen, unveränderte Regelkopie und konsistente Projekteinstellungen. Bei der Übernahme des Produktgesprächs insbesondere bestätigte Anforderungen von Empfehlungen und offenen Fragen trennen. Die fachliche Dokumentabnahme erfolgt vor Merge durch den Eigentümer. Ein getrennter Selbstreview ist keine unabhängige Zweitprüfung. Reine Dokumentpakete liefern kein Produktverhalten und benötigen keine vorgetäuschte Spiel-/Grafikabnahme.
@@ -57,8 +65,8 @@ Sobald ausführbarer Produktcode hinzukommt, im selben Paket die echten Build-, 
 
 ## Daten und Betriebswirkung
 
-Aktuell richtet das Repository keine Laufzeitdienste oder Produktionsdaten ein. Prüfungen verwenden isolierte temporäre Testdaten; kein Zugriff auf echte Spielstände, private Daten oder kostenpflichtige Dienste aus einer bloßen Entwicklungsfreigabe. Neue Abhängigkeiten und Assets vor Aufnahme auf Notwendigkeit und Nutzungsrechte prüfen; keine Secrets einchecken.
+Aktuell richtet das Repository keine Laufzeitdienste oder Produktionsdaten ein. Prüfungen verwenden isolierte temporäre Testdaten; kein Zugriff auf echte Spielstände, private Daten oder kostenpflichtige Dienste aus einer bloßen Entwicklungsfreigabe. Der P1.0-Preflight lädt die zwei benannten öffentlichen Godot-Release-Assets, verwendet sie ausschließlich temporär beziehungsweise in einem expliziten externen Cache und erzeugt ein kurzlebiges CI-Artefakt. Neue Abhängigkeiten und Assets vor Aufnahme auf Notwendigkeit und Nutzungsrechte prüfen; keine Secrets einchecken.
 
-Der eingerichtete Merge-Prüfpfad startet ausschließlich die Setup-CI mit lesenden Repositoryrechten. Kein Produktdeployment, kein Release, Tag oder Hosting wird eingerichtet. Externe Automatisierungen außerhalb der gelesenen Repositoryquellen sind nicht als überprüft behauptet. Spätere Änderungen der Betriebswirkung im zuständigen Paket dokumentieren.
+Die eingerichteten Merge-Prüfpfade starten die Setup-CI und für #7 die getrennte Preflight-CI mit lesenden Repositoryrechten. Kein Produktdeployment, kein Release, Tag oder Hosting wird eingerichtet. Externe Automatisierungen außerhalb der gelesenen Repositoryquellen sind nicht als überprüft behauptet. Spätere Änderungen der Betriebswirkung im zuständigen Paket dokumentieren.
 
 Die [ChatGPT-Projekteinstellungen](CHATGPT_PROJECT_INSTRUCTIONS.md) werden nach dem Setup-Merge separat durch den Nutzer eingesetzt. Die neue lokale Modellheuristik ersetzt allgemeine alte Modellanweisungen einschließlich eines etwaigen Pflichtverweises auf `Codex-Empfehlung.txt`; keine zweite Heuristik parallel aktivieren.
