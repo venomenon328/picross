@@ -1,10 +1,10 @@
 # Produktdefinition: picross
 
-Stand: 22.09.2026 · Arbeitsfassung 0.1 · Produktkonzept, keine Implementierungsspezifikation
+Stand: 22.09.2026 · Arbeitsfassung 0.2 · Produktkonzept, keine Implementierungsspezifikation
 
 ## 1. Geltung und Herkunft
 
-Dieses Dokument konsolidiert das Produktgespräch einschließlich der ausdrücklich beantworteten Fragen 1–22. Maßgeblich sind die zuletzt bestätigten Nutzerentscheidungen. Frühere Alternativen und Empfehlungen werden nicht allein durch ihre Erwähnung zu Anforderungen.
+Dieses Dokument konsolidiert das Produktgespräch einschließlich der ausdrücklich beantworteten Fragen 1–22 und der anschließenden Gestaltungskonversation vom 22.09.2026. Maßgeblich sind die zuletzt bestätigten Nutzerentscheidungen. Frühere Alternativen und Empfehlungen werden nicht allein durch ihre Erwähnung zu Anforderungen. Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ergänzt die bestätigte visuelle Grundlage, offene Themenalternativen und noch zu prüfende Interaktionen.
 
 Die Abschnitte 2–9 beschreiben die beschlossene Produktausrichtung und kennzeichnen verbleibende Detailfragen. Abschnitt 10 sammelt noch nicht verbindlich beschlossene Ausgestaltungsideen; Abschnitt 11 hält offene Entscheidungen fest. Der Ablauf in Abschnitt 12 ist eine grobe Orientierung, kein beauftragter Implementierungsplan. Lieferumfang, Akzeptanz und Fortschritt konkreter Pakete stehen weiterhin in den jeweiligen Issues und PRs.
 
@@ -48,6 +48,8 @@ Jedes reguläre Rätsel soll ein erkennbares Bild ergeben, gegebenenfalls stark 
 
 Ein monochromes Raster muss sein Motiv nicht bereits im uneingefärbten Ergebnis zweifelsfrei erkennen lassen. Eine kolorierte Abschlussansicht soll die Abstraktion zu einem klaren Motiv auflösen können. Das gelöste Raster und die Enthüllung sollen dabei nachvollziehbar zusammengehören. Farbige Rätsel sollen bereits selbst als Bild erkennbar sein.
 
+Gesammelt werden die erarbeiteten Bilder selbst, nicht davon unabhängige Belohnungsillustrationen. Bei monochromen Rätseln ist eine farbige Repräsentation des tatsächlichen Motivs vorgesehen; sie darf gegebenenfalls etwas höher aufgelöst sein, muss aber klar als Repräsentation des gelösten Rastermotivs erkennbar bleiben. Eine zusätzliche hochaufgelöste Fassung jedes Motivs ist damit nicht verpflichtend. Konkrete Übergänge und Darstellungsregeln werden im [Gestaltungskonzept](DESIGN_CONCEPT.md) untersucht.
+
 Vor Abschluss werden weder das fertige Lösungsbild noch der Motivname gezeigt. Während des Lösens ist jederzeit eine Miniatur des aktuellen eigenen Bearbeitungsstands sichtbar. Sie basiert nur auf den Eingaben des Spielers, einschließlich möglicher Fehler, nicht auf einer korrigierten oder vorweggenommenen Lösung. Darstellung und Platzierung werden im UI-Konzept ausgearbeitet.
 
 ### 3.4 Inhaltsproduktion
@@ -86,15 +88,21 @@ Maus und Tastatur sind die primäre Eingabeform. Controller werden von Beginn an
 
 Ein ausdrücklich gewünschtes Steuerungsdetail: Beim Zeichnen mit gedrückter Maustaste wird die Bewegung ab dem zweiten Feld auf die aktuelle Zeile oder Spalte beschränkt; innerhalb dieses Strichs werden keine Kurven gezeichnet. Verhalten bei Rückwärtsbewegung, vorhandenen Einträgen, Abbruch und diagonalen Bewegungen wird noch spezifiziert.
 
-Speichern, Unterbrechen und Fortsetzen großer Rätsel sowie verlässliches Rückgängigmachen gehören zum Komfortkonzept. Wie viel des Arbeitszustands zusätzlich zum Raster gespeichert wird, ist im Detail offen; entsprechende Ideen stehen in Abschnitt 10.
+Speichern, Unterbrechen und Fortsetzen großer Rätsel sowie verlässliches Rückgängigmachen gehören zum Komfortkonzept. Wie viel des Arbeitszustands zusätzlich zum Raster gespeichert wird, ist im Detail offen; entsprechende Ideen stehen in Abschnitt 10. Die Nutzung von Undo schließt eine perfekte Bewertung des betroffenen Durchgangs aus, ohne die Funktion zu verbieten; siehe Abschnitt 6.2.
+
+Hypothesen als mögliche Zustände „unsicher gesetzt“ und „unsicher leer“ wurden zur Untersuchung vorgeschlagen. Die Funktion ist noch nicht abschließend spezifiziert; insbesondere ist nicht entschieden, ob ihre Nutzung mit einer perfekten Bewertung vereinbar ist. Der Nutzer setzt selbst überwiegend nur sicher hergeleitete Felder. Hypothesen ändern nicht das Versprechen, dass Rätsel ohne notwendiges Raten lösbar sein müssen.
 
 ### 5.2 Frühe visuelle Arbeit
 
 Thematik, visuelle Identität und weit ausgearbeitete UI-Konzepte werden früh und parallel zur Funktionalität bearbeitet. Die Gestaltung ist kein abschließender Skin über einer bereits fertigen Oberfläche. Ebenso werden frühe Entwürfe nicht vor praktischer Erprobung unveränderlich festgeschrieben.
 
-Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlungen, Bearbeitung und Enthüllungen gestalterisch zusammenführen. Eine komplexe Geschichte ist nicht erforderlich. Eine zusätzliche Wirtschaftssimulation, Währungen oder ein Aufbauspiel folgen daraus nicht automatisch. Die konkrete Thematik bleibt einer eigenen Konzeptphase vorbehalten.
+Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlungen, Bearbeitung und Enthüllungen gestalterisch zusammenführen. Eine komplexe Geschichte ist nicht erforderlich. Eine zusätzliche Wirtschaftssimulation, Währungen oder ein Aufbauspiel folgen daraus nicht automatisch.
 
-Die zentralen Ansichten werden auch mit langen Hinweisfolgen, farbigen Rätseln, großen Rastern und beiden Eingabeformen überprüft. Lesbarkeit und Bedienbarkeit haben Vorrang vor dekorativer Inszenierung. Sound wird vorerst nach hinten gestellt; das bedeutet keine endgültige Entscheidung gegen Audio.
+Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Die Gestaltung geht in Richtung handgezeichneter 2D-Illustration mit klaren gezeichneten Konturen und ruhigen, nicht zu blassen Farbflächen. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar; die Arbeitsansicht soll nicht steril wirken, das Raster selbst aber sachlich und präzise bleiben.
+
+Die endgültige Themenwahl bleibt ausdrücklich offen: A ist ein thematisches Sammelalbum, B ein Reisetagebuch beziehungsweise Weltreisealbum mit regionalen Motiven. Die näheren Entscheidungen, Beispiele und offenen Interaktionen stehen im [Gestaltungskonzept](DESIGN_CONCEPT.md). Die positive Rückmeldung zu einem exemplarischen Mock legt weder eine dieser Alternativen noch alle darin dargestellten Details verbindlich fest.
+
+Die zentralen Ansichten werden auch mit langen Hinweisfolgen, farbigen Rätseln, großen Rastern und beiden Eingabeformen überprüft. Lesbarkeit und Bedienbarkeit haben Vorrang vor dekorativer Inszenierung. Sound wird vorerst nach hinten gestellt. Als spätere Richtung sind kleine angenehme und unauffällige Effekte sowie ein besonders gelungener Abschlussjingle gewünscht; zurückhaltende Hintergrundmusik ist denkbar. Eine konkrete Audioproduktion ist noch nicht beauftragt.
 
 ### 5.3 Persönliche Referenzen aus dem Produktgespräch
 
@@ -115,13 +123,19 @@ Mehrere Zugänge sollen früh verfügbar sein, darunter große und anspruchsvoll
 
 Die thematische Präsentation bildet den Zusammenhang. Ergänzend bündelt eine Bibliothek alle bereits freigeschalteten Rätsel unabhängig von dieser Navigation. Bibliothekszugriff bedeutet daher nicht, dass sämtliche Inhalte von Anfang an entsperrt sind.
 
-### 6.2 Fehlerbasierte Bewertung
+Die bevorzugte Sammlungspräsentation ist ein Album, das sich mit den erarbeiteten Bildern nach und nach füllt und einen erkennbaren vollständigen Zustand erreichen kann. Eine zusätzliche Raum-/Ausstellungsansicht ist keine bestätigte Anforderung. Konkrete Kapitel, Seitenaufteilung und die visuelle Unterscheidung von Sammlungsvollständigkeit und Meisterschaft bleiben auszugestalten.
+
+### 6.2 Fehlerbasierte Bewertung und Perfektionsbedingung
 
 Eine einfache Bewertung, voraussichtlich auf einer dreistufigen Skala, ist gewünscht. „Sterne“ ist ein vorläufiger Arbeitsbegriff, keine Entscheidung für das spätere visuelle Motiv.
 
-Ausschließlich die beim Lösen gemachten Fehler bestimmen diese Bewertung. Die Lösungszeit fließt aus Gründen der Barrierefreiheit weder in Sterne noch in Freischaltungen ein. Sie darf weiterhin dokumentiert und für freiwillige Ranglistenvergleiche verwendet werden.
+Fehler bestimmen die Bewertung; für Perfektion gilt zusätzlich die ausdrücklich bestätigte Bedingung: ein Durchgang ohne Fehler und ohne Undo. Damit ist die frühere Formulierung „ausschließlich fehlerbasiert“ für die Höchstwertung abgelöst. Im bisherigen Drei-Sterne-Arbeitsmodell schließt eine tatsächlich ausgeführte Rücknahme drei Sterne aus, auch wenn der zurückgenommene Eintrag korrekt war. Undo bleibt als Komfortfunktion verfügbar.
 
-Die exakte Skala, Fehlertoleranz und Fehlerdefinition sind noch nicht beschlossen. Auch die Behandlung von Wiederholungen und Bestbewertungen wird separat spezifiziert; Empfehlungen dazu stehen in Abschnitt 10. Beispielhafte Zahlen aus dem Gespräch sind keine verbindlichen Schwellen.
+Die Perfektionsbedingung bezieht sich auf den gesamten Durchgang. Redo oder Speichern und Fortsetzen machen eine bereits ausgeführte Rücknahme nicht ungeschehen. Ein Neustart ist davon getrennt zu spezifizieren. Ob manuelles Löschen, Zurücksetzen auf „unbekannt“ oder Überschreiben wie Undo zählen und ob Hypothesen mit Perfektion vereinbar sind, bleibt ausdrücklich offen; keine Entscheidung allein aus den Mocks ableiten.
+
+Die Lösungszeit fließt aus Gründen der Barrierefreiheit weder in Sterne noch in Freischaltungen ein. Sie darf weiterhin dokumentiert und für freiwillige Ranglistenvergleiche verwendet werden.
+
+Die genaue Skala unterhalb der Höchstwertung, Fehlertoleranz und Fehlerdefinition sind noch nicht beschlossen. Auch die Behandlung von Wiederholungen und Bestbewertungen wird separat spezifiziert; Empfehlungen dazu stehen in Abschnitt 10. Beispielhafte Zahlen aus dem Gespräch sind keine verbindlichen Schwellen. Aus „Undo verhindert Perfektion“ folgt keine bereits beschlossene Anzahl zusätzlicher Fehler oder feste Bewertung für einen Durchgang mit Undo.
 
 ### 6.3 Bonusrätsel und Perfektion
 
@@ -175,12 +189,13 @@ Die folgende Sammlung bewahrt sinnvolle Ansätze aus dem Gespräch, ohne sie zu 
 | --- | --- |
 | Großraster | Fixierte Hinweise, Hervorhebung der aktiven Zeile/Spalte, Fokusansicht einer vollständigen Linie, Lesezeichen und aussagekräftige Ausschnittnavigation. |
 | Eingaben | Eindeutige Aktion pro Ziehvorgang statt unerwartetem Umschalten überfahrener Felder; Längenzähler, Linealmodus und Abbruchmöglichkeit. |
-| Undo/Redo | Rücknahme zusammenhängender Aktionen beziehungsweise ganzer Striche; Verhältnis zur Fehlerhistorie ausdrücklich spezifizieren. |
+| Undo/Redo | Rücknahme zusammenhängender Aktionen beziehungsweise ganzer Striche; Fehlerhistorie, manuelle Korrekturen und genaue Aktionsgrenzen spezifizieren. Der Perfektionsausschluss durch Undo ist bereits in Abschnitt 6.2 beschlossen. |
+| Hypothesen | „Unsicher gesetzt“ beziehungsweise „unsicher leer“, bei Farben mit Farbzuordnung; separate Notizebene als Vorschlag. Aufnahme, Übernahme-/Verwerfverhalten und Verträglichkeit mit Perfektion bleiben offen. |
 | Arbeitszustand | Neben dem Raster auch Zoom, Ausschnitt, aktive Farbe und gegebenenfalls Notizen speichern; optionale Hervorhebung der letzten Änderungen beim Wiedereinstieg. |
 | Farbdarstellung | Symbole oder Muster zusätzlich zu Farben, geeignete Paletten und schnelle Farbwahl über Hinweise. |
 | Automatischer Komfort | Abhaken von Hinweisen nur nach nachvollziehbarer sichtbarer Information, nicht als verdeckter Vergleich mit der hinterlegten Lösung. |
 | Qualitätssicherung | Erklärender Solver mit vollständigem Deduktionsprotokoll und gegebenenfalls unabhängiger Eindeutigkeitsprüfung; konkrete Verfahren noch offen. |
-| Sterne | Ein Stern für Abschluss, zwei bei begrenzten Fehlern, drei für Fehlerfreiheit; keine verbindlich festgelegte Skalierung. |
+| Sterne | Ein Stern für Abschluss und zwei bei begrenzten Fehlern bleiben Vorschläge ohne feste Schwellen. Für die Höchstwertung gilt bereits: ohne Fehler und ohne Undo; Hypothesenfrage offen. |
 | Wiederholungen | Beste Bewertung je Rätsel für Fortschritt verwenden; Sterne nicht durch wiederholtes Lösen aufsummieren und bestehende Freischaltungen nicht durch schlechtere Ergebnisse verlieren. |
 | Fehlerbehandlung | Keine Leben, erzwungenen Abbrüche oder Strafsekunden; fehlerhafte Aktionen und betroffene Felder gegebenenfalls getrennt erfassen. |
 | Zeitmessung | Explizite Pausen und Sitzungswechsel definieren, Denkzeit nicht durch bloße Inaktivität herausrechnen; Erstlösungen und Wiederholungen unterscheiden. |
@@ -190,12 +205,12 @@ Die folgende Sammlung bewahrt sinnvolle Ansätze aus dem Gespräch, ohne sie zu 
 
 | Kennung | Offene Entscheidung |
 | --- | --- |
-| O-01 | Konkrete Thematik, visuelle Sprache, UI-System und Präsentation der Abschlussbilder. |
+| O-01 | Wahl zwischen thematischem Sammelalbum und Reisealbum; konkrete Kapitel, Layouts, Designsystem und Enthüllungsdetails auf Basis der bestätigten Album-/Illustrationsrichtung. |
 | O-02 | Prüffähige Definition der zugelassenen Deduktionen, Eindeutigkeitsprüfung und Schwierigkeitseinstufung. |
 | O-03 | Exakte Startmenge, Größen- und Variantenverteilung; Auswahlkriterien und zulässige Ausnahmen bei winzigen Motiven. |
 | O-04 | Produktionsverfahren aus Beschreibungen/Bildvorlagen, Kurationsaufwand und Nutzungsrechte der eingesetzten Vorlagen und Assets. |
-| O-05 | Was als Fehler zählt, insbesondere bei falschen Leer-/Farbmarkierungen, Strichen, Wiederholungen, Notizen und Undo. |
-| O-06 | Sterneskala und Fehlertoleranzen; Bestbewertungen, Wiederholungen sowie Wechsel zwischen den Unterstützungsmodi. |
+| O-05 | Was als Fehler zählt; Behandlung falscher Leer-/Farbmarkierungen, Striche und Wiederholungen; Abgrenzung manueller Korrekturen zu Undo und mögliche Hypothesen. |
+| O-06 | Skala/Fehlertoleranzen unterhalb der Höchstwertung, Bestbewertungen und Wiederholungen, Wechsel zwischen Unterstützungsmodi; Vereinbarkeit von Hypothesen mit der bestätigten Perfektionsregel ohne Fehler und ohne Undo. |
 | O-07 | Aufbau und frühe Zugänge der Sammlungen, konkrete Freischaltschwellen, Abhängigkeiten und Umfang der Bonusinhalte. |
 | O-08 | Belohnungen nach perfekter Lösung der Bonusrätsel, Achievement-Katalog und gegebenenfalls weitere Abschlussinszenierung. |
 | O-09 | Detailverhalten von Maus-/Tastatur- und Controllersteuerung, Zoom/Scrollen, Miniatur, Hinweisen und Arbeitszustand. |
@@ -210,8 +225,8 @@ Diese offenen Punkte verhindern nicht die Arbeit an unabhängigen Konzepten. Sie
 
 Diese Reihenfolge bewahrt den besprochenen Ablauf als Orientierung. Sie setzt keine Termine, erzeugt keine Umsetzungspakete und ersetzt keine Issue-/PR-Planung.
 
-1. **Produktkern und Prioritäten:** Gemeinsames Produktbild festhalten. Dieses Dokument ist die erste Arbeitsfassung dieses Ergebnisses; konkrete Fachverträge folgen.
-2. **Thematik, visuelles Konzept und Bedienung:** Mehrere Richtungen anhand derselben repräsentativen Spielansichten vergleichen, eine Richtung auswählen und zentrale Abläufe weit ausarbeiten. Kleine, farbige und sehr große Raster berücksichtigen.
+1. **Produktkern und Prioritäten:** Gemeinsames Produktbild festhalten. Dieses Dokument konsolidiert die bisherigen Entscheidungen; konkrete Fachverträge folgen.
+2. **Thematik, visuelles Konzept und Bedienung:** Mehrere Richtungen anhand derselben repräsentativen Spielansichten vergleichen, eine Richtung auswählen und zentrale Abläufe weit ausarbeiten. Kleine, farbige und sehr große Raster berücksichtigen. Die bestätigte gemeinsame Grundlage und der noch nicht abschließende Mockstand stehen im [Gestaltungskonzept](DESIGN_CONCEPT.md).
 3. **Risikoprototypen:** Parallel zur Gestaltung die Orientierung und Eingabe in Großrastern, die Erzeugung/Prüfung guter Bildrätsel und einen begrenzten Verbundraster-Prototyp untersuchen. Gestaltung anhand der Ergebnisse korrigieren, bevor umfangreiche Assets produziert werden.
 4. **Kleine vollständige Fassung:** Einen zusammenhängenden Ablauf von Auswahl bis Abschluss in der gewählten Gestaltung herstellen, mit wenigen repräsentativen Rätseln einschließlich eines großen, Speicherung/Fortsetzung und grundlegender Auswertung.
 5. **Ausbau und Inhalte:** Beschlossenen Funktionsumfang, Produktionswerkzeuge und kuratierte Sammlung ausbauen. Konkrete Lieferpakete erst anhand der vorherigen Ergebnisse festlegen.
