@@ -31,7 +31,7 @@ jobs:
           --download-timeout-seconds 1200
           --process-timeout-seconds 300
       - name: Upload Windows smoke artifact and report
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: p1-preflight-windows-x86_64-${{ github.event.pull_request.head.sha || github.sha }}
           path: ${{ runner.temp }}/p1-preflight-output/
