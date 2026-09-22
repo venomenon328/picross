@@ -2,15 +2,19 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` befindet sich in der Produktkonzeption. Das Repository enthält Entwicklungsregeln, Projekteinstellungen, die erste konsolidierte Produktdefinition und eine kleine Dokumentprüfung, noch keine Spielimplementierung. Der [Workflow](dev-rules/WORKFLOW.md) ist die gemeinsame Prozessgrundlage; [AGENTS.md](../AGENTS.md) der Einstieg. Aktueller Lieferumfang und Freigaben stehen im jeweiligen Issue/PR, nicht in einer parallel gepflegten Roadmap.
+`venomenon328/picross` befindet sich in der Produktkonzeption. Das Repository enthält Entwicklungsregeln, Projekteinstellungen, die konsolidierte Produktdefinition, ein frühes Gestaltungskonzept und eine kleine Dokumentprüfung, noch keine Spielimplementierung. Der [Workflow](dev-rules/WORKFLOW.md) ist die gemeinsame Prozessgrundlage; [AGENTS.md](../AGENTS.md) der Einstieg. Aktueller Lieferumfang und Freigaben stehen im jeweiligen Issue/PR, nicht in einer parallel gepflegten Roadmap.
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist die zuständige Quelle für die bisher bestätigte Produktausrichtung. Bei Arbeiten an Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig lesen. Sie unterscheidet bestätigte Entscheidungen, noch zu prüfende Vorschläge und offene Details. Ihr grober Entwicklungsablauf ist keine Implementierungsfreigabe oder eigenständige Fortschrittsverwaltung.
+
+Das [Gestaltungskonzept](DESIGN_CONCEPT.md) konkretisiert die bestätigte visuelle Grundlage und dokumentiert die noch offene Themenwahl sowie Interaktionsvorschläge. Bei Arbeiten an Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung oder entsprechenden Prototypen zusätzlich vollständig lesen. Die positive Rückmeldung zu den exemplarischen Mocks ist keine Abnahme sämtlicher dargestellter Details und kein Nachweis funktionierender Bedienung.
 
 Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Regelkopie. Eine detaillierte Umsetzungsspezifikation, Architektur und produktspezifische Teststrategie existieren noch nicht. Solche Quellen erst mit tatsächlich beschlossenen Inhalten anlegen und hier situationsbezogen verlinken; keine nicht vorhandenen Pflichtdokumente erfinden.
 
 ## Beschlossene Richtung und offene Produkt-/Technikentscheidungen
 
 Die Produktdefinition legt das PC-Nonogramm-Konzept mit klassischen und farbigen kuratierten Bildrätseln, Großrasterfokus, früher visueller/UI-Konzeption, Offline-Solo-Spiel sowie den grundsätzlichen Progressions- und Wertungsrahmen fest. Sie ist für diese Entscheidungen maßgeblich; das ursprüngliche Repositorysetup hatte sie noch nicht getroffen.
+
+Beschlossen sind außerdem ein sich füllendes Album, warme und ruhige handgezeichnete 2D-Gestaltung mit klaren Konturen und Farbflächen, motivtreue farbige Abschlussrepräsentationen monochromer Rätsel sowie Perfektion nur ohne Fehler und ohne Undo. Thematisches Sammelalbum und regionales Reisetagebuch bleiben Alternativen. Hypothesen und ihre Wertungswirkung, die Abgrenzung manueller Korrekturen sowie konkrete Layout-/Interaktionsdetails sind nicht allein durch den Mock entschieden.
 
 Engine/Framework, Anwendungssprache, konkrete PC-Betriebssysteme, Datenhaltung, genaue Rätsel-/Solververträge, Fehlerzählung, Sternschwellen und Veröffentlichungs-/Lizenzdetails bleiben offen. Vor davon abhängiger Implementierung die konkreten Entscheidungen und Abnahmekriterien klären. Bereits ausdrücklich getroffene neue Nutzerentscheidungen nachvollziehbar in ihre zuständigen Quellen übernehmen, statt sie ungefragt neu festzulegen.
 
