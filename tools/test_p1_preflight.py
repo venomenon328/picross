@@ -100,6 +100,9 @@ class PreflightHarnessTests(unittest.TestCase):
         with self.assertRaisesRegex(PreflightError, "did not produce"):
             create_artifact(build, output, manifest)
         (build / "p1-preflight.exe").write_bytes(b"exe")
+        with self.assertRaisesRegex(PreflightError, "p1-preflight.console.exe"):
+            create_artifact(build, output, manifest)
+        (build / "p1-preflight.console.exe").write_bytes(b"console")
         (build / "unexpected.dll").write_bytes(b"dll")
         with self.assertRaisesRegex(PreflightError, "Unexpected exported files"):
             create_artifact(build, output, manifest)

@@ -284,9 +284,15 @@ def create_artifact(
     output_directory: Path,
     manifest: dict[str, object],
 ) -> Path:
-    executable = build_directory / "p1-preflight.exe"
-    if not executable.is_file() or executable.stat().st_size == 0:
-        raise PreflightError("Windows export did not produce p1-preflight.exe")
+    required = {"p1-preflight.exe", "p1-preflight.console.exe"}
+    missing = sorted(
+        name
+        for name in required
+        if not (build_directory / name).is_file()
+        or (build_directory / name).stat().st_size == 0
+    )
+    if missing:
+        raise PreflightError(f"Windows export did not produce: {missing}")
     allowed = {"p1-preflight.exe", "p1-preflight.console.exe", "p1-preflight.pck"}
     unexpected = sorted(
         path.name for path in build_directory.iterdir() if path.is_file() and path.name not in allowed
