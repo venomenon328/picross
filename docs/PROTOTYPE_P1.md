@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 22.09.2026 · Spezifikation 0.2 · Entscheidungen bestätigt, technische Startprüfung noch offen
+Stand: 22.09.2026 · Spezifikation 0.3 · D-06 übernommen; P1.1 als erster ausführbarer Zwischenstand
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -8,7 +8,9 @@ Paketquelle ist [Issue #5](https://github.com/venomenon328/picross/issues/5). Di
 
 Maßgebliche Grundlagen sind [Produktdefinition](PRODUCT_DEFINITION.md), [Gestaltungskonzept](DESIGN_CONCEPT.md), [Projektprofil](PROJECT_PROFILE.md) und [lokaler Workflow](dev-rules/WORKFLOW.md); Einstieg bleibt [AGENTS.md](../AGENTS.md). Geprüfte Ausgangsbasis dieser Spezifikation: `main` / `5e610126737460dc0290c8360294daca72e6eb9c`. Vor Ausführung die aktuellen Quellen und Issue-Kommentare prüfen.
 
-Der Auftrag „Bitte ergänze die Spezifikation im Repo und merge“ erlaubt die Dokumentation der beantworteten Fragen und deren Merge. Er ist kein Auftrag, den Prototyp zu implementieren oder einen späteren Produkt-PR zu mergen. Issue #5 bleibt bis zur tatsächlichen Lieferung und Abnahme offen.
+Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. Der anschließende Implementierungsauftrag umfasst ausschließlich [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8), einschließlich D-06, Tests, Windows-Zwischenartefakt und Draft-PR; keinen Merge. Basis ist `main@7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac`. Issue #5 bleibt bis zur vollständigen Lieferung und Abnahme offen.
+
+**Paketgrenze:** Diese Spezifikation beschreibt weiterhin den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. F-02/F-03, Zoom/Pan und interaktive Miniaturnavigation folgen erst mit #9, dauerhafte Speicherung mit #11, integrierte Prüfung mit #12. Diese späteren Verträge sind keine Behauptung bereits implementierter Funktionen. Anleitung und technische Nachweise des Zwischenstands: [P1.1](../prototypes/p1/README.md), [Prüfbericht](P1_1_VERIFICATION.md).
 
 Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen weder die endgültige Produktengine noch die gesamte Betriebssystemmatrix, Wertung oder Themenwahl fest. Frühere als offen beziehungsweise vorgeschlagen bezeichnete P1-Alternativen in Issue-Revision 0.1 und Gestaltungskonzept Abschnitt 7 sind insoweit durch die folgenden Entscheidungen abgelöst; globale Produktfragen bleiben außerhalb dieser P1-Grenze offen.
 
@@ -21,9 +23,10 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 | D-03A | Elastische Strichvorschau: Rückwärtsziehen verkürzt den noch nicht übernommenen Abschnitt; Loslassen übernimmt ihn als eine Aktion. | Bestätigt. Keine bleibende Farbspur außerhalb des zuletzt gewählten Abschnitts. |
 | D-03B | Vorhandene Einträge schützen: Füllen/Leermarkieren verändern nur unbekannte Zellen; bewusste Korrektur durch Radieren und erneutes Setzen. | Bestätigt. Die spätere Wertung des Radierens ist damit nicht entschieden. |
 | D-04 | Leere Felder müssen nicht vollständig ausgekreuzt werden. Die korrekte vollständige Füll-/Farbverteilung reicht zum Abschluss. | Die Antwort „Nein“ bezieht sich auf die Pflicht zum Markieren sämtlicher Leerfelder. |
-| D-05 | Referenztest: Windows 11, 2560×1440, Maussteuerung, AMD Ryzen 7 5800X, NVIDIA GeForce RTX 3070. | Diese Angaben sind bestätigt. Anzeigeskalierung, Controllergerät und Controller-Tester wurden nicht genannt. Keine Werte dafür erfinden. |
+| D-05 | Referenztest: Windows 11, 2560×1440, Maussteuerung, AMD Ryzen 7 5800X, NVIDIA GeForce RTX 3070. | Diese Angaben sind bestätigt. Anzeigeskalierung wird bei der realen Mausprobe protokolliert. |
+| D-06 | P1 wird ausschließlich mit Maus umgesetzt und abgenommen. | Nutzerklarstellung vom 22.09.2026 in #5/#8: Tastatur-/Controllerbedienung sind kein P1-Scope, kein Start- und kein Merge-/Abnahme-Gate. Spätere alternative Produkteingaben bleiben außerhalb P1 erhalten. |
 
-Der Nutzer testet primär mit der Maus. Daraus folgt weder, dass er keinen Controller besitzt, noch eine Streichung der bereits vorgesehenen Tastatur-/Controlleralternative. Der echte Controllerprüfweg bleibt vor der Implementierungsfreigabe abzustimmen; ein Maus- oder emulierter Test weist ihn nicht nach. Die reale Windows-Anzeigeskalierung ist spätestens im Testprotokoll zu erfassen. 2560×1440 bezeichnet zunächst die gemeldete Bildschirmauflösung, nicht automatisch logische UI-Pixel oder 100 % Skalierung.
+Die frühere Pflicht zu Tastatur-/Controllerpfad, M-05 und Controllergerät-/Tester-Gate aus Revision 0.2 ist durch D-06 ausdrücklich abgelöst. Die reale Windows-Anzeigeskalierung ist spätestens im Testprotokoll zu erfassen. 2560×1440 bezeichnet die gemeldete Bildschirmauflösung, nicht automatisch logische UI-Pixel oder 100 % Skalierung.
 
 ## 3. Ziel, Umfang und Nichtziele
 
@@ -42,7 +45,7 @@ P1 ist ein zusammenhängender Bedienversuch, kein vollständiges Spiel und kein 
 
 ### 3.2 Nicht enthalten
 
-Keine Sterneberechnung, Perfektionsanzeige, Fehlerstatistik, Rangliste, Freischaltungen, Bonuslogik, Live-Fehlerhilfe oder Hypothesen. Kein allgemeiner Solver, Produktionseditor, Bildimport, Community-Funktion, Audio, aufwendige Buchanimation, finale A/B-Entscheidung, Verbundraster oder Regionenregeln. Kein Hosting, Steam, Release, Installer, Cloudkonto oder kostenpflichtiger Dienst. Keine globale Tastenumbelegung und kein vollständiges Accessibility-Optionsmenü; klare Fokusführung, skalierbare Schrift und Alternativen zum Mausziehen gehören dennoch zur Untersuchung.
+Keine Sterneberechnung, Perfektionsanzeige, Fehlerstatistik, Rangliste, Freischaltungen, Bonuslogik, Live-Fehlerhilfe oder Hypothesen. Kein allgemeiner Solver, Produktionseditor, Bildimport, Community-Funktion, Audio, aufwendige Buchanimation, finale A/B-Entscheidung, Verbundraster oder Regionenregeln. Kein Hosting, Steam, Release, Installer, Cloudkonto oder kostenpflichtiger Dienst. Keine Tastatur-/Controllerbedienung, globale Tastenumbelegung oder vollständiges Accessibility-Optionsmenü. Der ausdrücklich vereinbarte Escape-Abbruch bleibt Teil des Mausgestenvertrags.
 
 Die bestätigte spätere Perfektionsregel „ohne Fehler und ohne Undo“ bleibt erhalten. P1 darf mangels Wertung keinen Durchgang als perfekt ausweisen. Eine Bearbeitungshistorie ist kein vollständiges Ergebnislogbuch. Hypothesen und die Wertungswirkung manueller Korrekturen bleiben globale offene Fragen; für P1 sind sie keine Voraussetzung.
 
@@ -88,23 +91,19 @@ Eine wirksame zusammenhängende Aktion ist ein Undo-Schritt. Redo stellt die Än
 
 Mausrad zoomt mit möglichst stabiler Rasterposition unter dem Zeiger. Mittlere Maustaste oder Hand-Werkzeug verschieben. Sichtbare Zoomknöpfe, Gesamtansicht und Rückkehr zur Arbeitsgröße bieten Alternativen. Die Rasteransicht muss bei 100×100 tatsächlich unterschiedliche Bereiche zugänglich machen, nicht nur ein verkleinertes Bild anzeigen.
 
-Hinweise bleiben den sichtbaren Zeilen-/Spaltenindizes zugeordnet; aktive Linie und Koordinaten unterstützen die Orientierung. Sie beschreiben stets die ganze Linie. Bei Platzmangel den Überlauf eindeutig kennzeichnen und eine vollständig lesbare Fokusansicht anbieten, erreichbar mit Maus, Tastatur und Controller. Keine versteckt abgeschnittenen Hinweise und keine Verkleinerung bis zur Unlesbarkeit. Großrasterzoom und UI-/Hinweisschriftgröße sind nicht zwangsläufig gekoppelt.
+Hinweise bleiben den sichtbaren Zeilen-/Spaltenindizes zugeordnet; aktive Linie und Koordinaten unterstützen die Orientierung. Sie beschreiben stets die ganze Linie. Bei Platzmangel den Überlauf eindeutig kennzeichnen und eine vollständig lesbare Fokusansicht mit Mauszugang anbieten. Keine versteckt abgeschnittenen Hinweise und keine Verkleinerung bis zur Unlesbarkeit. Großrasterzoom und UI-/Hinweisschriftgröße sind nicht zwangsläufig gekoppelt.
 
 Keine automatische Fehler- oder Erfüllungsmarkierung durch Vergleich mit der Lösung. Manuelles beziehungsweise komplexes automatisches Abhaken von Hinweisen ist in P1 nicht erforderlich.
 
 Die Miniatur wird nur aus Spielerzustand und gegebenenfalls derselben aktiven Vorschau erzeugt. Unbekannt, leer und gefüllt bleiben unterscheidbar; keine korrigierte oder vorweggenommene Lösung. Ein Ausschnittrahmen zeigt den sichtbaren Bereich. Klick und Ziehen navigieren, ändern aber keine Zellen.
 
-Vier Rätselfarben sind über Palette und alternative Aktionen erreichbar, mit zusätzlicher stabiler Symbol-/Buchstabenkennung. Auswahl, Fokus und Leerzustand dürfen keine weitere Rätselfarbe vortäuschen. Für P1 eine geprüfte Palette statt beliebiger benutzerdefinierter Paletten.
+Vier Rätselfarben sind mit der Maus über die Palette erreichbar, mit zusätzlicher stabiler Symbol-/Buchstabenkennung. Auswahl, Fokus und Leerzustand dürfen keine weitere Rätselfarbe vortäuschen. Für P1 eine geprüfte Palette statt beliebiger benutzerdefinierter Paletten.
 
 Layoutprüfungen: 1280×720 und 1920×1080 als logische Referenzflächen plus die tatsächliche 2560×1440-Testumgebung. Physische Auflösung, Fenstergröße und Skalierung getrennt protokollieren. Kleinere Fenster dürfen eine eindeutige Mindestgrößenmeldung statt eines beschädigten Layouts zeigen. Kein Rückschluss auf 100 % Windows-Skalierung aus den Hardwareangaben.
 
-### 5.3 Tastatur und Controller
+### 5.3 Alternative Eingaben außerhalb P1
 
-Maussteuerung ist die bestätigte primäre Nutzerprobe. Der aus dem Entwurf übernommene Alternativpfad arbeitet mit einem sichtbaren Zellcursor, nicht mit einem simulierten Mauszeiger: Cursorbewegung, Füllen, Leer, Radieren, Farbwechsel, Undo/Redo, Zoom/Pan, vollständige Hinweisansicht und Album/Zurück. Zentrale Aktionszuordnung und sichtbare Belegungshinweise. Texteingaben oder Schaltflächenfokus lösen keine Rasteraktionen aus.
-
-Einzelzellen lassen sich ohne anhaltendes Gedrückthalten bearbeiten. Für Linien wird zusätzlich Start/Ende ausdrücklich bestätigt; dieselbe Achsenbindung und Aktionsgrenze gelten. Controllertrennung beziehungsweise Fokusverlust verwirft unbestätigte Eingaben sicher. Keine unerwartete Fortsetzung nach Wiederverbinden. Konkrete Tastenbelegung ist innerhalb dieser Grenzen ein reversibles Implementierungsdetail und muss mit der Lieferung dokumentiert werden.
-
-Der echte Controller-Hardwaretest ist noch nicht zugeordnet. Er wird weder aus „Maussteuerung“ heraus als entfallen gewertet noch durch Tastaturemulation als bestanden erklärt. Vor der Implementierungsfreigabe Gerät/Tester bestimmen oder einen abweichenden Gate-Zeitpunkt ausdrücklich vereinbaren.
+D-06 stellt den bisherigen P1-Tastatur-/Controllerpfad zurück. Für diesen Prototypen sind weder eine zusätzliche Eingabeschicht noch ein Controllergerät/-Tester oder eine entsprechende Abnahme erforderlich. [Issue #10](https://github.com/venomenon328/picross/issues/10) ist für P1 entfallen. Die produktweiten Entscheidungen und offenen Details zu späteren alternativen Eingaben in Produktdefinition und Gestaltungskonzept bleiben unverändert; die frühere P1-Ausgestaltung wird dadurch nicht als Produktvertrag übernommen.
 
 ### 5.4 Abschluss ohne Pflicht zum Auskreuzen
 
@@ -114,7 +113,7 @@ Es müssen nicht alle Hintergrundfelder mit Kreuzen versehen werden. Vor dem vol
 
 ## 6. Speicherung und Wiederaufnahme
 
-Isolierter P1-Speicherbereich, keine fremden Spielstände, Cloudkonten oder Repositorydateien. Pro Puzzle speichern: Definitions-ID/Revision, Zellmatrix, wirksame Undo-/Redo-Aktionen, Undo-verwendet-Merkmal als Metadatum ohne Perfektionsaussage, Zoom/Ausschnitt, aktive Farbe/Werkzeug, Cursor und Abschlussstatus. Keine Hypothesenfelder. Redo oder Speichern/Fortsetzen löschen das Undo-verwendet-Merkmal nicht. Das ist keine vollständige Fehlerhistorie und keine Zusicherung späterer Produktspielstandkompatibilität.
+Isolierter P1-Speicherbereich, keine fremden Spielstände, Cloudkonten oder Repositorydateien. Pro Puzzle speichern: Definitions-ID/Revision, Zellmatrix, wirksame Undo-/Redo-Aktionen, Undo-verwendet-Merkmal als Metadatum ohne Perfektionsaussage, Zoom/Ausschnitt, aktive Farbe/Werkzeug, Rasterfokus und Abschlussstatus. Keine Hypothesenfelder. Redo oder Speichern/Fortsetzen löschen das Undo-verwendet-Merkmal nicht. Das ist keine vollständige Fehlerhistorie und keine Zusicherung späterer Produktspielstandkompatibilität.
 
 Nach übernommenen Zellaktionen sowie beim Verlassen sichern. Ansichtsänderungen dürfen zusammengefasst gespeichert werden, müssen aber vor regulärem Schließen berücksichtigt sein. Keine halb ausgeführten Striche speichern. Bei Schreibfehler klar warnen und nicht fälschlich „gespeichert“ anzeigen.
 
@@ -132,9 +131,9 @@ Primärquelle: [offizieller Release 4.7.2-stable](https://github.com/godotengine
 
 Vorgesehener Projektpfad: `prototypes/p1/`. Eigene Zeichen-/Hit-Test-Komponente für das Raster, keine Pflicht zu einer Schaltfläche pro Zelle. Menü, Palette und Fokusbereiche nutzen die UI-Bausteine. Raster-/Aktionsmodell, Ansichtskoordinaten und Speicherung getrennt testbar halten. Keine Abstraktionsplattform für hypothetische Engines und keine neue Drittanbieterabhängigkeit ohne begründeten Bedarf. Deutsche UI-Beschriftung; keine vollständige Lokalisierungsinfrastruktur.
 
-### 7.2 Befehlsvertrag für das spätere Implementierungspaket
+### 7.2 Ausführbarer Befehlsvertrag
 
-Die folgenden Pfade, Testskripte und Exportpresets sind **zu liefernde Bestandteile**, noch keine existierenden Dateien oder ausgeführten Tests. `godot` bezeichnet den oben gebundenen Standard-Editor im jeweiligen Ausführungspfad, unter Windows entsprechend dessen Konsolenprogramm. Keine Installation an einem erfundenen Nutzerpfad voraussetzen.
+Die folgenden Pfade, Testskripte und Exportpresets sind mit #8 vorhanden; der Testrunner deckt den P1.1-Anteil ab. `godot` bezeichnet den oben gebundenen Standard-Editor im jeweiligen Ausführungspfad, unter Windows dessen Konsolenprogramm. Keine Installation an einem erfundenen Nutzerpfad voraussetzen. Der vollständig isolierte Produktprüfweg steht in der [Anleitung](../prototypes/p1/README.md).
 
 ```sh
 godot --version
@@ -148,7 +147,7 @@ Der Testrunner muss alle vereinbarten Logikprüfungen ausführen, Anzahl/Ergebni
 
 Das Exportpreset wird exakt `P1 Windows x86_64` genannt. Passende Exportvorlagen vorher installieren; das Zielverzeichnis `prototypes/p1/build/windows/` vor Export anlegen. Der Exportpfad ist relativ zum Godot-Projekt, nicht zum Repository-Root. Testartefakt als ZIP mit sämtlichen zum Start nötigen Dateien, Kurz-Anleitung und Commitkennung; keine Engineinstallation beim Nutzer für die exportierte Spielprobe voraussetzen. Keine Signaturzertifikate, Releaseveröffentlichung oder Änderung von Windows-Schutzfunktionen beauftragt.
 
-Diese Bedienung der CLI ist anhand der offiziellen [Kommandozeilendokumentation](https://docs.godotengine.org/en/stable/tutorials/editor/command_line_tutorial.html) und [Windows-Exportdokumentation](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_windows.html) am 22.09.2026 geprüft. Die Befehle wurden noch nicht an einem P1-Projekt ausgeführt. Vor Implementierungsstart sind Runtime-/Exportvorlagenzugriff und der konkrete CI-Ausführungsweg zu verifizieren. Die neuen Produktjobs und tatsächlich ausführbaren Befehle werden zusammen mit der Implementierung im Projektprofil ergänzt; die jetzige Dokument-CI bleibt unverändert.
+Der praktische Runtime-/Exportvorlagenweg ist durch [P1.0](P1_PREFLIGHT.md) nachgewiesen. Für das echte P1.1-Projekt führt `tools/p1_product.py` Import, Godot-Tests samt absichtlichem Negativtest, kontrollierten Start und Windows-Export aus; unter Windows zusätzlich den exportierten Start. [Produkt-CI](../.github/workflows/p1-product.yml) und [Projektprofil](PROJECT_PROFILE.md) benennen den tatsächlichen Prüfweg. Die Dokument-CI bleibt zusätzlich erforderlich. Aktuelle commitgebundene Ergebnisse stehen im PR.
 
 ## 8. Akzeptanz und Abnahme
 
@@ -174,7 +173,7 @@ Bestehende Dokumentprüfung bleibt zusätzlich erforderlich: `python3 -m unittes
 | M-02 | F-02 mit allen vier Farben und langen Hinweisen bearbeiten; Werkzeuge, Fokus und Farben unterscheidbar; vollständige Hinweise zugänglich. | Eigentümer |
 | M-03 | In F-03 notierte Koordinate bearbeiten, stark zoomen, weit verschieben und über Miniatur/Koordinaten zurückfinden. Kein Orientierungsverlust durch falsch zugeordnete Hinweise. | Eigentümer |
 | M-04 | Teilstand schließen, Anwendung neu starten und fortsetzen; Zellen, Undo/Redo, Farbe/Werkzeug und relevanter Ausschnitt wiederhergestellt. | Eigentümer |
-| M-05 | Kernablauf ohne Maus mit Tastatur und mit echtem Controller, Fokuswechsel und Controllertrennung prüfen. Emulation ist kein Hardwaretest. | Tastaturprobe durch Eigentümer; Controllergerät/Tester noch zu benennen. |
+| M-05 | Durch D-06 für P1 nicht anwendbar: Tastatur-/Controllerprobe gehört nicht zum Prototyp. | Kein Start- oder Merge-/Abnahme-Gate; spätere Produktarbeit. |
 | M-06 | Logische Referenzlayouts und reale 2560×1440-Umgebung samt tatsächlicher Windows-Skalierung prüfen; keine verdeckten Bedienelemente/abgeschnittenen Hinweise. | Eigentümer |
 | M-07 | Wiederholte Eingaben, Pan und Zoom im 100×100-Raster auf Ryzen 7 5800X / RTX 3070 unter Win 11: keine verlorenen/falsch zugeordneten Aktionen und keine wahrnehmbaren Hänger. Reproduzierbaren Ablauf mit 500 Zell-/Navigationsaktionen gegen Sollzustand prüfen; Messungen und Beobachtungen getrennt dokumentieren. | Implementierer für reproduzierbaren Ablauf, Eigentümer für reale Bedienprobe. |
 
@@ -182,14 +181,12 @@ Protokoll: Commit/Artefaktkennung, Betriebssystem, CPU/GPU, Fenster- und Bildsch
 
 ### 8.3 Gate-Zeitpunkte
 
-Vor Merge der späteren P1-Implementierung sind A-01 bis A-07, die Dokumentprüfung und die manuellen Szenarien M-01 bis M-07 nachzuweisen. Der noch nicht organisierte Controllerteil M-05 bleibt als offener Prüfweg sichtbar; vor Implementierungsfreigabe Gerät/Tester zuordnen oder eine Abweichung ausdrücklich vereinbaren. In dieser Dokumentation wurde keine nachträgliche Gate-Verschiebung beschlossen.
+Vor Merge der gesamten P1-Implementierung sind A-01 bis A-07, die Dokumentprüfung sowie M-01 bis M-04, M-06 und M-07 nachzuweisen. M-05 entfällt ausdrücklich durch D-06. Die sequenziellen Zwischenpakete bleiben gemäß #5 im gemeinsamen Draft-PR; #8 wird nicht vorgezogen gemergt.
 
-Der jetzige Merge betrifft nur die Spezifikation und unterliegt der Dokumentprüfung sowie dem inhaltlichen Review. Noch ausstehende Produkt-/Hardwareprüfungen blockieren diesen Dokumentmerge nicht und dürfen dabei nicht als bestanden dargestellt werden. Eine schlecht bedienbare, technisch startende Fassung benötigt Auswertung/Nacharbeit, keine fingierte UX-Abnahme.
+K-06 aus #8 ist die frühe reale Mausprobe durch den Eigentümer am Windows-Zwischenartefakt. Sie erfolgt vor Start von #9 oder wird ausdrücklich übersprungen; Codex darf sie nicht als bestanden markieren. Technischer Start, synthetische Eingabe und Renderprüfung ersetzen keine reale Bedienabnahme. Eine schlecht bedienbare, technisch startende Fassung benötigt Auswertung/Nacharbeit.
 
 ## 9. Startprüfung, Lieferung und offene Restpunkte
 
-D-01 bis D-04 sind beantwortet; D-05 enthält die bestätigte Maus-Testhardware. Noch offen sind die tatsächliche Windows-Skalierung als Prüfmetadatum, der Controllerprüfweg sowie die technische Startverifikation mit heruntergeladenem Editor, passenden Exportvorlagen, verifizierten Assetprüfsummen und konkret verfügbarem CI-/Ausführungsweg. Version und Befehlsvertrag sind bereits festgelegt, deren erfolgreiche Ausführung ist noch nicht belegt. Deshalb keine uneingeschränkte technische Startbereitschaft behaupten.
-
-Bei einem Implementierungsauftrag diese Restpunkte gezielt prüfen und den aktuellen Issue-/Branchstand verwenden. Ein neuer Implementierungsbranch würde gemäß Workflow vom dann aktuellen `main` abzweigen. Kein Prototypcode, keine produktbezogenen Tests und kein Exportartefakt entstehen durch dieses Dokumentpaket. Ausführungsweg und gegebenenfalls Modellwahl erst für die noch ausstehende Umsetzung nach [MODEL_SELECTION.md](dev-rules/MODEL_SELECTION.md) beurteilen; nicht rückblickend für die erledigte Spezifikationspflege.
+D-01 bis D-06 sind bestätigt, der technische Preflight ist gemergt. #8 verwendet den beauftragten Branch `feat/5-p1-prototype`; der Windows-Produktprüfweg ist vorhanden. Offen bleiben K-06 einschließlich realer Windows-Skalierung sowie die ausdrücklich späteren Pakete #9, #11 und #12. Die [P1.1-Nachweise](P1_1_VERIFICATION.md) sind vom vollständigen P1-Abnahmestand zu unterscheiden.
 
 Lieferung des späteren P1-Pakets: Quellcode, Fixtures mit Herkunft und Nachweisen, Tests, Start-/Bedien-/Resetanleitung, Windows-Testartefakt und kurzer Ergebnisbericht. Keine vollständige Progression, finale Themenwahl oder Releasefähigkeit behaupten. Rätselproduktion/Solver und Verbundraster bleiben gesonderte frühe Risikostränge; P1 übernimmt sie nicht stillschweigend.
