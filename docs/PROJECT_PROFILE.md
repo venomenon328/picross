@@ -14,7 +14,7 @@ Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issu
 Persistenz, strikte Savevalidierung, Primary/Backup-Recovery, Viewwiederaufnahme,
 bestätigten Einzelreset und den isolierten Zwei-Prozess-Nachweis. Der
 [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und die Anleitung beschreiben den technischen
-Stand. M-04 bleibt bis zur realen Eigentümerprüfung offen; #12 und die gesamte
+Stand einschließlich R2/B-01+B-02 und D-23 bis D-27. M-04 bleibt bis zur realen Eigentümerprüfung offen; #12 und die gesamte
 P1-Abnahme bleiben separat. Ältere grüne Läufe belegen den #11-Head nicht.
 
 Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Regelkopie. Keine abschließende Produktarchitektur oder universell erprobte Produkt-Teststrategie behaupten. Weitere Pflichtquellen erst mit tatsächlich beschlossenen Inhalten anlegen.
@@ -115,6 +115,12 @@ Zoom, Resize und UI-Skalierung ihre semantische Leseposition statt nur den numer
 Offset erhalten; der widersprüchliche Farbrätsel-Satz im Gestaltungskonzept ist mit
 D-22 zu vereinheitlichen. Die Nacharbeit ändert weder die übrigen D-18-bis-D-22-
 Funktionen noch die getrennte spätere Layout-/Zieldesign-Phase. A-01 bleibt offen.
+
+Review R2 zu PR #15 bezieht sich auf `1a5756f37b1e43b6d8126e5c0e4c817e7e3290c1`:
+B-01 verlangt blockierende Pflicht-Flushes bei Fehlern, B-02 die Schreibsperre
+eines aus Backup geladenen Slots auch bei fehlendem Primary. #11 ergänzt als
+ausdrücklich beauftragte Nacharbeit D-23 bis D-27. Der neue technische Head und
+seine CI-/Artefaktnachweise stehen im PR; frühere Läufe bleiben historisch.
 
 Die reale Maus-/Layoutprobe an der integrierten #9-Lieferung bleibt offen; fehlende Metadaten sind dabei zu erfassen. Für #11 prüft der Eigentümer M-04 am commitgebundenen Windows-Artefakt: Bearbeiten, regulär schließen, echten App-Neustart, Zellen/Undo/Redo/Ansicht/Einzelhinweise fortsetzen sowie sichtbare Recovery und bestätigten Einzelreset. Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken. Die positive F-01-Teilbestätigung bleibt erhalten.
 

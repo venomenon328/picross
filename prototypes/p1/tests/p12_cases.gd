@@ -297,6 +297,7 @@ static func ui_cases(t: SceneTree) -> void:
 	b.reset_clue_pan()
 	await semantic_clue_geometry_routes(t, app)
 	await clue_navigation_routes(t, app, longest_row, longest_column)
+	await followup_input_geometry(t, app)
 	b.fit_all()
 	var below_work_range: float = b.view.cell_size
 	t.check(below_work_range < Board.WORK_STEPS[0], "F03 overview is below minimum work zoom")
@@ -327,6 +328,67 @@ static func ui_cases(t: SceneTree) -> void:
 	app.queue_free()
 	await t.process_frame
 	t.root.size = Vector2i(1280, 720)
+
+static func followup_input_geometry(t: SceneTree, app: Main) -> void:
+	var b: Board = app.board
+	app.set_tool("fill")
+	b.reset_clue_pan()
+	var rows: Array[int] = visible_overflowing_lines(b, "row")
+	if rows.is_empty():
+		return
+	var index: int = rows[0]
+	var point: Vector2 = clue_point(b, "row", index)
+	var pitch: float = float(b.clue_layout("row", index).slot_extent)
+	var confirmed: Dictionary = b.capture_view()
+	var neighbour: int = rows[1] if rows.size() > 1 else index
+	var neighbour_layout: Array = window_signature(b.clue_layout("row", neighbour))
+	t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_motion(point + Vector2(pitch * 0.35, 2 * b.view.cell_size), true, MOUSE_BUTTON_MIDDLE)
+	t.check(b.clue_step("row", index) == 0 and is_equal_approx(float(b.visible_clue_layout("row", index).visual_shift), pitch * 0.35) and b.capture_view() == confirmed, "N-03 subslot movement stays visual and unsaved")
+	t.check(window_signature(b.clue_layout("row", neighbour)) == neighbour_layout, "N-03 adjacent clue remains fixed during drag")
+	t.mouse_motion(point + Vector2(pitch * 1.6, 2 * b.view.cell_size), true, MOUSE_BUTTON_MIDDLE)
+	t.check(b.clue_step("row", index) == 0 and b.visible_clue_layout("row", index).offset == 2, "N-03 dragged clue crosses slots without committing")
+	var escape: InputEventKey = InputEventKey.new()
+	escape.keycode = KEY_ESCAPE
+	escape.pressed = true
+	t.root.push_input(escape, true)
+	t.check(b.capture_view() == confirmed and b.pan_drag_distance == 0.0, "N-03 Escape restores last snapped semantic read")
+	t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_motion(point + Vector2(pitch * 1.6, 0), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(point, false, MOUSE_BUTTON_MIDDLE)
+	t.check(b.clue_step("row", index) == 2 and b.capture_view() != confirmed and b.pan_drag_distance == 0.0, "N-03 drop snaps and commits one semantic read")
+	var cells: Array[int] = app.session.player.cells.duplicate()
+	var history: Array = app.session.player.history.duplicate(true)
+	var start: Vector2i = b.view.hit(b.view.viewport.get_center())
+	start.x = mini(start.x, app.session.player.width - 12)
+	var endpoint: Vector2i = Vector2i(start.x + 7, start.y)
+	app.session.gesture.begin(app.session.player, start, 1)
+	t.check(b.gesture_length() == 1, "N-07 single cell counts one")
+	app.session.gesture.move(endpoint)
+	t.check(b.gesture_length() == 8, "N-07 jump counts entire geometric length")
+	app.session.gesture.move(Vector2i(start.x + 4, start.y))
+	t.check(b.gesture_length() == 5, "N-07 elastic retreat updates immediately")
+	app.session.gesture.cancel()
+	app.session.player.cells[start.y * app.session.player.width + start.x] = 1
+	app.session.gesture.begin(app.session.player, start, 1)
+	app.session.gesture.move(endpoint)
+	t.check(b.gesture_length() == 8 and app.session.gesture.changes().size() < 8, "N-07 prefilled cells do not shorten counter")
+	app.session.gesture.cancel()
+	app.session.player.cells = cells
+	t.check(app.session.player.history == history and b.gesture_length() == 0, "N-07 canceled count changes no history")
+	var clipped: PackedVector2Array = Board.clipped_segment(Vector2.ZERO, Vector2(10, 10), Rect2(2, 2, 6, 6))
+	t.check(clipped.size() == 2 and clipped[0].is_equal_approx(Vector2(2, 2)) and clipped[1].is_equal_approx(Vector2(8, 8)), "N-06 diagonal X segment clips at corner")
+	for area: Rect2 in [Rect2(2, -1, 8, 12), Rect2(-1, -1, 8, 12), Rect2(-1, 2, 12, 8), Rect2(-1, -1, 12, 8)]:
+		clipped = Board.clipped_segment(Vector2.ZERO, Vector2(10, 10), area)
+		t.check(clipped.size() == 2 and area.has_point(clipped[0]) and clipped[0].distance_to(clipped[1]) > 0.0, "N-06 X intersection survives a viewport edge")
+	t.check(Board.clipped_segment(Vector2.ZERO, Vector2(1, 1), Rect2(5, 5, 2, 2)).is_empty(), "N-06 no artificial X when geometry misses visible remainder")
+	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+	motion.position = b.view.viewport.get_center()
+	b._gui_input(motion)
+	t.check(b.hover.x >= 0 and b.hover.y >= 0, "N-05 grid cell activates row and column focus")
+	motion.position = b.row_clue_area().get_center()
+	b._gui_input(motion)
+	t.check(b.hover == Vector2i(-1, -1) and app.session.player.history == history, "N-05 leaving grid clears focus without history")
 
 static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	var b: Control = app.board
@@ -469,11 +531,11 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	t.mouse_motion(row_point_a + Vector2(row_pitch * 0.8, row_pitch * 0.7), true, MOUSE_BUTTON_MIDDLE)
 	t.check(b.clue_step("row", row_a) == 0 and b.pan_line_index == row_a, "J-03 sub-slot diagonal motion stays snapped to its start row")
 	t.mouse_motion(row_point_a + Vector2(row_pitch * 1.2, row_pitch * 0.7), true, MOUSE_BUTTON_MIDDLE)
-	t.check(b.pan_target == "row" and b.pan_line_index == row_a and only_line_changed(rows_before, b.row_clue_steps, row_a), "J-03 middle drag moves one concrete row only")
+	t.check(b.pan_target == "row" and b.pan_line_index == row_a and b.row_clue_steps == rows_before and absf(float(b.visible_clue_layout("row", row_a).visual_shift)) > 0.0, "N-03 middle drag is continuous without confirming slots")
 	t.check(window_signature(b.clue_layout("row", row_b)) == row_b_window_before, "J-03 neighbouring row window remains byte-for-byte equivalent")
 	var outside: Vector2 = b.get_global_rect().end + Vector2(40, 40)
 	t.mouse_button(outside, false, MOUSE_BUTTON_MIDDLE)
-	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "J-03 row drag releases outside")
+	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty() and only_line_changed(rows_before, b.row_clue_steps, row_a), "N-03 row drag snaps on release outside")
 	# Hand/left independently moves a second row by two fixed slots.
 	app.set_tool("hand")
 	t.mouse_motion(row_point_b, false)

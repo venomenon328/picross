@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 23.09.2026 · Arbeitsfassung 0.5 · frühe Konzeption mit supersedierendem P1-Mausfeedback
+Stand: 24.09.2026 · Arbeitsfassung 0.6 · frühe Konzeption mit supersedierendem P1-Mausfeedback
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -21,9 +21,12 @@ darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, rich
 alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
 eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
 auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.7. Die technische Umsetzung erfolgt
-in #9; Nachweise im P1.2-Prüfbericht, erneute Eigentümerabnahme weiterhin offen. Das
-ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsystem.
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.9. Die Nacharbeit in #11
+ergänzt D-23 bis D-27: flüssigen Hinweisdrag mit Einrasten beim Loslassen,
+geringfügig größere getrennte Füllungen, dezente Cursorbänder, geclippte X
+und den geometrischen Live-Strichzähler. Nachweise stehen im P1.3-Prüfbericht;
+erneute Eigentümerabnahme bleibt offen. Das ist weder eine endgültige
+Themenentscheidung noch ein vollständiges Designsystem.
 
 ## 2. Bestätigte gestalterische Grundlage
 
@@ -109,7 +112,10 @@ am Strichstart festgelegte Modus einschließlich Farbverhalten, elastischer Vors
 und Undo-Grenze steht in P1 §5.1. Kein wiederholtes Umschalten derselben Zelle beim
 Zurückziehen.
 
-Längenzähler, Linealmodus und weitergehende Eingabealternativen bleiben Vorschläge.
+Für P1 zeigt ein Live-Zähler während linker und rechter Zellgesten die gesamte
+geometrische aktuelle Strichlänge inklusive Start/Ende, auch bei Vorbelegungen und
+Eingabesprüngen; er folgt dem elastischen Zurückziehen. Ein Linealmodus und
+weitergehende Eingabealternativen bleiben Vorschläge.
 Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
 Arbeitskontext, aktive Linien und eine Miniatur mit Ausschnittrahmen wichtig. Lange
 Folgen werden nur an Grenzen vollständiger Einzelhinweise gekürzt; ein möglichst
@@ -117,7 +123,9 @@ großer zusammenhängender Ausschnitt bleibt direkt lesbar. Alle Folgen einer
 Orientierung verwenden gemeinsame feste Slots, und kurze Folgen stehen ebenfalls
 rasterseitig. Seitengerechte Marker zeigen verborgene Präfixe/Suffixe. Jede konkrete
 Spalte lässt sich nur für sich vertikal, jede konkrete Zeile nur für sich horizontal
-in ganzen eingerasteten Slots lesen, ohne X-/Y-Zuordnung oder Nachbarfolgen zu ändern.
+kontinuierlich ziehen und beim Loslassen in ganzen gemeinsamen Slots einrasten
+lassen, ohne X-/Y-Zuordnung oder Nachbarfolgen zu ändern. Der temporäre Versatz
+ist weder gespeicherte Leseposition noch Spielzustand.
 Der vollständige Hover-Tooltip ergänzt diese Navigation statt sie zu ersetzen; eine
 separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze Linien,
 nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich

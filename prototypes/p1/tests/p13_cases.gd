@@ -99,8 +99,14 @@ static func run(t: SceneTree) -> void:
 		for step: String in ["after_temp", "after_rotation"]:
 			store.fail_step = step
 			t.check(not store.write_slot(session, session.view_state).is_empty(), "P1.3 %s injected %s fails" % [id, step])
-			t.check(store.load_slot(definition).status in ["loaded", "recovered"], "P1.3 %s valid data survives %s" % [id, step])
+			var interrupted: Dictionary = store.load_slot(definition)
+			t.check(interrupted.status in ["loaded", "recovered"], "P1.3 %s valid data survives %s" % [id, step])
 			store.fail_step = ""
+			if step == "after_rotation":
+				var backup_bytes: String = FileAccess.get_file_as_string(store.path_for(id, ".bak"))
+				t.check(interrupted.status == "recovered" and not FileAccess.file_exists(store.path_for(id)), "N-02 %s restart sees missing primary and valid backup" % id)
+				t.check(not store.write_slot(session, session.view_state).is_empty() and not FileAccess.file_exists(store.path_for(id)) and FileAccess.get_file_as_string(store.path_for(id, ".bak")) == backup_bytes, "N-02 %s autosave remains blocked and backup unchanged" % id)
+				t.check(store.repair_from_backup(definition).is_empty(), "N-02 %s explicit missing-primary recovery" % id)
 		t.check(store.write_slot(session, session.view_state).is_empty(), "P1.3 %s resumes after interrupted replace" % id)
 		file = FileAccess.open(store.path_for(id, ".bak"), FileAccess.WRITE)
 		file.store_string("{broken backup")
@@ -200,3 +206,74 @@ static func run(t: SceneTree) -> void:
 	backup_ui.repair_dialog.confirmed.emit()
 	t.check(backup_ui.store.load_slot(f01).status == "loaded" and backup_ui.status_label.text.is_empty(), "P1.3 confirmed recovery resumes saving")
 	backup_ui.queue_free()
+	await t.process_frame
+	var failure_ui: Main = load("res://main.tscn").instantiate()
+	t.root.add_child(failure_ui)
+	await t.process_frame
+	failure_ui.open_puzzle()
+	failure_ui.board.zoom(1, failure_ui.board.view.viewport.get_center())
+	failure_ui.store.fail_step = "after_temp"
+	failure_ui.show_album()
+	t.check(failure_ui.work.visible and not failure_ui.album.visible and failure_ui.status_label.text.contains("Speicherfehler"), "N-01 album stays open on failed mandatory flush")
+	failure_ui.store.fail_step = ""
+	failure_ui.show_album()
+	t.check(failure_ui.album.visible and failure_ui.status_label.text.is_empty(), "N-01 album transition succeeds after retry")
+	failure_ui.open_puzzle()
+	failure_ui.board.zoom(1, failure_ui.board.view.viewport.get_center())
+	failure_ui.store.fail_step = "after_temp"
+	failure_ui.select_puzzle(1)
+	t.check(failure_ui.session == failure_ui.sessions[0] and failure_ui.status_label.text.contains("Speicherfehler"), "N-01 fixture switch is blocked on failed flush")
+	failure_ui.store.fail_step = ""
+	failure_ui.select_puzzle(1)
+	t.check(failure_ui.session == failure_ui.sessions[1] and failure_ui.status_label.text.is_empty(), "N-01 fixture switch succeeds after retry")
+	failure_ui.store.fail_step = "after_temp"
+	t.check(failure_ui.session.player.commit(first_action) and not failure_ui._save_current(), "N-01 confirmed cell action remains unsaved after write failure")
+	failure_ui.board.zoom(1, failure_ui.board.view.viewport.get_center())
+	failure_ui.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	t.check(is_instance_valid(failure_ui) and failure_ui.is_inside_tree() and failure_ui.session.player.cells[0] == 1 and failure_ui.status_label.text.contains("Speicherfehler"), "N-01 WM-close failure keeps unsaved cell and visible error")
+	failure_ui.leave_app()
+	t.check(failure_ui.is_inside_tree() and failure_ui.status_label.text.contains("Speicherfehler"), "N-01 Beenden failure cannot quit")
+	failure_ui.store.fail_step = ""
+	t.check(failure_ui._flush_current() and failure_ui.status_label.text.is_empty(), "N-01 close retry clears error and persists view")
+	# Reproduce the interruption after rotation, then build a genuinely new UI process.
+	failure_ui.select_puzzle(0)
+	failure_ui.store.fail_step = "after_rotation"
+	failure_ui.board.zoom(1, failure_ui.board.view.viewport.get_center())
+	t.check(not failure_ui._save_current() and failure_ui.slot_status[0] == "recovered" and failure_ui.work_repair_button.visible, "N-02 interrupted replacement exposes same-process recovery")
+	failure_ui.store.fail_step = ""
+	var saved_backup: String = FileAccess.get_file_as_string(failure_ui.store.path_for("f01", ".bak"))
+	failure_ui.queue_free()
+	await t.process_frame
+	var missing_ui: Main = load("res://main.tscn").instantiate()
+	t.root.add_child(missing_ui)
+	await t.process_frame
+	t.check(missing_ui.slot_status[0] == "recovered" and missing_ui.repair_button.visible and not FileAccess.file_exists(missing_ui.store.path_for("f01")), "N-02 missing primary loads backup visibly after restart")
+	missing_ui.open_puzzle()
+	t.check(missing_ui.work_repair_button.visible, "N-02 recovery takeover remains available from work view")
+	missing_ui.board.zoom(1, missing_ui.board.view.viewport.get_center())
+	t.check(not missing_ui._save_current() and missing_ui.slot_status[0] == "recovered" and not FileAccess.file_exists(missing_ui.store.path_for("f01")) and FileAccess.get_file_as_string(missing_ui.store.path_for("f01", ".bak")) == saved_backup, "N-02 normal view save cannot acknowledge recovered backup")
+	var free_index: int = missing_ui.session.player.cells.find(-1)
+	t.check(missing_ui.session.player.commit([{"index": free_index, "before": -1, "after": 1}]) and not missing_ui._save_current() and missing_ui.slot_status[0] == "recovered" and not FileAccess.file_exists(missing_ui.store.path_for("f01")), "N-02 confirmed cell cannot autosave before takeover")
+	missing_ui.set_tool("hand")
+	t.check(missing_ui.slot_status[0] == "recovered" and not FileAccess.file_exists(missing_ui.store.path_for("f01")), "N-02 tool save remains blocked")
+	missing_ui._ask_repair()
+	missing_ui.repair_dialog.confirmed.emit()
+	t.check(missing_ui.store.load_slot(f01).status == "loaded" and missing_ui.status_label.text.is_empty(), "N-02 confirmed takeover permits saving")
+	missing_ui.queue_free()
+	await t.process_frame
+	var f02: Dictionary = Definition.load_fixture("f02")
+	var color_store: SaveStore = SaveStore.new(SaveStore.test_root_override)
+	color_store.fail_step = "after_rotation"
+	t.check(not color_store.write_slot(Session.new(f02), Session.new(f02).view_state).is_empty() and color_store.load_slot(f02).status == "recovered", "N-02 color fixture interrupted after rotation")
+	var color_backup: String = FileAccess.get_file_as_string(color_store.path_for("f02", ".bak"))
+	var color_ui: Main = load("res://main.tscn").instantiate()
+	t.root.add_child(color_ui)
+	await t.process_frame
+	color_ui.select_puzzle(1)
+	color_ui.board.active_color = 2
+	color_ui.set_tool("fill")
+	t.check(color_ui.slot_status[1] == "recovered" and not FileAccess.file_exists(color_store.path_for("f02")) and FileAccess.get_file_as_string(color_store.path_for("f02", ".bak")) == color_backup, "N-02 changed color cannot autosave before takeover")
+	color_ui._ask_repair()
+	color_ui.repair_dialog.confirmed.emit()
+	t.check(color_store.load_slot(f02).status == "loaded" and int(color_store.load_slot(f02).data.view.active_color) == 2, "N-02 confirmed color-slot takeover saves changed color")
+	color_ui.queue_free()

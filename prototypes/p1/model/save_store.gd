@@ -199,6 +199,8 @@ func write_slot(session: Session, view: Dictionary) -> String:
 	var temp_path: String = path_for(id, ".tmp")
 	var previous: Dictionary = _parse(primary_path, session.definition)
 	var backup: Dictionary = _parse(backup_path, session.definition)
+	if previous.status == "missing" and backup.status == "valid":
+		return "Gültiges Backup muss vor weiterem Speichern bewusst übernommen werden."
 	if previous.status == "invalid" or backup.status == "invalid":
 		return "Vorhandene ungültige Daten werden nicht überschrieben."
 	if DirAccess.make_dir_recursive_absolute(_absolute(root)) != OK:

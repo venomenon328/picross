@@ -1,6 +1,6 @@
 # P1.3 · Persistenz und Recovery: technischer Prüfbericht
 
-Stand: 23.09.2026 · [Issue #11](https://github.com/venomenon328/picross/issues/11) ·
+Stand: 24.09.2026 · [Issue #11](https://github.com/venomenon328/picross/issues/11) ·
 Branch `feat/11-p1-persistence`, Zielbasis
 `main@acc9c51161a18cca17813a8e44c07b2cf074cd44`.
 Der finale Head, die dazugehörigen CI-Läufe und das Windows-Artefakt werden im
@@ -28,11 +28,33 @@ nur gültiges bisheriges Primary als Backup rotieren, dann Temp als Primary eins
 Ein unterbrochener Ersatz lässt mindestens eine gültige ältere Fassung ladbar.
 Verwaiste Temps sind nicht autoritativ. Ein beschädigtes Primary wird bei gültigem
 Backup sichtbar aus dem Backup gelesen, aber nicht über dieses Backup rotiert.
-Erst eine bestätigte Backupübernahme ersetzt die beschädigte Primärdatei; ohne
+Erst eine bestätigte Backupübernahme ersetzt die beschädigte oder fehlende Primärdatei;
+normales Autosave bleibt in beiden Fällen gesperrt. Ohne
 gültige Fassung bleibt der Slot im sichtbaren Fehlerzustand, bis sein Reset
 bestätigt wird. Gültiges Primary mit beschädigtem Backup bleibt lesbar;
 eine bestätigte Backup-Erneuerung erlaubt wieder Speichern. Ein Reset greift
 nur auf Dateien des ausgewählten Slots zu.
+
+Ein verpflichtender Flush liefert Erfolg oder Fehler an Album-, Blattwechsel-,
+Beenden- und Window-Close-Pfade. Bei Schreibfehler bleibt die aktuelle Ansicht samt
+ungesichertem Zustand und sichtbarer Fehlermeldung bestehen. Ein erfolgreicher Retry
+ermöglicht den Übergang. Nach einem `after_rotation`-Abbruch bleibt das gültige Backup
+bis zur bestätigten Übernahme unverändert; die Reparatur ist auch aus der Arbeitsansicht
+erreichbar. Temporäre Subslotpositionen, Hoverbänder und Strichzähler werden nie
+Teil von Schema 1.
+
+## Nacharbeit D-23 bis D-27
+
+Die angefasste Hinweisfolge folgt während eines Drags kontinuierlich ihrer Achse.
+Nur beim Loslassen wird der nächste gültige gemeinsame Slot als semantische
+Leseposition bestätigt; Escape, Fokusverlust und reguläre Übergänge rollen den
+visuellen Versatz zurück. Der kleinere Füll-Inset vergrößert bestätigte und
+vorläufige Farbflächen, während der Zwischenraum an normalen und kräftigen
+Fünferlinien erhalten bleibt. Cursorzeile und -spalte erhalten gleich starke
+Hintergrundbänder, deren Kreuzung nicht doppelt gezeichnet wird. X- und Preview-X-
+Segmente werden bei angeschnittenen Zellen am Rasterviewport geometrisch geclippt.
+Der Live-Zähler zeigt bei linken und rechten Zellgesten die gesamte aktuelle
+geometrische Länge einschließlich Start, Ende, Sprüngen und vorbesetzten Zellen.
 
 ## Automatisierte Prüfungen
 
@@ -54,12 +76,26 @@ Albumminiaturen. Test- und Render-Skripte setzen ebenfalls
 eigene temporäre Speicherroots. Der Produkt-Harness nutzt zudem eine temporäre
 Projektkopie mit isoliertem Godot-Profil; das Windows-ZIP enthält keine Saves.
 
-Lokaler Windows-Zwischenlauf: Godot 4.7.2, 1038 Prüfungen erfolgreich;
+Historischer Windows-Zwischenlauf des Ausgangsheads `1a5756f…`: Godot 4.7.2,
+1038 Prüfungen erfolgreich;
 isolierter Zwei-Prozess-Roundtrip mit beiden Erfolgsmarkern erfolgreich.
 Der vollständige lokale Produktweg umfasste Import, erwarteten Negativtest
 mit Exit 23, kontrollierten Start, 249 Render-PNGs, Windows-Export sowie
 exportierten Headless- und OpenGL-Start. Dieser Lauf prüfte einen veränderten
-Arbeitsbaum und ist deshalb kein commitgebundener Abschlussnachweis.
+Arbeitsbaum und ist deshalb kein commitgebundener Abschlussnachweis der Nacharbeit.
+
+Die neuen Godot-Fälle injizieren Schreibfehler vor Album, Fixturewechsel,
+Beenden und WM-Close, prüfen Retry und den Wiederanlauf mit fehlendem Primary
+nach `after_rotation`. Eingabetests prüfen Subslot-Drag ohne Save, Drop-Snap,
+Abbruch, geometrischen Zähler, Hoverzustand und X-Segment-Clipping. Echte
+OpenGL-SubViewport-Bilder und Pixelproben decken die größere Füllfläche samt
+Trennung über alle Farben und Arbeitszoomstufen, dezente Bänder, Hintdrag,
+Live-Zähler sowie bestätigte und vorläufige X an vier Rändern und einer Ecke
+bei 24/36 Zellabstand ab. Der lokale Windows-Nacharbeitslauf auf verändertem
+Arbeitsbaum erreichte 1083/0 Godot-Prüfungen, 273 echte Renderbilder und 527
+Pixelchecks. Ein gesonderter isolierter Zwei-Prozess-Lauf meldete
+`P1_ROUNDTRIP_WRITE_OK` und `P1_ROUNDTRIP_READ_OK`. Die commitgebundenen
+Abschlussnachweise stehen nach den aktuellen CI-Läufen im Draft-PR.
 Die CI führt zusätzlich Import, denselben Godot-Test, den erwarteten Negativpfad
 mit Exit 23, kontrollierten Start, echte Renderbilder/Pixelchecks, Windows-Export,
 Python-Dokumenttests und Preflight am finalen Head aus. Laufkennungen/Artefakthashes

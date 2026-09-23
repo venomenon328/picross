@@ -224,6 +224,7 @@ func test_scene() -> void:
 	app.board.pointer_move(far, false)
 	app.board.pointer_release(Vector2(-10, -10), false)
 	check(app.session.player.cells.count(1) == 5, "tool/color frozen; UI/outside release commits last endpoint")
+	app.board.active_color = 1
 	app.board.pointer_press(start, MOUSE_BUTTON_RIGHT)
 	check(app.session.gesture.target == 0, "right button empty even with eraser")
 	var escape: InputEventKey = InputEventKey.new()
@@ -283,6 +284,7 @@ func mouse_button(point: Vector2, pressed: bool, button: MouseButton = MOUSE_BUT
 	root.push_input(event, true)
 
 func test_event_routing() -> void:
+	SaveStore.test_root_override += "-event-routes"
 	var app: Main = load("res://main.tscn").instantiate()
 	root.add_child(app)
 	app.open_puzzle()

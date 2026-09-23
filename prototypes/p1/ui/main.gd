@@ -15,6 +15,7 @@ var status_label: Label
 var reset_dialog: ConfirmationDialog
 var repair_dialog: ConfirmationDialog
 var repair_button: Button
+var work_repair_button: Button
 var session: Session
 var board: Board
 var mini: Miniature
@@ -202,6 +203,8 @@ func _build() -> void:
 	sidebar.add_child(coordinate)
 	clue_reset_button = button("Hinweise rasterseitig ausrichten", board.reset_clue_pan)
 	sidebar.add_child(clue_reset_button)
+	work_repair_button = button("Backup zum Speichern übernehmen", _ask_repair)
+	sidebar.add_child(work_repair_button)
 	var scroll: ScrollContainer = ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -293,7 +296,8 @@ func _update_palette() -> void:
 
 func select_puzzle(index: int) -> void:
 	board.cancel_gesture()
-	_flush_current()
+	if not _flush_current():
+		return
 	session.view_state = board.capture_view()
 	session = sessions[index]
 	board.session = session
@@ -306,7 +310,8 @@ func select_puzzle(index: int) -> void:
 
 func show_album() -> void:
 	board.cancel_gesture()
-	_flush_current()
+	if not _flush_current():
+		return
 	board.clear_clue_hover()
 	album.show()
 	work.hide()
@@ -400,21 +405,27 @@ func _redo() -> void:
 		_save_current()
 	refresh()
 
-func _save_current() -> void:
+func _save_current() -> bool:
 	if store == null or board == null or session == null:
-		return
+		return true
 	if save_timer != null:
 		save_timer.stop()
 	session.view_state = board.capture_view()
-	save_error = store.write_slot(session, session.view_state)
+	save_error = "Backup vor weiterem Speichern bewusst übernehmen." if slot_status[sessions.find(session)] == "recovered" else store.write_slot(session, session.view_state)
 	slot_errors[sessions.find(session)] = save_error
 	if save_error.is_empty():
 		slot_status[sessions.find(session)] = "loaded"
+	else:
+		var disk_state: String = str(store.load_slot(session.definition).status)
+		if disk_state in ["recovered", "backup_invalid"]:
+			slot_status[sessions.find(session)] = disk_state
 	_update_status()
+	return save_error.is_empty()
 
-func _flush_current() -> void:
+func _flush_current() -> bool:
 	if (save_timer != null and not save_timer.is_stopped()) or (board != null and session != null and (board.capture_view() != session.view_state or not slot_errors[sessions.find(session)].is_empty())):
-		_save_current()
+		return _save_current()
+	return true
 
 func _update_status() -> void:
 	if status_label == null or session == null:
@@ -424,6 +435,9 @@ func _update_status() -> void:
 	status_label.text = "Speicherfehler: " + error if not error.is_empty() else ("Backup geladen; Primärstand beschädigt. Vor weiterem Speichern Backup bewusst übernehmen." if state == "recovered" else ("Backup beschädigt; gültiger Primärstand geladen. Backup vor weiterem Speichern bewusst erneuern." if state == "backup_invalid" else ("Speicherdaten ungültig. Nur bestätigter Reset dieses Blatts ist möglich." if state == "error" else "")))
 	status_label.visible = not status_label.text.is_empty()
 	status_label.add_theme_color_override("font_color", Color("9d2e24"))
+	if work_repair_button != null:
+		work_repair_button.visible = state in ["recovered", "backup_invalid"]
+		work_repair_button.text = "Backup erneuern" if state == "backup_invalid" else "Backup zum Speichern übernehmen"
 
 func _ask_reset() -> void:
 	reset_dialog.popup_centered()
@@ -467,8 +481,8 @@ func _repair_selected() -> void:
 
 func leave_app() -> void:
 	board.cancel_gesture()
-	_flush_current()
-	get_tree().quit()
+	if _flush_current():
+		get_tree().quit()
 
 static func label(text: String, font_size: int) -> Label:
 	var item: Label = Label.new()
