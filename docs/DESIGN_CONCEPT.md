@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 23.09.2026 · Arbeitsfassung 0.2 · frühe Konzeption mit präzisierter Motivtreue und P1-Mausfeedback
+Stand: 23.09.2026 · Arbeitsfassung 0.3 · frühe Konzeption mit supersedierendem P1-Mausfeedback
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -8,7 +8,16 @@ Dieses Dokument überträgt die Gestaltungskonversation zu Punkt 2 des Entwicklu
 
 Die ausdrücklichen Antworten des Nutzers begründen die bestätigten Entscheidungen in Abschnitt 2. Die Rückmeldung „Sieht gut aus“ zu exemplarischen Mocks bestätigte deren grundsätzliche gestalterische Richtung, nicht jeden Bildinhalt, jede Zahl, jedes Werkzeug oder eine fertig geprüfte Bedienung. Abschnitt 3 erhält die offenen Themenalternativen. Abschnitte 4–5 enthalten Entwurfsansätze, soweit nicht ausdrücklich durch das nachfolgende Nutzerfeedback konkretisiert.
 
-Die reale P1.1-Mausprobe ergänzt vier Punkte: größeres Standardfenster ohne automatisch riesige Raster, sichtbar getrennte Füllzellen auch an Fünferlinien, direktes Neutralisieren mit dem normalen Werkzeug und detailliertere motivtreue Abschlussbilder. Der anschließende Auftrag übernimmt diese Punkte in die Vorbereitung von #9. Der konkrete P1-Vertrag steht in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.4, D-07 bis D-10. Die technische Umsetzung erfolgt in #9; Nachweise im P1.2-Prüfbericht, erneute Eigentümerabnahme weiterhin offen. Das ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsystem.
+Die reale P1.1-Mausprobe ergänzt zunächst vier Punkte: größeres Standardfenster ohne
+automatisch riesige Raster, sichtbar getrennte Füllzellen auch an Fünferlinien,
+direktes Neutralisieren mit dem normalen Werkzeug und detailliertere motivtreue
+Abschlussbilder. Die folgende P1.2-Probe ergänzt den supersedierenden Sollstand D-11
+bis D-15: keine Randnummerierung oder separate Hinweisansicht, vollständiger
+In-Context-Hinweiszugriff, feinere monotone Zoomstufen, farbige Hinweiszahlen mit
+optionalen Kennungen und direkte Füllung↔X-Umwandlung. Der konkrete P1-Vertrag steht
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.5. Die technische Umsetzung erfolgt
+in #9; Nachweise im P1.2-Prüfbericht, erneute Eigentümerabnahme weiterhin offen. Das
+ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsystem.
 
 ## 2. Bestätigte gestalterische Grundlage
 
@@ -19,6 +28,7 @@ Die reale P1.1-Mausprobe ergänzt vier Punkte: größeres Standardfenster ohne a
 | Stimmung | Warm, neugierig und dennoch ruhig. |
 | Spielbildschirm | Thematik bleibt dezent sichtbar, das Raster sachlich und präzise. Größere Fenster dürfen nicht zu unnötig riesigen Zellen führen. |
 | Zelllesbarkeit | Füllungen bleiben einzeln erkennbar, insbesondere an kräftigen Fünferlinien. Raster und Füllung dürfen nicht optisch zu einer gemeinsamen Fläche verschmelzen. |
+| Hinweise | Am Raster stehen nur Lösungshinweise, ohne laufende Randnummern. Farbige Zahlen und vollständige Hover-Auflösung bei Überlauf bleiben im Arbeitsbild; A–D-Suffixe sind optional. |
 | Sammelbilder | Das Rätselmotiv ist eine klar erkennbare Stilisierung des detaillierteren Ergebnisbilds. Höhere Auflösung, feinere Konturen und Details sind erlaubt; keine Pflicht zu pixelidentischer Silhouette oder bloßer Kolorierung. |
 | Perfektion | Ein perfekter Durchgang ist ohne Fehler und ohne Undo. Details und offene Wertungsfragen stehen in der Produktdefinition, Abschnitt 6.2. |
 | Hypothesen | Nicht abschließend entschieden, auch nicht ihre Vereinbarkeit mit Perfektion. |
@@ -84,11 +94,29 @@ Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte An
 
 Die bestätigte Achsenbindung eines Mausstrichs ab der ersten eindeutigen Bewegung in eine weitere Zelle bleibt verbindlich. Produktweit bleiben alternative Eingaben vorgesehen. Für P1 gilt jedoch D-06: Maus, kein Tastatur-/Controller-Gate.
 
-**Präzisierung aus der Mausprobe:** Das normale Werkzeug soll vorhandene Füllungen mit links und Leermarkierungen mit rechts wieder neutralisieren können. Gegenmarkierungen bleiben geschützt; ein Radierer kann zusätzlich als Universalwerkzeug existieren. Der konkrete, am Strichstart festgelegte Setz-/Rücknahmemodus einschließlich Farbverhalten, elastischer Vorschau und Undo-Grenze steht in P1 §5.1. Kein wiederholtes Umschalten derselben Zelle beim Zurückziehen.
+**Präzisierung aus den Mausproben:** Das normale Werkzeug neutralisiert vorhandene
+Füllungen mit links und Leermarkierungen mit rechts. Zusätzlich wandelt ein linker
+Setzmodus X direkt in die aktive Farbe und ein rechter Setzmodus Füllungen direkt in
+X um. Die frühere allgemeine Gegenmarkierungs-Schutzregel ist damit abgelöst;
+Rücknahmestriche bleiben auf den am Start vorhandenen Zieltyp beschränkt. Der konkrete,
+am Strichstart festgelegte Modus einschließlich Farbverhalten, elastischer Vorschau
+und Undo-Grenze steht in P1 §5.1. Kein wiederholtes Umschalten derselben Zelle beim
+Zurückziehen.
 
-Längenzähler, Linealmodus und weitergehende Eingabealternativen bleiben Vorschläge. Für große Raster sind vollständig zugeordnete Hinweise, aktive Linien, Fokusansicht langer Hinweise und Miniatur mit Ausschnittrahmen wichtig. Hinweise beziehen sich auf ganze Linien, nicht nur den Ausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich Fehlern, niemals eine korrigierte Lösung. P1 konkretisiert Zoom/Pan und Miniaturnavigation; Lesezeichen gehören nicht automatisch dazu.
+Längenzähler, Linealmodus und weitergehende Eingabealternativen bleiben Vorschläge.
+Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
+Arbeitskontext, aktive Linien und eine Miniatur mit Ausschnittrahmen wichtig. Lange
+Folgen erhalten bei physischem Überlauf einen vollständigen Hover-Tooltip statt einer
+separaten Hinweisansicht. Hinweise beziehen sich auf ganze Linien, nicht nur den
+Ausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich Fehlern, niemals eine
+korrigierte Lösung. P1 konkretisiert Zoom/Pan und Miniaturnavigation; Lesezeichen
+gehören nicht automatisch dazu.
 
-Rätselfarben und UI-Zustandsfarben sollen unterscheidbar sein; stabile ergänzende Kennungen und unabhängige UI-/Rasterskalierung unterstützen dies. Automatisches Hinweisabblenden darf keine verdeckte Lösungsprüfung sein. Einzelheiten des gespeicherten Zustands werden im zuständigen Speicherpaket konkretisiert.
+Rätselfarben und UI-Zustandsfarben sollen unterscheidbar sein. Die Hinweiszahl selbst
+trägt die Rätselfarbe; stabile ergänzende A–D-Kennungen sind als einschaltbare
+Accessibility-Darstellung verfügbar. Unabhängige UI-/Rasterskalierung unterstützt die
+Lesbarkeit. Automatisches Hinweisabblenden darf keine verdeckte Lösungsprüfung sein.
+Einzelheiten des gespeicherten Zustands werden im zuständigen Speicherpaket konkretisiert.
 
 ### 5.2 Undo und Hypothesen
 

@@ -17,7 +17,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 	var picture: Image = surface.get_texture().get_image()
 	if name.contains("confirmed"):
 		for i: int in range(app.session.definition.palette.size()):
-			var cell: Rect2 = app.board.view.cell_rect(Vector2i(4 + i * 4, 4))
+			var cell: Rect2 = app.board.view.cell_rect(Vector2i(2 + i * 2, 4))
 			var center: Vector2i = Vector2i(app.board.global_position + cell.get_center())
 			var moat: Vector2i = Vector2i(app.board.global_position + cell.position + Vector2(2, cell.size.y / 2))
 			if not picture.get_pixelv(center).is_equal_approx(Color(app.session.definition.palette[i].color)) or not picture.get_pixelv(moat).is_equal_approx(app.board.PAPER):
@@ -64,14 +64,27 @@ func run() -> void:
 					app.session.player.cells[(4 + i) * app.session.player.width + 4] = mini(i + 1, app.session.definition.palette.size())
 				app.board.hover = Vector2i(4, 4)
 				await snapshot(app, "%dx%d-ui%d-f%d" % [dims.x, dims.y, roundi(scale * 100), fixture + 1])
-	# Same L/block at normal and five-cell boundaries, every color/work step.
+	# D-11/D-12/D-14: unnumbered colored hints stay in the work view; optional
+	# accessibility suffixes and the complete overflow tooltip get real renders.
 	surface.size = Vector2i(1600, 900)
 	app.set_ui_scale(1)
+	app.select_puzzle(1)
+	app.board.hover = Vector2i(10, 10)
+	await snapshot(app, "f02-colored-hints-default")
+	app.toggle_accessibility_labels()
+	await snapshot(app, "f02-colored-hints-accessibility")
+	app.toggle_accessibility_labels()
+	app.select_puzzle(2)
+	app.board.hover = Vector2i(57, 87)
+	app.board.set_clue_hover("row", 87)
+	await snapshot(app, "f03-overflow-hover-tooltip")
+	app.board.clear_clue_hover()
+	# Same L/block at normal and five-cell boundaries, every color/work step.
 	for fixture: int in [0, 1]:
 		app.select_puzzle(fixture)
 		app.session.player.cells.fill(-1)
 		for i: int in range(app.session.definition.palette.size()):
-			var x: int = 4 + i * 4
+			var x: int = 2 + i * 2
 			for cell: Vector2i in [Vector2i(x, 4), Vector2i(x+1, 4), Vector2i(x, 5), Vector2i(x, 7), Vector2i(x+1, 7), Vector2i(x+1, 8)]:
 				app.session.player.cells[cell.y * app.session.player.width + cell.x] = i + 1
 		for step: float in app.board.WORK_STEPS:
@@ -79,20 +92,20 @@ func run() -> void:
 			app.board.navigate_to(Vector2.ZERO)
 			await snapshot(app, "separation-f%d-%d-confirmed" % [fixture + 1, roundi(step)], true)
 			# Preview whole mixed-color removal: original values outside endpoint survive.
-			app.session.gesture.begin(app.session.player, Vector2i(4, 4), 1)
-			app.session.gesture.move(Vector2i(17, 4))
+			app.session.gesture.begin(app.session.player, Vector2i(2, 4), 1)
+			app.session.gesture.move(Vector2i(10, 4))
 			await snapshot(app, "separation-f%d-%d-removal" % [fixture + 1, roundi(step)], true)
 			app.session.gesture.cancel()
 			for color: int in range(1, app.session.definition.palette.size() + 1):
-				app.session.gesture.begin(app.session.player, Vector2i(4, 3), color)
-				app.session.gesture.move(Vector2i(17, 3))
+				app.session.gesture.begin(app.session.player, Vector2i(2, 3), color)
+				app.session.gesture.move(Vector2i(10, 3))
 				await snapshot(app, "separation-f%d-%d-preview-color%d" % [fixture + 1, roundi(step), color], true)
 				app.session.gesture.cancel()
 	app.select_puzzle(2)
 	app.board.hover = Vector2i(57, 87)
-	app.show_clues("both", 87)
-	await snapshot(app, "f03-full-clues")
-	app.focus_panel.hide()
+	app.board.set_clue_hover("row", 87)
+	await snapshot(app, "f03-full-clues-in-work-tooltip")
+	app.board.clear_clue_hover()
 	app.board.fit_all()
 	await snapshot(app, "f03-overview")
 	for index: int in [0, 1, 2]:
@@ -108,6 +121,6 @@ func run() -> void:
 		app.show_album()
 		await snapshot(app, "f%d-earned-album" % (index + 1))
 	var report: FileAccess = FileAccess.open(output.path_join("render-report.json"), FileAccess.WRITE)
-	report.store_string(JSON.stringify({"renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(), "pixel_checks": pixel_checks, "physical_dpi_acceptance": "OPEN: owner", "captures": captures}, "  ") + "\n")
+	report.store_string(JSON.stringify({"renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(), "pixel_checks": pixel_checks, "clue_contract": "unnumbered in-work colored numbers; optional suffixes; complete overflow hover tooltip", "physical_dpi_acceptance": "OPEN: owner", "captures": captures}, "  ") + "\n")
 	print("P1_CAPTURE_OK: %d actual rendered images" % captures.size())
 	quit(0)

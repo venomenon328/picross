@@ -5,6 +5,7 @@ const Gesture = preload("res://model/gesture.gd")
 const Session = preload("res://model/session.gd")
 const GridView = preload("res://ui/grid_view.gd")
 const Main = preload("res://ui/main.gd")
+const Board = preload("res://ui/board.gd")
 
 static func run(t: SceneTree) -> void:
 	for id: String in ["f01", "f02", "f03"]:
@@ -37,7 +38,7 @@ static func run(t: SceneTree) -> void:
 		t.check(s.completed and not s.reveal().is_empty(), "actual committed completion " + id)
 		s.player.cells[0] = 1
 		t.check(not s.is_solution(), "extra fill rejects " + id)
-	# D-09 full table, including mixed colors and protected countermarks.
+	# D-15 full table, including mixed colors, direct conversion and typed removal.
 	for start_value: int in [-1, 0, 1, 2, 3, 4]:
 		for target: int in [-1, 0, 1, 2, 3, 4]:
 			var p: Player = Player.new(8, 1)
@@ -52,7 +53,9 @@ static func run(t: SceneTree) -> void:
 			for i: int in range(8):
 				if target == -1 or (target > 0 and start_value > 0 and before[i] > 0) or (target == 0 and start_value == 0 and before[i] == 0):
 					expected[i] = -1
-				elif not (target > 0 and start_value > 0) and not (target == 0 and start_value == 0) and before[i] == -1:
+				elif target > 0 and start_value <= 0 and before[i] in [-1, 0]:
+					expected[i] = target
+				elif target == 0 and start_value != 0 and (before[i] == -1 or before[i] > 0):
 					expected[i] = target
 			t.check(p.cells == before, "preview does not mutate source")
 			var changed: bool = g.finish(p)
@@ -89,6 +92,13 @@ static func run(t: SceneTree) -> void:
 	var coordinate: Vector2 = (anchor - v.origin) / v.cell_size
 	v.zoom_to(48, anchor)
 	t.check(((anchor - v.origin) / v.cell_size).is_equal_approx(coordinate), "pointer anchored zoom")
+	t.check(Board.WORK_STEPS.size() >= 16, "D-13 offers substantially finer work zoom steps")
+	for i: int in range(1, Board.WORK_STEPS.size()):
+		t.check(Board.WORK_STEPS[i] > Board.WORK_STEPS[i - 1], "work zoom steps strictly increase")
+	t.check(Board.next_zoom_step(5.0, -1) == 5.0 and Board.next_zoom_step(5.0, 1) == Board.WORK_STEPS[0], "overview below work range keeps zoom direction")
+	t.check(Board.next_zoom_step(96.0, 1) == 96.0 and Board.next_zoom_step(96.0, -1) == Board.WORK_STEPS[-1], "overview above work range keeps zoom direction")
+	for current: float in [5.0, 12.0, 23.0, 24.0, 73.0, 96.0]:
+		t.check(Board.next_zoom_step(current, -1) <= current and Board.next_zoom_step(current, 1) >= current, "zoom direction monotone at " + str(current))
 	t.check(Main.bounded_start(Rect2i(0, 0, 1366, 768), Vector2i(16, 48)) == Vector2i(1350, 720), "small work area bounded")
 	t.check(Main.bounded_start(Rect2i(0, 0, 2560, 1400), Vector2i(16, 48)) == Vector2i(1600, 900), "large start remains 1600x900")
 	for usable: Rect2i in [Rect2i(0, 0, 1366, 768), Rect2i(-1920, 32, 1920, 1000), Rect2i(0, 0, 1100, 680)]:
@@ -106,6 +116,12 @@ static func ui_cases(t: SceneTree) -> void:
 	await t.process_frame
 	await t.process_frame
 	var b: Control = app.board
+	var sample_clue: Dictionary = app.session.definition.rows[10][0]
+	t.check(b.clue_token(sample_clue) == str(int(sample_clue.length)), "colored clue defaults to number without suffix")
+	t.check(b.clue_color(sample_clue).is_equal_approx(Color(app.session.definition.palette[int(sample_clue.color) - 1].color)), "clue number uses puzzle color")
+	app.toggle_accessibility_labels()
+	t.check(b.clue_token(sample_clue).ends_with(app.session.definition.palette[int(sample_clue.color) - 1].symbol), "optional accessibility suffix enabled")
+	app.toggle_accessibility_labels()
 	b.navigate_to(Vector2(0.5, 0.5))
 	var start: Vector2i = b.view.hit(b.view.viewport.get_center())
 	var point: Vector2 = b.get_global_transform() * b.view.cell_rect(start).get_center()
@@ -129,6 +145,12 @@ static func ui_cases(t: SceneTree) -> void:
 		t.mouse_button(point, true, MOUSE_BUTTON_RIGHT)
 		t.mouse_button(point, false, MOUSE_BUTTON_RIGHT)
 		t.check(app.session.player.cells[start.y * 40 + start.x] == 0, "viewport right marks empty")
+		t.mouse_button(point, true)
+		t.mouse_button(point, false)
+		t.check(app.session.player.cells[start.y * 40 + start.x] == i + 1, "viewport left converts X directly to active color")
+		t.mouse_button(point, true, MOUSE_BUTTON_RIGHT)
+		t.mouse_button(point, false, MOUSE_BUTTON_RIGHT)
+		t.check(app.session.player.cells[start.y * 40 + start.x] == 0, "viewport right converts fill directly to X")
 		t.mouse_button(point, true, MOUSE_BUTTON_RIGHT)
 		t.mouse_button(point, false, MOUSE_BUTTON_RIGHT)
 		t.check(app.session.player.cells[start.y * 40 + start.x] == -1, "viewport right removes empty")
@@ -156,9 +178,29 @@ static func ui_cases(t: SceneTree) -> void:
 	await t.process_frame
 	t.check(app.stress_label.visible, "F03 stress marking")
 	b.hover = Vector2i(57, 87)
-	app.show_clues("both", 87)
-	t.check(app.focus_text.text.contains("Zeile 88") and app.focus_text.text.contains("Spalte 58") and app.focus_text.text.contains(b.hint_text(app.session.definition.rows[87])), "whole line focus includes every clue")
-	app.focus_panel.hide()
+	t.check(b.row_hint_overflows(87), "long F03 row uses compact overflow marker")
+	b.set_clue_hover("row", 87)
+	var tooltip: Array = b.tooltip_entries("row", 87)
+	var complete_tooltip: bool = tooltip.size() == app.session.definition.rows[87].size()
+	for i: int in range(tooltip.size()):
+		var clue: Dictionary = app.session.definition.rows[87][i]
+		complete_tooltip = complete_tooltip and tooltip[i].text == b.clue_token(clue) and tooltip[i].color.is_equal_approx(b.clue_color(clue))
+	t.check(complete_tooltip, "in-work hover tooltip contains every row clue and color")
+	t.check(not has_button_text(app, "Ganze Zeile / Spalte ↗") and not has_button_text(app, "Hinweisansicht schließen"), "separate clue view removed")
+	b.fit_all()
+	var below_work_range: float = b.view.cell_size
+	t.check(below_work_range < Board.WORK_STEPS[0], "F03 overview is below minimum work zoom")
+	b.zoom(-1, b.view.viewport.get_center())
+	t.check(is_equal_approx(b.view.cell_size, below_work_range) and b.overview, "zoom out from small overview never zooms in")
+	b.zoom(1, b.view.viewport.get_center())
+	t.check(b.view.cell_size > below_work_range and not b.overview, "zoom in from small overview increases monotonically")
+	b.view.zoom_to(96.0, b.view.viewport.get_center())
+	b.overview = true
+	b.zoom(1, b.view.viewport.get_center())
+	t.check(b.view.cell_size == 96.0 and b.overview, "zoom in above maximum never shrinks")
+	b.zoom(-1, b.view.viewport.get_center())
+	t.check(b.view.cell_size == Board.WORK_STEPS[-1] and not b.overview, "zoom out above maximum decreases monotonically")
+	b.working_size()
 	for dims: Vector2i in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
 		t.root.size = dims
 		for scale: float in [1.0, 1.25]:
@@ -175,3 +217,11 @@ static func ui_cases(t: SceneTree) -> void:
 	app.queue_free()
 	await t.process_frame
 	t.root.size = Vector2i(1280, 720)
+
+static func has_button_text(node: Node, text: String) -> bool:
+	if node is Button and node.text == text:
+		return true
+	for child: Node in node.get_children():
+		if has_button_text(child, text):
+			return true
+	return false

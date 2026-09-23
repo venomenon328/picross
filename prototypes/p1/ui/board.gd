@@ -3,27 +3,30 @@ const Session = preload("res://model/session.gd")
 const GridView = preload("res://ui/grid_view.gd")
 signal edited
 signal pointed(cell: Vector2i)
-signal clue_requested(axis: String, index: int)
 var session: Session
 var view: GridView = GridView.new()
 var eraser: bool = false
 var hand: bool = false
 var active_color: int = 1
 var ui_scale: float = 1.0
+var accessibility_labels: bool = false
 var overview: bool = false
 var held_button: MouseButton = MOUSE_BUTTON_NONE
 var pan_button: MouseButton = MOUSE_BUTTON_NONE
 var pan_last: Vector2
 var hover: Vector2i = Vector2i(-1, -1)
+var clue_hover_axis: String = ""
+var clue_hover_index: int = -1
 const INK: Color = Color("343f42")
 const PAPER: Color = Color("faf6ec")
 const ACCENT: Color = Color("be7446")
-const WORK_STEPS: Array[float] = [18.0, 24.0, 36.0, 48.0]
+const WORK_STEPS: Array[float] = [12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0, 32.0, 34.0, 36.0, 40.0, 44.0, 48.0, 54.0, 60.0, 66.0, 72.0]
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	clip_contents = true
 	resized.connect(_layout)
+	mouse_exited.connect(clear_clue_hover)
 	_layout()
 
 func _layout() -> void:
@@ -51,14 +54,23 @@ func navigate_to(normalized: Vector2) -> void:
 	edited.emit()
 	queue_redraw()
 
+static func next_zoom_step(current: float, direction: int) -> float:
+	if direction > 0:
+		for candidate: float in WORK_STEPS:
+			if candidate > current + 0.01:
+				return candidate
+	elif direction < 0:
+		for i: int in range(WORK_STEPS.size() - 1, -1, -1):
+			if WORK_STEPS[i] < current - 0.01:
+				return WORK_STEPS[i]
+	return current
+
 func zoom(direction: int, anchor: Vector2) -> void:
 	if session.gesture.active:
 		return
-	var step: float = WORK_STEPS[-1] if direction > 0 else WORK_STEPS[0]
-	for candidate: float in (WORK_STEPS if direction > 0 else [48.0, 36.0, 24.0, 18.0]):
-		if (direction > 0 and candidate > view.cell_size + 0.01) or (direction < 0 and candidate < view.cell_size - 0.01):
-			step = candidate
-			break
+	var step: float = next_zoom_step(view.cell_size, direction)
+	if is_equal_approx(step, view.cell_size):
+		return
 	overview = false
 	view.zoom_to(step, anchor if view.viewport.has_point(anchor) else view.viewport.get_center())
 	edited.emit()
@@ -115,6 +127,7 @@ func _gui_input(event: InputEvent) -> void:
 		if cell.x >= 0:
 			hover = cell
 			pointed.emit(hover)
+		update_clue_hover(event.position)
 		queue_redraw()
 	if event is InputEventMouseButton and event.pressed:
 		if session.gesture.active or pan_button != MOUSE_BUTTON_NONE:
@@ -125,18 +138,29 @@ func _gui_input(event: InputEvent) -> void:
 			if view.viewport.has_point(event.position):
 				pan_button = event.button_index
 				pan_last = event.position
-		elif event.button_index == MOUSE_BUTTON_LEFT and view.hit(event.position).x < 0:
-			request_clue(event.position)
 		else:
 			pointer_press(event.position, event.button_index)
 		accept_event()
 
-func request_clue(point: Vector2) -> void:
+func clear_clue_hover() -> void:
+	clue_hover_axis = ""
+	clue_hover_index = -1
+	queue_redraw()
+
+func set_clue_hover(axis: String, index: int) -> void:
+	clue_hover_axis = axis
+	clue_hover_index = index
+	queue_redraw()
+
+func update_clue_hover(point: Vector2) -> void:
+	var grid: Rect2 = view.visible_bounds()
 	var cell: Vector2i = Vector2i(((point - view.origin) / view.cell_size).floor())
-	if point.x < view.visible_bounds().position.x and point.y >= view.viewport.position.y and cell.y >= 0 and cell.y < view.dimensions.y:
-		clue_requested.emit("row", cell.y)
-	elif point.y < view.visible_bounds().position.y and point.x >= view.viewport.position.x and cell.x >= 0 and cell.x < view.dimensions.x:
-		clue_requested.emit("column", cell.x)
+	if point.x < grid.position.x and point.y >= grid.position.y and point.y < grid.end.y and cell.y >= 0 and cell.y < view.dimensions.y and row_hint_overflows(cell.y):
+		set_clue_hover("row", cell.y)
+	elif point.y < grid.position.y and point.x >= grid.position.x and point.x < grid.end.x and cell.x >= 0 and cell.x < view.dimensions.x and column_hint_overflows(cell.x):
+		set_clue_hover("column", cell.x)
+	else:
+		clear_clue_hover()
 
 func pointer_press(point: Vector2, button: MouseButton) -> void:
 	if session.completed or hand or (button != MOUSE_BUTTON_LEFT and button != MOUSE_BUTTON_RIGHT):
@@ -206,55 +230,36 @@ func _draw() -> void:
 		if py >= grid.position.y and py <= grid.end.y:
 			draw_line(Vector2(grid.position.x, py), Vector2(grid.end.x, py), INK if y % 5 == 0 else Color("b5b6ab"), 2.0 if y % 5 == 0 else 1.0)
 	_draw_clues(first, last)
+	_draw_clue_tooltip()
 
 func _draw_clues(first: Vector2i, last: Vector2i) -> void:
 	var font: Font = ThemeDB.fallback_font
 	var fs: int = roundi(14 * ui_scale)
-	var line_height: float = 19 * ui_scale
-	var sparse: int = maxi(1, ceili(line_height / view.cell_size))
 	var near_grid: Vector2 = view.visible_bounds().position
 	for y: int in range(first.y, last.y):
 		var py: float = view.cell_rect(Vector2i(0, y)).get_center().y
-		if py < view.viewport.position.y + line_height / 2 or py > view.viewport.end.y - line_height / 2 or (y % sparse != 0 and y != hover.y):
+		if py < view.viewport.position.y or py > view.viewport.end.y:
 			continue
-		var text: String = "%d: %s" % [y + 1, hint_text(session.definition.rows[y])]
-		var max_width: float = view.viewport.position.x - 16
-		if font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > max_width or sparse > 1:
-			text = "%d: … ↗" % (y + 1)
 		if y == hover.y:
-			draw_rect(Rect2(near_grid.x - max_width - 8, py - line_height / 2, max_width + 6, line_height), Color("d8ddcc"))
-		var tw: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		draw_string(font, Vector2(near_grid.x - 10 - tw, py + fs * 0.35), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
+			draw_rect(Rect2(4, py - view.cell_size / 2, near_grid.x - 8, view.cell_size), Color("d8ddcc"))
+		if row_hint_overflows(y):
+			_draw_overflow_marker(Vector2(near_grid.x - 12, py), false)
+		else:
+			_draw_row_hint(session.definition.rows[y], py, font, fs, near_grid.x - 10)
 	for x: int in range(first.x, last.x):
 		var px: float = view.cell_rect(Vector2i(x, 0)).get_center().x
-		var stride: int = maxi(sparse, ceili(22 * ui_scale / view.cell_size))
-		if px < view.viewport.position.x + 10 or px > view.viewport.end.x - 10 or (x % stride != 0 and x != hover.x):
+		if px < view.viewport.position.x or px > view.viewport.end.x:
 			continue
-		var clues: Array = session.definition.columns[x]
-		var room: int = floori((view.viewport.position.y - 35 * ui_scale) / line_height)
-		var texts: PackedStringArray = []
-		var too_wide: bool = false
-		for clue: Dictionary in clues:
-			too_wide = too_wide or font.get_string_size(token(clue), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > view.cell_size - 2
-		if clues.size() > room or stride > 1 or too_wide:
-			texts.append("…↗")
-		else:
-			for clue: Dictionary in clues:
-				texts.append(token(clue))
-			if texts.is_empty():
-				texts.append("–")
 		if x == hover.x:
-			draw_rect(Rect2(px - view.cell_size / 2, near_grid.y - (texts.size() + 1) * line_height - 8, view.cell_size, (texts.size() + 1) * line_height + 4), Color("d8ddcc"))
-		var number: String = str(x + 1)
-		var nw: float = font.get_string_size(number, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		draw_string(font, Vector2(px - nw / 2, near_grid.y - view.viewport.position.y + 22 * ui_scale), number, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
-		for i: int in range(texts.size()):
-			var tw: float = font.get_string_size(texts[i], HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-			draw_string(font, Vector2(px - tw / 2, near_grid.y - 10 - (texts.size() - 1 - i) * line_height), texts[i], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
+			draw_rect(Rect2(px - view.cell_size / 2, 4, view.cell_size, near_grid.y - 8), Color("d8ddcc"))
+		if column_hint_overflows(x):
+			_draw_overflow_marker(Vector2(px, near_grid.y - 12), true)
+		else:
+			_draw_column_hint(session.definition.columns[x], px, font, fs, near_grid.y - 10)
 
-func token(clue: Dictionary) -> String:
+func clue_token(clue: Dictionary) -> String:
 	var symbol: String = ""
-	if session.definition.palette.size() > 1:
+	if accessibility_labels and session.definition.palette.size() > 1:
 		for entry: Dictionary in session.definition.palette:
 			if int(entry.id) == int(clue.color):
 				symbol = entry.symbol
@@ -263,8 +268,106 @@ func token(clue: Dictionary) -> String:
 func hint_text(clues: Array) -> String:
 	var texts: PackedStringArray = []
 	for clue: Dictionary in clues:
-		texts.append(token(clue))
+		texts.append(clue_token(clue))
 	return "  ".join(texts) if not texts.is_empty() else "–"
+
+func clue_color(clue: Dictionary) -> Color:
+	if session.definition.palette.size() > 1:
+		return cell_color(int(clue.color))
+	return INK
+
+func row_hint_overflows(index: int) -> bool:
+	var font: Font = ThemeDB.fallback_font
+	var fs: int = roundi(14 * ui_scale)
+	if view.cell_size < fs + 2:
+		return true
+	var width: float = 0.0
+	var clues: Array = session.definition.rows[index]
+	if clues.is_empty():
+		width = font.get_string_size("–", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	for clue: Dictionary in clues:
+		width += font.get_string_size(clue_token(clue), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 6 * ui_scale
+	return width > view.visible_bounds().position.x - 20
+
+func column_hint_overflows(index: int) -> bool:
+	var font: Font = ThemeDB.fallback_font
+	var fs: int = roundi(14 * ui_scale)
+	var clues: Array = session.definition.columns[index]
+	var count: int = maxi(1, clues.size())
+	if count * 19 * ui_scale > view.visible_bounds().position.y - 18 or view.cell_size < fs + 2:
+		return true
+	for clue: Dictionary in clues:
+		if font.get_string_size(clue_token(clue), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > view.cell_size - 2:
+			return true
+	return false
+
+func tooltip_entries(axis: String, index: int) -> Array:
+	var clues: Array = session.definition.rows[index] if axis == "row" else session.definition.columns[index]
+	var result: Array = []
+	if clues.is_empty():
+		result.append({"text": "–", "color": INK})
+	for clue: Dictionary in clues:
+		result.append({"text": clue_token(clue), "color": clue_color(clue)})
+	return result
+
+func _draw_row_hint(clues: Array, py: float, font: Font, fs: int, right_edge: float) -> void:
+	var entries: Array = []
+	if clues.is_empty():
+		entries.append({"text": "–", "color": INK})
+	for clue: Dictionary in clues:
+		entries.append({"text": clue_token(clue), "color": clue_color(clue)})
+	var cursor: float = right_edge
+	for i: int in range(entries.size() - 1, -1, -1):
+		var width: float = font.get_string_size(entries[i].text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		cursor -= width
+		draw_string(font, Vector2(cursor, py + fs * 0.35), entries[i].text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, entries[i].color)
+		cursor -= 6 * ui_scale
+
+func _draw_column_hint(clues: Array, px: float, font: Font, fs: int, bottom: float) -> void:
+	var entries: Array = []
+	if clues.is_empty():
+		entries.append({"text": "–", "color": INK})
+	for clue: Dictionary in clues:
+		entries.append({"text": clue_token(clue), "color": clue_color(clue)})
+	for i: int in range(entries.size()):
+		var entry: Dictionary = entries[entries.size() - 1 - i]
+		var width: float = font.get_string_size(entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		draw_string(font, Vector2(px - width / 2, bottom - i * 19 * ui_scale), entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, entry.color)
+
+func _draw_overflow_marker(point: Vector2, vertical: bool) -> void:
+	if view.cell_size >= 12:
+		var font: Font = ThemeDB.fallback_font
+		var fs: int = roundi(14 * ui_scale)
+		var width: float = font.get_string_size("…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		draw_string(font, point + Vector2(-width / 2, fs * 0.35), "…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, ACCENT)
+	else:
+		var marker: Vector2 = Vector2(5, minf(5, view.cell_size)) if vertical else Vector2(minf(5, view.cell_size), 5)
+		draw_rect(Rect2(point - marker / 2, marker), ACCENT)
+
+func _draw_clue_tooltip() -> void:
+	if clue_hover_axis.is_empty() or clue_hover_index < 0:
+		return
+	var entries: Array = tooltip_entries(clue_hover_axis, clue_hover_index)
+	var font: Font = ThemeDB.fallback_font
+	var fs: int = roundi(16 * ui_scale)
+	var line_height: float = 22 * ui_scale
+	var box_width: float = minf(520 * ui_scale, size.x - view.viewport.position.x - 32)
+	var positions: Array[Vector2] = []
+	var cursor: Vector2 = Vector2(14, 44 * ui_scale)
+	for entry: Dictionary in entries:
+		var width: float = font.get_string_size(entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		if cursor.x + width > box_width - 14:
+			cursor.x = 14
+			cursor.y += line_height
+		positions.append(cursor)
+		cursor.x += width + 9 * ui_scale
+	var box_height: float = cursor.y + 12 * ui_scale
+	var box: Rect2 = Rect2(view.viewport.position + Vector2(12, 12), Vector2(box_width, box_height))
+	draw_rect(box, Color("fffaf0"))
+	draw_rect(box, ACCENT, false, 2)
+	draw_string(font, box.position + Vector2(14, 26 * ui_scale), "Vollständiger Hinweis", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
+	for i: int in range(entries.size()):
+		draw_string(font, box.position + positions[i], entries[i].text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, entries[i].color)
 
 static func _paper_style() -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()

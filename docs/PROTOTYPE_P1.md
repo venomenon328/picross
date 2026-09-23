@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 23.09.2026 · Spezifikation 0.4 · Fachvertrag mit Mausproben-Feedback; technische Umsetzung in #9, Eigentümerabnahme offen
+Stand: 23.09.2026 · Spezifikation 0.5 · supersedierender Fachvertrag D-11 bis D-15 umgesetzt; Eigentümerabnahme offen
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -10,7 +10,7 @@ Maßgebliche Grundlagen sind [Produktdefinition](PRODUCT_DEFINITION.md), [Gestal
 
 Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) liegt auf `feat/5-p1-prototype` in Draft-PR #14 vor: Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, Zielbasis `main@7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac`. Die anschließende Eigentümerprobe ergab vier Folgepunkte. Die anschließende Vorbereitung hat diese in den Vertrag übernommen; der neue Implementierungsauftrag liefert #9 auf demselben Branch/PR, ohne Merge.
 
-**Ist/Soll:** D-07 bis D-10 sind mit #9 umgesetzt; technische Nachweise und verbleibende
+**Ist/Soll:** D-07 bis D-15 sind mit #9 umgesetzt; technische Nachweise und verbleibende
 Abnahmen stehen im [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und PR #14. Die früheren
 P1.1-Prüfungen bleiben historische Nachweise ihres damaligen Vertrags, keine
 Eigentümerabnahme des neuen Verhaltens.
@@ -26,16 +26,25 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 | D-01 | Native Windows-Desktopfassung mit Godot Standard und typisiertem GDScript, Windows-11-Testplattform. | Kein C#/.NET-/Browserparallelweg; keine endgültige Produktstackentscheidung. Versionsbindung in Abschnitt 7. |
 | D-02 | Reduzierte Spielprobe: reale Bearbeitung, Abschluss und später Speicherung; keine Sterne-/Fehlerwertung, Live-Fehlerhilfe oder Hypothesen. | Bestätigte Funktionen des späteren Produkts werden nicht gestrichen. |
 | D-03A | Elastische Strichvorschau: Rückwärtsziehen verkürzt; Loslassen übernimmt eine atomare Aktion. | Unverändert, auch für die neuen Rücknahmestriche. |
-| D-03B | Setzende Striche überschreiben keine vorhandenen Einträge. | Die frühere Pflicht, für jede Rücknahme den Radierer zu wählen, wird durch D-09 ersetzt. Gegenmarkierungen bleiben geschützt. |
+| D-03B | Werkzeug und Modus bleiben je Strich eingefroren; kein Mehrfachtoggle beim Zurückziehen. | Der frühere allgemeine Schutz vorhandener Gegenmarkierungen ist durch D-15 für Füllung↔X abgelöst. |
 | D-04 | Hintergrundfelder müssen für den Abschluss nicht vollständig ausgekreuzt werden. | Richtige vollständige Füll-/Farbverteilung erforderlich. |
 | D-05 | Referenz: Windows 11, 2560×1440, Maus, Ryzen 7 5800X, RTX 3070. | Frühere Nutzerangaben; tatsächliche Fenstergröße und Anzeigeskalierung der Probe noch nicht vollständig protokolliert. |
 | D-06 | P1 wird mit Maus umgesetzt und abgenommen. | Tastatur-/Controllerbedienung und M-05 sind kein P1-Scope oder Gate; spätere alternative Produkteingaben bleiben erhalten. |
 | D-07 | Größeres Standardfenster, nutzbar bei 1080p und 1440p, ohne automatische Riesenraster. | Fenster-/UI-Größe und Arbeitszoom getrennt; Abschnitt 5.2. |
 | D-08 | Gefüllte Zellen bleiben auch an dicken Fünferlinien visuell getrennt. | Kontrast und Zwischenraum für alle vier Farben und Arbeitszoomstufen; keine verschmolzenen L-/Blockformen. |
-| D-09 | Normales Werkzeug neutralisiert Füllungen mit links und Leermarkierungen mit rechts. | Eine am Gestenstart festgelegte Setz- oder Rücknahmeaktion pro Strich; Abschnitt 5.1. |
+| D-09 | Normales Werkzeug neutralisiert Füllungen mit links und Leermarkierungen mit rechts. | Grundregel der Rücknahmestriche; die frühere Gegenmarkierungs-Schutzregel ist durch D-15 abgelöst. |
 | D-10 | Ergebnisbild darf deutlich detaillierter sein als das abstrahierte Rastermotiv. | Klar erkennbar dasselbe Motiv, keine Pflicht zu identischer Pixelmaske oder Bildauflösung; Abschnitt 5.4. |
+| D-11 | An den Rasterrändern stehen keine laufenden Zeilen-/Spaltennummern. | Dort erscheinen ausschließlich Lösungshinweise beziehungsweise deren Überlaufmarker. Koordinaten bleiben separat im Arbeitsbereich sichtbar. |
+| D-12 | Hinweise bleiben direkt im Arbeitsbild; keine separate Hinweisansicht. | Regulär passende Folgen werden vollständig gezeichnet. Physischer Überlauf erhält je betroffener Linie einen kompakten Marker und vollständigen farbigen Hover-Tooltip im Arbeitskontext. |
+| D-13 | Arbeitszoom hat eine deutlich feinere monotone Stufenfolge. | Gesamtansicht bleibt separat; `+`/Rad hoch vergrößert nur, `−`/Rad runter verkleinert nur oder bleibt am jeweiligen Grenzwert. |
+| D-14 | Farbhinweise zeichnen die Zahl selbst in der Rätselfarbe. | A–D-Suffixe sind standardmäßig aus und als optionale Accessibility-Darstellung einschaltbar. |
+| D-15 | Links wandelt X direkt in die aktive Farbe, rechts eine Füllung direkt in X um. | Rücknahmestriche entfernen weiterhin nur den am Start vorhandenen Zieltyp; direkte Gegenmarkierungsumwandlung gilt für Setzstriche. |
 
-D-07 bis D-10 übernehmen die vier Punkte der Nutzer-Mausprobe und den anschließenden Auftrag, sie in #9 einzuarbeiten. D-10 präzisiert die bereits im Produkt-/Gestaltungskonzept erlaubte höhere Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
+D-07 bis D-10 übernehmen die vier Punkte der ersten Nutzer-Mausprobe. D-11 bis D-15
+übernehmen den ausdrücklich supersedierenden Sollstand der anschließenden P1.2-Probe.
+Soweit die älteren D-09-/Hinweisformulierungen widersprechen, gelten D-11 bis D-15.
+D-10 präzisiert die bereits im Produkt-/Gestaltungskonzept erlaubte höhere
+Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
 
 2560×1440 bezeichnet die gemeldete Bildschirmauflösung, nicht automatisch logische UI-Pixel oder 100 % Windows-Skalierung. Fehlende Testmetadaten nicht aus Screenshotabmessungen ableiten.
 
@@ -47,7 +56,7 @@ D-07 bis D-10 übernehmen die vier Punkte der Nutzer-Mausprobe und den anschlie�
 
 - Kleine Album-Testauswahl mit neutraler Kennung, Größe, Rätselart und Bearbeitungsstand. Alle Testfälle direkt zugänglich; keine Freischaltlogik.
 - Zellbearbeitung, Farbwahl, Achsenbindung, elastische Vorschau, kontrollierte Rücknahmen sowie Undo/Redo.
-- Arbeitsansicht mit vollständigen zugeordneten Hinweisen, Linienfokus, interaktiver eigener Miniatur, Zoom/Pan und getrennt skalierbarer Oberfläche.
+- Arbeitsansicht mit unnummerierten, farbigen zugeordneten Hinweisen und vollständigem In-Context-Überlaufzugriff, interaktiver eigener Miniatur, Zoom/Pan und getrennt skalierbarer Oberfläche.
 - Mit #11 ein fortsetzbarer lokaler Arbeitsstand je Testfall einschließlich Ansicht und Undo/Redo.
 - Tatsächlicher Abschluss und motivtreue, auch detailliertere Darstellung im Album.
 - Tests, Start-/Bedien-/Resetanleitung, Windows-Testartefakte und nachvollziehbare manuelle Erprobung.
@@ -84,18 +93,25 @@ Zellen: `unbekannt`, `leer`, `gefüllt(Farbkennung)`. Farbindizes unabhängig vo
 
 ## 5. Interaktionsvertrag
 
-### 5.1 Werkzeuge, Neutralisieren und Strichgrenzen
+### 5.1 Werkzeuge, direkte Umwandlung und Strichgrenzen
 
 Beim normalen Werkzeug bestimmt die Maustaste zusammen mit dem **bestätigten Startzellzustand** einmalig den Aktionsmodus:
 
 | Taste / Startzustand | Aktion für den gesamten Strich | Veränderbare Zellen |
 | --- | --- | --- |
-| Links / unbekannt oder leer markiert | Aktive Farbe setzen | Nur unbekannte Zellen; vorhandene Füllungen und Leermarkierungen bleiben geschützt. |
+| Links / unbekannt oder leer markiert | Aktive Farbe setzen | Unbekannte und leer markierte Zellen werden zur aktiven Farbe. Vorhandene Füllungen bleiben geschützt. |
 | Links / gefüllt, unabhängig von Farbe | Füllungen neutralisieren | Nur gefüllte Zellen werden unbekannt, auch andere vorhandene Farben. Unbekannte und leere Zellen bleiben unverändert. |
-| Rechts / unbekannt oder gefüllt | Leer markieren | Nur unbekannte Zellen; alle vorhandenen Markierungen bleiben geschützt. |
+| Rechts / unbekannt oder gefüllt | Leer markieren | Unbekannte und gefüllte Zellen werden zu X. Vorhandene X bleiben geschützt. |
 | Rechts / leer markiert | Leermarkierungen neutralisieren | Nur leer markierte Zellen werden unbekannt; Füllungen bleiben geschützt. |
 
-Ein Einzelklick ist ein Strich der Länge eins. Damit gilt direkt: links `unbekannt ↔ gefüllt`, rechts `unbekannt ↔ leer`; links verändert kein vorhandenes Kreuz, rechts keine vorhandene Füllung. Start auf einer Gegenmarkierung lässt diese unberührt, kann beim Weiterziehen aber unbekannte Zellen im Setzmodus bearbeiten. Eine andersfarbige Füllung wird nicht direkt übermalt; links nimmt sie zurück, ein neuer Setzvorgang verwendet die aktive Farbe.
+Ein Einzelklick ist ein Strich der Länge eins. Damit gilt direkt: links
+`unbekannt → aktive Farbe`, `gefüllt → unbekannt`, `X → aktive Farbe`; rechts
+`unbekannt → X`, `X → unbekannt`, `gefüllt → X`. Eine andersfarbige Füllung
+wird links weiterhin neutralisiert und nicht direkt umgefärbt. Bei Strichen wandelt
+ein linker Setzmodus unbekannte/X-Zellen in die eingefrorene aktive Farbe um, ein
+rechter Setzmodus unbekannte/gefüllte Zellen in X. Ein auf einer Füllung gestarteter
+linker Rücknahmestrich neutralisiert nur Füllungen; ein auf X gestarteter rechter
+Rücknahmestrich neutralisiert nur X.
 
 Der explizite Radierer bleibt als Universalwerkzeug: links setzt alle vorhandenen Markierungen auf unbekannt. Rechts folgt weiterhin der Leer-/Leerrücknahme-Regel. Beim Hand-Werkzeug verschiebt links ausschließlich die Ansicht. Werkzeug, Aktionsmodus und Setzfarbe bleiben bis zum Ende der Geste eingefroren; keine Neuerkennung pro überfahrener Zelle und kein wiederholtes Umschalten beim Rückwärtsziehen.
 
@@ -113,13 +129,36 @@ D-07: Größerer Fensterstart und echte Nutzung von 1920×1080/2560×1440 ohne Z
 
 Arbeitszoom, UI-/Hinweisskalierung und Fenstergröße sind getrennt. Technischer Ausgangswert: 24 logische Einheiten Zellabstand bei 100 % Arbeitszoom; eine begründete Feinanpassung nach Darstellungstests ist reversibles Implementierungsdetail. Vergrößern/Maximieren des Fensters vergrößert bei gleichem Zoom und UI-Maßstab nicht automatisch die Zellen. Stattdessen mehr Raster zeigen oder kleine Raster mit ruhigen Rändern platzieren. Eine ausdrücklich gewählte Gesamtansicht ist vom Arbeitszoom zu unterscheiden; „Arbeitsgröße“ stellt eine brauchbare Bearbeitungsgröße wieder her.
 
-Mausrad zoomt möglichst ortsstabil am Zeiger. Mittlere Taste oder Hand-Werkzeug verschieben. Sichtbare Zoomknöpfe, Gesamtansicht und Rückkehr zur Arbeitsgröße. 100×100 vollständig navigierbar; Viewportgrenzen, Hinweise und Hit-Tests verwenden dieselbe Transformation. Bei Resize/Zoom Fokus soweit geometrisch möglich erhalten und Pan gültig begrenzen. Navigieren verändert keine Zellen und keine Undo-Historie.
+Mausrad zoomt möglichst ortsstabil am Zeiger. Mittlere Taste oder Hand-Werkzeug
+verschieben. Sichtbare Zoomknöpfe, Gesamtansicht und Rückkehr zur Arbeitsgröße.
+Die #9-Referenzfolge umfasst 20 streng steigende Zellabstände von 12 bis 72 logischen
+Einheiten (`12/14/16/18/20/22/24/26/28/30/32/34/36/40/44/48/54/60/66/72`).
+Aus einer Gesamtansicht unterhalb beziehungsweise oberhalb dieser Folge springt eine
+gegenläufige Bedienung nicht in die falsche Richtung: ohne kleinere/größere Stufe
+bleibt sie stehen, in Gegenrichtung wechselt sie zur nächsten tatsächlich kleineren/
+größeren Arbeitsstufe. 100×100 bleibt vollständig navigierbar; Viewportgrenzen,
+Hinweise und Hit-Tests verwenden dieselbe Transformation. Bei Resize/Zoom Fokus soweit
+geometrisch möglich erhalten und Pan gültig begrenzen. Navigieren verändert keine
+Zellen und keine Undo-Historie.
 
 D-08: Füllungen haben zu anderen Füllungen und insbesondere den Fünferlinien einen sichtbar kontrastierenden Zwischenraum. Dunkle Füllung und dunkle Linie dürfen an Kreuzungen nicht zu einer gemeinsamen L-/Blockform verschmelzen. Fünfergruppen bleiben erkennbar; Umrissstärke, Füll-Inset und Renderingreihenfolge gemeinsam abstimmen. Dies gilt für alle vier Farben, Vorschau und die angebotenen Bearbeitungszoomstufen. Eine verdichtete Gesamtansicht ist kein Ersatz für diese Arbeitsansicht. Zeichnung und tatsächliche Trefferflächen bleiben korrekt zugeordnet.
 
-Hinweise beziehen sich stets auf ganze Zeilen/Spalten und sind den sichtbaren Indizes korrekt zugeordnet. Aktive Linie und Koordinaten unterstützen die Orientierung. Lange Hinweise nicht abschneiden oder bis zur Unlesbarkeit verkleinern: Überlauf anzeigen und vollständige, mit Maus zugängliche Fokusansicht anbieten. Keine automatische Fehler-/Erfüllungsmarkierung durch Lösungsvergleich. Hinweisabhaken ist nicht erforderlich.
+Hinweise beziehen sich stets auf ganze Zeilen/Spalten und sind korrekt zugeordnet,
+aber nicht zusätzlich laufend nummeriert. Aktive Linie und die separate Koordinatenanzeige
+unterstützen die Orientierung. Jede regulär passende Folge steht vollständig direkt
+am Raster. Wenn Folge oder Zellabstand den Randbereich physisch überfordern, erscheint
+je betroffener Linie ein kompakter Überlaufmarker; Darüberfahren zeigt die vollständige
+Folge als farbigen, umbrechenden Tooltip über dem Arbeitsbild. Es gibt keinen eigenen
+Hinweisbildschirm und kein allgemeines „Ganze Zeile/Spalte“-Popup. Keine automatische
+Fehler-/Erfüllungsmarkierung durch Lösungsvergleich. Hinweisabhaken ist nicht erforderlich.
 
-Die stets sichtbare Miniatur enthält nur Spielerzustand und gegebenenfalls dieselbe Vorschau, keine korrigierte Lösung. Unbekannt/leer/gefüllt unterscheidbar; richtige Rätselfarben darstellen. Ein Ausschnittrahmen zeigt den Viewport. Klick/Ziehen navigiert ohne Zellmutation. Vier Farben über Mauspalette mit stabilen Symbol-/Buchstabenkennungen; Auswahl/Fokus/Leerzustand dürfen keine zusätzliche Rätselfarbe vortäuschen. Keine beliebigen Nutzerpaletten.
+Die stets sichtbare Miniatur enthält nur Spielerzustand und gegebenenfalls dieselbe
+Vorschau, keine korrigierte Lösung. Unbekannt/leer/gefüllt unterscheidbar; richtige
+Rätselfarben darstellen. Ein Ausschnittrahmen zeigt den Viewport. Klick/Ziehen navigiert
+ohne Zellmutation. Vier Farben über Mauspalette mit stabilen Symbol-/Buchstabenkennungen;
+Hinweiszahlen verwenden standardmäßig allein die zugehörige Rätselfarbe. Eine sichtbare
+Option ergänzt die A–D-Suffixe in den Hinweisen. Auswahl/Fokus/Leerzustand dürfen keine
+zusätzliche Rätselfarbe vortäuschen. Keine beliebigen Nutzerpaletten.
 
 Layouttests umfassen 1280×720, den gewählten größeren Start sowie 1920×1080 und 2560×1440 als logische Testflächen. Reale Windows-Bildschirmauflösung, Fenster-/Clientfläche und Anzeigeskalierung zusätzlich getrennt protokollieren; logische Tests sind kein Nachweis physischer DPI-Verhältnisse. Keine versteckten Werkzeuge/Hinweise; unter der Mindestfläche klare Meldung statt beschädigtem Layout.
 
@@ -178,7 +217,7 @@ Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `prototype
 | ID | Prüffall und Erfolg |
 | --- | --- |
 | A-01 | Definitionen/Hinweise einschließlich Farben, Leerlinien und ungültiger Daten validieren; F-01/F-02 mit Deduktionsfolge, F-03 als Stressfixture. Abschlussressourcen technisch unabhängig von Rasterauflösung prüfen. |
-| A-02 | Setz-/Neutralisierungs-/Radiergesten: Achsenbindung, diagonaler Start, Sprünge, elastisches Zurückziehen, gemischte Vorbelegung, Rand/UI, Abbruch und No-op. Nur zum eingefrorenen Modus passende Zellen ändern sich. |
+| A-02 | Setz-/Neutralisierungs-/Radiergesten: direkte Füllung↔X-Umwandlung, Achsenbindung, diagonaler Start, Sprünge, elastisches Zurückziehen, gemischte Vorbelegung, Rand/UI, Abbruch und No-op. Nur zum eingefrorenen Modus passende Zellen ändern sich. |
 | A-03 | Atomarer Strich, exakte Vorzustände bei Undo/Redo, korrekte Verzweigung; Neutralisieren nicht als versteckten Undo-Aufruf behandeln. |
 | A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei Zoom, Pan, UI-Skalierung und Resize; Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
 | A-05 | Mit #11 Speicherung/Recovery ohne stillen Datenverlust oder fremden Zugriff. |
@@ -191,8 +230,8 @@ Bestehende Dokumentprüfung zusätzlich: `python3 -m unittest discover -s tools 
 
 | ID | Szenario | Zuständigkeit |
 | --- | --- | --- |
-| M-01 | F-01 per Maus setzen/neutralisieren, zurückziehen, Gegenmarkierungen schützen, Radierer/Undo/Redo und Abschluss ohne Auskreuzpflicht. Neuer F-01-Reveal sichtbar detaillierter und eindeutig zugehörig. | Eigentümer |
-| M-02 | F-02 mit vier Farben und langen Hinweisen; Farbwahl, Zelltrennung, Neutralisieren und vollständige Hinweise klar bedienbar. | Eigentümer |
+| M-01 | F-01 per Maus setzen/neutralisieren, X↔Füllung direkt umwandeln, zurückziehen, Rücknahmetyp schützen, Radierer/Undo/Redo und Abschluss ohne Auskreuzpflicht. Neuer F-01-Reveal sichtbar detaillierter und eindeutig zugehörig. | Eigentümer |
+| M-02 | F-02 mit vier Farben und langen Hinweisen; farbige Zahlen ohne Nummerierung, optionale A–D-Kennung, In-Context-Überlauf, Farbwahl, Zelltrennung und direkte Umwandlung klar bedienbar. | Eigentümer |
 | M-03 | F-03-Koordinate bearbeiten, stark zoomen, weit verschieben und über Miniatur/Koordinaten wiederfinden. | Eigentümer |
 | M-04 | Mit #11 Teilstand schließen, neu starten und samt Historie/Ansicht fortsetzen. | Eigentümer |
 | M-05 | Durch D-06 nicht anwendbar: Tastatur/Controller außerhalb P1. | Kein P1-Gate |
@@ -211,6 +250,10 @@ Die Probe ist **durchgeführt mit Änderungsbedarf**, nicht pauschal bestanden. 
 
 ## 9. Aktueller Lieferstand
 
-#9 ist der technische Lieferstand auf `feat/5-p1-prototype` / Draft-PR #14: Feedbackänderungen und Farb-/Großrasterbedienung, einschließlich Tests, Anleitung, Windows-Zwischenartefakt und nachvollziehbaren visuellen Nachweisen. Genaue technische Nachweise und ausstehende Eigentümerabnahme stehen in #9 und im P1.2-Prüfbericht.
+#9 ist der technische Lieferstand auf `feat/5-p1-prototype` / Draft-PR #14:
+Feedbackänderungen D-07 bis D-15 und Farb-/Großrasterbedienung, einschließlich Tests,
+Anleitung, Windows-Zwischenartefakt und nachvollziehbaren visuellen Nachweisen. Genaue
+technische Nachweise und ausstehende Eigentümerabnahme stehen in #9 und im
+P1.2-Prüfbericht.
 
 #11/#12, endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte frühe Risikostränge.

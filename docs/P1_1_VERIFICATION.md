@@ -36,6 +36,10 @@ Der anschließende Nutzerauftrag lautet, diese Punkte einzuarbeiten und #9 vorzu
 
 ## Grenzen der nächsten Lieferung
 
-#9 übernimmt die vier Punkte und ergänzt F-02/F-03, Zoom/Pan und interaktive Miniatur. Die verbindlichen neuen Regeln stehen in [P1 0.4](PROTOTYPE_P1.md), ihre Paketakzeptanz in #9. Bestehende Testergebnisse beweisen weder diese Änderungen noch deren Lesbarkeit.
+#9 übernahm die vier damaligen Punkte und ergänzte F-02/F-03, Zoom/Pan und interaktive
+Miniatur. Sie wurden zunächst in P1 0.4 festgehalten. Die aktuelle
+[P1-Spezifikation 0.5](PROTOTYPE_P1.md) ergänzt D-11 bis D-15 und löst widersprechende
+alte D-09-/Hinweisregeln ab. Dieser historische P1.1-Bericht beweist weder die
+damaligen noch die späteren Änderungen oder deren Lesbarkeit.
 
 Persistenz/Recovery, 500-Aktionen-Gesamtintegration und abschließende P1-Abnahme bleiben #11/#12. Spielstände existieren weiterhin nur in der Sitzung. Keine finale Themenwahl, Wertung, Live-Fehlerhilfe, Merge- oder Releasefähigkeit behaupten. Der gemeinsame PR bleibt Draft.

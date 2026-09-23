@@ -4,7 +4,7 @@ import zipfile
 from pathlib import Path
 
 from p1_preflight import PreflightError
-from p1_product import package, require_clean_output
+from p1_product import EXPECTED_PROJECT_NAME, package, project_name, require_clean_output
 
 
 class ProductHarnessTests(unittest.TestCase):
@@ -15,6 +15,18 @@ class ProductHarnessTests(unittest.TestCase):
     def test_missing_success_marker_fails(self):
         with self.assertRaises(PreflightError):
             require_clean_output(dict(name="tests", exit_code=0, output=""), "P1_TESTS_OK")
+
+    def test_project_name_is_exact_utf8_without_mojibake(self):
+        project = Path(__file__).resolve().parents[1] / "prototypes/p1/project.godot"
+        self.assertEqual(project_name(project), EXPECTED_PROJECT_NAME)
+        self.assertNotIn("Â", project.read_text(encoding="utf-8"))
+
+    def test_wrong_project_name_fails(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary) / "project.godot"
+            project.write_text('[application]\nconfig/name="picross Â· P1"\n', encoding="utf-8")
+            with self.assertRaises(PreflightError):
+                project_name(project)
 
     def test_artifact_requires_executable_pair_and_binds_identity(self):
         with tempfile.TemporaryDirectory() as temporary:

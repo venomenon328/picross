@@ -1,8 +1,9 @@
-# P1.2 · Farben, Großraster und Mausprobe
+# P1.2 · Farben, Großraster und Nacharbeit D-11 bis D-15
 
 Zwischenstand zu Issue #9 auf dem gemeinsamen P1-Draft #14. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
-sind direkt zugänglich. Keine Wertung, Fehlerhilfe oder dauerhafte Speicherung.
+sind direkt zugänglich. Review R2/B-01/B-02 und D-11 bis D-15 sind in diesem Stand
+technisch nachgearbeitet. Keine Wertung, Fehlerhilfe oder dauerhafte Speicherung.
 Albumwechsel erhält den eigenen Stand und Undo/Redo pro Blatt innerhalb dieser
 Sitzung. Beenden verwirft alle Stände.
 
@@ -20,12 +21,12 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
 
 ## Bearbeiten und zurücknehmen
 
-- Links auf unbekannt: aktive Farbe setzen. Links auf Füllung: Füllungen neutralisieren,
-  auch andere Farben. Vorhandene Kreuze bleiben geschützt.
-- Rechts auf unbekannt: Kreuz setzen. Rechts auf Kreuz: Kreuze neutralisieren.
-  Vorhandene Füllungen bleiben geschützt.
-- Start auf Gegenmarkierung: diese bleibt unverändert; der Strich kann unbekannte
-  Nachbarzellen setzen. Zum Umfärben erst neutralisieren, dann neu füllen.
+- Links: unbekannt → aktive Farbe, Füllung → unbekannt, X → aktive Farbe.
+- Rechts: unbekannt → X, X → unbekannt, Füllung → X.
+- Ein linker Setzstrich wandelt unbekannte/X-Zellen in die beim Start aktive Farbe;
+  ein rechter Setzstrich unbekannte/gefüllte Zellen in X. Ein auf Füllung gestarteter
+  linker Rücknahmestrich entfernt nur Füllungen, ein auf X gestarteter rechter nur X.
+  Eine andersfarbige Füllung wird links neutralisiert, nicht direkt umgefärbt.
 - Modus und Farbe stehen für die gesamte Geste fest. Achse nach erster eindeutiger
   Bewegung fest; bei diagonalem Gleichstand zunächst nur die Startzelle.
 - Zurückziehen verkürzt die Vorschau. 5→12→9 übernimmt nur 5–9 als eine Aktion.
@@ -34,13 +35,16 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
   Rückgängig/Wiederholen stellt ganze Striche mit exakten Vorzuständen wieder her.
-- F-02/F-03: Farbe per Palette A–D wählen. Buchstaben in den Hinweisen entsprechen
-  diesen Farben. Gleiche Farbblöcke brauchen Abstand; verschiedene dürfen angrenzen.
+- F-02/F-03: Farbe per Palette A–D wählen. Hinweiszahlen tragen standardmäßig selbst
+  die Farbe; „Farbkennungen in Hinweisen“ ergänzt A–D auf Wunsch. Gleiche Farbblöcke
+  brauchen Abstand; verschiedene dürfen angrenzen.
 
 ## Navigieren und Hinweise lesen
 
 - Mausrad: Zoom am Zeiger. Sichtbare −/+ Knöpfe: Zoom um die Ansichtsmitte.
-  Arbeitsstufen 75/100/150/200 % entsprechen 18/24/36/48 logischen Einheiten.
+  20 monotone Arbeitsstufen reichen von 50 bis 300 % (12 bis 72 logische Einheiten),
+  rund um 100 % in Zwei-Einheiten-Schritten. Herauszoomen vergrößert nie und
+  Hineinzoomen verkleinert nie, auch nicht aus einer Gesamtansicht außerhalb der Folge.
 - Mittlere Taste oder Hand-Werkzeug links: Ansicht verschieben. Gesamtansicht passt
   das komplette Raster ein; Arbeitsgröße stellt 100 % wieder her.
 - Eigene Miniatur: Klick/Ziehen versetzt den Ausschnitt. Der doppelte Rahmen markiert
@@ -49,11 +53,11 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
 - Während Zellgesten sind Zoom und Navigation gesperrt. Navigation ändert keine Zellen
   oder Undo-Historie. Pro Blatt bleiben Bearbeitung/History erhalten; beim Blattwechsel
   startet die Ansicht wieder bei Arbeitsgröße.
-- Hinweise gehören immer zur ganzen nummerierten Zeile/Spalte. „–“ ist eine leere Linie.
-  „… ↗“ kennzeichnet Überlauf/verdichteten Zugriff, keine gekürzte Rätselregel.
-  Hinweis anklicken oder über einer Zelle die aktive Zeile/Spalte wählen und
-  „Ganze Zeile / Spalte ↗“ öffnen. Die Fokusansicht zeigt die vollständigen Folgen,
-  mit Umbruch und bei Bedarf Mausscrollen. Miniatur bleibt daneben sichtbar.
+- Am Raster stehen ausschließlich die Lösungshinweise, ohne laufende Zeilen-/
+  Spaltennummern. „–“ ist eine leere Linie. Passende Folgen werden vollständig und
+  bei F-02/F-03 farbig gezeichnet. „…“ kennzeichnet ausschließlich physischen
+  Überlauf; darüberfahren zeigt die vollständige farbige Folge mit Umbruch direkt
+  über dem Arbeitsbild. Eine separate Hinweisansicht gibt es nicht.
 - UI 100/125 % vergrößert Oberfläche und Hinweise unabhängig vom Arbeitszoom.
   Bei 1280×720/125 % ist der untere Hilfetext über die Seitenleiste scrollbar;
   Werkzeuge und Hinweiszugriff bleiben erreichbar, die Miniatur bleibt fest sichtbar.
@@ -68,14 +72,18 @@ detaillierteren Illustration desselben Motivs. F-03 bleibt auch danach als Test 
 Die frühere #8-Probe ist mit Änderungsbedarf ausgewertet, keine pauschale Abnahme.
 Am neuen Artefakt mit echter Maus prüfen und Ergebnisse einzeln protokollieren:
 
-1. M-01: F-01 setzen/neutralisieren, 5→12→9 und Startüberquerung, Gegenmarkierungen,
-   Radierer, Undo/Redo, Rand, falsche Tastenfreigabe, Esc und Fokusverlust. Tatsächlich
-   lösen ohne Auskreuzpflicht; Detailbild und Raster als dasselbe Motiv beurteilen.
-2. M-02: F-02, alle Farben A–D, andersfarbige Rücknahme, lange Hinweise, Farbzuordnung
-   und Abschluss. Drei angrenzende Füllungen an einer Fünfergrenze müssen einzeln
-   erkennbar sein, auch in Vorschau und bei allen angebotenen Arbeitszoomstufen.
-3. M-03: F-03 eine notierte Koordinate bearbeiten, zoomen, weit verschieben und per
-   Miniatur/Koordinaten wiederfinden. Keine verlorenen Aktionen oder Hänger.
+1. M-01: F-01 setzen/neutralisieren, X↔Füllung direkt umwandeln, 5→12→9 und
+   Startüberquerung, typspezifische Rücknahmestriche, Radierer, Undo/Redo, Rand,
+   falsche Tastenfreigabe, Esc und Fokusverlust. Tatsächlich lösen ohne Auskreuzpflicht;
+   Detailbild und Raster als dasselbe Motiv beurteilen.
+2. M-02: F-02, alle Farben A–D, direkte Umwandlung, unnummerierte farbige Hinweise,
+   Accessibility-Kennungen aus/an, vollständiger Hover-Zugriff bei Überlauf und
+   Abschluss. Drei angrenzende Füllungen an einer Fünfergrenze müssen einzeln
+   erkennbar sein, auch in Vorschau und bei den relevanten Arbeitszoomstufen.
+3. M-03: F-03 eine notierte Koordinate bearbeiten, fein hinein-/herauszoomen,
+   Gesamtansicht einschließlich unterstem Grenzfall prüfen, weit verschieben und per
+   Miniatur/Koordinaten wiederfinden. Lange Hinweise per Hover vollständig lesen.
+   Keine verlorenen Aktionen, Richtungsumkehr beim Zoom oder Hänger.
 4. M-06: Startfenster, Vergrößern/Maximieren, 1080p/1440p soweit verfügbar,
    UI 100/125 %, feste Zellgröße bei reinem Resize, erreichbare Werkzeuge/Hinweise.
 

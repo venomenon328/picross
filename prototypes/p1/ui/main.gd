@@ -28,8 +28,7 @@ var palette_row: HBoxContainer
 var sidebar: VBoxContainer
 var page: VBoxContainer
 var minimum_message: Label
-var focus_panel: PanelContainer
-var focus_text: RichTextLabel
+var accessibility_button: Button
 var ui_scale: float = 1.0
 var choices: Array[Button] = []
 
@@ -127,7 +126,6 @@ func _build() -> void:
 	board.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	board.edited.connect(refresh)
 	board.pointed.connect(func(cell: Vector2i) -> void: coordinate.text = "Zeile %d · Spalte %d" % [cell.y + 1, cell.x + 1])
-	board.clue_requested.connect(show_clues)
 	work.add_child(board)
 	sidebar = VBoxContainer.new()
 	sidebar.custom_minimum_size.x = 300
@@ -170,8 +168,9 @@ func _build() -> void:
 	zoom_row.add_child(button("+", func() -> void: board.zoom(1, board.view.viewport.get_center())))
 	zoom_row.add_child(button("Gesamtansicht", board.fit_all))
 	controls.add_child(button("Arbeitsgröße (100 %)", board.working_size))
-	controls.add_child(button("Ganze Zeile / Spalte ↗", func() -> void: show_clues("both", maxi(0, board.hover.y))))
-	controls.add_child(label("Links: Füllung setzen / zurücknehmen\nRechts: Kreuz setzen / zurücknehmen\nRad: Zoom · Mitte/Hand: verschieben\nEsc/Fokusverlust: Strich verwerfen\n… ↗: ganzer Hinweis per Klick", 14))
+	accessibility_button = button("Farbkennungen in Hinweisen: aus", toggle_accessibility_labels)
+	controls.add_child(accessibility_button)
+	controls.add_child(label("Links: Farbe setzen / Füllung zurücknehmen\nRechts: Kreuz setzen / Kreuz zurücknehmen\nX ↔ Farbe wird direkt umgewandelt\nRad: Zoom · Mitte/Hand: verschieben\nEsc/Fokusverlust: Strich verwerfen\n…: vollständiger Hinweis beim Darüberfahren", 14))
 	ending = VBoxContainer.new()
 	ending.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	page.add_child(ending)
@@ -188,28 +187,6 @@ func _build() -> void:
 	minimum_message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	minimum_message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	add_child(minimum_message)
-	focus_panel = PanelContainer.new()
-	focus_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	focus_panel.offset_left = 60
-	focus_panel.offset_right = -60
-	focus_panel.offset_top = 110
-	focus_panel.offset_bottom = -70
-	add_child(focus_panel)
-	var focus_box: VBoxContainer = VBoxContainer.new()
-	focus_panel.add_child(focus_box)
-	focus_box.add_child(button("Hinweisansicht schließen", func() -> void: focus_panel.hide()))
-	focus_text = RichTextLabel.new()
-	focus_text.bbcode_enabled = true
-	focus_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	focus_text.add_theme_color_override("default_color", Board.INK)
-	focus_box.add_child(focus_text)
-	var focus_style: StyleBoxFlat = Board._paper_style()
-	focus_style.content_margin_left = 24
-	focus_style.content_margin_right = 24
-	focus_style.content_margin_top = 16
-	focus_style.content_margin_bottom = 16
-	focus_panel.add_theme_stylebox_override("panel", focus_style)
-	focus_panel.hide()
 	_update_palette()
 
 func _check_minimum() -> void:
@@ -218,16 +195,15 @@ func _check_minimum() -> void:
 	page.visible = not small
 	if small:
 		board.cancel_gesture()
-		focus_panel.hide()
 
 func set_ui_scale(value: float) -> void:
 	ui_scale = value
 	theme.default_font_size = roundi(16 * value)
 	_scale_labels(self)
 	sidebar.custom_minimum_size.x = 300 * value
-	focus_panel.offset_right = -(300 * value + 48)
 	board.ui_scale = value
 	board._layout()
+	board.queue_redraw()
 
 func _scale_labels(node: Node) -> void:
 	if node is Label:
@@ -241,6 +217,12 @@ func set_tool(tool: String) -> void:
 	board.eraser = tool == "erase"
 	board.hand = tool == "hand"
 	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Hand" if board.hand else "Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
+
+func toggle_accessibility_labels() -> void:
+	board.accessibility_labels = not board.accessibility_labels
+	accessibility_button.text = "Farbkennungen in Hinweisen: " + ("an" if board.accessibility_labels else "aus")
+	board.clear_clue_hover()
+	board.queue_redraw()
 
 func _update_palette() -> void:
 	for child: Node in palette_row.get_children():
@@ -259,6 +241,7 @@ func select_puzzle(index: int) -> void:
 	board.view.cell_size = 24
 	board.active_color = 1
 	board.hover = Vector2i(-1, -1)
+	board.clear_clue_hover()
 	board.overview = false
 	board._layout()
 	set_tool("fill")
@@ -267,7 +250,7 @@ func select_puzzle(index: int) -> void:
 
 func show_album() -> void:
 	board.cancel_gesture()
-	focus_panel.hide()
+	board.clear_clue_hover()
 	album.show()
 	work.hide()
 	ending.hide()
@@ -318,26 +301,6 @@ func refresh() -> void:
 	reveal_view.solved = session.definition.solution if session.completed else []
 	reveal_view.palette = session.definition.palette
 	reveal_view.queue_redraw()
-
-func show_clues(axis: String, index: int) -> void:
-	if session.gesture.active:
-		return
-	var text: String = "[b]Vollständige Linienhinweise[/b]\nZahl + Farbkennung; gilt für die ganze Linie. Keine Lösungsprüfung.\n\n"
-	for entry: Dictionary in session.definition.palette:
-		text += "[color=%s]■[/color] %s   " % [entry.color, entry.symbol]
-	text += "\n\n"
-	var axes: Array = ["row", "column"] if axis == "both" else [axis]
-	for kind: String in axes:
-		var i: int = (maxi(0, board.hover.x) if kind == "column" else maxi(0, board.hover.y)) if axis == "both" else index
-		var clues: Array = session.definition.rows[i] if kind == "row" else session.definition.columns[i]
-		text += "[b]%s %d[/b]\n" % ["Zeile" if kind == "row" else "Spalte", i + 1]
-		text += board.hint_text(clues) + "\n\n"
-	focus_text.text = text
-	focus_text.add_theme_font_size_override("normal_font_size", roundi(22 * ui_scale))
-	focus_text.add_theme_font_size_override("bold_font_size", roundi(22 * ui_scale))
-	focus_panel.offset_right = -(sidebar.size.x + 48)
-	focus_text.scroll_to_line(0)
-	focus_panel.show()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and board != null:

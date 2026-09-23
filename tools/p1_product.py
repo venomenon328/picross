@@ -17,6 +17,18 @@ import p1_preflight as toolchain
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
+EXPECTED_PROJECT_NAME = "picross · P1"
+
+
+def project_name(project_file: Path) -> str:
+    for line in project_file.read_text(encoding="utf-8").splitlines():
+        if line.startswith('config/name="') and line.endswith('"'):
+            value = line[len('config/name="'):-1]
+            if value != EXPECTED_PROJECT_NAME:
+                raise toolchain.PreflightError(f"Unexpected project name: {value!r}")
+            return value
+    raise toolchain.PreflightError("Missing project name")
+
 
 def require_clean_output(result: dict, marker: str | None = None) -> None:
     toolchain.require_success(result, marker)
@@ -71,6 +83,7 @@ def main() -> int:
     logs = output / "logs"
     logs.mkdir(exist_ok=True)
     try:
+        title = project_name(root / "prototypes/p1/project.godot")
         proof_steps = verify(json.loads((DATA / "f01.json").read_text(encoding="utf-8")), json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8")))
         color_proof_steps = verify_f02(json.loads((DATA / "f02.json").read_text(encoding="utf-8")), json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8")))
         metadata = toolchain.request_json(toolchain.RELEASE_API)
@@ -121,7 +134,7 @@ def main() -> int:
             commit, dirty = toolchain.source_commit(root)
             checkout_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
             manifest = dict(schema=1, source_commit=commit, source_tree_dirty=dirty, tested_checkout_commit=checkout_commit,
-                            host=host, engine_version=toolchain.EXPECTED_VERSION, assets=hashes, proof_steps=proof_steps, color_proof_steps=color_proof_steps,
+                            host=host, engine_version=toolchain.EXPECTED_VERSION, project_name=title, assets=hashes, proof_steps=proof_steps, color_proof_steps=color_proof_steps,
                             render_files={p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()},
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),

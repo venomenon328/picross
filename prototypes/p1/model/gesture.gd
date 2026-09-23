@@ -55,7 +55,9 @@ func changes() -> Array:
 		for x: int in range(mini(start.x, endpoint.x), maxi(start.x, endpoint.x) + 1):
 			var index: int = y * width + x
 			var before: int = source[index]
-			var eligible: bool = (mode == Mode.SET and before == Player.UNKNOWN) or (mode == Mode.ERASE and before != Player.UNKNOWN) or (mode == Mode.REMOVE_FILL and before > 0) or (mode == Mode.REMOVE_EMPTY and before == Player.EMPTY)
+			var set_fill: bool = mode == Mode.SET and target > 0 and (before == Player.UNKNOWN or before == Player.EMPTY)
+			var set_empty: bool = mode == Mode.SET and target == Player.EMPTY and (before == Player.UNKNOWN or before > 0)
+			var eligible: bool = set_fill or set_empty or (mode == Mode.ERASE and before != Player.UNKNOWN) or (mode == Mode.REMOVE_FILL and before > 0) or (mode == Mode.REMOVE_EMPTY and before == Player.EMPTY)
 			if before != target and eligible:
 				result.append({"index": index, "before": before, "after": target})
 	return result
