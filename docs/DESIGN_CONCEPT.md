@@ -1,135 +1,170 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 22.09.2026 · Arbeitsfassung 0.1 · frühe Konzeption, keine umsetzungsreife UI-Spezifikation
+Stand: 23.09.2026 · Arbeitsfassung 0.5 · frühe Konzeption mit supersedierendem P1-Mausfeedback
 
 ## 1. Geltung und Entscheidungsstand
 
 Dieses Dokument überträgt die Gestaltungskonversation zu Punkt 2 des Entwicklungsablaufs in die Repositoryquellen. Die [Produktdefinition](PRODUCT_DEFINITION.md) bleibt für Produktkern, Rätselregeln, Progression und Wertung maßgeblich; hier stehen die visuelle Konkretisierung und ausdrücklich noch offene Entwurfsfragen. Prüfwege und Befugnisse stehen im [Projektprofil](PROJECT_PROFILE.md).
 
-Die ausdrücklichen Antworten des Nutzers begründen die bestätigten Entscheidungen in Abschnitt 2. Die anschließende Rückmeldung „Sieht gut aus“ zu den exemplarischen Mocks bestätigt deren grundsätzliche gestalterische Richtung, nicht jeden Bildinhalt, jede Zahl, jedes Werkzeug oder eine fertig geprüfte Bedienung. Abschnitt 3 erhält die nicht entschiedenen Themenalternativen. Abschnitte 4–5 enthalten Entwurfsansätze, nicht stillschweigend zusätzliche Anforderungen.
+Die ausdrücklichen Antworten des Nutzers begründen die bestätigten Entscheidungen in Abschnitt 2. Die Rückmeldung „Sieht gut aus“ zu exemplarischen Mocks bestätigte deren grundsätzliche gestalterische Richtung, nicht jeden Bildinhalt, jede Zahl, jedes Werkzeug oder eine fertig geprüfte Bedienung. Abschnitt 3 erhält die offenen Themenalternativen. Abschnitte 4–5 enthalten Entwurfsansätze, soweit nicht ausdrücklich durch das nachfolgende Nutzerfeedback konkretisiert.
 
-Es wurde kein endgültiges Thema, kein vollständiges Designsystem und kein Produktstack ausgewählt. Dieses Dokument ist weder eine Implementierungsfreigabe noch ein Nachweis abgeschlossener UX-Konzeption. Der explizite Auftrag zur Dokumentation und zum Merge ist im zugehörigen PR festzuhalten.
+Die reale P1.1-Mausprobe ergänzt zunächst vier Punkte: größeres Standardfenster ohne
+automatisch riesige Raster, sichtbar getrennte Füllzellen auch an Fünferlinien,
+direktes Neutralisieren mit dem normalen Werkzeug und detailliertere motivtreue
+Abschlussbilder. Die folgende P1.2-Probe ergänzt den supersedierenden Sollstand D-11
+bis D-15: keine Randnummerierung oder separate Hinweisansicht, vollständiger
+In-Context-Hinweiszugriff, feinere monotone Zoomstufen, farbige Hinweiszahlen mit
+optionalen Kennungen und direkte Füllung↔X-Umwandlung. Die nächste Probe konkretisiert
+D-16/D-17: Überlauf lässt vollständige einzelne Hinweiszahlen sichtbar, und Zeilen-/
+Spaltenhinweise erhalten zwei getrennte Panachsen bei fester Rasterzuordnung. Der
+darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, richtet
+alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
+eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
+auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.7. Die technische Umsetzung erfolgt
+in #9; Nachweise im P1.2-Prüfbericht, erneute Eigentümerabnahme weiterhin offen. Das
+ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsystem.
 
 ## 2. Bestätigte gestalterische Grundlage
 
 | Bereich | Bestätigte Entscheidung |
 | --- | --- |
-| Sammlung | Bevorzugt ein Album, das sich mit erarbeiteten Bildern füllt und am Ende einen erkennbar vollständigen Zustand erreichen kann. Eine zusätzliche Raumansicht ist nicht erforderlich beschlossen. |
-| Zeichenstil | Handgezeichnete 2D-Illustration; klare gezeichnete Konturen mit ruhigen, nicht zu blassen Farbflächen. Nicht automatisch Retro-Pixel-Art für die ganze Oberfläche. |
+| Sammlung | Ein Album füllt sich mit erarbeiteten Bildern und kann einen erkennbar vollständigen Zustand erreichen. Keine zusätzlich beschlossene Raumansicht. |
+| Zeichenstil | Handgezeichnete 2D-Illustration mit klaren Konturen und ruhigen, nicht zu blassen Farbflächen. Nicht automatisch Retro-Pixel-Art für die gesamte Oberfläche. |
 | Stimmung | Warm, neugierig und dennoch ruhig. |
-| Spielbildschirm | Die Thematik bleibt zurückhaltend, aber sichtbar. Das Spiel soll auch beim Rätseln nicht steril oder seelenlos wirken; das eigentliche Raster bleibt sachlich und präzise. |
-| Sammelbilder | Die gelösten Bilder selbst bilden die Sammlung. Bei monochromen Rätseln eine farbige Repräsentation des tatsächlichen Motivs, gegebenenfalls etwas höher aufgelöst, aber eindeutig dem Rastermotiv zuzuordnen. |
-| Perfektion | Ein perfekter Durchgang ist ohne Fehler und ohne Undo. Die frühere ausschließlich fehlerbasierte Beschreibung wird für die Höchstwertung ergänzt; Details stehen in der Produktdefinition, Abschnitt 6.2. |
-| Hypothesen | Als Möglichkeit diskutiert, nicht abschließend entschieden. Insbesondere bleibt offen, ob sie auch bei perfekten Lösungen zulässig sind. |
-| Audio | Später behandeln. Kleine, angenehme und unauffällige Effekte sowie ein besonders guter Erfolgsjingle sind gewünscht; zurückhaltende Hintergrundmusik ist denkbar. |
+| Spielbildschirm | Thematik bleibt dezent sichtbar, das Raster sachlich und präzise. Größere Fenster dürfen nicht zu unnötig riesigen Zellen führen. |
+| Zelllesbarkeit | Füllungen bleiben einzeln erkennbar, insbesondere an kräftigen Fünferlinien. Raster und Füllung dürfen nicht optisch zu einer gemeinsamen Fläche verschmelzen. |
+| Hinweise | Am Raster stehen nur Lösungshinweise, ohne laufende Randnummern. Vollständige einzeilige farbige Zahlen rasten in gemeinsame feste Plätze; jede konkrete Zeile/Spalte hat ihre eigene Leseposition. Seitengerechte Marker und vollständige Hover-Auflösung bleiben Ergänzungen im Arbeitsbild. Keine A–D-Suffixe in P1. |
+| Sammelbilder | Das Rätselmotiv ist eine klar erkennbare Stilisierung des detaillierteren Ergebnisbilds. F-01 und F-02 zeigen dieselbe ruhige Kontur-/Farbflächensprache; keine Pflicht zu pixelidentischer Silhouette oder bloßer Kolorierung. |
+| Perfektion | Ein perfekter Durchgang ist ohne Fehler und ohne Undo. Details und offene Wertungsfragen stehen in der Produktdefinition, Abschnitt 6.2. |
+| Hypothesen | Nicht abschließend entschieden, auch nicht ihre Vereinbarkeit mit Perfektion. |
+| Audio | Später behandeln. Kleine unauffällige Effekte und ein besonders guter Erfolgsjingle gewünscht; zurückhaltende Hintergrundmusik denkbar. |
 
-Der Nutzer arbeitet selbst überwiegend mit sicheren Schlüssen, nicht mit versuchsweisem Setzen und Zurückspringen. Hypothesen sind daher eine mögliche Zusatzfunktion, keine notwendige Spielweise. Unverändert müssen Rätsel ohne notwendiges Raten lösbar sein.
+Der Nutzer arbeitet überwiegend mit sicheren Schlüssen, nicht mit versuchsweisem Setzen und Zurückspringen. Hypothesen sind eine mögliche Zusatzfunktion, keine notwendige Spielweise. Rätsel müssen ohne notwendiges Raten lösbar sein.
 
 ## 3. Zwei offene Themenalternativen
 
 ### A: Thematisches Sammelalbum
 
-Sammlungen können Themen wie Erfindungen, Tiere, Personenporträts oder stilisierte Filmposter behandeln. Das Album verbindet unterschiedliche Motivgruppen durch eine gemeinsame Präsentation und Zeichenweise. Diese Beispiele sind mögliche Inhalte, kein bestätigter Rätselkatalog und keine Assetfreigabe.
+Sammlungen können Themen wie Erfindungen, Tiere, Personenporträts oder stilisierte Filmposter behandeln. Das Album verbindet unterschiedliche Motivgruppen durch gemeinsame Präsentation und Zeichenweise. Dies sind mögliche Inhalte, kein bestätigter Rätselkatalog und keine Assetfreigabe.
 
-Der Nutzer hält eine sinnvolle Progression in A zunächst für leichter vorstellbar, hat A aber nicht ausgewählt. Denkbare Inszenierungen wie Bilderkabinett, Atelier oder Archiv sind Ausgestaltungsideen; eine zusätzliche begehbare Ausstellung oder Dekorationsmechanik folgt daraus nicht.
+Der Nutzer hält eine sinnvolle Progression in A zunächst für leichter vorstellbar, hat A aber nicht ausgewählt. Bilderkabinett, Atelier oder Archiv sind Ausgestaltungsideen; daraus folgt keine zusätzliche begehbare Ausstellung oder Dekorationsmechanik.
 
 ### B: Reisetagebuch beziehungsweise Weltreisealbum
 
-Regionale Kapitel können Tiere, Gerichte, Sehenswürdigkeiten, Pflanzen und weitere Motive der jeweiligen Region verbinden. Die Weltreise ist eine reale regionale Themenidee, keine Festlegung auf eine fantastische Welt.
+Regionale Kapitel können Tiere, Gerichte, Sehenswürdigkeiten, Pflanzen und weitere Motive der Region verbinden. Dies ist eine reale regionale Themenidee, keine Festlegung auf eine fantastische Welt.
 
-Ein möglicher Ansatz sind mehrere früh zugängliche Reisekapitel statt einer starren geografischen Route. Eine klar begrenzte Auswahl vervollständigbarer Kapitel ist denkbar; weder eine vollständige Abdeckung aller Länder noch konkrete Regionen oder Kapitelmengen wurden beschlossen. Die bestehenden Anforderungen an früh zugängliche große und anspruchsvolle Rätsel gelten auch für B.
+Ein möglicher Ansatz sind mehrere früh zugängliche Reisekapitel statt einer starren geografischen Route. Eine begrenzte Auswahl vervollständigbarer Kapitel ist denkbar; weder vollständige Länderabdeckung noch konkrete Regionen oder Mengen sind beschlossen. Früh verfügbare große und anspruchsvolle Rätsel bleiben auch hier gefordert.
 
 ### Gemeinsamer Vergleich
 
-A und B bleiben bis zu einer ausdrücklichen Richtungsentscheidung parallel untersuchbar. Keine erzwungene Mischform. Das Album und der sachliche Arbeitsbereich können beiden dienen; ihre Atmosphäre und Kapitelorganisation unterscheiden sich.
+A und B bleiben bis zu einer ausdrücklichen Entscheidung parallel untersuchbar. Keine erzwungene Mischform. Album und sachlicher Arbeitsbereich können beiden dienen; Atmosphäre und Kapitelorganisation unterscheiden sich.
 
-Als Vergleichsaufgabe wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vorgeschlagen: identische Hinweise, eigener Bearbeitungsstand, Miniatur, Werkzeuge und Informationsumfang. Dazu jeweils eine Albumansicht und derselbe Abschlussmoment. Das ist ein Entwurfsmaßstab, kein bereits gelieferter mathematisch identischer oder spielbarer Vergleich.
+Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vorgeschlagen: identische Hinweise, eigener Stand, Miniatur, Werkzeuge und Informationsumfang, ergänzt um Albumansicht und Abschluss. Das ist ein Entwurfsmaßstab, kein bereits gelieferter mathematisch identischer oder spielbarer Vergleich.
 
-## 4. Visuelle Ausarbeitung: Vorschläge für die nächste Erprobung
+## 4. Visuelle Ausarbeitung
 
 ### 4.1 Album und Arbeitsansicht
 
-Ein möglicher Albumaufbau sind redaktionell komponierte Doppelseiten mit Registern, Kapitelverzierungen und unterschiedlich großen Bildplätzen. Große Panoramen könnten eigene Seiten erhalten. Fest angeordnete Seiten statt einer zusätzlichen freien Dekorationsfunktion sind ein Vorschlag, keine neue Spielmechanik.
+Ein möglicher Albumaufbau sind redaktionell komponierte Doppelseiten mit Registern, Kapitelverzierungen und unterschiedlich großen Bildplätzen. Große Panoramen könnten eigene Seiten erhalten. Feste Seiten statt freier Dekoration sind ein Vorschlag, keine neue Spielmechanik.
 
-Beim Öffnen eines Rätsels könnte dessen Blatt zur großzügigen Arbeitsfläche werden. Konturen, Materialanmutung und Kapitelakzente bleiben, während Hinweise und Raster ausreichend Raum erhalten. Die Buchmetapher soll insbesondere große Raster nicht in eine halbe Seite oder über einen störenden Buchfalz zwingen. Konkrete Perspektive, Ränder und Übergänge sind noch zu prüfen.
+Beim Öffnen könnte das Rätselblatt zur großzügigen Arbeitsfläche werden. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster erhalten ausreichend Platz. Die Buchmetapher darf große Raster nicht in eine halbe Seite oder über einen störenden Falz zwingen. Perspektive, Ränder und Übergänge bleiben zu prüfen.
 
-Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Materialtexturen sind mögliche Stilmittel, keine festgelegte Farbpalette. Zahlen, Linien und Zellzustände benötigen eine klare, unverzerrte Darstellung. Handschriftliche Ziffern, Flecken oder dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
+Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
 
-Für die Großrasteransicht ist ein verdichteter Rahmen mit kompakteren Werkzeugen denkbar. Er soll die Identität bewahren, ohne wichtige Arbeitsfläche zu belegen. Konkrete Schriftgrößen, Abstände, Kontraste, Skalierung und Controllerfokus sind noch nicht als Designsystem definiert.
+**Präzisierung aus der Mausprobe:** Fensterfläche, Oberflächenskalierung und Rasterzoom getrennt behandeln. 1080p und 1440p sollen sinnvoll nutzbar sein, ohne kleine Rätsel automatisch auf die gesamte Arbeitsfläche zu vergrößern. Mehr Fläche darf mehr Ausschnitt oder ruhige Ränder bedeuten. Konkrete Startwerte und Tests für P1 stehen ausschließlich in der P1-Spezifikation; sie sind keine allgemeingültigen Pixelwerte des späteren Designsystems.
+
+Die gefüllten Zellen brauchen einen erkennbaren Zwischenraum beziehungsweise eine kontrastierende Trennung auch zu dunklen Fünferlinien. Innenabstand, Linienbreite, Farben und Ebenenreihenfolge gemeinsam prüfen. Der in der Mausprobe gezeigte Fall dreier angrenzender Füllzellen an einer Fünfergrenze darf nicht wie eine einzige umgedrehte L-Form aussehen. Fünfergruppen sollen dabei weiterhin gut zählbar bleiben. Prüfung an dunklen und allen angebotenen Farbzellen, Arbeitszoom und Vorschau, nicht nur an einem leeren Raster.
+
+Für Großraster ist ein verdichteter Rahmen mit kompakteren Werkzeugen denkbar. Er soll Identität bewahren, ohne Arbeitsfläche zu verschwenden. Schriftgrößen, Abstände, Kontraste und Fokuszustände sind noch kein endgültiges Designsystem.
 
 ### 4.2 Bildplätze und Vollständigkeit
 
-Ungelöste Plätze benötigen neutrale Kennungen statt vorweggenommener Motivnamen oder verräterischer Skizzen. Angefangene Rätsel könnten den eigenen Zwischenstand zeigen. Die bindende Spoilergrenze und Miniaturregel stehen in der Produktdefinition, Abschnitt 3.3.
+Ungelöste Plätze benötigen neutrale Kennungen statt vorweggenommener Motivnamen oder verräterischer Skizzen. Angefangene Rätsel dürfen ihren eigenen Stand zeigen. Spoilergrenze und Miniaturregel bleiben verbindlich.
 
-Vorgeschlagen ist eine Unterscheidung zwischen vollständiger Grundsammlung und zusätzlicher Meisterschaft: jedes gelöste Rätsel liefert sein vollständiges Bild, unabhängig von der Bewertung; perfekte Leistungen erhalten zusätzliche Kennzeichnungen. Bonusinhalte könnten als Zusatzblätter erscheinen statt als dauerhafte Löcher in der Grundsammlung. Konkrete Zustandsbezeichnungen und Bonusplatzierung sind noch nicht beschlossen. Die bestätigten Perfektions-Bonusrätsel dürfen dadurch nicht durch rein kosmetische Belohnungen ersetzt werden.
+Vorgeschlagen ist eine Unterscheidung zwischen vollständiger Sammlung und zusätzlicher Meisterschaft: jedes gelöste Rätsel liefert sein vollständiges Bild unabhängig von der Bewertung, perfekte Leistungen erhalten zusätzliche Kennzeichnungen. Bonusinhalte könnten als Zusatzblätter erscheinen statt dauerhaften Löchern. Konkrete Begriffe und Platzierung sind offen. Bestätigte Perfektions-Bonusrätsel nicht durch rein kosmetische Belohnung ersetzen.
 
-### 4.3 Motivtreue Enthüllung
+### 4.3 Motivtreue, detailliertere Enthüllung
 
-Als Ausarbeitung der bestätigten Motivtreue werden gleicher Bildaufbau, wesentliche Formen und nachvollziehbare Proportionen vorgeschlagen. Farbe und feinere Details können die Abstraktion auflösen; ein beliebiges neues Bild oder ein vollständig anderer Blickwinkel wäre kein Ersatz für die erarbeitete Lösung.
+**Bestätigte Präzisierung:** Das Ergebnisbild darf sichtbar detaillierter als das Rätsel sein. Der Hauptgegenstand, wesentliche Formen, Bildaufbau und Proportionen müssen so zusammenpassen, dass das Raster sehr deutlich als Stilisierung des Bilds erkennbar ist. Feinere Konturen, Schattierungen, Oberflächen und kleinere passende Elemente sind erlaubt. Eine identische belegte Pixelmaske oder identische Auflösung ist ausdrücklich nicht erforderlich. Ein beliebiges neues Bild oder vollständig anderer Blickwinkel wäre weiterhin kein Ersatz.
 
-Ein möglicher Ablauf: Hinweise, Leermarkierungen und Rasterlinien treten zurück; das gelöste Motiv bleibt zunächst sichtbar; daraus entsteht die farbige Fassung; anschließend erscheinen Name und Bewertung und das Bild erhält seinen Albumeintrag. Bei Farbrätseln kann Freistellung und Präsentation genügen. Weder eine feste Animationsfolge noch eine höher aufgelöste Neuzeichnung für jedes Motiv sind beschlossen.
+Die frühere P1.1-Prüfung auf identische Silhouetten war eine enge technische Fixture-Regel, nicht das allgemeine Qualitätsziel. #9 demonstriert die breitere Richtung am positiv bestätigten F-01-Segelboot und am eigenständig verfeinerten F-02-Leuchtturm. Beide verwenden ruhige Farbflächen, klare dunkle Konturen und motivbezogene Details. F-02 erhält passend zu seinem Raster Sonne, rechts stehenden Turm und Wasseraufbau, ergänzt um Architektur-, Oberflächen- und Wellendetails. Bloßes Vergrößern der gleichen Pixel oder Neufärben genügt nicht. Die Rätsel selbst werden nicht zur Illustration passend verändert.
 
-Eine umschaltbare Ansicht des ursprünglichen Lösungsrasters im Albumeintrag sowie überspringbare oder reduzierte Animationen sind sinnvolle Entwurfsvorschläge, keine bereits implementierten Funktionen.
+Ein möglicher Ablauf bleibt: Hinweise, Leermarkierungen und Raster treten zurück; das gelöste Motiv bleibt sichtbar; daraus entsteht die detailliertere Fassung; anschließend Name und gegebenenfalls spätere Bewertung/Albumeintrag. Auch bei Farbrätseln genügt die bloße Freistellung oder erneute Präsentation desselben gelösten Rasters nicht als bestätigtes Qualitätsziel; ihre Abschlussmotive folgen der konsistenten motivtreuen Verfeinerungsrichtung. Das schreibt weder identische Auflösungen noch eine allgemeine Assetpipeline oder eine hochaufgelöste Neuzeichnung jedes Motivs vor. Keine feste Animationsfolge. P1 hat weiterhin keine Wertung.
 
-## 5. Bedienung und Wertung: zu untersuchende Details
+Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte Animationen bleiben sinnvolle Vorschläge, keine automatisch beauftragten Funktionen. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur. Eine bloße Freistellung desselben Farbrasters genügt für F-02 ausdrücklich nicht mehr.
+
+## 5. Bedienung und Wertung
 
 ### 5.1 Präzise Eingaben und Orientierung
 
-Die bereits bestätigte Achsenbindung eines Mausstrichs ab dem zweiten Feld bleibt verbindlich; sie wird nicht durch den früheren Vorschlag eines nur optionalen Standards ersetzt. Maus/Tastatur sind primär, Controller werden von Beginn an berücksichtigt. Sonstige Belegungen sind nicht durch das Mock festgelegt.
+Die bestätigte Achsenbindung eines Mausstrichs ab der ersten eindeutigen Bewegung in eine weitere Zelle bleibt verbindlich. Produktweit bleiben alternative Eingaben vorgesehen. Für P1 gilt jedoch D-06: Maus, kein Tastatur-/Controller-Gate.
 
-Vorgeschlagen sind eine feste Aktion je Ziehvorgang, ein Undo-Schritt je zusammenhängendem Strich, ein Längenzähler sowie ein echter Zellcursor für Tastatur/Controller. Verhalten bei Rückwärtsbewegung, diagonaler Bewegung, bestehenden Markierungen und Abbruch muss vor betroffener Umsetzung konkretisiert werden.
+**Präzisierung aus den Mausproben:** Das normale Werkzeug neutralisiert vorhandene
+Füllungen mit links und Leermarkierungen mit rechts. Zusätzlich wandelt ein linker
+Setzmodus X direkt in die aktive Farbe und ein rechter Setzmodus Füllungen direkt in
+X um. Die frühere allgemeine Gegenmarkierungs-Schutzregel ist damit abgelöst;
+Rücknahmestriche bleiben auf den am Start vorhandenen Zieltyp beschränkt. Der konkrete,
+am Strichstart festgelegte Modus einschließlich Farbverhalten, elastischer Vorschau
+und Undo-Grenze steht in P1 §5.1. Kein wiederholtes Umschalten derselben Zelle beim
+Zurückziehen.
 
-Für große Raster sind fixierte vollständige Zeilen-/Spaltenhinweise, eine aktive Linienhervorhebung, ein besonderer Fokus für lange Hinweisfolgen und eine interaktive Miniatur mit Ausschnittrahmen zu prüfen. Hinweise beziehen sich weiterhin auf ganze Linien, nicht nur auf den sichtbaren Ausschnitt. Die Miniatur zeigt den eigenen Stand einschließlich Fehlern, niemals eine korrigierte Lösung. Zoomen am Mauszeiger, Hand-Werkzeug und Lesezeichen sind Vorschläge. Speichern von Ausschnitt, Zoom, aktiver Farbe, Notizen und Undo-Verlauf ist ebenfalls noch im Detail zu entscheiden.
+Längenzähler, Linealmodus und weitergehende Eingabealternativen bleiben Vorschläge.
+Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
+Arbeitskontext, aktive Linien und eine Miniatur mit Ausschnittrahmen wichtig. Lange
+Folgen werden nur an Grenzen vollständiger Einzelhinweise gekürzt; ein möglichst
+großer zusammenhängender Ausschnitt bleibt direkt lesbar. Alle Folgen einer
+Orientierung verwenden gemeinsame feste Slots, und kurze Folgen stehen ebenfalls
+rasterseitig. Seitengerechte Marker zeigen verborgene Präfixe/Suffixe. Jede konkrete
+Spalte lässt sich nur für sich vertikal, jede konkrete Zeile nur für sich horizontal
+in ganzen eingerasteten Slots lesen, ohne X-/Y-Zuordnung oder Nachbarfolgen zu ändern.
+Der vollständige Hover-Tooltip ergänzt diese Navigation statt sie zu ersetzen; eine
+separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze Linien,
+nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich
+Fehlern, niemals eine korrigierte Lösung. P1 konkretisiert Zoom/Pan und
+Miniaturnavigation; Lesezeichen gehören nicht automatisch dazu.
 
-Rätselfarben und UI-Zustandsfarben sollen in den Entwürfen unterscheidbar sein. Ergänzende Farbsymbole oder Muster, unabhängige UI-/Raster-Skalierung und zugängliche Eingabealternativen sind zu erproben. Automatisches Abblenden von Hinweisen darf keine verdeckte Prüfung gegen die hinterlegte Lösung sein.
+Rätselfarben und UI-Zustandsfarben sollen unterscheidbar sein. Die Hinweiszahl selbst
+trägt die Rätselfarbe; für P1 entfallen ergänzende A–D-Kennungen und ihr Schalter
+vorerst vollständig. Das ist keine endgültige Streichung farbunabhängiger Erkennbarkeit
+im Produkt und kein vorgezogener Neuentwurf der Mauspalette. Unabhängige UI-/
+Rasterskalierung unterstützt die Lesbarkeit. Automatisches Hinweisabblenden darf keine verdeckte Lösungsprüfung sein.
+Einzelheiten des gespeicherten Zustands werden im zuständigen Speicherpaket konkretisiert.
 
 ### 5.2 Undo und Hypothesen
 
-Beschlossen ist der Ausschluss von Perfektion durch Undo, nicht die Abschaffung von Undo. Fehlerzahl und Rücknahmen getrennt zu erfassen ist ein Vorschlag; feste Abzüge und die Bewertung unterhalb der Höchstwertung sind offen.
+Beschlossen ist der Ausschluss von Perfektion durch Undo, nicht die Abschaffung von Undo. Fehlerzahl und Rücknahmen getrennt zu erfassen bleibt ein Vorschlag; feste Abzüge und niedrigere Wertungsstufen sind offen.
 
-Offen bleibt die zuletzt gestellte Frage, ob manuelles Löschen, Zurücksetzen auf „unbekannt“ oder Überschreiben verbindlicher Einträge ebenfalls als wertungsrelevante Rücknahme gelten. Die Empfehlung, solche Aktionen wie Undo zu behandeln, wurde noch nicht bestätigt. Auch Undo-Aufrufe ohne Wirkung, Abbruch eines noch laufenden Strichs, Neustart und reine Notizkorrekturen sind abzugrenzen.
+Auch nach dem Wunsch zum direkten Neutralisieren ist nicht entschieden, ob manuelles Löschen, Zurücksetzen oder Überschreiben wertungsrelevante Rücknahmen sind. P1 implementiert hier Komfort, keine Wertungsregel. Undo ohne Wirkung, Vorschauabbruch, Neustart und Notizkorrekturen bleiben abzugrenzen.
 
-Eine einmalige abschaltbare Bestätigung vor dem ersten wertungsrelevanten Undo ist ein Entwurfsvorschlag. Sie müsste unabhängig von bereits unbemerkt gemachten Fehlern erscheinen; sonst würde ihr Auftreten im Standardmodus verdeckte Fehlerhinweise liefern. Es ist keine Anzeige „bisher fehlerfrei“ während eines Standarddurchgangs vorgesehen.
+Eine einmalige abschaltbare Bestätigung vor dem ersten wertungsrelevanten Undo ist ein Entwurfsvorschlag. Sie müsste unabhängig von unbemerkten Fehlern erscheinen; sonst verriete sie verdeckt den Lösungszustand. Keine Anzeige „bisher fehlerfrei“ während des Standardmodus.
 
-Eine separate Notizebene für „unsicher gesetzt“ und „unsicher leer“ ist ein Untersuchungsansatz. Bei Farbrätseln müsste eine vermutete Farbe zugeordnet werden können. Vorläufige Einträge sollten mehr als nur eine schwächere Deckkraft unterscheiden; ihre Darstellung in der Miniatur ist mitzudenken.
-
-Vorgeschlagen sind ausdrückliches Übernehmen beziehungsweise Verwerfen und keine Richtig-/Falsch-Prüfung von Notizen, auch nicht im unterstützten Modus. Notizen würden in diesem Ansatz nicht selbst als fertige Lösung gelten. Aufnahme dieser Funktion, ihre Grenzen und ihre Vereinbarkeit mit Perfektion sind noch nicht entschieden. Wer Annahmen in unbewerteten Notizen ausprobieren darf, kann bewusst eine andere Spielweise nutzen; diese Konsequenz ist vor einer Wertungsentscheidung offenzulegen.
+Eine separate Ebene für „unsicher gesetzt/leer“, bei Farbrätseln mit vermuteter Farbe, bleibt ein Untersuchungsansatz. Mehr als schwächere Deckkraft zur Unterscheidung ist zu prüfen. Übernehmen/Verwerfen ohne Richtig-/Falsch-Prüfung ist vorgeschlagen; Notizen würden nicht als Lösung gelten. Aufnahme, Grenzen und Perfektionswirkung sind offen.
 
 ### 5.3 Verbundraster
 
-Als frühe Arbeitshypothese wurden zwei Raster mit tatsächlich gemeinsamen Zellen diskutiert: aktives Raster mit klar zugehörigen Hinweisen, gemeinsamer Bereich mit eindeutiger Umrandung und Kennzeichnung, anderes Raster zurückgenommen. Gemeinsame Felder nicht durch einen irreführenden Rätselfarb-Hintergrund markieren und keine zwei unlesbaren Zahlenteppiche überlagern.
+Arbeitshypothese: zwei Raster mit wirklich gemeinsamen Zellen, aktives Raster mit zugehörigen Hinweisen, gemeinsamer Bereich klar umrandet, anderes Raster zurückgenommen. Keine irreführende Rätselfarbe als Kennzeichnung und keine unlesbaren überlagerten Hinweisflächen.
 
-Diese Darstellung und Geometrie sind nicht beschlossen. Der begrenzte Verbundraster-Prototyp muss echte logische Abhängigkeiten und verständliche Hinweiszuordnung nachweisen; ein Mosaik aus unabhängigen Einzelrätseln genügt nicht. Verbundraster bleiben eine Evaluation, keine Startvoraussetzung und kein tragendes Versprechen der gewählten Thematik.
+Geometrie und Darstellung sind nicht beschlossen. Ein gesonderter Prototyp muss echte logische Abhängigkeiten und verständliche Hinweiszuordnung zeigen; unabhängige Einzelrätsel ergeben keinen solchen Nachweis. Keine P1-Erweiterung durch dieses Feedback.
 
-## 6. Exemplarische Mocks und Grenzen ihrer Aussage
+## 6. Referenzen und Aussagegrenzen
 
-Referenz M-01 ist der im Gespräch vom 22.09.2026 generierte Vergleich mit den Überschriften „Thematisches Sammelalbum – Beispiel: Erfindungen“ und „Reisetagebuch – Beispiel: Japan“. Er enthält Albumansichten, Rätselbildschirme, Abschlussdarstellungen sowie Details zu Werkzeugen, Miniatur, Undo-Bestätigung und Albumeintrag. Der Nutzer bewertete die Richtung positiv. Die Bilddatei ist nicht Bestandteil dieses Dokumentationspakets; die hier übertragene textliche Einordnung vermeidet eine Abhängigkeit von einem nur im Chat erreichbaren Bild.
+Referenz M-01 aus dem Gestaltungsgespräch vom 22.09.2026 ist der generierte Vergleich „Thematisches Sammelalbum – Beispiel: Erfindungen“ / „Reisetagebuch – Beispiel: Japan“. Er enthält Album-, Rätsel- und Abschlussdarstellungen sowie Details zu Werkzeugen und Undo. Die Richtung wurde positiv bewertet. Die Bilddatei ist nicht Teil dieses Dokumentpakets; die textliche Einordnung vermeidet eine Pflichtabhängigkeit von Chatbildern.
 
-M-01 ist eine illustrative Stilreferenz, keine Bildschirm-für-Bildschirm-Spezifikation, kein freigegebener Rätseldatensatz und kein finales Assetpaket. Beispiele, Motive, Schriften, Papier-/Holzdetails, Texte und Beispielwerte sind nicht automatisch beschlossen. A/B wurden dadurch nicht entschieden.
+Der Mock ist keine Bildschirm-für-Bildschirm-Spezifikation, kein gültiger Rätseldatensatz und kein finales Assetpaket. A/B wurden dadurch nicht entschieden. Insbesondere keine vorzeitigen Motivvorschauen, Skizzen, fremden Assets, erfundenen Sternschwellen oder schematischen Rätselzahlen übernehmen. Detaillierte Illustrationen müssen trotz erlaubter Verfeinerung die Wiedererkennbarkeit erhalten.
 
-Insbesondere nicht wörtlich aus M-01 übernehmen:
+Die spätere reale P1.1-Probe lieferte einen Abschluss-Screenshot und einen Rasterausschnitt mit dem beschriebenen Fünferlinienproblem. Das belegt vorhandenes Nutzerfeedback, nicht jede K-06-Einzelprüfung, tatsächliche Windows-Skalierung oder die Güte der damals noch nicht implementierten Großraster-/Zoom-/Speicherfunktionen. Aktueller Abnahmestand in #5/#8 und PR #14.
 
-- Fertige Motivvorschauen während eines noch ungelösten Rätsels und erkennbare Motivskizzen in noch offenen Albumplätzen widersprechen der Spoilergrenze. Dort sind nur eigener Arbeitsstand beziehungsweise neutrale Platzhalter zulässig.
-- Unterschiedliche beziehungsweise zu viele Sternsymbole und erfundene Beispielwerte begründen keine neue Skala, Schwelle oder Statistik. Die beschlossene Perfektionsbedingung bleibt ohne Fehler und ohne Undo; die Hypothesenfrage bleibt offen.
-- Schematische Zahlen, Rastergrößen und nicht nachgewiesen identische Spielstände sind keine Belege mathematisch gültiger oder deduktiv lösbarer Rätsel. Der Wechsel zwischen Farb-Arbeitsansicht und monochromer Enthüllungsdarstellung ist kein geprüfter zusammenhängender Spielablauf.
-- Stark ausgearbeitete Abschlussillustrationen dürfen die bestätigte Wiedererkennbarkeit des erarbeiteten Rastermotivs nicht ersetzen.
+## 7. Weitere Erprobung und offene Entscheidungen
 
-Es liegen keine praktischen Nachweise für Zoom, lange Hinweisfolgen, sehr große Raster, Controllerbedienung, Persistenz oder Verbundraster vor. Auch die Dokumentations-CI weist diese Eigenschaften nicht nach.
-
-## 7. Offene Entscheidungen und empfohlener nächster Untersuchungsschritt
-
-| Thema | Noch zu entscheiden oder nachzuweisen |
+| Thema | Nächster Gegenstand |
 | --- | --- |
-| Themenwahl | A oder B; konkrete Kapitel und Motivzusammenhang, ohne bestehende Progressionsanforderungen neu zu öffnen. |
-| Album und Designsystem | Seitenkomposition, Bibliothekszugang, Raster-/Werkzeuglayout, Typografie, Farben, Skalierung, Fokus-/Zellzustände und Enthüllungsdetails. |
-| Korrekturen und Bewertung | Manuelle Korrekturen gegenüber Undo, Aktionsgrenzen, Fehlerzählung, niedrigere Sternstufen, Wiederholungen und mögliche Hypothesen. |
-| Eingabe und Wiedereinstieg | Strichverhalten, Navigation, lange Hinweise, Farbwahl, beide Eingabeformen und genauer gespeicherter Arbeitszustand. |
-| Prototyptechnik und Prüfung | Bewusst begrenzter technischer Weg, Start-/Testanleitung, Testdaten und konkrete manuelle Erfolgskriterien; keine Engine-/Plattformentscheidung aus dem Dokumentsetup ableiten. |
+| Themenwahl | A oder B, Kapitel und Motivzusammenhang; bestehende Progressionsanforderungen nicht neu öffnen. |
+| Album/Designsystem | Layout, Typografie, Größenbandbreiten, Kontraste und Fokus anhand realer Proben ausarbeiten. |
+| Rücknahmen/Wertung | Direkte Neutralisierung ist für die Bedienung festgelegt; Fehlerzählung, Sterne und Hypothesenwirkung bleiben offen. |
+| P1-Bedienung | Vier Feedbackpunkte plus Farb-/Großraster, Zoom, lange Hinweise und eigene Miniatur in #9. |
+| Fortsetzung | Speicherung/Recovery in #11, integrierte Erprobung in #12. |
 
-Empfehlung, keine bereits beauftragte Umsetzung: Gestaltung und Risikoprototypen nun überlappen lassen. Die gemeinsame visuelle Richtung reicht, um die kritische Arbeitsansicht interaktiv zu untersuchen; das vollständige UI-Konzept ist damit nicht abgeschlossen. Noch mehr statische Mocks allein beantworten die Bedienungsfragen nicht.
+Gestaltung und Risikoprototypen überlappen weiter. Statische Mocks allein beantworten keine Bedienungsfrage. Die bestätigte gemeinsame Richtung reicht zur Untersuchung; sie ist noch kein fertiges UI-Konzept.
 
-Als erster enger Schnitt bietet sich ein Großraster-/Bedienprototyp an: wenige repräsentative klassische und farbige Testfälle, etwa ein kleineres monochromes Rätsel, ein 40×40-Farbrätsel mit vier Farben und ein 100×100-Ausschnitt mit langen Hinweisfolgen. Zu prüfen sind präzises Setzen/Leermarkieren mit Achsenbindung, Zuordnung vollständiger Hinweise, Miniatur und Zoom/Navigation, Farbwahl, Undo sowie Unterbrechen und Wiederaufnahme des Arbeitsstands. Ein einfacher Album-/Arbeitsansicht-Wechsel kann die gemeinsame visuelle Grundlage erlebbar machen. Keine vollständige Progression, Inhaltsbibliothek oder Audioarbeit in diesen Untersuchungsschnitt hineinziehen.
-
-Vor einer Implementierung sind Umfang, Prototyptechnik, offene unmittelbar betroffene Eingaberegeln sowie automatisierte und manuelle Nachweise in einem beauftragten Paket festzulegen. Bewertungsdetails können nur dann außen vor bleiben, wenn der Prototyp ausdrücklich keine abschließende Wertung implementiert. A/B, Sound und vollständige Bonusprogression müssen den reinen Bedienversuch nicht blockieren. Der Nutzer prüft die tatsächliche Benutzbarkeit am benannten Stand; Mess-/Prüfergebnisse werden im Paket festgehalten.
-
-Rätselproduktion und Deduktionsnachweis bilden einen eigenen frühen Risikostrang. UI-Testdaten sind nicht allein wegen eines hübschen Bildes als kuratierte Rätsel freigegeben. Die begrenzte Verbundraster-Evaluation bleibt separat prüfbar, statt den ersten Eingabeprototyp zu überladen. Danach werden Thema, Designsystem und zentrale Ansichten anhand der Erfahrungen geschärft, bevor die kleine vollständige Fassung und umfangreiche Inhaltsproduktion folgen.
+Rätselproduktion und Deduktionsnachweis bleiben ein eigener früher Risikostrang. Hübsche Bilder allein sind keine qualitätsgeprüften Rätsel. Verbundraster getrennt evaluieren. Thema, Designsystem und zentrale Ansichten anhand der Erfahrungen schärfen, bevor umfangreiche Inhalte produziert werden.
