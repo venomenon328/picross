@@ -56,7 +56,7 @@ Ausgangsstände sind kein Nachweis des neuen Lieferheads.
 
 Der lokale Windows-Prüfweg für D-16/D-17 lief mit den vollständig hashgeprüften offiziellen
 Godot-4.7.2-Standardarchiven, isolierten Profilpfaden und temporärer Projektkopie:
-Import, 703 Godot-Prüfungen, erwarteter Negativtest Exit 23, begrenzter Start mit
+Import, 704 Godot-Prüfungen, erwarteter Negativtest Exit 23, begrenzter Start mit
 allen drei Fixtures, echte OpenGL-Renderprüfung, Windows-Export und exportierter
 Headless- und OpenGL-GUI-Start mit Prüfung des gesamten Fensterrahmens. Der neue Stand
 umfasst 45 Python-Tests; unter Windows ist nur der vorhandene Symlink-Test wegen
