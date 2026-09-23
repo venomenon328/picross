@@ -43,6 +43,7 @@ var ui_scale: float = 1.0
 var choices: Array[Button] = []
 var album_previews: Array[Miniature] = []
 var album_reveals: Array[Reveal] = []
+var album_slot_status: Array[Label] = []
 
 static func bounded_start(usable: Rect2i, decorations: Vector2i) -> Vector2i:
 	return Vector2i(1920, 1080).min((usable.size - decorations).max(Vector2i.ONE))
@@ -146,6 +147,9 @@ func _build() -> void:
 		picture.custom_minimum_size = Vector2(96, 96)
 		slot_column.add_child(picture)
 		album_reveals.append(picture)
+		var slot_note: Label = label("", 14)
+		slot_column.add_child(slot_note)
+		album_slot_status.append(slot_note)
 	album_mini = Miniature.new()
 	album_mini.custom_minimum_size = Vector2(240, 240)
 	album.add_child(album_mini)
@@ -324,6 +328,8 @@ func show_album() -> void:
 		album_reveals[i].payload = sessions[i].reveal()
 		album_reveals[i].visible = sessions[i].completed
 		album_reveals[i].queue_redraw()
+		album_slot_status[i].text = "Backup geladen" if slot_status[i] == "recovered" else ("Speicherfehler" if slot_status[i] == "error" or not slot_errors[i].is_empty() else "")
+		album_slot_status[i].visible = not album_slot_status[i].text.is_empty()
 	album_mini.cells = session.player.cells.duplicate()
 	album_mini.width = session.player.width
 	album_mini.height = session.player.height
