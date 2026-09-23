@@ -70,7 +70,7 @@ func _ready() -> void:
 			return
 		var item: Session = Session.new(data)
 		var result: Dictionary = store.load_slot(data)
-		if result.status in ["loaded", "recovered"]:
+		if result.status in ["loaded", "recovered", "backup_invalid"]:
 			SaveStore.apply(result.data, item)
 		sessions.append(item)
 		slot_status.append(str(result.status))
@@ -315,7 +315,8 @@ func show_album() -> void:
 	stress_label.visible = session.definition.get("stress", false)
 	title.text = "picross / Mein Probealbum"
 	open_button.text = session.album_title() + (" · ansehen" if session.completed else " · öffnen")
-	repair_button.visible = slot_status[sessions.find(session)] == "recovered"
+	repair_button.visible = slot_status[sessions.find(session)] in ["recovered", "backup_invalid"]
+	repair_button.text = "Backup erneuern" if slot_status[sessions.find(session)] == "backup_invalid" else "Backup zum Speichern übernehmen"
 	_update_status()
 	for i: int in range(sessions.size()):
 		choices[i].text = sessions[i].album_title() + (" · UI-Test" if i == 2 else "")
@@ -328,7 +329,7 @@ func show_album() -> void:
 		album_reveals[i].payload = sessions[i].reveal()
 		album_reveals[i].visible = sessions[i].completed
 		album_reveals[i].queue_redraw()
-		album_slot_status[i].text = "Backup geladen" if slot_status[i] == "recovered" else ("Speicherfehler" if slot_status[i] == "error" or not slot_errors[i].is_empty() else "")
+		album_slot_status[i].text = "Backup geladen" if slot_status[i] == "recovered" else ("Backup beschädigt" if slot_status[i] == "backup_invalid" else ("Speicherfehler" if slot_status[i] == "error" or not slot_errors[i].is_empty() else ""))
 		album_slot_status[i].visible = not album_slot_status[i].text.is_empty()
 	album_mini.cells = session.player.cells.duplicate()
 	album_mini.width = session.player.width
@@ -420,7 +421,7 @@ func _update_status() -> void:
 		return
 	var state: String = slot_status[sessions.find(session)]
 	var error: String = slot_errors[sessions.find(session)]
-	status_label.text = "Speicherfehler: " + error if not error.is_empty() else ("Backup geladen; Primärstand beschädigt. Vor weiterem Speichern Backup bewusst übernehmen." if state == "recovered" else ("Speicherdaten ungültig. Nur bestätigter Reset dieses Blatts ist möglich." if state == "error" else ""))
+	status_label.text = "Speicherfehler: " + error if not error.is_empty() else ("Backup geladen; Primärstand beschädigt. Vor weiterem Speichern Backup bewusst übernehmen." if state == "recovered" else ("Backup beschädigt; gültiger Primärstand geladen. Backup vor weiterem Speichern bewusst erneuern." if state == "backup_invalid" else ("Speicherdaten ungültig. Nur bestätigter Reset dieses Blatts ist möglich." if state == "error" else "")))
 	status_label.visible = not status_label.text.is_empty()
 	status_label.add_theme_color_override("font_color", Color("9d2e24"))
 
@@ -448,14 +449,17 @@ func _reset_selected() -> void:
 	show_album()
 
 func _ask_repair() -> void:
+	repair_dialog.title = "Backup erneuern?" if slot_status[sessions.find(session)] == "backup_invalid" else "Backup übernehmen?"
+	repair_dialog.dialog_text = "Das beschädigte Backup wird entfernt und aus dem gültigen Primärstand neu erstellt." if slot_status[sessions.find(session)] == "backup_invalid" else "Der beschädigte Primärstand dieses Blatts wird durch das gültige Backup ersetzt."
 	repair_dialog.popup_centered()
 
 func _repair_selected() -> void:
-	var error: String = store.repair_from_backup(session.definition)
+	var error: String = store.discard_invalid_backup(session.definition) if slot_status[sessions.find(session)] == "backup_invalid" else store.repair_from_backup(session.definition)
 	if error.is_empty():
 		slot_status[sessions.find(session)] = "loaded"
 		save_error = ""
 		slot_errors[sessions.find(session)] = ""
+		_save_current()
 	else:
 		save_error = error
 		slot_errors[sessions.find(session)] = error

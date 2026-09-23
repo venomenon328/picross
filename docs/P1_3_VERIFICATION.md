@@ -30,7 +30,9 @@ Verwaiste Temps sind nicht autoritativ. Ein beschädigtes Primary wird bei gült
 Backup sichtbar aus dem Backup gelesen, aber nicht über dieses Backup rotiert.
 Erst eine bestätigte Backupübernahme ersetzt die beschädigte Primärdatei; ohne
 gültige Fassung bleibt der Slot im sichtbaren Fehlerzustand, bis sein Reset
-bestätigt wird. Ein Reset greift nur auf Dateien des ausgewählten Slots zu.
+bestätigt wird. Gültiges Primary mit beschädigtem Backup bleibt lesbar;
+eine bestätigte Backup-Erneuerung erlaubt wieder Speichern. Ein Reset greift
+nur auf Dateien des ausgewählten Slots zu.
 
 ## Automatisierte Prüfungen
 
@@ -52,7 +54,7 @@ Albumminiaturen. Test- und Render-Skripte setzen ebenfalls
 eigene temporäre Speicherroots. Der Produkt-Harness nutzt zudem eine temporäre
 Projektkopie mit isoliertem Godot-Profil; das Windows-ZIP enthält keine Saves.
 
-Lokaler Windows-Zwischenlauf: Godot 4.7.2, 1028 Prüfungen erfolgreich;
+Lokaler Windows-Zwischenlauf: Godot 4.7.2, 1038 Prüfungen erfolgreich;
 isolierter Zwei-Prozess-Roundtrip mit beiden Erfolgsmarkern erfolgreich.
 Der vollständige lokale Produktweg umfasste Import, erwarteten Negativtest
 mit Exit 23, kontrollierten Start, 249 Render-PNGs, Windows-Export sowie

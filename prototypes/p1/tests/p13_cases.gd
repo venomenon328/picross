@@ -102,6 +102,11 @@ static func run(t: SceneTree) -> void:
 			t.check(store.load_slot(definition).status in ["loaded", "recovered"], "P1.3 %s valid data survives %s" % [id, step])
 			store.fail_step = ""
 		t.check(store.write_slot(session, session.view_state).is_empty(), "P1.3 %s resumes after interrupted replace" % id)
+		file = FileAccess.open(store.path_for(id, ".bak"), FileAccess.WRITE)
+		file.store_string("{broken backup")
+		file.close()
+		t.check(store.load_slot(definition).status == "backup_invalid" and not store.write_slot(session, session.view_state).is_empty(), "P1.3 %s valid primary plus invalid backup blocks silent rotation" % id)
+		t.check(store.discard_invalid_backup(definition).is_empty() and store.write_slot(session, session.view_state).is_empty(), "P1.3 %s explicit invalid-backup renewal" % id)
 		var solved_session: Session = Session.new(definition)
 		var solution_changes: Array[Dictionary] = []
 		for y: int in range(int(definition.height)):
@@ -168,4 +173,30 @@ static func run(t: SceneTree) -> void:
 	app.reset_dialog.confirmed.emit()
 	t.check(app.session.player.cells[0] == -1 and app.store.load_slot(app.session.definition).status == "fresh", "P1.3 confirmed UI reset starts selected slot fresh")
 	t.check(app.sessions[0].player.cells[0] == 1 and app.store.load_slot(app.sessions[0].definition).status == "loaded" and app.sessions[2].player.cells[0] == -1, "P1.3 UI reset preserves both other sessions")
+	app.select_puzzle(0)
+	app._save_current()
+	var broken_backup: FileAccess = FileAccess.open(app.store.path_for("f01", ".bak"), FileAccess.WRITE)
+	broken_backup.store_string("{bad backup")
+	broken_backup.close()
 	app.queue_free()
+	await t.process_frame
+	var recovery_ui: Main = load("res://main.tscn").instantiate()
+	t.root.add_child(recovery_ui)
+	await t.process_frame
+	t.check(recovery_ui.slot_status[0] == "backup_invalid" and recovery_ui.status_label.visible and recovery_ui.repair_button.visible, "P1.3 broken backup visibly reported at startup")
+	recovery_ui._ask_repair()
+	recovery_ui.repair_dialog.confirmed.emit()
+	t.check(recovery_ui.store.load_slot(f01).status == "loaded" and recovery_ui.status_label.text.is_empty(), "P1.3 confirmed backup renewal restores saving")
+	var broken_primary: FileAccess = FileAccess.open(recovery_ui.store.path_for("f01"), FileAccess.WRITE)
+	broken_primary.store_string("{bad primary")
+	broken_primary.close()
+	recovery_ui.queue_free()
+	await t.process_frame
+	var backup_ui: Main = load("res://main.tscn").instantiate()
+	t.root.add_child(backup_ui)
+	await t.process_frame
+	t.check(backup_ui.slot_status[0] == "recovered" and backup_ui.status_label.visible and backup_ui.repair_button.visible, "P1.3 backup recovery visibly reported at startup")
+	backup_ui._ask_repair()
+	backup_ui.repair_dialog.confirmed.emit()
+	t.check(backup_ui.store.load_slot(f01).status == "loaded" and backup_ui.status_label.text.is_empty(), "P1.3 confirmed recovery resumes saving")
+	backup_ui.queue_free()

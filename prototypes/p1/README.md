@@ -29,6 +29,8 @@ Spielstände.
 
 Beschädigtes Primary mit gültigem Backup wird sichtbar als Recovery geladen.
 „Backup zum Speichern übernehmen“ fragt vor dem Ersetzen des Primary nach.
+Bei gültigem Primary und defektem Backup bleibt der Primärstand lesbar;
+„Backup erneuern“ fragt vor dem Ersatz des beschädigten Backups nach.
 Ohne gültige Fassung erscheint ein Fehler. „Arbeitsstand zurücksetzen“ fragt
 ebenfalls nach und entfernt ausschließlich Primary, Backup und Temp des
 ausgewählten Blatts. Die zwei anderen Blätter bleiben erhalten.

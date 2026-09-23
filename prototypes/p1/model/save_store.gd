@@ -172,9 +172,11 @@ func load_slot(definition: Dictionary) -> Dictionary:
 	if not id in IDS:
 		return {"status": "error", "error": "Unbekanntes Fixture."}
 	var primary: Dictionary = _parse(path_for(id), definition)
-	if primary.status == "valid":
-		return {"status": "loaded", "data": primary.data}
 	var backup: Dictionary = _parse(path_for(id, ".bak"), definition)
+	if primary.status == "valid":
+		if backup.status == "invalid":
+			return {"status": "backup_invalid", "data": primary.data, "error": "Primärstand geladen; Backup beschädigt und Speichern bis zur bewussten Erneuerung gesperrt."}
+		return {"status": "loaded", "data": primary.data}
 	if backup.status == "valid":
 		return {"status": "recovered", "data": backup.data, "error": "Primärstand fehlt oder ist ungültig; gültiges Backup geladen."}
 	if primary.status == "missing" and backup.status == "missing":
@@ -261,4 +263,17 @@ func repair_from_backup(definition: Dictionary) -> String:
 		return "Beschädigter Primärstand nicht entfernbar."
 	if DirAccess.rename_absolute(_absolute(temp_path), _absolute(primary_path)) != OK:
 		return "Backup konnte nicht als Primärstand eingesetzt werden."
+	return ""
+
+func discard_invalid_backup(definition: Dictionary) -> String:
+	var id: String = str(definition.id).to_lower().replace("-", "")
+	if not id in IDS:
+		return "Unbekanntes Fixture."
+	if _parse(path_for(id), definition).status != "valid":
+		return "Kein gültiger Primärstand vorhanden."
+	var backup_path: String = path_for(id, ".bak")
+	if _parse(backup_path, definition).status != "invalid":
+		return "Backup ist nicht beschädigt."
+	if DirAccess.remove_absolute(_absolute(backup_path)) != OK:
+		return "Beschädigtes Backup nicht entfernbar."
 	return ""
