@@ -7,10 +7,12 @@ Ausgangshead `9a68e7300c2469151638dc3751522bdb63d4c1c4`, Basis
 Test-Merge, aktuelle CI-Runs und Artefakt-ID werden im PR geführt; dieser Bericht
 behauptet keine Prüfung eines noch unbekannten späteren Heads.
 
-Die Nacharbeit startet auf `267df8cdb264070ed1f81e500475657be6f27f9d` und behebt
+Die erste Nacharbeit startete auf `267df8cdb264070ed1f81e500475657be6f27f9d` und behob
 [Review R2](https://github.com/venomenon328/picross/pull/14#pullrequestreview-5289320370)
-B-01/B-02 sowie den supersedierenden Sollstand D-11 bis D-15. Alte grüne Läufe des
-Ausgangsheads sind kein Nachweis der Nacharbeit.
+B-01/B-02 sowie D-11 bis D-15. Die Folgearbeit D-16/D-17 startet auf dem durch
+[Review R3](https://github.com/venomenon328/picross/pull/14#pullrequestreview-5290145666)
+geprüften Head `bd6730d3c0952d8ae74437cd0da9235f2ab0e116`. Alte grüne Läufe beider
+Ausgangsstände sind kein Nachweis des neuen Lieferheads.
 
 ## Umsetzung und technische Prüfung
 
@@ -30,9 +32,18 @@ Ausgangsheads sind kein Nachweis der Nacharbeit.
   F-03: 100×100-Stressfixture, keine Rätselqualitätsbehauptung. Herkunft in
   [F-01](../prototypes/p1/F01_PROOF.md) und [F-02/F-03](../prototypes/p1/F02_PROOF.md).
 - D-11/D-12/D-14: keine laufenden Randnummern und keine separate Hinweisansicht.
-  Passende Folgen stehen vollständig im Arbeitsbild; Überlaufmarker öffnen beim
-  Darüberfahren einen vollständigen farbigen, umbrechenden In-Context-Tooltip.
+  Passende Folgen stehen vollständig im Arbeitsbild; der Tooltip bleibt ergänzend.
   Farbzahlen sind Standard, A–D-Suffixe eine sichtbare optionale Darstellung.
+- D-16: gemeinsame tokenbasierte Fensterberechnung. Bei Überlauf bleiben vollständige
+  zusammenhängende Hinweisabschnitte sichtbar; Markerplatz wird mitberechnet und
+  kennzeichnet exakt verborgene Präfixe/Suffixe. Leere/kurze Folgen bleiben direkt
+  lesbar. Kleine Spaltenbreiten nutzen kompakte, umrandete Einheiten statt einer
+  pauschalen Ausblendung.
+- D-17: getrennte normierte Lesepositionen für den horizontalen Zeilen- und vertikalen
+  Spaltenhinweisbereich. Mittlere Taste und Hand-Werkzeug werden über echte
+  Viewport-Ereignisse geroutet; Ziel/Achse bleiben über Bereichsgrenzen eingefroren.
+  Ein sichtbarer Rücksetzknopf stellt beide rasterseitigen Ausschnitte wieder her.
+  Raster-Pan/Zoom, Miniatur, Matrix, Preview, History und Abschluss bleiben unabhängig.
 - D-13/R2-B-01: 20 streng steigende Arbeitsstufen von 12 bis 72 logischen Einheiten.
   Richtungsregressionen unterhalb/oberhalb der Folge sind automatisiert abgedeckt;
   Zeigeranker, Gesamtansicht und Arbeitsgröße bleiben getrennt.
@@ -43,9 +54,9 @@ Ausgangsheads sind kein Nachweis der Nacharbeit.
 - Pro Blatt eigener Zustand/History innerhalb der Sitzung, echter Abschluss und Album.
   Keine dauerhafte Speicherung, Wertung oder Controllerfunktion.
 
-Der lokale Windows-Prüfweg lief mit den vollständig hashgeprüften offiziellen
+Der lokale Windows-Prüfweg für D-16/D-17 lief mit den vollständig hashgeprüften offiziellen
 Godot-4.7.2-Standardarchiven, isolierten Profilpfaden und temporärer Projektkopie:
-Import, 570 Godot-Prüfungen, erwarteter Negativtest Exit 23, begrenzter Start mit
+Import, 703 Godot-Prüfungen, erwarteter Negativtest Exit 23, begrenzter Start mit
 allen drei Fixtures, echte OpenGL-Renderprüfung, Windows-Export und exportierter
 Headless- und OpenGL-GUI-Start mit Prüfung des gesamten Fensterrahmens. Der neue Stand
 umfasst 45 Python-Tests; unter Windows ist nur der vorhandene Symlink-Test wegen
@@ -54,19 +65,27 @@ Die endgültige commitgebundene Zuordnung
 steht im PR.
 
 Die Tests erhalten die bisherigen Regressionen einschließlich F-01/F-02-Logiknachweis.
-Neue Fälle ergänzen die vollständige D-15-Startzustandsmatrix, echte direkte X↔Füllung-
-UI-Routen, typspezifische Rücknahme/History, monotone Zoomgrenzen unterhalb und oberhalb
-der Arbeitsfolge, unnummerierte In-Context-Hinweise, farbige Standardzahlen, optionale
-Accessibility-Suffixe, vollständige Überlaufdaten sowie den exakten UTF-8-Projekttitel.
+Die bisherigen Fälle erhalten die vollständige D-15-Startzustandsmatrix, echte direkte
+X↔Füllung-UI-Routen, typspezifische Rücknahme/History, monotone Zoomgrenzen und den
+exakten UTF-8-Projekttitel. H-01 bis H-04 ergänzen passende/gerade überlaufende/sehr
+lange/leere Folgen, mehrstellige Einheiten, beide Marker, vollständige Erreichbarkeit,
+F-02-Spalte 22 bei Zellabstand 22/24, F-03 bei 12/18/22/24, A–D aus/an sowie echte
+Mausrouten für Mitte/Hand, Bereichswechsel, Freigabe außerhalb, falsche Freigabe,
+Escape/Fokusverlust, Grenzanschläge und Zellgestensperre. Zustands-, History-,
+Rasterzentrum-/Zoom- und Miniaturinvarianten werden dabei gemeinsam geprüft.
 
 ## Tatsächliche Renderkontrolle
 
-`tests/capture.gd` rendert 216 PNGs in echten Godot-SubViewports: logische Flächen
+`tests/capture.gd` rendert 242 PNGs in echten Godot-SubViewports: logische Flächen
 1280×720, 1600×900, 1920×1080 und 2560×1440, jeweils UI/Arbeitszoom
 100/100 % und 125/108 %, alle drei Fixtures. Hinzu kommen L-/Blockausschnitte
 für alle 20 Zellabstände 12 bis 72, jede Farbe in Vorschau, Neutralisierung,
 farbige Hinweise ohne und mit Accessibility-Suffixen, vollständiger F-03-Hover-
 Tooltip im Arbeitsbild, Gesamtansicht, drei Abschlüsse und fertige Albumansichten.
+Neu sind F-02-Ausschnitte bei 22/24 mit Anfang/Mitte/Ende, unabhängige Achspositionen,
+50-%-Accessibility und F-03-Arbeitszoom 50/75/92/100 mit echten Zahlen sowie
+Anfang/Mitte/Ende und erhaltener Leseposition nach Raster-Pan. Die Layoutmatrix enthält
+zusätzlich F-02 mit A–D und mittleren beidseitigen Markern in allen Flächen/UI-Stufen.
 200 Pixelprüfungen bestätigen tatsächliche Füllfarbe und hellen Zwischenraum.
 
 Zusätzlicher nativer Windows-Start: 1600×900 Clientfläche, 1616×939 inklusive
@@ -75,10 +94,12 @@ Rahmen liegt darin. Die Zentrierung berücksichtigt den ungleichen Titel-/Seiten
 gemäß [Godot-DisplayServer](https://docs.godotengine.org/en/stable/classes/class_displayserver.html#class-displayserver-method-window-get-position-with-decorations).
 Die tatsächliche Windows-Skalierung wird daraus nicht abgeleitet.
 
-Lokal gerendert mit OpenGL auf der vom Treiber gemeldeten RTX 3070. Visuell geprüft:
+Lokal gerendert mit OpenGL auf der vom Treiber gemeldeten RTX 3070. Für D-16/D-17 visuell geprüft:
 Layouts aller vier Flächen, kleinste Fläche in beiden UI-Skalierungen, getrennte
 Füllzellen an Fünferkreuzungen, unnummerierte farbige Hinweise, A–D-Umschaltung,
-vollständiger F-03-Überlauf-Tooltip im Arbeitsbild, relevante kleine/große Zoomstufen,
+ein-/beidseitige Marker, Anfangs-/Mittel-/Endausschnitte, F-02 bei 92/100 %, F-03 bei
+50/75/92/100 %, kompakte A–D-Spalten bei 50 %, erhaltener Zuordnung nach Raster-Pan,
+vollständiger F-03-Überlauf-Tooltip im Arbeitsbild sowie relevante große Zoomstufen,
 F-01-Motivvergleich und F-02-Farbmotiv. Bei Mindestgröße/UI 125 % scrollt der untere Hilfetext;
 Werkzeuge und Hinweiszugriff bleiben zugänglich, Miniatur fest sichtbar.
 Kleine Raster behalten ruhige Ränder, die Hinweise bleiben am Raster zugeordnet.
@@ -98,11 +119,13 @@ für den finalen Stand tatsächlich erfolgreich sein; konkrete Ergebnisse im PR.
 ZIP enthält sämtliche Startdateien, Anleitung und Bericht. Tests/Prüfzertifikate
 werden vom Spiel-Export ausgeschlossen. Kein Installer, Release, Dienst oder Merge.
 
-Vor Übergabe erfolgt ein getrennter Selbstreview des vollständigen Diffs gegen
-#9/P1 0.5 und R2. Dies ersetzt weder unabhängiges Review noch Eigentümerabnahme.
+Vor Übergabe erfolgt ein getrennter Selbstreview des vollständigen Folgediffs gegen
+#9/P1 0.6, H-01 bis H-06 und Review R3; R2/B-01/B-02 bleiben Regressionen. Dies
+ersetzt weder unabhängiges Review noch Eigentümerabnahme.
 
 **Offen beim Eigentümer vor Gesamt-P1-Merge:** M-01/M-02/M-03/M-06, echte
-Maus-/Layout-/Motivprüfung am neuen Artefakt. Tatsächlicher Head/Artefakt,
+Maus-/Layout-/Motivprüfung am neuen Artefakt, einschließlich Teilhinweisen, beider
+Hinweis-Panachsen und fester Zuordnung bei Raster-Pan/Zoom. Tatsächlicher Head/Artefakt,
 Windows-Version, Bildschirmauflösung, Fenster-/Clientfläche und reale Windows-Skalierung
 sind dabei zu protokollieren. Die frühere #8-Probe war durchgeführt mit Änderungsbedarf;
 keine pauschale Abnahme. Szenarien in der [Anleitung](../prototypes/p1/README.md).

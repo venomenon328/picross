@@ -139,7 +139,7 @@ def main() -> int:
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="OPEN: owner M-01/M-02/M-03/M-06 mouse, motif and actual Windows scaling before overall P1 merge; prior K-06 had change requests")
+                            manual_acceptance="OPEN: owner M-01/M-02/M-03/M-06 mouse, atomic clue windows, independent clue panning, motif and actual Windows scaling before overall P1 merge; prior trials had change requests")
             archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"))
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)

@@ -29,6 +29,7 @@ var sidebar: VBoxContainer
 var page: VBoxContainer
 var minimum_message: Label
 var accessibility_button: Button
+var clue_reset_button: Button
 var ui_scale: float = 1.0
 var choices: Array[Button] = []
 
@@ -138,6 +139,8 @@ func _build() -> void:
 	sidebar.add_child(mini)
 	coordinate = label("Zeile – · Spalte –", 16)
 	sidebar.add_child(coordinate)
+	clue_reset_button = button("Hinweise rasterseitig ausrichten", board.reset_clue_pan)
+	sidebar.add_child(clue_reset_button)
 	var scroll: ScrollContainer = ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -170,7 +173,7 @@ func _build() -> void:
 	controls.add_child(button("Arbeitsgröße (100 %)", board.working_size))
 	accessibility_button = button("Farbkennungen in Hinweisen: aus", toggle_accessibility_labels)
 	controls.add_child(accessibility_button)
-	controls.add_child(label("Links: Farbe setzen / Füllung zurücknehmen\nRechts: Kreuz setzen / Kreuz zurücknehmen\nX ↔ Farbe wird direkt umgewandelt\nRad: Zoom · Mitte/Hand: verschieben\nEsc/Fokusverlust: Strich verwerfen\n…: vollständiger Hinweis beim Darüberfahren", 14))
+	controls.add_child(label("Links: Farbe setzen / Füllung zurücknehmen\nRechts: Kreuz setzen / Kreuz zurücknehmen\nX ↔ Farbe wird direkt umgewandelt\nRad: Zoom · Mitte/Hand im Raster: verschieben\nMitte/Hand in Hinweisen: Zeilen ↔ / Spalten ↕\nEsc/Fokusverlust: Geste verwerfen\n…: verborgener Anfang/verborgenes Ende · Hover: vollständig", 14))
 	ending = VBoxContainer.new()
 	ending.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	page.add_child(ending)
@@ -241,6 +244,8 @@ func select_puzzle(index: int) -> void:
 	board.view.cell_size = 24
 	board.active_color = 1
 	board.hover = Vector2i(-1, -1)
+	board.row_clue_position = 0.0
+	board.column_clue_position = 0.0
 	board.clear_clue_hover()
 	board.overview = false
 	board._layout()

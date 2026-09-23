@@ -5,7 +5,8 @@ Ein geplantes thematisch zusammenhängendes Nonogramm-Spiel für PC: kuratierte 
 Unter [prototypes/p1](prototypes/p1/README.md) liegt P1.2: 20×20 monochrom,
 40×40 mit vier Farben und ein 100×100-UI-Stressraster. Mausstriche mit direkter
 Füllung↔X-Umwandlung, Undo/Redo, feinem monotonem Zoom/Pan, eigene interaktive Miniatur,
-unnummerierte farbige In-Context-Hinweise und motivtreuer Abschluss. Keine Wertung oder
+unnummerierte farbige Teilhinweise mit unabhängigem Zeilen-/Spalten-Panning und
+motivtreuer Abschluss. Keine Wertung oder
 dauerhafte Speicherung. Die reale Eigentümerprobe des neuen Artefakts bleibt offen;
 #8 und der frühere P1.2-Head wurden mit Änderungsbedarf erprobt.
 

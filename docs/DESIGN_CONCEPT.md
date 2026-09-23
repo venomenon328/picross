@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 23.09.2026 · Arbeitsfassung 0.3 · frühe Konzeption mit supersedierendem P1-Mausfeedback
+Stand: 23.09.2026 · Arbeitsfassung 0.4 · frühe Konzeption mit supersedierendem P1-Mausfeedback
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -14,8 +14,10 @@ direktes Neutralisieren mit dem normalen Werkzeug und detailliertere motivtreue
 Abschlussbilder. Die folgende P1.2-Probe ergänzt den supersedierenden Sollstand D-11
 bis D-15: keine Randnummerierung oder separate Hinweisansicht, vollständiger
 In-Context-Hinweiszugriff, feinere monotone Zoomstufen, farbige Hinweiszahlen mit
-optionalen Kennungen und direkte Füllung↔X-Umwandlung. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.5. Die technische Umsetzung erfolgt
+optionalen Kennungen und direkte Füllung↔X-Umwandlung. Die nächste Probe konkretisiert
+D-16/D-17: Überlauf lässt vollständige einzelne Hinweiszahlen sichtbar, und Zeilen-/
+Spaltenhinweise erhalten zwei getrennte Panachsen bei fester Rasterzuordnung. Der
+konkrete P1-Vertrag steht in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.6. Die technische Umsetzung erfolgt
 in #9; Nachweise im P1.2-Prüfbericht, erneute Eigentümerabnahme weiterhin offen. Das
 ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsystem.
 
@@ -28,7 +30,7 @@ ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsyst
 | Stimmung | Warm, neugierig und dennoch ruhig. |
 | Spielbildschirm | Thematik bleibt dezent sichtbar, das Raster sachlich und präzise. Größere Fenster dürfen nicht zu unnötig riesigen Zellen führen. |
 | Zelllesbarkeit | Füllungen bleiben einzeln erkennbar, insbesondere an kräftigen Fünferlinien. Raster und Füllung dürfen nicht optisch zu einer gemeinsamen Fläche verschmelzen. |
-| Hinweise | Am Raster stehen nur Lösungshinweise, ohne laufende Randnummern. Farbige Zahlen und vollständige Hover-Auflösung bei Überlauf bleiben im Arbeitsbild; A–D-Suffixe sind optional. |
+| Hinweise | Am Raster stehen nur Lösungshinweise, ohne laufende Randnummern. Überlauf erhält atomare sichtbare Teilfolgen und je einen unabhängig pannbaren Zeilen-/Spaltenbereich; farbige Zahlen, seitengerechte Marker und ergänzende vollständige Hover-Auflösung bleiben im Arbeitsbild. A–D-Suffixe sind optional. |
 | Sammelbilder | Das Rätselmotiv ist eine klar erkennbare Stilisierung des detaillierteren Ergebnisbilds. Höhere Auflösung, feinere Konturen und Details sind erlaubt; keine Pflicht zu pixelidentischer Silhouette oder bloßer Kolorierung. |
 | Perfektion | Ein perfekter Durchgang ist ohne Fehler und ohne Undo. Details und offene Wertungsfragen stehen in der Produktdefinition, Abschnitt 6.2. |
 | Hypothesen | Nicht abschließend entschieden, auch nicht ihre Vereinbarkeit mit Perfektion. |
@@ -106,11 +108,15 @@ Zurückziehen.
 Längenzähler, Linealmodus und weitergehende Eingabealternativen bleiben Vorschläge.
 Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
 Arbeitskontext, aktive Linien und eine Miniatur mit Ausschnittrahmen wichtig. Lange
-Folgen erhalten bei physischem Überlauf einen vollständigen Hover-Tooltip statt einer
-separaten Hinweisansicht. Hinweise beziehen sich auf ganze Linien, nicht nur den
-Ausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich Fehlern, niemals eine
-korrigierte Lösung. P1 konkretisiert Zoom/Pan und Miniaturnavigation; Lesezeichen
-gehören nicht automatisch dazu.
+Folgen werden nur an Grenzen vollständiger Einzelhinweise gekürzt; ein möglichst
+großer zusammenhängender Ausschnitt bleibt direkt lesbar. Seitengerechte Marker
+zeigen verborgene Präfixe/Suffixe. Spaltenhinweise lassen sich vertikal, Zeilenhinweise
+horizontal unabhängig vom Raster und voneinander lesen, ohne ihre X-/Y-Zuordnung zu
+ändern. Der vollständige Hover-Tooltip ergänzt diese Navigation statt sie zu ersetzen;
+eine separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze
+Linien, nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich
+Fehlern, niemals eine korrigierte Lösung. P1 konkretisiert Zoom/Pan und
+Miniaturnavigation; Lesezeichen gehören nicht automatisch dazu.
 
 Rätselfarben und UI-Zustandsfarben sollen unterscheidbar sein. Die Hinweiszahl selbst
 trägt die Rätselfarbe; stabile ergänzende A–D-Kennungen sind als einschaltbare

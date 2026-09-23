@@ -1,9 +1,10 @@
-# P1.2 · Farben, Großraster und Nacharbeit D-11 bis D-15
+# P1.2 · Atomare Teilhinweise und getrenntes Hinweis-Panning
 
 Zwischenstand zu Issue #9 auf dem gemeinsamen P1-Draft #14. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
-sind direkt zugänglich. Review R2/B-01/B-02 und D-11 bis D-15 sind in diesem Stand
-technisch nachgearbeitet. Keine Wertung, Fehlerhilfe oder dauerhafte Speicherung.
+sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-17 sind in diesem Stand
+technisch nachgearbeitet. Lange Folgen behalten sichtbare vollständige Einzelhinweise;
+Zeilen- und Spaltenhinweise sind unabhängig pannbar. Keine Wertung, Fehlerhilfe oder dauerhafte Speicherung.
 Albumwechsel erhält den eigenen Stand und Undo/Redo pro Blatt innerhalb dieser
 Sitzung. Beenden verwirft alle Stände.
 
@@ -45,8 +46,8 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   20 monotone Arbeitsstufen reichen von 50 bis 300 % (12 bis 72 logische Einheiten),
   rund um 100 % in Zwei-Einheiten-Schritten. Herauszoomen vergrößert nie und
   Hineinzoomen verkleinert nie, auch nicht aus einer Gesamtansicht außerhalb der Folge.
-- Mittlere Taste oder Hand-Werkzeug links: Ansicht verschieben. Gesamtansicht passt
-  das komplette Raster ein; Arbeitsgröße stellt 100 % wieder her.
+- Mittlere Taste oder Hand-Werkzeug links im Raster: Rasteransicht verschieben.
+  Gesamtansicht passt das komplette Raster ein; Arbeitsgröße stellt 100 % wieder her.
 - Eigene Miniatur: Klick/Ziehen versetzt den Ausschnitt. Der doppelte Rahmen markiert
   die sichtbare Fläche. Helle Flächen sind unbekannt, Punkte leer, Farben eigene Füllungen
   einschließlich möglicher Fehler und derselben Strichvorschau.
@@ -54,10 +55,22 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   oder Undo-Historie. Pro Blatt bleiben Bearbeitung/History erhalten; beim Blattwechsel
   startet die Ansicht wieder bei Arbeitsgröße.
 - Am Raster stehen ausschließlich die Lösungshinweise, ohne laufende Zeilen-/
-  Spaltennummern. „–“ ist eine leere Linie. Passende Folgen werden vollständig und
-  bei F-02/F-03 farbig gezeichnet. „…“ kennzeichnet ausschließlich physischen
-  Überlauf; darüberfahren zeigt die vollständige farbige Folge mit Umbruch direkt
-  über dem Arbeitsbild. Eine separate Hinweisansicht gibt es nicht.
+  Spaltennummern. „–“ ist eine leere Linie. Bei Überlauf bleibt ein zusammenhängender
+  Ausschnitt vollständiger Zahlen sichtbar. Standardmäßig bleibt das rasternahe Ende:
+  Spalten unten, Zeilen rechts. `…` links/oben markiert einen verborgenen Anfang,
+  rechts/unten ein verborgenes Ende; mittlere Ausschnitte dürfen beide Marker haben.
+  Zahlen, Farben und optionale A–D-Kennungen werden nie halb abgeschnitten.
+- Mittlere Taste oder Hand-Werkzeug links im oberen Hinweisbereich verschiebt nur
+  Spaltenfolgen vertikal. Dieselbe Geste im linken Hinweisbereich verschiebt nur
+  Zeilenfolgen horizontal. Die Hinweise bleiben derselben Rasterspalte/-zeile
+  zugeordnet; Raster, Miniatur, Zellen und Undo/Redo ändern sich nicht. Ziehen kann
+  über den Bereich hinausgehen, ohne sein Ziel zu wechseln. `Esc` oder Fokusverlust
+  bricht die Navigation ab. „Hinweise rasterseitig ausrichten“ stellt beide
+  Standardausschnitte wieder her.
+- Darüberfahren einer gekürzten Folge zeigt weiterhin den vollständigen farbigen
+  Hinweis mit Umbruch direkt über dem Arbeitsbild. Das ist ein Zusatzweg; Anfang,
+  Mitte und Ende bleiben auch durch Hinweis-Panning erreichbar. Eine separate
+  Hinweisansicht gibt es nicht.
 - UI 100/125 % vergrößert Oberfläche und Hinweise unabhängig vom Arbeitszoom.
   Bei 1280×720/125 % ist der untere Hilfetext über die Seitenleiste scrollbar;
   Werkzeuge und Hinweiszugriff bleiben erreichbar, die Miniatur bleibt fest sichtbar.
@@ -76,14 +89,17 @@ Am neuen Artefakt mit echter Maus prüfen und Ergebnisse einzeln protokollieren:
    Startüberquerung, typspezifische Rücknahmestriche, Radierer, Undo/Redo, Rand,
    falsche Tastenfreigabe, Esc und Fokusverlust. Tatsächlich lösen ohne Auskreuzpflicht;
    Detailbild und Raster als dasselbe Motiv beurteilen.
-2. M-02: F-02, alle Farben A–D, direkte Umwandlung, unnummerierte farbige Hinweise,
-   Accessibility-Kennungen aus/an, vollständiger Hover-Zugriff bei Überlauf und
-   Abschluss. Drei angrenzende Füllungen an einer Fünfergrenze müssen einzeln
-   erkennbar sein, auch in Vorschau und bei den relevanten Arbeitszoomstufen.
-3. M-03: F-03 eine notierte Koordinate bearbeiten, fein hinein-/herauszoomen,
-   Gesamtansicht einschließlich unterstem Grenzfall prüfen, weit verschieben und per
-   Miniatur/Koordinaten wiederfinden. Lange Hinweise per Hover vollständig lesen.
-   Keine verlorenen Aktionen, Richtungsumkehr beim Zoom oder Hänger.
+2. M-02: F-02, alle Farben A–D, direkte Umwandlung, unnummerierte farbige Hinweise
+   und Accessibility-Kennungen aus/an. Spalte 22 bei etwa 92/100 % prüfen: Beim
+   Kürzen bleiben vollständige restliche Zahlen sichtbar. Spalten vertikal und lange
+   Zeilen horizontal bis Anfang/Mitte/Ende pannen; Marker und ergänzenden Hover prüfen.
+   Drei angrenzende Füllungen an einer Fünfergrenze müssen einzeln erkennbar sein,
+   auch in Vorschau und bei den relevanten Arbeitszoomstufen. Anschließend lösen.
+3. M-03: F-03 eine notierte Koordinate bearbeiten und bei 50/75/92/100 % echte
+   Hinweiszahlen ohne Hover lesen. Beide Hinweisbereiche getrennt pannen; danach das
+   Raster stark zoomen/verschieben und per Miniatur/Koordinaten wiederfinden. Die
+   Zuordnung und gewählten Lesepositionen dürfen sich durch reines Raster-Pan nicht
+   ändern. Keine verlorenen Aktionen, Richtungsumkehr beim Zoom oder Hänger.
 4. M-06: Startfenster, Vergrößern/Maximieren, 1080p/1440p soweit verfügbar,
    UI 100/125 %, feste Zellgröße bei reinem Resize, erreichbare Werkzeuge/Hinweise.
 
@@ -109,8 +125,9 @@ python tools/p1_product.py --cache-dir $p1Cache --output-dir artifacts/p1-produc
 Unter Linux benötigt die echte OpenGL-Renderprüfung `xvfb-run` und Mesa. Der Harness
 nutzt nur die gepinnten offiziellen Archive, prüft deren vollständige Hashes, arbeitet
 in einer temporären Projektkopie mit isolierten APPDATA-/XDG-Pfaden und installiert
-nichts global. Tests, Negativtest Exit 23, Import, begrenzter Start, echte Renderbilder,
-Windows-Export und unter Windows exportierter Start. 300 Sekunden pro Prozess,
+nichts global. Tests, Negativtest Exit 23, Import, begrenzter Start, echte Renderbilder
+mit atomaren Anfangs-/Mittel-/Endausschnitten und beiden Hinweisachsen, Windows-Export
+und unter Windows exportierter Start. 300 Sekunden pro Prozess,
 1200 pro Download. Exportpreset exakt `P1 Windows x86_64`.
 
 ```sh

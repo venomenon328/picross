@@ -252,11 +252,14 @@ func test_scene() -> void:
 	await process_frame
 
 
-func mouse_motion(point: Vector2, held: bool) -> void:
+func mouse_motion(point: Vector2, held: bool, button: MouseButton = MOUSE_BUTTON_LEFT) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
 	event.position = point
 	event.global_position = point
-	event.button_mask = MOUSE_BUTTON_MASK_LEFT if held else 0
+	if held:
+		event.button_mask = MOUSE_BUTTON_MASK_MIDDLE if button == MOUSE_BUTTON_MIDDLE else (MOUSE_BUTTON_MASK_RIGHT if button == MOUSE_BUTTON_RIGHT else MOUSE_BUTTON_MASK_LEFT)
+	else:
+		event.button_mask = 0
 	root.push_input(event, true)
 
 func mouse_button(point: Vector2, pressed: bool, button: MouseButton = MOUSE_BUTTON_LEFT) -> void:
@@ -265,7 +268,10 @@ func mouse_button(point: Vector2, pressed: bool, button: MouseButton = MOUSE_BUT
 	event.global_position = point
 	event.button_index = button
 	event.pressed = pressed
-	event.button_mask = MOUSE_BUTTON_MASK_LEFT if pressed else 0
+	if pressed:
+		event.button_mask = MOUSE_BUTTON_MASK_MIDDLE if button == MOUSE_BUTTON_MIDDLE else (MOUSE_BUTTON_MASK_RIGHT if button == MOUSE_BUTTON_RIGHT else MOUSE_BUTTON_MASK_LEFT)
+	else:
+		event.button_mask = 0
 	root.push_input(event, true)
 
 func test_event_routing() -> void:

@@ -38,7 +38,7 @@ Der anschließende Nutzerauftrag lautet, diese Punkte einzuarbeiten und #9 vorzu
 
 #9 übernahm die vier damaligen Punkte und ergänzte F-02/F-03, Zoom/Pan und interaktive
 Miniatur. Sie wurden zunächst in P1 0.4 festgehalten. Die aktuelle
-[P1-Spezifikation 0.5](PROTOTYPE_P1.md) ergänzt D-11 bis D-15 und löst widersprechende
+[P1-Spezifikation 0.6](PROTOTYPE_P1.md) ergänzt D-11 bis D-17 und löst widersprechende
 alte D-09-/Hinweisregeln ab. Dieser historische P1.1-Bericht beweist weder die
 damaligen noch die späteren Änderungen oder deren Lesbarkeit.
 
