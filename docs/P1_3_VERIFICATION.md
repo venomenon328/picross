@@ -86,13 +86,14 @@ Arbeitsbaum und ist deshalb kein commitgebundener Abschlussnachweis der Nacharbe
 
 Die neuen Godot-Fälle injizieren Schreibfehler vor Album, Fixturewechsel,
 Beenden und WM-Close, prüfen Retry und den Wiederanlauf mit fehlendem Primary
-nach `after_rotation`. Eingabetests prüfen Subslot-Drag ohne Save, Drop-Snap,
+nach `after_rotation`. Eingabetests prüfen Subslot-Drag ohne Save, durchgehende
+Bewegung über Slotgrenzen hinweg, Drop-Snap,
 Abbruch, geometrischen Zähler, Hoverzustand und X-Segment-Clipping. Echte
 OpenGL-SubViewport-Bilder und Pixelproben decken die größere Füllfläche samt
 Trennung über alle Farben und Arbeitszoomstufen, dezente Bänder, Hintdrag,
 Live-Zähler sowie bestätigte und vorläufige X an vier Rändern und einer Ecke
 bei 24/36 Zellabstand ab. Der lokale Windows-Nacharbeitslauf auf verändertem
-Arbeitsbaum erreichte 1084/0 Godot-Prüfungen, 273 echte Renderbilder und 527
+Arbeitsbaum erreichte 1089/0 Godot-Prüfungen, 277 echte Renderbilder und 530
 Pixelchecks. Ein gesonderter isolierter Zwei-Prozess-Lauf meldete
 `P1_ROUNDTRIP_WRITE_OK` und `P1_ROUNDTRIP_READ_OK`. Die commitgebundenen
 Abschlussnachweise stehen nach den aktuellen CI-Läufen im Draft-PR.

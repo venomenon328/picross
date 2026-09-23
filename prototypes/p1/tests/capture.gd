@@ -356,6 +356,39 @@ func run() -> void:
 		quit(5)
 		return
 	pixel_checks += 1
+	var pitch: float = float(app.board.clue_layout("row", f03_row).slot_extent)
+	app.board.pan_drag_distance = pitch * 0.49
+	await snapshot(app, "hint-drag-before-slot-boundary")
+	var before_boundary: Image = Image.load_from_file(output.path_join("hint-drag-before-slot-boundary.png"))
+	app.board.pan_drag_distance = pitch * 0.51
+	await snapshot(app, "hint-drag-after-slot-boundary")
+	var after_boundary: Image = Image.load_from_file(output.path_join("hint-drag-after-slot-boundary.png"))
+	if region_difference(before_boundary, after_boundary, target_region) > 300 or region_difference(before_boundary, after_boundary, neighbour_region) != 0:
+		push_error("Rendered row hint jumped at a slot boundary")
+		quit(5)
+		return
+	pixel_checks += 2
+	app.board.cancel_gesture()
+	app.board.navigate_to(Vector2(float(f03_column) / 100.0, float(f03_row) / 100.0))
+	app.board.pan_button = MOUSE_BUTTON_MIDDLE
+	app.board.pan_target = "column"
+	app.board.pan_line_index = f03_column
+	app.board.pan_origin_step = app.board.clue_step("column", f03_column)
+	var column_pitch: float = float(app.board.clue_layout("column", f03_column).slot_extent)
+	app.board.pan_drag_distance = column_pitch * 0.49
+	await snapshot(app, "hint-drag-column-before-slot-boundary")
+	var column_before_boundary: Image = Image.load_from_file(output.path_join("hint-drag-column-before-slot-boundary.png"))
+	app.board.pan_drag_distance = column_pitch * 0.51
+	await snapshot(app, "hint-drag-column-after-slot-boundary")
+	var column_after_boundary: Image = Image.load_from_file(output.path_join("hint-drag-column-after-slot-boundary.png"))
+	var column_area: Rect2 = app.board.column_clue_area()
+	var column_x: float = app.board.view.cell_rect(Vector2i(f03_column, 0)).get_center().x
+	var column_region: Rect2i = Rect2i(Rect2(app.board.global_position + Vector2(column_x - 9, column_area.position.y), Vector2(18, column_area.size.y))).intersection(Rect2i(Vector2i.ZERO, surface.size))
+	if region_difference(column_before_boundary, column_after_boundary, column_region) > 300 or app.board.clue_step("column", f03_column) != 0:
+		push_error("Rendered column hint jumped at a slot boundary")
+		quit(5)
+		return
+	pixel_checks += 1
 	app.board.cancel_gesture()
 	var gesture_start: Vector2i = app.board.view.hit(app.board.view.viewport.get_center())
 	app.board.pointer_press(app.board.view.cell_rect(gesture_start).get_center(), MOUSE_BUTTON_RIGHT)

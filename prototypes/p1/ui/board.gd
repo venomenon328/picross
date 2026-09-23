@@ -528,12 +528,7 @@ func visible_clue_layout(axis: String, index: int) -> Dictionary:
 	result.visual_shift = 0.0
 	if pan_button != MOUSE_BUTTON_NONE and pan_target == axis and pan_line_index == index:
 		var pitch: float = maxf(float(result.slot_extent), 1.0)
-		var distance: float = clampf(pan_drag_distance, -float(pan_origin_step) * pitch, float(int(result.max_offset) - pan_origin_step) * pitch)
-		var snapped: int = clampi(pan_origin_step + roundi(distance / pitch), 0, int(result.max_offset))
-		result = ClueLayout.select_window(clue_entry_count(axis, index), clue_capacity(axis), snapped)
-		result.entries = clue_entries(session.definition.rows[index] if axis == "row" else session.definition.columns[index])
-		result.slot_extent = pitch
-		result.visual_shift = distance - float(snapped - pan_origin_step) * pitch
+		result.visual_shift = clampf(pan_drag_distance, -float(pan_origin_step) * pitch, float(int(result.max_offset) - pan_origin_step) * pitch)
 	return result
 
 func clue_entry_count(axis: String, index: int) -> int:
@@ -586,6 +581,15 @@ func tooltip_entries(axis: String, index: int) -> Array:
 func _draw_row_hint(index: int, py: float, font: Font, fs: int) -> void:
 	var layout: Dictionary = visible_clue_layout("row", index)
 	var area: Rect2 = row_clue_area()
+	if pan_button != MOUSE_BUTTON_NONE and pan_target == "row" and pan_line_index == index and not is_zero_approx(float(layout.visual_shift)):
+		for token_index: int in range(layout.entries.size()):
+			var token: Dictionary = layout.entries[token_index]
+			var slot: int = int(layout.token_slot) + token_index - int(layout.start)
+			var center: float = clue_slot_center("row", area, layout, slot) + float(layout.visual_shift)
+			var width: float = font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+			if center - width / 2.0 >= area.position.x and center + width / 2.0 <= area.end.x:
+				draw_string(font, Vector2(center - width / 2.0, py + fs * 0.35), str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(token.color))
+		return
 	for unit: Dictionary in layout.units:
 		var text: String = "…" if unit.kind != "token" else str(layout.entries[int(unit.index)].text)
 		var color: Color = ACCENT if unit.kind != "token" else Color(layout.entries[int(unit.index)].color)
@@ -597,6 +601,15 @@ func _draw_row_hint(index: int, py: float, font: Font, fs: int) -> void:
 func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 	var layout: Dictionary = visible_clue_layout("column", index)
 	var area: Rect2 = column_clue_area()
+	if pan_button != MOUSE_BUTTON_NONE and pan_target == "column" and pan_line_index == index and not is_zero_approx(float(layout.visual_shift)):
+		for token_index: int in range(layout.entries.size()):
+			var token: Dictionary = layout.entries[token_index]
+			var slot: int = int(layout.token_slot) + token_index - int(layout.start)
+			var center: float = clue_slot_center("column", area, layout, slot) + float(layout.visual_shift)
+			var width: float = font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+			if center - fs >= area.position.y and center + fs * 0.35 <= area.end.y:
+				draw_string(font, Vector2(px - width / 2.0, center + fs * 0.35), str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(token.color))
+		return
 	for unit: Dictionary in layout.units:
 		var text: String = "…" if unit.kind != "token" else str(layout.entries[int(unit.index)].text)
 		var color: Color = ACCENT if unit.kind != "token" else Color(layout.entries[int(unit.index)].color)

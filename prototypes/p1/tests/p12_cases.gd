@@ -348,8 +348,13 @@ static func followup_input_geometry(t: SceneTree, app: Main) -> void:
 	t.mouse_motion(point + Vector2(pitch * 0.35, 2 * b.view.cell_size), true, MOUSE_BUTTON_MIDDLE)
 	t.check(b.clue_step("row", index) == 0 and is_equal_approx(float(b.visible_clue_layout("row", index).visual_shift), pitch * 0.35) and b.capture_view() == confirmed, "N-03 subslot movement stays visual and unsaved")
 	t.check(window_signature(b.clue_layout("row", neighbour)) == neighbour_layout, "N-03 adjacent clue remains fixed during drag")
+	var confirmed_window: Array = window_signature(b.clue_layout("row", index))
+	for fraction: float in [0.49, 0.51, 1.49, 1.51]:
+		t.mouse_motion(point + Vector2(pitch * fraction, 2 * b.view.cell_size), true, MOUSE_BUTTON_MIDDLE)
+		var visual: Dictionary = b.visible_clue_layout("row", index)
+		t.check(visual.offset == 0 and window_signature(visual) == confirmed_window and is_equal_approx(float(visual.visual_shift), pitch * fraction), "N-03 visible tokens cross slot boundary continuously before drop " + str(fraction))
 	t.mouse_motion(point + Vector2(pitch * 1.6, 2 * b.view.cell_size), true, MOUSE_BUTTON_MIDDLE)
-	t.check(b.clue_step("row", index) == 0 and b.visible_clue_layout("row", index).offset == 2, "N-03 dragged clue crosses slots without committing")
+	t.check(b.clue_step("row", index) == 0 and b.visible_clue_layout("row", index).offset == 0, "N-03 dragged clue crosses slots without visual or semantic snap")
 	var escape: InputEventKey = InputEventKey.new()
 	escape.keycode = KEY_ESCAPE
 	escape.pressed = true
@@ -553,6 +558,7 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	t.check(b.pan_button == MOUSE_BUTTON_MIDDLE and b.pan_target == "column" and b.pan_line_index == column_a, "J-03 wrong release keeps frozen column target")
 	var column_pitch: float = float(b.clue_layout("column", column_a).slot_extent)
 	t.mouse_motion(column_point_a + Vector2(column_pitch * 0.7, column_pitch * 1.2), true, MOUSE_BUTTON_MIDDLE)
+	t.check(b.visible_clue_layout("column", column_a).offset == 0 and is_equal_approx(float(b.visible_clue_layout("column", column_a).visual_shift), column_pitch * 1.2), "N-03 column passes slot boundary without visual snap")
 	t.mouse_button(outside, false, MOUSE_BUTTON_MIDDLE)
 	t.check(only_line_changed(columns_before, b.column_clue_steps, column_a) and b.clue_step("column", column_a) == 1, "J-03 diagonal column drag changes only its vertical slot")
 	t.check(window_signature(b.clue_layout("column", column_b)) == column_b_window_before, "J-03 neighbouring column window remains byte-for-byte equivalent")
