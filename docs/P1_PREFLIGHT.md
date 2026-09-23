@@ -6,7 +6,7 @@ Stand: 22.09.2026 · technischer Untersuchungsnachweis zu [Issue #7](https://git
 
 Der reproduzierbare lokale Windows-Pfad für Godot Standard 4.7.2-stable ist positiv: offizielle Editor- und Exportvorlagen-Archive wurden tatsächlich heruntergeladen, gegen die SHA-256-Digests der GitHub-Release-Metadaten geprüft und in einem temporären, vom Nutzerprofil isolierten Verzeichnis verwendet. Import, positiver Test, absichtlich fehlschlagender Test, kontrollierter Headless-Start, Windows-x86_64-Debugexport und Start des exportierten Windows-Konsolenprogramms funktionieren.
 
-Der gleichartige Linux-CI-Pfad und sein herunterladbares Windows-Smoke-Artefakt müssen für den konkreten PR-Head erfolgreich sein; Lauf- und Artefaktkennung stehen im PR, weil sie erst nach dem Push entstehen. Erst mit diesem Nachweis ist das technische P1.0-Gate positiv. Die separate Controllergerät-/Testerentscheidung aus P1 §8.3 bleibt unabhängig davon offen und blockiert weiterhin die Freigabe der Spielimplementierung.
+Der gleichartige Linux-CI-Pfad und sein herunterladbares Windows-Smoke-Artefakt wurden für PR #13 / Head `9dc214005cc6c82adebd983d972f97af1b2217b7` erfolgreich geprüft und als `7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac` gemergt. Das technische P1.0-Gate ist damit positiv. Die ursprünglich offene Controllergerät-/Testerentscheidung wurde später durch D-06 in #5/#8 ausdrücklich für P1 aufgehoben; alternative Eingaben bleiben spätere Produktarbeit.
 
 Dies ist kein P1-Spiel, kein Beleg für einen sichtbaren Windows-GUI-Start und keine Bedien-, Controller-, Rätsel- oder Produktabnahme. Der Smoke greift nicht auf `prototypes/p1/` oder echte Spielstände zu.
 
@@ -75,4 +75,4 @@ Das ZIP ist nur die isolierte technische Probe. Es ist kein Release und kein P1-
 
 Der lokale Windows-Toolchainpfad ist technisch geeignet. Für eine positive Gesamtentscheidung von #7 müssen auf dem konkreten PR-Head zusätzlich die Preflight-CI, die bestehende Setup-CI, der vollständige Diffcheck und der Selbstreview grün sein. Fehlt einer dieser Nachweise, bleibt #7 entsprechend offen; ältere Dokument-CI zählt nicht als Ersatz.
 
-Auch nach positivem #7 bleiben vor P1.1 die in #5 benannte Zuordnung eines echten Controllergeräts/Testers oder eine ausdrückliche Gate-Abweichung offen. Später sind am echten `prototypes/p1` weiterhin A-01 bis A-07 und M-01 bis M-07 erforderlich. Der Preflight ändert weder Engineversion noch Fachverträge oder Gate-Zeitpunkte.
+D-06 hebt das frühere Controller-Startgate ausdrücklich auf. Für die gesamte P1-Lieferung gelten am echten `prototypes/p1` A-01 bis A-07 und M-01 bis M-04, M-06/M-07; M-05 ist nicht anwendbar. Der Preflight selbst ändert weder Engineversion noch Fachverträge. Der echte P1.1-Produktweg und die offene Eigentümer-Mausprobe K-06 stehen im [P1.1-Prüfbericht](P1_1_VERIFICATION.md).

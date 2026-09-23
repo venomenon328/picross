@@ -187,7 +187,7 @@ Die folgende Sammlung bewahrt sinnvolle Ansätze aus dem Gespräch, ohne sie zu 
 
 | Bereich | Vorschlag beziehungsweise Untersuchung |
 | --- | --- |
-| Großraster | Fixierte Hinweise, Hervorhebung der aktiven Zeile/Spalte, Fokusansicht einer vollständigen Linie, Lesezeichen und aussagekräftige Ausschnittnavigation. |
+| Großraster | Fixierte Hinweise, Hervorhebung der aktiven Zeile/Spalte, vollständiger In-Context-Zugriff bei Überlauf, Lesezeichen und aussagekräftige Ausschnittnavigation. |
 | Eingaben | Eindeutige Aktion pro Ziehvorgang statt unerwartetem Umschalten überfahrener Felder; Längenzähler, Linealmodus und Abbruchmöglichkeit. |
 | Undo/Redo | Rücknahme zusammenhängender Aktionen beziehungsweise ganzer Striche; Fehlerhistorie, manuelle Korrekturen und genaue Aktionsgrenzen spezifizieren. Der Perfektionsausschluss durch Undo ist bereits in Abschnitt 6.2 beschlossen. |
 | Hypothesen | „Unsicher gesetzt“ beziehungsweise „unsicher leer“, bei Farben mit Farbzuordnung; separate Notizebene als Vorschlag. Aufnahme, Übernahme-/Verwerfverhalten und Verträglichkeit mit Perfektion bleiben offen. |

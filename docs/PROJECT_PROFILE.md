@@ -2,39 +2,59 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` befindet sich in der Produktkonzeption und Prototypspezifikation. Das Repository enthält Entwicklungsregeln, Projekteinstellungen, die konsolidierte Produktdefinition, ein frühes Gestaltungskonzept, die P1-Spezifikation, eine kleine Dokumentprüfung und den isolierten technischen [P1.0-Preflight](P1_PREFLIGHT.md), noch keine Spielimplementierung. Der [Workflow](dev-rules/WORKFLOW.md) ist die gemeinsame Prozessgrundlage; [AGENTS.md](../AGENTS.md) der Einstieg. Aktueller Lieferumfang und Freigaben stehen im jeweiligen Issue/PR, nicht in einer parallel gepflegten Roadmap.
+`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1.2-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.2 liegt im gemeinsamen Draft-PR #14 vor, noch nicht auf `main`. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR, nicht in einer parallelen Roadmap.
 
-Die [Produktdefinition](PRODUCT_DEFINITION.md) ist die zuständige Quelle für die bisher bestätigte Produktausrichtung. Bei Arbeiten an Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig lesen. Sie unterscheidet bestätigte Entscheidungen, noch zu prüfende Vorschläge und offene Details. Ihr grober Entwicklungsablauf ist keine Implementierungsfreigabe oder eigenständige Fortschrittsverwaltung.
+Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
-Das [Gestaltungskonzept](DESIGN_CONCEPT.md) konkretisiert die bestätigte visuelle Grundlage und dokumentiert die noch offene Themenwahl sowie Interaktionsvorschläge. Bei Arbeiten an Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung oder entsprechenden Prototypen zusätzlich vollständig lesen. Die positive Rückmeldung zu den exemplarischen Mocks ist keine Abnahme sämtlicher dargestellter Details und kein Nachweis funktionierender Bedienung.
+Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.5 übernimmt das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung, gemeinsamem Hinweisraster und linienweisen Lesepositionen.
 
-Für den ersten Großraster-/Bedienprototyp zusätzlich die vollständige [P1-Spezifikation](PROTOTYPE_P1.md) und [Issue #5](https://github.com/venomenon328/picross/issues/5) einschließlich späterer Entscheidungen lesen. Die Datei enthält den versionierten Vertrag, das Issue den aktuellen Auftrag und Ausführungs-/Abnahmestand. Die bestätigten P1-Entscheidungen lösen die früheren offenen P1-Vorschläge innerhalb dieses begrenzten Scopes ab; sie entscheiden nicht automatisch die endgültige Produkttechnik oder globale Wertungsfragen. Noch keine technische Startverifikation oder Produktabnahme behaupten.
+Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und [P1.1-Prüfbericht](P1_1_VERIFICATION.md), ab #9 auch [P1.2-Prüfbericht](P1_2_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
 
-Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Regelkopie. Eine P1-Spezifikation liegt vor; eine abschließende Produktarchitektur und erprobte produktspezifische Teststrategie existieren noch nicht. Weitere Quellen erst mit tatsächlich beschlossenen Inhalten anlegen und hier situationsbezogen verlinken; keine nicht vorhandenen Pflichtdokumente erfinden.
+**Aktuelle Phase:** #9 implementiert D-07 bis D-22 der Spezifikation 0.7 samt
+Farb-/Großrasterbedienung, gemeinsamem Hinweisraster, individuellen Lesepositionen,
+1080p-Startbasis, verfeinertem F-02-Motiv und der Nacharbeit zu Review R2/B-01/B-02
+auf dem bestehenden P1-Draft. Der [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und die aktuelle Anleitung
+beschreiben Umsetzung und technische Nachweise. Reale Eigentümerabnahme, #11/#12 und
+Gesamtmerge bleiben offen. Der historische #8-Nachweis und die alten grünen Läufe auf
+`267df8c…`/`bd6730d…` werden dadurch nicht rückwirkend zum Nachweis des neuen Heads.
 
-## Beschlossene Richtung und offene Produkt-/Technikentscheidungen
+Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Regelkopie. Keine abschließende Produktarchitektur oder universell erprobte Produkt-Teststrategie behaupten. Weitere Pflichtquellen erst mit tatsächlich beschlossenen Inhalten anlegen.
 
-Die Produktdefinition legt das PC-Nonogramm-Konzept mit klassischen und farbigen kuratierten Bildrätseln, Großrasterfokus, früher visueller/UI-Konzeption, Offline-Solo-Spiel sowie den grundsätzlichen Progressions- und Wertungsrahmen fest. Sie ist für diese Entscheidungen maßgeblich; das ursprüngliche Repositorysetup hatte sie noch nicht getroffen.
+## Beschlossene Richtung und offene Entscheidungen
 
-Beschlossen sind außerdem ein sich füllendes Album, warme und ruhige handgezeichnete 2D-Gestaltung mit klaren Konturen und Farbflächen, motivtreue farbige Abschlussrepräsentationen monochromer Rätsel sowie Perfektion nur ohne Fehler und ohne Undo. Thematisches Sammelalbum und regionales Reisetagebuch bleiben Alternativen. Hypothesen und ihre Wertungswirkung, die Abgrenzung manueller Korrekturen sowie konkrete Layout-/Interaktionsdetails sind nicht allein durch den Mock entschieden.
+Produktkern: klassische und farbige kuratierte PC-Bildrätsel, Großrasterfokus, präzise Eingabe, Offline-Solo-Spiel, frühe visuelle Gestaltung sowie der bestätigte Progressions-/Wertungsrahmen. Das ursprüngliche Setup hatte weder Spielmechanik noch Technik festgelegt.
 
-Für P1 bestätigt: Godot als native Windows-Desktopfassung, reduzierter Umfang ohne Wertung/Live-Fehlerhilfe/Hypothesen, elastische Strichvorschau, geschützte vorhandene Einträge und Abschluss ohne Pflicht zum Auskreuzen leerer Hintergrundfelder. Die P1-Spezifikation konkretisiert typisiertes GDScript, Godot 4.7.2-stable mit passenden Exportvorlagen sowie den noch zu realisierenden Befehls-/Testvertrag. Nutzerreferenz: Windows 11, 2560×1440, Maus, Ryzen 7 5800X und GeForce RTX 3070. Reale Anzeigeskalierung und Controllergerät/-Tester sind nicht angegeben. Controllerkonzeption und ihr offener Hardwareprüfweg werden nicht aus der Mauspräferenz heraus gestrichen.
+Visuelle Grundlage: sich füllendes Album, warme ruhige 2D-Illustration mit klaren Konturen und Farbflächen, motivtreue Abschlussbilder, Perfektion nur ohne Fehler und ohne Undo. Sammelalbum/Reisealbum bleiben Alternativen. Detailliertere Abschlussbilder dürfen die Rasterstilisierung verfeinern; pixelidentische Silhouetten sind kein allgemeines Qualitätskriterium.
 
-Die endgültige Produktengine/-sprache, gesamte PC-Betriebssystemmatrix, Produktdatenhaltung, genaue Rätsel-/Solververträge, Fehlerzählung, Sternschwellen und Veröffentlichungs-/Lizenzdetails bleiben außerhalb der begrenzten P1-Festlegungen offen. Vor davon abhängiger Implementierung die konkreten Entscheidungen und Abnahmekriterien klären. Bereits ausdrücklich getroffene neue Nutzerentscheidungen nachvollziehbar in ihre zuständigen Quellen übernehmen, statt sie ungefragt neu festzulegen.
+P1: native Windows-Desktopfassung, typisiertes GDScript, Godot Standard 4.7.2-stable mit passenden Standard-Exportvorlagen, keine Wertung/Live-Fehlerhilfe/Hypothesen. D-06 bleibt verbindlich: Maus, kein Tastatur-/Controller-Scope oder entsprechendes Gate. Escape bleibt der vereinbarte Abbruch einer Mausgeste. Spätere alternative Produkteingaben werden dadurch nicht gestrichen.
 
-Insbesondere keine Java-, Datenbank-, Windows-Werkzeugpfad- oder lokalen Testverbote allein aus anderen Projekten übernehmen. Die Godot-Wahl für P1 beruht auf dem ausdrücklichen Nutzerentscheid, nicht auf dem ursprünglichen Setup. Python dient der Dokumentprüfung und dem isolierten P1.0-Toolchain-Smoke, nicht als Produktstackentscheidung.
+Ab #9: 1080p-Startziel ohne erzwungene Zellvergrößerung, getrennte UI-/Raster-
+Skalierung, visuelle Zelltrennung auch an Fünferlinien, direkte Füllung↔X-Umwandlung
+mit links/rechts bei einmalig festgelegtem Strichmodus, detaillierteres F-01-Ergebnisbild,
+unnummerierte einzeilige farbige Hinweise direkt im Arbeitsbild sowie feiner monotoner
+Zoom. Überlaufende Folgen behalten vollständige einzelne Hinweise, verwenden gemeinsame
+feste Slots und sind je konkrete Spalte beziehungsweise Zeile unabhängig vom Raster
+und allen Nachbarfolgen pannbar. F-02 erhält wie das bestätigte F-01 ein eigenständiges
+verfeinertes Ergebnisbild. Verbindliche Details ausschließlich in P1 §§4–5; D-18 bis
+D-22 lösen widersprechende alte D-07-/D-14-/D-17-/Hinweisregeln ab.
+
+Referenzhardware aus früheren Nutzerangaben: Windows 11, 2560×1440, Maus, Ryzen 7 5800X, RTX 3070. Tatsächliche Windows-Skalierung, Fensterfläche und Versionskennung des Nutzerlaufs sind nicht aus Screenshotgrößen bestätigt. Fehlende Daten sichtbar lassen und bei der erneuten Probe erfassen.
+
+Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, Solver-/Produktionsverträge, Fehlerzählung, Sternschwellen, Wertungswirkung manueller Neutralisierung und Veröffentlichungsdetails bleiben außerhalb dieser begrenzten Festlegungen offen. Keine Regeln aus anderen Projekten übernehmen. Python dient hier Prüf-/Buildwerkzeugen, nicht der Wahl eines Produktstacks.
 
 ## Branches und Befugnisse
 
-Zielbranch ist `main`. Neue Arbeitsbranches gemäß gemeinsamem Workflow; Vorbereitung erzeugt standardmäßig noch keinen Branch oder PR. Ein Implementierungsauftrag erlaubt Branch, Commits, Push und Draft-PR im beauftragten Umfang. Standardmerge ist Squash nach ausdrücklicher oder passender bedingter Freigabe. Keine automatische Branchlöschung, kein Force-Push und keine direkten Änderungen am Zielbranch ohne entsprechende Befugnis.
+Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter Freigabe. Keine automatische Branchlöschung, kein Force-Push und keine direkten Änderungen am Zielbranch ohne passende Befugnis.
 
-Die einmalige Initialisierung des tatsächlich leeren Repositories ist in [Issue #1](https://github.com/venomenon328/picross/issues/1) dokumentiert. Danach läuft auch das Setup über einen eigenen PR. Technischer Branchschutz wurde nicht eingerichtet oder als wirksam verifiziert; die vereinbarten Prüfungen gelten unabhängig davon.
+Der beauftragte gemeinsame Arbeitsbranch ist `feat/5-p1-prototype`, Draft-PR #14. #9 setzt dort auf #8 auf, nicht auf einem frisch von `main` abgezweigten Parallelbranch. Bestehenden Branch/PR nicht ersetzen. #9, #11 und #12 werden separat beauftragt, im gemeinsamen P1-Draft integriert und mit ihren eigenen Tests/Nachweisen geliefert. #5 bleibt bis vollständiger Lieferung und Abnahme offen.
 
-Der kombinierte Auftrag zur Ergänzung und zum Merge der P1-Spezifikation erlaubt das entsprechende Dokumentpaket. Er beauftragt weder die Implementierung von P1 noch deren späteren Merge. Issue #5 bleibt für die tatsächliche Prototyplieferung offen.
+Vorbereitung allein erlaubt keine Spielimplementierung. Der ausdrückliche Implementierungsauftrag für #9 erlaubt die spezifizierten Änderungen, Tests, Commits, Push und Aktualisierung desselben Draft-PRs, nicht die Ausführung von #11/#12 oder Merge.
 
-## Prüfweg für den Dokumentationsstand
+Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchschutz ist nicht als wirksam verifiziert; die vereinbarten Prüfungen gelten unabhängig davon. Keine Schutzregeln umgehen.
 
-Python 3.11 oder neuer, ausschließlich Standardbibliothek. Kleine lokale Prüfungen in einer geeigneten bestehenden Umgebung sind zulässig; ein passender aktueller CI-Nachweis kann die Abschlussprüfung liefern. Keine pauschale doppelte lokale Vollprüfung neben demselben belastbaren CI-Stand. Unbekannte lokale Ressourcen- oder Konfigurationsgrenzen vor davon betroffener Arbeit prüfen; globale Codex-Einstellungen der Nutzerworkstation sind hier nicht als geprüft bestätigt.
+## Dokumentprüfung
+
+Python 3.11 oder neuer, Standardbibliothek. Kleine lokale Prüfungen in geeigneter vorhandener Umgebung sind zulässig; belastbare aktuelle CI darf die Abschlussprüfung liefern. Keine ritualisierte doppelte Vollprüfung. Unbekannte lokale Ressourcen-/Konfigurationsgrenzen vorher prüfen; globale Codex-Einstellungen der Nutzerworkstation sind nicht als geprüft bestätigt.
 
 Verbindliche Befehle im Repository-Root:
 
@@ -43,30 +63,68 @@ python3 -m unittest discover -s tools -p 'test_*.py' -v
 python3 tools/check_docs.py
 ```
 
-Vor Merge muss [Setup verification](../.github/workflows/setup.yml), Job `docs`, für den aktuellen PR-Head beziehungsweise zugehörigen Test-Merge-Stand erfolgreich sein. Er führt die Tests, Dokumentprüfung und `git diff --check` über das vollständige Änderungspaket aus. Fehlende, fehlgeschlagene oder übersprungene Pflichtprüfungen nicht als bestanden werten. Head, Basis und gegebenenfalls Test-Merge den Belegen zuordnen.
+Vor Merge muss [Setup verification](../.github/workflows/setup.yml), Job `docs`, für aktuellen Head beziehungsweise zugehörigen Test-Merge erfolgreich sein. Der Job prüft Tests, Dokumente und vollständigen `git diff --check`. Head, Basis und gegebenenfalls Integrationscommit zuordnen; übersprungene oder alte unpassende Checks nicht als bestanden ausgeben.
 
-[check_docs.py](../tools/check_docs.py) und [seine Tests](../tools/test_check_docs.py) sind aus dem in der Herkunftsnotiz genannten dev-rules-Stand abgeleitet und auf `docs/dev-rules/` sowie die tatsächlichen Setup-Dateien angepasst. Sie prüfen erforderliche Dateien, UTF-8/LF/Abschlusszeile, nachgestellte Leerzeichen, Versionsformat und einfache lokale Inline-Markdown-Links einschließlich Paketgrenzen. Keine externe URL-Prüfung, Linkanker-, Referenzlink- oder vollständige Markdownvalidierung. Byteidentität des Regelpakets beim Einführen/Aktualisieren separat gegen den Quellcommit prüfen; der Dokumentvalidator beweist sie nicht.
+[Dokumentvalidator](../tools/check_docs.py) und [Tests](../tools/test_check_docs.py) sind aus dem dokumentierten dev-rules-Stand abgeleitet. Geprüft werden Pflichtdateien, UTF-8/LF/Abschlusszeile, nachgestellte Leerzeichen, Versionsformat und einfache lokale Inline-Markdown-Links samt Paketgrenzen. Nicht geprüft: externe URLs, Anker, Referenzlinks, vollständige Markdownvalidierung oder Byteidentität der Regelkopie. Letztere bei Regelpaketaktualisierung separat gegen den Quellcommit prüfen.
 
-## Technischer P1.0-Preflight
+## Toolchain- und Produktprüfung
 
-Issue #7 wird durch `tools/p1_preflight.py`, die ausschließlich technische Probe unter `tools/p1_preflight_smoke/` und den Workflow [P1 toolchain preflight](../.github/workflows/p1-preflight.yml) geprüft. Der Preflight bleibt bei Godot Standard 4.7.2-stable und lädt Editor sowie Standard-Exportvorlagen ausschließlich aus dem offiziellen Release. Live-Release-Metadaten und die vollständigen Archive werden gegen die festgeschriebenen SHA-256-Werte geprüft; Binärarchive werden nicht versioniert oder global installiert.
+P1.0 wurde nach erfolgreichem `preflight`-/`docs`-Job über PR #13 gemergt. [Preflight-Harness](../tools/p1_preflight.py) und [CI](../.github/workflows/p1-preflight.yml) verwenden ausschließlich die gepinnten offiziellen Standard-Assets. Live-Metadaten und vollständige Archive werden gegen SHA-256 geprüft, temporär verwendet und nicht versioniert/global installiert. Bei Änderungen am Preflight echten Download-/Import-/Test-/Start-/Exportweg nachweisen, nicht nur Mocks oder Dokumenttests.
 
-Der vollständige lokale Befehl und die Speicher-/Timeoutvoraussetzungen stehen im [Preflightbericht](P1_PREFLIGHT.md). Seine Offline-Harnesstests laufen bereits mit dem verbindlichen `unittest discover`-Befehl. Bei Änderungen am Preflight muss zusätzlich der echte Download-/Import-/Test-/Start-/Exportweg lokal oder in der dafür bestimmten CI ausgeführt werden; ein reiner Mock- oder Dokumenttest reicht nicht.
+Der [Produkt-Harness](../tools/p1_product.py) nutzt diese Grundlage mit temporärer Projektkopie und eigenen APPDATA-/LOCALAPPDATA- beziehungsweise XDG-Pfaden. P1.1/P1.2 haben noch keine dauerhaften Spielstände. Lokale Windows-Prüfungen sind erlaubt. Prozesslimit 300 Sekunden, Downloadlimit 1200 Sekunden, CI-Joblimit 40 Minuten.
 
-Vor Merge von #7 müssen für den konkreten PR-Head sowohl der Job `preflight` aus `P1 toolchain preflight` als auch der bestehende Job `docs` aus `Setup verification` erfolgreich sein. Das CI-Artefakt ist eine kurzlebige technische Windows-Probe, kein Release und kein Nachweis für sichtbaren GUI-Start, Bedienbarkeit, Controller, Rätselverhalten oder A-07 des späteren Produkts. Der positive P1.0-Nachweis hebt das separate Controller-Planungsgate aus #5/P1 §8.3 nicht auf.
+```powershell
+$p1Cache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
+python tools/p1_product.py --cache-dir $p1Cache --output-dir artifacts/p1-product
+```
 
-## Abnahme und spätere Erweiterung
+Unter Linux `python3` und externen Cachepfad verwenden. Der bestehende Ablauf prüft F-01s Zertifikat, Import, Godot-Tests, erwarteten Negativtest mit Exit 23, begrenzten Start der Hauptszene und Windows-Export mit `P1 Windows x86_64`; auf Windows zusätzlich exportierten Start. Bericht, Phasenlogs und vollständiges ZIP mit EXE-Paar/Anleitung/Commitkennung werden erzeugt. Quellhead, getesteten Checkout/Test-Merge und veränderten Arbeitsbaum unterscheiden.
 
-Den vollständigen Diff inhaltlich gegen den Auftrag prüfen: keine versteckten Produktentscheidungen, keine unerreichbaren Pflichtquellen, unveränderte Regelkopie und konsistente Projekteinstellungen. Bei der Übernahme des Produktgesprächs insbesondere bestätigte Anforderungen von Empfehlungen und offenen Fragen trennen. Die fachliche Dokumentabnahme erfolgt vor Merge durch den Eigentümer. Ein getrennter Selbstreview ist keine unabhängige Zweitprüfung. Reine Dokumentpakete liefern kein Produktverhalten und benötigen keine vorgetäuschte Spiel-/Grafikabnahme.
+#9 erweitert diesen Ablauf für F-02/F-03, direkte Gestenumwandlung und Rücknahme,
+farbige atomare In-Context-Hinweise in gemeinsamen Slots, individuelle Zeilen-/
+Spalten-Lesepositionen, feinen monotonen Zoom,
+Ansichts-/Miniaturtransformationen, Resize und unabhängige Abschlussressourcen.
+Teständerungen zu D-09 bis D-22 sind
+gezielte Vertragsanpassungen; sonstige Regressionen nicht durch Entfernen von Tests
+verdecken. F-01-Lösung/Hinweise und logische Nachweise erhalten. Keine neue allgemeine
+Solver-/Assetplattform erforderlich.
 
-Für die spätere P1-Implementierung gelten die automatisierten und manuellen Szenarien in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Abschnitt 8. Der echte Controllerprüfweg ist vor Implementierungsfreigabe zu klären oder eine Gate-Abweichung ausdrücklich zu vereinbaren. Noch offene Produktprüfungen blockieren nicht den ausdrücklich beauftragten Dokumentmerge und sind dabei nicht als bestanden zu melden.
+Für die technische Lieferung von #9 müssen `product` aus [P1 product verification](../.github/workflows/p1-product.yml), `docs` und der weiterhin aktive `preflight` für den aktuellen Stand tatsächlich erfolgreich sein. Produktartefakte werden im bestehenden Weg 14 Tage gespeichert. Ein Headless-Start oder synthetisches Event ersetzt keine reale Maus-/GUI-Abnahme. Die neuen Slotausrichtungs-/Layout-/Zelltrennungs-/Reveal-Kriterien benötigen außerdem echte Renderkontrolle mit dokumentierten Größen, nicht nur Assertions über Objektmaße.
 
-Sobald ausführbarer Produktcode hinzukommt, im selben Paket die echten Build-, Test- und gegebenenfalls Export-/manuellen Abnahmewege ergänzen und dieses Profil aktualisieren. Eine grüne Setup-CI allein ist dann kein ausreichender Produktnachweis. Die Godot-Befehle in der P1-Spezifikation sind ein zu realisierender Vertrag, noch keine hier erfolgreich ausgeführten Produktbefehle. Konkrete manuelle Szenarien mit Akteur, Stand, Ergebnis und Zeitpunkt vor Merge oder Release bestimmen. Offene Detailentscheidungen blockieren nicht eigenständig prüfbare Dokumentänderungen, wohl aber davon abhängige Produktimplementierung.
+## Abnahme und Übergaben
+
+Vollständigen Diff gegen den Auftrag prüfen: keine versteckten Produktentscheidungen, Secrets, ungeklärten Assets, unerreichbaren Pflichtquellen oder ungefragten Änderungen der gemeinsamen Regeln. Technischen Nachweis, Selbstreview, Nutzerprobe, Merge- und Releasefähigkeit unterscheiden. Ein getrennter Selbstreview ist keine unabhängige Zweitprüfung.
+
+Der Review R1 in PR #14 bezieht sich auf den P1.1-Head `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, nicht auf die damaligen noch ausstehenden #9-Funktionen. K-06 wurde anschließend vom Nutzer erprobt und mit zwei Screenshots/vier Folgepunkten beantwortet. **Durchgeführt mit Änderungsbedarf** ist keine pauschale positive Abnahme aller Szenarien. Einzelbestätigungen und tatsächliche Skalierung fehlen teilweise.
+
+Review R2 bezieht sich auf `267df8cdb264070ed1f81e500475657be6f27f9d` und
+nennt B-01 (invertierbare Zoomrichtung aus der Gesamtansicht) sowie B-02 (Mojibake im
+Projekttitel). Die folgende Eigentümerprobe ergänzt D-11 bis D-15 als neuen Sollstand;
+die Probe nach Review R3 ergänzt D-16/D-17 zur Kürzung und Hinweisnavigation.
+Die Nacharbeit behebt diese technischen Punkte, ersetzt aber weder ein Review des neuen
+Heads noch die weiterhin offene reale Eigentümerprobe.
+
+Review R4 bezieht sich auf `b19f14e0f8c7a599bd04799872ccea3b7ceadc6c` und verlangt
+die Grundlagenkorrektur J-01 bis J-06: keine Hinweis-Zusatzkennungen, gemeinsame feste
+Slots, unabhängige Navigation jeder konkreten Linie, 1080p-Startbasis, verfeinertes
+F-02-Motiv und dazu passende Quellen/Nachweise. D-18 bis D-22 in P1 0.7 setzen diesen
+Sollstand um; ältere grüne Läufe und frühere Reviewstände belegen ihn nicht.
+
+Review R5 bezieht sich auf `edd7a28ce11bdb2e0aff4e41ee5fbc6b8c7b7702` und führt
+B-03/B-04 als aktive technische Nacharbeit: individuelle Hinweisfolgen müssen bei
+Zoom, Resize und UI-Skalierung ihre semantische Leseposition statt nur den numerischen
+Offset erhalten; der widersprüchliche Farbrätsel-Satz im Gestaltungskonzept ist mit
+D-22 zu vereinheitlichen. Die Nacharbeit ändert weder die übrigen D-18-bis-D-22-
+Funktionen noch die getrennte spätere Layout-/Zieldesign-Phase. A-01 bleibt offen.
+
+Der ausdrückliche Folgeauftrag zur Umsetzung von #9 bearbeitet dieses Feedback; fehlende Metadaten sind weiterhin bei der erneuten Probe zu erfassen. Die erneute reale Maus-/Layoutprobe an der #9-Lieferung erfasst diese Daten und prüft einzeilige Teilhinweise, gemeinsame Slots, mehrere individuelle Zeilen-/Spaltenpositionen, ihre feste Rasterzuordnung, 1080p-Start und den neuen F-02-Leuchtturm sowie die übrigen offenen Bedien-/Motivfälle. Der Eigentümer ist dafür zuständig; Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken. Die positive F-01-Teilbestätigung bleibt erhalten.
+
+Vor Gesamt-P1-Merge gelten weiterhin A-01 bis A-07 und M-01 bis M-04, M-06/M-07 aus P1 §8. M-05 bleibt nicht anwendbar. Es entsteht kein neuer verpflichtender Hardware- oder Zwischenmergeprozess. #9 liefert einen technisch geprüften Zwischenstand; #11/#12 und vollständige manuelle Abnahme bleiben separat. Ohne passende Freigabe kein Merge/Release.
 
 ## Daten und Betriebswirkung
 
-Aktuell richtet das Repository keine Laufzeitdienste oder Produktionsdaten ein. Prüfungen verwenden isolierte temporäre Testdaten; kein Zugriff auf echte Spielstände, private Daten oder kostenpflichtige Dienste aus einer bloßen Entwicklungsfreigabe. Der P1.0-Preflight lädt die zwei benannten öffentlichen Godot-Release-Assets, verwendet sie ausschließlich temporär beziehungsweise in einem expliziten externen Cache und erzeugt ein kurzlebiges CI-Artefakt. Neue Abhängigkeiten und Assets vor Aufnahme auf Notwendigkeit und Nutzungsrechte prüfen; keine Secrets einchecken.
+Keine Laufzeitdienste oder Produktionsdaten eingerichtet. Prüfungen verwenden isolierte temporäre Daten; kein Zugriff auf echte Spielstände, private Daten oder kostenpflichtige Dienste aus einer Entwicklungsfreigabe. Öffentliche gepinnte Godot-Assets dürfen für den vereinbarten Prüfweg geladen werden. Zusätzliche Assets/Abhängigkeiten auf Notwendigkeit und Nutzungsrechte prüfen; keine Secrets einchecken.
 
-Die eingerichteten Merge-Prüfpfade starten die Setup-CI und für #7 die getrennte Preflight-CI mit lesenden Repositoryrechten. Kein Produktdeployment, kein Release, Tag oder Hosting wird eingerichtet. Externe Automatisierungen außerhalb der gelesenen Repositoryquellen sind nicht als überprüft behauptet. Spätere Änderungen der Betriebswirkung im zuständigen Paket dokumentieren.
+Setup-, Preflight- und Produkt-CI arbeiten mit lesenden Repositoryrechten. Kein Deployment, Release, Tag oder Hosting. Externe Automatisierungen außerhalb gelesener Repositoryquellen sind nicht als geprüft behauptet.
 
-Die [ChatGPT-Projekteinstellungen](CHATGPT_PROJECT_INSTRUCTIONS.md) werden nach dem Setup-Merge separat durch den Nutzer eingesetzt. Die neue lokale Modellheuristik ersetzt allgemeine alte Modellanweisungen einschließlich eines etwaigen Pflichtverweises auf `Codex-Empfehlung.txt`; keine zweite Heuristik parallel aktivieren.
+Die [ChatGPT-Projekteinstellungen](CHATGPT_PROJECT_INSTRUCTIONS.md) werden separat durch den Nutzer eingesetzt. Die lokale Modellheuristik ersetzt alte allgemeine Modellanweisungen einschließlich eines Pflichtverweises auf `Codex-Empfehlung.txt`; keine zweite Heuristik parallel aktivieren.
