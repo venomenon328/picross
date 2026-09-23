@@ -21,8 +21,8 @@ def placements(blocks: tuple[tuple[int, int], ...], width: int) -> tuple:
 
 
 def derive(data):
-    if (data['id'], data['revision'], data['width'], data['height']) != ('F-02', 1, 40, 40):
-        raise ValueError('Certificate scoped to F-02 revision 1')
+    if (data['id'], data['revision'], data['width'], data['height']) != ('F-02', 2, 40, 40):
+        raise ValueError('Certificate scoped to F-02 revision 2')
     known = [[-1] * 40 for _ in range(40)]
     candidates = {}
     for axis, clues in [('row', data['rows']), ('column', data['columns'])]:
@@ -54,7 +54,7 @@ def derive(data):
 
 def verify(data, certificate):
     steps, known = derive(data)
-    if certificate != dict(id='F-02', revision=1, rule='colored-line-intersection', steps=steps):
+    if certificate != dict(id='F-02', revision=2, rule='colored-line-intersection', steps=steps):
         raise ValueError('Certificate differs from deductions')
     if any(-1 in row for row in known) or known != data['solution']:
         raise ValueError('Deductions do not determine supplied solution')

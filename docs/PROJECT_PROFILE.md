@@ -6,13 +6,14 @@
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
-Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.4 übernimmt das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung und pannbarer atomarer Hinweisabschnitte.
+Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.5 übernimmt das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung, gemeinsamem Hinweisraster und linienweisen Lesepositionen.
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und [P1.1-Prüfbericht](P1_1_VERIFICATION.md), ab #9 auch [P1.2-Prüfbericht](P1_2_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
 
-**Aktuelle Phase:** #9 implementiert D-07 bis D-17 der Spezifikation 0.6 samt
-Farb-/Großrasterbedienung und der Nacharbeit zu Review R2/B-01/B-02 auf dem bestehenden
-P1-Draft. Der [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und die aktuelle Anleitung
+**Aktuelle Phase:** #9 implementiert D-07 bis D-22 der Spezifikation 0.7 samt
+Farb-/Großrasterbedienung, gemeinsamem Hinweisraster, individuellen Lesepositionen,
+1080p-Startbasis, verfeinertem F-02-Motiv und der Nacharbeit zu Review R2/B-01/B-02
+auf dem bestehenden P1-Draft. Der [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und die aktuelle Anleitung
 beschreiben Umsetzung und technische Nachweise. Reale Eigentümerabnahme, #11/#12 und
 Gesamtmerge bleiben offen. Der historische #8-Nachweis und die alten grünen Läufe auf
 `267df8c…`/`bd6730d…` werden dadurch nicht rückwirkend zum Nachweis des neuen Heads.
@@ -27,14 +28,15 @@ Visuelle Grundlage: sich füllendes Album, warme ruhige 2D-Illustration mit klar
 
 P1: native Windows-Desktopfassung, typisiertes GDScript, Godot Standard 4.7.2-stable mit passenden Standard-Exportvorlagen, keine Wertung/Live-Fehlerhilfe/Hypothesen. D-06 bleibt verbindlich: Maus, kein Tastatur-/Controller-Scope oder entsprechendes Gate. Escape bleibt der vereinbarte Abbruch einer Mausgeste. Spätere alternative Produkteingaben werden dadurch nicht gestrichen.
 
-Ab #9: größerer Fensterstart ohne erzwungene Zellvergrößerung, getrennte UI-/Raster-
+Ab #9: 1080p-Startziel ohne erzwungene Zellvergrößerung, getrennte UI-/Raster-
 Skalierung, visuelle Zelltrennung auch an Fünferlinien, direkte Füllung↔X-Umwandlung
 mit links/rechts bei einmalig festgelegtem Strichmodus, detaillierteres F-01-Ergebnisbild,
-unnummerierte Hinweise direkt im Arbeitsbild, farbige Hinweiszahlen mit optionalen
-A–D-Kennungen sowie feiner monotoner Zoom. Überlaufende Folgen behalten vollständige
-einzelne Hinweise und sind in einem vertikalen Spalten- beziehungsweise horizontalen
-Zeilenbereich unabhängig vom Raster pannbar. Verbindliche Details ausschließlich in
-P1 §§4–5; D-11 bis D-17 lösen widersprechende alte D-09-/Hinweisregeln ab.
+unnummerierte einzeilige farbige Hinweise direkt im Arbeitsbild sowie feiner monotoner
+Zoom. Überlaufende Folgen behalten vollständige einzelne Hinweise, verwenden gemeinsame
+feste Slots und sind je konkrete Spalte beziehungsweise Zeile unabhängig vom Raster
+und allen Nachbarfolgen pannbar. F-02 erhält wie das bestätigte F-01 ein eigenständiges
+verfeinertes Ergebnisbild. Verbindliche Details ausschließlich in P1 §§4–5; D-18 bis
+D-22 lösen widersprechende alte D-07-/D-14-/D-17-/Hinweisregeln ab.
 
 Referenzhardware aus früheren Nutzerangaben: Windows 11, 2560×1440, Maus, Ryzen 7 5800X, RTX 3070. Tatsächliche Windows-Skalierung, Fensterfläche und Versionskennung des Nutzerlaufs sind nicht aus Screenshotgrößen bestätigt. Fehlende Daten sichtbar lassen und bei der erneuten Probe erfassen.
 
@@ -79,14 +81,15 @@ python tools/p1_product.py --cache-dir $p1Cache --output-dir artifacts/p1-produc
 Unter Linux `python3` und externen Cachepfad verwenden. Der bestehende Ablauf prüft F-01s Zertifikat, Import, Godot-Tests, erwarteten Negativtest mit Exit 23, begrenzten Start der Hauptszene und Windows-Export mit `P1 Windows x86_64`; auf Windows zusätzlich exportierten Start. Bericht, Phasenlogs und vollständiges ZIP mit EXE-Paar/Anleitung/Commitkennung werden erzeugt. Quellhead, getesteten Checkout/Test-Merge und veränderten Arbeitsbaum unterscheiden.
 
 #9 erweitert diesen Ablauf für F-02/F-03, direkte Gestenumwandlung und Rücknahme,
-farbige atomare In-Context-Hinweise, zwei Hinweis-Panachsen, feinen monotonen Zoom,
+farbige atomare In-Context-Hinweise in gemeinsamen Slots, individuelle Zeilen-/
+Spalten-Lesepositionen, feinen monotonen Zoom,
 Ansichts-/Miniaturtransformationen, Resize und unabhängige Abschlussressourcen.
-Teständerungen zu D-09 bis D-17 sind
+Teständerungen zu D-09 bis D-22 sind
 gezielte Vertragsanpassungen; sonstige Regressionen nicht durch Entfernen von Tests
 verdecken. F-01-Lösung/Hinweise und logische Nachweise erhalten. Keine neue allgemeine
 Solver-/Assetplattform erforderlich.
 
-Für die technische Lieferung von #9 müssen `product` aus [P1 product verification](../.github/workflows/p1-product.yml), `docs` und der weiterhin aktive `preflight` für den aktuellen Stand tatsächlich erfolgreich sein. Produktartefakte werden im bestehenden Weg 14 Tage gespeichert. Ein Headless-Start oder synthetisches Event ersetzt keine reale Maus-/GUI-Abnahme. Die neuen Layout-/Zelltrennungs-/Reveal-Kriterien benötigen außerdem echte Renderkontrolle mit dokumentierten Größen, nicht nur Assertions über Objektmaße.
+Für die technische Lieferung von #9 müssen `product` aus [P1 product verification](../.github/workflows/p1-product.yml), `docs` und der weiterhin aktive `preflight` für den aktuellen Stand tatsächlich erfolgreich sein. Produktartefakte werden im bestehenden Weg 14 Tage gespeichert. Ein Headless-Start oder synthetisches Event ersetzt keine reale Maus-/GUI-Abnahme. Die neuen Slotausrichtungs-/Layout-/Zelltrennungs-/Reveal-Kriterien benötigen außerdem echte Renderkontrolle mit dokumentierten Größen, nicht nur Assertions über Objektmaße.
 
 ## Abnahme und Übergaben
 
@@ -101,7 +104,13 @@ die Probe nach Review R3 ergänzt D-16/D-17 zur Kürzung und Hinweisnavigation.
 Die Nacharbeit behebt diese technischen Punkte, ersetzt aber weder ein Review des neuen
 Heads noch die weiterhin offene reale Eigentümerprobe.
 
-Der ausdrückliche Folgeauftrag zur Umsetzung von #9 bearbeitet dieses Feedback; fehlende Metadaten sind weiterhin bei der erneuten Probe zu erfassen. Die erneute reale Maus-/Layoutprobe an der #9-Lieferung erfasst diese Daten und prüft Teilhinweise, beide Hinweis-Panachsen, ihre feste Rasterzuordnung sowie die übrigen offenen Bedien-/Motivfälle. Der Eigentümer ist dafür zuständig; Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken.
+Review R4 bezieht sich auf `b19f14e0f8c7a599bd04799872ccea3b7ceadc6c` und verlangt
+die Grundlagenkorrektur J-01 bis J-06: keine Hinweis-Zusatzkennungen, gemeinsame feste
+Slots, unabhängige Navigation jeder konkreten Linie, 1080p-Startbasis, verfeinertes
+F-02-Motiv und dazu passende Quellen/Nachweise. D-18 bis D-22 in P1 0.7 setzen diesen
+Sollstand um; ältere grüne Läufe und frühere Reviewstände belegen ihn nicht.
+
+Der ausdrückliche Folgeauftrag zur Umsetzung von #9 bearbeitet dieses Feedback; fehlende Metadaten sind weiterhin bei der erneuten Probe zu erfassen. Die erneute reale Maus-/Layoutprobe an der #9-Lieferung erfasst diese Daten und prüft einzeilige Teilhinweise, gemeinsame Slots, mehrere individuelle Zeilen-/Spaltenpositionen, ihre feste Rasterzuordnung, 1080p-Start und den neuen F-02-Leuchtturm sowie die übrigen offenen Bedien-/Motivfälle. Der Eigentümer ist dafür zuständig; Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken. Die positive F-01-Teilbestätigung bleibt erhalten.
 
 Vor Gesamt-P1-Merge gelten weiterhin A-01 bis A-07 und M-01 bis M-04, M-06/M-07 aus P1 §8. M-05 bleibt nicht anwendbar. Es entsteht kein neuer verpflichtender Hardware- oder Zwischenmergeprozess. #9 liefert einen technisch geprüften Zwischenstand; #11/#12 und vollständige manuelle Abnahme bleiben separat. Ohne passende Freigabe kein Merge/Release.
 

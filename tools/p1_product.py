@@ -135,11 +135,13 @@ def main() -> int:
             checkout_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
             manifest = dict(schema=1, source_commit=commit, source_tree_dirty=dirty, tested_checkout_commit=checkout_commit,
                             host=host, engine_version=toolchain.EXPECTED_VERSION, project_name=title, assets=hashes, proof_steps=proof_steps, color_proof_steps=color_proof_steps,
+                            artwork_files={name: toolchain.sha256_file(root / "prototypes/p1/art" / name) for name in ("f01.svg", "f02.svg")},
+                            fixture_files={name: toolchain.sha256_file(root / "prototypes/p1/data" / name) for name in ("f01.json", "f01-proof.json", "f02.json", "f02-proof.json")},
                             render_files={p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()},
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="OPEN: owner M-01/M-02/M-03/M-06 mouse, atomic clue windows, independent clue panning, motif and actual Windows scaling before overall P1 merge; prior trials had change requests")
+                            manual_acceptance="OPEN: owner M-01/M-02/M-03/M-06 mouse, shared snapped clue slots, per-line clue panning, F-02 motif and actual Windows scaling before overall P1 merge; F-01 artwork direction already confirmed")
             archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"))
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)

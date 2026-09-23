@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "id": "F-02",
-  "revision": 1,
+  "revision": 2,
   "width": 40,
   "height": 40,
   "palette": [{"id": 1, "color": "#343f42", "symbol": "A"}, {"id": 2, "color": "#edca78", "symbol": "B"}, {"id": 3, "color": "#bd604a", "symbol": "C"}, {"id": 4, "color": "#6c9aab", "symbol": "D"}],

@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 23.09.2026 · Arbeitsfassung 0.4 · frühe Konzeption mit supersedierendem P1-Mausfeedback
+Stand: 23.09.2026 · Arbeitsfassung 0.5 · frühe Konzeption mit supersedierendem P1-Mausfeedback
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -17,7 +17,11 @@ In-Context-Hinweiszugriff, feinere monotone Zoomstufen, farbige Hinweiszahlen mi
 optionalen Kennungen und direkte Füllung↔X-Umwandlung. Die nächste Probe konkretisiert
 D-16/D-17: Überlauf lässt vollständige einzelne Hinweiszahlen sichtbar, und Zeilen-/
 Spaltenhinweise erhalten zwei getrennte Panachsen bei fester Rasterzuordnung. Der
-konkrete P1-Vertrag steht in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.6. Die technische Umsetzung erfolgt
+darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, richtet
+alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
+eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
+auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.7. Die technische Umsetzung erfolgt
 in #9; Nachweise im P1.2-Prüfbericht, erneute Eigentümerabnahme weiterhin offen. Das
 ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsystem.
 
@@ -30,8 +34,8 @@ ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsyst
 | Stimmung | Warm, neugierig und dennoch ruhig. |
 | Spielbildschirm | Thematik bleibt dezent sichtbar, das Raster sachlich und präzise. Größere Fenster dürfen nicht zu unnötig riesigen Zellen führen. |
 | Zelllesbarkeit | Füllungen bleiben einzeln erkennbar, insbesondere an kräftigen Fünferlinien. Raster und Füllung dürfen nicht optisch zu einer gemeinsamen Fläche verschmelzen. |
-| Hinweise | Am Raster stehen nur Lösungshinweise, ohne laufende Randnummern. Überlauf erhält atomare sichtbare Teilfolgen und je einen unabhängig pannbaren Zeilen-/Spaltenbereich; farbige Zahlen, seitengerechte Marker und ergänzende vollständige Hover-Auflösung bleiben im Arbeitsbild. A–D-Suffixe sind optional. |
-| Sammelbilder | Das Rätselmotiv ist eine klar erkennbare Stilisierung des detaillierteren Ergebnisbilds. Höhere Auflösung, feinere Konturen und Details sind erlaubt; keine Pflicht zu pixelidentischer Silhouette oder bloßer Kolorierung. |
+| Hinweise | Am Raster stehen nur Lösungshinweise, ohne laufende Randnummern. Vollständige einzeilige farbige Zahlen rasten in gemeinsame feste Plätze; jede konkrete Zeile/Spalte hat ihre eigene Leseposition. Seitengerechte Marker und vollständige Hover-Auflösung bleiben Ergänzungen im Arbeitsbild. Keine A–D-Suffixe in P1. |
+| Sammelbilder | Das Rätselmotiv ist eine klar erkennbare Stilisierung des detaillierteren Ergebnisbilds. F-01 und F-02 zeigen dieselbe ruhige Kontur-/Farbflächensprache; keine Pflicht zu pixelidentischer Silhouette oder bloßer Kolorierung. |
 | Perfektion | Ein perfekter Durchgang ist ohne Fehler und ohne Undo. Details und offene Wertungsfragen stehen in der Produktdefinition, Abschnitt 6.2. |
 | Hypothesen | Nicht abschließend entschieden, auch nicht ihre Vereinbarkeit mit Perfektion. |
 | Audio | Später behandeln. Kleine unauffällige Effekte und ein besonders guter Erfolgsjingle gewünscht; zurückhaltende Hintergrundmusik denkbar. |
@@ -84,11 +88,11 @@ Vorgeschlagen ist eine Unterscheidung zwischen vollständiger Sammlung und zusä
 
 **Bestätigte Präzisierung:** Das Ergebnisbild darf sichtbar detaillierter als das Rätsel sein. Der Hauptgegenstand, wesentliche Formen, Bildaufbau und Proportionen müssen so zusammenpassen, dass das Raster sehr deutlich als Stilisierung des Bilds erkennbar ist. Feinere Konturen, Schattierungen, Oberflächen und kleinere passende Elemente sind erlaubt. Eine identische belegte Pixelmaske oder identische Auflösung ist ausdrücklich nicht erforderlich. Ein beliebiges neues Bild oder vollständig anderer Blickwinkel wäre weiterhin kein Ersatz.
 
-Die frühere P1.1-Prüfung auf identische Silhouetten war eine enge technische Fixture-Regel, nicht das allgemeine Qualitätsziel. #9 soll die breitere Richtung bereits am vorhandenen F-01-Motiv demonstrieren und dessen unpassende Validator-/Darstellungsbindung ersetzen. Bloßes Vergrößern der gleichen Pixel oder Neufärben genügt dafür nicht. Das Rätsel selbst wird nicht zur Illustration passend verändert.
+Die frühere P1.1-Prüfung auf identische Silhouetten war eine enge technische Fixture-Regel, nicht das allgemeine Qualitätsziel. #9 demonstriert die breitere Richtung am positiv bestätigten F-01-Segelboot und am eigenständig verfeinerten F-02-Leuchtturm. Beide verwenden ruhige Farbflächen, klare dunkle Konturen und motivbezogene Details. F-02 erhält passend zu seinem Raster Sonne, rechts stehenden Turm und Wasseraufbau, ergänzt um Architektur-, Oberflächen- und Wellendetails. Bloßes Vergrößern der gleichen Pixel oder Neufärben genügt nicht. Die Rätsel selbst werden nicht zur Illustration passend verändert.
 
 Ein möglicher Ablauf bleibt: Hinweise, Leermarkierungen und Raster treten zurück; das gelöste Motiv bleibt sichtbar; daraus entsteht die detailliertere Fassung; anschließend Name und gegebenenfalls spätere Bewertung/Albumeintrag. Bei Farbrätseln kann Freistellung/Präsentation genügen. Keine feste Animationsfolge und keine für jedes Motiv verpflichtende hochaufgelöste Neuzeichnung. P1 hat weiterhin keine Wertung.
 
-Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte Animationen bleiben sinnvolle Vorschläge, keine automatisch beauftragten Funktionen. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur.
+Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte Animationen bleiben sinnvolle Vorschläge, keine automatisch beauftragten Funktionen. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur. Eine bloße Freistellung desselben Farbrasters genügt für F-02 ausdrücklich nicht mehr.
 
 ## 5. Bedienung und Wertung
 
@@ -109,19 +113,22 @@ Längenzähler, Linealmodus und weitergehende Eingabealternativen bleiben Vorsch
 Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
 Arbeitskontext, aktive Linien und eine Miniatur mit Ausschnittrahmen wichtig. Lange
 Folgen werden nur an Grenzen vollständiger Einzelhinweise gekürzt; ein möglichst
-großer zusammenhängender Ausschnitt bleibt direkt lesbar. Seitengerechte Marker
-zeigen verborgene Präfixe/Suffixe. Spaltenhinweise lassen sich vertikal, Zeilenhinweise
-horizontal unabhängig vom Raster und voneinander lesen, ohne ihre X-/Y-Zuordnung zu
-ändern. Der vollständige Hover-Tooltip ergänzt diese Navigation statt sie zu ersetzen;
-eine separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze
-Linien, nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich
+großer zusammenhängender Ausschnitt bleibt direkt lesbar. Alle Folgen einer
+Orientierung verwenden gemeinsame feste Slots, und kurze Folgen stehen ebenfalls
+rasterseitig. Seitengerechte Marker zeigen verborgene Präfixe/Suffixe. Jede konkrete
+Spalte lässt sich nur für sich vertikal, jede konkrete Zeile nur für sich horizontal
+in ganzen eingerasteten Slots lesen, ohne X-/Y-Zuordnung oder Nachbarfolgen zu ändern.
+Der vollständige Hover-Tooltip ergänzt diese Navigation statt sie zu ersetzen; eine
+separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze Linien,
+nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich
 Fehlern, niemals eine korrigierte Lösung. P1 konkretisiert Zoom/Pan und
 Miniaturnavigation; Lesezeichen gehören nicht automatisch dazu.
 
 Rätselfarben und UI-Zustandsfarben sollen unterscheidbar sein. Die Hinweiszahl selbst
-trägt die Rätselfarbe; stabile ergänzende A–D-Kennungen sind als einschaltbare
-Accessibility-Darstellung verfügbar. Unabhängige UI-/Rasterskalierung unterstützt die
-Lesbarkeit. Automatisches Hinweisabblenden darf keine verdeckte Lösungsprüfung sein.
+trägt die Rätselfarbe; für P1 entfallen ergänzende A–D-Kennungen und ihr Schalter
+vorerst vollständig. Das ist keine endgültige Streichung farbunabhängiger Erkennbarkeit
+im Produkt und kein vorgezogener Neuentwurf der Mauspalette. Unabhängige UI-/
+Rasterskalierung unterstützt die Lesbarkeit. Automatisches Hinweisabblenden darf keine verdeckte Lösungsprüfung sein.
 Einzelheiten des gespeicherten Zustands werden im zuständigen Speicherpaket konkretisiert.
 
 ### 5.2 Undo und Hypothesen

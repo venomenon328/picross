@@ -21,6 +21,9 @@ static func run(t: SceneTree) -> void:
 			bad.reveal.image = path
 			t.check(not Definition.validate(bad).is_empty(), "invalid resource path")
 		var s: Session = Session.new(data)
+		if id == "f02":
+			var artwork: Texture2D = load(data.reveal.image) as Texture2D
+			t.check(data.revision == 2 and artwork != null and artwork.get_width() == 800 and artwork.get_height() == 800, "J-05 F-02 revision binds independent 800px lighthouse artwork")
 		for y: int in range(s.player.height):
 			for x: int in range(s.player.width):
 				if data.solution[y][x] > 0:
@@ -101,7 +104,8 @@ static func run(t: SceneTree) -> void:
 	for current: float in [5.0, 12.0, 23.0, 24.0, 73.0, 96.0]:
 		t.check(Board.next_zoom_step(current, -1) <= current and Board.next_zoom_step(current, 1) >= current, "zoom direction monotone at " + str(current))
 	t.check(Main.bounded_start(Rect2i(0, 0, 1366, 768), Vector2i(16, 48)) == Vector2i(1350, 720), "small work area bounded")
-	t.check(Main.bounded_start(Rect2i(0, 0, 2560, 1400), Vector2i(16, 48)) == Vector2i(1600, 900), "large start remains 1600x900")
+	t.check(Main.bounded_start(Rect2i(0, 0, 2560, 1400), Vector2i(16, 48)) == Vector2i(1920, 1080), "large work area reaches 1080p client target")
+	t.check(Main.bounded_start(Rect2i(0, 0, 1920, 1040), Vector2i(16, 48)) == Vector2i(1904, 992), "1080p work area bounds complete decorated window")
 	for usable: Rect2i in [Rect2i(0, 0, 1366, 768), Rect2i(-1920, 32, 1920, 1000), Rect2i(0, 0, 1100, 680)]:
 		var decoration: Vector2i = Vector2i(16, 48)
 		var offset: Vector2i = Vector2i(8, 40)
@@ -112,24 +116,28 @@ static func run(t: SceneTree) -> void:
 	await ui_cases(t)
 
 static func test_atomic_clue_windows(t: SceneTree) -> void:
-	var full: Dictionary = ClueLayout.select_window([10.0, 10.0, 10.0], 40.0, 0.0, 6.0, 2.0)
-	t.check(full.start == 0 and full.end == 3 and not full.prefix_hidden and not full.suffix_hidden, "H-01 fitting clue sequence has no marker")
-	var just_overflowing: Dictionary = ClueLayout.select_window([10.0, 10.0, 10.0], 30.0, 0.0, 6.0, 2.0)
-	t.check(just_overflowing.start == 1 and just_overflowing.end == 3 and just_overflowing.prefix_hidden and not just_overflowing.suffix_hidden, "H-01 overflow drops one outer token, not the fitting suffix")
-	var middle: Dictionary = ClueLayout.select_window([10.0, 18.0, 10.0, 10.0, 22.0, 10.0], 48.0, 0.5, 6.0, 2.0)
-	t.check(middle.start < middle.end and middle.prefix_hidden and middle.suffix_hidden, "H-01 middle clue window reserves both markers")
-	var empty: Dictionary = ClueLayout.select_window([], 10.0, 0.0, 6.0, 2.0)
-	t.check(empty.start == 0 and empty.end == 0 and not empty.prefix_hidden and not empty.suffix_hidden, "H-01 empty layout is stable")
+	var full: Dictionary = ClueLayout.select_window(3, 5, 0)
+	t.check(full.start == 0 and full.end == 3 and full.token_slot == 2 and not full.prefix_hidden and not full.suffix_hidden, "J-02 fitting clue sequence snaps to grid-near slots")
+	var just_overflowing: Dictionary = ClueLayout.select_window(6, 5, 0)
+	t.check(just_overflowing.start == 2 and just_overflowing.end == 6 and just_overflowing.prefix_hidden and not just_overflowing.suffix_hidden, "J-02 overflow keeps maximum grid-near complete tokens")
+	var middle: Dictionary = ClueLayout.select_window(8, 5, 2)
+	t.check(middle.start < middle.end and middle.prefix_hidden and middle.suffix_hidden and middle.units[0].slot == 0 and middle.units[-1].slot == 4, "J-02 middle clue window reserves fixed marker slots")
+	var outer: Dictionary = ClueLayout.select_window(8, 5, 5)
+	t.check(outer.start == 0 and outer.end == 4 and not outer.prefix_hidden and outer.suffix_hidden, "J-02 outer beginning and suffix marker are reachable")
+	var empty: Dictionary = ClueLayout.select_window(0, 5, 0)
+	t.check(empty.start == 0 and empty.end == 0 and not empty.prefix_hidden and not empty.suffix_hidden, "J-02 empty layout is stable")
 	var reached: Dictionary = {}
-	var extents: Array[float] = []
-	for i: int in range(24):
-		extents.append(8.0 if i % 3 else 16.0)
-	for sample: int in range(49):
-		var window: Dictionary = ClueLayout.select_window(extents, 52.0, float(sample) / 48.0, 6.0, 2.0)
-		t.check(window.start < window.end, "H-01 very long sequence always keeps complete clues")
+	var maximum: int = int(ClueLayout.select_window(24, 6, 0).max_offset)
+	for sample: int in range(maximum + 1):
+		var window: Dictionary = ClueLayout.select_window(24, 6, sample)
+		t.check(window.start < window.end and window.offset == sample, "J-02 very long sequence uses exact snapped offset")
+		var occupied: Dictionary = {}
+		for unit: Dictionary in window.units:
+			t.check(int(unit.slot) >= 0 and int(unit.slot) < 6 and not occupied.has(unit.slot), "J-02 each visible unit owns one regular slot")
+			occupied[unit.slot] = true
 		for index: int in range(int(window.start), int(window.end)):
 			reached[index] = true
-	t.check(reached.size() == extents.size(), "H-01 panning reaches every token in a very long sequence")
+	t.check(reached.size() == 24, "J-02 panning reaches every token in a very long sequence")
 
 static func ui_cases(t: SceneTree) -> void:
 	var app: Main = load("res://main.tscn").instantiate()
@@ -139,51 +147,56 @@ static func ui_cases(t: SceneTree) -> void:
 	await t.process_frame
 	var b: Control = app.board
 	var sample_clue: Dictionary = app.session.definition.rows[10][0]
-	t.check(b.clue_token(sample_clue) == str(int(sample_clue.length)), "colored clue defaults to number without suffix")
+	t.check(b.clue_token(sample_clue) == str(int(sample_clue.length)), "J-01 colored clue is the complete number without suffix")
 	t.check(b.clue_color(sample_clue).is_equal_approx(Color(app.session.definition.palette[int(sample_clue.color) - 1].color)), "clue number uses puzzle color")
-	app.toggle_accessibility_labels()
-	t.check(b.clue_token(sample_clue).ends_with(app.session.definition.palette[int(sample_clue.color) - 1].symbol), "optional accessibility suffix enabled")
-	app.toggle_accessibility_labels()
+	t.check(not has_button_text(app, "Farbkennungen in Hinweisen: aus") and not has_button_text(app, "Farbkennungen in Hinweisen: an"), "J-01 obsolete clue-label option removed")
 	var empty_row: int = first_empty_line(app.session.definition.rows)
 	var empty_layout: Dictionary = b.clue_layout("row", empty_row)
-	t.check(empty_layout.entries.size() == 1 and empty_layout.entries[0].text == "–" and not empty_layout.prefix_hidden and not empty_layout.suffix_hidden, "H-01 empty fixture line remains a visible dash")
-	t.check(b.clue_token({"length": 12, "color": 1}) == "12", "H-01 multi-digit clue remains one token")
-	# H-01/H-02: actual F-02 geometry keeps atomic suffixes and exposes start/middle/end.
+	t.check(empty_layout.entries.size() == 1 and empty_layout.entries[0].text == "–" and empty_layout.units[-1].slot == empty_layout.slot_count - 1, "J-01/J-02 empty line remains a grid-near dash")
+	t.check(b.clue_token({"length": 12, "color": 1}) == "12", "J-01 multi-digit clue remains one horizontal token")
+	# J-02: actual F-02 geometry uses common slots and exposes start/middle/end.
 	var column_22: Array = app.session.definition.columns[21]
-	t.check(column_22.size() == 12 and int(column_22[0].length) == 6 and int(column_22[0].color) == 4 and int(column_22[1].length) == 3 and int(column_22[1].color) == 3 and int(column_22[2].length) == 3 and int(column_22[2].color) == 2, "H-02 F-02 column 22 starts blue 6, red 3, yellow 3")
+	t.check(column_22.size() == 12 and int(column_22[0].length) == 6 and int(column_22[0].color) == 4 and int(column_22[1].length) == 3 and int(column_22[1].color) == 3 and int(column_22[2].length) == 3 and int(column_22[2].color) == 2, "J-02 F-02 column 22 starts blue 6, red 3, yellow 3")
 	for step: float in [22.0, 24.0]:
 		b.view.zoom_to(step, b.view.viewport.get_center())
-		b.column_clue_position = 0.0
 		var base_layout: Dictionary = b.clue_layout("column", 21)
-		var extents: Array[float] = base_layout.extents
-		var n: int = extents.size()
-		var one_removed_space: float = float(base_layout.marker_extent) + float(base_layout.gap) * float(n - 1)
-		for i: int in range(1, n):
-			one_removed_space += extents[i]
-		var after_blue: Dictionary = b.clue_layout("column", 21, one_removed_space)
-		t.check(after_blue.start == 1 and after_blue.end == n and after_blue.prefix_hidden and not after_blue.suffix_hidden, "H-02 removing blue 6 keeps suffix at pitch " + str(step))
-		var two_removed_space: float = float(base_layout.marker_extent) + float(base_layout.gap) * float(n - 2)
-		for i: int in range(2, n):
-			two_removed_space += extents[i]
-		var after_red: Dictionary = b.clue_layout("column", 21, two_removed_space)
-		t.check(after_red.start == 2 and after_red.end == n and after_red.prefix_hidden and not after_red.suffix_hidden, "H-02 removing red 3 keeps suffix from yellow 3 at pitch " + str(step))
+		var neighbor_layout: Dictionary = b.clue_layout("column", 22)
+		t.check(base_layout.slot_count == neighbor_layout.slot_count and is_equal_approx(base_layout.slot_extent, neighbor_layout.slot_extent), "J-02 adjacent columns share slot rows at pitch " + str(step))
+		var reached: Dictionary = {}
+		for offset: int in range(int(base_layout.max_offset) + 1):
+			b.set_clue_step("column", 21, offset)
+			var window: Dictionary = b.clue_layout("column", 21)
+			t.check(window.offset == offset and window.start < window.end, "J-02 column 22 snaps at offset %d / pitch %s" % [offset, step])
+			for index: int in range(int(window.start), int(window.end)):
+				reached[index] = true
+		t.check(reached.size() == column_22.size(), "J-02 column 22 exposes every token at pitch " + str(step))
+		b.set_clue_step("column", 21, 0)
+		var grid_end: Dictionary = b.clue_layout("column", 21)
+		b.set_clue_step("column", 21, maxi(1, int(float(grid_end.max_offset) / 2.0)))
+		var middle: Dictionary = b.clue_layout("column", 21)
+		b.set_clue_step("column", 21, int(grid_end.max_offset))
+		var outer: Dictionary = b.clue_layout("column", 21)
+		t.check(grid_end.end == column_22.size() and grid_end.prefix_hidden and not grid_end.suffix_hidden, "J-02 grid-near F-02 suffix retained at pitch " + str(step))
+		t.check(middle.prefix_hidden and middle.suffix_hidden and outer.start == 0 and outer.suffix_hidden, "J-02 F-02 middle and outer marker states at pitch " + str(step))
 	b.view.zoom_to(24.0, b.view.viewport.get_center())
-	for position: float in [0.0, 0.5, 1.0]:
-		b.column_clue_position = position
+	var short_row_layout: Dictionary = b.clue_layout("row", 34)
+	var long_row_layout: Dictionary = b.clue_layout("row", 35)
+	var row_area: Rect2 = b.row_clue_area()
+	t.check(short_row_layout.max_offset == 0 and long_row_layout.max_offset > 0 and short_row_layout.slot_count == long_row_layout.slot_count, "J-02 adjacent short and overflowing rows share one slot grid")
+	t.check(is_equal_approx(b.clue_slot_center("row", row_area, short_row_layout, short_row_layout.slot_count - 1), b.clue_slot_center("row", row_area, long_row_layout, long_row_layout.slot_count - 1)), "J-02 adjacent row slots have identical coordinates")
+	t.check(is_equal_approx(b.clue_slot_center("row", row_area, long_row_layout, 1) - b.clue_slot_center("row", row_area, long_row_layout, 0), long_row_layout.slot_extent), "J-02 row slot spacing is regular")
+	for position: int in [0, 1, 2]:
+		var column_base: Dictionary = b.clue_layout("column", 21)
+		var row_base: Dictionary = b.clue_layout("row", 35)
+		b.set_clue_step("column", 21, [0, int(float(column_base.max_offset) / 2.0), int(column_base.max_offset)][position])
 		var column_window: Dictionary = b.clue_layout("column", 21)
-		b.row_clue_position = position
+		b.set_clue_step("row", 35, [0, int(float(row_base.max_offset) / 2.0), int(row_base.max_offset)][position])
 		var row_window: Dictionary = b.clue_layout("row", 35)
-		t.check(column_window.start < column_window.end and row_window.start < row_window.end, "H-02 both axes keep real clues at pan " + str(position))
-		if position == 0.0:
-			t.check(column_window.end == column_22.size() and row_window.end == app.session.definition.rows[35].size(), "H-02 default windows retain grid-near ends")
-		elif position == 1.0:
-			t.check(column_window.start == 0 and row_window.start == 0, "H-02 outer beginnings reachable on both axes")
-	b.column_clue_position = 0.5
-	var labels_off: Dictionary = b.clue_layout("column", 21)
-	app.toggle_accessibility_labels()
-	var labels_on: Dictionary = b.clue_layout("column", 21)
-	t.check(labels_on.start < labels_on.end and labels_on.entries[labels_on.start].text.length() > labels_off.entries[labels_off.start].number.length(), "H-01 A-D labels participate in atomic layout")
-	app.toggle_accessibility_labels()
+		t.check(column_window.start < column_window.end and row_window.start < row_window.end, "J-02 both axes keep real clues at snapped state " + str(position))
+		if position == 0:
+			t.check(column_window.end == column_22.size() and row_window.end == app.session.definition.rows[35].size(), "J-02 default windows retain grid-near ends")
+		elif position == 2:
+			t.check(column_window.start == 0 and row_window.start == 0, "J-02 outer beginnings reachable on both axes")
 	b.reset_clue_pan()
 	b.navigate_to(Vector2(0.5, 0.5))
 	var start: Vector2i = b.view.hit(b.view.viewport.get_center())
@@ -259,13 +272,15 @@ static func ui_cases(t: SceneTree) -> void:
 		app.set_ui_scale(scale)
 		for step: float in [12.0, 18.0, 22.0, 24.0]:
 			b.view.zoom_to(step, b.view.viewport.get_center())
-			for position: float in [0.0, 0.5, 1.0]:
-				b.row_clue_position = position
-				b.column_clue_position = position
+			for position: int in [0, 1, 2]:
+				var row_base: Dictionary = b.clue_layout("row", longest_row)
+				var column_base: Dictionary = b.clue_layout("column", longest_column)
+				b.set_clue_step("row", longest_row, [0, int(float(row_base.max_offset) / 2.0), int(row_base.max_offset)][position])
+				b.set_clue_step("column", longest_column, [0, int(float(column_base.max_offset) / 2.0), int(column_base.max_offset)][position])
 				var row_window: Dictionary = b.clue_layout("row", longest_row)
 				var column_window: Dictionary = b.clue_layout("column", longest_column)
-				t.check(row_window.end > row_window.start and column_window.end > column_window.start, "H-03 real F-03 clues at UI/pitch/pan %s/%s/%s" % [scale, step, position])
-				t.check(row_window.prefix_hidden or row_window.suffix_hidden, "H-03 long row markers reflect hidden entries")
+				t.check(row_window.end > row_window.start and column_window.end > column_window.start, "J-02 real F-03 clues at UI/pitch/slot %s/%s/%s" % [scale, step, position])
+				t.check(row_window.prefix_hidden or row_window.suffix_hidden, "J-02 long row markers reflect hidden entries")
 	app.set_ui_scale(1.0)
 	b.working_size()
 	b.reset_clue_pan()
@@ -305,73 +320,111 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	var b: Control = app.board
 	var cells: Array[int] = app.session.player.cells.duplicate()
 	var history: Array = app.session.player.history.duplicate(true)
+	var undo_used: bool = app.session.player.undo_used
+	var completed: bool = app.session.completed
 	var raster_center: Vector2 = b.view.center
 	var raster_size: float = b.view.cell_size
 	var mini_frame: Rect2 = b.view.normalized_view()
-	var row_local: Vector2 = b.row_clue_area().get_center()
-	var column_local: Vector2 = b.column_clue_area().get_center()
-	var row_point: Vector2 = b.get_global_transform() * row_local
-	var column_point: Vector2 = b.get_global_transform() * column_local
-	# Middle-button row drag crosses into the grid and releases outside; target stays row.
-	t.mouse_motion(row_point, false)
-	t.mouse_button(row_point, true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_motion(row_point + Vector2(b.row_clue_area().size.x * 0.8, 0), true, MOUSE_BUTTON_MIDDLE)
-	t.check(b.pan_target == "row" and b.row_clue_position > 0.0 and b.column_clue_position == 0.0, "H-04 row hint drag is independently horizontal")
+	var rows: Array[int] = visible_overflowing_lines(b, "row")
+	var columns: Array[int] = visible_overflowing_lines(b, "column")
+	t.check(rows.size() >= 2 and columns.size() >= 2, "J-03 two visible pannable rows and columns available")
+	if rows.size() < 2 or columns.size() < 2:
+		return
+	var row_a: int = rows[0]
+	var row_b: int = rows[1]
+	var column_a: int = columns[0]
+	var column_b: int = columns[1]
+	var row_point_a: Vector2 = clue_point(b, "row", row_a)
+	var row_point_b: Vector2 = clue_point(b, "row", row_b)
+	var column_point_a: Vector2 = clue_point(b, "column", column_a)
+	var column_point_b: Vector2 = clue_point(b, "column", column_b)
+	var rows_before: Array[int] = b.row_clue_steps.duplicate()
+	var columns_before: Array[int] = b.column_clue_steps.duplicate()
+	var row_b_window_before: Array = window_signature(b.clue_layout("row", row_b))
+	var column_b_window_before: Array = window_signature(b.clue_layout("column", column_b))
+	var row_pitch: float = float(b.clue_layout("row", row_a).slot_extent)
+	# Middle-button diagonal motion below one slot does not flicker. Crossing one
+	# horizontal slot changes only the row selected at gesture start.
+	t.mouse_motion(row_point_a, false)
+	t.mouse_button(row_point_a, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_motion(row_point_a + Vector2(row_pitch * 0.8, row_pitch * 0.7), true, MOUSE_BUTTON_MIDDLE)
+	t.check(b.clue_step("row", row_a) == 0 and b.pan_line_index == row_a, "J-03 sub-slot diagonal motion stays snapped to its start row")
+	t.mouse_motion(row_point_a + Vector2(row_pitch * 1.2, row_pitch * 0.7), true, MOUSE_BUTTON_MIDDLE)
+	t.check(b.pan_target == "row" and b.pan_line_index == row_a and only_line_changed(rows_before, b.row_clue_steps, row_a), "J-03 middle drag moves one concrete row only")
+	t.check(window_signature(b.clue_layout("row", row_b)) == row_b_window_before, "J-03 neighbouring row window remains byte-for-byte equivalent")
 	var outside: Vector2 = b.get_global_rect().end + Vector2(40, 40)
 	t.mouse_button(outside, false, MOUSE_BUTTON_MIDDLE)
-	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "H-04 row drag releases outside")
-	# Wrong release cannot finish a middle-button hint drag.
-	t.mouse_motion(column_point, false)
-	t.mouse_button(column_point, true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_button(column_point, false, MOUSE_BUTTON_LEFT)
-	t.check(b.pan_button == MOUSE_BUTTON_MIDDLE and b.pan_target == "column", "H-04 wrong button release ignored for clue drag")
-	t.mouse_motion(column_point + Vector2(0, b.column_clue_area().size.y * 0.8), true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_button(outside, false, MOUSE_BUTTON_MIDDLE)
-	t.check(b.column_clue_position > 0.0 and b.row_clue_position > 0.0, "H-04 column hint drag is independent and vertical")
-	# Hand/left follows the same route and clamps rather than panning forever.
+	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "J-03 row drag releases outside")
+	# Hand/left independently moves a second row by two fixed slots.
 	app.set_tool("hand")
-	b.column_clue_position = 0.95
-	t.mouse_motion(column_point, false)
-	t.mouse_button(column_point, true)
-	t.mouse_motion(column_point + Vector2(0, b.column_clue_area().size.y), true)
-	t.mouse_button(column_point + Vector2(0, b.column_clue_area().size.y), false)
-	t.check(b.column_clue_position == 1.0, "H-04 hand drag clamps at clue boundary")
+	t.mouse_motion(row_point_b, false)
+	t.mouse_button(row_point_b, true)
+	t.mouse_motion(row_point_b + Vector2(float(b.clue_layout("row", row_b).slot_extent) * 2.2, 0), true)
+	t.mouse_button(row_point_b, false)
+	t.check(b.clue_step("row", row_b) == 2 and b.clue_step("row", row_a) == 1, "J-03 second row keeps an independent snapped position")
+	# Wrong release cannot finish a middle-button drag on one concrete column.
+	app.set_tool("fill")
+	t.mouse_motion(column_point_a, false)
+	t.mouse_button(column_point_a, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(column_point_a, false, MOUSE_BUTTON_LEFT)
+	t.check(b.pan_button == MOUSE_BUTTON_MIDDLE and b.pan_target == "column" and b.pan_line_index == column_a, "J-03 wrong release keeps frozen column target")
+	var column_pitch: float = float(b.clue_layout("column", column_a).slot_extent)
+	t.mouse_motion(column_point_a + Vector2(column_pitch * 0.7, column_pitch * 1.2), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(outside, false, MOUSE_BUTTON_MIDDLE)
+	t.check(only_line_changed(columns_before, b.column_clue_steps, column_a) and b.clue_step("column", column_a) == 1, "J-03 diagonal column drag changes only its vertical slot")
+	t.check(window_signature(b.clue_layout("column", column_b)) == column_b_window_before, "J-03 neighbouring column window remains byte-for-byte equivalent")
+	# Hand/left follows the same route for a second column and freezes its line
+	# even while the pointer crosses neighbouring columns.
+	app.set_tool("hand")
+	t.mouse_motion(column_point_b, false)
+	t.mouse_button(column_point_b, true)
+	t.mouse_motion(column_point_b + Vector2(b.view.cell_size * 3.0, float(b.clue_layout("column", column_b).slot_extent) * 2.2), true)
+	t.mouse_button(column_point_b, false)
+	t.check(b.clue_step("column", column_b) == 2 and b.clue_step("column", column_a) == 1, "J-03 second column ignores crossed neighbours")
 	# Escape and focus loss terminate clue navigation without state changes.
-	t.mouse_motion(row_point, false)
-	t.mouse_button(row_point, true)
+	t.mouse_motion(row_point_a, false)
+	t.mouse_button(row_point_a, true)
 	var escape: InputEventKey = InputEventKey.new()
 	escape.keycode = KEY_ESCAPE
 	escape.pressed = true
 	t.root.push_input(escape, true)
-	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "H-04 Escape ends clue drag")
-	t.mouse_motion(row_point, false)
-	t.mouse_button(row_point, true)
+	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "J-03 Escape ends clue drag")
+	t.mouse_motion(row_point_a, false)
+	t.mouse_button(row_point_a, true)
 	app.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
-	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "H-04 focus loss ends clue drag")
+	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "J-03 focus loss ends clue drag")
+	# Empty/short fitting lines never pan into empty space.
+	var short_row: int = first_fitting_line(b, "row")
+	var short_point: Vector2 = clue_point(b, "row", short_row)
+	t.mouse_motion(short_point, false)
+	t.mouse_button(short_point, true, MOUSE_BUTTON_MIDDLE)
+	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.clue_step("row", short_row) == 0, "J-03 empty or short row does not start clue panning")
+	t.mouse_button(short_point, false, MOUSE_BUTTON_MIDDLE)
 	# A normal clue click cannot paint, and an active cell gesture blocks clue panning.
 	app.set_tool("fill")
-	var prior_row: float = b.row_clue_position
-	t.mouse_button(row_point, true)
-	t.mouse_button(row_point, false)
-	t.check(app.session.player.cells == cells and app.session.player.history == history and b.row_clue_position == prior_row, "H-04 normal clue click changes nothing")
-	t.check(b.view.center == raster_center and b.view.cell_size == raster_size and b.view.normalized_view() == mini_frame, "H-04 pure clue navigation leaves raster and miniature frame unchanged")
+	var prior_rows: Array[int] = b.row_clue_steps.duplicate()
+	t.mouse_button(row_point_a, true)
+	t.mouse_button(row_point_a, false)
+	t.check(app.session.player.cells == cells and app.session.player.history == history and b.row_clue_steps == prior_rows, "J-03 normal clue click changes nothing")
+	t.check(b.view.center == raster_center and b.view.cell_size == raster_size and b.view.normalized_view() == mini_frame, "J-03 pure clue navigation leaves raster and miniature frame unchanged")
 	var visible_cell: Vector2i = b.view.hit(b.view.viewport.get_center())
 	var cell_point: Vector2 = b.get_global_transform() * b.view.cell_rect(visible_cell).get_center()
 	t.mouse_motion(cell_point, false)
 	t.mouse_button(cell_point, true)
-	t.mouse_button(row_point, true, MOUSE_BUTTON_MIDDLE)
-	t.check(app.session.gesture.active and b.pan_button == MOUSE_BUTTON_NONE, "H-04 cell gesture blocks clue navigation")
+	t.mouse_button(row_point_a, true, MOUSE_BUTTON_MIDDLE)
+	t.check(app.session.gesture.active and b.pan_button == MOUSE_BUTTON_NONE, "J-03 cell gesture blocks clue navigation")
 	t.root.push_input(escape, true)
-	# Pure raster pan, zoom, UI resize and labels preserve the two read positions.
-	b.row_clue_position = 0.4
-	b.column_clue_position = 0.6
+	# Raster pan, miniature, zoom, UI scale and resize preserve all individual
+	# read positions where the same offsets remain valid.
+	var expected_rows: Array[int] = b.row_clue_steps.duplicate()
+	var expected_columns: Array[int] = b.column_clue_steps.duplicate()
 	app.set_tool("hand")
 	var grid_point: Vector2 = b.get_global_transform() * b.view.viewport.get_center()
 	t.mouse_motion(grid_point, false)
 	t.mouse_button(grid_point, true)
 	t.mouse_motion(grid_point + Vector2(60, 40), true)
 	t.mouse_button(grid_point + Vector2(60, 40), false)
-	t.check(b.view.center != raster_center and is_equal_approx(b.row_clue_position, 0.4) and is_equal_approx(b.column_clue_position, 0.6), "H-04 raster pan preserves clue read positions")
+	t.check(b.view.center != raster_center and b.row_clue_steps == expected_rows and b.column_clue_steps == expected_columns, "J-03 raster pan preserves every clue read position")
 	app.refresh()
 	await t.process_frame
 	var before_miniature: Vector2 = b.view.center
@@ -384,23 +437,63 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	var mini_release: InputEventMouseButton = mini_press.duplicate()
 	mini_release.pressed = false
 	app.mini._gui_input(mini_release)
-	t.check(b.view.center != before_miniature and is_equal_approx(b.row_clue_position, 0.4) and is_equal_approx(b.column_clue_position, 0.6), "H-04 miniature input route preserves clue read positions")
+	t.check(b.view.center != before_miniature and b.row_clue_steps == expected_rows and b.column_clue_steps == expected_columns, "J-03 miniature input preserves every clue read position")
 	b.zoom(1, b.view.viewport.get_center())
 	app.set_ui_scale(1.25)
-	app.toggle_accessibility_labels()
-	t.check(is_equal_approx(b.row_clue_position, 0.4) and is_equal_approx(b.column_clue_position, 0.6), "H-04 zoom/UI/A-D preserve bounded clue positions")
-	t.check(app.session.player.cells == cells and app.session.player.history == history and b.view.cell_size > raster_size and b.view.normalized_view() != mini_frame, "H-04 clue navigation keeps cells/history; raster navigation remains independent")
-	# Visible reset control returns both areas to their grid-side defaults.
+	t.root.size = Vector2i(1920, 1080)
+	await t.process_frame
+	await t.process_frame
+	t.check(b.row_clue_steps == expected_rows and b.column_clue_steps == expected_columns, "J-03 zoom/UI/resize preserve snapped per-line positions")
+	t.check(app.session.player.cells == cells and app.session.player.history == history and app.session.player.undo_used == undo_used and app.session.completed == completed and app.session.gesture.changes().is_empty(), "J-03 clue navigation preserves matrix/preview/history/undo/completion")
+	t.check(b.view.cell_size > raster_size and b.view.normalized_view() != mini_frame, "J-03 raster navigation remains independently functional")
+	# Visible reset control returns every line to its grid-side default.
+	t.root.size = Vector2i(1280, 720)
 	app.set_ui_scale(1.0)
-	app.toggle_accessibility_labels()
 	await t.process_frame
 	t.check(app.clue_reset_button.is_visible_in_tree(), "H-04 clue reset control stays visible")
 	app.clue_reset_button.pressed.emit()
-	t.check(b.row_clue_position == 0.0 and b.column_clue_position == 0.0, "H-04 reset control restores grid-side clue windows")
+	t.check(b.row_clue_steps.count(0) == b.row_clue_steps.size() and b.column_clue_steps.count(0) == b.column_clue_steps.size(), "J-03 reset control restores every grid-side clue window")
 	app.select_puzzle(1)
 	app.select_puzzle(2)
-	t.check(b.row_clue_position == 0.0 and b.column_clue_position == 0.0, "H-04 deliberate fixture switch resets clue views")
-	t.check(b.clue_layout("row", longest_row).end > b.clue_layout("row", longest_row).start and b.clue_layout("column", longest_column).end > b.clue_layout("column", longest_column).start, "H-04 mapping remains valid after route sequence")
+	t.check(b.row_clue_steps.count(0) == b.row_clue_steps.size() and b.column_clue_steps.count(0) == b.column_clue_steps.size(), "J-03 deliberate fixture switch resets clue views")
+	t.check(b.clue_layout("row", longest_row).end > b.clue_layout("row", longest_row).start and b.clue_layout("column", longest_column).end > b.clue_layout("column", longest_column).start, "J-03 mapping remains valid after route sequence")
+
+static func visible_overflowing_lines(board: Control, axis: String) -> Array[int]:
+	var result: Array[int] = []
+	var visible: Rect2 = board.view.visible_bounds()
+	var first: int = maxi(0, floori(((visible.position.y if axis == "row" else visible.position.x) - (board.view.origin.y if axis == "row" else board.view.origin.x)) / board.view.cell_size))
+	var finish: int = mini(board.view.dimensions.y if axis == "row" else board.view.dimensions.x,
+		ceili(((visible.end.y if axis == "row" else visible.end.x) - (board.view.origin.y if axis == "row" else board.view.origin.x)) / board.view.cell_size))
+	for index: int in range(first, finish):
+		if int(board.clue_layout(axis, index).max_offset) > 0:
+			result.append(index)
+	return result
+
+static func clue_point(board: Control, axis: String, index: int) -> Vector2:
+	var local: Vector2
+	if axis == "row":
+		local = Vector2(board.row_clue_area().get_center().x, board.view.cell_rect(Vector2i(0, index)).get_center().y)
+	else:
+		local = Vector2(board.view.cell_rect(Vector2i(index, 0)).get_center().x, board.column_clue_area().get_center().y)
+	return board.get_global_transform() * local
+
+static func only_line_changed(before: Array[int], after: Array[int], index: int) -> bool:
+	if before.size() != after.size() or before[index] == after[index]:
+		return false
+	for other: int in range(before.size()):
+		if other != index and before[other] != after[other]:
+			return false
+	return true
+
+static func window_signature(layout: Dictionary) -> Array:
+	return [layout.start, layout.end, layout.prefix_hidden, layout.suffix_hidden, layout.offset, layout.units]
+
+static func first_fitting_line(board: Control, axis: String) -> int:
+	var count: int = board.view.dimensions.y if axis == "row" else board.view.dimensions.x
+	for index: int in range(count):
+		if int(board.clue_layout(axis, index).max_offset) == 0:
+			return index
+	return 0
 
 static func longest_line(lines: Array) -> int:
 	var result: int = 0

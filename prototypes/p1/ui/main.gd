@@ -28,13 +28,12 @@ var palette_row: HBoxContainer
 var sidebar: VBoxContainer
 var page: VBoxContainer
 var minimum_message: Label
-var accessibility_button: Button
 var clue_reset_button: Button
 var ui_scale: float = 1.0
 var choices: Array[Button] = []
 
 static func bounded_start(usable: Rect2i, decorations: Vector2i) -> Vector2i:
-	return Vector2i(1600, 900).min((usable.size - decorations).max(Vector2i.ONE))
+	return Vector2i(1920, 1080).min((usable.size - decorations).max(Vector2i.ONE))
 
 static func bounded_position(usable: Rect2i, client: Vector2i, decorations: Vector2i, client_offset: Vector2i) -> Vector2i:
 	# Window.position is the client origin. Center the entire decorated window.
@@ -171,9 +170,7 @@ func _build() -> void:
 	zoom_row.add_child(button("+", func() -> void: board.zoom(1, board.view.viewport.get_center())))
 	zoom_row.add_child(button("Gesamtansicht", board.fit_all))
 	controls.add_child(button("Arbeitsgröße (100 %)", board.working_size))
-	accessibility_button = button("Farbkennungen in Hinweisen: aus", toggle_accessibility_labels)
-	controls.add_child(accessibility_button)
-	controls.add_child(label("Links: Farbe setzen / Füllung zurücknehmen\nRechts: Kreuz setzen / Kreuz zurücknehmen\nX ↔ Farbe wird direkt umgewandelt\nRad: Zoom · Mitte/Hand im Raster: verschieben\nMitte/Hand in Hinweisen: Zeilen ↔ / Spalten ↕\nEsc/Fokusverlust: Geste verwerfen\n…: verborgener Anfang/verborgenes Ende · Hover: vollständig", 14))
+	controls.add_child(label("Links: Farbe setzen / Füllung zurücknehmen\nRechts: Kreuz setzen / Kreuz zurücknehmen\nX ↔ Farbe wird direkt umgewandelt\nRad: Zoom · Mitte/Hand im Raster: verschieben\nMitte/Hand: angefasste Zeile ↔ / Spalte ↕\nEsc/Fokusverlust: Geste verwerfen\n…: verborgener Anfang/verborgenes Ende · Hover: vollständig", 14))
 	ending = VBoxContainer.new()
 	ending.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	page.add_child(ending)
@@ -221,12 +218,6 @@ func set_tool(tool: String) -> void:
 	board.hand = tool == "hand"
 	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Hand" if board.hand else "Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
 
-func toggle_accessibility_labels() -> void:
-	board.accessibility_labels = not board.accessibility_labels
-	accessibility_button.text = "Farbkennungen in Hinweisen: " + ("an" if board.accessibility_labels else "aus")
-	board.clear_clue_hover()
-	board.queue_redraw()
-
 func _update_palette() -> void:
 	for child: Node in palette_row.get_children():
 		palette_row.remove_child(child)
@@ -244,8 +235,9 @@ func select_puzzle(index: int) -> void:
 	board.view.cell_size = 24
 	board.active_color = 1
 	board.hover = Vector2i(-1, -1)
-	board.row_clue_position = 0.0
-	board.column_clue_position = 0.0
+	board.row_clue_steps.clear()
+	board.column_clue_steps.clear()
+	board.reset_clue_pan()
 	board.clear_clue_hover()
 	board.overview = false
 	board._layout()
@@ -326,7 +318,7 @@ static func button(text: String, action: Callable) -> Button:
 
 func _smoke() -> void:
 	if DisplayServer.get_name() == "headless":
-		get_window().size = Vector2i(1600, 900)
+		get_window().size = Vector2i(1920, 1080)
 	else:
 		var outer: Rect2i = Rect2i(DisplayServer.window_get_position_with_decorations(), DisplayServer.window_get_size_with_decorations())
 		var usable: Rect2i = DisplayServer.screen_get_usable_rect()

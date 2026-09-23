@@ -1,10 +1,12 @@
-# P1.2 · Atomare Teilhinweise und getrenntes Hinweis-Panning
+# P1.2 · Gemeinsames Hinweisraster und linienweises Hinweis-Panning
 
 Zwischenstand zu Issue #9 auf dem gemeinsamen P1-Draft #14. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
-sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-17 sind in diesem Stand
-technisch nachgearbeitet. Lange Folgen behalten sichtbare vollständige Einzelhinweise;
-Zeilen- und Spaltenhinweise sind unabhängig pannbar. Keine Wertung, Fehlerhilfe oder dauerhafte Speicherung.
+sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-22 sind in diesem Stand
+technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
+Zusatzkennungen. Alle Zeilen beziehungsweise Spalten teilen sich je ein festes
+Hinweisraster; jede konkrete Linie behält darin ihre eigene eingerastete Leseposition.
+Keine Wertung, Fehlerhilfe oder dauerhafte Speicherung.
 Albumwechsel erhält den eigenen Stand und Undo/Redo pro Blatt innerhalb dieser
 Sitzung. Beenden verwirft alle Stände.
 
@@ -16,7 +18,7 @@ Debug-Spielprobe, kein Release/Installer. Die Quellcommitkennung steht im beigef
 README.txt; `product-report.json` bindet Head, getesteten Checkout/Test-Merge, Basis,
 CI-Lauf, Engine-/Archivhashes, EXE-Hashes und Prüfphasen. Artefaktlink im PR.
 
-Startziel: 1600×900, auf den verfügbaren Arbeitsbereich einschließlich Fensterrahmen
+Startziel: 1920×1080 Clientfläche, auf den verfügbaren Arbeitsbereich einschließlich Fensterrahmen
 begrenzt. Unter 1280×720 erscheint eine verständliche Meldung. Vergrößern des Fensters
 zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht automatisch.
 
@@ -36,9 +38,9 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
   Rückgängig/Wiederholen stellt ganze Striche mit exakten Vorzuständen wieder her.
-- F-02/F-03: Farbe per Palette A–D wählen. Hinweiszahlen tragen standardmäßig selbst
-  die Farbe; „Farbkennungen in Hinweisen“ ergänzt A–D auf Wunsch. Gleiche Farbblöcke
-  brauchen Abstand; verschiedene dürfen angrenzen.
+- F-02/F-03: Farbe per Palette A–D wählen. Diese Kennungen gehören ausschließlich zur
+  Bedienpalette; Lösungshinweise zeigen nur die vollständige Zahl in ihrer Farbe.
+  Gleiche Farbblöcke brauchen Abstand; verschiedene dürfen angrenzen.
 
 ## Navigieren und Hinweise lesen
 
@@ -55,18 +57,20 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   oder Undo-Historie. Pro Blatt bleiben Bearbeitung/History erhalten; beim Blattwechsel
   startet die Ansicht wieder bei Arbeitsgröße.
 - Am Raster stehen ausschließlich die Lösungshinweise, ohne laufende Zeilen-/
-  Spaltennummern. „–“ ist eine leere Linie. Bei Überlauf bleibt ein zusammenhängender
-  Ausschnitt vollständiger Zahlen sichtbar. Standardmäßig bleibt das rasternahe Ende:
-  Spalten unten, Zeilen rechts. `…` links/oben markiert einen verborgenen Anfang,
+  Spaltennummern oder A–D-Zusätze. „–“ ist eine leere Linie. Alle Zeilen nutzen dieselben
+  waagerechten Slots, alle Spalten dieselben senkrechten Slots; das rasternächste Ende
+  liegt an derselben Kante. Bei Überlauf bleibt ein zusammenhängender Ausschnitt
+  vollständiger Zahlen sichtbar. `…` links/oben markiert einen verborgenen Anfang,
   rechts/unten ein verborgenes Ende; mittlere Ausschnitte dürfen beide Marker haben.
-  Zahlen, Farben und optionale A–D-Kennungen werden nie halb abgeschnitten.
-- Mittlere Taste oder Hand-Werkzeug links im oberen Hinweisbereich verschiebt nur
-  Spaltenfolgen vertikal. Dieselbe Geste im linken Hinweisbereich verschiebt nur
-  Zeilenfolgen horizontal. Die Hinweise bleiben derselben Rasterspalte/-zeile
-  zugeordnet; Raster, Miniatur, Zellen und Undo/Redo ändern sich nicht. Ziehen kann
-  über den Bereich hinausgehen, ohne sein Ziel zu wechseln. `Esc` oder Fokusverlust
-  bricht die Navigation ab. „Hinweise rasterseitig ausrichten“ stellt beide
-  Standardausschnitte wieder her.
+  Zahlen werden nie geteilt und jede Verschiebung rastet in ganzen Slots ein.
+- Mittlere Taste oder Hand-Werkzeug links im oberen Hinweisbereich verschiebt nur die
+  beim Start angefasste Spaltenfolge vertikal. Dieselbe Geste im linken Hinweisbereich
+  verschiebt nur die angefasste Zeilenfolge horizontal. Nach der ersten vollen
+  Slotstrecke rastet genau diese Linie weiter; Nachbarlinien behalten ihre eigene
+  Position. Ziel, Linie und Achse bleiben auch beim Überqueren anderer Bereiche
+  eingefroren. Raster, Miniatur, Zellen und Undo/Redo ändern sich nicht. `Esc` oder
+  Fokusverlust bricht die Navigation ab. „Hinweise rasterseitig ausrichten“ stellt
+  alle Linien auf ihren rasterseitigen Standardausschnitt zurück.
 - Darüberfahren einer gekürzten Folge zeigt weiterhin den vollständigen farbigen
   Hinweis mit Umbruch direkt über dem Arbeitsbild. Das ist ein Zusatzweg; Anfang,
   Mitte und Ende bleiben auch durch Hinweis-Panning erreichbar. Eine separate
@@ -78,7 +82,9 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
 Für den Abschluss genügen alle richtigen Füllungen ohne Zusatzfüllungen.
 Hintergrund muss nicht vollständig ausgekreuzt sein. Name und Ergebnisbild erscheinen
 erst nach bestätigtem Abschluss. F-01 zeigt das ursprüngliche Raster neben einer
-detaillierteren Illustration desselben Motivs. F-03 bleibt auch danach als Test gekennzeichnet.
+detaillierteren Illustration desselben Motivs. F-02 zeigt einen verfeinerten Leuchtturm
+mit Sonne, Laterne, Turmbändern, Fenstern, Tür und Wasserlinien im klaren F-01-Stil.
+F-03 bleibt auch danach als Test gekennzeichnet.
 
 ## Erneute Eigentümerprobe · offen vor Gesamt-P1-Merge
 
@@ -89,18 +95,22 @@ Am neuen Artefakt mit echter Maus prüfen und Ergebnisse einzeln protokollieren:
    Startüberquerung, typspezifische Rücknahmestriche, Radierer, Undo/Redo, Rand,
    falsche Tastenfreigabe, Esc und Fokusverlust. Tatsächlich lösen ohne Auskreuzpflicht;
    Detailbild und Raster als dasselbe Motiv beurteilen.
-2. M-02: F-02, alle Farben A–D, direkte Umwandlung, unnummerierte farbige Hinweise
-   und Accessibility-Kennungen aus/an. Spalte 22 bei etwa 92/100 % prüfen: Beim
-   Kürzen bleiben vollständige restliche Zahlen sichtbar. Spalten vertikal und lange
-   Zeilen horizontal bis Anfang/Mitte/Ende pannen; Marker und ergänzenden Hover prüfen.
+2. M-02: F-02, alle Farben A–D, direkte Umwandlung und farbige Hinweise ohne
+   Zusatzkennungen prüfen. Spalte 22 bei etwa 92/100 % prüfen: Beim Kürzen bleiben
+   vollständige restliche Zahlen sichtbar. Je zwei benachbarte Spalten und Zeilen
+   auf unterschiedliche Anfangs-/Mittel-/Endpositionen pannen; gemeinsames Raster,
+   Slot-Einrasten, unveränderte Nachbarn, feste Linie und ergänzenden Hover prüfen.
    Drei angrenzende Füllungen an einer Fünfergrenze müssen einzeln erkennbar sein,
-   auch in Vorschau und bei den relevanten Arbeitszoomstufen. Anschließend lösen.
+   auch in Vorschau und bei den relevanten Arbeitszoomstufen. Anschließend lösen und
+   Raster/Ergebnisbild als denselben verfeinerten Leuchtturm beurteilen.
 3. M-03: F-03 eine notierte Koordinate bearbeiten und bei 50/75/92/100 % echte
-   Hinweiszahlen ohne Hover lesen. Beide Hinweisbereiche getrennt pannen; danach das
+   Hinweiszahlen ohne Hover lesen. Mehrere konkrete Zeilen/Spalten unabhängig pannen;
+   danach das
    Raster stark zoomen/verschieben und per Miniatur/Koordinaten wiederfinden. Die
-   Zuordnung und gewählten Lesepositionen dürfen sich durch reines Raster-Pan nicht
-   ändern. Keine verlorenen Aktionen, Richtungsumkehr beim Zoom oder Hänger.
-4. M-06: Startfenster, Vergrößern/Maximieren, 1080p/1440p soweit verfügbar,
+   Linienzuordnung und einzelnen Lesepositionen dürfen sich durch reines Raster-Pan
+   nicht ändern. Keine verlorenen Aktionen, Richtungsumkehr beim Zoom oder Hänger.
+4. M-06: 1920×1080-Clientstart beziehungsweise begrenzten Fallback,
+   Vergrößern/Maximieren, 1080p/1440p soweit verfügbar,
    UI 100/125 %, feste Zellgröße bei reinem Resize, erreichbare Werkzeuge/Hinweise.
 
 Protokollfelder: tatsächlicher Head/Artefakt, Windows-Version, Bildschirmauflösung,
@@ -128,7 +138,9 @@ in einer temporären Projektkopie mit isolierten APPDATA-/XDG-Pfaden und install
 nichts global. Tests, Negativtest Exit 23, Import, begrenzter Start, echte Renderbilder
 mit atomaren Anfangs-/Mittel-/Endausschnitten und beiden Hinweisachsen, Windows-Export
 und unter Windows exportierter Start. 300 Sekunden pro Prozess,
-1200 pro Download. Exportpreset exakt `P1 Windows x86_64`.
+1200 pro Download. Die Renderfälle decken gemeinsame Slots und unabhängige
+Anfangs-/Mittel-/Endausschnitte konkreter Linien auf beiden Achsen ab. Exportpreset
+exakt `P1 Windows x86_64`.
 
 ```sh
 godot --headless --path prototypes/p1 --import

@@ -43,9 +43,16 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 	var row_window: Dictionary = app.board.clue_layout("row", row_index)
 	var column_window: Dictionary = app.board.clue_layout("column", column_index)
 	captures.append({"file": name + ".png", "logical_surface": [surface.size.x, surface.size.y], "ui_scale": app.ui_scale, "cell_pitch": app.board.view.cell_size, "fixture": app.session.definition.id, "crop": crop,
-		"row_clue_position": app.board.row_clue_position, "column_clue_position": app.board.column_clue_position,
+		"row_clue_steps": nonzero_steps(app.board.row_clue_steps), "column_clue_steps": nonzero_steps(app.board.column_clue_steps),
 		"longest_row_window": [row_window.start, row_window.end, row_window.prefix_hidden, row_window.suffix_hidden],
 		"longest_column_window": [column_window.start, column_window.end, column_window.prefix_hidden, column_window.suffix_hidden]})
+
+func nonzero_steps(steps: Array[int]) -> Dictionary:
+	var result: Dictionary = {}
+	for index: int in range(steps.size()):
+		if steps[index] != 0:
+			result[str(index + 1)] = steps[index]
+	return result
 
 func longest_line(lines: Array) -> int:
 	var result: int = 0
@@ -54,13 +61,17 @@ func longest_line(lines: Array) -> int:
 			result = i
 	return result
 
+func set_fractional_step(app: Main, axis: String, index: int, fraction: float) -> void:
+	var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
+	app.board.set_clue_step(axis, index, roundi(float(maximum) * fraction))
+
 func run() -> void:
 	output = OS.get_environment("P1_CAPTURE_DIR")
 	if output.is_empty() or DisplayServer.get_name() == "headless":
 		quit(2)
 		return
 	surface = SubViewport.new()
-	surface.size = Vector2i(1600, 900)
+	surface.size = Vector2i(1920, 1080)
 	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(surface)
 	var app: Main = load("res://main.tscn").instantiate()
@@ -79,40 +90,42 @@ func run() -> void:
 				app.board.hover = Vector2i(4, 4)
 				await snapshot(app, "%dx%d-ui%d-f%d" % [dims.x, dims.y, roundi(scale * 100), fixture + 1])
 			app.select_puzzle(1)
-			app.toggle_accessibility_labels()
-			app.board.row_clue_position = 0.5
-			app.board.column_clue_position = 0.5
-			await snapshot(app, "%dx%d-ui%d-f2-accessibility-middle" % [dims.x, dims.y, roundi(scale * 100)])
-			app.toggle_accessibility_labels()
-	# D-11/D-12/D-14: unnumbered colored hints stay in the work view; optional
-	# accessibility suffixes and the complete overflow tooltip get real renders.
-	# D-16/D-17 add atomic clue windows and independent row/column reading positions.
-	surface.size = Vector2i(1600, 900)
+			set_fractional_step(app, "row", 35, 0.5)
+			set_fractional_step(app, "row", 36, 1.0)
+			set_fractional_step(app, "column", 21, 0.5)
+			set_fractional_step(app, "column", 22, 1.0)
+			await snapshot(app, "%dx%d-ui%d-f2-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
+			app.select_puzzle(2)
+			set_fractional_step(app, "row", 50, 0.35)
+			set_fractional_step(app, "row", 51, 0.7)
+			set_fractional_step(app, "column", 50, 0.35)
+			set_fractional_step(app, "column", 51, 0.7)
+			await snapshot(app, "%dx%d-ui%d-f3-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
+	# D-18/D-19: unnumbered colored numbers remain single-line in shared slots.
+	# D-20 adds independent snapped positions for every concrete row and column.
+	surface.size = Vector2i(1920, 1080)
 	app.set_ui_scale(1)
 	app.select_puzzle(1)
 	app.board.hover = Vector2i(10, 10)
 	await snapshot(app, "f02-colored-hints-default")
-	app.toggle_accessibility_labels()
-	await snapshot(app, "f02-colored-hints-accessibility")
-	app.toggle_accessibility_labels()
 	for step: float in [22.0, 24.0]:
 		app.board.view.zoom_to(step, app.board.view.viewport.get_center())
 		for position: float in [0.0, 0.5, 1.0]:
-			app.board.row_clue_position = position
-			app.board.column_clue_position = position
+			set_fractional_step(app, "row", 35, position)
+			set_fractional_step(app, "column", 21, position)
 			await snapshot(app, "f02-hints-%d-%s" % [roundi(step), ["end", "middle", "start"][roundi(position * 2.0)]])
 	app.board.view.zoom_to(12.0, app.board.view.viewport.get_center())
-	app.board.row_clue_position = 0.5
-	app.board.column_clue_position = 0.5
-	app.toggle_accessibility_labels()
-	await snapshot(app, "f02-hints-50-accessibility-middle")
-	app.toggle_accessibility_labels()
+	set_fractional_step(app, "row", 35, 0.5)
+	set_fractional_step(app, "row", 36, 1.0)
+	set_fractional_step(app, "column", 21, 0.5)
+	set_fractional_step(app, "column", 22, 1.0)
+	await snapshot(app, "f02-hints-50-independent-middle")
 	app.board.view.zoom_to(24.0, app.board.view.viewport.get_center())
-	app.board.row_clue_position = 1.0
-	app.board.column_clue_position = 0.0
+	app.board.reset_clue_pan()
+	set_fractional_step(app, "row", 35, 1.0)
 	await snapshot(app, "f02-row-start-column-end")
-	app.board.row_clue_position = 0.0
-	app.board.column_clue_position = 1.0
+	app.board.reset_clue_pan()
+	set_fractional_step(app, "column", 21, 1.0)
 	await snapshot(app, "f02-row-end-column-start")
 	app.select_puzzle(2)
 	var f03_row: int = longest_line(app.session.definition.rows)
@@ -123,18 +136,17 @@ func run() -> void:
 	app.board.clear_clue_hover()
 	for step: float in [12.0, 18.0, 22.0, 24.0]:
 		app.board.view.zoom_to(step, app.board.view.viewport.get_center())
-		app.board.row_clue_position = 0.0
-		app.board.column_clue_position = 0.0
+		app.board.reset_clue_pan()
 		await snapshot(app, "f03-hints-work-%d-end" % roundi(step / 24.0 * 100.0))
 	for step: float in [12.0, 24.0]:
 		app.board.view.zoom_to(step, app.board.view.viewport.get_center())
 		for position: float in [0.5, 1.0]:
-			app.board.row_clue_position = position
-			app.board.column_clue_position = position
+			set_fractional_step(app, "row", f03_row, position)
+			set_fractional_step(app, "column", f03_column, position)
 			await snapshot(app, "f03-hints-work-%d-%s" % [roundi(step / 24.0 * 100.0), "middle" if position == 0.5 else "start"])
 	app.board.view.zoom_to(24.0, app.board.view.viewport.get_center())
-	app.board.row_clue_position = 0.45
-	app.board.column_clue_position = 0.65
+	set_fractional_step(app, "row", f03_row, 0.45)
+	set_fractional_step(app, "column", f03_column, 0.65)
 	app.board.view.pan(Vector2(120, 80))
 	app.board.navigate_to(Vector2(0.78, 0.22))
 	await snapshot(app, "f03-hints-after-raster-pan")
@@ -180,6 +192,6 @@ func run() -> void:
 		app.show_album()
 		await snapshot(app, "f%d-earned-album" % (index + 1))
 	var report: FileAccess = FileAccess.open(output.path_join("render-report.json"), FileAccess.WRITE)
-	report.store_string(JSON.stringify({"renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(), "pixel_checks": pixel_checks, "clue_contract": "atomic contiguous in-work clue windows; exact prefix/suffix markers; independent row/column panning; optional suffixes; complete hover tooltip", "physical_dpi_acceptance": "OPEN: owner", "captures": captures}, "  ") + "\n")
+	report.store_string(JSON.stringify({"renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(), "pixel_checks": pixel_checks, "clue_contract": "single-line colored numbers; shared fixed slots; exact prefix/suffix markers; snapped per-line panning; complete hover tooltip", "physical_dpi_acceptance": "OPEN: owner", "captures": captures}, "  ") + "\n")
 	print("P1_CAPTURE_OK: %d actual rendered images" % captures.size())
 	quit(0)

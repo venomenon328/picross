@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 23.09.2026 · Spezifikation 0.6 · Fachvertrag D-16/D-17 umgesetzt; Eigentümerabnahme offen
+Stand: 23.09.2026 · Spezifikation 0.7 · Fachvertrag D-18 bis D-22 umgesetzt; Eigentümerabnahme offen
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -10,7 +10,7 @@ Maßgebliche Grundlagen sind [Produktdefinition](PRODUCT_DEFINITION.md), [Gestal
 
 Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) liegt auf `feat/5-p1-prototype` in Draft-PR #14 vor: Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, Zielbasis `main@7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac`. Die anschließende Eigentümerprobe ergab vier Folgepunkte. Die anschließende Vorbereitung hat diese in den Vertrag übernommen; der neue Implementierungsauftrag liefert #9 auf demselben Branch/PR, ohne Merge.
 
-**Ist/Soll:** D-07 bis D-17 sind mit #9 umgesetzt; technische Nachweise und verbleibende
+**Ist/Soll:** D-07 bis D-22 sind mit #9 umgesetzt; technische Nachweise und verbleibende
 Abnahmen stehen im [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und PR #14. Die früheren
 P1.1-Prüfungen bleiben historische Nachweise ihres damaligen Vertrags, keine
 Eigentümerabnahme des neuen Verhaltens.
@@ -41,12 +41,19 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 | D-15 | Links wandelt X direkt in die aktive Farbe, rechts eine Füllung direkt in X um. | Rücknahmestriche entfernen weiterhin nur den am Start vorhandenen Zieltyp; direkte Gegenmarkierungsumwandlung gilt für Setzstriche. |
 | D-16 | Überlauf kürzt auf Ebene vollständiger einzelner Hinweise. | Ein möglichst großer zusammenhängender Ausschnitt bleibt sichtbar; `…` markiert ausschließlich verborgene Präfixe/Suffixe. Tooltip nur ergänzend. |
 | D-17 | Spalten- und Zeilenhinweisbereich sind unabhängig pannbar. | Spaltenfolgen nur vertikal, Zeilenfolgen nur horizontal; Rasterzuordnung, Rasteransicht und Spielzustand bleiben unverändert. |
+| D-18 | Lösungshinweise zeigen ausschließlich vollständige einzeilige Zahlen in der Rätselfarbe. | Keine A–D-Suffixe, gestapelten Ziffern, Kompaktkästchen oder Umschaltoption; interne Farb-IDs und Mauspalette bleiben. |
+| D-19 | Alle Folgen einer Orientierung verwenden ein gemeinsames regelmäßiges Hinweisraster. | Feste Slotmaße, rasterseitige Ausrichtung, ganze eingerastete Schritte und reservierte Markerslots statt variabler Textpackung. |
+| D-20 | Jede konkrete Zeile und Spalte besitzt eine eigene Leseposition. | Achse und Linienindex werden am Gestenstart eingefroren; Nachbarfolgen bleiben unverändert. |
+| D-21 | 1920×1080 ist primäre Layoutbasis und gewünschte Start-Clientfläche. | Gesamter Fensterrahmen bleibt im Arbeitsbereich; kleinere Fallbacks, stabile Arbeitszellen und getrennte UI-/Rasterskalierung bleiben. |
+| D-22 | F-02 erhält wie F-01 ein eigenständiges verfeinertes Abschlussmotiv. | Leuchtturm, Bildaufbau, Proportionen und Farbverteilung bleiben klar zum Raster zugehörig; Rätsellogik bleibt unverändert. |
 
 D-07 bis D-10 übernehmen die vier Punkte der ersten Nutzer-Mausprobe. D-11 bis D-15
 übernehmen den ausdrücklich supersedierenden Sollstand der anschließenden P1.2-Probe.
-D-16/D-17 ersetzen für diese Folgearbeit die vollständige Ganzfolgen-Ersetzung durch
-einen Marker. Soweit ältere D-09-/Hinweisformulierungen widersprechen, gelten D-11 bis
-D-17.
+D-16/D-17 ersetzen die vollständige Ganzfolgen-Ersetzung durch atomare Ausschnitte.
+D-18 bis D-22 ersetzen anschließend die optionale A–D-Darstellung, variable
+Hinweispackung, gemeinsame Bereichspositionen, den 1600×900-Start und die bloße
+F-02-Rasterpräsentation. Soweit ältere D-07-/D-09-/D-14-/D-17- oder
+Hinweisformulierungen widersprechen, gelten D-18 bis D-22.
 D-10 präzisiert die bereits im Produkt-/Gestaltungskonzept erlaubte höhere
 Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
 
@@ -60,7 +67,7 @@ Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
 
 - Kleine Album-Testauswahl mit neutraler Kennung, Größe, Rätselart und Bearbeitungsstand. Alle Testfälle direkt zugänglich; keine Freischaltlogik.
 - Zellbearbeitung, Farbwahl, Achsenbindung, elastische Vorschau, kontrollierte Rücknahmen sowie Undo/Redo.
-- Arbeitsansicht mit unnummerierten, farbigen zugeordneten Hinweisen, atomaren Teilfolgen und zwei eigenständig pannbaren Hinweisbereichen, interaktiver eigener Miniatur, Raster-Zoom/Pan und getrennt skalierbarer Oberfläche.
+- Arbeitsansicht mit unnummerierten, farbigen einzeiligen Hinweisen, atomaren Teilfolgen in einem gemeinsamen Slotraster und eigener Leseposition je Zeile/Spalte, interaktiver eigener Miniatur, Raster-Zoom/Pan und getrennt skalierbarer Oberfläche.
 - Mit #11 ein fortsetzbarer lokaler Arbeitsstand je Testfall einschließlich Ansicht und Undo/Redo.
 - Tatsächlicher Abschluss und motivtreue, auch detailliertere Darstellung im Album.
 - Tests, Start-/Bedien-/Resetanleitung, Windows-Testartefakte und nachvollziehbare manuelle Erprobung.
@@ -82,7 +89,7 @@ Vor Abschluss weder fertiges Motivbild noch Motivname oder verräterischer Album
 | Kennung | Testfall | Zweck und Nachweis |
 | --- | --- | --- |
 | F-01 | 20×20 monochrom | Grundbedienung, Rücknahmeregression und mit #9 sichtbar detailliertere motivtreue Enthüllung. Bestehende logische Lösung und Hinweise beibehalten. |
-| F-02 | 40×40 mit vier Farben | Farbwahl, direkt angrenzende verschiedenfarbige Blöcke, lange Hinweise und vollständiger spielbarer Abschluss. |
+| F-02 | 40×40 mit vier Farben | Farbwahl, direkt angrenzende verschiedenfarbige Blöcke, lange Hinweise, vollständiger spielbarer Abschluss und verfeinertes motivtreues Leuchtturmbild. |
 | F-03 | Vollständig navigierbares 100×100-Stressraster | Großraster und lange Hinweise, kein statisches Ausschnittbild. Sichtbar „UI-Testdatensatz – Rätselqualität nicht abgenommen“. |
 
 F-01/F-02 dürfen einfach sein, benötigen aber ein erkennbares Motiv, geklärte Herkunft und eine endliche überprüfbare Deduktionsfolge ohne zusätzliche Startfelder oder notwendiges Raten. Eine Lösung oder passende Zahlen allein beweisen das nicht. Kein allgemeiner erklärender Solver beauftragt. F-03 erlaubt keine ungeprüften regulären Produkträtsel.
@@ -129,7 +136,12 @@ Ein wirksamer Strich ist ein Undo-Schritt; Redo stellt exakt wieder her. Neue wi
 
 ### 5.2 Fenster, Zoom, Hinweise und Miniatur
 
-D-07: Größerer Fensterstart und echte Nutzung von 1920×1080/2560×1440 ohne Zwang zu übergroßen Zellen. Technischer Ausgangswert für #9: 1600×900 logische Fensterfläche, soweit der tatsächlich verfügbare Monitorarbeitsbereich einschließlich Rahmen/Skalierung dies erlaubt; andernfalls passend begrenzen. 1280×720 bleibt logischer Mindest-/Fallback-Test, nicht das unveränderliche Wunschstandardfenster. Kein abgeschnittenes/offscreen geöffnetes Fenster.
+D-21 präzisiert D-07: 1920×1080 ist die primäre Layoutreferenz und die gewünschte
+Clientfläche beim Fensterstart, soweit diese einschließlich des tatsächlichen Rahmens
+in den verfügbaren Monitorarbeitsbereich passt. Andernfalls wird die Clientfläche so
+begrenzt, dass der ganze Rahmen sichtbar bleibt. Kein Vollbildzwang, Offscreen-Start
+oder Eingriff in Windows-Einstellungen. 1280×720 bleibt Mindest-/Fallback-Test,
+1600×900 kleinerer Regressionstest und 2560×1440 unterstützte größere Fläche.
 
 Arbeitszoom, UI-/Hinweisskalierung und Fenstergröße sind getrennt. Technischer Ausgangswert: 24 logische Einheiten Zellabstand bei 100 % Arbeitszoom; eine begründete Feinanpassung nach Darstellungstests ist reversibles Implementierungsdetail. Vergrößern/Maximieren des Fensters vergrößert bei gleichem Zoom und UI-Maßstab nicht automatisch die Zellen. Stattdessen mehr Raster zeigen oder kleine Raster mit ruhigen Rändern platzieren. Eine ausdrücklich gewählte Gesamtansicht ist vom Arbeitszoom zu unterscheiden; „Arbeitsgröße“ stellt eine brauchbare Bearbeitungsgröße wieder her.
 
@@ -149,26 +161,36 @@ D-08: Füllungen haben zu anderen Füllungen und insbesondere den Fünferlinien 
 
 Hinweise beziehen sich stets auf ganze Zeilen/Spalten und sind korrekt zugeordnet,
 aber nicht zusätzlich laufend nummeriert. Aktive Linie und die separate Koordinatenanzeige
-unterstützen die Orientierung. Jede regulär passende Folge steht vollständig direkt
-am Raster. Bei Überlauf bleibt pro Linie ein möglichst großer zusammenhängender
-Ausschnitt vollständiger Hinweise in unveränderter Reihenfolge sichtbar. Zahl, Farbe
-und optionale A–D-Kennung bilden eine unteilbare Einheit; mehrstellige Zahlen werden
-nicht angeschnitten. Standardmäßig bleibt das rasternahe Ende sichtbar: unten bei
-Spalten, rechts bei Zeilen. `…` steht nur an tatsächlich verborgenen Seiten, also
-oben/links für ein verborgenes Präfix und unten/rechts für ein verborgenes Suffix;
-ein mittlerer Ausschnitt darf beide Marker tragen. Leere Folgen bleiben `–`, kurze
-Nachbarfolgen vollständig.
+unterstützen die Orientierung. Sie zeigen nur vollständige einzeilige Zahlen in der
+jeweiligen Rätselfarbe; mehrstellige Zahlen bleiben horizontal und ungeteilt. Für P1
+gibt es keine A–D-Suffixe, gestapelten Ziffern, Kompaktkästchen oder entsprechende
+Umschaltoption. Interne Farb-IDs und die A–D-Beschriftung der vorläufigen Mauspalette
+sind davon nicht betroffen.
 
-Der Spaltenhinweisbereich lässt sich unabhängig vertikal entlang der Folgen, der
-Zeilenhinweisbereich unabhängig horizontal verschieben. Mittlere Taste und Linkszug
-mit Hand-Werkzeug wählen Ziel und Achse am Gestenstart; ein Grenzübertritt wird weder
-Raster-Pan noch Zellbearbeitung. Die X-Zuordnung der Spalten und Y-Zuordnung der Zeilen
-bleibt unverändert. Kurze Folgen werden pro Linie begrenzt und nicht mit einer langen
-Nachbarfolge aus dem Bereich geschoben. Scrollgrenzen verhindern leeren Raum;
-„Hinweise rasterseitig ausrichten“ stellt beide Standardausschnitte wieder her.
-Raster-Pan behält die Leseposition. Zoom, Resize, UI-Skalierung und A–D-Umschaltung
-berechnen Fenster/Marker neu und erhalten die normierte Leseposition soweit möglich.
-Beim Testblattwechsel werden beide Hinweisansichten neu initialisiert.
+Alle Zeilenfolgen verwenden dieselben festen horizontalen Hinweisplätze, alle
+Spaltenfolgen dieselben festen vertikalen Reihen. Die gemeinsame Slotgeometrie wird
+je Orientierung und aktueller Ansicht bestimmt, bleibt von individuellen Zahlenbreiten,
+Folgenlängen und Kürzungszuständen unabhängig und ist quer zur Folge exakt der
+Rasterzeile/-spalte zugeordnet. Kurze Folgen und `–` stehen rasterseitig rechts
+beziehungsweise unten. Bei Überlauf bleibt ein maximal sinnvoller zusammenhängender
+Ausschnitt vollständiger Tokens in unveränderter Reihenfolge sichtbar. `…` belegt
+einen festen Randplatz nur auf tatsächlich verborgenen Seiten. Keine zusätzlichen
+sichtbaren Hinweisgitterlinien.
+
+Jede konkrete Zeile und Spalte besitzt eine eigene ganzzahlige Leseposition. Mittlere
+Taste oder Linkszug mit Hand-Werkzeug frieren Achse und Linienindex am Gestenstart ein.
+Die angefasste Folge schaltet erst nach einer vollständigen Slotdistanz diskret weiter;
+jeder Zwischen- und Endzustand ist eingerastet. Überfahren benachbarter Linien, des
+Rasters oder anderer UI übernimmt keine andere Folge und wird weder Raster-Pan noch
+Zellbearbeitung. Leere/kurze Folgen pannen nicht in leeren Raum. Anfang, Mitte und Ende
+jeder langen Folge bleiben erreichbar; „Hinweise rasterseitig ausrichten“ setzt alle
+Einzelpositionen bewusst zurück.
+
+Raster-Pan und Miniaturnavigation erhalten sämtliche individuellen Lesepositionen.
+Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,
+begrenzen danach gültig und bleiben auf dem gemeinsamen Slotraster. Beim bewussten
+Testblattwechsel werden die Hinweispositionen wie bisher initialisiert; dauerhafte
+Persistenz folgt erst mit #11.
 
 Während einer Zellgeste ist Hinweisnavigation gesperrt. Freigabe, Escape und
 Fokusverlust beenden sie; falsche Tastenfreigabe nicht. Hinweis-Panning verändert
@@ -182,12 +204,16 @@ Lösungsvergleich. Hinweisabhaken ist nicht erforderlich.
 Die stets sichtbare Miniatur enthält nur Spielerzustand und gegebenenfalls dieselbe
 Vorschau, keine korrigierte Lösung. Unbekannt/leer/gefüllt unterscheidbar; richtige
 Rätselfarben darstellen. Ein Ausschnittrahmen zeigt den Viewport. Klick/Ziehen navigiert
-ohne Zellmutation. Vier Farben über Mauspalette mit stabilen Symbol-/Buchstabenkennungen;
-Hinweiszahlen verwenden standardmäßig allein die zugehörige Rätselfarbe. Eine sichtbare
-Option ergänzt die A–D-Suffixe in den Hinweisen. Auswahl/Fokus/Leerzustand dürfen keine
-zusätzliche Rätselfarbe vortäuschen. Keine beliebigen Nutzerpaletten.
+ohne Zellmutation. Vier Farben über die vorläufige Mauspalette mit stabilen internen
+Farb-IDs und A–D-Beschriftung; dies ist keine Zusatzkennung an Lösungshinweisen.
+Auswahl/Fokus/Leerzustand dürfen keine zusätzliche Rätselfarbe vortäuschen. Keine
+beliebigen Nutzerpaletten und kein vorgezogener Neuentwurf der Farbauswahl.
 
-Layouttests umfassen 1280×720, den gewählten größeren Start sowie 1920×1080 und 2560×1440 als logische Testflächen. Reale Windows-Bildschirmauflösung, Fenster-/Clientfläche und Anzeigeskalierung zusätzlich getrennt protokollieren; logische Tests sind kein Nachweis physischer DPI-Verhältnisse. Keine versteckten Werkzeuge/Hinweise; unter der Mindestfläche klare Meldung statt beschädigtem Layout.
+Layouttests umfassen 1280×720, 1600×900, die primäre 1920×1080-Fläche und 2560×1440
+als logische Testflächen. Reale Windows-Bildschirmauflösung, Fenster-/Clientfläche,
+Rahmen und Anzeigeskalierung zusätzlich getrennt protokollieren; logische Tests sind
+kein Nachweis physischer DPI-Verhältnisse. Keine versteckten Werkzeuge/Hinweise; unter
+der Mindestfläche klare Meldung statt beschädigtem Layout.
 
 ### 5.3 Alternative Eingaben außerhalb P1
 
@@ -199,7 +225,15 @@ Nach einer übernommenen Aktion gilt das Rätsel genau dann als gelöst, wenn je
 
 Danach Abschlussansicht „Prototyp ohne Wertung“, Motivname und fertiger Albumeintrag. D-10: Das Ergebnisbild darf höhere Auflösung, feinere Konturen, zusätzliche Oberflächendetails, Schattierungen und kleine passende Motivelemente besitzen. Das Rätsel muss sehr deutlich als Stilisierung dieses Bilds erkennbar bleiben: gleicher Hauptgegenstand, nachvollziehbarer Bildaufbau, wesentliche Formen und Proportionen. Keine unabhängige Belohnungsillustration, aber auch keine Pflicht zu identischen belegten Rasterzellen.
 
-#9 demonstriert diese Richtung bereits am F-01-Ergebnisbild. F-01s Rätsel, Hinweise und Deduktionsnachweis bleiben logisch unverändert; bloßes Hochskalieren/Umfärben desselben Pixelbilds genügt nicht als Detaillierungsnachweis. Eine für alle Rätsel verpflichtende hochaufgelöste Neuzeichnung oder neue Assetpipeline wird daraus nicht abgeleitet. F-02 bleibt bereits als Farbraster erkennbar. F-03 ist auch nach Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
+#9 demonstriert diese Richtung an den eigenständigen Ergebnisbildern von F-01 und F-02.
+Das positiv bestätigte F-01-Segelboot bleibt die Stil-/Abstraktionsreferenz. F-02 zeigt
+denselben Leuchtturmaufbau wie das Raster – Sonne oben links, Turm rechts, Wasser unten
+und dieselbe dominante Farbverteilung – mit feineren Architekturkonturen, Laterne,
+Turmbändern, Oberflächen- und Wasserdetails. Bloßes Hochskalieren/Umfärben desselben
+Pixelbilds genügt für keines der beiden Motive. Lösungen, Hinweise und die 48/80
+Deduktionsschritte bleiben logisch unverändert. Eine allgemeine Assetpipeline oder
+Pflicht-Neuzeichnung aller späteren Rätsel folgt daraus nicht. F-03 ist auch nach
+Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
 
@@ -246,7 +280,7 @@ Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `prototype
 | A-01 | Definitionen/Hinweise einschließlich Farben, Leerlinien und ungültiger Daten validieren; F-01/F-02 mit Deduktionsfolge, F-03 als Stressfixture. Abschlussressourcen technisch unabhängig von Rasterauflösung prüfen. |
 | A-02 | Setz-/Neutralisierungs-/Radiergesten: direkte Füllung↔X-Umwandlung, Achsenbindung, diagonaler Start, Sprünge, elastisches Zurückziehen, gemischte Vorbelegung, Rand/UI, Abbruch und No-op. Nur zum eingefrorenen Modus passende Zellen ändern sich. |
 | A-03 | Atomarer Strich, exakte Vorzustände bei Undo/Redo, korrekte Verzweigung; Neutralisieren nicht als versteckten Undo-Aufruf behandeln. |
-| A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei Zoom, Raster-Pan, UI-Skalierung und Resize; getrennte echte Mauspfade für beide Hinweisbereiche einschließlich Abbruch/Grenzen. Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
+| A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei Zoom, Raster-Pan, UI-Skalierung und Resize; echte Mauspfade bewegen nur die konkret gestartete Zeile/Spalte in eingerasteten gemeinsamen Slots, einschließlich Abbruch/Grenzen. Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
 | A-05 | Mit #11 Speicherung/Recovery ohne stillen Datenverlust oder fremden Zugriff. |
 | A-06 | Unkorrigierte eigene Miniatur, keine frühen Motivdaten, richtiger Abschluss mit unbekanntem Hintergrund, kein Abschluss bei Zusatz-/Fehl-/Falschfüllung oder leerer Motivzelle. Detailliertere Ressourcen ändern die Abschlusslogik nicht. |
 | A-07 | Import, begrenzter Start/Exit und Windows-Export; vollständige Artefakte/Logs einem konkreten Stand zugeordnet. |
@@ -258,11 +292,11 @@ Bestehende Dokumentprüfung zusätzlich: `python3 -m unittest discover -s tools 
 | ID | Szenario | Zuständigkeit |
 | --- | --- | --- |
 | M-01 | F-01 per Maus setzen/neutralisieren, X↔Füllung direkt umwandeln, zurückziehen, Rücknahmetyp schützen, Radierer/Undo/Redo und Abschluss ohne Auskreuzpflicht. Neuer F-01-Reveal sichtbar detaillierter und eindeutig zugehörig. | Eigentümer |
-| M-02 | F-02 mit vier Farben und langen Hinweisen; atomare Teilfolgen, farbige Zahlen ohne Nummerierung, optionale A–D-Kennung, beide Hinweis-Panachsen, ergänzender Tooltip, Farbwahl, Zelltrennung und direkte Umwandlung klar bedienbar. | Eigentümer |
-| M-03 | F-03-Koordinate bearbeiten, bei kleinen Arbeitsstufen echte Hinweiszahlen lesen, beide Hinweisbereiche unabhängig pannen, Raster stark zoomen/verschieben und über Miniatur/Koordinaten wiederfinden. | Eigentümer |
+| M-02 | F-02 mit vier Farben und langen Hinweisen; einzeilige farbige Zahlen ohne Zusatzkennung, gemeinsames Slotraster, mehrere Einzelketten unabhängig pannen, ergänzender Tooltip, Farbwahl, Zelltrennung, direkte Umwandlung und verfeinertes Leuchtturmmotiv klar bedienbar. | Eigentümer |
+| M-03 | F-03-Koordinate bearbeiten, bei kleinen Arbeitsstufen echte Hinweiszahlen lesen, mehrere konkrete Zeilen/Spalten unabhängig pannen, Raster stark zoomen/verschieben und über Miniatur/Koordinaten wiederfinden. | Eigentümer |
 | M-04 | Mit #11 Teilstand schließen, neu starten und samt Historie/Ansicht fortsetzen. | Eigentümer |
 | M-05 | Durch D-06 nicht anwendbar: Tastatur/Controller außerhalb P1. | Kein P1-Gate |
-| M-06 | Größerer Start, 1080p/1440p und logische Referenzflächen; tatsächliche Skalierung erfassen. Keine verdeckten Elemente, aufgezwungenen Riesenraster oder verschmolzenen Füll-/Fünferlinien. | Eigentümer |
+| M-06 | 1080p-Startziel beziehungsweise arbeitsbereichbegrenzter Fallback, 1080p/1440p und logische Referenzflächen; tatsächliche Skalierung erfassen. Keine verdeckten Elemente, aufgezwungenen Riesenraster oder verschmolzenen Füll-/Fünferlinien. | Eigentümer |
 | M-07 | 100×100 auf der Referenzhardware: keine verlorenen/falschen Aktionen oder wahrnehmbaren Hänger. Im integrierten Paket 500 reproduzierbare Zell-/Navigationsaktionen gegen Sollzustand; Messung und Beobachtung getrennt. | Implementierer / Eigentümer |
 
 Protokoll: tatsächliche Commit-/Artefaktkennung, Betriebssystem, verwendete Eingaben, Fenster-/Bildschirmgröße, reale Skalierung, Szenario und Ergebnis. Hardware-/Skalierungswerte nicht erfinden und keine pauschale FPS-Zusage aus der Referenz ableiten.
@@ -278,7 +312,7 @@ Die Probe ist **durchgeführt mit Änderungsbedarf**, nicht pauschal bestanden. 
 ## 9. Aktueller Lieferstand
 
 #9 ist der technische Lieferstand auf `feat/5-p1-prototype` / Draft-PR #14:
-Feedbackänderungen D-07 bis D-17 und Farb-/Großrasterbedienung, einschließlich Tests,
+Feedbackänderungen D-07 bis D-22 und Farb-/Großrasterbedienung, einschließlich Tests,
 Anleitung, Windows-Zwischenartefakt und nachvollziehbaren visuellen Nachweisen. Genaue
 technische Nachweise und ausstehende Eigentümerabnahme stehen in #9 und im
 P1.2-Prüfbericht.
