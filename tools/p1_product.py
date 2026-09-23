@@ -105,7 +105,7 @@ def main() -> int:
             renders = output / "renders"
             renders.mkdir(exist_ok=True)
             environment["P1_CAPTURE_DIR"] = str(renders)
-            render_command = [engine, "--path", str(project), "--rendering-driver", "opengl3", "--script", "res://tests/capture.gd", "--", "--p1-capture"]
+            render_command = [engine, "--path", str(project), "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--script", "res://tests/capture.gd", "--", "--p1-capture"]
             if host == "Linux":
                 if not shutil.which("xvfb-run"):
                     raise toolchain.PreflightError("Real render verification requires xvfb-run on Linux")

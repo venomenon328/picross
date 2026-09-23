@@ -245,7 +245,9 @@ func _draw_clues(first: Vector2i, last: Vector2i) -> void:
 				texts.append("–")
 		if x == hover.x:
 			draw_rect(Rect2(px - view.cell_size / 2, near_grid.y - (texts.size() + 1) * line_height - 8, view.cell_size, (texts.size() + 1) * line_height + 4), Color("d8ddcc"))
-		texts.insert(0, str(x + 1))
+		var number: String = str(x + 1)
+		var nw: float = font.get_string_size(number, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		draw_string(font, Vector2(px - nw / 2, near_grid.y - view.viewport.position.y + 22 * ui_scale), number, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 		for i: int in range(texts.size()):
 			var tw: float = font.get_string_size(texts[i], HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 			draw_string(font, Vector2(px - tw / 2, near_grid.y - 10 - (texts.size() - 1 - i) * line_height), texts[i], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
