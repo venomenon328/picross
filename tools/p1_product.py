@@ -15,6 +15,7 @@ from pathlib import Path
 
 import p1_preflight as toolchain
 from check_f01 import DATA, verify
+from check_f02 import verify as verify_f02
 
 
 def require_clean_output(result: dict, marker: str | None = None) -> None:
@@ -71,6 +72,7 @@ def main() -> int:
     logs.mkdir(exist_ok=True)
     try:
         proof_steps = verify(json.loads((DATA / "f01.json").read_text(encoding="utf-8")), json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8")))
+        color_proof_steps = verify_f02(json.loads((DATA / "f02.json").read_text(encoding="utf-8")), json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8")))
         metadata = toolchain.request_json(toolchain.RELEASE_API)
         editor = toolchain.EDITORS[host]
         assets = (editor, toolchain.TEMPLATES)
@@ -100,6 +102,16 @@ def main() -> int:
                 raise toolchain.PreflightError("Unexpected negative-test failure")
             results.append(negative)
             phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
+            renders = output / "renders"
+            renders.mkdir(exist_ok=True)
+            environment["P1_CAPTURE_DIR"] = str(renders)
+            render_command = [engine, "--path", str(project), "--rendering-driver", "opengl3", "--script", "res://tests/capture.gd", "--", "--p1-capture"]
+            if host == "Linux":
+                if not shutil.which("xvfb-run"):
+                    raise toolchain.PreflightError("Real render verification requires xvfb-run on Linux")
+                render_command = ["xvfb-run", "-a"] + render_command
+                environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
+            phase("render-capture", render_command, "P1_CAPTURE_OK")
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
@@ -108,10 +120,12 @@ def main() -> int:
             commit, dirty = toolchain.source_commit(root)
             checkout_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
             manifest = dict(schema=1, source_commit=commit, source_tree_dirty=dirty, tested_checkout_commit=checkout_commit,
-                            host=host, engine_version=toolchain.EXPECTED_VERSION, assets=hashes, proof_steps=proof_steps,
+                            host=host, engine_version=toolchain.EXPECTED_VERSION, assets=hashes, proof_steps=proof_steps, color_proof_steps=color_proof_steps,
+                            render_files={p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()},
+                            base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_K06="OPEN: owner mouse trial required before #9 unless explicitly skipped")
+                            manual_acceptance="OPEN: owner M-01/M-02/M-03/M-06 mouse, motif and actual Windows scaling before overall P1 merge; prior K-06 had change requests")
             archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"))
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)

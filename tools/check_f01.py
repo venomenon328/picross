@@ -25,8 +25,8 @@ def placements(lengths: list[int], width: int = 20) -> list[list[int]]:
 
 
 def derive(data: dict) -> tuple[list[dict], list[list[int]]]:
-    if (data["id"], data["revision"], data["width"], data["height"]) != ("F-01", 1, 20, 20):
-        raise ValueError("Certificate is scoped to F-01 revision 1, 20x20")
+    if (data["id"], data["revision"], data["width"], data["height"]) != ("F-01", 2, 20, 20):
+        raise ValueError("Certificate is scoped to F-01 revision 2, 20x20")
     candidates = {}
     for axis, hints in (("row", data["rows"]), ("column", data["columns"])):
         for index, blocks in enumerate(hints):
@@ -60,7 +60,7 @@ def derive(data: dict) -> tuple[list[dict], list[list[int]]]:
 
 def verify(data: dict, certificate: dict) -> int:
     steps, known = derive(data)
-    if certificate != {"id": "F-01", "revision": 1, "rule": "line-intersection", "steps": steps}:
+    if certificate != {"id": "F-01", "revision": 2, "rule": "line-intersection", "steps": steps}:
         raise ValueError("Certificate differs from reproducible deductions")
     if any(-1 in row for row in known) or known != data["solution"]:
         raise ValueError("Deductions do not determine the entire supplied solution")

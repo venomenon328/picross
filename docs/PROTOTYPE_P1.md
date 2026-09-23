@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 23.09.2026 · Spezifikation 0.4 · Mausproben-Feedback eingearbeitet; Umsetzung der Änderungen mit #9 noch ausstehend
+Stand: 23.09.2026 · Spezifikation 0.4 · Fachvertrag mit Mausproben-Feedback; technische Umsetzung in #9, Eigentümerabnahme offen
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -8,11 +8,14 @@ Paketquelle ist [Issue #5](https://github.com/venomenon328/picross/issues/5). Hi
 
 Maßgebliche Grundlagen sind [Produktdefinition](PRODUCT_DEFINITION.md), [Gestaltungskonzept](DESIGN_CONCEPT.md), [Projektprofil](PROJECT_PROFILE.md) und [lokaler Workflow](dev-rules/WORKFLOW.md); Einstieg bleibt [AGENTS.md](../AGENTS.md). Vor Ausführung die aktuellen Quellen und Issue-Kommentare prüfen.
 
-Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) liegt auf `feat/5-p1-prototype` in Draft-PR #14 vor: Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, Zielbasis `main@7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac`. Die anschließende Eigentümerprobe ergab vier Folgepunkte. Der aktuelle Auftrag übernimmt diese in die Spezifikation und bereitet #9 vor; er implementiert und mergt nichts.
+Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) liegt auf `feat/5-p1-prototype` in Draft-PR #14 vor: Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, Zielbasis `main@7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac`. Die anschließende Eigentümerprobe ergab vier Folgepunkte. Die anschließende Vorbereitung hat diese in den Vertrag übernommen; der neue Implementierungsauftrag liefert #9 auf demselben Branch/PR, ohne Merge.
 
-**Ist/Soll:** Das vorhandene Spielverhalten stammt weiterhin aus #8/Spezifikation 0.3. D-07 bis D-10 dieser Revision sind der verbindliche Sollstand für #9, noch kein Funktionsnachweis. Die frühere Pflicht zu pixelidentischer Abschluss-Silhouette und die Radiererpflicht für normale Rücknahmen werden nicht rückwirkend als neue #8-Abnahmekriterien behandelt.
+**Ist/Soll:** D-07 bis D-10 sind mit #9 umgesetzt; technische Nachweise und verbleibende
+Abnahmen stehen im [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und PR #14. Die früheren
+P1.1-Prüfungen bleiben historische Nachweise ihres damaligen Vertrags, keine
+Eigentümerabnahme des neuen Verhaltens.
 
-**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 übernimmt das Mausproben-Feedback und ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. Dauerhafte Speicherung folgt mit #11, integrierte Prüfung mit #12. Diese späteren Verträge sind keine Behauptung bereits implementierter Funktionen. Anleitung und technische Nachweise des bisherigen Zwischenstands: [P1.1](../prototypes/p1/README.md), [Prüfbericht](P1_1_VERIFICATION.md).
+**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 übernimmt das Mausproben-Feedback und ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. Dauerhafte Speicherung folgt mit #11, integrierte Prüfung mit #12. Diese späteren Verträge sind keine Behauptung bereits implementierter Funktionen. Aktuelle [Anleitung](../prototypes/p1/README.md) und [P1.2-Prüfbericht](P1_2_VERIFICATION.md); historischer [P1.1-Prüfbericht](P1_1_VERIFICATION.md).
 
 Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen weder die endgültige Produktengine noch die gesamte Betriebssystemmatrix, Wertung oder Themenwahl fest. Frühere P1-Vorschläge in Issue-Revision 0.1 und Gestaltungskonzept Abschnitt 7 sind innerhalb dieses Scopes abgelöst; globale Produktfragen bleiben offen.
 
@@ -200,14 +203,14 @@ Protokoll: tatsächliche Commit-/Artefaktkennung, Betriebssystem, verwendete Ein
 
 ### 8.3 Gate-Zeitpunkte und bisherige Mausprobe
 
-Vor Gesamt-P1-Merge A-01 bis A-07, Dokumentprüfung und M-01 bis M-04, M-06/M-07 nachweisen. Zwischenpakete #8/#9/#11/#12 bleiben gemäß #5 im gemeinsamen Draft-PR; keine vorgezogene Mergefreigabe durch diesen Vorbereitungsauftrag.
+Vor Gesamt-P1-Merge A-01 bis A-07, Dokumentprüfung und M-01 bis M-04, M-06/M-07 nachweisen. Zwischenpakete #8/#9/#11/#12 bleiben gemäß #5 im gemeinsamen Draft-PR; keine vorgezogene Mergefreigabe durch diesen Implementierungsauftrag.
 
 K-06: Der Nutzer hat die angebotene F-01-Spielprobe verwendet und anschließend zwei Screenshots sowie vier konkrete Rückmeldungen geliefert; der Abschlussbildschirm ist sichtbar. Bezug der Unterhaltung ist Artefakt `10719712143` / Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`. Eine separate Versionsanzeige des Nutzerlaufs, tatsächliche Windows-Skalierung und vollständige Einzelbestätigung aller K-06-Szenarien liegen nicht vor.
 
 Die Probe ist **durchgeführt mit Änderungsbedarf**, nicht pauschal bestanden. Der Nutzer beauftragt auf Basis dieses Feedbacks ausdrücklich die Vorbereitung von #9. Die frühe Feedbackschleife blockiert diesen Folgeschritt daher nicht; ihre Änderungen werden in #9 bearbeitet. Fehlende Metadaten/Einzelnachweise bleiben offen und werden mit der erneuten Maus-/Layoutprobe des neuen Artefakts erfasst. Keine vollständige M-01/M-06-/Produktabnahme aus den Screenshots ableiten. Technische Tests ersetzen diese nicht.
 
-## 9. Nächster Lieferstand
+## 9. Aktueller Lieferstand
 
-#9 ist der nächste spezifizierte Schritt auf `feat/5-p1-prototype` / Draft-PR #14: Feedbackänderungen und Farb-/Großrasterbedienung, einschließlich Tests, Anleitung, Windows-Zwischenartefakt und nachvollziehbaren visuellen Nachweisen. Genaue Abnahme und Vorbereitungsstatus stehen in #9. Dieses Dokument ist keine Ausführung von #9.
+#9 ist der technische Lieferstand auf `feat/5-p1-prototype` / Draft-PR #14: Feedbackänderungen und Farb-/Großrasterbedienung, einschließlich Tests, Anleitung, Windows-Zwischenartefakt und nachvollziehbaren visuellen Nachweisen. Genaue technische Nachweise und ausstehende Eigentümerabnahme stehen in #9 und im P1.2-Prüfbericht.
 
 #11/#12, endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte frühe Risikostränge.

@@ -2,7 +2,10 @@ extends RefCounted
 ## JSON boundary. 0 is background; positive IDs refer to palette entries.
 
 static func load_f01() -> Dictionary:
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/f01.json"))
+	return load_fixture("f01")
+
+static func load_fixture(id: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/" + id + ".json"))
 	return parsed if parsed is Dictionary else {}
 
 static func integer(value: Variant) -> bool:
@@ -40,7 +43,7 @@ static func valid_hints(stored: Variant, expected: Array) -> bool:
 	return true
 
 static func validate(data: Dictionary) -> String:
-	if data.get("schema") != 1 or not integer(data.get("revision")) or data.revision < 1:
+	if data.get("schema") != 2 or not integer(data.get("revision")) or data.revision < 1:
 		return "Unbekannte Definitionsversion."
 	if not data.get("id") is String or data.id.is_empty():
 		return "Definitionskennung fehlt."
@@ -79,15 +82,14 @@ static func validate(data: Dictionary) -> String:
 	var reveal: Variant = data.get("reveal")
 	if not reveal is Dictionary or not reveal.get("name") is String or reveal.name.is_empty():
 		return "Motivname fehlt."
-	if not reveal.get("pixels") is Array or reveal.pixels.size() != int(data.height):
+	if reveal.get("version") != 1 or reveal.get("definition_id") != data.id:
+		return "Ungültige Abschlusszuordnung."
+	var path: Variant = reveal.get("image")
+	if not path is String or not path.begins_with("res://art/") or ".." in path or not path.ends_with(".svg"):
+		return "Ungültiger lokaler Bildpfad."
+	if not ResourceLoader.exists(path, "Texture2D"):
 		return "Abschlussbild fehlt."
-	for y: int in range(int(data.height)):
-		if not reveal.pixels[y] is Array or reveal.pixels[y].size() != int(data.width):
-			return "Ungültiges Abschlussbild."
-		for x: int in range(int(data.width)):
-			var pixel: Variant = reveal.pixels[y][x]
-			if not pixel is String or (pixel != "" and not Color.html_is_valid(pixel)):
-				return "Ungültige Motivfarbe."
-			if (data.solution[y][x] == 0) != (pixel == ""):
-				return "Abschlussbild verändert die Motivsilhouette."
+	var texture: Texture2D = load(path) as Texture2D
+	if texture == null or texture.get_width() < 1 or texture.get_height() < 1:
+		return "Defektes Abschlussbild."
 	return ""

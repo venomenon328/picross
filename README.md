@@ -2,7 +2,11 @@
 
 Ein geplantes thematisch zusammenhängendes Nonogramm-Spiel für PC: kuratierte klassische und farbige Bildrätsel, ein substanzielles Angebot großer Raster und eine präzise, komfortable Bedienung. Logische Erkenntnisse und größere Projekte stehen im Mittelpunkt; ein sich füllendes illustriertes Album, Sterneprogression und freiwillige Leistungsvergleiche ergänzen das Spiel. Eine perfekte Lösung erfordert einen Durchgang ohne Fehler und ohne Undo.
 
-Unter [prototypes/p1](prototypes/p1/README.md) liegt die erste spielbare Mausprobe: ein monochromes 20×20-Rätsel mit elastischen Strichen, Undo/Redo, eigener Miniatur und motivtreuem Abschluss. Dieser P1.1-Zwischenstand hat keine Wertung oder dauerhafte Speicherung. Die reale Eigentümerprobe K-06 ist offen; spätere Großraster-/Speicherpakete sind noch nicht enthalten.
+Unter [prototypes/p1](prototypes/p1/README.md) liegt P1.2: 20×20 monochrom,
+40×40 mit vier Farben und ein 100×100-UI-Stressraster. Mausstriche mit direkter
+Neutralisierung, Undo/Redo, Zoom/Pan, eigene interaktive Miniatur, vollständige Hinweise
+und motivtreuer Abschluss. Keine Wertung oder dauerhafte Speicherung. Die reale
+Eigentümerprobe des neuen Artefakts bleibt offen; #8 wurde mit Änderungsbedarf erprobt.
 
 ## Einstieg
 
@@ -10,14 +14,14 @@ Unter [prototypes/p1](prototypes/p1/README.md) liegt die erste spielbare Mauspro
 - [Gestaltungskonzept](docs/DESIGN_CONCEPT.md): bestätigte Album-/Stilentscheidungen, noch offene Themenwahl, Umgang mit den exemplarischen Mocks und zu untersuchende Interaktionen.
 - [P1-Spezifikation](docs/PROTOTYPE_P1.md): Windows-/Godot-Bedienprototyp, bestätigte Eingaberegeln, Testdaten, Speicherung, Technikbindung und Abnahmevertrag. Auftrag und Ausführungsstand in [Issue #5](https://github.com/venomenon328/picross/issues/5).
 - [P1-Preflight](docs/P1_PREFLIGHT.md): reproduzierbarer Download-, Hash-, Smoke-, Export- und CI-Nachweis für die gebundene Godot-Toolchain.
-- [P1.1-Anleitung](prototypes/p1/README.md) und [Prüfbericht](docs/P1_1_VERIFICATION.md): Start, Mausbedienung, isolierte Produktprüfung, Windows-Zwischenartefakt und offene K-06-Probe.
+- [P1.2-Anleitung](prototypes/p1/README.md) und [Prüfbericht](docs/P1_2_VERIFICATION.md): Start, Mausbedienung, isolierte Produktprüfung, Windows-Zwischenartefakt und offene Eigentümerabnahme.
 - [AGENTS.md](AGENTS.md): verbindlicher Einstieg für ChatGPT und Coding Agents.
 - [Projektprofil](docs/PROJECT_PROFILE.md): aktueller Projekt- und Prüfrahmen sowie situationsbezogene Pflichtquellen.
 - [Gemeinsamer Workflow](docs/dev-rules/WORKFLOW.md): Spezifikation, Umsetzung, Review und Freigaben.
 - [Herkunft und Aktivierung](docs/DEV_RULES_ADOPTION.md): exakter dev-rules-Stand und Übernahmeweg.
 - [ChatGPT-Projekteinstellungen](docs/CHATGPT_PROJECT_INSTRUCTIONS.md): nach dem Setup-Merge einzusetzender Text.
 
-Produktdefinition, Gestaltungskonzept und P1-Spezifikation trennen bestätigte Entscheidungen von Vorschlägen und offenen Details. P1 verwendet Godot Standard 4.7.2-stable als native Windows-Desktopfassung. Nach D-06 ist Maus der einzige verpflichtende P1-Eingabepfad; spätere alternative Produkteingaben bleiben unverändert. Die endgültige Produkttechnik und Betriebssystemmatrix werden damit nicht festgelegt. Python prüft Dokumente, das F-01-Zertifikat und den isolierten Toolchain-/Produktweg. Die Spielimplementierung bleibt bis zur vollständigen P1-Abnahme im Draft-PR; kein Release oder Merge ist damit verbunden.
+Produktdefinition, Gestaltungskonzept und P1-Spezifikation trennen bestätigte Entscheidungen von Vorschlägen und offenen Details. P1 verwendet Godot Standard 4.7.2-stable als native Windows-Desktopfassung. Nach D-06 ist Maus der einzige verpflichtende P1-Eingabepfad; spätere alternative Produkteingaben bleiben unverändert. Die endgültige Produkttechnik und Betriebssystemmatrix werden damit nicht festgelegt. Python prüft Dokumente, die F-01-/F-02-Zertifikate und den isolierten Toolchain-/Produktweg. Die Spielimplementierung bleibt bis zur vollständigen P1-Abnahme im Draft-PR; kein Release oder Merge ist damit verbunden.
 
 ## Dokumentation prüfen
 

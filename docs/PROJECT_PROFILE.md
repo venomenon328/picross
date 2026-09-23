@@ -2,15 +2,19 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1.1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1 liegt im gemeinsamen Draft-PR #14 vor, noch nicht auf `main`. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR, nicht in einer parallelen Roadmap.
+`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1.2-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.2 liegt im gemeinsamen Draft-PR #14 vor, noch nicht auf `main`. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR, nicht in einer parallelen Roadmap.
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
 Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.2 übernimmt das konkrete Mausfeedback, insbesondere die Zelltrennung und detailliertere motivtreue Enthüllung.
 
-Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [P1.1-Anleitung](../prototypes/p1/README.md) und [P1.1-Prüfbericht](P1_1_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
+Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und [P1.1-Prüfbericht](P1_1_VERIFICATION.md), ab #9 auch [P1.2-Prüfbericht](P1_2_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
 
-**Aktuelle Phase:** Vier Rückmeldungen der realen P1.1-Mausprobe sind als D-07 bis D-10 in Spezifikation 0.4 aufgenommen; #9 wird zur Umsetzung vorbereitet. Spielcode und bestehende Tests bilden weiterhin den #8-Stand von `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8` ab. Die neuen Regeln sind Soll, nicht bereits implementiertes oder abgenommenes Verhalten. Die aktuelle Vorbereitung umfasst Dokumentation/Issues, keinen Spielcode und keinen Merge.
+**Aktuelle Phase:** #9 implementiert D-07 bis D-10 der Spezifikation 0.4 samt
+Farb-/Großrasterbedienung auf dem bestehenden P1-Draft. Der [P1.2-Prüfbericht](P1_2_VERIFICATION.md)
+und die aktuelle Anleitung beschreiben Umsetzung und technische Nachweise. Reale
+Eigentümerabnahme, #11/#12 und Gesamtmerge bleiben offen. Der historische #8-Nachweis
+wird dadurch nicht rückwirkend zu einer pauschalen Abnahme.
 
 Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Regelkopie. Keine abschließende Produktarchitektur oder universell erprobte Produkt-Teststrategie behaupten. Weitere Pflichtquellen erst mit tatsächlich beschlossenen Inhalten anlegen.
 
@@ -34,7 +38,7 @@ Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedi
 
 Der beauftragte gemeinsame Arbeitsbranch ist `feat/5-p1-prototype`, Draft-PR #14. #9 setzt dort auf #8 auf, nicht auf einem frisch von `main` abgezweigten Parallelbranch. Bestehenden Branch/PR nicht ersetzen. #9, #11 und #12 werden separat beauftragt, im gemeinsamen P1-Draft integriert und mit ihren eigenen Tests/Nachweisen geliefert. #5 bleibt bis vollständiger Lieferung und Abnahme offen.
 
-Vorbereitung allein erlaubt keine Spielimplementierung. Der aktuelle Auftrag zur Einarbeitung des Feedbacks erlaubt Dokument-/Issuepflege auf dem bestehenden Arbeitsbranch; kein Merge. Ein späterer Implementierungsauftrag für #9 erlaubt die spezifizierten Änderungen, Tests, Commits, Push und Aktualisierung desselben Draft-PRs, nicht die Ausführung von #11/#12 oder Merge.
+Vorbereitung allein erlaubt keine Spielimplementierung. Der ausdrückliche Implementierungsauftrag für #9 erlaubt die spezifizierten Änderungen, Tests, Commits, Push und Aktualisierung desselben Draft-PRs, nicht die Ausführung von #11/#12 oder Merge.
 
 Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchschutz ist nicht als wirksam verifiziert; die vereinbarten Prüfungen gelten unabhängig davon. Keine Schutzregeln umgehen.
 
@@ -74,9 +78,9 @@ Für die technische Lieferung von #9 müssen `product` aus [P1 product verificat
 
 Vollständigen Diff gegen den Auftrag prüfen: keine versteckten Produktentscheidungen, Secrets, ungeklärten Assets, unerreichbaren Pflichtquellen oder ungefragten Änderungen der gemeinsamen Regeln. Technischen Nachweis, Selbstreview, Nutzerprobe, Merge- und Releasefähigkeit unterscheiden. Ein getrennter Selbstreview ist keine unabhängige Zweitprüfung.
 
-Der Review R1 in PR #14 bezieht sich auf den P1.1-Head `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, nicht auf die noch ausstehenden #9-Funktionen. K-06 wurde anschließend vom Nutzer erprobt und mit zwei Screenshots/vier Folgepunkten beantwortet. **Durchgeführt mit Änderungsbedarf** ist keine pauschale positive Abnahme aller Szenarien. Einzelbestätigungen und tatsächliche Skalierung fehlen teilweise.
+Der Review R1 in PR #14 bezieht sich auf den P1.1-Head `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, nicht auf die damaligen noch ausstehenden #9-Funktionen. K-06 wurde anschließend vom Nutzer erprobt und mit zwei Screenshots/vier Folgepunkten beantwortet. **Durchgeführt mit Änderungsbedarf** ist keine pauschale positive Abnahme aller Szenarien. Einzelbestätigungen und tatsächliche Skalierung fehlen teilweise.
 
-Mit dem ausdrücklichen Folgeauftrag zur Einarbeitung und Vorbereitung von #9 wird dieses Feedback jetzt dort bearbeitet; fehlende Metadaten blockieren nicht die Vorbereitung. Die erneute reale Maus-/Layoutprobe an der #9-Lieferung erfasst diese Daten und prüft die vier Änderungen sowie Farben/Großraster. Der Eigentümer ist dafür zuständig; Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken.
+Der ausdrückliche Folgeauftrag zur Umsetzung von #9 bearbeitet dieses Feedback; fehlende Metadaten sind weiterhin bei der erneuten Probe zu erfassen. Die erneute reale Maus-/Layoutprobe an der #9-Lieferung erfasst diese Daten und prüft die vier Änderungen sowie Farben/Großraster. Der Eigentümer ist dafür zuständig; Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken.
 
 Vor Gesamt-P1-Merge gelten weiterhin A-01 bis A-07 und M-01 bis M-04, M-06/M-07 aus P1 §8. M-05 bleibt nicht anwendbar. Es entsteht kein neuer verpflichtender Hardware- oder Zwischenmergeprozess. #9 liefert einen technisch geprüften Zwischenstand; #11/#12 und vollständige manuelle Abnahme bleiben separat. Ohne passende Freigabe kein Merge/Release.
 

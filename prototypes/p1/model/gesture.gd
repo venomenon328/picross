@@ -6,6 +6,8 @@ var start: Vector2i
 var endpoint: Vector2i
 var axis: Axis = Axis.UNLOCKED
 var target: int = Player.UNKNOWN
+enum Mode { SET, ERASE, REMOVE_FILL, REMOVE_EMPTY }
+var mode: Mode = Mode.SET
 var source: Array[int] = []
 var width: int
 var height: int
@@ -20,6 +22,14 @@ func begin(player: Player, cell: Vector2i, frozen_target: int) -> bool:
 	endpoint = cell
 	axis = Axis.UNLOCKED
 	target = frozen_target
+	mode = Mode.ERASE if target == Player.UNKNOWN else Mode.SET
+	var initial: int = source[cell.y * width + cell.x]
+	if target > 0 and initial > 0:
+		mode = Mode.REMOVE_FILL
+		target = Player.UNKNOWN
+	elif target == Player.EMPTY and initial == Player.EMPTY:
+		mode = Mode.REMOVE_EMPTY
+		target = Player.UNKNOWN
 	active = true
 	return true
 
@@ -45,7 +55,8 @@ func changes() -> Array:
 		for x: int in range(mini(start.x, endpoint.x), maxi(start.x, endpoint.x) + 1):
 			var index: int = y * width + x
 			var before: int = source[index]
-			if before != target and (target == Player.UNKNOWN or before == Player.UNKNOWN):
+			var eligible: bool = (mode == Mode.SET and before == Player.UNKNOWN) or (mode == Mode.ERASE and before != Player.UNKNOWN) or (mode == Mode.REMOVE_FILL and before > 0) or (mode == Mode.REMOVE_EMPTY and before == Player.EMPTY)
+			if before != target and eligible:
 				result.append({"index": index, "before": before, "after": target})
 	return result
 

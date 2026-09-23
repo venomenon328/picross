@@ -8,7 +8,7 @@ Dieses Dokument überträgt die Gestaltungskonversation zu Punkt 2 des Entwicklu
 
 Die ausdrücklichen Antworten des Nutzers begründen die bestätigten Entscheidungen in Abschnitt 2. Die Rückmeldung „Sieht gut aus“ zu exemplarischen Mocks bestätigte deren grundsätzliche gestalterische Richtung, nicht jeden Bildinhalt, jede Zahl, jedes Werkzeug oder eine fertig geprüfte Bedienung. Abschnitt 3 erhält die offenen Themenalternativen. Abschnitte 4–5 enthalten Entwurfsansätze, soweit nicht ausdrücklich durch das nachfolgende Nutzerfeedback konkretisiert.
 
-Die reale P1.1-Mausprobe ergänzt vier Punkte: größeres Standardfenster ohne automatisch riesige Raster, sichtbar getrennte Füllzellen auch an Fünferlinien, direktes Neutralisieren mit dem normalen Werkzeug und detailliertere motivtreue Abschlussbilder. Der anschließende Auftrag übernimmt diese Punkte in die Vorbereitung von #9. Der konkrete P1-Vertrag steht in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.4, D-07 bis D-10; Umsetzung und erneute Abnahme stehen noch aus. Das ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsystem.
+Die reale P1.1-Mausprobe ergänzt vier Punkte: größeres Standardfenster ohne automatisch riesige Raster, sichtbar getrennte Füllzellen auch an Fünferlinien, direktes Neutralisieren mit dem normalen Werkzeug und detailliertere motivtreue Abschlussbilder. Der anschließende Auftrag übernimmt diese Punkte in die Vorbereitung von #9. Der konkrete P1-Vertrag steht in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.4, D-07 bis D-10. Die technische Umsetzung erfolgt in #9; Nachweise im P1.2-Prüfbericht, erneute Eigentümerabnahme weiterhin offen. Das ist weder eine endgültige Themenentscheidung noch ein vollständiges Designsystem.
 
 ## 2. Bestätigte gestalterische Grundlage
 
@@ -112,7 +112,7 @@ Referenz M-01 aus dem Gestaltungsgespräch vom 22.09.2026 ist der generierte Ver
 
 Der Mock ist keine Bildschirm-für-Bildschirm-Spezifikation, kein gültiger Rätseldatensatz und kein finales Assetpaket. A/B wurden dadurch nicht entschieden. Insbesondere keine vorzeitigen Motivvorschauen, Skizzen, fremden Assets, erfundenen Sternschwellen oder schematischen Rätselzahlen übernehmen. Detaillierte Illustrationen müssen trotz erlaubter Verfeinerung die Wiedererkennbarkeit erhalten.
 
-Die spätere reale P1.1-Probe lieferte einen Abschluss-Screenshot und einen Rasterausschnitt mit dem beschriebenen Fünferlinienproblem. Das belegt vorhandenes Nutzerfeedback, nicht jede K-06-Einzelprüfung, tatsächliche Windows-Skalierung oder die Güte noch nicht implementierter Großraster-/Zoom-/Speicherfunktionen. Aktueller Abnahmestand in #5/#8 und PR #14.
+Die spätere reale P1.1-Probe lieferte einen Abschluss-Screenshot und einen Rasterausschnitt mit dem beschriebenen Fünferlinienproblem. Das belegt vorhandenes Nutzerfeedback, nicht jede K-06-Einzelprüfung, tatsächliche Windows-Skalierung oder die Güte der damals noch nicht implementierten Großraster-/Zoom-/Speicherfunktionen. Aktueller Abnahmestand in #5/#8 und PR #14.
 
 ## 7. Weitere Erprobung und offene Entscheidungen
 

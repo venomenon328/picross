@@ -19,6 +19,7 @@ func check(condition: bool, description: String) -> void:
 		print("FAIL: ", description)
 
 func run() -> void:
+	root.size = Vector2i(1280, 720)
 	fixture = Definition.load_f01()
 	test_definition()
 	test_gesture()
@@ -27,6 +28,7 @@ func run() -> void:
 	test_geometry()
 	await test_scene()
 	await test_event_routing()
+	await preload("res://tests/p12_cases.gd").run(self)
 	if OS.get_cmdline_user_args().has("--force-failure"):
 		check(false, "P1_EXPECTED_FAILURE")
 	print("P1_TEST_RESULT checks=%d failures=%d" % [checked, failures])
@@ -63,17 +65,17 @@ func test_definition() -> void:
 	broken.solution[0].pop_back()
 	check(not Definition.validate(broken).is_empty(), "ragged matrix")
 	broken = fixture.duplicate(true)
-	broken.reveal.pixels[0][0] = "#ffffff"
-	check(not Definition.validate(broken).is_empty(), "reveal silhouette mismatch")
+	broken.reveal.image = "res://art/missing.svg"
+	check(not Definition.validate(broken).is_empty(), "missing reveal resource")
 	broken = fixture.duplicate(true)
 	broken.palette.append(broken.palette[0].duplicate())
 	check(not Definition.validate(broken).is_empty(), "duplicate color IDs")
 	# A fully valid tiny colored definition exercises the validator, not F-02 UX.
-	var colored: Dictionary = {"schema": 1, "id": "test", "revision": 1, "width": 4, "height": 1,
+	var colored: Dictionary = {"schema": 2, "id": "test", "revision": 1, "width": 4, "height": 1,
 		"palette": [{"id": 1, "color": "#123456", "symbol": "A"}, {"id": 2, "color": "#abcdef", "symbol": "B"}],
 		"solution": [[1, 2, 0, 2]], "rows": [[{"length": 1, "color": 1}, {"length": 1, "color": 2}, {"length": 1, "color": 2}]],
 		"columns": [[{"length": 1, "color": 1}], [{"length": 1, "color": 2}], [], [{"length": 1, "color": 2}]],
-		"reveal": {"name": "test", "pixels": [["#123456", "#abcdef", "", "#abcdef"]]}}
+		"reveal": {"version": 1, "definition_id": "test", "name": "test", "image": "res://art/f01.svg"}}
 	check(Definition.validate(colored).is_empty(), "valid color boundary definition")
 	colored.rows[0] = [{"length": 1, "color": 1}, {"length": 2, "color": 2}]
 	check(not Definition.validate(colored).is_empty(), "same-color separated clues cannot merge")
@@ -109,7 +111,7 @@ func test_gesture() -> void:
 	g.move(Vector2i(4, 0))
 	g.finish(p)
 	check(p.cells.slice(0, 5) == [0, 1, 2, 1, 1], "fill protects empty, same and different colors")
-	g.begin(p, Vector2i(0, 0), 0)
+	g.begin(p, Vector2i(1, 0), 0)
 	g.move(Vector2i(5, 0))
 	g.finish(p)
 	check(p.cells.slice(0, 6) == [0, 1, 2, 1, 1, 0], "empty protects all existing entries")
@@ -175,7 +177,7 @@ func test_completion() -> void:
 	check(s.visible_cells()[motif] == 1 and not s.completed and s.reveal().is_empty(), "last-cell preview cannot reveal")
 	s.finish()
 	check(s.completed and s.album_title() == fixture.reveal.name, "committed last cell reveals name")
-	check(s.reveal() == fixture.reveal, "reveal uses same silhouette colored payload")
+	check(s.reveal() == fixture.reveal, "reveal uses completion gated independent resource")
 	s.undo()
 	check(not s.completed and s.reveal().is_empty(), "undo recomputes completion")
 	s.redo()
@@ -201,7 +203,7 @@ func test_scene() -> void:
 	await process_frame
 	var board: Control = app.board
 	check(app.work.get_global_rect().end.y <= 697, "1280x720 work area leaves footer visible")
-	check(app.board.view.bounds().end.y <= app.board.size.y, "grid fits drawing area")
+	check(app.board.view.visible_bounds().end.y <= app.board.size.y, "visible grid fits drawing area")
 	var start: Vector2 = app.board.view.cell_rect(Vector2i(4, 3)).get_center()
 	var far: Vector2 = app.board.view.cell_rect(Vector2i(11, 3)).get_center()
 	var back: Vector2 = app.board.view.cell_rect(Vector2i(8, 3)).get_center()

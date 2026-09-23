@@ -1,20 +1,30 @@
 extends Control
-## Receives only the completion-gated payload. No name/image before a match.
-var payload: Dictionary = {}
+## Completion gated artwork, independent of puzzle resolution.
+var artwork: Texture2D
+var payload: Dictionary = {}:
+	set(value):
+		payload = value
+		artwork = null if value.is_empty() else load(value.image) as Texture2D
 var paired: bool = true
+var solved: Array = []
+var palette: Array = []
 
 func _draw() -> void:
 	if payload.is_empty():
 		return
-	var step: float = minf((size.x - 60) / 40, (size.y - 45) / 20) if paired else minf(size.x, size.y) / 20
-	var font: Font = ThemeDB.fallback_font
-	for side: int in range(2 if paired else 1):
-		var origin: Vector2 = Vector2(side * (20 * step + 60), 35) if paired else Vector2.ZERO
-		if paired:
-			draw_string(font, origin - Vector2(0, 12), "Dein gelöstes Raster" if side == 0 else "Das erarbeitete Motiv", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("343f42"))
-		draw_rect(Rect2(origin, Vector2.ONE * step * 20), Color("faf6ec"))
-		for y: int in range(20):
-			for x: int in range(20):
-				var color: String = payload.pixels[y][x]
-				if not color.is_empty():
-					draw_rect(Rect2(origin + Vector2(x, y) * step, Vector2.ONE * step), Color("343f42") if paired and side == 0 else Color(color))
+	var edge: float = minf((size.x - 32) / 2, size.y - 36) if paired else minf(size.x, size.y)
+	var offset: Vector2 = Vector2(0, 32) if paired else Vector2.ZERO
+	if paired:
+		draw_string(ThemeDB.fallback_font, Vector2(0, 22), "Dein gelöstes Raster", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("343f42"))
+		draw_string(ThemeDB.fallback_font, Vector2(edge + 32, 22), "Das erarbeitete Motiv", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("343f42"))
+		draw_rect(Rect2(offset, Vector2.ONE * edge), Color("faf6ec"))
+		if not solved.is_empty():
+			var step: float = edge / solved.size()
+			for y: int in range(solved.size()):
+				for x: int in range(solved[y].size()):
+					for entry: Dictionary in palette:
+						if int(entry.id) == int(solved[y][x]):
+							draw_rect(Rect2(offset + Vector2(x, y) * step, Vector2.ONE * step), Color(entry.color))
+		offset.x += edge + 32
+	if artwork != null:
+		draw_texture_rect(artwork, Rect2(offset, Vector2.ONE * edge), false)

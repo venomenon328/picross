@@ -42,7 +42,7 @@ func visible_cells() -> Array[int]:
 	return result
 
 func album_title() -> String:
-	return str(definition.reveal.name) if completed else "Blatt 01 · 20 × 20"
+	return str(definition.reveal.name) if completed else "Blatt %s · %d × %d" % [str(definition.id).trim_prefix("F-"), player.width, player.height]
 
 func reveal() -> Dictionary:
 	return definition.reveal.duplicate(true) if completed else {}
