@@ -36,12 +36,17 @@ var choices: Array[Button] = []
 static func bounded_start(usable: Rect2i, decorations: Vector2i) -> Vector2i:
 	return Vector2i(1600, 900).min((usable.size - decorations).max(Vector2i.ONE))
 
+static func bounded_position(usable: Rect2i, client: Vector2i, decorations: Vector2i, client_offset: Vector2i) -> Vector2i:
+	# Window.position is the client origin. Center the entire decorated window.
+	return usable.position + (usable.size - client - decorations) / 2 + client_offset
+
 func _ready() -> void:
 	if DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
 		var usable: Rect2i = DisplayServer.screen_get_usable_rect()
 		var decorations: Vector2i = (DisplayServer.window_get_size_with_decorations() - DisplayServer.window_get_size()).max(Vector2i(16, 48))
+		var client_offset: Vector2i = DisplayServer.window_get_position() - DisplayServer.window_get_position_with_decorations()
 		get_window().size = bounded_start(usable, decorations)
-		get_window().position = usable.position + (usable.size - get_window().size) / 2
+		get_window().position = bounded_position(usable, get_window().size, decorations, client_offset)
 	for id: String in ["f01", "f02", "f03"]:
 		var data: Dictionary = Definition.load_fixture(id)
 		var error: String = Definition.validate(data)
@@ -354,6 +359,14 @@ static func button(text: String, action: Callable) -> Button:
 func _smoke() -> void:
 	if DisplayServer.get_name() == "headless":
 		get_window().size = Vector2i(1600, 900)
+	else:
+		var outer: Rect2i = Rect2i(DisplayServer.window_get_position_with_decorations(), DisplayServer.window_get_size_with_decorations())
+		var usable: Rect2i = DisplayServer.screen_get_usable_rect()
+		print("P1_WINDOW_INFO client=", get_window().size, " outer=", outer, " usable=", usable, " screen=", DisplayServer.screen_get_size())
+		if not usable.encloses(outer):
+			push_error("Decorated start window exceeds usable monitor area")
+			get_tree().quit(7)
+			return
 	for i: int in range(3):
 		select_puzzle(i)
 		await get_tree().process_frame

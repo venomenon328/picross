@@ -30,9 +30,9 @@ behauptet keine Prüfung eines noch unbekannten späteren Heads.
 
 Der lokale Windows-Prüfweg lief mit den vollständig hashgeprüften offiziellen
 Godot-4.7.2-Standardarchiven, isolierten Profilpfaden und temporärer Projektkopie:
-Import, 521 Godot-Prüfungen, erwarteter Negativtest Exit 23, begrenzter Start mit
+Import, 524 Godot-Prüfungen, erwarteter Negativtest Exit 23, begrenzter Start mit
 allen drei Fixtures, echte OpenGL-Renderprüfung, Windows-Export und exportierter
-Headless-Start. 43 Python-Tests; unter Windows ist nur der vorhandene Symlink-Test
+Headless- und OpenGL-GUI-Start mit Prüfung des gesamten Fensterrahmens. 43 Python-Tests; unter Windows ist nur der vorhandene Symlink-Test
 wegen fehlender Symlinkfähigkeit übersprungen. Linux-CI prüft diesen zusätzlich.
 
 Die Tests erhalten die bisherigen Regressionen; gezielt geändert wurden die
@@ -49,6 +49,12 @@ Zell-/Historyänderung, Größen-/Skalierungsfälle und farbige Abschluss-Negati
 für 18/24/36/48er Zellabstand, jede Farbe in Vorschau, Neutralisierung, vollständige
 F-03-Hinweise, Gesamtansicht, drei Abschlüsse und fertige Albumansichten.
 40 Pixelprüfungen bestätigen tatsächliche Füllfarbe und hellen Zwischenraum.
+
+Zusätzlicher nativer Windows-Start: 1600×900 Clientfläche, 1616×939 inklusive
+Rahmen, gemeldeter Bildschirm 2560×1440, nutzbare Fläche 2560×1392. Der gesamte
+Rahmen liegt darin. Die Zentrierung berücksichtigt den ungleichen Titel-/Seitenrand
+gemäß [Godot-DisplayServer](https://docs.godotengine.org/en/stable/classes/class_displayserver.html#class-displayserver-method-window-get-position-with-decorations).
+Die tatsächliche Windows-Skalierung wird daraus nicht abgeleitet.
 
 Lokal gerendert mit OpenGL auf der vom Treiber gemeldeten RTX 3070. Visuell geprüft:
 Layouts aller vier Flächen, kleinste Fläche in beiden UI-Skalierungen, getrennte

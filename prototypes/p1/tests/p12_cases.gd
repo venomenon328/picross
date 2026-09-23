@@ -91,6 +91,12 @@ static func run(t: SceneTree) -> void:
 	t.check(((anchor - v.origin) / v.cell_size).is_equal_approx(coordinate), "pointer anchored zoom")
 	t.check(Main.bounded_start(Rect2i(0, 0, 1366, 768), Vector2i(16, 48)) == Vector2i(1350, 720), "small work area bounded")
 	t.check(Main.bounded_start(Rect2i(0, 0, 2560, 1400), Vector2i(16, 48)) == Vector2i(1600, 900), "large start remains 1600x900")
+	for usable: Rect2i in [Rect2i(0, 0, 1366, 768), Rect2i(-1920, 32, 1920, 1000), Rect2i(0, 0, 1100, 680)]:
+		var decoration: Vector2i = Vector2i(16, 48)
+		var offset: Vector2i = Vector2i(8, 40)
+		var client: Vector2i = Main.bounded_start(usable, decoration)
+		var position: Vector2i = Main.bounded_position(usable, client, decoration, offset)
+		t.check(usable.encloses(Rect2i(position - offset, client + decoration)), "whole decorated window fits asymmetric frame")
 	await ui_cases(t)
 
 static func ui_cases(t: SceneTree) -> void:
