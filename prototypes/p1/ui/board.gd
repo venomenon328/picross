@@ -216,9 +216,13 @@ func _input(event: InputEvent) -> void:
 			var delta: Vector2 = local.position - pan_last
 			if pan_target == "grid":
 				view.pan(delta)
+				hover = view.hit(local.position)
+				if hover.x >= 0:
+					pointed.emit(hover)
 			elif pan_target in ["row", "column"] and pan_line_index >= 0:
 				var total_delta: Vector2 = local.position - pan_origin
 				pan_drag_distance = total_delta.x if pan_target == "row" else total_delta.y
+				hover = Vector2i(-1, -1)
 			pan_last = local.position
 			if pan_target == "grid":
 				view_changed.emit()
@@ -267,6 +271,8 @@ func _gui_input(event: InputEvent) -> void:
 				pan_line_index = navigation_line(event.position, pan_target)
 				if pan_target == "grid" or (pan_line_index >= 0 and int(clue_layout(pan_target, pan_line_index).max_offset) > 0):
 					pan_button = event.button_index
+					if pan_target != "grid":
+						hover = Vector2i(-1, -1)
 					pan_last = event.position
 					pan_origin = event.position
 					pan_origin_step = 0 if pan_target == "grid" else clue_step(pan_target, pan_line_index)
@@ -392,6 +398,13 @@ func draw_clipped_x(box: Rect2) -> void:
 		if segment.size() == 2 and segment[0].distance_to(segment[1]) > 0.01:
 			draw_line(segment[0], segment[1], INK, 1.2, true)
 
+func draw_clipped_preview_outline(box: Rect2) -> void:
+	var bounds: Rect2 = view.viewport.grow(-0.8)
+	for endpoints: Array in [[box.position, Vector2(box.end.x, box.position.y)], [Vector2(box.end.x, box.position.y), box.end], [box.end, Vector2(box.position.x, box.end.y)], [Vector2(box.position.x, box.end.y), box.position]]:
+		var segment: PackedVector2Array = clipped_segment(endpoints[0], endpoints[1], bounds)
+		if segment.size() == 2 and segment[0].distance_to(segment[1]) > 0.01:
+			draw_line(segment[0], segment[1], PREVIEW_LINE, 1.5, true)
+
 func gesture_length() -> int:
 	if not session.gesture.active:
 		return 0
@@ -427,7 +440,7 @@ func _draw() -> void:
 	for change: Dictionary in session.gesture.changes():
 		var box: Rect2 = view.cell_rect(Vector2i(change.index % view.dimensions.x, change.index / view.dimensions.x)).grow(-2)
 		if box.intersects(view.viewport):
-			draw_rect(box.intersection(view.viewport), PREVIEW_LINE, false, 1.5)
+			draw_clipped_preview_outline(box)
 	for x: int in range(first.x, last.x + 1):
 		var px: float = view.origin.x + x * view.cell_size
 		if px >= grid.position.x and px <= grid.end.x:

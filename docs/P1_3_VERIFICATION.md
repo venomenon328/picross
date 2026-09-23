@@ -92,7 +92,7 @@ OpenGL-SubViewport-Bilder und Pixelproben decken die größere Füllfläche samt
 Trennung über alle Farben und Arbeitszoomstufen, dezente Bänder, Hintdrag,
 Live-Zähler sowie bestätigte und vorläufige X an vier Rändern und einer Ecke
 bei 24/36 Zellabstand ab. Der lokale Windows-Nacharbeitslauf auf verändertem
-Arbeitsbaum erreichte 1083/0 Godot-Prüfungen, 273 echte Renderbilder und 527
+Arbeitsbaum erreichte 1084/0 Godot-Prüfungen, 273 echte Renderbilder und 527
 Pixelchecks. Ein gesonderter isolierter Zwei-Prozess-Lauf meldete
 `P1_ROUNDTRIP_WRITE_OK` und `P1_ROUNDTRIP_READ_OK`. Die commitgebundenen
 Abschlussnachweise stehen nach den aktuellen CI-Läufen im Draft-PR.

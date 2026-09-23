@@ -342,7 +342,9 @@ static func followup_input_geometry(t: SceneTree, app: Main) -> void:
 	var confirmed: Dictionary = b.capture_view()
 	var neighbour: int = rows[1] if rows.size() > 1 else index
 	var neighbour_layout: Array = window_signature(b.clue_layout("row", neighbour))
+	b.hover = b.view.hit(b.view.viewport.get_center())
 	t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
+	t.check(b.hover == Vector2i(-1, -1), "N-05 hint navigation clears stale grid focus without a cell gesture")
 	t.mouse_motion(point + Vector2(pitch * 0.35, 2 * b.view.cell_size), true, MOUSE_BUTTON_MIDDLE)
 	t.check(b.clue_step("row", index) == 0 and is_equal_approx(float(b.visible_clue_layout("row", index).visual_shift), pitch * 0.35) and b.capture_view() == confirmed, "N-03 subslot movement stays visual and unsaved")
 	t.check(window_signature(b.clue_layout("row", neighbour)) == neighbour_layout, "N-03 adjacent clue remains fixed during drag")
