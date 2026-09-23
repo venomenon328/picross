@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 23.09.2026 · Spezifikation 0.7 · Fachvertrag D-18 bis D-22 umgesetzt; Eigentümerabnahme offen
+Stand: 23.09.2026 · Spezifikation 0.8 · P1.3-Persistenzvertrag ergänzt; Eigentümerabnahme offen
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -8,14 +8,14 @@ Paketquelle ist [Issue #5](https://github.com/venomenon328/picross/issues/5). Hi
 
 Maßgebliche Grundlagen sind [Produktdefinition](PRODUCT_DEFINITION.md), [Gestaltungskonzept](DESIGN_CONCEPT.md), [Projektprofil](PROJECT_PROFILE.md) und [lokaler Workflow](dev-rules/WORKFLOW.md); Einstieg bleibt [AGENTS.md](../AGENTS.md). Vor Ausführung die aktuellen Quellen und Issue-Kommentare prüfen.
 
-Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) liegt auf `feat/5-p1-prototype` in Draft-PR #14 vor: Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, Zielbasis `main@7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac`. Die anschließende Eigentümerprobe ergab vier Folgepunkte. Die anschließende Vorbereitung hat diese in den Vertrag übernommen; der neue Implementierungsauftrag liefert #9 auf demselben Branch/PR, ohne Merge.
+Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) und [P1.2 / Issue #9](https://github.com/venomenon328/picross/issues/9) wurden über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert. Die Eigentümerprobe und ihre noch offenen Einzelergebnisse bleiben davon getrennt. [P1.3 / Issue #11](https://github.com/venomenon328/picross/issues/11) wird auf `feat/11-p1-persistence` gegen diesen Stand geliefert.
 
 **Ist/Soll:** D-07 bis D-22 sind mit #9 umgesetzt; technische Nachweise und verbleibende
 Abnahmen stehen im [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und PR #14. Die früheren
 P1.1-Prüfungen bleiben historische Nachweise ihres damaligen Vertrags, keine
 Eigentümerabnahme des neuen Verhaltens.
 
-**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 übernimmt das Mausproben-Feedback und ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. Dauerhafte Speicherung folgt mit #11, integrierte Prüfung mit #12. Diese späteren Verträge sind keine Behauptung bereits implementierter Funktionen. Aktuelle [Anleitung](../prototypes/p1/README.md) und [P1.2-Prüfbericht](P1_2_VERIFICATION.md); historischer [P1.1-Prüfbericht](P1_1_VERIFICATION.md).
+**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; die integrierte 500-Aktionen-Prüfung folgt getrennt mit #12. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
 
 Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen weder die endgültige Produktengine noch die gesamte Betriebssystemmatrix, Wertung oder Themenwahl fest. Frühere P1-Vorschläge in Issue-Revision 0.1 und Gestaltungskonzept Abschnitt 7 sind innerhalb dieses Scopes abgelöst; globale Produktfragen bleiben offen.
 
@@ -189,8 +189,8 @@ Einzelpositionen bewusst zurück.
 Raster-Pan und Miniaturnavigation erhalten sämtliche individuellen Lesepositionen.
 Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,
 begrenzen danach gültig und bleiben auf dem gemeinsamen Slotraster. Beim bewussten
-Testblattwechsel werden die Hinweispositionen wie bisher initialisiert; dauerhafte
-Persistenz folgt erst mit #11.
+Testblattwechsel wird ab P1.3 die individuelle Hinweisansicht des Zielblatts
+wiederhergestellt; nur dessen bestätigter Reset initialisiert sie neu.
 
 Während einer Zellgeste ist Hinweisnavigation gesperrt. Freigabe, Escape und
 Fokusverlust beenden sie; falsche Tastenfreigabe nicht. Hinweis-Panning verändert
@@ -237,13 +237,18 @@ Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
 
-Mit #11: isolierter P1-Speicherbereich, keine fremden Spielstände, Cloudkonten oder Repositorydateien. Pro Puzzle Definitions-ID/Revision, Zellmatrix, wirksame Undo-/Redo-Aktionen, Undo-verwendet-Merkmal ohne Perfektionsaussage, Zoom/Ausschnitt, aktive Farbe/Werkzeug, Rasterfokus und Abschlussstatus. Keine Hypothesenfelder. Redo oder Fortsetzen löschen das Undo-Merkmal nicht. Keine vollständige Fehlerhistorie oder Zusicherung späterer Produktkompatibilität.
+P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den drei bekannten Fixture-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gültigen Arbeitszoom oder Gesamtansichtsmodus, aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 
-Nach bestätigten Zellaktionen und beim Verlassen sichern. Ansichtsänderungen dürfen zusammengefasst werden, müssen vor regulärem Schließen enthalten sein. Keine halben Striche speichern; Schreibfehler sichtbar machen, nicht fälschlich „gespeichert“ anzeigen.
+Vor Anwendung werden Schema, exakte Definition/Revision, Matrix/Palette, jede nichtleere atomare History-Aktion mit eindeutigen Indizes und gültigen Vor-/Nachwerten, das widerspruchsfreie Replay ab unbekanntem Raster einschließlich Redo, Cursor-Matrix-Gleichheit, `undo_used`, Abschluss und View vollständig geprüft. Unbekannte oder unpassende Daten werden weder teilweise geladen noch still migriert. Der Rasterfokus wird bei Resize gültig begrenzt; Hinweis-Offsets werden aus Rasterende, äußerem Anfang oder mittlerem Tokenfenster für die aktuelle Geometrie neu abgeleitet.
 
-Neue Fassung vollständig schreiben und validieren, dann gültigen Stand ersetzen; vorige gültige Fassung erhalten. Unterbrochene Schreibvorgänge, defekte/unbekannt versionierte oder inkompatible Daten ohne stilles Überschreiben behandeln. Erklärung und bewussten Neustart nur des ausgewählten Teststands mit Bestätigung anbieten. Keine spätere Wertungsregel daraus ableiten.
+Jede wirksame bestätigte Zellaktion und Undo/Redo werden sofort gesichert; Werkzeug/Farbe ebenfalls. Reine Ansicht darf kurz gebündelt werden, wird aber vor Album, Blattwechsel, Beenden und regulärer Window-Close-Anforderung geflusht. Vorschau wird zuerst verworfen. Fehler erscheinen sichtbar und dürfen keinen gesicherten Stand vortäuschen.
 
-Bei geänderter Fenstergröße Rasterfokus erhalten und Ausschnitt gültig begrenzen. Tests ausschließlich mit eigenen temporären Daten. #9 darf vorhandene Spielstände innerhalb derselben Sitzung erhalten, implementiert aber noch keine dauerhafte Speicherung.
+Schreiben erfolgt als vollständige Tempfassung im selben Speicherroot mit Flush, Schließen und erneuter Parse-/Vertragsvalidierung. Nur ein gültiges bisheriges Primary wird als genau eine gültige Backupfassung rotiert; erst danach ersetzt der Kandidat das Primary. Ein Abbruch lässt wenigstens die vorherige gültige Fassung ladbar. Ein verwaistes Tempfile wird nicht geladen. Gültiges Primary hat Vorrang; bei fehlendem/defektem Primary wird ein gültiges Backup sichtbar geladen. Defekte oder inkompatible Fassungen werden nicht still überschrieben; das bewusste Übernehmen eines gültigen Backups erlaubt wieder Speichern. Ohne gültige Fassung erscheint ein Fehlerzustand. Der bestätigte Reset entfernt ausschließlich Primary, Backup und Temp des ausgewählten Blatts und setzt nur dessen Session zurück.
+
+Tests verwenden ausschließlich eigene temporäre User-Daten; ein echter Zwei-Prozess-Roundtrip gehört zum Produktweg. Dies ist keine Produktmigration oder Zusicherung zukünftiger Save-Kompatibilität.
+Im Album zeigt jedes ungelöste Blatt ausschließlich seine eigene gespeicherte
+Spielerminiatur unter neutralem Blattnamen; nur ein valider abgeschlossener Slot
+zeigt die bisherige Motiv-/Abschlussdarstellung.
 
 ## 7. Technikbindung und Prüfweg
 
@@ -303,7 +308,7 @@ Protokoll: tatsächliche Commit-/Artefaktkennung, Betriebssystem, verwendete Ein
 
 ### 8.3 Gate-Zeitpunkte und bisherige Mausprobe
 
-Vor Gesamt-P1-Merge A-01 bis A-07, Dokumentprüfung und M-01 bis M-04, M-06/M-07 nachweisen. Zwischenpakete #8/#9/#11/#12 bleiben gemäß #5 im gemeinsamen Draft-PR; keine vorgezogene Mergefreigabe durch diesen Implementierungsauftrag.
+Vor Gesamt-P1-Merge A-01 bis A-07, Dokumentprüfung und M-01 bis M-04, M-06/M-07 nachweisen. #8/#9 sind über PR #14 integriert; #11 liegt auf einem neuen Draft-PR gegen `main`, #12 bleibt getrennt. Kein Zwischenstand erteilt eine vorgezogene Merge- oder Eigentümerfreigabe für #11.
 
 K-06: Der Nutzer hat die angebotene F-01-Spielprobe verwendet und anschließend zwei Screenshots sowie vier konkrete Rückmeldungen geliefert; der Abschlussbildschirm ist sichtbar. Bezug der Unterhaltung ist Artefakt `10719712143` / Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`. Eine separate Versionsanzeige des Nutzerlaufs, tatsächliche Windows-Skalierung und vollständige Einzelbestätigung aller K-06-Szenarien liegen nicht vor.
 
@@ -311,10 +316,8 @@ Die Probe ist **durchgeführt mit Änderungsbedarf**, nicht pauschal bestanden. 
 
 ## 9. Aktueller Lieferstand
 
-#9 ist der technische Lieferstand auf `feat/5-p1-prototype` / Draft-PR #14:
-Feedbackänderungen D-07 bis D-22 und Farb-/Großrasterbedienung, einschließlich Tests,
-Anleitung, Windows-Zwischenartefakt und nachvollziehbaren visuellen Nachweisen. Genaue
-technische Nachweise und ausstehende Eigentümerabnahme stehen in #9 und im
-P1.2-Prüfbericht.
-
-#11/#12, endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte frühe Risikostränge.
+#9 ist als P1.2-Zwischenstand in `main` integriert. #11 ergänzt P1.3 auf eigenem
+Branch/Draft-PR; tatsächliche technische Nachweise stehen im P1.3-Prüfbericht und PR.
+M-04 bleibt bis zur realen Eigentümerprobe am commitgebundenen Windows-Artefakt offen.
+#12, endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses
+Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte Risikostränge.

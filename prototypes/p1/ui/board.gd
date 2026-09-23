@@ -3,6 +3,8 @@ const Session = preload("res://model/session.gd")
 const GridView = preload("res://ui/grid_view.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
 signal edited
+signal committed
+signal view_changed
 signal pointed(cell: Vector2i)
 var session: Session
 var view: GridView = GridView.new()
@@ -63,6 +65,7 @@ func navigate_to(normalized: Vector2) -> void:
 		return
 	view.center = normalized.clamp(Vector2.ZERO, Vector2.ONE) * Vector2(view.dimensions)
 	view.reframe()
+	view_changed.emit()
 	edited.emit()
 	queue_redraw()
 
@@ -77,6 +80,7 @@ func reset_clue_pan() -> void:
 	for index: int in range(column_clue_reads.size()):
 		column_clue_reads[index] = ClueLayout.grid_end_position()
 	clear_clue_hover()
+	view_changed.emit()
 	edited.emit()
 	queue_redraw()
 
@@ -144,6 +148,7 @@ func zoom(direction: int, anchor: Vector2) -> void:
 	overview = false
 	view.zoom_to(step, anchor if view.viewport.has_point(anchor) else view.viewport.get_center())
 	normalize_clue_steps()
+	view_changed.emit()
 	edited.emit()
 	queue_redraw()
 
@@ -153,6 +158,7 @@ func working_size() -> void:
 	overview = false
 	view.zoom_to(24.0, view.viewport.get_center())
 	normalize_clue_steps()
+	view_changed.emit()
 	edited.emit()
 	queue_redraw()
 
@@ -161,6 +167,35 @@ func fit_all() -> void:
 		return
 	overview = true
 	_layout()
+	view_changed.emit()
+
+func capture_view() -> Dictionary:
+	ensure_clue_steps()
+	return {"center": [view.center.x, view.center.y], "zoom": 24 if overview else roundi(view.cell_size),
+		"overview": overview, "active_color": active_color,
+		"tool": "hand" if hand else ("erase" if eraser else "fill"),
+		"row_clue_reads": row_clue_reads.duplicate(true), "column_clue_reads": column_clue_reads.duplicate(true)}
+
+func restore_view(state: Dictionary) -> void:
+	cancel_gesture()
+	view.center = Vector2(float(state.center[0]), float(state.center[1]))
+	overview = state.overview
+	view.cell_size = float(state.zoom)
+	active_color = int(state.active_color)
+	eraser = state.tool == "erase"
+	hand = state.tool == "hand"
+	row_clue_reads.clear()
+	column_clue_reads.clear()
+	for read: Dictionary in state.row_clue_reads:
+		row_clue_reads.append(read.duplicate(true))
+	for read: Dictionary in state.column_clue_reads:
+		column_clue_reads.append(read.duplicate(true))
+	row_clue_steps.resize(session.player.height)
+	column_clue_steps.resize(session.player.width)
+	_layout()
+	view.reframe()
+	clear_clue_hover()
+	queue_redraw()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -185,6 +220,7 @@ func _input(event: InputEvent) -> void:
 				var step_delta: int = int(distance / maxf(float(layout.slot_extent), 1.0))
 				set_clue_step(pan_target, pan_line_index, pan_origin_step + step_delta)
 			pan_last = local.position
+			view_changed.emit()
 			edited.emit()
 			queue_redraw()
 		elif local is InputEventMouseButton and not local.pressed and local.button_index == pan_button:
@@ -298,8 +334,10 @@ func pointer_move(point: Vector2, over_board: bool) -> void:
 func pointer_release(point: Vector2, over_board: bool) -> void:
 	if over_board:
 		session.gesture.move(view.hit(point))
-	session.finish()
+	var changed: bool = session.finish()
 	held_button = MOUSE_BUTTON_NONE
+	if changed:
+		committed.emit()
 	queue_redraw()
 	edited.emit()
 

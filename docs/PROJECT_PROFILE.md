@@ -2,21 +2,20 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1.2-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.2 liegt im gemeinsamen Draft-PR #14 vor, noch nicht auf `main`. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR, nicht in einer parallelen Roadmap.
+`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1.3-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert; P1.3 wird auf `feat/11-p1-persistence` in einem neuen Draft-PR gegen `main` geliefert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
 Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.5 übernimmt das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung, gemeinsamem Hinweisraster und linienweisen Lesepositionen.
 
-Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und [P1.1-Prüfbericht](P1_1_VERIFICATION.md), ab #9 auch [P1.2-Prüfbericht](P1_2_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
+Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
 
-**Aktuelle Phase:** #9 implementiert D-07 bis D-22 der Spezifikation 0.7 samt
-Farb-/Großrasterbedienung, gemeinsamem Hinweisraster, individuellen Lesepositionen,
-1080p-Startbasis, verfeinertem F-02-Motiv und der Nacharbeit zu Review R2/B-01/B-02
-auf dem bestehenden P1-Draft. Der [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und die aktuelle Anleitung
-beschreiben Umsetzung und technische Nachweise. Reale Eigentümerabnahme, #11/#12 und
-Gesamtmerge bleiben offen. Der historische #8-Nachweis und die alten grünen Läufe auf
-`267df8c…`/`bd6730d…` werden dadurch nicht rückwirkend zum Nachweis des neuen Heads.
+**Aktuelle Phase:** #11 ergänzt auf der gemergten P1.2-Basis die isolierte lokale
+Persistenz, strikte Savevalidierung, Primary/Backup-Recovery, Viewwiederaufnahme,
+bestätigten Einzelreset und den isolierten Zwei-Prozess-Nachweis. Der
+[P1.3-Prüfbericht](P1_3_VERIFICATION.md) und die Anleitung beschreiben den technischen
+Stand. M-04 bleibt bis zur realen Eigentümerprüfung offen; #12 und die gesamte
+P1-Abnahme bleiben separat. Ältere grüne Läufe belegen den #11-Head nicht.
 
 Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Regelkopie. Keine abschließende Produktarchitektur oder universell erprobte Produkt-Teststrategie behaupten. Weitere Pflichtquellen erst mit tatsächlich beschlossenen Inhalten anlegen.
 
@@ -46,9 +45,9 @@ Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, Sol
 
 Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter Freigabe. Keine automatische Branchlöschung, kein Force-Push und keine direkten Änderungen am Zielbranch ohne passende Befugnis.
 
-Der beauftragte gemeinsame Arbeitsbranch ist `feat/5-p1-prototype`, Draft-PR #14. #9 setzt dort auf #8 auf, nicht auf einem frisch von `main` abgezweigten Parallelbranch. Bestehenden Branch/PR nicht ersetzen. #9, #11 und #12 werden separat beauftragt, im gemeinsamen P1-Draft integriert und mit ihren eigenen Tests/Nachweisen geliefert. #5 bleibt bis vollständiger Lieferung und Abnahme offen.
+Der beauftragte #11-Arbeitsbranch ist `feat/11-p1-persistence` vom aktuellen `main`; der neue PR bleibt bis zur erforderlichen Prüfung Draft. Der gemeinsame Branch `feat/5-p1-prototype`/PR #14 ist bereits gemergt und wird nicht fortgesetzt. #12 erhält einen späteren eigenen Auftrag. #5 bleibt bis vollständiger Lieferung und Abnahme offen.
 
-Vorbereitung allein erlaubt keine Spielimplementierung. Der ausdrückliche Implementierungsauftrag für #9 erlaubt die spezifizierten Änderungen, Tests, Commits, Push und Aktualisierung desselben Draft-PRs, nicht die Ausführung von #11/#12 oder Merge.
+Der ausdrückliche Implementierungsauftrag für #11 erlaubt die spezifizierten Änderungen, Tests, Commits, Push und Pflege von #11/#5 sowie des neuen Draft-PRs. Er erlaubt weder #12 noch Merge, Release oder Schließen von Issues.
 
 Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchschutz ist nicht als wirksam verifiziert; die vereinbarten Prüfungen gelten unabhängig davon. Keine Schutzregeln umgehen.
 
@@ -71,7 +70,7 @@ Vor Merge muss [Setup verification](../.github/workflows/setup.yml), Job `docs`,
 
 P1.0 wurde nach erfolgreichem `preflight`-/`docs`-Job über PR #13 gemergt. [Preflight-Harness](../tools/p1_preflight.py) und [CI](../.github/workflows/p1-preflight.yml) verwenden ausschließlich die gepinnten offiziellen Standard-Assets. Live-Metadaten und vollständige Archive werden gegen SHA-256 geprüft, temporär verwendet und nicht versioniert/global installiert. Bei Änderungen am Preflight echten Download-/Import-/Test-/Start-/Exportweg nachweisen, nicht nur Mocks oder Dokumenttests.
 
-Der [Produkt-Harness](../tools/p1_product.py) nutzt diese Grundlage mit temporärer Projektkopie und eigenen APPDATA-/LOCALAPPDATA- beziehungsweise XDG-Pfaden. P1.1/P1.2 haben noch keine dauerhaften Spielstände. Lokale Windows-Prüfungen sind erlaubt. Prozesslimit 300 Sekunden, Downloadlimit 1200 Sekunden, CI-Joblimit 40 Minuten.
+Der [Produkt-Harness](../tools/p1_product.py) nutzt diese Grundlage mit temporärer Projektkopie und eigenen APPDATA-/LOCALAPPDATA- beziehungsweise XDG-Pfaden. P1.3-Saves liegen ausschließlich unter Godots `user://p1/saves/`; automatisierte Tests erhalten zusätzlich eigene temporäre Speicherroots und dürfen den normalen Benutzerpfad nicht lesen oder verändern. Lokale Windows-Prüfungen sind erlaubt. Prozesslimit 300 Sekunden, Downloadlimit 1200 Sekunden, CI-Joblimit 40 Minuten.
 
 ```powershell
 $p1Cache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
@@ -89,7 +88,7 @@ gezielte Vertragsanpassungen; sonstige Regressionen nicht durch Entfernen von Te
 verdecken. F-01-Lösung/Hinweise und logische Nachweise erhalten. Keine neue allgemeine
 Solver-/Assetplattform erforderlich.
 
-Für die technische Lieferung von #9 müssen `product` aus [P1 product verification](../.github/workflows/p1-product.yml), `docs` und der weiterhin aktive `preflight` für den aktuellen Stand tatsächlich erfolgreich sein. Produktartefakte werden im bestehenden Weg 14 Tage gespeichert. Ein Headless-Start oder synthetisches Event ersetzt keine reale Maus-/GUI-Abnahme. Die neuen Slotausrichtungs-/Layout-/Zelltrennungs-/Reveal-Kriterien benötigen außerdem echte Renderkontrolle mit dokumentierten Größen, nicht nur Assertions über Objektmaße.
+Für die technische Lieferung von #11 müssen `product` aus [P1 product verification](../.github/workflows/p1-product.yml), `docs` und der weiterhin aktive `preflight` für den finalen Head tatsächlich erfolgreich sein. Der Produktweg ergänzt gezielte Speicher-/Fehler-/Recoverytests und einen echten Zwei-Prozess-Roundtrip im isolierten Profil; Windows-Export und bestehende Renderregressionen bleiben enthalten. Produktartefakte werden 14 Tage gespeichert. Ein Headless-Start oder synthetisches Event ersetzt M-04 oder die reale Maus-/GUI-Abnahme nicht.
 
 ## Abnahme und Übergaben
 
@@ -117,9 +116,9 @@ Offset erhalten; der widersprüchliche Farbrätsel-Satz im Gestaltungskonzept is
 D-22 zu vereinheitlichen. Die Nacharbeit ändert weder die übrigen D-18-bis-D-22-
 Funktionen noch die getrennte spätere Layout-/Zieldesign-Phase. A-01 bleibt offen.
 
-Der ausdrückliche Folgeauftrag zur Umsetzung von #9 bearbeitet dieses Feedback; fehlende Metadaten sind weiterhin bei der erneuten Probe zu erfassen. Die erneute reale Maus-/Layoutprobe an der #9-Lieferung erfasst diese Daten und prüft einzeilige Teilhinweise, gemeinsame Slots, mehrere individuelle Zeilen-/Spaltenpositionen, ihre feste Rasterzuordnung, 1080p-Start und den neuen F-02-Leuchtturm sowie die übrigen offenen Bedien-/Motivfälle. Der Eigentümer ist dafür zuständig; Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken. Die positive F-01-Teilbestätigung bleibt erhalten.
+Die reale Maus-/Layoutprobe an der integrierten #9-Lieferung bleibt offen; fehlende Metadaten sind dabei zu erfassen. Für #11 prüft der Eigentümer M-04 am commitgebundenen Windows-Artefakt: Bearbeiten, regulär schließen, echten App-Neustart, Zellen/Undo/Redo/Ansicht/Einzelhinweise fortsetzen sowie sichtbare Recovery und bestätigten Einzelreset. Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken. Die positive F-01-Teilbestätigung bleibt erhalten.
 
-Vor Gesamt-P1-Merge gelten weiterhin A-01 bis A-07 und M-01 bis M-04, M-06/M-07 aus P1 §8. M-05 bleibt nicht anwendbar. Es entsteht kein neuer verpflichtender Hardware- oder Zwischenmergeprozess. #9 liefert einen technisch geprüften Zwischenstand; #11/#12 und vollständige manuelle Abnahme bleiben separat. Ohne passende Freigabe kein Merge/Release.
+Vor Gesamt-P1-Merge gelten weiterhin A-01 bis A-07 und M-01 bis M-04, M-06/M-07 aus P1 §8. M-05 bleibt nicht anwendbar. #11 liefert A-05 technisch und ermöglicht M-04; #12 und vollständige manuelle Abnahme bleiben separat. Ohne passende Freigabe kein Merge/Release.
 
 ## Daten und Betriebswirkung
 

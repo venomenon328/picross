@@ -1,12 +1,19 @@
 extends SceneTree
 ## Real GPU/software-rendered offscreen surfaces; not a physical DPI claim.
 const Main = preload("res://ui/main.gd")
+const SaveStore = preload("res://model/save_store.gd")
 var surface: SubViewport
 var output: String
 var captures: Array = []
 var pixel_checks: int = 0
 
 func _initialize() -> void:
+	var temporary: String = OS.get_environment("P1_TEST_SAVE_ROOT")
+	if temporary.is_empty():
+		temporary = OS.get_environment("TEMP") if OS.has_feature("windows") else OS.get_environment("TMPDIR")
+	if temporary.is_empty():
+		temporary = "/tmp"
+	SaveStore.test_root_override = temporary.path_join("picross-p1-capture-%d" % Time.get_ticks_usec())
 	call_deferred("run")
 
 func snapshot(app: Main, name: String, crop: bool = false) -> void:

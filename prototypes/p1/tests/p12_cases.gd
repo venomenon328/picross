@@ -436,6 +436,7 @@ static func reading_signature(layout: Dictionary) -> Array:
 
 static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, longest_column: int) -> void:
 	var b: Control = app.board
+	b.reset_clue_pan()
 	var cells: Array[int] = app.session.player.cells.duplicate()
 	var history: Array = app.session.player.history.duplicate(true)
 	var undo_used: bool = app.session.player.undo_used
@@ -571,9 +572,11 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	t.check(app.clue_reset_button.is_visible_in_tree(), "H-04 clue reset control stays visible")
 	app.clue_reset_button.pressed.emit()
 	t.check(b.row_clue_steps.count(0) == b.row_clue_steps.size() and b.column_clue_steps.count(0) == b.column_clue_steps.size(), "J-03 reset control restores every grid-side clue window")
+	b.set_clue_step("row", longest_row, 1)
+	b.set_clue_step("column", longest_column, 1)
 	app.select_puzzle(1)
 	app.select_puzzle(2)
-	t.check(b.row_clue_steps.count(0) == b.row_clue_steps.size() and b.column_clue_steps.count(0) == b.column_clue_steps.size(), "J-03 deliberate fixture switch resets clue views")
+	t.check(b.clue_step("row", longest_row) == 1 and b.clue_step("column", longest_column) == 1, "P1.3 fixture switch retains each clue view")
 	t.check(b.clue_layout("row", longest_row).end > b.clue_layout("row", longest_row).start and b.clue_layout("column", longest_column).end > b.clue_layout("column", longest_column).start, "J-03 mapping remains valid after route sequence")
 
 static func visible_overflowing_lines(board: Control, axis: String) -> Array[int]:
@@ -583,7 +586,9 @@ static func visible_overflowing_lines(board: Control, axis: String) -> Array[int
 	var finish: int = mini(board.view.dimensions.y if axis == "row" else board.view.dimensions.x,
 		ceili(((visible.end.y if axis == "row" else visible.end.x) - (board.view.origin.y if axis == "row" else board.view.origin.x)) / board.view.cell_size))
 	for index: int in range(first, finish):
-		if int(board.clue_layout(axis, index).max_offset) > 0:
+		var center: Vector2 = board.view.cell_rect(Vector2i(0, index) if axis == "row" else Vector2i(index, 0)).get_center()
+		var in_gutter: bool = board.row_clue_area().has_point(Vector2(board.row_clue_area().get_center().x, center.y)) if axis == "row" else board.column_clue_area().has_point(Vector2(center.x, board.column_clue_area().get_center().y))
+		if in_gutter and int(board.clue_layout(axis, index).max_offset) > 0:
 			result.append(index)
 	return result
 

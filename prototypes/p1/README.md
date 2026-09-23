@@ -1,14 +1,15 @@
-# P1.2 · Gemeinsames Hinweisraster und linienweises Hinweis-Panning
+# P1.3 · Lokalen Arbeitsstand fortsetzen
 
-Zwischenstand zu Issue #9 auf dem gemeinsamen P1-Draft #14. F-01 (20×20),
+Zwischenstand zu [Issue #11](https://github.com/venomenon328/picross/issues/11)
+auf eigenem Draft-PR gegen `main`. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
 sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-22 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
 Zusatzkennungen. Alle Zeilen beziehungsweise Spalten teilen sich je ein festes
 Hinweisraster; jede konkrete Linie behält darin ihre eigene eingerastete Leseposition.
-Keine Wertung, Fehlerhilfe oder dauerhafte Speicherung.
-Albumwechsel erhält den eigenen Stand und Undo/Redo pro Blatt innerhalb dieser
-Sitzung. Beenden verwirft alle Stände.
+Keine Wertung oder Fehlerhilfe. Albumwechsel und echter App-Neustart erhalten den
+eigenen Stand samt Undo/Redo, Rasteransicht, Werkzeug, Farbe und individuellen
+Hinweis-Lesepositionen pro Blatt.
 
 ## Windows starten
 
@@ -17,6 +18,20 @@ nötig. `picross-p1.console.exe` zeigt technische Ausgaben. Dies ist eine unsign
 Debug-Spielprobe, kein Release/Installer. Die Quellcommitkennung steht im beigefügten
 README.txt; `product-report.json` bindet Head, getesteten Checkout/Test-Merge, Basis,
 CI-Lauf, Engine-/Archivhashes, EXE-Hashes und Prüfphasen. Artefaktlink im PR.
+
+Godot löst `user://p1/saves/` im projektbezogenen User-Data-Verzeichnis auf.
+Unter Windows liegt dieses standardmäßig unter
+`%APPDATA%\Godot\app_userdata\picross · P1\p1\saves\` (bei benutzerdefiniertem
+Godot-Datenpfad entsprechend dort). Die drei bekannten Fixture-IDs ergeben
+`f01.json`, `f02.json`, `f03.json` mit gleichnamigen `f01.bak`/`f01.tmp` usw.
+Tests verwenden nur eigene temporäre Profile; das ZIP enthält keine
+Spielstände.
+
+Beschädigtes Primary mit gültigem Backup wird sichtbar als Recovery geladen.
+„Backup zum Speichern übernehmen“ fragt vor dem Ersetzen des Primary nach.
+Ohne gültige Fassung erscheint ein Fehler. „Arbeitsstand zurücksetzen“ fragt
+ebenfalls nach und entfernt ausschließlich Primary, Backup und Temp des
+ausgewählten Blatts. Die zwei anderen Blätter bleiben erhalten.
 
 Startziel: 1920×1080 Clientfläche, auf den verfügbaren Arbeitsbereich einschließlich Fensterrahmen
 begrenzt. Unter 1280×720 erscheint eine verständliche Meldung. Vergrößern des Fensters
@@ -54,8 +69,8 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   die sichtbare Fläche. Helle Flächen sind unbekannt, Punkte leer, Farben eigene Füllungen
   einschließlich möglicher Fehler und derselben Strichvorschau.
 - Während Zellgesten sind Zoom und Navigation gesperrt. Navigation ändert keine Zellen
-  oder Undo-Historie. Pro Blatt bleiben Bearbeitung/History erhalten; beim Blattwechsel
-  startet die Ansicht wieder bei Arbeitsgröße.
+  oder Undo-Historie. Pro Blatt bleiben Bearbeitung/History und Ansicht beim
+  Blattwechsel und regulären App-Neustart erhalten.
 - Am Raster stehen ausschließlich die Lösungshinweise, ohne laufende Zeilen-/
   Spaltennummern oder A–D-Zusätze. „–“ ist eine leere Linie. Alle Zeilen nutzen dieselben
   waagerechten Slots, alle Spalten dieselben senkrechten Slots; das rasternächste Ende
@@ -126,11 +141,20 @@ Ergebnis/Abweichung. Nicht aus Screenshotabmessungen ableiten. Referenz aus frü
 Angaben: Windows 11, 2560×1440, Ryzen 7 5800X, RTX 3070. Die reale Skalierung bleibt
 unbekannt. Technische Renderflächen und synthetische Events ersetzen diese Abnahme nicht.
 
-Persistenz/Recovery (#11), 500-Aktionen-Gesamtintegration (#12), Wertung,
+500-Aktionen-Gesamtintegration (#12), Wertung,
 Controller/Tastatur und Release bleiben außerhalb dieser Lieferung. Escape ist
 weiterhin Mausgestenabbruch. Kein Merge durch diese Übergabe.
 
 ## Technische Reproduktion
+
+M-04 bleibt beim Eigentümer offen: Am commitgebundenen Windows-ZIP F-03 bearbeiten,
+Undo ausführen, Werkzeug/Farbe und Raster-/Hinweisansicht verändern, über die
+Beenden-Schaltfläche oder Alt-F4 schließen, die EXE als neuen Prozess starten und
+Zellen, Redo-Zweig und Ansichten prüfen. Danach sichtbare Backup-Recovery und den
+bestätigten Einzelreset mit separaten Testdaten prüfen; die anderen Blätter müssen
+erhalten bleiben. Head/Artefakt, Windows-Version, Bildschirm/Clientfläche, Skalierung,
+Maus und Einzelergebnis dokumentieren. Der technische Roundtrip ersetzt diese
+reale Mausprobe nicht.
 
 Godot Standard 4.7.2-stable; vollständiger isolierter Prüfweg im Repository-Root:
 
@@ -142,7 +166,8 @@ python tools/p1_product.py --cache-dir $p1Cache --output-dir artifacts/p1-produc
 Unter Linux benötigt die echte OpenGL-Renderprüfung `xvfb-run` und Mesa. Der Harness
 nutzt nur die gepinnten offiziellen Archive, prüft deren vollständige Hashes, arbeitet
 in einer temporären Projektkopie mit isolierten APPDATA-/XDG-Pfaden und installiert
-nichts global. Tests, Negativtest Exit 23, Import, begrenzter Start, echte Renderbilder
+nichts global. Tests einschließlich Speicher-/Recoveryfällen und echtem
+Zwei-Prozess-Roundtrip, Negativtest Exit 23, Import, begrenzter Start, echte Renderbilder
 mit atomaren Anfangs-/Mittel-/Endausschnitten und beiden Hinweisachsen, Windows-Export
 und unter Windows exportierter Start. 300 Sekunden pro Prozess,
 1200 pro Download. Die Renderfälle decken gemeinsame Slots und unabhängige
@@ -156,4 +181,4 @@ godot --path prototypes/p1
 ```
 
 Prüferdokumente mit Motivspoiler: [F-01](F01_PROOF.md), [F-02/F-03](F02_PROOF.md).
-Technische Ergebnisse und Grenzen im [P1.2-Prüfbericht](../../docs/P1_2_VERIFICATION.md).
+Technische Ergebnisse und Grenzen im [P1.3-Prüfbericht](../../docs/P1_3_VERIFICATION.md).
