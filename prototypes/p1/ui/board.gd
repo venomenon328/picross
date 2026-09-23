@@ -20,6 +20,8 @@ var pan_origin: Vector2
 var pan_origin_step: int = 0
 var row_clue_steps: Array[int] = []
 var column_clue_steps: Array[int] = []
+var row_clue_reads: Array[Dictionary] = []
+var column_clue_reads: Array[Dictionary] = []
 var hover: Vector2i = Vector2i(-1, -1)
 var clue_hover_axis: String = ""
 var clue_hover_index: int = -1
@@ -70,6 +72,10 @@ func reset_clue_pan() -> void:
 	ensure_clue_steps()
 	row_clue_steps.fill(0)
 	column_clue_steps.fill(0)
+	for index: int in range(row_clue_reads.size()):
+		row_clue_reads[index] = ClueLayout.grid_end_position()
+	for index: int in range(column_clue_reads.size()):
+		column_clue_reads[index] = ClueLayout.grid_end_position()
 	clear_clue_hover()
 	edited.emit()
 	queue_redraw()
@@ -77,21 +83,29 @@ func reset_clue_pan() -> void:
 func ensure_clue_steps() -> void:
 	if session == null:
 		return
-	if row_clue_steps.size() != session.player.height:
+	if row_clue_steps.size() != session.player.height or row_clue_reads.size() != session.player.height:
 		row_clue_steps.clear()
 		row_clue_steps.resize(session.player.height)
 		row_clue_steps.fill(0)
-	if column_clue_steps.size() != session.player.width:
+		row_clue_reads.clear()
+		for index: int in range(session.player.height):
+			row_clue_reads.append(ClueLayout.grid_end_position())
+	if column_clue_steps.size() != session.player.width or column_clue_reads.size() != session.player.width:
 		column_clue_steps.clear()
 		column_clue_steps.resize(session.player.width)
 		column_clue_steps.fill(0)
+		column_clue_reads.clear()
+		for index: int in range(session.player.width):
+			column_clue_reads.append(ClueLayout.grid_end_position())
 
 func normalize_clue_steps() -> void:
 	ensure_clue_steps()
+	var row_capacity: int = clue_capacity("row")
 	for index: int in range(row_clue_steps.size()):
-		row_clue_steps[index] = clampi(row_clue_steps[index], 0, int(clue_layout("row", index).max_offset))
+		row_clue_steps[index] = ClueLayout.offset_for_read_position(clue_entry_count("row", index), row_capacity, row_clue_reads[index])
+	var column_capacity: int = clue_capacity("column")
 	for index: int in range(column_clue_steps.size()):
-		column_clue_steps[index] = clampi(column_clue_steps[index], 0, int(clue_layout("column", index).max_offset))
+		column_clue_steps[index] = ClueLayout.offset_for_read_position(clue_entry_count("column", index), column_capacity, column_clue_reads[index])
 
 func clue_step(axis: String, index: int) -> int:
 	ensure_clue_steps()
@@ -99,11 +113,16 @@ func clue_step(axis: String, index: int) -> int:
 
 func set_clue_step(axis: String, index: int, value: int) -> void:
 	ensure_clue_steps()
-	var maximum: int = int(clue_layout(axis, index).max_offset)
+	var count: int = clue_entry_count(axis, index)
+	var capacity: int = clue_capacity(axis)
+	var window: Dictionary = ClueLayout.select_window(count, capacity, value)
+	var position: Dictionary = ClueLayout.read_position(count, capacity, int(window.offset))
 	if axis == "row":
-		row_clue_steps[index] = clampi(value, 0, maximum)
+		row_clue_steps[index] = int(window.offset)
+		row_clue_reads[index] = position
 	else:
-		column_clue_steps[index] = clampi(value, 0, maximum)
+		column_clue_steps[index] = int(window.offset)
+		column_clue_reads[index] = position
 
 static func next_zoom_step(current: float, direction: int) -> float:
 	if direction > 0:
@@ -375,16 +394,23 @@ func column_hint_overflows(index: int) -> bool:
 func clue_layout(axis: String, index: int, available_override: float = -1.0) -> Dictionary:
 	var clues: Array = session.definition.rows[index] if axis == "row" else session.definition.columns[index]
 	var entries: Array = clue_entries(clues)
+	var capacity: int = clue_capacity(axis, available_override)
+	var result: Dictionary = ClueLayout.select_window(entries.size(), capacity, clue_step(axis, index))
+	result.entries = entries
+	result.slot_extent = shared_clue_slot_extent(axis, ThemeDB.fallback_font, clue_font_size())
+	return result
+
+func clue_entry_count(axis: String, index: int) -> int:
+	var clues: Array = session.definition.rows[index] if axis == "row" else session.definition.columns[index]
+	return maxi(1, clues.size())
+
+func clue_capacity(axis: String, available_override: float = -1.0) -> int:
 	var font: Font = ThemeDB.fallback_font
 	var fs: int = clue_font_size()
 	var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
 	var available: float = available_override if available_override >= 0.0 else (area.size.x if axis == "row" else area.size.y)
 	var slot_extent: float = shared_clue_slot_extent(axis, font, fs)
-	var capacity: int = maxi(3, floori(available / slot_extent))
-	var result: Dictionary = ClueLayout.select_window(entries.size(), capacity, clue_step(axis, index))
-	result.entries = entries
-	result.slot_extent = slot_extent
-	return result
+	return maxi(3, floori(available / slot_extent))
 
 func clue_entries(clues: Array) -> Array:
 	var entries: Array = []

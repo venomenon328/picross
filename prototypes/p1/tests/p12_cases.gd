@@ -124,6 +124,17 @@ static func test_atomic_clue_windows(t: SceneTree) -> void:
 	t.check(middle.start < middle.end and middle.prefix_hidden and middle.suffix_hidden and middle.units[0].slot == 0 and middle.units[-1].slot == 4, "J-02 middle clue window reserves fixed marker slots")
 	var outer: Dictionary = ClueLayout.select_window(8, 5, 5)
 	t.check(outer.start == 0 and outer.end == 4 and not outer.prefix_hidden and outer.suffix_hidden, "J-02 outer beginning and suffix marker are reachable")
+	var outer_read: Dictionary = ClueLayout.read_position(90, 7, 85)
+	var outer_reflow: Dictionary = ClueLayout.select_window(90, 5, ClueLayout.offset_for_read_position(90, 5, outer_read))
+	t.check(outer_read.anchor == ClueLayout.OUTER_START and outer_reflow.start == 0 and not outer_reflow.prefix_hidden and outer_reflow.suffix_hidden, "B-03 outer-start anchor survives reduced slot capacity")
+	var grid_read: Dictionary = ClueLayout.read_position(90, 5, 0)
+	var grid_reflow: Dictionary = ClueLayout.select_window(90, 7, ClueLayout.offset_for_read_position(90, 7, grid_read))
+	t.check(grid_read.anchor == ClueLayout.GRID_END and grid_reflow.end == 90 and grid_reflow.prefix_hidden and not grid_reflow.suffix_hidden, "B-03 grid-end anchor survives increased slot capacity")
+	var middle_before: Dictionary = ClueLayout.select_window(90, 7, 42)
+	var middle_read: Dictionary = ClueLayout.read_position(90, 7, 42)
+	var middle_after: Dictionary = ClueLayout.select_window(90, 5, ClueLayout.offset_for_read_position(90, 5, middle_read))
+	var middle_overlap: int = mini(int(middle_before.end), int(middle_after.end)) - maxi(int(middle_before.start), int(middle_after.start))
+	t.check(middle_read.anchor == ClueLayout.MIDDLE and middle_overlap == mini(int(middle_before.end) - int(middle_before.start), int(middle_after.end) - int(middle_after.start)), "B-03 middle reflow retains the maximum readable token interval")
 	var empty: Dictionary = ClueLayout.select_window(0, 5, 0)
 	t.check(empty.start == 0 and empty.end == 0 and not empty.prefix_hidden and not empty.suffix_hidden, "J-02 empty layout is stable")
 	var reached: Dictionary = {}
@@ -284,6 +295,7 @@ static func ui_cases(t: SceneTree) -> void:
 	app.set_ui_scale(1.0)
 	b.working_size()
 	b.reset_clue_pan()
+	await semantic_clue_geometry_routes(t, app)
 	await clue_navigation_routes(t, app, longest_row, longest_column)
 	b.fit_all()
 	var below_work_range: float = b.view.cell_size
@@ -315,6 +327,112 @@ static func ui_cases(t: SceneTree) -> void:
 	app.queue_free()
 	await t.process_frame
 	t.root.size = Vector2i(1280, 720)
+
+static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
+	var b: Control = app.board
+	var original_size: Vector2i = t.root.size
+	var original_scale: float = app.ui_scale
+	var original_zoom: float = b.view.cell_size
+	var original_center: Vector2 = b.view.center
+	t.root.size = Vector2i(1920, 1080)
+	app.set_ui_scale(1.0)
+	await t.process_frame
+	await t.process_frame
+	b.reset_clue_pan()
+	set_work_zoom(b, 12.0)
+	var rows: Array[int] = overflowing_lines(b, "row")
+	var columns: Array[int] = overflowing_lines(b, "column")
+	t.check(rows.size() >= 3 and columns.size() >= 3, "B-03 three long F-03 rows and columns available for semantic reflow")
+	if rows.size() < 3 or columns.size() < 3:
+		return
+	var cases: Array[Dictionary] = [
+		{"axis": "row", "index": rows[0], "anchor": ClueLayout.OUTER_START},
+		{"axis": "row", "index": rows[1], "anchor": ClueLayout.GRID_END},
+		{"axis": "row", "index": rows[2], "anchor": ClueLayout.MIDDLE},
+		{"axis": "column", "index": columns[0], "anchor": ClueLayout.OUTER_START},
+		{"axis": "column", "index": columns[1], "anchor": ClueLayout.GRID_END},
+		{"axis": "column", "index": columns[2], "anchor": ClueLayout.MIDDLE},
+	]
+	for entry: Dictionary in cases:
+		var layout: Dictionary = b.clue_layout(entry.axis, entry.index)
+		var offset: int = 0
+		if entry.anchor == ClueLayout.OUTER_START:
+			offset = int(layout.max_offset)
+		elif entry.anchor == ClueLayout.MIDDLE:
+			offset = maxi(1, int(layout.max_offset) / 2)
+		b.set_clue_step(entry.axis, entry.index, offset)
+	var initial: Array[Dictionary] = semantic_windows(b, cases)
+	set_work_zoom(b, 24.0)
+	var current: Array[Dictionary] = check_semantic_transition(t, b, cases, initial, "50 to 100 percent")
+	set_work_zoom(b, 12.0)
+	current = check_semantic_transition(t, b, cases, current, "100 to 50 percent")
+	check_restored_windows(t, current, initial, "50 to 100 to 50 percent")
+	app.set_ui_scale(1.25)
+	current = check_semantic_transition(t, b, cases, current, "UI 100 to 125 percent")
+	app.set_ui_scale(1.0)
+	current = check_semantic_transition(t, b, cases, current, "UI 125 to 100 percent")
+	check_restored_windows(t, current, initial, "UI round trip")
+	t.root.size = Vector2i(1280, 720)
+	await t.process_frame
+	await t.process_frame
+	current = check_semantic_transition(t, b, cases, current, "resize smaller")
+	t.root.size = Vector2i(1920, 1080)
+	await t.process_frame
+	await t.process_frame
+	current = check_semantic_transition(t, b, cases, current, "resize larger")
+	check_restored_windows(t, current, initial, "resize round trip")
+	b.reset_clue_pan()
+	app.set_ui_scale(original_scale)
+	t.root.size = original_size
+	await t.process_frame
+	await t.process_frame
+	set_work_zoom(b, original_zoom)
+	b.view.center = original_center
+	b.view.reframe()
+
+static func set_work_zoom(board: Control, target: float) -> void:
+	while board.view.cell_size < target - 0.01:
+		board.zoom(1, board.view.viewport.get_center())
+	while board.view.cell_size > target + 0.01:
+		board.zoom(-1, board.view.viewport.get_center())
+
+static func overflowing_lines(board: Control, axis: String) -> Array[int]:
+	var result: Array[int] = []
+	var count: int = board.view.dimensions.y if axis == "row" else board.view.dimensions.x
+	for index: int in range(count):
+		if int(board.clue_layout(axis, index).max_offset) > 0:
+			result.append(index)
+	return result
+
+static func semantic_windows(board: Control, cases: Array[Dictionary]) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for entry: Dictionary in cases:
+		result.append(board.clue_layout(entry.axis, entry.index))
+	return result
+
+static func check_semantic_transition(t: SceneTree, board: Control, cases: Array[Dictionary], before: Array[Dictionary], label: String) -> Array[Dictionary]:
+	var after: Array[Dictionary] = semantic_windows(board, cases)
+	for i: int in range(cases.size()):
+		var entry: Dictionary = cases[i]
+		var previous: Dictionary = before[i]
+		var current: Dictionary = after[i]
+		if entry.anchor == ClueLayout.OUTER_START:
+			t.check(int(current.start) == 0 and not current.prefix_hidden and current.suffix_hidden and int(current.offset) == int(current.max_offset), "B-03 %s outer-start anchor survives %s" % [entry.axis, label])
+		elif entry.anchor == ClueLayout.GRID_END:
+			var count: int = board.clue_entry_count(entry.axis, entry.index)
+			t.check(int(current.end) == count and current.prefix_hidden and not current.suffix_hidden and int(current.offset) == 0, "B-03 %s grid-end anchor survives %s" % [entry.axis, label])
+		else:
+			var overlap: int = maxi(0, mini(int(previous.end), int(current.end)) - maxi(int(previous.start), int(current.start)))
+			var smaller: int = mini(int(previous.end) - int(previous.start), int(current.end) - int(current.start))
+			t.check(current.prefix_hidden and current.suffix_hidden and overlap == smaller, "B-03 %s middle tokens retain maximal overlap across %s" % [entry.axis, label])
+	return after
+
+static func check_restored_windows(t: SceneTree, actual: Array[Dictionary], expected: Array[Dictionary], label: String) -> void:
+	for i: int in range(actual.size()):
+		t.check(reading_signature(actual[i]) == reading_signature(expected[i]), "B-03 semantic token window restores after " + label)
+
+static func reading_signature(layout: Dictionary) -> Array:
+	return [layout.start, layout.end, layout.prefix_hidden, layout.suffix_hidden]
 
 static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, longest_column: int) -> void:
 	var b: Control = app.board

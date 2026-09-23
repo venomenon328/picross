@@ -1,5 +1,9 @@
 extends RefCounted
 
+const GRID_END: String = "grid_end"
+const OUTER_START: String = "outer_start"
+const MIDDLE: String = "middle"
+
 ## Places complete clue tokens and overflow markers on a shared sequence of
 ## fixed slots. Offset 0 keeps the grid-near end; increasing integer offsets
 ## move towards the outer beginning one stable reading step at a time.
@@ -48,3 +52,47 @@ static func _result(start: int, end: int, prefix_hidden: bool, suffix_hidden: bo
 		"max_offset": maximum,
 		"units": units,
 	}
+
+## Stores reading intent independently from the current number of slots. Edge
+## windows keep their edge anchor; a middle window keeps its visible token
+## interval so geometry changes can choose the greatest possible overlap.
+static func read_position(count: int, capacity: int, offset: int) -> Dictionary:
+	var window: Dictionary = select_window(count, capacity, offset)
+	if int(window.max_offset) == 0 or int(window.offset) == 0:
+		return {"anchor": GRID_END}
+	if int(window.offset) == int(window.max_offset):
+		return {"anchor": OUTER_START}
+	return {"anchor": MIDDLE, "start": int(window.start), "end": int(window.end)}
+
+static func grid_end_position() -> Dictionary:
+	return {"anchor": GRID_END}
+
+static func offset_for_read_position(count: int, capacity: int, position: Dictionary) -> int:
+	var grid_end: Dictionary = select_window(count, capacity, 0)
+	var maximum: int = int(grid_end.max_offset)
+	if maximum == 0:
+		return 0
+	var anchor: String = str(position.get("anchor", GRID_END))
+	if anchor == OUTER_START:
+		return maximum
+	if anchor != MIDDLE:
+		return 0
+	var target_start: int = clampi(int(position.get("start", 0)), 0, maxi(count, 0))
+	var target_end: int = clampi(int(position.get("end", target_start)), target_start, maxi(count, 0))
+	var best_offset: int = 1
+	var best_overlap: int = -1
+	var best_center_distance: int = 1 << 30
+	var best_edge_distance: int = 1 << 30
+	# Middle offsets exclude both edge anchors. Supported overflowing layouts
+	# always have at least one such offset, including the defensive narrow path.
+	for candidate: int in range(1, maximum):
+		var window: Dictionary = select_window(count, capacity, candidate)
+		var overlap: int = maxi(0, mini(target_end, int(window.end)) - maxi(target_start, int(window.start)))
+		var center_distance: int = absi(int(window.start) + int(window.end) - target_start - target_end)
+		var edge_distance: int = absi(int(window.start) - target_start) + absi(int(window.end) - target_end)
+		if overlap > best_overlap or (overlap == best_overlap and center_distance < best_center_distance) or (overlap == best_overlap and center_distance == best_center_distance and edge_distance < best_edge_distance):
+			best_offset = candidate
+			best_overlap = overlap
+			best_center_distance = center_distance
+			best_edge_distance = edge_distance
+	return best_offset

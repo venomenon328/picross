@@ -76,6 +76,11 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   Mitte und Ende bleiben auch durch Hinweis-Panning erreichbar. Eine separate
   Hinweisansicht gibt es nicht.
 - UI 100/125 % vergrößert Oberfläche und Hinweise unabhängig vom Arbeitszoom.
+  Geänderte Slotkapazitäten erhalten je konkrete Folge die semantische Leseposition:
+  äußerer Anfang und rasterseitiges Ende bleiben am gewählten Rand verankert,
+  mittlere Ausschnitte behalten den gelesenen Tokenbereich mit größtmöglicher
+  Überdeckung. Das gilt auch bei Arbeitszoom und Resize; alle Zustände bleiben
+  in ganzen Slots eingerastet.
   Bei 1280×720/125 % ist der untere Hilfetext über die Seitenleiste scrollbar;
   Werkzeuge und Hinweiszugriff bleiben erreichbar, die Miniatur bleibt fest sichtbar.
 
@@ -105,7 +110,9 @@ Am neuen Artefakt mit echter Maus prüfen und Ergebnisse einzeln protokollieren:
    Raster/Ergebnisbild als denselben verfeinerten Leuchtturm beurteilen.
 3. M-03: F-03 eine notierte Koordinate bearbeiten und bei 50/75/92/100 % echte
    Hinweiszahlen ohne Hover lesen. Mehrere konkrete Zeilen/Spalten unabhängig pannen;
-   danach das
+   ihre Anfangs-/Endanker und mittleren Tokenbereiche anschließend bei 50↔100 %,
+   UI 100↔125 % und Resize vergleichen; die Lesepositionen müssen semantisch stabil
+   und eingerastet bleiben. Danach das
    Raster stark zoomen/verschieben und per Miniatur/Koordinaten wiederfinden. Die
    Linienzuordnung und einzelnen Lesepositionen dürfen sich durch reines Raster-Pan
    nicht ändern. Keine verlorenen Aktionen, Richtungsumkehr beim Zoom oder Hänger.

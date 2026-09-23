@@ -2,12 +2,13 @@
 
 Stand: 23.09.2026 · [Issue #9](https://github.com/venomenon328/picross/issues/9)
 auf `feat/5-p1-prototype`, gemeinsamer [Draft-PR #14](https://github.com/venomenon328/picross/pull/14).
-Diese Grundlagenkorrektur D-18 bis D-22 startet auf
-`b19f14e0f8c7a599bd04799872ccea3b7ceadc6c`, Basis
-`7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac`, und arbeitet
-[Review R4](https://github.com/venomenon328/picross/pull/14#pullrequestreview-5291782095)
-nach. Der endgültige Lieferhead, Test-Merge, aktuelle CI-Läufe und das commitgebundene
-Windows-Artefakt werden im PR protokolliert; ältere grüne Läufe belegen diesen Stand nicht.
+Die Grundlagenkorrektur D-18 bis D-22 startete auf
+`b19f14e0f8c7a599bd04799872ccea3b7ceadc6c`; die Nacharbeit B-03/B-04 aus
+[Review R5](https://github.com/venomenon328/picross/pull/14#pullrequestreview-5293867918)
+startet auf `edd7a28ce11bdb2e0aff4e41ee5fbc6b8c7b7702`. Basis bleibt
+`7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac`. Der endgültige Nacharbeitshead,
+Test-Merge, aktuelle CI-Läufe und das commitgebundene Windows-Artefakt werden im PR
+protokolliert; ältere grüne Läufe belegen diesen Stand nicht.
 
 ## Liefervertrag J-01 bis J-06
 
@@ -38,9 +39,26 @@ Windows-Artefakt werden im PR protokolliert; ältere grüne Läufe belegen diese
   #11/#12, Layout-/Zieldesignphase, neue Farbauswahl, Hintergründe und umfassende
   Sidebar-Bereinigung bleiben außerhalb des Pakets.
 
+## Review-R5-Nacharbeit B-03/B-04
+
+- **B-03:** Jede Zeile und Spalte speichert neben dem aktuellen ganzzahligen Slot-
+  Offset ihre kapazitätsunabhängige Leseposition. Rasterseitiges Ende und äußerer
+  Anfang sind explizite Randanker. Eine mittlere Position hält ihren gelesenen
+  Tokenbereich; nach geänderter Slotkapazität wird das eingerastete Fenster mit
+  größtmöglicher Tokenüberdeckung gewählt. Auch ein zwischenzeitlich vollständig
+  passender Hinweis löscht diese Leseabsicht nicht. F-03-Regressionen vergleichen
+  Start-/Endindizes und Präfix-/Suffixmarker für lange Zeilen und Spalten vor und
+  nach 50↔100 %, UI 100↔125 % sowie kleinerem/größerem Resize. Raster-Pan,
+  Miniaturnavigation, Einzelkettenunabhängigkeit und der bewusste Gesamtreset bleiben.
+- **B-04:** Das Gestaltungskonzept erlaubt die unverfeinerte Freistellung desselben
+  gelösten Farbrasters nicht länger als bestätigtes Qualitätsziel. Es hält zugleich
+  fest, dass daraus weder identische Motivauflösungen, eine allgemeine Assetpipeline
+  noch eine hochaufgelöste Neuzeichnung jedes Motivs folgen. D-22 und die Grenze zu
+  F-03 beziehungsweise zur späteren Zieldesign-Phase bleiben unverändert.
+
 ## Automatisierte und echte Eingabeprüfung
 
-Die Godot-Suite umfasst 838 bestandene Prüfungen. Neben allen bisherigen
+Die Godot-Suite umfasst 896 bestandene Prüfungen. Neben allen bisherigen
 F-01/F-02-Logik-, Setz-/Rücknahme-, X↔Füllung-, Preview-, History-, Abschluss-,
 Album-, Miniatur-, Pan-, Zoom- und Resize-Regressionen prüft sie insbesondere:
 
@@ -48,6 +66,8 @@ Album-, Miniatur-, Pan-, Zoom- und Resize-Regressionen prüft sie insbesondere:
 - identische Slotursprünge/-abstände für benachbarte Linien und exakte
   Anfangs-/Mittel-/Endfenster einschließlich Präfix-/Suffixmarker;
 - unabhängige Schritte mehrerer konkreter F-02- und F-03-Zeilen/Spalten;
+- semantisch stabile Randanker und mittlere Tokenbereiche langer F-03-Zeilen und
+  -Spalten bei 50↔100 %, UI 100↔125 % und Resize in beiden Richtungen;
 - echte Mittel-/Hand-Ereignisse, Subslotbewegung, Slotgrenze, Diagonalbewegung,
   Linien-/Achsenfreeze, Bereichsübertritt, richtige/falsche Freigabe, Freigabe außerhalb,
   Escape, Fokusverlust, passende kurze Linie und gleichzeitig gesperrte Zellgeste;
@@ -98,14 +118,14 @@ nach dem Push aus dem erfolgreichen `product`-Lauf als commitgebundener Nachweis
 
 ## Selbstreview und Grenzen
 
-Nach Implementierung und vollständigem lokalen Produktlauf wurde der gesamte Diff ab
+Für D-18 bis D-22 wurde der gesamte Diff ab
 `b19f14e0f8c7a599bd04799872ccea3b7ceadc6c` getrennt gegen J-01 bis J-06,
 Scopegrenzen, F-01-Unverändertheit, F-02-Logikgleichheit, Geheimnisse, Whitespace und
-Artefaktinhalt geprüft. Ergebnis: keine unbeauftragte Produktfunktion, keine Änderung
-der F-01-Dateien, bei F-02 außer SVG und gemeinsamem Revisionsfeld bytegleiche
-Logik-/Proofdaten, keine erkannten Geheimnismuster und ein sauberer `git diff --check`.
-Tatsächlicher Lieferhead und commitgebundene Nachweise werden in #9, #5 und PR #14
-protokolliert. Dieses Selbstreview ersetzt kein unabhängiges Review.
+Artefaktinhalt geprüft. Die B-03/B-04-Nacharbeit erhält diese Grenzen und wird nach
+dem commitgebundenen Abschlusslauf nochmals separat gegen R5, den tatsächlichen
+Folgediff und die unveränderten Fixtures/Proofs geprüft. Tatsächlicher Lieferhead und
+Nachweise werden in #9, #5 und PR #14 protokolliert. Dieses Selbstreview ersetzt kein
+unabhängiges Review.
 
 **Offen beim Eigentümer vor Gesamt-P1-Merge:** M-01/M-02/M-03/M-06 und die echte
 Maus-/Layout-/Motivprüfung am neuen Artefakt. Dabei sind tatsächlicher Head/Artefakt,

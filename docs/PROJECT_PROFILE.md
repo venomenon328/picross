@@ -110,6 +110,13 @@ Slots, unabhängige Navigation jeder konkreten Linie, 1080p-Startbasis, verfeine
 F-02-Motiv und dazu passende Quellen/Nachweise. D-18 bis D-22 in P1 0.7 setzen diesen
 Sollstand um; ältere grüne Läufe und frühere Reviewstände belegen ihn nicht.
 
+Review R5 bezieht sich auf `edd7a28ce11bdb2e0aff4e41ee5fbc6b8c7b7702` und führt
+B-03/B-04 als aktive technische Nacharbeit: individuelle Hinweisfolgen müssen bei
+Zoom, Resize und UI-Skalierung ihre semantische Leseposition statt nur den numerischen
+Offset erhalten; der widersprüchliche Farbrätsel-Satz im Gestaltungskonzept ist mit
+D-22 zu vereinheitlichen. Die Nacharbeit ändert weder die übrigen D-18-bis-D-22-
+Funktionen noch die getrennte spätere Layout-/Zieldesign-Phase. A-01 bleibt offen.
+
 Der ausdrückliche Folgeauftrag zur Umsetzung von #9 bearbeitet dieses Feedback; fehlende Metadaten sind weiterhin bei der erneuten Probe zu erfassen. Die erneute reale Maus-/Layoutprobe an der #9-Lieferung erfasst diese Daten und prüft einzeilige Teilhinweise, gemeinsame Slots, mehrere individuelle Zeilen-/Spaltenpositionen, ihre feste Rasterzuordnung, 1080p-Start und den neuen F-02-Leuchtturm sowie die übrigen offenen Bedien-/Motivfälle. Der Eigentümer ist dafür zuständig; Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken. Die positive F-01-Teilbestätigung bleibt erhalten.
 
 Vor Gesamt-P1-Merge gelten weiterhin A-01 bis A-07 und M-01 bis M-04, M-06/M-07 aus P1 §8. M-05 bleibt nicht anwendbar. Es entsteht kein neuer verpflichtender Hardware- oder Zwischenmergeprozess. #9 liefert einen technisch geprüften Zwischenstand; #11/#12 und vollständige manuelle Abnahme bleiben separat. Ohne passende Freigabe kein Merge/Release.
