@@ -27,7 +27,9 @@ static func select_window(count: int, capacity: int, offset: int) -> Dictionary:
 		var visible: int = slots - 1
 		return _result(total - visible, total, true, false, slots, 1, position, maximum)
 	if position == maximum:
-		return _result(0, slots - 1, false, true, slots, 0, position, maximum)
+		# Variant A: keep the nearest snap geometry at the direct outer stop.
+		# Filling the free first slot would move every token backwards.
+		return _result(0, slots - 2, false, true, slots, 1, position, maximum)
 	var end: int = total - position
 	var start: int = end - (slots - 2)
 	return _result(start, end, true, true, slots, 1, position, maximum)

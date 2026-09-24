@@ -4,7 +4,18 @@ const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
+const SaveStore = preload("res://model/save_store.gd")
 var sessions: Array[Session] = []
+var store: SaveStore
+var slot_status: Array[String] = []
+var slot_errors: Array[String] = []
+var save_error: String = ""
+var save_timer: Timer
+var status_label: Label
+var reset_dialog: ConfirmationDialog
+var repair_dialog: ConfirmationDialog
+var repair_button: Button
+var work_repair_button: Button
 var session: Session
 var board: Board
 var mini: Miniature
@@ -31,6 +42,9 @@ var minimum_message: Label
 var clue_reset_button: Button
 var ui_scale: float = 1.0
 var choices: Array[Button] = []
+var album_previews: Array[Miniature] = []
+var album_reveals: Array[Reveal] = []
+var album_slot_status: Array[Label] = []
 
 static func bounded_start(usable: Rect2i, decorations: Vector2i) -> Vector2i:
 	return Vector2i(1920, 1080).min((usable.size - decorations).max(Vector2i.ONE))
@@ -40,6 +54,8 @@ static func bounded_position(usable: Rect2i, client: Vector2i, decorations: Vect
 	return usable.position + (usable.size - client - decorations) / 2 + client_offset
 
 func _ready() -> void:
+	get_tree().auto_accept_quit = false
+	store = SaveStore.new(SaveStore.test_root_override if not SaveStore.test_root_override.is_empty() else "user://p1/saves")
 	if DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
 		var usable: Rect2i = DisplayServer.screen_get_usable_rect()
 		var decorations: Vector2i = (DisplayServer.window_get_size_with_decorations() - DisplayServer.window_get_size()).max(Vector2i(16, 48))
@@ -53,11 +69,24 @@ func _ready() -> void:
 			push_error(error)
 			get_tree().quit(2)
 			return
-		sessions.append(Session.new(data))
+		var item: Session = Session.new(data)
+		var result: Dictionary = store.load_slot(data)
+		if result.status in ["loaded", "recovered", "backup_invalid"]:
+			SaveStore.apply(result.data, item)
+		sessions.append(item)
+		slot_status.append(str(result.status))
+		slot_errors.append("")
 	session = sessions[0]
 	_build()
+	save_timer = Timer.new()
+	save_timer.one_shot = true
+	save_timer.wait_time = 0.35
+	save_timer.timeout.connect(_save_current)
+	add_child(save_timer)
 	resized.connect(_check_minimum)
 	_check_minimum()
+	board.restore_view(session.view_state)
+	session.view_state = board.capture_view()
 	show_album()
 	if OS.get_cmdline_user_args().has("--p1-smoke"):
 		call_deferred("_smoke")
@@ -93,7 +122,9 @@ func _build() -> void:
 	header.add_child(button("UI 100 / 125 %", func() -> void: set_ui_scale(1.25 if ui_scale == 1.0 else 1.0)))
 	album_button = button("Zum Album", show_album)
 	header.add_child(album_button)
-	header.add_child(button("Beenden", func() -> void: get_tree().quit()))
+	header.add_child(button("Beenden", leave_app))
+	status_label = label("", 16)
+	page.add_child(status_label)
 	stress_label = label("UI-Testdatensatz – Rätselqualität nicht abgenommen", 16)
 	page.add_child(stress_label)
 	album = VBoxContainer.new()
@@ -103,9 +134,23 @@ func _build() -> void:
 	var choice_row: HBoxContainer = HBoxContainer.new()
 	album.add_child(choice_row)
 	for i: int in range(sessions.size()):
+		var slot_column: VBoxContainer = VBoxContainer.new()
+		choice_row.add_child(slot_column)
 		var choice: Button = button(sessions[i].album_title() + (" · UI-Test" if i == 2 else ""), select_puzzle.bind(i))
 		choices.append(choice)
-		choice_row.add_child(choice)
+		slot_column.add_child(choice)
+		var preview: Miniature = Miniature.new()
+		preview.custom_minimum_size = Vector2(96, 96)
+		slot_column.add_child(preview)
+		album_previews.append(preview)
+		var picture: Reveal = Reveal.new()
+		picture.paired = false
+		picture.custom_minimum_size = Vector2(96, 96)
+		slot_column.add_child(picture)
+		album_reveals.append(picture)
+		var slot_note: Label = label("", 14)
+		slot_column.add_child(slot_note)
+		album_slot_status.append(slot_note)
 	album_mini = Miniature.new()
 	album_mini.custom_minimum_size = Vector2(240, 240)
 	album.add_child(album_mini)
@@ -116,7 +161,23 @@ func _build() -> void:
 	open_button = button("Blatt öffnen", open_puzzle)
 	open_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	album.add_child(open_button)
-	album.add_child(label("Eigener Stand pro Blatt – nur in dieser Sitzung.\nBeenden verwirft alle Bearbeitungen.", 16))
+	album.add_child(label("Jedes Blatt speichert den eigenen Arbeitsstand lokal.", 16))
+	var reset_button: Button = button("Arbeitsstand zurücksetzen", _ask_reset)
+	reset_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	album.add_child(reset_button)
+	repair_button = button("Backup zum Speichern übernehmen", _ask_repair)
+	repair_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	album.add_child(repair_button)
+	reset_dialog = ConfirmationDialog.new()
+	reset_dialog.title = "Arbeitsstand zurücksetzen?"
+	reset_dialog.dialog_text = "Nur das ausgewählte Blatt wird vollständig zurückgesetzt."
+	reset_dialog.confirmed.connect(_reset_selected)
+	add_child(reset_dialog)
+	repair_dialog = ConfirmationDialog.new()
+	repair_dialog.title = "Backup übernehmen?"
+	repair_dialog.dialog_text = "Der beschädigte Primärstand dieses Blatts wird durch das gültige Backup ersetzt."
+	repair_dialog.confirmed.connect(_repair_selected)
+	add_child(repair_dialog)
 	work = HBoxContainer.new()
 	work.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	work.add_theme_constant_override("separation", 16)
@@ -125,6 +186,8 @@ func _build() -> void:
 	board.session = session
 	board.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	board.edited.connect(refresh)
+	board.committed.connect(_on_commit)
+	board.view_changed.connect(_schedule_view_save)
 	board.pointed.connect(func(cell: Vector2i) -> void: coordinate.text = "Zeile %d · Spalte %d" % [cell.y + 1, cell.x + 1])
 	work.add_child(board)
 	sidebar = VBoxContainer.new()
@@ -140,6 +203,8 @@ func _build() -> void:
 	sidebar.add_child(coordinate)
 	clue_reset_button = button("Hinweise rasterseitig ausrichten", board.reset_clue_pan)
 	sidebar.add_child(clue_reset_button)
+	work_repair_button = button("Backup zum Speichern übernehmen", _ask_repair)
+	sidebar.add_child(work_repair_button)
 	var scroll: ScrollContainer = ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -158,8 +223,8 @@ func _build() -> void:
 	tool_row.add_child(button("Hand", set_tool.bind("hand")))
 	var history_row: HBoxContainer = HBoxContainer.new()
 	controls.add_child(history_row)
-	undo_button = button("Rückgängig", func() -> void: session.undo(); refresh())
-	redo_button = button("Wiederholen", func() -> void: session.redo(); refresh())
+	undo_button = button("Rückgängig", _undo)
+	redo_button = button("Wiederholen", _redo)
 	history_row.add_child(undo_button)
 	history_row.add_child(redo_button)
 	zoom_label = label("Arbeitszoom 100 %", 16)
@@ -181,7 +246,7 @@ func _build() -> void:
 	reveal_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	ending.add_child(reveal_view)
 	ending.add_child(button("Zurück ins Album", show_album))
-	page.add_child(label("P1.2 · Mausprobe / Nur diese Sitzung / Ohne Wertung und Fehlerhilfe", 14))
+	page.add_child(label("P1.3 · Lokaler Arbeitsstand / Ohne Wertung und Fehlerhilfe", 14))
 	minimum_message = label("Mindestens 1280 × 720 logische Fensterfläche benötigt.\nBitte das Fenster vergrößern oder die Anzeigeskalierung prüfen.", 20)
 	minimum_message.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	minimum_message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -217,6 +282,8 @@ func set_tool(tool: String) -> void:
 	board.eraser = tool == "erase"
 	board.hand = tool == "hand"
 	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Hand" if board.hand else "Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
+	if save_timer != null:
+		_save_current()
 
 func _update_palette() -> void:
 	for child: Node in palette_row.get_children():
@@ -229,24 +296,22 @@ func _update_palette() -> void:
 
 func select_puzzle(index: int) -> void:
 	board.cancel_gesture()
+	if not _flush_current():
+		return
+	session.view_state = board.capture_view()
 	session = sessions[index]
 	board.session = session
-	board.view.center = Vector2(session.player.width, session.player.height) / 2
-	board.view.cell_size = 24
-	board.active_color = 1
 	board.hover = Vector2i(-1, -1)
-	board.row_clue_steps.clear()
-	board.column_clue_steps.clear()
-	board.reset_clue_pan()
-	board.clear_clue_hover()
-	board.overview = false
-	board._layout()
-	set_tool("fill")
+	board.restore_view(session.view_state)
+	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Hand" if board.hand else "Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
 	_update_palette()
+	_update_status()
 	open_puzzle()
 
 func show_album() -> void:
 	board.cancel_gesture()
+	if not _flush_current():
+		return
 	board.clear_clue_hover()
 	album.show()
 	work.hide()
@@ -255,8 +320,22 @@ func show_album() -> void:
 	stress_label.visible = session.definition.get("stress", false)
 	title.text = "picross / Mein Probealbum"
 	open_button.text = session.album_title() + (" · ansehen" if session.completed else " · öffnen")
+	repair_button.visible = slot_status[sessions.find(session)] in ["recovered", "backup_invalid"]
+	repair_button.text = "Backup erneuern" if slot_status[sessions.find(session)] == "backup_invalid" else "Backup zum Speichern übernehmen"
+	_update_status()
 	for i: int in range(sessions.size()):
 		choices[i].text = sessions[i].album_title() + (" · UI-Test" if i == 2 else "")
+		album_previews[i].cells = sessions[i].player.cells.duplicate()
+		album_previews[i].width = sessions[i].player.width
+		album_previews[i].height = sessions[i].player.height
+		album_previews[i].palette = sessions[i].definition.palette
+		album_previews[i].visible = not sessions[i].completed
+		album_previews[i].queue_redraw()
+		album_reveals[i].payload = sessions[i].reveal()
+		album_reveals[i].visible = sessions[i].completed
+		album_reveals[i].queue_redraw()
+		album_slot_status[i].text = "Backup geladen" if slot_status[i] == "recovered" else ("Backup beschädigt" if slot_status[i] == "backup_invalid" else ("Speicherfehler" if slot_status[i] == "error" or not slot_errors[i].is_empty() else ""))
+		album_slot_status[i].visible = not album_slot_status[i].text.is_empty()
 	album_mini.cells = session.player.cells.duplicate()
 	album_mini.width = session.player.width
 	album_mini.height = session.player.height
@@ -302,6 +381,108 @@ func refresh() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and board != null:
 		board.cancel_gesture()
+	if what == NOTIFICATION_WM_CLOSE_REQUEST and board != null:
+		leave_app()
+
+func _on_commit() -> void:
+	_save_current()
+
+func _schedule_view_save() -> void:
+	if save_timer != null:
+		save_timer.start()
+
+func _undo() -> void:
+	var old: int = session.player.cursor
+	session.undo()
+	if session.player.cursor != old:
+		_save_current()
+	refresh()
+
+func _redo() -> void:
+	var old: int = session.player.cursor
+	session.redo()
+	if session.player.cursor != old:
+		_save_current()
+	refresh()
+
+func _save_current() -> bool:
+	if store == null or board == null or session == null:
+		return true
+	if save_timer != null:
+		save_timer.stop()
+	session.view_state = board.capture_view()
+	save_error = "Backup vor weiterem Speichern bewusst übernehmen." if slot_status[sessions.find(session)] == "recovered" else store.write_slot(session, session.view_state)
+	slot_errors[sessions.find(session)] = save_error
+	if save_error.is_empty():
+		slot_status[sessions.find(session)] = "loaded"
+	else:
+		var disk_state: String = str(store.load_slot(session.definition).status)
+		if disk_state in ["recovered", "backup_invalid"]:
+			slot_status[sessions.find(session)] = disk_state
+	_update_status()
+	return save_error.is_empty()
+
+func _flush_current() -> bool:
+	if (save_timer != null and not save_timer.is_stopped()) or (board != null and session != null and (board.capture_view() != session.view_state or not slot_errors[sessions.find(session)].is_empty())):
+		return _save_current()
+	return true
+
+func _update_status() -> void:
+	if status_label == null or session == null:
+		return
+	var state: String = slot_status[sessions.find(session)]
+	var error: String = slot_errors[sessions.find(session)]
+	status_label.text = "Speicherfehler: " + error if not error.is_empty() else ("Backup geladen; Primärstand beschädigt. Vor weiterem Speichern Backup bewusst übernehmen." if state == "recovered" else ("Backup beschädigt; gültiger Primärstand geladen. Backup vor weiterem Speichern bewusst erneuern." if state == "backup_invalid" else ("Speicherdaten ungültig. Nur bestätigter Reset dieses Blatts ist möglich." if state == "error" else "")))
+	status_label.visible = not status_label.text.is_empty()
+	status_label.add_theme_color_override("font_color", Color("9d2e24"))
+	if work_repair_button != null:
+		work_repair_button.visible = state in ["recovered", "backup_invalid"]
+		work_repair_button.text = "Backup erneuern" if state == "backup_invalid" else "Backup zum Speichern übernehmen"
+
+func _ask_reset() -> void:
+	reset_dialog.popup_centered()
+
+func _reset_selected() -> void:
+	var index: int = sessions.find(session)
+	var id: String = str(session.definition.id).to_lower().replace("-", "")
+	if save_timer != null:
+		save_timer.stop()
+	var error: String = store.reset_slot(id)
+	if not error.is_empty():
+		save_error = error
+		slot_errors[index] = error
+		_update_status()
+		return
+	sessions[index] = Session.new(session.definition)
+	session = sessions[index]
+	slot_status[index] = "fresh"
+	slot_errors[index] = ""
+	board.session = session
+	board.restore_view(session.view_state)
+	save_error = ""
+	show_album()
+
+func _ask_repair() -> void:
+	repair_dialog.title = "Backup erneuern?" if slot_status[sessions.find(session)] == "backup_invalid" else "Backup übernehmen?"
+	repair_dialog.dialog_text = "Das beschädigte Backup wird entfernt und aus dem gültigen Primärstand neu erstellt." if slot_status[sessions.find(session)] == "backup_invalid" else "Der beschädigte Primärstand dieses Blatts wird durch das gültige Backup ersetzt."
+	repair_dialog.popup_centered()
+
+func _repair_selected() -> void:
+	var error: String = store.discard_invalid_backup(session.definition) if slot_status[sessions.find(session)] == "backup_invalid" else store.repair_from_backup(session.definition)
+	if error.is_empty():
+		slot_status[sessions.find(session)] = "loaded"
+		save_error = ""
+		slot_errors[sessions.find(session)] = ""
+		_save_current()
+	else:
+		save_error = error
+		slot_errors[sessions.find(session)] = error
+	show_album()
+
+func leave_app() -> void:
+	board.cancel_gesture()
+	if _flush_current():
+		get_tree().quit()
 
 static func label(text: String, font_size: int) -> Label:
 	var item: Label = Label.new()
@@ -338,7 +519,7 @@ func _smoke() -> void:
 		if session.player.cells.count(1) != 1 or session.completed or not session.reveal().is_empty():
 			get_tree().quit(3)
 			return
-		session.undo()
+		_undo()
 	show_album()
-	print("P1_START_OK: three fixtures -> mouse -> undo -> album; no persistence")
+	print("P1_START_OK: three fixtures -> mouse -> undo -> album; isolated persistence")
 	get_tree().quit(0)

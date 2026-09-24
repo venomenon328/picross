@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 23.09.2026 · Spezifikation 0.7 · Fachvertrag D-18 bis D-22 umgesetzt; Eigentümerabnahme offen
+Stand: 24.09.2026 · Spezifikation 0.10 · P1.3-Variante A nach R7; Eigentümerabnahme offen
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -8,14 +8,14 @@ Paketquelle ist [Issue #5](https://github.com/venomenon328/picross/issues/5). Hi
 
 Maßgebliche Grundlagen sind [Produktdefinition](PRODUCT_DEFINITION.md), [Gestaltungskonzept](DESIGN_CONCEPT.md), [Projektprofil](PROJECT_PROFILE.md) und [lokaler Workflow](dev-rules/WORKFLOW.md); Einstieg bleibt [AGENTS.md](../AGENTS.md). Vor Ausführung die aktuellen Quellen und Issue-Kommentare prüfen.
 
-Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) liegt auf `feat/5-p1-prototype` in Draft-PR #14 vor: Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, Zielbasis `main@7f5f945edecdad0c5b86ecbe66ab3d81c7bfedac`. Die anschließende Eigentümerprobe ergab vier Folgepunkte. Die anschließende Vorbereitung hat diese in den Vertrag übernommen; der neue Implementierungsauftrag liefert #9 auf demselben Branch/PR, ohne Merge.
+Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) und [P1.2 / Issue #9](https://github.com/venomenon328/picross/issues/9) wurden über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert. Die Eigentümerprobe und ihre noch offenen Einzelergebnisse bleiben davon getrennt. [P1.3 / Issue #11](https://github.com/venomenon328/picross/issues/11) wird auf `feat/11-p1-persistence` gegen diesen Stand geliefert.
 
 **Ist/Soll:** D-07 bis D-22 sind mit #9 umgesetzt; technische Nachweise und verbleibende
 Abnahmen stehen im [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und PR #14. Die früheren
 P1.1-Prüfungen bleiben historische Nachweise ihres damaligen Vertrags, keine
 Eigentümerabnahme des neuen Verhaltens.
 
-**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 übernimmt das Mausproben-Feedback und ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. Dauerhafte Speicherung folgt mit #11, integrierte Prüfung mit #12. Diese späteren Verträge sind keine Behauptung bereits implementierter Funktionen. Aktuelle [Anleitung](../prototypes/p1/README.md) und [P1.2-Prüfbericht](P1_2_VERIFICATION.md); historischer [P1.1-Prüfbericht](P1_1_VERIFICATION.md).
+**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; die integrierte 500-Aktionen-Prüfung folgt getrennt mit #12. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
 
 Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen weder die endgültige Produktengine noch die gesamte Betriebssystemmatrix, Wertung oder Themenwahl fest. Frühere P1-Vorschläge in Issue-Revision 0.1 und Gestaltungskonzept Abschnitt 7 sind innerhalb dieses Scopes abgelöst; globale Produktfragen bleiben offen.
 
@@ -39,13 +39,18 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 | D-13 | Arbeitszoom hat eine deutlich feinere monotone Stufenfolge. | Gesamtansicht bleibt separat; `+`/Rad hoch vergrößert nur, `−`/Rad runter verkleinert nur oder bleibt am jeweiligen Grenzwert. |
 | D-14 | Farbhinweise zeichnen die Zahl selbst in der Rätselfarbe. | A–D-Suffixe sind standardmäßig aus und als optionale Accessibility-Darstellung einschaltbar. |
 | D-15 | Links wandelt X direkt in die aktive Farbe, rechts eine Füllung direkt in X um. | Rücknahmestriche entfernen weiterhin nur den am Start vorhandenen Zieltyp; direkte Gegenmarkierungsumwandlung gilt für Setzstriche. |
-| D-16 | Überlauf kürzt auf Ebene vollständiger einzelner Hinweise. | Ein möglichst großer zusammenhängender Ausschnitt bleibt sichtbar; `…` markiert ausschließlich verborgene Präfixe/Suffixe. Tooltip nur ergänzend. |
+| D-16 | Überlauf kürzt auf Ebene vollständiger einzelner Hinweise. | Ein unter direkter monotoner Draggeometrie und festen Markerplätzen maximal sinnvoller zusammenhängender Ausschnitt bleibt sichtbar; `…` markiert ausschließlich verborgene Präfixe/Suffixe. Tooltip nur ergänzend. |
 | D-17 | Spalten- und Zeilenhinweisbereich sind unabhängig pannbar. | Spaltenfolgen nur vertikal, Zeilenfolgen nur horizontal; Rasterzuordnung, Rasteransicht und Spielzustand bleiben unverändert. |
 | D-18 | Lösungshinweise zeigen ausschließlich vollständige einzeilige Zahlen in der Rätselfarbe. | Keine A–D-Suffixe, gestapelten Ziffern, Kompaktkästchen oder Umschaltoption; interne Farb-IDs und Mauspalette bleiben. |
 | D-19 | Alle Folgen einer Orientierung verwenden ein gemeinsames regelmäßiges Hinweisraster. | Feste Slotmaße, rasterseitige Ausrichtung, ganze eingerastete Schritte und reservierte Markerslots statt variabler Textpackung. |
 | D-20 | Jede konkrete Zeile und Spalte besitzt eine eigene Leseposition. | Achse und Linienindex werden am Gestenstart eingefroren; Nachbarfolgen bleiben unverändert. |
 | D-21 | 1920×1080 ist primäre Layoutbasis und gewünschte Start-Clientfläche. | Gesamter Fensterrahmen bleibt im Arbeitsbereich; kleinere Fallbacks, stabile Arbeitszellen und getrennte UI-/Rasterskalierung bleiben. |
 | D-22 | F-02 erhält wie F-01 ein eigenständiges verfeinertes Abschlussmotiv. | Leuchtturm, Bildaufbau, Proportionen und Farbverteilung bleiben klar zum Raster zugehörig; Rätsellogik bleibt unverändert. |
+| D-23 | Nur die angefasste Hinweisfolge folgt während des Drags kontinuierlich der Maus. | Achse und Linie bleiben fest; beim Drop aus den unmittelbar zuvor sichtbaren Positionen derselben Zahlen die geometrisch nächste gültige ganzzahlige Slotlage wählen und erst dann den semantischen Lesezustand bestätigen. Markerwechsel dürfen keine zusätzliche Zahlenverschiebung erzeugen. Abbruch verwirft den temporären Versatz. |
+| D-24 | Füllungen und Vorschau belegen geringfügig mehr Zellfläche. | Der kontrastierende Zwischenraum aus D-08 bleibt an normalen und kräftigen Fünferlinien in allen Farben und Arbeitszoomstufen erhalten. |
+| D-25 | Die gültige Cursorzeile und -spalte werden im Raster dezent hervorgehoben. | Schnittpunkt nicht doppelt betonen; Inhalte und Linien bleiben lesbar. Ohne Zellgeste verschwindet das Band beim Verlassen der Rasterfläche. |
+| D-26 | X und Preview-X werden an angeschnittenen Zellen geometrisch am Rasterviewport geclippt. | Normale X-Geometrie beibehalten, nicht in den sichtbaren Rest verschieben oder eine teilweise sichtbare Zelle pauschal verwerfen. |
+| D-27 | Linke und rechte Zellgesten zeigen einen kleinen Live-Zähler der gesamten aktuellen Strichlänge. | Geometrisches gerades Segment inklusive Start/Ende und übersprungener oder vorbesetzter Zellen; elastisches Zurückziehen aktualisiert sofort. Keine Navigation und kein gespeicherter Zustand. |
 
 D-07 bis D-10 übernehmen die vier Punkte der ersten Nutzer-Mausprobe. D-11 bis D-15
 übernehmen den ausdrücklich supersedierenden Sollstand der anschließenden P1.2-Probe.
@@ -53,7 +58,9 @@ D-16/D-17 ersetzen die vollständige Ganzfolgen-Ersetzung durch atomare Ausschni
 D-18 bis D-22 ersetzen anschließend die optionale A–D-Darstellung, variable
 Hinweispackung, gemeinsame Bereichspositionen, den 1600×900-Start und die bloße
 F-02-Rasterpräsentation. Soweit ältere D-07-/D-09-/D-14-/D-17- oder
-Hinweisformulierungen widersprechen, gelten D-18 bis D-22.
+Hinweisformulierungen widersprechen, gelten D-18 bis D-22. D-23 ersetzt ausschließlich
+das alte schrittweise Einrasten während des Drags; der bestätigte Zustand bleibt
+ein gemeinsamer ganzzahliger Slot.
 D-10 präzisiert die bereits im Produkt-/Gestaltungskonzept erlaubte höhere
 Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
 
@@ -130,6 +137,12 @@ Die erste eindeutige Bewegung in eine andere Zelle verriegelt horizontal oder ve
 
 Die elastische Vorschau wird aus dem bestätigten Zustand am Gestenbeginn und dem aktuellen geraden Abschnitt berechnet. Zurückziehen verkürzt auch Rücknahmestriche; außerhalb des Abschnitts erscheint der unveränderte Ausgangszustand wieder. Überqueren des Starts bleibt auf derselben Achse. Loslassen übernimmt nur wirksame Änderungen atomar. Beispiel 5→12→9 bearbeitet nur 5–9 nach dem eingefrorenen Modus. Keine Abschlussprüfung aus der Vorschau.
 
+Während einer linken oder rechten Zellgeste zeigt ein kleiner Zähler am aktuellen
+Strichende, am Viewportrand nach innen versetzt, die geometrische Länge des aktuellen
+geraden Abschnitts einschließlich Start und Ende. 5→12 zeigt 8, zurück auf 9 zeigt 5,
+ein Einzelfeldabschnitt zeigt 1. Vorbelegungen und Eingabesprünge verkürzen den Zähler
+nicht. Nach Übernahme oder Abbruch verschwindet er; Navigation zeigt keinen Zähler.
+
 Escape oder Fokusverlust verwirft vollständig. Außerhalb des sichtbaren Rasterbereichs bleibt der letzte gültige Endpunkt stehen. Kein Zeichnen unter UI-Flächen, kein Auto-Scrollen, kein Zoom/Pan während Zellgesten. Werkzeug-/Farbwechsel wirken frühestens in der nächsten Geste. Reguläres Verlassen verwirft eine laufende Vorschau vor einem späteren Speichern.
 
 Ein wirksamer Strich ist ein Undo-Schritt; Redo stellt exakt wieder her. Neue wirksame Änderung nach Undo verwirft den Redo-Zweig; No-ops nicht. Navigation ist keine Zellaktion. Direktes Neutralisieren wird als normale Bearbeitungsaktion rückgängig machbar, ruft nicht heimlich Undo auf und löscht kein bestehendes Undo-verwendet-Merkmal. Keine Wertungsentscheidung daraus ableiten.
@@ -159,6 +172,14 @@ Zellen und keine Undo-Historie.
 
 D-08: Füllungen haben zu anderen Füllungen und insbesondere den Fünferlinien einen sichtbar kontrastierenden Zwischenraum. Dunkle Füllung und dunkle Linie dürfen an Kreuzungen nicht zu einer gemeinsamen L-/Blockform verschmelzen. Fünfergruppen bleiben erkennbar; Umrissstärke, Füll-Inset und Renderingreihenfolge gemeinsam abstimmen. Dies gilt für alle vier Farben, Vorschau und die angebotenen Bearbeitungszoomstufen. Eine verdichtete Gesamtansicht ist kein Ersatz für diese Arbeitsansicht. Zeichnung und tatsächliche Trefferflächen bleiben korrekt zugeordnet.
 
+D-24 vergrößert die Füllfläche geringfügig innerhalb dieser Trennungsgrenze. D-25
+betont die gültige Cursorzeile und -spalte als dezente Hintergrundbänder nur im
+sichtbaren Raster. Die Kreuzung erhält dieselbe Stärke wie jedes Band; Füllungen,
+X, Vorschau und Rasterlinien werden darüber gezeichnet. D-26 clippt die normalen
+X-Liniensegmente bestätigter und vorläufiger Leermarkierungen am Viewportrand,
+auch bei nur teilweise sichtbaren Zellen und Ecken. Wo kein X-Segment den sichtbaren
+Rest schneidet, entsteht keine Ersatzmarkierung.
+
 Hinweise beziehen sich stets auf ganze Zeilen/Spalten und sind korrekt zugeordnet,
 aber nicht zusätzlich laufend nummeriert. Aktive Linie und die separate Koordinatenanzeige
 unterstützen die Orientierung. Sie zeigen nur vollständige einzeilige Zahlen in der
@@ -173,14 +194,27 @@ je Orientierung und aktueller Ansicht bestimmt, bleibt von individuellen Zahlenb
 Folgenlängen und Kürzungszuständen unabhängig und ist quer zur Folge exakt der
 Rasterzeile/-spalte zugeordnet. Kurze Folgen und `–` stehen rasterseitig rechts
 beziehungsweise unten. Bei Überlauf bleibt ein maximal sinnvoller zusammenhängender
-Ausschnitt vollständiger Tokens in unveränderter Reihenfolge sichtbar. `…` belegt
+Ausschnitt vollständiger Tokens in unveränderter Reihenfolge sichtbar, unter Wahrung
+direkter monotoner Draggeometrie und fester Markerplätze. `…` belegt
 einen festen Randplatz nur auf tatsächlich verborgenen Seiten. Keine zusätzlichen
 sichtbaren Hinweisgitterlinien.
 
-Jede konkrete Zeile und Spalte besitzt eine eigene ganzzahlige Leseposition. Mittlere
-Taste oder Linkszug mit Hand-Werkzeug frieren Achse und Linienindex am Gestenstart ein.
-Die angefasste Folge schaltet erst nach einer vollständigen Slotdistanz diskret weiter;
-jeder Zwischen- und Endzustand ist eingerastet. Überfahren benachbarter Linien, des
+Jede konkrete Zeile und Spalte besitzt eine eigene ganzzahlige bestätigte Leseposition.
+Mittlere Taste oder Linkszug mit Hand-Werkzeug frieren Achse und Linienindex am
+Gestenstart ein. Während des Drags bewegt sich nur die angefasste Folge kontinuierlich
+entlang ihrer Achse, auch zwischen Slots; beim Loslassen rastet sie auf die nächste
+gültige ganzzahlige Position ein. Escape, Fokusverlust oder regulärer Übergang
+verwerfen den temporären Versatz und erhalten die letzte bestätigte Position.
+Die Eigentümerentscheidung Variante A zu #11/R7 priorisiert den geometrisch nächsten
+Snap und direkte monotone Manipulation. Der geometrische Außenanschlag ist selbst
+`outer_start`; dort darf ein physisch möglicher Tokenplatz frei bleiben, wenn seine
+Belegung die Zahlen entgegen der bisherigen Dragrichtung verschieben würde.
+Es gibt keinen zusätzlichen, nur durch Gegenbewegung erreichbaren Randzustand.
+Wiederholtes Ziehen mit gleichem Vorzeichen führt vom Rasterende bis zum äußeren
+Anfang; der Rückweg verwendet durchgehend das Gegenzeichen. Die Darstellung wird
+bereits während des Drags an diesen geometrischen Grenzen begrenzt. Alle Tokens
+müssen über die erreichbare Zustandsfolge vollständig lesbar bleiben.
+Überfahren benachbarter Linien, des
 Rasters oder anderer UI übernimmt keine andere Folge und wird weder Raster-Pan noch
 Zellbearbeitung. Leere/kurze Folgen pannen nicht in leeren Raum. Anfang, Mitte und Ende
 jeder langen Folge bleiben erreichbar; „Hinweise rasterseitig ausrichten“ setzt alle
@@ -189,8 +223,8 @@ Einzelpositionen bewusst zurück.
 Raster-Pan und Miniaturnavigation erhalten sämtliche individuellen Lesepositionen.
 Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,
 begrenzen danach gültig und bleiben auf dem gemeinsamen Slotraster. Beim bewussten
-Testblattwechsel werden die Hinweispositionen wie bisher initialisiert; dauerhafte
-Persistenz folgt erst mit #11.
+Testblattwechsel wird ab P1.3 die individuelle Hinweisansicht des Zielblatts
+wiederhergestellt; nur dessen bestätigter Reset initialisiert sie neu.
 
 Während einer Zellgeste ist Hinweisnavigation gesperrt. Freigabe, Escape und
 Fokusverlust beenden sie; falsche Tastenfreigabe nicht. Hinweis-Panning verändert
@@ -237,13 +271,18 @@ Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
 
-Mit #11: isolierter P1-Speicherbereich, keine fremden Spielstände, Cloudkonten oder Repositorydateien. Pro Puzzle Definitions-ID/Revision, Zellmatrix, wirksame Undo-/Redo-Aktionen, Undo-verwendet-Merkmal ohne Perfektionsaussage, Zoom/Ausschnitt, aktive Farbe/Werkzeug, Rasterfokus und Abschlussstatus. Keine Hypothesenfelder. Redo oder Fortsetzen löschen das Undo-Merkmal nicht. Keine vollständige Fehlerhistorie oder Zusicherung späterer Produktkompatibilität.
+P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den drei bekannten Fixture-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gültigen Arbeitszoom oder Gesamtansichtsmodus, aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 
-Nach bestätigten Zellaktionen und beim Verlassen sichern. Ansichtsänderungen dürfen zusammengefasst werden, müssen vor regulärem Schließen enthalten sein. Keine halben Striche speichern; Schreibfehler sichtbar machen, nicht fälschlich „gespeichert“ anzeigen.
+Vor Anwendung werden Schema, exakte Definition/Revision, Matrix/Palette, jede nichtleere atomare History-Aktion mit eindeutigen Indizes und gültigen Vor-/Nachwerten, das widerspruchsfreie Replay ab unbekanntem Raster einschließlich Redo, Cursor-Matrix-Gleichheit, `undo_used`, Abschluss und View vollständig geprüft. Unbekannte oder unpassende Daten werden weder teilweise geladen noch still migriert. Der Rasterfokus wird bei Resize gültig begrenzt; Hinweis-Offsets werden aus Rasterende, äußerem Anfang oder mittlerem Tokenfenster für die aktuelle Geometrie neu abgeleitet.
 
-Neue Fassung vollständig schreiben und validieren, dann gültigen Stand ersetzen; vorige gültige Fassung erhalten. Unterbrochene Schreibvorgänge, defekte/unbekannt versionierte oder inkompatible Daten ohne stilles Überschreiben behandeln. Erklärung und bewussten Neustart nur des ausgewählten Teststands mit Bestätigung anbieten. Keine spätere Wertungsregel daraus ableiten.
+Jede wirksame bestätigte Zellaktion und Undo/Redo werden sofort gesichert; Werkzeug/Farbe ebenfalls. Reine Ansicht darf kurz gebündelt werden, wird aber vor Album, Blattwechsel, Beenden und regulärer Window-Close-Anforderung geflusht. Vorschau wird zuerst verworfen. Fehler erscheinen sichtbar und dürfen keinen gesicherten Stand vortäuschen.
 
-Bei geänderter Fenstergröße Rasterfokus erhalten und Ausschnitt gültig begrenzen. Tests ausschließlich mit eigenen temporären Daten. #9 darf vorhandene Spielstände innerhalb derselben Sitzung erhalten, implementiert aber noch keine dauerhafte Speicherung.
+Schreiben erfolgt als vollständige Tempfassung im selben Speicherroot mit Flush, Schließen und erneuter Parse-/Vertragsvalidierung. Nur ein gültiges bisheriges Primary wird als genau eine gültige Backupfassung rotiert; erst danach ersetzt der Kandidat das Primary. Ein Abbruch lässt wenigstens die vorherige gültige Fassung ladbar. Ein verwaistes Tempfile wird nicht geladen. Gültiges Primary hat Vorrang; bei fehlendem/defektem Primary wird ein gültiges Backup sichtbar geladen. Defekte oder inkompatible Fassungen werden nicht still überschrieben; das bewusste Übernehmen eines gültigen Backups erlaubt wieder Speichern. Bei gültigem Primary und defektem Backup wird der Primärstand geladen; eine bestätigte Backup-Erneuerung erlaubt wieder Speichern. Ohne gültige Fassung erscheint ein Fehlerzustand. Der bestätigte Reset entfernt ausschließlich Primary, Backup und Temp des ausgewählten Blatts und setzt nur dessen Session zurück.
+
+Tests verwenden ausschließlich eigene temporäre User-Daten; ein echter Zwei-Prozess-Roundtrip gehört zum Produktweg. Dies ist keine Produktmigration oder Zusicherung zukünftiger Save-Kompatibilität. Ein fehlgeschlagener Pflicht-Flush blockiert Album, Blattwechsel, Beenden und Window-Close bis zu einem erfolgreichen Retry. Ein aus gültigem Backup geladener Stand bleibt auch bei fehlendem Primary bis zur bewussten Übernahme schreibgesperrt. Temporäre Hintdrag-Subslots, Hoverbänder und Strichzähler gehören nicht zum Save.
+Im Album zeigt jedes ungelöste Blatt ausschließlich seine eigene gespeicherte
+Spielerminiatur unter neutralem Blattnamen; nur ein valider abgeschlossener Slot
+zeigt die bisherige Motiv-/Abschlussdarstellung.
 
 ## 7. Technikbindung und Prüfweg
 
@@ -280,7 +319,7 @@ Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `prototype
 | A-01 | Definitionen/Hinweise einschließlich Farben, Leerlinien und ungültiger Daten validieren; F-01/F-02 mit Deduktionsfolge, F-03 als Stressfixture. Abschlussressourcen technisch unabhängig von Rasterauflösung prüfen. |
 | A-02 | Setz-/Neutralisierungs-/Radiergesten: direkte Füllung↔X-Umwandlung, Achsenbindung, diagonaler Start, Sprünge, elastisches Zurückziehen, gemischte Vorbelegung, Rand/UI, Abbruch und No-op. Nur zum eingefrorenen Modus passende Zellen ändern sich. |
 | A-03 | Atomarer Strich, exakte Vorzustände bei Undo/Redo, korrekte Verzweigung; Neutralisieren nicht als versteckten Undo-Aufruf behandeln. |
-| A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei Zoom, Raster-Pan, UI-Skalierung und Resize; echte Mauspfade bewegen nur die konkret gestartete Zeile/Spalte in eingerasteten gemeinsamen Slots, einschließlich Abbruch/Grenzen. Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
+| A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei Zoom, Raster-Pan, UI-Skalierung und Resize; echte Mauspfade bewegen nur die konkret gestartete Zeile/Spalte kontinuierlich und rasten beim Drop in gemeinsame Slots ein, einschließlich Abbruch/Grenzen. Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
 | A-05 | Mit #11 Speicherung/Recovery ohne stillen Datenverlust oder fremden Zugriff. |
 | A-06 | Unkorrigierte eigene Miniatur, keine frühen Motivdaten, richtiger Abschluss mit unbekanntem Hintergrund, kein Abschluss bei Zusatz-/Fehl-/Falschfüllung oder leerer Motivzelle. Detailliertere Ressourcen ändern die Abschlusslogik nicht. |
 | A-07 | Import, begrenzter Start/Exit und Windows-Export; vollständige Artefakte/Logs einem konkreten Stand zugeordnet. |
@@ -303,7 +342,7 @@ Protokoll: tatsächliche Commit-/Artefaktkennung, Betriebssystem, verwendete Ein
 
 ### 8.3 Gate-Zeitpunkte und bisherige Mausprobe
 
-Vor Gesamt-P1-Merge A-01 bis A-07, Dokumentprüfung und M-01 bis M-04, M-06/M-07 nachweisen. Zwischenpakete #8/#9/#11/#12 bleiben gemäß #5 im gemeinsamen Draft-PR; keine vorgezogene Mergefreigabe durch diesen Implementierungsauftrag.
+Vor Gesamt-P1-Merge A-01 bis A-07, Dokumentprüfung und M-01 bis M-04, M-06/M-07 nachweisen. #8/#9 sind über PR #14 integriert; #11 liegt auf einem neuen Draft-PR gegen `main`, #12 bleibt getrennt. Kein Zwischenstand erteilt eine vorgezogene Merge- oder Eigentümerfreigabe für #11.
 
 K-06: Der Nutzer hat die angebotene F-01-Spielprobe verwendet und anschließend zwei Screenshots sowie vier konkrete Rückmeldungen geliefert; der Abschlussbildschirm ist sichtbar. Bezug der Unterhaltung ist Artefakt `10719712143` / Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`. Eine separate Versionsanzeige des Nutzerlaufs, tatsächliche Windows-Skalierung und vollständige Einzelbestätigung aller K-06-Szenarien liegen nicht vor.
 
@@ -311,10 +350,8 @@ Die Probe ist **durchgeführt mit Änderungsbedarf**, nicht pauschal bestanden. 
 
 ## 9. Aktueller Lieferstand
 
-#9 ist der technische Lieferstand auf `feat/5-p1-prototype` / Draft-PR #14:
-Feedbackänderungen D-07 bis D-22 und Farb-/Großrasterbedienung, einschließlich Tests,
-Anleitung, Windows-Zwischenartefakt und nachvollziehbaren visuellen Nachweisen. Genaue
-technische Nachweise und ausstehende Eigentümerabnahme stehen in #9 und im
-P1.2-Prüfbericht.
-
-#11/#12, endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte frühe Risikostränge.
+#9 ist als P1.2-Zwischenstand in `main` integriert. #11 ergänzt P1.3 auf eigenem
+Branch/Draft-PR; tatsächliche technische Nachweise stehen im P1.3-Prüfbericht und PR.
+M-04 bleibt bis zur realen Eigentümerprobe am commitgebundenen Windows-Artefakt offen.
+#12, endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses
+Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte Risikostränge.

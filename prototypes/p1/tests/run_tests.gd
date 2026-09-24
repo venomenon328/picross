@@ -5,6 +5,7 @@ const Gesture = preload("res://model/gesture.gd")
 const Session = preload("res://model/session.gd")
 const GridView = preload("res://ui/grid_view.gd")
 const Main = preload("res://ui/main.gd")
+const SaveStore = preload("res://model/save_store.gd")
 var checked: int = 0
 var failures: int = 0
 var fixture: Dictionary
@@ -19,6 +20,12 @@ func check(condition: bool, description: String) -> void:
 		print("FAIL: ", description)
 
 func run() -> void:
+	var temporary: String = OS.get_environment("P1_TEST_SAVE_ROOT")
+	if temporary.is_empty():
+		temporary = OS.get_environment("TEMP") if OS.has_feature("windows") else OS.get_environment("TMPDIR")
+	if temporary.is_empty():
+		temporary = "/tmp"
+	SaveStore.test_root_override = temporary.path_join("picross-p1-tests-%d" % Time.get_ticks_usec())
 	root.size = Vector2i(1280, 720)
 	fixture = Definition.load_f01()
 	test_definition()
@@ -29,6 +36,7 @@ func run() -> void:
 	await test_scene()
 	await test_event_routing()
 	await preload("res://tests/p12_cases.gd").run(self)
+	await preload("res://tests/p13_cases.gd").run(self)
 	if OS.get_cmdline_user_args().has("--force-failure"):
 		check(false, "P1_EXPECTED_FAILURE")
 	print("P1_TEST_RESULT checks=%d failures=%d" % [checked, failures])
@@ -216,6 +224,7 @@ func test_scene() -> void:
 	app.board.pointer_move(far, false)
 	app.board.pointer_release(Vector2(-10, -10), false)
 	check(app.session.player.cells.count(1) == 5, "tool/color frozen; UI/outside release commits last endpoint")
+	app.board.active_color = 1
 	app.board.pointer_press(start, MOUSE_BUTTON_RIGHT)
 	check(app.session.gesture.target == 0, "right button empty even with eraser")
 	var escape: InputEventKey = InputEventKey.new()
@@ -275,6 +284,7 @@ func mouse_button(point: Vector2, pressed: bool, button: MouseButton = MOUSE_BUT
 	root.push_input(event, true)
 
 func test_event_routing() -> void:
+	SaveStore.test_root_override += "-event-routes"
 	var app: Main = load("res://main.tscn").instantiate()
 	root.add_child(app)
 	app.open_puzzle()
