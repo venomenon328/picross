@@ -17,6 +17,12 @@ bestätigten Einzelreset und den isolierten Zwei-Prozess-Nachweis. Der
 Stand einschließlich R2/B-01+B-02 und D-23 bis D-27. M-04 bleibt bis zur realen Eigentümerprüfung offen; #12 und die gesamte
 P1-Abnahme bleiben separat. Ältere grüne Läufe belegen den #11-Head nicht.
 
+Die Eigentümerentscheidung Variante A nach Review R7 priorisiert geometrisch
+nächsten Hinweis-Snap und monotone direkte Dragbedienung vor maximaler gleichzeitiger
+Außenbelegung. Der direkte äußere Draganschlag ist `outer_start`; alle Tokens bleiben
+über die Zustandsfolge erreichbar. Der verbindliche Vertrag V-01 bis V-05 steht in
+#11 und P1 §5.2. Der nur per Gegenbewegung erreichbare zusätzliche Randzustand entfällt.
+
 Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Regelkopie. Keine abschließende Produktarchitektur oder universell erprobte Produkt-Teststrategie behaupten. Weitere Pflichtquellen erst mit tatsächlich beschlossenen Inhalten anlegen.
 
 ## Beschlossene Richtung und offene Entscheidungen

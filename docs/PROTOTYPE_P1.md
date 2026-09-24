@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 24.09.2026 · Spezifikation 0.9 · P1.3-Nacharbeit D-23 bis D-27; Eigentümerabnahme offen
+Stand: 24.09.2026 · Spezifikation 0.10 · P1.3-Variante A nach R7; Eigentümerabnahme offen
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -39,7 +39,7 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 | D-13 | Arbeitszoom hat eine deutlich feinere monotone Stufenfolge. | Gesamtansicht bleibt separat; `+`/Rad hoch vergrößert nur, `−`/Rad runter verkleinert nur oder bleibt am jeweiligen Grenzwert. |
 | D-14 | Farbhinweise zeichnen die Zahl selbst in der Rätselfarbe. | A–D-Suffixe sind standardmäßig aus und als optionale Accessibility-Darstellung einschaltbar. |
 | D-15 | Links wandelt X direkt in die aktive Farbe, rechts eine Füllung direkt in X um. | Rücknahmestriche entfernen weiterhin nur den am Start vorhandenen Zieltyp; direkte Gegenmarkierungsumwandlung gilt für Setzstriche. |
-| D-16 | Überlauf kürzt auf Ebene vollständiger einzelner Hinweise. | Ein möglichst großer zusammenhängender Ausschnitt bleibt sichtbar; `…` markiert ausschließlich verborgene Präfixe/Suffixe. Tooltip nur ergänzend. |
+| D-16 | Überlauf kürzt auf Ebene vollständiger einzelner Hinweise. | Ein unter direkter monotoner Draggeometrie und festen Markerplätzen maximal sinnvoller zusammenhängender Ausschnitt bleibt sichtbar; `…` markiert ausschließlich verborgene Präfixe/Suffixe. Tooltip nur ergänzend. |
 | D-17 | Spalten- und Zeilenhinweisbereich sind unabhängig pannbar. | Spaltenfolgen nur vertikal, Zeilenfolgen nur horizontal; Rasterzuordnung, Rasteransicht und Spielzustand bleiben unverändert. |
 | D-18 | Lösungshinweise zeigen ausschließlich vollständige einzeilige Zahlen in der Rätselfarbe. | Keine A–D-Suffixe, gestapelten Ziffern, Kompaktkästchen oder Umschaltoption; interne Farb-IDs und Mauspalette bleiben. |
 | D-19 | Alle Folgen einer Orientierung verwenden ein gemeinsames regelmäßiges Hinweisraster. | Feste Slotmaße, rasterseitige Ausrichtung, ganze eingerastete Schritte und reservierte Markerslots statt variabler Textpackung. |
@@ -194,7 +194,8 @@ je Orientierung und aktueller Ansicht bestimmt, bleibt von individuellen Zahlenb
 Folgenlängen und Kürzungszuständen unabhängig und ist quer zur Folge exakt der
 Rasterzeile/-spalte zugeordnet. Kurze Folgen und `–` stehen rasterseitig rechts
 beziehungsweise unten. Bei Überlauf bleibt ein maximal sinnvoller zusammenhängender
-Ausschnitt vollständiger Tokens in unveränderter Reihenfolge sichtbar. `…` belegt
+Ausschnitt vollständiger Tokens in unveränderter Reihenfolge sichtbar, unter Wahrung
+direkter monotoner Draggeometrie und fester Markerplätze. `…` belegt
 einen festen Randplatz nur auf tatsächlich verborgenen Seiten. Keine zusätzlichen
 sichtbaren Hinweisgitterlinien.
 
@@ -204,10 +205,15 @@ Gestenstart ein. Während des Drags bewegt sich nur die angefasste Folge kontinu
 entlang ihrer Achse, auch zwischen Slots; beim Loslassen rastet sie auf die nächste
 gültige ganzzahlige Position ein. Escape, Fokusverlust oder regulärer Übergang
 verwerfen den temporären Versatz und erhalten die letzte bestätigte Position.
-Ein geometrisch nächster Snap darf als eigener eingerasteter Übergang mit freiem
-äußerem Slot vor dem echten Außenanschlag liegen. Nur der echte Außenanschlag
-erhält den semantischen Randanker `outer_start` und belegt alle nicht für den
-notwendigen Suffixmarker reservierten Slots mit vollständigen Hinweisen.
+Die Eigentümerentscheidung Variante A zu #11/R7 priorisiert den geometrisch nächsten
+Snap und direkte monotone Manipulation. Der geometrische Außenanschlag ist selbst
+`outer_start`; dort darf ein physisch möglicher Tokenplatz frei bleiben, wenn seine
+Belegung die Zahlen entgegen der bisherigen Dragrichtung verschieben würde.
+Es gibt keinen zusätzlichen, nur durch Gegenbewegung erreichbaren Randzustand.
+Wiederholtes Ziehen mit gleichem Vorzeichen führt vom Rasterende bis zum äußeren
+Anfang; der Rückweg verwendet durchgehend das Gegenzeichen. Die Darstellung wird
+bereits während des Drags an diesen geometrischen Grenzen begrenzt. Alle Tokens
+müssen über die erreichbare Zustandsfolge vollständig lesbar bleiben.
 Überfahren benachbarter Linien, des
 Rasters oder anderer UI übernimmt keine andere Folge und wird weder Raster-Pan noch
 Zellbearbeitung. Leere/kurze Folgen pannen nicht in leeren Raum. Anfang, Mitte und Ende

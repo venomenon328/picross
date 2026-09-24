@@ -122,20 +122,27 @@ static func test_atomic_clue_windows(t: SceneTree) -> void:
 	t.check(just_overflowing.start == 2 and just_overflowing.end == 6 and just_overflowing.prefix_hidden and not just_overflowing.suffix_hidden, "J-02 overflow keeps maximum grid-near complete tokens")
 	var middle: Dictionary = ClueLayout.select_window(8, 5, 2)
 	t.check(middle.start < middle.end and middle.prefix_hidden and middle.suffix_hidden and middle.units[0].slot == 0 and middle.units[-1].slot == 4, "J-02 middle clue window reserves fixed marker slots")
-	var transition: Dictionary = ClueLayout.select_window(8, 5, 5)
-	var outer: Dictionary = ClueLayout.select_window(8, 5, 6)
-	t.check(transition.start == 0 and transition.end == 3 and transition.token_slot == 1 and not transition.prefix_hidden and transition.suffix_hidden and transition.max_offset == 6, "R-02 geometric transition retains its snap slot")
-	t.check(outer.start == 0 and outer.end == 4 and outer.token_slot == 0 and outer.units.size() == 5 and not outer.prefix_hidden and outer.suffix_hidden, "R-02 8/5 outer beginning fills four token slots and suffix marker")
-	t.check(ClueLayout.read_position(8, 5, 5).anchor == ClueLayout.MIDDLE and ClueLayout.read_position(8, 5, 6).anchor == ClueLayout.OUTER_START, "R-04 only the maximal outer window has the outer-start anchor")
-	var seven_outer: Dictionary = ClueLayout.select_window(7, 6, 4)
-	t.check(seven_outer.start == 0 and seven_outer.end == 5 and seven_outer.token_slot == 0 and seven_outer.units.size() == 6 and seven_outer.units[-1].kind == "suffix", "R-02 7/6 outer beginning fills five token slots and suffix marker")
+	var outer: Dictionary = ClueLayout.select_window(8, 5, 5)
+	t.check(outer.start == 0 and outer.end == 3 and outer.token_slot == 1 and not outer.prefix_hidden and outer.suffix_hidden and outer.max_offset == 5, "V-03 8/5 direct outer stop preserves snap geometry with one free slot")
+	var seven_outer: Dictionary = ClueLayout.select_window(7, 6, 3)
+	t.check(seven_outer.start == 0 and seven_outer.end == 4 and seven_outer.token_slot == 1 and seven_outer.units[-1].kind == "suffix", "V-01 7/6 direct outer stop retains owner token coordinates")
 	for capacity: int in range(3, 10):
 		for count: int in range(capacity + 1, capacity + 7):
 			var maximum_offset: int = int(ClueLayout.select_window(count, capacity, 0).max_offset)
 			var edge: Dictionary = ClueLayout.select_window(count, capacity, maximum_offset)
-			var near_edge: Dictionary = ClueLayout.select_window(count, capacity, maximum_offset - 1)
-			t.check(edge.start == 0 and edge.end == capacity - 1 and edge.token_slot == 0 and edge.units.size() == capacity and near_edge.start == 0 and near_edge.token_slot == 1, "R-02 outer capacity and geometric transition %d/%d" % [count, capacity])
-			t.check(ClueLayout.read_position(count, capacity, maximum_offset - 1).anchor == ClueLayout.MIDDLE and ClueLayout.read_position(count, capacity, maximum_offset).anchor == ClueLayout.OUTER_START, "R-04 transition does not steal outer anchor %d/%d" % [count, capacity])
+			var seen: Dictionary = {}
+			var previous_slot: int = -count
+			var monotone: bool = true
+			for offset: int in range(maximum_offset + 1):
+				var window: Dictionary = ClueLayout.select_window(count, capacity, offset)
+				var first_slot: int = int(window.token_slot) - int(window.start)
+				monotone = monotone and first_slot >= previous_slot
+				previous_slot = first_slot
+				for token: int in range(int(window.start), int(window.end)):
+					seen[token] = true
+			t.check(monotone and seen.size() == count, "V-03 every token lies on monotone slot sequence %d/%d" % [count, capacity])
+			t.check(edge.start == 0 and edge.end == capacity - 2 and edge.token_slot == 1 and ClueLayout.select_window(count, capacity, maximum_offset + 1) == edge, "V-02 no extra outer state %d/%d" % [count, capacity])
+			t.check(ClueLayout.read_position(count, capacity, maximum_offset).anchor == ClueLayout.OUTER_START, "V-04 direct stop owns outer anchor %d/%d" % [count, capacity])
 	var outer_read: Dictionary = ClueLayout.read_position(90, 7, int(ClueLayout.select_window(90, 7, 0).max_offset))
 	var outer_reflow: Dictionary = ClueLayout.select_window(90, 5, ClueLayout.offset_for_read_position(90, 5, outer_read))
 	t.check(outer_read.anchor == ClueLayout.OUTER_START and outer_reflow.start == 0 and not outer_reflow.prefix_hidden and outer_reflow.suffix_hidden, "B-03 outer-start anchor survives reduced slot capacity")
@@ -515,24 +522,64 @@ static func snap_geometry_case(t: SceneTree, board: Board, axis: String, index: 
 			var nearest_slot: int = roundi((float(before[0]) - board.clue_slot_origin(axis, area, layout)) / pitch - 0.5)
 			owner_snapped = is_equal_approx(float(after[0]), board.clue_slot_center(axis, area, layout, nearest_slot))
 		t.check(owner_snapped, "B-04 F-02 row 12 token 4 remains on its nearest visible slot after Mouse-Up")
+		t.check(before.has(0) and after.has(0) and absf(float(before.get(0, -1)) - 51.2) < 0.001 and absf(float(after.get(0, -1)) - 56.0) < 0.001, "V-01 exact owner reference remains 51.2 to 56")
 	t.check(float(actual.mean) <= float(best.mean) + 0.001 and (absf(float(actual.mean) - float(best.mean)) > 0.001 or int(actual.count) >= int(best.count)), "B-04 %s mouse-up chooses nearest visible token coordinates" % label)
 	if float(best.mean) <= pitch * pitch * 0.25 + 0.001:
 		t.check(float(actual.largest) <= pitch * 0.5 + 0.001, "B-04 %s no marker-induced extra slot jump" % label)
 	t.check(window_signature(board.clue_layout(axis, neighbour)) == neighbour_before and board.pan_drag_distance == 0.0, "B-04 %s drop preserves neighbour and clears subslot" % label)
 
-static func pan_clue_to(t: SceneTree, board: Board, axis: String, index: int, fraction: float, expected: int, label: String) -> void:
+static func monotone_clue_drag(t: SceneTree, board: Board, axis: String, index: int, direction: int, at_limit: bool) -> Dictionary:
 	var point: Vector2 = clue_point(board, axis, index)
-	var delta: float = float(board.clue_layout(axis, index).slot_extent) * fraction
-	var move: Vector2 = Vector2(delta, 2) if axis == "row" else Vector2(2, delta)
+	var pitch: float = float(board.clue_layout(axis, index).slot_extent)
+	var delta: float = pitch * direction
+	var move: Vector2 = Vector2(delta, 0) if axis == "row" else Vector2(0, delta)
 	var confirmed: Dictionary = board.capture_view()
+	var start: Dictionary = token_centers(board.visual_hint_units(axis, index))
+	var neighbour: Array = window_signature(board.clue_layout(axis, index + 1))
 	t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_motion(point + move, true, MOUSE_BUTTON_MIDDLE)
+	for fraction: float in [0.25, 0.49, 0.51, 0.75, 1.0]:
+		t.mouse_motion(point + move * fraction, true, MOUSE_BUTTON_MIDDLE)
+		var moving: Dictionary = token_centers(board.visual_hint_units(axis, index))
+		for token: int in moving:
+			if start.has(token):
+				t.check(absf(float(moving[token]) - float(start[token]) - (0.0 if at_limit else delta * fraction)) < 0.001, "V-02 %s token follows pointer continuously or stays at stop" % axis)
+		t.check(board.capture_view() == confirmed and window_signature(board.clue_layout(axis, index + 1)) == neighbour, "V-03 %s drag preserves confirmed read and neighbour" % axis)
 	var visual: Dictionary = board.visual_hint_units(axis, index)
-	t.check(board.capture_view() == confirmed and visual.units.size() > 0 and board.pan_drag_distance != 0.0, "R-03 %s drag remains visual until release" % label)
+	var before: Dictionary = token_centers(visual)
 	t.mouse_button(point + move, false, MOUSE_BUTTON_MIDDLE)
 	var resting: Dictionary = board.clue_layout(axis, index)
-	t.check(int(resting.offset) == expected and board.pan_drag_distance == 0.0, "R-03 %s reaches expected snapped window" % label)
-	t.check(bool(resting.prefix_hidden) == (int(resting.start) > 0) and bool(resting.suffix_hidden) == (int(resting.end) < resting.entries.size()), "R-03 %s markers match hidden tokens" % label)
+	var after_visual: Dictionary = board.visual_hint_units(axis, index)
+	var after: Dictionary = token_centers(after_visual)
+	var distance: Dictionary = coordinate_distance(before, after)
+	t.check(distance.count > 0 and distance.largest <= pitch * 0.5 + 0.001, "V-01 %s no whole-slot jump on release" % axis)
+	for token: int in after:
+		if start.has(token):
+			t.check((float(after[token]) - float(start[token])) * direction >= -0.001, "V-02 %s confirmed token displacement has pointer sign" % axis)
+	t.check(board.pan_drag_distance == 0.0 and window_signature(board.clue_layout(axis, index + 1)) == neighbour, "V-03 %s drop clears subslot and preserves neighbour" % axis)
+	t.check(bool(resting.prefix_hidden) == (int(resting.start) > 0) and bool(resting.suffix_hidden) == (int(resting.end) < resting.entries.size()), "V-03 %s markers match hidden tokens" % axis)
+	if at_limit:
+		t.check(board.capture_view() == confirmed and start == after, "V-02 %s dragging past stop exposes no further state" % axis)
+	return {"pointer_delta": delta, "before": visual, "after": after_visual, "offset": resting.offset}
+
+static func monotone_clue_route(t: SceneTree, board: Board, axis: String, index: int) -> void:
+	board.set_clue_step(axis, index, 0)
+	var maximum: int = int(board.clue_layout(axis, index).max_offset)
+	var records: Array[Dictionary] = []
+	for direction: int in [1, -1]:
+		var seen: Dictionary = token_centers(board.visual_hint_units(axis, index))
+		var target: int = maximum if direction == 1 else 0
+		for attempt: int in range(maximum + 1):
+			if board.clue_step(axis, index) == target:
+				break
+			var previous: int = board.clue_step(axis, index)
+			var record: Dictionary = monotone_clue_drag(t, board, axis, index, direction, false)
+			records.append(record)
+			seen.merge(token_centers(record.after))
+			t.check((board.clue_step(axis, index) - previous) * direction > 0, "V-02 %s same-sign drag progresses toward endpoint" % axis)
+		t.check(board.clue_step(axis, index) == target and seen.size() == board.clue_entry_count(axis, index), "V-03 %s all tokens reached in direction %d" % [axis, direction])
+		t.check(board.capture_view()["row_clue_reads" if axis == "row" else "column_clue_reads"][index].anchor == (ClueLayout.OUTER_START if direction == 1 else ClueLayout.GRID_END), "V-04 %s endpoint has correct semantic anchor" % axis)
+		records.append(monotone_clue_drag(t, board, axis, index, direction, true))
+	print("V_A_POINTER_ROUTE ", JSON.stringify({"axis": axis, "line": index, "drops": records}))
 
 static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int) -> void:
 	var board: Board = app.board
@@ -560,28 +607,23 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	t.check(board.clue_capacity("row") == 6, "B-04 owner reproduction uses six real common row slots")
 	snap_geometry_case(t, board, "row", row_index, 0, 1.8, "F-02 row 12 owner +1.8 slots")
 	var row_maximum: int = int(board.clue_layout("row", row_index).max_offset)
-	t.check(board.clue_step("row", row_index) == row_maximum - 1 and board.row_clue_reads[row_index].anchor == ClueLayout.MIDDLE, "R-01 owner drop stops at geometric transition without outer anchor")
-	pan_clue_to(t, board, "row", row_index, -1.0, row_maximum, "F-02 row transition to maximal outer")
-	t.check(board.row_clue_reads[row_index].anchor == ClueLayout.OUTER_START and board.clue_layout("row", row_index).end == 5, "R-02 F-02 row maximal outer shows five tokens")
-	pan_clue_to(t, board, "row", row_index, 1.0, row_maximum - 1, "F-02 row maximal outer back to transition")
-	pan_clue_to(t, board, "row", row_index, -2.0, 0, "F-02 row transition back to grid end")
+	t.check(board.clue_step("row", row_index) == row_maximum and board.row_clue_reads[row_index].anchor == ClueLayout.OUTER_START, "V-01 owner snap is the direct outer stop")
+	monotone_clue_drag(t, board, "row", row_index, 1, true)
+	monotone_clue_route(t, board, "row", row_index)
 	var column_index: int = 11
 	var column_viewport: Rect2 = board.view.viewport
 	board.view.configure(Rect2(Vector2(column_viewport.position.x, 105), Vector2(column_viewport.size.x, column_viewport.end.y - 105)), board.view.dimensions)
 	board.normalize_clue_steps()
 	board.navigate_to(Vector2(float(column_index) / 40.0, float(row_index) / 40.0))
 	var column_capacity: int = board.clue_capacity("column")
-	t.check(column_capacity == 4 and app.session.definition.columns[column_index].size() == 5, "R-03 F-02 column route has four real slots and five clues")
+	t.check(column_capacity == 4 and app.session.definition.columns[column_index].size() == 5, "V-02 F-02 column route has four real slots and five clues")
 	if column_capacity == 4:
-		var column_maximum: int = int(board.clue_layout("column", column_index).max_offset)
-		pan_clue_to(t, board, "column", column_index, 1.8, column_maximum - 1, "F-02 column grid end to transition")
-		t.check(board.column_clue_reads[column_index].anchor == ClueLayout.MIDDLE, "R-04 column transition remains a middle read")
-		pan_clue_to(t, board, "column", column_index, -1.0, column_maximum, "F-02 column transition to maximal outer")
-		t.check(board.column_clue_reads[column_index].anchor == ClueLayout.OUTER_START and board.clue_layout("column", column_index).end == column_capacity - 1, "R-02 column maximal outer fills token slots")
-		pan_clue_to(t, board, "column", column_index, 1.0, column_maximum - 1, "F-02 column maximal outer back to transition")
-		pan_clue_to(t, board, "column", column_index, -2.0, 0, "F-02 column transition back to grid end")
+		monotone_clue_route(t, board, "column", column_index)
 	app.select_puzzle(2)
 	board.reset_clue_pan()
+	board.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
+	monotone_clue_route(t, board, "row", row)
+	monotone_clue_route(t, board, "column", column)
 
 static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	var b: Control = app.board
@@ -597,26 +639,22 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	set_work_zoom(b, 12.0)
 	var rows: Array[int] = overflowing_lines(b, "row")
 	var columns: Array[int] = overflowing_lines(b, "column")
-	t.check(rows.size() >= 4 and columns.size() >= 4, "R-04 four long F-03 rows and columns available for semantic reflow")
-	if rows.size() < 4 or columns.size() < 4:
+	t.check(rows.size() >= 3 and columns.size() >= 3, "V-04 three long F-03 rows and columns available for semantic reflow")
+	if rows.size() < 3 or columns.size() < 3:
 		return
 	var cases: Array[Dictionary] = [
 		{"axis": "row", "index": rows[0], "anchor": ClueLayout.OUTER_START},
 		{"axis": "row", "index": rows[1], "anchor": ClueLayout.GRID_END},
 		{"axis": "row", "index": rows[2], "anchor": ClueLayout.MIDDLE},
-		{"axis": "row", "index": rows[3], "anchor": "transition"},
 		{"axis": "column", "index": columns[0], "anchor": ClueLayout.OUTER_START},
 		{"axis": "column", "index": columns[1], "anchor": ClueLayout.GRID_END},
 		{"axis": "column", "index": columns[2], "anchor": ClueLayout.MIDDLE},
-		{"axis": "column", "index": columns[3], "anchor": "transition"},
 	]
 	for entry: Dictionary in cases:
 		var layout: Dictionary = b.clue_layout(entry.axis, entry.index)
 		var offset: int = 0
 		if entry.anchor == ClueLayout.OUTER_START:
 			offset = int(layout.max_offset)
-		elif entry.anchor == "transition":
-			offset = int(layout.max_offset) - 1
 		elif entry.anchor == ClueLayout.MIDDLE:
 			offset = maxi(1, int(layout.max_offset) / 2)
 		b.set_clue_step(entry.axis, entry.index, offset)
@@ -676,9 +714,7 @@ static func check_semantic_transition(t: SceneTree, board: Control, cases: Array
 		var previous: Dictionary = before[i]
 		var current: Dictionary = after[i]
 		if entry.anchor == ClueLayout.OUTER_START:
-			t.check(int(current.start) == 0 and int(current.end) == int(current.slot_count) - 1 and int(current.token_slot) == 0 and not current.prefix_hidden and current.suffix_hidden and int(current.offset) == int(current.max_offset), "R-04 %s maximal outer-start anchor survives %s" % [entry.axis, label])
-		elif entry.anchor == "transition":
-			t.check(int(current.start) == 0 and int(current.token_slot) == 1 and not current.prefix_hidden and current.suffix_hidden and int(current.offset) == int(current.max_offset) - 1 and board.capture_view()["row_clue_reads" if entry.axis == "row" else "column_clue_reads"][entry.index].anchor == ClueLayout.MIDDLE, "R-04 %s transition retains middle read across %s" % [entry.axis, label])
+			t.check(int(current.start) == 0 and int(current.end) == int(current.slot_count) - 2 and int(current.token_slot) == 1 and not current.prefix_hidden and current.suffix_hidden and int(current.offset) == int(current.max_offset), "V-04 %s direct outer-start anchor survives %s" % [entry.axis, label])
 		elif entry.anchor == ClueLayout.GRID_END:
 			var count: int = board.clue_entry_count(entry.axis, entry.index)
 			t.check(int(current.end) == count and current.prefix_hidden and not current.suffix_hidden and int(current.offset) == 0, "B-03 %s grid-end anchor survives %s" % [entry.axis, label])

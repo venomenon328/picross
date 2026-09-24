@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 24.09.2026 · Arbeitsfassung 0.6 · frühe Konzeption mit supersedierendem P1-Mausfeedback
+Stand: 24.09.2026 · Arbeitsfassung 0.7 · frühe Konzeption mit supersedierendem P1-Mausfeedback
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -21,7 +21,7 @@ darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, rich
 alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
 eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
 auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.9. Die Nacharbeit in #11
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.10. Die Nacharbeit in #11
 ergänzt D-23 bis D-27: flüssigen Hinweisdrag mit Einrasten beim Loslassen,
 geringfügig größere getrennte Füllungen, dezente Cursorbänder, geclippte X
 und den geometrischen Live-Strichzähler. Nachweise stehen im P1.3-Prüfbericht;
@@ -119,7 +119,11 @@ weitergehende Eingabealternativen bleiben Vorschläge.
 Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
 Arbeitskontext, aktive Linien und eine Miniatur mit Ausschnittrahmen wichtig. Lange
 Folgen werden nur an Grenzen vollständiger Einzelhinweise gekürzt; ein möglichst
-großer zusammenhängender Ausschnitt bleibt direkt lesbar. Alle Folgen einer
+großer zusammenhängender Ausschnitt bleibt direkt lesbar. Für den P1-Randfall
+priorisiert Variante A nach #11/R7 den geometrisch nächsten Snap und monotone
+direkte Bewegung: Am äußeren Draganschlag darf dafür ein Tokenplatz frei bleiben.
+Alle Zahlen bleiben über die Lesepositionen erreichbar; eine nur per Gegenbewegung
+erreichbare zusätzliche Randposition entfällt. Alle Folgen einer
 Orientierung verwenden gemeinsame feste Slots, und kurze Folgen stehen ebenfalls
 rasterseitig. Seitengerechte Marker zeigen verborgene Präfixe/Suffixe. Jede konkrete
 Spalte lässt sich nur für sich vertikal, jede konkrete Zeile nur für sich horizontal

@@ -83,6 +83,10 @@ static func run(t: SceneTree) -> void:
 		bad = current.duplicate(true)
 		bad.view.row_clue_reads[0] = {"anchor": "middle", "start": -1, "end": 4}
 		t.check(not SaveStore.validate(bad, definition).is_empty(), "P1.3 invalid semantic read rejected")
+		if row >= 0:
+			bad = current.duplicate(true)
+			bad.view.row_clue_reads[row] = {"anchor": "middle", "start": 0, "end": 3}
+			t.check(not SaveStore.validate(bad, definition).is_empty(), "V-04 former zero-start middle save is rejected without migration")
 		# Rotate one valid previous primary, then corrupt the new primary.
 		session.redo()
 		t.check(store.write_slot(session, session.view_state).is_empty(), "P1.3 %s backup rotation" % id)

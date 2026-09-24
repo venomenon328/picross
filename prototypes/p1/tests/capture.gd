@@ -251,7 +251,6 @@ func capture_hint_markers(app: Main, row: int, column: int) -> void:
 			app.board.pan_button = MOUSE_BUTTON_MIDDLE
 			app.board.pan_target = axis
 			app.board.pan_line_index = index
-			app.board.pan_origin_step = anchor
 			var direction: float = -1.0 if anchor == maximum else 1.0
 			var previous: Image
 			for fraction: float in [0.0, 0.49, 0.51, 1.49, 1.51]:
@@ -307,19 +306,29 @@ func token_pixels(image_file: String, app: Main, axis: String, index: int, cente
 func capture_drop_snap(app: Main, axis: String, index: int, anchor: int, fraction: float, name: String) -> void:
 	app.board.set_clue_step(axis, index, anchor)
 	var pitch: float = float(app.board.clue_layout(axis, index).slot_extent)
-	app.board.pan_button = MOUSE_BUTTON_MIDDLE
-	app.board.pan_target = axis
-	app.board.pan_line_index = index
-	app.board.pan_origin_step = anchor
-	app.board.pan_drag_distance = fraction * pitch
+	var point: Vector2 = preload("res://tests/p12_cases.gd").clue_point(app.board, axis, index)
+	var delta: Vector2 = Vector2(fraction * pitch, 0) if axis == "row" else Vector2(0, fraction * pitch)
+	var press: InputEventMouseButton = InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_MIDDLE
+	press.button_mask = MOUSE_BUTTON_MASK_MIDDLE
+	press.pressed = true
+	press.position = point
+	press.global_position = point
+	surface.push_input(press, true)
+	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+	motion.button_mask = MOUSE_BUTTON_MASK_MIDDLE
+	motion.position = point + delta
+	motion.global_position = motion.position
+	surface.push_input(motion, true)
 	var before: Dictionary = visible_token_centers(app, axis, index)
+	var before_units: Dictionary = app.board.visual_hint_units(axis, index)
 	await snapshot(app, name + "-before-mouse-up")
 	var release: InputEventMouseButton = InputEventMouseButton.new()
 	release.button_index = MOUSE_BUTTON_MIDDLE
 	release.pressed = false
-	release.position = app.board.global_position + app.board.view.viewport.get_center()
+	release.position = point + delta
 	release.global_position = release.position
-	app.board._input(release)
+	surface.push_input(release, true)
 	var after: Dictionary = visible_token_centers(app, axis, index)
 	await snapshot(app, name + "-after-mouse-up")
 	if not token_pixels(name + "-before-mouse-up", app, axis, index, before) or not token_pixels(name + "-after-mouse-up", app, axis, index, after):
@@ -328,15 +337,23 @@ func capture_drop_snap(app: Main, axis: String, index: int, anchor: int, fractio
 		return
 	var before_capture: Dictionary = captures[-2]
 	before_capture.token_centers = before
+	before_capture.pointer_delta = [delta.x, delta.y]
+	before_capture.hint_units = before_units
 	var after_capture: Dictionary = captures[-1]
 	after_capture.token_centers = after
+	after_capture.hint_units = app.board.visual_hint_units(axis, index)
+	var distance: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(before, after)
+	if distance.count == 0 or distance.largest > pitch * 0.5 + 0.001:
+		push_error("Rendered snap moved shared tokens more than half a slot: " + name)
+		quit(5)
+		return
 	if name == "snap-f02-row12-owner":
 		var layout: Dictionary = app.board.clue_layout(axis, index)
 		var owner_snapped: bool = false
 		if before.has(0) and after.has(0):
 			var nearest: int = roundi((float(before[0]) - app.board.clue_slot_origin(axis, app.board.row_clue_area(), layout)) / pitch - 0.5)
 			owner_snapped = is_equal_approx(float(after[0]), app.board.clue_slot_center(axis, app.board.row_clue_area(), layout, nearest))
-		if not owner_snapped:
+		if not owner_snapped or absf(float(before.get(0, -1)) - 51.2) > 0.001 or absf(float(after.get(0, -1)) - 56.0) > 0.001:
 			push_error("Rendered F-02 row 12 token 4 missed its nearest slot")
 			quit(5)
 			return
@@ -376,52 +393,58 @@ func capture_owner_drop(app: Main) -> void:
 		return
 	await capture_drop_snap(app, "row", 11, 0, 1.8, "snap-f02-row12-owner")
 	var row_maximum: int = int(app.board.clue_layout("row", 11).max_offset)
-	if app.board.clue_step("row", 11) != row_maximum - 1 or app.board.row_clue_reads[11].anchor != "middle":
-		push_error("R-01 owner render did not stop at the geometric transition")
+	if app.board.clue_step("row", 11) != row_maximum or app.board.row_clue_reads[11].anchor != "outer_start":
+		push_error("V-01 owner render did not reach the direct outer stop")
 		quit(5)
 		return
-	await capture_drop_snap(app, "row", 11, row_maximum - 1, -1.0, "r6-row-transition-to-outer")
-	var row_outer: Dictionary = app.board.clue_layout("row", 11)
-	if row_outer.offset != row_maximum or row_outer.end != 5 or row_outer.units.size() != 6 or app.board.row_clue_reads[11].anchor != "outer_start":
-		push_error("R-02 row render does not fill all outer slots")
-		quit(5)
-		return
-	await capture_drop_snap(app, "row", 11, row_maximum, 1.0, "r6-row-outer-to-transition")
-	await capture_drop_snap(app, "row", 11, row_maximum - 1, -2.0, "r6-row-transition-to-grid")
+	await capture_drop_snap(app, "row", 11, row_maximum, 1.0, "variant-a-owner-outer-clamp")
+	await capture_monotone_route(app, "row", 11)
 	var old_viewport: Rect2 = app.board.view.viewport
 	app.board.view.configure(Rect2(Vector2(old_viewport.position.x, 105), Vector2(old_viewport.size.x, old_viewport.end.y - 105)), app.board.view.dimensions)
 	app.board.normalize_clue_steps()
 	var column_index: int = 11
 	app.board.navigate_to(Vector2(float(column_index) / 40.0, 11.0 / 40.0))
 	if app.board.clue_capacity("column") != 4 or app.session.definition.columns[column_index].size() != 5:
-		push_error("R-02 column render requires four actual slots and five tokens")
+		push_error("V-02 column render requires four actual slots and five tokens")
 		quit(5)
 		return
-	var column_maximum: int = int(app.board.clue_layout("column", column_index).max_offset)
-	await capture_drop_snap(app, "column", column_index, 0, 1.8, "r6-column-grid-to-transition")
-	await capture_drop_snap(app, "column", column_index, column_maximum - 1, -1.0, "r6-column-transition-to-outer")
-	var column_outer: Dictionary = app.board.clue_layout("column", column_index)
-	if column_outer.offset != column_maximum or column_outer.end != 3 or column_outer.units.size() != 4 or app.board.column_clue_reads[column_index].anchor != "outer_start":
-		push_error("R-02 column render does not fill all outer slots")
-		quit(5)
-		return
-	await capture_drop_snap(app, "column", column_index, column_maximum, 1.0, "r6-column-outer-to-transition")
-	await capture_drop_snap(app, "column", column_index, column_maximum - 1, -2.0, "r6-column-transition-to-grid")
+	await capture_monotone_route(app, "column", column_index)
 	app.board.view.configure(old_viewport, app.board.view.dimensions)
 	app.board.normalize_clue_steps()
 	var long_column: int = 20
 	app.board.navigate_to(Vector2(float(long_column) / 40.0, 11.0 / 40.0))
 	if app.board.clue_capacity("column") != 5 or app.session.definition.columns[long_column].size() != 11:
-		push_error("R-02 long column render requires five actual slots and eleven tokens")
+		push_error("V-03 long column render requires five actual slots and eleven tokens")
 		quit(5)
 		return
-	var long_maximum: int = int(app.board.clue_layout("column", long_column).max_offset)
-	await capture_drop_snap(app, "column", long_column, long_maximum - 1, -1.0, "r6-column-eleven-of-five-maximal")
-	var long_outer: Dictionary = app.board.clue_layout("column", long_column)
-	if long_outer.offset != long_maximum or long_outer.end != 4 or long_outer.units.size() != 5 or long_outer.token_slot != 0:
-		push_error("R-02 long column render does not use four tokens and suffix marker")
-		quit(5)
-		return
+	await capture_monotone_route(app, "column", long_column)
+
+func capture_monotone_route(app: Main, axis: String, index: int) -> void:
+	app.board.set_clue_step(axis, index, 0)
+	var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
+	for direction: int in [1, -1]:
+		var seen: Dictionary = visible_token_centers(app, axis, index)
+		var target: int = maximum if direction == 1 else 0
+		for step: int in range(maximum + 1):
+			var origin: int = app.board.clue_step(axis, index)
+			if origin == target:
+				break
+			await capture_drop_snap(app, axis, index, origin, float(direction), "variant-a-%s-%d-dir%d-step%d" % [axis, index, direction, step])
+			seen.merge(visible_token_centers(app, axis, index))
+			if (app.board.clue_step(axis, index) - origin) * direction <= 0:
+				push_error("V-02 rendered same-sign route did not progress")
+				quit(5)
+				return
+		if app.board.clue_step(axis, index) != target or seen.size() != app.board.clue_entry_count(axis, index):
+			push_error("V-03 rendered route did not reach every token")
+			quit(5)
+			return
+		var stop: Dictionary = visible_token_centers(app, axis, index)
+		await capture_drop_snap(app, axis, index, target, float(direction), "variant-a-%s-%d-dir%d-clamp" % [axis, index, direction])
+		if stop != visible_token_centers(app, axis, index) or stop != captures[-2].token_centers:
+			push_error("V-02 rendered outer/grid clamp moved tokens")
+			quit(5)
+			return
 
 func run() -> void:
 	output = OS.get_environment("P1_CAPTURE_DIR")
@@ -551,7 +574,6 @@ func run() -> void:
 	app.board.pan_button = MOUSE_BUTTON_MIDDLE
 	app.board.pan_target = "row"
 	app.board.pan_line_index = f03_row
-	app.board.pan_origin_step = app.board.clue_step("row", f03_row)
 	app.board.pan_drag_distance = float(app.board.clue_layout("row", f03_row).slot_extent) * 0.42
 	await snapshot(app, "hint-drag-subslot")
 	var after_drag: Image = Image.load_from_file(output.path_join("hint-drag-subslot.png"))
@@ -582,7 +604,6 @@ func run() -> void:
 	app.board.pan_button = MOUSE_BUTTON_MIDDLE
 	app.board.pan_target = "column"
 	app.board.pan_line_index = f03_column
-	app.board.pan_origin_step = app.board.clue_step("column", f03_column)
 	var column_pitch: float = float(app.board.clue_layout("column", f03_column).slot_extent)
 	app.board.pan_drag_distance = column_pitch * 0.49
 	await snapshot(app, "hint-drag-column-before-slot-boundary")

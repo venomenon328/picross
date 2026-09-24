@@ -64,13 +64,13 @@ geometrische Länge einschließlich Start, Ende, Sprüngen und vorbesetzten Zell
 R5/B-04 korrigiert den Dropmaßstab: Vor Mouse-Up werden die tatsächlich
 gezeichneten Tokenzentren erfasst. Jeder gültige ruhende Fensterzustand wird
 anhand der Koordinaten derselben sichtbaren Tokenindizes verglichen; bei gleicher
-Nähe bleibt der Zustand mit mehr erhaltenen sichtbaren Tokens. Vor dem äußersten
-Lesefenster liegt eine eingerastete Übergangslage mit freiem äußerem Slot,
-damit die erste Zahl nach dem Wegfall des Präfixmarkers auf ihren nächsten Slot
-einrasten kann. Diese Lage bleibt ein mittlerer semantischer Read. Ein zusätzlicher
-echter Außenanschlag belegt alle nicht für den Suffixmarker benötigten Slots und
-ist allein als `outer_start` verankert. Nur der beim Drop gewählte Zustand wird
-als semantischer Read bestätigt.
+Nähe bleibt der Zustand mit mehr erhaltenen sichtbaren Tokens. Nach Variante A
+ist die geometrisch passende Lage mit freiem äußerem Slot selbst der direkte
+Außenanschlag und als `outer_start` verankert. Der zusätzliche kapazitätsvolle
+Randzustand aus R6 entfällt. Die Draggrenzen werden aus den Tokenkoordinaten beider
+Endlagen abgeleitet, nicht aus der Zahl interner Leseschritte. Das verhindert
+Überziehen und Ganzslot-Rücksprünge auch am rasterseitigen Ende. Nur der beim Drop
+gewählte Zustand wird als semantischer Read bestätigt.
 Die F-02-Eigentümerfolge in Zeile 12 (`4,7,8,1,7,1,10`) wird mit sechs realen
 Zeilenslots und +1,8 Slot Drag geprüft; vor und nach Mouse-Up muss dieselbe `4`
 auf ihrem nächsten Slot liegen. Die Eingabematrix prüft beide Achsen, beide
@@ -129,7 +129,7 @@ sind 21 Vorher-/Nachher-Paare mit Tokenzentren im Renderbericht; der F-02-Fall
 zeigt die `4` vor Mouse-Up bei 51,2 und danach bei 56 logischen Einheiten,
 also 4,8 statt eines zusätzlichen 24-Einheiten-Sprungs. Diese lokalen Läufe
 sind keine commitgebundenen Abschlussnachweise.
-Die R6/B-05-Nacharbeit erhält diesen Drop und ergänzt den maximalen Außenanschlag.
+Die historische R6/B-05-Nacharbeit erhielt diesen Drop und ergänzte den maximalen Außenanschlag.
 Direkte Zustandsregressionen prüfen unter anderem 7/6 mit fünf Tokens und
 Suffixmarker sowie 8/5 mit vier Tokens und Suffixmarker. Echte Eingaberouten
 prüfen Übergang, Außenanschlag und Rückweg für F-02-Zeile und -Spalte;
@@ -140,6 +140,24 @@ Zwei-Prozess-Roundtrip speichert einen Übergang und einen Außenanker in
 verschiedenen F-03-Linien. Die Savevalidierung akzeptiert dafür einen mittleren
 Tokenbereich, der bei Index 0 beginnt; Schema, Schreibreihenfolge und Recovery
 bleiben unverändert. Aktuelle commitgebundene Kennungen stehen im Draft-PR.
+Dieser R6-Prüfvertrag ist durch die Eigentümerentscheidung Variante A supersediert.
+Die neuen Eingaberouten ziehen F-02- und lange F-03-Zeilen/-Spalten in ganzen
+aufeinanderfolgenden Pointerbewegungen zum direkten Außenanschlag und zurück.
+Sie vergleichen dieselben Tokenkoordinaten bei 0,25/0,49/0,51/0,75/1 Slot Bewegung
+und vor/nach jedem Mouse-Up, protokollieren Pointervorzeichen und Marker und prüfen
+alle Tokenindizes auf Erreichbarkeit in beiden Richtungen. Weiterziehen an beiden
+Anschlägen verändert weder Darstellung noch bestätigten Read. Die Renderprüfung
+führt echte Down/Move/Up-Ereignisse durch den SubViewport-Eingabepfad und prüft
+die gezeichneten Tokenpixel; Vorher-/Nachher-Bilder samt Koordinaten und Pointerdelta
+werden im Renderbericht abgelegt.
+
+Der direkte `outer_start` und normale mittlere Tokenbereiche bleiben über
+50↔100 % Zoom, UI 100↔125 %, Resize und Save/echten Neustart erhalten. Die allein
+für den aufgegebenen R6-Übergang eingeführte Zulassung eines `middle`-Reads ab Token 0
+entfällt wieder; solche alten Übergangssaves werden strikt abgelehnt, nicht migriert
+oder still überschrieben. Sonstige gültige Saves, Schema, Schreibfolge und Recovery
+bleiben unverändert. V-01 bis V-05 ersetzen die widersprüchlichen R6/R7-Randtests;
+der bekannte Eigentümerfall bleibt unverändert Teil der geometrischen Snapmatrix.
 Die CI führt zusätzlich Import, denselben Godot-Test, den erwarteten Negativpfad
 mit Exit 23, kontrollierten Start, echte Renderbilder/Pixelchecks, Windows-Export,
 Python-Dokumenttests und Preflight am finalen Head aus. Laufkennungen/Artefakthashes

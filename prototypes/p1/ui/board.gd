@@ -19,7 +19,6 @@ var pan_target: String = ""
 var pan_line_index: int = -1
 var pan_last: Vector2
 var pan_origin: Vector2
-var pan_origin_step: int = 0
 var pan_drag_distance: float = 0.0
 var row_clue_steps: Array[int] = []
 var column_clue_steps: Array[int] = []
@@ -274,7 +273,6 @@ func _gui_input(event: InputEvent) -> void:
 						hover = Vector2i(-1, -1)
 					pan_last = event.position
 					pan_origin = event.position
-					pan_origin_step = 0 if pan_target == "grid" else clue_step(pan_target, pan_line_index)
 					pan_drag_distance = 0.0
 				else:
 					pan_target = ""
@@ -527,13 +525,14 @@ func visible_clue_layout(axis: String, index: int) -> Dictionary:
 	result.visual_shift = 0.0
 	if pan_button != MOUSE_BUTTON_NONE and pan_target == axis and pan_line_index == index:
 		var pitch: float = maxf(float(result.slot_extent), 1.0)
-		# The maximal outer window uses the first token slot; the adjacent
-		# geometric transition places the same tokens one slot gridward. Keep
-		# that return drag visible even though the semantic offset is maximal.
-		var positive_limit: float = float(int(result.max_offset) - pan_origin_step) * pitch
-		if pan_origin_step == int(result.max_offset):
-			positive_limit = pitch
-		result.visual_shift = clampf(pan_drag_distance, -float(pan_origin_step) * pitch, positive_limit)
+		# Marker reservations make read offsets non-linear in screen space.
+		# Clamp in the same token coordinates used by drawing and drop scoring.
+		var grid: Dictionary = ClueLayout.select_window(result.entries.size(), int(result.slot_count), 0)
+		var outer: Dictionary = ClueLayout.select_window(result.entries.size(), int(result.slot_count), int(result.max_offset))
+		var origin_slot: int = int(result.token_slot) - int(result.start)
+		var low: float = float(int(grid.token_slot) - int(grid.start) - origin_slot) * pitch
+		var high: float = float(int(outer.token_slot) - int(outer.start) - origin_slot) * pitch
+		result.visual_shift = clampf(pan_drag_distance, low, high)
 	return result
 
 func clue_entry_count(axis: String, index: int) -> int:

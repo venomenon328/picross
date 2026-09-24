@@ -100,9 +100,10 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   behalten ihre eigene Position. Ziel, Linie und Achse bleiben auch beim Überqueren anderer Bereiche
   eingefroren. Raster, Miniatur, Zellen und Undo/Redo ändern sich nicht. `Esc` oder
   Fokusverlust oder ein regulärer Übergang verwirft den temporären Versatz.
-  Eine geometrisch günstige eingerastete Übergangslage kann vor dem äußersten
-  Anfang liegen. Dort darf ein Platz frei bleiben; am echten Außenanschlag
-  zeigen alle übrigen Plätze vollständige Zahlen neben dem notwendigen `…`.
+  Weiteres Ziehen in derselben Richtung führt bis zum äußeren Anfang; zurück
+  geht es durchgehend in Gegenrichtung. Am Anschlag bleibt die Folge stehen.
+  Dort darf ein Platz frei bleiben, damit die Zahlen beim Einrasten nicht
+  zurückspringen. Alle Zahlen bleiben über die Folge der Lesepositionen erreichbar.
   „Hinweise rasterseitig ausrichten“ stellt
   alle Linien auf ihren rasterseitigen Standardausschnitt zurück.
 - Darüberfahren einer gekürzten Folge zeigt weiterhin den vollständigen farbigen
@@ -142,7 +143,10 @@ Am neuen Artefakt mit echter Maus prüfen und Ergebnisse einzeln protokollieren:
    auf unterschiedliche Anfangs-/Mittel-/Endpositionen pannen; gemeinsames Raster,
    flüssige Zwischenpositionen während des Ziehens, Slot-Einrasten erst beim Drop,
    Abbruch ohne Positionsänderung, unveränderte Nachbarn, feste Linie und
-   ergänzenden Hover prüfen.
+   ergänzenden Hover prüfen. F-02 Zeile 12 mit sechs Slots: nach +1,8 Slot Drag
+   bleibt die erste `4` auf dem nächstgelegenen Slot. Weiterziehen am äußeren
+   Anschlag darf nichts zurückwerfen; mit Gegenbewegung vollständig zum Rasterende
+   zurückkehren. Dasselbe an einer überlaufenden Spalte prüfen.
    Drei angrenzende Füllungen an einer Fünfergrenze müssen einzeln erkennbar sein,
    auch in Vorschau und bei den relevanten Arbeitszoomstufen. Die dezenten
    Cursorbänder dürfen X, Farben und Rasterlinien nicht verdecken. Anschließend lösen und

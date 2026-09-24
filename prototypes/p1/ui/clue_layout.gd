@@ -21,18 +21,14 @@ static func select_window(count: int, capacity: int, offset: int) -> Dictionary:
 		var defensive_index: int = total - 1 - defensive_offset
 		return _result(defensive_index, defensive_index + 1, defensive_index > 0,
 			defensive_index + 1 < total, slots, slots - 1, defensive_offset, total - 1)
-	# Keep the geometric snap position at the former outer offset, then offer
-	# one more position that fills every slot not needed by the suffix marker.
-	var maximum: int = total - slots + 3
+	var maximum: int = total - slots + 2
 	var position: int = clampi(offset, 0, maximum)
 	if position == 0:
 		var visible: int = slots - 1
 		return _result(total - visible, total, true, false, slots, 1, position, maximum)
 	if position == maximum:
-		return _result(0, slots - 1, false, true, slots, 0, position, maximum)
-	if position == maximum - 1:
-		# The prefix marker has gone, while tokens retain the positions at
-		# which a moving sequence can first snap without an extra slot jump.
+		# Variant A: keep the nearest snap geometry at the direct outer stop.
+		# Filling the free first slot would move every token backwards.
 		return _result(0, slots - 2, false, true, slots, 1, position, maximum)
 	var end: int = total - position
 	var start: int = end - (slots - 2)
@@ -87,7 +83,6 @@ static func offset_for_read_position(count: int, capacity: int, position: Dictio
 	var target_end: int = clampi(int(position.get("end", target_start)), target_start, maxi(count, 0))
 	var best_offset: int = 1
 	var best_overlap: int = -1
-	var best_outer_distance: int = 1 << 30
 	var best_center_distance: int = 1 << 30
 	var best_edge_distance: int = 1 << 30
 	# Middle offsets exclude both edge anchors. Supported overflowing layouts
@@ -95,19 +90,11 @@ static func offset_for_read_position(count: int, capacity: int, position: Dictio
 	for candidate: int in range(1, maximum):
 		var window: Dictionary = select_window(count, capacity, candidate)
 		var overlap: int = maxi(0, mini(target_end, int(window.end)) - maxi(target_start, int(window.start)))
-		# A middle read beginning with token zero is the geometric transition
-		# before the outer anchor. Keep that first token when reflow offers
-		# equally overlapping windows; the read must not become OUTER_START.
-		var outer_distance: int = int(window.start) if target_start == 0 else 0
 		var center_distance: int = absi(int(window.start) + int(window.end) - target_start - target_end)
 		var edge_distance: int = absi(int(window.start) - target_start) + absi(int(window.end) - target_end)
-		var better: bool = overlap > best_overlap
-		if overlap == best_overlap:
-			better = outer_distance < best_outer_distance or (outer_distance == best_outer_distance and (center_distance < best_center_distance or (center_distance == best_center_distance and edge_distance < best_edge_distance)))
-		if better:
+		if overlap > best_overlap or (overlap == best_overlap and center_distance < best_center_distance) or (overlap == best_overlap and center_distance == best_center_distance and edge_distance < best_edge_distance):
 			best_offset = candidate
 			best_overlap = overlap
-			best_outer_distance = outer_distance
 			best_center_distance = center_distance
 			best_edge_distance = edge_distance
 	return best_offset

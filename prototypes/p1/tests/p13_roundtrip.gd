@@ -61,11 +61,15 @@ func run() -> void:
 			break
 	if not require(row >= 0 and column >= 0, "long F-03 clue lines"):
 		return
+	if not require(app.session.definition.rows[row + 1].size() >= 5 and app.session.definition.columns[column + 1].size() >= 5, "neighbouring F-03 lines for both read anchors"):
+		return
 	if OS.get_cmdline_user_args().has("--write"):
 		board.navigate_to(Vector2(0.55, 0.45))
 		board.zoom(1, board.view.viewport.get_center())
-		board.set_clue_step("row", row, int(board.clue_layout("row", row).max_offset) - 1)
+		board.set_clue_step("row", row, 2)
 		board.set_clue_step("column", column, int(board.clue_layout("column", column).max_offset))
+		board.set_clue_step("row", row + 1, int(board.clue_layout("row", row + 1).max_offset))
+		board.set_clue_step("column", column + 1, 2)
 		board.active_color = 2
 		app.set_tool("fill")
 		var first: Vector2 = board.view.cell_rect(Vector2i(55, 45)).get_center()
@@ -96,7 +100,11 @@ func run() -> void:
 			return
 		var row_layout: Dictionary = board.clue_layout("row", row)
 		var column_layout: Dictionary = board.clue_layout("column", column)
-		if not require(board.row_clue_reads[row].anchor == "middle" and row_layout.offset == row_layout.max_offset - 1 and row_layout.start == 0 and row_layout.token_slot == 1 and board.column_clue_reads[column].anchor == "outer_start" and column_layout.offset == column_layout.max_offset and column_layout.start == 0 and column_layout.end == column_layout.slot_count - 1 and column_layout.token_slot == 0, "transition and maximal outer semantic reads restored"):
+		if not require(board.row_clue_reads[row].anchor == "middle" and row_layout.offset == 2 and row_layout.start > 0 and row_layout.token_slot == 1 and board.column_clue_reads[column].anchor == "outer_start" and column_layout.offset == column_layout.max_offset and column_layout.start == 0 and column_layout.end == column_layout.slot_count - 2 and column_layout.token_slot == 1, "middle and direct outer semantic reads restored"):
+			return
+		var outer_row: Dictionary = board.clue_layout("row", row + 1)
+		var middle_column: Dictionary = board.clue_layout("column", column + 1)
+		if not require(board.row_clue_reads[row + 1].anchor == "outer_start" and outer_row.offset == outer_row.max_offset and outer_row.start == 0 and outer_row.end == outer_row.slot_count - 2 and outer_row.token_slot == 1 and board.column_clue_reads[column + 1].anchor == "middle" and middle_column.offset == 2 and middle_column.start > 0, "both axes restore direct outer and middle reads independently"):
 			return
 		if not require(session.player.redo() and session.player.undo_used and session.player.cells[45 * 100 + 56] == 0, "redo after real process restart"):
 			return
