@@ -94,9 +94,10 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   beim Start angefasste Spaltenfolge vertikal. Dieselbe Geste im linken Hinweisbereich
   verschiebt nur die angefasste Zeilenfolge horizontal. Während des Ziehens folgt
   sie der Maus flüssig zwischen den Slots. `…` zeigt dabei auf der jeweiligen Seite
-  die aktuell verborgenen Zahlen an; erst beim Loslassen rastet die Folge auf den
-  nächsten gültigen Slot ein. Nachbarlinien behalten ihre eigene
-  Position. Ziel, Linie und Achse bleiben auch beim Überqueren anderer Bereiche
+  die aktuell verborgenen Zahlen an; erst beim Loslassen rastet die Folge anhand
+  der zuvor sichtbaren Zahlen auf die geometrisch nächste gültige Slotlage ein.
+  Ein Markerwechsel verschiebt Zahlen dabei nicht zusätzlich. Nachbarlinien
+  behalten ihre eigene Position. Ziel, Linie und Achse bleiben auch beim Überqueren anderer Bereiche
   eingefroren. Raster, Miniatur, Zellen und Undo/Redo ändern sich nicht. `Esc` oder
   Fokusverlust oder ein regulärer Übergang verwirft den temporären Versatz.
   „Hinweise rasterseitig ausrichten“ stellt

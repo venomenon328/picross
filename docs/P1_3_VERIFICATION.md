@@ -61,6 +61,18 @@ Segmente werden bei angeschnittenen Zellen am Rasterviewport geometrisch geclipp
 Der Live-Zähler zeigt bei linken und rechten Zellgesten die gesamte aktuelle
 geometrische Länge einschließlich Start, Ende, Sprüngen und vorbesetzten Zellen.
 
+R5/B-04 korrigiert den Dropmaßstab: Vor Mouse-Up werden die tatsächlich
+gezeichneten Tokenzentren erfasst. Jeder gültige ruhende Fensterzustand wird
+anhand der Koordinaten derselben sichtbaren Tokenindizes verglichen; bei gleicher
+Nähe bleibt der Zustand mit mehr erhaltenen sichtbaren Tokens. Das äußerste
+Lesefenster hält einen zusätzlichen freien gemeinsamen Slot vor, damit die erste
+Zahl nach dem Wegfall des Präfixmarkers auch auf ihren nächstgelegenen Slot
+einrasten kann. Nur der gewählte Zustand wird als semantischer Read bestätigt.
+Die F-02-Eigentümerfolge in Zeile 12 (`4,7,8,1,7,1,10`) wird mit sechs realen
+Zeilenslots und +1,8 Slot Drag geprüft; vor und nach Mouse-Up muss dieselbe `4`
+auf ihrem nächsten Slot liegen. Die Eingabematrix prüft beide Achsen, beide
+Richtungen, Anfang/Mitte/Ende sowie 0,49/0,51 und 1,49/1,51 Slot geometrisch.
+
 ## Automatisierte Prüfungen
 
 Die Godot-Suite ergänzt die P1.2-Regressionen um leere und verzweigte Stände aller
@@ -108,6 +120,12 @@ Godot-Prüfungen, beide Roundtrip-Erfolgsmarker, den erwarteten Negativpfad mit
 Exit 23, 307 neue echte Renderbilder und 602 Pixelprüfungen sowie Windows-Export
 und exportierten Headless-/OpenGL-Start. Er ersetzt keinen Nachweis des neuen
 Commits; dessen CI- und Artefaktkennungen stehen im Draft-PR.
+Der lokale R5/B-04-Lauf auf verändertem Arbeitsbaum erreichte 1353/0 Godot-
+Prüfungen und 349 echte OpenGL-Renderbilder mit 740 Pixelprüfungen. Darunter
+sind 21 Vorher-/Nachher-Paare mit Tokenzentren im Renderbericht; der F-02-Fall
+zeigt die `4` vor Mouse-Up bei 51,2 und danach bei 56 logischen Einheiten,
+also 4,8 statt eines zusätzlichen 24-Einheiten-Sprungs. Diese lokalen Läufe
+sind keine commitgebundenen Abschlussnachweise.
 Die CI führt zusätzlich Import, denselben Godot-Test, den erwarteten Negativpfad
 mit Exit 23, kontrollierten Start, echte Renderbilder/Pixelchecks, Windows-Export,
 Python-Dokumenttests und Preflight am finalen Head aus. Laufkennungen/Artefakthashes

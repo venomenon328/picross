@@ -27,7 +27,9 @@ static func select_window(count: int, capacity: int, offset: int) -> Dictionary:
 		var visible: int = slots - 1
 		return _result(total - visible, total, true, false, slots, 1, position, maximum)
 	if position == maximum:
-		return _result(0, slots - 1, false, true, slots, 0, position, maximum)
+		# Leave the outermost slot free so the first token can land on the
+		# nearest integer position when a moving prefix marker disappears.
+		return _result(0, slots - 2, false, true, slots, 1, position, maximum)
 	var end: int = total - position
 	var start: int = end - (slots - 2)
 	return _result(start, end, true, true, slots, 1, position, maximum)

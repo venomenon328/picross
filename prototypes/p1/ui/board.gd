@@ -230,9 +230,8 @@ func _input(event: InputEvent) -> void:
 			queue_redraw()
 		elif local is InputEventMouseButton and not local.pressed and local.button_index == pan_button:
 			if pan_target in ["row", "column"] and pan_line_index >= 0:
-				var pitch: float = float(clue_layout(pan_target, pan_line_index).slot_extent)
 				var old_step: int = clue_step(pan_target, pan_line_index)
-				set_clue_step(pan_target, pan_line_index, pan_origin_step + roundi(pan_drag_distance / maxf(pitch, 1.0)))
+				set_clue_step(pan_target, pan_line_index, closest_clue_snap(pan_target, pan_line_index))
 				if old_step != clue_step(pan_target, pan_line_index):
 					view_changed.emit()
 			pan_button = MOUSE_BUTTON_NONE
@@ -624,6 +623,37 @@ func visual_hint_units(axis: String, index: int) -> Dictionary:
 	if suffix_hidden:
 		units.append({"kind": "suffix", "index": -1, "center": suffix_center})
 	return {"units": units, "prefix_hidden": prefix_hidden, "suffix_hidden": suffix_hidden}
+
+## Compare the same rendered tokens before mouse-up with every valid resting
+## window. Marker slots make clue offsets non-linear in screen coordinates.
+func closest_clue_snap(axis: String, index: int) -> int:
+	var visible: Dictionary = visual_hint_units(axis, index)
+	var layout: Dictionary = visible_clue_layout(axis, index)
+	var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
+	var best_offset: int = clue_step(axis, index)
+	var best_distance: float = INF
+	var best_count: int = -1
+	var best_total: float = INF
+	for offset: int in range(int(layout.max_offset) + 1):
+		var candidate: Dictionary = ClueLayout.select_window(layout.entries.size(), int(layout.slot_count), offset)
+		var total: float = 0.0
+		var shared: int = 0
+		for unit: Dictionary in visible.units:
+			if unit.kind != "token" or int(unit.index) < int(candidate.start) or int(unit.index) >= int(candidate.end):
+				continue
+			var slot: int = int(candidate.token_slot) + int(unit.index) - int(candidate.start)
+			var delta: float = clue_slot_center(axis, area, layout, slot) - float(unit.center)
+			total += delta * delta
+			shared += 1
+		if shared == 0:
+			continue
+		var distance: float = total / float(shared)
+		if distance < best_distance - 0.001 or (absf(distance - best_distance) <= 0.001 and (shared > best_count or (shared == best_count and (total < best_total - 0.001 or (absf(total - best_total) <= 0.001 and offset < best_offset))))):
+			best_offset = offset
+			best_distance = distance
+			best_count = shared
+			best_total = total
+	return best_offset
 
 func _draw_row_hint(index: int, py: float, font: Font, fs: int) -> void:
 	var layout: Dictionary = visible_clue_layout("row", index)

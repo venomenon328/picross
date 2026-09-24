@@ -275,6 +275,107 @@ func capture_hint_markers(app: Main, row: int, column: int) -> void:
 			app.board.cancel_gesture()
 	app.board.reset_clue_pan()
 
+func visible_token_centers(app: Main, axis: String, index: int) -> Dictionary:
+	var result: Dictionary = {}
+	for unit: Dictionary in app.board.visual_hint_units(axis, index).units:
+		if unit.kind == "token":
+			result[int(unit.index)] = float(unit.center)
+	return result
+
+func token_pixels(image_file: String, app: Main, axis: String, index: int, centers: Dictionary) -> bool:
+	var picture: Image = Image.load_from_file(output.path_join(image_file + ".png"))
+	var layout: Dictionary = app.board.clue_layout(axis, index)
+	var line: Vector2 = app.board.view.cell_rect(Vector2i(0, index) if axis == "row" else Vector2i(index, 0)).get_center()
+	for token: int in centers:
+		var position: Vector2 = app.board.global_position + (Vector2(float(centers[token]), line.y) if axis == "row" else Vector2(line.x, float(centers[token])))
+		var region: Rect2i = Rect2i(Rect2(position - Vector2(12, 10), Vector2(24, 20))).intersection(Rect2i(Vector2i.ZERO, picture.get_size()))
+		var ink: Color = Color(layout.entries[token].color)
+		var found: bool = false
+		for y: int in range(region.position.y, region.end.y):
+			for x: int in range(region.position.x, region.end.x):
+				var pixel: Color = picture.get_pixel(x, y)
+				if absf(pixel.r - ink.r) + absf(pixel.g - ink.g) + absf(pixel.b - ink.b) < 0.06:
+					found = true
+					break
+			if found:
+				break
+		if not found:
+			return false
+		pixel_checks += 1
+	return true
+
+func capture_drop_snap(app: Main, axis: String, index: int, anchor: int, fraction: float, name: String) -> void:
+	app.board.set_clue_step(axis, index, anchor)
+	var pitch: float = float(app.board.clue_layout(axis, index).slot_extent)
+	app.board.pan_button = MOUSE_BUTTON_MIDDLE
+	app.board.pan_target = axis
+	app.board.pan_line_index = index
+	app.board.pan_origin_step = anchor
+	app.board.pan_drag_distance = fraction * pitch
+	var before: Dictionary = visible_token_centers(app, axis, index)
+	await snapshot(app, name + "-before-mouse-up")
+	var release: InputEventMouseButton = InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_MIDDLE
+	release.pressed = false
+	release.position = app.board.global_position + app.board.view.viewport.get_center()
+	release.global_position = release.position
+	app.board._input(release)
+	var after: Dictionary = visible_token_centers(app, axis, index)
+	await snapshot(app, name + "-after-mouse-up")
+	if not token_pixels(name + "-before-mouse-up", app, axis, index, before) or not token_pixels(name + "-after-mouse-up", app, axis, index, after):
+		push_error("Rendered snap token absent: " + name)
+		quit(5)
+		return
+	var before_capture: Dictionary = captures[-2]
+	before_capture.token_centers = before
+	var after_capture: Dictionary = captures[-1]
+	after_capture.token_centers = after
+	if name == "snap-f02-row12-owner":
+		var layout: Dictionary = app.board.clue_layout(axis, index)
+		var owner_snapped: bool = false
+		if before.has(0) and after.has(0):
+			var nearest: int = roundi((float(before[0]) - app.board.clue_slot_origin(axis, app.board.row_clue_area(), layout)) / pitch - 0.5)
+			owner_snapped = is_equal_approx(float(after[0]), app.board.clue_slot_center(axis, app.board.row_clue_area(), layout, nearest))
+		if not owner_snapped:
+			push_error("Rendered F-02 row 12 token 4 missed its nearest slot")
+			quit(5)
+			return
+		pixel_checks += 1
+
+func capture_drop_matrix(app: Main, row: int, column: int) -> void:
+	app.board.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
+	for axis: String in ["row", "column"]:
+		var index: int = row if axis == "row" else column
+		var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
+		for anchor: int in [0, maximum / 2, maximum]:
+			var direction: float = -1.0 if anchor == maximum else 1.0
+			for fraction: float in [0.49, 0.51, 1.8]:
+				await capture_drop_snap(app, axis, index, anchor, direction * fraction,
+					"snap-%s-%d-%d-%d" % [axis, index, anchor, roundi(direction * fraction * 100)])
+		await capture_drop_snap(app, axis, index, maximum / 2, -1.8, "snap-%s-%d-middle-reverse" % [axis, index])
+	app.board.reset_clue_pan()
+
+func capture_owner_drop(app: Main) -> void:
+	surface.size = Vector2i(1280, 720)
+	app.size = Vector2(surface.size)
+	app.set_ui_scale(1.0)
+	await process_frame
+	await process_frame
+	app.select_puzzle(1)
+	await process_frame
+	await process_frame
+	app.board._layout()
+	app.board.view.zoom_to(36.0, app.board.view.viewport.get_center())
+	var original_viewport: Rect2 = app.board.view.viewport
+	app.board.view.configure(Rect2(Vector2(174, original_viewport.position.y), Vector2(original_viewport.end.x - 174, original_viewport.size.y)), app.board.view.dimensions)
+	app.board.normalize_clue_steps()
+	app.board.navigate_to(Vector2(0.5, 11.0 / 40.0))
+	if app.board.clue_capacity("row") != 6:
+		push_error("F-02 owner render requires six actual row slots")
+		quit(5)
+		return
+	await capture_drop_snap(app, "row", 11, 0, 1.8, "snap-f02-row12-owner")
+
 func run() -> void:
 	output = OS.get_environment("P1_CAPTURE_DIR")
 	if output.is_empty() or DisplayServer.get_name() == "headless":
@@ -452,6 +553,7 @@ func run() -> void:
 	pixel_checks += 1
 	app.board.cancel_gesture()
 	await capture_hint_markers(app, f03_row, f03_column)
+	await capture_drop_matrix(app, f03_row, f03_column)
 	var gesture_start: Vector2i = app.board.view.hit(app.board.view.viewport.get_center())
 	app.board.pointer_press(app.board.view.cell_rect(gesture_start).get_center(), MOUSE_BUTTON_RIGHT)
 	app.board.pointer_move(app.board.view.cell_rect(gesture_start + Vector2i(7, 0)).get_center(), true)
@@ -467,6 +569,7 @@ func run() -> void:
 	app.board.clear_clue_hover()
 	app.board.fit_all()
 	await snapshot(app, "f03-overview")
+	await capture_owner_drop(app)
 	for index: int in [0, 1, 2]:
 		app.select_puzzle(index)
 		var values: Array[int] = app.session.player.cells.duplicate()
