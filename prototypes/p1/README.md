@@ -100,6 +100,9 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   behalten ihre eigene Position. Ziel, Linie und Achse bleiben auch beim Überqueren anderer Bereiche
   eingefroren. Raster, Miniatur, Zellen und Undo/Redo ändern sich nicht. `Esc` oder
   Fokusverlust oder ein regulärer Übergang verwirft den temporären Versatz.
+  Eine geometrisch günstige eingerastete Übergangslage kann vor dem äußersten
+  Anfang liegen. Dort darf ein Platz frei bleiben; am echten Außenanschlag
+  zeigen alle übrigen Plätze vollständige Zahlen neben dem notwendigen `…`.
   „Hinweise rasterseitig ausrichten“ stellt
   alle Linien auf ihren rasterseitigen Standardausschnitt zurück.
 - Darüberfahren einer gekürzten Folge zeigt weiterhin den vollständigen farbigen

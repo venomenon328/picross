@@ -64,7 +64,7 @@ func run() -> void:
 	if OS.get_cmdline_user_args().has("--write"):
 		board.navigate_to(Vector2(0.55, 0.45))
 		board.zoom(1, board.view.viewport.get_center())
-		board.set_clue_step("row", row, 1)
+		board.set_clue_step("row", row, int(board.clue_layout("row", row).max_offset) - 1)
 		board.set_clue_step("column", column, int(board.clue_layout("column", column).max_offset))
 		board.active_color = 2
 		app.set_tool("fill")
@@ -94,7 +94,9 @@ func run() -> void:
 			return
 		if not require(board.hand and board.active_color == 2 and board.view.cell_size == 26.0 and absf(board.view.center.x - 58.0) < 1.0, "tool, color and raster view restored"):
 			return
-		if not require(board.row_clue_reads[row].anchor == "middle" and board.column_clue_reads[column].anchor == "outer_start", "semantic clue reads restored"):
+		var row_layout: Dictionary = board.clue_layout("row", row)
+		var column_layout: Dictionary = board.clue_layout("column", column)
+		if not require(board.row_clue_reads[row].anchor == "middle" and row_layout.offset == row_layout.max_offset - 1 and row_layout.start == 0 and row_layout.token_slot == 1 and board.column_clue_reads[column].anchor == "outer_start" and column_layout.offset == column_layout.max_offset and column_layout.start == 0 and column_layout.end == column_layout.slot_count - 1 and column_layout.token_slot == 0, "transition and maximal outer semantic reads restored"):
 			return
 		if not require(session.player.redo() and session.player.undo_used and session.player.cells[45 * 100 + 56] == 0, "redo after real process restart"):
 			return

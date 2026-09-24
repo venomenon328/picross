@@ -58,7 +58,7 @@ static func valid_reads(reads: Variant, lines: Array) -> bool:
 			var count: int = maxi(1, lines[i].size())
 			if not keys(read, ["anchor", "start", "end"]) or not integer(read.start) or not integer(read.end):
 				return false
-			if int(read.start) <= 0 or int(read.end) >= count or int(read.start) >= int(read.end):
+			if int(read.start) < 0 or int(read.end) >= count or int(read.start) >= int(read.end):
 				return false
 		else:
 			return false

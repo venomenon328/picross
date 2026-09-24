@@ -204,6 +204,10 @@ Gestenstart ein. Während des Drags bewegt sich nur die angefasste Folge kontinu
 entlang ihrer Achse, auch zwischen Slots; beim Loslassen rastet sie auf die nächste
 gültige ganzzahlige Position ein. Escape, Fokusverlust oder regulärer Übergang
 verwerfen den temporären Versatz und erhalten die letzte bestätigte Position.
+Ein geometrisch nächster Snap darf als eigener eingerasteter Übergang mit freiem
+äußerem Slot vor dem echten Außenanschlag liegen. Nur der echte Außenanschlag
+erhält den semantischen Randanker `outer_start` und belegt alle nicht für den
+notwendigen Suffixmarker reservierten Slots mit vollständigen Hinweisen.
 Überfahren benachbarter Linien, des
 Rasters oder anderer UI übernimmt keine andere Folge und wird weder Raster-Pan noch
 Zellbearbeitung. Leere/kurze Folgen pannen nicht in leeren Raum. Anfang, Mitte und Ende

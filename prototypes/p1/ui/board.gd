@@ -527,7 +527,13 @@ func visible_clue_layout(axis: String, index: int) -> Dictionary:
 	result.visual_shift = 0.0
 	if pan_button != MOUSE_BUTTON_NONE and pan_target == axis and pan_line_index == index:
 		var pitch: float = maxf(float(result.slot_extent), 1.0)
-		result.visual_shift = clampf(pan_drag_distance, -float(pan_origin_step) * pitch, float(int(result.max_offset) - pan_origin_step) * pitch)
+		# The maximal outer window uses the first token slot; the adjacent
+		# geometric transition places the same tokens one slot gridward. Keep
+		# that return drag visible even though the semantic offset is maximal.
+		var positive_limit: float = float(int(result.max_offset) - pan_origin_step) * pitch
+		if pan_origin_step == int(result.max_offset):
+			positive_limit = pitch
+		result.visual_shift = clampf(pan_drag_distance, -float(pan_origin_step) * pitch, positive_limit)
 	return result
 
 func clue_entry_count(axis: String, index: int) -> int:

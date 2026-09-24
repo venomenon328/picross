@@ -64,10 +64,13 @@ geometrische Länge einschließlich Start, Ende, Sprüngen und vorbesetzten Zell
 R5/B-04 korrigiert den Dropmaßstab: Vor Mouse-Up werden die tatsächlich
 gezeichneten Tokenzentren erfasst. Jeder gültige ruhende Fensterzustand wird
 anhand der Koordinaten derselben sichtbaren Tokenindizes verglichen; bei gleicher
-Nähe bleibt der Zustand mit mehr erhaltenen sichtbaren Tokens. Das äußerste
-Lesefenster hält einen zusätzlichen freien gemeinsamen Slot vor, damit die erste
-Zahl nach dem Wegfall des Präfixmarkers auch auf ihren nächstgelegenen Slot
-einrasten kann. Nur der gewählte Zustand wird als semantischer Read bestätigt.
+Nähe bleibt der Zustand mit mehr erhaltenen sichtbaren Tokens. Vor dem äußersten
+Lesefenster liegt eine eingerastete Übergangslage mit freiem äußerem Slot,
+damit die erste Zahl nach dem Wegfall des Präfixmarkers auf ihren nächsten Slot
+einrasten kann. Diese Lage bleibt ein mittlerer semantischer Read. Ein zusätzlicher
+echter Außenanschlag belegt alle nicht für den Suffixmarker benötigten Slots und
+ist allein als `outer_start` verankert. Nur der beim Drop gewählte Zustand wird
+als semantischer Read bestätigt.
 Die F-02-Eigentümerfolge in Zeile 12 (`4,7,8,1,7,1,10`) wird mit sechs realen
 Zeilenslots und +1,8 Slot Drag geprüft; vor und nach Mouse-Up muss dieselbe `4`
 auf ihrem nächsten Slot liegen. Die Eingabematrix prüft beide Achsen, beide
@@ -126,6 +129,17 @@ sind 21 Vorher-/Nachher-Paare mit Tokenzentren im Renderbericht; der F-02-Fall
 zeigt die `4` vor Mouse-Up bei 51,2 und danach bei 56 logischen Einheiten,
 also 4,8 statt eines zusätzlichen 24-Einheiten-Sprungs. Diese lokalen Läufe
 sind keine commitgebundenen Abschlussnachweise.
+Die R6/B-05-Nacharbeit erhält diesen Drop und ergänzt den maximalen Außenanschlag.
+Direkte Zustandsregressionen prüfen unter anderem 7/6 mit fünf Tokens und
+Suffixmarker sowie 8/5 mit vier Tokens und Suffixmarker. Echte Eingaberouten
+prüfen Übergang, Außenanschlag und Rückweg für F-02-Zeile und -Spalte;
+Vorher-/Nachher-Renderbilder kontrollieren deren Tokenzentren und gezeichnete
+Zahlen. Die semantischen Tests decken Übergang und echten Außenanker über
+50↔100 % Arbeitszoom, UI 100↔125 % und Resize ab. Der isolierte echte
+Zwei-Prozess-Roundtrip speichert einen Übergang und einen Außenanker in
+verschiedenen F-03-Linien. Die Savevalidierung akzeptiert dafür einen mittleren
+Tokenbereich, der bei Index 0 beginnt; Schema, Schreibreihenfolge und Recovery
+bleiben unverändert. Aktuelle commitgebundene Kennungen stehen im Draft-PR.
 Die CI führt zusätzlich Import, denselben Godot-Test, den erwarteten Negativpfad
 mit Exit 23, kontrollierten Start, echte Renderbilder/Pixelchecks, Windows-Export,
 Python-Dokumenttests und Preflight am finalen Head aus. Laufkennungen/Artefakthashes

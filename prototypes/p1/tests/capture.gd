@@ -375,6 +375,53 @@ func capture_owner_drop(app: Main) -> void:
 		quit(5)
 		return
 	await capture_drop_snap(app, "row", 11, 0, 1.8, "snap-f02-row12-owner")
+	var row_maximum: int = int(app.board.clue_layout("row", 11).max_offset)
+	if app.board.clue_step("row", 11) != row_maximum - 1 or app.board.row_clue_reads[11].anchor != "middle":
+		push_error("R-01 owner render did not stop at the geometric transition")
+		quit(5)
+		return
+	await capture_drop_snap(app, "row", 11, row_maximum - 1, -1.0, "r6-row-transition-to-outer")
+	var row_outer: Dictionary = app.board.clue_layout("row", 11)
+	if row_outer.offset != row_maximum or row_outer.end != 5 or row_outer.units.size() != 6 or app.board.row_clue_reads[11].anchor != "outer_start":
+		push_error("R-02 row render does not fill all outer slots")
+		quit(5)
+		return
+	await capture_drop_snap(app, "row", 11, row_maximum, 1.0, "r6-row-outer-to-transition")
+	await capture_drop_snap(app, "row", 11, row_maximum - 1, -2.0, "r6-row-transition-to-grid")
+	var old_viewport: Rect2 = app.board.view.viewport
+	app.board.view.configure(Rect2(Vector2(old_viewport.position.x, 105), Vector2(old_viewport.size.x, old_viewport.end.y - 105)), app.board.view.dimensions)
+	app.board.normalize_clue_steps()
+	var column_index: int = 11
+	app.board.navigate_to(Vector2(float(column_index) / 40.0, 11.0 / 40.0))
+	if app.board.clue_capacity("column") != 4 or app.session.definition.columns[column_index].size() != 5:
+		push_error("R-02 column render requires four actual slots and five tokens")
+		quit(5)
+		return
+	var column_maximum: int = int(app.board.clue_layout("column", column_index).max_offset)
+	await capture_drop_snap(app, "column", column_index, 0, 1.8, "r6-column-grid-to-transition")
+	await capture_drop_snap(app, "column", column_index, column_maximum - 1, -1.0, "r6-column-transition-to-outer")
+	var column_outer: Dictionary = app.board.clue_layout("column", column_index)
+	if column_outer.offset != column_maximum or column_outer.end != 3 or column_outer.units.size() != 4 or app.board.column_clue_reads[column_index].anchor != "outer_start":
+		push_error("R-02 column render does not fill all outer slots")
+		quit(5)
+		return
+	await capture_drop_snap(app, "column", column_index, column_maximum, 1.0, "r6-column-outer-to-transition")
+	await capture_drop_snap(app, "column", column_index, column_maximum - 1, -2.0, "r6-column-transition-to-grid")
+	app.board.view.configure(old_viewport, app.board.view.dimensions)
+	app.board.normalize_clue_steps()
+	var long_column: int = 20
+	app.board.navigate_to(Vector2(float(long_column) / 40.0, 11.0 / 40.0))
+	if app.board.clue_capacity("column") != 5 or app.session.definition.columns[long_column].size() != 11:
+		push_error("R-02 long column render requires five actual slots and eleven tokens")
+		quit(5)
+		return
+	var long_maximum: int = int(app.board.clue_layout("column", long_column).max_offset)
+	await capture_drop_snap(app, "column", long_column, long_maximum - 1, -1.0, "r6-column-eleven-of-five-maximal")
+	var long_outer: Dictionary = app.board.clue_layout("column", long_column)
+	if long_outer.offset != long_maximum or long_outer.end != 4 or long_outer.units.size() != 5 or long_outer.token_slot != 0:
+		push_error("R-02 long column render does not use four tokens and suffix marker")
+		quit(5)
+		return
 
 func run() -> void:
 	output = OS.get_environment("P1_CAPTURE_DIR")
