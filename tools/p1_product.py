@@ -109,6 +109,10 @@ def main() -> int:
             base = [engine, "--headless", "--path", str(project)]
             phase("import", base + ["--import"])
             phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
+            environment["P1_TEST_SAVE_ROOT"] = str(workspace / "roundtrip-saves")
+            phase("roundtrip-write", base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--write"], "P1_ROUNDTRIP_WRITE_OK")
+            phase("roundtrip-read", base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--read"], "P1_ROUNDTRIP_READ_OK")
+            del environment["P1_TEST_SAVE_ROOT"]
             negative = run_phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"], environment, args.process_timeout_seconds, logs)
             toolchain.require_expected_failure(negative, "P1_EXPECTED_FAILURE")
             if negative["exit_code"] != 23 or "SCRIPT ERROR:" in negative["output"]:
@@ -141,7 +145,7 @@ def main() -> int:
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="OPEN: owner M-01/M-02/M-03/M-06 mouse, shared snapped clue slots, per-line clue panning, F-02 motif and actual Windows scaling before overall P1 merge; F-01 artwork direction already confirmed")
+                            manual_acceptance="OPEN: owner M-04 real Windows close/restart/resume; M-01/M-02/M-03/M-06 and actual Windows scaling before overall P1 merge; F-01 artwork direction already confirmed")
             archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"))
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)

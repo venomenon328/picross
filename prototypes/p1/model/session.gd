@@ -1,14 +1,25 @@
 extends RefCounted
 const Player = preload("res://model/player.gd")
 const Gesture = preload("res://model/gesture.gd")
+const ClueLayout = preload("res://ui/clue_layout.gd")
 var definition: Dictionary
 var player: Player
 var gesture: Gesture = Gesture.new()
 var completed: bool = false
+var view_state: Dictionary = {}
 
 func _init(data: Dictionary) -> void:
 	definition = data.duplicate(true)
 	player = Player.new(int(data.width), int(data.height))
+	var rows: Array[Dictionary] = []
+	var columns: Array[Dictionary] = []
+	for _y: int in range(player.height):
+		rows.append(ClueLayout.grid_end_position())
+	for _x: int in range(player.width):
+		columns.append(ClueLayout.grid_end_position())
+	view_state = {"center": [float(player.width) / 2.0, float(player.height) / 2.0],
+		"zoom": 24, "overview": false, "active_color": 1, "tool": "fill",
+		"row_clue_reads": rows, "column_clue_reads": columns}
 
 func is_solution() -> bool:
 	for y: int in range(player.height):

@@ -1,14 +1,15 @@
-# P1.2 · Gemeinsames Hinweisraster und linienweises Hinweis-Panning
+# P1.3 · Lokalen Arbeitsstand fortsetzen
 
-Zwischenstand zu Issue #9 auf dem gemeinsamen P1-Draft #14. F-01 (20×20),
+Zwischenstand zu [Issue #11](https://github.com/venomenon328/picross/issues/11)
+auf eigenem Draft-PR gegen `main`. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
-sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-22 sind in diesem Stand
+sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
 Zusatzkennungen. Alle Zeilen beziehungsweise Spalten teilen sich je ein festes
 Hinweisraster; jede konkrete Linie behält darin ihre eigene eingerastete Leseposition.
-Keine Wertung, Fehlerhilfe oder dauerhafte Speicherung.
-Albumwechsel erhält den eigenen Stand und Undo/Redo pro Blatt innerhalb dieser
-Sitzung. Beenden verwirft alle Stände.
+Keine Wertung oder Fehlerhilfe. Albumwechsel und echter App-Neustart erhalten den
+eigenen Stand samt Undo/Redo, Rasteransicht, Werkzeug, Farbe und individuellen
+Hinweis-Lesepositionen pro Blatt.
 
 ## Windows starten
 
@@ -17,6 +18,26 @@ nötig. `picross-p1.console.exe` zeigt technische Ausgaben. Dies ist eine unsign
 Debug-Spielprobe, kein Release/Installer. Die Quellcommitkennung steht im beigefügten
 README.txt; `product-report.json` bindet Head, getesteten Checkout/Test-Merge, Basis,
 CI-Lauf, Engine-/Archivhashes, EXE-Hashes und Prüfphasen. Artefaktlink im PR.
+
+Godot löst `user://p1/saves/` im projektbezogenen User-Data-Verzeichnis auf.
+Unter Windows liegt dieses standardmäßig unter
+`%APPDATA%\Godot\app_userdata\picross · P1\p1\saves\` (bei benutzerdefiniertem
+Godot-Datenpfad entsprechend dort). Die drei bekannten Fixture-IDs ergeben
+`f01.json`, `f02.json`, `f03.json` mit gleichnamigen `f01.bak`/`f01.tmp` usw.
+Tests verwenden nur eigene temporäre Profile; das ZIP enthält keine
+Spielstände.
+
+Fehlendes oder beschädigtes Primary mit gültigem Backup wird sichtbar als Recovery geladen;
+normales Speichern bleibt bis zur bewussten Übernahme gesperrt.
+„Backup zum Speichern übernehmen“ fragt vor dem Ersetzen des Primary nach.
+Bei gültigem Primary und defektem Backup bleibt der Primärstand lesbar;
+„Backup erneuern“ fragt vor dem Ersatz des beschädigten Backups nach.
+Ohne gültige Fassung erscheint ein Fehler. „Arbeitsstand zurücksetzen“ fragt
+ebenfalls nach und entfernt ausschließlich Primary, Backup und Temp des
+ausgewählten Blatts. Die zwei anderen Blätter bleiben erhalten.
+Scheitert ein verpflichtender Save, bleibt die aktuelle Ansicht offen und zeigt
+den Fehler. Album, Blattwechsel und reguläres Beenden gelingen nach einem
+erfolgreichen Retry.
 
 Startziel: 1920×1080 Clientfläche, auf den verfügbaren Arbeitsbereich einschließlich Fensterrahmen
 begrenzt. Unter 1280×720 erscheint eine verständliche Meldung. Vergrößern des Fensters
@@ -34,6 +55,9 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   Bewegung fest; bei diagonalem Gleichstand zunächst nur die Startzelle.
 - Zurückziehen verkürzt die Vorschau. 5→12→9 übernimmt nur 5–9 als eine Aktion.
   Überqueren des Starts ändert die Achse nicht. Kein mehrfaches Umschalten.
+- Ein kleiner Live-Zähler zeigt während linker/rechter Zellgesten die gesamte
+  geometrische Länge inklusive beider Endfelder: 5→12 zeigt 8, zurück auf 9 zeigt 5.
+  Vorbelegte oder übersprungene Zellen zählen mit; bei Abbruch/Drop verschwindet er.
 - Außerhalb des sichtbaren Rasters bleibt der letzte gültige Endpunkt stehen.
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
@@ -41,6 +65,9 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
 - F-02/F-03: Farbe per Palette A–D wählen. Diese Kennungen gehören ausschließlich zur
   Bedienpalette; Lösungshinweise zeigen nur die vollständige Zahl in ihrer Farbe.
   Gleiche Farbblöcke brauchen Abstand; verschiedene dürfen angrenzen.
+- Etwas größere Füllflächen bleiben durch Zwischenräume und Rasterlinien getrennt.
+  Die gültige Cursorzeile und -spalte sind im Grid dezent hinterlegt. Angeschnittene
+  X und Preview-X werden am sichtbaren Rasterrand geometrisch abgeschnitten.
 
 ## Navigieren und Hinweise lesen
 
@@ -54,22 +81,30 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   die sichtbare Fläche. Helle Flächen sind unbekannt, Punkte leer, Farben eigene Füllungen
   einschließlich möglicher Fehler und derselben Strichvorschau.
 - Während Zellgesten sind Zoom und Navigation gesperrt. Navigation ändert keine Zellen
-  oder Undo-Historie. Pro Blatt bleiben Bearbeitung/History erhalten; beim Blattwechsel
-  startet die Ansicht wieder bei Arbeitsgröße.
+  oder Undo-Historie. Pro Blatt bleiben Bearbeitung/History und Ansicht beim
+  Blattwechsel und regulären App-Neustart erhalten.
 - Am Raster stehen ausschließlich die Lösungshinweise, ohne laufende Zeilen-/
   Spaltennummern oder A–D-Zusätze. „–“ ist eine leere Linie. Alle Zeilen nutzen dieselben
   waagerechten Slots, alle Spalten dieselben senkrechten Slots; das rasternächste Ende
   liegt an derselben Kante. Bei Überlauf bleibt ein zusammenhängender Ausschnitt
   vollständiger Zahlen sichtbar. `…` links/oben markiert einen verborgenen Anfang,
   rechts/unten ein verborgenes Ende; mittlere Ausschnitte dürfen beide Marker haben.
-  Zahlen werden nie geteilt und jede Verschiebung rastet in ganzen Slots ein.
+  Zahlen werden nie geteilt; bestätigte Lesepositionen liegen in ganzen Slots.
 - Mittlere Taste oder Hand-Werkzeug links im oberen Hinweisbereich verschiebt nur die
   beim Start angefasste Spaltenfolge vertikal. Dieselbe Geste im linken Hinweisbereich
-  verschiebt nur die angefasste Zeilenfolge horizontal. Nach der ersten vollen
-  Slotstrecke rastet genau diese Linie weiter; Nachbarlinien behalten ihre eigene
-  Position. Ziel, Linie und Achse bleiben auch beim Überqueren anderer Bereiche
+  verschiebt nur die angefasste Zeilenfolge horizontal. Während des Ziehens folgt
+  sie der Maus flüssig zwischen den Slots. `…` zeigt dabei auf der jeweiligen Seite
+  die aktuell verborgenen Zahlen an; erst beim Loslassen rastet die Folge anhand
+  der zuvor sichtbaren Zahlen auf die geometrisch nächste gültige Slotlage ein.
+  Ein Markerwechsel verschiebt Zahlen dabei nicht zusätzlich. Nachbarlinien
+  behalten ihre eigene Position. Ziel, Linie und Achse bleiben auch beim Überqueren anderer Bereiche
   eingefroren. Raster, Miniatur, Zellen und Undo/Redo ändern sich nicht. `Esc` oder
-  Fokusverlust bricht die Navigation ab. „Hinweise rasterseitig ausrichten“ stellt
+  Fokusverlust oder ein regulärer Übergang verwirft den temporären Versatz.
+  Weiteres Ziehen in derselben Richtung führt bis zum äußeren Anfang; zurück
+  geht es durchgehend in Gegenrichtung. Am Anschlag bleibt die Folge stehen.
+  Dort darf ein Platz frei bleiben, damit die Zahlen beim Einrasten nicht
+  zurückspringen. Alle Zahlen bleiben über die Folge der Lesepositionen erreichbar.
+  „Hinweise rasterseitig ausrichten“ stellt
   alle Linien auf ihren rasterseitigen Standardausschnitt zurück.
 - Darüberfahren einer gekürzten Folge zeigt weiterhin den vollständigen farbigen
   Hinweis mit Umbruch direkt über dem Arbeitsbild. Das ist ein Zusatzweg; Anfang,
@@ -99,14 +134,22 @@ Am neuen Artefakt mit echter Maus prüfen und Ergebnisse einzeln protokollieren:
 1. M-01: F-01 setzen/neutralisieren, X↔Füllung direkt umwandeln, 5→12→9 und
    Startüberquerung, typspezifische Rücknahmestriche, Radierer, Undo/Redo, Rand,
    falsche Tastenfreigabe, Esc und Fokusverlust. Tatsächlich lösen ohne Auskreuzpflicht;
-   Detailbild und Raster als dasselbe Motiv beurteilen.
+   den Live-Zähler bei 5→12→9 unabhängig von Vorbelegung als 8→5 lesen und
+   abgeschnittene X an Viewporträndern prüfen. Detailbild und Raster als dasselbe
+   Motiv beurteilen.
 2. M-02: F-02, alle Farben A–D, direkte Umwandlung und farbige Hinweise ohne
    Zusatzkennungen prüfen. Spalte 22 bei etwa 92/100 % prüfen: Beim Kürzen bleiben
    vollständige restliche Zahlen sichtbar. Je zwei benachbarte Spalten und Zeilen
    auf unterschiedliche Anfangs-/Mittel-/Endpositionen pannen; gemeinsames Raster,
-   Slot-Einrasten, unveränderte Nachbarn, feste Linie und ergänzenden Hover prüfen.
+   flüssige Zwischenpositionen während des Ziehens, Slot-Einrasten erst beim Drop,
+   Abbruch ohne Positionsänderung, unveränderte Nachbarn, feste Linie und
+   ergänzenden Hover prüfen. F-02 Zeile 12 mit sechs Slots: nach +1,8 Slot Drag
+   bleibt die erste `4` auf dem nächstgelegenen Slot. Weiterziehen am äußeren
+   Anschlag darf nichts zurückwerfen; mit Gegenbewegung vollständig zum Rasterende
+   zurückkehren. Dasselbe an einer überlaufenden Spalte prüfen.
    Drei angrenzende Füllungen an einer Fünfergrenze müssen einzeln erkennbar sein,
-   auch in Vorschau und bei den relevanten Arbeitszoomstufen. Anschließend lösen und
+   auch in Vorschau und bei den relevanten Arbeitszoomstufen. Die dezenten
+   Cursorbänder dürfen X, Farben und Rasterlinien nicht verdecken. Anschließend lösen und
    Raster/Ergebnisbild als denselben verfeinerten Leuchtturm beurteilen.
 3. M-03: F-03 eine notierte Koordinate bearbeiten und bei 50/75/92/100 % echte
    Hinweiszahlen ohne Hover lesen. Mehrere konkrete Zeilen/Spalten unabhängig pannen;
@@ -126,11 +169,20 @@ Ergebnis/Abweichung. Nicht aus Screenshotabmessungen ableiten. Referenz aus frü
 Angaben: Windows 11, 2560×1440, Ryzen 7 5800X, RTX 3070. Die reale Skalierung bleibt
 unbekannt. Technische Renderflächen und synthetische Events ersetzen diese Abnahme nicht.
 
-Persistenz/Recovery (#11), 500-Aktionen-Gesamtintegration (#12), Wertung,
+500-Aktionen-Gesamtintegration (#12), Wertung,
 Controller/Tastatur und Release bleiben außerhalb dieser Lieferung. Escape ist
 weiterhin Mausgestenabbruch. Kein Merge durch diese Übergabe.
 
 ## Technische Reproduktion
+
+M-04 bleibt beim Eigentümer offen: Am commitgebundenen Windows-ZIP F-03 bearbeiten,
+Undo ausführen, Werkzeug/Farbe und Raster-/Hinweisansicht verändern, über die
+Beenden-Schaltfläche oder Alt-F4 schließen, die EXE als neuen Prozess starten und
+Zellen, Redo-Zweig und Ansichten prüfen. Danach sichtbare Backup-Recovery und den
+bestätigten Einzelreset mit separaten Testdaten prüfen; die anderen Blätter müssen
+erhalten bleiben. Head/Artefakt, Windows-Version, Bildschirm/Clientfläche, Skalierung,
+Maus und Einzelergebnis dokumentieren. Der technische Roundtrip ersetzt diese
+reale Mausprobe nicht.
 
 Godot Standard 4.7.2-stable; vollständiger isolierter Prüfweg im Repository-Root:
 
@@ -142,7 +194,8 @@ python tools/p1_product.py --cache-dir $p1Cache --output-dir artifacts/p1-produc
 Unter Linux benötigt die echte OpenGL-Renderprüfung `xvfb-run` und Mesa. Der Harness
 nutzt nur die gepinnten offiziellen Archive, prüft deren vollständige Hashes, arbeitet
 in einer temporären Projektkopie mit isolierten APPDATA-/XDG-Pfaden und installiert
-nichts global. Tests, Negativtest Exit 23, Import, begrenzter Start, echte Renderbilder
+nichts global. Tests einschließlich Speicher-/Recoveryfällen und echtem
+Zwei-Prozess-Roundtrip, Negativtest Exit 23, Import, begrenzter Start, echte Renderbilder
 mit atomaren Anfangs-/Mittel-/Endausschnitten und beiden Hinweisachsen, Windows-Export
 und unter Windows exportierter Start. 300 Sekunden pro Prozess,
 1200 pro Download. Die Renderfälle decken gemeinsame Slots und unabhängige
@@ -156,4 +209,4 @@ godot --path prototypes/p1
 ```
 
 Prüferdokumente mit Motivspoiler: [F-01](F01_PROOF.md), [F-02/F-03](F02_PROOF.md).
-Technische Ergebnisse und Grenzen im [P1.2-Prüfbericht](../../docs/P1_2_VERIFICATION.md).
+Technische Ergebnisse und Grenzen im [P1.3-Prüfbericht](../../docs/P1_3_VERIFICATION.md).
