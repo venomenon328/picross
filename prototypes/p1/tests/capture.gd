@@ -94,6 +94,30 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			quit(5)
 			return
 		pixel_checks += 2
+	if name.begins_with("hint-marker-"):
+		var parts: PackedStringArray = name.split("-")
+		var axis: String = parts[2]
+		var index: int = int(parts[3])
+		var visual: Dictionary = app.board.visual_hint_units(axis, index)
+		var layout: Dictionary = app.board.visible_clue_layout(axis, index)
+		var area: Rect2 = app.board.row_clue_area() if axis == "row" else app.board.column_clue_area()
+		var line_center: Vector2 = app.board.view.cell_rect(Vector2i(0, index) if axis == "row" else Vector2i(index, 0)).get_center()
+		for side: String in ["prefix", "suffix"]:
+			var slot: int = 0 if side == "prefix" else int(layout.slot_count) - 1
+			var center: float = app.board.clue_slot_center(axis, area, layout, slot)
+			var marker_center: Vector2 = app.board.global_position + (Vector2(center, line_center.y) if axis == "row" else Vector2(line_center.x, center))
+			var region: Rect2i = Rect2i(Rect2(marker_center - Vector2(8, 9), Vector2(16, 18))).intersection(Rect2i(Vector2i.ZERO, picture.get_size()))
+			var accent_pixels: int = 0
+			for y: int in range(region.position.y, region.end.y):
+				for x: int in range(region.position.x, region.end.x):
+					var pixel: Color = picture.get_pixel(x, y)
+					if absf(pixel.r - app.board.ACCENT.r) + absf(pixel.g - app.board.ACCENT.g) + absf(pixel.b - app.board.ACCENT.b) < 0.03:
+						accent_pixels += 1
+			if (accent_pixels > 0) != bool(visual[side + "_hidden"]):
+				push_error("Rendered hint marker mismatch: %s %s (%d pixels)" % [name, side, accent_pixels])
+				quit(5)
+				return
+			pixel_checks += 1
 	if name.ends_with("reveal"):
 		var texture_image: Image = app.reveal_view.artwork.get_image()
 		if texture_image == null or texture_image.is_empty():
@@ -213,6 +237,43 @@ func region_difference(before: Image, after: Image, region: Rect2i) -> int:
 			if not before.get_pixel(x, y).is_equal_approx(after.get_pixel(x, y)):
 				differences += 1
 	return differences
+
+func capture_hint_markers(app: Main, row: int, column: int) -> void:
+	app.board.clear_clue_hover()
+	app.board.hover = Vector2i(-1, -1)
+	app.board.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
+	for axis: String in ["row", "column"]:
+		var index: int = row if axis == "row" else column
+		var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
+		var pitch: float = float(app.board.clue_layout(axis, index).slot_extent)
+		for anchor: int in [0, int(float(maximum) / 2.0), maximum]:
+			app.board.set_clue_step(axis, index, anchor)
+			app.board.pan_button = MOUSE_BUTTON_MIDDLE
+			app.board.pan_target = axis
+			app.board.pan_line_index = index
+			app.board.pan_origin_step = anchor
+			var direction: float = -1.0 if anchor == maximum else 1.0
+			var previous: Image
+			for fraction: float in [0.0, 0.49, 0.51, 1.49, 1.51]:
+				app.board.pan_drag_distance = direction * pitch * fraction
+				var name: String = "hint-marker-%s-%d-%d-%d" % [axis, index, anchor, roundi(fraction * 100)]
+				await snapshot(app, name)
+				if not FileAccess.file_exists(output.path_join(name + ".png")):
+					return
+				var current: Image = Image.load_from_file(output.path_join(name + ".png"))
+				if previous != null and roundi(fraction * 100) in [51, 151]:
+					var area: Rect2 = app.board.row_clue_area() if axis == "row" else app.board.column_clue_area()
+					var line: Vector2 = app.board.view.cell_rect(Vector2i(0, index) if axis == "row" else Vector2i(index, 0)).get_center()
+					var region: Rect2i = Rect2i(Rect2(app.board.global_position + (Vector2(area.position.x, line.y - 9) if axis == "row" else Vector2(line.x - 9, area.position.y)),
+						Vector2(area.size.x, 18) if axis == "row" else Vector2(18, area.size.y))).intersection(Rect2i(Vector2i.ZERO, surface.size))
+					if region_difference(previous, current, region) > 300:
+						push_error("Rendered hint numbers snapped before drop: " + name)
+						quit(5)
+						return
+					pixel_checks += 1
+				previous = current
+			app.board.cancel_gesture()
+	app.board.reset_clue_pan()
 
 func run() -> void:
 	output = OS.get_environment("P1_CAPTURE_DIR")
@@ -390,6 +451,7 @@ func run() -> void:
 		return
 	pixel_checks += 1
 	app.board.cancel_gesture()
+	await capture_hint_markers(app, f03_row, f03_column)
 	var gesture_start: Vector2i = app.board.view.hit(app.board.view.viewport.get_center())
 	app.board.pointer_press(app.board.view.cell_rect(gesture_start).get_center(), MOUSE_BUTTON_RIGHT)
 	app.board.pointer_move(app.board.view.cell_rect(gesture_start + Vector2i(7, 0)).get_center(), true)

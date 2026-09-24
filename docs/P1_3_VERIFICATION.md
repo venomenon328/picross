@@ -48,7 +48,12 @@ Teil von Schema 1.
 Die angefasste Hinweisfolge folgt während eines Drags kontinuierlich ihrer Achse.
 Nur beim Loslassen wird der nächste gültige gemeinsame Slot als semantische
 Leseposition bestätigt; Escape, Fokusverlust und reguläre Übergänge rollen den
-visuellen Versatz zurück. Der kleinere Füll-Inset vergrößert bestätigte und
+visuellen Versatz zurück. Die Überlaufmarker werden dabei aus den tatsächlich
+außerhalb des aktuellen visuellen Ausschnitts liegenden vollständigen Zahlen
+abgeleitet und bleiben auf der passenden Seite sichtbar. Anfangs-, Mittel- und
+Endlagen sowie 0,49/0,51 und 1,49/1,51 Slot sind für Zeilen und Spalten als
+Eingabe- und echte Renderfälle geprüft; der Subslotversatz bleibt ungespeichert.
+Der kleinere Füll-Inset vergrößert bestätigte und
 vorläufige Farbflächen, während der Zwischenraum an normalen und kräftigen
 Fünferlinien erhalten bleibt. Cursorzeile und -spalte erhalten gleich starke
 Hintergrundbänder, deren Kreuzung nicht doppelt gezeichnet wird. X- und Preview-X-
@@ -88,7 +93,8 @@ Die neuen Godot-Fälle injizieren Schreibfehler vor Album, Fixturewechsel,
 Beenden und WM-Close, prüfen Retry und den Wiederanlauf mit fehlendem Primary
 nach `after_rotation`. Eingabetests prüfen Subslot-Drag ohne Save, durchgehende
 Bewegung über Slotgrenzen hinweg, Drop-Snap,
-Abbruch, geometrischen Zähler, Hoverzustand und X-Segment-Clipping. Echte
+Abbruch, seitengerechte dynamische Überlaufmarker, geometrischen Zähler,
+Hoverzustand und X-Segment-Clipping. Echte
 OpenGL-SubViewport-Bilder und Pixelproben decken die größere Füllfläche samt
 Trennung über alle Farben und Arbeitszoomstufen, dezente Bänder, Hintdrag,
 Live-Zähler sowie bestätigte und vorläufige X an vier Rändern und einer Ecke
@@ -97,6 +103,11 @@ Arbeitsbaum erreichte 1089/0 Godot-Prüfungen, 277 echte Renderbilder und 530
 Pixelchecks. Ein gesonderter isolierter Zwei-Prozess-Lauf meldete
 `P1_ROUNDTRIP_WRITE_OK` und `P1_ROUNDTRIP_READ_OK`. Die commitgebundenen
 Abschlussnachweise stehen nach den aktuellen CI-Läufen im Draft-PR.
+Der lokale R3/B-03-Korrekturlauf auf verändertem Arbeitsbaum erreichte 1155/0
+Godot-Prüfungen, beide Roundtrip-Erfolgsmarker, den erwarteten Negativpfad mit
+Exit 23, 307 neue echte Renderbilder und 602 Pixelprüfungen sowie Windows-Export
+und exportierten Headless-/OpenGL-Start. Er ersetzt keinen Nachweis des neuen
+Commits; dessen CI- und Artefaktkennungen stehen im Draft-PR.
 Die CI führt zusätzlich Import, denselben Godot-Test, den erwarteten Negativpfad
 mit Exit 23, kontrollierten Start, echte Renderbilder/Pixelchecks, Windows-Export,
 Python-Dokumenttests und Preflight am finalen Head aus. Laufkennungen/Artefakthashes

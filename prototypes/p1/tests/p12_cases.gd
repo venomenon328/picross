@@ -297,6 +297,7 @@ static func ui_cases(t: SceneTree) -> void:
 	b.reset_clue_pan()
 	await semantic_clue_geometry_routes(t, app)
 	await clue_navigation_routes(t, app, longest_row, longest_column)
+	await hint_drag_marker_routes(t, app, longest_row, longest_column)
 	await followup_input_geometry(t, app)
 	b.fit_all()
 	var below_work_range: float = b.view.cell_size
@@ -396,6 +397,52 @@ static func followup_input_geometry(t: SceneTree, app: Main) -> void:
 	motion.position = b.row_clue_area().get_center()
 	b._gui_input(motion)
 	t.check(b.hover == Vector2i(-1, -1) and app.session.player.history == history, "N-05 leaving grid clears focus without history")
+
+static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: int) -> void:
+	var b: Board = app.board
+	b.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
+	for axis: String in ["row", "column"]:
+		var index: int = row if axis == "row" else column
+		var maximum: int = int(b.clue_layout(axis, index).max_offset)
+		var point: Vector2 = clue_point(b, axis, index)
+		for anchor: int in [0, int(float(maximum) / 2.0), maximum]:
+			b.set_clue_step(axis, index, anchor)
+			var confirmed: Dictionary = b.capture_view()
+			var pitch: float = float(b.clue_layout(axis, index).slot_extent)
+			var direction: float = -1.0 if anchor == maximum else 1.0
+			t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
+			for fraction: float in [0.0, 0.49, 0.51, 1.49, 1.51]:
+				var delta: float = direction * pitch * fraction
+				t.mouse_motion(point + (Vector2(delta, 2) if axis == "row" else Vector2(2, delta)), true, MOUSE_BUTTON_MIDDLE)
+				var layout: Dictionary = b.visible_clue_layout(axis, index)
+				var visual: Dictionary = b.visual_hint_units(axis, index)
+				var area: Rect2 = b.row_clue_area() if axis == "row" else b.column_clue_area()
+				var low: float = area.position.x if axis == "row" else area.position.y
+				var high: float = area.end.x if axis == "row" else area.end.y
+				var first: int = layout.entries.size()
+				var last: int = -1
+				for token_index: int in range(layout.entries.size()):
+					var token: Dictionary = layout.entries[token_index]
+					var slot: int = int(layout.token_slot) + token_index - int(layout.start)
+					var center: float = b.clue_slot_center(axis, area, layout, slot) + float(layout.visual_shift)
+					var fs: int = b.clue_font_size()
+					var before: float = ThemeDB.fallback_font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs)
+					var after: float = before if axis == "row" else float(fs) * 0.35
+					if center - before >= low and center + after <= high:
+						first = mini(first, token_index)
+						last = token_index
+				var prefix: bool = first > 0
+				var suffix: bool = last < layout.entries.size() - 1
+				var prefix_units: int = 0
+				var suffix_units: int = 0
+				for unit: Dictionary in visual.units:
+					prefix_units += int(unit.kind == "prefix")
+					suffix_units += int(unit.kind == "suffix")
+				t.check(visual.prefix_hidden == prefix and visual.suffix_hidden == suffix and prefix_units == int(prefix) and suffix_units == int(suffix), "R3/B-03 %s markers match actual hidden tokens at %d/%.2f" % [axis, anchor, fraction])
+				t.check(b.clue_step(axis, index) == anchor and b.capture_view() == confirmed and is_equal_approx(float(layout.visual_shift), delta), "R3/B-03 %s subslot marker updates do not confirm or persist %d/%.2f" % [axis, anchor, fraction])
+			b.cancel_gesture()
+			t.check(b.capture_view() == confirmed and b.pan_drag_distance == 0.0, "R3/B-03 %s cancel restores confirmed read at %d" % [axis, anchor])
+	b.reset_clue_pan()
 
 static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	var b: Control = app.board

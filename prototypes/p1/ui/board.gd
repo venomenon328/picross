@@ -578,22 +578,60 @@ func tooltip_entries(axis: String, index: int) -> Array:
 		result.append({"text": clue_token(clue), "color": clue_color(clue)})
 	return result
 
+## The snapped read stays unchanged during a drag. Derive both the moving
+## tokens and the edge markers from the same temporary screen positions.
+func visual_hint_units(axis: String, index: int) -> Dictionary:
+	var layout: Dictionary = visible_clue_layout(axis, index)
+	var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
+	var font: Font = ThemeDB.fallback_font
+	var fs: int = clue_font_size()
+	var units: Array[Dictionary] = []
+	if is_zero_approx(float(layout.visual_shift)):
+		for unit: Dictionary in layout.units:
+			units.append({"kind": unit.kind, "index": unit.get("index", -1),
+				"center": clue_slot_center(axis, area, layout, int(unit.slot))})
+		return {"units": units, "prefix_hidden": layout.prefix_hidden, "suffix_hidden": layout.suffix_hidden}
+	var low: float = area.position.x if axis == "row" else area.position.y
+	var high: float = area.end.x if axis == "row" else area.end.y
+	var candidates: Array[Dictionary] = []
+	var first_visible: int = layout.entries.size()
+	var last_visible: int = -1
+	for token_index: int in range(layout.entries.size()):
+		var token: Dictionary = layout.entries[token_index]
+		var slot: int = int(layout.token_slot) + token_index - int(layout.start)
+		var center: float = clue_slot_center(axis, area, layout, slot) + float(layout.visual_shift)
+		var before: float = font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs)
+		var after: float = before if axis == "row" else float(fs) * 0.35
+		if center - before >= low and center + after <= high:
+			candidates.append({"kind": "token", "index": token_index, "center": center, "before": before, "after": after})
+			first_visible = mini(first_visible, token_index)
+			last_visible = token_index
+	var prefix_hidden: bool = first_visible > 0
+	var suffix_hidden: bool = last_visible < layout.entries.size() - 1
+	var marker_before: float = font.get_string_size("…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs)
+	var marker_after: float = marker_before if axis == "row" else float(fs) * 0.35
+	var prefix_center: float = clue_slot_center(axis, area, layout, 0)
+	var suffix_center: float = clue_slot_center(axis, area, layout, int(layout.slot_count) - 1)
+	if prefix_hidden:
+		units.append({"kind": "prefix", "index": -1, "center": prefix_center})
+	for candidate: Dictionary in candidates:
+		var center: float = float(candidate.center)
+		if prefix_hidden and center - float(candidate.before) < prefix_center + marker_after and center + float(candidate.after) > prefix_center - marker_before:
+			continue
+		if suffix_hidden and center - float(candidate.before) < suffix_center + marker_after and center + float(candidate.after) > suffix_center - marker_before:
+			continue
+		units.append(candidate)
+	if suffix_hidden:
+		units.append({"kind": "suffix", "index": -1, "center": suffix_center})
+	return {"units": units, "prefix_hidden": prefix_hidden, "suffix_hidden": suffix_hidden}
+
 func _draw_row_hint(index: int, py: float, font: Font, fs: int) -> void:
 	var layout: Dictionary = visible_clue_layout("row", index)
 	var area: Rect2 = row_clue_area()
-	if pan_button != MOUSE_BUTTON_NONE and pan_target == "row" and pan_line_index == index and not is_zero_approx(float(layout.visual_shift)):
-		for token_index: int in range(layout.entries.size()):
-			var token: Dictionary = layout.entries[token_index]
-			var slot: int = int(layout.token_slot) + token_index - int(layout.start)
-			var center: float = clue_slot_center("row", area, layout, slot) + float(layout.visual_shift)
-			var width: float = font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-			if center - width / 2.0 >= area.position.x and center + width / 2.0 <= area.end.x:
-				draw_string(font, Vector2(center - width / 2.0, py + fs * 0.35), str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(token.color))
-		return
-	for unit: Dictionary in layout.units:
+	for unit: Dictionary in visual_hint_units("row", index).units:
 		var text: String = "…" if unit.kind != "token" else str(layout.entries[int(unit.index)].text)
 		var color: Color = ACCENT if unit.kind != "token" else Color(layout.entries[int(unit.index)].color)
-		var center: float = clue_slot_center("row", area, layout, int(unit.slot)) + float(layout.visual_shift)
+		var center: float = float(unit.center)
 		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if center - width / 2.0 >= area.position.x and center + width / 2.0 <= area.end.x:
 			draw_string(font, Vector2(center - width / 2.0, py + fs * 0.35), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, color)
@@ -601,19 +639,10 @@ func _draw_row_hint(index: int, py: float, font: Font, fs: int) -> void:
 func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 	var layout: Dictionary = visible_clue_layout("column", index)
 	var area: Rect2 = column_clue_area()
-	if pan_button != MOUSE_BUTTON_NONE and pan_target == "column" and pan_line_index == index and not is_zero_approx(float(layout.visual_shift)):
-		for token_index: int in range(layout.entries.size()):
-			var token: Dictionary = layout.entries[token_index]
-			var slot: int = int(layout.token_slot) + token_index - int(layout.start)
-			var center: float = clue_slot_center("column", area, layout, slot) + float(layout.visual_shift)
-			var width: float = font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-			if center - fs >= area.position.y and center + fs * 0.35 <= area.end.y:
-				draw_string(font, Vector2(px - width / 2.0, center + fs * 0.35), str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(token.color))
-		return
-	for unit: Dictionary in layout.units:
+	for unit: Dictionary in visual_hint_units("column", index).units:
 		var text: String = "…" if unit.kind != "token" else str(layout.entries[int(unit.index)].text)
 		var color: Color = ACCENT if unit.kind != "token" else Color(layout.entries[int(unit.index)].color)
-		var center: float = clue_slot_center("column", area, layout, int(unit.slot)) + float(layout.visual_shift)
+		var center: float = float(unit.center)
 		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if center - fs >= area.position.y and center + fs * 0.35 <= area.end.y:
 			draw_string(font, Vector2(px - width / 2.0, center + fs * 0.35), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, color)
