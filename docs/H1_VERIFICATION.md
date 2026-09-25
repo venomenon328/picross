@@ -54,15 +54,17 @@ TEMP-Profil prüfen. Das normale Benutzer-ZIP entpacken; für F-02/F-03 den vorh
 `owner-probe.ps1` mit `-Exe <Pfad zu picross-p1.exe> -Profile <neuer TEMP-Unterordner>`
 aufrufen. Derselbe Profilpfad erlaubt Fortsetzung; normale Saves bleiben getrennt.
 
-Für die künstlichen Grenzfälle im äußeren Artefakt aus PowerShell:
+Für die künstlichen Grenzfälle zusätzlich `h1-probe-windows-x86_64.zip` in den
+Unterordner `h1-probe` entpacken und im äußeren Artefakt aus PowerShell starten:
 
 ```powershell
-.\h1-owner-probe.ps1 -Exe .\picross-p1.exe
+.\h1-owner-probe.ps1 -Exe .\h1-probe\picross-h1-probe.exe
 ```
 
 Falls die EXE in einem Unterordner entpackt wurde, ihren tatsächlichen Pfad einsetzen.
-Der Helfer lädt `h1-owner-probe.gd` mit der gelieferten Engine in einem frischen
-TEMP-Profil. Es ist ausdrücklich kein Produkträtsel: vier künstliche Zeilen,
+Der Helfer startet die separate `picross-h1-probe.exe` mit eingebauten Prüfdaten in
+einem frischen TEMP-Profil. Sie nutzt dasselbe Board wie das Spiel. Es ist
+ausdrücklich kein Produkträtsel: vier künstliche Zeilen,
 leere Spaltenhinweise, keine Speicherung und keine Motiventhüllung. „Leeren“ setzt
 nur diese Probe zurück. Zeilen/Spalten werden ab oben/links mit 1 gezählt.
 
@@ -89,6 +91,11 @@ nur diese Probe zurück. Zeilen/Spalten werden ab oben/links mit 1 gezählt.
    aus. App regulär schließen und erneut starten: an. Wiederholt in F-03 arbeiten,
    Vorschau zurückziehen/abbrechen und Undo/Redo nutzen: keine falschen/verlorenen
    Aktionen oder wahrnehmbaren Hänger. Variante-A-Hinweisnavigation bleibt erhalten.
+
+   Reproduzierbarer Einstieg in F-02: Farbe D, Zeile 2, Spalten 2–39 füllen;
+   `38` muss ohne Rand-X markiert sein. In Spalte 38 mit D die Zeilen 2–38 und
+   mit A Zeile 39 füllen: beide Spaltenhinweise `37 1` werden markiert. Hier zählt
+   jeweils nur die eigene Linie, auch wenn andere Linien noch unvollständig sind.
 
 Protokoll: Head/Artefakt/ZIP-Hash ____; Windows ____; Bildschirm ____; Client/Rahmen
 ____; tatsächliche Windows-Skalierung ____; UI/Zoom ____; Maus ____; Ergebnis und

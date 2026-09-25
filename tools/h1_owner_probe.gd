@@ -1,5 +1,5 @@
-extends SceneTree
-## External, explicitly synthetic owner test. Run with the exported P1 executable.
+extends Control
+## Separately exported, explicitly synthetic owner test using the production Board.
 ## No SaveStore, no registered album fixture, no access to normal user saves.
 const Board = preload("res://ui/board.gd")
 const Session = preload("res://model/session.gd")
@@ -7,16 +7,17 @@ const Miniature = preload("res://ui/miniature.gd")
 var board: Board
 var mini: Miniature
 
-func _initialize() -> void:
+func _ready() -> void:
 	call_deferred("build")
 
 func build() -> void:
-	root.size = Vector2i(1280, 720)
-	root.title = "H1 · Isolierte Linienprobe · kein Produkträtsel"
+	get_window().size = Vector2i(1280, 720)
+	get_window().title = "H1 · Isolierte Linienprobe · kein Produkträtsel"
 	var page: VBoxContainer = VBoxContainer.new()
 	page.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_child(page)
+	add_child(page)
 	var note: Label = Label.new()
+	note.add_theme_color_override("font_color", Color("343f42"))
 	note.text = "H1 · Künstliche Linien, keine Speicherung. Zeile 1: 3 5; Zeile 2: 3 3; Zeile 3: 10; Zeile 4: vier Farben.\nZeile 1/2: Spalten 9–11 füllen, dann X in 8 und 12. Zeile 1: X in 13–20 erzeugen Widerspruch."
 	page.add_child(note)
 	var tools: HBoxContainer = HBoxContainer.new()
@@ -45,6 +46,8 @@ func build() -> void:
 	add_button(tools, "Redo", func() -> void: board.session.redo(); refresh())
 	add_button(tools, "Leeren", func() -> void: board.cancel_gesture(); board.session = Session.new(data); refresh())
 	var toggle: CheckBox = CheckBox.new()
+	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
+		toggle.add_theme_color_override(state, Color("343f42"))
 	toggle.text = "Erfüllte Hinweise markieren"
 	toggle.button_pressed = true
 	toggle.toggled.connect(func(value: bool) -> void: board.mark_completed_clues = value; refresh())
@@ -61,8 +64,10 @@ func build() -> void:
 	board.edited.connect(refresh)
 	refresh()
 	if OS.get_cmdline_user_args().has("--h1-probe-smoke"):
+		await get_tree().process_frame
+		await get_tree().process_frame
 		print("H1_OWNER_PROBE_OK")
-		quit()
+		get_tree().quit()
 
 func refresh() -> void:
 	# This deliberately inconsistent line worksheet has no completion/reveal mode.

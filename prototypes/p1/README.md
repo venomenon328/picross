@@ -20,8 +20,9 @@ dieser Linie. Das prüft nicht die hinterlegte Lösung, verändert keine Zellen 
 verrät kein bestimmtes falsches Feld. Rückzug, Abbruch, Undo/Redo und Recovery führen
 die Anzeige mit; Flags und Schalter werden nicht im Spielstand gespeichert.
 
-Im äußeren technischen Artefakt liegen `H1-PRUEFUNG.md`, `h1-owner-probe.ps1` und
-`h1-owner-probe.gd` für die getrennte künstliche Linienprobe. Sie gehören nicht zum
+Im äußeren technischen Artefakt liegen `H1-PRUEFUNG.md`, `h1-owner-probe.ps1`,
+`h1-owner-probe.gd` und `h1-probe-windows-x86_64.zip` für die separate künstliche
+Windows-Linienprobe. Sie gehören nicht zum
 normalen Benutzer-ZIP und greifen nicht auf gespeicherte Puzzles zu.
 
 P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) ist über

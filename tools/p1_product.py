@@ -162,7 +162,6 @@ def main() -> int:
                                  ("docs/H1_VERIFICATION.md", "H1-PRUEFUNG.md")):
                 shutil.copyfile(root / source, output / name)
                 h1_files[name] = toolchain.sha256_file(output / name)
-            phase("h1-owner-probe-start", base + ["--script", str(output / "h1-owner-probe.gd"), "--", "--h1-probe-smoke"], "H1_OWNER_PROBE_OK")
             renders = output / "renders"
             renders.mkdir(exist_ok=True)
             environment["P1_CAPTURE_DIR"] = str(renders)
@@ -179,7 +178,32 @@ def main() -> int:
             if host == "Windows":
                 phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
                 phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"), "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
-                phase("h1-windows-probe-start", [str(build / "picross-p1.console.exe"), "--headless", "--script", str(output / "h1-owner-probe.gd"), "--", "--h1-probe-smoke"], "H1_OWNER_PROBE_OK")
+            # Build the synthetic worksheet separately, after the production export.
+            # Exported players cannot override their main scene via editor --script.
+            shutil.copyfile(root / "tools/h1_owner_probe.gd", project / "h1_owner_probe.gd")
+            (project / "h1_owner_probe.tscn").write_text(
+                '[gd_scene load_steps=2 format=3]\n\n[ext_resource type="Script" path="res://h1_owner_probe.gd" id="1"]\n\n'
+                '[node name="H1Probe" type="Control"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\n'
+                'grow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource("1")\n', encoding="utf-8")
+            settings = project / "project.godot"
+            settings.write_text(settings.read_text(encoding="utf-8").replace(
+                'run/main_scene="res://main.tscn"', 'run/main_scene="res://h1_owner_probe.tscn"'), encoding="utf-8")
+            phase("h1-probe-import", base + ["--import"])
+            phase("h1-owner-probe-start", base + ["--", "--h1-probe-smoke"], "H1_OWNER_PROBE_OK")
+            h1_build = workspace / "h1-windows"
+            h1_build.mkdir()
+            phase("h1-windows-export", base + ["--export-debug", "P1 Windows x86_64", str(h1_build / "picross-h1-probe.exe")])
+            if host == "Windows":
+                phase("h1-windows-probe-start", [str(h1_build / "picross-h1-probe.console.exe"), "--headless", "--", "--h1-probe-smoke"], "H1_OWNER_PROBE_OK")
+            h1_exports = {p.name: toolchain.sha256_file(p) for p in sorted(h1_build.iterdir()) if p.is_file()}
+            if set(h1_exports) != {"picross-h1-probe.exe", "picross-h1-probe.console.exe"}:
+                raise toolchain.PreflightError("Unexpected/incomplete H1 probe export")
+            h1_archive = output / "h1-probe-windows-x86_64.zip"
+            with zipfile.ZipFile(h1_archive, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
+                for name in h1_exports:
+                    bundle.write(h1_build / name, name)
+                bundle.write(output / "H1-PRUEFUNG.md", "H1-PRUEFUNG.md")
+            h1_files[h1_archive.name] = toolchain.sha256_file(h1_archive)
             commit, dirty = toolchain.source_commit(root)
             checkout_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
             owner_probe = output / "owner-probe.ps1"
@@ -193,6 +217,7 @@ def main() -> int:
                             integration_files={p.name: toolchain.sha256_file(p) for p in sorted(integration_dir.iterdir()) if p.is_file()},
                             owner_probe_sha256=toolchain.sha256_file(owner_probe),
                             h1_probe_files=h1_files,
+                            h1_probe_export_files=h1_exports,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
