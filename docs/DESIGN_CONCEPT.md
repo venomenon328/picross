@@ -21,7 +21,7 @@ darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, rich
 alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
 eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
 auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.10. Die Nacharbeit in #11
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.12 mit H1. Die Nacharbeit in #11
 ergänzt D-23 bis D-27: flüssigen Hinweisdrag mit Einrasten beim Loslassen,
 geringfügig größere getrennte Füllungen, dezente Cursorbänder, geclippte X
 und den geometrischen Live-Strichzähler. Nachweise stehen im P1.3-Prüfbericht;

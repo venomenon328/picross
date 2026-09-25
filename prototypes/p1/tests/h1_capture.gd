@@ -127,6 +127,19 @@ static func run(c: SceneTree, app: Main) -> void:
 		app.set_ui_scale(1.0)
 		app.board.working_size()
 		await c.process_frame
+		if fixture == 2:
+			var partial: Array[int] = values.duplicate()
+			for i: int in range(5000, partial.size()):
+				partial[i] = -1
+			c.replace_render_cells(app, partial)
+			app.board.navigate_to(Vector2(0.5, 0.5))
+			for x: int in range(100):
+				c.set_fractional_step(app, "column", x, 1.0)
+			await pair(c, app, "h1-f3-partial-identical-numbers")
+			app.board.set_clue_hover("column", 50)
+			await pair(c, app, "h1-f3-partial-tooltip")
+			app.board.clear_pointer_hover()
+			c.replace_render_cells(app, values)
 		for axis: String in ["row", "column"]:
 			var lines: Array = app.session.definition.rows if axis == "row" else app.session.definition.columns
 			var index: int = c.longest_line(lines)
