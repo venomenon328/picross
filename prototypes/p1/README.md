@@ -2,9 +2,11 @@
 
 H1 aus [#19](https://github.com/venomenon328/picross/issues/19) ergänzt automatisch
 durchgestrichene, eindeutig erfüllte Hinweise. Die gezielte neue Eigentümerprobe ist
-offen; technische Nachweise und Schritte stehen im [H1-Prüfbericht](../../docs/H1_VERIFICATION.md)
-und im eigenen Draft-PR. Die in #12 bestätigte bisherige P1-Probe bleibt gültig;
-die älteren Gesamtprobe-Abschnitte unten sind keine erneute Abnahmeforderung.
+nicht als bestanden dokumentiert; technische Nachweise und Schritte stehen im
+[H1-Prüfbericht](../../docs/H1_VERIFICATION.md) und in PR #20. Nach Review R1 hat
+der Eigentümer die B-01-Nacharbeit und den anschließenden Merge ausdrücklich
+beauftragt; die Probe ist für diesen Merge daher kein verbleibendes Gate. Die in
+#12 bestätigte bisherige P1-Probe bleibt gültig.
 
 „Erfüllte Hinweise markieren“ startet an und gilt für alle Blätter derselben
 App-Sitzung. Album-/Blattwechsel und Reset erhalten die Auswahl; nach Neustart ist
@@ -25,10 +27,11 @@ Im äußeren technischen Artefakt liegen `H1-PRUEFUNG.md`, `h1-owner-probe.ps1`,
 Windows-Linienprobe. Sie gehören nicht zum
 normalen Benutzer-ZIP und greifen nicht auf gespeicherte Puzzles zu.
 
-P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) ist über
-PR #15 technisch in `main` integriert. [P1.4 / #12](https://github.com/venomenon328/picross/issues/12)
-prüft diesen Stand im neuen Draft-PR mit einer integrierten 500-Aktionen-Folge;
-[aktueller Ergebnisbericht](../../docs/P1_4_VERIFICATION.md). F-01 (20×20),
+P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) und
+[P1.4 / #12](https://github.com/venomenon328/picross/issues/12) sind über PR #15/#16
+in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md).
+#17/G1 wird vor dem H1-Merge aus dem dann aktuellen `main` übernommen und gemeinsam
+regressionsgeprüft. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
 sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
@@ -153,52 +156,19 @@ detaillierteren Illustration desselben Motivs. F-02 zeigt einen verfeinerten Leu
 mit Sonne, Laterne, Turmbändern, Fenstern, Tür und Wasserlinien im klaren F-01-Stil.
 F-03 bleibt auch danach als Test gekennzeichnet.
 
-## Erneute Eigentümerprobe · offen vor Gesamt-P1-Merge
+## Abnahmestand
 
-Die frühere #8-Probe ist mit Änderungsbedarf ausgewertet, keine pauschale Abnahme.
-Am neuen Artefakt mit echter Maus prüfen und Ergebnisse einzeln protokollieren:
+Die Gesamtprobe M-01 bis M-04 und M-06/M-07 des bisherigen P1-Stands wurde in
+[#12](https://github.com/venomenon328/picross/issues/12) am dort gebundenen Windows-
+Artefakt als bestanden dokumentiert. Diese Abnahme wird durch H1 nicht erneut geöffnet.
 
-1. M-01: F-01 setzen/neutralisieren, X↔Füllung direkt umwandeln, 5→12→9 und
-   Startüberquerung, typspezifische Rücknahmestriche, Radierer, Undo/Redo, Rand,
-   falsche Tastenfreigabe, Esc und Fokusverlust. Tatsächlich lösen ohne Auskreuzpflicht;
-   den Live-Zähler bei 5→12→9 unabhängig von Vorbelegung als 8→5 lesen und
-   abgeschnittene X an Viewporträndern prüfen. Detailbild und Raster als dasselbe
-   Motiv beurteilen.
-2. M-02: F-02, alle Farben A–D, direkte Umwandlung und farbige Hinweise ohne
-   Zusatzkennungen prüfen. Spalte 22 bei etwa 92/100 % prüfen: Beim Kürzen bleiben
-   vollständige restliche Zahlen sichtbar. Je zwei benachbarte Spalten und Zeilen
-   auf unterschiedliche Anfangs-/Mittel-/Endpositionen pannen; gemeinsames Raster,
-   flüssige Zwischenpositionen während des Ziehens, Slot-Einrasten erst beim Drop,
-   Abbruch ohne Positionsänderung, unveränderte Nachbarn, feste Linie und
-   ergänzenden Hover prüfen. F-02 Zeile 12 mit sechs Slots: nach +1,8 Slot Drag
-   bleibt die erste `4` auf dem nächstgelegenen Slot. Weiterziehen am äußeren
-   Anschlag darf nichts zurückwerfen; mit Gegenbewegung vollständig zum Rasterende
-   zurückkehren. Dasselbe an einer überlaufenden Spalte prüfen.
-   Drei angrenzende Füllungen an einer Fünfergrenze müssen einzeln erkennbar sein,
-   auch in Vorschau und bei den relevanten Arbeitszoomstufen. Die dezenten
-   Cursorbänder dürfen X, Farben und Rasterlinien nicht verdecken. Anschließend lösen und
-   Raster/Ergebnisbild als denselben verfeinerten Leuchtturm beurteilen.
-3. M-03: F-03 eine notierte Koordinate bearbeiten und bei 50/75/92/100 % echte
-   Hinweiszahlen ohne Hover lesen. Mehrere konkrete Zeilen/Spalten unabhängig pannen;
-   ihre Anfangs-/Endanker und mittleren Tokenbereiche anschließend bei 50↔100 %,
-   UI 100↔125 % und Resize vergleichen; die Lesepositionen müssen semantisch stabil
-   und eingerastet bleiben. Danach das
-   Raster stark zoomen/verschieben und per Miniatur/Koordinaten wiederfinden. Die
-   Linienzuordnung und einzelnen Lesepositionen dürfen sich durch reines Raster-Pan
-   nicht ändern. Keine verlorenen Aktionen, Richtungsumkehr beim Zoom oder Hänger.
-4. M-06: 1920×1080-Clientstart beziehungsweise begrenzten Fallback,
-   Vergrößern/Maximieren, 1080p/1440p soweit verfügbar,
-   UI 100/125 %, feste Zellgröße bei reinem Resize, erreichbare Werkzeuge/Hinweise.
-
-Protokollfelder: tatsächlicher Head/Artefakt, Windows-Version, Bildschirmauflösung,
-Fenster- und Clientfläche, tatsächliche Windows-Anzeigeskalierung, Maus, Szenario,
-Ergebnis/Abweichung. Nicht aus Screenshotabmessungen ableiten. Referenz aus früheren
-Angaben: Windows 11, 2560×1440, Ryzen 7 5800X, RTX 3070. Die reale Skalierung bleibt
-unbekannt. Technische Renderflächen und synthetische Events ersetzen diese Abnahme nicht.
-
-Die technische 500-Aktionen-Gesamtintegration wird in #12 geprüft.
-Wertung, Controller/Tastatur und Release bleiben außerhalb dieser Lieferung.
-Escape ist weiterhin Mausgestenabbruch. Kein Merge durch diese Übergabe.
+Für H1 steht eine zusätzliche konkrete reale Probe im
+[H1-Prüfbericht](../../docs/H1_VERIFICATION.md). Sie bleibt als nicht durchgeführt
+sichtbar und darf nicht als bestanden bezeichnet werden. Der Eigentümer hat nach
+Review R1 jedoch ausdrücklich die Nacharbeit und den anschließenden Merge von PR #20
+beauftragt; damit ist sie für diesen Merge kein verbleibendes Gate. Technische
+Prüfungen des finalen kombinierten Heads bleiben erforderlich. Kein Release folgt
+aus dieser Entscheidung.
 
 ## Technische Reproduktion
 
