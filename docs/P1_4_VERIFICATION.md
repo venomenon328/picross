@@ -166,7 +166,10 @@ Testprofils. Für die Recovery-/Fehlerprobe ausschließlich dieses Profil nutzen
 2. **M-02, F-02:** A–D, getrennte Nachbarzellen, farbige unnummerierte
    Hinweise und Spalte 22 bei 92/100 % prüfen. Zwei Nachbarzeilen und
    Nachbarspalten unabhängig ziehen; Zeile 12 mit sechs Slots und +1,8
-   Slot testen, am Außenanschlag weiter und ohne Richtungswechsel zurück.
+   Slot testen: vom Rasterende mit gleichgerichteter Zeigerrichtung bis zum
+   Außenanschlag ziehen und dort gleichgerichtet weiterziehen (keine weitere
+   Bewegung, kein Rücksprung); anschließend mit durchgehend entgegengesetzter
+   Zeigerrichtung bis zum Rasterende zurückziehen.
    Erwartet: keine Zusatzkennungen, nur Zielreihe bewegt sich, dieselbe `4`
    snappt geometrisch nächst, alle Zahlen erreichbar; X und Cursorbänder
    verdecken nichts. Leuchtturmabschluss beurteilen. Ergebnis: ____ / ____.
