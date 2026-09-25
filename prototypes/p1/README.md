@@ -1,7 +1,9 @@
-# P1.3 · Lokalen Arbeitsstand fortsetzen
+# P1 · Integrierte Windows-Spielprobe
 
-Zwischenstand zu [Issue #11](https://github.com/venomenon328/picross/issues/11)
-auf eigenem Draft-PR gegen `main`. F-01 (20×20),
+P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) ist über
+PR #15 technisch in `main` integriert. [P1.4 / #12](https://github.com/venomenon328/picross/issues/12)
+prüft diesen Stand im neuen Draft-PR mit einer integrierten 500-Aktionen-Folge;
+[aktueller Ergebnisbericht](../../docs/P1_4_VERIFICATION.md). F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
 sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
@@ -169,9 +171,9 @@ Ergebnis/Abweichung. Nicht aus Screenshotabmessungen ableiten. Referenz aus frü
 Angaben: Windows 11, 2560×1440, Ryzen 7 5800X, RTX 3070. Die reale Skalierung bleibt
 unbekannt. Technische Renderflächen und synthetische Events ersetzen diese Abnahme nicht.
 
-500-Aktionen-Gesamtintegration (#12), Wertung,
-Controller/Tastatur und Release bleiben außerhalb dieser Lieferung. Escape ist
-weiterhin Mausgestenabbruch. Kein Merge durch diese Übergabe.
+Die technische 500-Aktionen-Gesamtintegration wird in #12 geprüft.
+Wertung, Controller/Tastatur und Release bleiben außerhalb dieser Lieferung.
+Escape ist weiterhin Mausgestenabbruch. Kein Merge durch diese Übergabe.
 
 ## Technische Reproduktion
 
@@ -209,4 +211,6 @@ godot --path prototypes/p1
 ```
 
 Prüferdokumente mit Motivspoiler: [F-01](F01_PROOF.md), [F-02/F-03](F02_PROOF.md).
-Technische Ergebnisse und Grenzen im [P1.3-Prüfbericht](../../docs/P1_3_VERIFICATION.md).
+Technische Ergebnisse und Grenzen im [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md);
+der [P1.3-Prüfbericht](../../docs/P1_3_VERIFICATION.md) bleibt ein historischer
+Nachweis seines damaligen Heads.
