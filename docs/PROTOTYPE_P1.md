@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 25.09.2026 · Spezifikation 0.13 · P1.4 und G1 integriert; H1 aus #19 technisch geliefert
+Stand: 25.09.2026 · Spezifikation 0.13 · P1.4, G1 und H1 integriert
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -405,8 +405,8 @@ der G1-Regressionen bestehen.
 P1.1/P1.2, P1.3, P1.4 und G1/#17 sind über PR #14 bis #18 in `main` integriert.
 #12 dokumentiert die bestandene Gesamtprobe seines Stands; PR #18 dokumentiert die
 technisch geprüfte Achsenneuwahl. H1/#19 ergänzt auf dieser Basis die
-lösungsunabhängige Erfüllungsmarkierung und wird in PR #20 am kombinierten Stand
-geprüft. Die gezielten realen G1-/H1-Proben bleiben als nicht durchgeführtes
+lösungsunabhängige Erfüllungsmarkierung und ist über PR #20 am kombinierten Stand
+integriert. Die gezielten realen G1-/H1-Proben bleiben als nicht durchgeführtes
 Produktfeedback sichtbar, sind nach den ausdrücklichen Mergeentscheidungen vom
 25.09.2026 aber keine Mergegates für PR #18/#20.
 
