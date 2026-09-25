@@ -2,7 +2,7 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` und P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` in `main` integriert; [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md). H1/#19 wird in PR #20 als eigenständige Erweiterung geliefert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
+`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436`, P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` und G1/#17 über PR #18 als `6dd33232977127592c2b881f73094658853dbd87` in `main` integriert. H1/#19 wird über PR #20 auf diesem Stand integriert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
@@ -12,10 +12,12 @@ Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issu
 
 **Aktuelle Phase:** Der integrierte #12-Stand enthält den isolierten
 Zwei-Prozess-Nachweis, 500 Aktionen mit Neustart, Messung, Renderregressionen
-und ein Windows-Artefakt. M-01 bis M-04 und M-06/M-07 wurden in #12 am dortigen
-Head vom Eigentümer als bestanden bestätigt. H1/#19 ergänzt darauf die
-lösungsunabhängige Erfüllungsmarkierung; seine technischen Nachweise und der
-Abnahmestand sind an PR #20 gebunden. Frühere grüne Läufe belegen H1 nicht.
+und ein Windows-Artefakt; M-01 bis M-04 und M-06/M-07 wurden dort vom Eigentümer
+bestätigt. G1/#17 ist als `6dd33232977127592c2b881f73094658853dbd87` integriert.
+H1/#19 ergänzt darauf die lösungsunabhängige Erfüllungsmarkierung. Die gezielten
+realen G1-/H1-Proben wurden nicht durchgeführt und werden nicht als bestanden
+umgedeutet; der Eigentümer hat ihre jeweiligen Merges nach technischer Review-
+Nacharbeit und aktuellen Checks ausdrücklich freigegeben.
 
 Die Eigentümerentscheidung Variante A nach Review R7 priorisiert geometrisch
 nächsten Hinweis-Snap und monotone direkte Dragbedienung vor maximaler gleichzeitiger
@@ -55,15 +57,14 @@ Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, Sol
 
 ## Branches und Befugnisse
 
-H1 verwendet `feat/19-clue-completion`, Ziel `main`, mit eigenem PR #20. #12 hat
-die bisherige reale Eigentümerprobe bestätigt. #17/PR #18 wird separat integriert;
-vor dem H1-Merge ist dessen aktueller `main`-Stand einschließlich G1 zu übernehmen und
-durch die H1-Regressionen mitzuprüfen. Nach Review R1 hat der Eigentümer die B-01-
-Nacharbeit und den anschließenden Merge von PR #20 ausdrücklich beauftragt. Die
-gezielte reale H1-Probe wird nicht als bestanden behauptet, ist nach dieser Entscheidung
-aber kein Mergegate. Kein Release, Force-Push oder Branchlöschen ist damit beauftragt.
-
-Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter Freigabe. Keine automatische Branchlöschung, kein Force-Push und keine direkten Änderungen am Zielbranch ohne passende Befugnis. PR #14 bis #16 sind integriert und werden nicht fortgesetzt.
+Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter
+Freigabe. PR #14 bis #18 sind integriert. H1 wird in PR #20 auf
+`feat/19-clue-completion` geliefert; der Branch enthält vor dem Merge den aktuellen
+`main`-Stand einschließlich G1 und prüft beide Änderungen gemeinsam. Nach Review R1
+hat der Eigentümer die B-01-Nacharbeit und den anschließenden Merge ausdrücklich
+beauftragt. Die gezielte reale H1-Probe wird nicht als bestanden behauptet, ist nach
+dieser Entscheidung aber kein Mergegate. Kein Release, Force-Push oder Branchlöschen
+ist damit beauftragt.
 
 Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchschutz ist nicht als wirksam verifiziert; die vereinbarten Prüfungen gelten unabhängig davon. Keine Schutzregeln umgehen.
 
@@ -112,12 +113,14 @@ erfolgreich sein; alte Läufe ersetzen diesen Nachweis nicht.
 
 ## Abnahme und Übergaben
 
-Für H1 müssen `product`, `docs` und `preflight` am finalen Head/zugehörigen Test-Merge
-tatsächlich erfolgreich sein. Der isolierte Produktweg ergänzt unabhängigen
-Linienoracle, echte Vorher-/Nachher-Renderbilder und Cache-/Zustandsregressionen;
-500-Aktionen-Folge, Neustart, Save-/Recoveryfälle und Windows-Export bleiben Pflicht.
-Die gezielte H1-Eigentümerprobe gemäß #19 bleibt ein separates Gate **vor Merge**.
-Commit-, Artefakt-, Hash- und Runbindung sowie Selbstreview stehen im eigenen PR.
+Für H1 müssen `product`, `docs` und `preflight` am finalen kombinierten
+Head/zugehörigen Test-Merge tatsächlich erfolgreich sein. Der isolierte Produktweg
+ergänzt unabhängigen Linienoracle, echte Vorher-/Nachher-Renderbilder und Cache-/
+Zustandsregressionen; 500-Aktionen-Folge, Neustart, Save-/Recoveryfälle, G1-
+Regressionen und Windows-Export bleiben Pflicht. Die gezielte H1-Eigentümerprobe
+gemäß #19 ist nicht durchgeführt; aufgrund der ausdrücklichen Mergeentscheidung ist
+sie für PR #20 kein verbleibendes Gate. Commit-, Artefakt-, Hash- und Runbindung sowie
+Review-Nacharbeit stehen im PR.
 
 Vollständigen Diff gegen den Auftrag prüfen: keine versteckten Produktentscheidungen, Secrets, ungeklärten Assets, unerreichbaren Pflichtquellen oder ungefragten Änderungen der gemeinsamen Regeln. Technischen Nachweis, Selbstreview, Nutzerprobe, Merge- und Releasefähigkeit unterscheiden. Ein getrennter Selbstreview ist keine unabhängige Zweitprüfung.
 
