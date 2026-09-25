@@ -3,7 +3,7 @@
 H1 aus [#19](https://github.com/venomenon328/picross/issues/19) ergänzt automatisch
 durchgestrichene, eindeutig erfüllte Hinweise. Die gezielte neue Eigentümerprobe ist
 nicht als bestanden dokumentiert; technische Nachweise und Schritte stehen im
-[H1-Prüfbericht](../../docs/H1_VERIFICATION.md) und in PR #20. Nach Review R1 hat
+[H1-Prüfbericht](../../docs/H1_VERIFICATION.md) und in PR #20; H1 ist dort integriert. Nach Review R1 hat
 der Eigentümer die B-01-Nacharbeit und den anschließenden Merge ausdrücklich
 beauftragt; die Probe ist für diesen Merge daher kein verbleibendes Gate. Die in
 #12 bestätigte bisherige P1-Probe bleibt gültig.
@@ -32,7 +32,7 @@ P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) und
 PR #15/#16 in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md).
 G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ist über
 PR #18 integriert und ergänzt die erneute Achsenwahl nach tatsächlicher Rückkehr
-zur Startzelle. H1/#19 wird in PR #20 auf diesem kombinierten Stand geprüft. F-01 (20×20),
+zur Startzelle. H1/#19 ist über PR #20 auf diesem kombinierten Stand integriert. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
 sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
