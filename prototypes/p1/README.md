@@ -1,9 +1,10 @@
 # P1 · Integrierte Windows-Spielprobe
 
-P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) ist über
-PR #15 technisch in `main` integriert. [P1.4 / #12](https://github.com/venomenon328/picross/issues/12)
-prüft diesen Stand im neuen Draft-PR mit einer integrierten 500-Aktionen-Folge;
-[aktueller Ergebnisbericht](../../docs/P1_4_VERIFICATION.md). F-01 (20×20),
+P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) und
+[P1.4 / #12](https://github.com/venomenon328/picross/issues/12) sind über
+PR #15/#16 in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md).
+G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ergänzt die
+erneute Achsenwahl nach tatsächlicher Rückkehr zur Startzelle. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
 sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
@@ -53,13 +54,17 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   ein rechter Setzstrich unbekannte/gefüllte Zellen in X. Ein auf Füllung gestarteter
   linker Rücknahmestrich entfernt nur Füllungen, ein auf X gestarteter rechter nur X.
   Eine andersfarbige Füllung wird links neutralisiert, nicht direkt umgefärbt.
-- Modus und Farbe stehen für die gesamte Geste fest. Achse nach erster eindeutiger
-  Bewegung fest; bei diagonalem Gleichstand zunächst nur die Startzelle.
+- Modus und Farbe stehen für die gesamte Geste fest. Die erste eindeutige Bewegung
+  bindet die Achse; bei diagonalem Gleichstand bleibt zunächst nur die Startzelle.
 - Zurückziehen verkürzt die Vorschau. 5→12→9 übernimmt nur 5–9 als eine Aktion.
-  Überqueren des Starts ändert die Achse nicht. Kein mehrfaches Umschalten.
+  Trifft der Zeiger die Startzelle tatsächlich wieder, zeigt die Vorschau nur diese
+  Zelle und die nächste eindeutige Bewegung darf eine neue Achse wählen, auch mehrfach
+  ohne Loslassen. Ohne diesen Treffer bleibt die Achse beim Überqueren gebunden;
+  eine bloße Projektion oder ein Eingabesprung reicht nicht.
 - Ein kleiner Live-Zähler zeigt während linker/rechter Zellgesten die gesamte
   geometrische Länge inklusive beider Endfelder: 5→12 zeigt 8, zurück auf 9 zeigt 5.
-  Vorbelegte oder übersprungene Zellen zählen mit; bei Abbruch/Drop verschwindet er.
+  Vorbelegte oder übersprungene Zellen zählen mit; am Ursprung zeigt er 1, danach
+  die Länge des neuen geraden Abschnitts. Bei Abbruch/Drop verschwindet er.
 - Außerhalb des sichtbaren Rasters bleibt der letzte gültige Endpunkt stehen.
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
@@ -128,42 +133,29 @@ detaillierteren Illustration desselben Motivs. F-02 zeigt einen verfeinerten Leu
 mit Sonne, Laterne, Turmbändern, Fenstern, Tür und Wasserlinien im klaren F-01-Stil.
 F-03 bleibt auch danach als Test gekennzeichnet.
 
-## Erneute Eigentümerprobe · offen vor Gesamt-P1-Merge
+## Gezielte G1-Eigentümerprobe · offen
 
-Die frühere #8-Probe ist mit Änderungsbedarf ausgewertet, keine pauschale Abnahme.
-Am neuen Artefakt mit echter Maus prüfen und Ergebnisse einzeln protokollieren:
+Die M-01-bis-M-04- und M-06/M-07-Proben des bisherigen P1-Stands sind in
+[#12](https://github.com/venomenon328/picross/issues/12) als bestanden dokumentiert.
+G1 erfordert am neuen commitgebundenen Windows-ZIP eine gezielte echte Mausprobe:
 
-1. M-01: F-01 setzen/neutralisieren, X↔Füllung direkt umwandeln, 5→12→9 und
-   Startüberquerung, typspezifische Rücknahmestriche, Radierer, Undo/Redo, Rand,
-   falsche Tastenfreigabe, Esc und Fokusverlust. Tatsächlich lösen ohne Auskreuzpflicht;
-   den Live-Zähler bei 5→12→9 unabhängig von Vorbelegung als 8→5 lesen und
-   abgeschnittene X an Viewporträndern prüfen. Detailbild und Raster als dasselbe
-   Motiv beurteilen.
-2. M-02: F-02, alle Farben A–D, direkte Umwandlung und farbige Hinweise ohne
-   Zusatzkennungen prüfen. Spalte 22 bei etwa 92/100 % prüfen: Beim Kürzen bleiben
-   vollständige restliche Zahlen sichtbar. Je zwei benachbarte Spalten und Zeilen
-   auf unterschiedliche Anfangs-/Mittel-/Endpositionen pannen; gemeinsames Raster,
-   flüssige Zwischenpositionen während des Ziehens, Slot-Einrasten erst beim Drop,
-   Abbruch ohne Positionsänderung, unveränderte Nachbarn, feste Linie und
-   ergänzenden Hover prüfen. F-02 Zeile 12 mit sechs Slots: nach +1,8 Slot Drag
-   bleibt die erste `4` auf dem nächstgelegenen Slot. Weiterziehen am äußeren
-   Anschlag darf nichts zurückwerfen; mit Gegenbewegung vollständig zum Rasterende
-   zurückkehren. Dasselbe an einer überlaufenden Spalte prüfen.
-   Drei angrenzende Füllungen an einer Fünfergrenze müssen einzeln erkennbar sein,
-   auch in Vorschau und bei den relevanten Arbeitszoomstufen. Die dezenten
-   Cursorbänder dürfen X, Farben und Rasterlinien nicht verdecken. Anschließend lösen und
-   Raster/Ergebnisbild als denselben verfeinerten Leuchtturm beurteilen.
-3. M-03: F-03 eine notierte Koordinate bearbeiten und bei 50/75/92/100 % echte
-   Hinweiszahlen ohne Hover lesen. Mehrere konkrete Zeilen/Spalten unabhängig pannen;
-   ihre Anfangs-/Endanker und mittleren Tokenbereiche anschließend bei 50↔100 %,
-   UI 100↔125 % und Resize vergleichen; die Lesepositionen müssen semantisch stabil
-   und eingerastet bleiben. Danach das
-   Raster stark zoomen/verschieben und per Miniatur/Koordinaten wiederfinden. Die
-   Linienzuordnung und einzelnen Lesepositionen dürfen sich durch reines Raster-Pan
-   nicht ändern. Keine verlorenen Aktionen, Richtungsumkehr beim Zoom oder Hänger.
-4. M-06: 1920×1080-Clientstart beziehungsweise begrenzten Fallback,
-   Vergrößern/Maximieren, 1080p/1440p soweit verfügbar,
-   UI 100/125 %, feste Zellgröße bei reinem Resize, erreichbare Werkzeuge/Hinweise.
+1. F-01: Einen linken Strich nach rechts, links, unten und oben ziehen. Jeweils bei
+   gedrückter Taste exakt zur Startzelle zurückkehren und senkrecht weiterziehen;
+   dann mehrfach zwischen Achsen wechseln. Am Ursprung muss nur diese Zelle mit
+   Zähler 1 sichtbar sein. Danach bleibt genau der letzte gerade Abschnitt in
+   Raster und Miniatur; ein Undo/Redo stellt ihn als einen Schritt wieder her.
+2. F-01: Rechts/X, linker Rücknahmestrich auf einer Füllung, rechter
+   Rücknahmestrich auf X und linker Radierer ebenso umorientieren. Vorbelegte
+   Zellen und Farbe prüfen. Escape und Fokusverlust nach dem Wechsel müssen die
+   Vorschau ohne neue Aktion verwerfen; eine falsche Tastenfreigabe darf nicht
+   abschließen.
+3. F-02 mit Farbe A–D und F-03 bei 50 % Arbeitszoom: echte Startzelle treffen und
+   die neue Achse prüfen. Zeiger ohne Startzelltreffer über den Ursprung springen
+   beziehungsweise in eine andere Zeile/Spalte neben ihn bewegen: Die alte Achse
+   muss gebunden bleiben. Über UI/Viewportgrenze bleibt der letzte gültige
+   Endpunkt stehen. Hinweis-Pan bleibt auf seine gestartete Linie beschränkt.
+
+Je Schritt Ergebnis/Abweichung notieren: ____ / ____ / ____.
 
 Protokollfelder: tatsächlicher Head/Artefakt, Windows-Version, Bildschirmauflösung,
 Fenster- und Clientfläche, tatsächliche Windows-Anzeigeskalierung, Maus, Szenario,
@@ -171,20 +163,17 @@ Ergebnis/Abweichung. Nicht aus Screenshotabmessungen ableiten. Referenz aus frü
 Angaben: Windows 11, 2560×1440, Ryzen 7 5800X, RTX 3070. Die reale Skalierung bleibt
 unbekannt. Technische Renderflächen und synthetische Events ersetzen diese Abnahme nicht.
 
-Die technische 500-Aktionen-Gesamtintegration wird in #12 geprüft.
+Die technische 500-Aktionen-Gesamtintegration wurde in #12 geprüft und läuft im
+Produktprüfweg für den neuen Head erneut.
 Wertung, Controller/Tastatur und Release bleiben außerhalb dieser Lieferung.
 Escape ist weiterhin Mausgestenabbruch. Kein Merge durch diese Übergabe.
 
 ## Technische Reproduktion
 
-M-04 bleibt beim Eigentümer offen: Am commitgebundenen Windows-ZIP F-03 bearbeiten,
-Undo ausführen, Werkzeug/Farbe und Raster-/Hinweisansicht verändern, über die
-Beenden-Schaltfläche oder Alt-F4 schließen, die EXE als neuen Prozess starten und
-Zellen, Redo-Zweig und Ansichten prüfen. Danach sichtbare Backup-Recovery und den
-bestätigten Einzelreset mit separaten Testdaten prüfen; die anderen Blätter müssen
-erhalten bleiben. Head/Artefakt, Windows-Version, Bildschirm/Clientfläche, Skalierung,
-Maus und Einzelergebnis dokumentieren. Der technische Roundtrip ersetzt diese
-reale Mausprobe nicht.
+Der technische Produktweg prüft F-01/F-02, Godot-Regressionen, den isolierten
+Zwei-Prozess-Roundtrip, die 500-Aktionen-Folge samt Neustart, Renderbilder und
+Windows-Export. Der Bericht bindet diese Ergebnisse an Head und Test-Merge;
+die neue reale G1-Mausprobe bleibt davon getrennt.
 
 Godot Standard 4.7.2-stable; vollständiger isolierter Prüfweg im Repository-Root:
 
