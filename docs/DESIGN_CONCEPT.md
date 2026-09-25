@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 24.09.2026 · Arbeitsfassung 0.7 · frühe Konzeption mit supersedierendem P1-Mausfeedback
+Stand: 25.09.2026 · Arbeitsfassung 0.9 · frühe Konzeption mit P1-Mausfeedback, G1 und H1
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -21,7 +21,7 @@ darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, rich
 alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
 eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
 auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), Revision 0.10. Die Nacharbeit in #11
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.13 mit G1 und H1. Die Nacharbeit in #11
 ergänzt D-23 bis D-27: flüssigen Hinweisdrag mit Einrasten beim Loslassen,
 geringfügig größere getrennte Füllungen, dezente Cursorbänder, geclippte X
 und den geometrischen Live-Strichzähler. Nachweise stehen im P1.3-Prüfbericht;
@@ -140,7 +140,16 @@ Rätselfarben und UI-Zustandsfarben sollen unterscheidbar sein. Die Hinweiszahl 
 trägt die Rätselfarbe; für P1 entfallen ergänzende A–D-Kennungen und ihr Schalter
 vorerst vollständig. Das ist keine endgültige Streichung farbunabhängiger Erkennbarkeit
 im Produkt und kein vorgezogener Neuentwurf der Mauspalette. Unabhängige UI-/
-Rasterskalierung unterstützt die Lesbarkeit. Automatisches Hinweisabblenden darf keine verdeckte Lösungsprüfung sein.
+Rasterskalierung unterstützt die Lesbarkeit. H1 aus [#19](https://github.com/venomenon328/picross/issues/19)
+ergänzt dezentes Durchstreichen eindeutig erfüllter Hinweiszahlen, bei unveränderter
+Rätselfarbe, Zahlengröße und Slotposition. Es hängt am Originalindex und gilt ebenso
+im vollständigen Tooltip und während des Hinweisdrags. `…` und Leerlinien-`–`
+werden nicht durchgestrichen. Nur die sichtbaren Zellen einschließlich elastischer
+Vorschau und die eigenen Hinweise der vollständigen Linie bestimmen den Status;
+kein verdeckter Lösungsvergleich. Widerspruch oder weggefallene Eindeutigkeit nimmt
+die Markierung zurück. „Erfüllte Hinweise markieren“ startet aktiv, gilt sitzungsweit
+auch nach Blatt-/Albumwechsel und Reset und wird nicht gespeichert. Nach App-Neustart
+ist es wieder aktiv; kein vorgezogenes dauerhaftes Produkt-Einstellungsformat.
 Einzelheiten des gespeicherten Zustands werden im zuständigen Speicherpaket konkretisiert.
 
 ### 5.2 Undo und Hypothesen

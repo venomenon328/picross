@@ -2,6 +2,7 @@ extends Control
 const Session = preload("res://model/session.gd")
 const GridView = preload("res://ui/grid_view.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
+const ClueCompletion = preload("res://model/clue_completion.gd")
 signal edited
 signal committed
 signal view_changed
@@ -28,6 +29,11 @@ var hover: Vector2i = Vector2i(-1, -1)
 var clue_hover_axis: String = ""
 var clue_hover_index: int = -1
 var row_slot_extent_cache: Dictionary = {}
+var mark_completed_clues: bool = true
+var completion_searches: int = 0
+var completion_cache: Dictionary = {}
+var completion_session: Session
+var completion_cells: Array[int] = []
 const INK: Color = Color("343f42")
 const PAPER: Color = Color("faf6ec")
 const ACCENT: Color = Color("be7446")
@@ -415,6 +421,7 @@ func _draw() -> void:
 	var grid: Rect2 = view.visible_bounds()
 	draw_rect(grid, PAPER)
 	var values: Array[int] = session.visible_cells()
+	sync_clue_completion(values)
 	var first: Vector2i = Vector2i(((grid.position - view.origin) / view.cell_size).floor()).max(Vector2i.ZERO)
 	var last: Vector2i = Vector2i(((grid.end - view.origin) / view.cell_size).ceil()).min(view.dimensions)
 	var active: Vector2i = session.gesture.endpoint if session.gesture.active else hover
@@ -486,6 +493,47 @@ func _draw_clues(first: Vector2i, last: Vector2i) -> void:
 		if x == hover.x:
 			draw_rect(Rect2(px - view.cell_size / 2, 4, view.cell_size, near_grid.y - 8), Color("d8ddcc"))
 		_draw_column_hint(x, px, font, fs)
+
+## One entry per complete row/column, never a growing cache of past previews.
+## Definitions are immutable within a Session. Full snapshots also detect old
+## preview arms, in-place restore and undo without changing gameplay signals.
+func sync_clue_completion(values: Array[int]) -> void:
+	if completion_session != session:
+		completion_session = session
+		completion_cache.clear()
+		completion_cells.clear()
+	if values == completion_cells:
+		return
+	completion_cells = values.duplicate()
+	for axis: String in ["row", "column"]:
+		var lines: Array = session.definition.rows if axis == "row" else session.definition.columns
+		for index: int in range(lines.size()):
+			var cells: Array[int] = []
+			var length: int = session.player.width if axis == "row" else session.player.height
+			for p: int in range(length):
+				cells.append(values[index * session.player.width + p] if axis == "row" else values[p * session.player.width + index])
+			var key: String = "%s/%d" % [axis, index]
+			if completion_cache.has(key) and completion_cache[key].cells == cells:
+				continue
+			completion_cache[key] = {"cells": cells, "flags": ClueCompletion.analyze(cells, lines[index])}
+			completion_searches += 1
+
+func completion_flags(axis: String, index: int) -> Array[bool]:
+	sync_clue_completion(session.visible_cells())
+	return completion_cache["%s/%d" % [axis, index]].flags.duplicate()
+
+func clue_is_marked(axis: String, index: int, token: int) -> bool:
+	if not mark_completed_clues or token < 0:
+		return false
+	var flags: Array[bool] = completion_cache["%s/%d" % [axis, index]].flags
+	return token < flags.size() and flags[token]
+
+func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, marked: bool) -> void:
+	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, color)
+	if marked:
+		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var start: Vector2 = baseline - Vector2(0, float(fs) * 0.32)
+		draw_line(start, start + Vector2(width, 0), Color(color, 0.72), maxf(1.0, float(fs) / 14.0), true)
 
 func clue_font_size() -> int:
 	return mini(roundi(14 * ui_scale), maxi(8, floori(view.cell_size - 4.0)))
@@ -584,12 +632,13 @@ func clue_slot_center(axis: String, area: Rect2, layout: Dictionary, slot: int) 
 	return clue_slot_origin(axis, area, layout) + (float(slot) + 0.5) * float(layout.slot_extent)
 
 func tooltip_entries(axis: String, index: int) -> Array:
+	sync_clue_completion(session.visible_cells())
 	var clues: Array = session.definition.rows[index] if axis == "row" else session.definition.columns[index]
 	var result: Array = []
 	if clues.is_empty():
 		result.append({"text": "–", "color": INK})
-	for clue: Dictionary in clues:
-		result.append({"text": clue_token(clue), "color": clue_color(clue)})
+	for i: int in range(clues.size()):
+		result.append({"text": clue_token(clues[i]), "color": clue_color(clues[i]), "marked": clue_is_marked(axis, index, i)})
 	return result
 
 ## The snapped read stays unchanged during a drag. Derive both the moving
@@ -679,7 +728,7 @@ func _draw_row_hint(index: int, py: float, font: Font, fs: int) -> void:
 		var center: float = float(unit.center)
 		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if center - width / 2.0 >= area.position.x and center + width / 2.0 <= area.end.x:
-			draw_string(font, Vector2(center - width / 2.0, py + fs * 0.35), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, color)
+			draw_clue_number(font, Vector2(center - width / 2.0, py + fs * 0.35), text, fs, color, unit.kind == "token" and clue_is_marked("row", index, int(unit.index)))
 
 func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 	var layout: Dictionary = visible_clue_layout("column", index)
@@ -690,7 +739,7 @@ func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 		var center: float = float(unit.center)
 		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if center - fs >= area.position.y and center + fs * 0.35 <= area.end.y:
-			draw_string(font, Vector2(px - width / 2.0, center + fs * 0.35), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, color)
+			draw_clue_number(font, Vector2(px - width / 2.0, center + fs * 0.35), text, fs, color, unit.kind == "token" and clue_is_marked("column", index, int(unit.index)))
 
 func _draw_clue_tooltip() -> void:
 	if clue_hover_axis.is_empty() or clue_hover_index < 0:
@@ -715,7 +764,7 @@ func _draw_clue_tooltip() -> void:
 	draw_rect(box, ACCENT, false, 2)
 	draw_string(font, box.position + Vector2(14, 26 * ui_scale), "Vollständiger Hinweis", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 	for i: int in range(entries.size()):
-		draw_string(font, box.position + positions[i], entries[i].text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, entries[i].color)
+		draw_clue_number(font, box.position + positions[i], entries[i].text, fs, entries[i].color, entries[i].get("marked", false))
 
 static func _paper_style() -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()

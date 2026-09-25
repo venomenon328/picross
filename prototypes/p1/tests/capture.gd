@@ -684,6 +684,7 @@ func run() -> void:
 	app.board.fit_all()
 	await snapshot(app, "f03-overview")
 	await capture_owner_drop(app)
+	await preload("res://tests/h1_capture.gd").run(self, app)
 	for index: int in [0, 1, 2]:
 		app.select_puzzle(index)
 		var values: Array[int] = app.session.player.cells.duplicate()
