@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 25.09.2026 · Arbeitsfassung 0.8 · frühe Konzeption mit P1-Mausfeedback und H1
+Stand: 25.09.2026 · Arbeitsfassung 0.9 · frühe Konzeption mit P1-Mausfeedback, G1 und H1
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -21,7 +21,7 @@ darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, rich
 alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
 eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
 auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.12 mit H1. Die Nacharbeit in #11
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.13 mit G1 und H1. Die Nacharbeit in #11
 ergänzt D-23 bis D-27: flüssigen Hinweisdrag mit Einrasten beim Loslassen,
 geringfügig größere getrennte Füllungen, dezente Cursorbänder, geclippte X
 und den geometrischen Live-Strichzähler. Nachweise stehen im P1.3-Prüfbericht;
@@ -101,7 +101,7 @@ Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte An
 
 ### 5.1 Präzise Eingaben und Orientierung
 
-Die bestätigte Achsenbindung eines Mausstrichs ab der ersten eindeutigen Bewegung in eine weitere Zelle bleibt verbindlich. Produktweit bleiben alternative Eingaben vorgesehen. Für P1 gilt jedoch D-06: Maus, kein Tastatur-/Controller-Gate.
+Die bestätigte Achsenbindung eines Mausstrichs ab der ersten eindeutigen Bewegung in eine weitere Zelle bleibt verbindlich. Für P1 wird sie erst bei tatsächlicher Rückkehr zur Startzelle innerhalb derselben Geste wieder freigegeben; danach kann eine neue Richtung gewählt werden. Eine bloße Projektion oder ein Eingabesprung über den Start löst dies nicht aus. Produktweit bleiben alternative Eingaben vorgesehen. Für P1 gilt jedoch D-06: Maus, kein Tastatur-/Controller-Gate.
 
 **Präzisierung aus den Mausproben:** Das normale Werkzeug neutralisiert vorhandene
 Füllungen mit links und Leermarkierungen mit rechts. Zusätzlich wandelt ein linker
@@ -114,7 +114,7 @@ Zurückziehen.
 
 Für P1 zeigt ein Live-Zähler während linker und rechter Zellgesten die gesamte
 geometrische aktuelle Strichlänge inklusive Start/Ende, auch bei Vorbelegungen und
-Eingabesprüngen; er folgt dem elastischen Zurückziehen. Ein Linealmodus und
+Eingabesprüngen; er folgt dem elastischen Zurückziehen und zeigt bei tatsächlicher Rückkehr zum Ursprung 1 sowie danach die Länge des neuen geraden Abschnitts. Ein Linealmodus und
 weitergehende Eingabealternativen bleiben Vorschläge.
 Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
 Arbeitskontext, aktive Linien und eine Miniatur mit Ausschnittrahmen wichtig. Lange
