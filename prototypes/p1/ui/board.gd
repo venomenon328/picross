@@ -27,6 +27,7 @@ var column_clue_reads: Array[Dictionary] = []
 var hover: Vector2i = Vector2i(-1, -1)
 var clue_hover_axis: String = ""
 var clue_hover_index: int = -1
+var row_slot_extent_cache: Dictionary = {}
 const INK: Color = Color("343f42")
 const PAPER: Color = Color("faf6ec")
 const ACCENT: Color = Color("be7446")
@@ -558,13 +559,22 @@ func clue_entries(clues: Array) -> Array:
 func shared_clue_slot_extent(axis: String, font: Font, fs: int) -> float:
 	if axis == "column":
 		return maxf(16.0 * ui_scale, float(fs) + 6.0 * ui_scale)
+	# Every visible row requests the same slot width. Measuring all tokens for
+	# each row on every redraw made F-03 take hundreds of milliseconds per frame.
+	# Definitions are immutable within a Session; scale and font size form the
+	# remaining geometry inputs.
+	var key: String = "%d/%d/%s" % [session.get_instance_id(), fs, str(ui_scale)]
+	if row_slot_extent_cache.has(key):
+		return float(row_slot_extent_cache[key])
 	var width: float = font.get_string_size("…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	for line: Array in session.definition.rows:
 		if line.is_empty():
 			width = maxf(width, font.get_string_size("–", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
 		for clue: Dictionary in line:
 			width = maxf(width, font.get_string_size(clue_token(clue), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
-	return maxf(24.0 * ui_scale, width + 8.0 * ui_scale)
+	var extent: float = maxf(24.0 * ui_scale, width + 8.0 * ui_scale)
+	row_slot_extent_cache[key] = extent
+	return extent
 
 func clue_slot_origin(axis: String, area: Rect2, layout: Dictionary) -> float:
 	var finish: float = area.end.x if axis == "row" else area.end.y

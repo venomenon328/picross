@@ -14,6 +14,7 @@ import zipfile
 from pathlib import Path
 
 import p1_preflight as toolchain
+import p14_integration
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -113,6 +114,42 @@ def main() -> int:
             phase("roundtrip-write", base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--write"], "P1_ROUNDTRIP_WRITE_OK")
             phase("roundtrip-read", base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--read"], "P1_ROUNDTRIP_READ_OK")
             del environment["P1_TEST_SAVE_ROOT"]
+            integration_dir = output / "integration"
+            integration_dir.mkdir(exist_ok=True)
+            integration_plan = integration_dir / "plan.json"
+            integration_trace = integration_dir / "trace.jsonl"
+            integration_expected = integration_dir / "expected-restart.json"
+            plan = p14_integration.write_plan(integration_plan)
+            environment.update(P1_TEST_SAVE_ROOT=str(workspace / "integration-saves"),
+                               P1_INTEGRATION_PLAN=str(integration_plan),
+                               P1_INTEGRATION_TRACE=str(integration_trace),
+                               P1_INTEGRATION_EXPECTED=str(integration_expected))
+            for start in range(0, 500, 100):
+                environment["P1_INTEGRATION_START"] = str(start)
+                environment["P1_INTEGRATION_COUNT"] = "100"
+                phase(f"integration-{start + 1:03d}-{start + 100:03d}",
+                      base + ["--script", "res://tests/p14_integration.gd", "--", "--write"],
+                      "P1_INTEGRATION_WRITE_OK")
+            oracle = p14_integration.validate_trace(plan, integration_trace)
+            final = json.loads((integration_dir / "trace.jsonl.final.json").read_text(encoding="utf-8"))
+            for key in ("cells", "history", "cursor", "undo_used"):
+                if final[key] != oracle[key]:
+                    raise toolchain.PreflightError(f"Integration final {key} differs from independent oracle")
+            if oracle["cursor"] >= len(oracle["history"]):
+                raise toolchain.PreflightError("Integration ended without required redo branch")
+            # The oracle supplies gameplay truth; the trace supplies the exact view to
+            # compare across the real process boundary. View assertions run separately.
+            integration_expected.write_text(json.dumps({**oracle, "view": final["view"],
+                "row_reads": final["row_reads"], "column_reads": final["column_reads"]},
+                ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+            phase("integration-restart", base + ["--script", "res://tests/p14_integration.gd", "--", "--read"],
+                  "P1_INTEGRATION_READ_OK")
+            p14_integration.verify_navigation(plan, integration_trace)
+            p14_integration.verify_negative_controls(plan, integration_trace)
+            integration_summary = p14_integration.summarize(plan, integration_trace, final, host)
+            (integration_dir / "summary.json").write_text(json.dumps(integration_summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            for key in ("P1_TEST_SAVE_ROOT", "P1_INTEGRATION_PLAN", "P1_INTEGRATION_TRACE", "P1_INTEGRATION_EXPECTED", "P1_INTEGRATION_START", "P1_INTEGRATION_COUNT"):
+                del environment[key]
             negative = run_phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"], environment, args.process_timeout_seconds, logs)
             toolchain.require_expected_failure(negative, "P1_EXPECTED_FAILURE")
             if negative["exit_code"] != 23 or "SCRIPT ERROR:" in negative["output"]:
@@ -137,15 +174,20 @@ def main() -> int:
                 phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"), "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             commit, dirty = toolchain.source_commit(root)
             checkout_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
+            owner_probe = output / "owner-probe.ps1"
+            shutil.copyfile(root / "tools/p14_owner_probe.ps1", owner_probe)
             manifest = dict(schema=1, source_commit=commit, source_tree_dirty=dirty, tested_checkout_commit=checkout_commit,
                             host=host, engine_version=toolchain.EXPECTED_VERSION, project_name=title, assets=hashes, proof_steps=proof_steps, color_proof_steps=color_proof_steps,
                             artwork_files={name: toolchain.sha256_file(root / "prototypes/p1/art" / name) for name in ("f01.svg", "f02.svg")},
                             fixture_files={name: toolchain.sha256_file(root / "prototypes/p1/data" / name) for name in ("f01.json", "f01-proof.json", "f02.json", "f02-proof.json")},
                             render_files={p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()},
+                            integration=integration_summary,
+                            integration_files={p.name: toolchain.sha256_file(p) for p in sorted(integration_dir.iterdir()) if p.is_file()},
+                            owner_probe_sha256=toolchain.sha256_file(owner_probe),
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="OPEN: owner M-04 real Windows close/restart/resume; M-01/M-02/M-03/M-06 and actual Windows scaling before overall P1 merge; F-01 artwork direction already confirmed")
+                            manual_acceptance="OPEN: owner M-01/M-02/M-03/M-04/M-06/M-07 and real Windows scaling/responsiveness; F-01 artwork direction already confirmed")
             archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"))
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)

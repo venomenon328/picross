@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 24.09.2026 · Spezifikation 0.10 · P1.3-Variante A nach R7; Eigentümerabnahme offen
+Stand: 25.09.2026 · Spezifikation 0.11 · P1.3 integriert; P1.4-Prüfung nach #12; Eigentümerabnahme offen
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -8,14 +8,14 @@ Paketquelle ist [Issue #5](https://github.com/venomenon328/picross/issues/5). Hi
 
 Maßgebliche Grundlagen sind [Produktdefinition](PRODUCT_DEFINITION.md), [Gestaltungskonzept](DESIGN_CONCEPT.md), [Projektprofil](PROJECT_PROFILE.md) und [lokaler Workflow](dev-rules/WORKFLOW.md); Einstieg bleibt [AGENTS.md](../AGENTS.md). Vor Ausführung die aktuellen Quellen und Issue-Kommentare prüfen.
 
-Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) und [P1.2 / Issue #9](https://github.com/venomenon328/picross/issues/9) wurden über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert. Die Eigentümerprobe und ihre noch offenen Einzelergebnisse bleiben davon getrennt. [P1.3 / Issue #11](https://github.com/venomenon328/picross/issues/11) wird auf `feat/11-p1-persistence` gegen diesen Stand geliefert.
+Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) und [P1.2 / Issue #9](https://github.com/venomenon328/picross/issues/9) wurden über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert. [P1.3 / Issue #11](https://github.com/venomenon328/picross/issues/11) wurde über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` integriert. Die neue technische Gesamtprüfung folgt [P1.4 / #12](https://github.com/venomenon328/picross/issues/12) und ihrem [Ergebnisbericht](P1_4_VERIFICATION.md). Die Eigentümerprobe und ihre noch offenen Einzelergebnisse bleiben davon getrennt.
 
 **Ist/Soll:** D-07 bis D-22 sind mit #9 umgesetzt; technische Nachweise und verbleibende
 Abnahmen stehen im [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und PR #14. Die früheren
 P1.1-Prüfungen bleiben historische Nachweise ihres damaligen Vertrags, keine
 Eigentümerabnahme des neuen Verhaltens.
 
-**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; die integrierte 500-Aktionen-Prüfung folgt getrennt mit #12. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
+**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; #12 prüft die integrierte 500-Aktionen-Folge und den Windows-Stand. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md), historischer [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
 
 Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen weder die endgültige Produktengine noch die gesamte Betriebssystemmatrix, Wertung oder Themenwahl fest. Frühere P1-Vorschläge in Issue-Revision 0.1 und Gestaltungskonzept Abschnitt 7 sind innerhalb dieses Scopes abgelöst; globale Produktfragen bleiben offen.
 
@@ -342,7 +342,7 @@ Protokoll: tatsächliche Commit-/Artefaktkennung, Betriebssystem, verwendete Ein
 
 ### 8.3 Gate-Zeitpunkte und bisherige Mausprobe
 
-Vor Gesamt-P1-Merge A-01 bis A-07, Dokumentprüfung und M-01 bis M-04, M-06/M-07 nachweisen. #8/#9 sind über PR #14 integriert; #11 liegt auf einem neuen Draft-PR gegen `main`, #12 bleibt getrennt. Kein Zwischenstand erteilt eine vorgezogene Merge- oder Eigentümerfreigabe für #11.
+Vor Gesamt-P1-Merge A-01 bis A-07, Dokumentprüfung und M-01 bis M-04, M-06/M-07 nachweisen. #8/#9 sind über PR #14 und #11 über PR #15 technisch integriert. #12 prüft den Gesamtstand auf einem eigenen Draft-PR. Die realen Eigentümer- und Gesamtgates bleiben offen; frühere Zwischenmergefreigaben gelten nicht für #12.
 
 K-06: Der Nutzer hat die angebotene F-01-Spielprobe verwendet und anschließend zwei Screenshots sowie vier konkrete Rückmeldungen geliefert; der Abschlussbildschirm ist sichtbar. Bezug der Unterhaltung ist Artefakt `10719712143` / Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`. Eine separate Versionsanzeige des Nutzerlaufs, tatsächliche Windows-Skalierung und vollständige Einzelbestätigung aller K-06-Szenarien liegen nicht vor.
 
@@ -350,8 +350,9 @@ Die Probe ist **durchgeführt mit Änderungsbedarf**, nicht pauschal bestanden. 
 
 ## 9. Aktueller Lieferstand
 
-#9 ist als P1.2-Zwischenstand in `main` integriert. #11 ergänzt P1.3 auf eigenem
-Branch/Draft-PR; tatsächliche technische Nachweise stehen im P1.3-Prüfbericht und PR.
+#9 ist als P1.2-Zwischenstand und #11 als P1.3-Zwischenstand in `main` integriert.
+Die neue P1.4-Integration und ihre technischen Ergebnisse stehen im
+[P1.4-Ergebnisbericht](P1_4_VERIFICATION.md) und im zugehörigen Draft-PR.
 M-04 bleibt bis zur realen Eigentümerprobe am commitgebundenen Windows-Artefakt offen.
-#12, endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses
+Die endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses
 Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte Risikostränge.

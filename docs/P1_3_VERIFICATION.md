@@ -1,5 +1,10 @@
 # P1.3 · Persistenz und Recovery: technischer Prüfbericht
 
+Historischer Nachweis des unten genannten #11-Stands. P1.3 wurde anschließend
+über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` integriert.
+Aktueller integrierter Prüf- und Abnahmestand:
+[P1.4-Ergebnisbericht](P1_4_VERIFICATION.md).
+
 Stand: 24.09.2026 · [Issue #11](https://github.com/venomenon328/picross/issues/11) ·
 Branch `feat/11-p1-persistence`, Zielbasis
 `main@acc9c51161a18cca17813a8e44c07b2cf074cd44`.
