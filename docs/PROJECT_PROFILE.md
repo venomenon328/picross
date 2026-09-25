@@ -2,7 +2,7 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436`, P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` und G1/#17 über PR #18 als `6dd33232977127592c2b881f73094658853dbd87` in `main` integriert. H1/#19 wird über PR #20 auf diesem Stand integriert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
+`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436`, P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` und G1/#17 über PR #18 als `6dd33232977127592c2b881f73094658853dbd87` in `main` integriert. H1/#19 ist über PR #20 auf diesem Stand integriert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
@@ -58,9 +58,7 @@ Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, Sol
 ## Branches und Befugnisse
 
 Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter
-Freigabe. PR #14 bis #18 sind integriert. H1 wird in PR #20 auf
-`feat/19-clue-completion` geliefert; der Branch enthält vor dem Merge den aktuellen
-`main`-Stand einschließlich G1 und prüft beide Änderungen gemeinsam. Nach Review R1
+Freigabe. PR #14 bis #20 sind integriert. H1/#19 liegt damit auf dem aktuellen `main`-Stand einschließlich G1; die gemeinsame Regression ist im PR-#20-Nachweis gebunden. Nach Review R1
 hat der Eigentümer die B-01-Nacharbeit und den anschließenden Merge ausdrücklich
 beauftragt. Die gezielte reale H1-Probe wird nicht als bestanden behauptet, ist nach
 dieser Entscheidung aber kein Mergegate. Kein Release, Force-Push oder Branchlöschen
