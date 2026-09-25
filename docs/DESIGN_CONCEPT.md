@@ -101,7 +101,7 @@ Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte An
 
 ### 5.1 Präzise Eingaben und Orientierung
 
-Die bestätigte Achsenbindung eines Mausstrichs ab der ersten eindeutigen Bewegung in eine weitere Zelle bleibt verbindlich. Produktweit bleiben alternative Eingaben vorgesehen. Für P1 gilt jedoch D-06: Maus, kein Tastatur-/Controller-Gate.
+Die bestätigte Achsenbindung eines Mausstrichs ab der ersten eindeutigen Bewegung in eine weitere Zelle bleibt verbindlich. Für P1 wird sie erst bei tatsächlicher Rückkehr zur Startzelle innerhalb derselben Geste wieder freigegeben; danach kann eine neue Richtung gewählt werden. Eine bloße Projektion oder ein Eingabesprung über den Start löst dies nicht aus. Produktweit bleiben alternative Eingaben vorgesehen. Für P1 gilt jedoch D-06: Maus, kein Tastatur-/Controller-Gate.
 
 **Präzisierung aus den Mausproben:** Das normale Werkzeug neutralisiert vorhandene
 Füllungen mit links und Leermarkierungen mit rechts. Zusätzlich wandelt ein linker
@@ -114,7 +114,7 @@ Zurückziehen.
 
 Für P1 zeigt ein Live-Zähler während linker und rechter Zellgesten die gesamte
 geometrische aktuelle Strichlänge inklusive Start/Ende, auch bei Vorbelegungen und
-Eingabesprüngen; er folgt dem elastischen Zurückziehen. Ein Linealmodus und
+Eingabesprüngen; er folgt dem elastischen Zurückziehen und zeigt bei tatsächlicher Rückkehr zum Ursprung 1 sowie danach die Länge des neuen geraden Abschnitts. Ein Linealmodus und
 weitergehende Eingabealternativen bleiben Vorschläge.
 Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
 Arbeitskontext, aktive Linien und eine Miniatur mit Ausschnittrahmen wichtig. Lange

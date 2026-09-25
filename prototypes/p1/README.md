@@ -53,13 +53,17 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   ein rechter Setzstrich unbekannte/gefüllte Zellen in X. Ein auf Füllung gestarteter
   linker Rücknahmestrich entfernt nur Füllungen, ein auf X gestarteter rechter nur X.
   Eine andersfarbige Füllung wird links neutralisiert, nicht direkt umgefärbt.
-- Modus und Farbe stehen für die gesamte Geste fest. Achse nach erster eindeutiger
-  Bewegung fest; bei diagonalem Gleichstand zunächst nur die Startzelle.
+- Modus und Farbe stehen für die gesamte Geste fest. Die erste eindeutige Bewegung
+  bindet die Achse; bei diagonalem Gleichstand bleibt zunächst nur die Startzelle.
 - Zurückziehen verkürzt die Vorschau. 5→12→9 übernimmt nur 5–9 als eine Aktion.
-  Überqueren des Starts ändert die Achse nicht. Kein mehrfaches Umschalten.
+  Trifft der Zeiger die Startzelle tatsächlich wieder, zeigt die Vorschau nur diese
+  Zelle und die nächste eindeutige Bewegung darf eine neue Achse wählen, auch mehrfach
+  ohne Loslassen. Ohne diesen Treffer bleibt die Achse beim Überqueren gebunden;
+  eine bloße Projektion oder ein Eingabesprung reicht nicht.
 - Ein kleiner Live-Zähler zeigt während linker/rechter Zellgesten die gesamte
   geometrische Länge inklusive beider Endfelder: 5→12 zeigt 8, zurück auf 9 zeigt 5.
-  Vorbelegte oder übersprungene Zellen zählen mit; bei Abbruch/Drop verschwindet er.
+  Vorbelegte oder übersprungene Zellen zählen mit; am Ursprung zeigt er 1, danach
+  die Länge des neuen geraden Abschnitts. Bei Abbruch/Drop verschwindet er.
 - Außerhalb des sichtbaren Rasters bleibt der letzte gültige Endpunkt stehen.
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
