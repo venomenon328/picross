@@ -24,14 +24,15 @@ die Anzeige mit; Flags und Schalter werden nicht im Spielstand gespeichert.
 
 Im äußeren technischen Artefakt liegen `H1-PRUEFUNG.md`, `h1-owner-probe.ps1`,
 `h1-owner-probe.gd` und `h1-probe-windows-x86_64.zip` für die separate künstliche
-Windows-Linienprobe. Sie gehören nicht zum
-normalen Benutzer-ZIP und greifen nicht auf gespeicherte Puzzles zu.
+Windows-Linienprobe. Sie gehören nicht zum normalen Benutzer-ZIP und greifen nicht
+auf gespeicherte Puzzles zu.
 
 P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) und
-[P1.4 / #12](https://github.com/venomenon328/picross/issues/12) sind über PR #15/#16
-in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md).
-#17/G1 wird vor dem H1-Merge aus dem dann aktuellen `main` übernommen und gemeinsam
-regressionsgeprüft. F-01 (20×20),
+[P1.4 / #12](https://github.com/venomenon328/picross/issues/12) sind über
+PR #15/#16 in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md).
+G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ist über
+PR #18 integriert und ergänzt die erneute Achsenwahl nach tatsächlicher Rückkehr
+zur Startzelle. H1/#19 wird in PR #20 auf diesem kombinierten Stand geprüft. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
 sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
@@ -81,13 +82,17 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   ein rechter Setzstrich unbekannte/gefüllte Zellen in X. Ein auf Füllung gestarteter
   linker Rücknahmestrich entfernt nur Füllungen, ein auf X gestarteter rechter nur X.
   Eine andersfarbige Füllung wird links neutralisiert, nicht direkt umgefärbt.
-- Modus und Farbe stehen für die gesamte Geste fest. Achse nach erster eindeutiger
-  Bewegung fest; bei diagonalem Gleichstand zunächst nur die Startzelle.
+- Modus und Farbe stehen für die gesamte Geste fest. Die erste eindeutige Bewegung
+  bindet die Achse; bei diagonalem Gleichstand bleibt zunächst nur die Startzelle.
 - Zurückziehen verkürzt die Vorschau. 5→12→9 übernimmt nur 5–9 als eine Aktion.
-  Überqueren des Starts ändert die Achse nicht. Kein mehrfaches Umschalten.
+  Trifft der Zeiger die Startzelle tatsächlich wieder, zeigt die Vorschau nur diese
+  Zelle und die nächste eindeutige Bewegung darf eine neue Achse wählen, auch mehrfach
+  ohne Loslassen. Ohne diesen Treffer bleibt die Achse beim Überqueren gebunden;
+  eine bloße Projektion oder ein Eingabesprung reicht nicht.
 - Ein kleiner Live-Zähler zeigt während linker/rechter Zellgesten die gesamte
   geometrische Länge inklusive beider Endfelder: 5→12 zeigt 8, zurück auf 9 zeigt 5.
-  Vorbelegte oder übersprungene Zellen zählen mit; bei Abbruch/Drop verschwindet er.
+  Vorbelegte oder übersprungene Zellen zählen mit; am Ursprung zeigt er 1, danach
+  die Länge des neuen geraden Abschnitts. Bei Abbruch/Drop verschwindet er.
 - Außerhalb des sichtbaren Rasters bleibt der letzte gültige Endpunkt stehen.
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
@@ -156,30 +161,49 @@ detaillierteren Illustration desselben Motivs. F-02 zeigt einen verfeinerten Leu
 mit Sonne, Laterne, Turmbändern, Fenstern, Tür und Wasserlinien im klaren F-01-Stil.
 F-03 bleibt auch danach als Test gekennzeichnet.
 
-## Abnahmestand
+## Optionale G1-Nachprobe · nicht durchgeführt
 
-Die Gesamtprobe M-01 bis M-04 und M-06/M-07 des bisherigen P1-Stands wurde in
-[#12](https://github.com/venomenon328/picross/issues/12) am dort gebundenen Windows-
-Artefakt als bestanden dokumentiert. Diese Abnahme wird durch H1 nicht erneut geöffnet.
+Die M-01-bis-M-04- und M-06/M-07-Proben des bisherigen P1-Stands sind in
+[#12](https://github.com/venomenon328/picross/issues/12) als bestanden dokumentiert.
+Die folgende G1-Nachprobe wurde nicht durchgeführt und wird nicht als bestanden
+behauptet; nach ausdrücklicher Eigentümerentscheidung war sie für PR #18 kein
+Mergegate. Sie bleibt als optionaler realer Eindruck dokumentiert:
 
-Für H1 steht eine zusätzliche konkrete reale Probe im
-[H1-Prüfbericht](../../docs/H1_VERIFICATION.md). Sie bleibt als nicht durchgeführt
-sichtbar und darf nicht als bestanden bezeichnet werden. Der Eigentümer hat nach
-Review R1 jedoch ausdrücklich die Nacharbeit und den anschließenden Merge von PR #20
-beauftragt; damit ist sie für diesen Merge kein verbleibendes Gate. Technische
-Prüfungen des finalen kombinierten Heads bleiben erforderlich. Kein Release folgt
-aus dieser Entscheidung.
+1. F-01: Einen linken Strich nach rechts, links, unten und oben ziehen. Jeweils bei
+   gedrückter Taste exakt zur Startzelle zurückkehren und senkrecht weiterziehen;
+   dann mehrfach zwischen Achsen wechseln. Am Ursprung muss nur diese Zelle mit
+   Zähler 1 sichtbar sein. Danach bleibt genau der letzte gerade Abschnitt in
+   Raster und Miniatur; ein Undo/Redo stellt ihn als einen Schritt wieder her.
+2. F-01: Rechts/X, linker Rücknahmestrich auf einer Füllung, rechter
+   Rücknahmestrich auf X und linker Radierer ebenso umorientieren. Vorbelegte
+   Zellen und Farbe prüfen. Escape und Fokusverlust nach dem Wechsel müssen die
+   Vorschau ohne neue Aktion verwerfen; eine falsche Tastenfreigabe darf nicht
+   abschließen.
+3. F-02 mit Farbe A–D und F-03 bei 50 % Arbeitszoom: echte Startzelle treffen und
+   die neue Achse prüfen. Zeiger ohne Startzelltreffer über den Ursprung springen
+   beziehungsweise in eine andere Zeile/Spalte neben ihn bewegen: Die alte Achse
+   muss gebunden bleiben. Über UI/Viewportgrenze bleibt der letzte gültige
+   Endpunkt stehen. Hinweis-Pan bleibt auf seine gestartete Linie beschränkt.
+
+Je Schritt Ergebnis/Abweichung notieren: ____ / ____ / ____.
+
+Protokollfelder: tatsächlicher Head/Artefakt, Windows-Version, Bildschirmauflösung,
+Fenster- und Clientfläche, tatsächliche Windows-Anzeigeskalierung, Maus, Szenario,
+Ergebnis/Abweichung. Nicht aus Screenshotabmessungen ableiten. Referenz aus früheren
+Angaben: Windows 11, 2560×1440, Ryzen 7 5800X, RTX 3070. Die reale Skalierung bleibt
+unbekannt. Technische Renderflächen und synthetische Events ersetzen diese Abnahme nicht.
+
+Die technische 500-Aktionen-Gesamtintegration wurde in #12 geprüft und läuft im
+Produktprüfweg für den neuen Head erneut.
+Wertung, Controller/Tastatur und Release bleiben außerhalb dieser Lieferung.
+Escape ist weiterhin Mausgestenabbruch. Kein Merge durch diese Übergabe.
 
 ## Technische Reproduktion
 
-M-04 bleibt beim Eigentümer offen: Am commitgebundenen Windows-ZIP F-03 bearbeiten,
-Undo ausführen, Werkzeug/Farbe und Raster-/Hinweisansicht verändern, über die
-Beenden-Schaltfläche oder Alt-F4 schließen, die EXE als neuen Prozess starten und
-Zellen, Redo-Zweig und Ansichten prüfen. Danach sichtbare Backup-Recovery und den
-bestätigten Einzelreset mit separaten Testdaten prüfen; die anderen Blätter müssen
-erhalten bleiben. Head/Artefakt, Windows-Version, Bildschirm/Clientfläche, Skalierung,
-Maus und Einzelergebnis dokumentieren. Der technische Roundtrip ersetzt diese
-reale Mausprobe nicht.
+Der technische Produktweg prüft F-01/F-02, Godot-Regressionen, den isolierten
+Zwei-Prozess-Roundtrip, die 500-Aktionen-Folge samt Neustart, Renderbilder und
+Windows-Export. Der Bericht bindet diese Ergebnisse an Head und Test-Merge;
+die neue reale G1-Mausprobe bleibt davon getrennt.
 
 Godot Standard 4.7.2-stable; vollständiger isolierter Prüfweg im Repository-Root:
 
