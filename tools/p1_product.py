@@ -15,6 +15,7 @@ from pathlib import Path
 
 import p1_preflight as toolchain
 import p14_integration
+import z1_design
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -172,6 +173,7 @@ def main() -> int:
                 render_command = ["xvfb-run", "-a"] + render_command
                 environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
             phase("render-capture", render_command, "P1_CAPTURE_OK")
+            z1_manifest = z1_design.verify(root, project, engine, environment, host, output, phase)
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
@@ -204,6 +206,7 @@ def main() -> int:
                     bundle.write(h1_build / name, name)
                 bundle.write(output / "H1-PRUEFUNG.md", "H1-PRUEFUNG.md")
             h1_files[h1_archive.name] = toolchain.sha256_file(h1_archive)
+            z1_design.export(root, project, workspace, engine, host, output, z1_manifest, phase)
             commit, dirty = toolchain.source_commit(root)
             checkout_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
             owner_probe = output / "owner-probe.ps1"
@@ -218,6 +221,8 @@ def main() -> int:
                             owner_probe_sha256=toolchain.sha256_file(owner_probe),
                             h1_probe_files=h1_files,
                             h1_probe_export_files=h1_exports,
+                            z1_report_sha256=toolchain.sha256_file(output / "z1/z1-report.json"),
+                            z1_archive_sha256=toolchain.sha256_file(output / "z1/picross-z1-windows-x86_64.zip"),
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],

@@ -29,6 +29,15 @@ Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Rege
 
 ## Beschlossene Richtung und offene Entscheidungen
 
+Z1 / [#22](https://github.com/venomenon328/picross/issues/22) untersucht auf
+`feat/22-zieldesign-entwuerfe` zwei **nicht gewählte** Entwürfe als getrennte,
+ausschließlich im Speicher arbeitende Godot-Ansicht. Quelle und Abnahmegrenzen:
+[Z1-Entscheidungsunterlage](design/Z1_DESIGN_REVIEW.md). Der normale P1-Start bleibt
+unverändert. Der Produktprüfweg ergänzt echte Z1-Szenen-/Renderchecks und ein
+separates Windows-ZIP in `z1/`; `product`, `docs` und `preflight` müssen am finalen
+Head/Test-Merge erfolgreich sein. Eigentümer-Stilwahl vor #23, unabhängiges Review
+und Mergefreigabe bleiben separat; #21 wird durch Z1 nicht geschlossen.
+
 [H1 / Issue #19](https://github.com/venomenon328/picross/issues/19) ergänzt die
 lösungsunabhängige optionale Erfüllungsmarkierung gemäß P1 §5.2. Der sitzungsweite
 Schalter startet aktiv, bleibt bei Blattwechsel/Reset erhalten und wird nicht

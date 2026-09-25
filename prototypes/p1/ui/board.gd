@@ -13,6 +13,8 @@ var eraser: bool = false
 var hand: bool = false
 var active_color: int = 1
 var ui_scale: float = 1.0
+# Optional Z1 frame styling; the regular renderer keeps its original default.
+var frame_style: StyleBox = null
 var overview: bool = false
 var held_button: MouseButton = MOUSE_BUTTON_NONE
 var pan_button: MouseButton = MOUSE_BUTTON_NONE
@@ -417,7 +419,7 @@ func gesture_length() -> int:
 func _draw() -> void:
 	if session == null:
 		return
-	draw_style_box(_paper_style(), Rect2(Vector2.ZERO, size))
+	draw_style_box(frame_style if frame_style != null else _paper_style(), Rect2(Vector2.ZERO, size))
 	var grid: Rect2 = view.visible_bounds()
 	draw_rect(grid, PAPER)
 	var values: Array[int] = session.visible_cells()
