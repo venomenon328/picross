@@ -1,5 +1,8 @@
 # P1.1: Prüfbericht und Übergabegrenze
 
+Historischer Nachweis des unten genannten Heads. Aktueller integrierter Prüf- und
+Abnahmestand: [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md).
+
 Stand: 23.09.2026 · [Issue #8](https://github.com/venomenon328/picross/issues/8) · erster Zwischenstand von [P1 / #5](https://github.com/venomenon328/picross/issues/5)
 
 ## Technischer P1.1-Nachweis

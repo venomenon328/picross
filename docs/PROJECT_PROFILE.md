@@ -2,7 +2,7 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1.3-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert; P1.3 wird auf `feat/11-p1-persistence` in einem neuen Draft-PR gegen `main` geliefert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
+`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1.3-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` in `main` integriert. P1.4/#12 wird auf `chore/12-p1-integration-verification` in einem eigenen Draft-PR technisch geprüft; [aktueller Ergebnisbericht](P1_4_VERIFICATION.md). Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
@@ -10,12 +10,14 @@ Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhü
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
 
-**Aktuelle Phase:** #11 ergänzt auf der gemergten P1.2-Basis die isolierte lokale
+**Aktuelle Phase:** #11 ergänzte auf der gemergten P1.2-Basis die isolierte lokale
 Persistenz, strikte Savevalidierung, Primary/Backup-Recovery, Viewwiederaufnahme,
 bestätigten Einzelreset und den isolierten Zwei-Prozess-Nachweis. Der
 [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und die Anleitung beschreiben den technischen
-Stand einschließlich R2/B-01+B-02 und D-23 bis D-27. M-04 bleibt bis zur realen Eigentümerprüfung offen; #12 und die gesamte
-P1-Abnahme bleiben separat. Ältere grüne Läufe belegen den #11-Head nicht.
+Stand einschließlich R2/B-01+B-02 und D-23 bis D-27. Dieser Stand ist als
+`efada371…` integriert. #12 prüft 500 Aktionen, Messung, Windows-Artefakt und
+Regressionen; M-04 und die gesamte reale Eigentümerabnahme bleiben offen.
+Ältere grüne Läufe belegen den neuen #12-Head nicht.
 
 Die Eigentümerentscheidung Variante A nach Review R7 priorisiert geometrisch
 nächsten Hinweis-Snap und monotone direkte Dragbedienung vor maximaler gleichzeitiger
@@ -51,9 +53,9 @@ Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, Sol
 
 Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter Freigabe. Keine automatische Branchlöschung, kein Force-Push und keine direkten Änderungen am Zielbranch ohne passende Befugnis.
 
-Der beauftragte #11-Arbeitsbranch ist `feat/11-p1-persistence` vom aktuellen `main`; der neue PR bleibt bis zur erforderlichen Prüfung Draft. Der gemeinsame Branch `feat/5-p1-prototype`/PR #14 ist bereits gemergt und wird nicht fortgesetzt. #12 erhält einen späteren eigenen Auftrag. #5 bleibt bis vollständiger Lieferung und Abnahme offen.
+Der beauftragte #12-Arbeitsbranch ist `chore/12-p1-integration-verification` vom aktuellen `main`; sein PR bleibt bis zur erforderlichen Prüfung Draft. PR #14/#15 sind gemergt und werden nicht fortgesetzt. #5 bleibt bis vollständiger Lieferung und Abnahme offen.
 
-Der ausdrückliche Implementierungsauftrag für #11 erlaubt die spezifizierten Änderungen, Tests, Commits, Push und Pflege von #11/#5 sowie des neuen Draft-PRs. Er erlaubt weder #12 noch Merge, Release oder Schließen von Issues.
+Der ausdrückliche Durchführungsauftrag für #12 erlaubt die spezifizierten technischen Änderungen, Tests, Commits, Push und den neuen Draft-PR. Er erlaubt weder Merge, Release noch Schließen von Issues.
 
 Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchschutz ist nicht als wirksam verifiziert; die vereinbarten Prüfungen gelten unabhängig davon. Keine Schutzregeln umgehen.
 
@@ -94,7 +96,7 @@ gezielte Vertragsanpassungen; sonstige Regressionen nicht durch Entfernen von Te
 verdecken. F-01-Lösung/Hinweise und logische Nachweise erhalten. Keine neue allgemeine
 Solver-/Assetplattform erforderlich.
 
-Für die technische Lieferung von #11 müssen `product` aus [P1 product verification](../.github/workflows/p1-product.yml), `docs` und der weiterhin aktive `preflight` für den finalen Head tatsächlich erfolgreich sein. Der Produktweg ergänzt gezielte Speicher-/Fehler-/Recoverytests und einen echten Zwei-Prozess-Roundtrip im isolierten Profil; Windows-Export und bestehende Renderregressionen bleiben enthalten. Produktartefakte werden 14 Tage gespeichert. Ein Headless-Start oder synthetisches Event ersetzt M-04 oder die reale Maus-/GUI-Abnahme nicht.
+Für die technische Lieferung von #12 müssen `product` aus [P1 product verification](../.github/workflows/p1-product.yml), `docs` und der weiterhin aktive `preflight` für den finalen Head tatsächlich erfolgreich sein. Der Produktweg enthält Speicher-/Fehler-/Recoverytests, den bestehenden echten Zwei-Prozess-Roundtrip und die neue 500-Aktionen-Folge samt Neustart im isolierten Profil; Windows-Export und Renderregressionen bleiben enthalten. Produktartefakte werden 14 Tage gespeichert. Ein Headless-Start oder synthetisches Event ersetzt M-04 oder die reale Maus-/GUI-Abnahme nicht.
 
 ## Abnahme und Übergaben
 

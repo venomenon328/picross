@@ -1,5 +1,8 @@
 # P1.2 · Technischer Prüfbericht und offene Eigentümerabnahme
 
+Historischer Nachweis des unten genannten Heads. Aktueller integrierter Prüf- und
+Abnahmestand: [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md).
+
 Stand: 23.09.2026 · [Issue #9](https://github.com/venomenon328/picross/issues/9)
 auf `feat/5-p1-prototype`, gemeinsamer [Draft-PR #14](https://github.com/venomenon328/picross/pull/14).
 Die Grundlagenkorrektur D-18 bis D-22 startete auf
