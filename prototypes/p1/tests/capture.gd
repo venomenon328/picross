@@ -76,10 +76,11 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			quit(5)
 			return
 		pixel_checks += 1
-	if name == "gesture-counter-8":
+	if name == "gesture-counter-8" or name.begins_with("g1-counter-"):
 		var font: Font = ThemeDB.fallback_font
 		var fs: int = roundi(15 * app.board.ui_scale)
-		var box_size: Vector2 = font.get_string_size("8", HORIZONTAL_ALIGNMENT_LEFT, -1, fs) + Vector2(14, 10)
+		var caption: String = "8" if name == "gesture-counter-8" else name.get_slice("-", 2)
+		var box_size: Vector2 = font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs) + Vector2(14, 10)
 		var end_point: Vector2 = app.board.view.cell_rect(app.session.gesture.endpoint).get_center()
 		var place: Vector2 = (end_point + Vector2(12, -box_size.y - 8)).clamp(app.board.view.viewport.position + Vector2(2, 2), app.board.view.viewport.end - box_size - Vector2(2, 2))
 		var sample: Vector2i = Vector2i(app.board.global_position + place + Vector2(3, 3))
@@ -174,6 +175,49 @@ func replace_render_cells(app: Main, values: Array[int]) -> void:
 	app.session = fresh
 	app.board.session = fresh
 	app.board.restore_view(view_state)
+
+func capture_axis_reset(app: Main, fixture_index: int, pitch: float, color: int) -> void:
+	app.select_puzzle(fixture_index)
+	var values: Array[int] = app.session.player.cells.duplicate()
+	values.fill(-1)
+	replace_render_cells(app, values)
+	app.board.view.zoom_to(pitch, app.board.view.viewport.get_center())
+	app.board.view.center = Vector2(app.session.player.width, app.session.player.height) / 2.0
+	app.board.view.reframe()
+	await process_frame
+	await process_frame
+	var start: Vector2i = app.board.view.hit(app.board.view.viewport.get_center())
+	var old: Vector2i = start + Vector2i(3, 0)
+	var next: Vector2i = start + Vector2i(0, 3)
+	app.board.active_color = color
+	app.board.pointer_press(app.board.view.cell_rect(start).get_center(), MOUSE_BUTTON_LEFT)
+	app.board.pointer_move(app.board.view.cell_rect(old).get_center(), true)
+	var label: String = "g1-f%02d" % (fixture_index + 1)
+	await snapshot(app, label + "-old-arm")
+	app.board.pointer_move(app.board.view.cell_rect(start).get_center(), true)
+	if app.board.gesture_length() != 1:
+		push_error("Origin counter did not reset to one: " + label)
+		quit(5)
+		return
+	await snapshot(app, "g1-counter-1-" + label)
+	app.board.pointer_move(app.board.view.cell_rect(next).get_center(), true)
+	if app.board.gesture_length() != 4:
+		push_error("New axis counter has wrong length: " + label)
+		quit(5)
+		return
+	await snapshot(app, "g1-counter-4-" + label)
+	var old_image: Image = Image.load_from_file(output.path_join(label + "-old-arm.png"))
+	var origin_image: Image = Image.load_from_file(output.path_join("g1-counter-1-" + label + ".png"))
+	var new_image: Image = Image.load_from_file(output.path_join("g1-counter-4-" + label + ".png"))
+	var old_pixel: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(old).get_center())
+	var new_pixel: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(next).get_center())
+	var fill: Color = Color(app.session.definition.palette[color - 1].color)
+	if not old_image.get_pixelv(old_pixel).is_equal_approx(fill) or origin_image.get_pixelv(old_pixel).is_equal_approx(fill) or new_image.get_pixelv(old_pixel).is_equal_approx(fill) or not new_image.get_pixelv(new_pixel).is_equal_approx(fill):
+		push_error("Rendered old/new arm pixel mismatch: " + label)
+		quit(5)
+		return
+	pixel_checks += 4
+	app.board.cancel_gesture()
 
 func edge_cell(app: Main, edge: String) -> Vector2i:
 	var grid: Rect2 = app.board.view.visible_bounds()
@@ -631,6 +675,8 @@ func run() -> void:
 		return
 	await snapshot(app, "gesture-counter-8")
 	app.board.cancel_gesture()
+	await capture_axis_reset(app, 1, 24.0, 3)
+	await capture_axis_reset(app, 2, 12.0, 1)
 	app.board.hover = Vector2i(f03_column, f03_row)
 	app.board.set_clue_hover("row", f03_row)
 	await snapshot(app, "f03-full-clues-in-work-tooltip")
