@@ -1,11 +1,11 @@
 # H1 · Erfüllte Hinweise: technische Nachweise und Eigentümerprobe
 
 Stand: 25.09.2026 · [Issue #19](https://github.com/venomenon328/picross/issues/19),
-Branch `feat/19-clue-completion`, Basis `95fee5f87a84d4e849c845ce98313144349b3dd8`.
+Branch `feat/19-clue-completion`, aktuelle Integrationsbasis
+`main@6dd33232977127592c2b881f73094658853dbd87` nach G1/#17 und PR #18.
 Lieferhead, Test-Merge, erfolgreiche CI-Runs und geprüftes Windows-Artefakt werden
-im eigenen Draft-PR gebunden. Lokale Entwicklungsläufe sind davon getrennt.
-#17/PR #18 war bei Beginn offen; sein Branch und seine G1-Lieferung werden nicht
-verändert. Die in #12 dokumentierte bisherige P1-Eigentümerabnahme bleibt gültig.
+im PR gebunden. Die in #12 dokumentierte bisherige P1-Eigentümerabnahme bleibt
+gültig; die gezielten G1-/H1-Proben werden nicht als bestanden umgedeutet.
 
 ## Technischer Prüfvertrag
 
@@ -28,7 +28,7 @@ bleibt wie bisher unveränderlich. Keine Schreibpfade zu Session, History oder S
 | --- | --- |
 | A-H01 | Neun Issuevektoren plus Farb-, Rand-, Teilblock-, Doppelhinweis-, Leerlinien- und Widerspruchsfälle; deterministische kurze mono-/farbige Eingänge gegen unabhängigen Zellbelegungs-Oracle, zusätzlich Spiegelung. |
 | A-H02 | Eingänge unverändert; andere Lösung/Reveal/Abschluss-/Kreuzhinweise bei identischen Linieneingängen; keine erzwungene unbekannte Füllung. Save-/History-/Dateivergleich vor/nach Analyse und Schalter. |
-| A-H03 | Viewportereignisse für Füllen/X/Radierwege, Eindeutigkeit, Widerspruch, Preview/Rückzug/Escape/Fokusverlust; Undo/Redo, Blattwechsel/Reset, Restore und echte Recovery. Zwei-Prozess-Roundtrip prüft neuen aktivierten Schalterdefault. |
+| A-H03 | Viewportereignisse für Füllen/X/Radierwege, Eindeutigkeit, Widerspruch, Preview/Rückzug/Escape/Fokusverlust; Undo/Redo, Blattwechsel/Reset, Restore und echte Recovery. Eine direkte G1-Integrationsregression prüft horizontalen erfüllten Previewarm → tatsächliche Startzelle → vertikalen Arm und die sofortige Markerinvalidierung/-neuzuordnung. Zwei-Prozess-Roundtrip prüft den aktivierten Schalterdefault. |
 | A-H04 | Echte Off/On-Paare: F-02/F-03, 1280×720 bis 2560×1440, UI 100/125 %, Zoom 50/75/92/100 %, unterschiedliche Lesepositionen, beide Achsen, alle Farben, ein-/mehrstellige Zahlen, Marker, Tooltip, kontinuierlicher Drag/Drop. Pixelvergleiche je Originaltoken sowie unverändertes Raster/Miniatur. Visuelle Stichproben ergänzen die maschinellen Vergleiche. |
 | A-H05 | 100er-Linien: leer, stark mehrdeutig, 100 wechselnde Farben, Widerspruch; wiederholte Läufe mit Zeitprotokoll. Cache-/Redrawprüfung und bestehende 500-Aktionen-Folge bei aktivierter Markierung samt Neustart. |
 | A-H06 | Produktdefinition, Gestaltungskonzept, P1-Vertrag, Profil und Anleitung nachgeführt; Lösungen, Hinweise, 48/80 Proofschritte, Artwork und Save-Schema unverändert. |
