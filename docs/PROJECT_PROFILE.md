@@ -2,7 +2,7 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1.3-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` in `main` integriert. P1.4/#12 wird auf `chore/12-p1-integration-verification` in einem eigenen Draft-PR technisch geprüft; [aktueller Ergebnisbericht](P1_4_VERIFICATION.md). Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
+`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` und P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` in `main` integriert; [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md). H1/#19 wird in PR #20 als eigenständige Erweiterung geliefert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
@@ -10,14 +10,12 @@ Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhü
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
 
-**Aktuelle Phase:** #11 ergänzte auf der gemergten P1.2-Basis die isolierte lokale
-Persistenz, strikte Savevalidierung, Primary/Backup-Recovery, Viewwiederaufnahme,
-bestätigten Einzelreset und den isolierten Zwei-Prozess-Nachweis. Der
-[P1.3-Prüfbericht](P1_3_VERIFICATION.md) und die Anleitung beschreiben den technischen
-Stand einschließlich R2/B-01+B-02 und D-23 bis D-27. Dieser Stand ist als
-`efada371…` integriert. #12 prüft 500 Aktionen, Messung, Windows-Artefakt und
-Regressionen; M-04 und die gesamte reale Eigentümerabnahme bleiben offen.
-Ältere grüne Läufe belegen den neuen #12-Head nicht.
+**Aktuelle Phase:** Der integrierte #12-Stand enthält den isolierten
+Zwei-Prozess-Nachweis, 500 Aktionen mit Neustart, Messung, Renderregressionen
+und ein Windows-Artefakt. M-01 bis M-04 und M-06/M-07 wurden in #12 am dortigen
+Head vom Eigentümer als bestanden bestätigt. H1/#19 ergänzt darauf die
+lösungsunabhängige Erfüllungsmarkierung; seine technischen Nachweise und der
+Abnahmestand sind an PR #20 gebunden. Frühere grüne Läufe belegen H1 nicht.
 
 Die Eigentümerentscheidung Variante A nach Review R7 priorisiert geometrisch
 nächsten Hinweis-Snap und monotone direkte Dragbedienung vor maximaler gleichzeitiger
@@ -57,18 +55,15 @@ Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, Sol
 
 ## Branches und Befugnisse
 
-H1 verwendet `feat/19-clue-completion` vom aktuellen `main`, Ziel `main`, mit eigenem
-Draft-PR. Der Durchführungsauftrag erlaubt H1, Tests, Dokumentation, Commit/Push und
-Draft-PR; weder Merge noch Issueschluss. Bei Start ist #17/PR #18 weiterhin offen
-und nicht integriert. Seine Lieferung wird nicht geändert; gemeinsame Stellen bei
-einer späteren Integration zusammenführen. #12 hat die bisherige reale Eigentümerprobe
-bestätigt; H1 verlangt ausschließlich seine zusätzliche gezielte Probe.
+H1 verwendet `feat/19-clue-completion`, Ziel `main`, mit eigenem PR #20. #12 hat
+die bisherige reale Eigentümerprobe bestätigt. #17/PR #18 wird separat integriert;
+vor dem H1-Merge ist dessen aktueller `main`-Stand einschließlich G1 zu übernehmen und
+durch die H1-Regressionen mitzuprüfen. Nach Review R1 hat der Eigentümer die B-01-
+Nacharbeit und den anschließenden Merge von PR #20 ausdrücklich beauftragt. Die
+gezielte reale H1-Probe wird nicht als bestanden behauptet, ist nach dieser Entscheidung
+aber kein Mergegate. Kein Release, Force-Push oder Branchlöschen ist damit beauftragt.
 
-Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter Freigabe. Keine automatische Branchlöschung, kein Force-Push und keine direkten Änderungen am Zielbranch ohne passende Befugnis.
-
-Der beauftragte #12-Arbeitsbranch ist `chore/12-p1-integration-verification` vom aktuellen `main`; sein PR bleibt bis zur erforderlichen Prüfung Draft. PR #14/#15 sind gemergt und werden nicht fortgesetzt. #5 bleibt bis vollständiger Lieferung und Abnahme offen.
-
-Der ausdrückliche Durchführungsauftrag für #12 erlaubt die spezifizierten technischen Änderungen, Tests, Commits, Push und den neuen Draft-PR. Er erlaubt weder Merge, Release noch Schließen von Issues.
+Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter Freigabe. Keine automatische Branchlöschung, kein Force-Push und keine direkten Änderungen am Zielbranch ohne passende Befugnis. PR #14 bis #16 sind integriert und werden nicht fortgesetzt.
 
 Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchschutz ist nicht als wirksam verifiziert; die vereinbarten Prüfungen gelten unabhängig davon. Keine Schutzregeln umgehen.
 
@@ -109,7 +104,11 @@ gezielte Vertragsanpassungen; sonstige Regressionen nicht durch Entfernen von Te
 verdecken. F-01-Lösung/Hinweise und logische Nachweise erhalten. Keine neue allgemeine
 Solver-/Assetplattform erforderlich.
 
-Für die technische Lieferung von #12 müssen `product` aus [P1 product verification](../.github/workflows/p1-product.yml), `docs` und der weiterhin aktive `preflight` für den finalen Head tatsächlich erfolgreich sein. Der Produktweg enthält Speicher-/Fehler-/Recoverytests, den bestehenden echten Zwei-Prozess-Roundtrip und die neue 500-Aktionen-Folge samt Neustart im isolierten Profil; Windows-Export und Renderregressionen bleiben enthalten. Produktartefakte werden 14 Tage gespeichert. Ein Headless-Start oder synthetisches Event ersetzt M-04 oder die reale Maus-/GUI-Abnahme nicht.
+Der integrierte #12-Stand hat `product`, `docs` und `preflight` samt
+500-Aktionen-Folge, Neustart, Speicher-/Recoverytests, Renderregressionen und
+Windows-Export erfolgreich durchlaufen. Diese Nachweise bleiben an PR #16 gebunden.
+Für H1 müssen dieselben aktuellen Workflows am finalen kombinierten Head erneut
+erfolgreich sein; alte Läufe ersetzen diesen Nachweis nicht.
 
 ## Abnahme und Übergaben
 
@@ -150,9 +149,17 @@ eines aus Backup geladenen Slots auch bei fehlendem Primary. #11 ergänzt als
 ausdrücklich beauftragte Nacharbeit D-23 bis D-27. Der neue technische Head und
 seine CI-/Artefaktnachweise stehen im PR; frühere Läufe bleiben historisch.
 
-Die reale Maus-/Layoutprobe an der integrierten #9-Lieferung bleibt offen; fehlende Metadaten sind dabei zu erfassen. Für #11 prüft der Eigentümer M-04 am commitgebundenen Windows-Artefakt: Bearbeiten, regulär schließen, echten App-Neustart, Zellen/Undo/Redo/Ansicht/Einzelhinweise fortsetzen sowie sichtbare Recovery und bestätigten Einzelreset. Codex liefert Szenarien/Artefakt und darf unbekannte Ergebnisse nicht abhaken. Die positive F-01-Teilbestätigung bleibt erhalten.
+Die reale Gesamtprobe M-01 bis M-04 und M-06/M-07 des bisherigen P1-Stands wurde
+in #12 am dort gebundenen Windows-Artefakt als bestanden dokumentiert. Diese
+Bestätigung bleibt commitgebunden und wird durch H1 weder zurückgesetzt noch
+automatisch auf neue Funktionen erweitert.
 
-Vor Gesamt-P1-Merge gelten weiterhin A-01 bis A-07 und M-01 bis M-04, M-06/M-07 aus P1 §8. M-05 bleibt nicht anwendbar. #11 liefert A-05 technisch und ermöglicht M-04; #12 und vollständige manuelle Abnahme bleiben separat. Ohne passende Freigabe kein Merge/Release.
+Für H1 sind A-H01 bis A-H07 am finalen kombinierten Head nachzuweisen. Die gezielte
+reale H1-Probe ist nicht als durchgeführt oder bestanden dokumentiert; der Eigentümer
+hat nach Review R1 jedoch ausdrücklich die B-01-Nacharbeit und den anschließenden Merge
+beauftragt, sodass sie für PR #20 kein verbleibendes Mergegate ist. M-05 bleibt nicht
+anwendbar. Ohne erfolgreiche aktuelle technische Checks kein Merge; kein Release folgt
+aus dieser Freigabe.
 
 ## Daten und Betriebswirkung
 
