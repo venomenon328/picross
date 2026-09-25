@@ -261,6 +261,7 @@ func _layout() -> void:
 	place(minimum, 0, 0, size.x, size.y)
 	board.mouse_filter = Control.MOUSE_FILTER_IGNORE if small else Control.MOUSE_FILTER_STOP
 	if small:
+		move_child(minimum, -1)
 		board.cancel_gesture()
 	refresh()
 
