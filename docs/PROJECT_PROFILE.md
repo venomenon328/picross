@@ -2,7 +2,7 @@
 
 ## Zweck, Quellen und aktueller Rahmen
 
-`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` und P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` in `main` integriert; [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md). #17/G1 ergänzt die Startzell-Rückkehr als eigenständige Änderung. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
+`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` und P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` in `main` integriert; [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md). #17/G1 wird über PR #18 als eigenständige Änderung auf diesem Stand integriert; die ausdrückliche Mergefreigabe liegt nach Review-Nacharbeit vor. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
@@ -51,9 +51,12 @@ Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, Sol
 
 Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter Freigabe. Keine automatische Branchlöschung, kein Force-Push und keine direkten Änderungen am Zielbranch ohne passende Befugnis.
 
-Der beauftragte #17-Arbeitsbranch ist `fix/17-stroke-axis-reset` vom aktuellen `main`; sein PR bleibt bis zur erforderlichen Prüfung Draft. PR #14 bis #16 sind gemergt und werden nicht fortgesetzt. #5 bleibt bis vollständiger Lieferung und Abnahme offen.
-
-Der ausdrückliche Durchführungsauftrag für #17 erlaubt die spezifizierten technischen Änderungen, Tests, Commits, Push und den neuen Draft-PR. Er erlaubt weder Merge, Release noch Schließen von Issues.
+#17/G1 wird in PR #18 auf `fix/17-stroke-axis-reset` geliefert. Nach Review R1 hat
+der Eigentümer die B-01-Nacharbeit und den anschließenden Merge ausdrücklich beauftragt;
+die aktuellen automatisierten Prüfungen des neuen Heads bleiben Bedingung. Die gezielte
+reale G1-Mausprobe wird nicht als bestanden behauptet, ist nach dieser Entscheidung aber
+kein Mergegate für PR #18. PR #14 bis #16 sind bereits integriert und werden nicht
+fortgesetzt. Kein Release oder Branchlöschen folgt aus der Mergefreigabe.
 
 Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchschutz ist nicht als wirksam verifiziert; die vereinbarten Prüfungen gelten unabhängig davon. Keine Schutzregeln umgehen.
 
