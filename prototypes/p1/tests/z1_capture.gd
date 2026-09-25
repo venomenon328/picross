@@ -10,6 +10,8 @@ var failures: int = 0
 var captures: Array[Dictionary] = []
 var output: String
 var tests_only: bool
+var pointer_position: Vector2 = Vector2.ZERO
+var pointer_buttons: int = 0
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -25,7 +27,11 @@ func frames() -> void:
 	await process_frame
 
 func pointer(point: Vector2, down: bool, button: MouseButton = MOUSE_BUTTON_LEFT) -> void:
+	pointer_position = point
+	var mask: int = 1 << (int(button) - 1)
+	pointer_buttons = (pointer_buttons | mask) if down else (pointer_buttons & ~mask)
 	var event: InputEventMouseButton = InputEventMouseButton.new()
+	event.button_mask = pointer_buttons
 	event.position = point
 	event.global_position = point
 	event.button_index = button
@@ -35,6 +41,9 @@ func pointer(point: Vector2, down: bool, button: MouseButton = MOUSE_BUTTON_LEFT
 
 func motion(point: Vector2) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
+	event.relative = point - pointer_position
+	event.button_mask = pointer_buttons
+	pointer_position = point
 	event.position = point
 	event.global_position = point
 	surface.push_input(event, true)
@@ -135,6 +144,9 @@ func run() -> void:
 	surface.size = Vector2i(1920, 1080)
 	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(surface)
+	# A standalone offscreen viewport has no SubViewportContainer to deliver entry.
+	# Without this notification Godot tracks hover but skips unpressed GUI motion.
+	surface.notify_mouse_entered()
 	app = DesignScene.instantiate()
 	surface.add_child(app)
 	await frames()
@@ -292,10 +304,13 @@ func run() -> void:
 		for _i: int in range(app.session.player.history.size()):
 			app.redo()
 		await snapshot("v%d-redo-disabled" % (variant + 1))
-		app.reset_demo()
-		app.board.set_clue_hover("row", 11)
+		app.select_fixture(2)
+		await frames()
+		var hint_point: Vector2 = app.board.global_position + Vector2(app.board.row_clue_area().get_center().x, app.board.view.cell_rect(Vector2i(0, 50)).get_center().y)
+		await motion(hint_point)
+		check(app.board.row_hint_overflows(50) and app.board.clue_hover_axis == "row" and app.board.clue_hover_index == 50, "real overflow hover for full hint capture")
 		await snapshot("v%d-full-hint" % (variant + 1))
-		app.board.clear_pointer_hover()
+		app.select_fixture(1)
 		app.board.working_size()
 		point = app.board.global_position + app.board.view.cell_rect(Vector2i(15, 12)).get_center()
 		await motion(point)

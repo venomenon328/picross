@@ -22,6 +22,9 @@ func leaf(origin: Vector2, direction: Vector2, length: float, color: Color) -> v
 	draw_line(origin, tip, Color("415951"), 1.0, true)
 
 func _draw() -> void:
+	if size.x < 1280 or size.y < 720:
+		draw_rect(Rect2(Vector2.ZERO, size), Color("e9ece7") if variant == 0 else Color("526d60"))
+		return # Unsupported/tiny startup surfaces show only the minimum-size notice.
 	if variant == 0:
 		draw_rect(Rect2(Vector2.ZERO, size), Color("e9ece7"))
 		# Fine editorial ruling and a small album registration motif.
