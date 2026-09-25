@@ -36,6 +36,10 @@ func begin(player: Player, cell: Vector2i, frozen_target: int) -> bool:
 func move(cell: Vector2i) -> void:
 	if not active or cell.x < 0 or cell.y < 0 or cell.x >= width or cell.y >= height:
 		return
+	if cell == start:
+		endpoint = start
+		axis = Axis.UNLOCKED
+		return
 	var delta: Vector2i = cell - start
 	if axis == Axis.UNLOCKED:
 		if absi(delta.x) > absi(delta.y):

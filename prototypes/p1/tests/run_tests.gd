@@ -35,6 +35,7 @@ func run() -> void:
 	test_geometry()
 	await test_scene()
 	await test_event_routing()
+	await preload("res://tests/g1_cases.gd").run(self)
 	await preload("res://tests/p12_cases.gd").run(self)
 	await preload("res://tests/p13_cases.gd").run(self)
 	await preload("res://tests/p14_cases.gd").run(self)

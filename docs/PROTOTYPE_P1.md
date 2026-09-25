@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 25.09.2026 · Spezifikation 0.11 · P1.3 integriert; P1.4-Prüfung nach #12; Eigentümerabnahme offen
+Stand: 25.09.2026 · Spezifikation 0.12 · P1.4 integriert und abgenommen; G1 aus #17 technisch geliefert
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -8,14 +8,16 @@ Paketquelle ist [Issue #5](https://github.com/venomenon328/picross/issues/5). Hi
 
 Maßgebliche Grundlagen sind [Produktdefinition](PRODUCT_DEFINITION.md), [Gestaltungskonzept](DESIGN_CONCEPT.md), [Projektprofil](PROJECT_PROFILE.md) und [lokaler Workflow](dev-rules/WORKFLOW.md); Einstieg bleibt [AGENTS.md](../AGENTS.md). Vor Ausführung die aktuellen Quellen und Issue-Kommentare prüfen.
 
-Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) und [P1.2 / Issue #9](https://github.com/venomenon328/picross/issues/9) wurden über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert. [P1.3 / Issue #11](https://github.com/venomenon328/picross/issues/11) wurde über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` integriert. Die neue technische Gesamtprüfung folgt [P1.4 / #12](https://github.com/venomenon328/picross/issues/12) und ihrem [Ergebnisbericht](P1_4_VERIFICATION.md). Die Eigentümerprobe und ihre noch offenen Einzelergebnisse bleiben davon getrennt.
+Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) und [P1.2 / Issue #9](https://github.com/venomenon328/picross/issues/9) wurden über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert. [P1.3 / Issue #11](https://github.com/venomenon328/picross/issues/11) wurde über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` integriert. [P1.4 / #12](https://github.com/venomenon328/picross/issues/12) wurde nach technischer Gesamtprüfung und bestandener Eigentümerprobe über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` integriert; der commitgebundene Stand steht im [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md). #17/G1 ergänzt darauf die erneute Achsenwahl nach tatsächlicher Rückkehr zur Startzelle. Die dafür vorgesehene gezielte reale Mausprobe ist nicht als bestanden dokumentiert; durch die ausdrückliche Mergeentscheidung vom 25.09.2026 ist sie für PR #18 jedoch kein verbleibendes Mergegate.
 
-**Ist/Soll:** D-07 bis D-22 sind mit #9 umgesetzt; technische Nachweise und verbleibende
-Abnahmen stehen im [P1.2-Prüfbericht](P1_2_VERIFICATION.md) und PR #14. Die früheren
-P1.1-Prüfungen bleiben historische Nachweise ihres damaligen Vertrags, keine
-Eigentümerabnahme des neuen Verhaltens.
+**Ist/Soll:** D-07 bis D-27, Persistenz/Recovery und die integrierte P1.4-Prüfung sind
+bis einschließlich PR #16 in `main` integriert. M-01 bis M-04 sowie M-06/M-07 wurden
+in #12 am dort gebundenen Stand vom Eigentümer bestätigt; historische Prüfberichte
+bleiben Nachweise ihrer jeweiligen Commits. #17/G1 ist die einzige neue Verhaltensänderung
+dieses Pakets und benötigt eigene technische Nachweise; seine reale Mausprobe wird nicht
+rückwirkend aus #12 abgeleitet.
 
-**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; #12 prüft die integrierte 500-Aktionen-Folge und den Windows-Stand. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md), historischer [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
+**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; #12 schließt die integrierte 500-Aktionen-, Windows-, Bedien- und Performanceprüfung ab. #17 ergänzt ausschließlich die Startzell-Rückkehr zur erneuten Achsenwahl. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md), historischer [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
 
 Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen weder die endgültige Produktengine noch die gesamte Betriebssystemmatrix, Wertung oder Themenwahl fest. Frühere P1-Vorschläge in Issue-Revision 0.1 und Gestaltungskonzept Abschnitt 7 sind innerhalb dieses Scopes abgelöst; globale Produktfragen bleiben offen.
 
@@ -133,9 +135,9 @@ Rücknahmestrich neutralisiert nur X.
 
 Der explizite Radierer bleibt als Universalwerkzeug: links setzt alle vorhandenen Markierungen auf unbekannt. Rechts folgt weiterhin der Leer-/Leerrücknahme-Regel. Beim Hand-Werkzeug verschiebt links ausschließlich die Ansicht. Werkzeug, Aktionsmodus und Setzfarbe bleiben bis zum Ende der Geste eingefroren; keine Neuerkennung pro überfahrener Zelle und kein wiederholtes Umschalten beim Rückwärtsziehen.
 
-Die erste eindeutige Bewegung in eine andere Zelle verriegelt horizontal oder vertikal. Bei diagonalem Gleichstand bleibt nur die Startzelle in der Vorschau, bis eine Richtung dominiert. Danach feste Achse bis zum Ende; Eingabesprünge erfassen alle Zwischenzellen.
+Die erste eindeutige Bewegung in eine andere Zelle verriegelt horizontal oder vertikal. Bei diagonalem Gleichstand bleibt nur die Startzelle in der Vorschau, bis eine Richtung dominiert. Trifft die aktive Zellgeste die tatsächliche Startzelle wieder, verkürzt sich die Vorschau auf diese Zelle und die Achse wird ohne Loslassen freigegeben. Die nächste eindeutige Bewegung wählt sie erneut; dies kann innerhalb derselben Geste mehrfach geschehen. Sonst bleibt die Achse fest und der Strich gerade. Eingabesprünge erfassen alle Zwischenzellen des aktuellen Abschnitts, schalten die Achse aber ohne gelieferten Startzelltreffer nicht frei. Ein nur auf die Achse projizierter Endpunkt am Start genügt ebenfalls nicht.
 
-Die elastische Vorschau wird aus dem bestätigten Zustand am Gestenbeginn und dem aktuellen geraden Abschnitt berechnet. Zurückziehen verkürzt auch Rücknahmestriche; außerhalb des Abschnitts erscheint der unveränderte Ausgangszustand wieder. Überqueren des Starts bleibt auf derselben Achse. Loslassen übernimmt nur wirksame Änderungen atomar. Beispiel 5→12→9 bearbeitet nur 5–9 nach dem eingefrorenen Modus. Keine Abschlussprüfung aus der Vorschau.
+Die elastische Vorschau wird aus dem bestätigten Zustand am Gestenbeginn und dem aktuellen geraden Abschnitt berechnet. Zurückziehen verkürzt auch Rücknahmestriche; außerhalb des Abschnitts erscheint der unveränderte Ausgangszustand wieder. Eine Startüberquerung ohne tatsächlichen Treffer bleibt auf derselben Achse; nach einem Treffer ist eine neue Achsenwahl möglich. Ursprung, Modus, Werkzeug und Setzfarbe bleiben dabei eingefroren. Loslassen übernimmt nur wirksame Änderungen atomar. Beispiel 5→12→9 bearbeitet nur 5–9 nach dem eingefrorenen Modus. Keine Abschlussprüfung aus der Vorschau.
 
 Während einer linken oder rechten Zellgeste zeigt ein kleiner Zähler am aktuellen
 Strichende, am Viewportrand nach innen versetzt, die geometrische Länge des aktuellen
@@ -317,7 +319,7 @@ Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `prototype
 | ID | Prüffall und Erfolg |
 | --- | --- |
 | A-01 | Definitionen/Hinweise einschließlich Farben, Leerlinien und ungültiger Daten validieren; F-01/F-02 mit Deduktionsfolge, F-03 als Stressfixture. Abschlussressourcen technisch unabhängig von Rasterauflösung prüfen. |
-| A-02 | Setz-/Neutralisierungs-/Radiergesten: direkte Füllung↔X-Umwandlung, Achsenbindung, diagonaler Start, Sprünge, elastisches Zurückziehen, gemischte Vorbelegung, Rand/UI, Abbruch und No-op. Nur zum eingefrorenen Modus passende Zellen ändern sich. |
+| A-02 | Setz-/Neutralisierungs-/Radiergesten: direkte Füllung↔X-Umwandlung, Achsenbindung und erneute Wahl nur nach tatsächlichem Startzelltreffer, diagonaler Start, Sprünge ohne Starttreffer, elastisches Zurückziehen, gemischte Vorbelegung, Rand/UI, Abbruch und No-op. Nur zum eingefrorenen Modus passende Zellen ändern sich. |
 | A-03 | Atomarer Strich, exakte Vorzustände bei Undo/Redo, korrekte Verzweigung; Neutralisieren nicht als versteckten Undo-Aufruf behandeln. |
 | A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei Zoom, Raster-Pan, UI-Skalierung und Resize; echte Mauspfade bewegen nur die konkret gestartete Zeile/Spalte kontinuierlich und rasten beim Drop in gemeinsame Slots ein, einschließlich Abbruch/Grenzen. Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
 | A-05 | Mit #11 Speicherung/Recovery ohne stillen Datenverlust oder fremden Zugriff. |
@@ -342,17 +344,33 @@ Protokoll: tatsächliche Commit-/Artefaktkennung, Betriebssystem, verwendete Ein
 
 ### 8.3 Gate-Zeitpunkte und bisherige Mausprobe
 
-Vor Gesamt-P1-Merge A-01 bis A-07, Dokumentprüfung und M-01 bis M-04, M-06/M-07 nachweisen. #8/#9 sind über PR #14 und #11 über PR #15 technisch integriert. #12 prüft den Gesamtstand auf einem eigenen Draft-PR. Die realen Eigentümer- und Gesamtgates bleiben offen; frühere Zwischenmergefreigaben gelten nicht für #12.
+Der damalige Gesamt-P1-Vertrag verlangte A-01 bis A-07, Dokumentprüfung sowie M-01 bis
+M-04 und M-06/M-07. Diese technische Integration und die reale Eigentümerprobe wurden
+in #12 am commitgebundenen PR-#16-Stand abgeschlossen; PR #16 wurde anschließend als
+`95fee5f87a84d4e849c845ce98313144349b3dd8` in `main` integriert. M-05 bleibt
+nicht anwendbar. Diese Bestätigung gilt für den dort geprüften Stand und wird durch
+spätere Änderungen nicht rückwirkend erweitert.
 
-K-06: Der Nutzer hat die angebotene F-01-Spielprobe verwendet und anschließend zwei Screenshots sowie vier konkrete Rückmeldungen geliefert; der Abschlussbildschirm ist sichtbar. Bezug der Unterhaltung ist Artefakt `10719712143` / Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`. Eine separate Versionsanzeige des Nutzerlaufs, tatsächliche Windows-Skalierung und vollständige Einzelbestätigung aller K-06-Szenarien liegen nicht vor.
+**Historische frühe Mausprobe K-06:** Der Nutzer hatte die angebotene F-01-Spielprobe
+auf Artefakt `10719712143` / Head `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`
+verwendet und mit Änderungsbedarf zurückgemeldet. Die daraus entstandenen Änderungen
+wurden in den späteren P1-Paketen bearbeitet. Dieser historische Befund ist keine
+aktuelle offene Gesamt-Abnahme.
 
-Die Probe ist **durchgeführt mit Änderungsbedarf**, nicht pauschal bestanden. Der Nutzer beauftragt auf Basis dieses Feedbacks ausdrücklich die Vorbereitung von #9. Die frühe Feedbackschleife blockiert diesen Folgeschritt daher nicht; ihre Änderungen werden in #9 bearbeitet. Fehlende Metadaten/Einzelnachweise bleiben offen und werden mit der erneuten Maus-/Layoutprobe des neuen Artefakts erfasst. Keine vollständige M-01/M-06-/Produktabnahme aus den Screenshots ableiten. Technische Tests ersetzen diese nicht.
+Für #17/G1 gelten die neuen technischen Nachweise des konkreten PR-#18-Heads. Die
+vorgesehene gezielte reale G1-Mausprobe ist nicht als bestanden dokumentiert. Der
+Eigentümer hat nach Review R1 am 25.09.2026 ausdrücklich die B-01-Nacharbeit und den
+anschließenden Merge beauftragt; damit ist diese Probe für genau diesen Merge kein
+verbleibendes Gate. Sie wird dadurch nicht als ausgeführt oder bestanden bezeichnet.
 
 ## 9. Aktueller Lieferstand
 
-#9 ist als P1.2-Zwischenstand und #11 als P1.3-Zwischenstand in `main` integriert.
-Die neue P1.4-Integration und ihre technischen Ergebnisse stehen im
-[P1.4-Ergebnisbericht](P1_4_VERIFICATION.md) und im zugehörigen Draft-PR.
-M-04 bleibt bis zur realen Eigentümerprobe am commitgebundenen Windows-Artefakt offen.
+P1.1/P1.2, P1.3 und P1.4 sind über PR #14 bis #16 in `main` integriert. #12
+dokumentiert die bestandene Gesamtprobe des dortigen Stands. #17/G1 ergänzt auf dieser
+Basis die erneute Achsenwahl nach tatsächlicher Rückkehr zur Startzelle; seine
+technischen Nachweise stehen in PR #18. Die gezielte reale G1-Probe bleibt als nicht
+durchgeführtes Produktfeedback sichtbar, ist nach der ausdrücklichen Mergeentscheidung
+vom 25.09.2026 aber kein Mergegate für PR #18.
+
 Die endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses
 Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte Risikostränge.
