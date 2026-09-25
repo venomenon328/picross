@@ -52,4 +52,3 @@ func _draw() -> void:
 	for i: int in range(8):
 		var base: Vector2 = Vector2(size.x - 45 - i * 54, -15)
 		leaf(base, Vector2(-0.3, 0.95), 105 + (i % 3) * 22, Color("829382"))
-	draw_line(Vector2(32, 94), Vector2(size.x - 32, 94), Color("b6bda5"), 1, true)
