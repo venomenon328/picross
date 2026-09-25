@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-Stand: 22.09.2026 · Arbeitsfassung 0.2 · Produktkonzept, keine Implementierungsspezifikation
+Stand: 25.09.2026 · Arbeitsfassung 0.3 · Produktkonzept mit begrenzter H1-Komfortentscheidung
 
 ## 1. Geltung und Herkunft
 
@@ -89,6 +89,15 @@ Maus und Tastatur sind die primäre Eingabeform. Controller werden von Beginn an
 Ein ausdrücklich gewünschtes Steuerungsdetail: Beim Zeichnen mit gedrückter Maustaste wird die Bewegung ab dem zweiten Feld auf die aktuelle Zeile oder Spalte beschränkt; innerhalb dieses Strichs werden keine Kurven gezeichnet. Verhalten bei Rückwärtsbewegung, vorhandenen Einträgen, Abbruch und diagonalen Bewegungen wird noch spezifiziert.
 
 Speichern, Unterbrechen und Fortsetzen großer Rätsel sowie verlässliches Rückgängigmachen gehören zum Komfortkonzept. Wie viel des Arbeitszustands zusätzlich zum Raster gespeichert wird, ist im Detail offen; entsprechende Ideen stehen in Abschnitt 10. Die Nutzung von Undo schließt eine perfekte Bewertung des betroffenen Durchgangs aus, ohne die Funktion zu verbieten; siehe Abschnitt 6.2.
+
+Bestätigt in [#19/H1](https://github.com/venomenon328/picross/issues/19): Hinweise
+werden optional, standardmäßig aktiv als erfüllt markiert, wenn ihr bereits vollständig
+gesetzter Block in jeder mit den sichtbaren Zellen vereinbaren Belegung der ganzen
+Linie eindeutig denselben Hinweis realisiert. Bei Widerspruch entfällt jede Markierung
+dieser Linie. Nur deren eigene Hinweise, Farben, Füllungen und X zählen; kein Vergleich
+mit der hinterlegten Lösung oder kreuzenden Hinweisen. Das ist keine Fehlerhilfe,
+kein manuelles Abhaken und kein automatisches Setzen. Der begrenzte P1-Vertrag samt
+Vorschau, Durchstreichung und Sitzungsschalter steht in P1 §5.2.
 
 Hypothesen als mögliche Zustände „unsicher gesetzt“ und „unsicher leer“ wurden zur Untersuchung vorgeschlagen. Die Funktion ist noch nicht abschließend spezifiziert; insbesondere ist nicht entschieden, ob ihre Nutzung mit einer perfekten Bewertung vereinbar ist. Der Nutzer setzt selbst überwiegend nur sicher hergeleitete Felder. Hypothesen ändern nicht das Versprechen, dass Rätsel ohne notwendiges Raten lösbar sein müssen.
 
@@ -193,7 +202,7 @@ Die folgende Sammlung bewahrt sinnvolle Ansätze aus dem Gespräch, ohne sie zu 
 | Hypothesen | „Unsicher gesetzt“ beziehungsweise „unsicher leer“, bei Farben mit Farbzuordnung; separate Notizebene als Vorschlag. Aufnahme, Übernahme-/Verwerfverhalten und Verträglichkeit mit Perfektion bleiben offen. |
 | Arbeitszustand | Neben dem Raster auch Zoom, Ausschnitt, aktive Farbe und gegebenenfalls Notizen speichern; optionale Hervorhebung der letzten Änderungen beim Wiedereinstieg. |
 | Farbdarstellung | Symbole oder Muster zusätzlich zu Farben, geeignete Paletten und schnelle Farbwahl über Hinweise. |
-| Automatischer Komfort | Abhaken von Hinweisen nur nach nachvollziehbarer sichtbarer Information, nicht als verdeckter Vergleich mit der hinterlegten Lösung. |
+| Automatischer Komfort | Die lösungsunabhängige optionale Erfüllungsmarkierung ist durch #19/H1 bestätigt; siehe §5.1 und P1 §5.2. Weitere Hilfen sind dadurch nicht freigegeben. |
 | Qualitätssicherung | Erklärender Solver mit vollständigem Deduktionsprotokoll und gegebenenfalls unabhängiger Eindeutigkeitsprüfung; konkrete Verfahren noch offen. |
 | Sterne | Ein Stern für Abschluss und zwei bei begrenzten Fehlern bleiben Vorschläge ohne feste Schwellen. Für die Höchstwertung gilt bereits: ohne Fehler und ohne Undo; Hypothesenfrage offen. |
 | Wiederholungen | Beste Bewertung je Rätsel für Fortschritt verwenden; Sterne nicht durch wiederholtes Lösen aufsummieren und bestehende Freischaltungen nicht durch schlechtere Ergebnisse verlieren. |

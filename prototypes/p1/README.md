@@ -1,5 +1,29 @@
 # P1 · Integrierte Windows-Spielprobe
 
+H1 aus [#19](https://github.com/venomenon328/picross/issues/19) ergänzt automatisch
+durchgestrichene, eindeutig erfüllte Hinweise. Die gezielte neue Eigentümerprobe ist
+offen; technische Nachweise und Schritte stehen im [H1-Prüfbericht](../../docs/H1_VERIFICATION.md)
+und im eigenen Draft-PR. Die in #12 bestätigte bisherige P1-Probe bleibt gültig;
+die älteren Gesamtprobe-Abschnitte unten sind keine erneute Abnahmeforderung.
+
+„Erfüllte Hinweise markieren“ startet an und gilt für alle Blätter derselben
+App-Sitzung. Album-/Blattwechsel und Reset erhalten die Auswahl; nach Neustart ist
+sie wieder an. Aus zeigt normale Zahlen, erneutes Einschalten den aktuellen Stand.
+Die Zahl bleibt farbig und an derselben Stelle; auch vollständige Hoverhinweise
+zeigen den Strich. `…` und `–` werden nicht markiert.
+
+Es zählt nur die ganze betreffende Linie einschließlich ihrer eigenen Hinweise und
+deiner aktuellen Füllungen/X samt elastischer Vorschau. Ein vollständig gefüllter
+Block wird nur bei eindeutiger Zuordnung markiert. X können Eindeutigkeit herstellen,
+sind aber keine allgemeine Pflicht. Bei Widerspruch entfallen alle Markierungen
+dieser Linie. Das prüft nicht die hinterlegte Lösung, verändert keine Zellen und
+verrät kein bestimmtes falsches Feld. Rückzug, Abbruch, Undo/Redo und Recovery führen
+die Anzeige mit; Flags und Schalter werden nicht im Spielstand gespeichert.
+
+Im äußeren technischen Artefakt liegen `H1-PRUEFUNG.md`, `h1-owner-probe.ps1` und
+`h1-owner-probe.gd` für die getrennte künstliche Linienprobe. Sie gehören nicht zum
+normalen Benutzer-ZIP und greifen nicht auf gespeicherte Puzzles zu.
+
 P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) ist über
 PR #15 technisch in `main` integriert. [P1.4 / #12](https://github.com/venomenon328/picross/issues/12)
 prüft diesen Stand im neuen Draft-PR mit einer integrierten 500-Aktionen-Folge;

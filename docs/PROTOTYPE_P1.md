@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 25.09.2026 · Spezifikation 0.11 · P1.3 integriert; P1.4-Prüfung nach #12; Eigentümerabnahme offen
+Stand: 25.09.2026 · Spezifikation 0.12 · integrierter P1-Stand mit H1; gezielte H1-Eigentümerprobe offen
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -233,7 +233,38 @@ Rasterzoom oder Miniaturrahmen. Darüberfahren einer gekürzten Folge zeigt weit
 die vollständige farbige Folge als umbrechenden Tooltip im Arbeitsbild. Dieser ist
 Ergänzung, nicht der einzige Zugriff; es gibt keinen eigenen Hinweisbildschirm oder
 modalen Ersatzdialog. Keine automatische Fehler-/Erfüllungsmarkierung durch
-Lösungsvergleich. Hinweisabhaken ist nicht erforderlich.
+Lösungsvergleich. Manuelles Hinweisabhaken ist nicht erforderlich.
+
+**H1 / [Issue #19](https://github.com/venomenon328/picross/issues/19):** Die optionale,
+standardmäßig aktive Erfüllungsmarkierung analysiert ausschließlich vollständige
+Linienwerte und deren geordnete Längen-/Farbhinweise. Unbekannt bleibt offen, X ist
+leer, eine Füllung legt die Farbe fest. Gleichfarbige Nachbarblöcke benötigen Abstand,
+verschiedenfarbige dürfen angrenzen. Ein Hinweis ist genau dann erfüllt, wenn es
+mindestens eine kompatible vollständige Linienbelegung gibt, sein Block in allen
+solchen Belegungen dasselbe Intervall hat und dieses bereits vollständig in der
+richtigen Farbe gesetzt ist. Eindeutig erzwungene, aber noch unbekannte Zellen genügen
+nicht. Rand-X sind keine Pflicht; ein mehrdeutiger Mittelblock bei `3 3` bleibt auch
+mit Rand-X unmarkiert. Existiert keine kompatible Belegung, bleiben alle Hinweise
+dieser Linie unmarkiert. Andere Linien werden unabhängig bewertet.
+
+Keine Verwendung von Lösung, Reveal, Abschluss, Fehlerstatistik, Proof oder kreuzenden
+Hinweisen; auch ein gegenüber der Lösung falsch platzierter, linienintern eindeutiger
+Block wird markiert. Keine automatischen Zellen oder zusätzliche Widerspruchsanzeige.
+Die Markierung folgt `visible_cells()` einschließlich elastischer Vorschau und wird
+nach Rückzug, Abbruch, Commit, Undo/Redo, Blattwechsel, Reset, Restore und Recovery
+frisch abgeleitet. Die nebenwirkungsfreie Analyse verwendet begrenzte dynamische
+Programmierung statt vollständiger Enumeration. Ein Cache hält nur den letzten
+Eingang jeder Linie; reine Geometrie-/Hover-/Panänderungen starten keine neue Suche.
+
+Erfüllte Zahlen werden dezent durchgestrichen, bleiben in ihrer Rätselfarbe lesbar
+und behalten Größe, Slot und Originalindex. Das gilt für beide Achsen, Überlauf,
+kontinuierlichen Drag und vollständigen Tooltip. `…` und `–` bleiben unverändert.
+Der Schalter „Erfüllte Hinweise markieren“ gilt sitzungsweit für alle Blätter, bleibt
+bei Album-/Blattwechsel und Reset erhalten und startet nach App-Neustart wieder an.
+Aus zeigt normale Zahlen, erneutes Einschalten den aktuellen Stand. Schalter und
+Analyse erzeugen weder Rasteraktion noch History, `undo_used`, Save/Autosave oder
+Abschluss und verändern keine semantische Leseposition. Flags und Option gehören
+nicht zum Puzzle-Saveformat; Pflicht-Flush und Recovery bleiben unverändert.
 
 Die stets sichtbare Miniatur enthält nur Spielerzustand und gegebenenfalls dieselbe
 Vorschau, keine korrigierte Lösung. Unbekannt/leer/gefüllt unterscheidbar; richtige
@@ -349,6 +380,12 @@ K-06: Der Nutzer hat die angebotene F-01-Spielprobe verwendet und anschließend 
 Die Probe ist **durchgeführt mit Änderungsbedarf**, nicht pauschal bestanden. Der Nutzer beauftragt auf Basis dieses Feedbacks ausdrücklich die Vorbereitung von #9. Die frühe Feedbackschleife blockiert diesen Folgeschritt daher nicht; ihre Änderungen werden in #9 bearbeitet. Fehlende Metadaten/Einzelnachweise bleiben offen und werden mit der erneuten Maus-/Layoutprobe des neuen Artefakts erfasst. Keine vollständige M-01/M-06-/Produktabnahme aus den Screenshots ableiten. Technische Tests ersetzen diese nicht.
 
 ## 9. Aktueller Lieferstand
+
+Für H1 gelten zusätzlich A-H01 bis A-H07 aus #19 und der
+[H1-Prüfbericht mit Eigentümeranleitung](H1_VERIFICATION.md). Die #12-Eigentümerprobe
+wurde später am dort gebundenen Stand als bestanden bestätigt; die folgenden älteren
+P1-Statusabsätze sind keine erneute Öffnung dieser Abnahme. H1 benötigt vor seinem
+Merge eigene technische Checks, Review, reale Eigentümerprobe und Mergefreigabe.
 
 #9 ist als P1.2-Zwischenstand und #11 als P1.3-Zwischenstand in `main` integriert.
 Die neue P1.4-Integration und ihre technischen Ergebnisse stehen im

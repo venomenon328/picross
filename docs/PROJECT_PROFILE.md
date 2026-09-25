@@ -29,6 +29,12 @@ Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Rege
 
 ## Beschlossene Richtung und offene Entscheidungen
 
+[H1 / Issue #19](https://github.com/venomenon328/picross/issues/19) ergänzt die
+lösungsunabhängige optionale Erfüllungsmarkierung gemäß P1 §5.2. Der sitzungsweite
+Schalter startet aktiv, bleibt bei Blattwechsel/Reset erhalten und wird nicht
+persistiert. Nur die vollständigen eigenen Linienhinweise und sichtbaren Zellen
+einschließlich Vorschau dürfen eingehen. [H1-Prüfbericht](H1_VERIFICATION.md).
+
 Produktkern: klassische und farbige kuratierte PC-Bildrätsel, Großrasterfokus, präzise Eingabe, Offline-Solo-Spiel, frühe visuelle Gestaltung sowie der bestätigte Progressions-/Wertungsrahmen. Das ursprüngliche Setup hatte weder Spielmechanik noch Technik festgelegt.
 
 Visuelle Grundlage: sich füllendes Album, warme ruhige 2D-Illustration mit klaren Konturen und Farbflächen, motivtreue Abschlussbilder, Perfektion nur ohne Fehler und ohne Undo. Sammelalbum/Reisealbum bleiben Alternativen. Detailliertere Abschlussbilder dürfen die Rasterstilisierung verfeinern; pixelidentische Silhouetten sind kein allgemeines Qualitätskriterium.
@@ -50,6 +56,13 @@ Referenzhardware aus früheren Nutzerangaben: Windows 11, 2560×1440, Maus, Ryze
 Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, Solver-/Produktionsverträge, Fehlerzählung, Sternschwellen, Wertungswirkung manueller Neutralisierung und Veröffentlichungsdetails bleiben außerhalb dieser begrenzten Festlegungen offen. Keine Regeln aus anderen Projekten übernehmen. Python dient hier Prüf-/Buildwerkzeugen, nicht der Wahl eines Produktstacks.
 
 ## Branches und Befugnisse
+
+H1 verwendet `feat/19-clue-completion` vom aktuellen `main`, Ziel `main`, mit eigenem
+Draft-PR. Der Durchführungsauftrag erlaubt H1, Tests, Dokumentation, Commit/Push und
+Draft-PR; weder Merge noch Issueschluss. Bei Start ist #17/PR #18 weiterhin offen
+und nicht integriert. Seine Lieferung wird nicht geändert; gemeinsame Stellen bei
+einer späteren Integration zusammenführen. #12 hat die bisherige reale Eigentümerprobe
+bestätigt; H1 verlangt ausschließlich seine zusätzliche gezielte Probe.
 
 Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter Freigabe. Keine automatische Branchlöschung, kein Force-Push und keine direkten Änderungen am Zielbranch ohne passende Befugnis.
 
@@ -99,6 +112,13 @@ Solver-/Assetplattform erforderlich.
 Für die technische Lieferung von #12 müssen `product` aus [P1 product verification](../.github/workflows/p1-product.yml), `docs` und der weiterhin aktive `preflight` für den finalen Head tatsächlich erfolgreich sein. Der Produktweg enthält Speicher-/Fehler-/Recoverytests, den bestehenden echten Zwei-Prozess-Roundtrip und die neue 500-Aktionen-Folge samt Neustart im isolierten Profil; Windows-Export und Renderregressionen bleiben enthalten. Produktartefakte werden 14 Tage gespeichert. Ein Headless-Start oder synthetisches Event ersetzt M-04 oder die reale Maus-/GUI-Abnahme nicht.
 
 ## Abnahme und Übergaben
+
+Für H1 müssen `product`, `docs` und `preflight` am finalen Head/zugehörigen Test-Merge
+tatsächlich erfolgreich sein. Der isolierte Produktweg ergänzt unabhängigen
+Linienoracle, echte Vorher-/Nachher-Renderbilder und Cache-/Zustandsregressionen;
+500-Aktionen-Folge, Neustart, Save-/Recoveryfälle und Windows-Export bleiben Pflicht.
+Die gezielte H1-Eigentümerprobe gemäß #19 bleibt ein separates Gate **vor Merge**.
+Commit-, Artefakt-, Hash- und Runbindung sowie Selbstreview stehen im eigenen PR.
 
 Vollständigen Diff gegen den Auftrag prüfen: keine versteckten Produktentscheidungen, Secrets, ungeklärten Assets, unerreichbaren Pflichtquellen oder ungefragten Änderungen der gemeinsamen Regeln. Technischen Nachweis, Selbstreview, Nutzerprobe, Merge- und Releasefähigkeit unterscheiden. Ein getrennter Selbstreview ist keine unabhängige Zweitprüfung.
 

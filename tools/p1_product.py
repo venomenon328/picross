@@ -156,6 +156,13 @@ def main() -> int:
                 raise toolchain.PreflightError("Unexpected negative-test failure")
             results.append(negative)
             phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
+            h1_files = {}
+            for source, name in (("tools/h1_owner_probe.gd", "h1-owner-probe.gd"),
+                                 ("tools/h1_owner_probe.ps1", "h1-owner-probe.ps1"),
+                                 ("docs/H1_VERIFICATION.md", "H1-PRUEFUNG.md")):
+                shutil.copyfile(root / source, output / name)
+                h1_files[name] = toolchain.sha256_file(output / name)
+            phase("h1-owner-probe-start", base + ["--script", str(output / "h1-owner-probe.gd"), "--", "--h1-probe-smoke"], "H1_OWNER_PROBE_OK")
             renders = output / "renders"
             renders.mkdir(exist_ok=True)
             environment["P1_CAPTURE_DIR"] = str(renders)
@@ -172,6 +179,7 @@ def main() -> int:
             if host == "Windows":
                 phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
                 phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"), "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
+                phase("h1-windows-probe-start", [str(build / "picross-p1.console.exe"), "--headless", "--script", str(output / "h1-owner-probe.gd"), "--", "--h1-probe-smoke"], "H1_OWNER_PROBE_OK")
             commit, dirty = toolchain.source_commit(root)
             checkout_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
             owner_probe = output / "owner-probe.ps1"
@@ -184,10 +192,11 @@ def main() -> int:
                             integration=integration_summary,
                             integration_files={p.name: toolchain.sha256_file(p) for p in sorted(integration_dir.iterdir()) if p.is_file()},
                             owner_probe_sha256=toolchain.sha256_file(owner_probe),
+                            h1_probe_files=h1_files,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="OPEN: owner M-01/M-02/M-03/M-04/M-06/M-07 and real Windows scaling/responsiveness; F-01 artwork direction already confirmed")
+                            manual_acceptance="OPEN: targeted H1 owner probe per issue 19; prior P1 acceptance remains bound to issue 12's artifact")
             archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"))
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)
