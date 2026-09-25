@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 25.09.2026 · Spezifikation 0.12 · P1.4 integriert und abgenommen; G1 aus #17 technisch geliefert
+Stand: 25.09.2026 · Spezifikation 0.13 · P1.4, G1 und H1 integriert
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -8,16 +8,16 @@ Paketquelle ist [Issue #5](https://github.com/venomenon328/picross/issues/5). Hi
 
 Maßgebliche Grundlagen sind [Produktdefinition](PRODUCT_DEFINITION.md), [Gestaltungskonzept](DESIGN_CONCEPT.md), [Projektprofil](PROJECT_PROFILE.md) und [lokaler Workflow](dev-rules/WORKFLOW.md); Einstieg bleibt [AGENTS.md](../AGENTS.md). Vor Ausführung die aktuellen Quellen und Issue-Kommentare prüfen.
 
-Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) und [P1.2 / Issue #9](https://github.com/venomenon328/picross/issues/9) wurden über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert. [P1.3 / Issue #11](https://github.com/venomenon328/picross/issues/11) wurde über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` integriert. [P1.4 / #12](https://github.com/venomenon328/picross/issues/12) wurde nach technischer Gesamtprüfung und bestandener Eigentümerprobe über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` integriert; der commitgebundene Stand steht im [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md). #17/G1 ergänzt darauf die erneute Achsenwahl nach tatsächlicher Rückkehr zur Startzelle. Die dafür vorgesehene gezielte reale Mausprobe ist nicht als bestanden dokumentiert; durch die ausdrückliche Mergeentscheidung vom 25.09.2026 ist sie für PR #18 jedoch kein verbleibendes Mergegate.
+Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Preflight über PR #13. [P1.1 / Issue #8](https://github.com/venomenon328/picross/issues/8) und [P1.2 / Issue #9](https://github.com/venomenon328/picross/issues/9) wurden über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44` in `main` integriert. [P1.3 / Issue #11](https://github.com/venomenon328/picross/issues/11) wurde über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436` integriert. [P1.4 / #12](https://github.com/venomenon328/picross/issues/12) wurde nach technischer Gesamtprüfung und bestandener Eigentümerprobe über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` integriert; der commitgebundene Stand steht im [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md). #17/G1 ist über PR #18 als `6dd33232977127592c2b881f73094658853dbd87` integriert. H1/#19 ergänzt darauf die lösungsunabhängige optionale Erfüllungsmarkierung. Die gezielten realen G1-/H1-Proben sind nicht als bestanden dokumentiert; durch die ausdrücklichen Mergeentscheidungen vom 25.09.2026 sind sie für PR #18 beziehungsweise PR #20 keine verbleibenden Mergegates.
 
 **Ist/Soll:** D-07 bis D-27, Persistenz/Recovery und die integrierte P1.4-Prüfung sind
 bis einschließlich PR #16 in `main` integriert. M-01 bis M-04 sowie M-06/M-07 wurden
 in #12 am dort gebundenen Stand vom Eigentümer bestätigt; historische Prüfberichte
-bleiben Nachweise ihrer jeweiligen Commits. #17/G1 ist die einzige neue Verhaltensänderung
-dieses Pakets und benötigt eigene technische Nachweise; seine reale Mausprobe wird nicht
-rückwirkend aus #12 abgeleitet.
+bleiben Nachweise ihrer jeweiligen Commits. G1/#17 ist in `main` integriert. H1/#19 ist die neue Produktfunktion dieses Pakets
+und benötigt am kombinierten Stand eigene technische Nachweise; keine gezielte reale
+Probe wird rückwirkend aus #12 abgeleitet oder als bestanden ausgegeben.
 
-**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; #12 schließt die integrierte 500-Aktionen-, Windows-, Bedien- und Performanceprüfung ab. #17 ergänzt ausschließlich die Startzell-Rückkehr zur erneuten Achsenwahl. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md), historischer [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
+**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; #12 schließt die integrierte 500-Aktionen-, Windows-, Bedien- und Performanceprüfung ab. #17 ergänzt die Startzell-Rückkehr zur erneuten Achsenwahl; #19/H1 ergänzt die lösungsunabhängige Erfüllungsmarkierung und ihren sitzungsweiten Schalter. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md), [H1-Prüfbericht](H1_VERIFICATION.md), historischer [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
 
 Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen weder die endgültige Produktengine noch die gesamte Betriebssystemmatrix, Wertung oder Themenwahl fest. Frühere P1-Vorschläge in Issue-Revision 0.1 und Gestaltungskonzept Abschnitt 7 sind innerhalb dieses Scopes abgelöst; globale Produktfragen bleiben offen.
 
@@ -235,7 +235,38 @@ Rasterzoom oder Miniaturrahmen. Darüberfahren einer gekürzten Folge zeigt weit
 die vollständige farbige Folge als umbrechenden Tooltip im Arbeitsbild. Dieser ist
 Ergänzung, nicht der einzige Zugriff; es gibt keinen eigenen Hinweisbildschirm oder
 modalen Ersatzdialog. Keine automatische Fehler-/Erfüllungsmarkierung durch
-Lösungsvergleich. Hinweisabhaken ist nicht erforderlich.
+Lösungsvergleich. Manuelles Hinweisabhaken ist nicht erforderlich.
+
+**H1 / [Issue #19](https://github.com/venomenon328/picross/issues/19):** Die optionale,
+standardmäßig aktive Erfüllungsmarkierung analysiert ausschließlich vollständige
+Linienwerte und deren geordnete Längen-/Farbhinweise. Unbekannt bleibt offen, X ist
+leer, eine Füllung legt die Farbe fest. Gleichfarbige Nachbarblöcke benötigen Abstand,
+verschiedenfarbige dürfen angrenzen. Ein Hinweis ist genau dann erfüllt, wenn es
+mindestens eine kompatible vollständige Linienbelegung gibt, sein Block in allen
+solchen Belegungen dasselbe Intervall hat und dieses bereits vollständig in der
+richtigen Farbe gesetzt ist. Eindeutig erzwungene, aber noch unbekannte Zellen genügen
+nicht. Rand-X sind keine Pflicht; ein mehrdeutiger Mittelblock bei `3 3` bleibt auch
+mit Rand-X unmarkiert. Existiert keine kompatible Belegung, bleiben alle Hinweise
+dieser Linie unmarkiert. Andere Linien werden unabhängig bewertet.
+
+Keine Verwendung von Lösung, Reveal, Abschluss, Fehlerstatistik, Proof oder kreuzenden
+Hinweisen; auch ein gegenüber der Lösung falsch platzierter, linienintern eindeutiger
+Block wird markiert. Keine automatischen Zellen oder zusätzliche Widerspruchsanzeige.
+Die Markierung folgt `visible_cells()` einschließlich elastischer Vorschau und wird
+nach Rückzug, Abbruch, Commit, Undo/Redo, Blattwechsel, Reset, Restore und Recovery
+frisch abgeleitet. Die nebenwirkungsfreie Analyse verwendet begrenzte dynamische
+Programmierung statt vollständiger Enumeration. Ein Cache hält nur den letzten
+Eingang jeder Linie; reine Geometrie-/Hover-/Panänderungen starten keine neue Suche.
+
+Erfüllte Zahlen werden dezent durchgestrichen, bleiben in ihrer Rätselfarbe lesbar
+und behalten Größe, Slot und Originalindex. Das gilt für beide Achsen, Überlauf,
+kontinuierlichen Drag und vollständigen Tooltip. `…` und `–` bleiben unverändert.
+Der Schalter „Erfüllte Hinweise markieren“ gilt sitzungsweit für alle Blätter, bleibt
+bei Album-/Blattwechsel und Reset erhalten und startet nach App-Neustart wieder an.
+Aus zeigt normale Zahlen, erneutes Einschalten den aktuellen Stand. Schalter und
+Analyse erzeugen weder Rasteraktion noch History, `undo_used`, Save/Autosave oder
+Abschluss und verändern keine semantische Leseposition. Flags und Option gehören
+nicht zum Puzzle-Saveformat; Pflicht-Flush und Recovery bleiben unverändert.
 
 Die stets sichtbare Miniatur enthält nur Spielerzustand und gegebenenfalls dieselbe
 Vorschau, keine korrigierte Lösung. Unbekannt/leer/gefüllt unterscheidbar; richtige
@@ -357,20 +388,27 @@ verwendet und mit Änderungsbedarf zurückgemeldet. Die daraus entstandenen Änd
 wurden in den späteren P1-Paketen bearbeitet. Dieser historische Befund ist keine
 aktuelle offene Gesamt-Abnahme.
 
-Für #17/G1 gelten die neuen technischen Nachweise des konkreten PR-#18-Heads. Die
-vorgesehene gezielte reale G1-Mausprobe ist nicht als bestanden dokumentiert. Der
-Eigentümer hat nach Review R1 am 25.09.2026 ausdrücklich die B-01-Nacharbeit und den
-anschließenden Merge beauftragt; damit ist diese Probe für genau diesen Merge kein
-verbleibendes Gate. Sie wird dadurch nicht als ausgeführt oder bestanden bezeichnet.
+G1/#17 ist nach Review R2 und erfolgreichen aktuellen Checks über PR #18 als
+`6dd33232977127592c2b881f73094658853dbd87` integriert. Seine gezielte reale
+Mausprobe wurde nicht durchgeführt und nicht als bestanden bezeichnet.
+
+Für H1 gelten A-H01 bis A-H07 aus #19 und der
+[H1-Prüfbericht mit Eigentümeranleitung](H1_VERIFICATION.md). Die gezielte reale
+H1-Probe ist ebenfalls nicht als bestanden dokumentiert. Der Eigentümer hat nach
+Review R1 am 25.09.2026 ausdrücklich die B-01-Nacharbeit und den anschließenden Merge
+von PR #20 beauftragt; damit ist diese Probe für genau diesen Merge kein verbleibendes
+Gate. Der finale kombinierte Head muss die aktuellen technischen Checks einschließlich
+der G1-Regressionen bestehen.
 
 ## 9. Aktueller Lieferstand
 
-P1.1/P1.2, P1.3 und P1.4 sind über PR #14 bis #16 in `main` integriert. #12
-dokumentiert die bestandene Gesamtprobe des dortigen Stands. #17/G1 ergänzt auf dieser
-Basis die erneute Achsenwahl nach tatsächlicher Rückkehr zur Startzelle; seine
-technischen Nachweise stehen in PR #18. Die gezielte reale G1-Probe bleibt als nicht
-durchgeführtes Produktfeedback sichtbar, ist nach der ausdrücklichen Mergeentscheidung
-vom 25.09.2026 aber kein Mergegate für PR #18.
+P1.1/P1.2, P1.3, P1.4 und G1/#17 sind über PR #14 bis #18 in `main` integriert.
+#12 dokumentiert die bestandene Gesamtprobe seines Stands; PR #18 dokumentiert die
+technisch geprüfte Achsenneuwahl. H1/#19 ergänzt auf dieser Basis die
+lösungsunabhängige Erfüllungsmarkierung und ist über PR #20 am kombinierten Stand
+integriert. Die gezielten realen G1-/H1-Proben bleiben als nicht durchgeführtes
+Produktfeedback sichtbar, sind nach den ausdrücklichen Mergeentscheidungen vom
+25.09.2026 aber keine Mergegates für PR #18/#20.
 
 Die endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses
 Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte Risikostränge.

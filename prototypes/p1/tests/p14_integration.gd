@@ -34,6 +34,9 @@ func run() -> void:
 	app.select_puzzle(2)
 	await process_frame
 	await process_frame
+	if not app.mark_completed_clues or not app.board.mark_completed_clues:
+		fail("H1 completion marking must remain enabled for the 500-action run and restart")
+		return
 	if OS.get_cmdline_user_args().has("--read"):
 		verify_restart(expected_path)
 		return

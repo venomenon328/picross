@@ -1,10 +1,38 @@
 # P1 · Integrierte Windows-Spielprobe
 
+H1 aus [#19](https://github.com/venomenon328/picross/issues/19) ergänzt automatisch
+durchgestrichene, eindeutig erfüllte Hinweise. Die gezielte neue Eigentümerprobe ist
+nicht als bestanden dokumentiert; technische Nachweise und Schritte stehen im
+[H1-Prüfbericht](../../docs/H1_VERIFICATION.md) und in PR #20; H1 ist dort integriert. Nach Review R1 hat
+der Eigentümer die B-01-Nacharbeit und den anschließenden Merge ausdrücklich
+beauftragt; die Probe ist für diesen Merge daher kein verbleibendes Gate. Die in
+#12 bestätigte bisherige P1-Probe bleibt gültig.
+
+„Erfüllte Hinweise markieren“ startet an und gilt für alle Blätter derselben
+App-Sitzung. Album-/Blattwechsel und Reset erhalten die Auswahl; nach Neustart ist
+sie wieder an. Aus zeigt normale Zahlen, erneutes Einschalten den aktuellen Stand.
+Die Zahl bleibt farbig und an derselben Stelle; auch vollständige Hoverhinweise
+zeigen den Strich. `…` und `–` werden nicht markiert.
+
+Es zählt nur die ganze betreffende Linie einschließlich ihrer eigenen Hinweise und
+deiner aktuellen Füllungen/X samt elastischer Vorschau. Ein vollständig gefüllter
+Block wird nur bei eindeutiger Zuordnung markiert. X können Eindeutigkeit herstellen,
+sind aber keine allgemeine Pflicht. Bei Widerspruch entfallen alle Markierungen
+dieser Linie. Das prüft nicht die hinterlegte Lösung, verändert keine Zellen und
+verrät kein bestimmtes falsches Feld. Rückzug, Abbruch, Undo/Redo und Recovery führen
+die Anzeige mit; Flags und Schalter werden nicht im Spielstand gespeichert.
+
+Im äußeren technischen Artefakt liegen `H1-PRUEFUNG.md`, `h1-owner-probe.ps1`,
+`h1-owner-probe.gd` und `h1-probe-windows-x86_64.zip` für die separate künstliche
+Windows-Linienprobe. Sie gehören nicht zum normalen Benutzer-ZIP und greifen nicht
+auf gespeicherte Puzzles zu.
+
 P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) und
 [P1.4 / #12](https://github.com/venomenon328/picross/issues/12) sind über
 PR #15/#16 in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md).
-G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ergänzt die
-erneute Achsenwahl nach tatsächlicher Rückkehr zur Startzelle. F-01 (20×20),
+G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ist über
+PR #18 integriert und ergänzt die erneute Achsenwahl nach tatsächlicher Rückkehr
+zur Startzelle. H1/#19 ist über PR #20 auf diesem kombinierten Stand integriert. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
 sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
@@ -133,11 +161,13 @@ detaillierteren Illustration desselben Motivs. F-02 zeigt einen verfeinerten Leu
 mit Sonne, Laterne, Turmbändern, Fenstern, Tür und Wasserlinien im klaren F-01-Stil.
 F-03 bleibt auch danach als Test gekennzeichnet.
 
-## Gezielte G1-Eigentümerprobe · offen
+## Optionale G1-Nachprobe · nicht durchgeführt
 
 Die M-01-bis-M-04- und M-06/M-07-Proben des bisherigen P1-Stands sind in
 [#12](https://github.com/venomenon328/picross/issues/12) als bestanden dokumentiert.
-G1 erfordert am neuen commitgebundenen Windows-ZIP eine gezielte echte Mausprobe:
+Die folgende G1-Nachprobe wurde nicht durchgeführt und wird nicht als bestanden
+behauptet; nach ausdrücklicher Eigentümerentscheidung war sie für PR #18 kein
+Mergegate. Sie bleibt als optionaler realer Eindruck dokumentiert:
 
 1. F-01: Einen linken Strich nach rechts, links, unten und oben ziehen. Jeweils bei
    gedrückter Taste exakt zur Startzelle zurückkehren und senkrecht weiterziehen;

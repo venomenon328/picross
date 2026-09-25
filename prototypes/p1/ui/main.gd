@@ -40,6 +40,8 @@ var sidebar: VBoxContainer
 var page: VBoxContainer
 var minimum_message: Label
 var clue_reset_button: Button
+var clue_completion_toggle: CheckBox
+var mark_completed_clues: bool = true
 var ui_scale: float = 1.0
 var choices: Array[Button] = []
 var album_previews: Array[Miniature] = []
@@ -203,6 +205,11 @@ func _build() -> void:
 	sidebar.add_child(coordinate)
 	clue_reset_button = button("Hinweise rasterseitig ausrichten", board.reset_clue_pan)
 	sidebar.add_child(clue_reset_button)
+	clue_completion_toggle = CheckBox.new()
+	clue_completion_toggle.text = "Erfüllte Hinweise markieren"
+	clue_completion_toggle.button_pressed = mark_completed_clues
+	clue_completion_toggle.toggled.connect(set_clue_completion)
+	sidebar.add_child(clue_completion_toggle)
 	work_repair_button = button("Backup zum Speichern übernehmen", _ask_repair)
 	sidebar.add_child(work_repair_button)
 	var scroll: ScrollContainer = ScrollContainer.new()
@@ -260,6 +267,12 @@ func _check_minimum() -> void:
 	page.visible = not small
 	if small:
 		board.cancel_gesture()
+
+func set_clue_completion(enabled: bool) -> void:
+	mark_completed_clues = enabled
+	clue_completion_toggle.set_pressed_no_signal(enabled)
+	board.mark_completed_clues = enabled
+	board.queue_redraw()
 
 func set_ui_scale(value: float) -> void:
 	ui_scale = value

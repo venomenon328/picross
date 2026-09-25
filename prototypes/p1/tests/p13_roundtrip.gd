@@ -22,7 +22,10 @@ func run() -> void:
 	root.add_child(app)
 	await process_frame
 	await process_frame
+	if not require(app.mark_completed_clues and app.board.mark_completed_clues, "H1 new process defaults to enabled"):
+		return
 	if OS.get_cmdline_user_args().has("--write"):
+		app.set_clue_completion(false)
 		app.open_puzzle()
 		await process_frame
 		await process_frame
