@@ -47,9 +47,18 @@ def verify(root: Path, project: Path, engine: str, environment: dict, host: str,
     commit, dirty = toolchain.source_commit(root)
     original_environment = environment.copy()
     environment.update(toolchain.isolated_environment(project.parent / "z1-check-profile", host))
-    env_keys = {"Z1_CAPTURE_DIR": str(renders), "Z1_SOURCE_COMMIT": commit}
+    env_keys = {"Z1_CAPTURE_DIR": str(renders), "Z1_SOURCE_COMMIT": commit,
+                "Z1_PROFILE_ROOT": str(project.parent / "z1-check-profile")}
     environment.update(env_keys)
     base = [engine, "--path", str(project)]
+    guard_environment = environment.copy()
+    del guard_environment["Z1_PROFILE_ROOT"]
+    guard = subprocess.run(base + ["--headless", "--script", "res://tests/z1_capture.gd"],
+                           env=guard_environment, capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", timeout=300, check=False)
+    (destination / "isolation-guard.log").write_text(guard.stdout + guard.stderr, encoding="utf-8", newline="\n")
+    if guard.returncode != 2 or "Z1_ISOLATION_REQUIRED" not in guard.stdout:
+        raise toolchain.PreflightError("Z1 unbound test profile was not rejected before file access")
     phase("z1-scene-tests", base + ["--headless", "--script", "res://tests/z1_capture.gd", "--", "--z1-capture", "--z1-tests-only"], "Z1_TESTS_OK")
     render = base + ["--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--script", "res://tests/z1_capture.gd", "--", "--z1-capture"]
     if host == "Linux":
@@ -65,6 +74,7 @@ def verify(root: Path, project: Path, engine: str, environment: dict, host: str,
                 github_run_id=os.environ.get("GITHUB_RUN_ID"), host=host,
                 engine_version=toolchain.EXPECTED_VERSION,
                 checks=report["checks"], failures=report["failures"],
+                isolation_guard="unbound profile rejected with exit 2 before file access",
                 dependency_files={p.relative_to(project).as_posix(): toolchain.sha256_file(p) for p in sorted(dependencies)},
                 fixtures={p.name: toolchain.sha256_file(p) for p in sorted((project / "data").glob("*.json"))},
                 render_files={p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()},
@@ -113,4 +123,5 @@ def export(root: Path, project: Path, workspace: Path, engine: str, host: str, o
         bundle.writestr("z1-report.json", report)
         bundle.write(root / "prototypes/p1/design/ASSETS.md", "ASSETS.md")
         bundle.write(root / "prototypes/p1/design/licenses/OpenSans.txt", "licenses/OpenSans.txt")
+        bundle.write(root / "prototypes/p1/design/licenses/Godot.txt", "licenses/Godot.txt")
     print(f"Z1 ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)

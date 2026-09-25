@@ -111,6 +111,14 @@ func snapshot(name: String) -> void:
 			break
 
 func run() -> void:
+	# Refuse a direct invocation against the owner's normal Godot profile.
+	# The harness must bind user:// beneath its freshly isolated temporary root.
+	var profile: String = OS.get_environment("Z1_PROFILE_ROOT").replace("\\", "/").simplify_path().to_lower()
+	var user_path: String = ProjectSettings.globalize_path("user://").replace("\\", "/").simplify_path().to_lower()
+	if profile.is_empty() or not user_path.begins_with(profile.trim_suffix("/") + "/"):
+		print("Z1_ISOLATION_REQUIRED")
+		quit(2)
+		return
 	output = OS.get_environment("Z1_CAPTURE_DIR")
 	tests_only = OS.get_cmdline_user_args().has("--z1-tests-only")
 	if output.is_empty():
