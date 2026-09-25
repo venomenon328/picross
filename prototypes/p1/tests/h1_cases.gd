@@ -253,6 +253,30 @@ static func scene_cases(t: SceneTree) -> void:
 	t.check(board.completion_cache.size() == 40 and board.capture_view() == view_before, "H1 session switch replaces cache without moving reads")
 	board.queue_free()
 	await t.process_frame
+	# Integration regression with G1: an H1 marker from the abandoned arm must
+	# disappear when the pointer actually returns to the start cell and switches axis.
+	var switch_data: Dictionary = Definition.load_f01()
+	switch_data.rows[4] = clues([3])
+	switch_data.columns[5] = clues([3])
+	var switch_board: Board = Board.new()
+	switch_board.size = Vector2(1100, 700)
+	switch_board.session = Session.new(switch_data)
+	t.root.add_child(switch_board)
+	await t.process_frame
+	switch_board.view.center = Vector2(10, 10)
+	switch_board.view.reframe()
+	var switch_start: Vector2i = Vector2i(5, 4)
+	send(t, switch_board, switch_start, MOUSE_BUTTON_LEFT, true)
+	move(t, switch_board, Vector2i(7, 4))
+	t.check(switch_board.completion_flags("row", 4) == [true] and switch_board.completion_flags("column", 5) == [false], "H1 G1 old horizontal arm marks only its row")
+	move(t, switch_board, switch_start)
+	t.check(switch_board.completion_flags("row", 4) == [false] and switch_board.completion_flags("column", 5) == [false], "H1 G1 origin return clears abandoned arm marker")
+	move(t, switch_board, Vector2i(5, 6))
+	t.check(switch_board.completion_flags("row", 4) == [false] and switch_board.completion_flags("column", 5) == [true], "H1 G1 new vertical arm marks only its column")
+	switch_board.cancel_gesture()
+	t.check(switch_board.completion_flags("row", 4) == [false] and switch_board.completion_flags("column", 5) == [false], "H1 G1 cancel clears switched preview markers")
+	switch_board.queue_free()
+	await t.process_frame
 	await app_cases(t)
 
 static func app_cases(t: SceneTree) -> void:
