@@ -200,6 +200,9 @@ zwei UI-Skalierungen, Variantenidentität, Undo/Redo, Farbauswahl, Werkzeugwahl,
 Board-/Miniaturnavigation, Einzelhinweisnavigation, Vorschauabbruch beim Stilwechsel,
 Hilfe/Menü samt Eingabesperre, Save-Sentinel im eigenen isolierten Profil und
 statischer vollständiger Abhängigkeitsabschluss ohne normalen Savepfad.
+Der Capture-Test verweigert vor Dateizugriffen den Start, wenn `user://` nicht
+unter dem vom Harness benannten temporären Profil liegt. Der Negativpfad ohne
+Profilbindung muss mit Exit 2 und `Z1_ISOLATION_REQUIRED` enden.
 Echte Renderprüfungen prüfen unveränderte Farbpixel, Board/Miniatur und H1-On/Off.
 
 Die technische Abschlussbindung liegt im Draft-PR: finaler Head, Test-Merge,

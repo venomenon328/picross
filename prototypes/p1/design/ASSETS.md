@@ -13,6 +13,8 @@ Geprüfte Primärquellen vom 25.09.2026:
 [Open-Sans-Lizenz im selben Tag](https://github.com/godotengine/godot/blob/4.7.2-stable/thirdparty/fonts/LICENSE.OpenSans.txt).
 Die vollständige unveränderte OFL liegt in `licenses/OpenSans.txt` und im Vorschau-ZIP.
 Die Schriftdatei selbst wird nicht zusätzlich extrahiert oder versioniert.
+Die unveränderte [Godot-MIT-Lizenz des gebundenen Tags](https://github.com/godotengine/godot/blob/4.7.2-stable/LICENSE.txt)
+liegt in `licenses/Godot.txt` und ebenfalls im Vorschau-ZIP.
 
 Diese Entwürfe wählen weder Sammelalbum noch Reisealbum. Das generische Blattornament
 enthält keine Geografie und keines der ungelösten Fixturemotive.
