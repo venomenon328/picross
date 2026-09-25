@@ -47,7 +47,7 @@ enthält nur EXE-Paar, Anleitung und Bericht; die künstliche Linienprobe liegt 
 Nach Download Hashes/Identität und exportierten Windows-Start kontrollieren.
 Artefaktaufbewahrung: 14 Tage. Selbstreview ist keine unabhängige Zweitprüfung.
 
-## Gezielte Eigentümerprobe · offen vor H1-Merge
+## Gezielte Eigentümerprobe · nicht durchgeführt
 
 Mit dem im Draft-PR verlinkten Windows-Artefakt, echter Maus und einem eigenen
 TEMP-Profil prüfen. Das normale Benutzer-ZIP entpacken; für F-02/F-03 den vorhandenen
@@ -101,7 +101,9 @@ Protokoll: Head/Artefakt/ZIP-Hash ____; Windows ____; Bildschirm ____; Client/Ra
 ____; tatsächliche Windows-Skalierung ____; UI/Zoom ____; Maus ____; Ergebnis und
 Abweichung je 1–5 ____. Technische Rendermaße ersetzen diese Angaben nicht.
 
-Ergebnis derzeit **offen**. Vor Merge: A-H01 bis A-H07, unabhängiger Review des
-konkreten Diffs/Heads, diese gezielte Eigentümerprobe und ausdrückliche/passende
-bedingte Mergefreigabe. Kein neues Gesamt-P1-Gate für unveränderte #12-Szenarien;
-PR #18 behält seinen separaten Prüf- und Abnahmestand. Kein Merge/Issueschluss/Release.
+Ergebnis der realen Probe derzeit **nicht durchgeführt** und ausdrücklich nicht als
+bestanden zu behandeln. Nach Review R1 hat der Eigentümer am 25.09.2026 die B-01-
+Nacharbeit und den anschließenden Merge von PR #20 beauftragt. Damit ist die Probe für
+diesen Merge kein verbleibendes Gate; A-H01 bis A-H07, Review-Nacharbeit und aktuelle
+technische Prüfungen des finalen kombinierten Heads bleiben erforderlich. Kein neues
+Gesamt-P1-Gate für unveränderte #12-Szenarien und kein Release aus dieser Entscheidung.
