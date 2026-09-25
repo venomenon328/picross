@@ -221,7 +221,7 @@ def main() -> int:
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="OPEN: targeted H1 owner probe per issue 19; prior P1 acceptance remains bound to issue 12's artifact")
+                            manual_acceptance="NOT RUN: targeted G1/H1 owner probes; owner explicitly authorized both merges after review/technical checks; prior P1 acceptance remains bound to issue 12's artifact")
             archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"))
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)
