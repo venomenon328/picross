@@ -1,0 +1,1381 @@
+{
+  "a-f02-1920": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1412,
+        195,
+        63.40625,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.6402
+    },
+    {
+      "text": "Sammlung / F-02",
+      "box": [
+        82.5,
+        43,
+        234.625,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.0986
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1406,
+        424,
+        90.536865234375,
+        17
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.6593
+    },
+    {
+      "text": "Raster 18 px · UI 100 %",
+      "box": [
+        1406,
+        598,
+        128.75,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.592
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        1406,
+        622,
+        84.96875,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.5864
+    }
+  ],
+  "a-f02-2560": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1732,
+        375,
+        63.40625,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.6402
+    },
+    {
+      "text": "Sammlung / F-02",
+      "box": [
+        110,
+        57,
+        234.625,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.0558
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1726,
+        604,
+        90.536865234375,
+        17
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7355
+    },
+    {
+      "text": "Raster 18 px · UI 100 %",
+      "box": [
+        1726,
+        778,
+        128.75,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.6735
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        1726,
+        802,
+        84.96875,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.6481
+    }
+  ],
+  "a-f01-2560": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1632,
+        445,
+        63.40625,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.6402
+    },
+    {
+      "text": "Sammlung / F-01",
+      "box": [
+        110,
+        57,
+        230.44790649414062,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.0558
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1626,
+        694,
+        90.536865234375,
+        17
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7411
+    },
+    {
+      "text": "Raster 24 px · UI 100 %",
+      "box": [
+        1626,
+        868,
+        128.75,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.5864
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        1626,
+        892,
+        84.96875,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.4888
+    }
+  ],
+  "a-f03-1920": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1702,
+        265,
+        63.40625,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.634
+    },
+    {
+      "text": "Sammlung / F-03",
+      "box": [
+        82.5,
+        43,
+        233.44790649414062,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.0986
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1696,
+        446,
+        90.536865234375,
+        17
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.0076
+    },
+    {
+      "text": "Raster 24 px · UI 100 %",
+      "box": [
+        1694,
+        658,
+        128.75,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.4947
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        1694,
+        682,
+        84.96875,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.9538
+    }
+  ],
+  "a-f02-1280": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1052,
+        192,
+        78.625,
+        19
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.5478
+    },
+    {
+      "text": "Sammlung / F-02",
+      "box": [
+        55,
+        29,
+        234.625,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.3233
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1016,
+        391.25,
+        113.171142578125,
+        21
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.3367
+    },
+    {
+      "text": "Raster 22 px · UI 125 %",
+      "box": [
+        996,
+        620,
+        161.0299072265625,
+        19
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.7051
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        996,
+        650,
+        106.21875,
+        19
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.7242
+    }
+  ],
+  "b-f02-1920": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1412,
+        195,
+        63.40625,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.6402
+    },
+    {
+      "text": "Sammlung / F-02",
+      "box": [
+        82.5,
+        43,
+        234.625,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.3355
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1406,
+        424,
+        90.536865234375,
+        17
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.8067
+    },
+    {
+      "text": "Raster 18 px · UI 100 %",
+      "box": [
+        1406,
+        598,
+        128.75,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.6459
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        1406,
+        622,
+        84.96875,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.6459
+    }
+  ],
+  "b-f02-2560": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1732,
+        375,
+        63.40625,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.6402
+    },
+    {
+      "text": "Sammlung / F-02",
+      "box": [
+        110,
+        57,
+        234.625,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.4757
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1726,
+        604,
+        90.536865234375,
+        17
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7813
+    },
+    {
+      "text": "Raster 18 px · UI 100 %",
+      "box": [
+        1726,
+        778,
+        128.75,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7225
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        1726,
+        802,
+        84.96875,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7554
+    }
+  ],
+  "b-f01-2560": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1632,
+        445,
+        63.40625,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.6402
+    },
+    {
+      "text": "Sammlung / F-01",
+      "box": [
+        110,
+        57,
+        230.44790649414062,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.4757
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1626,
+        694,
+        90.536865234375,
+        17
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7924
+    },
+    {
+      "text": "Raster 24 px · UI 100 %",
+      "box": [
+        1626,
+        868,
+        128.75,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.6459
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        1626,
+        892,
+        84.96875,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.637
+    }
+  ],
+  "b-f03-1920": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1702,
+        265,
+        63.40625,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.634
+    },
+    {
+      "text": "Sammlung / F-03",
+      "box": [
+        82.5,
+        43,
+        233.44790649414062,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.3355
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1696,
+        446,
+        90.536865234375,
+        17
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.3102
+    },
+    {
+      "text": "Raster 24 px · UI 100 %",
+      "box": [
+        1694,
+        658,
+        128.75,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.8057
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        1694,
+        682,
+        84.96875,
+        15
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.1744
+    }
+  ],
+  "b-f02-1280": [
+    {
+      "text": "Dein Stand",
+      "box": [
+        1052,
+        192,
+        78.625,
+        19
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.5478
+    },
+    {
+      "text": "Sammlung / F-02",
+      "box": [
+        55,
+        29,
+        234.625,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.7076
+    },
+    {
+      "text": "Zeile –  Spalte –",
+      "box": [
+        1016,
+        391.25,
+        113.171142578125,
+        21
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.5483
+    },
+    {
+      "text": "Raster 22 px · UI 125 %",
+      "box": [
+        996,
+        620,
+        161.0299072265625,
+        19
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.9374
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        996,
+        650,
+        106.21875,
+        19
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.0303
+    }
+  ],
+  "states": [
+    {
+      "text": "Werkzeuge, Farben und Rückwege",
+      "box": [
+        47,
+        25,
+        460.0167236328125,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Statische Zustandsbeispiele · keine ausgeführten Aktionen oder Speichervorgänge",
+      "box": [
+        48,
+        67,
+        626.203125,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Normal",
+      "box": [
+        390,
+        113,
+        56.69696044921875,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Hover",
+      "box": [
+        615,
+        113,
+        45.9639892578125,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Gedrückt",
+      "box": [
+        840,
+        113,
+        70.242919921875,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Ausgewählt",
+      "box": [
+        1065,
+        113,
+        88.9599609375,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Deaktiviert",
+      "box": [
+        1290,
+        113,
+        83.0780029296875,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Füllen",
+      "box": [
+        48,
+        166,
+        49.65625,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "—",
+      "box": [
+        1290,
+        164,
+        14.046875,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Radierer",
+      "box": [
+        48,
+        236,
+        69.17195129394531,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "—",
+      "box": [
+        1290,
+        234,
+        14.046875,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Hand",
+      "box": [
+        48,
+        306,
+        43.015625,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "—",
+      "box": [
+        1290,
+        304,
+        14.046875,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Farbmuster 2",
+      "box": [
+        48,
+        376,
+        108.375,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "—",
+      "box": [
+        1290,
+        374,
+        14.046875,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Rückgängig",
+      "box": [
+        48,
+        446,
+        93.39396667480469,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "—",
+      "box": [
+        1065,
+        444,
+        14.046875,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Wiederholen",
+      "box": [
+        48,
+        516,
+        102.65625,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "—",
+      "box": [
+        1065,
+        514,
+        14.046875,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Album",
+      "box": [
+        48,
+        586,
+        52.8125,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Information",
+      "box": [
+        48,
+        656,
+        96.328125,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Zum Rätsel",
+      "box": [
+        48,
+        726,
+        91.45393371582031,
+        23
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Auswahl: Unterstrich am Werkzeug, helle Eckmarken am Farbmuster; zusätzlich dauerhafter Werkzeug-/Farbstatus.",
+      "box": [
+        48,
+        796,
+        827.015625,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Farbauswahl aktiviert Füllen, auch nach Hand/Radierer. Undo/Redo sind Aktionen ohne dauerhaften Auswahlzustand.",
+      "box": [
+        48,
+        823,
+        839.640625,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Deaktivierte Navigation: Beispiel eines durch Pflicht-Flush blockierten Übergangs. Rückweg und Zustand bleiben erhalten.",
+      "box": [
+        48,
+        850,
+        872.859375,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Tooltip · F-02 / vollständige Originalfolge, Spalte 20 · BP-1R-Quelldaten",
+      "box": [
+        68,
+        909,
+        512.9375,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.3722
+    },
+    {
+      "text": "H1 · Zeile 2:",
+      "box": [
+        68,
+        982,
+        86.859375,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.1693
+    },
+    {
+      "text": "bestehendes Beispiel aus z1-demo-1; kein Lösungsvergleich.",
+      "box": [
+        230,
+        982,
+        437.96875,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.1693
+    },
+    {
+      "text": "Speicherfehler",
+      "box": [
+        72,
+        1073,
+        144.3979034423828,
+        28
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.2752
+    },
+    {
+      "text": "Temporäre Datei nicht schreibbar.",
+      "box": [
+        72,
+        1111,
+        242.375,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.83
+    },
+    {
+      "text": "Pflicht-Flush fehlgeschlagen: Übergang bleibt blockiert.",
+      "box": [
+        72,
+        1139,
+        397.5,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.4834
+    },
+    {
+      "text": "Backup geladen",
+      "box": [
+        832,
+        1073,
+        155.546875,
+        28
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.2752
+    },
+    {
+      "text": "Primärstand beschädigt. Vor weiterem Speichern",
+      "box": [
+        832,
+        1111,
+        350.546875,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.83
+    },
+    {
+      "text": "Backup bewusst übernehmen. Schreibsperre bleibt aktiv.",
+      "box": [
+        832,
+        1139,
+        408.84375,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.4834
+    },
+    {
+      "text": "Quellen: P1 §6; ui/main.gd und model/save_store.gd am Inputcommit. Beispielzustände, keine neue Meldungssemantik.",
+      "box": [
+        48,
+        1229,
+        861.84375,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Tooltip der Aktion Füllen: „Füllen · links Farbe setzen, rechts leer markieren“. Treffer 44 × 44 px; Icon 26 × 26 px.",
+      "box": [
+        48,
+        1259,
+        806.578125,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    }
+  ],
+  "connection": [
+    {
+      "text": "Anschluss der Informationsseite",
+      "box": [
+        40,
+        27,
+        434.4747314453125,
+        34
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Schematischer rechter Anschluss · kein drittes Buchbild, keine native Navigation",
+      "box": [
+        40,
+        69,
+        610.703125,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Album",
+      "box": [
+        118,
+        151,
+        64.5625,
+        29
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.0132
+    },
+    {
+      "text": "Sammlung / Blattauswahl",
+      "box": [
+        58,
+        201,
+        184.9198455810547,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.3919
+    },
+    {
+      "text": "nav-album → album",
+      "box": [
+        58,
+        228,
+        124.90625,
+        18
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.996
+    },
+    {
+      "text": "Arbeitsseite",
+      "box": [
+        528,
+        151,
+        118.828125,
+        29
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.0132
+    },
+    {
+      "text": "Raster / eigene Miniatur / Werkzeuge",
+      "box": [
+        468,
+        201,
+        264.2318115234375,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.3919
+    },
+    {
+      "text": "nav-work → work",
+      "box": [
+        468,
+        228,
+        108.3798828125,
+        18
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.996
+    },
+    {
+      "text": "Information",
+      "box": [
+        938,
+        151,
+        117.734375,
+        29
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.0132
+    },
+    {
+      "text": "Einstellungen / Hilfe",
+      "box": [
+        878,
+        201,
+        144.919921875,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.3919
+    },
+    {
+      "text": "nav-information → information",
+      "box": [
+        878,
+        228,
+        191.413818359375,
+        18
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 8.996
+    },
+    {
+      "text": "Einstellungen",
+      "box": [
+        64,
+        316,
+        145.46875,
+        30
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.4435
+    },
+    {
+      "text": "UI-Skalierung: 100 % / 125 %",
+      "box": [
+        64,
+        359,
+        229.078125,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.0829
+    },
+    {
+      "text": "Hinweise rasterseitig ausrichten",
+      "box": [
+        64,
+        392,
+        244.5625,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7615
+    },
+    {
+      "text": "Erfüllte Hinweise markieren · sitzungsweit",
+      "box": [
+        64,
+        425,
+        320.48272705078125,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.4165
+    },
+    {
+      "text": "Beenden · Pflicht-Flush bleibt verbindlich",
+      "box": [
+        64,
+        458,
+        315.1875,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.1693
+    },
+    {
+      "text": "Hilfe",
+      "box": [
+        684,
+        316,
+        50.58197021484375,
+        30
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.4435
+    },
+    {
+      "text": "Füllen / Radierer / Hand",
+      "box": [
+        684,
+        359,
+        181.53125,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.0829
+    },
+    {
+      "text": "Hinweisfolgen einzeln ziehen; Tooltip ergänzt",
+      "box": [
+        684,
+        392,
+        342.735595703125,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7615
+    },
+    {
+      "text": "Escape verwirft die laufende Geste",
+      "box": [
+        684,
+        425,
+        265,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.4165
+    },
+    {
+      "text": "Statistik: später / Umfang offen",
+      "box": [
+        684,
+        458,
+        237.640625,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.1693
+    },
+    {
+      "text": "Rückweg aus Album und Information: nav-work → work · „Zur Arbeitsseite zurück · Arbeitsstand erhalten“",
+      "box": [
+        40,
+        547,
+        807.171875,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Erhalten: Zellen, Undo/Redo, Farbe/Werkzeug, Rasterfokus/Zoom und bestätigte Hinweislesepositionen.",
+      "box": [
+        40,
+        581,
+        794.5625,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Gesten vorher abbrechen. Pflicht-Flush und Recovery-Schreibsperre nicht umgehen. Keine Live-Korrektheitsanzeige.",
+      "box": [
+        40,
+        615,
+        885.84375,
+        22
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Präsentationsumschaltung in der Galerie prüft keine dieser nativen Funktionen.",
+      "box": [
+        40,
+        666,
+        567.015625,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    }
+  ],
+  "compact-states": [
+    {
+      "text": "720p / UI 125 % · unskalierte Zustands- und Randprobe",
+      "box": [
+        32,
+        16,
+        653.828125,
+        30
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Statische Ausschnitte des 1280er Falls und Meldungsbeispiele; kein zusätzlicher Spielscreen.",
+      "box": [
+        32,
+        54,
+        669.234375,
+        20
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Raster 22 px · UI 125 %",
+      "box": [
+        712,
+        116,
+        161.0299072265625,
+        19
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Füllen · Farbe 1",
+      "box": [
+        712,
+        146,
+        106.21875,
+        19
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Tooltip einer langen Folge · F-02 / Spalte 20 · Originaldaten, 16,25 px",
+      "box": [
+        32,
+        205,
+        581.0870971679688,
+        24
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.9063
+    },
+    {
+      "text": "Ganze Zahlen bleiben erreichbar; Tooltip ergänzt die Leseposition jeder einzelnen Folge.",
+      "box": [
+        56,
+        291,
+        736.546875,
+        24
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.0797
+    },
+    {
+      "text": "Speicherfehler",
+      "box": [
+        56,
+        369,
+        163.12864685058594,
+        31
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.2692
+    },
+    {
+      "text": "Temporäre Datei nicht schreibbar.",
+      "box": [
+        56,
+        412,
+        284.03125,
+        24
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7363
+    },
+    {
+      "text": "Pflicht-Flush fehlgeschlagen: Der angeforderte Übergang bleibt blockiert.",
+      "box": [
+        56,
+        446,
+        613.359375,
+        24
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.2594
+    },
+    {
+      "text": "Backup geladen",
+      "box": [
+        56,
+        545,
+        175.921875,
+        31
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 10.2692
+    },
+    {
+      "text": "Primärstand beschädigt. Vor weiterem Speichern Backup bewusst übernehmen.",
+      "box": [
+        56,
+        588,
+        670.40625,
+        24
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.7557
+    },
+    {
+      "text": "Schreibsperre bleibt bis zur bewussten Übernahme aktiv.",
+      "box": [
+        56,
+        622,
+        478.453125,
+        24
+      ],
+      "fill": "rgb(41, 62, 61)",
+      "minimum": 9.2594
+    }
+  ]
+}

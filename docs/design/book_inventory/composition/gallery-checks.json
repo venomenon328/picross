@@ -1,0 +1,91 @@
+{
+  "renderer": "154.0.4258.37",
+  "source": "extracted bp3-review.zip, file protocol",
+  "index_sha256": "935a72ab293176529f8be676baa56b89f7a7ef4042f2aed2842d969475246f25",
+  "cases": [
+    {
+      "case": "f02-1920",
+      "variant": "a",
+      "natural_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "case": "f02-1920",
+      "variant": "b",
+      "natural_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "case": "f02-2560",
+      "variant": "a",
+      "natural_size": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "case": "f02-2560",
+      "variant": "b",
+      "natural_size": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "case": "f01-2560",
+      "variant": "a",
+      "natural_size": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "case": "f01-2560",
+      "variant": "b",
+      "natural_size": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "case": "f03-1920",
+      "variant": "a",
+      "natural_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "case": "f03-1920",
+      "variant": "b",
+      "natural_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "case": "f02-1280",
+      "variant": "a",
+      "natural_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "case": "f02-1280",
+      "variant": "b",
+      "natural_size": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "external_requests": [],
+  "javascript_errors": [],
+  "native_size_toggle": true,
+  "side_by_side": true
+}
