@@ -222,6 +222,13 @@ Die spätere reale P1.1-Probe lieferte einen Abschluss-Screenshot und einen Rast
 
 ## 7. Weitere Erprobung und offene Entscheidungen
 
+Die isolierten **nicht gewählten** Z1-Richtungen V1 (hell/redaktionell) und V2
+(ruhig/atmosphärisch) aus [#22](https://github.com/venomenon328/picross/issues/22)
+werden in der [Entscheidungsunterlage](design/Z1_DESIGN_REVIEW.md) mit identischen
+Original-Fixtures, echten Godot-Bildern und separater Windows-Probe verglichen.
+Sie wählen weder A noch B und ersetzen den regulären Spielbildschirm nicht.
+Erst die dokumentierte Eigentümerentscheidung vor #23 bestimmt eine Übernahme.
+
 | Thema | Nächster Gegenstand |
 | --- | --- |
 | Themenwahl | A oder B, Kapitel und Motivzusammenhang; bestehende Progressionsanforderungen nicht neu öffnen. |
