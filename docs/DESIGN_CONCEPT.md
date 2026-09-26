@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 25.09.2026 · Arbeitsfassung 0.9 · frühe Konzeption mit P1-Mausfeedback, G1 und H1
+Stand: 26.09.2026 · Arbeitsfassung 0.10 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -66,6 +66,30 @@ A und B bleiben bis zu einer ausdrücklichen Entscheidung parallel untersuchbar.
 Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vorgeschlagen: identische Hinweise, eigener Stand, Miniatur, Werkzeuge und Informationsumfang, ergänzt um Albumansicht und Abschluss. Das ist ein Entwurfsmaßstab, kein bereits gelieferter mathematisch identischer oder spielbarer Vergleich.
 
 ## 4. Visuelle Ausarbeitung
+
+### BP-1: bestätigte Buch-/Inventarrichtung zur Untersuchung
+
+[#27 unter #21](https://github.com/venomenon328/picross/issues/27) präzisiert die
+Bildausarbeitung: ein detailliert illustrierter aufgeschlagener Inventarband auf
+ruhigem Arbeitstisch, mit glaubwürdiger Bindung, Seitenschnitt, Papier und warmem
+Licht. Die einfachen Vektorlandschaften der Vorstudie sind kein Maßstab für die
+fertige Hintergrundkunst. Klare gezeichnete Konturen schließen Materialdetails
+nicht aus. Die obere Buch-/Museumsinventaransicht der ersten Albumstudie ist die
+textlich beschriebene Referenz; deren alte Bildinhalte/Funktionen werden nicht übernommen.
+
+Die [BP-1-Produktionsvorlage](design/book_inventory/production/README.md) liefert
+eine maßhaltige Arbeitskomposition, getrennte UI-/Freihalte-/Beschnittvorlagen,
+fünf Größenproben und das Bildbriefing. Ein flaches eingelegtes Arbeitsblatt
+verdeckt den Falz unter Raster und Hinweisen; große Raster werden weder geteilt
+noch auf eine halbe Buchseite geschrumpft. Die Dateien sind technische Vorlagen,
+keine fertig illustrierte Buchbühne und keine native Bedienabnahme.
+
+Die Buchrichtung ist als Untersuchung bestätigt. S1/P1, Iconausführung und
+Anordnung sind reversible Ausgangspunkte; finale Layout-, Schrift-, Kontrast-
+und Assetwahl bleiben bis zur integrierten Bildkomposition offen. BP-2 benötigt
+einen separaten Bildproduktionsauftrag, BP-3 die beiden tatsächlichen Bilder.
+Sammelalbum/Reisealbum, Sammlungsinhalte und Spielfachverträge bleiben unverändert.
+Aus BP-1 folgt keine Freigabe für #23/#24 oder ein Merge der Referenz-PRs #25/#28.
 
 ### 4.1 Album und Arbeitsansicht
 
