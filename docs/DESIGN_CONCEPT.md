@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 26.09.2026 · Arbeitsfassung 0.10 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
+Stand: 26.09.2026 · Arbeitsfassung 0.11 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -67,35 +67,55 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 
 ## 4. Visuelle Ausarbeitung
 
-### BP-1: bestätigte Buch-/Inventarrichtung zur Untersuchung
+### BP-1R: vergrößerte linke Buchseite
 
-[#27 unter #21](https://github.com/venomenon328/picross/issues/27) präzisiert die
-Bildausarbeitung: ein detailliert illustrierter aufgeschlagener Inventarband auf
-ruhigem Arbeitstisch, mit glaubwürdiger Bindung, Seitenschnitt, Papier und warmem
-Licht. Die einfachen Vektorlandschaften der Vorstudie sind kein Maßstab für die
-fertige Hintergrundkunst. Klare gezeichnete Konturen schließen Materialdetails
-nicht aus. Die obere Buch-/Museumsinventaransicht der ersten Albumstudie ist die
-textlich beschriebene Referenz; deren alte Bildinhalte/Funktionen werden nicht übernommen.
+[#27 unter #21](https://github.com/venomenon328/picross/issues/27) konkretisiert
+nach dem ersten nicht akzeptierten BP-2-A-Versuch die Arbeitskomposition: naher,
+annähernd senkrechter Blick auf eine breite linke Seite eines detailliert
+illustrierten Museums-/Inventarbands. Papierlagen, Einband, kleine sorgfältige
+Randdetails und warmes Licht geben Identität; Tisch und Requisiten treten zurück.
+Raster und beide Hinweisflächen liegen vollständig auf dieser einzelnen flachen
+Seite. Falz rechts außerhalb, allenfalls ein schmaler rechter Seitenanschnitt.
+Keine kleine halbe Bildschirmfläche, keine verzerrte Buchabbildung.
 
-Die [BP-1-Produktionsvorlage](design/book_inventory/production/README.md) liefert
-eine maßhaltige Arbeitskomposition, getrennte UI-/Freihalte-/Beschnittvorlagen,
-fünf Größenproben und das Bildbriefing. Ein flaches eingelegtes Arbeitsblatt
-verdeckt den Falz unter Raster und Hinweisen; große Raster werden weder geteilt
-noch auf eine halbe Buchseite geschrumpft. Die Dateien sind technische Vorlagen,
-keine fertig illustrierte Buchbühne und keine native Bedienabnahme.
+Diese Entscheidung ersetzt ausdrücklich den alten Einlegebogen über dem Mittelfalz
+und die alten Masterkoordinaten/-masken. Die historische
+[BP-1-Lieferung aus PR #29](https://github.com/venomenon328/picross/tree/0d3ad6a921578f94b3249ab83fbb215721549dfb/docs/design/book_inventory/production)
+bleibt eine gültige Lieferung ihres damaligen Auftrags. Die
+[BP-1R-Produktionsvorlage](design/book_inventory/production/README.md) schreibt
+Geometrie, fünf Größenproben, Ebenen/Masken, Navigationsanschluss und Briefing fort.
+Technische Vektoren bestimmen keine fertige Kunst; der ungeeignete A-Versuch wird
+weder nachgezeichnet noch bloß beschnitten. Keine neue breite Stil-/Schriftrunde.
 
-Die Buchrichtung ist als Untersuchung bestätigt. S1/P1, Iconausführung und
-Anordnung sind reversible Ausgangspunkte; finale Layout-, Schrift-, Kontrast-
-und Assetwahl bleiben bis zur integrierten Bildkomposition offen. BP-2 benötigt
-einen separaten Bildproduktionsauftrag, BP-3 die beiden tatsächlichen Bilder.
-Sammelalbum/Reisealbum, Sammlungsinhalte und Spielfachverträge bleiben unverändert.
-Aus BP-1 folgt keine Freigabe für #23/#24 oder ein Merge der Referenz-PRs #25/#28.
+Kompakter Album-/Sammlungszugang links und Wechsel zur rechten Informationsansicht
+sind getrennte echte UI-Gruppen mit eindeutigen Zielen und Rückweg. Kategorien aus
+dem generierten Bild sind kein beschlossener Katalog. Zwei feste Ansichten, kein
+Kamerapan und keine Kopplung an Raster-/Miniaturnavigation. Rückkehr erhält Zellen,
+Undo/Redo, Farbe/Werkzeug, Rasterausschnitt/Zoom und Hinweislesepositionen;
+Gestenabbruch, Pflicht-Flush und Recoverygrenzen bleiben verbindlich. Miniatur,
+Koordinaten, Farbe, Werkzeuge, Undo/Redo und Zoom bleiben auf der Arbeitsansicht.
+Rechts werden bestehende Einstellungen/Hilfe und ein späterer/offener Statistik-
+bereich nur schematisch geplant, ohne Daten oder versteckte Live-Fehlerhilfe.
+
+Hintergrund enthält Papier, Einband, Seitenkanten und wenig Umgebung. Registerkörper,
+Labels, Icons, Zustände, Raster/Zahlen und Informationen werden separat gerendert.
+Keine eingebrannten Bedienattrappen, beweglichen Werkzeugschatten, atmosphärischen
+Fülltexte, Mottos oder Pseudoschrift. Detaillierte warme 2D-Materialillustration bleibt
+das Ziel; einfache Vektorbuchflächen sind kein fertiger Ersatz.
+
+BP-1R ist eine statische technische Vorlage, keine Kunst-/Bedienabnahme. Vor erneuter
+BP-2-Bildproduktion eine konkret geprüfte Einzelseitenvorlage benennen: zuerst neues
+A (dunkles Leder/warmes Holz), dann B als kontrollierte hellere Material-/Lichtvariation.
+Finale Layout-, Schrift-, Icon-, Kontrast- und Assetwahl erst an BP-3 vor #23.
+Sammelalbum/Reisealbum, Sammlungsinhalte, Progression/Wertung bleiben offen bzw.
+unverändert. Kein Beginn von BP-2/BP-3/#23/#24 und keine Änderung an PR #25/#28/#29
+durch diese Vorlagenlieferung.
 
 ### 4.1 Album und Arbeitsansicht
 
 Ein möglicher Albumaufbau sind redaktionell komponierte Doppelseiten mit Registern, Kapitelverzierungen und unterschiedlich großen Bildplätzen. Große Panoramen könnten eigene Seiten erhalten. Feste Seiten statt freier Dekoration sind ein Vorschlag, keine neue Spielmechanik.
 
-Beim Öffnen könnte das Rätselblatt zur großzügigen Arbeitsfläche werden. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster erhalten ausreichend Platz. Die Buchmetapher darf große Raster nicht in eine halbe Seite oder über einen störenden Falz zwingen. Perspektive, Ränder und Übergänge bleiben zu prüfen.
+Beim Öffnen könnte das Rätselblatt zur großzügigen Arbeitsfläche werden. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster erhalten ausreichend Platz. Die linke Buchseite selbst wird zur großzügigen Bildschirmfläche; große Raster werden weder in eine kleine halbe Bildschirmfläche noch über einen Falz gezwungen. Perspektive, Ränder und Übergänge bleiben zu prüfen.
 
 Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
 
