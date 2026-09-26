@@ -1,0 +1,115 @@
+{
+  "date": "2026-09-26",
+  "tool": "image_gen.imagegen via functions.exec",
+  "mode": "built-in authenticated image tool",
+  "model_id": null,
+  "model_id_status": "Not exposed by tool response; no model ID inferred.",
+  "api_fallback_used": false,
+  "optional_album_study_used": false,
+  "optional_album_study_status": "Not present as an attached input. Text briefing and BP-1R used as authorized by issue 27.",
+  "runs": [
+    {
+      "id": "a-01",
+      "prompt": "prompts/a-01.txt",
+      "inputs": [
+        "production/png/f02-2560-layout.png",
+        "production/png/master-keepout.png",
+        "production/png/master-crop.png"
+      ],
+      "output_sha256": "e50f5cd1aacb942fd9687fdf125260ef1ddf920769c33bad5444c0188151fa22",
+      "native_size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "assessment": "Rejected: left paper edge too far right, props and patina.",
+      "retained_file": null
+    },
+    {
+      "id": "a-02",
+      "prompt": "prompts/a-02.txt",
+      "inputs": [
+        "a-01",
+        "production/png/f02-2560-layout.png",
+        "production/png/master-keepout.png"
+      ],
+      "output_sha256": "716afc7208583e85154b6f788f27361e3e7d930e0c3fcb845c9c6bbf04417ea6",
+      "native_size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "assessment": "Props removed; paper still too small.",
+      "retained_file": null
+    },
+    {
+      "id": "a-03",
+      "prompt": "prompts/a-03.txt",
+      "inputs": [
+        "a-02"
+      ],
+      "output_sha256": "7f3cf0a547d26ba1aebae4637f1548dad0b47ad0c8442e73a437349352a87203",
+      "native_size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "assessment": "Left edge improved insufficiently; bottom unchanged.",
+      "retained_file": null
+    },
+    {
+      "id": "a-04",
+      "prompt": "prompts/a-04.txt",
+      "inputs": [
+        "inputs/geometry-only.png",
+        "a-03"
+      ],
+      "output_sha256": "1a3bc585a56d8d70489df30f467b410de7aa34f24b00fe05733a138f780a4c24",
+      "native_size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "assessment": "Left boundary corrected with geometry reference; bottom still high.",
+      "retained_file": null
+    },
+    {
+      "id": "a-05",
+      "prompt": "prompts/a-05.txt",
+      "inputs": [
+        "a-04"
+      ],
+      "output_sha256": "d6db7992b1617f5040e0ba57fad17ac79e1c2e8cd4b23c2ac9e93045b3f7773b",
+      "native_size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "assessment": "Paper texture softened; bottom unchanged. Raw final A source.",
+      "retained_file": "originals/a-generator.png"
+    },
+    {
+      "id": "b-01",
+      "prompt": "prompts/b-01.txt",
+      "inputs": [
+        "originals/a-qualified.png"
+      ],
+      "output_sha256": "9ae0c247bb69ea460b164b3a246535e878032adc8b9370d51c9cb90e88f57aba",
+      "native_size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "assessment": "B material/light edit of the qualified retouched A.",
+      "retained_file": "originals/b-generator.png"
+    }
+  ],
+  "retouch": {
+    "input": "originals/a-generator.png",
+    "output": "originals/a-qualified.png",
+    "operation": "Clone original pixels 24 rows downward in lower border; feather over native rows 820..879; row y samples y-24 below row 879. Pillow Image.blend, no opaque fill, no non-proportional scaling.",
+    "pillow_version": "12.3.0"
+  },
+  "b_derivation": "b-01 edits originals/a-qualified.png after A native details and all five BP-1R montage checks.",
+  "rights": "Generated for this authorized repository task from project-owned technical inputs and generated A. No external stock/reference artwork used. Generation is not a blanket rights guarantee."
+}
