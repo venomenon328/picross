@@ -1,4 +1,4 @@
-"""BP-1 static templates; no game, solver or background illustration.
+"""BP-1R static templates; no game, solver or background illustration.
 
 Build uses optional Pillow/Playwright and temporary fonts; verify is stdlib only.
 """
@@ -17,11 +17,19 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'docs/design/book_inventory/production'
-BASE = '831b46f9e373e8691c18088efc9f2495fe3defb8'
+BASE = '0d3ad6a921578f94b3249ab83fbb215721549dfb'
+REVISION = 'BP-1R'
 REF = '9834ee834f5b83bbc5e6b17429a8fe7185c26758'
 DEMO = 'df7ac589e900a6d6d7c5080599c6a5ace47c395d'
 INK, PAPER = '#293e3d', '#fffaf0'
 NS = {'s': 'http://www.w3.org/2000/svg'}
+QUIET = ('grid', 'row_hints', 'column_hints', 'title', 'mini_card',
+         'coordinates', 'palette', 'status', 'tools', 'auxiliary', 'register', 'page_navigation')
+NAV = {
+    'nav-album': ('Album', 'Album öffnen · Sammlung und Blattauswahl', 'album', 'M3 4 h8 v18 H3 Z M11 4 h10 v18 H11 M6 8 h2 M14 8 h4'),
+    'nav-information': ('Information', 'Informationsseite öffnen · Einstellungen und Hilfe', 'information', 'M4 12 h16 m-7 -7 l7 7 -7 7'),
+    'nav-work': ('Zum Rätsel', 'Zur Arbeitsseite zurück · Arbeitsstand erhalten', 'work', 'M20 12 H4 m7 -7 l-7 7 7 7'),
+}
 
 
 def sha(b):
@@ -65,7 +73,7 @@ def layouts():
         ('f02-1920', 'f02', 1920, 1080, 1, [510,252,720,720],18,[0,0],[210,126],[1410,220,180,180]),
         ('f02-2560', 'f02', 2560, 1440, 1, [830,432,720,720],18,[0,0],[210,126],[1730,400,180,180]),
         ('f01-2560', 'f01', 2560, 1440, 1, [970,470,480,480],24,[0,0],[192,144],[1630,470,200,200]),
-        ('f03-1920', 'f03', 1920, 1080, 1, [350,270,1368,672],24,[25,35],[240,144],[1764,290,132,132]),
+        ('f03-1920', 'f03', 1920, 1080, 1, [310,270,1368,672],24,[25,35],[240,144],[1700,290,132,132]),
         ('f02-1280', 'f02', 1280, 720, 1.25, [300,222,638,374],22,[0,0],[210,120],[1050,220,140,140]),
     ]
     result = []
@@ -77,34 +85,61 @@ def layouts():
                   'coordinates':[mx-10,my+mh+16, max(mw+20,150),28],
                   'palette':[mx-6,my+mh+58,110*ui,110*ui],
                   'status':[mx-10,my+mh+190*ui,max(mw+20,170*ui),62*ui],
-                  'title':[80*scale,56*scale,640*scale,40],
+                  'title':[110*scale,56*scale,640*scale,40],
                   'book':[40*scale,34*scale,2480*scale,1372*scale],
-                  'sheet':[104*scale,140*scale,2200*scale,1180*scale],
-                  'fold':[1268*scale,50*scale,24*scale,1340*scale]}
+                  'sheet':[80*scale,48*scale,2380*scale,1340*scale],
+                  'fold':[2480*scale,40*scale,16*scale,1360*scale],
+                  'right_page_slice':[2496*scale,48*scale,64*scale,1340*scale]}
         # Short, coherent tool strip; auxiliary actions separately at the top edge.
         bx = 250 if w==1280 else (400 if key=='f03' else x-hw)
-        by = h-94 if w==1280 else (h-78 if w==1920 else 1210)
+        by = h-106 if w==1280 else (h-102 if w==1920 else 1210)
         groups['tools'] = [bx-8,by-8,9*52*ui+8,68*ui]
-        groups['auxiliary'] = [w-142*ui,48*scale,112*ui,54*ui]
+        groups['auxiliary'] = [w-270*ui,48*scale,112*ui,54*ui]
+        groups['register'] = [8*scale,140*scale,44*ui,44*ui]
+        groups['page_navigation'] = [w-150*ui,48*scale,44*ui,44*ui]
         if key=='f03':
-            groups['status'] = [1754,650,150,78]
+            groups['status'] = [1688,650,150,78]
         if w==1280:
-            groups['status'] = [1010,610,248,65]
-            groups['coordinates'] = [1010,382,248,32]
+            groups['status'] = [990,610,230,65]
+            groups['coordinates'] = [1010,382,210,32]
         actions = []
         for i,k in enumerate(['fill','erase','hand','undo','redo','minus','plus','fit','work']):
             actions.append({'id':k,'rect':[bx+i*52*ui,by,44*ui,44*ui],'group':'tools'})
         for i,k in enumerate(['help','menu']):
-            actions.append({'id':k,'rect':[w-136*ui+i*58*ui,54*scale,44*ui,44*ui],'group':'auxiliary'})
+            actions.append({'id':k,'rect':[w-264*ui+i*58*ui,54*scale,44*ui,44*ui],'group':'auxiliary'})
         for i in range(1 if key=='f01' else 4):
             actions.append({'id':f'color-{i+1}','rect':[mx+(i%2)*54*ui,my+mh+64+(i//2)*54*ui,44*ui,44*ui],'group':'palette'})
+        for action_id, group in [('nav-album','register'),('nav-information','page_navigation')]:
+            actions.append(navigation_action(action_id, groups[group], group, ui))
+        for action in actions:
+            ax,ay,aw,ah=action['rect']
+            action.setdefault('image_rect',[ax+9*ui,ay+9*ui,26*ui,26*ui])
+            action['normalized']=[round(v/(w if i%2==0 else h),8) for i,v in enumerate(action['rect'])]
+            action['image_normalized']=[round(v/(w if i%2==0 else h),8) for i,v in enumerate(action['image_rect'])]
         normalized = {k:[round(v/(w if i%2==0 else h),8) for i,v in enumerate(r)] for k,r in groups.items()}
-        result.append(dict(name=name, fixture=key, viewport=[w,h], ui_scale=ui, cell_px=cell,
+        result.append(dict(name=name, revision=REVISION, fixture=key, viewport=[w,h], ui_scale=ui, cell_px=cell,
                            origin_zero_based=origin, visible_cells=[gw//cell,gh//cell],
                            slots_px=[30*ui,18*ui], rects=groups, normalized=normalized, actions=actions,
-                           background=dict(source_px=[2560,1440],uniform_scale=scale,crop_px=[0,0,2560,1440]),
+                           background=dict(source_px=[2560,1440],uniform_scale=scale,crop_px=[0,0,2560,1440],offset_px=[0,0],inverse='master_rect = screen_rect / uniform_scale'),
                            decorative_edges=[[0,0,w,8*scale],[0,h-8*scale,w,8*scale],[0,8*scale,8*scale,h-16*scale],[w-8*scale,8*scale,8*scale,h-16*scale]]))
     return result
+
+
+def navigation_action(key, bounds, group, ui=1, state='normal'):
+    x,y,_,_=bounds
+    label,tooltip,target,_=NAV[key]
+    return dict(id=key,rect=list(bounds),image_rect=[x+9*ui,y+9*ui,26*ui,26*ui],
+                group=group,label=label,tooltip=tooltip,target=target,state=state)
+
+
+def navigation_svg(a, ui=1):
+    key=a['id']; state=a['state']; ax,ay,_,_=a['image_rect']
+    fill={'normal':PAPER,'hover':'#d8e5df','active':INK}[state]
+    color=PAPER if state=='active' else INK
+    return (f'<g data-action="{key}" data-target="{a["target"]}" data-state="{state}">'
+            +rect(a['rect'],fill,INK)
+            +f'<g transform="translate({ax} {ay}) scale({ui})">'+path(NAV[key][3],color,1.8)+'</g>'
+            +f'<title>{html.escape(a["tooltip"])}</title></g>')
 
 
 def ui_svg(g, d, icons):
@@ -113,7 +148,7 @@ def ui_svg(g, d, icons):
     colors={p['id']:p['color'] for p in d['palette']}; body=[]
     body.append('<g id="precise-ui">')
     tx,ty,_,_=r['title']
-    body.append(text(tx,ty+28,f'Inventarblatt / {d["id"]}',28,'style="font-family:Fraunces,serif;font-weight:600" data-zone="title"'))
+    body.append(text(tx,ty+28,f'Sammlung / {d["id"]}',28,'style="font-family:Fraunces,serif;font-weight:600" data-zone="title"'))
     body.append(f'<g id="grid" data-state="{sha(json.dumps(d["cells"]).encode())}">')
     for row in range(rows):
         for col in range(cols):
@@ -156,6 +191,9 @@ def ui_svg(g, d, icons):
     cx,cy,_,_=r['coordinates']; body.append(text(cx+6,cy+21*ui,'Zeile –  Spalte –',13*ui,'data-zone="coordinates"'))
     for a in g['actions']:
         ax,ay,aw,ah=a['rect']; key=a['id']; active=key in ('fill','color-1')
+        if key in NAV:
+            body.append(navigation_svg(a,ui))
+            continue
         body.append(f'<g data-action="{key}">')
         if key.startswith('color-'):
             p=colors[int(key[-1])]; title='Farbe wählen · aktiviert Füllen'
@@ -172,8 +210,8 @@ def ui_svg(g, d, icons):
     for i,label in enumerate([f'Raster {c} px · UI {round(ui*100)} %','Füllen · Farbe 1']):
         body.append(text(sx+6,sy+(20+i*24)*ui,label,12*ui,'data-zone="status"'))
     body.append('<g id="study-labels">')
-    caption='BP-1 / TECHNISCHE VORLAGE · KEINE HINTERGRUNDKUNST'
-    body.append(text(30,h-12,caption,12))
+    caption='BP-1R / TECHNISCHE VORLAGE · KEINE HINTERGRUNDKUNST'
+    body.append(text(30,h-4,caption,12))
     if d['id']=='F-03':
         body.append(text(1200,64,'UI-Testdatensatz – Rätselqualität nicht abgenommen',14))
         body.append(text(1200,87,'Ausschnitt: Spalten 26–82 / Zeilen 36–63 · 57 × 28 Zellen',14))
@@ -183,12 +221,77 @@ def ui_svg(g, d, icons):
     return body
 
 
+def navigation():
+    return dict(revision=REVISION, views=['work','information','album'],
+                contract=dict(fixed_views=True,camera_pan=False,cell_action=False,
+                              preserve=['cells','undo_redo','color','tool','grid_focus','grid_zoom','clue_reads'],
+                              transition='Abort uncommitted gestures; preserve confirmed state; never bypass required flush or recovery lock.'),
+                information=dict(viewport=[1920,1080],
+                    rects={'sheet':[90,36,1770,1005], 'fold':[60,30,12,1020],
+                           'title':[180,90,1450,70], 'return':[130,98,44,44],
+                           'settings':[180,230,710,370], 'help':[970,230,710,370],
+                           'statistics':[180,680,1500,190]},
+                    actions=[navigation_action('nav-work',[130,98,44,44],'return')]))
+
+
+def information_svg(info):
+    r=info['rects']; body=[navigation_svg(info['actions'][0])]
+    body.append(text(200,136,'Information',28,'data-zone="title" style="font-family:Fraunces,serif"'))
+    sections={
+        'settings':['Einstellungen · Anschluss an vorhandene Optionen',
+                    'UI-Skalierung: 100 % / 125 %', 'Hinweise rasterseitig ausrichten',
+                    'Erfüllte Hinweise markieren · sitzungsweit', 'Beenden · bestehende Speichergrenzen gelten'],
+        'help':['Hilfe · bestehende Bedienung', 'Füllen / Radieren / Hand · links und rechts',
+                'Hinweise: ganze Zahlen je Zeile oder Spalte ziehen',
+                'Miniatur und Zoom bleiben auf der Arbeitsseite', 'Escape: laufende Geste abbrechen'],
+        'statistics':['Statistik · später / Umfang offen',
+                      'Keine Spielerdaten in dieser Anschlussvorlage.',
+                      'Keine Live-Fehlerzahl oder Korrektheitsanzeige.']}
+    for key,lines in sections.items():
+        x,y,ww,hh=r[key]; body.append(rect(r[key],'none','#8a9c95'))
+        for i,line in enumerate(lines):
+            body.append(text(x+24,y+44+i*48,line,22 if i==0 else 20,f'data-zone="{key}"'))
+    body.append(text(30,1068,'BP-1R / SCHEMATISCHER RECHTER ANSCHLUSS · KEINE FUNKTIONSIMPLEMENTIERUNG',12))
+    return body
+
+
+def navigation_board():
+    body=[rect([0,0,1920,1080],PAPER,'none'), text(60,65,'BP-1R · Navigation und getrennte UI-Zustände',28)]
+    for x,title,lines in [(60,'Album / Sammlung',['Neutrale Blattauswahl','Kapitelumfang offen']),
+                          (670,'Arbeitsseite',['Eigene Miniatur, Farbe, Werkzeuge','Hinweise, Undo/Redo, Zoom']),
+                          (1280,'Informationsseite',['Einstellungen und Hilfe','Statistik: später / offen'])]:
+        body.append(rect([x,130,520,180],'none','#8a9c95'))
+        body.append(text(x+24,176,title,26))
+        for i,line in enumerate(lines): body.append(text(x+24,220+i*34,line,20))
+    body.extend([text(585,222,'↔',32),text(1195,222,'↔',32),
+                 text(60,366,'Albumzugang links · Seitenwechsel rechts · feste Ansichten, kein Kamerapan',24),
+                 text(60,410,'Rückkehr erhält Zellen, Undo/Redo, Farbe/Werkzeug, Ausschnitt/Zoom und Hinweislesepositionen.',20),
+                 text(60,448,'Laufende Gesten abbrechen; Pflicht-Flush und Recovery-Sperren bleiben verbindlich.',20)])
+    states=['normal','hover','active']
+    for row,key in enumerate(NAV):
+        y=510+row*130
+        body.append(text(60,y+30,NAV[key][0],24))
+        body.append(text(60,y+63,key+' → '+NAV[key][2],17))
+        for col,state in enumerate(states):
+            x=570+col*390
+            body.append(navigation_svg(navigation_action(key,[x,y,44,44],'example',state=state)))
+            body.append(text(x+60,y+28,{'normal':'Normal','hover':'Hover','active':'Aktiv / Zielansicht'}[state],20))
+        body.append(text(570,y+80,NAV[key][1],18))
+    body.append(text(60,988,'Trefferfläche 44 × 44 px (125 %: 55 × 55); Iconbild 26 × 26 px (32,5 × 32,5).',20))
+    body.append(text(60,1030,'Statische Zustandsbeispiele, keine funktionierende Navigation. Albumrückweg: nav-work.',20))
+    return body
+
+
 def build(browser_path, font_dir):
     from playwright.sync_api import sync_playwright
     from PIL import Image
     cases=layouts(); icons=read('sources/icons.json')
     master_quiet=[]; files=[]; bounds=[]
-    write('layout.json',dict(schema=1,base=BASE,reference=REF,demo_reference=DEMO,demo_revision='z1-demo-1',cases=cases))
+    nav=navigation()
+    for view in [nav['information']]:
+        w,h=view['viewport']
+        view['normalized']={k:[round(v/(w if i%2==0 else h),8) for i,v in enumerate(r)] for k,r in view['rects'].items()}
+    write('layout.json',dict(schema=2,revision=REVISION,base=BASE,reference=REF,demo_reference=DEMO,demo_revision='z1-demo-1',cases=cases,navigation=nav))
     with sync_playwright() as p:
         browser=p.chromium.launch(executable_path=browser_path,headless=True)
         page=browser.new_page(device_scale_factor=1)
@@ -207,7 +310,7 @@ def build(browser_path, font_dir):
             for item in boxes:
                 assert inside(item['box'],[0,0,w,h]),(name,item)
                 if g and item.get('zone'): assert inside(item['box'],g['rects'][item['zone']]),(name,item)
-            bounds.append(dict(file=name,measured_texts=len(boxes),overflow=0,fonts=page.evaluate('() => [...document.fonts].map(f=>({family:f.family,status:f.status}))')))
+            bounds.append(dict(file=name,measured_texts=len(boxes),text_bounds=boxes,overflow=0,fonts=page.evaluate('() => [...document.fonts].map(f=>({family:f.family,status:f.status}))')))
             dest=OUT/'png'/f'{name}.png'; dest.parent.mkdir(exist_ok=True)
             page.screenshot(path=str(dest),omit_background=transparent)
             if transparent: assert Image.open(dest).getchannel('A').getextrema()==(0,255)
@@ -216,11 +319,11 @@ def build(browser_path, font_dir):
             w,h=g['viewport']; r=g['rects']; scale=w/2560; d=read('sources/'+g['fixture']+'-public-demo.json')
             ui=ui_svg(g,d,icons)
             # Deliberately neutral engineering contours, never background artwork.
-            wire=[rect([0,0,w,h],'#e8edf1','none'),rect(r['book'],'#d8e0e5','#536d81'),rect(r['fold'],'#aec1ce','none'),rect(r['sheet'],PAPER,'#536d81')]
+            wire=[rect([0,0,w,h],'#e8edf1','none'),rect(r['book'],'#d8e0e5','#536d81'),rect(r['sheet'],PAPER,'#536d81'),rect(r['fold'],'#aec1ce','none'),rect(r['right_page_slice'],PAPER,'#536d81')]
             render(g['name']+'-layout',w,h,wire+ui,g=g)
             render(g['name']+'-ui',w,h,ui,True,g)
             quiet=[rect([0,0,w,h],'#000','none')]
-            for key in ['sheet','title','mini_card','coordinates','palette','status','tools','auxiliary']:
+            for key in QUIET:
                 zone=r[key]; quiet.append(mask_rect(zone))
                 master_quiet.append([v/scale for v in zone])
             render(g['name']+'-keepout',w,h,quiet)
@@ -228,7 +331,13 @@ def build(browser_path, font_dir):
             render(g['name']+'-crop',w,h,crop)
         render('master-keepout',2560,1440,[rect([0,0,2560,1440],'#000','none')]+[mask_rect(r) for r in master_quiet])
         render('master-crop',2560,1440,[rect([0,0,2560,1440],'#000','none'),mask_rect([8,8,2544,1424])])
-        write('render-checks.json',dict(renderer=browser.version,device_scale_factor=1,fonts_embedded_in_delivery=False,network='blocked',records=bounds))
+        info=nav['information']; r=info['rects']; content=information_svg(info)
+        render('information-1920-layout',1920,1080,[rect([0,0,1920,1080],'#e8edf1','none'),rect(r['sheet'],PAPER,'#536d81'),rect(r['fold'],'#aec1ce','none')]+content,g=info)
+        render('information-1920-ui',1920,1080,content,True,info)
+        render('information-1920-keepout',1920,1080,[rect([0,0,1920,1080],'#000','none')]+[mask_rect(r[k]) for k in ('title','return','settings','help','statistics')])
+        render('information-1920-crop',1920,1080,[rect([0,0,1920,1080],'#000','none'),mask_rect([6,6,1908,1068])])
+        render('navigation',1920,1080,navigation_board())
+        write('render-checks.json',dict(revision=REVISION,renderer=browser.version,device_scale_factor=1,fonts_embedded_in_delivery=False,network='blocked',records=bounds))
         browser.close()
     files += ['layout.json','render-checks.json'] + ['sources/'+p.name for p in sorted((OUT/'sources').iterdir())]
     reference_hashes={}
@@ -236,7 +345,7 @@ def build(browser_path, font_dir):
         source=subprocess.check_output(['git','show',f'{REF}:docs/design/z1_1/sources/{key}-public-demo.json'],cwd=ROOT)
         assert source==(OUT/'sources'/f'{key}-public-demo.json').read_bytes()
         reference_hashes[key]=sha(source)
-    write('manifest.json',dict(schema=1,base=BASE,reference=REF,demo_reference=DEMO,reference_data_sha256=reference_hashes,files={n:sha((OUT/n).read_bytes()) for n in files}))
+    write('manifest.json',dict(schema=2,revision=REVISION,base=BASE,reference=REF,demo_reference=DEMO,generator_sha256=sha(Path(__file__).read_bytes().replace(b'\r\n',b'\n')),reference_data_sha256=reference_hashes,files={n:sha((OUT/n).read_bytes()) for n in files}))
 
 
 def inside(a,b):
@@ -244,11 +353,97 @@ def inside(a,b):
     return x>=X-.01 and y>=Y-.01 and x+w<=X+W+.01 and y+h<=Y+H+.01
 
 
+def overlaps(a,b):
+    x,y,w,h=a; X,Y,W,H=b
+    return x<X+W and X<x+w and y<Y+H and Y<y+h
+
+
+def png_pixels(b):
+    """Decode delivered 8-bit RGB(A) PNGs, including PNG filter reversal, stdlib only."""
+    assert b[:8]==b'\x89PNG\r\n\x1a\n'
+    w,h,depth,mode=struct.unpack('>IIBB',b[16:26]); assert depth==8 and mode in (2,6)
+    assert b[26:29]==b'\0\0\0'  # compression, filter and non-interlaced
+    channels=3 if mode==2 else 4; stride=w*channels; pos=8; chunks=[]
+    while pos<len(b):
+        n=struct.unpack('>I',b[pos:pos+4])[0]; typ=b[pos+4:pos+8]; data=b[pos+8:pos+8+n]
+        assert zlib.crc32(typ+data)&0xffffffff==struct.unpack('>I',b[pos+8+n:pos+12+n])[0]
+        if typ==b'IDAT': chunks.append(data)
+        pos+=n+12
+    assert typ==b'IEND' and pos==len(b)
+    raw=zlib.decompress(b''.join(chunks)); assert len(raw)==h*(stride+1)
+    result=bytearray(); previous=bytearray(stride)
+    for y in range(h):
+        offset=y*(stride+1); kind=raw[offset]; row=bytearray(raw[offset+1:offset+stride+1]); assert kind<=4
+        if kind==2:
+            row=bytearray((a+b)&255 for a,b in zip(row,previous))
+        elif kind:
+            for i in range(stride):
+                left=row[i-channels] if i>=channels else 0
+                up=previous[i]; corner=previous[i-channels] if i>=channels else 0
+                if kind==1: predictor=left
+                elif kind==3: predictor=(left+up)//2
+                else:
+                    p=left+up-corner; distances=(abs(p-left),abs(p-up),abs(p-corner))
+                    predictor=(left,up,corner)[distances.index(min(distances))]
+                row[i]=(row[i]+predictor)&255
+        result.extend(row); previous=row
+    return w,h,channels,bytes(result)
+
+
+def verify_mask(name, regions):
+    w,h,n,pixels=png_pixels((OUT/'png'/f'{name}.png').read_bytes())
+    black=bytes([0,0,0]+([255] if n==4 else [])); white=bytes([255])*n
+    expected=bytearray(black*w*h)
+    for x,y,ww,hh in regions:
+        left,top=math.floor(x),math.floor(y); right,bottom=math.ceil(x+ww),math.ceil(y+hh)
+        assert 0<=left<=right<=w and 0<=top<=bottom<=h
+        segment=white*(right-left)
+        for row in range(top,bottom): expected[(row*w+left)*n:(row*w+right)*n]=segment
+    assert pixels==expected,(name,'binary mask geometry/union differs')
+
+
+def verify_navigation(root, actions):
+    for a in actions:
+        node=root.find(f'.//s:g[@data-action="{a["id"]}"]',NS); assert node is not None,a
+        drawn=node.find('s:rect',NS)
+        assert [float(drawn.get(k)) for k in ('x','y','width','height')]==a['rect']
+        assert inside(a['image_rect'],a['rect'])
+        if a['id'] in NAV:
+            assert a['target']==NAV[a['id']][2] and a['tooltip']==NAV[a['id']][1]
+            assert node.get('data-target')==a['target'] and node.find('s:title',NS).text==a['tooltip']
+
+
+def verify_geometry(g):
+    w,h=g['viewport']; r=g['rects']
+    for key in ('grid','row_hints','column_hints','mini_card','coordinates','palette','status','tools','auxiliary','page_navigation'):
+        assert inside(r[key],r['sheet']),(g['name'],key,'outside left page')
+        assert not overlaps(r[key],r['fold']),(g['name'],key,'fold')
+    assert r['sheet'][0]+r['sheet'][2]<r['fold'][0]
+    for a in g['actions']:
+        assert inside(a['rect'],r[a['group']]) and inside(a['rect'],[0,0,w,h]),a
+        assert a['normalized']==[round(v/(w if i%2==0 else h),8) for i,v in enumerate(a['rect'])]
+        assert a['image_normalized']==[round(v/(w if i%2==0 else h),8) for i,v in enumerate(a['image_rect'])]
+        for key in ('grid','row_hints','column_hints','mini_card','coordinates','status'):
+            assert not overlaps(a['rect'],r[key]),(a,key)
+    for i,a in enumerate(g['actions']):
+        for b in g['actions'][i+1:]: assert not overlaps(a['rect'],b['rect']),(a,b)
+
+
 def verify(check_zip=True):
-    manifest=read('manifest.json'); cases=read('layout.json')['cases']
+    manifest=read('manifest.json'); layout=read('layout.json'); cases=layout['cases']
+    assert manifest['revision']==layout['revision']==REVISION
+    assert manifest['generator_sha256']==sha(Path(__file__).read_bytes().replace(b'\r\n',b'\n'))
     assert len(cases)==5
+    assert [(g['fixture'],g['viewport'],g['ui_scale'],g['cell_px'],g['visible_cells']) for g in cases]==[
+        ('f02',[1920,1080],1,18,[40,40]),('f02',[2560,1440],1,18,[40,40]),
+        ('f01',[2560,1440],1,24,[20,20]),('f03',[1920,1080],1,24,[57,28]),
+        ('f02',[1280,720],1.25,22,[29,17])]
+    for source in (OUT/'sources').iterdir():
+        assert source.read_bytes()==subprocess.check_output(['git','show',f'{BASE}:docs/design/book_inventory/production/sources/{source.name}'],cwd=ROOT)
     for name,digest in manifest['files'].items():
         b=(OUT/name).read_bytes(); assert sha(b)==digest,name
+        if name.endswith('.svg'):
+            assert b'base64' not in b and b'@font-face' not in b
         if name.endswith('.png'):
             assert b[:8]==b'\x89PNG\r\n\x1a\n'; pos=8; chunks=[]
             while pos<len(b):
@@ -270,6 +465,11 @@ def verify(check_zip=True):
         assert sha((OUT/'sources'/f'{g["fixture"]}-public-demo.json').read_bytes())==manifest['reference_data_sha256'][g['fixture']]
         colors={p['id']:p['color'] for p in d['palette']}
         root=ET.parse(OUT/'svg'/f'{g["name"]}-ui.svg').getroot()
+        verify_geometry(g)
+        expected_actions={'fill','erase','hand','undo','redo','minus','plus','fit','work','help','menu','nav-album','nav-information'}|{f'color-{i+1}' for i in range(len(d['palette']))}
+        assert {a['id'] for a in g['actions']}==expected_actions
+        assert {a.get('data-action') for a in root.findall('.//s:g[@data-action]',NS)}==expected_actions
+        verify_navigation(root,g['actions'])
         w,h=g['viewport']; assert [int(root.get('width')),int(root.get('height'))]==[w,h]
         for a in g['actions']:
             assert inside(a['rect'],g['rects'][a['group']]) and inside(a['rect'],[0,0,w,h]),a
@@ -308,30 +508,74 @@ def verify(check_zip=True):
         for suffix in ('layout','ui','keepout','crop'):
             name=f'png/{g["name"]}-{suffix}.png'; b=(OUT/name).read_bytes()
             assert list(struct.unpack('>II',b[16:24]))==[w,h]
-    checks=read('render-checks.json')['records']; assert len(checks)==22
-    expected_names={g['name']+'-'+suffix for g in cases for suffix in ('layout','ui','keepout','crop')}|{'master-keepout','master-crop'}
+        _,_,channels,pixels=png_pixels((OUT/'png'/f'{g["name"]}-ui.png').read_bytes())
+        assert channels==4 and min(pixels[3::4])==0 and max(pixels[3::4])==255
+        # Unknown grid cell centers must remain transparent, never an opaque page card.
+        ox,oy=g['origin_zero_based']; gx,gy,_,_=g['rects']['grid']; cell=g['cell_px']
+        for row in range(g['visible_cells'][1]):
+            for col in range(g['visible_cells'][0]):
+                if d['cells'][(oy+row)*d['width']+ox+col]==-1:
+                    px=int(gx+(col+.5)*cell); py=int(gy+(row+.5)*cell)
+                    assert pixels[(py*w+px)*4+3]==0
+        _,_,channels,pixels=png_pixels((OUT/'png'/f'{g["name"]}-layout.png').read_bytes())
+        for row in range(g['visible_cells'][1]):
+            for col in range(g['visible_cells'][0]):
+                value=d['cells'][(oy+row)*d['width']+ox+col]
+                if value>0:
+                    px=int(gx+(col+.5)*cell); py=int(gy+(row+.5)*cell)
+                    assert pixels[(py*w+px)*channels:(py*w+px)*channels+3]==bytes.fromhex(colors[value].lstrip('#'))
+        verify_mask(g['name']+'-keepout',[g['rects'][key] for key in QUIET])
+        scale=g['background']['uniform_scale']
+        assert scale==w/2560 and g['background']['offset_px']==[0,0] and g['background']['crop_px']==[0,0,2560,1440]
+        verify_mask(g['name']+'-crop',[[8*scale,8*scale,w-16*scale,h-16*scale]])
+    verify_mask('master-keepout',[[v/g['background']['uniform_scale'] for v in g['rects'][key]] for g in cases for key in QUIET])
+    verify_mask('master-crop',[[8,8,2544,1424]])
+    info=layout['navigation']['information']; r=info['rects']
+    for key,zone in r.items():
+        assert info['normalized'][key]==[round(v/(1920 if i%2==0 else 1080),8) for i,v in enumerate(zone)]
+    assert layout['navigation']['views']==['work','information','album']
+    assert layout['navigation']['contract']['preserve']==['cells','undo_redo','color','tool','grid_focus','grid_zoom','clue_reads']
+    root=ET.parse(OUT/'svg/information-1920-ui.svg').getroot()
+    verify_navigation(root,info['actions'])
+    for key in ('title','return','settings','help','statistics'):
+        assert inside(r[key],r['sheet']) and not overlaps(r[key],r['fold'])
+    verify_mask('information-1920-keepout',[r[k] for k in ('title','return','settings','help','statistics')])
+    verify_mask('information-1920-crop',[[6,6,1908,1068]])
+    _,_,channels,pixels=png_pixels((OUT/'png/information-1920-ui.png').read_bytes())
+    assert channels==4 and min(pixels[3::4])==0 and max(pixels[3::4])==255
+    root=ET.parse(OUT/'svg/navigation.svg').getroot()
+    assert {(n.get('data-action'),n.get('data-target'),n.get('data-state')) for n in root.findall('.//s:g[@data-action]',NS)}=={(key,NAV[key][2],state) for key in NAV for state in ('normal','hover','active')}
+    checks=read('render-checks.json')['records']; assert len(checks)==27
+    expected_names={g['name']+'-'+suffix for g in cases for suffix in ('layout','ui','keepout','crop')}|{'master-keepout','master-crop','navigation'}|{'information-1920-'+s for s in ('layout','ui','keepout','crop')}
     assert {c['file'] for c in checks}==expected_names
     assert {Path(n).stem for n in manifest['files'] if n.endswith('.png')}==expected_names
     assert all(c['overflow']==0 and all(f['status']=='loaded' for f in c['fonts']) for c in checks)
+    for check in checks:
+        g=next((case for case in cases if check['file'].startswith(case['name'])),info)
+        w,h=g['viewport']
+        assert check['measured_texts']==len(check['text_bounds'])
+        for item in check['text_bounds']:
+            assert inside(item['box'],[0,0,w,h])
+            if item.get('zone'): assert inside(item['box'],g['rects'][item['zone']])
     for name in ('README.md','BRIEFING.md','VERIFICATION.md'): assert (OUT/name).is_file()
     if check_zip:
-        with zipfile.ZipFile(OUT/'bp1-review.zip') as z:
+        with zipfile.ZipFile(OUT/'bp1r-review.zip') as z:
             expected={p.relative_to(OUT).as_posix():p for p in OUT.rglob('*') if p.is_file() and p.suffix!='.zip'}
             assert set(z.namelist())==set(expected) and len(z.namelist())==len(expected)
             assert not any(Path(n).suffix.lower() in ('.ttf','.otf','.woff','.woff2') for n in z.namelist())
             for n,p in expected.items(): assert z.read(n)==p.read_bytes(),n
-    print('BP-1: 5 layouts, 22 PNG/SVG pairs, hashes, source equality, cells, palette, clues, rectangles and render bounds OK')
+    print('BP-1R: 5 layouts + information/navigation, 27 PNG/SVG pairs, source/data, geometry, navigation, transparency, binary masks/master union, hashes, render bounds and ZIP OK')
 
 
 def pack():
     verify(check_zip=False)
     files=sorted(p for p in OUT.rglob('*') if p.is_file() and p.suffix!='.zip')
     assert not any(p.suffix.lower() in ('.ttf','.otf','.woff','.woff2') for p in files)
-    with zipfile.ZipFile(OUT/'bp1-review.zip','w',zipfile.ZIP_DEFLATED) as z:
+    with zipfile.ZipFile(OUT/'bp1r-review.zip','w',zipfile.ZIP_DEFLATED) as z:
         for p in files:
             info=zipfile.ZipInfo(p.relative_to(OUT).as_posix(),date_time=(2026,9,26,0,0,0)); info.compress_type=zipfile.ZIP_DEFLATED
             z.writestr(info,p.read_bytes())
-    print('Review ZIP SHA-256:',sha((OUT/'bp1-review.zip').read_bytes()))
+    print('Review ZIP SHA-256:',sha((OUT/'bp1r-review.zip').read_bytes()))
 
 
 if __name__=='__main__':
