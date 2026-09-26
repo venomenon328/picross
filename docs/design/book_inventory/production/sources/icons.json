@@ -1,0 +1,62 @@
+{
+  "fill": [
+    "Füllen",
+    "Füllen · links Farbe setzen, rechts leer markieren",
+    "M4 17 L15 6 L19 10 L8 21 L3 22 Z M13 8 L17 12 M16 3 L21 8"
+  ],
+  "erase": [
+    "Radierer",
+    "Radierer · Markierungen entfernen",
+    "M3 15 L13 5 L22 14 L14 22 H10 Z M8 10 L17 19 M14 22 H23"
+  ],
+  "hand": [
+    "Hand",
+    "Hand · Raster oder einzelne Hinweisfolge verschieben",
+    "M7 13 V7 Q7 4 10 6 V12 V3 Q13 1 14 4 V12 V5 Q17 3 18 6 V13 V9 Q21 7 22 10 V17 Q21 23 15 23 H12 Q9 23 7 20 L3 14 Q3 11 6 12 Z"
+  ],
+  "undo": [
+    "Rückgängig",
+    "Letzten Strich rückgängig machen",
+    "M9 5 L3 11 L9 17 M3 11 H15 Q23 11 22 20"
+  ],
+  "redo": [
+    "Wiederholen",
+    "Zurückgenommenen Strich wiederholen",
+    "M17 5 L23 11 L17 17 M23 11 H11 Q3 11 4 20"
+  ],
+  "minus": [
+    "Verkleinern",
+    "Raster verkleinern",
+    "M5 13 H21"
+  ],
+  "plus": [
+    "Vergrößern",
+    "Raster vergrößern",
+    "M5 13 H21 M13 5 V21"
+  ],
+  "fit": [
+    "Gesamtansicht",
+    "Ganzes Raster anzeigen",
+    "M3 10 V3 H10 M16 3 H23 V10 M23 16 V23 H16 M10 23 H3 V16 M9 9 H17 V17 H9 Z"
+  ],
+  "work": [
+    "Arbeitsgröße",
+    "Zur Arbeitsgröße zurückkehren",
+    "M3 3 H9 V9 H3 Z M11 3 H17 V9 H11 Z M3 11 H9 V17 H3 Z M14 22 L22 14 M16 14 H22 V20"
+  ],
+  "help": [
+    "Hilfe",
+    "Mausbedienung und Zeichen erklären",
+    "M8 8 Q8 2 15 3 Q22 5 18 11 L13 15 V17 M13 21 V22"
+  ],
+  "menu": [
+    "Menü",
+    "Ansicht, Hinweise und Beenden",
+    "M4 6 H22 M4 13 H22 M4 20 H22"
+  ],
+  "album": [
+    "Zum Album",
+    "Zurück zum Album · Anschlussstelle",
+    "M12 4 H23 V22 H12 Q8 19 3 22 V4 Q8 1 12 4 V22"
+  ]
+}

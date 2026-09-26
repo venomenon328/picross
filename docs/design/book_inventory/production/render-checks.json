@@ -1,0 +1,338 @@
+{
+  "renderer": "154.0.4258.37",
+  "device_scale_factor": 1,
+  "fonts_embedded_in_delivery": false,
+  "network": "blocked",
+  "records": [
+    {
+      "file": "f02-1920-layout",
+      "measured_texts": 348,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-1920-ui",
+      "measured_texts": 348,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-1920-keepout",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-1920-crop",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-2560-layout",
+      "measured_texts": 348,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-2560-ui",
+      "measured_texts": 348,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-2560-keepout",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-2560-crop",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f01-2560-layout",
+      "measured_texts": 67,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f01-2560-ui",
+      "measured_texts": 67,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f01-2560-keepout",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f01-2560-crop",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f03-1920-layout",
+      "measured_texts": 603,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f03-1920-ui",
+      "measured_texts": 603,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f03-1920-keepout",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f03-1920-crop",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-1280-layout",
+      "measured_texts": 176,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-1280-ui",
+      "measured_texts": 176,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-1280-keepout",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "f02-1280-crop",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "master-keepout",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "file": "master-crop",
+      "measured_texts": 0,
+      "overflow": 0,
+      "fonts": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    }
+  ]
+}
