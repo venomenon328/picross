@@ -37,14 +37,17 @@ lesen: aktuellen #27-Body samt späteren Entscheidungen, #21, Produktdefinition,
 Gestaltungskonzept und [Produktionsanleitung](design/book_inventory/production/README.md)
 samt Briefing/Prüfbericht. P1-Fachverträge bleiben unverändert.
 
-BP-1R/K-01 bis K-05 liefert statische SVG-/PNG-/Maskenvorlagen in einem eigenen
-Draft-PR von `chore/27-einzelseiten-komposition`, keine Bildproduktion oder native
-Navigation. Unabhängiges technisches/visuelles Review und ausdrückliche Mergefreigabe
-bleiben offen. Pflichtnachweise: Python-Tests, Dokumentvalidator, vollständiger
-Diffcheck und aktueller erfolgreicher `docs`-Job; tatsächliche Ergebnisse der
-unverändert aktiven `product`-/`preflight`-Workflows separat ausweisen. Historische
-BP-1-Nachweise ersetzen weder neue Geometrieprüfung noch Sichtprüfung. Erster BP-2-A-
-Versuch nicht akzeptiert; BP-3/#23/#24 nicht begonnen. #27/#21 bleiben offen.
+BP-1R/K-01 bis K-05 ist über PR #30 als
+`4ef926fe033418090512d82b9aba151031534c5f` integriert; Review und Mergefreigabe
+dieses Vorlagenstands sind abgeschlossen. Die Produktionsdateien bleiben unverändert.
+BP-2/B2-01 bis B2-05 liefert auf `chore/27-bp2-buchillustrationen` tatsächliche
+[A/B-Hintergründe mit Kontrollmontagen](design/book_inventory/artwork/README.md).
+Native Bildherkunft, Aufbereitung und Grenzen stehen im Artworkpaket. Pflichtnachweise:
+Python-Dateiprüfungen, Sichtprüfung, Dokumentvalidator, vollständiger Diffcheck und
+aktueller erfolgreicher `docs`-Job; tatsächliche Ergebnisse der unverändert aktiven
+`product`-/`preflight`-Workflows separat ausweisen. Die BP-2-Lieferung erhält einen
+eigenen Draft-PR; unabhängiges technisches/visuelles Review und ausdrückliche
+Mergefreigabe bleiben dafür offen. BP-3/#23/#24 nicht begonnen, #27/#21 offen.
 
 ## Beschlossene Richtung und offene Entscheidungen
 
