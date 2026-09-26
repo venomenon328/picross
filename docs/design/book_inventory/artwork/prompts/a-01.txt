@@ -1,0 +1,94 @@
+Use case: stylized-concept
+Asset type: production raster background, candidate A.
+Input image 1: technical GEOMETRY REFERENCE ONLY, NOT a style reference. Replace its schematic book rendering with a high-quality hand-painted book illustration. Remove ALL its UI, grids, numbers, icons, text and labels. Keep only the exact page/fold geometry.
+Input image 2: master keepout REFERENCE ONLY. White requires quiet readable material. Black allows detail. Do NOT paint this mask into the image; it is not an alpha mask.
+Input image 3: crop reference only. White must remain; black permits optional outer cropping. No mask shapes in output.
+Create only ONE opaque 16:9 image, target 2560x1440. This is a NEW artwork, not the rejected prior artwork.
+Erzeuge eine detailreich handgezeichnete 2D-Rasterillustration als Nahansicht der linken Seite eines wertigen
+aufgeschlagenen, ausreichend breiten Museumsinventarbands auf einem zurückhaltenden Arbeitstisch.
+Ausgabeziel 2560×1440, 16:9, opak, ohne UI. Warm, ruhig, neugierig, sorgfältig
+kuratiert. Die Qualität soll deutlich über einfachen Vektorflächen liegen:
+sichtbar gearbeitete Bindung, glaubwürdige Leder- beziehungsweise Gewebestruktur
+an den freigegebenen Rändern, feine Nähte, leicht unregelmäßiger mehrlagiger
+Seitenschnitt, differenzierte Papierkanten, vereinzelte kleine Gebrauchsspuren,
+feine Einfassungen und sparsame unbeschriftete Randdetails. Kleine Messing- und
+gedämpfte Blauakzente; keine flächige Ornamentfüllung. Stimmiges warmes Licht und
+physikalisch plausible Kontaktschatten geben Deckel, Seiten und Einlegern Tiefe.
+Das bleibt Illustration mit klaren gezeichneten Konturen, keine Pflicht zu
+Fotografie, 3D-Rendering oder künstlicher Patina.
+
+Kamera annähernd senkrecht auf eine vergrößerte einzelne linke Buchseite.
+Sie füllt den Hauptteil des 16:9-Bildes, keine kleine Hochformatseite in halber
+Bildschirmbreite. Ein breitformatiger Band oder entsprechend komponierter naher
+Ausschnitt ist zulässig. Die Arbeitsseite bleibt exakt frontal, rechteckig und
+flach, ohne perspektivische Verjüngung oder Wölbung. Der Falz liegt rechts außerhalb
+aller Arbeits-/Hinweisflächen; höchstens ein schmaler Anschnitt der rechten Seite
+bleibt sichtbar. Keine vollständige Doppelseite und kein darüber gelegter Bogen.
+Papier, Einband und Seitenlagen sind die gemalte Bühne; keine riesige spätere UI-Karte.
+Die technische Vektorvorlage bestimmt ausschließlich Geometrie und Ruheflächen,
+nicht ihren vereinfachten Zeichenstil. Der alte A-Versuch darf weder nachgezeichnet
+noch einfach beschnitten, vergrößert oder nichtproportional gestreckt werden.
+
+Neue Geometrie in Masterpixeln, Ursprung links oben: linke Seite
+x80/y48, 2380×1340; Falzzone x2480/y40, 16×1360; schmaler rechter Anschnitt
+x2496/y48, 64×1340; Buchreserve x40/y34, 2480×1372. Der Falz bleibt auch mit
+Schatten rechts der Seite, niemals unter Zahlen/Zellen oder Statuszeilen.
+Natürliche kleine Unregelmäßigkeiten an freigegebenen Papier-/Einbandrändern
+sind erwünscht. Bindung, Seitenlagen und Licht sollen die Buchidentität tragen;
+Tisch und Requisiten treten zurück. Keine Fake-Buttons in der Illustration.
+
+Verwende die **gesamte Master-Freihaltemaske**, nicht nur den sichtbaren F-02-Fall:
+Weiß bedeutet ruhiges, gut lesbares Material unter späteren Texten, Zellen, Zahlen
+und Treffern. Dort keine hochfrequenten Fasern, Flecken, Randzeichnungen,
+Kontaktschatten oder harte Helligkeitsverläufe. Eine subtile großflächige Farbnuance
+ist möglich, sofern die spätere UI klar bleibt. Schwarz erlaubt Detailgestaltung,
+ist aber kein Auftrag, jeden freien Fleck zu füllen. Die Binärmaske selbst darf
+nicht als schwarze/weiße Grafik im Ergebnis erscheinen. Keine harten Blattkanten oder Falzschatten innerhalb weißer Zonen.
+
+Die kleine eigene Miniatur wird später als befestigte Inventarkarte separat
+gerendert; daneben werden präzise Farbmuster und eine ikonische Werkzeuggruppe
+eingesetzt. Bereite dafür ruhige Buch-/Papierbereiche vor, ohne tatsächliche
+Karteninhalte, feste Farbschalter, Symbole oder Beschriftung einzumalen. Positionen
+unterscheiden sich nach Fenstergröße; daher keine fest an einen einzelnen Screen
+gebundenen Karten-/Werkzeugschatten oder Rahmen in das Hintergrundbild einbrennen.
+Alle Registerkörper, ihre Beschriftung, Icons und Zustände werden separat als
+UI gezeichnet. Keine dekorativen Registerattrappen oder gemalten Navigationselemente. Die spätere UI-Materialmontierung wird in BP-3
+mit derselben Ausführung auf beide Kandidaten gesetzt.
+
+Bei 1920×1080 wird das Bild gleichmäßig auf 75 % eingepasst, bei 1280×720 auf 50 %.
+Die UI wird separat gerendert. Prüfe, dass Materialqualität schon bei 1080p sichtbar
+bleibt. Kein benötigtes Detail an den äußersten 8 Pixeln des Masters; die
+Beschnittmaske schützt den übrigen Bildbereich. Für die fünf BP-1R-Fälle wird
+zunächst das ganze Bild verwendet. Keine 9-Slice-Streckung des Buchs voraussetzen.
+
+## Gemeinsamer Negativprompt · unverändert für beide Kandidaten
+
+Keine Wörter, Buchstaben, Zahlen, Pseudoschrift, Pseudoziffern, Logos, Wasserzeichen, Spielraster,
+gefüllten Zellen, X-Markierungen, Hinweisfolgen, Werkzeugicons, Farbschalter,
+Spielerminiaturen oder Rätsellösungen. Kein vorweggenommener Motivname oder
+Lösungsspoiler, auch nicht als Randzeichnung. Keine Kamera-/Erfindungsmotive,
+Albumkacheln, Sterne, Timer, Notizwerkzeuge, Motivvorschauen oder Texte aus dem
+alten Referenzmock übernehmen. Kein gesamtes Referenzblatt nachbauen.
+Keine Mottos, lateinischen Sprüche, beschrifteten Dekobücher, Motivationsplaketten
+oder atmosphärischen Fülltexte. Funktionale deutsche Texte kommen ausschließlich
+in die separate UI. Keine eingebrannten Kategorien wie Inventar/Orte/Tiere.
+
+Kein Fantasy-Grimoire, keine Runen, kein Glühen, keine starken Schmutzspuren,
+kein Ornamentteppich, keine generischen abgerundeten Dashboardkarten. Keine
+grobe flache Buchsilhouette, keine Sammlung einfacher SVG-Flächen mit Rauschen,
+keine hochskalierte unscharfe Skizze als vermeintliche Detailillustration.
+Keine Schatten, Falzkanten oder perspektivische Schrägen unter dem Arbeitsraster.
+Keine Halbierung, Verkleinerung oder Verschiebung der Arbeitsfläche für Dekoration.
+Keine neue Themenwelt, Weltkarte, Werkbanksimulation, Audio- oder Animationsidee.
+
+
+Braunes, dunkles, fein genarbtes Leder mit dezenten Kantenabrieben und ruhigen
+geprägten Einfassungen; dunkler warmer Holztisch mit zurückhaltender Maserung.
+Cremefarbene, leicht warme Papierlagen, einzelne feine Bindungsnähte, kleine matte
+Messingakzente und sparsame gedeckt blaue Einbanddetails. Weiches warmes Licht
+von links oben, sanfte Kontaktschatten rechts unten. Papierweiß und Detailkontrast
+so abstimmen, dass die geschützten Arbeitszonen ruhig bleiben. Keine dramatische
+Vignette. Gewünschter Dateiname: `bp2-a-inventarband.png`.
+
+
+Critical: left page spans x=3.125% to 96.094% and y=3.333% to 96.389%. The thin binding fold is at x=96.875% to 97.5%, nearly at the RIGHT image edge. Do not center a book spine. Entire broad paper surface is blank, flat, quiet and unwarped. Rich painted details restricted to narrow outer cover/page edges. Do not reproduce technical shapes, lettering or UI.

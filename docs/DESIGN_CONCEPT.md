@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 26.09.2026 · Arbeitsfassung 0.11 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
+Stand: 26.09.2026 · Arbeitsfassung 0.12 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -110,6 +110,13 @@ Finale Layout-, Schrift-, Icon-, Kontrast- und Assetwahl erst an BP-3 vor #23.
 Sammelalbum/Reisealbum, Sammlungsinhalte, Progression/Wertung bleiben offen bzw.
 unverändert. Kein Beginn von BP-2/BP-3/#23/#24 und keine Änderung an PR #25/#28/#29
 durch diese Vorlagenlieferung.
+
+BP-1R ist inzwischen über PR #30 integriert. Die separate
+[BP-2-Artworklieferung](design/book_inventory/artwork/README.md) enthält zwei
+tatsächlich erzeugte UI-freie Materialvarianten und unveränderte BP-1R-Prüfmontagen.
+Native Auflösung, A-Korrekturen, A→B-Ableitung und Prüfumfang sind dort dokumentiert.
+Das ist keine endgültige Kunstwahl oder neue UI-Ausarbeitung; BP-3 und #23/#24
+bleiben separate, noch nicht begonnene Pakete.
 
 ### 4.1 Album und Arbeitsansicht
 
