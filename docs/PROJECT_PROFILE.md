@@ -40,14 +40,23 @@ samt Briefing/Prüfbericht. P1-Fachverträge bleiben unverändert.
 BP-1R/K-01 bis K-05 ist über PR #30 als
 `4ef926fe033418090512d82b9aba151031534c5f` integriert; Review und Mergefreigabe
 dieses Vorlagenstands sind abgeschlossen. Die Produktionsdateien bleiben unverändert.
-BP-2/B2-01 bis B2-05 liefert auf `chore/27-bp2-buchillustrationen` tatsächliche
+BP-2/B2-01 bis B2-05 ist über PR #31 als
+`66b9d39dd3dbce908ff663a18c059351cfccf557` integriert und liefert tatsächliche
 [A/B-Hintergründe mit Kontrollmontagen](design/book_inventory/artwork/README.md).
 Native Bildherkunft, Aufbereitung und Grenzen stehen im Artworkpaket. Pflichtnachweise:
 Python-Dateiprüfungen, Sichtprüfung, Dokumentvalidator, vollständiger Diffcheck und
 aktueller erfolgreicher `docs`-Job; tatsächliche Ergebnisse der unverändert aktiven
-`product`-/`preflight`-Workflows separat ausweisen. Die BP-2-Lieferung erhält einen
-eigenen Draft-PR; unabhängiges technisches/visuelles Review und ausdrückliche
-Mergefreigabe bleiben dafür offen. BP-3/#23/#24 nicht begonnen, #27/#21 offen.
+`product`-/`preflight`-Workflows separat ausweisen. Die BP-2-Nachweise stehen im
+historischen PR #31; unabhängiges Review und Mergefreigabe dafür sind abgeschlossen.
+BP-3/B3-01 bis B3-05 liefert auf `chore/27-bp3-zielkomposition` das separate
+[Kompositionspaket](design/book_inventory/composition/README.md): gemeinsame UI auf
+unverändertem A/B, zehn Zielansichten, editierbare Ebenen, Zustands-/Detailnachweise,
+Offline-Galerie und Review-ZIP. Pflichtquellen zusätzlich: aktueller #27-Body,
+BP-2-Anleitung/Prozess/Prüfbericht und PR #31/R1. Neue Lieferprüfung und aktueller
+`docs`-Job erforderlich; historische BP-1R-/BP-2-Nachweise ersetzen sie nicht.
+BP-3 bleibt Draft bis zum unabhängigen technischen/visuellen Review und ausdrücklicher
+Eigentümerfreigabe. Vor #23 konkrete Artwork-/UI-/Schrift-/Icon-/Kontrastwahl und
+Bestätigung des nativen Navigationsumfangs; #23/#24 nicht begonnen, #27/#21 offen.
 
 ## Beschlossene Richtung und offene Entscheidungen
 

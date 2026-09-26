@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 26.09.2026 · Arbeitsfassung 0.12 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
+Stand: 26.09.2026 · Arbeitsfassung 0.13 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -115,8 +115,15 @@ BP-1R ist inzwischen über PR #30 integriert. Die separate
 [BP-2-Artworklieferung](design/book_inventory/artwork/README.md) enthält zwei
 tatsächlich erzeugte UI-freie Materialvarianten und unveränderte BP-1R-Prüfmontagen.
 Native Auflösung, A-Korrekturen, A→B-Ableitung und Prüfumfang sind dort dokumentiert.
-Das ist keine endgültige Kunstwahl oder neue UI-Ausarbeitung; BP-3 und #23/#24
-bleiben separate, noch nicht begonnene Pakete.
+BP-2 ist inzwischen über PR #31 integriert, ohne endgültige Kunstwahl.
+Das separate [BP-3-Kompositionspaket](design/book_inventory/composition/README.md)
+arbeitet nun ein gemeinsames UI-System auf beiden unveränderten Bildern aus:
+gefasste Inventarkarte, zusammengehörige Originalfarbmuster, gruppierte Werkzeuge
+und getrennte Blattzugänge. Zehn Größen-/Artworkkompositionen und statische
+Zustandsnachweise liefern die konkrete Entscheidungsgrundlage. Fraunces/IBM Plex Sans
+und C1 werden begründet empfohlen; die Eigentümerwahl bleibt ausdrücklich offen.
+Raster-/Hinweisflächen, Zellstand und Miniatur bleiben unverändert. Unabhängiges
+Review und Eigentümerfreigabe stehen aus; #23/#24 wurden nicht begonnen.
 
 ### 4.1 Album und Arbeitsansicht
 

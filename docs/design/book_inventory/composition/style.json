@@ -1,0 +1,48 @@
+{
+  "fonts": {
+    "title": [
+      "Fraunces",
+      28,
+      600
+    ],
+    "body": [
+      "PlexSans",
+      14,
+      400
+    ],
+    "miniature": [
+      "PlexSans",
+      12,
+      600
+    ],
+    "clues": "unchanged BP-1R: 13 / 14 / 16.25 px"
+  },
+  "ink": "#293e3d",
+  "paper": "#fffaf0",
+  "brass": "#8c7047",
+  "icon_stroke": 1.8,
+  "icon_image_px": 26,
+  "minimum_hit_px": 44,
+  "layer_order": [
+    "unchanged BP-2 background",
+    "local mounts",
+    "precise data/icons/text"
+  ],
+  "selection": {
+    "tool": "light underline + dark enamel + explicit status",
+    "color": "light corner brackets outside untouched RGB interior + explicit status"
+  },
+  "paint": {
+    "action": "chamfer within original hit; 2 px bevel, 5 px swatch inset",
+    "miniature": "original image rect unchanged; mounts inside mini_card reserve",
+    "tools": "three shared wells: 3 tools / 2 history / 4 view actions; 3 px outer reserve"
+  },
+  "c1": "proposal only: original 0.55 px dark outline on hint colors 2/4",
+  "states": [
+    "normal",
+    "hover",
+    "pressed",
+    "active",
+    "disabled"
+  ]
+}

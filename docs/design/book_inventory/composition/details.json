@@ -1,0 +1,222 @@
+{
+  "details/a-f02-1920-numbers.png": {
+    "source": "views/a-f02-1920.png",
+    "box": [
+      438,
+      176,
+      760,
+      424
+    ],
+    "scale": 1
+  },
+  "details/a-f02-2560-numbers.png": {
+    "source": "views/a-f02-2560.png",
+    "box": [
+      758,
+      356,
+      1080,
+      604
+    ],
+    "scale": 1
+  },
+  "details/a-f01-2560-numbers.png": {
+    "source": "views/a-f01-2560.png",
+    "box": [
+      898,
+      394,
+      1220,
+      642
+    ],
+    "scale": 1
+  },
+  "details/a-f03-1920-numbers.png": {
+    "source": "views/a-f03-1920.png",
+    "box": [
+      238,
+      194,
+      560,
+      442
+    ],
+    "scale": 1
+  },
+  "details/a-f02-1280-numbers.png": {
+    "source": "views/a-f02-1280.png",
+    "box": [
+      228,
+      146,
+      550,
+      394
+    ],
+    "scale": 1
+  },
+  "details/a-f02-1280-miniature.png": {
+    "source": "views/a-f02-1280.png",
+    "box": [
+      1034,
+      180,
+      1208,
+      376
+    ],
+    "scale": 1
+  },
+  "details/a-f02-1280-swatches.png": {
+    "source": "views/a-f02-1280.png",
+    "box": [
+      1038,
+      414,
+      1185,
+      557
+    ],
+    "scale": 1
+  },
+  "details/a-f02-1280-tools.png": {
+    "source": "views/a-f02-1280.png",
+    "box": [
+      240,
+      602,
+      840,
+      689
+    ],
+    "scale": 1
+  },
+  "details/a-f02-1280-navigation.png": {
+    "source": "views/a-f02-1280.png",
+    "box": [
+      943,
+      19,
+      1155,
+      89
+    ],
+    "scale": 1
+  },
+  "details/a-f02-1280-album.png": {
+    "source": "views/a-f02-1280.png",
+    "box": [
+      0,
+      64,
+      66,
+      132
+    ],
+    "scale": 1
+  },
+  "details/a-f02-1280-status.png": {
+    "source": "views/a-f02-1280.png",
+    "box": [
+      984,
+      604,
+      1224,
+      684
+    ],
+    "scale": 1
+  },
+  "details/b-f02-1920-numbers.png": {
+    "source": "views/b-f02-1920.png",
+    "box": [
+      438,
+      176,
+      760,
+      424
+    ],
+    "scale": 1
+  },
+  "details/b-f02-2560-numbers.png": {
+    "source": "views/b-f02-2560.png",
+    "box": [
+      758,
+      356,
+      1080,
+      604
+    ],
+    "scale": 1
+  },
+  "details/b-f01-2560-numbers.png": {
+    "source": "views/b-f01-2560.png",
+    "box": [
+      898,
+      394,
+      1220,
+      642
+    ],
+    "scale": 1
+  },
+  "details/b-f03-1920-numbers.png": {
+    "source": "views/b-f03-1920.png",
+    "box": [
+      238,
+      194,
+      560,
+      442
+    ],
+    "scale": 1
+  },
+  "details/b-f02-1280-numbers.png": {
+    "source": "views/b-f02-1280.png",
+    "box": [
+      228,
+      146,
+      550,
+      394
+    ],
+    "scale": 1
+  },
+  "details/b-f02-1280-miniature.png": {
+    "source": "views/b-f02-1280.png",
+    "box": [
+      1034,
+      180,
+      1208,
+      376
+    ],
+    "scale": 1
+  },
+  "details/b-f02-1280-swatches.png": {
+    "source": "views/b-f02-1280.png",
+    "box": [
+      1038,
+      414,
+      1185,
+      557
+    ],
+    "scale": 1
+  },
+  "details/b-f02-1280-tools.png": {
+    "source": "views/b-f02-1280.png",
+    "box": [
+      240,
+      602,
+      840,
+      689
+    ],
+    "scale": 1
+  },
+  "details/b-f02-1280-navigation.png": {
+    "source": "views/b-f02-1280.png",
+    "box": [
+      943,
+      19,
+      1155,
+      89
+    ],
+    "scale": 1
+  },
+  "details/b-f02-1280-album.png": {
+    "source": "views/b-f02-1280.png",
+    "box": [
+      0,
+      64,
+      66,
+      132
+    ],
+    "scale": 1
+  },
+  "details/b-f02-1280-status.png": {
+    "source": "views/b-f02-1280.png",
+    "box": [
+      984,
+      604,
+      1224,
+      684
+    ],
+    "scale": 1
+  }
+}
