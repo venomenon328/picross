@@ -1,123 +1,131 @@
-# BP-1 · Prüfbericht und Reproduktion
+# BP-1R · Prüfbericht und Reproduktion
 
-Stand: 26.09.2026 · Technische Vorlagen, keine Spiel- oder Kunstabnahme.
+Stand: 26.09.2026 · K-01 bis K-05 · technische statische Vorlage.
 
-## Quellen und Stand
+## Stand und Quellen
 
-Basis `main@831b46f9e373e8691c18088efc9f2495fe3defb8`, Arbeitsbranch
-`chore/27-buch-produktionsvorlage`. Aktuelle AGENTS.md, Workflow, Projektprofil,
-Produktdefinition, Gestaltungskonzept, P1-Fachvertrag 0.13, Modellauswahl/-katalog,
-vollständiger #27-Body und #21 wurden gelesen. #27 hatte beim Start keine Kommentare.
-Die Bildbeschreibung im Issue war verfügbar, das ursprüngliche Chatbild nicht.
+Basis `main@0d3ad6a921578f94b3249ab83fbb215721549dfb`, Branch
+`chore/27-einzelseiten-komposition`. Der eigene Draft-PR bindet den finalen
+Head, ZIP-Hash, CI-/Test-Merge-Stand und den getrennten Selbstreview. Keine Prüfung
+von BP-1 wird als aktueller BP-1R-Nachweis ausgegeben.
 
-PR #28 ist nur lesende Referenz am Head
-`9834ee834f5b83bbc5e6b17429a8fe7185c26758`; README, Manifest, öffentliche
-Quellen, Typografie-/Iconvorlagen und Renderwerkzeuge wurden geprüft.
-[R2](https://github.com/venomenon328/picross/pull/28#pullrequestreview-5325378229)
-ist ein fremder vorhandener Prüfstand, kein selbst ausgeführtes neues Review.
-Die überholte Auswahlpflicht S1/S2/S3 + U1/U2 ist durch den aktuellen #27-Body
-ersetzt. O-01 ist kein Auftrag zur Änderung des alten PRs.
+Aktuelle AGENTS.md, Workflow, Projektprofil, Produktdefinition, Gestaltungskonzept,
+P1-Fachvertrag 0.13, Modellauswahl/-katalog und vollständiger aktueller #27-Body
+einschließlich beider Kommentare sowie #21 gelesen. Der konsolidierte #27-Body vom
+26.09.2026 ersetzt die ältere Doppelseitenentscheidung. PR #29/R1 und Merge sind
+historischer Kontext. PR #25/#28 bleiben lesende Herkunftsreferenzen, kein neues
+Review oder Korrekturauftrag dieser PRs. Kein Cherry-pick oder Spielquellendiff.
 
-PR #25 ist nur lesende Referenz am Head
-`df7ac589e900a6d6d7c5080599c6a5ace47c395d`; sein `design/demo.gd` bindet
-`z1-demo-1`. [R1/B-01](https://github.com/venomenon328/picross/pull/25#pullrequestreview-5323317296)
-bleibt offen. Kein Cherry-pick, kein Produktcode übernommen oder korrigiert.
-Die drei öffentlichen Datenexporte wurden vor Rendering byteweise gegen die
-Referenz gelesen; ihre SHA-256-Werte stehen separat im Manifest. Die Original-
-Fixturehashes werden zusätzlich gegen den Basiscommit geprüft.
+Der separate Worktree lässt unversionierte Altartefakte im ursprünglichen
+Arbeitsbaum unangetastet. Alle fünf Quellmanifeste/-daten unter `sources/` sind
+bytegleich zum integrierten BP-1-Basiscommit; dessen Herkunft liegt in PR #28
+`9834ee834f5b83bbc5e6b17429a8fe7185c26758` und PR #25
+`df7ac589e900a6d6d7c5080599c6a5ace47c395d`.
+Original-Fixtures, Proofs, Ergebnisbilder und Produktverträge werden nicht verändert.
 
-## Ausgeführte technische Prüfungen
+## Automatisierter Dateinachweis
 
-Der [kleine lokale Vorlagen-/Prüfhelfer](../../../../tools/book_inventory/production.py)
-enthält ausschließlich statisches Zeichnen, Renderprüfung, Lieferprüfung und
-ZIP-Verpackung. Keine Eingabe-, Solver- oder H1-Engine, keine Produktabhängigkeit.
-Die Lieferprüfung läuft über einen entdeckbaren Standardbibliothek-Test im
-bestehenden `docs`-Job; Browser/Pillow sind dort nicht erforderlich.
+Der bestehende [Vorlagenhelfer](../../../../tools/book_inventory/production.py)
+wurde fortgeschrieben, keine zweite Pipeline angelegt. Seine Tests werden vom
+unveränderten `docs`-Workflow entdeckt. `verify` verwendet nur die Standardbibliothek.
 
-Geprüft werden die tatsächlichen Dateien: fünf Fälle, 22 PNG-/SVG-Paare,
-Hashes, PNG-Signaturen/Chunk-CRCs/dekomprimierte Scanlinegrößen, Dimensionen,
-Quellgleichheit, öffentliche Datenfelder, Originalpalette/-hinweise,
-vollständige Raster-/Miniaturzellmengen, erwartete ganze Hinweisfenster,
-normierte Koordinaten, Aktionsgrenzen, Trennung von Aktionen und Hinweisen/Raster,
-Arbeitsflächen innerhalb des falzverdeckenden Bogens sowie Browser-Font-/Textgrenzen.
-Die transparenten UI-PNGs wurden beim Rendern auf Alpha 0 bis 255 geprüft.
+Geprüft werden die gelieferten Dateien: fünf verbindliche Größenfälle mit identischen
+Zell-/Rastergrößen, Quelldaten am Basiscommit, Originalpalette/-hinweise, ganze
+Hinweisfenster in gemeinsamen Slots, tatsächliche SVG-Zellmengen von Raster/Miniatur
+und tatsächliche RGB-Füllzellmittelpunkte der Layout-PNGs. Keine Solver-/H1-Neuberechnung.
 
-Die Browserprüfung misst die tatsächlichen Fontrechtecke aller Texte gegen den
-Viewport, Hinweise zusätzlich gegen ihre Flächen sowie Koordinaten/Status/Titel
-gegen ihre Reserven. Sie fand anfänglich knappe Fontüberstände; die finale
-Hinweisschrift/Baseline wurde so angepasst, dass alle gemessenen Grenzen passen.
-Kein Test wurde dafür abgeschwächt. Die zwei aufgezeichneten Schriftfamilien wurden
-explizit geladen und ihre Originaldateien vor Rendering hashgeprüft.
+Neue Geometrie-/Navigationstests prüfen vollständig enthaltene Arbeitsmittel auf
+der linken Seite, Abstand zum rechten Falz, getrennte Aktionsrechtecke ohne
+Raster-/Hinweisüberlagerung, alle häufigen Aktionen sowie Album-/Seitenzugang,
+SVG-Trefferflächen gegen Layoutdaten, benannte Ziele/Tooltips und drei Beispiel-
+zustände je Navigation. Negative Regressionen verändern Falz, 720p-Status,
+Navigationsposition/-ziel und Beschnittmaske; die Prüfer müssen dies ablehnen.
 
-Renderumgebung: Windows, Python 3.13, Playwright 1.55.0, Pillow 11.3.0,
-installierter Microsoft Edge. Exakte Browserversion in [render-checks.json](render-checks.json),
-Device Scale Factor 1; Netzwerk im Renderkontext gesperrt. Fonts nur temporär,
-keine globale Installation. Die editierbaren Liefer-SVGs enthalten keine Fontbytes.
+27 PNG-/SVG-Paare: fünf Arbeitsfälle × vier Ebenen, zwei Mastermasken,
+vier rechte Anschlussdateien und eine Navigationstafel. PNG-Struktur, CRCs,
+dekomprimierte Scanlines und Maße werden geprüft. 14 Masken werden vollständig
+decodiert und byteweise mit unabhängig aufgebauten binären Rechteckflächen
+verglichen, einschließlich exakter inverser Mastervereinigung. Keine Graukanten.
+Sechs UI-PNGs werden auf Alpha 0 bis 255 geprüft; unbekannte Rasterzellmittelpunkte
+müssen transparent sein. Kein opaker Ganzseitenersatz im UI.
 
-## Sichtprüfung und Grenzen
+Pixel-/Normrechtecke, proportionale Hintergrundtransformation und Fontfreiheit
+werden geprüft. Dateihashes stehen im [Manifest](manifest.json), Generatorhash
+ist auf LF normiert. Das ZIP wird vollständig gegen alle Paketdateien verglichen;
+keine TTF/OTF/WOFF/WOFF2 und keine eingebetteten Fontbytes in SVGs.
 
-Die fünf Arbeitskompositionen wurden in Originalgröße angesehen. Schwerpunkt:
-lange F-02-/F-03-Hinweise einschließlich Präfixmarkern, unveränderte Zellen und
-Farben, Trennung an Fünferlinien, Miniaturausschnitt, flache Falzabgrenzung,
-kleines Fenster mit UI 125 %, vollständige Aktions-/Statusflächen.
-Der technische Falz liegt nur außerhalb des Arbeitsbogens. Die 720p-Probe zeigt
-29×17 Zellen und vollständige Werkzeugziele, F-03 weiterhin 57×28.
-Eine kollidierende technische Randbeschriftung wurde vor der finalen Lieferung
-entfernt; die eigentliche Fußzeile kennzeichnet alle Vorlagen ausdrücklich.
+## Tatsächlicher Render- und Sichtnachweis
 
-Die getrennten UI-/Freihalte-/Beschnittbilder wurden ebenso in Originalgröße
-kontrolliert. Alle zwölf Masken wurden vollständig decodiert und enthalten nur
-Schwarz und Weiß; die Freihaltegrenzen sind nach außen auf ganze Pixel gerundet.
-Die Masken sind binäre Arbeitsmittel: Sie bewerten keine malerische
-Qualität und beweisen keinen zukünftigen Kontrast auf noch fehlender Illustration.
-Die tatsächlichen Originalbilder, Quellgeometrie und der vollständige Diff sind
-Gegenstand des getrennten Selbstreviews im Draft-PR.
+Windows, Python 3.13, isolierte Playwright-1.55.0-/Pillow-11.3.0-Umgebung,
+installierter Microsoft Edge, Device Scale Factor 1. Exakte Browserversion,
+geladene Schriftfamilien und gemessene Einzeltextrechtecke stehen in
+[render-checks.json](render-checks.json). Fraunces/PlexSans vor jedem Build gegen
+die gepinnten SHA-256 geprüft, nur temporär geladen, Netzwerk im Browser blockiert.
+Keine globale Fontinstallation. Die editierbaren SVGs enthalten keine Fontbytes.
 
-Kein neuer Godot-Screenshot, lokaler Produktneubau oder realer Maustest. Keine
-physische DPI-Messung, Kunstabnahme, neue H1-/G1-Spielabnahme oder allgemeine
-responsive Layoutgarantie. Helle Originalzahlen bleiben mit C1 als Vorschlag
-gekennzeichnet; finalen Kontrast anhand der tatsächlichen Kunst in BP-3 beurteilen.
+Alle 27 gelieferten PNGs wurden tatsächlich betrachtet: fünf Arbeitsansichten
+einzeln, rechte Anschlussansicht und Navigationstafel einzeln; alle sechs
+transparenten Overlays auf neutralem Prüfpapier sowie alle 14 Masken als benannte
+Übersichten. Zusätzlich unskalierte 1:1-Ausschnitte aller fünf Arbeitsfälle:
+Hinweiszahlen/H1-Beispiel, Zelltrennung, aktive Werkzeuge, Status, linker Albumzugang
+und rechter Seitenzugang mit Seitengrenzen. Große Gesamtbilder wurden in der
+Anzeige teilweise verkleinert; die Detailprüfung stützt sich deshalb ausdrücklich
+auf die unskalierten Ausschnitte, nicht auf eine behauptete Gesamtansicht bei 1:1.
 
-## Reproduktion
+Ergebnis: vollständige Zahlen, unveränderte Zellflächen, sichtbare Miniatur und
+Aktionszustände; Falz außerhalb des Arbeitsfelds, keine Seite durch Statuszeilen.
+F-03 weiterhin 57×28, 720p/UI 125 % weiterhin 29×17. Kein erkennbarer wesentlicher
+Flächenkonflikt. Bei der Erstellung wurden der 1440p-Seitenzugang um 10 px nach
+links gesetzt und die unteren Werkzeuge innerhalb die Blattgrenze gerückt.
+Die Prüfung wurde dafür nicht abgeschwächt. C1 bleibt als Vorschlag gekennzeichnet;
+finaler Kontrast auf tatsächlicher Kunst ist damit nicht bestätigt.
 
-Aus dem Repositoryroot, Python 3.11 oder neuer:
+## Reproduktion und Abschlussprüfungen
+
+Python 3.11 oder neuer, im Repositoryroot:
 
 ```powershell
 python tools/book_inventory/production.py verify
 python -m unittest discover -s tools -p 'test_*.py' -v
 python tools/check_docs.py
-git diff --check 831b46f9e373e8691c18088efc9f2495fe3defb8 HEAD
+git diff --check 0d3ad6a921578f94b3249ab83fbb215721549dfb HEAD
 ```
 
-Zum erneuten Rendern optional eine isolierte Python-Umgebung mit Playwright 1.55.0
-und Pillow 11.3.0 verwenden. Die zwei im Fontmanifest bezeichneten TTFs aus dem
-gepinnten Referenzstand in einem temporären Ordner als `Fraunces.ttf` und
-`PlexSans.ttf` bereitstellen; nicht in die Lieferung kopieren. Dann:
+Für einen neuen Renderlauf optional isolierte Umgebung mit Playwright 1.55.0
+und Pillow 11.3.0. Zwei TTFs aus [fonts.json](sources/fonts.json) temporär als
+`Fraunces.ttf` und `PlexSans.ttf` bereitstellen. Nicht in die Lieferung kopieren.
 
 ```powershell
-python tools/book_inventory/production.py build --browser 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe' --fonts artifacts/bp1-fonts
+python tools/book_inventory/production.py build --browser 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe' --fonts artifacts/bp1r-fonts
 python tools/book_inventory/production.py pack
 ```
 
-`build` ersetzt Layoutdaten, SVGs, PNGs und Render-/Hashmanifest. Manuelle Änderungen
-zuerst in den Quelldaten/Generator übernehmen. Andere Browserstände können andere
-PNG-Bytes erzeugen und erfordern erneute Sichtprüfung. Die Referenz-Commits müssen
-für einen Neubau lokal erreichbar sein; `verify` benötigt nur den Basiscommit.
-`pack` prüft vor Verpackung und nimmt alle Lieferdateien außer sich selbst auf;
-keine Fontdateien oder privaten Inhalte. Die festen ZIP-Zeitstempel ermöglichen
-bei unveränderten Dateien denselben Hash. Das ZIP enthält keine Tools; zur
-Reproduktion den im PR gebundenen Repositorycommit verwenden.
+`build` ersetzt Layout/SVG/PNG/Render-/Hashmanifest. Änderungen gehören zuerst
+in Generator/Quelldaten; andere Browserversionen können andere PNG-Bytes erzeugen.
+`pack` prüft und verpackt alle Paketdateien außer ZIPs mit festen Zeitstempeln.
+Das ZIP enthält keine Tools; Reproduktion am im PR verlinkten Repositorycommit.
+Die Commitbindung erfolgt über den unveränderlichen Raw-Link und SHA-256 im PR,
+nicht über eine unmögliche Selbstreferenz auf den Commit, der das ZIP erst enthält.
 
-Vorhandene unversionierte/ignorierte Altartefakte bleiben unangetastet. Der
-Dokumentvalidator scannt auch solche Verzeichnisse; der lokale Abschlussnachweis
-wird deshalb in einer temporären Kopie ausschließlich der Git-Indexdateien
-geführt. Die unveränderte CI prüft zusätzlich den tatsächlichen finalen Checkout.
-`product` und `preflight` bleiben aktiv und unverändert; ihre Ergebnisse stehen
-im PR, ohne sie als neue Spiel-/Gestaltungsabnahme auszugeben.
+Lokal ausgeführt: 53 Python-Tests in 24,657 Sekunden, erfolgreich mit einem
+bestehenden Windows-Symlink-Skip; Liefer-/ZIP-Prüfung erfolgreich. Dokumentvalidator
+und vollständiger Diffcheck erfolgreich. Der erste Dokumentlauf erfasste auch die
+lokale Render-venv und meldete 154 Fremdpaket-Formatprobleme. Die temporäre venv
+wurde aus dem Repository in den System-Tempordner verschoben; der unveränderte
+Validator besteht danach direkt im Arbeitsbaum. Keine Prüferregel abgeschwächt.
+Aktuelle CI-Ergebnisse werden im Draft-PR mit Head/Basis/Integrationscommit und
+ausgeführten Schritten ausgewiesen. `product` und `preflight` bleiben unverändert aktiv. Sie prüfen den
+unveränderten P1-Stand und ersetzen weder Sichtprüfung noch künstlerische Abnahme.
 
-## Abnahmegrenzen
+## Grenzen und offene Gates
 
-P-01 bis P-04 werden technisch zur Prüfung geliefert. Unabhängiges Review und
-ausdrückliche Mergefreigabe bleiben offen. Die finale Eigentümerentscheidung zu
-Bild, Layout, Schrift und Kontrast erfolgt erst an BP-3 vor #23. BP-2/BP-3 und
-#23/#24 wurden nicht begonnen. #27 und #21 bleiben offen; kein Merge oder Release.
+Getrennter Selbstreview im eigenen Draft-PR, keine unabhängige Zweitprüfung.
+Vor einem späteren Merge: unabhängiges technisches/visuelles Review und ausdrückliche
+Eigentümerfreigabe. Vor erneuter Bildproduktion: konkret geprüfte BP-1R-Vorlage
+benennen; keine alte BP-1-Maske verwenden. Finale Bild-/Layout-/Schrift-/Kontrastwahl
+erst an BP-3 vor #23. Das ursprüngliche Chatreferenzbild liegt hier nicht als
+Repositoryasset vor und wurde in diesem Lauf nicht betrachtet.
+
+Kein Godot-Navigationsbau, keine Statistikimplementation, keine reale Maus-/DPI-
+oder Spielabnahme, keine neue Hintergrundillustration. Kein neuer Beginn von
+BP-2/BP-3/#23/#24. PR #25/#28/#29 bleiben unverändert, #27/#21 offen. Kein Merge/Release.

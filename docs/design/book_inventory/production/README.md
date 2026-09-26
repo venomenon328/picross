@@ -1,163 +1,168 @@
-# BP-1 · Produktionsvorlage für den Inventarband
+# BP-1R · Einzelseiten-Komposition
 
-Stand: 26.09.2026 · Lieferung P-01 bis P-04 zu [#27](https://github.com/venomenon328/picross/issues/27)
+Stand: 26.09.2026 · K-01 bis K-05 aus [#27](https://github.com/venomenon328/picross/issues/27)
 unter [#21](https://github.com/venomenon328/picross/issues/21).
-**Technische Arbeitskomposition und Bildbriefing, keine Hintergrundillustration.**
+**Statische technische Vorlagen, keine Hintergrundkunst oder native Navigation.**
 
-[Review-ZIP](bp1-review.zip) · [Bildbriefing](BRIEFING.md) · [Layoutdaten](layout.json) ·
-[Prüfmanifest](manifest.json) · [Renderprüfung](render-checks.json) · [Prüfbericht](VERIFICATION.md).
-Der eigene Draft-PR bindet Lieferung, ZIP-Hash, Head, Basis, CI und getrennten Selbstreview.
-Auf GitHub sind die PNGs direkt einsehbar; das ZIP über „Download raw file“ laden.
+[Review-ZIP](bp1r-review.zip) · [Bildbriefing](BRIEFING.md) · [Layoutdaten](layout.json) ·
+[Quell-/Dateimanifest](manifest.json) · [Rendergrenzen](render-checks.json) · [Prüfbericht](VERIFICATION.md).
+Der eigene Draft-PR bindet ZIP-Hash, Head, Basis, CI und getrennten Selbstreview.
+Das ZIP über „Download raw file“ laden. Es enthält keine Fonts.
 
-## Eine Arbeitskomposition
+Diese Revision ersetzt die integrierte Vorlage in derselben Pipeline. Die
+[historische BP-1-Lieferung](https://github.com/venomenon328/picross/tree/0d3ad6a921578f94b3249ab83fbb215721549dfb/docs/design/book_inventory/production)
+aus PR #29 bleibt unverändert in der Historie. Ihre Doppelseitenmasken und ihr
+Einlegebogen sind für weitere Bildproduktion abgelöst, keine rückwirkend fehlerhafte Lieferung.
+Der erste BP-2-A-Versuch wurde nicht akzeptiert; er ist keine Assetgrundlage.
 
-Ein großer eingelegter Bogen liegt frontal über beiden Buchseiten und verdeckt den
-Falz im gesamten Arbeitsbereich. Raster und Hinweise bleiben eine durchgehende Ebene.
-Die Bindung ist oberhalb und unterhalb des Bogens sichtbar; Seitenschnitt, Deckel
-und Tisch rahmen ihn ein. Der Bogen ist Teil der späteren gemalten Bühne. Die
-UI-Überlagerung enthält **keine große opake Papierkarte** über der Illustration.
-Die cremefarbene Fläche in den Layout-PNGs bezeichnet lediglich diese Papierzone.
-Die blaugrauen Konturen bezeichnen Buch und Falz; sie sind keine Stil-/Materialprobe.
+## Eine breite linke Seite
 
-Die Inventarkarte mit eigener Miniatur steht rechts. Darunter liegen separate
-Koordinaten, eine 2×2-Gruppe echter Farbmuster und aktives Werkzeug/Farbe. Neun
-häufige Aktionen bilden eine kurze gemeinsame Leiste unten; Hilfe und Menü liegen
-oben rechts. Das hält die 57×28-Arbeitsfläche frei. Bei F-03 sitzt die Inventarkarte
-am rechten Buchrand und darf dort überstehen; ihr Inhalt bleibt vollständig sichtbar.
-Das Rahmenrechteck ist eine technische Montierungsreserve, kein zusätzliches Werkzeug.
+Nahansicht eines ausreichend breiten Inventarbands: Die linke Seite füllt fast
+den Bildschirm. Raster und beide Hinweisflächen liegen frontal auf demselben
+Papier. Falz rechts außerhalb, nur ein schmaler rechter Seitenanschnitt.
+Keine große zusätzliche UI-Karte und kein Einlegebogen über einer Doppelseite.
+Die neutralen technischen Konturen bestimmen Geometrie, keinen Illustrationsstil.
 
-Fraunces + IBM Plex Sans (S1/P1) und die bestehenden Iconpfade sind reversible
-Ausgangspunkte aus #26. Hier gibt es genau eine Anordnung, keine neue Stilserie.
-Die größere leere Papierfläche bei F-01 ist bewusst: 24-px-Zellen werden nicht auf
-1440p aufgeblasen. Spätere Malerei darf diese Ruhefläche nicht mit Dekoration füllen.
-Es handelt sich um ein flaches ausgeklapptes Arbeitsblatt, nicht um ein halbes Buchblatt.
+Master 2560×1440: linke Seite `[80,48,2380,1340]`, Falz `[2480,40,16,1360]`,
+rechter Anschnitt `[2496,48,64,1340]`, Buchreserve `[40,34,2480,1372]`.
+Die Arbeitsseite nimmt 93 % der Bildbreite ein. Perspektive und Material dürfen
+die rechteckigen Arbeitszonen nicht verformen. Der Bildausschnitt entsteht bei
+der Komposition eines breiten Bands, nicht durch Strecken eines vorhandenen Bilds.
 
-## Fünf native Größenproben
+Rechts auf der **linken Arbeitsseite** stehen eigene Miniatur, separate Koordinaten,
+Palette und Werkzeug-/Farbstatus; unten die neun häufigen Aktionen. Die Register-
+und Seitenzugänge sind eigenständige UI. F-03 verschiebt Raster/Hinweise um 40 px
+und die gleich große Miniatur um 64 px nach links, um alles vor dem Falz zu halten.
+Die untere Leiste rückt bei 1080p um 24 px, bei 720p um 12 px nach oben.
+Der 720p-Status liegt bei `[990,610,230,65]` vollständig innerhalb der Seite;
+keine Blattkante durch die Schrift. F-01 behält bewusst ruhige freie Papierfläche.
 
-Alle Angaben sind Bildpixel, keine gemessene Windows-DPI. Herkunft der bisherigen
-Flächen: [PR-#28-Unterlage am Referenzhead](https://github.com/venomenon328/picross/blob/9834ee834f5b83bbc5e6b17429a8fe7185c26758/docs/design/z1_1/README.md).
+## Fünf Größenfälle · BP-1 → BP-1R
 
-| PNG / editierbares SVG | UI / Zelle | Raster und sichtbare Spalten / Zeilen | Vergleich |
-| --- | --- | --- | --- |
-| [F-02 1920×1080](png/f02-1920-layout.png) / [SVG](svg/f02-1920-layout.svg) | 100 % / 18 px | 720×720; 1–40 / 1–40 | Bisheriger Demozoom und U1-Rasterursprung 510/252 bleiben. |
-| [F-02 2560×1440](png/f02-2560-layout.png) / [SVG](svg/f02-2560-layout.svg) | 100 % / 18 px | 720×720; 1–40 / 1–40 | +320/+180 verschoben; identische Zellen, Zahlen, Icons und Miniaturgröße. |
-| [F-01 2560×1440](png/f01-2560-layout.png) / [SVG](svg/f01-2560-layout.svg) | 100 % / 24 px | 480×480; 1–20 / 1–20 | Wie Referenz 20×20; neue Buchposition, kein Größenverlust. |
-| [F-03 1920×1080](png/f03-1920-layout.png) / [SVG](svg/f03-1920-layout.svg) | 100 % / 24 px | 1368×672; 26–82 / 36–63 | Unverändert 57×28 = 1.596 Zellen. UI-Testdatensatz, Rätselqualität nicht abgenommen. |
-| [F-02 1280×720](png/f02-1280-layout.png) / [SVG](svg/f02-1280-layout.svg) | 125 % / 22 px | 638×374; 1–29 / 1–17 | Unverändert 29×17 = 493 Zellen, 55-px-Aktionsziele. |
+Bildpixel, keine gemessene Windows-DPI. UI-Skalierung, Rasterzoom und Buchausschnitt
+sind unabhängig. Alle Angaben in den folgenden vier Maßspalten gelten **vorher = nachher**.
 
-![1080p-Arbeitskomposition](png/f02-1920-layout.png)
+| PNG / SVG | UI / Zelle / Hinweisschrift | Raster; sichtbare Zellen | Zeilen- / Spaltenhinweisfläche | Slots horizontal / vertikal |
+| --- | --- | --- | --- | --- |
+| [F-02 1920×1080](png/f02-1920-layout.png) / [SVG](svg/f02-1920-layout.svg) | 100 % / 18 / 13 px | 720×720; 40×40 | 210×720 / 720×126 | 30 / 18 px |
+| [F-02 2560×1440](png/f02-2560-layout.png) / [SVG](svg/f02-2560-layout.svg) | 100 % / 18 / 13 px | 720×720; 40×40 | 210×720 / 720×126 | 30 / 18 px |
+| [F-01 2560×1440](png/f01-2560-layout.png) / [SVG](svg/f01-2560-layout.svg) | 100 % / 24 / 14 px | 480×480; 20×20 | 192×480 / 480×144 | 30 / 18 px |
+| [F-03 1920×1080](png/f03-1920-layout.png) / [SVG](svg/f03-1920-layout.svg) | 100 % / 24 / 14 px | 1368×672; 57×28 | 240×672 / 1368×144 | 30 / 18 px |
+| [F-02 1280×720](png/f02-1280-layout.png) / [SVG](svg/f02-1280-layout.svg) | 125 % / 22 / 16,25 px | 638×374; 29×17 | 210×374 / 638×120 | 37,5 / 22,5 px |
 
-Hinweisflächen links/oben: F-02 groß 210×720 / 720×126, F-01 192×480 / 480×144,
-F-03 240×672 / 1368×144, F-02 klein 210×374 / 638×120.
-Gemeinsame Slots: 30×18 px bei UI 100 %, 37,5×22,5 px bei 125 %.
-Hinweisschrift: 13 px bei 18-/22-px-Zellen, 14 px bei 24-px-Zellen;
-bei UI 125 % daraus 16,25 px. Die 14 statt bisherigen 15 px halten den tatsächlichen
-Fontbereich innerhalb des 18-px-Spaltenslots. Keine Zahl wird gestapelt oder geteilt.
-Lange Folgen zeigen das rasterseitige Ende mit eigenem Präfixmarker; sämtliche
-Originalfolgen stehen vollständig in den öffentlichen Daten. Die Vorlage baut keine
-Hinweisnavigation, Hoverauflösung, H1-, Eingabe- oder Solverengine.
+F-03: Spalten 26–82 / Zeilen 36–63; UI-Testdatensatz, Rätselqualität nicht abgenommen.
+F-02 klein: Spalten 1–29 / Zeilen 1–17. Alle anderen Fälle zeigen das ganze Raster.
+Rasterursprünge vorher → nachher: F-02/1920 `510,252 → 510,252`, F-02/2560
+`830,432 → 830,432`, F-01 `970,470 → 970,470`, F-03 `350,270 → 310,270`,
+F-02/1280 `300,222 → 300,222`. Keine kleinere Schrift und kein Flächenverlust.
 
-## Dateien und Ebenen
+Navigation vorher: Hilfe/Menü je 44² px, bei 125 % je 55² px, Album nur als
+Menüanschluss; kein separater Seitenzugang. Nachher zusätzlich zwei eigenständige
+Ziele gleicher Größe: Album links und Information rechts. Zusätzliche Trefferfläche
+3.872 px² bei UI 100 %, 6.050 px² bei 125 %. Keine breite Kategorienwand.
+Alle Aktions- und Bildrechtecke sind je Größenfall in `layout.json` bemaßt.
 
-Für jeden Tabellenfall gibt es vier gleich große PNG-/SVG-Paare mit demselben Präfix:
+![Arbeitskomposition 1080p](png/f02-1920-layout.png)
 
-| Endung | Bedeutung / Verwendung |
+## Navigation und Anschlussvertrag
+
+[Navigationstafel](png/navigation.png) / [SVG](svg/navigation.svg) und
+[rechte Informationsansicht 1080p](png/information-1920-layout.png) / [SVG](svg/information-1920-layout.svg).
+Sammlung ist neutraler Kontext, kein beschlossener Katalog mit „Orte“ oder „Tiere“.
+
+| Aktion | Zweck / Ziel | Deutscher Tooltip |
+| --- | --- | --- |
+| `nav-album` | Kompaktes linkes Register → `album` | Album öffnen · Sammlung und Blattauswahl |
+| `nav-information` | Rechter Seitenzugang → `information` | Informationsseite öffnen · Einstellungen und Hilfe |
+| `nav-work` | Rückweg aus Information/Album → `work` | Zur Arbeitsseite zurück · Arbeitsstand erhalten |
+
+Registerkörper, Icon, Tooltip und Zustand sind separate UI, niemals gemalt.
+Normal: Papier, Hover: blassgrün, Aktiv/Zielansicht: dunkler Körper mit hellem Icon.
+Alle drei Zustände stehen für alle drei Aktionen auf der Tafel. In den Arbeits-
+vorlagen sind die beiden anderen Ziele normal; die Ansicht selbst ist `work`.
+Trefferfläche und sichtbarer Körper: 44×44 px, Iconreserve darin 26×26 px mit
+9 px Abstand; bei UI 125 % entsprechend 55×55, 32,5×32,5 und 11,25 px.
+`rect` bezeichnet Treffer/Körper, `image_rect` nur das Iconbild.
+
+Zwei feste Buchansichten, keine frei bewegte Kamera. Seitenwechsel sind weder
+Zellaktion noch Raster-/Miniatur-Pan. Bei Rückkehr bleiben eigener Zustand,
+Undo/Redo, aktive Farbe/Werkzeug, Rasterfokus/Zoom und individuelle bestätigte
+Hinweislesepositionen erhalten. Laufende Gesten werden nach dem bestehenden
+Abbruchvertrag verworfen. Pflicht-Flush und Recovery-Schreibsperre werden nicht
+umgangen; erforderliche Übergänge bleiben bei Speicherfehler blockiert. Keine neue
+Persistenzregel oder Erfolgsmeldung. Ein Albumwechsel behält seinen bisherigen Vertrag.
+
+Hilfe/Menü oben bleiben schnelle Zugänge zu den auf der Informationsseite
+schematisch benannten bestehenden Inhalten (Hilfe bzw. Einstellungen); kein neues
+Parallelmenü. Füllen/Radierer/Hand, Farbe, Undo/Redo, Zoom/Fit/Arbeitsgröße,
+Koordinaten und eigene Miniatur bleiben auf der Arbeitsseite. Farbauswahl aktiviert
+Füllen auch nach Hand/Radierer. Die Vorlage implementiert keine Aktionen.
+
+Die rechte Ansicht zeigt Bereiche für bestehende Einstellungen/Hilfe und einen
+ausdrücklich späteren/offenen Statistikbereich. Keine erfundenen Daten, keine
+Live-Fehlerzahl, Korrektheitsquote oder „bisher fehlerfrei“-Anzeige. Keine neue
+Statistik-, Ranglisten-, Timer-, Audio- oder Notizfunktion. Kein zweiter Bildauftrag.
+
+## Dateien, Masken und Transformation
+
+Für alle fünf Größenfälle sowie den schematischen rechten Anschluss:
+
+| Endung | Ebene / Bedeutung |
 | --- | --- |
-| `-layout` | Editierbare Arbeitskomposition; technische Buch-/Papierkonturen plus UI, ausdrücklich ohne fertige Kunst. |
-| `-ui` | RGBA-Überlagerung mit transparentem Außenraum und transparentem Rasterpapier. Nur Miniaturkarte/kleine Aktionsgehäuse sind opak. Keine Fontdateien eingebettet. |
-| `-keepout` | Binäre Freihaltemaske: **weiß = ruhiger Untergrund**, ohne Fasern, Flecken, Zeichnungen oder Schatten; **schwarz = Detailgestaltung möglich**, weiterhin innerhalb der Art Direction. Kein Alpha/Inpainting-Auftrag. |
-| `-crop` | Binäre Beschnittmaske: **weiß = erhalten**, **schwarz = äußerster optionaler Beschnitt**. Nicht mit der Freihaltemaske verwechseln. |
+| `-layout` | Technische Seitenkonturen plus präzise UI, editierbares SVG und gerendertes PNG. |
+| `-ui` | Transparente Überlagerung: Raster/Zahlen/Zellen, Miniatur, Registerkörper, Icons, Labels und Informationen; keine bildschirmfüllende Papierkarte. |
+| `-keepout` | Weiß = ruhiger geschützter Untergrund; schwarz = Details innerhalb der Art Direction möglich. Keine Alpha-/Inpainting-Maske. |
+| `-crop` | Weiß = erhalten; schwarz = optionaler äußerer Beschnitt. Keine Freihaltemaske. |
 
-[Master-Freihaltung](png/master-keepout.png) / [SVG](svg/master-keepout.svg) ist die
-Vereinigung aller fünf invers auf 2560×1440 transformierten Ruheflächen.
-[Master-Beschnitt](png/master-crop.png) / [SVG](svg/master-crop.svg) hält alles bis auf
-8 px äußeren Dekorationsrand geschützt. Beide sind produktionsfertige technische
-Masken, keine Illustrationen. Die Einzelmasken dienen der späteren Größenkontrolle.
-Freihalterechtecke werden nach außen auf ganze Maskenpixel gerundet, damit keine
-grauen Antialias-Kanten oder ungeschützten Teilpixel entstehen.
+[Master-Freihaltung](png/master-keepout.png) / [SVG](svg/master-keepout.svg):
+exakte Vereinigung der invers transformierten Arbeits-/UI-Rechtecke aller **fünf
+linken Arbeitsansichten**. Schützt Raster/Hinweise, Miniatur, Palette, Koordinaten,
+Status, Aktionen, Register, Seitenzugang und Titel. Keine alte ganze Einlegebogenmaske.
+Die eigene rechte Freihaltemaske schützt ihre schematischen Informationsbereiche;
+sie gehört zu einer anderen festen Ansicht, nicht in den linken Bildmaster.
+[Master-Beschnitt](png/master-crop.png) / [SVG](svg/master-crop.svg): wie zuvor
+8 Masterpixel außen optional; diese unveränderte Beschnittgeometrie wurde neu gerendert/geprüft.
 
-`layout.json` enthält `rects` als `[x,y,Breite,Höhe]`, Ursprung oben links,
-und `normalized` als `[x/W,y/H,Breite/W,Höhe/H]`. Rechteckenden sind exklusiv.
-Raster, beide Hinweisflächen, Miniatur/Karte, Palette, Koordinaten, Status,
-Aktionsgruppen, Buch, Falz und Arbeitsblatt sind getrennt bezeichnet.
-`actions` enthält einzelne Trefferflächen; `decorative_edges` die Beschnittstreifen.
-Der Falz ist eine **verdeckte** Gesamtzone; sichtbar ist nur ihr Anteil außerhalb
-`sheet`. Er darf im eingelegten Bogen weder gemalt noch beschattet werden.
-`origin_zero_based` beschreibt den Ausschnitt, nicht zusätzliche Startfelder.
+`layout.json` Revision `BP-1R`, Schema 2: Pixelrechtecke `[x,y,Breite,Höhe]`,
+normiert `[x/W,y/H,Breite/W,Höhe/H]`, Ursprung links oben, Enden exklusiv.
+`sheet` bedeutet jetzt linke Buchseite; `fold` liegt rechts **außerhalb**.
+`right_page_slice` ist nur der schmale Anschnitt. `decorative_edges` reserviert
+äußere Beschnittstreifen. Unbelegte schwarze Maskenbereiche sind mögliche ruhige
+Randdetails, kein Auftrag zum Füllen jedes freien Flecks.
 
-Der Ebenenvertrag für BP-2/BP-3 lautet:
+Master → 1440p: Faktor 1; → 1080p: 0,75; → 720p: 0,5. Offset immer `[0,0]`,
+Ausschnitt `[0,0,2560,1440]`. Rückrechnung jedes Rechtecks: alle vier Werte durch
+den Faktor teilen, Maskengrenzen anschließend nach außen auf ganze Pixel runden.
+Nur die Hintergrundkunst wird proportional angepasst. Zahlen, Iconbilder,
+Trefferflächen und Raster bleiben an ihrem eigenen Pixelvertrag. Kein Mitzoomen,
+kein 9-Slice des Buchs. Andere Seitenverhältnisse sind nicht untersucht.
 
-1. Ein opakes gemaltes Hintergrundbild: Tisch, Buch, Bindung, Seitenschnitt,
-   ruhiger eingelegter Bogen. BP-1 liefert dafür Geometrie und Briefing, kein Bild.
-2. Keine separate gemalte Montierungsebene geliefert oder erforderlich. Kleine
-   Karten-/Werkzeugrahmen sind derzeit Bestandteil der präzisen UI-Vorlage.
-3. Unabhängig gerenderte Hinweise, Zellen/X, Miniatur, Palette, Icons und Texte.
-   Die SVG-Gruppe `study-labels` enthält technische Bildkennzeichnungen; in späteren
-   Produktkompositionen die Kennzeichnung außerhalb der eigentlichen UI führen.
-   F-03s Testdatensatzhinweis muss weiterhin sichtbar bleiben.
+Hintergrund enthält ausschließlich Papier, Einband, Seitenlagen und wenig Umgebung.
+Keine Schrift/Pseudoschrift, Registerattrappen oder eingebrannten Werkzeugschatten.
+`study-labels` kennzeichnet die technische Studie außerhalb der Ziel-UI; in BP-3
+außerhalb der Produktkomposition führen. F-03s Testkennzeichnung bleibt erhalten.
 
-## Hintergrundanpassung ohne Zoomkopplung
-
-Beide BP-2-Bilder werden auf derselben 2560×1440-Geometrie hergestellt. Für 1440p:
-Faktor 1, voller Ausschnitt `[0,0,2560,1440]`; für 1080p: Faktor 0,75, voller
-Ausschnitt; für 720p: Faktor 0,5, voller Ausschnitt. Die Seitenverhältnisse sind
-identisch, daher braucht keiner der fünf Fälle einen Beschnitt. Die Bindung bleibt
-proportional. **Nur das Hintergrundbild** wird so eingepasst; jede UI wird aus
-ihrem eigenen Pixelvertrag gerendert. Keine Skalierung eines kompletten Screens,
-kein 9-Slice des Buchs und keine implizite Kopplung der 22-px-Probe an UI 125 %.
-
-Optional dürfen höchstens die schwarzen 8 Masterpixel außen entfallen (6 px bei
-1080p, 4 px bei 720p), ohne anschließendes Auffüllen durch Strecken. Die UI verbleibt
-an ihren Pixelpositionen. Technische Fußzeilen zählen nicht als Bildmotiv; ein
-andersartiges Fensterformat ist hier nicht untersucht und benötigt eine eigene
-Anpassungsprüfung. Kein universeller responsiver Produktvertrag wird behauptet.
-
-## Daten, Herkunft und Anschlusssemantik
+## Quellen und offene Abnahmen
 
 [F-01](sources/f01-public-demo.json), [F-02](sources/f02-public-demo.json),
-[F-03](sources/f03-public-demo.json) sind bytegleiche öffentliche Exporte aus
-PR #28 am Head `9834ee834f5b83bbc5e6b17429a8fe7185c26758`. Sie enthalten Original-
-Hinweise/Palette plus explizite `z1-demo-1`-Zellen aus
-[demo.gd am PR-#25-Head](https://github.com/venomenon328/picross/blob/df7ac589e900a6d6d7c5080599c6a5ace47c395d/prototypes/p1/design/demo.gd).
-Der abschließende Undo bleibt unbekannt. Es gibt keine neue Lösung, Startbelegung
-oder Savequelle. Raster und Miniatur lesen dieselbe Liste einschließlich Fehlern.
-Original-Fixtures, Proofs und Ergebnisbilder bleiben unverändert.
+[F-03](sources/f03-public-demo.json), [Icons](sources/icons.json) und
+[Fontquellen](sources/fonts.json) bleiben bytegleich zum integrierten BP-1-Stand.
+Öffentliche Daten aus PR #28 `9834ee834f5b83bbc5e6b17429a8fe7185c26758`,
+`z1-demo-1` aus PR #25 `df7ac589e900a6d6d7c5080599c6a5ace47c395d`.
+Raster und Miniatur lesen dieselbe eigene Zellliste, inklusive Fehlern und unbekanntem
+Undo-Endstand. Original-Fixtures, Hinweise, Farben, Proofs und Ergebnisbilder unverändert.
+G1/H1 und Spoilergrenzen bleiben verbindlich. Durchstrichenes F-02-`38` ist das
+bestehende echte Zeile-2-Beispiel. C1 (0,55-px-Kontur bei Hinweisfarben 2/4) bleibt
+ein Vorschlag aus #26, keine Paletteänderung oder neue H1-Engine.
 
-[Iconpfade und deutsche Tooltips](sources/icons.json) sind unverändert aus dem
-[PR-#28-Generator](https://github.com/venomenon328/picross/blob/9834ee834f5b83bbc5e6b17429a8fe7185c26758/tools/design_study/generate.py)
-übernommen; keine Übernahme des ganzen Studienpakets. Aktives Werkzeug erhält
-eine Dreieckmarke, aktive Farbe Außenrahmen und hellen Punkt. Farbauswahl aktiviert
-Füllen auch nach Hand/Radierer; PR #25/R1/B-01 wird nicht zum Sollverhalten.
-G1, H1, Undo/Redo und Speicher-/Recoveryverträge bleiben bestehen. Seltene Optionen
-werden im späteren Menü ausgeschrieben: UI 100/125 %, „Hinweise rasterseitig
-ausrichten“, „Erfüllte Hinweise markieren“, „Zum Album“, „Beenden“. Hilfe auf Abruf;
-reale Speicherfehler bleiben sichtbar/blockierend. Diese Bilder implementieren
-keine dieser Aktionen und behaupten keinen Speichererfolg.
+Fraunces / IBM Plex Sans bleiben reversible Typografievorgaben. Fonts nur temporär,
+hashgeprüft, nicht installiert/eingebettet/mitgeliefert. PNGs sind Rendernachweise;
+SVG-Editoren ohne diese Fonts können Ersatzschriften verwenden. OFL-Wortlaut an
+der Herkunft: [Fraunces](https://github.com/venomenon328/picross/blob/9834ee834f5b83bbc5e6b17429a8fe7185c26758/docs/design/z1_1/fonts/Fraunces-OFL.txt),
+[Plex Sans](https://github.com/venomenon328/picross/blob/9834ee834f5b83bbc5e6b17429a8fe7185c26758/docs/design/z1_1/fonts/PlexSans-OFL.txt).
 
-C1 bleibt der separate Vorschlag aus #26: Originalfarbe der Hinweise 2/4 plus
-0,55-px-Tintenkontur. Keine Umfärbung der Rätselpalette und keine zugesicherte
-Barrierefreiheit. Das durchgestrichene F-02-`38` stammt ausschließlich aus dem
-bereits dokumentierten eigenen Zeile-2-Block; keine dekorativen H1-Markierungen.
-
-Schriftquellen: [gepinntes Fontmanifest](sources/fonts.json), auf Fraunces und
-IBM Plex Sans begrenzt; OFL-Wortlaut am Referenzstand:
-[Fraunces](https://github.com/venomenon328/picross/blob/9834ee834f5b83bbc5e6b17429a8fe7185c26758/docs/design/z1_1/fonts/Fraunces-OFL.txt),
-[IBM Plex Sans](https://github.com/venomenon328/picross/blob/9834ee834f5b83bbc5e6b17429a8fe7185c26758/docs/design/z1_1/fonts/PlexSans-OFL.txt).
-Fonts werden nur temporär zum Rendern geladen und hashgeprüft, nicht installiert,
-eingebettet oder mit dem ZIP verteilt. PNGs sind die verbindlichen Rendernachweise.
-SVG-Text bleibt editierbar; ohne diese Fonts kann ein Editor Ersatzschriften zeigen.
-
-## Offene Bildinputs und Übergabe
-
-Für BP-2 gemeinsam übergeben: dieses ZIP, `master-keepout`, `master-crop`,
-`f02-2560-layout` für Geometrie, `f02-1920-layout` für die primäre Größe sowie das
-[Briefing](BRIEFING.md). Die erneut gezeigte erste Albumstudie ist **keine erreichbare
-Repositorydatei** und wurde hier nicht angesehen. Im beauftragten Bildlauf ihre
-tatsächliche Verfügbarkeit prüfen und gegebenenfalls erneut bereitstellen lassen.
-Die textliche Beschreibung aus #27 reicht für BP-1 aus.
-
-BP-2 braucht einen neuen ausdrücklichen Bildproduktionsauftrag; BP-3 braucht danach
-zwei tatsächlich zugängliche Bilddateien mit Maßen, SHA-256, Quelle/Werkzeug,
-Bearbeitung und Nutzungsstatus. Finale Layout-/Schrift-/Kontrast-/Assetwahl durch
-den Eigentümer erst an der integrierten Komposition. Keine BP-2/BP-3-Arbeit,
-kein Beginn von #23/#24, kein Abschluss von #27/#21 und kein Merge/Release durch BP-1.
+Unabhängiges technisches/visuelles Review und ausdrückliche Mergefreigabe offen.
+Vor erneuter BP-2-Bildproduktion die konkret geprüfte BP-1R-Vorlage benennen.
+Finale Kunst-/Layout-/Schrift-/Kontrastentscheidung erst an BP-3 vor #23.
+Keine neue Bildproduktion, keine native Bedienabnahme, kein Beginn von BP-3/#23/#24.
+#27 und #21 bleiben offen; PR #25/#28/#29 unverändert. Kein Merge/Release.
