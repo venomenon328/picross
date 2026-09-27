@@ -287,6 +287,8 @@ static func app_cases(t: SceneTree) -> void:
 	app.open_puzzle()
 	await t.process_frame
 	t.check(app.mark_completed_clues and app.board.mark_completed_clues and app.clue_completion_toggle.button_pressed, "H1 application default on")
+	app.show_information("settings")
+	await t.process_frame
 	var before: Dictionary = SaveStore.snapshot(app.session, app.board.capture_view())
 	# Actual checkbox through viewport; it must neither commit nor save.
 	var event: InputEventMouseButton = InputEventMouseButton.new()

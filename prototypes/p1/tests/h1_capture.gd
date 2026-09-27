@@ -31,7 +31,7 @@ static func pair(c: SceneTree, app: Main, name: String) -> void:
 	await c.snapshot(app, name + "-on")
 	var on: Image = c.surface.get_texture().get_image()
 	require(c, app.board.capture_view() == view_before and app.board.completion_searches == searches, name + " toggle keeps reads and cache")
-	var font: Font = ThemeDB.fallback_font
+	var font: Font = Board.BODY_FONT
 	var fs: int = app.board.clue_font_size()
 	var marked: Dictionary = {"row": 0, "column": 0}
 	var colors: Dictionary = {}
@@ -162,7 +162,7 @@ static func run(c: SceneTree, app: Main) -> void:
 			press.pressed = true
 			c.surface.push_input(press, true)
 			var motion: InputEventMouseMotion = InputEventMouseMotion.new()
-			var delta: float = 1.49 * app.board.shared_clue_slot_extent(axis, ThemeDB.fallback_font, app.board.clue_font_size())
+			var delta: float = 1.49 * app.board.shared_clue_slot_extent(axis, Board.BODY_FONT, app.board.clue_font_size())
 			motion.position = point + (Vector2(delta, 0) if axis == "row" else Vector2(0, delta))
 			c.surface.push_input(motion, true)
 			require(c, app.board.pan_target == axis, "H1 live hint drag entered")

@@ -48,15 +48,20 @@ Python-Dateiprüfungen, Sichtprüfung, Dokumentvalidator, vollständiger Diffche
 aktueller erfolgreicher `docs`-Job; tatsächliche Ergebnisse der unverändert aktiven
 `product`-/`preflight`-Workflows separat ausweisen. Die BP-2-Nachweise stehen im
 historischen PR #31; unabhängiges Review und Mergefreigabe dafür sind abgeschlossen.
-BP-3/B3-01 bis B3-05 liefert auf `chore/27-bp3-zielkomposition` das separate
-[Kompositionspaket](design/book_inventory/composition/README.md): gemeinsame UI auf
-unverändertem A/B, zehn Zielansichten, editierbare Ebenen, Zustands-/Detailnachweise,
-Offline-Galerie und Review-ZIP. Pflichtquellen zusätzlich: aktueller #27-Body,
-BP-2-Anleitung/Prozess/Prüfbericht und PR #31/R1. Neue Lieferprüfung und aktueller
-`docs`-Job erforderlich; historische BP-1R-/BP-2-Nachweise ersetzen sie nicht.
-BP-3 bleibt Draft bis zum unabhängigen technischen/visuellen Review und ausdrücklicher
-Eigentümerfreigabe. Vor #23 konkrete Artwork-/UI-/Schrift-/Icon-/Kontrastwahl und
-Bestätigung des nativen Navigationsumfangs; #23/#24 nicht begonnen, #27/#21 offen.
+BP-3/B3-01 bis B3-05 ist über PR #32 als
+`c3a5386580d7a0da29b927b41bd692f0cca59274` integriert. #27 ist als gelieferte
+Entwurfsphase abgeschlossen. GD-01 bis GD-05 wählen A, gemeinsame BP-3-UI,
+Fraunces/Plex Sans, C1 und die echte N1-Informationsseite. Die [aktive Auswahl](Z2_SELECTION.md)
+ersetzt die damalige Empfehlung B; historische Pakete werden nicht verändert.
+
+#23/Z2 implementiert ausschließlich I-01 bis I-05 im regulären P1-Kern.
+Pflichtquellen dafür: vollständiger aktueller #23-Body samt späteren Entscheidungen,
+#21, die dort gebundenen A-/BP-3-Dateien, [aktive Auswahl](Z2_SELECTION.md) und
+[Z2-Prüfbericht](Z2_VERIFICATION.md), zusätzlich zu den P1-Pflichtquellen.
+PR #25/#28 sind keine Integrationsvoraussetzung. Die Lieferung bleibt Draft:
+aktuelle docs/product/preflight-Checks, unabhängiges technisches/visuelles Review
+und repräsentative reale Z2-Eigentümerprobe am benannten Windows-Artefakt sind
+Mergegates. #24 ist nicht begonnen; kein Merge-/Releaseauftrag.
 
 ## Beschlossene Richtung und offene Entscheidungen
 

@@ -15,6 +15,8 @@ from pathlib import Path
 
 import p1_preflight as toolchain
 import p14_integration
+import z2_resources
+import z2_review
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -49,7 +51,7 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
     return dict(name=name, exit_code=process.returncode, output=output)
 
 
-def package(build: Path, output: Path, manifest: dict, readme: str) -> Path:
+def package(build: Path, output: Path, manifest: dict, readme: str, extras: dict[str, Path] | None = None) -> Path:
     required = {"picross-p1.exe", "picross-p1.console.exe"}
     files = {path.name for path in build.iterdir() if path.is_file()}
     if not required <= files or files - required - {"picross-p1.pck"}:
@@ -65,6 +67,8 @@ def package(build: Path, output: Path, manifest: dict, readme: str) -> Path:
             bundle.write(build / name, name)
         bundle.writestr("README.txt", f"Quellcommit: {manifest['source_commit']}\nArbeitsbaum verändert: {manifest['source_tree_dirty']}\n\n" + readme)
         bundle.writestr("product-report.json", report)
+        for name, path in (extras or {}).items():
+            bundle.write(path, name)
     return archive
 
 
@@ -85,6 +89,7 @@ def main() -> int:
     logs.mkdir(exist_ok=True)
     try:
         title = project_name(root / "prototypes/p1/project.godot")
+        book_resources = z2_resources.verify()
         proof_steps = verify(json.loads((DATA / "f01.json").read_text(encoding="utf-8")), json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8")))
         color_proof_steps = verify_f02(json.loads((DATA / "f02.json").read_text(encoding="utf-8")), json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8")))
         metadata = toolchain.request_json(toolchain.RELEASE_API)
@@ -171,7 +176,22 @@ def main() -> int:
                     raise toolchain.PreflightError("Real render verification requires xvfb-run on Linux")
                 render_command = ["xvfb-run", "-a"] + render_command
                 environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
-            phase("render-capture", render_command, "P1_CAPTURE_OK")
+            for stage in ("layout", "views", "cells-f1", "cells-f2", "gestures", "hints", "axis", "h1"):
+                environment["P1_RENDER_STAGE"] = stage
+                phase("render-" + stage, render_command, "P1_CAPTURE_OK")
+            del environment["P1_RENDER_STAGE"]
+            reports = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(renders.glob("render-report-*.json"))]
+            (renders / "render-report.json").write_text(json.dumps(dict(
+                stages=len(reports), pixel_checks=sum(r["pixel_checks"] for r in reports),
+                captures=[c for r in reports for c in r["captures"]]), indent=2) + "\n", encoding="utf-8")
+            z2_command = ["res://tests/z2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
+            phase("z2-render-capture", z2_command, "Z2_CAPTURE_OK")
+            before = z2_review.before_project(root, workspace)
+            phase("z2-before-import", [engine, "--headless", "--path", str(before), "--import"])
+            before_command = [str(before) if arg == str(project) else
+                              "res://tests/z2_before_capture.gd" if arg == "res://tests/capture.gd" else arg
+                              for arg in render_command]
+            phase("z2-before-capture", before_command, "Z2_BEFORE_OK")
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
@@ -216,13 +236,21 @@ def main() -> int:
                             integration=integration_summary,
                             integration_files={p.name: toolchain.sha256_file(p) for p in sorted(integration_dir.iterdir()) if p.is_file()},
                             owner_probe_sha256=toolchain.sha256_file(owner_probe),
+                            book_resources=book_resources,
                             h1_probe_files=h1_files,
                             h1_probe_export_files=h1_exports,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="NOT RUN: targeted G1/H1 owner probes; owner explicitly authorized both merges after review/technical checks; prior P1 acceptance remains bound to issue 12's artifact")
-            archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"))
+                            manual_acceptance="OPEN: Z2-M01/M02/M03 representative owner probe on this Windows artifact and independent technical/visual review required BEFORE MERGE; historical P1/G1/H1 decisions do not waive Z2 gates")
+            extras = {"Z2-PRUEFUNG.md": root / "docs/Z2_VERIFICATION.md",
+                      "owner-probe.ps1": owner_probe}
+            for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
+                extras["licenses/" + path.name] = path
+            extras["licenses/resources.json"] = root / "prototypes/p1/art/book/manifest.json"
+            archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"), extras)
+            review_zip = z2_review.package(root, output, manifest, archive)
+            print(f"REVIEW {review_zip} sha256:{toolchain.sha256_file(review_zip)}", flush=True)
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)
     except (OSError, ValueError, zipfile.BadZipFile, toolchain.PreflightError) as exc:

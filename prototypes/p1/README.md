@@ -1,5 +1,22 @@
 # P1 · Integrierte Windows-Spielprobe
 
+Z2 / [#23](https://github.com/venomenon328/picross/issues/23) liefert die native
+A-Bucharbeitsansicht und genau eine Informationsseite. Pfeil/Menü öffnen Einstellungen,
+`?` öffnet Hilfe; der Rückpfeil führt zum selben Blatt. UI 100/125 %, Hinweisreset,
+H1 und Beenden stehen dort. Neun Arbeitsaktionen bleiben direkt am Raster;
+Farbwahl aktiviert Füllen auch nach Hand/Radierer. Das linke Register öffnet das
+bestehende Album. Speicherfehler verhindern einen ungesicherten Wechsel; nötige
+Backupübernahme bleibt auf der Arbeitsseite mit Bestätigung erreichbar.
+
+Offline-Fonts Fraunces/Plex Sans, unverändertes A-Papier und feste C1-Kontur sind
+integriert. OFL-Texte liegen im Windows-ZIP unter `licenses/`, alle Ressourcen sind
+in der EXE eingebettet. Kein Fontdownload oder Godotsetup beim Spieler.
+[Auswahl und Herkunft](../../docs/Z2_SELECTION.md),
+[aktuelle Prüfung und sichere Eigentümeranleitung](../../docs/Z2_VERIFICATION.md).
+Die Z2-Eigentümerprobe und das unabhängige Review bleiben ausdrücklich vor Merge
+offen; frühere Freigaben weiter unten ersetzen sie nicht. Dies ist ein Draft-Testexport.
+
+
 H1 aus [#19](https://github.com/venomenon328/picross/issues/19) ergänzt automatisch
 durchgestrichene, eindeutig erfüllte Hinweise. Die gezielte neue Eigentümerprobe ist
 nicht als bestanden dokumentiert; technische Nachweise und Schritte stehen im

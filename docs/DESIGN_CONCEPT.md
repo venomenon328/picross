@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 26.09.2026 · Arbeitsfassung 0.13 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
+Stand: 27.09.2026 · Arbeitsfassung 0.14 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -21,7 +21,7 @@ darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, rich
 alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
 eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
 auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.13 mit G1 und H1. Die Nacharbeit in #11
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.14 mit G1, H1 und Z2. Die Nacharbeit in #11
 ergänzt D-23 bis D-27: flüssigen Hinweisdrag mit Einrasten beim Loslassen,
 geringfügig größere getrennte Füllungen, dezente Cursorbänder, geclippte X
 und den geometrischen Live-Strichzähler. Nachweise stehen im P1.3-Prüfbericht;
@@ -66,6 +66,17 @@ A und B bleiben bis zu einer ausdrücklichen Entscheidung parallel untersuchbar.
 Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vorgeschlagen: identische Hinweise, eigener Stand, Miniatur, Werkzeuge und Informationsumfang, ergänzt um Albumansicht und Abschluss. Das ist ein Entwurfsmaßstab, kein bereits gelieferter mathematisch identischer oder spielbarer Vergleich.
 
 ## 4. Visuelle Ausarbeitung
+
+Für #23 gilt die [aktive Auswahl GD-01 bis GD-05](Z2_SELECTION.md): A-Inventarband,
+gemeinsame BP-3-Montierungen, Fraunces/Plex Sans, feste C1-Kontur und eine echte
+native N1-Informationsseite. Diese konkrete Arbeitsansicht ersetzt die historische
+BP-3-Empfehlung B, nicht die noch offene gesamte Themen-/Kapitelentscheidung.
+Raster und UI werden getrennt auf unverzerrtem A-Papier gezeichnet. N1 nutzt
+nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen,
+Hinweisreset, H1, Bedienhilfe und Beenden teilen sich eine Seite mit Rückweg.
+Keine neue Statistik/Albumarchitektur oder Vorwegnahme von #24. Native Abweichungen,
+Offline-Fonts und die noch offene Eigentümerprobe stehen im [Z2-Prüfbericht](Z2_VERIFICATION.md).
+
 
 ### BP-1R: vergrößerte linke Buchseite
 
