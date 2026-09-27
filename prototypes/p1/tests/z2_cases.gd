@@ -159,6 +159,22 @@ static func run(t: SceneTree) -> void:
 	click(t,app.actions.menu)
 	t.check(app.information.visible and app.store.load_slot(app.session.definition).status == "loaded" and app.sessions[0].player.cells == other[0] and app.sessions[2].player.cells == other[1],"Z2-A04 confirmed repair allows retry and preserves other slots")
 	app.return_to_work()
+	app.board.set_clue_step("row",35,1)
+	app._save_current()
+	app.show_information("settings")
+	await t.process_frame
+	click(t,app.clue_reset_button)
+	app.store.fail_step = "after_rotation"
+	var information_state: Dictionary = state(app)
+	click(t,app.actions["nav-work"])
+	t.check(app.information.visible and state(app) == information_state and app.work_repair_button.is_visible_in_tree(),"Z2-A04 failed N1 return preserves state and exposes recovery")
+	app.store.fail_step = ""
+	click(t,app.work_repair_button)
+	t.check(app.repair_dialog.visible,"Z2-A04 recovery receives real click above information page")
+	app.repair_dialog.hide()
+	app.repair_dialog.confirmed.emit()
+	t.check(app.store.load_slot(app.session.definition).status == "loaded" and app.board.clue_step("row",35) == 0,"Z2-A04 N1 recovery saves the intended clue reset")
+	app.open_puzzle()
 	click(t,app.actions["nav-album"])
 	t.check(app.album.visible,"Z2-A02 album register via viewport")
 	app.queue_free()

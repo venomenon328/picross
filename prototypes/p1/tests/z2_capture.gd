@@ -69,6 +69,16 @@ func run() -> void:
 	app.repair_dialog.hide()
 	app.store.fail_step = ""
 	app._repair_selected()
+	app.open_puzzle()
+	app.board.set_clue_step("row",35,1)
+	app._save_current()
+	app.show_information("settings")
+	app.board.reset_clue_pan()
+	app.store.fail_step = "after_rotation"
+	app.return_to_work()
+	await shot("information-recovery-blocked")
+	app.store.fail_step = ""
+	app._repair_selected()
 	app.select_puzzle(0)
 	# Real gestures commit the remaining correct cells, triggering normal completion.
 	app.board.fit_all()

@@ -222,6 +222,9 @@ func _build() -> void:
 	minimum_message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	minimum_message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	add_child(minimum_message)
+	# Recovery must remain above either page, including a failed N1 return flush.
+	page.move_child(status_label,page.get_child_count()-1)
+	page.move_child(work_repair_button,page.get_child_count()-1)
 	_update_palette()
 	resized.connect(_layout_book)
 	_layout_book()
@@ -430,7 +433,7 @@ func _update_status() -> void:
 	status_label.visible = not status_label.text.is_empty()
 	status_label.add_theme_color_override("font_color", Color("682e24"))
 	if work_repair_button != null:
-		work_repair_button.visible = state in ["recovered", "backup_invalid"]
+		work_repair_button.visible = state in ["recovered", "backup_invalid"] and not album.visible
 		work_repair_button.text = "Backup erneuern" if state == "backup_invalid" else "Backup zum Speichern übernehmen"
 
 func _ask_reset() -> void:
@@ -790,13 +793,14 @@ func _layout_book() -> void:
 			item.ui_scale = u
 			item.queue_redraw()
 	# Local error card stays reachable on a blocked work->information transition.
-	_place(status_label,Rect2(o+Vector2(180,85),Vector2(w-550,70*u)))
-	_place(work_repair_button,Rect2(o+Vector2(w-430,h-170*u),Vector2(340*u,hit)))
+	_place(status_label,Rect2(o+Vector2(180,h-104 if information.visible else 85),Vector2(w-660 if information.visible else w-550,70*u)))
+	_place(work_repair_button,Rect2(o+Vector2(w-430,h-(80 if information.visible else 170)*u),Vector2(340*u,hit)))
 	surface.card = Rect2(mini_position-Vector2(10,34),Vector2(mini_extent+20,mini_extent+44))
 	surface.miniature = mini.get_rect()
 	surface.palette = Rect2(palette_pos-Vector2(6,6),Vector2(56,56)*u if session.definition.palette.size()==1 else Vector2(110,110)*u)
 	surface.information = information.visible
 	surface.work_visible = work.visible and page.visible
 	surface.queue_redraw()
+	_update_status()
 	_update_actions()
 	laying_out = false

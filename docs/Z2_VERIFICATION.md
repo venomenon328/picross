@@ -36,7 +36,7 @@ Linux-CI exportiert Windows, behauptet aber keinen Windowslauf.
 | --- | --- |
 | Z2-A01/A02 | `z2_cases.gd`: reguläre Auswahl, echte Viewport-Ereignisse für Werkzeuge, Palette, Undo/Redo, Zoom und Navigation, tatsächliche Fontnamen. `z2_capture.gd`: N1, per Zellgesten ausgelöster Abschluss, vorhandenes Album. |
 | Z2-A03 | Alle N1-Zugänge mit konsistenter History/Redo/Ansicht; verdeckte Klicks/Rad ignoriert; Abbruch von Zelle, Raster, beiden Hinweisachsen und Miniatur; UI-Skalierung/Resize in N1. |
-| Z2-A04 | Fehler nach Rotation: Primary fehlt, Backup bleibt unverändert, Arbeitsansicht/Fehler/Reparatur bleiben erreichbar. Abbruch der Bestätigung, erneuter Versuch, bestätigte Reparatur und unberührte Nachbarslots. Bestehende Recoverytests bleiben aktiv. |
+| Z2-A04 | Fehler nach Rotation: Primary fehlt, Backup bleibt unverändert, Arbeitsansicht/Fehler/Reparatur bleiben erreichbar. Abbruch der Bestätigung, erneuter Versuch, bestätigte Reparatur und unberührte Nachbarslots. Auch ein fehlgeschlagener N1-Rückweg hält die Reparatur oberhalb der Informationsseite erreichbar. Bestehende Recoverytests bleiben aktiv. |
 | Z2-A05 | Fünf native Referenzen einschließlich exakter 57×28-/29×17-Fläche; vier Clientgrößen × zwei UI-Skalen, Raster-/Werkzeugabstand und Mindesttrefferflächen. |
 | Z2-A06 | Bestehende Hint-/G1-/H1-Tests; historischer 24-px-Snapfall bleibt zusätzlich zur nativen 30-px-Route erhalten. C1-Tooltip/Drag und 1:1-Ausschnitte. |
 | Z2-A07 | `z2-renders.json`: echte Fontnamen, native Textkontraste über korrespondierende Glyphen-/Untergrundpixel; zusätzliche visuelle Detailprüfung. Keine universelle Barrierefreiheitsbehauptung. |
@@ -50,7 +50,7 @@ Invarianten, Negativkontrollen und ursprüngliche Szenarien bleiben erhalten.
 Gezielte lokale Nachprüfung am 27.09.2026: native Godot-Tests ohne Befund;
 Hint-, Achsen- und H1-Renderphasen erfolgreich. Die fünf Referenzrechtecke werden
 im Capture gegen die ausgewählten Maße geprüft. Die eigene native Z2-Messung auf
-Windows / Godot 4.7.2 / OpenGL / NVIDIA GeForce RTX 3070 erfasst 78 Textproben,
+Windows / Godot 4.7.2 / OpenGL / NVIDIA GeForce RTX 3070 erfasst 88 Textproben,
 einschließlich Recoverydialog, mit kleinstem Normaltextkontrast 7,39:1. Sie misst
 den tatsächlich gerenderten Untergrund an deckenden Glyphenpixeln, nicht einen
 Papiermittelwert. Normale Texte, C1-Ziffern, Farbflächen, Werkzeugzustände,
