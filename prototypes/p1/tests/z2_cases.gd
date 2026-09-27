@@ -45,14 +45,19 @@ static func run(t: SceneTree) -> void:
 	t.check(app.board.overview,"Z2-A02 fit via viewport")
 	click(t,app.actions.work)
 	t.check(not app.board.overview,"Z2-A02 work size via viewport")
-	app.board.set_clue_step("row",11,1)
-	app.board.set_clue_step("column",20,1)
+	app.board.set_clue_step("row",35,2)
+	app.board.set_clue_step("row",36,1)
+	app.board.set_clue_step("column",21,2)
+	app.board.set_clue_step("column",22,1)
 	click(t,app.actions.hand)
 	app._save_current()
 	for route: String in ["nav-information","help","menu"]:
 		if route == "nav-information":
 			click(t,app.actions.fit)
+		else:
+			click(t,app.actions.work)
 		var before: Dictionary = state(app)
+		t.check(app.board.clue_step("row",35) > 0 and app.board.clue_step("row",36) > 0 and app.board.clue_step("column",21) > 0 and app.board.clue_step("column",22) > 0,"Z2-A03 navigation starts with four nontrivial line reads")
 		click(t,app.actions[route])
 		await t.process_frame
 		t.check(app.information.visible and not app.work.visible and app.information_section == ("help" if route == "help" else "settings"),"Z2-A03 shared N1 route " + route)
@@ -84,13 +89,15 @@ static func run(t: SceneTree) -> void:
 		if gesture == "raster":
 			button = MOUSE_BUTTON_MIDDLE
 		elif gesture == "row" or gesture == "column":
-			point = P12.clue_point(app.board,gesture,11 if gesture == "row" else 20)
+			app.board.navigate_to(Vector2(0.8,0.8))
+			point = P12.clue_point(app.board,gesture,35 if gesture == "row" else 21)
 			button = MOUSE_BUTTON_MIDDLE
 		elif gesture == "mini":
 			point = app.mini.get_global_rect().get_center()
 		var history: Array = app.session.player.history.duplicate(true)
 		t.mouse_button(point,true,button)
 		t.mouse_motion(point+Vector2(8,8),true,button)
+		t.check(app.session.gesture.active if gesture == "cells" else (app.mini.dragging if gesture == "mini" else app.board.pan_button != MOUSE_BUTTON_NONE),"Z2-A03 actual transient started: " + gesture)
 		app.show_information("settings")
 		t.mouse_button(point+Vector2(8,8),false,button)
 		t.check(app.information.visible and not app.session.gesture.active and app.board.pan_button == MOUSE_BUTTON_NONE and app.board.pan_drag_distance == 0 and not app.mini.dragging and app.session.player.history == history,"Z2-A03 cancels " + gesture + " without history")

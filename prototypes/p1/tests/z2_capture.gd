@@ -132,7 +132,7 @@ func detail_shots() -> void:
 		failed = true
 	app.board.clear_clue_hover()
 	var area: Rect2 = app.board.row_clue_area()
-	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,11)).get_center().y)
+	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,35)).get_center().y)
 	var press: InputEventMouseButton = InputEventMouseButton.new()
 	press.position = app.board.global_position+point
 	press.button_index = MOUSE_BUTTON_MIDDLE
@@ -143,6 +143,9 @@ func detail_shots() -> void:
 	motion.relative = Vector2(14.7,0)
 	motion.button_mask = MOUSE_BUTTON_MASK_MIDDLE
 	surface.push_input(motion,true)
+	if app.board.pan_target != "row" or not is_equal_approx(app.board.pan_drag_distance,14.7):
+		push_error("Z2 C1 capture did not enter a continuous clue drag")
+		failed = true
 	await shot("c1-drag")
 	app.board.cancel_gesture()
 	app.board.clear_pointer_hover()
