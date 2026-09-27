@@ -47,8 +47,8 @@ auf gespeicherte Puzzles zu.
 P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) und
 [P1.4 / #12](https://github.com/venomenon328/picross/issues/12) sind über
 PR #15/#16 in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md).
-G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ist über
-PR #18 integriert und ergänzt die erneute Achsenwahl nach tatsächlicher Rückkehr
+G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ist über PR #18
+integriert und ergänzt die erneute Achsenwahl nach tatsächlicher Rückkehr
 zur Startzelle. H1/#19 ist über PR #20 auf diesem kombinierten Stand integriert. F-01 (20×20),
 F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
 sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
@@ -114,8 +114,10 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
   Rückgängig/Wiederholen stellt ganze Striche mit exakten Vorzuständen wieder her.
-- F-02/F-03: Farbe per Palette A–D wählen. Diese Kennungen gehören ausschließlich zur
-  Bedienpalette; Lösungshinweise zeigen nur die vollständige Zahl in ihrer Farbe.
+- F-02/F-03: Farbe über die unbeschrifteten Farbfelder in den Originalfarben wählen.
+  Eckmarkierungen zeigen die Auswahl; Status und Tooltip nennen „Farbe 1“ bis „Farbe 4“.
+  Farbwahl aktiviert Füllen, auch nach Hand oder Radierer. Die frühere A–D-Beschriftung
+  der Mauspalette entfällt; Lösungshinweise zeigen weiterhin nur die Zahl in ihrer Farbe.
   Gleiche Farbblöcke brauchen Abstand; verschiedene dürfen angrenzen.
 - Etwas größere Füllflächen bleiben durch Zwischenräume und Rasterlinien getrennt.
   Die gültige Cursorzeile und -spalte sind im Grid dezent hinterlegt. Angeschnittene
@@ -168,8 +170,11 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
   mittlere Ausschnitte behalten den gelesenen Tokenbereich mit größtmöglicher
   Überdeckung. Das gilt auch bei Arbeitszoom und Resize; alle Zustände bleiben
   in ganzen Slots eingerastet.
-  Bei 1280×720/125 % ist der untere Hilfetext über die Seitenleiste scrollbar;
-  Werkzeuge und Hinweiszugriff bleiben erreichbar, die Miniatur bleibt fest sichtbar.
+  Die UI-Skalierung, Hinweisrücksetzung und H1 stehen auf der Informationsseite.
+  `?` führt direkt zur dort scrollbar erreichbaren Bedienhilfe; Menü und rechter
+  Pfeil zu den Einstellungen. Auch bei 1280×720/UI 125 % bleiben Werkzeuge,
+  eigene Miniatur und Hinweiszugriff auf der Arbeitsseite. Der Rückpfeil führt
+  zum erhaltenen Arbeitsstand zurück.
 
 Für den Abschluss genügen alle richtigen Füllungen ohne Zusatzfüllungen.
 Hintergrund muss nicht vollständig ausgekreuzt sein. Name und Ergebnisbild erscheinen
@@ -196,7 +201,7 @@ Mergegate. Sie bleibt als optionaler realer Eindruck dokumentiert:
    Zellen und Farbe prüfen. Escape und Fokusverlust nach dem Wechsel müssen die
    Vorschau ohne neue Aktion verwerfen; eine falsche Tastenfreigabe darf nicht
    abschließen.
-3. F-02 mit Farbe A–D und F-03 bei 50 % Arbeitszoom: echte Startzelle treffen und
+3. F-02 mit den vier Farbfeldern und F-03 bei 50 % Arbeitszoom: echte Startzelle treffen und
    die neue Achse prüfen. Zeiger ohne Startzelltreffer über den Ursprung springen
    beziehungsweise in eine andere Zeile/Spalte neben ihn bewegen: Die alte Achse
    muss gebunden bleiben. Über UI/Viewportgrenze bleibt der letzte gültige

@@ -187,8 +187,9 @@ aber nicht zusätzlich laufend nummeriert. Aktive Linie und die separate Koordin
 unterstützen die Orientierung. Sie zeigen nur vollständige einzeilige Zahlen in der
 jeweiligen Rätselfarbe; mehrstellige Zahlen bleiben horizontal und ungeteilt. Für P1
 gibt es keine A–D-Suffixe, gestapelten Ziffern, Kompaktkästchen oder entsprechende
-Umschaltoption. Interne Farb-IDs und die A–D-Beschriftung der vorläufigen Mauspalette
-sind davon nicht betroffen.
+Umschaltoption. Die internen Farb-IDs bleiben unverändert. Z2 ersetzt die frühere
+A–D-beschriftete Mauspalette durch unbeschriftete Originalfarbfelder mit formaler
+Auswahlmarkierung; Status und Tooltip nennen die jeweilige Farbnummer.
 
 Alle Zeilenfolgen verwenden dieselben festen horizontalen Hinweisplätze, alle
 Spaltenfolgen dieselben festen vertikalen Reihen. Die gemeinsame Slotgeometrie wird
@@ -271,10 +272,13 @@ nicht zum Puzzle-Saveformat; Pflicht-Flush und Recovery bleiben unverändert.
 Die stets sichtbare Miniatur enthält nur Spielerzustand und gegebenenfalls dieselbe
 Vorschau, keine korrigierte Lösung. Unbekannt/leer/gefüllt unterscheidbar; richtige
 Rätselfarben darstellen. Ein Ausschnittrahmen zeigt den Viewport. Klick/Ziehen navigiert
-ohne Zellmutation. Vier Farben über die vorläufige Mauspalette mit stabilen internen
-Farb-IDs und A–D-Beschriftung; dies ist keine Zusatzkennung an Lösungshinweisen.
-Auswahl/Fokus/Leerzustand dürfen keine zusätzliche Rätselfarbe vortäuschen. Keine
-beliebigen Nutzerpaletten und kein vorgezogener Neuentwurf der Farbauswahl.
+ohne Zellmutation. Die Z2-Mauspalette zeigt unbeschriftete Farbfelder mit stabilen
+internen Farb-IDs und unveränderten RGB-Innenflächen. Eckmarkierungen außerhalb
+der Farbfläche kennzeichnen die Auswahl; Status und Tooltip nennen „Farbe 1“ bis
+„Farbe 4“. Farbwahl aktiviert Füllen, auch nach Hand/Radierer. Diese Darstellung
+ersetzt die vorläufige A–D-Beschriftung, nicht die Farb-IDs oder Hinweisregeln.
+Auswahl/Fokus/Leerzustand dürfen keine zusätzliche Rätselfarbe vortäuschen.
+Keine beliebigen Nutzerpaletten.
 
 Layouttests umfassen 1280×720, 1600×900, die primäre 1920×1080-Fläche und 2560×1440
 als logische Testflächen. Reale Windows-Bildschirmauflösung, Fenster-/Clientfläche,
@@ -423,6 +427,12 @@ Montierungen, UI und Raster sind getrennt; C1 konturiert nur Hinweisfarben 2/4.
 Fraunces/Plex Sans sind gepinnt und offline gebündelt. Farbwahl aktiviert Füllen.
 Neun Arbeitsaktionen, eigene Miniatur, Koordinaten und aktive Farbe/Werkzeug bleiben
 auf der Arbeitsseite, Trefferflächen mindestens 44/55 px bei UI 100/125 %.
+
+GD-01 bis GD-05 ersetzen für Z2 ausdrücklich die frühere provisorische A–D-Palette,
+den alten Sidebaraufbau und die damals offene Arbeitsasset-/Schrift-/C1-/Navigationswahl.
+Die unbeschrifteten Originalfarbfelder und die numerischen Status-/Tooltipkennungen
+sind in §5.2 beschrieben. Die gesamte Themenwahl Sammelalbum/Reisealbum und die
+unveränderten Spiel-/Speicherverträge werden dadurch nicht neu entschieden.
 
 Pfeil und Menü öffnen dieselbe Informationsseite mit Fokus Einstellungen, `?`
 deren Hilfe. Rückpfeil erhält denselben bestätigten Arbeitszustand. Laufende Gesten
