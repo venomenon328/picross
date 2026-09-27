@@ -84,6 +84,8 @@ def main() -> int:
     if host not in toolchain.EDITORS or platform.machine().lower() not in {"amd64", "x86_64"}:
         parser.error("P1 build supports Windows/Linux x86_64 hosts")
     output = args.output_dir.resolve()
+    if output.exists() and any(output.iterdir()):
+        parser.error("Output directory must be empty; preserve previous evidence in its own directory")
     output.mkdir(parents=True, exist_ok=True)
     logs = output / "logs"
     logs.mkdir(exist_ok=True)

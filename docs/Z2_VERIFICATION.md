@@ -19,6 +19,10 @@ git diff --check
 python tools/p1_product.py --cache-dir <externer-cache> --output-dir <externe-ausgabe>
 ```
 
+Für jeden Produktlauf ein neues beziehungsweise leeres Ausgabeverzeichnis verwenden.
+Der Harness verweigert ein nichtleeres Ziel, damit keine alten Screenshots in eine
+neue Quell-/Hashbindung geraten. Bestehende Prüfpakete bleiben erhalten.
+
 Der Produktweg prüft weiterhin den gesamten P1-Vertrag: beide Deduktionsnachweise,
 Godot-Import/Tests, 500 Aktionen mit unabhängigem Oracle, echten Zwei-Prozess-Neustart,
 erwarteten Exit-23-Negativtest, Start, bestehende Render-/G1-/H1-Regressionen,
