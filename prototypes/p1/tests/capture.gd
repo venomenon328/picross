@@ -20,6 +20,13 @@ func _initialize() -> void:
 	call_deferred("run")
 
 func snapshot(app: Main, name: String, crop: bool = false) -> void:
+	var material: Image
+	if (name.begins_with("separation-") and name.ends_with("-confirmed")) or name == "f03-grid-focus" or name.begins_with("hint-marker-"):
+		app.board.hide()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		material = surface.get_texture().get_image()
+		app.board.show()
 	app.refresh()
 	await process_frame
 	await process_frame
@@ -31,7 +38,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			var center: Vector2i = Vector2i(app.board.global_position + cell.get_center())
 			var expanded: Vector2i = Vector2i(app.board.global_position + cell.position + Vector2(2, cell.size.y / 2))
 			var moat: Vector2i = Vector2i(app.board.global_position + cell.position + Vector2(1, cell.size.y / 2))
-			if not picture.get_pixelv(center).is_equal_approx(Color(app.session.definition.palette[i].color)) or not picture.get_pixelv(expanded).is_equal_approx(Color(app.session.definition.palette[i].color)) or not picture.get_pixelv(moat).is_equal_approx(app.board.PAPER):
+			if not picture.get_pixelv(center).is_equal_approx(Color(app.session.definition.palette[i].color)) or not picture.get_pixelv(expanded).is_equal_approx(Color(app.session.definition.palette[i].color)) or not picture.get_pixelv(moat).is_equal_approx(material.get_pixelv(moat)):
 				push_error("Rendered fill/moat regression: " + name)
 				quit(5)
 				return
@@ -55,7 +62,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 		var intersection: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(focus).get_center())
 		var outside: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(focus + Vector2i(2, 2)).get_center())
 		var band: Color = Color("e8e9d9")
-		if not picture.get_pixelv(row_point).is_equal_approx(band) or not picture.get_pixelv(column_point).is_equal_approx(band) or not picture.get_pixelv(intersection).is_equal_approx(band) or not picture.get_pixelv(outside).is_equal_approx(app.board.PAPER):
+		if not picture.get_pixelv(row_point).is_equal_approx(band) or not picture.get_pixelv(column_point).is_equal_approx(band) or not picture.get_pixelv(intersection).is_equal_approx(band) or not picture.get_pixelv(outside).is_equal_approx(material.get_pixelv(outside)):
 			push_error("Rendered grid focus regression")
 			quit(5)
 			return
@@ -77,7 +84,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			return
 		pixel_checks += 1
 	if name == "gesture-counter-8" or name.begins_with("g1-counter-"):
-		var font: Font = ThemeDB.fallback_font
+		var font: Font = Board.BODY_FONT
 		var fs: int = roundi(15 * app.board.ui_scale)
 		var caption: String = "8" if name == "gesture-counter-8" else name.get_slice("-", 2)
 		var box_size: Vector2 = font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs) + Vector2(14, 10)
@@ -112,7 +119,13 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			for y: int in range(region.position.y, region.end.y):
 				for x: int in range(region.position.x, region.end.x):
 					var pixel: Color = picture.get_pixel(x, y)
-					if absf(pixel.r - app.board.ACCENT.r) + absf(pixel.g - app.board.ACCENT.g) + absf(pixel.b - app.board.ACCENT.b) < 0.03:
+					var paper: Color = material.get_pixel(x,y)
+					var delta: Vector3 = Vector3(pixel.r-paper.r,pixel.g-paper.g,pixel.b-paper.b)
+					var tint: Vector3 = Vector3(app.board.ACCENT.r-paper.r,app.board.ACCENT.g-paper.g,app.board.ACCENT.b-paper.b)
+					var coverage: float = delta.dot(tint)/tint.length_squared()
+					# Alpha coverage of this exact accent, not a tolerance that mistakes
+					# adjacent original red clue digits for ellipsis pixels.
+					if coverage > 0.15 and coverage <= 1.01 and (delta-tint*coverage).length() < 0.01:
 						accent_pixels += 1
 			if (accent_pixels > 0) != bool(visual[side + "_hidden"]):
 				push_error("Rendered hint marker mismatch: %s %s (%d pixels)" % [name, side, accent_pixels])
@@ -427,8 +440,11 @@ func capture_owner_drop(app: Main) -> void:
 	await process_frame
 	app.board._layout()
 	app.board.view.zoom_to(36.0, app.board.view.viewport.get_center())
+	# Retain the historical six-slot/24px repro alongside native Z2 captures.
+	app.board.book_layout = false
+	app.board.row_slot_extent_cache["%d/%d/%s" % [app.session.get_instance_id(),app.board.clue_font_size(),str(app.ui_scale)]] = 24.0
 	var original_viewport: Rect2 = app.board.view.viewport
-	app.board.view.configure(Rect2(Vector2(174, original_viewport.position.y), Vector2(original_viewport.end.x - 174, original_viewport.size.y)), app.board.view.dimensions)
+	app.board.view.configure(Rect2(Vector2(174, 126), Vector2(original_viewport.end.x - 174, original_viewport.size.y)), app.board.view.dimensions)
 	app.board.normalize_clue_steps()
 	app.board.navigate_to(Vector2(0.5, 11.0 / 40.0))
 	if app.board.clue_capacity("row") != 6:
@@ -462,6 +478,8 @@ func capture_owner_drop(app: Main) -> void:
 		quit(5)
 		return
 	await capture_monotone_route(app, "column", long_column)
+	app.board.book_layout = true
+	app._layout_book()
 
 func capture_monotone_route(app: Main, axis: String, index: int) -> void:
 	app.board.set_clue_step(axis, index, 0)
@@ -501,6 +519,38 @@ func run() -> void:
 	root.add_child(surface)
 	var app: Main = load("res://main.tscn").instantiate()
 	surface.add_child(app)
+	var stage: String = OS.get_environment("P1_RENDER_STAGE")
+	var stages: Array[String] = ["layout","views","cells-f1","cells-f2","gestures","hints","axis","h1"]
+	if not stage.is_empty() and not stage in stages:
+		push_error("Unknown capture stage: " + stage)
+		quit(5)
+		return
+	for current: String in stages:
+		if not stage.is_empty() and stage != current:
+			continue
+		surface.size = Vector2i(1920,1080)
+		app.set_ui_scale(1.0)
+		app.select_puzzle(2)
+		app.board.view.zoom_to(24.0,app.board.view.viewport.get_center())
+		app.board.reset_clue_pan()
+		await process_frame
+		await process_frame
+		match current:
+			"layout": await capture_layout(app)
+			"views": await capture_views(app)
+			"gestures": await capture_gestures(app)
+			"hints": await capture_hints(app)
+			"axis": await capture_axis(app)
+			"h1": await capture_h1(app)
+			"cells-f1": await capture_cells(app,[0])
+			"cells-f2": await capture_cells(app,[1])
+	var report: FileAccess = FileAccess.open(output.path_join("render-report" + ("-"+stage if not stage.is_empty() else "") + ".json"), FileAccess.WRITE)
+	report.store_string(JSON.stringify({"renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(), "pixel_checks": pixel_checks, "clue_contract": "single-line colored numbers; shared fixed slots; exact prefix/suffix markers; snapped per-line panning; complete hover tooltip", "physical_dpi_acceptance": "OPEN: owner", "captures": captures}, "  ") + "\n")
+	print("P1_CAPTURE_OK: %d actual rendered images" % captures.size())
+	quit(0)
+
+func capture_layout(app: Main) -> void:
+	app.show_album()
 	await snapshot(app, "album")
 	for dims: Vector2i in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
 		surface.size = dims
@@ -528,6 +578,10 @@ func run() -> void:
 			set_fractional_step(app, "column", 50, 0.35)
 			set_fractional_step(app, "column", 51, 0.7)
 			await snapshot(app, "%dx%d-ui%d-f3-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
+
+func capture_views(app: Main) -> void:
+	var f03_row: int = longest_line(app.sessions[2].definition.rows)
+	var f03_column: int = longest_line(app.sessions[2].definition.columns)
 	# D-18/D-19: unnumbered colored numbers remain single-line in shared slots.
 	# D-20 adds independent snapped positions for every concrete row and column.
 	surface.size = Vector2i(1920, 1080)
@@ -555,8 +609,6 @@ func run() -> void:
 	set_fractional_step(app, "column", 21, 1.0)
 	await snapshot(app, "f02-row-end-column-start")
 	app.select_puzzle(2)
-	var f03_row: int = longest_line(app.session.definition.rows)
-	var f03_column: int = longest_line(app.session.definition.columns)
 	app.board.hover = Vector2i(f03_column, f03_row)
 	app.board.set_clue_hover("row", f03_row)
 	await snapshot(app, "f03-overflow-hover-tooltip")
@@ -577,8 +629,10 @@ func run() -> void:
 	app.board.view.pan(Vector2(120, 80))
 	app.board.navigate_to(Vector2(0.78, 0.22))
 	await snapshot(app, "f03-hints-after-raster-pan")
+
+func capture_cells(app: Main, fixtures: Array) -> void:
 	# Same L/block at normal and five-cell boundaries, every color/work step.
-	for fixture: int in [0, 1]:
+	for fixture: int in fixtures:
 		app.select_puzzle(fixture)
 		var values: Array[int] = app.session.player.cells.duplicate()
 		values.fill(-1)
@@ -602,6 +656,10 @@ func run() -> void:
 				app.session.gesture.move(Vector2i(10, 3))
 				await snapshot(app, "separation-f%d-%d-preview-color%d" % [fixture + 1, roundi(step), color], true)
 				app.session.gesture.cancel()
+
+func capture_gestures(app: Main) -> void:
+	var f03_row: int = longest_line(app.sessions[2].definition.rows)
+	var f03_column: int = longest_line(app.sessions[2].definition.columns)
 	app.select_puzzle(2)
 	app.board.view.zoom_to(24.0, app.board.view.viewport.get_center())
 	app.board.view.center = Vector2(50, 50)
@@ -664,8 +722,16 @@ func run() -> void:
 		return
 	pixel_checks += 1
 	app.board.cancel_gesture()
+
+func capture_hints(app: Main) -> void:
+	var f03_row: int = longest_line(app.sessions[2].definition.rows)
+	var f03_column: int = longest_line(app.sessions[2].definition.columns)
 	await capture_hint_markers(app, f03_row, f03_column)
 	await capture_drop_matrix(app, f03_row, f03_column)
+
+func capture_axis(app: Main) -> void:
+	var f03_row: int = longest_line(app.sessions[2].definition.rows)
+	var f03_column: int = longest_line(app.sessions[2].definition.columns)
 	var gesture_start: Vector2i = app.board.view.hit(app.board.view.viewport.get_center())
 	app.board.pointer_press(app.board.view.cell_rect(gesture_start).get_center(), MOUSE_BUTTON_RIGHT)
 	app.board.pointer_move(app.board.view.cell_rect(gesture_start + Vector2i(7, 0)).get_center(), true)
@@ -684,6 +750,8 @@ func run() -> void:
 	app.board.fit_all()
 	await snapshot(app, "f03-overview")
 	await capture_owner_drop(app)
+
+func capture_h1(app: Main) -> void:
 	await preload("res://tests/h1_capture.gd").run(self, app)
 	for index: int in [0, 1, 2]:
 		app.select_puzzle(index)
@@ -698,7 +766,3 @@ func run() -> void:
 		await snapshot(app, "f%d-reveal" % (index + 1))
 		app.show_album()
 		await snapshot(app, "f%d-earned-album" % (index + 1))
-	var report: FileAccess = FileAccess.open(output.path_join("render-report.json"), FileAccess.WRITE)
-	report.store_string(JSON.stringify({"renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(), "pixel_checks": pixel_checks, "clue_contract": "single-line colored numbers; shared fixed slots; exact prefix/suffix markers; snapped per-line panning; complete hover tooltip", "physical_dpi_acceptance": "OPEN: owner", "captures": captures}, "  ") + "\n")
-	print("P1_CAPTURE_OK: %d actual rendered images" % captures.size())
-	quit(0)

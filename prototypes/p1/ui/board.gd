@@ -7,6 +7,11 @@ signal edited
 signal committed
 signal view_changed
 signal pointed(cell: Vector2i)
+const BODY_FONT = preload("res://art/book/PlexSans.ttf")
+var book_layout: bool = false
+var book_inset: Vector2 = Vector2(210,126)
+var book_grid_size: Vector2 = Vector2(720,720)
+var clue_tooltip_rect: Rect2
 var session: Session
 var view: GridView = GridView.new()
 var eraser: bool = false
@@ -48,10 +53,10 @@ func _ready() -> void:
 	_layout()
 
 func _layout() -> void:
-	if session == null:
+	if session == null or size.x <= 1 or size.y <= 1:
 		return
 	var inset: Vector2 = Vector2(156, 126) * ui_scale
-	view.configure(Rect2(inset, (size - inset - Vector2(12, 12)).max(Vector2.ONE)), Vector2i(session.player.width, session.player.height))
+	view.configure(Rect2(book_inset, book_grid_size) if book_layout else Rect2(inset, (size - inset - Vector2(12, 12)).max(Vector2.ONE)), Vector2i(session.player.width, session.player.height))
 	if overview:
 		view.zoom_to(minf(view.viewport.size.x / view.dimensions.x, view.viewport.size.y / view.dimensions.y), view.viewport.get_center())
 	ensure_clue_steps()
@@ -258,6 +263,10 @@ func _input(event: InputEvent) -> void:
 func _gui_input(event: InputEvent) -> void:
 	if session.completed:
 		return
+	if event is InputEventMouseButton and not clue_hover_axis.is_empty() and clue_tooltip_rect.has_point(event.position):
+		clear_clue_hover()
+		accept_event()
+		return
 	if event is InputEventMouseMotion and not session.gesture.active and pan_button == MOUSE_BUTTON_NONE:
 		var cell: Vector2i = view.hit(event.position)
 		hover = cell
@@ -333,10 +342,14 @@ func navigation_line(point: Vector2, target: String) -> int:
 
 func row_clue_area() -> Rect2:
 	var grid: Rect2 = view.visible_bounds()
+	if book_layout:
+		return Rect2(Vector2(0,grid.position.y),Vector2(grid.position.x,grid.size.y))
 	return Rect2(Vector2(4.0 * ui_scale, grid.position.y), Vector2(maxf(1.0, grid.position.x - 14.0 * ui_scale), grid.size.y))
 
 func column_clue_area() -> Rect2:
 	var grid: Rect2 = view.visible_bounds()
+	if book_layout:
+		return Rect2(Vector2(grid.position.x,0),Vector2(grid.size.x,grid.position.y))
 	return Rect2(Vector2(grid.position.x, 4.0 * ui_scale), Vector2(grid.size.x, maxf(1.0, grid.position.y - 14.0 * ui_scale)))
 
 func pointer_press(point: Vector2, button: MouseButton) -> void:
@@ -417,9 +430,11 @@ func gesture_length() -> int:
 func _draw() -> void:
 	if session == null:
 		return
-	draw_style_box(_paper_style(), Rect2(Vector2.ZERO, size))
+	if not book_layout:
+		draw_style_box(_paper_style(), Rect2(Vector2.ZERO, size))
 	var grid: Rect2 = view.visible_bounds()
-	draw_rect(grid, PAPER)
+	if not book_layout:
+		draw_rect(grid, PAPER)
 	var values: Array[int] = session.visible_cells()
 	sync_clue_completion(values)
 	var first: Vector2i = Vector2i(((grid.position - view.origin) / view.cell_size).floor()).max(Vector2i.ZERO)
@@ -461,7 +476,7 @@ func _draw() -> void:
 func _draw_gesture_counter() -> void:
 	if not session.gesture.active:
 		return
-	var font: Font = ThemeDB.fallback_font
+	var font: Font = BODY_FONT
 	var fs: int = roundi(15 * ui_scale)
 	var caption: String = str(gesture_length())
 	var box_size: Vector2 = font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs) + Vector2(14, 10)
@@ -476,7 +491,7 @@ func _draw_counter_box(box: Rect2, caption: String, font: Font, fs: int) -> void
 	draw_string(font, box.position + Vector2(7, box.size.y - 5), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 
 func _draw_clues(first: Vector2i, last: Vector2i) -> void:
-	var font: Font = ThemeDB.fallback_font
+	var font: Font = BODY_FONT
 	var fs: int = clue_font_size()
 	var near_grid: Vector2 = view.visible_bounds().position
 	for y: int in range(first.y, last.y):
@@ -529,6 +544,13 @@ func clue_is_marked(axis: String, index: int, token: int) -> bool:
 	return token < flags.size() and flags[token]
 
 func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, marked: bool) -> void:
+	# Quarter-pixel outline: a 4x glyph drawn at 1/4 scale gives a 0.25px
+	# outer contour (C1 reference: 0.275px). Keep the original fill last.
+	if text.is_valid_int() and session.definition.palette.size() > 1 and (color.is_equal_approx(cell_color(2)) or color.is_equal_approx(cell_color(4))):
+		var contour_scale: float = ui_scale/4.0
+		draw_set_transform(Vector2.ZERO,0,Vector2.ONE*contour_scale)
+		draw_string_outline(font,baseline/contour_scale,text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(fs/contour_scale),1,Color("293e3d"))
+		draw_set_transform(Vector2.ZERO)
 	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, color)
 	if marked:
 		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
@@ -536,6 +558,8 @@ func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, colo
 		draw_line(start, start + Vector2(width, 0), Color(color, 0.72), maxf(1.0, float(fs) / 14.0), true)
 
 func clue_font_size() -> int:
+	if book_layout:
+		return mini(roundi((13 if view.cell_size < 24 else 14)*ui_scale),maxi(8,floori(view.cell_size-4)))
 	return mini(roundi(14 * ui_scale), maxi(8, floori(view.cell_size - 4.0)))
 
 func clue_token(clue: Dictionary) -> String:
@@ -566,7 +590,7 @@ func clue_layout(axis: String, index: int, available_override: float = -1.0) -> 
 	var capacity: int = clue_capacity(axis, available_override)
 	var result: Dictionary = ClueLayout.select_window(entries.size(), capacity, clue_step(axis, index))
 	result.entries = entries
-	result.slot_extent = shared_clue_slot_extent(axis, ThemeDB.fallback_font, clue_font_size())
+	result.slot_extent = shared_clue_slot_extent(axis, BODY_FONT, clue_font_size())
 	return result
 
 func visible_clue_layout(axis: String, index: int) -> Dictionary:
@@ -589,7 +613,7 @@ func clue_entry_count(axis: String, index: int) -> int:
 	return maxi(1, clues.size())
 
 func clue_capacity(axis: String, available_override: float = -1.0) -> int:
-	var font: Font = ThemeDB.fallback_font
+	var font: Font = BODY_FONT
 	var fs: int = clue_font_size()
 	var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
 	var available: float = available_override if available_override >= 0.0 else (area.size.x if axis == "row" else area.size.y)
@@ -605,6 +629,8 @@ func clue_entries(clues: Array) -> Array:
 	return entries
 
 func shared_clue_slot_extent(axis: String, font: Font, fs: int) -> float:
+	if book_layout:
+		return (30.0 if axis == "row" else 18.0)*ui_scale
 	if axis == "column":
 		return maxf(16.0 * ui_scale, float(fs) + 6.0 * ui_scale)
 	# Every visible row requests the same slot width. Measuring all tokens for
@@ -646,7 +672,7 @@ func tooltip_entries(axis: String, index: int) -> Array:
 func visual_hint_units(axis: String, index: int) -> Dictionary:
 	var layout: Dictionary = visible_clue_layout(axis, index)
 	var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
-	var font: Font = ThemeDB.fallback_font
+	var font: Font = BODY_FONT
 	var fs: int = clue_font_size()
 	var units: Array[Dictionary] = []
 	if is_zero_approx(float(layout.visual_shift)):
@@ -663,16 +689,16 @@ func visual_hint_units(axis: String, index: int) -> Dictionary:
 		var token: Dictionary = layout.entries[token_index]
 		var slot: int = int(layout.token_slot) + token_index - int(layout.start)
 		var center: float = clue_slot_center(axis, area, layout, slot) + float(layout.visual_shift)
-		var before: float = font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs)
-		var after: float = before if axis == "row" else float(fs) * 0.35
+		var before: float = font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs) * (0.6 if book_layout else 1.0)
+		var after: float = before if axis == "row" else float(fs) * (0.4 if book_layout else 0.35)
 		if center - before >= low and center + after <= high:
 			candidates.append({"kind": "token", "index": token_index, "center": center, "before": before, "after": after})
 			first_visible = mini(first_visible, token_index)
 			last_visible = token_index
 	var prefix_hidden: bool = first_visible > 0
 	var suffix_hidden: bool = last_visible < layout.entries.size() - 1
-	var marker_before: float = font.get_string_size("…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs)
-	var marker_after: float = marker_before if axis == "row" else float(fs) * 0.35
+	var marker_before: float = font.get_string_size("…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs) * (0.6 if book_layout else 1.0)
+	var marker_after: float = marker_before if axis == "row" else float(fs) * (0.4 if book_layout else 0.35)
 	var prefix_center: float = clue_slot_center(axis, area, layout, 0)
 	var suffix_center: float = clue_slot_center(axis, area, layout, int(layout.slot_count) - 1)
 	if prefix_hidden:
@@ -738,14 +764,14 @@ func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 		var color: Color = ACCENT if unit.kind != "token" else Color(layout.entries[int(unit.index)].color)
 		var center: float = float(unit.center)
 		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		if center - fs >= area.position.y and center + fs * 0.35 <= area.end.y:
+		if center - fs * (0.6 if book_layout else 1.0) >= area.position.y and center + fs * (0.4 if book_layout else 0.35) <= area.end.y:
 			draw_clue_number(font, Vector2(px - width / 2.0, center + fs * 0.35), text, fs, color, unit.kind == "token" and clue_is_marked("column", index, int(unit.index)))
 
 func _draw_clue_tooltip() -> void:
 	if clue_hover_axis.is_empty() or clue_hover_index < 0:
 		return
 	var entries: Array = tooltip_entries(clue_hover_axis, clue_hover_index)
-	var font: Font = ThemeDB.fallback_font
+	var font: Font = BODY_FONT
 	var fs: int = roundi(16 * ui_scale)
 	var line_height: float = 22 * ui_scale
 	var box_width: float = minf(520 * ui_scale, size.x - view.viewport.position.x - 32)
@@ -760,6 +786,7 @@ func _draw_clue_tooltip() -> void:
 		cursor.x += width + 9 * ui_scale
 	var box_height: float = cursor.y + 12 * ui_scale
 	var box: Rect2 = Rect2(view.viewport.position + Vector2(12, 12), Vector2(box_width, box_height))
+	clue_tooltip_rect = box
 	draw_rect(box, Color("fffaf0"))
 	draw_rect(box, ACCENT, false, 2)
 	draw_string(font, box.position + Vector2(14, 26 * ui_scale), "Vollständiger Hinweis", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)

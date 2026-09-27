@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 26.09.2026 · Arbeitsfassung 0.13 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
+Stand: 27.09.2026 · Arbeitsfassung 0.14 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -21,12 +21,13 @@ darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, rich
 alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
 eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
 auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.13 mit G1 und H1. Die Nacharbeit in #11
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.14 mit G1, H1 und Z2. Die Nacharbeit in #11
 ergänzt D-23 bis D-27: flüssigen Hinweisdrag mit Einrasten beim Loslassen,
 geringfügig größere getrennte Füllungen, dezente Cursorbänder, geclippte X
 und den geometrischen Live-Strichzähler. Nachweise stehen im P1.3-Prüfbericht;
-erneute Eigentümerabnahme bleibt offen. Das ist weder eine endgültige
-Themenentscheidung noch ein vollständiges Designsystem.
+die spätere P1-Gesamtabnahme erfolgte in #12. Die neue Z2-Eigentümerprobe bleibt
+offen. Das ist weder eine endgültige Themenentscheidung noch ein vollständiges
+Designsystem.
 
 ## 2. Bestätigte gestalterische Grundlage
 
@@ -67,9 +68,29 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 
 ## 4. Visuelle Ausarbeitung
 
-### BP-1R: vergrößerte linke Buchseite
+Für #23 gilt die [aktive Auswahl GD-01 bis GD-05](Z2_SELECTION.md): A-Inventarband,
+gemeinsame BP-3-Montierungen, Fraunces/Plex Sans, feste C1-Kontur und eine echte
+native N1-Informationsseite. Diese konkrete Arbeitsansicht ersetzt die historische
+BP-3-Empfehlung B, nicht die noch offene gesamte Themen-/Kapitelentscheidung.
+Raster und UI werden getrennt auf unverzerrtem A-Papier gezeichnet. N1 nutzt
+nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen,
+Hinweisreset, H1, Bedienhilfe und Beenden teilen sich eine Seite mit Rückweg.
+Keine neue Statistik/Albumarchitektur oder Vorwegnahme von #24. Native Abweichungen,
+Offline-Fonts und die noch offene Eigentümerprobe stehen im [Z2-Prüfbericht](Z2_VERIFICATION.md).
+Die native Umsetzung ist als [Draft-PR #33](https://github.com/venomenon328/picross/pull/33)
+geliefert. Aktueller Head, technische/visuelle Reviewbefunde und Mergegates stehen
+dort sowie im [Paketstatus #23](https://github.com/venomenon328/picross/issues/23).
+Die Auswahl ist getroffen; Z2-M01/M02/M03 und eine ausdrückliche Mergefreigabe
+werden dadurch nicht vorweggenommen.
 
-[#27 unter #21](https://github.com/venomenon328/picross/issues/27) konkretisiert
+### BP-1R bis BP-3: Entwurfsverlauf und integrierte Grundlagen
+
+Der folgende Verlauf ordnet die bereits integrierten Vorlagen und Studien ein.
+Frühere Start- und Auswahlgrenzen sind keine erneut offenen Z2-Entscheidungen;
+maßgeblich sind GD-01 bis GD-05 und der aktuelle #23-Vertrag. Die historischen
+hashgebundenen Bilder, ZIPs, Manifeste und Prüfberichte bleiben unverändert.
+
+[#27 unter #21](https://github.com/venomenon328/picross/issues/27) konkretisierte
 nach dem ersten nicht akzeptierten BP-2-A-Versuch die Arbeitskomposition: naher,
 annähernd senkrechter Blick auf eine breite linke Seite eines detailliert
 illustrierten Museums-/Inventarbands. Papierlagen, Einband, kleine sorgfältige
@@ -94,8 +115,9 @@ Kamerapan und keine Kopplung an Raster-/Miniaturnavigation. Rückkehr erhält Ze
 Undo/Redo, Farbe/Werkzeug, Rasterausschnitt/Zoom und Hinweislesepositionen;
 Gestenabbruch, Pflicht-Flush und Recoverygrenzen bleiben verbindlich. Miniatur,
 Koordinaten, Farbe, Werkzeuge, Undo/Redo und Zoom bleiben auf der Arbeitsansicht.
-Rechts werden bestehende Einstellungen/Hilfe und ein späterer/offener Statistik-
-bereich nur schematisch geplant, ohne Daten oder versteckte Live-Fehlerhilfe.
+Rechts wurden in BP-1R bestehende Einstellungen/Hilfe und mögliche spätere Statistiken
+nur schematisch geplant. GD-05 begrenzt den jetzigen N1-Umfang ausdrücklich auf
+vorhandene Einstellungen und Hilfe; kein Statistikbereich oder Live-Fehlerhinweis.
 
 Hintergrund enthält Papier, Einband, Seitenkanten und wenig Umgebung. Registerkörper,
 Labels, Icons, Zustände, Raster/Zahlen und Informationen werden separat gerendert.
@@ -103,27 +125,26 @@ Keine eingebrannten Bedienattrappen, beweglichen Werkzeugschatten, atmosphärisc
 Fülltexte, Mottos oder Pseudoschrift. Detaillierte warme 2D-Materialillustration bleibt
 das Ziel; einfache Vektorbuchflächen sind kein fertiger Ersatz.
 
-BP-1R ist eine statische technische Vorlage, keine Kunst-/Bedienabnahme. Vor erneuter
-BP-2-Bildproduktion eine konkret geprüfte Einzelseitenvorlage benennen: zuerst neues
-A (dunkles Leder/warmes Holz), dann B als kontrollierte hellere Material-/Lichtvariation.
-Finale Layout-, Schrift-, Icon-, Kontrast- und Assetwahl erst an BP-3 vor #23.
-Sammelalbum/Reisealbum, Sammlungsinhalte, Progression/Wertung bleiben offen bzw.
-unverändert. Kein Beginn von BP-2/BP-3/#23/#24 und keine Änderung an PR #25/#28/#29
-durch diese Vorlagenlieferung.
+BP-1R war die statische technische Grundlage, keine Kunst-/Bedienabnahme. Darauf
+folgten die erneute BP-2-Bildproduktion mit A (dunkles Leder/warmes Holz) und B als
+kontrollierter hellerer Material-/Lichtvariation sowie die vollständigen BP-3-Ansichten.
+Die Auswahl vor #23 ist inzwischen mit GD-01 bis GD-05 erfolgt. Sammelalbum/Reisealbum,
+Sammlungsinhalte, Progression/Wertung bleiben davon getrennt offen bzw. unverändert.
 
-BP-1R ist inzwischen über PR #30 integriert. Die separate
+BP-1R ist über PR #30 integriert. Die separate
 [BP-2-Artworklieferung](design/book_inventory/artwork/README.md) enthält zwei
 tatsächlich erzeugte UI-freie Materialvarianten und unveränderte BP-1R-Prüfmontagen.
 Native Auflösung, A-Korrekturen, A→B-Ableitung und Prüfumfang sind dort dokumentiert.
-BP-2 ist inzwischen über PR #31 integriert, ohne endgültige Kunstwahl.
-Das separate [BP-3-Kompositionspaket](design/book_inventory/composition/README.md)
-arbeitet nun ein gemeinsames UI-System auf beiden unveränderten Bildern aus:
-gefasste Inventarkarte, zusammengehörige Originalfarbmuster, gruppierte Werkzeuge
-und getrennte Blattzugänge. Zehn Größen-/Artworkkompositionen und statische
-Zustandsnachweise liefern die konkrete Entscheidungsgrundlage. Fraunces/IBM Plex Sans
-und C1 werden begründet empfohlen; die Eigentümerwahl bleibt ausdrücklich offen.
-Raster-/Hinweisflächen, Zellstand und Miniatur bleiben unverändert. Unabhängiges
-Review und Eigentümerfreigabe stehen aus; #23/#24 wurden nicht begonnen.
+BP-2 wurde über PR #31 zunächst ohne endgültige Kunstwahl integriert.
+Das [BP-3-Kompositionspaket](design/book_inventory/composition/README.md) ist über
+PR #32 integriert: gemeinsame UI auf beiden unveränderten Bildern, gefasste
+Inventarkarte, Originalfarbmuster, gruppierte Werkzeuge und getrennte Blattzugänge.
+Zehn Größen-/Artworkkompositionen und statische Zustandsnachweise bildeten die
+Entscheidungsgrundlage. Technisches/visuelles Review und Mergefreigabe dieses
+Studienstands sind abgeschlossen. Der Eigentümer wählte anschließend A, die gemeinsame
+UI, Fraunces/IBM Plex Sans und C1; die frühere Bearbeiterempfehlung B ist historisch.
+#27 ist damit geschlossen. #23 liegt als native Draft-Lieferung vor; seine eigenen
+Prüf-/Abnahmegates bleiben separat. #24 wurde noch nicht begonnen.
 
 ### 4.1 Album und Arbeitsansicht
 
@@ -197,7 +218,9 @@ Miniaturnavigation; Lesezeichen gehören nicht automatisch dazu.
 Rätselfarben und UI-Zustandsfarben sollen unterscheidbar sein. Die Hinweiszahl selbst
 trägt die Rätselfarbe; für P1 entfallen ergänzende A–D-Kennungen und ihr Schalter
 vorerst vollständig. Das ist keine endgültige Streichung farbunabhängiger Erkennbarkeit
-im Produkt und kein vorgezogener Neuentwurf der Mauspalette. Unabhängige UI-/
+im Produkt. Der spätere separate Z2-Auftrag ersetzt die provisorische Mauspalette
+durch unbeschriftete Originalfarbfelder mit formaler Auswahlmarkierung und numerischem
+Status/Tooltip; die Hinweisregeln bleiben erhalten. Unabhängige UI-/
 Rasterskalierung unterstützt die Lesbarkeit. H1 aus [#19](https://github.com/venomenon328/picross/issues/19)
 ergänzt dezentes Durchstreichen eindeutig erfüllter Hinweiszahlen, bei unveränderter
 Rätselfarbe, Zahlengröße und Slotposition. Es hängt am Originalindex und gilt ebenso
@@ -232,18 +255,19 @@ Referenz M-01 aus dem Gestaltungsgespräch vom 22.09.2026 ist der generierte Ver
 
 Der Mock ist keine Bildschirm-für-Bildschirm-Spezifikation, kein gültiger Rätseldatensatz und kein finales Assetpaket. A/B wurden dadurch nicht entschieden. Insbesondere keine vorzeitigen Motivvorschauen, Skizzen, fremden Assets, erfundenen Sternschwellen oder schematischen Rätselzahlen übernehmen. Detaillierte Illustrationen müssen trotz erlaubter Verfeinerung die Wiedererkennbarkeit erhalten.
 
-Die spätere reale P1.1-Probe lieferte einen Abschluss-Screenshot und einen Rasterausschnitt mit dem beschriebenen Fünferlinienproblem. Das belegt vorhandenes Nutzerfeedback, nicht jede K-06-Einzelprüfung, tatsächliche Windows-Skalierung oder die Güte der damals noch nicht implementierten Großraster-/Zoom-/Speicherfunktionen. Aktueller Abnahmestand in #5/#8 und PR #14.
+Die spätere reale P1.1-Probe lieferte einen Abschluss-Screenshot und einen Rasterausschnitt mit dem beschriebenen Fünferlinienproblem. Das belegt vorhandenes Nutzerfeedback, nicht jede K-06-Einzelprüfung, tatsächliche Windows-Skalierung oder die Güte der damals noch nicht implementierten Großraster-/Zoom-/Speicherfunktionen. Der damalige Stand ist in #5/#8 und PR #14 nachvollziehbar; die spätere P1-Gesamtabnahme in #12 gilt nicht automatisch für Z2. Aktuelle Z2-Befunde und Gates stehen in #23/PR #33.
 
 ## 7. Weitere Erprobung und offene Entscheidungen
 
 | Thema | Nächster Gegenstand |
 | --- | --- |
-| Themenwahl | A oder B, Kapitel und Motivzusammenhang; bestehende Progressionsanforderungen nicht neu öffnen. |
-| Album/Designsystem | Layout, Typografie, Größenbandbreiten, Kontraste und Fokus anhand realer Proben ausarbeiten. |
+| Themenwahl | Thematisches Sammelalbum oder Reisealbum, Kapitel und Motivzusammenhang; nicht mit dem gewählten Arbeitsasset A verwechseln. Bestehende Progressionsanforderungen nicht neu öffnen. |
+| Album/Designsystem | Die gewählte Z2-Arbeitsansicht nativ prüfen; ein vollständiger Albumneubau ist nicht beauftragt. |
 | Rücknahmen/Wertung | Direkte Neutralisierung ist für die Bedienung festgelegt; Fehlerzählung, Sterne und Hypothesenwirkung bleiben offen. |
-| P1-Bedienung | Vier Feedbackpunkte plus Farb-/Großraster, Zoom, lange Hinweise und eigene Miniatur in #9. |
-| Fortsetzung | Speicherung/Recovery in #11, integrierte Erprobung in #12. |
+| P1-Bedienung | P1 einschließlich der früheren Feedbackkorrekturen ist integriert; die neue Z2-Maus-/Lesbarkeitsprobe bleibt vor dessen Merge offen. |
+| Fortsetzung | Speicherung/Recovery sind integriert und bleiben Z2-Regressionsumfang; die neue isolierte Eigentümerprobe Z2-M03 ist erforderlich. |
+| Designphase | Längere reale Nutzung und Phasenabschluss folgen in #24 nach der konkreten Z2-Fassung. |
 
-Gestaltung und Risikoprototypen überlappen weiter. Statische Mocks allein beantworten keine Bedienungsfrage. Die bestätigte gemeinsame Richtung reicht zur Untersuchung; sie ist noch kein fertiges UI-Konzept.
+Gestaltung und Risikoprototypen überlappen weiter. Statische Mocks allein beantworten keine Bedienungsfrage. GD-01 bis GD-05 legen die konkrete Zielrichtung für Z2 fest, ersetzen aber keine native Bedienabnahme oder vollständige Produktgestaltung.
 
 Rätselproduktion und Deduktionsnachweis bleiben ein eigener früher Risikostrang. Hübsche Bilder allein sind keine qualitätsgeprüften Rätsel. Verbundraster getrennt evaluieren. Thema, Designsystem und zentrale Ansichten anhand der Erfahrungen schärfen, bevor umfangreiche Inhalte produziert werden.
