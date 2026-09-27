@@ -36,8 +36,11 @@ static func run(t: SceneTree) -> void:
 		click(t,app.redo_button)
 		click(t,app.undo_button)
 	# Keep real history, a redo branch, tool, colour and non-default views.
+	var zoom_before: float = app.board.view.cell_size
 	click(t,app.actions.plus)
+	t.check(app.board.view.cell_size > zoom_before,"Z2-A02 plus changes working zoom")
 	click(t,app.actions.minus)
+	t.check(app.board.view.cell_size == zoom_before,"Z2-A02 minus restores previous step")
 	click(t,app.actions.fit)
 	t.check(app.board.overview,"Z2-A02 fit via viewport")
 	click(t,app.actions.work)
@@ -47,6 +50,8 @@ static func run(t: SceneTree) -> void:
 	click(t,app.actions.hand)
 	app._save_current()
 	for route: String in ["nav-information","help","menu"]:
+		if route == "nav-information":
+			click(t,app.actions.fit)
 		var before: Dictionary = state(app)
 		click(t,app.actions[route])
 		await t.process_frame
@@ -61,6 +66,7 @@ static func run(t: SceneTree) -> void:
 		click(t,app.actions["nav-work"])
 		await t.process_frame
 		t.check(app.work.visible and state(app) == before,"Z2-A03 full state survives return " + route)
+	click(t,app.actions.work)
 	# Native six-slot version supplements the historical exact owner regression.
 	var original_viewport: Rect2 = app.board.view.viewport
 	app.board.view.configure(Rect2(Vector2(180,original_viewport.position.y),Vector2(original_viewport.end.x-180,original_viewport.size.y)),app.board.view.dimensions)
@@ -91,6 +97,10 @@ static func run(t: SceneTree) -> void:
 		app.return_to_work()
 	app.show_information("settings")
 	await t.process_frame
+	click(t,app.information.get_node("help-access"))
+	t.check(app.help_panel.visible and not app.settings_panel.visible,"Z2-A02 N1 help section event")
+	click(t,app.information.get_node("settings-access"))
+	t.check(app.settings_panel.visible and not app.help_panel.visible,"Z2-A02 N1 settings section event")
 	click(t,app.ui_scale_button)
 	t.check(app.ui_scale == 1.25,"Z2-A03 UI scale in N1")
 	click(t,app.clue_completion_toggle)
@@ -127,6 +137,11 @@ static func run(t: SceneTree) -> void:
 	app.store.fail_step = ""
 	click(t,app.work_repair_button)
 	t.check(app.repair_dialog.visible and not FileAccess.file_exists(app.store.path_for("f02")),"Z2-A04 repair requires explicit confirmation")
+	var modal_history: Array = app.session.player.history.duplicate(true)
+	var behind: Vector2 = app.board.global_position+app.board.view.viewport.get_center()
+	t.mouse_button(behind,true)
+	t.mouse_button(behind,false)
+	t.check(app.session.player.history == modal_history and not app.session.gesture.active,"Z2-A04 modal does not click through")
 	app.repair_dialog.hide()
 	click(t,app.actions.menu)
 	t.check(app.work.visible and FileAccess.get_file_as_string(app.store.path_for("f02",".bak")) == backup,"Z2-A04 cancelled repair and retry preserve backup")

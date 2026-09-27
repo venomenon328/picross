@@ -444,7 +444,7 @@ func capture_owner_drop(app: Main) -> void:
 	app.board.book_layout = false
 	app.board.row_slot_extent_cache["%d/%d/%s" % [app.session.get_instance_id(),app.board.clue_font_size(),str(app.ui_scale)]] = 24.0
 	var original_viewport: Rect2 = app.board.view.viewport
-	app.board.view.configure(Rect2(Vector2(174, original_viewport.position.y), Vector2(original_viewport.end.x - 174, original_viewport.size.y)), app.board.view.dimensions)
+	app.board.view.configure(Rect2(Vector2(174, 126), Vector2(original_viewport.end.x - 174, original_viewport.size.y)), app.board.view.dimensions)
 	app.board.normalize_clue_steps()
 	app.board.navigate_to(Vector2(0.5, 11.0 / 40.0))
 	if app.board.clue_capacity("row") != 6:
@@ -529,7 +529,6 @@ func run() -> void:
 		if not stage.is_empty() and stage != current:
 			continue
 		surface.size = Vector2i(1920,1080)
-		app.size = Vector2(surface.size)
 		app.set_ui_scale(1.0)
 		app.select_puzzle(2)
 		app.board.view.zoom_to(24.0,app.board.view.viewport.get_center())

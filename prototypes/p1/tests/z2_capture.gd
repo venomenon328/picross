@@ -15,6 +15,7 @@ func run() -> void:
 	SaveStore.test_root_override = "user://z2-capture-saves-%d" % Time.get_ticks_usec()
 	output = OS.get_environment("P1_CAPTURE_DIR")
 	surface = SubViewport.new()
+	surface.gui_embed_subwindows = true
 	surface.size = Vector2i(1920,1080)
 	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(surface)
@@ -98,10 +99,18 @@ func shot(name: String) -> void:
 	await RenderingServer.frame_post_draw
 	var picture: Image = surface.get_texture().get_image()
 	picture.save_png(output.path_join("z2-"+name+".png"))
+	if name == "f02-1280":
+		picture.get_region(Rect2i(90,102,850,180)).save_png(output.path_join("z2-detail-clues-ui125-1to1.png"))
+		picture.get_region(Rect2i(245,608,590,65)).save_png(output.path_join("z2-detail-tools-ui125-1to1.png"))
 	var grid: Rect2 = app.board.view.visible_bounds()
+	var reference: Dictionary = {"f02-1920":Rect2(510,252,720,720),"f02-2560":Rect2(830,432,720,720),"f01-2560":Rect2(970,470,480,480),"f03-1920":Rect2(310,270,1368,672),"f02-1280":Rect2(300,222,638,374)}
+	if reference.has(name):
+		var actual: Rect2 = Rect2(grid.position+app.board.position,grid.size)
+		if not actual.is_equal_approx(reference[name]):
+			push_error("Z2 reference geometry: %s actual=%s expected=%s" % [name,actual,reference[name]])
+			failed = true
 	records.append({"file":"z2-"+name+".png","size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,"grid":[grid.position.x+app.board.position.x,grid.position.y+app.board.position.y,grid.size.x,grid.size.y],"cell":app.board.view.cell_size,"visible_cells":[grid.size.x/app.board.view.cell_size,grid.size.y/app.board.view.cell_size],"information":app.information.visible})
-	if not app.repair_dialog.visible:
-		await contrast_check(name,picture)
+	await contrast_check(name,picture)
 
 func detail_shots() -> void:
 	var image: Image = surface.get_texture().get_image()
@@ -109,6 +118,18 @@ func detail_shots() -> void:
 		image.get_region(entry[1]).save_png(output.path_join("z2-detail-"+entry[0]+"-1to1.png"))
 	app.board.set_clue_hover("row",11)
 	await shot("c1-tooltip")
+	var tooltip_state: Dictionary = SaveStore.snapshot(app.session,app.board.capture_view())
+	var tooltip_click: InputEventMouseButton = InputEventMouseButton.new()
+	tooltip_click.position = app.board.global_position+app.board.clue_tooltip_rect.get_center()
+	tooltip_click.button_index = MOUSE_BUTTON_LEFT
+	tooltip_click.pressed = true
+	surface.push_input(tooltip_click,true)
+	tooltip_click = tooltip_click.duplicate()
+	tooltip_click.pressed = false
+	surface.push_input(tooltip_click,true)
+	if SaveStore.snapshot(app.session,app.board.capture_view()) != tooltip_state or app.session.gesture.active:
+		push_error("Z2 rendered tooltip allowed a board action")
+		failed = true
 	app.board.clear_clue_hover()
 	var area: Rect2 = app.board.row_clue_area()
 	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,11)).get_center().y)
@@ -125,11 +146,18 @@ func detail_shots() -> void:
 	await shot("c1-drag")
 	app.board.cancel_gesture()
 	app.board.clear_pointer_hover()
+	var hover: InputEventMouseMotion = InputEventMouseMotion.new()
+	hover.position = app.actions.fill.get_global_rect().get_center()
+	surface.push_input(hover,true)
+	await create_timer(0.8).timeout
+	await shot("tool-hover")
+	hover.position = Vector2(5,5)
+	surface.push_input(hover,true)
 
 func text_controls(node: Node, result: Array) -> void:
 	if (node is Label or node is BaseButton) and node.is_visible_in_tree() and not node.text.is_empty():
 		result.append(node)
-	for child: Node in node.get_children():
+	for child: Node in node.get_children(true):
 		text_controls(child,result)
 
 static func luminance(color: Color) -> float:
@@ -139,6 +167,8 @@ static func luminance(color: Color) -> float:
 func contrast_check(name: String, rendered: Image) -> void:
 	var controls: Array = []
 	text_controls(app.page,controls)
+	if app.repair_dialog.visible:
+		text_controls(app.repair_dialog,controls)
 	var colors: Array = []
 	for item: Control in controls:
 		colors.append(item.get_theme_color("font_color"))
@@ -153,7 +183,10 @@ func contrast_check(name: String, rendered: Image) -> void:
 		for key: String in ["font_color","font_focus_color","font_hover_color","font_pressed_color","font_hover_pressed_color","font_disabled_color"]:
 			item.remove_theme_color_override(key)
 		item.add_theme_color_override("font_color",ink)
-		var rect: Rect2i = Rect2i(item.get_global_rect()).intersection(Rect2i(Vector2i.ZERO,rendered.get_size()))
+		var global_box: Rect2 = item.get_global_rect()
+		if app.repair_dialog.is_ancestor_of(item):
+			global_box.position += Vector2(app.repair_dialog.position)
+		var rect: Rect2i = Rect2i(global_box).intersection(Rect2i(Vector2i.ZERO,rendered.get_size()))
 		var minimum: float = 100.0
 		var count: int = 0
 		for y: int in range(rect.position.y,rect.end.y):

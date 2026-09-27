@@ -126,6 +126,12 @@ func _build() -> void:
 		style.corner_radius_bottom_right = 0
 		theme.set_stylebox(state, "Button", style)
 		theme.set_color("font_color" if state == "normal" else "font_" + state + "_color", "Button", Board.INK)
+	var dialog_paper: StyleBoxFlat = StyleBoxFlat.new()
+	dialog_paper.bg_color = Color("fffaf0")
+	dialog_paper.set_content_margin_all(16)
+	theme.set_stylebox("panel","AcceptDialog",dialog_paper)
+	theme.set_stylebox("panel","TooltipPanel",dialog_paper)
+	theme.set_color("font_color","TooltipLabel",Board.INK)
 	surface = BookSurface.new()
 	surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(surface)
@@ -190,11 +196,14 @@ func _build() -> void:
 	reset_dialog.dialog_text = "Nur das ausgewählte Blatt wird vollständig zurückgesetzt."
 	reset_dialog.confirmed.connect(_reset_selected)
 	add_child(reset_dialog)
+	reset_dialog.get_ok_button().text = "Zurücksetzen"
+	reset_dialog.get_cancel_button().text = "Abbrechen"
 	repair_dialog = ConfirmationDialog.new()
 	repair_dialog.title = "Backup übernehmen?"
 	repair_dialog.dialog_text = "Der beschädigte Primärstand dieses Blatts wird durch das gültige Backup ersetzt."
 	repair_dialog.confirmed.connect(_repair_selected)
 	add_child(repair_dialog)
+	repair_dialog.get_cancel_button().text = "Abbrechen"
 	_build_work()
 	_build_information()
 	ending = VBoxContainer.new()
@@ -452,6 +461,7 @@ func _ask_repair() -> void:
 	_cancel_interaction()
 	repair_dialog.title = "Backup erneuern?" if slot_status[sessions.find(session)] == "backup_invalid" else "Backup übernehmen?"
 	repair_dialog.dialog_text = "Das beschädigte Backup wird entfernt und aus dem gültigen Primärstand neu erstellt." if slot_status[sessions.find(session)] == "backup_invalid" else "Der beschädigte Primärstand dieses Blatts wird durch das gültige Backup ersetzt."
+	repair_dialog.get_ok_button().text = "Erneuern" if slot_status[sessions.find(session)] == "backup_invalid" else "Übernehmen"
 	repair_dialog.popup_centered()
 
 func _repair_selected() -> void:
@@ -475,6 +485,11 @@ static func label(text: String, font_size: int) -> Label:
 	var item: Label = Label.new()
 	item.text = text
 	item.add_theme_font_size_override("font_size", font_size)
+	if font_size >= 26:
+		var heading: FontVariation = FontVariation.new()
+		heading.base_font = TITLE_FONT
+		heading.variation_opentype = {"wght":600.0}
+		item.add_theme_font_override("font",heading)
 	return item
 
 static func button(text: String, action: Callable) -> Button:
@@ -485,6 +500,11 @@ static func button(text: String, action: Callable) -> Button:
 	return item
 
 func _smoke() -> void:
+	if BODY_FONT.get_font_name() != "IBM Plex Sans" or TITLE_FONT.get_font_name() != "Fraunces" or surface.ART.get_width() != 2560:
+		push_error("Z2 bundled offline resource mismatch")
+		get_tree().quit(8)
+		return
+	print("Z2_OFFLINE_RESOURCES body=",BODY_FONT.get_font_name()," title=",TITLE_FONT.get_font_name()," A_dimensions=",surface.ART.get_size())
 	if DisplayServer.get_name() == "headless":
 		get_window().size = Vector2i(1920, 1080)
 	else:
@@ -507,6 +527,11 @@ func _smoke() -> void:
 			get_tree().quit(3)
 			return
 		_undo()
+		show_information("settings")
+		if not information.visible or work.visible:
+			get_tree().quit(9)
+			return
+		return_to_work()
 	show_album()
 	print("P1_START_OK: three fixtures -> mouse -> undo -> album; isolated persistence")
 	get_tree().quit(0)
@@ -546,6 +571,7 @@ func _build_work() -> void:
 	mini.navigated.connect(board.navigate_to)
 	sidebar.add_child(mini)
 	coordinate = label("Zeile – · Spalte –",13)
+	coordinate.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	sidebar.add_child(coordinate)
 	tool_label = label("",12)
 	sidebar.add_child(tool_label)
@@ -726,7 +752,7 @@ func _layout_book() -> void:
 	_place(mini,Rect2(mini_position,Vector2.ONE*mini_extent))
 	_place(mini_title,Rect2(mini_position+Vector2(2,-29),Vector2(mini_extent,22*u)))
 	var coord_pos: Vector2 = mini_position+Vector2(-4,mini_extent+16)
-	_place(coordinate,Rect2(coord_pos,Vector2(maxf(mini_extent,210*u),28*u)))
+	_place(coordinate,Rect2(coord_pos,Vector2(w-80-(coord_pos.x-o.x),38*u)))
 	var palette_pos: Vector2 = mini_position+Vector2(0,mini_extent+64)
 	_place(palette_row,Rect2(palette_pos,Vector2(110,110)*u))
 	for i: int in range(palette_row.get_child_count()):

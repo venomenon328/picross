@@ -33,6 +33,7 @@ def provision():
     icons.update({"nav-album": icons["album"],
                   "nav-information": ["Information", "Einstellungen und Hilfe", "M4 12 h16 m-7 -7 l7 7 -7 7"],
                   "nav-work": ["Zum Rätsel", "Zur Arbeitsseite zurück", "M20 12 H4 m7 -7 l-7 7 7 7"]})
+    icons["nav-album"] = ["Album", "Zum Album", icons["album"][2]]
     (DEST / "icons.json").write_text(json.dumps(icons, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     for name, entry in icons.items():
         (DEST / (name + ".svg")).write_text('<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26"><path d="' + entry[2] + '" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>\n', encoding="utf-8", newline="\n")

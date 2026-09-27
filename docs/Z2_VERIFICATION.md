@@ -22,7 +22,9 @@ python tools/p1_product.py --cache-dir <externer-cache> --output-dir <externe-au
 Der Produktweg prüft weiterhin den gesamten P1-Vertrag: beide Deduktionsnachweise,
 Godot-Import/Tests, 500 Aktionen mit unabhängigem Oracle, echten Zwei-Prozess-Neustart,
 erwarteten Exit-23-Negativtest, Start, bestehende Render-/G1-/H1-Regressionen,
-regulären Windows-Export und die getrennte H1-Probe. Auf Windows startet er sowohl
+regulären Windows-Export und die getrennte H1-Probe. Die unverkleinerte Rendermatrix
+läuft in acht getrennten Prozessen (Layout, Ansichten, Zellfarben 1/2, Gesten,
+Hinweise, Achsen und H1); jede Phase bleibt unter dem bestehenden 300-Sekunden-Limit. Auf Windows startet er sowohl
 die exportierte Konsole als auch das echte OpenGL-Fenster mit Arbeitsbereichstest.
 Linux-CI exportiert Windows, behauptet aber keinen Windowslauf.
 
@@ -40,6 +42,18 @@ Die ursprünglichen gleichfarbigen Papiererwartungen der Pixeltests sind durch
 den tatsächlich darunter gerenderten A-Papierpixel ersetzt. Glyphenmessungen
 verwenden den gewählten Plex-Font; Marker erlauben dessen Antialiasing. Fachliche
 Invarianten, Negativkontrollen und ursprüngliche Szenarien bleiben erhalten.
+
+Gezielte lokale Nachprüfung am 27.09.2026: native Godot-Tests ohne Befund;
+Hint-, Achsen- und H1-Renderphasen erfolgreich. Die fünf Referenzrechtecke werden
+im Capture gegen die ausgewählten Maße geprüft. Die eigene native Z2-Messung auf
+Windows / Godot 4.7.2 / OpenGL / NVIDIA GeForce RTX 3070 erfasst 78 Textproben,
+einschließlich Recoverydialog, mit kleinstem Normaltextkontrast 7,39:1. Sie misst
+den tatsächlich gerenderten Untergrund an deckenden Glyphenpixeln, nicht einen
+Papiermittelwert. Normale Texte, C1-Ziffern, Farbflächen, Werkzeugzustände,
+N1 und eingebettete Bestätigungsdialoge wurden zusätzlich visuell betrachtet.
+Die Dialogeinbettung ist eine Capture-Einstellung; die reguläre App verwendet
+weiterhin Godots normale Dialogfenster. Die vollständigen aktuellen Endresultate,
+Artefakte und das getrennte Selbstreview werden commitgebunden im Draft-PR geführt.
 
 ## Artefakte und Sichtprüfung
 
