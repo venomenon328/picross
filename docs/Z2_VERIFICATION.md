@@ -116,5 +116,7 @@ gelten nicht als Z2-Freigabe. Die längere atmosphärische Sitzung bleibt #24.
 
 Der Starter verschiebt nur das isolierte F-03-Primary nach `f03.owner-held` und
 entfernt bei UnblockSave ausschließlich den von ihm angelegten leeren Tempordner.
+Die ausgelieferte PS1-Kopie erhält UTF-8-BOM, damit auch Windows PowerShell 5.1
+den unveränderten Appnamen mit Mittelpunkt korrekt liest; kein PowerShell-Upgrade nötig.
 Keine produktiven Speicherdateien, globalen Godot-Einstellungen oder Dienste werden
 für diese Probe benötigt. Einzelreset bleibt mit bestehender Bestätigung im Album.

@@ -229,7 +229,10 @@ def main() -> int:
             commit, dirty = toolchain.source_commit(root)
             checkout_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
             owner_probe = output / "owner-probe.ps1"
-            shutil.copyfile(root / "tools/p14_owner_probe.ps1", owner_probe)
+            # Windows PowerShell 5.1 otherwise reads the UTF-8 project name as
+            # ANSI and targets "picross Â· P1" instead of the isolated save path.
+            owner_probe.write_text((root / "tools/p14_owner_probe.ps1").read_text(encoding="utf-8"),
+                                   encoding="utf-8-sig", newline="\n")
             manifest = dict(schema=1, source_commit=commit, source_tree_dirty=dirty, tested_checkout_commit=checkout_commit,
                             host=host, engine_version=toolchain.EXPECTED_VERSION, project_name=title, assets=hashes, proof_steps=proof_steps, color_proof_steps=color_proof_steps,
                             artwork_files={name: toolchain.sha256_file(root / "prototypes/p1/art" / name) for name in ("f01.svg", "f02.svg")},
