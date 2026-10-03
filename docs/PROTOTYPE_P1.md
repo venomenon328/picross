@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 25.09.2026 · Spezifikation 0.13 · P1.4, G1 und H1 integriert
+Stand: 27.09.2026 · Spezifikation 0.14 · P1.4/G1/H1 integriert, Z2 im Draft
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -187,8 +187,9 @@ aber nicht zusätzlich laufend nummeriert. Aktive Linie und die separate Koordin
 unterstützen die Orientierung. Sie zeigen nur vollständige einzeilige Zahlen in der
 jeweiligen Rätselfarbe; mehrstellige Zahlen bleiben horizontal und ungeteilt. Für P1
 gibt es keine A–D-Suffixe, gestapelten Ziffern, Kompaktkästchen oder entsprechende
-Umschaltoption. Interne Farb-IDs und die A–D-Beschriftung der vorläufigen Mauspalette
-sind davon nicht betroffen.
+Umschaltoption. Die internen Farb-IDs bleiben unverändert. Z2 ersetzt die frühere
+A–D-beschriftete Mauspalette durch unbeschriftete Originalfarbfelder mit formaler
+Auswahlmarkierung; Status und Tooltip nennen die jeweilige Farbnummer.
 
 Alle Zeilenfolgen verwenden dieselben festen horizontalen Hinweisplätze, alle
 Spaltenfolgen dieselben festen vertikalen Reihen. Die gemeinsame Slotgeometrie wird
@@ -271,10 +272,13 @@ nicht zum Puzzle-Saveformat; Pflicht-Flush und Recovery bleiben unverändert.
 Die stets sichtbare Miniatur enthält nur Spielerzustand und gegebenenfalls dieselbe
 Vorschau, keine korrigierte Lösung. Unbekannt/leer/gefüllt unterscheidbar; richtige
 Rätselfarben darstellen. Ein Ausschnittrahmen zeigt den Viewport. Klick/Ziehen navigiert
-ohne Zellmutation. Vier Farben über die vorläufige Mauspalette mit stabilen internen
-Farb-IDs und A–D-Beschriftung; dies ist keine Zusatzkennung an Lösungshinweisen.
-Auswahl/Fokus/Leerzustand dürfen keine zusätzliche Rätselfarbe vortäuschen. Keine
-beliebigen Nutzerpaletten und kein vorgezogener Neuentwurf der Farbauswahl.
+ohne Zellmutation. Die Z2-Mauspalette zeigt unbeschriftete Farbfelder mit stabilen
+internen Farb-IDs und unveränderten RGB-Innenflächen. Eckmarkierungen außerhalb
+der Farbfläche kennzeichnen die Auswahl; Status und Tooltip nennen „Farbe 1“ bis
+„Farbe 4“. Farbwahl aktiviert Füllen, auch nach Hand/Radierer. Diese Darstellung
+ersetzt die vorläufige A–D-Beschriftung, nicht die Farb-IDs oder Hinweisregeln.
+Auswahl/Fokus/Leerzustand dürfen keine zusätzliche Rätselfarbe vortäuschen.
+Keine beliebigen Nutzerpaletten.
 
 Layouttests umfassen 1280×720, 1600×900, die primäre 1920×1080-Fläche und 2560×1440
 als logische Testflächen. Reale Windows-Bildschirmauflösung, Fenster-/Clientfläche,
@@ -412,3 +416,35 @@ Produktfeedback sichtbar, sind nach den ausdrücklichen Mergeentscheidungen vom
 
 Die endgültige Themenwahl, Wertung und Releasefähigkeit bleiben außerhalb dieses
 Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte Risikostränge.
+
+
+## 10. Z2: native Bucharbeitsansicht und N1
+
+[#23](https://github.com/venomenon328/picross/issues/23) konkretisiert ausschließlich
+I-01 bis I-05 gemäß [GD-01 bis GD-05](Z2_SELECTION.md). Der reguläre Kern,
+Appname/Speicherort, Saveformat und Rätseldaten bleiben erhalten. A-Papier,
+Montierungen, UI und Raster sind getrennt; C1 konturiert nur Hinweisfarben 2/4.
+Fraunces/Plex Sans sind gepinnt und offline gebündelt. Farbwahl aktiviert Füllen.
+Neun Arbeitsaktionen, eigene Miniatur, Koordinaten und aktive Farbe/Werkzeug bleiben
+auf der Arbeitsseite, Trefferflächen mindestens 44/55 px bei UI 100/125 %.
+
+GD-01 bis GD-05 ersetzen für Z2 ausdrücklich die frühere provisorische A–D-Palette,
+den alten Sidebaraufbau und die damals offene Arbeitsasset-/Schrift-/C1-/Navigationswahl.
+Die unbeschrifteten Originalfarbfelder und die numerischen Status-/Tooltipkennungen
+sind in §5.2 beschrieben. Die gesamte Themenwahl Sammelalbum/Reisealbum und die
+unveränderten Spiel-/Speicherverträge werden dadurch nicht neu entschieden.
+
+Pfeil und Menü öffnen dieselbe Informationsseite mit Fokus Einstellungen, `?`
+deren Hilfe. Rückpfeil erhält denselben bestätigten Arbeitszustand. Laufende Gesten
+werden verworfen; ausstehende Ansicht wird über den gemeinsamen Flush gesichert.
+Bei Fehler bleibt der Wechsel aus, und nötige Recovery mit Bestätigung ist bereits
+auf der Arbeitsseite erreichbar. Verstecken verändert keine Rastergeometrie auf Null.
+Bewusste UI-/Hinweisänderungen in N1 werden übernommen, H1 bleibt sitzungsweit.
+Linkes Register und bestätigter Einzelreset benutzen das vorhandene Album.
+
+Fünf ausdrücklich gesetzte Referenzzustände, Zwischengrößen und alle bisherigen
+Arbeitszoom-/G1-/H1-/Speicherregressionen sind Bestandteil der [Z2-Prüfung](Z2_VERIFICATION.md).
+Keine neuen Startzooms oder vorgegebenen Demo-Eingaben. Normale UI-Texte benötigen
+mindestens 4,5:1 zum nativen Untergrund; Hinweise und Icons zusätzlich 1:1 beurteilen.
+Unabhängiges Review, aktuelle Checks und Z2-M01/M02/M03 bleiben vor Merge erforderlich.
+Z2 ist keine Abnahme von #24 und keine Releasefreigabe.

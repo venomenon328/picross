@@ -1,0 +1,89 @@
+{
+  "source_commit": "c3a5386580d7a0da29b927b41bd692f0cca59274",
+  "files": [
+    {
+      "file": "album.svg",
+      "sha256": "8bc7b226378d58ef064f58667b22ea6ca2b0a4ddae08c7a2522a2247f4c0ee46"
+    },
+    {
+      "file": "bp2-a-inventarband.png",
+      "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a"
+    },
+    {
+      "file": "erase.svg",
+      "sha256": "1cfa09e9c77f2e5ede83efec65409beb6a6e88fd9345739bc7da9d88c2fe4468"
+    },
+    {
+      "file": "fill.svg",
+      "sha256": "212cb75f36b85126c1e26b3cac3b49d7bb38c671d5f9d6ea73af2b11cf290013"
+    },
+    {
+      "file": "fit.svg",
+      "sha256": "38680e6b60774d49a011c673eda41bca02406c790597d060bf0259a67a7265d7"
+    },
+    {
+      "file": "Fraunces-OFL.txt",
+      "sha256": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48"
+    },
+    {
+      "file": "Fraunces.ttf",
+      "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb"
+    },
+    {
+      "file": "hand.svg",
+      "sha256": "66562e9b39cc0f4374e678c796926ddbfa322fb45f566efcf892b29d23cbed8e"
+    },
+    {
+      "file": "help.svg",
+      "sha256": "0a2834ac56c5793fa5780ea54e2a85ab71f0d86e5e1564d7c03c97f0cc605894"
+    },
+    {
+      "file": "icons.json",
+      "sha256": "22f8084a308378f7012f1a5ddae84fbd846e4cbdb0634faf1855b2200a90cb4c"
+    },
+    {
+      "file": "menu.svg",
+      "sha256": "134be7b7194df4545113639ca2db5f26c7e7e4da874e7012a68c86c19b994a32"
+    },
+    {
+      "file": "minus.svg",
+      "sha256": "a6314f946c3e8234258715c2fc28b56626cc6b14f59f23faaef625b5d0612efa"
+    },
+    {
+      "file": "nav-album.svg",
+      "sha256": "8bc7b226378d58ef064f58667b22ea6ca2b0a4ddae08c7a2522a2247f4c0ee46"
+    },
+    {
+      "file": "nav-information.svg",
+      "sha256": "38d7c1c70e996b6d16f73b2dead69cafb016b8f515b48eb11f1055fd51d1e660"
+    },
+    {
+      "file": "nav-work.svg",
+      "sha256": "32a4a956c766f016ea2355ea03a8872306e7b83010d79e3f21f62736be185d3e"
+    },
+    {
+      "file": "PlexSans-OFL.txt",
+      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
+    },
+    {
+      "file": "PlexSans.ttf",
+      "sha256": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3"
+    },
+    {
+      "file": "plus.svg",
+      "sha256": "f486fdb694088960f9aa0d52749239652f965e8d38aa20d42bf5080964245a89"
+    },
+    {
+      "file": "redo.svg",
+      "sha256": "850f07276d7d01879fbf7e7564ec5b0966ebdb7f88d3a2054ccabf2e913a54e6"
+    },
+    {
+      "file": "undo.svg",
+      "sha256": "12f0da538f19c23cab6b9c2969fb0a4978e77da2ce2186561e0432638d1ab3ee"
+    },
+    {
+      "file": "work.svg",
+      "sha256": "e5d32f2217710a9f5f80d7d52fb669bc386b439863a0059645d6d784b1a5aaed"
+    }
+  ]
+}

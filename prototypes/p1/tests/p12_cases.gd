@@ -446,8 +446,8 @@ static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: i
 					var slot: int = int(layout.token_slot) + token_index - int(layout.start)
 					var center: float = b.clue_slot_center(axis, area, layout, slot) + float(layout.visual_shift)
 					var fs: int = b.clue_font_size()
-					var before: float = ThemeDB.fallback_font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs)
-					var after: float = before if axis == "row" else float(fs) * 0.35
+					var before: float = Board.BODY_FONT.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs) * (0.6 if b.book_layout else 1.0)
+					var after: float = before if axis == "row" else float(fs) * (0.4 if b.book_layout else 0.35)
 					if center - before >= low and center + after <= high:
 						first = mini(first, token_index)
 						last = token_index
@@ -600,6 +600,11 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	for clue: Dictionary in app.session.definition.rows[row_index]:
 		lengths.append(int(clue.length))
 	t.check(lengths == [4, 7, 8, 1, 7, 1, 10], "B-04 F-02 owner case is row 12 with exact clue sequence")
+	# Preserve the exact historical 24px/six-slot owner reproduction.
+	# Native 30/18px BP-3 geometry is covered separately by Z2 routes.
+	board.book_layout = false
+	# Historical glyph metrics yielded a 24px common row pitch.
+	board.row_slot_extent_cache["%d/%d/%s" % [board.session.get_instance_id(),board.clue_font_size(),str(board.ui_scale)]] = 24.0
 	var original_viewport: Rect2 = board.view.viewport
 	board.view.configure(Rect2(Vector2(174, original_viewport.position.y), Vector2(original_viewport.end.x - 174, original_viewport.size.y)), board.view.dimensions)
 	board.normalize_clue_steps()
@@ -619,6 +624,7 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	t.check(column_capacity == 4 and app.session.definition.columns[column_index].size() == 5, "V-02 F-02 column route has four real slots and five clues")
 	if column_capacity == 4:
 		monotone_clue_route(t, board, "column", column_index)
+	board.book_layout = true
 	app.select_puzzle(2)
 	board.reset_clue_pan()
 	board.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
@@ -857,21 +863,25 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	mini_release.pressed = false
 	app.mini._gui_input(mini_release)
 	t.check(b.view.center != before_miniature and b.row_clue_steps == expected_rows and b.column_clue_steps == expected_columns, "J-03 miniature input preserves every clue read position")
+	var expected_reads: Dictionary = b.capture_view()
 	b.zoom(1, b.view.viewport.get_center())
 	app.set_ui_scale(1.25)
 	t.root.size = Vector2i(1920, 1080)
 	await t.process_frame
 	await t.process_frame
-	t.check(b.row_clue_steps == expected_rows and b.column_clue_steps == expected_columns, "J-03 zoom/UI/resize preserve snapped per-line positions")
+	t.check(b.row_clue_reads == expected_reads.row_clue_reads and b.column_clue_reads == expected_reads.column_clue_reads, "J-03 zoom/UI/resize preserve semantic per-line positions across changed capacities")
 	t.check(app.session.player.cells == cells and app.session.player.history == history and app.session.player.undo_used == undo_used and app.session.completed == completed and app.session.gesture.changes().is_empty(), "J-03 clue navigation preserves matrix/preview/history/undo/completion")
 	t.check(b.view.cell_size > raster_size and b.view.normalized_view() != mini_frame, "J-03 raster navigation remains independently functional")
 	# Visible reset control returns every line to its grid-side default.
 	t.root.size = Vector2i(1280, 720)
 	app.set_ui_scale(1.0)
 	await t.process_frame
+	app.show_information("settings")
+	await t.process_frame
 	t.check(app.clue_reset_button.is_visible_in_tree(), "H-04 clue reset control stays visible")
 	app.clue_reset_button.pressed.emit()
 	t.check(b.row_clue_steps.count(0) == b.row_clue_steps.size() and b.column_clue_steps.count(0) == b.column_clue_steps.size(), "J-03 reset control restores every grid-side clue window")
+	app.return_to_work()
 	b.set_clue_step("row", longest_row, 1)
 	b.set_clue_step("column", longest_column, 1)
 	app.select_puzzle(1)
