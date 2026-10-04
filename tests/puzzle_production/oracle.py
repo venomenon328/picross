@@ -32,3 +32,24 @@ def grid_solutions(puzzle):
                                       for clues in puzzle.rows))
             if all(runs(row[x] for row in grid) == clue
                    for x, clue in enumerate(puzzle.columns))]
+
+
+def colored_runs(cells):
+    """Direct value-run scan; zero is empty, other integers are color ordinals."""
+    result = []
+    cells = tuple(cells)
+    p = 0
+    while p < len(cells):
+        value = cells[p]
+        end = p + 1
+        while end < len(cells) and cells[end] == value:
+            end += 1
+        if value:
+            result.append((end - p, value))
+        p = end
+    return tuple(result)
+
+
+def colored_placements(length, clues, color_count):
+    return [cells for cells in product(range(color_count + 1), repeat=length)
+            if colored_runs(cells) == clues]

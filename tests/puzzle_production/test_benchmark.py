@@ -4,13 +4,33 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from tools.puzzle_production.benchmark import reference, run
+from tools.puzzle_production.benchmark import color_reference, color_long_line_reference, reference, run
 from tools.puzzle_production.contract import canonical_bytes, digest, load_json
 from tools.puzzle_production.solver import solve
 from tools.puzzle_production.verifier import verify
 
 
 class BenchmarkTests(unittest.TestCase):
+    def test_color_references_require_joint_domains_and_real_work(self):
+        for n in (40, 100):
+            p = color_reference(n)
+            proof = solve(p)
+            self.assertTrue(verify(p, proof)["certified"])
+            self.assertGreater(sum(len(c["after"]) > 1 for s in proof["steps"]
+                                   for c in s["changes"]), n)
+            expected = []
+            for y in range(n):
+                length = 2 * (min(y, n - y - 1) + 1)
+                left = (n - length) // 2
+                expected.append([[p.colors[(x // 5 + y // 7) % 4]]
+                                 if left <= x < left + length else ["empty"] for x in range(n)])
+            self.assertEqual(proof["final_domains"], expected)
+        p = color_long_line_reference()
+        proof = solve(p)
+        self.assertEqual(proof["status"], "stalled")
+        self.assertFalse(verify(p, proof)["certified"])
+        self.assertGreater(len(proof["steps"]), 0)
+
     def test_references_do_real_propagation(self):
         for n in (40, 100):
             puzzle = reference(n)
@@ -40,6 +60,10 @@ class BenchmarkTests(unittest.TestCase):
                     report = run(Path(temp))
                 self.assertFalse(report["accepted"])
                 self.assertTrue(all(not case["accepted"] for case in report["cases"]))
+                self.assertEqual({case["profile"]["id"] for case in report["cases"]},
+                                 {"full-line-mono", "full-line-color"})
+                for case in report["cases"]:
+                    self.assertEqual(case["profile_hash"], digest(case["profile"]))
                 self.assertEqual(load_json(Path(temp) / "benchmark.json"), report)
                 self.assertFalse(any((Path(temp) / case["name"] / "result.json").exists()
                                      for case in report["cases"]))
