@@ -1,0 +1,41 @@
+name: Puzzle production verification
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: puzzle-production-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  puzzle-production:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Python version
+        run: python3 --version
+      - name: Independent oracles and proof rejection tests
+        run: python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
+      - name: Isolated reference runs and fresh verification
+        env:
+          RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python3 -m tools.puzzle_production.benchmark --output-dir artifacts/puzzle-production
+      - name: Upload reports, proofs and measurements
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: puzzle-production-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/puzzle-production/
+          if-no-files-found: error
+          retention-days: 14
