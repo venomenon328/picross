@@ -1,6 +1,6 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-Stand: 04.10.2026 · Arbeitsfassung 0.2 · RP-1 implementiert, Abnahme offen; weitere Machbarkeitsphase spezifiziert
+Stand: 04.10.2026 · Arbeitsfassung 0.3 · RP-1 integriert; RP-2 implementiert, unabhängiges Review offen
 
 ## 1. Geltung und Ziel
 
@@ -146,6 +146,27 @@ Vollständige Endraster werden zusätzlich direkt gegen die Hinweise geprüft;
 Fixpunkt/Widerspruch erhalten eigenständige Statusprüfung. Nur der erfolgreich
 geprüfte vollständige Status wird als zertifiziert ausgegeben.
 
+### 4.2 Technische Konkretisierung RP-2
+
+RP-2 erweitert denselben Python-/Standardbibliothekskern. `picross-logic-v2`,
+`picross-proof-v2`, `color-gap-v1` und `full-line-color` Version 1 binden gemeinsam
+geordnete Länge-/Farbhinweise, volle Startdomains und partielle Farbausschlüsse.
+Unterstützt werden 1..8 stabile Vordergrund-IDs plus Leer und 1..100 je Achse.
+Die Palette wird lexikografisch normalisiert; semantische IDs bleiben erhalten.
+Die alten Monoformate/-profile und ihre Hashbedeutung bleiben prüfbar; ein vor
+der Erweiterung erzeugter unveränderter RP-1-Nachweis ist eine Testfixture.
+ID-Grammatik, kanonische Domains, Dateilimits und vollständiger Wire-Vertrag stehen
+in der [Anleitung](../tools/puzzle_production/README.md).
+
+Zellautomat und unabhängig implementierter Blockintervall-DAG berücksichtigen
+Farben gemeinsam. Jeder Domainverlust wird gespeichert und an Kreuzungen propagiert;
+kein Singletonzwang für Fortschritt. Die maximale Schrittzahl ist Breite·Höhe·K
+bei K Vordergrundfarben, abgeleitet aus monoton entfernbaren Werten. 2 MiB Eingang,
+8 MiB Mono-/64 MiB Farbnachweis und kooperative Arbeits-/Zeitbudgets sind begründet
+und an Grenzen geprüft. Vollständige Endraster werden zusätzlich durch direkte
+Runextraktion einschließlich berührender Farbwechsel geprüft. Kein zweiter
+Prüfkern, Spieladapter, Bildimport oder Suchprofil wird eingeführt.
+
 ## 5. Deduktionsnachweis
 
 ### 5.1 Erstes Profil: vollständige Linienlogik
@@ -178,7 +199,7 @@ unterschiedliche Farben dürfen sich berühren oder durch Leerfelder getrennt se
 Farben werden gemeinsam gelöst, nicht als unabhängige monochrome Kanäle.
 Auch ein sicherer Ausschluss wie nur noch Blau oder Leer ist ein Fortschritt,
 obwohl noch keine endgültige Zelle feststeht. Der Vertrag ist deshalb bereits
-in RP-1 domainfähig; RP-2 implementiert und prüft die Mehrfarbenfälle.
+in RP-1 domainfähig; RP-2 implementiert und prüft die Mehrfarbenfälle auf derselben Grundlage.
 
 Der erste unterstützte Bereich umfasst positive rechteckige Dimensionen bis
 einschließlich 100 je Achse. Kleine Randfälle und 1×N/N×1 gehören zur Fachprüfung.
@@ -378,16 +399,19 @@ legen keine Produktsprache fest. Das erste Paket bindet ausführbare Testbefehle
 Umgebung, Ressourcenlimits und CI-Ausführung in Anleitung und Projektprofil.
 Ohne diesen konkreten Prüfpfad keine Behauptung umsetzungsbereiter Folgepakete.
 
-RP-1 bindet diesen Pfad im [Projektprofil](PROJECT_PROFILE.md), in der
+RP-1/RP-2 binden diesen Pfad im [Projektprofil](PROJECT_PROFILE.md), in der
 [Anleitung](../tools/puzzle_production/README.md) und im
-[Prüfvertrag](RP1_VERIFICATION.md). Eigener `puzzle-production`-Job auf Ubuntu 24.04
+[RP-1-Prüfvertrag](RP1_VERIFICATION.md) und in der [RP-2-Prüfzuordnung](RP2_VERIFICATION.md).
+Eigener `puzzle-production`-Job auf Ubuntu 24.04
 mit Python 3.11+, lesenden Rechten und 15 Minuten führt Fachoracles, Negativtests
 und tatsächliche Referenzläufe aus. Je 40×40-/100×100-Fall gelten vorab 120 Sekunden
 für Solve/Serialisierung/frische Prüfung und 512 MiB gemessener Linux-Peak-RSS je
 Prozess; getrennt davon erzwingt der Benchmark 1024 MiB virtuelles Speicherlimit.
 Informationsarme Langlinien und echte Propagation sind eingeschlossen. Der PR
 führt aktuelle Messwerte, Commit-/Basis-/CI-Artefaktbindung und offene Abnahme;
-vor Integration zusätzlich unabhängiges technisches Review und Spezifikationsintegration.
+Für RP-2 bleiben RP2-A01 bis A06 und unabhängiges technisches Review des kombinierten
+Kerns vor Merge erforderlich. Die RP-1-/Spezifikationsintegration aus #41/#42 ist
+abgeschlossen; ihre historischen Nachweise behalten den ursprünglichen Commitbezug.
 
 Für jedes Paket gelten der bestehende Dokumentprüfweg und ein vollständiger
 Diffcheck. `docs` muss am aktuellen Head/zugehörigen Test-Merge erfolgreich sein.
