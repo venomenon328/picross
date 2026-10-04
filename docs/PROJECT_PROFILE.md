@@ -6,7 +6,18 @@
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
-Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.14 enthält das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung, gemeinsamem Hinweisraster und linienweisen Lesepositionen sowie die aktive Z2-Auswahl.
+Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.15 enthält das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung, gemeinsamem Hinweisraster und linienweisen Lesepositionen sowie die aktive Z2-Auswahl und den Bezug zur Rätselproduktion.
+
+Die [Rätselproduktionsspezifikation](PUZZLE_PRODUCTION.md) ist bei Bildimport,
+Rastererzeugung, Deduktionsnachweisen, Produktionswerkzeugen und Pilotinhalten
+zusätzlich vollständig zu lesen. Sie konkretisiert den eigenen Risikostrang
+[RP / Rätselproduktion](https://github.com/venomenon328/picross/issues/34): erstes vollständiges Linienprofil,
+unabhängige Nachweisprüfung, frühe Mehrfarben-/100×100-Fälle, motivgeschützte
+Überarbeitung und redaktioneller Pilot. KI wird ausschließlich in ChatGPT/Codex
+verwendet; das lokale Werkzeug hat keine direkte Modell-API-Anbindung.
+Pakete und Fachverträge sind spezifiziert, noch nicht implementiert oder abgenommen.
+Technik-/Prüfpfad werden bei ihrer Startprüfung konkret gebunden; die P1-Fixtures
+und H1 liefern begrenzte Vorarbeiten, keine allgemeine Generatorplattform.
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
 
@@ -89,7 +100,7 @@ D-22 lösen widersprechende alte D-07-/D-14-/D-17-/Hinweisregeln ab.
 
 Referenzhardware aus früheren Nutzerangaben: Windows 11, 2560×1440, Maus, Ryzen 7 5800X, RTX 3070. Tatsächliche Windows-Skalierung, Fensterfläche und Versionskennung des Nutzerlaufs sind nicht aus Screenshotgrößen bestätigt. Fehlende Daten sichtbar lassen und bei der erneuten Probe erfassen.
 
-Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, Solver-/Produktionsverträge, Fehlerzählung, Sternschwellen, Wertungswirkung manueller Neutralisierung und Veröffentlichungsdetails bleiben außerhalb dieser begrenzten Festlegungen offen. Keine Regeln aus anderen Projekten übernehmen. Python dient hier Prüf-/Buildwerkzeugen, nicht der Wahl eines Produktstacks.
+Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, weitergehende Solverprofile, konkrete Produktionswerkzeug-Technik, Fehlerzählung, Sternschwellen, Wertungswirkung manueller Neutralisierung und Veröffentlichungsdetails bleiben außerhalb dieser begrenzten Festlegungen offen. Das erste Solver-/Produktionsprofil steht jetzt in [Rätselproduktion](PUZZLE_PRODUCTION.md). Keine Regeln aus anderen Projekten übernehmen. Python dient hier Prüf-/Buildwerkzeugen, nicht der Wahl eines Produktstacks.
 
 ## Branches und Befugnisse
 

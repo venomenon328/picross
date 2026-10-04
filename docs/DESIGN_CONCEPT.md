@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 27.09.2026 · Arbeitsfassung 0.14 · frühe Konzeption mit P1-Mausfeedback, G1, H1 und Buchuntersuchung
+Stand: 03.10.2026 · Arbeitsfassung 0.15 · frühe Konzeption mit P1-Mausfeedback, G1, H1, Buchuntersuchung und Rätselproduktion
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -271,3 +271,9 @@ Die spätere reale P1.1-Probe lieferte einen Abschluss-Screenshot und einen Rast
 Gestaltung und Risikoprototypen überlappen weiter. Statische Mocks allein beantworten keine Bedienungsfrage. GD-01 bis GD-05 legen die konkrete Zielrichtung für Z2 fest, ersetzen aber keine native Bedienabnahme oder vollständige Produktgestaltung.
 
 Rätselproduktion und Deduktionsnachweis bleiben ein eigener früher Risikostrang. Hübsche Bilder allein sind keine qualitätsgeprüften Rätsel. Verbundraster getrennt evaluieren. Thema, Designsystem und zentrale Ansichten anhand der Erfahrungen schärfen, bevor umfangreiche Inhalte produziert werden.
+
+Die [Produktionsspezifikation](PUZZLE_PRODUCTION.md) vom 03.10.2026 konkretisiert
+diesen Risikostrang mit Motivschutz, getrenntem Deduktionsnachweis und Pilotabnahme.
+ChatGPT-/Codex-Arbeit liefert gespeicherte Vorlagen und Abschlussbilder; das
+Produktionswerkzeug verwendet keine direkte Modell-API. Die hier festgelegte
+Motivtreue und die Spoilergrenze bleiben für sämtliche neuen Inhalte verbindlich.

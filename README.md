@@ -16,6 +16,7 @@ P1.4 ergänzt auf eigenem Branch den integrierten 500-Aktionen-Prüfweg und den
 
 - [Produktdefinition](docs/PRODUCT_DEFINITION.md): abgestimmte Ausrichtung, Rätselqualität, Varianten, UX, Progression, Spielmodi, offene Entscheidungen und grober Entwicklungsablauf.
 - [Gestaltungskonzept](docs/DESIGN_CONCEPT.md): bestätigte Album-/Stilentscheidungen, noch offene Themenwahl, Umgang mit den exemplarischen Mocks und zu untersuchende Interaktionen.
+- [Rätselproduktion](docs/PUZZLE_PRODUCTION.md): spezifiziertes externes Werkzeug mit Deduktionsnachweisen, Bildimport, Motivschutz und Pilotproduktion; KI ausschließlich in ChatGPT/Codex, ohne direkte Modell-API.
 - [P1-Spezifikation](docs/PROTOTYPE_P1.md): Windows-/Godot-Bedienprototyp, bestätigte Eingaberegeln, Testdaten, Speicherung, Technikbindung und Abnahmevertrag. Auftrag und Ausführungsstand in [Issue #5](https://github.com/venomenon328/picross/issues/5).
 - [P1-Preflight](docs/P1_PREFLIGHT.md): reproduzierbarer Download-, Hash-, Smoke-, Export- und CI-Nachweis für die gebundene Godot-Toolchain.
 - [P1-Anleitung](prototypes/p1/README.md), [historischer P1.3-Prüfbericht](docs/P1_3_VERIFICATION.md) und [P1.4-Ergebnisbericht](docs/P1_4_VERIFICATION.md): Start, Mausbedienung, lokale Speicherung/Recovery, integrierte Produktprüfung und offene Eigentümerabnahme.
