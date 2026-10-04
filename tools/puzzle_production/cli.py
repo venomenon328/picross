@@ -7,8 +7,8 @@ from pathlib import Path
 import sys
 import time
 
-from .contract import (Aborted, Budget, InvalidInput, InvalidProof, load_json,
-                       validate_logic, write_json)
+from .contract import (Aborted, Budget, InvalidInput, InvalidProof, LOGIC_BYTE_LIMIT,
+                       digest, load_json, validate_logic, write_json)
 from .solver import solve
 from .verifier import verify
 
@@ -41,7 +41,7 @@ def main(argv=None) -> int:
         if sys.version_info < (3, 11):
             raise InvalidInput("Python 3.11 or newer is required")
         budget = Budget(args.seconds, args.max_lines)
-        puzzle = validate_logic(load_json(args.input, max_bytes=2 * 1024 * 1024))
+        puzzle = validate_logic(load_json(args.input, max_bytes=LOGIC_BYTE_LIMIT))
         if args.command == "verify" and report_path:
             if (report_path.exists() or report_path.resolve() in
                     (args.input.resolve(), args.proof.resolve())):
@@ -50,7 +50,7 @@ def main(argv=None) -> int:
             # Refuse stale certificates and accidental input overwrites on reruns.
             if any((args.output_dir / name).exists()
                    for name in ("proof.json", "result.json")):
-                raise InvalidInput("Output directory already has RP-1 output; use a new directory")
+                raise InvalidInput("Output directory already has puzzle output; use a new directory")
             at = time.perf_counter()
             proof = solve(puzzle, budget, args.order)
             timings["solve_seconds"] = time.perf_counter() - at
@@ -62,15 +62,16 @@ def main(argv=None) -> int:
             if proof["status"] == "aborted":
                 result = {"status": "aborted", "certified": False,
                           "proof_verified": False, "reason": proof["reason"],
-                          "logic_hash": puzzle.logic_hash}
+                          "logic_hash": puzzle.logic_hash, "profile": puzzle.profile,
+                          "profile_hash": digest(puzzle.profile)}
             else:
                 at = time.perf_counter()
-                result = verify(puzzle, load_json(proof_path), budget)
+                result = verify(puzzle, load_json(proof_path, puzzle.proof_byte_limit), budget)
                 timings["verification_seconds"] = time.perf_counter() - at
             result["solver_line_evaluations"] = solver_lines
         else:
             try:
-                proof = load_json(args.proof)
+                proof = load_json(args.proof, puzzle.proof_byte_limit)
             except InvalidInput as exc:
                 raise InvalidProof(str(exc)) from exc
             at = time.perf_counter()

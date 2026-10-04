@@ -1,26 +1,33 @@
 """Independent block-interval DAG proof checker. Never imports the solver."""
 from __future__ import annotations
 
-from .contract import (Budget, EMPTY, INK, PROFILE, PROOF_FORMAT, InvalidProof,
+from .contract import (Budget, Clue, EMPTY, INK, InvalidProof,
                        Puzzle, digest, domain_values, exact_keys, integer,
                        wire_grid)
 
 
-def justified_support(clues: tuple[int, ...], domains: list[int]) -> list[int]:
+def justified_support(clues: tuple[int | Clue, ...], domains: list[int]) -> list[int]:
     """Compute support through edges placing an entire block or one empty cell.
 
-    Node (k, p): k complete blocks and p consumed cells. A nonfinal block edge
-    includes its mandatory trailing separator. Forward reachability and reverse
+    Node (k, p): k complete blocks and p consumed cells. A block edge includes
+    a trailing separator exactly when its next block has the same color.
+    Forward reachability and reverse
     co-reachability identify legal edges; edge intervals supply cell support.
     This has no shared state machine, transitions or deduction cache with solver.
     """
     n, m = len(domains), len(clues)
-    if sum(clues) + max(0, m - 1) > n:
+    blocks = [(c.length, c.color) if isinstance(c, Clue) else (c, INK) for c in clues]
+    if sum(length for length, _ in blocks) + sum(
+            blocks[k][1] == blocks[k + 1][1] for k in range(m - 1)) > n:
         return [0] * n
     # O(1) interval compatibility, independently from the solver's cell edges.
-    blocked_ink = [0]
-    for mask in domains:
-        blocked_ink.append(blocked_ink[-1] + (not mask & INK))
+    blocked = {}
+    for _, color in blocks:
+        if color not in blocked:
+            prefix = [0]
+            for mask in domains:
+                prefix.append(prefix[-1] + (not mask & color))
+            blocked[color] = prefix
     graph = {}
     reachable = {(0, 0)}
     for k in range(m + 1):
@@ -32,12 +39,13 @@ def justified_support(clues: tuple[int, ...], domains: list[int]) -> list[int]:
             if p < n and domains[p] & EMPTY:
                 edges.append(((k, p + 1), p, p + 1, EMPTY))
             if k < m:
-                end = p + clues[k]
-                separator = k + 1 < m
-                if (end <= n and blocked_ink[end] == blocked_ink[p] and
+                length, color = blocks[k]
+                end = p + length
+                separator = k + 1 < m and color == blocks[k + 1][1]
+                if (end <= n and blocked[color][end] == blocked[color][p] and
                         (not separator or end < n and domains[end] & EMPTY)):
                     target = (k + 1, end + int(separator))
-                    edges.append((target, p, end, INK))
+                    edges.append((target, p, end, color))
             graph[node] = edges
             reachable.update(edge[0] for edge in edges)
     finish = (m, n)
@@ -54,7 +62,7 @@ def justified_support(clues: tuple[int, ...], domains: list[int]) -> list[int]:
                 coreachable.add(node)
                 for offset in range(start, end):
                     support[offset] |= bit
-                if bit == INK and k + 1 < m:
+                if bit != EMPTY and target[1] > end:
                     support[end] |= EMPTY
     return support
 
@@ -67,16 +75,18 @@ def _line_ref(obj: dict, puzzle: Puzzle):
     return axis, integer(obj["index"], 0, limit - 1, "line index", InvalidProof)
 
 
-def _matches_clues(values: list[int], clues: tuple[int, ...]) -> bool:
+def _matches_clues(values: list[int], clues: tuple[int | Clue, ...]) -> bool:
     # Direct run extraction, independent also from this checker's support routine.
-    runs, length = [], 0
+    runs, length, color = [], 0, EMPTY
     for value in values + [EMPTY]:
-        if value == INK:
+        if value != color:
+            if length:
+                runs.append((length, color))
+            length, color = 0, value
+        if value != EMPTY:
             length += 1
-        elif length:
-            runs.append(length)
-            length = 0
-    return tuple(runs) == clues
+    expected = tuple((c.length, c.color) if isinstance(c, Clue) else (c, INK) for c in clues)
+    return tuple(runs) == expected
 
 
 def verify(puzzle: Puzzle, proof: object, budget: Budget | None = None) -> dict:
@@ -86,12 +96,12 @@ def verify(puzzle: Puzzle, proof: object, budget: Budget | None = None) -> dict:
         "format", "logic_hash", "profile", "profile_hash", "steps", "status",
         "final_domains", "contradiction", "reason",
     }, InvalidProof)
-    if (obj["format"] != PROOF_FORMAT or obj["logic_hash"] != puzzle.logic_hash or
-            digest(obj["profile"]) != digest(PROFILE) or
-            obj["profile_hash"] != digest(PROFILE)):
+    if (obj["format"] != puzzle.proof_format or obj["logic_hash"] != puzzle.logic_hash or
+            digest(obj["profile"]) != digest(puzzle.profile) or
+            obj["profile_hash"] != digest(puzzle.profile)):
         raise InvalidProof("Wrong logic, format or rule profile binding")
     steps = obj["steps"]
-    if not isinstance(steps, list) or len(steps) > puzzle.width * puzzle.height:
+    if not isinstance(steps, list) or len(steps) > puzzle.max_proof_steps:
         raise InvalidProof("Invalid or excessive proof step count")
     grid = puzzle.unknown_grid()
     for step in steps:
@@ -102,8 +112,8 @@ def verify(puzzle: Puzzle, proof: object, budget: Budget | None = None) -> dict:
         support = justified_support(clues, domains)
         if not all(support):
             raise InvalidProof("Deduction step on an impossible line")
-        expected = [{"offset": p, "before": domain_values(before),
-                     "after": domain_values(after)}
+        expected = [{"offset": p, "before": domain_values(before, puzzle.colors),
+                     "after": domain_values(after, puzzle.colors)}
                     for p, (before, after) in enumerate(zip(domains, support))
                     if before != after]
         # Canonical JSON comparison also distinguishes bool/float from int offsets.
@@ -112,7 +122,7 @@ def verify(puzzle: Puzzle, proof: object, budget: Budget | None = None) -> dict:
         for p, mask in enumerate(support):
             y, x = (index, p) if axis == "row" else (p, index)
             grid[y][x] = mask
-    if digest(obj["final_domains"]) != digest(wire_grid(grid)):
+    if digest(obj["final_domains"]) != digest(wire_grid(grid, puzzle.colors)):
         raise InvalidProof("End domains do not match replay from the unknown grid")
     status = obj["status"]
     if status not in ("solved", "stalled", "contradiction", "aborted"):
@@ -132,7 +142,7 @@ def verify(puzzle: Puzzle, proof: object, budget: Budget | None = None) -> dict:
     elif obj["reason"] is not None:
         raise InvalidProof("Completed proof cannot carry an abort reason")
     if status in ("solved", "stalled"):
-        complete = all(mask in (EMPTY, INK) for row in grid for mask in row)
+        complete = all(mask != 0 and mask & (mask - 1) == 0 for row in grid for mask in row)
         if (status == "solved") != complete:
             raise InvalidProof("Claimed end status disagrees with domain completeness")
         for axis, count in (("row", puzzle.height), ("column", puzzle.width)):
@@ -147,5 +157,5 @@ def verify(puzzle: Puzzle, proof: object, budget: Budget | None = None) -> dict:
     budget.check()
     return {"status": status, "proof_verified": True,
             "certified": status == "solved", "logic_hash": puzzle.logic_hash,
-            "profile_hash": digest(PROFILE), "steps": len(steps),
+            "profile": puzzle.profile, "profile_hash": digest(puzzle.profile), "steps": len(steps),
             "line_evaluations": budget.lines - start_lines}

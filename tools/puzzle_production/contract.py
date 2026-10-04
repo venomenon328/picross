@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 import time
 
@@ -17,6 +18,12 @@ PROFILE = {
 }
 LOGIC_FORMAT = "picross-logic-v1"
 PROOF_FORMAT = "picross-proof-v1"
+COLOR_LOGIC_FORMAT = "picross-logic-v2"
+COLOR_PROOF_FORMAT = "picross-proof-v2"
+MAX_COLORS = 8
+COLOR_PROFILE = {**PROFILE, "id": "full-line-color"}
+LOGIC_BYTE_LIMIT = 2 * 1024 * 1024
+COLOR_PROOF_BYTE_LIMIT = 64 * 1024 * 1024
 
 
 class InvalidInput(ValueError):
@@ -53,30 +60,63 @@ def integer(value: object, low: int, high: int, label: str,
     return value
 
 
-def domain_values(mask: int) -> list[str]:
-    return [name for bit, name in VALUES if mask & bit]
+def domain_values(mask: int, colors: tuple[str, ...] = ("ink",)) -> list[str]:
+    return [name for i, name in enumerate(("empty", *colors)) if mask & (1 << i)]
 
 
-def wire_grid(grid: list[list[int]]) -> list[list[list[str]]]:
-    return [[domain_values(mask) for mask in row] for row in grid]
+def wire_grid(grid: list[list[int]], colors: tuple[str, ...] = ("ink",)) -> list[list[list[str]]]:
+    return [[domain_values(mask, colors) for mask in row] for row in grid]
+
+
+@dataclass(frozen=True)
+class Clue:
+    length: int
+    color: int  # Single domain bit, allocated from the normalized palette.
 
 
 @dataclass(frozen=True)
 class Puzzle:
     width: int
     height: int
-    rows: tuple[tuple[int, ...], ...]
-    columns: tuple[tuple[int, ...], ...]
+    rows: tuple[tuple[int | Clue, ...], ...]
+    columns: tuple[tuple[int | Clue, ...], ...]
+    colors: tuple[str, ...] = ("ink",)
+    format: str = LOGIC_FORMAT
+
+    @property
+    def full_domain(self) -> int:
+        return (1 << (len(self.colors) + 1)) - 1
+
+    @property
+    def profile(self) -> dict:
+        return dict(PROFILE if self.format == LOGIC_FORMAT else COLOR_PROFILE)
+
+    @property
+    def proof_format(self) -> str:
+        return PROOF_FORMAT if self.format == LOGIC_FORMAT else COLOR_PROOF_FORMAT
+
+    @property
+    def max_proof_steps(self) -> int:
+        # Every step removes at least one value, and every cell retains >=1.
+        return self.width * self.height * len(self.colors)
+
+    @property
+    def proof_byte_limit(self) -> int:
+        return 8 * 1024 * 1024 if self.format == LOGIC_FORMAT else COLOR_PROOF_BYTE_LIMIT
 
     def to_wire(self) -> dict:
         def clues(lines):
-            return [[{"length": length, "color": "ink"} for length in line]
+            return [[{"length": clue.length if isinstance(clue, Clue) else clue,
+                      "color": self.colors[clue.color.bit_length() - 2]
+                      if isinstance(clue, Clue) else "ink"} for clue in line]
                     for line in lines]
         return {
-            "format": LOGIC_FORMAT, "width": self.width, "height": self.height,
-            "colors": ["ink"], "empty": "empty",
-            "rules": {"id": "mono-gap-v1", "same_color_gap": 1},
-            "initial_domain": ["empty", "ink"],
+            "format": self.format, "width": self.width, "height": self.height,
+            "colors": list(self.colors), "empty": "empty",
+            "rules": ({"id": "mono-gap-v1", "same_color_gap": 1}
+                      if self.format == LOGIC_FORMAT else
+                      {"id": "color-gap-v1", "same_color_gap": 1, "different_color_gap": 0}),
+            "initial_domain": ["empty", *self.colors],
             "row_clues": clues(self.rows), "column_clues": clues(self.columns),
         }
 
@@ -85,7 +125,7 @@ class Puzzle:
         return digest(self.to_wire())
 
     def unknown_grid(self) -> list[list[int]]:
-        return [[FULL] * self.width for _ in range(self.height)]
+        return [[self.full_domain] * self.width for _ in range(self.height)]
 
     def line(self, grid: list[list[int]], axis: str, index: int):
         if axis == "row":
@@ -100,13 +140,25 @@ def validate_logic(value: object) -> Puzzle:
     })
     width = integer(obj["width"], 1, 100, "width")
     height = integer(obj["height"], 1, 100, "height")
-    if obj["format"] != LOGIC_FORMAT or obj["colors"] != ["ink"]:
-        raise InvalidInput("Only picross-logic-v1 with foreground ID ink is supported")
-    rules = exact_keys(obj["rules"], {"id", "same_color_gap"})
-    if (rules["id"] != "mono-gap-v1" or
+    mono = obj["format"] == LOGIC_FORMAT
+    if not mono and obj["format"] != COLOR_LOGIC_FORMAT:
+        raise InvalidInput("Unsupported logic format")
+    raw_colors = obj["colors"]
+    if (not isinstance(raw_colors, list) or not 1 <= len(raw_colors) <= MAX_COLORS or
+            any(not isinstance(c, str) or not re.fullmatch(r"[a-z][a-z0-9_-]{0,31}", c)
+                or c == "empty" for c in raw_colors) or len(set(raw_colors)) != len(raw_colors)):
+        raise InvalidInput("Expected 1..8 unique foreground IDs, 1..32 ASCII characters")
+    if mono and raw_colors != ["ink"]:
+        raise InvalidInput("picross-logic-v1 requires foreground ID ink")
+    colors = tuple(sorted(raw_colors))
+    rules = exact_keys(obj["rules"], {"id", "same_color_gap"} if mono else
+                       {"id", "same_color_gap", "different_color_gap"})
+    if (rules["id"] != ("mono-gap-v1" if mono else "color-gap-v1") or
             integer(rules["same_color_gap"], 1, 1, "same_color_gap") != 1):
         raise InvalidInput("Unsupported spacing rules")
-    if obj["empty"] != "empty" or obj["initial_domain"] != ["empty", "ink"]:
+    if not mono:
+        integer(rules["different_color_gap"], 0, 0, "different_color_gap")
+    if obj["empty"] != "empty" or obj["initial_domain"] != ["empty", *raw_colors]:
         raise InvalidInput("Every cell must start with the full ordered domain")
 
     def lines(raw, count):
@@ -119,15 +171,16 @@ def validate_logic(value: object) -> Puzzle:
             lengths = []
             for clue in line:
                 clue = exact_keys(clue, {"length", "color"})
-                if clue["color"] != "ink":
+                if clue["color"] not in colors:
                     raise InvalidInput("Unsupported clue color")
-                lengths.append(integer(clue["length"], 1, 100, "clue length"))
+                length = integer(clue["length"], 1, 100, "clue length")
+                lengths.append(length if mono else Clue(length, 1 << (colors.index(clue["color"]) + 1)))
             result.append(tuple(lengths))
         return tuple(result)
 
     # Overfull lines and disagreeing totals are logical contradictions, not syntax.
     return Puzzle(width, height, lines(obj["row_clues"], height),
-                  lines(obj["column_clues"], width))
+                  lines(obj["column_clues"], width), colors, obj["format"])
 
 
 def load_json(path: Path, max_bytes: int = 8 * 1024 * 1024) -> object:
@@ -195,5 +248,5 @@ class Budget:
 
 
 def proof_header(puzzle: Puzzle) -> dict:
-    return {"format": PROOF_FORMAT, "logic_hash": puzzle.logic_hash,
-            "profile": dict(PROFILE), "profile_hash": digest(PROFILE)}
+    return {"format": puzzle.proof_format, "logic_hash": puzzle.logic_hash,
+            "profile": puzzle.profile, "profile_hash": digest(puzzle.profile)}

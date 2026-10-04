@@ -3,21 +3,23 @@ from __future__ import annotations
 
 from collections import deque
 
-from .contract import (Aborted, Budget, EMPTY, INK, Puzzle, domain_values,
+from .contract import (Aborted, Budget, Clue, EMPTY, INK, Puzzle, domain_values,
                        proof_header, wire_grid)
 
 
-def line_support(clues: tuple[int, ...], domains: list[int]) -> list[int]:
+def line_support(clues: tuple[int | Clue, ...], domains: list[int]) -> list[int]:
     """Union of supported values at each position; zeros mean no legal line.
 
     A state records either a gap after k completed blocks, or progress within
     block k. Paths consume one cell per edge. No complete placements are listed.
     """
     n = len(domains)
-    if sum(clues) + max(0, len(clues) - 1) > n:
+    lengths = [c.length if isinstance(c, Clue) else c for c in clues]
+    colors = [c.color if isinstance(c, Clue) else INK for c in clues]
+    if sum(lengths) + sum(a == b for a, b in zip(colors, colors[1:])) > n:
         return [0] * n
     states = [("gap", k, 0) for k in range(len(clues) + 1)]
-    states += [("run", k, r) for k, length in enumerate(clues)
+    states += [("run", k, r) for k, length in enumerate(lengths)
                for r in range(1, length + 1)]
     ids = {state: i for i, state in enumerate(states)}
     edges = [[] for _ in states]
@@ -25,14 +27,16 @@ def line_support(clues: tuple[int, ...], domains: list[int]) -> list[int]:
         if kind == "gap":
             edges[i].append((EMPTY, i))
             if k < len(clues):
-                edges[i].append((INK, ids[("run", k, 1)]))
-        elif r < clues[k]:
-            edges[i].append((INK, ids[("run", k, r + 1)]))
+                edges[i].append((colors[k], ids[("run", k, 1)]))
+        elif r < lengths[k]:
+            edges[i].append((colors[k], ids[("run", k, r + 1)]))
         else:
             edges[i].append((EMPTY, ids[("gap", k + 1, 0)]))
+            if k + 1 < len(clues) and colors[k] != colors[k + 1]:
+                edges[i].append((colors[k + 1], ids[("run", k + 1, 1)]))
     accepting = {ids[("gap", len(clues), 0)]}
     if clues:
-        accepting.add(ids[("run", len(clues) - 1, clues[-1])])
+        accepting.add(ids[("run", len(clues) - 1, lengths[-1])])
     forward = [{ids[("gap", 0, 0)]}]
     for mask in domains:
         forward.append({target for source in forward[-1]
@@ -84,8 +88,8 @@ def solve(puzzle: Puzzle, budget: Budget | None = None,
             for offset, (before, after) in enumerate(zip(domains, supported)):
                 if before == after:
                     continue
-                changes.append({"offset": offset, "before": domain_values(before),
-                                "after": domain_values(after)})
+                changes.append({"offset": offset, "before": domain_values(before, puzzle.colors),
+                                "after": domain_values(after, puzzle.colors)})
                 y, x = (index, offset) if axis == "row" else (offset, index)
                 grid[y][x] = after
                 cross = ("column", x) if axis == "row" else ("row", y)
@@ -96,11 +100,11 @@ def solve(puzzle: Puzzle, budget: Budget | None = None,
                 steps.append({"axis": axis, "index": index, "changes": changes})
         else:
             # Queue exhaustion only; no unknown cells get assigned here.
-            status = "solved" if all(mask in (EMPTY, INK) for row in grid
+            status = "solved" if all(mask != 0 and mask & (mask - 1) == 0 for row in grid
                                      for mask in row) else "stalled"
         budget.check()
     except Aborted as exc:
         status, contradiction, reason = "aborted", None, str(exc)
     return {**proof_header(puzzle), "steps": steps, "status": status,
-            "final_domains": wire_grid(grid), "contradiction": contradiction,
+            "final_domains": wire_grid(grid, puzzle.colors), "contradiction": contradiction,
             "reason": reason}

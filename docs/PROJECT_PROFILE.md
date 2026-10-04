@@ -15,11 +15,15 @@ zusätzlich vollständig zu lesen. Sie konkretisiert den eigenen Risikostrang
 unabhängige Nachweisprüfung, frühe Mehrfarben-/100×100-Fälle, motivgeschützte
 Überarbeitung und redaktioneller Pilot. KI wird ausschließlich in ChatGPT/Codex
 verwendet; das lokale Werkzeug hat keine direkte Modell-API-Anbindung.
-RP-1 liefert den separaten monochromen Prüfkern mit unabhängigem Nachweisprüfer;
+RP-1 liefert den separaten monochromen Prüfkern mit unabhängigem Nachweisprüfer
+und ist über PR #42 als `b18a23460708509adac2f04e724809cf0cc8b959` integriert;
 seine [Prüfzuordnung](RP1_VERIFICATION.md) und
 [Werkzeuganleitung](../tools/puzzle_production/README.md) konkretisieren Technik und
-Prüfpfad. Abnahme/Integration bleiben im Paket-PR gebunden. RP-2 bis RP-6 sind
-weiterhin spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
+Prüfpfad. Abnahme/Integration bleiben im Paket-PR gebunden. RP-2 erweitert denselben
+Kern um bis zu acht Farben plus Leer; die [RP-2-Prüfzuordnung](RP2_VERIFICATION.md)
+bindet Fachoracles, partielle Propagation, Kompatibilität und Farbreferenzen.
+RP-2 ist implementiert; unabhängiges technisches Review bleibt im eigenen Draft-PR offen.
+RP-3 bis RP-6 sind weiterhin spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
 begrenzte Vorarbeiten, keine allgemeine Generatorplattform.
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
@@ -131,33 +135,40 @@ Vor Merge muss [Setup verification](../.github/workflows/setup.yml), Job `docs`,
 
 [Dokumentvalidator](../tools/check_docs.py) und [Tests](../tools/test_check_docs.py) sind aus dem dokumentierten dev-rules-Stand abgeleitet. Geprüft werden Pflichtdateien, UTF-8/LF/Abschlusszeile, nachgestellte Leerzeichen, Versionsformat und einfache lokale Inline-Markdown-Links samt Paketgrenzen. Nicht geprüft: externe URLs, Anker, Referenzlinks, vollständige Markdownvalidierung oder Byteidentität der Regelkopie. Letztere bei Regelpaketaktualisierung separat gegen den Quellcommit prüfen.
 
-## RP-1-Prüfkern
+## RP-1/RP-2-Prüfkern
 
 Eigenes Werkzeug unter `tools/puzzle_production/`, Fachtests unter
 `tests/puzzle_production/`; kein P1-Code übernommen. Versionierter Logik-/Profil-/
 Nachweisvertrag, Zell-Domains, headless CLI und unabhängiger Blockpositions-Prüfer
 stehen in der [Anleitung](../tools/puzzle_production/README.md).
+RP-2 unterstützt 1..8 Vordergrundfarben plus Leer, gemeinsame Farblinienlogik und
+partielle Domainverluste. Alte Monoformate/-hashes bleiben erhalten; Farbformate
+und Profile sind separat versioniert. Keine P1-Integration in diesem Paket.
 
 ```sh
 python3 -m tools.puzzle_production solve --input tests/puzzle_production/fixtures/deductive.json --output-dir artifacts/rp1-example
 python3 -m tools.puzzle_production verify --input tests/puzzle_production/fixtures/deductive.json --proof artifacts/rp1-example/proof.json
+python3 -m tools.puzzle_production solve --input tests/puzzle_production/fixtures/color-four.json --output-dir artifacts/rp2-example
+python3 -m tools.puzzle_production verify --input tests/puzzle_production/fixtures/color-four.json --proof artifacts/rp2-example/proof.json
 python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
 python3 -m tools.puzzle_production.benchmark --output-dir artifacts/puzzle-production
 ```
 
 [Eigene CI](../.github/workflows/puzzle-production.yml), Job `puzzle-production`:
-Ubuntu 24.04, Python 3.11+, lesende Rechte, 15 Minuten. A01 bis A06 aus #35,
+Ubuntu 24.04, Python 3.11+, lesende Rechte, 15 Minuten. RP2-A01 bis A06 aus #36,
 aktueller erfolgreicher Fach-/`docs`-Job, vollständiger Paketdiffcheck und
-unabhängiges technisches Review sind vor Merge erforderlich. Referenzbudgets:
+unabhängiges technisches Review des kombinierten RP-1/RP-2-Kerns sind vor Merge erforderlich. Referenzbudgets:
 120 Sekunden je Fall inklusive frischer Prüfung, 512 MiB gemessener Peak-RSS je
 Linux-Prozess; separates hartes virtuelles Speicherlimit 1024 MiB im Benchmark.
 Fehlende Messung oder Abbruch ist keine Abnahme. Reports und geprüfte Nachweise
 unter `artifacts/puzzle-production/` werden als CI-Artefakt mit Commitbindung bereitgestellt.
-Aktuelle Ergebnisse/Integrationsbindung stehen im Draft-PR. Solange #41 offen ist,
-Basis `chore/34-puzzle-production-spec@fc8494b57f7fe59515f12fb1b4f3fc89a12f91bf`;
-kein Merge in diesen Branch. Vor `main`-Integration muss #41 separat integriert sein.
+Aktuelle Ergebnisse/Integrationsbindung stehen im RP-2-Draft-PR gegen `main`,
+Arbeitsbranch `feat/36-color-deduction-core`. #41/#42 sind integriert;
+die alte gestapelte Basis gehört ausschließlich zur RP-1-Historie. Mono-Balken-/
+Langlinienreferenzen bleiben erhalten; gemeinsame CI ergänzt vierfarbige
+40×40-/100×100-Fälle und schwierige farbige 100er-Linien mit frischer Prüfung.
 Bestehende `docs`-/`product`-/`preflight`-Workflows bleiben unverändert aktiv.
-Eine reale Motiv-/Spielprobe ist für den reinen RP-1-Logikkern nicht anwendbar.
+Eine reale Motiv-/Spielprobe ist für den reinen RP-1/RP-2-Logikkern nicht anwendbar.
 
 ## Toolchain- und Produktprüfung
 

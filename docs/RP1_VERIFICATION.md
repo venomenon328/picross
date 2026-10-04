@@ -1,6 +1,6 @@
 # RP-1: Prüfvertrag und Nachweiszuordnung
 
-Stand: 04.10.2026 · Arbeitsfassung 0.1 · implementiert, unabhängige Abnahme offen
+Stand: 04.10.2026 · Arbeitsfassung 0.2 · RP-1 unabhängig reviewt und integriert
 
 Auftrag: [Issue #35](https://github.com/venomenon328/picross/issues/35), vollständiger
 Body einschließlich Umsetzungsvorbereitung vom 04.10.2026; Parent
@@ -10,7 +10,7 @@ Kein P1-Code übernommen oder verändert; F-01/F-02/H1 bleiben begrenzte Referen
 
 ## Basis und Integration
 
-Startprüfung: #41 offen und Draft, Head unverändert
+Historische Startprüfung: #41 offen und Draft, Head unverändert
 `fc8494b57f7fe59515f12fb1b4f3fc89a12f91bf`; `main` unverändert
 `409febeeb5209ef18e8e27e77fd93a09c9850488`. Keine späteren Kommentare in #34/#35,
 keine Kommentare/Reviews in #41, keine zusätzlichen AGENTS-Bereichsregeln.
@@ -18,7 +18,14 @@ Arbeitsbranch `feat/35-monochrome-deduction-core`; Draft-Ziel
 `chore/34-puzzle-production-spec`. Der Paketdiff enthält ausschließlich RP-1.
 Nicht in den Spezifikationsbranch mergen. Bei Integration von #41 regulär mit dem
 aktuellen `main` integrieren, PR umstellen, Diff und alle Nachweise neu zuordnen;
-kein Force-Push und kein bloßer Zielwechsel. Aktueller Lieferhead/CI-Run stehen im PR.
+kein Force-Push und kein bloßer Zielwechsel. Diese Integration wurde anschließend
+ausgeführt: #41 als `79b1dc05a2139e20924c3c8f2772f3a178b3814e`, #42 als
+`b18a23460708509adac2f04e724809cf0cc8b959` nach `main`.
+[Integrationsreview R3](https://github.com/venomenon328/picross/pull/42#pullrequestreview-5405127592)
+bindet Head `72cb63b3b3f51d50c2f9b2911b4520988e325f7d`, Basis `79b1dc05...`
+und Test-Merge `547ec1d...`: B-01/A-01 abgeschlossen, alle vier Jobs erfolgreich.
+Diese Nachweise bleiben historisch; die [RP-2-Erweiterung](RP2_VERIFICATION.md)
+benötigt eigene aktuelle Checks und unabhängiges Review.
 
 ## Fachliche Abdeckung
 
@@ -69,7 +76,7 @@ Prüfung bestätigt beide vollständigen Raster und den informationsarmen Fixpun
 Die lokale Windows-Messung liefert keinen Linux-Peak-RSS; der Benchmark meldet deshalb
 korrekt `accepted=false`. Sie ist **kein RP1-A05-Abnahmenachweis**. Maßgebliche
 vollständige Abschlussprüfung erfolgt in Remote-CI am gelieferten Head/Test-Merge.
-Konkrete aktuelle Runs, Messwerte, Artefaktlinks und Ergebnisse stehen im Draft-PR.
+Konkrete damalige Runs, Messwerte, Artefaktlinks und Ergebnisse stehen in PR #42.
 
 Verbindlicher Dokumentweg zusätzlich zum neuen Fachjob:
 
@@ -80,6 +87,7 @@ git diff --check <tatsaechliche-pr-basis> <head>
 ```
 
 `docs`, `puzzle-production`, vollständiger Diffcheck und unabhängiges technisches
-Review am konkreten Head sind Mergegates, außerdem die Integration von #41.
+Review am konkreten Head waren Mergegates, außerdem die Integration von #41.
+Sie wurden im oben gebundenen finalen Integrationsstand erfüllt.
 Selbstreview ist keine unabhängige Zweitprüfung. Reale Motiv-/Spielabnahme ist für
 RP-1 nicht anwendbar; kein Release oder allgemeiner Produktionsqualitätsnachweis.
