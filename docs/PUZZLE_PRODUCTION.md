@@ -1,6 +1,6 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-Stand: 03.10.2026 · Arbeitsfassung 0.1 · spezifizierte Machbarkeitsphase, noch nicht implementiert
+Stand: 04.10.2026 · Arbeitsfassung 0.2 · RP-1 implementiert, Abnahme offen; weitere Machbarkeitsphase spezifiziert
 
 ## 1. Geltung und Ziel
 
@@ -125,6 +125,26 @@ denselben Rasterstand. Für spätere Suche gilt dies bei identischen tatsächlic
 ausgeführten Suchschritten. Ein Zeitlimit kann auf unterschiedlicher Hardware
 verschiedene Teilverläufe beenden; deshalb tatsächliche Schritte und Ergebnisse
 speichern und keinen identischen Suchausgang allein aus Seed und Zeitlimit zusagen.
+
+### 4.1 Technische Konkretisierung RP-1
+
+RP-1 verwendet Python 3.11+ mit ausschließlich Standardbibliothek als getrenntes
+lokales Werkzeug unter `tools/puzzle_production/`. Der vollständige versionierte
+Wire-/Hash-/CLI-Vertrag steht in der [Werkzeuganleitung](../tools/puzzle_production/README.md).
+`picross-logic-v1` führt Dimensionen, geordnete Länge-/Farbhinweise, Leerwert,
+stabile Vordergrund-ID `ink`, `mono-gap-v1` mit Pflichtabstand 1 und eine volle
+Broadcast-Startdomain für jede Zelle. Keine Lösung/Asset-/Motivfelder oder
+Vorbelegungen. `picross-proof-v1` bindet Logikhash und exaktes Profil
+`full-line-mono` Version 1, geordnete Linien-/Domainänderungen und Endstatus samt
+Enddomains/Widerspruchsreferenz. Kanonische JSON-UTF-8-Bytes mit sortierten Schlüsseln,
+ohne Whitespace/BOM/Abschlusszeile werden mit SHA-256 gebunden; Messdaten bleiben außen vor.
+
+Der Solver nutzt Zellautomaten-Erreichbarkeit, der unabhängig implementierte Prüfer
+einen Blockintervall-DAG mit eigener Intervallkompatibilität. Gemeinsam sind nur
+Vertrag/Validierung, Datentypen, Domainkonvention, Budgets und Hashbildung.
+Vollständige Endraster werden zusätzlich direkt gegen die Hinweise geprüft;
+Fixpunkt/Widerspruch erhalten eigenständige Statusprüfung. Nur der erfolgreich
+geprüfte vollständige Status wird als zertifiziert ausgegeben.
 
 ## 5. Deduktionsnachweis
 
@@ -357,6 +377,17 @@ der betroffenen Implementierung konkret begründet; die vorhandenen Python-Werkz
 legen keine Produktsprache fest. Das erste Paket bindet ausführbare Testbefehle,
 Umgebung, Ressourcenlimits und CI-Ausführung in Anleitung und Projektprofil.
 Ohne diesen konkreten Prüfpfad keine Behauptung umsetzungsbereiter Folgepakete.
+
+RP-1 bindet diesen Pfad im [Projektprofil](PROJECT_PROFILE.md), in der
+[Anleitung](../tools/puzzle_production/README.md) und im
+[Prüfvertrag](RP1_VERIFICATION.md). Eigener `puzzle-production`-Job auf Ubuntu 24.04
+mit Python 3.11+, lesenden Rechten und 15 Minuten führt Fachoracles, Negativtests
+und tatsächliche Referenzläufe aus. Je 40×40-/100×100-Fall gelten vorab 120 Sekunden
+für Solve/Serialisierung/frische Prüfung und 512 MiB gemessener Linux-Peak-RSS je
+Prozess; getrennt davon erzwingt der Benchmark 1024 MiB virtuelles Speicherlimit.
+Informationsarme Langlinien und echte Propagation sind eingeschlossen. Der PR
+führt aktuelle Messwerte, Commit-/Basis-/CI-Artefaktbindung und offene Abnahme;
+vor Integration zusätzlich unabhängiges technisches Review und Spezifikationsintegration.
 
 Für jedes Paket gelten der bestehende Dokumentprüfweg und ein vollständiger
 Diffcheck. `docs` muss am aktuellen Head/zugehörigen Test-Merge erfolgreich sein.
