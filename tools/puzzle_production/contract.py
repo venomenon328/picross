@@ -147,10 +147,17 @@ def load_json(path: Path, max_bytes: int = 8 * 1024 * 1024) -> object:
     if len(data) > max_bytes:
         raise InvalidInput(f"Input exceeds {max_bytes} byte limit")
     try:
-        return json.loads(data.decode("utf-8"), object_pairs_hook=unique_pairs,
-                          parse_constant=reject_constant)
-    except (UnicodeError, json.JSONDecodeError, RecursionError) as exc:
-        raise InvalidInput(f"Invalid UTF-8 JSON: {exc}") from exc
+        value = json.loads(data.decode("utf-8"), object_pairs_hook=unique_pairs,
+                           parse_constant=reject_constant)
+        # Keep parser acceptance and our canonical wire contract aligned. This
+        # rejects data such as exponent overflow to inf or lone surrogates before
+        # they can surface later as generic technical errors.
+        canonical_bytes(value)
+        return value
+    except InvalidInput:
+        raise
+    except (UnicodeError, json.JSONDecodeError, RecursionError, ValueError) as exc:
+        raise InvalidInput(f"Invalid or unsupported UTF-8 JSON: {exc}") from exc
 
 
 def write_json(path: Path, value: object) -> None:

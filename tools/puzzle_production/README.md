@@ -44,7 +44,7 @@ nicht erfolgreich. Ergebnisse sind nur aus erfolgreich beendeten Aufrufen zu üb
 ## Versionierter Datenvertrag
 
 Alle Objekte sind UTF-8-JSON. Unbekannte Schlüssel, doppelte JSON-Schlüssel,
-NaN/Infinity, boolesche Dimensionen und versteckte Startannahmen werden abgewiesen.
+NaN/Infinity, numerische Überläufe zu nicht-endlichen Werten, boolesche Dimensionen und versteckte Startannahmen werden abgewiesen.
 Dimensionen liegen in 1..100, Rechtecke und 1D eingeschlossen. Hinweislisten sind
 geordnet; Leerlinien verwenden `[]`, jeder Block positive Länge 1..100 und
 `color="ink"`. Maximal 100 Hinweise pro Linie. Auch formal übervolle Listen bleiben
