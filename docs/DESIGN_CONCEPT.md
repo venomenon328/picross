@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 03.10.2026 · Arbeitsfassung 0.15 · frühe Konzeption mit P1-Mausfeedback, G1, H1, Buchuntersuchung und Rätselproduktion
+Stand: 04.10.2026 · Arbeitsfassung 0.16 · frühe Konzeption mit integriertem Z2 und RP-3-Inhalt im Draft
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -21,12 +21,13 @@ darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, rich
 alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
 eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
 auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.14 mit G1, H1 und Z2. Die Nacharbeit in #11
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.15 mit G1, H1, Z2 und F-04. Die Nacharbeit in #11
 ergänzt D-23 bis D-27: flüssigen Hinweisdrag mit Einrasten beim Loslassen,
 geringfügig größere getrennte Füllungen, dezente Cursorbänder, geclippte X
 und den geometrischen Live-Strichzähler. Nachweise stehen im P1.3-Prüfbericht;
-die spätere P1-Gesamtabnahme erfolgte in #12. Die neue Z2-Eigentümerprobe bleibt
-offen. Das ist weder eine endgültige Themenentscheidung noch ein vollständiges
+die spätere P1-Gesamtabnahme erfolgte in #12. Z2 ist integriert; seine nicht
+durchgeführte Eigentümerprobe wurde für PR #33 ausdrücklich als Gate aufgehoben.
+Das ist weder eine endgültige Themenentscheidung noch ein vollständiges
 Designsystem.
 
 ## 2. Bestätigte gestalterische Grundlage
@@ -76,12 +77,13 @@ Raster und UI werden getrennt auf unverzerrtem A-Papier gezeichnet. N1 nutzt
 nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen,
 Hinweisreset, H1, Bedienhilfe und Beenden teilen sich eine Seite mit Rückweg.
 Keine neue Statistik/Albumarchitektur oder Vorwegnahme von #24. Native Abweichungen,
-Offline-Fonts und die noch offene Eigentümerprobe stehen im [Z2-Prüfbericht](Z2_VERIFICATION.md).
-Die native Umsetzung ist als [Draft-PR #33](https://github.com/venomenon328/picross/pull/33)
-geliefert. Aktueller Head, technische/visuelle Reviewbefunde und Mergegates stehen
-dort sowie im [Paketstatus #23](https://github.com/venomenon328/picross/issues/23).
-Die Auswahl ist getroffen; Z2-M01/M02/M03 und eine ausdrückliche Mergefreigabe
-werden dadurch nicht vorweggenommen.
+Offline-Fonts und die historische Eigentümeranleitung stehen im [Z2-Prüfbericht](Z2_VERIFICATION.md).
+Die native Umsetzung ist über [PR #33](https://github.com/venomenon328/picross/pull/33)
+integriert. Reviewbefunde und Mergefreigabe sind dort und im
+[Paketstatus #23](https://github.com/venomenon328/picross/issues/23) abgeschlossen.
+Z2-M01/M02/M03 wurden nicht durchgeführt; der Eigentümer hob das damalige Gate
+für diesen Merge auf. RP-3 verlangt eigene aktuelle Nachweise und unabhängiges
+Review; seine reale Eigentümer-Lösung ist RP-6-Gate.
 
 ### BP-1R bis BP-3: Entwurfsverlauf und integrierte Grundlagen
 
@@ -264,8 +266,8 @@ Die spätere reale P1.1-Probe lieferte einen Abschluss-Screenshot und einen Rast
 | Themenwahl | Thematisches Sammelalbum oder Reisealbum, Kapitel und Motivzusammenhang; nicht mit dem gewählten Arbeitsasset A verwechseln. Bestehende Progressionsanforderungen nicht neu öffnen. |
 | Album/Designsystem | Die gewählte Z2-Arbeitsansicht nativ prüfen; ein vollständiger Albumneubau ist nicht beauftragt. |
 | Rücknahmen/Wertung | Direkte Neutralisierung ist für die Bedienung festgelegt; Fehlerzählung, Sterne und Hypothesenwirkung bleiben offen. |
-| P1-Bedienung | P1 einschließlich der früheren Feedbackkorrekturen ist integriert; die neue Z2-Maus-/Lesbarkeitsprobe bleibt vor dessen Merge offen. |
-| Fortsetzung | Speicherung/Recovery sind integriert und bleiben Z2-Regressionsumfang; die neue isolierte Eigentümerprobe Z2-M03 ist erforderlich. |
+| P1-Bedienung | P1/Z2 ist integriert; Z2-M01/M02 wurden nicht durchgeführt, ihr damaliges Mergegate aufgehoben. Eigene aktuelle RP-3-Nachweise stehen im [Prüfbericht](RP3_VERIFICATION.md). |
+| Fortsetzung | Speicherung/Recovery bleiben Regressionsumfang; Z2-M03 wurde nicht durchgeführt und für PR #33 als Gate aufgehoben. F-04 erhält einen eigenen isolierten Neustartnachweis. |
 | Designphase | Längere reale Nutzung und Phasenabschluss folgen in #24 nach der konkreten Z2-Fassung. |
 
 Gestaltung und Risikoprototypen überlappen weiter. Statische Mocks allein beantworten keine Bedienungsfrage. GD-01 bis GD-05 legen die konkrete Zielrichtung für Z2 fest, ersetzen aber keine native Bedienabnahme oder vollständige Produktgestaltung.

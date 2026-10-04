@@ -6,7 +6,7 @@
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
 
-Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.15 enthält das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung, gemeinsamem Hinweisraster und linienweisen Lesepositionen sowie die aktive Z2-Auswahl und den Bezug zur Rätselproduktion.
+Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.16 enthält das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung, gemeinsamem Hinweisraster und linienweisen Lesepositionen sowie die aktive Z2-Auswahl und den Bezug zur Rätselproduktion.
 
 Die [Rätselproduktionsspezifikation](PUZZLE_PRODUCTION.md) ist bei Bildimport,
 Rastererzeugung, Deduktionsnachweisen, Produktionswerkzeugen und Pilotinhalten
@@ -22,8 +22,11 @@ seine [Prüfzuordnung](RP1_VERIFICATION.md) und
 Prüfpfad. Abnahme/Integration bleiben im Paket-PR gebunden. RP-2 erweitert denselben
 Kern um bis zu acht Farben plus Leer; die [RP-2-Prüfzuordnung](RP2_VERIFICATION.md)
 bindet Fachoracles, partielle Propagation, Kompatibilität und Farbreferenzen.
-RP-2 ist implementiert; unabhängiges technisches Review bleibt im eigenen Draft-PR offen.
-RP-3 bis RP-6 sind weiterhin spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
+RP-2 ist nach unabhängigem Review R1 über PR #43 als
+`742977ed17568f5f55f13b80b609687f93f1eb32` integriert. RP-3/#37 ergänzt Bildimport,
+Vergleich und F-04 im eigenen Draft; [Prüfzuordnung](RP3_VERIFICATION.md).
+Unabhängiges technisches/visuelles RP-3-Review bleibt offen.
+RP-4 bis RP-6 sind spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
 begrenzte Vorarbeiten, keine allgemeine Generatorplattform.
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
@@ -76,10 +79,11 @@ ersetzt die damalige Empfehlung B; historische Pakete werden nicht verändert.
 Pflichtquellen dafür: vollständiger aktueller #23-Body samt späteren Entscheidungen,
 #21, die dort gebundenen A-/BP-3-Dateien, [aktive Auswahl](Z2_SELECTION.md) und
 [Z2-Prüfbericht](Z2_VERIFICATION.md), zusätzlich zu den P1-Pflichtquellen.
-PR #25/#28 sind keine Integrationsvoraussetzung. Die Lieferung bleibt Draft:
-aktuelle docs/product/preflight-Checks, unabhängiges technisches/visuelles Review
-und repräsentative reale Z2-Eigentümerprobe am benannten Windows-Artefakt sind
-Mergegates. #24 ist nicht begonnen; kein Merge-/Releaseauftrag.
+PR #25/#28 sind keine Integrationsvoraussetzung. Z2/#23 ist über PR #33 integriert;
+technisches/visuelles Review und Mergefreigabe dieses Stands sind abgeschlossen.
+Z2-M01/M02/M03 wurden nicht durchgeführt. Der Eigentümer hob das damalige Gate
+für diesen Merge ausdrücklich auf; daraus entsteht kein neues RP-3-Gate.
+#24 ist nicht begonnen. RP-3 enthält keinen Merge-/Releaseauftrag.
 
 ## Beschlossene Richtung und offene Entscheidungen
 
@@ -155,20 +159,54 @@ python3 -m tools.puzzle_production.benchmark --output-dir artifacts/puzzle-produ
 ```
 
 [Eigene CI](../.github/workflows/puzzle-production.yml), Job `puzzle-production`:
-Ubuntu 24.04, Python 3.11+, lesende Rechte, 15 Minuten. RP2-A01 bis A06 aus #36,
-aktueller erfolgreicher Fach-/`docs`-Job, vollständiger Paketdiffcheck und
-unabhängiges technisches Review des kombinierten RP-1/RP-2-Kerns sind vor Merge erforderlich. Referenzbudgets:
+Ubuntu 24.04, Python 3.11+, lesende Rechte, 15 Minuten. Fachoracles,
+Negativtests und Referenzläufe bleiben für RP-3 vollständig aktiv. Referenzbudgets:
 120 Sekunden je Fall inklusive frischer Prüfung, 512 MiB gemessener Peak-RSS je
 Linux-Prozess; separates hartes virtuelles Speicherlimit 1024 MiB im Benchmark.
 Fehlende Messung oder Abbruch ist keine Abnahme. Reports und geprüfte Nachweise
 unter `artifacts/puzzle-production/` werden als CI-Artefakt mit Commitbindung bereitgestellt.
-Aktuelle Ergebnisse/Integrationsbindung stehen im RP-2-Draft-PR gegen `main`,
-Arbeitsbranch `feat/36-color-deduction-core`. #41/#42 sind integriert;
+Historische RP-2-Ergebnisse/Integrationsbindung stehen im abgeschlossenen PR #43.
+#41/#42/#43 sind integriert;
 die alte gestapelte Basis gehört ausschließlich zur RP-1-Historie. Mono-Balken-/
 Langlinienreferenzen bleiben erhalten; gemeinsame CI ergänzt vierfarbige
 40×40-/100×100-Fälle und schwierige farbige 100er-Linien mit frischer Prüfung.
-Bestehende `docs`-/`product`-/`preflight`-Workflows bleiben unverändert aktiv.
+Bestehende `docs`-/`product`-/`preflight`-Workflows bleiben aktiv.
 Eine reale Motiv-/Spielprobe ist für den reinen RP-1/RP-2-Logikkern nicht anwendbar.
+
+## RP-3-Bildimport und früher P1-Export
+
+Python 3.11+ und **Pillow exakt 12.3.0** in einer eigenen venv; nur Bildbefehle
+laden Pillow. Die bisherigen Kernbefehle bleiben ohne Zusatzpakete nutzbar.
+Installation und vollständiger Daten-/Normalisierungsvertrag stehen in der
+[Werkzeuganleitung](../tools/puzzle_production/README.md), reale Dateien in
+[examples/rp3](../examples/rp3/README.md). Keine Modell-API oder Laufzeitdienste.
+
+```sh
+python3 -m venv .venv/rp3
+.venv/rp3/bin/python -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+.venv/rp3/bin/python -m tools.puzzle_production.rp3_demo --output-dir artifacts/rp3-demo
+```
+
+Unter Windows die venv über `.venv/rp3/Scripts/python.exe` verwenden. Die
+betroffenen CI-Jobs `puzzle-production` und `product` installieren diese separate
+Anforderung ausschließlich in einer temporären venv. `docs` und `preflight`
+benötigen weiterhin nur Standardbibliothek. Vollständige Fachtests benötigen
+wegen der neuen Bildtests die Image-Umgebung.
+
+Grenzen: PNG/JPEG, 32 MiB kodiert, 8 Millionen dekodierte Pixel, 8192 je
+Quellachse, 1..8 Varianten, 1..100 Zielzellen je Achse und 1..8 Vordergrundfarben
+plus Leer. P1-Adapter: nur quadratisch monochrom, neutrale feste Kennung F-04,
+lokales SVG-Abschlussbild. Kein öffentlicher Import oder Saveformatwechsel.
+Die Exportfreigabe rekonstruiert Quelle/Raster/Hinweise und prüft die geschriebene
+Nachweisdatei unabhängig neu; bewiesene Enddomains müssen der Matrix entsprechen.
+
+RP3-A01 bis A06 binden aktuelle Fachtests/Benchmark, `docs`, `product`, `preflight`,
+vollständigen Diffcheck, Windows-Artefakt, eigene Sichtkontrolle und separat noch
+offenes unabhängiges technisches/visuelles Review. Die reguläre Hauptszene wird
+mit F-04 in drei isolierten Prozessen bearbeitet, abgeschlossen und wieder geladen;
+echte Renderbilder prüfen eigene falsche Einträge und die Spoilergrenze.
+Die reale Eigentümer-Lösung ist RP-6-Gate. Windows-Export, Windows-Start und
+Eigentümer-Lösung sind getrennte Nachweise. Parent #34 bleibt offen.
 
 ## Toolchain- und Produktprüfung
 

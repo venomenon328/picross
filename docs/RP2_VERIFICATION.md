@@ -1,5 +1,12 @@
 # RP-2: Prüfvertrag und Nachweiszuordnung
 
+**Integrationsstand vom 04.10.2026:** RP-2/#36 ist nach unabhängigem technischen
+Review R1 ohne offene B-/A-Befunde über [PR #43](https://github.com/venomenon328/picross/pull/43)
+als `742977ed17568f5f55f13b80b609687f93f1eb32` in `main` integriert.
+Die folgenden Entwicklungsstände, Draftangaben und damaligen Gates bleiben
+historische Nachweise ihrer benannten Commits. Aktuelle RP-3-Nachweise stehen in
+[RP3_VERIFICATION.md](RP3_VERIFICATION.md); Parent #34 bleibt offen.
+
 Stand: 04.10.2026 · Arbeitsfassung 0.1 · implementiert, unabhängiges Review offen
 
 Auftrag: [Issue #36](https://github.com/venomenon328/picross/issues/36), vollständiger
@@ -93,7 +100,7 @@ Sparse-Farbe: 271/1333. Linux-RSS ist lokal nicht verfügbar, deshalb ist lokale
 Benchmark-Abnahme korrekt `accepted=false`; sie ersetzt RP2-A05-CI nicht.
 Konkrete aktuelle CI-Messwerte und Ergebnisse gehören in den Draft-PR.
 
-## Abschlussprüfung und offene Gates
+## Historische Abschlussprüfung und damalige Gates
 
 ```sh
 python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v

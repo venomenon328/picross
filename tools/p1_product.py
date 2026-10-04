@@ -13,6 +13,10 @@ import tempfile
 import zipfile
 from pathlib import Path
 
+# Module invocation and direct script invocation share the repository package.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from tools.puzzle_production.rp3_demo import demonstrate as demonstrate_rp3
+
 import p1_preflight as toolchain
 import p14_integration
 import z2_resources
@@ -94,6 +98,7 @@ def main() -> int:
         book_resources = z2_resources.verify()
         proof_steps = verify(json.loads((DATA / "f01.json").read_text(encoding="utf-8")), json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8")))
         color_proof_steps = verify_f02(json.loads((DATA / "f02.json").read_text(encoding="utf-8")), json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8")))
+        rp3 = demonstrate_rp3(root, output / "rp3")
         metadata = toolchain.request_json(toolchain.RELEASE_API)
         editor = toolchain.EDITORS[host]
         assets = (editor, toolchain.TEMPLATES)
@@ -120,6 +125,12 @@ def main() -> int:
             environment["P1_TEST_SAVE_ROOT"] = str(workspace / "roundtrip-saves")
             phase("roundtrip-write", base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--write"], "P1_ROUNDTRIP_WRITE_OK")
             phase("roundtrip-read", base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--read"], "P1_ROUNDTRIP_READ_OK")
+            del environment["P1_TEST_SAVE_ROOT"]
+            environment["P1_TEST_SAVE_ROOT"] = str(workspace / "rp3-saves")
+            for stage in ("partial", "finish", "read"):
+                environment["RP3_STAGE"] = stage
+                phase("rp3-" + stage, base + ["--script", "res://tests/rp3_probe.gd"], "RP3_" + stage.upper() + "_OK")
+            del environment["RP3_STAGE"]
             del environment["P1_TEST_SAVE_ROOT"]
             integration_dir = output / "integration"
             integration_dir.mkdir(exist_ok=True)
@@ -188,6 +199,8 @@ def main() -> int:
                 captures=[c for r in reports for c in r["captures"]]), indent=2) + "\n", encoding="utf-8")
             z2_command = ["res://tests/z2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
             phase("z2-render-capture", z2_command, "Z2_CAPTURE_OK")
+            rp3_command = ["res://tests/rp3_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
+            phase("rp3-render-capture", rp3_command, "RP3_CAPTURE_OK")
             before = z2_review.before_project(root, workspace)
             phase("z2-before-import", [engine, "--headless", "--path", str(before), "--import"])
             before_command = [str(before) if arg == str(project) else
@@ -242,13 +255,15 @@ def main() -> int:
                             integration_files={p.name: toolchain.sha256_file(p) for p in sorted(integration_dir.iterdir()) if p.is_file()},
                             owner_probe_sha256=toolchain.sha256_file(owner_probe),
                             book_resources=book_resources,
+                            rp3=rp3,
                             h1_probe_files=h1_files,
                             h1_probe_export_files=h1_exports,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="OPEN: Z2-M01/M02/M03 representative owner probe on this Windows artifact and independent technical/visual review required BEFORE MERGE; historical P1/G1/H1 decisions do not waive Z2 gates")
+                            manual_acceptance="OPEN: RP-3 independent technical/visual review before merge; real owner solution is RP-6 gate. Z2 integrated via #33; Z2-M01/M02/M03 not performed and explicitly waived for that merge.")
             extras = {"Z2-PRUEFUNG.md": root / "docs/Z2_VERIFICATION.md",
+                      "RP3-PRUEFUNG.md": root / "docs/RP3_VERIFICATION.md",
                       "owner-probe.ps1": owner_probe}
             for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
                 extras["licenses/" + path.name] = path
