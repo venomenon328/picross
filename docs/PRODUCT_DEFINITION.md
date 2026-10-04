@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-Stand: 25.09.2026 · Arbeitsfassung 0.3 · Produktkonzept mit begrenzter H1-Komfortentscheidung
+Stand: 03.10.2026 · Arbeitsfassung 0.4 · Produktkonzept mit spezifizierter Rätselproduktion
 
 ## 1. Geltung und Herkunft
 
@@ -38,7 +38,7 @@ Ein größeres Rätsel darf sich über mehrere Sitzungen erstrecken. Die Bedienu
 
 Die Rätsel sollen eindeutig und vollständig deduktiv lösbar sein. Notwendiges Raten beziehungsweise das versuchsweise Durchspielen von Annahmen mit anschließendem Zurückspringen ist ausgeschlossen. Eindeutigkeit allein reicht nicht als Nachweis dieses Versprechens.
 
-Über einzelne Zeilen und Spalten hinausgehende Schlussfolgerungen sind erlaubt. Ein sinnvoll gestaffeltes Schwierigkeitssystem ist gewünscht; Rastergröße, Bearbeitungsumfang und logischer Anspruch dürfen nicht zu einer einzigen undifferenzierten Eigenschaft zusammenfallen. Die zugelassenen Schlussregeln und der konkrete Nachweis werden noch spezifiziert.
+Über einzelne Zeilen und Spalten hinausgehende Schlussfolgerungen sind erlaubt. Ein sinnvoll gestaffeltes Schwierigkeitssystem ist gewünscht; Rastergröße, Bearbeitungsumfang und logischer Anspruch dürfen nicht zu einer einzigen undifferenzierten Eigenschaft zusammenfallen. Das erste ausreichende Prüfprofil ist vollständige Linienlogik mit unabhängig prüfbarem Deduktionsnachweis gemäß [Rätselproduktion](PUZZLE_PRODUCTION.md) §5. Weitergehende Profile und mit Menschen kalibrierte Schwierigkeitsstufen bleiben offen. Ein Stillstand des ersten Profils beweist kein notwendiges Raten mit anderen Regeln; ein vollständig geprüfter zwingender Lösungsweg beweist zugleich Eindeutigkeit.
 
 Es gibt keine zusätzlichen redaktionell vorgegebenen Startfelder. Klassische und farbige Rätsel müssen aus ihren regulären Randhinweisen heraus lösbar sein. Unmittelbar aus diesen Hinweisen ableitbare Felder sind davon zu unterscheiden.
 
@@ -56,7 +56,9 @@ Vor Abschluss werden weder das fertige Lösungsbild noch der Motivname gezeigt. 
 
 Das Basisprodukt enthält eine vorab kuratierte Sammlung, keinen notwendigen Laufzeitgenerator und keine Abhängigkeit von Community-Nachschub. Gewünscht ist ein externes Produktionswerkzeug, das Entwürfe aus Beschreibungen oder bereitgestellten Bildern unterstützt.
 
-Der vorgesehene Arbeitsablauf ist: Motividee oder Vorlage, Rasterentwurf, logische Prüfung, Überarbeitung und redaktionelle Freigabe einschließlich der Abschlussansicht. Wie weit die Schritte automatisiert werden können, ist zu untersuchen. Eine Bildvorlage liefert nicht automatisch ein geeignetes Rätsel.
+Der Arbeitsablauf ist: Motividee oder Vorlage, Rasterentwurf, logische Prüfung, begrenzte motivgeschützte Überarbeitung und redaktionelle Freigabe einschließlich der Abschlussansicht. Die [Produktionsspezifikation](PUZZLE_PRODUCTION.md) konkretisiert dafür den allgemeinen Prüfkern, frühe Farben und 100×100-Fälle, einen dateibasierten Import mit erstem spielbarem Export sowie eine kleine Vergleichs- und Pilotproduktion. Wie weit sich damit gute Inhalte mit vertretbarem Aufwand herstellen lassen, bleibt Gegenstand dieser Untersuchung. Eine Bildvorlage liefert nicht automatisch ein geeignetes Rätsel.
+
+**KI wird ausschließlich in ChatGPT oder Codex verwendet.** Das Produktionswerkzeug besitzt keine direkte Modell-API-Anbindung, benötigt keine Modell-API-Keys und startet keine automatischen Modellaufrufe. Motive, Stilisierungen und Abschlussbilder gelangen als tatsächlich gespeicherte Dateien in den lokalen deterministischen Ablauf. Codex darf diese Werkzeuge ausführen. Reproduzierbar ist die Verarbeitung ab der konkreten gespeicherten Eingabe; ein Prompt allein ersetzt die Bildquelle nicht.
 
 Logische Prüfung sowie gestalterische und spielerische Kuratierung sind getrennte Qualitätsaufgaben. Die interne Prüfung der deduktiven Lösbarkeit wird früh benötigt, auch wenn die spielerseitige Hilfefunktion erst deutlich später kommt.
 
@@ -203,7 +205,7 @@ Die folgende Sammlung bewahrt sinnvolle Ansätze aus dem Gespräch, ohne sie zu 
 | Arbeitszustand | Neben dem Raster auch Zoom, Ausschnitt, aktive Farbe und gegebenenfalls Notizen speichern; optionale Hervorhebung der letzten Änderungen beim Wiedereinstieg. |
 | Farbdarstellung | Symbole oder Muster zusätzlich zu Farben, geeignete Paletten und schnelle Farbwahl über Hinweise. |
 | Automatischer Komfort | Die lösungsunabhängige optionale Erfüllungsmarkierung ist durch #19/H1 bestätigt; siehe §5.1 und P1 §5.2. Weitere Hilfen sind dadurch nicht freigegeben. |
-| Qualitätssicherung | Erklärender Solver mit vollständigem Deduktionsprotokoll und gegebenenfalls unabhängiger Eindeutigkeitsprüfung; konkrete Verfahren noch offen. |
+| Qualitätssicherung | Erstes Linienprofil und unabhängige Nachweisprüfung sind in [Rätselproduktion](PUZZLE_PRODUCTION.md) spezifiziert. Weitergehende Profile, Spielerhilfe und menschlich kalibrierte Schwierigkeit bleiben Folgearbeit; ein allgemeiner zusätzlicher Eindeutigkeitssolver ist optional. |
 | Sterne | Ein Stern für Abschluss und zwei bei begrenzten Fehlern bleiben Vorschläge ohne feste Schwellen. Für die Höchstwertung gilt bereits: ohne Fehler und ohne Undo; Hypothesenfrage offen. |
 | Wiederholungen | Beste Bewertung je Rätsel für Fortschritt verwenden; Sterne nicht durch wiederholtes Lösen aufsummieren und bestehende Freischaltungen nicht durch schlechtere Ergebnisse verlieren. |
 | Fehlerbehandlung | Keine Leben, erzwungenen Abbrüche oder Strafsekunden; fehlerhafte Aktionen und betroffene Felder gegebenenfalls getrennt erfassen. |
@@ -215,9 +217,9 @@ Die folgende Sammlung bewahrt sinnvolle Ansätze aus dem Gespräch, ohne sie zu 
 | Kennung | Offene Entscheidung |
 | --- | --- |
 | O-01 | Wahl zwischen thematischem Sammelalbum und Reisealbum; konkrete Kapitel, Layouts, Designsystem und Enthüllungsdetails auf Basis der bestätigten Album-/Illustrationsrichtung. |
-| O-02 | Prüffähige Definition der zugelassenen Deduktionen, Eindeutigkeitsprüfung und Schwierigkeitseinstufung. |
+| O-02 | Erstes ausreichendes Linienprofil und unabhängig prüfbarer Nachweis sind in [Rätselproduktion](PUZZLE_PRODUCTION.md) festgelegt. Offen bleiben weitergehende linienübergreifende Profile, deren Nachweise und menschlich kalibrierte Schwierigkeitseinstufung. |
 | O-03 | Exakte Startmenge, Größen- und Variantenverteilung; Auswahlkriterien und zulässige Ausnahmen bei winzigen Motiven. |
-| O-04 | Produktionsverfahren aus Beschreibungen/Bildvorlagen, Kurationsaufwand und Nutzungsrechte der eingesetzten Vorlagen und Assets. |
+| O-04 | Dateibasierte Produktion mit KI ausschließlich in ChatGPT/Codex, ohne direkte Modell-API, und die erste Vergleichs-/Pilotphase sind spezifiziert. Offen bleiben die nachzuweisende Ausbeute, der reale Kurationsaufwand, Rechte konkreter Quellen und der spätere Ausbau der Produktionsoberfläche. |
 | O-05 | Was als Fehler zählt; Behandlung falscher Leer-/Farbmarkierungen, Striche und Wiederholungen; Abgrenzung manueller Korrekturen zu Undo und mögliche Hypothesen. |
 | O-06 | Skala/Fehlertoleranzen unterhalb der Höchstwertung, Bestbewertungen und Wiederholungen, Wechsel zwischen Unterstützungsmodi; Vereinbarkeit von Hypothesen mit der bestätigten Perfektionsregel ohne Fehler und ohne Undo. |
 | O-07 | Aufbau und frühe Zugänge der Sammlungen, konkrete Freischaltschwellen, Abhängigkeiten und Umfang der Bonusinhalte. |
