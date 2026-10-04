@@ -289,9 +289,14 @@ SHA-256, kompletten Entwurf/Variante, Werkzeug `rp3-image-1`, Pillow und tatsäc
 verwendete JPEG-/LittleCMS-/zlib-Versionen, Matrix und normalisierten Logikhash.
 Sein SHA-256 verwendet die kanonischen JSON-Bytes des Kerns, ohne das `id`-Feld.
 Messzeiten sind ausgeschlossen. Gleiche Normalisierung/Parameter/Versionen liefern
-denselben Kandidaten. Bei anderen Codecversionen wird das Bundle ausdrücklich
-abgewiesen; neu importieren und vergleichen. Keine plattformübergreifende
-Byteidentität unterschiedlicher Codecstände behauptet.
+denselben Kandidaten. Unterschiedliche Codecbuilds können identische Pixel anders
+komprimieren und erhalten deshalb unterschiedliche neue Kandidatenkennungen.
+Bestehende Bundles behalten ihre tatsächlichen Produzentenbytes/-versionen.
+Replay verlangt dieselbe Werkzeug-/Pillowversion und zusätzlich **exakte** RGBA-
+Pixel-/Normalisierungsmetadaten-Gleichheit zur neu dekodierten Originaldatei,
+neu berechnete Matrix/Hinweise und exakte Vergleichsrasterpixel. Schon ein
+abweichendes Normalisierungspixel wird abgewiesen. JPEG/ICC-Rundungsunterschiede
+werden damit nicht toleriert. Keine plattformübergreifende Byteidentität versprochen.
 
 `picross-image-manifest-v1` bindet Originalbytes, normalisiertes PNG, Entwurf,
 Kandidat, Logik, tatsächlichen Proof, Ergebnis, Zell-PNG, HTML und Briefing per
@@ -324,8 +329,11 @@ beliebiger Inhalte, keine öffentliche Importoberfläche oder zweite Spiellogik.
 
 `picross-p1-export-v1` bindet Produktionsmanifest, Kandidat, Logik/Proof,
 Definition/Revision, Farbzuordnung und Reveal-Dateihash. `rp3_demo` importiert real
-erneut, prüft das eingecheckte Bundle frisch und vergleicht den neuen Export
-bytegenau mit dem registrierten P1-Inhalt. `product` ergänzt reguläre Hauptszene,
+erneut, prüft das eingecheckte Bundle frisch und vergleicht Matrix/Logik/Entwurf
+sowie den neuen Definitions-/Assetexport bytegenau mit dem registrierten P1-Inhalt.
+Auch der gespeicherte Export wird aus seinem gebundenen Produktionsbundle frisch
+rekonstruiert. Der Bericht führt ursprüngliche und neu erzeugte Kandidatenkennung
+samt beiden Codecständen. `product` ergänzt reguläre Hauptszene,
 drei isolierte Neustartprozesse und native Arbeits-/Abschluss-/Albumrenders.
 RP3-A01 bis A06 einschließlich separat noch offenem unabhängigem technischen/
 visuellen Review sind Mergegates. Eine echte Eigentümer-Lösung bleibt RP-6-Gate.

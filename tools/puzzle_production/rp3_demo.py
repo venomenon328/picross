@@ -18,9 +18,12 @@ def demonstrate(root: Path, output: Path) -> dict:
     import_image(source / "source.png", source / "design.json", output / "production")
     shipped, _, shipped_check = inspect_candidate(source / "production", "area-128")
     regenerated, _, check = inspect_candidate(output / "production", "area-128")
-    if shipped != regenerated or not shipped_check["certified"] or not check["certified"]:
+    semantic_fields = ("matrix", "logic_hash", "design", "variant", "source_id")
+    if (any(shipped[k] != regenerated[k] for k in semantic_fields) or
+            not shipped_check["certified"] or not check["certified"]):
         raise InvalidInput("Real imported candidate differs from shipped certified candidate")
     export_p1(output / "production", "area-128", source / "reveal.svg", "Fliegenpilz", output / "p1-export")
+    export_p1(source / "production", "area-128", source / "reveal.svg", "Fliegenpilz", output / "shipped-p1-export")
     for relative in ("data/f04.json", "art/f04.svg"):
         if (file_hash(output / "p1-export" / relative) != file_hash(root / "prototypes/p1" / relative) or
                 file_hash(output / "p1-export" / relative) != file_hash(source / "p1-export" / relative)):
@@ -31,7 +34,7 @@ def demonstrate(root: Path, output: Path) -> dict:
         if path.resolve().parent not in ((source / "p1-export").resolve(), (source / "p1-export/data").resolve(), (source / "p1-export/art").resolve()) or file_hash(path) != sha:
             raise InvalidInput("Altered or unsafe committed P1 export")
     for key in ("candidate_id", "logic_hash", "revision", "color_mapping", "technical"):
-        if committed_export[key] != load_json(output / "p1-export/manifest.json")[key]:
+        if committed_export[key] != load_json(output / "shipped-p1-export/manifest.json")[key]:
             raise InvalidInput(f"Committed export {key} differs from fresh verification")
     checkout = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
     base = subprocess.check_output(["git", "merge-base", "HEAD", "origin/main"], cwd=root, text=True).strip()
@@ -40,6 +43,8 @@ def demonstrate(root: Path, output: Path) -> dict:
               "tested_checkout_commit": checkout, "base_commit": os.environ.get("RP1_BASE_COMMIT") or base,
               "source_tree_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=root, text=True).strip()),
               "github_run_id": os.environ.get("GITHUB_RUN_ID"), "candidate_id": shipped["id"], "technical": check,
+              "regenerated_candidate_id": regenerated["id"], "producer_versions": shipped["versions"],
+              "current_versions": regenerated["versions"], "cross_build_pixel_and_raster_verified": True,
               "registered_files": {p: file_hash(root / "prototypes/p1" / p) for p in ("data/f04.json", "art/f04.svg")},
               "source_files": {p.name: file_hash(p) for p in sorted(source.iterdir()) if p.is_file()},
               "production_manifest_sha256": file_hash(output / "production/manifest.json"),

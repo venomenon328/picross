@@ -251,10 +251,11 @@ def logic_from_matrix(matrix: list[list[str]], design: dict) -> dict:
     return validate_logic(wire).to_wire()
 
 
-def candidate(normalized_hash: str, design: dict, variant: dict, matrix: list) -> dict:
+def candidate(normalized_hash: str, design: dict, variant: dict, matrix: list,
+              producer_versions: dict | None = None) -> dict:
     data = {"format": "picross-image-candidate-v1", "revision": 1,
             "source_id": design["source_id"], "normalized_sha256": normalized_hash,
-            "versions": versions(), "design": design, "variant": variant,
+            "versions": producer_versions or versions(), "design": design, "variant": variant,
             "matrix": matrix, "logic_hash": digest(logic_from_matrix(matrix, design))}
     return {"id": digest(data), **data}
 
@@ -271,8 +272,11 @@ def inspect_candidate(directory: Path, variant_id: str, budget: Budget | None = 
     manifest = load_json(directory / "manifest.json")
     if manifest.get("format") != "picross-image-manifest-v1":
         raise InvalidInput("Unsupported production manifest")
-    if manifest.get("versions") != versions() or manifest.get("original") not in ("original.png", "original.jpg"):
-        raise InvalidInput("Wrong image tool versions/original path")
+    producer = exact_keys(manifest.get("versions"), set(versions()))
+    if (producer["tool"] != VERSION or producer["pillow"] != PILLOW_VERSION or
+            any(v is not None and (not isinstance(v, str) or not 1 <= len(v) <= 128) for v in producer.values()) or
+            manifest.get("original") not in ("original.png", "original.jpg")):
+        raise InvalidInput("Wrong image tool/Pillow version or original path")
     if not isinstance(manifest.get("files"), dict):
         raise InvalidInput("Missing production file bindings")
     for name, sha in manifest["files"].items():
@@ -289,20 +293,27 @@ def inspect_candidate(directory: Path, variant_id: str, budget: Budget | None = 
     if set(manifest["files"]) != required or d != load_json(directory / "design.json"):
         raise InvalidInput("Incomplete/inconsistent production file bindings")
     image, meta, _ = normalize(directory / manifest["original"])
-    encoded = io.BytesIO()
-    image.save(encoded, format="PNG")
-    if (hashlib.sha256(encoded.getvalue()).hexdigest() != file_hash(directory / "normalized.png") or
-            meta != manifest["normalization"]):
-        raise InvalidInput("Normalization no longer matches original and tool versions")
+    # Codec builds may encode identical pixels differently. Preserve the actual
+    # producer bytes/versions, but demand exact current decoding/normalization
+    # and raster equality before accepting a cross-build replay.
+    with Image.open(directory / "normalized.png", formats=("PNG",)) as stored:
+        if stored.mode != "RGBA" or stored.size != image.size or stored.info or getattr(stored,"n_frames",1) != 1:
+            raise InvalidInput("Invalid normalized RGBA PNG")
+        stored.load()
+        if stored.tobytes() != image.tobytes() or meta != manifest["normalization"]:
+            raise InvalidInput("Normalization pixels no longer match original with the current codec build")
     c = load_json(directory / f"{variant_id}-candidate.json")
     variant = next(v for v in d["variants"] if v["id"] == variant_id)
-    expected = candidate(file_hash(directory / "normalized.png"), d, variant, rasterize(image, d, variant))
+    expected = candidate(file_hash(directory / "normalized.png"), d, variant, rasterize(image, d, variant), producer)
     if c != expected:
         raise InvalidInput("Candidate differs from imported source/parameters; regenerate proof")
-    encoded = io.BytesIO()
-    raster_image(c["matrix"], d).save(encoded, format="PNG")
-    if hashlib.sha256(encoded.getvalue()).hexdigest() != file_hash(directory / f"{variant_id}-raster.png"):
-        raise InvalidInput("Comparison raster differs from the candidate matrix")
+    with Image.open(directory / f"{variant_id}-raster.png", formats=("PNG",)) as stored_raster:
+        expected_raster = raster_image(c["matrix"], d)
+        if stored_raster.mode != "RGB" or stored_raster.size != expected_raster.size or stored_raster.info or getattr(stored_raster,"n_frames",1) != 1:
+            raise InvalidInput("Invalid comparison raster PNG")
+        stored_raster.load()
+        if stored_raster.tobytes() != expected_raster.tobytes():
+            raise InvalidInput("Comparison raster differs from the candidate matrix")
     wire = logic_from_matrix(c["matrix"], d)
     if wire != load_json(directory / f"{variant_id}-logic.json"):
         raise InvalidInput("Stored clues differ from the final matrix")

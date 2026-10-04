@@ -20,7 +20,7 @@ durchgeführt und für ihren damaligen Merge als Gate aufgehoben.
 | RP3-A03 | Eigene reale PNG-Datei und `production/index.html`, drei begrenzte Varianten, Parameter/Herkunft/Versions-/Dateihashes und Briefing. HTML-Metadaten werden escaped; feste lokale Dateinamen. Eigene Browser-Sichtkontrolle und dateibasierte Übergabe, keine allgemeine Motivqualität. |
 | RP3-A04 | `rp3_demo` importiert die reale Datei neu, rekonstruiert das eingecheckte Bundle und prüft alle Export-/Assetbindungen bytegenau gegen registriertes F-04. `rp3_probe.gd` lädt die reguläre Hauptszene, wählt F-04 über echte Viewport-Ereignisse, bearbeitet und schließt den neuen Inhalt ab. |
 | RP3-A05 | Drei getrennte isolierte Prozesse `partial`/`finish`/`read`: Teilstand, History, Undo/Redo, Abschluss und Wiederherstellung samt Album. Eigene falsche Miniaturzelle; Name/Reveal bis zum letzten Commit verborgen. Andere Slots bleiben unverändert; feste IDs/Pfade. Native Arbeits-/Abschluss-/Albumrenders, zwei Client-/UI-Kombinationen. Alte F-01/F-02-Dateien/Proofs/Bilder und F-03 erhalten. |
-| RP3-A06 | 55 gemeinsame Fachtests einschließlich 19 Bildtests; bestehende Werkzeug-/Dokumenttests, vollständiger Diffcheck, unverkleinerter Benchmark und Produkt-/Preflightweg bleiben aktiv. Aktuelle CI mit Windows-ZIP und genauer Head-/Basis-/Test-Merge-/Artefaktbindung im Draft-PR. Unabhängiges technisches/visuelles Review separat offen. |
+| RP3-A06 | 56 gemeinsame Fachtests einschließlich 20 Bildtests; bestehende Werkzeug-/Dokumenttests, vollständiger Diffcheck, unverkleinerter Benchmark und Produkt-/Preflightweg bleiben aktiv. Aktuelle CI mit Windows-ZIP und genauer Head-/Basis-/Test-Merge-/Artefaktbindung im Draft-PR. Unabhängiges technisches/visuelles Review separat offen. |
 
 ## Reproduktionsweg und Grenzen
 
@@ -45,6 +45,13 @@ Ziel 1..100 je Achse und acht Vordergrundfarben plus Leer. Kein verstecktes
 Strecken, keine dynamische Filter-/Modellintegration. P1-Adapter ausschließlich
 quadratisch monochrom, F-04 und lokales SVG; andere Fälle werden klar abgewiesen.
 Keine freie Save-/Definitionspfadableitung, Migration oder öffentliche Import-UI.
+
+Pillow-Wheels bündeln unter Windows/Linux unterschiedliche JPEG-ABI-/zlib-Stände.
+Ein Replay mit derselben Werkzeug-/Pillowversion behält die Produzentenidentität
+und fordert exakt gleiche neu normalisierte RGBA-Pixel, Metadaten und Raster.
+Abweichende Pixel oder Pillowversion scheitern im gezielten Cross-build-Test.
+Der Demonstrationsbericht weist ursprüngliche/neue Kennung und beide Codecstände
+separat aus; Definition und Reveal müssen bytegleich bleiben.
 
 Der Export liest Original und Normalisierung erneut, prüft Dateibindungen,
 rekonstruiert den Kandidaten, erzeugt Hinweise aus der Matrix und replayt den

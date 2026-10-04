@@ -255,6 +255,37 @@ class ImageTests(unittest.TestCase):
         self.assertEqual(load_json(self.root/"rgb-export/data/f04.json")["palette"][0]["color"],"203030")
         self.assertEqual((self.root/"rgb-export/art/f04.svg").read_bytes(),artwork.read_bytes())
 
+    def test_codec_build_replay_preserves_producer_identity_and_rejects_changed_pixels(self):
+        bundle=self.produce()
+        manifest=load_json(bundle/"manifest.json")
+        original_versions=copy.deepcopy(manifest["versions"])
+        manifest["versions"]["jpeg"]="6.2"
+        manifest["versions"]["zlib"]="different-build"
+        for variant in self.design["variants"]:
+            name=variant["id"]+"-candidate.json"
+            c=load_json(bundle/name)
+            expected=candidate(c["normalized_sha256"],c["design"],c["variant"],c["matrix"],manifest["versions"])
+            write_json(bundle/name,expected)
+            manifest["files"][name]=images.file_hash(bundle/name)
+        write_json(bundle/"manifest.json",manifest)
+        c,_,checked=inspect_candidate(bundle,"area-128")
+        self.assertTrue(checked["certified"])
+        self.assertNotEqual(c["versions"],original_versions)
+        self.assertEqual(c["versions"],manifest["versions"])
+        manifest["versions"]["pillow"]="12.2.0"
+        write_json(bundle/"manifest.json",manifest)
+        with self.assertRaises(InvalidInput):
+            inspect_candidate(bundle,"area-128")
+        manifest["versions"]["pillow"]=original_versions["pillow"]
+        write_json(bundle/"manifest.json",manifest)
+        with Image.open(bundle/"normalized.png") as normal:
+            changed=normal.copy()
+        changed.putpixel((0,0),(255,0,0,255))
+        changed.save(bundle/"normalized.png")
+        self.rebind(bundle,"normalized.png")
+        with self.assertRaises(InvalidInput):
+            inspect_candidate(bundle,"area-128")
+
     def test_tampered_proof_is_freshly_rejected_even_with_rebound_file_hash(self):
         bundle=self.produce()
         proof=load_json(bundle/"area-128-proof.json")
