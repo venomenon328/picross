@@ -41,11 +41,86 @@ jobs:
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: python3 -m tools.puzzle_production.rp3_demo --output-dir artifacts/puzzle-production/rp3
+      - name: RP-4 frozen corpus reconstruction and independent proof replay
+        timeout-minutes: 11
+        env:
+          RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python3 -m tools.puzzle_production.rp4 verify --output-dir artifacts/puzzle-production/rp4
       - name: Upload reports, proofs and measurements
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: puzzle-production-${{ github.event.pull_request.head.sha || github.sha }}
           path: artifacts/puzzle-production/
+          if-no-files-found: error
+          retention-days: 14
+
+  rp4-windows:
+    runs-on: windows-2022
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: current
+    env:
+      # Preserve the byte-bound corpus without changing global Git configuration.
+      GIT_CONFIG_COUNT: '1'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      RP4_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      RP4_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+    steps:
+      - name: Checkout current integration
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: current
+          persist-credentials: false
+      - name: Checkout only the unchanged R1 illustration-test inputs
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 4b794bb4ba109f2880876972e5e39e002b661478
+          path: r1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tests/puzzle_production/test_rp4.py
+            /tools/puzzle_production/
+            /examples/rp4/create_illustrations.py
+            /examples/rp4/sources/illustration-*.png
+      - name: Python 3.12.10 x64
+        # Official actions/setup-python v6, checked against its Git tag and action.yml.
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12.10'
+          architecture: x64
+      - name: Isolated official Pillow wheel
+        run: |
+          $rp4Env = Join-Path $env:RUNNER_TEMP 'rp4-image-env'
+          python -I -m venv $rp4Env
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $rp4Python = Join-Path $rp4Env 'Scripts/python.exe'
+          New-Item -ItemType Directory -Force 'artifacts/rp4-windows' | Out-Null
+          & $rp4Python -I -m pip --isolated install --index-url https://pypi.org/simple --only-binary=:all: --no-cache-dir --disable-pip-version-check --report artifacts/rp4-windows/pillow-install.json -r tools/puzzle_production/requirements-image.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          "RP4_PYTHON=$rp4Python" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Reproduce R1 hash failure with identical decoded images
+        timeout-minutes: 2
+        run: |
+          & $env:RP4_PYTHON -I tools/rp4_windows_check.py --phase baseline --repo "$env:GITHUB_WORKSPACE/r1" --output-dir artifacts/rp4-windows
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Require all current RP-4 regressions to pass
+        timeout-minutes: 3
+        run: |
+          & $env:RP4_PYTHON -I tools/rp4_windows_check.py --phase current --repo . --output-dir artifacts/rp4-windows
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Upload bounded Windows regression evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: rp4-windows-${{ github.event.pull_request.head.sha || github.sha }}
+          path: current/artifacts/rp4-windows/
           if-no-files-found: error
           retention-days: 14

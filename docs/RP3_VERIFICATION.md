@@ -1,6 +1,13 @@
 # RP-3: Bildimport, Vergleich und erster P1-Export
 
-Stand: 04.10.2026 · #37 · Implementierung im Draft, unabhängiges Review offen
+**Integrationsstand vom 05.10.2026:** RP-3/#37 ist nach unabhängigem technischem
+und visuellem Review R2 über [PR #44](https://github.com/venomenon328/picross/pull/44)
+als `aa9cc23244c60d647d8468a8d76a819f977e85a6` in `main` integriert. R2 bindet
+den Quellhead `3a1a9386750b50568f63d8277cdf67b9d2884c2c`; keine offenen B-/A-Befunde.
+Die folgenden Draft-/Gateangaben sind historische Entwicklungsnachweise.
+Aktuelle Vergleichsproduktion: [RP4_VERIFICATION.md](RP4_VERIFICATION.md).
+
+Historischer Stand: 04.10.2026 · #37 · damalige Implementierung im Draft
 
 Auftrag ist der vollständige [Issue-Body #37](https://github.com/venomenon328/picross/issues/37)
 einschließlich Umsetzungsvorbereitung vom 04.10.2026. Branch
@@ -88,7 +95,7 @@ finalen CI-Runs, Artefakthashes, ausgeführte Schritte und getrenntes Selbstrevi
 Linux-CI baut Windows, führt aber keinen Windows-Start aus. Ein lokaler Editor-
 Renderlauf ist ebenfalls kein Start der exportierten Windows-EXE.
 
-## Offene Abnahme
+## Historischer Abnahmestand vor Review R2
 
 Unabhängiges technisches und visuelles Review am benannten finalen PR-Stand bleibt
 **offen** und Teil RP3-A06. Eigenes Selbstreview ersetzt es nicht. Eine echte

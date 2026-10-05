@@ -1,0 +1,43 @@
+{
+  "format": "picross-rp4-effort-v1",
+  "human": [
+    {
+      "stage": "preparation",
+      "actor": "human",
+      "minutes": null,
+      "status": "not_observed",
+      "reason": "Commission executed by agent; no measured human authoring/curation session."
+    },
+    {
+      "stage": "ai_rounds",
+      "actor": "human",
+      "minutes": null,
+      "status": "not_observed",
+      "reason": "Commission executed by agent; no measured human authoring/curation session."
+    },
+    {
+      "stage": "raster_editing",
+      "actor": "human",
+      "minutes": null,
+      "status": "not_observed",
+      "reason": "Commission executed by agent; no measured human authoring/curation session."
+    },
+    {
+      "stage": "visual_inspection",
+      "actor": "human",
+      "minutes": null,
+      "status": "not_observed",
+      "reason": "Commission executed by agent; no measured human authoring/curation session."
+    }
+  ],
+  "agent": {
+    "actor": "Codex in ChatGPT Work",
+    "source_count": 12,
+    "native_image_calls": 9,
+    "raster_edit_operations": 0,
+    "visual_inspection": "source images then all actual baseline rasters; recorded separately in reviews.json"
+  },
+  "productivity_per_human_hour": null,
+  "productivity_status": "not estimable with unobserved human denominator",
+  "technical_timing": "baseline/production.json import_wall_seconds; each actual result elapsed_seconds includes solve/serialization/verification, not pure solver time or human difficulty"
+}

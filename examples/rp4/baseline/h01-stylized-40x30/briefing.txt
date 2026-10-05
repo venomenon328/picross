@@ -1,0 +1,4 @@
+Runde Uhr leicht rechts unterhalb der Bildmitte; Außenring und tatsächlich erkennbare Innenstrukturen erhalten, keine erfundene lesbare Uhrzeit oder Zahlen.
+
+Working mode: faithful
+Motif and gameplay review: open

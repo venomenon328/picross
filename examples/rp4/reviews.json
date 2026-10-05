@@ -1,0 +1,530 @@
+{
+  "i01-direct-40x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/i01.png",
+    "view_sha256": "dc08bdf8013879ebbf3ab6033b2a37911a1f82eff6b514b1a2be8ec31606f837",
+    "notes": "Beide Flächenraster zeigen Kanne, linke Tülle, Deckelknauf und offenen Henkel. 176 schließt die kleine Lücke unter dem Deckel rechts; kein wesentlicher Motivverlust. Motivtreue erhalten; keine Rasterkorrektur erforderlich.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "3c01a678e4d84f325b537fe11224518c454f4d604d26e57a9d9bec7c00da8cdc",
+        "raster_sha256": "c83c2677a3bed48b3f5f3fed07de9f488a256d9ddfe86d287fd915db10ae9cd3",
+        "motif_usable_for_comparison": true
+      },
+      "area-176": {
+        "verdict": "recognizable",
+        "candidate_id": "ea05163576317df43d34d5a40743dfaf3ef8240fac7956cad462cac965280e34",
+        "raster_sha256": "9550f9fd3d5d2dd2dc452661cd84121378ae95e5e7fb1e2acb4e10c1303e7e7b",
+        "motif_usable_for_comparison": true
+      }
+    }
+  },
+  "i01-direct-100x100": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/i01.png",
+    "view_sha256": "dc08bdf8013879ebbf3ab6033b2a37911a1f82eff6b514b1a2be8ec31606f837",
+    "notes": "Echte Neuabtastung aus 800×800: rundere Kanne und klarer Henkelinnenraum, schlankere Tülle. Beide Varianten erhalten die wesentlichen Formen. Viele breite Füllflächen; daraus keine Aussage über menschliche Schwierigkeit ableiten.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "3198799a95ddc533b5d86da3b1acbf7b6b204ca099520f717df7d88ed9ea296e",
+        "raster_sha256": "43ccdbbb88ca4e935cd73e8337907bec4aa7cfefa379ac28b913055204c6fac0",
+        "motif_usable_for_comparison": true
+      },
+      "area-176": {
+        "verdict": "recognizable",
+        "candidate_id": "503aff994719328e6d1af367bbe8e249f11afb38011c6c93bdc069a479b1b116",
+        "raster_sha256": "9512e3fa6c9a172c5fc6682e4fe6c0d9f4049911bde2fb12639c0555a256291d",
+        "motif_usable_for_comparison": true
+      }
+    }
+  },
+  "i02-direct-60x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/i02.png",
+    "view_sha256": "1427872e35056fddb6bee810ec1fc2a2a896a0566d93722e9b4bf5621452383e",
+    "notes": "Area zeigt beide Segel, Mast und Rumpf; Wellen zerfallen teilweise und erhalten falsche Ockerkanten. Contour ist trotz Zertifikat nur eine Grundlinie und wenige Punkte: Segel und Rumpf fehlen. Für RP-5 Area behalten, Mast-/Segellücke schützen; zertifizierte Kontur nicht als brauchbaren Inhalt zählen.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "712646f20260c4c28717a85e626ce11ec595998269a3b1727f59986c6a173782",
+        "raster_sha256": "5d3442f6c57eaa79239558925477b3a5e93759081b097d47c7463e60942d69df",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "rejected",
+        "candidate_id": "e7762dfaaa41e02c9f7a291d647b5c0da77ba62d1db39cc0265fbd8674a83967",
+        "raster_sha256": "e486c64699385389b3f27af54b39199fc5355ec30d7cb4a4ab3308fdc2116dd3",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "i03-direct-40x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/i03.png",
+    "view_sha256": "0da6de672f1144f9daa5f87128e13ff719021c805bad70daaf59e1fa75b09477",
+    "notes": "Area ist als Tulpe klar; Blütenkrone und asymmetrische Blätter erhalten. Ockerkanten aus Palette/BOX stören. Contour reduziert das Motiv auf verstreute Punkte. RP-5: Innenverbindungen am Stiel schützen, nur lokale Randänderungen untersuchen.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "64d69782687f0040be9041d0e123aca9761566e05e13dafd383a985b5d49de0b",
+        "raster_sha256": "e767440c1322a511a0a9942b52d59a10b1750310c4bae3775000e9ab3b15caf0",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "rejected",
+        "candidate_id": "52c1ec3826eef53672a9fd9daa6447c0709caf8f274e4f4ecd725f7d16049632",
+        "raster_sha256": "ff6b1932fc2a599831e43a10a53164c788de11a4e35328709880b9d22d554a9d",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "a01-direct-40x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/a01.png",
+    "view_sha256": "2c6ca75ef1c0350c0c36471143de26b0c77a7391de4b1a847a21d4a9d1ac22fe",
+    "notes": "Area zeigt Augen, Gesicht, Flügel und Ast als Eule; helle Gesichtsteile gehen in Leer über, Füße verschmelzen mit Ast. Contour ist eine löchrige Punktspur, ohne zusammenhängenden Kopf. Auch die KI-Quelle hält die angeforderte reine Flächenpalette nicht exakt ein (weiche Tonwechsel). Area für RP-5, Augen-/Gesichtsraum schützen.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "e8c302ecf9a49e1da59d1d9b8e9a5efbfca93fac3d685326c41f899f50a2cafa",
+        "raster_sha256": "8fd0630d74ceab544a221bf4ad0671dbafa5846280e92ed661cdf052f3dd6b3a",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "933c6de3468aa29e6e776b706124f87928f941ffa2b9caef3e49d6d1089bc670",
+        "raster_sha256": "9bacc66f96ee5d5f4a63ec7e6a8767b6b4e664dd1613bc800dce82cd6a217426",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "a01-direct-100x100": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/a01.png",
+    "view_sha256": "2c6ca75ef1c0350c0c36471143de26b0c77a7391de4b1a847a21d4a9d1ac22fe",
+    "notes": "Area erhält die herzförmige Gesichtsmaske und Flügel deutlich besser als 40×40; feines weißes Rauschen im Bauch durch Tonwechsel. Contour bleibt brüchig und unruhig. Größere Auflösung löst den logischen Fixpunkt nicht automatisch. Keine kleinen Raster hochskaliert.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "329d2fc26db5e83f97e3a627db788b778733709ad41e2d344d281e29b851954b",
+        "raster_sha256": "7cb5677e7c2d731dc81079f73a71409d6ace0c282d0456e587d560452937f6bc",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "73c247a171019ca286bd1aa58cb85b7a52183390535c98fedc95b0778e109cdc",
+        "raster_sha256": "7157ac72d0c9079733c942f6a30578768a95921b2632857f25aaa1ae33518f1f",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "a02-direct-60x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/a02.png",
+    "view_sha256": "bc9cb7c6eb6924a2fdbfb006a1b990ff8d8a6da3f7129941f075c4be39e68854",
+    "notes": "Beide Varianten zeigen Dampflok, Kabinenfenster, Schlot, drei Radinnenräume und Koppelstange. Unterbrechungen an den dünnen Radreifen sichtbar; 176 verbindet etwas stärker. Eine motivtreue Enthüllung darf die Räder verfeinern. Keine zusätzliche strengere Mono-Erkennungsregel.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "5285f7808dfba0c28464ed1cd047f1c97529bf19c9370d7517cc90f5e95a4881",
+        "raster_sha256": "f1982a6919e03ec8bfe29839ee2fe61d1edfbb3b3cec4be3a83c4413bd27e398",
+        "motif_usable_for_comparison": true
+      },
+      "area-176": {
+        "verdict": "recognizable",
+        "candidate_id": "1b21a20664d3e254819311d2e4a8146a31664b96aabc41d5dadc00e790634e71",
+        "raster_sha256": "3dbd29461d76387d6ce1ff17c166c76fdef3e96f1aa275a2522586b816f9d870",
+        "motif_usable_for_comparison": true
+      }
+    }
+  },
+  "a03-direct-50x50": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/a03.png",
+    "view_sha256": "d862c2ec066acd08267efa53253929fae6ef7e09c01860df331e96c35fe23567",
+    "notes": "Area ist als dreistöckige Pagode mit Eingang und Treppe klar; die kleineren Pfeilerfenster werden schmal, Sträucher blockiger. Contour lässt Pfosten und Dachflächen weg, liefert fragile Dachlinien. Area ist geeigneter Forschungskandidat; finale Enthüllung/Pilotfreigabe ausstehend.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "9e3326e41c5e3c97737e74cb4f9016819965270af2a170e3504a3d4901794d3b",
+        "raster_sha256": "524246d5804a19377d4a4985c644d1f3cae46b17fe9734976142613badcd5115",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "94afcb3f04f322914414d4c8748e8f0b405f1189d9c3eac8a2ba4ba8ab65fa81",
+        "raster_sha256": "0e27e8b0ebe019d39fe64b7eaf9bdac997e2831c8fc2b453c26ab85d7af4669e",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "p01-direct-40x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/p01.png",
+    "view_sha256": "3a5c9452d490eaf36e7dfe7bf0367626547c212f924c7316ee6cb3b7b5ac60f1",
+    "notes": "128 erhält gebeugte Person und Kamera, verliert aber die drei wesentlichen Stativbeine bis auf Bruchstücke. Die erlaubte Mono-Enthüllung könnte die Szene erklären; das ersetzt den dokumentierten Verlust der beauftragten Stativform nicht. 176 verschmilzt Person und Hintergrund zu einer Wand. Keine Motivfreigabe aus beiden Zertifikaten.",
+    "variants": {
+      "area-128": {
+        "verdict": "needs_revision",
+        "candidate_id": "815ba22d411d922f4c4a296b69c245bf79181ad1a15c88136b548666dca65dae",
+        "raster_sha256": "d69b613b9fda786044e38edcda3c6a17175398a8ed2bbe9ea67a67d6d6e74970",
+        "motif_usable_for_comparison": false
+      },
+      "area-176": {
+        "verdict": "rejected",
+        "candidate_id": "3b4b70a81819ca85177927df0721bd194cbac34484531f8b0d95437cd8509699",
+        "raster_sha256": "98312e615f40b0d997915683d0f5d28e801d6facdf50dd719c7abc701e31ce55",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "p01-stylized-40x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/p01.png",
+    "view_sha256": "3a5c9452d490eaf36e7dfe7bf0367626547c212f924c7316ee6cb3b7b5ac60f1",
+    "notes": "128 zeigt Person und Kamera, aber abgerissene Stativbeine. 176 erhält ein lesbares Stativ und eine nachvollziehbare Fotografenhaltung, die eine motivtreue Enthüllung klarer machen darf. Die KI-Ausgabe enthält mehr dünne Binnenlinien als beauftragt. Logischer Fixpunkt beider Varianten; RP-5 bei 176 Beine/Leerkeil schützen.",
+    "variants": {
+      "area-128": {
+        "verdict": "needs_revision",
+        "candidate_id": "435ea9547cc6d98457251249af36f635a8e283972247513ae68c0034c83826ec",
+        "raster_sha256": "01a10159e804711c3b6e5ca07453d3e53b886c0efc80154a18827ffbe7454d55",
+        "motif_usable_for_comparison": false
+      },
+      "area-176": {
+        "verdict": "reveal_supported",
+        "candidate_id": "078c72cbef56276076d2b3ec79d658fa5cf55a2ee5860b9289cb87a08b9640c1",
+        "raster_sha256": "3862ece5dc17315f3eafca0d98fb60667ee23cd1e263250614ce363de686d39b",
+        "motif_usable_for_comparison": true
+      }
+    }
+  },
+  "p02-direct-60x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/p02.png",
+    "view_sha256": "0b403dcf70b79358aab8d2691aa04a8cd2ac0cc40fe3425b51510ffbb3ef36cc",
+    "notes": "Area zeigt Tassenöffnung, Henkel und Untertasse; brauner Hintergrund und Tasse verschmelzen stellenweise, Löffel bleibt klein und fleckig. Motiv als Kaffeetasse selbst erkennbar. Contour übernimmt Holzmaserung und Glanz als störende Fragmente. Area technisch und visuell brauchbar für den Vergleich, keine Pilotfreigabe.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "dc2572409559e14381654508053189dcbce59602c966ace9ab5cbb7d03b79223",
+        "raster_sha256": "37c00a0b1247c28ab60c7d5bd3cafef5587297c687851481250b0f37fa7f6d58",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "7d567b6b0d949ef42c7161e02745c1c0ec1854626234cc4beb14c691cd16f109",
+        "raster_sha256": "b9a39741f0f2bbaa590fe1fcf774702fe8a8fd0539efc26da5235ecf78d50b13",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "p02-stylized-60x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/p02.png",
+    "view_sha256": "0b403dcf70b79358aab8d2691aa04a8cd2ac0cc40fe3425b51510ffbb3ef36cc",
+    "notes": "Area trennt Tasse, Henkel, Untertasse und Löffel auf weißem Hintergrund deutlich; Blickrichtung bleibt nachvollziehbar. Die KI vereinfacht Material und rahmt etwas enger, ohne grundlegenden Motivwechsel. Contour löchrig, Henkel innen unvollständig. Kein zusätzlicher Logikerfolg gegenüber direktem Area, aber klareres Motiv.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "55c1ba0eaa16310513f62f8b0ec88f66a91a893f980645449610b1e396d89937",
+        "raster_sha256": "5df6f91de7c445290361bc66154ae10972374d8e4149d24e1a83945ef54b2f88",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "f6ea4e016aeb80be34a0ca20c6b45c6d1d704d1ce0111752af1fa082b9189312",
+        "raster_sha256": "23b6cef464b05b27666d2fbcc4c72c2cfe392a07ad1d089f833c58d26f0a55d7",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "p02-direct-100x100": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/p02.png",
+    "view_sha256": "0b403dcf70b79358aab8d2691aa04a8cd2ac0cc40fe3425b51510ffbb3ef36cc",
+    "notes": "Direkt aus dem 600×400-Foto mit sichtbaren Leerstreifen: Tasse, Henkel und Löffel besser aufgelöst; Holz- und Glanzflecken bleiben. Contour stark fragmentiert. Area motivisch brauchbar, technisch unvollständig. Rechteckquelle belegt bei contain nur rund zwei Drittel der quadratischen Höhe; transparent als Auslastungsgrenze ausgewiesen.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "1fd66d64413f6358f9ab898e51b3eee82a70bb208da1a3698dbeb1b6760dee11",
+        "raster_sha256": "ede5083c4a3cfb94a5ad452725e5c9ed0c2fc152ff6b8b3ea202cc5a1eb5d179",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "cb1e5cb35af64958c7c061d05364523269add490db04bae1e630578e4926f2d9",
+        "raster_sha256": "409d6affdd91ced7f7e882f8e2f4c4ef1fec01baec6b5ed30ad163ba976c08fe",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "p02-stylized-100x100": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/p02.png",
+    "view_sha256": "0b403dcf70b79358aab8d2691aa04a8cd2ac0cc40fe3425b51510ffbb3ef36cc",
+    "notes": "Aus nativer 1536×1024-Stilisierung neu nach 100×100 abgetastet. Area erhält klare Tasse/Henkel/Löffel, Kontur bleibt dünn und unterbrochen. Beide Fixpunkte; RP-5 Henkelöffnung und Tassenrand schützen. Quadratisches Ziel nutzt wegen contain rund zwei Drittel seiner Höhe.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "cd2c1ae1f7c05b2306cc093efb6fca29b62e09919b202d2d3d35ed24f5827857",
+        "raster_sha256": "3be75b6e28244d0aa2eb0a3846762aaba8bb31bb6d5beb458291a1c0022aff17",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "a51239008b9126537b80f13442f289fda5466e0a8648c08f5ada545d5124c891",
+        "raster_sha256": "241fbdbaca2457fe9765ab1a1b0af945ff57b893fff7cee758525d4635222539",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "p03-direct-40x60": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/p03.png",
+    "view_sha256": "daebe941dd52f431cbfb2086834703da4edc7a39a3af69fc0caae7a0d44d9bab",
+    "notes": "Area ist logisch zertifiziert, aber Nutzlastspitze und Zylinderkontur verschmelzen mit Himmel/Farbflächen: weitgehend ein schmaler Stab. Contour zeigt Basis und eine eckige Spitze, verliert den eigentlichen Körper. Farbmotiv noch nicht hinreichend klar. Foto wurde vorab auf die zentrale Rakete zugeschnitten, nicht nach Solverausgang.",
+    "variants": {
+      "area-128": {
+        "verdict": "needs_revision",
+        "candidate_id": "5b1cc3caecc353fc3fc562a3559af7a04800227eb43470e0f8f8fafdab3b8f3f",
+        "raster_sha256": "c6d6f4ccdf86bdc090208a4f24c6aaca939cb45d1dfbeb57a4cd811582103ad5",
+        "motif_usable_for_comparison": false
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "0b87f795f2d3fde2c289624b423c04fc39861a0d963eb2fe5f41c4b169901759",
+        "raster_sha256": "652717b972b2c6bfc57fccf2a114b614e486ed499a643418fcc30aa46bc1dc74",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "p03-stylized-40x60": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/p03.png",
+    "view_sha256": "daebe941dd52f431cbfb2086834703da4edc7a39a3af69fc0caae7a0d44d9bab",
+    "notes": "Area erhält spitze Verkleidung, langen Zylinder und offene Stützstruktur als Rakete. Sehr heller Körper gegen Weiß bleibt kontrastarm. Die KI hat den Körper verbreitert und zentrale Struktur symmetrischer interpretiert; Motivtreue ist begrenzt, keine exakte technische Abbildung. Contour verliert den breiten Körper und zerbricht in Teilstücke.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "cb94a1fcef211aa9e5c7dcc2e565c05d95469ea1190634df08e2e66f0526fe06",
+        "raster_sha256": "0adbd2d941763f14682f799dd35eb5b7e26ba0b63f52667e7da2fa3014da5003",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "9204f444c98302913696f76c94be643eeb8ce814b6e672e2c97bd8ea89e365a8",
+        "raster_sha256": "c95dccede807029a5236975f8044ae789968c96ec43c5ce8a9eb1b5e945cc752",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "h01-direct-40x30": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/h01.png",
+    "view_sha256": "ffb0faa3ea823a68fd4be8c545a6582f337cc97c974d8f15e4ee1b0077b7b3d7",
+    "notes": "128 extrahiert vor allem einen Hintergrundkeil, 176 fast eine volle Fläche mit heller Öffnung. Weder Ring noch Innenstruktur der Uhr bleibt als passende Stilisierung erhalten. Die erlaubte kolorierte Enthüllung würde diesen Formverlust nicht plausibel beheben. Das 176-Zertifikat ist daher kein brauchbarer Inhalt.",
+    "variants": {
+      "area-128": {
+        "verdict": "rejected",
+        "candidate_id": "9823f75fbfed8be59774796b2378efd30d1cb6bd19dccdebd010527ef79a5f0e",
+        "raster_sha256": "78ee47e81f30aa9fdb84a41711c751e97e82c627cc525ff20ef2d088ded4e592",
+        "motif_usable_for_comparison": false
+      },
+      "area-176": {
+        "verdict": "rejected",
+        "candidate_id": "8c50f3694accf039ad2c88eaaa14a714921ee0d0536324f6993874fa05fb6481",
+        "raster_sha256": "38af4cbb90e3228ff5883887c8f9969fb1aec99f463db7d81b8642126cc2f6e5",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "h01-stylized-40x30": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/h01.png",
+    "view_sha256": "ffb0faa3ea823a68fd4be8c545a6582f337cc97c974d8f15e4ee1b0077b7b3d7",
+    "notes": "Die KI hat aus Bewegungsunschärfe erfundene horizontale Innenformen und einen zentralen Kasten gemacht; diese sind kein belegtes Uhrdetail. Raster zeigen nur einen unterbrochenen bzw. stärkeren Ring. Mono darf durch Enthüllung verständlicher werden, doch die Quellinformation reicht nicht für eine treue Uhrdarstellung. Neue belastbare Vorlage wäre ein neuer Auftrag, keine stille Reparatur dieser Baseline.",
+    "variants": {
+      "area-128": {
+        "verdict": "needs_revision",
+        "candidate_id": "f9b9409a5b2504152333920e5ac98833bd0afea99aa98415474a40ab9926b6d2",
+        "raster_sha256": "188e0ea70ebf823761cadbaac7401942093b290af110998c6f13b60e9f056111",
+        "motif_usable_for_comparison": false
+      },
+      "area-176": {
+        "verdict": "needs_revision",
+        "candidate_id": "d15ce4127923e3f72cb04fb98c331c8f9e29464027a612086d04b10bf2358ddd",
+        "raster_sha256": "24486a3ab7c084939b72030dfb73d609210663fe7c0bcea7791f9461fc3571bb",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "h02-direct-50x50": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/h02.png",
+    "view_sha256": "bfed45ac112fa40e49174f42cd890bf9281026d9f2255d069d099e9b172c2e74",
+    "notes": "Area zeigt Person im orangefarbenen Raumanzug, dunklen Halsring und überlagerten Helm; Gesicht wird fast merkmalslos. Als Astronautinnenmotiv erkennbar, als identifizierbares Porträt nicht ausreichend. Contour zerstückelt Gesicht, Anzug und Helm. RP-5 nur bei Schutz von Kopf, Halsring und Helm; persönliche Wiedererkennbarkeit wäre eigener zusätzlicher Anspruch.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "34128206dd6a95fc43145ad941fe573eec9f2e5a75172386bf93af13d44e2e17",
+        "raster_sha256": "d9c6fa61833c6f2bc6d2567b2c5dd59723b36be5fcf3b59c403951104fdbc28e",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "72599d1415dc8114b48319765ae9f5b87de2d5da2bd9559fb7c0a47d07d53db6",
+        "raster_sha256": "2826d94ceaeda932a22f8d96b44be2be3773460a35991216d0f17cdcfcf0d470",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "h02-stylized-50x50": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/h02.png",
+    "view_sha256": "bfed45ac112fa40e49174f42cd890bf9281026d9f2255d069d099e9b172c2e74",
+    "notes": "Area räumt Stoffflächen auf und trennt den dunklen Helm, das Gesicht bleibt im Raster weitgehend leer. Generierte Vorlage verändert Gesichtsdetails, erhält Haltung und Ausstattung. Kein Nachweis persönlicher Porträtähnlichkeit im Raster. Contour bleibt ein lückenhafter Linienhaufen. Kein logischer Gewinn; beide Varianten unvollständig.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "baf63626e6144d1394f429980aab31e707de5430f5a04c768d2d43ee3d8cdbbb",
+        "raster_sha256": "fe627de0a5c8feef1075cdb956b24e73c89684889238a7246a25e81a9168e032",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "30e2e124f9d3a39693e93cbc90b2cc58436eba817ec88b8857269afdcbd4e197",
+        "raster_sha256": "fba5883ed7c28998395e88f058e01a5ecbed92caa4c0d65368cce995a673a606",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "h03-direct-60x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/h03.png",
+    "view_sha256": "baf6f982ff44e8956b0898038f5f273ff26bb2368bd78c77a31e78d3bbbf12fa",
+    "notes": "Area zeigt Katzenaugen, Nase und Schnauze, aber die gemeinsame Palette macht Fell/Umgebung grünlich-braun und flächig. Contour ist stark mit Fellfragmenten durchsetzt; Augen erkennbar, Gesamtbild unruhig. Area logisch und motivisch brauchbar für den Vergleich, Farbtreue begrenzt.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "84a5eb3e733300f9827e69dc2509156929668ec9ea9ae0d153eda9ac8311b90b",
+        "raster_sha256": "6ba2db0bce0b844b251bc2ed6710155d2fb3b299a6b39f38949cf2f576c3d38e",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "e0f4320fcc32764d93556a1c3f15f9697346da302b47565705f53187afacd4fe",
+        "raster_sha256": "cc62c144b27d914303817077ac5969aed6ba36196a905a716842467733287b80",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "h03-stylized-60x40": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/h03.png",
+    "view_sha256": "baf6f982ff44e8956b0898038f5f273ff26bb2368bd78c77a31e78d3bbbf12fa",
+    "notes": "Area trennt beide Augen, Nasendreieck und helle Schnauze besser; Katze unmittelbar erkennbar. Die KI vergrößert Augen und verändert Fellzeichnung/Framing etwas, bewahrt aber Blickrichtung und Hauptformen. Contour bleibt zerrissen. Gleicher technischer Area-Erfolg wie direkt, sichtbar klarere Form.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "2d94fc5ba259f89e6ad09933219f9ff676dfd95151e2400e5853c217cbfffc82",
+        "raster_sha256": "05909280be8457313e54f2c7f5c27555c222eefbf488987a9a1349eb9cd945e9",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "e48c5148819f53908f2c674ab0224402be47783f9431ee75b3e1cb238f818410",
+        "raster_sha256": "24366de6ff59b20c8f1b05423019377ab84d7acdcc13dae0dcdb3b9aafebd72f",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "h03-direct-100x100": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/h03.png",
+    "view_sha256": "baf6f982ff44e8956b0898038f5f273ff26bb2368bd78c77a31e78d3bbbf12fa",
+    "notes": "Aus dem originalen 451×300-Foto neu gerastert. Area erhält Augen, Nase und Stirnzeichnung und ist vollständig zertifiziert; Palette grünlich, feine Fellflecken. Contour mit viel Rauschen. Das 100×100-Ziel enthält aufgrund contain rund ein Drittel Leerstreifen und ist kein vollflächiges quadratisches Großmotiv.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "64f848fbc6f37fadfd358b61cd77d776caf67f425575416ccc0d84f3b88957a8",
+        "raster_sha256": "99a2c6f6f8bd67dd7a4da28d7193871272bb287cd99518bc02fa7ca20ddb9d3d",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "a0215ad88492e58c6a69e6a8e0f879572fdd436bffceef4190853de91f5abbf3",
+        "raster_sha256": "da761737e5605adce8cdd08d688604e6403f82e5a5e0677554bcec5ce36cefef",
+        "motif_usable_for_comparison": false
+      }
+    }
+  },
+  "h03-stylized-100x100": {
+    "reviewer": "Codex implementing agent",
+    "review_kind": "editorial visual self-review; not independent review or owner playtest",
+    "date": "2026-10-05",
+    "view": "views/h03.png",
+    "view_sha256": "baf6f982ff44e8956b0898038f5f273ff26bb2368bd78c77a31e78d3bbbf12fa",
+    "notes": "Aus nativer 1536×1024-Stilisierung neu gerastert. Area bildet Augen und Schnauze klar, weniger Fellrauschen als direkt, vollständig zertifiziert. Contour zeigt zwar Katzenzüge, verliert Flächenzusammenhang und bleibt unvollständig. Veränderte Fellzeichnung/Augengröße begrenzen Vorlagentreue; Leerstreifen wegen contain sichtbar.",
+    "variants": {
+      "area-128": {
+        "verdict": "recognizable",
+        "candidate_id": "1d799d27bc79619d06c2e9e619478b786fc70cb4f37e7c2fd727c08de1da881e",
+        "raster_sha256": "23bea8c48ce9700df1bf9840f64da78546b3e3a275b2b66103c398d4eb8882dd",
+        "motif_usable_for_comparison": true
+      },
+      "contour-40": {
+        "verdict": "needs_revision",
+        "candidate_id": "33cee236bcb077a28c380e0773a830cfe6de95ce8bdea2df8a1ad1a3397cf509",
+        "raster_sha256": "f1b426cf94f69b20e223f965e64acf9e8676c2c9c3420c907d4e0e545b3af504",
+        "motif_usable_for_comparison": false
+      }
+    }
+  }
+}
