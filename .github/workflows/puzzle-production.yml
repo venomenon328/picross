@@ -41,6 +41,12 @@ jobs:
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: python3 -m tools.puzzle_production.rp3_demo --output-dir artifacts/puzzle-production/rp3
+      - name: RP-4 frozen corpus reconstruction and independent proof replay
+        timeout-minutes: 11
+        env:
+          RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python3 -m tools.puzzle_production.rp4 verify --output-dir artifacts/puzzle-production/rp4
       - name: Upload reports, proofs and measurements
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

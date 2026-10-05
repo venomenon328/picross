@@ -1,6 +1,6 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-Stand: 04.10.2026 · Arbeitsfassung 0.4 · RP-1/RP-2 integriert; RP-3 im Draft, unabhängiges Review offen
+Stand: 05.10.2026 · Arbeitsfassung 0.5 · RP-1 bis RP-3 integriert; RP-4-Baseline im Draft
 
 ## 1. Geltung und Ziel
 
@@ -451,8 +451,10 @@ integriert; historische Nachweise behalten ihren ursprünglichen Commitbezug.
 RP-3 ergänzt gezielte Bildtests und den realen Dateiimport/Export im gemeinsamen
 Fachjob. `product` ergänzt denselben Import samt Bindungsprüfung sowie reguläre
 Lade-/Bearbeitungs-/Abschluss-/Neustartprozesse und native Renderbilder.
-RP3-A01 bis A06 und unabhängiges technisches/visuelles Review bleiben Mergegates;
-die reale Eigentümer-Lösung bleibt ausdrücklich RP-6-Gate.
+RP3-A01 bis A06 und unabhängiges technisches/visuelles Review R2 sind über PR #44
+abgeschlossen. RP-4 liefert die [unveränderte Vergleichsbaseline](RP4_VERIFICATION.md)
+mit eigener Sichtprüfung; deren unabhängiges Daten-/Methodik-/Bildreview bleibt
+Mergegate. Die reale Eigentümer-Lösung bleibt ausdrücklich RP-6-Gate.
 
 Für jedes Paket gelten der bestehende Dokumentprüfweg und ein vollständiger
 Diffcheck. `docs` muss am aktuellen Head/zugehörigen Test-Merge erfolgreich sein.

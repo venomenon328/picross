@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 04.10.2026 · Arbeitsfassung 0.16 · frühe Konzeption mit integriertem Z2 und RP-3-Inhalt im Draft
+Stand: 05.10.2026 · Arbeitsfassung 0.17 · Z2 und RP-3 integriert; RP-4-Vergleich im Draft
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -82,8 +82,10 @@ Die native Umsetzung ist über [PR #33](https://github.com/venomenon328/picross/
 integriert. Reviewbefunde und Mergefreigabe sind dort und im
 [Paketstatus #23](https://github.com/venomenon328/picross/issues/23) abgeschlossen.
 Z2-M01/M02/M03 wurden nicht durchgeführt; der Eigentümer hob das damalige Gate
-für diesen Merge auf. RP-3 verlangt eigene aktuelle Nachweise und unabhängiges
-Review; seine reale Eigentümer-Lösung ist RP-6-Gate.
+für diesen Merge auf. RP-3 ist nach eigenem technischem/visuellem Review R2
+über PR #44 integriert; die reale Eigentümer-Lösung bleibt RP-6-Gate.
+Die [RP-4-Sichtprüfung](RP4_VERIFICATION.md) bewertet neue Produktionsraster,
+keine neue P1-Bedienabnahme.
 
 ### BP-1R bis BP-3: Entwurfsverlauf und integrierte Grundlagen
 

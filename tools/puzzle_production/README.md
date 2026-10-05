@@ -1,4 +1,4 @@
-# RP-1/RP-2/RP-3: Deduktionskern und Bildproduktion
+# RP-1 bis RP-4: Deduktionskern und Bildproduktion
 
 Python **3.11+**, ausschließlich Standardbibliothek, ohne Installation von Paketen,
 Netzwerk-/Modellaufrufe oder P1-Abhängigkeit. Aus dem Repository-Root ausführen;
@@ -335,5 +335,38 @@ Auch der gespeicherte Export wird aus seinem gebundenen Produktionsbundle frisch
 rekonstruiert. Der Bericht führt ursprüngliche und neu erzeugte Kandidatenkennung
 samt beiden Codecständen. `product` ergänzt reguläre Hauptszene,
 drei isolierte Neustartprozesse und native Arbeits-/Abschluss-/Albumrenders.
-RP3-A01 bis A06 einschließlich separat noch offenem unabhängigem technischen/
-visuellen Review sind Mergegates. Eine echte Eigentümer-Lösung bleibt RP-6-Gate.
+RP3-A01 bis A06 einschließlich unabhängigem technischem/visuellem Review R2
+sind über PR #44 integriert. Eine echte Eigentümer-Lösung bleibt RP-6-Gate.
+
+## RP-4: feste Vergleichsbaseline
+
+[Zwölf Quellen und Offlinevergleich](../../examples/rp4/README.md),
+[Methodik/Ergebnis/Prüfzuordnung](../../docs/RP4_VERIFICATION.md).
+Gleiche Image-Umgebung, keine neue Abhängigkeit. Beispiel für eine eigene venv:
+
+```sh
+python3 -m venv .venv/rp4
+.venv/rp4/bin/python -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+.venv/rp4/bin/python -m tools.puzzle_production.rp4 verify --output-dir artifacts/rp4-replay
+.venv/rp4/bin/python -m unittest discover -s tests/puzzle_production -p 'test_rp4.py' -v
+```
+
+Der Korpusprüfer validiert alle zwölf Quellen, sechs Fotopaare, vier zusätzliche
+100×100-Quellen, vollständige Entwürfe/Budgets und sämtliche originalen Resultate.
+Die vorhandene RP-3-Rekonstruktion erzeugt Normalisierung/Matrix/Hinweise neu und
+replayt die geschriebenen Proofs unabhängig. Original und Replay bleiben getrennt;
+ein später erfolgreich geprüftes ursprüngliches Abbruchresultat erhöht die
+Originalausbeute nicht. Raster-/Kandidathashes binden die 48 redaktionellen Urteile.
+Maschinelle Urteilsbindung ersetzt keine echte Sichtprüfung.
+
+Der gemeinsame CI-Job führt das Replay mit 600 s Gesamtbudget und maximal 11 Minuten
+für diesen Schritt aus; bestehende Fachoracles, Referenzbudgets und P1-Demo bleiben
+aktiv. Ergebnisse stehen im Fachartefakt unter `rp4/verification.json` mit
+Source-/Checkout-/Basis-/Runbindung. Kein nativer Bildaufruf in CI.
+
+Optional `rp4 produce --output-dir <neuer-pfad>` für neue deterministische Imports;
+die versionierte Baseline niemals überschreiben. `freeze` verweigert erneutes
+Fixieren bereits gesperrter Inputs. `views` und `index` bauen nur Dateiansichten.
+19 Zertifikate bedeuten hier 14 zusätzlich motivisch brauchbare Varianten aus
+sechs Quellen, keine abgeschlossene Pilotproduktion. Unabhängiges RP-4-Review
+bleibt separat offen, Eigentümer-Lösung RP-6-Gate.

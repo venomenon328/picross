@@ -10,7 +10,7 @@ from pathlib import Path
 import subprocess
 import time
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageOps
 
 from .contract import Budget, InvalidInput, load_json, write_json
 from .images import file_hash, import_image, inspect_candidate, normalize, validate_design
@@ -212,6 +212,7 @@ def verify_corpus(root: Path, baseline: Path, output: Path) -> dict:
     for t, r in zip(lock['trials'], original['trials']):
         require(time.perf_counter()-start < plan['policy']['replay_total_seconds'], 'Corpus replay time budget exceeded')
         rows.extend(inspect_trial(root, baseline / t['id'], t, r, plan['policy']))
+    editorial = check_reviews(root, lock, rows)
     checkout = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     result = {'format': 'picross-rp4-verification-v1', 'accepted': True,
               'source_commit': os.environ.get('RP1_SOURCE_HEAD', checkout), 'tested_checkout_commit': checkout,
@@ -224,11 +225,69 @@ def verify_corpus(root: Path, baseline: Path, output: Path) -> dict:
               'trials': len(original['trials']), 'candidates': len(rows),
               'logically_accepted': sum(r['logically_accepted'] for r in rows),
               'original_status_counts': dict(Counter(r['original']['status'] for r in rows)),
+              'editorial': editorial,
               'elapsed_seconds': time.perf_counter()-start, 'results': rows}
     require(result['elapsed_seconds'] <= plan['policy']['replay_total_seconds'], 'Corpus replay time budget exceeded')
     output.mkdir(parents=True)
     write_json(output / 'verification.json', result)
     return result
+
+
+def check_reviews(root: Path, lock: dict, rows: list[dict]) -> dict:
+    """Bind recorded judgments to actual rasters; this cannot automate seeing them."""
+    reviews = load_json(root / 'reviews.json')
+    require(set(reviews) == {t['id'] for t in lock['trials']}, 'Incomplete visual review coverage')
+    usable = 0
+    for t in lock['trials']:
+        review = reviews[t['id']]
+        require(bool(review['notes']) and bool(review['reviewer']) and bool(review['review_kind']), 'Missing review attribution')
+        require(file_hash(local(root, review['view'])) == review['view_sha256'], 'Changed comparison view')
+        require(set(review['variants']) == {v['id'] for v in t['design']['variants']}, 'Incomplete variant judgments')
+        for v in t['design']['variants']:
+            judgement = review['variants'][v['id']]
+            row = next(r for r in rows if r['trial'] == t['id'] and r['variant'] == v['id'])
+            require(judgement['verdict'] in ('recognizable', 'reveal_supported', 'needs_revision', 'rejected'), 'Unknown motif verdict')
+            require(t['design']['mode'] == 'mono' or judgement['verdict'] != 'reveal_supported', 'Color needs recognizable raster')
+            require(judgement['candidate_id'] == row['candidate_id'] and judgement['raster_sha256'] ==
+                    file_hash(local(root, f"baseline/{t['id']}/{v['id']}-raster.png")), 'Review applies to another raster')
+            acceptable = judgement['verdict'] in ('recognizable', 'reveal_supported')
+            require(type(judgement['motif_usable_for_comparison']) is bool and
+                    judgement['motif_usable_for_comparison'] == acceptable, 'Inconsistent motif flags')
+            row['motif_verdict'] = judgement['verdict']
+            row['usable_for_comparison'] = acceptable and row['logically_accepted']
+            usable += row['usable_for_comparison']
+    effort = load_json(root / 'effort.json')
+    require({r['stage'] for r in effort['human']} == {'preparation', 'ai_rounds', 'raster_editing', 'visual_inspection'} and
+            len(effort['human']) == 4 and all(r['minutes'] is None and r['status'] == 'not_observed' for r in effort['human']),
+            'Human effort must remain explicitly unobserved for this agent-only run')
+    require(effort['productivity_per_human_hour'] is None, 'No productivity ratio without human time')
+    return {'reviews_sha256': file_hash(root / 'reviews.json'), 'usable_candidates': usable,
+            'human_productivity_per_hour': None, 'human_effort_status': 'not_observed',
+            'independent_review': 'open', 'owner_playtest': 'RP-6; not performed'}
+
+
+def make_views(root: Path) -> None:
+    """Exact nearest-neighbor contact sheets, without modifying any candidate."""
+    plan, lock = validate_inputs(root)
+    results = load_json(root / 'baseline/production.json')
+    (root / 'views').mkdir(exist_ok=True)
+    for s in plan['sources']:
+        trials = [t for t in lock['trials'] if t['source_id'] == s['id']]
+        canvas = Image.new('RGB', (1050, len(trials)*350), '#efefef')
+        draw = ImageDraw.Draw(canvas)
+        for i, t in enumerate(trials):
+            record = next(x for x in results['trials'] if x['id'] == t['id'])
+            draw.text((5, i*350+5), t['id'], fill='black')
+            source, _, _ = normalize(root / t['input'])
+            source = source.crop(t['design']['crop'])
+            source = ImageOps.contain(source.convert('RGB'), (330, 310))
+            canvas.paste(source, (5, i*350+30))
+            for j, c in enumerate(record['candidates']):
+                draw.text((350+j*350, i*350+5), c['variant']+' '+c['technical']['status'], fill='black')
+                with Image.open(root / 'baseline' / t['id'] / (c['variant']+'-raster.png')) as cells:
+                    cells = ImageOps.contain(cells, (330, 310), Image.Resampling.NEAREST)
+                    canvas.paste(cells, (350+j*350, i*350+30))
+        canvas.save(root / 'views' / f'{s["id"]}.png')
 
 
 def make_index(root: Path) -> None:
@@ -247,7 +306,8 @@ def make_index(root: Path) -> None:
             r = next(r for r in production['trials'] if r['id'] == t['id'])
             review = reviews[t['id']]
             parts.append(f'<h3><a href="baseline/{t["id"]}/index.html">{t["id"]} · vollständiges RP-3-Bundle</a></h3><div class="row">')
-            for label, path, css in [('Eingabe', t['input'], '')] + [
+            source_view = s['style_reference'] if t['arm'] == 'direct' and s['class'].startswith('photo') else t['input']
+            for label, path, css in [('Eingabe / geplanter Ausschnitt', source_view, '')] + [
                     (f'{c["variant"]} · {c["technical"]["status"]}', f'baseline/{t["id"]}/{c["variant"]}-raster.png', 'cells') for c in r['candidates']]:
                 parts.append(f'<figure><figcaption>{esc(label)}</figcaption><a href="{path}"><img class="{css}" src="{path}" alt="{esc(label)}"></a></figure>')
             parts.append('</div><p>' + esc(review['notes']) + '</p>')
@@ -257,7 +317,7 @@ def make_index(root: Path) -> None:
 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('command', choices=('freeze', 'produce', 'verify', 'index'))
+    p.add_argument('command', choices=('freeze', 'produce', 'verify', 'views', 'index'))
     p.add_argument('--corpus', type=Path, default=CORPUS)
     p.add_argument('--baseline', type=Path)
     p.add_argument('--output-dir', type=Path)
@@ -265,6 +325,9 @@ def main() -> int:
     try:
         if a.command == 'freeze':
             result = freeze(a.corpus)
+        elif a.command == 'views':
+            make_views(a.corpus)
+            result = {'views': str(a.corpus / 'views')}
         elif a.command == 'index':
             make_index(a.corpus)
             result = {'index': str(a.corpus / 'index.html')}
