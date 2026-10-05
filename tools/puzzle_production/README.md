@@ -1,4 +1,4 @@
-# RP-1/RP-2: monochromer und farbiger Deduktionskern
+# RP-1/RP-2/RP-3: Deduktionskern und Bildproduktion
 
 Python **3.11+**, ausschließlich Standardbibliothek, ohne Installation von Paketen,
 Netzwerk-/Modellaufrufe oder P1-Abhängigkeit. Aus dem Repository-Root ausführen;
@@ -6,8 +6,9 @@ unter Windows einen tatsächlichen Python-Interpreter statt eines Store-Alias nu
 Fachvertrag: [Rätselproduktion](../../docs/PUZZLE_PRODUCTION.md).
 Prüfzuordnung: [RP1_VERIFICATION.md](../../docs/RP1_VERIFICATION.md).
 Farberweiterung: [RP2_VERIFICATION.md](../../docs/RP2_VERIFICATION.md).
-RP-1 ist über PR #42 in `main` integriert; RP-2 bleibt bis zum unabhängigen
-technischen Review im eigenen Draft-PR gegen `main`.
+RP-1/RP-2 sind nach unabhängigem Review über PR #42/#43 in `main` integriert.
+RP-3-Bildbefehle benötigen die separate Image-Umgebung weiter unten; die bisherigen
+Kernbefehle bleiben ohne Pillow nutzbar. [RP-3-Prüfzuordnung](../../docs/RP3_VERIFICATION.md).
 
 ## Aufruf an gespeicherten Beispielen
 
@@ -217,6 +218,122 @@ Checkout/Test-Merge, Basis und Arbeitsbaum; Profil/Profilhash und Eingänge steh
 Pro Fall liegen Logik, Proof, Ergebnis,
 frische Prüfung, getrennte Prozessmessdaten und Logs vor. Der CI-Artefaktname enthält
 den Source-Head. Laufartefakte werden nicht eingecheckt. Ein anderer Head/eine neue
-Basis braucht passend zugeordnete aktuelle Checks. RP2-A01 bis A06 und unabhängiges
-technisches Review des kombinierten Kerns sind Mergegates. #41/#42 sind integriert;
+Basis braucht passend zugeordnete aktuelle Checks. #41/#42/#43 sind integriert;
 Parent #34 und spätere Produktionspakete bleiben offen.
+
+## RP-3: isolierte Image-Umgebung und reale Befehle
+
+Pillow **exakt 12.3.0**, ausschließlich für Bildbefehle/-tests. Die CI installiert
+[requirements-image.txt](requirements-image.txt) in einer temporären venv. Lokal:
+
+```sh
+python3 -m venv .venv/rp3
+.venv/rp3/bin/python -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+.venv/rp3/bin/python -m tools.puzzle_production import-image --input examples/rp3/source.png --design examples/rp3/design.json --output-dir artifacts/rp3-import
+.venv/rp3/bin/python -m tools.puzzle_production export-p1 --bundle artifacts/rp3-import --variant area-128 --reveal examples/rp3/reveal.svg --name Fliegenpilz --output-dir artifacts/rp3-export
+.venv/rp3/bin/python -m tools.puzzle_production.rp3_demo --output-dir artifacts/rp3-demo
+.venv/rp3/bin/python -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
+```
+
+Unter Windows entsprechend `.venv/rp3/Scripts/python.exe`; keine globale
+Installation. Jedes Ausgabeziel muss **neu/nicht vorhanden** sein. Die mitgelieferte
+[reale Quelle samt Produktionsbundle](../../examples/rp3/README.md) enthält bereits
+einen offline öffnenden Vergleich: `examples/rp3/production/index.html`.
+PNG/JSON/Briefing können ohne Dienst an ChatGPT/Codex übergeben werden.
+
+### Entwurf, Normalisierung und Rasterverfahren
+
+`picross-image-design-v1` hat exakt die Schlüssel des
+[Beispielentwurfs](../../examples/rp3/design.json). `source_id` und Varianten-/Farb-IDs
+folgen `[a-z][a-z0-9_-]{0,31}`, `empty` ist reserviert. Herkunft, Nutzungsgrundlage
+und Briefing haben jeweils 1..4096 Zeichen. `working_mode` ist ausdrücklich
+`faithful` oder `free`; Eingriffe sind im Briefing festzuhalten. Zielbreite/-höhe
+1..100, Rechtecke/1D eingeschlossen. Palette 1..8 eindeutige Vordergrund-IDs und
+`#rrggbb`-Werte; Mono verlangt genau `ink`. Hintergrund/Leer-RGB ist von jeder
+Vordergrundfarbe verschieden, auch von Weiß. Palette wird nach ID sortiert.
+
+PNG/JPEG: 32 MiB kodierte Bytes, 8 Millionen dekodierte Pixel, höchstens 8192 je
+Quellachse, ein Frame. Beschädigte/trunkierte Dateien, Animation, andere Formate,
+High-depth-Modi und unprofiliertes CMYK werden ausdrücklich abgewiesen. Unterstützt
+werden 1/L/LA/P/RGB/RGBA sowie profiliertes CMYK. EXIF 1..8 einschließlich Spiegelung
+wird angewendet. ICC wird mit LittleCMS nach sRGB, perceptual intent 0, konvertiert;
+ungültiges/unpassendes ICC wird abgewiesen. Ungetaggtes RGB/Grau gilt als sRGB;
+abweichendes PNG-gamma ohne sRGB-Tag/ICC wird abgewiesen. Alpha bleibt separat
+erhalten. Normalisiertes PNG: RGBA, ohne EXIF/ICC/Text; Metadaten dokumentieren
+Quellmodus/-maße, Orientierung, Behandlung und ursprünglichen ICC-Hash.
+
+`crop=[left,top,right,bottom]` verwendet orientierte Quellpixel und muss vollständig
+innerhalb des Bilds liegen. `fit=exact` fordert gleiche Seitenverhältnisse.
+`contain` wählt ausdrücklich zentrierten Leerraum statt Strecken: Zielrechteck
+mittels ganzzahligem Verhältnis, mindestens eine Zelle je Achse; Restpixel rechts/
+unten. Sehr schmale Verhältnisse können dadurch um eine Zielzelle quantisiert sein.
+RGBA wird auf den gewählten Hintergrund komponiert, dann mit Pillow BOX auf
+Zellauflösung reduziert; Alpha wird separat mit BOX gemittelt. Unter
+`alpha_below` (1..255) bleibt die Zelle leer. Rechnen erfolgt im kodierten sRGB,
+keine behauptete lineare/perzeptuell optimale Bildabstraktion.
+
+Höchstens acht Varianten: `area` nutzt im Mono-Modus Luminanz `< threshold`
+(0..255), im Farbmodus nächstes RGB per quadriertem euklidischem Abstand zur
+Palette einschließlich Leer. Gleiche Entfernung: Leer, dann lexikografische ID.
+Bei Farbe ist der Area-Schwellwert wirkungslos und dennoch explizit gespeichert.
+`contour` nutzt FIND_EDGES auf der Zellluminanz, innere Werte `> threshold`,
+äußerste Zeile/Spalte stets leer (Pillow erhält dort sonst Quellwerte). Ausgewählte
+Konturzellen werden Mono-ink oder der nächsten Farbe zugeordnet. 1D-Konturen sind
+damit leer; Area bleibt nutzbar. Finale Werte sind ausschließlich IDs, keine
+Zwischenfarben. Hinweise werden durch vollständige Länge-/Farbruns abgeleitet.
+
+### Identität, Nachweis und P1-Grenze
+
+`picross-image-candidate-v1` führt Revision 1, Quellen-ID, normalisierten Datei-
+SHA-256, kompletten Entwurf/Variante, Werkzeug `rp3-image-1`, Pillow und tatsächlich
+verwendete JPEG-/LittleCMS-/zlib-Versionen, Matrix und normalisierten Logikhash.
+Sein SHA-256 verwendet die kanonischen JSON-Bytes des Kerns, ohne das `id`-Feld.
+Messzeiten sind ausgeschlossen. Gleiche Normalisierung/Parameter/Versionen liefern
+denselben Kandidaten. Unterschiedliche Codecbuilds können identische Pixel anders
+komprimieren und erhalten deshalb unterschiedliche neue Kandidatenkennungen.
+Bestehende Bundles behalten ihre tatsächlichen Produzentenbytes/-versionen.
+Replay verlangt dieselbe Werkzeug-/Pillowversion und zusätzlich **exakte** RGBA-
+Pixel-/Normalisierungsmetadaten-Gleichheit zur neu dekodierten Originaldatei,
+neu berechnete Matrix/Hinweise und exakte Vergleichsrasterpixel. Schon ein
+abweichendes Normalisierungspixel wird abgewiesen. JPEG/ICC-Rundungsunterschiede
+werden damit nicht toleriert. Keine plattformübergreifende Byteidentität versprochen.
+
+`picross-image-manifest-v1` bindet Originalbytes, normalisiertes PNG, Entwurf,
+Kandidat, Logik, tatsächlichen Proof, Ergebnis, Zell-PNG, HTML und Briefing per
+Dateihash. Alle Kandidaten bleiben vergleichbar, auch bei Fixpunkt/Abbruch.
+Solver und unabhängiger Prüfer erhalten ausschließlich den bestehenden v1-/v2-
+Logikeingang ohne Matrix/Bild/Motiv. `--seconds` 120 und `--max-lines` 100000
+gelten getrennt pro Solver/Prüfer je Variante, keine gemeinsame Bildlaufzeitgrenze.
+OS-Prozess-/RSS-Limits werden vom Import selbst nicht behauptet. CLI-Fehlercodes
+entsprechen dem Kern; `import-image` meldet bei erfolgreicher Bundle-Erstellung
+`produced`/0, auch wenn einzelne Kandidaten **nicht** zertifiziert sind.
+
+`export-p1` rekonstruiert Original→Normalisierung→Matrix→Hinweise, prüft sämtliche
+gebundenen Dateien und replayt den **geschriebenen** Proof unabhängig neu.
+Ergebnisflags/Exitcode reichen nicht. Nur `solved`/zertifiziert und Singleton-
+Enddomains gleich der beabsichtigten Matrix erlauben Export. Geänderte Raster,
+Hinweise oder Farbsemantik binden andere Logik; ein alter unpassender Proof scheitert.
+Reine RGB-/Assetänderungen können Logik erhalten, erfordern aber aktuelle
+Herkunft/Identität/Assetbindung und separate Motivkontrolle.
+
+Erster Adapter `rp3-p1-square-mono-1`: ausschließlich quadratisches Mono mit
+mindestens einer Füllzelle, feste neutrale ID **F-04**, Revision 1..1000000,
+Name 1..128 Zeichen erst nach Abschluss. Farb-IDs werden deterministisch auf
+1..N, Leer auf 0 abgebildet; keine Domain-Bitmasken im P1-Raster. Schema 2 mit
+exakt abgeleiteten Hinweisen, `res://art/f04.svg` als gebundener Reveal.
+SVG: lokale begrenzte Shape-/Gradientressource, quadratische numerische Maße,
+mindestens zwei Bildpixel je Zelle, höchstens 8192; keine externen Referenzen/
+Ausführung/Entities. PNG-Enthüllungen und Rechteck-/Farbexporte werden in diesem
+Adapter ausdrücklich abgewiesen. Kein automatisches Überschreiben/Registrieren
+beliebiger Inhalte, keine öffentliche Importoberfläche oder zweite Spiellogik.
+
+`picross-p1-export-v1` bindet Produktionsmanifest, Kandidat, Logik/Proof,
+Definition/Revision, Farbzuordnung und Reveal-Dateihash. `rp3_demo` importiert real
+erneut, prüft das eingecheckte Bundle frisch und vergleicht Matrix/Logik/Entwurf
+sowie den neuen Definitions-/Assetexport bytegenau mit dem registrierten P1-Inhalt.
+Auch der gespeicherte Export wird aus seinem gebundenen Produktionsbundle frisch
+rekonstruiert. Der Bericht führt ursprüngliche und neu erzeugte Kandidatenkennung
+samt beiden Codecständen. `product` ergänzt reguläre Hauptszene,
+drei isolierte Neustartprozesse und native Arbeits-/Abschluss-/Albumrenders.
+RP3-A01 bis A06 einschließlich separat noch offenem unabhängigem technischen/
+visuellen Review sind Mergegates. Eine echte Eigentümer-Lösung bleibt RP-6-Gate.

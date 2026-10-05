@@ -40,7 +40,9 @@ class Z2DeliveryTests(unittest.TestCase):
                 self.assertEqual(binding["images"][image.name], sha256_file(image))
                 self.assertEqual(bundle.read("renders/" + image.name), image.read_bytes())
                 self.assertEqual(binding["tested_checkout_commit"], "b" * 40)
-                self.assertIn("OPEN", binding["owner_acceptance"])
+                self.assertIn("NOT PERFORMED: Z2-M01/M02/M03", binding["owner_acceptance"])
+                self.assertIn("owner waived gate for merged PR #33", binding["owner_acceptance"])
+                self.assertIn("RP3 review remains separate", binding["owner_acceptance"])
                 self.assertNotIn("windows.zip", bundle.namelist())
 
 

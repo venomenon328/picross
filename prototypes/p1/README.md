@@ -13,8 +13,12 @@ integriert. OFL-Texte liegen im Windows-ZIP unter `licenses/`, alle Ressourcen s
 in der EXE eingebettet. Kein Fontdownload oder Godotsetup beim Spieler.
 [Auswahl und Herkunft](../../docs/Z2_SELECTION.md),
 [aktuelle Prüfung und sichere Eigentümeranleitung](../../docs/Z2_VERIFICATION.md).
-Die Z2-Eigentümerprobe und das unabhängige Review bleiben ausdrücklich vor Merge
-offen; frühere Freigaben weiter unten ersetzen sie nicht. Dies ist ein Draft-Testexport.
+Z2 ist nach Review und Mergefreigabe über PR #33 integriert. Z2-M01/M02/M03
+wurden nicht durchgeführt; der Eigentümer hob das damalige Gate für diesen Merge
+auf. RP-3/#37 ergänzt den neuen importierten Inhalt F-04 im Draft; dessen
+unabhängiges technisches/visuelles Review bleibt offen.
+[RP-3-Prüfzuordnung](../../docs/RP3_VERIFICATION.md),
+[Importdateien und Herkunft](../../examples/rp3/README.md). Dies ist ein Testexport.
 
 
 H1 aus [#19](https://github.com/venomenon328/picross/issues/19) ergänzt automatisch
@@ -50,7 +54,8 @@ PR #15/#16 in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICA
 G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ist über PR #18
 integriert und ergänzt die erneute Achsenwahl nach tatsächlicher Rückkehr
 zur Startzelle. H1/#19 ist über PR #20 auf diesem kombinierten Stand integriert. F-01 (20×20),
-F-02 (40×40, vier Farben) und F-03 (100×100, ausdrücklich UI-Testdatensatz)
+F-02 (40×40, vier Farben), F-03 (100×100, ausdrücklich UI-Testdatensatz)
+und F-04 (20×20 monochrom, neuer RP-3-Dateiimport)
 sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
 Zusatzkennungen. Alle Zeilen beziehungsweise Spalten teilen sich je ein festes
@@ -70,8 +75,8 @@ CI-Lauf, Engine-/Archivhashes, EXE-Hashes und Prüfphasen. Artefaktlink im PR.
 Godot löst `user://p1/saves/` im projektbezogenen User-Data-Verzeichnis auf.
 Unter Windows liegt dieses standardmäßig unter
 `%APPDATA%\Godot\app_userdata\picross · P1\p1\saves\` (bei benutzerdefiniertem
-Godot-Datenpfad entsprechend dort). Die drei bekannten Fixture-IDs ergeben
-`f01.json`, `f02.json`, `f03.json` mit gleichnamigen `f01.bak`/`f01.tmp` usw.
+Godot-Datenpfad entsprechend dort). Die vier bekannten Inhalts-IDs ergeben
+`f01.json`, `f02.json`, `f03.json`, `f04.json` mit gleichnamigen `f01.bak`/`f01.tmp` usw.
 Tests verwenden nur eigene temporäre Profile; das ZIP enthält keine
 Spielstände.
 
@@ -82,7 +87,7 @@ Bei gültigem Primary und defektem Backup bleibt der Primärstand lesbar;
 „Backup erneuern“ fragt vor dem Ersatz des beschädigten Backups nach.
 Ohne gültige Fassung erscheint ein Fehler. „Arbeitsstand zurücksetzen“ fragt
 ebenfalls nach und entfernt ausschließlich Primary, Backup und Temp des
-ausgewählten Blatts. Die zwei anderen Blätter bleiben erhalten.
+ausgewählten Blatts. Die anderen Blätter bleiben erhalten.
 Scheitert ein verpflichtender Save, bleibt die aktuelle Ansicht offen und zeigt
 den Fehler. Album, Blattwechsel und reguläres Beenden gelingen nach einem
 erfolgreichen Retry.
@@ -224,10 +229,14 @@ Escape ist weiterhin Mausgestenabbruch. Kein Merge durch diese Übergabe.
 
 Der technische Produktweg prüft F-01/F-02, Godot-Regressionen, den isolierten
 Zwei-Prozess-Roundtrip, die 500-Aktionen-Folge samt Neustart, Renderbilder und
-Windows-Export. Der Bericht bindet diese Ergebnisse an Head und Test-Merge;
-die neue reale G1-Mausprobe bleibt davon getrennt.
+Windows-Export. RP-3 ergänzt den realen Dateiimport/F-04-Export, drei getrennte
+Spiel-/Neustartprozesse sowie eigene Arbeits-/Abschluss-/Albumrenders.
+Der Bericht bindet diese Ergebnisse an Head und Test-Merge; unabhängiges
+RP-3-Review bleibt separat offen, die reale Eigentümer-Lösung ist RP-6-Gate.
 
-Godot Standard 4.7.2-stable; vollständiger isolierter Prüfweg im Repository-Root:
+Godot Standard 4.7.2-stable und isolierte Pillow-12.3.0-Umgebung aus der
+[Werkzeuganleitung](../../tools/puzzle_production/README.md); vollständiger Prüfweg
+im Repository-Root mit dem dort eingerichteten Python-Interpreter:
 
 ```powershell
 $p1Cache = Join-Path $env:TEMP 'picross-p1-preflight-cache'

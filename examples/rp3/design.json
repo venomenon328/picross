@@ -1,0 +1,21 @@
+{
+  "format": "picross-image-design-v1",
+  "source_id": "rp3-mushroom-01",
+  "origin": "Original geometry authored for RP-3; examples/rp3/create_source.py. No foreign or AI asset.",
+  "rights": "Repository-owned example, created within the implementation commission; no third-party image rights required.",
+  "briefing": "A single centered mushroom: broad rounded cap with level underside, short centered stem, generous margin. Preserve silhouette and proportions. 20x20 monochrome. Cap color, spots and stem shading may be refined only in the post-completion illustration. No KI rounds. Technical first content example; general motif quality and real owner solution remain unassessed.",
+  "working_mode": "faithful",
+  "width": 20,
+  "height": 20,
+  "crop": [0, 0, 640, 640],
+  "fit": "exact",
+  "background": "#ffffff",
+  "alpha_below": 128,
+  "mode": "mono",
+  "palette": [{"id": "ink", "rgb": "#293e3d"}],
+  "variants": [
+    {"id": "area-128", "method": "area", "threshold": 128},
+    {"id": "area-160", "method": "area", "threshold": 160},
+    {"id": "contour-40", "method": "contour", "threshold": 40}
+  ]
+}

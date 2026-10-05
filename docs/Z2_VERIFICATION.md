@@ -1,6 +1,13 @@
 # Z2: native Bucharbeitsansicht – Prüfbericht und Eigentümerprobe
 
-Stand: 27.09.2026 · #23 / I-01 bis I-05 · eigener Draft unter #21
+Stand: 04.10.2026 · #23 / I-01 bis I-05 integriert über PR #33
+
+Z2-Review und Mergefreigabe sind abgeschlossen. Z2-M01/M02/M03 wurden nicht
+durchgeführt; der Eigentümer hob das damalige A01-Gate für diesen Merge
+ausdrücklich auf. Die untenstehende Anleitung bleibt verfügbar, ist kein
+RP-3-Mergegate und kein nachträglicher Erfolgsbeleg. Die ursprünglichen technischen
+Nachweise vom 27.09.2026 behalten ihren Commit-/Artefaktbezug in PR #33.
+Neu erzeugte Harness-Artefakte binden ihren eigenen aktuellen Stand.
 
 Quellbasis: `c3a5386580d7a0da29b927b41bd692f0cca59274`, regulärer P1-Kern.
 Aktive Entscheidungen und native Abweichungen: [Z2-Auswahl](Z2_SELECTION.md).
@@ -78,13 +85,12 @@ Drag, H1-Striche, getrennte RGB-Füllungen, aktive/deaktivierte Icons, Palette,
 Falz/Ränder, UI 125 %, N1-Hilfe/Einstellungen und blockierte Recovery mit Dialog.
 Automatisierte Renderbilder belegen keine physische DPI-/Mausabnahme.
 
-## Offenes Mergegate: repräsentative Eigentümerprobe
+## Historische Eigentümerprobe: nicht durchgeführt, Gate aufgehoben
 
-**OFFEN – Z2-M01/M02/M03.** Verantwortlich ist der Eigentümer, am im PR eindeutig
-benannten Windows-ZIP. Ebenfalls vor Merge erforderlich: unabhängiges technisches
-und visuelles Review und erfolgreiche aktuelle Checks. Das getrennte Selbstreview
-des Implementierers ersetzt keine dieser Abnahmen. Frühere P1-/G1-/H1-Freigaben
-gelten nicht als Z2-Freigabe. Die längere atmosphärische Sitzung bleibt #24.
+**NICHT DURCHGEFÜHRT – Z2-M01/M02/M03.** Der Eigentümer hat diese Proben für den
+Merge von PR #33 als Gate aufgehoben. Die folgende Anleitung erlaubt einen späteren
+isolierten Eindruck; sie behauptet keinen bestandenen Lauf. Die längere
+atmosphärische Sitzung bleibt #24. Aktuelles RP-3-Review bleibt separat offen.
 
 1. ZIP vollständig entpacken. In PowerShell ein neues eigenes Profil unter TEMP
    wählen, etwa `$z2Profile = Join-Path $env:TEMP 'picross-z2-owner-01'`.

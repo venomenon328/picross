@@ -78,7 +78,7 @@ func _ready() -> void:
 		var client_offset: Vector2i = DisplayServer.window_get_position() - DisplayServer.window_get_position_with_decorations()
 		get_window().size = bounded_start(usable, decorations)
 		get_window().position = bounded_position(usable, get_window().size, decorations, client_offset)
-	for id: String in ["f01", "f02", "f03"]:
+	for id: String in SaveStore.IDS:
 		var data: Dictionary = Definition.load_fixture(id)
 		var error: String = Definition.validate(data)
 		if not error.is_empty():
@@ -153,7 +153,7 @@ func _build() -> void:
 	album = VBoxContainer.new()
 	album.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	page.add_child(album)
-	album.add_child(label("Drei Blätter zum Entdecken", 28))
+	album.add_child(label("Vier Blätter zum Entdecken", 28))
 	var choice_row: HBoxContainer = HBoxContainer.new()
 	album.add_child(choice_row)
 	for i: int in range(sessions.size()):
@@ -518,7 +518,7 @@ func _smoke() -> void:
 			push_error("Decorated start window exceeds usable monitor area")
 			get_tree().quit(7)
 			return
-	for i: int in range(3):
+	for i: int in range(sessions.size()):
 		select_puzzle(i)
 		await get_tree().process_frame
 		await get_tree().process_frame
@@ -536,7 +536,7 @@ func _smoke() -> void:
 			return
 		return_to_work()
 	show_album()
-	print("P1_START_OK: three fixtures -> mouse -> undo -> album; isolated persistence")
+	print("P1_START_OK: four fixtures -> mouse -> undo -> album; isolated persistence")
 	get_tree().quit(0)
 
 func _icon_button(id: String, action: Callable, parent: Control) -> BookButton:

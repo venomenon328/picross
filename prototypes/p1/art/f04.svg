@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640">
+<title>Fliegenpilz</title>
+<desc>Same centered mushroom and proportions as the imported silhouette; refined cap, spots, stem and grass. Original repository illustration.</desc>
+<defs><linearGradient id="stem" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d1bea0"/><stop offset="0.55" stop-color="#fff1cf"/><stop offset="1" stop-color="#d6c5a9"/></linearGradient></defs>
+<rect width="640" height="640" rx="24" fill="#f9f2e2"/>
+<ellipse cx="321" cy="564" rx="141" ry="17" fill="#ded4b5"/>
+<path d="M258 274 Q246 322 255 383 L255 520 Q251 557 290 558 L350 558 Q390 557 385 520 L382 376 Q394 325 382 274 Z" fill="url(#stem)" stroke="#433d31" stroke-width="7"/>
+<path d="M269 390 Q320 415 374 388 L370 412 Q322 437 272 415 Z" fill="#f7e6c6" stroke="#bba27c" stroke-width="3"/>
+<path d="M283 432 Q278 475 286 528 M356 435 Q365 484 354 538 M307 461 L306 538" fill="none" stroke="#b69c75" stroke-width="3" stroke-linecap="round"/>
+<path d="M65 298 C65 175 179 80 320 80 C461 80 575 175 575 298 Q320 315 65 298 Z" fill="#b94337" stroke="#433d31" stroke-width="8" stroke-linejoin="round"/>
+<path d="M81 282 C110 162 209 104 321 101 C413 99 488 139 524 193" fill="none" stroke="#d77553" stroke-width="9" stroke-linecap="round"/>
+<path d="M72 298 Q320 333 568 298 Q320 285 72 298 Z" fill="#ead4a8" stroke="#433d31" stroke-width="5"/>
+<ellipse cx="205" cy="194" rx="33" ry="20" transform="rotate(-22 205 194)" fill="#f5e8c9" stroke="#943d30" stroke-width="3"/>
+<ellipse cx="337" cy="154" rx="30" ry="21" transform="rotate(6 337 154)" fill="#f5e8c9" stroke="#943d30" stroke-width="3"/>
+<ellipse cx="438" cy="226" rx="38" ry="23" transform="rotate(19 438 226)" fill="#f5e8c9" stroke="#943d30" stroke-width="3"/>
+<path d="M272 259 Q287 235 307 253 Q317 274 292 278 Q274 277 272 259 Z" fill="#f5e8c9" stroke="#943d30" stroke-width="3"/>
+<ellipse cx="128" cy="268" rx="16" ry="10" fill="#f5e8c9"/>
+<ellipse cx="493" cy="277" rx="15" ry="9" fill="#f5e8c9"/>
+<path d="M210 565 Q219 538 234 526 M223 566 Q213 547 196 542 M401 563 Q408 537 428 528 M408 567 Q430 552 446 556" fill="none" stroke="#71835b" stroke-width="5" stroke-linecap="round"/>
+</svg>

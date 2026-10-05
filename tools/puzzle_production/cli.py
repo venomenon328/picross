@@ -18,6 +18,10 @@ EXIT = {"solved": 0, "stalled": 0, "contradiction": 0, "invalid_input": 2,
 
 
 def main(argv=None) -> int:
+    actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] in ("import-image", "export-p1"):
+        from .image_cli import main as image_main
+        return image_main(actual)
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     for command in ("solve", "verify"):

@@ -53,7 +53,8 @@ N1 ist eine reversible Hintergrundableitung, kein drittes fertiges Artwork.
 
 ## Prüfbarkeit
 
-[Z2-Prüfbericht und Eigentümerprobe](Z2_VERIFICATION.md) trennen lokale technische
-Prüfung, aktuelle CI, Selbstreview und noch offene unabhängige Abnahme. Die reguläre
+[Z2-Prüfbericht und Eigentümerprobe](Z2_VERIFICATION.md) trennen technische
+Nachweise und die nicht durchgeführten Z2-M01/M02/M03. Review und Mergefreigabe
+von PR #33 sind abgeschlossen; der Eigentümer hob das damalige Probengate auf. Die reguläre
 App-Identität `picross · P1`, `user://p1/saves/`, Schema 1, Fixtures, Revisionen,
 Deduktionsnachweise und Enthüllungsbilder bleiben erhalten.

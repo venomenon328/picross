@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 27.09.2026 · Spezifikation 0.14 · P1.4/G1/H1 integriert, Z2 im Draft
+Stand: 04.10.2026 · Spezifikation 0.15 · P1.4/G1/H1/Z2 integriert, RP-3-Inhalt im Draft
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -13,9 +13,9 @@ Die Spezifikationspflege 0.2 wurde über PR #6 gemergt, der technische P1.0-Pref
 **Ist/Soll:** D-07 bis D-27, Persistenz/Recovery und die integrierte P1.4-Prüfung sind
 bis einschließlich PR #16 in `main` integriert. M-01 bis M-04 sowie M-06/M-07 wurden
 in #12 am dort gebundenen Stand vom Eigentümer bestätigt; historische Prüfberichte
-bleiben Nachweise ihrer jeweiligen Commits. G1/#17 ist in `main` integriert. H1/#19 ist die neue Produktfunktion dieses Pakets
-und benötigt am kombinierten Stand eigene technische Nachweise; keine gezielte reale
-Probe wird rückwirkend aus #12 abgeleitet oder als bestanden ausgegeben.
+bleiben Nachweise ihrer jeweiligen Commits. G1/#17, H1/#19 und Z2/#23 sind in
+`main` integriert. RP-3/#37 ergänzt F-04 samt eigenen aktuellen technischen und
+visuellen Nachweisen; keine gezielte reale Probe wird rückwirkend aus #12 abgeleitet.
 
 **Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; #12 schließt die integrierte 500-Aktionen-, Windows-, Bedien- und Performanceprüfung ab. #17 ergänzt die Startzell-Rückkehr zur erneuten Achsenwahl; #19/H1 ergänzt die lösungsunabhängige Erfüllungsmarkierung und ihren sitzungsweiten Schalter. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md), [H1-Prüfbericht](H1_VERIFICATION.md), historischer [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
 
@@ -100,6 +100,7 @@ Vor Abschluss weder fertiges Motivbild noch Motivname oder verräterischer Album
 | F-01 | 20×20 monochrom | Grundbedienung, Rücknahmeregression und mit #9 sichtbar detailliertere motivtreue Enthüllung. Bestehende logische Lösung und Hinweise beibehalten. |
 | F-02 | 40×40 mit vier Farben | Farbwahl, direkt angrenzende verschiedenfarbige Blöcke, lange Hinweise, vollständiger spielbarer Abschluss und verfeinertes motivtreues Leuchtturmbild. |
 | F-03 | Vollständig navigierbares 100×100-Stressraster | Großraster und lange Hinweise, kein statisches Ausschnittbild. Sichtbar „UI-Testdatensatz – Rätselqualität nicht abgenommen“. |
+| F-04 | 20×20 monochrom aus realer Bilddatei | RP-3-Dateiimport, unabhängig geprüfter Produktionsnachweis, neuer regulärer Spielablauf und motivtreue eigene SVG-Enthüllung. Neutraler Name vor Abschluss. |
 
 F-01/F-02 dürfen einfach sein, benötigen aber ein erkennbares Motiv, geklärte Herkunft und eine endliche überprüfbare Deduktionsfolge ohne zusätzliche Startfelder oder notwendiges Raten. Eine Lösung oder passende Zahlen allein beweisen das nicht. Kein allgemeiner erklärender Solver beauftragt. F-03 erlaubt keine ungeprüften regulären Produkträtsel.
 
@@ -308,7 +309,7 @@ Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
 
-P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den drei bekannten Fixture-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gültigen Arbeitszoom oder Gesamtansichtsmodus, aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
+P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den vier fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gültigen Arbeitszoom oder Gesamtansichtsmodus, aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 
 Vor Anwendung werden Schema, exakte Definition/Revision, Matrix/Palette, jede nichtleere atomare History-Aktion mit eindeutigen Indizes und gültigen Vor-/Nachwerten, das widerspruchsfreie Replay ab unbekanntem Raster einschließlich Redo, Cursor-Matrix-Gleichheit, `undo_used`, Abschluss und View vollständig geprüft. Unbekannte oder unpassende Daten werden weder teilweise geladen noch still migriert. Der Rasterfokus wird bei Resize gültig begrenzt; Hinweis-Offsets werden aus Rasterende, äußerem Anfang oder mittlerem Tokenfenster für die aktuelle Geometrie neu abgeleitet.
 
@@ -446,5 +447,24 @@ Fünf ausdrücklich gesetzte Referenzzustände, Zwischengrößen und alle bisher
 Arbeitszoom-/G1-/H1-/Speicherregressionen sind Bestandteil der [Z2-Prüfung](Z2_VERIFICATION.md).
 Keine neuen Startzooms oder vorgegebenen Demo-Eingaben. Normale UI-Texte benötigen
 mindestens 4,5:1 zum nativen Untergrund; Hinweise und Icons zusätzlich 1:1 beurteilen.
-Unabhängiges Review, aktuelle Checks und Z2-M01/M02/M03 bleiben vor Merge erforderlich.
+Z2 ist über PR #33 integriert. Z2-M01/M02/M03 sind nicht durchgeführt; der
+Eigentümer hob das damalige Gate für diesen Merge auf. Sie sind kein RP-3-Gate.
 Z2 ist keine Abnahme von #24 und keine Releasefreigabe.
+
+## 11. RP-3: erster importierter Inhalt
+
+F-04 erweitert die festen Definition-/Save-Registrierungen additiv. Appname,
+Speicherroot, Schema 1 und bestehende ID-/Revisionsbindungen bleiben erhalten.
+Definitionen werden ausschließlich aus einer festen ID→Ressourcenliste geladen.
+Der Adapter liefert Schema 2, Leerwert 0, fortlaufende Palettenwerte 1..N und
+passende Hinweise. Erst ein neu unabhängig geprüfter vollständiger Nachweis samt
+Endmatrixvergleich erlaubt den Export. Der erste Adapter unterstützt nur
+quadratisches Mono und ein lokales SVG unter `res://art/f04.svg`.
+
+Der reguläre Hauptszenenweg wird in isolierten Profilen über echte Viewport-
+Ereignisse geprüft: Auswahl, falscher Eintrag/eigene Miniatur, Undo/Redo,
+Teilstand, Neustart, Abschluss und erneuter Neustart samt Album. Vor Abschluss
+bleiben Name, Reveal und Lösungsausschnitt verborgen. Die [RP-3-Prüfzuordnung](RP3_VERIFICATION.md)
+bindet native Renderbilder; F-01/F-02 samt Proofs/Bildern und F-03 bleiben erhalten.
+Unabhängiges technisches/visuelles RP-3-Review bleibt offen, die reale
+Eigentümer-Lösung ist RP-6-Gate. Parent #34 bleibt offen; kein Merge/Release.
