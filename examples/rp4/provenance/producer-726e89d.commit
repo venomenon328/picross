@@ -1,0 +1,6 @@
+tree 80201bbde68240dd51f8583acdb103db4a791bbe
+parent 37c97a6215a550a6e74fd2536a30c8ff13d9baba
+author Codex <codex@openai.com> 1791202494 +0200
+committer Codex <codex@openai.com> 1791202494 +0200
+
+RP-4: freeze native stylizations and all 24 trial inputs before solving

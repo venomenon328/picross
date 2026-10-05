@@ -1,0 +1,509 @@
+{
+  "format": "picross-rp4-plan-v1",
+  "selected_at_utc": "2026-10-05T12:03:21.205712+00:00",
+  "base_commit": "aa9cc23244c60d647d8468a8d76a819f977e85a6",
+  "selection_before_solver": true,
+  "policy": {
+    "variants_per_arm": 2,
+    "ai_rounds_per_asset": 1,
+    "solver_seconds": 30,
+    "verifier_seconds": 30,
+    "max_lines": 100000,
+    "replay_total_seconds": 600,
+    "raster_edits": 0,
+    "selection": "Purposive small corpus; no population-level success estimate. No source or variant substitution after outcomes.",
+    "large_sources": [
+      "i01",
+      "a01",
+      "p02",
+      "h03"
+    ],
+    "background": "#ffffff",
+    "working_mode": "faithful",
+    "fit": "contain",
+    "comparison": "Same source crop, motif brief, dimensions, palette, normalization, variant count and solver budgets; AI may simplify photo background/detail in one round. No parameter tuning after solver outcomes.",
+    "effort": "Agent executes authoring and inspection. Human minutes unobserved/null by stage, not zero and not derived from agent walltime. No productivity ratio with missing denominator."
+  },
+  "sources": [
+    {
+      "id": "i01",
+      "class": "illustration",
+      "file": "sources/illustration-teapot.png",
+      "sha256": "97405e8e64abf8a8accaa9c4451c680a941947c4dce1aa333f10b070a7c9555c",
+      "dimensions": [
+        800,
+        800
+      ],
+      "title": "Teekanne",
+      "briefing": "Breiter runder Korpus, Tülle links, Griff mit offenem Innenraum rechts, Deckelknauf.",
+      "origin": "Original geometric artwork authored for RP-4 in create_illustrations.py",
+      "rights": "Created within the commissioned project; no third-party asset used.",
+      "crop": [
+        0,
+        0,
+        800,
+        800
+      ],
+      "width": 40,
+      "height": 40,
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253342"
+        }
+      ],
+      "large": true,
+      "ai_prompt": null
+    },
+    {
+      "id": "i02",
+      "class": "illustration",
+      "file": "sources/illustration-sailboat.png",
+      "sha256": "df7f728ea743d507b5d15e854859db3f62edcf474855e50bcb0de4c91b27e6a6",
+      "dimensions": [
+        900,
+        600
+      ],
+      "title": "Segelboot",
+      "briefing": "Zwei getrennte Dreieckssegel, Mast, länglicher Rumpf und drei Wellen.",
+      "origin": "Original geometric artwork authored for RP-4 in create_illustrations.py",
+      "rights": "Created within the commissioned project; no third-party asset used.",
+      "crop": [
+        0,
+        0,
+        900,
+        600
+      ],
+      "width": 60,
+      "height": 40,
+      "mode": "color",
+      "palette": [
+        {
+          "id": "charcoal",
+          "rgb": "#253342"
+        },
+        {
+          "id": "red",
+          "rgb": "#b55848"
+        },
+        {
+          "id": "ochre",
+          "rgb": "#c89d56"
+        },
+        {
+          "id": "green",
+          "rgb": "#637b58"
+        }
+      ],
+      "large": false,
+      "ai_prompt": null
+    },
+    {
+      "id": "i03",
+      "class": "illustration",
+      "file": "sources/illustration-tulip.png",
+      "sha256": "0217c3c7853c8ff8768ea161e0149a48b0aec4de16da4742aafa0ef4793eec7b",
+      "dimensions": [
+        800,
+        800
+      ],
+      "title": "Tulpe",
+      "briefing": "Dreizackige Blütenkrone, Stiel und zwei asymmetrische Blätter.",
+      "origin": "Original geometric artwork authored for RP-4 in create_illustrations.py",
+      "rights": "Created within the commissioned project; no third-party asset used.",
+      "crop": [
+        0,
+        0,
+        800,
+        800
+      ],
+      "width": 40,
+      "height": 40,
+      "mode": "color",
+      "palette": [
+        {
+          "id": "charcoal",
+          "rgb": "#253342"
+        },
+        {
+          "id": "red",
+          "rgb": "#b55848"
+        },
+        {
+          "id": "ochre",
+          "rgb": "#c89d56"
+        },
+        {
+          "id": "green",
+          "rgb": "#637b58"
+        }
+      ],
+      "large": false,
+      "ai_prompt": null
+    },
+    {
+      "id": "a01",
+      "class": "ai_template",
+      "file": "sources/ai-owl.png",
+      "sha256": "50493120121531a15cdc6352a85efc2b08ac6b12793b22740f3fdfa468bf0562",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "title": "Eule",
+      "briefing": "Herzförmiges Gesicht, zwei Augen, spitze Flügel, Füße und Ast.",
+      "origin": "Built-in ChatGPT/Codex image generation, one call, actual output retained",
+      "rights": "Generated within ChatGPT/Codex for the commissioned project; no external reference image; no exclusive copyright claim.",
+      "crop": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "width": 40,
+      "height": 40,
+      "mode": "color",
+      "palette": [
+        {
+          "id": "charcoal",
+          "rgb": "#253342"
+        },
+        {
+          "id": "ochre",
+          "rgb": "#b37b42"
+        },
+        {
+          "id": "tan",
+          "rgb": "#dfbb80"
+        },
+        {
+          "id": "green",
+          "rgb": "#637b58"
+        }
+      ],
+      "large": true,
+      "ai_prompt": "briefings/ai-owl.txt"
+    },
+    {
+      "id": "a02",
+      "class": "ai_template",
+      "file": "sources/ai-train.png",
+      "sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "title": "Dampflok",
+      "briefing": "Seitenansicht nach links, Kessel, Schlot, Kabinenfenster und drei Räder mit Innenräumen.",
+      "origin": "Built-in ChatGPT/Codex image generation, one call, actual output retained",
+      "rights": "Generated within ChatGPT/Codex for the commissioned project; no external reference image; no exclusive copyright claim.",
+      "crop": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "width": 60,
+      "height": 40,
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253342"
+        }
+      ],
+      "large": false,
+      "ai_prompt": "briefings/ai-train.txt"
+    },
+    {
+      "id": "a03",
+      "class": "ai_template",
+      "file": "sources/ai-pagoda.png",
+      "sha256": "5017066bf077dbfede6009d160a6986218dfe4a5795a2027b9aeec0160b7d96b",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "title": "Pagode",
+      "briefing": "Drei breite Dächer, Pfeiler und freier Eingang, Stufen und flankierende Sträucher.",
+      "origin": "Built-in ChatGPT/Codex image generation, one call, actual output retained",
+      "rights": "Generated within ChatGPT/Codex for the commissioned project; no external reference image; no exclusive copyright claim.",
+      "crop": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "width": 50,
+      "height": 50,
+      "mode": "color",
+      "palette": [
+        {
+          "id": "charcoal",
+          "rgb": "#253342"
+        },
+        {
+          "id": "red",
+          "rgb": "#b55848"
+        },
+        {
+          "id": "ochre",
+          "rgb": "#c89d56"
+        },
+        {
+          "id": "green",
+          "rgb": "#637b58"
+        }
+      ],
+      "large": false,
+      "ai_prompt": "briefings/ai-pagoda.txt"
+    },
+    {
+      "id": "p01",
+      "class": "photo_clear",
+      "file": "sources/camera.png",
+      "sha256": "b0793d2adda0fa6ae899c03989482bff9a42d3d5690fc7e3648f2795d730c23a",
+      "dimensions": [
+        512,
+        512
+      ],
+      "title": "Fotograf mit Stativ",
+      "briefing": "Nach rechts gebeugter Fotograf, Kamera, drei Stativbeine; Haltung und Ausschnitt erhalten, Hintergrund darf ruhig vereinfacht werden.",
+      "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/camera.png",
+      "rights": "CC0, Lav Varshney; current replacement image introduced in scikit-image 0.18, not the older restricted image.",
+      "crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "width": 40,
+      "height": 40,
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253342"
+        }
+      ],
+      "large": false,
+      "ai_prompt": null,
+      "stylization_prompt": "briefings/p01-stylized.txt",
+      "style_reference": "references/p01.png"
+    },
+    {
+      "id": "p02",
+      "class": "photo_clear",
+      "file": "sources/coffee.png",
+      "sha256": "cc02f8ca188b167c775a7101b5d767d1e71792cf762c33d6fa15a4599b5a8de7",
+      "dimensions": [
+        600,
+        400
+      ],
+      "title": "Kaffeetasse",
+      "briefing": "Blick von schräg oben, elliptische Öffnung, braune Tasse, Henkel unten links, Untertasse und Löffel rechts; Holzmaserung darf entfallen.",
+      "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/coffee.png",
+      "rights": "CC0, Rachel Michetti; photograph courtesy of Pikolo Espresso Bar.",
+      "crop": [
+        0,
+        0,
+        600,
+        400
+      ],
+      "width": 60,
+      "height": 40,
+      "mode": "color",
+      "palette": [
+        {
+          "id": "dark",
+          "rgb": "#30241d"
+        },
+        {
+          "id": "brown",
+          "rgb": "#8c482c"
+        },
+        {
+          "id": "tan",
+          "rgb": "#ce955e"
+        },
+        {
+          "id": "cream",
+          "rgb": "#eed8b1"
+        }
+      ],
+      "large": true,
+      "ai_prompt": null,
+      "stylization_prompt": "briefings/p02-stylized.txt",
+      "style_reference": "references/p02.png"
+    },
+    {
+      "id": "p03",
+      "class": "photo_clear",
+      "file": "sources/rocket.jpg",
+      "sha256": "c2dd0de7c538df8d111e479619b129464d0269d0ae5fd18ca91d33a7fdfea95c",
+      "dimensions": [
+        640,
+        427
+      ],
+      "title": "Rakete auf Startrampe",
+      "briefing": "Schlanke aufrechte Rakete, spitze Nutzlastverkleidung, Basis; gleiche vorab gewählte Ausschnittsgeometrie, feine Leitungen dürfen entfallen.",
+      "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/rocket.jpg",
+      "rights": "SpaceX; released into the public domain according to the pinned scikit-image source documentation.",
+      "crop": [
+        220,
+        90,
+        440,
+        420
+      ],
+      "width": 40,
+      "height": 60,
+      "mode": "color",
+      "palette": [
+        {
+          "id": "sky",
+          "rgb": "#253653"
+        },
+        {
+          "id": "metal",
+          "rgb": "#d7d4bc"
+        },
+        {
+          "id": "gold",
+          "rgb": "#c8a05b"
+        },
+        {
+          "id": "dark",
+          "rgb": "#192330"
+        }
+      ],
+      "large": false,
+      "ai_prompt": null,
+      "stylization_prompt": "briefings/p03-stylized.txt",
+      "style_reference": "references/p03.png"
+    },
+    {
+      "id": "h01",
+      "class": "photo_difficult",
+      "file": "sources/clock_motion.png",
+      "sha256": "f029226b28b642e80113d86622e9b215ee067a0966feaf5e60604a1e05733955",
+      "dimensions": [
+        400,
+        300
+      ],
+      "title": "Bewegungsunscharfe Uhr",
+      "briefing": "Runde Uhr leicht rechts unterhalb der Bildmitte; Außenring und tatsächlich erkennbare Innenstrukturen erhalten, keine erfundene lesbare Uhrzeit oder Zahlen.",
+      "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/clock_motion.png",
+      "rights": "Public-domain dedication by photographer Stefan van der Walt.",
+      "crop": [
+        0,
+        0,
+        400,
+        300
+      ],
+      "width": 40,
+      "height": 30,
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253342"
+        }
+      ],
+      "large": false,
+      "ai_prompt": null,
+      "stylization_prompt": "briefings/h01-stylized.txt",
+      "style_reference": "references/h01.png"
+    },
+    {
+      "id": "h02",
+      "class": "photo_difficult",
+      "file": "sources/astronaut.png",
+      "sha256": "88431cd9653ccd539741b555fb0a46b61558b301d4110412b5bc28b5e3ea6cb5",
+      "dimensions": [
+        512,
+        512
+      ],
+      "title": "Astronautin mit Helm",
+      "briefing": "Porträt mit Gesicht, Haaren, orangefarbenem Anzug, dunklem Halsring und überlagertem Helm unten rechts; Pose erhalten, Stofftextur und Schrift dürfen entfallen.",
+      "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/astronaut.png",
+      "rights": "NASA portrait of Eileen Collins; public domain per NASA/scikit-image source. Research comparison only; no endorsement implied.",
+      "crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "width": 50,
+      "height": 50,
+      "mode": "color",
+      "palette": [
+        {
+          "id": "dark",
+          "rgb": "#253342"
+        },
+        {
+          "id": "orange",
+          "rgb": "#d86b32"
+        },
+        {
+          "id": "skin",
+          "rgb": "#e3b992"
+        },
+        {
+          "id": "hair",
+          "rgb": "#8c7145"
+        }
+      ],
+      "large": false,
+      "ai_prompt": null,
+      "stylization_prompt": "briefings/h02-stylized.txt",
+      "style_reference": "references/h02.png"
+    },
+    {
+      "id": "h03",
+      "class": "photo_difficult",
+      "file": "sources/chelsea.png",
+      "sha256": "596aa1e7cb875eb79f437e310381d26b338a81c2da23439704a73c4651e8c4bb",
+      "dimensions": [
+        451,
+        300
+      ],
+      "title": "Katzenporträt",
+      "briefing": "Schräges nahes Gesicht, zwei Augen, dreieckige Nase, Stirnzeichnung und helle Schnauze; abgeschnittene Ohren und Blickrichtung erhalten, einzelne Haare dürfen entfallen.",
+      "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/chelsea.png",
+      "rights": "CC0, photographer Stefan van der Walt.",
+      "crop": [
+        0,
+        0,
+        451,
+        300
+      ],
+      "width": 60,
+      "height": 40,
+      "mode": "color",
+      "palette": [
+        {
+          "id": "dark",
+          "rgb": "#30241d"
+        },
+        {
+          "id": "brown",
+          "rgb": "#997141"
+        },
+        {
+          "id": "cream",
+          "rgb": "#e2c6a2"
+        },
+        {
+          "id": "eyes",
+          "rgb": "#a69b55"
+        }
+      ],
+      "large": true,
+      "ai_prompt": null,
+      "stylization_prompt": "briefings/h03-stylized.txt",
+      "style_reference": "references/h03.png"
+    }
+  ]
+}

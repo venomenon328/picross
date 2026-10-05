@@ -24,9 +24,13 @@ Kern um bis zu acht Farben plus Leer; die [RP-2-Prüfzuordnung](RP2_VERIFICATION
 bindet Fachoracles, partielle Propagation, Kompatibilität und Farbreferenzen.
 RP-2 ist nach unabhängigem Review R1 über PR #43 als
 `742977ed17568f5f55f13b80b609687f93f1eb32` integriert. RP-3/#37 ergänzt Bildimport,
-Vergleich und F-04 im eigenen Draft; [Prüfzuordnung](RP3_VERIFICATION.md).
-Unabhängiges technisches/visuelles RP-3-Review bleibt offen.
-RP-4 bis RP-6 sind spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
+Vergleich und F-04 und ist nach unabhängigem Review R2 über PR #44 als
+`aa9cc23244c60d647d8468a8d76a819f977e85a6` integriert;
+[Prüfzuordnung](RP3_VERIFICATION.md). RP-4/#38 liefert die
+[Vergleichsbaseline](RP4_VERIFICATION.md) in PR #45. Unabhängiges Review R1 ist
+durchgeführt; R1-N1 liefert den korrigierten Illustrationstest und Original-
+Commitbeleg. Aktuelle Nachprüfung und Integration stehen im PR.
+RP-5 und RP-6 sind spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
 begrenzte Vorarbeiten, keine allgemeine Generatorplattform.
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
@@ -200,13 +204,32 @@ lokales SVG-Abschlussbild. Kein öffentlicher Import oder Saveformatwechsel.
 Die Exportfreigabe rekonstruiert Quelle/Raster/Hinweise und prüft die geschriebene
 Nachweisdatei unabhängig neu; bewiesene Enddomains müssen der Matrix entsprechen.
 
-RP3-A01 bis A06 binden aktuelle Fachtests/Benchmark, `docs`, `product`, `preflight`,
-vollständigen Diffcheck, Windows-Artefakt, eigene Sichtkontrolle und separat noch
-offenes unabhängiges technisches/visuelles Review. Die reguläre Hauptszene wird
+RP3-A01 bis A06 einschließlich unabhängigem technischem/visuellem Review R2
+sind im integrierten PR #44 abgeschlossen. Die dort gebundenen Fachtests/Benchmark,
+`docs`, `product`, `preflight`, Diffcheck, Windows-Artefakt und Sichtkontrolle
+bleiben historische Nachweise dieses Stands. Die reguläre Hauptszene wird
 mit F-04 in drei isolierten Prozessen bearbeitet, abgeschlossen und wieder geladen;
 echte Renderbilder prüfen eigene falsche Einträge und die Spoilergrenze.
 Die reale Eigentümer-Lösung ist RP-6-Gate. Windows-Export, Windows-Start und
 Eigentümer-Lösung sind getrennte Nachweise. Parent #34 bleibt offen.
+
+## RP-4-Regression und Herkunftsnachweis
+
+R1-N1 zu PR #45 prüft Neuerzeugungen der drei eigenen Illustrationen auf exakte
+Dateimenge, Modus, Abmessungen und dekodierte Pixel. Gespeicherte Originale,
+Erzeugungsskript und Input-Lock bleiben bytegebunden. Der tatsächliche ursprüngliche
+Commitpayload wird als kleine Datei bereitgestellt und mit seinem Git-Objekthash,
+Tree und unverändertem Produktionsreport verbunden; [Prüfzuordnung](RP4_VERIFICATION.md).
+
+Der bestehende Linux-Fachjob bleibt unverändert. Ein zusätzlicher begrenzter
+Windows-x64-Job im Fachworkflow führt nur `test_rp4*.py` aus: Python 3.12.10,
+offizielles Pillow-12.3.0-Wheel in temporärer venv, `contents: read`, zehn Minuten
+hartes Joblimit. Er reproduziert R1s PNG-Byteabweichung am Originaltest gezielt und
+verlangt anschließend erfolgreiche aktuelle Tests. Tatsächliche Laufzeit-/Codec-
+daten und Head/Basis/Checkout/Run stehen im kleinen Nachweisartefakt. Kein Windows-
+Benchmark, keine zusätzliche P1-/Eigentümerprobe. Unabhängige Nachprüfung beider
+R1-Befunde und aktuelle technische Checks sind vor dem bedingt beauftragten Merge
+erforderlich; der verbindliche Abnahmestand steht im PR.
 
 ## Toolchain- und Produktprüfung
 
