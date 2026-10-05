@@ -286,6 +286,45 @@ class ImageTests(unittest.TestCase):
         with self.assertRaises(InvalidInput):
             inspect_candidate(bundle,"area-128")
 
+    def test_malformed_production_manifest_is_invalid_input_not_internal_error(self):
+        bundle = self.produce(folder="malformed-manifest")
+        original = load_json(bundle / "manifest.json")
+        mutations = (
+            ("missing-design", lambda m: m.pop("design")),
+            ("wrong-design-type", lambda m: m.__setitem__("design", "not-an-object")),
+            ("missing-variants", lambda m: m["design"].pop("variants")),
+            ("wrong-variants-type", lambda m: m["design"].__setitem__("variants", {})),
+        )
+        for label, mutate in mutations:
+            manifest = copy.deepcopy(original)
+            mutate(manifest)
+            write_json(bundle / "manifest.json", manifest)
+            output = self.root / ("export-" + label)
+            cmd = [sys.executable, "-m", "tools.puzzle_production", "export-p1",
+                   "--bundle", str(bundle), "--variant", "area-128",
+                   "--reveal", str(EXAMPLE / "reveal.svg"), "--name", "Name",
+                   "--output-dir", str(output)]
+            done = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+            payload = json.loads(done.stdout)
+            self.assertEqual(payload["status"], "invalid_input")
+            self.assertFalse(payload["certified"])
+            self.assertFalse(output.exists())
+
+        write_json(bundle / "manifest.json", original)
+        from contextlib import redirect_stdout
+        from tools.puzzle_production import p1_export
+        from tools.puzzle_production.image_cli import main as image_main
+        captured = io.StringIO()
+        with patch.object(p1_export, "export_p1", side_effect=RuntimeError("internal failure")), redirect_stdout(captured):
+            code = image_main(["export-p1", "--bundle", str(bundle), "--variant", "area-128",
+                               "--reveal", str(EXAMPLE / "reveal.svg"), "--name", "Name",
+                               "--output-dir", str(self.root / "internal-error")])
+        self.assertEqual(code, 5)
+        payload = json.loads(captured.getvalue())
+        self.assertEqual(payload["status"], "technical_error")
+        self.assertFalse(payload["certified"])
+
     def test_tampered_proof_is_freshly_rejected_even_with_rebound_file_hash(self):
         bundle=self.produce()
         proof=load_json(bundle/"area-128-proof.json")
