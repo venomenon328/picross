@@ -24,6 +24,11 @@ jobs:
           persist-credentials: false
       - name: Python version
         run: python3 --version
+      - name: Isolated image dependency
+        run: |
+          python3 -m venv "${{ runner.temp }}/rp3-image-env"
+          "${{ runner.temp }}/rp3-image-env/bin/python" -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+          echo "${{ runner.temp }}/rp3-image-env/bin" >> "$GITHUB_PATH"
       - name: Independent oracles and proof rejection tests
         run: python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
       - name: Isolated reference runs and fresh verification
@@ -31,6 +36,11 @@ jobs:
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: python3 -m tools.puzzle_production.benchmark --output-dir artifacts/puzzle-production
+      - name: Real image import and registered P1 export
+        env:
+          RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python3 -m tools.puzzle_production.rp3_demo --output-dir artifacts/puzzle-production/rp3
       - name: Upload reports, proofs and measurements
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

@@ -1,6 +1,6 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-Stand: 04.10.2026 · Arbeitsfassung 0.3 · RP-1 integriert; RP-2 implementiert, unabhängiges Review offen
+Stand: 04.10.2026 · Arbeitsfassung 0.4 · RP-1/RP-2 integriert; RP-3 im Draft, unabhängiges Review offen
 
 ## 1. Geltung und Ziel
 
@@ -166,6 +166,36 @@ bei K Vordergrundfarben, abgeleitet aus monoton entfernbaren Werten. 2 MiB Einga
 und an Grenzen geprüft. Vollständige Endraster werden zusätzlich durch direkte
 Runextraktion einschließlich berührender Farbwechsel geprüft. Kein zweiter
 Prüfkern, Spieladapter, Bildimport oder Suchprofil wird eingeführt.
+
+### 4.3 Technische Konkretisierung RP-3
+
+Bildbefehle verwenden die separate isolierte Abhängigkeit Pillow 12.3.0;
+der Logikkern bleibt Standardbibliothek. `picross-image-design-v1` bindet Quelle,
+Herkunft/Nutzungsgrundlage, Briefing, vorlagentreue oder freie Arbeitsweise,
+Zieldimensionen, orientierten Ausschnitt, expliziten Fit, Hintergrund/Alpha,
+Mono-/Farbpalette und höchstens acht Flächen-/Konturvarianten.
+PNG/JPEG werden strikt dekodiert, EXIF inklusive Spiegelung angewendet und ICC
+nach sRGB transformiert. Ungetaggte RGB-/Graubilder gelten ausdrücklich als sRGB.
+Originalbytes und normalisiertes RGBA-PNG bleiben getrennt erhalten.
+
+32 MiB Dateigröße, 8 Millionen dekodierte Pixel und 8192 je Quellachse begrenzen
+den Import. Die endgültige Matrix enthält nur stabile Paletten-IDs/Leer;
+vollständige Hinweise entstehen ausschließlich durch Runextraktion daraus.
+`picross-image-candidate-v1` bindet Normalisierungshash, Entwurf, Variante,
+Werkzeug-/Codecversionen, Matrix und Logikhash; Zeiten sind keine Identität.
+`picross-image-manifest-v1` führt tatsächliche Dateihashes und getrennte technische,
+Motiv- und redaktionelle Status. Eine statische Offline-HTML-Seite zeigt den
+vollständigen Vergleich samt Raster bei echter Zellauflösung.
+
+`picross-p1-export-v1` / Adapter `rp3-p1-square-mono-1` rekonstruiert die gebundene
+Quelle und Matrix, leitet Hinweise neu ab, prüft den gespeicherten Nachweis
+unabhängig und vergleicht die bewiesenen Enddomains mit der Matrix. Erst ein
+vollständiges Zertifikat erlaubt den Export. P1 erhält Leer 0 und fortlaufende
+Paletten-IDs 1..N, ausdrücklich im Manifest; erster registrierter Inhalt ist F-04.
+Andere als quadratische monochrome Kandidaten und lokale SVG-Enthüllungen werden
+in diesem ersten Adapter abgewiesen. Die Produktion unterstützt weiterhin Farben,
+Rechtecke und 100×100. Details/Grenzen: [Anleitung](../tools/puzzle_production/README.md),
+[reales Beispiel](../examples/rp3/README.md), [Prüfzuordnung](RP3_VERIFICATION.md).
 
 ## 5. Deduktionsnachweis
 
@@ -364,6 +394,13 @@ den eigenen Bearbeitungsstand einschließlich Fehlern. Bestehende F-01/F-02-Date
 Proofs und Bilder werden nicht zur Erleichterung des neuen Nachweises verändert.
 F-03 bleibt ein UI-Stressdatensatz ohne Rätselqualitätsabnahme.
 
+RP-3 liefert F-04 als neu aus einer realen eigenen Bilddatei importiertes
+20×20-Beispiel mit detaillierterer eigener SVG-Enthüllung. Definition, Hauptszene
+und SaveStore registrieren ausschließlich feste Pfade/IDs. Appidentität,
+Saveformat 1 und bestehende Slots bleiben erhalten; F-04 ergänzt `f04.json` samt
+Backup/Temp. Produktionsbilder und Motivname sind vor Abschluss unzugänglich.
+Der technische Durchstich ist keine reale Eigentümer-Lösung oder Pilotfreigabe.
+
 Fachliche Vorarbeiten sind [F-01](../prototypes/p1/F01_PROOF.md),
 [F-02](../prototypes/p1/F02_PROOF.md), die begrenzten
 [Python-Prüfer](../tools/check_f01.py) und die
@@ -409,9 +446,13 @@ für Solve/Serialisierung/frische Prüfung und 512 MiB gemessener Linux-Peak-RSS
 Prozess; getrennt davon erzwingt der Benchmark 1024 MiB virtuelles Speicherlimit.
 Informationsarme Langlinien und echte Propagation sind eingeschlossen. Der PR
 führt aktuelle Messwerte, Commit-/Basis-/CI-Artefaktbindung und offene Abnahme;
-Für RP-2 bleiben RP2-A01 bis A06 und unabhängiges technisches Review des kombinierten
-Kerns vor Merge erforderlich. Die RP-1-/Spezifikationsintegration aus #41/#42 ist
-abgeschlossen; ihre historischen Nachweise behalten den ursprünglichen Commitbezug.
+RP-1/RP-2 einschließlich des unabhängigen technischen Reviews sind über #42/#43
+integriert; historische Nachweise behalten ihren ursprünglichen Commitbezug.
+RP-3 ergänzt gezielte Bildtests und den realen Dateiimport/Export im gemeinsamen
+Fachjob. `product` ergänzt denselben Import samt Bindungsprüfung sowie reguläre
+Lade-/Bearbeitungs-/Abschluss-/Neustartprozesse und native Renderbilder.
+RP3-A01 bis A06 und unabhängiges technisches/visuelles Review bleiben Mergegates;
+die reale Eigentümer-Lösung bleibt ausdrücklich RP-6-Gate.
 
 Für jedes Paket gelten der bestehende Dokumentprüfweg und ein vollständiger
 Diffcheck. `docs` muss am aktuellen Head/zugehörigen Test-Merge erfolgreich sein.

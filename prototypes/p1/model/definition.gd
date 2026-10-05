@@ -1,11 +1,14 @@
 extends RefCounted
 ## JSON boundary. 0 is background; positive IDs refer to palette entries.
+const FILES: Dictionary = {"f01": "res://data/f01.json", "f02": "res://data/f02.json", "f03": "res://data/f03.json", "f04": "res://data/f04.json"}
 
 static func load_f01() -> Dictionary:
 	return load_fixture("f01")
 
 static func load_fixture(id: String) -> Dictionary:
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/" + id + ".json"))
+	if not FILES.has(id):
+		return {}
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(FILES[id]))
 	return parsed if parsed is Dictionary else {}
 
 static func integer(value: Variant) -> bool:
