@@ -1,6 +1,6 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-Stand: 05.10.2026 · Arbeitsfassung 0.6 · RP-1 bis RP-3 integriert; RP-4-Baseline und R1-Nacharbeit
+Stand: 05.10.2026 · Arbeitsfassung 0.7 · RP-1 bis RP-4 integriert; RP-5 im Draft
 
 ## 1. Geltung und Ziel
 
@@ -196,6 +196,34 @@ Andere als quadratische monochrome Kandidaten und lokale SVG-Enthüllungen werde
 in diesem ersten Adapter abgewiesen. Die Produktion unterstützt weiterhin Farben,
 Rechtecke und 100×100. Details/Grenzen: [Anleitung](../tools/puzzle_production/README.md),
 [reales Beispiel](../examples/rp3/README.md), [Prüfzuordnung](RP3_VERIFICATION.md).
+
+### 4.4 Technische Konkretisierung RP-5
+
+`picross-repair-plan-v1`, `picross-repair-v1` und eigenes Reparaturmanifest
+binden unveränderten geprüften Import, Farbsemantik, boolesche Schutzmaske,
+festgelegte Suchkonfiguration/Seed, tatsächliche Vorschläge/Elternänderungen,
+alle Kandidaten und Endmatrix. Keine Umetikettierung als unveränderter RP-3-Import.
+Der [Paketvertrag](../examples/rp5/README.md) dokumentiert genaue Hash-/Zähler-/
+Ressourcengrenzen und Abbruch-/Replayregeln; [Prüfzuordnung](RP5_VERIFICATION.md).
+
+Einzellokale Änderungen, Manhattan-Priorität um ursprünglich offene Zellen,
+SHA-256-Tiereihenfolge und begrenzte Frontier genügen dem Paket. Partielle
+Farb-Domainverluste, offene Zellen und Änderungsabstand bleiben getrennte
+Merkmale. Schutz und Abstand werden vor jeder Bewertung kontrolliert;
+Duplikate/Rücknahmen/verworfene Varianten verbrauchen kumulative Vorschläge.
+Ein gemeinsames Suchbudget umfasst Importrekonstruktion und alle Solve-/
+Prüfoperationen; die frische Abschlussprüfung besitzt ihr eigenes vorab
+festgelegtes Zeit-/Linienbudget. Kooperative Grenzen sind keine harten OS-Limits.
+Abgebrochene Abschlussprüfung verleiht keine Freigabe, auch wenn ein späterer
+Replay den gespeicherten Proof bestätigen kann.
+
+Jede Matrix und ihre Hinweise werden neu rekonstruiert, jeder geschriebene
+Proof unabhängig vom unbekannten Raster geprüft. Nur ein vollständig geprüfter
+Endproof mit identischen Singleton-Enddomains erlaubt logische Freigabe.
+Der bestehende P1-Adapter weist Reparaturmanifeste ausdrücklich zurück;
+kein neues P1-Zielprofil, keine Farb-/Rechteckintegration oder Registrierung.
+Manuelle Rasterkorrekturen werden als neue Eingabedatei/-revision importiert
+und verlangen eine neue vollständige Prüfung.
 
 ## 5. Deduktionsnachweis
 
@@ -456,9 +484,15 @@ abgeschlossen. RP-4 liefert die [unveränderte Vergleichsbaseline](RP4_VERIFICAT
 mit eigener Sichtprüfung und unabhängigem Daten-/Methodik-/Bildreview R1.
 R1-N1 ergänzt den exakten Pixel-/Modus-/Dimensionsvergleich neuer Illustrationen,
 einen begrenzten Windows-Regressionslauf und die Originalbytes des Produzentencommits.
-Gespeicherte Eingänge und Baseline behalten sämtliche Dateihashes. Aktuelle technische
-Nachweise und die gezielte unabhängige Nachprüfung von R1/B-01 und A-01 bleiben
-Mergegates; ihr commitgebundener Abschluss steht in PR #45. Die reale Eigentümer-
+Gespeicherte Eingänge und Baseline behalten sämtliche Dateihashes. R2 hat R1/B-01
+und A-01 sowie die aktuellen technischen Nachweise bestätigt; RP-4 ist über
+PR #45 als `80ae2c1` integriert. RP-5 führt genau die neun vorab ausgewählten
+motivisch geeigneten Fixpunkte weiter; alle 48 Originalresultate bleiben in
+der Übersicht. Eigene Sichtprüfung, zwei neue Zertifikate und auch logisch
+bessere, motivisch verschlechterte Stände stehen im RP-5-Paket. Der separate
+begrenzte CI-Job prüft alle geschriebenen Reparaturspuren und Vergleichsbindungen;
+unverkleinerte Fach-/Referenz-/RP-3-/RP-4-Prüfungen bleiben. Unabhängiges
+technisches/visuelles Review von RP-5 bleibt in PR #46 offen. Die reale Eigentümer-
 Lösung bleibt ausdrücklich RP-6-Gate.
 
 Für jedes Paket gelten der bestehende Dokumentprüfweg und ein vollständiger

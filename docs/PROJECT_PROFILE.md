@@ -26,11 +26,13 @@ RP-2 ist nach unabhängigem Review R1 über PR #43 als
 `742977ed17568f5f55f13b80b609687f93f1eb32` integriert. RP-3/#37 ergänzt Bildimport,
 Vergleich und F-04 und ist nach unabhängigem Review R2 über PR #44 als
 `aa9cc23244c60d647d8468a8d76a819f977e85a6` integriert;
-[Prüfzuordnung](RP3_VERIFICATION.md). RP-4/#38 liefert die
-[Vergleichsbaseline](RP4_VERIFICATION.md) in PR #45. Unabhängiges Review R1 ist
-durchgeführt; R1-N1 liefert den korrigierten Illustrationstest und Original-
-Commitbeleg. Aktuelle Nachprüfung und Integration stehen im PR.
-RP-5 und RP-6 sind spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
+[Prüfzuordnung](RP3_VERIFICATION.md). RP-4/#38 ist nach R1-Nacharbeit und
+unabhängigem Review R2 über PR #45 als `80ae2c1` integriert;
+[Vergleichsbaseline](RP4_VERIFICATION.md) und Originalbindungen bleiben erhalten.
+RP-5/#39 liefert in Draft-PR #46 die begrenzte motivgeschützte Reparatursuche,
+[neun Vergleichsläufe](../examples/rp5/README.md) und
+[Prüfzuordnung](RP5_VERIFICATION.md). Unabhängiges RP-5-Review bleibt offen.
+RP-6 ist spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
 begrenzte Vorarbeiten, keine allgemeine Generatorplattform.
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
@@ -227,9 +229,39 @@ offizielles Pillow-12.3.0-Wheel in temporärer venv, `contents: read`, zehn Minu
 hartes Joblimit. Er reproduziert R1s PNG-Byteabweichung am Originaltest gezielt und
 verlangt anschließend erfolgreiche aktuelle Tests. Tatsächliche Laufzeit-/Codec-
 daten und Head/Basis/Checkout/Run stehen im kleinen Nachweisartefakt. Kein Windows-
-Benchmark, keine zusätzliche P1-/Eigentümerprobe. Unabhängige Nachprüfung beider
-R1-Befunde und aktuelle technische Checks sind vor dem bedingt beauftragten Merge
-erforderlich; der verbindliche Abnahmestand steht im PR.
+Benchmark, keine zusätzliche P1-/Eigentümerprobe. R2 hat beide R1-Befunde
+und die aktuellen technischen Checks bestätigt; RP-4 ist über PR #45 integriert.
+Die eingefrorenen Daten und historischen offenen Felder behalten ihre Bindung.
+
+## RP-5-Reparaturprüfung
+
+Eigener additiver Reparatur-/Replayvertrag nach dem bestehenden Importprüfpfad;
+Mono und Farbe, einzelne Zelländerungen, harte Masken und separate kumulative
+Änderungs-/Vorschlags-/Kandidaten-/Linien-/Zeitgrenzen. Alle Parameter wurden vor
+dem ersten Vergleichslauf in Commit `55f9e0f` fixiert. Endnachweise entstehen
+frisch vom unbekannten Raster und werden unabhängig geprüft; keine neue Regel
+im Zertifizierer. Bestehender P1-Export weist Reparaturbundles ausdrücklich zurück.
+Keine P1-Datei, Registrierung, Spielprobe oder Produktregel verändert.
+
+```sh
+python -m tools.puzzle_production.rp5 verify --output-dir artifacts/rp5-replay
+python -m unittest discover -s tests/puzzle_production -p 'test_repair.py' -v
+python -m unittest discover -s tests/puzzle_production -p 'test_rp5.py' -v
+```
+
+Gleiche isolierte Image-Umgebung. Neuer Job `rp5-repair` auf Ubuntu 24.04,
+lesende Rechte, zehn Minuten hartes Joblimit, sechs Minuten Schrittlimit;
+Paketreplay kooperativ 300 s, Einzelbundle-Prüfung 60 s / 1000000 Linien.
+Der Job entpackt das bytegebundene Originalarchiv mit Mengen-/Größen-/Pfadkontrolle,
+prüft alle Kandidaten/Eltern/Proofs, 48 Originalresultate und neun Sichturteile.
+Source-Head, Basis, Test-Merge und Run stehen im Artefakt. Gemeinsamer Fachjob
+behält sämtliche Oracles, sechs Referenzen, RP-3-Demo und RP-4-Replay;
+Windowsregression, `docs`, `product` und `preflight` bleiben aktiv.
+
+RP5-A01 bis A06 und aktuelle Fach-/RP-5-/Dokumentchecks sind vor Merge erforderlich.
+Die tatsächliche eigene Bildsichtung ist keine unabhängige technische/visuelle
+Zweitprüfung; dieses Gate bleibt in PR #46 separat offen. Reale Eigentümer-Lösung
+und finale Pilotabnahme bleiben RP-6-Gates. Kein Merge/Release; Parent #34 offen.
 
 ## Toolchain- und Produktprüfung
 

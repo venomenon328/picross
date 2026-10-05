@@ -1,11 +1,11 @@
 # RP-4: zwölf Quellen, Vergleich und unveränderte Baseline
 
-Status: durchgeführt und technisch nachgeprüft;
-[Review R1](https://github.com/venomenon328/picross/pull/45#pullrequestreview-5415580729)
-bestätigt die Bild-/Datenprüfung und verlangt B-01/A-01-Nacharbeit. R1-N1 ergänzt
-den präzisen Illustrationstest und den Original-Commitbeleg. Commitgebundene
-Nachprüfung und Integration stehen in [PR #45](https://github.com/venomenon328/picross/pull/45)
-zu [#38](https://github.com/venomenon328/picross/issues/38).
+Status: nach R1-Nacharbeit und [unabhängigem Review R2](https://github.com/venomenon328/picross/pull/45#pullrequestreview-5416322309)
+über [PR #45](https://github.com/venomenon328/picross/pull/45) als
+`80ae2c19eb6f85bbac58a247badf65b3e0669132` integriert; #38 abgeschlossen.
+B-01/A-01 sind geschlossen. Baseline, Bilder, Original-Commitbeleg und historische
+Reviewfelder bleiben unverändert. [RP-5](../rp5/README.md) führt die festgelegten
+neun Fixpunkte in einem eigenen Paket weiter.
 Keine Pilot-/Katalogfreigabe oder reale Eigentümer-Lösung.
 
 Offline-Einstieg: [Vergleichsindex](index.html). Jede Zeile verlinkt das vollständige

@@ -1,4 +1,4 @@
-# RP-1 bis RP-4: Deduktionskern und Bildproduktion
+# RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
 Python **3.11+**, ausschließlich Standardbibliothek, ohne Installation von Paketen,
 Netzwerk-/Modellaufrufe oder P1-Abhängigkeit. Aus dem Repository-Root ausführen;
@@ -388,6 +388,28 @@ Optional `rp4 produce --output-dir <neuer-pfad>` für neue deterministische Impo
 die versionierte Baseline niemals überschreiben. `freeze` verweigert erneutes
 Fixieren bereits gesperrter Inputs. `views` und `index` bauen nur Dateiansichten.
 19 Zertifikate bedeuten hier 14 zusätzlich motivisch brauchbare Varianten aus
-sechs Quellen, keine abgeschlossene Pilotproduktion. Unabhängiges RP-4-Review R1
-ist durchgeführt; die commitgebundene Nachprüfung von B-01/A-01 und Integration
-stehen in PR #45. Eigentümer-Lösung bleibt RP-6-Gate.
+sechs Quellen, keine abgeschlossene Pilotproduktion. RP-4 ist nach R1-Nacharbeit
+und unabhängigem R2 über PR #45 als `80ae2c1` integriert; B-01/A-01 geschlossen.
+Eigentümer-Lösung bleibt RP-6-Gate.
+
+## RP-5: motivgeschützte Reparatur
+
+[Versionierter Vertrag, Status-/Exitcodes, Schema-/Hash-/Ressourcengrenzen](../../examples/rp5/README.md),
+[Prüfzuordnung](../../docs/RP5_VERIFICATION.md), [Offlinevergleich](../../examples/rp5/index.html).
+Gleiche isolierte Image-Umgebung; keine neue Abhängigkeit. P1-Export und Spiel
+bleiben unverändert; `export-p1` weist das eigene Reparaturmanifest zurück.
+
+```sh
+python -m tools.puzzle_production.repair search --reference examples/rp4/baseline/i02-direct-60x40 --plan examples/rp5/plans/i02-direct-60x40.json --output-dir artifacts/rp5-boat
+python -m tools.puzzle_production.repair verify --reference examples/rp4/baseline/i02-direct-60x40 --bundle artifacts/rp5-boat --report artifacts/rp5-boat-replay.json
+python -m tools.puzzle_production.rp5 verify --output-dir artifacts/rp5-replay
+python -m tools.puzzle_production.rp5 unpack --output-dir artifacts/rp5-frozen
+```
+
+Alle Ausgabepfade neu. Der erste originale Vergleich ist bytegebunden im
+Paketarchiv erhalten; Replay rekonstruiert jeden Kandidaten und Proof unabhängig,
+auch bei Nichtfund/Abbruch. Eine spätere Prüfung wertet einen ursprünglichen
+Abbruch nicht zur logischen Freigabe auf. Vorher/Nachher, alle Änderungen,
+Schutzmaske und Einzelurteile stehen offline bereit. Neuer begrenzter
+`rp5-repair`-CI-Job mit zehn Minuten hartem Joblimit; die bisherigen Fachtests,
+Referenzen, RP-3-Demo, RP-4-Replay und Windowsregression bleiben aktiv.

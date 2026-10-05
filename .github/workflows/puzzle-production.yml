@@ -56,6 +56,37 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  rp5-repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Isolated image dependency
+        run: |
+          python3 -m venv "${{ runner.temp }}/rp5-image-env"
+          "${{ runner.temp }}/rp5-image-env/bin/python" -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+          echo "${{ runner.temp }}/rp5-image-env/bin" >> "$GITHUB_PATH"
+      - name: RP-5 all candidate proofs, exact parent replay and complete baseline comparison
+        timeout-minutes: 6
+        env:
+          RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python3 -m tools.puzzle_production.rp5 verify --output-dir artifacts/rp5
+      - name: Upload commit-bound repair comparison
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: rp5-repair-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/rp5/
+          if-no-files-found: error
+          retention-days: 14
+
   rp4-windows:
     runs-on: windows-2022
     timeout-minutes: 10
