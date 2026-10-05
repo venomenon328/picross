@@ -4,3 +4,4 @@ __pycache__/
 artifacts/
 .godot/
 prototypes/p1/build/
+examples/rp5/baseline/
