@@ -269,24 +269,27 @@ def raster_image(matrix: list, design: dict) -> Image.Image:
 
 def inspect_candidate(directory: Path, variant_id: str, budget: Budget | None = None) -> tuple[dict, dict, dict]:
     """Rebuild identity/hints and freshly replay the written proof, ignoring flags."""
-    manifest = load_json(directory / "manifest.json")
-    if manifest.get("format") != "picross-image-manifest-v1":
+    manifest = exact_keys(load_json(directory / "manifest.json"), {
+        "format", "versions", "design", "original", "original_filename",
+        "normalization", "limits", "candidates", "files",
+    })
+    if manifest["format"] != "picross-image-manifest-v1":
         raise InvalidInput("Unsupported production manifest")
-    producer = exact_keys(manifest.get("versions"), set(versions()))
+    producer = exact_keys(manifest["versions"], set(versions()))
+    d = validate_design(manifest["design"])
     if (producer["tool"] != VERSION or producer["pillow"] != PILLOW_VERSION or
             any(v is not None and (not isinstance(v, str) or not 1 <= len(v) <= 128) for v in producer.values()) or
-            manifest.get("original") not in ("original.png", "original.jpg")):
+            manifest["original"] not in ("original.png", "original.jpg")):
         raise InvalidInput("Wrong image tool/Pillow version or original path")
-    if not isinstance(manifest.get("files"), dict):
+    if not isinstance(manifest["files"], dict):
         raise InvalidInput("Missing production file bindings")
     for name, sha in manifest["files"].items():
         path = directory / name
         if (not isinstance(name, str) or Path(name).name != name or "\\" in name or path.is_symlink() or
                 path.resolve().parent != directory.resolve() or file_hash(path) != sha):
             raise InvalidInput("Missing, altered or unsafe production file")
-    if variant_id not in [v["id"] for v in manifest["design"]["variants"]]:
+    if variant_id not in [v["id"] for v in d["variants"]]:
         raise InvalidInput("Unknown candidate variant")
-    d = validate_design(manifest["design"])
     required = {manifest["original"], "normalized.png", "design.json", "index.html", "briefing.txt"}
     required.update(f'{v["id"]}-{suffix}' for v in d["variants"] for suffix in
                     ("candidate.json", "logic.json", "proof.json", "result.json", "raster.png"))
