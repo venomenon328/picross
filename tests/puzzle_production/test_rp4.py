@@ -13,12 +13,21 @@ from tools.puzzle_production.images import file_hash, import_image, validate_des
 from tools.puzzle_production.rp4 import CORPUS, check_reviews, inspect_trial, local, validate_inputs
 
 
+ILLUSTRATIONS = ('illustration-sailboat.png', 'illustration-teapot.png', 'illustration-tulip.png')
+
+
 class CorpusTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name) / 'corpus'
         shutil.copytree(CORPUS, self.root, ignore=shutil.ignore_patterns('baseline', 'views', '__pycache__'))
+
+    def assert_same_decoded_image(self, actual, expected):
+        with Image.open(actual, formats=('PNG',)) as current, Image.open(expected, formats=('PNG',)) as original:
+            self.assertEqual(current.mode, original.mode, 'Decoded image mode differs')
+            self.assertEqual(current.size, original.size, 'Decoded image dimensions differ')
+            self.assertTrue(current.tobytes() == original.tobytes(), 'Decoded image pixels differ')
 
     def test_complete_paired_input_and_icc_reference_reconstruction(self):
         plan, lock = validate_inputs(self.root)
@@ -84,13 +93,62 @@ class CorpusTests(unittest.TestCase):
         spec.loader.exec_module(module)
         output = Path(self.temp.name) / 'illustrations'
         module.create(output)
-        self.assertEqual(len(list(output.iterdir())), 3)
-        for path in output.iterdir():
-            self.assertEqual(file_hash(path), file_hash(CORPUS / 'sources' / path.name))
+        self.assertEqual({path.name for path in output.iterdir()}, set(ILLUSTRATIONS))
+        for name in ILLUSTRATIONS:
+            with self.subTest(illustration=name):
+                self.assert_same_decoded_image(output / name, CORPUS / 'sources' / name)
         invalid = Path(self.temp.name) / 'not-directory'
         invalid.write_text('existing file')
         with self.assertRaises(OSError):
             module.create(invalid)
+
+    def test_illustration_reencoding_preserves_decoded_image(self):
+        for name in ILLUSTRATIONS:
+            with self.subTest(illustration=name):
+                original = CORPUS / 'sources' / name
+                reencoded = Path(self.temp.name) / name
+                with Image.open(original) as image:
+                    image.save(reencoded, compress_level=0)
+                self.assertNotEqual(file_hash(reencoded), file_hash(original))
+                self.assert_same_decoded_image(reencoded, original)
+
+    def test_illustration_pixel_change_rejected(self):
+        original = CORPUS / 'sources' / 'illustration-sailboat.png'
+        changed = Path(self.temp.name) / 'changed-pixel.png'
+        with Image.open(original) as image:
+            red, green, blue = image.getpixel((0, 0))
+            image.putpixel((0, 0), (red ^ 1, green, blue))
+            image.save(changed)
+        with self.assertRaisesRegex(AssertionError, 'Decoded image pixels differ'):
+            self.assert_same_decoded_image(changed, original)
+
+    def test_illustration_dimensions_change_rejected(self):
+        original = CORPUS / 'sources' / 'illustration-sailboat.png'
+        changed = Path(self.temp.name) / 'changed-dimensions.png'
+        with Image.open(original) as image:
+            # Preserve every decoded byte so only the dimensions distinguish this file.
+            reshaped = Image.frombytes(image.mode, (image.width * 2, image.height // 2), image.tobytes())
+            reshaped.save(changed)
+        with self.assertRaisesRegex(AssertionError, 'Decoded image dimensions differ'):
+            self.assert_same_decoded_image(changed, original)
+
+    def test_illustration_mode_change_rejected(self):
+        original = CORPUS / 'sources' / 'illustration-sailboat.png'
+        changed = Path(self.temp.name) / 'changed-mode.png'
+        with Image.open(original) as image:
+            image.convert('RGBA').save(changed)
+        with self.assertRaisesRegex(AssertionError, 'Decoded image mode differs'):
+            self.assert_same_decoded_image(changed, original)
+
+    def test_reencoded_stored_original_is_rejected(self):
+        original = CORPUS / 'sources' / 'illustration-sailboat.png'
+        reencoded = self.root / 'sources' / original.name
+        with Image.open(original) as image:
+            image.save(reencoded, compress_level=0)
+        self.assertNotEqual(file_hash(reencoded), file_hash(original))
+        self.assert_same_decoded_image(reencoded, original)
+        with self.assertRaisesRegex(InvalidInput, 'Source changed after selection'):
+            validate_inputs(self.root)
 
     def test_missing_visual_judgment_is_an_open_evidence_gap(self):
         lock = load_json(self.root / 'inputs.json')

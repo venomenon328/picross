@@ -1,7 +1,11 @@
 # RP-4: zwölf Quellen, Vergleich und unveränderte Baseline
 
-Status: durchgeführt und technisch nachgeprüft; eigener Draft-PR zu
-[#38](https://github.com/venomenon328/picross/issues/38), unabhängiges Review offen.
+Status: durchgeführt und technisch nachgeprüft;
+[Review R1](https://github.com/venomenon328/picross/pull/45#pullrequestreview-5415580729)
+bestätigt die Bild-/Datenprüfung und verlangt B-01/A-01-Nacharbeit. R1-N1 ergänzt
+den präzisen Illustrationstest und den Original-Commitbeleg. Commitgebundene
+Nachprüfung und Integration stehen in [PR #45](https://github.com/venomenon328/picross/pull/45)
+zu [#38](https://github.com/venomenon328/picross/issues/38).
 Keine Pilot-/Katalogfreigabe oder reale Eigentümer-Lösung.
 
 Offline-Einstieg: [Vergleichsindex](index.html). Jede Zeile verlinkt das vollständige
@@ -31,7 +35,7 @@ Eingabedateien vollständig offline; keine KI-Aufrufe durch das Werkzeug.
 
 ```sh
 .venv/rp4/bin/python -m tools.puzzle_production.rp4 verify --output-dir artifacts/rp4-replay
-.venv/rp4/bin/python -m unittest discover -s tests/puzzle_production -p 'test_rp4.py' -v
+.venv/rp4/bin/python -m unittest discover -s tests/puzzle_production -p 'test_rp4*.py' -v
 ```
 
 `verify` prüft Abdeckung/Parameter und sämtliche Input-/Bundlebindungen,
@@ -41,6 +45,21 @@ vollständige identische Enddomains. Aktuelles Replay überschreibt nie ein
 ursprüngliches Ergebnis. Der Bericht bindet Head/Basis/Checkout, Run, Input-Lock,
 Produktionsreport und die rastergebundenen Sichturteile. Ein CLI-Erfolg bestätigt
 die vollständige Untersuchung, nicht 48 gelöste Rätsel.
+
+Die drei eigenen Illustrationen werden zusätzlich aus dem unveränderten
+`create_illustrations.py` in einem temporären Verzeichnis neu erzeugt. Geprüft
+werden die genaue Dateimenge, der ursprüngliche Bildmodus, die Abmessungen und
+sämtliche dekodierten Pixel. Unterschiedliche PNG-Kompression bei gleichem Bild
+ist zulässig; Modus-/Größen-/Pixeländerungen sind es nicht. Das lockert keine
+Dateibindung: Die gespeicherten Originale und das Erzeugungsskript behalten ihre
+ursprünglichen SHA-256-Werte im Plan/Input-Lock. Auch ein nur umkodiertes
+gespeichertes Original wird dort weiterhin abgewiesen.
+
+R1/B-01 wird zusätzlich in einem begrenzten Windows-CI-Job mit Python 3.12.10 und
+Pillow 12.3.0 geprüft. Der R1-Ausgangstest muss an der dokumentierten
+PNG-Byteabweichung scheitern, die aktuellen RP-4-Tests müssen vollständig bestehen.
+Laufzeit-/Codec- und Commitdaten stehen im kleinen Windows-Nachweisartefakt;
+der Linux-Fachjob bleibt für Referenzbudgets und vollständigen Replay zuständig.
 
 Optional ein neuer deterministischer Produktionslauf in **neuem** Ausgabepfad:
 
@@ -65,6 +84,30 @@ Sein Git-Baum `80201bbde68240dd51f8583acdb103db4a791bbe` wurde über die GitHub-
 byteidentisch als `5926bab3fb7a59ebd07e741869f3286d2bb41860` veröffentlicht;
 nur Commitmetadaten unterscheiden sich. Der direkte Git-Push hatte keine
 Anmeldedaten, der autorisierte GitHub-Zugang übernahm die Veröffentlichung.
+
+R1/A-01 verlangte zusätzlich die unabhängig abrufbaren Bytes des ursprünglichen
+Commitobjekts. [Der Originalpayload](provenance/producer-726e89d.commit) wurde für
+R1-N1 mit `git cat-file commit` binär aus dem erhaltenen Produzentencheckout
+ausgelesen: 268 unveränderte Bytes, keine Rekonstruktion der Metadaten. Seine
+SHA-256 ist
+`4e4b747ad959ee9c7c267c04e0f4ed60d35b692c8d00858e43bec1a27c8a2cac`.
+Der Git-Objektheader `commit 268` einschließlich NUL plus diese Bytes ergibt die
+ursprüngliche Commit-ID. Dies lässt sich auch in einem frischen Checkout prüfen,
+ohne dass dessen Git-Datenbank das historische Originalobjekt enthält:
+
+```sh
+git hash-object -t commit examples/rp4/provenance/producer-726e89d.commit
+python -m unittest discover -s tests/puzzle_production -p 'test_rp4_provenance.py' -v
+```
+
+Erwartete Objekt-ID: `726e89d573558a558c6b64f883c33331a26b8365`. Die ersten beiden
+Payloadzeilen binden Tree `80201bbde68240dd51f8583acdb103db4a791bbe` und Parent
+`37c97a6215a550a6e74fd2536a30c8ff13d9baba`; der veröffentlichte Commit
+`5926bab3fb7a59ebd07e741869f3286d2bb41860` führt denselben Tree/Parent. Der Test
+bindet den tatsächlichen Payload außerdem an den unveränderten Produktionsreport.
+Die unabhängige Nachprüfung lädt den Beleg aus dem finalen Remote-Stand selbst.
+Die Objektbindung ist kein nachträglicher Augenzeugenbeleg für den damals im Report
+als sauber protokollierten Arbeitsbaum. Sie ändert keinen Produktionsbezug.
 
 Input-Lock SHA-256:
 `21f2f9f5b719f6eb244e3617f351faa9a1d9741d95b68e5a23ee243d791bbe43`.

@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 05.10.2026 · Arbeitsfassung 0.17 · Z2 und RP-3 integriert; RP-4-Vergleich im Draft
+Stand: 05.10.2026 · Arbeitsfassung 0.17 · Z2 und RP-3 integriert; RP-4-Vergleich dokumentiert
 
 ## 1. Geltung und Entscheidungsstand
 

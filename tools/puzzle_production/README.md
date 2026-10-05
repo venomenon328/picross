@@ -348,7 +348,7 @@ Gleiche Image-Umgebung, keine neue Abhängigkeit. Beispiel für eine eigene venv
 python3 -m venv .venv/rp4
 .venv/rp4/bin/python -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
 .venv/rp4/bin/python -m tools.puzzle_production.rp4 verify --output-dir artifacts/rp4-replay
-.venv/rp4/bin/python -m unittest discover -s tests/puzzle_production -p 'test_rp4.py' -v
+.venv/rp4/bin/python -m unittest discover -s tests/puzzle_production -p 'test_rp4*.py' -v
 ```
 
 Der Korpusprüfer validiert alle zwölf Quellen, sechs Fotopaare, vier zusätzliche
@@ -359,14 +359,35 @@ ein später erfolgreich geprüftes ursprüngliches Abbruchresultat erhöht die
 Originalausbeute nicht. Raster-/Kandidathashes binden die 48 redaktionellen Urteile.
 Maschinelle Urteilsbindung ersetzt keine echte Sichtprüfung.
 
+Eigene Illustrationen werden getrennt in temporären Dateien neu erzeugt und auf
+exakte Dateimenge, ursprünglichen Modus, Abmessungen und dekodierte Pixel geprüft.
+Andere PNG-Kompression bei gleichem Bild ist zulässig. Gespeicherte Originaldateien
+und das ebenfalls im Input-Lock enthaltene Erzeugungsskript bleiben dagegen strikt
+per SHA-256 gebunden. Positive Codec- sowie negative Pixel-/Modus-/Dimensionsfälle
+und die Zurückweisung umkodierter gespeicherter Originale sichern R1/B-01 ab.
+
 Der gemeinsame CI-Job führt das Replay mit 600 s Gesamtbudget und maximal 11 Minuten
 für diesen Schritt aus; bestehende Fachoracles, Referenzbudgets und P1-Demo bleiben
 aktiv. Ergebnisse stehen im Fachartefakt unter `rp4/verification.json` mit
 Source-/Checkout-/Basis-/Runbindung. Kein nativer Bildaufruf in CI.
 
+Ein separater Windows-x64-Job führt ausschließlich die RP-4-Tests mit Python 3.12.10
+und dem offiziellen Pillow-12.3.0-Wheel in temporärer venv aus. Er hat lesende Rechte
+und zehn Minuten hartes Joblimit, reproduziert die dokumentierte R1-PNG-Abweichung
+am Ausgangstest und verlangt danach vollständig erfolgreiche aktuelle Tests.
+Laufzeit-/Codec- und Commitbindung stehen in einem kleinen separaten Artefakt.
+Die Linux-RSS-Referenzen und der vollständige Fachjob bleiben erhalten.
+
+R1/A-01: Der [tatsächlich ausgelesene Original-Commitpayload](../../examples/rp4/provenance/producer-726e89d.commit)
+ist im Paket erhalten. [Prüfanleitung](../../examples/rp4/README.md) und zusätzlicher
+Fachtest binden die Originalbytes an Git-Objekt-ID, veröffentlichten Tree und
+unveränderten Produktionsreport. Dafür ist kein historisches Originalobjekt in der
+lokalen Git-Datenbank erforderlich.
+
 Optional `rp4 produce --output-dir <neuer-pfad>` für neue deterministische Imports;
 die versionierte Baseline niemals überschreiben. `freeze` verweigert erneutes
 Fixieren bereits gesperrter Inputs. `views` und `index` bauen nur Dateiansichten.
 19 Zertifikate bedeuten hier 14 zusätzlich motivisch brauchbare Varianten aus
-sechs Quellen, keine abgeschlossene Pilotproduktion. Unabhängiges RP-4-Review
-bleibt separat offen, Eigentümer-Lösung RP-6-Gate.
+sechs Quellen, keine abgeschlossene Pilotproduktion. Unabhängiges RP-4-Review R1
+ist durchgeführt; die commitgebundene Nachprüfung von B-01/A-01 und Integration
+stehen in PR #45. Eigentümer-Lösung bleibt RP-6-Gate.

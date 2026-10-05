@@ -27,7 +27,9 @@ RP-2 ist nach unabhängigem Review R1 über PR #43 als
 Vergleich und F-04 und ist nach unabhängigem Review R2 über PR #44 als
 `aa9cc23244c60d647d8468a8d76a819f977e85a6` integriert;
 [Prüfzuordnung](RP3_VERIFICATION.md). RP-4/#38 liefert die
-[Vergleichsbaseline](RP4_VERIFICATION.md) im Draft-PR #45; unabhängiges Review offen.
+[Vergleichsbaseline](RP4_VERIFICATION.md) in PR #45. Unabhängiges Review R1 ist
+durchgeführt; R1-N1 liefert den korrigierten Illustrationstest und Original-
+Commitbeleg. Aktuelle Nachprüfung und Integration stehen im PR.
 RP-5 und RP-6 sind spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
 begrenzte Vorarbeiten, keine allgemeine Generatorplattform.
 
@@ -210,6 +212,24 @@ mit F-04 in drei isolierten Prozessen bearbeitet, abgeschlossen und wieder gelad
 echte Renderbilder prüfen eigene falsche Einträge und die Spoilergrenze.
 Die reale Eigentümer-Lösung ist RP-6-Gate. Windows-Export, Windows-Start und
 Eigentümer-Lösung sind getrennte Nachweise. Parent #34 bleibt offen.
+
+## RP-4-Regression und Herkunftsnachweis
+
+R1-N1 zu PR #45 prüft Neuerzeugungen der drei eigenen Illustrationen auf exakte
+Dateimenge, Modus, Abmessungen und dekodierte Pixel. Gespeicherte Originale,
+Erzeugungsskript und Input-Lock bleiben bytegebunden. Der tatsächliche ursprüngliche
+Commitpayload wird als kleine Datei bereitgestellt und mit seinem Git-Objekthash,
+Tree und unverändertem Produktionsreport verbunden; [Prüfzuordnung](RP4_VERIFICATION.md).
+
+Der bestehende Linux-Fachjob bleibt unverändert. Ein zusätzlicher begrenzter
+Windows-x64-Job im Fachworkflow führt nur `test_rp4*.py` aus: Python 3.12.10,
+offizielles Pillow-12.3.0-Wheel in temporärer venv, `contents: read`, zehn Minuten
+hartes Joblimit. Er reproduziert R1s PNG-Byteabweichung am Originaltest gezielt und
+verlangt anschließend erfolgreiche aktuelle Tests. Tatsächliche Laufzeit-/Codec-
+daten und Head/Basis/Checkout/Run stehen im kleinen Nachweisartefakt. Kein Windows-
+Benchmark, keine zusätzliche P1-/Eigentümerprobe. Unabhängige Nachprüfung beider
+R1-Befunde und aktuelle technische Checks sind vor dem bedingt beauftragten Merge
+erforderlich; der verbindliche Abnahmestand steht im PR.
 
 ## Toolchain- und Produktprüfung
 

@@ -1,9 +1,9 @@
 # RP-4: Vergleichsproduktion und Prüfzuordnung
 
-Stand: 05.10.2026 · Arbeitsfassung 0.1 · Baseline geliefert, unabhängiges Review offen
+Stand: 05.10.2026 · Arbeitsfassung 0.2 · Baseline und R1-Nacharbeit; Abnahme im PR
 
 Auftrag: [#38](https://github.com/venomenon328/picross/issues/38),
-[Draft-PR #45](https://github.com/venomenon328/picross/pull/45),
+[PR #45](https://github.com/venomenon328/picross/pull/45),
 Branch `feat/38-comparative-production`, Basis
 `aa9cc23244c60d647d8468a8d76a819f977e85a6`. [Parent #34](https://github.com/venomenon328/picross/issues/34)
 bleibt offen. Fachvertrag: [Rätselproduktion](PUZZLE_PRODUCTION.md), insbesondere
@@ -52,8 +52,12 @@ Der erste veröffentlichte Commit fixiert zwölf Dateien und Vergleichsplan.
 Der zweite fixiert vor dem ersten Solverlauf alle sechs tatsächlich erzeugten
 Stilisierungen und die 24 vollständigen Entwürfe. Die Veröffentlichung des zweiten
 Commits ist baumidentisch zum sauberen lokalen Produzentencommit; beide Identitäten
-stehen im Paket und im Git-Committext. Die ursprünglichen Ergebnisse werden nicht
-mit späteren Replay-Zeiten/Status überschrieben.
+stehen im Paket und im Git-Committext. R1-N1 ergänzt den tatsächlich ausgelesenen
+[Original-Commitpayload](../examples/rp4/provenance/producer-726e89d.commit), damit
+auch die ursprüngliche Objekt-ID unabhängig auf den veröffentlichten Tree
+zurückgeführt werden kann. Der 268-Byte-Payload ist keine Metadatenrekonstruktion;
+Prüfbefehle und Hashes stehen in der Paketübersicht. Die ursprünglichen Ergebnisse
+werden nicht mit späteren Replay-Zeiten/Status überschrieben.
 
 Die drei klaren Illustrationen sind eigene geometrische Zeichnungen, keine
 KI-Ausgaben. Die drei KI-Vorlagen sind echte native Bildausgaben. Alle sechs
@@ -118,6 +122,14 @@ Zweitprüfung und kein Eigentümer-Spieltest. Ein `needs_revision`-Urteil kann n
 erkennbare Teile enthalten, zählt aber nicht als brauchbarer Kandidat der Bilanz.
 Die Übersicht enthält sämtliche schwachen Konturvarianten und Fehlschläge.
 
+Das anschließend durchgeführte unabhängige
+[Review R1](https://github.com/venomenon328/picross/pull/45#pullrequestreview-5415580729)
+öffnete ebenfalls alle zwölf Kontaktansichten, rekonstruierte sämtliche Panels
+und bestätigte die 19/29/14-Bilanz am Head `4b794bb4ba109f2880876972e5e39e002b661478`.
+Es verlangte B-01 (PNG-Reproduktionstest unter Windows) und A-01 (veröffentlichtes
+Original-Commitobjekt). Die unveränderten Bilder und Sichturteile behalten diese
+Reviewbindung; aktuelle Nachprüfung und Integration stehen im PR.
+
 ## Aufwand und Maschinendaten
 
 [Aufwandserhebung](../examples/rp4/effort.json) trennt Vorbereitung, KI-Runden,
@@ -169,14 +181,29 @@ kein fehlender Bild-/Logikversuch.
 | RP4-A03 | Alle 48 originalen Resultate/Proofs vorhanden; `inspect_candidate` rekonstruiert und replayt unabhängig, Enddomains müssen zur Matrix passen. 19 vollständig, 29 bestätigte Fixpunkte. |
 | RP4-A04 | Native Aufrufe/Varianten/Solveraufrufe, echte Vorher-/Nachher-Dateien, technische Zeiten; menschliche Zeit und native Einzelzeiten ausdrücklich fehlend. Kein unzulässiger Produktivitätsquotient. |
 | RP4-A05 | Tatsächliche eigene Sichtprüfung aller Raster, dateigebundene Einzelurteile und Formverluste; Mono-Enthüllungsbeitrag erlaubt, keine Pilot-/Eigentümerprobe behauptet. |
-| RP4-A06 | Bericht, reproduzierbare Korpusprüfung und Hilfswerkzeugtests, unveränderte Fachoracles/Referenzen, aktueller `docs`-Job/Diffcheck im PR. Eigenes getrenntes Selbstreview; unabhängiges Review offen. |
+| RP4-A06 | Bericht, reproduzierbare Korpusprüfung und Hilfswerkzeugtests, unveränderte Fachoracles/Referenzen, aktueller `docs`-Job/Diffcheck im PR. R1 durchgeführt; R1-N1 ergänzt Pixel-/Codec-Regressionsfälle, Windows-Nachweis und Original-Commitbeleg. Getrennter Selbstreview und unabhängige Nachprüfung commitgebunden im PR. |
 
 Neue Hilfe: `tools/puzzle_production/rp4.py`; vorhandene Bild-/Solver-/Prüfalgorithmen
 bleiben unverändert. Tests prüfen vollständige Abdeckung, Quellen-/Prompt-/Paar-
 Manipulationen, ICC-Referenzen, fehlende Sichturteile und manipulierte Statusflags
 auch nach neu gebundenen Dateihashes. Ein später erfolgreiches Replay eines
 ursprünglichen Prüfungsabbruchs darf dessen Ausbeute nicht verbessern. Eigene
-Illustrationen werden bytegenau aus der Quellenautorisierung reproduziert.
+Illustrationen werden in temporären Ausgaben aus dem unveränderten gebundenen
+Erzeugungsskript reproduziert: genaue Dateimenge, ursprünglicher Modus,
+Abmessungen und sämtliche dekodierten Pixel müssen übereinstimmen. Zulässige
+PNG-Kompressionsunterschiede ändern diesen Bildinhalt nicht. R1/B-01 zeigte unter
+Windows/Python 3.12.10/Pillow 12.3.0 und zlib `1.3.1.zlib-ng` exakt gleiche Bilder
+bei anderen PNG-Dateihashes; die vorherige Zusage bytegleicher Neuerzeugung war
+falsch. Positive Umkodierung sowie negative Pixel-/Dimensions-/Modusfälle sichern
+den korrigierten Vertrag ab. Gespeicherte Originalbytes und sämtliche Input-Lock-
+Hashes bleiben strikt erhalten; ihre Umkodierung scheitert weiterhin.
+
+R1/A-01 wird durch den unveränderten Originalpayload mit dessen Git-Objekthash,
+Tree-/Parentbindung und zusätzlichem SHA-256 prüfbar. Der zusätzliche Fachtest
+liest die tatsächlich gespeicherte Datei und bindet sie an den unveränderten
+Produktionsreport. Er benötigt keine historischen Git-Objekte im Checkout und
+funktioniert deshalb auch nach einem Squash-Merge. Erst die unabhängige Prüfung
+des veröffentlichten Belegs schließt das Herkunftsgate.
 
 ```sh
 python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
@@ -193,10 +220,27 @@ zusätzlich die begrenzte Korpusprüfung aus: 600 s Gesamtbudget, CI-Schritt max
 KI-Erzeugung wird in CI nicht wiederholt. `product`/`preflight` bleiben aktiv und
 werden im PR gesondert ausgewiesen; keine P1-Datei oder Registrierung verändert.
 
-**Vor Merge offen:** unabhängiges qualifiziertes Review von Daten, Methodik,
-tatsächlichen Bildern und technischen Nachweisen am finalen PR-Head. Eigene
-Sichtprüfung/Selbstreview ersetzt es nicht. Reale Eigentümer-Lösung bleibt RP-6-Gate.
-Der Auftrag erlaubt weder Merge noch Release; #34 und Folgepakete bleiben offen.
+Ein separater Windows-x64-Job ergänzt ausschließlich die RP-4-Regressionen:
+Python 3.12.10, offizielles Pillow-12.3.0-Binary-Wheel in temporärer venv, lesende
+Rechte und zehn Minuten hartes Joblimit. Die dokumentierte R1-PNG-Abweichung wird
+am unveränderten Ausgangstest gezielt negativ reproduziert; die aktuellen
+`test_rp4*.py` müssen vollständig bestehen. Der kleine Nachweis enthält tatsächliche
+Python-/Pillow-/zlib-/Plattform-/Isolationsdaten, Head/Basis/Checkout/Run, Quellbaum-
+status und Testlogs. Ein Windows-Export ersetzt diesen Windows-Python-Lauf nicht.
+Der [Windows-Prüfhelfer](../tools/rp4_windows_check.py) schreibt `baseline.json`,
+`current.json`, beide Testlogs und `pillow-install.json` unter
+`artifacts/rp4-windows/`; der Job veröffentlicht sie als `rp4-windows-<Head>`.
+Nur ein passender R1-Fehlschlag mit drei bildgleichen, byteverschiedenen PNGs und
+anschließend vollständig erfolgreichen aktuellen Tests ergibt `accepted: true`.
+Der vollständige Linux-Fachjob samt sechs RSS-Referenzen bleibt unverändert.
+
+**Vor Merge erforderlich:** aktuelle technische Nachweise und unabhängige gezielte
+Nachprüfung von R1/B-01 und A-01 sowie ihrer Auswirkungen am finalen PR-Head.
+Die unveränderte tatsächliche Bild-/Datenprüfung aus R1 darf mit bestätigter
+Dateibindung weiterverwendet werden. Selbstreview ersetzt die unabhängige Nachprüfung
+nicht. Der Eigentümer hat die Nacharbeit und den anschließenden Merge bei erfüllten
+Gates beauftragt; tatsächliches Review-/Mergeergebnis steht in PR #45. Kein Release;
+#34 und Folgepakete bleiben offen. Reale Eigentümer-Lösung bleibt RP-6-Gate.
 
 ## Vollständige Fallübersicht
 
