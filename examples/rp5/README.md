@@ -148,7 +148,7 @@ und von 14 auf 16 zusätzlich motivisch geeignete Varianten; die 48 ursprünglic
 Ergebnisse bleiben unverändert. Varianten derselben Motive sind keine unabhängigen
 Katalogrätsel. Keine Pilotfreigabe und kein unabhängiges RP-5-Review daraus ableiten.
 Drei andere bessere logische Teilstände beschädigen lokale Bilddetails. Die
-Suche liefert bei fünf Referenzen kein besseres gewähltes Raster; der größere
+Suche liefert bei vier Referenzen kein besseres gewähltes Raster; der größere
 Eulenfall erreicht das Zeitlimit. Diese Grenzen gehören zum Nutzeneffekt.
 
 113 begonnene Bewertungen und 275 kumulative Vorschläge; verworfene Vorschläge,
