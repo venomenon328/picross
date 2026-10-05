@@ -6,7 +6,9 @@ from collections import Counter
 from pathlib import Path
 import os
 import subprocess
+import tempfile
 import time
+import zipfile
 
 from .contract import Budget, digest, load_json, write_json
 from .images import file_hash
@@ -156,10 +158,58 @@ def produce(output):
     return report
 
 
+def unpack_archive(archive, metadata, output):
+    require(not output.exists(), "Use a fresh archive extraction directory")
+    require(metadata["format"] == "picross-rp5-archive-v1" and archive.stat().st_size <= 8*1024*1024 and
+            file_hash(archive) == metadata["sha256"], "Invalid/altered RP-5 archive")
+    files = metadata["files"]
+    require(isinstance(files, dict) and 1 <= len(files) <= 512, "Invalid archive file count")
+    with zipfile.ZipFile(archive) as z:
+        entries = z.infolist()
+        names = [e.filename for e in entries]
+        require(len(names) == len(set(n.casefold() for n in names)) and set(names) == set(files), "Duplicate/missing archive entries")
+        expanded = sum(e.file_size for e in entries)
+        require(expanded == metadata["expanded_bytes"] and expanded <= 128*1024*1024, "Archive expanded byte limit exceeded")
+        for e in entries:
+            path = Path(e.filename)
+            require(not path.is_absolute() and "\\" not in e.filename and ":" not in e.filename and
+                    all(p not in (".", "..", "") for p in e.filename.split("/")) and
+                    not e.is_dir() and (e.external_attr >> 16) & 0o170000 != 0o120000,
+                    "Unsafe archive member")
+        output.mkdir(parents=True)
+        for e in entries:
+            target = output / e.filename
+            require(output.resolve() in target.resolve().parents, "Unsafe archive target")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(z.read(e))
+            require(file_hash(target) == files[e.filename], "Archive member bytes changed")
+    return output
+
+
+def unpack(output):
+    unpack_archive(RP5 / "baseline.zip", load_json(RP5 / "archive.json"), output)
+    return {"status": "unpacked", "files": len(load_json(RP5 / "archive.json")["files"])}
+
+
 def verify_package(output):
+    # Always inspect the committed archive, even if a local unpacked directory exists.
+    with tempfile.TemporaryDirectory() as tmp:
+        metadata = load_json(RP5 / "archive.json")
+        baseline = unpack_archive(RP5 / "baseline.zip", metadata, Path(tmp) / "baseline")
+        original = load_json(baseline / "comparison.json")
+        require(original == load_json(RP5 / "comparison.json") and original["source_commit"] == metadata["producer_commit"] and
+                original["tested_checkout_commit"] == metadata["producer_commit"], "Wrong original production/commit binding")
+        tree = subprocess.check_output(["git", "rev-parse", metadata["producer_commit"] + "^{tree}"], cwd=ROOT, text=True).strip()
+        require(tree == metadata["producer_tree"], "Wrong producer tree identity")
+        result = verify_baseline(output, baseline)
+        result.update(archive_sha256=file_hash(RP5 / "baseline.zip"))
+        write_json(output / "verification.json", result)
+        return result
+
+
+def verify_baseline(output, baseline):
     start = time.monotonic()
     lock, trial_plans = plans()
-    baseline = RP5 / "baseline"
     original = load_json(baseline / "comparison.json")
     reviews = load_json(RP5 / "reviews.json")
     require(set(reviews) == {t["trial"] for t, _ in trial_plans}, "Missing RP-5 visual review")
@@ -170,7 +220,7 @@ def verify_package(output):
         trial = t["trial"]
         bundle = baseline / trial
         require(load_json(bundle / "plan.json") == p, "Production used a different frozen plan")
-        fresh = inspect_repair(bundle, RP4 / "baseline" / trial, Budget(60, 1_000_000))
+        fresh = inspect_repair(bundle, RP4 / "baseline" / trial, Budget(min(60, 300-(time.monotonic()-start)), 1_000_000))
         raw = load_json(bundle / "repair.json")
         result = load_json(bundle / "result.json")
         record = next(r["repair"] for r in original["rows"] if r["trial"] == trial and r["selected_for_repair"])
@@ -182,9 +232,13 @@ def verify_package(output):
                 review["repair_sha256"] == expected["repair_sha256"] and review["plan_sha256"] == t["sha256"] and
                 review["verdict"] in ("retained", "damaged") and review["review_kind"] == "implementer_visual_inspection" and
                 bool(review["reviewer"]) and bool(review["notes"]), "Unbound/unsupported visual judgment")
+        require(file_hash(RP5 / "views" / f"{trial}.png") == expected["view_sha256"], "Changed published contact view")
         repairs[trial] = expected
         checked.append(fresh)
     current = comparison(repairs, reviews)
+    require(time.monotonic()-start <= 300, "RP-5 replay exceeds total time budget")
+    require(original["rows"] == comparison(repairs)["rows"] and
+            original["plans_sha256"] == file_hash(RP5 / "plans.json"), "Changed original 48-row comparison/plan binding")
     # Original results were recorded before sight judgments; never rewrite them.
     require(all(original[k] == current[k] for k in ("rp4_anchors", "original_candidates", "selected", "not_selected",
                                                    "original_certified", "original_usable", "new_certificates", "status_counts")),
@@ -201,10 +255,10 @@ def verify_package(output):
 def main(argv=None):
     import json
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("command", choices=("freeze", "produce", "verify"))
+    p.add_argument("command", choices=("freeze", "produce", "verify", "unpack"))
     p.add_argument("--output-dir", type=Path, required=True)
     args = p.parse_args(argv)
-    result = {"freeze": freeze, "produce": produce, "verify": verify_package}[args.command](args.output_dir)
+    result = {"freeze": freeze, "produce": produce, "verify": verify_package, "unpack": unpack}[args.command](args.output_dir)
     print(json.dumps({k: v for k, v in result.items() if k not in ("rows", "trials", "fresh_repairs")}, sort_keys=True))
     return 0
 

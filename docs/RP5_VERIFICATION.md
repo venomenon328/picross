@@ -23,7 +23,49 @@ PR #45 als `80ae2c1` integriert; historische offene Reviewfelder bleiben erhalte
 | RP5-A05 | Genau neun vorab bestimmte Reparaturen; vollständiger Vergleich mit 48 unveränderten RP-4-Resultaten. Aufwand, Motivänderung und Ausbeute getrennt; menschliche Zeit unbekannt. |
 | RP5-A06 | Tatsächlich geöffnete Vorher-/Nachher-/Änderungs-/Maskenbilder, dateigebundene Einzelurteile; Fach-/Replay-/Dokument-/Diffprüfung und aktuelle CI im PR. |
 
-Aktuelle Messwerte und Sichtbefunde werden nach dem Lauf ergänzt. Das separate
+## Beobachteter Lauf und Sichtbefund
+
+Vorabcommit `55f9e0f143bc79a4d5ff81d83d1c901b90f1797c`, bytegleich veröffentlichter
+Tree `ed7c30cd4b6e0ad9f9c463f3fdc6fba9c250314e`; keine nachträgliche Parameterlockerung.
+Neun vollständige Erstläufe: zwei neue Zertifikate, sechs ausgeschöpfte
+Suchbudgets, ein Zeitabbruch. 113 begonnene Kandidatenbewertungen, 275 Vorschläge,
+82,799 s kumulative Suchzeit einschließlich Referenzrekonstruktion und Prüfung;
+separate Endprüfung und Gesamtdauer in den Originalresultaten. Windows,
+Python 3.12.10 und Pillow 12.3.0; keine Linux-RSS-Messung für diesen Lauf behauptet.
+
+Tulpe und Eule 40×40 werden mit je zwei Zelländerungen vollständig nachgewiesen.
+Die eigene Sichtprüfung erhält Hauptform und empfindliche Details. Segelboot,
+große Eule und stilisierte Astronautin erreichen bessere logische Teilstände,
+aber zeigen neue Rand-/Hintergrundartefakte und werden als motivisch verschlechtert
+ausgewiesen. Die übrigen gewählten Ausgaben bleiben unverändert. Alle neun
+Vorher-/Nachher-/Änderungs-/Maskenansichten und sechs ursprünglichen RP-4-
+Kontaktansichten wurden tatsächlich geöffnet. Hashgebundene Einzelbegründungen,
+vollständige 48er-Übersicht und Grenzen stehen im [Paket](../examples/rp5/README.md).
+
+321 Originaldateien sind im ZIP byteidentisch erhalten, einschließlich aller
+113 Bewertungsproofs, zwei Endproofs und des beobachteten Abbruchs. Die
+originale Ausbeute 19/29/14 und unbekannte menschliche Zeit bleiben unverändert.
+Zwei zusätzliche motivisch geeignete Zertifikate bedeuten potentielle 21/16
+Varianten, keine 16 unabhängigen Katalogrätsel oder Pilotfreigabe. Drei logisch
+bessere, visuell verschlechterte Teilstände begrenzen den Nutzen dieser Suche.
+Keine neuen Modellaufrufe, keine manuellen Rasterkorrekturen, keine beobachtete
+menschliche Nacharbeitszeit und keine Produktivitätsquote.
+
+Gezielte Entwicklung: 19 Reparaturtests plus drei Paket-/Archivtests bestanden;
+unabhängiger vollständiger Paketreplay erfolgreich in 57,515 s am veränderten
+Arbeitsbaum. Dies sind Entwicklungsbelege. Die aktuelle abschließende CI-/Head-/
+Basis-/Test-Merge-/Artefaktbindung steht in [Draft-PR #46](https://github.com/venomenon328/picross/pull/46).
+Der gemeinsame Fachjob führt sämtliche bisherigen und neuen Fachtests, sechs
+Referenzen, RP-3-Demo und vollständigen RP-4-Replay aus. Ein zusätzlicher
+`rp5-repair`-Job prüft alle Kandidaten-/Eltern-/Nachweis-/Vergleichsbindungen mit
+300 s kooperativem Replaybudget, 60 s / 1000000 Linien pro Bundle und sechs
+Minuten hartem Schrittlimit; Job insgesamt zehn Minuten. Archivgrenzen und
+Extraktions-Negativtests sind dokumentiert. Windowsregression und
+`docs`-/`product`-/`preflight`-Workflows bleiben unverändert aktiv.
+
+## Verbleibendes Mergegate
+
+Das separate
 unabhängige technische und visuelle Review am finalen Head bleibt vor Merge
 erforderlich. Selbstreview ist keine unabhängige Zweitprüfung. Reale Eigentümer-
 Lösung und finale Pilotabnahme sind RP-6-Gates.

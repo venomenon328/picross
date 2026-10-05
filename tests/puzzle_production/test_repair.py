@@ -17,18 +17,18 @@ from tools.puzzle_production.p1_export import export_p1
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def fixture(root, color=False):
+def fixture(root, color=False, n=2):
     design = load_json(ROOT / "examples/rp3/design.json")
-    design.update(source_id="repair-functional", width=2, height=2, crop=[0, 0, 2, 2], fit="exact",
+    design.update(source_id="repair-functional", width=n, height=n, crop=[0, 0, n, n], fit="exact",
                   mode="color" if color else "mono", working_mode="faithful",
                   briefing="Technical 2x2 diagonal fixture; no catalogue motif claim.",
                   variants=[{"id": "area-128", "method": "area", "threshold": 128}])
     design["palette"] = [{"id": "red", "rgb": "#000000"}, {"id": "blue", "rgb": "#8888ff"}] if color else \
         [{"id": "ink", "rgb": "#000000"}]
     source = root / "source.png"
-    im = Image.new("RGB", (2, 2), "white")
-    im.putpixel((0, 0), (0, 0, 0))
-    im.putpixel((1, 1), (0, 0, 0))
+    im = Image.new("RGB", (n, n), "white")
+    for i in range(n):
+        im.putpixel((i, i), (0, 0, 0))
     im.save(source)
     write_json(root / "design.json", design)
     bundle = root / "reference"
@@ -124,6 +124,14 @@ class RepairTests(unittest.TestCase):
         with self.assertRaises(InvalidInput):
             repair.apply_edit(original, {"y": 0, "x": 1, "before": "empty", "after": "blue"}, original, mask, 2)
 
+    def test_partial_color_losses_improve_score_without_singletons(self):
+        matrix = [["empty", "red"]]
+        a = repair.metrics({"final_domains": [[["empty", "red", "blue"], ["empty", "red", "blue"]]]}, matrix, matrix, ("red", "blue"))
+        b = repair.metrics({"final_domains": [[["empty", "blue"], ["red", "blue"]]]}, matrix, matrix, ("red", "blue"))
+        self.assertEqual((a["unresolved_cells"], b["unresolved_cells"]), (2, 2))
+        self.assertEqual(b["domain_losses"], 2)
+        self.assertLess(repair.rank(b), repair.rank(a))
+
     def test_rejected_proposals_do_not_reset_steps(self):
         p = deepcopy(self.plan)
         p["mask"] = [[False]*2 for _ in range(2)]
@@ -210,6 +218,35 @@ class RepairTests(unittest.TestCase):
         output, result = self.run_search(p, name="time-final")
         self.assertEqual(result["reason"], "time_limit")
         self.assertFalse(repair.inspect_repair(output, self.reference)["certified"])
+
+    def test_time_abort_during_evaluation_keeps_replayable_part(self):
+        real = repair.solve
+
+        def timeout(puzzle, budget):
+            budget.deadline = 0
+            return real(puzzle, budget)
+
+        with patch.object(repair, "solve", side_effect=timeout):
+            output, result = self.run_search()
+        self.assertEqual((result["status"], result["reason"], result["candidates"]), ("aborted", "time_limit", 1))
+        self.assertFalse(repair.inspect_repair(output, self.reference)["certified"])
+
+    def test_real_search_duplicates_rejections_and_rollback_are_cumulative(self):
+        sub = self.root / "four"
+        sub.mkdir()
+        reference, plan, _, _ = fixture(sub, color=True, n=4)
+        plan["mask"] = [[False]*4 for _ in range(4)]
+        plan["config"].update(max_changes=1, max_candidates=16, max_steps=80)
+        output = sub / "search"
+        result = repair.search(reference, plan, output)
+        raw = load_json(output / "repair.json")
+        counts = [a["outcome"] for a in raw["attempts"]]
+        self.assertIn("duplicate", counts)
+        self.assertIn("change_limit", counts)
+        self.assertEqual(result["steps"], len(counts))
+        self.assertEqual(result["candidates"], 1+counts.count("evaluated"))
+        self.assertLessEqual(result["search_lines"], plan["config"]["search_lines"])
+        self.assertTrue(repair.inspect_repair(output, reference)["accepted"])
 
     def test_reproducible_identity_proofs_and_step_replay(self):
         a, ra = self.run_search(name="a")

@@ -11,7 +11,7 @@ import time
 from .contract import (Aborted, Budget, InvalidInput, InvalidProof, digest,
                        exact_keys, integer, load_json, validate_logic, write_json)
 from .images import (file_hash, inspect_candidate, logic_from_matrix,
-                     publish_bundle, raster_image)
+                     publish_bundle, raster_image, validate_design)
 from .solver import solve
 from .verifier import verify
 
@@ -33,12 +33,16 @@ def require(condition, message):
 def validate_plan(raw, reference):
     p = exact_keys(raw, {"format", "tool", "reference", "mask", "config", "rationale"})
     require(p["format"] == PLAN_FORMAT and p["tool"] == VERSION, "Unsupported repair plan/tool")
+    reference = exact_keys(reference, {"id", "format", "revision", "source_id", "normalized_sha256", "versions",
+                                       "design", "variant", "matrix", "logic_hash"})
+    require(reference["format"] == "picross-image-candidate-v1", "Invalid import reference format")
+    d = validate_design(reference["design"])
+    exact_keys(reference["variant"], {"id", "method", "threshold"})
     r = exact_keys(p["reference"], {"candidate_id", "manifest_sha256", "variant"})
     require(r["candidate_id"] == reference["id"] and r["variant"] == reference["variant"]["id"],
             "Plan refers to a different imported candidate")
     require(isinstance(r["manifest_sha256"], str) and len(r["manifest_sha256"]) == 64,
             "Invalid reference manifest hash")
-    d = reference["design"]
     mask = p["mask"]
     require(isinstance(mask, list) and len(mask) == d["height"] and all(
         isinstance(row, list) and len(row) == d["width"] and all(type(v) is bool for v in row)
@@ -172,7 +176,8 @@ def search(reference_dir, plan, output, cancelled=None):
     require(not output.exists(), "Use a fresh repair output directory")
     start = time.monotonic()
     # Validate the small plan before allocating the search data structures.
-    r = exact_keys(plan.get("reference"), {"candidate_id", "manifest_sha256", "variant"})
+    exact_keys(plan, {"format", "tool", "reference", "mask", "config", "rationale"})
+    r = exact_keys(plan["reference"], {"candidate_id", "manifest_sha256", "variant"})
     raw = load_json(reference_dir / f'{r["variant"]}-candidate.json') if isinstance(r["variant"], str) and \
         r["variant"].isascii() and r["variant"].replace("-", "").replace("_", "").isalnum() else None
     require(raw is not None, "Invalid reference variant path")
@@ -270,13 +275,19 @@ def search(reference_dir, plan, output, cancelled=None):
               "reference_lines": reference_checked["line_evaluations"],
               "search_seconds": search_seconds, "final": final, "total_seconds": time.monotonic()-start,
               "evaluations": [h["evaluation"] for h in history], "editorial_release": False}
-    write_json(stage / "result.json", result)
     make_views(stage, matrix, final_matrix, plan["mask"], design, changes, status)
+    result["total_seconds"] = time.monotonic()-start
+    write_json(stage / "result.json", result)
     write_json(stage / "manifest.json", {"format": "picross-repair-manifest-v1", "repair_id": digest(core)})
     files = {p.name: file_hash(p) for p in stage.iterdir() if p.is_file()}
     require(sum(p.stat().st_size for p in stage.iterdir()) <= TOTAL_BYTES, "Repair bundle exceeds 256 MiB")
     write_json(stage / "repair.json", {"id": digest(core), **core, "files": files})
     publish_bundle(stage, output)
+    # Only our own fixed sibling is removed, after successful publication.
+    require(stage.resolve().parent == output.resolve().parent and stage.name == output.name + ".staging",
+            "Unexpected staging cleanup target")
+    import shutil
+    shutil.rmtree(stage)
     return result
 
 
@@ -325,6 +336,7 @@ def inspect_repair(directory, reference_dir, budget=None):
         require(isinstance(name, str) and Path(name).name == name and "\\" not in name,
                 "Unsafe repair filename")
         path = directory / name
+        require(not path.is_symlink() and path.resolve().parent == directory.resolve(), "Unsafe repair file path")
         total_bytes += path.stat().st_size
         require(total_bytes <= TOTAL_BYTES, "Repair bundle exceeds 256 MiB")
         require(not path.is_symlink() and path.resolve().parent == directory.resolve() and file_hash(path) == sha,
@@ -350,6 +362,8 @@ def inspect_repair(directory, reference_dir, budget=None):
     require(result["candidates"] == started and result["steps"] == len(attempts) and
             result["editorial_release"] is False and isinstance(result["evaluations"], list) and
             len(result["evaluations"]) == len(history), "Inconsistent result counters/release")
+    integer(result["candidates"], 0, config["max_candidates"], "candidate count")
+    integer(result["steps"], 0, config["max_steps"], "proposal count")
     integer(result["search_lines"], 0, config["search_lines"], "cumulative search lines")
     require(result["reference_lines"] == reference_checked["line_evaluations"], "Wrong reference work count")
     for name in ("search_seconds", "total_seconds"):
@@ -363,7 +377,7 @@ def inspect_repair(directory, reference_dir, budget=None):
 
     def check_candidate(i, state, parent, edit):
         h = exact_keys(history[i], {"parent", "edit", "matrix_hash", "logic_hash", "score"})
-        require(h["parent"] == parent and h["edit"] == edit and h["matrix_hash"] == digest(state),
+        require(digest(h["parent"]) == digest(parent) and digest(h["edit"]) == digest(edit) and h["matrix_hash"] == digest(state),
                 "Wrong candidate parent/edit/matrix")
         wire = logic_from_matrix(state, design)
         require(h["logic_hash"] == digest(wire), "Stale candidate logic")
@@ -376,7 +390,7 @@ def inspect_repair(directory, reference_dir, budget=None):
         require(not checked["certified"] or proof["final_domains"] == [[[v] for v in row] for row in state],
                 "Proof belongs to another final matrix")
         score = metrics(proof, state, matrix, colors)
-        require(h["score"] == score, "Forged logical/visual score")
+        require(digest(h["score"]) == digest(score), "Forged logical/visual score")
         e = exact_keys(result["evaluations"][i], {"status", "proof_verified", "certified", "reason", "line_evaluations", "seconds"})
         require(type(e["certified"]) is bool and type(e["proof_verified"]) is bool and
                 e["certified"] == (e["proof_verified"] and checked["certified"]), "Forged original certification")
@@ -400,7 +414,7 @@ def inspect_repair(directory, reference_dir, budget=None):
                 "Search continued after a certified candidate")
         a = exact_keys(a, {"parent", "edit", "outcome", "candidate"})
         proposal = frontier.next()
-        require(proposal is not None and proposal == (a["parent"], a["edit"]), "Altered deterministic proposal history")
+        require(proposal is not None and digest(proposal) == digest((a["parent"], a["edit"])), "Altered deterministic proposal history")
         state = deepcopy(frontier.states[a["parent"]]["matrix"])
         state[a["edit"]["y"]][a["edit"]["x"]] = a["edit"]["after"]
         if distance(state, matrix) > config["max_changes"]:
@@ -415,7 +429,7 @@ def inspect_repair(directory, reference_dir, budget=None):
             continue
         require(a["outcome"] == expected, "Forged rejected/duplicate proposal")
         if expected == "evaluated":
-            require(a["candidate"] == next_candidate and next_candidate < len(history), "Missing/reordered candidate")
+            require(type(a["candidate"]) is int and a["candidate"] == next_candidate and next_candidate < len(history), "Missing/reordered candidate")
             state = apply_edit(frontier.states[a["parent"]]["matrix"], a["edit"], matrix, p["mask"], config["max_changes"])
             check_candidate(next_candidate, state, a["parent"], a["edit"])
             next_candidate += 1
@@ -437,7 +451,7 @@ def inspect_repair(directory, reference_dir, budget=None):
     require(raw["matrix"] == end and distance(end, matrix) <= config["max_changes"], "Wrong output matrix")
     changes = [{"y": y, "x": x, "before": matrix[y][x], "after": v}
                for y, row in enumerate(end) for x, v in enumerate(row) if v != matrix[y][x]]
-    require(raw["changes"] == changes and all(not p["mask"][e["y"]][e["x"]] for e in changes),
+    require(digest(raw["changes"]) == digest(changes) and all(not p["mask"][e["y"]][e["x"]] for e in changes),
             "Incomplete changes view or protected output")
     for name, state in (("before", matrix), ("after", end)):
         from PIL import Image
@@ -515,7 +529,7 @@ def main(argv=None):
             if args.report:
                 write_json(args.report, result)
             code = 0
-    except (InvalidInput, InvalidProof, Aborted, OSError, ValueError, RuntimeError, MemoryError, KeyboardInterrupt) as exc:
+    except (InvalidInput, InvalidProof, Aborted, OSError, ValueError, RuntimeError, TypeError, KeyError, MemoryError, KeyboardInterrupt) as exc:
         code = 2 if isinstance(exc, InvalidInput) else 3 if isinstance(exc, InvalidProof) else \
             4 if isinstance(exc, (Aborted, MemoryError, KeyboardInterrupt)) else 5
         result = {"status": {2: "invalid_input", 3: "invalid_proof", 4: "aborted", 5: "technical_error"}[code],

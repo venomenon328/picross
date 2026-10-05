@@ -1,6 +1,12 @@
 # RP-4: Vergleichsproduktion und Prüfzuordnung
 
-Stand: 05.10.2026 · Arbeitsfassung 0.2 · Baseline und R1-Nacharbeit; Abnahme im PR
+Stand: 05.10.2026 · Arbeitsfassung 0.3 · RP-4 nach R2 integriert
+
+RP-4/#38 ist nach R1-Nacharbeit und [unabhängigem Review R2](https://github.com/venomenon328/picross/pull/45#pullrequestreview-5416322309)
+über PR #45 als `80ae2c19eb6f85bbac58a247badf65b3e0669132` integriert.
+B-01/A-01 sind geschlossen. Die folgenden R1-N1-Prüfwege und damaligen Gates
+sind historische Belege; Baseline und hashgebundene Bilder bleiben unverändert.
+Aktuelle Reparaturarbeit: [RP5_VERIFICATION.md](RP5_VERIFICATION.md).
 
 Auftrag: [#38](https://github.com/venomenon328/picross/issues/38),
 [PR #45](https://github.com/venomenon328/picross/pull/45),
@@ -128,7 +134,7 @@ Das anschließend durchgeführte unabhängige
 und bestätigte die 19/29/14-Bilanz am Head `4b794bb4ba109f2880876972e5e39e002b661478`.
 Es verlangte B-01 (PNG-Reproduktionstest unter Windows) und A-01 (veröffentlichtes
 Original-Commitobjekt). Die unveränderten Bilder und Sichturteile behalten diese
-Reviewbindung; aktuelle Nachprüfung und Integration stehen im PR.
+Reviewbindung; R2 bestätigte die Nacharbeit und Integration in PR #45.
 
 ## Aufwand und Maschinendaten
 
@@ -172,7 +178,7 @@ kein fehlender Bild-/Logikversuch.
    Größe oder Framing wären ein neuer Entwurfsauftrag, keine versteckte Reparatur
    dieser Baseline. KI-Bilderzeugung bleibt dateibasiert in ChatGPT/Codex.
 
-## Akzeptanz, Prüfweg und offene Gates
+## Historische Akzeptanz, Prüfweg und Gates vor R2
 
 | Kriterium | Tatsächlich gelieferter Nachweis |
 | --- | --- |
@@ -234,7 +240,7 @@ Nur ein passender R1-Fehlschlag mit drei bildgleichen, byteverschiedenen PNGs un
 anschließend vollständig erfolgreichen aktuellen Tests ergibt `accepted: true`.
 Der vollständige Linux-Fachjob samt sechs RSS-Referenzen bleibt unverändert.
 
-**Vor Merge erforderlich:** aktuelle technische Nachweise und unabhängige gezielte
+**Historischer Gate-Stand vor R2:** aktuelle technische Nachweise und unabhängige gezielte
 Nachprüfung von R1/B-01 und A-01 sowie ihrer Auswirkungen am finalen PR-Head.
 Die unveränderte tatsächliche Bild-/Datenprüfung aus R1 darf mit bestätigter
 Dateibindung weiterverwendet werden. Selbstreview ersetzt die unabhängige Nachprüfung
