@@ -27,7 +27,7 @@ static func run(t: SceneTree) -> void:
 		var corner: Vector2 = app.board.view.cell_rect(Vector2i(19, 19)).get_center()
 		t.check(app.board.view.hit(corner) == Vector2i(19, 19), "ZV50-A01 hit test reaches last cell at pitch " + str(expected))
 
-	var local_anchor: Vector2 = app.board.view.viewport.position + app.board.view.viewport.size * Vector2(0.68, 0.61)
+	var local_anchor: Vector2 = app.board.view.viewport.position + app.board.view.viewport.size * Vector2(0.50, 0.61)
 	var global_anchor: Vector2 = app.board.global_position + local_anchor
 	var coordinate_before: Vector2 = (local_anchor - app.board.view.origin) / app.board.view.cell_size
 	app.board.zoom(1, local_anchor)
