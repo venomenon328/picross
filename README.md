@@ -4,8 +4,8 @@ Ein geplantes thematisch zusammenhängendes Nonogramm-Spiel für PC: kuratierte 
 
 Unter [prototypes/p1](prototypes/p1/README.md) liegt der integrierte P1.4/G1/H1/Z2-Stand:
 20×20 monochrom, 40×40 mit vier Farben und ein 100×100-UI-Stressraster. RP-3 ergänzt
-im Draft ein neues aus einer realen Bilddatei importiertes 20×20-Blatt. Mausstriche mit direkter
-Füllung↔X-Umwandlung, Undo/Redo, feinem monotonem Zoom/Pan, eigene interaktive Miniatur,
+im Draft ein neues aus einer realen Bilddatei importiertes 20×20-Blatt. Mausstriche mit
+startzustandsabhängiger Füllung↔X-Umwandlung, Undo/Redo, feinem monotonem Zoom/Pan, eigene interaktive Miniatur,
 unnummerierte farbige Teilhinweise mit unabhängigem Zeilen-/Spalten-Panning und
 motivtreuer Abschluss. Isolierte lokale Spielstände je Blatt mit Undo/Redo,
 Raster-/Hinweisansicht und Primary/Backup-Recovery sind ergänzt. Keine Wertung.
@@ -15,6 +15,11 @@ und für PR #33 als Gate aufgehoben. RP-1/RP-2 sind über #42/#43 integriert.
 [Bildwerkzeug](tools/puzzle_production/README.md), [reale Importdateien](examples/rp3/README.md)
 und [RP-3-Nachweise](docs/RP3_VERIFICATION.md) dokumentieren den neuen Produktionsweg;
 unabhängiges technisches/visuelles RP-3-Review bleibt offen.
+
+GP-48 ergänzt im eigenen Draft startzustandsabhängige Schutzregeln beim Ziehen
+und drei Hinweiszustände mit kräftigeren Ziffern. [Technische Lieferung](docs/GP48_VERIFICATION.md)
+und [gezielte Eigentümerprobe](docs/GP48_OWNER_TRIAL.md). Unabhängiges Review und
+GP48-M01 bleiben offen; die spätere Integration mit PR #47 erfolgt separat.
 
 ## Einstieg
 

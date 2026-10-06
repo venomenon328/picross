@@ -6,6 +6,7 @@ var start: Vector2i
 var endpoint: Vector2i
 var axis: Axis = Axis.UNLOCKED
 var target: int = Player.UNKNOWN
+var initial: int = Player.UNKNOWN
 enum Mode { SET, ERASE, REMOVE_FILL, REMOVE_EMPTY }
 var mode: Mode = Mode.SET
 var source: Array[int] = []
@@ -23,7 +24,7 @@ func begin(player: Player, cell: Vector2i, frozen_target: int) -> bool:
 	axis = Axis.UNLOCKED
 	target = frozen_target
 	mode = Mode.ERASE if target == Player.UNKNOWN else Mode.SET
-	var initial: int = source[cell.y * width + cell.x]
+	initial = source[cell.y * width + cell.x]
 	if target > 0 and initial > 0:
 		mode = Mode.REMOVE_FILL
 		target = Player.UNKNOWN
@@ -59,8 +60,8 @@ func changes() -> Array:
 		for x: int in range(mini(start.x, endpoint.x), maxi(start.x, endpoint.x) + 1):
 			var index: int = y * width + x
 			var before: int = source[index]
-			var set_fill: bool = mode == Mode.SET and target > 0 and (before == Player.UNKNOWN or before == Player.EMPTY)
-			var set_empty: bool = mode == Mode.SET and target == Player.EMPTY and (before == Player.UNKNOWN or before > 0)
+			var set_fill: bool = mode == Mode.SET and target > 0 and (before == Player.UNKNOWN or (initial == Player.EMPTY and before == Player.EMPTY))
+			var set_empty: bool = mode == Mode.SET and target == Player.EMPTY and (before == Player.UNKNOWN or (initial > 0 and before > 0))
 			var eligible: bool = set_fill or set_empty or (mode == Mode.ERASE and before != Player.UNKNOWN) or (mode == Mode.REMOVE_FILL and before > 0) or (mode == Mode.REMOVE_EMPTY and before == Player.EMPTY)
 			if before != target and eligible:
 				result.append({"index": index, "before": before, "after": target})

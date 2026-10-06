@@ -31,7 +31,7 @@ static func pair(c: SceneTree, app: Main, name: String) -> void:
 	await c.snapshot(app, name + "-on")
 	var on: Image = c.surface.get_texture().get_image()
 	require(c, app.board.capture_view() == view_before and app.board.completion_searches == searches, name + " toggle keeps reads and cache")
-	var font: Font = Board.BODY_FONT
+	var font: Font = Board.CLUE_FONT
 	var fs: int = app.board.clue_font_size()
 	var marked: Dictionary = {"row": 0, "column": 0}
 	var colors: Dictionary = {}
@@ -69,7 +69,7 @@ static func pair(c: SceneTree, app: Main, name: String) -> void:
 				if tooltip_box.has_area() and tooltip_box.intersects(rect):
 					continue # Covered tokens are checked in the full tooltip below.
 				var changed: int = changed_pixels(off, on, rect)
-				var done: bool = entry.get("marked", false)
+				var done: bool = int(entry.get("status", 0)) > 0
 				require(c, (changed > 0) == done, name + " original token %s/%d/%d" % [axis, index, int(unit.index)])
 				if done:
 					marked[axis] += 1
@@ -89,7 +89,7 @@ static func pair(c: SceneTree, app: Main, name: String) -> void:
 				cursor.x = 14
 				cursor.y += 22 * app.ui_scale
 			var baseline: Vector2 = app.board.global_position + app.board.view.viewport.position + Vector2(12, 12) + cursor
-			require(c, (changed_pixels(off, on, Rect2(baseline - Vector2(0, tooltip_fs), Vector2(width + 1, tooltip_fs + 2))) > 0) == bool(entry.get("marked", false)), name + " tooltip original token")
+			require(c, (changed_pixels(off, on, Rect2(baseline - Vector2(0, tooltip_fs), Vector2(width + 1, tooltip_fs + 2))) > 0) == (int(entry.get("status", 0)) > 0), name + " tooltip original token")
 			cursor.x += width + 9 * app.ui_scale
 	require(c, same_region(off, on, app.mini.get_global_rect()), name + " miniature unchanged")
 	require(c, marked.row > 0 and marked.column > 0, name + " both axes drawn with marks")
@@ -162,7 +162,7 @@ static func run(c: SceneTree, app: Main) -> void:
 			press.pressed = true
 			c.surface.push_input(press, true)
 			var motion: InputEventMouseMotion = InputEventMouseMotion.new()
-			var delta: float = 1.49 * app.board.shared_clue_slot_extent(axis, Board.BODY_FONT, app.board.clue_font_size())
+			var delta: float = 1.49 * app.board.shared_clue_slot_extent(axis, Board.CLUE_FONT, app.board.clue_font_size())
 			motion.position = point + (Vector2(delta, 0) if axis == "row" else Vector2(0, delta))
 			c.surface.push_input(motion, true)
 			require(c, app.board.pan_target == axis, "H1 live hint drag entered")

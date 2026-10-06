@@ -351,3 +351,23 @@ Keine Laufzeitdienste oder Produktionsdaten eingerichtet. Prüfungen verwenden i
 Setup-, Preflight- und Produkt-CI arbeiten mit lesenden Repositoryrechten. Kein Deployment, Release, Tag oder Hosting. Externe Automatisierungen außerhalb gelesener Repositoryquellen sind nicht als geprüft behauptet.
 
 Die [ChatGPT-Projekteinstellungen](CHATGPT_PROJECT_INSTRUCTIONS.md) werden separat durch den Nutzer eingesetzt. Die lokale Modellheuristik ersetzt alte allgemeine Modellanweisungen einschließlich eines Pflichtverweises auf `Codex-Empfehlung.txt`; keine zweite Heuristik parallel aktivieren.
+
+## GP-48: eigener Gameplay-Auftrag
+
+[Issue #48](https://github.com/venomenon328/picross/issues/48) ersetzt im eigenen
+Branch `feat/48-gameplay-feedback` die betroffenen D-15-/H1-Regeln durch
+Startzustandsschutz und drei Hinweiszustände. Der aktuelle Vertrag steht in
+P1 §§5.1/5.2. Für diesen Auftrag zusätzlich die [GP-Prüfzuordnung](GP48_VERIFICATION.md)
+und [Eigentümeranleitung](GP48_OWNER_TRIAL.md) berücksichtigen.
+
+Pflichtjobs am Lieferhead/Test-Merge: `docs`, `product`, `preflight`,
+`puzzle-production`, `rp4-windows`, `rp5-repair`. Produktweg ergänzt identische
+native Main-/Head-Vergleiche bei 1280×720/UI 125 % und 1920×1080/UI 100 %.
+`gp48-review` enthält technische PNGs/Hashbindungen separat;
+`picross-p1-player-<Head>` enthält ausschließlich das kleine Spieler-ZIP mit
+EXE-Paar, neutraler Anleitung/isoliertem Start, Bericht und Lizenzen.
+
+Getrennter Selbstreview ist keine unabhängige Prüfung. Unabhängiges technisches/
+visuelles Review und gezielte GP48-M01-Eigentümerprobe bleiben vor Merge offen.
+Keine eigene Eigentümerabnahme, kein Merge/Release. PR #47 und sein Branch bleiben
+unverändert; spätere Integration und RP-6-Abnahme sind separate Schritte.

@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-Stand: 03.10.2026 · Arbeitsfassung 0.4 · Produktkonzept mit spezifizierter Rätselproduktion
+Stand: 06.10.2026 · Arbeitsfassung 0.5 · Produktkonzept mit spezifizierter Rätselproduktion
 
 ## 1. Geltung und Herkunft
 
@@ -99,7 +99,13 @@ Linie eindeutig denselben Hinweis realisiert. Bei Widerspruch entfällt jede Mar
 dieser Linie. Nur deren eigene Hinweise, Farben, Füllungen und X zählen; kein Vergleich
 mit der hinterlegten Lösung oder kreuzenden Hinweisen. Das ist keine Fehlerhilfe,
 kein manuelles Abhaken und kein automatisches Setzen. Der begrenzte P1-Vertrag samt
-Vorschau, Durchstreichung und Sitzungsschalter steht in P1 §5.2.
+Vorschau und Sitzungsschalter steht in P1 §5.2. GP-02/#48 ergänzt drei Zustände:
+normal, eindeutig gesetzt und abgeschwächt, zusätzlich beidseitig abgegrenzt und
+durchgestrichen. X, echter Linienrand und direkt andere Füllfarbe begrenzen;
+Ausschnittränder und unbekannte Nachbarn nicht. Der Abschluss verlangt keine
+vollständige Hintergrundauskreuzung. GP-01 schützt bei unbekanntem Gestenstart
+Vorbelegungen; bewusste Umwandlung startet auf X beziehungsweise Füllung.
+GP-03 kräftigt nur die Hinweisziffern, bei erhaltener Farb- und Slotzuordnung.
 
 Hypothesen als mögliche Zustände „unsicher gesetzt“ und „unsicher leer“ wurden zur Untersuchung vorgeschlagen. Die Funktion ist noch nicht abschließend spezifiziert; insbesondere ist nicht entschieden, ob ihre Nutzung mit einer perfekten Bewertung vereinbar ist. Der Nutzer setzt selbst überwiegend nur sicher hergeleitete Felder. Hypothesen ändern nicht das Versprechen, dass Rätsel ohne notwendiges Raten lösbar sein müssen.
 

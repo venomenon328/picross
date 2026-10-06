@@ -22,7 +22,7 @@ unabhängiges technisches/visuelles Review bleibt offen.
 
 
 H1 aus [#19](https://github.com/venomenon328/picross/issues/19) ergänzt automatisch
-durchgestrichene, eindeutig erfüllte Hinweise. Die gezielte neue Eigentümerprobe ist
+die exakte Eindeutigkeitsanalyse der Hinweise. Die damalige Eigentümerprobe ist
 nicht als bestanden dokumentiert; technische Nachweise und Schritte stehen im
 [H1-Prüfbericht](../../docs/H1_VERIFICATION.md) und in PR #20; H1 ist dort integriert. Nach Review R1 hat
 der Eigentümer die B-01-Nacharbeit und den anschließenden Merge ausdrücklich
@@ -32,16 +32,28 @@ beauftragt; die Probe ist für diesen Merge daher kein verbleibendes Gate. Die i
 „Erfüllte Hinweise markieren“ startet an und gilt für alle Blätter derselben
 App-Sitzung. Album-/Blattwechsel und Reset erhalten die Auswahl; nach Neustart ist
 sie wieder an. Aus zeigt normale Zahlen, erneutes Einschalten den aktuellen Stand.
-Die Zahl bleibt farbig und an derselben Stelle; auch vollständige Hoverhinweise
-zeigen den Strich. `…` und `–` werden nicht markiert.
+GP-48 unterscheidet nun normale, leicht abgeschwächte und durchgestrichene Zahlen.
+Plex Sans Gewicht 600 macht sie kräftiger; Schriftgrößen und Positionen bleiben
+gleich. Abschwächung (Alpha 0,78) erhält die Hinweisfarbe und C1-Kontur. Auch
+Hoverhinweise und gezogene Folgen zeigen denselben Zustand. Aus blendet beide
+positiven Zustände aus; `…` und `–` werden nicht markiert.
 
 Es zählt nur die ganze betreffende Linie einschließlich ihrer eigenen Hinweise und
 deiner aktuellen Füllungen/X samt elastischer Vorschau. Ein vollständig gefüllter
-Block wird nur bei eindeutiger Zuordnung markiert. X können Eindeutigkeit herstellen,
-sind aber keine allgemeine Pflicht. Bei Widerspruch entfallen alle Markierungen
+Block wird bei eindeutiger Zuordnung zunächst abgeschwächt. Durchgestrichen wird
+er erst, wenn beide Enden unmittelbar durch X, den tatsächlichen Rasterrand oder
+eine andersfarbige Füllung begrenzt sind. Der andere Farbblock muss nicht schon
+vollständig sein. Unbekannte Nachbarn, entfernte X und Viewportränder zählen nicht.
+Bei Widerspruch entfallen alle positiven Zustände
 dieser Linie. Das prüft nicht die hinterlegte Lösung, verändert keine Zellen und
 verrät kein bestimmtes falsches Feld. Rückzug, Abbruch, Undo/Redo und Recovery führen
-die Anzeige mit; Flags und Schalter werden nicht im Spielstand gespeichert.
+die Anzeige mit; Zustände und Schalter werden nicht im Spielstand gespeichert.
+
+[GP-48-Prüfung](../../docs/GP48_VERIFICATION.md) und
+[gezielte GP48-M01-Eigentümerprobe](../../docs/GP48_OWNER_TRIAL.md) binden die neue
+Lieferung. Unabhängiges Review und GP48-M01 sind offen. Der neue Slim-Download
+enthält eine neutrale Anleitung und `gp48-owner.ps1` für einen isolierten Prüfstart.
+Die frühere H1-Abnahme wird dadurch nicht rückwirkend geändert.
 
 Im äußeren technischen Artefakt liegen `H1-PRUEFUNG.md`, `h1-owner-probe.ps1`,
 `h1-owner-probe.gd` und `h1-probe-windows-x86_64.zip` für die separate künstliche
@@ -100,11 +112,14 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
 
 - Links: unbekannt → aktive Farbe, Füllung → unbekannt, X → aktive Farbe.
 - Rechts: unbekannt → X, X → unbekannt, Füllung → X.
-- Ein linker Setzstrich wandelt unbekannte/X-Zellen in die beim Start aktive Farbe;
-  ein rechter Setzstrich unbekannte/gefüllte Zellen in X. Ein auf Füllung gestarteter
+- Auf unbekannt gestartete Setzstriche verändern nur unbekannte Zellen und schützen
+  alle vorhandenen Füllungen und X. Links setzt die aktive Farbe, rechts X.
+  Nur ein auf X gestarteter linker Strich wandelt unbekannte/X-Zellen in Farbe;
+  nur ein auf Füllung gestarteter rechter Strich unbekannte/Füllungen in X.
+  Ein auf Füllung gestarteter
   linker Rücknahmestrich entfernt nur Füllungen, ein auf X gestarteter rechter nur X.
   Eine andersfarbige Füllung wird links neutralisiert, nicht direkt umgefärbt.
-- Modus und Farbe stehen für die gesamte Geste fest. Die erste eindeutige Bewegung
+- Ursprünglicher Startzustand, Modus und Farbe stehen für die gesamte Geste fest. Die erste eindeutige Bewegung
   bindet die Achse; bei diagonalem Gleichstand bleibt zunächst nur die Startzelle.
 - Zurückziehen verkürzt die Vorschau. 5→12→9 übernimmt nur 5–9 als eine Aktion.
   Trifft der Zeiger die Startzelle tatsächlich wieder, zeigt die Vorschau nur diese

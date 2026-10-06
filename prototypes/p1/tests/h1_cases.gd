@@ -20,7 +20,7 @@ static func clues(lengths: Array, colors: Array = []) -> Array:
 
 ## Independent test oracle: enumerate cell assignments, scan maximal colored
 ## runs, then compare their intervals. No production DP/Definition.hints calls.
-static func oracle(input: Array[int], hints: Array, colors: int) -> Array[bool]:
+static func oracle(input: Array[int], hints: Array, colors: int) -> Array[int]:
 	var starts: Array = []
 	var matches: int = 0
 	for code: int in range(int(pow(colors + 1, input.size()))):
@@ -54,13 +54,20 @@ static func oracle(input: Array[int], hints: Array, colors: int) -> Array[bool]:
 				if starts[i] != positions[i]:
 					starts[i] = -1
 		matches += 1
-	var flags: Array[bool] = []
+	var flags: Array[int] = []
 	for i: int in range(hints.size()):
 		var done: bool = matches > 0 and starts[i] >= 0
 		if done:
 			for p: int in range(starts[i], starts[i] + int(hints[i].length)):
 				done = done and input[p] == int(hints[i].color)
-		flags.append(done)
+		var state: int = 0
+		if done:
+			var left: int = starts[i] - 1
+			var right: int = starts[i] + int(hints[i].length)
+			var left_closed: bool = left < 0 or input[left] == 0 or (input[left] > 0 and input[left] != int(hints[i].color))
+			var right_closed: bool = right == input.size() or input[right] == 0 or (input[right] > 0 and input[right] != int(hints[i].color))
+			state = 2 if left_closed and right_closed else 1
+		flags.append(state)
 	return flags
 
 static func run(t: SceneTree) -> void:
@@ -104,12 +111,12 @@ static func run(t: SceneTree) -> void:
 		var hints: Array = []
 		for i: int in range(rng.randi_range(0, 3)):
 			hints.append({"length": rng.randi_range(1, 3), "color": rng.randi_range(1, colors)})
-		var expected: Array[bool] = oracle(input, hints, colors)
-		t.check(Completion.analyze(input, hints) == expected, "H1 independent cell oracle trial %d" % trial)
+		var expected: Array[int] = oracle(input, hints, colors)
+		t.check(Completion.analyze_states(input, hints) == expected, "GP48 independent cell oracle trial %d" % trial)
 		input.reverse()
 		hints.reverse()
 		expected.reverse()
-		t.check(Completion.analyze(input, hints) == expected, "H1 oracle mirrored trial %d" % trial)
+		t.check(Completion.analyze_states(input, hints) == expected, "GP48 oracle mirrored trial %d" % trial)
 	var timings: Array[int] = []
 	for kind: int in range(4):
 		var input: Array[int] = []
@@ -131,6 +138,27 @@ static func run(t: SceneTree) -> void:
 			t.check(flags.size() == hints.size() and (not flags.has(false) if kind == 2 else not flags.has(true)), "H1 bounded 100-cell case %d" % kind)
 		timings.append(Time.get_ticks_usec() - start)
 	print("H1_LINE_TIMING_US twenty analyses each [empty, ambiguous, 100 colored, contradiction]=", timings)
+	# GP-02: immediate bounds, including mixed types; uniqueness stays required.
+	for v: Array in [
+		[[3], "?###?", [1]], [[3], "X###?", [1]], [[3], "?###X", [1]],
+		[[3], "X###X", [2]], [[3], "X?###?X", [1]],
+		[[3], "###??", [1]], [[3], "###X?", [2]], [[3], "??###", [1]],
+		[[3], "?X###", [2]], [[3], "###", [2]],
+		[[3, 3], "###?###", [1, 1]], [[3, 3], "###X###", [2, 2]],
+		[[3, 3], "???X###X???", [0, 0]], [[3], "X####X", [0]],
+		[[3, 3], "AAABBB", [2, 2], [1, 2]],
+		[[3, 3], "?AAABBB?", [1, 1], [1, 2]],
+		[[3, 3], "XAAABBB?", [2, 1], [1, 2]],
+		[[3, 3], "?AAABBBX", [1, 2], [1, 2]],
+		[[3, 3], "AAAB??", [2, 0], [1, 2]]]:
+		var input: Array[int] = cells(v[1])
+		var hints: Array = clues(v[0], v[3] if v.size() == 4 else [])
+		t.check(Completion.analyze_states(input, hints) == v[2], "GP48 status vector " + str(v))
+		input.reverse()
+		hints.reverse()
+		var expected: Array = v[2].duplicate()
+		expected.reverse()
+		t.check(Completion.analyze_states(input, hints) == expected, "GP48 mirrored status")
 	await scene_cases(t)
 
 static func send(t: SceneTree, board: Board, cell: Vector2i, button: MouseButton, pressed: bool) -> void:
@@ -318,6 +346,7 @@ static func app_cases(t: SceneTree) -> void:
 		if int(app.session.definition.solution[y][x]) > 0:
 			stroke(t, app.board, Vector2i(x, y), Vector2i(x, y))
 	var flags: Array[bool] = app.board.completion_flags("row", y)
+	var states: Array[int] = app.board.completion_states("row", y)
 	t.check(flags.has(true), "H1 actual fixture filled row marks")
 	var saved: Dictionary = SaveStore.snapshot(app.session, app.board.capture_view())
 	var path: String = app.store.path_for("f01")
@@ -330,6 +359,7 @@ static func app_cases(t: SceneTree) -> void:
 	app.session.player.cells.fill(-1)
 	t.check(not app.board.completion_flags("row", y).has(true), "H1 blank restore precursor unmarks")
 	SaveStore.apply(saved, app.session)
+	t.check(app.board.completion_states("row", y) == states, "GP48 in-place restore derives all three states")
 	t.check(app.board.completion_flags("row", y) == flags, "H1 in-place restore derives fresh flags")
 	# Preserve marked state as backup, then make a different primary.
 	app._save_current()
@@ -345,6 +375,7 @@ static func app_cases(t: SceneTree) -> void:
 	app.open_puzzle()
 	await t.process_frame
 	t.check(app.slot_status[0] == "recovered" and app.board.completion_flags("row", y) == flags, "H1 actual recovery loads fresh derived markers")
+	t.check(app.board.completion_states("row", y) == states, "GP48 actual backup recovery restores three-state derivation")
 	var recovery_before: String = FileAccess.get_file_as_string(path)
 	app.set_clue_completion(false)
 	app.set_clue_completion(true)

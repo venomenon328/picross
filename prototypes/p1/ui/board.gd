@@ -8,6 +8,8 @@ signal committed
 signal view_changed
 signal pointed(cell: Vector2i)
 const BODY_FONT = preload("res://art/book/PlexSans.ttf")
+const CLUE_FONT = preload("res://ui/clue_font.tres")
+const FILLED_ALPHA: float = 0.78
 var book_layout: bool = false
 var book_inset: Vector2 = Vector2(210,126)
 var book_grid_size: Vector2 = Vector2(720,720)
@@ -491,7 +493,7 @@ func _draw_counter_box(box: Rect2, caption: String, font: Font, fs: int) -> void
 	draw_string(font, box.position + Vector2(7, box.size.y - 5), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 
 func _draw_clues(first: Vector2i, last: Vector2i) -> void:
-	var font: Font = BODY_FONT
+	var font: Font = CLUE_FONT
 	var fs: int = clue_font_size()
 	var near_grid: Vector2 = view.visible_bounds().position
 	for y: int in range(first.y, last.y):
@@ -530,29 +532,39 @@ func sync_clue_completion(values: Array[int]) -> void:
 			var key: String = "%s/%d" % [axis, index]
 			if completion_cache.has(key) and completion_cache[key].cells == cells:
 				continue
-			completion_cache[key] = {"cells": cells, "flags": ClueCompletion.analyze(cells, lines[index])}
+			completion_cache[key] = {"cells": cells, "states": ClueCompletion.analyze_states(cells, lines[index])}
 			completion_searches += 1
 
 func completion_flags(axis: String, index: int) -> Array[bool]:
+	var flags: Array[bool] = []
+	for status: int in completion_states(axis, index):
+		flags.append(status != ClueCompletion.Status.OPEN)
+	return flags
+
+func completion_states(axis: String, index: int) -> Array[int]:
 	sync_clue_completion(session.visible_cells())
-	return completion_cache["%s/%d" % [axis, index]].flags.duplicate()
+	return completion_cache["%s/%d" % [axis, index]].states.duplicate()
 
 func clue_is_marked(axis: String, index: int, token: int) -> bool:
-	if not mark_completed_clues or token < 0:
-		return false
-	var flags: Array[bool] = completion_cache["%s/%d" % [axis, index]].flags
-	return token < flags.size() and flags[token]
+	return clue_status(axis, index, token) == ClueCompletion.Status.CLOSED
 
-func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, marked: bool) -> void:
+func clue_status(axis: String, index: int, token: int) -> int:
+	if not mark_completed_clues or token < 0:
+		return ClueCompletion.Status.OPEN
+	var states: Array[int] = completion_cache["%s/%d" % [axis, index]].states
+	return states[token] if token < states.size() else ClueCompletion.Status.OPEN
+
+func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, status: int) -> void:
+	var alpha: float = FILLED_ALPHA if status == ClueCompletion.Status.FILLED else 1.0
 	# Quarter-pixel outline: a 4x glyph drawn at 1/4 scale gives a 0.25px
 	# outer contour (C1 reference: 0.275px). Keep the original fill last.
 	if text.is_valid_int() and session.definition.palette.size() > 1 and (color.is_equal_approx(cell_color(2)) or color.is_equal_approx(cell_color(4))):
 		var contour_scale: float = ui_scale/4.0
 		draw_set_transform(Vector2.ZERO,0,Vector2.ONE*contour_scale)
-		draw_string_outline(font,baseline/contour_scale,text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(fs/contour_scale),1,Color("293e3d"))
+		draw_string_outline(font,baseline/contour_scale,text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(fs/contour_scale),1,Color(Color("293e3d"),alpha))
 		draw_set_transform(Vector2.ZERO)
-	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, color)
-	if marked:
+	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(color, alpha))
+	if status == ClueCompletion.Status.CLOSED:
 		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		var start: Vector2 = baseline - Vector2(0, float(fs) * 0.32)
 		draw_line(start, start + Vector2(width, 0), Color(color, 0.72), maxf(1.0, float(fs) / 14.0), true)
@@ -590,7 +602,7 @@ func clue_layout(axis: String, index: int, available_override: float = -1.0) -> 
 	var capacity: int = clue_capacity(axis, available_override)
 	var result: Dictionary = ClueLayout.select_window(entries.size(), capacity, clue_step(axis, index))
 	result.entries = entries
-	result.slot_extent = shared_clue_slot_extent(axis, BODY_FONT, clue_font_size())
+	result.slot_extent = shared_clue_slot_extent(axis, CLUE_FONT, clue_font_size())
 	return result
 
 func visible_clue_layout(axis: String, index: int) -> Dictionary:
@@ -613,7 +625,7 @@ func clue_entry_count(axis: String, index: int) -> int:
 	return maxi(1, clues.size())
 
 func clue_capacity(axis: String, available_override: float = -1.0) -> int:
-	var font: Font = BODY_FONT
+	var font: Font = CLUE_FONT
 	var fs: int = clue_font_size()
 	var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
 	var available: float = available_override if available_override >= 0.0 else (area.size.x if axis == "row" else area.size.y)
@@ -664,7 +676,7 @@ func tooltip_entries(axis: String, index: int) -> Array:
 	if clues.is_empty():
 		result.append({"text": "–", "color": INK})
 	for i: int in range(clues.size()):
-		result.append({"text": clue_token(clues[i]), "color": clue_color(clues[i]), "marked": clue_is_marked(axis, index, i)})
+		result.append({"text": clue_token(clues[i]), "color": clue_color(clues[i]), "status": clue_status(axis, index, i), "marked": clue_is_marked(axis, index, i)})
 	return result
 
 ## The snapped read stays unchanged during a drag. Derive both the moving
@@ -672,7 +684,7 @@ func tooltip_entries(axis: String, index: int) -> Array:
 func visual_hint_units(axis: String, index: int) -> Dictionary:
 	var layout: Dictionary = visible_clue_layout(axis, index)
 	var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
-	var font: Font = BODY_FONT
+	var font: Font = CLUE_FONT
 	var fs: int = clue_font_size()
 	var units: Array[Dictionary] = []
 	if is_zero_approx(float(layout.visual_shift)):
@@ -754,7 +766,7 @@ func _draw_row_hint(index: int, py: float, font: Font, fs: int) -> void:
 		var center: float = float(unit.center)
 		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if center - width / 2.0 >= area.position.x and center + width / 2.0 <= area.end.x:
-			draw_clue_number(font, Vector2(center - width / 2.0, py + fs * 0.35), text, fs, color, unit.kind == "token" and clue_is_marked("row", index, int(unit.index)))
+			draw_clue_number(font, Vector2(center - width / 2.0, py + fs * 0.35), text, fs, color, clue_status("row", index, int(unit.index)))
 
 func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 	var layout: Dictionary = visible_clue_layout("column", index)
@@ -765,13 +777,13 @@ func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 		var center: float = float(unit.center)
 		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if center - fs * (0.6 if book_layout else 1.0) >= area.position.y and center + fs * (0.4 if book_layout else 0.35) <= area.end.y:
-			draw_clue_number(font, Vector2(px - width / 2.0, center + fs * 0.35), text, fs, color, unit.kind == "token" and clue_is_marked("column", index, int(unit.index)))
+			draw_clue_number(font, Vector2(px - width / 2.0, center + fs * 0.35), text, fs, color, clue_status("column", index, int(unit.index)))
 
 func _draw_clue_tooltip() -> void:
 	if clue_hover_axis.is_empty() or clue_hover_index < 0:
 		return
 	var entries: Array = tooltip_entries(clue_hover_axis, clue_hover_index)
-	var font: Font = BODY_FONT
+	var font: Font = CLUE_FONT
 	var fs: int = roundi(16 * ui_scale)
 	var line_height: float = 22 * ui_scale
 	var box_width: float = minf(520 * ui_scale, size.x - view.viewport.position.x - 32)
@@ -789,9 +801,9 @@ func _draw_clue_tooltip() -> void:
 	clue_tooltip_rect = box
 	draw_rect(box, Color("fffaf0"))
 	draw_rect(box, ACCENT, false, 2)
-	draw_string(font, box.position + Vector2(14, 26 * ui_scale), "Vollständiger Hinweis", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
+	draw_string(BODY_FONT, box.position + Vector2(14, 26 * ui_scale), "Vollständiger Hinweis", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 	for i: int in range(entries.size()):
-		draw_clue_number(font, box.position + positions[i], entries[i].text, fs, entries[i].color, entries[i].get("marked", false))
+		draw_clue_number(font, box.position + positions[i], entries[i].text, fs, entries[i].color, entries[i].get("status", ClueCompletion.Status.OPEN))
 
 static func _paper_style() -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
