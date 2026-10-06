@@ -69,6 +69,12 @@ static func bounded_position(usable: Rect2i, client: Vector2i, decorations: Vect
 	# Window.position is the client origin. Center the entire decorated window.
 	return usable.position + (usable.size - client - decorations) / 2 + client_offset
 
+static func expanded_grid_extent(dimensions: Vector2i, cell_size: float, standard_extent: Vector2, maximum_extent: Vector2, overview: bool) -> Vector2:
+	var result: Vector2 = standard_extent.min(maximum_extent)
+	if not overview and cell_size > 24.01:
+		result = result.max(Vector2(dimensions) * cell_size).min(maximum_extent)
+	return result
+
 func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	store = SaveStore.new(SaveStore.test_root_override if not SaveStore.test_root_override.is_empty() else "user://p1/saves")
@@ -562,6 +568,7 @@ func _build_work() -> void:
 	board.edited.connect(refresh)
 	board.committed.connect(_on_commit)
 	board.view_changed.connect(_schedule_view_save)
+	board.viewport_layout_requested.connect(_layout_book)
 	board.pointed.connect(func(cell: Vector2i) -> void: coordinate.text = "Zeile %d · Spalte %d" % [cell.y+1,cell.x+1])
 	work.add_child(board)
 	sidebar = Control.new()
@@ -723,6 +730,7 @@ func _layout_book() -> void:
 	var grid_position: Vector2
 	var mini_position: Vector2
 	var mini_extent: float
+	var tools_y: float = h-106 if compact else minf(h-102*u,h/2+490)
 	if compact:
 		inset = Vector2(210,120)*Vector2(1,u/1.25)
 		grid_position = Vector2(300,minf(270,h*37.0/120.0))
@@ -732,19 +740,29 @@ func _layout_book() -> void:
 	else:
 		inset = Vector2(240 if large else (192 if session.player.width == 20 else 210),144 if large or session.player.width == 20 else 126)*u
 		var available: Vector2 = Vector2(w-552,h-408) if large else Vector2(w-800,h-234)
-		grid_extent = (Vector2(session.player.width,session.player.height)*(24 if session.player.width==20 or large else 18)).min(available)
+		var standard_extent: Vector2 = (Vector2(session.player.width,session.player.height)*(24 if session.player.width==20 or large else 18)).min(available)
+		grid_extent = standard_extent
 		if large:
 			grid_position = Vector2(70+inset.x,126+inset.y)
 			mini_position = Vector2(w-220,290)
 			mini_extent = 132
 		else:
-			grid_position = Vector2(w/2-grid_extent.x/2-(70 if session.player.width==20 else 90),h/2-grid_extent.y/2+(-10 if session.player.width==20 else 72))
-			mini_position = Vector2(grid_position.x+grid_extent.x+180,grid_position.y-(0 if session.player.width==20 else 32))
+			var standard_position: Vector2 = Vector2(w/2-standard_extent.x/2-(70 if session.player.width==20 else 90),h/2-standard_extent.y/2+(-10 if session.player.width==20 else 72))
+			grid_position = standard_position
+			mini_position = Vector2(standard_position.x+standard_extent.x+180,standard_position.y-(0 if session.player.width==20 else 32))
 			mini_extent = 200 if session.player.width==20 else 180
+			# The standard box is the calm 100%-layout, not the zoom ceiling.
+			var left_limit: float = 70.0 + inset.x
+			var right_limit: float = mini_position.x - 22.0
+			var top_limit: float = maxf(90.0,h*0.083) + inset.y
+			var bottom_limit: float = tools_y - 6.0
+			var maximum_extent: Vector2 = Vector2(maxf(1.0,right_limit-left_limit),maxf(1.0,bottom_limit-top_limit)).min(available)
+			grid_extent = expanded_grid_extent(Vector2i(session.player.width,session.player.height),board.view.cell_size,standard_extent,maximum_extent,board.overview)
+			var preferred_center: Vector2 = standard_position + standard_extent/2.0
+			grid_position = (preferred_center-grid_extent/2.0).clamp(Vector2(left_limit,top_limit),Vector2(right_limit,bottom_limit)-grid_extent)
 	# Larger UI reserves actual space instead of shrinking hit areas or cells.
 	mini_position.x = minf(mini_position.x,w-80-mini_extent)
 	grid_extent.x = minf(grid_extent.x,mini_position.x-grid_position.x-22)
-	var tools_y: float = h-106 if compact else minf(h-102*u,h/2+490)
 	grid_extent.y = minf(grid_extent.y,tools_y-grid_position.y-6)
 	grid_position += o
 	mini_position += o
