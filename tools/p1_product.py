@@ -23,6 +23,8 @@ import p14_integration
 import z2_resources
 import z2_review
 import rp6_review
+import gp48_review
+import gp48_delivery
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -240,6 +242,15 @@ def main() -> int:
                               "res://tests/z2_before_capture.gd" if arg == "res://tests/capture.gd" else arg
                               for arg in render_command]
             phase("z2-before-capture", before_command, "Z2_BEFORE_OK")
+            gp_command = ["res://tests/gp48_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
+            environment["GP48_VARIANT"] = "after"
+            phase("gp48-after-capture", gp_command, "GP48_CAPTURE_OK")
+            gp_before = gp48_review.before_project(root, workspace)
+            phase("gp48-before-import", [engine, "--headless", "--path", str(gp_before), "--import"])
+            environment["GP48_VARIANT"] = "before"
+            phase("gp48-before-capture", [str(gp_before) if arg == str(project) else arg for arg in gp_command], "GP48_CAPTURE_OK")
+            del environment["GP48_VARIANT"]
+            gp_comparison = gp48_review.verify_pairs(renders)
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
@@ -290,12 +301,13 @@ def main() -> int:
                             book_resources=book_resources,
                             rp3=rp3,
                             rp6=rp6,
+                            gp48=gp_comparison,
                             h1_probe_files=h1_files,
                             h1_probe_export_files=h1_exports,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"], seconds=item.get("seconds")) for item in results],
-                            manual_acceptance="OPEN: RP-6 independent technical/visual review, editorial release, actual owner solutions/large trial and phase decision. No merge/release. Parent #34 remains open.")
+                            manual_acceptance="OPEN: combined RP-6 independent review, editorial release, owner solutions/large trial and phase decision. GP48 is integrated and owner-accepted via #49. No merge/release. Parent #34 remains open.")
             pilot_launcher = output / "rp6-owner.ps1"
             pilot_launcher.write_text((root / "tools/rp6_owner.ps1").read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
             extras = {"RP6-SPIELPROBE.md": root / "docs/RP6_OWNER_TRIAL.md",
@@ -305,8 +317,17 @@ def main() -> int:
                 extras["licenses/" + path.name] = path
             extras["licenses/resources.json"] = root / "prototypes/p1/art/book/manifest.json"
             archive = package(build, output, manifest, (root / "docs/RP6_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
+            rp6_player_files = {
+                "picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json",
+                "RP6-SPIELPROBE.md", "rp6-owner.ps1", "owner-probe.ps1",
+                "licenses/Fraunces-OFL.txt", "licenses/PlexSans-OFL.txt", "licenses/resources.json",
+            }
+            player_delivery = gp48_delivery.verify_player_package(archive, manifest, expected_files=rp6_player_files)
+            (output / "player-audit.json").write_text(json.dumps(player_delivery, indent=2) + "\n", encoding="utf-8")
             review_zip = z2_review.package(root, output, manifest, archive)
+            gp_review = gp48_review.package(root, output, manifest, archive)
             rp6_review.package(root, output, manifest, archive)
+            print(f"GP48 REVIEW {gp_review} sha256:{toolchain.sha256_file(gp_review)}", flush=True)
             print(f"REVIEW {review_zip} sha256:{toolchain.sha256_file(review_zip)}", flush=True)
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)

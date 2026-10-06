@@ -370,3 +370,18 @@ bisherigen Oracles, sechs Benchmarks und RP-3-/RP-4-/RP-5-Replays bleiben aktiv.
 Die sechs Jobs `puzzle-production`, `rp5-repair`, `rp4-windows`, `docs`, `product`
 und `preflight` müssen am neuen Stand erfolgreich laufen. A01–A03 und M01–M04
 bleiben das positive Mergegate aus #40; kein Merge/Releaseauftrag, Parent #34 offen.
+
+
+## GP-48: integrierter Gameplay-Vertrag
+
+[Issue #48](https://github.com/venomenon328/picross/issues/48) ist nach unabhängigem
+Review R1 und positiver GP48-M01-Eigentümerprobe über PR #49 als
+`add7a7e6aa507d54d6e0e2ac8a3a2c5e2d1d6912` in `main` integriert.
+Startzustandsschutz, drei Hinweiszustände und die kräftigere Hinweisdarstellung
+stehen in P1 §§5.1/5.2; historische Abnahmen bleiben commitgebunden.
+
+Für den jetzt kombinierten RP-6-Stand bleiben dieselben GP-Regeln verpflichtend.
+`product` vergleicht die native Darstellung zusätzlich gegen den integrierten
+GP-48-Mainstand und veröffentlicht technische GP-Vergleiche getrennt vom schlanken
+RP-6-Spielerpaket. Eine erneute GP48-M01 ist kein eigenes Gate; Integrationsregressionen
+und die offenen RP6-A01–A03/M01–M04 werden am neuen PR-#47-Head geprüft.

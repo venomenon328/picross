@@ -16,14 +16,14 @@ in der EXE eingebettet. Kein Fontdownload oder Godotsetup beim Spieler.
 Z2 ist nach Review und Mergefreigabe über PR #33 integriert. Z2-M01/M02/M03
 wurden nicht durchgeführt; der Eigentümer hob das damalige Gate für diesen Merge
 auf. RP-3/#37 ist nach unabhängigem Review R2 über PR #44 integriert.
-RP-6/#40 ergänzt fünf weitere feste Pilotblätter im Draft; unabhängiges Review
-und tatsächliche Eigentümerproben bleiben offen.
+RP-6/#40 ergänzt fünf weitere feste Pilotblätter im Draft; kombinierte unabhängige
+Nachprüfung und tatsächliche Eigentümerproben bleiben offen.
 [RP-3-Prüfzuordnung](../../docs/RP3_VERIFICATION.md),
 [Importdateien und Herkunft](../../examples/rp3/README.md). Dies ist ein Testexport.
 
 
 H1 aus [#19](https://github.com/venomenon328/picross/issues/19) ergänzt automatisch
-durchgestrichene, eindeutig erfüllte Hinweise. Die gezielte neue Eigentümerprobe ist
+die exakte Eindeutigkeitsanalyse der Hinweise. Die damalige Eigentümerprobe ist
 nicht als bestanden dokumentiert; technische Nachweise und Schritte stehen im
 [H1-Prüfbericht](../../docs/H1_VERIFICATION.md) und in PR #20; H1 ist dort integriert. Nach Review R1 hat
 der Eigentümer die B-01-Nacharbeit und den anschließenden Merge ausdrücklich
@@ -33,16 +33,28 @@ beauftragt; die Probe ist für diesen Merge daher kein verbleibendes Gate. Die i
 „Erfüllte Hinweise markieren“ startet an und gilt für alle Blätter derselben
 App-Sitzung. Album-/Blattwechsel und Reset erhalten die Auswahl; nach Neustart ist
 sie wieder an. Aus zeigt normale Zahlen, erneutes Einschalten den aktuellen Stand.
-Die Zahl bleibt farbig und an derselben Stelle; auch vollständige Hoverhinweise
-zeigen den Strich. `…` und `–` werden nicht markiert.
+GP-48 unterscheidet nun normale, leicht abgeschwächte und durchgestrichene Zahlen.
+Plex Sans Gewicht 600 macht sie kräftiger; Schriftgrößen und Positionen bleiben
+gleich. Abschwächung (Alpha 0,78) erhält die Hinweisfarbe und C1-Kontur. Auch
+Hoverhinweise und gezogene Folgen zeigen denselben Zustand. Aus blendet beide
+positiven Zustände aus; `…` und `–` werden nicht markiert.
 
 Es zählt nur die ganze betreffende Linie einschließlich ihrer eigenen Hinweise und
 deiner aktuellen Füllungen/X samt elastischer Vorschau. Ein vollständig gefüllter
-Block wird nur bei eindeutiger Zuordnung markiert. X können Eindeutigkeit herstellen,
-sind aber keine allgemeine Pflicht. Bei Widerspruch entfallen alle Markierungen
+Block wird bei eindeutiger Zuordnung zunächst abgeschwächt. Durchgestrichen wird
+er erst, wenn beide Enden unmittelbar durch X, den tatsächlichen Rasterrand oder
+eine andersfarbige Füllung begrenzt sind. Der andere Farbblock muss nicht schon
+vollständig sein. Unbekannte Nachbarn, entfernte X und Viewportränder zählen nicht.
+Bei Widerspruch entfallen alle positiven Zustände
 dieser Linie. Das prüft nicht die hinterlegte Lösung, verändert keine Zellen und
 verrät kein bestimmtes falsches Feld. Rückzug, Abbruch, Undo/Redo und Recovery führen
-die Anzeige mit; Flags und Schalter werden nicht im Spielstand gespeichert.
+die Anzeige mit; Zustände und Schalter werden nicht im Spielstand gespeichert.
+
+[GP-48-Prüfung](../../docs/GP48_VERIFICATION.md) und
+[gezielte GP48-M01-Eigentümerprobe](../../docs/GP48_OWNER_TRIAL.md) dokumentieren die
+integrierte Lieferung. Review R1 und GP48-M01 sind abgeschlossen; PR #49 ist als
+`add7a7e6` in `main` integriert. Die Regeln bleiben für RP-6 aktiv; der neue kombinierte
+Slim-Download verwendet die RP-6-Anleitung. Historische H1-Abnahmen werden nicht umgedeutet.
 
 Im äußeren technischen Artefakt liegen `H1-PRUEFUNG.md`, `h1-owner-probe.ps1`,
 `h1-owner-probe.gd` und `h1-probe-windows-x86_64.zip` für die separate künstliche
@@ -102,11 +114,14 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
 
 - Links: unbekannt → aktive Farbe, Füllung → unbekannt, X → aktive Farbe.
 - Rechts: unbekannt → X, X → unbekannt, Füllung → X.
-- Ein linker Setzstrich wandelt unbekannte/X-Zellen in die beim Start aktive Farbe;
-  ein rechter Setzstrich unbekannte/gefüllte Zellen in X. Ein auf Füllung gestarteter
+- Auf unbekannt gestartete Setzstriche verändern nur unbekannte Zellen und schützen
+  alle vorhandenen Füllungen und X. Links setzt die aktive Farbe, rechts X.
+  Nur ein auf X gestarteter linker Strich wandelt unbekannte/X-Zellen in Farbe;
+  nur ein auf Füllung gestarteter rechter Strich unbekannte/Füllungen in X.
+  Ein auf Füllung gestarteter
   linker Rücknahmestrich entfernt nur Füllungen, ein auf X gestarteter rechter nur X.
   Eine andersfarbige Füllung wird links neutralisiert, nicht direkt umgefärbt.
-- Modus und Farbe stehen für die gesamte Geste fest. Die erste eindeutige Bewegung
+- Ursprünglicher Startzustand, Modus und Farbe stehen für die gesamte Geste fest. Die erste eindeutige Bewegung
   bindet die Achse; bei diagonalem Gleichstand bleibt zunächst nur die Startzelle.
 - Zurückziehen verkürzt die Vorschau. 5→12→9 übernimmt nur 5–9 als eine Aktion.
   Trifft der Zeiger die Startzelle tatsächlich wieder, zeigt die Vorschau nur diese
@@ -233,8 +248,8 @@ Der technische Produktweg prüft F-01/F-02, Godot-Regressionen, den isolierten
 Zwei-Prozess-Roundtrip, die 500-Aktionen-Folge samt Neustart, Renderbilder und
 Windows-Export. RP-3 ergänzt den realen Dateiimport/F-04-Export, drei getrennte
 Spiel-/Neustartprozesse sowie eigene Arbeits-/Abschluss-/Albumrenders.
-Der Bericht bindet diese Ergebnisse an Head und Test-Merge; unabhängiges
-RP-6-Review bleibt separat offen, die reale Eigentümer-Lösung ist RP-6-Gate.
+Der Bericht bindet diese Ergebnisse an Head und Test-Merge; die kombinierte
+RP-6-Nachprüfung bleibt separat offen, die reale Eigentümer-Lösung ist RP-6-Gate.
 
 Godot Standard 4.7.2-stable und isolierte Pillow-12.3.0-Umgebung aus der
 [Werkzeuganleitung](../../tools/puzzle_production/README.md); vollständiger Prüfweg
@@ -266,6 +281,7 @@ Prüferdokumente mit Motivspoiler: [F-01](F01_PROOF.md), [F-02/F-03](F02_PROOF.m
 Technische Ergebnisse und Grenzen im [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md);
 der [P1.3-Prüfbericht](../../docs/P1_3_VERIFICATION.md) bleibt ein historischer
 Nachweis seines damaligen Heads.
+
 
 ## RP-6-Spielprobe
 

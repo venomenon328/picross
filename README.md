@@ -2,10 +2,10 @@
 
 Ein geplantes thematisch zusammenhängendes Nonogramm-Spiel für PC: kuratierte klassische und farbige Bildrätsel, ein substanzielles Angebot großer Raster und eine präzise, komfortable Bedienung. Logische Erkenntnisse und größere Projekte stehen im Mittelpunkt; ein sich füllendes illustriertes Album, Sterneprogression und freiwillige Leistungsvergleiche ergänzen das Spiel. Eine perfekte Lösung erfordert einen Durchgang ohne Fehler und ohne Undo.
 
-Unter [prototypes/p1](prototypes/p1/README.md) liegt der integrierte P1.4/G1/H1/Z2-Stand:
+Unter [prototypes/p1](prototypes/p1/README.md) liegt der integrierte P1.4/G1/H1/Z2/RP-3/GP-48-Stand:
 20×20 monochrom, 40×40 mit vier Farben und ein 100×100-UI-Stressraster. RP-3 ergänzt
-im Draft ein neues aus einer realen Bilddatei importiertes 20×20-Blatt. Mausstriche mit direkter
-Füllung↔X-Umwandlung, Undo/Redo, feinem monotonem Zoom/Pan, eigene interaktive Miniatur,
+als integriertes RP-3-Blatt ein aus einer realen Bilddatei importiertes 20×20-Rätsel; RP-6 ergänzt im Draft fünf weitere Pilotblätter. Mausstriche mit
+startzustandsabhängiger Füllung↔X-Umwandlung, Undo/Redo, feinem monotonem Zoom/Pan, eigene interaktive Miniatur,
 unnummerierte farbige Teilhinweise mit unabhängigem Zeilen-/Spalten-Panning und
 motivtreuer Abschluss. Isolierte lokale Spielstände je Blatt mit Undo/Redo,
 Raster-/Hinweisansicht und Primary/Backup-Recovery sind ergänzt. Keine Wertung.
@@ -13,8 +13,12 @@ P1.4 ist mit 500-Aktionen-Prüfweg und bestätigter Eigentümerprobe integriert;
 [Ergebnisbericht](docs/P1_4_VERIFICATION.md). Z2-M01/M02/M03 wurden nicht durchgeführt
 und für PR #33 als Gate aufgehoben. RP-1/RP-2 sind über #42/#43 integriert.
 [Bildwerkzeug](tools/puzzle_production/README.md), [reale Importdateien](examples/rp3/README.md)
-und [RP-3-Nachweise](docs/RP3_VERIFICATION.md) dokumentieren den neuen Produktionsweg;
-unabhängiges technisches/visuelles RP-3-Review bleibt offen.
+und [RP-3-Nachweise](docs/RP3_VERIFICATION.md) dokumentieren den Produktionsweg; RP-3 ist nach Review R2 integriert, RP-6 bleibt in PR #47 in Abnahme.
+
+GP-48 ergänzt startzustandsabhängige Schutzregeln beim Ziehen und drei Hinweiszustände
+mit kräftigeren Ziffern. [Technische Lieferung](docs/GP48_VERIFICATION.md) und
+[gezielte Eigentümerprobe](docs/GP48_OWNER_TRIAL.md) sind nach Review R1 und positiver
+GP48-M01 über PR #49 in `main` integriert. PR #47 baut nun auf diesem Stand auf.
 
 ## Einstieg
 
@@ -30,7 +34,7 @@ unabhängiges technisches/visuelles RP-3-Review bleibt offen.
 - [Herkunft und Aktivierung](docs/DEV_RULES_ADOPTION.md): exakter dev-rules-Stand und Übernahmeweg.
 - [ChatGPT-Projekteinstellungen](docs/CHATGPT_PROJECT_INSTRUCTIONS.md): nach dem Setup-Merge einzusetzender Text.
 
-Produktdefinition, Gestaltungskonzept und P1-Spezifikation trennen bestätigte Entscheidungen von Vorschlägen und offenen Details. P1 verwendet Godot Standard 4.7.2-stable als native Windows-Desktopfassung. Nach D-06 ist Maus der einzige verpflichtende P1-Eingabepfad; spätere alternative Produkteingaben bleiben unverändert. Die endgültige Produkttechnik und Betriebssystemmatrix werden damit nicht festgelegt. Python prüft Dokumente, die F-01-/F-02-Zertifikate und den isolierten Toolchain-/Produktweg. P1.1 bis P1.4, G1/H1 und Z2 sind in `main` integriert; RP-3 wird im eigenen Draft-PR geprüft. Es gibt keinen Release.
+Produktdefinition, Gestaltungskonzept und P1-Spezifikation trennen bestätigte Entscheidungen von Vorschlägen und offenen Details. P1 verwendet Godot Standard 4.7.2-stable als native Windows-Desktopfassung. Nach D-06 ist Maus der einzige verpflichtende P1-Eingabepfad; spätere alternative Produkteingaben bleiben unverändert. Die endgültige Produkttechnik und Betriebssystemmatrix werden damit nicht festgelegt. Python prüft Dokumente, die F-01-/F-02-Zertifikate und den isolierten Toolchain-/Produktweg. P1.1 bis P1.4, G1/H1, Z2, RP-3 und GP-48 sind in `main` integriert; RP-6 wird in PR #47 geprüft. Es gibt keinen Release.
 
 ## Dokumentation prüfen
 
