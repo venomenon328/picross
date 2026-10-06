@@ -28,11 +28,11 @@ static func run(t: SceneTree) -> void:
 		t.check(app.board.view.hit(corner) == Vector2i(19, 19), "ZV50-A01 hit test reaches last cell at pitch " + str(expected))
 
 	var local_anchor: Vector2 = app.board.view.viewport.position + app.board.view.viewport.size * Vector2(0.68, 0.61)
-	var global_anchor: Vector2 = app.board.to_global(local_anchor)
+	var global_anchor: Vector2 = app.board.global_position + local_anchor
 	var coordinate_before: Vector2 = (local_anchor - app.board.view.origin) / app.board.view.cell_size
 	app.board.zoom(1, local_anchor)
 	await t.process_frame
-	var adjusted_anchor: Vector2 = app.board.to_local(global_anchor)
+	var adjusted_anchor: Vector2 = global_anchor - app.board.global_position
 	var coordinate_after: Vector2 = (adjusted_anchor - app.board.view.origin) / app.board.view.cell_size
 	t.check(close(app.board.view.cell_size, 40.0) and coordinate_before.distance_to(coordinate_after) < 0.08, "ZV50-A04 pointer anchor survives viewport growth")
 	t.check(app.board.view.visible_bounds().size.x >= 799.9 and app.board.view.visible_bounds().size.y < 800.0 and not full_grid(app.board), "ZV50-A02 first tested overflow is actual vertical paper limit at 167 percent")
