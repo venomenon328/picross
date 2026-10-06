@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 05.10.2026 · Arbeitsfassung 0.17 · Z2 und RP-3 integriert; RP-4-Vergleich dokumentiert
+Stand: 06.10.2026 · Arbeitsfassung 0.18 · Z2 und RP-3 integriert; RP-4-Vergleich dokumentiert
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -21,7 +21,7 @@ darauffolgende Feedback D-18 bis D-22 entfernt die Zusatzkennungen für P1, rich
 alle Zahlen in einem gemeinsamen Slotraster aus, gibt jeder konkreten Linie eine
 eigene eingerastete Leseposition, setzt 1080p als primäre Startbasis und verlangt
 auch für F-02 eine verfeinerte motivtreue Illustration. Der konkrete P1-Vertrag steht
-in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.15 mit G1, H1, Z2 und F-04. Die Nacharbeit in #11
+in [PROTOTYPE_P1.md](PROTOTYPE_P1.md), nun Revision 0.16 mit G1, H1, Z2 und F-04. Die Nacharbeit in #11
 ergänzt D-23 bis D-27: flüssigen Hinweisdrag mit Einrasten beim Loslassen,
 geringfügig größere getrennte Füllungen, dezente Cursorbänder, geclippte X
 und den geometrischen Live-Strichzähler. Nachweise stehen im P1.3-Prüfbericht;
@@ -186,14 +186,14 @@ Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte An
 
 Die bestätigte Achsenbindung eines Mausstrichs ab der ersten eindeutigen Bewegung in eine weitere Zelle bleibt verbindlich. Für P1 wird sie erst bei tatsächlicher Rückkehr zur Startzelle innerhalb derselben Geste wieder freigegeben; danach kann eine neue Richtung gewählt werden. Eine bloße Projektion oder ein Eingabesprung über den Start löst dies nicht aus. Produktweit bleiben alternative Eingaben vorgesehen. Für P1 gilt jedoch D-06: Maus, kein Tastatur-/Controller-Gate.
 
-**Präzisierung aus den Mausproben:** Das normale Werkzeug neutralisiert vorhandene
-Füllungen mit links und Leermarkierungen mit rechts. Zusätzlich wandelt ein linker
-Setzmodus X direkt in die aktive Farbe und ein rechter Setzmodus Füllungen direkt in
-X um. Die frühere allgemeine Gegenmarkierungs-Schutzregel ist damit abgelöst;
-Rücknahmestriche bleiben auf den am Start vorhandenen Zieltyp beschränkt. Der konkrete,
-am Strichstart festgelegte Modus einschließlich Farbverhalten, elastischer Vorschau
-und Undo-Grenze steht in P1 §5.1. Kein wiederholtes Umschalten derselben Zelle beim
-Zurückziehen.
+**GP-01/#48 präzisiert D-15:** Das normale Werkzeug neutralisiert vorhandene
+Füllungen mit links und X mit rechts. Eine auf unbekannt gestartete Geste setzt
+nur unbekannte Zellen und schützt alle Vorbelegungen. Start auf X plus links
+wandelt X und unbekannt in die eingefrorene aktive Farbe; Start auf Füllung plus
+rechts wandelt Füllungen aller Farb-IDs und unbekannt in X. Rücknahmestriche
+bleiben auf Füllungen beziehungsweise X beschränkt, kein direktes Umfärben.
+Snapshot, Aktionsmodus und Farbe bleiben auch nach G1-Achsenwechsel fest.
+Der konkrete sechszeilige Vertrag steht in P1 §5.1.
 
 Für P1 zeigt ein Live-Zähler während linker und rechter Zellgesten die gesamte
 geometrische aktuelle Strichlänge inklusive Start/Ende, auch bei Vorbelegungen und
@@ -226,8 +226,13 @@ im Produkt. Der spätere separate Z2-Auftrag ersetzt die provisorische Mauspalet
 durch unbeschriftete Originalfarbfelder mit formaler Auswahlmarkierung und numerischem
 Status/Tooltip; die Hinweisregeln bleiben erhalten. Unabhängige UI-/
 Rasterskalierung unterstützt die Lesbarkeit. H1 aus [#19](https://github.com/venomenon328/picross/issues/19)
-ergänzt dezentes Durchstreichen eindeutig erfüllter Hinweiszahlen, bei unveränderter
-Rätselfarbe, Zahlengröße und Slotposition. Es hängt am Originalindex und gilt ebenso
+bleibt die exakte eindeutige Zuordnungsgrundlage. GP-02/#48 unterscheidet normale
+Zahlen, leicht abgeschwächte eindeutig gesetzte Blöcke und durchgestrichene
+zusätzlich beidseitig abgegrenzte Blöcke. X, echter Rasterrand und direkt andere
+Füllfarbe zählen; unbekannte Nachbarn und Viewportränder nicht. GP-03 verwendet
+kräftigere Plex-Sans-Ziffern mit Gewicht 600 bei bisherigem Schriftgrad. Nur der
+mittlere Zustand erhält 78 % Deckkraft, einschließlich seiner C1-Kontur. Farben
+bleiben unterscheidbar; Statuswechsel ändern weder Größe noch Slotposition. Es hängt am Originalindex und gilt ebenso
 im vollständigen Tooltip und während des Hinweisdrags. `…` und Leerlinien-`–`
 werden nicht durchgestrichen. Nur die sichtbaren Zellen einschließlich elastischer
 Vorschau und die eigenen Hinweise der vollständigen Linie bestimmen den Status;
