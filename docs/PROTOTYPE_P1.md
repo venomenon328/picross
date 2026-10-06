@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 04.10.2026 · Spezifikation 0.15 · P1.4/G1/H1/Z2 integriert, RP-3-Inhalt im Draft
+Stand: 06.10.2026 · Spezifikation 0.16 · P1.4/G1/H1/Z2 integriert, RP-3-Inhalt im Draft
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -28,7 +28,7 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 | D-01 | Native Windows-Desktopfassung mit Godot Standard und typisiertem GDScript, Windows-11-Testplattform. | Kein C#/.NET-/Browserparallelweg; keine endgültige Produktstackentscheidung. Versionsbindung in Abschnitt 7. |
 | D-02 | Reduzierte Spielprobe: reale Bearbeitung, Abschluss und später Speicherung; keine Sterne-/Fehlerwertung, Live-Fehlerhilfe oder Hypothesen. | Bestätigte Funktionen des späteren Produkts werden nicht gestrichen. |
 | D-03A | Elastische Strichvorschau: Rückwärtsziehen verkürzt; Loslassen übernimmt eine atomare Aktion. | Unverändert, auch für die neuen Rücknahmestriche. |
-| D-03B | Werkzeug und Modus bleiben je Strich eingefroren; kein Mehrfachtoggle beim Zurückziehen. | Der frühere allgemeine Schutz vorhandener Gegenmarkierungen ist durch D-15 für Füllung↔X abgelöst. |
+| D-03B | Werkzeug und Modus bleiben je Strich eingefroren; kein Mehrfachtoggle beim Zurückziehen. | GP-01/#48 bindet zusätzlich die ursprüngliche Startzustandskategorie; unbekannter Start schützt Gegenmarkierungen. |
 | D-04 | Hintergrundfelder müssen für den Abschluss nicht vollständig ausgekreuzt werden. | Richtige vollständige Füll-/Farbverteilung erforderlich. |
 | D-05 | Referenz: Windows 11, 2560×1440, Maus, Ryzen 7 5800X, RTX 3070. | Frühere Nutzerangaben; tatsächliche Fenstergröße und Anzeigeskalierung der Probe noch nicht vollständig protokolliert. |
 | D-06 | P1 wird mit Maus umgesetzt und abgenommen. | Tastatur-/Controllerbedienung und M-05 sind kein P1-Scope oder Gate; spätere alternative Produkteingaben bleiben erhalten. |
@@ -40,7 +40,7 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 | D-12 | Hinweise bleiben direkt im Arbeitsbild; keine separate Hinweisansicht. | Regulär passende Folgen werden vollständig gezeichnet. Physischer Überlauf erhält je betroffener Linie einen kompakten Marker und vollständigen farbigen Hover-Tooltip im Arbeitskontext. |
 | D-13 | Arbeitszoom hat eine deutlich feinere monotone Stufenfolge. | Gesamtansicht bleibt separat; `+`/Rad hoch vergrößert nur, `−`/Rad runter verkleinert nur oder bleibt am jeweiligen Grenzwert. |
 | D-14 | Farbhinweise zeichnen die Zahl selbst in der Rätselfarbe. | A–D-Suffixe sind standardmäßig aus und als optionale Accessibility-Darstellung einschaltbar. |
-| D-15 | Links wandelt X direkt in die aktive Farbe, rechts eine Füllung direkt in X um. | Rücknahmestriche entfernen weiterhin nur den am Start vorhandenen Zieltyp; direkte Gegenmarkierungsumwandlung gilt für Setzstriche. |
+| D-15 | Links wandelt X direkt in die aktive Farbe, rechts eine Füllung direkt in X um. | GP-01/#48: Gegenmarkierungen nur bei Start auf diesem umzuwandelnden Zustand umwandeln; unbekannter Start schützt Vorbelegungen. Rücknahmestriche bleiben typspezifisch. |
 | D-16 | Überlauf kürzt auf Ebene vollständiger einzelner Hinweise. | Ein unter direkter monotoner Draggeometrie und festen Markerplätzen maximal sinnvoller zusammenhängender Ausschnitt bleibt sichtbar; `…` markiert ausschließlich verborgene Präfixe/Suffixe. Tooltip nur ergänzend. |
 | D-17 | Spalten- und Zeilenhinweisbereich sind unabhängig pannbar. | Spaltenfolgen nur vertikal, Zeilenfolgen nur horizontal; Rasterzuordnung, Rasteransicht und Spielzustand bleiben unverändert. |
 | D-18 | Lösungshinweise zeigen ausschließlich vollständige einzeilige Zahlen in der Rätselfarbe. | Keine A–D-Suffixe, gestapelten Ziffern, Kompaktkästchen oder Umschaltoption; interne Farb-IDs und Mauspalette bleiben. |
@@ -118,21 +118,22 @@ Zellen: `unbekannt`, `leer`, `gefüllt(Farbkennung)`. Farbindizes unabhängig vo
 
 Beim normalen Werkzeug bestimmt die Maustaste zusammen mit dem **bestätigten Startzellzustand** einmalig den Aktionsmodus:
 
-| Taste / Startzustand | Aktion für den gesamten Strich | Veränderbare Zellen |
-| --- | --- | --- |
-| Links / unbekannt oder leer markiert | Aktive Farbe setzen | Unbekannte und leer markierte Zellen werden zur aktiven Farbe. Vorhandene Füllungen bleiben geschützt. |
-| Links / gefüllt, unabhängig von Farbe | Füllungen neutralisieren | Nur gefüllte Zellen werden unbekannt, auch andere vorhandene Farben. Unbekannte und leere Zellen bleiben unverändert. |
-| Rechts / unbekannt oder gefüllt | Leer markieren | Unbekannte und gefüllte Zellen werden zu X. Vorhandene X bleiben geschützt. |
-| Rechts / leer markiert | Leermarkierungen neutralisieren | Nur leer markierte Zellen werden unbekannt; Füllungen bleiben geschützt. |
+[GP-01 / Issue #48](https://github.com/venomenon328/picross/issues/48) ersetzt
+für diesen Stand die bisherigen D-15-Setzregeln. Bewertung immer aus dem ursprünglichen
+Zellsnapshot; gefüllt ist eine Kategorie unabhängig von der Farb-ID.
 
-Ein Einzelklick ist ein Strich der Länge eins. Damit gilt direkt: links
-`unbekannt → aktive Farbe`, `gefüllt → unbekannt`, `X → aktive Farbe`; rechts
-`unbekannt → X`, `X → unbekannt`, `gefüllt → X`. Eine andersfarbige Füllung
-wird links weiterhin neutralisiert und nicht direkt umgefärbt. Bei Strichen wandelt
-ein linker Setzmodus unbekannte/X-Zellen in die eingefrorene aktive Farbe um, ein
-rechter Setzmodus unbekannte/gefüllte Zellen in X. Ein auf einer Füllung gestarteter
-linker Rücknahmestrich neutralisiert nur Füllungen; ein auf X gestarteter rechter
-Rücknahmestrich neutralisiert nur X.
+| Start / Taste | Unbekannte Zelle | X | Füllung |
+| --- | --- | --- | --- |
+| Unbekannt / links | Aktive Farbe | Geschützt | Geschützt |
+| Unbekannt / rechts | X | Geschützt | Geschützt |
+| X / links | Aktive Farbe | Aktive Farbe | Geschützt |
+| X / rechts | Unverändert | Unbekannt | Geschützt |
+| Gefüllt / links | Unverändert | Geschützt | Unbekannt, auch andere Farben |
+| Gefüllt / rechts | X | Geschützt | X, auch andere Farben |
+
+Einzelklicks sind Gesten der Länge eins; bewusste X↔Füllung-Umwandlung bleibt
+möglich. Vorhandene Füllungen werden links nicht direkt umgefärbt. Startzustand,
+Taste, Modus und aktive Farbe bleiben auch bei Rückzug und G1-Achsenneuwahl fest.
 
 Der explizite Radierer bleibt als Universalwerkzeug: links setzt alle vorhandenen Markierungen auf unbekannt. Rechts folgt weiterhin der Leer-/Leerrücknahme-Regel. Beim Hand-Werkzeug verschiebt links ausschließlich die Ansicht. Werkzeug, Aktionsmodus und Setzfarbe bleiben bis zum Ende der Geste eingefroren; keine Neuerkennung pro überfahrener Zelle und kein wiederholtes Umschalten beim Rückwärtsziehen.
 
@@ -247,8 +248,10 @@ verschiedenfarbige dürfen angrenzen. Ein Hinweis ist genau dann erfüllt, wenn 
 mindestens eine kompatible vollständige Linienbelegung gibt, sein Block in allen
 solchen Belegungen dasselbe Intervall hat und dieses bereits vollständig in der
 richtigen Farbe gesetzt ist. Eindeutig erzwungene, aber noch unbekannte Zellen genügen
-nicht. Rand-X sind keine Pflicht; ein mehrdeutiger Mittelblock bei `3 3` bleibt auch
-mit Rand-X unmarkiert. Existiert keine kompatible Belegung, bleiben alle Hinweise
+nicht. GP-02/#48 unterscheidet jetzt drei Anzeigezustände: normal (offen),
+leicht abgeschwächt (eindeutig vollständig gesetzt), durchgestrichen (zusätzlich
+beidseitig abgegrenzt). Ein mehrdeutiger Mittelblock bei `3 3` bleibt auch
+mit Rand-X normal. Existiert keine kompatible Belegung, bleiben alle Hinweise
 dieser Linie unmarkiert. Andere Linien werden unabhängig bewertet.
 
 Keine Verwendung von Lösung, Reveal, Abschluss, Fehlerstatistik, Proof oder kreuzenden
@@ -260,12 +263,23 @@ frisch abgeleitet. Die nebenwirkungsfreie Analyse verwendet begrenzte dynamische
 Programmierung statt vollständiger Enumeration. Ein Cache hält nur den letzten
 Eingang jeder Linie; reine Geometrie-/Hover-/Panänderungen starten keine neue Suche.
 
-Erfüllte Zahlen werden dezent durchgestrichen, bleiben in ihrer Rätselfarbe lesbar
-und behalten Größe, Slot und Originalindex. Das gilt für beide Achsen, Überlauf,
+Für das Durchstreichen muss jedes Ende unmittelbar an X, den tatsächlichen
+Linienrand oder eine vorhandene Füllung mit anderer Farb-ID grenzen. Gemischte
+Abgrenzungen sind erlaubt; der andere Farbblock muss nicht selbst vollständig sein.
+Unbekannte Nachbarn, entfernte X und Ausschnittränder aus Zoom/Pan zählen nicht.
+Die exakte widerspruchsfreie eindeutige Zuordnung bleibt für beide positiven
+Zustände erforderlich; keine neue Farb-/Abstandsregel und keine Auskreuzpflicht
+für den Rätselabschluss.
+
+GP-03 zeichnet alle Hinweiszahlen kräftiger mit dem vorhandenen Plex-Sans-
+Variationsgewicht 600. Der bisherige Schriftgrad bleibt erhalten; der gesetzte,
+noch offene Block erhält 78 % Deckkraft, die Rätselfarbe und C1-Kontur bleiben
+erkennbar. Abgegrenzte Zahlen werden durchgestrichen. Alle drei Zustände behalten
+Größe, Slot und Originalindex. Das gilt für beide Achsen, Überlauf,
 kontinuierlichen Drag und vollständigen Tooltip. `…` und `–` bleiben unverändert.
 Der Schalter „Erfüllte Hinweise markieren“ gilt sitzungsweit für alle Blätter, bleibt
 bei Album-/Blattwechsel und Reset erhalten und startet nach App-Neustart wieder an.
-Aus zeigt normale Zahlen, erneutes Einschalten den aktuellen Stand. Schalter und
+Aus zeigt alle Zahlen ohne Abschwächung/Strich, erneutes Einschalten den aktuellen Stand. Schalter und
 Analyse erzeugen weder Rasteraktion noch History, `undo_used`, Save/Autosave oder
 Abschluss und verändern keine semantische Leseposition. Flags und Option gehören
 nicht zum Puzzle-Saveformat; Pflicht-Flush und Recovery bleiben unverändert.
@@ -468,3 +482,17 @@ bleiben Name, Reveal und Lösungsausschnitt verborgen. Die [RP-3-Prüfzuordnung]
 bindet native Renderbilder; F-01/F-02 samt Proofs/Bildern und F-03 bleiben erhalten.
 Unabhängiges technisches/visuelles RP-3-Review bleibt offen, die reale
 Eigentümer-Lösung ist RP-6-Gate. Parent #34 bleibt offen; kein Merge/Release.
+
+## 12. GP-48: Gameplay-Vertragsänderung
+
+GP-01 bis GP-03 aus [#48](https://github.com/venomenon328/picross/issues/48)
+ersetzen ausschließlich die betroffenen D-15-/H1-Bedien- und Anzeigeregeln in
+§§5.1/5.2. Historische Abnahmen bleiben commitgebunden. Rätseldaten, Palette,
+Proofs, Appidentität und Save-Schema bleiben erhalten; gespeicherte alte Aktionen
+werden als Vor-/Nachwerte replayt, ohne die neue Gestenregel rückwirkend anzuwenden.
+
+[GP-48-Prüfzuordnung](GP48_VERIFICATION.md) und
+[gezielte Eigentümerprobe](GP48_OWNER_TRIAL.md) binden die Lieferung.
+Vor Merge: aktuelle sechs Pflichtjobs, unabhängiges technisches/visuelles Review,
+GP48-M01 und gesonderte Mergefreigabe. PR #47 bleibt getrennt; Integration und
+RP-6-Fortsetzung erfolgen später als eigener Auftrag. Kein Release.

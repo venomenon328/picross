@@ -4,12 +4,21 @@ extends RefCounted
 ## consume one empty cell or the next block (plus its required same-color gap).
 ## Forward reachability and backward feasibility identify every possible start.
 ## O(clues * cells) time/storage; no full placements or puzzle definition.
+enum Status { OPEN, FILLED, CLOSED }
+
+## Kept for H1's exact filled-block predicate; closure is separate display data.
 static func analyze(cells: Array[int], clues: Array) -> Array[bool]:
+	var flags: Array[bool] = []
+	for status: int in analyze_states(cells, clues):
+		flags.append(status != Status.OPEN)
+	return flags
+
+static func analyze_states(cells: Array[int], clues: Array) -> Array[int]:
 	var n: int = cells.size()
 	var k: int = clues.size()
-	var flags: Array[bool] = []
+	var flags: Array[int] = []
 	flags.resize(k)
-	flags.fill(false)
+	flags.fill(Status.OPEN)
 	var ends: Array[PackedInt32Array] = []
 	for i: int in range(k):
 		var length: int = int(clues[i].length)
@@ -69,9 +78,14 @@ static func analyze(cells: Array[int], clues: Array) -> Array[bool]:
 				start = p
 		if start < 0:
 			continue
-		flags[i] = true
+		flags[i] = Status.FILLED
 		for p: int in range(start, start + int(clues[i].length)):
 			if cells[p] != int(clues[i].color):
-				flags[i] = false
+				flags[i] = Status.OPEN
 				break
+		if flags[i] == Status.FILLED and bounded(cells, start - 1, int(clues[i].color)) and bounded(cells, start + int(clues[i].length), int(clues[i].color)):
+			flags[i] = Status.CLOSED
 	return flags
+
+static func bounded(cells: Array[int], index: int, color: int) -> bool:
+	return index < 0 or index >= cells.size() or cells[index] == 0 or (cells[index] > 0 and cells[index] != color)

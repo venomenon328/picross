@@ -115,7 +115,8 @@ class Oracle:
                     before = self.cells[index]
                     eligible = (erase and before != -1 or remove_fill and before > 0
                                 or remove_empty and before == 0 or not (erase or remove_fill or remove_empty)
-                                and (before in (-1, 0) if target > 0 else before == -1 or before > 0))
+                                and (before == -1 or (start == 0 and before == 0) if target > 0
+                                     else before == -1 or (start > 0 and before > 0)))
                     if eligible and before != target:
                         changes.append({"index": index, "before": before, "after": target})
             if not changes:

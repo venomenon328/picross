@@ -42,7 +42,7 @@ static func run(t: SceneTree) -> void:
 		t.check(s.completed and not s.reveal().is_empty(), "actual committed completion " + id)
 		s.player.cells[0] = 1
 		t.check(not s.is_solution(), "extra fill rejects " + id)
-	# D-15 full table, including mixed colors, direct conversion and typed removal.
+	# GP-01 full table, including mixed colors, direct conversion and typed removal.
 	for start_value: int in [-1, 0, 1, 2, 3, 4]:
 		for target: int in [-1, 0, 1, 2, 3, 4]:
 			var p: Player = Player.new(8, 1)
@@ -57,9 +57,9 @@ static func run(t: SceneTree) -> void:
 			for i: int in range(8):
 				if target == -1 or (target > 0 and start_value > 0 and before[i] > 0) or (target == 0 and start_value == 0 and before[i] == 0):
 					expected[i] = -1
-				elif target > 0 and start_value <= 0 and before[i] in [-1, 0]:
+				elif target > 0 and start_value <= 0 and (before[i] == -1 or (start_value == 0 and before[i] == 0)):
 					expected[i] = target
-				elif target == 0 and start_value != 0 and (before[i] == -1 or before[i] > 0):
+				elif target == 0 and start_value != 0 and (before[i] == -1 or (start_value > 0 and before[i] > 0)):
 					expected[i] = target
 			t.check(p.cells == before, "preview does not mutate source")
 			var changed: bool = g.finish(p)
@@ -446,7 +446,7 @@ static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: i
 					var slot: int = int(layout.token_slot) + token_index - int(layout.start)
 					var center: float = b.clue_slot_center(axis, area, layout, slot) + float(layout.visual_shift)
 					var fs: int = b.clue_font_size()
-					var before: float = Board.BODY_FONT.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs) * (0.6 if b.book_layout else 1.0)
+					var before: float = Board.CLUE_FONT.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs) * (0.6 if b.book_layout else 1.0)
 					var after: float = before if axis == "row" else float(fs) * (0.4 if b.book_layout else 0.35)
 					if center - before >= low and center + after <= high:
 						first = mini(first, token_index)

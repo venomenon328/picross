@@ -84,7 +84,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			return
 		pixel_checks += 1
 	if name == "gesture-counter-8" or name.begins_with("g1-counter-"):
-		var font: Font = Board.BODY_FONT
+		var font: Font = Board.CLUE_FONT
 		var fs: int = roundi(15 * app.board.ui_scale)
 		var caption: String = "8" if name == "gesture-counter-8" else name.get_slice("-", 2)
 		var box_size: Vector2 = font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs) + Vector2(14, 10)

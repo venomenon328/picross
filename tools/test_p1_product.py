@@ -5,9 +5,36 @@ from pathlib import Path
 
 from p1_preflight import PreflightError
 from p1_product import EXPECTED_PROJECT_NAME, package, project_name, require_clean_output
+from gp48_delivery import PLAYER_FILES, verify_player_package
 
 
 class ProductHarnessTests(unittest.TestCase):
+    def test_gp48_slim_upload_is_only_player_zip(self):
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
+        step = workflow.split("- name: Upload compact player package\n", 1)[1].split("- name:", 1)[0]
+        self.assertIn("name: picross-p1-player-${{ github.event.pull_request.head.sha || github.sha }}", step)
+        self.assertIn("path: ${{ runner.temp }}/p1-product-output/picross-p1-windows-x86_64.zip\n", step)
+        self.assertIn("if-no-files-found: error", step)
+        self.assertEqual(step.count("path:"), 1)
+
+    def test_gp48_player_contents_and_report_are_checked(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            build = root / "build"
+            build.mkdir()
+            for name in ("picross-p1.exe", "picross-p1.console.exe"):
+                (build / name).write_bytes(name.encode())
+            extra = root / "extra.txt"
+            extra.write_text("neutral", encoding="utf-8")
+            extras = {name: extra for name in PLAYER_FILES - {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json"}}
+            manifest = dict(source_commit="b" * 40, source_tree_dirty=False)
+            artifact = package(build, root, manifest, "neutral instructions", extras)
+            self.assertEqual(set(verify_player_package(artifact, manifest)["files"]), PLAYER_FILES)
+            with zipfile.ZipFile(artifact, "a") as bundle:
+                bundle.writestr("renders/screenshot.png", b"technical")
+            with self.assertRaisesRegex(PreflightError, "contents"):
+                verify_player_package(artifact, manifest)
+
     def test_exit_zero_with_script_error_fails(self):
         with self.assertRaises(PreflightError):
             require_clean_output(dict(name="import", exit_code=0, output="SCRIPT ERROR: parse failure"))
