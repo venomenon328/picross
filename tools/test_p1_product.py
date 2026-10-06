@@ -17,6 +17,13 @@ class ProductHarnessTests(unittest.TestCase):
         self.assertIn("if-no-files-found: error", step)
         self.assertEqual(step.count("path:"), 1)
 
+    def test_zv50_review_upload_is_separate(self):
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
+        step = workflow.split("- name: Upload ZV-50 native zoom comparisons\n", 1)[1].split("- name:", 1)[0]
+        self.assertIn("name: zv50-review-${{ github.event.pull_request.head.sha || github.sha }}", step)
+        self.assertIn("path: ${{ runner.temp }}/p1-product-output/picross-zv50-review.zip\n", step)
+        self.assertEqual(step.count("path:"), 1)
+
     def test_gp48_player_contents_and_report_are_checked(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
