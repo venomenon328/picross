@@ -27,7 +27,8 @@ class ProductHarnessTests(unittest.TestCase):
             extra = root / "extra.txt"
             extra.write_text("neutral", encoding="utf-8")
             extras = {name: extra for name in PLAYER_FILES - {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json"}}
-            manifest = dict(source_commit="b" * 40, source_tree_dirty=False)
+            manifest = dict(source_commit="b" * 40, source_tree_dirty=False,
+                            render_metrics={2: (0.25, 0.78)})
             artifact = package(build, root, manifest, "neutral instructions", extras)
             self.assertEqual(set(verify_player_package(artifact, manifest)["files"]), PLAYER_FILES)
             with zipfile.ZipFile(artifact, "a") as bundle:

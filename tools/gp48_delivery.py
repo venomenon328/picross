@@ -23,7 +23,10 @@ def verify_player_package(archive: Path, manifest: dict) -> dict:
         expected = PLAYER_FILES | (exports - executables)
         if set(names) != expected or len(names) != len(expected):
             raise toolchain.PreflightError("Unexpected GP-48 player ZIP contents")
-        if json.loads(bundle.read("product-report.json")) != manifest:
+        # The technical report is JSON: tuples become arrays and numeric keys
+        # become strings. Compare its exact serialized bytes, not Python types.
+        expected_report = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+        if bundle.read("product-report.json") != expected_report:
             raise toolchain.PreflightError("Player report differs from technical report")
         for name, digest in manifest["export_files"].items():
             if hashlib.sha256(bundle.read(name)).hexdigest() != digest:
