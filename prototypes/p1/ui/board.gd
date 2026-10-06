@@ -159,11 +159,11 @@ static func next_zoom_step(current: float, direction: int) -> float:
 func _zoom_to_with_layout(step: float, anchor: Vector2) -> void:
 	var actual_anchor: Vector2 = anchor if view.viewport.has_point(anchor) else view.viewport.get_center()
 	var centered: bool = actual_anchor.distance_to(view.viewport.get_center()) < 0.01
-	var anchor_global: Vector2 = to_global(actual_anchor)
+	var anchor_global: Vector2 = global_position + actual_anchor
 	var coordinate: Vector2 = (actual_anchor - view.origin) / view.cell_size
 	view.cell_size = step
 	viewport_layout_requested.emit()
-	var adjusted_anchor: Vector2 = view.viewport.get_center() if centered else to_local(anchor_global)
+	var adjusted_anchor: Vector2 = view.viewport.get_center() if centered else anchor_global - global_position
 	view.center = coordinate - (adjusted_anchor - view.viewport.get_center()) / view.cell_size
 	view.reframe()
 
