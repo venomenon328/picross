@@ -6,19 +6,25 @@ Automatisierte Eingaben zählen nicht als echte Lösungsprobe.
 
 ## Benannten Windows-Stand starten
 
-1. Das vollständige `picross-p1-windows-x86_64.zip` aus dem im Draft-PR gebundenen
-   Produktlauf laden. ZIP-SHA-256 mit dem PR-Beleg vergleichen und in einen neuen
-   Ordner entpacken. Keine Teststände hineinkopieren.
-2. Im entpackten Ordner PowerShell öffnen und `./rp6-owner.ps1 -Trial meine-probe`
+1. Im Draft-PR den direkt verlinkten Actions-Download
+   `picross-p1-player-<Quellcommit>` laden. Dieses **schlanke Spielerartefakt**
+   enthält ausschließlich die eigentliche `picross-p1-windows-x86_64.zip`;
+   den großen technischen Evidenzdownload mit `renders/`, Logs und Replays
+   ausdrücklich **nicht** für die Eigentümerprobe verwenden. Actions-Digest und
+   Quellcommit müssen mit dem PR-Beleg übereinstimmen.
+2. Die SHA-256 der enthaltenen `picross-p1-windows-x86_64.zip` mit dem PR-Beleg
+   vergleichen und diese ZIP in einen neuen Ordner entpacken. Sie enthält keine
+   Teststände oder Entwicklungsrender.
+3. Im entpackten Ordner PowerShell öffnen und `./rp6-owner.ps1 -Trial meine-probe`
    ausführen. Der Launcher prüft den EXE-Hash gegen den Produktreport, zeigt den
    Quellcommit und verwendet ein eigenes temporäres Profil. Falls die lokale
    Skriptrichtlinie den Start blockiert, zunächst diesen Befund melden; keine
    globale Richtlinienänderung nötig. Keine vorhandenen normalen Saves ersetzen.
-3. Für Fortsetzung denselben Ordner, Commit und `-Trial`-Namen verwenden. Nach
+4. Für Fortsetzung denselben Ordner, Commit und `-Trial`-Namen verwenden. Nach
    normalem Beenden wieder mit demselben Befehl starten. `-Status` zeigt nur den
    Prüfpfad und Dateidaten. Temporäre Dateien können vom System bereinigt werden;
    vor längerer Pause nach geschlossenem Spiel den angezeigten Prüfstand sichern.
-4. Im Album öffnet ein Klick ein Blatt; die Auswahl ist scrollbar. UI 100/125 %
+5. Im Album öffnet ein Klick ein Blatt; die Auswahl ist scrollbar. UI 100/125 %
    und Hilfe stehen im Menü. Links füllen, rechts X, Rad zoomen, Hand/mittlere
    Taste verschieben. Undo/Redo bleiben erhalten. Die kleine Vorschau zeigt nur
    eigene Einträge. Zum Abschluss genügen richtige Füllungen ohne Zusatzfüllung;

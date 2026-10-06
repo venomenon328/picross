@@ -46,11 +46,18 @@ python tools/p1_product.py --cache-dir <externer-cache> --output-dir <neues-ziel
 
 `product` erzeugt den kompletten Windows-Spielstand als ZIP **ohne gespeicherte
 Teststände**, mit neutraler Anleitung und isoliertem `rp6-owner.ps1`-Launcher.
-Die EXE bindet alle Ressourcen offline ein. `rp6-review-<Head>` enthält separat
-Manifest/Plan, sechs Paaransichten, native Bildausgaben, alle 60 unverkleinerten
-RP-6-Renderbilder, Produkt-/Replayreport und Datei-Hashinventar. `report.json`
-bindet Quellhead, Basis, getesteten Checkout/Test-Merge, Run, vollständiges
-Windows-ZIP und EXE-Dateien. Native Bilddateien werden nicht durch Montagen ersetzt.
+Die EXE bindet alle Ressourcen offline ein. Der Produktworkflow veröffentlicht
+genau diese `picross-p1-windows-x86_64.zip` zusätzlich als eigenständiges
+`picross-p1-player-<Head>`-Artefakt für die Eigentümerprobe. Dieses schlanke
+Artefakt enthält keine Entwicklungsrender, Logs, Replays oder Teststände; der
+direkte Link sowie Actions-Digest, innerer ZIP-Hash und EXE-Hashes stehen im PR.
+Der vollständige technische Produktoutput bleibt davon getrennt als Evidenz erhalten.
+
+`rp6-review-<Head>` enthält separat Manifest/Plan, sechs Paaransichten, native
+Bildausgaben, alle 60 unverkleinerten RP-6-Renderbilder, Produkt-/Replayreport und
+Datei-Hashinventar. `report.json` bindet Quellhead, Basis, getesteten
+Checkout/Test-Merge, Run, vollständiges Windows-ZIP und EXE-Dateien. Native
+Bilddateien werden nicht durch Montagen ersetzt.
 
 Erfolgreicher Linux-CI-Export ist kein Windows-Start. Ein isolierter Windows-
 Start des tatsächlich heruntergeladenen Artefakts wird gegebenenfalls zusätzlich
