@@ -17,7 +17,6 @@ from pathlib import Path
 # Module invocation and direct script invocation share the repository package.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.puzzle_production.rp3_demo import demonstrate as demonstrate_rp3
-from tools.puzzle_production.rp6 import verify_package as verify_rp6
 
 import p1_preflight as toolchain
 import p14_integration
@@ -103,6 +102,8 @@ def main() -> int:
         proof_steps = verify(json.loads((DATA / "f01.json").read_text(encoding="utf-8")), json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8")))
         color_proof_steps = verify_f02(json.loads((DATA / "f02.json").read_text(encoding="utf-8")), json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8")))
         rp3 = demonstrate_rp3(root, output / "rp3")
+        # Documentation/harness unit tests remain standard-library-only.
+        from tools.puzzle_production.rp6 import verify_package as verify_rp6
         rp6 = verify_rp6(output / "rp6")
         metadata = toolchain.request_json(toolchain.RELEASE_API)
         editor = toolchain.EDITORS[host]

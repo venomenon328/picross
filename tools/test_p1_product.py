@@ -1,4 +1,6 @@
 import tempfile
+import subprocess
+import sys
 import unittest
 import zipfile
 from pathlib import Path
@@ -8,6 +10,13 @@ from p1_product import EXPECTED_PROJECT_NAME, package, project_name, require_cle
 
 
 class ProductHarnessTests(unittest.TestCase):
+    def test_harness_import_needs_no_image_dependency(self):
+        root = Path(__file__).resolve().parents[1]
+        result = subprocess.run([sys.executable, "-S", "-c",
+                                 "import sys; sys.path.insert(0,'tools'); import p1_product"],
+                                cwd=root, capture_output=True, text=True, timeout=15)
+        self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+
     def test_exit_zero_with_script_error_fails(self):
         with self.assertRaises(PreflightError):
             require_clean_output(dict(name="import", exit_code=0, output="SCRIPT ERROR: parse failure"))
