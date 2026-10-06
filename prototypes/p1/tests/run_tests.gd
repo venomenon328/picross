@@ -42,6 +42,7 @@ func run() -> void:
 	await preload("res://tests/h1_cases.gd").run(self)
 	await preload("res://tests/gp48_cases.gd").run(self)
 	await preload("res://tests/z2_cases.gd").run(self)
+	await preload("res://tests/zv50_cases.gd").run(self)
 	if OS.get_cmdline_user_args().has("--force-failure"):
 		check(false, "P1_EXPECTED_FAILURE")
 	print("P1_TEST_RESULT checks=%d failures=%d" % [checked, failures])
