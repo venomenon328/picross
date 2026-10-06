@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 06.10.2026 · Arbeitsfassung 0.18 · Z2 und RP-3 integriert; RP-4-Vergleich dokumentiert
+Stand: 06.10.2026 · Arbeitsfassung 0.19 · Z2/GP-48 integriert; ZV-50 spezifiziert
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -159,6 +159,8 @@ Beim Öffnen könnte das Rätselblatt zur großzügigen Arbeitsfläche werden. M
 Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
 
 **Präzisierung aus der Mausprobe:** Fensterfläche, Oberflächenskalierung und Rasterzoom getrennt behandeln. 1080p und 1440p sollen sinnvoll nutzbar sein, ohne kleine Rätsel automatisch auf die gesamte Arbeitsfläche zu vergrößern. Mehr Fläche darf mehr Ausschnitt oder ruhige Ränder bedeuten. Konkrete Startwerte und Tests für P1 stehen ausschließlich in der P1-Spezifikation; sie sind keine allgemeingültigen Pixelwerte des späteren Designsystems.
+
+**ZV-50 / #50:** Die ruhige Standarddarstellung eines kleinen Rasters bleibt erhalten, darf aber den späteren Arbeitszoom nicht als unsichtbare feste Clippingbox begrenzen. Oberhalb 100 % nutzt das Raster im nicht kompakten Buchlayout die freie Papierfläche bis zu echten Hinweis-/Titel-, Miniatur- und Werkzeuggrenzen. Für 20×20 sind bei 1920×1080/UI 100 % alle Arbeitsstufen bis einschließlich 150 % vollständig sichtbar; erst danach ist ein Ausschnitt legitim. Kleinere Flächen/UI 125 % werden nach ihrem realen Platz beurteilt. Die größere sichtbare Fläche darf weder Zellen, Hinweise noch Trefferflächen verkleinern oder unter Bedienung zeichnen.
 
 Die gefüllten Zellen brauchen einen erkennbaren Zwischenraum beziehungsweise eine kontrastierende Trennung auch zu dunklen Fünferlinien. Innenabstand, Linienbreite, Farben und Ebenenreihenfolge gemeinsam prüfen. Der in der Mausprobe gezeigte Fall dreier angrenzender Füllzellen an einer Fünfergrenze darf nicht wie eine einzige umgedrehte L-Form aussehen. Fünfergruppen sollen dabei weiterhin gut zählbar bleiben. Prüfung an dunklen und allen angebotenen Farbzellen, Arbeitszoom und Vorschau, nicht nur an einem leeren Raster.
 
