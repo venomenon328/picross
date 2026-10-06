@@ -54,3 +54,11 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           compression-level: 0
+      - name: Upload RP-6 compact review package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: rp6-review-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/p1-product-output/rp6-review/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0

@@ -15,8 +15,9 @@ in der EXE eingebettet. Kein Fontdownload oder Godotsetup beim Spieler.
 [aktuelle Prüfung und sichere Eigentümeranleitung](../../docs/Z2_VERIFICATION.md).
 Z2 ist nach Review und Mergefreigabe über PR #33 integriert. Z2-M01/M02/M03
 wurden nicht durchgeführt; der Eigentümer hob das damalige Gate für diesen Merge
-auf. RP-3/#37 ergänzt den neuen importierten Inhalt F-04 im Draft; dessen
-unabhängiges technisches/visuelles Review bleibt offen.
+auf. RP-3/#37 ist nach unabhängigem Review R2 über PR #44 integriert.
+RP-6/#40 ergänzt fünf weitere feste Pilotblätter im Draft; unabhängiges Review
+und tatsächliche Eigentümerproben bleiben offen.
 [RP-3-Prüfzuordnung](../../docs/RP3_VERIFICATION.md),
 [Importdateien und Herkunft](../../examples/rp3/README.md). Dies ist ein Testexport.
 
@@ -55,8 +56,9 @@ G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ist über 
 integriert und ergänzt die erneute Achsenwahl nach tatsächlicher Rückkehr
 zur Startzelle. H1/#19 ist über PR #20 auf diesem kombinierten Stand integriert. F-01 (20×20),
 F-02 (40×40, vier Farben), F-03 (100×100, ausdrücklich UI-Testdatensatz)
-und F-04 (20×20 monochrom, neuer RP-3-Dateiimport)
-sind direkt zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
+und F-04 (20×20 monochrom, RP-3-Dateiimport) bleiben erhalten. RP-6 ergänzt
+F-05 (100×100 Mono), F-06 (50×50 Farbe), F-07 (100×100 Farbe),
+F-08/F-09 (40×40 Farbe). Alle neun sind im scrollbar erreichbaren Album zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
 Zusatzkennungen. Alle Zeilen beziehungsweise Spalten teilen sich je ein festes
 Hinweisraster; jede konkrete Linie behält darin ihre eigene eingerastete Leseposition.
@@ -75,8 +77,8 @@ CI-Lauf, Engine-/Archivhashes, EXE-Hashes und Prüfphasen. Artefaktlink im PR.
 Godot löst `user://p1/saves/` im projektbezogenen User-Data-Verzeichnis auf.
 Unter Windows liegt dieses standardmäßig unter
 `%APPDATA%\Godot\app_userdata\picross · P1\p1\saves\` (bei benutzerdefiniertem
-Godot-Datenpfad entsprechend dort). Die vier bekannten Inhalts-IDs ergeben
-`f01.json`, `f02.json`, `f03.json`, `f04.json` mit gleichnamigen `f01.bak`/`f01.tmp` usw.
+Godot-Datenpfad entsprechend dort). Die neun bekannten Inhalts-IDs ergeben
+`f01.json` bis `f09.json` mit gleichnamigen `f01.bak`/`f01.tmp` usw.
 Tests verwenden nur eigene temporäre Profile; das ZIP enthält keine
 Spielstände.
 
@@ -232,7 +234,7 @@ Zwei-Prozess-Roundtrip, die 500-Aktionen-Folge samt Neustart, Renderbilder und
 Windows-Export. RP-3 ergänzt den realen Dateiimport/F-04-Export, drei getrennte
 Spiel-/Neustartprozesse sowie eigene Arbeits-/Abschluss-/Albumrenders.
 Der Bericht bindet diese Ergebnisse an Head und Test-Merge; unabhängiges
-RP-3-Review bleibt separat offen, die reale Eigentümer-Lösung ist RP-6-Gate.
+RP-6-Review bleibt separat offen, die reale Eigentümer-Lösung ist RP-6-Gate.
 
 Godot Standard 4.7.2-stable und isolierte Pillow-12.3.0-Umgebung aus der
 [Werkzeuganleitung](../../tools/puzzle_production/README.md); vollständiger Prüfweg
@@ -264,3 +266,12 @@ Prüferdokumente mit Motivspoiler: [F-01](F01_PROOF.md), [F-02/F-03](F02_PROOF.m
 Technische Ergebnisse und Grenzen im [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md);
 der [P1.3-Prüfbericht](../../docs/P1_3_VERIFICATION.md) bleibt ein historischer
 Nachweis seines damaligen Heads.
+
+## RP-6-Spielprobe
+
+Für die neue Eigentümerprobe die [neutrale Anleitung](../../docs/RP6_OWNER_TRIAL.md)
+verwenden. Das Windows-ZIP enthält `rp6-owner.ps1` für einen eigenen temporären
+Prüfstand und die Fortsetzung unter gleichem Commit/Prüfnamen. Technische
+Motivspoiler liegen im getrennten `rp6-review`-Artefakt. Sechs Pilotproben im
+Produktprüfweg ergänzen je drei Prozesse und zehn native Ansichten; kein
+automatisierter Lauf ist eine reale Lösung oder Phasenentscheidung.

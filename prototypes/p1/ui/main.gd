@@ -36,7 +36,9 @@ var mini: Miniature
 var album_mini: Miniature
 var album_picture: Reveal
 var reveal_view: Reveal
-var album: VBoxContainer
+var album: ScrollContainer
+var album_content: VBoxContainer
+var album_grid: GridContainer
 var work: Control
 var ending: VBoxContainer
 var title: Label
@@ -150,15 +152,23 @@ func _build() -> void:
 	page.add_child(status_label)
 	stress_label = label("UI-Testdatensatz – Rätselqualität nicht abgenommen", 14)
 	page.add_child(stress_label)
-	album = VBoxContainer.new()
+	album = ScrollContainer.new()
+	album.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	album_content = VBoxContainer.new()
+	album_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	album.add_child(album_content)
 	album.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	page.add_child(album)
-	album.add_child(label("Vier Blätter zum Entdecken", 28))
-	var choice_row: HBoxContainer = HBoxContainer.new()
-	album.add_child(choice_row)
+	album_content.add_child(label("Neun Blätter zum Entdecken", 28))
+	album_grid = GridContainer.new()
+	album_grid.columns = 3
+	album_grid.add_theme_constant_override("h_separation", 16)
+	album_grid.add_theme_constant_override("v_separation", 12)
+	album_content.add_child(album_grid)
 	for i: int in range(sessions.size()):
 		var slot_column: VBoxContainer = VBoxContainer.new()
-		choice_row.add_child(slot_column)
+		album_grid.add_child(slot_column)
+		slot_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var choice: Button = button(sessions[i].album_title() + (" · UI-Test" if i == 2 else ""), select_puzzle.bind(i))
 		choices.append(choice)
 		slot_column.add_child(choice)
@@ -176,21 +186,21 @@ func _build() -> void:
 		album_slot_status.append(slot_note)
 	album_mini = Miniature.new()
 	album_mini.custom_minimum_size = Vector2(240, 240)
-	album.add_child(album_mini)
+	album_content.add_child(album_mini)
 	album_picture = Reveal.new()
 	album_picture.paired = false
 	album_picture.custom_minimum_size = Vector2(240, 240)
-	album.add_child(album_picture)
+	album_content.add_child(album_picture)
 	open_button = button("Blatt öffnen", open_puzzle)
 	open_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	album.add_child(open_button)
-	album.add_child(label("Jedes Blatt speichert den eigenen Arbeitsstand lokal.", 16))
+	album_content.add_child(open_button)
+	album_content.add_child(label("Jedes Blatt speichert den eigenen Arbeitsstand lokal.", 16))
 	var reset_button: Button = button("Arbeitsstand zurücksetzen", _ask_reset)
 	reset_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	album.add_child(reset_button)
+	album_content.add_child(reset_button)
 	repair_button = button("Backup zum Speichern übernehmen", _ask_repair)
 	repair_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	album.add_child(repair_button)
+	album_content.add_child(repair_button)
 	reset_dialog = ConfirmationDialog.new()
 	reset_dialog.title = "Arbeitsstand zurücksetzen?"
 	reset_dialog.dialog_text = "Nur das ausgewählte Blatt wird vollständig zurückgesetzt."
@@ -536,7 +546,7 @@ func _smoke() -> void:
 			return
 		return_to_work()
 	show_album()
-	print("P1_START_OK: four fixtures -> mouse -> undo -> album; isolated persistence")
+	print("P1_START_OK: nine fixtures -> mouse -> undo -> album; isolated persistence")
 	get_tree().quit(0)
 
 func _icon_button(id: String, action: Callable, parent: Control) -> BookButton:
@@ -779,6 +789,9 @@ func _layout_book() -> void:
 	_place(title,Rect2(o+Vector2(w*0.043,h*0.039),Vector2(w*0.6,45*u)))
 	_place(stress_label,Rect2(o+Vector2(w*0.043,h*0.039+46*u),Vector2(w*0.7,28*u)))
 	_place(album,Rect2(o+Vector2(90,130),Vector2(w-180,h-200)))
+	for choice: Button in choices:
+		choice.custom_minimum_size.y = 44 * ui_scale
+		choice.add_theme_font_size_override("font_size", int(16 * ui_scale))
 	_place(ending,Rect2(o+Vector2(100,120),Vector2(w-200,h-180)))
 	_place(information,Rect2(Vector2.ZERO,size))
 	_place(actions["nav-work"],Rect2(o+Vector2(100,110),Vector2.ONE*hit))

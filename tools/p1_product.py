@@ -10,17 +10,20 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import zipfile
 from pathlib import Path
 
 # Module invocation and direct script invocation share the repository package.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.puzzle_production.rp3_demo import demonstrate as demonstrate_rp3
+from tools.puzzle_production.rp6 import verify_package as verify_rp6
 
 import p1_preflight as toolchain
 import p14_integration
 import z2_resources
 import z2_review
+import rp6_review
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -45,6 +48,7 @@ def require_clean_output(result: dict, marker: str | None = None) -> None:
 
 def run_phase(name: str, command: list[str], environment: dict, timeout: int, logs: Path) -> dict:
     print(f"RUN {name}", flush=True)
+    started = time.monotonic()
     try:
         process = subprocess.run(command, env=environment, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout, check=False)
     except subprocess.TimeoutExpired as exc:
@@ -52,7 +56,7 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
     output = process.stdout + process.stderr
     (logs / f"{name}.log").write_text(output, encoding="utf-8")
     print(output, flush=True)
-    return dict(name=name, exit_code=process.returncode, output=output)
+    return dict(name=name, exit_code=process.returncode, output=output, seconds=time.monotonic()-started)
 
 
 def package(build: Path, output: Path, manifest: dict, readme: str, extras: dict[str, Path] | None = None) -> Path:
@@ -99,6 +103,7 @@ def main() -> int:
         proof_steps = verify(json.loads((DATA / "f01.json").read_text(encoding="utf-8")), json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8")))
         color_proof_steps = verify_f02(json.loads((DATA / "f02.json").read_text(encoding="utf-8")), json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8")))
         rp3 = demonstrate_rp3(root, output / "rp3")
+        rp6 = verify_rp6(output / "rp6")
         metadata = toolchain.request_json(toolchain.RELEASE_API)
         editor = toolchain.EDITORS[host]
         assets = (editor, toolchain.TEMPLATES)
@@ -132,6 +137,26 @@ def main() -> int:
                 phase("rp3-" + stage, base + ["--script", "res://tests/rp3_probe.gd"], "RP3_" + stage.upper() + "_OK")
             del environment["RP3_STAGE"]
             del environment["P1_TEST_SAVE_ROOT"]
+            pilot_saves = workspace / "rp6-saves"
+            environment["P1_TEST_SAVE_ROOT"] = str(pilot_saves)
+            slot_checks = []
+            for index in range(3,9):
+                environment["RP6_INDEX"] = str(index)
+                for stage in ("partial", "finish", "read"):
+                    # F-01 is flushed when leaving the initial album selection;
+                    # compare gameplay in GDScript and byte-preserve other pilots here.
+                    untouched = {p.name: toolchain.sha256_file(p) for p in pilot_saves.glob("*")
+                                 if p.is_file() and not p.name.startswith(("f01.", f"f{index+1:02d}."))}
+                    environment["RP6_STAGE"] = stage
+                    phase(f"rp6-f{index+1:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
+                          "RP6_" + stage.upper() + "_OK")
+                    if any(toolchain.sha256_file(pilot_saves / name) != sha for name,sha in untouched.items()):
+                        raise toolchain.PreflightError("Another pilot save changed")
+                    slot_checks.append(dict(index=index,stage=stage,unchanged_files=untouched))
+            rp6["separate_slot_checks"] = slot_checks
+            del environment["P1_TEST_SAVE_ROOT"]
+            del environment["RP6_STAGE"]
+            del environment["RP6_INDEX"]
             integration_dir = output / "integration"
             integration_dir.mkdir(exist_ok=True)
             integration_plan = integration_dir / "plan.json"
@@ -201,6 +226,13 @@ def main() -> int:
             phase("z2-render-capture", z2_command, "Z2_CAPTURE_OK")
             rp3_command = ["res://tests/rp3_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
             phase("rp3-render-capture", rp3_command, "RP3_CAPTURE_OK")
+            rp6_command = ["res://tests/rp6_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
+            environment["P1_TEST_SAVE_ROOT"] = str(pilot_saves)
+            for index in range(3,9):
+                environment["RP6_INDEX"] = str(index)
+                phase(f"rp6-f{index+1:02d}-render", rp6_command, "RP6_CAPTURE_OK")
+            del environment["RP6_INDEX"]
+            del environment["P1_TEST_SAVE_ROOT"]
             before = z2_review.before_project(root, workspace)
             phase("z2-before-import", [engine, "--headless", "--path", str(before), "--import"])
             before_command = [str(before) if arg == str(project) else
@@ -256,20 +288,24 @@ def main() -> int:
                             owner_probe_sha256=toolchain.sha256_file(owner_probe),
                             book_resources=book_resources,
                             rp3=rp3,
+                            rp6=rp6,
                             h1_probe_files=h1_files,
                             h1_probe_export_files=h1_exports,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
-                            checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="OPEN: RP-3 independent technical/visual review before merge; real owner solution is RP-6 gate. Z2 integrated via #33; Z2-M01/M02/M03 not performed and explicitly waived for that merge.")
-            extras = {"Z2-PRUEFUNG.md": root / "docs/Z2_VERIFICATION.md",
-                      "RP3-PRUEFUNG.md": root / "docs/RP3_VERIFICATION.md",
+                            checks=[dict(name=item["name"], exit_code=item["exit_code"], seconds=item.get("seconds")) for item in results],
+                            manual_acceptance="OPEN: RP-6 independent technical/visual review, editorial release, actual owner solutions/large trial and phase decision. No merge/release. Parent #34 remains open.")
+            pilot_launcher = output / "rp6-owner.ps1"
+            pilot_launcher.write_text((root / "tools/rp6_owner.ps1").read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
+            extras = {"RP6-SPIELPROBE.md": root / "docs/RP6_OWNER_TRIAL.md",
+                      "rp6-owner.ps1": pilot_launcher,
                       "owner-probe.ps1": owner_probe}
             for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
                 extras["licenses/" + path.name] = path
             extras["licenses/resources.json"] = root / "prototypes/p1/art/book/manifest.json"
-            archive = package(build, output, manifest, (root / "prototypes/p1/README.md").read_text(encoding="utf-8"), extras)
+            archive = package(build, output, manifest, (root / "docs/RP6_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
             review_zip = z2_review.package(root, output, manifest, archive)
+            rp6_review.package(root, output, manifest, archive)
             print(f"REVIEW {review_zip} sha256:{toolchain.sha256_file(review_zip)}", flush=True)
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)

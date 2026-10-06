@@ -413,3 +413,23 @@ Abbruch nicht zur logischen Freigabe auf. Vorher/Nachher, alle Änderungen,
 Schutzmaske und Einzelurteile stehen offline bereit. Neuer begrenzter
 `rp5-repair`-CI-Job mit zehn Minuten hartem Joblimit; die bisherigen Fachtests,
 Referenzen, RP-3-Demo, RP-4-Replay und Windowsregression bleiben aktiv.
+
+## RP-6 · begrenzter Sechserpilot
+
+`python -m tools.puzzle_production.rp6 --output-dir artifacts/rp6-replay`
+prüft den vorab gebundenen Plan, vollständiges Manifest, tatsächliche native
+Bilddateien/Rahmenanpassung und alle sechs Exporte gegen die registrierten
+P1-Dateien. Neues Ausgabeziel verwenden; keine Baseline überschreiben. Gleiche
+isolierte Python-3.11+-Umgebung mit Pillow exakt 12.3.0.
+
+Additiver Adapter `rp6-p1-square-color-1` / `picross-p1-export-v2`: feste
+F-05 bis F-09, quadratisch, höchstens vier Farben; vollständiger RP-3-Import-
+oder RP-5-Reparaturreplay, exakte Enddomains, lokale begrenzte SVG/PNG-Dateien.
+`export_pilot` ist der interne Adapter; keine öffentliche Spieler-Importfunktion.
+Der alte v1-Adapter/F-04 und seine Negativfälle bleiben erhalten.
+
+Gezielte Tests: `python -m unittest discover -s tests/puzzle_production -p test_rp6.py -v`.
+Vollständige Fachtests und bestehende Replays bleiben zusätzlich erforderlich.
+[Plan/Bilanz/Paaransichten](../../examples/rp6/README.md),
+[Prüfzuordnung](../../docs/RP6_VERIFICATION.md). Eigentümerproben und
+Phasenentscheidung bleiben offen; kein Merge/Release.

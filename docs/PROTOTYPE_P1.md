@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 04.10.2026 · Spezifikation 0.15 · P1.4/G1/H1/Z2 integriert, RP-3-Inhalt im Draft
+Stand: 06.10.2026 · Spezifikation 0.16 · P1.4/G1/H1/Z2/RP-3 integriert, RP-6-Pilot im Draft
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -309,7 +309,7 @@ Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
 
-P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den vier fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gültigen Arbeitszoom oder Gesamtansichtsmodus, aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
+P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den neun fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gültigen Arbeitszoom oder Gesamtansichtsmodus, aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 
 Vor Anwendung werden Schema, exakte Definition/Revision, Matrix/Palette, jede nichtleere atomare History-Aktion mit eindeutigen Indizes und gültigen Vor-/Nachwerten, das widerspruchsfreie Replay ab unbekanntem Raster einschließlich Redo, Cursor-Matrix-Gleichheit, `undo_used`, Abschluss und View vollständig geprüft. Unbekannte oder unpassende Daten werden weder teilweise geladen noch still migriert. Der Rasterfokus wird bei Resize gültig begrenzt; Hinweis-Offsets werden aus Rasterende, äußerem Anfang oder mittlerem Tokenfenster für die aktuelle Geometrie neu abgeleitet.
 
@@ -466,5 +466,27 @@ Ereignisse geprüft: Auswahl, falscher Eintrag/eigene Miniatur, Undo/Redo,
 Teilstand, Neustart, Abschluss und erneuter Neustart samt Album. Vor Abschluss
 bleiben Name, Reveal und Lösungsausschnitt verborgen. Die [RP-3-Prüfzuordnung](RP3_VERIFICATION.md)
 bindet native Renderbilder; F-01/F-02 samt Proofs/Bildern und F-03 bleiben erhalten.
-Unabhängiges technisches/visuelles RP-3-Review bleibt offen, die reale
+RP-3 ist nach unabhängigem Review R2 über PR #44 integriert; die reale
 Eigentümer-Lösung ist RP-6-Gate. Parent #34 bleibt offen; kein Merge/Release.
+
+## 12. RP-6: sechs feste Pilotinhalte
+
+F-04 bleibt byteidentisch einschließlich Revision und SVG. F-05 bis F-09 sind
+zusätzliche Schema-2-Definitionen/Save-Slots: 100×100 Mono, 50×50 Farbe,
+100×100 Farbe, zweimal 40×40 Farbe. Lokale quadratische PNGs `art/f05.png`
+bis `art/f09.png` sind je ID fest gebunden. Adapter v2 prüft Import oder
+vollständigen RP-5-Reparaturvertrag; technische Zertifizierung ist keine
+redaktionelle Freigabe. Quelle/Palette/Matrix/Proof und Ressourcen stehen im
+[Pilotmanifest](../examples/rp6/manifest.json).
+
+Das vorhandene Album erhält ein scrollbar erreichbares Dreispaltenraster; alle
+neun Blätter sind auch bei 1280×720/UI 125 % wählbar. Keine neue Progression
+oder Albumarchitektur. Appidentität, Save-Schema 1, F-01 bis F-04 und deren
+Revisionen bleiben erhalten. Font-/C1-, Maus-, Spoiler- und H1-Verträge gelten
+für die neuen Paletten unverändert. Vor Abschluss nur eigene Miniatur, danach
+korrekt gebundener Name und Ressource; alle sechs mit isolierter Fortsetzung
+und tatsächlichen nativen Renderbildern geprüft.
+
+[RP-6-Nachweise](RP6_VERIFICATION.md) und [neutrale Spielprobe](RP6_OWNER_TRIAL.md).
+Unabhängiges technisches/visuelles Review und M01–M04 aus #40 bleiben
+Abnahmegates. Eine automatisierte Lösung ersetzt keine Eigentümerprobe.

@@ -44,7 +44,7 @@ func setup(viewport: Viewport) -> void:
 	target.add_child(app)
 	await process_frame
 	await process_frame
-	check(app.sessions.size() == 4 and app.sessions[3].definition.id == "F-04", "regular registration of neutral F-04")
+	check(app.sessions.size() == 9 and app.sessions[3].definition.id == "F-04", "regular registration of neutral F-04")
 	check(Definition.load_fixture("../art/f04").is_empty() and Definition.load_fixture("unknown").is_empty(), "fixed definition paths reject unregistered IDs")
 	check(app.store.path_for("../f04").is_empty(), "save paths reject traversal")
 	check(Definition.validate(app.sessions[3].definition).is_empty(), "schema/hints/reveal validate")
