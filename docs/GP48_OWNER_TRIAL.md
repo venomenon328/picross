@@ -15,12 +15,13 @@ Keine Godot-Installation nötig. Unsignierte Windows-Debugprobe, kein Release.
 PowerShell im entpackten Spielerordner, mit einem neuen TEMP-Unterordner:
 
 ```powershell
-.\gp48-owner.ps1 -Profile (Join-Path $env:TEMP 'picross-gp48-meine-probe')
+powershell -NoProfile -ExecutionPolicy Bypass -File .\gp48-owner.ps1 -Profile (Join-Path $env:TEMP 'picross-gp48-meine-probe')
 ```
 
 Der Helfer prüft EXE/Head und startet mit eigenen APPDATA-/LOCALAPPDATA-Pfaden.
 Denselben Ordner nur für die Fortsetzung desselben Heads verwenden. Normale Saves
-bleiben getrennt. Keine globale Skriptrichtlinie ändern. Falls die lokale Richtlinie
+bleiben getrennt. `-ExecutionPolicy Bypass` gilt nur für diesen gestarteten Prozess;
+keine globale Skriptrichtlinie wird geändert. Falls eine verbindliche Richtlinie
 den Helfer sperrt, die Prüfung als nicht gestartet dokumentieren.
 Das isolierte Profil enthält nur F-01 bis F-04; bisherige RP-6-Spielarbeit bleibt
 in ihrem eigenen Profil. Die spätere Zusammenführung/Fortsetzung ist separat.
