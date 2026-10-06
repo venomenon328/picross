@@ -1,4 +1,4 @@
-"""Check the exact neutral GP-48 player ZIP, separate from technical evidence."""
+"""Check the exact neutral P1 player ZIP, separate from technical evidence."""
 import hashlib
 import json
 import zipfile
@@ -8,7 +8,8 @@ import p1_preflight as toolchain
 
 PLAYER_FILES = {
     "picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json",
-    "GP48-SPIELPROBE.md", "gp48-owner.ps1", "licenses/Fraunces-OFL.txt",
+    "GP48-SPIELPROBE.md", "gp48-owner.ps1", "ZV50-SPIELPROBE.md", "zv50-owner.ps1",
+    "licenses/Fraunces-OFL.txt",
     "licenses/PlexSans-OFL.txt", "licenses/resources.json",
 }
 
@@ -19,10 +20,10 @@ def verify_player_package(archive: Path, manifest: dict) -> dict:
         exports = set(manifest["export_files"])
         executables = {"picross-p1.exe", "picross-p1.console.exe"}
         if not executables <= exports or exports - executables - {"picross-p1.pck"}:
-            raise toolchain.PreflightError("Unexpected GP-48 export files")
+            raise toolchain.PreflightError("Unexpected P1 export files")
         expected = PLAYER_FILES | (exports - executables)
         if set(names) != expected or len(names) != len(expected):
-            raise toolchain.PreflightError("Unexpected GP-48 player ZIP contents")
+            raise toolchain.PreflightError("Unexpected P1 player ZIP contents")
         # The technical report is JSON: tuples become arrays and numeric keys
         # become strings. Compare its exact serialized bytes, not Python types.
         expected_report = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
