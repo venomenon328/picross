@@ -107,6 +107,11 @@ erfolgreichen Retry.
 Startziel: 1920×1080 Clientfläche, auf den verfügbaren Arbeitsbereich einschließlich Fensterrahmen
 begrenzt. Unter 1280×720 erscheint eine verständliche Meldung. Vergrößern des Fensters
 zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht automatisch.
+Die kompakte 20×20-Standarddarstellung bleibt bei 100 % 480×480. Oberhalb 100 %
+wächst der Rasterviewport im nicht kompakten Buchlayout in die freie Papierfläche:
+bei 1920×1080/UI 100 % bleiben 133 % und 150 % vollständig sichtbar; erst der
+nächste Arbeitszoom bei rund 167 % trifft im gezielt geprüften Fall die echte
+vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clippen.
 
 ## Bearbeiten und zurücknehmen
 

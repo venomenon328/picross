@@ -6,6 +6,7 @@ const ClueCompletion = preload("res://model/clue_completion.gd")
 signal edited
 signal committed
 signal view_changed
+signal viewport_layout_requested
 signal pointed(cell: Vector2i)
 const BODY_FONT = preload("res://art/book/PlexSans.ttf")
 const CLUE_FONT = preload("res://ui/clue_font.tres")
@@ -155,6 +156,17 @@ static func next_zoom_step(current: float, direction: int) -> float:
 				return WORK_STEPS[i]
 	return current
 
+func _zoom_to_with_layout(step: float, anchor: Vector2) -> void:
+	var actual_anchor: Vector2 = anchor if view.viewport.has_point(anchor) else view.viewport.get_center()
+	var centered: bool = actual_anchor.distance_to(view.viewport.get_center()) < 0.01
+	var anchor_global: Vector2 = global_position + actual_anchor
+	var coordinate: Vector2 = (actual_anchor - view.origin) / view.cell_size
+	view.cell_size = step
+	viewport_layout_requested.emit()
+	var adjusted_anchor: Vector2 = view.viewport.get_center() if centered else anchor_global - global_position
+	view.center = coordinate - (adjusted_anchor - view.viewport.get_center()) / view.cell_size
+	view.reframe()
+
 func zoom(direction: int, anchor: Vector2) -> void:
 	if session.gesture.active:
 		return
@@ -162,7 +174,7 @@ func zoom(direction: int, anchor: Vector2) -> void:
 	if is_equal_approx(step, view.cell_size):
 		return
 	overview = false
-	view.zoom_to(step, anchor if view.viewport.has_point(anchor) else view.viewport.get_center())
+	_zoom_to_with_layout(step, anchor)
 	normalize_clue_steps()
 	view_changed.emit()
 	edited.emit()
@@ -172,7 +184,7 @@ func working_size() -> void:
 	if session.gesture.active:
 		return
 	overview = false
-	view.zoom_to(24.0, view.viewport.get_center())
+	_zoom_to_with_layout(24.0, view.viewport.get_center())
 	normalize_clue_steps()
 	view_changed.emit()
 	edited.emit()
@@ -182,6 +194,7 @@ func fit_all() -> void:
 	if session.gesture.active:
 		return
 	overview = true
+	viewport_layout_requested.emit()
 	_layout()
 	view_changed.emit()
 
@@ -208,6 +221,7 @@ func restore_view(state: Dictionary) -> void:
 		column_clue_reads.append(read.duplicate(true))
 	row_clue_steps.resize(session.player.height)
 	column_clue_steps.resize(session.player.width)
+	viewport_layout_requested.emit()
 	_layout()
 	view.reframe()
 	clear_clue_hover()

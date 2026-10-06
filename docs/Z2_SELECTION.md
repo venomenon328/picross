@@ -45,6 +45,10 @@ statt der SVG-Verläufe. Die fünf Referenzzustände werden ausdrücklich im Cap
 gesetzt; das Spiel erhält gespeicherten Zoom und die bisherigen 20 Arbeitsstufen.
 Zwischengrößen reservieren zuerst die tatsächlichen Trefferflächen und begrenzen
 den Rasterviewport oberhalb der Werkzeuge. Kein unsichtbares Verkleinern der Zellen.
+Die in Z2 gebundenen Rastermaße sind Standard-/Referenzflächen, keine Obergrenzen
+für spätere Arbeitszoomstufen. [#50](https://github.com/venomenon328/picross/issues/50)
+konkretisiert dies: oberhalb 100 % darf der native Viewport in freie Papierfläche
+wachsen, solange dieselben Treffer-/Hinweis-/Bediengrenzen erhalten bleiben.
 
 Das A-Master bleibt aufbereitetes 1672×941-Material auf 2560×1440, keine nativ
 erzeugte 1440p-Illustration. Untere Retuschestelle und weichere Detailauflösung

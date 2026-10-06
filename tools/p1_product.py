@@ -23,6 +23,7 @@ import z2_resources
 import z2_review
 import gp48_review
 import gp48_delivery
+import zv50_review
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -218,6 +219,15 @@ def main() -> int:
             phase("gp48-before-capture", [str(gp_before) if arg == str(project) else arg for arg in gp_command], "GP48_CAPTURE_OK")
             del environment["GP48_VARIANT"]
             gp_comparison = gp48_review.verify_pairs(renders)
+            zv_command = ["res://tests/zv50_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
+            environment["ZV50_VARIANT"] = "after"
+            phase("zv50-after-capture", zv_command, "ZV50_CAPTURE_OK")
+            zv_before = zv50_review.before_project(root, workspace)
+            phase("zv50-before-import", [engine, "--headless", "--path", str(zv_before), "--import"])
+            environment["ZV50_VARIANT"] = "before"
+            phase("zv50-before-capture", [str(zv_before) if arg == str(project) else arg for arg in zv_command], "ZV50_CAPTURE_OK")
+            del environment["ZV50_VARIANT"]
+            zv50_comparison = zv50_review.verify_pairs(renders)
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
@@ -259,6 +269,8 @@ def main() -> int:
                                    encoding="utf-8-sig", newline="\n")
             gp_owner = output / "gp48-owner.ps1"
             gp_owner.write_text((root / "tools/gp48_owner.ps1").read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
+            zv_owner = output / "zv50-owner.ps1"
+            zv_owner.write_text((root / "tools/zv50_owner.ps1").read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
             manifest = dict(schema=1, source_commit=commit, source_tree_dirty=dirty, tested_checkout_commit=checkout_commit,
                             host=host, engine_version=toolchain.EXPECTED_VERSION, project_name=title, assets=hashes, proof_steps=proof_steps, color_proof_steps=color_proof_steps,
                             artwork_files={name: toolchain.sha256_file(root / "prototypes/p1/art" / name) for name in ("f01.svg", "f02.svg")},
@@ -271,23 +283,29 @@ def main() -> int:
                             rp3=rp3,
                             gp48=gp_comparison,
                             gp48_owner_sha256=toolchain.sha256_file(gp_owner),
+                            zv50=zv50_comparison,
+                            zv50_owner_sha256=toolchain.sha256_file(zv_owner),
                             h1_probe_files=h1_files,
                             h1_probe_export_files=h1_exports,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"]) for item in results],
-                            manual_acceptance="OPEN: GP48 independent technical/visual review and GP48-M01 before merge; no merge/release authorized. RP-6 integration/trials remain separate.")
+                            manual_acceptance="Issue #50 owner explicitly authorized implementation and merge on 2026-10-06. ZV50-M01 and an independent #50 review are not performed and are waived only for this merge; this is not a positive manual acceptance. RP-6 integration/trials remain separate.")
             extras = {"GP48-SPIELPROBE.md": root / "docs/GP48_OWNER_TRIAL.md",
-                      "gp48-owner.ps1": gp_owner}
+                      "gp48-owner.ps1": gp_owner,
+                      "ZV50-SPIELPROBE.md": root / "docs/ZV50_OWNER_TRIAL.md",
+                      "zv50-owner.ps1": zv_owner}
             for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
                 extras["licenses/" + path.name] = path
             extras["licenses/resources.json"] = root / "prototypes/p1/art/book/manifest.json"
-            archive = package(build, output, manifest, (root / "docs/GP48_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
+            archive = package(build, output, manifest, (root / "docs/ZV50_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
             player_delivery = gp48_delivery.verify_player_package(archive, manifest)
             (output / "gp48-player-audit.json").write_text(json.dumps(player_delivery, indent=2) + "\n", encoding="utf-8")
             review_zip = z2_review.package(root, output, manifest, archive)
             gp_review = gp48_review.package(root, output, manifest, archive)
+            zv_review = zv50_review.package(root, output, manifest, archive)
             print(f"GP48 REVIEW {gp_review} sha256:{toolchain.sha256_file(gp_review)}", flush=True)
+            print(f"ZV50 REVIEW {zv_review} sha256:{toolchain.sha256_file(zv_review)}", flush=True)
             print(f"REVIEW {review_zip} sha256:{toolchain.sha256_file(review_zip)}", flush=True)
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)
