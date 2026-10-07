@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-Stand: 06.10.2026 · Arbeitsfassung 0.5 · Produktkonzept mit spezifizierter Rätselproduktion
+Stand: 07.10.2026 · Arbeitsfassung 0.6 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
 
 ## 1. Geltung und Herkunft
 
@@ -107,6 +107,16 @@ vollständige Hintergrundauskreuzung. GP-01 schützt bei unbekanntem Gestenstart
 Vorbelegungen; bewusste Umwandlung startet auf X beziehungsweise Füllung.
 GP-03 kräftigt nur die Hinweisziffern, bei erhaltener Farb- und Slotzuordnung.
 
+Die am 07.10.2026 freigegebene [zeichnerische UI-Spezifikation](UI_DRAWING_STYLE.md)
+ergänzt kurze abschaltbare Zellanimationen erst beim tatsächlichen Anwenden einer
+Aktion. Während des Ziehens zeigt die elastische Vorschau den vorgesehenen
+Endzustand statisch und leicht heller beziehungsweise transparenter. Loslassen
+übernimmt den Strich atomar; alle tatsächlich geänderten Zellen animieren
+gleichzeitig. Weitere Eingaben werden dadurch nicht blockiert. Spielzustand,
+Rücknahme und Speicherung warten nicht auf das Animationsende; eine neuere
+Vorschau oder Änderung derselben Zelle hat Vorrang. Die visuelle Vorschau ist
+keine zusätzliche Hypothesenebene.
+
 Hypothesen als mögliche Zustände „unsicher gesetzt“ und „unsicher leer“ wurden zur Untersuchung vorgeschlagen. Die Funktion ist noch nicht abschließend spezifiziert; insbesondere ist nicht entschieden, ob ihre Nutzung mit einer perfekten Bewertung vereinbar ist. Der Nutzer setzt selbst überwiegend nur sicher hergeleitete Felder. Hypothesen ändern nicht das Versprechen, dass Rätsel ohne notwendiges Raten lösbar sein müssen.
 
 ### 5.2 Frühe visuelle Arbeit
@@ -115,7 +125,20 @@ Thematik, visuelle Identität und weit ausgearbeitete UI-Konzepte werden früh u
 
 Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlungen, Bearbeitung und Enthüllungen gestalterisch zusammenführen. Eine komplexe Geschichte ist nicht erforderlich. Eine zusätzliche Wirtschaftssimulation, Währungen oder ein Aufbauspiel folgen daraus nicht automatisch.
 
-Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Die Gestaltung geht in Richtung handgezeichneter 2D-Illustration mit klaren gezeichneten Konturen und ruhigen, nicht zu blassen Farbflächen. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar; die Arbeitsansicht soll nicht steril wirken, das Raster selbst aber sachlich und präzise bleiben.
+Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Die Gestaltung geht in Richtung handgezeichneter 2D-Illustration mit klaren gezeichneten Konturen und ruhigen, nicht zu blassen Farbflächen. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
+
+Priorität haben optisch kräftigere, kompakte und klar unterscheidbare Hinweisziffern
+sowie satte Füllflächen mit zurückhaltender, pro Zelle stabiler Strichtextur.
+Gezeichnete X bleiben eindeutige, dem entstehenden Motiv untergeordnete
+Arbeitsmarkierungen. Zelltrennung, Rätselfarben und Hinweiszustände bleiben klar
+lesbar; bei kleinen Zellen wird die Textur vereinfacht. Die eigene Miniatur bleibt
+für den Überblick bewusst einfacher. Wenige zusätzliche Randdetails führen die
+Buchgestaltung fort, verraten kein Motiv und treten bei Platzbedarf zurück.
+Die [UI-Spezifikation](UI_DRAWING_STYLE.md) trennt diese beschlossene Richtung
+von der noch ausstehenden nativen Auswahl konkreter Schrift-, Textur- und
+Bewegungswerte in [ZS-1 / #52](https://github.com/venomenon328/picross/issues/52)
+und deren Integration in [ZS-2 / #53](https://github.com/venomenon328/picross/issues/53).
+Ein vollständiger Themen- oder Layoutwechsel folgt daraus nicht.
 
 Die endgültige Themenwahl bleibt ausdrücklich offen: A ist ein thematisches Sammelalbum, B ein Reisetagebuch beziehungsweise Weltreisealbum mit regionalen Motiven. Die näheren Entscheidungen, Beispiele und offenen Interaktionen stehen im [Gestaltungskonzept](DESIGN_CONCEPT.md). Die positive Rückmeldung zu einem exemplarischen Mock legt weder eine dieser Alternativen noch alle darin dargestellten Details verbindlich fest.
 
@@ -127,6 +150,7 @@ Dies sind vom Nutzer benannte Erfahrungen und Vorbilder, keine recherchierte Mar
 
 - Mario's Picross (Game Boy) und Mario's Super Picross (SNES): positive Referenzen für Präsentation und Progression. Insbesondere die kolorierte Auflösung abstrahierter monochromer Motive dient als Anschauung für das gewünschte Erlebnis.
 - Griddlers (PC): Erfahrung mit sehr großen und farbigen Rätseln. Trotz Zoom kam es beim Scrollen großer Raster zu Orientierungsverlust; genau diese Schwäche soll das eigene Bedienkonzept vermeiden.
+- Squeakross (Screenshotvergleich vom 07.10.2026): veranschaulicht den gewünschten Grad einer charaktervollen Spieloberfläche. Ausdrücklich keine Vorlage für das eigene UI, seine Anordnung oder seine Assets; die eigene Buchrichtung bleibt Grundlage.
 
 Die Referenzen legen weder eine Nachbildung ihrer Gestaltung noch die Übernahme fremder Assets nahe.
 

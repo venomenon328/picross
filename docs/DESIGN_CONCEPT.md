@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 06.10.2026 · Arbeitsfassung 0.19 · Z2/GP-48 integriert; ZV-50 spezifiziert
+Stand: 07.10.2026 · Arbeitsfassung 0.20 · Z2/GP-48/ZV-50 integriert; zeichnerische UI spezifiziert
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -30,6 +30,13 @@ durchgeführte Eigentümerprobe wurde für PR #33 ausdrücklich als Gate aufgeho
 Das ist weder eine endgültige Themenentscheidung noch ein vollständiges
 Designsystem.
 
+Die Spezifikationsfreigabe vom 07.10.2026 ergänzt die
+[zeichnerische UI](UI_DRAWING_STYLE.md): kräftigere kompakte Hinweisziffern,
+eigene Füll-/X-Striche, zurückhaltende Randdetails und kurze Zellanimationen.
+Die ausdrücklich korrigierte Bewegungsregel gilt: statische hellere Vorschau
+während des Ziehens, Animation erst beim tatsächlichen Anwenden. Diese
+Folgearbeit ist spezifiziert, noch nicht implementiert oder visuell abgenommen.
+
 ## 2. Bestätigte gestalterische Grundlage
 
 | Bereich | Bestätigte Entscheidung |
@@ -37,9 +44,12 @@ Designsystem.
 | Sammlung | Ein Album füllt sich mit erarbeiteten Bildern und kann einen erkennbar vollständigen Zustand erreichen. Keine zusätzlich beschlossene Raumansicht. |
 | Zeichenstil | Handgezeichnete 2D-Illustration mit klaren Konturen und ruhigen, nicht zu blassen Farbflächen. Nicht automatisch Retro-Pixel-Art für die gesamte Oberfläche. |
 | Stimmung | Warm, neugierig und dennoch ruhig. |
-| Spielbildschirm | Thematik bleibt dezent sichtbar, das Raster sachlich und präzise. Größere Fenster dürfen nicht zu unnötig riesigen Zellen führen. |
+| Spielbildschirm | Thematik bleibt dezent sichtbar; das geometrisch präzise Raster trägt selbst den gezeichneten Spielcharakter. Größere Fenster dürfen nicht zu unnötig riesigen Zellen führen. |
 | Zelllesbarkeit | Füllungen bleiben einzeln erkennbar, insbesondere an kräftigen Fünferlinien. Raster und Füllung dürfen nicht optisch zu einer gemeinsamen Fläche verschmelzen. |
+| Zellstil | Kräftige Farbflächen mit dezenter stabiler Strichtextur; gezeichnete X bleiben gegenüber dem Motiv zurückhaltend. Textur bei kleinen Zellen vereinfachen, Miniatur bewusst ruhig halten. |
 | Hinweise | Am Raster stehen nur Lösungshinweise, ohne laufende Randnummern. Vollständige einzeilige farbige Zahlen rasten in gemeinsame feste Plätze; jede konkrete Zeile/Spalte hat ihre eigene Leseposition. Seitengerechte Marker und vollständige Hover-Auflösung bleiben Ergänzungen im Arbeitsbild. Keine A–D-Suffixe in P1. |
+| Hinweisgestalt | Kompaktere, optisch kräftigere Ziffern mit klaren Innenräumen; alle drei Hinweiszustände, Farben, Konturen und die gemeinsame Slotzuordnung bleiben lesbar. Konkrete Auswahl durch die native Gestaltungsprobe. |
+| Zellbewegung | Statische hellere/transparente Vorschau während des Ziehens; erst angewendete Änderungen animieren kurz und gleichzeitig. Abschaltbar, ohne zusätzliche Eingabesperre oder Verzögerung des Spielzustands. |
 | Sammelbilder | Das Rätselmotiv ist eine klar erkennbare Stilisierung des detaillierteren Ergebnisbilds. F-01 und F-02 zeigen dieselbe ruhige Kontur-/Farbflächensprache; keine Pflicht zu pixelidentischer Silhouette oder bloßer Kolorierung. |
 | Perfektion | Ein perfekter Durchgang ist ohne Fehler und ohne Undo. Details und offene Wertungsfragen stehen in der Produktdefinition, Abschnitt 6.2. |
 | Hypothesen | Nicht abschließend entschieden, auch nicht ihre Vereinbarkeit mit Perfektion. |
@@ -63,7 +73,7 @@ Ein möglicher Ansatz sind mehrere früh zugängliche Reisekapitel statt einer s
 
 ### Gemeinsamer Vergleich
 
-A und B bleiben bis zu einer ausdrücklichen Entscheidung parallel untersuchbar. Keine erzwungene Mischform. Album und sachlicher Arbeitsbereich können beiden dienen; Atmosphäre und Kapitelorganisation unterscheiden sich.
+A und B bleiben bis zu einer ausdrücklichen Entscheidung parallel untersuchbar. Keine erzwungene Mischform. Album und präziser gezeichneter Arbeitsbereich können beiden dienen; Atmosphäre und Kapitelorganisation unterscheiden sich.
 
 Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vorgeschlagen: identische Hinweise, eigener Stand, Miniatur, Werkzeuge und Informationsumfang, ergänzt um Albumansicht und Abschluss. Das ist ein Entwurfsmaßstab, kein bereits gelieferter mathematisch identischer oder spielbarer Vergleich.
 
@@ -86,6 +96,14 @@ für diesen Merge auf. RP-3 ist nach eigenem technischem/visuellem Review R2
 über PR #44 integriert; die reale Eigentümer-Lösung bleibt RP-6-Gate.
 Die [RP-4-Sichtprüfung](RP4_VERIFICATION.md) bewertet neue Produktionsraster,
 keine neue P1-Bedienabnahme.
+
+Die neue ZS-Folgearbeit aus Abschnitt 4.4 öffnet GD-03 ausschließlich für die
+Gestaltung der Hinweisziffern. Fraunces für Titel, Plex Sans für übrige UI,
+A-Arbeitsasset, Buchkomposition, N1 und die C1-Farb-/Kontursemantik bleiben die
+Grundlage. Konkrete abweichende Ziffern-, Schriftgrad- oder Slotwerte werden
+erst im nativen Vergleich begründet gewählt; eine Änderung dieser Werte ist
+kein Selbstzweck. Die historischen GD-Auswahl- und Abnahmenachweise bleiben
+an ihren jeweiligen Stand gebunden.
 
 ### BP-1R bis BP-3: Entwurfsverlauf und integrierte Grundlagen
 
@@ -147,8 +165,9 @@ Zehn Größen-/Artworkkompositionen und statische Zustandsnachweise bildeten die
 Entscheidungsgrundlage. Technisches/visuelles Review und Mergefreigabe dieses
 Studienstands sind abgeschlossen. Der Eigentümer wählte anschließend A, die gemeinsame
 UI, Fraunces/IBM Plex Sans und C1; die frühere Bearbeiterempfehlung B ist historisch.
-#27 ist damit geschlossen. #23 liegt als native Draft-Lieferung vor; seine eigenen
-Prüf-/Abnahmegates bleiben separat. #24 wurde noch nicht begonnen.
+#27 ist damit geschlossen. #23 ist über PR #33 integriert; die dort nicht
+durchgeführte Eigentümerprobe wurde ausdrücklich als damaliges Mergegate
+aufgehoben. #24 wurde noch nicht begonnen.
 
 ### 4.1 Album und Arbeitsansicht
 
@@ -180,7 +199,61 @@ Die frühere P1.1-Prüfung auf identische Silhouetten war eine enge technische F
 
 Ein möglicher Ablauf bleibt: Hinweise, Leermarkierungen und Raster treten zurück; das gelöste Motiv bleibt sichtbar; daraus entsteht die detailliertere Fassung; anschließend Name und gegebenenfalls spätere Bewertung/Albumeintrag. Auch bei Farbrätseln genügt die bloße Freistellung oder erneute Präsentation desselben gelösten Rasters nicht als bestätigtes Qualitätsziel; ihre Abschlussmotive folgen der konsistenten motivtreuen Verfeinerungsrichtung. Das schreibt weder identische Auflösungen noch eine allgemeine Assetpipeline oder eine hochaufgelöste Neuzeichnung jedes Motivs vor. Keine feste Animationsfolge. P1 hat weiterhin keine Wertung.
 
-Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte Animationen bleiben sinnvolle Vorschläge, keine automatisch beauftragten Funktionen. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur. Eine bloße Freistellung desselben Farbrasters genügt für F-02 ausdrücklich nicht mehr.
+Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte Abschlussanimationen bleiben sinnvolle Vorschläge, keine automatisch beauftragten Funktionen. Davon getrennt ist das Abschalten der Zellanimationen inzwischen durch ZS bestätigt. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur. Eine bloße Freistellung desselben Farbrasters genügt für F-02 ausdrücklich nicht mehr.
+
+### 4.4 Zeichnerische Hinweiszahlen, Zellmarkierungen und Randdetails
+
+Die am 07.10.2026 freigegebene Richtung führt die Buchgestaltung innerhalb der
+Arbeitsfläche fort. Hinweisziffern und Zellmarkierungen haben Vorrang; wenige
+Randdetails verbinden sie mit Werkzeugen und Miniaturfassung. Die
+[detaillierte Spezifikation](UI_DRAWING_STYLE.md) führt den Vertrag und die
+Pakete [ZS-1 / #52](https://github.com/venomenon328/picross/issues/52)
+(native Gestaltungsprobe) und [ZS-2 / #53](https://github.com/venomenon328/picross/issues/53)
+(Integration) unter #21.
+
+Hinweisziffern sollen ihren Platz optisch besser ausfüllen und durch klare
+Strichstärken kompakter wirken. Ziffernform, Gewicht, Größe und Ausrichtung
+werden zuerst beurteilt; geänderte Slotabstände benötigen eine begründete
+Wahl im Vergleich und erhalten das gemeinsame regelmäßige Hinweisraster.
+Ein- und mehrstellige Zahlen einschließlich `1`, `11`, `17`, `40` und `100`
+müssen in normalem, abgeschwächtem und durchgestrichenem Zustand lesbar
+bleiben. Unregelmäßige Handschrift, abgeschnittene Ziffern und verdrängte
+Überlaufmarker erfüllen das Ziel nicht.
+
+Gefüllte Zellen erhalten eine kräftige Grundfläche in der jeweiligen
+Rätselfarbe und eine zurückhaltende Schraffur beziehungsweise Strichtextur.
+Variationen bleiben pro Zelle stabil, auch bei erneutem Zeichnen; die
+Fläche darf im Inneren leicht organisch wirken. Sie bleibt von Nachbarzellen
+und Fünferlinien zuverlässig getrennt. Reine dünne Schraffuren ohne tragende
+Grundfläche sind kein bevorzugter Ansatz. Bei kleinen Zellgrößen werden
+Texturdetails vereinfacht, damit Motive zusammenhängend erkennbar bleiben.
+Ein dominanter Sepiafilter oder schwarze Textur darf die Rätselfarben nicht
+einander angleichen.
+
+X bestehen aus zwei kurzen, klaren gezeichneten Stiftstrichen. Auch bei sehr
+vielen Auskreuzungen dominiert das entstehende Motiv. Unbekannte Felder
+bleiben ruhig; Status und Treffergeometrie sind eindeutig. Die Miniatur
+zeigt weiterhin ausschließlich eigene Eingaben einschließlich Fehlern und
+Vorschau, verwendet zur Orientierung aber eine einfachere Flächendarstellung
+ohne jede kleinteilige Schraffur oder eigene Animationsfolge.
+
+Zusätzliche Randverzierungen, dezente Materialspuren und kleine Akzente sind
+als gemeinsame Zeichensprache mit den Werkzeugen vorgesehen. Sie liegen
+außerhalb der eigentlichen Zahlen-/Rasterarbeit, verraten kein Rätselmotiv
+und treten bei Zoom oder engem Fenster zurück. Die nutzbare freie Papierfläche
+aus ZV-50 und die unverdeckten Bedienelemente bleiben erhalten. Konkrete
+Ornamente, Schriftdateien, Deckkräfte und Bewegungskurven sind noch keine
+ausgewählten oder abgenommenen Assets.
+
+ZS-1 vergleicht zwei eng verwandte native Ausprägungen: kräftige Tinte mit
+feiner Schraffur und weichere Stiftflächen mit gezeichneten Konturen. Tinte
+ist die Ausgangsempfehlung, noch keine Eigentümerwahl. Dieselben echten
+Mono-/Farbspielstände, viele X, lange Hinweise und ein Großrasterausschnitt
+dienen dem Vergleich bei tatsächlicher Spielgröße. Die ausgewählte Kombination
+aus Ziffern, Füllung, X und kurzer Bewegung ist das Ergebnis dieser Probe;
+ZS-2 integriert sie mit gezielten Regressionen. #24 beurteilt anschließend
+die längere reale Nutzung. Die Spezifikationsfreigabe beginnt keines dieser
+Umsetzungspakete und ersetzt keine spätere Gestaltungs- oder Bedienabnahme.
 
 ## 5. Bedienung und Wertung
 
@@ -196,6 +269,26 @@ rechts wandelt Füllungen aller Farb-IDs und unbekannt in X. Rücknahmestriche
 bleiben auf Füllungen beziehungsweise X beschränkt, kein direktes Umfärben.
 Snapshot, Aktionsmodus und Farbe bleiben auch nach G1-Achsenwechsel fest.
 Der konkrete sechszeilige Vertrag steht in P1 §5.1.
+
+**ZS / statische Vorschau, Animation bei Übernahme:** Während der Zellgeste
+erscheint die vorgesehene endgültige Markierung ohne Bewegung, leicht heller
+beziehungsweise transparenter. Verlängern, Zurückziehen und Abbrechen
+aktualisieren diese Vorschau unmittelbar. Erst beim Loslassen und tatsächlichen
+Anwenden starten alle wirksam geänderten Zellen gleichzeitig ihre kurze
+Bestätigungsanimation. Unveränderte oder geschützte Zellen animieren nicht;
+Abbruch erzeugt keinen Effekt. Eine neue Vorschau oder Änderung derselben
+Zelle hat Vorrang vor einem älteren Effekt.
+
+Der Zeichenauftrag verdichtet die Vorschau zur endgültigen Füllung oder
+zieht die X-Striche nach, ohne die Markierung zuvor vollständig verschwinden
+zu lassen. Effekte bleiben innerhalb ihrer Zelle. Etwa 100–180 ms sind
+Ausgangswerte zur Erprobung, keine bereits gemessenen Idealwerte; auch ein
+langer Strich erhält keine gestaffelte Warteschlange. Eine nächste Eingabe,
+Undo/Redo oder ein Seitenwechsel warten nicht auf Animationen. Zellzustand,
+Hinweisermittlung, atomare History und Speicherung sind unabhängig vom
+Animationsfortschritt. Zellanimationen lassen sich abschalten; der endgültige
+Zustand erscheint dann unmittelbar. Einzelheiten und gezielte Prüffälle
+stehen in [UI_DRAWING_STYLE.md](UI_DRAWING_STYLE.md).
 
 Für P1 zeigt ein Live-Zähler während linker und rechter Zellgesten die gesamte
 geometrische aktuelle Strichlänge inklusive Start/Ende, auch bei Vorbelegungen und
@@ -232,7 +325,9 @@ bleibt die exakte eindeutige Zuordnungsgrundlage. GP-02/#48 unterscheidet normal
 Zahlen, leicht abgeschwächte eindeutig gesetzte Blöcke und durchgestrichene
 zusätzlich beidseitig abgegrenzte Blöcke. X, echter Rasterrand und direkt andere
 Füllfarbe zählen; unbekannte Nachbarn und Viewportränder nicht. GP-03 verwendet
-kräftigere Plex-Sans-Ziffern mit Gewicht 600 bei bisherigem Schriftgrad. Nur der
+auf dem integrierten Stand kräftigere Plex-Sans-Ziffern mit Gewicht 600 bei bisherigem
+Schriftgrad; ZS darf diese Darstellung nach dem engen nativen Vergleich gemäß
+Abschnitt 4.4 weiterentwickeln. Nur der
 mittlere Zustand erhält 78 % Deckkraft, einschließlich seiner C1-Kontur. Farben
 bleiben unterscheidbar; Statuswechsel ändern weder Größe noch Slotposition. Es hängt am Originalindex und gilt ebenso
 im vollständigen Tooltip und während des Hinweisdrags. `…` und Leerlinien-`–`
@@ -268,16 +363,23 @@ Der Mock ist keine Bildschirm-für-Bildschirm-Spezifikation, kein gültiger Rät
 
 Die spätere reale P1.1-Probe lieferte einen Abschluss-Screenshot und einen Rasterausschnitt mit dem beschriebenen Fünferlinienproblem. Das belegt vorhandenes Nutzerfeedback, nicht jede K-06-Einzelprüfung, tatsächliche Windows-Skalierung oder die Güte der damals noch nicht implementierten Großraster-/Zoom-/Speicherfunktionen. Der damalige Stand ist in #5/#8 und PR #14 nachvollziehbar; die spätere P1-Gesamtabnahme in #12 gilt nicht automatisch für Z2. Aktuelle Z2-Befunde und Gates stehen in #23/PR #33.
 
+Der Squeakross-Screenshot aus dem Gespräch vom 07.10.2026 dient ausschließlich
+als Vergleich für eine charaktervolle Spieloberfläche. Er ist ausdrücklich
+keine Vorlage für Layout, Zellformen, Motive oder eigene Assets. Die textliche
+ZS-Spezifikation trägt die beschlossenen Anforderungen ohne dauerhafte
+Pflichtabhängigkeit von diesem fremden Spielbild. Weder der Vergleich noch
+die Freigabe dieses Sollstands belegen bereits dessen Implementierung.
+
 ## 7. Weitere Erprobung und offene Entscheidungen
 
 | Thema | Nächster Gegenstand |
 | --- | --- |
 | Themenwahl | Thematisches Sammelalbum oder Reisealbum, Kapitel und Motivzusammenhang; nicht mit dem gewählten Arbeitsasset A verwechseln. Bestehende Progressionsanforderungen nicht neu öffnen. |
-| Album/Designsystem | Die gewählte Z2-Arbeitsansicht nativ prüfen; ein vollständiger Albumneubau ist nicht beauftragt. |
+| Album/Designsystem | ZS-1 vergleicht zwei eng verwandte Ausprägungen der gewählten Buchrichtung; ZS-2 integriert die ausgewählten Ziffern, Zellmarkierungen, Animationen und Randdetails. Ein vollständiger Albumneubau ist nicht beauftragt. |
 | Rücknahmen/Wertung | Direkte Neutralisierung ist für die Bedienung festgelegt; Fehlerzählung, Sterne und Hypothesenwirkung bleiben offen. |
 | P1-Bedienung | P1/Z2 ist integriert; Z2-M01/M02 wurden nicht durchgeführt, ihr damaliges Mergegate aufgehoben. Eigene aktuelle RP-3-Nachweise stehen im [Prüfbericht](RP3_VERIFICATION.md). |
 | Fortsetzung | Speicherung/Recovery bleiben Regressionsumfang; Z2-M03 wurde nicht durchgeführt und für PR #33 als Gate aufgehoben. F-04 erhält einen eigenen isolierten Neustartnachweis. |
-| Designphase | Längere reale Nutzung und Phasenabschluss folgen in #24 nach der konkreten Z2-Fassung. |
+| Designphase | Längere reale Nutzung und Phasenabschluss folgen in #24 nach der technisch geprüften ZS-2-Fassung. Pflichtregressionen gehören bereits zur Umsetzung. |
 
 Gestaltung und Risikoprototypen überlappen weiter. Statische Mocks allein beantworten keine Bedienungsfrage. GD-01 bis GD-05 legen die konkrete Zielrichtung für Z2 fest, ersetzen aber keine native Bedienabnahme oder vollständige Produktgestaltung.
 
