@@ -67,9 +67,22 @@ def verify(renders: Path) -> dict:
         raise toolchain.PreflightError("Incomplete ZS1 comparison matrix")
     for record in study["captures"]:
         old = baseline[record["case"]]
-        for key in ("fixture", "size", "ui_scale", "cells_sha256", "view", "board", "grid", "viewport", "pan_target", "tooltip"):
+        for key in ("fixture", "size", "ui_scale", "cells_sha256", "board", "grid", "viewport", "pan_target", "tooltip"):
             if old[key] != record[key]:
                 raise toolchain.PreflightError(f"ZS1 {record['case']}: changed {key}")
+        if old["view"] != record["view"]:
+            # E3/N07 deliberately changes only the horizontal row-clue slot pitch.
+            # The same physical drag can therefore snap to another valid semantic
+            # row read. All cell-view fields and the untouched column reads must
+            # remain identical; no other capture may change its semantic view.
+            e3_row_snap = record["font_choice"] == 2 and record["case"] == "hint-row-tooltip"
+            if not e3_row_snap:
+                raise toolchain.PreflightError(f"ZS1 {record['case']}: changed view")
+            for view_key in ("center", "zoom", "overview", "active_color", "tool", "column_clue_reads"):
+                if old["view"][view_key] != record["view"][view_key]:
+                    raise toolchain.PreflightError(f"ZS1 {record['case']}: changed view/{view_key}")
+            if old["view"]["row_clue_reads"] == record["view"]["row_clue_reads"]:
+                raise toolchain.PreflightError("ZS1 N07 row drag did not exercise compact-slot snap")
         if not record["spoiler_free"]:
             raise toolchain.PreflightError("ZS1 comparison leaked reveal")
         with Image.open(renders / old["file"]) as a, Image.open(renders / record["file"]) as b:

@@ -23,6 +23,14 @@ gemeinsame horizontale Slotweite der Zeilenhinweise im Buchlayout von 30 auf
 Spaltenslots bleiben 18 beziehungsweise 22,5 Pixel. Die kombinierte reale Sichtprüfung
 wurde vom Eigentümer ausdrücklich auf den gemergten `main`-Stand verschoben.
 
+
+Der historische Bildvergleich behandelt deshalb genau den Chalkboard-Fall
+`hint-row-tooltip` separat: Derselbe physische 67-px-Drag darf wegen der kleineren
+Slotweite auf eine andere gültige semantische **Zeilen**-Leseposition einrasten.
+Raster-/Viewport-/Spielzustand, die komplette Spalten-Leseposition und alle übrigen
+Vergleichsfälle müssen weiterhin der Main-Baseline entsprechen. Eine unveränderte
+Zeilen-Leseposition in diesem gezielten Fall wird als fehlender N07-Nachweis abgelehnt.
+
 | Kriterium | Aktueller Nachweis / Grenze |
 | --- | --- |
 | A01 | 14 native Situationen je Plex-Baseline, Bakso/Stift und Chalkboard/Stift: 42 Bilder auf identischen eigenen F-01/F-02/F-03-Ständen. Bisherige reguläre Boardpixel gegen 14 echte Main-Archivbilder geprüft. Kandidaten zeigen unterschiedliche Hinweis-Pixel bei identischen Zellbildern (zwölf Fälle ohne überlagernden Tooltip). |
