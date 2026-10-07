@@ -50,6 +50,10 @@ vollständige monotone Leseroute bleiben hart geprüft. Historische GP-48-Bilder
 behalten ihren alten Referenzcommit; die neue Typografie wird im Vergleich
 ausdrücklich ausgewiesen. Der zusätzliche ZS-2-Vergleich bindet genau die
 integrierte ausgewählte ZS-1-Fassung und verlangt identische Boardpixel.
+Die Pixelgrenze für subpixelweichen Hinweisdrag berücksichtigt die Fläche der
+1,35-fachen Schriftgröße (550 statt 300 geänderte Pixel); Nachbarlinien bleiben
+pixelgenau gleich. X-Testpositionen schneiden jetzt tatsächlich einen der
+gekrümmten Züge an; die sichtbare Tinte und ihre Clipgrenze prüft der Bildvergleich.
 
 ## Reproduktion und Artefaktbindung
 

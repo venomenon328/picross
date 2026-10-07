@@ -4,6 +4,10 @@ const Main = preload("res://ui/main.gd")
 const SaveStore = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
+const PencilMarks = preload("res://ui/pencil_marks.gd")
+# Same subpixel motion oracle, scaled for the selected 1.35x clue ink area.
+# Whole-slot jumps remain far above this bound; untouched neighbour stays exact.
+const CLUE_MOTION_PIXEL_BUDGET: int = 550
 var surface: SubViewport
 var output: String
 var captures: Array = []
@@ -22,6 +26,11 @@ func _initialize() -> void:
 func snapshot(app: Main, name: String, crop: bool = false) -> void:
 	var material: Image
 	if name.begins_with("x-clip-"):
+		# Complete pending board redraws before hiding its separate ink layer.
+		app.refresh()
+		await process_frame
+		await process_frame
+		await RenderingServer.frame_post_draw
 		app.board.marks.hide()
 		await process_frame
 		await RenderingServer.frame_post_draw
@@ -59,10 +68,12 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 		var preview_cell: Rect2 = app.board.view.cell_rect(Vector2i(2, 3))
 		var preview_center: Vector2i = Vector2i(app.board.global_position + preview_cell.position + preview_cell.size * Vector2(0.5, 0.38))
 		var preview_moat: Vector2i = Vector2i(app.board.global_position + preview_cell.position + Vector2(1, preview_cell.size.y / 2))
-		var expected_fill: Color = Color("e8e9d9").blend(Color(Color(app.session.definition.palette[color_index - 1].color), 0.56))
 		var gap: Color = picture.get_pixelv(preview_moat)
+		# The endpoint may be outside the clipped viewport. Measure the actual
+		# underlay (paper or active band) beside the target, then blend 56 % ink.
+		var expected_fill: Color = gap.blend(Color(Color(app.session.definition.palette[color_index - 1].color), 0.56))
 		if not close_color(picture.get_pixelv(preview_center), expected_fill) or absf(gap.r - expected_fill.r) + absf(gap.g - expected_fill.g) + absf(gap.b - expected_fill.b) < 0.1:
-			push_error("Rendered preview fill/moat regression: " + name)
+			push_error("Rendered preview fill/moat regression: %s actual=%s expected=%s gap=%s" % [name,picture.get_pixelv(preview_center),expected_fill,gap])
 			quit(5)
 			return
 		pixel_checks += 2
@@ -90,11 +101,13 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 		for y: int in range(region.position.y, region.end.y):
 			for x: int in range(region.position.x, region.end.x):
 				var delta: float = material.get_pixel(x, y).r - picture.get_pixel(x, y).r
-				if delta > 0.03:
-					if not viewport.has_point(Vector2(x, y) + Vector2(0.5, 0.5)):
-						push_error("Rendered X escaped viewport: " + name)
-						quit(5)
-						return
+				if delta > 2.0/255 and not viewport.has_point(Vector2(x, y) + Vector2(0.5, 0.5)):
+					push_error("Rendered X escaped viewport: " + name)
+					quit(5)
+					return
+				# Preview active bands are lighter than this threshold; only ink
+				# counts as a visible clipped X.
+				if delta > 0.12:
 					pixels += 1
 		if pixels < 3:
 			push_error("Rendered clipped X absent: " + name)
@@ -271,11 +284,18 @@ func x_crosses_view(app: Main, cell: Vector2i) -> bool:
 	var box: Rect2 = app.board.view.cell_rect(cell)
 	if not box.intersects(app.board.view.viewport) or app.board.view.viewport.encloses(box):
 		return false
-	for endpoints: Array in [[box.position + box.size * 0.3, box.position + box.size * 0.7], [box.position + box.size * Vector2(0.7, 0.3), box.position + box.size * Vector2(0.3, 0.7)]]:
-		var segment: PackedVector2Array = Board.clipped_segment(endpoints[0], endpoints[1], app.board.view.viewport.grow(-0.65))
-		if segment.size() == 2 and segment[0].distance_to(segment[1]) >= 3.0:
-			return true
-	return false
+	var visible_length: float = 0.0
+	var crosses: bool = false
+	for which: int in range(2):
+		var path: PackedVector2Array = PencilMarks.x_path(cell.y * app.session.player.width + cell.x, which)
+		for i: int in range(path.size() - 1):
+			var a: Vector2 = box.position + box.size * path[i]
+			var b: Vector2 = box.position + box.size * path[i+1]
+			crosses = crosses or (app.board.view.viewport.has_point(a) != app.board.view.viewport.has_point(b))
+			var segment: PackedVector2Array = Board.clipped_segment(a, b, app.board.view.viewport.grow(-0.65))
+			if segment.size() == 2:
+				visible_length += segment[0].distance_to(segment[1])
+	return crosses and visible_length >= 6.0
 
 func capture_x_edges(app: Main) -> void:
 	for pitch: float in [24.0, 36.0]:
@@ -345,7 +365,7 @@ func capture_hint_markers(app: Main, row: int, column: int) -> void:
 					var line: Vector2 = app.board.view.cell_rect(Vector2i(0, index) if axis == "row" else Vector2i(index, 0)).get_center()
 					var region: Rect2i = Rect2i(Rect2(app.board.global_position + (Vector2(area.position.x, line.y - 9) if axis == "row" else Vector2(line.x - 9, area.position.y)),
 						Vector2(area.size.x, 18) if axis == "row" else Vector2(18, area.size.y))).intersection(Rect2i(Vector2i.ZERO, surface.size))
-					if region_difference(previous, current, region) > 300:
+					if region_difference(previous, current, region) > CLUE_MOTION_PIXEL_BUDGET:
 						push_error("Rendered hint numbers snapped before drop: " + name)
 						quit(5)
 						return
@@ -721,7 +741,7 @@ func capture_gestures(app: Main) -> void:
 	app.board.pan_drag_distance = pitch * 0.51
 	await snapshot(app, "hint-drag-after-slot-boundary")
 	var after_boundary: Image = Image.load_from_file(output.path_join("hint-drag-after-slot-boundary.png"))
-	if region_difference(before_boundary, after_boundary, target_region) > 300 or region_difference(before_boundary, after_boundary, neighbour_region) != 0:
+	if region_difference(before_boundary, after_boundary, target_region) > CLUE_MOTION_PIXEL_BUDGET or region_difference(before_boundary, after_boundary, neighbour_region) != 0:
 		push_error("Rendered row hint jumped at a slot boundary")
 		quit(5)
 		return
@@ -741,7 +761,7 @@ func capture_gestures(app: Main) -> void:
 	var column_area: Rect2 = app.board.column_clue_area()
 	var column_x: float = app.board.view.cell_rect(Vector2i(f03_column, 0)).get_center().x
 	var column_region: Rect2i = Rect2i(Rect2(app.board.global_position + Vector2(column_x - 9, column_area.position.y), Vector2(18, column_area.size.y))).intersection(Rect2i(Vector2i.ZERO, surface.size))
-	if region_difference(column_before_boundary, column_after_boundary, column_region) > 300 or app.board.clue_step("column", f03_column) != 0:
+	if region_difference(column_before_boundary, column_after_boundary, column_region) > CLUE_MOTION_PIXEL_BUDGET or app.board.clue_step("column", f03_column) != 0:
 		push_error("Rendered column hint jumped at a slot boundary")
 		quit(5)
 		return
