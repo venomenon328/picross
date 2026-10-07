@@ -8,6 +8,14 @@ Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselre
 
 Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.16 enthält das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung, gemeinsamem Hinweisraster und linienweisen Lesepositionen sowie die aktive Z2-Auswahl und den Bezug zur Rätselproduktion.
 
+Die [Spezifikation zur zeichnerischen Spieloberfläche](UI_DRAWING_STYLE.md) ist bei
+Arbeit an der neuen Hinweis-/Zellsprache, statischer Zellvorschau und Zellanimationen
+zusätzlich vollständig zu lesen. Sie ist am 07.10.2026 fachlich freigegeben und
+als isolierte Studie umgesetzt, Auswahl noch offen: native Auswahl in [ZS-1/#52](https://github.com/venomenon328/picross/issues/52),
+reguläre Integration in [ZS-2/#53](https://github.com/venomenon328/picross/issues/53),
+danach längere Spielerprobung in #24. Animationen beginnen ausschließlich nach
+dem Anwenden, nicht in der Vorschau.
+
 Die [Rätselproduktionsspezifikation](PUZZLE_PRODUCTION.md) ist bei Bildimport,
 Rastererzeugung, Deduktionsnachweisen, Produktionswerkzeugen und Pilotinhalten
 zusätzlich vollständig zu lesen. Sie konkretisiert den eigenen Risikostrang
@@ -32,8 +40,10 @@ unabhängigem Review R2 über PR #45 als `80ae2c1` integriert;
 RP-5/#39 ist nach unabhängigem Review R1 über PR #46 als `cd4a8db` integriert und liefert die begrenzte motivgeschützte Reparatursuche,
 [neun Vergleichsläufe](../examples/rp5/README.md) und
 [Prüfzuordnung](RP5_VERIFICATION.md). Keine offenen RP-5-Reviewbefunde.
-RP-6/#40 liefert den begrenzten [Sechserpiloten](RP6_VERIFICATION.md) im Draft;
-unabhängiges Review, redaktionelle Freigabe, Eigentümerproben und Phasenentscheidung bleiben offen. Die P1-Fixtures und H1 liefern
+RP-6/#40 ist mit dem begrenzten [Sechserpiloten](RP6_VERIFICATION.md) über
+[PR #47](https://github.com/venomenon328/picross/pull/47) als
+`ec99954268f1ad959d9ea779dbbd9e28edf7d8fa` in main integriert; die zugehörigen
+Nachweise und Abnahmeentscheidungen bleiben in diesem PR gebunden. Die P1-Fixtures und H1 liefern
 begrenzte Vorarbeiten, keine allgemeine Generatorplattform.
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
@@ -413,3 +423,32 @@ Lieferhead/Test-Merge bleiben `docs`, `product`, `preflight`,
 Die ausdrückliche Eigentümeranweisung vom 06.10.2026 beauftragt Umsetzung und
 anschließenden Merge; die zuvor geplante ZV50-M01-Probe und unabhängige Zweitprüfung
 sind für genau diesen Merge aufgehoben, nicht als bestanden umgedeutet. Kein Release.
+
+## ZS: freigegebene nächste UI-Entwicklung
+
+[ZS-1/#52](https://github.com/venomenon328/picross/issues/52) und
+[ZS-2/#53](https://github.com/venomenon328/picross/issues/53) gehören zu #21. Die
+[Detailspezifikation](UI_DRAWING_STYLE.md) ergänzt die vorhandene A-Buchkomposition
+um kräftige kompakte Hinweisziffern, satte stabile Schraffur-/Stiftflächen,
+gezeichnete X, zurückhaltende Randdetails und kurze parallele Zellanimationen.
+Die konkrete Variante ist Ergebnis von ZS-1; GD-03/GP-03 werden nur für Hinweisziffern
+und begründet gewählte gemeinsame Slotmaße geöffnet. Historische Designpakete bleiben.
+
+Vorschau ist statisch und heller/transparenter. Erst die tatsächliche atomare
+Übernahme animiert alle wirksamen Änderungen gleichzeitig, ohne zusätzliche
+Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
+ist rein visuell; Sitzungsschalter nach P1-Vorbild, kein neues Saveformat.
+
+ZS-1 liefert eine isolierte native Vergleichsprobe und Eigentümerwahl; ZS-2 die
+reguläre Integration. Technische Nachweise, unabhängiges Review, jeweilige reale
+Auswahl/Probe und ausdrückliche Mergefreigabe stehen als Gates in den Paketissues.
+#24 folgt mit der längeren Nutzung der integrierten Fassung. Der anschließende
+Umsetzungsauftrag zu #52 umfasst die geprüfte Draft-Lieferung der isolierten
+Studie; siehe [Prüfzuordnung](ZS1_VERIFICATION.md) und
+[Entscheidungsvorlage](ZS1_DECISION.md). Eigentümerwahl ZS1-M01, unabhängiges
+Review und Mergefreigabe bleiben offen. #53 und Release sind nicht beauftragt.
+
+Die bestehenden sechs CI-Jobs bleiben aktiv. Spielerpaket und kleine gezielte
+Reviewartefakte bleiben getrennt; das optionale Hochladen kompletter Arbeitsrender
+wird nicht wieder zum Standard. Pflichtprüfungen werden weder durch statische
+Bilder ersetzt noch aus den Umsetzungspaketen nach #24 verschoben.

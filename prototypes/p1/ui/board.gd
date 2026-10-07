@@ -456,27 +456,13 @@ func _draw() -> void:
 	var first: Vector2i = Vector2i(((grid.position - view.origin) / view.cell_size).floor()).max(Vector2i.ZERO)
 	var last: Vector2i = Vector2i(((grid.end - view.origin) / view.cell_size).ceil()).min(view.dimensions)
 	var active: Vector2i = session.gesture.endpoint if session.gesture.active else hover
-	if active.x >= 0 and active.y >= 0 and active.x < view.dimensions.x and active.y < view.dimensions.y:
-		var active_box: Rect2 = view.cell_rect(active)
-		var row: Rect2 = Rect2(Vector2(grid.position.x, active_box.position.y), Vector2(grid.size.x, active_box.size.y)).intersection(grid)
-		var column: Rect2 = Rect2(Vector2(active_box.position.x, grid.position.y), Vector2(active_box.size.x, grid.size.y)).intersection(grid)
-		var band: Color = Color("e8e9d9")
-		if row.has_area() and column.has_area():
-			draw_rect(row, band)
-			draw_rect(Rect2(column.position, Vector2(column.size.x, maxf(0.0, row.position.y - column.position.y))), band)
-			draw_rect(Rect2(Vector2(column.position.x, row.end.y), Vector2(column.size.x, maxf(0.0, column.end.y - row.end.y))), band)
+	draw_active_bands(grid, active)
 	for y: int in range(first.y, last.y):
 		for x: int in range(first.x, last.x):
 			var box: Rect2 = view.cell_rect(Vector2i(x, y))
 			var value: int = values[y * view.dimensions.x + x]
-			if value > 0:
-				clipped_box(box.grow(-2.0 if not overview else -0.4), cell_color(value))
-			elif value == 0:
-				draw_clipped_x(box)
-	for change: Dictionary in session.gesture.changes():
-		var box: Rect2 = view.cell_rect(Vector2i(change.index % view.dimensions.x, change.index / view.dimensions.x)).grow(-2)
-		if box.intersects(view.viewport):
-			draw_clipped_preview_outline(box)
+			draw_cell(box, value, y * view.dimensions.x + x)
+	draw_preview()
 	for x: int in range(first.x, last.x + 1):
 		var px: float = view.origin.x + x * view.cell_size
 		if px >= grid.position.x and px <= grid.end.x:
@@ -488,6 +474,33 @@ func _draw() -> void:
 	_draw_clues(first, last)
 	_draw_clue_tooltip()
 	_draw_gesture_counter()
+
+func draw_active_bands(grid: Rect2, active: Vector2i) -> void:
+	if active.x >= 0 and active.y >= 0 and active.x < view.dimensions.x and active.y < view.dimensions.y:
+		var active_box: Rect2 = view.cell_rect(active)
+		var row: Rect2 = Rect2(Vector2(grid.position.x, active_box.position.y), Vector2(grid.size.x, active_box.size.y)).intersection(grid)
+		var column: Rect2 = Rect2(Vector2(active_box.position.x, grid.position.y), Vector2(active_box.size.x, grid.size.y)).intersection(grid)
+		var band: Color = Color("e8e9d9")
+		if row.has_area() and column.has_area():
+			draw_rect(row, band)
+			draw_rect(Rect2(column.position, Vector2(column.size.x, maxf(0.0, row.position.y - column.position.y))), band)
+			draw_rect(Rect2(Vector2(column.position.x, row.end.y), Vector2(column.size.x, maxf(0.0, column.end.y - row.end.y))), band)
+
+# Rendering seams shared by the isolated ZS-1 study; regular defaults unchanged.
+func clue_font() -> Font:
+	return CLUE_FONT
+
+func draw_cell(box: Rect2, value: int, _index: int) -> void:
+	if value > 0:
+		clipped_box(box.grow(-2.0 if not overview else -0.4), cell_color(value))
+	elif value == 0:
+		draw_clipped_x(box)
+
+func draw_preview() -> void:
+	for change: Dictionary in session.gesture.changes():
+		var box: Rect2 = view.cell_rect(Vector2i(change.index % view.dimensions.x, change.index / view.dimensions.x)).grow(-2)
+		if box.intersects(view.viewport):
+			draw_clipped_preview_outline(box)
 
 func _draw_gesture_counter() -> void:
 	if not session.gesture.active:
@@ -507,7 +520,7 @@ func _draw_counter_box(box: Rect2, caption: String, font: Font, fs: int) -> void
 	draw_string(font, box.position + Vector2(7, box.size.y - 5), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 
 func _draw_clues(first: Vector2i, last: Vector2i) -> void:
-	var font: Font = CLUE_FONT
+	var font: Font = clue_font()
 	var fs: int = clue_font_size()
 	var near_grid: Vector2 = view.visible_bounds().position
 	for y: int in range(first.y, last.y):
@@ -616,7 +629,7 @@ func clue_layout(axis: String, index: int, available_override: float = -1.0) -> 
 	var capacity: int = clue_capacity(axis, available_override)
 	var result: Dictionary = ClueLayout.select_window(entries.size(), capacity, clue_step(axis, index))
 	result.entries = entries
-	result.slot_extent = shared_clue_slot_extent(axis, CLUE_FONT, clue_font_size())
+	result.slot_extent = shared_clue_slot_extent(axis, clue_font(), clue_font_size())
 	return result
 
 func visible_clue_layout(axis: String, index: int) -> Dictionary:
@@ -639,7 +652,7 @@ func clue_entry_count(axis: String, index: int) -> int:
 	return maxi(1, clues.size())
 
 func clue_capacity(axis: String, available_override: float = -1.0) -> int:
-	var font: Font = CLUE_FONT
+	var font: Font = clue_font()
 	var fs: int = clue_font_size()
 	var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
 	var available: float = available_override if available_override >= 0.0 else (area.size.x if axis == "row" else area.size.y)
@@ -698,7 +711,7 @@ func tooltip_entries(axis: String, index: int) -> Array:
 func visual_hint_units(axis: String, index: int) -> Dictionary:
 	var layout: Dictionary = visible_clue_layout(axis, index)
 	var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
-	var font: Font = CLUE_FONT
+	var font: Font = clue_font()
 	var fs: int = clue_font_size()
 	var units: Array[Dictionary] = []
 	if is_zero_approx(float(layout.visual_shift)):
@@ -797,7 +810,7 @@ func _draw_clue_tooltip() -> void:
 	if clue_hover_axis.is_empty() or clue_hover_index < 0:
 		return
 	var entries: Array = tooltip_entries(clue_hover_axis, clue_hover_index)
-	var font: Font = CLUE_FONT
+	var font: Font = clue_font()
 	var fs: int = roundi(16 * ui_scale)
 	var line_height: float = 22 * ui_scale
 	var box_width: float = minf(520 * ui_scale, size.x - view.viewport.position.x - 32)
