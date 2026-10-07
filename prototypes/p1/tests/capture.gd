@@ -25,7 +25,7 @@ func _initialize() -> void:
 
 func snapshot(app: Main, name: String, crop: bool = false) -> void:
 	var material: Image
-	if name.begins_with("x-clip-"):
+	if name.begins_with("x-clip-") or name.contains("preview-color"):
 		# Complete pending board redraws before hiding its separate ink layer.
 		app.refresh()
 		await process_frame
@@ -69,9 +69,10 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 		var preview_center: Vector2i = Vector2i(app.board.global_position + preview_cell.position + preview_cell.size * Vector2(0.5, 0.38))
 		var preview_moat: Vector2i = Vector2i(app.board.global_position + preview_cell.position + Vector2(1, preview_cell.size.y / 2))
 		var gap: Color = picture.get_pixelv(preview_moat)
-		# The endpoint may be outside the clipped viewport. Measure the actual
-		# underlay (paper or active band) beside the target, then blend 56 % ink.
-		var expected_fill: Color = gap.blend(Color(Color(app.session.definition.palette[color_index - 1].color), 0.56))
+		# Paper varies spatially, so measure it at this exact pixel with marks
+		# hidden. The active band, when present, is the flat moat color.
+		var underlay: Color = gap if gap.is_equal_approx(Color("e8e9d9")) else material.get_pixelv(preview_center)
+		var expected_fill: Color = underlay.blend(Color(Color(app.session.definition.palette[color_index - 1].color), 0.56))
 		if not close_color(picture.get_pixelv(preview_center), expected_fill) or absf(gap.r - expected_fill.r) + absf(gap.g - expected_fill.g) + absf(gap.b - expected_fill.b) < 0.1:
 			push_error("Rendered preview fill/moat regression: %s actual=%s expected=%s gap=%s" % [name,picture.get_pixelv(preview_center),expected_fill,gap])
 			quit(5)
