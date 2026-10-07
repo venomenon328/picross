@@ -19,6 +19,9 @@ func _ready() -> void:
 	super._ready()
 	SaveStore.test_root_override = previous_override
 	get_window().title = "picross · ZS-1 · isolierte Gestaltungsprobe"
+	for item: Node in album_content.get_children():
+		if item is Label and item.text == "Neun Blätter zum Entdecken":
+			item.text = "Drei Blätter für den Gestaltungsvergleich"
 	variant_button = _text_button("", cycle_variant)
 	# Reuses the title's free right-hand region, above every working surface.
 	page.add_child(variant_button)
@@ -31,9 +34,11 @@ func _ready() -> void:
 	var study_label: Label = label("ZS-1 · isolierte Studie\nDer Variantenknopf oben wechselt Baseline / Tinte / Stift am selben Stand.\nNeue Starts verwenden frische Studienstände. Eigene P1-Spielstände bleiben getrennt.", 16)
 	study_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	settings_panel.add_child(study_label)
+	var quit_control: Node = settings_panel.get_child(settings_panel.get_child_count() - 2)
 	settings_panel.add_child(_text_button("Vergleichsstand dieses Blatts wiederherstellen", restore_sample))
 	settings_panel.add_child(_text_button("Leeres Studienblatt", empty_sample))
 	settings_panel.add_child(_text_button("Ziffernprobe bis 100", show_numerals))
+	settings_panel.move_child(quit_control, settings_panel.get_child_count() - 1)
 	for i: int in range(3, choices.size()):
 		choices[i].hide()
 		album_previews[i].get_parent().hide()
