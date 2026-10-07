@@ -50,8 +50,8 @@ beschriftet und ersetzt keine unveränderten Rätseldaten.
 Der erste lokale Windows/OpenGL-Durchlauf mit Godot 4.7.2 und RTX 3070 bestand
 117 Studienprüfungen und die nativen Bewegungsassertionen. Nach Trennung der
 Zellschicht lag deren gemessene F-03-Zeichenzeit im Entwicklungslauf ungefähr
-bei 2,8–3,2 ms; die vollständige synthetische 100-Zellen-Eingabe einschließlich
-des bestehenden synchronen Speicherwegs bei 81–88 ms. Diese Werte stammen aus
+bei 2,8–5,9 ms; die vollständige synthetische 100-Zellen-Eingabe einschließlich
+des bestehenden synchronen Speicherwegs bei 81–120 ms. Diese Werte stammen aus
 einem veränderten Entwicklungsbaum, sind keine finalen Head-/CI-Nachweise und
 kein allgemeines Performanceversprechen. Ein vollständiges Neuzeichnen inklusive
 Hinweisarbeit kann deutlich teurer sein; schnelle reale Eingaben sind ZS1-M01.

@@ -14,7 +14,7 @@ Produktbasis ist `ec99954268f1ad959d9ea779dbbd9e28edf7d8fa`, nicht der Dokumenta
 | Ziffernform | Sans | kompakte kräftige Serifenziffern | weichere verwandte Serifenziffern |
 | Breitenfaktor | 1 | 0,86 | 0,86 |
 | Schriftgrad bei 24er-Zelle/UI 100 % | 14 | 16 | 16 |
-| Kleine Zellen | bestehende Begrenzung | höchstens Zellabstand − 3, mindestens 8 | wie Tinte |
+| Kleine Zellen | bestehende Begrenzung | höchstens 75 % Zellabstand, mindestens 8 | wie Tinte |
 | Gemeinsame Slots | Zeile 30, Spalte 18 × UI | unverändert | unverändert |
 | Füllung | flache Originalfarbe | stabile innere Kontur, drei feine helle Schraffuren | stabile innere Kontur, drei weiche Auftragsspuren |
 | Textur | keine | 15 % Weiß, 0,8 px | 12 % Weiß, 1,2 px; dunklere Eigenfarbkontur |
@@ -25,6 +25,8 @@ Produktbasis ist `ec99954268f1ad959d9ea779dbbd9e28edf7d8fa`, nicht der Dokumenta
 
 Alle drei Hinweiszustände behalten jeweils dieselbe Schrift/Größe/Position;
 gesetzt bleibt bei 78 %. Originalfarben und C1-Semantik bleiben erhalten.
+Bei 24er-Zellen/UI 125 % begrenzt die Studie den Schriftgrad auf 18, damit
+mehrstellige Spaltenhinweise Abstand behalten.
 Keine andere Slotvariante ist eingeführt: Die gewählte Form und der optische
 Schriftgrad werden zuerst verglichen. Auch die Maximalzahl `100` wird in der
 beschrifteten nativen Schriftprobe gezeigt; F-03 selbst enthält nur Einerfolgen.

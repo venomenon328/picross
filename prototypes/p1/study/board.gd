@@ -44,7 +44,7 @@ func clue_font() -> Font:
 func clue_font_size() -> int:
 	if style == 0:
 		return super.clue_font_size()
-	return mini(roundi(16 * ui_scale), maxi(8, floori(view.cell_size - 3)))
+	return mini(roundi(16 * ui_scale), maxi(8, floori(view.cell_size * 0.75)))
 
 func set_style(value: int) -> void:
 	cancel_gesture()

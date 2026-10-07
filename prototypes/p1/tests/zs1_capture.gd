@@ -134,6 +134,8 @@ func rect_data(rect: Rect2) -> Array:
 	return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
 
 func shot(name: String) -> void:
+	# Do not carry the last movement probe coordinate into another fixture.
+	app.coordinate.text = "Zeile – · Spalte –"
 	var axis: String = app.board.clue_hover_axis
 	var line: int = app.board.clue_hover_index
 	app.refresh()

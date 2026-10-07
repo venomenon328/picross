@@ -82,12 +82,24 @@ def verify(renders: Path) -> dict:
                     raise toolchain.PreflightError(f"ZS1 regular baseline pixels changed: {record['case']}")
     if len(study["frames"]) != 2 or len(study["measurements"]) != 2:
         raise toolchain.PreflightError("Missing ZS1 movement/load evidence")
+    if {item["style"] for item in study["specimens"]} != {0, 1, 2}:
+        raise toolchain.PreflightError("Missing ZS1 native numeral specimen")
+    for specimen in study["specimens"]:
+        if not (renders / specimen["file"]).is_file():
+            raise toolchain.PreflightError("Missing ZS1 specimen image")
     for motion in study["frames"]:
         if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"] < 140):
             raise toolchain.PreflightError("ZS1 movement contract failed")
         for frame in motion["timeline"]:
             if not (renders / frame["file"]).is_file():
                 raise toolchain.PreflightError("Missing ZS1 timed frame")
+        early = next(frame for frame in motion["timeline"] if frame["label"] == "parallel-commit-0")
+        settled = next(frame for frame in motion["timeline"] if frame["label"] == "settled")
+        if not 0 < early["after_commit_ms"] < 140:
+            raise toolchain.PreflightError("ZS1 renderer missed the actual commit effect")
+        with Image.open(renders / early["file"]) as a, Image.open(renders / settled["file"]) as b:
+            if not ImageChops.difference(a.convert("RGB"), b.convert("RGB")).getbbox():
+                raise toolchain.PreflightError("ZS1 native commit effect is not visible")
     return dict(baseline=BASE, identical_regular_board_cases=len(baseline),
                 comparison_images=len(study["captures"]), movements=study["frames"],
                 measurements=study["measurements"], renderer=study["renderer"])
@@ -145,8 +157,8 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
             if hashlib.sha256(bundle.read(name)).hexdigest() != digest:
                 raise toolchain.PreflightError("ZS1 player ZIP audit failed")
     review = output / "picross-zs1-review.zip"
-    # The original-main and study-baseline renders remain temporary; they are
-    # byte-compared above. One baseline plus two styles is enough for the reader.
+    # Original-main renders remain temporary after the pixel comparison.
+    # Ship the identical study baseline plus both styles, without duplicate PNGs.
     names = {item["file"] for item in json.loads((renders / "zs1-study.json").read_text(encoding="utf-8"))["captures"]}
     names.update(p.name for p in renders.glob("zs1-motion-*.png"))
     names.update(p.name for p in renders.glob("zs1-numerals-*.png"))
