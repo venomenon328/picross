@@ -8,7 +8,8 @@ import p1_preflight as toolchain
 
 PLAYER_FILES = {
     "picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json",
-    "GP48-SPIELPROBE.md", "gp48-owner.ps1", "licenses/Fraunces-OFL.txt",
+    "GP48-SPIELPROBE.md", "gp48-owner.ps1", "ZV50-SPIELPROBE.md", "zv50-owner.ps1",
+    "licenses/Fraunces-OFL.txt",
     "licenses/PlexSans-OFL.txt", "licenses/resources.json",
 }
 

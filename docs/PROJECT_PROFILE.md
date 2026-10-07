@@ -385,3 +385,23 @@ Für den jetzt kombinierten RP-6-Stand bleiben dieselben GP-Regeln verpflichtend
 GP-48-Mainstand und veröffentlicht technische GP-Vergleiche getrennt vom schlanken
 RP-6-Spielerpaket. Eine erneute GP48-M01 ist kein eigenes Gate; Integrationsregressionen
 und die offenen RP6-A01–A03/M01–M04 werden am neuen PR-#47-Head geprüft.
+
+## ZV-50: freie Rasterfläche beim Arbeitszoom
+
+[Issue #50](https://github.com/venomenon328/picross/issues/50) ergänzt den integrierten
+Z2/P1-Arbeitsbildschirm um D-28: Die historische Standardrasterbox bleibt bis 100 %
+unverändert, begrenzt aber höhere Arbeitszoomstufen nicht mehr. Im nicht kompakten
+Buchlayout wächst der Viewport oberhalb 100 % bis zu den tatsächlich verfügbaren
+Papier-/UI-Grenzen. 20×20 muss bei 1920×1080/UI 100 % bis einschließlich 150 %
+vollständig sichtbar bleiben; 167 % ist der erste gezielt geprüfte vertikale
+Überlauffall.
+
+Technische Zuordnung: [ZV50_VERIFICATION.md](ZV50_VERIFICATION.md), optionale
+Eigentümerprobe: [ZV50_OWNER_TRIAL.md](ZV50_OWNER_TRIAL.md). Pflichtjobs am
+Lieferhead/Test-Merge bleiben `docs`, `product`, `preflight`,
+`puzzle-production`, `rp4-windows` und `rp5-repair`. Das separate
+`zv50-review-<Head>` enthält native Vorher-/Nachherbilder gegen
+`main@add7a7e6…`; der kleine Spielerdownload bleibt von technischen Renders getrennt.
+Die ausdrückliche Eigentümeranweisung vom 06.10.2026 beauftragt Umsetzung und
+anschließenden Merge; die zuvor geplante ZV50-M01-Probe und unabhängige Zweitprüfung
+sind für genau diesen Merge aufgehoben, nicht als bestanden umgedeutet. Kein Release.

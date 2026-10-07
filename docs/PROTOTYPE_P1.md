@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 06.10.2026 · Spezifikation 0.17 · P1.4/G1/H1/Z2/RP-3/GP-48 integriert, RP-6-Pilot im Draft
+Stand: 07.10.2026 · Spezifikation 0.18 · P1.4/G1/H1/Z2/RP-3/GP-48/ZV-50 integriert, RP-6-Pilot im Draft
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -53,6 +53,7 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 | D-25 | Die gültige Cursorzeile und -spalte werden im Raster dezent hervorgehoben. | Schnittpunkt nicht doppelt betonen; Inhalte und Linien bleiben lesbar. Ohne Zellgeste verschwindet das Band beim Verlassen der Rasterfläche. |
 | D-26 | X und Preview-X werden an angeschnittenen Zellen geometrisch am Rasterviewport geclippt. | Normale X-Geometrie beibehalten, nicht in den sichtbaren Rest verschieben oder eine teilweise sichtbare Zelle pauschal verwerfen. |
 | D-27 | Linke und rechte Zellgesten zeigen einen kleinen Live-Zähler der gesamten aktuellen Strichlänge. | Geometrisches gerades Segment inklusive Start/Ende und übersprungener oder vorbesetzter Zellen; elastisches Zurückziehen aktualisiert sofort. Keine Navigation und kein gespeicherter Zustand. |
+| D-28 | Die kompakte Standardrasterfläche ist keine Zoom-Clippinggrenze. | Im nicht kompakten Buchlayout wächst der Rasterviewport erst oberhalb 100 % in freie Papierfläche; tatsächliche UI-/Papiergrenzen erzeugen den Ausschnitt. 20×20 bleibt bei 1920×1080/UI 100 % bis einschließlich 150 % vollständig sichtbar. |
 
 D-07 bis D-10 übernehmen die vier Punkte der ersten Nutzer-Mausprobe. D-11 bis D-15
 übernehmen den ausdrücklich supersedierenden Sollstand der anschließenden P1.2-Probe.
@@ -161,6 +162,8 @@ oder Eingriff in Windows-Einstellungen. 1280×720 bleibt Mindest-/Fallback-Test,
 1600×900 kleinerer Regressionstest und 2560×1440 unterstützte größere Fläche.
 
 Arbeitszoom, UI-/Hinweisskalierung und Fenstergröße sind getrennt. Technischer Ausgangswert: 24 logische Einheiten Zellabstand bei 100 % Arbeitszoom; eine begründete Feinanpassung nach Darstellungstests ist reversibles Implementierungsdetail. Vergrößern/Maximieren des Fensters vergrößert bei gleichem Zoom und UI-Maßstab nicht automatisch die Zellen. Stattdessen mehr Raster zeigen oder kleine Raster mit ruhigen Rändern platzieren. Eine ausdrücklich gewählte Gesamtansicht ist vom Arbeitszoom zu unterscheiden; „Arbeitsgröße“ stellt eine brauchbare Bearbeitungsgröße wieder her.
+
+D-28 / [#50](https://github.com/venomenon328/picross/issues/50) trennt dabei die ruhige Standardfläche vom maximal nutzbaren Rasterviewport. Bis einschließlich 100 % bleiben die integrierten Z2-Referenzflächen unverändert. Erst oberhalb davon wächst der Viewport im nicht kompakten Buchlayout in die tatsächlich freie Papierfläche und wird an Hinweis-/Titel-, Miniatur- und Werkzeuggrenzen begrenzt. Bei 1920×1080/UI 100 % bleibt ein 20×20-Raster bei 26, 28, 30, 32, 34 und 36 Einheiten vollständig sichtbar; 40 Einheiten ist der erste gezielt geprüfte vertikale Überlauffall. Kleinere Fenster oder UI 125 % dürfen aufgrund realen Platzmangels früher clippen. Rendering, Trefferprüfung, Zoomanker, Panbegrenzung und Miniatur verwenden dieselbe resultierende Geometrie; keine versteckte Zell-/Hinweisverkleinerung und kein Save-Schemawechsel.
 
 Mausrad zoomt möglichst ortsstabil am Zeiger. Mittlere Taste oder Hand-Werkzeug
 verschieben. Sichtbare Zoomknöpfe, Gesamtansicht und Rückkehr zur Arbeitsgröße.
@@ -520,3 +523,15 @@ und tatsächlichen nativen Renderbildern geprüft.
 [RP-6-Nachweise](RP6_VERIFICATION.md) und [neutrale Spielprobe](RP6_OWNER_TRIAL.md).
 Unabhängiges technisches/visuelles Review und M01–M04 aus #40 bleiben
 Abnahmegates. Eine automatisierte Lösung ersetzt keine Eigentümerprobe.
+
+
+## 14. ZV-50: nutzbare Rasterfläche beim Zoom
+
+[#50](https://github.com/venomenon328/picross/issues/50) konkretisiert D-28 als
+begrenzte Layoutkorrektur auf der integrierten Z2-Arbeitsansicht. Technische
+Zuordnung und native Vorher-/Nachherbelege stehen in
+[ZV50_VERIFICATION.md](ZV50_VERIFICATION.md); die optionale reale Nachprobe in
+[ZV50_OWNER_TRIAL.md](ZV50_OWNER_TRIAL.md). Rätseldaten, Regeln, Save-Schema,
+20 Zoomstufen und historische Designpakete bleiben unverändert. PR #51 ist als
+`952d68956f93851695234731a6d94e6552c8d54a` in `main` integriert; RP-6 übernimmt
+diesen Stand regressionsfrei.
