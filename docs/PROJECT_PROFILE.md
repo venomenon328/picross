@@ -29,10 +29,11 @@ Vergleich und F-04 und ist nach unabhängigem Review R2 über PR #44 als
 [Prüfzuordnung](RP3_VERIFICATION.md). RP-4/#38 ist nach R1-Nacharbeit und
 unabhängigem Review R2 über PR #45 als `80ae2c1` integriert;
 [Vergleichsbaseline](RP4_VERIFICATION.md) und Originalbindungen bleiben erhalten.
-RP-5/#39 liefert in Draft-PR #46 die begrenzte motivgeschützte Reparatursuche,
+RP-5/#39 ist nach unabhängigem Review R1 über PR #46 als `cd4a8db` integriert und liefert die begrenzte motivgeschützte Reparatursuche,
 [neun Vergleichsläufe](../examples/rp5/README.md) und
-[Prüfzuordnung](RP5_VERIFICATION.md). Unabhängiges RP-5-Review bleibt offen.
-RP-6 ist spezifiziert, noch nicht implementiert. Die P1-Fixtures und H1 liefern
+[Prüfzuordnung](RP5_VERIFICATION.md). Keine offenen RP-5-Reviewbefunde.
+RP-6/#40 liefert den begrenzten [Sechserpiloten](RP6_VERIFICATION.md) im Draft;
+unabhängiges Review, redaktionelle Freigabe, Eigentümerproben und Phasenentscheidung bleiben offen. Die P1-Fixtures und H1 liefern
 begrenzte Vorarbeiten, keine allgemeine Generatorplattform.
 
 Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
@@ -201,8 +202,9 @@ wegen der neuen Bildtests die Image-Umgebung.
 
 Grenzen: PNG/JPEG, 32 MiB kodiert, 8 Millionen dekodierte Pixel, 8192 je
 Quellachse, 1..8 Varianten, 1..100 Zielzellen je Achse und 1..8 Vordergrundfarben
-plus Leer. P1-Adapter: nur quadratisch monochrom, neutrale feste Kennung F-04,
-lokales SVG-Abschlussbild. Kein öffentlicher Import oder Saveformatwechsel.
+plus Leer. P1-Adapter v1 bleibt quadratisch monochrom mit F-04/SVG. RP-6 ergänzt
+versioniert v2: quadratische F-05 bis F-09, bis vier Farben plus Leer, lokale
+begrenzte PNG-/SVG-Ressourcen und vollständiger RP-5-Replay für Reparaturen. Kein öffentlicher Import oder Saveformatwechsel.
 Die Exportfreigabe rekonstruiert Quelle/Raster/Hinweise und prüft die geschriebene
 Nachweisdatei unabhängig neu; bewiesene Enddomains müssen der Matrix entsprechen.
 
@@ -240,8 +242,8 @@ Mono und Farbe, einzelne Zelländerungen, harte Masken und separate kumulative
 Änderungs-/Vorschlags-/Kandidaten-/Linien-/Zeitgrenzen. Alle Parameter wurden vor
 dem ersten Vergleichslauf in Commit `55f9e0f` fixiert. Endnachweise entstehen
 frisch vom unbekannten Raster und werden unabhängig geprüft; keine neue Regel
-im Zertifizierer. Bestehender P1-Export weist Reparaturbundles ausdrücklich zurück.
-Keine P1-Datei, Registrierung, Spielprobe oder Produktregel verändert.
+im Zertifizierer. Der v1-P1-Export weist Reparaturbundles weiterhin zurück. RP-5 selbst
+veränderte keine P1-Datei; RP-6 ergänzt dafür den getrennten v2-Adapter.
 
 ```sh
 python -m tools.puzzle_production.rp5 verify --output-dir artifacts/rp5-replay
@@ -258,9 +260,9 @@ Source-Head, Basis, Test-Merge und Run stehen im Artefakt. Gemeinsamer Fachjob
 behält sämtliche Oracles, sechs Referenzen, RP-3-Demo und RP-4-Replay;
 Windowsregression, `docs`, `product` und `preflight` bleiben aktiv.
 
-RP5-A01 bis A06 und aktuelle Fach-/RP-5-/Dokumentchecks sind vor Merge erforderlich.
-Die tatsächliche eigene Bildsichtung ist keine unabhängige technische/visuelle
-Zweitprüfung; dieses Gate bleibt in PR #46 separat offen. Reale Eigentümer-Lösung
+RP5-A01 bis A06 und unabhängiges technisches/visuelles Review R1 sind
+im integrierten PR #46 abgeschlossen. Historische Baseline-/Reviewfelder
+bleiben unverändert; eigene Sichtung ersetzt weiterhin keine Zweitprüfung. Reale Eigentümer-Lösung
 und finale Pilotabnahme bleiben RP-6-Gates. Kein Merge/Release; Parent #34 offen.
 
 ## Toolchain- und Produktprüfung
@@ -352,26 +354,45 @@ Setup-, Preflight- und Produkt-CI arbeiten mit lesenden Repositoryrechten. Kein 
 
 Die [ChatGPT-Projekteinstellungen](CHATGPT_PROJECT_INSTRUCTIONS.md) werden separat durch den Nutzer eingesetzt. Die lokale Modellheuristik ersetzt alte allgemeine Modellanweisungen einschließlich eines Pflichtverweises auf `Codex-Empfehlung.txt`; keine zweite Heuristik parallel aktivieren.
 
-## GP-48: eigener Gameplay-Auftrag
+## RP-6-Prüfumfang
 
-[Issue #48](https://github.com/venomenon328/picross/issues/48) ersetzt im eigenen
-Branch `feat/48-gameplay-feedback` die betroffenen D-15-/H1-Regeln durch
-Startzustandsschutz und drei Hinweiszustände. Der aktuelle Vertrag steht in
-P1 §§5.1/5.2. Für diesen Auftrag zusätzlich die [GP-Prüfzuordnung](GP48_VERIFICATION.md)
-und [Eigentümeranleitung](GP48_OWNER_TRIAL.md) berücksichtigen.
+Der vor Bildarbeit gebundene Plan in `examples/rp6/plan.json` legt genau sechs
+Piloten fest: F-04 unverändert, F-05 bis F-09 additiv; F-01 bis F-03 zählen nicht.
+Alle neun festen Slots bleiben im scrollbar erreichbaren Album verfügbar.
+Save-Schema 1, Appidentität und normale Saves bleiben erhalten.
+`product` prüft alle sechs über reguläre Mauseingaben, je drei frische Prozesse,
+getrennte Slots und zehn native Bilder je Pilot bei 1920×1080/UI 100 % sowie
+1280×720/UI 125 %. `rp6-review` enthält technische Motivspoiler separat vom
+Windows-Spielpaket mit neutraler Eigentümeranleitung.
 
-Pflichtjobs am Lieferhead/Test-Merge: `docs`, `product`, `preflight`,
-`puzzle-production`, `rp4-windows`, `rp5-repair`. Produktweg ergänzt identische
-native Main-/Head-Vergleiche bei 1280×720/UI 125 % und 1920×1080/UI 100 %.
-`gp48-review` enthält technische PNGs/Hashbindungen separat;
-`picross-p1-player-<Head>` enthält ausschließlich das kleine Spieler-ZIP mit
-EXE-Paar, neutraler Anleitung/isoliertem Start, Bericht und Lizenzen.
+Der `product`-Job erzeugt die vollständigen Render-/Log-/Replaydaten weiterhin
+temporär und verwendet sie für seine Prüfungen. Reguläre PR-Läufe laden jedoch nur
+das schlanke Spielerpaket und die gezielten Reviewartefakte für GP-48, ZV-50, RP-3
+und RP-6 hoch. Der komplette `p1-product-output/`-Baum ist wegen seiner Größe nur
+bei einem manuellen `workflow_dispatch` mit `upload_full_evidence=true` als
+zusätzliches Sammelartefakt vorgesehen. Das ändert keinen Prüfpfad und entfernt
+keinen gezielten Nachweis; es vermeidet lediglich den standardmäßigen ~1-GB-Upload.
 
-Getrennter Selbstreview ist keine unabhängige Prüfung. Unabhängiges technisches/
-visuelles Review und gezielte GP48-M01-Eigentümerprobe bleiben vor Merge offen.
-Keine eigene Eigentümerabnahme, kein Merge/Release. PR #47 und sein Branch bleiben
-unverändert; spätere Integration und RP-6-Abnahme sind separate Schritte.
+Fachtests inklusive Export-/Manifest-/Asset-/Reparaturnegativfällen, sämtliche
+bisherigen Oracles, sechs Benchmarks und RP-3-/RP-4-/RP-5-Replays bleiben aktiv.
+Die sechs Jobs `puzzle-production`, `rp5-repair`, `rp4-windows`, `docs`, `product`
+und `preflight` müssen am neuen Stand erfolgreich laufen. A01–A03 und M01–M04
+bleiben das positive Mergegate aus #40; kein Merge/Releaseauftrag, Parent #34 offen.
 
+
+## GP-48: integrierter Gameplay-Vertrag
+
+[Issue #48](https://github.com/venomenon328/picross/issues/48) ist nach unabhängigem
+Review R1 und positiver GP48-M01-Eigentümerprobe über PR #49 als
+`add7a7e6aa507d54d6e0e2ac8a3a2c5e2d1d6912` in `main` integriert.
+Startzustandsschutz, drei Hinweiszustände und die kräftigere Hinweisdarstellung
+stehen in P1 §§5.1/5.2; historische Abnahmen bleiben commitgebunden.
+
+Für den jetzt kombinierten RP-6-Stand bleiben dieselben GP-Regeln verpflichtend.
+`product` vergleicht die native Darstellung zusätzlich gegen den integrierten
+GP-48-Mainstand und veröffentlicht technische GP-Vergleiche getrennt vom schlanken
+RP-6-Spielerpaket. Eine erneute GP48-M01 ist kein eigenes Gate; Integrationsregressionen
+und die offenen RP6-A01–A03/M01–M04 werden am neuen PR-#47-Head geprüft.
 
 ## ZV-50: freie Rasterfläche beim Arbeitszoom
 

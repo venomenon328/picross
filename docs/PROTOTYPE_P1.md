@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 06.10.2026 · Spezifikation 0.17 · P1.4/G1/H1/Z2/GP-48 integriert; ZV-50 spezifiziert
+Stand: 07.10.2026 · Spezifikation 0.18 · P1.4/G1/H1/Z2/RP-3/GP-48/ZV-50 integriert, RP-6-Pilot im Draft
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -326,7 +326,7 @@ Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
 
-P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den vier fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gültigen Arbeitszoom oder Gesamtansichtsmodus, aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
+P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den neun fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gültigen Arbeitszoom oder Gesamtansichtsmodus, aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 
 Vor Anwendung werden Schema, exakte Definition/Revision, Matrix/Palette, jede nichtleere atomare History-Aktion mit eindeutigen Indizes und gültigen Vor-/Nachwerten, das widerspruchsfreie Replay ab unbekanntem Raster einschließlich Redo, Cursor-Matrix-Gleichheit, `undo_used`, Abschluss und View vollständig geprüft. Unbekannte oder unpassende Daten werden weder teilweise geladen noch still migriert. Der Rasterfokus wird bei Resize gültig begrenzt; Hinweis-Offsets werden aus Rasterende, äußerem Anfang oder mittlerem Tokenfenster für die aktuelle Geometrie neu abgeleitet.
 
@@ -483,7 +483,7 @@ Ereignisse geprüft: Auswahl, falscher Eintrag/eigene Miniatur, Undo/Redo,
 Teilstand, Neustart, Abschluss und erneuter Neustart samt Album. Vor Abschluss
 bleiben Name, Reveal und Lösungsausschnitt verborgen. Die [RP-3-Prüfzuordnung](RP3_VERIFICATION.md)
 bindet native Renderbilder; F-01/F-02 samt Proofs/Bildern und F-03 bleiben erhalten.
-Unabhängiges technisches/visuelles RP-3-Review bleibt offen, die reale
+RP-3 ist nach unabhängigem Review R2 über PR #44 integriert; die reale
 Eigentümer-Lösung ist RP-6-Gate. Parent #34 bleibt offen; kein Merge/Release.
 
 ## 12. GP-48: Gameplay-Vertragsänderung
@@ -495,17 +495,43 @@ Proofs, Appidentität und Save-Schema bleiben erhalten; gespeicherte alte Aktion
 werden als Vor-/Nachwerte replayt, ohne die neue Gestenregel rückwirkend anzuwenden.
 
 [GP-48-Prüfzuordnung](GP48_VERIFICATION.md) und
-[gezielte Eigentümerprobe](GP48_OWNER_TRIAL.md) binden die Lieferung.
-Vor Merge: aktuelle sechs Pflichtjobs, unabhängiges technisches/visuelles Review,
-GP48-M01 und gesonderte Mergefreigabe. PR #47 bleibt getrennt; Integration und
-RP-6-Fortsetzung erfolgen später als eigener Auftrag. Kein Release.
+[gezielte Eigentümerprobe](GP48_OWNER_TRIAL.md) dokumentieren die Lieferung.
+Review R1 und GP48-M01 sind für Lieferhead `1127b22c3b472f4af2a872643870549f65798bfc`
+abgeschlossen; PR #49 wurde als `add7a7e6aa507d54d6e0e2ac8a3a2c5e2d1d6912`
+in `main` integriert. Der kombinierte RP-6-Stand muss diese Regeln regressionsfrei
+erhalten. Kein Release folgt daraus.
 
 
-## 13. ZV-50: nutzbare Rasterfläche beim Zoom
+## 13. RP-6: sechs feste Pilotinhalte
+
+F-04 bleibt byteidentisch einschließlich Revision und SVG. F-05 bis F-09 sind
+zusätzliche Schema-2-Definitionen/Save-Slots: 100×100 Mono, 50×50 Farbe,
+100×100 Farbe, zweimal 40×40 Farbe. Lokale quadratische PNGs `art/f05.png`
+bis `art/f09.png` sind je ID fest gebunden. Adapter v2 prüft Import oder
+vollständigen RP-5-Reparaturvertrag; technische Zertifizierung ist keine
+redaktionelle Freigabe. Quelle/Palette/Matrix/Proof und Ressourcen stehen im
+[Pilotmanifest](../examples/rp6/manifest.json).
+
+Das vorhandene Album erhält ein scrollbar erreichbares Dreispaltenraster; alle
+neun Blätter sind auch bei 1280×720/UI 125 % wählbar. Keine neue Progression
+oder Albumarchitektur. Appidentität, Save-Schema 1, F-01 bis F-04 und deren
+Revisionen bleiben erhalten. Font-/C1-, Maus-, Spoiler- und H1-Verträge gelten
+für die neuen Paletten unverändert. Vor Abschluss nur eigene Miniatur, danach
+korrekt gebundener Name und Ressource; alle sechs mit isolierter Fortsetzung
+und tatsächlichen nativen Renderbildern geprüft.
+
+[RP-6-Nachweise](RP6_VERIFICATION.md) und [neutrale Spielprobe](RP6_OWNER_TRIAL.md).
+Unabhängiges technisches/visuelles Review und M01–M04 aus #40 bleiben
+Abnahmegates. Eine automatisierte Lösung ersetzt keine Eigentümerprobe.
+
+
+## 14. ZV-50: nutzbare Rasterfläche beim Zoom
 
 [#50](https://github.com/venomenon328/picross/issues/50) konkretisiert D-28 als
 begrenzte Layoutkorrektur auf der integrierten Z2-Arbeitsansicht. Technische
 Zuordnung und native Vorher-/Nachherbelege stehen in
 [ZV50_VERIFICATION.md](ZV50_VERIFICATION.md); die optionale reale Nachprobe in
 [ZV50_OWNER_TRIAL.md](ZV50_OWNER_TRIAL.md). Rätseldaten, Regeln, Save-Schema,
-20 Zoomstufen und historische Designpakete bleiben unverändert.
+20 Zoomstufen und historische Designpakete bleiben unverändert. PR #51 ist als
+`952d68956f93851695234731a6d94e6552c8d54a` in `main` integriert; RP-6 übernimmt
+diesen Stand regressionsfrei.

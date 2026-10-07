@@ -1,7 +1,7 @@
 # GP-48 · Gezielte Eigentümerprobe
 
 Stand: 06.10.2026 · [Issue #48](https://github.com/venomenon328/picross/issues/48).
-**GP48-M01 ist nicht durchgeführt. Vor dem Merge separat vom Eigentümer prüfen.**
+**GP48-M01 wurde am 06.10.2026 vom Eigentümer durchgeführt und als „funktioniert wie gewünscht“ bestätigt.**
 Dies ist eine kurze Bedien-/Sichtprobe, keine vollständige Rätsellösung oder RP-6-Abnahme.
 
 ## Download und isolierter Start
@@ -96,5 +96,4 @@ aus/an schalten: normale/aktuelle Zustände, ohne Änderung von Zellen oder Undo
 | Mono/Farbe, beide Achsen, Tooltip/Überlauf/Drag | ____ |
 | Gesamturteil und konkrete Abweichungen | ____ |
 
-Keine vorab eingetragene Bestätigung. Unabhängiges technisches/visuelles Review,
-GP48-M01 und spätere ausdrückliche Mergefreigabe bleiben getrennte Schritte.
+Die leeren Felder oben bleiben die historische Vorlage; nicht übermittelte Umgebungsmetadaten werden nicht nachträglich erfunden. Review R1 und GP48-M01 sind abgeschlossen, PR #49 ist als `add7a7e6` integriert. Für den kombinierten PR-#47-Stand zählt dies als bereits abgenommene GP-Regel; RP-6 besitzt eigene offene Gates.
