@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 07.10.2026 · Spezifikation 0.18 · P1.4/G1/H1/Z2/RP-3/GP-48/ZV-50 integriert, RP-6-Pilot im Draft
+Stand: 07.10.2026 · Spezifikation 0.20 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -20,6 +20,12 @@ visuellen Nachweisen; keine gezielte reale Probe wird rückwirkend aus #12 abgel
 **Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; #12 schließt die integrierte 500-Aktionen-, Windows-, Bedien- und Performanceprüfung ab. #17 ergänzt die Startzell-Rückkehr zur erneuten Achsenwahl; #19/H1 ergänzt die lösungsunabhängige Erfüllungsmarkierung und ihren sitzungsweiten Schalter. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md), [H1-Prüfbericht](H1_VERIFICATION.md), historischer [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
 
 Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen weder die endgültige Produktengine noch die gesamte Betriebssystemmatrix, Wertung oder Themenwahl fest. Frühere P1-Vorschläge in Issue-Revision 0.1 und Gestaltungskonzept Abschnitt 7 sind innerhalb dieses Scopes abgelöst; globale Produktfragen bleiben offen.
+
+Die [zeichnerische Spieloberfläche](UI_DRAWING_STYLE.md) ergänzt als am 07.10.2026
+freigegebener **Sollstand** ZS-D01 bis ZS-D10. [ZS-1/#52](https://github.com/venomenon328/picross/issues/52)
+liefert die native Auswahl, [ZS-2/#53](https://github.com/venomenon328/picross/issues/53)
+die spätere reguläre Integration. Die [ZS-1-Studie](ZS1_VERIFICATION.md) setzt
+die Varianten isoliert um; die reguläre Darstellung bleibt bis ZS-2 unverändert.
 
 ## 2. Bestätigte Entscheidungen und Referenzumgebung
 
@@ -54,6 +60,11 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 | D-26 | X und Preview-X werden an angeschnittenen Zellen geometrisch am Rasterviewport geclippt. | Normale X-Geometrie beibehalten, nicht in den sichtbaren Rest verschieben oder eine teilweise sichtbare Zelle pauschal verwerfen. |
 | D-27 | Linke und rechte Zellgesten zeigen einen kleinen Live-Zähler der gesamten aktuellen Strichlänge. | Geometrisches gerades Segment inklusive Start/Ende und übersprungener oder vorbesetzter Zellen; elastisches Zurückziehen aktualisiert sofort. Keine Navigation und kein gespeicherter Zustand. |
 | D-28 | Die kompakte Standardrasterfläche ist keine Zoom-Clippinggrenze. | Im nicht kompakten Buchlayout wächst der Rasterviewport erst oberhalb 100 % in freie Papierfläche; tatsächliche UI-/Papiergrenzen erzeugen den Ausschnitt. 20×20 bleibt bei 1920×1080/UI 100 % bis einschließlich 150 % vollständig sichtbar. |
+| D-29 | Die Spielfläche erhält eine geometrisch präzise, charaktervolle zeichnerische Sprache. | Kräftige kompakte Hinweisziffern, stabile zurückhaltende Textur auf satten Farbflächen, handschriftliche X ohne zusätzliche Rand-UI; Stiftfüllung nach E1 gewählt, konkreter Hinweisfontvergleich und Abschlussbestätigung in ZS-1 offen. |
+| D-30 | Die Zellvorschau bleibt statisch und zeigt den Zielzustand heller beziehungsweise transparenter. | Nur wirksame Änderungen des elastischen Abschnitts; Rückzug/Abbruch unmittelbar, keine Animation der laufenden Vorschau. |
+| D-31 | Zellanimationen beginnen erst beim tatsächlichen Anwenden des Strichs. | Alle wirksamen Änderungen gleichzeitig; sehr kurz, ohne mit der Strichlänge wachsende Dauer oder zusätzliche Eingabesperre; Modell/History/Save warten nicht. |
+| D-32 | Zellanimationen sind einfach abschaltbar. | P1-Ausarbeitungsdefault: aktiv nach App-Start, sitzungsweit, nicht im Rätselsave; Aus beendet Effekte sofort, Vorschau bleibt statisch. |
+| D-33 | ZS1-E3 wählt Chalkboard Regular und kompaktere Zeilenhinweisabstände. | ZS-Studie: 26 × UI-Skalierung horizontale Zeilenslots links; vertikale Spaltenslots bleiben 18 × UI. Reguläre Integration erst in ZS-2. |
 
 D-07 bis D-10 übernehmen die vier Punkte der ersten Nutzer-Mausprobe. D-11 bis D-15
 übernehmen den ausdrücklich supersedierenden Sollstand der anschließenden P1.2-Probe.
@@ -90,7 +101,7 @@ Die spätere Perfektionsregel „ohne Fehler und ohne Undo“ bleibt erhalten. P
 
 ### 3.3 Gestaltung und Spoilergrenze
 
-Warmes, ruhiges handgezeichnetes 2D-Album mit klaren Konturen und Farbflächen. Thematik dezent im Arbeitsbildschirm, Raster sachlich und präzise. Keine Buchfalte, Dekoration oder unleserliche Handschrift über Arbeitszellen/Hinweisen. Sammelalbum und Reisealbum bleiben offene Themenalternativen.
+Warmes, ruhiges handgezeichnetes 2D-Album mit klaren Konturen und Farbflächen. Thematik dezent im Arbeitsbildschirm; das Raster bleibt geometrisch präzise und erhält im freigegebenen ZS-Folgeschritt eine charaktervolle gezeichnete Darstellung. Keine Buchfalte, Dekoration oder unleserliche Handschrift über Arbeitszellen/Hinweisen. Sammelalbum und Reisealbum bleiben offene Themenalternativen. Der Squeakross-Vergleich ist keine UI- oder Assetvorlage; Details in [Zeichensprache](UI_DRAWING_STYLE.md).
 
 Vor Abschluss weder fertiges Motivbild noch Motivname oder verräterischer Albumplatzhalter. Während des Lösens stets eine Miniatur nur des eigenen Zustands einschließlich Fehlern. Mocks sind Stilreferenzen, keine gültigen Rätseldaten oder vorweggenommenen Produktabnahmen.
 
@@ -141,6 +152,15 @@ Der explizite Radierer bleibt als Universalwerkzeug: links setzt alle vorhandene
 Die erste eindeutige Bewegung in eine andere Zelle verriegelt horizontal oder vertikal. Bei diagonalem Gleichstand bleibt nur die Startzelle in der Vorschau, bis eine Richtung dominiert. Trifft die aktive Zellgeste die tatsächliche Startzelle wieder, verkürzt sich die Vorschau auf diese Zelle und die Achse wird ohne Loslassen freigegeben. Die nächste eindeutige Bewegung wählt sie erneut; dies kann innerhalb derselben Geste mehrfach geschehen. Sonst bleibt die Achse fest und der Strich gerade. Eingabesprünge erfassen alle Zwischenzellen des aktuellen Abschnitts, schalten die Achse aber ohne gelieferten Startzelltreffer nicht frei. Ein nur auf die Achse projizierter Endpunkt am Start genügt ebenfalls nicht.
 
 Die elastische Vorschau wird aus dem bestätigten Zustand am Gestenbeginn und dem aktuellen geraden Abschnitt berechnet. Zurückziehen verkürzt auch Rücknahmestriche; außerhalb des Abschnitts erscheint der unveränderte Ausgangszustand wieder. Eine Startüberquerung ohne tatsächlichen Treffer bleibt auf derselben Achse; nach einem Treffer ist eine neue Achsenwahl möglich. Ursprung, Modus, Werkzeug und Setzfarbe bleiben dabei eingefroren. Loslassen übernimmt nur wirksame Änderungen atomar. Beispiel 5→12→9 bearbeitet nur 5–9 nach dem eingefrorenen Modus. Keine Abschlussprüfung aus der Vorschau.
+
+**D-30/D-31, freigegebener ZS-Sollstand:** Während des Ziehens erscheinen nur
+wirksame Zielmarkierungen statisch, heller beziehungsweise transparenter. Erst die
+tatsächliche Übernahme bei Mouse-Up startet gleichzeitig die Effekte aller
+geänderten Zellen; keine Animation in der Vorschau und kein Warten auf ihre
+Fertigstellung. Neue wirksame Vorschau hat zellweise Vorrang vor älteren Effekten.
+Neutralisierung zeigt bereits unbekannt mit dezenter statischer Vorschaukontur;
+keine alte Markierung für einen späteren Löscheffekt wieder einblenden. Vollständige
+Prioritäts-/Abbruch-/Lebenszyklusregeln stehen in [ZS-D06 bis D09](UI_DRAWING_STYLE.md).
 
 Während einer linken oder rechten Zellgeste zeigt ein kleiner Zähler am aktuellen
 Strichende, am Viewportrand nach innen versetzt, die geometrische Länge des aktuellen
@@ -274,8 +294,11 @@ Die exakte widerspruchsfreie eindeutige Zuordnung bleibt für beide positiven
 Zustände erforderlich; keine neue Farb-/Abstandsregel und keine Auskreuzpflicht
 für den Rätselabschluss.
 
-GP-03 zeichnet alle Hinweiszahlen kräftiger mit dem vorhandenen Plex-Sans-
-Variationsgewicht 600. Der bisherige Schriftgrad bleibt erhalten; der gesetzte,
+Die integrierte GP-03-Baseline zeichnet alle Hinweiszahlen kräftiger mit dem vorhandenen
+Plex-Sans-Variationsgewicht 600 bei bisherigem Schriftgrad. Der ZS-Folgevertrag
+öffnet gezielt die Hinweisziffern für eine native Auswahl von Form, Gewicht, optischer
+Größe und gegebenenfalls bewusst gewählten gemeinsamen Slotmaßen; bis zu dieser
+Umsetzung bleibt die Baseline der Iststand. Der gesetzte,
 noch offene Block erhält 78 % Deckkraft, die Rätselfarbe und C1-Kontur bleiben
 erkennbar. Abgegrenzte Zahlen werden durchgestrichen. Alle drei Zustände behalten
 Größe, Slot und Originalindex. Das gilt für beide Achsen, Überlauf,
@@ -535,3 +558,41 @@ Zuordnung und native Vorher-/Nachherbelege stehen in
 20 Zoomstufen und historische Designpakete bleiben unverändert. PR #51 ist als
 `952d68956f93851695234731a6d94e6552c8d54a` in `main` integriert; RP-6 übernimmt
 diesen Stand regressionsfrei.
+
+## 15. ZS: zeichnerische Oberfläche und Zellanimationen
+
+Die [freigegebene Detailspezifikation](UI_DRAWING_STYLE.md) konkretisiert D-29 bis
+D-32. [ZS-1/#52](https://github.com/venomenon328/picross/issues/52) führt die nach
+E1 gewählte Stiftfüllung fort. Neues X und räumlicher Strichaufbau ersetzen die
+bisherige gleichförmige Kreuzform und Fade-Animation; 140 ms Setzen/Umwandeln und
+80 ms Entfernen bleiben. Zwei Eigentümer-TTFs werden gemäß Eigentümerentscheidung E2 am
+gleichen Stand verglichen. Zusätzliche Rand-UI entfällt; Hintergrundarbeit bleibt separat.
+[ZS-2/#53](https://github.com/venomenon328/picross/issues/53) integriert genau diese
+Auswahl in die reguläre Arbeitsansicht einschließlich abschaltbarer Effekte.
+
+Alle tatsächlich geänderten Zellen eines angewendeten Strichs animieren gleichzeitig.
+Die nächste Eingabe liest sofort den bestätigten Zustand. Neue Vorschau oder ein
+neuer Zustand derselben Zelle beendet veraltete Effekte; Rückzug spielt sie nicht
+erneut ab. Undo/Redo bleiben unmittelbar und ohne eigene Setzanimation. Abschluss,
+Seitenwechsel und Speicherung erhalten ihre vorhandenen Regeln; keine neue
+Abschlussverzögerung und keine transienten Effekte im Save.
+
+Für den P1-Schalter Zellanimationen gilt als begrenzter Ausarbeitungsdefault der
+bestehende sitzungsweite Ansatz: aktiv nach Start, erhalten über Blätter/Reset/Seiten,
+keine neue dauerhafte Einstellungsarchitektur. Hinweise analysieren weiterhin den
+eigenen logischen Zustand einschließlich statischer Vorschau; die Miniatur zeigt
+diesen unmittelbar und unanimiert. Farb-/Gesten-/History-/Save-/Spoiler-/ZV-50-Verträge
+bleiben erhalten. Die [isolierte ZS-1-Studie](ZS1_VERIFICATION.md) enthält die
+fontunabhängige Nacharbeit; der vollständige Fontvergleich und die abschließende
+Eigentümerbestätigung fehlen noch. ZS-2 ist weiterhin nicht implementiert.
+
+Aktuelle technische und gezielte reale Gates stehen im jeweiligen Paket. Die
+längere Spielerprobung [#24](https://github.com/venomenon328/picross/issues/24) folgt
+nach ZS-2 und ersetzt keine davor nötige Prüfung. Historische Abnahmen bleiben
+commitgebunden; kein Merge- oder Releaseauftrag aus der Spezifikationsfreigabe.
+
+
+ZS1-E3 wählt Chalkboard als konkrete Hinweisfont. N07 reduziert in der isolierten
+Studie ausschließlich die horizontale Zeilenhinweis-Slotweite auf 26 logische Pixel
+bei UI 100 %; Spaltenslots bleiben unverändert. Für PR #55 hat der Eigentümer die
+kombinierte Sichtprüfung ausdrücklich auf den gemergten `main`-Stand verlegt.

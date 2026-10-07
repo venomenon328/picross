@@ -26,6 +26,7 @@ import rp6_review
 import gp48_review
 import gp48_delivery
 import zv50_review
+import zs1_delivery
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -261,12 +262,14 @@ def main() -> int:
             phase("zv50-before-capture", [str(zv_before) if arg == str(project) else arg for arg in zv_command], "ZV50_CAPTURE_OK")
             del environment["ZV50_VARIANT"]
             zv50_comparison = zv50_review.verify_pairs(renders)
+            zs1_evidence = zs1_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
             if host == "Windows":
                 phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
                 phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"), "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
+            zs1_build, zs1_exports = zs1_delivery.export(project, workspace, output, base, phase, host)
             # Build the synthetic worksheet separately, after the production export.
             # Exported players cannot override their main scene via editor --script.
             shutil.copyfile(root / "tools/h1_owner_probe.gd", project / "h1_owner_probe.gd")
@@ -345,6 +348,7 @@ def main() -> int:
             gp_review = gp48_review.package(root, output, manifest, archive)
             zv_review = zv50_review.package(root, output, manifest, archive)
             rp6_review.package(root, output, manifest, archive)
+            zs1_delivery.package(root, output, zs1_build, zs1_exports, manifest, zs1_evidence)
             print(f"GP48 REVIEW {gp_review} sha256:{toolchain.sha256_file(gp_review)}", flush=True)
             print(f"ZV50 REVIEW {zv_review} sha256:{toolchain.sha256_file(zv_review)}", flush=True)
             print(f"REVIEW {review_zip} sha256:{toolchain.sha256_file(review_zip)}", flush=True)
