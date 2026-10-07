@@ -3,9 +3,10 @@ extends "res://ui/board.gd"
 const PREVIEW_ALPHA: float = 0.56
 const SET_SECONDS: float = 0.140
 const REMOVE_SECONDS: float = 0.080
+const CHALKBOARD_ROW_SLOT: float = 26.0
 const Marks = preload("res://study/marks.gd")
 const Fonts = preload("res://study/fonts.gd")
-var font_choice: int = 1 # Candidate order, not the final owner selection.
+var font_choice: int = 2 # Chalkboard selected by owner E3; other fonts remain comparison references.
 var marks: Marks
 var style: int = 2 # 0 historical regular baseline, 2 selected pencil
 var animations: bool = true
@@ -35,6 +36,11 @@ func clue_text_font(font: Font, text: String) -> Font:
 
 func clue_font_size() -> int:
 	return mini(Fonts.pixel_size(font_choice, super.clue_font_size()), maxi(Fonts.pixel_size(font_choice, 8), floori(view.cell_size - 4)))
+
+func shared_clue_slot_extent(axis: String, font: Font, fs: int) -> float:
+	if book_layout and axis == "row" and font_choice == 2:
+		return CHALKBOARD_ROW_SLOT * ui_scale
+	return super.shared_clue_slot_extent(axis, font, fs)
 
 func clue_tooltip_font_size() -> int:
 	return Fonts.pixel_size(font_choice, super.clue_tooltip_font_size())

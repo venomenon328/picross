@@ -73,7 +73,7 @@ func run() -> void:
 		await status_probe()
 		if not baseline:
 			await numeral_probe()
-		if not baseline and choice == 1:
+		if not baseline and choice == 2:
 			await movement()
 			await load_probe()
 			await stroke_probe()
@@ -179,6 +179,9 @@ func font_metrics() -> Dictionary:
 	if not baseline and variant > 0:
 		check(width + 1 <= minf(rows, board.view.cell_size), "actual clue widths fit fixed slots and columns")
 		check(extents.x + extents.y <= columns, "glyphs including markers fit column slot height")
+	if not baseline and variant == 2:
+		check(is_equal_approx(rows, 26.0 * app.ui_scale), "Chalkboard row slot is owner-selected compact spacing")
+		check(is_equal_approx(columns, 18.0 * app.ui_scale), "column slot spacing remains unchanged")
 	return {"font_size": fs, "max_actual_token_width": width, "row_slot": rows, "column_slot": columns,
 		"ink_above_center": extents.x, "ink_below_center": extents.y, "ascent": font.get_ascent(fs), "descent": font.get_descent(fs)}
 

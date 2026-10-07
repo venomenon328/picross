@@ -33,7 +33,9 @@ func run() -> void:
 	check(app.store.root == app.study_root and not app.store.root.contains("forbidden"), "isolation before slot load")
 	check(FileAccess.get_file_as_string(Store.test_root_override.path_join("f01.json")) == "normal-save-sentinel", "normal sentinel untouched")
 	check(app.board.style == 2, "selected pencil is startup default")
+	check(app.board.font_choice == 2, "owner-selected Chalkboard is startup default")
 	font_probe()
+	slot_probe()
 	for index: int in range(30):
 		for which: int in range(2):
 			var path: PackedVector2Array = Marks.x_path(index, which)
@@ -148,6 +150,18 @@ func run() -> void:
 		print("ZS1_TESTS_OK")
 	quit(0 if failures == 0 else 1)
 
+func slot_probe() -> void:
+	app.board.set_font_choice(2)
+	app.set_ui_scale(1.0)
+	var fs: int = app.board.clue_font_size()
+	check(is_equal_approx(app.board.shared_clue_slot_extent("row", app.board.clue_font(), fs), 26.0), "Chalkboard row clues use compact 26px slots")
+	check(is_equal_approx(app.board.shared_clue_slot_extent("column", app.board.clue_font(), fs), 18.0), "column clue spacing remains 18px")
+	app.set_ui_scale(1.25)
+	fs = app.board.clue_font_size()
+	check(is_equal_approx(app.board.shared_clue_slot_extent("row", app.board.clue_font(), fs), 32.5), "compact row slots scale with UI")
+	check(is_equal_approx(app.board.shared_clue_slot_extent("column", app.board.clue_font(), fs), 22.5), "column slots scale unchanged")
+	app.set_ui_scale(1.0)
+
 func font_probe() -> void:
 	var fonts = app.board.Fonts
 	for choice: int in [1, 2]:
@@ -181,7 +195,7 @@ func font_probe() -> void:
 				for symbol: String in "0123456789…–":
 					check(app.board.clue_font().has_char(symbol.unicode_at(0)), "digit or explicit punctuation available")
 	app.board.set_style(2)
-	app.board.set_font_choice(1)
+	app.board.set_font_choice(2)
 
 func fresh() -> void:
 	app.select_puzzle(0)

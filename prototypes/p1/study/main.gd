@@ -30,7 +30,7 @@ func _ready() -> void:
 	animation_toggle.toggled.connect(func(enabled: bool) -> void: board.set_animations(enabled))
 	settings_panel.add_child(animation_toggle)
 	settings_panel.move_child(animation_toggle, 1)
-	var study_label: Label = label("ZS-1 · Stift und Timing sind gewählt.\nHinweisfont oben wechseln: Bakso Daging / Chalkboard, zusätzlich Plex als bisherige Referenz. Der Zellstil lässt sich hier unabhängig umschalten.\nNeue Starts verwenden frische Studienstände.", 16)
+	var study_label: Label = label("ZS-1 · Chalkboard, Stift und Timing sind gewählt.\nChalkboard startet mit kompakteren Zeilenhinweisen; Bakso Daging und Plex bleiben Vergleichsreferenzen. Der Zellstil lässt sich unabhängig umschalten.\nNeue Starts verwenden frische Studienstände.", 16)
 	study_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	settings_panel.add_child(study_label)
 	var quit_control: Node = settings_panel.get_child(settings_panel.get_child_count() - 2)
