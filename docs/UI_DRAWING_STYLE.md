@@ -41,8 +41,8 @@ wählt **Chalkboard Regular** als Hinweisfont und reduziert die gemeinsame horiz
 Slotweite der Zeilenhinweise links vom Raster auf **26 logische Pixel bei UI 100 %**
 (UI-skaliert). Die Spaltenhinweise bleiben bei 18 logischen Pixeln. Der Eigentümer
 hat die Mergefreigabe ausdrücklich vor die kombinierte Sichtprüfung gezogen: Die
-visuelle Gesamtprüfung erfolgt anschließend auf `main` und ist für PR #55 kein
-verbleibendes Mergegate; sie bleibt Rückmeldung vor der regulären ZS-2-Integration.
+visuelle Gesamtprüfung wurde anschließend auf `main@985cf08e` erfolgreich
+abgeschlossen und am 07.10.2026 bestätigt; #52 ist abgeschlossen.
 
 ## 2. Ziel und begrenzte Ablösung
 
@@ -250,7 +250,7 @@ Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflü
 
 | Paket | Ergebnis | Abhängigkeit und Gate |
 | --- | --- | --- |
-| ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; E2-Fontvergleich, E3-Auswahl Chalkboard und kompaktere 26-px-Zeilenhinweisslots. | PR #55 darf nach N07 und aktuellen technischen Nachweisen gemergt werden; kombinierte Eigentümersichtprüfung folgt ausdrücklich auf main und bleibt Rückmeldung vor ZS-2. |
+| ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; E2-Fontvergleich, E3-Auswahl Chalkboard und kompaktere 26-px-Zeilenhinweisslots. | PR #55 ist nach R3 integriert; kombinierte Eigentümersichtprüfung auf main erfolgreich abgeschlossen. |
 | ZS-2 | Gewählte Hinweis-/Zellsprache ohne zusätzliche Rand-UI, statische Vorschau, parallele Commit-Effekte und Schalter in der regulären Arbeitsansicht. | ZS-1-Auswahl und integrierte nutzbare Grundlage; aktuelle technische Nachweise, unabhängiges Review und gezielte reale Eigentümerprobe vor Merge. |
 | Z3/#24 | Längere reale Spielerprobung der integrierten neuen Fassung und Abschluss der Designphase. | Nach ZS-2; ersetzt keine davor erforderlichen technischen oder gezielten manuellen Gates. |
 
@@ -275,10 +275,5 @@ Engine-/Plattformänderung oder globale Accessibility-/Einstellungsplattform.
 Keine Integration alter PRs #25/#28 als Voraussetzung, kein verstecktes Übernehmen
 ihrer offenen Befunde. Keine Änderung historischer Designartefakte oder Rätselproofs.
 
-Die Spezifikationsvorbereitung ist abgeschlossen. Der anschließende Auftrag
-zu #52 liefert die [isolierte ZS-1-Studie](ZS1_VERIFICATION.md) bis zum geprüften
-Draft-PR. Die [ZS1-M01-Rückmeldung](ZS1_OWNER_TRIAL.md) enthält Stift-/Timing- und
-Chalkboardwahl. E3 verlegt die kombinierte Sichtprüfung auf den gemergten main-Stand;
-sie blockiert PR #55 nicht mehr, bleibt aber vor ZS-2 als Produktfeedback offen.
-ZS-2 und Release sind damit nicht beauftragt. E1 ersetzt gezielt die genannten Teile des alten #54-Vertrags; die übrigen
+ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer erfolgreich abgeschlossen und die Kombination bestätigt. #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md) ist separat beauftragt; ZS2-M01, unabhängiges aktuelles Review und Mergefreigabe bleiben vor Merge offen. Kein Release. E1 ersetzt gezielt die genannten Teile des alten #54-Vertrags; die übrigen
 P1-/ZS-Invarianten bleiben erhalten.

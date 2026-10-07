@@ -37,9 +37,8 @@ eigene Füll-/X-Striche und kurze Zellanimationen. E1 wählt Stiftfüllung und
 Die ausdrücklich korrigierte Bewegungsregel gilt: statische hellere Vorschau
 während des Ziehens, Animation erst beim tatsächlichen Anwenden. Diese
 Folgearbeit liegt als [isolierte ZS-1-Studie](ZS1_VERIFICATION.md) vor.
-Eigentümerfeedback mit Stift-/Timingwahl liegt vor; endgültige Fontwahl und
-Bestätigung von neuem X/Strichaufbau bleiben offen; die reguläre Integration folgt
-erst mit ZS-2.
+Chalkboard/Stift/X/Timing sind nach ZS1-M01 bestätigt; die
+[reguläre ZS-2-Integration](ZS2_VERIFICATION.md) übernimmt diese Kombination.
 
 ## 2. Bestätigte gestalterische Grundlage
 
@@ -252,7 +251,7 @@ Chalkboard, werden gemäß [E2/Fontinput](ZS1_FONT_INPUT.md) auf derselben
 Zellgestaltung verglichen; kein neues breites Font-/Themenscreening. Dieselben echten
 Mono-/Farbspielstände, viele X, lange Hinweise und ein Großrasterausschnitt
 dienen dem Vergleich bei tatsächlicher Spielgröße. Die ausgewählte Kombination
-aus konkreter Hinweisfont, überarbeitetem X und Strichaufbau bleibt zu bestätigen;
+aus konkreter Hinweisfont, überarbeitetem X und Strichaufbau ist nach ZS1-M01 bestätigt;
 ZS-2 integriert sie mit gezielten Regressionen. #24 beurteilt anschließend
 die längere reale Nutzung. Die Spezifikationsfreigabe beginnt keines dieser
 Umsetzungspakete und ersetzt keine spätere Gestaltungs- oder Bedienabnahme.
@@ -262,7 +261,7 @@ Umsetzungspakete und ersetzt keine spätere Gestaltungs- oder Bedienabnahme.
 Zeilenhinweise links vom Raster werden gegenüber dem 30-px-Studienstand moderat
 verdichtet und verwenden 26 logische Pixel gemeinsame Slotweite bei UI 100 %;
 die vertikale Staffel der Spaltenhinweise bleibt unverändert. Die kombinierte
-Sichtprüfung erfolgt nach Merge von PR #55 auf `main`.
+Sichtprüfung ist nach Merge von PR #55 auf `main` erfolgreich abgeschlossen.
 
 ## 5. Bedienung und Wertung
 

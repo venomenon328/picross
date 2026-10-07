@@ -27,6 +27,7 @@ import gp48_review
 import gp48_delivery
 import zv50_review
 import zs1_delivery
+import zs2_delivery
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -263,6 +264,7 @@ def main() -> int:
             del environment["ZV50_VARIANT"]
             zv50_comparison = zv50_review.verify_pairs(renders)
             zs1_evidence = zs1_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
+            zs2_evidence = zs2_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
@@ -318,13 +320,14 @@ def main() -> int:
                             rp6=rp6,
                             gp48=gp_comparison,
                             zv50=zv50_comparison,
+                            zs2=zs2_evidence,
                             zv50_owner_sha256=toolchain.sha256_file(zv_owner),
                             h1_probe_files=h1_files,
                             h1_probe_export_files=h1_exports,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"], seconds=item.get("seconds")) for item in results],
-                            manual_acceptance="OPEN: combined RP-6 independent review, editorial release, owner solutions/large trial and phase decision. GP48 is integrated and owner-accepted via #49. No merge/release. Parent #34 remains open.")
+                            manual_acceptance="OPEN: ZS2-M01 and independent technical/visual review of this head before merge. ZS1-M01 confirmed by owner on 2026-10-07. No merge/release authorized.")
             pilot_launcher = output / "rp6-owner.ps1"
             pilot_launcher.write_text((root / "tools/rp6_owner.ps1").read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
             extras = {"RP6-SPIELPROBE.md": root / "docs/RP6_OWNER_TRIAL.md",
@@ -335,10 +338,13 @@ def main() -> int:
             for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
                 extras["licenses/" + path.name] = path
             extras["licenses/resources.json"] = root / "prototypes/p1/art/book/manifest.json"
-            archive = package(build, output, manifest, (root / "docs/RP6_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
+            extras["ZS2-SPIELPROBE.md"] = root / "docs/ZS2_OWNER_TRIAL.md"
+            extras["licenses/Chalkboard-NOTICES.md"] = root / "prototypes/p1/art/drawing/NOTICES.md"
+            archive = package(build, output, manifest, (root / "docs/ZS2_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
             rp6_player_files = {
                 "picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json",
                 "RP6-SPIELPROBE.md", "rp6-owner.ps1", "owner-probe.ps1",
+                "ZS2-SPIELPROBE.md", "licenses/Chalkboard-NOTICES.md",
                 "ZV50-SPIELPROBE.md", "zv50-owner.ps1",
                 "licenses/Fraunces-OFL.txt", "licenses/PlexSans-OFL.txt", "licenses/resources.json",
             }
@@ -349,6 +355,7 @@ def main() -> int:
             zv_review = zv50_review.package(root, output, manifest, archive)
             rp6_review.package(root, output, manifest, archive)
             zs1_delivery.package(root, output, zs1_build, zs1_exports, manifest, zs1_evidence)
+            zs2_delivery.package(root, output, manifest, zs2_evidence)
             print(f"GP48 REVIEW {gp_review} sha256:{toolchain.sha256_file(gp_review)}", flush=True)
             print(f"ZV50 REVIEW {zv_review} sha256:{toolchain.sha256_file(zv_review)}", flush=True)
             print(f"REVIEW {review_zip} sha256:{toolchain.sha256_file(review_zip)}", flush=True)

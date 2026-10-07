@@ -24,8 +24,8 @@ Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen wed
 Die [zeichnerische Spieloberfläche](UI_DRAWING_STYLE.md) ergänzt als am 07.10.2026
 freigegebener **Sollstand** ZS-D01 bis ZS-D10. [ZS-1/#52](https://github.com/venomenon328/picross/issues/52)
 liefert die native Auswahl, [ZS-2/#53](https://github.com/venomenon328/picross/issues/53)
-die spätere reguläre Integration. Die [ZS-1-Studie](ZS1_VERIFICATION.md) setzt
-die Varianten isoliert um; die reguläre Darstellung bleibt bis ZS-2 unverändert.
+die [reguläre Integration](ZS2_VERIFICATION.md). Die [ZS-1-Studie](ZS1_VERIFICATION.md)
+bleibt als isolierter Vergleich ausführbar; ZS-2 verwendet die bestätigte Kombination.
 
 ## 2. Bestätigte Entscheidungen und Referenzumgebung
 
@@ -60,11 +60,11 @@ die Varianten isoliert um; die reguläre Darstellung bleibt bis ZS-2 unveränder
 | D-26 | X und Preview-X werden an angeschnittenen Zellen geometrisch am Rasterviewport geclippt. | Normale X-Geometrie beibehalten, nicht in den sichtbaren Rest verschieben oder eine teilweise sichtbare Zelle pauschal verwerfen. |
 | D-27 | Linke und rechte Zellgesten zeigen einen kleinen Live-Zähler der gesamten aktuellen Strichlänge. | Geometrisches gerades Segment inklusive Start/Ende und übersprungener oder vorbesetzter Zellen; elastisches Zurückziehen aktualisiert sofort. Keine Navigation und kein gespeicherter Zustand. |
 | D-28 | Die kompakte Standardrasterfläche ist keine Zoom-Clippinggrenze. | Im nicht kompakten Buchlayout wächst der Rasterviewport erst oberhalb 100 % in freie Papierfläche; tatsächliche UI-/Papiergrenzen erzeugen den Ausschnitt. 20×20 bleibt bei 1920×1080/UI 100 % bis einschließlich 150 % vollständig sichtbar. |
-| D-29 | Die Spielfläche erhält eine geometrisch präzise, charaktervolle zeichnerische Sprache. | Kräftige kompakte Hinweisziffern, stabile zurückhaltende Textur auf satten Farbflächen, handschriftliche X ohne zusätzliche Rand-UI; Stiftfüllung nach E1 gewählt, konkreter Hinweisfontvergleich und Abschlussbestätigung in ZS-1 offen. |
+| D-29 | Die Spielfläche erhält eine geometrisch präzise, charaktervolle zeichnerische Sprache. | Kräftige kompakte Hinweisziffern, stabile zurückhaltende Textur auf satten Farbflächen, handschriftliche X ohne zusätzliche Rand-UI; Stiftfüllung nach E1 gewählt, Chalkboard und kombinierte Darstellung nach ZS1-M01 bestätigt. |
 | D-30 | Die Zellvorschau bleibt statisch und zeigt den Zielzustand heller beziehungsweise transparenter. | Nur wirksame Änderungen des elastischen Abschnitts; Rückzug/Abbruch unmittelbar, keine Animation der laufenden Vorschau. |
 | D-31 | Zellanimationen beginnen erst beim tatsächlichen Anwenden des Strichs. | Alle wirksamen Änderungen gleichzeitig; sehr kurz, ohne mit der Strichlänge wachsende Dauer oder zusätzliche Eingabesperre; Modell/History/Save warten nicht. |
 | D-32 | Zellanimationen sind einfach abschaltbar. | P1-Ausarbeitungsdefault: aktiv nach App-Start, sitzungsweit, nicht im Rätselsave; Aus beendet Effekte sofort, Vorschau bleibt statisch. |
-| D-33 | ZS1-E3 wählt Chalkboard Regular und kompaktere Zeilenhinweisabstände. | ZS-Studie: 26 × UI-Skalierung horizontale Zeilenslots links; vertikale Spaltenslots bleiben 18 × UI. Reguläre Integration erst in ZS-2. |
+| D-33 | ZS1-E3 wählt Chalkboard Regular und kompaktere Zeilenhinweisabstände. | ZS-Studie: 26 × UI-Skalierung horizontale Zeilenslots links; vertikale Spaltenslots bleiben 18 × UI. Reguläre Integration in ZS-2. |
 
 D-07 bis D-10 übernehmen die vier Punkte der ersten Nutzer-Mausprobe. D-11 bis D-15
 übernehmen den ausdrücklich supersedierenden Sollstand der anschließenden P1.2-Probe.
@@ -583,8 +583,8 @@ keine neue dauerhafte Einstellungsarchitektur. Hinweise analysieren weiterhin de
 eigenen logischen Zustand einschließlich statischer Vorschau; die Miniatur zeigt
 diesen unmittelbar und unanimiert. Farb-/Gesten-/History-/Save-/Spoiler-/ZV-50-Verträge
 bleiben erhalten. Die [isolierte ZS-1-Studie](ZS1_VERIFICATION.md) enthält die
-fontunabhängige Nacharbeit; der vollständige Fontvergleich und die abschließende
-Eigentümerbestätigung fehlen noch. ZS-2 ist weiterhin nicht implementiert.
+bestätigte Kombination. Die reguläre Integration und ihre weiterhin getrennten
+Abnahmegates sind in [ZS2_VERIFICATION.md](ZS2_VERIFICATION.md) dokumentiert.
 
 Aktuelle technische und gezielte reale Gates stehen im jeweiligen Paket. Die
 längere Spielerprobung [#24](https://github.com/venomenon328/picross/issues/24) folgt
@@ -595,4 +595,5 @@ commitgebunden; kein Merge- oder Releaseauftrag aus der Spezifikationsfreigabe.
 ZS1-E3 wählt Chalkboard als konkrete Hinweisfont. N07 reduziert in der isolierten
 Studie ausschließlich die horizontale Zeilenhinweis-Slotweite auf 26 logische Pixel
 bei UI 100 %; Spaltenslots bleiben unverändert. Für PR #55 hat der Eigentümer die
-kombinierte Sichtprüfung ausdrücklich auf den gemergten `main`-Stand verlegt.
+kombinierte Sichtprüfung ausdrücklich auf den gemergten `main`-Stand verlegt
+und ihren erfolgreichen Abschluss am 07.10.2026 bestätigt.

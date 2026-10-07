@@ -1,6 +1,6 @@
 # ZS-1 · Prüfzuordnung nach E1–E3 und Liefergrenze
 
-Stand: 07.10.2026 · bestehender Branch `feat/52-native-drawing-study`, Draft-PR #55
+Stand: 07.10.2026 · PR #55 nach R3 integriert als `985cf08e`; ZS1-M01 abgeschlossen
 
 Basis `ec99954268f1ad959d9ea779dbbd9e28edf7d8fa`, Ausgangs-/R1-Head
 `4ae4f5a20273808f99d257a3812da86d72307a5f`. Maßgeblich sind
@@ -14,7 +14,8 @@ R1 bleibt historisch; neue Selbstprüfung ist keine unabhängige Zweitprüfung.
 räumlichen Strichaufbau und beide Original-TTFs. [ZS1-E2](https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344)
 akzeptiert die vorhandenen Nutzungshinweise für die Kandidatenlieferung;
 [Fontinput](ZS1_FONT_INPUT.md) dokumentiert diese Grundlage und die genauen Bytes.
-Abschließende Eigentümerbestätigung und unabhängiges Review bleiben getrennte Gates.
+R3 und die anschließende ZS1-M01-Bestätigung sind für #52 abgeschlossen.
+Aktuelle ZS-2-Gates stehen in [ZS2_VERIFICATION.md](ZS2_VERIFICATION.md).
 
 
 **E3/N07:** Chalkboard Regular ist gewählt. Die Studienfassung reduziert nur die
@@ -76,16 +77,16 @@ bleiben verpflichtend. Lokale Entwicklungsläufe ersetzen die aktuellen CI nicht
 
 Die Indizes sind Nachweisgalerien, keine Browserimplementierung des Spiels.
 PNG bei 100 % prüfen. Vollrender-Sammelupload bleibt manuelles Opt-in.
-Reguläre Hauptszene und Standardzeichner bleiben erhalten; regulärer Export
-schließt `study/*` aus. Nur der Studienexport verwendet die getrennte Hauptszene
-und Appidentität. Beide Eigentümer-TTFs sind ausschließlich im Studienexport enthalten.
+Der reguläre Export schließt `study/*` weiter aus. Nur der Studienexport verwendet
+die getrennte Hauptszene und Appidentität. ZS-2 übernimmt die gewählte Chalkboard-TTF
+in den regulären Export; Bakso bleibt ausschließlich Studienkandidat.
 
 ## Abnahme und Historie
 
 Die Erstlieferung mit 117 Studienprüfungen, 42 Vergleichen und zwei Fade-Zeitfolgen
 bleibt ausschließlich an R1/`4ae4f5a` gebunden. Die fontunabhängige E1-Lieferung `9df51f0`
 mit 720 Studienprüfungen und 28 Ansichten bleibt ebenfalls historisch.
-Die aktuelle lokale Studienprüfung umfasst 1057 Assertions und 42 Ansichten
+Die damalige lokale Studienprüfung umfasste 1057 Assertions und 42 Ansichten
 unter Windows/OpenGL/RTX 3070. Aktuelle finale CI-/Download-/Sichtprüfung und
 der getrennte Selbstreview werden mit Headbindung im PR dokumentiert; frühere
 grüne Läufe werden nicht als Prüfung des neuen Heads ausgegeben.
@@ -93,7 +94,5 @@ grüne Läufe werden nicht als Prüfung des neuen Heads ausgegeben.
 **Mergeentscheidung E3:** Chalkboard, Stift und Timing sind gewählt. Nach N07
 müssen die aktuellen technischen Checks und ein commitbezogener Prüfschritt den
 neuen Head abdecken. Der Eigentümer hat PR #55 anschließend zum Merge freigegeben
-und die kombinierte reale Sichtprüfung auf `main` verschoben. Diese Nachprüfung
-bleibt vor #53 offen und wird nicht als bestanden umgedeutet. #52 bleibt dafür
-vorerst offen; #53 ist nicht implementiert.
+und die kombinierte reale Sichtprüfung auf `main` verschoben. ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer erfolgreich abgeschlossen und die Kombination bestätigt. #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md) ist separat beauftragt; ZS2-M01, unabhängiges aktuelles Review und Mergefreigabe bleiben vor Merge offen. Kein Release.
 Keine Hintergrundproduktion oder Veröffentlichung.

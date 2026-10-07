@@ -5,7 +5,6 @@ const Samples = preload("res://study/samples.gd")
 const Numerals = preload("res://study/numerals.gd")
 var variant_button: Button
 var font_button: Button
-var animation_toggle: CheckBox
 var study_root: String
 
 func create_board() -> Board:
@@ -24,12 +23,6 @@ func _ready() -> void:
 	font_button = _text_button("", cycle_font)
 	# Reuses the title's free right-hand region, above every working surface.
 	page.add_child(font_button)
-	animation_toggle = CheckBox.new()
-	animation_toggle.text = "Zellanimationen"
-	animation_toggle.button_pressed = true
-	animation_toggle.toggled.connect(func(enabled: bool) -> void: board.set_animations(enabled))
-	settings_panel.add_child(animation_toggle)
-	settings_panel.move_child(animation_toggle, 1)
 	var study_label: Label = label("ZS-1 · Chalkboard, Stift und Timing sind gewählt.\nChalkboard startet mit kompakteren Zeilenhinweisen; Bakso Daging und Plex bleiben Vergleichsreferenzen. Der Zellstil lässt sich unabhängig umschalten.\nNeue Starts verwenden frische Studienstände.", 16)
 	study_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	settings_panel.add_child(study_label)
@@ -112,14 +105,6 @@ func _layout_book() -> void:
 	if font_button != null:
 		var material: Rect2 = surface.material_rect()
 		_place(font_button, Rect2(material.position + Vector2(material.size.x * 0.52, material.size.y * 0.039), Vector2(210 * ui_scale, 44 * ui_scale)))
-
-func _undo() -> void:
-	board.clear_effects()
-	super._undo()
-
-func _redo() -> void:
-	board.clear_effects()
-	super._redo()
 
 func study_smoke() -> void:
 	for choice: int in [1, 2]:

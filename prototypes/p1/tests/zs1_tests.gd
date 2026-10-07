@@ -3,7 +3,7 @@ const Study = preload("res://study/main.gd")
 const Session = preload("res://model/session.gd")
 const Store = preload("res://model/save_store.gd")
 const Marks = preload("res://study/marks.gd")
-var app: Study
+var app: Control
 var surface: SubViewport
 var checks: int = 0
 var failures: int = 0
@@ -46,96 +46,7 @@ func run() -> void:
 	for choice: int in [1, 2]:
 		app.board.set_font_choice(choice)
 		app.board.set_style(2)
-		fresh()
-		var a: Vector2 = point(0, 0)
-		var b: Vector2 = point(19, 0)
-		mouse(a, MOUSE_BUTTON_LEFT, true)
-		motion(b)
-		check(app.session.gesture.active and app.board.preview.size() == 20, "native route long static preview")
-		check(app.board.effects.is_empty() and app.session.player.cursor == 0, "preview no effect/history")
-		mouse(b, MOUSE_BUTTON_LEFT, false)
-		check(app.session.player.cursor == 1 and app.board.effects.size() == 20, "one atomic commit, 20 simultaneous effects")
-		var start: int = int(app.board.effects[0].start)
-		for effect: Dictionary in app.board.effects.values():
-			check(int(effect.start) == start, "same timestamp")
-		# Same tick: the first effect has not ended. A new real GUI gesture wins.
-		mouse(a, MOUSE_BUTTON_RIGHT, true)
-		motion(point(4, 0))
-		check(app.session.gesture.active and app.board.effects.size() == 15, "second gesture before first finishes")
-		check(app.session.visible_cells()[0] == 0 and not app.board.effects.has(0), "conversion preview replaces old fill")
-		motion(a)
-		check(not app.board.effects.has(4) and app.session.visible_cells()[4] == 1, "retraction never resurrects effect")
-		mouse(a, MOUSE_BUTTON_RIGHT, false)
-		check(app.session.player.cells[0] == 0 and app.session.player.cursor == 2, "immediate conversion commit")
-		check(int(app.board.effects[0].after) == 0, "only youngest target")
-		var snapshot: Array[int] = app.session.player.cells.duplicate()
-		app._undo()
-		check(app.board.effects.is_empty() and app.session.player.cells[0] == 1, "undo immediate, no effect")
-		app._redo()
-		check(app.board.effects.is_empty() and app.session.player.cells == snapshot, "redo exact, no effect")
-		mouse(a, MOUSE_BUTTON_RIGHT, true)
-		check(app.session.visible_cells()[0] == -1 and app.board.preview.has(0), "erase preview unknown with contour")
-		mouse(a, MOUSE_BUTTON_RIGHT, false)
-		check(int(app.board.effects[0].after) == -1 and float(app.board.effects[0].seconds) == 0.08, "erase effect only neutral target")
-		var cursor: int = app.session.player.cursor
-		var bytes: String = FileAccess.get_file_as_string(app.store.path_for("f01"))
-		app.board.set_animations(false)
-		check(app.board.effects.is_empty() and not app.board.is_processing(), "disable clears and stops ticking")
-		app.board.set_animations(true)
-		check(app.board.effects.is_empty() and app.session.player.cursor == cursor, "enable no replay/history")
-		check(FileAccess.get_file_as_string(app.store.path_for("f01")) == bytes, "toggle does not save")
-		# Unknown start protects the existing fills in the middle of a long stroke.
-		mouse(a, MOUSE_BUTTON_RIGHT, true)
-		motion(b)
-		check(app.board.preview.size() == 1, "protected cells absent from preview")
-		mouse(b, MOUSE_BUTTON_RIGHT, false)
-		check(app.board.effects.size() == 1, "protected cells do not animate")
-		app.board.cancel_gesture()
-		app.board.eraser = true
-		mouse(point(0, 1), MOUSE_BUTTON_LEFT, true)
-		mouse(point(0, 1), MOUSE_BUTTON_LEFT, false)
-		check(app.board.effects.is_empty(), "noop does not animate")
-		app.board.eraser = false
-		mouse(point(0, 1), MOUSE_BUTTON_LEFT, true)
-		motion(point(8, 1))
-		var escape: InputEventKey = InputEventKey.new()
-		escape.keycode = KEY_ESCAPE
-		escape.pressed = true
-		surface.push_input(escape, true)
-		check(app.board.effects.is_empty() and app.session.player.cells[20] == -1 and not app.session.gesture.active, "escape without action/effect")
-		mouse(point(0, 1), MOUSE_BUTTON_LEFT, true)
-		app._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
-		check(app.board.preview.is_empty() and not app.session.gesture.active, "focus loss clears preview")
-		for event: String in ["zoom", "resize", "information", "album", "reset", "switch"]:
-			fresh()
-			mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
-			mouse(point(0, 0), MOUSE_BUTTON_LEFT, false)
-			check(not app.board.effects.is_empty(), "lifecycle starts effect")
-			match event:
-				"zoom": app.board.zoom(1, app.board.view.viewport.get_center())
-				"resize": app.size = Vector2(1600, 900); app._layout_book()
-				"information": app.show_information()
-				"album": app.show_album()
-				"reset": app.empty_sample()
-				"switch": app.select_puzzle(1)
-			check(app.board.effects.is_empty(), "lifecycle clears " + event)
-			app.size = Vector2(1920, 1080)
-		# Finish is immediate even while the display would still be animating.
-		fresh()
-		var changes: Array = []
-		var final_cell: Vector2i = Vector2i(-1, -1)
-		for y: int in range(20):
-			for x: int in range(20):
-				if int(app.session.definition.solution[y][x]) > 0:
-					if final_cell.x < 0:
-						final_cell = Vector2i(x, y)
-					else:
-						changes.append({"index": y * 20 + x, "before": -1, "after": 1})
-		app.session.player.commit(changes)
-		mouse(point(final_cell.x, final_cell.y), MOUSE_BUTTON_LEFT, true)
-		mouse(point(final_cell.x, final_cell.y), MOUSE_BUTTON_LEFT, false)
-		check(app.session.completed and app.ending.visible and app.board.effects.is_empty(), "finish has no animation delay")
-		check(app.store.load_slot(app.session.definition).data.completed, "completion saved immediately")
+		gesture_probe()
 		fresh()
 		# Geometry and semantic reads stay fixed while switching only style.
 		var rect: Rect2 = app.board.view.viewport
@@ -149,6 +60,98 @@ func run() -> void:
 	if failures == 0:
 		print("ZS1_TESTS_OK")
 	quit(0 if failures == 0 else 1)
+
+func gesture_probe() -> void:
+	fresh()
+	var a: Vector2 = point(0, 0)
+	var b: Vector2 = point(19, 0)
+	mouse(a, MOUSE_BUTTON_LEFT, true)
+	motion(b)
+	check(app.session.gesture.active and app.board.preview.size() == 20, "native route long static preview")
+	check(app.board.effects.is_empty() and app.session.player.cursor == 0, "preview no effect/history")
+	mouse(b, MOUSE_BUTTON_LEFT, false)
+	check(app.session.player.cursor == 1 and app.board.effects.size() == 20, "one atomic commit, 20 simultaneous effects")
+	var start: int = int(app.board.effects[0].start)
+	for effect: Dictionary in app.board.effects.values():
+		check(int(effect.start) == start, "same timestamp")
+	# Same tick: the first effect has not ended. A new real GUI gesture wins.
+	mouse(a, MOUSE_BUTTON_RIGHT, true)
+	motion(point(4, 0))
+	check(app.session.gesture.active and app.board.effects.size() == 15, "second gesture before first finishes")
+	check(app.session.visible_cells()[0] == 0 and not app.board.effects.has(0), "conversion preview replaces old fill")
+	motion(a)
+	check(not app.board.effects.has(4) and app.session.visible_cells()[4] == 1, "retraction never resurrects effect")
+	mouse(a, MOUSE_BUTTON_RIGHT, false)
+	check(app.session.player.cells[0] == 0 and app.session.player.cursor == 2, "immediate conversion commit")
+	check(int(app.board.effects[0].after) == 0, "only youngest target")
+	var snapshot: Array[int] = app.session.player.cells.duplicate()
+	app._undo()
+	check(app.board.effects.is_empty() and app.session.player.cells[0] == 1, "undo immediate, no effect")
+	app._redo()
+	check(app.board.effects.is_empty() and app.session.player.cells == snapshot, "redo exact, no effect")
+	mouse(a, MOUSE_BUTTON_RIGHT, true)
+	check(app.session.visible_cells()[0] == -1 and app.board.preview.has(0), "erase preview unknown with contour")
+	mouse(a, MOUSE_BUTTON_RIGHT, false)
+	check(int(app.board.effects[0].after) == -1 and float(app.board.effects[0].seconds) == 0.08, "erase effect only neutral target")
+	var cursor: int = app.session.player.cursor
+	var bytes: String = FileAccess.get_file_as_string(app.store.path_for("f01"))
+	app.board.set_animations(false)
+	check(app.board.effects.is_empty() and not app.board.is_processing(), "disable clears and stops ticking")
+	app.board.set_animations(true)
+	check(app.board.effects.is_empty() and app.session.player.cursor == cursor, "enable no replay/history")
+	check(FileAccess.get_file_as_string(app.store.path_for("f01")) == bytes, "toggle does not save")
+	# Unknown start protects the existing fills in the middle of a long stroke.
+	mouse(a, MOUSE_BUTTON_RIGHT, true)
+	motion(b)
+	check(app.board.preview.size() == 1, "protected cells absent from preview")
+	mouse(b, MOUSE_BUTTON_RIGHT, false)
+	check(app.board.effects.size() == 1, "protected cells do not animate")
+	app.board.cancel_gesture()
+	app.board.eraser = true
+	mouse(point(0, 1), MOUSE_BUTTON_LEFT, true)
+	mouse(point(0, 1), MOUSE_BUTTON_LEFT, false)
+	check(app.board.effects.is_empty(), "noop does not animate")
+	app.board.eraser = false
+	mouse(point(0, 1), MOUSE_BUTTON_LEFT, true)
+	motion(point(8, 1))
+	var escape: InputEventKey = InputEventKey.new()
+	escape.keycode = KEY_ESCAPE
+	escape.pressed = true
+	surface.push_input(escape, true)
+	check(app.board.effects.is_empty() and app.session.player.cells[20] == -1 and not app.session.gesture.active, "escape without action/effect")
+	mouse(point(0, 1), MOUSE_BUTTON_LEFT, true)
+	app._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	check(app.board.preview.is_empty() and not app.session.gesture.active, "focus loss clears preview")
+	for event: String in ["zoom", "resize", "information", "album", "reset", "switch"]:
+		fresh()
+		mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
+		mouse(point(0, 0), MOUSE_BUTTON_LEFT, false)
+		check(not app.board.effects.is_empty(), "lifecycle starts effect")
+		match event:
+			"zoom": app.board.zoom(1, app.board.view.viewport.get_center())
+			"resize": app.size = Vector2(1600, 900); app._layout_book()
+			"information": app.show_information()
+			"album": app.show_album()
+			"reset": fresh()
+			"switch": app.select_puzzle(1)
+		check(app.board.effects.is_empty(), "lifecycle clears " + event)
+		app.size = Vector2(1920, 1080)
+	# Finish is immediate even while the display would still be animating.
+	fresh()
+	var changes: Array = []
+	var final_cell: Vector2i = Vector2i(-1, -1)
+	for y: int in range(20):
+		for x: int in range(20):
+			if int(app.session.definition.solution[y][x]) > 0:
+				if final_cell.x < 0:
+					final_cell = Vector2i(x, y)
+				else:
+					changes.append({"index": y * 20 + x, "before": -1, "after": 1})
+	app.session.player.commit(changes)
+	mouse(point(final_cell.x, final_cell.y), MOUSE_BUTTON_LEFT, true)
+	mouse(point(final_cell.x, final_cell.y), MOUSE_BUTTON_LEFT, false)
+	check(app.session.completed and app.ending.visible and app.board.effects.is_empty(), "finish has no animation delay")
+	check(app.store.load_slot(app.session.definition).data.completed, "completion saved immediately")
 
 func slot_probe() -> void:
 	app.board.set_font_choice(2)

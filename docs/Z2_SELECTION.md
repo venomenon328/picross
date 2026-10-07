@@ -40,8 +40,8 @@ Spezifikation ist keine bereits gelieferte oder abgenommene Z2-Änderung.
 
 ZS1-E3 wählt Chalkboard Regular. Für die Studienfassung werden nur die horizontalen
 Zeilenhinweisslots links vom Raster auf 26 × UI-Skalierung verdichtet; die
-Spaltenhinweisslots bleiben 18 × UI. Diese Auswahl wird erst mit ZS-2 regulär
-integriert. Die kombinierte Sichtprüfung von PR #55 erfolgt nach dessen Merge auf main.
+Spaltenhinweisslots bleiben 18 × UI. Diese Auswahl wird mit der beauftragten [ZS-2-Integration](ZS2_VERIFICATION.md)
+regulär verwendet. Die kombinierte Sichtprüfung von PR #55 ist nach dessen Merge auf main abgeschlossen.
 
 ## Bereitstellung und Renderergrenzen
 

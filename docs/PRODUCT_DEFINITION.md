@@ -145,7 +145,8 @@ Ein vollständiger Themen- oder Layoutwechsel folgt daraus nicht.
 **ZS1-E3:** Für die ausgewählte ZS-Fassung ist Chalkboard Regular der Hinweisfont.
 Zeilenhinweise links vom Raster verwenden kompaktere gemeinsame 26-px-Slots bei
 UI 100 % (UI-skaliert); die vertikalen Spaltenslots bleiben unverändert. Die
-kombinierte Sichtprüfung erfolgt nach dem Merge von PR #55 auf `main`.
+kombinierte Sichtprüfung ist nach dem Merge von PR #55 auf `main` erfolgreich
+abgeschlossen; die reguläre Umsetzung ist separat in #53 beauftragt.
 
 Die endgültige Themenwahl bleibt ausdrücklich offen: A ist ein thematisches Sammelalbum, B ein Reisetagebuch beziehungsweise Weltreisealbum mit regionalen Motiven. Die näheren Entscheidungen, Beispiele und offenen Interaktionen stehen im [Gestaltungskonzept](DESIGN_CONCEPT.md). Die positive Rückmeldung zu einem exemplarischen Mock legt weder eine dieser Alternativen noch alle darin dargestellten Details verbindlich fest.
 

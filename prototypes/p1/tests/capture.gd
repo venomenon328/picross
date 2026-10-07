@@ -21,6 +21,12 @@ func _initialize() -> void:
 
 func snapshot(app: Main, name: String, crop: bool = false) -> void:
 	var material: Image
+	if name.begins_with("x-clip-"):
+		app.board.marks.hide()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		material = surface.get_texture().get_image()
+		app.board.marks.show()
 	if (name.begins_with("separation-") and name.ends_with("-confirmed")) or name == "f03-grid-focus" or name.begins_with("hint-marker-"):
 		app.board.hide()
 		await process_frame
@@ -35,22 +41,27 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 	if name.begins_with("separation-") and name.ends_with("-confirmed"):
 		for i: int in range(app.session.definition.palette.size()):
 			var cell: Rect2 = app.board.view.cell_rect(Vector2i(2 + i * 2, 4))
-			var center: Vector2i = Vector2i(app.board.global_position + cell.get_center())
-			var expanded: Vector2i = Vector2i(app.board.global_position + cell.position + Vector2(2, cell.size.y / 2))
+			# Solid pencil interior, between the three lighter texture strokes.
+			var center: Vector2i = Vector2i(app.board.global_position + cell.position + cell.size * Vector2(0.5, 0.38))
+			var expanded: Vector2i = Vector2i(app.board.global_position + cell.position + cell.size * Vector2(0.18, 0.38))
 			var moat: Vector2i = Vector2i(app.board.global_position + cell.position + Vector2(1, cell.size.y / 2))
-			if not picture.get_pixelv(center).is_equal_approx(Color(app.session.definition.palette[i].color)) or not picture.get_pixelv(expanded).is_equal_approx(Color(app.session.definition.palette[i].color)) or not picture.get_pixelv(moat).is_equal_approx(material.get_pixelv(moat)):
-				push_error("Rendered fill/moat regression: " + name)
+			var original: Color = Color(app.session.definition.palette[i].color)
+			var textured: Color = picture.get_pixelv(expanded)
+			var tint_delta: Vector3 = Vector3(textured.r-original.r, textured.g-original.g, textured.b-original.b)
+			# The selected pencil has white texture at up to 12 % coverage.
+			if not picture.get_pixelv(center).is_equal_approx(original) or minf(tint_delta.x, minf(tint_delta.y, tint_delta.z)) < -0.005 or tint_delta.length() > 0.13 * sqrt(3.0) or not picture.get_pixelv(moat).is_equal_approx(material.get_pixelv(moat)):
+				push_error("Rendered fill/moat regression: %s solid=%s inner=%s moat=%s paper=%s expected=%s" % [name,picture.get_pixelv(center),picture.get_pixelv(expanded),picture.get_pixelv(moat),material.get_pixelv(moat),Color(app.session.definition.palette[i].color)])
 				quit(5)
 				return
 			pixel_checks += 3
 	if name.contains("preview-color"):
 		var color_index: int = int(name.get_slice("preview-color", 1))
 		var preview_cell: Rect2 = app.board.view.cell_rect(Vector2i(2, 3))
-		var preview_center: Vector2i = Vector2i(app.board.global_position + preview_cell.get_center())
+		var preview_center: Vector2i = Vector2i(app.board.global_position + preview_cell.position + preview_cell.size * Vector2(0.5, 0.38))
 		var preview_moat: Vector2i = Vector2i(app.board.global_position + preview_cell.position + Vector2(1, preview_cell.size.y / 2))
-		var expected_fill: Color = Color(app.session.definition.palette[color_index - 1].color)
+		var expected_fill: Color = Color("e8e9d9").blend(Color(Color(app.session.definition.palette[color_index - 1].color), 0.56))
 		var gap: Color = picture.get_pixelv(preview_moat)
-		if not picture.get_pixelv(preview_center).is_equal_approx(expected_fill) or absf(gap.r - expected_fill.r) + absf(gap.g - expected_fill.g) + absf(gap.b - expected_fill.b) < 0.2:
+		if not close_color(picture.get_pixelv(preview_center), expected_fill) or absf(gap.r - expected_fill.r) + absf(gap.g - expected_fill.g) + absf(gap.b - expected_fill.b) < 0.1:
 			push_error("Rendered preview fill/moat regression: " + name)
 			quit(5)
 			return
@@ -69,16 +80,23 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 		pixel_checks += 4
 	if name.begins_with("x-clip-"):
 		var cell_box: Rect2 = app.board.view.cell_rect(x_test_cell)
-		var found: bool = false
-		for endpoints: Array in [[cell_box.position + cell_box.size * 0.3, cell_box.position + cell_box.size * 0.7], [cell_box.position + cell_box.size * Vector2(0.7, 0.3), cell_box.position + cell_box.size * Vector2(0.3, 0.7)]]:
-			var segment: PackedVector2Array = Board.clipped_segment(endpoints[0], endpoints[1], app.board.view.viewport.grow(-0.65))
-			if segment.size() == 2 and segment[0].distance_to(segment[1]) >= 3.0:
-				var sample: Vector2i = Vector2i(app.board.global_position + (segment[0] + segment[1]) * 0.5)
-				var pixel: Color = picture.get_pixelv(sample)
-				if pixel.r < 0.82 and pixel.g < 0.82 and pixel.b < 0.82:
-					found = true
-					break
-		if not found:
+		cell_box.position += app.board.global_position
+		var viewport: Rect2 = app.board.view.viewport
+		viewport.position += app.board.global_position
+		var pixels: int = 0
+		# Independent image oracle: visible curved ink, and no ink outside the
+		# viewport. It does not reuse the renderer's Bezier/path calculation.
+		var region: Rect2i = Rect2i(cell_box.grow(2)).intersection(Rect2i(Vector2i.ZERO, picture.get_size()))
+		for y: int in range(region.position.y, region.end.y):
+			for x: int in range(region.position.x, region.end.x):
+				var delta: float = material.get_pixel(x, y).r - picture.get_pixel(x, y).r
+				if delta > 0.03:
+					if not viewport.has_point(Vector2(x, y) + Vector2(0.5, 0.5)):
+						push_error("Rendered X escaped viewport: " + name)
+						quit(5)
+						return
+					pixels += 1
+		if pixels < 3:
 			push_error("Rendered clipped X absent: " + name)
 			quit(5)
 			return
@@ -154,6 +172,9 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 		"longest_row_window": [row_window.start, row_window.end, row_window.prefix_hidden, row_window.suffix_hidden],
 		"longest_column_window": [column_window.start, column_window.end, column_window.prefix_hidden, column_window.suffix_hidden]})
 
+func close_color(actual: Color, expected: Color) -> bool:
+	return absf(actual.r - expected.r) <= 2.0/255 and absf(actual.g - expected.g) <= 2.0/255 and absf(actual.b - expected.b) <= 2.0/255
+
 func nonzero_steps(steps: Array[int]) -> Dictionary:
 	var result: Dictionary = {}
 	for index: int in range(steps.size()):
@@ -222,10 +243,12 @@ func capture_axis_reset(app: Main, fixture_index: int, pitch: float, color: int)
 	var old_image: Image = Image.load_from_file(output.path_join(label + "-old-arm.png"))
 	var origin_image: Image = Image.load_from_file(output.path_join("g1-counter-1-" + label + ".png"))
 	var new_image: Image = Image.load_from_file(output.path_join("g1-counter-4-" + label + ".png"))
-	var old_pixel: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(old).get_center())
-	var new_pixel: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(next).get_center())
-	var fill: Color = Color(app.session.definition.palette[color - 1].color)
-	if not old_image.get_pixelv(old_pixel).is_equal_approx(fill) or origin_image.get_pixelv(old_pixel).is_equal_approx(fill) or new_image.get_pixelv(old_pixel).is_equal_approx(fill) or not new_image.get_pixelv(new_pixel).is_equal_approx(fill):
+	var old_box: Rect2 = app.board.view.cell_rect(old)
+	var new_box: Rect2 = app.board.view.cell_rect(next)
+	var old_pixel: Vector2i = Vector2i(app.board.global_position + old_box.position + old_box.size * Vector2(0.5, 0.38))
+	var new_pixel: Vector2i = Vector2i(app.board.global_position + new_box.position + new_box.size * Vector2(0.5, 0.38))
+	var fill: Color = Color("e8e9d9").blend(Color(Color(app.session.definition.palette[color - 1].color), 0.56))
+	if not close_color(old_image.get_pixelv(old_pixel), fill) or close_color(origin_image.get_pixelv(old_pixel), fill) or close_color(new_image.get_pixelv(old_pixel), fill) or not close_color(new_image.get_pixelv(new_pixel), fill):
 		push_error("Rendered old/new arm pixel mismatch: " + label)
 		quit(5)
 		return
@@ -460,7 +483,8 @@ func capture_owner_drop(app: Main) -> void:
 	await capture_drop_snap(app, "row", 11, row_maximum, 1.0, "variant-a-owner-outer-clamp")
 	await capture_monotone_route(app, "row", 11)
 	var old_viewport: Rect2 = app.board.view.viewport
-	app.board.view.configure(Rect2(Vector2(old_viewport.position.x, 105), Vector2(old_viewport.size.x, old_viewport.end.y - 105)), app.board.view.dimensions)
+	var column_top: float = 4.0 * app.board.shared_clue_slot_extent("column", app.board.clue_font(), app.board.clue_font_size()) + 15.0
+	app.board.view.configure(Rect2(Vector2(old_viewport.position.x, column_top), Vector2(old_viewport.size.x, old_viewport.end.y - column_top)), app.board.view.dimensions)
 	app.board.normalize_clue_steps()
 	var column_index: int = 11
 	app.board.navigate_to(Vector2(float(column_index) / 40.0, 11.0 / 40.0))
@@ -469,7 +493,8 @@ func capture_owner_drop(app: Main) -> void:
 		quit(5)
 		return
 	await capture_monotone_route(app, "column", column_index)
-	app.board.view.configure(old_viewport, app.board.view.dimensions)
+	column_top = 5.0 * app.board.shared_clue_slot_extent("column", app.board.clue_font(), app.board.clue_font_size()) + 15.0
+	app.board.view.configure(Rect2(Vector2(old_viewport.position.x, column_top), Vector2(old_viewport.size.x, old_viewport.end.y - column_top)), app.board.view.dimensions)
 	app.board.normalize_clue_steps()
 	var long_column: int = 20
 	app.board.navigate_to(Vector2(float(long_column) / 40.0, 11.0 / 40.0))

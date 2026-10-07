@@ -617,7 +617,8 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	monotone_clue_route(t, board, "row", row_index)
 	var column_index: int = 11
 	var column_viewport: Rect2 = board.view.viewport
-	board.view.configure(Rect2(Vector2(column_viewport.position.x, 105), Vector2(column_viewport.size.x, column_viewport.end.y - 105)), board.view.dimensions)
+	var four_slot_inset: float = 4.0 * board.shared_clue_slot_extent("column", board.clue_font(), board.clue_font_size()) + 15.0
+	board.view.configure(Rect2(Vector2(column_viewport.position.x, four_slot_inset), Vector2(column_viewport.size.x, column_viewport.end.y - four_slot_inset)), board.view.dimensions)
 	board.normalize_clue_steps()
 	board.navigate_to(Vector2(float(column_index) / 40.0, float(row_index) / 40.0))
 	var column_capacity: int = board.clue_capacity("column")
