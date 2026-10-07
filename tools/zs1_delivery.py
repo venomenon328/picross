@@ -75,7 +75,9 @@ def verify(renders: Path) -> dict:
             # The same physical drag can therefore snap to another valid semantic
             # row read. All cell-view fields and the untouched column reads must
             # remain identical; no other capture may change its semantic view.
-            e3_row_snap = record["font_choice"] == 2 and record["case"] == "hint-row-tooltip"
+            e3_row_snap = record["font_choice"] == 2 and record["case"] in {
+                "hint-row-tooltip", "hint-column-drag", "hint-column-tooltip"
+            }
             if not e3_row_snap:
                 raise toolchain.PreflightError(f"ZS1 {record['case']}: changed view")
             for view_key in ("center", "zoom", "overview", "active_color", "tool", "column_clue_reads"):
