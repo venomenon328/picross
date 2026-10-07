@@ -446,8 +446,8 @@ static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: i
 					var slot: int = int(layout.token_slot) + token_index - int(layout.start)
 					var center: float = b.clue_slot_center(axis, area, layout, slot) + float(layout.visual_shift)
 					var fs: int = b.clue_font_size()
-					var before: float = Board.CLUE_FONT.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs) * (0.6 if b.book_layout else 1.0)
-					var after: float = before if axis == "row" else float(fs) * (0.4 if b.book_layout else 0.35)
+					var before: float = b.clue_text_font(b.clue_font(), str(token.text)).get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else b.clue_vertical_extents(fs).x
+					var after: float = before if axis == "row" else b.clue_vertical_extents(fs).y
 					if center - before >= low and center + after <= high:
 						first = mini(first, token_index)
 						last = token_index

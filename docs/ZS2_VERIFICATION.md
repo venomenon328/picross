@@ -58,6 +58,9 @@ ausdrücklich ausgewiesen. Der zusätzliche ZS-2-Vergleich bindet genau die
 integrierte ausgewählte ZS-1-Fassung. Vollständig identische und ausschließlich
 durch den begrenzten AA-Cliprand samt Rasterrundung abweichende Fälle werden im
 Bericht getrennt gezählt.
+Die H1-An/Aus-Bildprüfung bindet Token-/Tooltipbereiche und Marker an die
+tatsächliche gewählte Schrift, Plex-Sonderzeichen und ihre Baseline-/Slotmetriken;
+der unabhängige Pixelvergleich sowie Raster-/Miniaturgleichheit bleiben bestehen.
 Die Pixelgrenze für subpixelweichen Hinweisdrag berücksichtigt die Fläche der
 1,35-fachen Schriftgröße (550 statt 300 geänderte Pixel); Nachbarlinien bleiben
 pixelgenau gleich. X-Testpositionen schneiden jetzt tatsächlich einen der
