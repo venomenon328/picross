@@ -157,12 +157,16 @@ func shot(name: String) -> void:
 		"fixture": app.session.definition.id, "size": [surface.size.x, surface.size.y], "ui_scale": app.ui_scale,
 		"cells_sha256": JSON.stringify(app.session.player.cells).sha256_text(), "view": app.board.capture_view(),
 		"board": rect_data(app.board.get_global_rect()), "grid": rect_data(Rect2(app.board.global_position + app.board.view.visible_bounds().position, app.board.view.visible_bounds().size)),
-		"viewport": rect_data(app.board.view.viewport), "font_size": app.board.clue_font_size(), "font": app.board.clue_font().get_font_name(), "font_metrics": font_metrics(),
+		"viewport": rect_data(app.board.view.viewport), "font_size": app.board.clue_font_size(), "font": capture_font().get_font_name(), "font_metrics": font_metrics(),
 		"pan_target": app.board.pan_target, "tooltip": [axis, line], "spoiler_free": not app.session.completed and app.session.reveal().is_empty()})
+
+func capture_font() -> Font:
+	# The archived main predates the study's virtual font accessor.
+	return app.board.CLUE_FONT if baseline else app.board.clue_font()
 
 func font_metrics() -> Dictionary:
 	var board = app.board
-	var font: Font = board.clue_font()
+	var font: Font = capture_font()
 	var fs: int = board.clue_font_size()
 	var rows: float = board.shared_clue_slot_extent("row", font, fs)
 	var columns: float = board.shared_clue_slot_extent("column", font, fs)
