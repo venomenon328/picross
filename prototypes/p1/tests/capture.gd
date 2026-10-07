@@ -102,7 +102,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			for x: int in range(region.position.x, region.end.x):
 				var delta: float = material.get_pixel(x, y).r - picture.get_pixel(x, y).r
 				if delta > 2.0/255 and not viewport.has_point(Vector2(x, y) + Vector2(0.5, 0.5)):
-					push_error("Rendered X escaped viewport: " + name)
+					push_error("Rendered X escaped viewport: %s point=%s clip=%s delta=%s" % [name,Vector2i(x,y),viewport,delta])
 					quit(5)
 					return
 				# Preview active bands are lighter than this threshold; only ink

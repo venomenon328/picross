@@ -119,7 +119,9 @@ func draw_fill(box: Rect2, value: int, index: int, alpha: float) -> void:
 		stroke(inside.position + inside.size * Vector2(0.12, y), inside.position + inside.size * Vector2(0.88, y - wobble), Color(Color.WHITE, 0.12 * alpha), 1.2)
 
 func stroke(a: Vector2, b: Vector2, color: Color, width: float) -> void:
-	var segment: PackedVector2Array = Board.clipped_segment(a, b, board.view.viewport.grow(-width / 2.0 - 0.2).intersection(mark_clip))
+	# Reserve the antialias fringe as well as half the stroke width. The old
+	# 0.2px allowance leaked faint X pixels beyond a clipped viewport edge.
+	var segment: PackedVector2Array = Board.clipped_segment(a, b, board.view.viewport.grow(-width / 2.0 - 1.0).intersection(mark_clip))
 	if segment.size() == 2 and segment[0].distance_to(segment[1]) > 0.01:
 		draw_line(segment[0], segment[1], color, width, true)
 

@@ -23,6 +23,12 @@ History, H1, Miniatur, Save und Abschluss geschieht vor dem Effektstart. Nur
 Zellzeichnung wird pro Effektframe erneuert. Entartete, nicht triangulierbare
 Subpixelanschnitte am bewegten Strichrand werden vor Übergabe an Godots Canvas
 verworfen; die reguläre Form und ihre statischen Vergleichspixel bleiben erhalten.
+Der Clipabstand berücksichtigt zusätzlich einen Pixel Antialiasing-Saum, damit
+keine schwache X-Tinte außerhalb des Viewports verbleibt. Gegenüber der Studie
+dürfen dadurch ausschließlich Pixel bis 5 px vom Viewportrand abweichen
+(einschließlich diagonaler AA-Endkappen und Rundung);
+Hinweise bleiben pixelgleich; im Rasterinneren ist ausschließlich ein
+8-Bit-Rundungsschritt je Kanal aus neu abgeschnittenen AA-Linien zulässig.
 Wirksame neue Vorschau entfernt abgelöste Effekte dauerhaft; Abbruch lässt sie
 nicht zurückkehren. Der eine
 Sitzungsschalter „Zellanimationen“ startet an und schreibt keine Einstellungsdatei.
@@ -32,7 +38,7 @@ Keine neue Rand-UI, Hintergrundproduktion, Spielregel oder Veröffentlichung.
 
 | Issue-ID | Nachweise am Lieferstand |
 | --- | --- |
-| ZS2-A01 | `zs2_tests.gd`: reguläre Board-Erzeugung und 26/18 für alle neun Blätter bei UI 100/125 %. `zs2_capture.gd`/`zs2_delivery.py`: 16 Dreiervergleiche (bisher regulär, ausgewählte Studie, jetzt regulär), identische eigene Zellen, Geometrie und Eingaben; ausgewählter Studien- und regulärer Boardausschnitt pixelgleich. |
+| ZS2-A01 | `zs2_tests.gd`: reguläre Board-Erzeugung und 26/18 für alle neun Blätter bei UI 100/125 %. `zs2_capture.gd`/`zs2_delivery.py`: 16 Dreiervergleiche (bisher regulär, ausgewählte Studie, jetzt regulär), identische eigene Zellen, Geometrie und Eingaben; Hinweise pixelgleich, Rastervergleich mit der oben begrenzten AA-Clipkorrektur. |
 | ZS2-A02 | Native Ziffernprobe 0–9/11/17/40/100, drei Zustände, beide Achsen, C1; Schrift-/Glyphenmetriken und Plex-Marker. Reguläre P1-/GP-48-Tests und native Drag-/Drop-/Tooltip-/Markerprüfungen bleiben aktiv. Semantische Lesepositionen statt Pixelwerte gespeichert. |
 | ZS2-A03 | Gemeinsame Gestenprobe aus `zs1_tests.gd` auf echter regulärer Hauptszene; G1-Neuwahl, Schutz, Umwandlung, Neutralisierung, Rückzug, Escape/Fokus. Native Echtzeitfolge bestätigt statische Vorschau einschließlich Wartezeit. |
 | ZS2-A04 | Reale Eingabeereignisse und parallele Startzeit aller wirksamen Zellen; kontrollierte Ablaufgrenzen 79/80 und 139/140 ms. Sieben native Strichzeitbilder, unabhängige räumliche Pixelpunkte und zwei Negativkontrollen (gleichförmiges Fade, umgekehrte X-Reihenfolge). Separate Echtzeitfolge zeigt den laufenden Effekt. |
@@ -49,7 +55,9 @@ Hinweisbereich aus der tatsächlichen Schriftmetrik; Anzahl der Slots/Token und
 vollständige monotone Leseroute bleiben hart geprüft. Historische GP-48-Bilder
 behalten ihren alten Referenzcommit; die neue Typografie wird im Vergleich
 ausdrücklich ausgewiesen. Der zusätzliche ZS-2-Vergleich bindet genau die
-integrierte ausgewählte ZS-1-Fassung und verlangt identische Boardpixel.
+integrierte ausgewählte ZS-1-Fassung. Vollständig identische und ausschließlich
+durch den begrenzten AA-Cliprand samt Rasterrundung abweichende Fälle werden im
+Bericht getrennt gezählt.
 Die Pixelgrenze für subpixelweichen Hinweisdrag berücksichtigt die Fläche der
 1,35-fachen Schriftgröße (550 statt 300 geänderte Pixel); Nachbarlinien bleiben
 pixelgenau gleich. X-Testpositionen schneiden jetzt tatsächlich einen der

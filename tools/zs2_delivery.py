@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import io
 import json
+import math
 import shutil
 import subprocess
 import tarfile
@@ -61,12 +62,14 @@ def capture(root, project, workspace, output, engine, render_command, environmen
 
 
 def verify(renders: Path) -> dict:
-    from PIL import Image, ImageChops
+    from PIL import Image, ImageChops, ImageDraw
     reports = {role: json.loads((renders / f"zs2-{role}.json").read_text(encoding="utf-8"))
                for role in ("before", "study", "after")}
     if any(report["failures"] or len(report["captures"]) != 16 for report in reports.values()):
         raise toolchain.PreflightError("Incomplete/failed ZS2 native matrix")
     pairs = []
+    identical_boards = 0
+    edge_only_boards = []
     for old, chosen, new in zip(*(reports[role]["captures"] for role in ("before", "study", "after")), strict=True):
         for key in ("case", "fixture", "size", "ui_scale", "cells_sha256", "board", "grid", "viewport", "pan_target", "tooltip"):
             if old[key] != new[key] or chosen[key] != new[key]:
@@ -88,8 +91,29 @@ def verify(renders: Path) -> dict:
         with Image.open(renders / chosen["file"]) as a, Image.open(renders / new["file"]) as b, Image.open(renders / old["file"]) as c:
             if a.size != b.size or b.size != c.size:
                 raise toolchain.PreflightError("ZS2 capture dimensions differ")
-            if ImageChops.difference(a.crop(bounds).convert("RGB"), b.crop(bounds).convert("RGB")).getbbox():
-                raise toolchain.PreflightError(f"ZS2 selected board pixels differ: {new['case']}")
+            difference = ImageChops.difference(a.convert("RGB"), b.convert("RGB"))
+            if difference.crop(bounds).getbbox():
+                # The selected study's 0.2px AA allowance leaked faint X ink.
+                # ZS2 reserves 1px. Only the 5px viewport fringe may differ
+                # (diagonal AA end caps and their raster rounding included);
+                # clues remain exact; raster rounding is bounded below.
+                vx, vy, vw, vh = new["viewport"]
+                vx, vy = x + vx, y + vy
+                allowed = Image.new("L", a.size)
+                draw = ImageDraw.Draw(allowed)
+                draw.rectangle((math.floor(vx-5), math.floor(vy-5), math.ceil(vx+vw+5), math.ceil(vy+vh+5)), fill=255)
+                draw.rectangle((math.ceil(vx+6), math.ceil(vy+6), math.floor(vx+vw-6), math.floor(vy+vh-6)), fill=0)
+                forbidden = ImageChops.multiply(difference, ImageChops.invert(allowed).convert("RGB"))
+                # Re-triangulated AA lines can round one 8-bit channel step
+                # differently along their remainder. Clues allow no tolerance.
+                rounding = Image.new("L", a.size)
+                ImageDraw.Draw(rounding).rectangle((math.ceil(vx), math.ceil(vy), math.floor(vx+vw)-1, math.floor(vy+vh)-1), fill=1)
+                forbidden = ImageChops.subtract(forbidden, rounding.convert("RGB"))
+                if forbidden.crop(bounds).getbbox():
+                    raise toolchain.PreflightError(f"ZS2 selected board pixels differ outside clipping fringe: {new['case']}")
+                edge_only_boards.append(new["case"])
+            else:
+                identical_boards += 1
             if not ImageChops.difference(c.crop(bounds).convert("RGB"), b.crop(bounds).convert("RGB")).getbbox():
                 raise toolchain.PreflightError("ZS2 regular rendering was not integrated")
         pairs.append({"case": new["case"], "before": old["file"], "study": chosen["file"], "after": new["file"]})
@@ -108,7 +132,9 @@ def verify(renders: Path) -> dict:
                 raise toolchain.PreflightError("ZS2 live effect is invisible")
     strokes = zs1_delivery.verify_strokes(renders, current["stroke_frames"])
     return dict(reference_commit=BASE, font_sha256=FONT_SHA256, pairs=pairs,
-                identical_selected_boards=len(pairs), movements=current["frames"], stroke_evidence=strokes,
+                identical_selected_boards=identical_boards, clipping_corrected_boards=edge_only_boards,
+                raster_rounding_tolerance="1/255 per channel inside raster only; clues exact",
+                movements=current["frames"], stroke_evidence=strokes,
                 measurements=current["measurements"], renderer=current["renderer"])
 
 
