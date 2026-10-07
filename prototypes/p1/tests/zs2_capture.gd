@@ -6,7 +6,7 @@ func run() -> void:
 	output = OS.get_environment("P1_CAPTURE_DIR")
 	role = OS.get_environment("ZS2_VARIANT")
 	baseline = role == "before"
-	variant = 2
+	variant = 0 if baseline else 2
 	if output.is_empty() or DisplayServer.get_name() == "headless" or not role in ["before", "study", "after"]:
 		quit(2)
 		return
