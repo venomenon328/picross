@@ -1,6 +1,6 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-Stand: 07.10.2026 · Spezifikation 0.3 · E1: Stift/Timing gewählt; E2: beide Kandidaten akzeptiert; Abschlussbestätigung offen
+Stand: 07.10.2026 · Spezifikation 0.4 · E3: Chalkboard/Stift/Timing gewählt; kompakte Zeilenhinweise festgelegt
 
 ## 1. Auftrag, Quellen und Status
 
@@ -35,6 +35,15 @@ gebunden. [Fontinput](ZS1_FONT_INPUT.md): beide Original-TTFs samt Nutzungshinwe
 [ZS1-E2](https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344)
 für die beauftragte Studienlieferung akzeptiert; zusätzliche Lizenztexte sind kein Startblocker.
 
+
+[Eigentümerentscheidung ZS1-E3](https://github.com/venomenon328/picross/pull/55#issuecomment-6043750653)
+wählt **Chalkboard Regular** als Hinweisfont und reduziert die gemeinsame horizontale
+Slotweite der Zeilenhinweise links vom Raster auf **26 logische Pixel bei UI 100 %**
+(UI-skaliert). Die Spaltenhinweise bleiben bei 18 logischen Pixeln. Der Eigentümer
+hat die Mergefreigabe ausdrücklich vor die kombinierte Sichtprüfung gezogen: Die
+visuelle Gesamtprüfung erfolgt anschließend auf `main` und ist für PR #55 kein
+verbleibendes Mergegate; sie bleibt Rückmeldung vor der regulären ZS-2-Integration.
+
 ## 2. Ziel und begrenzte Ablösung
 
 Das Spielen soll wie das Bearbeiten eines gezeichneten Rätselbuchs wirken.
@@ -54,12 +63,12 @@ Schriftgrad und gegebenenfalls bewusst gewählte gemeinsame Slotmaße. Fraunces-
 Plex-Sans-Bedientexte, die übrige Z2-Komposition und die C1-Farbkontur bleiben Grundlage.
 Eine neue allgemeine Hintergrund-, Schrift- oder Layoutauswahl ist nicht beauftragt.
 
-Die Stiftfüllung ist gewählt. Zwei konkrete Eigentümer-TTFs werden gemäß E2 unabhängig von der Zellgestaltung am selben Stand verglichen:
-Bakso Daging Regular und Chalkboard Regular. Historische Tinte-/Stiftbilder und R1
-bleiben Referenzen ihrer Lieferung, keine erneut offene Füllformwahl. Die endgültige
-Hinweisfont und die überarbeitete Kombination aus X und Strichaufbau benötigen noch
-ZS1-M01. Die Studie enthält beide Kandidaten und kennzeichnet Plex ausdrücklich als
-bisherige Referenz. Technische Lieferung und abschließende Eigentümerwahl bleiben getrennt.
+Die Stiftfüllung ist gewählt. Der enge E2-Vergleich enthielt Bakso Daging Regular
+und Chalkboard Regular; E3 wählt **Chalkboard Regular**. Bakso Daging und Plex bleiben
+nur Vergleichsreferenzen der Studie. Für Chalkboard verwendet die gewählte Fassung
+kompaktere gemeinsame Zeilenhinweisslots von 26 logischen Pixeln bei UI 100 %;
+die vertikalen Spaltenslots bleiben 18 Pixel. Historische Tinte-/Stiftbilder und R1/R2
+bleiben Referenzen ihrer Lieferstände, keine erneut offene Grundsatzwahl.
 
 ## 3. Zeichensprache
 
@@ -83,6 +92,14 @@ Analyse einschließlich Vorschau bleiben unverändert. Alle Zustände müssen au
 Achsen, im kontinuierlichen Hinweisdrag und im vollständigen Tooltip funktionieren.
 Helle Rätselfarben bleiben durch C1 erkennbar; Statuswechsel verändern weder Slot
 noch Schriftgröße. Auslassungsmarker und Leerlinienzeichen erhalten keine neue Bedeutung.
+
+
+**E3 / konkrete Hinweisgeometrie:** Chalkboard Regular ist gewählt. Im Buchlayout
+verwenden die Zeilenhinweise links vom Raster gemeinsame horizontale Slots von
+**26 × UI-Skalierung** statt 30 × UI-Skalierung. Die Spaltenhinweise oberhalb des
+Rasters bleiben bei **18 × UI-Skalierung**. Die kompaktere Zeilenstaffel ändert
+weder Slotprinzip noch Marker-, Drag-, Snap-, Tooltip- oder gespeicherte
+Lesepositionssemantik.
 
 ### ZS-D02: Gefüllte Zellen
 
@@ -233,7 +250,7 @@ Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflü
 
 | Paket | Ergebnis | Abhängigkeit und Gate |
 | --- | --- | --- |
-| ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; zwei durch E2 akzeptierte Eigentümer-TTFs auf identischen Testständen, abschließende Kombination bestätigen. | Eigener Implementierungsauftrag nach Startprüfung. Eigentümerwahl der nativen Fassung vor Abschluss und ZS-2. |
+| ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; E2-Fontvergleich, E3-Auswahl Chalkboard und kompaktere 26-px-Zeilenhinweisslots. | PR #55 darf nach N07 und aktuellen technischen Nachweisen gemergt werden; kombinierte Eigentümersichtprüfung folgt ausdrücklich auf main und bleibt Rückmeldung vor ZS-2. |
 | ZS-2 | Gewählte Hinweis-/Zellsprache ohne zusätzliche Rand-UI, statische Vorschau, parallele Commit-Effekte und Schalter in der regulären Arbeitsansicht. | ZS-1-Auswahl und integrierte nutzbare Grundlage; aktuelle technische Nachweise, unabhängiges Review und gezielte reale Eigentümerprobe vor Merge. |
 | Z3/#24 | Längere reale Spielerprobung der integrierten neuen Fassung und Abschluss der Designphase. | Nach ZS-2; ersetzt keine davor erforderlichen technischen oder gezielten manuellen Gates. |
 
@@ -260,7 +277,8 @@ ihrer offenen Befunde. Keine Änderung historischer Designartefakte oder Rätsel
 
 Die Spezifikationsvorbereitung ist abgeschlossen. Der anschließende Auftrag
 zu #52 liefert die [isolierte ZS-1-Studie](ZS1_VERIFICATION.md) bis zum geprüften
-Draft-PR. Die [ZS1-M01-Rückmeldung](ZS1_OWNER_TRIAL.md) enthält die Stift-/Timingwahl;
-abschließende Bestätigung nach Nacharbeit bleibt offen.
-ZS-2, Merge und Release sind damit nicht beauftragt. E1 ersetzt gezielt die genannten Teile des alten #54-Vertrags; die übrigen
+Draft-PR. Die [ZS1-M01-Rückmeldung](ZS1_OWNER_TRIAL.md) enthält Stift-/Timing- und
+Chalkboardwahl. E3 verlegt die kombinierte Sichtprüfung auf den gemergten main-Stand;
+sie blockiert PR #55 nicht mehr, bleibt aber vor ZS-2 als Produktfeedback offen.
+ZS-2 und Release sind damit nicht beauftragt. E1 ersetzt gezielt die genannten Teile des alten #54-Vertrags; die übrigen
 P1-/ZS-Invarianten bleiben erhalten.

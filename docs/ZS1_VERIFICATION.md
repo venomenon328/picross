@@ -1,4 +1,4 @@
-# ZS-1 · Prüfzuordnung nach E1 und Liefergrenze
+# ZS-1 · Prüfzuordnung nach E1–E3 und Liefergrenze
 
 Stand: 07.10.2026 · bestehender Branch `feat/52-native-drawing-study`, Draft-PR #55
 
@@ -16,10 +16,17 @@ akzeptiert die vorhandenen Nutzungshinweise für die Kandidatenlieferung;
 [Fontinput](ZS1_FONT_INPUT.md) dokumentiert diese Grundlage und die genauen Bytes.
 Abschließende Eigentümerbestätigung und unabhängiges Review bleiben getrennte Gates.
 
+
+**E3/N07:** Chalkboard Regular ist gewählt. Die Studienfassung reduziert nur die
+gemeinsame horizontale Slotweite der Zeilenhinweise im Buchlayout von 30 auf
+**26 logische Pixel bei UI 100 %**; UI 125 % ergibt 32,5 Pixel. Die vertikalen
+Spaltenslots bleiben 18 beziehungsweise 22,5 Pixel. Die kombinierte reale Sichtprüfung
+wurde vom Eigentümer ausdrücklich auf den gemergten `main`-Stand verschoben.
+
 | Kriterium | Aktueller Nachweis / Grenze |
 | --- | --- |
 | A01 | 14 native Situationen je Plex-Baseline, Bakso/Stift und Chalkboard/Stift: 42 Bilder auf identischen eigenen F-01/F-02/F-03-Ständen. Bisherige reguläre Boardpixel gegen 14 echte Main-Archivbilder geprüft. Kandidaten zeigen unterschiedliche Hinweis-Pixel bei identischen Zellbildern (zwölf Fälle ohne überlagernden Tooltip). |
-| A02 | Unveränderte echte Hinweise mit drei Zuständen auf beiden Achsen, C1, unabhängiger Hinweisdrag/Tooltip und beschriftete Ziffernprobe. Drei Ziffernproben mit 0–9/11/17/40/100. Native Originalhashes/Glyphen geprüft, explizite Plex-Navigationszeichen `…`/`–` bei beiden Kandidaten; keine Ziffernfallbacks. Metrikbericht je Ansicht; gleiche Slots, Chalkboard-Schriftgrad ×1,35. |
+| A02 | Unveränderte echte Hinweise mit drei Zuständen auf beiden Achsen, C1, unabhängiger Hinweisdrag/Tooltip und beschriftete Ziffernprobe. Chalkboard ist gewählt; Ziffern bleiben nativ, Plex nur für `…`/`–`. N07 prüft 26×UI-Zeilenhinweisslots gegen Glyphenbreite/Marker/Überlauf; Spaltenslots bleiben 18×UI. |
 | A03 | 1920×1080, 1280×720/UI125, 1600×900, 2560×1440; 12/24/36/72er-Zellen und F-01 bei 150 %. Gleiche Geometrie/Spielstände. Keine zusätzliche Studien-Rand-UI. |
 | A04 | Echtzeitfolge mit statischer Vorschau, 20 parallelen Commits, zweiter Geste vor Effektende, Umwandlung und pixelgleichem Endzustand bei Aus. Zusätzlich sieben native 72-px-Zellausschnitte bei kontrollierten 0/21/49/70/98/119/140 ms: räumlicher Füllfortschritt, Zug eins vor Zug zwei. Bildprüfer lehnt aus diesen Bildern erzeugtes globales Fade und umgekehrte X-Reihenfolge ab. |
 | A05 | Unveränderter Gesten-/Session-/Savekern; Normal-Sentinel vor/nach Studienlauf bytegleich. Echter Commit/Save im eigenen Root, Originaldaten/Proofs/Assets unverändert. Gesamter Produktweg mit Zwei-Prozess-, 500-Aktionen-, Recoveryregressionen sowie sechs aktuelle CI-Jobs erforderlich. |
@@ -75,8 +82,10 @@ unter Windows/OpenGL/RTX 3070. Aktuelle finale CI-/Download-/Sichtprüfung und
 der getrennte Selbstreview werden mit Headbindung im PR dokumentiert; frühere
 grüne Läufe werden nicht als Prüfung des neuen Heads ausgegeben.
 
-**Vor Merge offen:** Abschließende [ZS1-M01](ZS1_OWNER_TRIAL.md) einschließlich
-konkreter Fontwahl, unabhängiges technisches/visuelles Review des neuen Heads
-und ausdrückliche Mergefreigabe. Stift/Timing sind gewählt; M01 ist keine noch unbeantwortete Probe.
-#52 bleibt offen, #53 nicht implementiert, #54 nicht gemergt/geschlossen.
+**Mergeentscheidung E3:** Chalkboard, Stift und Timing sind gewählt. Nach N07
+müssen die aktuellen technischen Checks und ein commitbezogener Prüfschritt den
+neuen Head abdecken. Der Eigentümer hat PR #55 anschließend zum Merge freigegeben
+und die kombinierte reale Sichtprüfung auf `main` verschoben. Diese Nachprüfung
+bleibt vor #53 offen und wird nicht als bestanden umgedeutet. #52 bleibt dafür
+vorerst offen; #53 ist nicht implementiert.
 Keine Hintergrundproduktion oder Veröffentlichung.

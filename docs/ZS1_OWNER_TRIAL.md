@@ -1,13 +1,15 @@
 # ZS-1 · native Gestaltungsprobe
 
-Stand: 07.10.2026 · ZS1-M01: **Teilwahl erfolgt, abschließende Bestätigung offen**
+Stand: 07.10.2026 · ZS1-M01/E3: **Chalkboard, Stift und Timing gewählt; kombinierte Sichtprüfung nach Merge auf main**
 
 Das Studien-ZIP vollständig entpacken und `picross-zs1.exe` starten. Godot,
 **Bakso Daging Regular und Chalkboard Regular** sowie die bisherigen UI-Fonts sind
 eingebettet. [Quellen und Nutzungshinweise](ZS1_FONT_INPUT.md) folgen E2.
-Dies ist ein Windows-Testexport, kein Release. Stiftfüllung und kurzes Timing sind
-bereits gewählt. Jetzt beide Hinweisfonts, das neue X und den räumlichen
-Strichaufbau beurteilen und die endgültige Kombination bestätigen.
+Dies ist ein Windows-Testexport, kein Release. **Chalkboard Regular, Stiftfüllung
+und kurzes Timing sind gewählt.** Nach N07 startet die Studie mit Chalkboard und
+kompakteren Zeilenhinweisen links vom Raster; Bakso/Plex bleiben nur Vergleich.
+Die kombinierte Darstellung wird nach ausdrücklicher Eigentümerentscheidung
+anschließend auf dem gemergten `main`-Stand beurteilt.
 Quellhead, Basis, getesteter Checkout/Test-Merge, Run und EXE-Hashes stehen in
 `zs1-report.json`; die genaue Downloadbindung steht im Draft-PR zu #52.
 
@@ -20,8 +22,8 @@ Studienordner können nach der Probe gezielt entfernt werden.
 
 1. Die Studie startet mit der bereits gewählten **Stiftfüllung**. Oben lässt sich
    der Hinweisfont zwischen **Bakso Daging**, **Chalkboard** und der bisherigen
-   **Plex-Referenz** wechseln. Bakso startet als erster Kandidat, nicht als endgültige
-   Auswahl. In den Einstellungen lässt sich der Zellstil unabhängig zwischen
+   **Plex-Referenz** wechseln. Chalkboard startet als ausgewählte Fassung; Bakso und
+   Plex bleiben Vergleichsreferenzen. In den Einstellungen lässt sich der Zellstil unabhängig zwischen
    Stift/neuem X und Baseline wechseln. Zellen, Ausschnitt und Hinweisleseposition bleiben gleich.
    Im Album links stehen F-01 (20×20 Mono), F-02 (40×40 Farbe) und F-03
    (100×100, ausdrücklich UI-Stresstest). Die angearbeiteten Muster enthalten
@@ -54,6 +56,11 @@ Studienordner können nach der Probe gezielt entfernt werden.
    2560×1440. F-01 bei 150 % Arbeitszoom, F-03 bei kleinen Zellen, Gesamtansicht
    und maximalem Zoom prüfen. Zusätzliche Randdekoration ist entfernt; funktionale Buchmontierungen bleiben.
    Auf F-03 lange Striche und schnelle Folgegesten besonders kritisch beurteilen.
+7. Links vom Raster die Zeilenhinweise gezielt prüfen: Chalkboard verwendet
+   gemeinsame **26-px-Slots bei UI 100 %** (UI-skaliert), also sichtbar weniger
+   horizontalen Abstand als der vorige 30-px-Stand. Mehrstellige Hinweise, Marker,
+   Drag/Snap und Tooltip dürfen nicht kollidieren. Die Spaltenhinweise oberhalb des
+   Rasters behalten ihre bisherige vertikale Slotweite.
 
 Die ursprünglichen Mauswerkzeuge, Miniatur, Hinweisnavigation, Speicherung im
 Studienordner und Abschlusslogik bleiben aktiv. Die Miniatur zeigt sofort den
@@ -66,15 +73,15 @@ Bitte im Issue/PR am konkreten Artefakt festhalten:
 | Head, Run/Artefakt und ZIP-Hash | offen |
 | Windows-Version, Bildschirm, tatsächliche Clientfläche, Windows-Skalierung | offen |
 | UI-Skalierung, Arbeitszoom, Eingabegerät | offen |
-| Ziffern: Bakso Daging / Chalkboard am identischen Stand | beide enthalten; endgültige Wahl offen |
+| Hinweisfont | Chalkboard gewählt; Bakso/Plex nur Vergleich |
 | Stiftfüllung und Timing | bereits positiv gewählt |
 | Neues X und räumlicher Strichaufbau | abschließende Bestätigung offen |
 | Zusätzliche Rand-UI | verworfen und entfernt; Hintergrundarbeit separat |
 | Vorschaukontrast 56 % | unveränderter Ausarbeitungswert, Einzelbestätigung offen |
 | Kleine Zellen, C1, Hinweisdrag/Tooltip, F-03-Folgegesten | offen |
-| Gewählte konkrete Kombination oder nötige Nacharbeit | offen |
+| Kompaktere Zeilenhinweise (26 px bei UI 100 %) | nach Merge auf main prüfen |
 
-Abschließende ZS1-M01 einschließlich konkreter Fontwahl,
-unabhängiges technisches/visuelles Review des neuen Heads und ausdrückliche
-Mergefreigabe bleiben vor Merge erforderlich. Die Auswahl ist Voraussetzung
-für #53; diese Studie stellt die reguläre Arbeitsansicht noch nicht um.
+E3 erteilt die Mergefreigabe nach technischer N07-Prüfung und verlegt die
+kombinierte Sichtprüfung ausdrücklich auf den gemergten `main`-Stand. Das Ergebnis
+dieser Nachprüfung vor #53 im Issue festhalten; sie wird nicht als bereits bestanden
+behauptet. Diese Studie stellt die reguläre Arbeitsansicht noch nicht um.

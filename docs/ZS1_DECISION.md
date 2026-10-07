@@ -1,9 +1,10 @@
 # ZS-1 · Eigentümerentscheidung und Nacharbeitsstand
 
-Stand: 07.10.2026 · E1: Stift und Timing gewählt; E2-Kandidaten enthalten; Abschlussbestätigung offen
+Stand: 07.10.2026 · E3: Chalkboard, Stift und Timing gewählt; N07 kompaktere Zeilenhinweise
 
 [ZS1-E1](https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659)
-sowie [ZS1-E2](https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344)
+sowie [ZS1-E2](https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344),
+[ZS1-E3](https://github.com/venomenon328/picross/pull/55#issuecomment-6043750653)
 und [#52](https://github.com/venomenon328/picross/issues/52) sind maßgeblich.
 R1 ohne B-/O-Befunde gilt ausschließlich für den ursprünglichen Head
 `4ae4f5a20273808f99d257a3812da86d72307a5f`. Neue Eigentümeranforderungen sind keine
@@ -21,8 +22,8 @@ fortgeschrieben; #54 bleibt offen und ist keine Produktbasis.
 | Vorschau | Statisch, 56 %; keine zusätzliche Einzelabnahme behauptet. Radieren zeigt unbekannt mit neutraler Kontur, keine alte Markierung kehrt zurück. |
 | Kleine Zellen / Miniatur | Unter 18 px und in Gesamtansicht vereinfachte Füllung; Miniatur zeigt eigene Werte unmittelbar ohne Animation. |
 | Rand-UI | Zusätzlichen Studien-Zeichenlayer entfernt; funktionale Buchmontierungen/Controls und Hintergrund bleiben. Keine neue Hintergrundproduktion. |
-| Hinweisfonts | Bakso Daging Regular und Chalkboard Regular enthalten, unabhängig vom Zellstil wählbar. Originalbytes gegen Eigentümerquellen bestätigt; Nutzungshinweise durch E2 als Liefergrundlage akzeptiert. Finale Fontwahl offen. |
-| Referenz / Geometrie | Bisherige Plex-Sans-Referenz bleibt zusätzlich wählbar, kein dritter Kandidat. Identische Slots; Chalkboard optisch mit 1,35-fachem Schriftgrad normalisiert. Fraunces-Titel und übrige UI erhalten. |
+| Hinweisfont | **Chalkboard Regular gewählt.** Bakso Daging und Plex bleiben Vergleichsreferenzen der Studie. Originalbytes/Nutzungshinweise bleiben über E2 dokumentiert. |
+| Hinweisgeometrie | Chalkboard bleibt optisch mit 1,35-fachem Schriftgrad normalisiert. Zeilenhinweise links vom Raster: **26 logische Pixel gemeinsame Slotweite bei UI 100 %**, UI-skaliert. Spaltenhinweise oben: unverändert 18 Pixel. Fraunces-Titel und übrige UI erhalten. |
 
 [Fontinput, Nutzungshinweise und E2](ZS1_FONT_INPUT.md),
 [Identitäten/Hashes](zs1-font-input.json). Kandidaten nur im Studienpfad/-export.
@@ -45,8 +46,10 @@ CPU-Zeichenzeit, Eingabe einschließlich synchronem Save, vollständige Frameabs
 und reale Mauswahrnehmung sind getrennte Messgrenzen. Der Effekt-Takt erneuert nur
 die Zellschicht, keine Hinweise, Miniatur, Saves oder Modellwerte.
 
-**ZS1-M01:** Rückmeldung erfolgt; endgültige Hinweisfont, neues X und Strichaufbau
-nach vollständigem Vergleich noch bestätigen. Stift/Timing nicht erneut wählen.
-Unabhängiges Review des neuen Heads und ausdrückliche Mergefreigabe bleiben nötig.
+**ZS1-M01 / E3:** Chalkboard, Stift und Timing sind gewählt. Der Eigentümer hat
+die kombinierte Sichtprüfung der 26-px-Zeilenstaffel ausdrücklich auf den
+gemergten `main`-Stand verschoben und PR #55 zum Merge freigegeben, sofern N07
+technisch sauber geliefert ist. Diese Nachprüfung bleibt vor ZS-2 als Feedback offen;
+sie ist kein verbleibendes Mergegate für PR #55.
 [Eigentümeranleitung](ZS1_OWNER_TRIAL.md), [Prüfzuordnung](ZS1_VERIFICATION.md).
 #52 bleibt offen, #53 wird nicht vorgezogen.
