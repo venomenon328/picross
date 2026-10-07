@@ -1,8 +1,11 @@
 {
   "date": "2026-10-07",
-  "status": "BLOCKED_RIGHTS_EVIDENCE",
+  "status": "OWNER_ACCEPTED_CANDIDATES_E2",
   "input_directory": "E:\\Downloads\\zs1-fonts",
-  "distributed_candidates": [],
+  "distributed_candidates": [
+    "prototypes/p1/study/fonts/BaksoDaging-Regular.ttf",
+    "prototypes/p1/study/fonts/Chalkboard-Regular.ttf"
+  ],
   "candidates": [
     {
       "file": "Bakso Daging/BaksoDaging-Regular.ttf",
@@ -17,7 +20,14 @@
       "archive_sha256": "5f55db3ad1ff8f4f4c1e5db4e6d77ea57a5a819b0a0143d5e5f0d671fad64022",
       "original_ttf_matches": true,
       "os2_fsType": 8,
-      "license_evidence": "Author permits personal/commercial use; no packaged license; embedding and redistribution unresolved"
+      "license_evidence": "Author notice: free personal and commercial use, also embedded name-ID 13; no packaged EULA. Owner E2 accepts existing notices for this delivery.",
+      "resource": "prototypes/p1/study/fonts/BaksoDaging-Regular.ttf",
+      "digit_fallback": false,
+      "punctuation_fallback": [
+        "…",
+        "–"
+      ],
+      "nominal_size_multiplier": 1.0
     },
     {
       "file": "Chalkboard/Chalkboard-Regular.ttf",
@@ -33,7 +43,18 @@
       "archive_sha256": "4b1ee090e9c8e5a78c4cbd5fb50a5258460f6e0b4e73901cca1a8bd3b0442ee2",
       "original_ttf_matches": true,
       "os2_fsType": 0,
-      "license_evidence": "100% Free category only; no packaged license or embedded license; commercial/app/redistribution conditions unresolved"
+      "license_evidence": "Source category: 100% Free; no packaged/embedded license text. Owner confirms designer publication for private/commercial use and accepts existing notices for this delivery (E2).",
+      "resource": "prototypes/p1/study/fonts/Chalkboard-Regular.ttf",
+      "digit_fallback": false,
+      "punctuation_fallback": [
+        "…",
+        "–"
+      ],
+      "nominal_size_multiplier": 1.35
     }
-  ]
+  ],
+  "owner_decision": "https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344",
+  "scope": "Isolated study repository resources and Windows study export; excluded from regular export",
+  "additional_license_terms": "None available; existing publication notices accepted by owner E2; no invented license",
+  "punctuation_policy": "Explicit shared Plex navigation signs: Chalkboard lacks these glyphs; Bakso ellipsis does not read as conventional ellipsis in native inspection. All digits remain native."
 }

@@ -440,8 +440,8 @@ um kräftige kompakte Hinweisziffern, satte stabile Schraffur-/Stiftflächen,
 handschriftliche X und kurze parallele Zellanimationen. E1 wählt Stiftfüllung und
 140/80-ms-Timing, fordert echten räumlichen Strichaufbau und entfernt zusätzliche
 Rand-UI. Hintergrundarbeit bleibt separat zurückgestellt. Der vollständige
-Vergleich der zwei Eigentümer-TTFs ist durch fehlende Rechtebelege blockiert;
-[Fontinput](ZS1_FONT_INPUT.md) dokumentiert lesbare Originaldateien/Quellen/Hashes.
+Vergleich der zwei Eigentümer-TTFs verwendet die durch E2 akzeptierten Nutzungshinweise;
+[Fontinput](ZS1_FONT_INPUT.md) dokumentiert Originaldateien, Quellen, Hashes und die Eigentümerentscheidung.
 Die abschließend bestätigte Kombination ist Ergebnis von ZS-1; GD-03/GP-03 werden nur für Hinweisziffern
 und begründet gewählte gemeinsame Slotmaße geöffnet. Historische Designpakete bleiben.
 

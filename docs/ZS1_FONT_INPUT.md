@@ -1,39 +1,53 @@
-# ZS-1 · Fontinput und konkrete Liefergrenze
+# ZS-1 · Fontinput und Verwendung nach E2
 
-Stand: 07.10.2026 · ZS1-N03 **blockiert durch fehlende Rechtebelege**, Dateien vorhanden
+Stand: 07.10.2026 · **Beide Kandidaten gemäß Eigentümerentscheidung E2 aufgenommen**
 
-Beide TTFs aus dem nicht versionierten Eigentümerordner
-`E:\Downloads\zs1-fonts` wurden vollständig gelesen und gehasht. Der Eigentümer
-benannte anschließend die unten verlinkten DaFont-Fundstellen. Die daraus frisch
-abgerufenen Originalarchive enthalten byteidentische TTFs. Keine Kandidatenbytes
-wurden in Repository, CI-Eingaben oder Export kopiert. Die zusätzliche OTF von
-Bakso Daging ist kein dritter Kandidat.
+Die beiden Original-TTFs aus `E:\Downloads\zs1-fonts` wurden vollständig gelesen,
+gehasht und mit den vom Eigentümer benannten DaFont-Originalarchiven bytegenau
+verglichen. Die zusätzliche Bakso-OTF ist kein weiterer Kandidat.
 
-| Kandidat | Identität und Herkunft | Vorliegender Beleg / offene Rechte |
+| Kandidat | Identität / Quelle | Verfügbare Nutzungshinweise |
 | --- | --- | --- |
-| Bakso Daging Regular | Hasna / Viola Type, Silverdav Studio; Version 1.000, PostScript BaksoDaging; 128924 Bytes. [Eigentümerquelle](https://www.dafont.com/de/bakso-daging.font), [Originalpaket](https://dl.dafont.com/dl/?f=bakso_daging). | Autorenhinweis erlaubt private und kommerzielle Nutzung; entsprechender Hinweis auch in name-ID 13. Keine beigefügte EULA/README. App-Einbettung, Weitergabe eingebetteter Fontsoftware und öffentliche Rohdateiverteilung nicht ausdrücklich geklärt. |
-| Chalkboard Regular | Florence S laut [Eigentümerquelle](https://www.dafont.com/de/chalkboard-3.font); Version 001.001, Calligraphr-ID vom 24.07.2021; 21976 Bytes. [Originalpaket](https://dl.dafont.com/dl/?f=chalkboard_3). | DaFont-Kategorie „100% Kostenlos“, kein Autoren-Lizenztext, keine name-ID 13/14, Originalpaket enthält nur die TTF. Konkrete Bedingungen für kommerzielle Nutzung, App-Einbettung und öffentliche Weitergabe fehlen. |
+| Bakso Daging Regular | Hasna / Viola Type / Silverdav Studio; Version 1.000, PostScript BaksoDaging; 128924 Bytes. [Quelle](https://www.dafont.com/de/bakso-daging.font), [Originalpaket](https://dl.dafont.com/dl/?f=bakso_daging). | Autorenhinweis erlaubt private und kommerzielle Nutzung; auch in name-ID 13. Keine zusätzliche EULA/README im Archiv. |
+| Chalkboard Regular | Florence S laut [Quelle](https://www.dafont.com/de/chalkboard-3.font); Version 001.001, Calligraphr-ID vom 24.07.2021; 21976 Bytes. [Originalpaket](https://dl.dafont.com/dl/?f=chalkboard_3). | Veröffentlichungskategorie „100% Kostenlos“; kein Autoren-Lizenztext in der Datei, keine name-ID 13/14, Archiv enthält nur die TTF. |
 
-Die anfängliche Suchzuordnung von Chalkboard zu einer Privatnutzungslizenz war
-falsch: Sie betraf eine andere Zuordnung bei einem gleichnamigen Font.
-Maßgeblich ist die bytebestätigte Florence-S-Quelle. Weder „100% Kostenlos“ noch
-die technischen OS/2-fsType-Werte (Bakso 8, Chalkboard 0) ersetzen eine
-Weitergabe-/App-Lizenz. Es wird kein Verbot erfunden; die nötige Erlaubnis ist
-mit den vorhandenen Belegen nicht hinreichend nachgewiesen.
+[ZS1-E2](https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344)
+hält die ausdrückliche Eigentümerentscheidung fest: Beide Fonts wurden durch die
+Designer mit „100% free“ beziehungsweise privater/kommerzieller Nutzung veröffentlicht;
+weitere Bedingungen sind nicht verfügbar. Die vorhandenen Hinweise werden für die
+beauftragte Kandidatenverwendung im öffentlichen Studienpfad und Windows-Studienexport
+akzeptiert. Damit entfällt der vorherige Rechtebeleg-Blocker. Es wird keine zusätzliche
+EULA, OFL oder neue Rechteinhabererlaubnis behauptet. Die technischen fsType-Werte
+(Bakso 8, Chalkboard 0) werden nur als Metadaten dokumentiert.
 
-**Konkreter Bedarf:** je Kandidat die zu diesen Bytes gehörenden Lizenzbedingungen
-oder eine ausdrückliche Erlaubnis des Rechteinhabers für kommerzielle Spielnutzung,
-Einbettung und Verteilung im Windows-Studienpaket sowie Aufnahme der TTF in das
-öffentliche GitHub-Repository. Auch eine nur bestimmte Verteilform erlaubende
-Lizenz muss genau zu diesem Lieferweg passen. Keine Lizenz wird eigenmächtig
-gekauft, kein Rechteinhaber ohne Auftrag angeschrieben.
+Die anfängliche Zuordnung von Chalkboard zu einer Privatnutzungslizenz betraf einen
+anderen gleichnamigen Font und bleibt korrigiert. Maßgeblich ist die bytebestätigte
+Florence-S-Quelle. [Mitgelieferte Hinweise](../prototypes/p1/study/fonts/NOTICES.md)
+und [Maschinenmanifest mit Font-/Archivhashes](zs1-font-input.json).
 
-Die unabhängige Lieferung verwendet ausschließlich die bereits gebündelte
-**IBM-Plex-Sans-Referenz**. Sie ist kein Ersatzkandidat und keine neue Fontwahl.
-N03, A01/A02 für beide Kandidaten und der vollständige kombinierte Abschluss
-bleiben offen. Nach Klärung gehören beide Ressourcen ausschließlich unter
-`prototypes/p1/study/`; der reguläre Export muss sie weiterhin ausschließen.
-Der dann nötige echte Hinweisvergleich einschließlich Metriken, Ziffern bis 100,
-C1/Marker/Tooltip und eventuell explizitem Markerfallback ist nicht durchgeführt.
+## Native Darstellung
 
-[Maschinenlesbare Identitäten und Hashes](zs1-font-input.json).
+Beide unveränderten Ressourcen liegen ausschließlich unter `prototypes/p1/study/fonts/`.
+Der reguläre Export schließt `study/*` aus; nur die Studien-EXE enthält sie.
+Der Export-Smoke prüft die eingebetteten TTF-Bytes erneut gegen beide Originalhashes.
+Plex bleibt die ausdrücklich beschriftete historische Referenz, kein dritter Kandidat.
+
+Beide Kandidaten enthalten 0–9 vollständig. Chalkboard fehlen `…` und `–`.
+Bakso enthält Zuordnungen für diese Zeichen, sein Auslassungszeichen ist in der
+nativen Probe aber nicht als übliche Ellipse erkennbar. Deshalb verwenden beide
+Kandidaten bewusst die bestehenden Plex-Zeichen `…` und `–` für die Navigation.
+Dies gilt auch für Markermaße und leere Tooltipfolgen. Systemfallback ist für
+die Kandidaten ausgeschaltet. Kein Austausch von Ziffern.
+
+Bakso verwendet den bisherigen nominalen Schriftgrad. Chalkboard wird wegen seiner
+kleineren Ziffern innerhalb des em gleichmäßig mit Faktor 1,35 (auf ganze Pixel gerundet)
+gezeichnet, im Raster zusätzlich auf Zellbreite minus 4 px begrenzt (Minimum
+11 px bei Chalkboard, 8 px bei Bakso); beide Kandidaten werden anhand ihrer gemessenen Glyphengrenzen vertikal zentriert.
+Keine veränderten Fontbytes, künstliche Fettung oder verzerrten Konturen. Die
+Ziffernprobe und Tooltips verwenden dieselbe Größennormalisierung. Status/C1 bleiben.
+Die Spaltenrandprüfung verwendet gemessene Glyphengrenzen einschließlich Marker;
+Zeilen-/Spaltenslots bleiben 30/18 px × UI-Skalierung. Native Berichte protokollieren
+Schriftgrad, tatsächliche maximale Hinweisbreite, Glyphengrenzen und Slotmaße.
+
+Die finale Fontwahl ist weiterhin Teil von ZS1-M01; E2 ist die Freigabe beider
+Kandidaten für den Vergleich, keine vorweggenommene Auswahl oder Mergefreigabe.

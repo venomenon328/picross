@@ -582,6 +582,7 @@ func clue_status(axis: String, index: int, token: int) -> int:
 	return states[token] if token < states.size() else ClueCompletion.Status.OPEN
 
 func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, status: int) -> void:
+	font = clue_text_font(font, text)
 	var alpha: float = FILLED_ALPHA if status == ClueCompletion.Status.FILLED else 1.0
 	# Quarter-pixel outline: a 4x glyph drawn at 1/4 scale gives a 0.25px
 	# outer contour (C1 reference: 0.275px). Keep the original fill last.
@@ -592,7 +593,7 @@ func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, colo
 		draw_set_transform(Vector2.ZERO)
 	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(color, alpha))
 	if status == ClueCompletion.Status.CLOSED:
-		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var width: float = clue_text_font(font, text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		var start: Vector2 = baseline - Vector2(0, float(fs) * 0.32)
 		draw_line(start, start + Vector2(width, 0), Color(color, 0.72), maxf(1.0, float(fs) / 14.0), true)
 
@@ -600,6 +601,20 @@ func clue_font_size() -> int:
 	if book_layout:
 		return mini(roundi((13 if view.cell_size < 24 else 14)*ui_scale),maxi(8,floori(view.cell_size-4)))
 	return mini(roundi(14 * ui_scale), maxi(8, floori(view.cell_size - 4.0)))
+
+# Typography hooks preserve the regular geometry; the isolated study can
+# normalize an owner's different em metrics without changing slot allocation.
+func clue_text_font(font: Font, _text: String) -> Font:
+	return font
+
+func clue_vertical_extents(fs: int) -> Vector2:
+	return Vector2(float(fs) * (0.6 if book_layout else 1.0), float(fs) * (0.4 if book_layout else 0.35))
+
+func clue_baseline_offset(fs: int) -> float:
+	return fs * 0.35
+
+func clue_tooltip_font_size() -> int:
+	return roundi(16 * ui_scale)
 
 func clue_token(clue: Dictionary) -> String:
 	return str(int(clue.length))
@@ -679,12 +694,12 @@ func shared_clue_slot_extent(axis: String, font: Font, fs: int) -> float:
 	var key: String = "%d/%d/%s" % [session.get_instance_id(), fs, str(ui_scale)]
 	if row_slot_extent_cache.has(key):
 		return float(row_slot_extent_cache[key])
-	var width: float = font.get_string_size("…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	var width: float = clue_text_font(font, "…").get_string_size("…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	for line: Array in session.definition.rows:
 		if line.is_empty():
-			width = maxf(width, font.get_string_size("–", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
+			width = maxf(width, clue_text_font(font, "–").get_string_size("–", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
 		for clue: Dictionary in line:
-			width = maxf(width, font.get_string_size(clue_token(clue), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
+			width = maxf(width, clue_text_font(font, clue_token(clue)).get_string_size(clue_token(clue), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
 	var extent: float = maxf(24.0 * ui_scale, width + 8.0 * ui_scale)
 	row_slot_extent_cache[key] = extent
 	return extent
@@ -728,16 +743,16 @@ func visual_hint_units(axis: String, index: int) -> Dictionary:
 		var token: Dictionary = layout.entries[token_index]
 		var slot: int = int(layout.token_slot) + token_index - int(layout.start)
 		var center: float = clue_slot_center(axis, area, layout, slot) + float(layout.visual_shift)
-		var before: float = font.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs) * (0.6 if book_layout else 1.0)
-		var after: float = before if axis == "row" else float(fs) * (0.4 if book_layout else 0.35)
+		var before: float = clue_text_font(font, str(token.text)).get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else clue_vertical_extents(fs).x
+		var after: float = before if axis == "row" else clue_vertical_extents(fs).y
 		if center - before >= low and center + after <= high:
 			candidates.append({"kind": "token", "index": token_index, "center": center, "before": before, "after": after})
 			first_visible = mini(first_visible, token_index)
 			last_visible = token_index
 	var prefix_hidden: bool = first_visible > 0
 	var suffix_hidden: bool = last_visible < layout.entries.size() - 1
-	var marker_before: float = font.get_string_size("…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs) * (0.6 if book_layout else 1.0)
-	var marker_after: float = marker_before if axis == "row" else float(fs) * (0.4 if book_layout else 0.35)
+	var marker_before: float = clue_text_font(font, "…").get_string_size("…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else clue_vertical_extents(fs).x
+	var marker_after: float = marker_before if axis == "row" else clue_vertical_extents(fs).y
 	var prefix_center: float = clue_slot_center(axis, area, layout, 0)
 	var suffix_center: float = clue_slot_center(axis, area, layout, int(layout.slot_count) - 1)
 	if prefix_hidden:
@@ -791,9 +806,9 @@ func _draw_row_hint(index: int, py: float, font: Font, fs: int) -> void:
 		var text: String = "…" if unit.kind != "token" else str(layout.entries[int(unit.index)].text)
 		var color: Color = ACCENT if unit.kind != "token" else Color(layout.entries[int(unit.index)].color)
 		var center: float = float(unit.center)
-		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var width: float = clue_text_font(font, text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if center - width / 2.0 >= area.position.x and center + width / 2.0 <= area.end.x:
-			draw_clue_number(font, Vector2(center - width / 2.0, py + fs * 0.35), text, fs, color, clue_status("row", index, int(unit.index)))
+			draw_clue_number(font, Vector2(center - width / 2.0, py + clue_baseline_offset(fs)), text, fs, color, clue_status("row", index, int(unit.index)))
 
 func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 	var layout: Dictionary = visible_clue_layout("column", index)
@@ -802,22 +817,22 @@ func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 		var text: String = "…" if unit.kind != "token" else str(layout.entries[int(unit.index)].text)
 		var color: Color = ACCENT if unit.kind != "token" else Color(layout.entries[int(unit.index)].color)
 		var center: float = float(unit.center)
-		var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		if center - fs * (0.6 if book_layout else 1.0) >= area.position.y and center + fs * (0.4 if book_layout else 0.35) <= area.end.y:
-			draw_clue_number(font, Vector2(px - width / 2.0, center + fs * 0.35), text, fs, color, clue_status("column", index, int(unit.index)))
+		var width: float = clue_text_font(font, text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		if center - clue_vertical_extents(fs).x >= area.position.y and center + clue_vertical_extents(fs).y <= area.end.y:
+			draw_clue_number(font, Vector2(px - width / 2.0, center + clue_baseline_offset(fs)), text, fs, color, clue_status("column", index, int(unit.index)))
 
 func _draw_clue_tooltip() -> void:
 	if clue_hover_axis.is_empty() or clue_hover_index < 0:
 		return
 	var entries: Array = tooltip_entries(clue_hover_axis, clue_hover_index)
 	var font: Font = clue_font()
-	var fs: int = roundi(16 * ui_scale)
+	var fs: int = clue_tooltip_font_size()
 	var line_height: float = 22 * ui_scale
 	var box_width: float = minf(520 * ui_scale, size.x - view.viewport.position.x - 32)
 	var positions: Array[Vector2] = []
 	var cursor: Vector2 = Vector2(14, 44 * ui_scale)
 	for entry: Dictionary in entries:
-		var width: float = font.get_string_size(entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var width: float = clue_text_font(font, entry.text).get_string_size(entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if cursor.x + width > box_width - 14:
 			cursor.x = 14
 			cursor.y += line_height

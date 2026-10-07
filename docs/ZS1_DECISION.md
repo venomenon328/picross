@@ -1,8 +1,9 @@
 # ZS-1 · Eigentümerentscheidung und Nacharbeitsstand
 
-Stand: 07.10.2026 · E1: Stift und Timing gewählt; N03 / Abschlussbestätigung offen
+Stand: 07.10.2026 · E1: Stift und Timing gewählt; E2-Kandidaten enthalten; Abschlussbestätigung offen
 
 [ZS1-E1](https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659)
+sowie [ZS1-E2](https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344)
 und [#52](https://github.com/venomenon328/picross/issues/52) sind maßgeblich.
 R1 ohne B-/O-Befunde gilt ausschließlich für den ursprünglichen Head
 `4ae4f5a20273808f99d257a3812da86d72307a5f`. Neue Eigentümeranforderungen sind keine
@@ -20,11 +21,13 @@ fortgeschrieben; #54 bleibt offen und ist keine Produktbasis.
 | Vorschau | Statisch, 56 %; keine zusätzliche Einzelabnahme behauptet. Radieren zeigt unbekannt mit neutraler Kontur, keine alte Markierung kehrt zurück. |
 | Kleine Zellen / Miniatur | Unter 18 px und in Gesamtansicht vereinfachte Füllung; Miniatur zeigt eigene Werte unmittelbar ohne Animation. |
 | Rand-UI | Zusätzlichen Studien-Zeichenlayer entfernt; funktionale Buchmontierungen/Controls und Hintergrund bleiben. Keine neue Hintergrundproduktion. |
-| Hinweisfonts | Genau Bakso Daging Regular und Chalkboard Regular vorgesehen. TTFs vorhanden und gegen Eigentümerquellen bytebestätigt; notwendige Rechtebelege fehlen. N03 und kombinierter Fontvergleich offen. |
-| Teilstudie ohne Kandidaten | Bisherige Plex-Sans-Referenz und identische Slots; ausdrücklich keine Ersatzfont als Kandidat. Fraunces-Titel und übrige UI erhalten. |
+| Hinweisfonts | Bakso Daging Regular und Chalkboard Regular enthalten, unabhängig vom Zellstil wählbar. Originalbytes gegen Eigentümerquellen bestätigt; Nutzungshinweise durch E2 als Liefergrundlage akzeptiert. Finale Fontwahl offen. |
+| Referenz / Geometrie | Bisherige Plex-Sans-Referenz bleibt zusätzlich wählbar, kein dritter Kandidat. Identische Slots; Chalkboard optisch mit 1,35-fachem Schriftgrad normalisiert. Fraunces-Titel und übrige UI erhalten. |
 
-[Fontinput und konkreter Bedarf](ZS1_FONT_INPUT.md),
-[Identitäten/Hashes](zs1-font-input.json). Keine ungeklärten Fontbytes in Git/CI/Export.
+[Fontinput, Nutzungshinweise und E2](ZS1_FONT_INPUT.md),
+[Identitäten/Hashes](zs1-font-input.json). Kandidaten nur im Studienpfad/-export.
+Beide Kandidaten verwenden Plex explizit für die Navigationszeichen `…`/`–`,
+niemals für Ziffern; Begründung und tatsächliche Glyphenabdeckung im Fontinput.
 Die tatsächlich verwendeten vorhandenen Fonts und OFL bleiben im
 [Z2-Ressourcenmanifest](../prototypes/p1/art/book/manifest.json) und im historischen
 [Font-Lock](design/book_inventory/composition/inputs/fonts.json) gebunden.

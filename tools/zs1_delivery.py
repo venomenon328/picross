@@ -63,7 +63,7 @@ def verify(renders: Path) -> dict:
     if original["failures"] or study["failures"]:
         raise toolchain.PreflightError("ZS1 native assertions failed")
     baseline = {item["case"]: item for item in original["captures"]}
-    if len(baseline) != 14 or len(study["captures"]) != 28:
+    if len(baseline) != 14 or len(study["captures"]) != 42:
         raise toolchain.PreflightError("Incomplete ZS1 comparison matrix")
     for record in study["captures"]:
         old = baseline[record["case"]]
@@ -80,10 +80,30 @@ def verify(renders: Path) -> dict:
                 box = (int(x), int(y), int(x+w), int(y+h))
                 if ImageChops.difference(a.crop(box).convert("RGB"), b.crop(box).convert("RGB")).getbbox():
                     raise toolchain.PreflightError(f"ZS1 regular baseline pixels changed: {record['case']}")
+    candidates = {(item["font_choice"], item["case"]): item for item in study["captures"]}
+    for case in baseline:
+        first, second = candidates[1, case], candidates[2, case]
+        with Image.open(renders / first["file"]) as a, Image.open(renders / second["file"]) as b:
+            x, y, w, h = first["grid"]
+            box = (int(x), int(y), int(x+w), int(y+h))
+            if not case.endswith("tooltip") and ImageChops.difference(a.crop(box).convert("RGB"), b.crop(box).convert("RGB")).getbbox():
+                raise toolchain.PreflightError(f"ZS1 fonts changed cell rendering: {case}")
+            x, y, w, h = first["board"]
+            box = (int(x), int(y), int(x+w), int(y+h))
+            if not ImageChops.difference(a.crop(box).convert("RGB"), b.crop(box).convert("RGB")).getbbox():
+                raise toolchain.PreflightError(f"ZS1 fonts produced identical clue pixels: {case}")
     if len(study["frames"]) != 1 or len(study["measurements"]) != 1:
         raise toolchain.PreflightError("Missing ZS1 movement/load evidence")
-    if {item["style"] for item in study["specimens"]} != {0, 2}:
+    if {item["font_choice"] for item in study["specimens"]} != {0, 1, 2}:
         raise toolchain.PreflightError("Missing ZS1 native numeral specimen")
+    expected = {1: ("Bakso Daging", "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e", ["…", "–"]),
+                2: ("Chalkboard", "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d", ["…", "–"])}
+    for specimen in study["specimens"]:
+        if specimen["font_choice"]:
+            family, digest, fallback = expected[specimen["font_choice"]]
+            font = specimen["font"]
+            if (font["family"], font["sha256"], font["plex_punctuation"], font["digits_native"]) != (family, digest, fallback, True):
+                raise toolchain.PreflightError("ZS1 actual native candidate identity/fallback mismatch")
     for specimen in study["specimens"]:
         if not (renders / specimen["file"]).is_file():
             raise toolchain.PreflightError("Missing ZS1 specimen image")
@@ -102,8 +122,8 @@ def verify(renders: Path) -> dict:
                 raise toolchain.PreflightError("ZS1 native commit effect is not visible")
     stroke_evidence = verify_strokes(renders, study["stroke_frames"])
     return dict(baseline=BASE, identical_regular_board_cases=len(baseline),
-                comparison_images=len(study["captures"]), movements=study["frames"],
-                stroke_evidence=stroke_evidence, font_comparison="BLOCKED: embedding and redistribution evidence missing; Plex reference only",
+                comparison_images=len(study["captures"]), identical_candidate_grid_cases=12, distinct_candidate_clue_cases=14, movements=study["frames"],
+                stroke_evidence=stroke_evidence, font_comparison=study["specimens"],
                 measurements=study["measurements"], renderer=study["renderer"])
 
 
@@ -200,6 +220,7 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
     manifest = {key: product[key] for key in ("source_commit", "source_tree_dirty", "tested_checkout_commit", "base_commit", "github_run_id", "host", "engine_version", "assets")}
     manifest.update(specification_commit="c82ae74f794936bca93d45f5f505ba283e971227",
                     owner_decision="https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659",
+                    font_owner_decision="https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344",
                     font_input=json.loads((root / "docs/zs1-font-input.json").read_text(encoding="utf-8")),
                     export_files=files, evidence=evidence, owner_acceptance="OPEN ZS1-M01; independent review and merge authorization OPEN")
     renders = output / "zs1-renders"
@@ -216,6 +237,7 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
             bundle.write(path, "licenses/" + path.name)
         bundle.write(root / "prototypes/p1/art/book/manifest.json", "licenses/resources.json")
         bundle.write(root / "docs/ZS1_FONT_INPUT.md", "FONTSTATUS.md")
+        bundle.write(root / "prototypes/p1/study/fonts/NOTICES.md", "licenses/study-fonts-NOTICES.md")
     with zipfile.ZipFile(player) as bundle:
         for name, digest in files.items():
             import hashlib
@@ -251,9 +273,9 @@ def review_html(evidence: dict) -> str:
     for case in ("f01-work", "f02-color", "f03-small", "f02-compact", "f01-1600", "f01-z150", "f03-z300", "hint-row-drag", "hint-row-tooltip", "hint-column-drag", "hint-column-tooltip", "status-0", "status-1", "status-2"):
         sections.append(f"<h2>{case}</h2><div class='row'>" + "".join(
             f"<figure><figcaption>{label}</figcaption><a href='zs1-{style}-{case}.png'><img src='zs1-{style}-{case}.png'></a></figure>"
-            for style, label in ((0, "Bisherige Baseline"), (2, "Gewählter Stift / neues X; Plex-Referenz"))) + "</div>")
-    sections.append("<h2>Plex-Referenzprobe (keine Eigentümerkandidaten)</h2>" + "".join(f"<figure><img src='zs1-numerals-{i}.png'></figure>" for i in (0, 2)))
-    return html_page("Native Vergleiche · Fontvergleich blockiert", sections)
+            for style, label in ((0, "Bisherige Baseline · Plex"), (1, "Stift / neues X · Bakso Daging"), (2, "Stift / neues X · Chalkboard"))) + "</div>")
+    sections.append("<h2>Ziffernproben: Plex-Referenz, Bakso Daging, Chalkboard</h2>" + "".join(f"<figure><img src='zs1-numerals-{i}.png'></figure>" for i in (0, 1, 2)))
+    return html_page("Native Vergleiche · zwei Eigentümerfonts", sections)
 
 
 def movement_html(evidence: dict) -> str:
@@ -269,4 +291,4 @@ def movement_html(evidence: dict) -> str:
 
 
 def html_page(title: str, sections: list[str]) -> str:
-    return "<!doctype html><html lang='de'><meta charset='utf-8'><title>ZS-1</title><style>body{font:16px system-ui;background:#faf6ec;color:#343f42;margin:24px}.row{display:flex}figure{margin:8px}.row figure{width:48%}.row img{width:100%}img{max-width:100%}h2{margin-top:40px}</style>" + f"<h1>ZS-1 · {title}</h1><p>PNG bei 100 % betrachten. Nachweisindex, keine Spielimplementierung. Abschließende Eigentümerbestätigung offen.</p>" + "".join(sections) + "</html>"
+    return "<!doctype html><html lang='de'><meta charset='utf-8'><title>ZS-1</title><style>body{font:16px system-ui;background:#faf6ec;color:#343f42;margin:24px}.row{display:flex}figure{margin:8px}.row figure{width:32%}.row img{width:100%}img{max-width:100%}h2{margin-top:40px}</style>" + f"<h1>ZS-1 · {title}</h1><p>PNG bei 100 % betrachten. Nachweisindex, keine Spielimplementierung. Abschließende Eigentümerbestätigung offen.</p>" + "".join(sections) + "</html>"

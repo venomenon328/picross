@@ -1,6 +1,6 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-Stand: 07.10.2026 · Spezifikation 0.2 · E1: Stift/Timing gewählt; Fontrechte und abschließende Bestätigung offen
+Stand: 07.10.2026 · Spezifikation 0.3 · E1: Stift/Timing gewählt; E2: beide Kandidaten akzeptiert; Abschlussbestätigung offen
 
 ## 1. Auftrag, Quellen und Status
 
@@ -31,7 +31,9 @@ prüfen. [AGENTS.md](../AGENTS.md), [lokaler Workflow](dev-rules/WORKFLOW.md),
 konkretisiert die Auswahl: Stiftfüllung und kurzes Timing sind gewählt. N01–N06
 ersetzen die offene Tinte-/Stiftwahl, frühere Fraunces-Hinweiskandidaten, bloßes Fade
 und zusätzliche Rand-UI. R1 bleibt an `4ae4f5a20273808f99d257a3812da86d72307a5f`
-gebunden. [Fontinput](ZS1_FONT_INPUT.md): beide TTFs vorhanden, Rechtebelege fehlen.
+gebunden. [Fontinput](ZS1_FONT_INPUT.md): beide Original-TTFs samt Nutzungshinweisen durch
+[ZS1-E2](https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344)
+für die beauftragte Studienlieferung akzeptiert; zusätzliche Lizenztexte sind kein Startblocker.
 
 ## 2. Ziel und begrenzte Ablösung
 
@@ -52,13 +54,12 @@ Schriftgrad und gegebenenfalls bewusst gewählte gemeinsame Slotmaße. Fraunces-
 Plex-Sans-Bedientexte, die übrige Z2-Komposition und die C1-Farbkontur bleiben Grundlage.
 Eine neue allgemeine Hintergrund-, Schrift- oder Layoutauswahl ist nicht beauftragt.
 
-Die Stiftfüllung ist gewählt. Zwei konkrete Eigentümer-TTFs werden nach Klärung
-der benötigten Rechte unabhängig von der Zellgestaltung am selben Stand verglichen:
+Die Stiftfüllung ist gewählt. Zwei konkrete Eigentümer-TTFs werden gemäß E2 unabhängig von der Zellgestaltung am selben Stand verglichen:
 Bakso Daging Regular und Chalkboard Regular. Historische Tinte-/Stiftbilder und R1
 bleiben Referenzen ihrer Lieferung, keine erneut offene Füllformwahl. Die endgültige
 Hinweisfont und die überarbeitete Kombination aus X und Strichaufbau benötigen noch
-ZS1-M01. Die fontunabhängige Teilstudie kennzeichnet Plex ausdrücklich als bisherige
-Referenz und behauptet keinen Ersatzkandidaten oder vollständigen Abschluss.
+ZS1-M01. Die Studie enthält beide Kandidaten und kennzeichnet Plex ausdrücklich als
+bisherige Referenz. Technische Lieferung und abschließende Eigentümerwahl bleiben getrennt.
 
 ## 3. Zeichensprache
 
@@ -232,7 +233,7 @@ Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflü
 
 | Paket | Ergebnis | Abhängigkeit und Gate |
 | --- | --- | --- |
-| ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; zwei rechtlich geklärte Eigentümer-TTFs auf identischen Testständen, abschließende Kombination bestätigen. | Eigener Implementierungsauftrag nach Startprüfung. Eigentümerwahl der nativen Fassung vor Abschluss und ZS-2. |
+| ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; zwei durch E2 akzeptierte Eigentümer-TTFs auf identischen Testständen, abschließende Kombination bestätigen. | Eigener Implementierungsauftrag nach Startprüfung. Eigentümerwahl der nativen Fassung vor Abschluss und ZS-2. |
 | ZS-2 | Gewählte Hinweis-/Zellsprache ohne zusätzliche Rand-UI, statische Vorschau, parallele Commit-Effekte und Schalter in der regulären Arbeitsansicht. | ZS-1-Auswahl und integrierte nutzbare Grundlage; aktuelle technische Nachweise, unabhängiges Review und gezielte reale Eigentümerprobe vor Merge. |
 | Z3/#24 | Längere reale Spielerprobung der integrierten neuen Fassung und Abschluss der Designphase. | Nach ZS-2; ersetzt keine davor erforderlichen technischen oder gezielten manuellen Gates. |
 

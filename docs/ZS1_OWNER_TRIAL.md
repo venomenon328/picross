@@ -2,13 +2,12 @@
 
 Stand: 07.10.2026 · ZS1-M01: **Teilwahl erfolgt, abschließende Bestätigung offen**
 
-Das Studien-ZIP vollständig entpacken und `picross-zs1.exe` starten. Godot und
-die bisher verwendeten Fonts sind eingebettet. **Diese Teillieferung enthält keine
-Eigentümer-TTFs:** [Fontrechte](ZS1_FONT_INPUT.md) bleiben zu klären. Die Hinweise
-zeigen die gekennzeichnete Plex-Referenz, keinen Ersatzkandidaten. Dies ist ein Windows-Testexport, kein Release.
-Die Stiftfüllung und das kurze Timing sind nach E1 gewählt. Jetzt sind das neue X
-und der tatsächliche Strichaufbau zu beurteilen; die endgültige Fontwahl folgt erst
-mit beiden zulässigen Kandidaten. Diese Teillieferung schließt #52 nicht ab.
+Das Studien-ZIP vollständig entpacken und `picross-zs1.exe` starten. Godot,
+**Bakso Daging Regular und Chalkboard Regular** sowie die bisherigen UI-Fonts sind
+eingebettet. [Quellen und Nutzungshinweise](ZS1_FONT_INPUT.md) folgen E2.
+Dies ist ein Windows-Testexport, kein Release. Stiftfüllung und kurzes Timing sind
+bereits gewählt. Jetzt beide Hinweisfonts, das neue X und den räumlichen
+Strichaufbau beurteilen und die endgültige Kombination bestätigen.
 Quellhead, Basis, getesteter Checkout/Test-Merge, Run und EXE-Hashes stehen in
 `zs1-report.json`; die genaue Downloadbindung steht im Draft-PR zu #52.
 
@@ -20,7 +19,10 @@ Undo/Redo beim Blatt- und Variantenwechsel erhalten. Die getrennten temporären
 Studienordner können nach der Probe gezielt entfernt werden.
 
 1. Die Studie startet mit der bereits gewählten **Stiftfüllung**. Oben lässt sich
-   zwischen Stift mit neuem X und bisheriger Baseline als Referenz wechseln. Zellen, Ausschnitt und Hinweisleseposition bleiben dabei gleich.
+   der Hinweisfont zwischen **Bakso Daging**, **Chalkboard** und der bisherigen
+   **Plex-Referenz** wechseln. Bakso startet als erster Kandidat, nicht als endgültige
+   Auswahl. In den Einstellungen lässt sich der Zellstil unabhängig zwischen
+   Stift/neuem X und Baseline wechseln. Zellen, Ausschnitt und Hinweisleseposition bleiben gleich.
    Im Album links stehen F-01 (20×20 Mono), F-02 (40×40 Farbe) und F-03
    (100×100, ausdrücklich UI-Stresstest). Die angearbeiteten Muster enthalten
    nur eigene Beispielmarkierungen, darunter absichtliche Fehler und viele X.
@@ -64,7 +66,7 @@ Bitte im Issue/PR am konkreten Artefakt festhalten:
 | Head, Run/Artefakt und ZIP-Hash | offen |
 | Windows-Version, Bildschirm, tatsächliche Clientfläche, Windows-Skalierung | offen |
 | UI-Skalierung, Arbeitszoom, Eingabegerät | offen |
-| Ziffern: Bakso Daging / Chalkboard am identischen Stand | durch Rechtebelege blockiert; in dieser Teillieferung nicht prüfbar |
+| Ziffern: Bakso Daging / Chalkboard am identischen Stand | beide enthalten; endgültige Wahl offen |
 | Stiftfüllung und Timing | bereits positiv gewählt |
 | Neues X und räumlicher Strichaufbau | abschließende Bestätigung offen |
 | Zusätzliche Rand-UI | verworfen und entfernt; Hintergrundarbeit separat |
@@ -72,7 +74,7 @@ Bitte im Issue/PR am konkreten Artefakt festhalten:
 | Kleine Zellen, C1, Hinweisdrag/Tooltip, F-03-Folgegesten | offen |
 | Gewählte konkrete Kombination oder nötige Nacharbeit | offen |
 
-Vollständiger Fontvergleich nach Rechteklärung, abschließende ZS1-M01,
+Abschließende ZS1-M01 einschließlich konkreter Fontwahl,
 unabhängiges technisches/visuelles Review des neuen Heads und ausdrückliche
 Mergefreigabe bleiben vor Merge erforderlich. Die Auswahl ist Voraussetzung
 für #53; diese Studie stellt die reguläre Arbeitsansicht noch nicht um.

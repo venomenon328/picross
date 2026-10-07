@@ -10,27 +10,28 @@ Basis `ec99954268f1ad959d9ea779dbbd9e28edf7d8fa`, Ausgangs-/R1-Head
 Downloadbindungen stehen im PR und den maschinenlesbaren Artefaktberichten.
 R1 bleibt historisch; neue Selbstprüfung ist keine unabhängige Zweitprüfung.
 
-**Teillieferung:** N01/N02/N04/N05 und unabhängige N06-Nachweise umgesetzt.
-N03 und der davon abhängige vollständige A01/A02/A06-/N06-Abschluss sind blockiert:
-[beide TTFs und Originalquellen vorhanden, konkrete Rechtebelege fehlen](ZS1_FONT_INPUT.md).
-Keine Kandidatenfontbytes verteilt, kein vollständiger Abschluss mit Platzhaltern.
-Plex ist ausdrücklich bisherige Referenz und kein angebotener Ersatzkandidat.
+**N01–N06:** Die isolierte Studie enthält die gewählte Stiftfüllung, neues X,
+räumlichen Strichaufbau und beide Original-TTFs. [ZS1-E2](https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344)
+akzeptiert die vorhandenen Nutzungshinweise für die Kandidatenlieferung;
+[Fontinput](ZS1_FONT_INPUT.md) dokumentiert diese Grundlage und die genauen Bytes.
+Abschließende Eigentümerbestätigung und unabhängiges Review bleiben getrennte Gates.
 
 | Kriterium | Aktueller Nachweis / Grenze |
 | --- | --- |
-| A01 | 14 native Situationen je bisherige Baseline und gewählter Stift: 28 Bilder auf identischen eigenen F-01/F-02/F-03-Ständen. Bisherige reguläre Boardpixel zusätzlich gegen 14 echte Main-Archivbilder geprüft. Der Zweifontvergleich fehlt. |
-| A02 | Unveränderte echte Hinweise mit drei Zuständen auf beiden Achsen, C1, unabhängiger Hinweisdrag/Tooltip und beschriftete Ziffernprobe. Aktuell nur Plex-Referenz; Metriken/Glyphen/Fallbacks beider Kandidaten nicht als geprüft behauptet. |
+| A01 | 14 native Situationen je Plex-Baseline, Bakso/Stift und Chalkboard/Stift: 42 Bilder auf identischen eigenen F-01/F-02/F-03-Ständen. Bisherige reguläre Boardpixel gegen 14 echte Main-Archivbilder geprüft. Kandidaten zeigen unterschiedliche Hinweis-Pixel bei identischen Zellbildern (zwölf Fälle ohne überlagernden Tooltip). |
+| A02 | Unveränderte echte Hinweise mit drei Zuständen auf beiden Achsen, C1, unabhängiger Hinweisdrag/Tooltip und beschriftete Ziffernprobe. Drei Ziffernproben mit 0–9/11/17/40/100. Native Originalhashes/Glyphen geprüft, explizite Plex-Navigationszeichen `…`/`–` bei beiden Kandidaten; keine Ziffernfallbacks. Metrikbericht je Ansicht; gleiche Slots, Chalkboard-Schriftgrad ×1,35. |
 | A03 | 1920×1080, 1280×720/UI125, 1600×900, 2560×1440; 12/24/36/72er-Zellen und F-01 bei 150 %. Gleiche Geometrie/Spielstände. Keine zusätzliche Studien-Rand-UI. |
 | A04 | Echtzeitfolge mit statischer Vorschau, 20 parallelen Commits, zweiter Geste vor Effektende, Umwandlung und pixelgleichem Endzustand bei Aus. Zusätzlich sieben native 72-px-Zellausschnitte bei kontrollierten 0/21/49/70/98/119/140 ms: räumlicher Füllfortschritt, Zug eins vor Zug zwei. Bildprüfer lehnt aus diesen Bildern erzeugtes globales Fade und umgekehrte X-Reihenfolge ab. |
 | A05 | Unveränderter Gesten-/Session-/Savekern; Normal-Sentinel vor/nach Studienlauf bytegleich. Echter Commit/Save im eigenen Root, Originaldaten/Proofs/Assets unverändert. Gesamter Produktweg mit Zwei-Prozess-, 500-Aktionen-, Recoveryregressionen sowie sechs aktuelle CI-Jobs erforderlich. |
-| A06 | Schlankes Windows-ZIP, eigener nativer Vergleich und separates kleines Strichaufbau-ZIP. Identitätsbericht mit Head/Dirty/Basis/Test-Merge/Run, EXE-/Bildhashes, vorhandenem Fontmanifest/OFL und ausdrücklich blockiertem Eigentümerfontinput. Vollständige Kandidatenlieferung offen. |
+| A06 | Schlankes Windows-ZIP, eigener nativer Vergleich und separates kleines Strichaufbau-ZIP. Identitätsbericht mit Head/Dirty/Basis/Test-Merge/Run, EXE-/Bildhashes, vorhandenem Fontmanifest/OFL sowie separaten Quellen-/Nutzungshinweisen und E2 für beide Studienfonts. Export-Smoke prüft die eingebetteten Kandidatenbytes gegen die Originalhashes. |
 
 `zs1_tests.gd` prüft stabile und begrenzte X-Pfade sowie die echten GUI-Ereigniswege:
 Parallelstart, Priorität, Rückzug, Abbruch, Schutz/No-op, Radieren ohne Rückkehr alter
 Markierungen, Undo/Redo, Schalter ohne Save/Replay, Fokus, Zoom/Resize, Seiten-/
 Blattwechsel/Reset und sofortigen gespeicherten Abschluss. Die neue Matrix führt
-diese Fälle einmal für die gewählte Stiftgestaltung aus; die frühere Duplikation
-für Tinte entfällt begründet durch E1. Reguläre P1-Regressionen bleiben vollständig.
+diese Fälle für beide Fonts mit gewählter Stiftgestaltung aus. Unabhängiger Font-/
+Stilwechsel erhält History, Savebytes und semantische Hinweislesepositionen.
+Die frühere Tinte entfällt begründet durch E1. Reguläre P1-Regressionen bleiben vollständig.
 
 Die kontrollierte Uhr wird nur im Capture gesetzt. Dieselbe Produktionszeichenfunktion
 zeichnet die Zwischenstände; das ist ein Geometrienachweis, keine behauptete reale
@@ -53,8 +54,8 @@ bleiben verpflichtend. Lokale Entwicklungsläufe ersetzen die aktuellen CI nicht
 
 - `zs1-windows-study-<Head>`: `picross-zs1-windows-x86_64.zip`, EXE-Paar,
   Eigentümeranleitung, Identität, Fontstatus und Lizenzen der enthaltenen Fonts.
-- `zs1-review-<Head>`: `picross-zs1-review.zip`, 28 native Vergleiche,
-  Referenzziffernproben und HTML-Index. Kein Zweifontnachweis.
+- `zs1-review-<Head>`: `picross-zs1-review.zip`, 42 native Vergleiche,
+  drei Ziffernproben, Fontidentitäten/-metriken und HTML-Index.
 - `zs1-strokes-<Head>`: `picross-zs1-strokes.zip`, sieben kontrollierte native
   Strichbilder, getrennte Echtzeitfolge, Zeit-/Hashbindung und HTML-Index.
 
@@ -62,22 +63,20 @@ Die Indizes sind Nachweisgalerien, keine Browserimplementierung des Spiels.
 PNG bei 100 % prüfen. Vollrender-Sammelupload bleibt manuelles Opt-in.
 Reguläre Hauptszene und Standardzeichner bleiben erhalten; regulärer Export
 schließt `study/*` aus. Nur der Studienexport verwendet die getrennte Hauptszene
-und Appidentität. Die beiden Eigentümer-TTFs sind in keinem Export enthalten.
+und Appidentität. Beide Eigentümer-TTFs sind ausschließlich im Studienexport enthalten.
 
 ## Abnahme und Historie
 
 Die Erstlieferung mit 117 Studienprüfungen, 42 Vergleichen und zwei Fade-Zeitfolgen
-bleibt ausschließlich an R1/`4ae4f5a` gebunden. Der neue Entwicklungsstand bestand
-lokal 720 Studienprüfungen, 28 native Ansichten und die gezielten Strichpixelprüfungen
-unter Windows/OpenGL/RTX 3070. Zusätzlich bestanden 70 Python-Prüfungen (eine weitere
-plattformbedingt übersprungen) und die Dokumentprüfung eines sauberen Quellsnapshots.
-Aktuelle finale CI-/Download-/Sichtprüfung und der
-getrennte Selbstreview werden nach Abschluss im PR dokumentiert; diese lokalen
-Angaben behaupten keine Prüfung eines noch nicht benannten Lieferheads.
+bleibt ausschließlich an R1/`4ae4f5a` gebunden. Die fontunabhängige E1-Lieferung `9df51f0`
+mit 720 Studienprüfungen und 28 Ansichten bleibt ebenfalls historisch.
+Die aktuelle lokale Studienprüfung umfasst 1057 Assertions und 42 Ansichten
+unter Windows/OpenGL/RTX 3070. Aktuelle finale CI-/Download-/Sichtprüfung und
+der getrennte Selbstreview werden mit Headbindung im PR dokumentiert; frühere
+grüne Läufe werden nicht als Prüfung des neuen Heads ausgegeben.
 
-**Vor Merge offen:** Fontrechte und vollständiger Kandidatenvergleich, fehlende
-abhängige Akzeptanznachweise, abschließende [ZS1-M01](ZS1_OWNER_TRIAL.md),
-unabhängiges technisches/visuelles Review des neuen Heads und ausdrückliche
-Mergefreigabe. Stift/Timing sind gewählt; M01 ist keine noch unbeantwortete Probe.
+**Vor Merge offen:** Abschließende [ZS1-M01](ZS1_OWNER_TRIAL.md) einschließlich
+konkreter Fontwahl, unabhängiges technisches/visuelles Review des neuen Heads
+und ausdrückliche Mergefreigabe. Stift/Timing sind gewählt; M01 ist keine noch unbeantwortete Probe.
 #52 bleibt offen, #53 nicht implementiert, #54 nicht gemergt/geschlossen.
 Keine Hintergrundproduktion oder Veröffentlichung.

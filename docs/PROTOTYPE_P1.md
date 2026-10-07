@@ -564,7 +564,7 @@ Die [freigegebene Detailspezifikation](UI_DRAWING_STYLE.md) konkretisiert D-29 b
 D-32. [ZS-1/#52](https://github.com/venomenon328/picross/issues/52) führt die nach
 E1 gewählte Stiftfüllung fort. Neues X und räumlicher Strichaufbau ersetzen die
 bisherige gleichförmige Kreuzform und Fade-Animation; 140 ms Setzen/Umwandeln und
-80 ms Entfernen bleiben. Zwei Eigentümer-TTFs werden nach Rechteklärung am
+80 ms Entfernen bleiben. Zwei Eigentümer-TTFs werden gemäß Eigentümerentscheidung E2 am
 gleichen Stand verglichen. Zusätzliche Rand-UI entfällt; Hintergrundarbeit bleibt separat.
 [ZS-2/#53](https://github.com/venomenon328/picross/issues/53) integriert genau diese
 Auswahl in die reguläre Arbeitsansicht einschließlich abschaltbarer Effekte.

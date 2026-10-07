@@ -4,6 +4,7 @@ const StudyBoard = preload("res://study/board.gd")
 const Samples = preload("res://study/samples.gd")
 const Numerals = preload("res://study/numerals.gd")
 var variant_button: Button
+var font_button: Button
 var animation_toggle: CheckBox
 var study_root: String
 
@@ -20,19 +21,21 @@ func _ready() -> void:
 	for item: Node in album_content.get_children():
 		if item is Label and item.text == "Neun Blätter zum Entdecken":
 			item.text = "Drei Blätter für den Gestaltungsvergleich"
-	variant_button = _text_button("", cycle_variant)
+	font_button = _text_button("", cycle_font)
 	# Reuses the title's free right-hand region, above every working surface.
-	page.add_child(variant_button)
+	page.add_child(font_button)
 	animation_toggle = CheckBox.new()
 	animation_toggle.text = "Zellanimationen"
 	animation_toggle.button_pressed = true
 	animation_toggle.toggled.connect(func(enabled: bool) -> void: board.set_animations(enabled))
 	settings_panel.add_child(animation_toggle)
 	settings_panel.move_child(animation_toggle, 1)
-	var study_label: Label = label("ZS-1 · Stift ist gewählt\nVergleich: bisherige Baseline / überarbeitete Stiftmarkierungen.\nHinweise weiterhin Plex-Referenz. Der Vergleich Bakso Daging / Chalkboard wartet auf Lizenzbelege; keine Kandidatenschrift enthalten.\nNeue Starts verwenden frische Studienstände.", 16)
+	var study_label: Label = label("ZS-1 · Stift und Timing sind gewählt.\nHinweisfont oben wechseln: Bakso Daging / Chalkboard, zusätzlich Plex als bisherige Referenz. Der Zellstil lässt sich hier unabhängig umschalten.\nNeue Starts verwenden frische Studienstände.", 16)
 	study_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	settings_panel.add_child(study_label)
 	var quit_control: Node = settings_panel.get_child(settings_panel.get_child_count() - 2)
+	variant_button = _text_button("", cycle_variant)
+	settings_panel.add_child(variant_button)
 	settings_panel.add_child(_text_button("Vergleichsstand dieses Blatts wiederherstellen", restore_sample))
 	settings_panel.add_child(_text_button("Leeres Studienblatt", empty_sample))
 	settings_panel.add_child(_text_button("Ziffernprobe bis 100", show_numerals))
@@ -54,11 +57,12 @@ func restore_sample() -> void:
 
 func show_numerals() -> void:
 	var dialog: AcceptDialog = AcceptDialog.new()
-	dialog.title = "ZS-1 · Plex-Referenz · Fontvergleich noch offen"
+	dialog.title = "ZS-1 · " + StudyBoard.Fonts.LABELS[board.font_choice]
 	dialog.min_size = Vector2i(740, 490)
 	var specimen: Numerals = Numerals.new()
 	specimen.session = Session.new(sessions[1].definition)
 	specimen.style = board.style
+	specimen.set_font_choice(board.font_choice)
 	specimen.custom_minimum_size = Vector2(720, 445)
 	specimen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	dialog.add_child(specimen)
@@ -89,17 +93,25 @@ func cycle_variant() -> void:
 	board.set_style(2 if board.style == 0 else 0)
 	update_variant()
 
+func cycle_font() -> void:
+	if session.gesture.active:
+		return
+	board.set_font_choice((board.font_choice + 1) % 3)
+	update_variant()
+
 func update_variant() -> void:
-	variant_button.text = "ZS-1 · Baseline →" if board.style == 0 else "ZS-1 · Stift →"
-	variant_button.tooltip_text = "Gewählte Stiftmarkierungen / bisherige Baseline; Fontvergleich noch offen"
+	variant_button.text = "Zellstil: Baseline →" if board.style == 0 else "Zellstil: Stift →"
+	variant_button.tooltip_text = "Zellstil wechseln; Hinweisfont bleibt erhalten"
+	font_button.text = StudyBoard.Fonts.LABELS[board.font_choice] + " →"
+	font_button.tooltip_text = "Hinweisfont wechseln; Zellstil und eigener Spielstand bleiben erhalten"
 	_layout_book()
 	refresh()
 
 func _layout_book() -> void:
 	super._layout_book()
-	if variant_button != null:
+	if font_button != null:
 		var material: Rect2 = surface.material_rect()
-		_place(variant_button, Rect2(material.position + Vector2(material.size.x * 0.52, material.size.y * 0.039), Vector2(210 * ui_scale, 44 * ui_scale)))
+		_place(font_button, Rect2(material.position + Vector2(material.size.x * 0.52, material.size.y * 0.039), Vector2(210 * ui_scale, 44 * ui_scale)))
 
 func _undo() -> void:
 	board.clear_effects()
@@ -110,6 +122,12 @@ func _redo() -> void:
 	super._redo()
 
 func study_smoke() -> void:
+	for choice: int in [1, 2]:
+		var evidence: Dictionary = StudyBoard.Fonts.evidence(choice)
+		if not evidence.digits_native or evidence.sha256 != StudyBoard.Fonts.HASHES[choice]:
+			get_tree().quit(6)
+			return
+		print("ZS1_FONT_OK ", JSON.stringify(evidence))
 	if store.root != study_root or store.root.contains("app_userdata"):
 		get_tree().quit(4)
 		return

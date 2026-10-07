@@ -137,7 +137,7 @@ Timing (140/80 ms); ein handschriftlicheres X und räumlicher Strichaufbau folge
 Zusätzliche Rand-UI-Dekoration entfällt; mögliche Hintergrundarbeit bleibt separat.
 Die [UI-Spezifikation](UI_DRAWING_STYLE.md) trennt diese beschlossene Richtung
 von der abschließenden nativen Bestätigung der überarbeiteten Kombination und
-dem Vergleich zweier Eigentümer-TTFs nach Rechteklärung in [ZS-1 / #52](https://github.com/venomenon328/picross/issues/52)
+dem Vergleich zweier Eigentümer-TTFs gemäß Eigentümerentscheidung E2 in [ZS-1 / #52](https://github.com/venomenon328/picross/issues/52)
 und deren Integration in [ZS-2 / #53](https://github.com/venomenon328/picross/issues/53).
 Ein vollständiger Themen- oder Layoutwechsel folgt daraus nicht.
 

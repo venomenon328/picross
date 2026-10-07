@@ -33,6 +33,7 @@ func run() -> void:
 	check(app.store.root == app.study_root and not app.store.root.contains("forbidden"), "isolation before slot load")
 	check(FileAccess.get_file_as_string(Store.test_root_override.path_join("f01.json")) == "normal-save-sentinel", "normal sentinel untouched")
 	check(app.board.style == 2, "selected pencil is startup default")
+	font_probe()
 	for index: int in range(30):
 		for which: int in range(2):
 			var path: PackedVector2Array = Marks.x_path(index, which)
@@ -40,8 +41,9 @@ func run() -> void:
 			check(path != Marks.x_path(index + 1, which), "X varies across cells")
 			for p: Vector2 in path:
 				check(Rect2(0.15, 0.15, 0.7, 0.7).has_point(p), "bounded X geometry")
-	for style: int in [2]:
-		app.board.set_style(style)
+	for choice: int in [1, 2]:
+		app.board.set_font_choice(choice)
+		app.board.set_style(2)
 		fresh()
 		var a: Vector2 = point(0, 0)
 		var b: Vector2 = point(19, 0)
@@ -145,6 +147,41 @@ func run() -> void:
 	if failures == 0:
 		print("ZS1_TESTS_OK")
 	quit(0 if failures == 0 else 1)
+
+func font_probe() -> void:
+	var fonts = app.board.Fonts
+	for choice: int in [1, 2]:
+		var evidence: Dictionary = fonts.evidence(choice)
+		check(evidence.digits_native and evidence.sha256 == fonts.HASHES[choice], "exact original TTF with native digits")
+		check(not fonts.selected(choice).allow_system_fallback, "no implicit system font")
+		app.board.set_font_choice(choice)
+		for symbol: String in "…–":
+			check(app.board.clue_text_font(fonts.selected(choice), symbol) == fonts.REFERENCE, "explicit shared navigation punctuation")
+		print("ZS1_FONT ", JSON.stringify(evidence))
+	for index: int in range(3):
+		app.select_puzzle(index)
+		app.open_puzzle()
+		app.board.set_clue_step("row", 12, 2)
+		app.board.set_clue_step("column", 22 if index > 0 else 2, 3)
+		app.session.player.commit([{"index": 0, "before": app.session.player.cells[0], "after": 1 if app.session.player.cells[0] != 1 else 0}])
+		app._save_current()
+		var save_path: String = app.store.path_for("f%02d" % (index + 1))
+		check(FileAccess.file_exists(save_path), "font switch has a real saved nonempty history")
+		var before: Dictionary = app.board.capture_view()
+		var cells: Array[int] = app.session.player.cells.duplicate()
+		var cursor: int = app.session.player.cursor
+		var saved: String = FileAccess.get_file_as_string(save_path)
+		for style: int in [0, 2]:
+			app.board.set_style(style)
+			for choice: int in [0, 1, 2]:
+				app.board.set_font_choice(choice)
+				check(app.board.style == style and app.board.capture_view() == before, "font independent of style and semantic reads")
+				check(app.session.player.cells == cells and app.session.player.cursor == cursor, "font preserves cells and history")
+				check(FileAccess.get_file_as_string(save_path) == saved, "font does not write saves")
+				for symbol: String in "0123456789…–":
+					check(app.board.clue_font().has_char(symbol.unicode_at(0)), "digit or explicit punctuation available")
+	app.board.set_style(2)
+	app.board.set_font_choice(1)
 
 func fresh() -> void:
 	app.select_puzzle(0)

@@ -32,7 +32,7 @@ noch aus; frühere feste Font-/Slotwerte unten beschreiben den integrierten Z2-S
 
 E1 wählt Stiftfüllung und 140/80-ms-Timing. Es folgen ein handschriftlicheres X
 und räumlicher Strichaufbau; zusätzliche Rand-UI entfällt. Der Vergleich der zwei
-Eigentümer-TTFs ist bis zur Rechteklärung blockiert. Hintergrundarbeit bleibt separat.
+Eigentümer-TTFs erfolgt auf der durch E2 akzeptierten Grundlage. Hintergrundarbeit bleibt separat.
 Die kurzen parallelen Animationen beginnen ausschließlich nach dem Anwenden.
 Die Vorschau beim Ziehen bleibt statisch und heller/transparenter. Die neue
 Spezifikation ist keine bereits gelieferte oder abgenommene Z2-Änderung.

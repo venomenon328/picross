@@ -38,10 +38,11 @@ func run() -> void:
 	surface.add_child(app)
 	await process_frame
 	await create_timer(0.3).timeout
-	for style: int in ([0] if baseline else [0, 2]):
-		variant = style
+	for choice: int in ([0] if baseline else [0, 1, 2]):
+		variant = choice
 		if not baseline:
-			app.board.set_style(style)
+			app.board.set_style(0 if choice == 0 else 2)
+			app.board.set_font_choice(choice)
 			app.update_variant()
 		for spec: Array in [
 			[0, 1920, 1080, 1.0, 24.0, "f01-work"],
@@ -72,7 +73,7 @@ func run() -> void:
 		await status_probe()
 		if not baseline:
 			await numeral_probe()
-		if not baseline and style > 0:
+		if not baseline and choice == 1:
 			await movement()
 			await load_probe()
 			await stroke_probe()
@@ -119,7 +120,8 @@ func status_probe() -> void:
 func numeral_probe() -> void:
 	var specimen = load("res://study/numerals.gd").new()
 	specimen.session = Session.new(app.sessions[1].definition)
-	specimen.style = variant
+	specimen.style = 0 if variant == 0 else 2
+	specimen.set_font_choice(variant)
 	specimen.size = Vector2(720, 445)
 	surface.add_child(specimen)
 	app.hide()
@@ -128,7 +130,7 @@ func numeral_probe() -> void:
 	var picture: Image = surface.get_texture().get_image().get_region(Rect2i(0, 0, 720, 445))
 	var filename: String = "zs1-numerals-%d.png" % variant
 	picture.save_png(output.path_join(filename))
-	specimens.append({"file": filename, "style": variant, "label": "Artificial font specimen, not puzzle data", "font": specimen.clue_font().get_font_name()})
+	specimens.append({"file": filename, "font_choice": variant, "label": "Artificial font specimen, not puzzle data", "font": specimen.Fonts.evidence(variant)})
 	specimen.queue_free()
 	app.show()
 	await process_frame
@@ -151,12 +153,30 @@ func shot(name: String) -> void:
 	var picture: Image = surface.get_texture().get_image()
 	var filename: String = "zs1-%s-%s.png" % ["main" if baseline else str(variant), name]
 	check(picture.save_png(output.path_join(filename)) == OK, "image write")
-	captures.append({"file": filename, "case": name, "style": variant,
+	captures.append({"file": filename, "case": name, "style": 0 if variant == 0 else 2, "font_choice": variant,
 		"fixture": app.session.definition.id, "size": [surface.size.x, surface.size.y], "ui_scale": app.ui_scale,
 		"cells_sha256": JSON.stringify(app.session.player.cells).sha256_text(), "view": app.board.capture_view(),
 		"board": rect_data(app.board.get_global_rect()), "grid": rect_data(Rect2(app.board.global_position + app.board.view.visible_bounds().position, app.board.view.visible_bounds().size)),
-		"viewport": rect_data(app.board.view.viewport), "font_size": app.board.clue_font_size(),
+		"viewport": rect_data(app.board.view.viewport), "font_size": app.board.clue_font_size(), "font": app.board.clue_font().get_font_name(), "font_metrics": font_metrics(),
 		"pan_target": app.board.pan_target, "tooltip": [axis, line], "spoiler_free": not app.session.completed and app.session.reveal().is_empty()})
+
+func font_metrics() -> Dictionary:
+	var board = app.board
+	var font: Font = board.clue_font()
+	var fs: int = board.clue_font_size()
+	var rows: float = board.shared_clue_slot_extent("row", font, fs)
+	var columns: float = board.shared_clue_slot_extent("column", font, fs)
+	var width: float = 0
+	for lines: Array in [app.session.definition.rows, app.session.definition.columns]:
+		for clues: Array in lines:
+			for clue: Dictionary in clues:
+				width = maxf(width, font.get_string_size(board.clue_token(clue), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
+	var extents: Vector2 = Vector2.ZERO if baseline else board.clue_vertical_extents(fs)
+	if not baseline and variant > 0:
+		check(width + 1 <= minf(rows, board.view.cell_size), "actual clue widths fit fixed slots and columns")
+		check(extents.x + extents.y <= columns, "glyphs including markers fit column slot height")
+	return {"font_size": fs, "max_actual_token_width": width, "row_slot": rows, "column_slot": columns,
+		"ink_above_center": extents.x, "ink_below_center": extents.y, "ascent": font.get_ascent(fs), "descent": font.get_descent(fs)}
 
 func hint_probe(axis: String) -> void:
 	var line: int = 12 if axis == "row" else 22
@@ -247,7 +267,7 @@ func movement() -> void:
 		images[i].get_region(crop).save_png(output.path_join(filename))
 		timeline[i]["file"] = filename
 		timeline[i]["crop"] = [crop.position.x, crop.position.y, crop.size.x, crop.size.y]
-	frames.append({"style": variant, "second_gesture_ms": second_ms, "parallel_cells": 20, "preview_static": true, "off_same_end": true, "timeline": timeline})
+	frames.append({"style": 2, "font_choice": variant, "second_gesture_ms": second_ms, "parallel_cells": 20, "preview_static": true, "off_same_end": true, "timeline": timeline})
 
 func load_probe() -> void:
 	app.select_puzzle(2)
@@ -274,7 +294,7 @@ func load_probe() -> void:
 	check(app.board.completion_searches == searches, "animation ticks do not search clues")
 	check(not app.board.is_processing(), "animation ticker stops")
 	check(app.session.player.cursor == 1, "100-cell stroke remains one action")
-	measurements.append({"style": variant, "fixture": "F-03", "overview": true, "cells": 100,
+	measurements.append({"style": 2, "font_choice": variant, "fixture": "F-03", "overview": true, "cells": 100,
 		"input_commit_us": commit_us, "draw_us": app.board.draw_times_us.duplicate(), "frame_us": frame_times,
 		"renderer": RenderingServer.get_video_adapter_name(), "real_mouse_acceptance": "OPEN ZS1-M01"})
 	app.board.measure_draws = false

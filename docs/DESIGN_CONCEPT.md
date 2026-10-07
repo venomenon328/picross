@@ -248,7 +248,7 @@ Assetauftrag und kein Gate. Historische Artworkpakete bleiben unverändert.
 
 ZS1-E1 wählt die Stiftfüllung. Das überarbeitete X verwendet zwei stabile,
 weniger gleichförmige Stiftzüge. Genau zwei Eigentümer-TTFs, Bakso Daging und
-Chalkboard, werden nach [Rechteklärung](ZS1_FONT_INPUT.md) auf derselben
+Chalkboard, werden gemäß [E2/Fontinput](ZS1_FONT_INPUT.md) auf derselben
 Zellgestaltung verglichen; kein neues breites Font-/Themenscreening. Dieselben echten
 Mono-/Farbspielstände, viele X, lange Hinweise und ein Großrasterausschnitt
 dienen dem Vergleich bei tatsächlicher Spielgröße. Die ausgewählte Kombination
@@ -377,7 +377,7 @@ die Freigabe dieses Sollstands belegen bereits dessen Implementierung.
 | Thema | Nächster Gegenstand |
 | --- | --- |
 | Themenwahl | Thematisches Sammelalbum oder Reisealbum, Kapitel und Motivzusammenhang; nicht mit dem gewählten Arbeitsasset A verwechseln. Bestehende Progressionsanforderungen nicht neu öffnen. |
-| Album/Designsystem | ZS-1 bestätigt nach E1-Nacharbeit die gewählte Stiftgrundlage mit neuem X/Strichaufbau und zwei rechtlich geklärten Eigentümer-TTFs; ZS-2 integriert diese Auswahl ohne zusätzliche Rand-UI. Ein vollständiger Albumneubau ist nicht beauftragt. |
+| Album/Designsystem | ZS-1 bestätigt nach E1-Nacharbeit die gewählte Stiftgrundlage mit neuem X/Strichaufbau und zwei durch E2 akzeptierten Eigentümer-TTFs; ZS-2 integriert diese Auswahl ohne zusätzliche Rand-UI. Ein vollständiger Albumneubau ist nicht beauftragt. |
 | Rücknahmen/Wertung | Direkte Neutralisierung ist für die Bedienung festgelegt; Fehlerzählung, Sterne und Hypothesenwirkung bleiben offen. |
 | P1-Bedienung | P1/Z2 ist integriert; Z2-M01/M02 wurden nicht durchgeführt, ihr damaliges Mergegate aufgehoben. Eigene aktuelle RP-3-Nachweise stehen im [Prüfbericht](RP3_VERIFICATION.md). |
 | Fortsetzung | Speicherung/Recovery bleiben Regressionsumfang; Z2-M03 wurde nicht durchgeführt und für PR #33 als Gate aufgehoben. F-04 erhält einen eigenen isolierten Neustartnachweis. |
