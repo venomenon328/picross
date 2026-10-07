@@ -45,14 +45,14 @@ def package(root: Path, output: Path, manifest: dict, windows_zip: Path) -> Path
                    windows_zip=dict(file=windows_zip.name, sha256=toolchain.sha256_file(windows_zip)),
                    book_resources=manifest["book_resources"],
                    images={p.name: toolchain.sha256_file(p) for p in paths},
-                   owner_acceptance="NOT PERFORMED: Z2-M01/M02/M03; owner waived gate for merged PR #33; RP3 review remains separate")
+                   owner_acceptance="NOT PERFORMED: Z2-M01/M02/M03; owner waived gate for merged PR #33; RP3 integrated via #44; RP6 review/owner gates remain separate")
     index = ['<!doctype html><html lang="de"><meta charset="utf-8"><title>Z2 – native Godot-Nachweise</title>',
              '<style>body{font:16px sans-serif;max-width:1200px;margin:40px auto;background:#faf6ed;color:#293e3d}img{max-width:100%;height:auto}figure{margin:32px 0}code{overflow-wrap:anywhere}</style>',
              '<h1>Z2 – native Godot-Nachweise</h1>',
              '<p>PNG-Dateien sind unveränderte Godot-Render oder ausdrücklich bezeichnete 1:1-Ausschnitte. Für Pixelprüfung die Bilddatei in Originalgröße öffnen.</p>',
              '<p>Vorher: regulärer P1 auf ' + BASE + '. Gleiche Fixtures, z1-demo-1-Zellen, Fenster, UI-Skala und gesetzter Zellmaßstab; Anordnung und sichtbarer Ausschnitt sind das Ergebnis des jeweiligen Layouts. Keine Browsermontage.</p>',
              '<p>Quellhead: <code>' + html.escape(manifest["source_commit"]) + '</code>; Windows-ZIP SHA-256: <code>' + binding["windows_zip"]["sha256"] + '</code>.</p>',
-             '<p>Z2 ist über PR #33 integriert. Z2-M01/M02/M03 wurden nicht durchgeführt; ihr Gate wurde für diesen Merge aufgehoben. Aktuelles RP-3-Review bleibt separat offen. Details: Z2-PRUEFUNG.md; Hashbindung: z2-binding.json.</p>']
+             '<p>Z2 ist über PR #33 integriert. Z2-M01/M02/M03 wurden nicht durchgeführt; ihr Gate wurde für diesen Merge aufgehoben. RP-3 ist über PR #44 integriert; RP-6-Review und Eigentümerproben bleiben offen. Details: Z2-PRUEFUNG.md; Hashbindung: z2-binding.json.</p>']
     for path in paths:
         if path.suffix == ".png":
             name = html.escape(path.name)

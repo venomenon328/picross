@@ -1,4 +1,4 @@
-# GP-48 · technische Lieferung und offene Abnahme
+# GP-48 · technische Lieferung und abgeschlossene Abnahme
 
 Issue [#48](https://github.com/venomenon328/picross/issues/48), GP-01–GP-03.
 Arbeitsbranch `feat/48-gameplay-feedback`, Ziel `main`; vorbereitete und tatsächlich
@@ -39,7 +39,7 @@ Prüfphasen; `report.json` im getrennten GP-Review-ZIP bindet dieselbe Lieferung
 | GP48-A02 | `tests/h1_cases.gd`: unabhängiger kleiner Zellbelegungsoracle, gespiegelte Zufallslinien, 19 explizite Dreizustandsfälle und bestehende Cache-, Vorschau-, Save-/Restore-/Recovery-Szenarien. GP-Ereignistests prüfen Übergänge und Schalter einschließlich Tooltip. |
 | GP48-A03 | 40 native Bildpaare, 80 unveränderte PNGs: Mono/Farbe, beide Achsen, Tooltip, Überlauf, Zwischenversatz/Drop, Statusfolgen; 1920×1080/UI 100 % und 1280×720/UI 125 %. Dieselbe Capturedatei wird auf Basis und Lieferung ausgeführt. Zellhash, Ansicht, Skalierung, Schriftgröße, Dragziel und Tooltip werden paarweise verglichen; Statuswechsel erhalten Zeichenpositionen. Bestehende Pixelprüfungen laufen weiterhin. |
 | GP48-A04 | Vollständiger Produktweg einschließlich 500 Aktionen mit unabhängigem Oracle, Prozessneustart, negativer Kontrolle, nativen Renderprüfungen, Windows-Export; sechs Pflichtjobs. Separater Slim-Upload, exakte Inhaltsliste und Exporthashes werden geprüft. |
-| GP48-A05 | Getrennter vollständiger Selbstreview; unabhängiges technisches und visuelles Review bleibt offen. |
+| GP48-A05 | Getrennter Selbstreview plus unabhängiges technisches/visuelles Review R1 auf `1127b22c3b472f4af2a872643870549f65798bfc`; ohne B-/O-Befund abgeschlossen. |
 
 Bewusst angepasste historische Testerwartungen: P1.2-Matrix und Python-
 500-Aktionen-Oracle bilden die Startkategorie ab; H1-Oracle vergleicht jetzt
@@ -66,8 +66,4 @@ Renderbilder, technische Logs, Teststände und synthetische H1-Exporte liegen se
 Hinweiszustände mit X/Rasterrand/Farbwechsel, Lesbarkeit und leeres Ergebnisprotokoll.
 Keine vollständige RP-6-Lösung erforderlich. Normale Benutzersaves bleiben getrennt.
 
-**Offene Mergegates:** unabhängiges technisches/visuelles Review auf dem Lieferhead
-und GP48-M01 durch den Eigentümer. Keine davon wurde durch den Implementierer
-als bestanden erklärt. Erst eine separate Freigabe erlaubt Merge. Zusammenführung
-mit PR #47 und Fortsetzung von RP6-M01–M04 sind spätere, getrennte Schritte.
-Kein Release.
+**Abschluss:** Review R1 und GP48-M01 sind für den Lieferhead abgeschlossen. Der Eigentümer bestätigte die reale Probe am 06.10.2026 als „funktioniert wie gewünscht“ und ordnete anschließend den Merge an. PR #49 wurde per Squash als `add7a7e6aa507d54d6e0e2ac8a3a2c5e2d1d6912` in `main` integriert. Fehlende separate Umgebungsmetadaten wurden nicht erfunden. Die Zusammenführung mit PR #47 und RP6-M01–M04 bleiben getrennte Folgearbeit. Kein Release.

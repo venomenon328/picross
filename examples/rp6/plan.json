@@ -1,0 +1,352 @@
+{
+  "format": "picross-rp6-plan-v1",
+  "date": "2026-10-06",
+  "base_commit": "cd4a8db86e51891f13e305b589837a1a4354c5a2",
+  "started_at_utc": "2026-10-06T08:10:55.947532+00:00",
+  "issue": 40,
+  "selection": [
+    {
+      "definition_id": "F-04",
+      "revision": 1,
+      "kind": "import",
+      "reference_bundle": "examples/rp3/production",
+      "variant": "area-128",
+      "candidate_id": "8202aa28c0113a39d6a64bca2a9bfdc31c364f2c545030adf66d4e73c0478f9b",
+      "reference_matrix_hash": "a5b6cf901605301fc63ec0fbb1bacc85a5b6ebd43cff2064ceb15908f02d6efb",
+      "reference_files": {
+        "manifest.json": "da485596636b211733a6cbf7ffd2f3ce7bff61c19507c8e11e8120d3a613b558",
+        "design.json": "2c0b546f775d0dbc55caa717c88875af8ce50264b20e52002171ce8f239490fe",
+        "original.png": "79e40044c083443b171041b4d2d0699714d9c7b3a027f9eded850c3703471bc1",
+        "normalized.png": "79e40044c083443b171041b4d2d0699714d9c7b3a027f9eded850c3703471bc1",
+        "area-128-candidate.json": "2ada509db495876010adb35d7f68a2670ee8e2cda6b39181f39b9acd0f70b0bb",
+        "area-128-logic.json": "1e3daffc4be230acd7821baf643c48d3dcaadfe64a2425df64428e843829f4f6",
+        "area-128-proof.json": "45ef928ecd282351479761c20cde97e04e498574eb80797313dfe3aad6d960af",
+        "area-128-raster.png": "1ab616dab603747e8efaaa1d7dcf0f9f556cee064ab6d51ab2ac1eb9ca23ae1b"
+      },
+      "dimensions": [
+        20,
+        20
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#293e3d"
+        }
+      ],
+      "versions": {
+        "jpeg": "8.0",
+        "jpeg_turbo": "3.1.4.1",
+        "littlecms": "2.19",
+        "pillow": "12.3.0",
+        "tool": "rp3-image-1",
+        "zlib": "1.3.1.zlib-ng"
+      },
+      "name": "Fliegenpilz",
+      "briefing": "Unveränderte F-04-Definition, Revision und SVG. Breite Kappe, mittiger Stiel; erlaubter Mono-Enthüllungsbeitrag.",
+      "allowed_refinement": "Vorlagentreu; Konturen, Schattierung, Oberflächen und passende kleine Details. Keine Raster-/Palettenänderung, kein neuer Blickwinkel oder Ersatzmotiv.",
+      "image_call_limit": 0,
+      "matrix_hash": "a5b6cf901605301fc63ec0fbb1bacc85a5b6ebd43cff2064ceb15908f02d6efb",
+      "retained_files": {
+        "prototypes/p1/data/f04.json": "c575bd448f736045da13dd5553550f5154e1215d2eac743806245b776a7d4587",
+        "prototypes/p1/art/f04.svg": "602b5fa22cec2255292e209afb0a64c1d696aa5cd711c9d4b21044263bf1b15a",
+        "examples/rp3/p1-export/manifest.json": "8374090f21a64cf972f31cac13c59939195800a70485207cf37aa8c4357c09fa"
+      }
+    },
+    {
+      "definition_id": "F-05",
+      "revision": 1,
+      "kind": "import",
+      "reference_bundle": "examples/rp4/baseline/i01-direct-100x100",
+      "variant": "area-128",
+      "candidate_id": "3198799a95ddc533b5d86da3b1acbf7b6b204ca099520f717df7d88ed9ea296e",
+      "reference_matrix_hash": "aa0523b838b63d24a241d46151b466776a154003af5454ce6b604fafcea9724b",
+      "reference_files": {
+        "manifest.json": "ee57a894d331a715e365ca2b0e540e88ac9b46e2dc3e81cccb14af6ba207361f",
+        "design.json": "8ba910a29075c195caff87c0e7ce7b1ba206de93ef20a89bf251392f3f291d45",
+        "original.png": "97405e8e64abf8a8accaa9c4451c680a941947c4dce1aa333f10b070a7c9555c",
+        "normalized.png": "0a1dc0865ea478339d9b2d78865b34c15a14a1f36badccf41020b36606fc2393",
+        "area-128-candidate.json": "b5dbc782e0bbafec0eee874511675b647d828574c4242bd0281e4093542e06db",
+        "area-128-logic.json": "2b1a71fd7bf908203af6e03564f71910196e9a0a723b2dcaea8c99129c16599b",
+        "area-128-proof.json": "969ab8b04bc0b567555fb932bc5a56262cbfbafae7a9aff935a3e2eb7ecd22a1",
+        "area-128-raster.png": "43ccdbbb88ca4e935cd73e8337907bec4aa7cfefa379ac28b913055204c6fac0"
+      },
+      "dimensions": [
+        100,
+        100
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253342"
+        }
+      ],
+      "versions": {
+        "jpeg": "6.2",
+        "jpeg_turbo": "3.1.4.1",
+        "littlecms": "2.19",
+        "pillow": "12.3.0",
+        "tool": "rp3-image-1",
+        "zlib": "1.3"
+      },
+      "name": "Teekanne",
+      "briefing": "Breiter runder Korpus, Tülle links, offener Henkel rechts, Deckelknauf. Ruhige Konturen, Keramikfarbe, Glasurlicht und wenige Oberflächendetails erlaubt; Hauptproportionen und Henkelinnenraum erhalten.",
+      "allowed_refinement": "Vorlagentreu; Konturen, Schattierung, Oberflächen und passende kleine Details. Keine Raster-/Palettenänderung, kein neuer Blickwinkel oder Ersatzmotiv.",
+      "image_call_limit": 2,
+      "matrix_hash": "aa0523b838b63d24a241d46151b466776a154003af5454ce6b604fafcea9724b"
+    },
+    {
+      "definition_id": "F-06",
+      "revision": 1,
+      "kind": "import",
+      "reference_bundle": "examples/rp4/baseline/a03-direct-50x50",
+      "variant": "area-128",
+      "candidate_id": "9e3326e41c5e3c97737e74cb4f9016819965270af2a170e3504a3d4901794d3b",
+      "reference_matrix_hash": "bb1055baeb81a2e7ba0726eca14f075c8e53a1cb44841894ecb23034075d35d1",
+      "reference_files": {
+        "manifest.json": "96dab8497b606a28635df56b1ff7b360a9e831feac12b7f5dcdd678efcd61eaa",
+        "design.json": "60d7d04725854aa4039da7e8854cc95e859200460b77c8079688422de15ce6c9",
+        "original.png": "5017066bf077dbfede6009d160a6986218dfe4a5795a2027b9aeec0160b7d96b",
+        "normalized.png": "9c40f677172d17154248f174209a3e10136dd98cc62ac59fdd576744307ffe95",
+        "area-128-candidate.json": "597b31c632c11b493d94a58393ad0ffd6ebeede1995f54821746d8890b15a5af",
+        "area-128-logic.json": "87e695b47d0decc7fefff70459176d2ebc1532f40d6b4215692d21dda13c04f6",
+        "area-128-proof.json": "9229d734a529cb7c14f3cc731e448e4b187d28badd7eea2e20afcb8651a6569b",
+        "area-128-raster.png": "524246d5804a19377d4a4985c644d1f3cae46b17fe9734976142613badcd5115"
+      },
+      "dimensions": [
+        50,
+        50
+      ],
+      "palette": [
+        {
+          "id": "charcoal",
+          "rgb": "#253342"
+        },
+        {
+          "id": "green",
+          "rgb": "#637b58"
+        },
+        {
+          "id": "ochre",
+          "rgb": "#c89d56"
+        },
+        {
+          "id": "red",
+          "rgb": "#b55848"
+        }
+      ],
+      "versions": {
+        "jpeg": "6.2",
+        "jpeg_turbo": "3.1.4.1",
+        "littlecms": "2.19",
+        "pillow": "12.3.0",
+        "tool": "rp3-image-1",
+        "zlib": "1.3"
+      },
+      "name": "Pagode",
+      "briefing": "Drei breite gestaffelte Dächer, Pfeiler, freier Eingang, Stufen und flankierende Sträucher. Vorhandene detaillierte Illustration nach Paarprüfung bevorzugt übernehmen.",
+      "allowed_refinement": "Vorlagentreu; Konturen, Schattierung, Oberflächen und passende kleine Details. Keine Raster-/Palettenänderung, kein neuer Blickwinkel oder Ersatzmotiv.",
+      "image_call_limit": 2,
+      "matrix_hash": "bb1055baeb81a2e7ba0726eca14f075c8e53a1cb44841894ecb23034075d35d1"
+    },
+    {
+      "definition_id": "F-07",
+      "revision": 1,
+      "kind": "import",
+      "reference_bundle": "examples/rp4/baseline/h03-stylized-100x100",
+      "variant": "area-128",
+      "candidate_id": "1d799d27bc79619d06c2e9e619478b786fc70cb4f37e7c2fd727c08de1da881e",
+      "reference_matrix_hash": "55d6082470d29f1ea109bc090b6125337f11c66296f693b98fdb29bff96b1205",
+      "reference_files": {
+        "manifest.json": "d4ba243b5ad661bc196cc0aab0ef14edffb8320023eb3963fd357ce8ed679a38",
+        "design.json": "2f56a40babb3da16119ef43ac3b5dd15a8bed4feb8261e8d621ef6870e6ef435",
+        "original.png": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+        "normalized.png": "cf6cc429677c1b14532670600ed9495429eaef787ebb066d722fca8478fb37c4",
+        "area-128-candidate.json": "a885015c0c07c1faccebf50aaab0f99d7a9cf5827426eb6b9b2a7f963e8228a2",
+        "area-128-logic.json": "79d6d61b46fe4049d8c0a228ca39750fe76023a7bcced4498a101a9f19b18fa0",
+        "area-128-proof.json": "5f8cf29055938250ab4f5cf901780a5d16f8401fe2012f780f974d8c543632a6",
+        "area-128-raster.png": "23bea8c48ce9700df1bf9840f64da78546b3e3a275b2b66103c398d4eb8882dd"
+      },
+      "dimensions": [
+        100,
+        100
+      ],
+      "palette": [
+        {
+          "id": "brown",
+          "rgb": "#997141"
+        },
+        {
+          "id": "cream",
+          "rgb": "#e2c6a2"
+        },
+        {
+          "id": "dark",
+          "rgb": "#30241d"
+        },
+        {
+          "id": "eyes",
+          "rgb": "#a69b55"
+        }
+      ],
+      "versions": {
+        "jpeg": "6.2",
+        "jpeg_turbo": "3.1.4.1",
+        "littlecms": "2.19",
+        "pillow": "12.3.0",
+        "tool": "rp3-image-1",
+        "zlib": "1.3"
+      },
+      "name": "Katze",
+      "briefing": "Schräges nahes Gesicht, zwei Augen, dreieckige Nase, Stirnzeichnung und helle Schnauze. Abgeschnittene Ohren, Blickrichtung und 3:2-Proportionen erhalten; quadratischer Leerrahmen ohne Strecken erlaubt. Vorhandene Stilisierung nach Paarprüfung bevorzugt.",
+      "allowed_refinement": "Vorlagentreu; Konturen, Schattierung, Oberflächen und passende kleine Details. Keine Raster-/Palettenänderung, kein neuer Blickwinkel oder Ersatzmotiv.",
+      "image_call_limit": 2,
+      "matrix_hash": "55d6082470d29f1ea109bc090b6125337f11c66296f693b98fdb29bff96b1205"
+    },
+    {
+      "definition_id": "F-08",
+      "revision": 1,
+      "kind": "repair",
+      "reference_bundle": "examples/rp4/baseline/i03-direct-40x40",
+      "variant": "area-128",
+      "candidate_id": "64d69782687f0040be9041d0e123aca9761566e05e13dafd383a985b5d49de0b",
+      "reference_matrix_hash": "71eca89fe04d446871e3695ff513f56c2e85b2d3cadd816f475eaddd22de32c2",
+      "reference_files": {
+        "manifest.json": "8b71cb70f41705eb705feb0329da7c6435a6d0829eb14804efac6086f1046266",
+        "design.json": "eca8c2381f2bf3c7344163ebc22290d3279789d0d0b12d24ffa8060e7813bdee",
+        "original.png": "0217c3c7853c8ff8768ea161e0149a48b0aec4de16da4742aafa0ef4793eec7b",
+        "normalized.png": "443f442999febe0ded2857b0c6da5be3a88e5038dcc5be542109af178c13d20b",
+        "area-128-candidate.json": "45519e53cfe3bc79c82392ad7d465c0f7f6ee4031d99b9dfbe2584dc589a1d69",
+        "area-128-logic.json": "93389524ef6ee76eb8c547aacd25392771af9cfd93c0ad83d097c48f70944d4e",
+        "area-128-proof.json": "b45d358df5a40b8513b5205eb3690b1006886d99e2fdfa11e0e564c2a1adc5fa",
+        "area-128-raster.png": "e767440c1322a511a0a9942b52d59a10b1750310c4bae3775000e9ab3b15caf0"
+      },
+      "dimensions": [
+        40,
+        40
+      ],
+      "palette": [
+        {
+          "id": "charcoal",
+          "rgb": "#253342"
+        },
+        {
+          "id": "green",
+          "rgb": "#637b58"
+        },
+        {
+          "id": "ochre",
+          "rgb": "#c89d56"
+        },
+        {
+          "id": "red",
+          "rgb": "#b55848"
+        }
+      ],
+      "versions": {
+        "jpeg": "6.2",
+        "jpeg_turbo": "3.1.4.1",
+        "littlecms": "2.19",
+        "pillow": "12.3.0",
+        "tool": "rp3-image-1",
+        "zlib": "1.3"
+      },
+      "name": "Tulpe",
+      "briefing": "Reparierte Endmatrix bindend: rote dreizackige Blüte, gerader Stiel, zwei grüne seitliche Blätter; entfernte Randpixel nicht als neue Form deuten. Innenkeile und Blattanschlüsse erhalten. Feinere Kontur, Blütenfalten und Blattadern erlaubt.",
+      "allowed_refinement": "Vorlagentreu; Konturen, Schattierung, Oberflächen und passende kleine Details. Keine Raster-/Palettenänderung, kein neuer Blickwinkel oder Ersatzmotiv.",
+      "image_call_limit": 2,
+      "repair_bundle": "i03-direct-40x40",
+      "repair_id": "f0a654159066abf872b5bb9dbebe32915884afcc85598f5f0effb35b8cb374c8",
+      "matrix_hash": "2561ad77c5124148dcee04a0c82bd60110600b29a077887dc54bcff8b1a75f09",
+      "repair_files": {
+        "repair.json": "7736e6e036c5f124d7cc1cc623feece21846fd793327dec784f67adc0f39606a",
+        "manifest.json": "115dc143a74354b4e6126b0784ab998a696c21fca49d07abb84e03d6f475cefe",
+        "plan.json": "a0ba8ee97762d953070f366e051df07f6d3077926f3fb7a88adbb7374e1c3bde",
+        "final-proof.json": "2e14423f97c5374cd3f0b629a265446b5c85873d0859b8f464f190d7d446a24b",
+        "final-logic.json": "843a28f8e10dcc590469e24e8d8bb3eaed2e0c0e57c947d7d7dd8f6b7fd2927a",
+        "after.png": "665f3992830d61b751455f0aded69a5d2a13f994d06d1aeea5303865c2e83a66",
+        "changes.png": "92e885d809090378de8c53e7deb923e5dac813e2996f80c4203572f5a99eb535",
+        "mask.png": "97ed38aa5101371b5b3b1f79a2e160e6a2bdfd489a53e0c31e2520ec0a52e529"
+      }
+    },
+    {
+      "definition_id": "F-09",
+      "revision": 1,
+      "kind": "repair",
+      "reference_bundle": "examples/rp4/baseline/a01-direct-40x40",
+      "variant": "area-128",
+      "candidate_id": "e8c302ecf9a49e1da59d1d9b8e9a5efbfca93fac3d685326c41f899f50a2cafa",
+      "reference_matrix_hash": "6211764c9915d4bae3b90d638c6c36410c9c620710c258434dd419b322ec6623",
+      "reference_files": {
+        "manifest.json": "3cfff4b0970e6cc42c7d3482ed69ac9f01298912304c8d7c4fe71df224ea8cd4",
+        "design.json": "3a2f098024cdf41037ce1d96bc2ac1e60acc6e5db213cb25a80e608d42c7bc30",
+        "original.png": "50493120121531a15cdc6352a85efc2b08ac6b12793b22740f3fdfa468bf0562",
+        "normalized.png": "5ecca2d7fb5f82262732f3558fbf5808b7fe4798d82684e8ad6941837822b751",
+        "area-128-candidate.json": "6255ebd6d188d9f4302b47e85751e2274f7594e10b2839a8968c0a907ab8e777",
+        "area-128-logic.json": "d408f25f759fa12384ce6920c07334a244cc7d9f09b671153febb61e72fd8a84",
+        "area-128-proof.json": "129a24bbd23a17d0476fa4935e406f1e4b74d6281eaf0e68a94a566f088b5d35",
+        "area-128-raster.png": "8fd0630d74ceab544a221bf4ad0671dbafa5846280e92ed661cdf052f3dd6b3a"
+      },
+      "dimensions": [
+        40,
+        40
+      ],
+      "palette": [
+        {
+          "id": "charcoal",
+          "rgb": "#253342"
+        },
+        {
+          "id": "green",
+          "rgb": "#637b58"
+        },
+        {
+          "id": "ochre",
+          "rgb": "#b37b42"
+        },
+        {
+          "id": "tan",
+          "rgb": "#dfbb80"
+        }
+      ],
+      "versions": {
+        "jpeg": "6.2",
+        "jpeg_turbo": "3.1.4.1",
+        "littlecms": "2.19",
+        "pillow": "12.3.0",
+        "tool": "rp3-image-1",
+        "zlib": "1.3"
+      },
+      "name": "Eule",
+      "briefing": "Reparierte Endmatrix bindend: frontale Eule auf Ast, große Augen, Schnabel, Flügelkonturen, Füße/Astkontakt. Zwei umgefärbte untere Flügelrandzellen ändern keine Hauptform. Vorhandene detaillierte Illustration bevorzugt nach explizitem Endmatrixvergleich.",
+      "allowed_refinement": "Vorlagentreu; Konturen, Schattierung, Oberflächen und passende kleine Details. Keine Raster-/Palettenänderung, kein neuer Blickwinkel oder Ersatzmotiv.",
+      "image_call_limit": 2,
+      "repair_bundle": "a01-direct-40x40",
+      "repair_id": "e3a77abe7cea7514a190bc15e17649a448802d5efa1a963c69adcad9cda5ccfc",
+      "matrix_hash": "c254d08c96446790d0fedd444aa4d5e46147dc5a1986cd2afdd716ee15d4b9a0",
+      "repair_files": {
+        "repair.json": "972bfd87de64673235e30de7d6f347210db8421a620658cc7acd10d6b7d12e7f",
+        "manifest.json": "e93748cdc38eb9a53e69294c5e7a5591ecc0640f83a288e7ab484eccfa96d4dc",
+        "plan.json": "e1619b26802169dce5f91a5f62144793e4d8e3850362baccb24e3176a01d9a01",
+        "final-proof.json": "63798382b0b67c98a708ae75ee104e4e8aeac293773026e3732e31782204c41e",
+        "final-logic.json": "09be99623a6958ac825fa90b564ffed456567253905d044323e04604f1033e56",
+        "after.png": "20188f9cc98ec3c2c20c932136283b14ae69f757554d17f3e0a269aa0e0a78f2",
+        "changes.png": "acacb5ec6f203d0ef7a965c7cfedb0f753494c0ae99ee3a586eb0f44e41ac782",
+        "mask.png": "35d8d5bcd80917da5feca14fb7f9b6348b642bde8dd397339b1697011a045de3"
+      }
+    }
+  ],
+  "repair_archive_sha256": "812c558198408ef750764ad18426f5e1ce4bdb336fad1a59c903bd0068459b8a",
+  "budget": {
+    "native_calls_total": 10,
+    "native_calls_per_new_motif": 2,
+    "failed_calls_count": true,
+    "new_raster_attempts": 0,
+    "import_export_seconds": 120,
+    "import_export_lines": 100000,
+    "repair_replay_seconds": 60,
+    "repair_replay_lines": 1000000,
+    "product_process_seconds": 300,
+    "human_minutes": null
+  },
+  "status": "precommitted plan; no RP-6 editorial release or owner trial"
+}

@@ -1,4 +1,6 @@
 import tempfile
+import subprocess
+import sys
 import unittest
 import zipfile
 from pathlib import Path
@@ -24,7 +26,7 @@ class ProductHarnessTests(unittest.TestCase):
         self.assertIn("path: ${{ runner.temp }}/p1-product-output/picross-zv50-review.zip\n", step)
         self.assertEqual(step.count("path:"), 1)
 
-    def test_gp48_player_contents_and_report_are_checked(self):
+    def test_player_contents_and_report_verifier_is_generic(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             build = root / "build"
@@ -34,14 +36,53 @@ class ProductHarnessTests(unittest.TestCase):
             extra = root / "extra.txt"
             extra.write_text("neutral", encoding="utf-8")
             extras = {name: extra for name in PLAYER_FILES - {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json"}}
-            manifest = dict(source_commit="b" * 40, source_tree_dirty=False,
-                            render_metrics={2: (0.25, 0.78)})
+            manifest = dict(source_commit="b" * 40, source_tree_dirty=False, render_metrics={2: (0.25, 0.78)})
             artifact = package(build, root, manifest, "neutral instructions", extras)
             self.assertEqual(set(verify_player_package(artifact, manifest)["files"]), PLAYER_FILES)
             with zipfile.ZipFile(artifact, "a") as bundle:
                 bundle.writestr("renders/screenshot.png", b"technical")
             with self.assertRaisesRegex(PreflightError, "contents"):
                 verify_player_package(artifact, manifest)
+
+    def test_harness_import_needs_no_image_dependency(self):
+        root = Path(__file__).resolve().parents[1]
+        result = subprocess.run([sys.executable, "-S", "-c",
+                                 "import sys; sys.path.insert(0,'tools'); import p1_product"],
+                                cwd=root, capture_output=True, text=True, timeout=15)
+        self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+
+    def test_workflow_publishes_compact_player_artifact_separately(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
+        marker = "      - name: Upload compact player package"
+        self.assertIn(marker, workflow)
+        block = workflow.split(marker, 1)[1].split("      - name:", 1)[0]
+        self.assertIn(
+            "name: picross-p1-player-${{ github.event.pull_request.head.sha || github.sha }}",
+            block,
+        )
+        self.assertIn(
+            "path: ${{ runner.temp }}/p1-product-output/picross-p1-windows-x86_64.zip",
+            block,
+        )
+        self.assertNotIn("renders", block)
+        self.assertNotIn("path: ${{ runner.temp }}/p1-product-output/\n", block)
+        self.assertIn(
+            "name: picross-p1-technical-evidence-${{ github.event.pull_request.head.sha || github.sha }}",
+            workflow,
+        )
+
+    def test_full_technical_evidence_is_manual_opt_in(self):
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
+        self.assertIn("workflow_dispatch:\n    inputs:\n      upload_full_evidence:", workflow)
+        input_block = workflow.split("      upload_full_evidence:", 1)[1].split("jobs:", 1)[0]
+        self.assertIn("default: false", input_block)
+        marker = "      - name: Upload complete technical product evidence (manual opt-in)"
+        self.assertIn(marker, workflow)
+        block = workflow.split(marker, 1)[1].split("      - name:", 1)[0]
+        self.assertIn("if: github.event_name == 'workflow_dispatch' && inputs.upload_full_evidence", block)
+        self.assertIn("path: ${{ runner.temp }}/p1-product-output/\n", block)
+        self.assertEqual(workflow.count("path: ${{ runner.temp }}/p1-product-output/\n"), 1)
 
     def test_exit_zero_with_script_error_fails(self):
         with self.assertRaises(PreflightError):

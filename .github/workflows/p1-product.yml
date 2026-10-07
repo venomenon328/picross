@@ -3,6 +3,12 @@ name: P1 product verification
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      upload_full_evidence:
+        description: Upload the complete temporary product evidence tree (large)
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -35,6 +41,15 @@ jobs:
           --output-dir "${{ runner.temp }}/p1-product-output"
           --download-timeout-seconds 1200
           --process-timeout-seconds 300
+      - name: Upload complete technical product evidence (manual opt-in)
+        if: github.event_name == 'workflow_dispatch' && inputs.upload_full_evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: picross-p1-technical-evidence-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/p1-product-output/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
       - name: Upload compact player package
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -59,14 +74,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           compression-level: 0
-      - name: Upload Windows intermediate build and technical evidence
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: picross-p1-windows-x86_64-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
       - name: Upload RP-3 review renders
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -75,6 +82,14 @@ jobs:
             ${{ runner.temp }}/p1-product-output/renders/rp3-*.png
             ${{ runner.temp }}/p1-product-output/renders/rp3-renders.json
             ${{ runner.temp }}/p1-product-output/product-report.json
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+      - name: Upload RP-6 compact review package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: rp6-review-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/p1-product-output/rp6-review/
           if-no-files-found: error
           retention-days: 14
           compression-level: 0

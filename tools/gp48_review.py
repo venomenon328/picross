@@ -12,7 +12,7 @@ from pathlib import Path
 
 import p1_preflight as toolchain
 
-BASE = "cd4a8db86e51891f13e305b589837a1a4354c5a2"
+BASE = "add7a7e6aa507d54d6e0e2ac8a3a2c5e2d1d6912"
 
 
 def before_project(root: Path, workspace: Path) -> Path:
@@ -75,7 +75,8 @@ def package(root: Path, output: Path, manifest: dict, windows_zip: Path) -> Path
                                              "tested_checkout_commit", "github_run_id", "host", "export_files")}
     binding.update(comparison_commit=BASE, windows_zip_sha256=toolchain.sha256_file(windows_zip),
                    files={p.name: toolchain.sha256_file(p) for p in paths}, comparison=comparison,
-                   independent_review="OPEN", owner_trial="GP48-M01 NOT PERFORMED")
+                   independent_review="GP48 R1 PASSED on 1127b22; combined PR47 review OPEN",
+                   owner_trial="GP48-M01 PASSED on 1127b22")
     archive = output / "picross-gp48-review.zip"
     index = ['<!doctype html><html lang="de"><meta charset="utf-8"><title>GP-48 – native Vergleiche</title>',
              '<style>body{font:16px sans-serif;background:#faf6ec;margin:24px;color:#293e3d}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}img{width:100%}code{overflow-wrap:anywhere}</style>',

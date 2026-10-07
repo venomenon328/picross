@@ -3,7 +3,7 @@ extends RefCounted
 const Definition = preload("res://model/definition.gd")
 const Session = preload("res://model/session.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
-const IDS: Array[String] = ["f01", "f02", "f03", "f04"]
+const IDS: Array[String] = ["f01", "f02", "f03", "f04", "f05", "f06", "f07", "f08", "f09"]
 const ZOOMS: Array[int] = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40, 44, 48, 54, 60, 66, 72]
 static var test_root_override: String = ""
 var root: String

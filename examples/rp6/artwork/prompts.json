@@ -1,0 +1,30 @@
+{
+  "format": "picross-rp6-native-calls-v1",
+  "tool": "built-in image_gen",
+  "calls": [
+    {
+      "id": "f05-1",
+      "definition_id": "F-05",
+      "prompt": "Use case: style-transfer. Asset type: finished nonogram reveal illustration for a calm illustrated album. Input image is the binding teapot composition. Refine this EXACT teapot motif into a detailed warm hand-drawn 2D illustration, clear dark outlines and quiet ceramic teal/ochre color fields. Preserve its broad round body, triangular left spout with straight cut opening, oval right loop handle and large white internal hole, low wide lid with circular knob, flat broad foot, all relative positions, silhouette and proportions. Same straight-on view, same scale/placement in a square pure white canvas. Add fine glaze highlights, subtle ceramic shading, lid rim, small restrained decorative curved lines on the body. Do not add surrounding objects, steam, scenery, letters, grid, or change perspective. Not pixel art; visibly richer than the flat silhouette. Background white and opaque.",
+      "references": [
+        "examples/rp4/baseline/i01-direct-100x100/original.png"
+      ],
+      "output": "f05-native.png",
+      "observed_tool_seconds": 23.7,
+      "status": "retained"
+    },
+    {
+      "id": "f08-1",
+      "definition_id": "F-08",
+      "prompt": "Use case: style-transfer. Asset type: refined nonogram reveal illustration for a calm hand-drawn album. Input 1 is the source composition; input 2 is the binding production comparison, use ONLY its second panel (after) as final motif reference; do not reproduce labels/panels. Draw one detailed warm 2D red tulip on pure opaque white square background. Preserve the source's exact front-facing composition: large broad red cup flower with three pointed tips and two V notches, rounded lower bowl, straight centered green stem, one pointed green leaf each side, right tip a little higher, left leaf attaches above right leaf. Keep the large white inner wedges between stem and leaves, source proportions and placement. Subtle curved petal folds and highlights, fine leaf veins, quiet red/green fields and clear dark colored hand-drawn contours; visibly more detailed than a flat geometric symbol. No new leaves, soil, vase, insects, text, grid, scenery or viewpoint change. Do not make pixel art or a collage.",
+      "references": [
+        "examples/rp4/baseline/i03-direct-40x40/original.png",
+        "examples/rp5/views/i03-direct-40x40.png"
+      ],
+      "output": "f08-native.png",
+      "observed_tool_seconds": 21.1,
+      "status": "retained"
+    }
+  ],
+  "human_minutes": null
+}

@@ -1,6 +1,6 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-Stand: 05.10.2026 · Arbeitsfassung 0.7 · RP-1 bis RP-4 integriert; RP-5 im Draft
+Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-5 integriert; RP-6 im Draft
 
 ## 1. Geltung und Ziel
 
@@ -220,8 +220,8 @@ Replay den gespeicherten Proof bestätigen kann.
 Jede Matrix und ihre Hinweise werden neu rekonstruiert, jeder geschriebene
 Proof unabhängig vom unbekannten Raster geprüft. Nur ein vollständig geprüfter
 Endproof mit identischen Singleton-Enddomains erlaubt logische Freigabe.
-Der bestehende P1-Adapter weist Reparaturmanifeste ausdrücklich zurück;
-kein neues P1-Zielprofil, keine Farb-/Rechteckintegration oder Registrierung.
+Der v1-P1-Adapter weist Reparaturmanifeste ausdrücklich zurück; RP-5 selbst
+lieferte kein neues Zielprofil. Der additive RP-6-v2-Adapter ist unten festgelegt.
 Manuelle Rasterkorrekturen werden als neue Eingabedatei/-revision importiert
 und verlangen eine neue vollständige Prüfung.
 
@@ -492,7 +492,8 @@ der Übersicht. Eigene Sichtprüfung, zwei neue Zertifikate und auch logisch
 bessere, motivisch verschlechterte Stände stehen im RP-5-Paket. Der separate
 begrenzte CI-Job prüft alle geschriebenen Reparaturspuren und Vergleichsbindungen;
 unverkleinerte Fach-/Referenz-/RP-3-/RP-4-Prüfungen bleiben. Unabhängiges
-technisches/visuelles Review von RP-5 bleibt in PR #46 offen. Die reale Eigentümer-
+technisches/visuelles Review R1 von RP-5 ist in PR #46 abgeschlossen; integriert
+als `cd4a8db86e51891f13e305b589837a1a4354c5a2`. Die reale Eigentümer-
 Lösung bleibt ausdrücklich RP-6-Gate.
 
 Für jedes Paket gelten der bestehende Dokumentprüfweg und ein vollständiger
@@ -533,3 +534,32 @@ gelöst oder human-like nicht automatisch die Erfüllung von RP-D05.
 - [Batenburg/Kosters: Solving Nonograms by combining relaxations](https://homepages.cwi.nl/~kbatenbu/papers/bako_pr_2009.pdf): vollständige Linieninformation und weitergehende logische Beziehungen; stärkere Versuchssolver des Papers gehören nicht automatisch zu unserem Profil.
 - [Gerstner et al.: Pixelated Image Abstraction](https://pixl.cs.princeton.edu/gfx/pubs/Gerstner_2012_PIA/index.php): klassische gemeinsame Abstraktion von Bildmerkmalen und Farbpalette, ohne Nonogramm-Garantie.
 - [Wolter: pbnsolve](https://webpbn.com/pbnsolve.html): Unterscheidung von Linien-/Farblogik und nachgelagerter Suche; Referenz, keine beschlossene Abhängigkeit.
+
+## 12. Konkreter RP-6-Pilotvertrag
+
+Der [Vorabplan](../examples/rp6/plan.json) und #40 vom 06.10.2026 binden sechs
+verschiedene Bestandsmotive vor neuer Bildarbeit: F-04 unverändert (20 Mono),
+F-05 (100 Mono), F-06 (50 Farbe), F-07 (100 Farbe), F-08/F-09 (40 Farbe, RP-5).
+Keine neue Raster-/Reparatursuche. Maximal zwei native Bildaufrufe je neuem
+Motiv und zehn insgesamt, einschließlich Fehlversuchen; vorhandene detaillierte
+Illustrationen dürfen nach tatsächlicher Paarprüfung dienen. Nur unverzerrte
+Rahmenanpassung; Dateihashes und Operationen werden protokolliert.
+
+`picross-p1-export-v2` / `rp6-p1-square-color-1` unterstützt feste F-05 bis F-09,
+quadratisch und höchstens vier Vordergrundfarben. Leer 0, stabile numerische
+Palettenzuordnung, neu abgeleitete Hinweise, vollständige identische
+Singleton-Enddomains. Importquellen durchlaufen RP-3 einschließlich Rekonstruktion,
+Reparaturen den gesamten RP-5-Vertrag einschließlich Referenz, Schutz, Eltern,
+Änderungen und geschriebenem Endproof. Nur `found` plus Zertifizierung erlaubt
+Reparaturexport; Quelle bleibt ausdrücklich `repair`. v1/F-04 bleibt kompatibel.
+
+Lokale SVGs bleiben begrenzt validiert; PNGs durchlaufen dieselben Bildlimits,
+Format PNG, Orientierung 1, quadratisch und mindestens zwei Pixel je Rasterzelle.
+Definition und Manifest binden exakte lokale Dateien. Detailqualität und
+Motivtreue bleiben tatsächliche redaktionelle Sichturteile, keine Pixelzahlheuristik.
+Kein öffentlicher Import, keine Rechteckprobe in P1, kein Saveformatwechsel.
+
+[Prüfzuordnung](RP6_VERIFICATION.md), [Bilanz und Paaransichten](../examples/rp6/README.md)
+und getrennte [Eigentümeranleitung](RP6_OWNER_TRIAL.md) dokumentieren Grenzen.
+Eigene Sichtung ist keine unabhängige Zweitprüfung. M02–M04 bleiben offen;
+fehlende reale Befunde sind kein negatives Machbarkeitsergebnis.

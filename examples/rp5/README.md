@@ -5,7 +5,8 @@ einschließlich Umsetzungsvorbereitung vom 05.10.2026. Branch
 `feat/39-motif-repair-search` von `main@80ae2c19eb6f85bbac58a247badf65b3e0669132`.
 Bei Start keine neueren Main-Änderungen, RP-5-Branches/PRs oder späteren
 Kommentarentscheidungen. [Parent #34](https://github.com/venomenon328/picross/issues/34)
-bleibt offen. Unabhängiges technisches/visuelles Review bleibt separates Mergegate.
+bleibt offen. RP-5 ist nach unabhängigem technischem/visuellem Review R1
+über PR #46 als `cd4a8db` integriert; keine offenen Reviewbefunde.
 
 ## Festlegung vor dem ersten Vergleichslauf
 
@@ -98,10 +99,10 @@ separat. Manuelle Korrektur: geändertes Bild als neue Datei/Importrevision füh
 neuen Plan und neue vollständige Prüfung erstellen; Bundle nicht nachträglich
 umetikettieren.
 
-P1 bleibt unverändert. Der bestehende `export-p1` weist Reparaturbundles am
+RP-5 selbst ließ P1 unverändert. Der bestehende v1-`export-p1` weist Reparaturbundles am
 abweichenden Manifest zurück. Kein Reparaturraster wird als unveränderter
-`picross-image-candidate-v1` ausgegeben. Eine spätere Exportanbindung muss den
-gesamten Reparaturvertrag prüfen; sie gehört nicht zu dieser Lieferung.
+`picross-image-candidate-v1` ausgegeben. RP-6 ergänzt den separaten v2-Export unter vollständiger Prüfung des
+gesamten Reparaturvertrags; das ändert diese eingefrorene RP-5-Lieferung nicht.
 
 ## Ursprünglicher Lauf, Sichtprüfung und Ergebnis
 

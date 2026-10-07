@@ -90,7 +90,7 @@ Automatisierte Renderbilder belegen keine physische DPI-/Mausabnahme.
 **NICHT DURCHGEFÜHRT – Z2-M01/M02/M03.** Der Eigentümer hat diese Proben für den
 Merge von PR #33 als Gate aufgehoben. Die folgende Anleitung erlaubt einen späteren
 isolierten Eindruck; sie behauptet keinen bestandenen Lauf. Die längere
-atmosphärische Sitzung bleibt #24. Aktuelles RP-3-Review bleibt separat offen.
+atmosphärische Sitzung bleibt #24. RP-3 ist über PR #44 integriert; RP-6-Review und Eigentümerproben bleiben offen.
 
 1. ZIP vollständig entpacken. In PowerShell ein neues eigenes Profil unter TEMP
    wählen, etwa `$z2Profile = Join-Path $env:TEMP 'picross-z2-owner-01'`.

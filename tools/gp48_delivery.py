@@ -1,4 +1,4 @@
-"""Check the exact neutral P1 player ZIP, separate from technical evidence."""
+"""Check a compact commit-bound player ZIP, separate from technical evidence."""
 import hashlib
 import json
 import zipfile
@@ -14,16 +14,16 @@ PLAYER_FILES = {
 }
 
 
-def verify_player_package(archive: Path, manifest: dict) -> dict:
+def verify_player_package(archive: Path, manifest: dict, expected_files: set[str] | None = None) -> dict:
     with zipfile.ZipFile(archive) as bundle:
         names = bundle.namelist()
         exports = set(manifest["export_files"])
         executables = {"picross-p1.exe", "picross-p1.console.exe"}
         if not executables <= exports or exports - executables - {"picross-p1.pck"}:
-            raise toolchain.PreflightError("Unexpected P1 export files")
-        expected = PLAYER_FILES | (exports - executables)
+            raise toolchain.PreflightError("Unexpected player export files")
+        expected = (PLAYER_FILES if expected_files is None else set(expected_files)) | (exports - executables)
         if set(names) != expected or len(names) != len(expected):
-            raise toolchain.PreflightError("Unexpected P1 player ZIP contents")
+            raise toolchain.PreflightError("Unexpected player ZIP contents")
         # The technical report is JSON: tuples become arrays and numeric keys
         # become strings. Compare its exact serialized bytes, not Python types.
         expected_report = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")

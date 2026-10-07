@@ -1,0 +1,130 @@
+extends "res://tests/rp3_probe.gd"
+## All six pilots through the regular scene and mouse route; separate real processes.
+var pilot_index: int = 3
+
+func setup(viewport: Viewport) -> void:
+	target = viewport
+	app = load("res://main.tscn").instantiate()
+	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	target.add_child(app)
+	await process_frame
+	await process_frame
+	check(app.sessions.size() == 9, "all nine fixed registrations load")
+	for i: int in range(9):
+		check(Definition.validate(app.sessions[i].definition).is_empty(), "valid definition %d" % i)
+		var wrong: Dictionary = app.sessions[i].definition.duplicate(true)
+		if i >= 3:
+			wrong.reveal.image = "res://art/f01.svg"
+			check(not Definition.validate(wrong).is_empty(), "wrong pilot asset rejected")
+	await select_pilot()
+
+func select_pilot() -> void:
+	app.show_album()
+	await process_frame
+	app.album.ensure_control_visible(app.choices[pilot_index])
+	await process_frame
+	await process_frame
+	var box: Rect2 = app.choices[pilot_index].get_global_rect()
+	check(app.album.get_global_rect().encloses(box), "pilot album choice reachable")
+	check(box.size.y >= 44 * app.ui_scale, "choice respects minimum hit height")
+	click(box.get_center())
+	await process_frame
+	check(app.session == app.sessions[pilot_index], "regular album click selects pilot")
+	app.board.fit_all()
+
+func partial() -> void:
+	check(not app.session.completed and app.session.reveal().is_empty(), "fresh pilot hides reveal")
+	check(app.session.definition.solution[0][0] == 0, "deliberate wrong corner is background")
+	click(cell_point(Vector2i.ZERO))
+	check(app.mini.cells[0] == 1 and not app.session.completed, "own incorrect miniature retained")
+	click(app.undo_button.get_global_rect().get_center())
+	check(app.mini.cells[0] == -1, "mouse undo")
+	click(app.redo_button.get_global_rect().get_center())
+	check(app.mini.cells[0] == 1 and app.session.player.undo_used, "mouse redo")
+	check(app._flush_current(), "partial flush")
+	app.show_album()
+	check(app.album_previews[pilot_index].cells[0] == 1 and app.album_reveals[pilot_index].payload.is_empty(), "album own wrong miniature and no spoiler")
+
+func choose_color(color: int) -> void:
+	click(app.palette_row.get_child(color - 1).get_global_rect().get_center())
+	check(app.board.active_color == color and not app.board.eraser and not app.board.hand, "real palette selects fill color")
+
+func finish() -> void:
+	check(app.session.player.cells[0] == 1 and app.session.player.undo_used, "new process restores partial and history")
+	click(cell_point(Vector2i.ZERO), MOUSE_BUTTON_RIGHT)
+	check(app.session.player.cells[0] == 0, "real conversion removes incorrect fill")
+	var matrix: Array = app.session.definition.solution
+	var width: int = app.session.player.width
+	var last: Vector2i = Vector2i(-1, -1)
+	for y: int in range(matrix.size()):
+		for x: int in range(width):
+			if matrix[y][x] > 0:
+				last = Vector2i(x,y)
+	# Whole same-color horizontal runs are ordinary atomic mouse strokes. This
+	# avoids a save per cell while preserving the actual product/save path.
+	for selected_color: int in range(1,app.session.definition.palette.size()+1):
+		choose_color(selected_color)
+		for y: int in range(matrix.size()):
+			var x: int = 0
+			while x < width:
+				var color: int = int(matrix[y][x])
+				if color != selected_color or Vector2i(x,y) == last:
+					x += 1
+					continue
+				var end: int = x
+				while end + 1 < width and int(matrix[y][end+1]) == color and Vector2i(end+1,y) != last:
+					end += 1
+				event(cell_point(Vector2i(x,y)),true)
+				var move: InputEventMouseMotion = InputEventMouseMotion.new()
+				move.position = cell_point(Vector2i(end,y))
+				move.global_position = move.position
+				move.button_mask = MOUSE_BUTTON_MASK_LEFT
+				target.push_input(move,true)
+				event(cell_point(Vector2i(end,y)),false)
+				x = end + 1
+	check(not app.session.completed and app.session.reveal().is_empty(), "last missing cell still hides motif")
+	choose_color(int(matrix[last.y][last.x]))
+	event(cell_point(last),true)
+	check(not app.session.completed and app.session.reveal().is_empty(), "preview never completes")
+	event(cell_point(last),false)
+	check(app.session.completed and app.session.is_solution() and app.ending.visible, "committed regular mouse path completes pilot")
+	check(app.reveal_view.payload == app.session.definition.reveal and app.completion_title.text == app.session.definition.reveal.name, "exact completion asset and name")
+	check(app.session.player.cells.count(-1) > 0, "unknown background allowed")
+	app.show_album()
+	check(app.album_reveals[pilot_index].visible, "earned pilot artwork in album")
+
+func restored() -> void:
+	check(app.session.completed and app.session.is_solution() and app.session.player.undo_used, "second restart restores completed pilot")
+	check(app.store.load_slot(app.session.definition).status == "loaded", "separate fixed slot loaded")
+	app.show_album()
+	check(app.album_reveals[pilot_index].payload == app.session.definition.reveal, "restored correct album asset")
+
+func run() -> void:
+	var isolated: String = OS.get_environment("P1_TEST_SAVE_ROOT")
+	if isolated.is_empty():
+		quit(4)
+		return
+	SaveStore.test_root_override = isolated
+	pilot_index = int(OS.get_environment("RP6_INDEX"))
+	root.size = Vector2i(1920,1080)
+	await setup(root)
+	var others: Array = []
+	for i: int in range(9):
+		others.append(app.sessions[i].player.cells.duplicate())
+	var stage: String = OS.get_environment("RP6_STAGE")
+	if stage == "partial":
+		partial()
+	elif stage == "finish":
+		finish()
+	elif stage == "read":
+		restored()
+	else:
+		check(false,"unknown stage")
+	for i: int in range(9):
+		if i != pilot_index:
+			check(app.sessions[i].player.cells == others[i], "other slot unchanged %d" % i)
+	check(app._flush_current(), "final mandatory flush")
+	print("RP6_RESULT index=%d stage=%s checks=%d failures=%d" % [pilot_index,stage,checks,failures])
+	if failures == 0:
+		print("RP6_" + stage.to_upper() + "_OK")
+	quit(0 if failures == 0 else 4)

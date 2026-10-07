@@ -1,11 +1,13 @@
 # RP-5: Reparatursuche und Prüfzuordnung
 
-Stand: 05.10.2026 · Arbeitsfassung 0.1 · Umsetzung; unabhängiges Review offen
+Stand: 06.10.2026 · RP-5 nach unabhängigem Review R1 über PR #46 als
+`cd4a8db86e51891f13e305b589837a1a4354c5a2` integriert. Keine offenen B-/A-/O-Befunde.
+Die folgenden Entwicklungsnachweise behalten ihre ursprüngliche Bindung.
 
 Auftrag [#39](https://github.com/venomenon328/picross/issues/39),
 [Fachvertrag](PUZZLE_PRODUCTION.md), [Paket und vorab gebundene Parameter](../examples/rp5/README.md).
 Basis `80ae2c19eb6f85bbac58a247badf65b3e0669132`, Branch
-`feat/39-motif-repair-search`, eigener Draft-PR gegen `main`.
+`feat/39-motif-repair-search`, damaliger Arbeits-PR gegen `main`.
 Parent #34 bleibt offen; kein Merge oder Release.
 
 Die Vorabfestlegung enthält alle neun Referenzen und gesichtete harte Masken,
@@ -54,7 +56,7 @@ menschliche Nacharbeitszeit und keine Produktivitätsquote.
 Gezielte Entwicklung: 19 Reparaturtests plus drei Paket-/Archivtests bestanden;
 unabhängiger vollständiger Paketreplay erfolgreich in 57,515 s am veränderten
 Arbeitsbaum. Dies sind Entwicklungsbelege. Die aktuelle abschließende CI-/Head-/
-Basis-/Test-Merge-/Artefaktbindung steht in [Draft-PR #46](https://github.com/venomenon328/picross/pull/46).
+Basis-/Test-Merge-/Artefaktbindung steht in [integriertem PR #46](https://github.com/venomenon328/picross/pull/46).
 Der gemeinsame Fachjob führt sämtliche bisherigen und neuen Fachtests, sechs
 Referenzen, RP-3-Demo und vollständigen RP-4-Replay aus. Ein zusätzlicher
 `rp5-repair`-Job prüft alle Kandidaten-/Eltern-/Nachweis-/Vergleichsbindungen mit
@@ -63,9 +65,9 @@ Minuten hartem Schrittlimit; Job insgesamt zehn Minuten. Archivgrenzen und
 Extraktions-Negativtests sind dokumentiert. Windowsregression und
 `docs`-/`product`-/`preflight`-Workflows bleiben unverändert aktiv.
 
-## Verbleibendes Mergegate
+## Abnahmestand
 
-Das separate
-unabhängige technische und visuelle Review am finalen Head bleibt vor Merge
-erforderlich. Selbstreview ist keine unabhängige Zweitprüfung. Reale Eigentümer-
+Das unabhängige technische und visuelle Review R1 am Head
+`df77c0c1e76d150880570473e1225458a4924eca` ist in PR #46 abgeschlossen.
+Selbstreview bleibt davon getrennt. Reale Eigentümer-
 Lösung und finale Pilotabnahme sind RP-6-Gates.

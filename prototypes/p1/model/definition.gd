@@ -1,6 +1,6 @@
 extends RefCounted
 ## JSON boundary. 0 is background; positive IDs refer to palette entries.
-const FILES: Dictionary = {"f01": "res://data/f01.json", "f02": "res://data/f02.json", "f03": "res://data/f03.json", "f04": "res://data/f04.json"}
+const FILES: Dictionary = {"f01": "res://data/f01.json", "f02": "res://data/f02.json", "f03": "res://data/f03.json", "f04": "res://data/f04.json", "f05": "res://data/f05.json", "f06": "res://data/f06.json", "f07": "res://data/f07.json", "f08": "res://data/f08.json", "f09": "res://data/f09.json"}
 
 static func load_f01() -> Dictionary:
 	return load_fixture("f01")
@@ -88,11 +88,16 @@ static func validate(data: Dictionary) -> String:
 	if reveal.get("version") != 1 or reveal.get("definition_id") != data.id:
 		return "Ungültige Abschlusszuordnung."
 	var path: Variant = reveal.get("image")
-	if not path is String or not path.begins_with("res://art/") or ".." in path or not path.ends_with(".svg"):
+	if not path is String or not path.begins_with("res://art/") or ".." in path or not (path.ends_with(".svg") or path.ends_with(".png")):
 		return "Ungültiger lokaler Bildpfad."
+	var fixed_assets: Dictionary = {"F-04": "res://art/f04.svg", "F-05": "res://art/f05.png", "F-06": "res://art/f06.png", "F-07": "res://art/f07.png", "F-08": "res://art/f08.png", "F-09": "res://art/f09.png"}
+	if fixed_assets.has(data.id) and path != fixed_assets[data.id]:
+		return "Falsche feste Abschlussressource."
 	if not ResourceLoader.exists(path, "Texture2D"):
 		return "Abschlussbild fehlt."
 	var texture: Texture2D = load(path) as Texture2D
 	if texture == null or texture.get_width() < 1 or texture.get_height() < 1:
 		return "Defektes Abschlussbild."
+	if fixed_assets.has(data.id) and (texture.get_width() != texture.get_height() or texture.get_width() < 2 * int(data.width) or texture.get_width() > 8192):
+		return "Ungültige quadratische Abschlussgröße."
 	return ""
