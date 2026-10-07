@@ -147,6 +147,11 @@ Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchsch
 
 Python 3.11 oder neuer, Standardbibliothek. Kleine lokale Prüfungen in geeigneter vorhandener Umgebung sind zulässig; belastbare aktuelle CI darf die Abschlussprüfung liefern. Keine ritualisierte doppelte Vollprüfung. Unbekannte lokale Ressourcen-/Konfigurationsgrenzen vorher prüfen; globale Codex-Einstellungen der Nutzerworkstation sind nicht als geprüft bestätigt.
 
+Der `docs`-Job hat zehn Minuten Gesamtbudget für vollständigen Checkout,
+Tool-/Artworktests, Dokumentprüfung und Diffcheck. Bei ZS1-E1 verbrauchte der
+Checkout zweimal mehr als drei Minuten des bisherigen Fünf-Minuten-Limits;
+die Tests wurden dadurch abgebrochen. Prüfumfang und Regeln bleiben unverändert.
+
 Verbindliche Befehle im Repository-Root:
 
 ```sh
