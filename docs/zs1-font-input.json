@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-07",
+  "status": "BLOCKED_RIGHTS_EVIDENCE",
+  "input_directory": "E:\\Downloads\\zs1-fonts",
+  "distributed_candidates": [],
+  "candidates": [
+    {
+      "file": "Bakso Daging/BaksoDaging-Regular.ttf",
+      "family": "Bakso Daging",
+      "style": "Regular",
+      "version": "1.000",
+      "author": "Hasna - Violatype / Silverdav Studio",
+      "size": 128924,
+      "sha256": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e",
+      "source": "https://www.dafont.com/de/bakso-daging.font",
+      "archive": "https://dl.dafont.com/dl/?f=bakso_daging",
+      "archive_sha256": "5f55db3ad1ff8f4f4c1e5db4e6d77ea57a5a819b0a0143d5e5f0d671fad64022",
+      "original_ttf_matches": true,
+      "os2_fsType": 8,
+      "license_evidence": "Author permits personal/commercial use; no packaged license; embedding and redistribution unresolved"
+    },
+    {
+      "file": "Chalkboard/Chalkboard-Regular.ttf",
+      "family": "Chalkboard",
+      "style": "Regular",
+      "version": "001.001",
+      "unique_id": "Calligraphr : Chalkboard Regular : 24-07-2021",
+      "author": "Florence S (source page)",
+      "size": 21976,
+      "sha256": "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d",
+      "source": "https://www.dafont.com/de/chalkboard-3.font",
+      "archive": "https://dl.dafont.com/dl/?f=chalkboard_3",
+      "archive_sha256": "4b1ee090e9c8e5a78c4cbd5fb50a5258460f6e0b4e73901cca1a8bd3b0442ee2",
+      "original_ttf_matches": true,
+      "os2_fsType": 0,
+      "license_evidence": "100% Free category only; no packaged license or embedded license; commercial/app/redistribution conditions unresolved"
+    }
+  ]
+}

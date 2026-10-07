@@ -1,4 +1,4 @@
-"""Small native ZS-1 delivery; current-main baseline, separate player/review ZIPs."""
+"""Small native ZS-1 delivery; separate player, comparison and stroke ZIPs."""
 from __future__ import annotations
 
 import io
@@ -63,7 +63,7 @@ def verify(renders: Path) -> dict:
     if original["failures"] or study["failures"]:
         raise toolchain.PreflightError("ZS1 native assertions failed")
     baseline = {item["case"]: item for item in original["captures"]}
-    if len(baseline) != 14 or len(study["captures"]) != 42:
+    if len(baseline) != 14 or len(study["captures"]) != 28:
         raise toolchain.PreflightError("Incomplete ZS1 comparison matrix")
     for record in study["captures"]:
         old = baseline[record["case"]]
@@ -80,9 +80,9 @@ def verify(renders: Path) -> dict:
                 box = (int(x), int(y), int(x+w), int(y+h))
                 if ImageChops.difference(a.crop(box).convert("RGB"), b.crop(box).convert("RGB")).getbbox():
                     raise toolchain.PreflightError(f"ZS1 regular baseline pixels changed: {record['case']}")
-    if len(study["frames"]) != 2 or len(study["measurements"]) != 2:
+    if len(study["frames"]) != 1 or len(study["measurements"]) != 1:
         raise toolchain.PreflightError("Missing ZS1 movement/load evidence")
-    if {item["style"] for item in study["specimens"]} != {0, 1, 2}:
+    if {item["style"] for item in study["specimens"]} != {0, 2}:
         raise toolchain.PreflightError("Missing ZS1 native numeral specimen")
     for specimen in study["specimens"]:
         if not (renders / specimen["file"]).is_file():
@@ -100,9 +100,71 @@ def verify(renders: Path) -> dict:
         with Image.open(renders / early["file"]) as a, Image.open(renders / settled["file"]) as b:
             if not ImageChops.difference(a.convert("RGB"), b.convert("RGB")).getbbox():
                 raise toolchain.PreflightError("ZS1 native commit effect is not visible")
+    stroke_evidence = verify_strokes(renders, study["stroke_frames"])
     return dict(baseline=BASE, identical_regular_board_cases=len(baseline),
                 comparison_images=len(study["captures"]), movements=study["frames"],
+                stroke_evidence=stroke_evidence, font_comparison="BLOCKED: embedding and redistribution evidence missing; Plex reference only",
                 measurements=study["measurements"], renderer=study["renderer"])
+
+
+def check_stroke_pixels(images):
+    """Independent spatial oracle on native pixels; no renderer geometry imports."""
+    def distance(a, b):
+        return max(abs(x-y) for x, y in zip(a, b))
+
+    preview, final = images[0], images[140]
+    # Full paint and untouched preview coexist, including the partial pen pass.
+    for ms, painted, pending in (
+        (21, (12, 9), (65, 9)), (49, (5, 30), (55, 30)),
+        (70, (12, 31), (12, 55)), (98, (10, 53), (55, 53)),
+        (119, (66, 63), (12, 63)),
+    ):
+        for point, reference in ((painted, final), (pending, preview)):
+            if distance(preview.getpixel(point), final.getpixel(point)) < 30 or distance(images[ms].getpixel(point), reference.getpixel(point)) > 5:
+                raise toolchain.PreflightError(f"ZS1 spatial paint progression failed at {ms}ms/{point}")
+    # Upper-left X quadrant belongs only to stroke 1; upper-right only to 2.
+    fractions = {}
+    for name, bounds in (("first", (87, 13, 104, 30)), ("second", (115, 13, 132, 29))):
+        x0, y0, x1, y1 = bounds
+        pixels = [(x, y) for y in range(y0, y1) for x in range(x0, x1)
+                  if distance(preview.getpixel((x, y)), final.getpixel((x, y))) > 20]
+        if len(pixels) < 8:
+            raise toolchain.PreflightError("ZS1 X evidence contains too few stroke pixels")
+        fractions[name] = {}
+        for ms in (21, 49, 70, 98, 119):
+            fractions[name][ms] = sum(distance(images[ms].getpixel(p), final.getpixel(p)) < 6 for p in pixels) / len(pixels)
+        if name == "first" and fractions[name][70] < 0.90:
+            raise toolchain.PreflightError("ZS1 first X stroke incomplete at 70ms")
+        if name == "second" and (fractions[name][70] > 0.05 or fractions[name][119] < 0.9):
+            raise toolchain.PreflightError("ZS1 second X stroke must follow the first")
+    return fractions
+
+
+def verify_strokes(renders: Path, records: list) -> dict:
+    from PIL import Image
+    if [item["elapsed_ms"] for item in records] != [0, 21, 49, 70, 98, 119, 140]:
+        raise toolchain.PreflightError("ZS1 stroke timeline incomplete")
+    images = {}
+    for item in records:
+        with Image.open(renders / item["file"]) as picture:
+            images[item["elapsed_ms"]] = picture.convert("RGB")
+        if images[item["elapsed_ms"]].size != (144, 72):
+            raise toolchain.PreflightError("ZS1 stroke crop changed")
+    fractions = check_stroke_pixels(images)
+    # Mutate actual evidence: both a uniform fade and reverse stroke order must fail.
+    fade = {ms: Image.blend(images[0], images[140], ms / 140) for ms in images}
+    reverse = dict(images)
+    reverse[70] = images[70].copy()
+    reverse[70].paste(images[0].crop((87, 13, 104, 30)), (87, 13))
+    reverse[70].paste(images[140].crop((115, 13, 132, 29)), (115, 13))
+    for label, mutant in (("uniform fade", fade), ("reversed X strokes", reverse)):
+        try:
+            check_stroke_pixels(mutant)
+        except toolchain.PreflightError:
+            continue
+        raise toolchain.PreflightError(f"ZS1 negative control accepted {label}")
+    return dict(frames=records, x_progress=fractions, negative_controls=["uniform fade rejected", "reversed X strokes rejected"],
+                timing="Controlled clock through real native renderer; separate real-time sequence measures wall time")
 
 
 def export(project, workspace, output, base, phase, host):
@@ -137,6 +199,8 @@ def export(project, workspace, output, base, phase, host):
 def package(root: Path, output: Path, build: Path, files: dict, product: dict, evidence: dict):
     manifest = {key: product[key] for key in ("source_commit", "source_tree_dirty", "tested_checkout_commit", "base_commit", "github_run_id", "host", "engine_version", "assets")}
     manifest.update(specification_commit="c82ae74f794936bca93d45f5f505ba283e971227",
+                    owner_decision="https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659",
+                    font_input=json.loads((root / "docs/zs1-font-input.json").read_text(encoding="utf-8")),
                     export_files=files, evidence=evidence, owner_acceptance="OPEN ZS1-M01; independent review and merge authorization OPEN")
     renders = output / "zs1-renders"
     manifest["render_files"] = {p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()}
@@ -151,6 +215,7 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
         for path in (root / "prototypes/p1/art/book").glob("*-OFL.txt"):
             bundle.write(path, "licenses/" + path.name)
         bundle.write(root / "prototypes/p1/art/book/manifest.json", "licenses/resources.json")
+        bundle.write(root / "docs/ZS1_FONT_INPUT.md", "FONTSTATUS.md")
     with zipfile.ZipFile(player) as bundle:
         for name, digest in files.items():
             import hashlib
@@ -158,9 +223,8 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
                 raise toolchain.PreflightError("ZS1 player ZIP audit failed")
     review = output / "picross-zs1-review.zip"
     # Original-main renders remain temporary after the pixel comparison.
-    # Ship the identical study baseline plus both styles, without duplicate PNGs.
+    # Ship the identical study baseline and selected pencil, without duplicate PNGs.
     names = {item["file"] for item in json.loads((renders / "zs1-study.json").read_text(encoding="utf-8"))["captures"]}
-    names.update(p.name for p in renders.glob("zs1-motion-*.png"))
     names.update(p.name for p in renders.glob("zs1-numerals-*.png"))
     names.update({"zs1-baseline.json", "zs1-study.json"})
     with zipfile.ZipFile(review, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
@@ -170,8 +234,16 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
         bundle.write(root / "docs/ZS1_VERIFICATION.md", "PRUEFUNG.md")
         bundle.write(root / "docs/ZS1_DECISION.md", "ENTSCHEIDUNG.md")
         bundle.writestr("index.html", review_html(evidence))
+    movement = output / "picross-zs1-strokes.zip"
+    with zipfile.ZipFile(movement, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
+        for pattern in ("zs1-motion-*.png", "zs1-strokes-*.png"):
+            for path in sorted(renders.glob(pattern)):
+                bundle.write(path, path.name)
+        bundle.writestr("zs1-report.json", report)
+        bundle.writestr("index.html", movement_html(evidence))
     print(f"ZS1 PLAYER {player} sha256:{toolchain.sha256_file(player)}", flush=True)
     print(f"ZS1 REVIEW {review} sha256:{toolchain.sha256_file(review)}", flush=True)
+    print(f"ZS1 STROKES {movement} sha256:{toolchain.sha256_file(movement)}", flush=True)
 
 
 def review_html(evidence: dict) -> str:
@@ -179,10 +251,22 @@ def review_html(evidence: dict) -> str:
     for case in ("f01-work", "f02-color", "f03-small", "f02-compact", "f01-1600", "f01-z150", "f03-z300", "hint-row-drag", "hint-row-tooltip", "hint-column-drag", "hint-column-tooltip", "status-0", "status-1", "status-2"):
         sections.append(f"<h2>{case}</h2><div class='row'>" + "".join(
             f"<figure><figcaption>{label}</figcaption><a href='zs1-{style}-{case}.png'><img src='zs1-{style}-{case}.png'></a></figure>"
-            for style, label in enumerate(("Baseline", "Tinte", "Stift"))) + "</div>")
-    sections.append("<h2>Ziffernprobe (künstliche Schriftmuster)</h2>" + "".join(f"<figure><img src='zs1-numerals-{i}.png'></figure>" for i in range(3)))
+            for style, label in ((0, "Bisherige Baseline"), (2, "Gewählter Stift / neues X; Plex-Referenz"))) + "</div>")
+    sections.append("<h2>Plex-Referenzprobe (keine Eigentümerkandidaten)</h2>" + "".join(f"<figure><img src='zs1-numerals-{i}.png'></figure>" for i in (0, 2)))
+    return html_page("Native Vergleiche · Fontvergleich blockiert", sections)
+
+
+def movement_html(evidence: dict) -> str:
+    sections = ["<p>Native 72-px-Zellen: links Füllung, rechts X. Kontrollierte Effektuhr im unveränderten Zeichenpfad; keine Messung realer Framezeiten.</p>"]
+    for frame in evidence["stroke_evidence"]["frames"]:
+        sections.append(f"<figure><figcaption>{frame['elapsed_ms']} ms von 140 ms</figcaption><img src='{frame['file']}'></figure>")
+    sections.append("<p>Negativkontrollen: gleichmäßiges Fade und vertauschte X-Zugfolge abgelehnt.</p>")
     for motion in evidence["movements"]:
         sections.append(f"<h2>Bewegung Variante {motion['style']}</h2><p>Zweite Geste: {motion['second_gesture_ms']:.2f} ms nach Commit; native 1:1-Ausschnitte. Zeiten sind Messwerte, keine Einzelbild-FPS-Zusage.</p>")
         for frame in motion["timeline"]:
             sections.append(f"<figure><figcaption>{frame['label']} · {frame['after_commit_ms']:.2f} ms</figcaption><img src='{frame['file']}'></figure>")
-    return "<!doctype html><html lang='de'><meta charset='utf-8'><title>ZS-1 · native Vergleiche</title><style>body{font:16px system-ui;background:#faf6ec;color:#343f42;margin:24px}.row{display:flex}figure{margin:8px}.row figure{width:32%}.row img{width:100%}img{max-width:100%}h2{margin-top:40px}</style><h1>ZS-1 · native Vergleiche</h1><p>PNG anklicken und bei 100 % betrachten. Diese Seite ist nur der Nachweisindex; die bedienbare Studie liegt im separaten Windows-ZIP. Eigentümerwahl offen.</p>" + "".join(sections) + "</html>"
+    return html_page("Nativer Strichaufbau und Echtzeitfolge", sections)
+
+
+def html_page(title: str, sections: list[str]) -> str:
+    return "<!doctype html><html lang='de'><meta charset='utf-8'><title>ZS-1</title><style>body{font:16px system-ui;background:#faf6ec;color:#343f42;margin:24px}.row{display:flex}figure{margin:8px}.row figure{width:48%}.row img{width:100%}img{max-width:100%}h2{margin-top:40px}</style>" + f"<h1>ZS-1 · {title}</h1><p>PNG bei 100 % betrachten. Nachweisindex, keine Spielimplementierung. Abschließende Eigentümerbestätigung offen.</p>" + "".join(sections) + "</html>"

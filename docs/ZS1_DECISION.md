@@ -1,75 +1,49 @@
-# ZS-1 · Entscheidungsvorlage
+# ZS-1 · Eigentümerentscheidung und Nacharbeitsstand
 
-Stand: 07.10.2026 · zwei Studienvarianten, Eigentümerwahl **offen**
+Stand: 07.10.2026 · E1: Stift und Timing gewählt; N03 / Abschlussbestätigung offen
 
-Die native Probe und die [Eigentümeranleitung](ZS1_OWNER_TRIAL.md) gehören zu
-[#52](https://github.com/venomenon328/picross/issues/52). Vertrag ist
-[ZS-D01 bis D10](UI_DRAWING_STYLE.md), übernommen aus der gebundenen Fassung
-`c82ae74f794936bca93d45f5f505ba283e971227` / Dokumentations-PR #54.
-Produktbasis ist `ec99954268f1ad959d9ea779dbbd9e28edf7d8fa`, nicht der Dokumentationsbranch.
+[ZS1-E1](https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659)
+und [#52](https://github.com/venomenon328/picross/issues/52) sind maßgeblich.
+R1 ohne B-/O-Befunde gilt ausschließlich für den ursprünglichen Head
+`4ae4f5a20273808f99d257a3812da86d72307a5f`. Neue Eigentümeranforderungen sind keine
+rückwirkenden R1-Codefehler. Basis bleibt `ec99954268f1ad959d9ea779dbbd9e28edf7d8fa`.
+Die übernommenen sechs Dokumente aus #54/`c82ae74f` werden durch E1 gezielt
+fortgeschrieben; #54 bleibt offen und ist keine Produktbasis.
 
-| Parameter | Aktuelle Baseline | Tinte | Stift |
-| --- | --- | --- | --- |
-| Hinweisfont | IBM Plex Sans 600 | Fraunces 750, opsz 9, SOFT 20, WONK 1 | Fraunces 650, opsz 9, SOFT 70, WONK 1 |
-| Ziffernform | Sans | kompakte kräftige Serifenziffern | weichere verwandte Serifenziffern |
-| Breitenfaktor | 1 | 0,86 | 0,86 |
-| Schriftgrad bei 24er-Zelle/UI 100 % | 14 | 16 | 16 |
-| Kleine Zellen | bestehende Begrenzung | höchstens 75 % Zellabstand, mindestens 8 | wie Tinte |
-| Gemeinsame Slots | Zeile 30, Spalte 18 × UI | unverändert | unverändert |
-| Füllung | flache Originalfarbe | stabile innere Kontur, drei feine helle Schraffuren | stabile innere Kontur, drei weiche Auftragsspuren |
-| Textur | keine | 15 % Weiß, 0,8 px | 12 % Weiß, 1,2 px; dunklere Eigenfarbkontur |
-| X | gerades X, 1,2 px | zwei leicht gebogene Striche, höchstens 2 px, 68 % | höchstens 1,7 px, 60 % |
-| Vorschau | bisherige Kontur | Zielmarkierung mit 56 % Alpha; Radieren nur neutrale Kontur | wie Tinte |
-| Commit | ohne Effekt | 140 ms Verdichtung, Entfernen 80 ms Konturauslauf | wie Tinte |
-| Kleine Zellen/Gesamtansicht | bisherig | unter 18 px/Übersicht keine Textur; Miniatur unverändert ruhig | wie Tinte |
+| Gegenstand | Verbindliche Wahl / aktueller Stand |
+| --- | --- |
+| Füllform | Stift gewählt; satte Originalfarben, bisherige Kontur und drei weiche Auftragsspuren bleiben im ruhenden Endbild erhalten. Historische Tinte ist kein offener Kandidat mehr. |
+| X | Zwei quadratische Bézierzüge, je acht kurze Segmente; begrenzte Unterschiede in Endpunkten, Krümmung und Stärke aus der Zell-ID. Gleiche Geometrie bei Pan/Zoom/Restore, korrekt geclippt. Eigentümerbestätigung des neuen X offen. |
+| Füllanimation | Sechs kurze abwechselnd nach rechts/links fortschreitende Stiftbahnen verdichten räumlich die statische Zielvorschau. Endfüllung liegt vor ihrem Strichfortschritt nur abgeschwächt vor. Kein globales Fade. |
+| X-Animation | Erster Zug in der ersten Hälfte, zweiter in der zweiten Hälfte; noch ungezeichnete Abschnitte bleiben als hellere Zielvorschau sichtbar. |
+| Zeit | 140 ms insgesamt Setzen/Umwandeln, 80 ms Entfernen beibehalten. Alle wirksamen Zellen eines Strichs starten gleichzeitig. Positives Timingurteil liegt bereits vor. |
+| Vorschau | Statisch, 56 %; keine zusätzliche Einzelabnahme behauptet. Radieren zeigt unbekannt mit neutraler Kontur, keine alte Markierung kehrt zurück. |
+| Kleine Zellen / Miniatur | Unter 18 px und in Gesamtansicht vereinfachte Füllung; Miniatur zeigt eigene Werte unmittelbar ohne Animation. |
+| Rand-UI | Zusätzlichen Studien-Zeichenlayer entfernt; funktionale Buchmontierungen/Controls und Hintergrund bleiben. Keine neue Hintergrundproduktion. |
+| Hinweisfonts | Genau Bakso Daging Regular und Chalkboard Regular vorgesehen. TTFs vorhanden und gegen Eigentümerquellen bytebestätigt; notwendige Rechtebelege fehlen. N03 und kombinierter Fontvergleich offen. |
+| Teilstudie ohne Kandidaten | Bisherige Plex-Sans-Referenz und identische Slots; ausdrücklich keine Ersatzfont als Kandidat. Fraunces-Titel und übrige UI erhalten. |
 
-Alle drei Hinweiszustände behalten jeweils dieselbe Schrift/Größe/Position;
-gesetzt bleibt bei 78 %. Originalfarben und C1-Semantik bleiben erhalten.
-Bei 24er-Zellen/UI 125 % begrenzt die Studie den Schriftgrad auf 18, damit
-mehrstellige Spaltenhinweise Abstand behalten.
-Keine andere Slotvariante ist eingeführt: Die gewählte Form und der optische
-Schriftgrad werden zuerst verglichen. Auch die Maximalzahl `100` wird in der
-beschrifteten nativen Schriftprobe gezeigt; F-03 selbst enthält nur Einerfolgen.
+[Fontinput und konkreter Bedarf](ZS1_FONT_INPUT.md),
+[Identitäten/Hashes](zs1-font-input.json). Keine ungeklärten Fontbytes in Git/CI/Export.
+Die tatsächlich verwendeten vorhandenen Fonts und OFL bleiben im
+[Z2-Ressourcenmanifest](../prototypes/p1/art/book/manifest.json) und im historischen
+[Font-Lock](design/book_inventory/composition/inputs/fonts.json) gebunden.
+Füllkontur/Textur und X sind eigene prozedurale Zeichenbefehle in
+[marks.gd](../prototypes/p1/study/marks.gd). Historische Designpakete, Rätseldaten,
+Proofs, ursprüngliche Paletten und Saveformat sind unverändert.
 
-Die Tintenempfehlung bleibt eine Empfehlung: Sie grenzt die Flächen deutlicher
-ab und verwendet wenige gerichtete Spuren. Stift bietet eine weichere Alternative.
-Die native Beurteilung kleiner Serifenziffern und heller Farben sowie schneller
-F-03-Gesten bleibt ausdrücklich Teil der Eigentümerwahl. Eine Mischkombination
-ist möglich, muss aber konkret benannt werden; keine Auswahl wird hier vorweggenommen.
+Die Erstlieferung mit Baseline/Tinte/Stift und Fraunces-Hinweisvarianten ist über
+[den historischen Head](https://github.com/venomenon328/picross/blob/4ae4f5a20273808f99d257a3812da86d72307a5f/docs/ZS1_DECISION.md)
+weiter nachvollziehbar. Ihre 42 Bilder und Fade-Zeitfolgen beweisen nicht E1.
 
-## Herkunft und Rechte
+`zs1-study.json` trennt native Echtzeitfolge und kontrollierte Effektzeitpunkte.
+Letztere belegen Geometrie/Zugreihenfolge mit unverändertem Zeichenpfad, keine FPS.
+CPU-Zeichenzeit, Eingabe einschließlich synchronem Save, vollständige Frameabstände
+und reale Mauswahrnehmung sind getrennte Messgrenzen. Der Effekt-Takt erneuert nur
+die Zellschicht, keine Hinweise, Miniatur, Saves oder Modellwerte.
 
-Keine neuen Fremdassets oder Systemfonts. Die unveränderten, bereits offline
-gebündelten Fontdateien samt OFL und SHA-256 stehen im
-[Z2-Ressourcenmanifest](../prototypes/p1/art/book/manifest.json). Die exakten
-Upstream-URLs/Commits stehen im historischen
-[Font-Lock](design/book_inventory/composition/inputs/fonts.json).
-Fraunces SHA-256: `177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb`;
-Plex Sans: `3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3`.
-Variation erfolgt zur Laufzeit; keine veränderte Fontdatei wird verteilt.
-
-Konturen, Schraffuren, X und die wenigen statischen Striche an Werkzeugmulden
-und Miniaturkarte sind eigene prozedurale Zeichenbefehle in
-[study/marks.gd](../prototypes/p1/study/marks.gd) und
-[study/details.gd](../prototypes/p1/study/details.gd). Der Zellindex bestimmt
-Variation stabil; Zeit, Neuzeichnen und Zoom würfeln keine Textur neu.
-Bei schmalem Fenster oder Zoom über 100 % entfallen die Randdetails.
-Das unveränderte A-Arbeitsbild behält seine dokumentierte BP-2-Herkunft und
-Auflösungsgrenze. Historische Designpakete und Rätselproofs werden nicht verändert.
-Squeakross liefert weder Code noch Bilder, Fontformen oder Layoutassets.
-
-## Messung und Entscheidung
-
-`zs1-study.json` enthält den tatsächlich verwendeten Renderer, Zeitstempel der
-Bewegungsbilder, die Verzögerung bis zur zweiten Geste, native Zellzeichenzeiten
-und den 100-Zellen-F-03-Eingabeweg. CPU-Zeichenzeit, vollständige Eingabe inklusive
-bestehendem Save, Frameabstände und reale Mauswahrnehmung sind verschiedene Werte.
-Der Animationstakt zeichnet ausschließlich die Zellschicht; er löst keine neuen
-Hinweisanalysen, UI-/Miniaturrefreshes oder Saves aus und endet bei leerer Effektliste.
-Die bestehende synchrone Hinweis-/Speicherarbeit ist kein FPS-Versprechen.
-Aktuelle Messwerte und ihre Grenzen stehen in [Prüfzuordnung](ZS1_VERIFICATION.md)
-und im commitgebundenen Draft-PR/Artefakt.
-
-**ZS1-M01:** offen. Eigentümer wählt am benannten Windows-ZIP Ziffern, Zellform,
-Texturen, X, Randdetails, Vorschaukontrast und Bewegungswerte. Unabhängiges Review
-und ausdrückliche Mergefreigabe bleiben getrennte Gates; #53 beginnt danach.
+**ZS1-M01:** Rückmeldung erfolgt; endgültige Hinweisfont, neues X und Strichaufbau
+nach vollständigem Vergleich noch bestätigen. Stift/Timing nicht erneut wählen.
+Unabhängiges Review des neuen Heads und ausdrückliche Mergefreigabe bleiben nötig.
+[Eigentümeranleitung](ZS1_OWNER_TRIAL.md), [Prüfzuordnung](ZS1_VERIFICATION.md).
+#52 bleibt offen, #53 wird nicht vorgezogen.

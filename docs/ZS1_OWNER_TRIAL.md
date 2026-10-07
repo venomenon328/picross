@@ -1,9 +1,14 @@
 # ZS-1 · native Gestaltungsprobe
 
-Stand: 07.10.2026 · Eigentümerprüfung ZS1-M01 **offen**, keine Vorauswahl
+Stand: 07.10.2026 · ZS1-M01: **Teilwahl erfolgt, abschließende Bestätigung offen**
 
 Das Studien-ZIP vollständig entpacken und `picross-zs1.exe` starten. Godot und
-Fonts sind eingebettet. Dies ist ein Windows-Testexport, kein Release.
+die bisher verwendeten Fonts sind eingebettet. **Diese Teillieferung enthält keine
+Eigentümer-TTFs:** [Fontrechte](ZS1_FONT_INPUT.md) bleiben zu klären. Die Hinweise
+zeigen die gekennzeichnete Plex-Referenz, keinen Ersatzkandidaten. Dies ist ein Windows-Testexport, kein Release.
+Die Stiftfüllung und das kurze Timing sind nach E1 gewählt. Jetzt sind das neue X
+und der tatsächliche Strichaufbau zu beurteilen; die endgültige Fontwahl folgt erst
+mit beiden zulässigen Kandidaten. Diese Teillieferung schließt #52 nicht ab.
 Quellhead, Basis, getesteter Checkout/Test-Merge, Run und EXE-Hashes stehen in
 `zs1-report.json`; die genaue Downloadbindung steht im Draft-PR zu #52.
 
@@ -14,8 +19,8 @@ frischen Vergleichsständen; innerhalb der Sitzung bleiben Änderungen und
 Undo/Redo beim Blatt- und Variantenwechsel erhalten. Die getrennten temporären
 Studienordner können nach der Probe gezielt entfernt werden.
 
-1. Oben mit **ZS-1 · Tinte →** zwischen Tinte, Stift und aktueller Baseline
-   wechseln. Zellen, Ausschnitt und Hinweisleseposition bleiben dabei gleich.
+1. Die Studie startet mit der bereits gewählten **Stiftfüllung**. Oben lässt sich
+   zwischen Stift mit neuem X und bisheriger Baseline als Referenz wechseln. Zellen, Ausschnitt und Hinweisleseposition bleiben dabei gleich.
    Im Album links stehen F-01 (20×20 Mono), F-02 (40×40 Farbe) und F-03
    (100×100, ausdrücklich UI-Stresstest). Die angearbeiteten Muster enthalten
    nur eigene Beispielmarkierungen, darunter absichtliche Fehler und viele X.
@@ -35,7 +40,9 @@ Studienordner können nach der Probe gezielt entfernt werden.
    ausschließlich das Ziel. Start auf X plus links wandelt zu Farbe, Start
    auf Füllung plus rechts zu X; unbekannter Start schützt Vorbelegungen.
    Beim Radieren verschwindet die alte Markierung schon in der Vorschau.
-5. Loslassen: alle geänderten Zellen verdichten sich gleichzeitig. Sofort eine
+5. Loslassen: alle geänderten Zellen beginnen gleichzeitig. Füllungen zeichnen
+   sich räumlich in kurzen Stiftbahnen; beim X folgt Zug zwei auf Zug eins.
+   Gesamtzeit bleibt 140 ms, Entfernen 80 ms (bereits positiv beurteiltes Timing). Sofort eine
    zweite Geste beginnen, auch auf denselben Zellen, dann zurückziehen oder
    abbrechen. Kein alter Effekt darf wiederkommen. Undo/Redo, Seitenwechsel,
    Zoom und Resize müssen sofort reagieren. In den Einstellungen
@@ -43,7 +50,7 @@ Studienordner können nach der Probe gezielt entfernt werden.
    spielt nichts nach. Der Schalter gilt für diese Sitzung und startet wieder an.
 6. 1920×1080 und 1280×720 mit UI 125 % vergleichen, ergänzend 1600×900 und
    2560×1440. F-01 bei 150 % Arbeitszoom, F-03 bei kleinen Zellen, Gesamtansicht
-   und maximalem Zoom prüfen. Randdetails dürfen nie Arbeitsfläche kosten.
+   und maximalem Zoom prüfen. Zusätzliche Randdekoration ist entfernt; funktionale Buchmontierungen bleiben.
    Auf F-03 lange Striche und schnelle Folgegesten besonders kritisch beurteilen.
 
 Die ursprünglichen Mauswerkzeuge, Miniatur, Hinweisnavigation, Speicherung im
@@ -57,12 +64,15 @@ Bitte im Issue/PR am konkreten Artefakt festhalten:
 | Head, Run/Artefakt und ZIP-Hash | offen |
 | Windows-Version, Bildschirm, tatsächliche Clientfläche, Windows-Skalierung | offen |
 | UI-Skalierung, Arbeitszoom, Eingabegerät | offen |
-| Ziffern: Baseline / Tinte / Stift, Gewicht/Größe | offen |
-| Füllform und Textur; X; Randdetails | offen |
-| Vorschaukontrast 56 %; Setzen 140 ms / Entfernen 80 ms | offen |
+| Ziffern: Bakso Daging / Chalkboard am identischen Stand | durch Rechtebelege blockiert; in dieser Teillieferung nicht prüfbar |
+| Stiftfüllung und Timing | bereits positiv gewählt |
+| Neues X und räumlicher Strichaufbau | abschließende Bestätigung offen |
+| Zusätzliche Rand-UI | verworfen und entfernt; Hintergrundarbeit separat |
+| Vorschaukontrast 56 % | unveränderter Ausarbeitungswert, Einzelbestätigung offen |
 | Kleine Zellen, C1, Hinweisdrag/Tooltip, F-03-Folgegesten | offen |
 | Gewählte konkrete Kombination oder nötige Nacharbeit | offen |
 
-ZS1-M01, unabhängiges technisches/visuelles Review und ausdrückliche
+Vollständiger Fontvergleich nach Rechteklärung, abschließende ZS1-M01,
+unabhängiges technisches/visuelles Review des neuen Heads und ausdrückliche
 Mergefreigabe bleiben vor Merge erforderlich. Die Auswahl ist Voraussetzung
 für #53; diese Studie stellt die reguläre Arbeitsansicht noch nicht um.

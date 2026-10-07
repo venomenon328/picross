@@ -2,11 +2,9 @@ extends "res://ui/main.gd"
 ## This scene is never the regular main_scene. Isolation precedes Main._ready.
 const StudyBoard = preload("res://study/board.gd")
 const Samples = preload("res://study/samples.gd")
-const Details = preload("res://study/details.gd")
 const Numerals = preload("res://study/numerals.gd")
 var variant_button: Button
 var animation_toggle: CheckBox
-var details: Details
 var study_root: String
 
 func create_board() -> Board:
@@ -31,7 +29,7 @@ func _ready() -> void:
 	animation_toggle.toggled.connect(func(enabled: bool) -> void: board.set_animations(enabled))
 	settings_panel.add_child(animation_toggle)
 	settings_panel.move_child(animation_toggle, 1)
-	var study_label: Label = label("ZS-1 · isolierte Studie\nDer Variantenknopf oben wechselt Baseline / Tinte / Stift am selben Stand.\nNeue Starts verwenden frische Studienstände. Eigene P1-Spielstände bleiben getrennt.", 16)
+	var study_label: Label = label("ZS-1 · Stift ist gewählt\nVergleich: bisherige Baseline / überarbeitete Stiftmarkierungen.\nHinweise weiterhin Plex-Referenz. Der Vergleich Bakso Daging / Chalkboard wartet auf Lizenzbelege; keine Kandidatenschrift enthalten.\nNeue Starts verwenden frische Studienstände.", 16)
 	study_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	settings_panel.add_child(study_label)
 	var quit_control: Node = settings_panel.get_child(settings_panel.get_child_count() - 2)
@@ -42,10 +40,6 @@ func _ready() -> void:
 	for i: int in range(3, choices.size()):
 		choices[i].hide()
 		album_previews[i].get_parent().hide()
-	details = Details.new()
-	details.app = self
-	details.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	page.add_child(details)
 	for i: int in range(3):
 		sessions[i] = Samples.create(sessions[i].definition)
 	session = sessions[0]
@@ -60,7 +54,7 @@ func restore_sample() -> void:
 
 func show_numerals() -> void:
 	var dialog: AcceptDialog = AcceptDialog.new()
-	dialog.title = "ZS-1 · " + ["Baseline", "Tinte", "Stift"][board.style]
+	dialog.title = "ZS-1 · Plex-Referenz · Fontvergleich noch offen"
 	dialog.min_size = Vector2i(740, 490)
 	var specimen: Numerals = Numerals.new()
 	specimen.session = Session.new(sessions[1].definition)
@@ -92,12 +86,12 @@ func replace_sample(pattern: bool) -> void:
 func cycle_variant() -> void:
 	if session.gesture.active:
 		return
-	board.set_style((board.style + 1) % 3)
+	board.set_style(2 if board.style == 0 else 0)
 	update_variant()
 
 func update_variant() -> void:
-	variant_button.text = ["ZS-1 · Baseline →", "ZS-1 · Tinte →", "ZS-1 · Stift →"][board.style]
-	variant_button.tooltip_text = "Nächste Variante am identischen eigenen Spielerstand"
+	variant_button.text = "ZS-1 · Baseline →" if board.style == 0 else "ZS-1 · Stift →"
+	variant_button.tooltip_text = "Gewählte Stiftmarkierungen / bisherige Baseline; Fontvergleich noch offen"
 	_layout_book()
 	refresh()
 
@@ -106,9 +100,6 @@ func _layout_book() -> void:
 	if variant_button != null:
 		var material: Rect2 = surface.material_rect()
 		_place(variant_button, Rect2(material.position + Vector2(material.size.x * 0.52, material.size.y * 0.039), Vector2(210 * ui_scale, 44 * ui_scale)))
-	if details != null:
-		details.size = size
-		details.queue_redraw()
 
 func _undo() -> void:
 	board.clear_effects()

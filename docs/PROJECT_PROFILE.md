@@ -11,7 +11,9 @@ Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhü
 Die [Spezifikation zur zeichnerischen Spieloberfläche](UI_DRAWING_STYLE.md) ist bei
 Arbeit an der neuen Hinweis-/Zellsprache, statischer Zellvorschau und Zellanimationen
 zusätzlich vollständig zu lesen. Sie ist am 07.10.2026 fachlich freigegeben und
-als isolierte Studie umgesetzt, Auswahl noch offen: native Auswahl in [ZS-1/#52](https://github.com/venomenon328/picross/issues/52),
+als isolierte Studie umgesetzt. E1 wählt Stiftfüllung und kurzes Timing;
+X/Strichaufbau sind isoliert nachgearbeitet. Fontvergleich und abschließende
+Bestätigung bleiben offen: native Auswahl in [ZS-1/#52](https://github.com/venomenon328/picross/issues/52),
 reguläre Integration in [ZS-2/#53](https://github.com/venomenon328/picross/issues/53),
 danach längere Spielerprobung in #24. Animationen beginnen ausschließlich nach
 dem Anwenden, nicht in der Vorschau.
@@ -430,8 +432,12 @@ sind für genau diesen Merge aufgehoben, nicht als bestanden umgedeutet. Kein Re
 [ZS-2/#53](https://github.com/venomenon328/picross/issues/53) gehören zu #21. Die
 [Detailspezifikation](UI_DRAWING_STYLE.md) ergänzt die vorhandene A-Buchkomposition
 um kräftige kompakte Hinweisziffern, satte stabile Schraffur-/Stiftflächen,
-gezeichnete X, zurückhaltende Randdetails und kurze parallele Zellanimationen.
-Die konkrete Variante ist Ergebnis von ZS-1; GD-03/GP-03 werden nur für Hinweisziffern
+handschriftliche X und kurze parallele Zellanimationen. E1 wählt Stiftfüllung und
+140/80-ms-Timing, fordert echten räumlichen Strichaufbau und entfernt zusätzliche
+Rand-UI. Hintergrundarbeit bleibt separat zurückgestellt. Der vollständige
+Vergleich der zwei Eigentümer-TTFs ist durch fehlende Rechtebelege blockiert;
+[Fontinput](ZS1_FONT_INPUT.md) dokumentiert lesbare Originaldateien/Quellen/Hashes.
+Die abschließend bestätigte Kombination ist Ergebnis von ZS-1; GD-03/GP-03 werden nur für Hinweisziffern
 und begründet gewählte gemeinsame Slotmaße geöffnet. Historische Designpakete bleiben.
 
 Vorschau ist statisch und heller/transparenter. Erst die tatsächliche atomare
@@ -445,8 +451,9 @@ Auswahl/Probe und ausdrückliche Mergefreigabe stehen als Gates in den Paketissu
 #24 folgt mit der längeren Nutzung der integrierten Fassung. Der anschließende
 Umsetzungsauftrag zu #52 umfasst die geprüfte Draft-Lieferung der isolierten
 Studie; siehe [Prüfzuordnung](ZS1_VERIFICATION.md) und
-[Entscheidungsvorlage](ZS1_DECISION.md). Eigentümerwahl ZS1-M01, unabhängiges
-Review und Mergefreigabe bleiben offen. #53 und Release sind nicht beauftragt.
+[Entscheidungsstand](ZS1_DECISION.md). ZS1-M01 hat Teilfeedback erhalten;
+abschließende Bestätigung, unabhängiges Review des neuen Heads und Mergefreigabe
+bleiben offen. R1 ist ausschließlich für `4ae4f5a` abgeschlossen. #53 und Release sind nicht beauftragt.
 
 Die bestehenden sechs CI-Jobs bleiben aktiv. Spielerpaket und kleine gezielte
 Reviewartefakte bleiben getrennt; das optionale Hochladen kompletter Arbeitsrender

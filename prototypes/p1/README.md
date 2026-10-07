@@ -300,9 +300,12 @@ automatisierter Lauf ist eine reale Lösung oder Phasenentscheidung.
 ## Isolierte ZS-1-Vergleichsprobe (#52)
 
 Die reguläre P1-Fassung bleibt unverändert. Das separate Windows-Studienpaket
-startet `study/main.tscn` mit eigener Speicherwurzel und zwei umschaltbaren
-Zeichenvarianten auf denselben F-01/F-02/F-03-Testständen.
+startet `study/main.tscn` mit eigener Speicherwurzel und der gewählten Stiftfüllung,
+neuem X und Strichaufbau. Bisherige Baseline als Referenz umschaltbar; gleiche
+F-01/F-02/F-03-Teststände. Beide Eigentümer-TTFs warten auf Rechtebelege und
+sind nicht enthalten; Plex wird ausdrücklich nur als bisherige Referenz gezeigt.
 [Bedienung und offene Eigentümerwahl](../../docs/ZS1_OWNER_TRIAL.md),
 [Prüfnachweise](../../docs/ZS1_VERIFICATION.md) und
 [Entscheidungsvorlage](../../docs/ZS1_DECISION.md).
-ZS1-M01 ist offen; #53 ist nicht integriert.
+ZS1-M01: Stift/Timing bestätigt, endgültige Kombination nach Nacharbeit offen;
+#53 ist nicht integriert.

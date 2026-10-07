@@ -12,6 +12,8 @@ var specimens: Array = []
 var baseline: bool
 var variant: int
 var failures: int = 0
+var stroke_frames: Array = []
+var probe_time: int = 1000000
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -36,7 +38,7 @@ func run() -> void:
 	surface.add_child(app)
 	await process_frame
 	await create_timer(0.3).timeout
-	for style: int in ([0] if baseline else [0, 1, 2]):
+	for style: int in ([0] if baseline else [0, 2]):
 		variant = style
 		if not baseline:
 			app.board.set_style(style)
@@ -73,8 +75,9 @@ func run() -> void:
 		if not baseline and style > 0:
 			await movement()
 			await load_probe()
+			await stroke_probe()
 	var report: Dictionary = {"baseline": baseline, "renderer": RenderingServer.get_video_adapter_name(),
-		"display": DisplayServer.get_name(), "captures": captures, "frames": frames, "measurements": measurements, "specimens": specimens, "failures": failures}
+		"display": DisplayServer.get_name(), "captures": captures, "frames": frames, "stroke_frames": stroke_frames, "measurements": measurements, "specimens": specimens, "failures": failures}
 	var path: String = output.path_join("zs1-baseline.json" if baseline else "zs1-study.json")
 	FileAccess.open(path, FileAccess.WRITE).store_string(JSON.stringify(report, "\t") + "\n")
 	if failures == 0:
@@ -275,6 +278,34 @@ func load_probe() -> void:
 		"input_commit_us": commit_us, "draw_us": app.board.draw_times_us.duplicate(), "frame_us": frame_times,
 		"renderer": RenderingServer.get_video_adapter_name(), "real_mouse_acceptance": "OPEN ZS1-M01"})
 	app.board.measure_draws = false
+
+func stroke_probe() -> void:
+	# Controlled clock, real production draw path: geometry evidence, not FPS.
+	app.select_puzzle(0)
+	app.empty_sample()
+	var board = app.board
+	while board.view.cell_size < 72:
+		board.zoom(1, board.view.viewport.get_center())
+	board.view.center = Vector2(2, 2)
+	board.view.reframe()
+	board.animation_clock = func() -> int: return probe_time
+	mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
+	mouse(point(0, 0), MOUSE_BUTTON_LEFT, false)
+	mouse(point(1, 0), MOUSE_BUTTON_RIGHT, true)
+	mouse(point(1, 0), MOUSE_BUTTON_RIGHT, false)
+	board.clear_pointer_hover()
+	var crop: Rect2i = Rect2i(Rect2(board.global_position + board.view.cell_rect(Vector2i(0, 0)).position, Vector2(144, 72)))
+	for elapsed: int in [0, 21, 49, 70, 98, 119, 140]:
+		probe_time = 1000000 + elapsed * 1000
+		board.marks.queue_redraw()
+		await process_frame
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var filename: String = "zs1-strokes-%03d.png" % elapsed
+		check(surface.get_texture().get_image().get_region(crop).save_png(output.path_join(filename)) == OK, "stroke frame saved")
+		stroke_frames.append({"file": filename, "elapsed_ms": elapsed, "clock": "controlled production animation clock", "crop": [crop.position.x, crop.position.y, crop.size.x, crop.size.y], "cell_size": 72, "indices": [0, 1]})
+	board.animation_clock = Time.get_ticks_usec
+	board.clear_effects()
 
 func point(x: int, y: int) -> Vector2:
 	return app.board.global_position + app.board.view.cell_rect(Vector2i(x, y)).get_center()

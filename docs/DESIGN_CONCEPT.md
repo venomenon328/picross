@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 07.10.2026 · Arbeitsfassung 0.20 · Z2/GP-48/ZV-50 integriert; zeichnerische UI spezifiziert
+Stand: 07.10.2026 · Arbeitsfassung 0.21 · Z2/GP-48/ZV-50 integriert; zeichnerische UI spezifiziert
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -32,11 +32,13 @@ Designsystem.
 
 Die Spezifikationsfreigabe vom 07.10.2026 ergänzt die
 [zeichnerische UI](UI_DRAWING_STYLE.md): kräftigere kompakte Hinweisziffern,
-eigene Füll-/X-Striche, zurückhaltende Randdetails und kurze Zellanimationen.
+eigene Füll-/X-Striche und kurze Zellanimationen. E1 wählt Stiftfüllung und
+140/80-ms-Timing; zusätzliche Rand-UI entfällt, Hintergrundarbeit bleibt separat.
 Die ausdrücklich korrigierte Bewegungsregel gilt: statische hellere Vorschau
 während des Ziehens, Animation erst beim tatsächlichen Anwenden. Diese
 Folgearbeit liegt als [isolierte ZS-1-Studie](ZS1_VERIFICATION.md) vor.
-Eigentümerwahl und visuelle Abnahme sind offen; die reguläre Integration folgt
+Eigentümerfeedback mit Stift-/Timingwahl liegt vor; endgültige Fontwahl und
+Bestätigung von neuem X/Strichaufbau bleiben offen; die reguläre Integration folgt
 erst mit ZS-2.
 
 ## 2. Bestätigte gestalterische Grundlage
@@ -203,11 +205,11 @@ Ein möglicher Ablauf bleibt: Hinweise, Leermarkierungen und Raster treten zurü
 
 Eine umschaltbare ursprüngliche Rasteransicht und überspringbare/reduzierte Abschlussanimationen bleiben sinnvolle Vorschläge, keine automatisch beauftragten Funktionen. Davon getrennt ist das Abschalten der Zellanimationen inzwischen durch ZS bestätigt. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur. Eine bloße Freistellung desselben Farbrasters genügt für F-02 ausdrücklich nicht mehr.
 
-### 4.4 Zeichnerische Hinweiszahlen, Zellmarkierungen und Randdetails
+### 4.4 Zeichnerische Hinweiszahlen und Zellmarkierungen nach E1
 
 Die am 07.10.2026 freigegebene Richtung führt die Buchgestaltung innerhalb der
-Arbeitsfläche fort. Hinweisziffern und Zellmarkierungen haben Vorrang; wenige
-Randdetails verbinden sie mit Werkzeugen und Miniaturfassung. Die
+Arbeitsfläche fort. Hinweisziffern und Zellmarkierungen haben Vorrang; die
+bestehenden funktionalen Werkzeuge und Miniaturfassung bleiben erhalten. Die
 [detaillierte Spezifikation](UI_DRAWING_STYLE.md) führt den Vertrag und die
 Pakete [ZS-1 / #52](https://github.com/venomenon328/picross/issues/52)
 (native Gestaltungsprobe) und [ZS-2 / #53](https://github.com/venomenon328/picross/issues/53)
@@ -239,20 +241,18 @@ zeigt weiterhin ausschließlich eigene Eingaben einschließlich Fehlern und
 Vorschau, verwendet zur Orientierung aber eine einfachere Flächendarstellung
 ohne jede kleinteilige Schraffur oder eigene Animationsfolge.
 
-Zusätzliche Randverzierungen, dezente Materialspuren und kleine Akzente sind
-als gemeinsame Zeichensprache mit den Werkzeugen vorgesehen. Sie liegen
-außerhalb der eigentlichen Zahlen-/Rasterarbeit, verraten kein Rätselmotiv
-und treten bei Zoom oder engem Fenster zurück. Die nutzbare freie Papierfläche
-aus ZV-50 und die unverdeckten Bedienelemente bleiben erhalten. Konkrete
-Ornamente, Schriftdateien, Deckkräfte und Bewegungskurven sind noch keine
-ausgewählten oder abgenommenen Assets.
+Zusätzliche Randverzierungen als UI-Layer werden nach ZS1-E1/N05 entfernt.
+Funktionale Montierungen und ZV-50-Arbeitsfläche bleiben erhalten. Spätere
+Hintergrundbildarbeit ist eine zurückgestellte Möglichkeit, kein aktueller
+Assetauftrag und kein Gate. Historische Artworkpakete bleiben unverändert.
 
-ZS-1 vergleicht zwei eng verwandte native Ausprägungen: kräftige Tinte mit
-feiner Schraffur und weichere Stiftflächen mit gezeichneten Konturen. Tinte
-ist die Ausgangsempfehlung, noch keine Eigentümerwahl. Dieselben echten
+ZS1-E1 wählt die Stiftfüllung. Das überarbeitete X verwendet zwei stabile,
+weniger gleichförmige Stiftzüge. Genau zwei Eigentümer-TTFs, Bakso Daging und
+Chalkboard, werden nach [Rechteklärung](ZS1_FONT_INPUT.md) auf derselben
+Zellgestaltung verglichen; kein neues breites Font-/Themenscreening. Dieselben echten
 Mono-/Farbspielstände, viele X, lange Hinweise und ein Großrasterausschnitt
 dienen dem Vergleich bei tatsächlicher Spielgröße. Die ausgewählte Kombination
-aus Ziffern, Füllung, X und kurzer Bewegung ist das Ergebnis dieser Probe;
+aus konkreter Hinweisfont, überarbeitetem X und Strichaufbau bleibt zu bestätigen;
 ZS-2 integriert sie mit gezielten Regressionen. #24 beurteilt anschließend
 die längere reale Nutzung. Die Spezifikationsfreigabe beginnt keines dieser
 Umsetzungspakete und ersetzt keine spätere Gestaltungs- oder Bedienabnahme.
@@ -281,10 +281,10 @@ Bestätigungsanimation. Unveränderte oder geschützte Zellen animieren nicht;
 Abbruch erzeugt keinen Effekt. Eine neue Vorschau oder Änderung derselben
 Zelle hat Vorrang vor einem älteren Effekt.
 
-Der Zeichenauftrag verdichtet die Vorschau zur endgültigen Füllung oder
-zieht die X-Striche nach, ohne die Markierung zuvor vollständig verschwinden
-zu lassen. Effekte bleiben innerhalb ihrer Zelle. Etwa 100–180 ms sind
-Ausgangswerte zur Erprobung, keine bereits gemessenen Idealwerte; auch ein
+Der Zeichenauftrag baut die kräftige Füllung räumlich entlang kurzer Stiftzüge
+auf oder zeichnet zuerst den ersten, dann den zweiten X-Zug, ohne die Markierung zuvor vollständig verschwinden
+zu lassen. Effekte bleiben innerhalb ihrer Zelle. 140 ms insgesamt für Setzen/Umwandeln und 80 ms Entfernen erhalten das
+positiv beurteilte Timing; auch ein
 langer Strich erhält keine gestaffelte Warteschlange. Eine nächste Eingabe,
 Undo/Redo oder ein Seitenwechsel warten nicht auf Animationen. Zellzustand,
 Hinweisermittlung, atomare History und Speicherung sind unabhängig vom
@@ -377,7 +377,7 @@ die Freigabe dieses Sollstands belegen bereits dessen Implementierung.
 | Thema | Nächster Gegenstand |
 | --- | --- |
 | Themenwahl | Thematisches Sammelalbum oder Reisealbum, Kapitel und Motivzusammenhang; nicht mit dem gewählten Arbeitsasset A verwechseln. Bestehende Progressionsanforderungen nicht neu öffnen. |
-| Album/Designsystem | ZS-1 vergleicht zwei eng verwandte Ausprägungen der gewählten Buchrichtung; ZS-2 integriert die ausgewählten Ziffern, Zellmarkierungen, Animationen und Randdetails. Ein vollständiger Albumneubau ist nicht beauftragt. |
+| Album/Designsystem | ZS-1 bestätigt nach E1-Nacharbeit die gewählte Stiftgrundlage mit neuem X/Strichaufbau und zwei rechtlich geklärten Eigentümer-TTFs; ZS-2 integriert diese Auswahl ohne zusätzliche Rand-UI. Ein vollständiger Albumneubau ist nicht beauftragt. |
 | Rücknahmen/Wertung | Direkte Neutralisierung ist für die Bedienung festgelegt; Fehlerzählung, Sterne und Hypothesenwirkung bleiben offen. |
 | P1-Bedienung | P1/Z2 ist integriert; Z2-M01/M02 wurden nicht durchgeführt, ihr damaliges Mergegate aufgehoben. Eigene aktuelle RP-3-Nachweise stehen im [Prüfbericht](RP3_VERIFICATION.md). |
 | Fortsetzung | Speicherung/Recovery bleiben Regressionsumfang; Z2-M03 wurde nicht durchgeführt und für PR #33 als Gate aufgehoben. F-04 erhält einen eigenen isolierten Neustartnachweis. |

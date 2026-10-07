@@ -1,6 +1,6 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-Stand: 07.10.2026 · Spezifikation 0.1 · fachlich freigegeben; isolierte ZS-1-Studie, Auswahl offen
+Stand: 07.10.2026 · Spezifikation 0.2 · E1: Stift/Timing gewählt; Fontrechte und abschließende Bestätigung offen
 
 ## 1. Auftrag, Quellen und Status
 
@@ -27,6 +27,12 @@ prüfen. [AGENTS.md](../AGENTS.md), [lokaler Workflow](dev-rules/WORKFLOW.md),
 [Gestaltungskonzept](DESIGN_CONCEPT.md), [P1-Vertrag](PROTOTYPE_P1.md) und
 [aktive Z2-Auswahl](Z2_SELECTION.md) bleiben Pflichtquellen im jeweiligen Geltungsbereich.
 
+[Eigentümerentscheidung ZS1-E1](https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659)
+konkretisiert die Auswahl: Stiftfüllung und kurzes Timing sind gewählt. N01–N06
+ersetzen die offene Tinte-/Stiftwahl, frühere Fraunces-Hinweiskandidaten, bloßes Fade
+und zusätzliche Rand-UI. R1 bleibt an `4ae4f5a20273808f99d257a3812da86d72307a5f`
+gebunden. [Fontinput](ZS1_FONT_INPUT.md): beide TTFs vorhanden, Rechtebelege fehlen.
+
 ## 2. Ziel und begrenzte Ablösung
 
 Das Spielen soll wie das Bearbeiten eines gezeichneten Rätselbuchs wirken.
@@ -46,15 +52,13 @@ Schriftgrad und gegebenenfalls bewusst gewählte gemeinsame Slotmaße. Fraunces-
 Plex-Sans-Bedientexte, die übrige Z2-Komposition und die C1-Farbkontur bleiben Grundlage.
 Eine neue allgemeine Hintergrund-, Schrift- oder Layoutauswahl ist nicht beauftragt.
 
-Zwei eng verwandte Ausprägungen werden in ZS-1 verglichen:
-
-- kräftige Tintenflächen mit feiner Schraffur;
-- etwas weichere Stiftflächen mit gezeichneten Konturen.
-
-Tinte ist die Ausgangsempfehlung, keine bereits erfolgte Eigentümerwahl.
-Konkrete Ziffern, Texturen, Randdetails, Vorschaukontraste und Bewegungswerte werden
-an der nativen Probe ausgewählt und im Ergebnis von ZS-1 gebunden. Diese Auswahl
-ist Voraussetzung für ZS-2, kein jetzt fehlender Grundsatzentscheid für die Studie.
+Die Stiftfüllung ist gewählt. Zwei konkrete Eigentümer-TTFs werden nach Klärung
+der benötigten Rechte unabhängig von der Zellgestaltung am selben Stand verglichen:
+Bakso Daging Regular und Chalkboard Regular. Historische Tinte-/Stiftbilder und R1
+bleiben Referenzen ihrer Lieferung, keine erneut offene Füllformwahl. Die endgültige
+Hinweisfont und die überarbeitete Kombination aus X und Strichaufbau benötigen noch
+ZS1-M01. Die fontunabhängige Teilstudie kennzeichnet Plex ausdrücklich als bisherige
+Referenz und behauptet keinen Ersatzkandidaten oder vollständigen Abschluss.
 
 ## 3. Zeichensprache
 
@@ -98,18 +102,19 @@ Trefferflächen, Koordinaten, Rastergröße und Rätselfarben werden nicht dekor
 
 ### ZS-D03: Ausgekreuzte Zellen
 
-Das X besteht aus zwei konsistenten, etwas kräftigeren, leicht organischen
-Stiftstrichen. Kreuze bleiben eindeutig, übertönen aber auch auf einem stark
+Das X besteht aus zwei erkennbaren handschriftlichen Stiftzügen mit begrenzter
+Variation in Krümmung, Winkel, Länge und Stärke. Die Variation hängt stabil an
+der Zellidentität; Neuzeichnen, Pan, Zoom und Wiederherstellung würfeln nichts neu. Kreuze bleiben eindeutig, übertönen aber auch auf einem stark
 ausgekreuzten Blatt das gefüllte Motiv nicht. Unbekannt, X und Füllung sind
 unmittelbar unterscheidbar. Normale und teilweise sichtbare Zellen verwenden
 dieselbe Geometrie mit korrektem Anschnitt; keine Ersatzmarkierung am Viewportrand.
 
-### ZS-D04: Buch, Werkzeuge und Randdetails
+### ZS-D04: Buch und funktionale UI ohne zusätzliche Randdekoration
 
-Die vorhandene Buchkomposition wird durch wenige passende statische Randdetails
-und eine gemeinsame Strich-/Materialwirkung von Werkzeugen und Miniaturfassung
-weiterentwickelt. Mögliche Mittel sind kleine Randverzierungen, Gebrauchsspuren
-oder zurückhaltende Materialakzente; die Beispiele sind keine Pflichtliste einzelner Requisiten.
+Die zusätzliche Studien-Randdekoration wird nach E1/N05 entfernt. Funktionale
+Buchmontierungen, Werkzeuge und Miniaturfassung bleiben erhalten. Eine spätere
+Hintergrundbildanpassung ist zurückgestellt, kein aktueller Assetauftrag und kein
+Gate für #52/#53. Hintergrund und historische Artworkpakete bleiben unverändert.
 
 Hinweise und Raster erhalten einen ruhigen Untergrund. Dekoration gibt weder
 Motivnamen noch eine vorzeitige Skizze der Lösung preis und enthält keine eingebrannten
@@ -133,8 +138,8 @@ Motivname und fertige Illustration erscheinen weiterhin erst nach tatsächlichem
 
 Die Vorschau zeigt nur wirksame Änderungen des aktuellen geraden Strichabschnitts.
 Füllung oder X erscheinen vollständig, ohne Animation, in der gewählten Endform,
-aber heller beziehungsweise transparenter. Der native Vergleich bestimmt die
-ausreichend gut lesbare Abschwächung für alle Farben auf dem Papier.
+aber heller beziehungsweise transparenter. 56 % bleiben der unveränderte
+Ausarbeitungswert; eine neue gesonderte Eigentümerabnahme dafür fehlt.
 
 Bei X-zu-Füllung und Füllung-zu-X zeigt die Vorschau nur den neuen Zielzustand;
 die bisherige Gegenmarkierung wird nicht darunter stehen gelassen.
@@ -155,17 +160,17 @@ Strichs erhalten denselben Animationsstart; keine Sequenz pro Zelle, künstliche
 Warteschlange oder mit der Strichlänge wachsende Gesamtdauer.
 Geschützte Felder und No-ops lösen keine Animation aus.
 
-Die endgültige Markierung verdichtet beziehungsweise zeichnet sich aus der
-zurückgenommenen Vorschau heraus. Sie verschwindet nicht erst vollständig für einen
+Füllung baut sich räumlich entlang aufeinanderfolgender kurzer Stiftzüge auf;
+das X zeichnet erst den ersten, dann den zweiten Zug. Bloßes globales Fade oder
+bewegte Dekorstriche auf schon kräftiger Endfüllung genügen nicht. Die kräftige
+Markierung wird über den zurückgenommenen statischen Zielzustand gezeichnet. Sie verschwindet nicht erst vollständig für einen
 zweiten Aufbau. Beim Neutralisieren darf eine zuvor entfernte Füllung oder ein X
 nicht nochmals als Löschanimation auftauchen; stattdessen kann die Vorschaukontur
 oder ein neutraler kurzer Löschhinweis auslaufen.
 
-Das dauerhafte Ziel sind sehr kurze Effekte deutlich unter einer Sekunde.
-Für die erste Probe gelten als Ausarbeitungswerte: Setzen/Umwandeln ungefähr
-100–180 ms, Entfernen ungefähr 60–100 ms. Ein Zielmaximum von 200 ms dient der
-ersten Feinabstimmung, nicht als nachträglich behauptete wörtliche Eigentümervorgabe.
-Die konkret ausgewählten Dauern werden im ZS-1-Ergebnis festgehalten und in ZS-2 geprüft.
+Das positiv beurteilte kurze Timing bleibt bei **140 ms insgesamt** für
+Setzen/Umwandeln und **80 ms** Entfernen. Teilzüge innerhalb einer Zelle folgen
+aufeinander; alle wirksamen Zellen starten gleichzeitig. Keine 140 ms pro Teilzug.
 
 Der Strich wird weiterhin sofort als eine atomare Aktion übernommen.
 History, Hinweiszustände, Abschlussprüfung und Sicherung warten nicht auf Effekte.
@@ -218,7 +223,8 @@ Animationstakte sollen keinen vollständigen UI-/Miniatur-/Analyse-Refresh ausl�
 Die konkrete Umsetzung und Leistung werden nativ gemessen; keine ungeprüfte FPS-Zusage.
 
 Verifikation verbindet Zustands-/Gestenregressionen, gezielte native Bilder zu
-bekannten Zeitpunkten, einen kurzen Bewegungsclip beziehungsweise eine kleine Sequenz
+bekannten Zeitpunkten, eine kleine Strichsequenz mit Negativkontrollen gegen
+gleichmäßiges Fade und falsche X-Zugreihenfolge
 und reale schnelle Mauseingaben. Ein Endzustands-Screenshot allein beweist keine
 Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflüssigkeit.
 
@@ -226,8 +232,8 @@ Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflü
 
 | Paket | Ergebnis | Abhängigkeit und Gate |
 | --- | --- | --- |
-| ZS-1 | Zwei eng verwandte native Gestaltungsvarianten mit denselben realen Testständen, statischer Vorschau und kurzer Commit-Bewegungsprobe; dokumentierte konkrete Wahl. | Eigener Implementierungsauftrag nach Startprüfung. Eigentümerwahl der nativen Fassung vor Abschluss und ZS-2. |
-| ZS-2 | Gewählte Hinweis-/Zellsprache, Randdetails, statische Vorschau, parallele Commit-Effekte und Schalter in der regulären Arbeitsansicht. | ZS-1-Auswahl und integrierte nutzbare Grundlage; aktuelle technische Nachweise, unabhängiges Review und gezielte reale Eigentümerprobe vor Merge. |
+| ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; zwei rechtlich geklärte Eigentümer-TTFs auf identischen Testständen, abschließende Kombination bestätigen. | Eigener Implementierungsauftrag nach Startprüfung. Eigentümerwahl der nativen Fassung vor Abschluss und ZS-2. |
+| ZS-2 | Gewählte Hinweis-/Zellsprache ohne zusätzliche Rand-UI, statische Vorschau, parallele Commit-Effekte und Schalter in der regulären Arbeitsansicht. | ZS-1-Auswahl und integrierte nutzbare Grundlage; aktuelle technische Nachweise, unabhängiges Review und gezielte reale Eigentümerprobe vor Merge. |
 | Z3/#24 | Längere reale Spielerprobung der integrierten neuen Fassung und Abschluss der Designphase. | Nach ZS-2; ersetzt keine davor erforderlichen technischen oder gezielten manuellen Gates. |
 
 ZS-1 verwendet insbesondere F-01/20×20 Mono, F-02/40×40 Farbe und F-03/100×100
@@ -253,6 +259,7 @@ ihrer offenen Befunde. Keine Änderung historischer Designartefakte oder Rätsel
 
 Die Spezifikationsvorbereitung ist abgeschlossen. Der anschließende Auftrag
 zu #52 liefert die [isolierte ZS-1-Studie](ZS1_VERIFICATION.md) bis zum geprüften
-Draft-PR. Die [Eigentümerwahl ZS1-M01](ZS1_OWNER_TRIAL.md) bleibt offen.
-ZS-2, Merge und Release sind damit nicht beauftragt. Die fachlichen Verträge
-dieser Spezifikation bleiben gegenüber PR #54 unverändert.
+Draft-PR. Die [ZS1-M01-Rückmeldung](ZS1_OWNER_TRIAL.md) enthält die Stift-/Timingwahl;
+abschließende Bestätigung nach Nacharbeit bleibt offen.
+ZS-2, Merge und Release sind damit nicht beauftragt. E1 ersetzt gezielt die genannten Teile des alten #54-Vertrags; die übrigen
+P1-/ZS-Invarianten bleiben erhalten.

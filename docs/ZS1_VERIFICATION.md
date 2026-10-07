@@ -1,74 +1,83 @@
-# ZS-1 · Prüfzuordnung und Liefergrenze
+# ZS-1 · Prüfzuordnung nach E1 und Liefergrenze
 
-Stand: 07.10.2026 · Implementierung auf `feat/52-native-drawing-study`, Draft-Lieferung
+Stand: 07.10.2026 · bestehender Branch `feat/52-native-drawing-study`, Draft-PR #55
 
-Basis `ec99954268f1ad959d9ea779dbbd9e28edf7d8fa`; gebundene Spezifikation und
-sechs Dokumentänderungen aus PR #54 bei `c82ae74f794936bca93d45f5f505ba283e971227`.
-Sie wurden auf den aktuellen Main-basierten Studienbranch übernommen. #54 wird
-dadurch weder gemergt noch geschlossen. Lieferhead, Test-Merge, sechs aktuelle
-CI-Jobs, Downloadkennungen und ZIP-Hashes werden im Draft-PR zu #52 gebunden.
+Basis `ec99954268f1ad959d9ea779dbbd9e28edf7d8fa`, Ausgangs-/R1-Head
+`4ae4f5a20273808f99d257a3812da86d72307a5f`. Maßgeblich sind
+[ZS1-E1](https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659),
+[#52](https://github.com/venomenon328/picross/issues/52) und
+[ZS-D01–D10](UI_DRAWING_STYLE.md). Neue Head-/Basis-/Test-Merge-/Run- und
+Downloadbindungen stehen im PR und den maschinenlesbaren Artefaktberichten.
+R1 bleibt historisch; neue Selbstprüfung ist keine unabhängige Zweitprüfung.
 
-| Kriterium | Ausführbarer Nachweis |
+**Teillieferung:** N01/N02/N04/N05 und unabhängige N06-Nachweise umgesetzt.
+N03 und der davon abhängige vollständige A01/A02/A06-/N06-Abschluss sind blockiert:
+[beide TTFs und Originalquellen vorhanden, konkrete Rechtebelege fehlen](ZS1_FONT_INPUT.md).
+Keine Kandidatenfontbytes verteilt, kein vollständiger Abschluss mit Platzhaltern.
+Plex ist ausdrücklich bisherige Referenz und kein angebotener Ersatzkandidat.
+
+| Kriterium | Aktueller Nachweis / Grenze |
 | --- | --- |
-| ZS1-A01 | Native Hauptszene `study/main.tscn`, Variantenknopf am identischen Sessionstand, F-01/F-02/F-03; lösungsunabhängig erzeugte eigene Muster mit vielen X. `zs1_capture.gd` vergleicht gegen ein echtes Git-Archiv der aktuellen Produktbasis. |
-| ZS1-A02 | Normale/gesetzte/abgegrenzte Originalhinweise auf beiden Achsen, C1/alle Farben, echte lange Zeilen-/Spaltendrags und Tooltips; eigene beschriftete Ziffernprobe bis 100. Originalindizes, Slots und semantische Lesepositionen unverändert. |
-| ZS1-A03 | Gezielte 1920×1080-, 1280×720/UI125-, 1600×900- und 2560×1440-Fälle; 12/24/36/72er-Zellen; F-01 bei 150 %. Geometrie-/Zellhashvergleich für alle Varianten, pixelidentische Studienbaseline gegen Main im Boardbereich. |
-| ZS1-A04 | Native Zeitsequenz für ruhige Vorschau, 20 parallele Änderungen, zweite Geste vor Effektende, direkte Umwandlung und identischer Endzustand bei Aus. Separate echte GUI-Ereignistests für Rückzug/Abbruch, Schutz/No-op, jüngsten Zielzustand, Undo/Redo, Ausschalten, Fokus/Zoom/Resize/Seitenwechsel/Reset und sofortigen Abschluss. |
-| ZS1-A05 | Unveränderter Session-/Gesten-/Savekern; vergifteter Normal-Sentinel bleibt bytegleich. Isolation vor Main._ready, eigene Speicherwurzel auch beim Direktstart; Originaldaten/Proofs unverändert. Bestehender kompletter Produktweg einschließlich 500 Aktionen, Neustart/Recovery und sämtliche sechs CI-Jobs bleiben aktiv. |
-| ZS1-A06 | Eigener Windows-Export mit separater Hauptszene/Appidentität; eigenes schlankes ZIP und getrenntes Review-ZIP. Bericht bindet Source-Head, Dirty-Status, Checkout/Test-Merge, Basis, Run, Fonts/Engine und Datei-Hashes. |
+| A01 | 14 native Situationen je bisherige Baseline und gewählter Stift: 28 Bilder auf identischen eigenen F-01/F-02/F-03-Ständen. Bisherige reguläre Boardpixel zusätzlich gegen 14 echte Main-Archivbilder geprüft. Der Zweifontvergleich fehlt. |
+| A02 | Unveränderte echte Hinweise mit drei Zuständen auf beiden Achsen, C1, unabhängiger Hinweisdrag/Tooltip und beschriftete Ziffernprobe. Aktuell nur Plex-Referenz; Metriken/Glyphen/Fallbacks beider Kandidaten nicht als geprüft behauptet. |
+| A03 | 1920×1080, 1280×720/UI125, 1600×900, 2560×1440; 12/24/36/72er-Zellen und F-01 bei 150 %. Gleiche Geometrie/Spielstände. Keine zusätzliche Studien-Rand-UI. |
+| A04 | Echtzeitfolge mit statischer Vorschau, 20 parallelen Commits, zweiter Geste vor Effektende, Umwandlung und pixelgleichem Endzustand bei Aus. Zusätzlich sieben native 72-px-Zellausschnitte bei kontrollierten 0/21/49/70/98/119/140 ms: räumlicher Füllfortschritt, Zug eins vor Zug zwei. Bildprüfer lehnt aus diesen Bildern erzeugtes globales Fade und umgekehrte X-Reihenfolge ab. |
+| A05 | Unveränderter Gesten-/Session-/Savekern; Normal-Sentinel vor/nach Studienlauf bytegleich. Echter Commit/Save im eigenen Root, Originaldaten/Proofs/Assets unverändert. Gesamter Produktweg mit Zwei-Prozess-, 500-Aktionen-, Recoveryregressionen sowie sechs aktuelle CI-Jobs erforderlich. |
+| A06 | Schlankes Windows-ZIP, eigener nativer Vergleich und separates kleines Strichaufbau-ZIP. Identitätsbericht mit Head/Dirty/Basis/Test-Merge/Run, EXE-/Bildhashes, vorhandenem Fontmanifest/OFL und ausdrücklich blockiertem Eigentümerfontinput. Vollständige Kandidatenlieferung offen. |
 
-Die reguläre `main.tscn` und ihr Appname bleiben erhalten. Ihre einzigen
-Codeanschlüsse sind eine Board-Fabrik und überschreibbare Zeichenfunktionen mit
-unveränderten Standardkörpern. Der normale Export schließt `study/*` aus.
-Nur der temporäre Studienexport öffnet diesen Filter und setzt die andere
-Hauptszene/Appidentität. Weder Modell-/Saveformat noch Originalinhalte ändern sich.
+`zs1_tests.gd` prüft stabile und begrenzte X-Pfade sowie die echten GUI-Ereigniswege:
+Parallelstart, Priorität, Rückzug, Abbruch, Schutz/No-op, Radieren ohne Rückkehr alter
+Markierungen, Undo/Redo, Schalter ohne Save/Replay, Fokus, Zoom/Resize, Seiten-/
+Blattwechsel/Reset und sofortigen gespeicherten Abschluss. Die neue Matrix führt
+diese Fälle einmal für die gewählte Stiftgestaltung aus; die frühere Duplikation
+für Tinte entfällt begründet durch E1. Reguläre P1-Regressionen bleiben vollständig.
 
-## Reproduktion
+Die kontrollierte Uhr wird nur im Capture gesetzt. Dieselbe Produktionszeichenfunktion
+zeichnet die Zwischenstände; das ist ein Geometrienachweis, keine behauptete reale
+Aufnahmefrequenz. Die getrennte Echtzeitfolge und F-03-Lastmessung verwenden die
+normale monotone Uhr. Zeichenzeiten, 100-Zellen-Eingabe inklusive synchronem Save
+und Frameabstände bleiben getrennt von realer Maus-/DPI-Abnahme.
 
-Der bestehende freigegebene Produktweg erzeugt zusätzlich die Studie:
+## Reproduktion und Artefakte
 
 ```powershell
 $zs1Cache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
 python tools/p1_product.py --cache-dir $zs1Cache --output-dir artifacts/zs1-product
 ```
 
-Voraussetzungen bleiben die isolierte Image-Umgebung, gepinnte Godot-Toolchain,
-vollständige Git-Historie und unter Linux Xvfb/Mesa aus dem Projektprofil.
-`tools/zs1_delivery.py` wird vom Produktharness ausgeführt; kein zweiter allgemeiner
-Buildpfad. `zs1-tests` prüft die Ereignis- und Lebenszyklusverträge, die Renderphase
-echte OpenGL-Bilder und Messwerte. Standard-Uploads ergänzen ausschließlich
-`zs1-windows-study-<Head>` und `zs1-review-<Head>`; der große Vollnachweis bleibt opt-in.
+Isolierte Pillow-12.3.0-Umgebung, gepinnte Godot-4.7.2-Toolchain und vollständige
+Git-Historie nach Projektprofil; Linux zusätzlich Xvfb/Mesa. Der Produktharness
+verwendet temporäre Projekt-/Profilpfade, keine normalen Saves. Die sechs Jobs
+`docs`, `product`, `preflight`, `puzzle-production`, `rp4-windows`, `rp5-repair`
+bleiben verpflichtend. Lokale Entwicklungsläufe ersetzen die aktuellen CI nicht.
 
-Im Review-ZIP zeigt `index.html` statische native Vergleichsbilder und zeitgebundene
-1:1-Bewegungsausschnitte. Der Index ist keine Browserimplementierung des Spiels.
-Die eigentliche bedienbare Probe ist die EXE. PNGs bei 100 % prüfen; die verkleinerte
-Übersicht ist keine Lesbarkeitsabnahme. Die synthetische Schriftprobe ist als solche
-beschriftet und ersetzt keine unveränderten Rätseldaten.
+- `zs1-windows-study-<Head>`: `picross-zs1-windows-x86_64.zip`, EXE-Paar,
+  Eigentümeranleitung, Identität, Fontstatus und Lizenzen der enthaltenen Fonts.
+- `zs1-review-<Head>`: `picross-zs1-review.zip`, 28 native Vergleiche,
+  Referenzziffernproben und HTML-Index. Kein Zweifontnachweis.
+- `zs1-strokes-<Head>`: `picross-zs1-strokes.zip`, sieben kontrollierte native
+  Strichbilder, getrennte Echtzeitfolge, Zeit-/Hashbindung und HTML-Index.
 
-## Bisherige lokale Befunde und Grenzen
+Die Indizes sind Nachweisgalerien, keine Browserimplementierung des Spiels.
+PNG bei 100 % prüfen. Vollrender-Sammelupload bleibt manuelles Opt-in.
+Reguläre Hauptszene und Standardzeichner bleiben erhalten; regulärer Export
+schließt `study/*` aus. Nur der Studienexport verwendet die getrennte Hauptszene
+und Appidentität. Die beiden Eigentümer-TTFs sind in keinem Export enthalten.
 
-Der erste lokale Windows/OpenGL-Durchlauf mit Godot 4.7.2 und RTX 3070 bestand
-117 Studienprüfungen und die nativen Bewegungsassertionen. Nach Trennung der
-Zellschicht lag deren gemessene F-03-Zeichenzeit im Entwicklungslauf ungefähr
-bei 2,8–5,9 ms; die vollständige synthetische 100-Zellen-Eingabe einschließlich
-des bestehenden synchronen Speicherwegs bei 81–120 ms. Diese Werte stammen aus
-einem veränderten Entwicklungsbaum, sind keine finalen Head-/CI-Nachweise und
-kein allgemeines Performanceversprechen. Ein vollständiges Neuzeichnen inklusive
-Hinweisarbeit kann deutlich teurer sein; schnelle reale Eingaben sind ZS1-M01.
+## Abnahme und Historie
 
-Vorschau-Ruhe wird über gleiche native Pixel vor/nach einer Wartezeit geprüft.
-Die zweite Geste beginnt vor Ablauf der ersten 140 ms; jüngste Zielwerte haben
-Vorrang. Ausgeschaltete Effekte ergeben denselben logischen und nativen Endzustand.
-Die Messung des Animationstakts prüft ausdrücklich, dass keine zusätzlichen
-Hinweissuchen ausgelöst werden. Technische synthetische Events sind keine
-Eigentümermausprobe oder Bestätigung physischer Windows-DPI-Verhältnisse.
+Die Erstlieferung mit 117 Studienprüfungen, 42 Vergleichen und zwei Fade-Zeitfolgen
+bleibt ausschließlich an R1/`4ae4f5a` gebunden. Der neue Entwicklungsstand bestand
+lokal 720 Studienprüfungen, 28 native Ansichten und die gezielten Strichpixelprüfungen
+unter Windows/OpenGL/RTX 3070. Zusätzlich bestanden 70 Python-Prüfungen (eine weitere
+plattformbedingt übersprungen) und die Dokumentprüfung eines sauberen Quellsnapshots.
+Aktuelle finale CI-/Download-/Sichtprüfung und der
+getrennte Selbstreview werden nach Abschluss im PR dokumentiert; diese lokalen
+Angaben behaupten keine Prüfung eines noch nicht benannten Lieferheads.
 
-Vor Übergabe: vollständigen Diff, Originalhashes, separate Selbstprüfung,
-aktuellen CI-Checkout und die heruntergeladenen Artefakte prüfen. Tatsächliche
-Ergebnisse und eventuelle Nacharbeit stehen commitgebunden im PR. Ein Selbstreview
-ist keine unabhängige technische/visuelle Zweitprüfung.
-
-**Vor Merge offen:** unabhängiges technisches/visuelles Review, reale
-[ZS1-M01-Eigentümerprobe und Auswahl](ZS1_OWNER_TRIAL.md), passende ausdrückliche
-Mergefreigabe. Die [Entscheidungsvorlage](ZS1_DECISION.md) enthält Kandidaten,
-keine gewählte Produktfassung. #52 bleibt offen; #53 und Release sind nicht geliefert.
+**Vor Merge offen:** Fontrechte und vollständiger Kandidatenvergleich, fehlende
+abhängige Akzeptanznachweise, abschließende [ZS1-M01](ZS1_OWNER_TRIAL.md),
+unabhängiges technisches/visuelles Review des neuen Heads und ausdrückliche
+Mergefreigabe. Stift/Timing sind gewählt; M01 ist keine noch unbeantwortete Probe.
+#52 bleibt offen, #53 nicht implementiert, #54 nicht gemergt/geschlossen.
+Keine Hintergrundproduktion oder Veröffentlichung.

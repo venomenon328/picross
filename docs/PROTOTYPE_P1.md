@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 07.10.2026 · Spezifikation 0.19 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
+Stand: 07.10.2026 · Spezifikation 0.20 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -60,7 +60,7 @@ die Varianten isoliert um; die reguläre Darstellung bleibt bis ZS-2 unveränder
 | D-26 | X und Preview-X werden an angeschnittenen Zellen geometrisch am Rasterviewport geclippt. | Normale X-Geometrie beibehalten, nicht in den sichtbaren Rest verschieben oder eine teilweise sichtbare Zelle pauschal verwerfen. |
 | D-27 | Linke und rechte Zellgesten zeigen einen kleinen Live-Zähler der gesamten aktuellen Strichlänge. | Geometrisches gerades Segment inklusive Start/Ende und übersprungener oder vorbesetzter Zellen; elastisches Zurückziehen aktualisiert sofort. Keine Navigation und kein gespeicherter Zustand. |
 | D-28 | Die kompakte Standardrasterfläche ist keine Zoom-Clippinggrenze. | Im nicht kompakten Buchlayout wächst der Rasterviewport erst oberhalb 100 % in freie Papierfläche; tatsächliche UI-/Papiergrenzen erzeugen den Ausschnitt. 20×20 bleibt bei 1920×1080/UI 100 % bis einschließlich 150 % vollständig sichtbar. |
-| D-29 | Die Spielfläche erhält eine geometrisch präzise, charaktervolle zeichnerische Sprache. | Kräftige kompakte Hinweisziffern, stabile zurückhaltende Textur auf satten Farbflächen, gezeichnete X und passende Randdetails; konkrete native Auswahl in ZS-1. |
+| D-29 | Die Spielfläche erhält eine geometrisch präzise, charaktervolle zeichnerische Sprache. | Kräftige kompakte Hinweisziffern, stabile zurückhaltende Textur auf satten Farbflächen, handschriftliche X ohne zusätzliche Rand-UI; Stiftfüllung nach E1 gewählt, konkreter Hinweisfontvergleich und Abschlussbestätigung in ZS-1 offen. |
 | D-30 | Die Zellvorschau bleibt statisch und zeigt den Zielzustand heller beziehungsweise transparenter. | Nur wirksame Änderungen des elastischen Abschnitts; Rückzug/Abbruch unmittelbar, keine Animation der laufenden Vorschau. |
 | D-31 | Zellanimationen beginnen erst beim tatsächlichen Anwenden des Strichs. | Alle wirksamen Änderungen gleichzeitig; sehr kurz, ohne mit der Strichlänge wachsende Dauer oder zusätzliche Eingabesperre; Modell/History/Save warten nicht. |
 | D-32 | Zellanimationen sind einfach abschaltbar. | P1-Ausarbeitungsdefault: aktiv nach App-Start, sitzungsweit, nicht im Rätselsave; Aus beendet Effekte sofort, Vorschau bleibt statisch. |
@@ -561,10 +561,11 @@ diesen Stand regressionsfrei.
 ## 15. ZS: zeichnerische Oberfläche und Zellanimationen
 
 Die [freigegebene Detailspezifikation](UI_DRAWING_STYLE.md) konkretisiert D-29 bis
-D-32. [ZS-1/#52](https://github.com/venomenon328/picross/issues/52) vergleicht zwei
-verwandte native Varianten mit identischen eigenen Testständen und statischer
-Vorschau plus kurzer Animation nach dem Anwenden. Tinte/Schraffur bleibt eine
-Empfehlung; konkrete Schrift-/Textur-/Abstands-/Bewegungswerte werden gewählt.
+D-32. [ZS-1/#52](https://github.com/venomenon328/picross/issues/52) führt die nach
+E1 gewählte Stiftfüllung fort. Neues X und räumlicher Strichaufbau ersetzen die
+bisherige gleichförmige Kreuzform und Fade-Animation; 140 ms Setzen/Umwandeln und
+80 ms Entfernen bleiben. Zwei Eigentümer-TTFs werden nach Rechteklärung am
+gleichen Stand verglichen. Zusätzliche Rand-UI entfällt; Hintergrundarbeit bleibt separat.
 [ZS-2/#53](https://github.com/venomenon328/picross/issues/53) integriert genau diese
 Auswahl in die reguläre Arbeitsansicht einschließlich abschaltbarer Effekte.
 
@@ -581,7 +582,8 @@ keine neue dauerhafte Einstellungsarchitektur. Hinweise analysieren weiterhin de
 eigenen logischen Zustand einschließlich statischer Vorschau; die Miniatur zeigt
 diesen unmittelbar und unanimiert. Farb-/Gesten-/History-/Save-/Spoiler-/ZV-50-Verträge
 bleiben erhalten. Die [isolierte ZS-1-Studie](ZS1_VERIFICATION.md) enthält die
-Vergleichsvarianten; eine gewählte reguläre Integration durch ZS-2 fehlt weiterhin.
+fontunabhängige Nacharbeit; der vollständige Fontvergleich und die abschließende
+Eigentümerbestätigung fehlen noch. ZS-2 ist weiterhin nicht implementiert.
 
 Aktuelle technische und gezielte reale Gates stehen im jeweiligen Paket. Die
 längere Spielerprobung [#24](https://github.com/venomenon328/picross/issues/24) folgt

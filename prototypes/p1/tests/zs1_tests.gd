@@ -2,6 +2,7 @@ extends SceneTree
 const Study = preload("res://study/main.gd")
 const Session = preload("res://model/session.gd")
 const Store = preload("res://model/save_store.gd")
+const Marks = preload("res://study/marks.gd")
 var app: Study
 var surface: SubViewport
 var checks: int = 0
@@ -31,7 +32,15 @@ func run() -> void:
 	await process_frame
 	check(app.store.root == app.study_root and not app.store.root.contains("forbidden"), "isolation before slot load")
 	check(FileAccess.get_file_as_string(Store.test_root_override.path_join("f01.json")) == "normal-save-sentinel", "normal sentinel untouched")
-	for style: int in [1, 2]:
+	check(app.board.style == 2, "selected pencil is startup default")
+	for index: int in range(30):
+		for which: int in range(2):
+			var path: PackedVector2Array = Marks.x_path(index, which)
+			check(path == Marks.x_path(index, which), "X geometry deterministic")
+			check(path != Marks.x_path(index + 1, which), "X varies across cells")
+			for p: Vector2 in path:
+				check(Rect2(0.15, 0.15, 0.7, 0.7).has_point(p), "bounded X geometry")
+	for style: int in [2]:
 		app.board.set_style(style)
 		fresh()
 		var a: Vector2 = point(0, 0)
@@ -128,7 +137,7 @@ func run() -> void:
 		var rect: Rect2 = app.board.view.viewport
 		var view: Dictionary = app.board.capture_view()
 		var before_cells: Array[int] = app.session.player.cells.duplicate()
-		for variant: int in [0, 1, 2]:
+		for variant: int in [0, 2]:
 			app.board.set_style(variant)
 			check(app.board.view.viewport == rect and app.board.capture_view() == view and app.session.player.cells == before_cells, "variant same geometry/state")
 	check(FileAccess.get_file_as_string(Store.test_root_override.path_join("f01.json")) == "normal-save-sentinel", "normal sentinel still untouched")

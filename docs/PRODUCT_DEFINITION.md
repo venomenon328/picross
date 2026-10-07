@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-Stand: 07.10.2026 · Arbeitsfassung 0.6 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
+Stand: 07.10.2026 · Arbeitsfassung 0.7 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
 
 ## 1. Geltung und Herkunft
 
@@ -132,11 +132,12 @@ sowie satte Füllflächen mit zurückhaltender, pro Zelle stabiler Strichtextur.
 Gezeichnete X bleiben eindeutige, dem entstehenden Motiv untergeordnete
 Arbeitsmarkierungen. Zelltrennung, Rätselfarben und Hinweiszustände bleiben klar
 lesbar; bei kleinen Zellen wird die Textur vereinfacht. Die eigene Miniatur bleibt
-für den Überblick bewusst einfacher. Wenige zusätzliche Randdetails führen die
-Buchgestaltung fort, verraten kein Motiv und treten bei Platzbedarf zurück.
+für den Überblick bewusst einfacher. E1 wählt die Stiftfüllung und das kurze
+Timing (140/80 ms); ein handschriftlicheres X und räumlicher Strichaufbau folgen.
+Zusätzliche Rand-UI-Dekoration entfällt; mögliche Hintergrundarbeit bleibt separat.
 Die [UI-Spezifikation](UI_DRAWING_STYLE.md) trennt diese beschlossene Richtung
-von der noch ausstehenden nativen Auswahl konkreter Schrift-, Textur- und
-Bewegungswerte in [ZS-1 / #52](https://github.com/venomenon328/picross/issues/52)
+von der abschließenden nativen Bestätigung der überarbeiteten Kombination und
+dem Vergleich zweier Eigentümer-TTFs nach Rechteklärung in [ZS-1 / #52](https://github.com/venomenon328/picross/issues/52)
 und deren Integration in [ZS-2 / #53](https://github.com/venomenon328/picross/issues/53).
 Ein vollständiger Themen- oder Layoutwechsel folgt daraus nicht.
 
