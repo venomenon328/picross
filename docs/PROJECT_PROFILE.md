@@ -365,6 +365,14 @@ getrennte Slots und zehn native Bilder je Pilot bei 1920×1080/UI 100 % sowie
 1280×720/UI 125 %. `rp6-review` enthält technische Motivspoiler separat vom
 Windows-Spielpaket mit neutraler Eigentümeranleitung.
 
+Der `product`-Job erzeugt die vollständigen Render-/Log-/Replaydaten weiterhin
+temporär und verwendet sie für seine Prüfungen. Reguläre PR-Läufe laden jedoch nur
+das schlanke Spielerpaket und die gezielten Reviewartefakte für GP-48, ZV-50, RP-3
+und RP-6 hoch. Der komplette `p1-product-output/`-Baum ist wegen seiner Größe nur
+bei einem manuellen `workflow_dispatch` mit `upload_full_evidence=true` als
+zusätzliches Sammelartefakt vorgesehen. Das ändert keinen Prüfpfad und entfernt
+keinen gezielten Nachweis; es vermeidet lediglich den standardmäßigen ~1-GB-Upload.
+
 Fachtests inklusive Export-/Manifest-/Asset-/Reparaturnegativfällen, sämtliche
 bisherigen Oracles, sechs Benchmarks und RP-3-/RP-4-/RP-5-Replays bleiben aktiv.
 Die sechs Jobs `puzzle-production`, `rp5-repair`, `rp4-windows`, `docs`, `product`

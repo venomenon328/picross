@@ -72,6 +72,18 @@ class ProductHarnessTests(unittest.TestCase):
             workflow,
         )
 
+    def test_full_technical_evidence_is_manual_opt_in(self):
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
+        self.assertIn("workflow_dispatch:\n    inputs:\n      upload_full_evidence:", workflow)
+        input_block = workflow.split("      upload_full_evidence:", 1)[1].split("jobs:", 1)[0]
+        self.assertIn("default: false", input_block)
+        marker = "      - name: Upload complete technical product evidence (manual opt-in)"
+        self.assertIn(marker, workflow)
+        block = workflow.split(marker, 1)[1].split("      - name:", 1)[0]
+        self.assertIn("if: github.event_name == 'workflow_dispatch' && inputs.upload_full_evidence", block)
+        self.assertIn("path: ${{ runner.temp }}/p1-product-output/\n", block)
+        self.assertEqual(workflow.count("path: ${{ runner.temp }}/p1-product-output/\n"), 1)
+
     def test_exit_zero_with_script_error_fails(self):
         with self.assertRaises(PreflightError):
             require_clean_output(dict(name="import", exit_code=0, output="SCRIPT ERROR: parse failure"))

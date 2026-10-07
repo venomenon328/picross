@@ -51,7 +51,12 @@ genau diese `picross-p1-windows-x86_64.zip` zusätzlich als eigenständiges
 `picross-p1-player-<Head>`-Artefakt für die Eigentümerprobe. Dieses schlanke
 Artefakt enthält keine Entwicklungsrender, Logs, Replays oder Teststände; der
 direkte Link sowie Actions-Digest, innerer ZIP-Hash und EXE-Hashes stehen im PR.
-Der vollständige technische Produktoutput bleibt davon getrennt als Evidenz erhalten.
+Die vollständigen technischen Render-/Log-/Replaydaten werden im `product`-Job
+weiterhin erzeugt und geprüft. Reguläre PR-Läufe laden sie aber nicht mehr als
+zusätzliches ~1-GB-Sammelartefakt hoch: dauerhaft bereitgestellt werden das
+schlanke Spielerartefakt sowie die gezielten Reviewpakete für GP-48, ZV-50, RP-3
+und RP-6. Der komplette `p1-product-output/`-Baum ist bei Bedarf über einen
+manuellen `workflow_dispatch` mit `upload_full_evidence=true` abrufbar.
 
 `rp6-review-<Head>` enthält separat Manifest/Plan, sechs Paaransichten, native
 Bildausgaben, alle 60 unverkleinerten RP-6-Renderbilder, Produkt-/Replayreport und

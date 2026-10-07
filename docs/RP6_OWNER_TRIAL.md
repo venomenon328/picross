@@ -9,8 +9,10 @@ Automatisierte Eingaben zählen nicht als echte Lösungsprobe.
 1. Im Draft-PR den direkt verlinkten Actions-Download
    `picross-p1-player-<Quellcommit>` laden. Dieses **schlanke Spielerartefakt**
    enthält ausschließlich die eigentliche `picross-p1-windows-x86_64.zip`;
-   den großen technischen Evidenzdownload mit `renders/`, Logs und Replays
-   ausdrücklich **nicht** für die Eigentümerprobe verwenden. Actions-Digest und
+   einen gegebenenfalls manuell erzeugten vollständigen technischen Evidenzdownload
+   mit `renders/`, Logs und Replays ausdrücklich **nicht** für die Eigentümerprobe
+   verwenden. Reguläre PR-Läufe erzeugen diesen großen Sammeldownload gar nicht.
+   Actions-Digest und
    Quellcommit müssen mit dem PR-Beleg übereinstimmen.
 2. Die SHA-256 der enthaltenen `picross-p1-windows-x86_64.zip` mit dem PR-Beleg
    vergleichen und diese ZIP in einen neuen Ordner entpacken. Sie enthält keine
