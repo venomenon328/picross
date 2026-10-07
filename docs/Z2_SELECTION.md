@@ -37,6 +37,12 @@ Die kurzen parallelen Animationen beginnen ausschließlich nach dem Anwenden.
 Die Vorschau beim Ziehen bleibt statisch und heller/transparenter. Die neue
 Spezifikation ist keine bereits gelieferte oder abgenommene Z2-Änderung.
 
+
+ZS1-E3 wählt Chalkboard Regular. Für die Studienfassung werden nur die horizontalen
+Zeilenhinweisslots links vom Raster auf 26 × UI-Skalierung verdichtet; die
+Spaltenhinweisslots bleiben 18 × UI. Diese Auswahl wird erst mit ZS-2 regulär
+integriert. Die kombinierte Sichtprüfung von PR #55 erfolgt nach dessen Merge auf main.
+
 ## Bereitstellung und Renderergrenzen
 
 [Ressourcenmanifest](../prototypes/p1/art/book/manifest.json) bindet alle lokalen

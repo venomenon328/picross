@@ -141,6 +141,12 @@ dem Vergleich zweier Eigentümer-TTFs gemäß Eigentümerentscheidung E2 in [ZS-
 und deren Integration in [ZS-2 / #53](https://github.com/venomenon328/picross/issues/53).
 Ein vollständiger Themen- oder Layoutwechsel folgt daraus nicht.
 
+
+**ZS1-E3:** Für die ausgewählte ZS-Fassung ist Chalkboard Regular der Hinweisfont.
+Zeilenhinweise links vom Raster verwenden kompaktere gemeinsame 26-px-Slots bei
+UI 100 % (UI-skaliert); die vertikalen Spaltenslots bleiben unverändert. Die
+kombinierte Sichtprüfung erfolgt nach dem Merge von PR #55 auf `main`.
+
 Die endgültige Themenwahl bleibt ausdrücklich offen: A ist ein thematisches Sammelalbum, B ein Reisetagebuch beziehungsweise Weltreisealbum mit regionalen Motiven. Die näheren Entscheidungen, Beispiele und offenen Interaktionen stehen im [Gestaltungskonzept](DESIGN_CONCEPT.md). Die positive Rückmeldung zu einem exemplarischen Mock legt weder eine dieser Alternativen noch alle darin dargestellten Details verbindlich fest.
 
 Die zentralen Ansichten werden auch mit langen Hinweisfolgen, farbigen Rätseln, großen Rastern und beiden Eingabeformen überprüft. Lesbarkeit und Bedienbarkeit haben Vorrang vor dekorativer Inszenierung. Sound wird vorerst nach hinten gestellt. Als spätere Richtung sind kleine angenehme und unauffällige Effekte sowie ein besonders gelungener Abschlussjingle gewünscht; zurückhaltende Hintergrundmusik ist denkbar. Eine konkrete Audioproduktion ist noch nicht beauftragt.

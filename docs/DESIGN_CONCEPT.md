@@ -257,6 +257,13 @@ ZS-2 integriert sie mit gezielten Regressionen. #24 beurteilt anschließend
 die längere reale Nutzung. Die Spezifikationsfreigabe beginnt keines dieser
 Umsetzungspakete und ersetzt keine spätere Gestaltungs- oder Bedienabnahme.
 
+
+**ZS1-E3:** Chalkboard Regular ist die ausgewählte Hinweisfont. Die
+Zeilenhinweise links vom Raster werden gegenüber dem 30-px-Studienstand moderat
+verdichtet und verwenden 26 logische Pixel gemeinsame Slotweite bei UI 100 %;
+die vertikale Staffel der Spaltenhinweise bleibt unverändert. Die kombinierte
+Sichtprüfung erfolgt nach Merge von PR #55 auf `main`.
+
 ## 5. Bedienung und Wertung
 
 ### 5.1 Präzise Eingaben und Orientierung

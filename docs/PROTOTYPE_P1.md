@@ -64,6 +64,7 @@ die Varianten isoliert um; die reguläre Darstellung bleibt bis ZS-2 unveränder
 | D-30 | Die Zellvorschau bleibt statisch und zeigt den Zielzustand heller beziehungsweise transparenter. | Nur wirksame Änderungen des elastischen Abschnitts; Rückzug/Abbruch unmittelbar, keine Animation der laufenden Vorschau. |
 | D-31 | Zellanimationen beginnen erst beim tatsächlichen Anwenden des Strichs. | Alle wirksamen Änderungen gleichzeitig; sehr kurz, ohne mit der Strichlänge wachsende Dauer oder zusätzliche Eingabesperre; Modell/History/Save warten nicht. |
 | D-32 | Zellanimationen sind einfach abschaltbar. | P1-Ausarbeitungsdefault: aktiv nach App-Start, sitzungsweit, nicht im Rätselsave; Aus beendet Effekte sofort, Vorschau bleibt statisch. |
+| D-33 | ZS1-E3 wählt Chalkboard Regular und kompaktere Zeilenhinweisabstände. | ZS-Studie: 26 × UI-Skalierung horizontale Zeilenslots links; vertikale Spaltenslots bleiben 18 × UI. Reguläre Integration erst in ZS-2. |
 
 D-07 bis D-10 übernehmen die vier Punkte der ersten Nutzer-Mausprobe. D-11 bis D-15
 übernehmen den ausdrücklich supersedierenden Sollstand der anschließenden P1.2-Probe.
@@ -589,3 +590,9 @@ Aktuelle technische und gezielte reale Gates stehen im jeweiligen Paket. Die
 längere Spielerprobung [#24](https://github.com/venomenon328/picross/issues/24) folgt
 nach ZS-2 und ersetzt keine davor nötige Prüfung. Historische Abnahmen bleiben
 commitgebunden; kein Merge- oder Releaseauftrag aus der Spezifikationsfreigabe.
+
+
+ZS1-E3 wählt Chalkboard als konkrete Hinweisfont. N07 reduziert in der isolierten
+Studie ausschließlich die horizontale Zeilenhinweis-Slotweite auf 26 logische Pixel
+bei UI 100 %; Spaltenslots bleiben unverändert. Für PR #55 hat der Eigentümer die
+kombinierte Sichtprüfung ausdrücklich auf den gemergten `main`-Stand verlegt.

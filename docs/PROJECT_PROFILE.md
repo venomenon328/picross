@@ -464,3 +464,11 @@ Die bestehenden sechs CI-Jobs bleiben aktiv. Spielerpaket und kleine gezielte
 Reviewartefakte bleiben getrennt; das optionale Hochladen kompletter Arbeitsrender
 wird nicht wieder zum Standard. Pflichtprüfungen werden weder durch statische
 Bilder ersetzt noch aus den Umsetzungspaketen nach #24 verschoben.
+
+
+**ZS1-E3:** Chalkboard Regular ist gewählt. N07 setzt nur die horizontalen
+Zeilenhinweisslots der Studienfassung auf 26 logische Pixel bei UI 100 %;
+Spaltenslots bleiben 18. Der Eigentümer hat den Merge von PR #55 nach technischer
+N07-Prüfung freigegeben und verlegt die kombinierte Sichtprüfung auf den
+anschließenden `main`-Stand. #52 bleibt bis zu dieser Rückmeldung offen; #53 folgt
+nicht automatisch aus dem Merge.

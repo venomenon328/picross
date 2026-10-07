@@ -307,5 +307,6 @@ wählbar; Plex wird ausdrücklich nur als bisherige Referenz gezeigt.
 [Bedienung und offene Eigentümerwahl](../../docs/ZS1_OWNER_TRIAL.md),
 [Prüfnachweise](../../docs/ZS1_VERIFICATION.md) und
 [Entscheidungsvorlage](../../docs/ZS1_DECISION.md).
-ZS1-M01: Stift/Timing bestätigt, endgültige Kombination nach Nacharbeit offen;
-#53 ist nicht integriert.
+ZS1-E3: Chalkboard/Stift/Timing gewählt; die Studie startet mit Chalkboard und
+26-px-Zeilenhinweisslots bei UI 100 % (Spaltenslots unverändert). Die kombinierte
+Sichtprüfung erfolgt nach Merge auf main; #53 ist nicht integriert.
