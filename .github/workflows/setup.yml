@@ -15,7 +15,9 @@ concurrency:
 jobs:
   docs:
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    # Full history plus the native artwork/tool tests exceeded five minutes
+    # twice during ZS1 E1 verification, before the document checks could run.
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # Source pin from dev-rules

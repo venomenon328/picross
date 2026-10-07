@@ -568,11 +568,14 @@ func _icon_button(id: String, action: Callable, parent: Control) -> BookButton:
 	actions[id] = item
 	return item
 
+func create_board() -> Board:
+	return Board.new()
+
 func _build_work() -> void:
 	work = Control.new()
 	work.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	page.add_child(work)
-	board = Board.new()
+	board = create_board()
 	board.book_layout = true
 	board.session = session
 	board.edited.connect(refresh)

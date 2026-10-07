@@ -296,3 +296,17 @@ Prüfstand und die Fortsetzung unter gleichem Commit/Prüfnamen. Technische
 Motivspoiler liegen im getrennten `rp6-review`-Artefakt. Sechs Pilotproben im
 Produktprüfweg ergänzen je drei Prozesse und zehn native Ansichten; kein
 automatisierter Lauf ist eine reale Lösung oder Phasenentscheidung.
+
+## Isolierte ZS-1-Vergleichsprobe (#52)
+
+Die reguläre P1-Fassung bleibt unverändert. Das separate Windows-Studienpaket
+startet `study/main.tscn` mit eigener Speicherwurzel und der gewählten Stiftfüllung,
+neuem X und Strichaufbau. Bisherige Baseline als Referenz umschaltbar; gleiche
+F-01/F-02/F-03-Teststände. Beide Eigentümer-TTFs sind gemäß E2 enthalten und unabhängig vom Zellstil
+wählbar; Plex wird ausdrücklich nur als bisherige Referenz gezeigt.
+[Bedienung und offene Eigentümerwahl](../../docs/ZS1_OWNER_TRIAL.md),
+[Prüfnachweise](../../docs/ZS1_VERIFICATION.md) und
+[Entscheidungsvorlage](../../docs/ZS1_DECISION.md).
+ZS1-E3: Chalkboard/Stift/Timing gewählt; die Studie startet mit Chalkboard und
+26-px-Zeilenhinweisslots bei UI 100 % (Spaltenslots unverändert). Die kombinierte
+Sichtprüfung erfolgt nach Merge auf main; #53 ist nicht integriert.
