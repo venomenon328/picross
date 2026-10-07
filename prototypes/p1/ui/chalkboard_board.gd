@@ -27,4 +27,3 @@ func clue_baseline_offset(fs: int) -> float:
 func clue_vertical_extents(fs: int) -> Vector2:
 	var bounds: Vector2 = Fonts.ink_vertical(fs)
 	return Vector2(-bounds.x - clue_baseline_offset(fs), bounds.y + clue_baseline_offset(fs))
-
