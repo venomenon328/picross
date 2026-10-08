@@ -31,6 +31,8 @@ func validate_definition(data: Dictionary) -> String:
 
 func _ready() -> void:
 	super._ready()
+	if board == null or sessions.size() != 10:
+		return
 	get_window().title = "picross · VS-1 · Vollsicht-Studie"
 	for item: Node in album_content.get_children():
 		if item is Label and item.text == "Neun Blätter zum Entdecken":
@@ -50,6 +52,8 @@ func _ready() -> void:
 	animation_toggle.button_pressed = true
 	animation_toggle.toggled.connect(board.set_animations)
 	settings_panel.add_child(animation_toggle)
+	for mode: String in ["R","G","V"]:
+		settings_panel.add_child(_text_button("Ansicht %s öffnen" % mode, func() -> void: choose_mode(mode); open_puzzle()))
 	settings_panel.add_child(_text_button("Künstlichen Vergleichsstand laden", _ask_sample))
 	settings_panel.add_child(_text_button("Studienblatt leeren", _ask_reset))
 	var info: Label = label("VS-1: R behält die Referenznavigation. G hält das Raster sichtbar; lange Hinweise bleiben verschiebbar. V reserviert alle Hinweise. Kleine oder kollidierende Zahlen sind kein Komfortnachweis.\nVergleichsstand: künstliche eigene Eingaben, keine Lösungshilfe. Zurücksetzen betrifft nur dieses Studienblatt. Normale P1-Spielstände bleiben getrennt.", 16)
@@ -162,6 +166,10 @@ func _layout_book() -> void:
 	if board == null or mode_controls == null or size.x < 1280 or size.y < 720:
 		return
 	var u: float = ui_scale
+	# R keeps its original clue surface completely unobscured. Its study-mode
+	# controls are reachable in the existing menu; G/V reserve their own header.
+	mode_controls.visible = board.mode != "R"
+	study_status.visible = board.mode != "R"
 	var material: Rect2 = surface.material_rect()
 	var origin: Vector2 = material.position
 	var extent: Vector2 = material.size
@@ -181,8 +189,8 @@ func _layout_book() -> void:
 		_place(mini_title, Rect2(mini.position-Vector2(0,26*u),Vector2(180,24)*u))
 		_place(coordinate,Rect2(mini.position+Vector2(0,150*u),Vector2(190,44)*u))
 		_place(palette_row,Rect2(mini.position+Vector2(0,202*u),Vector2(110,110)*u))
-		_place(zoom_label,Rect2(mini.position+Vector2(0,308*u),Vector2(200,24)*u))
-		_place(tool_label,Rect2(mini.position+Vector2(0,332*u),Vector2(200,24)*u))
+		_place(zoom_label,Rect2(mini.position+Vector2(0,316*u),Vector2(200,24)*u))
+		_place(tool_label,Rect2(mini.position+Vector2(0,340*u),Vector2(200,24)*u))
 		var ids: Array[String] = ["fill","erase","hand","undo","redo","minus","plus","fit","work"]
 		surface.wells.clear()
 		for i: int in range(ids.size()):
@@ -201,6 +209,8 @@ func _layout_book() -> void:
 func _update_study_status() -> void:
 	if study_status == null:
 		return
+	if work.visible and not session.completed:
+		title.text = "%s · %s" % [session.album_title(),board.mode]
 	var prefix: String = "R · freie Navigation" if board.mode == "R" else ("G · Raster; Hinweise ggf. verschieben" if board.mode == "G" else "V · Raster und alle Hinweise")
 	var warning: String = ""
 	if board.mode != "R":

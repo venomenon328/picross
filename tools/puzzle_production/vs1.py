@@ -141,6 +141,15 @@ def verify_cases():
             expected_source={'kind':'import','bundle':slot['retained'],'variant':'area-128'} if slot['id']=='vs07' else {'kind':'retained-rp6-repair','id':'F-09'}
             require(e['source']==expected_source and e['reveal_source']==slot['reveal'] and e['transpose_reveal'] is False,'Unbound retained source')
         design,matrix,original_proof=read_source(e['source'])
+        if slot['attempts']:
+            require(design==attempt['design'] and file_hash(ROOT/attempt['source'])==attempt['source_sha256'],'Bound design/source changed')
+            imported=ROOT/e['source']['bundle']/'original.png'
+            if attempt['transpose']:
+                with Image.open(ROOT/attempt['source']) as a,Image.open(imported) as b:
+                    expected=a.transpose(Image.Transpose.TRANSPOSE)
+                    require(b.size==expected.size and ImageChops.difference(expected,b).getbbox() is None,'Wrong transposed source')
+            else:
+                require(file_hash(imported)==attempt['source_sha256'],'Unbound source pixels')
         require(design==e['source_design'] and digest(matrix)==e['matrix_hash'], 'Source/matrix changed')
         folder=STUDY/'cases'/e['id']
         required={'definition.json','logic.json','proof.json','raster.png','reveal'+Path(e['reveal_source']).suffix}

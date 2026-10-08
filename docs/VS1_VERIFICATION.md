@@ -13,7 +13,7 @@ unabhängiger Abnahme, Mergefähigkeit oder Releasefähigkeit.
 | VS-A02 | `vs1_tests.gd`: echte InputEvents für Ecken/Linien/Umwandeln/Neutralisieren/Zurückziehen/Wechsel/History; isolierter Root vor Lesen; `vs1_roundtrip.gd` in getrennten Prozessen |
 | VS-A03 | `vs1_capture.gd`: alle angebotenen G/V-Zoomstufen, Resize/UI-Matrix, explizite Fehlfälle, Clipping/Kollisionen und 16/18/20-px-Vergleich |
 | VS-A04 | `test_vs1.py` im Fachjob: komplette Quellenrekonstruktion, unabhängige Proofs und Enddomains; manipulierte Maße/Orientierung/Matrix/Hinweise/Palette/Pfade/Proofs, doppelte IDs, Revealbindung, Diagnosezertifizierung und unvollständiger Reparaturreplay abgewiesen |
-| VS-A05 | `vs1-matrix.json`: 120 Hauptzeilen und 30 größere Kontrollen, reale Glyphen-/Statusstrichgrenzen; 24 gezielte Spielfallbilder und vier klar bezeichnete Diagnosebilder |
+| VS-A05 | `vs1-matrix.json`: 120 Hauptzeilen und 30 größere Kontrollen, reale Glyphen-/Statusstrichgrenzen; 24 Arbeitsbilder, zwei Rechteck-Abschlussbilder aus Testständen und vier klar bezeichnete Diagnosebilder |
 | VS-A06 | Gemeinsame reguläre P1-/ZS1-Tests und unveränderte Pixelbaselines im product-Job; VS-Save-Recovery, Spoilergrenze, Miniatur und rechteckiger Abschluss zusätzlich |
 | VS-A07 | Zwei getrennte ZIPs mit Quellhead/Basis/Test-Checkout/Run sowie EXE-/Bild-/Matrixhashes; tatsächlicher Downloadstart auf Windows separat im PR gebunden |
 | VS-A08 | Nachstehende vorläufige technische Einordnung, vollständige Fehlfälle im Bericht und unausgefülltes Eigentümerprotokoll |

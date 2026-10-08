@@ -108,6 +108,47 @@ func run() -> void:
 		var bad: Dictionary = saved.data.duplicate(true)
 		bad.width += 1
 		check(not Store.validate(bad,app.session.definition).is_empty(), "wrong dimensions rejected")
+	# Long clues remain independently mouse-navigable in G, never in V.
+	app.select_puzzle(7)
+	app.choose_mode("G")
+	app.board.fit_all()
+	for axis: String in ["row","column"]:
+		var lines: Array = app.session.definition.rows if axis == "row" else app.session.definition.columns
+		var index: int = 0
+		for i: int in range(lines.size()):
+			if lines[i].size()>lines[index].size(): index=i
+		var area: Rect2 = app.board.row_clue_area() if axis=="row" else app.board.column_clue_area()
+		var p: Vector2 = app.board.global_position + (Vector2(area.get_center().x,app.board.view.origin.y+(index+0.5)*app.board.view.cell_size) if axis=="row" else Vector2(app.board.view.origin.x+(index+0.5)*app.board.view.cell_size,area.get_center().y))
+		var old: Dictionary = app.board.capture_view()
+		mouse(p,MOUSE_BUTTON_MIDDLE,true)
+		check(app.board.pan_target==axis,"MMB selects clue axis")
+		var q: Vector2 = p+(Vector2(120,0) if axis=="row" else Vector2(0,90))
+		motion(q)
+		mouse(q,MOUSE_BUTTON_MIDDLE,false)
+		check(app.board.capture_view()!=old,"MMB commits independent clue read")
+	app.choose_mode("V")
+	check(app.board.navigation_target(app.board.column_clue_area().get_center()).is_empty(),"V has no hint pan")
+	app.choose_mode("R")
+	app.board.working_size()
+	var center_before: Vector2 = app.board.view.center
+	var p: Vector2 = app.board.global_position+app.board.view.viewport.get_center()
+	mouse(p,MOUSE_BUTTON_MIDDLE,true)
+	motion(p-Vector2(90,60))
+	mouse(p-Vector2(90,60),MOUSE_BUTTON_MIDDLE,false)
+	check(app.board.view.center!=center_before,"R actual MMB grid pan retained")
+	app.choose_mode("G")
+	var before_cancel: Array = app.session.player.cells.duplicate()
+	for action: String in ["escape","resize"]:
+		mouse(point(2,3),MOUSE_BUTTON_LEFT,true)
+		if action=="escape":
+			var key: InputEventKey = InputEventKey.new()
+			key.keycode=KEY_ESCAPE; key.pressed=true; canvas.push_input(key,true)
+		else:
+			app.size=Vector2(1280,720); app._layout_book()
+		check(not app.session.gesture.active and app.session.player.cells==before_cancel,"cancel/resize no cell action")
+		mouse(point(2,3),MOUSE_BUTTON_LEFT,false)
+		app.size=Vector2(1920,1080); app._layout_book()
+	app.select_puzzle(9)
 	# Stable restart resumes selected case, mode, UI and exact cells/history.
 	app.choose_mode("V")
 	app.set_ui_scale(1.25)
@@ -141,7 +182,15 @@ func run() -> void:
 			for x: int in range(app.session.player.width):
 				changes.append({"index":y*app.session.player.width+x,"before":-1,"after":int(app.session.definition.solution[y][x])})
 		app.session.player.commit(changes)
-		app.session.completed = app.session.is_solution()
+		# Leave the last cell to the actual GUI event/Session.finish route.
+		app.session.player.undo()
+		changes.pop_back()
+		app.session.player.commit(changes)
+		var last: int = int(app.session.definition.solution[-1][-1])
+		app.choose_mode("G")
+		app.board.fit_all()
+		app.board.active_color = maxi(last,1)
+		click(app.session.player.width-1,app.session.player.height-1,MOUSE_BUTTON_RIGHT if last==0 else MOUSE_BUTTON_LEFT)
 		app.refresh()
 		check(app.session.completed, "rectangular end matrix completes")
 		check(app._save_current() and app.store.load_slot(app.session.definition).data.completed, "completion persists")

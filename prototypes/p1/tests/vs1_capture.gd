@@ -63,12 +63,22 @@ func run() -> void:
 						if app.actions[key].is_visible_in_tree():
 							controls[key] = app.actions[key]
 					for key: String in controls:
+						if not controls[key].is_visible_in_tree():
+							continue
 						var rect: Rect2 = controls[key].get_global_rect()
 						record.controls[key] = app.board.rect_values(rect)
 						if not Rect2(Vector2.ZERO,Vector2(extent)).encloses(rect):
 							record.controls_clipped.append(key)
 						if app.board.get_global_rect().intersects(rect):
 							record.control_overlaps.append(key)
+					record.control_collisions = []
+					var independent: Array[String] = ["mini","mini_title","palette","coordinate","zoom_label","tool_label","modes","status"]
+					for i: int in range(independent.size()):
+						for j: int in range(i+1,independent.size()):
+							var a: Control = controls[independent[i]]
+							var b: Control = controls[independent[j]]
+							if a.is_visible_in_tree() and b.is_visible_in_tree() and a.get_global_rect().intersects(b.get_global_rect()):
+								record.control_collisions.append([independent[i],independent[j]])
 					record.limiting_element = "reference navigation" if mode == "R" else ("glyph collision/clipping" if record.glyph_collisions > 0 or record.clipped_glyphs > 0 else ("control space" if not record.controls_clipped.is_empty() or not record.control_overlaps.is_empty() else ("height / upper clues" if (app.board.size.y-app.board.book_inset.y-6)/app.session.player.height <= (app.board.size.x-app.board.book_inset.x-6)/app.session.player.width else "width / left clues")))
 					check(app.session.player.cells == cells and app.session.player.history == history, "comparison preserves model")
 					if mode != "R":
@@ -98,6 +108,19 @@ func run() -> void:
 	app.choose_mode("V")
 	app.board.fit_all()
 	await shot("vs1-VS08-empty")
+	for index: int in [2,4]:
+		app.select_puzzle(index)
+		app._reset_selected()
+		app.open_puzzle()
+		var changes: Array = []
+		for y: int in range(app.session.player.height):
+			for x: int in range(app.session.player.width):
+				changes.append({"index":y*app.session.player.width+x,"before":-1,"after":int(app.session.definition.solution[y][x])})
+		app.session.player.commit(changes)
+		app.session.completed = app.session.is_solution()
+		app.refresh()
+		check(app.ending.visible and app.reveal_view.solved.size()==app.session.player.height and app.reveal_view.solved[0].size()==app.session.player.width,"rectangular revealed axes")
+		await shot("vs1-%s-completed-test-state" % app.session.definition.id)
 	await diagnostic_probe()
 	var report: Dictionary = {"schema": 1, "records": records, "pictures": pictures, "diagnostics": diagnostics, "failures": failures, "drawing_basis": "985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f / study / Chalkboard 1.35 / pencil", "renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(), "physical_environment": {"screen": str(DisplayServer.screen_get_size()), "usable": str(DisplayServer.screen_get_usable_rect()), "dpi": DisplayServer.screen_get_dpi(), "scale": DisplayServer.screen_get_scale(), "root_client": str(root.size), "physical_720p_1080p_dpi_comfort": "not tested"}}
 	FileAccess.open(output.path_join("vs1-matrix.json"), FileAccess.WRITE).store_string(JSON.stringify(report,"\t")+"\n")

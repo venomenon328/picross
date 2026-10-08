@@ -100,6 +100,8 @@ Der Vorabplan begrenzt den Layoutversuch auf L1 plus zwei Korrekturen:
 L1 brachte Messdaten und fand nicht zeichnungsfähige Kleinstzellen; L2 ergänzt
 deren Fehlermeldung und die kompakte Statusposition; L3 trennt Status-/Werkzeugtexte
 auch bei UI 125 %. Keine Font-, Thema- oder Hintergrundvariation.
+Die R-Moduswahl liegt im vorhandenen Menü, damit zusätzliche Studiencontrols
+keine ursprünglichen Hinweisflächen verdecken. G/V haben dafür einen eigenen Kopfbereich.
 
 `tools/vs1_delivery.py` läuft aus dem bestehenden Produktharness. Die regulären
 P1-/ZS1-Exporte schließen `full_view_study/*` aus. VS exportiert einen getrennten

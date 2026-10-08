@@ -25,7 +25,7 @@ def verify(renders: Path) -> dict:
             raise toolchain.PreflightError('VS1 full grid assertion failed')
         if row['mode']=='V' and row['hidden_tokens']:
             raise toolchain.PreflightError('VS1 V silently hides hints')
-        if row['controls_clipped'] or row['control_overlaps']:
+        if row['controls_clipped'] or row['control_overlaps'] or row['control_collisions']:
             raise toolchain.PreflightError('VS1 controls overlap board or leave client')
         if row['status']=='geometric_fit_owner_open' and (row['cell_pitch']<16 or row['glyph_collisions'] or row['clipped_glyphs']):
             raise toolchain.PreflightError('VS1 failed case reported as positive')

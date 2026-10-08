@@ -9,6 +9,8 @@ Bei einem Hinweis auf unbekannten Herausgeber handelt es sich um den unsignierte
 Studienexport. Beide Programme verwenden denselben getrennten Studienstand.
 
 Die zehn neutral benannten Blätter stehen über das Buchsymbol links zur Auswahl.
+In R erfolgt der Wechsel zu G/V über das Menü rechts oben ("Ansicht G/V öffnen");
+so bleiben die ursprünglichen Hinweisflächen der Referenz frei von Zusatzcontrols.
 Format bedeutet Spalten × Zeilen. Eigene Einträge werden lokal fortgesetzt.
 R/G/V vergleichen dasselbe Blatt und denselben Arbeitsstand:
 

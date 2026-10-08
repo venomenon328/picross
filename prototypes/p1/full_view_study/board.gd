@@ -36,6 +36,7 @@ func _layout() -> void:
 	layout_valid = raw_fit > 4.0
 	fit_ceiling = maxf(1.0, floorf(raw_fit * 100.0) / 100.0)
 	view.cell_size = minf(requested_cell, fit_ceiling) if requested_cell > 0 else fit_ceiling
+	layout_valid = layout_valid and view.cell_size > 4.0
 	book_grid_size = Vector2(session.player.width, session.player.height) * view.cell_size
 	view.configure(Rect2(book_inset, book_grid_size), Vector2i(session.player.width, session.player.height))
 	view.center = Vector2(view.dimensions) / 2.0
