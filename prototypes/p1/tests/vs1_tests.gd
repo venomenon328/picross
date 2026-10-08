@@ -59,6 +59,8 @@ func run() -> void:
 		app.choose_mode("G")
 		app.board.fit_all()
 		await process_frame
+		if index == 0:
+			check(not app.board.glyph_risk,"warning measures drawn integer tokens, not parsed JSON decimals")
 		var w: int = app.session.player.width
 		var h: int = app.session.player.height
 		for cell: Vector2i in [Vector2i.ZERO,Vector2i(w-1,0),Vector2i(0,h-1),Vector2i(w-1,h-1)]:

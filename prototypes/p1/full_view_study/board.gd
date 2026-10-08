@@ -50,7 +50,7 @@ func _layout() -> void:
 	for axis: String in ["row", "column"]:
 		for line: Array in (session.definition.rows if axis == "row" else session.definition.columns):
 			for clue: Dictionary in line:
-				var box: Rect2 = glyph_box(str(clue.length), Vector2.ZERO, fs)
+				var box: Rect2 = glyph_box(clue_token(clue), Vector2.ZERO, fs)
 				if (box.size.y if axis == "row" else box.size.x) > view.cell_size:
 					glyph_risk = true
 	ensure_clue_steps()
