@@ -281,3 +281,16 @@ Diese Reihenfolge bewahrt den besprochenen Ablauf als Orientierung. Sie setzt ke
 6. **Erprobung und Veröffentlichung:** Bedienbarkeit, Rätselqualität, Performance, Spielstände und tatsächliche Zielplattformen prüfen und verfeinern. Externe Spieltests beginnen bereits mit geeigneten Prototypen und nicht erst am Ende.
 
 Ein wesentlicher erster Nachweis ist erreicht, wenn ein anspruchsvolles großes Rätsel angenehm spielbar ist, das Spiel bereits eine erkennbare Identität besitzt und die Rätselqualität mit einem geeigneten Verfahren überprüft werden kann. Eine grüne Dokumentations-CI weist davon noch nichts nach.
+
+## VS-1 · experimentelle Vollsichtprobe (#57)
+
+Der [VS-1-Studienvertrag](VS1_STUDY.md) bindet zehn native Beispiele, aktuell G/V nach VS-E1-R2,
+die ausgewählte ZS-1-Zeichenschicht und getrennte Studienfortsetzung.
+[Prüfzuordnung](VS1_VERIFICATION.md) und [Eigentümerprobe](VS1_OWNER_TRIAL.md)
+trennen technische Lieferung von VS-M01 und VS-D01. Keine reguläre Größen-,
+Auflösungs- oder Katalogentscheidung und keine Merge-/Releasefreigabe.
+
+VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
+pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige
+zusammenhängende Zahlen auch im Drag und eine harte Raster-Fitgrenze sind aktiv.
+Historische Erstlieferung bleibt gebunden; normale P1-Defaults bleiben bestehen.

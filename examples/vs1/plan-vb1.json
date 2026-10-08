@@ -1,0 +1,963 @@
+{
+  "format": "picross-vs1-plan-v1",
+  "date": "2026-10-08",
+  "issue": 57,
+  "base_commit": "985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f",
+  "drawing_basis": "prototypes/p1/study/ at base_commit: Chalkboard 26/18 x UI, pencil/X, 140/80 ms simultaneous effects",
+  "pr56_rule": "If merged during work, integrate current main, bind the new drawing layer and rerun all affected comparisons/regressions. Never copy unmerged PR56 files.",
+  "order": "VS-P1 then VS-P2 then VS-P3",
+  "production_budget": {
+    "max_new_candidates": 40,
+    "planned_new_candidates": 26,
+    "solver_seconds": 30,
+    "solver_lines": 100000,
+    "verifier_seconds": 30,
+    "verifier_lines": 100000,
+    "repair_runs_max": 10,
+    "repair_changes_max": 4,
+    "repair_seed": 57,
+    "repair_proposals": 96,
+    "repair_evaluations": 16,
+    "repair_seconds": 30,
+    "repair_lines": 250000,
+    "repair_final_seconds": 10,
+    "repair_final_lines": 100000,
+    "repair_policy": "Optional only after separately bound and visually inspected protection mask; none preselected.",
+    "ai_calls": 0,
+    "human_minutes": null
+  },
+  "slots": [
+    {
+      "id": "vs01",
+      "definition_id": "VS01",
+      "revision": 1,
+      "dimensions": [
+        30,
+        30
+      ],
+      "mode": "mono",
+      "attempts": [
+        {
+          "revision": 1,
+          "name": "mushroom",
+          "source": "examples/rp3/source.png",
+          "source_sha256": "79e40044c083443b171041b4d2d0699714d9c7b3a027f9eded850c3703471bc1",
+          "source_design": "examples/rp3/design.json",
+          "source_design_sha256": "c23cb600cf2a178839ed61c5d90a2d977c6007198635bb4f6a7aee2505c1603a",
+          "reveal": "examples/rp3/reveal.svg",
+          "reveal_sha256": "602b5fa22cec2255292e209afb0a64c1d696aa5cd711c9d4b21044263bf1b15a",
+          "transpose": false,
+          "design": {
+            "format": "picross-image-design-v1",
+            "source_id": "vs01-mushroom",
+            "origin": "Original geometry authored for RP-3; examples/rp3/create_source.py. No foreign or AI asset.",
+            "rights": "Repository-owned example, created within the implementation commission; no third-party image rights required.",
+            "briefing": "A single centered mushroom: broad rounded cap with level underside, short centered stem, generous margin. Preserve silhouette and proportions. 20x20 monochrome. Cap color, spots and stem shading may be refined only in the post-completion illustration. No KI rounds. Technical first content example; general motif quality and real owner solution remain unassessed. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "working_mode": "faithful",
+            "width": 30,
+            "height": 30,
+            "crop": [
+              0,
+              0,
+              640,
+              640
+            ],
+            "fit": "contain",
+            "background": "#ffffff",
+            "alpha_below": 128,
+            "mode": "mono",
+            "palette": [
+              {
+                "id": "ink",
+                "rgb": "#293e3d"
+              }
+            ],
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "area-160",
+                "method": "area",
+                "threshold": 160
+              }
+            ]
+          }
+        },
+        {
+          "revision": 2,
+          "name": "teapot",
+          "source": "examples/rp4/sources/illustration-teapot.png",
+          "source_sha256": "97405e8e64abf8a8accaa9c4451c680a941947c4dce1aa333f10b070a7c9555c",
+          "source_design": "examples/rp4/baseline/i01-direct-40x40/design.json",
+          "source_design_sha256": "e9de8ca5a43f1c1a03afc87f4b9c1bb447e3fa122f0c08030bd771916ae2a6a8",
+          "reveal": "prototypes/p1/art/f05.png",
+          "reveal_sha256": "91304a15c6f2f6106b7169d224422da7c781cb630d7b6b1e727cf85fef47ec2d",
+          "transpose": false,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Breiter runder Korpus, Tülle links, Griff mit offenem Innenraum rechts, Deckelknauf. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "crop": [
+              0,
+              0,
+              800,
+              800
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 30,
+            "mode": "mono",
+            "origin": "Original geometric artwork authored for RP-4 in create_illustrations.py",
+            "palette": [
+              {
+                "id": "ink",
+                "rgb": "#253342"
+              }
+            ],
+            "rights": "Created within the commissioned project; no third-party asset used.",
+            "source_id": "vs01-teapot",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "area-176",
+                "method": "area",
+                "threshold": 176
+              }
+            ],
+            "width": 30,
+            "working_mode": "faithful"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vs02",
+      "definition_id": "VS02",
+      "revision": 1,
+      "dimensions": [
+        30,
+        30
+      ],
+      "mode": "color",
+      "attempts": [
+        {
+          "revision": 1,
+          "name": "tulip",
+          "source": "examples/rp4/sources/illustration-tulip.png",
+          "source_sha256": "0217c3c7853c8ff8768ea161e0149a48b0aec4de16da4742aafa0ef4793eec7b",
+          "source_design": "examples/rp4/baseline/i03-direct-40x40/design.json",
+          "source_design_sha256": "eca8c2381f2bf3c7344163ebc22290d3279789d0d0b12d24ffa8060e7813bdee",
+          "reveal": "prototypes/p1/art/f08.png",
+          "reveal_sha256": "f654720341d5a11d0e7aec6b9be1f37b902eef20d3de5364d525cb0905a05d0e",
+          "transpose": false,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Dreizackige Blütenkrone, Stiel und zwei asymmetrische Blätter. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "crop": [
+              0,
+              0,
+              800,
+              800
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 30,
+            "mode": "color",
+            "origin": "Original geometric artwork authored for RP-4 in create_illustrations.py",
+            "palette": [
+              {
+                "id": "charcoal",
+                "rgb": "#253342"
+              },
+              {
+                "id": "green",
+                "rgb": "#637b58"
+              },
+              {
+                "id": "ochre",
+                "rgb": "#c89d56"
+              },
+              {
+                "id": "red",
+                "rgb": "#b55848"
+              }
+            ],
+            "rights": "Created within the commissioned project; no third-party asset used.",
+            "source_id": "vs02-tulip",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "contour-40",
+                "method": "contour",
+                "threshold": 40
+              }
+            ],
+            "width": 30,
+            "working_mode": "faithful"
+          }
+        },
+        {
+          "revision": 2,
+          "name": "pagoda",
+          "source": "examples/rp4/sources/ai-pagoda.png",
+          "source_sha256": "5017066bf077dbfede6009d160a6986218dfe4a5795a2027b9aeec0160b7d96b",
+          "source_design": "examples/rp4/baseline/a03-direct-50x50/design.json",
+          "source_design_sha256": "60d7d04725854aa4039da7e8854cc95e859200460b77c8079688422de15ce6c9",
+          "reveal": "prototypes/p1/art/f06.png",
+          "reveal_sha256": "5017066bf077dbfede6009d160a6986218dfe4a5795a2027b9aeec0160b7d96b",
+          "transpose": false,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Drei breite Dächer, Pfeiler und freier Eingang, Stufen und flankierende Sträucher. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "crop": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 30,
+            "mode": "color",
+            "origin": "Built-in ChatGPT/Codex image generation, one call, actual output retained",
+            "palette": [
+              {
+                "id": "charcoal",
+                "rgb": "#253342"
+              },
+              {
+                "id": "green",
+                "rgb": "#637b58"
+              },
+              {
+                "id": "ochre",
+                "rgb": "#c89d56"
+              },
+              {
+                "id": "red",
+                "rgb": "#b55848"
+              }
+            ],
+            "rights": "Generated within ChatGPT/Codex for the commissioned project; no external reference image; no exclusive copyright claim.",
+            "source_id": "vs02-pagoda",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "contour-40",
+                "method": "contour",
+                "threshold": 40
+              }
+            ],
+            "width": 30,
+            "working_mode": "faithful"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vs03",
+      "definition_id": "VS03",
+      "revision": 1,
+      "dimensions": [
+        40,
+        30
+      ],
+      "mode": "mono",
+      "attempts": [
+        {
+          "revision": 1,
+          "name": "train",
+          "source": "examples/rp4/sources/ai-train.png",
+          "source_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+          "source_design": "examples/rp4/baseline/a02-direct-60x40/design.json",
+          "source_design_sha256": "d4f80d318f65f45fb4511d2af83b197d3c786bbddd098b6bded0a79862b09448",
+          "reveal": "examples/rp4/sources/ai-train.png",
+          "reveal_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+          "transpose": false,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Seitenansicht nach links, Kessel, Schlot, Kabinenfenster und drei Räder mit Innenräumen. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "crop": [
+              0,
+              0,
+              1536,
+              1024
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 30,
+            "mode": "mono",
+            "origin": "Built-in ChatGPT/Codex image generation, one call, actual output retained",
+            "palette": [
+              {
+                "id": "ink",
+                "rgb": "#253342"
+              }
+            ],
+            "rights": "Generated within ChatGPT/Codex for the commissioned project; no external reference image; no exclusive copyright claim.",
+            "source_id": "vs03-train",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "area-176",
+                "method": "area",
+                "threshold": 176
+              }
+            ],
+            "width": 40,
+            "working_mode": "faithful"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vs04",
+      "definition_id": "VS04",
+      "revision": 1,
+      "dimensions": [
+        40,
+        30
+      ],
+      "mode": "color",
+      "attempts": [
+        {
+          "revision": 1,
+          "name": "cat",
+          "source": "examples/rp4/stylized/h03.png",
+          "source_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+          "source_design": "examples/rp4/baseline/h03-stylized-60x40/design.json",
+          "source_design_sha256": "d7df9cfb78090eafd5bba2a617f2ce5f15da8b65f0ab0e7138ba2196f59e6c7e",
+          "reveal": "examples/rp4/stylized/h03.png",
+          "reveal_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+          "transpose": false,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Schräges nahes Gesicht, zwei Augen, dreieckige Nase, Stirnzeichnung und helle Schnauze; abgeschnittene Ohren und Blickrichtung erhalten, einzelne Haare dürfen entfallen. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "crop": [
+              0,
+              0,
+              1536,
+              1024
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 30,
+            "mode": "color",
+            "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/chelsea.png; one built-in image stylization, original in plan.json",
+            "palette": [
+              {
+                "id": "brown",
+                "rgb": "#997141"
+              },
+              {
+                "id": "cream",
+                "rgb": "#e2c6a2"
+              },
+              {
+                "id": "dark",
+                "rgb": "#30241d"
+              },
+              {
+                "id": "eyes",
+                "rgb": "#a69b55"
+              }
+            ],
+            "rights": "CC0, photographer Stefan van der Walt.",
+            "source_id": "vs04-cat",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "contour-40",
+                "method": "contour",
+                "threshold": 40
+              }
+            ],
+            "width": 40,
+            "working_mode": "faithful"
+          }
+        },
+        {
+          "revision": 2,
+          "name": "coffee",
+          "source": "examples/rp4/stylized/p02.png",
+          "source_sha256": "dd7d6c70d56eff7f3bd1367dab92ccb87194df9853b8a4f9e5e035944047f6b2",
+          "source_design": "examples/rp4/baseline/p02-stylized-60x40/design.json",
+          "source_design_sha256": "d3b8fde95a89467d410cbd784e6e0d2cce9e7f7cd7bac5edfa225fe9587f8b22",
+          "reveal": "examples/rp4/stylized/p02.png",
+          "reveal_sha256": "dd7d6c70d56eff7f3bd1367dab92ccb87194df9853b8a4f9e5e035944047f6b2",
+          "transpose": false,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Blick von schräg oben, elliptische Öffnung, braune Tasse, Henkel unten links, Untertasse und Löffel rechts; Holzmaserung darf entfallen. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "crop": [
+              0,
+              0,
+              1536,
+              1024
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 30,
+            "mode": "color",
+            "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/coffee.png; one built-in image stylization, original in plan.json",
+            "palette": [
+              {
+                "id": "brown",
+                "rgb": "#8c482c"
+              },
+              {
+                "id": "cream",
+                "rgb": "#eed8b1"
+              },
+              {
+                "id": "dark",
+                "rgb": "#30241d"
+              },
+              {
+                "id": "tan",
+                "rgb": "#ce955e"
+              }
+            ],
+            "rights": "CC0, Rachel Michetti; photograph courtesy of Pikolo Espresso Bar.",
+            "source_id": "vs04-coffee",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "contour-40",
+                "method": "contour",
+                "threshold": 40
+              }
+            ],
+            "width": 40,
+            "working_mode": "faithful"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vs05",
+      "definition_id": "VS05",
+      "revision": 1,
+      "dimensions": [
+        30,
+        40
+      ],
+      "mode": "mono",
+      "attempts": [
+        {
+          "revision": 1,
+          "name": "train",
+          "source": "examples/rp4/sources/ai-train.png",
+          "source_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+          "source_design": "examples/rp4/baseline/a02-direct-60x40/design.json",
+          "source_design_sha256": "d4f80d318f65f45fb4511d2af83b197d3c786bbddd098b6bded0a79862b09448",
+          "reveal": "examples/rp4/sources/ai-train.png",
+          "reveal_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+          "transpose": true,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Seitenansicht nach links, Kessel, Schlot, Kabinenfenster und drei Räder mit Innenräumen. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource. Kontrollierte Transposition beider Achsen inklusive Abschlussbild; neue orientierte Kandidaten zählen separat.",
+            "crop": [
+              0,
+              0,
+              1024,
+              1536
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 40,
+            "mode": "mono",
+            "origin": "Built-in ChatGPT/Codex image generation, one call, actual output retained",
+            "palette": [
+              {
+                "id": "ink",
+                "rgb": "#253342"
+              }
+            ],
+            "rights": "Generated within ChatGPT/Codex for the commissioned project; no external reference image; no exclusive copyright claim.",
+            "source_id": "vs05-train",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "area-176",
+                "method": "area",
+                "threshold": 176
+              }
+            ],
+            "width": 30,
+            "working_mode": "faithful"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vs06",
+      "definition_id": "VS06",
+      "revision": 1,
+      "dimensions": [
+        30,
+        40
+      ],
+      "mode": "color",
+      "attempts": [
+        {
+          "revision": 1,
+          "name": "cat",
+          "source": "examples/rp4/stylized/h03.png",
+          "source_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+          "source_design": "examples/rp4/baseline/h03-stylized-60x40/design.json",
+          "source_design_sha256": "d7df9cfb78090eafd5bba2a617f2ce5f15da8b65f0ab0e7138ba2196f59e6c7e",
+          "reveal": "examples/rp4/stylized/h03.png",
+          "reveal_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+          "transpose": true,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Schräges nahes Gesicht, zwei Augen, dreieckige Nase, Stirnzeichnung und helle Schnauze; abgeschnittene Ohren und Blickrichtung erhalten, einzelne Haare dürfen entfallen. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource. Kontrollierte Transposition beider Achsen inklusive Abschlussbild; neue orientierte Kandidaten zählen separat.",
+            "crop": [
+              0,
+              0,
+              1024,
+              1536
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 40,
+            "mode": "color",
+            "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/chelsea.png; one built-in image stylization, original in plan.json",
+            "palette": [
+              {
+                "id": "brown",
+                "rgb": "#997141"
+              },
+              {
+                "id": "cream",
+                "rgb": "#e2c6a2"
+              },
+              {
+                "id": "dark",
+                "rgb": "#30241d"
+              },
+              {
+                "id": "eyes",
+                "rgb": "#a69b55"
+              }
+            ],
+            "rights": "CC0, photographer Stefan van der Walt.",
+            "source_id": "vs06-cat",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "contour-40",
+                "method": "contour",
+                "threshold": 40
+              }
+            ],
+            "width": 30,
+            "working_mode": "faithful"
+          }
+        },
+        {
+          "revision": 2,
+          "name": "coffee",
+          "source": "examples/rp4/stylized/p02.png",
+          "source_sha256": "dd7d6c70d56eff7f3bd1367dab92ccb87194df9853b8a4f9e5e035944047f6b2",
+          "source_design": "examples/rp4/baseline/p02-stylized-60x40/design.json",
+          "source_design_sha256": "d3b8fde95a89467d410cbd784e6e0d2cce9e7f7cd7bac5edfa225fe9587f8b22",
+          "reveal": "examples/rp4/stylized/p02.png",
+          "reveal_sha256": "dd7d6c70d56eff7f3bd1367dab92ccb87194df9853b8a4f9e5e035944047f6b2",
+          "transpose": true,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Blick von schräg oben, elliptische Öffnung, braune Tasse, Henkel unten links, Untertasse und Löffel rechts; Holzmaserung darf entfallen. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource. Kontrollierte Transposition beider Achsen inklusive Abschlussbild; neue orientierte Kandidaten zählen separat.",
+            "crop": [
+              0,
+              0,
+              1024,
+              1536
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 40,
+            "mode": "color",
+            "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/coffee.png; one built-in image stylization, original in plan.json",
+            "palette": [
+              {
+                "id": "brown",
+                "rgb": "#8c482c"
+              },
+              {
+                "id": "cream",
+                "rgb": "#eed8b1"
+              },
+              {
+                "id": "dark",
+                "rgb": "#30241d"
+              },
+              {
+                "id": "tan",
+                "rgb": "#ce955e"
+              }
+            ],
+            "rights": "CC0, Rachel Michetti; photograph courtesy of Pikolo Espresso Bar.",
+            "source_id": "vs06-coffee",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "contour-40",
+                "method": "contour",
+                "threshold": 40
+              }
+            ],
+            "width": 30,
+            "working_mode": "faithful"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vs07",
+      "definition_id": "VS07",
+      "revision": 1,
+      "dimensions": [
+        40,
+        40
+      ],
+      "mode": "mono",
+      "attempts": [],
+      "retained": "examples/rp4/baseline/i01-direct-40x40",
+      "reveal": "prototypes/p1/art/f05.png"
+    },
+    {
+      "id": "vs08",
+      "definition_id": "VS08",
+      "revision": 1,
+      "dimensions": [
+        40,
+        40
+      ],
+      "mode": "color",
+      "attempts": [],
+      "retained": "examples/rp6/exports/f09",
+      "reveal": "prototypes/p1/art/f09.png"
+    },
+    {
+      "id": "vs09",
+      "definition_id": "VS09",
+      "revision": 1,
+      "dimensions": [
+        50,
+        30
+      ],
+      "mode": "mono",
+      "attempts": [
+        {
+          "revision": 1,
+          "name": "train",
+          "source": "examples/rp4/sources/ai-train.png",
+          "source_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+          "source_design": "examples/rp4/baseline/a02-direct-60x40/design.json",
+          "source_design_sha256": "d4f80d318f65f45fb4511d2af83b197d3c786bbddd098b6bded0a79862b09448",
+          "reveal": "examples/rp4/sources/ai-train.png",
+          "reveal_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+          "transpose": false,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Seitenansicht nach links, Kessel, Schlot, Kabinenfenster und drei Räder mit Innenräumen. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "crop": [
+              0,
+              0,
+              1536,
+              1024
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 30,
+            "mode": "mono",
+            "origin": "Built-in ChatGPT/Codex image generation, one call, actual output retained",
+            "palette": [
+              {
+                "id": "ink",
+                "rgb": "#253342"
+              }
+            ],
+            "rights": "Generated within ChatGPT/Codex for the commissioned project; no external reference image; no exclusive copyright claim.",
+            "source_id": "vs09-train",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "area-176",
+                "method": "area",
+                "threshold": 176
+              }
+            ],
+            "width": 50,
+            "working_mode": "faithful"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vs10",
+      "definition_id": "VS10",
+      "revision": 1,
+      "dimensions": [
+        50,
+        30
+      ],
+      "mode": "color",
+      "attempts": [
+        {
+          "revision": 1,
+          "name": "cat",
+          "source": "examples/rp4/stylized/h03.png",
+          "source_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+          "source_design": "examples/rp4/baseline/h03-stylized-60x40/design.json",
+          "source_design_sha256": "d7df9cfb78090eafd5bba2a617f2ce5f15da8b65f0ab0e7138ba2196f59e6c7e",
+          "reveal": "examples/rp4/stylized/h03.png",
+          "reveal_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+          "transpose": false,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Schräges nahes Gesicht, zwei Augen, dreieckige Nase, Stirnzeichnung und helle Schnauze; abgeschnittene Ohren und Blickrichtung erhalten, einzelne Haare dürfen entfallen. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "crop": [
+              0,
+              0,
+              1536,
+              1024
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 30,
+            "mode": "color",
+            "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/chelsea.png; one built-in image stylization, original in plan.json",
+            "palette": [
+              {
+                "id": "brown",
+                "rgb": "#997141"
+              },
+              {
+                "id": "cream",
+                "rgb": "#e2c6a2"
+              },
+              {
+                "id": "dark",
+                "rgb": "#30241d"
+              },
+              {
+                "id": "eyes",
+                "rgb": "#a69b55"
+              }
+            ],
+            "rights": "CC0, photographer Stefan van der Walt.",
+            "source_id": "vs10-cat",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "contour-40",
+                "method": "contour",
+                "threshold": 40
+              }
+            ],
+            "width": 50,
+            "working_mode": "faithful"
+          }
+        },
+        {
+          "revision": 2,
+          "name": "coffee",
+          "source": "examples/rp4/stylized/p02.png",
+          "source_sha256": "dd7d6c70d56eff7f3bd1367dab92ccb87194df9853b8a4f9e5e035944047f6b2",
+          "source_design": "examples/rp4/baseline/p02-stylized-60x40/design.json",
+          "source_design_sha256": "d3b8fde95a89467d410cbd784e6e0d2cce9e7f7cd7bac5edfa225fe9587f8b22",
+          "reveal": "examples/rp4/stylized/p02.png",
+          "reveal_sha256": "dd7d6c70d56eff7f3bd1367dab92ccb87194df9853b8a4f9e5e035944047f6b2",
+          "transpose": false,
+          "design": {
+            "alpha_below": 128,
+            "background": "#ffffff",
+            "briefing": "Blick von schräg oben, elliptische Öffnung, braune Tasse, Henkel unten links, Untertasse und Löffel rechts; Holzmaserung darf entfallen. VS-1: neues Zielmaß; kein übertragenes Zertifikat. Bestehende Enthüllung als ausdrücklich vereinfachte Studienressource.",
+            "crop": [
+              0,
+              0,
+              1536,
+              1024
+            ],
+            "fit": "contain",
+            "format": "picross-image-design-v1",
+            "height": 30,
+            "mode": "color",
+            "origin": "https://github.com/scikit-image/scikit-image/blob/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/coffee.png; one built-in image stylization, original in plan.json",
+            "palette": [
+              {
+                "id": "brown",
+                "rgb": "#8c482c"
+              },
+              {
+                "id": "cream",
+                "rgb": "#eed8b1"
+              },
+              {
+                "id": "dark",
+                "rgb": "#30241d"
+              },
+              {
+                "id": "tan",
+                "rgb": "#ce955e"
+              }
+            ],
+            "rights": "CC0, Rachel Michetti; photograph courtesy of Pikolo Espresso Bar.",
+            "source_id": "vs10-coffee",
+            "variants": [
+              {
+                "id": "area-128",
+                "method": "area",
+                "threshold": 128
+              },
+              {
+                "id": "contour-40",
+                "method": "contour",
+                "threshold": 40
+              }
+            ],
+            "width": 50,
+            "working_mode": "faithful"
+          }
+        }
+      ]
+    }
+  ],
+  "layout_plan": {
+    "ids": [
+      "L1-full-paper",
+      "L1-correction-1",
+      "L1-correction-2"
+    ],
+    "max_layout_revisions": 3,
+    "description": "One bounded book layout: existing paper/background, persistent 44xUI tools and miniature in side rail; G short clue budgets, V full max clue budgets; square cells. Corrections only for measured clipping/collision. R retains existing book geometry.",
+    "cell_checkpoints": [
+      16,
+      18,
+      20
+    ],
+    "diagnostic_ids": [
+      "VS-D11",
+      "VS-D12"
+    ],
+    "diagnostics": "Two consistent noncertified matrices: 50x30 alternating color blocks/X; 40x40 bands with long runs and empty lines. Always labeled diagnosis, never playable certification.",
+    "matrix": {
+      "formats": [
+        [
+          30,
+          30
+        ],
+        [
+          40,
+          30
+        ],
+        [
+          30,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          50,
+          30
+        ]
+      ],
+      "modes": [
+        "R",
+        "G",
+        "V"
+      ],
+      "color_modes": [
+        "mono",
+        "color"
+      ],
+      "clients": [
+        [
+          1920,
+          1080
+        ],
+        [
+          1280,
+          720
+        ]
+      ],
+      "ui_scales": [
+        1,
+        1.25
+      ],
+      "gv_rows": 80,
+      "reference_rows": 40,
+      "extra_client": [
+        2560,
+        1440
+      ]
+    },
+    "native_capture": "Selected empty/worked main, boundary and failed cases; all measurements retained. No full-render upload."
+  },
+  "owner_gates": {
+    "VS-M01": "open; actual owner trial before study completion/merge",
+    "VS-D01": "open; owner decision before regular product strategy change"
+  }
+}

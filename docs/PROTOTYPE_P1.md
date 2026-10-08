@@ -596,3 +596,16 @@ ZS1-E3 wählt Chalkboard als konkrete Hinweisfont. N07 reduziert in der isoliert
 Studie ausschließlich die horizontale Zeilenhinweis-Slotweite auf 26 logische Pixel
 bei UI 100 %; Spaltenslots bleiben unverändert. Für PR #55 hat der Eigentümer die
 kombinierte Sichtprüfung ausdrücklich auf den gemergten `main`-Stand verlegt.
+
+## VS-1 · experimentelle Vollsichtprobe (#57)
+
+Der [VS-1-Studienvertrag](VS1_STUDY.md) bindet zehn native Beispiele, aktuell G/V nach VS-E1-R2,
+die ausgewählte ZS-1-Zeichenschicht und getrennte Studienfortsetzung.
+[Prüfzuordnung](VS1_VERIFICATION.md) und [Eigentümerprobe](VS1_OWNER_TRIAL.md)
+trennen technische Lieferung von VS-M01 und VS-D01. Keine reguläre Größen-,
+Auflösungs- oder Katalogentscheidung und keine Merge-/Releasefreigabe.
+
+VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
+pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige
+zusammenhängende Zahlen auch im Drag und eine harte Raster-Fitgrenze sind aktiv.
+Historische Erstlieferung bleibt gebunden; normale P1-Defaults bleiben bestehen.

@@ -45,7 +45,7 @@ static func valid_hints(stored: Variant, expected: Array) -> bool:
 			return false
 	return true
 
-static func validate(data: Dictionary) -> String:
+static func validate(data: Dictionary, study_assets: Dictionary = {}) -> String:
 	if data.get("schema") != 2 or not integer(data.get("revision")) or data.revision < 1:
 		return "Unbekannte Definitionsversion."
 	if not data.get("id") is String or data.id.is_empty():
@@ -88,7 +88,8 @@ static func validate(data: Dictionary) -> String:
 	if reveal.get("version") != 1 or reveal.get("definition_id") != data.id:
 		return "Ungültige Abschlusszuordnung."
 	var path: Variant = reveal.get("image")
-	if not path is String or not path.begins_with("res://art/") or ".." in path or not (path.ends_with(".svg") or path.ends_with(".png")):
+	var study_asset: bool = study_assets.has(data.id) and path == study_assets[data.id]
+	if not path is String or (not study_asset and not path.begins_with("res://art/")) or ".." in path or not (path.ends_with(".svg") or path.ends_with(".png")):
 		return "Ungültiger lokaler Bildpfad."
 	var fixed_assets: Dictionary = {"F-04": "res://art/f04.svg", "F-05": "res://art/f05.png", "F-06": "res://art/f06.png", "F-07": "res://art/f07.png", "F-08": "res://art/f08.png", "F-09": "res://art/f09.png"}
 	if fixed_assets.has(data.id) and path != fixed_assets[data.id]:
