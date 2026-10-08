@@ -19,7 +19,7 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, Vector2(edge + 32, 22), "Das erarbeitete Motiv", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("343f42"))
 		draw_rect(Rect2(offset, Vector2.ONE * edge), Color("faf6ec"))
 		if not solved.is_empty():
-			var step: float = edge / solved.size()
+			var step: float = edge / maxf(solved.size(), solved[0].size())
 			for y: int in range(solved.size()):
 				for x: int in range(solved[y].size()):
 					for entry: Dictionary in palette:
@@ -27,4 +27,5 @@ func _draw() -> void:
 							draw_rect(Rect2(offset + Vector2(x, y) * step, Vector2.ONE * step), Color(entry.color))
 		offset.x += edge + 32
 	if artwork != null:
-		draw_texture_rect(artwork, Rect2(offset, Vector2.ONE * edge), false)
+		var extent: Vector2 = artwork.get_size() * (edge / maxf(artwork.get_width(), artwork.get_height()))
+		draw_texture_rect(artwork, Rect2(offset, extent), false)

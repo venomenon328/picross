@@ -77,18 +77,29 @@ static func expanded_grid_extent(dimensions: Vector2i, cell_size: float, standar
 		result = result.max(Vector2(dimensions) * cell_size).min(maximum_extent)
 	return result
 
+func create_store() -> SaveStore:
+	return SaveStore.new(SaveStore.test_root_override if not SaveStore.test_root_override.is_empty() else "user://p1/saves")
+
+func puzzle_definitions() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for id: String in SaveStore.IDS:
+		result.append(Definition.load_fixture(id))
+	return result
+
+func validate_definition(data: Dictionary) -> String:
+	return Definition.validate(data)
+
 func _ready() -> void:
 	get_tree().auto_accept_quit = false
-	store = SaveStore.new(SaveStore.test_root_override if not SaveStore.test_root_override.is_empty() else "user://p1/saves")
+	store = create_store()
 	if DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
 		var usable: Rect2i = DisplayServer.screen_get_usable_rect()
 		var decorations: Vector2i = (DisplayServer.window_get_size_with_decorations() - DisplayServer.window_get_size()).max(Vector2i(16, 48))
 		var client_offset: Vector2i = DisplayServer.window_get_position() - DisplayServer.window_get_position_with_decorations()
 		get_window().size = bounded_start(usable, decorations)
 		get_window().position = bounded_position(usable, get_window().size, decorations, client_offset)
-	for id: String in SaveStore.IDS:
-		var data: Dictionary = Definition.load_fixture(id)
-		var error: String = Definition.validate(data)
+	for data: Dictionary in puzzle_definitions():
+		var error: String = validate_definition(data)
 		if not error.is_empty():
 			push_error(error)
 			get_tree().quit(2)
