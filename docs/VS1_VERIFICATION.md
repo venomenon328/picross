@@ -1,6 +1,7 @@
 # VS-1 · technische Nachweise und Entscheidungsvorlage
 
-Status: technische Draft-Lieferung in Arbeit. Maßgebliche Head-/Run-/Artefaktbindung
+Status: Implementierung und technische Prüfstrecke für die Draft-Lieferung vorhanden.
+Maßgebliche Head-/Run-/Artefaktbindung
 steht im zugehörigen Draft-PR zu [#57](https://github.com/venomenon328/picross/issues/57)
 und in `vs1-report.json`. VS-M01 und VS-D01 bleiben offen; keine Behauptung
 unabhängiger Abnahme, Mergefähigkeit oder Releasefähigkeit.

@@ -12,6 +12,16 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class DeliveryTests(unittest.TestCase):
+    def test_capture_preserves_native_wrapper_and_uses_one_real_script(self):
+        native=['godot','--path','project','--rendering-driver','opengl3','--script','res://tests/capture.gd','--','--p1-capture']
+        for prefix in ([],['xvfb-run','-a']):
+            command=vs1_delivery.capture_command(prefix+native)
+            self.assertEqual(command[:len(prefix)+1],prefix+['godot'])
+            self.assertEqual(command[command.index('--script')+1],'res://tests/vs1_capture.gd')
+            self.assertEqual(command[command.index('--')+1:],['--p1-capture'])
+            self.assertEqual(command.count('--script'),1)
+        with self.assertRaises(p1_preflight.PreflightError):vs1_delivery.capture_command(['godot','--headless'])
+
     def test_zip_audit_checks_actual_bytes_and_excludes_review_payload(self):
         files={'picross-vs1.exe':hashlib.sha256(b'player').hexdigest(),'picross-vs1.console.exe':hashlib.sha256(b'console').hexdigest()}
         with tempfile.TemporaryDirectory() as tmp:

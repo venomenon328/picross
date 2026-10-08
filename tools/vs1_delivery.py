@@ -9,6 +9,12 @@ from pathlib import Path
 import p1_preflight as toolchain
 
 
+def capture_command(render_command):
+    if render_command.count('res://tests/capture.gd') != 1:
+        raise toolchain.PreflightError('VS1 unknown native harness command')
+    return ['res://tests/vs1_capture.gd' if part=='res://tests/capture.gd' else part for part in render_command]
+
+
 def verify(renders: Path) -> dict:
     report=json.loads((renders/'vs1-matrix.json').read_text(encoding='utf-8'))
     expected={(f'VS{i:02}',w,u,m) for i in range(1,11) for w in (1280,1920) for u in (1.0,1.25) for m in ('R','G','V')}
@@ -52,7 +58,7 @@ def capture(root, project, workspace, output, engine, render_command, environmen
     old=environment.get('P1_CAPTURE_DIR')
     environment['P1_CAPTURE_DIR']=str(renders)
     try:
-        phase('vs1-native-capture',render_command+[engine,'--path',str(project),'--rendering-driver','opengl3','--script','res://tests/vs1_capture.gd','--','--p1-capture'],'VS1_CAPTURE_OK')
+        phase('vs1-native-capture',capture_command(render_command),'VS1_CAPTURE_OK')
     finally:
         if old is None: environment.pop('P1_CAPTURE_DIR',None)
         else: environment['P1_CAPTURE_DIR']=old

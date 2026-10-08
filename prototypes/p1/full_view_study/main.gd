@@ -173,7 +173,7 @@ func _layout_book() -> void:
 	var material: Rect2 = surface.material_rect()
 	var origin: Vector2 = material.position
 	var extent: Vector2 = material.size
-	_place(mode_controls, Rect2(origin + Vector2(100, 98)*u, Vector2(560*u, 44*u)))
+	_place(mode_controls, Rect2(origin + Vector2(100, 98)*u, Vector2(450*u+16, 44*u)))
 	for control: Button in mode_controls.get_children():
 		control.custom_minimum_size = Vector2(150*u, 44*u)
 		control.add_theme_font_size_override("font_size", roundi(15*u))
