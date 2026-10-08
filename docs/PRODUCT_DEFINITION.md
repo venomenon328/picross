@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-Stand: 07.10.2026 · Arbeitsfassung 0.7 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
+Stand: 09.10.2026 · Arbeitsfassung 0.8 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
 
 ## 1. Geltung und Herkunft
 
@@ -30,7 +30,7 @@ Groß und schwierig sind unterschiedliche Eigenschaften. Ein großes, flüssig l
 
 Für die erste Veröffentlichung sind einige Hundert vorab erstellte und kuratierte Rätsel ein angemessenes Wunschziel. Exakte Stückzahlen, das Verhältnis der Varianten und die Größenverteilung werden nach einer repräsentativen Testproduktion festgelegt, nicht bereits als zugesicherter Lieferumfang behandelt.
 
-Rätsel jenseits von ungefähr 40×40 sollen ein dauerhaft substanzielles Angebot bilden, nicht nur einzelne Abschlussaufgaben. Auch um 100×100 soll eine vernünftige Auswahl angestrebt werden. Übertriebene Riesenprojekte deutlich jenseits von 100×100 sind denkbar, dürfen aber selten bleiben und sind keine bestätigte Startvoraussetzung. Kleinere und mittlere Formate bleiben ebenfalls Bestandteil des Spiels.
+Die bestätigte [Vollsichtstrategie VS-D01](VS1_DECISION.md) setzt 40×40 als reguläres Ziel und mindestens 30×30 als brauchbar zu erreichende Größenkapazität. 40×30 und geeignete 50×30 sind gleichberechtigte sinnvolle Formate. Kleinere Rätsel bleiben möglich. Format, tatsächliche Hinweislast und belegte Bedienbarkeit bestimmen die Eignung gemeinsam; keine pauschale Katalog- oder Komfortgarantie. Sehr große Rätsel um 60×60/100×100 bleiben perspektivisch Sonderfälle mit gesonderter Navigation. Dies löst die frühere pauschale Pflicht zu einem substanziellen regulären Bestand jenseits 40×40 und um 100×100 ab; bestehende Daten und Proofs bleiben erhalten.
 
 Ein größeres Rätsel darf sich über mehrere Sitzungen erstrecken. Die Bedienung und Fortschrittsspeicherung müssen diesen Nutzungsfall von Anfang an berücksichtigen.
 
@@ -84,7 +84,7 @@ Regionenbedingungen würden zusätzliche Bedingungen für markierte Bereiche erg
 
 ### 5.1 Verbindliche Leitlinien
 
-Die Handhabung soll intuitiv, präzise und unkompliziert sein. Große Raster sind ein zentraler Auslegungsfall, kein späterer Belastungstest. Zoom ist dafür wichtig, reicht aber ohne gute Orientierung beim Scrollen nicht aus. Im Ausschnitt müssen Arbeitsposition und zugehörige Hinweise nachvollziehbar bleiben; die Rückkehr zu relevanten Bereichen und der Wiedereinstieg nach einer Pause sind früh zu gestalten.
+Die Handhabung soll intuitiv, präzise und unkompliziert sein. Reguläres Ziel ist das vollständig sichtbare Raster einschließlich Rahmen ohne erforderliches Rasterverschieben. G ist bevorzugt: mindestens min(5,n) vollständige zusammenhängende Zahlen je Folge, bei Bedarf unabhängig bewegt; freie Breite darf mehr Zeilenhinweise zeigen. V ergänzt die vollständige Blattansicht mit allen Hinweisen. 1080p ist als maßgebliches Mindestziel beziehungsweise spätere Mindestauflösung akzeptiert; Clientfläche, Windows- und UI-Skalierung bleiben getrennt zu prüfen. 720p bleibt zusätzlicher Befund/Fallback. Die bestehende reguläre P1-Navigation wird erst in einem gesonderten Folgepaket umgestellt. Für sehr große Sonderfälle sind Zoom und Ausschnittorientierung weiter erforderlich: Arbeitsposition, Hinweise und Wiedereinstieg müssen nachvollziehbar bleiben.
 
 Maus und Tastatur sind die primäre Eingabeform. Controller werden von Beginn an als alternative Eingabemethode vorgesehen und in die Interaktionskonzeption einbezogen, nicht erst nachträglich auf eine ausschließlich mausabhängige Oberfläche aufgesetzt. Touch oder eine Mobile-Version sind nicht beschlossen.
 
@@ -223,7 +223,7 @@ Die vorhandenen Python-Dokumentprüfer sind keine Festlegung des Produktstacks. 
 
 ## 9. Abgrenzung des ersten Produkts
 
-Zum Produktkern gehören klassische und farbige kuratierte Bildrätsel, ein nennenswerter Großrasterbestand, komfortable Bearbeitung und Fortsetzung, frühe thematische/UI-Konzeption, Sammlungsprogression, Perfektions-Bonusrätsel, die beiden Fehler-Rückmeldungsmodi sowie Logbuch und vorgesehene Leistungsvergleiche.
+Zum Produktkern gehören klassische und farbige kuratierte Bildrätsel, das reguläre Vollsichtziel mit 40×40 und mindestens 30×30 Größenkapazität, geeigneten Rechtecken und möglichen Großraster-Sonderfällen, komfortable Bearbeitung und Fortsetzung, frühe thematische/UI-Konzeption, Sammlungsprogression, Perfektions-Bonusrätsel, die beiden Fehler-Rückmeldungsmodi sowie Logbuch und vorgesehene Leistungsvergleiche.
 
 Nicht als Startvoraussetzung beschlossen sind Verbundraster, Regionenbedingungen, extreme Raster weit jenseits von 100×100, ein öffentlicher Editor, Community-/Workshop-Inhalte, Koop, spielerseitige Bildgenerierung, Wochenherausforderungen und umfangreiche Lern- oder Erklärhilfen. Diese Themen dürfen nicht stillschweigend den verbindlichen Umfang vergrößern. Unvollständige Hinweise sind vorerst ausgeschlossen.
 
@@ -287,8 +287,13 @@ Ein wesentlicher erster Nachweis ist erreicht, wenn ein anspruchsvolles großes 
 Der [VS-1-Studienvertrag](VS1_STUDY.md) bindet zehn native Beispiele, aktuell G/V nach VS-E1-R2,
 die ausgewählte ZS-1-Zeichenschicht und getrennte Studienfortsetzung.
 [Prüfzuordnung](VS1_VERIFICATION.md) und [Eigentümerprobe](VS1_OWNER_TRIAL.md)
-trennen technische Lieferung von VS-M01 und VS-D01. Keine reguläre Größen-,
-Auflösungs- oder Katalogentscheidung und keine Merge-/Releasefreigabe.
+trennen technische Lieferung und persönliche Komfortbefunde. [VS-D01](VS1_DECISION.md)
+ist strategisch entschieden: reguläres Vollsichtziel 40×40, mindestens 30×30,
+geeignete 40×30/50×30, 1080p, bevorzugt G und ergänzend V. Sehr große Rätsel
+bleiben mögliche Sonderfälle. PR #58 ist als `c19b3547…` integriert; VS-GF1/#59
+liefert zusätzliche Zeilenkapazität aus freier G-Breite bei unverändertem Fit.
+Die reguläre P1-Umstellung bleibt separat. VS-M01 ist nicht vollständig persönlich
+durchgeführt; unabhängiges Review, GF-M01 und Mergefreigabe des neuen Heads bleiben offen.
 
 VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
 pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige

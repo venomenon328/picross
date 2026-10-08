@@ -102,7 +102,7 @@ func run() -> void:
 							var b: Control = controls[independent[j]]
 							if a.is_visible_in_tree() and b.is_visible_in_tree() and a.get_global_rect().intersects(b.get_global_rect()):
 								record.control_collisions.append([independent[i],independent[j]])
-					record.limiting_element = "reference navigation" if mode == "R" else ("glyph collision/clipping" if record.glyph_collisions > 0 or record.clipped_glyphs > 0 else ("control space" if not record.controls_clipped.is_empty() or not record.control_overlaps.is_empty() else ("height / upper clues" if (app.board.size.y-app.board.book_inset.y-6-2*app.board.FRAME_MARGIN)/app.session.player.height <= (app.board.size.x-app.board.book_inset.x-6-2*app.board.FRAME_MARGIN)/app.session.player.width else "width / left clues")))
+					record.limiting_element = "glyph collision/clipping" if record.glyph_collisions > 0 or record.clipped_glyphs > 0 else ("control space" if not record.controls_clipped.is_empty() or not record.control_overlaps.is_empty() else record.limiting_axis)
 					check(app.session.player.cells == cells and app.session.player.history == history, "comparison preserves model")
 					if mode != "R":
 						check(record.grid_fit or not record.layout_valid, "full grid or explicit invalid layout")
