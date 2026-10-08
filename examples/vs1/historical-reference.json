@@ -1,0 +1,16 @@
+{
+  "role": "historical R / first delivery; not current G/V evidence",
+  "source_commit": "bbc91821b0bcc69565fbb94124a57ed2b7ac0a2e",
+  "tested_checkout_commit": "0b7ca18e1fbcea95f27f4bc36947aede63468c70",
+  "run": "37811277576",
+  "artifact_id": "11565982332",
+  "archive_sha256": "0c0cf70af6d90d0354a3424bb41ef882a03b8a81974e72fee843de57aa5d3ca8",
+  "url": "https://github.com/venomenon328/picross/actions/runs/37811277576/artifacts/11565982332",
+  "files": {
+    "vs1-matrix.json": "556d5185903af5a83e4275b3900d7c15e1e81a36167abc4f37124d4e8a12e090",
+    "vs1-VS01-1920-u100-R.png": "63cc1470e2cd564e7f7f03cb33c66dd359538ab9daf37ae5cd85758e89fd87a3",
+    "vs1-VS08-1920-u100-R.png": "551eb08e4c9c9833c6c2ef4ff779c8ed3e6f9868eacbee8a1f775a590353405c",
+    "vs1-VS09-1920-u100-R.png": "f4280e77d0be1726d6b202b81a4428e1c715f6666858234691d63432b35d661b",
+    "vs1-VS10-1920-u100-R.png": "edf43eba58fba172a2e8ffee59a9e1dc9429a2ef89810e333367834606a17944"
+  }
+}

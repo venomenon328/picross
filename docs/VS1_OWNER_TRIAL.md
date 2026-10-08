@@ -9,22 +9,24 @@ Bei einem Hinweis auf unbekannten Herausgeber handelt es sich um den unsignierte
 Studienexport. Beide Programme verwenden denselben getrennten Studienstand.
 
 Die zehn neutral benannten Blätter stehen über das Buchsymbol links zur Auswahl.
-In R erfolgt der Wechsel zu G/V über das Menü rechts oben ("Ansicht G/V öffnen");
-so bleiben die ursprünglichen Hinweisflächen der Referenz frei von Zusatzcontrols.
 Format bedeutet Spalten × Zeilen. Eigene Einträge werden lokal fortgesetzt.
-R/G/V vergleichen dasselbe Blatt und denselben Arbeitsstand:
+Die aktive Lieferung VS-E1-R2 bietet ausschließlich G/V für denselben Arbeitsstand:
 
-- R: bisherige Aufteilung, freie Vergrößerung und Navigation.
-- G: ganzes Raster; lange Hinweise können separat verschoben werden.
-- V: Raster mit allen Hinweisen; die Fitgrenze begrenzt den Zoom.
+- G: ganzes Raster; lange Hinweise einzeln mit MMB verschieben. Mindestens fünf
+  zusammenhängende vollständige Zahlen bleiben sichtbar, bei kürzeren Folgen alle.
+- V: Raster und alle Hinweise. Beide Modi begrenzen den Zoom auf Rastervollsicht.
+
+R ist entfernt; alte R-Ergebnisse bleiben historische Vergleichsbelege mit eigener
+Head-/Dateibindung. Alte R-Auswahl wird beim Start auf G normalisiert. Hand und
+Rasterpanning entfallen; die Miniatur zeigt eigene Einträge und bewegt keinen Ausschnitt.
 
 Links füllen, rechts X setzen oder den begonnenen Eintrag umwandeln/neutralisieren.
 Gerade ziehen, zum Verkürzen zurückziehen; Escape verwirft die Vorschau.
-MMB verschiebt in R Raster oder Hinweise, in G bei Bedarf Hinweise. Farbe und
-Radierer/Hand befinden sich neben beziehungsweise unter dem Blatt. Undo/Redo,
-Minus/Plus, „alles einpassen“ und Arbeitsgröße bleiben verfügbar. Vollsichtmodi
-erlauben keine Vergrößerung über ihre Fitgrenze. In R kann nötige Vergrößerung
-ausprobiert werden. Kein Zähllineal oder zusätzliche Modifierbelegung.
+MMB verschiebt in G ausschließlich die angefasste lange Zeile oder Spalte.
+Farbe und Radierer befinden sich neben beziehungsweise unter dem Blatt. Undo/Redo,
+Minus/Plus, „alles einpassen“ und Arbeitsgröße bleiben verfügbar. Einpassen erreicht
+die aktuelle Vollsichtgrenze; bewusst kleinerer Zoom ist möglich. Kein Handwerkzeug,
+Zähllineal oder zusätzliche Modifierbelegung.
 
 Über das Menü lassen sich UI 100/125 %, Zellanimation und Hinweisabstreichung
 ändern. Dort können ein leeres Blatt oder feste künstliche Vergleichseingaben
@@ -39,17 +41,17 @@ aller zehn Rätsel sind dafür nicht nötig:
    normale und maximierte Clientfläche, UI-Skalierung, ZIP-/Headbindung aus
    `vs1-report.json`. Eine 1080p-Bildschirmauflösung ist nicht automatisch ein
    1920 × 1080 großer Fensterinhalt. Fehlende Konfigurationen als ungeprüft belassen.
-2. Mindestfall VS01/VS02 (30 × 30): R/G/V durchgehen. Einzelzellen an vier Ecken,
+2. Mindestfall VS01/VS02 (30 × 30): G/V durchgehen. Einzelzellen an vier Ecken,
    eine gerade Linie, Umwandeln, Neutralisieren, Zurückziehen, Escape, Undo/Redo.
 3. Hauptziel VS07 und VS08 (40 × 40): leer und mit Vergleichsstand jeweils etwa
    drei Minuten denselben kleinen Abschnitt bearbeiten. Lange Hinweise sowie
    normale, abgeschwächte und durchgestrichene Ziffern beurteilen.
-4. Breite Alternative VS09/VS10 (50 × 30): denselben Abschnitt in R/G/V probieren.
+4. Breite Alternative VS09/VS10 (50 × 30): denselben Abschnitt in G/V probieren.
    VS03/VS04 (40 × 30) und VS05/VS06 (30 × 40) ergänzend vergleichen. Die beiden
    Hochkantfälle sind kontrollierte Transponate mit unnatürlicher Motivorientierung.
 5. UI 125 %, Fenstergröße und angebotene Zoomstufen prüfen. Kleine und gescheiterte
    Fälle ausdrücklich ansehen. „Unter 16 px“, Kollision oder „PASST NICHT“ ist
-   kein positiver Komfortnachweis. Falls nötig R-Vergrößerung benutzen und notieren.
+   kein positiver Komfortnachweis. Das negative Ergebnis notieren; es gibt keinen R-Ausweg.
 6. Einige eigene Einträge speichern, schließen, erneut starten. Ausgewähltes Blatt,
    Modus und Einträge müssen fortgesetzt werden. Normale P1-Blätter prüfen, falls
    zuvor welche vorhanden waren.

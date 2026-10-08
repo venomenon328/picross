@@ -14,20 +14,62 @@ unabhängiger Abnahme, Mergefähigkeit oder Releasefähigkeit.
 | VS-A02 | `vs1_tests.gd`: echte InputEvents für Ecken/Linien/Umwandeln/Neutralisieren/Zurückziehen/Wechsel/History; isolierter Root vor Lesen; `vs1_roundtrip.gd` in getrennten Prozessen |
 | VS-A03 | `vs1_capture.gd`: alle angebotenen G/V-Zoomstufen, Resize/UI-Matrix, explizite Fehlfälle, Clipping/Kollisionen und 16/18/20-px-Vergleich |
 | VS-A04 | `test_vs1.py` im Fachjob: komplette Quellenrekonstruktion, unabhängige Proofs und Enddomains; manipulierte Maße/Orientierung/Matrix/Hinweise/Palette/Pfade/Proofs, doppelte IDs, Revealbindung, Diagnosezertifizierung und unvollständiger Reparaturreplay abgewiesen |
-| VS-A05 | `vs1-matrix.json`: 120 Hauptzeilen und 30 größere Kontrollen, reale Glyphen-/Statusstrichgrenzen; 24 Arbeitsbilder, zwei Rechteck-Abschlussbilder aus Testständen und vier klar bezeichnete Diagnosebilder |
+| VS-A05 | `vs1-matrix.json`: aktuell 80 G/V-Hauptzeilen und 20 größere Kontrollen, reale Glyphen-/Statusstrichgrenzen; gezielte Arbeits-/Diagnosebilder; Erstmatrix historisch 120 + 30 |
 | VS-A06 | Gemeinsame reguläre P1-/ZS1-Tests und unveränderte Pixelbaselines im product-Job; VS-Save-Recovery, Spoilergrenze, Miniatur und rechteckiger Abschluss zusätzlich |
 | VS-A07 | Zwei getrennte ZIPs mit Quellhead/Basis/Test-Checkout/Run sowie EXE-/Bild-/Matrixhashes; tatsächlicher Downloadstart auf Windows separat im PR gebunden |
 | VS-A08 | Nachstehende vorläufige technische Einordnung, vollständige Fehlfälle im Bericht und unausgefülltes Eigentümerprotokoll |
 
 Die sechs Pflichtjobs `docs`, `product`, `preflight`, `puzzle-production`,
 `rp4-windows`, `rp5-repair` müssen am Lieferhead/Test-Merge erfolgreich sein.
-`tools/p1_product.py` ruft die VS-Tests, beide Neustartprozesse, native Messung und
+`tools/p1_product.py` ruft die VS-Tests, sechs Neustartprozesse, native Messung und
 separaten Export tatsächlich auf. Der Linux-product-Job belegt allein keinen
 Windows-EXE-Start. Die implementierende Windows-Prüfung muss das heruntergeladene
 ZIP verwenden und dessen Hashes sowie normalen/maximierten Client protokollieren.
 
-## Technische Ergebnisse der gebundenen Aufteilung
+## Aktiver Nachweisvertrag VS-E1-R2
 
+| Anforderung | Gebundener Anschluss |
+| --- | --- |
+| N01 | vs1_capture.gd: Board-/Papier-/Controlrechtecke, 100 Matrixzeilen, Glyphen und Statusstrich; obere Fläche durch Modusleiste unten frei |
+| N02 | vs1_tests.gd, vs1_window.gd: keine Hand/Miniatur-/Rasternavigation, echte Ecken-/MMB-/Rad-/Werkzeugeingaben, Fit, UI100/125, echte Fenster-Resize/Abbruch und G/V-Wechsel |
+| N03 | vs1_e1_cases.gd / vs1_e1_tests.gd: sechs begrenzte Diagnosen, vollständige Tokens an allen Glyphen-/Markerübergängen und Zwischenintervallen; 1–5, 5/6/7/lang, Transponate, unveränderte farbige Korpusfälle und drei Hinweiszustände |
+| N04 | vs1_roundtrip.gd: sechs getrennte Schreib-/Leseprozesse für G, V und Legacy R/Hand/Zoom/Zentrum; Zellen, History, Farbe, Auswahl und semantische Lesepositionen; Recovery/Isolation/Spoilerprüfungen |
+
+tools/vs1_delivery.py registriert E1-Prüfung und sämtliche Roundtrips im Produktlauf.
+Unter Windows folgt die tatsächliche OS-Fensterprobe; CI-Linux behält die native
+SubViewport-Matrix. Neue Matrix, Bilder und Logs sind im separaten Review-ZIP.
+minimum_surplus misst je Folge die kleinste Differenz der tatsächlich gezeichneten
+Tokens zu min(5,n). Negative Fälle werden nicht aus der Gesamtmatrix entfernt.
+Der aktuelle Lieferhead und die neuen Download-/Windowsbindungen stehen im Draft-PR.
+Selbstreview ist Implementierungsprüfung; unabhängiges Review und VS-M01 bleiben offen.
+
+Die historischen Produktions-/Manifestbindungen bleiben unverändert und prüfen die
+bytegleiche Kopie [plan-vb1.json](../examples/vs1/plan-vb1.json). Der aktuelle Plan
+muss ohne seinen E1-Abschnitt genau diesen historischen Inhalt behalten. Negative
+Prüfungen weisen geänderte Altslots, fehlenden E1-Abschnitt und andere Archivbytes ab.
+
+Die Windows-Downloadprobe ist mit [vs1_windows_probe.py](../tools/vs1_windows_probe.py)
+reproduzierbar: sauberer Lieferhead, Run-ID, frischer Ausgabepfad und gepinnter
+Godot-Editor/Cache. Sie startet beide entpackten EXEs direkt und führt native
+Bearbeitungs-/Neustart-/Legacy-/Fensterprüfungen gegen deren eingebetteten PCK aus.
+
+
+Aktive Windows-Messung E1-correction-1, maximaler Fit in V bei 1920 × 1080.
+Keine Komfortabnahme; G und sämtliche Fehlfälle bleiben in der vollständigen Matrix.
+
+| Fall | UI 100 % | UI 125 % |
+| --- | --- | --- |
+| VS01 | 29.29 px | 28.07 px |
+| VS02 | 21.49 px | 18.32 px |
+| VS07 | 21.52 px | 20.49 px |
+| VS08 | 16.12 px | 13.74 px |
+| VS09 | 27.48 px | 24.81 px |
+| VS10 | 18.64 px | 13.76 px |
+
+## Historische Ergebnisse der Erstlieferung bbc91821
+
+Die folgenden Zahlen und Einordnungen gelten ausschließlich für den historischen
+Erststand, nicht für VS-E1-R2. [Dateibindung](../examples/vs1/historical-reference.json).
 Zellabstände bei maximalem Fit in V, logischer Client 1920 × 1080. Werte sind
 geometrische Messwerte, keine menschlich bestätigten Komfortgrenzen:
 
@@ -68,7 +110,7 @@ Passform erwartungsgemäß; daraus folgt keine neue Mindestauflösung.
 Versteckte Hinweisteile bleiben ausdrücklich als Navigationserfordernis
 protokolliert. G ist keine vollständige Rätselblattsicht und beweist V nicht.
 
-## Hinweisbudget und offene Entscheidung
+## Historisches Hinweisbudget und offene Entscheidung
 
 Für die konkret gelieferte Aufteilung beträgt bei 1080p/UI100 die nutzbare Höhe
 vor oberen Hinweisen 824 px. Ein 40×40-Raster mit 18 px lässt rechnerisch etwa

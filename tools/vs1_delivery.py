@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import html
 import json
+import platform
 import zipfile
 from pathlib import Path
 
@@ -17,11 +18,11 @@ def capture_command(render_command):
 
 def verify(renders: Path) -> dict:
     report=json.loads((renders/'vs1-matrix.json').read_text(encoding='utf-8'))
-    expected={(f'VS{i:02}',w,u,m) for i in range(1,11) for w in (1280,1920) for u in (1.0,1.25) for m in ('R','G','V')}
+    expected={(f'VS{i:02}',w,u,m) for i in range(1,11) for w in (1280,1920) for u in (1.0,1.25) for m in ('G','V')}
     rows=report['records']
     main=[r for r in rows if r['client'][0] in (1280,1920)]
     actual={(r['id'],r['client'][0],r['ui_scale'],r['mode']) for r in main}
-    if report['failures'] or actual!=expected or len(main)!=120 or len(rows)!=150:
+    if report['failures'] or actual!=expected or len(main)!=80 or len(rows)!=100:
         raise toolchain.PreflightError('VS1 incomplete/failed native matrix')
     for row in rows:
         if not row['spoiler_free']:
@@ -42,6 +43,9 @@ def verify(renders: Path) -> dict:
             raise toolchain.PreflightError('VS1 image binding differs')
     if {d['id'] for d in report['diagnostics']}!={'VS-D11','VS-D12'} or any(d['certified'] for d in report['diagnostics']):
         raise toolchain.PreflightError('VS1 diagnosis certification error')
+    e1=report['VS_E1_R2']
+    if len(e1)!=34 or {r['id'] for r in e1}!={*(f'VS-E{i}' for i in range(13,19)),'VS04','VS06','VS08','VS10'} or any(r['minimum_surplus']<0 or r['states']<=0 or r['certified'] for r in e1):
+        raise toolchain.PreflightError('VS1 E1 incomplete actual continuous-token evidence')
     return report
 
 
@@ -49,16 +53,19 @@ def capture(root, project, workspace, output, engine, render_command, environmen
     from tools.puzzle_production.vs1 import verify_cases
     corpus=verify_cases()
     phase('vs1-tests',[engine,'--headless','--path',str(project),'--script','res://tests/vs1_tests.gd'],'VS1_TESTS_OK')
+    phase('vs1-e1-tests',[engine,'--headless','--path',str(project),'--script','res://tests/vs1_e1_tests.gd'],'VS1_E1_TESTS_OK')
     # Deliberately no VS1_TEST_ROOT: exercise the same default stable root as EXE.
-    for stage in ('write','read'):
+    for stage in ('write','read','legacy-write','legacy-read','v-write','v-read'):
         environment['VS1_STAGE']=stage
-        phase('vs1-roundtrip-'+stage,[engine,'--headless','--path',str(project),'--script','res://tests/vs1_roundtrip.gd'],f'VS1_ROUNDTRIP_{stage.upper()}_OK')
+        phase('vs1-roundtrip-'+stage,[engine,'--headless','--path',str(project),'--script','res://tests/vs1_roundtrip.gd'],f'VS1_ROUNDTRIP_{stage.upper().replace("-","_")}_OK')
     environment.pop('VS1_STAGE',None)
     renders=output/'vs1-renders'; renders.mkdir()
     old=environment.get('P1_CAPTURE_DIR')
     environment['P1_CAPTURE_DIR']=str(renders)
     try:
         phase('vs1-native-capture',capture_command(render_command),'VS1_CAPTURE_OK')
+        if platform.system()=='Windows':
+            phase('vs1-native-window',[engine,'--path',str(project),'--rendering-driver','opengl3','--audio-driver','Dummy','--script','res://tests/vs1_window.gd'],'VS1_WINDOW_OK')
     finally:
         if old is None: environment.pop('P1_CAPTURE_DIR',None)
         else: environment['P1_CAPTURE_DIR']=old
@@ -95,7 +102,7 @@ def export(project, workspace, output, base, phase, host):
 
 def package(root, output, build, files, product, evidence):
     manifest={k:product[k] for k in ('source_commit','source_tree_dirty','tested_checkout_commit','base_commit','github_run_id','host','engine_version','assets')}
-    manifest.update(schema=1,study='VS-1 revision 1',drawing_basis='985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f',export_files=files,
+    manifest.update(schema=1,study='VS-1 revision 1 / VS-E1-R2',modes=['G','V'],drawing_basis='985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f',export_files=files,
                     plan_sha256=toolchain.sha256_file(root/'examples/vs1/plan.json'),corpus_manifest_sha256=toolchain.sha256_file(root/'examples/vs1/manifest.json'),
                     matrix_sha256=toolchain.sha256_file(output/'vs1-renders/vs1-matrix.json'),
                     VS_M01='OPEN owner trial',VS_D01='OPEN owner decision',independent_review='OPEN',
@@ -117,7 +124,8 @@ def package(root, output, build, files, product, evidence):
         bundle.write(output/'vs1-renders/vs1-matrix.json','vs1-matrix.json')
         bundle.writestr('vs1-report.json',report)
         for name in ('VS1_STUDY.md','VS1_VERIFICATION.md'): bundle.write(root/'docs'/name,name)
-        for name in ('manifest.json','plan.json','production.json','owner-protocol.json'): bundle.write(root/'examples/vs1'/name,name)
+        for name in ('manifest.json','plan.json','plan-vb1.json','production.json','owner-protocol.json'): bundle.write(root/'examples/vs1'/name,name)
+        bundle.write(root/'examples/vs1/historical-reference.json','historical-reference.json')
         for path in (output/'logs').glob('vs1-*.log'): bundle.write(path,'logs/'+path.name)
         bundle.writestr('index.html',gallery(evidence))
     for p in (player,review): print(f'VS1 ARTIFACT {p} sha256:{toolchain.sha256_file(p)}',flush=True)

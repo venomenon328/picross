@@ -86,13 +86,13 @@ func run() -> void:
 		var cells: Array = app.session.player.cells.duplicate()
 		var history: Array = app.session.player.history.duplicate(true)
 		app.board.active_color = app.session.definition.palette.size()
-		for mode: String in ["R","G","V","R","G"]:
+		for mode: String in ["G","V","G"]:
 			mouse(point(1,2),MOUSE_BUTTON_LEFT,true)
 			app.choose_mode(mode)
 			mouse(point(1,2),MOUSE_BUTTON_LEFT,false)
 			check(not app.session.gesture.active and app.session.player.cells == cells and app.session.player.history == history, "switch cancels gesture without model change")
 			check(app.board.active_color == app.session.definition.palette.size(), "switch preserves active color")
-			check(app._save_current(), "every mode saves valid schema including first R entry")
+			check(app._save_current(), "every mode saves valid schema")
 		app.board.fit_all()
 		var center: Vector2 = app.board.view.center
 		mouse(point(4,4),MOUSE_BUTTON_MIDDLE,true)
@@ -130,14 +130,20 @@ func run() -> void:
 		check(app.board.capture_view()!=old,"MMB commits independent clue read")
 	app.choose_mode("V")
 	check(app.board.navigation_target(app.board.column_clue_area().get_center()).is_empty(),"V has no hint pan")
+	# Legacy entry points cannot restore a playable R or grid pan.
 	app.choose_mode("R")
+	check(app.board.mode == "G" and app.mode_controls.get_child_count() == 2, "legacy R maps to G; only G/V offered")
+	app.set_tool("hand")
+	check(not app.board.hand and not app.actions.hand.visible and not app.mini.interactive, "hand removed and miniature inert")
 	app.board.working_size()
 	var center_before: Vector2 = app.board.view.center
 	var p: Vector2 = app.board.global_position+app.board.view.viewport.get_center()
 	mouse(p,MOUSE_BUTTON_MIDDLE,true)
 	motion(p-Vector2(90,60))
 	mouse(p-Vector2(90,60),MOUSE_BUTTON_MIDDLE,false)
-	check(app.board.view.center!=center_before,"R actual MMB grid pan retained")
+	check(app.board.view.center==center_before,"legacy R MMB cannot pan grid")
+	app.board.navigate_to(Vector2.ZERO)
+	check(app.board.view.center==center_before,"miniature callback cannot pan grid")
 	app.choose_mode("G")
 	var before_cancel: Array = app.session.player.cells.duplicate()
 	for action: String in ["escape","resize"]:
@@ -172,6 +178,15 @@ func run() -> void:
 	check(recovered.status == "recovered", "backup recovery offered")
 	app.slot_status[9] = "recovered"
 	check(not app._save_current() and FileAccess.get_file_as_string(path) == "broken", "recovery needs conscious adoption")
+	app.open_puzzle()
+	app._layout_book()
+	check(not app.board.get_global_rect().intersects(app.status_label.get_global_rect()) and not app.board.get_global_rect().intersects(app.work_repair_button.get_global_rect()), "recovery status/actions reserve space above board")
+	app.size=Vector2(1280,720)
+	app._layout_book()
+	for control: Control in [app.status_label,app.work_repair_button,app.mini,app.study_status]:
+		check(Rect2(Vector2.ZERO,app.size).encloses(control.get_global_rect()) and not app.board.get_global_rect().intersects(control.get_global_rect()), "720p/UI125 recovery and rail controls remain visible outside grid")
+	app.size=Vector2(1920,1080)
+	app._layout_book()
 	app._repair_selected()
 	check(app._save_current(), "explicit backup adoption")
 	# Real completion contract on both rectangle orientations; no aspect distortion.

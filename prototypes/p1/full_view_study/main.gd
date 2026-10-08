@@ -40,8 +40,8 @@ func _ready() -> void:
 	mode_controls = HBoxContainer.new()
 	mode_controls.add_theme_constant_override("separation", 8)
 	work.add_child(mode_controls)
-	for mode: String in ["R", "G", "V"]:
-		var caption: String = {"R": "R · Referenz", "G": "G · Raster", "V": "V · Ganzes Blatt"}[mode]
+	for mode: String in ["G", "V"]:
+		var caption: String = {"G": "G · Raster", "V": "V · Blatt"}[mode]
 		mode_controls.add_child(_text_button(caption, choose_mode.bind(mode)))
 	study_status = label("", 14)
 	study_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -52,13 +52,19 @@ func _ready() -> void:
 	animation_toggle.button_pressed = true
 	animation_toggle.toggled.connect(board.set_animations)
 	settings_panel.add_child(animation_toggle)
-	for mode: String in ["R","G","V"]:
+	for mode: String in ["G","V"]:
 		settings_panel.add_child(_text_button("Ansicht %s öffnen" % mode, func() -> void: choose_mode(mode); open_puzzle()))
 	settings_panel.add_child(_text_button("Künstlichen Vergleichsstand laden", _ask_sample))
 	settings_panel.add_child(_text_button("Studienblatt leeren", _ask_reset))
-	var info: Label = label("VS-1: R behält die Referenznavigation. G hält das Raster sichtbar; lange Hinweise bleiben verschiebbar. V reserviert alle Hinweise. Kleine oder kollidierende Zahlen sind kein Komfortnachweis.\nVergleichsstand: künstliche eigene Eingaben, keine Lösungshilfe. Zurücksetzen betrifft nur dieses Studienblatt. Normale P1-Spielstände bleiben getrennt.", 16)
+	var info: Label = label("VS-E1: G hält das Raster sichtbar; lange Hinweise bleiben mit mindestens fünf Zahlen verschiebbar. V reserviert alle Hinweise. Kleine oder kollidierende Zahlen sind kein Komfortnachweis.\nVergleichsstand: künstliche eigene Eingaben, keine Lösungshilfe. Zurücksetzen betrifft nur dieses Studienblatt. Normale P1-Spielstände bleiben getrennt.", 16)
 	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	settings_panel.add_child(info)
+	actions["hand"].hide()
+	actions["hand"].disabled = true
+	mini.interactive = false
+	for item: Node in help_panel.get_children():
+		if item is Label:
+			item.text = item.text.replace("Rad: Zoom am Zeiger. Mittlere Taste oder Hand im Raster: verschieben. Miniatur: den eigenen Ausschnitt versetzen. Gesamtansicht und Arbeitsgröße sind getrennt.", "Rad und +/−: Zoom bis zur Vollsichtgrenze. Gesamtansicht erreicht diese Grenze; Arbeitsgröße bleibt darunter. Das Raster und die Miniatur werden nicht verschoben.").replace("Mittlere Taste oder Hand auf Hinweisen:", "In G: Mittlere Taste auf langen Hinweisen:")
 	var restored: Dictionary = state.duplicate(true)
 	select_puzzle(clampi(int(restored.selected), 0, sessions.size() - 1))
 	set_ui_scale(float(restored.get("ui_scale", 1.0)))
@@ -84,10 +90,20 @@ func set_ui_scale(value: float) -> void:
 
 func choose_mode(value: String) -> void:
 	board.set_mode(value)
-	state.mode = value
+	state.mode = board.mode
 	_schedule_view_save()
 	_layout_book()
 	refresh()
+
+func set_tool(tool: String) -> void:
+	super.set_tool("fill" if tool == "hand" else tool)
+
+func _update_status() -> void:
+	var was_visible: bool = status_label.visible if status_label != null else false
+	var repair_visible: bool = work_repair_button.visible if work_repair_button != null else false
+	super._update_status()
+	if study_ready and work.visible and (was_visible != status_label.visible or repair_visible != work_repair_button.visible):
+		_layout_book()
 
 func _ask_sample() -> void:
 	var dialog: ConfirmationDialog = ConfirmationDialog.new()
@@ -138,6 +154,9 @@ func _read_state() -> void:
 	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if value is Dictionary and value.get("revision") == 1 and value.get("mode") in ["R", "G", "V"] and SaveStore.integer(value.get("selected")) and int(value.selected) >= 0 and int(value.selected) < 10 and SaveStore.number(value.get("requested_cell")) and float(value.requested_cell) >= 0 and float(value.requested_cell) <= 72 and value.get("ui_scale", 1.0) in [1.0, 1.25]:
 		state = value
+		if state.mode == "R":
+			state.mode = "G"
+			state.requested_cell = 0.0
 	# Invalid view metadata never changes cell recovery or creates a new puzzle stand.
 
 func _save_current() -> bool:
@@ -166,43 +185,50 @@ func _layout_book() -> void:
 	if board == null or mode_controls == null or size.x < 1280 or size.y < 720:
 		return
 	var u: float = ui_scale
-	# R keeps its original clue surface completely unobscured. Its study-mode
-	# controls are reachable in the existing menu; G/V reserve their own header.
-	mode_controls.visible = board.mode != "R"
-	study_status.visible = board.mode != "R"
+	mode_controls.show()
+	study_status.show()
 	var material: Rect2 = surface.material_rect()
 	var origin: Vector2 = material.position
 	var extent: Vector2 = material.size
-	_place(mode_controls, Rect2(origin + Vector2(100, 98)*u, Vector2(450*u+16, 44*u)))
+	var rail: float = extent.x - 260*u
+	var top: float = maxf(title.get_rect().end.y - origin.y + 6*u, 82*u)
+	var rail_top: float = top
+	var bottom: float = extent.y - 68*u
+	var left: float = 68*u
+	if work.visible and status_label.visible:
+		_place(status_label,Rect2(origin+Vector2(left,top),Vector2(rail-left-24*u,100*u)))
+		top += 106*u
+		if work_repair_button.visible:
+			_place(work_repair_button,Rect2(origin+Vector2(left,top),Vector2(340,44)*u))
+			top += 50*u
+	# Modes share the bottom tool strip, freeing the previously unused upper
+	# paper. Top follows the actual title height instead of a fixed clue budget.
+	_place(mode_controls, Rect2(origin + Vector2(left+8*52*u+12*u, bottom), Vector2(240*u+8, 44*u)))
 	for control: Button in mode_controls.get_children():
-		control.custom_minimum_size = Vector2(150*u, 44*u)
+		control.custom_minimum_size = Vector2(120*u, 44*u)
 		control.add_theme_font_size_override("font_size", roundi(15*u))
-	if board.mode != "R":
+	if board.mode in ["G", "V"]:
 		laying_out = true
-		var rail: float = extent.x - 260*u
-		var top: float = 158*u
-		var bottom: float = extent.y - 76*u
-		var left: float = 68*u
 		_place(board, Rect2(origin + Vector2(left, top), Vector2(rail-left-24*u, bottom-top-10*u)))
 		board._layout()
-		_place(mini, Rect2(origin+Vector2(rail+22*u,top+30*u),Vector2(132,132)*u))
+		_place(stress_label, Rect2(origin+Vector2(rail+12*u,20*u),Vector2(224,52)*u))
+		var mini_extent: float = 100.0 if (bottom-rail_top)/u < 600 else 132.0
+		_place(mini, Rect2(origin+Vector2(rail+12*u,rail_top+30*u),Vector2.ONE*mini_extent*u))
 		_place(mini_title, Rect2(mini.position-Vector2(0,26*u),Vector2(180,24)*u))
-		_place(coordinate,Rect2(mini.position+Vector2(0,150*u),Vector2(190,44)*u))
-		_place(palette_row,Rect2(mini.position+Vector2(0,202*u),Vector2(110,110)*u))
-		_place(zoom_label,Rect2(mini.position+Vector2(0,316*u),Vector2(200,24)*u))
-		_place(tool_label,Rect2(mini.position+Vector2(0,340*u),Vector2(200,24)*u))
-		var ids: Array[String] = ["fill","erase","hand","undo","redo","minus","plus","fit","work"]
+		_place(coordinate,Rect2(mini.position+Vector2(0,(mini_extent+14)*u),Vector2(190,44)*u))
+		_place(palette_row,Rect2(mini.position+Vector2(0,(mini_extent+66)*u),Vector2(110,110)*u))
+		_place(zoom_label,Rect2(mini.position+Vector2(0,(mini_extent+188)*u),Vector2(200,24)*u))
+		_place(tool_label,Rect2(mini.position+Vector2(0,(mini_extent+212)*u),Vector2(200,24)*u))
+		_place(study_status,Rect2(mini.position+Vector2(0,(mini_extent+244)*u),Vector2(200,84)*u))
+		var ids: Array[String] = ["fill","erase","undo","redo","minus","plus","fit","work"]
 		surface.wells.clear()
 		for i: int in range(ids.size()):
 			_place(actions[ids[i]],Rect2(origin+Vector2(left+i*52*u,bottom),Vector2(44,44)*u))
-		surface.wells.append(Rect2(origin+Vector2(left-3*u,bottom-3*u),Vector2(466,50)*u))
+		surface.wells.append(Rect2(origin+Vector2(left-3*u,bottom-3*u),Vector2(414,50)*u))
 		surface.card=Rect2(mini.position-Vector2(10,28)*u,mini.size+Vector2(20,38)*u)
 		surface.miniature=mini.get_rect()
 		surface.palette=palette_row.get_rect().grow(6*u)
 		laying_out=false
-	_place(study_status,Rect2(origin+Vector2(680*u,90*u),Vector2(maxf(260,extent.x-760*u),62*u)))
-	if extent.x < 1500 and u > 1.0:
-		_place(study_status,Rect2(origin+Vector2(600*u,70*u),Vector2(extent.x-610*u,82*u)))
 	_update_study_status()
 	surface.queue_redraw()
 
@@ -211,16 +237,16 @@ func _update_study_status() -> void:
 		return
 	if work.visible and not session.completed:
 		title.text = "%s · %s" % [session.album_title(),board.mode]
-	var prefix: String = "R · freie Navigation" if board.mode == "R" else ("G · Raster; Hinweise ggf. verschieben" if board.mode == "G" else "V · Raster und alle Hinweise")
+	var prefix: String = "G · Raster + Hinweise" if board.mode == "G" else "V · Vollständiges Blatt"
 	var warning: String = ""
-	if board.mode != "R":
+	if board.mode in ["G", "V"]:
 		if not board.layout_valid:
-			warning = "PASST NICHT · R verwenden"
+				warning = "PASST NICHT · mehr Fläche nötig"
 		elif board.view.cell_size < 16:
-			warning = "Unter 16 px · Diagnose, Komfort offen"
+			warning = "Unter 16 px · Komfort offen"
 		if board.glyph_risk:
-			warning = "Zahlenkollision möglich · R verwenden" if board.layout_valid else warning
-	study_status.text = "%s\nZelle %.2f · Fit %.2f · Schrift %d px\n%s" % [prefix,board.view.cell_size,board.fit_ceiling,board.clue_font_size(),warning]
+			warning = "Eingeschränkt: Zahlkollision" if board.layout_valid else warning
+	study_status.text = "%s\nZelle %.2f · Fit %.2f\nSchrift %d px\n%s" % [prefix,board.view.cell_size,board.fit_ceiling,board.clue_font_size(),warning]
 
 func refresh() -> void:
 	super.refresh()

@@ -7,6 +7,7 @@ var pictures: Array = []
 var failures: int = 0
 var output: String
 var diagnostics: Array = []
+var e1_evidence: Array = []
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -49,12 +50,9 @@ func run() -> void:
 				app.replace_with_sample()
 				var cells: Array = app.session.player.cells.duplicate()
 				var history: Array = app.session.player.history.duplicate(true)
-				for mode: String in ["R", "G", "V"]:
+				for mode: String in ["G", "V"]:
 					app.choose_mode(mode)
-					if mode == "R":
-						app.board.working_size()
-					else:
-						app.board.fit_all()
+					app.board.fit_all()
 					await process_frame
 					var record: Dictionary = app.board.measurements()
 					record.merge({"id": app.session.definition.id, "revision": app.session.definition.revision, "definition_sha256": FileAccess.get_sha256("res://full_view_study/cases/vs%02d/definition.json" % (index+1)), "format": [app.session.player.width,app.session.player.height], "color": app.session.definition.palette.size() > 1, "client": [extent.x,extent.y], "ui_scale": ui, "surface_kind": "native-rendered logical SubViewport, not physical display proof", "board_rect": app.board.rect_values(app.board.get_global_rect()), "miniature_rect": app.board.rect_values(app.mini.get_global_rect()), "controls": {}, "controls_clipped": [], "control_overlaps": [], "spoiler_free": not app.session.completed and not app.ending.visible})
@@ -122,7 +120,9 @@ func run() -> void:
 		check(app.ending.visible and app.reveal_view.solved.size()==app.session.player.height and app.reveal_view.solved[0].size()==app.session.player.width,"rectangular revealed axes")
 		await shot("vs1-%s-completed-test-state" % app.session.definition.id)
 	await diagnostic_probe()
+	await e1_diagnostic_probe()
 	var report: Dictionary = {"schema": 1, "records": records, "pictures": pictures, "diagnostics": diagnostics, "failures": failures, "drawing_basis": "985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f / study / Chalkboard 1.35 / pencil", "renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(), "physical_environment": {"screen": str(DisplayServer.screen_get_size()), "usable": str(DisplayServer.screen_get_usable_rect()), "dpi": DisplayServer.screen_get_dpi(), "scale": DisplayServer.screen_get_scale(), "root_client": str(root.size), "physical_720p_1080p_dpi_comfort": "not tested"}}
+	report.VS_E1_R2 = e1_evidence
 	FileAccess.open(output.path_join("vs1-matrix.json"), FileAccess.WRITE).store_string(JSON.stringify(report,"\t")+"\n")
 	if failures == 0:
 		print("VS1_CAPTURE_OK rows=", records.size(), " pictures=", pictures.size())
@@ -184,3 +184,65 @@ func diagnostic_probe() -> void:
 			diagnostics.append({"id":id,"certified":false,"kind":"diagnostic","state":state,"file":name,"sha256":FileAccess.get_sha256(output.path_join(name)),"matrix_sha256":JSON.stringify(data.solution).sha256_text(),"measurements":board.measurements()})
 		board.queue_free()
 		await process_frame
+	background.queue_free()
+	title.queue_free()
+	await process_frame
+
+func e1_diagnostic_probe() -> void:
+	const Cases = preload("res://tests/vs1_e1_cases.gd")
+	var board: Control = load("res://full_view_study/board.gd").new()
+	var template: Dictionary = app.sessions[0].definition
+	var background: ColorRect = ColorRect.new()
+	background.color = Color("faf6ec")
+	background.size = Vector2(canvas.size)
+	canvas.add_child(background)
+	board.session = Session.new(template)
+	board.book_layout = true
+	board.position = Vector2(60,110)
+	board.size = Vector2(1740,890)
+	canvas.add_child(board)
+	var title: Label = Label.new()
+	title.position = Vector2(60,65)
+	title.add_theme_color_override("font_color",Color("343f42"))
+	title.add_theme_font_size_override("font_size",22)
+	canvas.add_child(title)
+	var inputs: Array = []
+	for n: int in range(1,6): inputs.append(Cases.fixture(template,n))
+	for transposed: bool in [false,true]:
+		for n: int in [5,6,7,25]: inputs.append(Cases.fixture(template,n,true,transposed))
+	for index: int in [3,5,7,9]: inputs.append(app.sessions[index].definition)
+	for ui: float in [1.0,1.25]:
+		board.ui_scale = ui
+		for data: Dictionary in inputs:
+			board.session = Session.new(data)
+			board.mode = "G"
+			board.fit_all()
+			var probe: Dictionary = Cases.drag_probe(board,check)
+			probe.merge({"id":data.id,"certified":false,"kind":"E1 geometry diagnosis; corpus IDs refer to existing unchanged cases","matrix_sha256":JSON.stringify(data.solution).sha256_text(),"format":[data.width,data.height],"ui_scale":ui,"max_hints":[board.max_hints.x,board.max_hints.y],"measurements":board.measurements()})
+			e1_evidence.append(probe)
+			# Six short/long diagnoses and the demanding corpus example get native
+			# pixels at start, an unsnapped midpoint and direct outer stop.
+			if ui != 1.25 or not (str(data.id).begins_with("VS-E") or data.id == "VS08"): continue
+			var axis: String = "row" if board.max_hints.x >= board.max_hints.y else "column"
+			var lines: Array = data.rows if axis == "row" else data.columns
+			var index: int = 0
+			for i: int in range(lines.size()):
+				if lines[i].size() > lines[index].size(): index = i
+			var layout: Dictionary = board.clue_layout(axis,index)
+			for phase: String in (["start","continuous","outer"] if int(layout.max_offset)>0 else ["complete"]):
+				board.set_clue_step(axis,index,int(layout.max_offset) if phase == "outer" else 0)
+				if phase == "continuous":
+					board.pan_target=axis; board.pan_button=MOUSE_BUTTON_MIDDLE; board.pan_line_index=index
+					board.pan_drag_distance=(layout.entries.size()-int(layout.slot_count)+1)*float(layout.slot_extent)*0.5
+				title.text = "%s · DIAGNOSE · %s · Bedarf %s · Reserve %s · %s" % [data.id,axis,str(board.max_hints),str(board.reserve_slots),phase]
+				board.queue_redraw()
+				await process_frame
+				await RenderingServer.frame_post_draw
+				var name: String = "vs1-e1-%02d-%s-%s.png" % [inputs.find(data),axis,phase]
+				canvas.get_texture().get_image().save_png(output.path_join(name))
+				pictures.append({"file":name,"sha256":FileAccess.get_sha256(output.path_join(name)),"id":data.id,"kind":"E1 diagnosis; not owner trial","phase":phase,"measurements":board.measurements()})
+				board.cancel_gesture()
+	board.queue_free()
+	title.queue_free()
+	background.queue_free()
+	await process_frame

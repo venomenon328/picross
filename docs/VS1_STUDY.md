@@ -1,7 +1,7 @@
 # VS-1 · Vertrag der Vollsichtstudie
 
-Umsetzung von [#57](https://github.com/venomenon328/picross/issues/57), Vorbereitung
-VS-VB1. Technische Draft-Lieferung; VS-M01, unabhängiges Review und VS-D01 bleiben
+Aktiver Nacharbeitsvertrag VS-E1-R2 aus [#57 §11](https://github.com/venomenon328/picross/issues/57).
+VS-VB1 und die ursprüngliche Produktionsvorbereitung bleiben historisch. Technische Draft-Lieferung; VS-M01, unabhängiges Review und VS-D01 bleiben
 offen. Keine reguläre Größenstrategie, Merge- oder Releasefreigabe.
 
 ## Gebundene Basis und Grenzen
@@ -9,8 +9,8 @@ offen. Keine reguläre Größenstrategie, Merge- oder Releasefreigabe.
 Ausgangsbasis ist `main@985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f`.
 Alle Modi verwenden unverändert die Zeichenkomponenten aus `study/`: Chalkboard
 mit Faktor 1,35, Zeilenslots 26 × UI, Spaltenslots 18 × UI, Stift/X und gleichzeitige
-140/80-ms-Effekte. R behält die bisherige Buchaufteilung und Navigation und erhält
-denselben Rechteckadapter. Die damalige reguläre Plex-Ansicht ist keine VS-Referenz.
+140/80-ms-Effekte. Spielbar sind ausschließlich G/V ohne Hand oder Rasterpanning.
+R gehört nur zum historischen Erststand; die reguläre Plex-Ansicht ist keine VS-Referenz.
 Ungemergte Dateien aus PR #56 sind nicht übernommen; ZS2-N01–N03 gehören nicht hierher.
 Bei Integration von #56 während der Arbeit muss aktuelles `main` integriert, die
 Zeichenbasis neu gebunden und die betroffene Vergleichsmatrix neu erzeugt werden.
@@ -74,34 +74,64 @@ Der künstliche Vergleichsstand folgt einer festen arithmetischen Eingabefolge,
 liest keine Lösung und gilt nicht als Lösungshilfe. Vor Abschluss bleiben Titel
 neutral und Miniaturen zeigen ausschließlich eigene Einträge. Das Umschalten
 verwirft laufende Gesten, erhält bestätigte Matrix/History/aktive Farbe und
-erzeugt keine Zellaktion. R behält MMB-Raster-/Hinweisnavigation; G erlaubt MMB
-für lange Hinweise; V benötigt keine Hinweisnavigation.
+erzeugt keine Zellaktion. G erlaubt MMB für einzelne lange Hinweisfolgen; V zeigt
+alle. Miniatur und MMB im Raster verschieben das Raster nicht. Alte R-Auswahl wird
+auf G mit Einpasszoom normalisiert. Schema-1-Hand, Zentrum und Zoom werden beim
+Ansichtsladen bereinigt; bestätigte Zellen/History/Farbe und semantische Lesepositionen
+bleiben erhalten. Reguläre P1-Saves und ihr Schema ändern sich nicht.
 
-G reserviert bis zu sechs Zeilen- und fünf Spaltenslots, V den vollständigen
-maximalen Hinweisbedarf. Reservierung bleibt beim Erfüllen von Hinweisen konstant.
-Nach Abzug von Controls, Miniatur und Rand wird quadratischer Zellabstand berechnet.
-Alle angebotenen G/V-Zoomstufen sind durch den aktuellen Fit begrenzt. Unter 16 px
-steht ausdrücklich Diagnose/Komfort offen; mögliche Glyphenkollisionen werden
-gemeldet. Unterhalb eines überhaupt zeichnungsfähigen Stiftinneren (>4 px) wird
-kein Raster vorgetäuscht: die Ansicht zeigt „PASST NICHT“ und verweist auf R.
-Solche Fälle bleiben in der Matrix, mit `geometry_rendered=false` und gemessener
-Kandidatengeometrie. Sie sind keine Vollsicht-Erfolge.
+G reserviert je Achse den tatsächlichen vollständigen Bedarf bei M ≤ 5, ohne alten
+Dreiermindestwert oder Fünferpadding. Bei M > 5 wird die kleinste geeignete Reserve
+anhand realer Glyphen, C1/AA, Statusstrich, Marker und kontinuierlicher Bewegung
+ermittelt. Alle Sichtbarkeitsübergänge und die offenen Intervalle dazwischen werden
+geprüft, für sämtliche angebotenen Schriftpixelgrößen. Mindestens min(5,n)
+zusammenhängende ganze Zahlen bleiben sichtbar. Sechs/sieben passen gegebenenfalls
+vollständig; mehrstellige Zahlen zählen als eine. Leere Linien behalten „–“.
+V reserviert den vollständigen tatsächlichen Bedarf. Kein Spielfortschritt und
+kein kleinerer Benutzerzoom verändert diese Reservierung.
 
-## VS-P3: Messung und Lieferung
+Moduswahl liegt neben den acht Werkzeugen unten; die obere Boardgrenze folgt dem
+realen Titel. Die Miniatur und Texte liegen in einer eigenen Seitenleiste mit
+kompakterem Umfang bei wenig Höhe. Nach Controls/Rändern und beiden Hinweisreserven
+folgt min(nutzbare Breite/Spalten, nutzbare Höhe/Zeilen). Einpassen erreicht diese
+Grenze; bewusst kleinere Zoomwerte bleiben kleiner. Jeder Zoom-/Resize-/UI-/Blatt-/
+Ansichtsweg wird begrenzt. Semantische Lesepositionen werden neu eingerahmt;
+outer_start und geometrisches Einrasten erst beim Loslassen bleiben.
 
-Die Hauptmatrix hat 80 G/V- und 40 R-Zeilen bei logischen Clients 1920 × 1080 und
-1280 × 720, UI 100/125 %. Weitere 30 Zeilen auf 2560 × 1440 plausibilisieren.
-Native SubViewport-Bilder sind ausdrücklich keine physischen Auflösungs- oder
-DPI-Proben. Zellabstand, Schriftpixel, echte TextServer-Glyphen samt Statusstrich,
-Clipping/Kollisionen, Hinweisrechtecke, Miniatur/Controls, Zoomgrenzen und
-16/18/20-px-Vergleichspunkte werden protokolliert. Negative Fälle bleiben sichtbar.
+Unter 16 px oder bei Glyphenkollisionen bleibt die Ansicht ausdrücklich eingeschränkt.
+Unterhalb des zeichnungsfähigen Stiftinneren (>4 px) wird kein Raster vorgegeben:
+„PASST NICHT“. Fenster vergrößern/UI verkleinern; kein R-Ausweg und kein positiver
+Komfortnachweis. Fehlfälle bleiben vollständig in der Matrix.
 
-Der Vorabplan begrenzt den Layoutversuch auf L1 plus zwei Korrekturen:
+## VS-P3 / VS-E1-R2: Messung und Lieferung
+
+Die neue Hauptmatrix enthält 80 G/V-Zeilen bei logischen Clients 1920 × 1080 und
+1280 × 720, UI 100/125 %, sowie 20 größere Kontrollen auf 2560 × 1440. Native
+SubViewport-Bilder sind keine physische Display-/DPI-Abnahme. Die zusätzliche
+OS-Fensterprobe erfasst tatsächliche Clientgrößen mit echten InputEvents.
+TextServer-Glyphen samt Statusstrich, Clipping/Kollision, Hinweisrechtecke,
+Controls, Zoomgrenzen und 16/18/20-px-Vergleichspunkte werden protokolliert.
+
+Der gesonderte Planabschnitt VS-E1-R2 wurde vor dem Vergleich gebunden: E1-initial
+plus höchstens zwei Korrekturen. E1-initial fand Status-/Modusüberdeckung bei
+720p/UI125; E1-correction-1 verkürzt die Beschriftungen und verbreitert den Abstand
+zur Seitenleiste. Keine neue Produktion, Artwork-, Font- oder Hintergrundvariation.
+Historische Produktionsdaten und L1–L3 bleiben unverändert.
+
+Sechs Reviewdiagnose-Familien VS-E13–E18 decken Maxima 1–5 sowie parametrisierte
+5/6/7/Langfolge und Transponat ab. Sie sind keine neuen Spielslots oder Zertifikate.
+VS04/VS06, VS08 und VS10 ergänzen reale farbige Folgen; VS-D11/D12 bleiben die
+ursprünglichen zwei Status-/Farbdiagnosen. Die Fünfergarantie zählt dieselben ganzen
+Tokens, die der Zeichenpfad verwendet, einschließlich aller kritischen Dragübergänge.
+Historische R-/Erststanddateien sind in
+[historical-reference.json](../examples/vs1/historical-reference.json) mit Head,
+Reviewarchiv, konkreten Dateihashes und Download gebunden; keine neuen R-Messungen.
+
+Historisch begrenzte der Erstplan den Layoutversuch auf L1 plus zwei Korrekturen:
 L1 brachte Messdaten und fand nicht zeichnungsfähige Kleinstzellen; L2 ergänzt
 deren Fehlermeldung und die kompakte Statusposition; L3 trennt Status-/Werkzeugtexte
 auch bei UI 125 %. Keine Font-, Thema- oder Hintergrundvariation.
-Die R-Moduswahl liegt im vorhandenen Menü, damit zusätzliche Studiencontrols
-keine ursprünglichen Hinweisflächen verdecken. G/V haben dafür einen eigenen Kopfbereich.
+Diese R-/Kopfaufteilung gilt ausschließlich für die historische Erstlieferung.
 
 `tools/vs1_delivery.py` läuft aus dem bestehenden Produktharness. Die regulären
 P1-/ZS1-Exporte schließen `full_view_study/*` aus. VS exportiert einen getrennten

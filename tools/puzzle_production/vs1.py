@@ -122,8 +122,12 @@ def build_cases():
 
 def verify_cases():
     from PIL import Image, ImageChops
-    manifest=load_json(STUDY/'manifest.json'); plan=load_json(STUDY/'plan.json')
-    require(manifest['format']=='picross-vs1-manifest-v1' and manifest['plan_sha256']==file_hash(STUDY/'plan.json'), 'Plan binding differs')
+    manifest=load_json(STUDY/'manifest.json'); plan=load_json(STUDY/'plan-vb1.json')
+    require(manifest['format']=='picross-vs1-manifest-v1' and manifest['plan_sha256']==file_hash(STUDY/'plan-vb1.json'), 'Historical production plan binding differs')
+    active=load_json(STUDY/'plan.json')
+    require('VS-E1-R2' in active, 'Missing E1 measurement plan')
+    active.pop('VS-E1-R2')
+    require(active==plan, 'Historical production/layout plan was changed')
     require([e['id'] for e in manifest['cases']]==[s['id'] for s in plan['slots']], 'Missing, duplicate or reordered IDs')
     require(manifest['missing_slots']==[] and manifest['owner_trial']=='open' and manifest['product_decision']=='open', 'Unperformed acceptance or missing slot')
     catalog=load_json(RUNTIME/'catalog.json')

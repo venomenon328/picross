@@ -12,6 +12,22 @@ from tools.puzzle_production.images import file_hash
 
 
 class StudyTests(unittest.TestCase):
+    def test_e1_extension_cannot_rebind_historical_production(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            study=Path(tmp)
+            for name in ('manifest.json','plan.json','plan-vb1.json'):
+                shutil.copyfile(vs1.STUDY/name,study/name)
+            original=load_json(study/'plan.json')
+            for attack in ('historical slot','missing E1','archive bytes'):
+                active=copy.deepcopy(original)
+                if attack=='historical slot': active['slots'][0]['dimensions']=[50,40]
+                if attack=='missing E1': active.pop('VS-E1-R2')
+                write_json(study/'plan.json',active)
+                if attack=='archive bytes':
+                    (study/'plan-vb1.json').write_bytes((study/'plan-vb1.json').read_bytes()+b'\n')
+                with self.subTest(attack=attack),patch.object(vs1,'STUDY',study),self.assertRaises(InvalidInput):
+                    vs1.verify_cases()
+
     def test_all_ten_reconstruct_sources_and_replay_proofs(self):
         report=vs1.verify_cases()
         self.assertEqual(len(report),10)
@@ -32,6 +48,7 @@ class StudyTests(unittest.TestCase):
             study=Path(tmp)/'study'; runtime=Path(tmp)/'runtime'
             study.mkdir(); runtime.mkdir()
             shutil.copyfile(vs1.STUDY/'plan.json',study/'plan.json')
+            shutil.copyfile(vs1.STUDY/'plan-vb1.json',study/'plan-vb1.json')
             shutil.copytree(vs1.STUDY/'cases/vs01',study/'cases/vs01')
             shutil.copytree(vs1.RUNTIME/'cases/vs01',runtime/'cases/vs01')
             for label,(filename,mutate) in attacks.items():
@@ -67,6 +84,7 @@ class StudyTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             study=Path(tmp)
             shutil.copyfile(vs1.STUDY/'plan.json',study/'plan.json')
+            shutil.copyfile(vs1.STUDY/'plan-vb1.json',study/'plan-vb1.json')
             for attack in attacks:
                 m=copy.deepcopy(original); attack(m); write_json(study/'manifest.json',m)
                 with self.subTest(attack=attack),patch.object(vs1,'STUDY',study),self.assertRaises(InvalidInput):

@@ -6,5 +6,7 @@
   "environment": null,
   "scenarios": null,
   "judgment": null,
-  "decision": null
+  "decision": null,
+  "active_package": "VS-E1-R2 / G,V only",
+  "historical_reference": "historical-reference.json"
 }
