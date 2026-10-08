@@ -1022,6 +1022,10 @@
       {
         "id": "E1-correction-1",
         "result": "100 rows; zero control clipping/overlap; compact labels and wider rail spacing"
+      },
+      {
+        "id": "E1-correction-2",
+        "result": "Outer-frame follow-up: one pixel per side for the two-pixel grid stroke; viewport-based line culling; native edge-pixel regression including VS09 G/V at maximum zoom"
       }
     ]
   },

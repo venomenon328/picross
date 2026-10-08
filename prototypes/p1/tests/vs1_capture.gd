@@ -24,8 +24,33 @@ func shot(name: String) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var path: String = name + ".png"
-	check(canvas.get_texture().get_image().save_png(output.path_join(path)) == OK, "PNG write")
-	pictures.append({"file": path, "sha256": FileAccess.get_sha256(output.path_join(path)), "id": app.session.definition.id, "mode": app.board.mode, "ui_scale": app.ui_scale, "client": [canvas.size.x, canvas.size.y], "own_cells_sha256": JSON.stringify(app.session.player.cells).sha256_text()})
+	var image: Image = canvas.get_texture().get_image()
+	var frame: Dictionary = frame_pixels(image) if app.board.layout_valid and not app.session.completed else {}
+	check(image.save_png(output.path_join(path)) == OK, "PNG write")
+	pictures.append({"file": path, "sha256": FileAccess.get_sha256(output.path_join(path)), "id": app.session.definition.id, "mode": app.board.mode, "ui_scale": app.ui_scale, "client": [canvas.size.x, canvas.size.y], "own_cells_sha256": JSON.stringify(app.session.player.cells).sha256_text(), "frame_pixels": frame})
+
+func frame_pixels(image: Image) -> Dictionary:
+	# Sample between intersections: vertical lines/cell ink cannot mask a missing
+	# horizontal frame. All corpus dimensions end on a two-pixel major line.
+	var grid: Rect2 = app.board.view.bounds()
+	grid.position += app.board.global_position
+	var result: Dictionary = {}
+	for side: String in ["top", "bottom", "left", "right"]:
+		var horizontal: bool = side in ["top", "bottom"]
+		var edge: float = (grid.position.y if side == "top" else grid.end.y) if horizontal else (grid.position.x if side == "left" else grid.end.x)
+		var minimum: int = 5
+		var count: int = app.session.player.width if horizontal else app.session.player.height
+		for i: int in range(count):
+			var along: int = floori((grid.position.x if horizontal else grid.position.y) + (i + 0.5) * app.board.view.cell_size)
+			var dark: int = 0
+			for across: int in range(floori(edge) - 2, floori(edge) + 3):
+				var pixel: Color = image.get_pixel(along, across) if horizontal else image.get_pixel(across, along)
+				if Vector3(pixel.r, pixel.g, pixel.b).distance_to(Vector3(app.board.INK.r, app.board.INK.g, app.board.INK.b)) < 0.04:
+					dark += 1
+			minimum = mini(minimum, dark)
+		result[side] = {"samples": count, "minimum_ink_pixels": minimum}
+		check(minimum >= 2, "%s/%s %s frame fully drawn (%d pixels)" % [app.session.definition.id, app.board.mode, side, minimum])
+	return result
 
 func run() -> void:
 	output = OS.get_environment("P1_CAPTURE_DIR")
@@ -77,7 +102,7 @@ func run() -> void:
 							var b: Control = controls[independent[j]]
 							if a.is_visible_in_tree() and b.is_visible_in_tree() and a.get_global_rect().intersects(b.get_global_rect()):
 								record.control_collisions.append([independent[i],independent[j]])
-					record.limiting_element = "reference navigation" if mode == "R" else ("glyph collision/clipping" if record.glyph_collisions > 0 or record.clipped_glyphs > 0 else ("control space" if not record.controls_clipped.is_empty() or not record.control_overlaps.is_empty() else ("height / upper clues" if (app.board.size.y-app.board.book_inset.y-6)/app.session.player.height <= (app.board.size.x-app.board.book_inset.x-6)/app.session.player.width else "width / left clues")))
+					record.limiting_element = "reference navigation" if mode == "R" else ("glyph collision/clipping" if record.glyph_collisions > 0 or record.clipped_glyphs > 0 else ("control space" if not record.controls_clipped.is_empty() or not record.control_overlaps.is_empty() else ("height / upper clues" if (app.board.size.y-app.board.book_inset.y-6-2*app.board.FRAME_MARGIN)/app.session.player.height <= (app.board.size.x-app.board.book_inset.x-6-2*app.board.FRAME_MARGIN)/app.session.player.width else "width / left clues")))
 					check(app.session.player.cells == cells and app.session.player.history == history, "comparison preserves model")
 					if mode != "R":
 						check(record.grid_fit or not record.layout_valid, "full grid or explicit invalid layout")
@@ -86,7 +111,7 @@ func run() -> void:
 							for step: int in range(24):
 								app.board.zoom(direction,app.board.view.viewport.get_center())
 								check(app.board.view.cell_size <= app.board.fit_ceiling + 0.01, "zoom bounded")
-								check(app.board.view.viewport.grow(0.01).encloses(app.board.view.bounds()), "all offered zoom steps fit")
+								check(app.board.view.viewport.grow(0.01).encloses(app.board.view.bounds().grow(app.board.FRAME_MARGIN)), "all offered zoom steps fit including frame")
 						app.board.fit_all()
 						record.checkpoints = []
 						for pitch: float in [16.0,18.0,20.0]:

@@ -39,7 +39,7 @@ func run() -> void:
 		check(root.size==client,"actual requested client reached")
 		for ui: float in [1.0,1.25]:
 			app.set_ui_scale(ui)
-			for index: int in [0,3,5,7,9]:
+			for index: int in [0,3,5,7,8,9]:
 				app.select_puzzle(index)
 				app._reset_selected()
 				app.open_puzzle()
@@ -48,6 +48,7 @@ func run() -> void:
 					app.board.fit_all()
 					await process_frame
 					var record: Dictionary=app.board.measurements()
+					check(record.grid_fit or not record.layout_valid,"actual window fits the complete grid frame")
 					record.merge({"id":app.session.definition.id,"client":[root.size.x,root.size.y],"ui_scale":ui,"actual_window":true})
 					records.append(record)
 					if not app.board.layout_valid: continue
@@ -69,7 +70,7 @@ func run() -> void:
 					for direction: MouseButton in [MOUSE_BUTTON_WHEEL_DOWN,MOUSE_BUTTON_WHEEL_UP]:
 						for step: int in range(20):
 							mouse(point,direction,true)
-							check(app.board.view.cell_size<=app.board.fit_ceiling and app.board.view.viewport.grow(0.01).encloses(app.board.view.bounds()),"actual wheel retains grid and ceiling")
+							check(app.board.view.cell_size<=app.board.fit_ceiling and app.board.view.viewport.grow(0.01).encloses(app.board.view.bounds().grow(app.board.FRAME_MARGIN)),"actual wheel retains grid frame and ceiling")
 					for tool: String in ["work","minus","plus","fit"]:
 						var control_point: Vector2=app.actions[tool].get_global_rect().get_center()
 						mouse(control_point,MOUSE_BUTTON_LEFT,true); mouse(control_point,MOUSE_BUTTON_LEFT,false)

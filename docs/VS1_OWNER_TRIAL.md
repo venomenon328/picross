@@ -14,7 +14,8 @@ Die aktive Lieferung VS-E1-R2 bietet ausschließlich G/V für denselben Arbeitss
 
 - G: ganzes Raster; lange Hinweise einzeln mit MMB verschieben. Mindestens fünf
   zusammenhängende vollständige Zahlen bleiben sichtbar, bei kürzeren Folgen alle.
-- V: Raster und alle Hinweise. Beide Modi begrenzen den Zoom auf Rastervollsicht.
+- V: Raster und alle Hinweise. Beide Modi begrenzen den Zoom auf Rastervollsicht
+  einschließlich des vollständigen äußeren Rahmens.
 
 R ist entfernt; alte R-Ergebnisse bleiben historische Vergleichsbelege mit eigener
 Head-/Dateibindung. Alte R-Auswahl wird beim Start auf G normalisiert. Hand und

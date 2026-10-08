@@ -43,8 +43,9 @@ func run() -> void:
 				var actual: int = board.reserve_slots.y if transposed else board.reserve_slots.x
 				check(actual == n if n <= 7 else actual >= 7 and actual < n, "5/6/7 full; long reserve passes actual marker/movement need")
 				check((board.reserve_slots.x if transposed else board.reserve_slots.y) == 1, "long line leaves other axis actual short")
-				var vertical: float = (board.size.y-board.book_inset.y-6)/board.session.player.height
-				var horizontal: float = (board.size.x-board.book_inset.x-6)/board.session.player.width
+				# Six pixels outer gap plus the actual two-pixel frame stroke.
+				var vertical: float = (board.size.y-board.book_inset.y-8)/board.session.player.height
+				var horizontal: float = (board.size.x-board.book_inset.x-8)/board.session.player.width
 				check(absf(board.raw_fit-minf(vertical,horizontal)) < 0.001, "both axis ceilings; width/height limiting axis")
 				if transposed and not previous.is_empty():
 					check(board.raw_fit <= previous[-1] + 0.001, "larger actual top reserve cannot enlarge fit")
@@ -56,7 +57,7 @@ func run() -> void:
 				for direction: int in [-1,1]:
 					for step: int in range(30):
 						board.zoom(direction,board.view.viewport.get_center())
-						check(board.view.cell_size <= board.fit_ceiling and board.view.viewport.grow(0.01).encloses(board.view.bounds()), "all zoom paths keep complete grid")
+						check(board.view.cell_size <= board.fit_ceiling and board.view.viewport.grow(0.01).encloses(board.view.bounds().grow(1.0)), "all zoom paths keep complete grid frame")
 				board.fit_all()
 			previous.clear()
 	# Existing long color cases, real multi-digit counts, both axes and states.

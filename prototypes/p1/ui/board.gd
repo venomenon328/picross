@@ -465,11 +465,13 @@ func _draw() -> void:
 	draw_preview()
 	for x: int in range(first.x, last.x + 1):
 		var px: float = view.origin.x + x * view.cell_size
-		if px >= grid.position.x and px <= grid.end.x:
+		# Cull against the viewport: float rounding at the cell bounds must not
+		# discard an outer line that lies inside the reserved drawing area.
+		if px >= view.viewport.position.x and px <= view.viewport.end.x:
 			draw_line(Vector2(px, grid.position.y), Vector2(px, grid.end.y), INK if x % 5 == 0 else Color("b5b6ab"), 2.0 if x % 5 == 0 else 1.0)
 	for y: int in range(first.y, last.y + 1):
 		var py: float = view.origin.y + y * view.cell_size
-		if py >= grid.position.y and py <= grid.end.y:
+		if py >= view.viewport.position.y and py <= view.viewport.end.y:
 			draw_line(Vector2(grid.position.x, py), Vector2(grid.end.x, py), INK if y % 5 == 0 else Color("b5b6ab"), 2.0 if y % 5 == 0 else 1.0)
 	_draw_clues(first, last)
 	_draw_clue_tooltip()

@@ -35,6 +35,14 @@ ZIP verwenden und dessen Hashes sowie normalen/maximierten Client protokollieren
 | N03 | vs1_e1_cases.gd / vs1_e1_tests.gd: sechs begrenzte Diagnosen, vollständige Tokens an allen Glyphen-/Markerübergängen und Zwischenintervallen; 1–5, 5/6/7/lang, Transponate, unveränderte farbige Korpusfälle und drei Hinweiszustände |
 | N04 | vs1_roundtrip.gd: sechs getrennte Schreib-/Leseprozesse für G, V und Legacy R/Hand/Zoom/Zentrum; Zellen, History, Farbe, Auswahl und semantische Lesepositionen; Recovery/Isolation/Spoilerprüfungen |
 
+Die Rahmennacharbeit E1-correction-2 reserviert 1 px je Seite für die 2-px-Linien.
+`grid_fit` schließt die tatsächliche Strichfläche ein; alle Zoomstufen prüfen diese
+Grenze. `vs1_capture.gd` misst native Randpixel an jeder Zellmitte aller vier
+Rahmenkanten: mindestens zwei Tintenpixel, ohne Kreuzungen als Ersatz für fehlende
+Linien. Der Check scheitert am unveränderten Ausgangsstand in VS09/G und V unten
+(0 px) und besteht danach (2 px). Gegencheck: VS08/40×40/G und V bei 1280×720/UI125.
+Die tatsächliche Fensterprobe enthält zusätzlich VS09, insgesamt 48 Kombinationen.
+
 tools/vs1_delivery.py registriert E1-Prüfung und sämtliche Roundtrips im Produktlauf.
 Unter Windows folgt die tatsächliche OS-Fensterprobe; CI-Linux behält die native
 SubViewport-Matrix. Neue Matrix, Bilder und Logs sind im separaten Review-ZIP.
@@ -54,17 +62,17 @@ Godot-Editor/Cache. Sie startet beide entpackten EXEs direkt und führt native
 Bearbeitungs-/Neustart-/Legacy-/Fensterprüfungen gegen deren eingebetteten PCK aus.
 
 
-Aktive Windows-Messung E1-correction-1, maximaler Fit in V bei 1920 × 1080.
+Aktive Windows-Messung E1-correction-2, maximaler Fit in V bei 1920 × 1080.
 Keine Komfortabnahme; G und sämtliche Fehlfälle bleiben in der vollständigen Matrix.
 
 | Fall | UI 100 % | UI 125 % |
 | --- | --- | --- |
-| VS01 | 29.29 px | 28.07 px |
-| VS02 | 21.49 px | 18.32 px |
-| VS07 | 21.52 px | 20.49 px |
-| VS08 | 16.12 px | 13.74 px |
-| VS09 | 27.48 px | 24.81 px |
-| VS10 | 18.64 px | 13.76 px |
+| VS01 | 29.22 px | 28.00 px |
+| VS02 | 21.42 px | 18.25 px |
+| VS07 | 21.47 px | 20.44 px |
+| VS08 | 16.07 px | 13.69 px |
+| VS09 | 27.44 px | 24.77 px |
+| VS10 | 18.60 px | 13.72 px |
 
 ## Historische Ergebnisse der Erstlieferung bbc91821
 

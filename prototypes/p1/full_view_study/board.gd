@@ -1,5 +1,6 @@
 extends "res://study/board.gd"
 ## VS-E1-R2: same ZS-1 ink, complete grid, actual per-axis clue reserve.
+const FRAME_MARGIN: float = 1.0 # half the widest (two-pixel) grid stroke
 var mode: String = "G"
 var requested_cell: float = 0.0 # zero means the current fit ceiling
 var fit_ceiling: float = 24.0
@@ -23,7 +24,8 @@ func _layout() -> void:
 		max_hints.y = maxi(max_hints.y, line.size())
 	reserve_slots = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
 	book_inset = Vector2(reserve_slots) * Vector2(26, 18) * ui_scale + Vector2(6, 6)
-	var available: Vector2 = size - book_inset - Vector2(6, 6)
+	var frame_space: Vector2 = Vector2.ONE * 2.0 * FRAME_MARGIN
+	var available: Vector2 = size - book_inset - Vector2(6, 6) - frame_space
 	raw_fit = minf(available.x / session.player.width, available.y / session.player.height)
 	# The bound pen uses a two-pixel inset. Below four pixels even its interior
 	# disappears: report failure rather than feeding negative rectangles to it.
@@ -32,7 +34,7 @@ func _layout() -> void:
 	view.cell_size = minf(requested_cell, fit_ceiling) if requested_cell > 0 else fit_ceiling
 	layout_valid = layout_valid and view.cell_size > 4.0
 	book_grid_size = Vector2(session.player.width, session.player.height) * view.cell_size
-	view.configure(Rect2(book_inset, book_grid_size), Vector2i(session.player.width, session.player.height))
+	view.configure(Rect2(book_inset, book_grid_size + frame_space), Vector2i(session.player.width, session.player.height))
 	view.center = Vector2(view.dimensions) / 2.0
 	view.reframe()
 	if marks != null:
@@ -301,10 +303,11 @@ func measurements() -> Dictionary:
 			for box: Rect2 in boxes:
 				union = union.merge(box)
 			extents[axis] = rect_values(union)
-	var grid_fit: bool = view.viewport.grow(0.01).encloses(view.bounds()) and layout_valid
+	var grid_frame: Rect2 = view.bounds().grow(FRAME_MARGIN)
+	var grid_fit: bool = view.viewport.grow(0.01).encloses(grid_frame) and layout_valid
 	var complete: bool = grid_fit and hidden == 0 and clipped == 0 and collisions == 0
 	return {"mode": mode, "cell_pitch": view.cell_size, "raw_fit_ceiling": raw_fit, "zoom_ceiling": fit_ceiling, "reserve_slots": [reserve_slots.x,reserve_slots.y],
-		"grid": rect_values(view.bounds()), "viewport": rect_values(view.viewport), "row_clues": rect_values(row_clue_area()), "column_clues": rect_values(column_clue_area()),
+		"grid": rect_values(view.bounds()), "grid_frame": rect_values(grid_frame), "viewport": rect_values(view.viewport), "row_clues": rect_values(row_clue_area()), "column_clues": rect_values(column_clue_area()),
 		"font_px": fs, "glyph_max": [largest.x, largest.y], "glyph_extents": extents, "glyph_count": glyph_count,
 		"clipped_glyphs": clipped, "glyph_collisions": collisions, "hidden_tokens": hidden, "grid_fit": grid_fit, "full_sheet_fit": complete,
 		"grid_navigation_needed": not grid_fit, "hint_navigation_needed": hidden > 0, "layout_valid": layout_valid,

@@ -93,7 +93,9 @@ kein kleinerer Benutzerzoom verändert diese Reservierung.
 Moduswahl liegt neben den acht Werkzeugen unten; die obere Boardgrenze folgt dem
 realen Titel. Die Miniatur und Texte liegen in einer eigenen Seitenleiste mit
 kompakterem Umfang bei wenig Höhe. Nach Controls/Rändern und beiden Hinweisreserven
-folgt min(nutzbare Breite/Spalten, nutzbare Höhe/Zeilen). Einpassen erreicht diese
+bleibt je Seite 1 px für die halbe Breite der 2-px-Rasterlinien frei. Der Fit berechnet
+min(verbleibende Breite/Spalten, verbleibende Höhe/Zeilen) und umfasst den vollständig
+gezeichneten äußeren Rahmen einschließlich der unteren Abschlusslinie. Einpassen erreicht diese
 Grenze; bewusst kleinere Zoomwerte bleiben kleiner. Jeder Zoom-/Resize-/UI-/Blatt-/
 Ansichtsweg wird begrenzt. Semantische Lesepositionen werden neu eingerahmt;
 outer_start und geometrisches Einrasten erst beim Loslassen bleiben.
@@ -115,7 +117,11 @@ Controls, Zoomgrenzen und 16/18/20-px-Vergleichspunkte werden protokolliert.
 Der gesonderte Planabschnitt VS-E1-R2 wurde vor dem Vergleich gebunden: E1-initial
 plus höchstens zwei Korrekturen. E1-initial fand Status-/Modusüberdeckung bei
 720p/UI125; E1-correction-1 verkürzt die Beschriftungen und verbreitert den Abstand
-zur Seitenleiste. Keine neue Produktion, Artwork-, Font- oder Hintergrundvariation.
+zur Seitenleiste. E1-correction-2 ergänzt ausschließlich den Rahmenzeichenraum und
+prüft die Linien gegen den Viewport, damit Rundung an der Zellflächengrenze keine
+Abschlusslinie auslässt. Native Pixelchecks prüfen alle vier Rahmenkanten zwischen
+den Kreuzungen, einschließlich VS09/50×30/G und V am maximalen Zoom sowie VS08/40×40
+bei 720p/UI125. Keine neue Produktion, Artwork-, Font- oder Hintergrundvariation.
 Historische Produktionsdaten und L1–L3 bleiben unverändert.
 
 Sechs Reviewdiagnose-Familien VS-E13–E18 decken Maxima 1–5 sowie parametrisierte
