@@ -472,3 +472,11 @@ Spaltenslots bleiben 18. Der Eigentümer hat den Merge von PR #55 nach technisch
 N07-Prüfung freigegeben und verlegt die kombinierte Sichtprüfung auf den
 anschließenden `main`-Stand. #52 bleibt bis zu dieser Rückmeldung offen; #53 folgt
 nicht automatisch aus dem Merge.
+
+## VS-1 · experimentelle Vollsichtprobe (#57)
+
+Der [VS-1-Studienvertrag](VS1_STUDY.md) bindet zehn native Beispiele, R/G/V,
+die ausgewählte ZS-1-Zeichenschicht und getrennte Studienfortsetzung.
+[Prüfzuordnung](VS1_VERIFICATION.md) und [Eigentümerprobe](VS1_OWNER_TRIAL.md)
+trennen technische Lieferung von VS-M01 und VS-D01. Keine reguläre Größen-,
+Auflösungs- oder Katalogentscheidung und keine Merge-/Releasefreigabe.
