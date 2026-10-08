@@ -1,7 +1,6 @@
 extends SceneTree
 const Session = preload("res://model/session.gd")
 const Cases = preload("res://tests/vs1_e1_cases.gd")
-const Layout = preload("res://ui/clue_layout.gd")
 var checks: int = 0
 var failures: int = 0
 var board: Control
@@ -15,7 +14,31 @@ func check(ok: bool, message: String) -> void:
 		failures += 1
 		if failures < 25: printerr("VS1 GF1 FAIL: ", message)
 
-func probe_row(index: int) -> void:
+func probe_row(index: int, all_states: bool = false) -> void:
+	if all_states:
+		var cells: Array[int] = board.session.player.cells.duplicate()
+		var read: Dictionary = board.row_clue_reads[index].duplicate(true)
+		var geometry: Rect2 = board.view.bounds()
+		for status: int in range(3):
+			for x: int in range(board.session.player.width):
+				var value: int = board.session.definition.solution[index][x]
+				board.session.player.cells[index*board.session.player.width+x] = -1 if status==0 or (status==1 and value==0) else value
+			board.sync_clue_completion(board.session.visible_cells())
+			check(board.completion_states("row",index).has(status),"each added capacity exercises all three actual clue states")
+			board._layout()
+			check(board.view.bounds()==geometry,"each status leaves capacity/grid unchanged")
+			var maximum: int = board.clue_layout("row",index).max_offset
+			for offset: int in [0,maximum/2,maximum]:
+				board.set_clue_step("row",index,offset)
+				var tokens: Array = board.visual_hint_units("row",index).units.filter(func(u: Dictionary)->bool:return u.kind=="token")
+				check(tokens.size()>=mini(5,board.session.definition.rows[index].size()),"all statuses show complete numbers at start middle and outer stop")
+			board.set_clue_step("row",index,0)
+			probe_row(index)
+		board.session.player.cells.assign(cells)
+		board.row_clue_reads[index]=read
+		board.normalize_clue_steps()
+		board.sync_clue_completion(board.session.visible_cells())
+		return
 	var layout: Dictionary = board.clue_layout("row", index)
 	var entries: Array = layout.entries
 	var capacity: int = layout.slot_count
@@ -72,7 +95,7 @@ func run() -> void:
 					check(board.view.cell_size <= 12 and board.view.cell_size >= 11.99, "new capacity never feeds back into zoom")
 					check(board.measurements().grid_fit and board.horizontal_used <= board.horizontal_budget+0.00001, "frame and added budget fit")
 					if delta == 0 and expected > minimum.x:
-						probe_row(index)
+						probe_row(index,true)
 				board.fit_all()
 				var fit: float = board.fit_ceiling
 				var position: Vector2 = board.view.origin
