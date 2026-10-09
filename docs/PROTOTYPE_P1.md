@@ -62,7 +62,7 @@ bleibt als isolierter Vergleich ausführbar; ZS-2 verwendet die bestätigte Komb
 | D-28 | Die kompakte Standardrasterfläche ist keine Zoom-Clippinggrenze. | Im nicht kompakten Buchlayout wächst der Rasterviewport erst oberhalb 100 % in freie Papierfläche; tatsächliche UI-/Papiergrenzen erzeugen den Ausschnitt. 20×20 bleibt bei 1920×1080/UI 100 % bis einschließlich 150 % vollständig sichtbar. |
 | D-29 | Die Spielfläche erhält eine geometrisch präzise, charaktervolle zeichnerische Sprache. | Kräftige kompakte Hinweisziffern, stabile zurückhaltende Textur auf satten Farbflächen, handschriftliche X ohne zusätzliche Rand-UI; Stiftfüllung nach E1 gewählt, Chalkboard und kombinierte Darstellung nach ZS1-M01 bestätigt. |
 | D-30 | Die Zellvorschau bleibt statisch und zeigt den Zielzustand heller beziehungsweise transparenter. | Nur wirksame Änderungen des elastischen Abschnitts; Rückzug/Abbruch unmittelbar, keine Animation der laufenden Vorschau. |
-| D-31 | Zellanimationen beginnen erst beim tatsächlichen Anwenden des Strichs. | Alle wirksamen Änderungen gleichzeitig; sehr kurz, ohne mit der Strichlänge wachsende Dauer oder zusätzliche Eingabesperre; Modell/History/Save warten nicht. |
+| D-31 | Zellanimationen beginnen erst beim tatsächlichen Anwenden des Strichs. | ZS2-E2: Setzen/Umwandeln gerichtet vom Start zum finalen Ende; Δ = min(8 ms, 120 ms/(m−1)) bei m > 1 wirksamen Zellen, 140 ms je Zelle, maximal 260 ms. Entfernen sofort/80 ms; Modell/History/Save warten nicht. |
 | D-32 | Zellanimationen sind einfach abschaltbar. | P1-Ausarbeitungsdefault: aktiv nach App-Start, sitzungsweit, nicht im Rätselsave; Aus beendet Effekte sofort, Vorschau bleibt statisch. |
 | D-33 | ZS1-E3 wählt Chalkboard Regular und kompaktere Zeilenhinweisabstände. | ZS-Studie: 26 × UI-Skalierung horizontale Zeilenslots links; vertikale Spaltenslots bleiben 18 × UI. Reguläre Integration in ZS-2. |
 
@@ -155,8 +155,8 @@ Die elastische Vorschau wird aus dem bestätigten Zustand am Gestenbeginn und de
 
 **D-30/D-31, freigegebener ZS-Sollstand:** Während des Ziehens erscheinen nur
 wirksame Zielmarkierungen statisch, heller beziehungsweise transparenter. Erst die
-tatsächliche Übernahme bei Mouse-Up startet gleichzeitig die Effekte aller
-geänderten Zellen; keine Animation in der Vorschau und kein Warten auf ihre
+tatsächliche Übernahme bei Mouse-Up startet die gerichteten Effekte der wirksam
+geänderten Zellen gemäß ZS2-E2; keine Animation in der Vorschau und kein Warten auf ihre
 Fertigstellung. Neue wirksame Vorschau hat zellweise Vorrang vor älteren Effekten.
 Neutralisierung zeigt bereits unbekannt mit dezenter statischer Vorschaukontur;
 keine alte Markierung für einen späteren Löscheffekt wieder einblenden. Vollständige
@@ -575,7 +575,12 @@ gleichen Stand verglichen. Zusätzliche Rand-UI entfällt; Hintergrundarbeit ble
 [ZS-2/#53](https://github.com/venomenon328/picross/issues/53) integriert genau diese
 Auswahl in die reguläre Arbeitsansicht einschließlich abschaltbarer Effekte.
 
-Alle tatsächlich geänderten Zellen eines angewendeten Strichs animieren gleichzeitig.
+ZS2-E2/N01–N03 ersetzt die gleichzeitigen Starts durch die begrenzte gerichtete
+Folge nach D-31/ZS-D07; Schutzlücken bleiben ohne Zeitlücke. Das aktive X schreibt
+Zug eins vor Zug zwei ohne vollständige Unterzeichnung. Gegentasten-Down verwirft
+die ganze aktive Zellgeste samt Zähler, auch außerhalb des Boards. Nach beiden
+Ups erlaubt erst ein frisches Down die nächste Geste. Escape/Fokus dürfen keine
+Phantomaktion oder hängende Sperre erzeugen; MMB/Hand bleiben Navigation.
 Die nächste Eingabe liest sofort den bestätigten Zustand. Neue Vorschau oder ein
 neuer Zustand derselben Zelle beendet veraltete Effekte; Rückzug spielt sie nicht
 erneut ab. Undo/Redo bleiben unmittelbar und ohne eigene Setzanimation. Abschluss,

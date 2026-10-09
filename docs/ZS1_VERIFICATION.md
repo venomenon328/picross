@@ -1,5 +1,11 @@
 # ZS-1 · Prüfzuordnung nach E1–E3 und Liefergrenze
 
+Aktualitätshinweis 09.10.2026: Die unten beschriebene gleichzeitige Bewegung gehört
+zum historisch abgenommenen ZS1-Stand. Neue Studienexports erben den gemeinsamen
+Zeichner mit ZS2-N01–N03 (gerichtete Folge, geschriebenes X, Gegentasten-Abbruch).
+Dessen aktuelle Prüfung und offene Abnahme stehen in [ZS2_VERIFICATION.md](ZS2_VERIFICATION.md);
+die alte ZS1-M01-Bestätigung wird dadurch nicht auf einen neuen Head übertragen.
+
 Stand: 07.10.2026 · PR #55 nach R3 integriert als `985cf08e`; ZS1-M01 abgeschlossen
 
 Basis `ec99954268f1ad959d9ea779dbbd9e28edf7d8fa`, Ausgangs-/R1-Head

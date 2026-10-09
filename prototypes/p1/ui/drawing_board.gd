@@ -3,6 +3,8 @@ extends "res://ui/board.gd"
 const PREVIEW_ALPHA: float = 0.56
 const SET_SECONDS: float = 0.140
 const REMOVE_SECONDS: float = 0.080
+const MAX_STEP_US: int = 8000
+const MAX_SPREAD_US: int = 120000
 const Marks = preload("res://ui/pencil_marks.gd")
 var marks: Marks
 var style: int = 2 # 0 historical regular baseline, 2 selected pencil
@@ -20,6 +22,7 @@ func _ready() -> void:
 	marks.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(marks)
 	super._ready()
+	view_changed.connect(clear_effects)
 	set_process(false)
 	visibility_changed.connect(func() -> void:
 		if not is_visible_in_tree():
@@ -67,14 +70,29 @@ func pointer_release(point: Vector2, over_board: bool) -> void:
 		session.gesture.move(view.hit(point))
 	sync_preview()
 	var changes: Array = session.gesture.changes()
+	# changes() is model/index ordered. Capture the final G1 direction before
+	# finish() cancels the gesture; only this transient presentation is reversed.
+	var direction: Vector2i = session.gesture.endpoint - session.gesture.start
+	if direction.x < 0 or direction.y < 0:
+		changes.reverse()
 	var old_cursor: int = session.player.cursor
 	super.pointer_release(point, over_board)
 	preview.clear()
 	if style != 0 and animations and not session.completed and session.player.cursor != old_cursor:
 		var started: int = animation_clock.call()
+		var count: int = 0
 		for change: Dictionary in changes:
-			effects[int(change.index)] = {"start": started, "after": int(change.after),
-				"seconds": REMOVE_SECONDS if int(change.after) < 0 else SET_SECONDS}
+			if int(change.after) >= 0:
+				count += 1
+		var step_us: float = minf(MAX_STEP_US, float(MAX_SPREAD_US) / (count - 1)) if count > 1 else 0.0
+		var ordinal: int = 0
+		for change: Dictionary in changes:
+			var removing: bool = int(change.after) < 0
+			var offset: int = 0 if removing else roundi(ordinal * step_us)
+			effects[int(change.index)] = {"start": started + offset, "after": int(change.after),
+				"seconds": REMOVE_SECONDS if removing else SET_SECONDS}
+			if not removing:
+				ordinal += 1
 	set_process(not effects.is_empty())
 
 func _process(_delta: float) -> void:

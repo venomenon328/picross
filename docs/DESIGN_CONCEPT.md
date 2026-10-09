@@ -52,7 +52,7 @@ Chalkboard/Stift/X/Timing sind nach ZS1-M01 bestätigt; die
 | Zellstil | Kräftige Farbflächen mit dezenter stabiler Strichtextur; gezeichnete X bleiben gegenüber dem Motiv zurückhaltend. Textur bei kleinen Zellen vereinfachen, Miniatur bewusst ruhig halten. |
 | Hinweise | Am Raster stehen nur Lösungshinweise, ohne laufende Randnummern. Vollständige einzeilige farbige Zahlen rasten in gemeinsame feste Plätze; jede konkrete Zeile/Spalte hat ihre eigene Leseposition. Seitengerechte Marker und vollständige Hover-Auflösung bleiben Ergänzungen im Arbeitsbild. Keine A–D-Suffixe in P1. |
 | Hinweisgestalt | Kompaktere, optisch kräftigere Ziffern mit klaren Innenräumen; alle drei Hinweiszustände, Farben, Konturen und die gemeinsame Slotzuordnung bleiben lesbar. Konkrete Auswahl durch die native Gestaltungsprobe. |
-| Zellbewegung | Statische hellere/transparente Vorschau während des Ziehens; erst angewendete Änderungen animieren kurz und gleichzeitig. Abschaltbar, ohne zusätzliche Eingabesperre oder Verzögerung des Spielzustands. |
+| Zellbewegung | Statische hellere/transparente Vorschau während des Ziehens; erst angewendete Änderungen zeichnen kurz vom Gestenstart zum finalen Abschnittsende (maximal 260 ms). Abschaltbar, ohne zusätzliche Eingabesperre oder Verzögerung des Spielzustands. |
 | Sammelbilder | Das Rätselmotiv ist eine klar erkennbare Stilisierung des detaillierteren Ergebnisbilds. F-01 und F-02 zeigen dieselbe ruhige Kontur-/Farbflächensprache; keine Pflicht zu pixelidentischer Silhouette oder bloßer Kolorierung. |
 | Perfektion | Ein perfekter Durchgang ist ohne Fehler und ohne Undo. Details und offene Wertungsfragen stehen in der Produktdefinition, Abschnitt 6.2. |
 | Hypothesen | Nicht abschließend entschieden, auch nicht ihre Vereinbarkeit mit Perfektion. |
@@ -282,21 +282,24 @@ Der konkrete sechszeilige Vertrag steht in P1 §5.1.
 erscheint die vorgesehene endgültige Markierung ohne Bewegung, leicht heller
 beziehungsweise transparenter. Verlängern, Zurückziehen und Abbrechen
 aktualisieren diese Vorschau unmittelbar. Erst beim Loslassen und tatsächlichen
-Anwenden starten alle wirksam geänderten Zellen gleichzeitig ihre kurze
-Bestätigungsanimation. Unveränderte oder geschützte Zellen animieren nicht;
+Anwenden startet die gerichtete Folge der wirksam geänderten Zellen vom
+Gestenstart zum finalen Ende; höchstens 120 ms Startspreizung. Unveränderte oder geschützte Zellen animieren nicht;
 Abbruch erzeugt keinen Effekt. Eine neue Vorschau oder Änderung derselben
 Zelle hat Vorrang vor einem älteren Effekt.
 
 Der Zeichenauftrag baut die kräftige Füllung räumlich entlang kurzer Stiftzüge
-auf oder zeichnet zuerst den ersten, dann den zweiten X-Zug, ohne die Markierung zuvor vollständig verschwinden
-zu lassen. Effekte bleiben innerhalb ihrer Zelle. 140 ms insgesamt für Setzen/Umwandeln und 80 ms Entfernen erhalten das
-positiv beurteilte Timing; auch ein
-langer Strich erhält keine gestaffelte Warteschlange. Eine nächste Eingabe,
+auf oder schreibt sichtbar zuerst den ersten, dann den zweiten X-Zug. Noch nicht
+geschriebene Teile eines gestarteten X bleiben unsichtbar; wartende Ziele bleiben
+abgeschwächt sichtbar. Effekte bleiben innerhalb ihrer Zelle. 140 ms insgesamt für Setzen/Umwandeln und 80 ms Entfernen erhalten das
+positiv beurteilte Zell-Timing. Die Setzfolge endet spätestens nach 260 ms;
+Entfernen bleibt ungestaffelt. Schutzlücken zählen nicht für die Staffelung. Eine nächste Eingabe,
 Undo/Redo oder ein Seitenwechsel warten nicht auf Animationen. Zellzustand,
 Hinweisermittlung, atomare History und Speicherung sind unabhängig vom
 Animationsfortschritt. Zellanimationen lassen sich abschalten; der endgültige
 Zustand erscheint dann unmittelbar. Einzelheiten und gezielte Prüffälle
-stehen in [UI_DRAWING_STYLE.md](UI_DRAWING_STYLE.md).
+stehen in [UI_DRAWING_STYLE.md](UI_DRAWING_STYLE.md). ZS2-E2 ergänzt den Abbruch
+durch Gegentasten-Down auch außerhalb des Boards: beide Tasten loslassen, dann
+frisch starten; MMB/Hand-Navigation bleibt erhalten.
 
 Für P1 zeigt ein Live-Zähler während linker und rechter Zellgesten die gesamte
 geometrische aktuelle Strichlänge inklusive Start/Ende, auch bei Vorbelegungen und

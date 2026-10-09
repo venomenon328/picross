@@ -304,6 +304,7 @@ func load_probe() -> void:
 		await process_frame
 		frame_times.append(Time.get_ticks_usec() - previous)
 		previous = Time.get_ticks_usec()
+	await create_timer(0.27).timeout
 	check(app.board.completion_searches == searches, "animation ticks do not search clues")
 	check(not app.board.is_processing(), "animation ticker stops")
 	check(app.session.player.cursor == 1, "100-cell stroke remains one action")

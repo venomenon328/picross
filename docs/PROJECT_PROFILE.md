@@ -436,7 +436,7 @@ sind für genau diesen Merge aufgehoben, nicht als bestanden umgedeutet. Kein Re
 [ZS-2/#53](https://github.com/venomenon328/picross/issues/53) gehören zu #21. Die
 [Detailspezifikation](UI_DRAWING_STYLE.md) ergänzt die vorhandene A-Buchkomposition
 um kräftige kompakte Hinweisziffern, satte stabile Schraffur-/Stiftflächen,
-handschriftliche X und kurze parallele Zellanimationen. E1 wählt Stiftfüllung und
+handschriftliche X und kurze gerichtete Zellanimationen. E1 wählt Stiftfüllung und
 140/80-ms-Timing, fordert echten räumlichen Strichaufbau und entfernt zusätzliche
 Rand-UI. Hintergrundarbeit bleibt separat zurückgestellt. Der vollständige
 Vergleich der zwei Eigentümer-TTFs verwendet die durch E2 akzeptierten Nutzungshinweise;
@@ -445,14 +445,22 @@ Die abschließend bestätigte Kombination ist Ergebnis von ZS-1; GD-03/GP-03 wer
 und begründet gewählte gemeinsame Slotmaße geöffnet. Historische Designpakete bleiben.
 
 Vorschau ist statisch und heller/transparenter. Erst die tatsächliche atomare
-Übernahme animiert alle wirksamen Änderungen gleichzeitig, ohne zusätzliche
-Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
+Übernahme zeichnet Setzen/Umwandeln vom Start zum finalen Abschnittsende
+(Δ = min(8 ms, 120 ms/(m−1)), 140 ms je Zelle, maximal 260 ms; Entfernen sofort
+und 80 ms). ZS2-E2 verlangt sichtbar geschriebene X-Züge und Gegentasten-Abbruch
+auch außerhalb des Boards, bis beide Tasten losgelassen sind. MMB/Hand bleiben
+Navigation; keine zusätzliche Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
 ist rein visuell; Sitzungsschalter nach P1-Vorbild, kein neues Saveformat.
 
 ZS-1 liefert eine isolierte native Vergleichsprobe und Eigentümerwahl; ZS-2 die
 reguläre Integration. Technische Nachweise, unabhängiges Review, jeweilige reale
 Auswahl/Probe und ausdrückliche Mergefreigabe stehen als Gates in den Paketissues.
 #24 folgt mit der längeren Nutzung der integrierten Fassung. ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer erfolgreich abgeschlossen und die Kombination bestätigt. #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md) ist separat beauftragt; ZS2-M01, unabhängiges aktuelles Review und Mergefreigabe bleiben vor Merge offen. Kein Release.
+
+ZS2-V1 integriert main einschließlich VS1/GF1; beide Lieferwege bleiben aktiv.
+VS-D01 ist entschieden, GF-M01/#59 ist historisch bestanden; #61 ist der separate
+Folgeschritt nach #53. Neue Studienberichte binden ihren tatsächlichen Zeichner
+an Quellcommit und Dateihashes; historische Vergleichsbasen bleiben erhalten.
 
 Die bestehenden sechs CI-Jobs bleiben aktiv. Spielerpaket und kleine gezielte
 Reviewartefakte bleiben getrennt; das optionale Hochladen kompletter Arbeitsrender

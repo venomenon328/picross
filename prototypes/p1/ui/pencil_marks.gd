@@ -38,7 +38,12 @@ func draw_cell(box: Rect2, value: int, index: int) -> void:
 	var progress: float = 1.0
 	if board.effects.has(index) and not board.preview.has(index):
 		var effect: Dictionary = board.effects[index]
-		progress = clampf(float(int(board.animation_clock.call()) - int(effect.start)) / (1000000.0 * float(effect.seconds)), 0.0, 1.0)
+		var elapsed: int = int(board.animation_clock.call()) - int(effect.start)
+		if elapsed < 0:
+			# Waiting cells already show the committed target, never the old mark.
+			alpha = board.PREVIEW_ALPHA
+		else:
+			progress = clampf(float(elapsed) / (1000000.0 * float(effect.seconds)), 0.0, 1.0)
 	if value < 0:
 		if board.preview.has(index) or board.effects.has(index):
 			outline(box.grow(-2), Color(board.INK, 0.32 * (1.0 if board.preview.has(index) else 1.0 - progress)), 0.8)
@@ -54,7 +59,8 @@ func draw_cell(box: Rect2, value: int, index: int) -> void:
 				var part: float = clampf(head * (path.size() - 1) - k, 0.0, 1.0)
 				var middle: Vector2 = a.lerp(b, part)
 				stroke(a, middle, Color(board.INK, 0.60 * alpha), weight)
-				stroke(middle, b, Color(board.INK, 0.60 * board.PREVIEW_ALPHA), weight)
+				# Active X strokes reveal only the traversed path. Preview/waiting
+				# targets use progress=1 at reduced alpha; no full-X underdrawing.
 		return
 	if progress < 1.0:
 		# Complete static target remains underneath. Opaque paint replaces it only

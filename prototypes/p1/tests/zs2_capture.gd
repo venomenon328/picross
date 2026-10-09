@@ -1,6 +1,113 @@
 extends "res://tests/zs1_capture.gd"
 ## Identical inputs on the previous regular main, selected study and new regular UI.
 var role: String
+var rework_sequences: Array = []
+var wave_sequence: Dictionary = {}
+
+func rework_wave() -> void:
+	app.select_puzzle(0)
+	empty_sample()
+	app.board.working_size()
+	app.board.hover = Vector2i(1, 2)
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var crop: Rect2i = Rect2i(Rect2(app.board.global_position + app.board.view.cell_rect(Vector2i(1, 2)).position, Vector2(17 * 24, 24)))
+	var blank: String = "zs2-wave-blank.png"
+	surface.get_texture().get_image().get_region(crop).save_png(output.path_join(blank))
+	probe_time = 1000000
+	app.board.animation_clock = func() -> int: return probe_time
+	mouse(point(1, 2), MOUSE_BUTTON_LEFT, true)
+	motion(point(17, 2))
+	mouse(point(17, 2), MOUSE_BUTTON_LEFT, false)
+	app.board.clear_effects()
+	mouse(point(17, 2), MOUSE_BUTTON_RIGHT, true)
+	motion(point(1, 2))
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var preview: String = "zs2-wave-preview.png"
+	surface.get_texture().get_image().get_region(crop).save_png(output.path_join(preview))
+	mouse(point(1, 2), MOUSE_BUTTON_RIGHT, false)
+	var timeline: Array = []
+	for elapsed: int in [0, 8, 70, 120, 140, 260]:
+		probe_time = 1000000 + elapsed * 1000
+		app.board.marks.queue_redraw()
+		await process_frame
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var file: String = "zs2-wave-%03d.png" % elapsed
+		surface.get_texture().get_image().get_region(crop).save_png(output.path_join(file))
+		timeline.append({"file": file, "elapsed_ms": elapsed})
+	wave_sequence = {"blank": blank, "preview": preview, "frames": timeline, "cell_size": 24,
+		"crop": [crop.position.x, crop.position.y, crop.size.x, crop.size.y], "start": [17, 2], "end": [1, 2],
+		"effective_cells": 17, "target": "fill to X", "clock": "controlled production animation clock"}
+	app.board.animation_clock = Time.get_ticks_usec
+
+func rework_motion() -> void:
+	surface.size = Vector2i(1920, 1080)
+	app.size = Vector2(surface.size)
+	app.set_ui_scale(1.0)
+	for pitch: int in [12, 24, 36]:
+		app.select_puzzle(0)
+		empty_sample()
+		app.board.working_size()
+		while not is_equal_approx(app.board.view.cell_size, pitch):
+			app.board.zoom(1 if pitch > app.board.view.cell_size else -1, app.board.view.viewport.get_center())
+		app.board.view.center = Vector2(10, 10)
+		app.board.view.reframe()
+		app.board.clear_pointer_hover()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var crop: Rect2i = Rect2i(Rect2(app.board.global_position + app.board.view.cell_rect(Vector2i(1, 1)).position, Vector2.ONE * pitch))
+		var prefix: String = "zs2-x-%d" % pitch
+		var blank: String = prefix + "-blank.png"
+		check(surface.get_texture().get_image().get_region(crop).save_png(output.path_join(blank)) == OK, "blank native crop")
+		probe_time = 1000000
+		app.board.animation_clock = func() -> int: return probe_time
+		mouse(point(1, 1), MOUSE_BUTTON_RIGHT, true)
+		mouse(point(1, 1), MOUSE_BUTTON_RIGHT, false)
+		app.board.clear_pointer_hover()
+		var controlled: Array = []
+		for elapsed: int in [0, 21, 49, 70, 98, 119, 140]:
+			probe_time = 1000000 + elapsed * 1000
+			app.board.marks.queue_redraw()
+			await process_frame
+			await process_frame
+			await RenderingServer.frame_post_draw
+			var file: String = prefix + "-controlled-%03d.png" % elapsed
+			check(surface.get_texture().get_image().get_region(crop).save_png(output.path_join(file)) == OK, "controlled native X")
+			controlled.append({"file": file, "elapsed_ms": elapsed})
+		# Same real input and draw function, wall clock restored for the live run.
+		var view_state: Dictionary = app.board.capture_view()
+		empty_sample()
+		app.board.restore_view(view_state)
+		var rendered: Array[int] = [0]
+		app.board.animation_clock = func() -> int:
+			rendered[0] = Time.get_ticks_usec()
+			return rendered[0]
+		app.board.clear_pointer_hover()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		mouse(point(1, 1), MOUSE_BUTTON_RIGHT, true)
+		mouse(point(1, 1), MOUSE_BUTTON_RIGHT, false)
+		var began: int = int(app.board.effects[21].start)
+		app.board.clear_pointer_hover()
+		var live: Array = []
+		var pictures: Array[Image] = []
+		for i: int in range(22):
+			app.board.marks.queue_redraw()
+			await process_frame
+			await RenderingServer.frame_post_draw
+			pictures.append(surface.get_texture().get_image())
+			live.append({"file": prefix + "-live-%02d.png" % i, "elapsed_ms": float(rendered[0] - began) / 1000.0})
+		check(not app.board.is_processing(), "real-time X ends without callback")
+		var context: String = prefix + "-context.png"
+		pictures.back().save_png(output.path_join(context))
+		for i: int in range(pictures.size()):
+			pictures[i].get_region(crop).save_png(output.path_join(live[i].file))
+		rework_sequences.append({"cell_size": pitch, "blank": blank, "context": context,
+			"crop": [crop.position.x, crop.position.y, crop.size.x, crop.size.y], "controlled": controlled,
+			"live": live, "clock": "Time.get_ticks_usec sampled by production draw", "native_scale": "1:1"})
+	app.board.animation_clock = Time.get_ticks_usec
 
 func run() -> void:
 	output = OS.get_environment("P1_CAPTURE_DIR")
@@ -55,9 +162,11 @@ func run() -> void:
 		measurements.back().real_mouse_acceptance = "OPEN ZS2-M01"
 		await color_load_probe()
 		await stroke_probe()
+		await rework_motion()
+		await rework_wave()
 	var report: Dictionary = {"role": role, "renderer": RenderingServer.get_video_adapter_name(),
 		"display": DisplayServer.get_name(), "captures": captures, "frames": frames,
-		"stroke_frames": stroke_frames, "measurements": measurements, "specimens": specimens, "failures": failures}
+		"stroke_frames": stroke_frames, "rework_sequences": rework_sequences, "wave_sequence": wave_sequence, "measurements": measurements, "specimens": specimens, "failures": failures}
 	FileAccess.open(output.path_join("zs2-" + role + ".json"), FileAccess.WRITE).store_string(JSON.stringify(report, "\t") + "\n")
 	if failures == 0:
 		print("ZS2_CAPTURE_OK role=", role, " captures=", captures.size())
@@ -116,6 +225,7 @@ func color_load_probe() -> void:
 		await process_frame
 		frame_times.append(Time.get_ticks_usec() - previous)
 		previous = Time.get_ticks_usec()
+	await create_timer(0.27).timeout
 	check(app.board.completion_searches == searches and not app.board.is_processing(), "F07 ticker neither analyzes nor keeps running")
 	measurements.append({"fixture": "F-07", "overview": true, "cells": 400, "actions": 4,
 		"input_commit_us": input_us, "draw_us": app.board.draw_times_us.duplicate(), "frame_us": frame_times,

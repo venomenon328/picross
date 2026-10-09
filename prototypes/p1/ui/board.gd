@@ -23,6 +23,8 @@ var active_color: int = 1
 var ui_scale: float = 1.0
 var overview: bool = false
 var held_button: MouseButton = MOUSE_BUTTON_NONE
+const CELL_BUTTONS: int = MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT
+var cell_buttons_blocked: bool = false
 var pan_button: MouseButton = MOUSE_BUTTON_NONE
 var pan_target: String = ""
 var pan_line_index: int = -1
@@ -230,8 +232,18 @@ func restore_view(state: Dictionary) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		cancel_gesture()
+		# Releases can happen outside the application. A later fresh Down uses
+		# its physical mask to detect a still-held opposite button.
+		cell_buttons_blocked = false
 
 func _input(event: InputEvent) -> void:
+	# This release barrier belongs to input, not to gesture state. Escape,
+	# relayout and page changes must not turn a held chord into a new gesture.
+	if cell_buttons_blocked and event is InputEventMouse:
+		cell_buttons_blocked = (int(event.button_mask) & CELL_BUTTONS) != 0
+		if event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
+			get_viewport().set_input_as_handled()
+			return
 	if not is_visible_in_tree() or session == null:
 		return
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
@@ -269,6 +281,11 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		return
 	if not session.gesture.active:
+		return
+	if local is InputEventMouseButton and local.pressed and local.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT] and local.button_index != held_button:
+		cancel_gesture()
+		cell_buttons_blocked = true
+		get_viewport().set_input_as_handled()
 		return
 	if local is InputEventMouseMotion:
 		pointer_move(local.position, get_viewport().gui_get_hovered_control() == self)
@@ -310,7 +327,10 @@ func _gui_input(event: InputEvent) -> void:
 					pan_target = ""
 					pan_line_index = -1
 		else:
-			pointer_press(event.position, event.button_index)
+			if (int(event.button_mask) & CELL_BUTTONS) == CELL_BUTTONS:
+				cell_buttons_blocked = true
+			if not cell_buttons_blocked:
+				pointer_press(event.position, event.button_index)
 		accept_event()
 
 func clear_clue_hover() -> void:

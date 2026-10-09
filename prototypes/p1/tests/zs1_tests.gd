@@ -7,6 +7,7 @@ var app: Control
 var surface: SubViewport
 var checks: int = 0
 var failures: int = 0
+var buttons: int = 0
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -70,10 +71,10 @@ func gesture_probe() -> void:
 	check(app.session.gesture.active and app.board.preview.size() == 20, "native route long static preview")
 	check(app.board.effects.is_empty() and app.session.player.cursor == 0, "preview no effect/history")
 	mouse(b, MOUSE_BUTTON_LEFT, false)
-	check(app.session.player.cursor == 1 and app.board.effects.size() == 20, "one atomic commit, 20 simultaneous effects")
+	check(app.session.player.cursor == 1 and app.board.effects.size() == 20, "one atomic commit, 20 directed effects")
 	var start: int = int(app.board.effects[0].start)
-	for effect: Dictionary in app.board.effects.values():
-		check(int(effect.start) == start, "same timestamp")
+	for index: int in range(20):
+		check(int(app.board.effects[index].start) == start + roundi(index * 120000.0 / 19), "directed bounded timestamp")
 	# Same tick: the first effect has not ended. A new real GUI gesture wins.
 	mouse(a, MOUSE_BUTTON_RIGHT, true)
 	motion(point(4, 0))
@@ -119,9 +120,11 @@ func gesture_probe() -> void:
 	escape.pressed = true
 	surface.push_input(escape, true)
 	check(app.board.effects.is_empty() and app.session.player.cells[20] == -1 and not app.session.gesture.active, "escape without action/effect")
+	mouse(point(0, 1), MOUSE_BUTTON_LEFT, false)
 	mouse(point(0, 1), MOUSE_BUTTON_LEFT, true)
 	app._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 	check(app.board.preview.is_empty() and not app.session.gesture.active, "focus loss clears preview")
+	mouse(point(0, 1), MOUSE_BUTTON_LEFT, false)
 	for event: String in ["zoom", "resize", "information", "album", "reset", "switch"]:
 		fresh()
 		mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
@@ -213,6 +216,7 @@ func point(x: int, y: int) -> Vector2:
 func motion(p: Vector2) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
 	event.position = p
+	event.button_mask = buttons
 	surface.push_input(event, true)
 
 func mouse(p: Vector2, button: MouseButton, down: bool) -> void:
@@ -222,4 +226,7 @@ func mouse(p: Vector2, button: MouseButton, down: bool) -> void:
 	event.position = p
 	event.button_index = button
 	event.pressed = down
+	var flag: int = 1 << (int(button) - 1)
+	buttons = (buttons | flag) if down else (buttons & ~flag)
+	event.button_mask = buttons
 	surface.push_input(event, true)

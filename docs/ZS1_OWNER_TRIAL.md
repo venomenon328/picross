@@ -1,5 +1,11 @@
 # ZS-1 · native Gestaltungsprobe
 
+Aktualitätshinweis 09.10.2026: Die unten beschriebene gleichzeitige Bewegung gehört
+zum historisch abgenommenen ZS1-Stand. Neue Studienexports erben den gemeinsamen
+Zeichner mit ZS2-N01–N03 (gerichtete Folge, geschriebenes X, Gegentasten-Abbruch).
+Dessen aktuelle Prüfung und offene Abnahme stehen in [ZS2_VERIFICATION.md](ZS2_VERIFICATION.md);
+die alte ZS1-M01-Bestätigung wird dadurch nicht auf einen neuen Head übertragen.
+
 Stand: 07.10.2026 · ZS1-M01/E3: **nach Merge auf main erfolgreich abgeschlossen; Kombination bestätigt**
 
 Das Studien-ZIP vollständig entpacken und `picross-zs1.exe` starten. Godot,

@@ -170,25 +170,36 @@ aktualisieren die Vorschau unmittelbar gemäß P1. Entfallene Vorschauänderunge
 zeigen sofort den bestätigten Ausgangszustand; keine nachlaufenden Spuren.
 Vorschautransparenz ist kein neuer gespeicherter Zell- oder Hypothesenzustand.
 
-### ZS-D07: Commit und parallele Effekte
+### ZS-D07: Commit und gerichtete Effekte (ZS2-E2)
 
 Erst das tatsächliche Anwenden bei Mouse-Up startet die kurze Zellanimation.
-Einzelklicks bleiben Striche der Länge eins. Alle effektiv geänderten Zellen eines
-Strichs erhalten denselben Animationsstart; keine Sequenz pro Zelle, künstliche
-Warteschlange oder mit der Strichlänge wachsende Gesamtdauer.
-Geschützte Felder und No-ops lösen keine Animation aus.
+Einzelklicks bleiben Striche der Länge eins. Maßgeblich ist die bestätigte
+[ZS2-E2-Nacharbeit N01–N03](https://github.com/venomenon328/picross/pull/56#issuecomment-6061611805).
+Nach sofortigem atomarem Commit beginnen Setzen/Umwandeln vom tatsächlichen
+Start zum finalen geraden Abschnittsende; Rückzug und G1-Neuwahl bestimmen diesen
+Endabschnitt. Nur die `m` effektiv geänderten Füllungen/X zählen. Für `m > 1` gilt
+`Δ = min(8 ms, 120 ms / (m - 1))`, Start der Zelle `i` bei `i × Δ`; bei `m = 1`
+ohne Verzögerung. Mikrosekunden werden auf die nächste ganze Zahl gerundet.
+Geschützte Felder/No-ops animieren nicht und erzeugen keine Zeitlücken.
+Wartende Zellen zeigen bereits das gültige Ziel abgeschwächt; nie alte Gegenmarken.
+Die reine Darstellung hat keine Modell-/Save-Callbacks oder Eingabesperre.
 
 Füllung baut sich räumlich entlang aufeinanderfolgender kurzer Stiftzüge auf;
 das X zeichnet erst den ersten, dann den zweiten Zug. Bloßes globales Fade oder
 bewegte Dekorstriche auf schon kräftiger Endfüllung genügen nicht. Die kräftige
-Markierung wird über den zurückgenommenen statischen Zielzustand gezeichnet. Sie verschwindet nicht erst vollständig für einen
-zweiten Aufbau. Beim Neutralisieren darf eine zuvor entfernte Füllung oder ein X
+Füllung wird über den zurückgenommenen statischen Zielzustand gezeichnet.
+Beim gestarteten X bleiben dagegen noch nicht geschriebene Zugteile unsichtbar,
+damit Zug eins und danach Zug zwei bei normaler Spielgröße sichtbar entstehen.
+Die vollständige 56-%-Vorschau beim Ziehen und das abgeschwächte wartende Ziel
+bleiben statisch; Endgeometrie, Farben und Clipping bleiben erhalten. Beim Neutralisieren darf eine zuvor entfernte Füllung oder ein X
 nicht nochmals als Löschanimation auftauchen; stattdessen kann die Vorschaukontur
 oder ein neutraler kurzer Löschhinweis auslaufen.
 
 Das positiv beurteilte kurze Timing bleibt bei **140 ms insgesamt** für
 Setzen/Umwandeln und **80 ms** Entfernen. Teilzüge innerhalb einer Zelle folgen
-aufeinander; alle wirksamen Zellen starten gleichzeitig. Keine 140 ms pro Teilzug.
+aufeinander; die beiden X-Züge teilen sich die 140 ms. Die gesamte Setzfolge endet
+spätestens nach 260 ms (maximal 120 ms Startspreizung plus 140 ms). Entfernen
+beginnt für alle wirksamen Zellen sofort und endet nach 80 ms, ohne Staffelung.
 
 Der Strich wird weiterhin sofort als eine atomare Aktion übernommen.
 History, Hinweiszustände, Abschlussprüfung und Sicherung warten nicht auf Effekte.
@@ -203,10 +214,19 @@ einer tatsächlich aktiven Zellgeste werden dadurch weder erweitert noch aufgeho
 | Rückzug/Abbruch dieser neuen Vorschau | Bestätigten Endzustand sofort zeigen; den zuvor beendeten Effekt nicht wieder starten. |
 | Erneuter Commit derselben Zelle | Nur der jüngste bestätigte Zielzustand ist maßgeblich; kein alter Callback darf später Zellen oder Darstellung zurücksetzen. |
 | Undo/Redo | Exakten Zustand sofort herstellen, betroffene Effekte beenden; keine eigene neue Setzanimation und keine zusätzliche Eingabesperre. |
-| Escape/Fokusverlust | P1-Abbruchregel erhalten; statische Vorschau sofort verwerfen. Rein visuelle Restzustände dürfen beendet werden. |
+| Escape/Fokusverlust/Gegentaste | Vorschau verwerfen und aktive sowie wartende Effekte beenden. Kein Commit oder verspäteter Wiederanlauf. |
 | Blattwechsel, Reset, Restore, Album/Informationsseite | Keine Effekte in eine andere Session übertragen, speichern oder beim Wiederöffnen erneut abspielen. Bestehender Abbruch-/Flush-/Recoveryvertrag bleibt. |
 | Letzter erfolgreicher Strich | Sofortiger bestehender Abschluss-/Speicher-/Enthüllungspfad; laufende Effekte dürfen enden. Kein neues Warten auf das Animationsende. |
-| Pan/Zoom/Resize nach Commit | Effekte bleiben der richtigen Zelle und aktuellen Geometrie zugeordnet oder werden sauber beendet; keine Eingabe- oder Navigationssperre durch Effekte. |
+| Pan/Zoom/Resize nach Commit | Aktive und wartende Effekte beenden; keine Eingabe- oder Navigationssperre durch Effekte. |
+
+Während einer linken/rechten Zellgeste bricht das Down der jeweils anderen
+Taste die gesamte Vorschau samt Zähler ab, auch außerhalb des Boards innerhalb
+des Fensters. Beide zugehörigen Ups werden ohne Commit verbraucht; erst nach
+Loslassen beider Tasten darf ein frisches Down wieder eine Zellgeste starten.
+Erneutes Down/Bewegung bei noch gehaltener Taste bleibt gesperrt; Escape/Fokusverlust
+dürfen weder Phantom-Commit noch hängende Sperre erzeugen. Ein falsches Up ohne
+vorheriges Gegentasten-Down bleibt gemäß G1 unbeachtlich. Mittlere Taste und
+Hand-Panning bleiben Navigation. N04/Zählmöglichkeit ohne Commit ist zurückgestellt.
 
 Animation ist eine transiente Darstellungsschicht. Sie verändert weder Zellen,
 History, Hinweislogik, Bewertung noch Saveformat. Effekte sind innerhalb der
@@ -216,7 +236,7 @@ bewegten fertigen Markierungen.
 ### ZS-D09: Abschaltmöglichkeit
 
 Ein einfacher Schalter „Zellanimationen“ schaltet diese Effekte ab.
-Ausschalten beendet laufende Effekte sofort und zeigt den gültigen Endzustand.
+Ausschalten beendet aktive und wartende Effekte sofort und zeigt den gültigen Endzustand.
 Wiedereinschalten wirkt nur auf künftige Strich-Commits; alte Aktionen werden nicht
 nachgespielt. Die statische, abgeschwächte Vorschau bleibt unverändert erhalten.
 
@@ -251,7 +271,7 @@ Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflü
 | Paket | Ergebnis | Abhängigkeit und Gate |
 | --- | --- | --- |
 | ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; E2-Fontvergleich, E3-Auswahl Chalkboard und kompaktere 26-px-Zeilenhinweisslots. | PR #55 ist nach R3 integriert; kombinierte Eigentümersichtprüfung auf main erfolgreich abgeschlossen. |
-| ZS-2 | Gewählte Hinweis-/Zellsprache ohne zusätzliche Rand-UI, statische Vorschau, parallele Commit-Effekte und Schalter in der regulären Arbeitsansicht. | ZS-1-Auswahl und integrierte nutzbare Grundlage; aktuelle technische Nachweise, unabhängiges Review und gezielte reale Eigentümerprobe vor Merge. |
+| ZS-2 | Gewählte Hinweis-/Zellsprache ohne zusätzliche Rand-UI, statische Vorschau, gerichtete Commit-Effekte und Schalter in der regulären Arbeitsansicht. | ZS-1-Auswahl und integrierte nutzbare Grundlage; aktuelle technische Nachweise, unabhängiges Review und gezielte reale Eigentümerprobe vor Merge. |
 | Z3/#24 | Längere reale Spielerprobung der integrierten neuen Fassung und Abschluss der Designphase. | Nach ZS-2; ersetzt keine davor erforderlichen technischen oder gezielten manuellen Gates. |
 
 ZS-1 verwendet insbesondere F-01/20×20 Mono, F-02/40×40 Farbe und F-03/100×100

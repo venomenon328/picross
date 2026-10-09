@@ -29,6 +29,7 @@ func run() -> void:
 				check(board.clue_text_font(board.clue_font(), symbol) == Regular.Fonts.REFERENCE, "explicit Plex punctuation")
 	app.set_ui_scale(1.0)
 	gesture_probe()
+	preload("res://tests/zs2_rework_cases.gd").new().run(self)
 	# Real toggle event must not touch any save, history, cells or semantic view.
 	fresh()
 	mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
@@ -69,6 +70,7 @@ func run() -> void:
 	check(not app.board.effects.has(6), "retracted horizontal effect stays superseded")
 	app.board.cancel_gesture()
 	check(app.board.effects.is_empty() and app.session.player.cursor == 1, "cancel leaves confirmed action only")
+	mouse(point(0, 5), MOUSE_BUTTON_RIGHT, false)
 	# Removing cannot resurrect the old fill; set/remove clocks are total durations.
 	var time: Array[int] = [1000000]
 	app.board.animation_clock = func() -> int: return time[0]

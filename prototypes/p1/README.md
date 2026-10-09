@@ -314,7 +314,12 @@ Sichtprüfung ist nach Merge auf main erfolgreich abgeschlossen.
 ## Reguläre ZS-2-Integration (#53)
 
 Die Hauptszene verwendet die bestätigte Chalkboard-/Stift-/X-Darstellung, statische
-56-%-Zielvorschau und parallele räumliche Commit-Effekte (140/80 ms). Genau ein
+56-%-Zielvorschau und gerichtete räumliche Commit-Effekte gemäß ZS2-E2:
+Start bis finales Abschnittsende, Δ = min(8 ms, 120 ms/(m−1)) für m > 1 wirksame
+Setz-/Umwandlungszellen, 140 ms je Zelle, maximal 260 ms; Entfernen sofort/80 ms.
+Das aktive X schreibt Zug eins vor Zug zwei ohne vollständige Unterzeichnung.
+Gegentasten-Down bricht aktive Zellgesten auch außerhalb des Boards ab; nach beiden
+Ups ist ein frisches Down nötig. MMB/Hand bleiben Navigation. Genau ein
 Sitzungsschalter „Zellanimationen“ ergänzt die bestehenden Einstellungen.
 [Prüfzuordnung](../../docs/ZS2_VERIFICATION.md),
 [offene reguläre Eigentümerprobe](../../docs/ZS2_OWNER_TRIAL.md).
