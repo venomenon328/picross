@@ -51,6 +51,14 @@ func run() -> void:
 	await process_frame
 	check(app.store.root == OS.get_environment("VS1_TEST_ROOT") and app.store.path_for("f01").is_empty(), "isolation before reads")
 	check(Store.new().path_for("vs01").is_empty() and Store.IDS.size() == 9, "normal catalog remains nine")
+	var toggles: int = 0
+	for node: Node in app.animation_toggle.get_parent().get_children():
+		if node is CheckBox and node.text == "Zellanimationen":
+			toggles += 1
+	check(toggles == 1 and app.animation_toggle.toggled.get_connections().size() == 1, "one inherited animation toggle and signal")
+	app.animation_toggle.button_pressed = false
+	check(not app.board.animations, "inherited toggle drives shared drawing board")
+	app.animation_toggle.button_pressed = true
 	check(app.sessions.size() == 10 and app.board.style == 2 and app.board.font_choice == 2, "ten cases with bound drawing layer")
 	for index: int in range(10):
 		app.select_puzzle(index)

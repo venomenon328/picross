@@ -15,13 +15,13 @@ func shot(name: String) -> void:
 	captures.append({"file":filename,"size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,
 		"completed":app.session.completed,"reveal":app.session.reveal(),
 		"palette":app.session.definition.palette,"own_miniature":app.mini.cells.duplicate(),
-		"font":app.board.BODY_FONT.resource_path,"c1_color_ids":[2,4]})
+		"font":app.board.clue_font().get_font_name(),"c1_color_ids":[2,4]})
 	if name.begins_with("work-"):
 		# Interior own wrong cells remain measurable even in a 100-cell miniature.
 		var step: float = app.mini.image_rect().size.x / app.session.player.width
 		var point: Vector2i = Vector2i(app.mini.global_position + Vector2(3.5,3.5)*step)
 		check(image.get_pixelv(point).is_equal_approx(Color(app.session.definition.palette[0].color)), "native own wrong miniature pixel")
-		check(app.board.BODY_FONT.resource_path == "res://art/book/PlexSans.ttf", "bound clue font")
+		check(app.board.clue_font().get_font_name() == "Chalkboard", "bound regular clue font")
 		check(not app.minimum_message.visible and app.work.visible, "critical layout supported")
 		for control: Control in [app.undo_button,app.redo_button,app.palette_row,app.mini]:
 			check(Rect2(Vector2.ZERO,Vector2(surface.size)).encloses(control.get_global_rect()), "controls on surface")

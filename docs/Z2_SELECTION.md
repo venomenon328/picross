@@ -27,21 +27,26 @@ vorhandene A-Arbeitsansicht gemäß [Detailspezifikation](UI_DRAWING_STYLE.md) w
 GD-03 und GP-03 werden gezielt für kompakte kräftige Hinweisziffern geöffnet:
 Form, Gewicht, optische Größe und gegebenenfalls bewusst ausgewählte gemeinsame
 Slotmaße. Fraunces-Titel, übrige Plex-UI, C1-Semantik, grundlegende Buchkomposition
-und historische hashgebundene Dateien bleiben Grundlage. Die native Wahl steht
-noch aus; frühere feste Font-/Slotwerte unten beschreiben den integrierten Z2-Stand.
+und historische hashgebundene Dateien bleiben Grundlage. Die native Wahl ist durch ZS1-E3/M01 bestätigt; frühere feste Font-/Slotwerte
+unten beschreiben den historischen integrierten Z2-Stand.
 
-E1 wählt Stiftfüllung und 140/80-ms-Timing. Es folgen ein handschriftlicheres X
+E1 wählt Stiftfüllung und historisch 140/80-ms-Timing.
+Die bestätigte ZS2-Nacharbeit vom 09.10.2026 verlangsamt auf 210/120 ms und
+verlangt sichtbar kurze handschriftliche Schraffurzüge bei gesetzten Feldern. Es folgen ein handschriftlicheres X
 und räumlicher Strichaufbau; zusätzliche Rand-UI entfällt. Der Vergleich der zwei
 Eigentümer-TTFs erfolgt auf der durch E2 akzeptierten Grundlage. Hintergrundarbeit bleibt separat.
-Die kurzen parallelen Animationen beginnen ausschließlich nach dem Anwenden.
+Nach ZS2-E2 beginnen die kurzen gerichteten Animationen ausschließlich nach dem
+atomaren Anwenden: höchstens 180 ms Startspreizung plus 210 ms je Zelle; Entfernen
+sofort/120 ms. Das aktive X schreibt ohne volle Unterzeichnung. Gegentasten-Down
+bricht die aktive Zellgeste bis zum Loslassen beider Tasten ab; MMB bleibt Navigation.
 Die Vorschau beim Ziehen bleibt statisch und heller/transparenter. Die neue
 Spezifikation ist keine bereits gelieferte oder abgenommene Z2-Änderung.
 
 
 ZS1-E3 wählt Chalkboard Regular. Für die Studienfassung werden nur die horizontalen
 Zeilenhinweisslots links vom Raster auf 26 × UI-Skalierung verdichtet; die
-Spaltenhinweisslots bleiben 18 × UI. Diese Auswahl wird erst mit ZS-2 regulär
-integriert. Die kombinierte Sichtprüfung von PR #55 erfolgt nach dessen Merge auf main.
+Spaltenhinweisslots bleiben 18 × UI. Diese Auswahl wird mit der beauftragten [ZS-2-Integration](ZS2_VERIFICATION.md)
+regulär verwendet. Die kombinierte Sichtprüfung von PR #55 ist nach dessen Merge auf main abgeschlossen.
 
 ## Bereitstellung und Renderergrenzen
 

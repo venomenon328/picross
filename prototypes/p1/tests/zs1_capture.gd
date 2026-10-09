@@ -171,19 +171,25 @@ func font_metrics() -> Dictionary:
 	var rows: float = board.shared_clue_slot_extent("row", font, fs)
 	var columns: float = board.shared_clue_slot_extent("column", font, fs)
 	var width: float = 0
+	var axis_widths: Array[float] = []
 	for lines: Array in [app.session.definition.rows, app.session.definition.columns]:
+		var axis_width: float = 0
 		for clues: Array in lines:
 			for clue: Dictionary in clues:
-				width = maxf(width, font.get_string_size(board.clue_token(clue), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
+				axis_width = maxf(axis_width, font.get_string_size(board.clue_token(clue), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
+		axis_widths.append(axis_width)
+		width = maxf(width, axis_width)
 	var extents: Vector2 = Vector2.ZERO if baseline else board.clue_vertical_extents(fs)
 	if not baseline and variant > 0:
-		check(width + 1 <= minf(rows, board.view.cell_size), "actual clue widths fit fixed slots and columns")
+		# Advance includes glyph side bearings. F07's widest 12px column token
+		# exactly fills the 12px column advance; no invented extra 1px gap.
+		check(axis_widths[0] <= rows and axis_widths[1] <= board.view.cell_size, "actual clue widths fit their own axis: %s / slots %s,%s" % [axis_widths,rows,board.view.cell_size])
 		check(extents.x + extents.y <= columns, "glyphs including markers fit column slot height")
 	if not baseline and variant == 2:
 		check(is_equal_approx(rows, 26.0 * app.ui_scale), "Chalkboard row slot is owner-selected compact spacing")
 		check(is_equal_approx(columns, 18.0 * app.ui_scale), "column slot spacing remains unchanged")
 	return {"font_size": fs, "max_actual_token_width": width, "row_slot": rows, "column_slot": columns,
-		"ink_above_center": extents.x, "ink_below_center": extents.y, "ascent": font.get_ascent(fs), "descent": font.get_descent(fs)}
+		"axis_widths": axis_widths, "ink_above_center": extents.x, "ink_below_center": extents.y, "ascent": font.get_ascent(fs), "descent": font.get_descent(fs)}
 
 func hint_probe(axis: String) -> void:
 	var line: int = 12 if axis == "row" else 22
@@ -215,7 +221,7 @@ func movement() -> void:
 	app.size = Vector2(surface.size)
 	app.set_ui_scale(1.0)
 	app.select_puzzle(0)
-	app.empty_sample()
+	empty_sample()
 	await process_frame
 	var board = app.board
 	var start: Vector2 = point(0, 0)
@@ -238,7 +244,7 @@ func movement() -> void:
 	mouse(start, MOUSE_BUTTON_RIGHT, true)
 	motion(point(4, 0))
 	var second_ms: float = float(Time.get_ticks_usec() - committed_at) / 1000.0
-	check(second_ms < 140 and board.effects.size() == 15, "second gesture before first effect ends")
+	check(second_ms < 210 and board.effects.size() == 15, "second gesture before first effect ends")
 	await process_frame
 	await RenderingServer.frame_post_draw
 	images.append(surface.get_texture().get_image())
@@ -249,13 +255,13 @@ func movement() -> void:
 		await RenderingServer.frame_post_draw
 		images.append(surface.get_texture().get_image())
 		timeline.append({"label": "parallel-commit-%d" % i, "after_commit_ms": float(Time.get_ticks_usec() - committed_at) / 1000.0})
-	await create_timer(0.18).timeout
+	await create_timer(0.40).timeout
 	await RenderingServer.frame_post_draw
 	images.append(surface.get_texture().get_image())
 	timeline.append({"label": "settled", "after_commit_ms": float(Time.get_ticks_usec() - committed_at) / 1000.0})
 	var final_cells: Array[int] = app.session.player.cells.duplicate()
 	board.set_animations(false)
-	app.empty_sample()
+	empty_sample()
 	mouse(start, MOUSE_BUTTON_LEFT, true)
 	motion(end)
 	mouse(end, MOUSE_BUTTON_LEFT, false)
@@ -278,7 +284,7 @@ func movement() -> void:
 
 func load_probe() -> void:
 	app.select_puzzle(2)
-	app.empty_sample()
+	empty_sample()
 	app.board.fit_all()
 	await process_frame
 	app.board.measure_draws = true
@@ -298,6 +304,7 @@ func load_probe() -> void:
 		await process_frame
 		frame_times.append(Time.get_ticks_usec() - previous)
 		previous = Time.get_ticks_usec()
+	await create_timer(0.40).timeout
 	check(app.board.completion_searches == searches, "animation ticks do not search clues")
 	check(not app.board.is_processing(), "animation ticker stops")
 	check(app.session.player.cursor == 1, "100-cell stroke remains one action")
@@ -309,7 +316,7 @@ func load_probe() -> void:
 func stroke_probe() -> void:
 	# Controlled clock, real production draw path: geometry evidence, not FPS.
 	app.select_puzzle(0)
-	app.empty_sample()
+	empty_sample()
 	var board = app.board
 	while board.view.cell_size < 72:
 		board.zoom(1, board.view.viewport.get_center())
@@ -322,7 +329,7 @@ func stroke_probe() -> void:
 	mouse(point(1, 0), MOUSE_BUTTON_RIGHT, false)
 	board.clear_pointer_hover()
 	var crop: Rect2i = Rect2i(Rect2(board.global_position + board.view.cell_rect(Vector2i(0, 0)).position, Vector2(144, 72)))
-	for elapsed: int in [0, 21, 49, 70, 98, 119, 140]:
+	for elapsed: int in [0, 30, 75, 105, 150, 180, 210]:
 		probe_time = 1000000 + elapsed * 1000
 		board.marks.queue_redraw()
 		await process_frame
@@ -350,3 +357,6 @@ func mouse(p: Vector2, button: MouseButton, down: bool) -> void:
 	event.button_index = button
 	event.pressed = down
 	surface.push_input(event, true)
+
+func empty_sample() -> void:
+	app.empty_sample()

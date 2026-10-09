@@ -1,6 +1,18 @@
 # ZS-1 · native Gestaltungsprobe
 
-Stand: 07.10.2026 · ZS1-M01/E3: **Chalkboard, Stift und Timing gewählt; kombinierte Sichtprüfung nach Merge auf main**
+Aktualität 09.10.2026: Historische ZS1-Abnahmen und Timingwerte unten bleiben
+an ihren alten Stand gebunden. Neue Studienexports erben den gemeinsamen
+ZS2-Zeichner mit 210/120 ms, 12/180-ms-Staffelung (maximal 390 ms) und sichtbaren
+Schraffurzügen ohne volle Unterzeichnung aktiver Füllungen.
+Aktuelle Nachweise und offene Abnahme: [ZS2-Verifikation](ZS2_VERIFICATION.md).
+
+Aktualitätshinweis 09.10.2026: Die unten beschriebene gleichzeitige Bewegung gehört
+zum historisch abgenommenen ZS1-Stand. Neue Studienexports erben den gemeinsamen
+Zeichner mit ZS2-N01–N03 (gerichtete Folge, geschriebenes X, Gegentasten-Abbruch).
+Dessen aktuelle Prüfung und offene Abnahme stehen in [ZS2_VERIFICATION.md](ZS2_VERIFICATION.md);
+die alte ZS1-M01-Bestätigung wird dadurch nicht auf einen neuen Head übertragen.
+
+Stand: 07.10.2026 · ZS1-M01/E3: **nach Merge auf main erfolgreich abgeschlossen; Kombination bestätigt**
 
 Das Studien-ZIP vollständig entpacken und `picross-zs1.exe` starten. Godot,
 **Bakso Daging Regular und Chalkboard Regular** sowie die bisherigen UI-Fonts sind
@@ -8,10 +20,9 @@ eingebettet. [Quellen und Nutzungshinweise](ZS1_FONT_INPUT.md) folgen E2.
 Dies ist ein Windows-Testexport, kein Release. **Chalkboard Regular, Stiftfüllung
 und kurzes Timing sind gewählt.** Nach N07 startet die Studie mit Chalkboard und
 kompakteren Zeilenhinweisen links vom Raster; Bakso/Plex bleiben nur Vergleich.
-Die kombinierte Darstellung wird nach ausdrücklicher Eigentümerentscheidung
-anschließend auf dem gemergten `main`-Stand beurteilt.
+ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer erfolgreich abgeschlossen und die Kombination bestätigt. #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md) ist separat beauftragt; ZS2-M01, unabhängiges aktuelles Review und Mergefreigabe bleiben vor Merge offen. Kein Release.
 Quellhead, Basis, getesteter Checkout/Test-Merge, Run und EXE-Hashes stehen in
-`zs1-report.json`; die genaue Downloadbindung steht im Draft-PR zu #52.
+`zs1-report.json`; die genaue Downloadbindung steht im gemergten PR #55.
 
 Der Studienstart verwendet vor dem Laden der Hauptszene einen neuen, eigenen
 Ordner unter `%LOCALAPPDATA%/picross-zs1/session-<Prozess>-<Startzeit>/`.
@@ -70,18 +81,16 @@ Bitte im Issue/PR am konkreten Artefakt festhalten:
 
 | Feld | Eigentümerergebnis |
 | --- | --- |
-| Head, Run/Artefakt und ZIP-Hash | offen |
+| Head, Run/Artefakt und ZIP-Hash | ZS1-M01 nach Merge `main@985cf08e` bestätigt; keine zusätzliche Artefaktkennung mitgeteilt |
 | Windows-Version, Bildschirm, tatsächliche Clientfläche, Windows-Skalierung | offen |
 | UI-Skalierung, Arbeitszoom, Eingabegerät | offen |
 | Hinweisfont | Chalkboard gewählt; Bakso/Plex nur Vergleich |
 | Stiftfüllung und Timing | bereits positiv gewählt |
-| Neues X und räumlicher Strichaufbau | abschließende Bestätigung offen |
+| Neues X und räumlicher Strichaufbau | Kombination bestätigt |
 | Zusätzliche Rand-UI | verworfen und entfernt; Hintergrundarbeit separat |
-| Vorschaukontrast 56 % | unveränderter Ausarbeitungswert, Einzelbestätigung offen |
-| Kleine Zellen, C1, Hinweisdrag/Tooltip, F-03-Folgegesten | offen |
-| Kompaktere Zeilenhinweise (26 px bei UI 100 %) | nach Merge auf main prüfen |
+| Vorschaukontrast 56 % | bestätigte Kombination; keine gesonderte Messung mitgeteilt |
+| Kleine Zellen, C1, Hinweisdrag/Tooltip, F-03-Folgegesten | Gesamtprobe erfolgreich; keine gesonderten Messwerte mitgeteilt |
+| Kompaktere Zeilenhinweise (26 px bei UI 100 %) | nach Merge bestätigt |
 
-E3 erteilt die Mergefreigabe nach technischer N07-Prüfung und verlegt die
-kombinierte Sichtprüfung ausdrücklich auf den gemergten `main`-Stand. Das Ergebnis
-dieser Nachprüfung vor #53 im Issue festhalten; sie wird nicht als bereits bestanden
-behauptet. Diese Studie stellt die reguläre Arbeitsansicht noch nicht um.
+Die erfolgreiche Nachprüfung ist in #52 dokumentiert. Diese Anleitung bleibt die
+Studienanleitung; die reguläre Integration hat eine eigene [ZS2-M01-Probe](ZS2_OWNER_TRIAL.md).

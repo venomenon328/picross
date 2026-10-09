@@ -446,8 +446,8 @@ static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: i
 					var slot: int = int(layout.token_slot) + token_index - int(layout.start)
 					var center: float = b.clue_slot_center(axis, area, layout, slot) + float(layout.visual_shift)
 					var fs: int = b.clue_font_size()
-					var before: float = Board.CLUE_FONT.get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else float(fs) * (0.6 if b.book_layout else 1.0)
-					var after: float = before if axis == "row" else float(fs) * (0.4 if b.book_layout else 0.35)
+					var before: float = b.clue_text_font(b.clue_font(), str(token.text)).get_string_size(str(token.text), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0 if axis == "row" else b.clue_vertical_extents(fs).x
+					var after: float = before if axis == "row" else b.clue_vertical_extents(fs).y
 					if center - before >= low and center + after <= high:
 						first = mini(first, token_index)
 						last = token_index
@@ -617,7 +617,8 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	monotone_clue_route(t, board, "row", row_index)
 	var column_index: int = 11
 	var column_viewport: Rect2 = board.view.viewport
-	board.view.configure(Rect2(Vector2(column_viewport.position.x, 105), Vector2(column_viewport.size.x, column_viewport.end.y - 105)), board.view.dimensions)
+	var four_slot_inset: float = 4.0 * board.shared_clue_slot_extent("column", board.clue_font(), board.clue_font_size()) + 15.0
+	board.view.configure(Rect2(Vector2(column_viewport.position.x, four_slot_inset), Vector2(column_viewport.size.x, column_viewport.end.y - four_slot_inset)), board.view.dimensions)
 	board.normalize_clue_steps()
 	board.navigate_to(Vector2(float(column_index) / 40.0, float(row_index) / 40.0))
 	var column_capacity: int = board.clue_capacity("column")
