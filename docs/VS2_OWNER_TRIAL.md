@@ -1,5 +1,18 @@
 # Reguläre Windows-Spielprobe · VS2-M01
 
+## Status und Bindung
+
+**Rückmeldung mit Änderungsbedarf; keine vollständige positive Abnahme.** Nach
+Review R1 zur Erstlieferung `2c332ad688315bfa851f7c0d8642d2ab4ac3709c` hat der
+Eigentümer fünf visuelle Nacharbeiten benannt und als Spezifikation freigegeben.
+[VS2-E1 / N01–N05](UI_DRAWING_STYLE.md) sind noch nicht implementiert. Die folgenden
+zusätzlichen Sichtprüfungen gelten erst für deren späteren, im PR gebundenen neuen
+Download; die alten EXEs können die neue Spezifikation nicht bereits erfüllen.
+Keine vollständige Lösung, konkrete Prüfzeit oder unbekannte Windows-/DPI-Werte
+werden aus dem bisherigen Sichtfeedback abgeleitet.
+
+## Regulärer Start und Bedienung
+
 Das Paket enthält `picross-p1.exe` und die Konsolenfassung. ZIP vollständig in einen
 neuen Ordner entpacken und eine der beiden Dateien ohne Zusatzargumente starten.
 Godot muss nicht installiert werden. Die Anwendung startet in der Sammlung;
@@ -14,14 +27,20 @@ bei Blattwechsel und Reset erhalten. Ein neuer Start beginnt in Rasteransicht.
 24 Pixel; Fenster, Hinweise und UI begrenzen die tatsächliche Größe.
 
 Links setzt Farbe, rechts X; erneutes Setzen nimmt den jeweiligen Typ zurück.
-Die Farbe kann einen Füllstrich schützen oder bewusst ein begonnenes X umwandeln.
+Eine auf unbekannt begonnene Geste schützt Vorbelegungen; bewusstes Umwandeln
+beginnt auf X mit links beziehungsweise auf einer Füllung mit rechts.
 Rückziehen verkürzt die Vorschau; Undo/Redo arbeitet mit vollständigen Strichen.
 Die eigene Miniatur ist passiv. Raster und Miniatur lassen sich nicht verschieben.
 Eine überlaufende Hinweiszeile lässt sich mit der mittleren Taste waagerecht,
 eine Hinweisspalte senkrecht ziehen. Darüberfahren zeigt die gesamte Folge.
-Esc oder Fokusverlust bricht ab. Optionen enthalten Hilfe und Zellanimationen.
+Esc, Fokusverlust oder Gegentasten-Down bricht die laufende Zellgeste ab;
+nach Gegentastenabbruch beide Tasten loslassen und neu beginnen.
+Optionen enthalten Hilfe und Zellanimationen.
 
-Bitte an genau dem im PR gebundenen Download prüfen:
+## Probe am späteren kombinierten E1-Lieferstand
+
+Bitte an genau dem im PR gebundenen neuen Download prüfen; nur tatsächlich
+beurteilte Szenarien als durchgeführt eintragen:
 
 1. Frischer, angefangener und gelöster Stand starten jeweils in der Sammlung.
    Optionen dort öffnen kein Rätsel; Auswahl und Rückweg funktionieren.
@@ -34,11 +53,31 @@ Bitte an genau dem im PR gebundenen Download prüfen:
    eine Platzmeldung ist kein Komfortversprechen und bietet keinen Pan-Ausweg.
 5. Speichern/Beenden/Neustart: wieder Sammlung, eigener Stand und Redo erhalten.
    Reset betrifft nur das ausdrücklich bestätigte Blatt.
+6. **Kompakte Hinweise und Platzierung:** Die Zahlen einer Zeilenfolge stehen sichtbar
+   enger, sind aber nicht kleiner oder angeschnitten. Bei freier Breite sitzt der
+   ganze Raster-/Hinweisblock ausgewogener statt am linken Rand. Mit langen Folgen
+   bleiben sämtliche Hinweise erreichbar; Zahlen dürfen beim Ziehen/Einrasten
+   nicht springen oder sich überdecken. Beide Ansichten und UI100/125 ansehen.
+7. **Scribble-Optik und Buchrand:** Rasterlinien, kleine Vorschau samt Fassung und
+   Farbauswahl wirken leicht handgezeichnet, nicht unruhig. Fünferlinien, benachbarte
+   dunkle Füllungen und kleine Zellen bleiben klar. Miniatur/Palette stehen etwas
+   weiter unten/links und berühren den Buchrand nicht; keine Überdeckung von
+   Hinweisen, Werkzeugen, Beschriftungen oder einer sichtbaren Speichermeldung.
+   Zell- und Farbwahl müssen weiterhin präzise treffen.
+8. **Nur Füllungen in der Miniatur:** X sind weiterhin im großen Raster vorhanden,
+   erscheinen aber weder als X noch als Punkte im kleinen Bild. Eigene Füllungen
+   einschließlich falsch gesetzter Farben bleiben sichtbar. Füllung in X umwandeln,
+   Vorschau zurückziehen/abbrechen und Undo/Redo prüfen: Das kleine Bild folgt sofort
+   den eigenen vorgesehenen beziehungsweise bestätigten Füllungen, ohne Animation
+   oder Lösungskorrektur. Vorhandene ungelöste Albumminiaturen zeigen dasselbe Prinzip.
 
 Protokoll: PR/Head, Download/ZIP-Hash, EXE, Windows-Version, Monitorauflösung,
 tatsächliche normale/maximierte Clientfläche, Windows-Anzeigeskalierung, gewählte
 UI-Skalierung, Maus und Ergebnis je Schritt festhalten. Unbekannte Werte offenlassen.
 Technische Eingabeproben ersetzen kein persönliches Komforturteil.
 
-**VS2-M01 ist offen.** Unabhängiges technisches/visuelles Review und passende
-Mergefreigabe bleiben vor Merge erforderlich. Dieses Paket ist kein Release.
+**VS2-M01 bleibt vor Merge offen.** Der neue kombinierte Stand benötigt zusätzlich
+unabhängiges technisches/visuelles Review und passende Mergefreigabe. Frühere
+R1-/ZS2-/GF1-Nachweise nehmen weder die neue Gestaltung noch ihre persönliche
+Abnahme vorweg. Dieses Paket ist kein Release; die Spezifikation ist kein
+Implementierungsauftrag.
