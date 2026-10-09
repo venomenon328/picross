@@ -241,8 +241,9 @@ des Fensters. Beide zugehörigen Ups werden ohne Commit verbraucht; erst nach
 Loslassen beider Tasten darf ein frisches Down wieder eine Zellgeste starten.
 Erneutes Down/Bewegung bei noch gehaltener Taste bleibt gesperrt; Escape/Fokusverlust
 dürfen weder Phantom-Commit noch hängende Sperre erzeugen. Ein falsches Up ohne
-vorheriges Gegentasten-Down bleibt gemäß G1 unbeachtlich. Mittlere Taste und
-Hand-Panning bleiben Navigation. N04/Zählmöglichkeit ohne Commit ist zurückgestellt.
+vorheriges Gegentasten-Down bleibt gemäß G1 unbeachtlich. Die mittlere Taste
+bewegt nach VS2 ausschließlich überlaufende Hinweisfolgen; Hand- und Rasterpan
+entfallen. N04/Zählmöglichkeit ohne Commit ist zurückgestellt.
 
 Animation ist eine transiente Darstellungsschicht. Sie verändert weder Zellen,
 History, Hinweislogik, Bewertung noch Saveformat. Effekte sind innerhalb der

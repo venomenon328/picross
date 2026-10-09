@@ -32,7 +32,7 @@ ZS2-M01 und GF-M01/#59 sind historisch bestanden. VS2-M01 und unabhängiges
 technisches/visuelles Review des neuen Heads bleiben vor Merge offen. Kein Release.
 
 
-Stand: 09.10.2026 · Spezifikation 0.23 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
+Stand: 09.10.2026 · Spezifikation 0.23 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6/ZS2 integriert; VS2-Lieferung im Draft-PR
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -133,7 +133,7 @@ Die spätere Perfektionsregel „ohne Fehler und ohne Undo“ bleibt erhalten. P
 
 ### 3.3 Gestaltung und Spoilergrenze
 
-Warmes, ruhiges handgezeichnetes 2D-Album mit klaren Konturen und Farbflächen. Thematik dezent im Arbeitsbildschirm; das Raster bleibt geometrisch präzise und erhält im freigegebenen ZS-Folgeschritt eine charaktervolle gezeichnete Darstellung. Keine Buchfalte, Dekoration oder unleserliche Handschrift über Arbeitszellen/Hinweisen. Sammelalbum und Reisealbum bleiben offene Themenalternativen. Der Squeakross-Vergleich ist keine UI- oder Assetvorlage; Details in [Zeichensprache](UI_DRAWING_STYLE.md).
+Warmes, ruhiges handgezeichnetes 2D-Album mit klaren Konturen und Farbflächen. Thematik dezent im Arbeitsbildschirm; das Raster bleibt geometrisch präzise und verwendet die über ZS2 integrierte gezeichnete Darstellung. Keine Buchfalte, Dekoration oder unleserliche Handschrift über Arbeitszellen/Hinweisen. Sammelalbum und Reisealbum bleiben offene Themenalternativen. Der Squeakross-Vergleich ist keine UI- oder Assetvorlage; Details in [Zeichensprache](UI_DRAWING_STYLE.md).
 
 Vor Abschluss weder fertiges Motivbild noch Motivname oder verräterischer Albumplatzhalter. Während des Lösens stets eine Miniatur nur des eigenen Zustands einschließlich Fehlern. Mocks sind Stilreferenzen, keine gültigen Rätseldaten oder vorweggenommenen Produktabnahmen.
 
