@@ -21,6 +21,10 @@ func setup(viewport: Viewport) -> void:
 		if i >= 3:
 			wrong.reveal.image = "res://art/f01.svg"
 			check(not Definition.validate(wrong).is_empty(), "wrong pilot asset rejected")
+	if pilot_index == 3 and OS.get_environment("RP6_STAGE") == "partial":
+		# Seed a valid unchanged F01 save so the later real restart exercises
+		# loaded cell semantics as well as the permitted initial fresh state.
+		check(app._save_current(), "isolated F04 seeds unchanged F01 save")
 	await select_pilot()
 
 func select_pilot() -> void:

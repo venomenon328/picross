@@ -76,13 +76,16 @@ nicht zusätzlich in den Runtime-Harness.
 
 F04 prüft nach Abschluss außerdem die bekannten unveränderten F01–F03-Zellstände
 (400/1600/10000 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
-F01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Erstmals erzeugte
-Dateien und reguläre Start-/Flush-Metadaten bleiben zulässig. Eine zusätzliche kurze
+F01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Die isolierte
+Partialinstanz sichert den unveränderten F01-Startstand, damit der zweite Neustart
+auch die gültig geladene Variante tatsächlich prüft. JSON-Zellwerte werden numerisch
+verglichen. Erstmals erzeugte Dateien und reguläre Start-/Flush-Metadaten bleiben
+zulässig. Eine zusätzliche kurze
 F04-Lesegegenprobe verwendet ausschließlich eine Kopie des temporären Profils:
 Ein kurzer Schreibprozess erzeugt dort über eine echte F01-Zellaktion den gültigen
 veränderten Save samt History, auch wenn zuvor noch keine F01-Datei existierte.
 Die neue Leseinstanz muss ihn nativ als `loaded`
-mit 399 unbekannten Zellen erkannt werden und genau an der Isolationsassertion
+mit 399 unbekannten Zellen erkennen und genau an der Isolationsassertion
 mit Exit 4 scheitern. Erfolg, Recovery, Parserfehler oder andere Fehler werden
 nicht als erfolgreiche Gegenprobe akzeptiert. Kein weiteres RP3-Durchspiel.
 
