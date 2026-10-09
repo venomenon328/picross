@@ -437,7 +437,7 @@ sind für genau diesen Merge aufgehoben, nicht als bestanden umgedeutet. Kein Re
 [Detailspezifikation](UI_DRAWING_STYLE.md) ergänzt die vorhandene A-Buchkomposition
 um kräftige kompakte Hinweisziffern, satte stabile Schraffur-/Stiftflächen,
 handschriftliche X und kurze gerichtete Zellanimationen. E1 wählt Stiftfüllung und
-140/80-ms-Timing, fordert echten räumlichen Strichaufbau und entfernt zusätzliche
+historisch 140/80-ms-Timing, fordert echten räumlichen Strichaufbau und entfernt zusätzliche
 Rand-UI. Hintergrundarbeit bleibt separat zurückgestellt. Der vollständige
 Vergleich der zwei Eigentümer-TTFs verwendet die durch E2 akzeptierten Nutzungshinweise;
 [Fontinput](ZS1_FONT_INPUT.md) dokumentiert Originaldateien, Quellen, Hashes und die Eigentümerentscheidung.
@@ -446,8 +446,8 @@ und begründet gewählte gemeinsame Slotmaße geöffnet. Historische Designpaket
 
 Vorschau ist statisch und heller/transparenter. Erst die tatsächliche atomare
 Übernahme zeichnet Setzen/Umwandeln vom Start zum finalen Abschnittsende
-(m wirksame Zellen: Δ = min(8 ms, 120 ms/(m−1)) für m > 1, sonst null;
-140 ms je Zelle, maximal 260 ms; Entfernen sofort und 80 ms). ZS2-E2 verlangt sichtbar geschriebene X-Züge und Gegentasten-Abbruch
+(m wirksame Zellen: Δ = min(12 ms, 180 ms/(m−1)) für m > 1, sonst null;
+210 ms je Zelle, maximal 390 ms; Entfernen sofort und 120 ms). ZS2-E2 verlangt sichtbar geschriebene X-Züge und Gegentasten-Abbruch
 auch außerhalb des Boards, bis beide Tasten losgelassen sind. MMB/Hand bleiben
 Navigation; keine zusätzliche Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
 ist rein visuell; Sitzungsschalter nach P1-Vorbild, kein neues Saveformat.

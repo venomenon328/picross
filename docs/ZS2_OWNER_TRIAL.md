@@ -23,12 +23,15 @@ stehen in `licenses/Chalkboard-NOTICES.md`; es wird keine neue Lizenz behauptet.
    die Achse neu wählen und per Escape abbrechen. Die vollständige Zielvorschau
    bleibt beim Warten statisch. X↔Füllung und Entfernen dürfen keine alte
    Gegenmarkierung stehen lassen; Miniatur folgt unmittelbar den eigenen Zellen.
-3. Nach Mouse-Up räumlichen Stiftaufbau und X-Zug 1 vor Zug 2 beobachten.
+3. Nach Mouse-Up das handschriftliche Ausschraffieren beurteilen: kurze schräge
+   Füllstriche müssen einzeln wachsen und die Fläche aufbauen, ohne bloßes
+   Einfaden oder flächiges Erscheinen. Bei 12/24/36 px auch benachbarte Füllungen,
+   Fünferlinien und alle Rätselfarben prüfen. X-Zug 1 vor Zug 2 beobachten.
    Das X muss bei normalen 24-px-Zellen sichtbar geschrieben werden; auch kleine
    12- und größere 36-px-Zellen prüfen. Setzen/Umwandeln startet vom tatsächlichen
-   Start zum finalen Ende: Δ = min(8 ms, 120 ms/(m−1)) bei m > 1 wirksamen Zellen,
-   140 ms je Zelle, maximal 260 ms insgesamt. Schutzlücken erzeugen keine Pause;
-   Entfernen startet gemeinsam und dauert 80 ms. Beide Achsen/Richtungen,
+   Start zum finalen Ende: Δ = min(12 ms, 180 ms/(m−1)) bei m > 1 wirksamen Zellen,
+   210 ms je Zelle, maximal 390 ms insgesamt. Schutzlücken erzeugen keine Pause;
+   Entfernen startet gemeinsam und dauert 120 ms. Beide Achsen/Richtungen,
    Umwandlung sowie 1/kurze/16/17/100 Zellen und G1-Rückzug vergleichen. Rasch weiterzeichnen, in laufende Effekte hineinzeichnen und
    zurückziehen/abbrechen. Keine verlorene Eingabe oder wiederkehrende Altmarkierung.
 4. Während links gehalten ist rechts drücken und umgekehrt, auch außerhalb des
@@ -58,6 +61,8 @@ Bitte Ergebnis im #53-PR am tatsächlich verwendeten Artefakt festhalten:
 | Tatsächliche Windows-/UI-Skalierung, Arbeitszoom, Maus | offen |
 | F-01/F-02/F-07, Hinweise/C1/Lesbarkeit | offen |
 | Vorschau, Umwandlung, Abbruch, schnelle Folgegesten | offen |
+| Füllung sichtbar strichweise ausgeschraffiert bei 12/24/36 px; Zelltrennung/Farben | offen |
+| Langsameres 210/120-ms-Tempo und 12/180-ms-Staffelung angenehm | offen |
 | X sichtbar geschrieben bei 12/24/36 px; gerichtete Folge und Obergrenze | offen |
 | Gegentasten-Abbruch, Fokus-Rückkehr und frische Eingabe | offen |
 | Bisherige Änderungsrückmeldung zu N01–N03 erneut beurteilt | offen |

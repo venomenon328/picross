@@ -1,6 +1,6 @@
 # ZS-2 · reguläre Integration und Prüfzuordnung
 
-Stand: 09.10.2026 · ZS2-V1 / ZS2-E2 / N01–N03 · #53 · Arbeitsbranch `feat/53-zs2-regular-ui`, Ziel `main`.
+Stand: 09.10.2026 · ZS2-V1 / N01–N03 plus Tempo-/Schraffur-Nacharbeit · #53 · Arbeitsbranch `feat/53-zs2-regular-ui`, Ziel `main`.
 Historische native Auswahlreferenz: `985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f`
 (integrierte ZS-1-Studie aus PR #55). Aktuelle integrierte main-Basis:
 `24564dfed3bb9844d151f4c4ec055d051232d16f` (VS1/GF1); Mergecommit
@@ -37,6 +37,36 @@ nicht zurückkehren. Der eine
 Sitzungsschalter „Zellanimationen“ startet an und schreibt keine Einstellungsdatei.
 Keine neue Rand-UI, Hintergrundproduktion, Spielregel oder Veröffentlichung.
 
+## Bestätigte Tempo-/Schraffur-Nacharbeit · 09.10.2026
+
+210 ms je Setzen/Umwandeln, 120 ms Entfernen; Δ = min(12 ms, 180 ms/(m−1))
+für m > 1, Einzelzelle ohne Versatz. Maximal 390 ms Gesamtablauf, Entfernen
+weiter ungestaffelt. Dies ersetzt die früheren 140/80/8/120/260-ms-Werte;
+R2 und die alte ZS1-Abnahme bleiben ausschließlich Nachweise ihrer alten Heads.
+
+Aktive Füllungen entstehen aus sieben schrägen, zellstabil leicht gebogenen
+Schraffurzügen mit wechselnder Richtung. Schmale Papierfugen machen den Aufbau
+sichtbar; ein abschließender Füllstrich schließt sie und übernimmt Kontur/Textur.
+Die ruhende Silhouette bleibt unverändert. Aktive Füllungen besitzen keine volle
+blasse Unterzeichnung; Ziehvorschau und noch wartende Ziele bleiben statisch.
+
+`zs2_capture.gd` erfasst zusätzlich native Füllungen bei 12/24/36 px: 16
+kontrollierte Zeitpunkte von 0 bis 210 ms, je 22 Echtzeitframes und vollständigen
+1920×1080-Spielkontext. `zs_hatching.py` prüft unabhängig anhand der Pixel:
+gleichzeitig fertige Tinte und unbeschriebenes Papier, getrennte Schraffurzüge,
+wachsende Abdeckung, wechselnde Richtung bei kleinen Zellen und unveränderten
+äußeren Zellrand. Negativkontrollen verwerfen globales Fade, flächiges Wischen
+und sofortige Vollfüllung. Die 72-px-Probe verwendet denselben neuen Oracle;
+X-Zugreihenfolge und deren Negativkontrolle bleiben erhalten. Vergleich mit der
+historischen Auswahl prüft unveränderte Endbilder/Farben und Zelltrennung.
+
+Numerische Nachweise prüfen 119/120 ms Entfernen, 209/210 ms Setzen, 12/180-ms-
+Starts über 1/4/16/17/100 wirksame Zellen und 390-ms-Ende. History, Savebytes,
+Miniatur und Abschluss bleiben sofort; ein weiterer echter Mauscommit bei
+300 ms prüft freie Eingabe ausdrücklich auch im verlängerten Zeitfenster.
+Kein Modell-/Saveformatwechsel; H1-, Abschluss-, Recovery- und Lebenszyklusregressionen
+bleiben aktiv. Neue Lieferhead-/CI-/Artefaktbindung und Selbstreview stehen im PR.
+
 ## Akzeptanzzuordnung
 
 | Issue-ID | Nachweise am Lieferstand |
@@ -44,7 +74,7 @@ Keine neue Rand-UI, Hintergrundproduktion, Spielregel oder Veröffentlichung.
 | ZS2-A01 | `zs2_tests.gd`: reguläre Board-Erzeugung und 26/18 für alle neun Blätter bei UI 100/125 %. `zs2_capture.gd`/`zs2_delivery.py`: 16 Dreiervergleiche (bisher regulär, ausgewählte Studie, jetzt regulär), identische eigene Zellen, Geometrie und Eingaben; Hinweise pixelgleich, Rastervergleich mit der oben begrenzten AA-Clipkorrektur. |
 | ZS2-A02 | Native Ziffernprobe 0–9/11/17/40/100, drei Zustände, beide Achsen, C1; Schrift-/Glyphenmetriken und Plex-Marker. Reguläre P1-/GP-48-Tests und native Drag-/Drop-/Tooltip-/Markerprüfungen bleiben aktiv. Semantische Lesepositionen statt Pixelwerte gespeichert. |
 | ZS2-A03 | Gemeinsame Gestenprobe aus `zs1_tests.gd` auf echter regulärer Hauptszene; G1-Neuwahl, Schutz, Umwandlung, Neutralisierung, Rückzug, Escape/Fokus. Native Echtzeitfolge bestätigt statische Vorschau einschließlich Wartezeit. |
-| ZS2-A04 | Reale Eingabeereignisse und gerichtete Startfolge aller wirksamen Setz-/Umwandlungszellen; kontrollierte Ablaufgrenzen 79/80 und 139/140 ms. Sieben native Strichzeitbilder, unabhängige räumliche Pixelpunkte und zwei Negativkontrollen (gleichförmiges Fade, umgekehrte X-Reihenfolge). Zusätzlich native kontrollierte und Echtzeit-X-Folgen bei 12/24/36 px mit 1:1-Wiedergabe und vollständigem Spielkontext; Negativkontrollen bei jeder Größe. |
+| ZS2-A04 | Reale Eingabeereignisse und gerichtete Startfolge aller wirksamen Setz-/Umwandlungszellen; kontrollierte Ablaufgrenzen 119/120 und 209/210 ms. Sieben native Strichzeitbilder, unabhängige räumliche Pixelpunkte und zwei Negativkontrollen (gleichförmiges Fade, umgekehrte X-Reihenfolge). Zusätzlich native kontrollierte und Echtzeit-X-Folgen bei 12/24/36 px mit 1:1-Wiedergabe und vollständigem Spielkontext; Negativkontrollen bei jeder Größe. |
 | ZS2-A05 | Folgestrich vor Ablauf, Übernahme auf animierten Zellen, Zurückziehen/Abbruch ohne Wiederkehr, G1-Neuwahl; vier schnelle 100-Zellen-Farbstriche auf F-07. |
 | ZS2-A06 | Undo/Redo, Fokus, Zoom/Resize/Pan, Reset/Restore, Blatt-/Album-/Informationswechsel und sofort gespeicherter letzter Lösungsstrich. Bestehender Gesamtproduktharness prüft Flushfehler, Backup/Recovery und Zwei-Prozess-Restore. |
 | ZS2-A07 | Tatsächlicher Checkbox-Signalweg; Aus beendet Effekte, An spielt nichts nach; Zellen/History/View/Savebytes gleich. Aus über alle neun Blätter/Reset erhalten; frische Hauptszene beginnt an. |
@@ -80,12 +110,12 @@ Farben und Clipgrenzen bleiben unverändert.
 N02 ordnet ausschließlich die transiente Darstellung nach dem tatsächlichen
 Gestenstart und finalen G1-/Rückzugsabschnitt. Modelländerungen bleiben atomar.
 Eine native 17-Zellen-Umwandlung rechts nach links prüft wartende Ziele gegen die
-statische X-Vorschau (keine alten Füllungen), den letzten Start bei 120 ms und
-den Endstand bei 260 ms. Der Pixelvergleich lässt nur die überlagerte Zählerkante
+statische X-Vorschau (keine alten Füllungen), den letzten Start bei 180 ms und
+den Endstand bei 390 ms. Der Pixelvergleich lässt nur die überlagerte Zählerkante
 in den oberen vier Pixeln der Vorschauzeile aus.
-Nur m effektive Setz-/Umwandlungszellen zählen: Δ = min(8 ms, 120 ms/(m−1)) bei
-m > 1, sonst null; 140 ms je Zelle, höchstens 260 ms gesamt. Entfernen beginnt
-ungestaffelt und dauert 80 ms. Vorschau/Commit ersetzt ältere aktive und wartende
+Nur m effektive Setz-/Umwandlungszellen zählen: Δ = min(12 ms, 180 ms/(m−1)) bei
+m > 1, sonst null; 210 ms je Zelle, höchstens 390 ms gesamt. Entfernen beginnt
+ungestaffelt und dauert 120 ms. Vorschau/Commit ersetzt ältere aktive und wartende
 Effekte dauerhaft; keine verzögerten Modell-, History- oder Save-Callbacks.
 
 N03 behandelt Gegentasten-Down in der globalen Eingaberoute, auch außerhalb des
@@ -99,8 +129,8 @@ Navigation. N04 ist ausdrücklich zurückgestellt.
 
 - Längen 1/4/16/17/100, beide Achsen und Richtungen, Füllung/X, Schutzlücken,
   Umwandlung, G1-Neuwahl und finalen Rückzug; numerisch unabhängiges Timingoracle.
-- Sofortige Zellen/Miniatur/Savebytes und atomare History, 139/140-ms-Endgrenze,
-  höchstens 260 ms; gleichzeitige 80-ms-Entfernung. Keine spätere Zustandsänderung.
+- Sofortige Zellen/Miniatur/Savebytes und atomare History, 209/210-ms-Endgrenze,
+  höchstens 390 ms; gleichzeitige 120-ms-Entfernung. Keine spätere Zustandsänderung.
 - Wirklich wartende Effekte bei Undo/Redo, Escape/Fokus, Pan/Zoom/Resize,
   Blatt-/Album-/Informationswechsel, Reset/Restore und Ausschalten; nach weiterlaufender
   Uhr kein Wiederanlauf. Miniaturnavigation beendet ebenfalls die Effekte.
@@ -132,7 +162,7 @@ Windows-Exportstart stehen im Draft-PR. Frühere Runs gelten nur für ihre Heads
 - `zs2-review-<Head>` enthält 48 native PNGs, die reguläre Ziffernprobe, drei
   Captureberichte, HTML-Index und `zs2-report.json` mit Export-/Bildhashes.
 - `zs2-strokes-<Head>` enthält die kontrollierte räumliche Strichfolge und die
-  getrennte Echtzeitfolge mit Zeitangaben, 12/24/36-px-X-Folgen, 1:1-Wiedergabe,
+  getrennte Echtzeitfolge mit Zeitangaben, 12/24/36-px-X- und Schraffurfolgen, 1:1-Wiedergabe,
   Vollbildkontext, Negativkontrollen und demselben Bericht.
 - `zs1-*` bleiben eigene Studienartefakte; sie ersetzen keine reguläre ZS-2-Prüfung.
 
@@ -144,7 +174,7 @@ konkrete technische Stichproben; keine allgemeine FPS-/DPI- oder Mausabnahme.
 
 [ZS2-M01 / R1-A01](ZS2_OWNER_TRIAL.md) am regulären Windows-Artefakt und das unabhängige
 technische/visuelle Review des aktuellen Heads sind **offen vor Merge**. Die Eigentümerprobe umfasst die
-bisherige Änderungsrückmeldung zu X-Aufbau, Staffelung und Gegentasten-Abbruch.
+bisherige Änderungsrückmeldung zu X-/Schraffuraufbau, langsamerem Tempo, Staffelung und Gegentasten-Abbruch.
 Eine ausdrückliche Mergefreigabe liegt mit diesem Umsetzungsauftrag nicht vor. Der
 getrennte Selbstreview wird im Draft-PR protokolliert und ersetzt keines dieser
 Gates. Der Auftrag endet mit geprüftem Commit/Push und Draft-PR. Kein Merge oder

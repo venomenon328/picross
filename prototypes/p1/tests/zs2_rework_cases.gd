@@ -57,33 +57,42 @@ func logical() -> Array:
 func wave(indices: Array[int], target: int) -> void:
 	var effects: Dictionary = app.board.effects
 	t.check(effects.size() == indices.size(), "only effective cells animate")
-	# Independent oracle: start at gesture origin, 8ms steps up to length 16;
-	# longer lines place their final start exactly at 120ms.
+	# Independent oracle: start at gesture origin, 12ms steps up to length 16;
+	# longer lines place their final start exactly at 180ms.
 	for i: int in range(indices.size()):
-		var expected: int = i * 8000 if indices.size() <= 16 else roundi(120000.0 * i / (indices.size() - 1))
+		var expected: int = i * 12000 if indices.size() <= 16 else roundi(180000.0 * i / (indices.size() - 1))
 		t.check(effects.has(indices[i]), "effective cell has effect")
 		if not effects.has(indices[i]):
 			continue
 		t.check(int(effects[indices[i]].start) == 1000000 + expected, "start follows gesture direction and effective ordinal")
-		t.check(effects[indices[i]].after == target and is_equal_approx(effects[indices[i]].seconds, 0.14), "140ms target only")
+		t.check(effects[indices[i]].after == target and is_equal_approx(effects[indices[i]].seconds, 0.21), "210ms target only")
 		t.check(app.session.player.cells[indices[i]] == target and app.mini.cells[indices[i]] == target, "model and miniature already committed")
 	var restored: Array[int] = []
 	for value: Variant in app.store.load_slot(app.session.definition).data.cells:
 		restored.append(int(value))
 	t.check(restored == app.session.player.cells, "all cells saved before visual starts")
 	t.check(not saved().is_empty(), "save-byte oracle reads a real slot")
+	t.check(app.session.player.history.back().size() == indices.size(), "one atomic history entry contains every effective cell")
 	var state: Array = logical()
 	var last_start: int = int(effects[indices.back()].start)
-	t.check(last_start <= 1120000, "maximum 120ms spread")
-	clock[0] = last_start + 139000
+	t.check(last_start <= 1180000, "maximum 180ms spread")
+	clock[0] = last_start + 209000
 	app.board._process(0)
-	t.check(app.board.effects.has(indices.back()), "last cell still active at 139ms")
+	t.check(app.board.effects.has(indices.back()), "last cell still active at 209ms")
 	clock[0] += 1000
 	app.board._process(0)
-	t.check(app.board.effects.is_empty() and not app.board.is_processing(), "last ends by 260ms and ticker stops")
+	t.check(app.board.effects.is_empty() and not app.board.is_processing(), "last ends by 390ms and ticker stops")
 	t.check(logical() == state, "elapsed effects never write model/history/mini/save/completion")
 
 func protection_and_g1() -> void:
+	reset()
+	stroke(Vector2i.ZERO, Vector2i(16, 0), MOUSE_BUTTON_LEFT)
+	clock[0] += 300000
+	app.board._process(0)
+	t.check(app.board.effects.has(16), "longer wave still active after the old 260ms bound")
+	stroke(Vector2i(16, 0), Vector2i(16, 0), MOUSE_BUTTON_RIGHT)
+	t.check(app.session.player.cursor == 2 and app.session.player.cells[16] == 0, "fresh input commits inside extended animation window")
+	t.check(app.store.load_slot(app.session.definition).data.cells[16] == 0, "extended-window input is saved immediately")
 	reset()
 	app.session.player.commit([{"index": 2, "before": -1, "after": 1}, {"index": 5, "before": -1, "after": 0}])
 	stroke(Vector2i(7, 0), Vector2i(0, 0), MOUSE_BUTTON_LEFT)
@@ -110,10 +119,10 @@ func protection_and_g1() -> void:
 	app.board.clear_effects()
 	stroke(Vector2i(15, 0), Vector2i(0, 0), MOUSE_BUTTON_LEFT)
 	for effect: Dictionary in app.board.effects.values():
-		t.check(int(effect.start) == clock[0] and is_equal_approx(effect.seconds, 0.08) and effect.after == -1, "removal has no staggering or old mark")
-	clock[0] += 80000
+		t.check(int(effect.start) == clock[0] and is_equal_approx(effect.seconds, 0.12) and effect.after == -1, "removal has no staggering or old mark")
+	clock[0] += 120000
 	app.board._process(0)
-	t.check(app.board.effects.is_empty(), "whole removal ends at 80ms")
+	t.check(app.board.effects.is_empty(), "whole removal ends at 120ms")
 	reset()
 	stroke(Vector2i(0, 0), Vector2i(16, 0), MOUSE_BUTTON_LEFT)
 	app.board.clear_effects()

@@ -244,7 +244,7 @@ func movement() -> void:
 	mouse(start, MOUSE_BUTTON_RIGHT, true)
 	motion(point(4, 0))
 	var second_ms: float = float(Time.get_ticks_usec() - committed_at) / 1000.0
-	check(second_ms < 140 and board.effects.size() == 15, "second gesture before first effect ends")
+	check(second_ms < 210 and board.effects.size() == 15, "second gesture before first effect ends")
 	await process_frame
 	await RenderingServer.frame_post_draw
 	images.append(surface.get_texture().get_image())
@@ -255,7 +255,7 @@ func movement() -> void:
 		await RenderingServer.frame_post_draw
 		images.append(surface.get_texture().get_image())
 		timeline.append({"label": "parallel-commit-%d" % i, "after_commit_ms": float(Time.get_ticks_usec() - committed_at) / 1000.0})
-	await create_timer(0.18).timeout
+	await create_timer(0.40).timeout
 	await RenderingServer.frame_post_draw
 	images.append(surface.get_texture().get_image())
 	timeline.append({"label": "settled", "after_commit_ms": float(Time.get_ticks_usec() - committed_at) / 1000.0})
@@ -304,7 +304,7 @@ func load_probe() -> void:
 		await process_frame
 		frame_times.append(Time.get_ticks_usec() - previous)
 		previous = Time.get_ticks_usec()
-	await create_timer(0.27).timeout
+	await create_timer(0.40).timeout
 	check(app.board.completion_searches == searches, "animation ticks do not search clues")
 	check(not app.board.is_processing(), "animation ticker stops")
 	check(app.session.player.cursor == 1, "100-cell stroke remains one action")
@@ -329,7 +329,7 @@ func stroke_probe() -> void:
 	mouse(point(1, 0), MOUSE_BUTTON_RIGHT, false)
 	board.clear_pointer_hover()
 	var crop: Rect2i = Rect2i(Rect2(board.global_position + board.view.cell_rect(Vector2i(0, 0)).position, Vector2(144, 72)))
-	for elapsed: int in [0, 21, 49, 70, 98, 119, 140]:
+	for elapsed: int in [0, 30, 75, 105, 150, 180, 210]:
 		probe_time = 1000000 + elapsed * 1000
 		board.marks.queue_redraw()
 		await process_frame

@@ -76,20 +76,20 @@ func run() -> void:
 	app.board.animation_clock = func() -> int: return time[0]
 	mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
 	mouse(point(0, 0), MOUSE_BUTTON_LEFT, false)
-	time[0] += 79000
+	time[0] += 119000
 	app.board._process(0)
-	check(app.board.effects.has(0) and app.session.player.cells[0] == -1, "remove remains purely visual at 79ms")
+	check(app.board.effects.has(0) and app.session.player.cells[0] == -1, "remove remains purely visual at 119ms")
 	time[0] += 1000
 	app.board._process(0)
-	check(app.board.effects.is_empty(), "remove ends at 80ms")
+	check(app.board.effects.is_empty(), "remove ends at 120ms")
 	mouse(point(0, 1), MOUSE_BUTTON_RIGHT, true)
 	mouse(point(0, 1), MOUSE_BUTTON_RIGHT, false)
-	time[0] += 139000
+	time[0] += 209000
 	app.board._process(0)
-	check(app.board.effects.has(20), "set still active at 139ms")
+	check(app.board.effects.has(20), "set still active at 209ms")
 	time[0] += 1000
 	app.board._process(0)
-	check(app.board.effects.is_empty() and not app.board.is_processing(), "set ends at 140ms and ticker stops")
+	check(app.board.effects.is_empty() and not app.board.is_processing(), "set ends at 210ms and ticker stops")
 	app.board.animation_clock = Time.get_ticks_usec
 	print("ZS2_TESTS checks=", checks, " failures=", failures)
 	if failures == 0:

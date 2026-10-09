@@ -12,6 +12,7 @@ from pathlib import Path
 
 import p1_preflight as toolchain
 import zs1_delivery
+import zs_hatching
 
 BASE = "985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f"
 FONT_SHA256 = "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d"
@@ -121,11 +122,11 @@ def verify(renders: Path) -> dict:
     if len(current["frames"]) != 1 or {m["fixture"] for m in current["measurements"]} != {"F-03", "F-07"}:
         raise toolchain.PreflightError("Missing ZS2 motion/large color load")
     for motion in current["frames"]:
-        if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"] < 140):
+        if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"] < 210):
             raise toolchain.PreflightError("ZS2 real-time motion failed")
         early = next(f for f in motion["timeline"] if f["label"] == "parallel-commit-0")
         final = next(f for f in motion["timeline"] if f["label"] == "settled")
-        if not 0 < early["after_commit_ms"] < 140:
+        if not 0 < early["after_commit_ms"] < 210:
             raise toolchain.PreflightError("ZS2 missed live commit effect")
         with Image.open(renders / early["file"]) as a, Image.open(renders / final["file"]) as b:
             if not ImageChops.difference(a.convert("RGB"), b.convert("RGB")).getbbox():
@@ -136,6 +137,7 @@ def verify(renders: Path) -> dict:
                 raster_rounding_tolerance="1/255 per channel inside raster only; clues exact",
                 movements=current["frames"], stroke_evidence=strokes,
                 x_size_evidence=verify_x_sizes(renders, current["rework_sequences"]),
+                fill_size_evidence=verify_fill_sizes(renders, current["fill_sequences"]),
                 wave_evidence=verify_wave(renders, current['wave_sequence']),
                 measurements=current["measurements"], renderer=current["renderer"])
 
@@ -149,7 +151,7 @@ def package(root: Path, output: Path, product: dict, evidence: dict):
     (output / "zs2-report.json").write_text(text, encoding="utf-8")
     names = {pair[key] for pair in evidence["pairs"] for key in ("before", "study", "after")}
     names.update({"zs2-numerals.png", "zs2-before.json", "zs2-study.json", "zs2-after.json"})
-    for kind, files in (("review", names), ("strokes", {p.name for pattern in ("zs1-motion-*.png", "zs1-strokes-*.png", "zs2-x-*.png", "zs2-wave-*.png") for p in renders.glob(pattern)})):
+    for kind, files in (("review", names), ("strokes", {p.name for pattern in ("zs1-motion-*.png", "zs1-strokes-*.png", "zs2-x-*.png", "zs2-fill-*.png", "zs2-wave-*.png") for p in renders.glob(pattern)})):
         archive = output / f"picross-zs2-{kind}.zip"
         with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
             for name in sorted(files):
@@ -158,9 +160,9 @@ def package(root: Path, output: Path, product: dict, evidence: dict):
             bundle.write(root / "docs/ZS2_VERIFICATION.md", "PRUEFUNG.md")
             if kind == "strokes":
                 index = zs1_delivery.movement_html(evidence).replace("ZS-1", "ZS-2")
-                index = index.replace("</html>", x_playback(evidence["x_size_evidence"]) + "</html>")
+                index = index.replace("</html>", x_playback(evidence["x_size_evidence"]) + x_playback(evidence["fill_size_evidence"], "fill") + "</html>")
                 wave=evidence['wave_evidence']
-                index=index.replace('</html>', '<h2>N02: 17 Umwandlungszellen, rechts nach links</h2><p>0 ms: rechte Zelle beginnt, alle wartenden Ziele zeigen nur das abgeschwächte X. 120 ms: linke Zelle beginnt; 260 ms: vollständig fertig.</p>'+''.join(f"<figure><figcaption>{f['elapsed_ms']} ms</figcaption><img src='{f['file']}'></figure>" for f in wave['frames'])+'</html>')
+                index=index.replace('</html>', '<h2>N02: 17 Umwandlungszellen, rechts nach links</h2><p>0 ms: rechte Zelle beginnt, alle wartenden Ziele zeigen nur das abgeschwächte X. 180 ms: linke Zelle beginnt; 390 ms: vollständig fertig.</p>'+''.join(f"<figure><figcaption>{f['elapsed_ms']} ms</figcaption><img src='{f['file']}'></figure>" for f in wave['frames'])+'</html>')
             else:
                 sections = ["<p>Jeweils vorherige reguläre Ansicht, gewählte isolierte Studie, neue reguläre Ansicht. Identische eigene Zellen und Eingaben; PNG bei 100 % prüfen.</p>"]
                 for pair in evidence["pairs"]:
@@ -186,7 +188,7 @@ def verify_wave(renders, record):
             return p.convert('RGB')
     blank,preview=read(record['blank']),read(record['preview'])
     images={f['elapsed_ms']:read(f['file']) for f in record['frames']}
-    if list(images)!=[0,8,70,120,140,260]:raise toolchain.PreflightError('ZS2 wave timeline incomplete')
+    if list(images)!=[0,12,105,180,210,390]:raise toolchain.PreflightError('ZS2 wave timeline incomplete')
     def same(a,b,cell):
         # The live gesture counter overlaps the top 4px of this row. Compare
         # cell ink below that UI edge; an old fill/X would still be detected.
@@ -194,11 +196,11 @@ def verify_wave(renders, record):
         return not ImageChops.difference(a.crop(bounds),b.crop(bounds)).getbbox()
     if not same(images[0],blank,16) or not all(same(images[0],preview,i) for i in range(16)):
         raise toolchain.PreflightError('ZS2 waiting targets/first cell disagree with reverse gesture')
-    if not same(images[120],blank,0) or not same(images[140],images[260],16):
-        raise toolchain.PreflightError('ZS2 native starts are not bounded by 120ms')
-    if any(same(images[260],preview,i) or same(preview,blank,i) for i in range(17)):
+    if not same(images[180],blank,0) or not same(images[210],images[390],16):
+        raise toolchain.PreflightError('ZS2 native starts are not bounded by 180ms')
+    if any(same(images[390],preview,i) or same(preview,blank,i) for i in range(17)):
         raise toolchain.PreflightError('ZS2 wave lacks distinct preview/final X targets')
-    return dict(record,checks=['waiting cells equal target preview, no old fills','rightmost starts first','leftmost starts at 120ms','rightmost complete at 140ms','all final at 260ms'])
+    return dict(record,checks=['waiting cells equal target preview, no old fills','rightmost starts first','leftmost starts at 180ms','rightmost complete at 210ms','all final at 390ms'])
 
 
 def x_order(images, blank, size):
@@ -210,11 +212,11 @@ def x_order(images, blank, size):
     for bounds in x_regions(size):
         x0,y0,x1,y1=bounds
         pixels=[(x,y) for y in range(y0,y1) for x in range(x0,x1)
-                if distance(blank.getpixel((x,y)),images[140].getpixel((x,y)))>18]
+                if distance(blank.getpixel((x,y)),images[210].getpixel((x,y)))>18]
         if not pixels:raise toolchain.PreflightError("ZS2 native X quadrant has no visible ink")
-        fractions.append({ms:sum(distance(picture.getpixel(p),images[140].getpixel(p))<6 for p in pixels)/len(pixels)
+        fractions.append({ms:sum(distance(picture.getpixel(p),images[210].getpixel(p))<6 for p in pixels)/len(pixels)
                           for ms,picture in images.items()})
-    if fractions[0][70]<.9 or fractions[1][70]>.05 or fractions[1][140]<.9:
+    if fractions[0][105]<.9 or fractions[1][105]>.05 or fractions[1][210]<.9:
         raise toolchain.PreflightError("ZS2 native X does not write first stroke before second")
     return fractions
 
@@ -231,11 +233,11 @@ def verify_x_sizes(renders, records):
                 return p.convert('RGB')
         blank=read(record['blank'])
         images={f['elapsed_ms']:read(f['file']) for f in record['controlled']}
-        if list(images)!=[0,21,49,70,98,119,140]:raise toolchain.PreflightError("Incomplete X timeline")
+        if list(images)!=[0,30,75,105,150,180,210]:raise toolchain.PreflightError("Incomplete X timeline")
         fractions=x_order(images,blank,size)
-        fade={ms:Image.blend(blank,images[140],ms/140) for ms in images}
-        reverse=dict(images);reverse[70]=images[70].copy()
-        for region,source in zip(x_regions(size),(blank,images[140])):reverse[70].paste(source.crop(region),region[:2])
+        fade={ms:Image.blend(blank,images[210],ms/210) for ms in images}
+        reverse=dict(images);reverse[105]=images[105].copy()
+        for region,source in zip(x_regions(size),(blank,images[210])):reverse[105].paste(source.crop(region),region[:2])
         for label,mutant in (('global fade',fade),('reversed strokes',reverse)):
             try:x_order(mutant,blank,size)
             except toolchain.PreflightError:pass
@@ -243,25 +245,25 @@ def verify_x_sizes(renders, records):
         live=record['live']
         if len(live)<8 or any(a['elapsed_ms']>b['elapsed_ms'] for a,b in zip(live,live[1:])):
             raise toolchain.PreflightError("Invalid real-time X frames")
-        early=[f for f in live if 0<f['elapsed_ms']<70]
-        second=[f for f in live if 70<f['elapsed_ms']<140]
-        if not early or not second or live[-1]['elapsed_ms']<140:
+        early=[f for f in live if 0<f['elapsed_ms']<105]
+        second=[f for f in live if 105<f['elapsed_ms']<210]
+        if not early or not second or live[-1]['elapsed_ms']<210:
             raise toolchain.PreflightError("Real-time capture missed an X stroke")
         # Early native frame must visibly differ both from blank and from final.
         if not any(ImageChops.difference(read(f['file']),blank).getbbox() and
-                   ImageChops.difference(read(f['file']),images[140]).getbbox() for f in early):
+                   ImageChops.difference(read(f['file']),images[210]).getbbox() for f in early):
             raise toolchain.PreflightError("No spatial movement visible at native cell size")
-        if ImageChops.difference(read(live[-1]['file']),images[140]).getbbox():
+        if ImageChops.difference(read(live[-1]['file']),images[210]).getbbox():
             raise toolchain.PreflightError("Real-time X ends differently from controlled X")
         with Image.open(renders/record['context']) as context:
             x,y,w,h=record['crop']
-            if context.size!=(1920,1080) or ImageChops.difference(context.crop((x,y,x+w,y+h)).convert('RGB'),images[140]).getbbox():
+            if context.size!=(1920,1080) or ImageChops.difference(context.crop((x,y,x+w,y+h)).convert('RGB'),images[210]).getbbox():
                 raise toolchain.PreflightError("X crop does not match native game context")
         result.append(dict(record,quadrant_progress=fractions,negative_controls=['global fade rejected','reversed strokes rejected']))
     return result
 
 
-def x_playback(records):
+def x_playback(records, marker="x"):
     sections=['<h2>ZS2-N01: X in nativer Spielgröße, Echtzeit</h2><p>12 / 24 / 36 px; unvergrößerte Originalpixel. Wiedergabe verwendet die gemessenen Frameabstände. Vollbild-PNG und kontrollierte Zeiten separat prüfen; keine Mausabnahme.</p>']
     for r in records:
         size=r['cell_size']
@@ -272,4 +274,43 @@ const pending={};
 async function playX(size){clearTimeout(pending[size]);const r=sequences.find(s=>s.cell_size===size),img=document.getElementById('x'+size);await Promise.all(r.live.map(f=>new Promise(resolve=>{const p=new Image();p.onload=resolve;p.onerror=resolve;p.src=f.file})));img.src=r.blank;
 const start=performance.now();let i=0;function tick(){if(i>=r.live.length)return;const f=r.live[i++];pending[size]=setTimeout(()=>{img.src=f.file;tick()},Math.max(0,f.elapsed_ms-(performance.now()-start)))}tick()}
 </script>''')
-    return ''.join(sections)
+    result = ''.join(sections)
+    if marker == "fill":
+        result = result.replace("ZS2-N01: X", "Schraffuraufbau").replace("playX", "playFill").replace("sequences", "fillSequences").replace("pending", "fillPending").replace("id='x", "id='fill").replace("getElementById('x'", "getElementById('fill'")
+    return result
+
+
+def verify_fill_sizes(renders, records):
+    from PIL import Image, ImageChops
+    if [r['cell_size'] for r in records] != [12, 24, 36]:
+        raise toolchain.PreflightError("Missing small/normal/large hatch evidence")
+    result = []
+    for record in records:
+        size = record['cell_size']
+        def read(name):
+            with Image.open(renders / name) as picture:
+                if picture.size != (size, size):
+                    raise toolchain.PreflightError("Scaled hatch evidence")
+                return picture.convert('RGB')
+        blank = read(record['blank'])
+        images = {f['elapsed_ms']: read(f['file']) for f in record['controlled']}
+        if list(images) != [0,15,30,45,60,75,90,105,120,135,150,165,180,195,209,210]:
+            raise toolchain.PreflightError("Incomplete hatching timeline")
+        progress = zs_hatching.check_hatching(images, blank, size)
+        rejected = zs_hatching.negative_controls(images, blank, size)
+        live = record['live']
+        if len(live) < 8 or any(a['elapsed_ms'] > b['elapsed_ms'] for a,b in zip(live,live[1:])):
+            raise toolchain.PreflightError("Invalid real-time hatch clock")
+        for low, high in [(0,105),(105,184)]:
+            if not any(low < f['elapsed_ms'] < high and
+                       ImageChops.difference(read(f['file']), blank).getbbox() and
+                       ImageChops.difference(read(f['file']), images[210]).getbbox() for f in live):
+                raise toolchain.PreflightError("Real-time capture missed visible hatch buildup")
+        if live[-1]['elapsed_ms'] < 210 or ImageChops.difference(read(live[-1]['file']), images[210]).getbbox():
+            raise toolchain.PreflightError("Live hatch final differs")
+        with Image.open(renders / record['context']) as context:
+            x,y,w,h = record['crop']
+            if context.size != (1920,1080) or ImageChops.difference(context.crop((x,y,x+w,y+h)).convert('RGB'), images[210]).getbbox():
+                raise toolchain.PreflightError("Hatching crop/context differs")
+        result.append(dict(record, spatial_progress=progress, negative_controls=rejected))
+    return result

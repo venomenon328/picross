@@ -123,14 +123,14 @@ def verify(renders: Path) -> dict:
         if not (renders / specimen["file"]).is_file():
             raise toolchain.PreflightError("Missing ZS1 specimen image")
     for motion in study["frames"]:
-        if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"] < 140):
+        if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"] < 210):
             raise toolchain.PreflightError("ZS1 movement contract failed")
         for frame in motion["timeline"]:
             if not (renders / frame["file"]).is_file():
                 raise toolchain.PreflightError("Missing ZS1 timed frame")
         early = next(frame for frame in motion["timeline"] if frame["label"] == "parallel-commit-0")
         settled = next(frame for frame in motion["timeline"] if frame["label"] == "settled")
-        if not 0 < early["after_commit_ms"] < 140:
+        if not 0 < early["after_commit_ms"] < 210:
             raise toolchain.PreflightError("ZS1 renderer missed the actual commit effect")
         with Image.open(renders / early["file"]) as a, Image.open(renders / settled["file"]) as b:
             if not ImageChops.difference(a.convert("RGB"), b.convert("RGB")).getbbox():
@@ -147,16 +147,11 @@ def check_stroke_pixels(images):
     def distance(a, b):
         return max(abs(x-y) for x, y in zip(a, b))
 
-    preview, final = images[0], images[140]
-    # Full paint and untouched preview coexist, including the partial pen pass.
-    for ms, painted, pending in (
-        (21, (12, 9), (65, 9)), (49, (5, 30), (55, 30)),
-        (70, (12, 31), (12, 55)), (98, (10, 53), (55, 53)),
-        (119, (66, 63), (12, 63)),
-    ):
-        for point, reference in ((painted, final), (pending, preview)):
-            if distance(preview.getpixel(point), final.getpixel(point)) < 30 or distance(images[ms].getpixel(point), reference.getpixel(point)) > 5:
-                raise toolchain.PreflightError(f"ZS1 spatial paint progression failed at {ms}ms/{point}")
+    preview, final = images[0], images[210]
+    import zs_hatching
+    fills = {ms: picture.crop((0, 0, 72, 72)) for ms, picture in images.items()}
+    zs_hatching.check_hatching(fills, fills[0], 72)
+    zs_hatching.negative_controls(fills, fills[0], 72)
     # Upper-left X quadrant belongs only to stroke 1; upper-right only to 2.
     fractions = {}
     for name, bounds in (("first", (87, 13, 104, 30)), ("second", (115, 13, 132, 29))):
@@ -166,18 +161,18 @@ def check_stroke_pixels(images):
         if len(pixels) < 8:
             raise toolchain.PreflightError("ZS1 X evidence contains too few stroke pixels")
         fractions[name] = {}
-        for ms in (21, 49, 70, 98, 119):
+        for ms in (30, 75, 105, 150, 180):
             fractions[name][ms] = sum(distance(images[ms].getpixel(p), final.getpixel(p)) < 6 for p in pixels) / len(pixels)
-        if name == "first" and fractions[name][70] < 0.90:
-            raise toolchain.PreflightError("ZS1 first X stroke incomplete at 70ms")
-        if name == "second" and (fractions[name][70] > 0.05 or fractions[name][119] < 0.9):
+        if name == "first" and fractions[name][105] < 0.90:
+            raise toolchain.PreflightError("ZS1 first X stroke incomplete at 105ms")
+        if name == "second" and (fractions[name][105] > 0.05 or fractions[name][180] < 0.9):
             raise toolchain.PreflightError("ZS1 second X stroke must follow the first")
     return fractions
 
 
 def verify_strokes(renders: Path, records: list) -> dict:
     from PIL import Image
-    if [item["elapsed_ms"] for item in records] != [0, 21, 49, 70, 98, 119, 140]:
+    if [item["elapsed_ms"] for item in records] != [0, 30, 75, 105, 150, 180, 210]:
         raise toolchain.PreflightError("ZS1 stroke timeline incomplete")
     images = {}
     for item in records:
@@ -187,11 +182,11 @@ def verify_strokes(renders: Path, records: list) -> dict:
             raise toolchain.PreflightError("ZS1 stroke crop changed")
     fractions = check_stroke_pixels(images)
     # Mutate actual evidence: both a uniform fade and reverse stroke order must fail.
-    fade = {ms: Image.blend(images[0], images[140], ms / 140) for ms in images}
+    fade = {ms: Image.blend(images[0], images[210], ms / 210) for ms in images}
     reverse = dict(images)
-    reverse[70] = images[70].copy()
-    reverse[70].paste(images[0].crop((87, 13, 104, 30)), (87, 13))
-    reverse[70].paste(images[140].crop((115, 13, 132, 29)), (115, 13))
+    reverse[105] = images[105].copy()
+    reverse[105].paste(images[0].crop((87, 13, 104, 30)), (87, 13))
+    reverse[105].paste(images[210].crop((115, 13, 132, 29)), (115, 13))
     for label, mutant in (("uniform fade", fade), ("reversed X strokes", reverse)):
         try:
             check_stroke_pixels(mutant)
@@ -296,7 +291,7 @@ def review_html(evidence: dict) -> str:
 def movement_html(evidence: dict) -> str:
     sections = ["<p>Native 72-px-Zellen: links Füllung, rechts X. Kontrollierte Effektuhr im unveränderten Zeichenpfad; keine Messung realer Framezeiten.</p>"]
     for frame in evidence["stroke_evidence"]["frames"]:
-        sections.append(f"<figure><figcaption>{frame['elapsed_ms']} ms von 140 ms</figcaption><img src='{frame['file']}'></figure>")
+        sections.append(f"<figure><figcaption>{frame['elapsed_ms']} ms von 210 ms</figcaption><img src='{frame['file']}'></figure>")
     sections.append("<p>Negativkontrollen: gleichmäßiges Fade und vertauschte X-Zugfolge abgelehnt.</p>")
     for motion in evidence["movements"]:
         sections.append(f"<h2>Bewegung Variante {motion['style']}</h2><p>Zweite Geste: {motion['second_gesture_ms']:.2f} ms nach Commit; native 1:1-Ausschnitte. Zeiten sind Messwerte, keine Einzelbild-FPS-Zusage.</p>")

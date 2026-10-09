@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 09.10.2026 · Spezifikation 0.21 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
+Stand: 09.10.2026 · Spezifikation 0.22 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -62,7 +62,7 @@ bleibt als isolierter Vergleich ausführbar; ZS-2 verwendet die bestätigte Komb
 | D-28 | Die kompakte Standardrasterfläche ist keine Zoom-Clippinggrenze. | Im nicht kompakten Buchlayout wächst der Rasterviewport erst oberhalb 100 % in freie Papierfläche; tatsächliche UI-/Papiergrenzen erzeugen den Ausschnitt. 20×20 bleibt bei 1920×1080/UI 100 % bis einschließlich 150 % vollständig sichtbar. |
 | D-29 | Die Spielfläche erhält eine geometrisch präzise, charaktervolle zeichnerische Sprache. | Kräftige kompakte Hinweisziffern, stabile zurückhaltende Textur auf satten Farbflächen, handschriftliche X ohne zusätzliche Rand-UI; Stiftfüllung nach E1 gewählt, Chalkboard und kombinierte Darstellung nach ZS1-M01 bestätigt. |
 | D-30 | Die Zellvorschau bleibt statisch und zeigt den Zielzustand heller beziehungsweise transparenter. | Nur wirksame Änderungen des elastischen Abschnitts; Rückzug/Abbruch unmittelbar, keine Animation der laufenden Vorschau. |
-| D-31 | Zellanimationen beginnen erst beim tatsächlichen Anwenden des Strichs. | ZS2-E2: Setzen/Umwandeln gerichtet vom Start zum finalen Ende; Δ = min(8 ms, 120 ms/(m−1)) bei m > 1 wirksamen Zellen, 140 ms je Zelle, maximal 260 ms. Entfernen sofort/80 ms; Modell/History/Save warten nicht. |
+| D-31 | Zellanimationen beginnen erst beim tatsächlichen Anwenden des Strichs. | ZS2-E2 plus Tempo-Nacharbeit 09.10.2026: Setzen/Umwandeln gerichtet vom Start zum finalen Ende; Δ = min(12 ms, 180 ms/(m−1)) bei m > 1 wirksamen Zellen, 210 ms je Zelle, maximal 390 ms. Entfernen sofort/120 ms; Modell/History/Save warten nicht. |
 | D-32 | Zellanimationen sind einfach abschaltbar. | P1-Ausarbeitungsdefault: aktiv nach App-Start, sitzungsweit, nicht im Rätselsave; Aus beendet Effekte sofort, Vorschau bleibt statisch. |
 | D-33 | ZS1-E3 wählt Chalkboard Regular und kompaktere Zeilenhinweisabstände. | ZS-Studie: 26 × UI-Skalierung horizontale Zeilenslots links; vertikale Spaltenslots bleiben 18 × UI. Reguläre Integration in ZS-2. |
 
@@ -569,8 +569,9 @@ diesen Stand regressionsfrei.
 Die [freigegebene Detailspezifikation](UI_DRAWING_STYLE.md) konkretisiert D-29 bis
 D-32. [ZS-1/#52](https://github.com/venomenon328/picross/issues/52) führt die nach
 E1 gewählte Stiftfüllung fort. Neues X und räumlicher Strichaufbau ersetzen die
-bisherige gleichförmige Kreuzform und Fade-Animation; 140 ms Setzen/Umwandeln und
-80 ms Entfernen bleiben. Zwei Eigentümer-TTFs werden gemäß Eigentümerentscheidung E2 am
+bisherige gleichförmige Kreuzform und Fade-Animation. Die bestätigte Nacharbeit
+vom 09.10.2026 ersetzt 140/80 ms durch 210 ms Setzen/Umwandeln und 120 ms
+Entfernen; kurze sichtbare Schraffurzüge bauen die Füllung händisch auf. Zwei Eigentümer-TTFs werden gemäß Eigentümerentscheidung E2 am
 gleichen Stand verglichen. Zusätzliche Rand-UI entfällt; Hintergrundarbeit bleibt separat.
 [ZS-2/#53](https://github.com/venomenon328/picross/issues/53) integriert genau diese
 Auswahl in die reguläre Arbeitsansicht einschließlich abschaltbarer Effekte.

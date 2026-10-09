@@ -1,10 +1,10 @@
 extends "res://ui/board.gd"
 ## Transient cell presentation shared with the isolated study; never writes model state.
 const PREVIEW_ALPHA: float = 0.56
-const SET_SECONDS: float = 0.140
-const REMOVE_SECONDS: float = 0.080
-const MAX_STEP_US: int = 8000
-const MAX_SPREAD_US: int = 120000
+const SET_SECONDS: float = 0.210
+const REMOVE_SECONDS: float = 0.120
+const MAX_STEP_US: int = 12000
+const MAX_SPREAD_US: int = 180000
 const Marks = preload("res://ui/pencil_marks.gd")
 var marks: Marks
 var style: int = 2 # 0 historical regular baseline, 2 selected pencil

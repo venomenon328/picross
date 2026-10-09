@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-Stand: 09.10.2026 · Arbeitsfassung 0.8 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
+Stand: 09.10.2026 · Arbeitsfassung 0.9 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
 
 ## 1. Geltung und Herkunft
 
@@ -112,8 +112,8 @@ ergänzt kurze abschaltbare Zellanimationen erst beim tatsächlichen Anwenden ei
 Aktion. Während des Ziehens zeigt die elastische Vorschau den vorgesehenen
 Endzustand statisch und leicht heller beziehungsweise transparenter. Loslassen
 übernimmt den Strich atomar; Setzen/Umwandeln zeichnet vom Gestenstart zum finalen
-Abschnittsende mit höchstens 120 ms Startspreizung und 140 ms je Zelle (maximal
-260 ms). Entfernen bleibt ungestaffelt bei 80 ms. Weitere Eingaben werden dadurch nicht blockiert. Spielzustand,
+Abschnittsende mit höchstens 180 ms Startspreizung und 210 ms je Zelle (maximal
+390 ms). Entfernen bleibt ungestaffelt bei 120 ms. Weitere Eingaben werden dadurch nicht blockiert. Spielzustand,
 Rücknahme und Speicherung warten nicht auf das Animationsende; eine neuere
 Vorschau oder Änderung derselben Zelle hat Vorrang. Die visuelle Vorschau ist
 keine zusätzliche Hypothesenebene. ZS2-E2 präzisiert den X-Aufbau ohne volle
@@ -137,7 +137,9 @@ Gezeichnete X bleiben eindeutige, dem entstehenden Motiv untergeordnete
 Arbeitsmarkierungen. Zelltrennung, Rätselfarben und Hinweiszustände bleiben klar
 lesbar; bei kleinen Zellen wird die Textur vereinfacht. Die eigene Miniatur bleibt
 für den Überblick bewusst einfacher. E1 wählt die Stiftfüllung und das kurze
-Timing (140/80 ms); ein handschriftlicheres X und räumlicher Strichaufbau folgen.
+Timing (historisch 140/80 ms). Die bestätigte ZS2-Nacharbeit vom 09.10.2026
+setzt 210/120 ms und einen deutlicheren handschriftlichen Schraffuraufbau: kurze
+sichtbar wachsende Füllstriche statt flächigem Erscheinen oder Einfaden.
 Zusätzliche Rand-UI-Dekoration entfällt; mögliche Hintergrundarbeit bleibt separat.
 Die [UI-Spezifikation](UI_DRAWING_STYLE.md) trennt diese beschlossene Richtung
 von der abschließenden nativen Bestätigung der überarbeiteten Kombination und

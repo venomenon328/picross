@@ -74,7 +74,7 @@ func gesture_probe() -> void:
 	check(app.session.player.cursor == 1 and app.board.effects.size() == 20, "one atomic commit, 20 directed effects")
 	var start: int = int(app.board.effects[0].start)
 	for index: int in range(20):
-		check(int(app.board.effects[index].start) == start + roundi(index * 120000.0 / 19), "directed bounded timestamp")
+		check(int(app.board.effects[index].start) == start + roundi(index * 180000.0 / 19), "directed bounded timestamp")
 	# Same tick: the first effect has not ended. A new real GUI gesture wins.
 	mouse(a, MOUSE_BUTTON_RIGHT, true)
 	motion(point(4, 0))
@@ -93,7 +93,7 @@ func gesture_probe() -> void:
 	mouse(a, MOUSE_BUTTON_RIGHT, true)
 	check(app.session.visible_cells()[0] == -1 and app.board.preview.has(0), "erase preview unknown with contour")
 	mouse(a, MOUSE_BUTTON_RIGHT, false)
-	check(int(app.board.effects[0].after) == -1 and float(app.board.effects[0].seconds) == 0.08, "erase effect only neutral target")
+	check(int(app.board.effects[0].after) == -1 and float(app.board.effects[0].seconds) == 0.12, "erase effect only neutral target")
 	var cursor: int = app.session.player.cursor
 	var bytes: String = FileAccess.get_file_as_string(app.store.path_for("f01"))
 	app.board.set_animations(false)

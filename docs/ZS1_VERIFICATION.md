@@ -1,5 +1,11 @@
 # ZS-1 · Prüfzuordnung nach E1–E3 und Liefergrenze
 
+Aktualität 09.10.2026: Historische ZS1-Abnahmen und Timingwerte unten bleiben
+an ihren alten Stand gebunden. Neue Studienexports erben den gemeinsamen
+ZS2-Zeichner mit 210/120 ms, 12/180-ms-Staffelung (maximal 390 ms) und sichtbaren
+Schraffurzügen ohne volle Unterzeichnung aktiver Füllungen.
+Aktuelle Nachweise und offene Abnahme: [ZS2-Verifikation](ZS2_VERIFICATION.md).
+
 Aktualitätshinweis 09.10.2026: Die unten beschriebene gleichzeitige Bewegung gehört
 zum historisch abgenommenen ZS1-Stand. Neue Studienexports erben den gemeinsamen
 Zeichner mit ZS2-N01–N03 (gerichtete Folge, geschriebenes X, Gegentasten-Abbruch).

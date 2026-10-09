@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 09.10.2026 · Arbeitsfassung 0.22 · Z2/GP-48/ZV-50 integriert; zeichnerische UI spezifiziert
+Stand: 09.10.2026 · Arbeitsfassung 0.23 · Z2/GP-48/ZV-50 integriert; zeichnerische UI spezifiziert
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -33,7 +33,7 @@ Designsystem.
 Die Spezifikationsfreigabe vom 07.10.2026 ergänzt die
 [zeichnerische UI](UI_DRAWING_STYLE.md): kräftigere kompakte Hinweisziffern,
 eigene Füll-/X-Striche und kurze Zellanimationen. E1 wählt Stiftfüllung und
-140/80-ms-Timing; zusätzliche Rand-UI entfällt, Hintergrundarbeit bleibt separat.
+historisch 140/80-ms-Timing; zusätzliche Rand-UI entfällt, Hintergrundarbeit bleibt separat.
 Die ausdrücklich korrigierte Bewegungsregel gilt: statische hellere Vorschau
 während des Ziehens, Animation erst beim tatsächlichen Anwenden. Diese
 Folgearbeit liegt als [isolierte ZS-1-Studie](ZS1_VERIFICATION.md) vor.
@@ -52,7 +52,7 @@ Chalkboard/Stift/X/Timing sind nach ZS1-M01 bestätigt; die
 | Zellstil | Kräftige Farbflächen mit dezenter stabiler Strichtextur; gezeichnete X bleiben gegenüber dem Motiv zurückhaltend. Textur bei kleinen Zellen vereinfachen, Miniatur bewusst ruhig halten. |
 | Hinweise | Am Raster stehen nur Lösungshinweise, ohne laufende Randnummern. Vollständige einzeilige farbige Zahlen rasten in gemeinsame feste Plätze; jede konkrete Zeile/Spalte hat ihre eigene Leseposition. Seitengerechte Marker und vollständige Hover-Auflösung bleiben Ergänzungen im Arbeitsbild. Keine A–D-Suffixe in P1. |
 | Hinweisgestalt | Kompaktere, optisch kräftigere Ziffern mit klaren Innenräumen; alle drei Hinweiszustände, Farben, Konturen und die gemeinsame Slotzuordnung bleiben lesbar. Konkrete Auswahl durch die native Gestaltungsprobe. |
-| Zellbewegung | Statische hellere/transparente Vorschau während des Ziehens; erst angewendete Änderungen zeichnen kurz vom Gestenstart zum finalen Abschnittsende (maximal 260 ms). Abschaltbar, ohne zusätzliche Eingabesperre oder Verzögerung des Spielzustands. |
+| Zellbewegung | Statische hellere/transparente Vorschau während des Ziehens; erst angewendete Änderungen zeichnen kurz vom Gestenstart zum finalen Abschnittsende (maximal 390 ms). Abschaltbar, ohne zusätzliche Eingabesperre oder Verzögerung des Spielzustands. |
 | Sammelbilder | Das Rätselmotiv ist eine klar erkennbare Stilisierung des detaillierteren Ergebnisbilds. F-01 und F-02 zeigen dieselbe ruhige Kontur-/Farbflächensprache; keine Pflicht zu pixelidentischer Silhouette oder bloßer Kolorierung. |
 | Perfektion | Ein perfekter Durchgang ist ohne Fehler und ohne Undo. Details und offene Wertungsfragen stehen in der Produktdefinition, Abschnitt 6.2. |
 | Hypothesen | Nicht abschließend entschieden, auch nicht ihre Vereinbarkeit mit Perfektion. |
@@ -283,15 +283,17 @@ erscheint die vorgesehene endgültige Markierung ohne Bewegung, leicht heller
 beziehungsweise transparenter. Verlängern, Zurückziehen und Abbrechen
 aktualisieren diese Vorschau unmittelbar. Erst beim Loslassen und tatsächlichen
 Anwenden startet die gerichtete Folge der wirksam geänderten Zellen vom
-Gestenstart zum finalen Ende; höchstens 120 ms Startspreizung. Unveränderte oder geschützte Zellen animieren nicht;
+Gestenstart zum finalen Ende; höchstens 180 ms Startspreizung. Unveränderte oder geschützte Zellen animieren nicht;
 Abbruch erzeugt keinen Effekt. Eine neue Vorschau oder Änderung derselben
 Zelle hat Vorrang vor einem älteren Effekt.
 
 Der Zeichenauftrag baut die kräftige Füllung räumlich entlang kurzer Stiftzüge
 auf oder schreibt sichtbar zuerst den ersten, dann den zweiten X-Zug. Noch nicht
 geschriebene Teile eines gestarteten X bleiben unsichtbar; wartende Ziele bleiben
-abgeschwächt sichtbar. Effekte bleiben innerhalb ihrer Zelle. 140 ms insgesamt für Setzen/Umwandeln und 80 ms Entfernen erhalten das
-positiv beurteilte Zell-Timing. Die Setzfolge endet spätestens nach 260 ms;
+abgeschwächt sichtbar. Effekte bleiben innerhalb ihrer Zelle. Die bestätigte Nacharbeit vom 09.10.2026 verlangsamt Setzen/Umwandeln auf
+210 ms je Zelle und Entfernen auf 120 ms. Kurze schräge Schraffurzüge bauen die
+Füllung sichtbar strichweise auf; unbeschriebene Abschnitte der aktiven Füllung
+bleiben frei. Bloßes Einfaden oder ein flächiger Aufbau genügen nicht. Die Setzfolge endet spätestens nach 390 ms;
 Entfernen bleibt ungestaffelt. Schutzlücken zählen nicht für die Staffelung. Eine nächste Eingabe,
 Undo/Redo oder ein Seitenwechsel warten nicht auf Animationen. Zellzustand,
 Hinweisermittlung, atomare History und Speicherung sind unabhängig vom

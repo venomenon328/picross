@@ -63,21 +63,59 @@ func draw_cell(box: Rect2, value: int, index: int) -> void:
 				# targets use progress=1 at reduced alpha; no full-X underdrawing.
 		return
 	if progress < 1.0:
-		# Complete static target remains underneath. Opaque paint replaces it only
-		# along successive alternating pen passes, never through a global fade.
-		draw_fill(box, value, index, board.PREVIEW_ALPHA)
-		var inside: Rect2 = box.grow(-0.4 if board.overview else -2.0)
-		for k: int in range(6):
-			var part: float = clampf(progress * 6.0 - k, 0.0, 1.0)
-			if part <= 0.0:
-				break
-			var width: float = inside.size.x * part
-			var left: float = inside.position.x if k % 2 == 0 else inside.end.x - width
-			mark_clip = board.view.viewport.intersection(Rect2(left, inside.position.y + inside.size.y * k / 6.0, width, inside.size.y / 6.0))
-			draw_fill(box, value, index, 1.0)
-		mark_clip = board.view.viewport
+		draw_hatching(box, value, index, progress)
 	else:
 		draw_fill(box, value, index, alpha)
+
+func draw_hatching(box: Rect2, value: int, index: int, progress: float) -> void:
+	# Seven short pen passes, alternating direction, then one finishing pass.
+	# Narrow paper seams keep individual strokes visible until that last pass.
+	# No full target underdrawing:
+	# unvisited paper stays blank, while traversed ink already has its final color.
+	var inside: Rect2 = box.grow(-0.4 if board.overview else -2.0)
+	var shape: PackedVector2Array = fill_shape(box, index)
+	var visible: Rect2 = inside.intersection(board.view.viewport)
+	if not visible.has_area():
+		return
+	var bounds: PackedVector2Array = PackedVector2Array([visible.position, Vector2(visible.end.x, visible.position.y), visible.end, Vector2(visible.position.x, visible.end.y)])
+	for k: int in range(7):
+		var part: float = clampf(progress * 8.0 - k, 0.0, 1.0)
+		if part <= 0.0:
+			break
+		var left: float = 0.0 if k % 2 == 0 else 1.0 - part
+		var right: float = part if k % 2 == 0 else 1.0
+		var nib: PackedVector2Array = PackedVector2Array()
+		for step: int in range(9):
+			var x: float = lerpf(left, right, step / 8.0)
+			nib.append(inside.position + inside.size * Vector2(x, hatch_edge(index, k, x)))
+		for step: int in range(8, -1, -1):
+			var x: float = lerpf(left, right, step / 8.0)
+			nib.append(inside.position + inside.size * Vector2(x, hatch_edge(index, k + 1, x) - 0.035))
+		for clipped: PackedVector2Array in Geometry2D.intersect_polygons(nib, shape):
+			for polygon: PackedVector2Array in Geometry2D.intersect_polygons(clipped, bounds):
+				if not Geometry2D.triangulate_polygon(polygon).is_empty():
+					draw_colored_polygon(polygon, board.cell_color(value))
+	var finish: float = clampf(progress * 8.0 - 7.0, 0.0, 1.0)
+	if finish > 0.0:
+		mark_clip = board.view.viewport.intersection(Rect2(inside.position, Vector2(inside.size.x * finish, inside.size.y)))
+		draw_fill(box, value, index, 1.0)
+		mark_clip = board.view.viewport
+
+static func hatch_edge(index: int, edge: int, x: float) -> float:
+	# Cell-stable boundaries, bend and tilt
+	# avoid mechanical horizontal strips without changing the resting silhouette.
+	var tilt: float = 0.24 + variation(index, 31) * 0.08
+	return edge * (1.0 + tilt) / 7.0 - tilt * x + sin(x * PI) * (variation(index, edge + 40) - 0.5) * 0.045
+
+func fill_shape(box: Rect2, index: int) -> PackedVector2Array:
+	var inside: Rect2 = box.grow(-0.4 if board.overview else -2.0)
+	if box.size.x < 18 or board.overview:
+		return PackedVector2Array([inside.position, Vector2(inside.end.x, inside.position.y), inside.end, Vector2(inside.position.x, inside.end.y)])
+	var wobble: float = 0.025 + float((index * 17 + 3) % 7) * 0.003
+	var points: PackedVector2Array = PackedVector2Array()
+	for p: Vector2 in [Vector2(wobble, 0), Vector2(0.96, wobble), Vector2(1, 0.51), Vector2(0.98, 0.98), Vector2(0.48, 1), Vector2(0, 0.97), Vector2(wobble, 0.45)]:
+		points.append(inside.position + inside.size * p)
+	return points
 
 static func variation(index: int, salt: int) -> float:
 	# Integer-only cell identity: independent of frames, viewport, zoom and saves.
@@ -106,9 +144,7 @@ func draw_fill(box: Rect2, value: int, index: int, alpha: float) -> void:
 		draw_rect(inside.intersection(mark_clip), fill)
 		return
 	var wobble: float = 0.025 + float((index * 17 + 3) % 7) * 0.003
-	var points: PackedVector2Array = PackedVector2Array()
-	for p: Vector2 in [Vector2(wobble, 0), Vector2(0.96, wobble), Vector2(1, 0.51), Vector2(0.98, 0.98), Vector2(0.48, 1), Vector2(0, 0.97), Vector2(wobble, 0.45)]:
-		points.append(inside.position + inside.size * p)
+	var points: PackedVector2Array = fill_shape(box, index)
 	if mark_clip.encloses(inside):
 		draw_colored_polygon(points, fill)
 	else:

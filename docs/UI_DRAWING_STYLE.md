@@ -1,6 +1,6 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-Stand: 07.10.2026 · Spezifikation 0.4 · E3: Chalkboard/Stift/Timing gewählt; kompakte Zeilenhinweise festgelegt
+Stand: 09.10.2026 · Spezifikation 0.5 · ZS2: langsameres Tempo und handschriftlicher Schraffuraufbau
 
 ## 1. Auftrag, Quellen und Status
 
@@ -170,7 +170,7 @@ aktualisieren die Vorschau unmittelbar gemäß P1. Entfallene Vorschauänderunge
 zeigen sofort den bestätigten Ausgangszustand; keine nachlaufenden Spuren.
 Vorschautransparenz ist kein neuer gespeicherter Zell- oder Hypothesenzustand.
 
-### ZS-D07: Commit und gerichtete Effekte (ZS2-E2)
+### ZS-D07: Commit und gerichtete Effekte (ZS2-E2 plus Nacharbeit 09.10.2026)
 
 Erst das tatsächliche Anwenden bei Mouse-Up startet die kurze Zellanimation.
 Einzelklicks bleiben Striche der Länge eins. Maßgeblich ist die bestätigte
@@ -178,28 +178,32 @@ Einzelklicks bleiben Striche der Länge eins. Maßgeblich ist die bestätigte
 Nach sofortigem atomarem Commit beginnen Setzen/Umwandeln vom tatsächlichen
 Start zum finalen geraden Abschnittsende; Rückzug und G1-Neuwahl bestimmen diesen
 Endabschnitt. Nur die `m` effektiv geänderten Füllungen/X zählen. Für `m > 1` gilt
-`Δ = min(8 ms, 120 ms / (m - 1))`, Start der Zelle `i` bei `i × Δ`; bei `m = 1`
+`Δ = min(12 ms, 180 ms / (m - 1))`, Start der Zelle `i` bei `i × Δ`; bei `m = 1`
 ohne Verzögerung. Mikrosekunden werden auf die nächste ganze Zahl gerundet.
 Geschützte Felder/No-ops animieren nicht und erzeugen keine Zeitlücken.
 Wartende Zellen zeigen bereits das gültige Ziel abgeschwächt; nie alte Gegenmarken.
 Die reine Darstellung hat keine Modell-/Save-Callbacks oder Eingabesperre.
 
-Füllung baut sich räumlich entlang aufeinanderfolgender kurzer Stiftzüge auf;
+Die bestätigte Nacharbeit vom 09.10.2026 verlangt deutlich handschriftliches
+Ausfüllen: Füllung baut sich sichtbar entlang aufeinanderfolgender kurzer, leicht
+schräger Schraffur-/Füllstriche auf;
 das X zeichnet erst den ersten, dann den zweiten Zug. Bloßes globales Fade oder
-bewegte Dekorstriche auf schon kräftiger Endfüllung genügen nicht. Die kräftige
-Füllung wird über den zurückgenommenen statischen Zielzustand gezeichnet.
-Beim gestarteten X bleiben dagegen noch nicht geschriebene Zugteile unsichtbar,
+bewegte Dekorstriche auf schon kräftiger Endfüllung genügen nicht. Bei gestarteten Füllungen bleibt unbeschriebenes Papier frei; die volle blasse
+Unterzeichnung entfällt auch hier. Ruhende Endform und statische Ziehvorschau
+bleiben erhalten.
+Beim gestarteten X bleiben ebenfalls noch nicht geschriebene Zugteile unsichtbar,
 damit Zug eins und danach Zug zwei bei normaler Spielgröße sichtbar entstehen.
 Die vollständige 56-%-Vorschau beim Ziehen und das abgeschwächte wartende Ziel
 bleiben statisch; Endgeometrie, Farben und Clipping bleiben erhalten. Beim Neutralisieren darf eine zuvor entfernte Füllung oder ein X
 nicht nochmals als Löschanimation auftauchen; stattdessen kann die Vorschaukontur
 oder ein neutraler kurzer Löschhinweis auslaufen.
 
-Das positiv beurteilte kurze Timing bleibt bei **140 ms insgesamt** für
-Setzen/Umwandeln und **80 ms** Entfernen. Teilzüge innerhalb einer Zelle folgen
-aufeinander; die beiden X-Züge teilen sich die 140 ms. Die gesamte Setzfolge endet
-spätestens nach 260 ms (maximal 120 ms Startspreizung plus 140 ms). Entfernen
-beginnt für alle wirksamen Zellen sofort und endet nach 80 ms, ohne Staffelung.
+Die bestätigte Tempo-Nacharbeit ersetzt die historischen 140/80/8/120/260 ms
+durch **210 ms insgesamt pro Zelle** für
+Setzen/Umwandeln und **120 ms** Entfernen. Teilzüge innerhalb einer Zelle folgen
+aufeinander; die beiden X-Züge teilen sich die 210 ms. Die gesamte Setzfolge endet
+spätestens nach 390 ms (maximal 180 ms Startspreizung plus 210 ms). Entfernen
+beginnt für alle wirksamen Zellen sofort und endet nach 120 ms, ohne Staffelung.
 
 Der Strich wird weiterhin sofort als eine atomare Aktion übernommen.
 History, Hinweiszustände, Abschlussprüfung und Sicherung warten nicht auf Effekte.

@@ -315,8 +315,10 @@ Sichtprüfung ist nach Merge auf main erfolgreich abgeschlossen.
 
 Die Hauptszene verwendet die bestätigte Chalkboard-/Stift-/X-Darstellung, statische
 56-%-Zielvorschau und gerichtete räumliche Commit-Effekte gemäß ZS2-E2:
-Start bis finales Abschnittsende, Δ = min(8 ms, 120 ms/(m−1)) für m > 1 wirksame
-Setz-/Umwandlungszellen, 140 ms je Zelle, maximal 260 ms; Entfernen sofort/80 ms.
+Start bis finales Abschnittsende, Δ = min(12 ms, 180 ms/(m−1)) für m > 1 wirksame
+Setz-/Umwandlungszellen, 210 ms je Zelle, maximal 390 ms; Entfernen sofort/120 ms.
+Aktive Füllungen entstehen sichtbar aus kurzen wechselgerichteten Schraffurzügen
+ohne volle Unterzeichnung; die ruhende Endform bleibt erhalten.
 Das aktive X schreibt Zug eins vor Zug zwei ohne vollständige Unterzeichnung.
 Gegentasten-Down bricht aktive Zellgesten auch außerhalb des Boards ab; nach beiden
 Ups ist ein frisches Down nötig. MMB/Hand bleiben Navigation. Genau ein
