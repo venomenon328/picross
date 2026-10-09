@@ -4,8 +4,9 @@ Stand: 09.10.2026 · ZS2-V1 / ZS2-E2 / N01–N03 · #53 · Arbeitsbranch `feat/5
 Historische native Auswahlreferenz: `985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f`
 (integrierte ZS-1-Studie aus PR #55). Aktuelle integrierte main-Basis:
 `24564dfed3bb9844d151f4c4ec055d051232d16f` (VS1/GF1); Mergecommit
-`c13a699` führt beide Capture-/Export-/Uploadwege zusammen. Der Eigentümer hat die nach dessen Merge
-vorgesehene ZS1-M01-Prüfung erfolgreich abgeschlossen und die Kombination bestätigt;
+`c13a699` führt beide Capture-/Export-/Uploadwege zusammen. Die historische
+ZS1-M01-Prüfung nach Merge von PR #55 auf `985cf08e` hat der Eigentümer erfolgreich
+abgeschlossen und die damalige Kombination bestätigt;
 [#52](https://github.com/venomenon328/picross/issues/52) ist abgeschlossen. Nicht
 mitgeteilte Windows-/DPI-Metadaten werden dieser Bestätigung nicht hinzugedichtet.
 
@@ -78,6 +79,10 @@ Farben und Clipgrenzen bleiben unverändert.
 
 N02 ordnet ausschließlich die transiente Darstellung nach dem tatsächlichen
 Gestenstart und finalen G1-/Rückzugsabschnitt. Modelländerungen bleiben atomar.
+Eine native 17-Zellen-Umwandlung rechts nach links prüft wartende Ziele gegen die
+statische X-Vorschau (keine alten Füllungen), den letzten Start bei 120 ms und
+den Endstand bei 260 ms. Der Pixelvergleich lässt nur die überlagerte Zählerkante
+in den oberen vier Pixeln der Vorschauzeile aus.
 Nur m effektive Setz-/Umwandlungszellen zählen: Δ = min(8 ms, 120 ms/(m−1)) bei
 m > 1, sonst null; 140 ms je Zelle, höchstens 260 ms gesamt. Entfernen beginnt
 ungestaffelt und dauert 80 ms. Vorschau/Commit ersetzt ältere aktive und wartende

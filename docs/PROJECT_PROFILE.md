@@ -446,8 +446,8 @@ und begründet gewählte gemeinsame Slotmaße geöffnet. Historische Designpaket
 
 Vorschau ist statisch und heller/transparenter. Erst die tatsächliche atomare
 Übernahme zeichnet Setzen/Umwandeln vom Start zum finalen Abschnittsende
-(Δ = min(8 ms, 120 ms/(m−1)), 140 ms je Zelle, maximal 260 ms; Entfernen sofort
-und 80 ms). ZS2-E2 verlangt sichtbar geschriebene X-Züge und Gegentasten-Abbruch
+(m wirksame Zellen: Δ = min(8 ms, 120 ms/(m−1)) für m > 1, sonst null;
+140 ms je Zelle, maximal 260 ms; Entfernen sofort und 80 ms). ZS2-E2 verlangt sichtbar geschriebene X-Züge und Gegentasten-Abbruch
 auch außerhalb des Boards, bis beide Tasten losgelassen sind. MMB/Hand bleiben
 Navigation; keine zusätzliche Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
 ist rein visuell; Sitzungsschalter nach P1-Vorbild, kein neues Saveformat.
