@@ -111,7 +111,9 @@ func run() -> void:
 		bad.width += 1
 		check(not Store.validate(bad,app.session.definition).is_empty(), "wrong dimensions rejected")
 	# Long clues remain independently mouse-navigable in G, never in V.
-	app.select_puzzle(7)
+	canvas.size = Vector2i(1280,720)
+	app.size = Vector2(canvas.size)
+	app.select_puzzle(3)
 	app.choose_mode("G")
 	app.board.fit_all()
 	for axis: String in ["row","column"]:

@@ -1,5 +1,5 @@
 extends "res://study/board.gd"
-## VS-E1-R2: same ZS-1 ink, complete grid, actual per-axis clue reserve.
+## VS-GF1: fit from minimum reserves, then spend spare width on row clues.
 const FRAME_MARGIN: float = 1.0 # half the widest (two-pixel) grid stroke
 var mode: String = "G"
 var requested_cell: float = 0.0 # zero means the current fit ceiling
@@ -7,6 +7,9 @@ var fit_ceiling: float = 24.0
 var raw_fit: float = 24.0
 var max_hints: Vector2i = Vector2i.ONE
 var reserve_slots: Vector2i = Vector2i.ONE
+var minimum_slots: Vector2i = Vector2i.ONE
+var horizontal_budget: float = 0.0
+var horizontal_used: float = 0.0
 var reserve_cache: Dictionary = {}
 var ink_cache: Dictionary = {}
 var layout_valid: bool = true
@@ -22,8 +25,9 @@ func _layout() -> void:
 		max_hints.x = maxi(max_hints.x, line.size())
 	for line: Array in session.definition.columns:
 		max_hints.y = maxi(max_hints.y, line.size())
-	reserve_slots = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
-	book_inset = Vector2(reserve_slots) * Vector2(26, 18) * ui_scale + Vector2(6, 6)
+	minimum_slots = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
+	reserve_slots = minimum_slots
+	book_inset = Vector2(minimum_slots) * Vector2(26, 18) * ui_scale + Vector2(6, 6)
 	var frame_space: Vector2 = Vector2.ONE * 2.0 * FRAME_MARGIN
 	var available: Vector2 = size - book_inset - Vector2(6, 6) - frame_space
 	raw_fit = minf(available.x / session.player.width, available.y / session.player.height)
@@ -34,6 +38,18 @@ func _layout() -> void:
 	view.cell_size = minf(requested_cell, fit_ceiling) if requested_cell > 0 else fit_ceiling
 	layout_valid = layout_valid and view.cell_size > 4.0
 	book_grid_size = Vector2(session.player.width, session.player.height) * view.cell_size
+	# One-way allocation: the displayed capacity never feeds back into fit.
+	horizontal_budget = maxf(0.0, available.x - book_grid_size.x)
+	horizontal_used = 0.0
+	if mode == "G" and layout_valid:
+		var pitch: float = 26.0 * ui_scale
+		var offered: int = mini(max_hints.x, minimum_slots.x + floori((horizontal_budget + 0.000001) / pitch))
+		for capacity: int in range(offered, minimum_slots.x, -1):
+			if suitable_slots("row", capacity):
+				reserve_slots.x = capacity
+				break
+		horizontal_used = (reserve_slots.x - minimum_slots.x) * pitch
+		book_inset.x += horizontal_used
 	view.configure(Rect2(book_inset, book_grid_size + frame_space), Vector2i(session.player.width, session.player.height))
 	view.center = Vector2(view.dimensions) / 2.0
 	view.reframe()
@@ -68,7 +84,10 @@ func set_mode(value: String) -> void:
 func navigation_target(point: Vector2) -> String:
 	if mode == "G" and layout_valid:
 		var target: String = super.navigation_target(point)
-		return target if target in ["row", "column"] else ""
+		if target in ["row", "column"]:
+			var index: int = navigation_line(point, target)
+			if index >= 0 and int(clue_layout(target, index).max_offset) > 0:
+				return target
 	return ""
 
 func navigate_to(_normalized: Vector2) -> void:
@@ -203,28 +222,34 @@ func required_slots(axis: String) -> int:
 	if reserve_cache.has(key):
 		return int(reserve_cache[key])
 	var maximum: int = max_hints.x if axis == "row" else max_hints.y
-	var minimum_fs: int = Fonts.pixel_size(font_choice, 8)
-	var maximum_fs: int = Fonts.pixel_size(font_choice, roundi(14 * ui_scale))
 	var chosen: int = maximum
 	for capacity: int in range(mini(maximum, 5), maximum + 1):
-		var suitable: bool = true
-		for line: Array in lines:
-			if line.size() <= capacity:
-				continue
-			var entries: Array = clue_entries(line)
-			for fs: int in range(minimum_fs, maximum_fs + 1):
-				for shift: float in sequence_transitions(entries, capacity, axis, fs):
-					var drawn: Array = sequence_units(entries, capacity, capacity - entries.size(), shift, axis, fs, 0.0, capacity * (26.0 if axis == "row" else 18.0) * ui_scale + 6.0).units
-					if drawn.filter(func(unit: Dictionary) -> bool: return unit.kind == "token").size() < mini(5, line.size()):
-						suitable = false
-						break
-				if not suitable: break
-			if not suitable: break
-		if suitable:
+		if suitable_slots(axis, capacity):
 			chosen = capacity
 			break
 	reserve_cache[key] = chosen
 	return chosen
+
+func suitable_slots(axis: String, capacity: int) -> bool:
+	var lines: Array = session.definition.rows if axis == "row" else session.definition.columns
+	var key: String = "safe/%s/%s/%s/%d" % [JSON.stringify(lines), axis, ui_scale, capacity]
+	if reserve_cache.has(key):
+		return bool(reserve_cache[key])
+	var suitable: bool = true
+	for line: Array in lines:
+		if line.size() <= capacity:
+			continue
+		var entries: Array = clue_entries(line)
+		for fs: int in range(Fonts.pixel_size(font_choice, 8), Fonts.pixel_size(font_choice, roundi(14 * ui_scale)) + 1):
+			for shift: float in sequence_transitions(entries, capacity, axis, fs):
+				var drawn: Array = sequence_units(entries, capacity, capacity - entries.size(), shift, axis, fs, 0.0, capacity * (26.0 if axis == "row" else 18.0) * ui_scale + 6.0).units
+				if drawn.filter(func(unit: Dictionary) -> bool: return unit.kind == "token").size() < mini(5, line.size()):
+					suitable = false
+					break
+			if not suitable: break
+		if not suitable: break
+	reserve_cache[key] = suitable
+	return suitable
 
 func visual_hint_units(axis: String, index: int) -> Dictionary:
 	var layout: Dictionary = visible_clue_layout(axis, index)
@@ -277,14 +302,22 @@ func measurements() -> Dictionary:
 	var glyph_count: int = 0
 	var largest: Vector2 = Vector2.ZERO
 	var extents: Dictionary = {}
+	var axis_counts: Dictionary = {}
 	for axis: String in ["row", "column"]:
 		var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
 		var lines: Array = session.definition.rows if axis == "row" else session.definition.columns
 		var boxes: Array[Rect2] = []
+		var visible_numbers: int = 0
+		var total_numbers: int = 0
+		var visible_by_line: Array[int] = []
 		for index: int in range(lines.size()):
 			var layout: Dictionary = clue_layout(axis, index)
+			var visible_line: int = 0
+			total_numbers += lines[index].size()
 			hidden += int(layout.start) + int(layout.entries.size()) - int(layout.end)
 			for unit: Dictionary in visual_hint_units(axis, index).units:
+				if unit.kind == "token" and not lines[index].is_empty():
+					visible_line += 1
 				var text: String = "…" if unit.kind != "token" else str(layout.entries[int(unit.index)].text)
 				var width: float = clue_text_font(clue_font(), text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 				var cross: float = (view.origin.y if axis == "row" else view.origin.x) + (index + 0.5) * view.cell_size
@@ -298,6 +331,9 @@ func measurements() -> Dictionary:
 					if other.intersects(box):
 						collisions += 1
 				boxes.append(box)
+			visible_numbers += visible_line
+			visible_by_line.append(visible_line)
+		axis_counts[axis] = {"visible_numbers": visible_numbers, "hidden_numbers": total_numbers - visible_numbers, "total_numbers": total_numbers, "visible_by_line": visible_by_line}
 		if not boxes.is_empty():
 			var union: Rect2 = boxes[0]
 			for box: Rect2 in boxes:
@@ -306,7 +342,18 @@ func measurements() -> Dictionary:
 	var grid_frame: Rect2 = view.bounds().grow(FRAME_MARGIN)
 	var grid_fit: bool = view.viewport.grow(0.01).encloses(grid_frame) and layout_valid
 	var complete: bool = grid_fit and hidden == 0 and clipped == 0 and collisions == 0
+	var original_grid: Rect2 = view.bounds()
+	original_grid.position.x -= horizontal_used
+	var original_rows: Rect2 = row_clue_area()
+	original_rows.size.x -= horizontal_used
+	var original_columns: Rect2 = column_clue_area()
+	original_columns.position.x -= horizontal_used
+	var fit_dimensions: Vector2 = (size - Vector2(minimum_slots) * Vector2(26,18) * ui_scale - Vector2(14,14)) / Vector2(view.dimensions)
 	return {"mode": mode, "cell_pitch": view.cell_size, "raw_fit_ceiling": raw_fit, "zoom_ceiling": fit_ceiling, "reserve_slots": [reserve_slots.x,reserve_slots.y],
+		"minimum_reserve_slots": [minimum_slots.x,minimum_slots.y], "axis_counts": axis_counts,
+		"horizontal_budget_px": horizontal_budget, "horizontal_used_px": horizontal_used, "horizontal_remaining_px": horizontal_budget-horizontal_used,
+		"minimum_grid": rect_values(original_grid), "minimum_row_clues": rect_values(original_rows), "minimum_column_clues": rect_values(original_columns),
+		"fit_axis_cells": [fit_dimensions.x,fit_dimensions.y], "limiting_axis": "width" if fit_dimensions.x < fit_dimensions.y else "height", "frame_area_px": grid_frame.get_area(),
 		"grid": rect_values(view.bounds()), "grid_frame": rect_values(grid_frame), "viewport": rect_values(view.viewport), "row_clues": rect_values(row_clue_area()), "column_clues": rect_values(column_clue_area()),
 		"font_px": fs, "glyph_max": [largest.x, largest.y], "glyph_extents": extents, "glyph_count": glyph_count,
 		"clipped_glyphs": clipped, "glyph_collisions": collisions, "hidden_tokens": hidden, "grid_fit": grid_fit, "full_sheet_fit": complete,

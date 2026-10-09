@@ -4,6 +4,7 @@ var app: Control
 var failures: int = 0
 var checks: int = 0
 var records: Array = []
+var frame_verifier: RefCounted
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -26,11 +27,28 @@ func mouse(point: Vector2, button: MouseButton, down: bool) -> void:
 	event.position=point; event.button_index=button; event.pressed=down
 	root.push_input(event,true)
 
+func load_frame_verifier() -> void:
+	# Reuse the exact frame_pixels implementation, including against an export
+	# whose PCK intentionally excludes test scripts.
+	var path: String=OS.get_environment("VS1_FRAME_SOURCE")
+	if path.is_empty(): path=ProjectSettings.globalize_path("res://tests/vs1_capture.gd")
+	var source: String=FileAccess.get_file_as_string(path)
+	var start: int=source.find("func frame_pixels(")
+	var finish: int=source.find("\nfunc run()",start)
+	check(start>=0 and finish>start,"bound pixel verifier source")
+	if start<0 or finish<=start: return
+	var script: GDScript=GDScript.new()
+	script.source_code="extends RefCounted\nvar app: Control\nvar failures: int=0\nfunc check(ok: bool,message: String)->void:\n\tif not ok:\n\t\tfailures+=1\n\t\tprinterr(message)\n"+source.substr(start,finish-start)
+	check(script.reload()==OK,"load exact shared frame pixel check")
+	frame_verifier=script.new()
+	frame_verifier.app=app
+
 func run() -> void:
 	check(DisplayServer.get_name() != "headless", "native OS window required")
 	app=load("res://full_view_study/main.tscn").instantiate()
 	root.add_child(app)
 	await process_frame
+	load_frame_verifier()
 	for client: Vector2i in [Vector2i(1920,1080),Vector2i(1280,720)]:
 		root.mode=Window.MODE_WINDOWED
 		root.size=client
@@ -49,7 +67,20 @@ func run() -> void:
 					await process_frame
 					var record: Dictionary=app.board.measurements()
 					check(record.grid_fit or not record.layout_valid,"actual window fits the complete grid frame")
+					if index==7 and client==Vector2i(1920,1080) and mode=="G":
+						check(record.reserve_slots[0]==13 and record.axis_counts.row.hidden_numbers==0,"GF-A01 actual delivered window shows all 13 row hints")
+						check(is_equal_approx(record.cell_pitch,18.77 if ui==1.0 else 17.06),"GF-A01 delivered window retains exact fit")
 					record.merge({"id":app.session.definition.id,"client":[root.size.x,root.size.y],"ui_scale":ui,"actual_window":true})
+					if frame_verifier!=null and record.layout_valid and (index in [3,7,8] if client.x==1920 else index==7):
+						app.board.clear_pointer_hover()
+						app.board.clear_effects()
+						await process_frame
+						await RenderingServer.frame_post_draw
+						var image: Image=root.get_texture().get_image()
+						record.frame_pixels=frame_verifier.frame_pixels(image)
+						check(frame_verifier.failures==0,"actual delivered PCK draws all four frame edges")
+						var output: String=OS.get_environment("VS1_PROBE_OUTPUT")
+						if not output.is_empty(): image.save_png(output.path_join("vs1-frame-%s-%s-%d-u%d.png" % [record.id,mode,client.x,roundi(ui*100)]))
 					records.append(record)
 					if not app.board.layout_valid: continue
 					var center: Vector2=app.board.view.center
