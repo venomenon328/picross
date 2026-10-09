@@ -35,6 +35,8 @@ def before_project(root: Path, workspace: Path) -> Path:
         root / "prototypes/p1/tests/zv50_capture.gd",
         destination / "tests/zv50_capture.gd",
     )
+    shutil.copyfile(root / "prototypes/p1/tests/vs2_measurements.gd",
+                    destination / "tests/vs2_measurements.gd")
     return destination
 
 

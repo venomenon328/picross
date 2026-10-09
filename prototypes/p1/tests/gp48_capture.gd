@@ -1,4 +1,5 @@
 extends SceneTree
+const Measurements = preload("res://tests/vs2_measurements.gd")
 ## The same script runs against the pinned main and the delivery project.
 ## Fixtures, player inputs, geometry and pointer events are identical.
 const Main = preload("res://ui/main.gd")
@@ -162,4 +163,4 @@ func shot(name: String) -> void:
 					counts[state] += 1
 			states[axis] = counts
 	captures.append({"file": file, "case": name, "fixture": app.session.definition.id, "size": [surface.size.x, surface.size.y], "ui_scale": app.ui_scale, "cells_sha256": JSON.stringify(app.session.player.cells).sha256_text(), "view": app.board.capture_view(), "font_size": app.board.clue_font_size(), "states": states, "focus_states": focus_states, "row3_units": app.board.visual_hint_units("row", 3), "pan_target": app.board.pan_target, "tooltip": [app.board.clue_hover_axis, app.board.clue_hover_index]})
-	if app.board.has_method("measurements"): captures.back().full_view = app.board.measurements()
+	if app.board.get_script().resource_path.ends_with("/full_view_board.gd"): captures.back().full_view = Measurements.capture(app.board)

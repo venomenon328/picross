@@ -235,7 +235,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   platform=platform.platform(),bindings=[player_binding,review_binding],export_files=report["export_files"],embedded_packs=packs,
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
-                  scripts={name:toolchain.sha256_file(ROOT/"prototypes/p1/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd")},
+                  scripts={name:toolchain.sha256_file(ROOT/"prototypes/p1/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd")},
                   matrix_records=len(matrix["records"]),reference_comparisons=matrix["reference_comparisons"],
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.name:toolchain.sha256_file(p) for p in output.glob("*.png")},

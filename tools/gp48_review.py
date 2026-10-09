@@ -31,6 +31,8 @@ def before_project(root: Path, workspace: Path) -> Path:
             path.write_bytes(bundle.extractfile(member).read())
     shutil.copyfile(root / "prototypes/p1/tests/gp48_capture.gd",
                     destination / "tests/gp48_capture.gd")
+    shutil.copyfile(root / "prototypes/p1/tests/vs2_measurements.gd",
+                    destination / "tests/vs2_measurements.gd")
     return destination
 
 

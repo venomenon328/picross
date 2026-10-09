@@ -1,4 +1,5 @@
 extends SceneTree
+const Measurements = preload("res://tests/vs2_measurements.gd")
 const Store = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
 const Cases = preload("res://tests/vs2_scene.gd")
@@ -166,7 +167,7 @@ func matrix(corpus: bool) -> void:
 					app.board.fit_all()
 					await process_frame
 					var board = app.board
-					var data: Dictionary = board.measurements()
+					var data: Dictionary = Measurements.capture(board)
 					data.merge({"id":app.session.definition.id,"corpus":corpus,"client":[client.x,client.y],"ui_scale":ui,"board_rect":board.rect_values(board.get_global_rect())})
 					check(not data.layout_valid or data.grid_fit, "all four outer frame edges fit")
 					check(mode == 0 or data.hidden_tokens == 0, "V retains all hints")

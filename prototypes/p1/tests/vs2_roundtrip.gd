@@ -86,6 +86,7 @@ func run() -> void:
 	var resources: Array[String] = []
 	collect("res://",resources)
 	if OS.get_environment("VS2_PACK_AUDIT") == "1":
+		check(not app.board.has_method("measurements"),"PCK excludes developer matrix diagnosis")
 		for path: String in resources:
 			check(not path.contains("/study/") and not path.contains("/full_view_study/") and not path.contains("/tests/") and not path.contains("Bakso") and not path.contains("Shantell") and not path.contains("Virgil"),"PCK excludes developer/study resources: "+path)
 	var report: Dictionary = {"stage":stage,"failures":failures,"root":app.store.root,"app_data":OS.get_user_data_dir(),"client":[root.size.x,root.size.y],"display":DisplayServer.get_name(),"resources":resources}

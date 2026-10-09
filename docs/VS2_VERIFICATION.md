@@ -66,6 +66,10 @@ Argumente mit frischem, teilgespieltem und abgeschlossenem Profil. Der tatsächl
 alte Writer stammt aus PR #56, Run `37921979562`, Head `8b762dd9aaf976361cba44e3b25004e09edde348`.
 Externe Skripte prüfen anschließend das heruntergeladene eingebettete PCK einschließlich
 Ressourceninventur, normalen/maximierten Clientflächen, DPI und UI100/125. SHA-256
+bindet auch den externen Diagnosehelfer `tests/vs2_measurements.gd`; dieser wird
+zusammen mit sämtlichen Testskripten vom regulären Export ausgeschlossen. Die
+PCK-Probe prüft zusätzlich das Fehlen der alten Diagnosemethode im regulären Board.
+SHA-256
 bindet GitHub-Artefakt, inneres ZIP, EXE-Paar, eingebettetes PCK, Prüfscripte und Bilder.
 Die automatisierte Mausereignisprobe ersetzt weder persönliche Bedienabnahme noch Review.
 Geometrische Passung bei kleinen oder kollidierenden Glyphen ist kein Komforturteil;

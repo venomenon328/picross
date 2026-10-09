@@ -1,4 +1,5 @@
 extends SceneTree
+const Measurements = preload("res://tests/vs2_measurements.gd")
 const Session = preload("res://model/session.gd")
 const Cases = preload("res://tests/vs1_e1_cases.gd")
 var checks: int = 0
@@ -94,7 +95,7 @@ func run() -> void:
 					check(board.reserve_slots.x == expected, "only whole fitting slots; no demand padding")
 					check(board.minimum_slots == minimum and board.reserve_slots.y == minimum.y, "minimum and independent upper reserve stable")
 					check(board.view.cell_size <= 12 and board.view.cell_size >= 11.99, "new capacity never feeds back into zoom")
-					check(board.measurements().grid_fit and board.horizontal_used <= board.horizontal_budget+0.00001, "frame and added budget fit")
+					check(Measurements.capture(board).grid_fit and board.horizontal_used <= board.horizontal_budget+0.00001, "frame and added budget fit")
 					if delta == 0 and expected > minimum.x:
 						probe_row(index,true)
 				board.fit_all()

@@ -1,4 +1,5 @@
 extends "res://tests/zs1_capture.gd"
+const Measurements = preload("res://tests/vs2_measurements.gd")
 ## Identical inputs on the previous regular main, selected study and new regular UI.
 var role: String
 var rework_sequences: Array = []
@@ -182,7 +183,7 @@ func shot(name: String) -> void:
 	await super.shot(name)
 	var record: Dictionary = captures.back()
 	if role == "after":
-		record.full_view = app.board.measurements()
+		record.full_view = Measurements.capture(app.board)
 	var filename: String = "zs2-%s-%s.png" % [role, name]
 	check(DirAccess.rename_absolute(output.path_join(record.file), output.path_join(filename)) == OK, "rename bound comparison")
 	record.file = filename

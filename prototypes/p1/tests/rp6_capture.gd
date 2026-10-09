@@ -1,4 +1,5 @@
 extends "res://tests/rp6_probe.gd"
+const Measurements = preload("res://tests/vs2_measurements.gd")
 ## Native images; completion loads the preceding real mouse/process probe saves.
 var surface: SubViewport
 var output: String
@@ -16,7 +17,7 @@ func shot(name: String) -> void:
 		"completed":app.session.completed,"reveal":app.session.reveal(),
 		"palette":app.session.definition.palette,"own_miniature":app.mini.cells.duplicate(),
 		"font":app.board.clue_font().get_font_name(),"c1_color_ids":[2,4],
-		"layout_valid":app.board.layout_valid,"grid_fit":app.board.measurements().grid_fit,
+		"layout_valid":app.board.layout_valid,"grid_fit":Measurements.capture(app.board).grid_fit,
 		"geometry_status":"fit_owner_open" if app.board.layout_valid else "too_little_space"})
 	if name.begins_with("work-"):
 		# Interior own wrong cells remain measurable even in a 100-cell miniature.

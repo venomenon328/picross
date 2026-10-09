@@ -1,4 +1,5 @@
 extends SceneTree
+const Measurements = preload("res://tests/vs2_measurements.gd")
 const Main = preload("res://ui/main.gd")
 const Session = preload("res://model/session.gd")
 const SaveStore = preload("res://model/save_store.gd")
@@ -103,4 +104,4 @@ func shot(name: String) -> void:
 		"tools_top": app.actions.fill.global_position.y,
 		"mini": rect_data(app.mini.get_global_rect())
 	})
-	if app.board.has_method("measurements"): captures.back().full_view = app.board.measurements()
+	if app.board.get_script().resource_path.ends_with("/full_view_board.gd"): captures.back().full_view = Measurements.capture(app.board)

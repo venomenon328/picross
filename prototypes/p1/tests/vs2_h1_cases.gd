@@ -1,4 +1,5 @@
 extends RefCounted
+const Measurements = preload("res://tests/vs2_measurements.gd")
 ## Current regular H1 off/on pixels, complementing the strict frozen stress replay.
 const H1 = preload("res://tests/h1_capture.gd")
 
@@ -23,6 +24,6 @@ static func run(c: SceneTree, app: Control) -> void:
 				app.set_puzzle_view(mode)
 				app.board.working_size()
 				await c.process_frame
-				H1.require(c,app.board.layout_valid and app.board.measurements().glyph_collisions==0,"current regular H1 drawable non-overlapping geometry")
+				H1.require(c,app.board.layout_valid and Measurements.capture(app.board).glyph_collisions==0,"current regular H1 drawable non-overlapping geometry")
 				await H1.pair(c,app,"h1-vs2-%dx%d-ui%d-%s" % [dims.x,dims.y,roundi(ui*100),app.board.mode])
 	app.set_clue_completion(true)

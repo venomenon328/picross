@@ -32,7 +32,7 @@ def before_project(root: Path, workspace: Path) -> Path:
             path = destination / relative
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(archive.extractfile(member).read())
-    for name in ("zs1_capture.gd", "zs2_capture.gd"):
+    for name in ("zs1_capture.gd", "zs2_capture.gd", "vs2_measurements.gd"):
         shutil.copyfile(root / "prototypes/p1/tests" / name, destination / "tests" / name)
     return destination
 

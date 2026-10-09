@@ -5,8 +5,10 @@ var failures: int = 0
 var checks: int = 0
 var records: Array = []
 var output: String
+var measurements: Script
 
 func _initialize() -> void:
+	measurements = load(get_script().resource_path.get_base_dir().path_join("vs2_measurements.gd"))
 	call_deferred("run")
 
 func check(ok: bool, label: String) -> void:
@@ -62,7 +64,7 @@ func run() -> void:
 					app.board.fit_all()
 					await process_frame
 					var board = app.board
-					var record: Dictionary = board.measurements()
+					var record: Dictionary = measurements.capture(board)
 					record.merge({"id":app.session.definition.id,"window_mode":window_mode,"client":[root.size.x,root.size.y],"ui_scale":ui,"dpi":DisplayServer.screen_get_dpi(),"windows_scale":DisplayServer.screen_get_scale()})
 					records.append(record)
 					check(not board.layout_valid or record.grid_fit,"native full frame or explicit geometry failure")
