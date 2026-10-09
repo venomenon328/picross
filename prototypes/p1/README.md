@@ -304,12 +304,28 @@ startet `study/main.tscn` mit eigener Speicherwurzel und der gewählten Stiftfü
 neuem X und Strichaufbau. Bisherige Baseline als Referenz umschaltbar; gleiche
 F-01/F-02/F-03-Teststände. Beide Eigentümer-TTFs sind gemäß E2 enthalten und unabhängig vom Zellstil
 wählbar; Plex wird ausdrücklich nur als bisherige Referenz gezeigt.
-[Bedienung und offene Eigentümerwahl](../../docs/ZS1_OWNER_TRIAL.md),
+[Bedienung und bestätigte Eigentümerwahl](../../docs/ZS1_OWNER_TRIAL.md),
 [Prüfnachweise](../../docs/ZS1_VERIFICATION.md) und
 [Entscheidungsvorlage](../../docs/ZS1_DECISION.md).
 ZS1-E3: Chalkboard/Stift/Timing gewählt; die Studie startet mit Chalkboard und
 26-px-Zeilenhinweisslots bei UI 100 % (Spaltenslots unverändert). Die kombinierte
-Sichtprüfung erfolgt nach Merge auf main; #53 ist nicht integriert.
+Sichtprüfung ist nach Merge auf main erfolgreich abgeschlossen.
+
+## Reguläre ZS-2-Integration (#53)
+
+Die Hauptszene verwendet die bestätigte Chalkboard-/Stift-/X-Darstellung, statische
+56-%-Zielvorschau und gerichtete räumliche Commit-Effekte gemäß ZS2-E2:
+Start bis finales Abschnittsende, Δ = min(12 ms, 180 ms/(m−1)) für m > 1 wirksame
+Setz-/Umwandlungszellen, 210 ms je Zelle, maximal 390 ms; Entfernen sofort/120 ms.
+Aktive Füllungen entstehen sichtbar aus kurzen wechselgerichteten Schraffurzügen
+ohne volle Unterzeichnung; die ruhende Endform bleibt erhalten.
+Das aktive X schreibt Zug eins vor Zug zwei ohne vollständige Unterzeichnung.
+Gegentasten-Down bricht aktive Zellgesten auch außerhalb des Boards ab; nach beiden
+Ups ist ein frisches Down nötig. MMB/Hand bleiben Navigation. Genau ein
+Sitzungsschalter „Zellanimationen“ ergänzt die bestehenden Einstellungen.
+[Prüfzuordnung](../../docs/ZS2_VERIFICATION.md),
+[offene reguläre Eigentümerprobe](../../docs/ZS2_OWNER_TRIAL.md).
+Studienvergleich und Speicherisolation bleiben erhalten; kein Merge oder Release.
 
 ## VS-GF1 · isolierte Vollsichtstudie (#57/#59)
 

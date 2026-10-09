@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-Stand: 09.10.2026 · Arbeitsfassung 0.8 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
+Stand: 09.10.2026 · Arbeitsfassung 0.9 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
 
 ## 1. Geltung und Herkunft
 
@@ -111,11 +111,15 @@ Die am 07.10.2026 freigegebene [zeichnerische UI-Spezifikation](UI_DRAWING_STYLE
 ergänzt kurze abschaltbare Zellanimationen erst beim tatsächlichen Anwenden einer
 Aktion. Während des Ziehens zeigt die elastische Vorschau den vorgesehenen
 Endzustand statisch und leicht heller beziehungsweise transparenter. Loslassen
-übernimmt den Strich atomar; alle tatsächlich geänderten Zellen animieren
-gleichzeitig. Weitere Eingaben werden dadurch nicht blockiert. Spielzustand,
+übernimmt den Strich atomar; Setzen/Umwandeln zeichnet vom Gestenstart zum finalen
+Abschnittsende mit höchstens 180 ms Startspreizung und 210 ms je Zelle (maximal
+390 ms). Entfernen bleibt ungestaffelt bei 120 ms. Weitere Eingaben werden dadurch nicht blockiert. Spielzustand,
 Rücknahme und Speicherung warten nicht auf das Animationsende; eine neuere
 Vorschau oder Änderung derselben Zelle hat Vorrang. Die visuelle Vorschau ist
-keine zusätzliche Hypothesenebene.
+keine zusätzliche Hypothesenebene. ZS2-E2 präzisiert den X-Aufbau ohne volle
+Unterzeichnung während des aktiven Zuges. Das Down der Gegentaste bricht eine
+laufende Zellgeste auch außerhalb des Boards ab; erst beide Tasten loslassen und
+frisch drücken. Mittlere Taste/Hand bleiben Navigation. Details: ZS-D07/D08.
 
 Hypothesen als mögliche Zustände „unsicher gesetzt“ und „unsicher leer“ wurden zur Untersuchung vorgeschlagen. Die Funktion ist noch nicht abschließend spezifiziert; insbesondere ist nicht entschieden, ob ihre Nutzung mit einer perfekten Bewertung vereinbar ist. Der Nutzer setzt selbst überwiegend nur sicher hergeleitete Felder. Hypothesen ändern nicht das Versprechen, dass Rätsel ohne notwendiges Raten lösbar sein müssen.
 
@@ -133,7 +137,9 @@ Gezeichnete X bleiben eindeutige, dem entstehenden Motiv untergeordnete
 Arbeitsmarkierungen. Zelltrennung, Rätselfarben und Hinweiszustände bleiben klar
 lesbar; bei kleinen Zellen wird die Textur vereinfacht. Die eigene Miniatur bleibt
 für den Überblick bewusst einfacher. E1 wählt die Stiftfüllung und das kurze
-Timing (140/80 ms); ein handschriftlicheres X und räumlicher Strichaufbau folgen.
+Timing (historisch 140/80 ms). Die bestätigte ZS2-Nacharbeit vom 09.10.2026
+setzt 210/120 ms und einen deutlicheren handschriftlichen Schraffuraufbau: kurze
+sichtbar wachsende Füllstriche statt flächigem Erscheinen oder Einfaden.
 Zusätzliche Rand-UI-Dekoration entfällt; mögliche Hintergrundarbeit bleibt separat.
 Die [UI-Spezifikation](UI_DRAWING_STYLE.md) trennt diese beschlossene Richtung
 von der abschließenden nativen Bestätigung der überarbeiteten Kombination und
@@ -145,7 +151,8 @@ Ein vollständiger Themen- oder Layoutwechsel folgt daraus nicht.
 **ZS1-E3:** Für die ausgewählte ZS-Fassung ist Chalkboard Regular der Hinweisfont.
 Zeilenhinweise links vom Raster verwenden kompaktere gemeinsame 26-px-Slots bei
 UI 100 % (UI-skaliert); die vertikalen Spaltenslots bleiben unverändert. Die
-kombinierte Sichtprüfung erfolgt nach dem Merge von PR #55 auf `main`.
+kombinierte Sichtprüfung ist nach dem Merge von PR #55 auf `main` erfolgreich
+abgeschlossen; die reguläre Umsetzung ist separat in #53 beauftragt.
 
 Die endgültige Themenwahl bleibt ausdrücklich offen: A ist ein thematisches Sammelalbum, B ein Reisetagebuch beziehungsweise Weltreisealbum mit regionalen Motiven. Die näheren Entscheidungen, Beispiele und offenen Interaktionen stehen im [Gestaltungskonzept](DESIGN_CONCEPT.md). Die positive Rückmeldung zu einem exemplarischen Mock legt weder eine dieser Alternativen noch alle darin dargestellten Details verbindlich fest.
 

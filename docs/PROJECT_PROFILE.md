@@ -12,8 +12,7 @@ Die [Spezifikation zur zeichnerischen Spieloberfläche](UI_DRAWING_STYLE.md) ist
 Arbeit an der neuen Hinweis-/Zellsprache, statischer Zellvorschau und Zellanimationen
 zusätzlich vollständig zu lesen. Sie ist am 07.10.2026 fachlich freigegeben und
 als isolierte Studie umgesetzt. E1 wählt Stiftfüllung und kurzes Timing;
-X/Strichaufbau sind isoliert nachgearbeitet. Fontvergleich und abschließende
-Bestätigung bleiben offen: native Auswahl in [ZS-1/#52](https://github.com/venomenon328/picross/issues/52),
+X/Strichaufbau und Chalkboard sind nach ZS1-M01 bestätigt: native Auswahl in [ZS-1/#52](https://github.com/venomenon328/picross/issues/52),
 reguläre Integration in [ZS-2/#53](https://github.com/venomenon328/picross/issues/53),
 danach längere Spielerprobung in #24. Animationen beginnen ausschließlich nach
 dem Anwenden, nicht in der Vorschau.
@@ -437,8 +436,8 @@ sind für genau diesen Merge aufgehoben, nicht als bestanden umgedeutet. Kein Re
 [ZS-2/#53](https://github.com/venomenon328/picross/issues/53) gehören zu #21. Die
 [Detailspezifikation](UI_DRAWING_STYLE.md) ergänzt die vorhandene A-Buchkomposition
 um kräftige kompakte Hinweisziffern, satte stabile Schraffur-/Stiftflächen,
-handschriftliche X und kurze parallele Zellanimationen. E1 wählt Stiftfüllung und
-140/80-ms-Timing, fordert echten räumlichen Strichaufbau und entfernt zusätzliche
+handschriftliche X und kurze gerichtete Zellanimationen. E1 wählt Stiftfüllung und
+historisch 140/80-ms-Timing, fordert echten räumlichen Strichaufbau und entfernt zusätzliche
 Rand-UI. Hintergrundarbeit bleibt separat zurückgestellt. Der vollständige
 Vergleich der zwei Eigentümer-TTFs verwendet die durch E2 akzeptierten Nutzungshinweise;
 [Fontinput](ZS1_FONT_INPUT.md) dokumentiert Originaldateien, Quellen, Hashes und die Eigentümerentscheidung.
@@ -446,19 +445,22 @@ Die abschließend bestätigte Kombination ist Ergebnis von ZS-1; GD-03/GP-03 wer
 und begründet gewählte gemeinsame Slotmaße geöffnet. Historische Designpakete bleiben.
 
 Vorschau ist statisch und heller/transparenter. Erst die tatsächliche atomare
-Übernahme animiert alle wirksamen Änderungen gleichzeitig, ohne zusätzliche
-Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
+Übernahme zeichnet Setzen/Umwandeln vom Start zum finalen Abschnittsende
+(m wirksame Zellen: Δ = min(12 ms, 180 ms/(m−1)) für m > 1, sonst null;
+210 ms je Zelle, maximal 390 ms; Entfernen sofort und 120 ms). ZS2-E2 verlangt sichtbar geschriebene X-Züge und Gegentasten-Abbruch
+auch außerhalb des Boards, bis beide Tasten losgelassen sind. MMB/Hand bleiben
+Navigation; keine zusätzliche Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
 ist rein visuell; Sitzungsschalter nach P1-Vorbild, kein neues Saveformat.
 
 ZS-1 liefert eine isolierte native Vergleichsprobe und Eigentümerwahl; ZS-2 die
 reguläre Integration. Technische Nachweise, unabhängiges Review, jeweilige reale
 Auswahl/Probe und ausdrückliche Mergefreigabe stehen als Gates in den Paketissues.
-#24 folgt mit der längeren Nutzung der integrierten Fassung. Der anschließende
-Umsetzungsauftrag zu #52 umfasst die geprüfte Draft-Lieferung der isolierten
-Studie; siehe [Prüfzuordnung](ZS1_VERIFICATION.md) und
-[Entscheidungsstand](ZS1_DECISION.md). ZS1-M01 hat Teilfeedback erhalten;
-abschließende Bestätigung, unabhängiges Review des neuen Heads und Mergefreigabe
-bleiben offen. R1 ist ausschließlich für `4ae4f5a` abgeschlossen. #53 und Release sind nicht beauftragt.
+#24 folgt mit der längeren Nutzung der integrierten Fassung. ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer erfolgreich abgeschlossen und die Kombination bestätigt. #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md) ist separat beauftragt; ZS2-M01, unabhängiges aktuelles Review und Mergefreigabe bleiben vor Merge offen. Kein Release.
+
+ZS2-V1 integriert main einschließlich VS1/GF1; beide Lieferwege bleiben aktiv.
+VS-D01 ist entschieden, GF-M01/#59 ist historisch bestanden; #61 ist der separate
+Folgeschritt nach #53. Neue Studienberichte binden ihren tatsächlichen Zeichner
+an Quellcommit und Dateihashes; historische Vergleichsbasen bleiben erhalten.
 
 Die bestehenden sechs CI-Jobs bleiben aktiv. Spielerpaket und kleine gezielte
 Reviewartefakte bleiben getrennt; das optionale Hochladen kompletter Arbeitsrender
@@ -468,10 +470,8 @@ Bilder ersetzt noch aus den Umsetzungspaketen nach #24 verschoben.
 
 **ZS1-E3:** Chalkboard Regular ist gewählt. N07 setzt nur die horizontalen
 Zeilenhinweisslots der Studienfassung auf 26 logische Pixel bei UI 100 %;
-Spaltenslots bleiben 18. Der Eigentümer hat den Merge von PR #55 nach technischer
-N07-Prüfung freigegeben und verlegt die kombinierte Sichtprüfung auf den
-anschließenden `main`-Stand. #52 bleibt bis zu dieser Rückmeldung offen; #53 folgt
-nicht automatisch aus dem Merge.
+Spaltenslots bleiben 18. Die bestätigte Kombination ist Grundlage des aktuellen
+#53-Auftrags für die reguläre Arbeitsansicht; die Studie bleibt separat ausführbar.
 
 ## VS-1 · experimentelle Vollsichtprobe (#57)
 

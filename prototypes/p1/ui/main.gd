@@ -2,6 +2,7 @@ extends Control
 const Definition = preload("res://model/definition.gd")
 const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
+const ChalkboardBoard = preload("res://ui/chalkboard_board.gd")
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const SaveStore = preload("res://model/save_store.gd")
@@ -56,6 +57,7 @@ var sidebar: Control
 var page: Control
 var minimum_message: Label
 var clue_reset_button: Button
+var animation_toggle: CheckBox
 var clue_completion_toggle: CheckBox
 var mark_completed_clues: bool = true
 var ui_scale: float = 1.0
@@ -416,6 +418,7 @@ func _schedule_view_save() -> void:
 		save_timer.start()
 
 func _undo() -> void:
+	board.clear_effects()
 	var old: int = session.player.cursor
 	session.undo()
 	if session.player.cursor != old:
@@ -423,6 +426,7 @@ func _undo() -> void:
 	refresh()
 
 func _redo() -> void:
+	board.clear_effects()
 	var old: int = session.player.cursor
 	session.redo()
 	if session.player.cursor != old:
@@ -530,6 +534,19 @@ static func button(text: String, action: Callable) -> Button:
 	return item
 
 func _smoke() -> void:
+	if board is ChalkboardBoard:
+		var digest: HashingContext = HashingContext.new()
+		digest.start(HashingContext.HASH_SHA256)
+		digest.update(ChalkboardBoard.Fonts.CHALKBOARD.data)
+		if digest.finish().hex_encode() != ChalkboardBoard.Fonts.SHA256:
+			push_error("ZS2 selected embedded font bytes differ")
+			get_tree().quit(10)
+			return
+		if not OS.has_feature("editor") and (ResourceLoader.exists("res://study/main.tscn") or ResourceLoader.exists("res://study/fonts/BaksoDaging-Regular.ttf")):
+			push_error("ZS2 regular export contains the isolated study")
+			get_tree().quit(11)
+			return
+		print("ZS2_REGULAR_RESOURCES_OK Chalkboard=", ChalkboardBoard.Fonts.SHA256)
 	if BODY_FONT.get_font_name() != "IBM Plex Sans" or TITLE_FONT.get_font_name() != "Fraunces" or surface.ART.get_width() != 2560:
 		push_error("Z2 bundled offline resource mismatch")
 		get_tree().quit(8)
@@ -580,7 +597,7 @@ func _icon_button(id: String, action: Callable, parent: Control) -> BookButton:
 	return item
 
 func create_board() -> Board:
-	return Board.new()
+	return ChalkboardBoard.new()
 
 func _build_work() -> void:
 	work = Control.new()
@@ -661,12 +678,18 @@ func _build_information() -> void:
 	clue_completion_toggle.add_theme_color_override("font_color",BookButton.INK)
 	clue_completion_toggle.toggled.connect(set_clue_completion)
 	settings_panel.add_child(clue_completion_toggle)
+	animation_toggle = CheckBox.new()
+	animation_toggle.text = "Zellanimationen"
+	animation_toggle.button_pressed = true
+	animation_toggle.add_theme_color_override("font_color", BookButton.INK)
+	animation_toggle.toggled.connect(func(enabled: bool) -> void: board.set_animations(enabled))
+	settings_panel.add_child(animation_toggle)
 	settings_panel.add_child(_text_button("Beenden",leave_app))
 	help_panel = VBoxContainer.new()
 	help_panel.add_theme_constant_override("separation",16)
 	content.add_child(help_panel)
 	help_panel.add_child(label("Maus und Hinweise",26))
-	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nRad: Zoom am Zeiger. Mittlere Taste oder Hand im Raster: verschieben. Miniatur: den eigenen Ausschnitt versetzen. Gesamtansicht und Arbeitsgröße sind getrennt.\n\nMittlere Taste oder Hand auf Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nEsc oder Fokusverlust verwirft die laufende Geste.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
+	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nRad: Zoom am Zeiger. Mittlere Taste oder Hand im Raster: verschieben. Miniatur: den eigenen Ausschnitt versetzen. Gesamtansicht und Arbeitsgröße sind getrennt.\n\nMittlere Taste oder Hand auf Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
 	help_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help_panel.add_child(help_text)
 	information.hide()

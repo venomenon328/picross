@@ -46,9 +46,17 @@ def verify_pairs(renders: Path) -> dict:
             axis = after["case"].split("-")[-2]
             if any(record["pan_target"] != axis for record in (before, after)):
                 raise toolchain.PreflightError("GP comparison did not capture the intended drag")
-        for key in ("case", "fixture", "size", "ui_scale", "cells_sha256", "view", "font_size", "pan_target", "tooltip"):
+        for key in ("case", "fixture", "size", "ui_scale", "cells_sha256", "pan_target", "tooltip"):
             if before[key] != after[key]:
                 raise toolchain.PreflightError(f"GP comparison {after['case']}: mismatched {key}")
+        expected_font = min(int(before["font_size"] * 1.35 + 0.5), max(11, before["view"]["zoom"] - 4))
+        if after["font_size"] != expected_font:
+            raise toolchain.PreflightError("GP comparison lacks selected ZS2 font normalization")
+        for key in before["view"]:
+            if key == "row_clue_reads":
+                verify_row_reads(before, after)
+            elif before["view"][key] != after["view"][key]:
+                raise toolchain.PreflightError(f"GP comparison changed view/{key}")
         for record in (before, after):
             if not (renders / record["file"]).is_file():
                 raise toolchain.PreflightError("Missing native GP image")
@@ -64,7 +72,26 @@ def verify_pairs(renders: Path) -> dict:
         if any(c["row3_units"] != changes[0]["row3_units"] or c["font_size"] != changes[0]["font_size"]
                for c in changes):
             raise toolchain.PreflightError("A GP status transition moved or resized a clue")
-    return dict(comparison_commit=BASE, pairs=pairs, native_reports=reports)
+    return dict(comparison_commit=BASE, pairs=pairs, native_reports=reports,
+                typography_change="ZS2 Chalkboard x1.35 with cell cap; row slots 30->26, column slots 18 unchanged")
+
+
+def verify_row_reads(before: dict, after: dict) -> None:
+    """Only the physically dragged row may use the selected 26px slot geometry."""
+    case = after["case"]
+    affected = case.startswith(("f2-", "f3-")) and case.endswith(("row-drop", "column-drag", "column-drop"))
+    line = 35 if case.startswith("f2-") else 11
+    for index, (old, new) in enumerate(zip(before["view"]["row_clue_reads"], after["view"]["row_clue_reads"], strict=True)):
+        if affected and index == line:
+            # Fixed native reference points: same 44.7*UI physical drag, changed
+            # capacity and snap from the owner-selected compact horizontal slots.
+            bounds = {("F-02", 1.0): (2, 8), ("F-02", 1.25): (4, 8),
+                      ("F-03", 1.0): (80, 87), ("F-03", 1.25): (83, 87)}
+            start, end = bounds[(after["fixture"], after["ui_scale"])]
+            if new != dict(anchor="middle", start=start, end=end):
+                raise toolchain.PreflightError("GP comparison: unexpected compact row snap")
+        elif old != new:
+            raise toolchain.PreflightError("GP comparison: unrelated row read changed")
 
 
 def package(root: Path, output: Path, manifest: dict, windows_zip: Path) -> Path:
@@ -81,7 +108,7 @@ def package(root: Path, output: Path, manifest: dict, windows_zip: Path) -> Path
     index = ['<!doctype html><html lang="de"><meta charset="utf-8"><title>GP-48 – native Vergleiche</title>',
              '<style>body{font:16px sans-serif;background:#faf6ec;margin:24px;color:#293e3d}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}img{width:100%}code{overflow-wrap:anywhere}</style>',
              '<h1>GP-48 – native Godot-Vergleiche</h1>',
-             '<p>Links Main ' + BASE + '; rechts Lieferhead <code>' + html.escape(manifest["source_commit"]) + '</code>. Identische Spielerzellen, Ansicht und Eingaben; unveränderte native PNGs. Für 1:1-Prüfung Bild öffnen. Technische Bildstände, keine Eigentümerabnahme.</p>']
+             '<p>Links Main ' + BASE + '; rechts Lieferhead <code>' + html.escape(manifest["source_commit"]) + '</code>. Identische Spielerzellen, Rasteransicht und Eingaben; ZS-2 übernimmt Chalkboard und kompaktere 26-px-Zeilenslots samt zugehörigem Snap. Unveränderte native PNGs. Für 1:1-Prüfung Bild öffnen. Technische Bildstände, keine Eigentümerabnahme.</p>']
     for pair in comparison["pairs"]:
         index.append('<h2>' + html.escape(pair["case"]) + '</h2><div class="pair">')
         for key in ("before", "after"):

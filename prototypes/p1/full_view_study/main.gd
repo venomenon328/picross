@@ -5,7 +5,6 @@ const Catalog = preload("res://full_view_study/catalog.gd")
 var study_root: String
 var mode_controls: HBoxContainer
 var study_status: Label
-var animation_toggle: CheckBox
 var study_ready: bool = false
 var state: Dictionary = {"revision": 1, "selected": 0, "mode": "G", "requested_cell": 0.0}
 
@@ -47,11 +46,6 @@ func _ready() -> void:
 	study_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	study_status.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	work.add_child(study_status)
-	animation_toggle = CheckBox.new()
-	animation_toggle.text = "Zellanimationen"
-	animation_toggle.button_pressed = true
-	animation_toggle.toggled.connect(board.set_animations)
-	settings_panel.add_child(animation_toggle)
 	for mode: String in ["G","V"]:
 		settings_panel.add_child(_text_button("Ansicht %s öffnen" % mode, func() -> void: choose_mode(mode); open_puzzle()))
 	settings_panel.add_child(_text_button("Künstlichen Vergleichsstand laden", _ask_sample))
