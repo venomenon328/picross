@@ -148,7 +148,7 @@ def package(root: Path, output: Path, product: dict, evidence: dict):
     renders = output / "zs2-renders"
     report = {key: product[key] for key in ("source_commit", "source_tree_dirty", "base_commit", "tested_checkout_commit", "github_run_id", "host", "engine_version", "export_files")}
     report.update(evidence=evidence, files={p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()},
-                  owner_trial="OPEN ZS2-M01", independent_review="OPEN", merge_authorized=False)
+                  owner_trial="OPEN VS2-M01; ZS2-M01 PASSED historically via PR56", independent_review="OPEN", merge_authorized=False)
     text = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
     (output / "zs2-report.json").write_text(text, encoding="utf-8")
     names = {pair[key] for pair in evidence["pairs"] for key in ("before", "study", "after")}
@@ -160,6 +160,7 @@ def package(root: Path, output: Path, product: dict, evidence: dict):
                 bundle.write(renders / name, name)
             bundle.writestr("zs2-report.json", text)
             bundle.write(root / "docs/ZS2_VERIFICATION.md", "PRUEFUNG.md")
+            bundle.write(root / "docs/VS2_VERIFICATION.md", "CURRENT_SCOPE.md")
             if kind == "strokes":
                 index = zs1_delivery.movement_html(evidence).replace("ZS-1", "ZS-2")
                 index = index.replace("</html>", x_playback(evidence["x_size_evidence"]) + x_playback(evidence["fill_size_evidence"], "fill") + "</html>")

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import html
+import hashlib
 import json
 import platform
 import io
@@ -14,6 +15,12 @@ from pathlib import Path
 import p1_preflight as toolchain
 
 GF1_BASE = 'c19b3547eef81fbb7c3c5389834f7cc896c86069'
+
+
+def drawing_digest(root: Path, name: str, reference: str | None) -> str:
+    if reference:
+        return hashlib.sha256(subprocess.check_output(['git','show',f'{reference}:prototypes/p1/{name}'],cwd=root)).hexdigest()
+    return toolchain.sha256_file(root/'prototypes/p1'/name)
 
 
 def gf1_before_project(root: Path, workspace: Path) -> Path:
@@ -178,14 +185,15 @@ def export(project, workspace, output, base, phase, host):
 
 def package(root, output, build, files, product, evidence):
     manifest={k:product[k] for k in ('source_commit','source_tree_dirty','tested_checkout_commit','base_commit','github_run_id','host','engine_version','assets')}
-    manifest.update(developer_reference_commit=evidence.get('developer_reference_commit'), schema=1,study='VS-1 revision 1 / VS-GF1',modes=['G','V'],drawing_basis=product['source_commit'],
+    reference=evidence.get('developer_reference_commit')
+    manifest.update(developer_reference_commit=reference, schema=1,study='VS-1 revision 1 / VS-GF1',modes=['G','V'],drawing_basis=reference or product['source_commit'],
                     historical_selection_commit='985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f',
-                    drawing_sources={name:toolchain.sha256_file(root/'prototypes/p1'/name) for name in
+                    drawing_sources={name:drawing_digest(root,name,reference) for name in
                                      ('ui/board.gd','ui/drawing_board.gd','ui/pencil_marks.gd','study/board.gd','full_view_study/board.gd')},export_files=files,
                     plan_sha256=toolchain.sha256_file(root/'examples/vs1/plan.json'),corpus_manifest_sha256=toolchain.sha256_file(root/'examples/vs1/manifest.json'),
                     matrix_sha256=toolchain.sha256_file(output/'vs1-renders/vs1-matrix.json'),
                     gf1_baseline_commit=GF1_BASE,gf1_plan_sha256=toolchain.sha256_file(root/'examples/vs1/gf1-plan.json'),
-                    VS_M01='Incomplete personal protocol; prior integration approved',VS_D01='CONFIRMED / docs/VS1_DECISION.md',GF_M01='PASSED historical #59 / PR #60 comment-6076039228; new ZS2 acceptance remains open',independent_review='OPEN',
+                    VS_M01='Incomplete personal protocol; prior integration approved',VS_D01='CONFIRMED / docs/VS1_DECISION.md',GF_M01='PASSED historical #59 / PR #60 comment-6076039228; new VS2 acceptance remains open',independent_review='OPEN',
                     decision_sha256=toolchain.sha256_file(root/'docs/VS1_DECISION.md'),
                     windows_download_probe='Separate implementer evidence in PR; CI Linux export is not a native Windows launch')
     report=json.dumps(manifest,ensure_ascii=False,indent=2)+'\n'

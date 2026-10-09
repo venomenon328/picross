@@ -164,7 +164,7 @@ func run() -> void:
 		await numeral_probe()
 		await movement()
 		await load_probe()
-		measurements.back().real_mouse_acceptance = "OPEN ZS2-M01"
+		measurements.back().real_mouse_acceptance = "OPEN VS2-M01; ZS2-M01 passed historically" if app.board.has_method("set_mode") else "Historical developer reference; no new owner acceptance claimed"
 		await color_load_probe()
 		await stroke_probe()
 		await rework_motion()
@@ -252,6 +252,11 @@ func stroke_probe() -> void:
 	component.size = regular.size
 	component.position = regular.position
 	component.ui_scale = app.ui_scale
+	# Pencil marks are drawn behind the board's grid layer. Book rendering
+	# supplies the paper externally; the non-book opaque viewport would hide it.
+	component.book_layout = true
+	component.book_inset = Vector2(210,126)*app.ui_scale
+	component.book_grid_size = component.size-component.book_inset-Vector2(12,12)
 	regular.hide()
 	app.work.add_child(component)
 	app.board = component

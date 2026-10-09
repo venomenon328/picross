@@ -232,7 +232,7 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
                     owner_decision="https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659",
                     font_owner_decision="https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344",
                     font_input=json.loads((root / "docs/zs1-font-input.json").read_text(encoding="utf-8")),
-                    developer_reference_commit=evidence.get("developer_reference_commit"), export_files=files, evidence=evidence, owner_acceptance="ZS1-M01 PASSED after PR55 merge 985cf08e; current ZS2-M01 and independent review OPEN")
+                    developer_reference_commit=evidence.get("developer_reference_commit"), export_files=files, evidence=evidence, owner_acceptance="ZS1-M01 and ZS2-M01 PASSED historically; current VS2-M01 and independent review OPEN")
     renders = output / "zs1-renders"
     manifest["render_files"] = {p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()}
     report = json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
@@ -301,4 +301,4 @@ def movement_html(evidence: dict) -> str:
 
 
 def html_page(title: str, sections: list[str]) -> str:
-    return "<!doctype html><html lang='de'><meta charset='utf-8'><title>ZS-1</title><style>body{font:16px system-ui;background:#faf6ec;color:#343f42;margin:24px}.row{display:flex}figure{margin:8px}.row figure{width:32%}.row img{width:100%}img{max-width:100%}h2{margin-top:40px}</style>" + f"<h1>ZS-1 · {title}</h1><p>PNG bei 100 % betrachten. Nachweisindex, keine Spielimplementierung. ZS1-M01 abgeschlossen; aktuelle ZS2-M01-Abnahme separat offen.</p>" + "".join(sections) + "</html>"
+    return "<!doctype html><html lang='de'><meta charset='utf-8'><title>ZS-1</title><style>body{font:16px system-ui;background:#faf6ec;color:#343f42;margin:24px}.row{display:flex}figure{margin:8px}.row figure{width:32%}.row img{width:100%}img{max-width:100%}h2{margin-top:40px}</style>" + f"<h1>ZS-1 · {title}</h1><p>PNG bei 100 % betrachten. Nachweisindex, keine Spielimplementierung. ZS1-M01 und ZS2-M01 historisch abgeschlossen; aktuelle VS2-M01-Abnahme separat offen.</p>" + "".join(sections) + "</html>"

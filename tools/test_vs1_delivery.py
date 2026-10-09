@@ -14,6 +14,15 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class DeliveryTests(unittest.TestCase):
+    def test_reference_drawing_digest_uses_frozen_bytes(self):
+        # The replay loads the old renderer, even when the working renderer has
+        # changed. Its manifest must identify that same immutable source.
+        digest = vs1_delivery.drawing_digest(ROOT, 'ui/board.gd',
+            'fad885344874534629365917a2ab6a8d311cd3a7')
+        self.assertEqual(digest,
+            '0ecf85ca5d818ade11251c9f76cb30dbb9447de2fd76d36bdd1b34314ed3e236')
+        self.assertNotEqual(digest, vs1_delivery.drawing_digest(ROOT, 'ui/board.gd', None))
+
     def test_gf1_pairs_reject_missing_cases_changed_fit_and_inconsistent_budget(self):
         plan=json.loads((ROOT/'examples/vs1/gf1-plan.json').read_text(encoding='utf-8'))
         with tempfile.TemporaryDirectory() as tmp:
