@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 09.10.2026 · Version 1.0 · Auftrag [#63](https://github.com/venomenon328/picross/issues/63)
+Stand: 09.10.2026 · Version 1.1 · Auftrag [#63](https://github.com/venomenon328/picross/issues/63)
 
 ## Geltung und Ablösung
 
@@ -42,6 +42,14 @@ Fontinputs und Manifeste gehören zum Produkt. Ebenso können Markdowndateien wi
 werden vor der Dokumentabkürzung zugeordnet. Mehrere Änderungen vereinigen ihre
 Pflichten. Manuelle Auswahl im Hauptworkflow erweitert den tatsächlichen Diff.
 
+Aktive Markdowninputs des regulären Spielerpakets bleiben im kurzen docs-Pfad:
+Ein schneller Tooltest ruft denselben `package_player()`-Pfad wie Product auf,
+mit den echten `player_extras()`- und README-Quellen sowie kleinen EXE-Platzhaltern.
+Er prüft die tatsächliche Verpackung und Quellbytes ohne Engine/Export. Fehlende
+oder nicht nachgeführte verschobene Inputs lassen diesen Pflichtjob und damit
+`ci-required` scheitern. Löschung/Umbenennung jedes tatsächlichen Markdownextras
+werden gezielt negativ geprüft; es gibt keine zweite Paketinputliste.
+
 Auf `main` bleiben die bisher üblichen Integritätsprüfungen aktiv: Dokumente und
 bei relevanten Änderungen die Rätselproduktion. Product/Preflight werden nach
 einem Merge nicht nochmals automatisch wiederholt; ihre maßgebliche Bindung ist
@@ -65,6 +73,18 @@ CI ausdrücklich übergeben; lokal sind alle drei Bereiche standardmäßig aktiv
 Ein Lauf mit ausgeschaltetem Bereich wird nicht als dessen erfolgreicher Nachweis
 ausgegeben. Vollständige Produktionsrekonstruktionen gehören in den Fachlauf,
 nicht zusätzlich in den Runtime-Harness.
+
+F04 prüft nach Abschluss außerdem die bekannten unveränderten F01–F03-Zellstände
+(400/1600/10000 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
+F01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Erstmals erzeugte
+Dateien und reguläre Start-/Flush-Metadaten bleiben zulässig. Eine zusätzliche kurze
+F04-Lesegegenprobe verwendet ausschließlich eine Kopie des temporären Profils:
+Ein kurzer Schreibprozess erzeugt dort über eine echte F01-Zellaktion den gültigen
+veränderten Save samt History, auch wenn zuvor noch keine F01-Datei existierte.
+Die neue Leseinstanz muss ihn nativ als `loaded`
+mit 399 unbekannten Zellen erkannt werden und genau an der Isolationsassertion
+mit Exit 4 scheitern. Erfolg, Recovery, Parserfehler oder andere Fehler werden
+nicht als erfolgreiche Gegenprobe akzeptiert. Kein weiteres RP3-Durchspiel.
 
 ## Native Renderabdeckung und Speicherung
 

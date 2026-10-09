@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -162,11 +163,47 @@ def run_pilots(workspace: Path, environment: dict, base: list[str], phase) -> di
                        for name, digest in untouched.items()):
                     raise toolchain.PreflightError("Another pilot save changed")
                 slot_checks.append(dict(index=index, stage=stage, unchanged_files=untouched))
+            if index == 3:
+                isolation_control = run_pilot_isolation_control(workspace, environment, base, phase)
     finally:
         for key in ("P1_TEST_SAVE_ROOT", "RP6_STAGE", "RP6_INDEX"):
             environment.pop(key, None)
     return dict(pilots=6, processes=18, separate_slot_checks=slot_checks,
+                foreign_slot_control=isolation_control,
                 production_replay="not repeated here; authoritative puzzle-production job")
+
+
+def require_foreign_slot_failure(result: dict) -> None:
+    """Accept only the semantic F01 guard, with a natively valid loaded save."""
+    output = result["output"]
+    errors = [line.strip() for line in output.splitlines() if "ERROR:" in line]
+    if (result["exit_code"] != 4
+            or errors != ["ERROR: RP3_FAIL: isolated F04 preserves F01 cells after restart"]
+            or "RP6_F01_SAVE status=loaded unknown=399" not in output
+            or not re.search(r"RP6_RESULT index=3 stage=read checks=\d+ failures=1\b", output)
+            or "RP6_READ_OK" in output):
+        raise toolchain.PreflightError("Foreign-slot control did not fail solely on valid changed F01 cells")
+
+
+def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[str], phase) -> dict:
+    """Re-read F04 once with a valid changed F01 in a disposable profile copy."""
+    original = environment["P1_TEST_SAVE_ROOT"]
+    original_stage = environment["RP6_STAGE"]
+    control = workspace / "rp6-isolation-control"
+    shutil.copytree(original, control)
+    try:
+        environment["P1_TEST_SAVE_ROOT"] = str(control)
+        environment["RP6_STAGE"] = "foreign_write"
+        phase("rp6-f04-foreign-slot-write", base + ["--script", "res://tests/rp6_probe.gd"],
+              "RP6_FOREIGN_WRITE_OK")
+        environment["RP6_STAGE"] = "read"
+        phase("rp6-f04-foreign-slot-control", base + ["--script", "res://tests/rp6_probe.gd"],
+              validator=require_foreign_slot_failure)
+    finally:
+        environment["P1_TEST_SAVE_ROOT"] = original
+        environment["RP6_STAGE"] = original_stage
+    return dict(status="success", processes=2, slot="F-01", native_load="loaded",
+                unknown_cells=399, expected_exit=4, expected_failures=1)
 
 
 def run_visual(output: Path, workspace: Path, project: Path, engine: str,
@@ -256,6 +293,15 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
     return extras
 
 
+def package_player(build: Path, output: Path, manifest: dict, root: Path) -> tuple[Path, dict]:
+    """Use the same real delivery inputs in Product and the fast docs contract."""
+    extras = player_extras(root, output)
+    archive = package(build, output, manifest,
+                      (root / "docs/ZS2_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
+    expected = {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json", *extras}
+    return archive, gp48_delivery.verify_player_package(archive, manifest, expected_files=expected)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     root = Path(__file__).resolve().parents[1]
@@ -310,7 +356,8 @@ def main(argv: list[str] | None = None) -> int:
             shutil.copytree(root / "prototypes/p1", project, ignore=shutil.ignore_patterns(".godot", "build"))
             environment = toolchain.isolated_environment(workspace, host)
 
-            def phase(name: str, command: list[str], marker: str | None = None, expected_failure: bool = False):
+            def phase(name: str, command: list[str], marker: str | None = None,
+                      expected_failure: bool = False, validator=None):
                 record = evidence.start(name)
                 result = {}
                 try:
@@ -321,6 +368,9 @@ def main(argv: list[str] | None = None) -> int:
                         toolchain.require_expected_failure(result, "P1_EXPECTED_FAILURE")
                         if result["exit_code"] != 23 or "SCRIPT ERROR:" in result["output"] or "ERROR:" in result["output"]:
                             raise toolchain.PreflightError("Unexpected negative-test failure")
+                        result["expected_failure"] = True
+                    elif validator is not None:
+                        validator(result)
                         result["expected_failure"] = True
                     else:
                         require_clean_output(result, marker)
@@ -371,12 +421,8 @@ def main(argv: list[str] | None = None) -> int:
             evidence.retain_files(selected)
             evidence.enforce_budget()
             evidence.finish()
-            extras = player_extras(root, output)
             package_began = time.monotonic()
-            archive = package(build, output, evidence.report,
-                              (root / "docs/ZS2_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
-            expected = {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json", *extras}
-            delivery = gp48_delivery.verify_player_package(archive, evidence.report, expected_files=expected)
+            archive, delivery = package_player(build, output, evidence.report, root)
             delivery.update(packaging_seconds=round(time.monotonic() - package_began, 3),
                             total_seconds=round(time.monotonic() - evidence.began, 3))
             evidence.flush()

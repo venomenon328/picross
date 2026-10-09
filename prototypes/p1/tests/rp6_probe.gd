@@ -100,12 +100,44 @@ func finish() -> void:
 	check(app.session.player.cells.count(-1) > 0, "unknown background allowed")
 	app.show_album()
 	check(app.album_reveals[pilot_index].visible and app.album_reveals[pilot_index].payload.definition_id == app.session.definition.id, "earned pilot artwork bound to its album slot")
+	if pilot_index == 3:
+		check(app.sessions[0].player.cells.count(-1) == 400 and app.sessions[1].player.cells.count(-1) == 1600 and app.sessions[2].player.cells.count(-1) == 10000, "isolated F04 leaves old F01-F03 cells unknown")
 
 func restored() -> void:
 	check(app.session.completed and app.session.is_solution() and app.session.player.undo_used, "second restart restores completed pilot")
 	check(app.store.load_slot(app.session.definition).status == "loaded", "separate fixed slot loaded")
 	app.show_album()
 	check(app.album_reveals[pilot_index].payload == app.session.definition.reveal and app.choices[pilot_index].text.contains(app.session.definition.reveal.name), "restored correct earned album asset and name")
+	if pilot_index == 3:
+		var first: Dictionary = app.store.load_slot(app.sessions[0].definition)
+		var unknown: int = saved_unknown_count(first)
+		print("RP6_F01_SAVE status=%s unknown=%d" % [first.status, unknown])
+		check(first.status == "fresh" or first.status == "loaded" and unknown == 400, "isolated F04 preserves F01 cells after restart")
+
+func saved_unknown_count(slot: Dictionary) -> int:
+	if slot.status != "loaded":
+		return -1
+	# JSON numbers are floats; Array.count(-1) would compare their Variant types.
+	# load_slot has already validated integer values and the complete save contract.
+	var count: int = 0
+	for value: Variant in slot.data.cells:
+		if int(value) == -1:
+			count += 1
+	return count
+
+func write_foreign_slot_control() -> void:
+	# Only the harness's disposable profile copy uses this short control stage.
+	check(pilot_index == 3 and app.sessions[0].player.cells.count(-1) == 400, "foreign control starts from unchanged F01")
+	app.select_puzzle(0)
+	app.board.fit_all()
+	check(app._save_current(), "foreign control can create an unchanged F01 save")
+	var first: Dictionary = app.store.load_slot(app.sessions[0].definition)
+	check(saved_unknown_count(first) == 400, "valid unchanged persisted F01 cells are accepted")
+	click(cell_point(Vector2i.ZERO))
+	check(app.session == app.sessions[0] and app.session.player.cells.count(-1) == 399, "real F01 cell action seeds foreign-slot control")
+	check(app._flush_current(), "foreign-slot control write succeeds")
+	first = app.store.load_slot(app.sessions[0].definition)
+	check(saved_unknown_count(first) == 399, "foreign-slot control is a valid persisted save")
 
 func run() -> void:
 	var isolated: String = OS.get_environment("P1_TEST_SAVE_ROOT")
@@ -126,10 +158,12 @@ func run() -> void:
 		finish()
 	elif stage == "read":
 		restored()
+	elif stage == "foreign_write":
+		write_foreign_slot_control()
 	else:
 		check(false,"unknown stage")
 	for i: int in range(9):
-		if i != pilot_index:
+		if i != pilot_index and not (stage == "foreign_write" and i == 0):
 			check(app.sessions[i].player.cells == others[i], "other slot unchanged %d" % i)
 	check(app._flush_current(), "final mandatory flush")
 	print("RP6_RESULT index=%d stage=%s checks=%d failures=%d" % [pilot_index,stage,checks,failures])
