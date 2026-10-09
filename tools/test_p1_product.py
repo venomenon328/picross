@@ -11,20 +11,7 @@ from gp48_delivery import PLAYER_FILES, verify_player_package
 
 
 class ProductHarnessTests(unittest.TestCase):
-    def test_gp48_slim_upload_is_only_player_zip(self):
-        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
-        step = workflow.split("- name: Upload compact player package\n", 1)[1].split("- name:", 1)[0]
-        self.assertIn("name: picross-p1-player-${{ github.event.pull_request.head.sha || github.sha }}", step)
-        self.assertIn("path: ${{ runner.temp }}/p1-product-output/picross-p1-windows-x86_64.zip\n", step)
-        self.assertIn("if-no-files-found: error", step)
-        self.assertEqual(step.count("path:"), 1)
 
-    def test_zv50_review_upload_is_separate(self):
-        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
-        step = workflow.split("- name: Upload ZV-50 native zoom comparisons\n", 1)[1].split("- name:", 1)[0]
-        self.assertIn("name: zv50-review-${{ github.event.pull_request.head.sha || github.sha }}", step)
-        self.assertIn("path: ${{ runner.temp }}/p1-product-output/picross-zv50-review.zip\n", step)
-        self.assertEqual(step.count("path:"), 1)
 
     def test_player_contents_and_report_verifier_is_generic(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -51,38 +38,7 @@ class ProductHarnessTests(unittest.TestCase):
                                 cwd=root, capture_output=True, text=True, timeout=15)
         self.assertEqual(result.returncode,0,result.stdout+result.stderr)
 
-    def test_workflow_publishes_compact_player_artifact_separately(self):
-        root = Path(__file__).resolve().parents[1]
-        workflow = (root / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
-        marker = "      - name: Upload compact player package"
-        self.assertIn(marker, workflow)
-        block = workflow.split(marker, 1)[1].split("      - name:", 1)[0]
-        self.assertIn(
-            "name: picross-p1-player-${{ github.event.pull_request.head.sha || github.sha }}",
-            block,
-        )
-        self.assertIn(
-            "path: ${{ runner.temp }}/p1-product-output/picross-p1-windows-x86_64.zip",
-            block,
-        )
-        self.assertNotIn("renders", block)
-        self.assertNotIn("path: ${{ runner.temp }}/p1-product-output/\n", block)
-        self.assertIn(
-            "name: picross-p1-technical-evidence-${{ github.event.pull_request.head.sha || github.sha }}",
-            workflow,
-        )
 
-    def test_full_technical_evidence_is_manual_opt_in(self):
-        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
-        self.assertIn("workflow_dispatch:\n    inputs:\n      upload_full_evidence:", workflow)
-        input_block = workflow.split("      upload_full_evidence:", 1)[1].split("jobs:", 1)[0]
-        self.assertIn("default: false", input_block)
-        marker = "      - name: Upload complete technical product evidence (manual opt-in)"
-        self.assertIn(marker, workflow)
-        block = workflow.split(marker, 1)[1].split("      - name:", 1)[0]
-        self.assertIn("if: github.event_name == 'workflow_dispatch' && inputs.upload_full_evidence", block)
-        self.assertIn("path: ${{ runner.temp }}/p1-product-output/\n", block)
-        self.assertEqual(workflow.count("path: ${{ runner.temp }}/p1-product-output/\n"), 1)
 
     def test_exit_zero_with_script_error_fails(self):
         with self.assertRaises(PreflightError):

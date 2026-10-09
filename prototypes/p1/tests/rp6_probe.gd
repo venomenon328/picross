@@ -10,6 +10,11 @@ func setup(viewport: Viewport) -> void:
 	await process_frame
 	await process_frame
 	check(app.sessions.size() == 9, "all nine fixed registrations load")
+	# Retain RP3's registration/path guards when its duplicate F04 playthrough
+	# is omitted. RP6 still uses the same real scene, single clicks and strokes.
+	check(app.sessions[3].definition.id == "F-04", "regular neutral F-04 registration")
+	check(Definition.load_fixture("../art/f04").is_empty() and Definition.load_fixture("unknown").is_empty(), "fixed definition paths reject unregistered IDs")
+	check(app.store.path_for("../f04").is_empty(), "save paths reject traversal")
 	for i: int in range(9):
 		check(Definition.validate(app.sessions[i].definition).is_empty(), "valid definition %d" % i)
 		var wrong: Dictionary = app.sessions[i].definition.duplicate(true)
@@ -29,11 +34,12 @@ func select_pilot() -> void:
 	check(box.size.y >= 44 * app.ui_scale, "choice respects minimum hit height")
 	click(box.get_center())
 	await process_frame
-	check(app.session == app.sessions[pilot_index], "regular album click selects pilot")
+	check(app.session == app.sessions[pilot_index] and (app.ending.visible if app.session.completed else app.work.visible), "regular album click selects pilot and saved completion scene")
 	app.board.fit_all()
 
 func partial() -> void:
 	check(not app.session.completed and app.session.reveal().is_empty(), "fresh pilot hides reveal")
+	check(not app.title.text.contains(app.session.definition.reveal.name), "fresh pilot title hides motif name")
 	check(app.session.definition.solution[0][0] == 0, "deliberate wrong corner is background")
 	click(cell_point(Vector2i.ZERO))
 	check(app.mini.cells[0] == 1 and not app.session.completed, "own incorrect miniature retained")
@@ -43,14 +49,14 @@ func partial() -> void:
 	check(app.mini.cells[0] == 1 and app.session.player.undo_used, "mouse redo")
 	check(app._flush_current(), "partial flush")
 	app.show_album()
-	check(app.album_previews[pilot_index].cells[0] == 1 and app.album_reveals[pilot_index].payload.is_empty(), "album own wrong miniature and no spoiler")
+	check(app.album_previews[pilot_index].cells[0] == 1 and app.album_reveals[pilot_index].payload.is_empty() and not app.choices[pilot_index].text.contains(app.session.definition.reveal.name), "album own wrong miniature and no spoiler/name")
 
 func choose_color(color: int) -> void:
 	click(app.palette_row.get_child(color - 1).get_global_rect().get_center())
 	check(app.board.active_color == color and not app.board.eraser and not app.board.hand, "real palette selects fill color")
 
 func finish() -> void:
-	check(app.session.player.cells[0] == 1 and app.session.player.undo_used, "new process restores partial and history")
+	check(app.session.player.cells[0] == 1 and app.session.player.undo_used and not app.session.completed, "new process restores partial and history")
 	click(cell_point(Vector2i.ZERO), MOUSE_BUTTON_RIGHT)
 	check(app.session.player.cells[0] == 0, "real conversion removes incorrect fill")
 	var matrix: Array = app.session.definition.solution
@@ -85,19 +91,21 @@ func finish() -> void:
 	check(not app.session.completed and app.session.reveal().is_empty(), "last missing cell still hides motif")
 	choose_color(int(matrix[last.y][last.x]))
 	event(cell_point(last),true)
-	check(not app.session.completed and app.session.reveal().is_empty(), "preview never completes")
+	check(not app.session.completed and app.session.reveal().is_empty() and app.mini.cells[last.y * width + last.x] == matrix[last.y][last.x], "last-cell preview is own miniature input and never completes")
 	event(cell_point(last),false)
 	check(app.session.completed and app.session.is_solution() and app.ending.visible, "committed regular mouse path completes pilot")
 	check(app.reveal_view.payload == app.session.definition.reveal and app.completion_title.text == app.session.definition.reveal.name, "exact completion asset and name")
+	if pilot_index == 3:
+		check(app.completion_title.text == "Fliegenpilz" and app.reveal_view.payload.image == "res://art/f04.svg", "retained F-04 name and SVG binding")
 	check(app.session.player.cells.count(-1) > 0, "unknown background allowed")
 	app.show_album()
-	check(app.album_reveals[pilot_index].visible, "earned pilot artwork in album")
+	check(app.album_reveals[pilot_index].visible and app.album_reveals[pilot_index].payload.definition_id == app.session.definition.id, "earned pilot artwork bound to its album slot")
 
 func restored() -> void:
 	check(app.session.completed and app.session.is_solution() and app.session.player.undo_used, "second restart restores completed pilot")
 	check(app.store.load_slot(app.session.definition).status == "loaded", "separate fixed slot loaded")
 	app.show_album()
-	check(app.album_reveals[pilot_index].payload == app.session.definition.reveal, "restored correct album asset")
+	check(app.album_reveals[pilot_index].payload == app.session.definition.reveal and app.choices[pilot_index].text.contains(app.session.definition.reveal.name), "restored correct earned album asset and name")
 
 func run() -> void:
 	var isolated: String = OS.get_environment("P1_TEST_SAVE_ROOT")

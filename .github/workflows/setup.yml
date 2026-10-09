@@ -1,40 +1,99 @@
-name: Setup verification
+name: CI verification
 
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: Widen the changed-path selection
+        type: choice
+        options: [auto, all, runtime, visual, production, toolchain]
+        default: all
 
 permissions:
   contents: read
 
 concurrency:
-  group: setup-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   docs:
     runs-on: ubuntu-24.04
-    # Full history plus the native artwork/tool tests exceeded five minutes
-    # twice during ZS1 E1 verification, before the document checks could run.
-    timeout-minutes: 10
+    timeout-minutes: 3
+    outputs:
+      product: ${{ steps.scope.outputs.product }}
+      production: ${{ steps.scope.outputs.production }}
+      preflight: ${{ steps.scope.outputs.preflight }}
+      integration: ${{ steps.scope.outputs.integration }}
+      pilots: ${{ steps.scope.outputs.pilots }}
+      visual: ${{ steps.scope.outputs.visual }}
+      plan: ${{ steps.scope.outputs.plan }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # Source pin from dev-rules
+      - name: Checkout tested integration
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
-      - name: Validator tests
+      - name: Select required checks and verify the complete diff
+        id: scope
+        env:
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
+          CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          CI_SCOPE: ${{ inputs.scope || 'auto' }}
+        run: >-
+          python3 tools/ci_scope.py plan --fetch
+          --base "$CI_BASE" --head "$CI_HEAD" --scope "$CI_SCOPE"
+          --output "${{ runner.temp }}/ci-plan.json"
+      - name: Fast tool contracts and CI gate regression
         run: python3 -m unittest discover -s tools -p 'test_*.py' -v
       - name: Documentation checks
         run: python3 tools/check_docs.py
-      - name: Full change whitespace check
+      - name: Upload selection and source binding
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/ci-plan.json
+          if-no-files-found: warn
+          retention-days: 7
+
+  product:
+    needs: docs
+    if: needs.docs.outputs.product == 'true'
+    uses: ./.github/workflows/p1-product.yml
+    with:
+      integration: ${{ needs.docs.outputs.integration == 'true' }}
+      pilots: ${{ needs.docs.outputs.pilots == 'true' }}
+      visual: ${{ needs.docs.outputs.visual == 'true' }}
+
+  production:
+    needs: docs
+    if: needs.docs.outputs.production == 'true'
+    uses: ./.github/workflows/puzzle-production.yml
+
+  preflight:
+    needs: docs
+    if: needs.docs.outputs.preflight == 'true'
+    uses: ./.github/workflows/p1-preflight.yml
+
+  ci-required:
+    if: always()
+    needs: [docs, product, production, preflight]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Checkout only the result evaluator
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: tools/ci_scope.py
+          sparse-checkout-cone-mode: false
+      - name: Require every selected job to have actually succeeded
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          if [ -z "$BASE_SHA" ] || [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
-            git show --format= --check "$HEAD_SHA"
-          else
-            git diff --check "$BASE_SHA" "$HEAD_SHA"
-          fi
+          CI_PLAN: ${{ needs.docs.outputs.plan }}
+          CI_RESULTS: ${{ toJSON(needs) }}
+        run: python3 tools/ci_scope.py finish

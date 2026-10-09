@@ -20,6 +20,11 @@ func check(condition: bool, description: String) -> void:
 		print("FAIL: ", description)
 
 func run() -> void:
+	# Exercise the real assertion/report/exit path without rerunning the suite.
+	if OS.get_cmdline_user_args().has("--force-failure"):
+		check(false, "P1_EXPECTED_FAILURE")
+		finish()
+		return
 	var temporary: String = OS.get_environment("P1_TEST_SAVE_ROOT")
 	if temporary.is_empty():
 		temporary = OS.get_environment("TEMP") if OS.has_feature("windows") else OS.get_environment("TMPDIR")
@@ -43,8 +48,9 @@ func run() -> void:
 	await preload("res://tests/gp48_cases.gd").run(self)
 	await preload("res://tests/z2_cases.gd").run(self)
 	await preload("res://tests/zv50_cases.gd").run(self)
-	if OS.get_cmdline_user_args().has("--force-failure"):
-		check(false, "P1_EXPECTED_FAILURE")
+	finish()
+
+func finish() -> void:
 	print("P1_TEST_RESULT checks=%d failures=%d" % [checked, failures])
 	if failures == 0:
 		print("P1_TESTS_OK")

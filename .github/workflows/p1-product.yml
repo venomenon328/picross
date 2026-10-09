@@ -1,14 +1,31 @@
 name: P1 product verification
 
 on:
-  pull_request:
+  workflow_call:
+    inputs:
+      integration:
+        type: boolean
+        default: true
+      pilots:
+        type: boolean
+        default: true
+      visual:
+        type: boolean
+        default: true
   workflow_dispatch:
     inputs:
-      upload_full_evidence:
-        description: Upload the complete temporary product evidence tree (large)
-        required: false
-        default: false
+      integration:
+        description: Run the 500-action sequence and restart
         type: boolean
+        default: true
+      pilots:
+        description: Exercise all six registered pilot puzzles
+        type: boolean
+        default: true
+      visual:
+        description: Run the compact current native pixel matrix
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -20,36 +37,43 @@ concurrency:
 jobs:
   product:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: ${{ inputs.pilots && 15 || 10 }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
+      - name: Restore official toolchain archives
+        id: toolchain
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/p1-toolchain-cache
+          key: ${{ runner.os }}-godot-4.7.2-cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4-f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011
       - name: Isolated image dependency
         run: |
           python3 -m venv "${{ runner.temp }}/rp3-image-env"
           "${{ runner.temp }}/rp3-image-env/bin/python" -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
           echo "${{ runner.temp }}/rp3-image-env/bin" >> "$GITHUB_PATH"
-      - name: Import, tests, start and Windows export
+      - name: Current regression, selected integration, pixels and player export
         env:
           P1_PREFLIGHT_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          P1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: >-
           python3 tools/p1_product.py
-          --cache-dir "${{ runner.temp }}/p1-product-cache"
+          --cache-dir "${{ runner.temp }}/p1-toolchain-cache"
           --output-dir "${{ runner.temp }}/p1-product-output"
-          --download-timeout-seconds 1200
+          --download-timeout-seconds 180
           --process-timeout-seconds 300
-      - name: Upload complete technical product evidence (manual opt-in)
-        if: github.event_name == 'workflow_dispatch' && inputs.upload_full_evidence
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+          ${{ inputs.integration && '--integration' || '--no-integration' }}
+          ${{ inputs.pilots && '--pilots' || '--no-pilots' }}
+          ${{ inputs.visual && '--visual' || '--no-visual' }}
+      - name: Save verified toolchain archives
+        if: success() && steps.toolchain.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
-          name: picross-p1-technical-evidence-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
+          path: ${{ runner.temp }}/p1-toolchain-cache
+          key: ${{ steps.toolchain.outputs.cache-primary-key }}
       - name: Upload compact player package
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -58,94 +82,12 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           compression-level: 0
-      - name: Upload GP-48 native comparisons
+      - name: Upload bounded current evidence and failure diagnostics
+        if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: gp48-review-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-gp48-review.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload ZV-50 native zoom comparisons
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: zv50-review-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-zv50-review.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload RP-3 review renders
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: rp3-review-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            ${{ runner.temp }}/p1-product-output/renders/rp3-*.png
-            ${{ runner.temp }}/p1-product-output/renders/rp3-renders.json
-            ${{ runner.temp }}/p1-product-output/product-report.json
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload RP-6 compact review package
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: rp6-review-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/rp6-review/
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload isolated ZS-1 Windows study
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: zs1-windows-study-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-zs1-windows-x86_64.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload compact ZS-1 native comparison
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: zs1-review-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-zs1-review.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload separate ZS-1 stroke progression evidence
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: zs1-strokes-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-zs1-strokes.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload separate ZS-2 native comparison
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: zs2-review-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-zs2-review.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload separate ZS-2 stroke progression evidence
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: zs2-strokes-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-zs2-strokes.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload isolated VS-1 Windows study
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: vs1-windows-study-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-vs1-windows-x86_64.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-      - name: Upload compact VS-1 review
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: vs1-review-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-vs1-review.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
+          name: picross-p1-technical-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/p1-product-output/technical/
+          if-no-files-found: warn
+          retention-days: 7
+          compression-level: 6

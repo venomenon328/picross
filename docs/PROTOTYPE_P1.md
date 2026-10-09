@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 09.10.2026 · Spezifikation 0.22 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
+Stand: 09.10.2026 · Spezifikation 0.23 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; aktuelle CI-Policy #63
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -377,6 +377,12 @@ Projektpfad `prototypes/p1/`. Eigene Rasterzeichen-/Hit-Test-Komponente, UI-Baus
 
 ### 7.2 Ausführbarer Befehlsvertrag
 
+Für Auslöser, Umfang, Größen-/Zeitbudgets und Artefakte gilt ab #63 die
+[CI-Policy](CI_POLICY.md). Sie löst die pauschale Wiederholung historischer
+Studien und aller früheren Lieferprüfungen ab; die fachlichen Verträge dieser
+Spezifikation bleiben bestehen. Aktuelle Regression, technische Abnahme und
+historische Nachweise werden getrennt ausgewiesen.
+
 Die folgenden Bestandteile existieren aus #8; #9 erweitert deren tatsächlichen Prüfumfang. `godot` bezeichnet den gebundenen Standard-Editor, unter Windows dessen Konsolenprogramm. Vollständig isolierter Prüfweg in der [Anleitung](../prototypes/p1/README.md).
 
 ```sh
@@ -391,11 +397,16 @@ Der Testrunner führt vereinbarte Logikprüfungen aus, gibt Anzahl/Ergebnis aus 
 
 Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `prototypes/p1/build/windows/` anlegen. Exportpfad relativ zum Godot-Projekt. ZIP mit allen Startdateien, Anleitung und Commitkennung; keine Godot-Installation beim Nutzer voraussetzen. Keine Signaturzertifikate, Releases oder Änderung von Windows-Schutzfunktionen beauftragt.
 
-`tools/p1_product.py` und [Produkt-CI](../.github/workflows/p1-product.yml) liefern Import, Godot-Tests, absichtlichen Negativtest, kontrollierten Start und Windows-Export; unter Windows zusätzlich exportierten Start. #9 aktualisiert Fixture-/Ressourcenprüfung und Nachweise mit der Implementierung. Bestehende Dokument-/Preflight-CI bleibt zusätzlich bestehen. Aktuelle Head-/Basis-/Test-Merge-/Artefaktzuordnung im PR; alte grüne Prüfungen belegen nicht die neuen Funktionen.
+`tools/p1_product.py` und [Produkt-CI](../.github/workflows/p1-product.yml) liefern Import, aktuelle Godot-Tests, kurzen absichtlichen Negativtest, echten Save-Roundtrip, kontrollierten Start und Windows-Export; unter Windows zusätzlich exportierten Start. `--integration`, `--pilots` und `--visual` wählen die nach CI-Policy erforderlichen ergänzenden Wege; bei lokalem Aufruf sind alle standardmäßig aktiv. Der Preflight wird bei Toolchain-/Harnessänderungen und auf manuellen Auftrag ausgeführt. Aktuelle Head-/Basis-/Test-Merge-/Artefaktzuordnung im PR; alte grüne Prüfungen belegen nicht die neuen Funktionen.
 
 ## 8. Akzeptanz und Abnahme
 
 ### 8.1 Automatisiert durch Implementierer / CI
+
+Die folgende Zuordnung beschreibt die fachlichen Prüfeigenschaften. Die
+verbindliche Auswahl pro Änderung, kompakte native Grenzmatrix und abschließende
+Erfolgsprüfung stehen in [CI-Policy #63](CI_POLICY.md). Eine deaktivierte
+optionale Route wird als nicht zutreffend ausgewiesen, nicht als ausgeführt.
 
 | ID | Prüffall und Erfolg |
 | --- | --- |

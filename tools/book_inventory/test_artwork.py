@@ -1,12 +1,9 @@
-"""BP-2 delivery and independent pixel/transform examples."""
+"""Small BP-2 pixel/transform regressions; historical delivery is archived."""
 import unittest
-from book_inventory.artwork import montage, resample, verify
+from book_inventory.artwork import montage, resample
 
 
-class ArtworkDelivery(unittest.TestCase):
-    def test_delivered_artwork(self):
-        verify()
-
+class ArtworkHelpers(unittest.TestCase):
     def test_source_over_keeps_transparent_and_opaque_ui(self):
         bg = (3, 1, 3, bytes([20, 40, 60]*3))
         ui = (3, 1, 4, bytes([200, 100, 0, 0, 200, 100, 0, 255, 200, 100, 0, 128]))

@@ -1,9 +1,8 @@
 name: Puzzle production verification
 
 on:
-  pull_request:
-  push:
-    branches: [main]
+  workflow_call:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -20,8 +19,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
+      - name: Fetch the exact RP5 producer commit for provenance verification
+        run: git fetch --no-tags --depth=1 origin 55f9e0f143bc79a4d5ff81d83d1c901b90f1797c
       - name: Python version
         run: python3 --version
       - name: Isolated image dependency
@@ -30,22 +31,25 @@ jobs:
           "${{ runner.temp }}/rp3-image-env/bin/python" -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
           echo "${{ runner.temp }}/rp3-image-env/bin" >> "$GITHUB_PATH"
       - name: Independent oracles and proof rejection tests
-        run: python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
+        shell: bash
+        run: |
+          mkdir -p artifacts/puzzle-production
+          python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v 2>&1 | tee artifacts/puzzle-production/tests.log
       - name: Isolated reference runs and fresh verification
         env:
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: python3 -m tools.puzzle_production.benchmark --output-dir artifacts/puzzle-production
       - name: Real image import and registered P1 export
         env:
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: python3 -m tools.puzzle_production.rp3_demo --output-dir artifacts/puzzle-production/rp3
       - name: RP-4 frozen corpus reconstruction and independent proof replay
         timeout-minutes: 11
         env:
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: python3 -m tools.puzzle_production.rp4 verify --output-dir artifacts/puzzle-production/rp4
       - name: Upload reports, proofs and measurements
         if: always()
@@ -54,7 +58,7 @@ jobs:
           name: puzzle-production-${{ github.event.pull_request.head.sha || github.sha }}
           path: artifacts/puzzle-production/
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 7
 
   rp5-repair:
     runs-on: ubuntu-24.04
@@ -65,8 +69,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
+      - name: Fetch the exact RP5 producer commit for provenance verification
+        run: git fetch --no-tags --depth=1 origin 55f9e0f143bc79a4d5ff81d83d1c901b90f1797c
       - name: Isolated image dependency
         run: |
           python3 -m venv "${{ runner.temp }}/rp5-image-env"
@@ -76,7 +82,7 @@ jobs:
         timeout-minutes: 6
         env:
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: python3 -m tools.puzzle_production.rp5 verify --output-dir artifacts/rp5
       - name: Upload commit-bound repair comparison
         if: always()
@@ -85,7 +91,7 @@ jobs:
           name: rp5-repair-${{ github.event.pull_request.head.sha || github.sha }}
           path: artifacts/rp5/
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 7
 
   rp4-windows:
     runs-on: windows-2022
@@ -102,25 +108,13 @@ jobs:
       GIT_CONFIG_KEY_0: core.autocrlf
       GIT_CONFIG_VALUE_0: 'false'
       RP4_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-      RP4_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+      RP4_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
     steps:
       - name: Checkout current integration
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           path: current
           persist-credentials: false
-      - name: Checkout only the unchanged R1 illustration-test inputs
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          ref: 4b794bb4ba109f2880876972e5e39e002b661478
-          path: r1
-          persist-credentials: false
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /tests/puzzle_production/test_rp4.py
-            /tools/puzzle_production/
-            /examples/rp4/create_illustrations.py
-            /examples/rp4/sources/illustration-*.png
       - name: Python 3.12.10 x64
         # Official actions/setup-python v6, checked against its Git tag and action.yml.
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
@@ -137,11 +131,6 @@ jobs:
           & $rp4Python -I -m pip --isolated install --index-url https://pypi.org/simple --only-binary=:all: --no-cache-dir --disable-pip-version-check --report artifacts/rp4-windows/pillow-install.json -r tools/puzzle_production/requirements-image.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           "RP4_PYTHON=$rp4Python" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-      - name: Reproduce R1 hash failure with identical decoded images
-        timeout-minutes: 2
-        run: |
-          & $env:RP4_PYTHON -I tools/rp4_windows_check.py --phase baseline --repo "$env:GITHUB_WORKSPACE/r1" --output-dir artifacts/rp4-windows
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Require all current RP-4 regressions to pass
         timeout-minutes: 3
         run: |
@@ -154,4 +143,4 @@ jobs:
           name: rp4-windows-${{ github.event.pull_request.head.sha || github.sha }}
           path: current/artifacts/rp4-windows/
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 7
