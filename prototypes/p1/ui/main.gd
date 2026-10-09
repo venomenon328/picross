@@ -815,7 +815,7 @@ func _layout_book() -> void:
 	_place(palette_row,Rect2(palette_pos,Vector2(110,110)*u))
 	for i: int in range(palette_row.get_child_count()):
 		_place(palette_row.get_child(i),Rect2(Vector2(i%2,i/2)*54*u,Vector2.ONE*hit))
-	_place(zoom_label,Rect2(mini_position+Vector2(0,mini_extent+188*u),Vector2(220,52)*u))
+	_place(zoom_label,Rect2(mini_position+Vector2(0,mini_extent+188*u),Vector2(180,52)*u))
 	zoom_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_place(tool_label,Rect2(mini_position+Vector2(0,mini_extent+244*u),Vector2(200,24)*u))
 	var tools_origin: Vector2 = o+Vector2(left,bottom)
@@ -830,7 +830,8 @@ func _layout_book() -> void:
 		_place(actions[["help","menu","nav-information"][i]],Rect2(o+Vector2(nav_x-(2-i)*58*u,h/30),Vector2.ONE*hit))
 	_place(album_button,Rect2(o+Vector2(w/320,h*7/72),Vector2.ONE*hit))
 	_place(title,Rect2(o+Vector2(w*0.043,h*0.039),Vector2(w*0.6,45*u)))
-	_place(stress_label,Rect2(o+Vector2(rail+12*u,20*u),Vector2(224,52)*u))
+	stress_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_place(stress_label,Rect2(mini_position+Vector2(0,mini_extent+270*u),Vector2(180,64)*u))
 	_place(album,Rect2(o+Vector2(90,130),Vector2(w-180,h-200)))
 	for choice: Button in choices:
 		choice.custom_minimum_size.y = 44 * ui_scale
