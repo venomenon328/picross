@@ -1,7 +1,9 @@
 # VS-1 · native Vergleichsprobe
 
-Dies ist eine Untersuchung, keine fertige Größenentscheidung. VS-M01 und VS-D01
-sind offen. Ein negatives Komforturteil ist ein gültiges Studienergebnis.
+Die Größenstrategie [VS-D01 ist bestätigt](VS1_DECISION.md); die reguläre
+Produktintegration bleibt separat. Diese Anleitung gilt für die gezielte GF-M01-Probe
+vor GF1-Merge. Der frühere persönliche VS-M01-Bericht bleibt unvollständig.
+Ein negatives Komforturteil ist ein gültiges Ergebnis.
 
 Windows-ZIP vollständig entpacken. `picross-vs1.exe` starten; die benachbarte
 `picross-vs1.console.exe` ist der Konsolenstart. Keine Godot-Installation nötig.
@@ -10,9 +12,10 @@ Studienexport. Beide Programme verwenden denselben getrennten Studienstand.
 
 Die zehn neutral benannten Blätter stehen über das Buchsymbol links zur Auswahl.
 Format bedeutet Spalten × Zeilen. Eigene Einträge werden lokal fortgesetzt.
-Die aktive Lieferung VS-E1-R2 bietet ausschließlich G/V für denselben Arbeitsstand:
+Die aktive Lieferung VS-GF1 bietet ausschließlich G/V für denselben Arbeitsstand:
 
-- G: ganzes Raster; lange Hinweise einzeln mit MMB verschieben. Mindestens fünf
+- G: ganzes Raster; freie Breite zeigt zusätzliche Zeilenhinweise ohne kleinere
+  Zellen. Nur noch verborgene lange Hinweise einzeln mit MMB verschieben. Mindestens fünf
   zusammenhängende vollständige Zahlen bleiben sichtbar, bei kürzeren Folgen alle.
 - V: Raster und alle Hinweise. Beide Modi begrenzen den Zoom auf Rastervollsicht
   einschließlich des vollständigen äußeren Rahmens.
@@ -44,10 +47,16 @@ aller zehn Rätsel sind dafür nicht nötig:
    1920 × 1080 großer Fensterinhalt. Fehlende Konfigurationen als ungeprüft belassen.
 2. Mindestfall VS01/VS02 (30 × 30): G/V durchgehen. Einzelzellen an vier Ecken,
    eine gerade Linie, Umwandeln, Neutralisieren, Zurückziehen, Escape, Undo/Redo.
-3. Hauptziel VS07 und VS08 (40 × 40): leer und mit Vergleichsstand jeweils etwa
+3. GF1-Hauptprobe VS08 (40 × 40) bei 1920×1080-Client/UI100 und UI125: in G
+   müssen alle 13 Zeilenhinweise ohne Auslassungsmarker oder unnötigen MMB-Drag
+   sichtbar sein. Gegenüber der PR-58-Lieferung bleiben Zellen und Schrift gleich.
+   VS07 und VS08 leer und mit Vergleichsstand jeweils etwa
    drei Minuten denselben kleinen Abschnitt bearbeiten. Lange Hinweise sowie
    normale, abgeschwächte und durchgestrichene Ziffern beurteilen.
-4. Breite Alternative VS09/VS10 (50 × 30): denselben Abschnitt in G/V probieren.
+4. VS04 und VS10 mit langen Zeilen: schmal→breit→schmal, G→V→G und Neustart
+   erproben. Zuvor angefasste Zeilen sollen ihre Leseposition nach erneutem
+   Verengen behalten; nicht verschiebbare vollständige Zeilen brauchen keinen Drag.
+   Breite Alternative VS09/VS10 (50 × 30): denselben Abschnitt in G/V probieren.
    VS03/VS04 (40 × 30) und VS05/VS06 (30 × 40) ergänzend vergleichen. Die beiden
    Hochkantfälle sind kontrollierte Transponate mit unnatürlicher Motivorientierung.
 5. UI 125 %, Fenstergröße und angebotene Zoomstufen prüfen. Kleine und gescheiterte
@@ -62,7 +71,6 @@ Fehleingaben, nötige Vergrößerung/Verschiebung und subjektiven Komfort.
 `owner-protocol.json` ist absichtlich leer. Nur tatsächliche Beobachtungen
 eintragen; technische Automatikdaten sind keine Eigentümerprobe.
 
-VS-D01 folgt erst nach Auswertung: Hauptziel 40 × 40, möglicher Rechteckkompromiss,
-mindestens 30 × 30, Auflösung und Hinweisbudgets. Es gibt keine Zusage für 50 × 40
-oder einen beliebigen anderen Katalog. Keine reguläre Produktumstellung durch
-das Ausprobieren dieser Studie.
+VS-D01 wird nicht erneut entschieden. GF-M01 bewertet die konkrete neue
+Hinweisaufteilung; technische Automatikdaten füllen das persönliche Protokoll
+nicht aus. Keine reguläre Produktumstellung durch diese Probe.

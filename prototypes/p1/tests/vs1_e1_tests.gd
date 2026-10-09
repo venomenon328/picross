@@ -40,12 +40,12 @@ func run() -> void:
 				board.mode = "G"
 				board.fit_all()
 				print("VS1_E1_RESERVE ui=",ui," max=",n," transpose=",transposed," actual=",board.reserve_slots," ceilings=",board.raw_fit)
-				var actual: int = board.reserve_slots.y if transposed else board.reserve_slots.x
+				var actual: int = board.minimum_slots.y if transposed else board.minimum_slots.x
 				check(actual == n if n <= 7 else actual >= 7 and actual < n, "5/6/7 full; long reserve passes actual marker/movement need")
 				check((board.reserve_slots.x if transposed else board.reserve_slots.y) == 1, "long line leaves other axis actual short")
 				# Six pixels outer gap plus the actual two-pixel frame stroke.
-				var vertical: float = (board.size.y-board.book_inset.y-8)/board.session.player.height
-				var horizontal: float = (board.size.x-board.book_inset.x-8)/board.session.player.width
+				var vertical: float = (board.size.y-board.minimum_slots.y*18*ui-14)/board.session.player.height
+				var horizontal: float = (board.size.x-board.minimum_slots.x*26*ui-14)/board.session.player.width
 				check(absf(board.raw_fit-minf(vertical,horizontal)) < 0.001, "both axis ceilings; width/height limiting axis")
 				if transposed and not previous.is_empty():
 					check(board.raw_fit <= previous[-1] + 0.001, "larger actual top reserve cannot enlarge fit")

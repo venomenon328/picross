@@ -1,12 +1,15 @@
 # VS-1 · Vertrag der Vollsichtstudie
 
-Aktiver Nacharbeitsvertrag VS-E1-R2 aus [#57 §11](https://github.com/venomenon328/picross/issues/57).
-VS-VB1 und die ursprüngliche Produktionsvorbereitung bleiben historisch. Technische Draft-Lieferung; VS-M01, unabhängiges Review und VS-D01 bleiben
-offen. Keine reguläre Größenstrategie, Merge- oder Releasefreigabe.
+Aktiver Nacharbeitsvertrag VS-GF1 aus [#59](https://github.com/venomenon328/picross/issues/59),
+aufbauend auf dem integrierten VS-E1-R2 aus [#57](https://github.com/venomenon328/picross/issues/57).
+[VS-D01 ist bestätigt](VS1_DECISION.md). Die reguläre Produktintegration bleibt separat;
+der frühere persönliche VS-M01-Bericht bleibt unvollständig. Unabhängiges Review und
+die gezielte Eigentümerprobe GF-M01 sind vor GF1-Merge offen. Keine Merge- oder Releasefreigabe.
 
 ## Gebundene Basis und Grenzen
 
-Ausgangsbasis ist `main@985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f`.
+GF1-Ausgangsbasis ist `main@c19b3547eef81fbb7c3c5389834f7cc896c86069` nach Merge von PR #58.
+Die unveränderte Zeichenbasis stammt aus `985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f`.
 Alle Modi verwenden unverändert die Zeichenkomponenten aus `study/`: Chalkboard
 mit Faktor 1,35, Zeilenslots 26 × UI, Spaltenslots 18 × UI, Stift/X und gleichzeitige
 140/80-ms-Effekte. Spielbar sind ausschließlich G/V ohne Hand oder Rasterpanning.
@@ -87,8 +90,20 @@ ermittelt. Alle Sichtbarkeitsübergänge und die offenen Intervalle dazwischen w
 geprüft, für sämtliche angebotenen Schriftpixelgrößen. Mindestens min(5,n)
 zusammenhängende ganze Zahlen bleiben sichtbar. Sechs/sieben passen gegebenenfalls
 vollständig; mehrstellige Zahlen zählen als eine. Leere Linien behalten „–“.
-V reserviert den vollständigen tatsächlichen Bedarf. Kein Spielfortschritt und
-kein kleinerer Benutzerzoom verändert diese Reservierung.
+V reserviert den vollständigen tatsächlichen Bedarf. Spielfortschritt verändert
+weder Mindestreserve noch sichtbare Kapazität. Die Mindestreserve bleibt auch bei
+kleinerem Benutzerzoom gleich.
+
+GF1 berechnet zuerst den bisherigen Fit aus beiden Mindestreserven, Controls und
+vollständigem 2-px-Rahmen und begrenzt den gewünschten Zoom. Erst danach erhält G
+aus dem horizontalen Restbudget zusätzliche ganze 26-×-UI-Zeilenslots, höchstens
+bis zum wirklichen Zeilenmaximum. Jede angebotene Kapazität erfüllt die vollständige
+Glyphen-/Marker-/Statusstrichprüfung; ungeeignete Kapazitäten werden übersprungen.
+Raster, Spaltenhinweise und Treffergeometrie rücken gemeinsam nach rechts. Zellgröße,
+Fit, Schrift, obere Reserve und V werden dadurch nicht verkleinert oder optimiert.
+Vollständig sichtbare Zeilen haben keine Auslassungsmarker und keinen MMB-Drag.
+Ihre gespeicherten `grid_end`-/`outer_start`-/`middle`-Anker bleiben auch bei vorübergehender
+Vollsicht erhalten und werden bei erneuter Verengung rekonstruiert. Schema und Root bleiben gleich.
 
 Moduswahl liegt neben den acht Werkzeugen unten; die obere Boardgrenze folgt dem
 realen Titel. Die Miniatur und Texte liegen in einer eigenen Seitenleiste mit
@@ -105,7 +120,15 @@ Unterhalb des zeichnungsfähigen Stiftinneren (>4 px) wird kein Raster vorgegebe
 „PASST NICHT“. Fenster vergrößern/UI verkleinern; kein R-Ausweg und kein positiver
 Komfortnachweis. Fehlfälle bleiben vollständig in der Matrix.
 
-## VS-P3 / VS-E1-R2: Messung und Lieferung
+## VS-P3 / VS-GF1: Messung und Lieferung
+
+Der eigenständige [GF1-Plan](../examples/vs1/gf1-plan.json) wurde vor den Vergleichen
+versioniert. Er bindet vier native Vorher-/Nachherpaare an die GF1-Basis: VS08 bei
+1920×1080/UI100 und UI125, VS04/UI125 und VS09/UI100. Die ersten beiden zeigen alle
+13 Zeilenhinweise bei unverändertem Fit 18,77 beziehungsweise 17,06 px. Zusätzlich
+werden Null-/Teilbudgets, ganze Slotgrenzen und jede zusätzliche Kapazität geprüft.
+Die unten beschriebene E1-Folge ist abgeschlossen und wird nicht um eine dritte
+Korrektur erweitert. Produktion, historische Pläne und Manifestbytes bleiben gleich.
 
 Die neue Hauptmatrix enthält 80 G/V-Zeilen bei logischen Clients 1920 × 1080 und
 1280 × 720, UI 100/125 %, sowie 20 größere Kontrollen auf 2560 × 1440. Native

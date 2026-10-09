@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "package": "VS-GF1 / #59",
+  "decision": "VS-D01 CONFIRMED; docs/VS1_DECISION.md",
+  "GF_M01": "OPEN; not performed",
+  "VS_M01": "Incomplete personal protocol; prior integration approved",
+  "source_commit": null,
+  "artifact_sha256": null,
+  "windows_version": null,
+  "screen_resolution": null,
+  "windows_scale": null,
+  "normal_client": null,
+  "maximized_client": null,
+  "mouse": null,
+  "observations": []
+}

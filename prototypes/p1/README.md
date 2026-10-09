@@ -311,13 +311,16 @@ ZS1-E3: Chalkboard/Stift/Timing gewählt; die Studie startet mit Chalkboard und
 26-px-Zeilenhinweisslots bei UI 100 % (Spaltenslots unverändert). Die kombinierte
 Sichtprüfung erfolgt nach Merge auf main; #53 ist nicht integriert.
 
-## VS-E1-R2 · isolierte Vollsichtstudie (#57)
+## VS-GF1 · isolierte Vollsichtstudie (#57/#59)
 
 Das separate VS-1-ZIP bietet G/V ohne R, Hand oder Rasterpanning. Hinweise werden
-nach tatsächlichem Bedarf je Achse reserviert; G zeigt auch während des MMB-Drags
+nach tatsächlichem Mindestbedarf je Achse reserviert; zusätzliche freie Breite
+geht anschließend an ganze Zeilenhinweisslots ohne kleineren Fit. G zeigt auch während des MMB-Drags
 mindestens fünf zusammenhängende ganze Zahlen, bei kurzen Folgen alle. Einpassen
 erreicht die flächenabhängige Raster-Vollsichtgrenze. Alte R-Ansichten werden auf G
 normalisiert; Studienstand bleibt unter `user://vs1/revision-1` getrennt.
 [Vertrag](../../docs/VS1_STUDY.md), [Prüfzuordnung](../../docs/VS1_VERIFICATION.md)
 und [Eigentümerprobe](../../docs/VS1_OWNER_TRIAL.md). VS-VB1/Erstproduktion und alte
-R-Artefakte sind historisch; VS-M01, unabhängiges Review und VS-D01 bleiben offen.
+R-Artefakte und die begrenzte E1-Korrekturfolge sind historisch. VS-D01 ist bestätigt,
+reguläre Integration bleibt separat; der persönliche VS-M01-Bericht ist unvollständig.
+Unabhängiges Review und GF-M01 bleiben vor GF1-Merge offen.

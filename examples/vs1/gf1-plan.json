@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "package": "VS-GF1 / #59",
+  "baseline_commit": "c19b3547eef81fbb7c3c5389834f7cc896c86069",
+  "decision": "VS-D01 confirmed; docs/VS1_DECISION.md",
+  "cases": ["VS01", "VS02", "VS03", "VS04", "VS05", "VS06", "VS07", "VS08", "VS09", "VS10"],
+  "production": "none; historical plans, manifest and production bytes unchanged",
+  "matrix": {"main_rows": 80, "larger_controls": 20, "clients": [[1280, 720], [1920, 1080], [2560, 1440]], "ui_scales": [1.0, 1.25], "modes": ["G", "V"]},
+  "comparisons": [
+    {"id": "VS08", "client": [1920, 1080], "ui_scale": 1.0, "mode": "G"},
+    {"id": "VS08", "client": [1920, 1080], "ui_scale": 1.25, "mode": "G"},
+    {"id": "VS04", "client": [1920, 1080], "ui_scale": 1.25, "mode": "G"},
+    {"id": "VS09", "client": [1920, 1080], "ui_scale": 1.0, "mode": "G"}
+  ],
+  "diagnostics": {
+    "slot_threshold_deltas_px": [-0.01, 0.0, 0.01],
+    "capacities": "every newly offered row capacity; real colored cases and E13-E18",
+    "drag": "all glyph/marker boundaries and open intervals; endpoints, middle, snap, all statuses",
+    "continuation": "grid_end, outer_start, middle; narrow-wide-narrow, G-V-G, sheets, fresh processes, legacy baseline writer"
+  },
+  "acceptance": {
+    "GF-A01": "VS08 13 complete row numbers at unchanged 18.77/17.06 fit, font and slots",
+    "GF-A02": "partial/no budget, VS04/VS10/VS09/short mono, three slot threshold sides, demand cap",
+    "GF-A03": "complete five-number contract for actual added capacities, indices, colors and three states",
+    "GF-A04": "real mouse routes and shared shifted geometry, lifecycle and all four frame pixel edges",
+    "GF-A05": "semantic reads preserved across complete visibility, saves and prior-delivery reader/writer isolation",
+    "GF-A06": "100 current rows, restricted cases kept, four targeted native before/after pairs",
+    "GF-A07": "separate player/review ZIPs with hashes and six CI jobs; downloaded EXE/PCK Windows probes",
+    "GF-A08": "consistent versioned decision and current reports; no invented owner trial"
+  },
+  "remaining_merge_gates": ["independent technical/visual review", "GF-M01 owner trial", "explicit or suitable conditional merge approval"],
+  "limits": "One finite comparison set and targeted regression corrections only; no E1 correction-3, corpus/font/artwork production or vertical optimization. Failed checks remain reported and corrections are documented."
+}

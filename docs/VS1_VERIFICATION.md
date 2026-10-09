@@ -2,8 +2,9 @@
 
 Status: Implementierung und technische Prüfstrecke für die Draft-Lieferung vorhanden.
 Maßgebliche Head-/Run-/Artefaktbindung
-steht im zugehörigen Draft-PR zu [#57](https://github.com/venomenon328/picross/issues/57)
-und in `vs1-report.json`. VS-M01 und VS-D01 bleiben offen; keine Behauptung
+steht im neuen Draft-PR zu [#59](https://github.com/venomenon328/picross/issues/59)
+und in `vs1-report.json`. [VS-D01 ist bestätigt](VS1_DECISION.md); der frühere persönliche
+VS-M01-Bericht ist unvollständig. GF-M01 und unabhängiges Review bleiben offen; keine Behauptung
 unabhängiger Abnahme, Mergefähigkeit oder Releasefähigkeit.
 
 ## Prüfzuordnung
@@ -26,7 +27,25 @@ separaten Export tatsächlich auf. Der Linux-product-Job belegt allein keinen
 Windows-EXE-Start. Die implementierende Windows-Prüfung muss das heruntergeladene
 ZIP verwenden und dessen Hashes sowie normalen/maximierten Client protokollieren.
 
-## Aktiver Nachweisvertrag VS-E1-R2
+## Aktiver Nachweisvertrag VS-GF1
+
+| Akzeptanz | Gebundener Anschluss |
+| --- | --- |
+| GF-A01 | `vs1_gf1_capture.gd`, vier native Bildpaare gegen `c19b3547`; VS08 G/1920×1080/UI100 und UI125: alle 13 Zeilenhinweise, unveränderte 18,77/17,06 px und Schrift |
+| GF-A02 | `vs1_gf1_tests.gd`: Null-/Teilbudget und jeder ganze Slotübergang −0,01/0/+0,01 px, Bedarfskappe, unabhängige obere Reserve; VS04/08/09/10 und Langdiagnose |
+| GF-A03 | Mindestprüfung plus jede zusätzlich angebotene Kapazität; alle Glyphen-/Markergrenzen und offenen Intervalle, mindestens fünf vollständige zusammenhängende Originalzahlen/Farben, drei Hinweiszustände |
+| GF-A04 | `vs1_tests.gd` und `vs1_window.gd`: echte MouseEvents an vier Ecken, Linien/Abbruch/Undo/Redo, Rad/Werkzeuge, UI/Resize/G/V/Blattwechsel; `frame_pixels` prüft alle vier gezeichneten Rahmenkanten |
+| GF-A05 | Schmal→Breit→Schmal und G→V→G für alle drei Anker; `vs1_gf1_roundtrip.gd`: frische Schreib-/Leseprozesse, Speicherung bei vollständiger Sicht, exakt gleiche Zellen/History/Farbe/Anker; Windows-Probe zusätzlich alter PR-58-Export→neuer Export |
+| GF-A06 | Weiterhin vollständige 80+20-Zeilen-Matrix einschließlich negativer Fälle, achsweise Gesamt-/sichtbare/versteckte Zahlen, Minimum/Kapazität, Raster/Rahmen/Hinweisrechtecke, horizontaler Verbrauch und tatsächliche Fitachse |
+| GF-A07 | Neues schlankes Spieler-ZIP und Review-ZIP mit GF1-Plan/Bildpaaren/Hashes; `vs1_windows_probe.py` lädt die CI-Artefakte herunter, startet beide EXEs nativ und prüft den ausgelieferten PCK mit Eingabe, Fit, Hinweisen und Neustarts |
+| GF-A08 | Bestätigte Strategie in `VS1_DECISION.md` und den vier Produktquellen; reguläre Integration separat, persönlicher VS-M01-Bericht unvollständig, GF-M01/unabhängiges Review vor Merge offen |
+
+`gf1-plan.json` ist eigenständig und wurde vor den GF1-Vergleichen gebunden. Die
+folgenden E1-Nachweise bleiben Regressionen; E1-initial/correction-1/correction-2
+sind abgeschlossen. Die GF1-Bildpaarprüfung verwirft geänderten Fit, Schrift,
+Modellstand, obere Reserve und überschrittenes Horizontalbudget.
+
+## Integrierter Nachweisvertrag VS-E1-R2
 
 | Anforderung | Gebundener Anschluss |
 | --- | --- |
@@ -49,7 +68,7 @@ SubViewport-Matrix. Neue Matrix, Bilder und Logs sind im separaten Review-ZIP.
 minimum_surplus misst je Folge die kleinste Differenz der tatsächlich gezeichneten
 Tokens zu min(5,n). Negative Fälle werden nicht aus der Gesamtmatrix entfernt.
 Der aktuelle Lieferhead und die neuen Download-/Windowsbindungen stehen im Draft-PR.
-Selbstreview ist Implementierungsprüfung; unabhängiges Review und VS-M01 bleiben offen.
+Selbstreview ist Implementierungsprüfung; unabhängiges Review und GF-M01 bleiben offen.
 
 Die historischen Produktions-/Manifestbindungen bleiben unverändert und prüfen die
 bytegleiche Kopie [plan-vb1.json](../examples/vs1/plan-vb1.json). Der aktuelle Plan
@@ -62,7 +81,7 @@ Godot-Editor/Cache. Sie startet beide entpackten EXEs direkt und führt native
 Bearbeitungs-/Neustart-/Legacy-/Fensterprüfungen gegen deren eingebetteten PCK aus.
 
 
-Aktive Windows-Messung E1-correction-2, maximaler Fit in V bei 1920 × 1080.
+Integrierte Windows-Messung E1-correction-2, maximaler Fit in V bei 1920 × 1080.
 Keine Komfortabnahme; G und sämtliche Fehlfälle bleiben in der vollständigen Matrix.
 
 | Fall | UI 100 % | UI 125 % |
@@ -118,7 +137,7 @@ Passform erwartungsgemäß; daraus folgt keine neue Mindestauflösung.
 Versteckte Hinweisteile bleiben ausdrücklich als Navigationserfordernis
 protokolliert. G ist keine vollständige Rätselblattsicht und beweist V nicht.
 
-## Historisches Hinweisbudget und offene Entscheidung
+## Historisches Hinweisbudget und damalige offene Entscheidung
 
 Für die konkret gelieferte Aufteilung beträgt bei 1080p/UI100 die nutzbare Höhe
 vor oberen Hinweisen 824 px. Ein 40×40-Raster mit 18 px lässt rechnerisch etwa
@@ -136,9 +155,11 @@ sind nicht geprüft und keine stillen Voraussetzungen dieser Empfehlung.
 Nicht untersucht: allgemeine Katalogrepräsentativität, 50×40, Langzeitkomfort,
 physische 720p-/1080p-Displays mit allen DPI-Werten. SubViewport-Messungen ersetzen
 diese Proben nicht. Motivation/Motivqualität der Transponate bleibt eingeschränkt.
-Das leere [Eigentümerprotokoll](../examples/vs1/owner-protocol.json) bleibt maßgeblich:
-VS-M01 durch tatsächliche Probe grundsätzlich vor Studienabschluss/Merge;
-VS-D01 durch Eigentümerentscheidung vor regulärer Produktumstellung.
+Die damaligen offenen Gates sind historisch. VS-D01 ist inzwischen bestätigt und
+die frühere Integration ausdrücklich freigegeben; der persönliche VS-M01-Bericht
+bleibt unvollständig. Für GF1 gilt das neue leere
+[Eigentümerprotokoll](../examples/vs1/gf1-owner-protocol.json): gezielte GF-M01-Probe
+vor GF1-Merge. Die Strategieentscheidung wird dabei nicht erneut geöffnet.
 
 Vor Merge außerdem: getrennter Selbstreview, unabhängiges technisches/visuelles
 Review des konkreten Heads und passende ausdrückliche Mergefreigabe.

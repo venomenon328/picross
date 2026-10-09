@@ -56,7 +56,7 @@ func _ready() -> void:
 		settings_panel.add_child(_text_button("Ansicht %s öffnen" % mode, func() -> void: choose_mode(mode); open_puzzle()))
 	settings_panel.add_child(_text_button("Künstlichen Vergleichsstand laden", _ask_sample))
 	settings_panel.add_child(_text_button("Studienblatt leeren", _ask_reset))
-	var info: Label = label("VS-E1: G hält das Raster sichtbar; lange Hinweise bleiben mit mindestens fünf Zahlen verschiebbar. V reserviert alle Hinweise. Kleine oder kollidierende Zahlen sind kein Komfortnachweis.\nVergleichsstand: künstliche eigene Eingaben, keine Lösungshilfe. Zurücksetzen betrifft nur dieses Studienblatt. Normale P1-Spielstände bleiben getrennt.", 16)
+	var info: Label = label("G hält das Raster sichtbar und nutzt freie Breite für Zeilenhinweise. Verborgene lange Hinweise bleiben mit mindestens fünf Zahlen verschiebbar. V reserviert alle Hinweise. Kleine oder kollidierende Zahlen sind kein Komfortnachweis.\nVergleichsstand: künstliche eigene Eingaben, keine Lösungshilfe. Zurücksetzen betrifft nur dieses Studienblatt. Normale P1-Spielstände bleiben getrennt.", 16)
 	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	settings_panel.add_child(info)
 	actions["hand"].hide()
