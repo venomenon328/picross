@@ -37,10 +37,11 @@ def demonstrate(root: Path, output: Path) -> dict:
         if committed_export[key] != load_json(output / "shipped-p1-export/manifest.json")[key]:
             raise InvalidInput(f"Committed export {key} differs from fresh verification")
     checkout = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
-    base = subprocess.check_output(["git", "merge-base", "HEAD", "origin/main"], cwd=root, text=True).strip()
+    base = os.environ.get("RP1_BASE_COMMIT") or subprocess.check_output(
+        ["git", "merge-base", "HEAD", "origin/main"], cwd=root, text=True).strip()
     report = {"format": "picross-rp3-demonstration-v1", "accepted": True,
               "source_commit": os.environ.get("RP1_SOURCE_HEAD") or os.environ.get("P1_PREFLIGHT_SOURCE_COMMIT") or checkout,
-              "tested_checkout_commit": checkout, "base_commit": os.environ.get("RP1_BASE_COMMIT") or base,
+              "tested_checkout_commit": checkout, "base_commit": base,
               "source_tree_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=root, text=True).strip()),
               "github_run_id": os.environ.get("GITHUB_RUN_ID"), "candidate_id": shipped["id"], "technical": check,
               "regenerated_candidate_id": regenerated["id"], "producer_versions": shipped["versions"],
