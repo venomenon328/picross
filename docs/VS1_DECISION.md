@@ -1,5 +1,17 @@
 # VS-D01 · bestätigte Vollsichtstrategie
 
+## Aktueller regulärer Stand · VS2 (#61)
+
+VS2 überträgt die entschiedene Strategie samt GF1 auf den regulären Pfad.
+Historische VS-M01-Langzeitbefunde bleiben persönlich unvollständig. Die neue
+Integration ist keine rückwirkende Abnahme alter oder neuer Komfortfälle.
+
+Bedien-/Speichervertrag: [P1](PROTOTYPE_P1.md). Aktuelle
+[Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md).
+VS2-M01, unabhängiges technisches/visuelles Review und passende Mergefreigabe
+bleiben vor Merge offen. Historische Nachweise bleiben commitgebunden.
+
+
 Stand: 09.10.2026 · Entscheidung 1.0 · ausdrücklich angenommen durch den Eigentümer
 
 Maßgebliche Entscheidung: [#57 §1](https://github.com/venomenon328/picross/issues/57)
@@ -56,13 +68,13 @@ Fit zuerst, zusätzliche sichere Zeilenkapazität anschließend; unveränderter
 Lesemaßstab, obere Reserve, vollständiger Rahmen und semantische Fortsetzung.
 Der eigene [Prüfplan](../examples/vs1/gf1-plan.json) und die
 [Prüfzuordnung](VS1_VERIFICATION.md) binden die technische Lieferung.
-Unabhängiges Review des neuen Heads, GF-M01-Eigentümerprobe am neuen Paket und
-geeignete Mergefreigabe bleiben gesonderte Gates. Kein Merge oder Release im Auftrag.
-
-Die reguläre P1-Hauptszene, neun Inhalte, bisherige Pan-/Miniaturnavigation und
-720p-Fallback bleiben der aktuelle Iststand. Die reguläre Vollsichtintegration
-ist ein separater Folgeauftrag. Bestehende große Daten, Proofs und Testfälle
-werden weder entfernt noch umgedeutet. #53/PR #56 bleibt separat und ungemergt.
+GF-M01 und das Review von #59 sind nach PR #60 abgeschlossen; maßgeblich ist
+[die abschließende Klarstellung](https://github.com/venomenon328/picross/pull/60#issuecomment-6076039228).
+#53 einschließlich N01–N03 ist über PR #56 integriert. VS2/#61 überträgt diese
+Vollsicht auf die reguläre Hauptszene. Die neun Inhalte und der 720p-Fallback
+bleiben erhalten; manuelle Raster-/Miniaturnavigation entfällt. Neue VS2-Gates
+stehen in der oben verlinkten Prüfzuordnung. Historische Freigaben gelten nur
+für ihren jeweiligen Head.
 
 ## Herkunft und historische Daten
 

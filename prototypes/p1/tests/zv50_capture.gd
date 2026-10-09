@@ -42,10 +42,11 @@ func run() -> void:
 		install_demo(spec[0])
 		app.open_puzzle()
 		app.board.working_size()
-		while app.board.view.cell_size < float(spec[4]) - 0.01:
-			app.board.zoom(1, app.board.view.viewport.get_center())
-		while app.board.view.cell_size > float(spec[4]) + 0.01:
-			app.board.zoom(-1, app.board.view.viewport.get_center())
+		for zoom_attempt: int in range(25):
+			var before: float = app.board.view.cell_size
+			if absf(before-float(spec[4])) < 0.01: break
+			app.board.zoom(1 if before < float(spec[4]) else -1,app.board.view.viewport.get_center())
+			if is_equal_approx(before,app.board.view.cell_size): break
 		app.board.view.center = Vector2(app.session.player.width, app.session.player.height) / 2.0
 		app.board.view.reframe()
 		await shot(spec[5])
@@ -102,3 +103,4 @@ func shot(name: String) -> void:
 		"tools_top": app.actions.fill.global_position.y,
 		"mini": rect_data(app.mini.get_global_rect())
 	})
+	if app.board.has_method("measurements"): captures.back().full_view = app.board.measurements()

@@ -299,6 +299,7 @@ func x_crosses_view(app: Main, cell: Vector2i) -> bool:
 	return crosses and visible_length >= 6.0
 
 func capture_x_edges(app: Main) -> void:
+	var regular: Board = use_renderer_component(app)
 	for pitch: float in [24.0, 36.0]:
 		app.board.view.zoom_to(pitch, app.board.view.viewport.get_center())
 		for edge: String in ["top", "bottom", "left", "right", "corner"]:
@@ -330,6 +331,8 @@ func capture_x_edges(app: Main) -> void:
 			app.session.gesture.begin(app.session.player, x_test_cell, 0)
 			await snapshot(app, "x-clip-%d-%s-preview" % [roundi(pitch), edge])
 			app.session.gesture.cancel()
+
+	restore_regular_board(app,regular)
 
 func region_difference(before: Image, after: Image, region: Rect2i) -> int:
 	var differences: int = 0
@@ -482,6 +485,7 @@ func capture_owner_drop(app: Main) -> void:
 	app.select_puzzle(1)
 	await process_frame
 	await process_frame
+	var regular: Board = use_renderer_component(app)
 	app.board._layout()
 	app.board.view.zoom_to(36.0, app.board.view.viewport.get_center())
 	# Retain the historical six-slot/24px repro alongside native Z2 captures.
@@ -524,7 +528,7 @@ func capture_owner_drop(app: Main) -> void:
 		quit(5)
 		return
 	await capture_monotone_route(app, "column", long_column)
-	app.board.book_layout = true
+	restore_regular_board(app,regular)
 	app._layout_book()
 
 func capture_monotone_route(app: Main, axis: String, index: int) -> void:
@@ -812,3 +816,29 @@ func capture_h1(app: Main) -> void:
 		await snapshot(app, "f%d-reveal" % (index + 1))
 		app.show_album()
 		await snapshot(app, "f%d-earned-album" % (index + 1))
+
+
+func use_renderer_component(app: Main) -> Board:
+	# Explicit developer pixel oracle for historical clipped X/snap geometry.
+	# The regular route cannot offer this geometry; VS2 tests assert the opposite.
+	var regular: Board = app.board
+	var component = load("res://ui/chalkboard_board.gd").new()
+	component.session = app.session
+	component.size = regular.size
+	component.position = regular.position
+	component.ui_scale = regular.ui_scale
+	regular.hide()
+	app.work.add_child(component)
+	app.board = component
+	component.edited.connect(app.refresh)
+	return regular
+
+func restore_regular_board(app: Main, regular: Board) -> void:
+	var component: Board = app.board
+	component.get_parent().remove_child(component)
+	component.queue_free()
+	app.board = regular
+	regular.session = app.session
+	regular.layout_key = ""
+	regular._layout()
+	regular.show()

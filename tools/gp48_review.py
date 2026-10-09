@@ -37,6 +37,8 @@ def before_project(root: Path, workspace: Path) -> Path:
 def verify_pairs(renders: Path) -> dict:
     reports = {variant: json.loads((renders / f"gp48-{variant}.json").read_text(encoding="utf-8"))
                for variant in ("before", "after")}
+    if reports["after"]["captures"] and "full_view" in reports["after"]["captures"][0]:
+        return verify_full_view(renders,reports)
     pairs = []
     for before, after in zip(reports["before"]["captures"], reports["after"]["captures"], strict=True):
         expected_fixture = "F-0" + after["case"][1]
@@ -122,3 +124,22 @@ def package(root: Path, output: Path, manifest: dict, windows_zip: Path) -> Path
         for path in paths:
             bundle.write(path, "renders/" + path.name)
     return archive
+
+
+def verify_full_view(renders, reports):
+    before,after=reports['before']['captures'],reports['after']['captures']
+    if len(before)!=40 or len(after)!=40: raise toolchain.PreflightError('Incomplete GP/VS2 native matrix')
+    pairs=[]
+    for old,new in zip(before,after,strict=True):
+        for key in ('case','fixture','size','ui_scale','cells_sha256','states','focus_states'):
+            if old[key]!=new[key]: raise toolchain.PreflightError('GP/VS2 changed '+key)
+        if new['full_view']['layout_valid'] and not new['full_view']['grid_fit']:
+            raise toolchain.PreflightError('GP/VS2 full frame does not fit')
+        for r in (old,new):
+            if not (renders/r['file']).is_file(): raise toolchain.PreflightError('Missing GP image')
+        pairs.append(dict(case=new['case'],before=old['file'],after=new['file'],cells_sha256=new['cells_sha256'],states=new['states']))
+    for dims,scale in ((1920,100),(1280,125)):
+        states=[next(r for r in after if r['case']==f'f1-{dims}-ui{scale}-status{s}') for s in range(3)]
+        if [r['focus_states'] for r in states]!=[[0],[1],[2]] or any(r['row3_units']!=states[0]['row3_units'] or r['font_size']!=states[0]['font_size'] for r in states):
+            raise toolchain.PreflightError('GP status changed selected glyph geometry')
+    return dict(comparison_commit=BASE,pairs=pairs,native_reports=reports,typography_change='VS2 full frame replaces clipped/panned geometry; exact GP status and player cells preserved')

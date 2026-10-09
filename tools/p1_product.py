@@ -29,6 +29,7 @@ import zv50_review
 import zs1_delivery
 import zs2_delivery
 import vs1_delivery
+import vs2_delivery
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -264,17 +265,21 @@ def main() -> int:
             phase("zv50-before-capture", [str(zv_before) if arg == str(project) else arg for arg in zv_command], "ZV50_CAPTURE_OK")
             del environment["ZV50_VARIANT"]
             zv50_comparison = zv50_review.verify_pairs(renders)
-            zs1_evidence = zs1_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
+            reference = vs2_delivery.reference_project(root, workspace)
+            phase("vs2-frozen-reference-import", [engine,"--headless","--path",str(reference),"--import"])
+            reference_command = [str(reference) if part == str(project) else part for part in render_command]
+            zs1_evidence = zs1_delivery.capture(root, reference, workspace, output, engine, reference_command, environment, phase)
+            zs1_evidence["developer_reference_commit"] = vs2_delivery.BASE
             zs2_evidence = zs2_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
-            vs1_evidence = vs1_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
+            vs1_evidence = vs1_delivery.capture(root, reference, workspace, output, engine, reference_command, environment, phase)
+            vs1_evidence["developer_reference_commit"] = vs2_delivery.BASE
+            vs2_evidence = vs2_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
             if host == "Windows":
                 phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
                 phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"), "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
-            zs1_build, zs1_exports = zs1_delivery.export(project, workspace, output, base, phase, host)
-            vs1_build, vs1_exports = vs1_delivery.export(project, workspace, output, base, phase, host)
             # Build the synthetic worksheet separately, after the production export.
             # Exported players cannot override their main scene via editor --script.
             shutil.copyfile(root / "tools/h1_owner_probe.gd", project / "h1_owner_probe.gd")
@@ -323,43 +328,34 @@ def main() -> int:
                             rp6=rp6,
                             gp48=gp_comparison,
                             zv50=zv50_comparison,
-                            zs2=zs2_evidence,
+                            zs2=zs2_evidence, vs2=dict(matrix_records=len(vs2_evidence["records"]), reference_commit=vs2_delivery.BASE),
                             zv50_owner_sha256=toolchain.sha256_file(zv_owner),
                             h1_probe_files=h1_files,
                             h1_probe_export_files=h1_exports,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),
                             checks=[dict(name=item["name"], exit_code=item["exit_code"], seconds=item.get("seconds")) for item in results],
-                            manual_acceptance="OPEN: ZS2-M01 and independent technical/visual review of this head before merge. ZS1-M01 confirmed by owner on 2026-10-07. No merge/release authorized.")
+                            manual_acceptance="OPEN: VS2-M01 and independent technical/visual review of this head before merge. ZS2-M01 passed historically via PR56; GF-M01 passed via PR60. No merge/release authorized.")
             pilot_launcher = output / "rp6-owner.ps1"
             pilot_launcher.write_text((root / "tools/rp6_owner.ps1").read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
-            extras = {"RP6-SPIELPROBE.md": root / "docs/RP6_OWNER_TRIAL.md",
-                      "rp6-owner.ps1": pilot_launcher,
-                      "owner-probe.ps1": owner_probe,
-                      "ZV50-SPIELPROBE.md": root / "docs/ZV50_OWNER_TRIAL.md",
-                      "zv50-owner.ps1": zv_owner}
-            for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
-                extras["licenses/" + path.name] = path
+            extras = {}
+            for path in sorted((root / "prototypes/p1/art/book").glob("*-OFL.txt")):
+                extras["licenses/"+path.name] = path
             extras["licenses/resources.json"] = root / "prototypes/p1/art/book/manifest.json"
-            extras["ZS2-SPIELPROBE.md"] = root / "docs/ZS2_OWNER_TRIAL.md"
             extras["licenses/Chalkboard-NOTICES.md"] = root / "prototypes/p1/art/drawing/NOTICES.md"
-            archive = package(build, output, manifest, (root / "docs/ZS2_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
-            rp6_player_files = {
-                "picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json",
-                "RP6-SPIELPROBE.md", "rp6-owner.ps1", "owner-probe.ps1",
-                "ZS2-SPIELPROBE.md", "licenses/Chalkboard-NOTICES.md",
-                "ZV50-SPIELPROBE.md", "zv50-owner.ps1",
-                "licenses/Fraunces-OFL.txt", "licenses/PlexSans-OFL.txt", "licenses/resources.json",
-            }
+            archive = package(build, output, manifest, (root / "docs/VS2_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
+            rp6_player_files = {"picross-p1.exe","picross-p1.console.exe","README.txt","product-report.json",
+                                "licenses/Fraunces-OFL.txt","licenses/PlexSans-OFL.txt","licenses/resources.json","licenses/Chalkboard-NOTICES.md"}
             player_delivery = gp48_delivery.verify_player_package(archive, manifest, expected_files=rp6_player_files)
             (output / "player-audit.json").write_text(json.dumps(player_delivery, indent=2) + "\n", encoding="utf-8")
             review_zip = z2_review.package(root, output, manifest, archive)
             gp_review = gp48_review.package(root, output, manifest, archive)
             zv_review = zv50_review.package(root, output, manifest, archive)
             rp6_review.package(root, output, manifest, archive)
-            zs1_delivery.package(root, output, zs1_build, zs1_exports, manifest, zs1_evidence)
+            zs1_delivery.package(root, output, None, {}, manifest, zs1_evidence)
             zs2_delivery.package(root, output, manifest, zs2_evidence)
-            vs1_delivery.package(root, output, vs1_build, vs1_exports, manifest, vs1_evidence)
+            vs1_delivery.package(root, output, None, {}, manifest, vs1_evidence)
+            vs2_delivery.package(root, output, manifest, vs2_evidence)
             print(f"GP48 REVIEW {gp_review} sha256:{toolchain.sha256_file(gp_review)}", flush=True)
             print(f"ZV50 REVIEW {zv_review} sha256:{toolchain.sha256_file(zv_review)}", flush=True)
             print(f"REVIEW {review_zip} sha256:{toolchain.sha256_file(review_zip)}", flush=True)

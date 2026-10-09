@@ -79,14 +79,9 @@ func cancel_gesture() -> void:
 	queue_redraw()
 	edited.emit()
 
-func navigate_to(normalized: Vector2) -> void:
-	if session.gesture.active:
-		return
-	view.center = normalized.clamp(Vector2.ZERO, Vector2.ONE) * Vector2(view.dimensions)
-	view.reframe()
-	view_changed.emit()
-	edited.emit()
-	queue_redraw()
+func navigate_to(_normalized: Vector2) -> void:
+	# Compatibility no-op: passive miniature and legacy callers cannot move a grid.
+	pass
 
 func reset_clue_pan() -> void:
 	if session.gesture.active:
@@ -252,19 +247,11 @@ func _input(event: InputEvent) -> void:
 	var local: InputEvent = make_input_local(event)
 	if pan_button != MOUSE_BUTTON_NONE:
 		if local is InputEventMouseMotion:
-			var delta: Vector2 = local.position - pan_last
-			if pan_target == "grid":
-				view.pan(delta)
-				hover = view.hit(local.position)
-				if hover.x >= 0:
-					pointed.emit(hover)
-			elif pan_target in ["row", "column"] and pan_line_index >= 0:
+			if pan_target in ["row", "column"] and pan_line_index >= 0:
 				var total_delta: Vector2 = local.position - pan_origin
 				pan_drag_distance = total_delta.x if pan_target == "row" else total_delta.y
 				hover = Vector2i(-1, -1)
 			pan_last = local.position
-			if pan_target == "grid":
-				view_changed.emit()
 			edited.emit()
 			queue_redraw()
 		elif local is InputEventMouseButton and not local.pressed and local.button_index == pan_button:
@@ -312,14 +299,13 @@ func _gui_input(event: InputEvent) -> void:
 			return
 		if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			zoom(1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else -1, event.position)
-		elif event.button_index == MOUSE_BUTTON_MIDDLE or (event.button_index == MOUSE_BUTTON_LEFT and hand):
+		elif event.button_index == MOUSE_BUTTON_MIDDLE:
 			pan_target = navigation_target(event.position)
 			if not pan_target.is_empty():
 				pan_line_index = navigation_line(event.position, pan_target)
-				if pan_target == "grid" or (pan_line_index >= 0 and int(clue_layout(pan_target, pan_line_index).max_offset) > 0):
+				if pan_line_index >= 0 and int(clue_layout(pan_target, pan_line_index).max_offset) > 0:
 					pan_button = event.button_index
-					if pan_target != "grid":
-						hover = Vector2i(-1, -1)
+					hover = Vector2i(-1, -1)
 					pan_last = event.position
 					pan_origin = event.position
 					pan_drag_distance = 0.0
@@ -363,8 +349,6 @@ func navigation_target(point: Vector2) -> String:
 		return "row"
 	if column_clue_area().has_point(point):
 		return "column"
-	if view.viewport.has_point(point):
-		return "grid"
 	return ""
 
 func navigation_line(point: Vector2, target: String) -> int:

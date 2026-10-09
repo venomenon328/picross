@@ -3,6 +3,7 @@ const Definition = preload("res://model/definition.gd")
 const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
 const ChalkboardBoard = preload("res://ui/chalkboard_board.gd")
+const FullViewBoard = preload("res://ui/full_view_board.gd")
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const SaveStore = preload("res://model/save_store.gd")
@@ -16,6 +17,8 @@ var information_section: String = "settings"
 var settings_panel: VBoxContainer
 var help_panel: VBoxContainer
 var info_scroll: ScrollContainer
+var information_origin: String = "album"
+var view_choice: OptionButton
 var ui_scale_button: Button
 var actions: Dictionary = {}
 var mini_title: Label
@@ -214,6 +217,7 @@ func _build() -> void:
 	open_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	album_content.add_child(open_button)
 	album_content.add_child(label("Jedes Blatt speichert den eigenen Arbeitsstand lokal.", 16))
+	album_content.add_child(button("Einstellungen und Hilfe",show_information.bind("settings")))
 	var reset_button: Button = button("Arbeitsstand zurücksetzen", _ask_reset)
 	reset_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	album_content.add_child(reset_button)
@@ -293,8 +297,8 @@ func _scale_labels(node: Node) -> void:
 
 func set_tool(tool: String) -> void:
 	board.eraser = tool == "erase"
-	board.hand = tool == "hand"
-	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Hand" if board.hand else "Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
+	board.hand = false
+	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
 	_update_actions()
 	if save_timer != null:
 		_save_current()
@@ -323,7 +327,7 @@ func select_puzzle(index: int) -> void:
 	_layout_book()
 	board.hover = Vector2i(-1, -1)
 	board.restore_view(session.view_state)
-	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Hand" if board.hand else "Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
+	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
 	_update_palette()
 	_update_status()
 	open_puzzle()
@@ -390,7 +394,9 @@ func refresh() -> void:
 	mini.view_rect = board.view.normalized_view()
 	mini.queue_redraw()
 	board.queue_redraw()
-	zoom_label.text = ("Gesamtansicht " if board.overview else "Arbeitszoom ") + "%d %%" % roundi(board.view.cell_size / 24 * 100)
+	zoom_label.text = "Zoom %d %%" % roundi(board.view.cell_size / 24 * 100)
+	if board is FullViewBoard and (not board.layout_valid or board.glyph_risk or board.view.cell_size < 16):
+		zoom_label.text += " · " + ("Zu wenig Platz" if not board.layout_valid else "Kleine / eng stehende Hinweise")
 	undo_button.disabled = session.gesture.active or session.player.cursor == 0
 	redo_button.disabled = session.gesture.active or session.player.cursor == session.player.history.size()
 	if session.completed and work.visible:
@@ -458,6 +464,8 @@ func _flush_current() -> bool:
 func _update_status() -> void:
 	if status_label == null or session == null:
 		return
+	var previous_visibility: bool = status_label.visible
+	var previous_repair: bool = work_repair_button.visible if work_repair_button != null else false
 	var state: String = slot_status[sessions.find(session)]
 	var error: String = slot_errors[sessions.find(session)]
 	status_label.text = "Speicherfehler: " + error if not error.is_empty() else ("Backup geladen; Primärstand beschädigt. Vor weiterem Speichern Backup bewusst übernehmen." if state == "recovered" else ("Backup beschädigt; gültiger Primärstand geladen. Backup vor weiterem Speichern bewusst erneuern." if state == "backup_invalid" else ("Speicherdaten ungültig. Nur bestätigter Reset dieses Blatts ist möglich." if state == "error" else "")))
@@ -466,6 +474,8 @@ func _update_status() -> void:
 	if work_repair_button != null:
 		work_repair_button.visible = state in ["recovered", "backup_invalid"] and not album.visible
 		work_repair_button.text = "Backup erneuern" if state == "backup_invalid" else "Backup zum Speichern übernehmen"
+	if work != null and work.visible and (previous_visibility != status_label.visible or previous_repair != work_repair_button.visible):
+		_layout_book()
 
 func _ask_reset() -> void:
 	_cancel_interaction()
@@ -597,7 +607,7 @@ func _icon_button(id: String, action: Callable, parent: Control) -> BookButton:
 	return item
 
 func create_board() -> Board:
-	return ChalkboardBoard.new()
+	return FullViewBoard.new()
 
 func _build_work() -> void:
 	work = Control.new()
@@ -618,8 +628,7 @@ func _build_work() -> void:
 	mini_title = label("Dein Stand",12)
 	sidebar.add_child(mini_title)
 	mini = Miniature.new()
-	mini.interactive = true
-	mini.navigated.connect(board.navigate_to)
+	mini.interactive = false
 	sidebar.add_child(mini)
 	coordinate = label("Zeile – · Spalte –",13)
 	coordinate.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -631,13 +640,14 @@ func _build_work() -> void:
 	palette_row = Control.new()
 	palette_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	sidebar.add_child(palette_row)
-	for id: String in ["fill","erase","hand"]:
+	for id: String in ["fill","erase"]:
 		_icon_button(id,set_tool.bind(id),work)
 	undo_button = _icon_button("undo",_undo,work)
 	redo_button = _icon_button("redo",_redo,work)
 	_icon_button("minus",func() -> void: board.zoom(-1,board.view.viewport.get_center()),work)
 	_icon_button("plus",func() -> void: board.zoom(1,board.view.viewport.get_center()),work)
 	_icon_button("fit",board.fit_all,work)
+	actions["fit"].tooltip_text = "Einpassen"
 	_icon_button("work",board.working_size,work)
 	_icon_button("help",show_information.bind("help"),work)
 	_icon_button("menu",show_information.bind("settings"),work)
@@ -670,6 +680,16 @@ func _build_information() -> void:
 	settings_panel.add_child(label("Einstellungen",26))
 	ui_scale_button = _text_button("UI 100 %",func() -> void: set_ui_scale(1.25 if ui_scale == 1 else 1.0))
 	settings_panel.add_child(ui_scale_button)
+	settings_panel.add_child(label("Rätselansicht",20))
+	view_choice = OptionButton.new()
+	view_choice.name = "puzzle-view"
+	view_choice.add_item("Rasteransicht")
+	view_choice.add_item("Gesamtansicht mit allen Hinweisen")
+	view_choice.item_selected.connect(set_puzzle_view)
+	settings_panel.add_child(view_choice)
+	var explanation: Label = label("Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen.",16)
+	explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	settings_panel.add_child(explanation)
 	clue_reset_button = _text_button("Hinweise rasterseitig ausrichten",board.reset_clue_pan)
 	settings_panel.add_child(clue_reset_button)
 	clue_completion_toggle = CheckBox.new()
@@ -689,7 +709,7 @@ func _build_information() -> void:
 	help_panel.add_theme_constant_override("separation",16)
 	content.add_child(help_panel)
 	help_panel.add_child(label("Maus und Hinweise",26))
-	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nRad: Zoom am Zeiger. Mittlere Taste oder Hand im Raster: verschieben. Miniatur: den eigenen Ausschnitt versetzen. Gesamtansicht und Arbeitsgröße sind getrennt.\n\nMittlere Taste oder Hand auf Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
+	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nRad und +/−: Zoom bis zur Vollsichtgrenze. Einpassen passt innerhalb der gewählten Rätselansicht ein; Arbeitsgröße stellt die gewünschte Standardgröße wieder her. Raster und eigene Miniatur bleiben fest. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nMittlere Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
 	help_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help_panel.add_child(help_text)
 	information.hide()
@@ -711,13 +731,14 @@ func show_information(section: String = "settings") -> void:
 	_cancel_interaction()
 	if not _flush_current():
 		return
+	information_origin = "album" if album.visible else ("ending" if ending.visible else "work")
 	work.hide()
 	album.hide()
 	ending.hide()
 	information.show()
 	album_button.hide()
 	_information_section(section)
-	title.text = "Information / " + str(session.definition.id)
+	title.text = "Information" if information_origin == "album" else "Information / " + str(session.definition.id)
 	_layout_book()
 
 func _information_section(section: String) -> void:
@@ -735,13 +756,22 @@ func return_to_work() -> void:
 	_cancel_interaction()
 	if not _flush_current():
 		return
-	open_puzzle()
+	if information_origin == "album":
+		show_album()
+	else:
+		open_puzzle()
+
+func set_puzzle_view(index: int) -> void:
+	_cancel_interaction()
+	board.set_mode("V" if index == 1 else "G")
+	view_choice.select(1 if board.mode == "V" else 0)
+	refresh()
 
 func _update_actions() -> void:
 	if board == null or tool_label == null:
 		return
-	var selected_tool: String = "hand" if board.hand else ("erase" if board.eraser else "fill")
-	tool_label.text = ("Hand" if board.hand else ("Radierer" if board.eraser else "Füllen")) + " · Farbe %d" % board.active_color
+	var selected_tool: String = "erase" if board.eraser else "fill"
+	tool_label.text = ("Radierer" if board.eraser else "Füllen") + " · Farbe %d" % board.active_color
 	for key: String in actions:
 		if not is_instance_valid(actions[key]):
 			continue
@@ -772,77 +802,42 @@ func _layout_book() -> void:
 	work.size = Vector2(size.x,size.y-28)
 	sidebar.position = Vector2.ZERO
 	sidebar.size = work.size
-	var grid_extent: Vector2
-	var inset: Vector2
-	var grid_position: Vector2
-	var mini_position: Vector2
-	var mini_extent: float
-	var tools_y: float = h-106 if compact else minf(h-102*u,h/2+490)
-	if compact:
-		inset = Vector2(210,120)*Vector2(1,u/1.25)
-		grid_position = Vector2(300,minf(270,h*37.0/120.0))
-		grid_extent = Vector2(w-642,h-grid_position.y-124).max(Vector2(300,200))
-		mini_position = Vector2(w-230,220)
-		mini_extent = 140
-	else:
-		inset = Vector2(240 if large else (192 if session.player.width == 20 else 210),144 if large or session.player.width == 20 else 126)*u
-		var available: Vector2 = Vector2(w-552,h-408) if large else Vector2(w-800,h-234)
-		var standard_extent: Vector2 = (Vector2(session.player.width,session.player.height)*(24 if session.player.width==20 or large else 18)).min(available)
-		grid_extent = standard_extent
-		if large:
-			grid_position = Vector2(70+inset.x,126+inset.y)
-			mini_position = Vector2(w-220,290)
-			mini_extent = 132
-		else:
-			var standard_position: Vector2 = Vector2(w/2-standard_extent.x/2-(70 if session.player.width==20 else 90),h/2-standard_extent.y/2+(-10 if session.player.width==20 else 72))
-			grid_position = standard_position
-			mini_position = Vector2(standard_position.x+standard_extent.x+180,standard_position.y-(0 if session.player.width==20 else 32))
-			mini_extent = 200 if session.player.width==20 else 180
-			# The standard box is the calm 100%-layout, not the zoom ceiling.
-			var left_limit: float = 70.0 + inset.x
-			var right_limit: float = mini_position.x - 22.0
-			var top_limit: float = maxf(90.0,h*0.083) + inset.y
-			var bottom_limit: float = tools_y - 6.0
-			var maximum_extent: Vector2 = Vector2(maxf(1.0,right_limit-left_limit),maxf(1.0,bottom_limit-top_limit)).min(available)
-			grid_extent = expanded_grid_extent(Vector2i(session.player.width,session.player.height),board.view.cell_size,standard_extent,maximum_extent,board.overview)
-			var preferred_center: Vector2 = standard_position + standard_extent/2.0
-			grid_position = (preferred_center-grid_extent/2.0).clamp(Vector2(left_limit,top_limit),Vector2(right_limit,bottom_limit)-grid_extent)
-	# Larger UI reserves actual space instead of shrinking hit areas or cells.
-	mini_position.x = minf(mini_position.x,w-80-mini_extent)
-	grid_extent.x = minf(grid_extent.x,mini_position.x-grid_position.x-22)
-	grid_extent.y = minf(grid_extent.y,tools_y-grid_position.y-6)
-	grid_position += o
-	mini_position += o
-	board.book_inset = inset
-	board.book_grid_size = grid_extent
-	_place(board,Rect2(grid_position-inset,grid_extent+inset+Vector2(2,2)))
+	var left: float = 68*u
+	var rail: float = w-260*u
+	var top: float = maxf(h*0.039+45*u+6*u,82*u)
+	var bottom: float = h-68*u
+	var rail_top: float = top
+	if work.visible and status_label.visible:
+		top += 106*u
+		if work_repair_button.visible:
+			top += 50*u
+	_place(board,Rect2(o+Vector2(left,top),Vector2(rail-left-24*u,bottom-top-10*u)))
 	board._layout()
+	var mini_extent: float = (100.0 if (bottom-rail_top)/u < 600 else 132.0)*u
+	var mini_position: Vector2 = o+Vector2(rail+12*u,rail_top+30*u)
 	_place(mini,Rect2(mini_position,Vector2.ONE*mini_extent))
-	_place(mini_title,Rect2(mini_position+Vector2(2,-29),Vector2(mini_extent,22*u)))
-	var coord_pos: Vector2 = mini_position+Vector2(-4,mini_extent+16)
-	_place(coordinate,Rect2(coord_pos,Vector2(w-80-(coord_pos.x-o.x),38*u)))
-	var palette_pos: Vector2 = mini_position+Vector2(0,mini_extent+64)
+	_place(mini_title,Rect2(mini_position-Vector2(0,26*u),Vector2(180,24)*u))
+	_place(coordinate,Rect2(mini_position+Vector2(0,mini_extent+14*u),Vector2(190,44)*u))
+	var palette_pos: Vector2 = mini_position+Vector2(0,mini_extent+66*u)
 	_place(palette_row,Rect2(palette_pos,Vector2(110,110)*u))
 	for i: int in range(palette_row.get_child_count()):
 		_place(palette_row.get_child(i),Rect2(Vector2(i%2,i/2)*54*u,Vector2.ONE*hit))
-	var status_pos: Vector2 = mini_position+Vector2(-4,mini_extent+190*u)
-	if compact:
-		status_pos = o+Vector2(w-290,h-110)
-	_place(zoom_label,Rect2(status_pos,Vector2(240*u,24*u)))
-	_place(tool_label,Rect2(status_pos+Vector2(0,24*u),Vector2(240*u,24*u)))
-	var tools_origin: Vector2 = o+Vector2(250 if compact else (400 if large else grid_position.x-o.x-inset.x),tools_y)
+	_place(zoom_label,Rect2(mini_position+Vector2(0,mini_extent+188*u),Vector2(220,52)*u))
+	zoom_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_place(tool_label,Rect2(mini_position+Vector2(0,mini_extent+244*u),Vector2(200,24)*u))
+	var tools_origin: Vector2 = o+Vector2(left,bottom)
 	surface.wells.clear()
-	var ids: Array[String] = ["fill","erase","hand","undo","redo","minus","plus","fit","work"]
+	var ids: Array[String] = ["fill","erase","undo","redo","minus","plus","fit","work"]
 	for i: int in range(ids.size()):
 		_place(actions[ids[i]],Rect2(tools_origin+Vector2(i*52*u,0),Vector2.ONE*hit))
-	for group: Vector2i in [Vector2i(0,3),Vector2i(3,2),Vector2i(5,4)]:
+	for group: Vector2i in [Vector2i(0,2),Vector2i(2,2),Vector2i(4,4)]:
 		surface.wells.append(Rect2(tools_origin+Vector2(group.x*52*u-3*u,-3*u),Vector2((group.y-1)*52*u+hit+6*u,hit+6*u)))
 	var nav_x: float = w-(187.5 if compact else 150)
 	for i: int in range(3):
 		_place(actions[["help","menu","nav-information"][i]],Rect2(o+Vector2(nav_x-(2-i)*58*u,h/30),Vector2.ONE*hit))
 	_place(album_button,Rect2(o+Vector2(w/320,h*7/72),Vector2.ONE*hit))
 	_place(title,Rect2(o+Vector2(w*0.043,h*0.039),Vector2(w*0.6,45*u)))
-	_place(stress_label,Rect2(o+Vector2(w*0.043,h*0.039+46*u),Vector2(w*0.7,28*u)))
+	_place(stress_label,Rect2(o+Vector2(rail+12*u,20*u),Vector2(224,52)*u))
 	_place(album,Rect2(o+Vector2(90,130),Vector2(w-180,h-200)))
 	for choice: Button in choices:
 		choice.custom_minimum_size.y = 44 * ui_scale

@@ -93,14 +93,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           compression-level: 0
-      - name: Upload isolated ZS-1 Windows study
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: zs1-windows-study-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-zs1-windows-x86_64.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
       - name: Upload compact ZS-1 native comparison
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -133,19 +125,19 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           compression-level: 0
-      - name: Upload isolated VS-1 Windows study
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: vs1-windows-study-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-product-output/picross-vs1-windows-x86_64.zip
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
       - name: Upload compact VS-1 review
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: vs1-review-${{ github.event.pull_request.head.sha || github.sha }}
           path: ${{ runner.temp }}/p1-product-output/picross-vs1-review.zip
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+      - name: Upload regular VS2 native review
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: vs2-review-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/p1-product-output/picross-vs2-review.zip
           if-no-files-found: error
           retention-days: 14
           compression-level: 0

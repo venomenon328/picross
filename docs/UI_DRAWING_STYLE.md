@@ -1,5 +1,17 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
+## Aktueller regulärer Stand · VS2 (#61)
+
+VS2 erhält den ausgewählten Chalkboard-/Stiftzeichner und N01–N03. Nur MMB auf
+überlaufenden Hinweisfolgen bleibt Navigation; Hand-/Raster-/Miniaturpan entfallen.
+Fit und Rendering verwenden dieselbe Vollsichtgeometrie.
+
+Bedien-/Speichervertrag: [P1](PROTOTYPE_P1.md). Aktuelle
+[Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md).
+VS2-M01, unabhängiges technisches/visuelles Review und passende Mergefreigabe
+bleiben vor Merge offen. Historische Nachweise bleiben commitgebunden.
+
+
 Stand: 09.10.2026 · Spezifikation 0.5 · ZS2: langsameres Tempo und handschriftlicher Schraffuraufbau
 
 ## 1. Auftrag, Quellen und Status

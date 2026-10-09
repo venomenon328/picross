@@ -205,7 +205,8 @@ func hint_probe(axis: String) -> void:
 	mouse(p, MOUSE_BUTTON_MIDDLE, true)
 	var end: Vector2 = p + (Vector2(67, 0) if axis == "row" else Vector2(0, 40))
 	motion(end)
-	check(app.board.pan_target == axis, "long clue drag " + axis)
+	var expected: String = app.board.navigation_target(p-app.board.global_position) if app.board.has_method("set_mode") else axis
+	check(app.board.pan_target == expected, "overflow-only clue drag " + axis)
 	var neighbor: Dictionary = app.board.capture_view()
 	await shot("hint-" + axis + "-drag")
 	mouse(end, MOUSE_BUTTON_MIDDLE, false)

@@ -1,6 +1,38 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 09.10.2026 · Spezifikation 0.22 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
+## Aktueller regulärer Stand · VS2 (#61)
+
+Der reguläre Start öffnet die Sammlung, auch mit Teil- oder Abschlussständen.
+Einstellungen sind dort ohne Rätselöffnung erreichbar. **Rätselansicht** bietet
+**Rasteransicht** (Sitzungsdefault) und **Gesamtansicht mit allen Hinweisen**.
+Die Wahl bleibt bis zum nächsten Start erhalten. Einpassen ändert den Modus nicht.
+Das ganze Raster samt Außenrahmen bleibt bei jedem angebotenen Zoom sichtbar;
+Hand-, Raster- und Miniaturverschiebung entfallen auch für bestehende Großfälle.
+MMB bewegt ausschließlich eine angefasste überlaufende Hinweiszeile horizontal
+oder Hinweisspalte vertikal. Die eigene Miniatur bleibt proportional und passiv.
+
+Mindestreserven werden pro Achse aus tatsächlichen vollständigen Glyphen bestimmt;
+Rasteransicht zeigt mindestens min(5,n) zusammenhängende Zahlen auch im Drag.
+Erst danach nutzt GF1 freie horizontale Breite für weitere sichere ganze Slots,
+ohne Fit-/Schriftverlust. Gesamtansicht reserviert sämtliche Hinweise. 24px bleibt
+der gewünschte reguläre Arbeitswert, begrenzt durch den tatsächlichen Fit.
+Platzmangel und kleine/kollidierende Hinweise werden transparent behandelt;
+50×50/100×100 erhalten keinen versteckten Pan-Ausweg oder Komfortzertifikat.
+
+Neun Inhalte und Schema 1/Appidentität bleiben erhalten. Vollständige Validierung
+geht der Normalisierung alter Hand-/Pan-/Zoomwerte voraus. Gültige gewünschte
+Arbeitsstufe und aktuelle Fitgröße sind getrennt; Modus wird nicht gespeichert.
+Studienkatalog und -speicher werden beim regulären Start nicht verwendet.
+Historische Studienquellen bleiben ausschließlich Entwickler-/Referenzbestand;
+separate Studienplayer entfallen aus der Standardlieferung.
+
+[Prüfzuordnung](VS2_VERIFICATION.md) und [neutrale Windows-Probe](VS2_OWNER_TRIAL.md)
+binden die neue Lieferung. #53/N01–N03 ist über PR #56 auf `fad8853` integriert;
+ZS2-M01 und GF-M01/#59 sind historisch bestanden. VS2-M01 und unabhängiges
+technisches/visuelles Review des neuen Heads bleiben vor Merge offen. Kein Release.
+
+
+Stand: 09.10.2026 · Spezifikation 0.23 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -88,7 +120,7 @@ Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
 
 - Kleine Album-Testauswahl mit neutraler Kennung, Größe, Rätselart und Bearbeitungsstand. Alle Testfälle direkt zugänglich; keine Freischaltlogik.
 - Zellbearbeitung, Farbwahl, Achsenbindung, elastische Vorschau, kontrollierte Rücknahmen sowie Undo/Redo.
-- Arbeitsansicht mit unnummerierten, farbigen einzeiligen Hinweisen, atomaren Teilfolgen in einem gemeinsamen Slotraster und eigener Leseposition je Zeile/Spalte, interaktiver eigener Miniatur, Raster-Zoom/Pan und getrennt skalierbarer Oberfläche.
+- Arbeitsansicht mit unnummerierten, farbigen einzeiligen Hinweisen, atomaren Teilfolgen in einem gemeinsamen Slotraster und eigener Leseposition je Zeile/Spalte, passiver eigener Miniatur, fitbegrenztem Rasterzoom und getrennt skalierbarer Oberfläche.
 - Mit #11 ein fortsetzbarer lokaler Arbeitsstand je Testfall einschließlich Ansicht und Undo/Redo.
 - Tatsächlicher Abschluss und motivtreue, auch detailliertere Darstellung im Album.
 - Tests, Start-/Bedien-/Resetanleitung, Windows-Testartefakte und nachvollziehbare manuelle Erprobung.
@@ -147,7 +179,7 @@ Einzelklicks sind Gesten der Länge eins; bewusste X↔Füllung-Umwandlung bleib
 möglich. Vorhandene Füllungen werden links nicht direkt umgefärbt. Startzustand,
 Taste, Modus und aktive Farbe bleiben auch bei Rückzug und G1-Achsenneuwahl fest.
 
-Der explizite Radierer bleibt als Universalwerkzeug: links setzt alle vorhandenen Markierungen auf unbekannt. Rechts folgt weiterhin der Leer-/Leerrücknahme-Regel. Beim Hand-Werkzeug verschiebt links ausschließlich die Ansicht. Werkzeug, Aktionsmodus und Setzfarbe bleiben bis zum Ende der Geste eingefroren; keine Neuerkennung pro überfahrener Zelle und kein wiederholtes Umschalten beim Rückwärtsziehen.
+Der explizite Radierer bleibt als Universalwerkzeug: links setzt alle vorhandenen Markierungen auf unbekannt. Rechts folgt weiterhin der Leer-/Leerrücknahme-Regel. Das Hand-Werkzeug entfällt mit VS2. Werkzeug, Aktionsmodus und Setzfarbe bleiben bis zum Ende der Geste eingefroren; keine Neuerkennung pro überfahrener Zelle und kein wiederholtes Umschalten beim Rückwärtsziehen.
 
 Die erste eindeutige Bewegung in eine andere Zelle verriegelt horizontal oder vertikal. Bei diagonalem Gleichstand bleibt nur die Startzelle in der Vorschau, bis eine Richtung dominiert. Trifft die aktive Zellgeste die tatsächliche Startzelle wieder, verkürzt sich die Vorschau auf diese Zelle und die Achse wird ohne Loslassen freigegeben. Die nächste eindeutige Bewegung wählt sie erneut; dies kann innerhalb derselben Geste mehrfach geschehen. Sonst bleibt die Achse fest und der Strich gerade. Eingabesprünge erfassen alle Zwischenzellen des aktuellen Abschnitts, schalten die Achse aber ohne gelieferten Startzelltreffer nicht frei. Ein nur auf die Achse projizierter Endpunkt am Start genügt ebenfalls nicht.
 
@@ -174,10 +206,8 @@ Ein wirksamer Strich ist ein Undo-Schritt; Redo stellt exakt wieder her. Neue wi
 
 ### 5.2 Fenster, Zoom, Hinweise und Miniatur
 
-Die folgenden Pan-/Miniatur-/720p-Verträge beschreiben den unveränderten regulären
-P1-Iststand. [VS-D01](VS1_DECISION.md) entscheidet das spätere reguläre Vollsichtziel
-mit G/V und 1080p; seine reguläre Integration benötigt einen gesonderten Auftrag.
-VS-GF1/#59 ändert ausschließlich die getrennte VS-Studie, keine dieser Runtime-Regeln.
+VS2 ersetzt die früheren Pan-/Miniaturverträge. Die aktuellen Regeln stehen oben
+und in der nachfolgenden Bedienung; frühere Berichte bleiben historisch.
 
 D-21 präzisiert D-07: 1920×1080 ist die primäre Layoutreferenz und die gewünschte
 Clientfläche beim Fensterstart, soweit diese einschließlich des tatsächlichen Rahmens
@@ -188,19 +218,15 @@ oder Eingriff in Windows-Einstellungen. 1280×720 bleibt Mindest-/Fallback-Test,
 
 Arbeitszoom, UI-/Hinweisskalierung und Fenstergröße sind getrennt. Technischer Ausgangswert: 24 logische Einheiten Zellabstand bei 100 % Arbeitszoom; eine begründete Feinanpassung nach Darstellungstests ist reversibles Implementierungsdetail. Vergrößern/Maximieren des Fensters vergrößert bei gleichem Zoom und UI-Maßstab nicht automatisch die Zellen. Stattdessen mehr Raster zeigen oder kleine Raster mit ruhigen Rändern platzieren. Eine ausdrücklich gewählte Gesamtansicht ist vom Arbeitszoom zu unterscheiden; „Arbeitsgröße“ stellt eine brauchbare Bearbeitungsgröße wieder her.
 
-D-28 / [#50](https://github.com/venomenon328/picross/issues/50) trennt dabei die ruhige Standardfläche vom maximal nutzbaren Rasterviewport. Bis einschließlich 100 % bleiben die integrierten Z2-Referenzflächen unverändert. Erst oberhalb davon wächst der Viewport im nicht kompakten Buchlayout in die tatsächlich freie Papierfläche und wird an Hinweis-/Titel-, Miniatur- und Werkzeuggrenzen begrenzt. Bei 1920×1080/UI 100 % bleibt ein 20×20-Raster bei 26, 28, 30, 32, 34 und 36 Einheiten vollständig sichtbar; 40 Einheiten ist der erste gezielt geprüfte vertikale Überlauffall. Kleinere Fenster oder UI 125 % dürfen aufgrund realen Platzmangels früher clippen. Rendering, Trefferprüfung, Zoomanker, Panbegrenzung und Miniatur verwenden dieselbe resultierende Geometrie; keine versteckte Zell-/Hinweisverkleinerung und kein Save-Schemawechsel.
-
-Mausrad zoomt möglichst ortsstabil am Zeiger. Mittlere Taste oder Hand-Werkzeug
-verschieben. Sichtbare Zoomknöpfe, Gesamtansicht und Rückkehr zur Arbeitsgröße.
-Die #9-Referenzfolge umfasst 20 streng steigende Zellabstände von 12 bis 72 logischen
-Einheiten (`12/14/16/18/20/22/24/26/28/30/32/34/36/40/44/48/54/60/66/72`).
-Aus einer Gesamtansicht unterhalb beziehungsweise oberhalb dieser Folge springt eine
-gegenläufige Bedienung nicht in die falsche Richtung: ohne kleinere/größere Stufe
-bleibt sie stehen, in Gegenrichtung wechselt sie zur nächsten tatsächlich kleineren/
-größeren Arbeitsstufe. 100×100 bleibt vollständig navigierbar; Viewportgrenzen,
-Hinweise und Hit-Tests verwenden dieselbe Transformation. Bei Resize/Zoom Fokus soweit
-geometrisch möglich erhalten und Pan gültig begrenzen. Navigieren verändert keine
-Zellen und keine Undo-Historie.
+VS2 löst die frühere D-28-Erlaubnis von Ausschnitten oberhalb 150 % ab.
+Mausrad und Zoomknöpfe bleiben monoton und stoppen am aktuellen Fit einschließlich
+Außenrahmen. Einpassen erreicht diesen Fit im gewählten Modus; Arbeitsgröße wünscht
+24 Pixel. Die gültige Schema-1-Stufenfolge bleibt
+`12/14/16/18/20/22/24/26/28/30/32/34/36/40/44/48/54/60/66/72`.
+Berechnete Fitwerte können darunter oder dazwischen liegen. Kein Rasterpan,
+Hand-Linkszug oder Miniaturklick/-drag; auch 100×100 nutzt nur Vollsicht und kann
+als eingeschränkt oder geometrisch nicht bedienbar gemeldet werden. Optionen und
+Rückweg bleiben erreichbar. Gemeinsame Draw-/Hit-Geometrie, keine Zell-/Historymutation.
 
 D-08: Füllungen haben zu anderen Füllungen und insbesondere den Fünferlinien einen sichtbar kontrastierenden Zwischenraum. Dunkle Füllung und dunkle Linie dürfen an Kreuzungen nicht zu einer gemeinsamen L-/Blockform verschmelzen. Fünfergruppen bleiben erkennbar; Umrissstärke, Füll-Inset und Renderingreihenfolge gemeinsam abstimmen. Dies gilt für alle vier Farben, Vorschau und die angebotenen Bearbeitungszoomstufen. Eine verdichtete Gesamtansicht ist kein Ersatz für diese Arbeitsansicht. Zeichnung und tatsächliche Trefferflächen bleiben korrekt zugeordnet.
 
@@ -233,7 +259,7 @@ einen festen Randplatz nur auf tatsächlich verborgenen Seiten. Keine zusätzlic
 sichtbaren Hinweisgitterlinien.
 
 Jede konkrete Zeile und Spalte besitzt eine eigene ganzzahlige bestätigte Leseposition.
-Mittlere Taste oder Linkszug mit Hand-Werkzeug frieren Achse und Linienindex am
+Nur die mittlere Taste friert Achse und Linienindex am
 Gestenstart ein. Während des Drags bewegt sich nur die angefasste Folge kontinuierlich
 entlang ihrer Achse, auch zwischen Slots; beim Loslassen rastet sie auf die nächste
 gültige ganzzahlige Position ein. Escape, Fokusverlust oder regulärer Übergang
@@ -253,7 +279,7 @@ Zellbearbeitung. Leere/kurze Folgen pannen nicht in leeren Raum. Anfang, Mitte u
 jeder langen Folge bleiben erreichbar; „Hinweise rasterseitig ausrichten“ setzt alle
 Einzelpositionen bewusst zurück.
 
-Raster-Pan und Miniaturnavigation erhalten sämtliche individuellen Lesepositionen.
+Die wirkungslosen Raster-/Miniaturnavigationsversuche erhalten sämtliche individuellen Lesepositionen.
 Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,
 begrenzen danach gültig und bleiben auf dem gemeinsamen Slotraster. Beim bewussten
 Testblattwechsel wird ab P1.3 die individuelle Hinweisansicht des Zielblatts
@@ -321,7 +347,7 @@ Rätselfarben darstellen. Ein Ausschnittrahmen zeigt den Viewport. Klick/Ziehen 
 ohne Zellmutation. Die Z2-Mauspalette zeigt unbeschriftete Farbfelder mit stabilen
 internen Farb-IDs und unveränderten RGB-Innenflächen. Eckmarkierungen außerhalb
 der Farbfläche kennzeichnen die Auswahl; Status und Tooltip nennen „Farbe 1“ bis
-„Farbe 4“. Farbwahl aktiviert Füllen, auch nach Hand/Radierer. Diese Darstellung
+„Farbe 4“. Farbwahl aktiviert Füllen, auch nach Radierer. Diese Darstellung
 ersetzt die vorläufige A–D-Beschriftung, nicht die Farb-IDs oder Hinweisregeln.
 Auswahl/Fokus/Leerzustand dürfen keine zusätzliche Rätselfarbe vortäuschen.
 Keine beliebigen Nutzerpaletten.
@@ -354,7 +380,7 @@ Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
 
-P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den neun fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gültigen Arbeitszoom oder Gesamtansichtsmodus, aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
+P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den neun fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gewünschte gültige Arbeitszoomstufe und Einpassen-Flag (overview), aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 
 Vor Anwendung werden Schema, exakte Definition/Revision, Matrix/Palette, jede nichtleere atomare History-Aktion mit eindeutigen Indizes und gültigen Vor-/Nachwerten, das widerspruchsfreie Replay ab unbekanntem Raster einschließlich Redo, Cursor-Matrix-Gleichheit, `undo_used`, Abschluss und View vollständig geprüft. Unbekannte oder unpassende Daten werden weder teilweise geladen noch still migriert. Der Rasterfokus wird bei Resize gültig begrenzt; Hinweis-Offsets werden aus Rasterende, äußerem Anfang oder mittlerem Tokenfenster für die aktuelle Geometrie neu abgeleitet.
 
@@ -402,7 +428,7 @@ Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `prototype
 | A-01 | Definitionen/Hinweise einschließlich Farben, Leerlinien und ungültiger Daten validieren; F-01/F-02 mit Deduktionsfolge, F-03 als Stressfixture. Abschlussressourcen technisch unabhängig von Rasterauflösung prüfen. |
 | A-02 | Setz-/Neutralisierungs-/Radiergesten: direkte Füllung↔X-Umwandlung, Achsenbindung und erneute Wahl nur nach tatsächlichem Startzelltreffer, diagonaler Start, Sprünge ohne Starttreffer, elastisches Zurückziehen, gemischte Vorbelegung, Rand/UI, Abbruch und No-op. Nur zum eingefrorenen Modus passende Zellen ändern sich. |
 | A-03 | Atomarer Strich, exakte Vorzustände bei Undo/Redo, korrekte Verzweigung; Neutralisieren nicht als versteckten Undo-Aufruf behandeln. |
-| A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei Zoom, Raster-Pan, UI-Skalierung und Resize; echte Mauspfade bewegen nur die konkret gestartete Zeile/Spalte kontinuierlich und rasten beim Drop in gemeinsame Slots ein, einschließlich Abbruch/Grenzen. Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
+| A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei fitbegrenztem Zoom, negativen Raster-/Miniaturpanversuchen, UI-Skalierung und Resize; echte Mauspfade bewegen nur die konkret gestartete Zeile/Spalte kontinuierlich und rasten beim Drop in gemeinsame Slots ein, einschließlich Abbruch/Grenzen. Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
 | A-05 | Mit #11 Speicherung/Recovery ohne stillen Datenverlust oder fremden Zugriff. |
 | A-06 | Unkorrigierte eigene Miniatur, keine frühen Motivdaten, richtiger Abschluss mit unbekanntem Hintergrund, kein Abschluss bei Zusatz-/Fehl-/Falschfüllung oder leerer Motivzelle. Detailliertere Ressourcen ändern die Abschlusslogik nicht. |
 | A-07 | Import, begrenzter Start/Exit und Windows-Export; vollständige Artefakte/Logs einem konkreten Stand zugeordnet. |
@@ -415,7 +441,7 @@ Bestehende Dokumentprüfung zusätzlich: `python3 -m unittest discover -s tools 
 | --- | --- | --- |
 | M-01 | F-01 per Maus setzen/neutralisieren, X↔Füllung direkt umwandeln, zurückziehen, Rücknahmetyp schützen, Radierer/Undo/Redo und Abschluss ohne Auskreuzpflicht. Neuer F-01-Reveal sichtbar detaillierter und eindeutig zugehörig. | Eigentümer |
 | M-02 | F-02 mit vier Farben und langen Hinweisen; einzeilige farbige Zahlen ohne Zusatzkennung, gemeinsames Slotraster, mehrere Einzelketten unabhängig pannen, ergänzender Tooltip, Farbwahl, Zelltrennung, direkte Umwandlung und verfeinertes Leuchtturmmotiv klar bedienbar. | Eigentümer |
-| M-03 | F-03-Koordinate bearbeiten, bei kleinen Arbeitsstufen echte Hinweiszahlen lesen, mehrere konkrete Zeilen/Spalten unabhängig pannen, Raster stark zoomen/verschieben und über Miniatur/Koordinaten wiederfinden. | Eigentümer |
+| M-03 | F-03-Koordinate bearbeiten, bei kleinen Arbeitsstufen echte Hinweiszahlen lesen, mehrere konkrete Zeilen/Spalten unabhängig pannen, Raster nur innerhalb der Vollsichtgrenze zoomen; passive Miniatur/Koordinaten vergleichen. VS2-M01 ersetzt die frühere Panprobe für den neuen Stand. | Eigentümer |
 | M-04 | Mit #11 Teilstand schließen, neu starten und samt Historie/Ansicht fortsetzen. | Eigentümer |
 | M-05 | Durch D-06 nicht anwendbar: Tastatur/Controller außerhalb P1. | Kein P1-Gate |
 | M-06 | 1080p-Startziel beziehungsweise arbeitsbereichbegrenzter Fallback, 1080p/1440p und logische Referenzflächen; tatsächliche Skalierung erfassen. Keine verdeckten Elemente, aufgezwungenen Riesenraster oder verschmolzenen Füll-/Fünferlinien. | Eigentümer |
@@ -471,7 +497,7 @@ I-01 bis I-05 gemäß [GD-01 bis GD-05](Z2_SELECTION.md). Der reguläre Kern,
 Appname/Speicherort, Saveformat und Rätseldaten bleiben erhalten. A-Papier,
 Montierungen, UI und Raster sind getrennt; C1 konturiert nur Hinweisfarben 2/4.
 Fraunces/Plex Sans sind gepinnt und offline gebündelt. Farbwahl aktiviert Füllen.
-Neun Arbeitsaktionen, eigene Miniatur, Koordinaten und aktive Farbe/Werkzeug bleiben
+Acht Arbeitsaktionen, eigene Miniatur, Koordinaten und aktive Farbe/Werkzeug bleiben
 auf der Arbeitsseite, Trefferflächen mindestens 44/55 px bei UI 100/125 %.
 
 GD-01 bis GD-05 ersetzen für Z2 ausdrücklich die frühere provisorische A–D-Palette,
@@ -581,7 +607,7 @@ Folge nach D-31/ZS-D07; Schutzlücken bleiben ohne Zeitlücke. Das aktive X schr
 Zug eins vor Zug zwei ohne vollständige Unterzeichnung. Gegentasten-Down verwirft
 die ganze aktive Zellgeste samt Zähler, auch außerhalb des Boards. Nach beiden
 Ups erlaubt erst ein frisches Down die nächste Geste. Escape/Fokus dürfen keine
-Phantomaktion oder hängende Sperre erzeugen; MMB/Hand bleiben Navigation.
+Phantomaktion oder hängende Sperre erzeugen; MMB bleibt ausschließlich Hinweisnavigation.
 Die nächste Eingabe liest sofort den bestätigten Zustand. Neue Vorschau oder ein
 neuer Zustand derselben Zelle beendet veraltete Effekte; Rückzug spielt sie nicht
 erneut ab. Undo/Redo bleiben unmittelbar und ohne eigene Setzanimation. Abschluss,
@@ -620,7 +646,7 @@ geeignete 40×30/50×30, 1080p, bevorzugt G und ergänzend V. Sehr große Rätse
 bleiben mögliche Sonderfälle. PR #58 ist als `c19b3547…` integriert; VS-GF1/#59
 liefert zusätzliche Zeilenkapazität aus freier G-Breite bei unverändertem Fit.
 Die reguläre P1-Umstellung bleibt separat. VS-M01 ist nicht vollständig persönlich
-durchgeführt; unabhängiges Review, GF-M01 und Mergefreigabe des neuen Heads bleiben offen.
+durchgeführt; GF-M01/#59 ist historisch bestanden; neues unabhängiges VS2-Review und VS2-M01 bleiben vor Merge offen.
 
 VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
 pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige

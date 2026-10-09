@@ -1,5 +1,17 @@
 # Z2: aktive Auswahl und native Integration
 
+## Aktueller regulärer Stand · VS2 (#61)
+
+Die gewählte A-Komposition bleibt. VS2 ordnet die Arbeitsfläche für vollständige
+Raster neu; Werkzeugmulden 2/2/4, passive eigene Miniatur, benannte Ansichtsoption
+ausschließlich in Einstellungen. Z2-Herkunft und historische Designs bleiben.
+
+Bedien-/Speichervertrag: [P1](PROTOTYPE_P1.md). Aktuelle
+[Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md).
+VS2-M01, unabhängiges technisches/visuelles Review und passende Mergefreigabe
+bleiben vor Merge offen. Historische Nachweise bleiben commitgebunden.
+
+
 Stand: 27.09.2026 · #23 / I-01 bis I-05 unter #21
 
 Maßgeblich ist die [Eigentümerentscheidung GD-01 bis GD-05](https://github.com/venomenon328/picross/pull/32#issuecomment-5855483934)
@@ -10,7 +22,7 @@ production/artwork/composition bleiben unverändert. PR #25/#28 sind keine Basis
 | Auswahl | Native Umsetzung |
 | --- | --- |
 | GD-01: A, dunkler Inventarband | Unverändertes UI-freies PNG, SHA-256 `957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a`; proportionaler Hintergrund, getrennt von Control-/Rastergeometrie. |
-| GD-02: gemeinsame BP-3-UI | Gefasste Miniatur, zwei Metallhalter, gemeinsame Farbmusterfassung, Werkzeugmulden 3/2/4, abgeschrägte Controls. Auswahl aus Sessionzustand: Werkzeug dunkel/unterstrichen, Farbe mit äußeren Eckmarkierungen. |
+| GD-02: gemeinsame BP-3-UI | Gefasste Miniatur, zwei Metallhalter, gemeinsame Farbmusterfassung, Werkzeugmulden 2/2/4, abgeschrägte Controls. Auswahl aus Sessionzustand: Werkzeug dunkel/unterstrichen, Farbe mit äußeren Eckmarkierungen. |
 | GD-03: Fraunces / IBM Plex Sans | Fraunces 600 für Blatttitel; Plex Sans für UI/Hinweise. Gepinnte Fontbytes und OFL offline im regulären Export, keine Systemfontsuche. |
 | GD-04: C1 | Feste dunkle Kontur für Hinweisfarben 2/4 an beiden Achsen, im Drag und Tooltip; unveränderte RGB-Füllung, Originalindizes und H1. Keine neue Option. |
 | GD-05: N1 | Eine native Informations-Control mit gemeinsamem Einstellungen-/Hilfebereich, drei Zugängen und Rückweg. Nur der UI-freie Hintergrund wird gespiegelt; Falz links. |
@@ -38,7 +50,7 @@ Eigentümer-TTFs erfolgt auf der durch E2 akzeptierten Grundlage. Hintergrundarb
 Nach ZS2-E2 beginnen die kurzen gerichteten Animationen ausschließlich nach dem
 atomaren Anwenden: höchstens 180 ms Startspreizung plus 210 ms je Zelle; Entfernen
 sofort/120 ms. Das aktive X schreibt ohne volle Unterzeichnung. Gegentasten-Down
-bricht die aktive Zellgeste bis zum Loslassen beider Tasten ab; MMB bleibt Navigation.
+bricht die aktive Zellgeste bis zum Loslassen beider Tasten ab; MMB bleibt ausschließlich Hinweisnavigation.
 Die Vorschau beim Ziehen bleibt statisch und heller/transparenter. Die neue
 Spezifikation ist keine bereits gelieferte oder abgenommene Z2-Änderung.
 

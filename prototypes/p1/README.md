@@ -1,12 +1,20 @@
 # P1 · Integrierte Windows-Spielprobe
 
-Z2 / [#23](https://github.com/venomenon328/picross/issues/23) liefert die native
-A-Bucharbeitsansicht und genau eine Informationsseite. Pfeil/Menü öffnen Einstellungen,
-`?` öffnet Hilfe; der Rückpfeil führt zum selben Blatt. UI 100/125 %, Hinweisreset,
-H1 und Beenden stehen dort. Neun Arbeitsaktionen bleiben direkt am Raster;
-Farbwahl aktiviert Füllen auch nach Hand/Radierer. Das linke Register öffnet das
-bestehende Album. Speicherfehler verhindern einen ungesicherten Wechsel; nötige
-Backupübernahme bleibt auf der Arbeitsseite mit Bestätigung erreichbar.
+VS2 / [#61](https://github.com/venomenon328/picross/issues/61) startet regulär in der
+Sammlung. Erst die Auswahl öffnet ein Blatt; Einstellungen sind auch aus der
+Sammlung erreichbar. Unter **Rätselansicht** stehen **Rasteransicht** und
+**Gesamtansicht mit allen Hinweisen**. Genau diese Option wählt den Modus; sie gilt
+für die Sitzung, nach Neustart wieder Rasteransicht. **Einpassen** passt innerhalb
+des gewählten Modus ein. **Arbeitsgröße** wünscht 24px, begrenzt durch den Fit.
+
+Acht Arbeitsaktionen, Farben, eigene passive Miniatur und unabhängige lange Hinweise
+bleiben am Raster. Hand- und Raster-/Miniaturverschiebung entfallen. Kleine oder
+kollidierende Großrasterhinweise sind kein Komfortversprechen. Optionen und Rückweg
+bleiben erreichbar. Speicherfehler blockieren ungesicherte Wechsel; Backupübernahme
+braucht weiter Bestätigung. Neun Inhalte und normale Schema-1-Saves bleiben erhalten.
+[Aktuelle technische Zuordnung](../../docs/VS2_VERIFICATION.md) und
+[neutrale Windows-Spielprobe](../../docs/VS2_OWNER_TRIAL.md); VS2-M01 und unabhängiges
+Review bleiben vor Merge offen. Kein Release.
 
 Offline-Fonts Fraunces/Plex Sans, unverändertes A-Papier und feste C1-Kontur sind
 integriert. OFL-Texte liegen im Windows-ZIP unter `licenses/`, alle Ressourcen sind
@@ -111,8 +119,8 @@ begrenzt. Unter 1280×720 erscheint eine verständliche Meldung. Vergrößern de
 zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht automatisch.
 Die kompakte 20×20-Standarddarstellung bleibt bei 100 % 480×480. Oberhalb 100 %
 wächst der Rasterviewport im nicht kompakten Buchlayout in die freie Papierfläche:
-bei 1920×1080/UI 100 % bleiben 133 % und 150 % vollständig sichtbar; erst der
-nächste Arbeitszoom bei rund 167 % trifft im gezielt geprüften Fall die echte
+Historisch blieben bei 1920×1080/UI 100 % 133 % und 150 % vollständig sichtbar; erst der
+nächste Arbeitszoom bei rund 167 % traf die echte
 vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clippen.
 
 ## Bearbeiten und zurücknehmen
@@ -143,7 +151,7 @@ vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clipp
   Rückgängig/Wiederholen stellt ganze Striche mit exakten Vorzuständen wieder her.
 - F-02/F-03: Farbe über die unbeschrifteten Farbfelder in den Originalfarben wählen.
   Eckmarkierungen zeigen die Auswahl; Status und Tooltip nennen „Farbe 1“ bis „Farbe 4“.
-  Farbwahl aktiviert Füllen, auch nach Hand oder Radierer. Die frühere A–D-Beschriftung
+  Farbwahl aktiviert Füllen, auch nach Radierer. Die frühere A–D-Beschriftung
   der Mauspalette entfällt; Lösungshinweise zeigen weiterhin nur die Zahl in ihrer Farbe.
   Gleiche Farbblöcke brauchen Abstand; verschiedene dürfen angrenzen.
 - Etwas größere Füllflächen bleiben durch Zwischenräume und Rasterlinien getrennt.
@@ -152,15 +160,12 @@ vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clipp
 
 ## Navigieren und Hinweise lesen
 
-- Mausrad: Zoom am Zeiger. Sichtbare −/+ Knöpfe: Zoom um die Ansichtsmitte.
-  20 monotone Arbeitsstufen reichen von 50 bis 300 % (12 bis 72 logische Einheiten),
-  rund um 100 % in Zwei-Einheiten-Schritten. Herauszoomen vergrößert nie und
-  Hineinzoomen verkleinert nie, auch nicht aus einer Gesamtansicht außerhalb der Folge.
-- Mittlere Taste oder Hand-Werkzeug links im Raster: Rasteransicht verschieben.
-  Gesamtansicht passt das komplette Raster ein; Arbeitsgröße stellt 100 % wieder her.
-- Eigene Miniatur: Klick/Ziehen versetzt den Ausschnitt. Der doppelte Rahmen markiert
-  die sichtbare Fläche. Helle Flächen sind unbekannt, Punkte leer, Farben eigene Füllungen
-  einschließlich möglicher Fehler und derselben Strichvorschau.
+- Mausrad und −/+ zoomen monoton bis zur vollständigen Raster-Fitgrenze samt Rahmen.
+  Die gewünschte gültige Arbeitsstufe bleibt separat vom berechneten Fitwert erhalten.
+  Einpassen und Arbeitsgröße ändern die benannte Rätselansicht nicht.
+- Raster-MMB und frühere Handrouten verschieben oder bearbeiten nichts.
+- Die eigene Miniatur bleibt passiv: helle Flächen unbekannt, Punkte leer, Farben
+  eigene Füllungen einschließlich Fehlern und statischer Strichvorschau.
 - Während Zellgesten sind Zoom und Navigation gesperrt. Navigation ändert keine Zellen
   oder Undo-Historie. Pro Blatt bleiben Bearbeitung/History und Ansicht beim
   Blattwechsel und regulären App-Neustart erhalten.
@@ -171,7 +176,7 @@ vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clipp
   vollständiger Zahlen sichtbar. `…` links/oben markiert einen verborgenen Anfang,
   rechts/unten ein verborgenes Ende; mittlere Ausschnitte dürfen beide Marker haben.
   Zahlen werden nie geteilt; bestätigte Lesepositionen liegen in ganzen Slots.
-- Mittlere Taste oder Hand-Werkzeug links im oberen Hinweisbereich verschiebt nur die
+- Nur die mittlere Taste im oberen Hinweisbereich verschiebt nur die
   beim Start angefasste Spaltenfolge vertikal. Dieselbe Geste im linken Hinweisbereich
   verschiebt nur die angefasste Zeilenfolge horizontal. Während des Ziehens folgt
   sie der Maus flüssig zwischen den Slots. `…` zeigt dabei auf der jeweiligen Seite
@@ -321,7 +326,7 @@ Aktive Füllungen entstehen sichtbar aus kurzen wechselgerichteten Schraffurzüg
 ohne volle Unterzeichnung; die ruhende Endform bleibt erhalten.
 Das aktive X schreibt Zug eins vor Zug zwei ohne vollständige Unterzeichnung.
 Gegentasten-Down bricht aktive Zellgesten auch außerhalb des Boards ab; nach beiden
-Ups ist ein frisches Down nötig. MMB/Hand bleiben Navigation. Genau ein
+Ups ist ein frisches Down nötig. MMB bleibt ausschließlich Hinweisnavigation. Genau ein
 Sitzungsschalter „Zellanimationen“ ergänzt die bestehenden Einstellungen.
 [Prüfzuordnung](../../docs/ZS2_VERIFICATION.md),
 [offene reguläre Eigentümerprobe](../../docs/ZS2_OWNER_TRIAL.md).
@@ -329,7 +334,7 @@ Studienvergleich und Speicherisolation bleiben erhalten; kein Merge oder Release
 
 ## VS-GF1 · isolierte Vollsichtstudie (#57/#59)
 
-Das separate VS-1-ZIP bietet G/V ohne R, Hand oder Rasterpanning. Hinweise werden
+Historische VS-1-ZIPs boten G/V ohne R, Hand oder Rasterpanning. Hinweise werden
 nach tatsächlichem Mindestbedarf je Achse reserviert; zusätzliche freie Breite
 geht anschließend an ganze Zeilenhinweisslots ohne kleineren Fit. G zeigt auch während des MMB-Drags
 mindestens fünf zusammenhängende ganze Zahlen, bei kurzen Folgen alle. Einpassen
@@ -338,5 +343,5 @@ normalisiert; Studienstand bleibt unter `user://vs1/revision-1` getrennt.
 [Vertrag](../../docs/VS1_STUDY.md), [Prüfzuordnung](../../docs/VS1_VERIFICATION.md)
 und [Eigentümerprobe](../../docs/VS1_OWNER_TRIAL.md). VS-VB1/Erstproduktion und alte
 R-Artefakte und die begrenzte E1-Korrekturfolge sind historisch. VS-D01 ist bestätigt,
-reguläre Integration bleibt separat; der persönliche VS-M01-Bericht ist unvollständig.
-Unabhängiges Review und GF-M01 bleiben vor GF1-Merge offen.
+reguläre Integration erfolgt mit VS2; der persönliche VS-M01-Bericht ist unvollständig.
+GF-M01/#59 ist historisch bestanden (PR #60, Kommentar 6076039228). Neue VS2-M01 und unabhängiges Review bleiben vor Merge offen. Separate ZS-/VS-Spielerbuilds werden nicht mehr standardmäßig erzeugt; die gebundenen Vergleiche laufen als Entwickler-Replays weiter.

@@ -170,6 +170,7 @@ static func test_atomic_clue_windows(t: SceneTree) -> void:
 	t.check(reached.size() == 24, "J-02 panning reaches every token in a very long sequence")
 
 static func ui_cases(t: SceneTree) -> void:
+	t.root.size = Vector2i(1920, 1080)
 	var app: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(app)
 	app.select_puzzle(1)
@@ -188,7 +189,7 @@ static func ui_cases(t: SceneTree) -> void:
 	var column_22: Array = app.session.definition.columns[21]
 	t.check(column_22.size() == 12 and int(column_22[0].length) == 6 and int(column_22[0].color) == 4 and int(column_22[1].length) == 3 and int(column_22[1].color) == 3 and int(column_22[2].length) == 3 and int(column_22[2].color) == 2, "J-02 F-02 column 22 starts blue 6, red 3, yellow 3")
 	for step: float in [22.0, 24.0]:
-		b.view.zoom_to(step, b.view.viewport.get_center())
+		set_work_zoom(b, step)
 		var base_layout: Dictionary = b.clue_layout("column", 21)
 		var neighbor_layout: Dictionary = b.clue_layout("column", 22)
 		t.check(base_layout.slot_count == neighbor_layout.slot_count and is_equal_approx(base_layout.slot_extent, neighbor_layout.slot_extent), "J-02 adjacent columns share slot rows at pitch " + str(step))
@@ -208,11 +209,11 @@ static func ui_cases(t: SceneTree) -> void:
 		var outer: Dictionary = b.clue_layout("column", 21)
 		t.check(grid_end.end == column_22.size() and grid_end.prefix_hidden and not grid_end.suffix_hidden, "J-02 grid-near F-02 suffix retained at pitch " + str(step))
 		t.check(middle.prefix_hidden and middle.suffix_hidden and outer.start == 0 and outer.suffix_hidden, "J-02 F-02 middle and outer marker states at pitch " + str(step))
-	b.view.zoom_to(24.0, b.view.viewport.get_center())
+	set_work_zoom(b, 24.0)
 	var short_row_layout: Dictionary = b.clue_layout("row", 34)
 	var long_row_layout: Dictionary = b.clue_layout("row", 35)
 	var row_area: Rect2 = b.row_clue_area()
-	t.check(short_row_layout.max_offset == 0 and long_row_layout.max_offset > 0 and short_row_layout.slot_count == long_row_layout.slot_count, "J-02 adjacent short and overflowing rows share one slot grid")
+	t.check(short_row_layout.max_offset == 0 and short_row_layout.slot_count == long_row_layout.slot_count, "J-02 adjacent short and overflowing rows share one slot grid")
 	t.check(is_equal_approx(b.clue_slot_center("row", row_area, short_row_layout, short_row_layout.slot_count - 1), b.clue_slot_center("row", row_area, long_row_layout, long_row_layout.slot_count - 1)), "J-02 adjacent row slots have identical coordinates")
 	t.check(is_equal_approx(b.clue_slot_center("row", row_area, long_row_layout, 1) - b.clue_slot_center("row", row_area, long_row_layout, 0), long_row_layout.slot_extent), "J-02 row slot spacing is regular")
 	for position: int in [0, 1, 2]:
@@ -245,7 +246,7 @@ static func ui_cases(t: SceneTree) -> void:
 		var prior: Vector2 = b.view.center
 		b.zoom(1, b.view.viewport.get_center())
 		b.navigate_to(Vector2.ONE)
-		t.check(b.view.center == prior and b.view.cell_size == 24, "cell gesture blocks zoom and miniature")
+		t.check(b.view.center == prior and b.view.cell_size == minf(24, b.fit_ceiling), "cell gesture blocks zoom and miniature")
 		t.mouse_button(point, false)
 		t.check(app.session.player.cells[start.y * 40 + start.x] == -1, "viewport left neutralizes color " + str(i))
 		t.mouse_button(point, true, MOUSE_BUTTON_RIGHT)
@@ -266,16 +267,17 @@ static func ui_cases(t: SceneTree) -> void:
 	t.mouse_motion(mini_point, false)
 	t.mouse_button(mini_point, true)
 	t.mouse_button(mini_point, false)
-	t.check(b.view.center.x > 20 and b.view.center.y > 20, "real miniature click navigates")
+	t.check(b.view.center == Vector2(20, 20), "VS2 miniature click is passive")
 	var before_center: Vector2 = b.view.center
-	app.set_tool("hand")
+	b.hand = true # Inject obsolete hidden hand state: no productive route.
 	point = b.get_global_transform() * b.view.viewport.get_center()
 	t.mouse_motion(point, false)
 	t.mouse_button(point, true)
 	t.mouse_motion(point + Vector2(80, 60), true)
 	t.mouse_button(point + Vector2(80, 60), false)
-	t.check(b.view.center != before_center and not app.session.gesture.active, "hand pans without gesture")
+	t.check(b.view.center == before_center and not app.session.gesture.active, "VS2 injected hand cannot pan or paint")
 	t.check(app.session.player.history == history and app.session.player.cells == cells, "navigation history/matrix invariant")
+	b.hand = false
 	app.select_puzzle(0)
 	app.select_puzzle(1)
 	t.check(app.session.player.history == history, "per-fixture session history retained")
@@ -301,7 +303,7 @@ static func ui_cases(t: SceneTree) -> void:
 	for scale: float in [1.0, 1.25]:
 		app.set_ui_scale(scale)
 		for step: float in [12.0, 18.0, 22.0, 24.0]:
-			b.view.zoom_to(step, b.view.viewport.get_center())
+			set_work_zoom(b, step)
 			for position: int in [0, 1, 2]:
 				var row_base: Dictionary = b.clue_layout("row", longest_row)
 				var column_base: Dictionary = b.clue_layout("column", longest_column)
@@ -325,13 +327,11 @@ static func ui_cases(t: SceneTree) -> void:
 	b.zoom(-1, b.view.viewport.get_center())
 	t.check(is_equal_approx(b.view.cell_size, below_work_range) and b.overview, "zoom out from small overview never zooms in")
 	b.zoom(1, b.view.viewport.get_center())
-	t.check(b.view.cell_size > below_work_range and not b.overview, "zoom in from small overview increases monotonically")
-	b.view.zoom_to(96.0, b.view.viewport.get_center())
-	b.overview = true
-	b.zoom(1, b.view.viewport.get_center())
-	t.check(b.view.cell_size == 96.0 and b.overview, "zoom in above maximum never shrinks")
-	b.zoom(-1, b.view.viewport.get_center())
-	t.check(b.view.cell_size == Board.WORK_STEPS[-1] and not b.overview, "zoom out above maximum decreases monotonically")
+	t.check(b.view.cell_size == below_work_range and b.overview, "VS2 zoom at full fit cannot exceed ceiling")
+	b.requested_cell = 72.0
+	b.overview = false
+	b._layout()
+	t.check(b.view.cell_size <= b.fit_ceiling and b.capture_view().zoom == 72, "VS2 excessive desired zoom clamps without invalid save step")
 	b.working_size()
 	for dims: Vector2i in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
 		t.root.size = dims
@@ -340,7 +340,7 @@ static func ui_cases(t: SceneTree) -> void:
 			await t.process_frame
 			await t.process_frame
 			t.check(app.work.get_global_rect().end.y < dims.y and app.mini.get_global_rect().end.x < dims.x, "logical layout bounds " + str(dims))
-			t.check(b.view.cell_size == 24, "UI scale/resize independent from zoom")
+			t.check(b.view.cell_size == minf(24, b.fit_ceiling), "VS2 resize keeps desired zoom subject to fit")
 			t.check(not app.minimum_message.visible and app.page.visible, "supported layout visible")
 	t.root.size = Vector2i(1000, 650)
 	await t.process_frame
@@ -594,7 +594,13 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 					snap_geometry_case(t, board, axis, index, anchor, direction * fraction,
 						"%s/%d/%d/%.2f" % [axis, index, anchor, direction * fraction])
 	app.select_puzzle(1)
-	board = app.board
+	board = Board.new()
+	board.session = app.session
+	board.size = app.board.size
+	board.position = app.board.global_position
+	t.root.add_child(board)
+	var historical: Board = board
+	app.work.hide() # Component oracle owns these synthetic events.
 	var row_index: int = 11
 	var lengths: Array[int] = []
 	for clue: Dictionary in app.session.definition.rows[row_index]:
@@ -625,8 +631,11 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	t.check(column_capacity == 4 and app.session.definition.columns[column_index].size() == 5, "V-02 F-02 column route has four real slots and five clues")
 	if column_capacity == 4:
 		monotone_clue_route(t, board, "column", column_index)
-	board.book_layout = true
+	t.root.remove_child(historical)
+	historical.queue_free()
+	await t.process_frame
 	app.select_puzzle(2)
+	board = app.board
 	board.reset_clue_pan()
 	board.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
 	monotone_clue_route(t, board, "row", row)
@@ -695,10 +704,9 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	b.view.reframe()
 
 static func set_work_zoom(board: Control, target: float) -> void:
-	while board.view.cell_size < target - 0.01:
-		board.zoom(1, board.view.viewport.get_center())
-	while board.view.cell_size > target + 0.01:
-		board.zoom(-1, board.view.viewport.get_center())
+	board.requested_cell = target if target in Board.WORK_STEPS else 12.0
+	board.overview = false
+	board._layout()
 
 static func overflowing_lines(board: Control, axis: String) -> Array[int]:
 	var result: Array[int] = []
@@ -779,12 +787,12 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	t.mouse_button(outside, false, MOUSE_BUTTON_MIDDLE)
 	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty() and only_line_changed(rows_before, b.row_clue_steps, row_a), "N-03 row drag snaps on release outside")
 	# Hand/left independently moves a second row by two fixed slots.
-	app.set_tool("hand")
+	app.set_tool("fill")
 	var rows_after_first: Array[int] = b.row_clue_steps.duplicate()
 	t.mouse_motion(row_point_b, false)
-	t.mouse_button(row_point_b, true)
-	t.mouse_motion(row_point_b + Vector2(float(b.clue_layout("row", row_b).slot_extent) * 2.2, 0), true)
-	t.mouse_button(row_point_b, false)
+	t.mouse_button(row_point_b, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_motion(row_point_b + Vector2(float(b.clue_layout("row", row_b).slot_extent) * 2.2, 0), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(row_point_b, false, MOUSE_BUTTON_MIDDLE)
 	t.check(only_line_changed(rows_after_first, b.row_clue_steps, row_b), "J-03 second row keeps an independent snapped position")
 	# Wrong release cannot finish a middle-button drag on one concrete column.
 	app.set_tool("fill")
@@ -800,23 +808,23 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	t.check(window_signature(b.clue_layout("column", column_b)) == column_b_window_before, "J-03 neighbouring column window remains byte-for-byte equivalent")
 	# Hand/left follows the same route for a second column and freezes its line
 	# even while the pointer crosses neighbouring columns.
-	app.set_tool("hand")
+	app.set_tool("fill")
 	var columns_after_first: Array[int] = b.column_clue_steps.duplicate()
 	t.mouse_motion(column_point_b, false)
-	t.mouse_button(column_point_b, true)
-	t.mouse_motion(column_point_b + Vector2(b.view.cell_size * 3.0, float(b.clue_layout("column", column_b).slot_extent) * 2.2), true)
-	t.mouse_button(column_point_b, false)
+	t.mouse_button(column_point_b, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_motion(column_point_b + Vector2(b.view.cell_size * 3.0, float(b.clue_layout("column", column_b).slot_extent) * 2.2), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(column_point_b, false, MOUSE_BUTTON_MIDDLE)
 	t.check(only_line_changed(columns_after_first, b.column_clue_steps, column_b), "J-03 second column ignores crossed neighbours")
 	# Escape and focus loss terminate clue navigation without state changes.
 	t.mouse_motion(row_point_a, false)
-	t.mouse_button(row_point_a, true)
+	t.mouse_button(row_point_a, true, MOUSE_BUTTON_MIDDLE)
 	var escape: InputEventKey = InputEventKey.new()
 	escape.keycode = KEY_ESCAPE
 	escape.pressed = true
 	t.root.push_input(escape, true)
 	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "J-03 Escape ends clue drag")
 	t.mouse_motion(row_point_a, false)
-	t.mouse_button(row_point_a, true)
+	t.mouse_button(row_point_a, true, MOUSE_BUTTON_MIDDLE)
 	app.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "J-03 focus loss ends clue drag")
 	# Empty/short fitting lines never pan into empty space.
@@ -844,13 +852,13 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	# read positions where the same offsets remain valid.
 	var expected_rows: Array[int] = b.row_clue_steps.duplicate()
 	var expected_columns: Array[int] = b.column_clue_steps.duplicate()
-	app.set_tool("hand")
+	app.set_tool("fill")
 	var grid_point: Vector2 = b.get_global_transform() * b.view.viewport.get_center()
 	t.mouse_motion(grid_point, false)
-	t.mouse_button(grid_point, true)
-	t.mouse_motion(grid_point + Vector2(60, 40), true)
-	t.mouse_button(grid_point + Vector2(60, 40), false)
-	t.check(b.view.center != raster_center and b.row_clue_steps == expected_rows and b.column_clue_steps == expected_columns, "J-03 raster pan preserves every clue read position")
+	t.mouse_button(grid_point, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_motion(grid_point + Vector2(60, 40), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(grid_point + Vector2(60, 40), false, MOUSE_BUTTON_MIDDLE)
+	t.check(b.view.center == raster_center and b.row_clue_steps == expected_rows and b.column_clue_steps == expected_columns, "J-03 VS2 prohibited raster pan preserves every clue read position")
 	app.refresh()
 	await t.process_frame
 	var before_miniature: Vector2 = b.view.center
@@ -863,7 +871,7 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	var mini_release: InputEventMouseButton = mini_press.duplicate()
 	mini_release.pressed = false
 	app.mini._gui_input(mini_release)
-	t.check(b.view.center != before_miniature and b.row_clue_steps == expected_rows and b.column_clue_steps == expected_columns, "J-03 miniature input preserves every clue read position")
+	t.check(b.view.center == before_miniature and b.row_clue_steps == expected_rows and b.column_clue_steps == expected_columns, "J-03 miniature input preserves every clue read position")
 	var expected_reads: Dictionary = b.capture_view()
 	b.zoom(1, b.view.viewport.get_center())
 	app.set_ui_scale(1.25)
@@ -872,7 +880,7 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	await t.process_frame
 	t.check(b.row_clue_reads == expected_reads.row_clue_reads and b.column_clue_reads == expected_reads.column_clue_reads, "J-03 zoom/UI/resize preserve semantic per-line positions across changed capacities")
 	t.check(app.session.player.cells == cells and app.session.player.history == history and app.session.player.undo_used == undo_used and app.session.completed == completed and app.session.gesture.changes().is_empty(), "J-03 clue navigation preserves matrix/preview/history/undo/completion")
-	t.check(b.view.cell_size > raster_size and b.view.normalized_view() != mini_frame, "J-03 raster navigation remains independently functional")
+	t.check(b.view.cell_size <= b.fit_ceiling and b.view.normalized_view() == mini_frame, "VS2 resize/zoom retain full grid without navigation")
 	# Visible reset control returns every line to its grid-side default.
 	t.root.size = Vector2i(1280, 720)
 	app.set_ui_scale(1.0)

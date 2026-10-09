@@ -1,6 +1,5 @@
 extends Control
 ## Only own cells, palette and view rectangle; no solution reference.
-signal navigated(point: Vector2)
 var cells: Array[int] = []
 var width: int = 20
 var height: int = 20
@@ -14,15 +13,8 @@ func image_rect() -> Rect2:
 	return Rect2(Vector2.ZERO, Vector2(width, height) * step)
 
 func _gui_input(event: InputEvent) -> void:
-	if not interactive:
-		return
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		dragging = event.pressed and image_rect().has_point(event.position)
-		if dragging:
-			navigated.emit(event.position / image_rect().size)
-		accept_event()
-	elif event is InputEventMouseMotion and dragging:
-		navigated.emit((event.position / image_rect().size).clamp(Vector2.ZERO, Vector2.ONE))
+	# Passive even if an obsolete caller tries to enable interactivity.
+	pass
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -45,7 +37,3 @@ func _draw() -> void:
 		elif cells[i] == 0:
 			draw_circle(box.get_center(), maxf(0.45, step * 0.16), Color("827765"))
 	draw_rect(area, Color("a4a99f"), false, 1)
-	if interactive:
-		var frame: Rect2 = Rect2(view_rect.position * area.size, view_rect.size * area.size)
-		draw_rect(frame.grow(-2), Color.WHITE, false, 3)
-		draw_rect(frame.grow(-2), Color("343f42"), false, 1)

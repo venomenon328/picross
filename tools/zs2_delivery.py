@@ -68,6 +68,8 @@ def verify(renders: Path) -> dict:
                for role in ("before", "study", "after")}
     if any(report["failures"] or len(report["captures"]) != 16 for report in reports.values()):
         raise toolchain.PreflightError("Incomplete/failed ZS2 native matrix")
+    if reports["after"]["captures"] and "full_view" in reports["after"]["captures"][0]:
+        return verify_full_view(renders,reports)
     pairs = []
     identical_boards = 0
     edge_only_boards = []
@@ -314,3 +316,40 @@ def verify_fill_sizes(renders, records):
                 raise toolchain.PreflightError("Hatching crop/context differs")
         result.append(dict(record, spatial_progress=progress, negative_controls=rejected))
     return result
+
+
+def verify_full_view(renders, reports):
+    from PIL import Image, ImageChops
+    pairs=[]
+    for old,chosen,new in zip(*(reports[role]["captures"] for role in ("before","study","after")),strict=True):
+        for key in ("case","fixture","size","ui_scale","cells_sha256"):
+            if old[key]!=new[key] or chosen[key]!=new[key]:
+                raise toolchain.PreflightError("VS2/ZS2 comparison changed "+key)
+        full=new["full_view"]
+        if (full["layout_valid"] and not full["grid_fit"]) or new["font"]!="Chalkboard" or not new["spoiler_free"]:
+            raise toolchain.PreflightError("VS2/ZS2 selected renderer/frame/spoiler regression")
+        if new["view"]["zoom"] not in (12,14,16,18,20,22,24,26,28,30,32,34,36,40,44,48,54,60,66,72):
+            raise toolchain.PreflightError("VS2/ZS2 persisted calculated fit")
+        for view_key in ("active_color","tool"):
+            if old["view"][view_key]!=new["view"][view_key]:
+                raise toolchain.PreflightError("VS2/ZS2 changed "+view_key)
+        for record in (old,chosen,new):
+            if not (renders/record["file"]).is_file(): raise toolchain.PreflightError("Missing ZS2 native image")
+        pairs.append({"case":new["case"],"before":old["file"],"study":chosen["file"],"after":new["file"],"geometry_change":"VS2 regular full-view; no whole-screen pixel identity claimed"})
+    current=reports["after"]
+    if len(current["frames"])!=1 or {m["fixture"] for m in current["measurements"]}!={"F-03","F-07"}:
+        raise toolchain.PreflightError("Missing current ZS2 motion/load evidence")
+    for motion in current["frames"]:
+        if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"]<210):
+            raise toolchain.PreflightError("Current ZS2 motion regression")
+        early=next(f for f in motion["timeline"] if f["label"]=="parallel-commit-0")
+        final=next(f for f in motion["timeline"] if f["label"]=="settled")
+        with Image.open(renders/early["file"]) as a,Image.open(renders/final["file"]) as b:
+            if not 0<early["after_commit_ms"]<210 or not ImageChops.difference(a.convert("RGB"),b.convert("RGB")).getbbox():
+                raise toolchain.PreflightError("Current ZS2 live effect invisible")
+    return dict(reference_commit=BASE,font_sha256=FONT_SHA256,pairs=pairs,
+                comparison="VS2 changes layout and visible capacity; exact selected ink/timing checked separately below",
+                movements=current["frames"],stroke_evidence=zs1_delivery.verify_strokes(renders,current["stroke_frames"]),
+                x_size_evidence=verify_x_sizes(renders,current["rework_sequences"]),
+                fill_size_evidence=verify_fill_sizes(renders,current["fill_sequences"]),wave_evidence=verify_wave(renders,current["wave_sequence"]),
+                measurements=current["measurements"],renderer=current["renderer"])
