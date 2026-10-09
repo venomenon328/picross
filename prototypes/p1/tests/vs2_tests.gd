@@ -243,7 +243,7 @@ func rectangular_input() -> void:
 			var saved: Dictionary = app.store.load_slot(app.session.definition).data
 			var restored: Array[int] = []
 			for value: Variant in saved.cells: restored.append(int(value))
-			check(restored == player.cells and saved.width==player.width and saved.height==player.height and saved.cursor == 4 and JSON.stringify(saved.history)==JSON.stringify(player.history),"rectangular saved dimensions/history/cursor")
+			check(restored == player.cells and saved.width==player.width and saved.height==player.height and saved.cursor == 4 and saved.history==JSON.parse_string(JSON.stringify(player.history)),"rectangular saved dimensions/history/cursor")
 			for i: int in range(4): app._undo()
 		var changes: Array[Dictionary] = []
 		for y: int in range(app.session.player.height):
