@@ -1,6 +1,6 @@
 # P1: Großraster- und Bedienprototyp
 
-Stand: 07.10.2026 · Spezifikation 0.20 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
+Stand: 09.10.2026 · Spezifikation 0.21 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6 integriert; ZS als Folgespezifikation freigegeben
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -173,6 +173,11 @@ Escape oder Fokusverlust verwirft vollständig. Außerhalb des sichtbaren Raster
 Ein wirksamer Strich ist ein Undo-Schritt; Redo stellt exakt wieder her. Neue wirksame Änderung nach Undo verwirft den Redo-Zweig; No-ops nicht. Navigation ist keine Zellaktion. Direktes Neutralisieren wird als normale Bearbeitungsaktion rückgängig machbar, ruft nicht heimlich Undo auf und löscht kein bestehendes Undo-verwendet-Merkmal. Keine Wertungsentscheidung daraus ableiten.
 
 ### 5.2 Fenster, Zoom, Hinweise und Miniatur
+
+Die folgenden Pan-/Miniatur-/720p-Verträge beschreiben den unveränderten regulären
+P1-Iststand. [VS-D01](VS1_DECISION.md) entscheidet das spätere reguläre Vollsichtziel
+mit G/V und 1080p; seine reguläre Integration benötigt einen gesonderten Auftrag.
+VS-GF1/#59 ändert ausschließlich die getrennte VS-Studie, keine dieser Runtime-Regeln.
 
 D-21 präzisiert D-07: 1920×1080 ist die primäre Layoutreferenz und die gewünschte
 Clientfläche beim Fensterstart, soweit diese einschließlich des tatsächlichen Rahmens
@@ -597,3 +602,21 @@ Studie ausschließlich die horizontale Zeilenhinweis-Slotweite auf 26 logische P
 bei UI 100 %; Spaltenslots bleiben unverändert. Für PR #55 hat der Eigentümer die
 kombinierte Sichtprüfung ausdrücklich auf den gemergten `main`-Stand verlegt
 und ihren erfolgreichen Abschluss am 07.10.2026 bestätigt.
+
+## VS-1 · experimentelle Vollsichtprobe (#57)
+
+Der [VS-1-Studienvertrag](VS1_STUDY.md) bindet zehn native Beispiele, aktuell G/V nach VS-E1-R2,
+die ausgewählte ZS-1-Zeichenschicht und getrennte Studienfortsetzung.
+[Prüfzuordnung](VS1_VERIFICATION.md) und [Eigentümerprobe](VS1_OWNER_TRIAL.md)
+trennen technische Lieferung und persönliche Komfortbefunde. [VS-D01](VS1_DECISION.md)
+ist strategisch entschieden: reguläres Vollsichtziel 40×40, mindestens 30×30,
+geeignete 40×30/50×30, 1080p, bevorzugt G und ergänzend V. Sehr große Rätsel
+bleiben mögliche Sonderfälle. PR #58 ist als `c19b3547…` integriert; VS-GF1/#59
+liefert zusätzliche Zeilenkapazität aus freier G-Breite bei unverändertem Fit.
+Die reguläre P1-Umstellung bleibt separat. VS-M01 ist nicht vollständig persönlich
+durchgeführt; unabhängiges Review, GF-M01 und Mergefreigabe des neuen Heads bleiben offen.
+
+VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
+pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige
+zusammenhängende Zahlen auch im Drag und eine harte Raster-Fitgrenze sind aktiv.
+Historische Erstlieferung bleibt gebunden; normale P1-Defaults bleiben bestehen.

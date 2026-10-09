@@ -111,7 +111,7 @@ Schalter startet aktiv, bleibt bei Blattwechsel/Reset erhalten und wird nicht
 persistiert. Nur die vollständigen eigenen Linienhinweise und sichtbaren Zellen
 einschließlich Vorschau dürfen eingehen. [H1-Prüfbericht](H1_VERIFICATION.md).
 
-Produktkern: klassische und farbige kuratierte PC-Bildrätsel, Großrasterfokus, präzise Eingabe, Offline-Solo-Spiel, frühe visuelle Gestaltung sowie der bestätigte Progressions-/Wertungsrahmen. Das ursprüngliche Setup hatte weder Spielmechanik noch Technik festgelegt.
+Produktkern: klassische und farbige kuratierte PC-Bildrätsel, reguläres Vollsichtziel gemäß [VS-D01](VS1_DECISION.md) und mögliche Großraster-Sonderfälle, präzise Eingabe, Offline-Solo-Spiel, frühe visuelle Gestaltung sowie der bestätigte Progressions-/Wertungsrahmen. Das ursprüngliche Setup hatte weder Spielmechanik noch Technik festgelegt.
 
 Visuelle Grundlage: sich füllendes Album, warme ruhige 2D-Illustration mit klaren Konturen und Farbflächen, motivtreue Abschlussbilder, Perfektion nur ohne Fehler und ohne Undo. Sammelalbum/Reisealbum bleiben Alternativen. Detailliertere Abschlussbilder dürfen die Rasterstilisierung verfeinern; pixelidentische Silhouetten sind kein allgemeines Qualitätskriterium.
 
@@ -464,3 +464,29 @@ Bilder ersetzt noch aus den Umsetzungspaketen nach #24 verschoben.
 Zeilenhinweisslots der Studienfassung auf 26 logische Pixel bei UI 100 %;
 Spaltenslots bleiben 18. Die bestätigte Kombination ist Grundlage des aktuellen
 #53-Auftrags für die reguläre Arbeitsansicht; die Studie bleibt separat ausführbar.
+
+## VS-1 · experimentelle Vollsichtprobe (#57)
+
+Der [VS-1-Studienvertrag](VS1_STUDY.md) bindet zehn native Beispiele, aktuell G/V nach VS-E1-R2,
+die ausgewählte ZS-1-Zeichenschicht und getrennte Studienfortsetzung.
+[Prüfzuordnung](VS1_VERIFICATION.md) und [Eigentümerprobe](VS1_OWNER_TRIAL.md)
+trennen technische Lieferung und persönliche Komfortbefunde. [VS-D01](VS1_DECISION.md)
+ist strategisch entschieden: reguläres Vollsichtziel 40×40, mindestens 30×30,
+geeignete 40×30/50×30, 1080p, bevorzugt G und ergänzend V. Sehr große Rätsel
+bleiben mögliche Sonderfälle. PR #58 ist als `c19b3547…` integriert; VS-GF1/#59
+liefert zusätzliche Zeilenkapazität aus freier G-Breite bei unverändertem Fit.
+Die reguläre P1-Umstellung bleibt separat. VS-M01 ist nicht vollständig persönlich
+durchgeführt; unabhängiges Review, GF-M01 und Mergefreigabe des neuen Heads bleiben offen.
+
+VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
+pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige
+zusammenhängende Zahlen auch im Drag und eine harte Raster-Fitgrenze sind aktiv.
+Historische Erstlieferung bleibt gebunden; normale P1-Defaults bleiben bestehen.
+
+Für VS-GF1 zusätzlich vollständig lesen: aktuelle Bodies #57/#59, #53 und PR #56,
+[Entscheidung](VS1_DECISION.md), Studien-/Prüf-/Eigentümerquellen sowie den eigenen
+[GF1-Prüfplan](../examples/vs1/gf1-plan.json). Native lokale Windows-Prüfungen bleiben
+erlaubt, ausschließlich mit isolierten Profilen. Alle sechs Pflichtjobs am
+Lieferhead/Test-Merge, tatsächlicher Downloadstart beider EXEs und GF-PCK-Proben
+sind erforderlich. Unabhängiges Review, GF-M01 und geeignete Mergefreigabe bleiben
+vor Merge offen; frühere Freigabe von #58 gilt nur für dessen integrierten Stand.

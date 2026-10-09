@@ -28,6 +28,7 @@ import gp48_delivery
 import zv50_review
 import zs1_delivery
 import zs2_delivery
+import vs1_delivery
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
@@ -265,6 +266,7 @@ def main() -> int:
             zv50_comparison = zv50_review.verify_pairs(renders)
             zs1_evidence = zs1_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
             zs2_evidence = zs2_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
+            vs1_evidence = vs1_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
@@ -272,6 +274,7 @@ def main() -> int:
                 phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
                 phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"), "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             zs1_build, zs1_exports = zs1_delivery.export(project, workspace, output, base, phase, host)
+            vs1_build, vs1_exports = vs1_delivery.export(project, workspace, output, base, phase, host)
             # Build the synthetic worksheet separately, after the production export.
             # Exported players cannot override their main scene via editor --script.
             shutil.copyfile(root / "tools/h1_owner_probe.gd", project / "h1_owner_probe.gd")
@@ -356,6 +359,7 @@ def main() -> int:
             rp6_review.package(root, output, manifest, archive)
             zs1_delivery.package(root, output, zs1_build, zs1_exports, manifest, zs1_evidence)
             zs2_delivery.package(root, output, manifest, zs2_evidence)
+            vs1_delivery.package(root, output, vs1_build, vs1_exports, manifest, vs1_evidence)
             print(f"GP48 REVIEW {gp_review} sha256:{toolchain.sha256_file(gp_review)}", flush=True)
             print(f"ZV50 REVIEW {zv_review} sha256:{toolchain.sha256_file(zv_review)}", flush=True)
             print(f"REVIEW {review_zip} sha256:{toolchain.sha256_file(review_zip)}", flush=True)

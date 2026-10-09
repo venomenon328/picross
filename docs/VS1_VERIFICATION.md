@@ -1,0 +1,165 @@
+# VS-1 · technische Nachweise und Entscheidungsvorlage
+
+Status: Implementierung und technische Prüfstrecke für die Draft-Lieferung vorhanden.
+Maßgebliche Head-/Run-/Artefaktbindung
+steht im neuen Draft-PR zu [#59](https://github.com/venomenon328/picross/issues/59)
+und in `vs1-report.json`. [VS-D01 ist bestätigt](VS1_DECISION.md); der frühere persönliche
+VS-M01-Bericht ist unvollständig. GF-M01 und unabhängiges Review bleiben offen; keine Behauptung
+unabhängiger Abnahme, Mergefähigkeit oder Releasefähigkeit.
+
+## Prüfzuordnung
+
+| Akzeptanz | Ausgeführter Anschluss / Beleg |
+| --- | --- |
+| VS-A01 | Vorabplan `48d302b`; zehn Manifestfälle mit Verteilungen, Quellen, Hashes, Orientierung und contain-Rändern; 26 Produktionsvarianten ohne Reparatur |
+| VS-A02 | `vs1_tests.gd`: echte InputEvents für Ecken/Linien/Umwandeln/Neutralisieren/Zurückziehen/Wechsel/History; isolierter Root vor Lesen; `vs1_roundtrip.gd` in getrennten Prozessen |
+| VS-A03 | `vs1_capture.gd`: alle angebotenen G/V-Zoomstufen, Resize/UI-Matrix, explizite Fehlfälle, Clipping/Kollisionen und 16/18/20-px-Vergleich |
+| VS-A04 | `test_vs1.py` im Fachjob: komplette Quellenrekonstruktion, unabhängige Proofs und Enddomains; manipulierte Maße/Orientierung/Matrix/Hinweise/Palette/Pfade/Proofs, doppelte IDs, Revealbindung, Diagnosezertifizierung und unvollständiger Reparaturreplay abgewiesen |
+| VS-A05 | `vs1-matrix.json`: aktuell 80 G/V-Hauptzeilen und 20 größere Kontrollen, reale Glyphen-/Statusstrichgrenzen; gezielte Arbeits-/Diagnosebilder; Erstmatrix historisch 120 + 30 |
+| VS-A06 | Gemeinsame reguläre P1-/ZS1-Tests und unveränderte Pixelbaselines im product-Job; VS-Save-Recovery, Spoilergrenze, Miniatur und rechteckiger Abschluss zusätzlich |
+| VS-A07 | Zwei getrennte ZIPs mit Quellhead/Basis/Test-Checkout/Run sowie EXE-/Bild-/Matrixhashes; tatsächlicher Downloadstart auf Windows separat im PR gebunden |
+| VS-A08 | Nachstehende vorläufige technische Einordnung, vollständige Fehlfälle im Bericht und unausgefülltes Eigentümerprotokoll |
+
+Die sechs Pflichtjobs `docs`, `product`, `preflight`, `puzzle-production`,
+`rp4-windows`, `rp5-repair` müssen am Lieferhead/Test-Merge erfolgreich sein.
+`tools/p1_product.py` ruft die VS-Tests, sechs Neustartprozesse, native Messung und
+separaten Export tatsächlich auf. Der Linux-product-Job belegt allein keinen
+Windows-EXE-Start. Die implementierende Windows-Prüfung muss das heruntergeladene
+ZIP verwenden und dessen Hashes sowie normalen/maximierten Client protokollieren.
+
+## Aktiver Nachweisvertrag VS-GF1
+
+| Akzeptanz | Gebundener Anschluss |
+| --- | --- |
+| GF-A01 | `vs1_gf1_capture.gd`, vier native Bildpaare gegen `c19b3547`; VS08 G/1920×1080/UI100 und UI125: alle 13 Zeilenhinweise, unveränderte 18,77/17,06 px und Schrift |
+| GF-A02 | `vs1_gf1_tests.gd`: Null-/Teilbudget und jeder ganze Slotübergang −0,01/0/+0,01 px, Bedarfskappe, unabhängige obere Reserve; VS04/08/09/10 und Langdiagnose |
+| GF-A03 | Mindestprüfung plus jede zusätzlich angebotene Kapazität; alle Glyphen-/Markergrenzen und offenen Intervalle, mindestens fünf vollständige zusammenhängende Originalzahlen/Farben, drei Hinweiszustände |
+| GF-A04 | `vs1_tests.gd` und `vs1_window.gd`: echte MouseEvents an vier Ecken, Linien/Abbruch/Undo/Redo, Rad/Werkzeuge, UI/Resize/G/V/Blattwechsel; `frame_pixels` prüft alle vier gezeichneten Rahmenkanten |
+| GF-A05 | Schmal→Breit→Schmal und G→V→G für alle drei Anker; `vs1_gf1_roundtrip.gd`: frische Schreib-/Leseprozesse, Speicherung bei vollständiger Sicht, exakt gleiche Zellen/History/Farbe/Anker; Windows-Probe zusätzlich alter PR-58-Export→neuer Export |
+| GF-A06 | Weiterhin vollständige 80+20-Zeilen-Matrix einschließlich negativer Fälle, achsweise Gesamt-/sichtbare/versteckte Zahlen, Minimum/Kapazität, Raster/Rahmen/Hinweisrechtecke, horizontaler Verbrauch und tatsächliche Fitachse |
+| GF-A07 | Neues schlankes Spieler-ZIP und Review-ZIP mit GF1-Plan/Bildpaaren/Hashes; `vs1_windows_probe.py` lädt die CI-Artefakte herunter, startet beide EXEs nativ und prüft den ausgelieferten PCK mit Eingabe, Fit, Hinweisen und Neustarts |
+| GF-A08 | Bestätigte Strategie in `VS1_DECISION.md` und den vier Produktquellen; reguläre Integration separat, persönlicher VS-M01-Bericht unvollständig, GF-M01/unabhängiges Review vor Merge offen |
+
+`gf1-plan.json` ist eigenständig und wurde vor den GF1-Vergleichen gebunden. Die
+folgenden E1-Nachweise bleiben Regressionen; E1-initial/correction-1/correction-2
+sind abgeschlossen. Die GF1-Bildpaarprüfung verwirft geänderten Fit, Schrift,
+Modellstand, obere Reserve und überschrittenes Horizontalbudget.
+
+## Integrierter Nachweisvertrag VS-E1-R2
+
+| Anforderung | Gebundener Anschluss |
+| --- | --- |
+| N01 | vs1_capture.gd: Board-/Papier-/Controlrechtecke, 100 Matrixzeilen, Glyphen und Statusstrich; obere Fläche durch Modusleiste unten frei |
+| N02 | vs1_tests.gd, vs1_window.gd: keine Hand/Miniatur-/Rasternavigation, echte Ecken-/MMB-/Rad-/Werkzeugeingaben, Fit, UI100/125, echte Fenster-Resize/Abbruch und G/V-Wechsel |
+| N03 | vs1_e1_cases.gd / vs1_e1_tests.gd: sechs begrenzte Diagnosen, vollständige Tokens an allen Glyphen-/Markerübergängen und Zwischenintervallen; 1–5, 5/6/7/lang, Transponate, unveränderte farbige Korpusfälle und drei Hinweiszustände |
+| N04 | vs1_roundtrip.gd: sechs getrennte Schreib-/Leseprozesse für G, V und Legacy R/Hand/Zoom/Zentrum; Zellen, History, Farbe, Auswahl und semantische Lesepositionen; Recovery/Isolation/Spoilerprüfungen |
+
+Die Rahmennacharbeit E1-correction-2 reserviert 1 px je Seite für die 2-px-Linien.
+`grid_fit` schließt die tatsächliche Strichfläche ein; alle Zoomstufen prüfen diese
+Grenze. `vs1_capture.gd` misst native Randpixel an jeder Zellmitte aller vier
+Rahmenkanten: mindestens zwei Tintenpixel, ohne Kreuzungen als Ersatz für fehlende
+Linien. Der Check scheitert am unveränderten Ausgangsstand in VS09/G und V unten
+(0 px) und besteht danach (2 px). Gegencheck: VS08/40×40/G und V bei 1280×720/UI125.
+Die tatsächliche Fensterprobe enthält zusätzlich VS09, insgesamt 48 Kombinationen.
+
+tools/vs1_delivery.py registriert E1-Prüfung und sämtliche Roundtrips im Produktlauf.
+Unter Windows folgt die tatsächliche OS-Fensterprobe; CI-Linux behält die native
+SubViewport-Matrix. Neue Matrix, Bilder und Logs sind im separaten Review-ZIP.
+minimum_surplus misst je Folge die kleinste Differenz der tatsächlich gezeichneten
+Tokens zu min(5,n). Negative Fälle werden nicht aus der Gesamtmatrix entfernt.
+Der aktuelle Lieferhead und die neuen Download-/Windowsbindungen stehen im Draft-PR.
+Selbstreview ist Implementierungsprüfung; unabhängiges Review und GF-M01 bleiben offen.
+
+Die historischen Produktions-/Manifestbindungen bleiben unverändert und prüfen die
+bytegleiche Kopie [plan-vb1.json](../examples/vs1/plan-vb1.json). Der aktuelle Plan
+muss ohne seinen E1-Abschnitt genau diesen historischen Inhalt behalten. Negative
+Prüfungen weisen geänderte Altslots, fehlenden E1-Abschnitt und andere Archivbytes ab.
+
+Die Windows-Downloadprobe ist mit [vs1_windows_probe.py](../tools/vs1_windows_probe.py)
+reproduzierbar: sauberer Lieferhead, Run-ID, frischer Ausgabepfad und gepinnter
+Godot-Editor/Cache. Sie startet beide entpackten EXEs direkt und führt native
+Bearbeitungs-/Neustart-/Legacy-/Fensterprüfungen gegen deren eingebetteten PCK aus.
+
+
+Integrierte Windows-Messung E1-correction-2, maximaler Fit in V bei 1920 × 1080.
+Keine Komfortabnahme; G und sämtliche Fehlfälle bleiben in der vollständigen Matrix.
+
+| Fall | UI 100 % | UI 125 % |
+| --- | --- | --- |
+| VS01 | 29.22 px | 28.00 px |
+| VS02 | 21.42 px | 18.25 px |
+| VS07 | 21.47 px | 20.44 px |
+| VS08 | 16.07 px | 13.69 px |
+| VS09 | 27.44 px | 24.77 px |
+| VS10 | 18.60 px | 13.72 px |
+
+## Historische Ergebnisse der Erstlieferung bbc91821
+
+Die folgenden Zahlen und Einordnungen gelten ausschließlich für den historischen
+Erststand, nicht für VS-E1-R2. [Dateibindung](../examples/vs1/historical-reference.json).
+Zellabstände bei maximalem Fit in V, logischer Client 1920 × 1080. Werte sind
+geometrische Messwerte, keine menschlich bestätigten Komfortgrenzen:
+
+| Fall/Format | Hinweise Z/S max. | UI 100 % | UI 125 % |
+| --- | --- | --- | --- |
+| VS01 · 30 × 30 Mono | 1/1 | 26,86 px | 24,68 px |
+| VS02 · 30 × 30 Farbe | 10/14 | 19,06 px | 14,93 px |
+| VS03 · 40 × 30 Mono | 7/3 | 25,66 px | 23,18 px |
+| VS04 · 40 × 30 Farbe | 26/14 | 19,06 px | 14,93 px |
+| VS05 · 30 × 40 Mono | 3/7 | 17,45 px | 15,13 px |
+| VS06 · 30 × 40 Farbe | 14/26 | 8,90 px | 4,45 px |
+| VS07 · 40 × 40 Mono | 3/2 | 19,70 px | 17,95 px |
+| VS08 · 40 × 40 Farbe | 13/14 | 14,30 px | 11,20 px |
+| VS09 · 50 × 30 Mono | 7/3 | 25,66 px | 23,18 px |
+| VS10 · 50 × 30 Farbe | 24/15 | 18,46 px | 13,76 px |
+
+**40 × 40:** Das kurze Monobeispiel erreicht den ersten 18–20-px-Prüfbereich.
+Der belastete Farbfall erreicht ihn bei 1080p in V nicht. Eine allgemeine
+40×40-Vollsichtzusage ist daher nicht belegt. Begrenzend ist vor allem die Höhe
+nach Reservierung der oberen Hinweise; UI 125 % verschärft dies.
+
+**Rechtecke:** 40 × 30 und 50 × 30 sind bei UI 100 % auch in den ausgewählten
+Farbbeispielen geometrisch aussichtsreich. 30 × 40 mit 26 oberen Hinweisen zeigt
+einen klaren Problemfall: starke Verkleinerung und Glyphenkollisionen. Das ist
+eine Aussage über Format plus Hinweislast, kein unabhängiges Breiten-/Höhenmaximum.
+
+**30 × 30:** Beide Beispiele liegen bei UI 100 % geometrisch oberhalb 18 px;
+damit existiert ein technischer Kandidat für die geforderte Mindestkapazität.
+UI 125 % drückt das Farbblatt bereits unter 16 px. Die Bedienbarkeit bleibt offen.
+
+**720p:** Schon VS01 fällt in V auf 14,86 / 12,68 px. Lange Farbhinweise führen
+zu sehr kleinen Zellen, Kollisionen oder explizitem Nichtpassen. Diese Aufteilung
+stützt keine komfortable 30×30-Vollsichtstrategie für 720p. Sie ändert weder den
+regulären Mindestclient noch den Inhaltskatalog. **2560 × 1440** verbessert die
+Passform erwartungsgemäß; daraus folgt keine neue Mindestauflösung.
+
+**G:** Bietet zusätzliche Rasterfläche durch begrenzte Hinweisreservierung.
+Versteckte Hinweisteile bleiben ausdrücklich als Navigationserfordernis
+protokolliert. G ist keine vollständige Rätselblattsicht und beweist V nicht.
+
+## Historisches Hinweisbudget und damalige offene Entscheidung
+
+Für die konkret gelieferte Aufteilung beträgt bei 1080p/UI100 die nutzbare Höhe
+vor oberen Hinweisen 824 px. Ein 40×40-Raster mit 18 px lässt rechnerisch etwa
+fünf 18-px-Spaltenslots zu; 20 px nur einen. Für 30 Zeilen bleiben bei 18 px etwa
+15 Slots. Zusätzlich müssen linke Hinweislast, echte Ziffernbreite, Statusstriche
+und Controlabstände passen. UI125 reduziert diese Budgets weiter. Diese Formel
+ist eine Planungsgrenze; die gemessenen Glyphen und tatsächliche Bedienung bleiben
+zusätzliche Kriterien. Erfüllte Hinweise geben keinen Raum frei.
+
+Vorläufig technisch sinnvoll zu erproben: 1080p/UI100, formatabhängiges Hinweisbudget,
+40×40 mit kurzen oberen Folgen und breite Rechtecke mit 30 Zeilen. Die vorhandene
+Miniatur ist in allen Messungen enthalten. Ihre Entfernung oder andere Layouts
+sind nicht geprüft und keine stillen Voraussetzungen dieser Empfehlung.
+
+Nicht untersucht: allgemeine Katalogrepräsentativität, 50×40, Langzeitkomfort,
+physische 720p-/1080p-Displays mit allen DPI-Werten. SubViewport-Messungen ersetzen
+diese Proben nicht. Motivation/Motivqualität der Transponate bleibt eingeschränkt.
+Die damaligen offenen Gates sind historisch. VS-D01 ist inzwischen bestätigt und
+die frühere Integration ausdrücklich freigegeben; der persönliche VS-M01-Bericht
+bleibt unvollständig. Für GF1 gilt das neue leere
+[Eigentümerprotokoll](../examples/vs1/gf1-owner-protocol.json): gezielte GF-M01-Probe
+vor GF1-Merge. Die Strategieentscheidung wird dabei nicht erneut geöffnet.
+
+Vor Merge außerdem: getrennter Selbstreview, unabhängiges technisches/visuelles
+Review des konkreten Heads und passende ausdrückliche Mergefreigabe.

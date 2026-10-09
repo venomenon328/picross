@@ -12,8 +12,11 @@ var fail_step: String = "" # Deterministic filesystem interruption hook for isol
 func _init(path: String = "user://p1/saves") -> void:
 	root = path.trim_suffix("/")
 
+func registered_ids() -> Array[String]:
+	return IDS
+
 func path_for(id: String, suffix: String = ".json") -> String:
-	if not id in IDS:
+	if not id in registered_ids():
 		return ""
 	return root.path_join(id + suffix)
 
@@ -169,7 +172,7 @@ func _parse(path: String, definition: Dictionary) -> Dictionary:
 
 func load_slot(definition: Dictionary) -> Dictionary:
 	var id: String = str(definition.id).to_lower().replace("-", "")
-	if not id in IDS:
+	if not id in registered_ids():
 		return {"status": "error", "error": "Unbekanntes Fixture."}
 	var primary: Dictionary = _parse(path_for(id), definition)
 	var backup: Dictionary = _parse(path_for(id, ".bak"), definition)
@@ -188,7 +191,7 @@ func _absolute(path: String) -> String:
 
 func write_slot(session: Session, view: Dictionary) -> String:
 	var id: String = str(session.definition.id).to_lower().replace("-", "")
-	if not id in IDS:
+	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	var candidate: Dictionary = snapshot(session, view)
 	var error: String = validate(candidate, session.definition)
@@ -230,7 +233,7 @@ func write_slot(session: Session, view: Dictionary) -> String:
 	return ""
 
 func reset_slot(id: String) -> String:
-	if not id in IDS:
+	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	if fail_step == "reset":
 		return "Testabbruch vor Reset."
@@ -242,7 +245,7 @@ func reset_slot(id: String) -> String:
 
 func repair_from_backup(definition: Dictionary) -> String:
 	var id: String = str(definition.id).to_lower().replace("-", "")
-	if not id in IDS:
+	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	var backup: Dictionary = _parse(path_for(id, ".bak"), definition)
 	if backup.status != "valid":
@@ -269,7 +272,7 @@ func repair_from_backup(definition: Dictionary) -> String:
 
 func discard_invalid_backup(definition: Dictionary) -> String:
 	var id: String = str(definition.id).to_lower().replace("-", "")
-	if not id in IDS:
+	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	if _parse(path_for(id), definition).status != "valid":
 		return "Kein gültiger Primärstand vorhanden."

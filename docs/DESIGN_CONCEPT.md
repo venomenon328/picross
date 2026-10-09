@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-Stand: 07.10.2026 · Arbeitsfassung 0.21 · Z2/GP-48/ZV-50 integriert; zeichnerische UI spezifiziert
+Stand: 09.10.2026 · Arbeitsfassung 0.22 · Z2/GP-48/ZV-50 integriert; zeichnerische UI spezifiziert
 
 ## 1. Geltung und Entscheidungsstand
 
@@ -186,7 +186,7 @@ Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Textu
 
 Die gefüllten Zellen brauchen einen erkennbaren Zwischenraum beziehungsweise eine kontrastierende Trennung auch zu dunklen Fünferlinien. Innenabstand, Linienbreite, Farben und Ebenenreihenfolge gemeinsam prüfen. Der in der Mausprobe gezeigte Fall dreier angrenzender Füllzellen an einer Fünfergrenze darf nicht wie eine einzige umgedrehte L-Form aussehen. Fünfergruppen sollen dabei weiterhin gut zählbar bleiben. Prüfung an dunklen und allen angebotenen Farbzellen, Arbeitszoom und Vorschau, nicht nur an einem leeren Raster.
 
-Für Großraster ist ein verdichteter Rahmen mit kompakteren Werkzeugen denkbar. Er soll Identität bewahren, ohne Arbeitsfläche zu verschwenden. Schriftgrößen, Abstände, Kontraste und Fokuszustände sind noch kein endgültiges Designsystem.
+Für reguläre Rätsel gilt [VS-D01](VS1_DECISION.md): Vollsicht einschließlich Rahmen, bevorzugt G, ergänzend V, Format-/Hinweislastprüfung bei 1080p. VS-GF1 nutzt freie rechte Papierbreite für Zeilenhinweise und versetzt Raster samt Spaltenhinweisen und Treffergeometrie gemeinsam, ohne Zell-/Schriftverkleinerung. Die reguläre P1-Integration bleibt separat. Für mögliche Großraster-Sonderfälle ist ein verdichteter Rahmen mit kompakteren Werkzeugen denkbar. Er soll Identität bewahren, ohne Arbeitsfläche zu verschwenden. Schriftgrößen, Abstände, Kontraste und Fokuszustände sind noch kein endgültiges Designsystem.
 
 ### 4.2 Bildplätze und Vollständigkeit
 
@@ -398,3 +398,21 @@ diesen Risikostrang mit Motivschutz, getrenntem Deduktionsnachweis und Pilotabna
 ChatGPT-/Codex-Arbeit liefert gespeicherte Vorlagen und Abschlussbilder; das
 Produktionswerkzeug verwendet keine direkte Modell-API. Die hier festgelegte
 Motivtreue und die Spoilergrenze bleiben für sämtliche neuen Inhalte verbindlich.
+
+## VS-1 · experimentelle Vollsichtprobe (#57)
+
+Der [VS-1-Studienvertrag](VS1_STUDY.md) bindet zehn native Beispiele, aktuell G/V nach VS-E1-R2,
+die ausgewählte ZS-1-Zeichenschicht und getrennte Studienfortsetzung.
+[Prüfzuordnung](VS1_VERIFICATION.md) und [Eigentümerprobe](VS1_OWNER_TRIAL.md)
+trennen technische Lieferung und persönliche Komfortbefunde. [VS-D01](VS1_DECISION.md)
+ist strategisch entschieden: reguläres Vollsichtziel 40×40, mindestens 30×30,
+geeignete 40×30/50×30, 1080p, bevorzugt G und ergänzend V. Sehr große Rätsel
+bleiben mögliche Sonderfälle. PR #58 ist als `c19b3547…` integriert; VS-GF1/#59
+liefert zusätzliche Zeilenkapazität aus freier G-Breite bei unverändertem Fit.
+Die reguläre P1-Umstellung bleibt separat. VS-M01 ist nicht vollständig persönlich
+durchgeführt; unabhängiges Review, GF-M01 und Mergefreigabe des neuen Heads bleiben offen.
+
+VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
+pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige
+zusammenhängende Zahlen auch im Drag und eine harte Raster-Fitgrenze sind aktiv.
+Historische Erstlieferung bleibt gebunden; normale P1-Defaults bleiben bestehen.
