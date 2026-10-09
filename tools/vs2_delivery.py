@@ -48,7 +48,21 @@ def capture(root, project, workspace, output, engine, render_command, environmen
         phase("vs2-regular-matrix",command,"VS2_TESTS_OK")
     finally:
         environment.pop("VS2_CAPTURE_DIR",None)
-    return verify(renders)
+    evidence = verify(renders)
+    historical = json.loads((output/"vs1-renders/vs1-matrix.json").read_text(encoding="utf-8"))
+    comparisons=[]
+    for current in evidence["records"]:
+        if not current["corpus"] or current["client"] != [1920,1080] or current["mode"]!="G" or current["id"] not in {"VS04","VS08","VS09"}: continue
+        old=next(r for r in historical["records"] if (r["id"],r["client"],r["ui_scale"],r["mode"]) == (current["id"],current["client"],current["ui_scale"],current["mode"]))
+        comparisons.append(dict(id=current["id"],ui_scale=current["ui_scale"],reference_commit=BASE,
+                                old={k:old[k] for k in ("board_rect","cell_pitch","reserve_slots","font_px","horizontal_budget_px")},
+                                regular={k:current[k] for k in ("board_rect","cell_pitch","reserve_slots","font_px","horizontal_budget_px")}))
+        if current["id"]=="VS08" and (current["reserve_slots"][0]!=13 or current["axis_counts"]["row"]["hidden_numbers"]):
+            raise toolchain.PreflightError("Regular 1080 VS08 does not show all 13 row hints")
+    if len(comparisons)!=6: raise toolchain.PreflightError("Missing GF1 regular/reference geometry comparisons")
+    evidence["reference_comparisons"]=comparisons
+    (renders/"vs2-matrix.json").write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    return evidence
 
 def verify(renders: Path) -> dict:
     report = json.loads((renders/"vs2-matrix.json").read_text(encoding="utf-8"))
@@ -66,6 +80,14 @@ def verify(renders: Path) -> dict:
     for picture in report["pictures"]:
         if Path(picture["file"]).name != picture["file"] or toolchain.sha256_file(renders/picture["file"]) != picture["sha256"]:
             raise toolchain.PreflightError("VS2 native image binding differs")
+        if any(edge["minimum_ink_pixels"] < 2 for edge in picture.get("frame_pixels",{}).values()):
+            raise toolchain.PreflightError("VS2 rendered frame edge missing")
+    expected_images = {"album.png","options.png"}
+    expected_images.update(f"regular-F-{i:02d}-G-ui{ui}.png" for i in (1,7) for ui in (100,125))
+    expected_images.update(f"corpus-VS{i:02d}-{mode}-ui{ui}.png" for i in (4,8,9) for mode in ("G","V") for ui in (100,125))
+    expected_images.update(f"rectangular-VS{i:02d}-reveal.png" for i in (1,3,5,7,9))
+    if {p["file"] for p in report["pictures"]} != expected_images or len(report["pictures"]) != len(expected_images):
+        raise toolchain.PreflightError("VS2 native image coverage incomplete")
     return report
 
 def package(root, output, product, evidence):

@@ -37,7 +37,7 @@ func run() -> void:
 			var player = app.session.player
 			check(player.commit([{"index":0,"before":-1,"after":1}]),"write first action")
 			check(player.commit([{"index":1,"before":-1,"after":0}]) and player.undo(),"write real redo branch")
-			if index == 3:
+			if index == 3 or (index == 0 and OS.get_environment("VS2_COMPLETE_FIRST") == "1"):
 				var changes: Array = []
 				for y: int in range(player.height):
 					for x: int in range(player.width):
@@ -85,7 +85,7 @@ func run() -> void:
 	collect("res://",resources)
 	if OS.get_environment("VS2_PACK_AUDIT") == "1":
 		for path: String in resources:
-			check(not path.contains("/study/") and not path.contains("/full_view_study/") and not path.contains("/tests/") and not path.contains("Bakso"),"PCK excludes developer/study resources: "+path)
+			check(not path.contains("/study/") and not path.contains("/full_view_study/") and not path.contains("/tests/") and not path.contains("Bakso") and not path.contains("Shantell") and not path.contains("Virgil"),"PCK excludes developer/study resources: "+path)
 	var report: Dictionary = {"stage":stage,"failures":failures,"root":app.store.root,"app_data":OS.get_user_data_dir(),"client":[root.size.x,root.size.y],"display":DisplayServer.get_name(),"resources":resources}
 	FileAccess.open(output.path_join("vs2-"+stage+".json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
 	print("VS2_ROUNDTRIP_",stage.to_upper().replace("-","_"),"_", "OK" if failures==0 else "FAILED")
@@ -94,5 +94,4 @@ func run() -> void:
 func collect(path: String, result: Array[String]) -> void:
 	for file: String in DirAccess.get_files_at(path): result.append(path.path_join(file))
 	for folder: String in DirAccess.get_directories_at(path):
-		if folder == ".godot": continue
 		collect(path.path_join(folder),result)

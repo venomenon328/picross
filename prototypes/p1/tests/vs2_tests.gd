@@ -46,7 +46,8 @@ func shot(name: String) -> void:
 	var image: Image = canvas.get_texture().get_image()
 	var path: String = output.path_join(name + ".png")
 	check(image.save_png(path) == OK, "native PNG write")
-	pictures.append({"file":name+".png", "sha256":FileAccess.get_sha256(path), "client":[canvas.size.x,canvas.size.y]})
+	var frame: Dictionary = frame_pixels(image) if app.work.visible and app.board.layout_valid else {}
+	pictures.append({"file":name+".png", "sha256":FileAccess.get_sha256(path), "client":[canvas.size.x,canvas.size.y],"frame_pixels":frame})
 
 func run() -> void:
 	output = OS.get_environment("VS2_CAPTURE_DIR")
@@ -132,7 +133,7 @@ func run() -> void:
 		mouse(start,MOUSE_BUTTON_MIDDLE,true)
 		motion(start+(Vector2(100,60) if axis=="row" else Vector2(60,100)))
 		check(app.board.pan_target == axis and app.board.pan_line_index == index, "MMB target freezes across lines")
-		mouse(start,MOUSE_BUTTON_MIDDLE,false)
+		mouse(start+(Vector2(100,60) if axis=="row" else Vector2(60,100)),MOUSE_BUTTON_MIDDLE,false)
 		var after: Array = app.board.row_clue_reads if axis == "row" else app.board.column_clue_reads
 		check(after[index] != prior[index], "positive independent clue MMB")
 		for i: int in range(prior.size()):
@@ -144,6 +145,7 @@ func run() -> void:
 	canvas.add_child(app)
 	await process_frame
 	await matrix(true)
+	await rectangular_input()
 	check(FileAccess.get_file_as_string(sentinel) == "untouched VS2 sentinel", "regular work leaves study root untouched")
 	if not output.is_empty():
 		FileAccess.open(output.path_join("vs2-matrix.json"),FileAccess.WRITE).store_string(JSON.stringify({"records":records,"pictures":pictures,"checks":checks,"failures":failures},"\t"))
@@ -178,5 +180,69 @@ func matrix(corpus: bool) -> void:
 					check(is_equal_approx(app.mini.image_rect().size.x/app.mini.image_rect().size.y,float(app.session.player.width)/app.session.player.height), "proportional passive own miniature")
 					check(not app.mini.interactive and app.mini.cells == app.session.visible_cells(), "miniature exclusively own cells")
 					records.append(data)
-					if client.x == 1920 and mode == 0 and ((corpus and index in [3,7,8]) or (not corpus and index in [0,6])):
-						await shot("%s-%s-ui%d" % ["corpus" if corpus else "regular",app.session.definition.id,roundi(ui*100)])
+					if client.x == 1920 and (mode == 0 or corpus) and ((corpus and index in [3,7,8]) or (not corpus and index in [0,6])):
+						await shot("%s-%s-%s-ui%d" % ["corpus" if corpus else "regular",app.session.definition.id,board.mode,roundi(ui*100)])
+
+
+func frame_pixels(image: Image) -> Dictionary:
+	# Sample between intersections: vertical lines/cell ink cannot mask a missing
+	# horizontal frame. All corpus dimensions end on a two-pixel major line.
+	var grid: Rect2 = app.board.view.bounds()
+	grid.position += app.board.global_position
+	var result: Dictionary = {}
+	for side: String in ["top", "bottom", "left", "right"]:
+		var horizontal: bool = side in ["top", "bottom"]
+		var edge: float = (grid.position.y if side == "top" else grid.end.y) if horizontal else (grid.position.x if side == "left" else grid.end.x)
+		var minimum: int = 5
+		var count: int = app.session.player.width if horizontal else app.session.player.height
+		for i: int in range(count):
+			var along: int = floori((grid.position.x if horizontal else grid.position.y) + (i + 0.5) * app.board.view.cell_size)
+			var dark: int = 0
+			for across: int in range(floori(edge) - 2, floori(edge) + 3):
+				var pixel: Color = image.get_pixel(along, across) if horizontal else image.get_pixel(across, along)
+				if Vector3(pixel.r, pixel.g, pixel.b).distance_to(Vector3(app.board.INK.r, app.board.INK.g, app.board.INK.b)) < 0.04:
+					dark += 1
+			minimum = mini(minimum, dark)
+		result[side] = {"samples": count, "minimum_ink_pixels": minimum}
+		check(minimum >= 2, "%s/%s %s frame fully drawn (%d pixels)" % [app.session.definition.id, app.board.mode, side, minimum])
+	return result
+
+func rectangular_input() -> void:
+	canvas.size = Vector2i(1920,1080)
+	app.size = Vector2(canvas.size)
+	app.set_ui_scale(1.0)
+	for index: int in [0,2,4,6,8]:
+		app.select_puzzle(index)
+		app._reset_selected()
+		app.open_puzzle()
+		app.set_tool("fill")
+		for mode: int in range(2):
+			app.set_puzzle_view(mode)
+			app.board.working_size()
+			await process_frame
+			var player = app.session.player
+			var expected: Array = player.cells.duplicate()
+			for cell: Vector2i in [Vector2i.ZERO,Vector2i(player.width-1,0),Vector2i(0,player.height-1),Vector2i(player.width-1,player.height-1)]:
+				var p: Vector2 = point(cell)
+				mouse(p,MOUSE_BUTTON_LEFT,true)
+				mouse(p,MOUSE_BUTTON_LEFT,false)
+				expected[cell.y*player.width+cell.x] = 1
+				check(player.cells == expected,"rectangular native corner input hits only row-major target")
+			for i: int in range(4): app._undo()
+			check(player.cells.all(func(value: int)->bool:return value == -1),"rectangular exact undo")
+			for i: int in range(4): app._redo()
+			check(player.cells == expected,"rectangular exact redo")
+			check(app._save_current(),"rectangular normal compatible writer")
+			var saved: Dictionary = app.store.load_slot(app.session.definition).data
+			check(saved.cells == expected and saved.cursor == 4 and saved.history.size()==4,"rectangular saved dimensions/history/cursor")
+			for i: int in range(4): app._undo()
+		var changes: Array[Dictionary] = []
+		for y: int in range(app.session.player.height):
+			for x: int in range(app.session.player.width):
+				var i: int = y*app.session.player.width+x
+				changes.append({"index":i,"before":-1,"after":app.session.definition.solution[y][x]})
+		check(app.session.player.commit(changes) and app.session.is_solution(),"rectangular completion checks exact width/height")
+		app.session.completed = true
+		app.refresh()
+		check(app.ending.visible and app.reveal_view.solved.size()==app.session.player.height and app.reveal_view.solved[0].size()==app.session.player.width,"rectangular reveal retains proportional own matrix")
+		await shot("rectangular-%s-reveal" % app.session.definition.id)

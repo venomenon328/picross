@@ -183,7 +183,11 @@ func font_metrics() -> Dictionary:
 	if not baseline and variant > 0:
 		# Advance includes glyph side bearings. F07's widest 12px column token
 		# exactly fills the 12px column advance; no invented extra 1px gap.
-		check(axis_widths[0] <= rows and axis_widths[1] <= board.view.cell_size, "actual clue widths fit their own axis: %s / slots %s,%s" % [axis_widths,rows,board.view.cell_size])
+		if board.has_method("set_mode"):
+			check(axis_widths[0] <= rows,"regular horizontal token pitch retained")
+			check(axis_widths[1] <= board.view.cell_size or board.glyph_risk or not board.layout_valid,"small regular fit must explicitly warn about crowded glyphs")
+		else:
+			check(axis_widths[0] <= rows and axis_widths[1] <= board.view.cell_size, "actual clue widths fit their own axis: %s / slots %s,%s" % [axis_widths,rows,board.view.cell_size])
 		check(extents.x + extents.y <= columns, "glyphs including markers fit column slot height")
 	if not baseline and variant == 2:
 		check(is_equal_approx(rows, 26.0 * app.ui_scale), "Chalkboard row slot is owner-selected compact spacing")

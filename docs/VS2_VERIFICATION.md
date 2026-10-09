@@ -18,7 +18,7 @@ Das breite frühere VS-M01-Protokoll bleibt persönlich unvollständig.
 | A01/A02 | Reguläre Szene; `vs2_tests.gd`, `vs2_roundtrip.gd`, normaler Windows-Downloadstart. Sammlung, eine Optionswahl, Sitzungsdefault und Abbruch. |
 | A03 | Native Viewportevents für Raster-MMB, injizierte obsolete Hand und passive Miniatur; unabhängige Hinweisziele samt Bereichsübertritt. P12 prüft Snap/Abbruch/Nachbarn. |
 | A04/A05 | `vs2_gf1_tests.gd`: alle Slotgrenzen ±0,01, Null-/Teilbudget, echte Glyphen/C1/Statusstriche und kontinuierliche Grenzen/Intervalle. `vs2_tests.gd`: 304 reguläre Layoutfälle. |
-| A06 | Alle neun unveränderten regulären Inhalte plus zehn gebundene technische Fälle über `tests/vs2_scene.gd`; vier Flächen, UI100/125, beide Modi, Ecken, proportional eigene Miniatur. Kein Spielerimport. |
+| A06 | Alle neun unveränderten regulären Inhalte plus zehn gebundene technische Fälle über `tests/vs2_scene.gd`; vier Flächen, UI100/125, beide Modi. Zusätzliche echte Eckklicks mit exaktem Undo/Redo, normalem Writer und proportionalem Reveal für alle fünf Dimensionen. Kein Spielerimport. |
 | A07 | G1/GP48/H1 und reguläre ZS2-/N01–N03-Suiten; native X/Schraffur 12/24/36 px und gerichtete 17-Zellen-Welle einschließlich Gegenknopf-Abbruch. |
 | A08 | Tatsächlicher alter regulärer Prozess schreibt, neuer Prozess liest; neuer Writer → frischer Reader. Schema-1-Validierung bleibt vollständig; P13/500-Aktionen und Recovery bleiben aktiv. |
 | A09 | Normales ZIP ohne Studienplayer/-protokolle; tatsächliche PCK-Inventur und native Downloadprobe. Studienreplays sind separat deklarierter Entwicklerbestand. |
@@ -44,6 +44,8 @@ Gezielte Umstellung alter Oracles:
 | ZV50 167%-Clipping/feste Standardbox | Vollständiger Rahmen bei jeder angebotenen Stufe, endliche Zoomversuche, aktueller Fit statt alter festen Box. Native Vorher-/Nachherdaten benennen die Geometrieänderung. |
 | ZS2 72px-Schrift-/X-Komponentenprobe | Expliziter Entwicklerzeichner für räumlichen Pixeloracle; angebotene reguläre 12/24/36px-Darstellung und Timing zusätzlich unverändert streng geprüft. |
 | Native partielle X-/historische Snapbilder | Explizite Zeichnerkomponente; keine Behauptung eines regulär angebotenen abgeschnittenen Rasters. |
+| Zelltrennung über sämtliche alten Arbeitsstufen und exhaustive H1-Off/On-Pixelpaare | Explizite Komponente des ausgewählten regulären Zeichners bei historisch zeichnungsfähigen Stress-Pitches. Reguläre GP48-Statusbilder sowie VS2-Glyphen-, Eingabe- und Layoutprüfungen kommen hinzu. Komponenten-Pan nur im Testaufbau, kein produktiver Eingabeweg. |
+| ZS-Schriftbreite bei winzigem Fit | Reguläre Glyphenüberschneidung verlangt eine echte Platz-/Engewarnung und bleibt als Einschränkung im Bericht sichtbar; historische Komponentenproben behalten ihre strenge Passungsprüfung. |
 | GP48/ZS2 Bildschirmgleichheit | Identische eigene Zellen/Fachzustände, stabile Statusgeometrie, vollständiger neuer Rahmen und ausgewählter Font; keine falsche Pixelgleichheit bei geändertem Layout. |
 | Historische ZS1-/VS1-Vergleichsoberflächen | Gepinnter Entwickler-Replay von Basis `fad8853`, Quellen/Reports klar als Referenz. Neue reguläre Prüfungen laufen zusätzlich. Keine separaten Studienplayer in Standard-CI. |
 
@@ -54,6 +56,15 @@ Opt-in komplett hochgeladen. Fachoracles, Zertifikate und RP-Reparaturreplays bl
 Aktuelle Ausführung und commitgebundene CI-/Downloadnachweise werden im Draft-PR
 gebunden: Head, Basis, Test-Merge, Run/Artefakt, EXE-/PCK-/Bild-/Berichtshashes.
 Lokale Entwicklungsproben sind noch keine saubere finale Lieferung.
+Die reproduzierbare Downloadprobe ist `tools/vs2_windows_probe.py` mit vollständigem
+`--head`, erfolgreichem Produkt-`--run`, neuem externem `--output-dir`, gepinntem
+`--engine` und verifiziertem `--cache-dir`. Sie startet beide regulären EXEs ohne
+Argumente mit frischem, teilgespieltem und abgeschlossenem Profil. Der tatsächliche
+alte Writer stammt aus PR #56, Run `37921979562`, Head `8b762dd9aaf976361cba44e3b25004e09edde348`.
+Externe Skripte prüfen anschließend das heruntergeladene eingebettete PCK einschließlich
+Ressourceninventur, normalen/maximierten Clientflächen, DPI und UI100/125. SHA-256
+bindet GitHub-Artefakt, inneres ZIP, EXE-Paar, eingebettetes PCK, Prüfscripte und Bilder.
+Die automatisierte Mausereignisprobe ersetzt weder persönliche Bedienabnahme noch Review.
 Geometrische Passung bei kleinen oder kollidierenden Glyphen ist kein Komforturteil;
 Matrixberichte führen Einschränkungen sichtbar, einschließlich vorhandener Großfälle.
 

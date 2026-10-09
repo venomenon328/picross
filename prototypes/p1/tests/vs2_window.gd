@@ -72,6 +72,7 @@ func run() -> void:
 					var p: Vector2 = board.global_position+board.view.cell_rect(cell).get_center()
 					var cells: Array = app.session.player.cells.duplicate()
 					var history: Array = app.session.player.history.duplicate(true)
+					var cursor: int = app.session.player.cursor
 					var center: Vector2 = board.view.center
 					mouse(p,MOUSE_BUTTON_MIDDLE,true)
 					motion(p+Vector2(90,60))
@@ -88,7 +89,7 @@ func run() -> void:
 					check(center == board.view.center and app.session.player.cells == cells and app.session.player.history == history,"native PCK negative MMB/hand/mini input")
 					mouse(p,MOUSE_BUTTON_LEFT,true)
 					mouse(p,MOUSE_BUTTON_LEFT,false)
-					check(app.session.player.cursor == history.size()+1,"native PCK real paint commits")
+					check(app.session.player.cursor == cursor+1,"native PCK real paint commits, including existing redo")
 					app._undo()
 					check(app.session.player.cells == cells,"native PCK undo exact")
 					app._redo()
@@ -111,7 +112,7 @@ func run() -> void:
 							check(board.pan_target == axis and board.pan_line_index == line,"native positive frozen clue MMB")
 							var tokens: Array = board.visual_hint_units(axis,line).units.filter(func(unit: Dictionary)->bool:return unit.kind=="token")
 							check(tokens.size() >= mini(5,lines[line].size()),"native complete minimum tokens")
-							mouse(start,MOUSE_BUTTON_MIDDLE,false)
+							mouse(start+(Vector2(44.5,90) if axis=="row" else Vector2(90,44.5)),MOUSE_BUTTON_MIDDLE,false)
 							check(board.clue_step(axis,line)>0,"native clue snap saved")
 					if index==0 and not output.is_empty():
 						board.clear_pointer_hover()

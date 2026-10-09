@@ -59,6 +59,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			var tint_delta: Vector3 = Vector3(textured.r-original.r, textured.g-original.g, textured.b-original.b)
 			# The selected pencil has white texture at up to 12 % coverage.
 			if not picture.get_pixelv(center).is_equal_approx(original) or minf(tint_delta.x, minf(tint_delta.y, tint_delta.z)) < -0.005 or tint_delta.length() > 0.13 * sqrt(3.0) or not picture.get_pixelv(moat).is_equal_approx(material.get_pixelv(moat)):
+				picture.save_png(output.path_join(name + "-failure.png"))
 				push_error("Rendered fill/moat regression: %s solid=%s inner=%s moat=%s paper=%s expected=%s" % [name,picture.get_pixelv(center),picture.get_pixelv(expanded),picture.get_pixelv(moat),material.get_pixelv(moat),Color(app.session.definition.palette[i].color)])
 				quit(5)
 				return
@@ -229,7 +230,7 @@ func capture_axis_reset(app: Main, fixture_index: int, pitch: float, color: int)
 	var values: Array[int] = app.session.player.cells.duplicate()
 	values.fill(-1)
 	replace_render_cells(app, values)
-	app.board.view.zoom_to(pitch, app.board.view.viewport.get_center())
+	set_pitch(app,pitch)
 	app.board.view.center = Vector2(app.session.player.width, app.session.player.height) / 2.0
 	app.board.view.reframe()
 	await process_frame
@@ -301,7 +302,7 @@ func x_crosses_view(app: Main, cell: Vector2i) -> bool:
 func capture_x_edges(app: Main) -> void:
 	var regular: Board = use_renderer_component(app)
 	for pitch: float in [24.0, 36.0]:
-		app.board.view.zoom_to(pitch, app.board.view.viewport.get_center())
+		set_pitch(app,pitch)
 		for edge: String in ["top", "bottom", "left", "right", "corner"]:
 			var found: bool = false
 			for xi: int in range(10):
@@ -345,7 +346,7 @@ func region_difference(before: Image, after: Image, region: Rect2i) -> int:
 func capture_hint_markers(app: Main, row: int, column: int) -> void:
 	app.board.clear_clue_hover()
 	app.board.hover = Vector2i(-1, -1)
-	app.board.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
+	component_navigate(app,Vector2(float(column) / 100.0, float(row) / 100.0))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
 		var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
@@ -464,7 +465,7 @@ func capture_drop_snap(app: Main, axis: String, index: int, anchor: int, fractio
 		pixel_checks += 1
 
 func capture_drop_matrix(app: Main, row: int, column: int) -> void:
-	app.board.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
+	component_navigate(app,Vector2(float(column) / 100.0, float(row) / 100.0))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
 		var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
@@ -487,14 +488,14 @@ func capture_owner_drop(app: Main) -> void:
 	await process_frame
 	var regular: Board = use_renderer_component(app)
 	app.board._layout()
-	app.board.view.zoom_to(36.0, app.board.view.viewport.get_center())
+	set_pitch(app,36.0)
 	# Retain the historical six-slot/24px repro alongside native Z2 captures.
 	app.board.book_layout = false
 	app.board.row_slot_extent_cache["%d/%d/%s" % [app.session.get_instance_id(),app.board.clue_font_size(),str(app.ui_scale)]] = 24.0
 	var original_viewport: Rect2 = app.board.view.viewport
 	app.board.view.configure(Rect2(Vector2(174, 126), Vector2(original_viewport.end.x - 174, original_viewport.size.y)), app.board.view.dimensions)
 	app.board.normalize_clue_steps()
-	app.board.navigate_to(Vector2(0.5, 11.0 / 40.0))
+	component_navigate(app,Vector2(0.5, 11.0 / 40.0))
 	if app.board.clue_capacity("row") != 6:
 		push_error("F-02 owner render requires six actual row slots")
 		quit(5)
@@ -512,7 +513,7 @@ func capture_owner_drop(app: Main) -> void:
 	app.board.view.configure(Rect2(Vector2(old_viewport.position.x, column_top), Vector2(old_viewport.size.x, old_viewport.end.y - column_top)), app.board.view.dimensions)
 	app.board.normalize_clue_steps()
 	var column_index: int = 11
-	app.board.navigate_to(Vector2(float(column_index) / 40.0, 11.0 / 40.0))
+	component_navigate(app,Vector2(float(column_index) / 40.0, 11.0 / 40.0))
 	if app.board.clue_capacity("column") != 4 or app.session.definition.columns[column_index].size() != 5:
 		push_error("V-02 column render requires four actual slots and five tokens")
 		quit(5)
@@ -522,7 +523,7 @@ func capture_owner_drop(app: Main) -> void:
 	app.board.view.configure(Rect2(Vector2(old_viewport.position.x, column_top), Vector2(old_viewport.size.x, old_viewport.end.y - column_top)), app.board.view.dimensions)
 	app.board.normalize_clue_steps()
 	var long_column: int = 20
-	app.board.navigate_to(Vector2(float(long_column) / 40.0, 11.0 / 40.0))
+	component_navigate(app,Vector2(float(long_column) / 40.0, 11.0 / 40.0))
 	if app.board.clue_capacity("column") != 5 or app.session.definition.columns[long_column].size() != 11:
 		push_error("V-03 long column render requires five actual slots and eleven tokens")
 		quit(5)
@@ -581,7 +582,7 @@ func run() -> void:
 		surface.size = Vector2i(1920,1080)
 		app.set_ui_scale(1.0)
 		app.select_puzzle(2)
-		app.board.view.zoom_to(24.0,app.board.view.viewport.get_center())
+		set_pitch(app,24.0)
 		app.board.reset_clue_pan()
 		await process_frame
 		await process_frame
@@ -640,18 +641,18 @@ func capture_views(app: Main) -> void:
 	app.board.hover = Vector2i(10, 10)
 	await snapshot(app, "f02-colored-hints-default")
 	for step: float in [22.0, 24.0]:
-		app.board.view.zoom_to(step, app.board.view.viewport.get_center())
+		set_pitch(app,step)
 		for position: float in [0.0, 0.5, 1.0]:
 			set_fractional_step(app, "row", 35, position)
 			set_fractional_step(app, "column", 21, position)
 			await snapshot(app, "f02-hints-%d-%s" % [roundi(step), ["end", "middle", "start"][roundi(position * 2.0)]])
-	app.board.view.zoom_to(12.0, app.board.view.viewport.get_center())
+	set_pitch(app,12.0)
 	set_fractional_step(app, "row", 35, 0.5)
 	set_fractional_step(app, "row", 36, 1.0)
 	set_fractional_step(app, "column", 21, 0.5)
 	set_fractional_step(app, "column", 22, 1.0)
 	await snapshot(app, "f02-hints-50-independent-middle")
-	app.board.view.zoom_to(24.0, app.board.view.viewport.get_center())
+	set_pitch(app,24.0)
 	app.board.reset_clue_pan()
 	set_fractional_step(app, "row", 35, 1.0)
 	await snapshot(app, "f02-row-start-column-end")
@@ -664,24 +665,27 @@ func capture_views(app: Main) -> void:
 	await snapshot(app, "f03-overflow-hover-tooltip")
 	app.board.clear_clue_hover()
 	for step: float in [12.0, 18.0, 22.0, 24.0]:
-		app.board.view.zoom_to(step, app.board.view.viewport.get_center())
+		set_pitch(app,step)
 		app.board.reset_clue_pan()
 		await snapshot(app, "f03-hints-work-%d-end" % roundi(step / 24.0 * 100.0))
 	for step: float in [12.0, 24.0]:
-		app.board.view.zoom_to(step, app.board.view.viewport.get_center())
+		set_pitch(app,step)
 		for position: float in [0.5, 1.0]:
 			set_fractional_step(app, "row", f03_row, position)
 			set_fractional_step(app, "column", f03_column, position)
 			await snapshot(app, "f03-hints-work-%d-%s" % [roundi(step / 24.0 * 100.0), "middle" if position == 0.5 else "start"])
-	app.board.view.zoom_to(24.0, app.board.view.viewport.get_center())
+	set_pitch(app,24.0)
 	set_fractional_step(app, "row", f03_row, 0.45)
 	set_fractional_step(app, "column", f03_column, 0.65)
 	app.board.view.pan(Vector2(120, 80))
-	app.board.navigate_to(Vector2(0.78, 0.22))
+	component_navigate(app,Vector2(0.78, 0.22))
 	await snapshot(app, "f03-hints-after-raster-pan")
 
 func capture_cells(app: Main, fixtures: Array) -> void:
 	# Same L/block at normal and five-cell boundaries, every color/work step.
+	# This spatial renderer oracle deliberately covers every historical work
+	# pitch; regular fit-bounded geometry is checked by VS2's native matrix.
+	var regular: Board = use_renderer_component(app)
 	for fixture: int in fixtures:
 		app.select_puzzle(fixture)
 		var values: Array[int] = app.session.player.cells.duplicate()
@@ -693,8 +697,9 @@ func capture_cells(app: Main, fixtures: Array) -> void:
 		replace_render_cells(app, values)
 		app.board.hover = Vector2i(-1, -1)
 		for step: float in app.board.WORK_STEPS:
-			app.board.view.zoom_to(step, app.board.view.viewport.get_center())
-			app.board.navigate_to(Vector2.ZERO)
+			set_pitch(app,step)
+			app.board.view.center = Vector2.ZERO
+			app.board.view.reframe()
 			await snapshot(app, "separation-f%d-%d-confirmed" % [fixture + 1, roundi(step)], true)
 			# Preview whole mixed-color removal: original values outside endpoint survive.
 			app.session.gesture.begin(app.session.player, Vector2i(2, 4), 1)
@@ -706,20 +711,24 @@ func capture_cells(app: Main, fixtures: Array) -> void:
 				app.session.gesture.move(Vector2i(10, 3))
 				await snapshot(app, "separation-f%d-%d-preview-color%d" % [fixture + 1, roundi(step), color], true)
 				app.session.gesture.cancel()
+	restore_regular_board(app,regular)
 
 func capture_gestures(app: Main) -> void:
 	var f03_row: int = longest_line(app.sessions[2].definition.rows)
 	var f03_column: int = longest_line(app.sessions[2].definition.columns)
 	app.select_puzzle(2)
-	app.board.view.zoom_to(24.0, app.board.view.viewport.get_center())
+	set_pitch(app,24.0)
 	app.board.view.center = Vector2(50, 50)
 	app.board.view.reframe()
 	app.board.hover = app.board.view.hit(app.board.view.viewport.get_center())
 	await snapshot(app, "f03-grid-focus")
 	app.board.hover = Vector2i(-1, -1)
 	await capture_x_edges(app)
-	app.board.view.zoom_to(24.0, app.board.view.viewport.get_center())
-	app.board.navigate_to(Vector2(0.5, float(f03_row) / 100.0))
+	# Continuous pixel motion at the historical 24px stress-sheet geometry.
+	var regular: Board = use_renderer_component(app)
+	set_pitch(app,24.0)
+	app.board.view.center = Vector2(50,f03_row)
+	app.board.view.reframe()
 	app.board.reset_clue_pan()
 	await snapshot(app, "hint-drag-before")
 	var before_drag: Image = Image.load_from_file(output.path_join("hint-drag-before.png"))
@@ -752,7 +761,8 @@ func capture_gestures(app: Main) -> void:
 		return
 	pixel_checks += 2
 	app.board.cancel_gesture()
-	app.board.navigate_to(Vector2(float(f03_column) / 100.0, float(f03_row) / 100.0))
+	app.board.view.center = Vector2(f03_column,f03_row)
+	app.board.view.reframe()
 	app.board.pan_button = MOUSE_BUTTON_MIDDLE
 	app.board.pan_target = "column"
 	app.board.pan_line_index = f03_column
@@ -772,12 +782,18 @@ func capture_gestures(app: Main) -> void:
 		return
 	pixel_checks += 1
 	app.board.cancel_gesture()
+	restore_regular_board(app,regular)
 
 func capture_hints(app: Main) -> void:
 	var f03_row: int = longest_line(app.sessions[2].definition.rows)
 	var f03_column: int = longest_line(app.sessions[2].definition.columns)
+	var regular: Board = use_renderer_component(app)
+	set_pitch(app,24.0)
+	app.board.view.center = Vector2(f03_column,f03_row)
+	app.board.view.reframe()
 	await capture_hint_markers(app, f03_row, f03_column)
 	await capture_drop_matrix(app, f03_row, f03_column)
+	restore_regular_board(app,regular)
 
 func capture_axis(app: Main) -> void:
 	var f03_row: int = longest_line(app.sessions[2].definition.rows)
@@ -802,7 +818,15 @@ func capture_axis(app: Main) -> void:
 	await capture_owner_drop(app)
 
 func capture_h1(app: Main) -> void:
+	# Keep the exhaustive per-token off/on pixel oracle at its historical
+	# drawable stress-sheet pitches. Regular status geometry is additionally
+	# exercised by GP48 and VS2's real layout/glyph matrix.
+	var regular: Board = use_renderer_component(app)
+	app.board.book_inset = Vector2(156,126) * app.ui_scale
+	app.board.book_grid_size = app.board.size-app.board.book_inset-Vector2(12,12)
+	app.board._layout()
 	await preload("res://tests/h1_capture.gd").run(self, app)
+	restore_regular_board(app,regular)
 	for index: int in [0, 1, 2]:
 		app.select_puzzle(index)
 		var values: Array[int] = app.session.player.cells.duplicate()
@@ -827,10 +851,16 @@ func use_renderer_component(app: Main) -> Board:
 	component.size = regular.size
 	component.position = regular.position
 	component.ui_scale = regular.ui_scale
+	component.book_layout = true
+	component.book_inset = Vector2(210,126) * regular.ui_scale
+	component.book_grid_size = component.size - component.book_inset - Vector2(12,12)
 	regular.hide()
 	app.work.add_child(component)
 	app.board = component
 	component.edited.connect(app.refresh)
+	component.resized.connect(func() -> void:
+		component.book_grid_size = (component.size-component.book_inset-Vector2(12,12)).max(Vector2.ONE)
+		component._layout())
 	return regular
 
 func restore_regular_board(app: Main, regular: Board) -> void:
@@ -842,3 +872,17 @@ func restore_regular_board(app: Main, regular: Board) -> void:
 	regular.layout_key = ""
 	regular._layout()
 	regular.show()
+
+func set_pitch(app: Main, pitch: float) -> void:
+	if app.board.has_method("set_mode"):
+		app.board.requested_cell = pitch
+		app.board.overview = false
+		app.board._layout()
+	else:
+		app.board.view.zoom_to(pitch,app.board.view.viewport.get_center())
+
+func component_navigate(app: Main, normalized: Vector2) -> void:
+	# Only the explicit developer renderer can exercise historical clipped views.
+	if not app.board.has_method("set_mode"):
+		app.board.view.center = normalized * Vector2(app.board.view.dimensions)
+		app.board.view.reframe()

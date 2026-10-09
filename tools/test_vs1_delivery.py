@@ -82,7 +82,11 @@ class DeliveryTests(unittest.TestCase):
         self.assertIn('config/name="picross · P1"',project)
         self.assertIn('exclude_filter="tests/*,data/*proof*,study/*,full_view_study/*"',preset)
         harness=(ROOT/'tools/p1_product.py').read_text(encoding='utf-8')
-        for operation in ('capture','export','package'): self.assertIn('vs1_delivery.'+operation+'(',harness)
+        # VS2 retains frozen native developer comparisons and their evidence,
+        # while standard delivery must no longer build separate study players.
+        for operation in ('capture','package'): self.assertIn('vs1_delivery.'+operation+'(',harness)
+        for study in ('vs1','zs1'): self.assertNotIn(study+'_delivery.export(',harness)
+        self.assertIn('vs2_delivery.capture(',harness)
 
 
 if __name__=='__main__':unittest.main()

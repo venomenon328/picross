@@ -10,12 +10,23 @@ var reserve_slots: Vector2i = Vector2i.ONE
 var minimum_slots: Vector2i = Vector2i.ONE
 var horizontal_budget: float = 0.0
 var horizontal_used: float = 0.0
-static var reserve_cache: Dictionary = {}
-static var ink_cache: Dictionary = {}
+var reserve_cache: Dictionary = {}
+var ink_cache: Dictionary = {}
 var layout_valid: bool = true
 var glyph_risk: bool = false
 var layout_key: String = ""
 var layout_state: Array = []
+
+func _ready() -> void:
+	# Share immutable measurements for this process without retaining script/font
+	# resources beyond the SceneTree's lifetime through static dictionaries.
+	var tree: SceneTree = get_tree()
+	if not tree.has_meta("full_view_measurements"):
+		tree.set_meta("full_view_measurements", {"reserves":{},"ink":{}})
+	var cache: Dictionary = tree.get_meta("full_view_measurements")
+	reserve_cache = cache.reserves
+	ink_cache = cache.ink
+	super._ready()
 
 func _layout() -> void:
 	if session == null or size.x <= 1 or size.y <= 1:
@@ -177,11 +188,21 @@ func token_ink(text: String, axis: String, fs: int) -> Vector2:
 	ink_cache[key] = result
 	return result
 
-func sequence_units(entries: Array, capacity: int, origin_slot: int, shift: float, axis: String, fs: int, low: float, high: float) -> Dictionary:
+func sequence_units(entries: Array, capacity: int, origin_slot: int, shift: float, axis: String, fs: int, low: float, high: float, ink_bound: Vector2 = Vector2(-1,-1)) -> Dictionary:
 	var pitch: float = (26.0 if axis == "row" else 18.0) * ui_scale
 	var origin: float = high - capacity * pitch
 	var candidates: Array[Dictionary] = []
-	for i: int in range(entries.size()):
+	if ink_bound.x < 0:
+		ink_bound = Vector2.ZERO
+		for entry: Dictionary in entries:
+			ink_bound = ink_bound.max(token_ink(str(entry.text),axis,fs))
+	# Exclude only centers whose measured maximum ink cannot intersect the area.
+	# This keeps the exact whole-glyph oracle linear in visible capacity rather
+	# than scanning a hundred hidden tokens at every continuous boundary.
+	var base: float = origin + (origin_slot+0.5)*pitch + shift
+	var first: int = maxi(0,floori((low-ink_bound.y-base)/pitch))
+	var last: int = mini(entries.size(),ceili((high+ink_bound.x-base)/pitch)+1)
+	for i: int in range(first,last):
 		var center: float = origin + (origin_slot + i + 0.5) * pitch + shift
 		var ink: Vector2 = token_ink(str(entries[i].text), axis, fs)
 		if center - ink.x >= low and center + ink.y <= high:
@@ -243,6 +264,12 @@ func required_slots(axis: String) -> int:
 
 func suitable_slots(axis: String, capacity: int) -> bool:
 	var lines: Array = session.definition.rows if axis == "row" else session.definition.columns
+	var minimum_key: String = "%s/%s/%s" % [JSON.stringify(lines),axis,ui_scale]
+	if reserve_cache.has(minimum_key) and capacity >= int(reserve_cache[minimum_key]):
+		# Increasing capacity moves the prefix marker outward, keeps the suffix
+		# edge fixed and shortens the shift interval. Every previously whole
+		# token remains whole; a proven minimum therefore proves all supersets.
+		return true
 	var key: String = "safe/%s/%s/%s/%d" % [JSON.stringify(lines), axis, ui_scale, capacity]
 	if reserve_cache.has(key):
 		return bool(reserve_cache[key])
@@ -259,8 +286,11 @@ func suitable_slots(axis: String, capacity: int) -> bool:
 			continue
 		seen[tokens] = true
 		for fs: int in range(Fonts.pixel_size(8), Fonts.pixel_size(roundi(14 * ui_scale)) + 1):
+			var ink_bound: Vector2 = Vector2.ZERO
+			for entry: Dictionary in entries:
+				ink_bound = ink_bound.max(token_ink(str(entry.text),axis,fs))
 			for shift: float in sequence_transitions(entries, capacity, axis, fs):
-				var drawn: Array = sequence_units(entries, capacity, capacity - entries.size(), shift, axis, fs, 0.0, capacity * (26.0 if axis == "row" else 18.0) * ui_scale + 6.0).units
+				var drawn: Array = sequence_units(entries, capacity, capacity - entries.size(), shift, axis, fs, 0.0, capacity * (26.0 if axis == "row" else 18.0) * ui_scale + 6.0, ink_bound).units
 				if drawn.filter(func(unit: Dictionary) -> bool: return unit.kind == "token").size() < mini(5, line.size()):
 					suitable = false
 					break
