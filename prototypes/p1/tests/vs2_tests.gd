@@ -177,6 +177,13 @@ func matrix(corpus: bool) -> void:
 					if data.layout_valid:
 						for cell: Vector2i in [Vector2i.ZERO,Vector2i(board.session.player.width-1,0),Vector2i(0,board.session.player.height-1),Vector2i(board.session.player.width-1,board.session.player.height-1)]:
 							check(board.view.hit(board.view.cell_rect(cell).get_center()) == cell, "four rectangular corner hits")
+					else:
+						var untouched: Array = board.session.player.cells.duplicate()
+						var cursor: int = board.session.player.cursor
+						board.pointer_press(board.view.viewport.get_center(),MOUSE_BUTTON_LEFT)
+						board.pointer_release(board.view.viewport.get_center(),true)
+						check(not board.session.gesture.active and board.session.player.cells==untouched and board.session.player.cursor==cursor,"undrawable geometry offers no broken cell input")
+						check(board.view.cell_size>=1 and not board.marks.visible and board.navigation_target(board.view.viewport.get_center()).is_empty(),"undrawable geometry has no negative marks or pan escape")
 					check(is_equal_approx(app.mini.image_rect().size.x/app.mini.image_rect().size.y,float(app.session.player.width)/app.session.player.height), "proportional passive own miniature")
 					check(not app.mini.interactive and app.mini.cells == app.session.visible_cells(), "miniature exclusively own cells")
 					records.append(data)
@@ -234,7 +241,9 @@ func rectangular_input() -> void:
 			check(player.cells == expected,"rectangular exact redo")
 			check(app._save_current(),"rectangular normal compatible writer")
 			var saved: Dictionary = app.store.load_slot(app.session.definition).data
-			check(saved.cells == expected and saved.cursor == 4 and saved.history.size()==4,"rectangular saved dimensions/history/cursor")
+			var restored: Array[int] = []
+			for value: Variant in saved.cells: restored.append(int(value))
+			check(restored == player.cells and saved.width==player.width and saved.height==player.height and saved.cursor == 4 and JSON.stringify(saved.history)==JSON.stringify(player.history),"rectangular saved dimensions/history/cursor")
 			for i: int in range(4): app._undo()
 		var changes: Array[Dictionary] = []
 		for y: int in range(app.session.player.height):

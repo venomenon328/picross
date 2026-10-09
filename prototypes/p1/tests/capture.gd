@@ -818,15 +818,7 @@ func capture_axis(app: Main) -> void:
 	await capture_owner_drop(app)
 
 func capture_h1(app: Main) -> void:
-	# Keep the exhaustive per-token off/on pixel oracle at its historical
-	# drawable stress-sheet pitches. Regular status geometry is additionally
-	# exercised by GP48 and VS2's real layout/glyph matrix.
-	var regular: Board = use_renderer_component(app)
-	app.board.book_inset = Vector2(156,126) * app.ui_scale
-	app.board.book_grid_size = app.board.size-app.board.book_inset-Vector2(12,12)
-	app.board._layout()
-	await preload("res://tests/h1_capture.gd").run(self, app)
-	restore_regular_board(app,regular)
+	await preload("res://tests/vs2_h1_cases.gd").run(self, app)
 	for index: int in [0, 1, 2]:
 		app.select_puzzle(index)
 		var values: Array[int] = app.session.player.cells.duplicate()

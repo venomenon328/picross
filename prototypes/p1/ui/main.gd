@@ -76,12 +76,6 @@ static func bounded_position(usable: Rect2i, client: Vector2i, decorations: Vect
 	# Window.position is the client origin. Center the entire decorated window.
 	return usable.position + (usable.size - client - decorations) / 2 + client_offset
 
-static func expanded_grid_extent(dimensions: Vector2i, cell_size: float, standard_extent: Vector2, maximum_extent: Vector2, overview: bool) -> Vector2:
-	var result: Vector2 = standard_extent.min(maximum_extent)
-	if not overview and cell_size > 24.01:
-		result = result.max(Vector2(dimensions) * cell_size).min(maximum_extent)
-	return result
-
 func create_store() -> SaveStore:
 	return SaveStore.new(SaveStore.test_root_override if not SaveStore.test_root_override.is_empty() else "user://p1/saves")
 
@@ -796,7 +790,6 @@ func _layout_book() -> void:
 	var w: float = material.size.x
 	var h: float = material.size.y
 	var compact: bool = w < 1700
-	var large: bool = session.player.width > 40
 	var hit: float = 44*u
 	work.position = Vector2.ZERO
 	work.size = Vector2(size.x,size.y-28)

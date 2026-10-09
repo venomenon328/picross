@@ -74,7 +74,7 @@ static func pair(c: SceneTree, app: Main, name: String) -> void:
 				continue
 			var entries: Array = app.board.tooltip_entries(axis, index)
 			for unit: Dictionary in app.board.visual_hint_units(axis, index).units:
-				var entry: Dictionary = entries[int(unit.index)] if unit.kind == "token" else {"text": "â€¦", "marked": false}
+				var entry: Dictionary = entries[int(unit.index)] if unit.kind == "token" else {"text": "…", "marked": false}
 				var width: float = app.board.clue_text_font(font, entry.text).get_string_size(entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 				var baseline: Vector2 = Vector2(float(unit.center) - width / 2, cross + app.board.clue_baseline_offset(fs)) if axis == "row" else Vector2(cross - width / 2, float(unit.center) + app.board.clue_baseline_offset(fs))
 				var area: Rect2 = app.board.row_clue_area() if axis == "row" else app.board.column_clue_area()
@@ -133,7 +133,7 @@ static func run(c: SceneTree, app: Main) -> void:
 				app.set_ui_scale(scale)
 				await c.process_frame
 				for pitch: float in [12.0, 18.0, 22.0, 24.0]:
-					c.set_pitch(app,pitch)
+					app.board.view.zoom_to(pitch, app.board.view.viewport.get_center())
 					app.board.normalize_clue_steps()
 					for axis: String in ["row", "column"]:
 						var lines: Array = app.session.definition.rows if axis == "row" else app.session.definition.columns
@@ -149,7 +149,7 @@ static func run(c: SceneTree, app: Main) -> void:
 			for i: int in range(5000, partial.size()):
 				partial[i] = -1
 			c.replace_render_cells(app, partial)
-			c.component_navigate(app,Vector2(0.5, 0.5))
+			app.board.navigate_to(Vector2(0.5, 0.5))
 			for x: int in range(100):
 				c.set_fractional_step(app, "column", x, 1.0)
 			await pair(c, app, "h1-f3-partial-identical-numbers")
@@ -160,7 +160,7 @@ static func run(c: SceneTree, app: Main) -> void:
 		for axis: String in ["row", "column"]:
 			var lines: Array = app.session.definition.rows if axis == "row" else app.session.definition.columns
 			var index: int = c.longest_line(lines)
-			c.component_navigate(app,Vector2(0.5, (index + 0.5) / app.session.player.height) if axis == "row" else Vector2((index + 0.5) / app.session.player.width, 0.5))
+			app.board.navigate_to(Vector2(0.5, (index + 0.5) / app.session.player.height) if axis == "row" else Vector2((index + 0.5) / app.session.player.width, 0.5))
 			app.board.set_clue_step(axis, index, 0)
 			app.board.set_clue_hover(axis, index)
 			await pair(c, app, "h1-f%d-%s-tooltip" % [fixture + 1, axis])
@@ -169,7 +169,7 @@ static func run(c: SceneTree, app: Main) -> void:
 			c.surface.size = Vector2i(1280, 720)
 			await c.process_frame
 			await c.process_frame
-			c.component_navigate(app,Vector2(0.5, (index + 0.5) / app.session.player.height) if axis == "row" else Vector2((index + 0.5) / app.session.player.width, 0.5))
+			app.board.navigate_to(Vector2(0.5, (index + 0.5) / app.session.player.height) if axis == "row" else Vector2((index + 0.5) / app.session.player.width, 0.5))
 			var area: Rect2 = app.board.row_clue_area() if axis == "row" else app.board.column_clue_area()
 			var cell: Vector2 = app.board.view.cell_rect(Vector2i(index, index)).get_center()
 			var point: Vector2 = app.board.global_position + (Vector2(area.get_center().x, cell.y) if axis == "row" else Vector2(cell.x, area.get_center().y))

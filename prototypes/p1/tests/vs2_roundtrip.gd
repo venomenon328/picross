@@ -73,7 +73,9 @@ func run() -> void:
 			var actual: Dictionary = Store.snapshot(app.session,app.board.capture_view())
 			var expected: Dictionary = records[index]
 			for key: String in ["cells","history","cursor","undo_used","completed"]:
-				check(JSON.stringify(actual[key]) == JSON.stringify(expected[key]),"exact restart "+key+" slot "+str(index))
+				# JSON's numeric representation is double while the model stores
+				# typed integers. Compare the full JSON values, not 1 versus 1.0 text.
+				check(JSON.parse_string(JSON.stringify(actual[key])) == expected[key],"exact restart "+key+" slot "+str(index))
 			check(not app.board.hand and actual.view.active_color == expected.view.active_color and actual.view.tool == ("fill" if expected.view.tool == "hand" else expected.view.tool),"legacy presentation normalized, color/eraser retained")
 			check(actual.view.zoom == expected.view.zoom and actual.view.overview == expected.view.overview and app.board.view.cell_size <= app.board.fit_ceiling,"desired valid work step retained and fit bounded")
 			check(JSON.stringify(actual.view.row_clue_reads)==JSON.stringify(expected.view.row_clue_reads) and JSON.stringify(actual.view.column_clue_reads)==JSON.stringify(expected.view.column_clue_reads),"semantic read intent retained through full visibility")

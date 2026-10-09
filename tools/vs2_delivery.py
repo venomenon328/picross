@@ -42,6 +42,9 @@ def capture(root, project, workspace, output, engine, render_command, environmen
     phase("vs2-gf1-tests",[engine,"--headless","--path",str(project),"--script","res://tests/vs2_gf1_tests.gd"],"VS2_GF1_TESTS_OK")
     renders = output / "vs2-renders"
     renders.mkdir()
+    for path in (output/"renders").glob("h1-vs2-1920x1080-ui*-G-*.png"):
+        shutil.copyfile(path,renders/path.name)
+    shutil.copyfile(output/"renders/render-report-h1.json",renders/"vs2-h1-regular.json")
     environment["VS2_CAPTURE_DIR"] = str(renders)
     command = ["res://tests/vs2_tests.gd" if part == "res://tests/capture.gd" else part for part in render_command]
     try:
@@ -82,6 +85,8 @@ def verify(renders: Path) -> dict:
             raise toolchain.PreflightError("VS2 native image binding differs")
         if any(edge["minimum_ink_pixels"] < 2 for edge in picture.get("frame_pixels",{}).values()):
             raise toolchain.PreflightError("VS2 rendered frame edge missing")
+        if picture["file"].startswith(("regular-","corpus-")) and set(picture.get("frame_pixels",{})) != {"top","bottom","left","right"}:
+            raise toolchain.PreflightError("VS2 rendered frame evidence incomplete")
     expected_images = {"album.png","options.png"}
     expected_images.update(f"regular-F-{i:02d}-G-ui{ui}.png" for i in (1,7) for ui in (100,125))
     expected_images.update(f"corpus-VS{i:02d}-{mode}-ui{ui}.png" for i in (4,8,9) for mode in ("G","V") for ui in (100,125))

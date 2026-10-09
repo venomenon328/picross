@@ -225,6 +225,16 @@ def main() -> int:
             for stage in ("layout", "views", "cells-f1", "cells-f2", "gestures", "hints", "axis", "h1"):
                 environment["P1_RENDER_STAGE"] = stage
                 phase("render-" + stage, render_command, "P1_CAPTURE_OK")
+            # Preserve the exhaustive old H1 stress/token pixel oracle at the
+            # exact accepted layout, alongside the new regular H1 native pairs.
+            h1_reference = vs2_delivery.reference_project(root, workspace)
+            phase("h1-reference-import",[engine,"--headless","--path",str(h1_reference),"--import"])
+            h1_renders = output / "h1-reference-renders"
+            h1_renders.mkdir()
+            environment["P1_CAPTURE_DIR"] = str(h1_renders)
+            environment["P1_RENDER_STAGE"] = "h1"
+            phase("h1-reference-native",[str(h1_reference) if arg==str(project) else arg for arg in render_command],"P1_CAPTURE_OK")
+            environment["P1_CAPTURE_DIR"] = str(renders)
             del environment["P1_RENDER_STAGE"]
             reports = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(renders.glob("render-report-*.json"))]
             (renders / "render-report.json").write_text(json.dumps(dict(
@@ -331,6 +341,8 @@ def main() -> int:
                             zs2=zs2_evidence, vs2=dict(matrix_records=len(vs2_evidence["records"]), reference_commit=vs2_delivery.BASE),
                             zv50_owner_sha256=toolchain.sha256_file(zv_owner),
                             h1_probe_files=h1_files,
+                            h1_reference_commit=vs2_delivery.BASE,
+                            h1_reference_files={p.name:toolchain.sha256_file(p) for p in h1_renders.iterdir() if p.is_file()},
                             h1_probe_export_files=h1_exports,
                             base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
                             github_run_id=os.environ.get("GITHUB_RUN_ID"),

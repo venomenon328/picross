@@ -27,6 +27,9 @@ class DeliveryTests(unittest.TestCase):
         names.update(f"rectangular-VS{i:02d}-reveal.png" for i in (1,3,5,7,9))
         for name in names: (self.root/name).write_bytes(b"bound-test-image")
         self.report=dict(failures=0,records=records,pictures=[dict(file=n,sha256=hashlib.sha256(b"bound-test-image").hexdigest()) for n in names])
+        for picture in self.report["pictures"]:
+            if picture["file"].startswith(("regular-","corpus-")):
+                picture["frame_pixels"]={side:{"minimum_ink_pixels":2} for side in ("top","bottom","left","right")}
 
     def tearDown(self): self.temporary.cleanup()
 
