@@ -37,7 +37,7 @@ def embedded_pack(executable: Path) -> dict:
 
 def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
     """No arguments or player test entry point; inspect only our owned window."""
-    from PIL import ImageGrab
+    from PIL import Image
     user = ctypes.windll.user32
     kernel = ctypes.windll.kernel32
     user.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
@@ -73,17 +73,53 @@ def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
         process.terminate()
         raise ValueError((label, "Expected exactly one owned native player window", owned))
     hwnd, pid = owned[0]
-    user.SetForegroundWindow(hwnd)
     time.sleep(1)
     client = wintypes.RECT()
     user.GetClientRect(hwnd, ctypes.byref(client))
-    origin = wintypes.POINT(0, 0)
-    user.ClientToScreen(hwnd, ctypes.byref(origin))
     width, height = client.right, client.bottom
     if width < 1280 or height < 720:
         raise ValueError("Unexpected regular startup client")
     path = output/(label+".png")
-    ImageGrab.grab(bbox=(origin.x,origin.y,origin.x+width,origin.y+height),all_screens=True).save(path)
+    # Capture only the verified owned HWND, even when another application
+    # covers it. Desktop screenshots could accidentally include user content.
+    gdi = ctypes.windll.gdi32
+    user.GetDC.restype = wintypes.HDC
+    user.GetDC.argtypes = [wintypes.HWND]
+    user.PrintWindow.argtypes = [wintypes.HWND,wintypes.HDC,wintypes.UINT]
+    user.ReleaseDC.argtypes = [wintypes.HWND,wintypes.HDC]
+    gdi.CreateCompatibleDC.restype = wintypes.HDC
+    gdi.CreateCompatibleDC.argtypes = [wintypes.HDC]
+    gdi.CreateCompatibleBitmap.restype = wintypes.HBITMAP
+    gdi.CreateCompatibleBitmap.argtypes = [wintypes.HDC,ctypes.c_int,ctypes.c_int]
+    gdi.SelectObject.restype = wintypes.HANDLE
+    gdi.SelectObject.argtypes = [wintypes.HDC,wintypes.HANDLE]
+    gdi.DeleteObject.argtypes = [wintypes.HANDLE]
+    gdi.DeleteDC.argtypes = [wintypes.HDC]
+    gdi.GetDIBits.argtypes = [wintypes.HDC,wintypes.HBITMAP,wintypes.UINT,wintypes.UINT,ctypes.c_void_p,ctypes.c_void_p,wintypes.UINT]
+    dc = user.GetDC(hwnd)
+    memory = gdi.CreateCompatibleDC(dc)
+    bitmap = gdi.CreateCompatibleBitmap(dc,width,height)
+    previous = gdi.SelectObject(memory,bitmap)
+    captured = None
+    try:
+        if not user.PrintWindow(hwnd,memory,3):
+            raise ValueError("Owned window capture failed")
+        gdi.SelectObject(memory,previous)
+        # BITMAPINFOHEADER: top-down, uncompressed BGRA.
+        header = struct.pack('<IiiHHIIiiII',40,width,-height,1,32,0,width*height*4,0,0,0,0)
+        pixels = ctypes.create_string_buffer(width*height*4)
+        if gdi.GetDIBits(memory,bitmap,0,height,pixels,header,0)!=height:
+            raise ValueError("Owned window bitmap read failed")
+        captured = Image.frombytes('RGB',(width,height),pixels.raw,'raw','BGRX')
+        if len(captured.getcolors(width*height)) < 16:
+            raise ValueError("Owned window capture is blank")
+        captured.save(path)
+    finally:
+        gdi.SelectObject(memory,previous)
+        gdi.DeleteObject(bitmap)
+        gdi.DeleteDC(memory)
+        user.ReleaseDC(hwnd,dc)
+        user.PostMessageW(hwnd,0x0010,0,0)
     dpi = user.GetDpiForWindow(hwnd)
     user.PostMessageW(hwnd, 0x0010, 0, 0)
     process.wait(timeout=30)
@@ -93,7 +129,7 @@ def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
         raise ValueError("Player did not close normally")
     return dict(name=label, executable=executable.name, arguments=[], exit_code=process.returncode,
                 client=[width,height], dpi=dpi, windows_scale=dpi/96, pid=pid,
-                screenshot=path.name, screenshot_sha256=toolchain.sha256_file(path))
+                capture_method="PrintWindow: owned client only", screenshot=path.name, screenshot_sha256=toolchain.sha256_file(path))
 
 
 def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> dict:
