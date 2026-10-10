@@ -13,7 +13,7 @@ damaligen Stand gebunden; aktuelle Produktverträge werden nicht aufgehoben.
 
 ## Aktueller regulärer Stand · VS2 (#61)
 
-**V1-Zwischenstand:** N01/N02/N04 umgesetzt; [Umsetzung und Nachweisweg](VS2_V1_IMPLEMENTATION.md). V2/N03/N05 und kombinierte Abnahme bleiben offen.
+**Kombinierter V1/V2-Stand:** N01–N05 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md) und [V2-Umsetzung und Nachweisweg](VS2_V2_IMPLEMENTATION.md). Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe bleiben offen.
 
 Aktuelle Integrationsbasis ist main `d7ec4e1e4a29d82b6979537a33868d57732d3713`
 mit CI-Policy #63; ursprüngliche Produktbasis `fad8853`, PR #56

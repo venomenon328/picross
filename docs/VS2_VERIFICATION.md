@@ -1,8 +1,8 @@
 # VS2 · reguläre Vollsichtintegration
 
-## Aktueller Nachweisstand · S0 erledigt, V1 technisch geliefert, V2 offen
+## Aktueller Nachweisstand · S0 erledigt, V1/V2 umgesetzt
 
-Stand: 10.10.2026 · R2-B01-Quellenkonsistenz.
+Stand: 10.10.2026 · kombinierter V1/V2-Prüfweg.
 
 [V1-S0 ist abgeschlossen](VS2_V1_S0.md). Lauf `38048159384` auf
 `32befbf336013d8fee29fb6ec61981cc867d1b12`, Test-Merge
@@ -23,10 +23,12 @@ R2-B01 wird durch die konsistenten aktiven Status-/Glyphenangaben nachgeführt.
 native Implementiererprobe des heruntergeladenen Windows-Pakets. Diese alten
 Zahlen sind keine neuen Testläufe der reinen Dokumentationsnacharbeit.
 
-**V2/N03/N05, NA03/NA05 und die kombinierte Abnahme bleiben offen.**
+**V2/N03/N05 ist umgesetzt; NA03/NA05 und kombinierte Regressionen werden durch den
+[V2-Prüfweg](VS2_V2_IMPLEMENTATION.md) nachgewiesen.** Aktuelle Lauf-/Artefaktbindungen
+stehen im PR. Unabhängiges kombiniertes Review und persönliche Abnahme bleiben offen.
 Arbeitsbranch `feat/61-regular-full-view`, [Draft-PR #62](https://github.com/venomenon328/picross/pull/62),
 Auftrag [#61](https://github.com/venomenon328/picross/issues/61). Die aktuelle
-Dokumentationskorrektur implementiert V2 nicht und erteilt keine Mergefreigabe.
+V2-Umsetzung erteilt keine Mergefreigabe.
 
 Der [vor den Erstvergleichen gebundene Plan](../examples/vs2/plan.json) wurde auf
 `4fa23d2` committed. Der separate [V1-Plan](../examples/vs2/v1-plan.json) wurde
@@ -79,7 +81,7 @@ Zellen, vollständige History/Redo, Cursor, `undo_used`, Abschluss, Farbe, Radie
 und semantische Reads bleiben erhalten. Studienroot bleibt unberührt. Die zusätzliche
 Layoutverschiebung N02 ist keine neue gespeicherte Panposition; N05 keine Zellmigration.
 
-## Kriterien VS2-NA01–NA05 · V1 geprüft, V2 und kombinierte Wiederprüfung offen
+## Kriterien VS2-NA01–NA05 · kombinierter Prüfauftrag
 
 Dauerhafter Vertrag: [UI_DRAWING_STYLE.md, VS2-E1](UI_DRAWING_STYLE.md).
 VS2-V1 umfasst N01/N02/N04; VS2-V2 N03/N05. Tests und Dokumentation gehören zu
@@ -93,9 +95,9 @@ VS2-/V1-Pläne oder Manifeste.
 | --- | --- |
 | VS2-NA01 | Auf `40829b4` technisch geprüft: 24 × UI horizontal statt 26, gleicher Fontmaßstab; vertikal 18 × UI. Reale 1/11/17/40 gemäß Eigentümernachtrag, C1/AA, drei Zustände und Marker vollständig und kollisionsfrei. Rasteransicht min(5,n) auch über kontinuierliche Übergänge; Gesamtansicht alle Hinweise; Snap, monotone Bewegung und Leseanker. Im kombinierten V2-Stand erhalten und erneut regressionsprüfen. |
 | VS2-NA02 | Auf `40829b4` technisch geprüft: F-01 und geeigneter VS09-Breitenfall ausgewogener samt beiden Hinweis-/Rastertreffern; gemessene Belegungs-/Randbudgets. VS08/VS04 und knappe Fälle sichern GF1, Lesemaßstab und Fit. Keine Leer-Slots, zusätzliche Fitverkleinerung, fehlenden Zahlen oder Rückkopplung. V2-Strichumfang erneut gegen diese Anordnung prüfen. |
-| VS2-NA03 | Offen, V2: native 1:1-Bilder von Raster, Miniaturfassung und Palette mit subtiler Scribble-Wirkung. Stabile identitätsgebundene Striche über Neuzeichnen/Seiten/Neustart; kleine Zellen, Fünferkreuzungen, dunkle Füllungen und vier volle Rahmenkanten lesbar. Tatsächlicher Strich-/AA-Umfang passt, logische Zellen/Hit-Tests unverändert. ZS2-Timing, Vorschau und Gegentastenabbruch bleiben. |
+| VS2-NA03 | V2-Prüfweg: native 1:1-Bilder von Raster, Miniaturfassung und Palette mit subtiler Scribble-Wirkung. Stabile identitätsgebundene Striche über Neuzeichnen/Seiten/Neustart; kleine Zellen, Fünferkreuzungen, dunkle Füllungen und vier volle Rahmenkanten lesbar. Tatsächlicher Strich-/AA-Umfang passt, logische Zellen/Hit-Tests unverändert. ZS2-Timing, Vorschau und Gegentastenabbruch bleiben. |
 | VS2-NA04 | Auf `40829b4` technisch geprüft: ganze Gruppe großzügig (−16,+24) × UI, begrenzter Abwärtsversatz auf knappen Flächen; Buchrandabstand, vier Flächen, UI100/125, G/V und echte Save-/Recoveryzustände ohne Überdeckung. 44/55-px-Trefferflächen/Rückwege erhalten, keine bloße Verkleinerung. Neue V2-Fassungen erneut gegen diese Grenzen prüfen. |
-| VS2-NA05 | Offen, V2: identische Füllungen bei abweichenden X/unbekannt ergeben identische Miniaturpixel. Positive Farb-/Fehlerfüllungen, Vorschau Füllung↔X/Neutralisierung, Rückzug/Abbruch, Undo/Redo, Neustart und vorhandene Albumminiaturen prüfen. Keine X/Punkte/Leer-Ersatzzeichen; X im Hauptraster, Save und History sowie H1/Abschluss unverändert. Keine Lösungskorrektur oder früher Reveal. |
+| VS2-NA05 | V2-Prüfweg: identische Füllungen bei abweichenden X/unbekannt ergeben identische Miniaturpixel. Positive Farb-/Fehlerfüllungen, Vorschau Füllung↔X/Neutralisierung, Rückzug/Abbruch, Undo/Redo, Neustart und vorhandene Albumminiaturen prüfen. Keine X/Punkte/Leer-Ersatzzeichen; X im Hauptraster, Save und History sowie H1/Abschluss unverändert. Keine Lösungskorrektur oder früher Reveal. |
 
 Vier logische Flächen: 1280×720, 1600×900, 1920×1080, 2560×1440; UI100/125,
 beide Ansichten, angebotene kleine Arbeitsstufen und Einpassen. F-01/20×20 ist
@@ -169,7 +171,7 @@ Die übernommene [CI-Policy #63](CI_POLICY.md) verlangt Änderungsauswahl und
 Für neue Heads ist die tatsächliche Auswahl verbindlich. Alte grüne Läufe sind
 keine neuen V2-Nachweise; reine Dokumentchecks beweisen keine Produktänderung.
 
-**Offen vor Merge:** V2/N03/N05 und kombinierte aktuelle technische Nachweise,
+**Erforderlich vor Merge:** erfolgreiche kombinierte aktuelle technische Nachweise,
 unabhängiges technisches/visuelles Review des neuen kombinierten Heads, positive
 VS2-M01 am regulären heruntergeladenen Windows-Paket und passende ausdrückliche
 oder bedingte Mergefreigabe. R1 und der technische V1-Anteil von R2 bleiben

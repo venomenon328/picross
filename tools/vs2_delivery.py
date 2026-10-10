@@ -56,10 +56,47 @@ def capture_current(project, workspace, output, engine, render_command, environm
                 focused_dir / "v1-focused.json", focused_dir / "v1-acceptance.json"]
     selected += [focused_dir / name for name in ("v1-F-01-fit.png", "v1-F-01-work.png", "v1-VS09-work.png", "v1-VS08-fit.png", "v1-VS04-fit.png", "v1-recovery-1280-ui125.png")]
     selected += [focused_dir / g["file"] for g in focused["glyphs"]]
+    v2_dir = output / "v2-renders"
+    v2_dir.mkdir()
+    environment["VS2_V2_CAPTURE_DIR"] = str(v2_dir)
+    try:
+        for stage in ("write", "read"):
+            environment["VS2_V2_STAGE"] = stage
+            phase("vs2-v2-" + stage,
+                  ["res://tests/vs2_v2_tests.gd" if part == "res://tests/capture.gd" else part
+                   for part in render_command], "VS2_V2_" + stage.upper() + "_OK")
+    finally:
+        environment.pop("VS2_V2_CAPTURE_DIR", None)
+        environment.pop("VS2_V2_STAGE", None)
+    v2 = verify_v2(v2_dir)
+    v2["plan_sha256"] = toolchain.sha256_file(Path(__file__).resolve().parents[1] / "examples/vs2/v2-plan.json")
+    v2["scripts"] = {name: toolchain.sha256_file(project / "tests" / name)
+                     for name in ("vs2_v2_tests.gd", "vs2_v2_cases.gd")}
+    selected += list(v2_dir.glob("*.json"))
+    selected += [v2_dir / p["file"] for p in v2["write"]["pictures"]]
     return dict(records=len(report["records"]), failures=report["failures"],
-                rendered=len(report["pictures"]), v1=v1,
+                rendered=len(report["pictures"]), v1=v1, v2=v2,
                 historical_comparison="not run; CI policy #63",
                 legacy_reader="separate downloaded Windows old-writer/new-reader probe"), selected
+
+
+def verify_v2(directory: Path) -> dict:
+    reports = {stage: json.loads((directory / ("v2-" + stage + ".json")).read_text(encoding="utf-8"))
+               for stage in ("write", "read")}
+    expected = {"v2-projection-1.png", "v2-projection-4.png", "v2-mono-work.png",
+                "v2-five-crossing.png", "v2-color-work.png", "v2-mini-palette.png"}
+    for stage, report in reports.items():
+        if report["failures"] or report["checks"] < (100 if stage == "write" else 8):
+            raise toolchain.PreflightError("Incomplete/failed V2 " + stage)
+        for picture in report["pictures"]:
+            if Path(picture["file"]).name != picture["file"]:
+                raise toolchain.PreflightError("Unsafe V2 image path")
+            toolchain.verify_sha256(directory / picture["file"], picture["sha256"])
+    if {p["file"] for p in reports["write"]["pictures"]} != expected or len(reports["write"]["pictures"]) != len(expected):
+        raise toolchain.PreflightError("Incomplete V2 native image coverage")
+    if len(reports["write"]["scenarios"]) != 19 or len(set(reports["write"]["scenarios"])) != 19 or reports["read"]["scenarios"] != ["fresh process redo restores X"]:
+        raise toolchain.PreflightError("Incomplete V2 transition coverage")
+    return reports
 
 
 def reference_project(root: Path, workspace: Path) -> Path:
@@ -138,7 +175,7 @@ def verify(renders: Path) -> dict:
     for picture in report["pictures"]:
         if Path(picture["file"]).name != picture["file"] or toolchain.sha256_file(renders/picture["file"]) != picture["sha256"]:
             raise toolchain.PreflightError("VS2 native image binding differs")
-        if any(edge["minimum_ink_pixels"] < 2 for edge in picture.get("frame_pixels",{}).values()):
+        if any(edge["minimum_ink_pixels"] < 1 for edge in picture.get("frame_pixels",{}).values()):
             raise toolchain.PreflightError("VS2 rendered frame edge missing")
         if picture["file"].startswith(("regular-","corpus-")) and set(picture.get("frame_pixels",{})) != {"top","bottom","left","right"}:
             raise toolchain.PreflightError("VS2 rendered frame evidence incomplete")

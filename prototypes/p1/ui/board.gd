@@ -472,14 +472,17 @@ func _draw() -> void:
 		# Cull against the viewport: float rounding at the cell bounds must not
 		# discard an outer line that lies inside the reserved drawing area.
 		if px >= view.viewport.position.x and px <= view.viewport.end.x:
-			draw_line(Vector2(px, grid.position.y), Vector2(px, grid.end.y), INK if x % 5 == 0 else Color("b5b6ab"), 2.0 if x % 5 == 0 else 1.0)
+			draw_grid_line(Vector2(px, grid.position.y), Vector2(px, grid.end.y), "column", x)
 	for y: int in range(first.y, last.y + 1):
 		var py: float = view.origin.y + y * view.cell_size
 		if py >= view.viewport.position.y and py <= view.viewport.end.y:
-			draw_line(Vector2(grid.position.x, py), Vector2(grid.end.x, py), INK if y % 5 == 0 else Color("b5b6ab"), 2.0 if y % 5 == 0 else 1.0)
+			draw_grid_line(Vector2(grid.position.x, py), Vector2(grid.end.x, py), "row", y)
 	_draw_clues(first, last)
 	_draw_clue_tooltip()
 	_draw_gesture_counter()
+
+func draw_grid_line(start: Vector2, end: Vector2, _axis: String, index: int) -> void:
+	draw_line(start, end, INK if index % 5 == 0 else Color("b5b6ab"), 2.0 if index % 5 == 0 else 1.0)
 
 func draw_active_bands(grid: Rect2, active: Vector2i) -> void:
 	if active.x >= 0 and active.y >= 0 and active.x < view.dimensions.x and active.y < view.dimensions.y:

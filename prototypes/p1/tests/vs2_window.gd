@@ -7,10 +7,12 @@ var records: Array = []
 var output: String
 var measurements: Script
 var v1: Script
+var v2: Script
 
 func _initialize() -> void:
 	measurements = load(get_script().resource_path.get_base_dir().path_join("vs2_measurements.gd"))
 	v1 = load(get_script().resource_path.get_base_dir().path_join("vs2_v1_cases.gd"))
+	v2 = load(get_script().resource_path.get_base_dir().path_join("vs2_v2_cases.gd"))
 	call_deferred("run")
 
 func check(ok: bool, label: String) -> void:
@@ -69,6 +71,7 @@ func run() -> void:
 					var record: Dictionary = measurements.capture(board)
 					record.merge({"id":app.session.definition.id,"window_mode":window_mode,"client":[root.size.x,root.size.y],"ui_scale":ui,"dpi":DisplayServer.screen_get_dpi(),"windows_scale":DisplayServer.screen_get_scale()})
 					record.v1 = v1.layout(app,check)
+					record.v2 = v2.layout(app,check)
 					records.append(record)
 					check(not board.layout_valid or record.grid_fit,"native full frame or explicit geometry failure")
 					check(mode == 0 or record.hidden_tokens == 0,"native V all clues")

@@ -12,16 +12,16 @@ Die jüngere **VS2-E1-Spezifikationsfreigabe** ergänzt kompakte Zeilenhinweise 
 Ausgleich der freien Papierfläche. Miniatur und Palette werden etwas nach unten/links
 versetzt, einschließlich ihrer Fassung/Beschriftung, und erhalten wie die sichtbaren
 Rasterlinien eine subtile Scribble-Optik. Der Inhalt der Miniatur wird auf eigene
-Füllungen beschränkt. **V1/N01/N02/N04 ist umgesetzt; V2/N03/N05 bleibt offen.**
-[Konkrete Parameter und Nachweise](VS2_V1_IMPLEMENTATION.md).
+Füllungen beschränkt. **V1/N01/N02/N04 und V2/N03/N05 sind umgesetzt.**
+[V1-Parameter](VS2_V1_IMPLEMENTATION.md) und [V2-Parameter und Nachweise](VS2_V2_IMPLEMENTATION.md).
 Dauerhafter Detailvertrag und ausdrückliche Ablösungen:
 [Zeichensprache, Abschnitt VS2-E1](UI_DRAWING_STYLE.md).
 
 Bedien-/Speichergrundlage: [P1](PROTOTYPE_P1.md). Die
 [Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md)
-trennen Erstlieferung und offene Folgearbeit. VS2-M01 hat Änderungsfeedback und
+trennen Erstlieferung und kombinierte V1/V2-Lieferung. VS2-M01 hat Änderungsfeedback und
 bleibt vor Merge offen; der neue kombinierte Head benötigt technische/visuelle
-Nachprüfung und passende Mergefreigabe. Keine kombinierte Abnahme durch diesen V1-Zwischenstand.
+Nachprüfung und passende Mergefreigabe. Keine persönliche Abnahme durch die technische V1/V2-Lieferung.
 
 Stand: 09.10.2026 · historische GD-Auswahl mit freigegebener VS2-E1-Fortschreibung
 

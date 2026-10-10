@@ -71,5 +71,29 @@ class DeliveryTests(unittest.TestCase):
         executable.write_bytes(b"MZtemplate"+pack+struct.pack("<Q",len(pack)+999)+b"GDPC")
         with self.assertRaises(ValueError): embedded_pack(executable)
 
+    def test_v2_rejects_failed_or_missing_round_and_modified_image(self):
+        names = ["v2-projection-1.png", "v2-projection-4.png", "v2-mono-work.png",
+                 "v2-five-crossing.png", "v2-color-work.png", "v2-mini-palette.png"]
+        for name in names: (self.root/name).write_bytes(b"native-binding")
+        write = dict(checks=100, failures=0, scenarios=[str(i) for i in range(19)],
+                     pictures=[dict(file=n,sha256=hashlib.sha256(b"native-binding").hexdigest()) for n in names])
+        read = dict(checks=8, failures=0, pictures=[], scenarios=["fresh process redo restores X"])
+        def save():
+            for stage, value in (("write", write), ("read", read)):
+                (self.root/("v2-"+stage+".json")).write_text(json.dumps(value),encoding="utf-8")
+        save()
+        self.assertEqual(vs2_delivery.verify_v2(self.root)["read"]["checks"],8)
+        read["failures"] = 1
+        save()
+        with self.assertRaises(PreflightError): vs2_delivery.verify_v2(self.root)
+        read["failures"] = 0
+        write["scenarios"][-1] = write["scenarios"][0]
+        save()
+        with self.assertRaises(PreflightError): vs2_delivery.verify_v2(self.root)
+        write["scenarios"][-1] = "18"
+        save()
+        (self.root/names[0]).write_bytes(b"changed-pixels")
+        with self.assertRaises(PreflightError): vs2_delivery.verify_v2(self.root)
+
 
 if __name__=="__main__": unittest.main()

@@ -1,4 +1,5 @@
 extends Control
+const Scribble = preload("res://ui/scribble.gd")
 ## Only own cells, palette and view rectangle; no solution reference.
 var cells: Array[int] = []
 var width: int = 20
@@ -7,10 +8,14 @@ var palette: Array = []
 var view_rect: Rect2 = Rect2(0, 0, 1, 1)
 var interactive: bool = false
 var dragging: bool = false
+var style_identity: String = "miniature"
 
 func image_rect() -> Rect2:
 	var step: float = minf(size.x / width, size.y / height)
 	return Rect2(Vector2.ZERO, Vector2(width, height) * step)
+
+func frame_strokes() -> Array:
+	return Scribble.outline_strokes(image_rect().grow(-1.0),style_identity,1.2)
 
 func _gui_input(event: InputEvent) -> void:
 	# Passive even if an obsolete caller tries to enable interactivity.
@@ -34,6 +39,7 @@ func _draw() -> void:
 			for entry: Dictionary in palette:
 				if int(entry.id) == cells[i]:
 					draw_rect(box, Color(entry.color))
-		elif cells[i] == 0:
-			draw_circle(box.get_center(), maxf(0.45, step * 0.16), Color("827765"))
-	draw_rect(area, Color("a4a99f"), false, 1)
+	# X and unknown intentionally project to the same neutral paper. The input
+	# matrix is kept intact for the main grid, history, H1 and persistence.
+	for line: Dictionary in frame_strokes():
+		Scribble.paint(self,line,Color("a4a99f"))

@@ -348,6 +348,7 @@ func show_album() -> void:
 		album_previews[i].width = sessions[i].player.width
 		album_previews[i].height = sessions[i].player.height
 		album_previews[i].palette = sessions[i].definition.palette
+		album_previews[i].style_identity = str(sessions[i].definition.id) + "/miniature"
 		album_previews[i].visible = not sessions[i].completed
 		album_previews[i].queue_redraw()
 		album_reveals[i].payload = sessions[i].reveal()
@@ -359,6 +360,7 @@ func show_album() -> void:
 	album_mini.width = session.player.width
 	album_mini.height = session.player.height
 	album_mini.palette = session.definition.palette
+	album_mini.style_identity = str(session.definition.id) + "/miniature"
 	album_mini.visible = not session.completed
 	album_picture.visible = session.completed
 	album_picture.payload = session.reveal()
@@ -385,6 +387,7 @@ func refresh() -> void:
 	mini.width = session.player.width
 	mini.height = session.player.height
 	mini.palette = session.definition.palette
+	mini.style_identity = str(session.definition.id) + "/miniature"
 	mini.view_rect = board.view.normalized_view()
 	mini.queue_redraw()
 	board.queue_redraw()
@@ -703,7 +706,7 @@ func _build_information() -> void:
 	help_panel.add_theme_constant_override("separation",16)
 	content.add_child(help_panel)
 	help_panel.add_child(label("Maus und Hinweise",26))
-	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nRad und +/−: Zoom bis zur Vollsichtgrenze. Einpassen passt innerhalb der gewählten Rätselansicht ein; Arbeitsgröße stellt die gewünschte Standardgröße wieder her. Raster und eigene Miniatur bleiben fest. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nMittlere Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
+	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nRad und +/−: Zoom bis zur Vollsichtgrenze. Einpassen passt innerhalb der gewählten Rätselansicht ein; Arbeitsgröße stellt die gewünschte Standardgröße wieder her. Raster und eigene Miniatur bleiben fest. Die Miniatur zeigt nur eigene Füllungen in Originalfarben, auch Fehler und die aktuelle Vorschau. X und unbekannt bleiben gleich neutral. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nMittlere Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
 	help_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help_panel.add_child(help_text)
 	information.hide()

@@ -2,7 +2,7 @@
 
 ## Aktueller regulärer Stand · VS2 (#61)
 
-**V1-Zwischenstand:** N01/N02/N04 umgesetzt; [Umsetzung und Nachweisweg](VS2_V1_IMPLEMENTATION.md). V2/N03/N05 und kombinierte Abnahme bleiben offen.
+**Kombinierter V1/V2-Stand:** N01–N05 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md) und [V2-Umsetzung und Nachweisweg](VS2_V2_IMPLEMENTATION.md). Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe bleiben offen.
 
 Regulärer Produktstand: Start in Sammlung; genau eine benannte Rätselansicht in
 Optionen. Vollständiges Raster samt Rahmen, passive eigene Miniatur und

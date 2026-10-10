@@ -1,7 +1,8 @@
 extends "res://ui/chalkboard_board.gd"
 ## Regular full view: one selected renderer, no study lifecycle or persistence.
 const ROW_SLOT: float = 24.0 # V1-A: same font, shared tighter horizontal pitch
-const FRAME_MARGIN: float = 1.0 # half the widest (two-pixel) grid stroke
+const Scribble = preload("res://ui/scribble.gd")
+const FRAME_MARGIN: float = 1.0 # 0.18 deviation + 0.82 half-width + 1 AA - 1 inward
 var composition_shift: Vector2 = Vector2.ZERO
 var untranslated_occupied: Rect2
 var untranslated_grid: Rect2
@@ -230,6 +231,31 @@ func _draw() -> void:
 	super._draw()
 	if marks != null:
 		marks.visible = layout_valid
+
+func grid_stroke(start: Vector2, end: Vector2, axis: String, index: int) -> Dictionary:
+	var horizontal: bool = axis == "row"
+	var limit: int = session.player.height if horizontal else session.player.width
+	var outer: bool = index == 0 or index == limit
+	var detail: float = clampf((view.cell_size-4.0)/20.0,0.0,1.0)
+	var identity: String = "%s/%s/%s/%d" % [session.definition.id,session.definition.revision,axis,index]
+	var major: bool = outer or index % 5 == 0
+	var width: float = (1.4 + 0.24 * (Scribble.unit(identity,0)+1.0)/2.0) if major else (0.7 + 0.2 * (Scribble.unit(identity,0)+1.0)/2.0)
+	# Endpoints meet on the same inset rectangle. Interior logical boundaries
+	# stay fixed; only their ink deviates within the existing two-pixel gap.
+	var along: Vector2 = Vector2.RIGHT if horizontal else Vector2.DOWN
+	start += along
+	end -= along
+	if outer:
+		var inward: Vector2 = (Vector2.DOWN if horizontal else Vector2.RIGHT) * (1.0 if index == 0 else -1.0)
+		start += inward
+		end += inward
+	var line: Dictionary = Scribble.stroke(start,end,identity,0.18*detail,width,maxi(2,ceili(start.distance_to(end)/24.0)))
+	line.color = INK if major else Color("b5b6ab")
+	return line
+
+func draw_grid_line(start: Vector2, end: Vector2, axis: String, index: int) -> void:
+	var line: Dictionary = grid_stroke(start,end,axis,index)
+	Scribble.paint(self,line,line.color)
 
 func clue_capacity(axis: String, _available_override: float = -1.0) -> int:
 	return reserve_slots.x if axis == "row" else reserve_slots.y

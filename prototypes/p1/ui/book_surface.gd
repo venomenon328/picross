@@ -2,6 +2,7 @@ extends Control
 ## Only the UI-free material is reflected for the right information page.
 const ART = preload("res://art/book/bp2-a-inventarband.png")
 const ButtonPaint = preload("res://ui/book_button.gd")
+const Scribble = preload("res://ui/scribble.gd")
 var information: bool = false
 var card: Rect2
 var miniature: Rect2
@@ -30,16 +31,23 @@ func _draw() -> void:
 		return
 	for box: Rect2 in wells:
 		mount(box,Color("cbb991"))
-	mount(palette,Color("f4ead4"))
-	mount(card,Color("fffaf0"))
+	mount(palette,Color("f4ead4"),"palette-mount")
+	mount(card,Color("fffaf0"),"miniature-mount")
 	draw_rect(miniature,Color("fffaf0"))
 	for x: float in [card.position.x+3,card.end.x-7]:
 		draw_rect(Rect2(x,card.position.y+7,3,13),Color("a68a55"))
 	draw_line(Vector2(card.position.x+9,miniature.position.y-5),Vector2(card.end.x-9,miniature.position.y-5),Color("c1b18d"),0.7,true)
 
-func mount(box: Rect2, fill: Color) -> void:
+func mount_strokes(box: Rect2, identity: String) -> Array:
+	return Scribble.outline_strokes(box.grow(-0.5),identity,1.5)
+
+func mount(box: Rect2, fill: Color, identity: String = "") -> void:
 	if not box.has_area():
 		return
 	draw_colored_polygon(ButtonPaint.points(box,3),Color("a38b65"))
 	draw_colored_polygon(ButtonPaint.points(box.grow(-2),2),fill)
-	draw_polyline(ButtonPaint.points(box,3),Color("8c7047"),1,true)
+	if identity.is_empty():
+		draw_polyline(ButtonPaint.points(box,3),Color("8c7047"),1,true)
+	else:
+		for line: Dictionary in mount_strokes(box,identity):
+			Scribble.paint(self,line,Color("8c7047"))

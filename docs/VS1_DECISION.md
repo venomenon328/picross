@@ -8,7 +8,8 @@ auf `2c332ad688315bfa851f7c0d8642d2ab4ac3709c`; sie ist noch nicht gemergt.
 [Review R1](https://github.com/venomenon328/picross/pull/62#pullrequestreview-5472592800)
 ist für diesen Stand abgeschlossen. Nachfolgend bestätigte der Eigentümer
 **VS2-E1 als Spezifikation**. Inzwischen ist [V1/N01/N02/N04](VS2_V1_IMPLEMENTATION.md)
-umgesetzt; V2/N03/N05 und kombinierte Abnahme bleiben offen.
+umgesetzt; [V2/N03/N05](VS2_V2_IMPLEMENTATION.md) ergänzt die Zeichnung und Füllprojektion.
+Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe bleiben offen.
 Der neue [Darstellungsvertrag](UI_DRAWING_STYLE.md) §7 ergänzt kompakte Zeilenhinweise,
 ausgewogene Platzierung und eine konsequentere Scribble-Optik mit reiner Füllminiatur.
 VS-D01 selbst wird dadurch nicht erneut zur Wahl gestellt.

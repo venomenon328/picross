@@ -1,6 +1,6 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-## Aktueller Stand · V1 technisch geliefert, V2 freigegeben und offen
+## Aktueller Stand · V1/V2 umgesetzt, kombinierte Abnahme offen
 
 Die reguläre VS2-Erstlieferung liegt in [Draft-PR #62](https://github.com/venomenon328/picross/pull/62)
 auf `2c332ad688315bfa851f7c0d8642d2ab4ac3709c`, Basis
@@ -15,22 +15,21 @@ Der Eigentümer hat anschließend **VS2-E1 / N01–N05 als Spezifikation freigeg
 kompaktere Zeilenhinweise, ausgewogenere Platzierung, subtile Scribble-Optik und
 Miniatur/Palette weiter innerhalb des Buches; Miniaturen zeigen nur Füllungen.
 Der verbindliche Vertrag steht in Abschnitt 7. **S0 abgeschlossen; V1/N01/N02/N04
-auf `40829b43db6509447863c9d27dbb87dcfaf2a988` technisch geliefert; V2/N03/N05 offen.**
+auf `40829b43db6509447863c9d27dbb87dcfaf2a988` technisch geliefert; V2/N03/N05 inzwischen umgesetzt.**
 [Parameter, Präzisierung der Glyphenprobe und Nachweise](VS2_V1_IMPLEMENTATION.md).
 [Review R2](https://github.com/venomenon328/picross/pull/62#pullrequestreview-5479141642)
 prüfte V1-Code und verfügbare native Bilder positiv; R2-B01 verlangt die hier
-nachgeführte Quellenkonsistenz. Die Nacharbeit ändert keinen Produktcode.
+nachgeführte Quellenkonsistenz. [V2](VS2_V2_IMPLEMENTATION.md) ergänzt jetzt N03/N05.
 VS2-M01 hat Rückmeldung mit Änderungsbedarf, keine vollständige positive Abnahme.
 
 Bedien-/Speichergrundlage: [P1](PROTOTYPE_P1.md). Die
 [Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md)
-unterscheiden Erstlieferung, geprüften V1-Zwischenstand und noch offene V2-Nachweise.
-Vor Merge bleiben V2, aktuelle kombinierte technische Prüfung,
+unterscheiden Erstlieferung, geprüften V1-Zwischenstand und kombinierte V1/V2-Nachweise.
+Vor Merge bleiben aktuelle kombinierte technische Prüfung,
 unabhängiges Review des kombinierten Heads, VS2-M01 und passende Mergefreigabe nötig.
-Historische Nachweise bleiben commitgebunden; keine Produktänderung durch diese
-Dokumentationsnacharbeit.
+Historische Nachweise bleiben commitgebunden; neue Laufbindungen stehen im PR.
 
-Stand: 10.10.2026 · Spezifikation 0.7 · R2-B01: S0/V1-Status und Glyphenpräzisierung konsolidiert
+Stand: 10.10.2026 · Spezifikation 0.8 · V2: Scribble-Konturen und reine Füllprojektion
 
 ## 1. Auftrag, Quellen und Status
 
@@ -185,13 +184,12 @@ die Erreichbarkeit aller bestehenden Werkzeuge werden nicht eingeschränkt.
 Historische hashgebundene Designpakete bleiben unverändert; neue Lieferassets sind
 gesondert nach Herkunft, Rechten und Version zu dokumentieren.
 
-### ZS-D05: Miniatur – Folgespezifikation VS2-E1/N05
+### ZS-D05: Miniatur – umgesetzter Vertrag VS2-E1/N05
 
 Die Miniatur zeigt unmittelbar nur die eigenen **gefüllten Felder** in ihren
 Rätselfarben, einschließlich der aktuellen elastischen Füllvorschau und möglicher
 Fehler. Ausgekreuzt und unbekannt haben denselben neutralen Hintergrund; keine X,
-Punkte oder anderen Leer-Ersatzzeichen. Diese freigegebene Folgeregel ist noch nicht
-implementiert und ersetzt die frühere visuelle Dreizustandsunterscheidung nur in
+Punkte oder anderen Leer-Ersatzzeichen. Diese in V2 umgesetzte Regel ersetzt die frühere visuelle Dreizustandsunterscheidung nur in
 Miniaturen. Der Hauptraster-/Spielzustand behält alle drei Zustände.
 
 Die Miniatur bleibt passiv, proportional und unanimiert. Ihre vereinfachten Füllformen
@@ -330,7 +328,7 @@ Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflü
 | ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; E2-Fontvergleich, E3-Auswahl Chalkboard und kompaktere 26-px-Zeilenhinweisslots. | PR #55 nach R3 integriert; kombinierte Eigentümersichtprüfung auf main erfolgreich abgeschlossen. |
 | ZS-2 | Gewählte Hinweis-/Zellsprache ohne zusätzliche Rand-UI, statische Vorschau, gerichtete Commit-Effekte und Schalter in der regulären Arbeitsansicht. | PR #56 auf `fad8853` integriert, R3 und ZS2-M01 für diesen Vorgänger bestanden. |
 | VS2-V1 | Kompakte Zeilenhinweise und ausgewogene Flächenaufteilung einschließlich Miniatur-/Palettenposition. | N01/N02/N04 auf `40829b4` technisch geliefert und in R2 positiv geprüft; V1-Zwischenstand, kombinierte Abnahme offen. |
-| VS2-V2 | Subtile Scribble-Linien, Miniatur/Palette und reine Füllminiatur. | N03/N05 freigegeben, noch nicht implementiert; auf der V1-Geometrie, gemeinsame Nachprüfung vor Merge. |
+| VS2-V2 | Subtile Scribble-Linien, Miniatur/Palette und reine Füllminiatur. | N03/N05 umgesetzt; auf der V1-Geometrie, kombinierte technische Nachweise und offene Abnahme im PR. |
 | Z3/#24 | Längere reale Spielerprobung der integrierten neuen Fassung und Abschluss der Designphase. | Nach der integrierten Zielansicht; ersetzt keine davor erforderlichen technischen oder gezielten manuellen Gates. |
 
 ZS-1 verwendete insbesondere F-01/20×20 Mono, F-02/40×40 Farbe und F-03/100×100
@@ -357,14 +355,13 @@ ihrer offenen Befunde. Keine Änderung historischer Designartefakte oder Rätsel
 ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer
 bestätigt; #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md)
 ist über PR #56 abgeschlossen. S0 und die technische V1-Lieferung sind abgeschlossen.
-V2, aktuelle kombinierte Nachweise, unabhängiges Review des kombinierten Heads,
-VS2-M01 und passende Mergefreigabe bleiben offen. Diese Dokumentationsnacharbeit
-implementiert weder V2 noch einen Merge.
+V2 ist umgesetzt. Aktuelle kombinierte Nachweise werden commitgebunden im PR geführt.
+Unabhängiges Review des kombinierten Heads, VS2-M01 und passende Mergefreigabe bleiben offen.
 
 ## 7. VS2-E1 – kompakte, ausgewogene Scribble-Arbeitsansicht
 
 **Status am 10.10.2026: S0 abgeschlossen; V1/N01/N02/N04 technisch geliefert und
-in R2 positiv geprüft; V2/N03/N05 freigegeben, noch nicht implementiert.**
+in R2 positiv geprüft; V2/N03/N05 umgesetzt.**
 Auftrag und Teilpakete stehen in [#61](https://github.com/venomenon328/picross/issues/61).
 Aktuelle V1-Produktreferenz ist `40829b43db6509447863c9d27dbb87dcfaf2a988`
 auf Basis `d7ec4e1e4a29d82b6979537a33868d57732d3713`; `2c332ad…` bleibt die
@@ -415,7 +412,7 @@ F-01 und geeignete VS09-Breitenfälle dienen als reproduzierbare Freiraumbeispie
 VS08/VS04 und knappe Flächen sichern die Kapazitätsgrenzen. Die Chatbezeichnung
 „Analyseausgabe 1“ ist keine eindeutig identifizierte Datei und keine Pflichtquelle.
 
-### VS2-N03: subtile, stabile handgezeichnete Elemente – V2 offen
+### VS2-N03: subtile, stabile handgezeichnete Elemente – V2 umgesetzt
 
 Sichtbare Rasterlinien erhalten kleine kontrollierte Abweichungen von vollkommen
 gleichmäßiger Strichführung und -stärke. Logische quadratische Zellen, Koordinaten,
@@ -448,7 +445,7 @@ Keine Verkleinerung als Ersatz; Mindesthitflächen von **44/55 px bei UI100/125*
 Die tatsächlichen neuen Strichränder aus V2 sind erneut gegen diese V1-Anordnung
 zu prüfen; V1s alte Pixelbilder nehmen die kombinierte Abnahme nicht vorweg.
 
-### VS2-N05: reine Füllprojektion der Miniaturen – V2 offen
+### VS2-N05: reine Füllprojektion der Miniaturen – V2 umgesetzt
 
 ZS-D05 ist der neue Miniaturvertrag: ausschließlich eigene Füllungen einschließlich
 bereits bestehender Vorschau, keine X/Punkte/Leer-Ersatzzeichen. Unbekannt und X
@@ -467,7 +464,7 @@ Die ausdrückliche Eigentümerfreigabe ersetzt gezielt D-33/ZS1-E3 als unveränd
 horizontale 26er-Zielweite und die frühere linke Anordnung/Positionierung durch V1.
 Die Ablösung ausschließlich mathematisch gerader sichtbarer Rasterstriche, der
 bisherigen Miniatur-/Palettenfassung und der Dreizustandsdarstellung in Miniaturen
-ist dagegen weiterhin **V2-Sollstand**. Dies gilt entsprechend für
+ist mit **V2 umgesetzt**. Dies gilt entsprechend für
 [Produktdefinition](PRODUCT_DEFINITION.md) §§3.3/5,
 [Gestaltungskonzept](DESIGN_CONCEPT.md) §§2/4.1/4.4/5.1,
 [P1](PROTOTYPE_P1.md) D-29/D-33 und §5.2 sowie die betroffenen Z2-Auswahlpassagen.
@@ -480,9 +477,9 @@ keine historischen Ergebnisdaten. R1 gilt für `2c332ad`, R2 für `40829b4`; kei
 nimmt V2 oder die persönliche kombinierte Abnahme vorweg. Bei V2 sind Bedienhilfe
 und betroffene Pixel-/Strichoracles konsistent nachzuführen.
 
-V1/NA01/NA02/NA04 ist technisch geprüft; V2/NA03/NA05 und die kombinierte Regression
-bleiben offen. Aktuelle Nachweiszuordnung steht in [VS2_VERIFICATION.md](VS2_VERIFICATION.md),
-Vorbereitung und Auftrag in #61. Vor V2-Vergleichen eine eigene endliche Planung
-binden, ohne ursprünglichen VS2-/V1-Plan zu überschreiben. Beide Teilpakete bleiben
+V1/NA01/NA02/NA04 ist historisch technisch geprüft. Der neue [V2-Prüfweg](VS2_V2_IMPLEMENTATION.md)
+prüft NA03/NA05 und die kombinierte Regression; tatsächliche Laufresultate stehen im PR. Aktuelle Nachweiszuordnung steht in [VS2_VERIFICATION.md](VS2_VERIFICATION.md),
+Vorbereitung und Auftrag in #61. Der eigene [endliche V2-Plan](../examples/vs2/v2-plan.json)
+wurde vor Vergleichen in `75b640c` versioniert; ursprüngliche VS2-/V1-Pläne bleiben erhalten. Beide Teilpakete bleiben
 in PR #62, mit kombinierter technischer/visueller Prüfung und VS2-M01 vor einem
 gesondert freizugebenden Merge.

@@ -42,12 +42,12 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 	var paper: Rect2 = app.surface.material_rect()
 	# Inner paper measured from the unchanged A background, excluding wood/fold.
 	var inner: Rect2 = Rect2(paper.position+paper.size*Vector2(0.03125,0.034),paper.size*Vector2(0.93125,0.933))
-	var boxes: Array[Rect2] = [app.surface.card.grow(2),app.mini.get_global_rect(),app.surface.palette.grow(2)]
+	var boxes: Array[Rect2] = [app.surface.card.grow(2),app.mini.get_global_rect().grow(1),app.surface.palette.grow(2)]
 	for label: Label in [app.mini_title,app.coordinate,app.zoom_label,app.tool_label,app.stress_label]:
 		if label.is_visible_in_tree() and not label.text.is_empty(): boxes.append(label_ink(label))
 	for item: Control in app.palette_row.get_children():
 		check.call(item.size.x >= 44*u and item.size.y >= 44*u,"V1 unchanged color minimum hit size")
-		boxes.append(item.get_global_rect())
+		boxes.append(item.get_global_rect().grow(1))
 	var group: Rect2 = boxes[0]
 	for box: Rect2 in boxes:
 		group = group.merge(box)

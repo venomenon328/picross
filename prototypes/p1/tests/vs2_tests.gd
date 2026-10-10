@@ -188,6 +188,7 @@ func matrix(corpus: bool) -> void:
 					check(is_equal_approx(app.mini.image_rect().size.x/app.mini.image_rect().size.y,float(app.session.player.width)/app.session.player.height), "proportional passive own miniature")
 					check(not app.mini.interactive and app.mini.cells == app.session.visible_cells(), "miniature exclusively own cells")
 					data.v1 = preload("res://tests/vs2_v1_cases.gd").layout(app, check)
+					data.v2 = preload("res://tests/vs2_v2_cases.gd").layout(app, check)
 					records.append(data)
 					if client.x == 1920 and (mode == 0 or corpus) and ((corpus and index in [3,7,8]) or (not corpus and index in [0,6])):
 						await shot("%s-%s-%s-ui%d" % ["corpus" if corpus else "regular",app.session.definition.id,board.mode,roundi(ui*100)])
@@ -209,11 +210,13 @@ func frame_pixels(image: Image) -> Dictionary:
 			var dark: int = 0
 			for across: int in range(floori(edge) - 2, floori(edge) + 3):
 				var pixel: Color = image.get_pixel(along, across) if horizontal else image.get_pixel(across, along)
-				if Vector3(pixel.r, pixel.g, pixel.b).distance_to(Vector3(app.board.INK.r, app.board.INK.g, app.board.INK.b)) < 0.04:
+				# N03 uses 1.4..1.64px antialiased strokes instead of opaque 2px.
+				# Require a dark core on every sample, including all four sides.
+				if Vector3(pixel.r, pixel.g, pixel.b).distance_to(Vector3(app.board.INK.r, app.board.INK.g, app.board.INK.b)) < 0.28:
 					dark += 1
 			minimum = mini(minimum, dark)
 		result[side] = {"samples": count, "minimum_ink_pixels": minimum}
-		check(minimum >= 2, "%s/%s %s frame fully drawn (%d pixels)" % [app.session.definition.id, app.board.mode, side, minimum])
+		check(minimum >= 1, "%s/%s %s frame fully drawn (%d pixels)" % [app.session.definition.id, app.board.mode, side, minimum])
 	return result
 
 func rectangular_input() -> void:

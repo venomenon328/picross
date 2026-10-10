@@ -62,6 +62,7 @@ func focused_scene(corpus: bool) -> void:
 					else: app.board.working_size()
 					await process_frame
 					var record: Dictionary = V1.layout(app,check)
+					record.v2 = preload("res://tests/vs2_v2_cases.gd").layout(app,check)
 					var measured: Dictionary = Measurements.capture(app.board)
 					check(measured.clipped_glyphs == 0 and measured.glyph_collisions == 0,"V1 focused real glyphs and C1/status bounds fit")
 					var ink: Rect2 = app.board.view.bounds().grow(1)

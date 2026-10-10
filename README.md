@@ -2,14 +2,15 @@
 
 Aktueller [VS2-V1-Zwischenstand](docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
 ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
-V2 und kombinierte Abnahme bleiben offen; Draft-PR #62, kein Release.
+Ergänzt durch [V2](docs/VS2_V2_IMPLEMENTATION.md): stabile Scribble-Konturen und reine Füllminiaturen.
+Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe offen; Draft-PR #62, kein Release.
 
 Ein geplantes thematisch zusammenhängendes Nonogramm-Spiel für PC: kuratierte klassische und farbige Bildrätsel, ein substanzielles Angebot großer Raster und eine präzise, komfortable Bedienung. Logische Erkenntnisse und größere Projekte stehen im Mittelpunkt; ein sich füllendes illustriertes Album, Sterneprogression und freiwillige Leistungsvergleiche ergänzen das Spiel. Eine perfekte Lösung erfordert einen Durchgang ohne Fehler und ohne Undo.
 
 Unter [prototypes/p1](prototypes/p1/README.md) liegt der integrierte P1.4/G1/H1/Z2/RP-3/GP-48-Stand:
 20×20 monochrom, 40×40 mit vier Farben und ein 100×100-UI-Stressraster. RP-3 ergänzt
 als integriertes RP-3-Blatt ein aus einer realen Bilddatei importiertes 20×20-Rätsel; RP-6 ergänzt im Draft fünf weitere Pilotblätter. Mausstriche mit
-startzustandsabhängiger Füllung↔X-Umwandlung, Undo/Redo, feinem monotonem Zoom/Pan, eigene interaktive Miniatur,
+startzustandsabhängiger Füllung↔X-Umwandlung, Undo/Redo, feinem monotonem Zoom bis zur Vollsichtgrenze, eigene passive Füllminiatur,
 unnummerierte farbige Teilhinweise mit unabhängigem Zeilen-/Spalten-Panning und
 motivtreuer Abschluss. Isolierte lokale Spielstände je Blatt mit Undo/Redo,
 Raster-/Hinweisansicht und Primary/Backup-Recovery sind ergänzt. Keine Wertung.

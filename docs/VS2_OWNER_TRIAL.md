@@ -5,8 +5,8 @@
 **Rückmeldung mit Änderungsbedarf; keine vollständige positive Abnahme.** Nach
 Review R1 zur Erstlieferung `2c332ad688315bfa851f7c0d8642d2ab4ac3709c` hat der
 Eigentümer fünf visuelle Nacharbeiten benannt und als Spezifikation freigegeben.
-[VS2-V1 / N01/N02/N04](VS2_V1_IMPLEMENTATION.md) ist umgesetzt, V2/N03/N05 bleibt offen. Die folgenden
-zusätzlichen Sichtprüfungen gelten erst für deren späteren, im PR gebundenen neuen
+[VS2-V1 / N01/N02/N04](VS2_V1_IMPLEMENTATION.md) und [V2/N03/N05](VS2_V2_IMPLEMENTATION.md) sind umgesetzt. Die folgenden
+zusätzlichen Sichtprüfungen gelten für den im PR commitgebundenen neuen
 Download; die alten EXEs können die neue Spezifikation nicht bereits erfüllen.
 Keine vollständige Lösung, konkrete Prüfzeit oder unbekannte Windows-/DPI-Werte
 werden aus dem bisherigen Sichtfeedback abgeleitet.

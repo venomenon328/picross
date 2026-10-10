@@ -195,6 +195,8 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         toolchain.verify_sha256(review/"selected"/relative,entry["sha256"])
     matrix=json.loads((review/"selected/vs2-renders/vs2-matrix.json").read_text(encoding="utf-8"))
     vs2_delivery.verify_records(matrix)
+    if review_report["visual"]["vs2"]["v2"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v2-plan.json"):
+        raise ValueError("Delivered V2 plan identity differs")
     if review_report["visual"]["vs2"]["records"]!=304 or review_report["visual"]["vs2"]["rendered"]!=23:
         raise ValueError("Missing current native VS2 coverage")
     archive=cache/toolchain.EDITORS["Windows"].name
@@ -243,6 +245,11 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         launch("new-"+stage,package,"vs2_roundtrip.gd","VS2_ROUNDTRIP_"+stage.upper()+"_OK")
     env.pop("VS2_STAGE",None)
     launch("native-window",package,"vs2_window.gd","VS2_WINDOW_OK")
+    env["VS2_V2_CAPTURE_DIR"] = str(output)
+    for stage in ("write", "read"):
+        env["VS2_V2_STAGE"] = stage
+        launch("v2-" + stage, package, "vs2_v2_tests.gd", "VS2_V2_" + stage.upper() + "_OK")
+    v2 = vs2_delivery.verify_v2(output)
     if toolchain.sha256_file(study)!=study_hash: raise ValueError("Historical study data changed")
     packs={"picross-p1.exe":embedded_pack(package/"picross-p1.exe")}
     console=package/"picross-p1.console.exe"
@@ -257,10 +264,11 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     evidence=dict(source_commit=head,base_commit=report["base_commit"],tested_checkout_commit=report["tested_checkout_commit"],github_run_id=run_id,
                   plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan.json"),
                   plan_amendment_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan-amendment.json"),
+                  v2_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v2-plan.json"),v2=v2,
                   platform=platform.platform(),bindings=[player_binding,review_binding],export_files=report["export_files"],embedded_packs=packs,
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
-                  scripts={name:toolchain.sha256_file(ROOT/"prototypes/p1/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd","vs2_v1_cases.gd")},
+                  scripts={name:toolchain.sha256_file(ROOT/"prototypes/p1/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd","vs2_v1_cases.gd","vs2_v2_cases.gd","vs2_v2_tests.gd")},
                   matrix_records=len(matrix["records"]),historical_comparison="not repeated under CI policy #63",
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.name:toolchain.sha256_file(p) for p in output.glob("*.png")},

@@ -2,7 +2,8 @@
 
 Aktueller [VS2-V1-Zwischenstand](../../docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
 ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
-V2 und kombinierte Abnahme bleiben offen; Draft-PR #62, kein Release.
+Ergänzt durch [V2](../../docs/VS2_V2_IMPLEMENTATION.md): stabile Scribble-Konturen und reine Füllminiaturen.
+Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe offen; Draft-PR #62, kein Release.
 
 VS2 / [#61](https://github.com/venomenon328/picross/issues/61) startet regulär in der
 Sammlung. Erst die Auswahl öffnet ein Blatt; Einstellungen sind auch aus der
@@ -167,8 +168,9 @@ vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clipp
   Die gewünschte gültige Arbeitsstufe bleibt separat vom berechneten Fitwert erhalten.
   Einpassen und Arbeitsgröße ändern die benannte Rätselansicht nicht.
 - Raster-MMB und frühere Handrouten verschieben oder bearbeiten nichts.
-- Die eigene Miniatur bleibt passiv: helle Flächen unbekannt, Punkte leer, Farben
-  eigene Füllungen einschließlich Fehlern und statischer Strichvorschau.
+- Die eigene Miniatur bleibt passiv: nur eigene Füllungen in Originalfarben,
+  einschließlich Fehlern und statischer Strichvorschau. X und unbekannt erscheinen
+  gleich neutral, auch in vorhandenen ungelösten Albumminiaturen.
 - Während Zellgesten sind Zoom und Navigation gesperrt. Navigation ändert keine Zellen
   oder Undo-Historie. Pro Blatt bleiben Bearbeitung/History und Ansicht beim
   Blattwechsel und regulären App-Neustart erhalten.
