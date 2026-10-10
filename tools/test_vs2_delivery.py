@@ -72,7 +72,7 @@ class DeliveryTests(unittest.TestCase):
         with self.assertRaises(ValueError): embedded_pack(executable)
 
     def test_v3_rejects_duplicate_case_failed_assertion_and_changed_picture(self):
-        names = ['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'] + ["v3-tight-rail.png", "v3-F01-work.png", "v3-F02-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
+        names = ['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'] + ["v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
         for name in names: (self.root/name).write_bytes(b"native-binding")
         report = dict(checks=1000, failures=0,
                       sidebar_assets=json.loads((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8")),
