@@ -82,7 +82,9 @@ class DeliveryTests(unittest.TestCase):
         self.assertIn('config/name="picross · P1"',project)
         self.assertIn('exclude_filter="tests/*,data/*proof*,study/*,full_view_study/*"',preset)
         harness=(ROOT/'tools/p1_product.py').read_text(encoding='utf-8')
-        for operation in ('capture','export','package'): self.assertIn('vs1_delivery.'+operation+'(',harness)
+        # The archived study stays separate from the current CI product path.
+        for operation in ('capture','export','package'):
+            self.assertNotIn('vs1_delivery.'+operation+'(',harness)
 
 
 if __name__=='__main__':unittest.main()

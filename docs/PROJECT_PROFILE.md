@@ -1,5 +1,16 @@
 # Projektprofil: picross
 
+## Aktueller CI-Vertrag ab #63
+
+Bei Arbeit an CI, Prüfprogrammen, Artefakten oder Archivierung zusätzlich die
+[CI-Policy](CI_POLICY.md) vollständig lesen. Die am 09.10.2026 beauftragte
+Bereinigung ersetzt für diesen Stand ausdrücklich die älteren pauschalen
+Sechs-Job-, Altstudien-, Vollrender- und 40-Minuten-Pflichten in diesem Profil
+und den früheren Paketbeschreibungen. Maßgeblich sind die vollständige
+Änderungsauswahl, aktuelle fachliche Regression und der Status `ci-required`.
+Historische Prüfberichte und persönliche Abnahmeentscheidungen bleiben an ihren
+damaligen Stand gebunden; aktuelle Produktverträge werden nicht aufgehoben.
+
 ## Zweck, Quellen und aktueller Rahmen
 
 `venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436`, P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` und G1/#17 über PR #18 als `6dd33232977127592c2b881f73094658853dbd87` in `main` integriert. H1/#19 ist über PR #20 auf diesem Stand integriert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
@@ -146,10 +157,11 @@ Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchsch
 
 Python 3.11 oder neuer, Standardbibliothek. Kleine lokale Prüfungen in geeigneter vorhandener Umgebung sind zulässig; belastbare aktuelle CI darf die Abschlussprüfung liefern. Keine ritualisierte doppelte Vollprüfung. Unbekannte lokale Ressourcen-/Konfigurationsgrenzen vorher prüfen; globale Codex-Einstellungen der Nutzerworkstation sind nicht als geprüft bestätigt.
 
-Der `docs`-Job hat zehn Minuten Gesamtbudget für vollständigen Checkout,
-Tool-/Artworktests, Dokumentprüfung und Diffcheck. Bei ZS1-E1 verbrauchte der
-Checkout zweimal mehr als drei Minuten des bisherigen Fünf-Minuten-Limits;
-die Tests wurden dadurch abgebrochen. Prüfumfang und Regeln bleiben unverändert.
+Der `docs`-Job verwendet einen flachen Checkout mit den exakten Diff-Commits,
+schnelle Tooltests, Dokumentprüfung und vollständigen Diffcheck. Ziel ist unter
+einer Minute; hartes Joblimit drei Minuten. Die drei abgeschlossenen BP-
+Paketrekonstruktionen sind gemäß [Archiv](design/book_inventory/ARCHIVE.md)
+ausgelagert; 13 günstige BP-Hilfsregressionen bleiben erhalten.
 
 Verbindliche Befehle im Repository-Root:
 
@@ -158,7 +170,12 @@ python3 -m unittest discover -s tools -p 'test_*.py' -v
 python3 tools/check_docs.py
 ```
 
-Vor Merge muss [Setup verification](../.github/workflows/setup.yml), Job `docs`, für aktuellen Head beziehungsweise zugehörigen Test-Merge erfolgreich sein. Der Job prüft Tests, Dokumente und vollständigen `git diff --check`. Head, Basis und gegebenenfalls Integrationscommit zuordnen; übersprungene oder alte unpassende Checks nicht als bestanden ausgeben.
+Vor Merge müssen `docs` und der Abschlussstatus `ci-required` in
+[CI verification](../.github/workflows/setup.yml) für aktuellen Head beziehungsweise
+zugehörigen Test-Merge erfolgreich sein. Die Auswahl verlangt zusätzlich alle
+betroffenen aktuellen Fach-/Produkt-/Toolchainprüfungen. Head, Basis und
+Integrationscommit zuordnen; übersprungene oder alte unpassende Checks nicht als
+bestanden ausgeben. Begründetes Nichtzutreffen bleibt ausdrücklich sichtbar.
 
 [Dokumentvalidator](../tools/check_docs.py) und [Tests](../tools/test_check_docs.py) sind aus dem dokumentierten dev-rules-Stand abgeleitet. Geprüft werden Pflichtdateien, UTF-8/LF/Abschlusszeile, nachgestellte Leerzeichen, Versionsformat und einfache lokale Inline-Markdown-Links samt Paketgrenzen. Nicht geprüft: externe URLs, Anker, Referenzlinks, vollständige Markdownvalidierung oder Byteidentität der Regelkopie. Letztere bei Regelpaketaktualisierung separat gegen den Quellcommit prüfen.
 
@@ -241,11 +258,12 @@ Erzeugungsskript und Input-Lock bleiben bytegebunden. Der tatsächliche ursprün
 Commitpayload wird als kleine Datei bereitgestellt und mit seinem Git-Objekthash,
 Tree und unverändertem Produktionsreport verbunden; [Prüfzuordnung](RP4_VERIFICATION.md).
 
-Der bestehende Linux-Fachjob bleibt unverändert. Ein zusätzlicher begrenzter
+Der aktuelle Linux-Fachjob bleibt für Produktionsänderungen aktiv. Ein begrenzter
 Windows-x64-Job im Fachworkflow führt nur `test_rp4*.py` aus: Python 3.12.10,
 offizielles Pillow-12.3.0-Wheel in temporärer venv, `contents: read`, zehn Minuten
-hartes Joblimit. Er reproduziert R1s PNG-Byteabweichung am Originaltest gezielt und
-verlangt anschließend erfolgreiche aktuelle Tests. Tatsächliche Laufzeit-/Codec-
+hartes Joblimit. Er verlangt erfolgreiche aktuelle Tests ohne erneute Produktion
+des alten R1-Fehlers. Die isolierte historische Reproduktion bleibt ein gezielter
+Diagnoseweg. Tatsächliche Laufzeit-/Codec-
 daten und Head/Basis/Checkout/Run stehen im kleinen Nachweisartefakt. Kein Windows-
 Benchmark, keine zusätzliche P1-/Eigentümerprobe. R2 hat beide R1-Befunde
 und die aktuellen technischen Checks bestätigt; RP-4 ist über PR #45 integriert.
@@ -285,7 +303,7 @@ und finale Pilotabnahme bleiben RP-6-Gates. Kein Merge/Release; Parent #34 offen
 
 P1.0 wurde nach erfolgreichem `preflight`-/`docs`-Job über PR #13 gemergt. [Preflight-Harness](../tools/p1_preflight.py) und [CI](../.github/workflows/p1-preflight.yml) verwenden ausschließlich die gepinnten offiziellen Standard-Assets. Live-Metadaten und vollständige Archive werden gegen SHA-256 geprüft, temporär verwendet und nicht versioniert/global installiert. Bei Änderungen am Preflight echten Download-/Import-/Test-/Start-/Exportweg nachweisen, nicht nur Mocks oder Dokumenttests.
 
-Der [Produkt-Harness](../tools/p1_product.py) nutzt diese Grundlage mit temporärer Projektkopie und eigenen APPDATA-/LOCALAPPDATA- beziehungsweise XDG-Pfaden. P1.3-Saves liegen ausschließlich unter Godots `user://p1/saves/`; automatisierte Tests erhalten zusätzlich eigene temporäre Speicherroots und dürfen den normalen Benutzerpfad nicht lesen oder verändern. Lokale Windows-Prüfungen sind erlaubt. Prozesslimit 300 Sekunden, Downloadlimit 1200 Sekunden, CI-Joblimit 40 Minuten.
+Der [Produkt-Harness](../tools/p1_product.py) nutzt diese Grundlage mit temporärer Projektkopie und eigenen APPDATA-/LOCALAPPDATA- beziehungsweise XDG-Pfaden. P1.3-Saves liegen ausschließlich unter Godots `user://p1/saves/`; automatisierte Tests erhalten zusätzlich eigene temporäre Speicherroots und dürfen den normalen Benutzerpfad nicht lesen oder verändern. Lokale Windows-Prüfungen sind erlaubt. Product-Prozesslimit 300 Sekunden; CI-Downloadlimit 180 Sekunden, normales Product-Joblimit zehn Minuten, mit allen Piloten 15 Minuten. Der eigene Preflight hat fünf Minuten Jobbudget. Konkreter Umfang und Artefaktgrenzen stehen in der [CI-Policy](CI_POLICY.md).
 
 ```powershell
 $p1Cache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
@@ -381,18 +399,20 @@ getrennte Slots und zehn native Bilder je Pilot bei 1920×1080/UI 100 % sowie
 1280×720/UI 125 %. `rp6-review` enthält technische Motivspoiler separat vom
 Windows-Spielpaket mit neutraler Eigentümeranleitung.
 
-Der `product`-Job erzeugt die vollständigen Render-/Log-/Replaydaten weiterhin
-temporär und verwendet sie für seine Prüfungen. Reguläre PR-Läufe laden jedoch nur
-das schlanke Spielerpaket und die gezielten Reviewartefakte für GP-48, ZV-50, RP-3
-und RP-6 hoch. Der komplette `p1-product-output/`-Baum ist wegen seiner Größe nur
-bei einem manuellen `workflow_dispatch` mit `upload_full_evidence=true` als
-zusätzliches Sammelartefakt vorgesehen. Das ändert keinen Prüfpfad und entfernt
-keinen gezielten Nachweis; es vermeidet lediglich den standardmäßigen ~1-GB-Upload.
+Der aktuelle `product`-Job erzeugt ausschließlich ausgewählte aktuelle
+Prüfumfänge. Historische Vergleiche und Studienpakete entfallen bereits bei der
+Erzeugung. Der allgemeine native Capturepfad verwendet die kompakte Grenzmatrix;
+Assertions und Bildspeicherung sind getrennt. Spielerpaket und `technical/`
+werden getrennt hochgeladen, technische Daten auch bei Fehlern. Höchstens
+75 MB insgesamt, davon 20 MB technische Daten; Details und Nachweisgrenzen in
+der [CI-Policy](CI_POLICY.md). Ein pauschaler Full-Evidence-Schalter besteht
+nicht mehr; historische Diagnosen erhalten ihren konkreten eigenen Auftrag.
 
 Fachtests inklusive Export-/Manifest-/Asset-/Reparaturnegativfällen, sämtliche
 bisherigen Oracles, sechs Benchmarks und RP-3-/RP-4-/RP-5-Replays bleiben aktiv.
-Die sechs Jobs `puzzle-production`, `rp5-repair`, `rp4-windows`, `docs`, `product`
-und `preflight` müssen am neuen Stand erfolgreich laufen. A01–A03 und M01–M04
+Der aktuelle PR benötigt `ci-required` einschließlich sämtlicher nach
+Änderungsumfang ausgewählter Jobs. Die frühere Pflicht zu allen sechs Jobs bei
+jeder Änderung ist durch #63 abgelöst. A01–A03 und M01–M04
 bleiben das positive Mergegate aus #40; kein Merge/Releaseauftrag, Parent #34 offen.
 
 
@@ -462,10 +482,11 @@ VS-D01 ist entschieden, GF-M01/#59 ist historisch bestanden; #61 ist der separat
 Folgeschritt nach #53. Neue Studienberichte binden ihren tatsächlichen Zeichner
 an Quellcommit und Dateihashes; historische Vergleichsbasen bleiben erhalten.
 
-Die bestehenden sechs CI-Jobs bleiben aktiv. Spielerpaket und kleine gezielte
-Reviewartefakte bleiben getrennt; das optionale Hochladen kompletter Arbeitsrender
-wird nicht wieder zum Standard. Pflichtprüfungen werden weder durch statische
-Bilder ersetzt noch aus den Umsetzungspaketen nach #24 verschoben.
+Die aktuellen Prüffunktionen bleiben nach [CI-Policy](CI_POLICY.md) aktiv und
+werden nach geändertem Bereich ausgewählt. Spielerpaket und begrenzte aktuelle
+Reviewartefakte bleiben getrennt. Pflichtprüfungen werden weder durch statische
+Bilder ersetzt noch aus den Umsetzungspaketen nach #24 verschoben; abgeschlossene
+Studienproduktion ist kein allgemeiner Regressionstest.
 
 
 **ZS1-E3:** Chalkboard Regular ist gewählt. N07 setzt nur die horizontalen

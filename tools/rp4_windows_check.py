@@ -1,4 +1,4 @@
-"""Bounded R1 reproduction and current RP-4 tests in the pinned Windows venv."""
+"""Current RP-4 tests in the pinned Windows venv; optional historical R1 diagnosis."""
 import argparse
 import hashlib
 import importlib.util
@@ -19,6 +19,7 @@ from urllib.parse import urlparse
 
 R1_HEAD = '4b794bb4ba109f2880876972e5e39e002b661478'
 R1_TEST = 'test_rp4.CorpusTests.test_original_illustrations_reproduce_without_solver'
+R1_ZLIB = '1.3.1.zlib-ng'
 NAMES = {'illustration-teapot.png', 'illustration-sailboat.png', 'illustration-tulip.png'}
 
 
@@ -36,7 +37,7 @@ def runtime():
     return {'python': platform.python_version(), 'platform': platform.platform(),
             'system': platform.system(), 'machine': platform.machine(), 'bits': struct.calcsize('P') * 8,
             'pillow': Image.__version__, 'pillow_file': Image.__file__,
-            'pillow_zlib': features.version_codec('zlib'), 'r1_zlib': '1.3.1.zlib-ng',
+            'pillow_zlib': features.version_codec('zlib'),
             'executable': sys.executable, 'prefix': sys.prefix, 'base_prefix': sys.base_prefix,
             'isolated': sys.flags.isolated, 'user_site_enabled': site.ENABLE_USER_SITE}
 
@@ -76,8 +77,11 @@ def main():
     root, output = args.repo.resolve(), args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=True)
     current = Path(__file__).resolve().parents[1]
-    report = {'format': 'picross-rp4-windows-v1', 'phase': args.phase,
-              'phase_passed': False, 'accepted': False, 'r1_head': R1_HEAD}
+    report = {'format': 'picross-rp4-windows-v2', 'phase': args.phase,
+              'phase_passed': False, 'accepted': False,
+              'verification': 'current-regression' if args.phase == 'current' else 'historical-r1-reproduction'}
+    if args.phase == 'baseline':
+        report.update(r1_head=R1_HEAD, r1_zlib=R1_ZLIB)
     try:
         report['binding'] = {
             'source_head': os.environ['RP4_SOURCE_HEAD'], 'base_commit': os.environ['RP4_BASE_COMMIT'],
@@ -94,8 +98,10 @@ def main():
         report['runtime'] = data = runtime()
         require(data['python'] == '3.12.10' and data['system'] == 'Windows' and data['bits'] == 64 and
                 data['machine'].lower() in ('amd64', 'x86_64'), 'Requires the pinned Windows x64 Python')
-        require(data['pillow'] == '12.3.0' and data['pillow_zlib'] == data['r1_zlib'],
-                'Pillow or actual zlib differs from R1; this is not the requested reproduction')
+        require(data['pillow'] == '12.3.0', 'Requires the pinned Pillow version')
+        if args.phase == 'baseline':
+            require(data['pillow_zlib'] == R1_ZLIB,
+                    'Actual zlib differs from R1; this is not the requested reproduction')
         prefix = Path(sys.prefix).resolve()
         require(prefix != Path(sys.base_prefix).resolve() and
                 prefix.is_relative_to(Path(os.environ['RUNNER_TEMP']).resolve()) and
@@ -135,10 +141,6 @@ def main():
             report['baseline_reproduced'] = True
         else:
             require(result.testsRun > 13 and result.wasSuccessful(), 'Current RP-4 regressions failed or missing')
-            baseline = json.loads((output / 'baseline.json').read_text(encoding='utf-8'))
-            require(baseline['baseline_reproduced'] is True and baseline['phase_passed'] is True and
-                    baseline['binding'] == report['binding'] and baseline['runtime'] == report['runtime'] and
-                    baseline['wheel'] == report['wheel'], 'No matching successful R1 reproduction in this run')
             report['accepted'] = True
         report['phase_passed'] = True
     except Exception as exc:
