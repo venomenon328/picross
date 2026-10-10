@@ -50,7 +50,7 @@ func shot(name: String) -> void:
 			app.tools_scroll.ensure_control_visible(control)
 			await process_frame
 			await process_frame
-			check(app.tools_scroll.get_global_rect().encloses(control.get_global_rect()),"V3 history controls reachable inside clipped rail")
+			check(app.tools_scroll.get_global_rect().encloses(control.get_global_rect()),"V3 history controls reachable inside clipped rail %s control%s rail%s scroll%s" % [control.name,control.get_global_rect(),app.tools_scroll.get_global_rect(),app.tools_scroll.scroll_vertical])
 		app.tools_scroll.scroll_vertical=scroll_before
 		await process_frame
 	if not pending_failures.is_empty():

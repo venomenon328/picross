@@ -24,10 +24,13 @@ Historische Pläne und Reports bleiben unverändert. R3 gilt für den Ausgangsst
   Zellindex und Zug: Enden, Neigung, Höhe, Abstand, Biegung und Strichbreite.
   Deckende Originalfarbe, Umriss und kleine vereinfachte Flächen bleiben.
   `draw_fill()` liefert Vorschau, wartendes Ziel und finalen Animationsdurchgang.
+  Zusammenhängende Linienzüge vermeiden doppelte Aufhellung an Segmentenden.
 - Navigation (−20,+12) × UI gegenüber dem vorbereiteten Head. Miniatur/Palette
   behalten ihre sichere V1-Lage. Werkzeugspalte darunter: 44 × UI große Controls,
   4 × UI Abstand, doppelte Lücke zwischen den Gruppen 2/2/4. Bei Bedarf lokales
   Scrollen; keine versteckten Klickflächen außerhalb des sichtbaren Ausschnitts.
+  Die sichtbare Scrollhöhe ist ganzzahlig, damit ganzzahlige Scrolloffsets auch
+  bei UI125 vollständige Trefferflächen zeigen können.
 - Die beiden dauerhaften Textzeilen entfallen. Nichtnumerische Platz-/Hinweis-
   und technische Stressmeldungen nutzen getrennte Bereiche einer Fußzeile auf
   dem Papier; vertikales Stapeln würde bei großen Flächen die Papierkante kreuzen.
@@ -57,6 +60,11 @@ V1-Fokus-/Recoveryfälle, Glyphen 1/11/17/40, 24/18-Slots und GF1 bleiben erhalt
 V2-Projektions-/Vorschau-/Neustartprüfungen erhalten die reine Füllminiatur.
 Geänderte Testannahmen betreffen gezielt die abgelöste Bodenleiste, entfernte
 Textlabels, neue Rasteramplitude und bewusst aktive Bakso-Ressource.
+Die alten fest ausgesparten Texturkoordinaten sind durch eine unabhängige
+Innenflächenprüfung ersetzt: mindestens ein Viertel echte Originalfarbpixel,
+alle übrigen Pixel innerhalb des bisherigen Aufhellungsbudgets, exakte Papierfuge
+und analoge 0,56-Previewprüfung. Uniformes Aufhellen und fehlende Originalfarbe
+werden gezielt abgelehnt; auch G1 prüft die tatsächlich neue Füllfläche.
 
 ## CI, Downloads und Beweisgrenzen
 

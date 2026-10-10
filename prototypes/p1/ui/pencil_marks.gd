@@ -157,8 +157,8 @@ func draw_fill(box: Rect2, value: int, index: int, alpha: float) -> void:
 		stroke(points[k], points[(k + 1) % points.size()], Color(board.cell_color(value).darkened(0.22), 0.55 * alpha), 0.8)
 	for k: int in range(3):
 		var path: PackedVector2Array = fill_trace(index,k)
-		for j: int in range(path.size()-1):
-			stroke(inside.position+inside.size*path[j],inside.position+inside.size*path[j+1],Color(Color.WHITE,0.12*alpha),0.9+0.3*variation(index,90+k))
+		for j: int in range(path.size()): path[j]=inside.position+inside.size*path[j]
+		stroke_path(path,Color(Color.WHITE,0.12*alpha),0.9+0.3*variation(index,90+k))
 
 static func fill_trace(index: int, which: int) -> PackedVector2Array:
 	# Cell identity only. Preview, waiting targets and the final finishing pass
@@ -173,6 +173,24 @@ static func fill_trace(index: int, which: int) -> PackedVector2Array:
 		var t: float = step/4.0
 		result.append(a.lerp(b,t)+Vector2(0,sin(t*PI)*bend))
 	return result
+
+func stroke_path(points: PackedVector2Array, color: Color, width: float) -> void:
+	# One joined stroke avoids double alpha where short segments meet. Keep
+	# the existing viewport/AA clipping; finishing passes may clip this path.
+	var clip: Rect2 = board.view.viewport.grow(-width/2.0-1.0).intersection(mark_clip)
+	var part: PackedVector2Array = PackedVector2Array()
+	for j: int in range(points.size()-1):
+		var segment: PackedVector2Array = Board.clipped_segment(points[j],points[j+1],clip)
+		if segment.size()!=2 or segment[0].distance_to(segment[1])<=0.01:
+			if part.size()>1: draw_polyline(part,color,width,true)
+			part.clear()
+			continue
+		if not part.is_empty() and part[-1].distance_to(segment[0])>0.01:
+			if part.size()>1: draw_polyline(part,color,width,true)
+			part.clear()
+		if part.is_empty(): part.append(segment[0])
+		part.append(segment[1])
+	if part.size()>1: draw_polyline(part,color,width,true)
 
 func stroke(a: Vector2, b: Vector2, color: Color, width: float) -> void:
 	# Reserve the antialias fringe as well as half the stroke width. The old

@@ -71,6 +71,35 @@ func fail_capture(message: String, code: int = 5) -> void:
 	write_report()
 	quit(code)
 
+func fill_patch_region(box: Rect2) -> Rect2i:
+	# Independent clear interior, away from the outline and paper moat.
+	var margin: float = maxf(minf(4.0,box.size.x*0.3),box.size.x*0.18)
+	var a: Vector2i = Vector2i(ceilf(box.position.x+margin),ceilf(box.position.y+margin))
+	var b: Vector2i = Vector2i(floorf(box.end.x-margin),floorf(box.end.y-margin))
+	return Rect2i(a,b-a)
+
+func fill_patch(picture: Image, material: Image, box: Rect2, palette: Color, alpha: float, band: bool = false) -> Dictionary:
+	# V3 moves the light traces. Do not require one formerly blank coordinate
+	# to stay blank: retain real palette pixels across at least 1/4 of the core,
+	# and bound EVERY other core pixel by the existing 12%-white texture budget.
+	var region: Rect2i = fill_patch_region(box)
+	var pure: int = 0
+	var total: int = 0
+	var bounded: bool = true
+	var first_bad: Dictionary = {}
+	for y: int in range(region.position.y,region.end.y):
+		for x: int in range(region.position.x,region.end.x):
+			var base: Color = Color("e8e9d9") if band else material.get_pixel(x,y)
+			base = base.blend(Color(palette,alpha))
+			var actual: Color = picture.get_pixel(x,y)
+			var delta: Vector3 = Vector3(actual.r-base.r,actual.g-base.g,actual.b-base.b)
+			var within: bool = minf(delta.x,minf(delta.y,delta.z)) >= -0.005 and delta.length() <= alpha*0.13*sqrt(3.0)
+			if not within and first_bad.is_empty(): first_bad={"pixel":[x,y],"actual":str(actual),"base":str(base)}
+			bounded = bounded and within
+			pure += int(actual.is_equal_approx(base) if alpha==1.0 else close_color(actual,base))
+			total += 1
+	return {"valid":bounded and total>0 and pure>=total*0.25,"bounded":bounded,"pure":pure,"total":total,"first_bad":first_bad}
+
 func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 	var material: Image
 	if name.begins_with("x-clip-") or name.contains("preview-color"):
@@ -104,18 +133,22 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 	if name.begins_with("separation-") and name.ends_with("-confirmed"):
 		for i: int in range(app.session.definition.palette.size()):
 			var cell: Rect2 = app.board.view.cell_rect(Vector2i(2 + i * 2, 4))
-			# Solid pencil interior, between the three lighter texture strokes.
-			var center: Vector2i = Vector2i(app.board.global_position + cell.position + cell.size * Vector2(0.5, 0.38))
-			var expanded: Vector2i = Vector2i(app.board.global_position + cell.position + cell.size * Vector2(0.18, 0.38))
 			var moat: Vector2i = Vector2i(app.board.global_position + cell.position + Vector2(1, cell.size.y / 2))
 			var original: Color = Color(app.session.definition.palette[i].color)
-			var textured: Color = picture.get_pixelv(expanded)
-			var tint_delta: Vector3 = Vector3(textured.r-original.r, textured.g-original.g, textured.b-original.b)
-			# The selected pencil has white texture at up to 12 % coverage.
-			if not picture.get_pixelv(center).is_equal_approx(original) or minf(tint_delta.x, minf(tint_delta.y, tint_delta.z)) < -0.005 or tint_delta.length() > 0.13 * sqrt(3.0) or not picture.get_pixelv(moat).is_equal_approx(material.get_pixelv(moat)):
-				fail_capture("Rendered fill/moat regression: %s solid=%s inner=%s moat=%s paper=%s expected=%s" % [name,picture.get_pixelv(center),picture.get_pixelv(expanded),picture.get_pixelv(moat),material.get_pixelv(moat),Color(app.session.definition.palette[i].color)], 5)
+			cell.position+=app.board.global_position
+			var patch: Dictionary = fill_patch(picture,material,cell,original,1.0)
+			if not patch.valid or not picture.get_pixelv(moat).is_equal_approx(material.get_pixelv(moat)):
+				fail_capture("Rendered fill/moat regression: %s patch=%s moat=%s paper=%s expected=%s" % [name,patch,picture.get_pixelv(moat),material.get_pixelv(moat),original], 5)
 				return picture
 			pixel_checks += 3
+			if name=="separation-f1-24-confirmed":
+				for color: Color in [original.lightened(0.08),Color.WHITE]:
+					var wrong: Image = picture.duplicate()
+					wrong.fill_rect(fill_patch_region(cell),color)
+					if fill_patch(wrong,material,cell,original,1.0).valid:
+						fail_capture("V3 fill oracle accepted uniform whitening/missing palette",5)
+						return picture
+					pixel_checks += 1
 	if name.contains("preview-color"):
 		var color_index: int = int(name.get_slice("preview-color", 1))
 		var preview_cell: Rect2 = app.board.view.cell_rect(Vector2i(2, 3))
@@ -126,8 +159,10 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 		# hidden. The active band, when present, is the flat moat color.
 		var underlay: Color = gap if gap.is_equal_approx(Color("e8e9d9")) else material.get_pixelv(preview_center)
 		var expected_fill: Color = underlay.blend(Color(Color(app.session.definition.palette[color_index - 1].color), 0.56))
-		if not close_color(picture.get_pixelv(preview_center), expected_fill) or absf(gap.r - expected_fill.r) + absf(gap.g - expected_fill.g) + absf(gap.b - expected_fill.b) < 0.1:
-			fail_capture("Rendered preview fill/moat regression: %s actual=%s expected=%s gap=%s" % [name,picture.get_pixelv(preview_center),expected_fill,gap], 5)
+		preview_cell.position+=app.board.global_position
+		var patch: Dictionary = fill_patch(picture,material,preview_cell,Color(app.session.definition.palette[color_index - 1].color),0.56,gap.is_equal_approx(Color("e8e9d9")))
+		if not patch.valid or absf(gap.r - expected_fill.r) + absf(gap.g - expected_fill.g) + absf(gap.b - expected_fill.b) < 0.1:
+			fail_capture("Rendered preview fill/moat regression: %s patch=%s expected=%s gap=%s" % [name,patch,expected_fill,gap], 5)
 			return picture
 		pixel_checks += 2
 	if name == "f03-grid-focus":
@@ -304,11 +339,15 @@ func capture_axis_reset(app: Main, fixture_index: int, pitch: float, color: int)
 	var new_image: Image = await snapshot(app, "g1-counter-4-" + label)
 	var old_box: Rect2 = app.board.view.cell_rect(old)
 	var new_box: Rect2 = app.board.view.cell_rect(next)
-	var old_pixel: Vector2i = Vector2i(app.board.global_position + old_box.position + old_box.size * Vector2(0.5, 0.38))
-	var new_pixel: Vector2i = Vector2i(app.board.global_position + new_box.position + new_box.size * Vector2(0.5, 0.38))
-	var fill: Color = Color("e8e9d9").blend(Color(Color(app.session.definition.palette[color - 1].color), 0.56))
-	if not close_color(old_image.get_pixelv(old_pixel), fill) or close_color(origin_image.get_pixelv(old_pixel), fill) or close_color(new_image.get_pixelv(old_pixel), fill) or not close_color(new_image.get_pixelv(new_pixel), fill):
-		fail_capture("Rendered old/new arm pixel mismatch: " + label, 5)
+	old_box.position+=app.board.global_position
+	new_box.position+=app.board.global_position
+	var palette: Color = Color(app.session.definition.palette[color - 1].color)
+	var patches: Array[Dictionary] = [fill_patch(old_image,old_image,old_box,palette,0.56,true),
+		fill_patch(origin_image,origin_image,old_box,palette,0.56,true),
+		fill_patch(new_image,new_image,old_box,palette,0.56,true),
+		fill_patch(new_image,new_image,new_box,palette,0.56,true)]
+	if not patches[0].valid or patches[1].valid or patches[2].valid or not patches[3].valid:
+		fail_capture("Rendered old/new arm pixel mismatch: %s %s" % [label,patches], 5)
 		return
 	pixel_checks += 4
 	app.board.cancel_gesture()

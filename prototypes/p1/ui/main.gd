@@ -847,7 +847,9 @@ func _layout_book() -> void:
 	_place(layout_warning,Rect2(o+Vector2(notice_left,bottom-6*u),Vector2(warning_width,24*u)))
 	layout_warning.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var tools_top: float = palette_pos.y + (56.0 if session.definition.palette.size()==1 else 110.0)*u + 14*u
-	var tools_height: float = minf(8*hit+9*4*u, o.y+h-40*u-tools_top)
+	# Scroll offsets are integer pixels. A fractional page height otherwise
+	# leaves the last half pixel of a revealed button clipped at UI125.
+	var tools_height: float = floorf(minf(8*hit+9*4*u, o.y+h-40*u-tools_top))
 	_place(tools_scroll,Rect2(Vector2(mini_position.x+20*u,tools_top),Vector2(hit+20*u,tools_height)))
 	tools_column.add_theme_constant_override("separation",roundi(4*u))
 	for id: String in TOOL_IDS:
