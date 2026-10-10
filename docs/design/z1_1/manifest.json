@@ -1,0 +1,2103 @@
+{
+  "base": "831b46f9e373e8691c18088efc9f2495fe3defb8",
+  "reference_head": "df7ac589e900a6d6d7c5080599c6a5ace47c395d",
+  "demo_revision": "z1-demo-1",
+  "demo_source_sha256": "2e6a616bfd2110b862fe7a15726f5aa96fbf001eb6ae9800ff323d31b5771781",
+  "study": "Static SVG compositions; not Godot captures",
+  "records": [
+    {
+      "name": "s1-u1-f02-1920",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "style": "s1",
+      "layout": "u1",
+      "fixture": "f02",
+      "data_sha256": "95a1359febb6e02acfd9a780969c71d72fbcb60c75d0bff162e14a5e77db2793",
+      "cells_sha256": "b2564e0127f19affebf142164b6ba408474443a2ba7a8e54ff4cf550bfda1f75",
+      "geometry": {
+        "grid": [
+          510,
+          252,
+          720,
+          720
+        ],
+        "cell": 18,
+        "origin": [
+          0,
+          0
+        ],
+        "hints": [
+          210,
+          126
+        ],
+        "mini": [
+          1410,
+          220,
+          180,
+          180
+        ],
+        "title": [
+          300,
+          90
+        ],
+        "ui": 1
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            325,
+            1004,
+            44,
+            44
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            377,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            429,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            481,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            533,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            585,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            637,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            689,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            741,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            793,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            845,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        },
+        {
+          "id": 2,
+          "color": "#edca78",
+          "symbol": "B"
+        },
+        {
+          "id": 3,
+          "color": "#bd604a",
+          "symbol": "C"
+        },
+        {
+          "id": 4,
+          "color": "#6c9aab",
+          "symbol": "D"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "0554b1043656059381d613268e959a7e5aaea1aff609caf497bfa44ec0dee953",
+      "png_sha256": "567e35f0d17b581f876b3d84d5f2454b3b6093a83d5b3eb3db6c7ad6eaa27127",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 1051417,
+      "visible_background_percent": 50.7
+    },
+    {
+      "name": "s1-detail",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "svg_sha256": "be303cc1b76441a4846dc667e3ea3200a4abbb4ebd028b9a8fb30b9311acaf9e",
+      "png_sha256": "a952b147d8b9fd69b50100a7c3e8a6cf94c6d44d7483b14c368d7c02e14c849e",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "name": "s1-background",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "svg_sha256": "d5c7a847795ac93df990543e14c30cc9d9c663ce7676aeb3bfda8d74bbb58326",
+      "png_sha256": "10e94cb627f3757f762f6f21320e83b4a201443c7430dd36358ac494f5576e1d",
+      "outer_text_overflow": [],
+      "fonts_loaded": []
+    },
+    {
+      "name": "s2-u1-f02-1920",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "style": "s2",
+      "layout": "u1",
+      "fixture": "f02",
+      "data_sha256": "95a1359febb6e02acfd9a780969c71d72fbcb60c75d0bff162e14a5e77db2793",
+      "cells_sha256": "b2564e0127f19affebf142164b6ba408474443a2ba7a8e54ff4cf550bfda1f75",
+      "geometry": {
+        "grid": [
+          510,
+          252,
+          720,
+          720
+        ],
+        "cell": 18,
+        "origin": [
+          0,
+          0
+        ],
+        "hints": [
+          210,
+          126
+        ],
+        "mini": [
+          1410,
+          220,
+          180,
+          180
+        ],
+        "title": [
+          300,
+          90
+        ],
+        "ui": 1
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            325,
+            1004,
+            44,
+            44
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            377,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            429,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            481,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            533,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            585,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            637,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            689,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            741,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            793,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            845,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        },
+        {
+          "id": 2,
+          "color": "#edca78",
+          "symbol": "B"
+        },
+        {
+          "id": 3,
+          "color": "#bd604a",
+          "symbol": "C"
+        },
+        {
+          "id": 4,
+          "color": "#6c9aab",
+          "symbol": "D"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "4b039a69f5e5c0eea0904ab5a1ec430d21141b4ce7bbe01fabef11e0185aeffc",
+      "png_sha256": "bdf0a5c1455ce1f2e1ffd4b6c9acd6bc18d44f6e9739cb0a336b713c1e14359a",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 1062781,
+      "visible_background_percent": 51.25
+    },
+    {
+      "name": "s2-detail",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "svg_sha256": "1387a47787a695727c9d2af85daedcd1e486ef8ec50081f1f7db8a5fecd03354",
+      "png_sha256": "dbb2cc05a12173c8126c5d7ddccd50ac788575180c525351f3e49a14c4687f03",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "name": "s2-background",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "svg_sha256": "005c11fee3d91de321ce390feaa468dfcc9d9564d86f6b9ebb60eb889d03e38b",
+      "png_sha256": "d3f7b0e429567eecdbc9ea31400cf2bc3420ac295dfc2c701f1477c9e594186d",
+      "outer_text_overflow": [],
+      "fonts_loaded": []
+    },
+    {
+      "name": "s3-u1-f02-1920",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "style": "s3",
+      "layout": "u1",
+      "fixture": "f02",
+      "data_sha256": "95a1359febb6e02acfd9a780969c71d72fbcb60c75d0bff162e14a5e77db2793",
+      "cells_sha256": "b2564e0127f19affebf142164b6ba408474443a2ba7a8e54ff4cf550bfda1f75",
+      "geometry": {
+        "grid": [
+          510,
+          252,
+          720,
+          720
+        ],
+        "cell": 18,
+        "origin": [
+          0,
+          0
+        ],
+        "hints": [
+          210,
+          126
+        ],
+        "mini": [
+          1410,
+          220,
+          180,
+          180
+        ],
+        "title": [
+          300,
+          90
+        ],
+        "ui": 1
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            325,
+            1004,
+            44,
+            44
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            377,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            429,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            481,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            533,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            585,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            637,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            689,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            741,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            793,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            845,
+            1004,
+            44,
+            44
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        },
+        {
+          "id": 2,
+          "color": "#edca78",
+          "symbol": "B"
+        },
+        {
+          "id": 3,
+          "color": "#bd604a",
+          "symbol": "C"
+        },
+        {
+          "id": 4,
+          "color": "#6c9aab",
+          "symbol": "D"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "359681ca1ea635327a376d04152dfbae02548cae6552e397d2327e5fef92f9bd",
+      "png_sha256": "5da2c41def16c85b40f31c1e332cc0145c9309842f0b1667285fca4226c85bba",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Barlow",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexMono",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 1055928,
+      "visible_background_percent": 50.92
+    },
+    {
+      "name": "s3-detail",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "svg_sha256": "efbe05a4583f20ab920e1502d77feac98e398c24eb15de0f4d4f6e1e95e036fd",
+      "png_sha256": "f8805948945a8d3f6d8239cfaef30e92d94a00442f84c4d4dfac02fc67602740",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Barlow",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexMono",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "name": "s3-background",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "svg_sha256": "303b714a2a9ae07ae6530d7ff4b97fdd5eadc3a9e93d03d006f2a7289106b4ad",
+      "png_sha256": "25167f84fd42acf82d45cb30bf011d308ac056c56ac7044e877484276638e0e2",
+      "outer_text_overflow": [],
+      "fonts_loaded": []
+    },
+    {
+      "name": "s1-u2-f02-1920",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "style": "s1",
+      "layout": "u2",
+      "fixture": "f02",
+      "data_sha256": "95a1359febb6e02acfd9a780969c71d72fbcb60c75d0bff162e14a5e77db2793",
+      "cells_sha256": "b2564e0127f19affebf142164b6ba408474443a2ba7a8e54ff4cf550bfda1f75",
+      "geometry": {
+        "grid": [
+          420,
+          252,
+          720,
+          720
+        ],
+        "cell": 18,
+        "origin": [
+          0,
+          0
+        ],
+        "hints": [
+          210,
+          126
+        ],
+        "mini": [
+          1450,
+          650,
+          180,
+          180
+        ],
+        "title": [
+          210,
+          90
+        ],
+        "ui": 1
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            194,
+            1002,
+            44,
+            44
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            246,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            298,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            350,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            402,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            1622,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            1674,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            1726,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            1778,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            1784,
+            35,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            1842,
+            35,
+            44,
+            44
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        },
+        {
+          "id": 2,
+          "color": "#edca78",
+          "symbol": "B"
+        },
+        {
+          "id": 3,
+          "color": "#bd604a",
+          "symbol": "C"
+        },
+        {
+          "id": 4,
+          "color": "#6c9aab",
+          "symbol": "D"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "00067c44a43d71713c84b3b1d140dbb24d849c8929ebbcb20c667b60e74ed887",
+      "png_sha256": "19fe6856543f665ebfe6bb6c570594552c98f388c64a152f4d87a1dc17a44977",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 1066779,
+      "visible_background_percent": 51.45
+    },
+    {
+      "name": "s1-u1-f01-2560",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "style": "s1",
+      "layout": "u1",
+      "fixture": "f01",
+      "data_sha256": "329320630b68b856235992e95c9ec192a3a7cc08b03d81aacab0c0d0762fe1ec",
+      "cells_sha256": "9187336355b521af075cc1239f9f6daa9ac23f04e7ea779dec66a4b221be013b",
+      "geometry": {
+        "grid": [
+          890,
+          440,
+          480,
+          480
+        ],
+        "cell": 24,
+        "origin": [
+          0,
+          0
+        ],
+        "hints": [
+          192,
+          144
+        ],
+        "mini": [
+          1590,
+          440,
+          200,
+          200
+        ],
+        "title": [
+          706,
+          228
+        ],
+        "ui": 1
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            778,
+            1000,
+            44,
+            44
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            830,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            882,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            934,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            986,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            1038,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            1090,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            1142,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            1194,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            1246,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            1298,
+            1000,
+            44,
+            44
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "37a962e94dc4641126ca5e5d3d4f71cbec9780143a30c30b4f0579c6168c1c28",
+      "png_sha256": "ab7f47a7747eb1290e9037ce436d59bb3a68256771db637e27e0cee179b766c3",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 3043379,
+      "visible_background_percent": 82.56
+    },
+    {
+      "name": "s1-u1-f03-1920",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "style": "s1",
+      "layout": "u1",
+      "fixture": "f03",
+      "data_sha256": "4e7988a8044d82144ef6c13d6df3eb53288c5c5fff3682a446d9a2ae30b2f530",
+      "cells_sha256": "179dfec8eb479f2e406962adfebaa92cff734effc893da9a72c4bed392a9b78f",
+      "geometry": {
+        "grid": [
+          350,
+          270,
+          1368,
+          672
+        ],
+        "cell": 24,
+        "origin": [
+          25,
+          35
+        ],
+        "hints": [
+          240,
+          144
+        ],
+        "mini": [
+          1764,
+          290,
+          132,
+          132
+        ],
+        "title": [
+          108,
+          91
+        ],
+        "ui": 1
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            400,
+            1003,
+            44,
+            44
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            452,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            504,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            556,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            608,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            660,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            712,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            764,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            816,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            868,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            920,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        },
+        {
+          "id": 2,
+          "color": "#edca78",
+          "symbol": "B"
+        },
+        {
+          "id": 3,
+          "color": "#bd604a",
+          "symbol": "C"
+        },
+        {
+          "id": 4,
+          "color": "#6c9aab",
+          "symbol": "D"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "b0be32be326fffada3a28bb739fa6293d2e17dab2aa8bc8a348ab8fd2a43c4a1",
+      "png_sha256": "aef7aaaec8698ae58013a3d3862b9410fbb350edf59e808e83158551b5825c1d",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 520951,
+      "visible_background_percent": 25.12
+    },
+    {
+      "name": "s1-u1-f02-1280",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "style": "s1",
+      "layout": "u1",
+      "fixture": "f02",
+      "data_sha256": "95a1359febb6e02acfd9a780969c71d72fbcb60c75d0bff162e14a5e77db2793",
+      "cells_sha256": "b2564e0127f19affebf142164b6ba408474443a2ba7a8e54ff4cf550bfda1f75",
+      "geometry": {
+        "grid": [
+          300,
+          222,
+          638,
+          374
+        ],
+        "cell": 22,
+        "origin": [
+          0,
+          0
+        ],
+        "hints": [
+          210,
+          120
+        ],
+        "mini": [
+          1050,
+          220,
+          140,
+          140
+        ],
+        "title": [
+          90,
+          71
+        ],
+        "ui": 1.25
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            250.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            315.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            380.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            445.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            510.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            575.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            640.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            705.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            770.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            835.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            900.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        },
+        {
+          "id": 2,
+          "color": "#edca78",
+          "symbol": "B"
+        },
+        {
+          "id": 3,
+          "color": "#bd604a",
+          "symbol": "C"
+        },
+        {
+          "id": 4,
+          "color": "#6c9aab",
+          "symbol": "D"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "0c0a791cff6d4bf320fb7836eef721e9bf935c93f0f92b3f535f53f9bb09b6d7",
+      "png_sha256": "86d2df4eeb9fec9ef17cf2ed4cc852e9159481b1068836c8252600fbd9a4b322",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 277191,
+      "visible_background_percent": 30.08
+    },
+    {
+      "name": "s1-u2-f01-2560",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "style": "s1",
+      "layout": "u2",
+      "fixture": "f01",
+      "data_sha256": "329320630b68b856235992e95c9ec192a3a7cc08b03d81aacab0c0d0762fe1ec",
+      "cells_sha256": "9187336355b521af075cc1239f9f6daa9ac23f04e7ea779dec66a4b221be013b",
+      "geometry": {
+        "grid": [
+          890,
+          440,
+          480,
+          480
+        ],
+        "cell": 24,
+        "origin": [
+          0,
+          0
+        ],
+        "hints": [
+          192,
+          144
+        ],
+        "mini": [
+          1590,
+          440,
+          200,
+          200
+        ],
+        "title": [
+          706,
+          228
+        ],
+        "ui": 1
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            682,
+            1362,
+            44,
+            44
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            734,
+            1362,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            786,
+            1362,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            838,
+            1362,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            890,
+            1362,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            2262,
+            1362,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            2314,
+            1362,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            2366,
+            1362,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            2418,
+            1362,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            2424,
+            35,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            2482,
+            35,
+            44,
+            44
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "e43b26c5a998cbaccc6f252067a87968f8f690f7893190c237cab4030b850fd3",
+      "png_sha256": "9e8691cd940eb4f95fcfa40e9ffcd3645070ac5784a7cde907d70e7698a55916",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 3058741,
+      "visible_background_percent": 82.97
+    },
+    {
+      "name": "s1-u2-f03-1920",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "style": "s1",
+      "layout": "u2",
+      "fixture": "f03",
+      "data_sha256": "4e7988a8044d82144ef6c13d6df3eb53288c5c5fff3682a446d9a2ae30b2f530",
+      "cells_sha256": "179dfec8eb479f2e406962adfebaa92cff734effc893da9a72c4bed392a9b78f",
+      "geometry": {
+        "grid": [
+          350,
+          270,
+          1368,
+          672
+        ],
+        "cell": 24,
+        "origin": [
+          25,
+          35
+        ],
+        "hints": [
+          240,
+          144
+        ],
+        "mini": [
+          1764,
+          290,
+          132,
+          132
+        ],
+        "title": [
+          108,
+          91
+        ],
+        "ui": 1
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            400,
+            1003,
+            44,
+            44
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            452,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            504,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            556,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            608,
+            1003,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            1622,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            1674,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            1726,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            1778,
+            1002,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            1784,
+            35,
+            44,
+            44
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            1842,
+            35,
+            44,
+            44
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        },
+        {
+          "id": 2,
+          "color": "#edca78",
+          "symbol": "B"
+        },
+        {
+          "id": 3,
+          "color": "#bd604a",
+          "symbol": "C"
+        },
+        {
+          "id": 4,
+          "color": "#6c9aab",
+          "symbol": "D"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "27aaec2c5638ff0d6c29e5c172d9b26491000cb34803c1c176f81d71d93639d5",
+      "png_sha256": "561ce365dbbe3338d60b419072fe31de88240e6bbe7e13189e9d19066e708bbc",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 536313,
+      "visible_background_percent": 25.86
+    },
+    {
+      "name": "s1-u2-f02-1280",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "style": "s1",
+      "layout": "u2",
+      "fixture": "f02",
+      "data_sha256": "95a1359febb6e02acfd9a780969c71d72fbcb60c75d0bff162e14a5e77db2793",
+      "cells_sha256": "b2564e0127f19affebf142164b6ba408474443a2ba7a8e54ff4cf550bfda1f75",
+      "geometry": {
+        "grid": [
+          310,
+          222,
+          638,
+          374
+        ],
+        "cell": 22,
+        "origin": [
+          0,
+          0
+        ],
+        "hints": [
+          210,
+          120
+        ],
+        "mini": [
+          1050,
+          220,
+          140,
+          140
+        ],
+        "title": [
+          90,
+          71
+        ],
+        "ui": 1.25
+      },
+      "actions": [
+        {
+          "action": "fill",
+          "rect": [
+            84.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "active"
+        },
+        {
+          "action": "erase",
+          "rect": [
+            149.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "hand",
+          "rect": [
+            214.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "undo",
+          "rect": [
+            279.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "redo",
+          "rect": [
+            344.0,
+            626,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "minus",
+          "rect": [
+            917.0,
+            642,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "plus",
+          "rect": [
+            982.0,
+            642,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "fit",
+          "rect": [
+            1047.0,
+            642,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "work",
+          "rect": [
+            1112.0,
+            642,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "help",
+          "rect": [
+            1110.0,
+            35,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        },
+        {
+          "action": "menu",
+          "rect": [
+            1182.5,
+            35,
+            55.0,
+            55.0
+          ],
+          "state": "normal"
+        }
+      ],
+      "palette": [
+        {
+          "id": 1,
+          "color": "#343f42",
+          "symbol": "A"
+        },
+        {
+          "id": 2,
+          "color": "#edca78",
+          "symbol": "B"
+        },
+        {
+          "id": 3,
+          "color": "#bd604a",
+          "symbol": "C"
+        },
+        {
+          "id": 4,
+          "color": "#6c9aab",
+          "symbol": "D"
+        }
+      ],
+      "demo_revision": "z1-demo-1",
+      "contrast_proposal": "C1: original fill plus 0.55 px ink outline on colors 2/4",
+      "svg_sha256": "2f6f59ccf13bebf21879090094c5a57cc09fd2a6c1cdb0f7e1233887f893f271",
+      "png_sha256": "62d982fa9c714af4d57e14f2cdfc086ba1d20150d873ab47e0b93c9d95777d52",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ],
+      "visible_background_pixels": 299827,
+      "visible_background_percent": 32.53
+    },
+    {
+      "name": "icons",
+      "dimensions": [
+        1920,
+        1160
+      ],
+      "svg_sha256": "0fc7d4b4b151bc411eaa076076181ad5b17846573b54cb12812b5257b819fed4",
+      "png_sha256": "241e2258126a82a15e439ce1d1d2a137601b429e8f1b1ba696faf154a883de1d",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "name": "typography",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "svg_sha256": "d32f0ccfc37465060ed1a9311992afff9283e1403ce405cdd4aabb9053b49aa0",
+      "png_sha256": "1f6ba06dda15f7470fd2e708679cee0237a109eff4d1dddaee5401fb6b9818e1",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        },
+        {
+          "family": "Barlow",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexMono",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "name": "layouts",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "svg_sha256": "1655f334f316e1eca3e1bed3592068699215a4be3d37ac4c9fbff3e911dcbbb2",
+      "png_sha256": "421cbad746268f81ea7a9895696cdfe99adfa7bc2126dbf1e9ef33d3371678ad",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "name": "comparison",
+      "dimensions": [
+        1920,
+        690
+      ],
+      "svg_sha256": "be6b2149aff87604fdd2498cb25e3e6288646cdb8e237c7c8e5781efdd37fc0f",
+      "png_sha256": "a13aa51064b929ee98baaa19e863ce609aedc4a7f7a52a547f50f79914492bc0",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    },
+    {
+      "name": "sizes",
+      "dimensions": [
+        1920,
+        1670
+      ],
+      "svg_sha256": "edbb565f84bf38af4f681f4c2916cdf5281b4c6d8a83789e4289ab890dcd7826",
+      "png_sha256": "c15afe261ed4a68ab9113028b0a00bdc1841a093f7a240e52a14759da8b6a5c5",
+      "outer_text_overflow": [],
+      "fonts_loaded": [
+        {
+          "family": "Fraunces",
+          "status": "loaded"
+        },
+        {
+          "family": "PlexSans",
+          "status": "loaded"
+        }
+      ]
+    }
+  ],
+  "renderer": {
+    "engine": "Chromium / Microsoft Edge",
+    "version": "153.0.4234.48",
+    "playwright": "1.55.0",
+    "device_scale_factor": 1,
+    "python": "3.13.14",
+    "font_wait": "document.fonts.ready",
+    "network": "none during rendering"
+  }
+}
