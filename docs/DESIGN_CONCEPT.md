@@ -1,5 +1,19 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+## Aktueller regulärer Stand · VS2 (#61)
+
+**Kombinierter V1/V2/V3-Stand:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
+
+Die A-Buchkomposition übernimmt reguläre Vollsicht mit achsengetrennten Reserven
+und GF1-Zusatzbreite. Acht Werkzeuge statt Hand; passive Miniatur. Keine zusätzliche
+Studiensteuerung oder Messanzeige im Arbeitsbild.
+
+Bedien-/Speichervertrag: [P1](PROTOTYPE_P1.md). Aktuelle
+[Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md).
+VS2-M01, unabhängiges technisches/visuelles Review und passende Mergefreigabe
+bleiben vor Merge offen. Historische Nachweise bleiben commitgebunden.
+
+
 Stand: 09.10.2026 · Arbeitsfassung 0.23 · Z2/GP-48/ZV-50 integriert; zeichnerische UI spezifiziert
 
 ## 1. Geltung und Entscheidungsstand
@@ -101,7 +115,8 @@ Die [RP-4-Sichtprüfung](RP4_VERIFICATION.md) bewertet neue Produktionsraster,
 keine neue P1-Bedienabnahme.
 
 Die neue ZS-Folgearbeit aus Abschnitt 4.4 öffnet GD-03 ausschließlich für die
-Gestaltung der Hinweisziffern. Fraunces für Titel, Plex Sans für übrige UI,
+Gestaltung der Hinweisziffern. VS2-E2/V3 ergänzt Bakso für Arbeits-Blatttitel;
+Fraunces bleibt für sonstige Überschriften, Plex Sans für übrige UI,
 A-Arbeitsasset, Buchkomposition, N1 und die C1-Farb-/Kontursemantik bleiben die
 Grundlage. Konkrete abweichende Ziffern-, Schriftgrad- oder Slotwerte werden
 erst im nativen Vergleich begründet gewählt; eine Änderung dieser Werte ist
@@ -182,11 +197,14 @@ Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Textu
 
 **Präzisierung aus der Mausprobe:** Fensterfläche, Oberflächenskalierung und Rasterzoom getrennt behandeln. 1080p und 1440p sollen sinnvoll nutzbar sein, ohne kleine Rätsel automatisch auf die gesamte Arbeitsfläche zu vergrößern. Mehr Fläche darf mehr Ausschnitt oder ruhige Ränder bedeuten. Konkrete Startwerte und Tests für P1 stehen ausschließlich in der P1-Spezifikation; sie sind keine allgemeingültigen Pixelwerte des späteren Designsystems.
 
-**ZV-50 / #50:** Die ruhige Standarddarstellung eines kleinen Rasters bleibt erhalten, darf aber den späteren Arbeitszoom nicht als unsichtbare feste Clippingbox begrenzen. Oberhalb 100 % nutzt das Raster im nicht kompakten Buchlayout die freie Papierfläche bis zu echten Hinweis-/Titel-, Miniatur- und Werkzeuggrenzen. Für 20×20 sind bei 1920×1080/UI 100 % alle Arbeitsstufen bis einschließlich 150 % vollständig sichtbar; erst danach ist ein Ausschnitt legitim. Kleinere Flächen/UI 125 % werden nach ihrem realen Platz beurteilt. Die größere sichtbare Fläche darf weder Zellen, Hinweise noch Trefferflächen verkleinern oder unter Bedienung zeichnen.
+**ZV-50 / #50, durch VS2 fortgeführt:** Freie Papierfläche bleibt nutzbar.
+Die frühere Erlaubnis eines Ausschnitts oberhalb 150 % entfällt. Jeder angebotene
+Zoom hält den vollständigen Rahmen sichtbar; Einpassen und Arbeitsgröße sind
+von der benannten Ansichtsoption getrennt.
 
 Die gefüllten Zellen brauchen einen erkennbaren Zwischenraum beziehungsweise eine kontrastierende Trennung auch zu dunklen Fünferlinien. Innenabstand, Linienbreite, Farben und Ebenenreihenfolge gemeinsam prüfen. Der in der Mausprobe gezeigte Fall dreier angrenzender Füllzellen an einer Fünfergrenze darf nicht wie eine einzige umgedrehte L-Form aussehen. Fünfergruppen sollen dabei weiterhin gut zählbar bleiben. Prüfung an dunklen und allen angebotenen Farbzellen, Arbeitszoom und Vorschau, nicht nur an einem leeren Raster.
 
-Für reguläre Rätsel gilt [VS-D01](VS1_DECISION.md): Vollsicht einschließlich Rahmen, bevorzugt G, ergänzend V, Format-/Hinweislastprüfung bei 1080p. VS-GF1 nutzt freie rechte Papierbreite für Zeilenhinweise und versetzt Raster samt Spaltenhinweisen und Treffergeometrie gemeinsam, ohne Zell-/Schriftverkleinerung. Die reguläre P1-Integration bleibt separat. Für mögliche Großraster-Sonderfälle ist ein verdichteter Rahmen mit kompakteren Werkzeugen denkbar. Er soll Identität bewahren, ohne Arbeitsfläche zu verschwenden. Schriftgrößen, Abstände, Kontraste und Fokuszustände sind noch kein endgültiges Designsystem.
+Für reguläre Rätsel gilt [VS-D01](VS1_DECISION.md): Vollsicht einschließlich Rahmen, bevorzugt G, ergänzend V, Format-/Hinweislastprüfung bei 1080p. VS-GF1 nutzt freie rechte Papierbreite für Zeilenhinweise und versetzt Raster samt Spaltenhinweisen und Treffergeometrie gemeinsam, ohne Zell-/Schriftverkleinerung. Die reguläre P1-Integration erfolgt mit VS2/#61. Für mögliche Großraster-Sonderfälle ist ein verdichteter Rahmen mit kompakteren Werkzeugen denkbar. Er soll Identität bewahren, ohne Arbeitsfläche zu verschwenden. Schriftgrößen, Abstände, Kontraste und Fokuszustände sind noch kein endgültiges Designsystem.
 
 ### 4.2 Bildplätze und Vollständigkeit
 
@@ -301,14 +319,14 @@ Animationsfortschritt. Zellanimationen lassen sich abschalten; der endgültige
 Zustand erscheint dann unmittelbar. Einzelheiten und gezielte Prüffälle
 stehen in [UI_DRAWING_STYLE.md](UI_DRAWING_STYLE.md). ZS2-E2 ergänzt den Abbruch
 durch Gegentasten-Down auch außerhalb des Boards: beide Tasten loslassen, dann
-frisch starten; MMB/Hand-Navigation bleibt erhalten.
+frisch starten; MMB-Hinweisnavigation bleibt erhalten.
 
 Für P1 zeigt ein Live-Zähler während linker und rechter Zellgesten die gesamte
 geometrische aktuelle Strichlänge inklusive Start/Ende, auch bei Vorbelegungen und
 Eingabesprüngen; er folgt dem elastischen Zurückziehen und zeigt bei tatsächlicher Rückkehr zum Ursprung 1 sowie danach die Länge des neuen geraden Abschnitts. Ein Linealmodus und
 weitergehende Eingabealternativen bleiben Vorschläge.
 Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
-Arbeitskontext, aktive Linien und eine Miniatur mit Ausschnittrahmen wichtig. Lange
+Arbeitskontext, aktive Linien und eine passive eigene Miniatur wichtig. Lange
 Folgen werden nur an Grenzen vollständiger Einzelhinweise gekürzt; ein möglichst
 großer zusammenhängender Ausschnitt bleibt direkt lesbar. Für den P1-Randfall
 priorisiert Variante A nach #11/R7 den geometrisch nächsten Snap und monotone
@@ -324,8 +342,8 @@ ist weder gespeicherte Leseposition noch Spielzustand.
 Der vollständige Hover-Tooltip ergänzt diese Navigation statt sie zu ersetzen; eine
 separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze Linien,
 nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich
-Fehlern, niemals eine korrigierte Lösung. P1 konkretisiert Zoom/Pan und
-Miniaturnavigation; Lesezeichen gehören nicht automatisch dazu.
+Fehlern, niemals eine korrigierte Lösung. VS2 konkretisiert fitbegrenzten Zoom und
+unabhängige Hinweisnavigation; Lesezeichen gehören nicht automatisch dazu.
 
 Rätselfarben und UI-Zustandsfarben sollen unterscheidbar sein. Die Hinweiszahl selbst
 trägt die Rätselfarbe; für P1 entfallen ergänzende A–D-Kennungen und ihr Schalter
@@ -415,7 +433,7 @@ geeignete 40×30/50×30, 1080p, bevorzugt G und ergänzend V. Sehr große Rätse
 bleiben mögliche Sonderfälle. PR #58 ist als `c19b3547…` integriert; VS-GF1/#59
 liefert zusätzliche Zeilenkapazität aus freier G-Breite bei unverändertem Fit.
 Die reguläre P1-Umstellung bleibt separat. VS-M01 ist nicht vollständig persönlich
-durchgeführt; unabhängiges Review, GF-M01 und Mergefreigabe des neuen Heads bleiben offen.
+durchgeführt; GF-M01/#59 ist historisch bestanden; neues unabhängiges VS2-Review und VS2-M01 bleiben vor Merge offen.
 
 VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
 pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige

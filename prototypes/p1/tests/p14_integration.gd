@@ -170,7 +170,7 @@ func view_match(actual: Dictionary, expected: Dictionary) -> bool:
 func view_record() -> Dictionary:
 	var board = app.board
 	return {"center": [board.view.center.x, board.view.center.y], "cell_size": board.view.cell_size,
-		"overview": board.overview, "active_color": board.active_color,
+		"fit_ceiling": board.fit_ceiling, "overview": board.overview, "active_color": board.active_color,
 		"tool": "hand" if board.hand else ("erase" if board.eraser else "fill"),
 		"viewport": [board.view.viewport.position.x, board.view.viewport.position.y,
 			board.view.viewport.size.x, board.view.viewport.size.y]}

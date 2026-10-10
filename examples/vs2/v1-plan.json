@@ -1,0 +1,130 @@
+{
+  "schema": "vs2-v1-finite-plan-1",
+  "issue": 61,
+  "scope": [
+    "N01",
+    "N02",
+    "N04"
+  ],
+  "not_in_scope": [
+    "N03",
+    "N05",
+    "V2",
+    "combined owner acceptance",
+    "merge"
+  ],
+  "reference_commit": "2c332ad688315bfa851f7c0d8642d2ab4ac3709c",
+  "specification_commit": "8d6b929099f552f1e1582b2cca478f35eef2f415",
+  "integrated_main": "d7ec4e1e4a29d82b6979537a33868d57732d3713",
+  "pre_layout_head": "1149552bac8f47fc4807cdd66bf6a7379530e543",
+  "entry_gate": "No layout changes or comparisons until current integrated product passes S0; bind the successful head and test merge in VS2_V1_S0.md.",
+  "reference_image": {
+    "file": "regular-F-01-G-ui100.png",
+    "run": 37948444207,
+    "artifact": 11626179754,
+    "bytes": 2088706,
+    "sha256": "0a7c386f3f52760e98bb15cbf8991cc4ae3c62d3f03af2db6d0d8c92d04c9392"
+  },
+  "candidates": [
+    {
+      "id": "A",
+      "row_pitch": 24,
+      "column_pitch": 18,
+      "group_delta_ui_px": [
+        -16,
+        24
+      ]
+    },
+    {
+      "id": "B-only-if-A-fails-glyph-or-clearance",
+      "row_pitch": 25,
+      "column_pitch": 18,
+      "group_delta_ui_px": [
+        -12,
+        16
+      ]
+    }
+  ],
+  "selection": "Try A once; B only for measured glyph/clearance failure. At most one correction pass per candidate. No font resizing; no unbounded parameter search. Stop and document if neither satisfies.",
+  "composition": "Use unchanged safe board budget. Minimum reserves and fit first, GF1 extra actual row capacity second, translation of the complete raster/hint block last. Measure a stable ink/status envelope (including marker/read extremes) without artificial empty slots; translate drawing and hit geometry together. Clamp on tight surfaces. Shift right group with its mounts, labels and hits; reduce only the group shift on tight surfaces if required.",
+  "matrix": {
+    "regular": 9,
+    "technical": 10,
+    "clients": [
+      [
+        1280,
+        720
+      ],
+      [
+        1600,
+        900
+      ],
+      [
+        1920,
+        1080
+      ],
+      [
+        2560,
+        1440
+      ]
+    ],
+    "ui": [
+      1,
+      1.25
+    ],
+    "views": [
+      "G",
+      "V"
+    ],
+    "records": 304,
+    "native_pictures": 23,
+    "recovery": true
+  },
+  "focused_cases": [
+    "F-01 work and fit",
+    "VS09 free-width work and fit",
+    "VS04 and VS08 constrained",
+    "1280x720 UI125 recovery"
+  ],
+  "oracles": {
+    "NA01": [
+      "row pitch <26 times UI; unchanged face and size policy; columns 18 times UI",
+      "real 1/11/17/40/100 ink, C1/AA and status union at UI100/125",
+      "both axes: markers, all statuses, five complete numbers across every visibility boundary and open interval; monotonic drag, snap, semantic reads; V all hints"
+    ],
+    "NA02": [
+      "used envelope and safe area, four margins, translation, desired/actual pitch, pre/post-translation fit and reserve recorded",
+      "same budget and fit before/after translation, no extra empty slots",
+      "centred envelope on generous cases and safe constrained cases; no change on fill/X/status/undo/redo/drag; actual corners/hints after resize/mode"
+    ],
+    "NA04": [
+      "generous group x decreases and y increases versus bound old image geometry",
+      "all controls/mounts/labels within paper and clear of used board and recovery; minimum color hit 44/55px",
+      "four sizes, two UI scales, G/V; compact fallback recorded"
+    ]
+  },
+  "negative_controls": [
+    "old pitch26 rejected",
+    "smaller font rejected",
+    "old left placement rejected on generous case",
+    "empty reserve padding rejected",
+    "grid-only translation rejected",
+    "old group placement rejected"
+  ],
+  "pictures": {
+    "before": "original hash-bound F01 plus matched baseline captures using archived regular source only in explicit V1 comparison",
+    "after": [
+      "F01 1920 G UI100 full and native clue crop",
+      "VS09 free-width",
+      "VS04/08 constrained",
+      "1280 UI125 recovery"
+    ],
+    "retain": "targeted native originals only; no default complete gallery; hash all rendered checks and report omitted optional images"
+  },
+  "validation": [
+    "all relevant Godot and Python regressions",
+    "change-selected CI and ci-required; actual head/base/test-merge",
+    "newly downloaded regular Windows EXE pair, PCK, fresh/partial/completed starts, native normal/maximized input/UI/DPI, redo/recovery",
+    "separate selfreview; V1 intermediate, V2 and combined gates open"
+  ]
+}

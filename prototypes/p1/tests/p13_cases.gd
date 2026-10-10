@@ -215,7 +215,7 @@ static func run(t: SceneTree) -> void:
 	t.root.add_child(failure_ui)
 	await t.process_frame
 	failure_ui.open_puzzle()
-	failure_ui.board.zoom(1, failure_ui.board.view.viewport.get_center())
+	failure_ui.board.eraser = not failure_ui.board.eraser # Guaranteed pending valid view change, even at fit.
 	failure_ui.store.fail_step = "after_temp"
 	failure_ui.show_album()
 	t.check(failure_ui.work.visible and not failure_ui.album.visible and failure_ui.status_label.text.contains("Speicherfehler"), "N-01 album stays open on failed mandatory flush")
@@ -223,7 +223,7 @@ static func run(t: SceneTree) -> void:
 	failure_ui.show_album()
 	t.check(failure_ui.album.visible and failure_ui.status_label.text.is_empty(), "N-01 album transition succeeds after retry")
 	failure_ui.open_puzzle()
-	failure_ui.board.zoom(1, failure_ui.board.view.viewport.get_center())
+	failure_ui.board.eraser = not failure_ui.board.eraser # Guaranteed pending valid view change, even at fit.
 	failure_ui.store.fail_step = "after_temp"
 	failure_ui.select_puzzle(1)
 	t.check(failure_ui.session == failure_ui.sessions[0] and failure_ui.status_label.text.contains("Speicherfehler"), "N-01 fixture switch is blocked on failed flush")
@@ -232,7 +232,7 @@ static func run(t: SceneTree) -> void:
 	t.check(failure_ui.session == failure_ui.sessions[1] and failure_ui.status_label.text.is_empty(), "N-01 fixture switch succeeds after retry")
 	failure_ui.store.fail_step = "after_temp"
 	t.check(failure_ui.session.player.commit(first_action) and not failure_ui._save_current(), "N-01 confirmed cell action remains unsaved after write failure")
-	failure_ui.board.zoom(1, failure_ui.board.view.viewport.get_center())
+	failure_ui.board.eraser = not failure_ui.board.eraser # Guaranteed pending valid view change, even at fit.
 	failure_ui.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
 	t.check(is_instance_valid(failure_ui) and failure_ui.is_inside_tree() and failure_ui.session.player.cells[0] == 1 and failure_ui.status_label.text.contains("Speicherfehler"), "N-01 WM-close failure keeps unsaved cell and visible error")
 	failure_ui.leave_app()
@@ -242,7 +242,7 @@ static func run(t: SceneTree) -> void:
 	# Reproduce the interruption after rotation, then build a genuinely new UI process.
 	failure_ui.select_puzzle(0)
 	failure_ui.store.fail_step = "after_rotation"
-	failure_ui.board.zoom(1, failure_ui.board.view.viewport.get_center())
+	failure_ui.board.eraser = not failure_ui.board.eraser # Guaranteed pending valid view change, even at fit.
 	t.check(not failure_ui._save_current() and failure_ui.slot_status[0] == "recovered" and failure_ui.work_repair_button.visible, "N-02 interrupted replacement exposes same-process recovery")
 	failure_ui.store.fail_step = ""
 	var saved_backup: String = FileAccess.get_file_as_string(failure_ui.store.path_for("f01", ".bak"))

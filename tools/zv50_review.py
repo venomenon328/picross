@@ -35,6 +35,8 @@ def before_project(root: Path, workspace: Path) -> Path:
         root / "prototypes/p1/tests/zv50_capture.gd",
         destination / "tests/zv50_capture.gd",
     )
+    shutil.copyfile(root / "prototypes/p1/tests/vs2_measurements.gd",
+                    destination / "tests/vs2_measurements.gd")
     return destination
 
 
@@ -51,6 +53,8 @@ def verify_pairs(renders: Path) -> dict:
     after = _by_case(reports["after"])
     if set(before) != set(after) or len(after) != 8:
         raise toolchain.PreflightError("Unexpected ZV50 capture matrix")
+    if after and "full_view" in next(iter(after.values())):
+        return verify_full_view(renders,before,after,reports)
     pairs = []
     for case in after:
         old, new = before[case], after[case]
@@ -181,3 +185,19 @@ def package(root: Path, output: Path, manifest: dict, windows_zip: Path) -> Path
         for path in paths:
             bundle.write(path, "renders/" + path.name)
     return archive
+
+
+def verify_full_view(renders,before,after,reports):
+    pairs=[]
+    for case,new in after.items():
+        old=before[case]
+        for key in ('case','fixture','size','ui_scale','cells_sha256'):
+            if old[key]!=new[key]: raise toolchain.PreflightError('ZV50/VS2 changed '+key)
+        if new['full_view']['layout_valid'] and not new['full_grid']:
+            raise toolchain.PreflightError('VS2 must replace old ZV50 clipping by full grid')
+        if new['grid'][1]+new['grid'][3]>new['tools_top']-3:
+            raise toolchain.PreflightError('VS2 grid overlaps tools')
+        for r in (old,new):
+            if not (renders/r['file']).is_file(): raise toolchain.PreflightError('Missing ZV50 native image')
+        pairs.append(dict(case=case,before=old['file'],after=new['file'],before_grid=old['grid'],after_grid=new['grid'],full_before=old['full_grid'],full_after=new['full_grid']))
+    return dict(comparison_commit=BASE,pairs=pairs,native_reports=reports,contract='VS2 supersedes fixed standard box and allowed 167% clipping; whole frame fits at every offered scale')

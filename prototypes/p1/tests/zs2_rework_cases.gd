@@ -153,7 +153,7 @@ func lifecycle() -> void:
 			"restore": app.board.restore_view(app.board.capture_view())
 			"switch": app.select_puzzle(1)
 			"off": app.animation_toggle.button_pressed = false
-		t.check(app.board.effects.is_empty(), "lifecycle clears waiting and active: " + event)
+		t.check(not app.board.effects.is_empty() if event in ["pan","zoom"] else app.board.effects.is_empty(), "VS2 no-op navigation preserves live effect; real lifecycle clears: " + event)
 		var state: Array = logical()
 		clock[0] += 1000000
 		app.board._process(0)
@@ -228,12 +228,12 @@ func chords() -> void:
 	reset()
 	t.mouse(t.point(4, 4), MOUSE_BUTTON_MIDDLE, true)
 	t.mouse(t.point(4, 4), MOUSE_BUTTON_RIGHT, true)
-	t.check(app.board.pan_button == MOUSE_BUTTON_MIDDLE and not app.board.cell_buttons_blocked, "MMB navigation is unchanged")
+	t.check(app.board.pan_button == MOUSE_BUTTON_NONE and not app.board.cell_buttons_blocked, "VS2 grid MMB never enters navigation")
 	t.mouse(t.point(5, 4), MOUSE_BUTTON_RIGHT, false)
 	t.mouse(t.point(5, 4), MOUSE_BUTTON_MIDDLE, false)
 	app.board.hand = true
 	t.mouse(t.point(4, 4), MOUSE_BUTTON_LEFT, true)
 	t.mouse(t.point(4, 4), MOUSE_BUTTON_RIGHT, true)
-	t.check(app.board.pan_button == MOUSE_BUTTON_LEFT and not app.board.cell_buttons_blocked, "hand navigation is unchanged")
+	t.check(app.board.pan_button == MOUSE_BUTTON_NONE and not app.session.gesture.active, "VS2 obsolete hand has neither pan nor cell route")
 	t.mouse(t.point(5, 4), MOUSE_BUTTON_RIGHT, false)
 	t.mouse(t.point(5, 4), MOUSE_BUTTON_LEFT, false)

@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "package": "VS2-V2 / N03 N05 / NA03 NA05",
+  "prepared_head": "13f9e02d7cc98b0e6e3816e09653f75ee0102c01",
+  "product_reference": "40829b43db6509447863c9d27dbb87dcfaf2a988",
+  "base": "d7ec4e1e4a29d82b6979537a33868d57732d3713",
+  "scope": "Drawing only; regular grid, miniature/mount and palette. No model, save, font, asset or animation changes.",
+  "candidate": {
+    "identity": "Definition ID/revision, orientation/line or named element, segment index; deterministic integer mixing, no time/frame/state seed",
+    "grid_deviation_max_px": 0.18,
+    "major_width_range_px": [1.4, 1.64],
+    "minor_width_range_px": [0.7, 0.9],
+    "aa_budget_px": 1.0,
+    "outer_center_inset_px": 1.0,
+    "outer_extent_max_px": 1.0,
+    "small_cells": "Amplitude fades to zero at 4px and reaches full detail at 24px; no extra ticker",
+    "element_deviation_max_px": 0.25,
+    "element_width_max_px": 1.5,
+    "element_extent_max_px": 2.0,
+    "miniature": "Unchanged proportional solid original RGB fills; X and unknown both neutral; stable frame shared by album and work"
+  },
+  "finite_cases": {
+    "existing": "304 regular/corpus layouts, 80 V1 focused/recovery cases, six 1/11/17/40 status strips, current core/G1/GP48/H1/ZS2/save/500/pilot/spoiler suites",
+    "v2_grid": "F01/F02 and VS04/VS08/VS09 at work/fit plus offered 12px, UI100/125; four surfaces and both modes through existing matrix",
+    "v2_projection": "Mono and all four colors; equal fills with distinct X/unknown distributions; wrong fill/color; X-to-fill, fill-to-X/neutral, retraction, Escape/focus/opposite-button, commit, undo/redo, reset, album/sheet, fresh-process continuation",
+    "v2_stability": "Geometry before/after redraw, progress/H1, sheet switch and fresh process; same environment and geometry only",
+    "windows": "Fresh download for delivery head; both EXEs without arguments fresh/partial/solved, embedded PCK, normal/maximized clients, DPI separate from UI100/125, actual events, recovery and continuation"
+  },
+  "independent_oracles": [
+    "Recompute stroke/AA envelopes from actual generated points and widths; every segment within reserved grid or mount bounds; no change to V1 fit/pitch/translation",
+    "Native four-edge coverage uses ink contribution rather than requiring two fully opaque pixels from a narrower antialiased stroke",
+    "Equal miniature pixel buffers for equal fills; positive original-color interior pixels and wrong fills required; input arrays and saved X remain exact",
+    "Actual grid ink differs from a straight-line reference within the declared corridor, remains stable under redraw and in a new process",
+    "Original minimum hit areas, cell centers and both sides of logical boundaries, independent clue navigation, group/recovery clearance"
+  ],
+  "negative_controls": ["changed identity/rerolled geometry", "excess stroke or AA extent", "reintroduced X/dot pixel", "hidden/corrected own wrong fill"],
+  "evidence": {
+    "selected_full_images_max": 4,
+    "selected_1to1_crops_max": 6,
+    "reference_artifact": 11670403247,
+    "reference_run": 38053346260,
+    "reference_use": "Bound existing V1 PNGs only; no historical import in standard CI",
+    "technical_bytes_max": 20000000,
+    "total_bytes_max": 75000000,
+    "bindings": "Head/base/test-merge/run, plan/scripts/EXEs/embedded PCK/reports/images SHA256; assertions and saved image selection separate"
+  },
+  "gates_left_open": ["independent combined technical/visual review", "personal VS2-M01", "merge authorization"],
+  "amendments": "If the finite candidate cannot satisfy the independent bounds, document a separate explicit amendment before new comparisons; preserve this original plan."
+}

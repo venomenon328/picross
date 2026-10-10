@@ -34,7 +34,7 @@ class ProductHarnessTests(unittest.TestCase):
             with zipfile.ZipFile(archive) as bundle:
                 for name, source in player_extras(root, output).items():
                     self.assertEqual(bundle.read(name), source.read_bytes())
-                self.assertIn((root / "docs/ZS2_OWNER_TRIAL.md").read_bytes(), bundle.read("README.txt"))
+                self.assertIn((root / "docs/VS2_OWNER_TRIAL.md").read_bytes(), bundle.read("README.txt"))
 
     def test_deleted_or_moved_actual_markdown_inputs_fail_docs_and_required_gate(self):
         root = Path(__file__).resolve().parents[1]

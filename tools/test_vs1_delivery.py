@@ -2,6 +2,7 @@
 import hashlib
 import copy
 import json
+import subprocess
 import tempfile
 import unittest
 import zipfile
@@ -14,6 +15,28 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class DeliveryTests(unittest.TestCase):
+    def test_reference_drawing_digest_uses_frozen_bytes(self):
+        # A real isolated Git object proves frozen bytes versus a changed
+        # worktree, without requiring an archived project in shallow CI.
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            path = root / 'prototypes/p1/ui/board.gd'
+            path.parent.mkdir(parents=True)
+            frozen = b'frozen renderer fixture\n'
+            path.write_bytes(frozen)
+            def git(*args):
+                return subprocess.check_output(['git', *args], cwd=root,
+                                               stderr=subprocess.STDOUT)
+            git('init')
+            git('add', '.')
+            git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid',
+                '-c', 'commit.gpgsign=false', 'commit', '-m', 'Frozen renderer')
+            reference = git('rev-parse', 'HEAD').decode().strip()
+            path.write_bytes(b'changed renderer fixture\n')
+            digest = vs1_delivery.drawing_digest(root, 'ui/board.gd', reference)
+            self.assertEqual(digest, hashlib.sha256(frozen).hexdigest())
+            self.assertNotEqual(digest, vs1_delivery.drawing_digest(root, 'ui/board.gd', None))
+
     def test_gf1_pairs_reject_missing_cases_changed_fit_and_inconsistent_budget(self):
         plan=json.loads((ROOT/'examples/vs1/gf1-plan.json').read_text(encoding='utf-8'))
         with tempfile.TemporaryDirectory() as tmp:

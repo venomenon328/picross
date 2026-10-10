@@ -2,6 +2,7 @@ extends Button
 ## BP-3 mounting and icon are separate from the unchanged colour sample.
 const INK = Color("293e3d")
 const PAPER = Color("fffaf0")
+const Scribble = preload("res://ui/scribble.gd")
 var action_id: String = ""
 var selected: bool = false
 var swatch: Color = Color.TRANSPARENT
@@ -22,6 +23,9 @@ static func points(box: Rect2, cut: float) -> PackedVector2Array:
 	var e: Vector2 = box.end
 	return PackedVector2Array([p + Vector2(cut, 0), Vector2(e.x-cut,p.y), Vector2(e.x,p.y+cut), e-Vector2(0,cut), e-Vector2(cut,0), Vector2(p.x+cut,e.y), Vector2(p.x,e.y-cut), p+Vector2(0,cut), p+Vector2(cut,0)])
 
+func swatch_strokes() -> Array:
+	return Scribble.outline_strokes(Rect2(Vector2.ZERO,size).grow(-1.0),"swatch/"+action_id,1.2)
+
 func _draw() -> void:
 	var u: float = ui_scale
 	var box: Rect2 = Rect2(Vector2.ZERO, size)
@@ -35,7 +39,11 @@ func _draw() -> void:
 	elif is_hovered():
 		body = Color("e0ece6")
 	draw_colored_polygon(points(box.grow(-0.5), 4*u), Color("a68a55"))
-	draw_polyline(points(box.grow(-0.5), 4*u), Color("68583f"), 1, true)
+	if swatch.a > 0:
+		for line: Dictionary in swatch_strokes():
+			Scribble.paint(self,line,Color("68583f"))
+	else:
+		draw_polyline(points(box.grow(-0.5), 4*u), Color("68583f"), 1, true)
 	draw_colored_polygon(points(box.grow(-2*u), 3*u), body)
 	draw_line(Vector2(6,4)*u,Vector2(size.x-6*u,4*u),Color("fff5d6"),0.7,true)
 	draw_line(Vector2(6*u,size.y-3*u),size-Vector2(6,3)*u,Color("74664d"),0.7,true)

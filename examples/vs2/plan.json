@@ -1,0 +1,18 @@
+{
+  "format": "picross-vs2-plan-1",
+  "issue": 61,
+  "base_commit": "fad885344874534629365917a2ab6a8d311cd3a7",
+  "zs2_merge_commit": "fad885344874534629365917a2ab6a8d311cd3a7",
+  "zs2_delivery_head": "8b762dd9aaf976361cba44e3b25004e09edde348",
+  "gf1_merge_commit": "24564dfed3bb9844d151f4c4ec055d051232d16f",
+  "regular_cases": ["F-01", "F-02", "F-03", "F-04", "F-05", "F-06", "F-07", "F-08", "F-09"],
+  "reference_cases": ["VS01", "VS02", "VS03", "VS04", "VS05", "VS06", "VS07", "VS08", "VS09", "VS10"],
+  "modes": ["G", "V"],
+  "ui_scales": [1.0, 1.25],
+  "clients": [[1280,720], [1600,900], [1920,1080], [2560,1440]],
+  "targeted_images": ["VS08-G-1080-ui100", "VS08-G-1080-ui125", "VS04-G-1080-ui125", "VS09-G-1080-ui100", "F01-work", "F07-restricted", "album", "options", "rectangle-reveal"],
+  "comparison": "Match GF1 fit/minimum reserves at equal board area and UI; record actual new product rectangles separately. Preserve selected ZS2 marks/timing; no claim of whole-screen pixel equality after layout change.",
+  "native_windows": ["downloaded regular EXE pair", "fresh/partial/completed start", "PCK resource audit", "negative raster/legacy-hand/miniature input", "positive independent clue MMB", "options and fit", "legacy writer to new reader", "new writer to fresh reader", "normal/maximized client and Windows DPI separately"],
+  "acceptance": ["VS2-A01", "VS2-A02", "VS2-A03", "VS2-A04", "VS2-A05", "VS2-A06", "VS2-A07", "VS2-A08", "VS2-A09", "VS2-A10"],
+  "limits": "No new content production, historical manifest edits, user-save access or full-render upload. Negative geometry/legibility cases remain in reports. Independent review and VS2-M01 remain open before merge."
+}

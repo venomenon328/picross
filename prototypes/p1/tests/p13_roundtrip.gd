@@ -99,7 +99,7 @@ func run() -> void:
 			return
 		if not require(session.player.cells[45 * 100 + 55] == 2 and session.player.cells[45 * 100 + 56] == -1 and session.player.cells[45 * 100 + 57] == -1, "cells restored without unfinished preview"):
 			return
-		if not require(board.hand and board.active_color == 2 and board.view.cell_size == 26.0 and absf(board.view.center.x - 58.0) < 1.0, "tool, color and raster view restored"):
+		if not require(not board.hand and board.active_color == 2 and board.view.cell_size <= board.fit_ceiling and board.view.center == Vector2(50,50), "tool, color and raster view restored"):
 			return
 		var row_layout: Dictionary = board.clue_layout("row", row)
 		var column_layout: Dictionary = board.clue_layout("column", column)
@@ -114,10 +114,10 @@ func run() -> void:
 		if not require(app.sessions[0].player.cells[10 * 20 + 10] == 1 and app.sessions[1].player.cells[10 * 40 + 10] == 3, "other two slots restored independently"):
 			return
 		app.select_puzzle(0)
-		if not require(app.board.view.cell_size == 26.0 and app.board.eraser, "F-01 own zoom/tool survives fixture switch"):
+		if not require(app.board.capture_view().zoom == 26 and app.board.view.cell_size <= app.board.fit_ceiling and app.board.eraser, "F-01 own zoom/tool survives fixture switch"):
 			return
 		app.select_puzzle(1)
-		if not require(app.board.overview and app.board.hand and app.board.active_color == 3, "F-02 own overview/tool/color survives fixture switch"):
+		if not require(app.board.overview and not app.board.hand and app.board.active_color == 3, "F-02 own overview/tool/color survives fixture switch"):
 			return
 		print("P1_ROUNDTRIP_READ_OK")
 		quit(0)

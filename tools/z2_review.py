@@ -50,7 +50,7 @@ def package(root: Path, output: Path, manifest: dict, windows_zip: Path) -> Path
              '<style>body{font:16px sans-serif;max-width:1200px;margin:40px auto;background:#faf6ed;color:#293e3d}img{max-width:100%;height:auto}figure{margin:32px 0}code{overflow-wrap:anywhere}</style>',
              '<h1>Z2 – native Godot-Nachweise</h1>',
              '<p>PNG-Dateien sind unveränderte Godot-Render oder ausdrücklich bezeichnete 1:1-Ausschnitte. Für Pixelprüfung die Bilddatei in Originalgröße öffnen.</p>',
-             '<p>Vorher: regulärer P1 auf ' + BASE + '. Gleiche Fixtures, z1-demo-1-Zellen, Fenster, UI-Skala und gesetzter Zellmaßstab; Anordnung und sichtbarer Ausschnitt sind das Ergebnis des jeweiligen Layouts. Keine Browsermontage.</p>',
+             '<p>Vorher: regulärer P1 auf ' + BASE + '. Gleiche Fixtures, z1-demo-1-Zellen, Fenster und UI-Skala. VS2 begrenzt die gewünschte Arbeitsstufe auf den vollständigen Fit; alte Ausschnitte sind keine behauptete Pixelgleichheit. Der kontinuierliche C1-Drag nutzt jetzt die tatsächlich überlaufende F03-Folge. Keine Browsermontage.</p>',
              '<p>Quellhead: <code>' + html.escape(manifest["source_commit"]) + '</code>; Windows-ZIP SHA-256: <code>' + binding["windows_zip"]["sha256"] + '</code>.</p>',
              '<p>Z2 ist über PR #33 integriert. Z2-M01/M02/M03 wurden nicht durchgeführt; ihr Gate wurde für diesen Merge aufgehoben. RP-3 ist über PR #44 integriert; RP-6-Review und Eigentümerproben bleiben offen. Details: Z2-PRUEFUNG.md; Hashbindung: z2-binding.json.</p>']
     for path in paths:

@@ -175,32 +175,25 @@ def verify_navigation(plan: list[dict], trace_path: Path) -> None:
         x, y = view["center"]
         zoom = view["cell_size"]
         left, top, width, height = view["viewport"]
-        if not (0 <= x <= WIDTH and 0 <= y <= HEIGHT and 12 <= zoom <= 72 and
+        if not (x == WIDTH/2 and y == HEIGHT/2 and 4 < zoom <= view["fit_ceiling"] + .001 and
                 0 <= left < left + width <= 1600 and 0 <= top < top + height <= 900):
             raise AssertionError(f"action {n}: invalid view {view}")
         if action["kind"] == "mini":
             visited_regions.add(action["region"])
-            half_x, half_y = width / (2 * zoom), height / (2 * zoom)
-            want_x = min(max(action["point"][0], half_x), WIDTH - half_x)
-            want_y = min(max(action["point"][1], half_y), HEIGHT - half_y)
-            if abs(x - want_x) > 0.02 or abs(y - want_y) > 0.02:
-                raise AssertionError(f"action {n}: miniature target {action['point']} expected {(want_x,want_y)}, got {(x,y)}")
+            if (x,y)!=(WIDTH/2,HEIGHT/2):
+                raise AssertionError(f"action {n}: passive miniature moved full grid")
         if previous:
-            if action["kind"] == "pan":
-                px, py = previous["view"]["center"]
-                dx, dy = action["delta"]
-                half_x, half_y = width / (2 * zoom), height / (2 * zoom)
-                want_x = min(max(px - dx / zoom, half_x), WIDTH - half_x)
-                want_y = min(max(py - dy / zoom, half_y), HEIGHT - half_y)
-                if abs(x - want_x) > 0.02 or abs(y - want_y) > 0.02 or (x, y) == (px, py):
-                    raise AssertionError(f"action {n}: grid pan expected {(want_x,want_y)}, got {(x,y)}")
+            if action["kind"] in {"pan","mini"}:
+                if view != previous["view"]:
+                    raise AssertionError(f"action {n}: forbidden navigation changed view")
             if action["kind"] == "zoom":
-                steps = (12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40, 44, 48, 54, 60, 66, 72)
+                steps = (12,14,16,18,20,22,24,26,28,30,32,34,36,40,44,48,54,60,66,72)
                 before = previous["view"]["cell_size"]
-                choices = [v for v in steps if v > before] if action["direction"] > 0 else [v for v in steps if v < before]
-                expected_zoom = min(choices) if action["direction"] > 0 else max(choices)
-                if zoom != expected_zoom:
-                    raise AssertionError(f"action {n}: zoom expected {expected_zoom}, got {zoom}")
+                choices = [v for v in steps if v>before] if action["direction"]>0 else [v for v in steps if v<before]
+                wanted = (min(choices) if action["direction"]>0 else max(choices)) if choices else before
+                expected_zoom = min(wanted,view["fit_ceiling"])
+                if abs(zoom-expected_zoom)>.001:
+                    raise AssertionError(f"action {n}: bounded zoom expected {expected_zoom}, got {zoom}")
             rows_before, cols_before = previous["row_reads"], previous["column_reads"]
             rows, cols = item["row_reads"], item["column_reads"]
             if action["kind"] == "hint":
@@ -266,7 +259,7 @@ def summarize(plan: list[dict], trace_path: Path, final: dict, host: str) -> dic
             "host": {"os": host, "platform": platform.platform(), "machine": platform.machine(),
                      "processor": platform.processor() or os.environ.get("PROCESSOR_IDENTIFIER", "unavailable")},
             "engine": final["engine"], "renderer": final["renderer"],
-            "logical_window": [1600, 900], "ui_scale": 1.0, "work_zoom_range": [24, 26],
+            "logical_window": [1600, 900], "ui_scale": 1.0, "work_zoom_range": "desired 24/26; actual bounded by full-grid fit",
             "save_profile": "P1_TEST_SAVE_ROOT isolated per product run; normal SaveStore writes enabled",
             "input_cadence": "synthetic viewport Down/Move/Up for Board, local Miniature._gui_input for miniature, button signals for Undo/Redo; one rendered process frame between completed actions",
             "warmup": "scene creation plus four frames before action 1, excluded from action timing",

@@ -1,5 +1,19 @@
 # Produktdefinition: picross
 
+## Aktueller regulärer Stand · VS2 (#61)
+
+**Kombinierter V1/V2/V3-Stand:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
+
+Regulärer Produktstand: Start in Sammlung; genau eine benannte Rätselansicht in
+Optionen. Vollständiges Raster samt Rahmen, passive eigene Miniatur und
+unabhängige MMB-Hinweise ersetzen Hand-/Rasterpan auch für vorhandene Großfälle.
+
+Bedien-/Speichervertrag: [P1](PROTOTYPE_P1.md). Aktuelle
+[Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md).
+VS2-M01, unabhängiges technisches/visuelles Review und passende Mergefreigabe
+bleiben vor Merge offen. Historische Nachweise bleiben commitgebunden.
+
+
 Stand: 09.10.2026 · Arbeitsfassung 0.9 · Produktkonzept mit spezifizierter Rätselproduktion und zeichnerischer UI
 
 ## 1. Geltung und Herkunft
@@ -84,7 +98,7 @@ Regionenbedingungen würden zusätzliche Bedingungen für markierte Bereiche erg
 
 ### 5.1 Verbindliche Leitlinien
 
-Die Handhabung soll intuitiv, präzise und unkompliziert sein. Reguläres Ziel ist das vollständig sichtbare Raster einschließlich Rahmen ohne erforderliches Rasterverschieben. G ist bevorzugt: mindestens min(5,n) vollständige zusammenhängende Zahlen je Folge, bei Bedarf unabhängig bewegt; freie Breite darf mehr Zeilenhinweise zeigen. V ergänzt die vollständige Blattansicht mit allen Hinweisen. 1080p ist als maßgebliches Mindestziel beziehungsweise spätere Mindestauflösung akzeptiert; Clientfläche, Windows- und UI-Skalierung bleiben getrennt zu prüfen. 720p bleibt zusätzlicher Befund/Fallback. Die bestehende reguläre P1-Navigation wird erst in einem gesonderten Folgepaket umgestellt. Für sehr große Sonderfälle sind Zoom und Ausschnittorientierung weiter erforderlich: Arbeitsposition, Hinweise und Wiedereinstieg müssen nachvollziehbar bleiben.
+Die Handhabung soll intuitiv, präzise und unkompliziert sein. Reguläres Ziel ist das vollständig sichtbare Raster einschließlich Rahmen ohne erforderliches Rasterverschieben. G ist bevorzugt: mindestens min(5,n) vollständige zusammenhängende Zahlen je Folge, bei Bedarf unabhängig bewegt; freie Breite darf mehr Zeilenhinweise zeigen. V ergänzt die vollständige Blattansicht mit allen Hinweisen. 1080p ist als maßgebliches Mindestziel beziehungsweise spätere Mindestauflösung akzeptiert; Clientfläche, Windows- und UI-Skalierung bleiben getrennt zu prüfen. 720p bleibt zusätzlicher Befund/Fallback. VS2 stellt die reguläre P1-Navigation gemäß den oben gebundenen Regeln um, auch für bestehende Großfälle. Eine künftige komfortable Sondernavigation für sehr große Rätsel liegt außerhalb dieses Pakets; Platzmangel und eingeschränkte Lesbarkeit bleiben ausdrücklich ausgewiesen.
 
 Maus und Tastatur sind die primäre Eingabeform. Controller werden von Beginn an als alternative Eingabemethode vorgesehen und in die Interaktionskonzeption einbezogen, nicht erst nachträglich auf eine ausschließlich mausabhängige Oberfläche aufgesetzt. Touch oder eine Mobile-Version sind nicht beschlossen.
 
@@ -119,7 +133,7 @@ Vorschau oder Änderung derselben Zelle hat Vorrang. Die visuelle Vorschau ist
 keine zusätzliche Hypothesenebene. ZS2-E2 präzisiert den X-Aufbau ohne volle
 Unterzeichnung während des aktiven Zuges. Das Down der Gegentaste bricht eine
 laufende Zellgeste auch außerhalb des Boards ab; erst beide Tasten loslassen und
-frisch drücken. Mittlere Taste/Hand bleiben Navigation. Details: ZS-D07/D08.
+frisch drücken. Mittlere Taste bleibt ausschließlich Hinweisnavigation. Details: ZS-D07/D08.
 
 Hypothesen als mögliche Zustände „unsicher gesetzt“ und „unsicher leer“ wurden zur Untersuchung vorgeschlagen. Die Funktion ist noch nicht abschließend spezifiziert; insbesondere ist nicht entschieden, ob ihre Nutzung mit einer perfekten Bewertung vereinbar ist. Der Nutzer setzt selbst überwiegend nur sicher hergeleitete Felder. Hypothesen ändern nicht das Versprechen, dass Rätsel ohne notwendiges Raten lösbar sein müssen.
 
@@ -300,7 +314,7 @@ geeignete 40×30/50×30, 1080p, bevorzugt G und ergänzend V. Sehr große Rätse
 bleiben mögliche Sonderfälle. PR #58 ist als `c19b3547…` integriert; VS-GF1/#59
 liefert zusätzliche Zeilenkapazität aus freier G-Breite bei unverändertem Fit.
 Die reguläre P1-Umstellung bleibt separat. VS-M01 ist nicht vollständig persönlich
-durchgeführt; unabhängiges Review, GF-M01 und Mergefreigabe des neuen Heads bleiben offen.
+durchgeführt; GF-M01/#59 ist historisch bestanden; neues unabhängiges VS2-Review und VS2-M01 bleiben vor Merge offen.
 
 VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
 pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige
