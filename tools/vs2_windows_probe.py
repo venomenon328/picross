@@ -15,6 +15,8 @@ import zipfile
 from pathlib import Path
 import p1_preflight as toolchain
 import vs2_delivery
+from p1_product import player_extras
+from gp48_delivery import verify_player_package
 from vs1_windows_probe import extract
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -140,7 +142,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     if output.exists(): raise ValueError("Use a fresh evidence/profile directory")
     output.mkdir(parents=True)
     def gh(*args): return subprocess.check_output(["gh",*args],cwd=ROOT,timeout=1200)
-    def download(run, kind, source):
+    def download(run, kind, source, packed=True):
         run_info=json.loads(gh("api",f"repos/{REPOSITORY}/actions/runs/{run}"))
         if run_info["conclusion"]!="success": raise ValueError("Product run is not successful")
         artifacts=json.loads(gh("api",f"repos/{REPOSITORY}/actions/runs/{run}/artifacts"))["artifacts"]
@@ -152,28 +154,36 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         if "sha256:"+toolchain.sha256_file(outer)!=meta["digest"]: raise ValueError("Artifact digest differs")
         destination=output/stem
         extract(outer,destination)
+        binding=dict(name=meta["name"],artifact_id=meta["id"],artifact_digest=meta["digest"],
+                     url=f"https://github.com/{REPOSITORY}/actions/runs/{run}/artifacts/{meta['id']}")
+        if not packed:
+            return destination, binding
         inner=next(destination.glob("*.zip"))
         extract(inner,destination/"package")
-        binding=dict(name=meta["name"],artifact_id=meta["id"],artifact_digest=meta["digest"],
-                     url=f"https://github.com/{REPOSITORY}/actions/runs/{run}/artifacts/{meta['id']}",
-                     inner_zip=inner.name,inner_sha256=toolchain.sha256_file(inner),bytes=inner.stat().st_size)
+        binding.update(inner_zip=inner.name,inner_sha256=toolchain.sha256_file(inner),bytes=inner.stat().st_size)
         return destination/"package",binding
     package,player_binding=download(run_id,"picross-p1-player",head)
-    review,review_binding=download(run_id,"vs2-review",head)
+    review,review_binding=download(run_id,"picross-p1-technical",head,packed=False)
     report=json.loads((package/"product-report.json").read_text(encoding="utf-8"))
-    review_report=json.loads((review/"vs2-report.json").read_text(encoding="utf-8"))
+    review_report=json.loads((review/"product-report.json").read_text(encoding="utf-8"))
     for key in ("source_commit","source_tree_dirty","base_commit","tested_checkout_commit","github_run_id","export_files"):
-        if report[key]!=review_report[key]: raise ValueError("Review/player identity differs: "+key)
-    if report["source_commit"]!=head or report["source_tree_dirty"] or str(report["github_run_id"])!=run_id or report["base_commit"]!=vs2_delivery.BASE:
+        if report[key]!=review_report[key]: raise ValueError("Evidence/player identity differs: "+key)
+    expected_base=subprocess.check_output(["git","merge-base",head,"origin/main"],cwd=ROOT,text=True).strip()
+    if report["source_commit"]!=head or report["source_tree_dirty"] or str(report["github_run_id"])!=run_id or report["base_commit"]!=expected_base or report["status"]!="success":
         raise ValueError("Unexpected product identity")
-    expected={"picross-p1.exe","picross-p1.console.exe","README.txt","product-report.json",
-              "licenses/Fraunces-OFL.txt","licenses/PlexSans-OFL.txt","licenses/resources.json","licenses/Chalkboard-NOTICES.md"}
-    if {p.relative_to(package).as_posix() for p in package.rglob("*") if p.is_file()}!=expected:
-        raise ValueError("Unexpected regular player ZIP contents")
-    for name,digest in report["export_files"].items(): toolchain.verify_sha256(package/name,digest)
-    for name,digest in review_report["files"].items(): toolchain.verify_sha256(review/name,digest)
-    toolchain.verify_sha256(review/"plan.json",toolchain.sha256_file(ROOT/"examples/vs2/plan.json"))
-    matrix=vs2_delivery.verify(review)
+    extras_dir=output/"package-inputs"
+    extras_dir.mkdir()
+    expected={"picross-p1.exe","picross-p1.console.exe","README.txt","product-report.json"} | set(player_extras(ROOT,extras_dir))
+    player_zip=package.parent/player_binding["inner_zip"]
+    verify_player_package(player_zip,report,expected)
+    for entry in review_report["selected_evidence"]["files"]:
+        relative=Path(entry["file"])
+        if relative.is_absolute() or ".." in relative.parts: raise ValueError("Unsafe evidence path")
+        toolchain.verify_sha256(review/"selected"/relative,entry["sha256"])
+    matrix=json.loads((review/"selected/vs2-renders/vs2-matrix.json").read_text(encoding="utf-8"))
+    vs2_delivery.verify_records(matrix)
+    if review_report["visual"]["vs2"]["records"]!=304 or review_report["visual"]["vs2"]["rendered"]!=23:
+        raise ValueError("Missing current native VS2 coverage")
     archive=cache/toolchain.EDITORS["Windows"].name
     toolchain.verify_sha256(archive,toolchain.EDITORS["Windows"].sha256)
     with zipfile.ZipFile(archive) as bundle: toolchain.verify_sha256(engine,hashlib.sha256(bundle.read(engine.name)).hexdigest())
@@ -236,7 +246,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
                   scripts={name:toolchain.sha256_file(ROOT/"prototypes/p1/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd")},
-                  matrix_records=len(matrix["records"]),reference_comparisons=matrix["reference_comparisons"],
+                  matrix_records=len(matrix["records"]),historical_comparison="not repeated under CI policy #63",
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.name:toolchain.sha256_file(p) for p in output.glob("*.png")},
                   study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,independent_review="OPEN",VS2_M01="OPEN",merge_authorized=False)

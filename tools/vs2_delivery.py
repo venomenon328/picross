@@ -99,8 +99,7 @@ def capture(root, project, workspace, output, engine, render_command, environmen
     (renders/"vs2-matrix.json").write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     return evidence
 
-def verify(renders: Path) -> dict:
-    report = json.loads((renders/"vs2-matrix.json").read_text(encoding="utf-8"))
+def verify_records(report: dict) -> None:
     expected = {(corpus,index,w,ui,mode) for corpus,count in ((False,9),(True,10)) for index in range(count) for w in (1280,1600,1920,2560) for ui in (1.0,1.25) for mode in ("G","V")}
     actual = {(r["corpus"], int(r["id"].replace("F-","").replace("VS",""))-1,r["client"][0],r["ui_scale"],r["mode"]) for r in report["records"]}
     if report["failures"] or actual != expected or len(report["records"]) != 304:
@@ -112,6 +111,11 @@ def verify(renders: Path) -> dict:
             raise toolchain.PreflightError("VS2 V hides hints")
         if record["status"] == "geometric_fit_owner_open" and (record["clipped_glyphs"] or record["glyph_collisions"] or record["cell_pitch"] < 16):
             raise toolchain.PreflightError("VS2 false positive legibility status")
+
+
+def verify(renders: Path) -> dict:
+    report = json.loads((renders/"vs2-matrix.json").read_text(encoding="utf-8"))
+    verify_records(report)
     for picture in report["pictures"]:
         if Path(picture["file"]).name != picture["file"] or toolchain.sha256_file(renders/picture["file"]) != picture["sha256"]:
             raise toolchain.PreflightError("VS2 native image binding differs")
