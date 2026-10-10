@@ -839,7 +839,12 @@ func _layout_book() -> void:
 	for i: int in range(palette_row.get_child_count()):
 		_place(palette_row.get_child(i),Rect2(Vector2(i%2,i/2)*54*u,Vector2.ONE*hit))
 	# The former bottom toolbar now holds only conditional non-numeric notices.
-	_place(layout_warning,Rect2(o+Vector2(left,bottom),Vector2(rail-left-24*u,24*u)))
+	# Both notices share the cleared footer horizontally. Stacking them would
+	# cross the sloped paper edge on taller canvases; the board keeps its budget.
+	var notice_left: float = maxf(left,w*0.03125+2*u)
+	var notice_width: float = rail-notice_left-24*u
+	var warning_width: float = notice_width*0.42
+	_place(layout_warning,Rect2(o+Vector2(notice_left,bottom-6*u),Vector2(warning_width,24*u)))
 	layout_warning.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var tools_top: float = palette_pos.y + (56.0 if session.definition.palette.size()==1 else 110.0)*u + 14*u
 	var tools_height: float = minf(8*hit+9*4*u, o.y+h-40*u-tools_top)
@@ -864,7 +869,7 @@ func _layout_book() -> void:
 		title.add_theme_font_override("font",heading)
 	_place(title,Rect2(o+Vector2(w*0.043,h*0.039),Vector2(w*0.6,45*u)))
 	stress_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_place(stress_label,Rect2(o+Vector2(left,bottom+25*u),Vector2(rail-left-24*u,24*u)))
+	_place(stress_label,Rect2(o+Vector2(notice_left+warning_width+12*u,bottom-6*u),Vector2(notice_width-warning_width-12*u,24*u)))
 	_place(album,Rect2(o+Vector2(90,130),Vector2(w-180,h-200)))
 	for choice: Button in choices:
 		choice.custom_minimum_size.y = 44 * ui_scale

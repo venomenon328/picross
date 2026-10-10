@@ -43,8 +43,16 @@ func shot(name: String) -> void:
 		check(not app.minimum_message.visible and app.work.visible, "work and critical controls accessible")
 		if not app.board.layout_valid:
 			check(app.layout_warning.text.contains("Zu wenig Platz") and not app.board.marks.visible,"invalid geometry is explicit and has no marks")
-		for control: Control in [app.undo_button,app.redo_button,app.palette_row,app.mini]:
+		for control: Control in [app.palette_row,app.mini,app.tools_scroll]:
 			check(Rect2(Vector2.ZERO,Vector2(surface.size)).encloses(control.get_global_rect()), "controls on surface")
+		var scroll_before: int = app.tools_scroll.scroll_vertical
+		for control: Control in [app.undo_button,app.redo_button]:
+			app.tools_scroll.ensure_control_visible(control)
+			await process_frame
+			await process_frame
+			check(app.tools_scroll.get_global_rect().encloses(control.get_global_rect()),"V3 history controls reachable inside clipped rail")
+		app.tools_scroll.scroll_vertical=scroll_before
+		await process_frame
 	if not pending_failures.is_empty():
 		failure_captures.append({"file":filename,"reasons":pending_failures.duplicate(),"crop":false})
 		pending_failures.clear()
@@ -95,14 +103,23 @@ func run() -> void:
 			app.size = Vector2(surface.size)
 			app.set_ui_scale(1.0)
 			await select_pilot()
+		app.tools_scroll.ensure_control_visible(app.undo_button)
+		await process_frame
+		await process_frame
+		var undo_cursor: int = app.session.player.cursor
 		for i: int in range(9):
 			click(app.undo_button.get_global_rect().get_center())
+		check(app.session.player.cursor==undo_cursor-9,"nine real visible undo clicks remove the wrong block")
 		if invalid_geometry:
 			surface.size = Vector2i(spec[0],spec[1])
 			app.size = Vector2(surface.size)
 			app.set_ui_scale(spec[2])
 			await select_pilot()
+		app.tools_scroll.ensure_control_visible(app.actions["work"])
+		await process_frame
+		await process_frame
 		click(app.actions["work"].get_global_rect().get_center())
+		check(not app.board.overview,"real visible work-size click leaves fit mode")
 		await shot("detail-%d-ui%d" % [spec[0],spec[2]*100])
 		app.show_album()
 		await process_frame

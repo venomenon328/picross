@@ -29,7 +29,8 @@ Historische Pläne und Reports bleiben unverändert. R3 gilt für den Ausgangsst
   4 × UI Abstand, doppelte Lücke zwischen den Gruppen 2/2/4. Bei Bedarf lokales
   Scrollen; keine versteckten Klickflächen außerhalb des sichtbaren Ausschnitts.
 - Die beiden dauerhaften Textzeilen entfallen. Nichtnumerische Platz-/Hinweis-
-  und technische Stressmeldungen nutzen getrennte Zeilen unten auf dem Papier.
+  und technische Stressmeldungen nutzen getrennte Bereiche einer Fußzeile auf
+  dem Papier; vertikales Stapeln würde bei großen Flächen die Papierkante kreuzen.
   Auswahlmarkierungen, alle acht Aktionen, Tooltips und Recovery bleiben.
 - [Bakso-Nutzungshinweise](../prototypes/p1/art/drawing/Bakso-NOTICES.md): aktive
   Original-TTF `art/drawing/BaksoDaging-Regular.ttf`, 128924 Bytes,

@@ -49,7 +49,7 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 	for label: Label in [app.layout_warning,app.stress_label]:
 		if label.is_visible_in_tree() and not label.text.is_empty():
 			var ink: Rect2 = label_ink(label)
-			check.call(inner.grow(0.1).encloses(ink),"V3 warning ink inside actual paper")
+			check.call(inner.grow(0.1).encloses(ink),"V3 warning ink inside actual paper %s %s u%s ink%s inner%s" % [app.session.definition.id,app.size,u,ink,inner])
 			for item: Control in [app.board,app.tools_scroll,app.status_label,app.work_repair_button]:
 				if item.is_visible_in_tree(): check.call(not ink.intersects(item.get_global_rect()),"V3 warning ink clear of board/tools/recovery")
 	for item: Control in [app.status_label,app.work_repair_button]:
