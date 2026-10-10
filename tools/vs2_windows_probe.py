@@ -67,7 +67,8 @@ def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
     process = subprocess.Popen([str(executable)], cwd=executable.parent, env=env,
                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                                creationflags=subprocess.CREATE_NO_WINDOW)
-    deadline = time.monotonic()+30
+    started = time.monotonic()
+    deadline = started+30
     while time.monotonic() < deadline and not owned:
         user.EnumWindows(visit, 0)
         time.sleep(0.1)
@@ -75,7 +76,6 @@ def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
         process.terminate()
         raise ValueError((label, "Expected exactly one owned native player window", owned))
     hwnd, pid = owned[0]
-    time.sleep(1)
     client = wintypes.RECT()
     user.GetClientRect(hwnd, ctypes.byref(client))
     width, height = client.right, client.bottom
@@ -103,19 +103,31 @@ def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
     bitmap = gdi.CreateCompatibleBitmap(dc,width,height)
     previous = gdi.SelectObject(memory,bitmap)
     captured = None
+    capture_attempts = 0
     dpi = user.GetDpiForWindow(hwnd)
     try:
-        if not user.PrintWindow(hwnd,memory,3):
-            raise ValueError("Owned window capture failed")
-        gdi.SelectObject(memory,previous)
         # BITMAPINFOHEADER: top-down, uncompressed BGRA.
         header = struct.pack('<IiiHHIIiiII',40,width,-height,1,32,0,width*height*4,0,0,0,0)
         pixels = ctypes.create_string_buffer(width*height*4)
-        if gdi.GetDIBits(memory,bitmap,0,height,pixels,header,0)!=height:
-            raise ValueError("Owned window bitmap read failed")
-        captured = Image.frombytes('RGB',(width,height),pixels.raw,'raw','BGRX')
-        if len(captured.getcolors(width*height)) < 16:
-            raise ValueError("Owned window capture is blank")
+        # HWND creation precedes the first rendered frame. Keep the original
+        # startup deadline and blank-image assertion, but wait for that frame.
+        while time.monotonic() < deadline:
+            if not user.IsWindow(hwnd):
+                raise ValueError("Owned player window closed before its first frame")
+            capture_attempts += 1
+            gdi.SelectObject(memory,bitmap)
+            if not user.PrintWindow(hwnd,memory,3):
+                raise ValueError("Owned window capture failed")
+            gdi.SelectObject(memory,previous)
+            if gdi.GetDIBits(memory,bitmap,0,height,pixels,header,0)!=height:
+                raise ValueError("Owned window bitmap read failed")
+            captured = Image.frombytes('RGB',(width,height),pixels.raw,'raw','BGRX')
+            if len(captured.getcolors(width*height)) >= 16:
+                break
+            time.sleep(0.1)
+        else:
+            raise ValueError("Owned window capture stayed blank within startup deadline")
+        frame_ready_seconds = round(time.monotonic()-started,3)
         captured.save(path)
     finally:
         gdi.SelectObject(memory,previous)
@@ -131,6 +143,7 @@ def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
         raise ValueError("Player did not close normally")
     return dict(name=label, executable=executable.name, arguments=[], exit_code=process.returncode,
                 client=[width,height], dpi=dpi, windows_scale=dpi/96, pid=pid,
+                frame_ready_seconds=frame_ready_seconds, capture_attempts=capture_attempts,
                 capture_method="PrintWindow: owned client only", screenshot=path.name, screenshot_sha256=toolchain.sha256_file(path))
 
 

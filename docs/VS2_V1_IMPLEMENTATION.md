@@ -103,3 +103,18 @@ bleiben ausdrücklich nach den echten Pilotabschlüssen und laden deren Saves;
 alle Futures müssen vor Export erfolgreich sein. Worker und Hauptlauf besitzen
 getrennte Projekte, Profile, Umgebungen und Berichtsschreiber. Keine gestrichene
 Prüfung, kein synthetischer Abschluss und keine erhöhten Zeit-/Bytebudgets.
+
+Die Laufzeitkorrektur bestand auf `df24f945f8f55cbddb07335dedd18e18dd89c456`
+alle sechs Fachjobs und `ci-required` in
+[CI 38051077068](https://github.com/venomenon328/picross/actions/runs/38051077068);
+der Produktjob `114210203554` dauerte 7:51 Minuten. Auch der vollständige lokale
+Windows-Produktharness bestand. Bei der anschließenden frisch heruntergeladenen
+Windows-Lieferung scheiterte zunächst ausschließlich die erste Startaufnahme:
+das eigene HWND existierte, hatte nach der festen Einsekundenpause aber noch
+kein Bild. Derselbe EXE-Download bestand einen getrennt ausgewiesenen Diagnose-
+Start mit acht Sekunden Wartezeit und regulärem 1920×1080-Sammlungsbild.
+Dies ist kein vollständiger nativer Abnahmenachweis. Die eng begrenzte Korrektur
+wartet innerhalb des bestehenden 30-Sekunden-Startlimits auf ein nicht leeres
+Bild des eigenen Fensters, protokolliert Versuche/Wartezeit und erhält alle
+Bild-, Größen-, Prozess- und Schließprüfungen. Der finale native Gesamtlauf muss
+mit einem neuen Download des anschließend geprüften Heads erfolgen.
