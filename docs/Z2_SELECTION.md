@@ -29,7 +29,7 @@ trennen Erstlieferung und kombinierte V1/V2/V3-Lieferung. VS2-M01 hat Änderungs
 bleibt vor Merge offen; der neue kombinierte Head benötigt technische/visuelle
 Nachprüfung und passende Mergefreigabe. Keine persönliche Abnahme durch die technische V1/V2/V3-Lieferung.
 
-Stand: 09.10.2026 · historische GD-Auswahl mit freigegebener VS2-E1-Fortschreibung
+Stand: 10.10.2026 · historische GD-Auswahl mit VS2-E1/E2-Fortschreibung
 
 Maßgebliche historische Auswahl ist die
 [Eigentümerentscheidung GD-01 bis GD-05](https://github.com/venomenon328/picross/pull/32#issuecomment-5855483934)

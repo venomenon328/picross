@@ -254,9 +254,16 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         launch("v2-" + stage, package, "vs2_v2_tests.gd", "VS2_V2_" + stage.upper() + "_OK")
     v2 = vs2_delivery.verify_v2(output)
     env["VS2_V3_CAPTURE_DIR"] = str(output)
+    v3_processes = {}
     for stage in ("write", "read"):
         launch("v3-" + stage, package, "vs2_v3_tests.gd", "VS2_V3_OK")
-        shutil.copyfile(output / "v3-report.json", output / ("v3-" + stage + ".json"))
+        # The second process intentionally changes a test cell. Retain each
+        # report with its own original pictures, never overwrite its bindings.
+        stage_dir = output / ("v3-" + stage)
+        stage_dir.mkdir()
+        for source in [output / "v3-report.json", output / "v3-fingerprint.json", *output.glob("v3-*.png")]:
+            shutil.copyfile(source, stage_dir / source.name)
+        v3_processes[stage] = vs2_delivery.verify_v3(stage_dir)
     v3 = vs2_delivery.verify_v3(output)
     if not v3["fresh_process_compared"]:
         raise ValueError("Missing V3 fresh-process geometry comparison")
@@ -274,14 +281,14 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     evidence=dict(source_commit=head,base_commit=report["base_commit"],tested_checkout_commit=report["tested_checkout_commit"],github_run_id=run_id,
                   plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan.json"),
                   plan_amendment_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan-amendment.json"),
-                  v2_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v2-plan.json"),v2=v2,v3=v3,v3_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v3-plan.json"),
+                  v2_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v2-plan.json"),v2=v2,v3=v3,v3_processes=v3_processes,v3_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v3-plan.json"),
                   platform=platform.platform(),bindings=[player_binding,review_binding],export_files=report["export_files"],embedded_packs=packs,
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
                   scripts={name:toolchain.sha256_file(ROOT/"prototypes/p1/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd","vs2_v1_cases.gd","vs2_v2_cases.gd","vs2_v2_tests.gd","vs2_v3_tests.gd")},
                   matrix_records=len(matrix["records"]),historical_comparison="not repeated under CI policy #63",
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
-                  images={p.name:toolchain.sha256_file(p) for p in output.glob("*.png")},
+                  images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},
                   study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,independent_review="OPEN",VS2_M01="OPEN",merge_authorized=False)
     target=output/"windows-download-verification.json"
     target.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")

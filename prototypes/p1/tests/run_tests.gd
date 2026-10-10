@@ -279,9 +279,11 @@ func test_scene() -> void:
 	await process_frame
 	await process_frame
 	check(app.ending.visible and not app.work.visible and app.completion_title.text == fixture.reveal.name, "real completion scene and name")
+	check(app.title.get_theme_font("font").get_font_name() == "Fraunces", "V3 earned completion title retains Fraunces")
 	check(app.ending.get_global_rect().end.y <= 697, "1280x720 completion leaves footer visible")
 	check(not app.reveal_view.payload.is_empty(), "real completion artwork")
 	app.show_album()
+	check(app.title.get_theme_font("font").get_font_name() == "Fraunces", "V3 completed album does not inherit work font")
 	check(app.open_button.text.contains(fixture.reveal.name), "completed album entry")
 	check(app.album_picture.visible and not app.album_mini.visible and app.album_picture.payload == fixture.reveal, "completed album has colored earned image")
 	app.queue_free()
