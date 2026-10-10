@@ -62,3 +62,6 @@ Die bisherige optionale 12-MB-Bildauswahl würde den geforderten 1440p-Fall
 verdrängen. Für die acht gezielten Vollbilder gilt ein 15-MB-Bildteilbudget;
 20 MB technische Daten und 75 MB gesamt bleiben unveränderte harte Grenzen.
 Eine redundante 1080p-Farbvollansicht entfällt, deren Prüfungen bleiben erhalten.
+Für abschließende Berichts-/Auditmetadaten bleiben 250 kB reserviert; das harte
+Techniklimit wird nach der Verpackung erneut geprüft. Fehlt eines der zwölf
+gezielten SL-Bilder in der begrenzten Lieferung, schlägt Product fehl.

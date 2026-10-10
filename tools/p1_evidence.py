@@ -179,7 +179,7 @@ class Evidence:
         # Leave room for the final phase/report/audit metadata. Reports and logs
         # take priority over optional retained images, including on failure.
         existing = sum(p.stat().st_size for p in self.technical.rglob("*") if p.is_file())
-        selection_limit = max(0, TECHNICAL_LIMIT - existing - 1_000_000)
+        selection_limit = max(0, TECHNICAL_LIMIT - existing - 250_000)
         priority = set(priority_sources)
         for path in sorted(set(sources), key=lambda p: (
                 p not in priority, "failure" not in p.name, p.suffix == ".png",
