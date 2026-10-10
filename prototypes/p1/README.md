@@ -3,7 +3,9 @@
 Aktueller [VS2-V1-Zwischenstand](../../docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
 ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
 Ergänzt durch [V2](../../docs/VS2_V2_IMPLEMENTATION.md): stabile Scribble-Konturen und reine Füllminiaturen.
-Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe offen; Draft-PR #62, kein Release.
+[V3](../../docs/VS2_V3_IMPLEMENTATION.md) ergänzt kräftiger variierte Rasterlinien, organische Fülltexturen,
+rechte Werkzeugleiste und Bakso-Arbeitstitel. Neues unabhängiges Review, persönliche
+VS2-M01 und Mergefreigabe offen; Draft-PR #62, kein Release.
 
 VS2 / [#61](https://github.com/venomenon328/picross/issues/61) startet regulär in der
 Sammlung. Erst die Auswahl öffnet ein Blatt; Einstellungen sind auch aus der
@@ -12,8 +14,13 @@ Sammlung erreichbar. Unter **Rätselansicht** stehen **Rasteransicht** und
 für die Sitzung, nach Neustart wieder Rasteransicht. **Einpassen** passt innerhalb
 des gewählten Modus ein. **Arbeitsgröße** wünscht 24px, begrenzt durch den Fit.
 
-Acht Arbeitsaktionen, Farben, eigene passive Miniatur und unabhängige lange Hinweise
-bleiben am Raster. Hand- und Raster-/Miniaturverschiebung entfallen. Kleine oder
+Rechts unter Miniatur und Farben stehen Füllen, Radieren, Undo, Redo, Verkleinern,
+Vergrößern, Einpassen und Arbeitsgröße in einer senkrechten Leiste. Bei knapper
+Höhe scrollt nur diese Leiste mit Rad oder sichtbarem Scrollbalken. Über dem Raster
+bleibt das Rad Zoom. Auswahlmarkierungen und Tooltips zeigen Werkzeug/Farbe;
+dauerhafte Werkzeug-/Farbtexte und numerische Zoomanzeige entfallen. Platz- und
+Hinweiswarnungen bleiben bei Bedarf unten auf dem Papier sichtbar.
+Eigene passive Miniatur und unabhängige lange Hinweise bleiben am Raster. Hand- und Raster-/Miniaturverschiebung entfallen. Kleine oder
 kollidierende Großrasterhinweise sind kein Komfortversprechen. Optionen und Rückweg
 bleiben erreichbar. Speicherfehler blockieren ungesicherte Wechsel; Backupübernahme
 braucht weiter Bestätigung. Neun Inhalte und normale Schema-1-Saves bleiben erhalten.
@@ -21,8 +28,11 @@ braucht weiter Bestätigung. Neun Inhalte und normale Schema-1-Saves bleiben erh
 [neutrale Windows-Spielprobe](../../docs/VS2_OWNER_TRIAL.md); VS2-M01 und unabhängiges
 Review bleiben vor Merge offen. Kein Release.
 
-Offline-Fonts Fraunces/Plex Sans, unverändertes A-Papier und feste C1-Kontur sind
-integriert. OFL-Texte liegen im Windows-ZIP unter `licenses/`, alle Ressourcen sind
+Offline-Fonts: Bakso Daging für den Arbeits-Blatttitel, Fraunces für sonstige
+Überschriften, Plex Sans für UI und das fehlende Titelzeichen `·`, Chalkboard für
+Hinweisziffern. Das A-Papier und die feste C1-Kontur bleiben. Originale OFL-Texte
+und getrennte Chalkboard-/Bakso-Nutzungshinweise liegen im Windows-ZIP unter
+`licenses/`; Bakso wird nicht als OFL-Font bezeichnet. Alle Ressourcen sind
 in der EXE eingebettet. Kein Fontdownload oder Godotsetup beim Spieler.
 [Auswahl und Herkunft](../../docs/Z2_SELECTION.md),
 [aktuelle Prüfung und sichere Eigentümeranleitung](../../docs/Z2_VERIFICATION.md).

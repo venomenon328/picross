@@ -41,7 +41,7 @@ static func run(t: SceneTree) -> void:
 			await t.process_frame
 			var viewport_global: Rect2 = Rect2(app.board.global_position + app.board.view.viewport.position, app.board.view.viewport.size)
 			var screen: Rect2 = Rect2(Vector2.ZERO, Vector2(dimensions))
-			t.check(screen.encloses(viewport_global) and viewport_global.end.y <= app.actions.fill.global_position.y - 4.0, "ZV50-A03 zoom viewport respects UI at " + str(dimensions) + " scale " + str(scale))
+			t.check(screen.encloses(viewport_global) and not viewport_global.intersects(app.tools_scroll.get_global_rect().grow(4.0)), "ZV50-A03 zoom viewport stays clear of right V3 tools at " + str(dimensions) + " scale " + str(scale))
 			t.check(app.board.view.cell_size <= app.board.fit_ceiling and full_grid(app.board), "VS2 resize/UI always clamps full frame")
 	app.queue_free()
 	await t.process_frame

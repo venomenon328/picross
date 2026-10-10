@@ -298,6 +298,7 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
         ("VS2-SPIELPROBE.md", "docs/VS2_OWNER_TRIAL.md"),
         ("licenses/resources.json", "prototypes/p1/art/book/manifest.json"),
         ("licenses/Chalkboard-NOTICES.md", "prototypes/p1/art/drawing/NOTICES.md"),
+        ("licenses/Bakso-NOTICES.md", "prototypes/p1/art/drawing/Bakso-NOTICES.md"),
     ):
         extras[name] = root / source
     for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
@@ -476,7 +477,7 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in {"v1-renders", "v2-renders"}])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name == "v3-renders"])
             evidence.enforce_budget()
             evidence.finish()
             package_began = time.monotonic()

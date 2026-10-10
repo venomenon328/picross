@@ -2,7 +2,7 @@
 
 ## Aktueller regulärer Stand · VS2 (#61)
 
-**Kombinierter V1/V2-Stand:** N01–N05 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md) und [V2-Umsetzung und Nachweisweg](VS2_V2_IMPLEMENTATION.md). Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe bleiben offen.
+**Kombinierter V1/V2/V3-Stand:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
 
 Der reguläre Start öffnet die Sammlung, auch mit Teil- oder Abschlussständen.
 Einstellungen sind dort ohne Rätselöffnung erreichbar. **Rätselansicht** bietet
@@ -509,9 +509,14 @@ Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte Risikostr
 I-01 bis I-05 gemäß [GD-01 bis GD-05](Z2_SELECTION.md). Der reguläre Kern,
 Appname/Speicherort, Saveformat und Rätseldaten bleiben erhalten. A-Papier,
 Montierungen, UI und Raster sind getrennt; C1 konturiert nur Hinweisfarben 2/4.
-Fraunces/Plex Sans sind gepinnt und offline gebündelt. Farbwahl aktiviert Füllen.
+Fraunces/Plex Sans sind gepinnt und offline gebündelt; VS2-V3 ergänzt das
+unveränderte Bakso nur für Arbeits-Blatttitel. Farbwahl aktiviert Füllen.
 Acht Arbeitsaktionen, eigene Miniatur, Koordinaten und aktive Farbe/Werkzeug bleiben
 auf der Arbeitsseite, Trefferflächen mindestens 44/55 px bei UI 100/125 %.
+VS2-V3 ordnet die acht Aktionen senkrecht rechts unter Miniatur/Palette an;
+nur diese Leiste scrollt bei Platzmangel. Auswahl und Tooltips bleiben,
+dauerhafte Werkzeug-/Farbtexte und numerische Zoomanzeige entfallen.
+Bedingte Platzwarnungen stehen getrennt unten; alle vier Zoomaktionen bleiben.
 
 GD-01 bis GD-05 ersetzen für Z2 ausdrücklich die frühere provisorische A–D-Palette,
 den alten Sidebaraufbau und die damals offene Arbeitsasset-/Schrift-/C1-/Navigationswahl.

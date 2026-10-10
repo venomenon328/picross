@@ -5,7 +5,8 @@
 **Rückmeldung mit Änderungsbedarf; keine vollständige positive Abnahme.** Nach
 Review R1 zur Erstlieferung `2c332ad688315bfa851f7c0d8642d2ab4ac3709c` hat der
 Eigentümer fünf visuelle Nacharbeiten benannt und als Spezifikation freigegeben.
-[VS2-V1 / N01/N02/N04](VS2_V1_IMPLEMENTATION.md) und [V2/N03/N05](VS2_V2_IMPLEMENTATION.md) sind umgesetzt. Die folgenden
+[VS2-V1 / N01/N02/N04](VS2_V1_IMPLEMENTATION.md), [V2/N03/N05](VS2_V2_IMPLEMENTATION.md)
+und [V3-01–07](VS2_V3_IMPLEMENTATION.md) sind umgesetzt. Die folgenden
 zusätzlichen Sichtprüfungen gelten für den im PR commitgebundenen neuen
 Download; die alten EXEs können die neue Spezifikation nicht bereits erfüllen.
 Keine vollständige Lösung, konkrete Prüfzeit oder unbekannte Windows-/DPI-Werte
@@ -37,7 +38,14 @@ Esc, Fokusverlust oder Gegentasten-Down bricht die laufende Zellgeste ab;
 nach Gegentastenabbruch beide Tasten loslassen und neu beginnen.
 Optionen enthalten Hilfe und Zellanimationen.
 
-## Probe am späteren kombinierten E1-Lieferstand
+Rechts unter Miniatur und Farben stehen Füllen, Radieren, Undo, Redo, Verkleinern,
+Vergrößern, Einpassen und Arbeitsgröße in einer senkrechten Leiste. Bei wenig Höhe
+scrollt nur diese Leiste mit Rad oder sichtbarem Balken. Über dem Raster bleibt
+das Rad Zoom. Auswahlmarkierungen und Tooltips ersetzen die dauerhafte Werkzeug-/
+Farbtextzeile; eine numerische Zoomanzeige gibt es nicht mehr. Nötige Platz- und
+Hinweiswarnungen bleiben unten sichtbar.
+
+## Probe am kombinierten E1/E2-V3-Lieferstand
 
 Bitte an genau dem im PR gebundenen neuen Download prüfen; nur tatsächlich
 beurteilte Szenarien als durchgeführt eintragen:
@@ -71,6 +79,17 @@ beurteilte Szenarien als durchgeführt eintragen:
    den eigenen vorgesehenen beziehungsweise bestätigten Füllungen, ohne Animation
    oder Lösungskorrektur. Vorhandene ungelöste Albumminiaturen zeigen dasselbe Prinzip.
 
+9. **V3-Striche und Textur:** Rasterlinien sind gegenüber V2 etwas deutlicher
+   handgezeichnet. Benachbarte satte Füllungen zeigen unterschiedliche ruhige
+   Stiftzüge; Vorschau, Animationsende, Zoomrückkehr und Neustart würfeln sie
+   nicht neu. Kleine Zellen, X, Rahmen und Fünfergrenzen bleiben gut unterscheidbar.
+10. **V3-Leiste und Titel:** Im kleinen Fenster mit UI125 alle acht Werkzeuge
+    durch Scrollen erreichen und bedienen; keine ungewollte Rasterbewegung oder
+    Zellaktion. Im großzügigen Fenster bleibt die Leiste ruhig. Hilfe/Menü/Info
+    sitzen etwas links/unten und sind frei erreichbar. Bakso erscheint nur im
+    Arbeits-Blatttitel; `·`, `×` und Ziffern sind vollständig, andere Seiten
+    behalten ihre bisherige Überschriftenschrift.
+
 Protokoll: PR/Head, Download/ZIP-Hash, EXE, Windows-Version, Monitorauflösung,
 tatsächliche normale/maximierte Clientfläche, Windows-Anzeigeskalierung, gewählte
 UI-Skalierung, Maus und Ergebnis je Schritt festhalten. Unbekannte Werte offenlassen.
@@ -79,5 +98,5 @@ Technische Eingabeproben ersetzen kein persönliches Komforturteil.
 **VS2-M01 bleibt vor Merge offen.** Der neue kombinierte Stand benötigt zusätzlich
 unabhängiges technisches/visuelles Review und passende Mergefreigabe. Frühere
 R1-/ZS2-/GF1-Nachweise nehmen weder die neue Gestaltung noch ihre persönliche
-Abnahme vorweg. Dieses Paket ist kein Release; die Spezifikation ist kein
-Implementierungsauftrag.
+Abnahme vorweg. Dieses Paket ist kein Release; seine Umsetzung ist keine
+Mergefreigabe.

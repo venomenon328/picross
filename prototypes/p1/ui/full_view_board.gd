@@ -2,7 +2,7 @@ extends "res://ui/chalkboard_board.gd"
 ## Regular full view: one selected renderer, no study lifecycle or persistence.
 const ROW_SLOT: float = 24.0 # V1-A: same font, shared tighter horizontal pitch
 const Scribble = preload("res://ui/scribble.gd")
-const FRAME_MARGIN: float = 1.0 # 0.18 deviation + 0.82 half-width + 1 AA - 1 inward
+const FRAME_MARGIN: float = 1.0 # 0.28 deviation + 0.82 half-width + 1 AA - 1.10 inward
 var composition_shift: Vector2 = Vector2.ZERO
 var untranslated_occupied: Rect2
 var untranslated_grid: Rect2
@@ -243,13 +243,13 @@ func grid_stroke(start: Vector2, end: Vector2, axis: String, index: int) -> Dict
 	# Endpoints meet on the same inset rectangle. Interior logical boundaries
 	# stay fixed; only their ink deviates within the existing two-pixel gap.
 	var along: Vector2 = Vector2.RIGHT if horizontal else Vector2.DOWN
-	start += along
-	end -= along
+	start += along * 1.10
+	end -= along * 1.10
 	if outer:
-		var inward: Vector2 = (Vector2.DOWN if horizontal else Vector2.RIGHT) * (1.0 if index == 0 else -1.0)
+		var inward: Vector2 = (Vector2.DOWN if horizontal else Vector2.RIGHT) * (1.10 if index == 0 else -1.10)
 		start += inward
 		end += inward
-	var line: Dictionary = Scribble.stroke(start,end,identity,0.18*detail,width,maxi(2,ceili(start.distance_to(end)/24.0)))
+	var line: Dictionary = Scribble.stroke(start,end,identity,0.28*detail,width,maxi(2,ceili(start.distance_to(end)/24.0)))
 	line.color = INK if major else Color("b5b6ab")
 	return line
 

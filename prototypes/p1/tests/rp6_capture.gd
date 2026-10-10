@@ -42,7 +42,7 @@ func shot(name: String) -> void:
 		check(app.board.clue_font().get_font_name() == "Chalkboard", "bound regular clue font")
 		check(not app.minimum_message.visible and app.work.visible, "work and critical controls accessible")
 		if not app.board.layout_valid:
-			check(app.zoom_label.text.contains("Zu wenig Platz") and not app.board.marks.visible,"invalid geometry is explicit and has no marks")
+			check(app.layout_warning.text.contains("Zu wenig Platz") and not app.board.marks.visible,"invalid geometry is explicit and has no marks")
 		for control: Control in [app.undo_button,app.redo_button,app.palette_row,app.mini]:
 			check(Rect2(Vector2.ZERO,Vector2(surface.size)).encloses(control.get_global_rect()), "controls on surface")
 	if not pending_failures.is_empty():

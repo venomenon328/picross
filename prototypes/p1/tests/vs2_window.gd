@@ -117,6 +117,9 @@ func run() -> void:
 						check(board.active_color == i+1 and not board.eraser,"native V1 moved palette hit")
 					board.active_color = 1
 					for tool: String in ["minus","plus","fit","work"]:
+						app.tools_scroll.ensure_control_visible(app.actions[tool])
+						await process_frame
+						await process_frame
 						click(app.actions[tool])
 						check(board.view.cell_size <= board.fit_ceiling and board.mode == ("G" if mode==0 else "V"),"native toolbar bounded and preserves mode")
 					if mode == 0:

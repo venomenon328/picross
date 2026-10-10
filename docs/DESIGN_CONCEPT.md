@@ -2,7 +2,7 @@
 
 ## Aktueller regulärer Stand · VS2 (#61)
 
-**Kombinierter V1/V2-Stand:** N01–N05 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md) und [V2-Umsetzung und Nachweisweg](VS2_V2_IMPLEMENTATION.md). Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe bleiben offen.
+**Kombinierter V1/V2/V3-Stand:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
 
 Die A-Buchkomposition übernimmt reguläre Vollsicht mit achsengetrennten Reserven
 und GF1-Zusatzbreite. Acht Werkzeuge statt Hand; passive Miniatur. Keine zusätzliche
@@ -115,7 +115,8 @@ Die [RP-4-Sichtprüfung](RP4_VERIFICATION.md) bewertet neue Produktionsraster,
 keine neue P1-Bedienabnahme.
 
 Die neue ZS-Folgearbeit aus Abschnitt 4.4 öffnet GD-03 ausschließlich für die
-Gestaltung der Hinweisziffern. Fraunces für Titel, Plex Sans für übrige UI,
+Gestaltung der Hinweisziffern. VS2-E2/V3 ergänzt Bakso für Arbeits-Blatttitel;
+Fraunces bleibt für sonstige Überschriften, Plex Sans für übrige UI,
 A-Arbeitsasset, Buchkomposition, N1 und die C1-Farb-/Kontursemantik bleiben die
 Grundlage. Konkrete abweichende Ziffern-, Schriftgrad- oder Slotwerte werden
 erst im nativen Vergleich begründet gewählt; eine Änderung dieser Werte ist

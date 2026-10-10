@@ -1,6 +1,6 @@
 # Z2: aktive Auswahl und native Integration
 
-## Aktueller Stand · VS2-Erstlieferung und VS2-E1
+## Aktueller Stand · VS2 einschließlich V3
 
 Die gewählte A-Komposition bleibt. Die VS2-Erstlieferung in Draft-PR #62 auf
 `2c332ad688315bfa851f7c0d8642d2ab4ac3709c` ordnet die Arbeitsfläche für vollständige
@@ -17,11 +17,17 @@ Füllungen beschränkt. **V1/N01/N02/N04 und V2/N03/N05 sind umgesetzt.**
 Dauerhafter Detailvertrag und ausdrückliche Ablösungen:
 [Zeichensprache, Abschnitt VS2-E1](UI_DRAWING_STYLE.md).
 
+**VS2-E2/V3-01–07 ist umgesetzt:** stärker variierte Rasterstriche, organische
+Fülltextur, Navigation links/unten, keine dauerhaften Werkzeug-/Zoomtexte, acht
+Werkzeuge senkrecht unter der Palette und Bakso-Arbeitsblatttitel.
+[Parameter, Originalfont und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Die bisherige
+2/2/4-Bodenanordnung ist historisch; aktuelle Gruppen stehen 2/2/4 untereinander.
+
 Bedien-/Speichergrundlage: [P1](PROTOTYPE_P1.md). Die
 [Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md)
-trennen Erstlieferung und kombinierte V1/V2-Lieferung. VS2-M01 hat Änderungsfeedback und
+trennen Erstlieferung und kombinierte V1/V2/V3-Lieferung. VS2-M01 hat Änderungsfeedback und
 bleibt vor Merge offen; der neue kombinierte Head benötigt technische/visuelle
-Nachprüfung und passende Mergefreigabe. Keine persönliche Abnahme durch die technische V1/V2-Lieferung.
+Nachprüfung und passende Mergefreigabe. Keine persönliche Abnahme durch die technische V1/V2/V3-Lieferung.
 
 Stand: 09.10.2026 · historische GD-Auswahl mit freigegebener VS2-E1-Fortschreibung
 
@@ -34,8 +40,8 @@ production/artwork/composition bleiben unverändert. PR #25/#28 sind keine Basis
 | Auswahl | Bisherige native Grundlage |
 | --- | --- |
 | GD-01: A, dunkler Inventarband | Unverändertes UI-freies PNG, SHA-256 `957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a`; proportionaler Hintergrund, getrennt von Control-/Rastergeometrie. |
-| GD-02: gemeinsame BP-3-UI | Gefasste Miniatur, zwei Metallhalter, gemeinsame Farbmusterfassung, Werkzeugmulden zuletzt 2/2/4, abgeschrägte Controls. Auswahl aus Sessionzustand: Werkzeug dunkel/unterstrichen, Farbe mit äußeren Eckmarkierungen. |
-| GD-03: Fraunces / IBM Plex Sans | Fraunces 600 für Blatttitel; Plex Sans für UI/Hinweise als historischer Z2-Stand. ZS wählt Chalkboard für Hinweise. Gepinnte Fontbytes und Nutzungshinweise offline, keine Systemfontsuche. |
+| GD-02: gemeinsame BP-3-UI | Gefasste Miniatur, zwei Metallhalter, gemeinsame Farbmusterfassung, Werkzeuggruppen seit V3 senkrecht rechts (2/2/4), abgeschrägte Controls. Auswahl aus Sessionzustand: Werkzeug dunkel/unterstrichen, Farbe mit äußeren Eckmarkierungen. |
+| GD-03: Fraunces / IBM Plex Sans | V3: Bakso Daging für Arbeits-Blatttitel, sonst Fraunces 600; Plex Sans für UI/Hinweise als historischer Z2-Stand. ZS wählt Chalkboard für Hinweise. Gepinnte Fontbytes und Nutzungshinweise offline, keine Systemfontsuche. |
 | GD-04: C1 | Feste dunkle Kontur für Hinweisfarben 2/4 an beiden Achsen, im Drag und Tooltip; unveränderte RGB-Füllung, Originalindizes und H1. Keine neue Option. |
 | GD-05: N1 | Eine native Informations-Control mit gemeinsamem Einstellungen-/Hilfebereich, drei Zugängen und Rückweg. Nur der UI-freie Hintergrund wird gespiegelt; Falz links. |
 
@@ -57,7 +63,7 @@ Album-/Statistikbau oder Inhalt aus #24.
 vorhandene A-Arbeitsansicht gemäß [Detailspezifikation](UI_DRAWING_STYLE.md) weiter.
 GD-03 und GP-03 wurden gezielt für kompakte kräftige Hinweisziffern geöffnet:
 Form, Gewicht, optische Größe und gegebenenfalls bewusst ausgewählte gemeinsame
-Slotmaße. Fraunces-Titel, übrige Plex-UI, C1-Semantik, grundlegende Buchkomposition
+Slotmaße. Seit V3 Bakso-Arbeitstitel, sonst Fraunces; übrige Plex-UI, C1-Semantik, grundlegende Buchkomposition
 und historische hashgebundene Dateien bleiben Grundlage. Die native Wahl ist durch
 ZS1-E3/M01 bestätigt; frühere feste Font-/Slotwerte beschreiben ihre jeweilige Lieferung.
 

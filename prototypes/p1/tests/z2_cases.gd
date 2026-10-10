@@ -120,10 +120,10 @@ static func run(t: SceneTree) -> void:
 			await t.process_frame
 			var grid: Rect2 = app.board.view.visible_bounds()
 			grid.position += app.board.global_position
-			t.check(Rect2(Vector2.ZERO,Vector2(dimensions)).encloses(grid) and grid.end.y <= app.actions.fill.global_position.y-4,"Z2-A05 raster stays above tools at intermediate sizes")
+			t.check(Rect2(Vector2.ZERO,Vector2(dimensions)).encloses(grid) and not grid.intersects(app.tools_scroll.get_global_rect()),"Z2-A05 raster stays clear of right tools at intermediate sizes")
 			for key: String in app.actions:
 				var item: Control = app.actions[key]
-				if item.is_visible_in_tree():
+				if item.is_visible_in_tree() and not key in app.TOOL_IDS:
 					t.check(Rect2(Vector2.ZERO,Vector2(dimensions)).encloses(item.get_global_rect()) and item.size.x >= 44*scale and item.size.y >= 44*scale,"Z2-A05 visible hit area " + key + str(dimensions) + str(scale))
 	# Missing primary after rotation must not trap recovery behind N1.
 	app.set_ui_scale(1.0)

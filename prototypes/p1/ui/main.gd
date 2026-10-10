@@ -11,6 +11,10 @@ const BookButton = preload("res://ui/book_button.gd")
 const BookSurface = preload("res://ui/book_surface.gd")
 const BODY_FONT = preload("res://art/book/PlexSans.ttf")
 const TITLE_FONT = preload("res://art/book/Fraunces.ttf")
+const WORK_TITLE_FONT = preload("res://art/drawing/BaksoDaging-Regular.ttf")
+const TOOL_IDS: Array[String] = ["fill","erase","undo","redo","minus","plus","fit","work"]
+var tools_scroll: ScrollContainer
+var tools_column: VBoxContainer
 var surface: BookSurface
 var information: Control
 var information_section: String = "settings"
@@ -51,9 +55,8 @@ var open_button: Button
 var undo_button: Button
 var redo_button: Button
 var coordinate: Label
-var tool_label: Label
 var completion_title: Label
-var zoom_label: Label
+var layout_warning: Label
 var stress_label: Label
 var palette_row: Control
 var sidebar: Control
@@ -89,6 +92,13 @@ func validate_definition(data: Dictionary) -> String:
 	return Definition.validate(data)
 
 func _ready() -> void:
+	var work_font: FontFile = WORK_TITLE_FONT
+	work_font.allow_system_fallback = false
+	# Bakso lacks only the middle dot in real work titles; all other title
+	# glyphs are verified on its own RID. Use the existing offline Plex dot.
+	var punctuation: FontFile = BODY_FONT.duplicate()
+	punctuation.allow_system_fallback = false
+	work_font.fallbacks = [punctuation]
 	get_tree().auto_accept_quit = false
 	store = create_store()
 	if DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
@@ -292,7 +302,6 @@ func _scale_labels(node: Node) -> void:
 func set_tool(tool: String) -> void:
 	board.eraser = tool == "erase"
 	board.hand = false
-	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
 	_update_actions()
 	if save_timer != null:
 		_save_current()
@@ -321,7 +330,6 @@ func select_puzzle(index: int) -> void:
 	_layout_book()
 	board.hover = Vector2i(-1, -1)
 	board.restore_view(session.view_state)
-	tool_label.text = "Werkzeug: " + ("Radierer" if board.eraser else ("Füllen · " + str(session.definition.palette[board.active_color - 1].symbol)))
 	_update_palette()
 	_update_status()
 	open_puzzle()
@@ -391,9 +399,10 @@ func refresh() -> void:
 	mini.view_rect = board.view.normalized_view()
 	mini.queue_redraw()
 	board.queue_redraw()
-	zoom_label.text = "Zoom %d %%" % roundi(board.view.cell_size / 24 * 100)
+	layout_warning.text = ""
 	if board is FullViewBoard and (not board.layout_valid or board.glyph_risk or board.view.cell_size < 16):
-		zoom_label.text += " · " + ("Zu wenig Platz" if not board.layout_valid else "Kleine / eng stehende Hinweise")
+		layout_warning.text = ("Zu wenig Platz" if not board.layout_valid else "Kleine / eng stehende Hinweise")
+	layout_warning.visible = not layout_warning.text.is_empty()
 	undo_button.disabled = session.gesture.active or session.player.cursor == 0
 	redo_button.disabled = session.gesture.active or session.player.cursor == session.player.history.size()
 	if session.completed and work.visible:
@@ -630,22 +639,31 @@ func _build_work() -> void:
 	coordinate = label("Zeile – · Spalte –",13)
 	coordinate.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	sidebar.add_child(coordinate)
-	tool_label = label("",12)
-	sidebar.add_child(tool_label)
-	zoom_label = label("",12)
-	sidebar.add_child(zoom_label)
+	layout_warning = label("",12)
+	work.add_child(layout_warning)
 	palette_row = Control.new()
 	palette_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	sidebar.add_child(palette_row)
+	tools_scroll = ScrollContainer.new()
+	tools_scroll.name = "tools-scroll"
+	tools_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	tools_scroll.mouse_filter = Control.MOUSE_FILTER_STOP
+	tools_scroll.mouse_force_pass_scroll_events = false
+	work.add_child(tools_scroll)
+	tools_column = VBoxContainer.new()
+	tools_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tools_scroll.add_child(tools_column)
 	for id: String in ["fill","erase"]:
-		_icon_button(id,set_tool.bind(id),work)
-	undo_button = _icon_button("undo",_undo,work)
-	redo_button = _icon_button("redo",_redo,work)
-	_icon_button("minus",func() -> void: board.zoom(-1,board.view.viewport.get_center()),work)
-	_icon_button("plus",func() -> void: board.zoom(1,board.view.viewport.get_center()),work)
-	_icon_button("fit",board.fit_all,work)
+		_icon_button(id,set_tool.bind(id),tools_column)
+	tools_column.add_child(Control.new())
+	undo_button = _icon_button("undo",_undo,tools_column)
+	redo_button = _icon_button("redo",_redo,tools_column)
+	tools_column.add_child(Control.new())
+	_icon_button("minus",func() -> void: board.zoom(-1,board.view.viewport.get_center()),tools_column)
+	_icon_button("plus",func() -> void: board.zoom(1,board.view.viewport.get_center()),tools_column)
+	_icon_button("fit",board.fit_all,tools_column)
 	actions["fit"].tooltip_text = "Einpassen"
-	_icon_button("work",board.working_size,work)
+	_icon_button("work",board.working_size,tools_column)
 	_icon_button("help",show_information.bind("help"),work)
 	_icon_button("menu",show_information.bind("settings"),work)
 	_icon_button("nav-information",show_information.bind("settings"),work)
@@ -706,7 +724,7 @@ func _build_information() -> void:
 	help_panel.add_theme_constant_override("separation",16)
 	content.add_child(help_panel)
 	help_panel.add_child(label("Maus und Hinweise",26))
-	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nRad und +/−: Zoom bis zur Vollsichtgrenze. Einpassen passt innerhalb der gewählten Rätselansicht ein; Arbeitsgröße stellt die gewünschte Standardgröße wieder her. Raster und eigene Miniatur bleiben fest. Die Miniatur zeigt nur eigene Füllungen in Originalfarben, auch Fehler und die aktuelle Vorschau. X und unbekannt bleiben gleich neutral. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nMittlere Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
+	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nDie Werkzeuge stehen rechts unter den Farben: Füllen, Radieren, Undo, Redo, Verkleinern, Vergrößern, Einpassen, Arbeitsgröße. Bei wenig Höhe lässt sich nur diese Leiste mit Rad oder Scrollbalken verschieben. Auswahlmarkierungen zeigen Werkzeug und Farbe.\n\nRad über dem Raster und +/−: Zoom bis zur Vollsichtgrenze. Einpassen passt innerhalb der gewählten Rätselansicht ein; Arbeitsgröße stellt die gewünschte Standardgröße wieder her. Raster und eigene Miniatur bleiben fest. Die Miniatur zeigt nur eigene Füllungen in Originalfarben, auch Fehler und die aktuelle Vorschau. X und unbekannt bleiben gleich neutral. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nMittlere Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
 	help_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help_panel.add_child(help_text)
 	information.hide()
@@ -765,10 +783,9 @@ func set_puzzle_view(index: int) -> void:
 	refresh()
 
 func _update_actions() -> void:
-	if board == null or tool_label == null:
+	if board == null:
 		return
 	var selected_tool: String = "erase" if board.eraser else "fill"
-	tool_label.text = ("Radierer" if board.eraser else "Füllen") + " · Farbe %d" % board.active_color
 	for key: String in actions:
 		if not is_instance_valid(actions[key]):
 			continue
@@ -821,23 +838,33 @@ func _layout_book() -> void:
 	_place(palette_row,Rect2(palette_pos,Vector2(110,110)*u))
 	for i: int in range(palette_row.get_child_count()):
 		_place(palette_row.get_child(i),Rect2(Vector2(i%2,i/2)*54*u,Vector2.ONE*hit))
-	_place(zoom_label,Rect2(mini_position+Vector2(0,mini_extent+188*u),Vector2(180,52)*u))
-	zoom_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_place(tool_label,Rect2(mini_position+Vector2(0,mini_extent+244*u),Vector2(200,24)*u))
-	var tools_origin: Vector2 = o+Vector2(left,bottom)
+	# The former bottom toolbar now holds only conditional non-numeric notices.
+	_place(layout_warning,Rect2(o+Vector2(left,bottom),Vector2(rail-left-24*u,24*u)))
+	layout_warning.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var tools_top: float = palette_pos.y + (56.0 if session.definition.palette.size()==1 else 110.0)*u + 14*u
+	var tools_height: float = minf(8*hit+9*4*u, o.y+h-40*u-tools_top)
+	_place(tools_scroll,Rect2(Vector2(mini_position.x+20*u,tools_top),Vector2(hit+20*u,tools_height)))
+	tools_column.add_theme_constant_override("separation",roundi(4*u))
+	for id: String in TOOL_IDS:
+		actions[id].custom_minimum_size = Vector2.ONE*hit
+		actions[id].size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	surface.wells.clear()
-	var ids: Array[String] = ["fill","erase","undo","redo","minus","plus","fit","work"]
-	for i: int in range(ids.size()):
-		_place(actions[ids[i]],Rect2(tools_origin+Vector2(i*52*u,0),Vector2.ONE*hit))
-	for group: Vector2i in [Vector2i(0,2),Vector2i(2,2),Vector2i(4,4)]:
-		surface.wells.append(Rect2(tools_origin+Vector2(group.x*52*u-3*u,-3*u),Vector2((group.y-1)*52*u+hit+6*u,hit+6*u)))
+	surface.wells.append(tools_scroll.get_rect().grow(3*u))
 	var nav_x: float = w-(187.5 if compact else 150)
 	for i: int in range(3):
-		_place(actions[["help","menu","nav-information"][i]],Rect2(o+Vector2(nav_x-(2-i)*58*u,h/30),Vector2.ONE*hit))
+		_place(actions[["help","menu","nav-information"][i]],Rect2(o+Vector2(nav_x-(2-i)*58*u-20*u,h/30+12*u),Vector2.ONE*hit))
 	_place(album_button,Rect2(o+Vector2(w/320,h*7/72),Vector2.ONE*hit))
+	# The shared heading changes font with page context, never globally.
+	if work.visible:
+		title.add_theme_font_override("font",WORK_TITLE_FONT)
+	else:
+		var heading: FontVariation = FontVariation.new()
+		heading.base_font = TITLE_FONT
+		heading.variation_opentype = {"wght":600.0}
+		title.add_theme_font_override("font",heading)
 	_place(title,Rect2(o+Vector2(w*0.043,h*0.039),Vector2(w*0.6,45*u)))
 	stress_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_place(stress_label,Rect2(mini_position+Vector2(0,mini_extent+270*u),Vector2(180,64)*u))
+	_place(stress_label,Rect2(o+Vector2(left,bottom+25*u),Vector2(rail-left-24*u,24*u)))
 	_place(album,Rect2(o+Vector2(90,130),Vector2(w-180,h-200)))
 	for choice: Button in choices:
 		choice.custom_minimum_size.y = 44 * ui_scale

@@ -43,8 +43,18 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 	# Inner paper measured from the unchanged A background, excluding wood/fold.
 	var inner: Rect2 = Rect2(paper.position+paper.size*Vector2(0.03125,0.034),paper.size*Vector2(0.93125,0.933))
 	var boxes: Array[Rect2] = [app.surface.card.grow(2),app.mini.get_global_rect().grow(1),app.surface.palette.grow(2)]
-	for label: Label in [app.mini_title,app.coordinate,app.zoom_label,app.tool_label,app.stress_label]:
+	for label: Label in [app.mini_title,app.coordinate]:
 		if label.is_visible_in_tree() and not label.text.is_empty(): boxes.append(label_ink(label))
+	# V3 moves conditional warnings below the board, outside the mini group.
+	for label: Label in [app.layout_warning,app.stress_label]:
+		if label.is_visible_in_tree() and not label.text.is_empty():
+			var ink: Rect2 = label_ink(label)
+			check.call(inner.grow(0.1).encloses(ink),"V3 warning ink inside actual paper")
+			for item: Control in [app.board,app.tools_scroll,app.status_label,app.work_repair_button]:
+				if item.is_visible_in_tree(): check.call(not ink.intersects(item.get_global_rect()),"V3 warning ink clear of board/tools/recovery")
+	for item: Control in [app.status_label,app.work_repair_button]:
+		if item.is_visible_in_tree():
+			check.call(not app.tools_scroll.get_global_rect().intersects(item.get_global_rect()),"V3 tool rail clear of recovery")
 	for item: Control in app.palette_row.get_children():
 		check.call(item.size.x >= 44*u and item.size.y >= 44*u,"V1 unchanged color minimum hit size")
 		boxes.append(item.get_global_rect().grow(1))

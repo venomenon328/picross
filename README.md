@@ -3,7 +3,9 @@
 Aktueller [VS2-V1-Zwischenstand](docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
 ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
 Ergänzt durch [V2](docs/VS2_V2_IMPLEMENTATION.md): stabile Scribble-Konturen und reine Füllminiaturen.
-Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe offen; Draft-PR #62, kein Release.
+[V3](docs/VS2_V3_IMPLEMENTATION.md) ergänzt kräftiger variierte Rasterlinien, organische Fülltexturen,
+rechte Werkzeugleiste und Bakso-Arbeitstitel. Neues unabhängiges Review, persönliche
+VS2-M01 und Mergefreigabe offen; Draft-PR #62, kein Release.
 
 Ein geplantes thematisch zusammenhängendes Nonogramm-Spiel für PC: kuratierte klassische und farbige Bildrätsel, ein substanzielles Angebot großer Raster und eine präzise, komfortable Bedienung. Logische Erkenntnisse und größere Projekte stehen im Mittelpunkt; ein sich füllendes illustriertes Album, Sterneprogression und freiwillige Leistungsvergleiche ergänzen das Spiel. Eine perfekte Lösung erfordert einen Durchgang ohne Fehler und ohne Undo.
 

@@ -1,6 +1,6 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-## Aktueller Stand · V1/V2 umgesetzt, kombinierte Abnahme offen
+## Aktueller Stand · V1/V2/V3 umgesetzt, kombinierte Abnahme offen
 
 Die reguläre VS2-Erstlieferung liegt in [Draft-PR #62](https://github.com/venomenon328/picross/pull/62)
 auf `2c332ad688315bfa851f7c0d8642d2ab4ac3709c`, Basis
@@ -30,6 +30,11 @@ unabhängiges Review des kombinierten Heads, VS2-M01 und passende Mergefreigabe 
 Historische Nachweise bleiben commitgebunden; neue Laufbindungen stehen im PR.
 
 Stand: 10.10.2026 · Spezifikation 0.8 · V2: Scribble-Konturen und reine Füllprojektion
+
+**VS2-E2/V3 ist umgesetzt:** der verbindliche Nachtrag in Abschnitt 8 ergänzt
+Raster-/Fülltextur, Navigation, Werkzeugleiste und Arbeits-Blatttitel. R3 bleibt
+an den vorbereiteten Head `e2547016cef7cfe400a77fb09f22c872306de22a` gebunden;
+neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
 
 ## 1. Auftrag, Quellen und Status
 
@@ -94,8 +99,8 @@ oder mathematischen Rätseldaten für die spätere Umsetzung.
 
 Die gewählte A-Buchkomposition bleibt Grundlage. GD-03/GP-03 wurden für die
 gezielte Untersuchung der Hinweisziffern geöffnet: Schriftform, Gewicht, optischer
-Schriftgrad und gegebenenfalls bewusst gewählte gemeinsame Slotmaße. Fraunces-Titel,
-Plex-Sans-Bedientexte und die C1-Farbkontur bleiben Grundlage. VS2-E1 erlaubt die
+Schriftgrad und gegebenenfalls bewusst gewählte gemeinsame Slotmaße. Seit V3
+Bakso-Arbeitstitel, sonstige Fraunces-Überschriften und Plex-Sans-Bedientexte und die C1-Farbkontur bleiben Grundlage. VS2-E1 erlaubt die
 begrenzte neue Flächenverteilung und Scribble-Fassung, keine allgemeine Hintergrund-,
 Schrift-, Themen- oder Albumneuauswahl.
 
@@ -483,3 +488,28 @@ Vorbereitung und Auftrag in #61. Der eigene [endliche V2-Plan](../examples/vs2/v
 wurde vor Vergleichen in `75b640c` versioniert; ursprüngliche VS2-/V1-Pläne bleiben erhalten. Beide Teilpakete bleiben
 in PR #62, mit kombinierter technischer/visueller Prüfung und VS2-M01 vor einem
 gesondert freizugebenden Merge.
+
+## 8. VS2-E2 / V3 – gezielte reguläre Fortschreibung
+
+Auftrag: [#61](https://github.com/venomenon328/picross/issues/61), Vorbereitung
+V3-S1–S5 und VS2-E2-Nachtrag in [PR #62](https://github.com/venomenon328/picross/pull/62#issuecomment-6099894860).
+V3-01–07 ist umgesetzt auf Basis des vorbereiteten kombinierten V1/V2-Heads
+`e2547016cef7cfe400a77fb09f22c872306de22a`. Der eigene endliche
+[V3-Prüfplan](../examples/vs2/v3-plan.json) wurde vor Vergleichen in `502883c`
+versioniert. [Umsetzung und Prüfzuordnung](VS2_V3_IMPLEMENTATION.md).
+
+| Regel | Aktueller verbindlicher Umfang |
+| --- | --- |
+| V3-01 | Rasterlinien etwas stärker handgezeichnet als V2, stabil je Linie. Tatsächliche Abweichung, Strichbreite und AA bleiben im vorhandenen Rahmenbudget; keine weitere Fitverkleinerung. Kleine Zellen vereinfachen; Rahmen, Fünfergruppen und Zelltreffer bleiben eindeutig. |
+| V3-02 | Drei organische helle Stiftzüge variieren in Lage, Enden, Neigung, Abständen und Krümmung stabil je Zelle. Satte Originalfarbe und Trennung bleiben. Zielvorschau, wartende Ziele und letzter Animationsdurchgang teilen dieselbe Endtextur. Unter 18px oder bei Einpassen ruhige vereinfachte Fläche. X, 210/120-ms-Timing, Startabstände und History bleiben. |
+| V3-03 | Hilfe, Menü und Informationszugang bewegen sich gemeinsam um (−20,+12) × UI; erreichbare Originalhitflächen, sicherer Abstand zu Titel, Miniatur und Papierkante. |
+| V3-04 | Dauerhafte Werkzeug-/Farbtextzeile samt Platzbedarf entfällt. Auswahlmarkierungen, Tooltips, Farberhalt und Bedienfunktion bleiben. |
+| V3-05 | Numerische Zoomanzeige entfällt. Verkleinern, Vergrößern, Einpassen und Arbeitsgröße bleiben; wahrheitsgemäße nichtnumerische Platz-/Hinweiswarnungen erscheinen bei Bedarf getrennt unten. |
+| V3-06 | Acht Werkzeuge in genau dieser Reihenfolge rechts unter Miniatur/Palette: Füllen, Radieren, Undo, Redo, Minus, Plus, Einpassen, Arbeitsgröße. Eine Spalte, 44/55px bei UI100/125, Gruppen 2/2/4. Nur bei knapper Höhe scrollt die Werkzeugleiste mit sichtbarem Balken. Gezeichnete Controls und Treffer clippen an derselben Grenze; Rad dort verändert weder Raster noch Zellen. Keine alten unteren Werkzeugmulden. |
+| V3-07 | Unverändertes Bakso Daging ausschließlich für den Arbeits-Blatttitel. Aktive reguläre Ressource und Nutzungshinweise, keine Freigabe des Studienpfads. Originalbytes bleiben; Fraunces in Sammlung/Information, Plex-UI und Chalkboard-Hinweise erhalten. Im realen Titel fehlt nur `·`; dafür explizites gebündeltes Plex, keine Systemfontsuche. |
+
+V1s 24/18-Slots, Schriftmaßstab, GF1 und Reihenfolge Fit → Kapazität → Translation
+bleiben. V2s reine eigene Füllminiatur einschließlich Vorschau bleibt. Keine
+Änderung an Modell, Rätseln, Saveformat, atomarer History, H1/GP48, X oder Reveal.
+Die aktuelle CI-Policy gilt einschließlich kompakter Bildauswahl und Budgets;
+historische Pläne/Manifeste und persönliche Abnahmen bleiben commitgebunden.

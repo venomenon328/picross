@@ -2,7 +2,7 @@
 
 ## Aktueller regulärer Stand · VS2 (#61)
 
-**Kombinierter V1/V2-Stand:** N01–N05 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md) und [V2-Umsetzung und Nachweisweg](VS2_V2_IMPLEMENTATION.md). Unabhängiges kombiniertes Review, VS2-M01 und Mergefreigabe bleiben offen.
+**Kombinierter V1/V2/V3-Stand:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
 
 Regulärer Produktstand: Start in Sammlung; genau eine benannte Rätselansicht in
 Optionen. Vollständiges Raster samt Rahmen, passive eigene Miniatur und

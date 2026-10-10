@@ -71,6 +71,28 @@ class DeliveryTests(unittest.TestCase):
         executable.write_bytes(b"MZtemplate"+pack+struct.pack("<Q",len(pack)+999)+b"GDPC")
         with self.assertRaises(ValueError): embedded_pack(executable)
 
+    def test_v3_rejects_duplicate_case_failed_assertion_and_changed_picture(self):
+        names = ["v3-tight-rail.png", "v3-F01-work.png", "v3-F02-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
+        for name in names: (self.root/name).write_bytes(b"native-binding")
+        report = dict(checks=1000, failures=0,
+                      records=[dict(id=s, client=[w,h], ui=u, mode=m, fit=f)
+                               for s in ("F-01","F-02","F-08") for w,h in ((1280,720),(1600,900),(1920,1080),(2560,1440))
+                               for u in (1.0,1.25) for m in ("G","V") for f in (False,True)],
+                      pictures=[dict(file=n,sha256=hashlib.sha256(b"native-binding").hexdigest()) for n in names])
+        def verify():
+            (self.root/"v3-report.json").write_text(json.dumps(report),encoding="utf-8")
+            return vs2_delivery.verify_v3(self.root)
+        self.assertEqual(len(verify()["records"]),96)
+        original = report["records"][-1]
+        report["records"][-1] = report["records"][0]
+        with self.assertRaises(PreflightError): verify()
+        report["records"][-1] = original
+        report["failures"] = 1
+        with self.assertRaises(PreflightError): verify()
+        report["failures"] = 0
+        (self.root/names[0]).write_bytes(b"different pixels")
+        with self.assertRaises(PreflightError): verify()
+
     def test_v2_rejects_failed_or_missing_round_and_modified_image(self):
         names = ["v2-projection-1.png", "v2-projection-4.png", "v2-mono-work.png",
                  "v2-five-crossing.png", "v2-color-work.png", "v2-mini-palette.png"]

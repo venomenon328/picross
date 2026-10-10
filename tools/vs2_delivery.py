@@ -74,10 +74,40 @@ def capture_current(project, workspace, output, engine, render_command, environm
                      for name in ("vs2_v2_tests.gd", "vs2_v2_cases.gd")}
     selected += list(v2_dir.glob("*.json"))
     selected += [v2_dir / p["file"] for p in v2["write"]["pictures"]]
+    font = project / "art/drawing/BaksoDaging-Regular.ttf"
+    toolchain.verify_sha256(font, "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e")
+    v3_dir = output / "v3-renders"
+    v3_dir.mkdir()
+    environment["VS2_V3_CAPTURE_DIR"] = str(v3_dir)
+    try:
+        phase("vs2-v3-current", ["res://tests/vs2_v3_tests.gd" if part == "res://tests/capture.gd" else part
+              for part in render_command], "VS2_V3_OK")
+    finally:
+        environment.pop("VS2_V3_CAPTURE_DIR", None)
+    v3 = verify_v3(v3_dir)
+    v3["plan_sha256"] = toolchain.sha256_file(Path(__file__).resolve().parents[1] / "examples/vs2/v3-plan.json")
+    v3["font_sha256"] = toolchain.sha256_file(font)
+    selected += list(v3_dir.glob("*.json")) + [v3_dir / p["file"] for p in v3["pictures"]]
     return dict(records=len(report["records"]), failures=report["failures"],
-                rendered=len(report["pictures"]), v1=v1, v2=v2,
+                rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3,
                 historical_comparison="not run; CI policy #63",
                 legacy_reader="separate downloaded Windows old-writer/new-reader probe"), selected
+
+
+def verify_v3(directory: Path) -> dict:
+    report = json.loads((directory / "v3-report.json").read_text(encoding="utf-8"))
+    expected_cases = {(sheet, w, h, ui, mode, fit) for sheet in ("F-01", "F-02", "F-08")
+                      for w, h in ((1280, 720), (1600, 900), (1920, 1080), (2560, 1440))
+                      for ui in (1.0, 1.25) for mode in ("G", "V") for fit in (False, True)}
+    actual_cases = {(r["id"], *r["client"], r["ui"], r["mode"], r["fit"]) for r in report["records"]}
+    if report["failures"] or len(report["records"]) != 96 or actual_cases != expected_cases or report["checks"] < 1000:
+        raise toolchain.PreflightError("Incomplete/failed V3 native coverage")
+    expected = {"v3-tight-rail.png", "v3-F01-work.png", "v3-F02-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"}
+    if {p["file"] for p in report["pictures"]} != expected or len(report["pictures"]) != len(expected):
+        raise toolchain.PreflightError("Missing V3 targeted native pictures")
+    for picture in report["pictures"]:
+        toolchain.verify_sha256(directory / picture["file"], picture["sha256"])
+    return report
 
 
 def verify_v2(directory: Path) -> dict:

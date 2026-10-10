@@ -1,8 +1,15 @@
 # VS2 · reguläre Vollsichtintegration
 
-## Aktueller Nachweisstand · S0 erledigt, V1/V2 umgesetzt
+## Aktueller Nachweisstand · S0 erledigt, V1/V2/V3 umgesetzt
 
-Stand: 10.10.2026 · kombinierter V1/V2-Prüfweg.
+Stand: 10.10.2026 · kombinierter V1/V2/V3-Prüfweg.
+
+**V3-01–07 ist umgesetzt.** [V3-Parameter und Zuordnung V3-A01–07](VS2_V3_IMPLEMENTATION.md)
+ergänzen die folgenden erhaltenen Verträge. Der eigene endliche Plan wurde vor
+Vergleichen in `502883c` gebunden; Referenz ist der vorbereitete Head `e2547016`.
+Aktuelle CI-/Download-/PCK-Nachweise und getrenntes Selbstreview stehen im PR.
+R3 bleibt an die V1/V2-Referenz gebunden; neues unabhängiges Review, persönliche
+VS2-M01 und Mergefreigabe bleiben offen.
 
 [V1-S0 ist abgeschlossen](VS2_V1_S0.md). Lauf `38048159384` auf
 `32befbf336013d8fee29fb6ec61981cc867d1b12`, Test-Merge
@@ -158,8 +165,9 @@ bindet auch den externen Diagnosehelfer `tests/vs2_measurements.gd`; dieser wird
 zusammen mit sämtlichen Testskripten vom regulären Export ausgeschlossen. Die
 PCK-Probe prüft zusätzlich das Fehlen der alten Diagnosemethode im regulären Board.
 SHA-256 bindet GitHub-Artefakt, inneres ZIP, EXE-Paar, eingebettetes PCK, Prüfscripte und Bilder.
-V1 hat diese tatsächliche PCK-Probe um N01/N02/N04 ergänzt. V2 muss N03/N05 am
-neuen heruntergeladenen kombinierten Paket nachweisen; ein Quellskripttest allein
+V1 hat diese tatsächliche PCK-Probe um N01/N02/N04 ergänzt. V2 ergänzt N03/N05,
+V3 die 96 gezielten Layoutfälle, Fontbytes und zwei echte Prozesse am
+neuen heruntergeladenen kombinierten Paket; ein Quellskripttest allein
 belegt die ausgelieferte neue Darstellung nicht.
 
 Die automatisierte Mausereignisprobe ersetzt weder persönliche Bedienabnahme noch Review.

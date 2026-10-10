@@ -42,7 +42,7 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 		var points: PackedVector2Array = line.points
 		for i: int in range(1,points.size()-1):
 			var straight: Vector2 = points[0].lerp(points[-1],float(i)/(points.size()-1))
-			check.call(points[i].distance_to(straight) <= 0.1801,"V2 bounded deviation")
+			check.call(points[i].distance_to(straight) <= 0.2801,"V3 bounded deviation supersedes V2 amplitude")
 			if points[i].distance_to(straight) > 0.01: bent += 1
 	check.call(b.view.cell_size < 6.0 or bent > 0,"V2 varied grid at readable size; tiny cells deliberately fade")
 	return {"valid":true,"lines":lines.size(),"bent_points":bent,"geometry_sha256":JSON.stringify(lines).sha256_text(),"outer_budget":1.0}
