@@ -1,10 +1,10 @@
 # VS2-V1 · Eingangsdiagnose S0
 
-Stand: 10.10.2026 · Diagnose, kein positiver Produktnachweis.
+Stand: 10.10.2026 · S0 abgeschlossen; neuer Prüfweg positiv belegt.
 
 ## Ergebnis und Grenze
 
-**S0 bleibt offen; N01/N02/N04 wurden nicht begonnen.** Der fehlgeschlagene
+**S0 ist abgeschlossen. Bis zu diesem Nachweis wurden N01/N02/N04 nicht begonnen.** Der fehlgeschlagene
 [Produktjob 113954966256](https://github.com/venomenon328/picross/actions/runs/37970317549/job/113954966256)
 endet beim nativen Godot-Import des historischen GP48-Vorherprojekts mit
 Prozessstatus `-11` (unter Linux Signal 11/SIGSEGV). Der Python-Harness behandelt
@@ -128,3 +128,28 @@ den vorhandenen Entwickler-Testhelfer positioniert, nicht über den bewusst
 wirkungslosen regulären Panaufruf. Lokaler Einzelbeleg: 82 native Aufnahmen,
 9.911 Pixelassertions, kein Fehler. Das ist kein Ersatz für den noch erforderlichen
 vollständigen integrierten Lauf. Weiterhin keine V1-Layoutänderung.
+
+## Positiver Abschluss vor Layoutarbeit
+
+[CI 38048159384](https://github.com/venomenon328/picross/actions/runs/38048159384)
+ist vollständig erfolgreich: Docs, Product, Preflight, puzzle-production,
+rp4-windows, rp5-repair und `ci-required`. Quellhead
+`32befbf336013d8fee29fb6ec61981cc867d1b12`, Basis
+`d7ec4e1e4a29d82b6979537a33868d57732d3713`, tatsächlicher Test-Merge
+`38760faec3a1ba01756fc2ff869864a119ee5854`. Product-Job `114201806659`
+lief 11:06 Minuten innerhalb des unveränderten Limits. Der heruntergeladene
+technische Bericht und sein eigenständiger VS2-Teilbericht melden `success`;
+304 Matrixfälle/23 geprüfte Bilder, GF1 und Roundtrips sind enthalten.
+[Maschinenlesbare Abschlussbindung](../examples/vs2/v1-s0-restored.json).
+
+Technisches Artefakt `11668343819`: SHA-256
+`918a54ef8b8e1325e61040df889a5a1a871b5616982926ede77726d1713b77b9`.
+Reguläres Spielerartefakt `11668104113` ist erzeugt; dies ist noch kein nativer
+Downloadnachweis der späteren V1-Fassung. Die ältere negative Integrationsmessung
+bleibt oben nachvollziehbar. Der historische SIGSEGV ist eingeordnet, nicht
+nachträglich repariert oder zum Pass erklärt. UI/Modell/Assets/Rätseldaten und
+Exportkonfiguration sind bis hier gegenüber `8d6b929` unverändert.
+
+Damit ist der erforderliche aktuelle Prüfweg wiederhergestellt. Die nachfolgende
+V1-Implementierung darf gemäß Plan `06f695f` beginnen; V2 und kombinierte Gates
+bleiben offen.

@@ -2,11 +2,11 @@
 
 ## Aktueller Nachweisstand und Folgespezifikation VS2-E1
 
-Aktualitätsprüfung vom 10.10.2026: [V1-S0-Diagnose](VS2_V1_S0.md).
-Der alte Produktlauf scheiterte im historischen GP48-Import; S0 bleibt offen.
-Die Übernahme der CI-Policy aus #63 ist ausdrücklich beauftragt und integriert.
-Aktuelle VS2-Nachweise sind angeschlossen; der erste Gesamt-CI-Lauf wurde am
-Zeitlimit abgebrochen. Die begrenzte Harnesskorrektur ist in S0 dokumentiert. Noch keine V1-Layoutänderungen oder V1-Abnahme.
+Aktualitätsprüfung vom 10.10.2026: [V1-S0 abgeschlossen](VS2_V1_S0.md).
+Der neue CI-Lauf `38048159384` auf `32befbf` / Test-Merge `38760fa`
+besteht vollständig einschließlich aktueller VS2-Prüfungen und `ci-required`.
+Die neue CI-Policy ist ausdrücklich übernommen. Der separate V1-Plan ist
+vor Layoutarbeit in `06f695f` versioniert. Noch keine V1-Abnahme.
 
 Auftrag: [#61](https://github.com/venomenon328/picross/issues/61), VS2-01–07 und
 VS2-A01–A10, jetzt ergänzt um die **noch nicht implementierte** VS2-E1-Nacharbeit
