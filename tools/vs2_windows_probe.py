@@ -242,6 +242,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         # actual owned native process is checked by the no-argument launches.
         packs[console.name]=dict(console_shim=True,load_target="picross-p1.exe",sha256=packs["picross-p1.exe"]["sha256"])
     evidence=dict(source_commit=head,base_commit=report["base_commit"],tested_checkout_commit=report["tested_checkout_commit"],github_run_id=run_id,
+                  plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan.json"),
                   platform=platform.platform(),bindings=[player_binding,review_binding],export_files=report["export_files"],embedded_packs=packs,
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
