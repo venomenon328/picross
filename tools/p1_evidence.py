@@ -15,7 +15,7 @@ import p1_preflight as toolchain
 TECHNICAL_LIMIT = 20_000_000
 TOTAL_LIMIT = 75_000_000
 LOG_LIMIT = 256_000
-IMAGE_LIMIT = 12_000_000
+IMAGE_LIMIT = 15_000_000 # SL-65: eight native full views; 20MB technical cap still wins.
 
 
 def now() -> str:

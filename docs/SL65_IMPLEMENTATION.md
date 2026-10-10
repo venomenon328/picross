@@ -49,7 +49,7 @@ Hinweisanker bleiben. Recovery erhält keine zusätzliche Schreibfreigabe.
 | SL-A01/A06 | Bestehende Integration, P1.3/VS2-Prozessroundtrips, alter echter Writer mit overview true/false und Zoom72 → neuer Reader, neuer Writer → frischer Reader. Ungültige/missing overview-Werte weiterhin abgewiesen; hohe Zoomwünsche exakt fitbegrenzt. |
 | SL-A02/A03 | Reale Klicks auf alle sechs Controls, Undo/Redo und Zellaktion, Rasterrad und wirkungsloses UI-Rad, 2×3-Positionen, Mindesttreffer, keine alte Action/Überschrift; versetzte/zu kleine Controls als Gegenprobe. |
 | SL-A04/A05 | 96 Geometriefälle: vier Flächen × UI100/125 × F01/F02/F08 × G/V × Wunsch24/72. Alpha-Hüllen gegen Papier, Inhalte und Nachbargruppen; identische optische Achse. RGBA-Hash/Innenalpha aus tatsächlich geladenen Texturen, gerenderter Bildvergleich mit entfernten Texturen. Falsche Textur/Überdeckung werden abgewiesen. |
-| SL-A05/A06 | [Endliche Bildauswahl](../examples/vs2/sl65-plan.json): neun Vollansichten einschließlich knapper normaler und Recoveryansicht, plus vier 1:1-Details. Bestehende V1-Recovery-, V2-Miniatur-, GF1-/H1-/Animations-/Spoileroracles bleiben. |
+| SL-A05/A06 | [Endliche Bildauswahl](../examples/vs2/sl65-plan.json): acht Vollansichten einschließlich knapper normaler und Recoveryansicht, plus vier 1:1-Details. Bestehende V1-Recovery-, V2-Miniatur-, GF1-/H1-/Animations-/Spoileroracles bleiben. |
 | SL-A07/T01 | Aktuelle CI-Diffauswahl, Product/Visual/Integration, Produktion/Piloten und gegebenenfalls Preflight; docs und ci-required. `vs2_windows_probe.py` am sauberen Lieferhead: frische Downloads, beide EXEs regulär, tatsächliches PCK in frischen Prozessen, Asset-/Bild-/EXE-/PCK-/Runbindung. |
 
 Die aktuelle Prüfausgabe und ausgeführten Ergebnisse werden commitgebunden im
@@ -57,3 +57,8 @@ neuen Draft-PR verlinkt, einschließlich getrenntem Selbstreview. Dieses Dokumen
 ist die Zuordnung, kein vorweggenommenes Testergebnis. Technische native Sichtung
 ist weder unabhängiges Review noch persönliche [SL-M01](VS2_OWNER_TRIAL.md).
 Historische V1/V2/V3-Pläne und Messergebnisse bleiben unverändert.
+
+Die bisherige optionale 12-MB-Bildauswahl würde den geforderten 1440p-Fall
+verdrängen. Für die acht gezielten Vollbilder gilt ein 15-MB-Bildteilbudget;
+20 MB technische Daten und 75 MB gesamt bleiben unveränderte harte Grenzen.
+Eine redundante 1080p-Farbvollansicht entfällt, deren Prüfungen bleiben erhalten.

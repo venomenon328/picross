@@ -362,7 +362,7 @@ func run() -> void:
 			if app.session.player.cells[4*app.session.player.width+x]<0:
 				mouse(q,MOUSE_BUTTON_LEFT,true)
 				mouse(q,MOUSE_BUTTON_LEFT,false)
-		await shot("v3-F%02d-work" % (index+1))
+		if index!=1: await shot("v3-F%02d-work" % (index+1))
 		if index==0:
 			var region: Rect2 = app.board.view.cell_rect(Vector2i(3,4))
 			region.position+=app.board.global_position
@@ -373,7 +373,7 @@ func run() -> void:
 	app.select_puzzle(0)
 	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	check(before==fingerprint(),"progress leaves same grid/texture identity")
-	# Five selected SL views supplement the three bound 1080p originals: nine
+	# Five selected SL views supplement two 1080p views and the tight view: eight
 	# full views including tight normal + actual recovery, not a screenshot matrix.
 	for scenario: Array in [[1280,720,1.0,0,1,"720-100-mono-V"],[1600,900,1.0,1,1,"900-100-color-V"],[1600,900,1.25,0,0,"900-125-mono-G"],[2560,1440,1.25,1,1,"1440-125-color-V"]]:
 		canvas.size=Vector2i(scenario[0],scenario[1])

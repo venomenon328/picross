@@ -200,6 +200,8 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         raise ValueError("Delivered V2 plan identity differs")
     if review_report["visual"]["vs2"]["v3"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v3-plan.json"):
         raise ValueError("Delivered V3 plan identity differs")
+    if review_report["visual"]["vs2"]["v3"]["sidebar_plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/sl65-plan.json"):
+        raise ValueError("Delivered SL plan identity differs")
     if review_report["visual"]["vs2"]["records"]!=304 or review_report["visual"]["vs2"]["rendered"]!=23:
         raise ValueError("Missing current native VS2 coverage")
     archive=cache/toolchain.EDITORS["Windows"].name

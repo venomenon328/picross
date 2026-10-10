@@ -4,7 +4,6 @@
   "geometry": "4 clients x UI100/125 x F01/F02/F08 x G/V x requested24/72 = 96",
   "full_views": [
     "1920x1080 UI100 G F01 selection/progress",
-    "1920x1080 UI100 G F02 color/progress",
     "1920x1080 UI100 G F08 large-grid warning",
     "1280x720 UI125 G F02 color normal",
     "1280x720 UI100 V F01 mono",
