@@ -105,8 +105,16 @@ def verify_v3(directory: Path) -> dict:
         raise toolchain.PreflightError("Incomplete/failed V3 native coverage")
     expected = {"v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"}
     expected.update(['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'])
-    metadata = json.loads((Path(__file__).resolve().parents[1] / "prototypes/p1/art/book/frames.json").read_text(encoding="utf-8"))
-    if report.get("sidebar_assets") != metadata or len(report.get("frame_pixels", [])) != 3 or any(p["changed_pixels"] <= 100 for p in report["frame_pixels"]):
+    metadata_path = Path(__file__).resolve().parents[1] / "prototypes/p1/art/book/frames.json"
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    def serialized_geometry(value):
+        # Godot JSON prints 15 significant digits. The exact source bytes remain
+        # independently hash-bound; sub-nanopixel JSON rounding is not a new asset.
+        if isinstance(value, float): return round(value, 9)
+        if isinstance(value, list): return [serialized_geometry(v) for v in value]
+        if isinstance(value, dict): return {k: serialized_geometry(v) for k,v in value.items()}
+        return value
+    if report.get("sidebar_metadata_sha256") != toolchain.sha256_file(metadata_path) or serialized_geometry(report.get("sidebar_assets")) != serialized_geometry(metadata) or len(report.get("frame_pixels", [])) != 3 or any(p["changed_pixels"] <= 100 for p in report["frame_pixels"]):
         raise toolchain.PreflightError("Missing/mismatched SL frame resources or actual render usage")
     if {p["file"] for p in report["pictures"]} != expected or len(report["pictures"]) != len(expected):
         raise toolchain.PreflightError("Missing V3 targeted native pictures")

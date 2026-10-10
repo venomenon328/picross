@@ -75,6 +75,7 @@ class DeliveryTests(unittest.TestCase):
         names = ['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'] + ["v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
         for name in names: (self.root/name).write_bytes(b"native-binding")
         report = dict(checks=1000, failures=0,
+                      sidebar_metadata_sha256=hashlib.sha256((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_bytes()).hexdigest(),
                       sidebar_assets=json.loads((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8")),
                       frame_pixels=[dict(changed_pixels=101) for _ in range(3)],
                       records=[dict(id=s, client=[w,h], ui=u, mode=m, fit=f)
@@ -85,6 +86,17 @@ class DeliveryTests(unittest.TestCase):
             (self.root/"v3-report.json").write_text(json.dumps(report),encoding="utf-8")
             return vs2_delivery.verify_v3(self.root)
         self.assertEqual(len(verify()["records"]),96)
+        for item in report["sidebar_assets"]["derivatives"]:
+            item["safe"] = [float(format(v,".15g")) for v in item["safe"]]
+        self.assertEqual(len(verify()["records"]),96)
+        original_safe = report["sidebar_assets"]["derivatives"][0]["safe"][0]
+        report["sidebar_assets"]["derivatives"][0]["safe"][0] += 0.01
+        with self.assertRaises(PreflightError): verify()
+        report["sidebar_assets"]["derivatives"][0]["safe"][0] = original_safe
+        original_hash = report["sidebar_metadata_sha256"]
+        report["sidebar_metadata_sha256"] = "0"*64
+        with self.assertRaises(PreflightError): verify()
+        report["sidebar_metadata_sha256"] = original_hash
         report["frame_pixels"][0]["changed_pixels"] = 0
         with self.assertRaises(PreflightError): verify()
         report["frame_pixels"][0]["changed_pixels"] = 101
