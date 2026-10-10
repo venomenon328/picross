@@ -1,8 +1,13 @@
 extends Control
 ## Only the UI-free material is reflected for the right information page.
 const ART = preload("res://art/book/bp2-a-inventarband.png")
-const ButtonPaint = preload("res://ui/book_button.gd")
-const Scribble = preload("res://ui/scribble.gd")
+const FRAMES = {
+ "preview": preload("res://art/book/frame-preview.png"),
+ "palette": preload("res://art/book/frame-palette.png"),
+ "tools": preload("res://art/book/frame-tools.png")
+}
+var frames: Dictionary = FRAMES.duplicate()
+var frame_metadata: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/frames.json"))
 var information: bool = false
 var card: Rect2
 var miniature: Rect2
@@ -30,24 +35,14 @@ func _draw() -> void:
 	if not work_visible:
 		return
 	for box: Rect2 in wells:
-		mount(box,Color("cbb991"))
-	mount(palette,Color("f4ead4"),"palette-mount")
-	mount(card,Color("fffaf0"),"miniature-mount")
-	draw_rect(miniature,Color("fffaf0"))
-	for x: float in [card.position.x+3,card.end.x-7]:
-		draw_rect(Rect2(x,card.position.y+7,3,13),Color("a68a55"))
-	draw_line(Vector2(card.position.x+9,miniature.position.y-5),Vector2(card.end.x-9,miniature.position.y-5),Color("c1b18d"),0.7,true)
+		draw_texture_rect(frames.tools,box,false)
+	draw_texture_rect(frames.palette,palette,false)
+	draw_texture_rect(frames.preview,card,false)
 
-func mount_strokes(box: Rect2, identity: String) -> Array:
-	return Scribble.outline_strokes(box.grow(-0.5),identity,1.5)
-
-func mount(box: Rect2, fill: Color, identity: String = "") -> void:
-	if not box.has_area():
-		return
-	draw_colored_polygon(ButtonPaint.points(box,3),Color("a38b65"))
-	draw_colored_polygon(ButtonPaint.points(box.grow(-2),2),fill)
-	if identity.is_empty():
-		draw_polyline(ButtonPaint.points(box,3),Color("8c7047"),1,true)
-	else:
-		for line: Dictionary in mount_strokes(box,identity):
-			Scribble.paint(self,line,Color("8c7047"))
+func frame_rect(content: Rect2, kind: String = "tools") -> Rect2:
+	for item: Dictionary in frame_metadata.derivatives:
+		if item.file == "frame-"+kind+".png":
+			var safe: Rect2 = Rect2(item.safe[0],item.safe[1],item.safe[2],item.safe[3])
+			var scale: Vector2 = content.size/safe.size
+			return Rect2(content.position-safe.position*scale,Vector2(item.size[0],item.size[1])*scale)
+	return Rect2()

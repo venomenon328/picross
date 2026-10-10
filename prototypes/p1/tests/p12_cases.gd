@@ -314,25 +314,25 @@ static func ui_cases(t: SceneTree) -> void:
 				t.check(row_window.end > row_window.start and column_window.end > column_window.start, "J-02 real F-03 clues at UI/pitch/slot %s/%s/%s" % [scale, step, position])
 				t.check(row_window.prefix_hidden or row_window.suffix_hidden, "J-02 long row markers reflect hidden entries")
 	app.set_ui_scale(1.0)
-	b.working_size()
+	b.restore_view(b.capture_view().merged({"zoom":24,"overview":false},true))
 	b.reset_clue_pan()
 	await semantic_clue_geometry_routes(t, app)
 	await clue_navigation_routes(t, app, longest_row, longest_column)
 	await hint_drag_marker_routes(t, app, longest_row, longest_column)
 	await snap_geometry_routes(t, app, longest_row, longest_column)
 	await followup_input_geometry(t, app)
-	b.fit_all()
+	b.restore_view(b.capture_view().merged({"zoom":72,"overview":false},true))
 	var below_work_range: float = b.view.cell_size
 	t.check(below_work_range < Board.WORK_STEPS[0], "F03 overview is below minimum work zoom")
 	b.zoom(-1, b.view.viewport.get_center())
-	t.check(is_equal_approx(b.view.cell_size, below_work_range) and b.overview, "zoom out from small overview never zooms in")
+	t.check(is_equal_approx(b.view.cell_size, below_work_range) and not b.overview, "zoom out from small overview never zooms in")
 	b.zoom(1, b.view.viewport.get_center())
-	t.check(b.view.cell_size == below_work_range and b.overview, "VS2 zoom at full fit cannot exceed ceiling")
+	t.check(b.view.cell_size == below_work_range and not b.overview, "VS2 zoom at full fit cannot exceed ceiling")
 	b.requested_cell = 72.0
 	b.overview = false
 	b._layout()
 	t.check(b.view.cell_size <= b.fit_ceiling and b.capture_view().zoom == 72, "VS2 excessive desired zoom clamps without invalid save step")
-	b.working_size()
+	b.restore_view(b.capture_view().merged({"zoom":24,"overview":false},true))
 	for dims: Vector2i in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
 		t.root.size = dims
 		for scale: float in [1.0, 1.25]:

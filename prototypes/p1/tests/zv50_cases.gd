@@ -16,7 +16,7 @@ static func run(t: SceneTree) -> void:
 	await t.process_frame
 	app.select_puzzle(3)
 	await t.process_frame
-	app.board.working_size()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	await t.process_frame
 	t.check(close(app.board.view.cell_size,24) and full_grid(app.board), "VS2 preserves regular 24px work intent within fit")
 	for i: int in range(24):
@@ -25,17 +25,17 @@ static func run(t: SceneTree) -> void:
 		t.check(app.board.view.cell_size >= before and app.board.view.cell_size <= app.board.fit_ceiling and full_grid(app.board), "VS2 replaces ZV50 overflow by monotone full-frame ceiling")
 		var corner: Vector2 = app.board.view.cell_rect(Vector2i(19,19)).get_center()
 		t.check(app.board.view.hit(corner) == Vector2i(19,19), "VS2 last cell reachable at every zoom")
-	app.board.working_size()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	for index: int in [1,2]:
 		app.select_puzzle(index)
-		app.board.working_size()
+		app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 		t.check(full_grid(app.board) and app.board.view.cell_size <= app.board.fit_ceiling, "VS2 large sheets fit instead of historical clipped viewport")
 	for dimensions: Vector2i in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
 		for scale: float in [1.0, 1.25]:
 			t.root.size = dimensions
 			app.set_ui_scale(scale)
 			app.select_puzzle(3)
-			app.board.working_size()
+			app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 			for i: int in range(8):
 				app.board.zoom(1, app.board.view.viewport.get_center())
 			await t.process_frame

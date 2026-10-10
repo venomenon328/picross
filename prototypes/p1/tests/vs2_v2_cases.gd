@@ -26,11 +26,8 @@ static func within_budget(lines: Array, grid: Rect2) -> bool:
 
 static func layout(app: Control, check: Callable) -> Dictionary:
 	var b = app.board
-	for spec: Array in [[app.surface.card,"miniature-mount"],[app.surface.palette,"palette-mount"]]:
-		var mount: Array = app.surface.mount_strokes(spec[0],spec[1])
-		check.call(mount == app.surface.mount_strokes(spec[0],spec[1]),"V2 stable mount geometry")
-		check.call(element_fits(mount,spec[0].grow(2)),"V2 actual mount stroke/AA within V1 group envelope")
-	check.call(element_fits(app.mini.frame_strokes(),app.mini.image_rect().grow(1)),"V2 miniature frame stroke/AA bounded")
+	check.call(not app.mini.draw_frame and app.mini.frame_strokes().is_empty(),"SL no duplicate procedural work frame")
+	check.call(app.surface.FRAMES.size()==3,"SL three bound image derivatives")
 	for item: Control in app.palette_row.get_children():
 		check.call(element_fits(item.swatch_strokes(),Rect2(Vector2.ZERO,item.size).grow(1)),"V2 palette stroke/AA within group envelope")
 	if not b.layout_valid: return {"valid":false}

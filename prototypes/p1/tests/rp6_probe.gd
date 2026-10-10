@@ -39,7 +39,7 @@ func select_pilot() -> void:
 	click(box.get_center())
 	await process_frame
 	check(app.session == app.sessions[pilot_index] and (app.ending.visible if app.session.completed else app.work.visible), "regular album click selects pilot and saved completion scene")
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 
 func partial() -> void:
 	check(not app.session.completed and app.session.reveal().is_empty(), "fresh pilot hides reveal")
@@ -133,7 +133,7 @@ func write_foreign_slot_control() -> void:
 	# Only the harness's disposable profile copy uses this short control stage.
 	check(pilot_index == 3 and app.sessions[0].player.cells.count(-1) == 400, "foreign control starts from unchanged F01")
 	app.select_puzzle(0)
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 	check(app._save_current(), "foreign control can create an unchanged F01 save")
 	var first: Dictionary = app.store.load_slot(app.sessions[0].definition)
 	check(saved_unknown_count(first) == 400, "valid unchanged persisted F01 cells are accepted")

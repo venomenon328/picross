@@ -1,0 +1,8 @@
+SL-65 sidebar frames, 2026-10-10
+Generated for this project using the native ChatGPT image tool.
+No external reference image supplied. Model identifier not exposed.
+Original SHA-256: 9e7f10b394caf8cd6b89eb7c990fe443d113286a7ac873ca730b1938ea1c4e33
+Technical alpha cleanup, crop and Lanczos derivatives: tools/sidebar_assets.py.
+Source, exact prompt and derivation: docs/design/sidebar_frames/README.md.
+PNG hashes, canonical visible RGBA hashes and safe rectangles: frames.json.
+These new drawings are not original assets of the historical BP-3 source commit.

@@ -115,11 +115,11 @@ func run() -> void:
 			app.size = Vector2(surface.size)
 			app.set_ui_scale(spec[2])
 			await select_pilot()
-		app.tools_scroll.ensure_control_visible(app.actions["work"])
+		app.tools_scroll.ensure_control_visible(app.actions["plus"])
 		await process_frame
 		await process_frame
-		click(app.actions["work"].get_global_rect().get_center())
-		check(not app.board.overview,"real visible work-size click leaves fit mode")
+		click(app.actions["plus"].get_global_rect().get_center())
+		check(not app.board.overview,"real visible plus click retains normal zoom")
 		await shot("detail-%d-ui%d" % [spec[0],spec[2]*100])
 		app.show_album()
 		await process_frame

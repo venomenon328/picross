@@ -69,6 +69,12 @@ func run() -> void:
 					var maximum: int = app.board.clue_layout(axis,i).max_offset
 					app.board.set_clue_step(axis,i,[0,maximum/2,maximum][i])
 			check(app._save_current(),"normal schema-1 writer")
+			if stage == "legacy-write":
+				# Real legacy Schema-1 writer with both old modes and a high valid wish.
+				var old_view: Dictionary = app.board.capture_view()
+				old_view.zoom = 72
+				old_view.overview = index % 2 == 0
+				check(app.store.write_slot(app.session,old_view).is_empty(),"legacy bool modes written")
 			records.append(app.store.load_slot(app.session.definition).data)
 		FileAccess.open(expected_path,FileAccess.WRITE).store_string(JSON.stringify(records))
 	else:
@@ -78,12 +84,20 @@ func run() -> void:
 			app.select_puzzle(index)
 			var actual: Dictionary = Store.snapshot(app.session,app.board.capture_view())
 			var expected: Dictionary = records[index]
+			check(Store.validate(expected,app.session.definition).is_empty(),"old full snapshot valid before presentation normalization")
+			for bad: Variant in [null,0,"true"]:
+				var invalid: Dictionary = expected.duplicate(true)
+				invalid.view.overview=bad
+				check(not Store.validate(invalid,app.session.definition).is_empty(),"invalid overview rejected before normalization")
+			var missing: Dictionary = expected.duplicate(true)
+			missing.view.erase("overview")
+			check(not Store.validate(missing,app.session.definition).is_empty(),"missing overview rejected")
 			for key: String in ["cells","history","cursor","undo_used","completed"]:
 				# JSON's numeric representation is double while the model stores
 				# typed integers. Compare the full JSON values, not 1 versus 1.0 text.
 				check(JSON.parse_string(JSON.stringify(actual[key])) == expected[key],"exact restart "+key+" slot "+str(index))
 			check(not app.board.hand and actual.view.active_color == expected.view.active_color and actual.view.tool == ("fill" if expected.view.tool == "hand" else expected.view.tool),"legacy presentation normalized, color/eraser retained")
-			check(actual.view.zoom == expected.view.zoom and actual.view.overview == expected.view.overview and app.board.view.cell_size <= app.board.fit_ceiling,"desired valid work step retained and fit bounded")
+			check(actual.view.zoom == expected.view.zoom and not actual.view.overview and is_equal_approx(app.board.view.cell_size,minf(expected.view.zoom,app.board.fit_ceiling)),"desired valid work step retained and fit bounded")
 			check(JSON.stringify(actual.view.row_clue_reads)==JSON.stringify(expected.view.row_clue_reads) and JSON.stringify(actual.view.column_clue_reads)==JSON.stringify(expected.view.column_clue_reads),"semantic read intent retained through full visibility")
 			if not app.session.completed:
 				check(app.session.player.redo() and app.session.player.cells[1] == 0,"real redo retained after restart")
@@ -94,6 +108,7 @@ func run() -> void:
 	if OS.get_environment("VS2_PACK_AUDIT") == "1":
 		check(not app.board.has_method("measurements"),"PCK excludes developer matrix diagnosis")
 		for path: String in resources:
+			check(not path.get_file().get_basename() in ["fit","work","hand","album"],"PCK has no obsolete action icons")
 			check(not path.contains("/study/") and not path.contains("/full_view_study/") and not path.contains("/tests/") and not path.contains("Shantell") and not path.contains("Virgil"),"PCK excludes developer/study resources: "+path)
 	var report: Dictionary = {"stage":stage,"failures":failures,"root":app.store.root,"app_data":OS.get_user_data_dir(),"client":[root.size.x,root.size.y],"display":DisplayServer.get_name(),"resources":resources}
 	FileAccess.open(output.path_join("vs2-"+stage+".json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))

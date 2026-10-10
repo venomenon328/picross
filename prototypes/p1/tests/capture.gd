@@ -932,7 +932,7 @@ func capture_axis(app: Main) -> void:
 	app.board.set_clue_hover("row", f03_row)
 	await snapshot(app, "f03-full-clues-in-work-tooltip")
 	app.board.clear_clue_hover()
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 	await snapshot(app, "f03-overview")
 	if not compact:
 		await capture_owner_drop(app)

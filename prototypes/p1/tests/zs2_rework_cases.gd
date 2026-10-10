@@ -40,7 +40,7 @@ func reset(sheet: int = 0) -> void:
 	app.board.eraser = false
 	app.animation_toggle.button_pressed = true
 	app.board.set_animations(true)
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 
 func stroke(first: Vector2i, last: Vector2i, button: MouseButton) -> void:
 	t.mouse(t.point(first.x, first.y), button, true)

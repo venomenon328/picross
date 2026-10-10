@@ -65,7 +65,7 @@ func run() -> void:
 				app.open_puzzle()
 				for mode: int in range(2):
 					app.set_puzzle_view(mode)
-					app.board.fit_all()
+					app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 					await process_frame
 					var board = app.board
 					var record: Dictionary = measurements.capture(board)

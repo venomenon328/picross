@@ -51,7 +51,7 @@ func setup(viewport: Viewport) -> void:
 	click(app.choices[3].get_global_rect().get_center())
 	await process_frame
 	check((app.ending.visible if app.session.completed else app.work.visible) and app.session == app.sessions[3], "real album choice opens F-04 according to saved completion")
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 
 func partial() -> void:
 	check(not app.session.completed and app.session.reveal().is_empty() and not app.title.text.contains("Fliegenpilz"), "unknown state has no motif name or reveal")
