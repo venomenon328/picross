@@ -899,6 +899,11 @@ func capture_axis(app: Main) -> void:
 		await capture_owner_drop(app)
 
 func capture_h1(app: Main) -> void:
+	# Preserve the current renderer's strict overflow/status/tooltip pixel
+	# contracts, then exercise the regular full-view route independently.
+	var regular: Board = use_renderer_component(app)
+	await preload("res://tests/h1_capture.gd").run(self, app)
+	restore_regular_board(app, regular)
 	await preload("res://tests/vs2_h1_cases.gd").run(self, app)
 	for index: int in [0, 1, 2]:
 		app.select_puzzle(index)

@@ -103,6 +103,7 @@ def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
     bitmap = gdi.CreateCompatibleBitmap(dc,width,height)
     previous = gdi.SelectObject(memory,bitmap)
     captured = None
+    dpi = user.GetDpiForWindow(hwnd)
     try:
         if not user.PrintWindow(hwnd,memory,3):
             raise ValueError("Owned window capture failed")
@@ -122,7 +123,6 @@ def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
         gdi.DeleteDC(memory)
         user.ReleaseDC(hwnd,dc)
         user.PostMessageW(hwnd,0x0010,0,0)
-    dpi = user.GetDpiForWindow(hwnd)
     user.PostMessageW(hwnd, 0x0010, 0, 0)
     process.wait(timeout=30)
     deadline = time.monotonic()+30
