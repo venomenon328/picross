@@ -409,6 +409,7 @@ func run() -> void:
 		check(JSON.parse_string(FileAccess.get_file_as_string(path))==fingerprint(),"fresh-process geometry/texture stable")
 	else: FileAccess.open(path,FileAccess.WRITE).store_string(JSON.stringify(fingerprint()))
 	var report: Dictionary = {"checks":checks,"failures":failures,"records":records,"pictures":pictures,"fingerprint":fingerprint(),"fresh_process_compared":compared,"max_grid_deviation":max_delta,"sidebar_assets":app.surface.frame_metadata,"frame_pixels":frame_evidence}
+	report.sidebar_metadata_sha256=FileAccess.get_sha256("res://art/book/frames.json")
 	FileAccess.open(output.path_join("v3-report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
 	print("VS2_V3_", "OK" if failures==0 else "FAILED", " checks=",checks," failures=",failures)
 	app.queue_free()
