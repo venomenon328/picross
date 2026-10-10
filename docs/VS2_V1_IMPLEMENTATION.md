@@ -80,3 +80,26 @@ V1-Messberichte und gezielte native Bilder innerhalb der unveränderten Bytebudg
 Die CI-Auswahl gemäß #63 ist maßgeblich; dieser breite PR betrifft derzeit alle
 sechs Fachjobs und `ci-required`. Ein gesonderter Selbstreview wird im PR als
 solcher bezeichnet. Er ersetzt weder unabhängiges Review noch persönliche Abnahme.
+
+## Begrenzte Laufzeitnacharbeit nach dem ersten V1-Commit
+
+`fd125bfb46c48cdc0a18c0c96cee13fe75738ad1` bestand lokal den vollständigen
+Windows-Produktharness mit 935,534 Sekunden, 16.572.315 technischen Bytes und
+41.728.975 Spielerbytes. Alle V1-Prüfungen bestanden auch in
+[CI 38050009306](https://github.com/venomenon328/picross/actions/runs/38050009306),
+Test-Merge `a479269d1dca1481427fa73b3d7ad67069301cf8` auf Basis `d7ec4e1`.
+Der CI-Produktjob `114207097577` wurde jedoch am 15-Minuten-Limit während
+`current-drawing-capture` abgebrochen: kein Spielerartefakt, `ci-required` rot.
+Das technische Fehlerartefakt `11669187693` (SHA-256
+`b61a391b6677a13e48924e298edc69c299e8e6398e8129c0f826564d96998d9d`)
+meldet den VS2-Teil erfolgreich, den Hauptlauf noch laufend; kein Gesamt-Pass.
+
+Gegenüber dem positiven S0-Lauf waren viele unveränderte Prüfphasen deutlich
+langsamer, etwa F07-finish 193 statt 129 Sekunden und Integration-401–500
+44,5 statt 27,9 Sekunden. Eine konkrete Hardwareursache ist nicht belegt.
+Die Korrektur überlappt die unabhängigen aktuellen Bild-/Pixelprüfungen im schon
+vorhandenen isolierten Worker mit Integration/Pilotprozessen. Die Pilotbilder
+bleiben ausdrücklich nach den echten Pilotabschlüssen und laden deren Saves;
+alle Futures müssen vor Export erfolgreich sein. Worker und Hauptlauf besitzen
+getrennte Projekte, Profile, Umgebungen und Berichtsschreiber. Keine gestrichene
+Prüfung, kein synthetischer Abschluss und keine erhöhten Zeit-/Bytebudgets.

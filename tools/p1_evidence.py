@@ -75,7 +75,7 @@ def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[l
                else phase.removesuffix("-render") + "-renders.json" if phase.startswith("rp6-")
                else "z2-renders.json" if phase == "current-book-capture"
                else "zs2-after.json" if phase.startswith("current-drawing-")
-               else "v1-focused.json" if phase == "current-vs2-complete" else None)
+               else "v1-focused.json" if phase in {"current-vs2-complete", "vs2-v1-focused"} else None)
     bound, phase_images, native_failures = set(), set(), set()
     for path in reports:
         try:
