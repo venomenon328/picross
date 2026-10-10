@@ -224,7 +224,12 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     def launch(label,delivered,script,marker):
         log=output/(label+".log")
         command=[str(engine),"--main-pack",str(delivered/"picross-p1.exe"),"--rendering-driver","opengl3","--audio-driver","Dummy","--script",str(ROOT/"prototypes/p1/tests"/script)]
-        result=subprocess.run(command,cwd=delivered,env=env,capture_output=True,encoding="utf-8",errors="replace",timeout=300,creationflags=subprocess.CREATE_NO_WINDOW)
+        try:
+            result=subprocess.run(command,cwd=delivered,env=env,capture_output=True,encoding="utf-8",errors="replace",timeout=300,creationflags=subprocess.CREATE_NO_WINDOW)
+        except subprocess.TimeoutExpired as error:
+            def decoded(value): return value.decode("utf-8",errors="replace") if isinstance(value,bytes) else value or ""
+            log.write_text(decoded(error.stdout)+decoded(error.stderr),encoding="utf-8",newline="\n")
+            raise
         text=result.stdout+result.stderr
         log.write_text(text,encoding="utf-8",newline="\n")
         if result.returncode or marker not in text or "ERROR:" in text:
