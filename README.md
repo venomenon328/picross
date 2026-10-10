@@ -1,5 +1,9 @@
 # picross
 
+Aktueller [VS2-V1-Zwischenstand](docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
+ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
+V2 und kombinierte Abnahme bleiben offen; Draft-PR #62, kein Release.
+
 Ein geplantes thematisch zusammenhängendes Nonogramm-Spiel für PC: kuratierte klassische und farbige Bildrätsel, ein substanzielles Angebot großer Raster und eine präzise, komfortable Bedienung. Logische Erkenntnisse und größere Projekte stehen im Mittelpunkt; ein sich füllendes illustriertes Album, Sterneprogression und freiwillige Leistungsvergleiche ergänzen das Spiel. Eine perfekte Lösung erfordert einen Durchgang ohne Fehler und ohne Undo.
 
 Unter [prototypes/p1](prototypes/p1/README.md) liegt der integrierte P1.4/G1/H1/Z2/RP-3/GP-48-Stand:

@@ -187,6 +187,7 @@ func matrix(corpus: bool) -> void:
 						check(board.view.cell_size>=1 and not board.marks.visible and board.navigation_target(board.view.viewport.get_center()).is_empty(),"undrawable geometry has no negative marks or pan escape")
 					check(is_equal_approx(app.mini.image_rect().size.x/app.mini.image_rect().size.y,float(app.session.player.width)/app.session.player.height), "proportional passive own miniature")
 					check(not app.mini.interactive and app.mini.cells == app.session.visible_cells(), "miniature exclusively own cells")
+					data.v1 = preload("res://tests/vs2_v1_cases.gd").layout(app, check)
 					records.append(data)
 					if client.x == 1920 and (mode == 0 or corpus) and ((corpus and index in [3,7,8]) or (not corpus and index in [0,6])):
 						await shot("%s-%s-%s-ui%d" % ["corpus" if corpus else "regular",app.session.definition.id,board.mode,roundi(ui*100)])

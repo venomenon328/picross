@@ -1,6 +1,10 @@
 extends "res://ui/chalkboard_board.gd"
 ## Regular full view: one selected renderer, no study lifecycle or persistence.
+const ROW_SLOT: float = 24.0 # V1-A: same font, shared tighter horizontal pitch
 const FRAME_MARGIN: float = 1.0 # half the widest (two-pixel) grid stroke
+var composition_shift: Vector2 = Vector2.ZERO
+var untranslated_occupied: Rect2
+var untranslated_grid: Rect2
 var mode: String = "G"
 var requested_cell: float = 24.0 # valid desired work step; actual cell size may be fit-limited
 var fit_ceiling: float = 24.0
@@ -44,7 +48,7 @@ func _layout() -> void:
 		max_hints.y = maxi(max_hints.y, line.size())
 	minimum_slots = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
 	reserve_slots = minimum_slots
-	book_inset = Vector2(minimum_slots) * Vector2(26, 18) * ui_scale + Vector2(6, 6)
+	book_inset = Vector2(minimum_slots) * Vector2(ROW_SLOT, 18) * ui_scale + Vector2(6, 6)
 	var frame_space: Vector2 = Vector2.ONE * 2.0 * FRAME_MARGIN
 	var available: Vector2 = size - book_inset - Vector2(6, 6) - frame_space
 	raw_fit = minf(available.x / session.player.width, available.y / session.player.height)
@@ -59,7 +63,7 @@ func _layout() -> void:
 	horizontal_budget = maxf(0.0, available.x - book_grid_size.x)
 	horizontal_used = 0.0
 	if mode == "G" and layout_valid:
-		var pitch: float = 26.0 * ui_scale
+		var pitch: float = ROW_SLOT * ui_scale
 		var offered: int = mini(max_hints.x, minimum_slots.x + floori((horizontal_budget + 0.000001) / pitch))
 		for capacity: int in range(offered, minimum_slots.x, -1):
 			if suitable_slots("row", capacity):
@@ -67,9 +71,22 @@ func _layout() -> void:
 				break
 		horizontal_used = (reserve_slots.x - minimum_slots.x) * pitch
 		book_inset.x += horizontal_used
+	composition_shift = Vector2.ZERO
 	view.configure(Rect2(book_inset, book_grid_size + frame_space), Vector2i(session.player.width, session.player.height))
 	view.center = Vector2(view.dimensions) / 2.0
 	view.reframe()
+	untranslated_grid = view.bounds()
+	untranslated_occupied = composition_envelope()
+	if layout_valid:
+		# Only the remaining space is balanced. Fit and real hint capacity are
+		# final already; never introduce slots or shrink the board for symmetry.
+		var desired: Vector2 = size / 2.0 - untranslated_occupied.get_center()
+		var room: Vector2 = (size - untranslated_occupied.end).max(Vector2.ZERO)
+		composition_shift = desired.round().max(Vector2.ZERO).min(room.floor())
+		book_inset += composition_shift
+		view.configure(Rect2(book_inset, book_grid_size + frame_space), Vector2i(session.player.width, session.player.height))
+		view.center = Vector2(view.dimensions) / 2.0
+		view.reframe()
 	layout_state = [view.cell_size, view.center, view.viewport]
 	if marks != null:
 		marks.visible = layout_valid
@@ -81,11 +98,52 @@ func _layout() -> void:
 		for line: Array in (session.definition.rows if axis == "row" else session.definition.columns):
 			for clue: Dictionary in line:
 				var box: Rect2 = glyph_box(clue_token(clue), Vector2.ZERO, fs)
-				if (box.size.y if axis == "row" else box.size.x) > view.cell_size or (box.size.x if axis == "row" else box.size.y) > (26.0 if axis == "row" else 18.0) * ui_scale:
+				if (box.size.y if axis == "row" else box.size.x) > view.cell_size or (box.size.x if axis == "row" else box.size.y) > (ROW_SLOT if axis == "row" else 18.0) * ui_scale:
 					glyph_risk = true
 	ensure_clue_steps()
 	normalize_clue_steps()
 	cancel_gesture()
+
+func shared_clue_slot_extent(axis: String, font: Font, fs: int) -> float:
+	return ROW_SLOT * ui_scale if book_layout and axis == "row" else super.shared_clue_slot_extent(axis, font, fs)
+
+func row_clue_area() -> Rect2:
+	var area: Rect2 = super.row_clue_area()
+	area.position.x += composition_shift.x
+	area.size.x -= composition_shift.x
+	return area
+
+func column_clue_area() -> Rect2:
+	var area: Rect2 = super.column_clue_area()
+	area.position.y += composition_shift.y
+	area.size.y -= composition_shift.y
+	return area
+
+func composition_envelope() -> Rect2:
+	# State-independent ink/status envelope. Complete lines use actual glyphs,
+	# never empty slots. Overflow can bring whole glyphs to the clipping edge
+	# during continuous reading, so its full travel area belongs to the block.
+	var result: Rect2 = view.bounds().grow(FRAME_MARGIN)
+	var fs: int = clue_font_size()
+	for axis: String in ["row", "column"]:
+		var lines: Array = session.definition.rows if axis == "row" else session.definition.columns
+		var capacity: int = clue_capacity(axis)
+		var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
+		for index: int in range(lines.size()):
+			var entries: Array = clue_entries(lines[index])
+			if entries.size() > capacity:
+				result = result.merge(area)
+				continue
+			var layout: Dictionary = ClueLayout.select_window(entries.size(), capacity, 0)
+			layout.slot_extent = shared_clue_slot_extent(axis, clue_font(), fs)
+			var cross: float = (view.origin.y if axis == "row" else view.origin.x) + (index + 0.5) * view.cell_size
+			for unit: Dictionary in layout.units:
+				var text: String = str(entries[int(unit.index)].text)
+				var width: float = clue_text_font(clue_font(), text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+				var along: float = clue_slot_center(axis, area, layout, int(unit.slot))
+				var baseline: Vector2 = Vector2(along-width/2.0, cross+clue_baseline_offset(fs)) if axis == "row" else Vector2(cross-width/2.0, along+clue_baseline_offset(fs))
+				result = result.merge(glyph_box(text, baseline, fs))
+	return result
 
 func set_mode(value: String) -> void:
 	value = "G" if value == "R" else value
@@ -189,7 +247,7 @@ func token_ink(text: String, axis: String, fs: int) -> Vector2:
 	return result
 
 func sequence_units(entries: Array, capacity: int, origin_slot: int, shift: float, axis: String, fs: int, low: float, high: float, ink_bound: Vector2 = Vector2(-1,-1)) -> Dictionary:
-	var pitch: float = (26.0 if axis == "row" else 18.0) * ui_scale
+	var pitch: float = (ROW_SLOT if axis == "row" else 18.0) * ui_scale
 	var origin: float = high - capacity * pitch
 	var candidates: Array[Dictionary] = []
 	if ink_bound.x < 0:
@@ -228,15 +286,17 @@ func sequence_units(entries: Array, capacity: int, origin_slot: int, shift: floa
 # Visibility changes only at these glyph/area/marker boundaries. Testing both
 # sides and each open interval proves the entire continuous drag, not samples.
 func sequence_transitions(entries: Array, capacity: int, axis: String, fs: int) -> Array[float]:
-	var pitch: float = (26.0 if axis == "row" else 18.0) * ui_scale
+	var pitch: float = (ROW_SLOT if axis == "row" else 18.0) * ui_scale
 	var high: float = capacity * pitch + 6.0
 	var maximum: float = (entries.size() - capacity + 1) * pitch
+	var start: float = 6.0 + pitch * 0.5
+	var finish: float = high - pitch * 0.5
 	var marker: Vector2 = token_ink("…", axis, fs)
 	var boundaries: Dictionary = {0.0: true, maximum: true}
 	for i: int in range(entries.size()):
 		var center: float = 6.0 + (capacity - entries.size() + i + 0.5) * pitch
 		var ink: Vector2 = token_ink(str(entries[i].text), axis, fs)
-		for boundary: float in [ink.x - center, high - ink.y - center, 6.0 + pitch * 0.5 + marker.y + ink.x - center, 6.0 + pitch * 0.5 - marker.x - ink.y - center, high - pitch * 0.5 + marker.y + ink.x - center, high - pitch * 0.5 - marker.x - ink.y - center]:
+		for boundary: float in [ink.x - center, high - ink.y - center, start + marker.y + ink.x - center, start - marker.x - ink.y - center, finish + marker.y + ink.x - center, finish - marker.x - ink.y - center]:
 			if boundary > 0.0 and boundary < maximum:
 				boundaries[boundary] = true
 	var points: Array = boundaries.keys()
@@ -250,7 +310,7 @@ func sequence_transitions(entries: Array, capacity: int, axis: String, fs: int) 
 
 func required_slots(axis: String) -> int:
 	var lines: Array = session.definition.rows if axis == "row" else session.definition.columns
-	var key: String = "%s/%s/%s" % [JSON.stringify(lines), axis, ui_scale]
+	var key: String = "%s/%s/%s/%s" % [JSON.stringify(lines), axis, ui_scale, ROW_SLOT]
 	if reserve_cache.has(key):
 		return int(reserve_cache[key])
 	var maximum: int = max_hints.x if axis == "row" else max_hints.y
@@ -264,13 +324,13 @@ func required_slots(axis: String) -> int:
 
 func suitable_slots(axis: String, capacity: int) -> bool:
 	var lines: Array = session.definition.rows if axis == "row" else session.definition.columns
-	var minimum_key: String = "%s/%s/%s" % [JSON.stringify(lines),axis,ui_scale]
+	var minimum_key: String = "%s/%s/%s/%s" % [JSON.stringify(lines),axis,ui_scale,ROW_SLOT]
 	if reserve_cache.has(minimum_key) and capacity >= int(reserve_cache[minimum_key]):
 		# Increasing capacity moves the prefix marker outward, keeps the suffix
 		# edge fixed and shortens the shift interval. Every previously whole
 		# token remains whole; a proven minimum therefore proves all supersets.
 		return true
-	var key: String = "safe/%s/%s/%s/%d" % [JSON.stringify(lines), axis, ui_scale, capacity]
+	var key: String = "safe/%s/%s/%s/%d/%s" % [JSON.stringify(lines), axis, ui_scale, capacity, ROW_SLOT]
 	if reserve_cache.has(key):
 		return bool(reserve_cache[key])
 	var suitable: bool = true
@@ -290,7 +350,7 @@ func suitable_slots(axis: String, capacity: int) -> bool:
 			for entry: Dictionary in entries:
 				ink_bound = ink_bound.max(token_ink(str(entry.text),axis,fs))
 			for shift: float in sequence_transitions(entries, capacity, axis, fs):
-				var drawn: Array = sequence_units(entries, capacity, capacity - entries.size(), shift, axis, fs, 0.0, capacity * (26.0 if axis == "row" else 18.0) * ui_scale + 6.0, ink_bound).units
+				var drawn: Array = sequence_units(entries, capacity, capacity - entries.size(), shift, axis, fs, 0.0, capacity * (ROW_SLOT if axis == "row" else 18.0) * ui_scale + 6.0, ink_bound).units
 				if drawn.filter(func(unit: Dictionary) -> bool: return unit.kind == "token").size() < mini(5, line.size()):
 					suitable = false
 					break

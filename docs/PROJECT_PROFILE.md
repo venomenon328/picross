@@ -13,7 +13,10 @@ damaligen Stand gebunden; aktuelle Produktverträge werden nicht aufgehoben.
 
 ## Aktueller regulärer Stand · VS2 (#61)
 
-Arbeitsbasis ist main `fad885344874534629365917a2ab6a8d311cd3a7`, PR #56
+**V1-Zwischenstand:** N01/N02/N04 umgesetzt; [Umsetzung und Nachweisweg](VS2_V1_IMPLEMENTATION.md). V2/N03/N05 und kombinierte Abnahme bleiben offen.
+
+Aktuelle Integrationsbasis ist main `d7ec4e1e4a29d82b6979537a33868d57732d3713`
+mit CI-Policy #63; ursprüngliche Produktbasis `fad8853`, PR #56
 einschließlich N01–N03 integriert. ZS2-M01 und GF-M01/#59 sind historisch bestanden.
 Aktueller Prüfweg gemäß CI-Policy #63; keine Veröffentlichungs- oder Mergefreigabe.
 

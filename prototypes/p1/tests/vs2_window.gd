@@ -6,9 +6,11 @@ var checks: int = 0
 var records: Array = []
 var output: String
 var measurements: Script
+var v1: Script
 
 func _initialize() -> void:
 	measurements = load(get_script().resource_path.get_base_dir().path_join("vs2_measurements.gd"))
+	v1 = load(get_script().resource_path.get_base_dir().path_join("vs2_v1_cases.gd"))
 	call_deferred("run")
 
 func check(ok: bool, label: String) -> void:
@@ -66,6 +68,7 @@ func run() -> void:
 					var board = app.board
 					var record: Dictionary = measurements.capture(board)
 					record.merge({"id":app.session.definition.id,"window_mode":window_mode,"client":[root.size.x,root.size.y],"ui_scale":ui,"dpi":DisplayServer.screen_get_dpi(),"windows_scale":DisplayServer.screen_get_scale()})
+					record.v1 = v1.layout(app,check)
 					records.append(record)
 					check(not board.layout_valid or record.grid_fit,"native full frame or explicit geometry failure")
 					check(mode == 0 or record.hidden_tokens == 0,"native V all clues")
@@ -96,6 +99,20 @@ func run() -> void:
 					check(app.session.player.cells == cells,"native PCK undo exact")
 					app._redo()
 					app._undo()
+					var stable: Rect2 = board.view.bounds()
+					for corner: Vector2i in [Vector2i.ZERO,Vector2i(board.session.player.width-1,board.session.player.height-1)]:
+						var at: Vector2 = board.global_position+board.view.cell_rect(corner).get_center()
+						mouse(at,MOUSE_BUTTON_LEFT,true)
+						mouse(at,MOUSE_BUTTON_LEFT,false)
+						check(app.session.player.cells[corner.y*board.session.player.width+corner.x] == 1,"native V1 actual shifted corner")
+						app._undo()
+						app._redo()
+						app._undo()
+						check(app.session.player.cells == cells and board.view.bounds() == stable,"native V1 exact undo/redo stable composition")
+					for i: int in range(app.palette_row.get_child_count()):
+						click(app.palette_row.get_child(i))
+						check(board.active_color == i+1 and not board.eraser,"native V1 moved palette hit")
+					board.active_color = 1
 					for tool: String in ["minus","plus","fit","work"]:
 						click(app.actions[tool])
 						check(board.view.cell_size <= board.fit_ceiling and board.mode == ("G" if mode==0 else "V"),"native toolbar bounded and preserves mode")
@@ -122,6 +139,29 @@ func run() -> void:
 						await process_frame
 						await RenderingServer.frame_post_draw
 						root.get_texture().get_image().save_png(output.path_join("vs2-window-%d-u%d-m%d.png" % [window_mode,roundi(ui*100),mode]))
+	# Real recovery state in the downloaded regular PCK, on both UI scales.
+	root.mode = Window.MODE_WINDOWED
+	root.size = Vector2i(1280,720)
+	await create_timer(0.3).timeout
+	for ui: float in [1.0,1.25]:
+		app.set_ui_scale(ui)
+		app.select_puzzle(1)
+		app._reset_selected()
+		app.open_puzzle()
+		check(app._save_current(),"native V1 recovery initial save")
+		app.board.eraser = not app.board.eraser
+		app.store.fail_step = "after_rotation"
+		check(not app._save_current() and app.work_repair_button.visible,"native V1 actual interrupted save")
+		app.store.fail_step = ""
+		for mode: int in range(2):
+			app.set_puzzle_view(mode)
+			await process_frame
+			v1.layout(app,check)
+		click(app.work_repair_button)
+		check(app.repair_dialog.visible,"native V1 moved recovery real hit")
+		app.repair_dialog.confirmed.emit()
+		app.repair_dialog.hide()
+		check(not app.work_repair_button.visible and app.store.load_slot(app.session.definition).status == "loaded","native V1 recovery restores saving")
 	if not output.is_empty():
 		FileAccess.open(output.path_join("vs2-window.json"),FileAccess.WRITE).store_string(JSON.stringify({"records":records,"checks":checks,"failures":failures,"screen":str(DisplayServer.screen_get_size()),"dpi":DisplayServer.screen_get_dpi(),"windows_scale":DisplayServer.screen_get_scale()},"\t"))
 	print("VS2_WINDOW_","OK" if failures==0 else "FAILED"," checks=",checks," failures=",failures)

@@ -14,7 +14,8 @@ ist für diesen Head und seinen damaligen Vertrag abgeschlossen, ohne B-Befund.
 Der Eigentümer hat anschließend **VS2-E1 / N01–N05 als Spezifikation freigegeben**:
 kompaktere Zeilenhinweise, ausgewogenere Platzierung, subtile Scribble-Optik und
 Miniatur/Palette weiter innerhalb des Buches; Miniaturen zeigen nur Füllungen.
-Der verbindliche Folgevertrag steht in Abschnitt 7. **Noch nicht implementiert.**
+Der verbindliche Folgevertrag steht in Abschnitt 7. **V1/N01/N02/N04 umgesetzt; V2/N03/N05 offen.**
+[Parameter, Präzisierung der Glyphenprobe und Nachweise](VS2_V1_IMPLEMENTATION.md).
 VS2-M01 hat Rückmeldung mit Änderungsbedarf, keine vollständige positive Abnahme.
 
 Bedien-/Speichergrundlage: [P1](PROTOTYPE_P1.md). Die
@@ -323,7 +324,7 @@ Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflü
 | --- | --- | --- |
 | ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; E2-Fontvergleich, E3-Auswahl Chalkboard und kompaktere 26-px-Zeilenhinweisslots. | PR #55 nach R3 integriert; kombinierte Eigentümersichtprüfung auf main erfolgreich abgeschlossen. |
 | ZS-2 | Gewählte Hinweis-/Zellsprache ohne zusätzliche Rand-UI, statische Vorschau, gerichtete Commit-Effekte und Schalter in der regulären Arbeitsansicht. | PR #56 auf `fad8853` integriert, R3 und ZS2-M01 für diesen Vorgänger bestanden. |
-| VS2-V1 | Kompakte Zeilenhinweise und ausgewogene Flächenaufteilung einschließlich Miniatur-/Palettenposition. | VS2-E1/N01/N02/N04 spezifiziert; noch nicht implementiert, vorhandener PR #62. |
+| VS2-V1 | Kompakte Zeilenhinweise und ausgewogene Flächenaufteilung einschließlich Miniatur-/Palettenposition. | VS2-E1/N01/N02/N04 umgesetzt; V1-Zwischenstand in PR #62, kombinierte Abnahme offen. |
 | VS2-V2 | Subtile Scribble-Linien, Miniatur/Palette und reine Füllminiatur. | VS2-E1/N03/N05 spezifiziert; auf der V1-Geometrie, gemeinsame Nachprüfung vor Merge. |
 | Z3/#24 | Längere reale Spielerprobung der integrierten neuen Fassung und Abschluss der Designphase. | Nach der integrierten Zielansicht; ersetzt keine davor erforderlichen technischen oder gezielten manuellen Gates. |
 

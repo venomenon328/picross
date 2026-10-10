@@ -807,7 +807,10 @@ func _layout_book() -> void:
 	_place(board,Rect2(o+Vector2(left,top),Vector2(rail-left-24*u,bottom-top-10*u)))
 	board._layout()
 	var mini_extent: float = (100.0 if (bottom-rail_top)/u < 600 else 132.0)*u
-	var mini_position: Vector2 = o+Vector2(rail+12*u,rail_top+30*u)
+	# V1: move the existing group and every dependent mount/control together.
+	# Limit the downward shift by the lowest label on compact/UI125 surfaces.
+	var group_down: float = minf(24*u, maxf(0.0, h-28*u-(rail_top+30*u+mini_extent+334*u)))
+	var mini_position: Vector2 = o+Vector2(rail-4*u,rail_top+30*u+group_down)
 	_place(mini,Rect2(mini_position,Vector2.ONE*mini_extent))
 	_place(mini_title,Rect2(mini_position-Vector2(0,26*u),Vector2(180,24)*u))
 	_place(coordinate,Rect2(mini_position+Vector2(0,mini_extent+14*u),Vector2(190,44)*u))
@@ -851,7 +854,8 @@ func _layout_book() -> void:
 			item.queue_redraw()
 	# Local error card stays reachable on a blocked work->information transition.
 	_place(status_label,Rect2(o+Vector2(180,h-104 if information.visible else 85),Vector2(w-660 if information.visible else w-550,70*u)))
-	_place(work_repair_button,Rect2(o+Vector2(w-430,h-(80 if information.visible else 170)*u),Vector2(340*u,hit)))
+	var repair_position: Vector2 = o+Vector2(w-430,h-80*u) if information.visible else o+Vector2(180,85+78*u)
+	_place(work_repair_button,Rect2(repair_position,Vector2(340*u,hit)))
 	surface.card = Rect2(mini_position-Vector2(10,34),Vector2(mini_extent+20,mini_extent+44))
 	surface.miniature = mini.get_rect()
 	surface.palette = Rect2(palette_pos-Vector2(6,6),Vector2(56,56)*u if session.definition.palette.size()==1 else Vector2(110,110)*u)

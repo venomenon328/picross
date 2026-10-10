@@ -36,12 +36,31 @@ def capture_current(project, workspace, output, engine, render_command, environm
     finally:
         environment.pop("VS2_CAPTURE_DIR", None)
     report = verify(renders)
+    focused_dir = output / "v1-renders"
+    focused_dir.mkdir()
+    environment["VS2_V1_CAPTURE_DIR"] = str(focused_dir)
+    try:
+        phase("vs2-v1-focused", ["res://tests/vs2_v1_tests.gd" if part == "res://tests/capture.gd" else part
+                                for part in render_command], "VS2_V1_OK")
+    finally:
+        environment.pop("VS2_V1_CAPTURE_DIR", None)
+    focused = json.loads((focused_dir / "v1-focused.json").read_text(encoding="utf-8"))
+    import vs2_v1_verify
+    v1 = vs2_v1_verify.verify(report, focused)
+    for picture in focused["pictures"] + focused["glyphs"]:
+        if Path(picture["file"]).name != picture["file"]:
+            raise toolchain.PreflightError("Unsafe V1 image path")
+        toolchain.verify_sha256(focused_dir/picture["file"], picture["sha256"])
+    (focused_dir / "v1-acceptance.json").write_text(json.dumps(v1,indent=2)+"\n",encoding="utf-8")
     selected = [renders / "vs2-matrix.json", output / "vs2-write.json", output / "vs2-read.json",
-                renders / "regular-F-01-G-ui100.png", renders / "corpus-VS08-G-ui125.png"]
+                focused_dir / "v1-focused.json", focused_dir / "v1-acceptance.json"]
+    selected += [focused_dir / name for name in ("v1-F-01-fit.png", "v1-F-01-work.png", "v1-VS09-work.png", "v1-VS08-fit.png", "v1-VS04-fit.png", "v1-recovery-1280-ui125.png")]
+    selected += [focused_dir / g["file"] for g in focused["glyphs"]]
     return dict(records=len(report["records"]), failures=report["failures"],
-                rendered=len(report["pictures"]), retained_picture_candidates=2,
+                rendered=len(report["pictures"]), v1=v1,
                 historical_comparison="not run; CI policy #63",
                 legacy_reader="separate downloaded Windows old-writer/new-reader probe"), selected
+
 
 def reference_project(root: Path, workspace: Path) -> Path:
     target = workspace / "vs2-zs2-reference"

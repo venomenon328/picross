@@ -70,11 +70,12 @@ def png_references(value) -> set[str]:
 
 def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[list[Path], list[Path]]:
     """Rebuild partial evidence selection when run_visual did not return."""
-    reports = sorted(output.glob("renders/*.json")) + sorted(output.glob("drawing-renders/*.json"))
+    reports = sorted(output.glob("renders/*.json")) + sorted(output.glob("drawing-renders/*.json")) + sorted(output.glob("vs2-renders/*.json")) + sorted(output.glob("v1-renders/*.json"))
     primary = ("render-report-" + phase[len("render-"):] + ".json" if phase.startswith("render-")
                else phase.removesuffix("-render") + "-renders.json" if phase.startswith("rp6-")
                else "z2-renders.json" if phase == "current-book-capture"
-               else "zs2-after.json" if phase.startswith("current-drawing-") else None)
+               else "zs2-after.json" if phase.startswith("current-drawing-")
+               else "v1-focused.json" if phase == "current-vs2-complete" else None)
     bound, phase_images, native_failures = set(), set(), set()
     for path in reports:
         try:
@@ -199,7 +200,7 @@ class Evidence:
             if path.suffix == ".png":
                 image_bytes += size
             selected.append(dict(file=str(relative), bytes=size, sha256=toolchain.sha256_file(path),
-                                 failure_priority=path in priority))
+                                 failure_priority=path in priority, priority=path in priority))
         self.report["selected_evidence"] = dict(files=selected, omitted=omitted,
                                                  image_bytes=image_bytes, image_limit=IMAGE_LIMIT)
         self.flush()

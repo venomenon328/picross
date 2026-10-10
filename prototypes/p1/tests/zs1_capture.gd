@@ -190,7 +190,9 @@ func font_metrics() -> Dictionary:
 			check(axis_widths[0] <= rows and axis_widths[1] <= board.view.cell_size, "actual clue widths fit their own axis: %s / slots %s,%s" % [axis_widths,rows,board.view.cell_size])
 		check(extents.x + extents.y <= columns, "glyphs including markers fit column slot height")
 	if not baseline and variant == 2:
-		check(is_equal_approx(rows, 26.0 * app.ui_scale), "Chalkboard row slot is owner-selected compact spacing")
+		# The frozen study/component remains 26; regular V1 intentionally uses 24.
+		var expected_row: float = 24.0 if board.has_method("composition_envelope") else 26.0
+		check(is_equal_approx(rows, expected_row * app.ui_scale), "selected study or regular V1 row pitch")
 		check(is_equal_approx(columns, 18.0 * app.ui_scale), "column slot spacing remains unchanged")
 	return {"font_size": fs, "max_actual_token_width": width, "row_slot": rows, "column_slot": columns,
 		"axis_widths": axis_widths, "ink_above_center": extents.x, "ink_below_center": extents.y, "ascent": font.get_ascent(fs), "descent": font.get_descent(fs)}

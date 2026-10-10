@@ -2,6 +2,8 @@
 
 ## Aktueller regulärer Stand · VS2 (#61)
 
+**V1-Zwischenstand:** N01/N02/N04 umgesetzt; [Umsetzung und Nachweisweg](VS2_V1_IMPLEMENTATION.md). V2/N03/N05 und kombinierte Abnahme bleiben offen.
+
 Die A-Buchkomposition übernimmt reguläre Vollsicht mit achsengetrennten Reserven
 und GF1-Zusatzbreite. Acht Werkzeuge statt Hand; passive Miniatur. Keine zusätzliche
 Studiensteuerung oder Messanzeige im Arbeitsbild.

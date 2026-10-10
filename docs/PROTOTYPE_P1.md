@@ -2,6 +2,8 @@
 
 ## Aktueller regulärer Stand · VS2 (#61)
 
+**V1-Zwischenstand:** N01/N02/N04 umgesetzt; [Umsetzung und Nachweisweg](VS2_V1_IMPLEMENTATION.md). V2/N03/N05 und kombinierte Abnahme bleiben offen.
+
 Der reguläre Start öffnet die Sammlung, auch mit Teil- oder Abschlussständen.
 Einstellungen sind dort ohne Rätselöffnung erreichbar. **Rätselansicht** bietet
 **Rasteransicht** (Sitzungsdefault) und **Gesamtansicht mit allen Hinweisen**.

@@ -9,8 +9,9 @@ Die neue CI-Policy ist ausdrücklich übernommen. Der separate V1-Plan ist
 vor Layoutarbeit in `06f695f` versioniert. Noch keine V1-Abnahme.
 
 Auftrag: [#61](https://github.com/venomenon328/picross/issues/61), VS2-01–07 und
-VS2-A01–A10, jetzt ergänzt um die **noch nicht implementierte** VS2-E1-Nacharbeit
-N01–N05 / VS2-NA01–NA05. Arbeitsbranch `feat/61-regular-full-view`, Draft-PR #62.
+VS2-A01–A10, jetzt ergänzt um die teilweise umgesetzte VS2-E1-Nacharbeit
+N01–N05 / VS2-NA01–NA05. [V1/N01/N02/N04](VS2_V1_IMPLEMENTATION.md) ist
+umgesetzt; V2 und kombinierte Abnahme bleiben offen. Arbeitsbranch `feat/61-regular-full-view`, Draft-PR #62.
 Erstlieferhead `2c332ad688315bfa851f7c0d8642d2ab4ac3709c`, tatsächliche Basis
 `fad885344874534629365917a2ab6a8d311cd3a7`.
 Der [vor den Erstvergleichen gebundene Plan](../examples/vs2/plan.json) wurde auf
@@ -68,7 +69,7 @@ abgeschlossenen VS-Korpusproduktion und kein Umschreiben alter Manifeste.
 
 | Akzeptanz | Später nachzuweisender Erfolg / Gegencheck |
 | --- | --- |
-| VS2-NA01 | Horizontaler Zeilenpitch gegenüber 26 × UI sichtbar enger bei gleichem Fontmaßstab; vertikal weiterhin 18 × UI. Reale 1/11/17/40/100, C1/AA, drei Zustände und Marker bleiben vollständig, kollisionsfrei und in gemeinsamen Slots. Rasteransicht min(5,n) auch über kontinuierliche Übergänge; Gesamtansicht alle Hinweise; Snap, monotone Bewegung und Leseanker erhalten. |
+| VS2-NA01 | Horizontaler Zeilenpitch gegenüber 26 × UI sichtbar enger bei gleichem Fontmaßstab; vertikal weiterhin 18 × UI. Reale 1/11/17/40 (Eigentümerpräzisierung: 100 entfällt als V1-Abnahmefall), C1/AA, drei Zustände und Marker bleiben vollständig, kollisionsfrei und in gemeinsamen Slots. Rasteransicht min(5,n) auch über kontinuierliche Übergänge; Gesamtansicht alle Hinweise; Snap, monotone Bewegung und Leseanker erhalten. |
 | VS2-NA02 | F-01 und geeigneter VS09-Breitenfall nutzen verbleibenden Raum für ausgewogenere Position des ganzen Raster-/Hinweisblocks. Vorher-/Nachherrechtecke und freie Randbudgets belegen die Verschiebung. VS08/VS04 plus knapper Fall sichern die GF1-Kapazität und unveränderten Lesemaßstab; Zentrierung erzeugt keine Leer-Slots, weitere Fitverkleinerung, fehlenden Zahlen oder instabile Rückkopplung. Reale Ecken-/Hinweis-/Gestentreffer folgen dem gemeinsamen Versatz. |
 | VS2-NA03 | Native 1:1-Bilder von Raster, Miniaturfassung und Palette zeigen subtile Scribble-Wirkung. Stabile identitätsgebundene Striche über Neuzeichnen/Seiten/Neustart; kleine Zellen, Fünferkreuzungen, dunkle Füllungen und vier volle Rahmenkanten lesbar. Tatsächlicher Strich-/AA-Umfang passt, logische Zellen/Hit-Tests bleiben unverändert. ZS2-Timing, Vorschau und Gegentastenabbruch bleiben. |
 | VS2-NA04 | Miniatur/Palette mit Fassung/Beschriftung in großzügiger Referenz etwas nach unten/links, sichtbar Abstand zum Buchrand. Vier Flächen, UI100/125, beide Ansichten und Save-/Recoverymeldung ohne Überdeckung; sichere Hitflächen und Rückwege. Keine bloße Verkleinerung als Ersatz. |
@@ -128,16 +129,18 @@ bindet auch den externen Diagnosehelfer `tests/vs2_measurements.gd`; dieser wird
 zusammen mit sämtlichen Testskripten vom regulären Export ausgeschlossen. Die
 PCK-Probe prüft zusätzlich das Fehlen der alten Diagnosemethode im regulären Board.
 SHA-256 bindet GitHub-Artefakt, inneres ZIP, EXE-Paar, eingebettetes PCK, Prüfscripte und Bilder.
-Die spätere E1-Lieferung ergänzt dieselbe tatsächliche PCK-Probe um N01–N05;
+V1 ergänzt dieselbe tatsächliche PCK-Probe um N01/N02/N04; V2/N03/N05 bleibt offen;
 ein Quellskripttest allein belegt die ausgelieferte neue Darstellung nicht.
 
 Die automatisierte Mausereignisprobe ersetzt weder persönliche Bedienabnahme noch Review.
 Geometrische Passung bei kleinen oder kollidierenden Glyphen ist kein Komforturteil;
 Matrixberichte führen Einschränkungen sichtbar, einschließlich vorhandener Großfälle.
-Die sechs Pflichtjobs bleiben `docs`, `product`, `preflight`, `puzzle-production`,
-`rp4-windows` und `rp5-repair`. Alte grüne Läufe sind keine neuen E1-Nachweise.
+Die übernommene [CI-Policy #63](CI_POLICY.md) verlangt Änderungsauswahl und
+`ci-required`. Für diesen breiten PR sind alle sechs Fachjobs gewählt: `docs`,
+`product`, `preflight`, `puzzle-production`, `rp4-windows`, `rp5-repair`.
+Alte grüne Läufe sind keine neuen E1-Nachweise.
 
-**Offen vor Merge:** N01–N05 beider Teilpakete, aktuelle technische Nachweise,
+**Offen vor Merge:** V2/N03/N05 und kombinierte aktuelle technische Nachweise,
 unabhängiges technisches/visuelles Review des neuen kombinierten Heads, positive
 VS2-M01 am regulären heruntergeladenen Windows-Paket und passende ausdrückliche
 oder bedingte Mergefreigabe. Das ursprüngliche R1 bleibt historisch abgeschlossen.

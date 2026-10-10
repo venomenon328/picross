@@ -58,7 +58,7 @@ func probe_row(index: int, all_states: bool = false) -> void:
 			check(str(entries[int(token.index)].text) == board.clue_token(original) and Color(entries[int(token.index)].color) == board.clue_color(original), "original indices numbers and colors unchanged")
 			if i > 0: check(int(token.index) == int(tokens[i-1].index)+1, "complete contiguous numbers")
 			var ink: Vector2 = board.token_ink(str(entries[int(token.index)].text), "row", board.clue_font_size())
-			check(token.center-ink.x >= 0 and token.center+ink.y <= board.row_clue_area().end.x, "whole ink C1 and strike fit")
+			check(token.center-ink.x >= board.row_clue_area().position.x and token.center+ink.y <= board.row_clue_area().end.x, "whole ink C1 and strike fit")
 			for marker: Dictionary in visual.units:
 				if marker.kind == "token": continue
 				var mark: Vector2 = board.token_ink("…", "row", board.clue_font_size())
@@ -89,7 +89,7 @@ func run() -> void:
 				if data.rows[i].size() > data.rows[index].size(): index = i
 			for added: int in range(0,board.max_hints.x-minimum.x+2):
 				for delta: float in [-0.01,0.0,0.01]:
-					board.size.x = minimum.x*26*ui+14+data.width*12+added*26*ui+delta
+					board.size.x = minimum.x*24*ui+14+data.width*12+added*24*ui+delta
 					board._layout()
 					var expected: int = mini(board.max_hints.x,minimum.x+maxi(0,added-(1 if delta < 0 else 0)))
 					check(board.reserve_slots.x == expected, "only whole fitting slots; no demand padding")

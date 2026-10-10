@@ -1,5 +1,9 @@
 # P1 · Integrierte Windows-Spielprobe
 
+Aktueller [VS2-V1-Zwischenstand](../../docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
+ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
+V2 und kombinierte Abnahme bleiben offen; Draft-PR #62, kein Release.
+
 VS2 / [#61](https://github.com/venomenon328/picross/issues/61) startet regulär in der
 Sammlung. Erst die Auswahl öffnet ein Blatt; Einstellungen sind auch aus der
 Sammlung erreichbar. Unter **Rätselansicht** stehen **Rasteransicht** und
