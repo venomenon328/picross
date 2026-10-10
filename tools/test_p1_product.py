@@ -134,12 +134,12 @@ class ProductHarnessTests(unittest.TestCase):
     def test_project_name_is_exact_utf8_without_mojibake(self):
         project = Path(__file__).resolve().parents[1] / "prototypes/p1/project.godot"
         self.assertEqual(project_name(project), EXPECTED_PROJECT_NAME)
-        self.assertNotIn("Ã‚", project.read_text(encoding="utf-8"))
+        self.assertNotIn("Â", project.read_text(encoding="utf-8"))
 
     def test_wrong_project_name_fails(self):
         with tempfile.TemporaryDirectory() as temporary:
             project = Path(temporary) / "project.godot"
-            project.write_text('[application]\nconfig/name="picross Ã‚Â· P1"\n', encoding="utf-8")
+            project.write_text('[application]\nconfig/name="picross Â· P1"\n', encoding="utf-8")
             with self.assertRaises(PreflightError):
                 project_name(project)
 

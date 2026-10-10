@@ -102,7 +102,7 @@ class DeliveryTests(unittest.TestCase):
         project=(ROOT/'prototypes/p1/project.godot').read_text(encoding='utf-8')
         preset=(ROOT/'prototypes/p1/export_presets.cfg').read_text(encoding='utf-8')
         self.assertIn('run/main_scene="res://main.tscn"',project)
-        self.assertIn('config/name="picross Â· P1"',project)
+        self.assertIn('config/name="picross · P1"',project)
         self.assertIn('exclude_filter="tests/*,data/*proof*,study/*,full_view_study/*"',preset)
         harness=(ROOT/'tools/p1_product.py').read_text(encoding='utf-8')
         # The archived study stays separate from the current CI product path.
