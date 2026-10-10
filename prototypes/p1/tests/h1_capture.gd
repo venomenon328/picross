@@ -158,7 +158,7 @@ static func run(c: SceneTree, app: Main) -> void:
 			await pair(c, app, "h1-f%d-%dx%d-ui%d-zoom%d" % [fixture + 1, dims.x, dims.y, roundi(scale * 100), roundi(pitch / 24 * 100)])
 		c.surface.size = Vector2i(1920, 1080)
 		app.set_ui_scale(1.0)
-		app.board.working_size()
+		app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 		await c.process_frame
 		if fixture == 2:
 			var partial: Array[int] = values.duplicate()

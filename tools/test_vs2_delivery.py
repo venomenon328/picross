@@ -72,9 +72,11 @@ class DeliveryTests(unittest.TestCase):
         with self.assertRaises(ValueError): embedded_pack(executable)
 
     def test_v3_rejects_duplicate_case_failed_assertion_and_changed_picture(self):
-        names = ["v3-tight-rail.png", "v3-F01-work.png", "v3-F02-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
+        names = ['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'] + ["v3-tight-rail.png", "v3-F01-work.png", "v3-F02-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
         for name in names: (self.root/name).write_bytes(b"native-binding")
         report = dict(checks=1000, failures=0,
+                      sidebar_assets=json.loads((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8")),
+                      frame_pixels=[dict(changed_pixels=101) for _ in range(3)],
                       records=[dict(id=s, client=[w,h], ui=u, mode=m, fit=f)
                                for s in ("F-01","F-02","F-08") for w,h in ((1280,720),(1600,900),(1920,1080),(2560,1440))
                                for u in (1.0,1.25) for m in ("G","V") for f in (False,True)],
@@ -83,6 +85,12 @@ class DeliveryTests(unittest.TestCase):
             (self.root/"v3-report.json").write_text(json.dumps(report),encoding="utf-8")
             return vs2_delivery.verify_v3(self.root)
         self.assertEqual(len(verify()["records"]),96)
+        report["frame_pixels"][0]["changed_pixels"] = 0
+        with self.assertRaises(PreflightError): verify()
+        report["frame_pixels"][0]["changed_pixels"] = 101
+        report["sidebar_assets"]["source"] = "wrong asset source"
+        with self.assertRaises(PreflightError): verify()
+        report["sidebar_assets"]=json.loads((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8"))
         original = report["records"][-1]
         report["records"][-1] = report["records"][0]
         with self.assertRaises(PreflightError): verify()

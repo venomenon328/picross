@@ -44,9 +44,7 @@ def record(r):
             require(close(shift[axis],expected), 'balance actual occupied envelope')
     require(close(r['rows'][0],shift[0]) and close(r['columns'][1],shift[1]), 'hint hits translated')
     require(close(r['rows'][1],grid[1]) and close(r['columns'][0],grid[0]), 'hint cross axes translated')
-    require(close(r['group_delta'][0],-16*ui) and 0 <= r['group_delta'][1] <= 24*ui+.01, 'group displacement')
-    if r['client'][0] >= 1920 and r['client'][1] >= 1080:
-        require(close(r['group_delta'][1],24*ui), 'generous group displacement')
+    require(all(close(v,0) for v in r['group_delta']), 'SL aligned visible frames')
 
 
 def verify(matrix, focused):
@@ -67,7 +65,7 @@ def verify(matrix, focused):
         'old left placement': lambda r: r.update(translation=[0,0]),
         'empty reserve padding': lambda r: r.update(reserve=[r['max_hints'][0]+1,r['reserve'][1]]),
         'grid-only translation': lambda r: r.update(rows=[0,*r['rows'][1:]],columns=[r['columns'][0],0,*r['columns'][2:]]),
-        'old group placement': lambda r: r.update(group_delta=[0,0]),
+        'old group placement': lambda r: r.update(group_delta=[16,0]),
     }
     rejected=[]
     for name, mutate in mutations.items():

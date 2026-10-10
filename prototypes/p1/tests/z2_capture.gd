@@ -86,7 +86,7 @@ func run() -> void:
 	app._repair_selected()
 	app.select_puzzle(0)
 	# Real gestures commit the remaining correct cells, triggering normal completion.
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 	for y: int in range(20):
 		for x: int in range(20):
 			var desired: int = int(app.session.definition.solution[y][x])

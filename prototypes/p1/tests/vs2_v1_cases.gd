@@ -43,7 +43,7 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 	# Inner paper measured from the unchanged A background, excluding wood/fold.
 	var inner: Rect2 = Rect2(paper.position+paper.size*Vector2(0.03125,0.034),paper.size*Vector2(0.93125,0.933))
 	var boxes: Array[Rect2] = [app.surface.card.grow(2),app.mini.get_global_rect().grow(1),app.surface.palette.grow(2)]
-	for label: Label in [app.mini_title,app.coordinate]:
+	for label: Label in [app.coordinate]:
 		if label.is_visible_in_tree() and not label.text.is_empty(): boxes.append(label_ink(label))
 	# V3 moves conditional warnings below the board, outside the mini group.
 	for label: Label in [app.layout_warning,app.stress_label]:
@@ -70,11 +70,9 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 	if app.work_repair_button.is_visible_in_tree():
 		check.call(not app.work_repair_button.get_global_rect().intersects(app.board.get_global_rect()),"V1 recovery action clear of board")
 		check.call(app.work_repair_button.size.y >= 44*u,"V1 recovery minimum hit size")
-	var old_mini: Vector2 = paper.position+Vector2(paper.size.x-248*u,maxf(paper.size.y*0.039+51*u,82*u)+30*u)
-	var group_delta: Vector2 = app.mini.global_position-old_mini
-	check.call(is_equal_approx(group_delta.x,-16*u) and group_delta.y >= 0 and group_delta.y <= 24*u+0.01,"V1 bounded whole-group movement")
-	if paper.size.x >= 1920 and paper.size.y >= 1080:
-		check.call(is_equal_approx(group_delta.y,24*u),"V1 generous group moves down")
+	var axis: float = app.surface.card.get_center().x
+	var group_delta: Vector2 = Vector2(app.surface.palette.get_center().x-axis,app.surface.wells[0].get_center().x-axis)
+	check.call(group_delta.length()<0.05,"SL visible frame centers align")
 	return {"id":app.session.definition.id,"client":[app.size.x,app.size.y],"ui_scale":u,"mode":b.mode,"overview":b.overview,
 		"safe":rect_values(b.get_global_rect()),"occupied":rect_values(occupied),"translation":[shift.x,shift.y],
 		"grid":rect_values(grid),"rows":rect_values(rows),"columns":rect_values(columns),

@@ -341,7 +341,7 @@ static func app_cases(t: SceneTree) -> void:
 	var y: int = 0
 	while app.session.definition.rows[y].is_empty():
 		y += 1
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 	for x: int in range(20):
 		if int(app.session.definition.solution[y][x]) > 0:
 			stroke(t, app.board, Vector2i(x, y), Vector2i(x, y))

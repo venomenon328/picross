@@ -85,6 +85,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     finally:
         environment.pop("VS2_V3_CAPTURE_DIR", None)
     v3 = verify_v3(v3_dir)
+    v3["sidebar_plan_sha256"] = toolchain.sha256_file(Path(__file__).resolve().parents[1] / "examples/vs2/sl65-plan.json")
     v3["plan_sha256"] = toolchain.sha256_file(Path(__file__).resolve().parents[1] / "examples/vs2/v3-plan.json")
     v3["font_sha256"] = toolchain.sha256_file(font)
     selected += list(v3_dir.glob("*.json")) + [v3_dir / p["file"] for p in v3["pictures"]]
@@ -103,6 +104,10 @@ def verify_v3(directory: Path) -> dict:
     if report["failures"] or len(report["records"]) != 96 or actual_cases != expected_cases or report["checks"] < 1000:
         raise toolchain.PreflightError("Incomplete/failed V3 native coverage")
     expected = {"v3-tight-rail.png", "v3-F01-work.png", "v3-F02-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"}
+    expected.update(['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'])
+    metadata = json.loads((Path(__file__).resolve().parents[1] / "prototypes/p1/art/book/frames.json").read_text(encoding="utf-8"))
+    if report.get("sidebar_assets") != metadata or len(report.get("frame_pixels", [])) != 3 or any(p["changed_pixels"] <= 100 for p in report["frame_pixels"]):
+        raise toolchain.PreflightError("Missing/mismatched SL frame resources or actual render usage")
     if {p["file"] for p in report["pictures"]} != expected or len(report["pictures"]) != len(expected):
         raise toolchain.PreflightError("Missing V3 targeted native pictures")
     for picture in report["pictures"]:
