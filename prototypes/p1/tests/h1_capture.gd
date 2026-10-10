@@ -3,8 +3,8 @@ const Main = preload("res://ui/main.gd")
 
 static func require(c: SceneTree, condition: bool, message: String) -> void:
 	if not condition:
-		push_error("H1_RENDER: " + message)
-		c.quit(5)
+		c.fail_capture("H1_RENDER: " + message)
+		return
 	c.pixel_checks += 1
 
 static func changed_pixels(a: Image, b: Image, rect: Rect2) -> int:
@@ -39,12 +39,10 @@ static func token_ink_rect(font: Font, text: String, fs: int, baseline: Vector2)
 static func pair(c: SceneTree, app: Main, name: String) -> void:
 	var view_before: Dictionary = app.board.capture_view()
 	app.set_clue_completion(false)
-	await c.snapshot(app, name + "-off")
-	var off: Image = c.surface.get_texture().get_image()
+	var off: Image = await c.snapshot(app, name + "-off")
 	var searches: int = app.board.completion_searches
 	app.set_clue_completion(true)
-	await c.snapshot(app, name + "-on")
-	var on: Image = c.surface.get_texture().get_image()
+	var on: Image = await c.snapshot(app, name + "-on")
 	require(c, app.board.capture_view() == view_before and app.board.completion_searches == searches, name + " toggle keeps reads and cache")
 	# Bind pixel regions to the selected clue face, punctuation and baseline.
 	# The independent off/on pixel oracle and unchanged-grid checks stay intact.
@@ -110,7 +108,24 @@ static func pair(c: SceneTree, app: Main, name: String) -> void:
 			cursor.x += width + 9 * app.ui_scale
 	require(c, same_region(off, on, app.mini.get_global_rect()), name + " miniature unchanged")
 	require(c, marked.row > 0 and marked.column > 0, name + " both axes drawn with marks")
-	c.captures[-1]["h1_pair"] = {"off": name + "-off.png", "marked_tokens": marked, "colors": colors.keys(), "searches_on_toggle": app.board.completion_searches - searches}
+	c.frames[-1]["h1_pair"] = {"off_frame": name + "-off", "marked_tokens": marked, "colors": colors.keys(), "searches_on_toggle": app.board.completion_searches - searches}
+
+static func configurations(compact: bool) -> Array:
+	if compact:
+		# Preserve minimum-window/UI125 and the current 1080p target, both
+		# faces of the clue-size boundary, and the smallest readable pitch.
+		return [
+			{"size": Vector2i(1280, 720), "scale": 1.25, "pitch": 12.0},
+			{"size": Vector2i(1920, 1080), "scale": 1.0, "pitch": 18.0},
+			{"size": Vector2i(1920, 1080), "scale": 1.25, "pitch": 22.0},
+			{"size": Vector2i(1920, 1080), "scale": 1.0, "pitch": 24.0},
+		]
+	var result: Array = []
+	for dims: Vector2i in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
+		for scale: float in [1.0, 1.25]:
+			for pitch: float in [12.0, 18.0, 22.0, 24.0]:
+				result.append({"size": dims, "scale": scale, "pitch": pitch})
+	return result
 
 static func run(c: SceneTree, app: Main) -> void:
 	for fixture: int in [1, 2]:
@@ -127,19 +142,20 @@ static func run(c: SceneTree, app: Main) -> void:
 		c.replace_render_cells(app, values)
 		app.open_puzzle()
 		app.board.clear_pointer_hover()
-		for dims: Vector2i in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
+		for configuration: Dictionary in configurations(c.compact):
+			var dims: Vector2i = configuration.size
+			var scale: float = configuration.scale
+			var pitch: float = configuration.pitch
 			c.surface.size = dims
-			for scale: float in [1.0, 1.25]:
-				app.set_ui_scale(scale)
-				await c.process_frame
-				for pitch: float in [12.0, 18.0, 22.0, 24.0]:
-					app.board.view.zoom_to(pitch, app.board.view.viewport.get_center())
-					app.board.normalize_clue_steps()
-					for axis: String in ["row", "column"]:
-						var lines: Array = app.session.definition.rows if axis == "row" else app.session.definition.columns
-						for i: int in range(lines.size()):
-							c.set_fractional_step(app, axis, i, float(i % 3) / 2.0)
-					await pair(c, app, "h1-f%d-%dx%d-ui%d-zoom%d" % [fixture + 1, dims.x, dims.y, roundi(scale * 100), roundi(pitch / 24 * 100)])
+			app.set_ui_scale(scale)
+			await c.process_frame
+			app.board.view.zoom_to(pitch, app.board.view.viewport.get_center())
+			app.board.normalize_clue_steps()
+			for axis: String in ["row", "column"]:
+				var lines: Array = app.session.definition.rows if axis == "row" else app.session.definition.columns
+				for i: int in range(lines.size()):
+					c.set_fractional_step(app, axis, i, float(i % 3) / 2.0)
+			await pair(c, app, "h1-f%d-%dx%d-ui%d-zoom%d" % [fixture + 1, dims.x, dims.y, roundi(scale * 100), roundi(pitch / 24 * 100)])
 		c.surface.size = Vector2i(1920, 1080)
 		app.set_ui_scale(1.0)
 		app.board.working_size()

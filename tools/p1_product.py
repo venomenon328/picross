@@ -1,38 +1,34 @@
 #!/usr/bin/env python3
-"""Build/test/export P1 using the verified P1.0 toolchain in a temporary profile."""
+"""Verify the current P1 product with bounded, change-selected CI evidence."""
 from __future__ import annotations
 
 import argparse
 import json
 import os
 import platform
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
 import time
+import traceback
 import zipfile
 from pathlib import Path
 
-# Module invocation and direct script invocation share the repository package.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from tools.puzzle_production.rp3_demo import demonstrate as demonstrate_rp3
 
 import p1_preflight as toolchain
 import p14_integration
 import z2_resources
-import z2_review
-import rp6_review
-import gp48_review
 import gp48_delivery
-import zv50_review
-import zs1_delivery
-import zs2_delivery
-import vs1_delivery
+import p1_current_visual
+from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
 
 EXPECTED_PROJECT_NAME = "picross · P1"
+RENDER_STAGES = ("layout", "views", "cells-f1", "cells-f2", "gestures", "hints", "axis", "h1")
 
 
 def project_name(project_file: Path) -> str:
@@ -52,16 +48,27 @@ def require_clean_output(result: dict, marker: str | None = None) -> None:
 
 
 def run_phase(name: str, command: list[str], environment: dict, timeout: int, logs: Path) -> dict:
+    """Write live diagnostic output even if the runner is cancelled mid-phase."""
     print(f"RUN {name}", flush=True)
     started = time.monotonic()
-    try:
-        process = subprocess.run(command, env=environment, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout, check=False)
-    except subprocess.TimeoutExpired as exc:
-        raise toolchain.PreflightError(f"{name} exceeded {timeout}s") from exc
-    output = process.stdout + process.stderr
-    (logs / f"{name}.log").write_text(output, encoding="utf-8")
-    print(output, flush=True)
-    return dict(name=name, exit_code=process.returncode, output=output, seconds=time.monotonic()-started)
+    path = logs / f"{name}.log"
+    timed_out = False
+    with path.open("wb") as stream:
+        try:
+            process = subprocess.run(command, env=environment, stdout=stream,
+                                     stderr=subprocess.STDOUT, timeout=timeout, check=False)
+            exit_code = process.returncode
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            exit_code = None
+            stream.write(f"\n{name} exceeded {timeout}s\n".encode())
+    output = path.read_bytes().decode("utf-8", errors="replace")
+    print(output[-4000:], flush=True)
+    if len(output) > 4000:
+        print(f"[{name}: console tail only; diagnostic log retained separately]", flush=True)
+    return dict(name=name, exit_code=exit_code, output=output,
+                seconds=round(time.monotonic() - started, 3), timed_out=timed_out,
+                log=bound_log(path))
 
 
 def package(build: Path, output: Path, manifest: dict, readme: str, extras: dict[str, Path] | None = None) -> Path:
@@ -85,287 +92,355 @@ def package(build: Path, output: Path, manifest: dict, readme: str, extras: dict
     return archive
 
 
-def main() -> int:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cache-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--process-timeout-seconds", type=int, default=300)
     parser.add_argument("--download-timeout-seconds", type=int, default=1200)
-    args = parser.parse_args()
+    for name, description in (
+        ("integration", "500 actions and the independent cross-process restart oracle"),
+        ("pilots", "all six pilot playthroughs across real processes"),
+        ("visual", "current compact native pixel and animation checks"),
+    ):
+        parser.add_argument("--" + name, action=argparse.BooleanOptionalAction, default=True,
+                            help=description + " (manual default: enabled)")
+    return parser.parse_args(argv)
+
+
+def run_integration(output: Path, workspace: Path, environment: dict, base: list[str], phase, host: str) -> dict:
+    directory = output / "integration"
+    directory.mkdir()
+    plan_path, trace = directory / "plan.json", directory / "trace.jsonl"
+    expected = directory / "expected-restart.json"
+    plan = p14_integration.write_plan(plan_path)
+    environment.update(P1_TEST_SAVE_ROOT=str(workspace / "integration-saves"),
+                       P1_INTEGRATION_PLAN=str(plan_path), P1_INTEGRATION_TRACE=str(trace),
+                       P1_INTEGRATION_EXPECTED=str(expected))
+    try:
+        for start in range(0, 500, 100):
+            environment.update(P1_INTEGRATION_START=str(start), P1_INTEGRATION_COUNT="100")
+            phase(f"integration-{start + 1:03d}-{start + 100:03d}",
+                  base + ["--script", "res://tests/p14_integration.gd", "--", "--write"],
+                  "P1_INTEGRATION_WRITE_OK")
+        oracle = p14_integration.validate_trace(plan, trace)
+        final = json.loads((directory / "trace.jsonl.final.json").read_text(encoding="utf-8"))
+        for key in ("cells", "history", "cursor", "undo_used"):
+            if final[key] != oracle[key]:
+                raise toolchain.PreflightError(f"Integration final {key} differs from independent oracle")
+        if oracle["cursor"] >= len(oracle["history"]):
+            raise toolchain.PreflightError("Integration ended without required redo branch")
+        expected.write_text(json.dumps({**oracle, "view": final["view"],
+            "row_reads": final["row_reads"], "column_reads": final["column_reads"]},
+            ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+        phase("integration-restart", base + ["--script", "res://tests/p14_integration.gd", "--", "--read"],
+              "P1_INTEGRATION_READ_OK")
+        p14_integration.verify_navigation(plan, trace)
+        p14_integration.verify_negative_controls(plan, trace)
+        summary = p14_integration.summarize(plan, trace, final, host)
+        (directory / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return summary
+    finally:
+        for key in ("P1_TEST_SAVE_ROOT", "P1_INTEGRATION_PLAN", "P1_INTEGRATION_TRACE",
+                    "P1_INTEGRATION_EXPECTED", "P1_INTEGRATION_START", "P1_INTEGRATION_COUNT"):
+            environment.pop(key, None)
+
+
+def run_pilots(workspace: Path, environment: dict, base: list[str], phase) -> dict:
+    pilot_saves = workspace / "rp6-saves"
+    environment["P1_TEST_SAVE_ROOT"] = str(pilot_saves)
+    slot_checks = []
+    try:
+        for index in range(3, 9):
+            environment["RP6_INDEX"] = str(index)
+            for stage in ("partial", "finish", "read"):
+                untouched = {p.name: toolchain.sha256_file(p) for p in pilot_saves.glob("*")
+                             if p.is_file() and not p.name.startswith(("f01.", f"f{index+1:02d}."))}
+                environment["RP6_STAGE"] = stage
+                phase(f"rp6-f{index+1:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
+                      "RP6_" + stage.upper() + "_OK")
+                if any(not (pilot_saves / name).is_file() or toolchain.sha256_file(pilot_saves / name) != digest
+                       for name, digest in untouched.items()):
+                    raise toolchain.PreflightError("Another pilot save changed")
+                slot_checks.append(dict(index=index, stage=stage, unchanged_files=untouched))
+            if index == 3:
+                isolation_control = run_pilot_isolation_control(workspace, environment, base, phase)
+    finally:
+        for key in ("P1_TEST_SAVE_ROOT", "RP6_STAGE", "RP6_INDEX"):
+            environment.pop(key, None)
+    return dict(pilots=6, processes=18, separate_slot_checks=slot_checks,
+                foreign_slot_control=isolation_control,
+                production_replay="not repeated here; authoritative puzzle-production job")
+
+
+def require_foreign_slot_failure(result: dict) -> None:
+    """Accept only the semantic F01 guard, with a natively valid loaded save."""
+    output = result["output"]
+    errors = [line.strip() for line in output.splitlines() if "ERROR:" in line]
+    if (result["exit_code"] != 4
+            or errors != ["ERROR: RP3_FAIL: isolated F04 preserves F01 cells after restart"]
+            or "RP6_F01_SAVE status=loaded unknown=399" not in output
+            or not re.search(r"RP6_RESULT index=3 stage=read checks=\d+ failures=1\b", output)
+            or "RP6_READ_OK" in output):
+        raise toolchain.PreflightError("Foreign-slot control did not fail solely on valid changed F01 cells")
+
+
+def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[str], phase) -> dict:
+    """Re-read F04 once with a valid changed F01 in a disposable profile copy."""
+    original = environment["P1_TEST_SAVE_ROOT"]
+    original_stage = environment["RP6_STAGE"]
+    control = workspace / "rp6-isolation-control"
+    shutil.copytree(original, control)
+    try:
+        environment["P1_TEST_SAVE_ROOT"] = str(control)
+        environment["RP6_STAGE"] = "foreign_write"
+        phase("rp6-f04-foreign-slot-write", base + ["--script", "res://tests/rp6_probe.gd"],
+              "RP6_FOREIGN_WRITE_OK")
+        environment["RP6_STAGE"] = "read"
+        phase("rp6-f04-foreign-slot-control", base + ["--script", "res://tests/rp6_probe.gd"],
+              validator=require_foreign_slot_failure)
+    finally:
+        environment["P1_TEST_SAVE_ROOT"] = original
+        environment["RP6_STAGE"] = original_stage
+    return dict(status="success", processes=2, slot="F-01", native_load="loaded",
+                unknown_cells=399, expected_exit=4, expected_failures=1)
+
+
+def run_visual(output: Path, workspace: Path, project: Path, engine: str,
+               environment: dict, phase, python_phase, host: str, pilots: bool) -> tuple[dict, list[Path]]:
+    renders = output / "renders"
+    renders.mkdir()
+    environment["P1_CAPTURE_DIR"] = str(renders)
+    command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
+               "--audio-driver", "Dummy", "--script", "res://tests/capture.gd",
+               "--", "--p1-capture", "--ci-compact"]
+    if host == "Linux":
+        if not shutil.which("xvfb-run"):
+            raise toolchain.PreflightError("Real render verification requires xvfb-run on Linux")
+        command = ["xvfb-run", "-a"] + command
+        environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
+    try:
+        reports = []
+        for stage in RENDER_STAGES:
+            environment["P1_RENDER_STAGE"] = stage
+            phase("render-" + stage, command, "P1_CAPTURE_OK")
+            report = json.loads((renders / f"render-report-{stage}.json").read_text(encoding="utf-8"))
+            if (report.get("failed") or report.get("compact") is not True
+                    or report["rendered_count"] < 1
+                    or report["retained_count"] != len(report["captures"])
+                    or report["retained_count"] > report["rendered_count"]):
+                raise toolchain.PreflightError(f"Incomplete compact native stage: {stage}")
+            reports.append(report)
+        environment.pop("P1_RENDER_STAGE", None)
+        combined = dict(stages=len(reports), pixel_checks=sum(r["pixel_checks"] for r in reports),
+                        rendered_count=sum(r["rendered_count"] for r in reports),
+                        retained_count=sum(r["retained_count"] for r in reports),
+                        captures=[c for r in reports for c in r["captures"]], compact=True)
+        (renders / "render-report.json").write_text(json.dumps(combined, indent=2) + "\n", encoding="utf-8")
+        # Current contrast, tooltip blocking and recovery layout assertions.
+        # No Z2 historical project, comparison or archive is produced.
+        z2_command = ["res://tests/z2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
+        phase("current-book-capture", z2_command, "Z2_CAPTURE_OK")
+        if pilots:
+            environment["P1_TEST_SAVE_ROOT"] = str(workspace / "rp6-saves")
+            pilot_command = ["res://tests/rp6_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
+            for index in range(3, 9):
+                environment["RP6_INDEX"] = str(index)
+                phase(f"rp6-f{index+1:02d}-render", pilot_command, "RP6_CAPTURE_OK")
+            environment.pop("P1_TEST_SAVE_ROOT", None)
+            environment.pop("RP6_INDEX", None)
+        current = output / "drawing-renders"
+        current.mkdir()
+        environment["P1_CAPTURE_DIR"] = str(current)
+        environment["ZS2_VARIANT"] = "after"
+        current_command = ["res://tests/zs2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
+        phase("current-drawing-capture", current_command, "ZS2_CAPTURE_OK")
+        motion = python_phase("current-drawing-pixel-oracles",
+                              lambda: p1_current_visual.verify_regular_motion(Path(__file__).resolve().parents[1], current))
+        (current / "current-drawing-report.json").write_text(json.dumps(motion, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        selected = [renders / entry["file"] for entry in combined["captures"]]
+        selected += list(renders.glob("*.json"))
+        selected += p1_current_visual.selected_motion_files(current)
+        if pilots:
+            selected += [renders / "rp6-f07-completion-1920-ui100.png"]
+        return dict(compact=combined, drawing=motion,
+                    pilot_native="success" if pilots else "not selected; --no-pilots"), selected
+    finally:
+        for key in ("P1_CAPTURE_DIR", "P1_RENDER_STAGE", "ZS2_VARIANT", "RP6_INDEX", "P1_TEST_SAVE_ROOT"):
+            environment.pop(key, None)
+
+
+def player_extras(root: Path, output: Path) -> dict[str, Path]:
+    extras = {}
+    for source, filename in (
+        ("tools/p14_owner_probe.ps1", "owner-probe.ps1"),
+        ("tools/rp6_owner.ps1", "rp6-owner.ps1"),
+        ("tools/zv50_owner.ps1", "zv50-owner.ps1"),
+    ):
+        path = output / filename
+        path.write_text((root / source).read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
+        extras[filename] = path
+    for name, source in (
+        ("RP6-SPIELPROBE.md", "docs/RP6_OWNER_TRIAL.md"),
+        ("ZV50-SPIELPROBE.md", "docs/ZV50_OWNER_TRIAL.md"),
+        ("ZS2-SPIELPROBE.md", "docs/ZS2_OWNER_TRIAL.md"),
+        ("licenses/resources.json", "prototypes/p1/art/book/manifest.json"),
+        ("licenses/Chalkboard-NOTICES.md", "prototypes/p1/art/drawing/NOTICES.md"),
+    ):
+        extras[name] = root / source
+    for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
+        extras["licenses/" + path.name] = path
+    return extras
+
+
+def package_player(build: Path, output: Path, manifest: dict, root: Path) -> tuple[Path, dict]:
+    """Use the same real delivery inputs in Product and the fast docs contract."""
+    extras = player_extras(root, output)
+    archive = package(build, output, manifest,
+                      (root / "docs/ZS2_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
+    expected = {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json", *extras}
+    return archive, gp48_delivery.verify_player_package(archive, manifest, expected_files=expected)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
     root = Path(__file__).resolve().parents[1]
     host = platform.system()
     if host not in toolchain.EDITORS or platform.machine().lower() not in {"amd64", "x86_64"}:
-        parser.error("P1 build supports Windows/Linux x86_64 hosts")
+        raise SystemExit("P1 build supports Windows/Linux x86_64 hosts")
     output = args.output_dir.resolve()
     if output.exists() and any(output.iterdir()):
-        parser.error("Output directory must be empty; preserve previous evidence in its own directory")
+        raise SystemExit("Output directory must be empty; preserve previous evidence in its own directory")
     output.mkdir(parents=True, exist_ok=True)
-    logs = output / "logs"
-    logs.mkdir(exist_ok=True)
+    evidence = Evidence(output, host, dict(core=True, integration=args.integration,
+                                          pilots=args.pilots, visual=args.visual, export=True))
+    selected = []
+
+    def python_phase(name, action):
+        record = evidence.start(name)
+        began = time.monotonic()
+        try:
+            result = action()
+        except Exception as exc:
+            evidence.complete(record, dict(seconds=round(time.monotonic() - began, 3)), exc)
+            raise
+        evidence.complete(record, dict(seconds=round(time.monotonic() - began, 3), exit_code=0))
+        return result
+
     try:
-        title = project_name(root / "prototypes/p1/project.godot")
-        book_resources = z2_resources.verify()
-        proof_steps = verify(json.loads((DATA / "f01.json").read_text(encoding="utf-8")), json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8")))
-        color_proof_steps = verify_f02(json.loads((DATA / "f02.json").read_text(encoding="utf-8")), json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8")))
-        rp3 = demonstrate_rp3(root, output / "rp3")
-        # Documentation/harness unit tests remain standard-library-only.
-        from tools.puzzle_production.rp6 import verify_package as verify_rp6
-        rp6 = verify_rp6(output / "rp6")
-        metadata = toolchain.request_json(toolchain.RELEASE_API)
+        evidence.report.update(source_identity(root))
+        evidence.scope_start("core")
+        evidence.report["project_name"] = project_name(root / "prototypes/p1/project.godot")
+        evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
+        evidence.report["proof_steps"] = python_phase("f01-certificate", lambda: verify(
+            json.loads((DATA / "f01.json").read_text(encoding="utf-8")),
+            json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8"))))
+        evidence.report["color_proof_steps"] = python_phase("f02-certificate", lambda: verify_f02(
+            json.loads((DATA / "f02.json").read_text(encoding="utf-8")),
+            json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8"))))
         editor = toolchain.EDITORS[host]
-        assets = (editor, toolchain.TEMPLATES)
-        urls = toolchain.official_asset_urls(metadata, assets)
-        hashes = {asset.name: toolchain.download_asset(urls[asset.name], args.cache_dir.resolve() / asset.name, asset.sha256, args.download_timeout_seconds) for asset in assets}
+
+        def assets():
+            metadata = toolchain.request_json(toolchain.RELEASE_API)
+            urls = toolchain.official_asset_urls(metadata, (editor, toolchain.TEMPLATES))
+            return {asset.name: toolchain.download_asset(urls[asset.name],
+                    args.cache_dir.resolve() / asset.name, asset.sha256, args.download_timeout_seconds)
+                    for asset in (editor, toolchain.TEMPLATES)}
+        evidence.report["assets"] = python_phase("verified-toolchain-assets", assets)
         with tempfile.TemporaryDirectory(prefix="picross-p1-product-") as temporary:
             workspace = Path(temporary).resolve()
             engine = str(toolchain.extract_editor(args.cache_dir.resolve() / editor.name, workspace / "engine", host))
-            toolchain.extract_windows_templates(args.cache_dir.resolve() / toolchain.TEMPLATES.name, toolchain.template_directory(workspace, host))
+            toolchain.extract_windows_templates(args.cache_dir.resolve() / toolchain.TEMPLATES.name,
+                                                toolchain.template_directory(workspace, host))
             project = workspace / "p1"
             shutil.copytree(root / "prototypes/p1", project, ignore=shutil.ignore_patterns(".godot", "build"))
             environment = toolchain.isolated_environment(workspace, host)
-            results = []
 
-            def phase(name: str, command: list[str], marker: str | None = None) -> None:
-                result = run_phase(name, command, environment, args.process_timeout_seconds, logs)
-                require_clean_output(result, marker)
-                results.append(result)
+            def phase(name: str, command: list[str], marker: str | None = None,
+                      expected_failure: bool = False, validator=None):
+                record = evidence.start(name)
+                result = {}
+                try:
+                    result = run_phase(name, command, environment, args.process_timeout_seconds, evidence.logs)
+                    if result["timed_out"]:
+                        raise toolchain.PreflightError(f"{name} exceeded {args.process_timeout_seconds}s")
+                    if expected_failure:
+                        toolchain.require_expected_failure(result, "P1_EXPECTED_FAILURE")
+                        if result["exit_code"] != 23 or "SCRIPT ERROR:" in result["output"] or "ERROR:" in result["output"]:
+                            raise toolchain.PreflightError("Unexpected negative-test failure")
+                        result["expected_failure"] = True
+                    elif validator is not None:
+                        validator(result)
+                        result["expected_failure"] = True
+                    else:
+                        require_clean_output(result, marker)
+                except Exception as exc:
+                    evidence.complete(record, result, exc)
+                    raise
+                evidence.complete(record, result)
 
             phase("version", [engine, "--version"], toolchain.EXPECTED_VERSION)
             base = [engine, "--headless", "--path", str(project)]
             phase("import", base + ["--import"])
             phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
+            phase("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
+            phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
+                  expected_failure=True)
             environment["P1_TEST_SAVE_ROOT"] = str(workspace / "roundtrip-saves")
-            phase("roundtrip-write", base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--write"], "P1_ROUNDTRIP_WRITE_OK")
-            phase("roundtrip-read", base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--read"], "P1_ROUNDTRIP_READ_OK")
-            del environment["P1_TEST_SAVE_ROOT"]
-            environment["P1_TEST_SAVE_ROOT"] = str(workspace / "rp3-saves")
-            for stage in ("partial", "finish", "read"):
-                environment["RP3_STAGE"] = stage
-                phase("rp3-" + stage, base + ["--script", "res://tests/rp3_probe.gd"], "RP3_" + stage.upper() + "_OK")
-            del environment["RP3_STAGE"]
-            del environment["P1_TEST_SAVE_ROOT"]
-            pilot_saves = workspace / "rp6-saves"
-            environment["P1_TEST_SAVE_ROOT"] = str(pilot_saves)
-            slot_checks = []
-            for index in range(3,9):
-                environment["RP6_INDEX"] = str(index)
-                for stage in ("partial", "finish", "read"):
-                    # F-01 is flushed when leaving the initial album selection;
-                    # compare gameplay in GDScript and byte-preserve other pilots here.
-                    untouched = {p.name: toolchain.sha256_file(p) for p in pilot_saves.glob("*")
-                                 if p.is_file() and not p.name.startswith(("f01.", f"f{index+1:02d}."))}
-                    environment["RP6_STAGE"] = stage
-                    phase(f"rp6-f{index+1:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
-                          "RP6_" + stage.upper() + "_OK")
-                    if any(toolchain.sha256_file(pilot_saves / name) != sha for name,sha in untouched.items()):
-                        raise toolchain.PreflightError("Another pilot save changed")
-                    slot_checks.append(dict(index=index,stage=stage,unchanged_files=untouched))
-            rp6["separate_slot_checks"] = slot_checks
-            del environment["P1_TEST_SAVE_ROOT"]
-            del environment["RP6_STAGE"]
-            del environment["RP6_INDEX"]
-            integration_dir = output / "integration"
-            integration_dir.mkdir(exist_ok=True)
-            integration_plan = integration_dir / "plan.json"
-            integration_trace = integration_dir / "trace.jsonl"
-            integration_expected = integration_dir / "expected-restart.json"
-            plan = p14_integration.write_plan(integration_plan)
-            environment.update(P1_TEST_SAVE_ROOT=str(workspace / "integration-saves"),
-                               P1_INTEGRATION_PLAN=str(integration_plan),
-                               P1_INTEGRATION_TRACE=str(integration_trace),
-                               P1_INTEGRATION_EXPECTED=str(integration_expected))
-            for start in range(0, 500, 100):
-                environment["P1_INTEGRATION_START"] = str(start)
-                environment["P1_INTEGRATION_COUNT"] = "100"
-                phase(f"integration-{start + 1:03d}-{start + 100:03d}",
-                      base + ["--script", "res://tests/p14_integration.gd", "--", "--write"],
-                      "P1_INTEGRATION_WRITE_OK")
-            oracle = p14_integration.validate_trace(plan, integration_trace)
-            final = json.loads((integration_dir / "trace.jsonl.final.json").read_text(encoding="utf-8"))
-            for key in ("cells", "history", "cursor", "undo_used"):
-                if final[key] != oracle[key]:
-                    raise toolchain.PreflightError(f"Integration final {key} differs from independent oracle")
-            if oracle["cursor"] >= len(oracle["history"]):
-                raise toolchain.PreflightError("Integration ended without required redo branch")
-            # The oracle supplies gameplay truth; the trace supplies the exact view to
-            # compare across the real process boundary. View assertions run separately.
-            integration_expected.write_text(json.dumps({**oracle, "view": final["view"],
-                "row_reads": final["row_reads"], "column_reads": final["column_reads"]},
-                ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-            phase("integration-restart", base + ["--script", "res://tests/p14_integration.gd", "--", "--read"],
-                  "P1_INTEGRATION_READ_OK")
-            p14_integration.verify_navigation(plan, integration_trace)
-            p14_integration.verify_negative_controls(plan, integration_trace)
-            integration_summary = p14_integration.summarize(plan, integration_trace, final, host)
-            (integration_dir / "summary.json").write_text(json.dumps(integration_summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-            for key in ("P1_TEST_SAVE_ROOT", "P1_INTEGRATION_PLAN", "P1_INTEGRATION_TRACE", "P1_INTEGRATION_EXPECTED", "P1_INTEGRATION_START", "P1_INTEGRATION_COUNT"):
-                del environment[key]
-            negative = run_phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"], environment, args.process_timeout_seconds, logs)
-            toolchain.require_expected_failure(negative, "P1_EXPECTED_FAILURE")
-            if negative["exit_code"] != 23 or "SCRIPT ERROR:" in negative["output"]:
-                raise toolchain.PreflightError("Unexpected negative-test failure")
-            results.append(negative)
+            for stage in ("write", "read"):
+                phase("roundtrip-" + stage, base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--" + stage],
+                      "P1_ROUNDTRIP_" + stage.upper() + "_OK")
+            environment.pop("P1_TEST_SAVE_ROOT")
             phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
-            h1_files = {}
-            for source, name in (("tools/h1_owner_probe.gd", "h1-owner-probe.gd"),
-                                 ("tools/h1_owner_probe.ps1", "h1-owner-probe.ps1"),
-                                 ("docs/H1_VERIFICATION.md", "H1-PRUEFUNG.md")):
-                shutil.copyfile(root / source, output / name)
-                h1_files[name] = toolchain.sha256_file(output / name)
-            renders = output / "renders"
-            renders.mkdir(exist_ok=True)
-            environment["P1_CAPTURE_DIR"] = str(renders)
-            render_command = [engine, "--path", str(project), "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--script", "res://tests/capture.gd", "--", "--p1-capture"]
-            if host == "Linux":
-                if not shutil.which("xvfb-run"):
-                    raise toolchain.PreflightError("Real render verification requires xvfb-run on Linux")
-                render_command = ["xvfb-run", "-a"] + render_command
-                environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
-            for stage in ("layout", "views", "cells-f1", "cells-f2", "gestures", "hints", "axis", "h1"):
-                environment["P1_RENDER_STAGE"] = stage
-                phase("render-" + stage, render_command, "P1_CAPTURE_OK")
-            del environment["P1_RENDER_STAGE"]
-            reports = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(renders.glob("render-report-*.json"))]
-            (renders / "render-report.json").write_text(json.dumps(dict(
-                stages=len(reports), pixel_checks=sum(r["pixel_checks"] for r in reports),
-                captures=[c for r in reports for c in r["captures"]]), indent=2) + "\n", encoding="utf-8")
-            z2_command = ["res://tests/z2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
-            phase("z2-render-capture", z2_command, "Z2_CAPTURE_OK")
-            rp3_command = ["res://tests/rp3_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
-            phase("rp3-render-capture", rp3_command, "RP3_CAPTURE_OK")
-            rp6_command = ["res://tests/rp6_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
-            environment["P1_TEST_SAVE_ROOT"] = str(pilot_saves)
-            for index in range(3,9):
-                environment["RP6_INDEX"] = str(index)
-                phase(f"rp6-f{index+1:02d}-render", rp6_command, "RP6_CAPTURE_OK")
-            del environment["RP6_INDEX"]
-            del environment["P1_TEST_SAVE_ROOT"]
-            before = z2_review.before_project(root, workspace)
-            phase("z2-before-import", [engine, "--headless", "--path", str(before), "--import"])
-            before_command = [str(before) if arg == str(project) else
-                              "res://tests/z2_before_capture.gd" if arg == "res://tests/capture.gd" else arg
-                              for arg in render_command]
-            phase("z2-before-capture", before_command, "Z2_BEFORE_OK")
-            gp_command = ["res://tests/gp48_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
-            environment["GP48_VARIANT"] = "after"
-            phase("gp48-after-capture", gp_command, "GP48_CAPTURE_OK")
-            gp_before = gp48_review.before_project(root, workspace)
-            phase("gp48-before-import", [engine, "--headless", "--path", str(gp_before), "--import"])
-            environment["GP48_VARIANT"] = "before"
-            phase("gp48-before-capture", [str(gp_before) if arg == str(project) else arg for arg in gp_command], "GP48_CAPTURE_OK")
-            del environment["GP48_VARIANT"]
-            gp_comparison = gp48_review.verify_pairs(renders)
-            zv_command = ["res://tests/zv50_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in render_command]
-            environment["ZV50_VARIANT"] = "after"
-            phase("zv50-after-capture", zv_command, "ZV50_CAPTURE_OK")
-            zv_before = zv50_review.before_project(root, workspace)
-            phase("zv50-before-import", [engine, "--headless", "--path", str(zv_before), "--import"])
-            environment["ZV50_VARIANT"] = "before"
-            phase("zv50-before-capture", [str(zv_before) if arg == str(project) else arg for arg in zv_command], "ZV50_CAPTURE_OK")
-            del environment["ZV50_VARIANT"]
-            zv50_comparison = zv50_review.verify_pairs(renders)
-            zs1_evidence = zs1_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
-            zs2_evidence = zs2_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
-            vs1_evidence = vs1_delivery.capture(root, project, workspace, output, engine, render_command, environment, phase)
+            evidence.scope_done("core")
+            if args.integration:
+                evidence.scope_start("integration")
+                evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
+                selected += [output / "integration/summary.json"]
+                evidence.scope_done("integration")
+            if args.pilots:
+                evidence.scope_start("pilots")
+                evidence.report["pilots"] = run_pilots(workspace, environment, base, phase)
+                evidence.scope_done("pilots")
+            if args.visual:
+                evidence.scope_start("visual")
+                evidence.report["visual"], visual_files = run_visual(
+                    output, workspace, project, engine, environment, phase, python_phase, host, args.pilots)
+                selected += visual_files
+                evidence.scope_done("visual")
+            evidence.scope_start("export")
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
             if host == "Windows":
                 phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
-                phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"), "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
-            zs1_build, zs1_exports = zs1_delivery.export(project, workspace, output, base, phase, host)
-            vs1_build, vs1_exports = vs1_delivery.export(project, workspace, output, base, phase, host)
-            # Build the synthetic worksheet separately, after the production export.
-            # Exported players cannot override their main scene via editor --script.
-            shutil.copyfile(root / "tools/h1_owner_probe.gd", project / "h1_owner_probe.gd")
-            (project / "h1_owner_probe.tscn").write_text(
-                '[gd_scene load_steps=2 format=3]\n\n[ext_resource type="Script" path="res://h1_owner_probe.gd" id="1"]\n\n'
-                '[node name="H1Probe" type="Control"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\n'
-                'grow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource("1")\n', encoding="utf-8")
-            settings = project / "project.godot"
-            settings.write_text(settings.read_text(encoding="utf-8").replace(
-                'run/main_scene="res://main.tscn"', 'run/main_scene="res://h1_owner_probe.tscn"'), encoding="utf-8")
-            phase("h1-probe-import", base + ["--import"])
-            phase("h1-owner-probe-start", base + ["--", "--h1-probe-smoke"], "H1_OWNER_PROBE_OK")
-            h1_build = workspace / "h1-windows"
-            h1_build.mkdir()
-            phase("h1-windows-export", base + ["--export-debug", "P1 Windows x86_64", str(h1_build / "picross-h1-probe.exe")])
-            if host == "Windows":
-                phase("h1-windows-probe-start", [str(h1_build / "picross-h1-probe.console.exe"), "--headless", "--", "--h1-probe-smoke"], "H1_OWNER_PROBE_OK")
-            h1_exports = {p.name: toolchain.sha256_file(p) for p in sorted(h1_build.iterdir()) if p.is_file()}
-            if set(h1_exports) != {"picross-h1-probe.exe", "picross-h1-probe.console.exe"}:
-                raise toolchain.PreflightError("Unexpected/incomplete H1 probe export")
-            h1_archive = output / "h1-probe-windows-x86_64.zip"
-            with zipfile.ZipFile(h1_archive, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
-                for name in h1_exports:
-                    bundle.write(h1_build / name, name)
-                bundle.write(output / "H1-PRUEFUNG.md", "H1-PRUEFUNG.md")
-            h1_files[h1_archive.name] = toolchain.sha256_file(h1_archive)
-            commit, dirty = toolchain.source_commit(root)
-            checkout_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
-            owner_probe = output / "owner-probe.ps1"
-            # Windows PowerShell 5.1 otherwise reads the UTF-8 project name as
-            # ANSI and targets "picross Â· P1" instead of the isolated save path.
-            owner_probe.write_text((root / "tools/p14_owner_probe.ps1").read_text(encoding="utf-8"),
-                                   encoding="utf-8-sig", newline="\n")
-            zv_owner = output / "zv50-owner.ps1"
-            zv_owner.write_text((root / "tools/zv50_owner.ps1").read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
-            manifest = dict(schema=1, source_commit=commit, source_tree_dirty=dirty, tested_checkout_commit=checkout_commit,
-                            host=host, engine_version=toolchain.EXPECTED_VERSION, project_name=title, assets=hashes, proof_steps=proof_steps, color_proof_steps=color_proof_steps,
-                            artwork_files={name: toolchain.sha256_file(root / "prototypes/p1/art" / name) for name in ("f01.svg", "f02.svg")},
-                            fixture_files={name: toolchain.sha256_file(root / "prototypes/p1/data" / name) for name in ("f01.json", "f01-proof.json", "f02.json", "f02-proof.json")},
-                            render_files={p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()},
-                            integration=integration_summary,
-                            integration_files={p.name: toolchain.sha256_file(p) for p in sorted(integration_dir.iterdir()) if p.is_file()},
-                            owner_probe_sha256=toolchain.sha256_file(owner_probe),
-                            book_resources=book_resources,
-                            rp3=rp3,
-                            rp6=rp6,
-                            gp48=gp_comparison,
-                            zv50=zv50_comparison,
-                            zs2=zs2_evidence,
-                            zv50_owner_sha256=toolchain.sha256_file(zv_owner),
-                            h1_probe_files=h1_files,
-                            h1_probe_export_files=h1_exports,
-                            base_commit=subprocess.run(["git", "merge-base", "HEAD", "origin/main"], cwd=root, capture_output=True, text=True, check=True).stdout.strip(),
-                            github_run_id=os.environ.get("GITHUB_RUN_ID"),
-                            checks=[dict(name=item["name"], exit_code=item["exit_code"], seconds=item.get("seconds")) for item in results],
-                            manual_acceptance="OPEN: ZS2-M01 and independent technical/visual review of this head before merge. ZS1-M01 confirmed by owner on 2026-10-07. No merge/release authorized.")
-            pilot_launcher = output / "rp6-owner.ps1"
-            pilot_launcher.write_text((root / "tools/rp6_owner.ps1").read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
-            extras = {"RP6-SPIELPROBE.md": root / "docs/RP6_OWNER_TRIAL.md",
-                      "rp6-owner.ps1": pilot_launcher,
-                      "owner-probe.ps1": owner_probe,
-                      "ZV50-SPIELPROBE.md": root / "docs/ZV50_OWNER_TRIAL.md",
-                      "zv50-owner.ps1": zv_owner}
-            for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
-                extras["licenses/" + path.name] = path
-            extras["licenses/resources.json"] = root / "prototypes/p1/art/book/manifest.json"
-            extras["ZS2-SPIELPROBE.md"] = root / "docs/ZS2_OWNER_TRIAL.md"
-            extras["licenses/Chalkboard-NOTICES.md"] = root / "prototypes/p1/art/drawing/NOTICES.md"
-            archive = package(build, output, manifest, (root / "docs/ZS2_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
-            rp6_player_files = {
-                "picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json",
-                "RP6-SPIELPROBE.md", "rp6-owner.ps1", "owner-probe.ps1",
-                "ZS2-SPIELPROBE.md", "licenses/Chalkboard-NOTICES.md",
-                "ZV50-SPIELPROBE.md", "zv50-owner.ps1",
-                "licenses/Fraunces-OFL.txt", "licenses/PlexSans-OFL.txt", "licenses/resources.json",
-            }
-            player_delivery = gp48_delivery.verify_player_package(archive, manifest, expected_files=rp6_player_files)
-            (output / "player-audit.json").write_text(json.dumps(player_delivery, indent=2) + "\n", encoding="utf-8")
-            review_zip = z2_review.package(root, output, manifest, archive)
-            gp_review = gp48_review.package(root, output, manifest, archive)
-            zv_review = zv50_review.package(root, output, manifest, archive)
-            rp6_review.package(root, output, manifest, archive)
-            zs1_delivery.package(root, output, zs1_build, zs1_exports, manifest, zs1_evidence)
-            zs2_delivery.package(root, output, manifest, zs2_evidence)
-            vs1_delivery.package(root, output, vs1_build, vs1_exports, manifest, vs1_evidence)
-            print(f"GP48 REVIEW {gp_review} sha256:{toolchain.sha256_file(gp_review)}", flush=True)
-            print(f"ZV50 REVIEW {zv_review} sha256:{toolchain.sha256_file(zv_review)}", flush=True)
-            print(f"REVIEW {review_zip} sha256:{toolchain.sha256_file(review_zip)}", flush=True)
+                phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
+                      "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
+            evidence.scope_done("export")
+            evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
+            evidence.retain_files(selected)
+            evidence.enforce_budget()
+            evidence.finish()
+            package_began = time.monotonic()
+            archive, delivery = package_player(build, output, evidence.report, root)
+            delivery.update(packaging_seconds=round(time.monotonic() - package_began, 3),
+                            total_seconds=round(time.monotonic() - evidence.began, 3))
+            evidence.flush()
+            audit = evidence.technical / "player-audit.json"
+            audit.write_text(json.dumps(delivery, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            budget = evidence.enforce_budget(archive)
+            print("EVIDENCE_BYTES " + json.dumps(budget, sort_keys=True), flush=True)
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)
-    except (OSError, ValueError, zipfile.BadZipFile, toolchain.PreflightError) as exc:
+    except Exception as exc:
+        failure_log = evidence.logs / "failure.log"
+        failure_log.write_text(traceback.format_exc(), encoding="utf-8")
+        bound_log(failure_log)
+        failed_phase = evidence.report["checks"][-1]["name"] if evidence.report["checks"] else ""
+        failure_files, priority = native_failure_sources(
+            output, failed_phase, getattr(exc, "p1_failure_images", ()))
+        evidence.retain_files(selected + failure_files, priority_sources=priority)
+        evidence.finish(exc)
         print(f"P1 PRODUCT FAIL: {exc}", file=sys.stderr, flush=True)
         return 1
     return 0

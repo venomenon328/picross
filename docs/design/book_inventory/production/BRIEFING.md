@@ -8,9 +8,9 @@ Auftrag und Grenzen: [#27](https://github.com/venomenon328/picross/issues/27).
 
 ## Eingaben vor einem ausdrücklich beauftragten Bildlauf
 
-Diese Dateien gemeinsam öffnen: [Master-Freihaltemaske](png/master-keepout.png),
-[Master-Beschnittmaske](png/master-crop.png), [native 2560er Komposition](png/f02-2560-layout.png),
-[primäre 1080er Komposition](png/f02-1920-layout.png) und [Geometrie](layout.json).
+Diese Dateien gemeinsam öffnen: [Master-Freihaltemaske](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/master-keepout.png),
+[Master-Beschnittmaske](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/master-crop.png), [native 2560er Komposition](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-2560-layout.png),
+[primäre 1080er Komposition](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1920-layout.png) und [Geometrie](layout.json).
 Die Layouts zeigen Maßvorgaben, keinen gewünschten vereinfachten Zeichenstil.
 Die genaue Spielgrafik ist nur Referenz für Platzbedarf: nicht mitmalen.
 

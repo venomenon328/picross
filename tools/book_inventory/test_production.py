@@ -1,14 +1,15 @@
-"""Check actual delivery, not a second set of manufactured examples."""
+"""Small geometry/navigation/mask regressions; old delivery is archived."""
 import unittest
 import copy
+import tempfile
+from pathlib import Path
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
-from book_inventory.production import OUT, layouts, verify, verify_geometry, verify_navigation, verify_mask
+from book_inventory.artwork import png_write
+from book_inventory.production import OUT, layouts, verify_geometry, verify_navigation, verify_mask
 
 
-class ProductionDelivery(unittest.TestCase):
-    def test_committed_delivery(self):
-        verify()
-
+class ProductionHelpers(unittest.TestCase):
     def test_fold_cannot_enter_working_page(self):
         case=copy.deepcopy(layouts()[0])
         case['rects']['fold'][0]=case['rects']['grid'][0]+100
@@ -36,8 +37,18 @@ class ProductionDelivery(unittest.TestCase):
             verify_navigation(root,case['actions'])
 
     def test_mask_must_not_protect_wrong_crop(self):
-        with self.assertRaises(AssertionError):
-            verify_mask('f02-1280-crop',[[0,0,1280,720]])
+        # Exercise the mask oracle without requiring a historical 720p render.
+        # The single white centre pixel is the only protected area.
+        black = bytes([0, 0, 0])
+        pixels = black * 4 + bytes([255, 255, 255]) + black * 4
+        with tempfile.TemporaryDirectory(prefix='bp-mask-test-') as temporary:
+            folder = Path(temporary)
+            (folder / 'png').mkdir()
+            png_write(folder / 'png/sample.png', (3, 3, 3, pixels))
+            with patch('book_inventory.production.OUT', folder):
+                verify_mask('sample', [[1, 1, 1, 1]])
+                with self.assertRaises(AssertionError):
+                    verify_mask('sample', [[0, 0, 3, 3]])
 
 
 if __name__ == '__main__':

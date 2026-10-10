@@ -1,0 +1,825 @@
+{
+  "schema": 1,
+  "issue": "https://github.com/venomenon328/picross/issues/63",
+  "archive_commit": "fad885344874534629365917a2ab6a8d311cd3a7",
+  "file_count": 136,
+  "total_bytes": 161102998,
+  "files": [
+    {
+      "path": "docs/design/book_inventory/artwork/bp2-review.zip",
+      "git_blob_sha": "03ce12221562638e0d5e1bfb7749caac19a02574",
+      "bytes": 49506430,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/bp2-review.zip"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-background-1080.png",
+      "git_blob_sha": "f60d0551b485a3622808cb313808d28bdfe44493",
+      "bytes": 2421313,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-background-1080.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f01-2560-numbers.png",
+      "git_blob_sha": "f1d0b145a7acfa60cc1bb03057dec2ea66ed801f",
+      "bytes": 62351,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f01-2560-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f01-2560-status.png",
+      "git_blob_sha": "86b68d1088693f8f9ac7b3d68c1fdc6320f5a6cd",
+      "bytes": 16958,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f01-2560-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f01-2560.png",
+      "git_blob_sha": "9e38b562e32b99ea93f39beaf956dc69706a0fb8",
+      "bytes": 4065937,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f01-2560.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f02-1280-numbers.png",
+      "git_blob_sha": "f5cb6149d256ba073f1f1d9736dc863190fba7f2",
+      "bytes": 72794,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f02-1280-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f02-1280-status.png",
+      "git_blob_sha": "659b995bf6817a3caf5ac122dfc737257d2d922a",
+      "bytes": 26517,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f02-1280-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f02-1280.png",
+      "git_blob_sha": "3ff0b869db3ba9a840c469ab09b95907b0fd251d",
+      "bytes": 1109306,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f02-1280.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f02-1920-numbers.png",
+      "git_blob_sha": "2a35fc6b5b54291229dfeefa86e3d5d32ccd8724",
+      "bytes": 70051,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f02-1920-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f02-1920-status.png",
+      "git_blob_sha": "b9aa7c33f2117cedf5441d8e5b8d9d6f20ed6b83",
+      "bytes": 16622,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f02-1920-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f02-1920.png",
+      "git_blob_sha": "972889445f10baaa6655df7e729a9ae32e46781d",
+      "bytes": 2458128,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f02-1920.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f02-2560-numbers.png",
+      "git_blob_sha": "ebfa10e5bb9526ff7ead1eddcc89c15114d471b9",
+      "bytes": 68350,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f02-2560-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f02-2560-status.png",
+      "git_blob_sha": "43bfd159a8461a8af038cc2a69bce39f5f1cf083",
+      "bytes": 15862,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f02-2560-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f02-2560.png",
+      "git_blob_sha": "bfbfa97ba6fcbbda3ad0b09d7a137d87cc95e363",
+      "bytes": 4139755,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f02-2560.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f03-1920-numbers.png",
+      "git_blob_sha": "3fbe77fad848bb187255218b915df191fedea513",
+      "bytes": 66096,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f03-1920-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f03-1920-status.png",
+      "git_blob_sha": "6d9ce5bf9496bd21ad35b5d31a6f07a0c3abf1a7",
+      "bytes": 20991,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f03-1920-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-f03-1920.png",
+      "git_blob_sha": "6185dff7b35a9e8ef3319ca0269faf9ed40c7a5e",
+      "bytes": 2459229,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-f03-1920.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-native-binding.png",
+      "git_blob_sha": "93cf02c09cf3b7b303730c5de9fe3a92456ef2a7",
+      "bytes": 213833,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-native-binding.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-native-fold.png",
+      "git_blob_sha": "9a22809f5862e5ad103c3186d9c5e9b84e124e8f",
+      "bytes": 193778,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-native-fold.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-native-lower-edge.png",
+      "git_blob_sha": "abcaa4c4f5c1a8b6c49583aa0f8f2dc9200c2198",
+      "bytes": 351009,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-native-lower-edge.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/a-native-paper.png",
+      "git_blob_sha": "72a6d2d47c35fc53008b8f72535e0b1dfdc79245",
+      "bytes": 166439,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/a-native-paper.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-background-1080.png",
+      "git_blob_sha": "2962a70dae5181ec909ef7260c2ce522612d785b",
+      "bytes": 2411240,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-background-1080.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f01-2560-numbers.png",
+      "git_blob_sha": "53e069750c6b87bf5d2c573fb96541b82261aa65",
+      "bytes": 62562,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f01-2560-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f01-2560-status.png",
+      "git_blob_sha": "32f1ab862fb0b8ab1bb3e03ee334977564a5869e",
+      "bytes": 16592,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f01-2560-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f01-2560.png",
+      "git_blob_sha": "4ee02f1c537cccec0e6dc0d202e1d85c98c96088",
+      "bytes": 4065676,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f01-2560.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f02-1280-numbers.png",
+      "git_blob_sha": "d95278f29736faa891834b4a699ba73ecc17206e",
+      "bytes": 73132,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f02-1280-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f02-1280-status.png",
+      "git_blob_sha": "3e5ef4b38666669eda806e068d947f1677054498",
+      "bytes": 24961,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f02-1280-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f02-1280.png",
+      "git_blob_sha": "dfdd3f747d1d65be5fa217fe164ed475799fc4e1",
+      "bytes": 1101867,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f02-1280.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f02-1920-numbers.png",
+      "git_blob_sha": "9c3ae8b415b9b991c20e0be57a759d0b96947a08",
+      "bytes": 70887,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f02-1920-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f02-1920-status.png",
+      "git_blob_sha": "99ed95b09e27c8bdf2c48d3e8f9c3fc620a4fa6d",
+      "bytes": 16539,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f02-1920-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f02-1920.png",
+      "git_blob_sha": "17918722c67b5d8703b320abe4bff11228f3aa52",
+      "bytes": 2448075,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f02-1920.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f02-2560-numbers.png",
+      "git_blob_sha": "ce178801360ddd8c5c05df4b686e569012f19f76",
+      "bytes": 69020,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f02-2560-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f02-2560-status.png",
+      "git_blob_sha": "839ff170351572b1f7a86efa2b3bdf318e2f8220",
+      "bytes": 15774,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f02-2560-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f02-2560.png",
+      "git_blob_sha": "7cbed17371f269d50f5782d8f4a502eb1f97de81",
+      "bytes": 4139305,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f02-2560.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f03-1920-numbers.png",
+      "git_blob_sha": "b3fbc9c02776296eedc214d34fa51d6f7d7fd09c",
+      "bytes": 66257,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f03-1920-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f03-1920-status.png",
+      "git_blob_sha": "9a2a0a687596b6499381ed6e47dc5b24df7bad2c",
+      "bytes": 20033,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f03-1920-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-f03-1920.png",
+      "git_blob_sha": "57cee6e6853d08591b9c54e3e658c2eda43c356f",
+      "bytes": 2449190,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-f03-1920.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-native-binding.png",
+      "git_blob_sha": "da137f7a6b58bce3bc2466349263a687b9c6ca8b",
+      "bytes": 213146,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-native-binding.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-native-fold.png",
+      "git_blob_sha": "71ec4572075a65ea7448a61003fea5c0207bc1c6",
+      "bytes": 186110,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-native-fold.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-native-lower-edge.png",
+      "git_blob_sha": "ba0c350fbbb1d18352bff93903dcbd36fcf6a06c",
+      "bytes": 374143,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-native-lower-edge.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/b-native-paper.png",
+      "git_blob_sha": "5b464d97fca13a5c8aab24f1b890dfea2077e548",
+      "bytes": 164879,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/b-native-paper.png"
+    },
+    {
+      "path": "docs/design/book_inventory/artwork/checks/contrast.json",
+      "git_blob_sha": "587b51db8d40aa892ba877c9b4b2630eaa55ecbe",
+      "bytes": 9115,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/artwork/checks/contrast.json"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/bp3-review.zip",
+      "git_blob_sha": "f6292dccdb17d67c322b89194afa0b92647b0435",
+      "bytes": 40695576,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/bp3-review.zip"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/checks/gallery.png",
+      "git_blob_sha": "65fa719b94a71329562aaa4692de80ba6f1a1d1f",
+      "bytes": 1189661,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/checks/gallery.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f01-2560-numbers.png",
+      "git_blob_sha": "7feb9913a5cdafd40220e115b0e0d8a7d019a539",
+      "bytes": 64716,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f01-2560-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f02-1280-album.png",
+      "git_blob_sha": "e78b2605d405da089dc2da0e192150a8401ab76d",
+      "bytes": 5351,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f02-1280-album.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f02-1280-miniature.png",
+      "git_blob_sha": "324466e6d47b6cd189906e9c2298406b1eaf6c7b",
+      "bytes": 11620,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f02-1280-miniature.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f02-1280-navigation.png",
+      "git_blob_sha": "312bb01bb4c3f37850da2d79558555ef3efb0364",
+      "bytes": 14856,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f02-1280-navigation.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f02-1280-numbers.png",
+      "git_blob_sha": "a445dc9bb89d4d67b9b808b179f7e10cc85f4add",
+      "bytes": 75605,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f02-1280-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f02-1280-status.png",
+      "git_blob_sha": "1e043bef1d21cfd2d012493f63483065c3264654",
+      "bytes": 25301,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f02-1280-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f02-1280-swatches.png",
+      "git_blob_sha": "6ea40da516f922b31ce0c9fb31c4ec3eb616975a",
+      "bytes": 11298,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f02-1280-swatches.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f02-1280-tools.png",
+      "git_blob_sha": "84e58920e465f0c06214c83a68091c4225ca2400",
+      "bytes": 27117,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f02-1280-tools.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f02-1920-numbers.png",
+      "git_blob_sha": "89fe007737720ac7097eb5de89ed5d1e94135356",
+      "bytes": 72414,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f02-1920-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f02-2560-numbers.png",
+      "git_blob_sha": "5fd200305b471c49022f08e543a49622d08e7a7a",
+      "bytes": 70749,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f02-2560-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/a-f03-1920-numbers.png",
+      "git_blob_sha": "916e1d245e52a11f372bb7213a1651bc07a72280",
+      "bytes": 68736,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/a-f03-1920-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f01-2560-numbers.png",
+      "git_blob_sha": "088e388923621e369d555cc97dfc723203dbaa8d",
+      "bytes": 64911,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f01-2560-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f02-1280-album.png",
+      "git_blob_sha": "b3b46fe8e3ee26c3442894c8819c450f47c81af4",
+      "bytes": 5309,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f02-1280-album.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f02-1280-miniature.png",
+      "git_blob_sha": "52b15dca08b054b94edf01da45817976c6a86925",
+      "bytes": 11252,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f02-1280-miniature.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f02-1280-navigation.png",
+      "git_blob_sha": "de846d00fffa88781b4e24bd96c3d32b3d34bb57",
+      "bytes": 14622,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f02-1280-navigation.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f02-1280-numbers.png",
+      "git_blob_sha": "252d88acaa0b3678ea8eeff43e43fff4cf0421ff",
+      "bytes": 76037,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f02-1280-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f02-1280-status.png",
+      "git_blob_sha": "c2b297d0ad6297dc533ffda1722980aecd7f2a55",
+      "bytes": 23691,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f02-1280-status.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f02-1280-swatches.png",
+      "git_blob_sha": "183724b6db9b42b098b56617bc68fdf84bd605b3",
+      "bytes": 11161,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f02-1280-swatches.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f02-1280-tools.png",
+      "git_blob_sha": "2ff6a774fc1398cbf8c36980ee895798ce372687",
+      "bytes": 26494,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f02-1280-tools.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f02-1920-numbers.png",
+      "git_blob_sha": "174d9e7dc92f64485a11d0425f6556535c8585e0",
+      "bytes": 73267,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f02-1920-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f02-2560-numbers.png",
+      "git_blob_sha": "2c1c9acb77039cd0ce3beabd4dc23a673fef8ca0",
+      "bytes": 71470,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f02-2560-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/details/b-f03-1920-numbers.png",
+      "git_blob_sha": "f9f5b4b9584cc1ee59d11de91b8b8dd8a6217dce",
+      "bytes": 68818,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/details/b-f03-1920-numbers.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/compact-states-content.png",
+      "git_blob_sha": "b2f1ca7b81c4d4a8c32f86bad414067b646491bb",
+      "bytes": 87709,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/compact-states-content.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/compact-states-mounts.png",
+      "git_blob_sha": "8697fe68e3932ca61ff3dee56c54716a7925cafc",
+      "bytes": 20781,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/compact-states-mounts.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/compact-states-ui-underlay.png",
+      "git_blob_sha": "39116c74ec1404d075dfeb4085106136666dc7c6",
+      "bytes": 27203,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/compact-states-ui-underlay.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/compact-states-ui.png",
+      "git_blob_sha": "756478702e95e65437e2da0a31faa845e95b9c39",
+      "bytes": 119433,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/compact-states-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/connection-content.png",
+      "git_blob_sha": "ce7b78b3bc1e625188a940ec3e56c2eeea93e9a0",
+      "bytes": 105431,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/connection-content.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/connection-mounts.png",
+      "git_blob_sha": "540e1d27c335fcf49fd020c17898342e9678e14e",
+      "bytes": 16248,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/connection-mounts.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/connection-ui-underlay.png",
+      "git_blob_sha": "3fd5d9e413bea127c8df3677ab8843960c96d58f",
+      "bytes": 17423,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/connection-ui-underlay.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/connection-ui.png",
+      "git_blob_sha": "19647f7e01eb3c58e5936b8ba786e36daeca5274",
+      "bytes": 130504,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/connection-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f01-2560-content.png",
+      "git_blob_sha": "df7e35865859663745e8c06e5a545ac3375767d9",
+      "bytes": 46449,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f01-2560-content.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f01-2560-mounts.png",
+      "git_blob_sha": "defe85d949b236461e49d01297520071952ce034",
+      "bytes": 31197,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f01-2560-mounts.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f01-2560-ui-underlay.png",
+      "git_blob_sha": "f5af063dd7589f77010ca714039be94f322a34cf",
+      "bytes": 39767,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f01-2560-ui-underlay.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f01-2560-ui.png",
+      "git_blob_sha": "8e28392667d2ab04442ae0ea12cf74b7e6d68201",
+      "bytes": 60483,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f01-2560-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-1280-content.png",
+      "git_blob_sha": "b365ffbe977014ef0ddb095565630afc3dfdaed8",
+      "bytes": 67101,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-1280-content.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-1280-mounts.png",
+      "git_blob_sha": "1fcc1fb701819c8bd5286b09c4474a32fc5ada5c",
+      "bytes": 26850,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-1280-mounts.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-1280-ui-underlay.png",
+      "git_blob_sha": "90defb8f0a6e9f92ee0860585497842efdca0e6e",
+      "bytes": 39017,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-1280-ui-underlay.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-1280-ui.png",
+      "git_blob_sha": "b4df0a9a01ff5383ca1c22043c1e24e70990f39e",
+      "bytes": 91008,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-1280-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-1920-content.png",
+      "git_blob_sha": "b822bb28c1b1ec63d761fa138ad3d7ab6c4711e0",
+      "bytes": 104493,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-1920-content.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-1920-mounts.png",
+      "git_blob_sha": "83fde3f338f414bd5be24e8623b7e1e7cbdd1c64",
+      "bytes": 26268,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-1920-mounts.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-1920-ui-underlay.png",
+      "git_blob_sha": "feabc7f647c2318497ed41a22d8510c066aac49a",
+      "bytes": 39809,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-1920-ui-underlay.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-1920-ui.png",
+      "git_blob_sha": "89897a343df69f39a07038a13dc4a7f1f5d68e37",
+      "bytes": 122749,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-1920-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-2560-content.png",
+      "git_blob_sha": "5a4b5950e4e1e50e4b4418fe09a5a993c9d70e51",
+      "bytes": 113115,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-2560-content.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-2560-mounts.png",
+      "git_blob_sha": "cc51db63f1d995d64e96c29646492d7321b9ae07",
+      "bytes": 34212,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-2560-mounts.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-2560-ui-underlay.png",
+      "git_blob_sha": "6a6892ab72d356214ab0a34133981b412f7953ce",
+      "bytes": 47728,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-2560-ui-underlay.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f02-2560-ui.png",
+      "git_blob_sha": "56041049469429aca988fd95e8edf7219b7285a9",
+      "bytes": 131255,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f02-2560-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f03-1920-content.png",
+      "git_blob_sha": "3b5aa1c4753954d60e93900853c7a44b54be6df5",
+      "bytes": 62156,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f03-1920-content.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f03-1920-mounts.png",
+      "git_blob_sha": "d13b80fec7f39e5e03a4c5f898fd4abf9cebf74d",
+      "bytes": 25893,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f03-1920-mounts.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f03-1920-ui-underlay.png",
+      "git_blob_sha": "57898760886bef8399c66f587fefad22bff8eded",
+      "bytes": 38314,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f03-1920-ui-underlay.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/f03-1920-ui.png",
+      "git_blob_sha": "032ee517effde4772ae7442ec2056da6b8ad52e3",
+      "bytes": 79852,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/f03-1920-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/states-content.png",
+      "git_blob_sha": "7af83b12ce712e73383ceb80ab69148a61604e27",
+      "bytes": 142078,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/states-content.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/states-mounts.png",
+      "git_blob_sha": "0e7a83aaf18f22ef8b8ee440bac6094984cac448",
+      "bytes": 40171,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/states-mounts.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/states-ui-underlay.png",
+      "git_blob_sha": "afe14a5c102f53e67bd37631f5d93179ba453c2f",
+      "bytes": 53408,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/states-ui-underlay.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/png/states-ui.png",
+      "git_blob_sha": "1449644d0deef50fe2c6b4f526ceed8d9d2dbf9d",
+      "bytes": 187544,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/states-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/a-f01-2560.png",
+      "git_blob_sha": "838002fdcbb5a0c784c73b20aef0cdfbd0ef247f",
+      "bytes": 4069581,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f01-2560.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/a-f02-1280.png",
+      "git_blob_sha": "bdfb879d164b37f94e381d3972ac33bf9267e518",
+      "bytes": 1112155,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f02-1280.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/a-f02-1920.png",
+      "git_blob_sha": "d3f69dcc34937cbdd79d36b9f5fa880c4405b343",
+      "bytes": 2462635,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f02-1920.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/a-f02-2560.png",
+      "git_blob_sha": "cf9c86579d2c13447c69a39498882db773472e79",
+      "bytes": 4144798,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f02-2560.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/a-f03-1920.png",
+      "git_blob_sha": "965850834fcedd82a2b0e7a5135c9186045bf65d",
+      "bytes": 2455139,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f03-1920.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/b-f01-2560.png",
+      "git_blob_sha": "bf9d8e36b556bd57f9fc0202b891aa779353cc26",
+      "bytes": 4069919,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f01-2560.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/b-f02-1280.png",
+      "git_blob_sha": "28db88f45a63434fe72e56ff88dd54afb83371e4",
+      "bytes": 1106786,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f02-1280.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/b-f02-1920.png",
+      "git_blob_sha": "e1cbee38b6e1bed62faf28f5673c7dd30f6ec203",
+      "bytes": 2453551,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f02-1920.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/b-f02-2560.png",
+      "git_blob_sha": "04d9abb40fdac83f29298c4d4e9ece2562749003",
+      "bytes": 4145302,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f02-2560.png"
+    },
+    {
+      "path": "docs/design/book_inventory/composition/views/b-f03-1920.png",
+      "git_blob_sha": "1df4cb18d7ec2b8b5af7b062726d93c29a068ade",
+      "bytes": 2446781,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f03-1920.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/bp1r-review.zip",
+      "git_blob_sha": "5db90097f2d4e6500fa0f6f5d73d6c237ce4f0dd",
+      "bytes": 976785,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/bp1r-review.zip"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f01-2560-crop.png",
+      "git_blob_sha": "ab0ec2abe5bc8c563400770d6cfb25ad440694f5",
+      "bytes": 14133,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f01-2560-crop.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f01-2560-keepout.png",
+      "git_blob_sha": "1a3f65c54ee613d132817aaf6161a4441c9c9f90",
+      "bytes": 14322,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f01-2560-keepout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f01-2560-layout.png",
+      "git_blob_sha": "b5721c881d66d1f203e8ee0663ddfc0057f91866",
+      "bytes": 41515,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f01-2560-layout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f01-2560-ui.png",
+      "git_blob_sha": "c07f1477457925e0cda830b9c418313bd3fdfb2a",
+      "bytes": 50691,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f01-2560-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-1280-crop.png",
+      "git_blob_sha": "8f5512f291913ebc535d854b601200208a45adb6",
+      "bytes": 4354,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1280-crop.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-1280-keepout.png",
+      "git_blob_sha": "d67b6e3ca9f2e9858443fab02cabd690fd747534",
+      "bytes": 4472,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1280-keepout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-1280-layout.png",
+      "git_blob_sha": "f17c68bc7146b2dba754f92c316b9743f0393223",
+      "bytes": 58432,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1280-layout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-1280-ui.png",
+      "git_blob_sha": "6ae09c1ac4c9bfda5216deda3b0897b0c173a0bb",
+      "bytes": 74826,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1280-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-1920-crop.png",
+      "git_blob_sha": "f5c6268c837514bb70c36dea375deba61a4c6361",
+      "bytes": 8659,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1920-crop.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-1920-keepout.png",
+      "git_blob_sha": "91bcbabb2866ddfa6272f9061f1723cfc7535e1a",
+      "bytes": 8768,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1920-keepout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-1920-layout.png",
+      "git_blob_sha": "8a8a996e3a27b772ef760a70157f38014261eb61",
+      "bytes": 82666,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1920-layout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-1920-ui.png",
+      "git_blob_sha": "ccc3a080d79fd369c656dfdf826d3da054c43f4c",
+      "bytes": 109298,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1920-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-2560-crop.png",
+      "git_blob_sha": "ab0ec2abe5bc8c563400770d6cfb25ad440694f5",
+      "bytes": 14133,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-2560-crop.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-2560-keepout.png",
+      "git_blob_sha": "af26fb6bae3997b05ae2dd1fd9832521a494fd99",
+      "bytes": 14330,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-2560-keepout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-2560-layout.png",
+      "git_blob_sha": "deaab26d2c783112e7ea705f9b746b65a31462da",
+      "bytes": 89566,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-2560-layout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f02-2560-ui.png",
+      "git_blob_sha": "00e83b2e347e52673f6f24976f2c8eb1d8e536f2",
+      "bytes": 118003,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-2560-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f03-1920-crop.png",
+      "git_blob_sha": "f5c6268c837514bb70c36dea375deba61a4c6361",
+      "bytes": 8659,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f03-1920-crop.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f03-1920-keepout.png",
+      "git_blob_sha": "8b08bf5eed183831e65f81469c3aa00c5dbaacd5",
+      "bytes": 8772,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f03-1920-keepout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f03-1920-layout.png",
+      "git_blob_sha": "48e9d286760934cb70ca1320a9049996ea04bb98",
+      "bytes": 62416,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f03-1920-layout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/f03-1920-ui.png",
+      "git_blob_sha": "4a1c2f78224ac422e1efba47c6d3601157a48d58",
+      "bytes": 76982,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f03-1920-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/information-1920-crop.png",
+      "git_blob_sha": "f5c6268c837514bb70c36dea375deba61a4c6361",
+      "bytes": 8659,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/information-1920-crop.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/information-1920-keepout.png",
+      "git_blob_sha": "147ecdd68f6b3043ce8216d961dca154b086605d",
+      "bytes": 8671,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/information-1920-keepout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/information-1920-layout.png",
+      "git_blob_sha": "c9d95fbe837adc95d5cc1926e653ed348cff34a7",
+      "bytes": 70502,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/information-1920-layout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/information-1920-ui.png",
+      "git_blob_sha": "452c3242255958ce552508c578b710e573b06af8",
+      "bytes": 84505,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/information-1920-ui.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/master-crop.png",
+      "git_blob_sha": "ab0ec2abe5bc8c563400770d6cfb25ad440694f5",
+      "bytes": 14133,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/master-crop.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/master-keepout.png",
+      "git_blob_sha": "5aed90ab232f4a15c767ed62d3991cc982983a52",
+      "bytes": 14419,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/master-keepout.png"
+    },
+    {
+      "path": "docs/design/book_inventory/production/png/navigation.png",
+      "git_blob_sha": "0773cc010435b763c56bbd206e11976a5d8fe964",
+      "bytes": 117747,
+      "url": "https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/navigation.png"
+    }
+  ]
+}

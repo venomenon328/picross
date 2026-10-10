@@ -1,40 +1,52 @@
 name: P1 toolchain preflight
 
 on:
-  pull_request:
+  workflow_call:
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: p1-preflight-${{ github.workflow }}-${{ github.ref }}
+  group: p1-preflight-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   preflight:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 5
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            tools/p1_preflight.py
+            tools/p1_preflight_smoke/
+          sparse-checkout-cone-mode: false
+      - name: Restore official toolchain archives
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/p1-toolchain-cache
+          key: ${{ runner.os }}-godot-4.7.2-cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4-f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011
       - name: Godot 4.7.2 smoke and Windows export
         env:
           P1_PREFLIGHT_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
         run: >-
           python3 tools/p1_preflight.py
-          --cache-dir "${{ runner.temp }}/p1-preflight-cache"
+          --cache-dir "${{ runner.temp }}/p1-toolchain-cache"
           --output-dir "${{ runner.temp }}/p1-preflight-output"
-          --download-timeout-seconds 1200
-          --process-timeout-seconds 300
-      - name: Upload Windows smoke artifact and report
+          --download-timeout-seconds 180
+          --process-timeout-seconds 90
+      - name: Upload toolchain report and logs
+        if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: p1-preflight-windows-x86_64-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/p1-preflight-output/
-          if-no-files-found: error
+          name: p1-preflight-report-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            ${{ runner.temp }}/p1-preflight-output/*.json
+            ${{ runner.temp }}/p1-preflight-output/*.log
+            ${{ runner.temp }}/p1-preflight-output/logs/
+          if-no-files-found: warn
           retention-days: 7
-          compression-level: 0

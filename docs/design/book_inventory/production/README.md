@@ -1,10 +1,15 @@
 # BP-1R · Einzelseiten-Komposition
 
+**Archivstatus seit #63:** Abgeleitete PNGs und Review-ZIP sind am gebundenen
+historischen Commit verfügbar. Die folgenden Bildlinks zeigen diese unveränderten
+Dateien. Vollprüfung und Reproduktion erfolgen im separaten Checkout nach der
+[Archivübersicht](../ARCHIVE.md). Die folgenden Standangaben sind historisch.
+
 Stand: 26.09.2026 · K-01 bis K-05 aus [#27](https://github.com/venomenon328/picross/issues/27)
 unter [#21](https://github.com/venomenon328/picross/issues/21).
 **Statische technische Vorlagen, keine Hintergrundkunst oder native Navigation.**
 
-[Review-ZIP](bp1r-review.zip) · [Bildbriefing](BRIEFING.md) · [Layoutdaten](layout.json) ·
+[Review-ZIP](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/bp1r-review.zip) · [Bildbriefing](BRIEFING.md) · [Layoutdaten](layout.json) ·
 [Quell-/Dateimanifest](manifest.json) · [Rendergrenzen](render-checks.json) · [Prüfbericht](VERIFICATION.md).
 Der eigene Draft-PR bindet ZIP-Hash, Head, Basis, CI und getrennten Selbstreview.
 Das ZIP über „Download raw file“ laden. Es enthält keine Fonts.
@@ -44,11 +49,11 @@ sind unabhängig. Alle Angaben in den folgenden vier Maßspalten gelten **vorher
 
 | PNG / SVG | UI / Zelle / Hinweisschrift | Raster; sichtbare Zellen | Zeilen- / Spaltenhinweisfläche | Slots horizontal / vertikal |
 | --- | --- | --- | --- | --- |
-| [F-02 1920×1080](png/f02-1920-layout.png) / [SVG](svg/f02-1920-layout.svg) | 100 % / 18 / 13 px | 720×720; 40×40 | 210×720 / 720×126 | 30 / 18 px |
-| [F-02 2560×1440](png/f02-2560-layout.png) / [SVG](svg/f02-2560-layout.svg) | 100 % / 18 / 13 px | 720×720; 40×40 | 210×720 / 720×126 | 30 / 18 px |
-| [F-01 2560×1440](png/f01-2560-layout.png) / [SVG](svg/f01-2560-layout.svg) | 100 % / 24 / 14 px | 480×480; 20×20 | 192×480 / 480×144 | 30 / 18 px |
-| [F-03 1920×1080](png/f03-1920-layout.png) / [SVG](svg/f03-1920-layout.svg) | 100 % / 24 / 14 px | 1368×672; 57×28 | 240×672 / 1368×144 | 30 / 18 px |
-| [F-02 1280×720](png/f02-1280-layout.png) / [SVG](svg/f02-1280-layout.svg) | 125 % / 22 / 16,25 px | 638×374; 29×17 | 210×374 / 638×120 | 37,5 / 22,5 px |
+| [F-02 1920×1080](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1920-layout.png) / [SVG](svg/f02-1920-layout.svg) | 100 % / 18 / 13 px | 720×720; 40×40 | 210×720 / 720×126 | 30 / 18 px |
+| [F-02 2560×1440](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-2560-layout.png) / [SVG](svg/f02-2560-layout.svg) | 100 % / 18 / 13 px | 720×720; 40×40 | 210×720 / 720×126 | 30 / 18 px |
+| [F-01 2560×1440](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f01-2560-layout.png) / [SVG](svg/f01-2560-layout.svg) | 100 % / 24 / 14 px | 480×480; 20×20 | 192×480 / 480×144 | 30 / 18 px |
+| [F-03 1920×1080](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f03-1920-layout.png) / [SVG](svg/f03-1920-layout.svg) | 100 % / 24 / 14 px | 1368×672; 57×28 | 240×672 / 1368×144 | 30 / 18 px |
+| [F-02 1280×720](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1280-layout.png) / [SVG](svg/f02-1280-layout.svg) | 125 % / 22 / 16,25 px | 638×374; 29×17 | 210×374 / 638×120 | 37,5 / 22,5 px |
 
 F-03: Spalten 26–82 / Zeilen 36–63; UI-Testdatensatz, Rätselqualität nicht abgenommen.
 F-02 klein: Spalten 1–29 / Zeilen 1–17. Alle anderen Fälle zeigen das ganze Raster.
@@ -62,12 +67,12 @@ Ziele gleicher Größe: Album links und Information rechts. Zusätzliche Treffer
 3.872 px² bei UI 100 %, 6.050 px² bei 125 %. Keine breite Kategorienwand.
 Alle Aktions- und Bildrechtecke sind je Größenfall in `layout.json` bemaßt.
 
-![Arbeitskomposition 1080p](png/f02-1920-layout.png)
+![Arbeitskomposition 1080p](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/f02-1920-layout.png)
 
 ## Navigation und Anschlussvertrag
 
-[Navigationstafel](png/navigation.png) / [SVG](svg/navigation.svg) und
-[rechte Informationsansicht 1080p](png/information-1920-layout.png) / [SVG](svg/information-1920-layout.svg).
+[Navigationstafel](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/navigation.png) / [SVG](svg/navigation.svg) und
+[rechte Informationsansicht 1080p](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/information-1920-layout.png) / [SVG](svg/information-1920-layout.svg).
 Sammlung ist neutraler Kontext, kein beschlossener Katalog mit „Orte“ oder „Tiere“.
 
 | Aktion | Zweck / Ziel | Deutscher Tooltip |
@@ -114,13 +119,13 @@ Für alle fünf Größenfälle sowie den schematischen rechten Anschluss:
 | `-keepout` | Weiß = ruhiger geschützter Untergrund; schwarz = Details innerhalb der Art Direction möglich. Keine Alpha-/Inpainting-Maske. |
 | `-crop` | Weiß = erhalten; schwarz = optionaler äußerer Beschnitt. Keine Freihaltemaske. |
 
-[Master-Freihaltung](png/master-keepout.png) / [SVG](svg/master-keepout.svg):
+[Master-Freihaltung](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/master-keepout.png) / [SVG](svg/master-keepout.svg):
 exakte Vereinigung der invers transformierten Arbeits-/UI-Rechtecke aller **fünf
 linken Arbeitsansichten**. Schützt Raster/Hinweise, Miniatur, Palette, Koordinaten,
 Status, Aktionen, Register, Seitenzugang und Titel. Keine alte ganze Einlegebogenmaske.
 Die eigene rechte Freihaltemaske schützt ihre schematischen Informationsbereiche;
 sie gehört zu einer anderen festen Ansicht, nicht in den linken Bildmaster.
-[Master-Beschnitt](png/master-crop.png) / [SVG](svg/master-crop.svg): wie zuvor
+[Master-Beschnitt](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/production/png/master-crop.png) / [SVG](svg/master-crop.svg): wie zuvor
 8 Masterpixel außen optional; diese unveränderte Beschnittgeometrie wurde neu gerendert/geprüft.
 
 `layout.json` Revision `BP-1R`, Schema 2: Pixelrechtecke `[x,y,Breite,Höhe]`,

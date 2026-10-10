@@ -8,13 +8,27 @@ const PencilMarks = preload("res://ui/pencil_marks.gd")
 # Same subpixel motion oracle, scaled for the selected 1.35x clue ink area.
 # Whole-slot jumps remain far above this bound; untouched neighbour stays exact.
 const CLUE_MOTION_PIXEL_BUDGET: int = 550
+const COMPACT_WORK_STEPS: Array[float] = [12.0, 16.0, 18.0, 22.0, 24.0, 72.0]
+# Review images are independent of assertion coverage. Failure frames are
+# always retained uncropped, including the preceding comparison images.
+const COMPACT_PICTURES: Array[String] = [
+	"1280x720-ui125-f2-independent-slots", "1920x1080-ui100-f1",
+	"separation-f1-24-confirmed", "separation-f2-24-confirmed", "f2-reveal",
+]
 var surface: SubViewport
 var output: String
 var captures: Array = []
+var frames: Array = []
+var recent_frames: Array = []
+var failure_captures: Array = []
+var compact: bool = false
+var failed: bool = false
+var failure_message: String = ""
 var pixel_checks: int = 0
 var x_test_cell: Vector2i = Vector2i(-1, -1)
 
 func _initialize() -> void:
+	compact = OS.get_cmdline_user_args().has("--ci-compact")
 	var temporary: String = OS.get_environment("P1_TEST_SAVE_ROOT")
 	if temporary.is_empty():
 		temporary = OS.get_environment("TEMP") if OS.has_feature("windows") else OS.get_environment("TMPDIR")
@@ -23,7 +37,41 @@ func _initialize() -> void:
 	SaveStore.test_root_override = temporary.path_join("picross-p1-capture-%d" % Time.get_ticks_usec())
 	call_deferred("run")
 
-func snapshot(app: Main, name: String, crop: bool = false) -> void:
+func write_report() -> void:
+	if output.is_empty():
+		return
+	var stage: String = OS.get_environment("P1_RENDER_STAGE")
+	var report: FileAccess = FileAccess.open(output.path_join("render-report" + ("-"+stage if not stage.is_empty() else "") + ".json"), FileAccess.WRITE)
+	if report == null:
+		failed = true
+		failure_message = "Cannot write native capture report"
+		push_error("Cannot write native capture report")
+		quit(4)
+		return
+	report.store_string(JSON.stringify({"renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(),
+		"compact": compact, "failed": failed, "failure": failure_message, "pixel_checks": pixel_checks,
+		"rendered_count": frames.size(), "retained_count": captures.size() + failure_captures.size(),
+		"clue_contract": "single-line colored numbers; shared fixed slots; exact prefix/suffix markers; snapped per-line panning; complete hover tooltip",
+		"physical_dpi_acceptance": "OPEN: owner", "captures": captures, "frames": frames, "failure_captures": failure_captures}, "  ") + "\n")
+
+func fail_capture(message: String, code: int = 5) -> void:
+	if failed:
+		return
+	failed = true
+	failure_message = message
+	push_error(message)
+	for frame: Dictionary in recent_frames:
+		for kind: String in ["picture", "material"]:
+			var picture: Image = frame.get(kind)
+			if picture == null:
+				continue
+			var name: String = "failure-" + str(frame.name) + ("-underlay" if kind == "material" else "") + ".png"
+			if picture.save_png(output.path_join(name)) == OK:
+				failure_captures.append({"file": name, "frame": frame.name, "kind": kind, "crop": false})
+	write_report()
+	quit(code)
+
+func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 	var material: Image
 	if name.begins_with("x-clip-") or name.contains("preview-color"):
 		# Complete pending board redraws before hiding its separate ink layer.
@@ -47,6 +95,12 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var picture: Image = surface.get_texture().get_image()
+	var record: Dictionary = {"name": name, "logical_surface": [surface.size.x, surface.size.y], "ui_scale": app.ui_scale,
+		"cell_pitch": app.board.view.cell_size, "fixture": app.session.definition.id, "retained": false, "crop": false}
+	frames.append(record)
+	recent_frames.append({"name": name, "picture": picture, "material": material})
+	if recent_frames.size() > 3:
+		recent_frames.pop_front()
 	if name.begins_with("separation-") and name.ends_with("-confirmed"):
 		for i: int in range(app.session.definition.palette.size()):
 			var cell: Rect2 = app.board.view.cell_rect(Vector2i(2 + i * 2, 4))
@@ -59,9 +113,8 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			var tint_delta: Vector3 = Vector3(textured.r-original.r, textured.g-original.g, textured.b-original.b)
 			# The selected pencil has white texture at up to 12 % coverage.
 			if not picture.get_pixelv(center).is_equal_approx(original) or minf(tint_delta.x, minf(tint_delta.y, tint_delta.z)) < -0.005 or tint_delta.length() > 0.13 * sqrt(3.0) or not picture.get_pixelv(moat).is_equal_approx(material.get_pixelv(moat)):
-				push_error("Rendered fill/moat regression: %s solid=%s inner=%s moat=%s paper=%s expected=%s" % [name,picture.get_pixelv(center),picture.get_pixelv(expanded),picture.get_pixelv(moat),material.get_pixelv(moat),Color(app.session.definition.palette[i].color)])
-				quit(5)
-				return
+				fail_capture("Rendered fill/moat regression: %s solid=%s inner=%s moat=%s paper=%s expected=%s" % [name,picture.get_pixelv(center),picture.get_pixelv(expanded),picture.get_pixelv(moat),material.get_pixelv(moat),Color(app.session.definition.palette[i].color)], 5)
+				return picture
 			pixel_checks += 3
 	if name.contains("preview-color"):
 		var color_index: int = int(name.get_slice("preview-color", 1))
@@ -74,9 +127,8 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 		var underlay: Color = gap if gap.is_equal_approx(Color("e8e9d9")) else material.get_pixelv(preview_center)
 		var expected_fill: Color = underlay.blend(Color(Color(app.session.definition.palette[color_index - 1].color), 0.56))
 		if not close_color(picture.get_pixelv(preview_center), expected_fill) or absf(gap.r - expected_fill.r) + absf(gap.g - expected_fill.g) + absf(gap.b - expected_fill.b) < 0.1:
-			push_error("Rendered preview fill/moat regression: %s actual=%s expected=%s gap=%s" % [name,picture.get_pixelv(preview_center),expected_fill,gap])
-			quit(5)
-			return
+			fail_capture("Rendered preview fill/moat regression: %s actual=%s expected=%s gap=%s" % [name,picture.get_pixelv(preview_center),expected_fill,gap], 5)
+			return picture
 		pixel_checks += 2
 	if name == "f03-grid-focus":
 		var focus: Vector2i = app.board.hover
@@ -86,9 +138,8 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 		var outside: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(focus + Vector2i(2, 2)).get_center())
 		var band: Color = Color("e8e9d9")
 		if not picture.get_pixelv(row_point).is_equal_approx(band) or not picture.get_pixelv(column_point).is_equal_approx(band) or not picture.get_pixelv(intersection).is_equal_approx(band) or not picture.get_pixelv(outside).is_equal_approx(material.get_pixelv(outside)):
-			push_error("Rendered grid focus regression")
-			quit(5)
-			return
+			fail_capture("Rendered grid focus regression", 5)
+			return picture
 		pixel_checks += 4
 	if name.begins_with("x-clip-"):
 		var cell_box: Rect2 = app.board.view.cell_rect(x_test_cell)
@@ -103,17 +154,15 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 			for x: int in range(region.position.x, region.end.x):
 				var delta: float = material.get_pixel(x, y).r - picture.get_pixel(x, y).r
 				if delta > 2.0/255 and not viewport.has_point(Vector2(x, y) + Vector2(0.5, 0.5)):
-					push_error("Rendered X escaped viewport: %s point=%s clip=%s delta=%s" % [name,Vector2i(x,y),viewport,delta])
-					quit(5)
-					return
+					fail_capture("Rendered X escaped viewport: %s point=%s clip=%s delta=%s" % [name,Vector2i(x,y),viewport,delta], 5)
+					return picture
 				# Preview active bands are lighter than this threshold; only ink
 				# counts as a visible clipped X.
 				if delta > 0.12:
 					pixels += 1
 		if pixels < 3:
-			push_error("Rendered clipped X absent: " + name)
-			quit(5)
-			return
+			fail_capture("Rendered clipped X absent: " + name, 5)
+			return picture
 		pixel_checks += 1
 	if name == "gesture-counter-8" or name.begins_with("g1-counter-"):
 		var font: Font = Board.BODY_FONT
@@ -130,9 +179,8 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 				if picture.get_pixel(x, y).r < 0.5:
 					dark_pixels += 1
 		if not picture.get_pixelv(sample).is_equal_approx(Color("fffaf0")) or dark_pixels < 3:
-			push_error("Rendered live counter absent")
-			quit(5)
-			return
+			fail_capture("Rendered live counter absent", 5)
+			return picture
 		pixel_checks += 2
 	if name.begins_with("hint-marker-"):
 		var parts: PackedStringArray = name.split("-")
@@ -160,31 +208,33 @@ func snapshot(app: Main, name: String, crop: bool = false) -> void:
 					if coverage > 0.15 and coverage <= 1.01 and (delta-tint*coverage).length() < 0.01:
 						accent_pixels += 1
 			if (accent_pixels > 0) != bool(visual[side + "_hidden"]):
-				push_error("Rendered hint marker mismatch: %s %s (%d pixels)" % [name, side, accent_pixels])
-				quit(5)
-				return
+				fail_capture("Rendered hint marker mismatch: %s %s (%d pixels)" % [name, side, accent_pixels], 5)
+				return picture
 			pixel_checks += 1
 	if name.ends_with("reveal"):
 		var texture_image: Image = app.reveal_view.artwork.get_image()
 		if texture_image == null or texture_image.is_empty():
-			push_error("Missing rendered reveal")
-			quit(6)
-			return
-	if crop:
-		var box: Rect2 = app.board.view.cell_rect(Vector2i(2, 2)).merge(app.board.view.cell_rect(Vector2i(18, 8)))
-		box.position += app.board.global_position
-		picture = picture.get_region(Rect2i(box.grow(8)))
-	if picture.save_png(output.path_join(name + ".png")) != OK:
-		quit(4)
-		return
+			fail_capture("Missing rendered reveal", 6)
+			return picture
 	var row_index: int = longest_line(app.session.definition.rows)
 	var column_index: int = longest_line(app.session.definition.columns)
 	var row_window: Dictionary = app.board.clue_layout("row", row_index)
 	var column_window: Dictionary = app.board.clue_layout("column", column_index)
-	captures.append({"file": name + ".png", "logical_surface": [surface.size.x, surface.size.y], "ui_scale": app.ui_scale, "cell_pitch": app.board.view.cell_size, "fixture": app.session.definition.id, "crop": crop,
-		"row_clue_steps": nonzero_steps(app.board.row_clue_steps), "column_clue_steps": nonzero_steps(app.board.column_clue_steps),
+	record.merge({"row_clue_steps": nonzero_steps(app.board.row_clue_steps), "column_clue_steps": nonzero_steps(app.board.column_clue_steps),
 		"longest_row_window": [row_window.start, row_window.end, row_window.prefix_hidden, row_window.suffix_hidden],
 		"longest_column_window": [column_window.start, column_window.end, column_window.prefix_hidden, column_window.suffix_hidden]})
+	if not compact or name in COMPACT_PICTURES:
+		var saved: Image = picture
+		if crop:
+			var box: Rect2 = app.board.view.cell_rect(Vector2i(2, 2)).merge(app.board.view.cell_rect(Vector2i(18, 8)))
+			box.position += app.board.global_position
+			saved = picture.get_region(Rect2i(box.grow(8)).intersection(Rect2i(Vector2i.ZERO, picture.get_size())))
+		if saved.save_png(output.path_join(name + ".png")) != OK:
+			fail_capture("Cannot retain capture: " + name, 4)
+			return picture
+		record.merge({"file": name + ".png", "retained": true, "crop": crop}, true)
+		captures.append(record)
+	return picture
 
 func close_color(actual: Color, expected: Color) -> bool:
 	return absf(actual.r - expected.r) <= 2.0/255 and absf(actual.g - expected.g) <= 2.0/255 and absf(actual.b - expected.b) <= 2.0/255
@@ -241,30 +291,24 @@ func capture_axis_reset(app: Main, fixture_index: int, pitch: float, color: int)
 	app.board.pointer_press(app.board.view.cell_rect(start).get_center(), MOUSE_BUTTON_LEFT)
 	app.board.pointer_move(app.board.view.cell_rect(old).get_center(), true)
 	var label: String = "g1-f%02d" % (fixture_index + 1)
-	await snapshot(app, label + "-old-arm")
+	var old_image: Image = await snapshot(app, label + "-old-arm")
 	app.board.pointer_move(app.board.view.cell_rect(start).get_center(), true)
 	if app.board.gesture_length() != 1:
-		push_error("Origin counter did not reset to one: " + label)
-		quit(5)
+		fail_capture("Origin counter did not reset to one: " + label, 5)
 		return
-	await snapshot(app, "g1-counter-1-" + label)
+	var origin_image: Image = await snapshot(app, "g1-counter-1-" + label)
 	app.board.pointer_move(app.board.view.cell_rect(next).get_center(), true)
 	if app.board.gesture_length() != 4:
-		push_error("New axis counter has wrong length: " + label)
-		quit(5)
+		fail_capture("New axis counter has wrong length: " + label, 5)
 		return
-	await snapshot(app, "g1-counter-4-" + label)
-	var old_image: Image = Image.load_from_file(output.path_join(label + "-old-arm.png"))
-	var origin_image: Image = Image.load_from_file(output.path_join("g1-counter-1-" + label + ".png"))
-	var new_image: Image = Image.load_from_file(output.path_join("g1-counter-4-" + label + ".png"))
+	var new_image: Image = await snapshot(app, "g1-counter-4-" + label)
 	var old_box: Rect2 = app.board.view.cell_rect(old)
 	var new_box: Rect2 = app.board.view.cell_rect(next)
 	var old_pixel: Vector2i = Vector2i(app.board.global_position + old_box.position + old_box.size * Vector2(0.5, 0.38))
 	var new_pixel: Vector2i = Vector2i(app.board.global_position + new_box.position + new_box.size * Vector2(0.5, 0.38))
 	var fill: Color = Color("e8e9d9").blend(Color(Color(app.session.definition.palette[color - 1].color), 0.56))
 	if not close_color(old_image.get_pixelv(old_pixel), fill) or close_color(origin_image.get_pixelv(old_pixel), fill) or close_color(new_image.get_pixelv(old_pixel), fill) or not close_color(new_image.get_pixelv(new_pixel), fill):
-		push_error("Rendered old/new arm pixel mismatch: " + label)
-		quit(5)
+		fail_capture("Rendered old/new arm pixel mismatch: " + label, 5)
 		return
 	pixel_checks += 4
 	app.board.cancel_gesture()
@@ -316,8 +360,7 @@ func capture_x_edges(app: Main) -> void:
 				if found:
 					break
 			if not found:
-				push_error("Cannot position partial X at " + edge)
-				quit(5)
+				fail_capture("Cannot position partial X at " + edge, 5)
 				return
 			var values: Array[int] = app.session.player.cells.duplicate()
 			values.fill(-1)
@@ -357,18 +400,14 @@ func capture_hint_markers(app: Main, row: int, column: int) -> void:
 			for fraction: float in [0.0, 0.49, 0.51, 1.49, 1.51]:
 				app.board.pan_drag_distance = direction * pitch * fraction
 				var name: String = "hint-marker-%s-%d-%d-%d" % [axis, index, anchor, roundi(fraction * 100)]
-				await snapshot(app, name)
-				if not FileAccess.file_exists(output.path_join(name + ".png")):
-					return
-				var current: Image = Image.load_from_file(output.path_join(name + ".png"))
+				var current: Image = await snapshot(app, name)
 				if previous != null and roundi(fraction * 100) in [51, 151]:
 					var area: Rect2 = app.board.row_clue_area() if axis == "row" else app.board.column_clue_area()
 					var line: Vector2 = app.board.view.cell_rect(Vector2i(0, index) if axis == "row" else Vector2i(index, 0)).get_center()
 					var region: Rect2i = Rect2i(Rect2(app.board.global_position + (Vector2(area.position.x, line.y - 9) if axis == "row" else Vector2(line.x - 9, area.position.y)),
 						Vector2(area.size.x, 18) if axis == "row" else Vector2(18, area.size.y))).intersection(Rect2i(Vector2i.ZERO, surface.size))
 					if region_difference(previous, current, region) > CLUE_MOTION_PIXEL_BUDGET:
-						push_error("Rendered hint numbers snapped before drop: " + name)
-						quit(5)
+						fail_capture("Rendered hint numbers snapped before drop: " + name, 5)
 						return
 					pixel_checks += 1
 				previous = current
@@ -382,8 +421,7 @@ func visible_token_centers(app: Main, axis: String, index: int) -> Dictionary:
 			result[int(unit.index)] = float(unit.center)
 	return result
 
-func token_pixels(image_file: String, app: Main, axis: String, index: int, centers: Dictionary) -> bool:
-	var picture: Image = Image.load_from_file(output.path_join(image_file + ".png"))
+func token_pixels(picture: Image, app: Main, axis: String, index: int, centers: Dictionary) -> bool:
 	var layout: Dictionary = app.board.clue_layout(axis, index)
 	var line: Vector2 = app.board.view.cell_rect(Vector2i(0, index) if axis == "row" else Vector2i(index, 0)).get_center()
 	for token: int in centers:
@@ -423,7 +461,7 @@ func capture_drop_snap(app: Main, axis: String, index: int, anchor: int, fractio
 	surface.push_input(motion, true)
 	var before: Dictionary = visible_token_centers(app, axis, index)
 	var before_units: Dictionary = app.board.visual_hint_units(axis, index)
-	await snapshot(app, name + "-before-mouse-up")
+	var before_image: Image = await snapshot(app, name + "-before-mouse-up")
 	var release: InputEventMouseButton = InputEventMouseButton.new()
 	release.button_index = MOUSE_BUTTON_MIDDLE
 	release.pressed = false
@@ -431,22 +469,20 @@ func capture_drop_snap(app: Main, axis: String, index: int, anchor: int, fractio
 	release.global_position = release.position
 	surface.push_input(release, true)
 	var after: Dictionary = visible_token_centers(app, axis, index)
-	await snapshot(app, name + "-after-mouse-up")
-	if not token_pixels(name + "-before-mouse-up", app, axis, index, before) or not token_pixels(name + "-after-mouse-up", app, axis, index, after):
-		push_error("Rendered snap token absent: " + name)
-		quit(5)
+	var after_image: Image = await snapshot(app, name + "-after-mouse-up")
+	if not token_pixels(before_image, app, axis, index, before) or not token_pixels(after_image, app, axis, index, after):
+		fail_capture("Rendered snap token absent: " + name, 5)
 		return
-	var before_capture: Dictionary = captures[-2]
+	var before_capture: Dictionary = frames[-2]
 	before_capture.token_centers = before
 	before_capture.pointer_delta = [delta.x, delta.y]
 	before_capture.hint_units = before_units
-	var after_capture: Dictionary = captures[-1]
+	var after_capture: Dictionary = frames[-1]
 	after_capture.token_centers = after
 	after_capture.hint_units = app.board.visual_hint_units(axis, index)
 	var distance: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(before, after)
 	if distance.count == 0 or distance.largest > pitch * 0.5 + 0.001:
-		push_error("Rendered snap moved shared tokens more than half a slot: " + name)
-		quit(5)
+		fail_capture("Rendered snap moved shared tokens more than half a slot: " + name, 5)
 		return
 	if name == "snap-f02-row12-owner":
 		var layout: Dictionary = app.board.clue_layout(axis, index)
@@ -455,8 +491,7 @@ func capture_drop_snap(app: Main, axis: String, index: int, anchor: int, fractio
 			var nearest: int = roundi((float(before[0]) - app.board.clue_slot_origin(axis, app.board.row_clue_area(), layout)) / pitch - 0.5)
 			owner_snapped = is_equal_approx(float(after[0]), app.board.clue_slot_center(axis, app.board.row_clue_area(), layout, nearest))
 		if not owner_snapped or absf(float(before.get(0, -1)) - 51.2) > 0.001 or absf(float(after.get(0, -1)) - 56.0) > 0.001:
-			push_error("Rendered F-02 row 12 token 4 missed its nearest slot")
-			quit(5)
+			fail_capture("Rendered F-02 row 12 token 4 missed its nearest slot", 5)
 			return
 		pixel_checks += 1
 
@@ -465,6 +500,27 @@ func capture_drop_matrix(app: Main, row: int, column: int) -> void:
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
 		var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
+		if compact:
+			# Both sides of the half-slot boundary, both directions, a longer
+			# middle drag, and the real current layout's two outward clamps.
+			for anchor: int in [0, maximum]:
+				var direction: float = -1.0 if anchor == maximum else 1.0
+				for fraction: float in [0.49, 0.51]:
+					await capture_drop_snap(app, axis, index, anchor, direction * fraction,
+						"snap-%s-%d-%d-%d" % [axis, index, anchor, roundi(direction * fraction * 100)])
+			for direction: float in [-1.0, 1.0]:
+				await capture_drop_snap(app, axis, index, maximum / 2, direction * 1.8,
+					"snap-%s-%d-middle-%d" % [axis, index, roundi(direction)])
+			for anchor: int in [0, maximum]:
+				app.board.set_clue_step(axis, index, anchor)
+				var stop: Dictionary = visible_token_centers(app, axis, index)
+				await capture_drop_snap(app, axis, index, anchor, -1.0 if anchor == 0 else 1.0,
+					"snap-%s-%d-clamp-%d" % [axis, index, anchor])
+				if stop != visible_token_centers(app, axis, index) or stop != frames[-2].token_centers:
+					fail_capture("Current rendered outward clamp moved tokens: " + axis)
+					return
+				pixel_checks += 1
+			continue
 		for anchor: int in [0, maximum / 2, maximum]:
 			var direction: float = -1.0 if anchor == maximum else 1.0
 			for fraction: float in [0.49, 0.51, 1.8]:
@@ -492,14 +548,12 @@ func capture_owner_drop(app: Main) -> void:
 	app.board.normalize_clue_steps()
 	app.board.navigate_to(Vector2(0.5, 11.0 / 40.0))
 	if app.board.clue_capacity("row") != 6:
-		push_error("F-02 owner render requires six actual row slots")
-		quit(5)
+		fail_capture("F-02 owner render requires six actual row slots", 5)
 		return
 	await capture_drop_snap(app, "row", 11, 0, 1.8, "snap-f02-row12-owner")
 	var row_maximum: int = int(app.board.clue_layout("row", 11).max_offset)
 	if app.board.clue_step("row", 11) != row_maximum or app.board.row_clue_reads[11].anchor != "outer_start":
-		push_error("V-01 owner render did not reach the direct outer stop")
-		quit(5)
+		fail_capture("V-01 owner render did not reach the direct outer stop", 5)
 		return
 	await capture_drop_snap(app, "row", 11, row_maximum, 1.0, "variant-a-owner-outer-clamp")
 	await capture_monotone_route(app, "row", 11)
@@ -510,8 +564,7 @@ func capture_owner_drop(app: Main) -> void:
 	var column_index: int = 11
 	app.board.navigate_to(Vector2(float(column_index) / 40.0, 11.0 / 40.0))
 	if app.board.clue_capacity("column") != 4 or app.session.definition.columns[column_index].size() != 5:
-		push_error("V-02 column render requires four actual slots and five tokens")
-		quit(5)
+		fail_capture("V-02 column render requires four actual slots and five tokens", 5)
 		return
 	await capture_monotone_route(app, "column", column_index)
 	column_top = 5.0 * app.board.shared_clue_slot_extent("column", app.board.clue_font(), app.board.clue_font_size()) + 15.0
@@ -520,8 +573,7 @@ func capture_owner_drop(app: Main) -> void:
 	var long_column: int = 20
 	app.board.navigate_to(Vector2(float(long_column) / 40.0, 11.0 / 40.0))
 	if app.board.clue_capacity("column") != 5 or app.session.definition.columns[long_column].size() != 11:
-		push_error("V-03 long column render requires five actual slots and eleven tokens")
-		quit(5)
+		fail_capture("V-03 long column render requires five actual slots and eleven tokens", 5)
 		return
 	await capture_monotone_route(app, "column", long_column)
 	app.board.book_layout = true
@@ -540,18 +592,15 @@ func capture_monotone_route(app: Main, axis: String, index: int) -> void:
 			await capture_drop_snap(app, axis, index, origin, float(direction), "variant-a-%s-%d-dir%d-step%d" % [axis, index, direction, step])
 			seen.merge(visible_token_centers(app, axis, index))
 			if (app.board.clue_step(axis, index) - origin) * direction <= 0:
-				push_error("V-02 rendered same-sign route did not progress")
-				quit(5)
+				fail_capture("V-02 rendered same-sign route did not progress", 5)
 				return
 		if app.board.clue_step(axis, index) != target or seen.size() != app.board.clue_entry_count(axis, index):
-			push_error("V-03 rendered route did not reach every token")
-			quit(5)
+			fail_capture("V-03 rendered route did not reach every token", 5)
 			return
 		var stop: Dictionary = visible_token_centers(app, axis, index)
 		await capture_drop_snap(app, axis, index, target, float(direction), "variant-a-%s-%d-dir%d-clamp" % [axis, index, direction])
-		if stop != visible_token_centers(app, axis, index) or stop != captures[-2].token_centers:
-			push_error("V-02 rendered outer/grid clamp moved tokens")
-			quit(5)
+		if stop != visible_token_centers(app, axis, index) or stop != frames[-2].token_centers:
+			fail_capture("V-02 rendered outer/grid clamp moved tokens", 5)
 			return
 
 func run() -> void:
@@ -559,6 +608,10 @@ func run() -> void:
 	if output.is_empty() or DisplayServer.get_name() == "headless":
 		quit(2)
 		return
+	for argument: String in OS.get_cmdline_user_args():
+		if argument not in ["--ci-compact", "--p1-capture"]:
+			fail_capture("Unknown capture argument: " + argument)
+			return
 	surface = SubViewport.new()
 	surface.size = Vector2i(1920, 1080)
 	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -568,10 +621,11 @@ func run() -> void:
 	var stage: String = OS.get_environment("P1_RENDER_STAGE")
 	var stages: Array[String] = ["layout","views","cells-f1","cells-f2","gestures","hints","axis","h1"]
 	if not stage.is_empty() and not stage in stages:
-		push_error("Unknown capture stage: " + stage)
-		quit(5)
+		fail_capture("Unknown capture stage: " + stage, 5)
 		return
 	for current: String in stages:
+		if failed:
+			return
 		if not stage.is_empty() and stage != current:
 			continue
 		surface.size = Vector2i(1920,1080)
@@ -590,12 +644,16 @@ func run() -> void:
 			"h1": await capture_h1(app)
 			"cells-f1": await capture_cells(app,[0])
 			"cells-f2": await capture_cells(app,[1])
-	var report: FileAccess = FileAccess.open(output.path_join("render-report" + ("-"+stage if not stage.is_empty() else "") + ".json"), FileAccess.WRITE)
-	report.store_string(JSON.stringify({"renderer": RenderingServer.get_video_adapter_name(), "display": DisplayServer.get_name(), "pixel_checks": pixel_checks, "clue_contract": "single-line colored numbers; shared fixed slots; exact prefix/suffix markers; snapped per-line panning; complete hover tooltip", "physical_dpi_acceptance": "OPEN: owner", "captures": captures}, "  ") + "\n")
-	print("P1_CAPTURE_OK: %d actual rendered images" % captures.size())
+	write_report()
+	if failed:
+		return
+	print("P1_CAPTURE_OK: rendered=%d retained=%d compact=%s" % [frames.size(), captures.size(), compact])
 	quit(0)
 
 func capture_layout(app: Main) -> void:
+	if compact:
+		await capture_compact_layout(app)
+		return
 	app.show_album()
 	await snapshot(app, "album")
 	for dims: Vector2i in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
@@ -624,6 +682,39 @@ func capture_layout(app: Main) -> void:
 			set_fractional_step(app, "column", 50, 0.35)
 			set_fractional_step(app, "column", 51, 0.7)
 			await snapshot(app, "%dx%d-ui%d-f3-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
+
+func capture_compact_layout(app: Main) -> void:
+	app.show_album()
+	await snapshot(app, "album")
+	# Minimum client at the larger UI scale; regular 1080p at both scales.
+	# Each visits mono, color and the 100x100 case; independent reads remain
+	# visible on both axes at UI125 rather than repeating a 4x2 cross product.
+	for configuration: Dictionary in [
+		{"size": Vector2i(1280, 720), "scale": 1.25},
+		{"size": Vector2i(1920, 1080), "scale": 1.0},
+		{"size": Vector2i(1920, 1080), "scale": 1.25},
+	]:
+		surface.size = configuration.size
+		app.set_ui_scale(configuration.scale)
+		for fixture: int in range(3):
+			app.select_puzzle(fixture)
+			if app.ui_scale > 1.0:
+				app.board.zoom(1, app.board.view.viewport.get_center())
+			var values: Array[int] = app.session.player.cells.duplicate()
+			for i: int in range(4):
+				values[(4 + i) * app.session.player.width + 4] = mini(i + 1, app.session.definition.palette.size())
+			replace_render_cells(app, values)
+			app.board.hover = Vector2i(4, 4)
+			var name: String = "%dx%d-ui%d-f%d" % [surface.size.x, surface.size.y, roundi(app.ui_scale * 100), fixture + 1]
+			if fixture > 0 and app.ui_scale > 1.0:
+				var row: int = 35 if fixture == 1 else 50
+				var column: int = 21 if fixture == 1 else 50
+				for axis: String in ["row", "column"]:
+					var index: int = row if axis == "row" else column
+					set_fractional_step(app, axis, index, 0.5)
+					set_fractional_step(app, axis, index + 1, 1.0)
+				name += "-independent-slots"
+			await snapshot(app, name)
 
 func capture_views(app: Main) -> void:
 	var f03_row: int = longest_line(app.sessions[2].definition.rows)
@@ -688,7 +779,7 @@ func capture_cells(app: Main, fixtures: Array) -> void:
 				values[cell.y * app.session.player.width + cell.x] = i + 1
 		replace_render_cells(app, values)
 		app.board.hover = Vector2i(-1, -1)
-		for step: float in app.board.WORK_STEPS:
+		for step: float in COMPACT_WORK_STEPS if compact else app.board.WORK_STEPS:
 			app.board.view.zoom_to(step, app.board.view.viewport.get_center())
 			app.board.navigate_to(Vector2.ZERO)
 			await snapshot(app, "separation-f%d-%d-confirmed" % [fixture + 1, roundi(step)], true)
@@ -717,34 +808,28 @@ func capture_gestures(app: Main) -> void:
 	app.board.view.zoom_to(24.0, app.board.view.viewport.get_center())
 	app.board.navigate_to(Vector2(0.5, float(f03_row) / 100.0))
 	app.board.reset_clue_pan()
-	await snapshot(app, "hint-drag-before")
-	var before_drag: Image = Image.load_from_file(output.path_join("hint-drag-before.png"))
+	var before_drag: Image = await snapshot(app, "hint-drag-before")
 	app.board.pan_button = MOUSE_BUTTON_MIDDLE
 	app.board.pan_target = "row"
 	app.board.pan_line_index = f03_row
 	app.board.pan_drag_distance = float(app.board.clue_layout("row", f03_row).slot_extent) * 0.42
-	await snapshot(app, "hint-drag-subslot")
-	var after_drag: Image = Image.load_from_file(output.path_join("hint-drag-subslot.png"))
+	var after_drag: Image = await snapshot(app, "hint-drag-subslot")
 	var row_rect: Rect2 = app.board.row_clue_area()
 	var row_y: float = app.board.view.cell_rect(Vector2i(0, f03_row)).get_center().y
 	var target_region: Rect2i = Rect2i(Rect2(app.board.global_position + Vector2(row_rect.position.x, row_y - 9), Vector2(row_rect.size.x, 18)))
 	var neighbour_y: float = row_y + app.board.view.cell_size
 	var neighbour_region: Rect2i = Rect2i(Rect2(app.board.global_position + Vector2(row_rect.position.x, neighbour_y - 9), Vector2(row_rect.size.x, 18)))
 	if region_difference(before_drag, after_drag, target_region) < 5 or region_difference(before_drag, after_drag, neighbour_region) != 0 or app.board.clue_step("row", f03_row) != 0:
-		push_error("Rendered subslot hint drag did not move continuously")
-		quit(5)
+		fail_capture("Rendered subslot hint drag did not move continuously", 5)
 		return
 	pixel_checks += 1
 	var pitch: float = float(app.board.clue_layout("row", f03_row).slot_extent)
 	app.board.pan_drag_distance = pitch * 0.49
-	await snapshot(app, "hint-drag-before-slot-boundary")
-	var before_boundary: Image = Image.load_from_file(output.path_join("hint-drag-before-slot-boundary.png"))
+	var before_boundary: Image = await snapshot(app, "hint-drag-before-slot-boundary")
 	app.board.pan_drag_distance = pitch * 0.51
-	await snapshot(app, "hint-drag-after-slot-boundary")
-	var after_boundary: Image = Image.load_from_file(output.path_join("hint-drag-after-slot-boundary.png"))
+	var after_boundary: Image = await snapshot(app, "hint-drag-after-slot-boundary")
 	if region_difference(before_boundary, after_boundary, target_region) > CLUE_MOTION_PIXEL_BUDGET or region_difference(before_boundary, after_boundary, neighbour_region) != 0:
-		push_error("Rendered row hint jumped at a slot boundary")
-		quit(5)
+		fail_capture("Rendered row hint jumped at a slot boundary", 5)
 		return
 	pixel_checks += 2
 	app.board.cancel_gesture()
@@ -754,17 +839,14 @@ func capture_gestures(app: Main) -> void:
 	app.board.pan_line_index = f03_column
 	var column_pitch: float = float(app.board.clue_layout("column", f03_column).slot_extent)
 	app.board.pan_drag_distance = column_pitch * 0.49
-	await snapshot(app, "hint-drag-column-before-slot-boundary")
-	var column_before_boundary: Image = Image.load_from_file(output.path_join("hint-drag-column-before-slot-boundary.png"))
+	var column_before_boundary: Image = await snapshot(app, "hint-drag-column-before-slot-boundary")
 	app.board.pan_drag_distance = column_pitch * 0.51
-	await snapshot(app, "hint-drag-column-after-slot-boundary")
-	var column_after_boundary: Image = Image.load_from_file(output.path_join("hint-drag-column-after-slot-boundary.png"))
+	var column_after_boundary: Image = await snapshot(app, "hint-drag-column-after-slot-boundary")
 	var column_area: Rect2 = app.board.column_clue_area()
 	var column_x: float = app.board.view.cell_rect(Vector2i(f03_column, 0)).get_center().x
 	var column_region: Rect2i = Rect2i(Rect2(app.board.global_position + Vector2(column_x - 9, column_area.position.y), Vector2(18, column_area.size.y))).intersection(Rect2i(Vector2i.ZERO, surface.size))
 	if region_difference(column_before_boundary, column_after_boundary, column_region) > CLUE_MOTION_PIXEL_BUDGET or app.board.clue_step("column", f03_column) != 0:
-		push_error("Rendered column hint jumped at a slot boundary")
-		quit(5)
+		fail_capture("Rendered column hint jumped at a slot boundary", 5)
 		return
 	pixel_checks += 1
 	app.board.cancel_gesture()
@@ -782,8 +864,7 @@ func capture_axis(app: Main) -> void:
 	app.board.pointer_press(app.board.view.cell_rect(gesture_start).get_center(), MOUSE_BUTTON_RIGHT)
 	app.board.pointer_move(app.board.view.cell_rect(gesture_start + Vector2i(7, 0)).get_center(), true)
 	if app.board.gesture_length() != 8:
-		push_error("Rendered gesture counter has wrong value")
-		quit(5)
+		fail_capture("Rendered gesture counter has wrong value", 5)
 		return
 	await snapshot(app, "gesture-counter-8")
 	app.board.cancel_gesture()
@@ -795,7 +876,8 @@ func capture_axis(app: Main) -> void:
 	app.board.clear_clue_hover()
 	app.board.fit_all()
 	await snapshot(app, "f03-overview")
-	await capture_owner_drop(app)
+	if not compact:
+		await capture_owner_drop(app)
 
 func capture_h1(app: Main) -> void:
 	await preload("res://tests/h1_capture.gd").run(self, app)
