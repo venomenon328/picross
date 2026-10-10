@@ -1,0 +1,243 @@
+{
+  "status": "S0_OPEN",
+  "source_commit": "8d6b929099f552f1e1582b2cca478f35eef2f415",
+  "base_commit": "fad885344874534629365917a2ab6a8d311cd3a7",
+  "tested_checkout_commit": "bed4ca33736b6b12c7540efb7ac41df4833f2bb2",
+  "tested_tree": "32961b6a1da9505385c4cbd34f9b5db80c392864",
+  "parents": [
+    "fad885344874534629365917a2ab6a8d311cd3a7",
+    "8d6b929099f552f1e1582b2cca478f35eef2f415"
+  ],
+  "current_main": "d7ec4e1e4a29d82b6979537a33868d57732d3713",
+  "run_id": 37970317549,
+  "run_attempt": 1,
+  "event": "pull_request",
+  "job_id": 113954966256,
+  "conclusion": "failure",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1,
+      "started_at": "2026-10-09T18:00:58Z",
+      "completed_at": "2026-10-09T18:00:59Z"
+    },
+    {
+      "name": "Checkout",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2,
+      "started_at": "2026-10-09T18:00:59Z",
+      "completed_at": "2026-10-09T18:01:05Z"
+    },
+    {
+      "name": "Isolated image dependency",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3,
+      "started_at": "2026-10-09T18:01:05Z",
+      "completed_at": "2026-10-09T18:01:08Z"
+    },
+    {
+      "name": "Import, tests, start and Windows export",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 4,
+      "started_at": "2026-10-09T18:01:08Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload complete technical product evidence (manual opt-in)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 5,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload compact player package",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 6,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload GP-48 native comparisons",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 7,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload ZV-50 native zoom comparisons",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 8,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload RP-3 review renders",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 9,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload RP-6 compact review package",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 10,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload compact ZS-1 native comparison",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 11,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload separate ZS-1 stroke progression evidence",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 12,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload separate ZS-2 native comparison",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 13,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload separate ZS-2 stroke progression evidence",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 14,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload compact VS-1 review",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 15,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Upload regular VS2 native review",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 16,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Post Checkout",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 32,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 33,
+      "started_at": "2026-10-09T18:17:09Z",
+      "completed_at": "2026-10-09T18:17:09Z"
+    }
+  ],
+  "artifacts_count": 0,
+  "original_job_log_sha256": "99c0eb1b6a302d90e029b75ad32e85187524664fc8a89e5f6bbd5edacb524afa",
+  "original_job_log_bytes": 1165865,
+  "log_excerpt": [
+    {
+      "line": 161,
+      "text": "2026-10-09T18:01:05.4235824Z HEAD is now at bed4ca3 Merge 8d6b929099f552f1e1582b2cca478f35eef2f415 into fad885344874534629365917a2ab6a8d311cd3a7"
+    },
+    {
+      "line": 465,
+      "text": "2026-10-09T18:01:46.5990848Z P1_TEST_RESULT checks=26623 failures=0"
+    },
+    {
+      "line": 466,
+      "text": "2026-10-09T18:01:46.5991001Z P1_TESTS_OK"
+    },
+    {
+      "line": 607,
+      "text": "2026-10-09T18:05:07.3613362Z P1_INTEGRATION_WRITE_OK start=0 count=100 cursor=80 history=80"
+    },
+    {
+      "line": 612,
+      "text": "2026-10-09T18:05:29.4673161Z P1_INTEGRATION_WRITE_OK start=100 count=100 cursor=160 history=160"
+    },
+    {
+      "line": 617,
+      "text": "2026-10-09T18:05:53.1529550Z P1_INTEGRATION_WRITE_OK start=200 count=100 cursor=240 history=240"
+    },
+    {
+      "line": 622,
+      "text": "2026-10-09T18:06:17.5802151Z P1_INTEGRATION_WRITE_OK start=300 count=100 cursor=320 history=320"
+    },
+    {
+      "line": 627,
+      "text": "2026-10-09T18:06:44.8921805Z P1_INTEGRATION_WRITE_OK start=400 count=100 cursor=398 history=399"
+    },
+    {
+      "line": 632,
+      "text": "2026-10-09T18:06:47.3890413Z P1_INTEGRATION_READ_OK cells/history/view/clues/redo"
+    },
+    {
+      "line": 1101,
+      "text": "2026-10-09T18:17:05.4318193Z GP48_CAPTURE_OK images=40"
+    },
+    {
+      "line": 1103,
+      "text": "2026-10-09T18:17:05.4528094Z RUN gp48-before-import"
+    },
+    {
+      "line": 1199,
+      "text": "2026-10-09T18:17:09.1372495Z [   0% ] \u001b[90m\u001b[1mreimport\u001b[22m | Executing pre-reimport operations...\u001b[39m\u001b[0m"
+    },
+    {
+      "line": 1200,
+      "text": "2026-10-09T18:17:09.1372753Z [   0% ] \u001b[90m\u001b[1mreimport\u001b[22m | Fraunces.ttf\u001b[39m\u001b[0m"
+    },
+    {
+      "line": 1201,
+      "text": "2026-10-09T18:17:09.1372876Z "
+    },
+    {
+      "line": 1202,
+      "text": "2026-10-09T18:17:09.2897641Z P1 PRODUCT FAIL: gp48-before-import failed with exit code -11"
+    },
+    {
+      "line": 1203,
+      "text": "2026-10-09T18:17:09.3086612Z ##[error]Process completed with exit code 1."
+    }
+  ],
+  "immediate_failure": "Godot historical gp48-before import process returned -11; harness returned 1",
+  "native_root_cause": "Unproven: no stack trace or crash dump in available evidence",
+  "rerun_performed": false,
+  "product_changes": false,
+  "sources": [
+    "https://api.github.com/repos/venomenon328/picross/actions/runs/37970317549",
+    "https://api.github.com/repos/venomenon328/picross/actions/jobs/113954966256",
+    "https://api.github.com/repos/venomenon328/picross/actions/jobs/113954966256/logs",
+    "https://api.github.com/repos/venomenon328/picross/actions/runs/37970317549/artifacts",
+    "https://api.github.com/repos/venomenon328/picross/git/commits/bed4ca33736b6b12c7540efb7ac41df4833f2bb2"
+  ]
+}

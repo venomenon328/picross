@@ -27,8 +27,13 @@ und [Maschinenmanifest mit Font-/Archivhashes](zs1-font-input.json).
 
 ## Native Darstellung
 
-Beide unveränderten Ressourcen liegen ausschließlich unter `prototypes/p1/study/fonts/`.
-Der reguläre Export schließt `study/*` aus; nur die Studien-EXE enthält sie.
+Historischer Studienstand: beide unveränderten Ressourcen unter
+`prototypes/p1/study/fonts/`; der reguläre Export schließt `study/*` weiterhin aus.
+ZS2 hat Chalkboard separat in aktive Ressourcen übernommen. VS2-E2/V3-07
+beauftragt nun auch die unveränderte Bakso-Datei für reguläre Arbeits-Blatttitel:
+[aktive Nutzungshinweise](../prototypes/p1/art/drawing/Bakso-NOTICES.md),
+[Einbettung und Glyphenprüfung](VS2_V3_IMPLEMENTATION.md). Das historische
+Manifest, die Original-TTFs und damaligen Studienberichte bleiben unverändert.
 Der Export-Smoke prüft die eingebetteten TTF-Bytes erneut gegen beide Originalhashes.
 Plex bleibt die ausdrücklich beschriftete historische Referenz, kein dritter Kandidat.
 

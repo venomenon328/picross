@@ -1,4 +1,5 @@
 extends SceneTree
+const Measurements = preload("res://tests/vs2_measurements.gd")
 ## The same script runs against the pinned main and the delivery project.
 ## Fixtures, player inputs, geometry and pointer events are identical.
 const Main = preload("res://ui/main.gd")
@@ -38,7 +39,12 @@ func run() -> void:
 			install_cells(fixture)
 			app.open_puzzle()
 			app.board.clear_pointer_hover()
-			app.board.view.zoom_to(24.0 if fixture == 0 else 22.0, app.board.view.viewport.get_center())
+			if app.board.has_method("set_mode"):
+				app.board.requested_cell = 24.0 if fixture == 0 else 22.0
+				app.board.overview = false
+				app.board._layout()
+			else:
+				app.board.view.zoom_to(24.0 if fixture == 0 else 22.0, app.board.view.viewport.get_center())
 			app.board.view.center = Vector2(10, 10) if fixture == 0 else (Vector2(22, 28) if fixture == 1 else Vector2(18, 12))
 			app.board.view.reframe()
 			app.board.reset_clue_pan()
@@ -69,7 +75,10 @@ func run() -> void:
 					var motion: InputEventMouseMotion = InputEventMouseMotion.new()
 					motion.position = point + (Vector2(44.7 * spec[2], 0) if axis == "row" else Vector2(0, 26.82 * spec[2]))
 					surface.push_input(motion, true)
-					if app.board.pan_target != axis:
+					var expected: String = axis
+					if app.board.has_method("set_mode"):
+						expected = app.board.navigation_target(point-app.board.global_position)
+					if app.board.pan_target != expected:
 						push_error("GP48 capture did not start the intended overflow drag")
 						quit(6)
 						return
@@ -154,3 +163,4 @@ func shot(name: String) -> void:
 					counts[state] += 1
 			states[axis] = counts
 	captures.append({"file": file, "case": name, "fixture": app.session.definition.id, "size": [surface.size.x, surface.size.y], "ui_scale": app.ui_scale, "cells_sha256": JSON.stringify(app.session.player.cells).sha256_text(), "view": app.board.capture_view(), "font_size": app.board.clue_font_size(), "states": states, "focus_states": focus_states, "row3_units": app.board.visual_hint_units("row", 3), "pan_target": app.board.pan_target, "tooltip": [app.board.clue_hover_axis, app.board.clue_hover_index]})
+	if app.board.get_script().resource_path.ends_with("/full_view_board.gd"): captures.back().full_view = Measurements.capture(app.board)

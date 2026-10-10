@@ -1,0 +1,53 @@
+{
+  "status": "success",
+  "source_commit": "32befbf336013d8fee29fb6ec61981cc867d1b12",
+  "base_commit": "d7ec4e1e4a29d82b6979537a33868d57732d3713",
+  "tested_checkout_commit": "38760faec3a1ba01756fc2ff869864a119ee5854",
+  "github_run_id": "38048159384",
+  "scope": {
+    "core": {
+      "enabled": true,
+      "status": "success",
+      "reason": "selected by caller or conservative manual default"
+    },
+    "integration": {
+      "enabled": true,
+      "status": "success",
+      "reason": "selected by caller or conservative manual default"
+    },
+    "pilots": {
+      "enabled": true,
+      "status": "success",
+      "reason": "selected by caller or conservative manual default"
+    },
+    "visual": {
+      "enabled": true,
+      "status": "success",
+      "reason": "selected by caller or conservative manual default"
+    },
+    "export": {
+      "enabled": true,
+      "status": "success",
+      "reason": "selected by caller or conservative manual default"
+    }
+  },
+  "elapsed_seconds": 630.098,
+  "export_files": {
+    "picross-p1.console.exe": "4713fefc9bbe042da13a38724297710e810bcda3166dfa405c3efecf8db3cdec",
+    "picross-p1.exe": "013c64b09a564d89662d470c7d9e030c4c115595668a666bdfeb237b2b3e3d3f"
+  },
+  "technical_artifact": 11668343819,
+  "technical_artifact_sha256": "918a54ef8b8e1325e61040df889a5a1a871b5616982926ede77726d1713b77b9",
+  "product_report_sha256": "3a01b51a5e8982122928304ee9b860d2a375cb0ef86a75e3c95c56a29ea9c909",
+  "vs2_worker_status": "success",
+  "vs2": {
+    "records": 304,
+    "failures": 0,
+    "rendered": 23,
+    "retained_picture_candidates": 2,
+    "historical_comparison": "not run; CI policy #63",
+    "legacy_reader": "separate downloaded Windows old-writer/new-reader probe"
+  },
+  "ci_required": "success",
+  "v1_layout_started": false
+}

@@ -11,6 +11,21 @@ und den früheren Paketbeschreibungen. Maßgeblich sind die vollständige
 Historische Prüfberichte und persönliche Abnahmeentscheidungen bleiben an ihren
 damaligen Stand gebunden; aktuelle Produktverträge werden nicht aufgehoben.
 
+## Aktueller regulärer Stand · VS2 (#61)
+
+**Kombinierter V1/V2/V3-Stand:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
+
+Aktuelle Integrationsbasis ist main `d7ec4e1e4a29d82b6979537a33868d57732d3713`
+mit CI-Policy #63; ursprüngliche Produktbasis `fad8853`, PR #56
+einschließlich N01–N03 integriert. ZS2-M01 und GF-M01/#59 sind historisch bestanden.
+Aktueller Prüfweg gemäß CI-Policy #63; keine Veröffentlichungs- oder Mergefreigabe.
+
+Bedien-/Speichervertrag: [P1](PROTOTYPE_P1.md). Aktuelle
+[Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md).
+VS2-M01, unabhängiges technisches/visuelles Review und passende Mergefreigabe
+bleiben vor Merge offen. Historische Nachweise bleiben commitgebunden.
+
+
 ## Zweck, Quellen und aktueller Rahmen
 
 `venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436`, P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` und G1/#17 über PR #18 als `6dd33232977127592c2b881f73094658853dbd87` in `main` integriert. H1/#19 ist über PR #20 auf diesem Stand integriert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
@@ -468,16 +483,15 @@ Vorschau ist statisch und heller/transparenter. Erst die tatsächliche atomare
 Übernahme zeichnet Setzen/Umwandeln vom Start zum finalen Abschnittsende
 (m wirksame Zellen: Δ = min(12 ms, 180 ms/(m−1)) für m > 1, sonst null;
 210 ms je Zelle, maximal 390 ms; Entfernen sofort und 120 ms). ZS2-E2 verlangt sichtbar geschriebene X-Züge und Gegentasten-Abbruch
-auch außerhalb des Boards, bis beide Tasten losgelassen sind. MMB/Hand bleiben
-Navigation; keine zusätzliche Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
+auch außerhalb des Boards, bis beide Tasten losgelassen sind. MMB bleibt ausschließlich Hinweisnavigation; keine zusätzliche Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
 ist rein visuell; Sitzungsschalter nach P1-Vorbild, kein neues Saveformat.
 
 ZS-1 liefert eine isolierte native Vergleichsprobe und Eigentümerwahl; ZS-2 die
 reguläre Integration. Technische Nachweise, unabhängiges Review, jeweilige reale
 Auswahl/Probe und ausdrückliche Mergefreigabe stehen als Gates in den Paketissues.
-#24 folgt mit der längeren Nutzung der integrierten Fassung. ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer erfolgreich abgeschlossen und die Kombination bestätigt. #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md) ist separat beauftragt; ZS2-M01, unabhängiges aktuelles Review und Mergefreigabe bleiben vor Merge offen. Kein Release.
+#24 folgt mit der längeren Nutzung der integrierten Fassung. ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer erfolgreich abgeschlossen und die Kombination bestätigt. #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md) ist über PR #56 abgeschlossen; ZS2-M01 und R3 wurden vor diesem Merge bestätigt. Kein Release.
 
-ZS2-V1 integriert main einschließlich VS1/GF1; beide Lieferwege bleiben aktiv.
+ZS2-V1 integrierte main einschließlich VS1/GF1. VS2 beendet separate Studienplayer in der Standardlieferung; notwendige historische Replays bleiben als Entwicklerprüfung aktiv.
 VS-D01 ist entschieden, GF-M01/#59 ist historisch bestanden; #61 ist der separate
 Folgeschritt nach #53. Neue Studienberichte binden ihren tatsächlichen Zeichner
 an Quellcommit und Dateihashes; historische Vergleichsbasen bleiben erhalten.
@@ -505,7 +519,7 @@ geeignete 40×30/50×30, 1080p, bevorzugt G und ergänzend V. Sehr große Rätse
 bleiben mögliche Sonderfälle. PR #58 ist als `c19b3547…` integriert; VS-GF1/#59
 liefert zusätzliche Zeilenkapazität aus freier G-Breite bei unverändertem Fit.
 Die reguläre P1-Umstellung bleibt separat. VS-M01 ist nicht vollständig persönlich
-durchgeführt; unabhängiges Review, GF-M01 und Mergefreigabe des neuen Heads bleiben offen.
+durchgeführt; GF-M01/#59 ist historisch bestanden; neues unabhängiges VS2-Review und VS2-M01 bleiben vor Merge offen.
 
 VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
 pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige

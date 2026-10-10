@@ -1,0 +1,8 @@
+{
+  "schema": "vs2-v1-plan-amendment-1",
+  "parent_plan": "v1-plan.json",
+  "parent_plan_commit": "06f695f",
+  "authority": "Explicit owner correction during V1 implementation, 2026-10-10",
+  "change": "100 is not a valid required clue for the intended regular puzzle sizes. Remove the synthetic 100 clue acceptance case and its proposed special padding. Prove actual 1/11/17/40 glyphs at unchanged type size instead.",
+  "unchanged": "Candidate A parameters, finite selection/correction budget, all current 304 regular/technical regression cases including existing large historical fixtures, V1 scope and all other gates. No new size-validation or data migration."
+}

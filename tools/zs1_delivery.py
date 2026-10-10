@@ -232,27 +232,28 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
                     owner_decision="https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659",
                     font_owner_decision="https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344",
                     font_input=json.loads((root / "docs/zs1-font-input.json").read_text(encoding="utf-8")),
-                    export_files=files, evidence=evidence, owner_acceptance="ZS1-M01 PASSED after PR55 merge 985cf08e; current ZS2-M01 and independent review OPEN")
+                    developer_reference_commit=evidence.get("developer_reference_commit"), export_files=files, evidence=evidence, owner_acceptance="ZS1-M01 and ZS2-M01 PASSED historically; current VS2-M01 and independent review OPEN")
     renders = output / "zs1-renders"
     manifest["render_files"] = {p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()}
     report = json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
     (output / "zs1-report.json").write_text(report, encoding="utf-8")
-    player = output / "picross-zs1-windows-x86_64.zip"
-    with zipfile.ZipFile(player, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
-        for name in files:
-            bundle.write(build / name, name)
-        bundle.writestr("README.txt", f"ZS-1 · Quellhead {manifest['source_commit']}\n\n" + (root / "docs/ZS1_OWNER_TRIAL.md").read_text(encoding="utf-8"))
-        bundle.writestr("zs1-report.json", report)
-        for path in (root / "prototypes/p1/art/book").glob("*-OFL.txt"):
-            bundle.write(path, "licenses/" + path.name)
-        bundle.write(root / "prototypes/p1/art/book/manifest.json", "licenses/resources.json")
-        bundle.write(root / "docs/ZS1_FONT_INPUT.md", "FONTSTATUS.md")
-        bundle.write(root / "prototypes/p1/study/fonts/NOTICES.md", "licenses/study-fonts-NOTICES.md")
-    with zipfile.ZipFile(player) as bundle:
-        for name, digest in files.items():
-            import hashlib
-            if hashlib.sha256(bundle.read(name)).hexdigest() != digest:
-                raise toolchain.PreflightError("ZS1 player ZIP audit failed")
+    if build is not None: # Explicit legacy developer export only; never standard CI.
+        player = output / "picross-zs1-windows-x86_64.zip"
+        with zipfile.ZipFile(player, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
+            for name in files:
+                bundle.write(build / name, name)
+            bundle.writestr("README.txt", f"ZS-1 · Quellhead {manifest['source_commit']}\n\n" + (root / "docs/ZS1_OWNER_TRIAL.md").read_text(encoding="utf-8"))
+            bundle.writestr("zs1-report.json", report)
+            for path in (root / "prototypes/p1/art/book").glob("*-OFL.txt"):
+                bundle.write(path, "licenses/" + path.name)
+            bundle.write(root / "prototypes/p1/art/book/manifest.json", "licenses/resources.json")
+            bundle.write(root / "docs/ZS1_FONT_INPUT.md", "FONTSTATUS.md")
+            bundle.write(root / "prototypes/p1/study/fonts/NOTICES.md", "licenses/study-fonts-NOTICES.md")
+        with zipfile.ZipFile(player) as bundle:
+            for name, digest in files.items():
+                import hashlib
+                if hashlib.sha256(bundle.read(name)).hexdigest() != digest:
+                    raise toolchain.PreflightError("ZS1 player ZIP audit failed")
     review = output / "picross-zs1-review.zip"
     # Original-main renders remain temporary after the pixel comparison.
     # Ship the identical study baseline and selected pencil, without duplicate PNGs.
@@ -273,7 +274,6 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
                 bundle.write(path, path.name)
         bundle.writestr("zs1-report.json", report)
         bundle.writestr("index.html", movement_html(evidence))
-    print(f"ZS1 PLAYER {player} sha256:{toolchain.sha256_file(player)}", flush=True)
     print(f"ZS1 REVIEW {review} sha256:{toolchain.sha256_file(review)}", flush=True)
     print(f"ZS1 STROKES {movement} sha256:{toolchain.sha256_file(movement)}", flush=True)
 
@@ -301,4 +301,4 @@ def movement_html(evidence: dict) -> str:
 
 
 def html_page(title: str, sections: list[str]) -> str:
-    return "<!doctype html><html lang='de'><meta charset='utf-8'><title>ZS-1</title><style>body{font:16px system-ui;background:#faf6ec;color:#343f42;margin:24px}.row{display:flex}figure{margin:8px}.row figure{width:32%}.row img{width:100%}img{max-width:100%}h2{margin-top:40px}</style>" + f"<h1>ZS-1 · {title}</h1><p>PNG bei 100 % betrachten. Nachweisindex, keine Spielimplementierung. ZS1-M01 abgeschlossen; aktuelle ZS2-M01-Abnahme separat offen.</p>" + "".join(sections) + "</html>"
+    return "<!doctype html><html lang='de'><meta charset='utf-8'><title>ZS-1</title><style>body{font:16px system-ui;background:#faf6ec;color:#343f42;margin:24px}.row{display:flex}figure{margin:8px}.row figure{width:32%}.row img{width:100%}img{max-width:100%}h2{margin-top:40px}</style>" + f"<h1>ZS-1 · {title}</h1><p>PNG bei 100 % betrachten. Nachweisindex, keine Spielimplementierung. ZS1-M01 und ZS2-M01 historisch abgeschlossen; aktuelle VS2-M01-Abnahme separat offen.</p>" + "".join(sections) + "</html>"

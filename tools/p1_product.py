@@ -2,6 +2,7 @@
 """Verify the current P1 product with bounded, change-selected CI evidence."""
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 import argparse
 import json
 import os
@@ -23,6 +24,7 @@ import p14_integration
 import z2_resources
 import gp48_delivery
 import p1_current_visual
+import vs2_delivery
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
@@ -207,9 +209,9 @@ def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[s
 
 
 def run_visual(output: Path, workspace: Path, project: Path, engine: str,
-               environment: dict, phase, python_phase, host: str, pilots: bool) -> tuple[dict, list[Path]]:
+               environment: dict, phase, python_phase, host: str) -> tuple[dict, list[Path]]:
     renders = output / "renders"
-    renders.mkdir()
+    renders.mkdir(exist_ok=True)
     environment["P1_CAPTURE_DIR"] = str(renders)
     command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
                "--audio-driver", "Dummy", "--script", "res://tests/capture.gd",
@@ -241,14 +243,6 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         # No Z2 historical project, comparison or archive is produced.
         z2_command = ["res://tests/z2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
         phase("current-book-capture", z2_command, "Z2_CAPTURE_OK")
-        if pilots:
-            environment["P1_TEST_SAVE_ROOT"] = str(workspace / "rp6-saves")
-            pilot_command = ["res://tests/rp6_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
-            for index in range(3, 9):
-                environment["RP6_INDEX"] = str(index)
-                phase(f"rp6-f{index+1:02d}-render", pilot_command, "RP6_CAPTURE_OK")
-            environment.pop("P1_TEST_SAVE_ROOT", None)
-            environment.pop("RP6_INDEX", None)
         current = output / "drawing-renders"
         current.mkdir()
         environment["P1_CAPTURE_DIR"] = str(current)
@@ -261,13 +255,31 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         selected = [renders / entry["file"] for entry in combined["captures"]]
         selected += list(renders.glob("*.json"))
         selected += p1_current_visual.selected_motion_files(current)
-        if pilots:
-            selected += [renders / "rp6-f07-completion-1920-ui100.png"]
-        return dict(compact=combined, drawing=motion,
-                    pilot_native="success" if pilots else "not selected; --no-pilots"), selected
+        return dict(compact=combined, drawing=motion), selected
     finally:
         for key in ("P1_CAPTURE_DIR", "P1_RENDER_STAGE", "ZS2_VARIANT", "RP6_INDEX", "P1_TEST_SAVE_ROOT"):
             environment.pop(key, None)
+
+
+def run_pilot_visual(output, workspace, project, engine, environment, phase, host):
+    """Only after real pilot completion; use its saves, never a synthetic finish."""
+    renders = output / "renders"
+    renders.mkdir(exist_ok=True)
+    environment["P1_CAPTURE_DIR"] = str(renders)
+    environment["P1_TEST_SAVE_ROOT"] = str(workspace / "rp6-saves")
+    command = [engine,"--path",str(project),"--rendering-driver","opengl3","--audio-driver","Dummy",
+               "--script","res://tests/rp6_capture.gd","--","--p1-capture","--ci-compact"]
+    if host == "Linux":
+        command = ["xvfb-run","-a"] + command
+        environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
+    try:
+        for index in range(3,9):
+            environment["RP6_INDEX"] = str(index)
+            phase(f"rp6-f{index+1:02d}-render",command,"RP6_CAPTURE_OK")
+        return list(renders.glob("rp6-*.json")) + [renders / "rp6-f07-completion-1920-ui100.png"]
+    finally:
+        for key in ("P1_CAPTURE_DIR","P1_TEST_SAVE_ROOT","RP6_INDEX"):
+            environment.pop(key,None)
 
 
 def player_extras(root: Path, output: Path) -> dict[str, Path]:
@@ -283,9 +295,10 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
     for name, source in (
         ("RP6-SPIELPROBE.md", "docs/RP6_OWNER_TRIAL.md"),
         ("ZV50-SPIELPROBE.md", "docs/ZV50_OWNER_TRIAL.md"),
-        ("ZS2-SPIELPROBE.md", "docs/ZS2_OWNER_TRIAL.md"),
+        ("VS2-SPIELPROBE.md", "docs/VS2_OWNER_TRIAL.md"),
         ("licenses/resources.json", "prototypes/p1/art/book/manifest.json"),
         ("licenses/Chalkboard-NOTICES.md", "prototypes/p1/art/drawing/NOTICES.md"),
+        ("licenses/Bakso-NOTICES.md", "prototypes/p1/art/drawing/Bakso-NOTICES.md"),
     ):
         extras[name] = root / source
     for path in sorted((root / "prototypes/p1/art/book").glob("*.txt")):
@@ -297,7 +310,7 @@ def package_player(build: Path, output: Path, manifest: dict, root: Path) -> tup
     """Use the same real delivery inputs in Product and the fast docs contract."""
     extras = player_extras(root, output)
     archive = package(build, output, manifest,
-                      (root / "docs/ZS2_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
+                      (root / "docs/VS2_OWNER_TRIAL.md").read_text(encoding="utf-8"), extras)
     expected = {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json", *extras}
     return archive, gp48_delivery.verify_player_package(archive, manifest, expected_files=expected)
 
@@ -316,15 +329,15 @@ def main(argv: list[str] | None = None) -> int:
                                           pilots=args.pilots, visual=args.visual, export=True))
     selected = []
 
-    def python_phase(name, action):
-        record = evidence.start(name)
+    def python_phase(name, action, reporter=evidence):
+        record = reporter.start(name)
         began = time.monotonic()
         try:
             result = action()
         except Exception as exc:
-            evidence.complete(record, dict(seconds=round(time.monotonic() - began, 3)), exc)
+            reporter.complete(record, dict(seconds=round(time.monotonic() - began, 3)), exc)
             raise
-        evidence.complete(record, dict(seconds=round(time.monotonic() - began, 3), exit_code=0))
+        reporter.complete(record, dict(seconds=round(time.monotonic() - began, 3), exit_code=0))
         return result
 
     try:
@@ -347,7 +360,7 @@ def main(argv: list[str] | None = None) -> int:
                     args.cache_dir.resolve() / asset.name, asset.sha256, args.download_timeout_seconds)
                     for asset in (editor, toolchain.TEMPLATES)}
         evidence.report["assets"] = python_phase("verified-toolchain-assets", assets)
-        with tempfile.TemporaryDirectory(prefix="picross-p1-product-") as temporary:
+        with tempfile.TemporaryDirectory(prefix="picross-p1-product-") as temporary, ThreadPoolExecutor(max_workers=1) as executor:
             workspace = Path(temporary).resolve()
             engine = str(toolchain.extract_editor(args.cache_dir.resolve() / editor.name, workspace / "engine", host))
             toolchain.extract_windows_templates(args.cache_dir.resolve() / toolchain.TEMPLATES.name,
@@ -357,11 +370,13 @@ def main(argv: list[str] | None = None) -> int:
             environment = toolchain.isolated_environment(workspace, host)
 
             def phase(name: str, command: list[str], marker: str | None = None,
-                      expected_failure: bool = False, validator=None):
-                record = evidence.start(name)
+                      expected_failure: bool = False, validator=None,
+                      reporter=evidence, phase_env=None):
+                record = reporter.start(name)
                 result = {}
                 try:
-                    result = run_phase(name, command, environment, args.process_timeout_seconds, evidence.logs)
+                    result = run_phase(name, command, environment if phase_env is None else phase_env,
+                                       args.process_timeout_seconds, reporter.logs)
                     if result["timed_out"]:
                         raise toolchain.PreflightError(f"{name} exceeded {args.process_timeout_seconds}s")
                     if expected_failure:
@@ -375,9 +390,9 @@ def main(argv: list[str] | None = None) -> int:
                     else:
                         require_clean_output(result, marker)
                 except Exception as exc:
-                    evidence.complete(record, result, exc)
+                    reporter.complete(record, result, exc)
                     raise
-                evidence.complete(record, result)
+                reporter.complete(record, result)
 
             phase("version", [engine, "--version"], toolchain.EXPECTED_VERSION)
             base = [engine, "--headless", "--path", str(project)]
@@ -393,6 +408,45 @@ def main(argv: list[str] | None = None) -> int:
             environment.pop("P1_TEST_SAVE_ROOT")
             phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
             evidence.scope_done("core")
+            vs2_future = None
+            if args.visual:
+                # Independent current coverage overlaps the long process/pilot
+                # checks. Its project, user profile, slot root, environment and
+                # live evidence are separate; the final gate awaits both paths.
+                vs2_project = workspace / "vs2-current-project"
+                shutil.copytree(project, vs2_project)
+                vs2_environment = toolchain.isolated_environment(workspace / "vs2-profile", host)
+                vs2_evidence = Evidence(evidence.technical / "vs2-worker", host, dict(vs2=True, visual=True))
+                vs2_evidence.report.update(source_identity(root))
+                def vs2_work():
+                    vs2_evidence.scope_start("vs2")
+                    command = [engine, "--path", str(vs2_project), "--rendering-driver", "opengl3",
+                               "--audio-driver", "Dummy", "--script", "res://tests/capture.gd",
+                               "--", "--p1-capture", "--ci-compact"]
+                    if host == "Linux":
+                        if not shutil.which("xvfb-run"):
+                            raise toolchain.PreflightError("VS2 requires xvfb-run on Linux")
+                        command = ["xvfb-run", "-a"] + command
+                        vs2_environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
+                    def vs2_phase(name, command, marker=None):
+                        return phase(name, command, marker, reporter=vs2_evidence, phase_env=vs2_environment)
+                    try:
+                        result = vs2_delivery.capture_current(vs2_project, workspace, output,
+                                                             engine, command, vs2_environment, vs2_phase)
+                        vs2_evidence.scope_done("vs2")
+                        vs2_evidence.scope_start("visual")
+                        def visual_python_phase(name, action):
+                            return python_phase(name, action, reporter=vs2_evidence)
+                        visual, files = run_visual(output, workspace, vs2_project, engine,
+                                                   vs2_environment, vs2_phase, visual_python_phase, host)
+                        visual["vs2"], vs2_files = result
+                        vs2_evidence.scope_done("visual")
+                        vs2_evidence.finish()
+                        return visual, files + vs2_files
+                    except Exception as error:
+                        vs2_evidence.finish(error)
+                        raise
+                vs2_future = executor.submit(vs2_work)
             if args.integration:
                 evidence.scope_start("integration")
                 evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
@@ -404,8 +458,13 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_done("pilots")
             if args.visual:
                 evidence.scope_start("visual")
-                evidence.report["visual"], visual_files = run_visual(
-                    output, workspace, project, engine, environment, phase, python_phase, host, args.pilots)
+                # Pilot captures consume completed real saves. Other native checks
+                # run independently in the existing isolated worker, with separate
+                # profile/project/environment and no concurrent evidence writes.
+                if args.pilots:
+                    selected += run_pilot_visual(output, workspace, project, engine, environment, phase, host)
+                evidence.report["visual"], visual_files = python_phase("current-vs2-complete", vs2_future.result)
+                evidence.report["visual"]["pilot_native"] = "success" if args.pilots else "not selected; --no-pilots"
                 selected += visual_files
                 evidence.scope_done("visual")
             evidence.scope_start("export")
@@ -418,7 +477,7 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected)
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name == "v3-renders"])
             evidence.enforce_budget()
             evidence.finish()
             package_began = time.monotonic()
@@ -437,6 +496,8 @@ def main(argv: list[str] | None = None) -> int:
         failure_log.write_text(traceback.format_exc(), encoding="utf-8")
         bound_log(failure_log)
         failed_phase = evidence.report["checks"][-1]["name"] if evidence.report["checks"] else ""
+        if failed_phase == "current-vs2-complete" and vs2_evidence.report["checks"]:
+            failed_phase = vs2_evidence.report["checks"][-1]["name"]
         failure_files, priority = native_failure_sources(
             output, failed_phase, getattr(exc, "p1_failure_images", ()))
         evidence.retain_files(selected + failure_files, priority_sources=priority)

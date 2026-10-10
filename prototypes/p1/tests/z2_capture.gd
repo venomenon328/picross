@@ -37,14 +37,9 @@ func run() -> void:
 		app.size = Vector2(surface.size)
 		app.set_ui_scale(spec[3])
 		app.select_puzzle(spec[0])
-		app.board.view.zoom_to(spec[4],app.board.view.viewport.get_center())
+		app.board.requested_cell = spec[4] if spec[4] in SaveStore.ZOOMS else 24.0
 		app.board.overview = false
-		app.board.normalize_clue_steps()
-		if spec[0] == 2:
-			app.board.view.center = Vector2(53.5,49)
-		else:
-			app.board.view.center = app.board.view.viewport.size/(2*float(spec[4]))
-		app.board.view.reframe()
+		app.board._layout()
 		app._save_current()
 		await shot(spec[5])
 		if spec[5] == "f02-1920":
@@ -61,9 +56,14 @@ func run() -> void:
 	app.set_ui_scale(1.0)
 	app.select_puzzle(1)
 	app._save_current()
-	app.board.zoom(1,app.board.view.viewport.get_center())
+	# A fit-capped zoom can legitimately be a no-op. Force a real pending
+	# view change so this remains an actual flush/recovery failure probe.
+	app.board.eraser = not app.board.eraser
 	app.store.fail_step = "after_rotation"
 	app.show_information("settings")
+	if not app.work.visible or app.information.visible or app.slot_errors[1].is_empty():
+		push_error("Z2 actual work-to-options flush failure did not block")
+		failed = true
 	await shot("recovery-blocked")
 	app._ask_repair()
 	await shot("recovery-confirmation")
@@ -75,8 +75,12 @@ func run() -> void:
 	app._save_current()
 	app.show_information("settings")
 	app.board.reset_clue_pan()
+	app.board.eraser = not app.board.eraser
 	app.store.fail_step = "after_rotation"
 	app.return_to_work()
+	if not app.information.visible or app.work.visible or app.slot_errors[1].is_empty():
+		push_error("Z2 actual options-to-work flush failure did not block")
+		failed = true
 	await shot("information-recovery-blocked")
 	app.store.fail_step = ""
 	app._repair_selected()
@@ -134,11 +138,14 @@ func shot(name: String) -> void:
 		picture.get_region(Rect2i(90,102,850,180)).save_png(output.path_join("z2-detail-clues-ui125-1to1.png"))
 		picture.get_region(Rect2i(245,608,590,65)).save_png(output.path_join("z2-detail-tools-ui125-1to1.png"))
 	var grid: Rect2 = app.board.view.visible_bounds()
-	var reference: Dictionary = {"f02-1920":Rect2(510,252,720,720),"f02-2560":Rect2(830,432,720,720),"f01-2560":Rect2(970,470,480,480),"f03-1920":Rect2(310,270,1368,672),"f02-1280":Rect2(300,222,638,374)}
-	if reference.has(name):
-		var actual: Rect2 = Rect2(grid.position+app.board.position,grid.size)
-		if not actual.is_equal_approx(reference[name]):
-			record_failure(name, "Z2 reference geometry: %s actual=%s expected=%s" % [name,actual,reference[name]])
+	# Old fixed boxes and clipped 167% views are superseded by VS2. Check
+	# the actual complete bounds, including the two-pixel outer pen, against
+	# the available board and the independent cell dimensions instead.
+	if app.work.visible:
+		var whole: Rect2 = app.board.view.bounds()
+		var dimensions: Vector2 = Vector2(app.session.player.width,app.session.player.height)
+		if not app.board.layout_valid or not grid.is_equal_approx(whole) or not grid.size.is_equal_approx(dimensions*app.board.view.cell_size) or not Rect2(Vector2.ZERO,app.board.size).encloses(whole.grow(1)) or app.board.view.cell_size > app.board.fit_ceiling:
+			record_failure(name, "Z2 complete frame/fit geometry: "+name)
 	records.append({"file":"z2-"+name+".png","size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,"grid":[grid.position.x+app.board.position.x,grid.position.y+app.board.position.y,grid.size.x,grid.size.y],"cell":app.board.view.cell_size,"visible_cells":[grid.size.x/app.board.view.cell_size,grid.size.y/app.board.view.cell_size],"information":app.information.visible})
 	await contrast_check(name,picture)
 	if failed:
@@ -162,6 +169,9 @@ func detail_shots() -> void:
 	if SaveStore.snapshot(app.session,app.board.capture_view()) != tooltip_state or app.session.gesture.active:
 		record_failure("c1-tooltip", "Z2 rendered tooltip allowed a board action")
 	app.board.clear_clue_hover()
+	# F02 now fits all its row clues. Use the existing long F03 row through
+	# the regular scene for the unchanged continuous 14.7px C1 drag oracle.
+	app.select_puzzle(2)
 	var area: Rect2 = app.board.row_clue_area()
 	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,35)).get_center().y)
 	var press: InputEventMouseButton = InputEventMouseButton.new()
@@ -179,6 +189,7 @@ func detail_shots() -> void:
 	await shot("c1-drag")
 	app.board.cancel_gesture()
 	app.board.clear_pointer_hover()
+	app.select_puzzle(1)
 	var hover: InputEventMouseMotion = InputEventMouseMotion.new()
 	hover.position = app.actions.fill.get_global_rect().get_center()
 	surface.push_input(hover,true)
