@@ -93,6 +93,38 @@ Test-Merge, Lauf und Ergebnisse werden hier ergänzt. Die Policyintegration
 beweist keine Reparatur des historischen Engineabsturzes.
 
 V1 bleibt ein nicht implementierter Zwischenstand des offenen Gesamtauftrags.
-Der separate endliche V1-Vergleichsplan ist weiterhin vor neuen Vergleichen zu
-versionieren. Historische Pläne und Nachweise bleiben unverändert. V2/N03/N05,
+Der separate [endliche V1-Vergleichsplan](../examples/vs2/v1-plan.json) wurde
+in `06f695f` vor neuen Vergleichen versioniert. Historische Pläne und Nachweise bleiben unverändert. V2/N03/N05,
 kombinierte Abnahmen, persönliche VS2-M01 und Mergefreigabe bleiben offen.
+
+## Integrationsmessung und begrenzte Harnesskorrektur
+
+Der neue [CI-Lauf 38047039151](https://github.com/venomenon328/picross/actions/runs/38047039151)
+prüft `1149552bac8f47fc4807cdd66bf6a7379530e543` gegen `d7ec4e1`, tatsächlich
+auf `d47982dde9d8d0b577bb5d388d1d26f3357b3cd8`. Docs, Preflight und alle drei
+Fachjobs bestehen. Product wird am unveränderten 15-Minuten-Limit während
+`vs2-regular-matrix` abgebrochen; der letzte laufende Bericht steht bei
+880,287 Sekunden. Das ist kein Pass. Das kleine technische Fehlerartefakt
+`11667917786` enthält Bericht und Phasenlogs; kein Spielerpaket wurde hochgeladen.
+
+Der parallele lokale Windowslauf desselben Ausgangsheads besteht Kernchecks,
+500 Aktionen/Neustart, sechs Piloten, aktuelle Zeichen-/Pixelprüfungen, 1.443.529
+GF1-Assertions und die 304 VS2-Fälle/23 Bilder. Danach scheitert der exportierte
+Start mit Exit 3: Der neu angeschlossene `vs2_roundtrip.gd` übernahm das vom
+Harness gesetzte `P1_TEST_SAVE_ROOT` nicht und hinterließ seine neun Teststände
+im normalen **isolierten** Harnessprofil. Der frische Smoke-Start erwartete dort
+unbespielte Blätter. Keine echten Benutzerdaten waren beteiligt.
+
+Die Integrationskorrektur hält Prüfumfang und Zeitlimits fest: unabhängige
+VS2-Prüfungen laufen überlappend in einer eigenen importierten Projektkopie,
+eigenem Profil und eigenen laufenden Phasenberichten. Der Hauptlauf verlangt
+ihren vollständigen Erfolg vor Export/Pass. Der Roundtrip übernimmt seinen
+expliziten CI-Slotroot und prüft ihn; die native Downloadprobe ohne diese Variable
+prüft weiterhin den normalen Speicherweg im isolierten Benutzerprofil.
+
+Zusätzlich bleiben die aktuellen strengen H1-Überlauf-/Tooltip-/Statuspixeltests
+neben den regulären VS2-Paaren aktiv. Die explizite Rendererkomponente wird über
+den vorhandenen Entwickler-Testhelfer positioniert, nicht über den bewusst
+wirkungslosen regulären Panaufruf. Lokaler Einzelbeleg: 82 native Aufnahmen,
+9.911 Pixelassertions, kein Fehler. Das ist kein Ersatz für den noch erforderlichen
+vollständigen integrierten Lauf. Weiterhin keine V1-Layoutänderung.

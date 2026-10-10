@@ -2,6 +2,7 @@
 """Verify the current P1 product with bounded, change-selected CI evidence."""
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 import argparse
 import json
 import os
@@ -262,12 +263,9 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         selected = [renders / entry["file"] for entry in combined["captures"]]
         selected += list(renders.glob("*.json"))
         selected += p1_current_visual.selected_motion_files(current)
-        vs2, vs2_files = vs2_delivery.capture_current(
-            project, workspace, output, engine, command, environment, phase)
-        selected += vs2_files
         if pilots:
             selected += [renders / "rp6-f07-completion-1920-ui100.png"]
-        return dict(compact=combined, drawing=motion, vs2=vs2,
+        return dict(compact=combined, drawing=motion,
                     pilot_native="success" if pilots else "not selected; --no-pilots"), selected
     finally:
         for key in ("P1_CAPTURE_DIR", "P1_RENDER_STAGE", "ZS2_VARIANT", "RP6_INDEX", "P1_TEST_SAVE_ROOT"):
@@ -351,7 +349,7 @@ def main(argv: list[str] | None = None) -> int:
                     args.cache_dir.resolve() / asset.name, asset.sha256, args.download_timeout_seconds)
                     for asset in (editor, toolchain.TEMPLATES)}
         evidence.report["assets"] = python_phase("verified-toolchain-assets", assets)
-        with tempfile.TemporaryDirectory(prefix="picross-p1-product-") as temporary:
+        with tempfile.TemporaryDirectory(prefix="picross-p1-product-") as temporary, ThreadPoolExecutor(max_workers=1) as executor:
             workspace = Path(temporary).resolve()
             engine = str(toolchain.extract_editor(args.cache_dir.resolve() / editor.name, workspace / "engine", host))
             toolchain.extract_windows_templates(args.cache_dir.resolve() / toolchain.TEMPLATES.name,
@@ -361,11 +359,13 @@ def main(argv: list[str] | None = None) -> int:
             environment = toolchain.isolated_environment(workspace, host)
 
             def phase(name: str, command: list[str], marker: str | None = None,
-                      expected_failure: bool = False, validator=None):
-                record = evidence.start(name)
+                      expected_failure: bool = False, validator=None,
+                      reporter=evidence, phase_env=None):
+                record = reporter.start(name)
                 result = {}
                 try:
-                    result = run_phase(name, command, environment, args.process_timeout_seconds, evidence.logs)
+                    result = run_phase(name, command, environment if phase_env is None else phase_env,
+                                       args.process_timeout_seconds, reporter.logs)
                     if result["timed_out"]:
                         raise toolchain.PreflightError(f"{name} exceeded {args.process_timeout_seconds}s")
                     if expected_failure:
@@ -379,9 +379,9 @@ def main(argv: list[str] | None = None) -> int:
                     else:
                         require_clean_output(result, marker)
                 except Exception as exc:
-                    evidence.complete(record, result, exc)
+                    reporter.complete(record, result, exc)
                     raise
-                evidence.complete(record, result)
+                reporter.complete(record, result)
 
             phase("version", [engine, "--version"], toolchain.EXPECTED_VERSION)
             base = [engine, "--headless", "--path", str(project)]
@@ -397,6 +397,38 @@ def main(argv: list[str] | None = None) -> int:
             environment.pop("P1_TEST_SAVE_ROOT")
             phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
             evidence.scope_done("core")
+            vs2_future = None
+            if args.visual:
+                # Independent current coverage overlaps the long process/pilot
+                # checks. Its project, user profile, slot root, environment and
+                # live evidence are separate; the final gate awaits both paths.
+                vs2_project = workspace / "vs2-current-project"
+                shutil.copytree(project, vs2_project)
+                vs2_environment = toolchain.isolated_environment(workspace / "vs2-profile", host)
+                vs2_evidence = Evidence(evidence.technical / "vs2-worker", host, dict(vs2=True))
+                vs2_evidence.report.update(source_identity(root))
+                def vs2_work():
+                    vs2_evidence.scope_start("vs2")
+                    command = [engine, "--path", str(vs2_project), "--rendering-driver", "opengl3",
+                               "--audio-driver", "Dummy", "--script", "res://tests/capture.gd",
+                               "--", "--p1-capture", "--ci-compact"]
+                    if host == "Linux":
+                        if not shutil.which("xvfb-run"):
+                            raise toolchain.PreflightError("VS2 requires xvfb-run on Linux")
+                        command = ["xvfb-run", "-a"] + command
+                        vs2_environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
+                    def vs2_phase(name, command, marker=None):
+                        return phase(name, command, marker, reporter=vs2_evidence, phase_env=vs2_environment)
+                    try:
+                        result = vs2_delivery.capture_current(vs2_project, workspace, output,
+                                                             engine, command, vs2_environment, vs2_phase)
+                        vs2_evidence.scope_done("vs2")
+                        vs2_evidence.finish()
+                        return result
+                    except Exception as error:
+                        vs2_evidence.finish(error)
+                        raise
+                vs2_future = executor.submit(vs2_work)
             if args.integration:
                 evidence.scope_start("integration")
                 evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
@@ -411,6 +443,9 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.report["visual"], visual_files = run_visual(
                     output, workspace, project, engine, environment, phase, python_phase, host, args.pilots)
                 selected += visual_files
+                vs2_summary, vs2_files = python_phase("current-vs2-complete", vs2_future.result)
+                evidence.report["visual"]["vs2"] = vs2_summary
+                selected += vs2_files
                 evidence.scope_done("visual")
             evidence.scope_start("export")
             build = project / "build/windows"

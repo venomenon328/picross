@@ -20,11 +20,17 @@ func run() -> void:
 	if output.is_empty() or not stage in ["legacy-write","legacy-read","write","read"]:
 		quit(2)
 		return
+	# CI uses a dedicated slot root; downloaded-player probes deliberately
+	# leave this unset to exercise the actual isolated user profile.
+	if not OS.get_environment("P1_TEST_SAVE_ROOT").is_empty():
+		Store.test_root_override = OS.get_environment("P1_TEST_SAVE_ROOT")
 	root.size = Vector2i(1920,1080)
 	app = load("res://main.tscn").instantiate()
 	root.add_child(app)
 	await process_frame
 	await process_frame
+	if not OS.get_environment("P1_TEST_SAVE_ROOT").is_empty():
+		check(app.store.root == OS.get_environment("P1_TEST_SAVE_ROOT"), "explicit CI slot isolation")
 	check(app.album.visible and not app.work.visible and not app.ending.visible,"restart always collection, including partial/completed")
 	var prefix: String = "legacy" if stage.begins_with("legacy") else "new"
 	var expected_path: String = output.path_join(prefix+"-expected.json")
