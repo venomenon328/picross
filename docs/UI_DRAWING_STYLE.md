@@ -1,6 +1,6 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-## Aktueller Stand · VS2-Erstlieferung und freigegebene VS2-E1-Nacharbeit
+## Aktueller Stand · V1 technisch geliefert, V2 freigegeben und offen
 
 Die reguläre VS2-Erstlieferung liegt in [Draft-PR #62](https://github.com/venomenon328/picross/pull/62)
 auf `2c332ad688315bfa851f7c0d8642d2ab4ac3709c`, Basis
@@ -14,19 +14,23 @@ ist für diesen Head und seinen damaligen Vertrag abgeschlossen, ohne B-Befund.
 Der Eigentümer hat anschließend **VS2-E1 / N01–N05 als Spezifikation freigegeben**:
 kompaktere Zeilenhinweise, ausgewogenere Platzierung, subtile Scribble-Optik und
 Miniatur/Palette weiter innerhalb des Buches; Miniaturen zeigen nur Füllungen.
-Der verbindliche Folgevertrag steht in Abschnitt 7. **V1/N01/N02/N04 umgesetzt; V2/N03/N05 offen.**
+Der verbindliche Vertrag steht in Abschnitt 7. **S0 abgeschlossen; V1/N01/N02/N04
+auf `40829b43db6509447863c9d27dbb87dcfaf2a988` technisch geliefert; V2/N03/N05 offen.**
 [Parameter, Präzisierung der Glyphenprobe und Nachweise](VS2_V1_IMPLEMENTATION.md).
+[Review R2](https://github.com/venomenon328/picross/pull/62#pullrequestreview-5479141642)
+prüfte V1-Code und verfügbare native Bilder positiv; R2-B01 verlangt die hier
+nachgeführte Quellenkonsistenz. Die Nacharbeit ändert keinen Produktcode.
 VS2-M01 hat Rückmeldung mit Änderungsbedarf, keine vollständige positive Abnahme.
 
 Bedien-/Speichergrundlage: [P1](PROTOTYPE_P1.md). Die
 [Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md)
-unterscheiden die Erstlieferung von den noch offenen neuen Nachweisen.
-Vor Merge bleiben die kombinierte Nacharbeit, aktuelle technische Prüfung,
-unabhängiges Review des neuen Heads, VS2-M01 und passende Mergefreigabe nötig.
+unterscheiden Erstlieferung, geprüften V1-Zwischenstand und noch offene V2-Nachweise.
+Vor Merge bleiben V2, aktuelle kombinierte technische Prüfung,
+unabhängiges Review des kombinierten Heads, VS2-M01 und passende Mergefreigabe nötig.
 Historische Nachweise bleiben commitgebunden; keine Produktänderung durch diese
-Dokumentationsfreigabe.
+Dokumentationsnacharbeit.
 
-Stand: 09.10.2026 · Spezifikation 0.6 · VS2-E1 als Folgespezifikation freigegeben
+Stand: 10.10.2026 · Spezifikation 0.7 · R2-B01: S0/V1-Status und Glyphenpräzisierung konsolidiert
 
 ## 1. Auftrag, Quellen und Status
 
@@ -70,8 +74,8 @@ Slotweite der Zeilenhinweise links vom Raster auf **26 logische Pixel bei UI 100
 hat die Mergefreigabe ausdrücklich vor die kombinierte Sichtprüfung gezogen: Die
 visuelle Gesamtprüfung wurde anschließend auf `main@985cf08e` erfolgreich
 abgeschlossen und am 07.10.2026 bestätigt; #52 ist abgeschlossen.
-Diese 26/18-Werte beschreiben die ZS-/VS2-Erstlieferung. **VS2-E1/N01 öffnet nur
-innerhalb des regulären Folgepakets die horizontale 26er-Weite für weitere Verdichtung.**
+Diese 26/18-Werte beschreiben die ZS-/VS2-Erstlieferung. **VS2-V1/N01 verwendet
+regulär 24 × UI horizontal und unverändert 18 × UI vertikal.**
 Die historische Auswahl und ihre Nachweise werden nicht rückwirkend verändert.
 
 ## 2. Ziel und begrenzte Ablösung
@@ -100,8 +104,8 @@ Die Stiftfüllung ist gewählt. Der enge E2-Vergleich enthielt Bakso Daging Regu
 und Chalkboard Regular; E3 wählt **Chalkboard Regular**. Bakso Daging und Plex bleiben
 nur Vergleichsreferenzen der Studie. Die ausgewählte Erstlieferung verwendet
 26 logische Pixel horizontale Zeilenslots und 18 vertikale Spaltenslots bei UI 100 %.
-Die Folgespezifikation N01 verdichtet nur die Zeilenslots weiter; konkrete neue Werte
-werden erst anhand der beschriebenen Prüfungen gewählt. Historische Tinte-/Stiftbilder
+V1 verdichtet nur die Zeilenslots auf 24 × UI; Auswahl und technische Nachweise
+stehen in [VS2_V1_IMPLEMENTATION.md](VS2_V1_IMPLEMENTATION.md). Historische Tinte-/Stiftbilder
 und R1/R2 bleiben Referenzen ihrer Lieferstände, keine erneut offene Grundsatzwahl.
 
 ## 3. Zeichensprache
@@ -115,7 +119,7 @@ forderte bereits Plex-Sans-Gewicht 600. Dessen sichtbare Wirkung musste nativ
 beurteilt werden; die konkrete Chalkboard-Auswahl ist inzwischen bestätigt.
 
 Keine absichtlich schwer lesbare Handschrift, verzogenen Ziffern oder zufälligen
-Zeichenabstände. Ein- und mehrstellige Zahlen bis zu den vorhandenen 100er-Fällen
+Zeichenabstände. Ein- und mehrstellige tatsächlich vorkommende Zahlen
 bleiben horizontal, vollständig und klar unterscheidbar. Alle Folgen einer Orientierung
 verwenden gemeinsame regelmäßige Slots. Eine Anpassung ihrer Maße ist nur als
 dokumentierte Auswahl zulässig und erhält unabhängige Liniennavigation, vollständige
@@ -128,12 +132,13 @@ Achsen, im kontinuierlichen Hinweisdrag und im vollständigen Tooltip funktionie
 Helle Rätselfarben bleiben durch C1 erkennbar; Statuswechsel verändern weder Slot
 noch Schriftgröße. Auslassungsmarker und Leerlinienzeichen erhalten keine neue Bedeutung.
 
-**E3 / bisherige Hinweisgeometrie:** Chalkboard Regular ist gewählt. Die Erstlieferung
+**E3 / historische Hinweisgeometrie:** Chalkboard Regular ist gewählt. Die Erstlieferung
 verwendet im Buchlayout **26 × UI-Skalierung** horizontal statt der früheren 30 × UI.
 Die Spaltenhinweise oberhalb des Rasters bleiben bei **18 × UI-Skalierung**.
-**Folgespezifikation VS2-E1/N01:** Die horizontalen Abstände werden bei unverändertem
-Schriftmaßstab sichtbar enger. Die bisherige 26er-Weite ist keine Zielvorgabe mehr;
-Slotprinzip, Marker-/Drag-/Snap-/Tooltip- und gespeicherte Lesepositionssemantik bleiben.
+**Aktueller V1-Vertrag VS2-E1/N01:** Die horizontalen Abstände betragen **24 × UI**
+bei unverändertem Schriftmaßstab. Slotprinzip, Marker-/Drag-/Snap-/Tooltip- und
+semantische gespeicherte Lesepositionen bleiben. Die Glyphenpräzisierung in §7
+begrenzt den gezielten V1-Abnahmefall, nicht den Bestand großer Regressionsblätter.
 
 ### ZS-D02: Gefüllte Zellen
 
@@ -158,7 +163,7 @@ Das X besteht aus zwei erkennbaren handschriftlichen Stiftzügen mit begrenzter
 Variation in Krümmung, Winkel, Länge und Stärke. Die Variation hängt stabil an
 der Zellidentität; Neuzeichnen, Pan, Zoom und Wiederherstellung würfeln nichts neu.
 Kreuze bleiben eindeutig, übertönen aber auch auf einem stark ausgekreuzten Blatt
- das gefüllte Motiv nicht. Unbekannt, X und Füllung sind im Hauptraster unmittelbar
+das gefüllte Motiv nicht. Unbekannt, X und Füllung sind im Hauptraster unmittelbar
 unterscheidbar. Normale und teilweise sichtbare Zellen verwenden dieselbe Geometrie
 mit korrektem Anschnitt; keine Ersatzmarkierung am Viewportrand. N05 ändert nur die
 Miniaturprojektion, nicht diesen Hauptraster- oder Zellzustandsvertrag.
@@ -324,8 +329,8 @@ Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflü
 | --- | --- | --- |
 | ZS-1 | Gewählte Stiftfüllung, neues X und räumlicher Strichaufbau; E2-Fontvergleich, E3-Auswahl Chalkboard und kompaktere 26-px-Zeilenhinweisslots. | PR #55 nach R3 integriert; kombinierte Eigentümersichtprüfung auf main erfolgreich abgeschlossen. |
 | ZS-2 | Gewählte Hinweis-/Zellsprache ohne zusätzliche Rand-UI, statische Vorschau, gerichtete Commit-Effekte und Schalter in der regulären Arbeitsansicht. | PR #56 auf `fad8853` integriert, R3 und ZS2-M01 für diesen Vorgänger bestanden. |
-| VS2-V1 | Kompakte Zeilenhinweise und ausgewogene Flächenaufteilung einschließlich Miniatur-/Palettenposition. | VS2-E1/N01/N02/N04 umgesetzt; V1-Zwischenstand in PR #62, kombinierte Abnahme offen. |
-| VS2-V2 | Subtile Scribble-Linien, Miniatur/Palette und reine Füllminiatur. | VS2-E1/N03/N05 spezifiziert; auf der V1-Geometrie, gemeinsame Nachprüfung vor Merge. |
+| VS2-V1 | Kompakte Zeilenhinweise und ausgewogene Flächenaufteilung einschließlich Miniatur-/Palettenposition. | N01/N02/N04 auf `40829b4` technisch geliefert und in R2 positiv geprüft; V1-Zwischenstand, kombinierte Abnahme offen. |
+| VS2-V2 | Subtile Scribble-Linien, Miniatur/Palette und reine Füllminiatur. | N03/N05 freigegeben, noch nicht implementiert; auf der V1-Geometrie, gemeinsame Nachprüfung vor Merge. |
 | Z3/#24 | Längere reale Spielerprobung der integrierten neuen Fassung und Abschluss der Designphase. | Nach der integrierten Zielansicht; ersetzt keine davor erforderlichen technischen oder gezielten manuellen Gates. |
 
 ZS-1 verwendete insbesondere F-01/20×20 Mono, F-02/40×40 Farbe und F-03/100×100
@@ -335,10 +340,10 @@ darunter F-07/100×100 Farbe. Relevante Flächen bleiben 1280×720, 1600×900,
 Gezielte Referenzen statt unnötiger vollständiger Kreuzprodukte; verpflichtende
 bestehende Regressionen bleiben aktiv.
 
-Der Spielerdownload bleibt schlank. Technische Vergleiche und der kleine
-Bewegungsnachweis liegen getrennt in gezielten Reviewartefakten; vollständige
-Arbeitsrender werden weiterhin nur über den bestehenden optionalen Vollnachweis
-veröffentlicht. Head, Basis/Test-Merge, Run und relevante Datei-Hashes binden die
+Der Spielerdownload bleibt schlank. Maßgeblich ist die aktuelle
+[CI-Policy #63](CI_POLICY.md): ausgewählte aktuelle Prüfungen und begrenzte technische
+Nachweise, kein allgemeiner Full-Evidence-Schalter und keine historischen Importe
+im Standardlauf. Head, Basis/Test-Merge, Run und relevante Datei-Hashes binden die
 Nachweise. Quellen-/Nachweis-/Sichtprüfung gehört zu jedem Umsetzungspaket.
 
 ## 6. Nichtziele
@@ -351,33 +356,47 @@ ihrer offenen Befunde. Keine Änderung historischer Designartefakte oder Rätsel
 
 ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer
 bestätigt; #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md)
-ist über PR #56 abgeschlossen. Neue VS2-E1-Nachweise, unabhängiges Review des neuen
-kombinierten Heads, VS2-M01 und passende Mergefreigabe bleiben offen.
-Die heutige Spezifikationsfreigabe implementiert oder mergt nichts.
+ist über PR #56 abgeschlossen. S0 und die technische V1-Lieferung sind abgeschlossen.
+V2, aktuelle kombinierte Nachweise, unabhängiges Review des kombinierten Heads,
+VS2-M01 und passende Mergefreigabe bleiben offen. Diese Dokumentationsnacharbeit
+implementiert weder V2 noch einen Merge.
 
 ## 7. VS2-E1 – kompakte, ausgewogene Scribble-Arbeitsansicht
 
-**Status: ausdrücklich als Spezifikation freigegeben am 09.10.2026; noch nicht
-implementiert.** Auftrag und Teilpakete stehen in [#61](https://github.com/venomenon328/picross/issues/61).
-Ausgangspunkt ist die reguläre VS2-Lieferung `2c332ad…`, nicht die historische
-Studienhauptszene. Die nachfolgenden fünf Regeln bilden eine begrenzte Erweiterung
-bestehender Fachverträge, keine zweite P1-Vollspezifikation.
+**Status am 10.10.2026: S0 abgeschlossen; V1/N01/N02/N04 technisch geliefert und
+in R2 positiv geprüft; V2/N03/N05 freigegeben, noch nicht implementiert.**
+Auftrag und Teilpakete stehen in [#61](https://github.com/venomenon328/picross/issues/61).
+Aktuelle V1-Produktreferenz ist `40829b43db6509447863c9d27dbb87dcfaf2a988`
+auf Basis `d7ec4e1e4a29d82b6979537a33868d57732d3713`; `2c332ad…` bleibt die
+historische reguläre Erstlieferung, nicht die spätere V2-Vergleichsbasis.
+Die fünf Regeln bilden eine begrenzte Erweiterung bestehender Fachverträge,
+keine zweite P1-Vollspezifikation. Technische Lieferung ist keine persönliche Abnahme.
 
-### VS2-N01: engere Zeilenhinweise
+### VS2-N01: engere Zeilenhinweise – V1 geliefert
 
-Die horizontalen Abstände zwischen den Zahlen derselben Zeilenhinweisfolge werden
-gegenüber 26 × UI sichtbar reduziert. Ein gemeinsamer regelmäßiger Slotabstand bleibt;
+Die horizontalen Abstände zwischen den Zahlen derselben Zeilenhinweisfolge betragen
+regulär **24 × UI statt 26 × UI**. Ein gemeinsamer regelmäßiger Slotabstand bleibt;
 keine variable Einzelpackung, keine kleinere Schrift als Ersatz. Chalkboard und dessen
-bestehender Schriftmaßstab bleiben, Spaltenslots weiterhin 18 × UI. Der genaue engere
-Wert wird als Implementierungsdetail anhand realer Zahlen einschließlich 1/11/17/40/100,
-C1/AA, drei Statuszuständen, Markern und kontinuierlicher Draggeometrie begründet.
+bestehender Schriftmaßstab bleiben, Spaltenslots weiterhin **18 × UI**. Kandidat A
+aus dem vorab gebundenen [V1-Plan](../examples/vs2/v1-plan.json) wurde gewählt.
+Reale Zahlen **1/11/17/40**, C1/AA, drei Statuszustände, Marker und kontinuierliche
+Draggeometrie bilden den gezielten V1-Glyphennachweis.
+
+**Eigentümerpräzisierung vom 10.10.2026:** Der separate
+[V1-Plan-Nachtrag](../examples/vs2/v1-plan-amendment.json), versioniert in `a41cf9b`,
+nimmt die synthetische Hinweiszahl **100** aus der V1-Abnahme. Ihre dafür erprobte
+Sonderbehandlung ist entfernt. Das ersetzt die frühere Aufzählung 1/11/17/40/100
+im aktiven V1-Vertrag; der ursprüngliche Plan bleibt als historischer Nachweis unverändert.
+Bestehende 100×100- und andere Großfallregressionen bleiben erhalten. Keine neue
+Größenvalidierung, Datenmigration oder erneute Sonderbehandlung folgt daraus.
 
 Rasteransicht erhält mindestens min(5,n) zusammenhängende ganze Zahlen auch zwischen
 Snaplagen; Gesamtansicht zeigt sämtliche Hinweise. Vollständige Originalzahlen,
 monotone direkte Bewegung, geometrischer Drop, Nachbarlinienunabhängigkeit und
-semantische Leseanker bleiben. Der neue Pixelwert ist noch kein gemessener Befund.
+semantische Leseanker bleiben. Parameter und technische Belege stehen in
+[VS2_V1_IMPLEMENTATION.md](VS2_V1_IMPLEMENTATION.md) und im commitgebundenen PR.
 
-### VS2-N02: ausgewogene belegte Arbeitsfläche
+### VS2-N02: ausgewogene belegte Arbeitsfläche – V1 geliefert
 
 Nach der Fit-/Kapazitätsberechnung werden Raster und beide Hinweisflächen als ein
 belegter Block bei ausreichender Restbreite weiter Richtung Mitte der nutzbaren
@@ -396,7 +415,7 @@ F-01 und geeignete VS09-Breitenfälle dienen als reproduzierbare Freiraumbeispie
 VS08/VS04 und knappe Flächen sichern die Kapazitätsgrenzen. Die Chatbezeichnung
 „Analyseausgabe 1“ ist keine eindeutig identifizierte Datei und keine Pflichtquelle.
 
-### VS2-N03: subtile, stabile handgezeichnete Elemente
+### VS2-N03: subtile, stabile handgezeichnete Elemente – V2 offen
 
 Sichtbare Rasterlinien erhalten kleine kontrollierte Abweichungen von vollkommen
 gleichmäßiger Strichführung und -stärke. Logische quadratische Zellen, Koordinaten,
@@ -418,18 +437,18 @@ verkleinert oder verzerrt keine Hitbox. Fraunces/Plex und das A-Hintergrundbild 
 „Kleine Vorschau“ bezeichnet hier die Miniatur; die statische Zielvorschau im Raster
 bleibt ebenfalls stilistisch konsistent, aber ohne neu eingeführte Bewegung.
 
-### VS2-N04: Miniatur-/Palettengruppe mit Buchrandabstand
+### VS2-N04: Miniatur-/Palettengruppe mit Buchrandabstand – V1 geliefert
 
-Gegenüber der großzügigen Ausgangsansicht die Gruppe etwas nach unten und leicht
-nach links verschieben. Fassung, Halterungen, Beschriftungen und Auswahlmarkierungen
-mitführen; sichtbar Abstand zum oberen/rechten Buchrand, keine angeschnittenen Konturen.
-Gemeinsam mit N02 so anordnen, dass Raster/Hinweise, Navigation, Koordinaten,
-Werkzeuge und Save-/Recoverymeldungen nicht überdeckt werden. Keine Verkleinerung
-als Ersatz; die bisherigen Mindesthitflächen von 44/55 px bei UI100/125 bleiben.
-Kleine Flächen verwenden einen begrenzten passenden Versatz statt starrer großer Werte.
-Konkrete Abstände werden erst in der Umsetzung nativ begründet und dokumentiert.
+V1 verschiebt die vorhandene Gruppe im großzügigen Referenzfall um **(−16, +24) × UI**
+nach links/unten; knappe Flächen begrenzen den Abwärtsversatz. Fassung, Halterungen,
+Beschriftungen und Auswahlmarkierungen werden mitgeführt; sichtbar Abstand zum
+oberen/rechten Buchrand, keine angeschnittenen Konturen. Gemeinsam mit N02 bleiben
+Raster/Hinweise, Navigation, Koordinaten, Werkzeuge und Save-/Recoverymeldungen frei.
+Keine Verkleinerung als Ersatz; Mindesthitflächen von **44/55 px bei UI100/125** bleiben.
+Die tatsächlichen neuen Strichränder aus V2 sind erneut gegen diese V1-Anordnung
+zu prüfen; V1s alte Pixelbilder nehmen die kombinierte Abnahme nicht vorweg.
 
-### VS2-N05: reine Füllprojektion der Miniaturen
+### VS2-N05: reine Füllprojektion der Miniaturen – V2 offen
 
 ZS-D05 ist der neue Miniaturvertrag: ausschließlich eigene Füllungen einschließlich
 bereits bestehender Vorschau, keine X/Punkte/Leer-Ersatzzeichen. Unbekannt und X
@@ -444,26 +463,26 @@ Vorhandene ungelöste Albumminiaturen folgen derselben Projektion; keine neue Al
 
 ### Geltung gegenüber älteren Fachtexten und Abnahme
 
-Die ausdrückliche Eigentümerfreigabe löst für den nächsten regulären VS2-Stand nur
-folgende ältere Aussagen ab: D-33/ZS1-E3 als unveränderliche horizontale 26er-Zielweite;
-linke Ausgangsanordnung ohne Restflächenausgleich; ausschließlich mathematisch gerade
-sichtbare Rasterstriche; bisherige Fassung/Position der Miniatur und Palette;
-Dreizustandsdarstellung in Miniaturen. Dies gilt entsprechend für
+Die ausdrückliche Eigentümerfreigabe ersetzt gezielt D-33/ZS1-E3 als unveränderliche
+horizontale 26er-Zielweite und die frühere linke Anordnung/Positionierung durch V1.
+Die Ablösung ausschließlich mathematisch gerader sichtbarer Rasterstriche, der
+bisherigen Miniatur-/Palettenfassung und der Dreizustandsdarstellung in Miniaturen
+ist dagegen weiterhin **V2-Sollstand**. Dies gilt entsprechend für
 [Produktdefinition](PRODUCT_DEFINITION.md) §§3.3/5,
 [Gestaltungskonzept](DESIGN_CONCEPT.md) §§2/4.1/4.4/5.1,
 [P1](PROTOTYPE_P1.md) D-29/D-33 und §5.2 sowie die betroffenen Z2-Auswahlpassagen.
 Deren nicht ersetzte Regeln bleiben verbindlich; **logische Regelmäßigkeit,
 Präzision und die drei Spielzustände sind ausdrücklich nicht abgelöst**.
 
-Diese klar bezeichnete Folgespezifikation ist bei weiterer Pflege der allgemeinen
-Fachtexte zu berücksichtigen. Historische Pläne, Proofs, Asset-/Fonthashes, Bilder,
-Abnahmen und Reports bleiben unverändert. Die alte Reviewaussage zu `2c332ad` wird
-nicht in eine Abnahme neuer Darstellung umgedeutet. Die spätere Umsetzung muss
-auch Bedienhilfe und konkrete Pixel-/Abstandsoracles konsistent nachführen.
+Historische Pläne, Proofs, Asset-/Fonthashes, Bilder, Abnahmen und Reports bleiben
+unverändert. Der separate V1-Nachtrag und die aktuelle Statuskonsolidierung ändern
+keine historischen Ergebnisdaten. R1 gilt für `2c332ad`, R2 für `40829b4`; keiner
+nimmt V2 oder die persönliche kombinierte Abnahme vorweg. Bei V2 sind Bedienhilfe
+und betroffene Pixel-/Strichoracles konsistent nachzuführen.
 
-VS2-V1 umfasst N01/N02/N04, VS2-V2 N03/N05. Die neuen Kriterien VS2-NA01–NA05,
-gezielte native Vorher-/Nachherbelege und die weiterhin nötigen Basisregressionen
-stehen in [Prüfzuordnung](VS2_VERIFICATION.md) und #61. Eine eigene endliche
-Nacharbeitsplanung wird vor neuen Vergleichen gebunden; kein Überschreiben des
-ursprünglichen VS2-Vergleichsplans. Beide Teilpakete bleiben in PR #62, mit
-kombinierter technischer/visueller Prüfung und VS2-M01 vor einem gesondert freizugebenden Merge.
+V1/NA01/NA02/NA04 ist technisch geprüft; V2/NA03/NA05 und die kombinierte Regression
+bleiben offen. Aktuelle Nachweiszuordnung steht in [VS2_VERIFICATION.md](VS2_VERIFICATION.md),
+Vorbereitung und Auftrag in #61. Vor V2-Vergleichen eine eigene endliche Planung
+binden, ohne ursprünglichen VS2-/V1-Plan zu überschreiben. Beide Teilpakete bleiben
+in PR #62, mit kombinierter technischer/visueller Prüfung und VS2-M01 vor einem
+gesondert freizugebenden Merge.
