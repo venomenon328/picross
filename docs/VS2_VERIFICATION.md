@@ -2,6 +2,11 @@
 
 ## Aktueller Nachweisstand und Folgespezifikation VS2-E1
 
+Aktualitätsprüfung vom 10.10.2026: [V1-S0-Diagnose](VS2_V1_S0.md).
+Der alte Produktlauf scheiterte im historischen GP48-Import; S0 bleibt offen.
+Die inzwischen integrierte CI-Policy aus #63 erfordert eine geklärte Übernahme
+und aktuelle VS2-Nachweise. Noch keine V1-Layoutänderungen oder V1-Abnahme.
+
 Auftrag: [#61](https://github.com/venomenon328/picross/issues/61), VS2-01–07 und
 VS2-A01–A10, jetzt ergänzt um die **noch nicht implementierte** VS2-E1-Nacharbeit
 N01–N05 / VS2-NA01–NA05. Arbeitsbranch `feat/61-regular-full-view`, Draft-PR #62.
