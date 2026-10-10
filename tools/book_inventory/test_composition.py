@@ -1,14 +1,11 @@
-"""BP-3 actual delivery plus focused corruption tests; no renderer required."""
+"""Focused BP-3 corruption tests; full historical delivery is archived."""
 import copy
 import unittest
 import xml.etree.ElementTree as ET
 from book_inventory import composition as c
 
 
-class CompositionDelivery(unittest.TestCase):
-    def test_delivery(self):
-        c.verify()
-
+class CompositionHelpers(unittest.TestCase):
     def content(self):
         g=c.p.read('layout.json')['cases'][0]
         return g,ET.parse(c.OUT/'svg'/f'{g["name"]}-content.svg').getroot()

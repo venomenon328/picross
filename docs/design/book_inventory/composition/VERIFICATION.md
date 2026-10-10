@@ -80,7 +80,7 @@ Mustermontierung innerhalb derselben Reserve reduziert, ohne den Treffer zu änd
 Die Galerie wurde aus dem entpackten Review-ZIP per `file://` tatsächlich geöffnet:
 alle zehn A/B-Umschaltungen, Originalbildmaße/-links, 1:1-Umschaltung und
 Nebeneinanderansicht erfolgreich, keine JavaScriptfehler oder externen Requests.
-[Browsernachweis](gallery-checks.json) und [Galerie-Screenshot](checks/gallery.png).
+[Browsernachweis](gallery-checks.json) und [Galerie-Screenshot](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/checks/gallery.png).
 
 Die neuen lokalen Kontrastminima liegen bei A zwischen 8,0558:1 und 8,3233:1,
 bei B zwischen 8,3355:1 und 8,7076:1. Die drei Tafeln liegen zwischen 8,9960:1

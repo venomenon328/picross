@@ -64,10 +64,9 @@ integrierte Lieferung. Review R1 und GP48-M01 sind abgeschlossen; PR #49 ist als
 `add7a7e6` in `main` integriert. Die Regeln bleiben für RP-6 aktiv; der neue kombinierte
 Slim-Download verwendet die RP-6-Anleitung. Historische H1-Abnahmen werden nicht umgedeutet.
 
-Im äußeren technischen Artefakt liegen `H1-PRUEFUNG.md`, `h1-owner-probe.ps1`,
-`h1-owner-probe.gd` und `h1-probe-windows-x86_64.zip` für die separate künstliche
-Windows-Linienprobe. Sie gehören nicht zum normalen Benutzer-ZIP und greifen nicht
-auf gespeicherte Puzzles zu.
+Die frühere separate künstliche H1-Windows-Linienprobe ist ein historischer
+Diagnoseweg. Sie wird gemäß [CI-Policy](../../docs/CI_POLICY.md) nicht mehr in
+jedem Product-Lauf erzeugt. Aktuelle H1-Logik und native Pixelprüfungen bleiben.
 
 P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) und
 [P1.4 / #12](https://github.com/venomenon328/picross/issues/12) sind über
@@ -247,19 +246,23 @@ Ergebnis/Abweichung. Nicht aus Screenshotabmessungen ableiten. Referenz aus frü
 Angaben: Windows 11, 2560×1440, Ryzen 7 5800X, RTX 3070. Die reale Skalierung bleibt
 unbekannt. Technische Renderflächen und synthetische Events ersetzen diese Abnahme nicht.
 
-Die technische 500-Aktionen-Gesamtintegration wurde in #12 geprüft und läuft im
-Produktprüfweg für den neuen Head erneut.
+Die technische 500-Aktionen-Gesamtintegration wurde in #12 geprüft und läuft
+gemäß CI-Policy bei Änderungen an Zustand, Eingabe, Save, History oder Navigation.
 Wertung, Controller/Tastatur und Release bleiben außerhalb dieser Lieferung.
 Escape ist weiterhin Mausgestenabbruch. Kein Merge durch diese Übergabe.
 
 ## Technische Reproduktion
 
-Der technische Produktweg prüft F-01/F-02, Godot-Regressionen, den isolierten
-Zwei-Prozess-Roundtrip, die 500-Aktionen-Folge samt Neustart, Renderbilder und
-Windows-Export. RP-3 ergänzt den realen Dateiimport/F-04-Export, drei getrennte
-Spiel-/Neustartprozesse sowie eigene Arbeits-/Abschluss-/Albumrenders.
-Der Bericht bindet diese Ergebnisse an Head und Test-Merge; die kombinierte
-RP-6-Nachprüfung bleibt separat offen, die reale Eigentümer-Lösung ist RP-6-Gate.
+Der technische Produktweg prüft F-01/F-02, aktuelle Godot-/ZS2-Regressionen,
+den isolierten Zwei-Prozess-Roundtrip, kurzen Negativtest, Start und Windows-Export.
+Gemäß [CI-Policy #63](../../docs/CI_POLICY.md) ergänzen `--integration` die
+500-Aktionen-Folge samt Neustart, `--pilots` sechs vollständige Pilotdurchspiele
+einschließlich der einzigartigen RP3/F04-Assertions und `--visual` die kompakte
+aktuelle native Pixelmatrix. Alle drei sind lokal standardmäßig aktiv; ihre
+negativen Formen `--no-integration`, `--no-pilots`, `--no-visual` müssen ausdrücklich
+angegeben werden. Die CI leitet sie aus dem gesamten geänderten Bereich ab.
+Der Bericht unterscheidet Erfolg, Nichtzutreffen und vorzeitig nicht ausgeführte
+Prüfungen und bindet sie an Source-Head, Basis, Test-Merge und Run.
 
 Godot Standard 4.7.2-stable und isolierte Pillow-12.3.0-Umgebung aus der
 [Werkzeuganleitung](../../tools/puzzle_production/README.md); vollständiger Prüfweg
@@ -276,10 +279,17 @@ in einer temporären Projektkopie mit isolierten APPDATA-/XDG-Pfaden und install
 nichts global. Tests einschließlich Speicher-/Recoveryfällen und echtem
 Zwei-Prozess-Roundtrip, Negativtest Exit 23, Import, begrenzter Start, echte Renderbilder
 mit atomaren Anfangs-/Mittel-/Endausschnitten und beiden Hinweisachsen, Windows-Export
-und unter Windows exportierter Start. 300 Sekunden pro Prozess,
-1200 pro Download. Die Renderfälle decken gemeinsame Slots und unabhängige
+und unter Windows exportierter Start. 300 Sekunden pro Product-Prozess;
+CI-Downloads höchstens 180 Sekunden. Die Renderfälle decken gemeinsame Slots und unabhängige
 Anfangs-/Mittel-/Endausschnitte konkreter Linien auf beiden Achsen ab. Exportpreset
 exakt `P1 Windows x86_64`.
+
+`technical/` enthält fortlaufenden Bericht, Phasenlogs und begrenzte aktuelle
+Reviewbilder und wird auch nach Fehlern hochgeladen. Technische Daten haben
+20 MB Budget, gemeinsam mit dem Spieler-ZIP 75 MB. Abgeschlossene Studien,
+historische Vorherprojekte und große alte Reviewpakete entstehen im Standardlauf
+nicht mehr. Die vollständige damalige Diagnose ist über ihren gebundenen Commit
+reproduzierbar; aktive Referenzen stehen in der CI-Policy.
 
 ```sh
 godot --headless --path prototypes/p1 --import

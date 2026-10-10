@@ -1,4 +1,5 @@
 import tempfile
+import shutil
 import subprocess
 import sys
 import unittest
@@ -6,25 +7,94 @@ import zipfile
 from pathlib import Path
 
 from p1_preflight import PreflightError
-from p1_product import EXPECTED_PROJECT_NAME, package, project_name, require_clean_output
+from p1_product import (EXPECTED_PROJECT_NAME, package, package_player, player_extras,
+                        project_name, require_clean_output, require_foreign_slot_failure)
 from gp48_delivery import PLAYER_FILES, verify_player_package
+from ci_scope import FLAGS, JOBS, classify, evaluate
 
 
 class ProductHarnessTests(unittest.TestCase):
-    def test_gp48_slim_upload_is_only_player_zip(self):
-        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
-        step = workflow.split("- name: Upload compact player package\n", 1)[1].split("- name:", 1)[0]
-        self.assertIn("name: picross-p1-player-${{ github.event.pull_request.head.sha || github.sha }}", step)
-        self.assertIn("path: ${{ runner.temp }}/p1-product-output/picross-p1-windows-x86_64.zip\n", step)
-        self.assertIn("if-no-files-found: error", step)
-        self.assertEqual(step.count("path:"), 1)
 
-    def test_zv50_review_upload_is_separate(self):
-        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
-        step = workflow.split("- name: Upload ZV-50 native zoom comparisons\n", 1)[1].split("- name:", 1)[0]
-        self.assertIn("name: zv50-review-${{ github.event.pull_request.head.sha || github.sha }}", step)
-        self.assertIn("path: ${{ runner.temp }}/p1-product-output/picross-zv50-review.zip\n", step)
-        self.assertEqual(step.count("path:"), 1)
+    @staticmethod
+    def placeholder_build(output):
+        build = output / "build"
+        build.mkdir()
+        for name in ("picross-p1.exe", "picross-p1.console.exe"):
+            (build / name).write_bytes(b"packaging contract placeholder; not a Windows build")
+        return build
+
+    def test_current_player_inputs_really_package_in_fast_docs_path(self):
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            build = self.placeholder_build(output)
+            manifest = dict(source_commit="a" * 40, source_tree_dirty=False)
+            archive, audit = package_player(build, output, manifest, root)
+            self.assertGreater(audit["bytes"], 0)
+            with zipfile.ZipFile(archive) as bundle:
+                for name, source in player_extras(root, output).items():
+                    self.assertEqual(bundle.read(name), source.read_bytes())
+                self.assertIn((root / "docs/VS2_OWNER_TRIAL.md").read_bytes(), bundle.read("README.txt"))
+
+    def test_deleted_or_moved_actual_markdown_inputs_fail_docs_and_required_gate(self):
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            fixture = output / "source"
+            # Derive delivery sources from the real extras, not another input list.
+            extras = player_extras(root, output)
+            for source in extras.values():
+                if source.is_relative_to(root):
+                    target = fixture / source.relative_to(root)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(source, target)
+            shutil.copytree(root / "tools", fixture / "tools", ignore=shutil.ignore_patterns("__pycache__"))
+            build = self.placeholder_build(output)
+            markdown = [p.relative_to(root) for p in extras.values()
+                        if p.is_relative_to(root) and p.suffix == ".md"]
+            self.assertTrue(markdown)
+            for relative in markdown:
+                path = fixture / relative
+                for operation in ("delete", "move"):
+                    with self.subTest(path=relative.as_posix(), operation=operation):
+                        content = path.read_bytes()
+                        moved = path.with_suffix(".moved.md")
+                        if operation == "delete":
+                            path.unlink()
+                        else:
+                            path.rename(moved)
+                        try:
+                            paths = [relative.as_posix()]
+                            if operation == "move":
+                                paths.append(moved.relative_to(fixture).as_posix())
+                            plan = classify(paths)
+                            self.assertFalse(any(plan["selected"][key] for key in FLAGS))
+                            with self.assertRaises(FileNotFoundError):
+                                package_player(build, output, dict(source_commit="b" * 40,
+                                               source_tree_dirty=False), fixture)
+                            results = {job: {"result": "failure" if job == "docs" else "skipped"}
+                                       for job in JOBS}
+                            self.assertFalse(all(row["accepted"] for row in evaluate(plan, results)))
+                        finally:
+                            if moved.exists():
+                                moved.rename(path)
+                            else:
+                                path.write_bytes(content)
+
+    def test_foreign_slot_control_requires_valid_load_and_exact_semantic_failure(self):
+        valid = dict(exit_code=4, output="RP6_F01_SAVE status=loaded unknown=399\n"
+                     "ERROR: RP3_FAIL: isolated F04 preserves F01 cells after restart\n"
+                     "RP6_RESULT index=3 stage=read checks=41 failures=1\n")
+        require_foreign_slot_failure(valid)
+        for result in [dict(valid, exit_code=0),
+                       dict(valid, output=valid["output"].replace("loaded", "recovered")),
+                       dict(valid, output=valid["output"].replace("399", "400")),
+                       dict(valid, output=valid["output"].replace("failures=1", "failures=2")),
+                       dict(valid, output=valid["output"] + "SCRIPT ERROR: parse failed\n"),
+                       dict(valid, output=valid["output"] + "RP6_READ_OK\n")]:
+            with self.subTest(result=result), self.assertRaises(PreflightError):
+                require_foreign_slot_failure(result)
+
 
     def test_player_contents_and_report_verifier_is_generic(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -51,38 +121,7 @@ class ProductHarnessTests(unittest.TestCase):
                                 cwd=root, capture_output=True, text=True, timeout=15)
         self.assertEqual(result.returncode,0,result.stdout+result.stderr)
 
-    def test_workflow_publishes_compact_player_artifact_separately(self):
-        root = Path(__file__).resolve().parents[1]
-        workflow = (root / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
-        marker = "      - name: Upload compact player package"
-        self.assertIn(marker, workflow)
-        block = workflow.split(marker, 1)[1].split("      - name:", 1)[0]
-        self.assertIn(
-            "name: picross-p1-player-${{ github.event.pull_request.head.sha || github.sha }}",
-            block,
-        )
-        self.assertIn(
-            "path: ${{ runner.temp }}/p1-product-output/picross-p1-windows-x86_64.zip",
-            block,
-        )
-        self.assertNotIn("renders", block)
-        self.assertNotIn("path: ${{ runner.temp }}/p1-product-output/\n", block)
-        self.assertIn(
-            "name: picross-p1-technical-evidence-${{ github.event.pull_request.head.sha || github.sha }}",
-            workflow,
-        )
 
-    def test_full_technical_evidence_is_manual_opt_in(self):
-        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/p1-product.yml").read_text(encoding="utf-8")
-        self.assertIn("workflow_dispatch:\n    inputs:\n      upload_full_evidence:", workflow)
-        input_block = workflow.split("      upload_full_evidence:", 1)[1].split("jobs:", 1)[0]
-        self.assertIn("default: false", input_block)
-        marker = "      - name: Upload complete technical product evidence (manual opt-in)"
-        self.assertIn(marker, workflow)
-        block = workflow.split(marker, 1)[1].split("      - name:", 1)[0]
-        self.assertIn("if: github.event_name == 'workflow_dispatch' && inputs.upload_full_evidence", block)
-        self.assertIn("path: ${{ runner.temp }}/p1-product-output/\n", block)
-        self.assertEqual(workflow.count("path: ${{ runner.temp }}/p1-product-output/\n"), 1)
 
     def test_exit_zero_with_script_error_fails(self):
         with self.assertRaises(PreflightError):
@@ -95,12 +134,12 @@ class ProductHarnessTests(unittest.TestCase):
     def test_project_name_is_exact_utf8_without_mojibake(self):
         project = Path(__file__).resolve().parents[1] / "prototypes/p1/project.godot"
         self.assertEqual(project_name(project), EXPECTED_PROJECT_NAME)
-        self.assertNotIn("Â", project.read_text(encoding="utf-8"))
+        self.assertNotIn("Ã‚", project.read_text(encoding="utf-8"))
 
     def test_wrong_project_name_fails(self):
         with tempfile.TemporaryDirectory() as temporary:
             project = Path(temporary) / "project.godot"
-            project.write_text('[application]\nconfig/name="picross Â· P1"\n', encoding="utf-8")
+            project.write_text('[application]\nconfig/name="picross Ã‚Â· P1"\n', encoding="utf-8")
             with self.assertRaises(PreflightError):
                 project_name(project)
 

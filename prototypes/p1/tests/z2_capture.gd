@@ -6,6 +6,7 @@ var app: Main
 var output: String
 var records: Array = []
 var contrast_records: Array = []
+var failure_captures: Array = []
 var failed: bool = false
 
 func _initialize() -> void:
@@ -95,16 +96,35 @@ func run() -> void:
 				app.board.pointer_press(point,MOUSE_BUTTON_LEFT if desired > 0 else MOUSE_BUTTON_RIGHT)
 				app.board.pointer_release(point,true)
 	if not app.session.completed:
-		push_error("Z2 actual completion failed")
-		failed = true
+		record_failure("completion", "Z2 actual completion failed")
 	await shot("completion")
 	app.show_album()
 	await shot("album-completed")
-	var report: FileAccess = FileAccess.open(output.path_join("z2-renders.json"),FileAccess.WRITE)
-	report.store_string(JSON.stringify({"captures":records,"normal_text_contrasts":contrast_records,"body_font":app.BODY_FONT.get_font_name(),"title_font":app.TITLE_FONT.get_font_name(),"c1_outer_radius_px":0.25,"reference_outer_radius_px":0.275},"\t"))
+	write_report()
 	if not failed:
 		print("Z2_CAPTURE_OK")
 	quit(5 if failed else 0)
+
+func write_report() -> void:
+	var report: FileAccess = FileAccess.open(output.path_join("z2-renders.json"),FileAccess.WRITE)
+	if report == null:
+		failed = true
+		push_error("Z2 render report could not be written")
+		quit(5)
+		return
+	report.store_string(JSON.stringify({"captures":records,"normal_text_contrasts":contrast_records,"failed":failed,"failure_captures":failure_captures,"body_font":app.BODY_FONT.get_font_name(),"title_font":app.TITLE_FONT.get_font_name(),"c1_outer_radius_px":0.25,"reference_outer_radius_px":0.275},"\t"))
+
+func record_failure(name: String, message: String) -> void:
+	failed = true
+	push_error(message)
+	var filename: String = "z2-"+name+".png"
+	for item: Dictionary in failure_captures:
+		if item.file == filename:
+			item.reasons.append(message)
+			write_report()
+			return
+	failure_captures.append({"file":filename,"reasons":[message],"crop":false})
+	write_report()
 
 func shot(name: String) -> void:
 	app.refresh()
@@ -112,7 +132,8 @@ func shot(name: String) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var picture: Image = surface.get_texture().get_image()
-	picture.save_png(output.path_join("z2-"+name+".png"))
+	if picture.save_png(output.path_join("z2-"+name+".png")) != OK:
+		record_failure(name, "Z2 native render could not be written: "+name)
 	if name == "f02-1280":
 		picture.get_region(Rect2i(90,102,850,180)).save_png(output.path_join("z2-detail-clues-ui125-1to1.png"))
 		picture.get_region(Rect2i(245,608,590,65)).save_png(output.path_join("z2-detail-tools-ui125-1to1.png"))
@@ -124,10 +145,11 @@ func shot(name: String) -> void:
 		var whole: Rect2 = app.board.view.bounds()
 		var dimensions: Vector2 = Vector2(app.session.player.width,app.session.player.height)
 		if not app.board.layout_valid or not grid.is_equal_approx(whole) or not grid.size.is_equal_approx(dimensions*app.board.view.cell_size) or not Rect2(Vector2.ZERO,app.board.size).encloses(whole.grow(1)) or app.board.view.cell_size > app.board.fit_ceiling:
-			push_error("Z2 complete frame/fit geometry: "+name)
-			failed = true
+			record_failure(name, "Z2 complete frame/fit geometry: "+name)
 	records.append({"file":"z2-"+name+".png","size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,"grid":[grid.position.x+app.board.position.x,grid.position.y+app.board.position.y,grid.size.x,grid.size.y],"cell":app.board.view.cell_size,"visible_cells":[grid.size.x/app.board.view.cell_size,grid.size.y/app.board.view.cell_size],"information":app.information.visible})
 	await contrast_check(name,picture)
+	if failed:
+		write_report()
 
 func detail_shots() -> void:
 	var image: Image = surface.get_texture().get_image()
@@ -145,8 +167,7 @@ func detail_shots() -> void:
 	tooltip_click.pressed = false
 	surface.push_input(tooltip_click,true)
 	if SaveStore.snapshot(app.session,app.board.capture_view()) != tooltip_state or app.session.gesture.active:
-		push_error("Z2 rendered tooltip allowed a board action")
-		failed = true
+		record_failure("c1-tooltip", "Z2 rendered tooltip allowed a board action")
 	app.board.clear_clue_hover()
 	# F02 now fits all its row clues. Use the existing long F03 row through
 	# the regular scene for the unchanged continuous 14.7px C1 drag oracle.
@@ -164,8 +185,7 @@ func detail_shots() -> void:
 	motion.button_mask = MOUSE_BUTTON_MASK_MIDDLE
 	surface.push_input(motion,true)
 	if app.board.pan_target != "row" or not is_equal_approx(app.board.pan_drag_distance,14.7):
-		push_error("Z2 C1 capture did not enter a continuous clue drag")
-		failed = true
+		record_failure("c1-drag", "Z2 C1 capture did not enter a continuous clue drag")
 	await shot("c1-drag")
 	app.board.cancel_gesture()
 	app.board.clear_pointer_hover()
@@ -225,5 +245,4 @@ func contrast_check(name: String, rendered: Image) -> void:
 		if count > 0:
 			contrast_records.append({"capture":name,"text":item.text,"opaque_glyph_pixels":count,"minimum":minimum})
 			if minimum < 4.5:
-				push_error("Z2 normal text contrast %.2f: %s / %s" % [minimum,name,item.text])
-				failed = true
+				record_failure(name, "Z2 normal text contrast %.2f: %s / %s" % [minimum,name,item.text])

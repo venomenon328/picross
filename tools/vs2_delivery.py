@@ -11,6 +11,38 @@ import p1_preflight as toolchain
 
 BASE = "fad885344874534629365917a2ab6a8d311cd3a7"
 
+def capture_current(project, workspace, output, engine, render_command, environment, phase):
+    """Current VS2 coverage; historical imports remain explicit separate replays."""
+    environment["VS2_PROBE_OUTPUT"] = str(output)
+    environment["P1_TEST_SAVE_ROOT"] = str(workspace / "vs2-current-saves")
+    try:
+        for stage in ("write", "read"):
+            environment["VS2_STAGE"] = stage
+            phase("vs2-roundtrip-" + stage,
+                  [engine, "--headless", "--path", str(project), "--script", "res://tests/vs2_roundtrip.gd"],
+                  "VS2_ROUNDTRIP_" + stage.upper() + "_OK")
+    finally:
+        for key in ("VS2_STAGE", "VS2_PROBE_OUTPUT", "P1_TEST_SAVE_ROOT"):
+            environment.pop(key, None)
+    phase("vs2-gf1-tests", [engine, "--headless", "--path", str(project), "--script",
+                          "res://tests/vs2_gf1_tests.gd"], "VS2_GF1_TESTS_OK")
+    renders = output / "vs2-renders"
+    renders.mkdir()
+    environment["VS2_CAPTURE_DIR"] = str(renders)
+    command = ["res://tests/vs2_tests.gd" if part == "res://tests/capture.gd" else part
+               for part in render_command]
+    try:
+        phase("vs2-regular-matrix", command, "VS2_TESTS_OK")
+    finally:
+        environment.pop("VS2_CAPTURE_DIR", None)
+    report = verify(renders)
+    selected = [renders / "vs2-matrix.json", output / "vs2-write.json", output / "vs2-read.json",
+                renders / "regular-F-01-G-ui100.png", renders / "corpus-VS08-G-ui125.png"]
+    return dict(records=len(report["records"]), failures=report["failures"],
+                rendered=len(report["pictures"]), retained_picture_candidates=2,
+                historical_comparison="not run; CI policy #63",
+                legacy_reader="separate downloaded Windows old-writer/new-reader probe"), selected
+
 def reference_project(root: Path, workspace: Path) -> Path:
     target = workspace / "vs2-zs2-reference"
     if target.exists():

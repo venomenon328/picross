@@ -4,6 +4,21 @@ const Measurements = preload("res://tests/vs2_measurements.gd")
 var surface: SubViewport
 var output: String
 var captures: Array = []
+var failure_captures: Array = []
+var pending_failures: Array[String] = []
+
+func check(condition: bool, description: String) -> void:
+	super.check(condition, description)
+	if not condition:
+		pending_failures.append(description)
+
+func write_report() -> void:
+	var report: FileAccess = FileAccess.open(output.path_join("rp6-f%02d-renders.json" % [pilot_index+1]),FileAccess.WRITE)
+	if report == null:
+		check(false, "RP6 render report could not be written")
+		quit(4)
+		return
+	report.store_string(JSON.stringify({"checks":checks,"failures":failures,"captures":captures,"failure_captures":failure_captures,"pending_failures":pending_failures},"\t") + "\n")
 
 func shot(name: String) -> void:
 	app.refresh()
@@ -30,6 +45,10 @@ func shot(name: String) -> void:
 			check(app.zoom_label.text.contains("Zu wenig Platz") and not app.board.marks.visible,"invalid geometry is explicit and has no marks")
 		for control: Control in [app.undo_button,app.redo_button,app.palette_row,app.mini]:
 			check(Rect2(Vector2.ZERO,Vector2(surface.size)).encloses(control.get_global_rect()), "controls on surface")
+	if not pending_failures.is_empty():
+		failure_captures.append({"file":filename,"reasons":pending_failures.duplicate(),"crop":false})
+		pending_failures.clear()
+		write_report()
 
 func run() -> void:
 	output = OS.get_environment("P1_CAPTURE_DIR")
@@ -103,6 +122,7 @@ func run() -> void:
 	var completed_root: String = OS.get_environment("P1_TEST_SAVE_ROOT")
 	if completed_root.is_empty():
 		check(false, "capture requires preceding real completion saves")
+		write_report()
 		quit(4)
 		return
 	SaveStore.test_root_override = completed_root
@@ -117,8 +137,7 @@ func run() -> void:
 		app.show_album()
 		app.album.ensure_control_visible(app.choices[pilot_index])
 		await shot("album-completed-%d-ui%d" % [spec[0],spec[2]*100])
-	var report: FileAccess = FileAccess.open(output.path_join("rp6-f%02d-renders.json" % [pilot_index+1]),FileAccess.WRITE)
-	report.store_string(JSON.stringify({"checks":checks,"failures":failures,"captures":captures},"\t") + "\n")
+	write_report()
 	if failures == 0:
 		print("RP6_CAPTURE_OK")
 	quit(0 if failures == 0 else 4)

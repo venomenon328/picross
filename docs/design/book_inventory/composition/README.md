@@ -1,10 +1,17 @@
 # BP-3 · Materialgerechte UI und Zielkompositionen
 
+**Archivstatus seit #63:** Review-ZIP und abgeleitete PNGs liegen am gebundenen
+historischen Commit; die folgenden Bildlinks zeigen diese unveränderten Dateien.
+Die vollständige Offline-Galerie ist im archivierten ZIP enthalten. Die unten
+stehenden Verifikationsbefehle gelten für den separaten historischen Checkout
+nach der [Archivübersicht](../ARCHIVE.md), nicht für diesen reduzierten Baum.
+Die folgenden Stand- und Abnahmeangaben sind historisch.
+
 Stand: 26.09.2026 · B3-01 bis B3-05 aus [#27](https://github.com/venomenon328/picross/issues/27)
 unter [#21](https://github.com/venomenon328/picross/issues/21).
 Statische Entscheidungsunterlage; Eigentümerwahl und native Umsetzung offen.
 
-[Offline-Vergleichsgalerie](index.html) · [Review-ZIP](bp3-review.zip) ·
+[Offline-Vergleichsgalerie](index.html) · [Review-ZIP](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/bp3-review.zip) ·
 [Entscheidungsunterlage](DECISION.md) · [Prüfbericht](VERIFICATION.md) ·
 [Layout](layout.json) · [Stilwerte](style.json) · [Manifest](manifest.json).
 
@@ -18,15 +25,15 @@ verwenden tatsächlich geladene Fraunces und IBM Plex Sans. Die Galerie bedient 
 
 | Fall | A · Inventarband | B · Sammlungskatalog | Maßstab |
 | --- | --- | --- | --- |
-| F-02 · 1920×1080 | [PNG](views/a-f02-1920.png) | [PNG](views/b-f02-1920.png) | UI 100 %, 40×40 bei 18 px |
-| F-02 · 2560×1440 | [PNG](views/a-f02-2560.png) | [PNG](views/b-f02-2560.png) | UI 100 %, dieselben 40×40 bei 18 px |
-| F-01 · 2560×1440 | [PNG](views/a-f01-2560.png) | [PNG](views/b-f01-2560.png) | UI 100 %, 20×20 bei 24 px |
-| F-03 · 1920×1080 | [PNG](views/a-f03-1920.png) | [PNG](views/b-f03-1920.png) | **UI-Testdatensatz, keine Rätselabnahme**; 57×28 bei 24 px, Spalten 26–82 / Zeilen 36–63 |
-| F-02 · 1280×720 | [PNG](views/a-f02-1280.png) | [PNG](views/b-f02-1280.png) | UI 125 %, 29×17 bei 22 px, Spalten 1–29 / Zeilen 1–17 |
+| F-02 · 1920×1080 | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f02-1920.png) | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f02-1920.png) | UI 100 %, 40×40 bei 18 px |
+| F-02 · 2560×1440 | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f02-2560.png) | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f02-2560.png) | UI 100 %, dieselben 40×40 bei 18 px |
+| F-01 · 2560×1440 | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f01-2560.png) | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f01-2560.png) | UI 100 %, 20×20 bei 24 px |
+| F-03 · 1920×1080 | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f03-1920.png) | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f03-1920.png) | **UI-Testdatensatz, keine Rätselabnahme**; 57×28 bei 24 px, Spalten 26–82 / Zeilen 36–63 |
+| F-02 · 1280×720 | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/a-f02-1280.png) | [PNG](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/views/b-f02-1280.png) | UI 125 %, 29×17 bei 22 px, Spalten 1–29 / Zeilen 1–17 |
 
-[Komponenten-/Zustandstafel](png/states-ui.png),
-[720p-Zustandsprobe bei UI 125 %](png/compact-states-ui.png) und
-[schematischer rechter Anschluss](png/connection-ui.png).
+[Komponenten-/Zustandstafel](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/states-ui.png),
+[720p-Zustandsprobe bei UI 125 %](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/compact-states-ui.png) und
+[schematischer rechter Anschluss](https://github.com/venomenon328/picross/blob/fad885344874534629365917a2ab6a8d311cd3a7/docs/design/book_inventory/composition/png/connection-ui.png).
 Alle drei sind ausdrücklich statische Beispiele, keine ausgeführten Eingaben,
 Speicheroperationen oder fertig implementierten Ansichten. Die 720p-Tafel montiert
 unskalierte Ausschnitte der unteren Werkzeuge, des Status und des rechten Zugangs
