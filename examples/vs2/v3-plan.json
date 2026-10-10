@@ -1,0 +1,40 @@
+{
+  "package": "VS2-V3 / issue 61 / PR 62",
+  "reference_head": "e2547016cef7cfe400a77fb09f22c872306de22a",
+  "base": "d7ec4e1e4a29d82b6979537a33868d57732d3713",
+  "reference_run": "38062931428",
+  "reference_technical_artifact": 11673329976,
+  "reference_player_artifact": 11674290298,
+  "selection": "One bounded candidate; at most two corrective rounds for demonstrated failures. No font/style search or historical import in standard CI.",
+  "candidate": {
+    "grid_max_deviation_px": 0.28,
+    "grid_previous_deviation_px": 0.18,
+    "grid_widths_px": [0.70, 0.90, 1.40, 1.64],
+    "grid_inward_px": 1.10,
+    "grid_aa_px": 1.0,
+    "grid_frame_budget_px": 1.0,
+    "fill": "Three low-alpha stable curved highlights: vary start/end, inclination, vertical spacing and bend by cell index and salt. Retain solid palette interior, outline, small-cell simplification and shared final drawing in preview/waiting/finishing pass.",
+    "navigation_delta_ui": [-20, 12],
+    "toolbar": "One vertical column beneath actual palette extent; 44*UI square actions, 4*UI gaps plus group separation. Clip and locally scroll only tools when necessary; visible scrollbar. Remove old bottom wells and tool text. Preserve board rectangle and mini/palette position where safe.",
+    "warning": "Non-numeric conditional warning in cleared bottom paper, separate from stress and recovery text.",
+    "title": "Original Bakso only while work visible; explicit bundled fallback only for individually missing real title glyphs, no system fallback. Fraunces on other contexts."
+  },
+  "font": {
+    "source": "prototypes/p1/study/fonts/BaksoDaging-Regular.ttf",
+    "target": "prototypes/p1/art/drawing/BaksoDaging-Regular.ttf",
+    "bytes": 128924,
+    "sha256": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e"
+  },
+  "coverage": {
+    "retained": "304 layouts, nine regular plus ten technical sheets; 80 V1 focused/recovery cases, glyphs 1/11/17/40, V2 projection and restart; current core/G1/GP48/H1/ZS2, 500 actions, saves/recovery, six pilots and export per CI policy.",
+    "v3_layout": "F01/F02/F08 on 1280x720,1600x900,1920x1080,2560x1440; UI100/125, G/V, work/fit. Actual visible/clipped tool hitboxes, all eight clicks, scroll ends, outside wheel routing, page transitions, recovery.",
+    "v3_drawing": "Native F01/F02/F08 whole images and 1:1 grid/five-crossing, adjacent fills, title and tight toolbar; 12/24/fit cells; preview, active stroke checkpoints and final target. Pure geometry fingerprints across redraw, zoom return, page return and fresh process.",
+    "v3_font": "All real work titles and each glyph including middle dot and multiplication; actual font bytes and effective title font from downloaded PCK, context switches and no study resources.",
+    "negative_controls": ["old unchanged grid must fail new variation oracle", "oversized stroke/AA must fail budget", "identical cell textures must fail diversity", "changed cell seed must fail stability", "uniform fade must fail spatial-build oracle", "horizontal or undersized or clipped/unreachable tools must fail layout", "numerical zoom/tool text must fail text oracle", "wrong/context-leaking font must fail title oracle"],
+    "windows": "Fresh download for clean final head: both EXEs without args fresh/partial/completed; genuine old writer/new reader; actual embedded PCK, normal/maximized clients, DPI separate from UI100/125, real viewport mouse/scroll/navigation, redo/recovery. Isolated profiles only."
+  },
+  "independent_success": "Full frame including AA; exact 24/18 UI slots and unchanged clue font; fit then capacity then translation; stable logical hits, no hidden clues in V, minimum five in G. Own pure fill miniature, timing/X/history/save untouched. Native visible style delta required in addition to geometry. No overlap of actual title/nav/rail/recovery ink.",
+  "budgets": {"product_minutes_with_pilots": 15, "technical_bytes": 20000000, "total_bytes": 75000000},
+  "gates_left_open": ["new independent review", "personal VS2-M01", "merge authorization"],
+  "historical_plans_unchanged": true
+}
