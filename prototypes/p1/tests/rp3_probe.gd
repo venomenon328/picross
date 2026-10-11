@@ -88,7 +88,7 @@ func finish() -> void:
 	check(app.session.player.cells.count(-1) > 0, "completion without mandatory background crosses")
 	app.show_album()
 	check(app.album_reveals[3].visible and app.album_reveals[3].payload.definition_id == "F-04", "earned album artwork bound to F-04")
-	check(app.sessions[0].player.cells.count(-1) == 400 and app.sessions[3].player.cells.count(-1) == 1600 and app.sessions[3].player.cells.count(-1) == 10000, "old slots remain untouched")
+	check(app.sessions[0].player.cells.count(-1) == 400 and app.sessions[1].player.cells.count(-1) == 1600 and app.sessions[3].player.cells.count(-1) == 2500, "old slots remain untouched")
 
 func restored() -> void:
 	check(app.session.completed and app.session.is_solution() and app.session.player.undo_used, "second real restart restores full completion/history")

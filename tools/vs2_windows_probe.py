@@ -194,6 +194,10 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         relative=Path(entry["file"])
         if relative.is_absolute() or ".." in relative.parts: raise ValueError("Unsafe evidence path")
         toolchain.verify_sha256(review/"selected"/relative,entry["sha256"])
+    import perf_b_report
+    b_comparison = perf_b_report.verify(review / "selected/perf-b-comparison")
+    if b_comparison != review_report["perf_b_comparison"]:
+        raise ValueError("Delivered PERF-B comparison binding differs")
     matrix=json.loads((review/"selected/vs2-renders/vs2-matrix.json").read_text(encoding="utf-8"))
     vs2_delivery.verify_records(matrix)
     if review_report["visual"]["vs2"]["v2"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v2-plan.json"):
@@ -305,7 +309,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},
                   study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,
                   previous_review="SL-R02: B-01 technically confirmed at a83ecf5",
-                  perf_b=b_probe, perf_b_probe_sha256=toolchain.sha256_file(ROOT / "prototypes/p1/tests/perf_b_probe.gd"),
+                  perf_b=b_probe, perf_b_comparison=b_comparison, perf_b_probe_sha256=toolchain.sha256_file(ROOT / "prototypes/p1/tests/perf_b_probe.gd"),
                   independent_combined_review="OPEN",PERF_01="B technical probes complete; owner acceptance OPEN",SL_M01="OPEN",PERF_M01="OPEN",merge_authorized=False)
     target=output/"windows-download-verification.json"
     target.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")

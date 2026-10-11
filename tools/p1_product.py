@@ -520,6 +520,10 @@ def main(argv: list[str] | None = None) -> int:
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
             evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "perf-b-comparison")])
+            required_b = {str(p.relative_to(output)) for p in selected if p.parent.name in ("perf-b", "perf-b-comparison")}
+            retained_b = {p["file"] for p in evidence.report["selected_evidence"]["files"]}
+            if not required_b <= retained_b:
+                raise toolchain.PreflightError("Required PERF-B comparison/native evidence missing from bounded delivery")
             if args.visual:
                 required_images = {p.name for p in selected if p.parent.name == "v3-renders" and p.suffix == ".png"}
                 retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}

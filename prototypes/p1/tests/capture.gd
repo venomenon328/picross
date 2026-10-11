@@ -6,9 +6,10 @@ const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
 const PencilMarks = preload("res://ui/pencil_marks.gd")
 const CellAtlas = preload("res://ui/cell_atlas.gd")
-# Same subpixel motion oracle, scaled for the selected 1.35x clue ink area.
-# Whole-slot jumps remain far above this bound; untouched neighbour stays exact.
-const CLUE_MOTION_PIXEL_BUDGET: int = 550
+# Subpixel motion at 1.35x clue ink scale, including the current multicolor
+# F06 glyphs (559 changed pixels at a 0.02-slot drag). Token displacement
+# independently rejects full-slot jumps; untouched neighbour remains exact.
+const CLUE_MOTION_PIXEL_BUDGET: int = 600
 const COMPACT_WORK_STEPS: Array[float] = [12.0, 16.0, 18.0, 22.0, 24.0, 72.0]
 # Review images are independent of assertion coverage. Failure frames are
 # always retained uncropped, including the preceding comparison images.
@@ -385,13 +386,18 @@ func x_crosses_view(app: Main, cell: Vector2i) -> bool:
 
 func capture_x_edges(app: Main) -> void:
 	var regular: Board = use_renderer_component(app)
+	# The developer-only clipped-cell oracle needs overflow on both axes even
+	# with the current 50x50 maximum; regular full-fit geometry is unchanged.
+	app.board.size = app.board.size.min(Vector2(1000,700))
+	await process_frame
+	await process_frame
 	for pitch: float in [24.0, 36.0]:
 		set_pitch(app,pitch)
 		for edge: String in ["top", "bottom", "left", "right", "corner"]:
 			var found: bool = false
 			for xi: int in range(10):
 				for yi: int in range(10):
-					app.board.view.center = Vector2(49.1 + xi * 0.1, 49.1 + yi * 0.1)
+					app.board.view.center = Vector2(app.board.view.dimensions) / 2.0 + Vector2(-0.9 + xi * 0.1, -0.9 + yi * 0.1)
 					app.board.view.reframe()
 					x_test_cell = edge_cell(app, edge)
 					var corner_box: Rect2 = app.board.view.cell_rect(x_test_cell)
@@ -750,7 +756,7 @@ func capture_compact_layout(app: Main) -> void:
 				values[(4 + i) * app.session.player.width + 4] = mini(i + 1, app.session.definition.palette.size())
 			replace_render_cells(app, values)
 			app.board.hover = Vector2i(4, 4)
-			var name: String = "%dx%d-ui%d-f%d" % [surface.size.x, surface.size.y, roundi(app.ui_scale * 100), fixture + 1]
+			var name: String = "%dx%d-ui%d-f%d" % [surface.size.x, surface.size.y, roundi(app.ui_scale * 100), int(app.session.definition.id.trim_prefix("F-"))]
 			if fixture > 0 and app.ui_scale > 1.0:
 				var row: int = 35 if fixture == 1 else 41
 				var column: int = 21 if fixture == 1 else 17
@@ -879,12 +885,20 @@ func capture_gestures(app: Main) -> void:
 	var pitch: float = float(app.board.clue_layout("row", f06_row).slot_extent)
 	app.board.pan_drag_distance = pitch * 0.49
 	var before_boundary: Image = await snapshot(app, "hint-drag-before-slot-boundary")
+	var row_centers: Dictionary = visible_token_centers(app, "row", f06_row)
 	app.board.pan_drag_distance = pitch * 0.51
 	var after_boundary: Image = await snapshot(app, "hint-drag-after-slot-boundary")
-	if region_difference(before_boundary, after_boundary, target_region) > CLUE_MOTION_PIXEL_BUDGET or region_difference(before_boundary, after_boundary, neighbour_region) != 0:
-		fail_capture("Rendered row hint jumped at a slot boundary", 5)
+	var row_shift: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(row_centers, visible_token_centers(app,"row",f06_row))
+	if row_shift.count == 0 or row_shift.largest > pitch * 0.021 or region_difference(before_boundary, after_boundary, target_region) > CLUE_MOTION_PIXEL_BUDGET or region_difference(before_boundary, after_boundary, neighbour_region) != 0:
+		fail_capture("Rendered row hint jumped at a slot boundary: delta=%d step=%d region=%s" % [region_difference(before_boundary, after_boundary, target_region), app.board.clue_step("row", f06_row), target_region], 5)
 		return
-	pixel_checks += 2
+	app.board.pan_drag_distance = pitch * 1.51
+	var wrong_row: Image = await snapshot(app, "hint-drag-row-full-slot-negative")
+	var wrong_row_shift: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(row_centers, visible_token_centers(app,"row",f06_row))
+	if wrong_row_shift.largest <= pitch * 0.5 or region_difference(after_boundary, wrong_row, target_region) == 0:
+		fail_capture("Full row slot jump escaped displacement/image oracle", 5)
+		return
+	pixel_checks += 3
 	app.board.cancel_gesture()
 	app.board.view.center = Vector2(f06_column,f06_row)
 	app.board.view.reframe()
@@ -894,15 +908,23 @@ func capture_gestures(app: Main) -> void:
 	var column_pitch: float = float(app.board.clue_layout("column", f06_column).slot_extent)
 	app.board.pan_drag_distance = column_pitch * 0.49
 	var column_before_boundary: Image = await snapshot(app, "hint-drag-column-before-slot-boundary")
+	var column_centers: Dictionary = visible_token_centers(app,"column",f06_column)
 	app.board.pan_drag_distance = column_pitch * 0.51
 	var column_after_boundary: Image = await snapshot(app, "hint-drag-column-after-slot-boundary")
+	var column_shift: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(column_centers, visible_token_centers(app,"column",f06_column))
 	var column_area: Rect2 = app.board.column_clue_area()
 	var column_x: float = app.board.view.cell_rect(Vector2i(f06_column, 0)).get_center().x
 	var column_region: Rect2i = Rect2i(Rect2(app.board.global_position + Vector2(column_x - 9, column_area.position.y), Vector2(18, column_area.size.y))).intersection(Rect2i(Vector2i.ZERO, surface.size))
-	if region_difference(column_before_boundary, column_after_boundary, column_region) > CLUE_MOTION_PIXEL_BUDGET or app.board.clue_step("column", f06_column) != 0:
+	if column_shift.count == 0 or column_shift.largest > column_pitch * 0.021 or region_difference(column_before_boundary, column_after_boundary, column_region) > CLUE_MOTION_PIXEL_BUDGET or app.board.clue_step("column", f06_column) != 0:
 		fail_capture("Rendered column hint jumped at a slot boundary", 5)
 		return
-	pixel_checks += 1
+	app.board.pan_drag_distance = column_pitch * 1.51
+	var wrong_column: Image = await snapshot(app, "hint-drag-column-full-slot-negative")
+	var wrong_column_shift: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(column_centers, visible_token_centers(app,"column",f06_column))
+	if wrong_column_shift.largest <= column_pitch * 0.5 or region_difference(column_after_boundary, wrong_column, column_region) == 0:
+		fail_capture("Full column slot jump escaped displacement/image oracle", 5)
+		return
+	pixel_checks += 2
 	app.board.cancel_gesture()
 	restore_regular_board(app,regular)
 

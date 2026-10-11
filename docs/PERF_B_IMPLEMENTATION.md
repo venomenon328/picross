@@ -87,3 +87,20 @@ CI-/Artefaktbereinigung gehört nicht zu dieser Änderung.
 Commitgebundene Ergebnisse, vollständige CI-Auswahl, frischer Windows-Download
 und getrennter Selbstreview werden im bestehenden Issue und PR nachgeführt.
 Historische SL-R02/PERF-A-R01 sind keine Abnahme dieses neuen Gesamtstands.
+
+Der [native B-Vergleich](../examples/perf_b/README.md) bindet 120 aktuelle
+F02-Vergleichsfälle auf `8ef3a1b` einschließlich Rohintervalle, Verteilungen,
+verbliebene Commitspitzen und Speichermehrbedarf. 100×100 bleibt getrennte
+theoretische Zusatzmessung. Die frische A-Herstellung ergibt 22/22 byteidentische
+Dateien. Produkt-CI und tatsächlicher Download prüfen die Mess-/Ressourcenbindung;
+fehlende Pflicht-B-Belege lassen die begrenzte Lieferung ebenso scheitern wie
+fehlende SL-Bilder. Der gemessene Runtimecode muss unverändert bleiben.
+
+Die 50×50-Umstellung erhält die Prüfarten: lange F06-Hinweise bei 720p/UI125,
+500 Aktionen samt unabhängigem Replay, echte Speicher-/Recoveryprozesse und
+Rand-Clipping in einer ausdrücklich kleineren Entwicklerfläche. H1 vergleicht
+weiter vollständige und halbe eigene Belegung. F06 hat andere farbige Glyphen
+als F03: die reine Pixelzählgrenze beim 0,02-Slot-Drag beträgt deshalb 600 statt
+550; zusätzlich gilt eine maximale gemeinsame Tokenverschiebung von 0,021
+Slots. Tatsächliche ganze Slotverschiebungen dienen als Negativkontrolle,
+unberührte Nachbarzeilen bleiben pixelidentisch. Das verändert keine Produktgeometrie.

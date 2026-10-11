@@ -155,22 +155,22 @@ static func run(c: SceneTree, app: Main) -> void:
 				var lines: Array = app.session.definition.rows if axis == "row" else app.session.definition.columns
 				for i: int in range(lines.size()):
 					c.set_fractional_step(app, axis, i, float(i % 3) / 2.0)
-			await pair(c, app, "h1-f%d-%dx%d-ui%d-zoom%d" % [fixture + 1, dims.x, dims.y, roundi(scale * 100), roundi(pitch / 24 * 100)])
+			await pair(c, app, "h1-f%d-%dx%d-ui%d-zoom%d" % [int(app.session.definition.id.trim_prefix("F-")), dims.x, dims.y, roundi(scale * 100), roundi(pitch / 24 * 100)])
 		c.surface.size = Vector2i(1920, 1080)
 		app.set_ui_scale(1.0)
 		app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 		await c.process_frame
-		if fixture == 2:
+		if fixture == 3:
 			var partial: Array[int] = values.duplicate()
-			for i: int in range(5000, partial.size()):
+			for i: int in range(partial.size() / 2, partial.size()):
 				partial[i] = -1
 			c.replace_render_cells(app, partial)
 			c.component_navigate(app, Vector2(0.5, 0.5))
-			for x: int in range(100):
+			for x: int in range(app.session.player.width):
 				c.set_fractional_step(app, "column", x, 1.0)
-			await pair(c, app, "h1-f3-partial-identical-numbers")
-			app.board.set_clue_hover("column", 50)
-			await pair(c, app, "h1-f3-partial-tooltip")
+			await pair(c, app, "h1-f6-partial-identical-numbers")
+			app.board.set_clue_hover("column", 25)
+			await pair(c, app, "h1-f6-partial-tooltip")
 			app.board.clear_pointer_hover()
 			c.replace_render_cells(app, values)
 		for axis: String in ["row", "column"]:
@@ -179,7 +179,7 @@ static func run(c: SceneTree, app: Main) -> void:
 			c.component_navigate(app, Vector2(0.5, (index + 0.5) / app.session.player.height) if axis == "row" else Vector2((index + 0.5) / app.session.player.width, 0.5))
 			app.board.set_clue_step(axis, index, 0)
 			app.board.set_clue_hover(axis, index)
-			await pair(c, app, "h1-f%d-%s-tooltip" % [fixture + 1, axis])
+			await pair(c, app, "h1-f%d-%s-tooltip" % [int(app.session.definition.id.trim_prefix("F-")), axis])
 			app.board.clear_pointer_hover()
 			# The wider surface may fit the entire row. Force actual overflow.
 			c.surface.size = Vector2i(1280, 720)
@@ -199,11 +199,11 @@ static func run(c: SceneTree, app: Main) -> void:
 			motion.position = point + (Vector2(delta, 0) if axis == "row" else Vector2(0, delta))
 			c.surface.push_input(motion, true)
 			require(c, app.board.pan_target == axis, "H1 live hint drag entered")
-			await pair(c, app, "h1-f%d-%s-drag" % [fixture + 1, axis])
+			await pair(c, app, "h1-f%d-%s-drag" % [int(app.session.definition.id.trim_prefix("F-")), axis])
 			var release: InputEventMouseButton = press.duplicate()
 			release.position = motion.position
 			release.pressed = false
 			c.surface.push_input(release, true)
 			app.board.clear_pointer_hover()
-			await pair(c, app, "h1-f%d-%s-drop" % [fixture + 1, axis])
+			await pair(c, app, "h1-f%d-%s-drop" % [int(app.session.definition.id.trim_prefix("F-")), axis])
 	app.set_clue_completion(true)
