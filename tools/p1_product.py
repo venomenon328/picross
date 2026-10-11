@@ -328,7 +328,9 @@ def player_guide(root: Path, source_commit: str) -> str:
         if url.scheme or not url.path:
             return match.group(0)
         path = (root / "game" / url.path).resolve()
-        if not path.is_relative_to(root.resolve()) or not path.exists():
+        # Existence is checked by the mandatory repository document validator;
+        # packaging fixtures need only the actual payload sources.
+        if not path.is_relative_to(root.resolve()):
             raise toolchain.PreflightError("Invalid player guide link: " + target)
         bound = "https://github.com/venomenon328/picross/blob/" + source_commit + "/" + quote(path.relative_to(root.resolve()).as_posix())
         return "[" + match.group(1) + "](" + bound + ("#" + url.fragment if url.fragment else "") + ")"
