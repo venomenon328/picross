@@ -19,6 +19,8 @@ Vor Verwendung wurde das bereitgestellte Original-ZIP gehasht:
 | Ausgewählte Logik | `62a584d7b1179a30f914ec5b8decb56a5fef532b8a85422e2147ad49dbd9963e` |
 
 Das Original enthält 182 Dateien, 36.827.537 entpackte Bytes, ZIP 33.631.879 Bytes.
+Der [gebundene Originalbericht](evidence/za1/original-input.json) führt die Prüfung
+am Implementierungscommit und den tatsächlich blockierten Exportversuch.
 Die frische Eingangsprüfung las das vollständige Inventar, rekonstruierte den
 Import und prüfte den vollständigen Reparaturverlauf mit drei Kandidaten.
 Auswahl `candidate-002`, Referenz `area-128`, Endproof solved/certified,
