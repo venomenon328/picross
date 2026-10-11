@@ -147,50 +147,23 @@ def spatial_oracle(image, plan, level, kind):
 
 
 def generate(cache, output):
-    if platform.system() != "Windows":
-        raise ValueError("Reference manufacture is pinned to native Windows/OpenGL")
-    Image, _ = image_api()
-    plan = json.loads(PLAN.read_text(encoding="utf-8"))
-    output.mkdir(parents=True, exist_ok=False)
-    originals, atlases = output / "sources", output / "atlases"
-    originals.mkdir(); atlases.mkdir()
-    with tempfile.TemporaryDirectory(prefix="picross-perfa-source-") as temporary:
-        workspace = Path(temporary)
-        engine = perf_a.prepare(cache, workspace)
-        project = perf_a.source_project(plan["source_commit"], workspace / "source")
-        shutil.copyfile(ROOT / "prototypes/p1/tests/perf_a_source.gd", project / "tests/perf_a_source.gd")
-        environment = tc.isolated_environment(workspace / "profile", "Windows")
-        environment.update(PERF_A_ATLAS_PLAN=str(PLAN), PERF_A_OUTPUT=str(originals))
-        perf_a.run([engine, "--headless", "--path", project, "--import"], environment, output / "import.log")
-        perf_a.run([engine, "--path", project, "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--script", "res://tests/perf_a_source.gd"], environment, output / "source.log", "PERF_A_SOURCE_OK")
-        manifest = dict(format="picross-perf-a-atlas-v1", plan=plan, plan_sha256=perf_a.digest(PLAN),
-            engine=tc.EXPECTED_VERSION, engine_archive_sha256=tc.EDITORS["Windows"].sha256,
-            source_files={p: perf_a.digest(project / p) for p in ("ui/pencil_marks.gd", "ui/board.gd", "ui/grid_view.gd")},
-            generator_files={p: perf_a.digest(ROOT / p) for p in ("tools/perf_a_atlas.py", "prototypes/p1/tests/perf_a_source.gd")},
-            consumer_contract={p: perf_a.digest(ROOT / "prototypes/p1/perf_a" / p) for p in ("atlas.gd","mask.gdshader")},
-            originals=[], atlases=[], usage="Developer-only PERF-A handover. Original project pencil; no third-party artwork. No palette copies. Excluded from player until PERF-B. Mipmaps/repeat/compression/source_color forbidden; linear filter; RGBA coefficients, straight alpha.")
-        for p in sorted(originals.glob("*.png")):
-            im = Image.open(p).convert("RGBA")
-            manifest["originals"].append(dict(file=p.name, sha256=perf_a.digest(p), pixel_sha256=pixel_hash(im), size=list(im.size)))
-        for level in plan["levels"]:
-            for kind in ("fill", "x"):
-                white = Image.open(originals / f"{kind}-{level['name']}-white.png").convert("RGBA")
-                black = Image.open(originals / f"fill-{level['name']}-black.png").convert("RGBA") if kind == "fill" else white
-                image = neutral(black, white, kind,plan["coefficient_extrusion_px"])
-                name = f"{kind}-{level['name']}.png"
-                path = atlases / name
-                image.save(path, compress_level=9, optimize=False)
-                imported = atlases / (name+".import")
-                imported.write_text(import_settings(name),encoding="utf-8",newline="\n")
-                item = dict(file=name, kind=kind, level=level["name"], size=list(image.size), bytes=path.stat().st_size,
-                    decoded_bytes=image.width*image.height*4, sha256=perf_a.digest(path), pixel_sha256=pixel_hash(image),
-                    safe_inner=[2*level["pixels"]/level["logical_cell"]]*2+[(level["logical_cell"]-4)*level["pixels"]/level["logical_cell"]]*2,
-                    import_sha256=perf_a.digest(imported), frames=frame_records(image, plan, level), oracle=spatial_oracle(image, plan, level, kind))
-                manifest["atlases"].append(item)
-        manifest["resources"] = dict(png_bytes=sum(a["bytes"] for a in manifest["atlases"]),
-            decoded_rgba_bytes=sum(a["decoded_bytes"] for a in manifest["atlases"]), textures=6, materials="one shared shader; palette materials reused by future renderer")
-        perf_a.write_json(atlases / "manifest.json", manifest)
-    print("PERF_A_ATLASES_OK", manifest["resources"], flush=True)
+    # Execute the actual bound manufacturer, including its original file hashes.
+    # This adapter is not silently relabelled as the historical manufacturer.
+    import importlib.util
+    from perf_b_resources import historical_files
+    with tempfile.TemporaryDirectory(prefix="picross-a-manufacturer-") as temporary:
+        root = Path(temporary)
+        for name, data in historical_files().items():
+            target = root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+        target = root / "examples/perf_a/atlas-plan.json"
+        target.parent.mkdir(parents=True)
+        shutil.copyfile(PLAN, target)
+        spec = importlib.util.spec_from_file_location("bound_a_manufacturer", root / "tools/perf_a_atlas.py")
+        original = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(original)
+        original.generate(cache, output)
 
 
 def verify(assets=ASSETS, sources=SOURCES):
@@ -199,12 +172,9 @@ def verify(assets=ASSETS, sources=SOURCES):
     plan = json.loads(PLAN.read_text(encoding="utf-8"))
     if manifest["plan"] != plan or manifest["plan_sha256"] != perf_a.digest(PLAN):
         raise ValueError("Atlas plan identity differs")
-    for path, expected in manifest["generator_files"].items():
-        if perf_a.digest(ROOT / path) != expected:
-            raise ValueError("Stored manufacturer identity differs")
-    for path, expected in manifest["source_files"].items():
-        if perf_a.digest(ROOT / "prototypes/p1" / path) != expected:
-            raise ValueError("A reference pencil differs from pinned source; rebind explicitly in B")
+    # PERF-B: retain the A manufacturer's original hashes, never rehash B.
+    from perf_b_resources import historical_files
+    historical_files()
     for path, expected in manifest["consumer_contract"].items():
         if perf_a.digest(ROOT / "prototypes/p1/perf_a" / path) != expected:
             raise ValueError("Atlas material/identity contract differs")
@@ -369,6 +339,8 @@ def probe(cache, output):
         engine = perf_a.prepare(cache, workspace)
         project = workspace / "p1"
         shutil.copytree(ROOT / "prototypes/p1", project, ignore=shutil.ignore_patterns(".godot", "build"))
+        from perf_b_resources import install_historical_probe
+        install_historical_probe(project)
         environment = tc.isolated_environment(workspace / "profile", "Windows")
         environment.update(PERF_A_ATLAS_PLAN=str(PLAN), PERF_A_OUTPUT=str(output))
         perf_a.run([engine, "--headless", "--path", project, "--import"], environment, output / "import.log")

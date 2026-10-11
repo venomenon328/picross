@@ -118,6 +118,9 @@ verpackt. Für einen konkreten historischen Vergleich wird ein separater Checkou
 des gebundenen ursprünglichen Commits verwendet. Dabei dessen damalige Quellen
 und Verträge lesen; keine alten Studienharnesses unbemerkt gegen neue APIs ausführen.
 
+PERF-B-E1 / #68 vom 11.10.2026 hebt ausschließlich das technische Budget auf
+30.000.000 Bytes an; Gesamtgrenze, Laufzeiten und Pflichtnachweise bleiben erhalten.
+
 ## Artefakte und Laufzeitbudgets
 
 | Bereich | Ziel/Budget |
@@ -127,7 +130,7 @@ und Verträge lesen; keine alten Studienharnesses unbemerkt gegen neue APIs ausf
 | Product einschließlich aller Piloten | Hartes Joblimit 15 Minuten |
 | Toolchain-Preflight | Hartes Joblimit fünf Minuten; nur relevante Änderungen/manueller Auftrag |
 | Regulärer Spieler plus technische Product-Daten | Höchstens 75.000.000 Bytes vor äußerem Actions-Container |
-| Technische Product-Daten | Höchstens 20.000.000 Bytes |
+| Technische Product-Daten | Höchstens 30.000.000 Bytes |
 
 Erfolgreiche Product-Läufe liefern das reguläre Windows-Spielerpaket und eine
 begrenzte technische Auswahl. Technische Daten werden sieben Tage, Spielerpakete

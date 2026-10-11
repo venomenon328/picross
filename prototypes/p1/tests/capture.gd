@@ -5,6 +5,7 @@ const SaveStore = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
 const PencilMarks = preload("res://ui/pencil_marks.gd")
+const CellAtlas = preload("res://ui/cell_atlas.gd")
 # Same subpixel motion oracle, scaled for the selected 1.35x clue ink area.
 # Whole-slot jumps remain far above this bound; untouched neighbour stays exact.
 const CLUE_MOTION_PIXEL_BUDGET: int = 550
@@ -371,7 +372,8 @@ func x_crosses_view(app: Main, cell: Vector2i) -> bool:
 	var visible_length: float = 0.0
 	var crosses: bool = false
 	for which: int in range(2):
-		var path: PackedVector2Array = PencilMarks.x_path(cell.y * app.session.player.width + cell.x, which)
+		var variant: int = CellAtlas.variant(str(app.session.definition.id),int(app.session.definition.revision),cell)
+		var path: PackedVector2Array = PencilMarks.x_path(variant, which)
 		for i: int in range(path.size() - 1):
 			var a: Vector2 = box.position + box.size * path[i]
 			var b: Vector2 = box.position + box.size * path[i+1]

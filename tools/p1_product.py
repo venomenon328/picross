@@ -26,6 +26,7 @@ import gp48_delivery
 import p1_current_visual
 import vs2_delivery
 import perf_a_atlas
+import perf_b_resources
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
@@ -368,6 +369,8 @@ def main(argv: list[str] | None = None) -> int:
                                                 toolchain.template_directory(workspace, host))
             project = workspace / "p1"
             shutil.copytree(root / "prototypes/p1", project, ignore=shutil.ignore_patterns(".godot", "build"))
+            evidence.report["perf_a_historical_sources"] = perf_b_resources.install_historical_probe(project)
+            evidence.report["perf_b_resources"] = perf_b_resources.verify_runtime()
             environment = toolchain.isolated_environment(workspace, host)
 
             def phase(name: str, command: list[str], marker: str | None = None,
@@ -488,6 +491,15 @@ def main(argv: list[str] | None = None) -> int:
                     evidence.report["perf_a_native"] = python_phase("perf-a-native-oracle-"+str(repetition),
                         lambda: perf_a_atlas.native_oracle(perf_output, require_restart=bool(repetition)))
                 selected += [perf_output / "probe.json", perf_output / "verified.json", perf_output / "flat-fill-24.0.png"]
+                b_output = output / "perf-b"
+                b_output.mkdir()
+                perf_env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(root / "prototypes/p1/perf_a/atlases/manifest.json"))
+                b_command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
+                             "--audio-driver", "Dummy", "--script", "res://tests/perf_b_probe.gd"]
+                if host == "Linux": b_command = ["xvfb-run", "-a"] + b_command
+                phase("perf-b-native", b_command, "PERF_B_PROBE_OK", phase_env=perf_env)
+                evidence.report["perf_b_native"] = json.loads((b_output / "probe.json").read_text())
+                selected += [b_output / "probe.json", *b_output.glob("runtime-*.png")]
             evidence.scope_start("export")
             build = project / "build/windows"
             build.mkdir(parents=True)
@@ -498,7 +510,7 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name == "v3-renders"])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b")])
             if args.visual:
                 required_images = {p.name for p in selected if p.parent.name == "v3-renders" and p.suffix == ".png"}
                 retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}

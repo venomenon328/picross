@@ -13,7 +13,7 @@ bestätigte Behebung der Sidebarachse B-01 bleibt davon getrennt.
 [PERF-A / #67](https://github.com/venomenon328/picross/issues/67) /
 [PERF-B / #68](https://github.com/venomenon328/picross/issues/68) sind freigegeben.
 [PERF-A](PERF_A_IMPLEMENTATION.md) liefert die geprüfte Entwicklergrundlage;
-die reguläre Renderer-/Cacheintegration in B steht aus. **PERF-M01 ist offen** und wird am neuen kombinierten
+die reguläre Renderer-/Cacheintegration steht in [PERF-B](PERF_B_IMPLEMENTATION.md). **PERF-M01 ist offen** und wird am neuen kombinierten
 Lieferstand mit SL-M01 geprüft, nicht am bloßen Spezifikationscommit.
 
 ## Regulärer Start und Bedienung

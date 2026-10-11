@@ -274,6 +274,11 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     v3 = vs2_delivery.verify_v3(output)
     if not v3["fresh_process_compared"]:
         raise ValueError("Missing V3 fresh-process geometry comparison")
+    b_output = output / "perf-b"
+    b_output.mkdir()
+    env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(ROOT / "prototypes/p1/perf_a/atlases/manifest.json"))
+    launch("perf-b-runtime", package, "perf_b_probe.gd", "PERF_B_PROBE_OK")
+    b_probe = json.loads((b_output / "probe.json").read_text())
     if toolchain.sha256_file(study)!=study_hash: raise ValueError("Historical study data changed")
     packs={"picross-p1.exe":embedded_pack(package/"picross-p1.exe")}
     console=package/"picross-p1.console.exe"
@@ -300,7 +305,8 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},
                   study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,
                   previous_review="SL-R02: B-01 technically confirmed at a83ecf5",
-                  independent_combined_review="OPEN",PERF_01="OPEN: A only",SL_M01="OPEN",PERF_M01="OPEN",merge_authorized=False)
+                  perf_b=b_probe, perf_b_probe_sha256=toolchain.sha256_file(ROOT / "prototypes/p1/tests/perf_b_probe.gd"),
+                  independent_combined_review="OPEN",PERF_01="B technical probes complete; owner acceptance OPEN",SL_M01="OPEN",PERF_M01="OPEN",merge_authorized=False)
     target=output/"windows-download-verification.json"
     target.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")
     print("VS2_WINDOWS_DOWNLOAD_OK",head,flush=True)

@@ -96,8 +96,9 @@ ist weder unabhängiges Review noch persönliche [SL-M01](VS2_OWNER_TRIAL.md).
 Historische V1/V2/V3-Pläne und Messergebnisse bleiben unverändert.
 
 Die bisherige optionale 12-MB-Bildauswahl würde den geforderten 1440p-Fall
-verdrängen. Für die acht gezielten Vollbilder gilt ein 15-MB-Bildteilbudget;
-20 MB technische Daten und 75 MB gesamt bleiben unveränderte harte Grenzen.
+verdrängen. Für die acht gezielten Vollbilder wurden 15 MB Bildteilbudget vorgesehen.
+PERF-B-E1 ergänzt 3 MB für B-Bilder und erhöht das technische Limit auf 30 MB;
+75 MB gesamt bleiben unverändert. Historische SL-Läufe galten unter 20 MB Technik.
 Eine redundante 1080p-Farbvollansicht entfällt, deren Prüfungen bleiben erhalten.
 Für abschließende Berichts-/Auditmetadaten bleiben 250 kB reserviert; das harte
 Techniklimit wird nach der Verpackung erneut geprüft. Fehlt eines der zwölf

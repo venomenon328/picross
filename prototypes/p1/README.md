@@ -1,8 +1,9 @@
 # P1 · Integrierte Windows-Spielprobe
 
 [PERF-A / #67](../../docs/PERF_A_IMPLEMENTATION.md) ergänzt native Referenzmessung
-und geprüfte Entwickleratlanten. Der reguläre Renderer bleibt bis PERF-B / #68
-unverändert. `perf_a/` und alle Probescripte sind vom Spielerexport ausgeschlossen.
+und geprüfte Entwickleratlanten. [PERF-B / #68](../../docs/PERF_B_IMPLEMENTATION.md)
+verwendet deren Texturen regulär mit getrennten Ruhe-, Übergangs- und Cursorebenen.
+`perf_a/` und alle Probescripte sind vom Spielerexport ausgeschlossen.
 Der [Zellrendering-Vertrag](../../docs/CELL_RENDERING.md) gilt für die Folgearbeit;
 PERF-01 und persönliche PERF-M01/SL-M01 bleiben offen.
 
@@ -304,7 +305,7 @@ exakt `P1 Windows x86_64`.
 
 `technical/` enthält fortlaufenden Bericht, Phasenlogs und begrenzte aktuelle
 Reviewbilder und wird auch nach Fehlern hochgeladen. Technische Daten haben
-20 MB Budget, gemeinsam mit dem Spieler-ZIP 75 MB. Abgeschlossene Studien,
+30 MB Budget, gemeinsam mit dem Spieler-ZIP 75 MB. Abgeschlossene Studien,
 historische Vorherprojekte und große alte Reviewpakete entstehen im Standardlauf
 nicht mehr. Die vollständige damalige Diagnose ist über ihren gebundenen Commit
 reproduzierbar; aktive Referenzen stehen in der CI-Policy.

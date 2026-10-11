@@ -1,6 +1,6 @@
 # Zellrendering: Sprite-Atlanten und getrennte Aktualisierung
 
-Stand: 11.10.2026 · Spezifikation 0.1 · PERF-A-Grundlage geliefert, PERF-B offen
+Stand: 11.10.2026 · Spezifikation 0.1 · PERF-A-Grundlage geliefert, PERF-B in technischer Prüfung
 
 ## Geltung, Befund und Paketstand
 
@@ -38,7 +38,8 @@ am genannten Ausgangshead technisch behoben. Das nimmt diese Performancearbeit
 nicht ab. Persönliche SL-M01 und neue PERF-M01 bleiben offen.
 [PERF-A](PERF_A_IMPLEMENTATION.md) liefert native Ausgangsmessung, reproduzierbare
 Atlanten und einen isolierten Material-/Identitätsprüfweg. Reguläre Atlasanzeige
-und neue Caches gehören weiterhin zu PERF-B und sind noch nicht implementiert.
+und neue Caches sind in [PERF-B](PERF_B_IMPLEMENTATION.md) integriert;
+die kombinierte unabhängige und persönliche Abnahme bleibt offen.
 Die Spezifikation stammt unverändert in ihren Fachentscheidungen aus PR #69,
 Commit `4a7573f3adaf7cef6df08adafb6caa767da02ad2`; #69 wurde nicht gemergt.
 
@@ -243,7 +244,7 @@ Ein einzelner Endzustands-Screenshot oder die reine Dateiexistenz genügt nicht.
 
 Die [aktuelle CI-Policy](CI_POLICY.md) bleibt maßgeblich: vollständige Diffauswahl,
 erfolgreiche ausgewählte Jobs und `ci-required`, kompakte statt pauschaler
-Screenshotmatrix, höchstens 20 MB technische und 75 MB gesamte Artefaktdaten.
+Screenshotmatrix, höchstens 30 MB technische und 75 MB gesamte Artefaktdaten.
 Die Laufzeitpakete brauchen frische reguläre Windows-EXE-Starts und Prüfung der
 tatsächlich exportierten PCK-Ressourcen am Lieferhead. Alte Messungen, Renderer-
 und Reviewstände sind keine Nachweise für die neue Integration.

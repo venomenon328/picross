@@ -2,7 +2,7 @@ extends SceneTree
 ## Current source and external downloaded-PCK probe; no developer code exported.
 const Store = preload("res://model/save_store.gd")
 var Sidebar: Script
-const Marks = preload("res://ui/pencil_marks.gd")
+const Atlas = preload("res://ui/cell_atlas.gd")
 var app: Control
 var canvas: SubViewport
 var output: String
@@ -224,16 +224,26 @@ func check_layout() -> void:
 			check(inner.encloses(item.get_global_rect()) and not item.get_global_rect().intersects(app.board.get_global_rect()),"notice outside grid and within paper")
 	records.append({"id":app.session.definition.id,"client":[canvas.size.x,canvas.size.y],"ui":app.ui_scale,"mode":app.board.mode,"fit":app.board.requested_cell==72,"rail":[app.tools_scroll.position.x,app.tools_scroll.position.y,app.tools_scroll.size.x,app.tools_scroll.size.y],"sidebar_axes":Sidebar.sidebar_axes(app),"scroll_needed":app.tools_column.size.y>app.tools_scroll.size.y+0.05,"title":app.title.text,"font":font.get_font_name()})
 
+func variant_trace(index: int) -> String:
+	var definition: Dictionary = app.session.definition
+	var variant: int = Atlas.variant(str(definition.id),int(definition.revision),Vector2i(index,0))
+	var texture: Texture2D = app.board.marks.textures["fill-medium"]
+	var pixels: Image = texture.get_image().get_region(Rect2i(Atlas.region("medium",variant,23)))
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(pixels.get_data())
+	return hash.finish().hex_encode()
+
 func fingerprint() -> Dictionary:
 	var traces: Array = []
 	for i: int in range(12):
-		for k: int in range(3): traces.append(Marks.fill_trace(i,k))
+		traces.append(variant_trace(i))
 	return {"traces":JSON.stringify(traces).sha256_text(),"grid":JSON.stringify(geometry.strokes(app.board)).sha256_text()}
 
 func diverse(traces: Array) -> bool:
 	var unique: Dictionary = {}
-	for trace: PackedVector2Array in traces: unique[str(trace)]=true
-	return unique.size()>=10
+	for trace: Variant in traces: unique[str(trace)]=true
+	return unique.size()>=6 # Twelve hashed cells select from sixteen bound variants.
 
 func max_deviation(lines: Array) -> float:
 	var result: float = 0
@@ -379,13 +389,13 @@ func run() -> void:
 	var traces: Array = []
 	var common: Array = []
 	for i: int in range(12):
-		traces.append(Marks.fill_trace(i,0))
-		common.append(Marks.fill_trace(0,0))
+		traces.append(variant_trace(i))
+		common.append(variant_trace(0))
 	check(diverse(traces),"different stable neighbor textures")
 	check(not diverse(common),"negative: common pattern rejected by same diversity oracle")
 	var shifted: Array = []
 	for i: int in range(12):
-		for k: int in range(3): shifted.append(Marks.fill_trace(i+1,k))
+		shifted.append(variant_trace(i+1))
 	check(JSON.stringify(shifted).sha256_text()!=before.traces,"negative: changed seed rejected by stability fingerprint")
 	var lines: Array = geometry.strokes(app.board)
 	var max_delta: float = max_deviation(lines)

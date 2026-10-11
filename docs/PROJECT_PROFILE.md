@@ -433,7 +433,7 @@ Prüfumfänge. Historische Vergleiche und Studienpakete entfallen bereits bei de
 Erzeugung. Der allgemeine native Capturepfad verwendet die kompakte Grenzmatrix;
 Assertions und Bildspeicherung sind getrennt. Spielerpaket und `technical/`
 werden getrennt hochgeladen, technische Daten auch bei Fehlern. Höchstens
-75 MB insgesamt, davon 20 MB technische Daten; Details und Nachweisgrenzen in
+75 MB insgesamt, davon 30 MB technische Daten; Details und Nachweisgrenzen in
 der [CI-Policy](CI_POLICY.md). Ein pauschaler Full-Evidence-Schalter besteht
 nicht mehr; historische Diagnosen erhalten ihren konkreten eigenen Auftrag.
 
