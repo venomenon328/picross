@@ -9,7 +9,7 @@ const Board = preload("res://ui/board.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
 
 static func run(t: SceneTree) -> void:
-	for id: String in ["f01", "f02", "f03"]:
+	for id: String in ["f01", "f02", "f06"]:
 		var data: Dictionary = Definition.load_fixture(id)
 		t.check(Definition.validate(data).is_empty(), id + " valid independent artwork")
 		for key: String in ["version", "definition_id", "image"]:
@@ -29,7 +29,11 @@ static func run(t: SceneTree) -> void:
 				if data.solution[y][x] > 0:
 					s.player.cells[y * s.player.width + x] = int(data.solution[y][x])
 		t.check(s.is_solution() and s.reveal().is_empty(), "no preview reveal; unknown background accepted " + id)
-		var index: int = s.player.width + (10 if id == "f01" else 1)
+		var index: int = -1
+		for candidate: int in range(s.player.cells.size()):
+			if s.player.cells[candidate]>0:
+				index=candidate
+				break
 		var actual: int = s.player.cells[index]
 		for wrong: int in [-1, 0, (actual % 4) + 1]:
 			s.player.cells[index] = wrong
@@ -71,7 +75,7 @@ static func run(t: SceneTree) -> void:
 				p.redo()
 				t.check(p.cells == expected and p.undo_used, "exact mixed redo")
 	# All transforms share coordinates; resizing does not change work pitch.
-	for n: int in [20, 40, 100]:
+	for n: int in [20, 40, 50]:
 		for step: float in [18.0, 24.0, 36.0, 48.0]:
 			var v: GridView = GridView.new()
 			v.cell_size = step
@@ -90,8 +94,8 @@ static func run(t: SceneTree) -> void:
 			v.configure(Rect2(180, 150, 800, 450), Vector2i(n, n))
 			t.check(v.cell_size == step and v.center.is_equal_approx(center), "resize stable cells and focus")
 	var v: GridView = GridView.new()
-	v.center = Vector2(50, 50)
-	v.configure(Rect2(100, 100, 600, 400), Vector2i(100, 100))
+	v.center = Vector2(25, 25)
+	v.configure(Rect2(100, 100, 600, 400), Vector2i(50, 50))
 	var anchor: Vector2 = Vector2(310, 270)
 	var coordinate: Vector2 = (anchor - v.origin) / v.cell_size
 	v.zoom_to(48, anchor)
@@ -281,17 +285,19 @@ static func ui_cases(t: SceneTree) -> void:
 	app.select_puzzle(0)
 	app.select_puzzle(1)
 	t.check(app.session.player.history == history, "per-fixture session history retained")
-	app.select_puzzle(2)
+	app.select_puzzle(3)
+	app.set_ui_scale(1.25)
+	t.root.size = Vector2i(1280, 720)
 	await t.process_frame
 	await t.process_frame
-	t.check(app.stress_label.visible, "F03 stress marking")
+	t.check(not app.stress_label.visible, "F06 is a regular bounded pilot")
 	var longest_row: int = longest_line(app.session.definition.rows)
 	var longest_column: int = longest_line(app.session.definition.columns)
-	b.navigate_to(Vector2(float(longest_column) / 100.0, float(longest_row) / 100.0))
+	b.navigate_to(Vector2(float(longest_column) / 50.0, float(longest_row) / 50.0))
 	var clue_point: Vector2 = b.get_global_transform() * Vector2(b.row_clue_area().get_center().x, b.view.cell_rect(Vector2i(0, longest_row)).get_center().y)
 	t.mouse_motion(clue_point, false)
 	t.check(b.clue_hover_axis == "row" and b.clue_hover_index == longest_row, "H-03 real pointer route opens in-work clue tooltip")
-	t.check(b.row_hint_overflows(longest_row), "long F03 row uses token-level overflow")
+	t.check(b.row_hint_overflows(longest_row), "long F06 row uses token-level overflow")
 	var tooltip: Array = b.tooltip_entries("row", longest_row)
 	var complete_tooltip: bool = tooltip.size() == app.session.definition.rows[longest_row].size()
 	for i: int in range(tooltip.size()):
@@ -311,9 +317,9 @@ static func ui_cases(t: SceneTree) -> void:
 				b.set_clue_step("column", longest_column, [0, int(float(column_base.max_offset) / 2.0), int(column_base.max_offset)][position])
 				var row_window: Dictionary = b.clue_layout("row", longest_row)
 				var column_window: Dictionary = b.clue_layout("column", longest_column)
-				t.check(row_window.end > row_window.start and column_window.end > column_window.start, "J-02 real F-03 clues at UI/pitch/slot %s/%s/%s" % [scale, step, position])
-				t.check(row_window.prefix_hidden or row_window.suffix_hidden, "J-02 long row markers reflect hidden entries")
-	app.set_ui_scale(1.0)
+				t.check(row_window.end > row_window.start and column_window.end > column_window.start, "J-02 real F-06 clues at UI/pitch/slot %s/%s/%s" % [scale, step, position])
+				t.check((row_window.prefix_hidden or row_window.suffix_hidden) == (row_window.entries.size()>row_window.slot_count), "J-02 markers match actual overflow or complete visibility")
+	app.set_ui_scale(1.25)
 	b.restore_view(b.capture_view().merged({"zoom":24,"overview":false},true))
 	b.reset_clue_pan()
 	await semantic_clue_geometry_routes(t, app)
@@ -323,9 +329,9 @@ static func ui_cases(t: SceneTree) -> void:
 	await followup_input_geometry(t, app)
 	b.restore_view(b.capture_view().merged({"zoom":72,"overview":false},true))
 	var below_work_range: float = b.view.cell_size
-	t.check(below_work_range < Board.WORK_STEPS[0], "F03 overview is below minimum work zoom")
+	t.check(below_work_range <= b.fit_ceiling, "F06 fits within its current ceiling")
 	b.zoom(-1, b.view.viewport.get_center())
-	t.check(is_equal_approx(b.view.cell_size, below_work_range) and not b.overview, "zoom out from small overview never zooms in")
+	t.check(b.view.cell_size <= below_work_range and not b.overview, "zoom out never zooms in")
 	b.zoom(1, b.view.viewport.get_center())
 	t.check(b.view.cell_size == below_work_range and not b.overview, "VS2 zoom at full fit cannot exceed ceiling")
 	b.requested_cell = 72.0
@@ -420,7 +426,7 @@ static func followup_input_geometry(t: SceneTree, app: Main) -> void:
 
 static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: int) -> void:
 	var b: Board = app.board
-	b.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
+	b.navigate_to(Vector2(float(column) / 50.0, float(row) / 50.0))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
 		var maximum: int = int(b.clue_layout(axis, index).max_offset)
@@ -584,7 +590,7 @@ static func monotone_clue_route(t: SceneTree, board: Board, axis: String, index:
 static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int) -> void:
 	var board: Board = app.board
 	board.reset_clue_pan()
-	board.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
+	board.navigate_to(Vector2(float(column) / 50.0, float(row) / 50.0))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
 		var maximum: int = int(board.clue_layout(axis, index).max_offset)
@@ -634,10 +640,10 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	t.root.remove_child(historical)
 	historical.queue_free()
 	await t.process_frame
-	app.select_puzzle(2)
+	app.select_puzzle(3)
 	board = app.board
 	board.reset_clue_pan()
-	board.navigate_to(Vector2(float(column) / 100.0, float(row) / 100.0))
+	board.navigate_to(Vector2(float(column) / 50.0, float(row) / 50.0))
 	monotone_clue_route(t, board, "row", row)
 	monotone_clue_route(t, board, "column", column)
 
@@ -647,24 +653,24 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	var original_scale: float = app.ui_scale
 	var original_zoom: float = b.view.cell_size
 	var original_center: Vector2 = b.view.center
-	t.root.size = Vector2i(1920, 1080)
-	app.set_ui_scale(1.0)
+	t.root.size = Vector2i(1280, 720)
+	app.set_ui_scale(1.25)
 	await t.process_frame
 	await t.process_frame
 	b.reset_clue_pan()
 	set_work_zoom(b, 12.0)
 	var rows: Array[int] = overflowing_lines(b, "row")
 	var columns: Array[int] = overflowing_lines(b, "column")
-	t.check(rows.size() >= 3 and columns.size() >= 3, "V-04 three long F-03 rows and columns available for semantic reflow")
-	if rows.size() < 3 or columns.size() < 3:
+	t.check(rows.size() >= 2 and columns.size() >= 2, "V-04 two overflowing F-06 lines per axis plus a fitting grid-end control")
+	if rows.size() < 2 or columns.size() < 2:
 		return
 	var cases: Array[Dictionary] = [
 		{"axis": "row", "index": rows[0], "anchor": ClueLayout.OUTER_START},
-		{"axis": "row", "index": rows[1], "anchor": ClueLayout.GRID_END},
-		{"axis": "row", "index": rows[2], "anchor": ClueLayout.MIDDLE},
+		{"axis": "row", "index": first_fitting_line(b,"row"), "anchor": ClueLayout.GRID_END},
+		{"axis": "row", "index": rows[1], "anchor": ClueLayout.MIDDLE},
 		{"axis": "column", "index": columns[0], "anchor": ClueLayout.OUTER_START},
-		{"axis": "column", "index": columns[1], "anchor": ClueLayout.GRID_END},
-		{"axis": "column", "index": columns[2], "anchor": ClueLayout.MIDDLE},
+		{"axis": "column", "index": first_fitting_line(b,"column"), "anchor": ClueLayout.GRID_END},
+		{"axis": "column", "index": columns[1], "anchor": ClueLayout.MIDDLE},
 	]
 	for entry: Dictionary in cases:
 		var layout: Dictionary = b.clue_layout(entry.axis, entry.index)
@@ -680,19 +686,19 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	set_work_zoom(b, 12.0)
 	current = check_semantic_transition(t, b, cases, current, "100 to 50 percent")
 	check_restored_windows(t, current, initial, "50 to 100 to 50 percent")
-	app.set_ui_scale(1.25)
-	current = check_semantic_transition(t, b, cases, current, "UI 100 to 125 percent")
 	app.set_ui_scale(1.0)
 	current = check_semantic_transition(t, b, cases, current, "UI 125 to 100 percent")
+	app.set_ui_scale(1.25)
+	current = check_semantic_transition(t, b, cases, current, "UI 100 to 125 percent")
 	check_restored_windows(t, current, initial, "UI round trip")
-	t.root.size = Vector2i(1280, 720)
-	await t.process_frame
-	await t.process_frame
-	current = check_semantic_transition(t, b, cases, current, "resize smaller")
 	t.root.size = Vector2i(1920, 1080)
 	await t.process_frame
 	await t.process_frame
 	current = check_semantic_transition(t, b, cases, current, "resize larger")
+	t.root.size = Vector2i(1280, 720)
+	await t.process_frame
+	await t.process_frame
+	current = check_semantic_transition(t, b, cases, current, "resize smaller")
 	check_restored_windows(t, current, initial, "resize round trip")
 	b.reset_clue_pan()
 	app.set_ui_scale(original_scale)
@@ -728,7 +734,11 @@ static func check_semantic_transition(t: SceneTree, board: Control, cases: Array
 		var entry: Dictionary = cases[i]
 		var previous: Dictionary = before[i]
 		var current: Dictionary = after[i]
-		if entry.anchor == ClueLayout.OUTER_START:
+		var read: Dictionary = (board.row_clue_reads if entry.axis=="row" else board.column_clue_reads)[entry.index]
+		t.check(read.anchor==entry.anchor,"semantic anchor retained independently of visible capacity")
+		if int(current.max_offset)==0:
+			t.check(current.start==0 and current.end==board.clue_entry_count(entry.axis,entry.index) and not current.prefix_hidden and not current.suffix_hidden and current.offset==0,"all fitting tokens visible without false overflow across "+label)
+		elif entry.anchor == ClueLayout.OUTER_START:
 			t.check(int(current.start) == 0 and int(current.end) == int(current.slot_count) - 2 and int(current.token_slot) == 1 and not current.prefix_hidden and current.suffix_hidden and int(current.offset) == int(current.max_offset), "V-04 %s direct outer-start anchor survives %s" % [entry.axis, label])
 		elif entry.anchor == ClueLayout.GRID_END:
 			var count: int = board.clue_entry_count(entry.axis, entry.index)
@@ -891,10 +901,11 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	app.clue_reset_button.pressed.emit()
 	t.check(b.row_clue_steps.count(0) == b.row_clue_steps.size() and b.column_clue_steps.count(0) == b.column_clue_steps.size(), "J-03 reset control restores every grid-side clue window")
 	app.return_to_work()
+	app.set_ui_scale(1.25)
 	b.set_clue_step("row", longest_row, 1)
 	b.set_clue_step("column", longest_column, 1)
 	app.select_puzzle(1)
-	app.select_puzzle(2)
+	app.select_puzzle(3)
 	t.check(b.clue_step("row", longest_row) == 1 and b.clue_step("column", longest_column) == 1, "P1.3 fixture switch retains each clue view")
 	t.check(b.clue_layout("row", longest_row).end > b.clue_layout("row", longest_row).start and b.clue_layout("column", longest_column).end > b.clue_layout("column", longest_column).start, "J-03 mapping remains valid after route sequence")
 

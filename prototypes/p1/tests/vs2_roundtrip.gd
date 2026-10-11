@@ -36,14 +36,15 @@ func run() -> void:
 	var expected_path: String = output.path_join(prefix+"-expected.json")
 	var records: Array = []
 	if stage.ends_with("write"):
-		for index: int in range(9):
+		for index: int in range(app.sessions.size()):
+			if app.sessions[index].player.width>50 or app.sessions[index].player.height>50: continue
 			app.select_puzzle(index)
 			app._reset_selected()
 			app.open_puzzle()
 			var player = app.session.player
 			check(player.commit([{"index":0,"before":-1,"after":1}]),"write first action")
 			check(player.commit([{"index":1,"before":-1,"after":0}]) and player.undo(),"write real redo branch")
-			if index == 3 or (index == 0 and OS.get_environment("VS2_COMPLETE_FIRST") == "1"):
+			if app.session.definition.id == "F-04" or (index == 0 and OS.get_environment("VS2_COMPLETE_FIRST") == "1"):
 				var changes: Array = []
 				for y: int in range(player.height):
 					for x: int in range(player.width):
@@ -80,10 +81,13 @@ func run() -> void:
 	else:
 		records = JSON.parse_string(FileAccess.get_file_as_string(expected_path))
 		check(app.board.mode == "G","mode is session-only default")
-		for index: int in range(9):
+		for index: int in range(app.sessions.size()):
 			app.select_puzzle(index)
 			var actual: Dictionary = Store.snapshot(app.session,app.board.capture_view())
-			var expected: Dictionary = records[index]
+			var expected: Dictionary = {}
+			for saved: Dictionary in records:
+				if saved.definition_id==app.session.definition.id: expected=saved
+			check(not expected.is_empty(),"matching stable save identity")
 			check(Store.validate(expected,app.session.definition).is_empty(),"old full snapshot valid before presentation normalization")
 			for bad: Variant in [null,0,"true"]:
 				var invalid: Dictionary = expected.duplicate(true)
@@ -109,6 +113,7 @@ func run() -> void:
 		check(not app.board.has_method("measurements"),"PCK excludes developer matrix diagnosis")
 		check(app.board.marks.textures.size()==6 and app.board.marks.ink_material.shader.resource_path=="res://ui/atlas_mask.gdshader","PCK active six atlas textures and runtime shader")
 		for path: String in resources:
+			check(not path.get_file().get_basename() in ["f03","f05","f07"],"PCK excludes retired 100x100 definitions and reveal assets")
 			check(not path.get_file().get_basename() in ["fit","work","hand","album"],"PCK has no obsolete action icons")
 			check(not path.contains("/study/") and not path.contains("/full_view_study/") and not path.contains("/tests/") and not path.contains("/perf_a/") and not path.contains("pencil_marks") and not path.contains("Shantell") and not path.contains("Virgil"),"PCK excludes developer/study/PERF-A probe resources: "+path)
 	var report: Dictionary = {"stage":stage,"failures":failures,"root":app.store.root,"app_data":OS.get_user_data_dir(),"client":[root.size.x,root.size.y],"display":DisplayServer.get_name(),"resources":resources}

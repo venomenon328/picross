@@ -14,7 +14,7 @@ import p1_preflight as tc
 ROOT = a.ROOT
 
 
-def compare(cache, output, role, source):
+def compare(cache, output, role, source, theoretical_stress=False):
     if platform.system() != "Windows":
         raise ValueError("Native Windows comparison required")
     output.mkdir(parents=True, exist_ok=False)
@@ -33,9 +33,16 @@ def compare(cache, output, role, source):
         env = tc.isolated_environment(workspace / "profile", "Windows")
         env["PERF_A_PLAN"] = str(a.PLAN)
         a.run([engine, "--headless", "--path", project, "--import"], env, output / "import.log")
-        # Original ten F02 contexts; F03/F07 use the same higher requested step
-        # at their real fit. No forced geometry and no historical overview mode.
-        for fixture, ci in [(1, i) for i in range(10)] + [(2, 3), (6, 3)]:
+        # Owner decision: 50x50 maximum. Historical 100x100 is optional theory
+        # only, and must never silently select different current catalog slots.
+        contexts = [(1, i) for i in range(10)]
+        if theoretical_stress:
+            main = (project / "ui/main.gd").read_text(encoding="utf-8")
+            if "Definition.CATALOG_IDS" in main:
+                raise ValueError("Theoretical F03/F07 requires a historical catalog source")
+            contexts += [(2, 3), (6, 3)]
+        report["theoretical_stress"] = theoretical_stress
+        for fixture, ci in contexts:
             target = output / f"f{fixture+1:02d}-{ci}"
             target.mkdir()
             env.update(PERF_A_OUTPUT=str(target), PERF_A_CONTEXT=str(ci), PERF_A_OVERVIEW="0", PERF_B_FIXTURE=str(fixture))
@@ -80,5 +87,6 @@ if __name__ == "__main__":
     parser.add_argument("--source", required=True)
     parser.add_argument("--cache-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--theoretical-stress", action="store_true")
     args = parser.parse_args()
-    compare(args.cache_dir.resolve(), args.output_dir.resolve(), args.role, args.source)
+    compare(args.cache_dir.resolve(), args.output_dir.resolve(), args.role, args.source, args.theoretical_stress)

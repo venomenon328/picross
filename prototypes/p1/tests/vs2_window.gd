@@ -59,7 +59,7 @@ func run() -> void:
 		await create_timer(0.3).timeout
 		for ui: float in [1.0,1.25]:
 			app.set_ui_scale(ui)
-			for index: int in [0,1,2,6,8]:
+			for index: int in [0,1,3,5]:
 				app.select_puzzle(index)
 				app._reset_selected()
 				app.open_puzzle()

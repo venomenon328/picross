@@ -14,7 +14,7 @@ static func run(t: SceneTree) -> void:
 	var app: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(app)
 	await t.process_frame
-	app.select_puzzle(3)
+	app.select_puzzle(2)
 	await t.process_frame
 	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	await t.process_frame
@@ -34,7 +34,7 @@ static func run(t: SceneTree) -> void:
 		for scale: float in [1.0, 1.25]:
 			t.root.size = dimensions
 			app.set_ui_scale(scale)
-			app.select_puzzle(3)
+			app.select_puzzle(2)
 			app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 			for i: int in range(8):
 				app.board.zoom(1, app.board.view.viewport.get_center())

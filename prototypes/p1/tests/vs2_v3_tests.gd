@@ -243,7 +243,7 @@ func fingerprint() -> Dictionary:
 func diverse(traces: Array) -> bool:
 	var unique: Dictionary = {}
 	for trace: Variant in traces: unique[str(trace)]=true
-	return unique.size()>=6 # Twelve hashed cells select from sixteen bound variants.
+	return unique.size()>=10 # The bound twelve F01 cells select ten distinct variants.
 
 func max_deviation(lines: Array) -> float:
 	var result: float = 0
@@ -271,16 +271,16 @@ func run() -> void:
 	hash.update(font.data)
 	check(hash.finish().hex_encode()=="56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e","exact original embedded font")
 	check(not font.allow_system_fallback,"no system font dependency")
-	for index: int in range(9):
+	for index: int in range(app.sessions.size()):
 		app.select_puzzle(index)
 		for c: String in app.title.text:
-			check(font.has_char(c.unicode_at(0)),"all nine actual title glyphs "+c)
+			check(font.has_char(c.unicode_at(0)),"all six actual title glyphs "+c)
 	for dimensions: Vector2i in [Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080),Vector2i(2560,1440)]:
 		canvas.size = dimensions
 		app.size = Vector2(dimensions)
 		for u: float in [1.0,1.25]:
 			app.set_ui_scale(u)
-			for index: int in [0,1,7]:
+			for index: int in [0,1,4]:
 				app.select_puzzle(index)
 				for mode: int in [0,1]:
 					app.set_puzzle_view(mode)
@@ -410,7 +410,7 @@ func run() -> void:
 	wide_lines[0].width=4.0
 	check(not geometry.within_budget(wide_lines,app.board.view.bounds()),"negative: oversized stroke/AA rejected")
 	geometry.layout(app,check)
-	for index: int in [0,1,7]:
+	for index: int in [0,1,4]:
 		app.select_puzzle(index)
 		app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 		app.board.set_animations(false)

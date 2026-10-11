@@ -75,14 +75,21 @@ func finish() -> void:
 
 func test_definition() -> void:
 	check(Definition.validate(fixture).is_empty(), "F-01 validates")
+	check(Definition.CATALOG_IDS==["f01","f02","f04","f06","f08","f09"],"current catalog excludes retired oversized sheets")
+	var largest: Dictionary = Definition.load_fixture("f06")
+	check(largest.width==50 and largest.height==50 and Definition.validate(largest).is_empty(),"50x50 boundary remains playable")
+	for axis: String in ["width","height"]:
+		var oversized: Dictionary = largest.duplicate(true)
+		oversized[axis]=51
+		check(Definition.validate(oversized)=="Ungültige Dimension.","51 on either axis fails at dimension boundary")
 	check(Definition.hints([0, 0, 0]).is_empty(), "empty line")
 	check(Definition.hints([1, 1, 1]) == [{"length": 3, "color": 1}], "full line")
 	check(Definition.hints([1, 0, 1]) == [{"length": 1, "color": 1}, {"length": 1, "color": 1}], "same colors separated")
 	check(Definition.hints([1, 2, 2, 1]) == [{"length": 1, "color": 1}, {"length": 2, "color": 2}, {"length": 1, "color": 1}], "different colors directly adjacent")
 	var long_line: Array = []
-	for i: int in range(100):
+	for i: int in range(50):
 		long_line.append(1 if i % 2 == 0 else 2)
-	check(Definition.hints(long_line).size() == 100, "long clues not truncated")
+	check(Definition.hints(long_line).size() == 50, "long clues not truncated")
 	for key: String in ["schema", "id", "revision", "width", "height", "palette", "solution", "rows", "columns", "reveal"]:
 		var bad: Dictionary = fixture.duplicate(true)
 		bad.erase(key)
@@ -91,7 +98,7 @@ func test_definition() -> void:
 		var bad: Dictionary = fixture.duplicate(true)
 		bad.solution[0][0] = bad_value
 		check(not Definition.validate(bad).is_empty(), "invalid solution value " + str(bad_value))
-	for bad_value: Variant in [0, 101, 20.5, "20"]:
+	for bad_value: Variant in [0, 51, 101, 20.5, "20"]:
 		var bad: Dictionary = fixture.duplicate(true)
 		bad.width = bad_value
 		check(not Definition.validate(bad).is_empty(), "invalid width " + str(bad_value))

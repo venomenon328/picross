@@ -214,9 +214,9 @@ def capture(root, project, workspace, output, engine, render_command, environmen
     return evidence
 
 def verify_records(report: dict) -> None:
-    expected = {(corpus,index,w,ui,mode) for corpus,count in ((False,9),(True,10)) for index in range(count) for w in (1280,1600,1920,2560) for ui in (1.0,1.25) for mode in ("G","V")}
+    expected = {(corpus,index,w,ui,mode) for corpus,indices in ((False,(0,1,3,5,7,8)),(True,range(10))) for index in indices for w in (1280,1600,1920,2560) for ui in (1.0,1.25) for mode in ("G","V")}
     actual = {(r["corpus"], int(r["id"].replace("F-","").replace("VS",""))-1,r["client"][0],r["ui_scale"],r["mode"]) for r in report["records"]}
-    if report["failures"] or actual != expected or len(report["records"]) != 304:
+    if report["failures"] or actual != expected or len(report["records"]) != 256:
         raise toolchain.PreflightError("Incomplete/failed VS2 regular matrix")
     for record in report["records"]:
         if record["layout_valid"] and not record["grid_fit"]:
@@ -238,7 +238,7 @@ def verify(renders: Path) -> dict:
         if picture["file"].startswith(("regular-","corpus-")) and set(picture.get("frame_pixels",{})) != {"top","bottom","left","right"}:
             raise toolchain.PreflightError("VS2 rendered frame evidence incomplete")
     expected_images = {"album.png","options.png"}
-    expected_images.update(f"regular-F-{i:02d}-G-ui{ui}.png" for i in (1,7) for ui in (100,125))
+    expected_images.update(f"regular-F-{i:02d}-G-ui{ui}.png" for i in (1,6) for ui in (100,125))
     expected_images.update(f"corpus-VS{i:02d}-{mode}-ui{ui}.png" for i in (4,8,9) for mode in ("G","V") for ui in (100,125))
     expected_images.update(f"rectangular-VS{i:02d}-reveal.png" for i in (1,3,5,7,9))
     if {p["file"] for p in report["pictures"]} != expected_images or len(report["pictures"]) != len(expected_images):

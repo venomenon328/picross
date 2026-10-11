@@ -104,7 +104,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--download-timeout-seconds", type=int, default=1200)
     for name, description in (
         ("integration", "500 actions and the independent cross-process restart oracle"),
-        ("pilots", "all six pilot playthroughs across real processes"),
+        ("pilots", "all four current pilot playthroughs across real processes"),
         ("visual", "current compact native pixel and animation checks"),
     ):
         parser.add_argument("--" + name, action=argparse.BooleanOptionalAction, default=True,
@@ -155,24 +155,24 @@ def run_pilots(workspace: Path, environment: dict, base: list[str], phase) -> di
     environment["P1_TEST_SAVE_ROOT"] = str(pilot_saves)
     slot_checks = []
     try:
-        for index in range(3, 9):
+        for index, number in ((2,4),(3,6),(4,8),(5,9)):
             environment["RP6_INDEX"] = str(index)
             for stage in ("partial", "finish", "read"):
                 untouched = {p.name: toolchain.sha256_file(p) for p in pilot_saves.glob("*")
-                             if p.is_file() and not p.name.startswith(("f01.", f"f{index+1:02d}."))}
+                             if p.is_file() and not p.name.startswith(("f01.", f"f{number:02d}."))}
                 environment["RP6_STAGE"] = stage
-                phase(f"rp6-f{index+1:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
+                phase(f"rp6-f{number:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
                       "RP6_" + stage.upper() + "_OK")
                 if any(not (pilot_saves / name).is_file() or toolchain.sha256_file(pilot_saves / name) != digest
                        for name, digest in untouched.items()):
                     raise toolchain.PreflightError("Another pilot save changed")
                 slot_checks.append(dict(index=index, stage=stage, unchanged_files=untouched))
-            if index == 3:
+            if index == 2:
                 isolation_control = run_pilot_isolation_control(workspace, environment, base, phase)
     finally:
         for key in ("P1_TEST_SAVE_ROOT", "RP6_STAGE", "RP6_INDEX"):
             environment.pop(key, None)
-    return dict(pilots=6, processes=18, separate_slot_checks=slot_checks,
+    return dict(pilots=4, processes=12, separate_slot_checks=slot_checks,
                 foreign_slot_control=isolation_control,
                 production_replay="not repeated here; authoritative puzzle-production job")
 
@@ -184,7 +184,7 @@ def require_foreign_slot_failure(result: dict) -> None:
     if (result["exit_code"] != 4
             or errors != ["ERROR: RP3_FAIL: isolated F04 preserves F01 cells after restart"]
             or "RP6_F01_SAVE status=loaded unknown=399" not in output
-            or not re.search(r"RP6_RESULT index=3 stage=read checks=\d+ failures=1\b", output)
+            or not re.search(r"RP6_RESULT index=2 stage=read checks=\d+ failures=1\b", output)
             or "RP6_READ_OK" in output):
         raise toolchain.PreflightError("Foreign-slot control did not fail solely on valid changed F01 cells")
 
@@ -275,10 +275,10 @@ def run_pilot_visual(output, workspace, project, engine, environment, phase, hos
         command = ["xvfb-run","-a"] + command
         environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
     try:
-        for index in range(3,9):
+        for index, number in ((2,4),(3,6),(4,8),(5,9)):
             environment["RP6_INDEX"] = str(index)
-            phase(f"rp6-f{index+1:02d}-render",command,"RP6_CAPTURE_OK")
-        return list(renders.glob("rp6-*.json")) + [renders / "rp6-f07-completion-1920-ui100.png"]
+            phase(f"rp6-f{number:02d}-render",command,"RP6_CAPTURE_OK")
+        return list(renders.glob("rp6-*.json")) + [renders / "rp6-f06-completion-1920-ui100.png"]
     finally:
         for key in ("P1_CAPTURE_DIR","P1_TEST_SAVE_ROOT","RP6_INDEX"):
             environment.pop(key,None)

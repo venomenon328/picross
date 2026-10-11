@@ -128,7 +128,7 @@ static func configurations(compact: bool) -> Array:
 	return result
 
 static func run(c: SceneTree, app: Main) -> void:
-	for fixture: int in [1, 2]:
+	for fixture: int in [1, 3]:
 		app.select_puzzle(fixture)
 		var values: Array[int] = []
 		for row: Array in app.session.definition.solution:

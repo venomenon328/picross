@@ -104,4 +104,4 @@ def verify(matrix, focused):
             rejected.append(name)
         else:
             raise PreflightError('V1 negative control escaped: '+name)
-    return dict(matrix_records=304,focused_records=80,glyph_status_images=6,negative_controls=rejected)
+    return dict(matrix_records=256,focused_records=80,glyph_status_images=6,negative_controls=rejected)

@@ -128,7 +128,7 @@ static func run(t: SceneTree) -> void:
 	# Missing primary after rotation must not trap recovery behind N1.
 	app.set_ui_scale(1.0)
 	app._save_current()
-	var other: Array = [app.sessions[0].player.cells.duplicate(),app.sessions[2].player.cells.duplicate()]
+	var other: Array = [app.sessions[0].player.cells.duplicate(),app.sessions[3].player.cells.duplicate()]
 	app.board.eraser = not app.board.eraser
 	var pending: Dictionary = state(app)
 	app.store.fail_step = "after_rotation"
@@ -152,7 +152,7 @@ static func run(t: SceneTree) -> void:
 	app.repair_dialog.confirmed.emit()
 	app.open_puzzle()
 	click(t,app.actions.menu)
-	t.check(app.information.visible and app.store.load_slot(app.session.definition).status == "loaded" and app.sessions[0].player.cells == other[0] and app.sessions[2].player.cells == other[1],"Z2-A04 confirmed repair allows retry and preserves other slots")
+	t.check(app.information.visible and app.store.load_slot(app.session.definition).status == "loaded" and app.sessions[0].player.cells == other[0] and app.sessions[3].player.cells == other[1],"Z2-A04 confirmed repair allows retry and preserves other slots")
 	app.return_to_work()
 	app.board.set_clue_step("row",35,1)
 	app._save_current()

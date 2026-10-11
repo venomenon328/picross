@@ -91,7 +91,7 @@ func run() -> void:
 	await create_timer(0.15).timeout
 	var largest: float=0
 	var smallest: float=72
-	for sheet: int in range(9):
+	for sheet: int in range(app.sessions.size()):
 		app.select_puzzle(sheet)
 		for scale: float in [1.0,1.25]:
 			app.set_ui_scale(scale)

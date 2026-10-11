@@ -17,7 +17,7 @@ func run() -> void:
 	if not require(not isolated.is_empty(), "isolated save root required"):
 		return
 	SaveStore.test_root_override = isolated
-	root.size = Vector2i(1600, 900)
+	root.size = Vector2i(1280, 720)
 	var app: Main = load("res://main.tscn").instantiate()
 	root.add_child(app)
 	await process_frame
@@ -48,35 +48,40 @@ func run() -> void:
 	else:
 		if not require(app.album_previews[0].cells[10 * 20 + 10] == 1 and app.album_previews[1].cells[10 * 40 + 10] == 3 and app.album_reveals[0].payload.is_empty() and app.album_reveals[1].payload.is_empty(), "album previews restored without reveal spoilers"):
 			return
-	app.select_puzzle(2)
+	app.select_puzzle(3)
+	app.set_ui_scale(1.25)
 	await process_frame
 	await process_frame
 	var board: Control = app.board
 	var row: int = -1
+	var row_other: int = -1
 	var column: int = -1
+	var column_other: int = -1
 	for i: int in range(app.session.definition.rows.size()):
-		if app.session.definition.rows[i].size() >= 5:
-			row = i
-			break
+		if board.clue_layout("row",i).max_offset>=3:
+			if row<0: row=i
+			else:
+				row_other=i
+				break
 	for i: int in range(app.session.definition.columns.size()):
-		if app.session.definition.columns[i].size() >= 5:
-			column = i
-			break
-	if not require(row >= 0 and column >= 0, "long F-03 clue lines"):
-		return
-	if not require(app.session.definition.rows[row + 1].size() >= 5 and app.session.definition.columns[column + 1].size() >= 5, "neighbouring F-03 lines for both read anchors"):
+		if board.clue_layout("column",i).max_offset>=3:
+			if column<0: column=i
+			else:
+				column_other=i
+				break
+	if not require(row_other>=0 and column_other>=0,"two independently overflowing F06 lines per axis"):
 		return
 	if OS.get_cmdline_user_args().has("--write"):
 		board.navigate_to(Vector2(0.55, 0.45))
 		board.zoom(1, board.view.viewport.get_center())
 		board.set_clue_step("row", row, 2)
 		board.set_clue_step("column", column, int(board.clue_layout("column", column).max_offset))
-		board.set_clue_step("row", row + 1, int(board.clue_layout("row", row + 1).max_offset))
-		board.set_clue_step("column", column + 1, 2)
+		board.set_clue_step("row", row_other, int(board.clue_layout("row", row_other).max_offset))
+		board.set_clue_step("column", column_other, 2)
 		board.active_color = 2
 		app.set_tool("fill")
-		var first: Vector2 = board.view.cell_rect(Vector2i(55, 45)).get_center()
-		var second: Vector2 = board.view.cell_rect(Vector2i(56, 45)).get_center()
+		var first: Vector2 = board.view.cell_rect(Vector2i(25, 25)).get_center()
+		var second: Vector2 = board.view.cell_rect(Vector2i(26, 25)).get_center()
 		if not require(board.view.viewport.has_point(first) and board.view.viewport.has_point(second), "selected cells visible"):
 			return
 		board.pointer_press(first, MOUSE_BUTTON_LEFT)
@@ -87,7 +92,7 @@ func run() -> void:
 		app.set_tool("hand")
 		# Pure view movement is debounced and must be flushed by the normal quit path.
 		board.navigate_to(Vector2(0.58, 0.43))
-		if not require(app.session.gesture.begin(app.session.player, Vector2i(57, 45), 2), "unfinished preview before close"):
+		if not require(app.session.gesture.begin(app.session.player, Vector2i(27, 25), 2), "unfinished preview before close"):
 			return
 		if not require(app.session.player.cursor == 1 and app.session.player.history.size() == 2 and app.session.player.undo_used, "write phase history"):
 			return
@@ -97,19 +102,19 @@ func run() -> void:
 		var session = app.session
 		if not require(session.player.cursor == 1 and session.player.history.size() == 2 and session.player.undo_used, "history restored"):
 			return
-		if not require(session.player.cells[45 * 100 + 55] == 2 and session.player.cells[45 * 100 + 56] == -1 and session.player.cells[45 * 100 + 57] == -1, "cells restored without unfinished preview"):
+		if not require(session.player.cells[25 * 50 + 25] == 2 and session.player.cells[25 * 50 + 26] == -1 and session.player.cells[25 * 50 + 27] == -1, "cells restored without unfinished preview"):
 			return
-		if not require(not board.hand and board.active_color == 2 and board.view.cell_size <= board.fit_ceiling and board.view.center == Vector2(50,50), "tool, color and raster view restored"):
+		if not require(not board.hand and board.active_color == 2 and board.view.cell_size <= board.fit_ceiling and board.view.center == Vector2(25,25), "tool, color and raster view restored"):
 			return
 		var row_layout: Dictionary = board.clue_layout("row", row)
 		var column_layout: Dictionary = board.clue_layout("column", column)
 		if not require(board.row_clue_reads[row].anchor == "middle" and row_layout.offset == 2 and row_layout.start > 0 and row_layout.token_slot == 1 and board.column_clue_reads[column].anchor == "outer_start" and column_layout.offset == column_layout.max_offset and column_layout.start == 0 and column_layout.end == column_layout.slot_count - 2 and column_layout.token_slot == 1, "middle and direct outer semantic reads restored"):
 			return
-		var outer_row: Dictionary = board.clue_layout("row", row + 1)
-		var middle_column: Dictionary = board.clue_layout("column", column + 1)
-		if not require(board.row_clue_reads[row + 1].anchor == "outer_start" and outer_row.offset == outer_row.max_offset and outer_row.start == 0 and outer_row.end == outer_row.slot_count - 2 and outer_row.token_slot == 1 and board.column_clue_reads[column + 1].anchor == "middle" and middle_column.offset == 2 and middle_column.start > 0, "both axes restore direct outer and middle reads independently"):
+		var outer_row: Dictionary = board.clue_layout("row", row_other)
+		var middle_column: Dictionary = board.clue_layout("column", column_other)
+		if not require(board.row_clue_reads[row_other].anchor == "outer_start" and outer_row.offset == outer_row.max_offset and outer_row.start == 0 and outer_row.end == outer_row.slot_count - 2 and outer_row.token_slot == 1 and board.column_clue_reads[column_other].anchor == "middle" and middle_column.offset == 2 and middle_column.start > 0, "both axes restore direct outer and middle reads independently"):
 			return
-		if not require(session.player.redo() and session.player.undo_used and session.player.cells[45 * 100 + 56] == 0, "redo after real process restart"):
+		if not require(session.player.redo() and session.player.undo_used and session.player.cells[25 * 50 + 26] == 0, "redo after real process restart"):
 			return
 		if not require(app.sessions[0].player.cells[10 * 20 + 10] == 1 and app.sessions[1].player.cells[10 * 40 + 10] == 3, "other two slots restored independently"):
 			return

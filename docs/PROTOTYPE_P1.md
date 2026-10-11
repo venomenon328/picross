@@ -1,5 +1,7 @@
 # P1: Großraster- und Bedienprototyp
 
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+
 Bei Zellrendering-/Performancearbeit zusätzlich den verbindlichen
 [PERF-Vertrag](CELL_RENDERING.md) und die [A-Prüfzuordnung](PERF_A_IMPLEMENTATION.md)
 lesen. #67 liefert eigene Referenzlast und Entwickleratlanten; [#68](PERF_B_IMPLEMENTATION.md)
@@ -30,7 +32,7 @@ Erst danach nutzt GF1 freie horizontale Breite für weitere sichere ganze Slots,
 ohne Fit-/Schriftverlust. Gesamtansicht reserviert sämtliche Hinweise. 24px bleibt
 der gewünschte reguläre Arbeitswert, begrenzt durch den tatsächlichen Fit.
 Platzmangel und kleine/kollidierende Hinweise werden transparent behandelt;
-50×50/100×100 erhalten keinen versteckten Pan-Ausweg oder Komfortzertifikat.
+50×50 erhält keinen versteckten Pan-Ausweg oder Komfortzertifikat.
 
 Neun Inhalte und Schema 1/Appidentität bleiben erhalten. Vollständige Validierung
 geht der Normalisierung alter Hand-/Pan-/Zoomwerte voraus. Gültige gewünschte
@@ -449,7 +451,7 @@ optionale Route wird als nicht zutreffend ausgewiesen, nicht als ausgeführt.
 
 | ID | Prüffall und Erfolg |
 | --- | --- |
-| A-01 | Definitionen/Hinweise einschließlich Farben, Leerlinien und ungültiger Daten validieren; F-01/F-02 mit Deduktionsfolge, F-03 als Stressfixture. Abschlussressourcen technisch unabhängig von Rasterauflösung prüfen. |
+| A-01 | Definitionen/Hinweise einschließlich Farben, Leerlinien und ungültiger Daten validieren; F-01/F-02 mit Deduktionsfolge, F-06 als 50×50-Obergrenze; 51 je Achse wird abgewiesen. Abschlussressourcen technisch unabhängig von Rasterauflösung prüfen. |
 | A-02 | Setz-/Neutralisierungs-/Radiergesten: direkte Füllung↔X-Umwandlung, Achsenbindung und erneute Wahl nur nach tatsächlichem Startzelltreffer, diagonaler Start, Sprünge ohne Starttreffer, elastisches Zurückziehen, gemischte Vorbelegung, Rand/UI, Abbruch und No-op. Nur zum eingefrorenen Modus passende Zellen ändern sich. |
 | A-03 | Atomarer Strich, exakte Vorzustände bei Undo/Redo, korrekte Verzweigung; Neutralisieren nicht als versteckten Undo-Aufruf behandeln. |
 | A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei fitbegrenztem Zoom, negativen Raster-/Miniaturpanversuchen, UI-Skalierung und Resize; echte Mauspfade bewegen nur die konkret gestartete Zeile/Spalte kontinuierlich und rasten beim Drop in gemeinsame Slots ein, einschließlich Abbruch/Grenzen. Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
@@ -465,11 +467,11 @@ Bestehende Dokumentprüfung zusätzlich: `python3 -m unittest discover -s tools 
 | --- | --- | --- |
 | M-01 | F-01 per Maus setzen/neutralisieren, X↔Füllung direkt umwandeln, zurückziehen, Rücknahmetyp schützen, Radierer/Undo/Redo und Abschluss ohne Auskreuzpflicht. Neuer F-01-Reveal sichtbar detaillierter und eindeutig zugehörig. | Eigentümer |
 | M-02 | F-02 mit vier Farben und langen Hinweisen; einzeilige farbige Zahlen ohne Zusatzkennung, gemeinsames Slotraster, mehrere Einzelketten unabhängig pannen, ergänzender Tooltip, Farbwahl, Zelltrennung, direkte Umwandlung und verfeinertes Leuchtturmmotiv klar bedienbar. | Eigentümer |
-| M-03 | F-03-Koordinate bearbeiten, bei kleinen Arbeitsstufen echte Hinweiszahlen lesen, mehrere konkrete Zeilen/Spalten unabhängig pannen, Raster nur innerhalb der Vollsichtgrenze zoomen; passive Miniatur/Koordinaten vergleichen. VS2-M01 ersetzt die frühere Panprobe für den neuen Stand. | Eigentümer |
+| M-03 | F-06-Koordinate bearbeiten, bei kleinen Arbeitsstufen echte Hinweiszahlen lesen, mehrere konkrete Zeilen/Spalten unabhängig pannen, Raster nur innerhalb der Vollsichtgrenze zoomen; passive Miniatur/Koordinaten vergleichen. VS2-M01 ersetzt die frühere Panprobe für den neuen Stand. | Eigentümer |
 | M-04 | Mit #11 Teilstand schließen, neu starten und samt Historie/Ansicht fortsetzen. | Eigentümer |
 | M-05 | Durch D-06 nicht anwendbar: Tastatur/Controller außerhalb P1. | Kein P1-Gate |
 | M-06 | 1080p-Startziel beziehungsweise arbeitsbereichbegrenzter Fallback, 1080p/1440p und logische Referenzflächen; tatsächliche Skalierung erfassen. Keine verdeckten Elemente, aufgezwungenen Riesenraster oder verschmolzenen Füll-/Fünferlinien. | Eigentümer |
-| M-07 | 100×100 auf der Referenzhardware: keine verlorenen/falschen Aktionen oder wahrnehmbaren Hänger. Im integrierten Paket 500 reproduzierbare Zell-/Navigationsaktionen gegen Sollzustand; Messung und Beobachtung getrennt. | Implementierer / Eigentümer |
+| M-07 | 50×50 auf der Referenzhardware: keine verlorenen/falschen Aktionen oder wahrnehmbaren Hänger. Im integrierten Paket 500 reproduzierbare Zell-/Navigationsaktionen gegen Sollzustand; Messung und Beobachtung getrennt. | Implementierer / Eigentümer |
 
 Protokoll: tatsächliche Commit-/Artefaktkennung, Betriebssystem, verwendete Eingaben, Fenster-/Bildschirmgröße, reale Skalierung, Szenario und Ergebnis. Hardware-/Skalierungswerte nicht erfinden und keine pauschale FPS-Zusage aus der Referenz ableiten.
 

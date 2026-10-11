@@ -5,7 +5,7 @@ const SaveStore = preload("res://model/save_store.gd")
 const Main = preload("res://ui/main.gd")
 
 static func run(t: SceneTree) -> void:
-	for id: String in SaveStore.IDS:
+	for id: String in Definition.CATALOG_IDS:
 		var definition: Dictionary = Definition.load_fixture(id)
 		var session: Session = Session.new(definition)
 		var store: SaveStore = SaveStore.new(SaveStore.test_root_override.path_join(id))
@@ -141,7 +141,7 @@ static func run(t: SceneTree) -> void:
 		t.check(store.reset_slot(id).is_empty() and store.load_slot(definition).status == "fresh", "P1.3 %s selected reset" % id)
 		t.check(FileAccess.get_file_as_string(neighbour) == "untouched", "P1.3 %s unrelated bytes untouched" % id)
 	var shared: SaveStore = SaveStore.new(SaveStore.test_root_override.path_join("shared"))
-	for id: String in SaveStore.IDS:
+	for id: String in Definition.CATALOG_IDS:
 		var item: Session = Session.new(Definition.load_fixture(id))
 		t.check(shared.write_slot(item, item.view_state).is_empty(), "P1.3 shared %s saved" % id)
 	var sentinel: String = SaveStore.test_root_override.path_join("outside-p1.bin")
@@ -152,7 +152,7 @@ static func run(t: SceneTree) -> void:
 	t.check(not shared.reset_slot("f02").is_empty() and shared.load_slot(Definition.load_fixture("f02")).status == "loaded", "P1.3 failed reset stays visible and leaves slot intact")
 	shared.fail_step = ""
 	t.check(shared.reset_slot("f02").is_empty(), "P1.3 selected shared slot reset")
-	t.check(shared.load_slot(Definition.load_fixture("f01")).status == "loaded" and shared.load_slot(Definition.load_fixture("f03")).status == "loaded" and shared.load_slot(Definition.load_fixture("f02")).status == "fresh", "P1.3 other two slots survive reset")
+	t.check(shared.load_slot(Definition.load_fixture("f01")).status == "loaded" and shared.load_slot(Definition.load_fixture("f06")).status == "loaded" and shared.load_slot(Definition.load_fixture("f02")).status == "fresh", "P1.3 other two slots survive reset")
 	t.check(FileAccess.get_file_as_string(sentinel) == "outside stays byte-identical", "P1.3 data outside save root untouched")
 	var f01: Dictionary = Definition.load_fixture("f01")
 	marker = FileAccess.open(shared.path_for("f01", ".tmp"), FileAccess.WRITE)
@@ -182,7 +182,7 @@ static func run(t: SceneTree) -> void:
 	app._ask_reset()
 	app.reset_dialog.confirmed.emit()
 	t.check(app.session.player.cells[0] == -1 and app.store.load_slot(app.session.definition).status == "fresh", "P1.3 confirmed UI reset starts selected slot fresh")
-	t.check(app.sessions[0].player.cells[0] == 1 and app.store.load_slot(app.sessions[0].definition).status == "loaded" and app.sessions[2].player.cells[0] == -1, "P1.3 UI reset preserves both other sessions")
+	t.check(app.sessions[0].player.cells[0] == 1 and app.store.load_slot(app.sessions[0].definition).status == "loaded" and app.sessions[3].player.cells[0] == -1, "P1.3 UI reset preserves both other sessions")
 	app.select_puzzle(0)
 	app._save_current()
 	var broken_backup: FileAccess = FileAccess.open(app.store.path_for("f01", ".bak"), FileAccess.WRITE)

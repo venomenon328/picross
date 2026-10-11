@@ -67,7 +67,12 @@ Atlas-Endpixel und stabile Zellauswahl, weiterhin über zwei Prozesse.
 
 `tools/perf_b.py` führt beide Quellrollen frisch unter Windows aus: die zehn
 A-Kontexte mit sechs Warm-up-Frames, drei Wiederholungen und 36 Intervallen je
-Fall sowie F03/F07 bei realem Fit. Rohdaten zählen CPU-Zeichenaufbau aller Ebenen
+Fall. F03/F07 bei realem Fit bleiben ausschließlich historische, explizit
+aktivierte theoretische Belastungsmessungen (`--theoretical-stress`). Der aktuelle
+Spielerkatalog enthält F01/F02/F04/F06/F08/F09; beide Exportprofile und die
+Laufzeitvalidierung begrenzen jede Achse auf 50. Alte Definitionen und
+Speicherkennungen bleiben erhalten, übergroße Blätter fehlen im Spielerexport.
+Rohdaten zählen CPU-Zeichenaufbau aller Ebenen
 einschließlich Synchronisierung und Nullarbeitsframes; Wall-Frameabstände,
 Dispatch, Zeichenaufrufe/Objekte und Speicher bleiben getrennte Größen.
 GPU-Dauer, Präsentationszeit und physische Eingabelatenz werden nicht gemessen.

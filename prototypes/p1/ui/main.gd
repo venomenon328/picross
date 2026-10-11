@@ -83,7 +83,7 @@ func create_store() -> SaveStore:
 
 func puzzle_definitions() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
-	for id: String in SaveStore.IDS:
+	for id: String in Definition.CATALOG_IDS:
 		result.append(Definition.load_fixture(id))
 	return result
 
@@ -595,7 +595,7 @@ func _smoke() -> void:
 			return
 		return_to_work()
 	show_album()
-	print("P1_START_OK: nine fixtures -> mouse -> undo -> album; isolated persistence")
+	print("P1_START_OK: six fixtures -> mouse -> undo -> album; isolated persistence")
 	get_tree().quit(0)
 
 func _icon_button(id: String, action: Callable, parent: Control) -> BookButton:

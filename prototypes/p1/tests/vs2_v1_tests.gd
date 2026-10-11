@@ -89,7 +89,7 @@ func recovery_matrix() -> void:
 		app.size = Vector2(dims)
 		for u: float in [1.0,1.25]:
 			app.set_ui_scale(u)
-			for index: int in [0,1,2]:
+			for index: int in [0,1,3]:
 				app.select_puzzle(index)
 				app._reset_selected()
 				app.open_puzzle()

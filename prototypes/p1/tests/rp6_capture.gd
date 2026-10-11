@@ -13,7 +13,7 @@ func check(condition: bool, description: String) -> void:
 		pending_failures.append(description)
 
 func write_report() -> void:
-	var report: FileAccess = FileAccess.open(output.path_join("rp6-f%02d-renders.json" % [pilot_index+1]),FileAccess.WRITE)
+	var report: FileAccess = FileAccess.open(output.path_join("rp6-f%02d-renders.json" % [int(app.session.definition.id.trim_prefix("F-"))]),FileAccess.WRITE)
 	if report == null:
 		check(false, "RP6 render report could not be written")
 		quit(4)
@@ -26,7 +26,7 @@ func shot(name: String) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = surface.get_texture().get_image()
-	var filename: String = "rp6-f%02d-%s.png" % [pilot_index + 1, name]
+	var filename: String = "rp6-f%02d-%s.png" % [int(app.session.definition.id.trim_prefix("F-")), name]
 	check(image.save_png(output.path_join(filename)) == OK, "native render " + filename)
 	captures.append({"file":filename,"size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,
 		"completed":app.session.completed,"reveal":app.session.reveal(),
@@ -35,7 +35,7 @@ func shot(name: String) -> void:
 		"layout_valid":app.board.layout_valid,"grid_fit":Measurements.capture(app.board).grid_fit,
 		"geometry_status":"fit_owner_open" if app.board.layout_valid else "too_little_space"})
 	if name.begins_with("work-"):
-		# Interior own wrong cells remain measurable even in a 100-cell miniature.
+		# Interior own wrong cells remain measurable in the largest supported miniature.
 		var step: float = app.mini.image_rect().size.x / app.session.player.width
 		var point: Vector2i = Vector2i(app.mini.global_position + Vector2(3.5,3.5)*step)
 		check(image.get_pixelv(point).is_equal_approx(Color(app.session.definition.palette[0].color)), "native own wrong miniature pixel")
@@ -127,7 +127,7 @@ func run() -> void:
 		for choice: Button in app.choices:
 			app.album.ensure_control_visible(choice)
 			await process_frame
-			check(app.album.get_global_rect().encloses(choice.get_global_rect()), "all nine choices reachable")
+			check(app.album.get_global_rect().encloses(choice.get_global_rect()), "all six choices reachable")
 		check(app.album_reveals[pilot_index].payload.is_empty(), "album no hidden reveal payload")
 		await shot("album-partial-%d-ui%d" % [spec[0],spec[2]*100])
 	surface.size = Vector2i(1920,1080)

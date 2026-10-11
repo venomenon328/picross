@@ -290,7 +290,7 @@ func movement() -> void:
 	frames.append({"style": 2, "font_choice": variant, "second_gesture_ms": second_ms, "parallel_cells": 20, "preview_static": true, "off_same_end": true, "timeline": timeline})
 
 func load_probe() -> void:
-	app.select_puzzle(2)
+	app.select_puzzle(3)
 	empty_sample()
 	app.board.fit_all()
 	await process_frame
@@ -298,8 +298,8 @@ func load_probe() -> void:
 	app.board.draw_times_us.clear()
 	var begin: int = Time.get_ticks_usec()
 	mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
-	motion(point(99, 0))
-	mouse(point(99, 0), MOUSE_BUTTON_LEFT, false)
+	motion(point(49, 0))
+	mouse(point(49, 0), MOUSE_BUTTON_LEFT, false)
 	var commit_us: int = Time.get_ticks_usec() - begin
 	var searches: int = app.board.completion_searches
 	await process_frame
@@ -314,8 +314,8 @@ func load_probe() -> void:
 	await create_timer(0.40).timeout
 	check(app.board.completion_searches == searches, "animation ticks do not search clues")
 	check(not app.board.is_processing(), "animation ticker stops")
-	check(app.session.player.cursor == 1, "100-cell stroke remains one action")
-	measurements.append({"style": 2, "font_choice": variant, "fixture": "F-03", "overview": true, "cells": 100,
+	check(app.session.player.cursor == 1, "50-cell stroke remains one action")
+	measurements.append({"style": 2, "font_choice": variant, "fixture": "F-06", "overview": true, "cells": 50,
 		"input_commit_us": commit_us, "draw_us": app.board.draw_times_us.duplicate(), "frame_us": frame_times,
 		"renderer": RenderingServer.get_video_adapter_name(), "real_mouse_acceptance": "OPEN ZS1-M01"})
 	app.board.measure_draws = false

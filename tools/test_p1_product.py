@@ -84,7 +84,7 @@ class ProductHarnessTests(unittest.TestCase):
     def test_foreign_slot_control_requires_valid_load_and_exact_semantic_failure(self):
         valid = dict(exit_code=4, output="RP6_F01_SAVE status=loaded unknown=399\n"
                      "ERROR: RP3_FAIL: isolated F04 preserves F01 cells after restart\n"
-                     "RP6_RESULT index=3 stage=read checks=41 failures=1\n")
+                     "RP6_RESULT index=2 stage=read checks=41 failures=1\n")
         require_foreign_slot_failure(valid)
         for result in [dict(valid, exit_code=0),
                        dict(valid, output=valid["output"].replace("loaded", "recovered")),

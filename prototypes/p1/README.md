@@ -1,5 +1,7 @@
 # P1 · Integrierte Windows-Spielprobe
 
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+
 [PERF-A / #67](../../docs/PERF_A_IMPLEMENTATION.md) ergänzt native Referenzmessung
 und geprüfte Entwickleratlanten. [PERF-B / #68](../../docs/PERF_B_IMPLEMENTATION.md)
 verwendet deren Texturen regulär mit getrennten Ruhe-, Übergangs- und Cursorebenen.
@@ -91,11 +93,7 @@ P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) und
 PR #15/#16 in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md).
 G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ist über PR #18
 integriert und ergänzt die erneute Achsenwahl nach tatsächlicher Rückkehr
-zur Startzelle. H1/#19 ist über PR #20 auf diesem kombinierten Stand integriert. F-01 (20×20),
-F-02 (40×40, vier Farben), F-03 (100×100, ausdrücklich UI-Testdatensatz)
-und F-04 (20×20 monochrom, RP-3-Dateiimport) bleiben erhalten. RP-6 ergänzt
-F-05 (100×100 Mono), F-06 (50×50 Farbe), F-07 (100×100 Farbe),
-F-08/F-09 (40×40 Farbe). Alle neun sind im scrollbar erreichbaren Album zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
+zur Startzelle. H1/#19 ist über PR #20 auf diesem kombinierten Stand integriert. Der aktuelle Katalog enthält F-01 (20×20), F-02 (40×40, vier Farben), F-04 (20×20 monochrom, RP-3-Dateiimport), F-06 (50×50 Farbe) und F-08/F-09 (40×40 Farbe). Alle sechs sind im scrollbar erreichbaren Album zugänglich. F-03/F-05/F-07 bleiben ausschließlich als historische Dateien erhalten. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
 Zusatzkennungen. Alle Zeilen beziehungsweise Spalten teilen sich je ein festes
 Hinweisraster; jede konkrete Linie behält darin ihre eigene eingerastete Leseposition.
@@ -166,7 +164,7 @@ vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clipp
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
   Rückgängig/Wiederholen stellt ganze Striche mit exakten Vorzuständen wieder her.
-- F-02/F-03: Farbe über die unbeschrifteten Farbfelder in den Originalfarben wählen.
+- F-02/F-06: Farbe über die unbeschrifteten Farbfelder in den Originalfarben wählen.
   Eckmarkierungen zeigen die Auswahl; Status und Tooltip nennen „Farbe 1“ bis „Farbe 4“.
   Farbwahl aktiviert Füllen, auch nach Radierer. Die frühere A–D-Beschriftung
   der Mauspalette entfällt; Lösungshinweise zeigen weiterhin nur die Zahl in ihrer Farbe.
@@ -231,7 +229,7 @@ Hintergrund muss nicht vollständig ausgekreuzt sein. Name und Ergebnisbild ersc
 erst nach bestätigtem Abschluss. F-01 zeigt das ursprüngliche Raster neben einer
 detaillierteren Illustration desselben Motivs. F-02 zeigt einen verfeinerten Leuchtturm
 mit Sonne, Laterne, Turmbändern, Fenstern, Tür und Wasserlinien im klaren F-01-Stil.
-F-03 bleibt auch danach als Test gekennzeichnet.
+Die früheren 100×100-Blätter werden nicht mehr angeboten.
 
 ## Optionale G1-Nachprobe · nicht durchgeführt
 
@@ -251,7 +249,7 @@ Mergegate. Sie bleibt als optionaler realer Eindruck dokumentiert:
    Zellen und Farbe prüfen. Escape und Fokusverlust nach dem Wechsel müssen die
    Vorschau ohne neue Aktion verwerfen; eine falsche Tastenfreigabe darf nicht
    abschließen.
-3. F-02 mit den vier Farbfeldern und F-03 bei 50 % Arbeitszoom: echte Startzelle treffen und
+3. F-02 mit den vier Farbfeldern und F-06 am tatsächlichen Fit: echte Startzelle treffen und
    die neue Achse prüfen. Zeiger ohne Startzelltreffer über den Ursprung springen
    beziehungsweise in eine andere Zeile/Spalte neben ihn bewegen: Die alte Achse
    muss gebunden bleiben. Über UI/Viewportgrenze bleibt der letzte gültige

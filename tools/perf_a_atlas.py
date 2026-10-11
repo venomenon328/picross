@@ -163,6 +163,10 @@ def generate(cache, output):
         spec = importlib.util.spec_from_file_location("bound_a_manufacturer", root / "tools/perf_a_atlas.py")
         original = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(original)
+        # The original module imports perf_a.ROOT; bind its file inputs to the
+        # frozen tree, while source_project still archives the real Git commit.
+        original.ROOT = root
+        original.PLAN = target
         original.generate(cache, output)
 
 

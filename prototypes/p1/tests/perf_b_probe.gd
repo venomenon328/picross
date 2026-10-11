@@ -72,7 +72,10 @@ func expected(blank: Image, box: Rect2, cell: Vector2i, value: int, elapsed: int
 	var id: String = "pencil-atlas-1\n%s\n%d\n%d\n%d" % [app.session.definition.id,app.session.definition.revision,cell.x,cell.y]
 	var variant: int = (id.sha256_text().substr(0,8).hex_to_int()+variant_shift)%16
 	var f: int = clampi(floori(float(maxi(0,elapsed))*23/210000),0,23)
-	var offset: Vector2 = box.position-Vector2(Vector2i(box.position))
+	# Godot snaps the Control canvas transform to physical pixels; keep the
+	# local draw-command fraction, not the unsnapped layout's parent fraction.
+	var local: Vector2 = app.board.view.cell_rect(cell).position
+	var offset: Vector2 = local-Vector2(Vector2i(local))
 	var scale: float = (box.size.x-4)/(logical-4)
 	ink.target = Rect2(offset+Vector2.ONE*(2-2*scale),Vector2.ONE*logical*scale) if value>0 else Rect2(offset,box.size)
 	ink.source=Rect2(f*(size_px+4)+2,variant*(size_px+4)+2,size_px,size_px)
@@ -103,9 +106,12 @@ func identity() -> void:
 
 func structural() -> void:
 	await clear_sample()
-	for i: int in range(1520): app.session.player.cells[i]=1 if i%5 else 0
+	var changes: Array = []
+	for i: int in range(1520): changes.append({"index":i,"before":-1,"after":1 if i%5 else 0})
+	check(app.session.player.commit(changes),"valid dense synthetic history")
 	app.refresh()
 	await settle()
+	root.get_texture().get_image().save_png(output.path_join("runtime-dense-f02.png"))
 	var before: Dictionary = app.board.marks.stats.duplicate()
 	var draws: Array[int] = draw_counts.duplicate()
 	for i: int in range(12):
@@ -139,7 +145,7 @@ func structural() -> void:
 	var ids: Array = [app.board.marks.ink_material.get_instance_id()]
 	for texture: Texture2D in app.board.marks.textures.values(): ids.append(texture.get_instance_id())
 	for i: int in range(24):
-		app.select_puzzle([0,1,2,6][i%4])
+		app.select_puzzle([0,1,3,4][i%4])
 		app.board.restore_view(app.board.capture_view().merged({"zoom":[16,18,20,72][i%4],"overview":false},true))
 		await settle()
 		var actual: Array = [app.board.marks.ink_material.get_instance_id()]
@@ -201,15 +207,17 @@ func lifecycle() -> void:
 
 func pictures() -> void:
 	var cell := Vector2i(3,3)
-	for zoom: int in [16,18,20,72]:
+	for zoom: int in [12,16,18,20,36,72]:
+		app.select_puzzle(0 if zoom>=36 else 1)
 		app.board.restore_view(app.board.capture_view().merged({"zoom":zoom,"overview":false},true))
 		for value: int in [1,2,3,4,0]:
+			if value>app.session.definition.palette.size(): continue
 			await clear_sample()
 			var box: Rect2 = app.board.view.cell_rect(cell)
 			box.position+=app.board.global_position
 			var blank: Image = capture(box)
-			var index: int = cell.y*40+cell.x
-			app.session.player.cells[index]=value
+			var index: int = cell.y*app.session.player.width+cell.x
+			check(app.session.player.commit([{"index":index,"before":-1,"after":value}]),"valid color sample history")
 			app.refresh()
 			await settle()
 			var actual: Image = capture(box)
@@ -217,9 +225,13 @@ func pictures() -> void:
 			var error: float = difference(actual,end)
 			check(error<=1.0,"independent A native end/color/variant "+str([zoom,value,error]))
 			var wrong: Image = await expected(blank,box,cell,value,210000,1.0,1)
-			check(difference(actual,wrong)>1.0,"negative: wrong variant detected")
+			if value>0 and box.size.x<18:
+				# A deliberately shares small-fill end tiles across all variants.
+				check(difference(actual,wrong)<=1.0,"A shared small-fill end tile")
+			else:
+				check(difference(actual,wrong)>1.0,"negative: wrong variant detected")
 			# Stale cache mutation must be visible to the same native pixel oracle.
-			app.board.marks.values[index]=4 if value==1 else 1
+			app.board.marks.values[index]=0 if value==1 else 1
 			app.board.marks.chunks[index/64].queue_redraw()
 			await settle()
 			check(difference(capture(box),end)>1.0,"negative: stale color/mark detected")

@@ -1,5 +1,7 @@
 # Projektprofil: picross
 
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+
 Bei Zellrendering, Spriteherstellung, Cache-/Invalidierungsarbeit und PERF-01
 zusätzlich [CELL_RENDERING](CELL_RENDERING.md) vollständig lesen; die
 [PERF-A-Nachweiszuordnung](PERF_A_IMPLEMENTATION.md) bindet Herstellung und Messung.

@@ -134,13 +134,13 @@ func run() -> void:
 	for spec: Array in [
 		[0, 1920, 1080, 1.0, 24.0, "f01-work"],
 		[1, 1920, 1080, 1.0, 24.0, "f02-color"],
-		[2, 1920, 1080, 1.0, 12.0, "f03-small"],
+		[3, 1920, 1080, 1.0, 12.0, "f06-small"],
 		[1, 1280, 720, 1.25, 24.0, "f02-compact"],
 		[0, 1600, 900, 1.0, 36.0, "f01-1600"],
 		[0, 1920, 1080, 1.0, 36.0, "f01-z150"],
-		[2, 2560, 1440, 1.0, 72.0, "f03-z300"],
-		[6, 1920, 1080, 1.0, 24.0, "f07-color100"],
-		[6, 1280, 720, 1.25, 12.0, "f07-small"]]:
+		[3, 2560, 1440, 1.0, 72.0, "f06-z300"],
+		[3, 1920, 1080, 1.0, 24.0, "f06-color50"],
+		[3, 1280, 720, 1.25, 12.0, "f06-compact"]]:
 		surface.size = Vector2i(spec[1], spec[2])
 		app.size = Vector2(surface.size)
 		app.set_ui_scale(spec[3])
@@ -211,7 +211,7 @@ func numeral_probe() -> void:
 	await process_frame
 
 func color_load_probe() -> void:
-	app.select_puzzle(6)
+	app.select_puzzle(3)
 	empty_sample()
 	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 	await process_frame
@@ -221,10 +221,10 @@ func color_load_probe() -> void:
 	for row: int in range(4):
 		app.board.active_color = row + 1
 		mouse(point(0, row), MOUSE_BUTTON_LEFT, true)
-		motion(point(99, row))
-		mouse(point(99, row), MOUSE_BUTTON_LEFT, false)
-	check(app.session.player.cursor == 4, "F07 four rapid 100-cell strokes retained")
-	check(app.mini.cells == app.session.player.cells, "F07 miniature immediately matches own cells")
+		motion(point(49, row))
+		mouse(point(49, row), MOUSE_BUTTON_LEFT, false)
+	check(app.session.player.cursor == 4, "F06 four rapid 50-cell strokes retained")
+	check(app.mini.cells == app.session.player.cells, "F06 miniature immediately matches own cells")
 	var input_us: int = Time.get_ticks_usec() - began
 	await process_frame
 	var searches: int = app.board.completion_searches
@@ -235,8 +235,8 @@ func color_load_probe() -> void:
 		frame_times.append(Time.get_ticks_usec() - previous)
 		previous = Time.get_ticks_usec()
 	await create_timer(0.40).timeout
-	check(app.board.completion_searches == searches and not app.board.is_processing(), "F07 ticker neither analyzes nor keeps running")
-	measurements.append({"fixture": "F-07", "overview": true, "cells": 400, "actions": 4,
+	check(app.board.completion_searches == searches and not app.board.is_processing(), "F06 ticker neither analyzes nor keeps running")
+	measurements.append({"fixture": "F-06", "overview": true, "cells": 200, "actions": 4,
 		"input_commit_us": input_us, "draw_us": app.board.draw_times_us.duplicate(), "frame_us": frame_times,
 		"renderer": RenderingServer.get_video_adapter_name(), "real_mouse_acceptance": "OPEN ZS2-M01"})
 	app.board.measure_draws = false
