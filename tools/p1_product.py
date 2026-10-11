@@ -25,6 +25,7 @@ import z2_resources
 import gp48_delivery
 import p1_current_visual
 import vs2_delivery
+import perf_a_atlas
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
@@ -398,6 +399,8 @@ def main(argv: list[str] | None = None) -> int:
             base = [engine, "--headless", "--path", str(project)]
             phase("import", base + ["--import"])
             phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
+            evidence.report["perf_a_resources"] = python_phase("perf-a-resource-contract", perf_a_atlas.verify)
+            phase("perf-a-image-negatives", [sys.executable, "-m", "unittest", "discover", "-s", str(root / "tools"), "-p", "test_perf_a_atlas.py", "-v"], "OK")
             phase("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
             phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
                   expected_failure=True)
@@ -467,6 +470,24 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.report["visual"]["pilot_native"] = "success" if args.pilots else "not selected; --no-pilots"
                 selected += visual_files
                 evidence.scope_done("visual")
+                # A handover probe is separate from the ordinary renderer. Run
+                # after the other native workers, retain only compact evidence.
+                perf_output = output / "perf-a"
+                perf_output.mkdir()
+                perf_env = environment.copy()
+                perf_env.update(PERF_A_OUTPUT=str(perf_output),
+                                PERF_A_ATLAS_PLAN=str(root / "examples/perf_a/atlas-plan.json"))
+                perf_command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
+                                "--audio-driver", "Dummy", "--script", "res://tests/perf_a_atlas_probe.gd"]
+                if host == "Linux":
+                    perf_command = ["xvfb-run", "-a"] + perf_command
+                    perf_env["LIBGL_ALWAYS_SOFTWARE"] = "1"
+                for repetition in range(2):
+                    phase("perf-a-native-"+str(repetition), perf_command, "PERF_A_ATLAS_PROBE_OK", phase_env=perf_env)
+                    vs2_delivery.compact_geometry_reports([perf_output / "probe.json"])
+                    evidence.report["perf_a_native"] = python_phase("perf-a-native-oracle-"+str(repetition),
+                        lambda: perf_a_atlas.native_oracle(perf_output, require_restart=bool(repetition)))
+                selected += [perf_output / "probe.json", perf_output / "verified.json", perf_output / "flat-fill-24.0.png"]
             evidence.scope_start("export")
             build = project / "build/windows"
             build.mkdir(parents=True)

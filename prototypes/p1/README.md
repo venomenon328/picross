@@ -1,5 +1,11 @@
 # P1 · Integrierte Windows-Spielprobe
 
+[PERF-A / #67](../../docs/PERF_A_IMPLEMENTATION.md) ergänzt native Referenzmessung
+und geprüfte Entwickleratlanten. Der reguläre Renderer bleibt bis PERF-B / #68
+unverändert. `perf_a/` und alle Probescripte sind vom Spielerexport ausgeschlossen.
+Der [Zellrendering-Vertrag](../../docs/CELL_RENDERING.md) gilt für die Folgearbeit;
+PERF-01 und persönliche PERF-M01/SL-M01 bleiben offen.
+
 Integrierter Vorgänger: [VS2-V1-Zwischenstand](../../docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
 ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
 Ergänzt durch [V2](../../docs/VS2_V2_IMPLEMENTATION.md): stabile Scribble-Konturen und reine Füllminiaturen.

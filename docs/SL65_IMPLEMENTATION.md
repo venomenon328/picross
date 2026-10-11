@@ -17,10 +17,11 @@ nicht gemessen. Die Ursache ist eingegrenzt, aber nicht abschließend profiliert
 Das ist keine erneute Beanstandung der in SL-R02 bestätigten Sidebarachse.
 
 Die [Sprite-/Caching-Spezifikation](CELL_RENDERING.md) ist fachlich freigegeben,
-**noch nicht implementiert**: [PERF-A / #67](https://github.com/venomenon328/picross/issues/67)
-liefert Referenzlast, Messplan und geprüfte Atlanten;
+mit [PERF-A-Ergebnis](PERF_A_IMPLEMENTATION.md):
+[PERF-A / #67](https://github.com/venomenon328/picross/issues/67)
+liefert Referenzlast, native Ausgangsmessung und geprüfte Atlanten;
 [PERF-B / #68](https://github.com/venomenon328/picross/issues/68) integriert die
-bildbasierte Anzeige mit unabhängig aktualisierten ruhenden Markierungen,
+erst anschließend die bildbasierte Anzeige mit unabhängig aktualisierten ruhenden Markierungen,
 Vorschau/Effekten und Cursor-Hervorhebung. Die gemeinsamen Bilder gelten auch
 für fertige Füllungen/X, nicht nur für laufende Animationen.
 

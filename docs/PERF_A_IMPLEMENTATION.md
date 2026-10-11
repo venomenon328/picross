@@ -99,11 +99,85 @@ sind hier nicht weiter aufgeteilt. Der sequenzielle Basisvergleich ist kein
 Beleg für einen kleinen prozentualen Sidebarunterschied. B muss alle Kosten am
 gleichen Plan erneut messen und darf CPU-/Wallwerte nicht als physische Latenz ausgeben.
 
+## A2: reproduzierbare Füll-/X-Atlanten
+
+[Herstellungsplan](../examples/perf_a/atlas-plan.json),
+[Quellen und Befehle](../examples/perf_a/README.md) und
+[Manifest](../prototypes/p1/perf_a/atlases/manifest.json) binden die Übergabe.
+Der unveränderte Projektstift aus `a83ecf5` wird offline unter nativem Windows /
+Godot 4.7.2 OpenGL3 in Schwarz-/Weiß-Basisbilder ausgerendert. Alle neun
+[Originalbilder](../examples/perf_a/sources) bleiben gespeichert. Pillow exakt
+12.3.0 erzeugt daraus sechs neutrale RGBA8-Koeffizientenmasken, ohne fremde Assets
+oder Modellaufruf. R trägt die Grundfarbe einschließlich dunkler Kontur, G die
+weißen Spuren, A die Deckung. Der gemeinsame kleine Shader rekonstruiert Farbe;
+eine graue Textur mit einfacher Multiplikation würde helle Spuren verfälschen.
+
+Festgelegt nach Einzelzell-, Flächen-, Bewegungs- und Ressourcenprobe:
+
+| Parameter | Entscheidung und Prüfergebnis |
+| --- | --- |
+| Varianten / Zeitbilder | 16 Varianten, 24 Zeitbilder, 210 ms pro Zelle. 384 Bilder je Atlas. Mittel/groß besitzen je 16 verschiedene fertige Füllungen; X besitzt in allen Stufen 16 Endformen. Kleine Füllungen behalten bewusst die bisherige einfache Rechteckform. |
+| Stufen | Logische Referenzen 16/24/72 px, Bildauflösungen 32/64/96 px; kleine Stufe unter 18, mittlere bis einschließlich 36, große darüber. Je ein Füll-/X-Atlas, keine Palettenkopien. |
+| Sichere Innenfläche | Füllinnenfläche auf echte Zelle minus 2 px je Rand abbilden; X verwendet die Zellbox. 2 px transparentes Atlaspadding, Koeffizientenrand ohne Alphaausweitung. Linearfilter, kein Repeat/Mipmap, verlustloser Import. |
+| Identität / Zeit | SHA-256 aus Renderfassung, Rätsel-ID, Revision und Zellkoordinate; erstes 32-Bit-Wort modulo 16. Zeitindex aus verstrichenen Mikrosekunden, Endframe 23. Farbe, Zoom, Redraw und History sind keine Eingaben; kein neues Savefeld. |
+| Vorschau / Warten / Ruhe | Identische Variante und Endform, Vorschau/Warten 56 % Deckung. Aktiver Aufbau zeigt räumliche Schraffur beziehungsweise X-Zug eins vor zwei, ohne volle Unterzeichnung. |
+| Ressourcen | 326.203 Bytes PNG, 48.906.240 Bytes dekodierte RGBA-Daten, sechs Texturen. Diese endliche Obergrenze benötigt keine Palette-/Zellkopien. Regulärer Spielerexport enthält keine A-Ressourcen. |
+
+Die räumliche Probe weist wachsende bedeckte Flächen nach; Startbild ist leer.
+Negativkontrollen verändern volle Unterzeichnung, globale Fadefolge, X-Reihenfolge,
+Endvarianten, Padding, Datei-/Importidentität, Farbmaterial und Variantenwahl.
+Zusätzlich werden leere und eingefrorene native Bewegungsbilder zurückgewiesen.
+Native importierte Pixel müssen exakt den Manifesthash treffen. Reale
+Grundfarben einschließlich dunkler Referenz, Kontur und weißer Spuren werden über
+alle Zeitbilder mit dem Originalstift verglichen; maximaler Kanalfehler beträgt
+0 bei kleiner und 1 von 255 bei mittlerer/großer Stufe. Vorschau entspricht dem
+gleichen Bild mit 56 % Deckung innerhalb der dokumentierten Quantisierung.
+
+### Native A2-Ergebnisse · 11.10.2026
+
+[Ergebnisindex](../examples/perf_a/a2-windows.json) und
+[Rohbilder, Logs und Reproduktionsbelege](../examples/perf_a/a2-windows-raw.zip)
+binden die tatsächlichen Scripts, Masken und Prüfdateien. Zwei frische native
+Herstellungen sind über alle 22 Original-/Derivat-/Import-/Manifestdateien
+bytegleich; reine Ableitung ab gespeicherten Quellen reproduziert alle sechs
+PNG-Dateien exakt. Zwei neue native Probeprozesse vergleichen dieselben 1600
+Zellidentitäten nach Neustart. Die JSON-Zahlenrepräsentation wird kanonisch
+verglichen, damit die vom Parser erzeugten Float-Varianten keine falsche
+Array-Ungleichheit erzeugen.
+
+Die native Fitprobe über alle neun Blätter, UI100/125 und G/V bei maximiertem
+2560×1369-Client ergibt gültige Istmaße von 5,1 bis 57,73 px. Die Flächenprobe
+prüft zusätzlich 8/14,81/16/17,06/17,99/18/18,77/20/21,75/24/25,71/26,77/36/48/72 px:
+34 Füll-/X-Flächenfälle, transparente Fugen und echte native Clipränder.
+72 px ist eine zusätzliche Ressourcengrenzprobe, kein behaupteter erreichbarer
+Produktzoom. Bewegungsfolgen zeigen beide Markierungsarten mit 40 Zellen,
+180-ms-Staffel und verstrichener Echtzeit bis 450 ms. Wartende letzte Zellen
+werden gegen die abgeschwächte Endform, der Schluss gegen alle exakten Endbilder
+geprüft; mehrere verschiedene Zwischenbilder sind zwingend.
+
+Eigene Sichtung der nativen Originalbilder und heller Kontrollmontagen:
+mittlere und große Füllungen zeigen Stiftspuren und unterscheidbare Konturen,
+ohne regelmäßigen Block gleicher Varianten. Die 16er-Auswahl wiederholt sich
+erwartungsgemäß, ohne feste Rasterperiode. Nichtganzzahlige Fugen bleiben offen,
+keine benachbarten Zeitbilder oder Farbsäume sichtbar. Bei 5,1 px reduziert sich
+die sichere Füllinnenfläche erwartungsgemäß auf etwa einen Pixel; eine detaillierte
+Stifttextur ist dort nicht sinnvoll. X bleibt erkennbar. 24 Zeitbilder zeigen
+sichtbaren räumlichen Aufbau; die native Folge erreicht ohne Formwechsel die
+Endbilder. Das beurteilt die isolierten Ressourcen, nicht die Flüssigkeit des
+noch unveränderten regulären Spielers.
+
+Die anfängliche Bewegungsprobe aktualisierte ihren unsichtbaren SubViewport nicht;
+deren leere Bilder sind kein gültiger Bewegungsnachweis. Der finale Probeweg nutzt
+`UPDATE_ALWAYS` und unabhängige Bildprüfungen. Ebenso sind der korrigierte native
+Float-Dateiname und kanonische Neustartvergleich in den finalen Script-Hashes
+gebunden. Fehlversuche werden nicht als erfolgreiche Läufe gezählt.
+
 ## Abnahmegrenze
 
-PERF-A01–A04 verlangen zusätzlich A2-Herstellung, Bild-/Negativtests,
-Reproduktion, native Einzelzell-/Flächen-/Bewegungsprobe, aktuellen gesamten
-CI-Diffumfang und getrennten Selbstreview. Diese Datei behauptet deren Erfolg
-erst mit den gebundenen Ergebnissen. SL-R02/B-01 bleibt historisch technisch
+PERF-A01–A04 erhalten A1/A2 samt eigenen Bild-/Negativtests, Reproduktion und
+nativen Einzelzell-/Flächen-/Bewegungsproben. Aktuelle CI für den gesamten
+PR-Diff und der getrennte Selbstreview werden commitgebunden in Issue #67 / PR #66
+dokumentiert; lokale Ressourcenproben allein ersetzen diese nicht.
+SL-R02/B-01 bleibt historisch technisch
 behoben; neue kombinierte unabhängige Prüfung, persönliche SL-M01/PERF-M01 und
 gesonderte Mergefreigabe bleiben vor einem späteren Merge offen. Kein Release.

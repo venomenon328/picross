@@ -298,7 +298,9 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   matrix_records=len(matrix["records"]),historical_comparison="not repeated under CI policy #63",
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},
-                  study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,SL_R01="OPEN",SL_M01="OPEN",merge_authorized=False)
+                  study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,
+                  previous_review="SL-R02: B-01 technically confirmed at a83ecf5",
+                  independent_combined_review="OPEN",PERF_01="OPEN: A only",SL_M01="OPEN",PERF_M01="OPEN",merge_authorized=False)
     target=output/"windows-download-verification.json"
     target.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")
     print("VS2_WINDOWS_DOWNLOAD_OK",head,flush=True)
