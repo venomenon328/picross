@@ -184,7 +184,7 @@ func _build() -> void:
 	album.add_child(album_content)
 	album.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	page.add_child(album)
-	album_content.add_child(label("Neun Blätter zum Entdecken", 28))
+	album_content.add_child(label("%d Blätter zum Entdecken" % sessions.size(), 28))
 	album_grid = GridContainer.new()
 	album_grid.columns = 3
 	album_grid.add_theme_constant_override("h_separation", 16)
@@ -194,7 +194,7 @@ func _build() -> void:
 		var slot_column: VBoxContainer = VBoxContainer.new()
 		album_grid.add_child(slot_column)
 		slot_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var choice: Button = button(sessions[i].album_title() + (" · UI-Test" if i == 2 else ""), select_puzzle.bind(i))
+		var choice: Button = button(sessions[i].album_title() + (" · UI-Test" if sessions[i].definition.get("stress", false) else ""), select_puzzle.bind(i))
 		choices.append(choice)
 		slot_column.add_child(choice)
 		var preview: Miniature = Miniature.new()
@@ -350,7 +350,7 @@ func show_album() -> void:
 	repair_button.text = "Backup erneuern" if slot_status[sessions.find(session)] == "backup_invalid" else "Backup zum Speichern übernehmen"
 	_update_status()
 	for i: int in range(sessions.size()):
-		choices[i].text = sessions[i].album_title() + (" · UI-Test" if i == 2 else "")
+		choices[i].text = sessions[i].album_title() + (" · UI-Test" if sessions[i].definition.get("stress", false) else "")
 		album_previews[i].cells = sessions[i].player.cells.duplicate()
 		album_previews[i].width = sessions[i].player.width
 		album_previews[i].height = sessions[i].player.height
