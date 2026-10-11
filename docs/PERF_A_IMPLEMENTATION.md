@@ -50,8 +50,54 @@ Den Cachepfad an den eigenen externen Archivcache anpassen, Ausgabe immer neu.
 `--only-context 0` ist eine Diagnose, kein vollständiger Liefernachweis.
 Der Harness bindet Plan-/Script-/Engine-/Renderer- und Rohdateihashes.
 `summary.json` aggregiert p50/p95/p99/Maximum aus den drei Wiederholungen;
-die Rohintervalle bleiben erhalten. Laufresultate und Commitbindung folgen nach
-tatsächlich erfolgreichem vollständigem Versuch im Issue/PR.
+die Rohintervalle bleiben erhalten.
+
+### Native A1-Ergebnisse · 11.10.2026
+
+Der vollständige Lauf verwendet Harness `b25ab7c`: 22 Kontexte, 264 Fälle,
+792 Wiederholungsdatensätze, 28.512 Rohintervalle, keine gemeldeten Fehler.
+Die ergänzende 16-px-Eingabekontrolle prüft beide unveränderten Quellrollen mit
+zusätzlichen Assertions für alle 40 Änderungen und jedes Ziel der Zeile.
+Sie ersetzt keine Kontexte der vollständigen Ausgangsmessung. Die erste
+ergänzende Kontrolle scheiterte an einer neuen `Window.vsync_mode`-Abfrage;
+die korrigierte Fassung verwendet `DisplayServer.window_get_vsync_mode`.
+
+[Dauerhafter Ergebnisindex](../examples/perf_a/a1-windows.json) und
+[Rohdaten einschließlich aller Verteilungen und Harnessquellen](../examples/perf_a/a1-windows-raw.zip)
+binden die tatsächlich geprüften Fassungen. Originale F02-Definition und Proof
+sind unverändert. Dünn: 40 Füllungen, 10 X, 1550 unbekannt; dicht: 1216/304/80.
+
+Maschine: Ryzen 7 5800X, RTX 3070, Windows 11 Pro Build 26200, NVIDIA 596.49 /
+Treiber 32.0.15.9649, Godot 4.7.2 GL Compatibility/OpenGL3. Monitor 2560×1440;
+normaler Client 1920×1080, maximierter Client 2560×1369, Windows-DPI 96 /
+Skalierung 100 %. UI100/125 wird unabhängig davon variiert. Der Hardwarebericht
+enthält auch den vom Treiber gemeldeten Refresh; die ergänzende native Kontrolle
+bindet die Godot-Refresh-/VSync-Abfrage: 59,951 Hz, VSync-Modus 1. Die separate
+Adapter-CIM-Abfrage meldet 143 Hz; beide Rohangaben bleiben erhalten und werden
+nicht zu einer behaupteten physischen Präsentationsrate vereinheitlicht.
+Diese Messung verwendet den nativen
+Editor am archivierten Produktprojekt, keine nachträglich rekonstruierte Eigentümer-EXE.
+
+Dichter F02-Hover, Effekte aus, je 108 Samples; Zeiten in Millisekunden:
+
+| Quelle / Kontext | Istmaß | CPU Aufbau p50 / p95 / p99 / Max | Wall p50 / p95 / p99 / Max |
+| --- | ---: | --- | --- |
+| a83, normal G/UI100, Wunsch16 | 16 | 17,10 / 17,86 / 18,38 / 18,42 | 43,03 / 44,94 / 45,80 / 46,43 |
+| a83, normal G/UI100, Wunsch18 | 18 | 148,39 / 154,82 / 158,43 / 173,32 | 275,57 / 285,84 / 297,10 / 314,07 |
+| a83, normal G/UI100, Wunsch20 | 18,77 | 147,69 / 153,85 / 158,70 / 159,13 | 275,19 / 287,15 / 290,88 / 291,72 |
+| a83, maximiert G/UI100, Wunsch72 | 25,71 | 148,80 / 156,36 / 165,23 / 186,95 | 277,30 / 290,15 / 320,98 / 325,00 |
+| main, normal G/UI100, Wunsch18, overview=false | 18 | 159,49 / 188,33 / 206,56 / 208,89 | 297,63 / 342,63 / 361,97 / 377,63 |
+| main, normal G/UI100, Wunsch72, overview=true | 18,77 | 18,98 / 20,93 / 22,65 / 25,74 | 49,64 / 52,77 / 54,45 / 59,74 |
+
+Bei beiden Quellen zeichnen Board und Markierungen im Hover jeden Sampleframe
+neu; Miniatur bleibt dabei ruhig. Der deutliche Sprung ab 18 px und die echte
+Main-Overviewkontrolle stützen den detaillierten Stiftaufbau als Engpass. Das
+beweist keine alleinige Ursache sämtlicher Wall-Kosten und keinen Sidebarfehler.
+Auch der vereinfachte dichte Fall benötigt deutlich mehr Wallzeit als seine
+gemessene Skriptaufbauzeit; übrige Engine-/Canvas-/Treiber-/Präsentationsanteile
+sind hier nicht weiter aufgeteilt. Der sequenzielle Basisvergleich ist kein
+Beleg für einen kleinen prozentualen Sidebarunterschied. B muss alle Kosten am
+gleichen Plan erneut messen und darf CPU-/Wallwerte nicht als physische Latenz ausgeben.
 
 ## Abnahmegrenze
 

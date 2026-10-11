@@ -1,0 +1,1464 @@
+{
+  "format": "picross-perf-a-a1-evidence-v1",
+  "baseline_harness_commit": "b25ab7ccef5e970271386ed0e2bd5e668fad604c",
+  "input_control_harness_commit": "4c9f490e6b403e94ef7dad1ec85ae65d090d4487",
+  "source_heads": {
+    "baseline": "a83ecf5db0800d198bb870932bf0365341aabb28",
+    "integrated_base": "e323dcf5c83b085144e61707ef98ecab2bfac39b"
+  },
+  "plan_sha256": "5eeaaa729bb3bf394fb36f58771fe2359c8958825f760d9a6d866959f4a4821d",
+  "raw_zip_sha256": "18f7ccf01613cc638f20135f11a29e0beac7d3e3d7b260897b30224893f5a6a0",
+  "raw_zip_bytes": 346913,
+  "contexts": 22,
+  "cases": 264,
+  "repetitions": 792,
+  "raw_frame_intervals": 28512,
+  "input_control": "Separate 16px native run, both unchanged source roles, complete 40-cell transactions and every target asserted; not part of the full timing baseline",
+  "hardware": {
+    "recorded_utc": "2026-10-11T11:11:11.0421464Z",
+    "cpu": {
+      "Name": "AMD Ryzen 7 5800X 8-Core Processor             ",
+      "NumberOfCores": 8,
+      "NumberOfLogicalProcessors": 16
+    },
+    "gpu": {
+      "Name": "NVIDIA GeForce RTX 3070",
+      "DriverVersion": "32.0.15.9649",
+      "CurrentHorizontalResolution": 2560,
+      "CurrentVerticalResolution": 1440,
+      "CurrentRefreshRate": 143
+    },
+    "os": {
+      "Caption": "Microsoft Windows 11 Pro",
+      "Version": "10.0.26200",
+      "BuildNumber": "26200"
+    },
+    "memory_bytes": 34269659136
+  },
+  "display": [
+    {
+      "client": [
+        1920,
+        1080
+      ],
+      "screen": 1,
+      "screen_size": [
+        2560,
+        1440
+      ],
+      "screen_dpi": 96,
+      "screen_scale": 1.0,
+      "window_vsync_mode": 1,
+      "screen_refresh_hz": 59.951000213623
+    },
+    {
+      "client": [
+        1920,
+        1080
+      ],
+      "screen": 1,
+      "screen_size": [
+        2560,
+        1440
+      ],
+      "screen_dpi": 96,
+      "screen_scale": 1.0,
+      "window_vsync_mode": 1,
+      "screen_refresh_hz": 59.951000213623
+    }
+  ],
+  "dense_hover_animations_off": [
+    {
+      "role": "baseline",
+      "context": [
+        "normal",
+        1.0,
+        "G",
+        16.0
+      ],
+      "actual_cell": 16.0,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 43033,
+        "p95": 44938,
+        "p99": 45800,
+        "maximum": 46433
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 17099,
+        "p95": 17864,
+        "p99": 18383,
+        "maximum": 18422
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 149,
+        "p95": 174,
+        "p99": 200,
+        "maximum": 259
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        75753811,
+        76743983,
+        76749579
+      ],
+      "texture_memory_bytes": [
+        35875960.0,
+        35875960.0,
+        35875960.0
+      ]
+    },
+    {
+      "role": "baseline",
+      "context": [
+        "normal",
+        1.0,
+        "G",
+        18.0
+      ],
+      "actual_cell": 18.0,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 275571,
+        "p95": 285842,
+        "p99": 297100,
+        "maximum": 314065
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 148394,
+        "p95": 154823,
+        "p99": 158427,
+        "maximum": 173318
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 151,
+        "p95": 188,
+        "p99": 212,
+        "maximum": 214
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        91462329,
+        92452501,
+        92458097
+      ],
+      "texture_memory_bytes": [
+        35045838.0,
+        35045838.0,
+        35045838.0
+      ]
+    },
+    {
+      "role": "baseline",
+      "context": [
+        "normal",
+        1.0,
+        "G",
+        20.0
+      ],
+      "actual_cell": 18.77,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 275190,
+        "p95": 287148,
+        "p99": 290877,
+        "maximum": 291722
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 147687,
+        "p95": 153852,
+        "p99": 158698,
+        "maximum": 159129
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 152,
+        "p95": 191,
+        "p99": 251,
+        "maximum": 317
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        91460845,
+        92451017,
+        92456613
+      ],
+      "texture_memory_bytes": [
+        35045838.0,
+        35045838.0,
+        35045838.0
+      ]
+    },
+    {
+      "role": "baseline",
+      "context": [
+        "normal",
+        1.0,
+        "G",
+        72.0
+      ],
+      "actual_cell": 18.77,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 275638,
+        "p95": 288768,
+        "p99": 296567,
+        "maximum": 303707
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 148415,
+        "p95": 155179,
+        "p99": 163049,
+        "maximum": 164047
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 152,
+        "p95": 186,
+        "p99": 196,
+        "maximum": 201
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        91460845,
+        92451017,
+        92456613
+      ],
+      "texture_memory_bytes": [
+        35045838.0,
+        35045838.0,
+        35045838.0
+      ]
+    },
+    {
+      "role": "baseline",
+      "context": [
+        "maximized",
+        1.0,
+        "G",
+        72.0
+      ],
+      "actual_cell": 25.71,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 277297,
+        "p95": 290145,
+        "p99": 320976,
+        "maximum": 324995
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 148799,
+        "p95": 156356,
+        "p99": 165229,
+        "maximum": 186953
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 153,
+        "p95": 187,
+        "p99": 212,
+        "maximum": 661
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        94594391,
+        95584563,
+        95590159
+      ],
+      "texture_memory_bytes": [
+        48198094.0,
+        48198094.0,
+        48198094.0
+      ]
+    },
+    {
+      "role": "baseline",
+      "context": [
+        "normal",
+        1.25,
+        "G",
+        18.0
+      ],
+      "actual_cell": 17.06,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 42979,
+        "p95": 45727,
+        "p99": 49091,
+        "maximum": 50776
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 16845,
+        "p95": 17525,
+        "p99": 20516,
+        "maximum": 21936
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 146,
+        "p95": 176,
+        "p99": 187,
+        "maximum": 260
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        79547111,
+        80537283,
+        80542879
+      ],
+      "texture_memory_bytes": [
+        37099298.0,
+        37099298.0,
+        37099298.0
+      ]
+    },
+    {
+      "role": "baseline",
+      "context": [
+        "maximized",
+        1.25,
+        "G",
+        20.0
+      ],
+      "actual_cell": 20.0,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 288663,
+        "p95": 334893,
+        "p99": 360392,
+        "maximum": 364181
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 154656,
+        "p95": 179649,
+        "p99": 190568,
+        "maximum": 200858
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 155,
+        "p95": 195,
+        "p99": 242,
+        "maximum": 257
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        99468609,
+        100458781,
+        100464377
+      ],
+      "texture_memory_bytes": [
+        50295244.0,
+        50295244.0,
+        50295244.0
+      ]
+    },
+    {
+      "role": "baseline",
+      "context": [
+        "maximized",
+        1.0,
+        "V",
+        20.0
+      ],
+      "actual_cell": 20.0,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 285045,
+        "p95": 310380,
+        "p99": 323005,
+        "maximum": 335170
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 153376,
+        "p95": 167391,
+        "p99": 182599,
+        "maximum": 190387
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 152,
+        "p95": 212,
+        "p99": 260,
+        "maximum": 282
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        95662015,
+        96652187,
+        96657783
+      ],
+      "texture_memory_bytes": [
+        48897144.0,
+        48897144.0,
+        48897144.0
+      ]
+    },
+    {
+      "role": "baseline",
+      "context": [
+        "normal",
+        1.25,
+        "V",
+        16.0
+      ],
+      "actual_cell": 14.81,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 45437,
+        "p95": 56407,
+        "p99": 66308,
+        "maximum": 69892
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 18060,
+        "p95": 22067,
+        "p99": 25375,
+        "maximum": 26719
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 155,
+        "p95": 212,
+        "p99": 238,
+        "maximum": 275
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        79667877,
+        80658049,
+        80662977
+      ],
+      "texture_memory_bytes": [
+        37405132.0,
+        37405132.0,
+        37405132.0
+      ]
+    },
+    {
+      "role": "baseline",
+      "context": [
+        "maximized",
+        1.25,
+        "V",
+        72.0
+      ],
+      "actual_cell": 21.75,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 295909,
+        "p95": 350782,
+        "p99": 364980,
+        "maximum": 367934
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 161649,
+        "p95": 192542,
+        "p99": 193369,
+        "maximum": 196606
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 165,
+        "p95": 250,
+        "p99": 330,
+        "maximum": 568
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        99477137,
+        100467309,
+        100472905
+      ],
+      "texture_memory_bytes": [
+        50470006.0,
+        50470006.0,
+        50470006.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "normal",
+        1.0,
+        "G",
+        16.0
+      ],
+      "actual_cell": 16.0,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 44888,
+        "p95": 50821,
+        "p99": 59329,
+        "maximum": 61728
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 17681,
+        "p95": 19690,
+        "p99": 22765,
+        "maximum": 23297
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 152,
+        "p95": 241,
+        "p99": 268,
+        "maximum": 307
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        75894617,
+        76886125,
+        76891721
+      ],
+      "texture_memory_bytes": [
+        33791462.0,
+        33791462.0,
+        33791462.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "normal",
+        1.0,
+        "G",
+        18.0
+      ],
+      "actual_cell": 18.0,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 297631,
+        "p95": 342632,
+        "p99": 361970,
+        "maximum": 377628
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 159491,
+        "p95": 188332,
+        "p99": 206560,
+        "maximum": 208886
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 167,
+        "p95": 230,
+        "p99": 261,
+        "maximum": 274
+      },
+      "draws": [
+        [
+          36,
+          36,
+          1
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        91508077,
+        92498249,
+        92503845
+      ],
+      "texture_memory_bytes": [
+        33136102.0,
+        33136102.0,
+        33136102.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "normal",
+        1.0,
+        "G",
+        20.0
+      ],
+      "actual_cell": 18.77,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 293025,
+        "p95": 338286,
+        "p99": 357996,
+        "maximum": 363527
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 157551,
+        "p95": 181167,
+        "p99": 198545,
+        "maximum": 204502
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 157,
+        "p95": 202,
+        "p99": 280,
+        "maximum": 478
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        91507405,
+        92497577,
+        92503173
+      ],
+      "texture_memory_bytes": [
+        33136102.0,
+        33136102.0,
+        33136102.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "normal",
+        1.0,
+        "G",
+        72.0
+      ],
+      "actual_cell": 18.77,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 290894,
+        "p95": 334242,
+        "p99": 351387,
+        "maximum": 355776
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 156393,
+        "p95": 185162,
+        "p99": 200617,
+        "maximum": 200915
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 162,
+        "p95": 214,
+        "p99": 231,
+        "maximum": 240
+      },
+      "draws": [
+        [
+          36,
+          36,
+          1
+        ],
+        [
+          36,
+          36,
+          1
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        91507405,
+        92497577,
+        92503173
+      ],
+      "texture_memory_bytes": [
+        33136102.0,
+        33136102.0,
+        33136102.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "maximized",
+        1.0,
+        "G",
+        72.0
+      ],
+      "actual_cell": 25.71,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 277367,
+        "p95": 291925,
+        "p99": 306543,
+        "maximum": 306801
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 148874,
+        "p95": 158299,
+        "p99": 171394,
+        "maximum": 175770
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 153,
+        "p95": 186,
+        "p99": 210,
+        "maximum": 241
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        94640951,
+        95631123,
+        95636719
+      ],
+      "texture_memory_bytes": [
+        46288358.0,
+        46288358.0,
+        46288358.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "normal",
+        1.25,
+        "G",
+        18.0
+      ],
+      "actual_cell": 17.06,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 45673,
+        "p95": 51252,
+        "p99": 54709,
+        "maximum": 65456
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 17799,
+        "p95": 19782,
+        "p99": 23304,
+        "maximum": 26025
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 149,
+        "p95": 191,
+        "p99": 234,
+        "maximum": 238
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        79702033,
+        80691537,
+        80698469
+      ],
+      "texture_memory_bytes": [
+        35320634.0,
+        35320634.0,
+        35320634.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "maximized",
+        1.25,
+        "G",
+        20.0
+      ],
+      "actual_cell": 20.0,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 291165,
+        "p95": 335654,
+        "p99": 360732,
+        "maximum": 375600
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 156936,
+        "p95": 185734,
+        "p99": 220453,
+        "maximum": 222828
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 159,
+        "p95": 205,
+        "p99": 268,
+        "maximum": 273
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        99512975,
+        100503147,
+        100508743
+      ],
+      "texture_memory_bytes": [
+        48516580.0,
+        48516580.0,
+        48516580.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "maximized",
+        1.0,
+        "V",
+        20.0
+      ],
+      "actual_cell": 20.0,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 299192,
+        "p95": 355795,
+        "p99": 405365,
+        "maximum": 408756
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 162170,
+        "p95": 202362,
+        "p99": 216946,
+        "maximum": 223827
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 163,
+        "p95": 228,
+        "p99": 261,
+        "maximum": 271
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        95708955,
+        96699127,
+        96704723
+      ],
+      "texture_memory_bytes": [
+        46987408.0,
+        46987408.0,
+        46987408.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "normal",
+        1.25,
+        "V",
+        16.0
+      ],
+      "actual_cell": 14.81,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 47279,
+        "p95": 52975,
+        "p99": 57481,
+        "maximum": 59723
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 18382,
+        "p95": 21237,
+        "p99": 22033,
+        "maximum": 23376
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 160,
+        "p95": 249,
+        "p99": 331,
+        "maximum": 371
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        79724887,
+        80715059,
+        80720655
+      ],
+      "texture_memory_bytes": [
+        35495396.0,
+        35495396.0,
+        35495396.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "maximized",
+        1.25,
+        "V",
+        72.0
+      ],
+      "actual_cell": 21.75,
+      "overview": false,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 306757,
+        "p95": 377588,
+        "p99": 490383,
+        "maximum": 498009
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 168204,
+        "p95": 217841,
+        "p99": 279213,
+        "maximum": 285439
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 156,
+        "p95": 234,
+        "p99": 303,
+        "maximum": 317
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        99524863,
+        100515887,
+        100521651
+      ],
+      "texture_memory_bytes": [
+        48691342.0,
+        48691342.0,
+        48691342.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "normal",
+        1.0,
+        "G",
+        72.0
+      ],
+      "actual_cell": 18.77,
+      "overview": true,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 49642,
+        "p95": 52767,
+        "p99": 54452,
+        "maximum": 59744
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 18980,
+        "p95": 20927,
+        "p99": 22648,
+        "maximum": 25738
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 165,
+        "p95": 240,
+        "p99": 317,
+        "maximum": 335
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        74841957,
+        75833285,
+        75838881
+      ],
+      "texture_memory_bytes": [
+        33136102.0,
+        33136102.0,
+        33136102.0
+      ]
+    },
+    {
+      "role": "integrated_base",
+      "context": [
+        "maximized",
+        1.0,
+        "G",
+        72.0
+      ],
+      "actual_cell": 25.71,
+      "overview": true,
+      "density": "dense",
+      "animations": false,
+      "scenario": "hover",
+      "frames_us": {
+        "n": 108,
+        "p50": 50467,
+        "p95": 59364,
+        "p99": 64904,
+        "maximum": 69692
+      },
+      "mark_build_us": {
+        "n": 108,
+        "p50": 19204,
+        "p95": 23374,
+        "p99": 24082,
+        "maximum": 24177
+      },
+      "dispatch_us": {
+        "n": 108,
+        "p50": 159,
+        "p95": 228,
+        "p99": 307,
+        "maximum": 320
+      },
+      "draws": [
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ],
+        [
+          36,
+          36,
+          0
+        ]
+      ],
+      "peak_effects": 0,
+      "static_memory_bytes": [
+        77976171,
+        78965007,
+        78971271
+      ],
+      "texture_memory_bytes": [
+        46288358.0,
+        46288358.0,
+        46288358.0
+      ]
+    }
+  ],
+  "unavailable": [
+    "GPU duration",
+    "physical input-to-pixel latency",
+    "compositor presentation time"
+  ],
+  "note": "CPU script-build time and frame_post_draw wall intervals are distinct; native editor experiment, not an owner EXE reconstruction. Complete full-baseline distributions/raw values remain in ZIP."
+}
