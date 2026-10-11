@@ -10,6 +10,7 @@ var failures: int = 0
 var checks: int = 0
 var textures: Dictionary = {}
 var actual_fits: Array = []
+var pictures: Array = []
 
 class Tiles extends Control:
 	var texture: Texture2D
@@ -64,6 +65,7 @@ func capture(node: Control, dimensions: Vector2i, name: String) -> Image:
 	await RenderingServer.frame_post_draw
 	var image: Image = surface.get_texture().get_image()
 	check(image.save_png(output.path_join(name+".png"))==OK,"save native "+name)
+	pictures.append(name+".png")
 	surface.queue_free()
 	await process_frame
 	return image
@@ -215,9 +217,10 @@ func run() -> void:
 			var elapsed: int=moving.time_us
 			var name: String="motion-%s-%02d.png"%[kind,motion.size()]
 			check(surface.get_texture().get_image().save_png(output.path_join(name))==OK,"save native motion")
+			pictures.append(name)
 			motion.append({"kind":kind,"elapsed_us":elapsed,"first_frame":Atlas.frame(elapsed),"last_frame":23 if elapsed<180000 else Atlas.frame(elapsed-180000),"last_state":"waiting" if elapsed<180000 else ("active" if elapsed<390000 else "rest"),"file":name})
 		surface.queue_free()
 		await process_frame
-	FileAccess.open(output.path_join("probe.json"),FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"records":records,"actual_fits":actual_fits,"smallest_actual_cell":smallest,"largest_actual_cell":largest,"motion":motion,"fresh_process_compared":restarted,"renderer":RenderingServer.get_current_rendering_driver_name(),"video_adapter":RenderingServer.get_video_adapter_name(),"texture_memory_bytes":Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED),"static_memory_bytes":OS.get_static_memory_usage()},"\t"))
+	FileAccess.open(output.path_join("probe.json"),FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"records":records,"pictures":pictures,"platform":OS.get_name(),"actual_fits":actual_fits,"smallest_actual_cell":smallest,"largest_actual_cell":largest,"motion":motion,"fresh_process_compared":restarted,"renderer":RenderingServer.get_current_rendering_driver_name(),"video_adapter":RenderingServer.get_video_adapter_name(),"texture_memory_bytes":Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED),"static_memory_bytes":OS.get_static_memory_usage()},"\t"))
 	print("PERF_A_ATLAS_PROBE_OK" if failures==0 else "PERF_A_ATLAS_PROBE_FAILED"," checks=",checks," failures=",failures)
 	quit(0 if failures==0 else 1)

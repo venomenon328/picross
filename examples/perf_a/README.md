@@ -30,6 +30,10 @@ exakte Dateiidentität. `verify` prüft zusätzlich Original-/Derivat-/Import-/
 Hersteller-/Vertragshashes, jedes Zeitbild und die räumlichen Oracles.
 `probe` führt zwei native Prozesse mit identischer Variantenliste aus; der zweite
 prüft den tatsächlichen Neustart. Normale Spielstände werden nicht gelesen.
+Der Farb-/Alphaoracle rechnet unabhängig aus den gespeicherten Schwarz-/Weiß-
+Originalen. Zusätzlich muss der frisch gezeichnete Windows-Stift pixelnah passen;
+frische Polygonraster anderer GPU-Treiber sind separat ausgewiesene Diagnosen,
+keine versprochene plattformübergreifende Rasterpixelidentität.
 
 ## Anschluss für PERF-B
 

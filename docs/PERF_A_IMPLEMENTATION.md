@@ -129,7 +129,11 @@ Endvarianten, Padding, Datei-/Importidentität, Farbmaterial und Variantenwahl.
 Zusätzlich werden leere und eingefrorene native Bewegungsbilder zurückgewiesen.
 Native importierte Pixel müssen exakt den Manifesthash treffen. Reale
 Grundfarben einschließlich dunkler Referenz, Kontur und weißer Spuren werden über
-alle Zeitbilder mit dem Originalstift verglichen; maximaler Kanalfehler beträgt
+alle Zeitbilder gegen eine unabhängige Rechnung aus den gespeicherten
+Schwarz-/Weiß-Originalen verglichen. Diese Rechnung verwendet weder den Shader
+noch dessen Maskendekodierung. Zusätzlich gilt auf dem nativen Windows-
+Herstellungsweg der strenge Vergleich mit dem frisch gezeichneten Originalstift;
+maximaler Kanalfehler beträgt dort
 0 bei kleiner und 1 von 255 bei mittlerer/großer Stufe. Vorschau entspricht dem
 gleichen Bild mit 56 % Deckung innerhalb der dokumentierten Quantisierung.
 
@@ -171,6 +175,18 @@ deren leere Bilder sind kein gültiger Bewegungsnachweis. Der finale Probeweg nu
 `UPDATE_ALWAYS` und unabhängige Bildprüfungen. Ebenso sind der korrigierte native
 Float-Dateiname und kanonische Neustartvergleich in den finalen Script-Hashes
 gebunden. Fehlversuche werden nicht als erfolgreiche Läufe gezählt.
+
+Der erste Gesamt-CI-Lauf zu `d768aff` scheiterte in der A2-Farbgegenprobe:
+erneut unter Mesa/llvmpipe gezeichnete Polygonpixel waren nicht identisch mit dem
+Windows-Herstellungsbestand (maximale Kanalabweichung 255). Eine portable
+Pixelidentität des ursprünglichen Geometriezeichners über GPU-Treiber war nicht
+vereinbart. Der finale unabhängige Farb-/Alphaoracle verwendet deshalb überall
+die gespeicherten Originalbasisbilder und unverändert höchstens vier Kanalwerte
+Quantisierungstoleranz. Windows prüft zusätzlich weiterhin den frischen Stift
+mit derselben strengen Grenze. Die frischen Originalvergleiche anderer Treiber
+bleiben als Diagnose protokolliert; sie ersetzen keine native Windows-Abnahme.
+Das ist keine erhöhte Farbtoleranz. A2-Fehlerberichte nominieren nun auch die
+tatsächlichen Probe-/Farb-/Bewegungsbilder für die begrenzte Fehlerdiagnose.
 
 ## Abnahmegrenze
 

@@ -41,7 +41,7 @@
     "ui/grid_view.gd": "dae1c95dc91419afeff6a593634ea53cb061b0fd940dbe68a9709d6c9ee8b976"
   },
   "generator_files": {
-    "tools/perf_a_atlas.py": "7d887cb3a8233d9f1dae3473b4406d8fd2a6fa42e44e703d49f04d4ebeb758ec",
+    "tools/perf_a_atlas.py": "f615f3f1e8057e298647208a4bd50032629e308aaebe9cca7e93be814a1c1249",
     "prototypes/p1/tests/perf_a_source.gd": "f27c45899a6dce970c0484bbae8ea6347c95a97da68efabfd640e8fdcaa71efa"
   },
   "consumer_contract": {

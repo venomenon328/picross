@@ -271,25 +271,48 @@ def motion_oracle(output, motion, kind):
     return len(distinct)
 
 
+def basis_color(level, color, kind="fill"):
+    """Independent premultiplied RGB oracle from stored black/white originals.
+
+    This does not decode our mask coefficients or execute the shader. A GPU's
+    fresh polygon rasterization is not a portable pixel identity baseline.
+    """
+    Image, Chops = image_api()
+    white=Image.open(SOURCES / f"{kind}-{level}-white.png").convert("RGBA")
+    black=Image.open(SOURCES / f"fill-{level}-black.png").convert("RGBA") if kind=="fill" else Image.new("RGBA",white.size)
+    channels=[Chops.add(b,Chops.subtract(w,b).point(lambda v:round(v*c/255)))
+              for b,w,c in zip(black.split()[:3],white.split()[:3],color)]
+    return Image.merge("RGBA",(*channels,white.getchannel("A")))
+
+
 def native_oracle(output, require_restart=True):
     Image, Chops = image_api()
     raw = json.loads((output / "probe.json").read_text(encoding="utf-8"))
     if raw["failures"] or raw["checks"] < 70 or (require_restart and not raw["fresh_process_compared"]):
         raise ValueError("Incomplete native atlas probe/restart")
     comparisons = []
+    original_comparisons = []
     for lod in ("small", "medium", "large"):
-        expected_x = Image.open(output / f"reference-x-{lod}.png").convert("RGBA")
+        expected_x = basis_color(lod,(52,63,66),"x")
         actual_x = Image.open(output / f"color-x-{lod}.png").convert("RGBA")
         if max(max(c.getextrema()) for c in Chops.difference(expected_x,actual_x).split()) > 4:
             raise ValueError("Native X ink/alpha differs")
         for color in range(4):
-            expected = Image.open(output / f"reference-{lod}-{color}.png").convert("RGBA")
+            expected = basis_color(lod,((52,63,66),(237,202,120),(189,96,74),(108,154,171))[color])
             actual = Image.open(output / f"color-{lod}-{color}.png").convert("RGBA")
             difference = Chops.difference(expected, actual)
             maximum = max(max(channel.getextrema()) for channel in difference.split())
             if maximum > 4:
                 raise ValueError(f"Native palette/alpha reconstruction differs: {lod}/{color}: {maximum}")
             comparisons.append(dict(level=lod, color=color, maximum_channel_error=maximum))
+            reference=Image.open(output / f"reference-{lod}-{color}.png").convert("RGBA")
+            original_max=max(max(c.getextrema()) for c in Chops.difference(reference,actual).split())
+            original_comparisons.append(dict(level=lod,color=color,maximum_channel_error=original_max))
+            if raw["platform"]=="Windows" and original_max>4:
+                raise ValueError("Native Windows original pencil reconstruction differs")
+        reference_x=Image.open(output / f"reference-x-{lod}.png").convert("RGBA")
+        if raw["platform"]=="Windows" and max(max(c.getextrema()) for c in Chops.difference(reference_x,actual_x).split())>4:
+            raise ValueError("Native Windows original X reconstruction differs")
         end = Image.open(output / f"color-{lod}-0.png").convert("RGBA")
         preview = Image.open(output / f"preview-{lod}.png").convert("RGBA")
         expected_preview = end.point(lambda v: round(v*.56))
@@ -323,7 +346,9 @@ def native_oracle(output, require_restart=True):
     motion = raw["motion"]
     motion_images = {kind:motion_oracle(output,[m for m in motion if m["kind"]==kind],kind) for kind in ("fill","x")}
     report = dict(checks=raw["checks"], fresh_process_compared=raw["fresh_process_compared"],
-        native_color_comparisons=comparisons, gap_cases=len(raw["records"]), motion_frames=len(motion), distinct_motion_images=motion_images,
+        native_color_comparisons=comparisons, original_pencil_comparisons=original_comparisons,
+        original_pencil_policy="strict <=4 on native Windows manufacturer; other GPUs diagnostic only; basis-derived color/alpha <=4 everywhere",
+        platform=raw["platform"], gap_cases=len(raw["records"]), motion_frames=len(motion), distinct_motion_images=motion_images,
         source_rendering_driver=raw["renderer"], video_adapter=raw["video_adapter"],
         texture_memory_bytes=raw["texture_memory_bytes"], negative_controls=["wrong variant", "full underdrawing", "global fade", "reversed X", "duplicate end variants", "changed imported pixels"],
         static_memory_bytes=raw["static_memory_bytes"], smallest_actual_cell=raw["smallest_actual_cell"], largest_actual_cell=raw["largest_actual_cell"],

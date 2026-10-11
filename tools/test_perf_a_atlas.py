@@ -5,6 +5,7 @@ import shutil
 import tempfile
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 import perf_a_atlas as atlas
 
 
@@ -15,6 +16,17 @@ def pinned_images():
 
 @unittest.skipUnless(pinned_images(), "image checks run in pinned product image environment")
 class AtlasTests(unittest.TestCase):
+    def test_independent_color_basis_preserves_alpha_and_white_contribution(self):
+        Image, _ = atlas.image_api()
+        with tempfile.TemporaryDirectory() as temporary:
+            sources=Path(temporary)
+            Image.new("RGBA",(1,1),(200,200,200,200)).save(sources/"fill-medium-white.png")
+            Image.new("RGBA",(1,1),(20,20,20,200)).save(sources/"fill-medium-black.png")
+            Image.new("RGBA",(1,1),(200,200,200,200)).save(sources/"x-medium-white.png")
+            with patch.object(atlas,"SOURCES",sources):
+                self.assertEqual(atlas.basis_color("medium",(51,102,153)).getpixel((0,0)),(56,92,128,200))
+                self.assertEqual(atlas.basis_color("medium",(51,102,153),"x").getpixel((0,0)),(40,80,120,200))
+
     def test_bound_resources(self):
         resources = atlas.verify()
         self.assertEqual(resources["textures"], 6)
