@@ -827,6 +827,13 @@ func _layout_book() -> void:
 	# SL-R01/B-01: follow the unchanged navigation at every breakpoint/UI scale.
 	# Cropped alpha envelopes and symmetric safe interiors share this content axis.
 	var axis: float = actions["menu"].get_rect().get_center().x
+	if board.layout_valid and mini_extent > 86*u:
+		var ink: Rect2 = board.composition_envelope()
+		ink.position += board.position
+		var left_room: float = maxf(0,ink.position.x-(o.x+w*0.03125))
+		var preview: Rect2 = surface.frame_rect(Rect2(Vector2(axis-mini_extent/2,o.y+rail_top+26*u),Vector2.ONE*mini_extent),"preview")
+		if preview.intersects(ink) and ink.end.x-preview.position.x+0.1 > left_room:
+			mini_extent = 86*u
 	var mini_position: Vector2 = Vector2(axis-mini_extent/2, o.y+rail_top+26*u)
 	_place(mini,Rect2(mini_position,Vector2.ONE*mini_extent))
 	_place(coordinate,Rect2(Vector2(axis-95*u,mini_position.y+mini_extent+20*u),Vector2(190,26)*u))

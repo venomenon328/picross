@@ -24,7 +24,8 @@ Das entspricht `material.x + material.width - (187.5 bei Breite <1700, sonst 150
 der Korrekturweg ist damit abhängig von Breiten-Breakpoint und UI-Skalierung.
 Die Alpha-Hüllen sind zuvor beschnitten;
 symmetrische sichere Innenräume zentrieren die sichtbare Zeichnung. Die Miniatur
-ist bei kompakter Breite oder knapper Höhe 86×UI, sonst 132×UI. Wenn die neuen
+ist bei kompakter Breite, knapper Höhe oder andernfalls verletzter linker
+Papiergrenze 86×UI, sonst 132×UI. Wenn die neuen
 Gruppen in den belegten Arbeitsblock reichen, nimmt ausschließlich ungenutztes
 linkes Papier den geometrisch ermittelten Abstand auf. Boardgröße, Fit,
 Zell-/Schriftmaße und Hinweisplätze bleiben unverändert; keine neue Panroute.
