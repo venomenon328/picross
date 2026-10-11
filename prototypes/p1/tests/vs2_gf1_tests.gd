@@ -98,7 +98,7 @@ func run() -> void:
 					check(Measurements.capture(board).grid_fit and board.horizontal_used <= board.horizontal_budget+0.00001, "frame and added budget fit")
 					if delta == 0 and expected > minimum.x:
 						probe_row(index,true)
-				board.fit_all()
+				board.restore_view(board.capture_view().merged({"zoom":72,"overview":false},true))
 				var fit: float = board.fit_ceiling
 				var position: Vector2 = board.view.origin
 				board._layout()

@@ -4,6 +4,12 @@ Diese Anleitung enthält keine Motivnamen oder Lösungen. Die technischen
 Paaransichten und `rp6-review` erst nach der Spielprobe ansehen.
 Automatisierte Eingaben zählen nicht als echte Lösungsprobe.
 
+**Aktuelle Größenentscheidung:** Seit [#68](https://github.com/venomenon328/picross/issues/68)
+sind reguläre Rätsel auf 50×50 begrenzt. F05/F07 fehlen im aktuellen Spieler.
+Der unten erhaltene historische M03-Vorschlag mit F07 gilt nicht für die aktuelle
+Produktprobe; daraus entsteht keine neue vollständige Lösungsprüfung für PERF-B.
+Dessen persönliche Gates stehen in [VS2_OWNER_TRIAL](VS2_OWNER_TRIAL.md).
+
 ## Benannten Windows-Stand starten
 
 1. Im Draft-PR den direkt verlinkten Actions-Download
@@ -27,8 +33,8 @@ Automatisierte Eingaben zählen nicht als echte Lösungsprobe.
    Prüfpfad und Dateidaten. Temporäre Dateien können vom System bereinigt werden;
    vor längerer Pause nach geschlossenem Spiel den angezeigten Prüfstand sichern.
 5. Im Album öffnet ein Klick ein Blatt; die Auswahl ist scrollbar. UI 100/125 %
-   und Hilfe stehen im Menü. Links füllen, rechts X, Rad zoomen, Hand/mittlere
-   Taste verschieben. Undo/Redo bleiben erhalten. Die kleine Vorschau zeigt nur
+   und Hilfe stehen im Menü. Links füllen, rechts X, Rad zoomen, überlaufende Hinweise mit der mittleren
+   Taste verschieben. Das Raster bleibt vollständig sichtbar. Undo/Redo bleiben erhalten. Die kleine Vorschau zeigt nur
    eigene Einträge. Zum Abschluss genügen richtige Füllungen ohne Zusatzfüllung;
    leere Felder müssen nicht vollständig mit X markiert sein.
 

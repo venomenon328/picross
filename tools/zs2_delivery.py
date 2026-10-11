@@ -283,7 +283,7 @@ const start=performance.now();let i=0;function tick(){if(i>=r.live.length)return
     return result
 
 
-def verify_fill_sizes(renders, records):
+def verify_fill_sizes(renders, records, *, atlas_frames=False):
     from PIL import Image, ImageChops
     if [r['cell_size'] for r in records] != [12, 24, 36]:
         raise toolchain.PreflightError("Missing small/normal/large hatch evidence")
@@ -299,8 +299,8 @@ def verify_fill_sizes(renders, records):
         images = {f['elapsed_ms']: read(f['file']) for f in record['controlled']}
         if list(images) != [0,15,30,45,60,75,90,105,120,135,150,165,180,195,209,210]:
             raise toolchain.PreflightError("Incomplete hatching timeline")
-        progress = zs_hatching.check_hatching(images, blank, size)
-        rejected = zs_hatching.negative_controls(images, blank, size)
+        progress = zs_hatching.check_hatching(images, blank, size, atlas_frames=atlas_frames)
+        rejected = zs_hatching.negative_controls(images, blank, size, atlas_frames=atlas_frames)
         live = record['live']
         if len(live) < 8 or any(a['elapsed_ms'] > b['elapsed_ms'] for a,b in zip(live,live[1:])):
             raise toolchain.PreflightError("Invalid real-time hatch clock")

@@ -1,10 +1,7 @@
 {
   "source_commit": "c3a5386580d7a0da29b927b41bd692f0cca59274",
+  "sidebar_source": "SL-65; frames.json",
   "files": [
-    {
-      "file": "album.svg",
-      "sha256": "8bc7b226378d58ef064f58667b22ea6ca2b0a4ddae08c7a2522a2247f4c0ee46"
-    },
     {
       "file": "bp2-a-inventarband.png",
       "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a"
@@ -18,8 +15,20 @@
       "sha256": "212cb75f36b85126c1e26b3cac3b49d7bb38c671d5f9d6ea73af2b11cf290013"
     },
     {
-      "file": "fit.svg",
-      "sha256": "38680e6b60774d49a011c673eda41bca02406c790597d060bf0259a67a7265d7"
+      "file": "frame-palette.png",
+      "sha256": "9ac25082d5bba17f5ec6dfc847fe3882d41d398f019349bb3db3677af8b76e42"
+    },
+    {
+      "file": "frame-preview.png",
+      "sha256": "9187f1b1796aa3d8ef0603e01f82fde347f40fdcb5d0e3c66cc22e42657f12dd"
+    },
+    {
+      "file": "frame-tools.png",
+      "sha256": "d2155c30234045ec0e178322be5bdcd381c03516ca850e9152ebb64da557196d"
+    },
+    {
+      "file": "frames.json",
+      "sha256": "0fcf84d17c01943cba6a86b342023b35926d05f862c8110cf6dcfd813234de3d"
     },
     {
       "file": "Fraunces-OFL.txt",
@@ -30,16 +39,12 @@
       "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb"
     },
     {
-      "file": "hand.svg",
-      "sha256": "66562e9b39cc0f4374e678c796926ddbfa322fb45f566efcf892b29d23cbed8e"
-    },
-    {
       "file": "help.svg",
       "sha256": "0a2834ac56c5793fa5780ea54e2a85ab71f0d86e5e1564d7c03c97f0cc605894"
     },
     {
       "file": "icons.json",
-      "sha256": "22f8084a308378f7012f1a5ddae84fbd846e4cbdb0634faf1855b2200a90cb4c"
+      "sha256": "94064020a6ba9619625119f037bb78ffc3ccebe55f9c4ae4c9cd050aa42c4039"
     },
     {
       "file": "menu.svg",
@@ -78,12 +83,12 @@
       "sha256": "850f07276d7d01879fbf7e7564ec5b0966ebdb7f88d3a2054ccabf2e913a54e6"
     },
     {
-      "file": "undo.svg",
-      "sha256": "12f0da538f19c23cab6b9c2969fb0a4978e77da2ce2186561e0432638d1ab3ee"
+      "file": "Sidebar-NOTICES.txt",
+      "sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d"
     },
     {
-      "file": "work.svg",
-      "sha256": "e5d32f2217710a9f5f80d7d52fb669bc386b439863a0059645d6d784b1a5aaed"
+      "file": "undo.svg",
+      "sha256": "12f0da538f19c23cab6b9c2969fb0a4978e77da2ce2186561e0432638d1ab3ee"
     }
   ]
 }

@@ -1,8 +1,14 @@
 # Produktdefinition: picross
 
-## Aktueller regulärer Stand · VS2 (#61)
+## Aktueller Vertrag · Sidebar #65
 
-**Kombinierter V1/V2/V3-Stand:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
+PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der neue zusammenhängende Stand A+B folgt auf `feat/65-sidebar-frames`; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.
+
+Aktuell: genau sechs Aktionen in 2×3 (Füllen/Radieren, Undo/Redo, Minus/Plus), ohne Einpassen-/Arbeitsgrößenaktion oder „Dein Stand“. Drei transparente gezeichnete Rahmen ersetzen die alten Fassungen; Miniatur, Koordinaten, Palette und Werkzeuge teilen die Mittelachse. Die interne Vollsichtgrenze, Optionsansichten G/V, Raster-/Hinweisbudgets und Albumminiaturen bleiben. Nach vollständiger unveränderter Schema-1-Validierung wird `overview=false`; gültiger Zoomwunsch, Inhalt, History/Redo und Recoverygrenzen bleiben erhalten. Neue Saves schreiben Schema 1 mit `overview=false`. SL-R02 bestätigt B-01 am Ausgangshead a83ecf5 technisch; neues kombiniertes Review, persönliche SL-M01/PERF-M01 und neue Mergefreigabe bleiben offen; kein Release. Historische Prüfpläne/-berichte bleiben unverändert.
+
+## Integrierter Vorgänger · VS2 (#61)
+
+**Historischer Paketstand vor Abschluss von #62:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
 
 Regulärer Produktstand: Start in Sammlung; genau eine benannte Rätselansicht in
 Optionen. Vollständiges Raster samt Rahmen, passive eigene Miniatur und
@@ -44,7 +50,7 @@ Groß und schwierig sind unterschiedliche Eigenschaften. Ein großes, flüssig l
 
 Für die erste Veröffentlichung sind einige Hundert vorab erstellte und kuratierte Rätsel ein angemessenes Wunschziel. Exakte Stückzahlen, das Verhältnis der Varianten und die Größenverteilung werden nach einer repräsentativen Testproduktion festgelegt, nicht bereits als zugesicherter Lieferumfang behandelt.
 
-Die bestätigte [Vollsichtstrategie VS-D01](VS1_DECISION.md) setzt 40×40 als reguläres Ziel und mindestens 30×30 als brauchbar zu erreichende Größenkapazität. 40×30 und geeignete 50×30 sind gleichberechtigte sinnvolle Formate. Kleinere Rätsel bleiben möglich. Format, tatsächliche Hinweislast und belegte Bedienbarkeit bestimmen die Eignung gemeinsam; keine pauschale Katalog- oder Komfortgarantie. Sehr große Rätsel um 60×60/100×100 bleiben perspektivisch Sonderfälle mit gesonderter Navigation. Dies löst die frühere pauschale Pflicht zu einem substanziellen regulären Bestand jenseits 40×40 und um 100×100 ab; bestehende Daten und Proofs bleiben erhalten.
+Die bestätigte [Vollsichtstrategie VS-D01](VS1_DECISION.md) setzt 40×40 als reguläres Ziel und mindestens 30×30 als brauchbar zu erreichende Größenkapazität. 40×30 und geeignete 50×30 sind gleichberechtigte sinnvolle Formate. Kleinere Rätsel bleiben möglich. Format, tatsächliche Hinweislast und belegte Bedienbarkeit bestimmen die Eignung gemeinsam; keine pauschale Katalog- oder Komfortgarantie. Gemäß [Eigentümerentscheidung vom 11.10.2026](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419) überschreiten Rätsel 50×50 nicht; beide Achsen sind auf 50 begrenzt. 100×100 bleibt ausschließlich als theoretische Performance-Stressgröße zulässig. Dies löst die frühere pauschale Pflicht zu einem substanziellen regulären Bestand jenseits 40×40 und um 100×100 ab; bestehende Daten und Proofs bleiben erhalten.
 
 Ein größeres Rätsel darf sich über mehrere Sitzungen erstrecken. Die Bedienung und Fortschrittsspeicherung müssen diesen Nutzungsfall von Anfang an berücksichtigen.
 
@@ -70,7 +76,7 @@ Vor Abschluss werden weder das fertige Lösungsbild noch der Motivname gezeigt. 
 
 Das Basisprodukt enthält eine vorab kuratierte Sammlung, keinen notwendigen Laufzeitgenerator und keine Abhängigkeit von Community-Nachschub. Gewünscht ist ein externes Produktionswerkzeug, das Entwürfe aus Beschreibungen oder bereitgestellten Bildern unterstützt.
 
-Der Arbeitsablauf ist: Motividee oder Vorlage, Rasterentwurf, logische Prüfung, begrenzte motivgeschützte Überarbeitung und redaktionelle Freigabe einschließlich der Abschlussansicht. Die [Produktionsspezifikation](PUZZLE_PRODUCTION.md) konkretisiert dafür den allgemeinen Prüfkern, frühe Farben und 100×100-Fälle, einen dateibasierten Import mit erstem spielbarem Export sowie eine kleine Vergleichs- und Pilotproduktion. Wie weit sich damit gute Inhalte mit vertretbarem Aufwand herstellen lassen, bleibt Gegenstand dieser Untersuchung. Eine Bildvorlage liefert nicht automatisch ein geeignetes Rätsel.
+Der Arbeitsablauf ist: Motividee oder Vorlage, Rasterentwurf, logische Prüfung, begrenzte motivgeschützte Überarbeitung und redaktionelle Freigabe einschließlich der Abschlussansicht. Die [Produktionsspezifikation](PUZZLE_PRODUCTION.md) konkretisiert dafür den allgemeinen Prüfkern, frühe Farben und die historischen 100×100-Untersuchungen, einen dateibasierten Import mit erstem spielbarem Export sowie eine kleine Vergleichs- und Pilotproduktion. Wie weit sich damit gute Inhalte mit vertretbarem Aufwand herstellen lassen, bleibt Gegenstand dieser Untersuchung. Eine Bildvorlage liefert nicht automatisch ein geeignetes Rätsel.
 
 **KI wird ausschließlich in ChatGPT oder Codex verwendet.** Das Produktionswerkzeug besitzt keine direkte Modell-API-Anbindung, benötigt keine Modell-API-Keys und startet keine automatischen Modellaufrufe. Motive, Stilisierungen und Abschlussbilder gelangen als tatsächlich gespeicherte Dateien in den lokalen deterministischen Ablauf. Codex darf diese Werkzeuge ausführen. Reproduzierbar ist die Verarbeitung ab der konkreten gespeicherten Eingabe; ein Prompt allein ersetzt die Bildquelle nicht.
 
@@ -246,7 +252,7 @@ Die vorhandenen Python-Dokumentprüfer sind keine Festlegung des Produktstacks. 
 
 Zum Produktkern gehören klassische und farbige kuratierte Bildrätsel, das reguläre Vollsichtziel mit 40×40 und mindestens 30×30 Größenkapazität, geeigneten Rechtecken und möglichen Großraster-Sonderfällen, komfortable Bearbeitung und Fortsetzung, frühe thematische/UI-Konzeption, Sammlungsprogression, Perfektions-Bonusrätsel, die beiden Fehler-Rückmeldungsmodi sowie Logbuch und vorgesehene Leistungsvergleiche.
 
-Nicht als Startvoraussetzung beschlossen sind Verbundraster, Regionenbedingungen, extreme Raster weit jenseits von 100×100, ein öffentlicher Editor, Community-/Workshop-Inhalte, Koop, spielerseitige Bildgenerierung, Wochenherausforderungen und umfangreiche Lern- oder Erklärhilfen. Diese Themen dürfen nicht stillschweigend den verbindlichen Umfang vergrößern. Unvollständige Hinweise sind vorerst ausgeschlossen.
+Nicht als Startvoraussetzung beschlossen sind Verbundraster, Regionenbedingungen, Raster jenseits von 50×50, ein öffentlicher Editor, Community-/Workshop-Inhalte, Koop, spielerseitige Bildgenerierung, Wochenherausforderungen und umfangreiche Lern- oder Erklärhilfen. Diese Themen dürfen nicht stillschweigend den verbindlichen Umfang vergrößern. Unvollständige Hinweise sind vorerst ausgeschlossen.
 
 Eine umfangreiche Geschichte, ein zusätzliches Wirtschaftsspiel, ein Mobile-/Touch-Produkt und laufend verpflichtend zu liefernde neue Inhalte wurden nicht beauftragt. Marktpotenzial und Verkaufszahlen sind nicht belegt; die angenommene Positionierung ist keine bestätigte Nachfrageprognose.
 

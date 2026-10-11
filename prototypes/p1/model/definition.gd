@@ -1,6 +1,8 @@
 extends RefCounted
 ## JSON boundary. 0 is background; positive IDs refer to palette entries.
 const FILES: Dictionary = {"f01": "res://data/f01.json", "f02": "res://data/f02.json", "f03": "res://data/f03.json", "f04": "res://data/f04.json", "f05": "res://data/f05.json", "f06": "res://data/f06.json", "f07": "res://data/f07.json", "f08": "res://data/f08.json", "f09": "res://data/f09.json"}
+const MAX_DIMENSION = 50
+const CATALOG_IDS: Array[String] = ["f01", "f02", "f04", "f06", "f08", "f09"]
 
 static func load_f01() -> Dictionary:
 	return load_fixture("f01")
@@ -51,7 +53,7 @@ static func validate(data: Dictionary, study_assets: Dictionary = {}) -> String:
 	if not data.get("id") is String or data.id.is_empty():
 		return "Definitionskennung fehlt."
 	for key: String in ["width", "height"]:
-		if not integer(data.get(key)) or data[key] < 1 or data[key] > 100:
+		if not integer(data.get(key)) or data[key] < 1 or data[key] > MAX_DIMENSION:
 			return "Ungültige Dimension."
 	if not data.get("palette") is Array or data.palette.is_empty():
 		return "Palette fehlt."

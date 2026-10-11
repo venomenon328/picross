@@ -1,0 +1,18 @@
+{
+  "issue": 65,
+  "base": "e323dcf5c83b085144e61707ef98ecab2bfac39b",
+  "geometry": "4 clients x UI100/125 x F01/F02/F08 x G/V x requested24/72 = 96",
+  "full_views": [
+    "1920x1080 UI100 G F01 selection/progress",
+    "1920x1080 UI100 G F08 large-grid warning",
+    "1280x720 UI125 G F02 color normal",
+    "1280x720 UI100 V F01 mono",
+    "1600x900 UI100 V F02 color",
+    "1600x900 UI125 G F01 mono",
+    "2560x1440 UI125 V F02 color",
+    "1280x720 UI125 G F02 actual interrupted-write recovery"
+  ],
+  "details_1_to_1": ["tight six tools", "tight entire sidebar", "title", "fills/five-line"],
+  "bounds": "No screenshot cross product; existing 20MB technical / 75MB total CI limits",
+  "gates_open": ["SL-R01 independent review", "SL-M01 personal trial", "new merge authorization"]
+}

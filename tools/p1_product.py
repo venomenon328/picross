@@ -25,6 +25,9 @@ import z2_resources
 import gp48_delivery
 import p1_current_visual
 import vs2_delivery
+import perf_a_atlas
+import perf_b_resources
+import perf_b_report
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
@@ -102,7 +105,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--download-timeout-seconds", type=int, default=1200)
     for name, description in (
         ("integration", "500 actions and the independent cross-process restart oracle"),
-        ("pilots", "all six pilot playthroughs across real processes"),
+        ("pilots", "all four current pilot playthroughs across real processes"),
         ("visual", "current compact native pixel and animation checks"),
     ):
         parser.add_argument("--" + name, action=argparse.BooleanOptionalAction, default=True,
@@ -153,24 +156,24 @@ def run_pilots(workspace: Path, environment: dict, base: list[str], phase) -> di
     environment["P1_TEST_SAVE_ROOT"] = str(pilot_saves)
     slot_checks = []
     try:
-        for index in range(3, 9):
+        for index, number in ((2,4),(3,6),(4,8),(5,9)):
             environment["RP6_INDEX"] = str(index)
             for stage in ("partial", "finish", "read"):
                 untouched = {p.name: toolchain.sha256_file(p) for p in pilot_saves.glob("*")
-                             if p.is_file() and not p.name.startswith(("f01.", f"f{index+1:02d}."))}
+                             if p.is_file() and not p.name.startswith(("f01.", f"f{number:02d}."))}
                 environment["RP6_STAGE"] = stage
-                phase(f"rp6-f{index+1:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
+                phase(f"rp6-f{number:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
                       "RP6_" + stage.upper() + "_OK")
                 if any(not (pilot_saves / name).is_file() or toolchain.sha256_file(pilot_saves / name) != digest
                        for name, digest in untouched.items()):
                     raise toolchain.PreflightError("Another pilot save changed")
                 slot_checks.append(dict(index=index, stage=stage, unchanged_files=untouched))
-            if index == 3:
+            if index == 2:
                 isolation_control = run_pilot_isolation_control(workspace, environment, base, phase)
     finally:
         for key in ("P1_TEST_SAVE_ROOT", "RP6_STAGE", "RP6_INDEX"):
             environment.pop(key, None)
-    return dict(pilots=6, processes=18, separate_slot_checks=slot_checks,
+    return dict(pilots=4, processes=12, separate_slot_checks=slot_checks,
                 foreign_slot_control=isolation_control,
                 production_replay="not repeated here; authoritative puzzle-production job")
 
@@ -182,7 +185,7 @@ def require_foreign_slot_failure(result: dict) -> None:
     if (result["exit_code"] != 4
             or errors != ["ERROR: RP3_FAIL: isolated F04 preserves F01 cells after restart"]
             or "RP6_F01_SAVE status=loaded unknown=399" not in output
-            or not re.search(r"RP6_RESULT index=3 stage=read checks=\d+ failures=1\b", output)
+            or not re.search(r"RP6_RESULT index=2 stage=read checks=\d+ failures=1\b", output)
             or "RP6_READ_OK" in output):
         raise toolchain.PreflightError("Foreign-slot control did not fail solely on valid changed F01 cells")
 
@@ -273,10 +276,10 @@ def run_pilot_visual(output, workspace, project, engine, environment, phase, hos
         command = ["xvfb-run","-a"] + command
         environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
     try:
-        for index in range(3,9):
+        for index, number in ((2,4),(3,6),(4,8),(5,9)):
             environment["RP6_INDEX"] = str(index)
-            phase(f"rp6-f{index+1:02d}-render",command,"RP6_CAPTURE_OK")
-        return list(renders.glob("rp6-*.json")) + [renders / "rp6-f07-completion-1920-ui100.png"]
+            phase(f"rp6-f{number:02d}-render",command,"RP6_CAPTURE_OK")
+        return list(renders.glob("rp6-*.json")) + [renders / "rp6-f06-completion-1920-ui100.png"]
     finally:
         for key in ("P1_CAPTURE_DIR","P1_TEST_SAVE_ROOT","RP6_INDEX"):
             environment.pop(key,None)
@@ -342,6 +345,14 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         evidence.report.update(source_identity(root))
+        comparison = root / "examples/perf_b"
+        evidence.report["perf_b_comparison"] = python_phase("perf-b-bound-comparison", lambda: perf_b_report.verify(comparison))
+        comparison_output = output / "perf-b-comparison"
+        comparison_output.mkdir()
+        for name in ("b1-windows.json", "b1-windows-raw.zip", "a-reproduction.json"):
+            target = comparison_output / name
+            shutil.copyfile(comparison / name, target)
+            selected.append(target)
         evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "prototypes/p1/project.godot")
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
@@ -367,6 +378,8 @@ def main(argv: list[str] | None = None) -> int:
                                                 toolchain.template_directory(workspace, host))
             project = workspace / "p1"
             shutil.copytree(root / "prototypes/p1", project, ignore=shutil.ignore_patterns(".godot", "build"))
+            evidence.report["perf_a_historical_sources"] = perf_b_resources.install_historical_probe(project)
+            evidence.report["perf_b_resources"] = perf_b_resources.verify_runtime()
             environment = toolchain.isolated_environment(workspace, host)
 
             def phase(name: str, command: list[str], marker: str | None = None,
@@ -398,6 +411,8 @@ def main(argv: list[str] | None = None) -> int:
             base = [engine, "--headless", "--path", str(project)]
             phase("import", base + ["--import"])
             phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
+            evidence.report["perf_a_resources"] = python_phase("perf-a-resource-contract", perf_a_atlas.verify)
+            phase("perf-a-image-negatives", [sys.executable, "-m", "unittest", "discover", "-s", str(root / "tools"), "-p", "test_perf_a_atlas.py", "-v"], "OK")
             phase("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
             phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
                   expected_failure=True)
@@ -467,6 +482,33 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.report["visual"]["pilot_native"] = "success" if args.pilots else "not selected; --no-pilots"
                 selected += visual_files
                 evidence.scope_done("visual")
+                # A handover probe is separate from the ordinary renderer. Run
+                # after the other native workers, retain only compact evidence.
+                perf_output = output / "perf-a"
+                perf_output.mkdir()
+                perf_env = environment.copy()
+                perf_env.update(PERF_A_OUTPUT=str(perf_output),
+                                PERF_A_ATLAS_PLAN=str(root / "examples/perf_a/atlas-plan.json"))
+                perf_command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
+                                "--audio-driver", "Dummy", "--script", "res://tests/perf_a_atlas_probe.gd"]
+                if host == "Linux":
+                    perf_command = ["xvfb-run", "-a"] + perf_command
+                    perf_env["LIBGL_ALWAYS_SOFTWARE"] = "1"
+                for repetition in range(2):
+                    phase("perf-a-native-"+str(repetition), perf_command, "PERF_A_ATLAS_PROBE_OK", phase_env=perf_env)
+                    vs2_delivery.compact_geometry_reports([perf_output / "probe.json"])
+                    evidence.report["perf_a_native"] = python_phase("perf-a-native-oracle-"+str(repetition),
+                        lambda: perf_a_atlas.native_oracle(perf_output, require_restart=bool(repetition)))
+                selected += [perf_output / "probe.json", perf_output / "verified.json", perf_output / "flat-fill-24.0.png"]
+                b_output = output / "perf-b"
+                b_output.mkdir()
+                perf_env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(root / "prototypes/p1/perf_a/atlases/manifest.json"))
+                b_command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
+                             "--audio-driver", "Dummy", "--script", "res://tests/perf_b_probe.gd"]
+                if host == "Linux": b_command = ["xvfb-run", "-a"] + b_command
+                phase("perf-b-native", b_command, "PERF_B_PROBE_OK", phase_env=perf_env)
+                evidence.report["perf_b_native"] = json.loads((b_output / "probe.json").read_text())
+                selected += [b_output / "probe.json", *b_output.glob("runtime-*.png")]
             evidence.scope_start("export")
             build = project / "build/windows"
             build.mkdir(parents=True)
@@ -477,7 +519,16 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name == "v3-renders"])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "perf-b-comparison")])
+            required_b = {str(p.relative_to(output)) for p in selected if p.parent.name in ("perf-b", "perf-b-comparison")}
+            retained_b = {p["file"] for p in evidence.report["selected_evidence"]["files"]}
+            if not required_b <= retained_b:
+                raise toolchain.PreflightError("Required PERF-B comparison/native evidence missing from bounded delivery")
+            if args.visual:
+                required_images = {p.name for p in selected if p.parent.name == "v3-renders" and p.suffix == ".png"}
+                retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}
+                if required_images != retained_images:
+                    raise toolchain.PreflightError("Targeted SL images missing from bounded technical delivery")
             evidence.enforce_budget()
             evidence.finish()
             package_began = time.monotonic()

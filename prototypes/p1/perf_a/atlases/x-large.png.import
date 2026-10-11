@@ -1,0 +1,25 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+path="res://.godot/imported/x-large.png-2897a587fba1214b745a0cd0c7403769.ctex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://perf_a/atlases/x-large.png"
+dest_files=["res://.godot/imported/x-large.png-2897a587fba1214b745a0cd0c7403769.ctex"]
+
+[params]
+
+compress/mode=0
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=false
+process/fix_alpha_border=false
+process/premult_alpha=false
+process/hdr_as_srgb=false
+process/size_limit=0
+detect_3d/compress_to=1

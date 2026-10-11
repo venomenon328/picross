@@ -42,6 +42,7 @@ func _layout() -> void:
 	layout_key = key
 	mode = "V" if mode == "V" else "G"
 	hand = false
+	overview = false
 	max_hints = Vector2i.ONE
 	for line: Array in session.definition.rows:
 		max_hints.x = maxi(max_hints.x, line.size())
@@ -57,7 +58,7 @@ func _layout() -> void:
 	# disappears: report failure rather than feeding negative rectangles to it.
 	layout_valid = raw_fit > 4.0
 	fit_ceiling = maxf(1.0, floorf(raw_fit * 100.0) / 100.0)
-	view.cell_size = fit_ceiling if overview else minf(requested_cell, fit_ceiling)
+	view.cell_size = minf(requested_cell, fit_ceiling)
 	layout_valid = layout_valid and view.cell_size > 4.0
 	book_grid_size = Vector2(session.player.width, session.player.height) * view.cell_size
 	# One-way allocation: the displayed capacity never feeds back into fit.
@@ -182,24 +183,11 @@ func zoom(direction: int, anchor: Vector2) -> void:
 	_layout()
 	view_changed.emit()
 
-func working_size() -> void:
-	if not session.gesture.active:
-		overview = false
-		requested_cell = 24.0
-		_layout()
-		view_changed.emit()
-
-func fit_all() -> void:
-	if not session.gesture.active:
-		overview = true
-		_layout()
-		view_changed.emit()
-
 func capture_view() -> Dictionary:
 	var state: Dictionary = super.capture_view()
 	# Schema 1 stores the user's valid work step, never a calculated fractional fit.
 	state.zoom = roundi(requested_cell)
-	state.overview = overview
+	state.overview = false
 	state.tool = "erase" if eraser else "fill"
 	state.center = [session.player.width / 2.0, session.player.height / 2.0]
 	return state
@@ -208,6 +196,7 @@ func restore_view(state: Dictionary) -> void:
 	# SaveStore validates the ENTIRE legacy save before this presentation mapping.
 	var normalized: Dictionary = state.duplicate(true)
 	normalized.tool = "fill" if normalized.get("tool") == "hand" else normalized.get("tool", "fill")
+	normalized.overview = false
 	normalized.center = [session.player.width / 2.0, session.player.height / 2.0]
 	requested_cell = float(state.zoom)
 	super.restore_view(normalized)

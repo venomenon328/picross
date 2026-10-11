@@ -8,10 +8,10 @@ func run(test: SceneTree) -> void:
 	t = test
 	app = t.app
 	app.board.animation_clock = func() -> int: return clock[0]
-	for length: int in [1, 4, 16, 17, 100]:
+	for length: int in [1, 4, 16, 17, 50]:
 		for axis: Vector2i in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:
 			for button: MouseButton in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
-				reset(2)
+				reset(3)
 				var first: Vector2i = Vector2i(2, 2)
 				if axis.x != 0:
 					first.x = 0 if axis.x > 0 else length - 1
@@ -20,7 +20,7 @@ func run(test: SceneTree) -> void:
 				var indices: Array[int] = []
 				for i: int in range(length):
 					var cell: Vector2i = first + axis * i
-					indices.append(cell.y * 100 + cell.x)
+					indices.append(cell.y * 50 + cell.x)
 				stroke(first, first + axis * (length - 1), button)
 				wave(indices, 1 if button == MOUSE_BUTTON_LEFT else 0)
 	protection_and_g1()
@@ -40,7 +40,7 @@ func reset(sheet: int = 0) -> void:
 	app.board.eraser = false
 	app.animation_toggle.button_pressed = true
 	app.board.set_animations(true)
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 
 func stroke(first: Vector2i, last: Vector2i, button: MouseButton) -> void:
 	t.mouse(t.point(first.x, first.y), button, true)

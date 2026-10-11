@@ -1,0 +1,17 @@
+{
+  "render_version": "pencil-atlas-1",
+  "source_commit": "a83ecf5db0800d198bb870932bf0365341aabb28",
+  "variants": 16,
+  "frames": 24,
+  "duration_us": 210000,
+  "padding": 2,
+  "coefficient_extrusion_px": 2,
+  "levels": [
+    {"name": "small", "logical_cell": 16, "pixels": 32, "maximum_cell_exclusive": 18},
+    {"name": "medium", "logical_cell": 24, "pixels": 64, "maximum_cell": 36},
+    {"name": "large", "logical_cell": 72, "pixels": 96, "maximum_cell": 72}
+  ],
+  "encoding": "RGBA8: R=base coefficient, G=white coefficient, B=0, A=coverage; straight alpha",
+  "sampling": "linear, no mipmaps, no repeat, no source_color conversion; padded frame region",
+  "identity": "sha256(render_version + LF + puzzle_id + LF + revision + LF + x + LF + y), first 8 hex digits modulo variants"
+}
