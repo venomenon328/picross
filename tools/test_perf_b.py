@@ -14,6 +14,28 @@ from p1_preflight import PreflightError
 
 
 class PerfBTests(unittest.TestCase):
+    def test_reference_binding_matches_verified_git_bytes(self):
+        bound = perf_b_report.comparison_binding()
+        verified = perf_b_report.verify(resources.ROOT / "examples/perf_b")
+        self.assertEqual(bound["report_sha256"], verified["report_sha256"])
+        self.assertEqual(bound["raw_sha256"], verified["archive_sha256"])
+        self.assertEqual(len(bound["source_commit"]), 40)
+
+    def test_selected_native_scope_cannot_finish_as_success_without_execution(self):
+        for status in ("pending", "running", "not_run"):
+            with tempfile.TemporaryDirectory() as temporary:
+                bundle = evidence.Evidence(Path(temporary), "Windows", {"perf_b": True, "perf_a": False})
+                bundle.report["scope"]["perf_b"]["status"] = status
+                with self.assertRaisesRegex(PreflightError, "Required coverage incomplete"):
+                    bundle.finish()
+                self.assertEqual(bundle.report["status"], "failure")
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = evidence.Evidence(Path(temporary), "Windows", {"perf_b": True, "perf_a": False})
+            bundle.scope_start("perf_b")
+            bundle.scope_done("perf_b")
+            bundle.finish()
+            self.assertEqual(bundle.report["status"], "success")
+
     def test_comparison_rejects_changed_runtime_archive_and_summary(self):
         source = resources.ROOT / "examples/perf_b"
         self.assertEqual(perf_b_report.verify(source)["current_cases"], 120)

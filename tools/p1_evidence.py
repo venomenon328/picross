@@ -160,6 +160,10 @@ class Evidence:
         self.flush()
 
     def finish(self, error: Exception | None = None) -> None:
+        incomplete = [name for name, item in self.report["scope"].items()
+                      if item["enabled"] and item["status"] != "success"]
+        missing = toolchain.PreflightError("Required coverage incomplete: " + ", ".join(incomplete)) if error is None and incomplete else None
+        error = error or missing
         self.report.update(status="failure" if error else "success", finished_at=now(),
                            elapsed_seconds=round(time.monotonic() - self.began, 3))
         if error:
@@ -170,6 +174,8 @@ class Evidence:
                 elif item["status"] == "pending":
                     item.update(status="not_run", reason="run failed before this scope completed")
         self.flush()
+        if missing:
+            raise missing
 
     def retain_files(self, sources: list[Path], priority_sources=()) -> None:
         """Select native originals; never resize an image or replace an assertion."""

@@ -13,6 +13,14 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def comparison_binding(root=resources.ROOT):
+    """Locate immutable comparison bytes in Git, without repackaging them."""
+    directory = root / "examples/perf_b"
+    return dict(source_commit="0f89f08729539bbb4a02a590cbd18e58fbbda305",
+                report_sha256=digest((directory / "b1-windows.json").read_bytes()),
+                raw_sha256=digest((directory / "b1-windows-raw.zip").read_bytes()))
+
+
 def case_key(case):
     return (case["fixture"], tuple(case["context"]), case["density"], case["animations"], case["scenario"])
 

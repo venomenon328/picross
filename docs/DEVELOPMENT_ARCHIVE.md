@@ -68,3 +68,19 @@ aktiven Prüfer; sie ist kein sicherer Teil dieser Bereinigung. Kein Git-Rewrite
 Die geschützte Ownerreferenz zu #61 bleibt gemäß [CI-Policy](CI_POLICY.md) gebunden.
 PR #54/#69 werden nur nach Diff-/Quellenvergleich als abgelöst geschlossen;
 PR #25/#28 und ihre Issues bleiben unverändert. Kein Merge, Release oder Tag.
+
+## Prüfung der offenen Spezifikations-PRs
+
+Verglichen wurden vollständige Bodies und tatsächliche Diffs gegen `main@0f89f087`:
+
+| PR/Quellhead | Vollständige inhaltliche Ablösung |
+| --- | --- |
+| #54 / `c82ae74f794936bca93d45f5f505ba283e971227` | Alle sechs Dokumentpfade sind in main vorhanden: `UI_DRAWING_STYLE`, `DESIGN_CONCEPT`, `PRODUCT_DEFINITION`, `PROJECT_PROFILE`, `PROTOTYPE_P1`, `Z2_SELECTION`. ZS-D01–D10 und statische Vorschau wurden durch #55/#56 übernommen; konkrete Font-/Stiftwahl, Rand-UI und gerichtetes Timing durch ZS1-E1/E2/E3 und ZS2-E2 entschieden. Miniatur-/Vollsichtfortschreibung ist über #62 integriert. Die alten offenen Auswahl-/Implementierungsstände und parallelen Ausgangseffekte sind ausdrücklich abgelöst. |
+| #69 / `4a7573f3adaf7cef6df08adafb6caa767da02ad2` | Alle vier Pfade (`AGENTS`, `CELL_RENDERING`, `SL65_IMPLEMENTATION`, `VS2_OWNER_TRIAL`) sind durch #66 übernommen/fortgeschrieben. PERF-D01–D08 ab der ersten Fachüberschrift sind gegenüber main vollständig gleich, mit genau einer beschlossenen Änderung: 30 statt 20 MB technisches Budget gemäß #68/PERF-B-E1. Hersteller, Runtime, SL-R02 und Eigentümerprobe sind über #66 integriert. |
+
+Integrationscommits: #55 `985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f`,
+#56 `fad885344874534629365917a2ab6a8d311cd3a7`,
+#62 `e323dcf5c83b085144e61707ef98ecab2bfac39b`,
+#66 `0f89f08729539bbb4a02a590cbd18e58fbbda305`.
+Beide alten PRs können deshalb gemäß #70 als überholt geschlossen werden;
+kein erneuter Merge und keine Branchlöschung. Ihre ursprünglichen Diffs bleiben erreichbar.

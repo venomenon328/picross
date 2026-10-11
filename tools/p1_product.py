@@ -27,6 +27,7 @@ import p1_current_visual
 import vs2_delivery
 import perf_a_atlas
 import perf_b_resources
+import perf_b_report
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
@@ -345,10 +346,7 @@ def main(argv: list[str] | None = None) -> int:
         evidence.report.update(source_identity(root))
         # Historical comparison integrity is checked by test_perf_b in docs.
         # Its exact source commit/hash is reported; immutable raw ZIPs stay in Git.
-        evidence.report["historical_comparison"] = dict(
-            source_commit="0f89f08729539bbb4a02a590cbd18e58fbbda305",
-            report_sha256=toolchain.sha256_file(root / "examples/perf_b/b1-windows.json"),
-            raw_sha256=toolchain.sha256_file(root / "examples/perf_b/b1-windows-raw.zip"))
+        evidence.report["historical_comparison"] = perf_b_report.comparison_binding(root)
         evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "game/project.godot")
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)

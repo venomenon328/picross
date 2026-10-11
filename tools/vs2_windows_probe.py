@@ -204,9 +204,9 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         if relative.is_absolute() or ".." in relative.parts: raise ValueError("Unsafe evidence path")
         toolchain.verify_sha256(review/"selected"/relative,entry["sha256"])
     import perf_b_report
-    b_comparison = perf_b_report.verify(review / "selected/perf-b-comparison")
-    if b_comparison != review_report["perf_b_comparison"]:
-        raise ValueError("Delivered PERF-B comparison binding differs")
+    b_comparison = perf_b_report.verify(ROOT / "examples/perf_b")
+    if perf_b_report.comparison_binding(ROOT) != review_report["historical_comparison"]:
+        raise ValueError("Commit-bound PERF-B comparison differs")
     matrix=json.loads((review/"selected/vs2-renders/vs2-matrix.json").read_text(encoding="utf-8"))
     vs2_delivery.verify_records(matrix)
     if review_report["visual"]["vs2"]["v2"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v2-plan.json"):
