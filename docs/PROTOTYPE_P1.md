@@ -2,8 +2,8 @@
 
 Bei Zellrendering-/Performancearbeit zusätzlich den verbindlichen
 [PERF-Vertrag](CELL_RENDERING.md) und die [A-Prüfzuordnung](PERF_A_IMPLEMENTATION.md)
-lesen. #67 liefert eigene Referenzlast und Entwickleratlanten; #68 integriert
-sie erst in den regulären Renderer. Spiel-/Save-/History-/Hinweisverträge bleiben.
+lesen. #67 liefert eigene Referenzlast und Entwickleratlanten; [#68](PERF_B_IMPLEMENTATION.md)
+integriert sie in den regulären Renderer. Spiel-/Save-/History-/Hinweisverträge bleiben.
 
 ## Aktueller Vertrag · Sidebar #65
 

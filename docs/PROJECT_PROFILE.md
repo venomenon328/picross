@@ -6,7 +6,7 @@ zusätzlich [CELL_RENDERING](CELL_RENDERING.md) vollständig lesen; die
 Native Windows-Proben verwenden die offizielle gepinnte Toolchain und isolierte
 temporäre Projekte/Profile. A2-Prüfressourcen sind im aktuellen Spielerexport
 ausgeschlossen; reguläre Integration und kombinierter Vorher-/Nachhervergleich
-bleiben #68. Technische Prüfung ersetzt PERF-M01/SL-M01 nicht.
+sind in [PERF-B / #68](PERF_B_IMPLEMENTATION.md) zugeordnet. Technische Prüfung ersetzt PERF-M01/SL-M01 nicht.
 
 ## Aktueller Vertrag · Sidebar #65
 

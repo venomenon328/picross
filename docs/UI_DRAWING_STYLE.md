@@ -7,8 +7,8 @@ Für Zellbilder, Varianten, Zeitabbildung und spätere Cachearbeit gilt zusätzl
 weiterhin Stiftoptik und Lesbarkeit; die pro Frame berechnete Geometrie und der
 exakte frühere 18-px-Pfad sind gemäß PERF-D06 keine Pflichtarchitektur.
 [PERF-A](PERF_A_IMPLEMENTATION.md) liefert die isolierte Mess-/Atlasgrundlage.
-Die reguläre Darstellung bleibt bis #68 beim bisherigen Renderer. Vorschau,
-210/120-ms-Vertrag, atomarer Commit und Miniatur ändern sich durch A nicht.
+[PERF-B / #68](PERF_B_IMPLEMENTATION.md) integriert die gebundenen Atlanten und
+getrennte Zeichenebenen. Vorschau, 210/120-ms-Vertrag, atomarer Commit und Miniatur bleiben.
 
 ## Aktueller Vertrag · Sidebar #65
 

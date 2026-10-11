@@ -226,6 +226,17 @@ func pictures() -> void:
 			app.board.marks.sync()
 			await settle()
 			check(difference(capture(box),end)<=1.0,"cache repairs from confirmed model")
+			if zoom==18 and value==1:
+				var color: String = app.session.definition.palette[0].color
+				var variant: int = app.board.marks.variants[index]
+				app.session.definition.palette[0].color="#bd604a"
+				app.board.queue_redraw()
+				await settle()
+				check(difference(capture(box),end)>1.0 and app.board.marks.variants[index]==variant,"palette content invalidates colors without changing variant")
+				app.session.definition.palette[0].color=color
+				app.board.queue_redraw()
+				await settle()
+				check(difference(capture(box),end)<=1.0,"palette restoration repairs cache")
 			if value!=0 and value!=1: continue
 			var strip: Image = Image.create(blank.get_width()*9,blank.get_height(),false,Image.FORMAT_RGBA8)
 			var column: int = 0

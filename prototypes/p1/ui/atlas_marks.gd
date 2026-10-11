@@ -133,7 +133,9 @@ func sync() -> void:
 		for i: int in range(cells.size()):
 			if cells[i] != values[i]: dirty[i / CHUNK_SIZE] = true
 	if cells != values: values = cells.duplicate()
-	geometry = next_geometry
+	# Keep a value snapshot, including nested palette entries, so an in-place
+	# restore cannot make both sides of the invalidation comparison change.
+	geometry = next_geometry.duplicate(true)
 	var next_suppressed: Dictionary = {}
 	for i: int in board.effects: next_suppressed[i] = true
 	for i: int in board.preview: next_suppressed[i] = true
