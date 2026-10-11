@@ -133,7 +133,7 @@ func run() -> void:
 	var report: Dictionary = {"context_index": ci, "requested_context": context, "client": [root.size.x, root.size.y],
 		"window_mode": root.mode, "screen": DisplayServer.window_get_current_screen(), "screen_size": [DisplayServer.screen_get_size().x, DisplayServer.screen_get_size().y],
 		"screen_dpi": DisplayServer.screen_get_dpi(), "screen_scale": DisplayServer.screen_get_scale(),
-		"window_vsync_mode":root.vsync_mode,"screen_refresh_hz":DisplayServer.screen_get_refresh_rate(),
+		"window_vsync_mode":DisplayServer.window_get_vsync_mode(),"screen_refresh_hz":DisplayServer.screen_get_refresh_rate(),
 		"renderer": RenderingServer.get_video_adapter_name(), "driver": RenderingServer.get_current_rendering_driver_name(),
 		"overview_requested": view.overview, "overview_actual": app.board.overview, "actual_cell": app.board.view.cell_size,
 		"fit_ceiling": app.board.fit_ceiling, "records": records, "failures": failures}
