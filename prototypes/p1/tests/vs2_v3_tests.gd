@@ -420,13 +420,13 @@ func run() -> void:
 			if app.session.player.cells[4*app.session.player.width+x]<0:
 				mouse(q,MOUSE_BUTTON_LEFT,true)
 				mouse(q,MOUSE_BUTTON_LEFT,false)
-		if index!=1: await shot("v3-F%02d-work" % (index+1))
+		if index!=1: await shot("v3-F%02d-work" % int(app.session.definition.id.trim_prefix("F-")))
 		if index==0:
 			var region: Rect2 = app.board.view.cell_rect(Vector2i(3,4))
 			region.position+=app.board.global_position
 			region.size=Vector2(6,2)*app.board.view.cell_size
 			await shot("v3-fills-five",region.grow(3))
-		if index==7: await shot("v3-title",app.title.get_global_rect())
+		if index==4: await shot("v3-title",app.title.get_global_rect())
 	# Bound cross-process fingerprint: the second invocation compares the same geometry.
 	app.select_puzzle(0)
 	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))

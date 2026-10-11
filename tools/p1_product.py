@@ -27,6 +27,7 @@ import p1_current_visual
 import vs2_delivery
 import perf_a_atlas
 import perf_b_resources
+import perf_b_report
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
@@ -344,6 +345,14 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         evidence.report.update(source_identity(root))
+        comparison = root / "examples/perf_b"
+        evidence.report["perf_b_comparison"] = python_phase("perf-b-bound-comparison", lambda: perf_b_report.verify(comparison))
+        comparison_output = output / "perf-b-comparison"
+        comparison_output.mkdir()
+        for name in ("b1-windows.json", "b1-windows-raw.zip", "a-reproduction.json"):
+            target = comparison_output / name
+            shutil.copyfile(comparison / name, target)
+            selected.append(target)
         evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "prototypes/p1/project.godot")
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
@@ -510,7 +519,7 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b")])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "perf-b-comparison")])
             if args.visual:
                 required_images = {p.name for p in selected if p.parent.name == "v3-renders" and p.suffix == ".png"}
                 retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}

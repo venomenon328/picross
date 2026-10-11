@@ -164,6 +164,12 @@ static func run(t: SceneTree) -> void:
 	marker.close()
 	t.check(shared.load_slot(f01).status == "error", "P1.3 corrupt primary plus temp is not silently fresh")
 	t.check(not shared.write_slot(Session.new(f01), Session.new(f01).view_state).is_empty(), "P1.3 invalid data cannot be silently overwritten")
+	var retired: SaveStore = SaveStore.new(SaveStore.test_root_override)
+	DirAccess.make_dir_recursive_absolute(retired.root)
+	for id: String in ["f03","f05","f07"]:
+		var untouched: FileAccess = FileAccess.open(retired.path_for(id),FileAccess.WRITE)
+		untouched.store_string("retired slot preserved " + id)
+		untouched.close()
 	var app: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(app)
 	await t.process_frame
@@ -185,6 +191,8 @@ static func run(t: SceneTree) -> void:
 	t.check(app.sessions[0].player.cells[0] == 1 and app.store.load_slot(app.sessions[0].definition).status == "loaded" and app.sessions[3].player.cells[0] == -1, "P1.3 UI reset preserves both other sessions")
 	app.select_puzzle(0)
 	app._save_current()
+	for id: String in ["f03","f05","f07"]:
+		t.check(FileAccess.get_file_as_string(retired.path_for(id))=="retired slot preserved " + id,"P1.3 catalog startup/switch/save/reset preserves retired slot bytes")
 	var broken_backup: FileAccess = FileAccess.open(app.store.path_for("f01", ".bak"), FileAccess.WRITE)
 	broken_backup.store_string("{bad backup")
 	broken_backup.close()

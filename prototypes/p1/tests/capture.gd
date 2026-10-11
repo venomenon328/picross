@@ -429,7 +429,7 @@ func region_difference(before: Image, after: Image, region: Rect2i) -> int:
 func capture_hint_markers(app: Main, row: int, column: int) -> void:
 	app.board.clear_clue_hover()
 	app.board.hover = Vector2i(-1, -1)
-	component_navigate(app,Vector2(float(column) / 100.0, float(row) / 100.0))
+	component_navigate(app,Vector2(float(column) / app.session.player.width, float(row) / app.session.player.height))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
 		var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
@@ -540,7 +540,7 @@ func capture_drop_snap(app: Main, axis: String, index: int, anchor: int, fractio
 		pixel_checks += 1
 
 func capture_drop_matrix(app: Main, row: int, column: int) -> void:
-	component_navigate(app,Vector2(float(column) / 100.0, float(row) / 100.0))
+	component_navigate(app,Vector2(float(column) / app.session.player.width, float(row) / app.session.player.height))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
 		var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
@@ -705,7 +705,7 @@ func capture_layout(app: Main) -> void:
 		surface.size = dims
 		for scale: float in [1.0, 1.25]:
 			app.set_ui_scale(scale)
-			for fixture: int in range(3):
+			for fixture: int in [0,1,3]:
 				app.select_puzzle(fixture)
 				if scale > 1:
 					app.board.zoom(1, app.board.view.viewport.get_center())
@@ -714,7 +714,7 @@ func capture_layout(app: Main) -> void:
 					values[(4 + i) * app.session.player.width + 4] = mini(i + 1, app.session.definition.palette.size())
 				replace_render_cells(app, values)
 				app.board.hover = Vector2i(4, 4)
-				await snapshot(app, "%dx%d-ui%d-f%d" % [dims.x, dims.y, roundi(scale * 100), fixture + 1])
+				await snapshot(app, "%dx%d-ui%d-f%d" % [dims.x, dims.y, roundi(scale * 100), int(app.session.definition.id.trim_prefix("F-"))])
 			app.select_puzzle(1)
 			set_fractional_step(app, "row", 35, 0.5)
 			set_fractional_step(app, "row", 36, 1.0)
@@ -722,17 +722,17 @@ func capture_layout(app: Main) -> void:
 			set_fractional_step(app, "column", 22, 1.0)
 			await snapshot(app, "%dx%d-ui%d-f2-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
 			app.select_puzzle(3)
-			set_fractional_step(app, "row", 50, 0.35)
-			set_fractional_step(app, "row", 51, 0.7)
-			set_fractional_step(app, "column", 50, 0.35)
-			set_fractional_step(app, "column", 51, 0.7)
-			await snapshot(app, "%dx%d-ui%d-f3-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
+			set_fractional_step(app, "row", 41, 0.35)
+			set_fractional_step(app, "row", 33, 0.7)
+			set_fractional_step(app, "column", 17, 0.35)
+			set_fractional_step(app, "column", 32, 0.7)
+			await snapshot(app, "%dx%d-ui%d-f6-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
 
 func capture_compact_layout(app: Main) -> void:
 	app.show_album()
 	await snapshot(app, "album")
 	# Minimum client at the larger UI scale; regular 1080p at both scales.
-	# Each visits mono, color and the 100x100 case; independent reads remain
+	# Each visits mono, color and the 50x50 case; independent reads remain
 	# visible on both axes at UI125 rather than repeating a 4x2 cross product.
 	for configuration: Dictionary in [
 		{"size": Vector2i(1280, 720), "scale": 1.25},
@@ -741,7 +741,7 @@ func capture_compact_layout(app: Main) -> void:
 	]:
 		surface.size = configuration.size
 		app.set_ui_scale(configuration.scale)
-		for fixture: int in range(3):
+		for fixture: int in [0,1,3]:
 			app.select_puzzle(fixture)
 			if app.ui_scale > 1.0:
 				app.board.zoom(1, app.board.view.viewport.get_center())
@@ -752,12 +752,12 @@ func capture_compact_layout(app: Main) -> void:
 			app.board.hover = Vector2i(4, 4)
 			var name: String = "%dx%d-ui%d-f%d" % [surface.size.x, surface.size.y, roundi(app.ui_scale * 100), fixture + 1]
 			if fixture > 0 and app.ui_scale > 1.0:
-				var row: int = 35 if fixture == 1 else 50
-				var column: int = 21 if fixture == 1 else 50
+				var row: int = 35 if fixture == 1 else 41
+				var column: int = 21 if fixture == 1 else 17
 				for axis: String in ["row", "column"]:
 					var index: int = row if axis == "row" else column
 					set_fractional_step(app, axis, index, 0.5)
-					set_fractional_step(app, axis, index + 1, 1.0)
+					set_fractional_step(app, axis, index + 1 if fixture == 1 else (33 if axis == "row" else 32), 1.0)
 				name += "-independent-slots"
 			await snapshot(app, name)
 
@@ -929,7 +929,7 @@ func capture_axis(app: Main) -> void:
 	await snapshot(app, "gesture-counter-8")
 	app.board.cancel_gesture()
 	await capture_axis_reset(app, 1, 24.0, 3)
-	await capture_axis_reset(app, 2, 12.0, 1)
+	await capture_axis_reset(app, 3, 12.0, 1)
 	app.board.hover = Vector2i(f06_column, f06_row)
 	app.board.set_clue_hover("row", f06_row)
 	await snapshot(app, "f06-full-clues-in-work-tooltip")

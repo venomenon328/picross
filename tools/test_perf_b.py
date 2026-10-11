@@ -6,12 +6,40 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import zipfile
+import shutil
 import perf_b_resources as resources
+import perf_b_report
 import p1_evidence as evidence
 from p1_preflight import PreflightError
 
 
 class PerfBTests(unittest.TestCase):
+    def test_comparison_rejects_changed_runtime_archive_and_summary(self):
+        source = resources.ROOT / "examples/perf_b"
+        self.assertEqual(perf_b_report.verify(source)["current_cases"], 120)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            report = json.loads((source / "b1-windows.json").read_text())
+            target = root / "b1-windows.json"
+            target.write_text(json.dumps(report))
+            archive = root / report["raw_archive"]["file"]
+            shutil.copyfile(source / archive.name, archive)
+            report["current_cases"][0]["after"]["wall_us"]["p50"] = -1
+            target.write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, "archived summaries"):
+                perf_b_report.verify(root)
+            shutil.copyfile(source / target.name, target)
+            with archive.open("ab") as stream: stream.write(b"x")
+            with self.assertRaisesRegex(ValueError, "archive identity"):
+                perf_b_report.verify(root)
+            runtime = root / "prototypes/p1/ui"
+            runtime.mkdir(parents=True)
+            for filename in report["runtime_files"]:
+                shutil.copyfile(resources.ROOT / "prototypes/p1/ui" / filename, runtime / filename)
+            with (runtime / "atlas_marks.gd").open("ab") as stream: stream.write(b"\n")
+            with self.assertRaisesRegex(ValueError, "Measured runtime changed"):
+                perf_b_report.verify(source, root)
+
     def test_historical_manufacturer_is_not_current_adapter(self):
         files = resources.historical_files()
         self.assertNotEqual(files["tools/perf_a_atlas.py"], (resources.ROOT / "tools/perf_a_atlas.py").read_bytes())

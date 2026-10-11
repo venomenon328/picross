@@ -74,7 +74,7 @@ Ein Lauf mit ausgeschaltetem Bereich wird nicht als dessen erfolgreicher Nachwei
 ausgegeben. Vollständige Produktionsrekonstruktionen gehören in den Fachlauf,
 nicht zusätzlich in den Runtime-Harness.
 
-F04 prüft nach Abschluss außerdem die bekannten unveränderten F01–F03-Zellstände
+F04 prüft nach Abschluss außerdem die bekannten unveränderten F01/F02/F06-Zellstände
 (400/1600/10000 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
 F01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Die isolierte
 Partialinstanz sichert den unveränderten F01-Startstand, damit der zweite Neustart
@@ -174,7 +174,7 @@ Die neue Sicherung macht den Ablauf des ursprünglichen Actions-Artefakts am
 
 PR #62 ist kein Bestandteil dieser Änderung. Vor seiner weiteren Umsetzung ist
 der neue CI-Stand zu integrieren und seine zusätzliche aktuelle VS2-Prüfung in
-den neuen Harness einzuordnen. Die neun regulären und zehn technischen VS-Fälle
+den neuen Harness einzuordnen. Die sechs regulären und zehn technischen VS-Fälle
 sowie die zugesagten V1-Nachweise bleiben für diese fachliche Arbeit erforderlich.
 Der alte GP48-Importfehler wird nicht als bestandener aktueller Product-Lauf
 umgedeutet; #61 benötigt nach Integration passende neue Nachweise. Auf `main`

@@ -16,6 +16,10 @@ bestätigte Behebung der Sidebarachse B-01 bleibt davon getrennt.
 die reguläre Renderer-/Cacheintegration steht in [PERF-B](PERF_B_IMPLEMENTATION.md). **PERF-M01 ist offen** und wird am neuen kombinierten
 Lieferstand mit SL-M01 geprüft, nicht am bloßen Spezifikationscommit.
 
+Der aktuelle Katalog enthält F01/F02/F04/F06/F08/F09, höchstens 50×50.
+F03/F05/F07 sind seit der Eigentümerentscheidung in #68 nicht mehr angeboten;
+ihre vorhandenen Speicherdateien bleiben unangetastet.
+
 ## Regulärer Start und Bedienung
 
 Das Paket enthält `picross-p1.exe` und die Konsolenfassung. ZIP vollständig in einen

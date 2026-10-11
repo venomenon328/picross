@@ -169,11 +169,16 @@ func detail_shots() -> void:
 	if SaveStore.snapshot(app.session,app.board.capture_view()) != tooltip_state or app.session.gesture.active:
 		record_failure("c1-tooltip", "Z2 rendered tooltip allowed a board action")
 	app.board.clear_clue_hover()
-	# F02 now fits all its row clues. Use the existing long F03 row through
+	# F02 fits all row clues. Use the longest F06 row at the smaller surface through
 	# the regular scene for the unchanged continuous 14.7px C1 drag oracle.
+	surface.size = Vector2i(1280,720)
+	app.size = Vector2(surface.size)
+	app.set_ui_scale(1.25)
 	app.select_puzzle(3)
+	await process_frame
+	await process_frame
 	var area: Rect2 = app.board.row_clue_area()
-	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,35)).get_center().y)
+	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,41)).get_center().y)
 	var press: InputEventMouseButton = InputEventMouseButton.new()
 	press.position = app.board.global_position+point
 	press.button_index = MOUSE_BUTTON_MIDDLE
@@ -189,6 +194,9 @@ func detail_shots() -> void:
 	await shot("c1-drag")
 	app.board.cancel_gesture()
 	app.board.clear_pointer_hover()
+	surface.size = Vector2i(1920,1080)
+	app.size = Vector2(surface.size)
+	app.set_ui_scale(1.0)
 	app.select_puzzle(1)
 	var hover: InputEventMouseMotion = InputEventMouseMotion.new()
 	hover.position = app.actions.fill.get_global_rect().get_center()
