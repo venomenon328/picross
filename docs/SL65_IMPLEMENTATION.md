@@ -3,9 +3,33 @@
 Auftrag [#65](https://github.com/venomenon328/picross/issues/65), Paket A+B auf
 `feat/65-sidebar-frames`, Basis `e323dcf5c83b085144e61707ef98ecab2bfac39b`.
 PR #62 ist integriert und abgeschlossen. Kein Merge-/Releaseauftrag.
-SL-R01/B-01 wird gemäß [SL-N01](https://github.com/venomenon328/picross/pull/66#issuecomment-6103925038)
-nachgearbeitet. Unabhängiges Nachreview, persönliche SL-M01 und gesonderte
-Mergefreigabe bleiben offen.
+SL-R01/B-01 ist auf `a83ecf5db0800d198bb870932bf0365341aabb28` gemäß
+[SL-N01](https://github.com/venomenon328/picross/pull/66#issuecomment-6103925038)
+nachgearbeitet und im [Nachreview SL-R02](https://github.com/venomenon328/picross/pull/66#pullrequestreview-5482654673)
+technisch bestätigt. Persönliche SL-M01 und gesonderte Mergefreigabe bleiben offen.
+
+## Freigegebene Performance-Nacharbeit · 11.10.2026
+
+Die Eigentümerprobe meldet PERF-01: Cursor-Nachlauf und abgehackte Animationen auf
+dicht belegtem F-02 ab einer Zoomstufe. Der Cursor-Nachlauf bleibt auch bei
+abgeschalteten Zellanimationen spürbar; eine mögliche geringe Verbesserung ist
+nicht gemessen. Die Ursache ist eingegrenzt, aber nicht abschließend profiliert.
+Das ist keine erneute Beanstandung der in SL-R02 bestätigten Sidebarachse.
+
+Die [Sprite-/Caching-Spezifikation](CELL_RENDERING.md) ist fachlich freigegeben,
+**noch nicht implementiert**: [PERF-A / #67](https://github.com/venomenon328/picross/issues/67)
+liefert Referenzlast, Messplan und geprüfte Atlanten;
+[PERF-B / #68](https://github.com/venomenon328/picross/issues/68) integriert die
+bildbasierte Anzeige mit unabhängig aktualisierten ruhenden Markierungen,
+Vorschau/Effekten und Cursor-Hervorhebung. Die gemeinsamen Bilder gelten auch
+für fertige Füllungen/X, nicht nur für laufende Animationen.
+
+Beide Pakete sind als begrenzte Ergänzung aus derselben Eigentümerprobe für den
+bestehenden Branch/PR vorgesehen. A allein behebt PERF-01 nicht. Neue kombinierte
+technische Nachweise, unabhängiges Review, persönliche PERF-M01/SL-M01 und separate
+Mergefreigabe sind vor Produktmerge erforderlich. Die bisherige CI und SL-R02
+belegen ihren ursprünglichen Head, nicht den noch ausstehenden neuen Renderer.
+Die folgenden Sidebarparameter und deren gebundene Nachweise bleiben erhalten.
 
 ## Bedienung und Layout
 

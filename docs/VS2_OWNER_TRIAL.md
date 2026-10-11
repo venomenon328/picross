@@ -2,7 +2,18 @@
 
 ## Status und Bindung
 
-**SL-M01 offen.** Diese persönliche Sicht-/Bedienprobe gilt für den neuen kombinierten Head zu [#65](https://github.com/venomenon328/picross/issues/65). PR #62 ist abgeschlossen. Alte Abnahmen und technische Implementiererproben ersetzen diese neue persönliche Prüfung nicht. Keine vollständige Rätsellösung erforderlich.
+**SL-M01 offen, Rückmeldung mit Änderungsbedarf.** Diese persönliche Sicht-/Bedienprobe gilt für den neuen kombinierten Head zu [#65](https://github.com/venomenon328/picross/issues/65). PR #62 ist abgeschlossen. Alte Abnahmen und technische Implementiererproben ersetzen diese neue persönliche Prüfung nicht. Keine vollständige Rätsellösung erforderlich.
+
+Am 11.10.2026 meldet der Eigentümer PERF-01: spürbarer Cursor-Nachlauf und
+abgehackte Mehrzellenanimationen auf weit ausgefülltem F-02 ab einer Zoomstufe,
+normal wie maximiert. Der Nachlauf bleibt auch mit abgeschalteten Zellanimationen
+bestehen; eine mögliche geringe Verbesserung ist unsicher. Die in SL-R02
+bestätigte Behebung der Sidebarachse B-01 bleibt davon getrennt.
+[Sprite-/Caching-Spezifikation](CELL_RENDERING.md) und Pakete
+[PERF-A / #67](https://github.com/venomenon328/picross/issues/67) /
+[PERF-B / #68](https://github.com/venomenon328/picross/issues/68) sind freigegeben,
+noch nicht umgesetzt. **PERF-M01 ist offen** und wird am neuen kombinierten
+Lieferstand mit SL-M01 geprüft, nicht am bloßen Spezifikationscommit.
 
 ## Regulärer Start und Bedienung
 
@@ -20,7 +31,7 @@ Minus/Plus und Mausrad wählen die Zoomstufe. Fenster, Hinweise und UI begrenzen
 
 Links setzt Farbe, rechts X; erneutes Setzen nimmt den jeweiligen Typ zurück.
 Eine auf unbekannt begonnene Geste schützt Vorbelegungen; bewusstes Umwandeln
-beginnt auf X mit links beziehungsweise auf einer Füllung mit rechts.
+beginnt auf X (links) beziehungsweise einer Füllung (rechts).
 Rückziehen verkürzt die Vorschau; Undo/Redo arbeitet mit vollständigen Strichen.
 Die eigene Miniatur ist passiv. Raster und Miniatur lassen sich nicht verschieben.
 Eine überlaufende Hinweiszeile lässt sich mit der mittleren Taste waagerecht,
@@ -77,13 +88,38 @@ beurteilte Szenarien als durchgeführt eintragen:
     Arbeits-Blatttitel; `·`, `×` und Ziffern sind vollständig, andere Seiten
     behalten ihre bisherige Überschriftenschrift.
 
+## Zusätzliche persönliche PERF-M01 am neuen Renderer
+
+Erst nach Lieferung von PERF-B anhand des dort gebundenen Windows-Spielers prüfen.
+Den vorhandenen weit ausgefüllten 40×40-Stand verwenden, ohne ihn für die Probe
+ungefragt zurückzusetzen. Technische Testprofile bleiben von normalen Saves getrennt.
+
+1. Cursor im dicht belegten Blatt bewegen: unterhalb, an und oberhalb der früheren
+   ruckelnden Zoomstufe, normal und maximiert, mit Zellanimationen an und aus.
+   Erwartet: kein spürbarer Nachlauf der Zeilen-/Spaltenhervorhebung. Die vom
+   technischen Bericht ausgewiesenen wirksamen Zellmaße nicht aus Screenshot-
+   oder Monitorgröße erraten. Keine neue numerische Spieler-Zoomanzeige nötig.
+2. Längere Füll- und X-Striche sowie schnellen Folgezug, Rückzug/Abbruch und Undo/Redo
+   prüfen. Erwartet: flüssiger räumlicher Schreibaufbau, X-Züge nacheinander, keine
+   verspäteten falschen Bilder, kein Warten von Eingabe/History auf das Animationsende.
+3. Größere zusammenhängende Farbflächen und kleine Zellgrößen ansehen. Varianten
+   bleiben nach Zoomrückkehr und Neustart stabil; Vorschau und Endform passen,
+   kein Formwechsel am Animationsende. Fugen, Farben und Schrift bleiben klar.
+4. Ausschalten beendet Effekte sofort; Einschalten spielt nichts nach. Miniatur
+   bleibt vereinfachte eigene Füllprojektion ohne X/Animation. Sidebarachse und
+   Controls bleiben wie im zuletzt bestätigten Layout.
+
+Das persönliche Ergebnis ist getrennt von den technischen Framezeit-/Cachemessungen
+zu dokumentieren. Ein schöner Endzustand oder eine verbesserte Durchschnittszeit
+ersetzt nicht die subjektiv flüssige Bedienung im berichteten Lastfall.
+
 Protokoll: PR/Head, Download/ZIP-Hash, EXE, Windows-Version, Monitorauflösung,
 tatsächliche normale/maximierte Clientfläche, Windows-Anzeigeskalierung, gewählte
 UI-Skalierung, Maus und Ergebnis je Schritt festhalten. Unbekannte Werte offenlassen.
 Technische Eingabeproben ersetzen kein persönliches Komforturteil.
 
-**SL-M01 bleibt vor Merge offen.** Der neue kombinierte Stand benötigt zusätzlich
-unabhängiges technisches/visuelles Review und passende Mergefreigabe. Frühere
-R1-/ZS2-/GF1-Nachweise nehmen weder die neue Gestaltung noch ihre persönliche
-Abnahme vorweg. Dieses Paket ist kein Release; seine Umsetzung ist keine
-Mergefreigabe.
+**SL-M01 und PERF-M01 bleiben vor Merge offen.** Der neue kombinierte Stand benötigt
+zusätzlich unabhängiges technisches/visuelles Review und passende Mergefreigabe.
+Frühere R1-/ZS2-/GF1-/SL-R02-Nachweise nehmen weder den neuen Renderer noch dessen
+persönliche Abnahme vorweg. Dieses Paket ist kein Release; seine Spezifikation
+oder Umsetzung ist keine Mergefreigabe.
