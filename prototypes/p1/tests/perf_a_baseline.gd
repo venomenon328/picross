@@ -123,6 +123,9 @@ func run() -> void:
 					if scenario != "hover":
 						require(app.session.player.cursor == 2, "40-cell native event commit")
 						require(app.session.player.cells[(38 if scenario == "fill" else 39) * 40] == (1 if scenario == "fill" else 0), "target after stroke")
+						require(app.session.player.history[-1].size()==40,"entire native 40-cell transaction")
+						for x: int in range(40):
+							require(app.session.player.cells[(38 if scenario=="fill" else 39)*40+x]==(1 if scenario=="fill" else 0),"entire native target row")
 					records.append({"density": density, "animations": animations, "scenario": scenario, "repetition": repetition,
 						"frame_intervals_us": intervals, "dispatch_cpu_us": dispatch, "mark_build_cpu_us": app.board.draw_times_us.duplicate(),
 						"draw_signals": draws.duplicate(), "active_effects": effects, "static_memory_bytes": OS.get_static_memory_usage(),
