@@ -83,7 +83,8 @@ Head, Basis, Checkout und Run auseinanderhalten. Fehlend, abgebrochen oder
 übersprungen ist bei Pflichtjobs kein Pass. Vollständiger Diff und getrennter
 Selbstreview sind erforderlich; eigener Selbstreview ist keine unabhängige Zweitprüfung.
 Persönliche Abnahme, technische Prüfung, Mergefreigabe und Release sind getrennt.
-Offene persönliche Befunde von Parent #34/#24 werden nicht durch Cleanup geschlossen.
+Die abgeschlossene Produktionsphase #34 wird nicht erneut geöffnet; offene
+persönliche Befunde aus #24 werden durch Cleanup nicht abgenommen.
 
 ## Dokumentprüfung und Umgebungen
 
@@ -174,7 +175,8 @@ mit F-04 in drei isolierten Prozessen bearbeitet, abgeschlossen und wieder gelad
 echte Renderbilder prüfen eigene falsche Einträge und die Spoilergrenze.
 Die RP-6-Abnahmeentscheidungen sind im integrierten PR #47 gebunden.
 Windows-Export, Windows-Start und persönliche Lösung bleiben getrennte Nachweise.
-Parent #34 bleibt offen.
+Die Machbarkeitsphase #34 ist seit 07.10.2026 abgeschlossen; wirtschaftliche
+Serienproduktion und weitergehende Produktionsoberfläche bleiben Folgearbeiten.
 
 ## RP-4-Regression und Herkunftsnachweis
 
@@ -223,7 +225,8 @@ Windowsregression, `docs`, `product` und `preflight` bleiben aktiv.
 RP5-A01 bis A06 und unabhängiges technisches/visuelles Review R1 sind
 im integrierten PR #46 abgeschlossen. Historische Baseline-/Reviewfelder
 bleiben unverändert; eigene Sichtung ersetzt weiterhin keine Zweitprüfung. Persönliche Lösung und finale Pilotabnahme gehören zum historischen RP-6-Auftrag;
-dessen Entscheidungen stehen im integrierten PR #47. Parent #34 bleibt offen.
+dessen Entscheidungen stehen im integrierten PR #47. Die Machbarkeitsphase #34 ist seit 07.10.2026 abgeschlossen; wirtschaftliche
+Serienproduktion und weitergehende Produktionsoberfläche bleiben Folgearbeiten.
 
 ## Toolchain, Product und Betriebswirkung
 

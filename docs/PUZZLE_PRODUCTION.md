@@ -496,7 +496,7 @@ begrenzte CI-Job prüft alle geschriebenen Reparaturspuren und Vergleichsbindung
 unverkleinerte Fach-/Referenz-/RP-3-/RP-4-Prüfungen bleiben. Unabhängiges
 technisches/visuelles Review R1 von RP-5 ist in PR #46 abgeschlossen; integriert
 als `cd4a8db86e51891f13e305b589837a1a4354c5a2`. Die reale Eigentümer-
-Lösung bleibt ausdrücklich RP-6-Gate.
+Lösung gehörte zum RP-6-Gate; die spätere Entscheidung steht in #34/PR #47.
 
 Für jedes Paket gelten der bestehende Dokumentprüfweg und ein vollständiger
 Diffcheck. `docs` muss am aktuellen Head/zugehörigen Test-Merge erfolgreich sein.
@@ -563,5 +563,7 @@ Kein öffentlicher Import, keine Rechteckprobe in P1, kein Saveformatwechsel.
 
 [Prüfzuordnung](RP6_VERIFICATION.md), [Bilanz und Paaransichten](../examples/rp6/README.md)
 und getrennte [Eigentümeranleitung](RP6_OWNER_TRIAL.md) dokumentieren Grenzen.
-Eigene Sichtung ist keine unabhängige Zweitprüfung. M02–M04 bleiben offen;
-fehlende reale Befunde sind kein negatives Machbarkeitsergebnis.
+Eigene Sichtung ist keine unabhängige Zweitprüfung. M01–M04 und die positive
+kuratierte Machbarkeitsentscheidung sind im abgeschlossenen #34 und PR #47
+gebunden; wirtschaftliche Serienproduktion bleibt mangels menschlicher
+Arbeitszeitdaten unbewiesen. Keine neue Produkt- oder Releasefreigabe.

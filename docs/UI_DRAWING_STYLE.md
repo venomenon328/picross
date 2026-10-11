@@ -16,41 +16,12 @@ PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac3
 
 Aktuell: genau sechs Aktionen in 2×3 (Füllen/Radieren, Undo/Redo, Minus/Plus), ohne Einpassen-/Arbeitsgrößenaktion oder „Dein Stand“. Drei transparente gezeichnete Rahmen ersetzen die alten Fassungen; Miniatur, Koordinaten, Palette und Werkzeuge teilen die Mittelachse. Die interne Vollsichtgrenze, Optionsansichten G/V, Raster-/Hinweisbudgets und Albumminiaturen bleiben. Nach vollständiger unveränderter Schema-1-Validierung wird `overview=false`; gültiger Zoomwunsch, Inhalt, History/Redo und Recoverygrenzen bleiben erhalten. Neue Saves schreiben Schema 1 mit `overview=false`. SL-R02 bestätigt B-01 am Ausgangshead a83ecf5 technisch; kombinierte Nachweise und Eigentümerbestätigung sind im integrierten PR #66 gebunden; kein Release. Historische Prüfpläne/-berichte bleiben unverändert.
 
-## Historischer Paketstand · V1/V2/V3 vor Abschluss von #62
+Stand: 11.10.2026 · Spezifikation 0.8 · VS2/Sidebar/PERF-A/B integriert
 
-Die reguläre VS2-Erstlieferung liegt in [Draft-PR #62](https://github.com/venomenon328/picross/pull/62)
-auf `2c332ad688315bfa851f7c0d8642d2ab4ac3709c`, Basis
-`fad885344874534629365917a2ab6a8d311cd3a7`. Sie erhält den ausgewählten
-Chalkboard-/Stiftzeichner und ZS2-N01–N03. Nur MMB auf überlaufenden Hinweisfolgen
-bleibt Navigation; Hand-/Raster-/Miniaturpan entfallen. Fit und Rendering
-verwenden dieselbe Vollsichtgeometrie. Diese Lieferung ist noch nicht gemergt.
-
-[Review R1](https://github.com/venomenon328/picross/pull/62#pullrequestreview-5472592800)
-ist für diesen Head und seinen damaligen Vertrag abgeschlossen, ohne B-Befund.
-Der Eigentümer hat anschließend **VS2-E1 / N01–N05 als Spezifikation freigegeben**:
-kompaktere Zeilenhinweise, ausgewogenere Platzierung, subtile Scribble-Optik und
-Miniatur/Palette weiter innerhalb des Buches; Miniaturen zeigen nur Füllungen.
-Der verbindliche Vertrag steht in Abschnitt 7. **S0 abgeschlossen; V1/N01/N02/N04
-auf `40829b43db6509447863c9d27dbb87dcfaf2a988` technisch geliefert; V2/N03/N05 inzwischen umgesetzt.**
-[Parameter, Präzisierung der Glyphenprobe und Nachweise](VS2_V1_IMPLEMENTATION.md).
-[Review R2](https://github.com/venomenon328/picross/pull/62#pullrequestreview-5479141642)
-prüfte V1-Code und verfügbare native Bilder positiv; R2-B01 verlangt die hier
-nachgeführte Quellenkonsistenz. [V2](VS2_V2_IMPLEMENTATION.md) ergänzt jetzt N03/N05.
-VS2-M01 hat Rückmeldung mit Änderungsbedarf, keine vollständige positive Abnahme.
-
-Bedien-/Speichergrundlage: [P1](PROTOTYPE_P1.md). Die
-[Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md)
-unterscheiden Erstlieferung, geprüften V1-Zwischenstand und kombinierte V1/V2-Nachweise.
-Vor Merge bleiben aktuelle kombinierte technische Prüfung,
-unabhängiges Review des kombinierten Heads, VS2-M01 und passende Mergefreigabe nötig.
-Historische Nachweise bleiben commitgebunden; neue Laufbindungen stehen im PR.
-
-Stand: 10.10.2026 · Spezifikation 0.8 · V2: Scribble-Konturen und reine Füllprojektion
-
-**VS2-E2/V3 ist umgesetzt:** der verbindliche Nachtrag in Abschnitt 8 ergänzt
-Raster-/Fülltextur, Navigation, Werkzeugleiste und Arbeits-Blatttitel. R3 bleibt
-an den vorbereiteten Head `e2547016cef7cfe400a77fb09f22c872306de22a` gebunden;
-neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
+V1-/V2-/V3-Prüfstatusangaben innerhalb der Fachfortschreibung beschreiben ihre
+damaligen Paketstände. Die kombinierte Integration/Abnahme steht in PR #62/#66;
+sie ist kein erneut offenes Gate. Frühere einleitende Liefermeldungen bleiben im
+[gebundenen Vorgänger](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/docs/UI_DRAWING_STYLE.md) erreichbar.
 
 ## 1. Auftrag, Quellen und Status
 
