@@ -22,7 +22,7 @@ EULA, OFL oder neue Rechteinhabererlaubnis behauptet. Die technischen fsType-Wer
 
 Die anfängliche Zuordnung von Chalkboard zu einer Privatnutzungslizenz betraf einen
 anderen gleichnamigen Font und bleibt korrigiert. Maßgeblich ist die bytebestätigte
-Florence-S-Quelle. [Mitgelieferte Hinweise](../prototypes/p1/study/fonts/NOTICES.md)
+Florence-S-Quelle. [Mitgelieferte Hinweise](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/study/fonts/NOTICES.md)
 und [Maschinenmanifest mit Font-/Archivhashes](zs1-font-input.json).
 
 ## Native Darstellung
@@ -31,7 +31,7 @@ Historischer Studienstand: beide unveränderten Ressourcen unter
 `prototypes/p1/study/fonts/`; der reguläre Export schließt `study/*` weiterhin aus.
 ZS2 hat Chalkboard separat in aktive Ressourcen übernommen. VS2-E2/V3-07
 beauftragt nun auch die unveränderte Bakso-Datei für reguläre Arbeits-Blatttitel:
-[aktive Nutzungshinweise](../prototypes/p1/art/drawing/Bakso-NOTICES.md),
+[aktive Nutzungshinweise](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/art/drawing/Bakso-NOTICES.md),
 [Einbettung und Glyphenprüfung](VS2_V3_IMPLEMENTATION.md). Das historische
 Manifest, die Original-TTFs und damaligen Studienberichte bleiben unverändert.
 Der Export-Smoke prüft die eingebetteten TTF-Bytes erneut gegen beide Originalhashes.

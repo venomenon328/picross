@@ -25,7 +25,7 @@ def demonstrate(root: Path, output: Path) -> dict:
     export_p1(output / "production", "area-128", source / "reveal.svg", "Fliegenpilz", output / "p1-export")
     export_p1(source / "production", "area-128", source / "reveal.svg", "Fliegenpilz", output / "shipped-p1-export")
     for relative in ("data/f04.json", "art/f04.svg"):
-        if (file_hash(output / "p1-export" / relative) != file_hash(root / "prototypes/p1" / relative) or
+        if (file_hash(output / "p1-export" / relative) != file_hash(root / "game" / relative) or
                 file_hash(output / "p1-export" / relative) != file_hash(source / "p1-export" / relative)):
             raise InvalidInput("Registered P1 content differs from newly imported/proven export")
     committed_export = load_json(source / "p1-export/manifest.json")
@@ -46,7 +46,7 @@ def demonstrate(root: Path, output: Path) -> dict:
               "github_run_id": os.environ.get("GITHUB_RUN_ID"), "candidate_id": shipped["id"], "technical": check,
               "regenerated_candidate_id": regenerated["id"], "producer_versions": shipped["versions"],
               "current_versions": regenerated["versions"], "cross_build_pixel_and_raster_verified": True,
-              "registered_files": {p: file_hash(root / "prototypes/p1" / p) for p in ("data/f04.json", "art/f04.svg")},
+              "registered_files": {p: file_hash(root / "game" / p) for p in ("data/f04.json", "art/f04.svg")},
               "source_files": {p.name: file_hash(p) for p in sorted(source.iterdir()) if p.is_file()},
               "production_manifest_sha256": file_hash(output / "production/manifest.json"),
               "export_manifest_sha256": file_hash(output / "p1-export/manifest.json"),

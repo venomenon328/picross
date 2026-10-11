@@ -6,12 +6,24 @@ from pathlib import Path
 import struct
 import tempfile
 import unittest
+import zipfile
 import vs2_delivery
 from p1_preflight import PreflightError
-from vs2_windows_probe import embedded_pack
+from vs2_windows_probe import embedded_pack, extract
 
 
 class DeliveryTests(unittest.TestCase):
+    def test_native_player_extraction_rejects_escape_and_duplicate_paths(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for index, names in enumerate((("../outside.exe",), ("/outside.exe",), ("same.exe", "same.exe"))):
+                archive = root / f"bad-{index}.zip"
+                with zipfile.ZipFile(archive, "w") as bundle:
+                    for name in names:
+                        bundle.writestr(name, b"invalid package")
+                with self.assertRaises(ValueError):
+                    extract(archive, root / f"extracted-{index}")
+
     def setUp(self):
         self.temporary=tempfile.TemporaryDirectory()
         self.root=Path(self.temporary.name)
@@ -80,8 +92,8 @@ class DeliveryTests(unittest.TestCase):
         names = ['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'] + ["v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
         for name in names: (self.root/name).write_bytes(b"native-binding")
         report = dict(checks=1000, failures=0,
-                      sidebar_metadata_sha256=hashlib.sha256((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_bytes()).hexdigest(),
-                      sidebar_assets=json.loads((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8")),
+                      sidebar_metadata_sha256=hashlib.sha256((Path(__file__).resolve().parents[1]/"game/art/book/frames.json").read_bytes()).hexdigest(),
+                      sidebar_assets=json.loads((Path(__file__).resolve().parents[1]/"game/art/book/frames.json").read_text(encoding="utf-8")),
                       frame_pixels=[dict(changed_pixels=101) for _ in range(3)],
                       records=[dict(id=s, client=[w,h], ui=u, mode=m, fit=f,sidebar_axes=axes(w,h,u))
                                for s in ("F-01","F-02","F-08") for w,h in ((1280,720),(1600,900),(1920,1080),(2560,1440))
@@ -126,7 +138,7 @@ class DeliveryTests(unittest.TestCase):
         report["frame_pixels"][0]["changed_pixels"] = 101
         report["sidebar_assets"]["source"] = "wrong asset source"
         with self.assertRaises(PreflightError): verify()
-        report["sidebar_assets"]=json.loads((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8"))
+        report["sidebar_assets"]=json.loads((Path(__file__).resolve().parents[1]/"game/art/book/frames.json").read_text(encoding="utf-8"))
         original = report["records"][-1]
         report["records"][-1] = report["records"][0]
         with self.assertRaises(PreflightError): verify()

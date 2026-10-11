@@ -35,7 +35,7 @@ Historische Pläne und Reports bleiben unverändert. R3 gilt für den Ausgangsst
   und technische Stressmeldungen nutzen getrennte Bereiche einer Fußzeile auf
   dem Papier; vertikales Stapeln würde bei großen Flächen die Papierkante kreuzen.
   Auswahlmarkierungen, alle acht Aktionen, Tooltips und Recovery bleiben.
-- [Bakso-Nutzungshinweise](../prototypes/p1/art/drawing/Bakso-NOTICES.md): aktive
+- [Bakso-Nutzungshinweise](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/art/drawing/Bakso-NOTICES.md): aktive
   Original-TTF `art/drawing/BaksoDaging-Regular.ttf`, 128924 Bytes,
   SHA-256 `56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e`.
   Alle tatsächlichen Blatttitel werden nativ geprüft. Nur `·` fehlt im Original;

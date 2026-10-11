@@ -86,7 +86,7 @@ class PilotTests(unittest.TestCase):
         locked = rp6.plan()["selection"][-2]
         reference = rp6.ROOT / locked["reference_bundle"]
         original = baseline / locked["repair_bundle"]
-        asset = rp6.ROOT / "prototypes/p1/art/f08.png"
+        asset = rp6.ROOT / "game/art/f08.png"
         for kind in ("parents", "proof", "mask", "status"):
             folder = self.path / kind
             shutil.copytree(original,folder)

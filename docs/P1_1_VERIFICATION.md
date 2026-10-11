@@ -11,7 +11,7 @@ Implementierungshead `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, Arbeitsbranch `
 
 | Kriterium | Nachweis am genannten P1.1-Stand |
 | --- | --- |
-| K-01 | Eigener F-01-Datensatz mit ID/Revision, validierten Hinweisen und damals pixelgleicher Kolorierung. [Herkunft/Zertifikat](../prototypes/p1/F01_PROOF.md): 48 Linienschlüsse bestimmen alle 400 Zellen ohne Startfelder/Raten; Manipulationstests vorhanden. |
+| K-01 | Eigener F-01-Datensatz mit ID/Revision, validierten Hinweisen und damals pixelgleicher Kolorierung. [Herkunft/Zertifikat](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/F01_PROOF.md): 48 Linienschlüsse bestimmen alle 400 Zellen ohne Startfelder/Raten; Manipulationstests vorhanden. |
 | K-02 | Achsenbindung, diagonaler Gleichstand, Sprünge, 5→12→9, Rückwärtskreuzen, Vorbelegungsschutz, Rand/UI, eingefrorenes Werkzeug/Farbe, Escape/Fokusverlust/Albumwechsel und No-op. Vorschau ändert keinen bestätigten Zustand. |
 | K-03 | Exakte Vor-/Nachwerte atomarer Striche; Undo/Redo, gemischte Radieraktionen, Verzweigung, No-op und bleibendes Undo-Metadatum ohne Wertung. |
 | K-04 | Miniatur nur aus Spielerdaten; keine Korrektur falscher Eingaben oder Enthüllung durch Vorschau. Abschlussfälle und Szenenwechsel bis zum Albumeintrag geprüft. |

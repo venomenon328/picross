@@ -75,7 +75,7 @@ bytegleiche Kopie [plan-vb1.json](../examples/vs1/plan-vb1.json). Der aktuelle P
 muss ohne seinen E1-Abschnitt genau diesen historischen Inhalt behalten. Negative
 Prüfungen weisen geänderte Altslots, fehlenden E1-Abschnitt und andere Archivbytes ab.
 
-Die Windows-Downloadprobe ist mit [vs1_windows_probe.py](../tools/vs1_windows_probe.py)
+Die Windows-Downloadprobe ist mit [vs1_windows_probe.py](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/tools/vs1_windows_probe.py)
 reproduzierbar: sauberer Lieferhead, Run-ID, frischer Ausgabepfad und gepinnter
 Godot-Editor/Cache. Sie startet beide entpackten EXEs direkt und führt native
 Bearbeitungs-/Neustart-/Legacy-/Fensterprüfungen gegen deren eingebetteten PCK aus.

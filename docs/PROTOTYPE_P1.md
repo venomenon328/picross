@@ -1,21 +1,21 @@
-# P1: Großraster- und Bedienprototyp
+# P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
 Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
 
 Bei Zellrendering-/Performancearbeit zusätzlich den verbindlichen
 [PERF-Vertrag](CELL_RENDERING.md) und die [A-Prüfzuordnung](PERF_A_IMPLEMENTATION.md)
-lesen. #67 liefert eigene Referenzlast und Entwickleratlanten; [#68](PERF_B_IMPLEMENTATION.md)
+lesen. #67 dokumentiert die historische Referenzlast und Atlasherstellung; [#68](PERF_B_IMPLEMENTATION.md)
 integriert sie in den regulären Renderer. Spiel-/Save-/History-/Hinweisverträge bleiben.
 
 ## Aktueller Vertrag · Sidebar #65
 
-PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der neue zusammenhängende Stand A+B folgt auf `feat/65-sidebar-frames`; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.
+PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der zusammenhängende Stand A+B ist über PR #66 in main integriert; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.
 
-Aktuell: genau sechs Aktionen in 2×3 (Füllen/Radieren, Undo/Redo, Minus/Plus), ohne Einpassen-/Arbeitsgrößenaktion oder „Dein Stand“. Drei transparente gezeichnete Rahmen ersetzen die alten Fassungen; Miniatur, Koordinaten, Palette und Werkzeuge teilen die Mittelachse. Die interne Vollsichtgrenze, Optionsansichten G/V, Raster-/Hinweisbudgets und Albumminiaturen bleiben. Nach vollständiger unveränderter Schema-1-Validierung wird `overview=false`; gültiger Zoomwunsch, Inhalt, History/Redo und Recoverygrenzen bleiben erhalten. Neue Saves schreiben Schema 1 mit `overview=false`. SL-R02 bestätigt B-01 am Ausgangshead a83ecf5 technisch; neues kombiniertes Review, persönliche SL-M01/PERF-M01 und neue Mergefreigabe bleiben offen; kein Release. Historische Prüfpläne/-berichte bleiben unverändert.
+Aktuell: genau sechs Aktionen in 2×3 (Füllen/Radieren, Undo/Redo, Minus/Plus), ohne Einpassen-/Arbeitsgrößenaktion oder „Dein Stand“. Drei transparente gezeichnete Rahmen ersetzen die alten Fassungen; Miniatur, Koordinaten, Palette und Werkzeuge teilen die Mittelachse. Die interne Vollsichtgrenze, Optionsansichten G/V, Raster-/Hinweisbudgets und Albumminiaturen bleiben. Nach vollständiger unveränderter Schema-1-Validierung wird `overview=false`; gültiger Zoomwunsch, Inhalt, History/Redo und Recoverygrenzen bleiben erhalten. Neue Saves schreiben Schema 1 mit `overview=false`. SL-R02 bestätigt B-01 am Ausgangshead a83ecf5 technisch; kombinierte Nachweise und Eigentümerbestätigung sind im integrierten PR #66 gebunden; kein Release. Historische Prüfpläne/-berichte bleiben unverändert.
 
 ## Integrierter Vorgänger · VS2 (#61)
 
-**Historischer Paketstand vor Abschluss von #62:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
+**Integrierter VS2-Vertrag:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Historische Prüfstände und Abnahmen stehen im integrierten PR #62.
 
 Der reguläre Start öffnet die Sammlung, auch mit Teil- oder Abschlussständen.
 Einstellungen sind dort ohne Rätselöffnung erreichbar. **Rätselansicht** bietet
@@ -34,7 +34,7 @@ der gewünschte reguläre Arbeitswert, begrenzt durch den tatsächlichen Fit.
 Platzmangel und kleine/kollidierende Hinweise werden transparent behandelt;
 50×50 erhält keinen versteckten Pan-Ausweg oder Komfortzertifikat.
 
-Neun Inhalte und Schema 1/Appidentität bleiben erhalten. Vollständige Validierung
+Sechs Inhalte werden angeboten; neun bekannte IDs und Schema 1/Appidentität bleiben erhalten. Vollständige Validierung
 geht der Normalisierung alter Hand-/Pan-/Zoomwerte voraus. Gültige gewünschte
 Arbeitsstufe und aktuelle Fitgröße sind getrennt; Modus wird nicht gespeichert.
 Studienkatalog und -speicher werden beim regulären Start nicht verwendet.
@@ -43,11 +43,12 @@ separate Studienplayer entfallen aus der Standardlieferung.
 
 [Prüfzuordnung](VS2_VERIFICATION.md) und [neutrale Windows-Probe](VS2_OWNER_TRIAL.md)
 binden die neue Lieferung. #53/N01–N03 ist über PR #56 auf `fad8853` integriert;
-ZS2-M01 und GF-M01/#59 sind historisch bestanden. VS2-M01 und unabhängiges
-technisches/visuelles Review des neuen Heads bleiben vor Merge offen. Kein Release.
+ZS2-M01 und GF-M01/#59 sind historisch bestanden. Die spätere VS2-Abnahme
+ist im integrierten PR #62 gebunden; neue Änderungen benötigen ihre passenden
+aktuellen Prüfungen. Kein Release.
 
 
-Stand: 09.10.2026 · Spezifikation 0.23 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6/ZS2 integriert; VS2-Lieferung im Draft-PR
+Stand: 09.10.2026 · Spezifikation 0.23 · P1.4/G1/H1/Z2/GP-48/ZV-50/RP-6/ZS2 integriert; VS2/Sidebar/PERF-A/B integriert
 
 ## 1. Geltung, Auftrag und Quellen
 
@@ -64,7 +65,7 @@ bleiben Nachweise ihrer jeweiligen Commits. G1/#17, H1/#19 und Z2/#23 sind in
 `main` integriert. RP-3/#37 ergänzt F-04 samt eigenen aktuellen technischen und
 visuellen Nachweisen; keine gezielte reale Probe wird rückwirkend aus #12 abgeleitet.
 
-**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; #12 schließt die integrierte 500-Aktionen-, Windows-, Bedien- und Performanceprüfung ab. #17 ergänzt die Startzell-Rückkehr zur erneuten Achsenwahl; #19/H1 ergänzt die lösungsunabhängige Erfüllungsmarkierung und ihren sitzungsweiten Schalter. Aktuelle [Anleitung](../prototypes/p1/README.md), [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md), [H1-Prüfbericht](H1_VERIFICATION.md), historischer [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
+**Paketgrenze:** Diese Spezifikation beschreibt den gesamten P1-Vertrag. #8 liefert F-01, Mausstriche, eigene Miniatur, Undo/Redo und Abschluss. #9 ergänzt F-02/F-03, Farben, Zoom/Pan und interaktive Miniaturnavigation. #11 ergänzt lokale Persistenz und Recovery; #12 schließt die integrierte 500-Aktionen-, Windows-, Bedien- und Performanceprüfung ab. #17 ergänzt die Startzell-Rückkehr zur erneuten Achsenwahl; #19/H1 ergänzt die lösungsunabhängige Erfüllungsmarkierung und ihren sitzungsweiten Schalter. Aktuelle [Anleitung](../game/README.md), [P1.4-Ergebnisbericht](P1_4_VERIFICATION.md), [H1-Prüfbericht](H1_VERIFICATION.md), historischer [P1.3-Prüfbericht](P1_3_VERIFICATION.md) und historischer [P1.2-Prüfbericht](P1_2_VERIFICATION.md).
 
 Die P1-Entscheidungen konkretisieren den begrenzten Bedienversuch. Sie legen weder die endgültige Produktengine noch die gesamte Betriebssystemmatrix, Wertung oder Themenwahl fest. Frühere P1-Vorschläge in Issue-Revision 0.1 und Gestaltungskonzept Abschnitt 7 sind innerhalb dieses Scopes abgelöst; globale Produktfragen bleiben offen.
 
@@ -414,7 +415,7 @@ zeigt die bisherige Motiv-/Abschlussdarstellung.
 
 Godot Standard **4.7.2-stable** mit typisiertem GDScript, passenden Standard-Exportvorlagen und Windows-x86_64-Testexport. Kein .NET-SDK oder Runtime-Backend. Primärquelle: [offizieller Release](https://github.com/godotengine/godot-builds/releases/tag/4.7.2-stable). Der gebundene Editor-/Template-/Hash-/CI-Weg ist durch [P1.0](P1_PREFLIGHT.md) nachgewiesen. Kein ungeprüfter Wechsel zu `latest`; Archive vor Verwendung prüfen, nicht einchecken oder global installieren.
 
-Projektpfad `prototypes/p1/`. Eigene Rasterzeichen-/Hit-Test-Komponente, UI-Bausteine für Menüs/Palette/Fokus. Raster-/Aktionsmodell, Ansichtskoordinaten und später Speicherung getrennt testbar. Keine Abstraktionsplattform für hypothetische Engines oder unnötigen Drittanbieterabhängigkeiten. Deutsche UI, keine vollständige Lokalisierungsinfrastruktur.
+Projektpfad `game/`. Eigene Rasterzeichen-/Hit-Test-Komponente, UI-Bausteine für Menüs/Palette/Fokus. Raster-/Aktionsmodell, Ansichtskoordinaten und später Speicherung getrennt testbar. Keine Abstraktionsplattform für hypothetische Engines oder unnötigen Drittanbieterabhängigkeiten. Deutsche UI, keine vollständige Lokalisierungsinfrastruktur.
 
 ### 7.2 Ausführbarer Befehlsvertrag
 
@@ -424,19 +425,19 @@ Studien und aller früheren Lieferprüfungen ab; die fachlichen Verträge dieser
 Spezifikation bleiben bestehen. Aktuelle Regression, technische Abnahme und
 historische Nachweise werden getrennt ausgewiesen.
 
-Die folgenden Bestandteile existieren aus #8; #9 erweitert deren tatsächlichen Prüfumfang. `godot` bezeichnet den gebundenen Standard-Editor, unter Windows dessen Konsolenprogramm. Vollständig isolierter Prüfweg in der [Anleitung](../prototypes/p1/README.md).
+Die folgenden Bestandteile existieren aus #8; #9 erweitert deren tatsächlichen Prüfumfang. `godot` bezeichnet den gebundenen Standard-Editor, unter Windows dessen Konsolenprogramm. Vollständig isolierter Prüfweg in der [Anleitung](../game/README.md).
 
 ```sh
 godot --version
-godot --headless --path prototypes/p1 --import
-godot --headless --path prototypes/p1 --script res://tests/run_tests.gd
-godot --path prototypes/p1
-godot --headless --path prototypes/p1 --export-debug "P1 Windows x86_64" build/windows/picross-p1.exe
+godot --headless --path game --import
+godot --headless --path game --script res://tests/run_tests.gd
+godot --path game
+godot --headless --path game --export-debug "P1 Windows x86_64" build/windows/picross-p1.exe
 ```
 
 Der Testrunner führt vereinbarte Logikprüfungen aus, gibt Anzahl/Ergebnis aus und endet bei Fehler mit Fehlerstatus. Import-, Start- und Exportfehler sind Fehlschläge. Begrenzte Laufzeiten; isolierter Speicher bei Tests/Smoke. Technischen Start-Smoke und reale GUI-Erprobung trennen.
 
-Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `prototypes/p1/build/windows/` anlegen. Exportpfad relativ zum Godot-Projekt. ZIP mit allen Startdateien, Anleitung und Commitkennung; keine Godot-Installation beim Nutzer voraussetzen. Keine Signaturzertifikate, Releases oder Änderung von Windows-Schutzfunktionen beauftragt.
+Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `game/build/windows/` anlegen. Exportpfad relativ zum Godot-Projekt. ZIP mit allen Startdateien, Anleitung und Commitkennung; keine Godot-Installation beim Nutzer voraussetzen. Keine Signaturzertifikate, Releases oder Änderung von Windows-Schutzfunktionen beauftragt.
 
 `tools/p1_product.py` und [Produkt-CI](../.github/workflows/p1-product.yml) liefern Import, aktuelle Godot-Tests, kurzen absichtlichen Negativtest, echten Save-Roundtrip, kontrollierten Start und Windows-Export; unter Windows zusätzlich exportierten Start. `--integration`, `--pilots` und `--visual` wählen die nach CI-Policy erforderlichen ergänzenden Wege; bei lokalem Aufruf sind alle standardmäßig aktiv. Der Preflight wird bei Toolchain-/Harnessänderungen und auf manuellen Auftrag ausgeführt. Aktuelle Head-/Basis-/Test-Merge-/Artefaktzuordnung im PR; alte grüne Prüfungen belegen nicht die neuen Funktionen.
 

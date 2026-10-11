@@ -7,7 +7,7 @@ import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "docs/design/book_inventory"
-DEST = ROOT / "prototypes/p1/art/book"
+DEST = ROOT / "game/art/book"
 ACTIVE_ICONS = {"fill", "erase", "undo", "redo", "minus", "plus", "help", "menu", "nav-album", "nav-information", "nav-work"}
 
 

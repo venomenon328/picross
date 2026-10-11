@@ -3,5 +3,5 @@ __pycache__/
 .venv/
 artifacts/
 .godot/
-prototypes/p1/build/
+game/build/
 examples/rp5/baseline/

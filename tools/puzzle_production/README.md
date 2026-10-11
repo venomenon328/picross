@@ -219,7 +219,7 @@ Pro Fall liegen Logik, Proof, Ergebnis,
 frische Prüfung, getrennte Prozessmessdaten und Logs vor. Der CI-Artefaktname enthält
 den Source-Head. Laufartefakte werden nicht eingecheckt. Ein anderer Head/eine neue
 Basis braucht passend zugeordnete aktuelle Checks. #41/#42/#43 sind integriert;
-Parent #34 und spätere Produktionspakete bleiben offen.
+Die Machbarkeitsphase #34 ist abgeschlossen; neue Produktionspakete benötigen eigene Aufträge.
 
 ## RP-3: isolierte Image-Umgebung und reale Befehle
 
@@ -336,7 +336,7 @@ rekonstruiert. Der Bericht führt ursprüngliche und neu erzeugte Kandidatenkenn
 samt beiden Codecständen. `product` ergänzt reguläre Hauptszene,
 drei isolierte Neustartprozesse und native Arbeits-/Abschluss-/Albumrenders.
 RP3-A01 bis A06 einschließlich unabhängigem technischem/visuellem Review R2
-sind über PR #44 integriert. Eine echte Eigentümer-Lösung bleibt RP-6-Gate.
+sind über PR #44 integriert. Die spätere RP-6-Eigentümerentscheidung ist im abgeschlossenen #34 gebunden.
 
 ## RP-4: feste Vergleichsbaseline
 
@@ -390,7 +390,7 @@ Fixieren bereits gesperrter Inputs. `views` und `index` bauen nur Dateiansichten
 19 Zertifikate bedeuten hier 14 zusätzlich motivisch brauchbare Varianten aus
 sechs Quellen, keine abgeschlossene Pilotproduktion. RP-4 ist nach R1-Nacharbeit
 und unabhängigem R2 über PR #45 als `80ae2c1` integriert; B-01/A-01 geschlossen.
-Eigentümer-Lösung bleibt RP-6-Gate.
+Eigentümer-Lösung gehörte zum RP-6-Gate; der Abschluss steht in #34/PR #47.
 
 ## RP-5: motivgeschützte Reparatur
 
@@ -418,8 +418,9 @@ Referenzen, RP-3-Demo, RP-4-Replay und Windowsregression bleiben aktiv.
 
 `python -m tools.puzzle_production.rp6 --output-dir artifacts/rp6-replay`
 prüft den vorab gebundenen Plan, vollständiges Manifest, tatsächliche native
-Bilddateien/Rahmenanpassung und alle sechs Exporte gegen die registrierten
-P1-Dateien. Neues Ausgabeziel verwenden; keine Baseline überschreiben. Gleiche
+Bilddateien/Rahmenanpassung und alle sechs historischen Manifestbindungen.
+F04/F06/F08/F09 werden frisch gegen die registrierten `game/`-Dateien exportiert;
+F05/F07 bleiben historische Inputs, ohne erneuten übergroßen Spielerexport. Neues Ausgabeziel verwenden; keine Baseline überschreiben. Gleiche
 isolierte Python-3.11+-Umgebung mit Pillow exakt 12.3.0.
 
 Additiver Adapter `rp6-p1-square-color-1` / `picross-p1-export-v2`: feste
@@ -431,5 +432,6 @@ Der alte v1-Adapter/F-04 und seine Negativfälle bleiben erhalten.
 Gezielte Tests: `python -m unittest discover -s tests/puzzle_production -p test_rp6.py -v`.
 Vollständige Fachtests und bestehende Replays bleiben zusätzlich erforderlich.
 [Plan/Bilanz/Paaransichten](../../examples/rp6/README.md),
-[Prüfzuordnung](../../docs/RP6_VERIFICATION.md). Eigentümerproben und
-Phasenentscheidung bleiben offen; kein Merge/Release.
+[Prüfzuordnung](../../docs/RP6_VERIFICATION.md). Eigentümerentscheidungen und
+Phasenabschluss sind im abgeschlossenen [#34](https://github.com/venomenon328/picross/issues/34)
+und PR #47 gebunden. Wirtschaftliche Serienproduktion bleibt unbewiesen; kein Release.

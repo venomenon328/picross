@@ -8,6 +8,7 @@ import shutil
 import tempfile
 import time
 from pathlib import Path
+from tools.project_paths import current_path
 
 from .contract import Budget, digest, load_json, write_json, validate_logic
 from .images import file_hash, import_image, inspect_candidate, versions, logic_from_matrix, raster_image
@@ -16,7 +17,7 @@ from .repair import require
 
 ROOT = Path(__file__).resolve().parents[2]
 STUDY = ROOT / "examples/vs1"
-RUNTIME = ROOT / "prototypes/p1/full_view_study"
+RUNTIME = ROOT / "game/full_view_study"
 FORMATS = [(30,30),(40,30),(30,40),(40,40),(50,30)]
 
 
@@ -84,10 +85,10 @@ def build_cases():
         if rev:
             attempt=slot['attempts'][rev-1]
             source={"kind":"import","bundle":f"examples/vs1/imports/{id}-r{rev}","variant":variant}
-            reveal=ROOT/attempt['reveal']; transpose=attempt['transpose']
+            reveal=current_path(ROOT, attempt['reveal']); transpose=attempt['transpose']
         else:
             source={"kind":"import","bundle":slot['retained'],"variant":variant} if id=='vs07' else {"kind":"retained-rp6-repair","id":"F-09"}
-            reveal=ROOT/slot['reveal']; transpose=False
+            reveal=current_path(ROOT, slot['reveal']); transpose=False
         design,matrix,proof=read_source(source)
         require([design['width'],design['height']]==slot['dimensions'], 'Orientation differs')
         case=STUDY/'cases'/id; case.mkdir(parents=True)
@@ -167,9 +168,9 @@ def verify_cases():
         require(checked['certified'] and proof['final_domains']==[[[v] for v in row] for row in matrix] and proof==original_proof,'Incomplete or wrong proof')
         asset=folder/next(n for n in required if n.startswith('reveal'))
         require(e['motif_review']['matrix_hash']==digest(matrix) and e['motif_review']['reveal_sha256']==file_hash(asset) and e['motif_review']['final_catalog_acceptance'] is False,'Motif judgment binding differs')
-        require(file_hash(ROOT/e['reveal_source'])==e['reveal_source_sha256'], 'Reveal source changed')
+        require(file_hash(current_path(ROOT, e['reveal_source']))==e['reveal_source_sha256'], 'Reveal source changed')
         if e['transpose_reveal']:
-            with Image.open(ROOT/e['reveal_source']) as a,Image.open(asset) as b:
+            with Image.open(current_path(ROOT, e['reveal_source'])) as a,Image.open(asset) as b:
                 expected=a.transpose(Image.Transpose.TRANSPOSE)
                 require(b.size==expected.size and ImageChops.difference(expected,b).getbbox() is None,'Wrong oriented reveal')
         else: require(file_hash(asset)==e['reveal_source_sha256'],'Swapped reveal')

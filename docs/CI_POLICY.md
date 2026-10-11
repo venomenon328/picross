@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 09.10.2026 · Version 1.1 · Auftrag [#63](https://github.com/venomenon328/picross/issues/63)
+Stand: 11.10.2026 · Version 1.3 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
 
 ## Geltung und Ablösung
 
@@ -12,6 +12,12 @@ Sie gilt auch dort, wo Projektprofil, ältere Paketbeschreibungen oder historisc
 Prüfberichte noch den damaligen Vollumfang nennen. Fachliche Produktverträge,
 gezielte aktuelle Abnahmen und die Zuordnung zum tatsächlichen Quell-/Basisstand
 bleiben verbindlich. Historische Berichte behalten ihr damaliges Urteil.
+
+Die [Eigentümerentscheidung N70-HIST-01](https://github.com/venomenon328/picross/pull/71#issuecomment-6111613992)
+löst historische PERF-A-Herstellung/Reproduktion, Altzeichnerproben und A/B-
+Vergleichsrekonstruktion als aktuelle Pflichten ab. R1/B-01 ist supersediert.
+Die sechs produktiven Atlanten und sämtliche aktiven Runtimeverträge bleiben.
+Es gibt keinen PERF-A-CI-Schalter und kein getarntes historisches Laufzeitbudget.
 
 Der Abschlussstatus für Pull Requests heißt `ci-required` im Workflow
 [CI verification](../.github/workflows/setup.yml). Er verlangt tatsächlichen
@@ -32,8 +38,9 @@ Auswahlbericht und Logs nennen Head, Basis, Checkout, Run und ausgewählte Pfade
 | --- | --- |
 | Reine normative Dokumentation/Anleitung | Schnelle Tooltests, Dokumentvalidator, vollständiger Diffcheck |
 | Spielzustand, Eingabe, Save, History, Navigation | Aktuelle Kernregression, echte Prozess-Roundtrips, 500er-Route, aktuelle Pixelprüfungen und Spielerexport |
-| Reine Stiftzeichnung/Capture oder aktive Buchassets | Aktuelle Kernregression, kompakte native Pixelprüfungen und Spielerexport |
-| Rätseldaten, Pilotassets/-probes, Produktion, Proofs und Quellenkorpora | Fachtests und vollständige relevante Replays, alle sechs Piloten, aktuelle Pixelprüfungen und Spielerexport |
+| Reine Stiftzeichnung/Capture oder aktive Buchassets | Kernregression, aktuelle Pixelprüfungen, PERF-B und Spielerexport |
+| Reguläre Atlasanzeige/Cache/aktive Zelltexturen | Kernregression, aktuelle Pixelprüfungen, PERF-B und Export |
+| Rätseldaten, Pilotassets/-probes, Produktion, Proofs und Quellenkorpora | Fachtests und vollständige relevante Replays, vier aktuelle Produktionspiloten, aktuelle Pixelprüfungen und Spielerexport |
 | CI/Harness/Toolchain oder nicht zugeordneter Codepfad | Alle aktuellen Bereiche einschließlich Preflight |
 
 Dateien unter `docs/` sind nicht automatisch reine Dokumentation: Buchbilder,
@@ -65,17 +72,35 @@ kontrollierten Start sowie den regulären Windows-Export. Der kurze absichtliche
 Fehler durchläuft dieselbe `check()`-/Ergebnis-/Exit-23-Strecke wie die Suite.
 
 `--integration` ergänzt die 500 Aktionen in fünf echten Prozessen plus Neustart
-und unabhängigem Python-Orakel. `--pilots` prüft die sechs RP6-Piloten vollständig;
+und unabhängigem Python-Orakel. `--pilots` prüft F04/F06/F08/F09 vollständig;
 F04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
 Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `--visual` ergänzt
 die aktuelle native Renderprüfung. Die jeweiligen `--no-*`-Schalter werden von
-CI ausdrücklich übergeben; lokal sind alle drei Bereiche standardmäßig aktiv.
+CI ausdrücklich übergeben; lokal sind alle vier ergänzenden Bereiche aktiv.
+`--perf-b` prüft den regulären Atlasrenderer samt Cache-/Invalidierungslebenszyklus,
+auch ohne den allgemeinen Visualbereich. Aktuelle Darstellung, Texturen und ihre
+Referenz wählen PERF-B; CI/Harness/Toolchain wählen alle aktuellen Bereiche.
+
+`tools/perf_b_resources.py` prüft exakt sechs aktive PNGs samt Importdateien,
+Dateihashes, RGBA8-Maßen, Speicherobergrenze und Importparametern gegen die eigene
+`tools/cell_atlas_reference.json`. Die Referenz enthält aktuelle Datei-/Pixelbindungen
+und Mappingdaten; keine Herstellerquellen, Originalbilder oder Vergleichsarchive.
+Positive Prüfung ohne diese Archive und Negativfälle für fehlende/zusätzliche/
+veränderte Ressourcen, falsche Imports, leere/doppelte/unsichere Inventare sowie
+falsche Maße/Hashes/Versionen laufen im schnellen Toolpfad. Die native B-Probe
+prüft tatsächlich importierte Pixel, sechs Texturen und 48.906.240 dekodierte
+Bytes; Pixelmutation, falsche Variante, stale Cache und Vollinvalidierung bleiben
+Gegenproben. Shaderfarbe/Alpha, Zeitbilder, Vorschau, Undo/Redo, Sessionwechsel
+und Ressourcenplateau werden im regulären Projekt und separat im gelieferten PCK
+geprüft. Aktuelle goldene Varianten-/Zeit-/Region-/Fugenfälle laufen in der Kernsuite.
+Historische Laufzeit-/Quellhashvergleiche sind keine Ersatzpflicht mehr.
+
 Ein Lauf mit ausgeschaltetem Bereich wird nicht als dessen erfolgreicher Nachweis
 ausgegeben. Vollständige Produktionsrekonstruktionen gehören in den Fachlauf,
 nicht zusätzlich in den Runtime-Harness.
 
 F04 prüft nach Abschluss außerdem die bekannten unveränderten F01/F02/F06-Zellstände
-(400/1600/10000 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
+(400/1600/2500 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
 F01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Die isolierte
 Partialinstanz sichert den unveränderten F01-Startstand, damit der zweite Neustart
 auch die gültig geladene Variante tatsächlich prüft. JSON-Zellwerte werden numerisch
@@ -152,7 +177,7 @@ Die Fachjobs laden zusätzlich ausschließlich den benötigten RP5-Produzentenco
 verlangt weiterhin offizielle isolierte Runtime/Wheel-/Commitbindung, aber keine
 erneute Reproduktion des bekannten Fehlers eines alten Commits.
 
-## Archiv und aktive Vollsichtnacharbeit
+## Archiv und gebundene Referenzen
 
 Das [BP-Archiv](design/book_inventory/ARCHIVE.md) bindet die 136 entfernten alten
 Dateien mit 161.102.998 Bytes an unveränderliche Git-Objekte. Originalbilder,
@@ -172,13 +197,10 @@ inneres ursprüngliches Review-ZIP:
 Die neue Sicherung macht den Ablauf des ursprünglichen Actions-Artefakts am
 23.10.2026 für diese benötigten Bytes unschädlich. Sie ist kein neues Renderbild.
 
-PR #62 ist kein Bestandteil dieser Änderung. Vor seiner weiteren Umsetzung ist
-der neue CI-Stand zu integrieren und seine zusätzliche aktuelle VS2-Prüfung in
-den neuen Harness einzuordnen. Die sechs regulären und zehn technischen VS-Fälle
-sowie die zugesagten V1-Nachweise bleiben für diese fachliche Arbeit erforderlich.
-Der alte GP48-Importfehler wird nicht als bestandener aktueller Product-Lauf
-umgedeutet; #61 benötigt nach Integration passende neue Nachweise. Auf `main`
-geltende Pan-Verträge bleiben bis zur tatsächlichen Vollsichtintegration aktiv.
+VS2, Sidebar und PERF-A/B sind über PR #62/#66 integriert. Die alte offene
+Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Die sechs Katalogrätsel und
+zehn technischen VS-Fälle bleiben geprüft. Weitere Quellenentscheidungen und
+Dateibindungen stehen im [Bestandsinventar](DEVELOPMENT_ARCHIVE.md).
 
 ## Verifikation dieses Pakets
 
@@ -188,4 +210,4 @@ Löschung des alten Pfades. Gatetests prüfen Erfolg, Nichtzutreffen und sämtli
 fehlenden/abgebrochenen/fehlgeschlagenen Pflichtresultate. Dazu kommen aktuelle
 Tool-/Fachtests, Workflowvalidierung und der echte native Product-/Windowslauf.
 Konkrete gemessene Resultate, Head-/Test-Merge-Bindung und der getrennte Selbstreview
-stehen im PR zu #63. Persönliche Produktabnahmen und Mergefreigabe bleiben separat.
+stehen im PR zu #70 (Vorgängermessungen in #63/#66). Persönliche Produktabnahmen und Mergefreigabe bleiben separat.

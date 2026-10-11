@@ -95,7 +95,7 @@ VS2-E1/N01 verdichtet die horizontale Weite künftig weiter bei gleichem Schrift
 
 ## Bereitstellung und Renderergrenzen
 
-[Ressourcenmanifest](../prototypes/p1/art/book/manifest.json) bindet alle lokalen
+[Ressourcenmanifest](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/art/book/manifest.json) bindet alle lokalen
 Dateien. `python tools/z2_resources.py provision` lädt ausschließlich die
 [gepinnten BP-3-Upstreamquellen](design/book_inventory/composition/inputs/fonts.json),
 prüft Downloadhashes, normalisiert die OFL-Texte wie BP-3 und prüft deren Zielhashes.
