@@ -33,7 +33,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
     guards["P1_TEST_SAVE_ROOT"] = str(workspace / "za1-save-guards")
     phase("za1-save-recovery",[engine,"--headless","--path",str(project),"--script","res://tests/za1_save_cases.gd"],"ZA1_SAVE_OK",phase_env=guards)
     command = [engine,"--path",str(project),"--rendering-driver","opengl3","--audio-driver","Dummy",
-               "--script","res://tests/za1_probe.gd"]
+               "--script","res://tests/za1_probe.gd","--","--p1-capture"]
     if host == "Linux":
         command = ["xvfb-run","-a"]+command
         env["LIBGL_ALWAYS_SOFTWARE"] = "1"

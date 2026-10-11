@@ -2,6 +2,7 @@ extends "res://tests/rp6_probe.gd"
 ## Artificial registrations, actual main scene/input, isolated profile, real restarts.
 var output: String
 var captures: Array = []
+var surface: SubViewport
 
 func setup(viewport: Viewport) -> void:
 	target = viewport
@@ -28,7 +29,7 @@ func shot(stage: String) -> void:
 	await process_frame
 	await process_frame
 	await RenderingServer.frame_post_draw
-	var image: Image = root.get_texture().get_image()
+	var image: Image = surface.get_texture().get_image()
 	var ratio: float = float(app.session.player.width)/app.session.player.height
 	var mini: Rect2 = app.mini.image_rect()
 	check(is_equal_approx(mini.size.x/mini.size.y,ratio), "rectangular miniature has square cells")
@@ -78,7 +79,7 @@ func shot(stage: String) -> void:
 		var preview: Control = app.album_previews[pilot_index] if app.album.visible else app.mini
 		area = Rect2(preview.global_position+preview.image_rect().position,preview.image_rect().size)
 	check(image.get_region(Rect2i(area)).save_png(output.path_join(filename)) == OK,"native relevant crop")
-	captures.append({"file":filename,"context_file":context_file,"stage":stage,"completed":earned,"native_size":[root.size.x,root.size.y],"crop":true,"crop_rect":[area.position.x,area.position.y,area.size.x,area.size.y],"ratio":ratio})
+	captures.append({"file":filename,"context_file":context_file,"stage":stage,"completed":earned,"native_size":[surface.size.x,surface.size.y],"crop":true,"crop_rect":[area.position.x,area.position.y,area.size.x,area.size.y],"ratio":ratio})
 
 func seed_old() -> void:
 	for index: int in [0,1,3]:
@@ -102,8 +103,12 @@ func run() -> void:
 	output = OS.get_environment("ZA1_OUTPUT")
 	if isolated.is_empty() or output.is_empty(): quit(4); return
 	SaveStore.test_root_override = isolated
-	root.size = Vector2i(1920,1080)
-	await setup(root)
+	surface = SubViewport.new()
+	surface.gui_embed_subwindows = true
+	surface.size = Vector2i(1920,1080)
+	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(surface)
+	await setup(surface)
 	var others: Array = []
 	for session: RefCounted in app.sessions: others.append(session.player.cells.duplicate())
 	var stage: String = OS.get_environment("ZA1_STAGE")

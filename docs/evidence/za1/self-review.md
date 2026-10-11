@@ -47,3 +47,18 @@ Kunsturteil über Knoblauch.
 Urteil: Selbstreview abgeschlossen; unabhängige technische und visuelle
 Zweitprüfung bleibt vor Merge offen. Keine mergefähige Endabnahme, keine
 Knoblauch-Endfreigabe und kein verpflichtendes Probespielen daraus abgeleitet.
+
+## CI-Nacharbeit B-SR04
+
+Der erste vollständige Remote-Lauf am Beleghead `c87d917` scheiterte im neuen
+Linux-UI-Probe: Die reale Fensterbegrenzung auf dem kleineren Xvfb-Bildschirm
+verkleinerte den angenommenen 1920×1080-Viewport vor der Albumwahl. Die Windows-
+Probe hatte dies auf dem größeren Desktop nicht aufgedeckt. Save/Recovery und
+alle Produktionsjobs bestanden; der Produktjob und damit `ci-required` nicht.
+
+Korrektur ausschließlich im Probe: derselbe feste native SubViewport und
+`--p1-capture`-Einstieg wie die bestehenden regulären Renderprüfungen. Hauptszene,
+Viewport-Mausroute, Pixelassertions, echte Saveprozesse und Ressourcen bleiben
+unverändert geprüft. Das Produktfenster wird dafür nicht geändert. Der erneute
+vollständige CI-Lauf muss den korrigierten Head bestätigen; der fehlgeschlagene
+Lauf ist kein Passnachweis.
