@@ -1,5 +1,10 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+ZA-1 ergänzt den allgemeinen Authoring-v2-Zieladapter und Datenregistrierung:
+[CLI, Schemas und Fehlerverhalten](../../docs/ZA1_ADAPTER.md),
+[Prüfzuordnung](../../docs/ZA1_VERIFICATION.md). Diese Befehle benötigen die
+isolierte Image-Umgebung mit Pillow 12.3.0. Alte Pilotprofile bleiben erhalten.
+
 Python **3.11+**, ausschließlich Standardbibliothek, ohne Installation von Paketen,
 Netzwerk-/Modellaufrufe oder P1-Abhängigkeit. Aus dem Repository-Root ausführen;
 unter Windows einen tatsächlichen Python-Interpreter statt eines Store-Alias nutzen.

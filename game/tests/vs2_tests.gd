@@ -65,7 +65,7 @@ func run() -> void:
 	await process_frame
 	check(app.album.visible and not app.work.visible and not app.ending.visible, "fresh regular startup is collection")
 	check(app.board.mode == "G" and app.view_choice.item_count == 2 and not app.actions.has("hand"), "one named option, G default, no hand")
-	check(app.sessions.size() == 6 and app.store.root == Store.test_root_override, "unchanged regular catalog/root")
+	check(app.sessions.size() == app.puzzle_definitions().size() and app.store.root == Store.test_root_override, "registered catalog and unchanged root")
 	await shot("album")
 	app.show_information("settings")
 	check(app.information.visible and app.information_origin == "album" and not app.work.visible, "options from album never open a sheet")

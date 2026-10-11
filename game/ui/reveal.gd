@@ -9,10 +9,23 @@ var paired: bool = true
 var solved: Array = []
 var palette: Array = []
 
+func panel_edge() -> float:
+	return minf((size.x - 32) / 2, size.y - 36) if paired else minf(size.x, size.y)
+
+func raster_rect() -> Rect2:
+	if solved.is_empty(): return Rect2()
+	var step: float = panel_edge() / maxf(solved.size(), solved[0].size())
+	return Rect2(Vector2(0,32), Vector2(solved[0].size(),solved.size()) * step)
+
+func artwork_rect() -> Rect2:
+	if artwork == null: return Rect2()
+	var offset: Vector2 = Vector2(panel_edge()+32,32) if paired else Vector2.ZERO
+	return Rect2(offset, artwork.get_size() * (panel_edge() / maxf(artwork.get_width(),artwork.get_height())))
+
 func _draw() -> void:
 	if payload.is_empty():
 		return
-	var edge: float = minf((size.x - 32) / 2, size.y - 36) if paired else minf(size.x, size.y)
+	var edge: float = panel_edge()
 	var offset: Vector2 = Vector2(0, 32) if paired else Vector2.ZERO
 	if paired:
 		draw_string(ThemeDB.fallback_font, Vector2(0, 22), "Dein gelöstes Raster", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("343f42"))
@@ -27,5 +40,4 @@ func _draw() -> void:
 							draw_rect(Rect2(offset + Vector2(x, y) * step, Vector2.ONE * step), Color(entry.color))
 		offset.x += edge + 32
 	if artwork != null:
-		var extent: Vector2 = artwork.get_size() * (edge / maxf(artwork.get_width(), artwork.get_height()))
-		draw_texture_rect(artwork, Rect2(offset, extent), false)
+		draw_texture_rect(artwork, artwork_rect(), false)

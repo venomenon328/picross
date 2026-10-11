@@ -3,7 +3,7 @@ extends RefCounted
 const Definition = preload("res://model/definition.gd")
 const Session = preload("res://model/session.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
-const IDS: Array[String] = ["f01", "f02", "f03", "f04", "f05", "f06", "f07", "f08", "f09"]
+const Registry = preload("res://model/content_registry.gd")
 const ZOOMS: Array[int] = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40, 44, 48, 54, 60, 66, 72]
 static var test_root_override: String = ""
 var root: String
@@ -13,12 +13,21 @@ func _init(path: String = "user://p1/saves") -> void:
 	root = path.trim_suffix("/")
 
 func registered_ids() -> Array[String]:
-	return IDS
+	var result: Array[String] = []
+	for entry: Dictionary in Registry.entries():
+		result.append(entry.key)
+	return result
+
+func key_for_definition(id: String) -> String:
+	return Registry.key_for_id(id)
+
+func slot_for_key(id: String) -> String:
+	return str(Registry.by_key(id).get("save_slot", ""))
 
 func path_for(id: String, suffix: String = ".json") -> String:
-	if not id in registered_ids():
+	if not id in registered_ids() or not suffix in [".json", ".bak", ".tmp"]:
 		return ""
-	return root.path_join(id + suffix)
+	return root.path_join(slot_for_key(id) + suffix)
 
 static func number(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value))
@@ -171,7 +180,7 @@ func _parse(path: String, definition: Dictionary) -> Dictionary:
 	return {"status": "valid", "data": parser.data} if error.is_empty() else {"status": "invalid", "error": error}
 
 func load_slot(definition: Dictionary) -> Dictionary:
-	var id: String = str(definition.id).to_lower().replace("-", "")
+	var id: String = key_for_definition(str(definition.id))
 	if not id in registered_ids():
 		return {"status": "error", "error": "Unbekanntes Fixture."}
 	var primary: Dictionary = _parse(path_for(id), definition)
@@ -190,7 +199,7 @@ func _absolute(path: String) -> String:
 	return ProjectSettings.globalize_path(path) if path.begins_with("user://") else path
 
 func write_slot(session: Session, view: Dictionary) -> String:
-	var id: String = str(session.definition.id).to_lower().replace("-", "")
+	var id: String = key_for_definition(str(session.definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	var candidate: Dictionary = snapshot(session, view)
@@ -244,7 +253,7 @@ func reset_slot(id: String) -> String:
 	return ""
 
 func repair_from_backup(definition: Dictionary) -> String:
-	var id: String = str(definition.id).to_lower().replace("-", "")
+	var id: String = key_for_definition(str(definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	var backup: Dictionary = _parse(path_for(id, ".bak"), definition)
@@ -271,7 +280,7 @@ func repair_from_backup(definition: Dictionary) -> String:
 	return ""
 
 func discard_invalid_backup(definition: Dictionary) -> String:
-	var id: String = str(definition.id).to_lower().replace("-", "")
+	var id: String = key_for_definition(str(definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	if _parse(path_for(id), definition).status != "valid":

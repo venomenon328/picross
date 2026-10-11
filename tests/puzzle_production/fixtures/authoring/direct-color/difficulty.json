@@ -1,0 +1,1 @@
+{"assessment_type":"editorial_estimate","confidence":"low","level":"L1","logic_hash":"acb3bd2bddabcaa63c20ee7c7ec72e201ad82e18bea5f524aab4a538dfa5cccf","method":"picross-difficulty-0.1","plausible_range":["L1","L2"],"playtest":"not_performed","rule_families":{"R0":"Artificial full runs"},"time_estimate":null}

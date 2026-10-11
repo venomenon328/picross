@@ -83,7 +83,7 @@ func create_store() -> SaveStore:
 
 func puzzle_definitions() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
-	for id: String in Definition.CATALOG_IDS:
+	for id: String in Definition.catalog_ids():
 		result.append(Definition.load_fixture(id))
 	return result
 
@@ -488,7 +488,7 @@ func _ask_reset() -> void:
 
 func _reset_selected() -> void:
 	var index: int = sessions.find(session)
-	var id: String = str(session.definition.id).to_lower().replace("-", "")
+	var id: String = store.key_for_definition(str(session.definition.id))
 	if save_timer != null:
 		save_timer.stop()
 	var error: String = store.reset_slot(id)
@@ -585,7 +585,7 @@ func _smoke() -> void:
 		var point: Vector2 = board.view.cell_rect(cell).get_center()
 		board.pointer_press(point, MOUSE_BUTTON_LEFT)
 		board.pointer_release(point, true)
-		if session.player.cells.count(1) != 1 or session.completed or not session.reveal().is_empty():
+		if session.player.cells.count(1) != 1 or session.completed != session.is_solution() or (not session.completed and not session.reveal().is_empty()):
 			get_tree().quit(3)
 			return
 		_undo()
@@ -595,7 +595,7 @@ func _smoke() -> void:
 			return
 		return_to_work()
 	show_album()
-	print("P1_START_OK: six fixtures -> mouse -> undo -> album; isolated persistence")
+	print("P1_START_OK: ", sessions.size(), " registered fixtures -> mouse -> undo -> album; isolated persistence")
 	get_tree().quit(0)
 
 func _icon_button(id: String, action: Callable, parent: Control) -> BookButton:

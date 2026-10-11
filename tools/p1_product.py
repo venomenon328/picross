@@ -27,6 +27,7 @@ import gp48_delivery
 import p1_current_visual
 import vs2_delivery
 import perf_b_resources
+import za1_product
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
@@ -365,6 +366,8 @@ def main(argv: list[str] | None = None) -> int:
         evidence.report.update(source_identity(root))
         evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "game/project.godot")
+        from tools.puzzle_production.content_registry import check_checkout
+        registry = python_phase("content-registry-projection", lambda: check_checkout(root))
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
         evidence.report["proof_steps"] = python_phase("f01-certificate", lambda: verify(
             json.loads((DATA / "f01.json").read_text(encoding="utf-8")),
@@ -477,6 +480,8 @@ def main(argv: list[str] | None = None) -> int:
             if args.pilots:
                 evidence.scope_start("pilots")
                 evidence.report["pilots"] = run_pilots(workspace, environment, base, phase)
+                evidence.report["za1"], za1_files = za1_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
+                selected += za1_files
                 evidence.scope_done("pilots")
             if args.visual:
                 evidence.scope_start("visual")
@@ -508,13 +513,18 @@ def main(argv: list[str] | None = None) -> int:
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
+            evidence.report["content_pack"] = za1_product.audit_pack(root, engine, build / "picross-p1.exe", environment,
+                phase, sum(e["visible"] for e in registry["entries"]), "player-content-pck")
             if host == "Windows":
                 phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
                 phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b")])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "za1")])
+            required_za1 = {str(p.relative_to(output)) for p in selected if p.parent.name == "za1"}
+            if not required_za1 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
+                raise toolchain.PreflightError("Required ZA-1 native evidence missing from bounded delivery")
             required_b = {str(p.relative_to(output)) for p in selected if p.parent.name == "perf-b"}
             retained_b = {p["file"] for p in evidence.report["selected_evidence"]["files"]}
             if not required_b <= retained_b:

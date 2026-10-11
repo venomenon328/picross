@@ -9,7 +9,7 @@ func setup(viewport: Viewport) -> void:
 	target.add_child(app)
 	await process_frame
 	await process_frame
-	check(app.sessions.size() == 6, "all six current registrations load")
+	check(app.sessions.size() == Definition.catalog_ids().size(), "all current registrations load")
 	# Retain RP3's registration/path guards when its duplicate F04 playthrough
 	# is omitted. RP6 still uses the same real scene, single clicks and strokes.
 	check(app.sessions[2].definition.id == "F-04", "regular neutral F-04 registration")
