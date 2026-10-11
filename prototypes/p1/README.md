@@ -13,7 +13,7 @@ Sammlung erreichbar. Unter **Rätselansicht** stehen **Rasteransicht** und
 **Gesamtansicht mit allen Hinweisen**. Genau diese Option wählt den Modus; sie gilt
 für die Sitzung, nach Neustart wieder Rasteransicht. Minus/Plus und Mausrad wählen die Zoomstufe; die interne Fitgrenze hält das Raster vollständig sichtbar.
 
-Rechts unter Miniatur und Farben stehen genau sechs Aktionen in zwei Spalten und drei Zeilen: Füllen/Radieren, Undo/Redo, Verkleinern/Vergrößern. Alle sechs bleiben ohne Scrollen sichtbar, auch bei 720p/UI125. Drei gezeichnete transparente Rahmen liegen auf einer gemeinsamen Mittelachse. Die Miniatur hat keine Überschrift. Über dem Raster bleibt das Rad Zoom; über den Werkzeugen verändert es keine Zellen oder Rastergröße. Auswahlmarkierungen und Tooltips zeigen Werkzeug/Farbe;
+Rechts unter Miniatur und Farben stehen genau sechs Aktionen in zwei Spalten und drei Zeilen: Füllen/Radieren, Undo/Redo, Verkleinern/Vergrößern. Alle sechs bleiben ohne Scrollen sichtbar, auch bei 720p/UI125. Drei gezeichnete transparente Rahmen samt Miniatur, Koordinaten und Controls liegen auf der Mittelachse der unveränderten oberen Dreiernavigation. Die Miniatur hat keine Überschrift. Über dem Raster bleibt das Rad Zoom; über den Werkzeugen verändert es keine Zellen oder Rastergröße. Auswahlmarkierungen und Tooltips zeigen Werkzeug/Farbe;
 dauerhafte Werkzeug-/Farbtexte und numerische Zoomanzeige entfallen. Platz- und
 Hinweiswarnungen bleiben bei Bedarf unten auf dem Papier sichtbar.
 Eigene passive Miniatur und unabhängige lange Hinweise bleiben am Raster. Hand- und Raster-/Miniaturverschiebung entfallen. Kleine oder
