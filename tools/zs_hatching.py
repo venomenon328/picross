@@ -8,7 +8,7 @@ def distance(a, b):
     return max(abs(x - y) for x, y in zip(a, b))
 
 
-def check_hatching(images, blank, size):
+def check_hatching(images, blank, size, *, atlas_frames=False):
     from PIL import ImageChops
     final = images[210]
     if ImageChops.difference(images[0], blank).getbbox():
@@ -27,7 +27,10 @@ def check_hatching(images, blank, size):
         # Outer pixel ring is the cell/grid separation, never a painting surface.
         border = [(x, y) for y in range(size) for x in range(size)
                   if x in (0, size - 1) or y in (0, size - 1)]
-        if any(picture.getpixel(p) != blank.getpixel(p) for p in border):
+        # A's bilinear edge can contribute up to three channel levels at 36px;
+        # visible ink crossing the separation remains a failure. Historical
+        # procedural-renderer checks retain their exact-pixel contract.
+        if any(distance(picture.getpixel(p), blank.getpixel(p)) > (3 if atlas_frames else 0) for p in border):
             raise toolchain.PreflightError("Hatching crosses cell separation")
     if not .1 < coverage[75] < coverage[150] < 1:
         raise toolchain.PreflightError("Fill does not accumulate spatially")
@@ -44,7 +47,23 @@ def check_hatching(images, blank, size):
         runs = max(runs, count)
     if size >= 24 and runs < 2:
         raise toolchain.PreflightError("No distinct short hatch strokes visible")
-    if size == 12:
+    if size == 12 and atlas_frames:
+        # Quantized A frames and ID-based variants move the pen at different
+        # instants from the legacy per-index curves. Require partial opaque
+        # tracks within rows at multiple times, independently of those curves.
+        # A top-to-bottom solid wipe has only complete or empty rows.
+        partial_times = 0
+        for ms in (75, 105, 150):
+            partial = False
+            for y in range(2, size - 2):
+                row = [p for p in core if p[1] == y]
+                painted = any(distance(images[ms].getpixel(p), final.getpixel(p)) < 40 for p in row)
+                paper = any(distance(images[ms].getpixel(p), blank.getpixel(p)) < 8 for p in row)
+                partial |= painted and paper
+            partial_times += partial
+        if partial_times < 2:
+            raise toolchain.PreflightError("Small atlas frames lack partial opaque pen tracks")
+    elif size == 12:
         # At the smallest pitch seams can fall between pixel centers; two partial
         # passes must still grow in opposite directions, not sweep one full area.
         def added_center(a, b):
@@ -57,7 +76,7 @@ def check_hatching(images, blank, size):
     return {"coverage": coverage, "separate_tracks_at_105ms": runs}
 
 
-def negative_controls(images, blank, size):
+def negative_controls(images, blank, size, *, atlas_frames=False):
     from PIL import Image
     final = images[210]
     fade = {ms: Image.blend(blank, final, ms / 210) for ms in images}
@@ -72,7 +91,7 @@ def negative_controls(images, blank, size):
     rejected = []
     for label, mutant in (("global fade", fade), ("solid area wipe", wipe), ("instant full area", instant)):
         try:
-            check_hatching(mutant, blank, size)
+            check_hatching(mutant, blank, size, atlas_frames=atlas_frames)
         except toolchain.PreflightError:
             rejected.append(label)
         else:

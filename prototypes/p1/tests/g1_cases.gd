@@ -172,7 +172,7 @@ static func gui_cases(t: SceneTree) -> void:
 	t.check(app.session.gesture.target == 3 and app.mini.cells[finish.y * 40 + finish.x] == 3, "G-05 F-02 frozen color in miniature")
 	app.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 	t.check(not app.session.gesture.active, "G-04 focus loss discards changed axis")
-	app.select_puzzle(2)
+	app.select_puzzle(3)
 	await t.process_frame
 	b = app.board
 	b.view.zoom_to(12.0, b.view.viewport.get_center())
@@ -184,12 +184,12 @@ static func gui_cases(t: SceneTree) -> void:
 	t.mouse_motion(point(b, old), true)
 	t.mouse_motion(point(b, start), true)
 	t.mouse_motion(point(b, finish), true)
-	t.check(b.gesture_length() == 3 and app.mini.cells[finish.y * 100 + finish.x] == 1, "G-05 F-03 small zoom route")
+	t.check(b.gesture_length() == 3 and app.mini.cells[finish.y * 50 + finish.x] == 1, "G-05 F-06 small zoom route")
 	var held: Vector2i = app.session.gesture.endpoint
 	t.mouse_motion(b.get_global_rect().position - Vector2(10, 10), true)
 	t.check(app.session.gesture.endpoint == held, "G-05 outside board holds last endpoint")
 	t.mouse_button(b.get_global_rect().position - Vector2(10, 10), false)
-	t.check(app.session.player.cells[finish.y * 100 + finish.x] == 1, "G-05 outside release commits held endpoint")
+	t.check(app.session.player.cells[finish.y * 50 + finish.x] == 1, "G-05 outside release commits held endpoint")
 	app.queue_free()
 	await t.process_frame
 

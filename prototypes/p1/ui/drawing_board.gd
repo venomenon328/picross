@@ -5,7 +5,7 @@ const SET_SECONDS: float = 0.210
 const REMOVE_SECONDS: float = 0.120
 const MAX_STEP_US: int = 12000
 const MAX_SPREAD_US: int = 180000
-const Marks = preload("res://ui/pencil_marks.gd")
+const Marks = preload("res://ui/atlas_marks.gd")
 var marks: Marks
 var style: int = 2 # 0 historical regular baseline, 2 selected pencil
 var animations: bool = true
@@ -104,15 +104,65 @@ func _process(_delta: float) -> void:
 	set_process(not effects.is_empty())
 	# Only cell marks redraw. Clues, analysis, UI and miniature remain cached.
 	if marks != null:
-		marks.queue_redraw()
+		marks.tick()
 
 func _draw() -> void:
-	if session != null:
-		sync_preview()
-	super._draw()
+	if session == null: return
+	sync_preview()
 	if marks != null:
 		marks.visible = style != 0
-		marks.queue_redraw()
+		marks.sync()
+	var began: int = Time.get_ticks_usec()
+	if style == 0:
+		super._draw()
+		return
+	# Grid and clues are above cached marks. No inherited all-cell draw loop.
+	var grid: Rect2 = view.visible_bounds()
+	var values: Array[int] = session.visible_cells()
+	sync_clue_completion(values)
+	var first: Vector2i = Vector2i(((grid.position-view.origin)/view.cell_size).floor()).max(Vector2i.ZERO)
+	var last: Vector2i = Vector2i(((grid.end-view.origin)/view.cell_size).ceil()).min(view.dimensions)
+	for x: int in range(first.x,last.x+1):
+		var px: float = view.origin.x+x*view.cell_size
+		if px >= view.viewport.position.x and px <= view.viewport.end.x:
+			draw_grid_line(Vector2(px,grid.position.y),Vector2(px,grid.end.y),"column",x)
+	for y: int in range(first.y,last.y+1):
+		var py: float = view.origin.y+y*view.cell_size
+		if py >= view.viewport.position.y and py <= view.viewport.end.y:
+			draw_grid_line(Vector2(grid.position.x,py),Vector2(grid.end.x,py),"row",y)
+	var saved_hover: Vector2i = hover
+	hover = Vector2i(-1,-1) # bands belong to the independently updated cursor
+	_draw_clues(first,last)
+	hover = saved_hover
+	_draw_clue_tooltip()
+	_draw_gesture_counter()
+	if measure_draws: draw_times_us.append(Time.get_ticks_usec()-began)
+
+func _gui_input(event: InputEvent) -> void:
+	if style != 0 and session != null and not session.completed and event is InputEventMouseMotion and not session.gesture.active and pan_button == MOUSE_BUTTON_NONE:
+		hover = view.hit(event.position)
+		if hover.x >= 0: pointed.emit(hover)
+		update_clue_hover(event.position)
+		if marks != null: marks.sync_cursor()
+		return
+	super._gui_input(event)
+
+func clear_clue_hover() -> void:
+	if clue_hover_axis.is_empty() and clue_hover_index == -1: return
+	super.clear_clue_hover()
+
+func set_clue_hover(axis: String, index: int) -> void:
+	if clue_hover_axis == axis and clue_hover_index == index: return
+	super.set_clue_hover(axis,index)
+
+func clear_pointer_hover() -> void:
+	if style == 0:
+		super.clear_pointer_hover()
+		return
+	clear_clue_hover()
+	if session != null and not session.gesture.active:
+		hover = Vector2i(-1,-1)
+		if marks != null: marks.sync_cursor()
 
 func draw_active_bands(grid: Rect2, active: Vector2i) -> void:
 	if style == 0:

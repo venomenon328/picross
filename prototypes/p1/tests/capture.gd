@@ -5,9 +5,11 @@ const SaveStore = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
 const PencilMarks = preload("res://ui/pencil_marks.gd")
-# Same subpixel motion oracle, scaled for the selected 1.35x clue ink area.
-# Whole-slot jumps remain far above this bound; untouched neighbour stays exact.
-const CLUE_MOTION_PIXEL_BUDGET: int = 550
+const CellAtlas = preload("res://ui/cell_atlas.gd")
+# Subpixel motion at 1.35x clue ink scale, including the current multicolor
+# F06 glyphs (559 changed pixels at a 0.02-slot drag). Token displacement
+# independently rejects full-slot jumps; untouched neighbour remains exact.
+const CLUE_MOTION_PIXEL_BUDGET: int = 600
 const COMPACT_WORK_STEPS: Array[float] = [12.0, 16.0, 18.0, 22.0, 24.0, 72.0]
 # Review images are independent of assertion coverage. Failure frames are
 # always retained uncropped, including the preceding comparison images.
@@ -113,7 +115,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 		await RenderingServer.frame_post_draw
 		material = surface.get_texture().get_image()
 		app.board.marks.show()
-	if (name.begins_with("separation-") and name.ends_with("-confirmed")) or name == "f03-grid-focus" or name.begins_with("hint-marker-"):
+	if (name.begins_with("separation-") and name.ends_with("-confirmed")) or name == "f06-grid-focus" or name.begins_with("hint-marker-"):
 		app.board.hide()
 		await process_frame
 		await RenderingServer.frame_post_draw
@@ -165,7 +167,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 			fail_capture("Rendered preview fill/moat regression: %s patch=%s expected=%s gap=%s" % [name,patch,expected_fill,gap], 5)
 			return picture
 		pixel_checks += 2
-	if name == "f03-grid-focus":
+	if name == "f06-grid-focus":
 		var focus: Vector2i = app.board.hover
 		var row_point: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(focus + Vector2i(2, 0)).get_center())
 		var column_point: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(focus + Vector2i(0, 2)).get_center())
@@ -371,7 +373,8 @@ func x_crosses_view(app: Main, cell: Vector2i) -> bool:
 	var visible_length: float = 0.0
 	var crosses: bool = false
 	for which: int in range(2):
-		var path: PackedVector2Array = PencilMarks.x_path(cell.y * app.session.player.width + cell.x, which)
+		var variant: int = CellAtlas.variant(str(app.session.definition.id),int(app.session.definition.revision),cell)
+		var path: PackedVector2Array = PencilMarks.x_path(variant, which)
 		for i: int in range(path.size() - 1):
 			var a: Vector2 = box.position + box.size * path[i]
 			var b: Vector2 = box.position + box.size * path[i+1]
@@ -383,13 +386,18 @@ func x_crosses_view(app: Main, cell: Vector2i) -> bool:
 
 func capture_x_edges(app: Main) -> void:
 	var regular: Board = use_renderer_component(app)
+	# The developer-only clipped-cell oracle needs overflow on both axes even
+	# with the current 50x50 maximum; regular full-fit geometry is unchanged.
+	app.board.size = app.board.size.min(Vector2(1000,700))
+	await process_frame
+	await process_frame
 	for pitch: float in [24.0, 36.0]:
 		set_pitch(app,pitch)
 		for edge: String in ["top", "bottom", "left", "right", "corner"]:
 			var found: bool = false
 			for xi: int in range(10):
 				for yi: int in range(10):
-					app.board.view.center = Vector2(49.1 + xi * 0.1, 49.1 + yi * 0.1)
+					app.board.view.center = Vector2(app.board.view.dimensions) / 2.0 + Vector2(-0.9 + xi * 0.1, -0.9 + yi * 0.1)
 					app.board.view.reframe()
 					x_test_cell = edge_cell(app, edge)
 					var corner_box: Rect2 = app.board.view.cell_rect(x_test_cell)
@@ -427,7 +435,7 @@ func region_difference(before: Image, after: Image, region: Rect2i) -> int:
 func capture_hint_markers(app: Main, row: int, column: int) -> void:
 	app.board.clear_clue_hover()
 	app.board.hover = Vector2i(-1, -1)
-	component_navigate(app,Vector2(float(column) / 100.0, float(row) / 100.0))
+	component_navigate(app,Vector2(float(column) / app.session.player.width, float(row) / app.session.player.height))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
 		var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
@@ -538,7 +546,7 @@ func capture_drop_snap(app: Main, axis: String, index: int, anchor: int, fractio
 		pixel_checks += 1
 
 func capture_drop_matrix(app: Main, row: int, column: int) -> void:
-	component_navigate(app,Vector2(float(column) / 100.0, float(row) / 100.0))
+	component_navigate(app,Vector2(float(column) / app.session.player.width, float(row) / app.session.player.height))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
 		var maximum: int = int(app.board.clue_layout(axis, index).max_offset)
@@ -673,7 +681,7 @@ func run() -> void:
 			continue
 		surface.size = Vector2i(1920,1080)
 		app.set_ui_scale(1.0)
-		app.select_puzzle(2)
+		app.select_puzzle(3)
 		set_pitch(app,24.0)
 		app.board.reset_clue_pan()
 		await process_frame
@@ -703,7 +711,7 @@ func capture_layout(app: Main) -> void:
 		surface.size = dims
 		for scale: float in [1.0, 1.25]:
 			app.set_ui_scale(scale)
-			for fixture: int in range(3):
+			for fixture: int in [0,1,3]:
 				app.select_puzzle(fixture)
 				if scale > 1:
 					app.board.zoom(1, app.board.view.viewport.get_center())
@@ -712,25 +720,25 @@ func capture_layout(app: Main) -> void:
 					values[(4 + i) * app.session.player.width + 4] = mini(i + 1, app.session.definition.palette.size())
 				replace_render_cells(app, values)
 				app.board.hover = Vector2i(4, 4)
-				await snapshot(app, "%dx%d-ui%d-f%d" % [dims.x, dims.y, roundi(scale * 100), fixture + 1])
+				await snapshot(app, "%dx%d-ui%d-f%d" % [dims.x, dims.y, roundi(scale * 100), int(app.session.definition.id.trim_prefix("F-"))])
 			app.select_puzzle(1)
 			set_fractional_step(app, "row", 35, 0.5)
 			set_fractional_step(app, "row", 36, 1.0)
 			set_fractional_step(app, "column", 21, 0.5)
 			set_fractional_step(app, "column", 22, 1.0)
 			await snapshot(app, "%dx%d-ui%d-f2-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
-			app.select_puzzle(2)
-			set_fractional_step(app, "row", 50, 0.35)
-			set_fractional_step(app, "row", 51, 0.7)
-			set_fractional_step(app, "column", 50, 0.35)
-			set_fractional_step(app, "column", 51, 0.7)
-			await snapshot(app, "%dx%d-ui%d-f3-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
+			app.select_puzzle(3)
+			set_fractional_step(app, "row", 41, 0.35)
+			set_fractional_step(app, "row", 33, 0.7)
+			set_fractional_step(app, "column", 17, 0.35)
+			set_fractional_step(app, "column", 32, 0.7)
+			await snapshot(app, "%dx%d-ui%d-f6-independent-slots" % [dims.x, dims.y, roundi(scale * 100)])
 
 func capture_compact_layout(app: Main) -> void:
 	app.show_album()
 	await snapshot(app, "album")
 	# Minimum client at the larger UI scale; regular 1080p at both scales.
-	# Each visits mono, color and the 100x100 case; independent reads remain
+	# Each visits mono, color and the 50x50 case; independent reads remain
 	# visible on both axes at UI125 rather than repeating a 4x2 cross product.
 	for configuration: Dictionary in [
 		{"size": Vector2i(1280, 720), "scale": 1.25},
@@ -739,7 +747,7 @@ func capture_compact_layout(app: Main) -> void:
 	]:
 		surface.size = configuration.size
 		app.set_ui_scale(configuration.scale)
-		for fixture: int in range(3):
+		for fixture: int in [0,1,3]:
 			app.select_puzzle(fixture)
 			if app.ui_scale > 1.0:
 				app.board.zoom(1, app.board.view.viewport.get_center())
@@ -748,20 +756,20 @@ func capture_compact_layout(app: Main) -> void:
 				values[(4 + i) * app.session.player.width + 4] = mini(i + 1, app.session.definition.palette.size())
 			replace_render_cells(app, values)
 			app.board.hover = Vector2i(4, 4)
-			var name: String = "%dx%d-ui%d-f%d" % [surface.size.x, surface.size.y, roundi(app.ui_scale * 100), fixture + 1]
+			var name: String = "%dx%d-ui%d-f%d" % [surface.size.x, surface.size.y, roundi(app.ui_scale * 100), int(app.session.definition.id.trim_prefix("F-"))]
 			if fixture > 0 and app.ui_scale > 1.0:
-				var row: int = 35 if fixture == 1 else 50
-				var column: int = 21 if fixture == 1 else 50
+				var row: int = 35 if fixture == 1 else 41
+				var column: int = 21 if fixture == 1 else 17
 				for axis: String in ["row", "column"]:
 					var index: int = row if axis == "row" else column
 					set_fractional_step(app, axis, index, 0.5)
-					set_fractional_step(app, axis, index + 1, 1.0)
+					set_fractional_step(app, axis, index + 1 if fixture == 1 else (33 if axis == "row" else 32), 1.0)
 				name += "-independent-slots"
 			await snapshot(app, name)
 
 func capture_views(app: Main) -> void:
-	var f03_row: int = longest_line(app.sessions[2].definition.rows)
-	var f03_column: int = longest_line(app.sessions[2].definition.columns)
+	var f06_row: int = longest_line(app.sessions[3].definition.rows)
+	var f06_column: int = longest_line(app.sessions[3].definition.columns)
 	# D-18/D-19: unnumbered colored numbers remain single-line in shared slots.
 	# D-20 adds independent snapped positions for every concrete row and column.
 	surface.size = Vector2i(1920, 1080)
@@ -788,27 +796,27 @@ func capture_views(app: Main) -> void:
 	app.board.reset_clue_pan()
 	set_fractional_step(app, "column", 21, 1.0)
 	await snapshot(app, "f02-row-end-column-start")
-	app.select_puzzle(2)
-	app.board.hover = Vector2i(f03_column, f03_row)
-	app.board.set_clue_hover("row", f03_row)
-	await snapshot(app, "f03-overflow-hover-tooltip")
+	app.select_puzzle(3)
+	app.board.hover = Vector2i(f06_column, f06_row)
+	app.board.set_clue_hover("row", f06_row)
+	await snapshot(app, "f06-overflow-hover-tooltip")
 	app.board.clear_clue_hover()
 	for step: float in [12.0, 18.0, 22.0, 24.0]:
 		set_pitch(app,step)
 		app.board.reset_clue_pan()
-		await snapshot(app, "f03-hints-work-%d-end" % roundi(step / 24.0 * 100.0))
+		await snapshot(app, "f06-hints-work-%d-end" % roundi(step / 24.0 * 100.0))
 	for step: float in [12.0, 24.0]:
 		set_pitch(app,step)
 		for position: float in [0.5, 1.0]:
-			set_fractional_step(app, "row", f03_row, position)
-			set_fractional_step(app, "column", f03_column, position)
-			await snapshot(app, "f03-hints-work-%d-%s" % [roundi(step / 24.0 * 100.0), "middle" if position == 0.5 else "start"])
+			set_fractional_step(app, "row", f06_row, position)
+			set_fractional_step(app, "column", f06_column, position)
+			await snapshot(app, "f06-hints-work-%d-%s" % [roundi(step / 24.0 * 100.0), "middle" if position == 0.5 else "start"])
 	set_pitch(app,24.0)
-	set_fractional_step(app, "row", f03_row, 0.45)
-	set_fractional_step(app, "column", f03_column, 0.65)
+	set_fractional_step(app, "row", f06_row, 0.45)
+	set_fractional_step(app, "column", f06_column, 0.65)
 	app.board.view.pan(Vector2(120, 80))
 	component_navigate(app,Vector2(0.78, 0.22))
-	await snapshot(app, "f03-hints-after-raster-pan")
+	await snapshot(app, "f06-hints-after-raster-pan")
 
 func capture_cells(app: Main, fixtures: Array) -> void:
 	# Same L/block at normal and five-cell boundaries, every color/work step.
@@ -843,81 +851,97 @@ func capture_cells(app: Main, fixtures: Array) -> void:
 	restore_regular_board(app,regular)
 
 func capture_gestures(app: Main) -> void:
-	var f03_row: int = longest_line(app.sessions[2].definition.rows)
-	var f03_column: int = longest_line(app.sessions[2].definition.columns)
-	app.select_puzzle(2)
+	var f06_row: int = longest_line(app.sessions[3].definition.rows)
+	var f06_column: int = longest_line(app.sessions[3].definition.columns)
+	app.select_puzzle(3)
 	set_pitch(app,24.0)
-	app.board.view.center = Vector2(50, 50)
+	app.board.view.center = Vector2(25, 25)
 	app.board.view.reframe()
 	app.board.hover = app.board.view.hit(app.board.view.viewport.get_center())
-	await snapshot(app, "f03-grid-focus")
+	await snapshot(app, "f06-grid-focus")
 	app.board.hover = Vector2i(-1, -1)
 	await capture_x_edges(app)
 	# Continuous pixel motion at the historical 24px stress-sheet geometry.
 	var regular: Board = use_renderer_component(app)
 	set_pitch(app,24.0)
-	app.board.view.center = Vector2(50,f03_row)
+	app.board.view.center = Vector2(25,f06_row)
 	app.board.view.reframe()
 	app.board.reset_clue_pan()
 	var before_drag: Image = await snapshot(app, "hint-drag-before")
 	app.board.pan_button = MOUSE_BUTTON_MIDDLE
 	app.board.pan_target = "row"
-	app.board.pan_line_index = f03_row
-	app.board.pan_drag_distance = float(app.board.clue_layout("row", f03_row).slot_extent) * 0.42
+	app.board.pan_line_index = f06_row
+	app.board.pan_drag_distance = float(app.board.clue_layout("row", f06_row).slot_extent) * 0.42
 	var after_drag: Image = await snapshot(app, "hint-drag-subslot")
 	var row_rect: Rect2 = app.board.row_clue_area()
-	var row_y: float = app.board.view.cell_rect(Vector2i(0, f03_row)).get_center().y
+	var row_y: float = app.board.view.cell_rect(Vector2i(0, f06_row)).get_center().y
 	var target_region: Rect2i = Rect2i(Rect2(app.board.global_position + Vector2(row_rect.position.x, row_y - 9), Vector2(row_rect.size.x, 18)))
 	var neighbour_y: float = row_y + app.board.view.cell_size
 	var neighbour_region: Rect2i = Rect2i(Rect2(app.board.global_position + Vector2(row_rect.position.x, neighbour_y - 9), Vector2(row_rect.size.x, 18)))
-	if region_difference(before_drag, after_drag, target_region) < 5 or region_difference(before_drag, after_drag, neighbour_region) != 0 or app.board.clue_step("row", f03_row) != 0:
+	if region_difference(before_drag, after_drag, target_region) < 5 or region_difference(before_drag, after_drag, neighbour_region) != 0 or app.board.clue_step("row", f06_row) != 0:
 		fail_capture("Rendered subslot hint drag did not move continuously", 5)
 		return
 	pixel_checks += 1
-	var pitch: float = float(app.board.clue_layout("row", f03_row).slot_extent)
+	var pitch: float = float(app.board.clue_layout("row", f06_row).slot_extent)
 	app.board.pan_drag_distance = pitch * 0.49
 	var before_boundary: Image = await snapshot(app, "hint-drag-before-slot-boundary")
+	var row_centers: Dictionary = visible_token_centers(app, "row", f06_row)
 	app.board.pan_drag_distance = pitch * 0.51
 	var after_boundary: Image = await snapshot(app, "hint-drag-after-slot-boundary")
-	if region_difference(before_boundary, after_boundary, target_region) > CLUE_MOTION_PIXEL_BUDGET or region_difference(before_boundary, after_boundary, neighbour_region) != 0:
-		fail_capture("Rendered row hint jumped at a slot boundary", 5)
+	var row_shift: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(row_centers, visible_token_centers(app,"row",f06_row))
+	if row_shift.count == 0 or row_shift.largest > pitch * 0.021 or region_difference(before_boundary, after_boundary, target_region) > CLUE_MOTION_PIXEL_BUDGET or region_difference(before_boundary, after_boundary, neighbour_region) != 0:
+		fail_capture("Rendered row hint jumped at a slot boundary: delta=%d step=%d region=%s" % [region_difference(before_boundary, after_boundary, target_region), app.board.clue_step("row", f06_row), target_region], 5)
 		return
-	pixel_checks += 2
+	app.board.pan_drag_distance = pitch * 1.51
+	var wrong_row: Image = await snapshot(app, "hint-drag-row-full-slot-negative")
+	var wrong_row_shift: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(row_centers, visible_token_centers(app,"row",f06_row))
+	if wrong_row_shift.largest <= pitch * 0.5 or region_difference(after_boundary, wrong_row, target_region) == 0:
+		fail_capture("Full row slot jump escaped displacement/image oracle", 5)
+		return
+	pixel_checks += 3
 	app.board.cancel_gesture()
-	app.board.view.center = Vector2(f03_column,f03_row)
+	app.board.view.center = Vector2(f06_column,f06_row)
 	app.board.view.reframe()
 	app.board.pan_button = MOUSE_BUTTON_MIDDLE
 	app.board.pan_target = "column"
-	app.board.pan_line_index = f03_column
-	var column_pitch: float = float(app.board.clue_layout("column", f03_column).slot_extent)
+	app.board.pan_line_index = f06_column
+	var column_pitch: float = float(app.board.clue_layout("column", f06_column).slot_extent)
 	app.board.pan_drag_distance = column_pitch * 0.49
 	var column_before_boundary: Image = await snapshot(app, "hint-drag-column-before-slot-boundary")
+	var column_centers: Dictionary = visible_token_centers(app,"column",f06_column)
 	app.board.pan_drag_distance = column_pitch * 0.51
 	var column_after_boundary: Image = await snapshot(app, "hint-drag-column-after-slot-boundary")
+	var column_shift: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(column_centers, visible_token_centers(app,"column",f06_column))
 	var column_area: Rect2 = app.board.column_clue_area()
-	var column_x: float = app.board.view.cell_rect(Vector2i(f03_column, 0)).get_center().x
+	var column_x: float = app.board.view.cell_rect(Vector2i(f06_column, 0)).get_center().x
 	var column_region: Rect2i = Rect2i(Rect2(app.board.global_position + Vector2(column_x - 9, column_area.position.y), Vector2(18, column_area.size.y))).intersection(Rect2i(Vector2i.ZERO, surface.size))
-	if region_difference(column_before_boundary, column_after_boundary, column_region) > CLUE_MOTION_PIXEL_BUDGET or app.board.clue_step("column", f03_column) != 0:
+	if column_shift.count == 0 or column_shift.largest > column_pitch * 0.021 or region_difference(column_before_boundary, column_after_boundary, column_region) > CLUE_MOTION_PIXEL_BUDGET or app.board.clue_step("column", f06_column) != 0:
 		fail_capture("Rendered column hint jumped at a slot boundary", 5)
 		return
-	pixel_checks += 1
+	app.board.pan_drag_distance = column_pitch * 1.51
+	var wrong_column: Image = await snapshot(app, "hint-drag-column-full-slot-negative")
+	var wrong_column_shift: Dictionary = preload("res://tests/p12_cases.gd").coordinate_distance(column_centers, visible_token_centers(app,"column",f06_column))
+	if wrong_column_shift.largest <= column_pitch * 0.5 or region_difference(column_after_boundary, wrong_column, column_region) == 0:
+		fail_capture("Full column slot jump escaped displacement/image oracle", 5)
+		return
+	pixel_checks += 2
 	app.board.cancel_gesture()
 	restore_regular_board(app,regular)
 
 func capture_hints(app: Main) -> void:
-	var f03_row: int = longest_line(app.sessions[2].definition.rows)
-	var f03_column: int = longest_line(app.sessions[2].definition.columns)
+	var f06_row: int = longest_line(app.sessions[3].definition.rows)
+	var f06_column: int = longest_line(app.sessions[3].definition.columns)
 	var regular: Board = use_renderer_component(app)
 	set_pitch(app,24.0)
-	app.board.view.center = Vector2(f03_column,f03_row)
+	app.board.view.center = Vector2(f06_column,f06_row)
 	app.board.view.reframe()
-	await capture_hint_markers(app, f03_row, f03_column)
-	await capture_drop_matrix(app, f03_row, f03_column)
+	await capture_hint_markers(app, f06_row, f06_column)
+	await capture_drop_matrix(app, f06_row, f06_column)
 	restore_regular_board(app,regular)
 
 func capture_axis(app: Main) -> void:
-	var f03_row: int = longest_line(app.sessions[2].definition.rows)
-	var f03_column: int = longest_line(app.sessions[2].definition.columns)
+	var f06_row: int = longest_line(app.sessions[3].definition.rows)
+	var f06_column: int = longest_line(app.sessions[3].definition.columns)
 	var gesture_start: Vector2i = app.board.view.hit(app.board.view.viewport.get_center())
 	app.board.pointer_press(app.board.view.cell_rect(gesture_start).get_center(), MOUSE_BUTTON_RIGHT)
 	app.board.pointer_move(app.board.view.cell_rect(gesture_start + Vector2i(7, 0)).get_center(), true)
@@ -927,13 +951,13 @@ func capture_axis(app: Main) -> void:
 	await snapshot(app, "gesture-counter-8")
 	app.board.cancel_gesture()
 	await capture_axis_reset(app, 1, 24.0, 3)
-	await capture_axis_reset(app, 2, 12.0, 1)
-	app.board.hover = Vector2i(f03_column, f03_row)
-	app.board.set_clue_hover("row", f03_row)
-	await snapshot(app, "f03-full-clues-in-work-tooltip")
+	await capture_axis_reset(app, 3, 12.0, 1)
+	app.board.hover = Vector2i(f06_column, f06_row)
+	app.board.set_clue_hover("row", f06_row)
+	await snapshot(app, "f06-full-clues-in-work-tooltip")
 	app.board.clear_clue_hover()
-	app.board.fit_all()
-	await snapshot(app, "f03-overview")
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
+	await snapshot(app, "f06-overview")
 	if not compact:
 		await capture_owner_drop(app)
 

@@ -63,6 +63,8 @@ func run() -> void:
 	await preload("res://tests/z2_cases.gd").run(self)
 	print("PHASE zv50")
 	await preload("res://tests/zv50_cases.gd").run(self)
+	print("PHASE perf_a")
+	preload("res://tests/perf_a_cases.gd").run(self)
 	finish()
 
 func finish() -> void:
@@ -73,14 +75,21 @@ func finish() -> void:
 
 func test_definition() -> void:
 	check(Definition.validate(fixture).is_empty(), "F-01 validates")
+	check(Definition.CATALOG_IDS==["f01","f02","f04","f06","f08","f09"],"current catalog excludes retired oversized sheets")
+	var largest: Dictionary = Definition.load_fixture("f06")
+	check(largest.width==50 and largest.height==50 and Definition.validate(largest).is_empty(),"50x50 boundary remains playable")
+	for axis: String in ["width","height"]:
+		var oversized: Dictionary = largest.duplicate(true)
+		oversized[axis]=51
+		check(Definition.validate(oversized)=="Ungültige Dimension.","51 on either axis fails at dimension boundary")
 	check(Definition.hints([0, 0, 0]).is_empty(), "empty line")
 	check(Definition.hints([1, 1, 1]) == [{"length": 3, "color": 1}], "full line")
 	check(Definition.hints([1, 0, 1]) == [{"length": 1, "color": 1}, {"length": 1, "color": 1}], "same colors separated")
 	check(Definition.hints([1, 2, 2, 1]) == [{"length": 1, "color": 1}, {"length": 2, "color": 2}, {"length": 1, "color": 1}], "different colors directly adjacent")
 	var long_line: Array = []
-	for i: int in range(100):
+	for i: int in range(50):
 		long_line.append(1 if i % 2 == 0 else 2)
-	check(Definition.hints(long_line).size() == 100, "long clues not truncated")
+	check(Definition.hints(long_line).size() == 50, "long clues not truncated")
 	for key: String in ["schema", "id", "revision", "width", "height", "palette", "solution", "rows", "columns", "reveal"]:
 		var bad: Dictionary = fixture.duplicate(true)
 		bad.erase(key)
@@ -89,7 +98,7 @@ func test_definition() -> void:
 		var bad: Dictionary = fixture.duplicate(true)
 		bad.solution[0][0] = bad_value
 		check(not Definition.validate(bad).is_empty(), "invalid solution value " + str(bad_value))
-	for bad_value: Variant in [0, 101, 20.5, "20"]:
+	for bad_value: Variant in [0, 51, 101, 20.5, "20"]:
 		var bad: Dictionary = fixture.duplicate(true)
 		bad.width = bad_value
 		check(not Definition.validate(bad).is_empty(), "invalid width " + str(bad_value))
@@ -234,6 +243,18 @@ func test_scene() -> void:
 	await process_frame
 	await process_frame
 	check(app.album.visible and not app.work.visible and app.reveal_view.payload.is_empty(), "scene starts in neutral album")
+	var expected_catalog: Array[String] = ["F-01", "F-02", "F-04", "F-06", "F-08", "F-09"]
+	check(app.sessions.size() == expected_catalog.size() and app.choices.size() == expected_catalog.size(), "album offers exactly six approved sheets")
+	var catalog_heading: Label = app.album_content.get_child(0) as Label
+	check(catalog_heading != null and catalog_heading.text == "6 Blätter zum Entdecken", "album heading reflects the current catalog")
+	for i: int in range(mini(app.sessions.size(), expected_catalog.size())):
+		var definition: Dictionary = app.sessions[i].definition
+		check(str(definition.id) == expected_catalog[i], "album includes correct sheet in position " + str(i))
+		var expected_title: String = app.sessions[i].album_title()
+		if definition.get("stress", false): expected_title += " · UI-Test"
+		check(app.choices[i].text == expected_title, "album label uses semantic stress flag for " + str(definition.id))
+	if app.sessions.size() >= 3:
+		check(app.sessions[2].definition.id == "F-04" and not app.choices[2].text.contains("UI-Test"), "retired F03 test label does not follow the third slot")
 	app.open_puzzle()
 	await process_frame
 	var board: Control = app.board
@@ -286,6 +307,8 @@ func test_scene() -> void:
 	check(app.title.get_theme_font("font").get_font_name() == "Fraunces", "V3 completed album does not inherit work font")
 	check(app.open_button.text.contains(fixture.reveal.name), "completed album entry")
 	check(app.album_picture.visible and not app.album_mini.visible and app.album_picture.payload == fixture.reveal, "completed album has colored earned image")
+	if app.sessions.size() >= 3:
+		check(app.choices[2].text == app.sessions[2].album_title(), "album refresh does not restore obsolete F03 UI-test suffix on F04")
 	app.queue_free()
 	await process_frame
 

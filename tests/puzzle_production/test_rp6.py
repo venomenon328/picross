@@ -3,6 +3,7 @@ import copy
 import shutil
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from PIL import Image
@@ -20,12 +21,26 @@ class PilotTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.path = Path(self.temp.name)
 
-    def test_six_complete_exports_match_registered_files(self):
+    def test_four_current_exports_match_registered_files(self):
         report = rp6.verify_package(self.path / "replay")
         self.assertTrue(report["accepted"])
-        self.assertEqual(len(report["exports"]), 6)
-        self.assertEqual([x["source"]["kind"] for x in report["exports"]], ["import"]*4+["repair"]*2)
+        self.assertEqual(len(report["exports"]), 4)
+        self.assertEqual([x["source"]["kind"] for x in report["exports"]], ["import"]*2+["repair"]*2)
         self.assertEqual(report["owner_trials"], "open")
+
+    def test_both_p1_export_profiles_reject_51_on_either_axis(self):
+        bundle = rp6.ROOT / "examples/rp3/production"
+        for width, height in ((51,50),(50,51)):
+            candidate = {"design":{"width":width,"height":height,"mode":"mono"},
+                         "matrix":[["ink"]],"id":"bound-test"}
+            checked = {"certified":True,"status":"solved"}
+            with patch("tools.puzzle_production.p1_export.inspect_candidate",
+                       return_value=(candidate,{},checked)):
+                for profile in ("first","pilot"):
+                    with self.subTest(width=width,height=height,profile=profile), self.assertRaisesRegex(InvalidInput,"at most 50"):
+                        args = (bundle,"area-128",self.path/"unused.png","Name",self.path/"unused")
+                        if profile=="first": export_p1(*args)
+                        else: export_pilot(*args,"F-06")
 
     def test_manifest_cannot_omit_swap_or_self_accept(self):
         original = load_json(rp6.PILOT / "manifest.json")

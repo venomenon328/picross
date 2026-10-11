@@ -1,0 +1,23 @@
+{
+  "format": "picross-perf-b-plan-v1",
+  "a_delivery": "2bbc28eecb0c15276ebcd52b473c4fdb5ee10781",
+  "manufacturer": "a83ecf5db0800d198bb870932bf0365341aabb28",
+  "a_plan_sha256": "5eeaaa729bb3bf394fb36f58771fe2359c8958825f760d9a6d866959f4a4821d",
+  "a_source_archive_sha256": "6e184053ac26eb6f297cf292273acdd6021668afdb5a95544a5e8f34dfd8d703",
+  "comparison": "Fresh original a83 and regular B on same Windows host; A contexts, warmup=6, repetitions=3, intervals=36 preserved. F03/F07 additional fit controls. No new FPS threshold.",
+  "metrics": [
+    "frame_post_draw wall intervals",
+    "all B layer CPU builds and synchronization",
+    "input dispatch CPU",
+    "rest/transition/cursor counters",
+    "static/texture memory",
+    "render draw calls/objects (not GPU duration)"
+  ],
+  "resources": "six shared textures, one shared material per SceneTree, at most ceil(cells/64) chunks; 24 repeated page/zoom cycles",
+  "limits": {
+    "process_seconds": 300,
+    "technical_bytes": 30000000,
+    "total_bytes": 75000000
+  },
+  "images": "regular runtime time samples and realtime fill/X strips; preserve twelve SL images; 18 MB image sub-budget (15 MB SL plus 3 MB B)"
+}

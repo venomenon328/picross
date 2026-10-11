@@ -26,12 +26,13 @@ func run() -> void:
 		fail("isolated root, plan, trace and expected file required")
 		return
 	SaveStore.test_root_override = isolated
-	root.size = Vector2i(1600, 900)
+	root.size = Vector2i(1280, 720)
 	app = load("res://main.tscn").instantiate()
 	root.add_child(app)
 	await process_frame
 	await process_frame
-	app.select_puzzle(2)
+	app.select_puzzle(3)
+	app.set_ui_scale(1.25)
 	await process_frame
 	await process_frame
 	if not app.mark_completed_clues or not app.board.mark_completed_clues:
@@ -60,7 +61,7 @@ func run() -> void:
 		var before_cursor: int = app.session.player.cursor
 		await perform(action)
 		if app.session == null:
-			fail("missing F-03 session at action %d" % int(action.number))
+			fail("missing F-06 session at action %d" % int(action.number))
 			return
 		var changes: Array[Dictionary] = []
 		for i: int in range(before.size()):
@@ -191,7 +192,7 @@ func perform(action: Dictionary) -> void:
 			motion(end, button)
 			release(end, button)
 		"mini":
-			var desired: Vector2 = Vector2(float(action.point[0]) / 100.0, float(action.point[1]) / 100.0)
+			var desired: Vector2 = Vector2(float(action.point[0]) / 50.0, float(action.point[1]) / 50.0)
 			var local: Vector2 = app.mini.image_rect().size * desired
 			mini_button(local, true)
 			await tick()

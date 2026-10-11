@@ -1,5 +1,21 @@
 # Projektprofil: picross
 
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+
+Bei Zellrendering, Spriteherstellung, Cache-/Invalidierungsarbeit und PERF-01
+zusätzlich [CELL_RENDERING](CELL_RENDERING.md) vollständig lesen; die
+[PERF-A-Nachweiszuordnung](PERF_A_IMPLEMENTATION.md) bindet Herstellung und Messung.
+Native Windows-Proben verwenden die offizielle gepinnte Toolchain und isolierte
+temporäre Projekte/Profile. A2-Prüfressourcen sind im aktuellen Spielerexport
+ausgeschlossen; reguläre Integration und kombinierter Vorher-/Nachhervergleich
+sind in [PERF-B / #68](PERF_B_IMPLEMENTATION.md) zugeordnet. Technische Prüfung ersetzt PERF-M01/SL-M01 nicht.
+
+## Aktueller Vertrag · Sidebar #65
+
+PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der neue zusammenhängende Stand A+B folgt auf `feat/65-sidebar-frames`; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.
+
+Aktuell: genau sechs Aktionen in 2×3 (Füllen/Radieren, Undo/Redo, Minus/Plus), ohne Einpassen-/Arbeitsgrößenaktion oder „Dein Stand“. Drei transparente gezeichnete Rahmen ersetzen die alten Fassungen; Miniatur, Koordinaten, Palette und Werkzeuge teilen die Mittelachse. Die interne Vollsichtgrenze, Optionsansichten G/V, Raster-/Hinweisbudgets und Albumminiaturen bleiben. Nach vollständiger unveränderter Schema-1-Validierung wird `overview=false`; gültiger Zoomwunsch, Inhalt, History/Redo und Recoverygrenzen bleiben erhalten. Neue Saves schreiben Schema 1 mit `overview=false`. SL-R02 bestätigt B-01 am Ausgangshead a83ecf5 technisch; neues kombiniertes Review, persönliche SL-M01/PERF-M01 und neue Mergefreigabe bleiben offen; kein Release. Historische Prüfpläne/-berichte bleiben unverändert.
+
 ## Aktueller CI-Vertrag ab #63
 
 Bei Arbeit an CI, Prüfprogrammen, Artefakten oder Archivierung zusätzlich die
@@ -11,9 +27,9 @@ und den früheren Paketbeschreibungen. Maßgeblich sind die vollständige
 Historische Prüfberichte und persönliche Abnahmeentscheidungen bleiben an ihren
 damaligen Stand gebunden; aktuelle Produktverträge werden nicht aufgehoben.
 
-## Aktueller regulärer Stand · VS2 (#61)
+## Integrierter Vorgänger · VS2 (#61)
 
-**Kombinierter V1/V2/V3-Stand:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
+**Historischer Paketstand vor Abschluss von #62:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
 
 Aktuelle Integrationsbasis ist main `d7ec4e1e4a29d82b6979537a33868d57732d3713`
 mit CI-Policy #63; ursprüngliche Produktbasis `fad8853`, PR #56
@@ -419,7 +435,7 @@ Prüfumfänge. Historische Vergleiche und Studienpakete entfallen bereits bei de
 Erzeugung. Der allgemeine native Capturepfad verwendet die kompakte Grenzmatrix;
 Assertions und Bildspeicherung sind getrennt. Spielerpaket und `technical/`
 werden getrennt hochgeladen, technische Daten auch bei Fehlern. Höchstens
-75 MB insgesamt, davon 20 MB technische Daten; Details und Nachweisgrenzen in
+75 MB insgesamt, davon 30 MB technische Daten; Details und Nachweisgrenzen in
 der [CI-Policy](CI_POLICY.md). Ein pauschaler Full-Evidence-Schalter besteht
 nicht mehr; historische Diagnosen erhalten ihren konkreten eigenen Auftrag.
 

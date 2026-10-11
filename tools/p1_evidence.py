@@ -12,10 +12,10 @@ from pathlib import Path
 
 import p1_preflight as toolchain
 
-TECHNICAL_LIMIT = 20_000_000
+TECHNICAL_LIMIT = 30_000_000
 TOTAL_LIMIT = 75_000_000
 LOG_LIMIT = 256_000
-IMAGE_LIMIT = 12_000_000
+IMAGE_LIMIT = 18_000_000 # 15 MB SL views plus 3 MB compact PERF-B strips; 30 MB total technical cap.
 
 
 def now() -> str:
@@ -71,12 +71,15 @@ def png_references(value) -> set[str]:
 def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[list[Path], list[Path]]:
     """Rebuild partial evidence selection when run_visual did not return."""
     reports = sorted(output.glob("renders/*.json")) + sorted(output.glob("drawing-renders/*.json")) + sorted(output.glob("vs2-renders/*.json")) + sorted(output.glob("v1-renders/*.json")) + sorted(output.glob("v2-renders/*.json")) + sorted(output.glob("v3-renders/*.json"))
+    reports += sorted(output.glob("perf-a/*.json"))
+    reports += sorted(output.glob("perf-b/*.json"))
     primary = ("render-report-" + phase[len("render-"):] + ".json" if phase.startswith("render-")
                else phase.removesuffix("-render") + "-renders.json" if phase.startswith("rp6-")
                else "z2-renders.json" if phase == "current-book-capture"
                else "zs2-after.json" if phase.startswith("current-drawing-")
                else "v2-write.json" if phase.startswith("vs2-v2-") or phase == "current-vs2-complete"
-               else "v1-focused.json" if phase == "vs2-v1-focused" else None)
+               else "v1-focused.json" if phase == "vs2-v1-focused"
+               else "probe.json" if phase.startswith(("perf-a-", "perf-b-")) else None)
     bound, phase_images, native_failures = set(), set(), set()
     for path in reports:
         try:
@@ -179,7 +182,7 @@ class Evidence:
         # Leave room for the final phase/report/audit metadata. Reports and logs
         # take priority over optional retained images, including on failure.
         existing = sum(p.stat().st_size for p in self.technical.rglob("*") if p.is_file())
-        selection_limit = max(0, TECHNICAL_LIMIT - existing - 1_000_000)
+        selection_limit = max(0, TECHNICAL_LIMIT - existing - 250_000)
         priority = set(priority_sources)
         for path in sorted(set(sources), key=lambda p: (
                 p not in priority, "failure" not in p.name, p.suffix == ".png",

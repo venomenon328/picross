@@ -194,13 +194,19 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         relative=Path(entry["file"])
         if relative.is_absolute() or ".." in relative.parts: raise ValueError("Unsafe evidence path")
         toolchain.verify_sha256(review/"selected"/relative,entry["sha256"])
+    import perf_b_report
+    b_comparison = perf_b_report.verify(review / "selected/perf-b-comparison")
+    if b_comparison != review_report["perf_b_comparison"]:
+        raise ValueError("Delivered PERF-B comparison binding differs")
     matrix=json.loads((review/"selected/vs2-renders/vs2-matrix.json").read_text(encoding="utf-8"))
     vs2_delivery.verify_records(matrix)
     if review_report["visual"]["vs2"]["v2"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v2-plan.json"):
         raise ValueError("Delivered V2 plan identity differs")
     if review_report["visual"]["vs2"]["v3"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v3-plan.json"):
         raise ValueError("Delivered V3 plan identity differs")
-    if review_report["visual"]["vs2"]["records"]!=304 or review_report["visual"]["vs2"]["rendered"]!=23:
+    if review_report["visual"]["vs2"]["v3"]["sidebar_plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/sl65-plan.json"):
+        raise ValueError("Delivered SL plan identity differs")
+    if review_report["visual"]["vs2"]["records"]!=256 or review_report["visual"]["vs2"]["rendered"]!=23:
         raise ValueError("Missing current native VS2 coverage")
     archive=cache/toolchain.EDITORS["Windows"].name
     toolchain.verify_sha256(archive,toolchain.EDITORS["Windows"].sha256)
@@ -222,7 +228,12 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     def launch(label,delivered,script,marker):
         log=output/(label+".log")
         command=[str(engine),"--main-pack",str(delivered/"picross-p1.exe"),"--rendering-driver","opengl3","--audio-driver","Dummy","--script",str(ROOT/"prototypes/p1/tests"/script)]
-        result=subprocess.run(command,cwd=delivered,env=env,capture_output=True,encoding="utf-8",errors="replace",timeout=300,creationflags=subprocess.CREATE_NO_WINDOW)
+        try:
+            result=subprocess.run(command,cwd=delivered,env=env,capture_output=True,encoding="utf-8",errors="replace",timeout=300,creationflags=subprocess.CREATE_NO_WINDOW)
+        except subprocess.TimeoutExpired as error:
+            def decoded(value): return value.decode("utf-8",errors="replace") if isinstance(value,bytes) else value or ""
+            log.write_text(decoded(error.stdout)+decoded(error.stderr),encoding="utf-8",newline="\n")
+            raise
         text=result.stdout+result.stderr
         log.write_text(text,encoding="utf-8",newline="\n")
         if result.returncode or marker not in text or "ERROR:" in text:
@@ -267,6 +278,11 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     v3 = vs2_delivery.verify_v3(output)
     if not v3["fresh_process_compared"]:
         raise ValueError("Missing V3 fresh-process geometry comparison")
+    b_output = output / "perf-b"
+    b_output.mkdir()
+    env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(ROOT / "prototypes/p1/perf_a/atlases/manifest.json"))
+    launch("perf-b-runtime", package, "perf_b_probe.gd", "PERF_B_PROBE_OK")
+    b_probe = json.loads((b_output / "probe.json").read_text())
     if toolchain.sha256_file(study)!=study_hash: raise ValueError("Historical study data changed")
     packs={"picross-p1.exe":embedded_pack(package/"picross-p1.exe")}
     console=package/"picross-p1.console.exe"
@@ -282,6 +298,8 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan.json"),
                   plan_amendment_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan-amendment.json"),
                   v2_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v2-plan.json"),v2=v2,v3=v3,v3_processes=v3_processes,v3_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v3-plan.json"),
+                  sidebar_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/sl65-plan.json"),
+                  sidebar_assets=json.loads((ROOT/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8")),
                   platform=platform.platform(),bindings=[player_binding,review_binding],export_files=report["export_files"],embedded_packs=packs,
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
@@ -289,7 +307,10 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   matrix_records=len(matrix["records"]),historical_comparison="not repeated under CI policy #63",
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},
-                  study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,independent_review="OPEN",VS2_M01="OPEN",merge_authorized=False)
+                  study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,
+                  previous_review="SL-R02: B-01 technically confirmed at a83ecf5",
+                  perf_b=b_probe, perf_b_comparison=b_comparison, perf_b_probe_sha256=toolchain.sha256_file(ROOT / "prototypes/p1/tests/perf_b_probe.gd"),
+                  independent_combined_review="OPEN",PERF_01="B technical probes complete; owner acceptance OPEN",SL_M01="OPEN",PERF_M01="OPEN",merge_authorized=False)
     target=output/"windows-download-verification.json"
     target.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")
     print("VS2_WINDOWS_DOWNLOAD_OK",head,flush=True)

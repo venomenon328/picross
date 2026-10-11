@@ -1,6 +1,12 @@
 # VS2 · reguläre Vollsichtintegration
 
-## Aktueller Nachweisstand · S0 erledigt, V1/V2/V3 umgesetzt
+## Aktueller Vertrag · Sidebar #65
+
+PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der neue zusammenhängende Stand A+B folgt auf `feat/65-sidebar-frames`; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.
+
+Aktuell: genau sechs Aktionen in 2×3 (Füllen/Radieren, Undo/Redo, Minus/Plus), ohne Einpassen-/Arbeitsgrößenaktion oder „Dein Stand“. Drei transparente gezeichnete Rahmen ersetzen die alten Fassungen; Miniatur, Koordinaten, Palette und Werkzeuge teilen die Mittelachse. Die interne Vollsichtgrenze, Optionsansichten G/V, Raster-/Hinweisbudgets und Albumminiaturen bleiben. Nach vollständiger unveränderter Schema-1-Validierung wird `overview=false`; gültiger Zoomwunsch, Inhalt, History/Redo und Recoverygrenzen bleiben erhalten. Neue Saves schreiben Schema 1 mit `overview=false`. SL-R02 bestätigt B-01 am Ausgangshead a83ecf5 technisch; neues kombiniertes Review, persönliche SL-M01/PERF-M01 und neue Mergefreigabe bleiben offen; kein Release. Historische Prüfpläne/-berichte bleiben unverändert.
+
+## Historischer Nachweisstand zu #62 · S0 erledigt, V1/V2/V3 umgesetzt
 
 Stand: 10.10.2026 · kombinierter V1/V2/V3-Prüfweg.
 
@@ -73,7 +79,7 @@ Vergleichsimporte und Artefaktgrenzen gilt die aktuelle CI-Policy, nicht der
 | A01/A02 | Reguläre Szene; `vs2_tests.gd`, `vs2_roundtrip.gd`, normaler Windows-Downloadstart. Sammlung, eine Optionswahl, Sitzungsdefault und Abbruch. |
 | A03 | Native Viewportevents für Raster-MMB, injizierte obsolete Hand und passive Miniatur; unabhängige Hinweisziele samt Bereichsübertritt. P12 prüft Snap/Abbruch/Nachbarn. |
 | A04/A05 | `vs2_gf1_tests.gd`: alle Slotgrenzen ±0,01, Null-/Teilbudget, echte Glyphen/C1/Statusstriche und kontinuierliche Grenzen/Intervalle. `vs2_tests.gd`: 304 reguläre Layoutfälle der Erstlieferung. |
-| A06 | Alle neun unveränderten regulären Inhalte plus zehn gebundene technische Fälle über `tests/vs2_scene.gd`; vier Flächen, UI100/125, beide Modi. Zusätzliche echte Eckklicks mit exaktem Undo/Redo, normalem Writer und proportionalem Reveal für alle fünf Dimensionen. Kein Spielerimport. |
+| A06 | Alle sechs aktuellen regulären Inhalte plus zehn gebundene technische Fälle über `tests/vs2_scene.gd`; vier Flächen, UI100/125, beide Modi. Zusätzliche echte Eckklicks mit exaktem Undo/Redo, normalem Writer und proportionalem Reveal für alle fünf Dimensionen. Kein Spielerimport. |
 | A07 | G1/GP48/H1 und reguläre ZS2-/N01–N03-Suiten; native X/Schraffur 12/24/36 px und gerichtete 17-Zellen-Welle einschließlich Gegenknopf-Abbruch. |
 | A08 | Tatsächlicher alter regulärer Prozess schreibt, neuer Prozess liest; neuer Writer → frischer Reader. Schema-1-Validierung bleibt vollständig; P13/500-Aktionen und Recovery bleiben aktiv. |
 | A09 | Normales ZIP ohne Studienplayer/-protokolle; tatsächliche PCK-Inventur und native Downloadprobe. Studienreplays sind separat deklarierter Entwicklerbestand. |
@@ -133,7 +139,7 @@ Uploadweg, nicht die weiterhin relevanten aktuellen Fachoracles.
 | P12 historische Sechs-/Vier-Slot-Snapfälle | Explizite Board-Komponente; unveränderte geometrische Snap-/Richtungsoracles. Neue reguläre Reserven separat mit mindestens fünf Zahlen. |
 | 500 Aktionen, zehn entfernte Regionen | Unveränderter unabhängiger Zell-/Historyoracle und alle 500 Aktionen; Mini/Pan jetzt negative View-Oracles, Zoom exakt fitbegrenzt. Mehrprozess-Redo bleibt. |
 | Z2 Aktionen/Information/Recovery | Entfernte Handauswahl ersetzt durch Füll-/Radierwahl; negative Raster-/Miniaturtransienten, reale MMB-Hinweise, unveränderte Flush-/Recoverymodalität. |
-| Z2 native feste Rasterboxen/F02-Hinweisdrag | Vollständige Bounds samt Außenstift und unabhängig berechneter Zellumfang im verfügbaren Board; 14,7px-C1-Drag auf tatsächlich überlaufender F03-Folge. Pending-Werkzeugänderung erzwingt beide Flushfehler trotz wirkungslosem Zoom am Fit. Kontrast-, Tooltip- und Abschlussoracles bleiben streng. |
+| Z2 native feste Rasterboxen/F02-Hinweisdrag | Vollständige Bounds samt Außenstift und unabhängig berechneter Zellumfang im verfügbaren Board; 14,7px-C1-Drag auf tatsächlich überlaufender F06-Folge bei 720p/UI125. Pending-Werkzeugänderung erzwingt beide Flushfehler trotz wirkungslosem Zoom am Fit. Kontrast-, Tooltip- und Abschlussoracles bleiben streng. |
 | RP6 native Miniatur bei nicht zeichnungsfähigem Kleinflächen-Fit | Identischen eigenen Fehlerblock zuvor durch reguläre Mausaktionen auf gültiger Fläche vorbereiten; kleine Fläche zeigt denselben Stand passiv und muss Zell-/Historyeingaben ablehnen. Tatsächlicher Miniaturpixel, alle zehn Bilder je Pilot, Einzel-Undo, Abschluss-/Spoiler- und Erreichbarkeitsprüfungen bleiben. |
 | ZV50 167%-Clipping/feste Standardbox | Vollständiger Rahmen bei jeder angebotenen Stufe, endliche Zoomversuche, aktueller Fit statt alter festen Box. Native Vorher-/Nachherdaten benennen die Geometrieänderung. |
 | ZS2 72px-Schrift-/X-Komponentenprobe | Expliziter Entwicklerzeichner für räumlichen Pixeloracle; angebotene reguläre 12/24/36px-Darstellung und Timing zusätzlich unverändert streng geprüft. |

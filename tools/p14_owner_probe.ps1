@@ -13,9 +13,9 @@ if (-not $profileRoot.StartsWith($tempRoot + '\', [System.StringComparison]::Ord
 }
 $marker = Join-Path $profileRoot '.picross-p14-owner-profile'
 $saveRoot = Join-Path $profileRoot 'appdata\Godot\app_userdata\picross · P1\p1\saves'
-$primary = Join-Path $saveRoot 'f03.json'
-$backup = Join-Path $saveRoot 'f03.bak'
-$temporary = Join-Path $saveRoot 'f03.tmp'
+$primary = Join-Path $saveRoot 'f06.json'
+$backup = Join-Path $saveRoot 'f06.bak'
+$temporary = Join-Path $saveRoot 'f06.tmp'
 
 if ($Action -eq 'Start') {
     $resolvedExe = (Resolve-Path -LiteralPath $Exe).Path
@@ -58,28 +58,28 @@ if ($Action -eq 'Status') {
     exit 0
 }
 if (-not (Test-Path -LiteralPath $saveRoot -PathType Container)) {
-    throw 'Noch kein F-03-Speicherordner im isolierten Testprofil.'
+    throw 'Noch kein F-06-Speicherordner im isolierten Testprofil.'
 }
 
 switch ($Action) {
     'BlockSave' {
-        if (Test-Path -LiteralPath $temporary) { throw 'f03.tmp existiert bereits; keine Änderung ausgeführt.' }
+        if (Test-Path -LiteralPath $temporary) { throw 'f06.tmp existiert bereits; keine Änderung ausgeführt.' }
         [void](New-Item -ItemType Directory -Path $temporary)
-        Write-Host 'Nächster F-03-Speicherversuch wird durch den Testordner f03.tmp blockiert.'
+        Write-Host 'Nächster F-06-Speicherversuch wird durch den Testordner f06.tmp blockiert.'
     }
     'UnblockSave' {
-        if (-not (Test-Path -LiteralPath $temporary -PathType Container)) { throw 'Kein Testordner f03.tmp vorhanden.' }
+        if (-not (Test-Path -LiteralPath $temporary -PathType Container)) { throw 'Kein Testordner f06.tmp vorhanden.' }
         if (@(Get-ChildItem -LiteralPath $temporary -Force).Count -ne 0) { throw 'Testordner ist nicht leer; keine Änderung ausgeführt.' }
         Remove-Item -LiteralPath $temporary
         Write-Host 'Testblockade entfernt; den in der App gesperrten Übergang erneut versuchen.'
     }
     'HidePrimary' {
         if (-not (Test-Path -LiteralPath $primary -PathType Leaf) -or -not (Test-Path -LiteralPath $backup -PathType Leaf)) {
-            throw 'F-03 benötigt ein Primary und Backup im isolierten Testprofil. In der App zuerst zwei wirksame Aktionen speichern.'
+            throw 'F-06 benötigt ein Primary und Backup im isolierten Testprofil. In der App zuerst zwei wirksame Aktionen speichern.'
         }
-        $held = Join-Path $saveRoot 'f03.owner-held'
-        if (Test-Path -LiteralPath $held) { throw 'f03.owner-held existiert bereits; keine Änderung ausgeführt.' }
+        $held = Join-Path $saveRoot 'f06.owner-held'
+        if (Test-Path -LiteralPath $held) { throw 'f06.owner-held existiert bereits; keine Änderung ausgeführt.' }
         Move-Item -LiteralPath $primary -Destination $held
-        Write-Host 'Nur das isolierte F-03-Primary wurde beiseitegelegt. Die App sollte jetzt Backup-Recovery anzeigen.'
+        Write-Host 'Nur das isolierte F-06-Primary wurde beiseitegelegt. Die App sollte jetzt Backup-Recovery anzeigen.'
     }
 }

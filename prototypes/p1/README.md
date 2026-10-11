@@ -1,23 +1,28 @@
 # P1 · Integrierte Windows-Spielprobe
 
-Aktueller [VS2-V1-Zwischenstand](../../docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+
+[PERF-A / #67](../../docs/PERF_A_IMPLEMENTATION.md) ergänzt native Referenzmessung
+und geprüfte Entwickleratlanten. [PERF-B / #68](../../docs/PERF_B_IMPLEMENTATION.md)
+verwendet deren Texturen regulär mit getrennten Ruhe-, Übergangs- und Cursorebenen.
+`perf_a/` und alle Probescripte sind vom Spielerexport ausgeschlossen.
+Der [Zellrendering-Vertrag](../../docs/CELL_RENDERING.md) gilt für die Folgearbeit;
+PERF-01 und persönliche PERF-M01/SL-M01 bleiben offen.
+
+Integrierter Vorgänger: [VS2-V1-Zwischenstand](../../docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
 ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
 Ergänzt durch [V2](../../docs/VS2_V2_IMPLEMENTATION.md): stabile Scribble-Konturen und reine Füllminiaturen.
 [V3](../../docs/VS2_V3_IMPLEMENTATION.md) ergänzt kräftiger variierte Rasterlinien, organische Fülltexturen,
-rechte Werkzeugleiste und Bakso-Arbeitstitel. Neues unabhängiges Review, persönliche
-VS2-M01 und Mergefreigabe offen; Draft-PR #62, kein Release.
+rechte Werkzeugleiste und Bakso-Arbeitstitel. [SL-65](../../docs/SL65_IMPLEMENTATION.md) ersetzt dessen Sidebar durch sechs Aktionen und drei gezeichnete Bildrahmen. Neues unabhängiges Review, persönliche
+SL-M01 und Mergefreigabe offen; neuer Draft-PR zu #65, kein Release.
 
 VS2 / [#61](https://github.com/venomenon328/picross/issues/61) startet regulär in der
 Sammlung. Erst die Auswahl öffnet ein Blatt; Einstellungen sind auch aus der
 Sammlung erreichbar. Unter **Rätselansicht** stehen **Rasteransicht** und
 **Gesamtansicht mit allen Hinweisen**. Genau diese Option wählt den Modus; sie gilt
-für die Sitzung, nach Neustart wieder Rasteransicht. **Einpassen** passt innerhalb
-des gewählten Modus ein. **Arbeitsgröße** wünscht 24px, begrenzt durch den Fit.
+für die Sitzung, nach Neustart wieder Rasteransicht. Minus/Plus und Mausrad wählen die Zoomstufe; die interne Fitgrenze hält das Raster vollständig sichtbar.
 
-Rechts unter Miniatur und Farben stehen Füllen, Radieren, Undo, Redo, Verkleinern,
-Vergrößern, Einpassen und Arbeitsgröße in einer senkrechten Leiste. Bei knapper
-Höhe scrollt nur diese Leiste mit Rad oder sichtbarem Scrollbalken. Über dem Raster
-bleibt das Rad Zoom. Auswahlmarkierungen und Tooltips zeigen Werkzeug/Farbe;
+Rechts unter Miniatur und Farben stehen genau sechs Aktionen in zwei Spalten und drei Zeilen: Füllen/Radieren, Undo/Redo, Verkleinern/Vergrößern. Alle sechs bleiben ohne Scrollen sichtbar, auch bei 720p/UI125. Drei gezeichnete transparente Rahmen samt Miniatur, Koordinaten und Controls liegen auf der Mittelachse der unveränderten oberen Dreiernavigation. Die Miniatur hat keine Überschrift. Über dem Raster bleibt das Rad Zoom; über den Werkzeugen verändert es keine Zellen oder Rastergröße. Auswahlmarkierungen und Tooltips zeigen Werkzeug/Farbe;
 dauerhafte Werkzeug-/Farbtexte und numerische Zoomanzeige entfallen. Platz- und
 Hinweiswarnungen bleiben bei Bedarf unten auf dem Papier sichtbar.
 Eigene passive Miniatur und unabhängige lange Hinweise bleiben am Raster. Hand- und Raster-/Miniaturverschiebung entfallen. Kleine oder
@@ -25,7 +30,7 @@ kollidierende Großrasterhinweise sind kein Komfortversprechen. Optionen und Rü
 bleiben erreichbar. Speicherfehler blockieren ungesicherte Wechsel; Backupübernahme
 braucht weiter Bestätigung. Neun Inhalte und normale Schema-1-Saves bleiben erhalten.
 [Aktuelle technische Zuordnung](../../docs/VS2_VERIFICATION.md) und
-[neutrale Windows-Spielprobe](../../docs/VS2_OWNER_TRIAL.md); VS2-M01 und unabhängiges
+[neutrale Windows-Spielprobe](../../docs/VS2_OWNER_TRIAL.md); SL-M01 und unabhängiges
 Review bleiben vor Merge offen. Kein Release.
 
 Offline-Fonts: Bakso Daging für den Arbeits-Blatttitel, Fraunces für sonstige
@@ -88,11 +93,7 @@ P1.3 aus [Issue #11](https://github.com/venomenon328/picross/issues/11) und
 PR #15/#16 in `main` integriert; [P1.4-Ergebnisbericht](../../docs/P1_4_VERIFICATION.md).
 G1 aus [Issue #17](https://github.com/venomenon328/picross/issues/17) ist über PR #18
 integriert und ergänzt die erneute Achsenwahl nach tatsächlicher Rückkehr
-zur Startzelle. H1/#19 ist über PR #20 auf diesem kombinierten Stand integriert. F-01 (20×20),
-F-02 (40×40, vier Farben), F-03 (100×100, ausdrücklich UI-Testdatensatz)
-und F-04 (20×20 monochrom, RP-3-Dateiimport) bleiben erhalten. RP-6 ergänzt
-F-05 (100×100 Mono), F-06 (50×50 Farbe), F-07 (100×100 Farbe),
-F-08/F-09 (40×40 Farbe). Alle neun sind im scrollbar erreichbaren Album zugänglich. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
+zur Startzelle. H1/#19 ist über PR #20 auf diesem kombinierten Stand integriert. Der aktuelle Katalog enthält F-01 (20×20), F-02 (40×40, vier Farben), F-04 (20×20 monochrom, RP-3-Dateiimport), F-06 (50×50 Farbe) und F-08/F-09 (40×40 Farbe). Alle sechs sind im scrollbar erreichbaren Album zugänglich. F-03/F-05/F-07 bleiben ausschließlich als historische Dateien erhalten. Review R2/B-01/B-02 und D-07 bis D-27 sind in diesem Stand
 technisch nachgearbeitet. Hinweise bleiben vollständige einzeilige farbige Zahlen ohne
 Zusatzkennungen. Alle Zeilen beziehungsweise Spalten teilen sich je ein festes
 Hinweisraster; jede konkrete Linie behält darin ihre eigene eingerastete Leseposition.
@@ -163,7 +164,7 @@ vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clipp
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
   Rückgängig/Wiederholen stellt ganze Striche mit exakten Vorzuständen wieder her.
-- F-02/F-03: Farbe über die unbeschrifteten Farbfelder in den Originalfarben wählen.
+- F-02/F-06: Farbe über die unbeschrifteten Farbfelder in den Originalfarben wählen.
   Eckmarkierungen zeigen die Auswahl; Status und Tooltip nennen „Farbe 1“ bis „Farbe 4“.
   Farbwahl aktiviert Füllen, auch nach Radierer. Die frühere A–D-Beschriftung
   der Mauspalette entfällt; Lösungshinweise zeigen weiterhin nur die Zahl in ihrer Farbe.
@@ -176,7 +177,7 @@ vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clipp
 
 - Mausrad und −/+ zoomen monoton bis zur vollständigen Raster-Fitgrenze samt Rahmen.
   Die gewünschte gültige Arbeitsstufe bleibt separat vom berechneten Fitwert erhalten.
-  Einpassen und Arbeitsgröße ändern die benannte Rätselansicht nicht.
+  Minus/Plus und Mausrad ändern die benannte Rätselansicht nicht.
 - Raster-MMB und frühere Handrouten verschieben oder bearbeiten nichts.
 - Die eigene Miniatur bleibt passiv: nur eigene Füllungen in Originalfarben,
   einschließlich Fehlern und statischer Strichvorschau. X und unbekannt erscheinen
@@ -228,7 +229,7 @@ Hintergrund muss nicht vollständig ausgekreuzt sein. Name und Ergebnisbild ersc
 erst nach bestätigtem Abschluss. F-01 zeigt das ursprüngliche Raster neben einer
 detaillierteren Illustration desselben Motivs. F-02 zeigt einen verfeinerten Leuchtturm
 mit Sonne, Laterne, Turmbändern, Fenstern, Tür und Wasserlinien im klaren F-01-Stil.
-F-03 bleibt auch danach als Test gekennzeichnet.
+Die früheren 100×100-Blätter werden nicht mehr angeboten.
 
 ## Optionale G1-Nachprobe · nicht durchgeführt
 
@@ -248,7 +249,7 @@ Mergegate. Sie bleibt als optionaler realer Eindruck dokumentiert:
    Zellen und Farbe prüfen. Escape und Fokusverlust nach dem Wechsel müssen die
    Vorschau ohne neue Aktion verwerfen; eine falsche Tastenfreigabe darf nicht
    abschließen.
-3. F-02 mit den vier Farbfeldern und F-03 bei 50 % Arbeitszoom: echte Startzelle treffen und
+3. F-02 mit den vier Farbfeldern und F-06 am tatsächlichen Fit: echte Startzelle treffen und
    die neue Achse prüfen. Zeiger ohne Startzelltreffer über den Ursprung springen
    beziehungsweise in eine andere Zeile/Spalte neben ihn bewegen: Die alte Achse
    muss gebunden bleiben. Über UI/Viewportgrenze bleibt der letzte gültige
@@ -302,7 +303,7 @@ exakt `P1 Windows x86_64`.
 
 `technical/` enthält fortlaufenden Bericht, Phasenlogs und begrenzte aktuelle
 Reviewbilder und wird auch nach Fehlern hochgeladen. Technische Daten haben
-20 MB Budget, gemeinsam mit dem Spieler-ZIP 75 MB. Abgeschlossene Studien,
+30 MB Budget, gemeinsam mit dem Spieler-ZIP 75 MB. Abgeschlossene Studien,
 historische Vorherprojekte und große alte Reviewpakete entstehen im Standardlauf
 nicht mehr. Die vollständige damalige Diagnose ist über ihren gebundenen Commit
 reproduzierbar; aktive Referenzen stehen in der CI-Policy.
@@ -363,11 +364,11 @@ Studienvergleich und Speicherisolation bleiben erhalten; kein Merge oder Release
 Historische VS-1-ZIPs boten G/V ohne R, Hand oder Rasterpanning. Hinweise werden
 nach tatsächlichem Mindestbedarf je Achse reserviert; zusätzliche freie Breite
 geht anschließend an ganze Zeilenhinweisslots ohne kleineren Fit. G zeigt auch während des MMB-Drags
-mindestens fünf zusammenhängende ganze Zahlen, bei kurzen Folgen alle. Einpassen
+mindestens fünf zusammenhängende ganze Zahlen, bei kurzen Folgen alle. Der interne Fit
 erreicht die flächenabhängige Raster-Vollsichtgrenze. Alte R-Ansichten werden auf G
 normalisiert; Studienstand bleibt unter `user://vs1/revision-1` getrennt.
 [Vertrag](../../docs/VS1_STUDY.md), [Prüfzuordnung](../../docs/VS1_VERIFICATION.md)
 und [Eigentümerprobe](../../docs/VS1_OWNER_TRIAL.md). VS-VB1/Erstproduktion und alte
 R-Artefakte und die begrenzte E1-Korrekturfolge sind historisch. VS-D01 ist bestätigt,
 reguläre Integration erfolgt mit VS2; der persönliche VS-M01-Bericht ist unvollständig.
-GF-M01/#59 ist historisch bestanden (PR #60, Kommentar 6076039228). Neue VS2-M01 und unabhängiges Review bleiben vor Merge offen. Separate ZS-/VS-Spielerbuilds werden nicht mehr standardmäßig erzeugt; die gebundenen Vergleiche laufen als Entwickler-Replays weiter.
+GF-M01/#59 ist historisch bestanden (PR #60, Kommentar 6076039228). Neue SL-M01 und unabhängiges Review bleiben vor Merge offen. Separate ZS-/VS-Spielerbuilds werden nicht mehr standardmäßig erzeugt; die gebundenen Vergleiche laufen als Entwickler-Replays weiter.

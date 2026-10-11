@@ -41,9 +41,9 @@ static func run(t: SceneTree) -> void:
 	t.check(app.board.view.cell_size >= zoom_before and app.board.view.cell_size <= app.board.fit_ceiling,"Z2-A02 plus changes working zoom")
 	click(t,app.actions.minus)
 	t.check(app.board.view.cell_size <= zoom_before,"Z2-A02 minus restores previous step")
-	click(t,app.actions.fit)
-	t.check(app.board.overview,"Z2-A02 fit via viewport")
-	click(t,app.actions.work)
+	click(t,app.actions.plus)
+	t.check(not app.actions.has("fit") and not app.actions.has("work") and not app.board.overview,"SL no obsolete actions")
+	click(t,app.actions.minus)
 	t.check(not app.board.overview,"Z2-A02 work size via viewport")
 	app.board.set_clue_step("row",35,2)
 	app.board.set_clue_step("row",36,1)
@@ -53,9 +53,9 @@ static func run(t: SceneTree) -> void:
 	app._save_current()
 	for route: String in ["nav-information","help","menu"]:
 		if route == "nav-information":
-			click(t,app.actions.fit)
+			click(t,app.actions.plus)
 		else:
-			click(t,app.actions.work)
+			click(t,app.actions.minus)
 		var before: Dictionary = state(app)
 		t.check(app.board.row_clue_reads.size() == 40 and app.board.clue_step("column",21) > 0 and app.board.clue_step("column",22) > 0,"Z2-A03 navigation starts with four nontrivial line reads")
 		click(t,app.actions[route])
@@ -71,7 +71,7 @@ static func run(t: SceneTree) -> void:
 		click(t,app.actions["nav-work"])
 		await t.process_frame
 		t.check(app.work.visible and state(app) == before,"Z2-A03 full state survives return " + route)
-	click(t,app.actions.work)
+	click(t,app.actions.minus)
 	# Historical six-slot snap is still exercised by P12's isolated component;
 	# regular full view additionally verifies all its allocated slots here.
 	var capacity: int = app.board.clue_capacity("row")
@@ -128,7 +128,7 @@ static func run(t: SceneTree) -> void:
 	# Missing primary after rotation must not trap recovery behind N1.
 	app.set_ui_scale(1.0)
 	app._save_current()
-	var other: Array = [app.sessions[0].player.cells.duplicate(),app.sessions[2].player.cells.duplicate()]
+	var other: Array = [app.sessions[0].player.cells.duplicate(),app.sessions[3].player.cells.duplicate()]
 	app.board.eraser = not app.board.eraser
 	var pending: Dictionary = state(app)
 	app.store.fail_step = "after_rotation"
@@ -152,7 +152,7 @@ static func run(t: SceneTree) -> void:
 	app.repair_dialog.confirmed.emit()
 	app.open_puzzle()
 	click(t,app.actions.menu)
-	t.check(app.information.visible and app.store.load_slot(app.session.definition).status == "loaded" and app.sessions[0].player.cells == other[0] and app.sessions[2].player.cells == other[1],"Z2-A04 confirmed repair allows retry and preserves other slots")
+	t.check(app.information.visible and app.store.load_slot(app.session.definition).status == "loaded" and app.sessions[0].player.cells == other[0] and app.sessions[3].player.cells == other[1],"Z2-A04 confirmed repair allows retry and preserves other slots")
 	app.return_to_work()
 	app.board.set_clue_step("row",35,1)
 	app._save_current()

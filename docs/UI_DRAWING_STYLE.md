@@ -1,6 +1,22 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-## Aktueller Stand · V1/V2/V3 umgesetzt, kombinierte Abnahme offen
+## Zellrendering-Vertrag · PERF
+
+Für Zellbilder, Varianten, Zeitabbildung und spätere Cachearbeit gilt zusätzlich
+[CELL_RENDERING, PERF-D01–D08](CELL_RENDERING.md). ZS-D02/03 und V3-02 bestimmen
+weiterhin Stiftoptik und Lesbarkeit; die pro Frame berechnete Geometrie und der
+exakte frühere 18-px-Pfad sind gemäß PERF-D06 keine Pflichtarchitektur.
+[PERF-A](PERF_A_IMPLEMENTATION.md) liefert die isolierte Mess-/Atlasgrundlage.
+[PERF-B / #68](PERF_B_IMPLEMENTATION.md) integriert die gebundenen Atlanten und
+getrennte Zeichenebenen. Vorschau, 210/120-ms-Vertrag, atomarer Commit und Miniatur bleiben.
+
+## Aktueller Vertrag · Sidebar #65
+
+PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der neue zusammenhängende Stand A+B folgt auf `feat/65-sidebar-frames`; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.
+
+Aktuell: genau sechs Aktionen in 2×3 (Füllen/Radieren, Undo/Redo, Minus/Plus), ohne Einpassen-/Arbeitsgrößenaktion oder „Dein Stand“. Drei transparente gezeichnete Rahmen ersetzen die alten Fassungen; Miniatur, Koordinaten, Palette und Werkzeuge teilen die Mittelachse. Die interne Vollsichtgrenze, Optionsansichten G/V, Raster-/Hinweisbudgets und Albumminiaturen bleiben. Nach vollständiger unveränderter Schema-1-Validierung wird `overview=false`; gültiger Zoomwunsch, Inhalt, History/Redo und Recoverygrenzen bleiben erhalten. Neue Saves schreiben Schema 1 mit `overview=false`. SL-R02 bestätigt B-01 am Ausgangshead a83ecf5 technisch; neues kombiniertes Review, persönliche SL-M01/PERF-M01 und neue Mergefreigabe bleiben offen; kein Release. Historische Prüfpläne/-berichte bleiben unverändert.
+
+## Historischer Paketstand · V1/V2/V3 vor Abschluss von #62
 
 Die reguläre VS2-Erstlieferung liegt in [Draft-PR #62](https://github.com/venomenon328/picross/pull/62)
 auf `2c332ad688315bfa851f7c0d8642d2ab4ac3709c`, Basis

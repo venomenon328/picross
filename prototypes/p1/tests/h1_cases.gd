@@ -120,24 +120,24 @@ static func run(t: SceneTree) -> void:
 	var timings: Array[int] = []
 	for kind: int in range(4):
 		var input: Array[int] = []
-		input.resize(100)
+		input.resize(50)
 		input.fill(-1)
 		var hints: Array = []
-		for i: int in range(30 if kind != 2 else 100):
+		for i: int in range(30 if kind != 2 else 50):
 			hints.append({"length": 1, "color": 1 + i % 2 if kind == 2 else 1})
 		if kind == 0:
 			hints.clear()
 		if kind == 2:
-			for p: int in range(100):
+			for p: int in range(50):
 				input[p] = 1 + p % 2
 		if kind == 3:
 			input.fill(2)
 		var start: int = Time.get_ticks_usec()
 		for repeat: int in range(20):
 			var flags: Array[bool] = Completion.analyze(input, hints)
-			t.check(flags.size() == hints.size() and (not flags.has(false) if kind == 2 else not flags.has(true)), "H1 bounded 100-cell case %d" % kind)
+			t.check(flags.size() == hints.size() and (not flags.has(false) if kind == 2 else not flags.has(true)), "H1 bounded 50-cell case %d" % kind)
 		timings.append(Time.get_ticks_usec() - start)
-	print("H1_LINE_TIMING_US twenty analyses each [empty, ambiguous, 100 colored, contradiction]=", timings)
+	print("H1_LINE_TIMING_US twenty analyses each [empty, ambiguous, 50 colored, contradiction]=", timings)
 	# GP-02: immediate bounds, including mixed types; uniqueness stays required.
 	for v: Array in [
 		[[3], "?###?", [1]], [[3], "X###?", [1]], [[3], "?###X", [1]],
@@ -341,7 +341,7 @@ static func app_cases(t: SceneTree) -> void:
 	var y: int = 0
 	while app.session.definition.rows[y].is_empty():
 		y += 1
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 	for x: int in range(20):
 		if int(app.session.definition.solution[y][x]) > 0:
 			stroke(t, app.board, Vector2i(x, y), Vector2i(x, y))

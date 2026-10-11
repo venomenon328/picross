@@ -45,6 +45,8 @@ def build_exports(output):
         repaired = Path(tmp) / "baseline"
         unpack_archive(ROOT / "examples/rp5/baseline.zip", load_json(ROOT / "examples/rp5/archive.json"), repaired)
         for e in data["selection"]:
+            if e["definition_id"] in {"F-05", "F-07"}:
+                continue  # Retired 100x100 content; original bindings remain above.
             start = time.monotonic()
             stem = e["definition_id"].lower().replace("-", "")
             reference = ROOT / e["reference_bundle"]
@@ -126,6 +128,8 @@ def verify_package(output):
     validate_manifest(manifest, data)
     fresh = build_exports(output / "exports")
     for e, locked in zip(manifest["entries"], data["selection"]):
+        if e["definition_id"] in {"F-05", "F-07"}:
+            continue
         stem = e["definition_id"].lower().replace("-", "")
         # Exact stored export reproduction (v1 retains historical timing fields).
         fresh_manifest = load_json(output / "exports" / stem / "manifest.json")
@@ -155,7 +159,7 @@ def verify_package(output):
               "source_tree_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip()),
               "manifest_sha256": file_hash(PILOT / "manifest.json"), "plan_sha256": PLAN_SHA,
               "host": platform.system(), "python": platform.python_version(), "image_versions": versions(),
-              "exports": fresh, "elapsed_seconds": time.monotonic()-started,
+              "exports": fresh, "retired_historical_bindings_only": ["F-05", "F-07"], "elapsed_seconds": time.monotonic()-started,
               "independent_review": "open", "owner_trials": "open", "phase_decision": "open"}
     write_json(output / "verification.json", report)
     shutil.copyfile(PILOT / "manifest.json", output / "manifest.json")

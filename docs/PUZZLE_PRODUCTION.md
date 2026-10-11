@@ -1,5 +1,7 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+
 Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-5 integriert; RP-6 im Draft
 
 ## 1. Geltung und Ziel

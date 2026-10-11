@@ -166,7 +166,7 @@ def export(project, workspace, output, base, phase, host):
     build=workspace/'vs1-windows'; build.mkdir()
     try:
         settings.write_text(changed,encoding='utf-8')
-        filtered=preset.replace('exclude_filter="tests/*,data/*proof*,study/*,full_view_study/*"', 'exclude_filter="tests/*,data/*,art/f*.png,art/f*.svg"')
+        filtered=preset.replace('exclude_filter="tests/*,data/*proof*,study/*,full_view_study/*', 'exclude_filter="tests/*,data/*,art/f*.png,art/f*.svg')
         filtered=filtered.replace('include_filter="','include_filter="full_view_study/*.json,full_view_study/cases/*/*.json,')
         if filtered==preset: raise toolchain.PreflightError('VS1 export filters not set')
         presets.write_text(filtered,encoding='utf-8')

@@ -52,6 +52,8 @@ def export_p1(bundle: Path, variant: str, reveal: Path, name: str, output: Path,
         raise InvalidInput("Reveal name requires 1..128 characters")
     c, proof, checked = inspect_candidate(bundle, variant, Budget(seconds, max_lines))
     d = c["design"]
+    if d["width"] > 50 or d["height"] > 50:
+        raise InvalidInput("P1 puzzles support at most 50 cells per axis")
     if d["mode"] != "mono" or d["width"] != d["height"]:
         raise InvalidInput("First P1 profile supports square monochrome candidates only")
     if not checked["certified"] or checked["status"] != "solved":
@@ -138,6 +140,8 @@ def export_pilot(bundle: Path, variant: str, reveal: Path, name: str, output: Pa
         source = {"kind": "repair", "repair_id": raw["id"], "reference": raw["reference"],
                   "repair_sha256": file_hash(bundle / "repair.json"),
                   "manifest_sha256": file_hash(bundle / "manifest.json")}
+    if design["width"] > 50 or design["height"] > 50:
+        raise InvalidInput("P1 puzzles support at most 50 cells per axis")
     if not certified:
         raise InvalidInput("Pilot export requires complete independent certification")
     if (design["width"] != design["height"] or len(design["palette"]) > 4 or

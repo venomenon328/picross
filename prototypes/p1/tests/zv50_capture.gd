@@ -42,7 +42,7 @@ func run() -> void:
 		app.select_puzzle(spec[0])
 		install_demo(spec[0])
 		app.open_puzzle()
-		app.board.working_size()
+		app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 		for zoom_attempt: int in range(25):
 			var before: float = app.board.view.cell_size
 			if absf(before-float(spec[4])) < 0.01: break

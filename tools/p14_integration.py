@@ -14,9 +14,9 @@ import tempfile
 from collections import Counter
 from pathlib import Path
 
-REGIONS = ((2, 2), (45, 2), (88, 2), (2, 45), (45, 45),
-           (88, 45), (2, 88), (45, 88), (88, 88), (45, 65))
-WIDTH = HEIGHT = 100
+REGIONS = ((2, 2), (14, 2), (26, 2), (38, 2), (2, 18),
+           (14, 18), (26, 18), (38, 18), (2, 34), (14, 34))
+WIDTH = HEIGHT = 50
 
 
 def build_plan() -> list[dict]:
@@ -27,15 +27,15 @@ def build_plan() -> list[dict]:
     """
     result: list[dict] = []
     for region, (bx, by) in enumerate(REGIONS):
-        block: list[dict] = [{"kind": "mini", "point": [min(bx + 4, 96), min(by + 4, 96)]}]
+        block: list[dict] = [{"kind": "mini", "point": [min(bx + 4, 46), min(by + 4, 46)]}]
         for j in range(33):
             block.append(_edit(bx, by, j))
         block += [
-            {"kind": "pan", "delta": [-60 if bx < 45 else 60, -40 if by < 45 else 40]},
+            {"kind": "pan", "delta": [-60 if bx < 19 else 60, -40 if by < 19 else 40]},
             {"kind": "zoom", "direction": 1},
             {"kind": "zoom", "direction": -1},
-            {"kind": "hint", "axis": "row", "index": by + 3, "slots": 1.2},
-            {"kind": "hint", "axis": "column", "index": bx + 3, "slots": 1.2},
+            {"kind": "hint", "axis": "row", "index": 41, "slots": 1.2 if region==0 or region%2 else -1.2},
+            {"kind": "hint", "axis": "column", "index": 17, "slots": 1.2 if region==0 or region%2 else -1.2},
             {"kind": "undo"}, {"kind": "redo"}, {"kind": "undo"},
             {"kind": "cell", "start": [bx, by + 6], "end": [bx, by + 6],
              "button": "right", "tool": "fill", "color": 1, "purpose": "redo branch"},
@@ -200,10 +200,10 @@ def verify_navigation(plan: list[dict], trace_path: Path) -> None:
                 axis, index = action["axis"], action["index"]
                 current, old = (rows, rows_before) if axis == "row" else (cols, cols_before)
                 other, old_other = (cols, cols_before) if axis == "row" else (rows, rows_before)
-                if other != old_other or any(current[i] != old[i] for i in range(100) if i != index):
+                if other != old_other or any(current[i] != old[i] for i in range(HEIGHT) if i != index):
                     raise AssertionError(f"action {n}: clue drag altered a neighbour or opposite axis")
                 read = current[index]
-                if read == old[index] or read.get("anchor") != "middle" or not (0 <= read["start"] < read["end"] <= 100):
+                if read == old[index] or read.get("anchor") != "middle" or not (0 <= read["start"] < read["end"] <= WIDTH):
                     raise AssertionError(f"action {n}: wrong semantic target read {old[index]} -> {read}")
             elif rows != rows_before or cols != cols_before:
                 raise AssertionError(f"action {n}: non-clue action changed semantic clue reads")

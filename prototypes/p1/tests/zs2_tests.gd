@@ -13,10 +13,10 @@ func run() -> void:
 	surface.add_child(app)
 	await process_frame
 	check(app.board is Regular and app.store.root == saved_root, "regular scene and isolated test save root")
-	check(app.sessions.size() == 9, "all nine regular sheets available")
+	check(app.sessions.size() == 6, "all six regular sheets available")
 	check(app.animation_toggle.button_pressed and app.board.animations, "new session starts enabled")
 	check(not app.has_method("cycle_font") and not app.has_method("empty_sample"), "no study controls in regular app")
-	for index: int in range(9):
+	for index: int in range(app.sessions.size()):
 		app.select_puzzle(index)
 		for scale: float in [1.0, 1.25]:
 			app.set_ui_scale(scale)
@@ -41,7 +41,7 @@ func run() -> void:
 	check(app.board.effects.is_empty() and not app.board.animations, "checkbox ends active effects")
 	check(app.board.capture_view() == state and app.session.player.history == history, "checkbox preserves view/history")
 	check(FileAccess.get_file_as_string(app.store.path_for("f01")) == bytes, "checkbox preserves save bytes")
-	for index: int in range(9):
+	for index: int in range(app.sessions.size()):
 		app.select_puzzle(index)
 		app.show_information()
 		app.return_to_work()
@@ -100,6 +100,6 @@ func fresh() -> void:
 	app.select_puzzle(0)
 	app._reset_selected()
 	app.open_puzzle()
-	app.board.working_size()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	app.board.hand = false
 	app.board.eraser = false

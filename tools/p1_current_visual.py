@@ -10,8 +10,8 @@ import zs1_delivery
 import zs2_delivery
 
 CURRENT_CASES = {
-    "f01-work", "f02-color", "f03-small", "f02-compact", "f01-1600",
-    "f01-z150", "f03-z300", "f07-color100", "f07-small",
+    "f01-work", "f02-color", "f06-small", "f02-compact", "f01-1600",
+    "f01-z150", "f06-z300", "f06-color50", "f06-compact",
     "hint-row-drag", "hint-row-tooltip", "hint-column-drag", "hint-column-tooltip",
     "status-0", "status-1", "status-2",
 }
@@ -46,7 +46,7 @@ def verify_regular_motion(root: Path, renders: Path) -> dict:
         with Image.open(renders / item["file"]) as picture:
             if list(picture.size) != item["size"]:
                 raise toolchain.PreflightError("Current drawing capture dimensions differ")
-    if len(current["frames"]) != 1 or {m["fixture"] for m in current["measurements"]} != {"F-03", "F-07"}:
+    if len(current["frames"]) != 1 or {m["fixture"] for m in current["measurements"]} != {"F-06"}:
         raise toolchain.PreflightError("Missing current motion/large color load")
     for motion in current["frames"]:
         if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"] < 210):
@@ -65,7 +65,7 @@ def verify_regular_motion(root: Path, renders: Path) -> dict:
     x_sizes = pixel_oracle(renders, current["rework_sequences"],
                           lambda: zs2_delivery.verify_x_sizes(renders, current["rework_sequences"]))
     fill_sizes = pixel_oracle(renders, current["fill_sequences"],
-                             lambda: zs2_delivery.verify_fill_sizes(renders, current["fill_sequences"]))
+                             lambda: zs2_delivery.verify_fill_sizes(renders, current["fill_sequences"], atlas_frames=True))
     wave = pixel_oracle(renders, current["wave_sequence"],
                        lambda: zs2_delivery.verify_wave(renders, current["wave_sequence"]))
     return dict(font_sha256=zs2_delivery.FONT_SHA256, cases=sorted(CURRENT_CASES),
@@ -79,7 +79,7 @@ def selected_motion_files(renders: Path) -> list[Path]:
     """Keep native animation crops plus two current contexts, within the global cap."""
     selected = [renders / name for name in (
         "zs2-after.json", "current-drawing-report.json", "zs2-numerals.png",
-        "zs2-after-f02-color.png", "zs2-after-f07-small.png")]
+        "zs2-after-f02-color.png", "zs2-after-f06-compact.png")]
     for pattern in ("zs1-motion-*.png", "zs1-strokes-*.png", "zs2-x-*.png",
                     "zs2-fill-*.png", "zs2-wave-*.png"):
         selected.extend(path for path in renders.glob(pattern) if not path.name.endswith("-context.png"))

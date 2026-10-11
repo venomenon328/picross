@@ -25,14 +25,14 @@ func run() -> void:
 	surface.add_child(app)
 	await process_frame
 	var demos: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/z2-demo.json"))
-	for i: int in range(3):
+	for i: int in range(2):
 		var changes: Array = []
-		var cells: Array = demos[["f01","f02","f03"][i]]
+		var cells: Array = demos[["f01","f02"][i]]
 		for index: int in range(cells.size()):
 			if int(cells[index]) != -1:
 				changes.append({"index":index,"before":-1,"after":int(cells[index])})
 		app.sessions[i].player.commit(changes)
-	for spec: Array in [[1,1920,1080,1.0,18,"f02-1920"],[1,2560,1440,1.0,18,"f02-2560"],[0,2560,1440,1.0,24,"f01-2560"],[2,1920,1080,1.0,24,"f03-1920"],[1,1280,720,1.25,22,"f02-1280"]]:
+	for spec: Array in [[1,1920,1080,1.0,18,"f02-1920"],[1,2560,1440,1.0,18,"f02-2560"],[0,2560,1440,1.0,24,"f01-2560"],[3,1920,1080,1.0,24,"f06-1920"],[1,1280,720,1.25,22,"f02-1280"]]:
 		surface.size = Vector2i(spec[1],spec[2])
 		app.size = Vector2(surface.size)
 		app.set_ui_scale(spec[3])
@@ -86,7 +86,7 @@ func run() -> void:
 	app._repair_selected()
 	app.select_puzzle(0)
 	# Real gestures commit the remaining correct cells, triggering normal completion.
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 	for y: int in range(20):
 		for x: int in range(20):
 			var desired: int = int(app.session.definition.solution[y][x])
@@ -169,11 +169,16 @@ func detail_shots() -> void:
 	if SaveStore.snapshot(app.session,app.board.capture_view()) != tooltip_state or app.session.gesture.active:
 		record_failure("c1-tooltip", "Z2 rendered tooltip allowed a board action")
 	app.board.clear_clue_hover()
-	# F02 now fits all its row clues. Use the existing long F03 row through
+	# F02 fits all row clues. Use the longest F06 row at the smaller surface through
 	# the regular scene for the unchanged continuous 14.7px C1 drag oracle.
-	app.select_puzzle(2)
+	surface.size = Vector2i(1280,720)
+	app.size = Vector2(surface.size)
+	app.set_ui_scale(1.25)
+	app.select_puzzle(3)
+	await process_frame
+	await process_frame
 	var area: Rect2 = app.board.row_clue_area()
-	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,35)).get_center().y)
+	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,41)).get_center().y)
 	var press: InputEventMouseButton = InputEventMouseButton.new()
 	press.position = app.board.global_position+point
 	press.button_index = MOUSE_BUTTON_MIDDLE
@@ -189,6 +194,9 @@ func detail_shots() -> void:
 	await shot("c1-drag")
 	app.board.cancel_gesture()
 	app.board.clear_pointer_hover()
+	surface.size = Vector2i(1920,1080)
+	app.size = Vector2(surface.size)
+	app.set_ui_scale(1.0)
 	app.select_puzzle(1)
 	var hover: InputEventMouseMotion = InputEventMouseMotion.new()
 	hover.position = app.actions.fill.get_global_rect().get_center()
