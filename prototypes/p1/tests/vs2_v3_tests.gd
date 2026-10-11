@@ -1,6 +1,7 @@
 extends SceneTree
 ## Current source and external downloaded-PCK probe; no developer code exported.
 const Store = preload("res://model/save_store.gd")
+var Sidebar: Script
 const Marks = preload("res://ui/pencil_marks.gd")
 var app: Control
 var canvas: SubViewport
@@ -34,11 +35,12 @@ func frame_bindings_ok() -> bool:
 	return true
 
 func frame_geometry_ok() -> bool:
-	var boxes: Array[Rect2] = [app.surface.card,app.surface.palette,app.surface.wells[0]]
+	var boxes: Array[Rect2] = Sidebar.visible_frames(app)
+	if not Sidebar.sidebar_aligned(app): return false
 	var paper: Rect2 = app.surface.material_rect()
 	var inner: Rect2 = Rect2(paper.position+paper.size*Vector2(0.03125,0.034),paper.size*Vector2(0.93125,0.933))
 	for i: int in range(3):
-		if not inner.encloses(boxes[i]) or boxes[i].intersects(app.board.get_global_rect()):
+		if not inner.encloses(boxes[i]) or not Sidebar.clear_of_board(app,boxes[i]):
 			print("FRAME bounds ",canvas.size," u",app.ui_scale," ",i," ",boxes[i]," inner",inner)
 			return false
 		if absf(boxes[i].get_center().x-boxes[0].get_center().x)>0.05:
@@ -56,7 +58,7 @@ func frame_geometry_ok() -> bool:
 
 func frame_pixels() -> void:
 	check(frame_bindings_ok(),"SL actual texture RGBA hashes and transparent safe interiors")
-	await shot("v3-sidebar-detail",Rect2(app.surface.card.position,Vector2(app.surface.card.size.x,app.surface.wells[0].end.y-app.surface.card.position.y)).grow(2))
+	await shot("v3-sidebar-detail",Sidebar.navigation_bounds(app).merge(app.surface.card).merge(app.surface.wells[0]).grow(2))
 	var original: Dictionary = app.surface.frames.duplicate()
 	await RenderingServer.frame_post_draw
 	var before: Image = canvas.get_texture().get_image()
@@ -78,8 +80,53 @@ func frame_pixels() -> void:
 	app.surface.queue_redraw()
 	await settle()
 
+func axis_negatives() -> void:
+	var card: Rect2 = app.surface.card
+	var palette: Rect2 = app.surface.palette
+	var tools: Rect2 = app.surface.wells[0]
+	var controls: Array[Control] = [app.mini,app.coordinate,app.palette_row,app.tools_scroll]
+	var positions: Array[Vector2] = []
+	for item: Control in controls: positions.append(item.position)
+	# Internally centered lower groups can still violate the upper reference.
+	app.surface.card.position.x+=16
+	app.surface.palette.position.x+=16
+	app.surface.wells[0].position.x+=16
+	for item: Control in controls: item.position.x+=16
+	check(not frame_geometry_ok() and not Sidebar.sidebar_aligned(app),"negative: jointly shifted lower frames AND controls rejected")
+	app.surface.card=card
+	app.surface.palette=palette
+	app.surface.wells[0]=tools
+	check(not frame_geometry_ok(),"negative: aligned frames with shifted actual controls rejected")
+	for i: int in range(controls.size()): controls[i].position=positions[i]
+	app.surface.card.position.x+=16
+	app.surface.palette.position.x+=16
+	app.surface.wells[0].position.x+=16
+	check(not frame_geometry_ok(),"negative: jointly shifted frames with unchanged controls rejected")
+	app.surface.card=card
+	app.surface.palette=palette
+	app.surface.wells[0]=tools
+	for id: String in ["help","menu","nav-information"]: app.actions[id].position.x+=16
+	app.surface.card.position.x+=16
+	app.surface.palette.position.x+=16
+	app.surface.wells[0].position.x+=16
+	for item: Control in controls: item.position.x+=16
+	check(not frame_geometry_ok(),"negative: moving upper navigation to fake alignment rejected")
+	for id: String in ["help","menu","nav-information"]: app.actions[id].position.x-=16
+	app.surface.card=card
+	app.surface.palette=palette
+	app.surface.wells[0]=tools
+	for i: int in range(controls.size()): controls[i].position=positions[i]
+	check(frame_geometry_ok(),"axis negative controls fully restored")
+	var grid: Rect2 = app.board.view.bounds()
+	grid.position+=app.board.global_position
+	check(not Sidebar.clear_of_board(app,grid.grow(1)),"negative: actual grid/frame collision rejected")
+	for box: Rect2 in [app.board.row_clue_area(),app.board.column_clue_area()]:
+		box.position+=app.board.global_position
+		check(not Sidebar.clear_of_board(app,box),"negative: complete hint hit/travel collision rejected")
+
 func _initialize() -> void:
 	geometry = load(get_script().resource_path.get_base_dir().path_join("vs2_v2_cases.gd"))
+	Sidebar = load(get_script().resource_path.get_base_dir().path_join("vs2_v1_cases.gd"))
 	call_deferred("run")
 
 func check(ok: bool, message: String) -> void:
@@ -135,7 +182,7 @@ func layout_ok() -> bool:
 		if box.size.x < 44*app.ui_scale or box.size.y < 44*app.ui_scale: return false
 		var expected: Vector2 = rail.position+Vector2(i%2,i/2)*48*app.ui_scale
 		if box.position.distance_to(expected)>0.05 or not rail.grow(0.01).encloses(box): return false
-	if rail.intersects(app.board.get_global_rect()) or rail.position.y < app.surface.palette.end.y: return false
+	if not Sidebar.clear_of_board(app,rail) or rail.position.y < app.surface.palette.end.y: return false
 	return app.surface.wells.size()==1 and app.surface.wells[0].encloses(rail)
 
 func text_ok() -> bool:
@@ -146,7 +193,7 @@ func text_ok() -> bool:
 func check_layout() -> void:
 	check(layout_ok(),"SL 2x3 order, original hits, no obsolete actions/overlap")
 	check(frame_geometry_ok(),"SL visible alpha envelopes centered, paper/content/recovery clear")
-	if app.tools_column.size.y>app.tools_scroll.size.y:
+	if app.tools_column.size.y>app.tools_scroll.size.y+0.05:
 		check(app.tools_scroll.get_v_scroll_bar().visible,"tight rail exposes scrollbar")
 	else:
 		check(not app.tools_scroll.get_v_scroll_bar().visible,"generous rail needs no scrollbar")
@@ -175,7 +222,7 @@ func check_layout() -> void:
 	for item: Control in [app.layout_warning,app.stress_label]:
 		if item.is_visible_in_tree() and not item.text.is_empty():
 			check(inner.encloses(item.get_global_rect()) and not item.get_global_rect().intersects(app.board.get_global_rect()),"notice outside grid and within paper")
-	records.append({"id":app.session.definition.id,"client":[canvas.size.x,canvas.size.y],"ui":app.ui_scale,"mode":app.board.mode,"fit":app.board.requested_cell==72,"rail":[app.tools_scroll.position.x,app.tools_scroll.position.y,app.tools_scroll.size.x,app.tools_scroll.size.y],"scroll_needed":app.tools_column.size.y>app.tools_scroll.size.y,"title":app.title.text,"font":font.get_font_name()})
+	records.append({"id":app.session.definition.id,"client":[canvas.size.x,canvas.size.y],"ui":app.ui_scale,"mode":app.board.mode,"fit":app.board.requested_cell==72,"rail":[app.tools_scroll.position.x,app.tools_scroll.position.y,app.tools_scroll.size.x,app.tools_scroll.size.y],"sidebar_axes":Sidebar.sidebar_axes(app),"scroll_needed":app.tools_column.size.y>app.tools_scroll.size.y+0.05,"title":app.title.text,"font":font.get_font_name()})
 
 func fingerprint() -> Dictionary:
 	var traces: Array = []
@@ -259,6 +306,7 @@ func run() -> void:
 	await shot("v3-tight-rail",app.tools_scroll.get_global_rect().grow(5))
 	await shot("v3-sl-720-125-color-G")
 	await frame_pixels()
+	axis_negatives()
 	var saved_palette: Rect2 = app.surface.palette
 	app.surface.palette=app.surface.card
 	check(not frame_geometry_ok(),"negative: overlaid frame rejected")

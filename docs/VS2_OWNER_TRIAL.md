@@ -29,7 +29,7 @@ Esc, Fokusverlust oder Gegentasten-Down bricht die laufende Zellgeste ab;
 nach Gegentastenabbruch beide Tasten loslassen und neu beginnen.
 Optionen enthalten Hilfe und Zellanimationen.
 
-Rechts unter Miniatur und Farben stehen genau sechs Aktionen in zwei Spalten und drei Zeilen: Füllen/Radieren, Undo/Redo, Verkleinern/Vergrößern. Alle sechs bleiben ohne Scrollen sichtbar, auch bei 720p/UI125. Drei gezeichnete transparente Rahmen liegen auf einer gemeinsamen Mittelachse. Die Miniatur hat keine Überschrift. Über dem Raster bleibt das Rad Zoom; über den Werkzeugen verändert es keine Zellen oder Rastergröße. Auswahlmarkierungen und Tooltips ersetzen die dauerhafte Werkzeug-/
+Rechts unter Miniatur und Farben stehen genau sechs Aktionen in zwei Spalten und drei Zeilen: Füllen/Radieren, Undo/Redo, Verkleinern/Vergrößern. Alle sechs bleiben ohne Scrollen sichtbar, auch bei 720p/UI125. Drei gezeichnete transparente Rahmen samt Miniatur, Koordinaten und Controls liegen auf der Mittelachse der unveränderten oberen Dreiernavigation. Die Miniatur hat keine Überschrift. Über dem Raster bleibt das Rad Zoom; über den Werkzeugen verändert es keine Zellen oder Rastergröße. Auswahlmarkierungen und Tooltips ersetzen die dauerhafte Werkzeug-/
 Farbtextzeile; eine numerische Zoomanzeige gibt es nicht mehr. Nötige Platz- und
 Hinweiswarnungen bleiben unten sichtbar.
 
@@ -56,7 +56,7 @@ beurteilte Szenarien als durchgeführt eintragen:
    nicht springen oder sich überdecken. Beide Ansichten und UI100/125 ansehen.
 7. **Scribble-Optik und Buchrand:** Rasterlinien, kleine Vorschau samt Fassung und
    Farbauswahl wirken leicht handgezeichnet, nicht unruhig. Fünferlinien, benachbarte
-   dunkle Füllungen und kleine Zellen bleiben klar. Miniatur, Palette und Werkzeuge stehen auf einer gemeinsamen Mittelachse und berühren den Buchrand nicht; keine Überdeckung von
+   dunkle Füllungen und kleine Zellen bleiben klar. Miniatur, Palette und Werkzeuge samt Controls stehen auf der Mittelachse der unveränderten oberen Dreiernavigation und berühren den Buchrand nicht; keine Überdeckung von
    Hinweisen, Werkzeugen, Beschriftungen oder einer sichtbaren Speichermeldung.
    Zell- und Farbwahl müssen weiterhin präzise treffen.
 8. **Nur Füllungen in der Miniatur:** X sind weiterhin im großen Raster vorhanden,

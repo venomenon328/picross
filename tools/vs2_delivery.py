@@ -8,6 +8,7 @@ import tarfile
 import zipfile
 from pathlib import Path
 import p1_preflight as toolchain
+import vs2_v1_verify
 
 BASE = "fad885344874534629365917a2ab6a8d311cd3a7"
 
@@ -45,7 +46,6 @@ def capture_current(project, workspace, output, engine, render_command, environm
     finally:
         environment.pop("VS2_V1_CAPTURE_DIR", None)
     focused = json.loads((focused_dir / "v1-focused.json").read_text(encoding="utf-8"))
-    import vs2_v1_verify
     v1 = vs2_v1_verify.verify(report, focused)
     for picture in focused["pictures"] + focused["glyphs"]:
         if Path(picture["file"]).name != picture["file"]:
@@ -103,6 +103,8 @@ def verify_v3(directory: Path) -> dict:
     actual_cases = {(r["id"], *r["client"], r["ui"], r["mode"], r["fit"]) for r in report["records"]}
     if report["failures"] or len(report["records"]) != 96 or actual_cases != expected_cases or report["checks"] < 1000:
         raise toolchain.PreflightError("Incomplete/failed V3 native coverage")
+    for record in report["records"]:
+        vs2_v1_verify.sidebar_axes(record, record["ui"])
     expected = {"v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"}
     expected.update(['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'])
     metadata_path = Path(__file__).resolve().parents[1] / "prototypes/p1/art/book/frames.json"

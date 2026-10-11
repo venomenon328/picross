@@ -820,9 +820,13 @@ func _layout_book() -> void:
 			top += 50*u
 	_place(board,Rect2(o+Vector2(left,top),Vector2(rail-left-24*u,bottom-top-10*u)))
 	board._layout()
-	var mini_extent: float = (86.0 if (bottom-rail_top)/u < 600 else 132.0)*u
-	# SL: common optical axis; content rectangles stay independent of decoration.
-	var axis: float = o.x+rail+76*u
+	var mini_extent: float = (86.0 if compact or (bottom-rail_top)/u < 600 else 132.0)*u
+	var nav_x: float = w-(187.5 if compact else 150)
+	for i: int in range(3):
+		_place(actions[["help","menu","nav-information"][i]],Rect2(o+Vector2(nav_x-(2-i)*58*u-20*u,h/30+12*u),Vector2.ONE*hit))
+	# SL-R01/B-01: follow the unchanged navigation at every breakpoint/UI scale.
+	# Cropped alpha envelopes and symmetric safe interiors share this content axis.
+	var axis: float = actions["menu"].get_rect().get_center().x
 	var mini_position: Vector2 = Vector2(axis-mini_extent/2, o.y+rail_top+26*u)
 	_place(mini,Rect2(mini_position,Vector2.ONE*mini_extent))
 	_place(coordinate,Rect2(Vector2(axis-95*u,mini_position.y+mini_extent+20*u),Vector2(190,26)*u))
@@ -849,9 +853,6 @@ func _layout_book() -> void:
 		actions[id].custom_minimum_size = Vector2.ONE*hit
 		actions[id].size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	surface.wells.assign([surface.frame_rect(tools_scroll.get_rect())])
-	var nav_x: float = w-(187.5 if compact else 150)
-	for i: int in range(3):
-		_place(actions[["help","menu","nav-information"][i]],Rect2(o+Vector2(nav_x-(2-i)*58*u-20*u,h/30+12*u),Vector2.ONE*hit))
 	_place(album_button,Rect2(o+Vector2(w/320,h*7/72),Vector2.ONE*hit))
 	# The shared heading changes font with page context, never globally.
 	if work.visible:
@@ -888,6 +889,18 @@ func _layout_book() -> void:
 	surface.card = surface.frame_rect(mini.get_rect(),"preview")
 	surface.miniature = mini.get_rect()
 	surface.palette = surface.frame_rect(palette_row.get_rect(),"palette")
+	# Preserve the complete fit/hint budget. Only unused left paper absorbs the
+	# clearance required by the aligned sidebar; no cell, font or slot reduction.
+	if board.layout_valid:
+		var occupied: Rect2 = board.composition_envelope()
+		occupied.position += board.position
+		var coordinate_text: String = "Zeile %d · Spalte %d" % [session.player.height,session.player.width]
+		var coordinate_width: float = coordinate.get_theme_font("font").get_string_size(coordinate_text,HORIZONTAL_ALIGNMENT_LEFT,-1,coordinate.get_theme_font_size("font_size")).x+2
+		var coordinate_ink: Rect2 = Rect2(Vector2(axis-coordinate_width/2,coordinate.position.y),Vector2(coordinate_width,coordinate.size.y))
+		var clearance: float = 0
+		for box: Rect2 in [surface.card,surface.palette,surface.wells[0],coordinate_ink]:
+			if box.intersects(occupied): clearance = maxf(clearance,occupied.end.x-box.position.x+0.1)
+		board.position.x -= clearance
 	surface.information = information.visible
 	surface.work_visible = work.visible and page.visible
 	surface.queue_redraw()
