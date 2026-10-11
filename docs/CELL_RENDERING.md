@@ -95,10 +95,10 @@ getrennt. Eine neue Variante wird nicht in jedem Save gespeichert; das Schema
 bleibt unverändert. Bei späterem Austausch des Variantenbestands dessen Version
 und sichtbare Auswirkung dokumentieren, statt alte Pixelgleichheit zu behaupten.
 
-**Ausarbeitungsparameter, keine ungeprüften Produktkonstanten:** etwa 16 Füllvarianten
-und 16–24 Zeitbilder je Variante sind die erste Vergleichskonfiguration. Konkrete
-Anzahl, X-Varianten, Auflösung und Atlasaufteilung werden in PERF-A anhand realer
-Einzelzellen, größerer Farbflächen, Bewegung und Speicherbedarf begründet gewählt.
+Die integrierte Renderfassung `pencil-atlas-1` verwendet 16 Varianten und 24
+Zeitbilder je Variante für Füllung und X, verteilt auf je drei Detailstufen.
+Diese aktuellen Werte und Bildmaße sind in `tools/cell_atlas_reference.json`
+gebunden; die ursprüngliche Auswahlbegründung steht im historischen PERF-A-Bericht.
 Kein pauschales Zufallsversprechen, dass benachbarte Zellen niemals gleich aussehen;
 auffällige periodische Muster sind visuell zu prüfen. Eine erhebliche gestalterische
 Abweichung benötigt eine Entscheidung, kein heimliches Herabsetzen der Qualität.

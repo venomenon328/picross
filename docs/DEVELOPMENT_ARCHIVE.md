@@ -19,8 +19,9 @@ ohne `.git`, Importcache und lokale Artefakte. Ausgangstree: 1361 Dateien,
 ## Entfernt und unveränderlich erreichbar
 
 [DEVELOPMENT_ARCHIVE.json](DEVELOPMENT_ARCHIVE.json) nennt jede entfernte Datei
-mit ursprünglichem Pfad, Git-Blob, Bytezahl und SHA-256. Es bindet 22 Dateien mit
-168.221 Bytes. Wiederherstellung außerhalb des aktiven Trees, beispielsweise:
+mit ursprünglichem Pfad, Git-Blob, Bytezahl und SHA-256. Die erste Bereinigung
+bindet 22 Dateien mit 168.221 Bytes; N70-HIST-01 ergänzt die unten gesondert
+gebundenen 48 Dateien. Wiederherstellung außerhalb des aktiven Trees, beispielsweise:
 
 ```sh
 git show 0f89f08729539bbb4a02a590cbd18e58fbbda305:tools/vs1_delivery.py
