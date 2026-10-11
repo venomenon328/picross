@@ -58,8 +58,8 @@ func focused_scene(corpus: bool) -> void:
 			for mode: int in range(2):
 				app.set_puzzle_view(mode)
 				for fit: bool in [false,true]:
-					if fit: app.board.fit_all()
-					else: app.board.working_size()
+					if fit: app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
+					else: app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 					await process_frame
 					var record: Dictionary = V1.layout(app,check)
 					record.v2 = preload("res://tests/vs2_v2_cases.gd").layout(app,check)
@@ -138,7 +138,7 @@ func glyph_probe() -> void:
 	canvas.add_child(b)
 	for u: float in [1.0,1.25]:
 		b.ui_scale = u
-		b.working_size()
+		b.restore_view(b.capture_view().merged({"zoom":24,"overview":false},true))
 		for status: int in range(3):
 			b.probe_status = status
 			b.queue_redraw()
@@ -162,7 +162,7 @@ func glyph_probe() -> void:
 		canvas.add_child(board)
 		for u: float in [1.0,1.25]:
 			board.ui_scale = u
-			board.working_size()
+			board.restore_view(board.capture_view().merged({"zoom":24,"overview":false},true))
 			var before: Rect2 = board.view.bounds()
 			Drag.drag_probe(board,check)
 			check(board.view.bounds() == before,"V1 continuous hint reading cannot move grid")

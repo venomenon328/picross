@@ -43,7 +43,7 @@ func run() -> void:
 		app.set_tool("fill")
 		app.board.pointer_press(second_slot, MOUSE_BUTTON_LEFT)
 		app.board.pointer_release(second_slot, true)
-		app.board.fit_all()
+		app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 		app.set_tool("hand")
 	else:
 		if not require(app.album_previews[0].cells[10 * 20 + 10] == 1 and app.album_previews[1].cells[10 * 40 + 10] == 3 and app.album_reveals[0].payload.is_empty() and app.album_reveals[1].payload.is_empty(), "album previews restored without reveal spoilers"):
@@ -117,7 +117,7 @@ func run() -> void:
 		if not require(app.board.capture_view().zoom == 26 and app.board.view.cell_size <= app.board.fit_ceiling and app.board.eraser, "F-01 own zoom/tool survives fixture switch"):
 			return
 		app.select_puzzle(1)
-		if not require(app.board.overview and not app.board.hand and app.board.active_color == 3, "F-02 own overview/tool/color survives fixture switch"):
+		if not require(not app.board.overview and not app.board.hand and app.board.active_color == 3, "F-02 own overview/tool/color survives fixture switch"):
 			return
 		print("P1_ROUNDTRIP_READ_OK")
 		quit(0)

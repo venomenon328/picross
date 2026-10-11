@@ -200,6 +200,8 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         raise ValueError("Delivered V2 plan identity differs")
     if review_report["visual"]["vs2"]["v3"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v3-plan.json"):
         raise ValueError("Delivered V3 plan identity differs")
+    if review_report["visual"]["vs2"]["v3"]["sidebar_plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/sl65-plan.json"):
+        raise ValueError("Delivered SL plan identity differs")
     if review_report["visual"]["vs2"]["records"]!=304 or review_report["visual"]["vs2"]["rendered"]!=23:
         raise ValueError("Missing current native VS2 coverage")
     archive=cache/toolchain.EDITORS["Windows"].name
@@ -222,7 +224,12 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     def launch(label,delivered,script,marker):
         log=output/(label+".log")
         command=[str(engine),"--main-pack",str(delivered/"picross-p1.exe"),"--rendering-driver","opengl3","--audio-driver","Dummy","--script",str(ROOT/"prototypes/p1/tests"/script)]
-        result=subprocess.run(command,cwd=delivered,env=env,capture_output=True,encoding="utf-8",errors="replace",timeout=300,creationflags=subprocess.CREATE_NO_WINDOW)
+        try:
+            result=subprocess.run(command,cwd=delivered,env=env,capture_output=True,encoding="utf-8",errors="replace",timeout=300,creationflags=subprocess.CREATE_NO_WINDOW)
+        except subprocess.TimeoutExpired as error:
+            def decoded(value): return value.decode("utf-8",errors="replace") if isinstance(value,bytes) else value or ""
+            log.write_text(decoded(error.stdout)+decoded(error.stderr),encoding="utf-8",newline="\n")
+            raise
         text=result.stdout+result.stderr
         log.write_text(text,encoding="utf-8",newline="\n")
         if result.returncode or marker not in text or "ERROR:" in text:
@@ -282,6 +289,8 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan.json"),
                   plan_amendment_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan-amendment.json"),
                   v2_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v2-plan.json"),v2=v2,v3=v3,v3_processes=v3_processes,v3_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v3-plan.json"),
+                  sidebar_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/sl65-plan.json"),
+                  sidebar_assets=json.loads((ROOT/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8")),
                   platform=platform.platform(),bindings=[player_binding,review_binding],export_files=report["export_files"],embedded_packs=packs,
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
@@ -289,7 +298,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   matrix_records=len(matrix["records"]),historical_comparison="not repeated under CI policy #63",
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},
-                  study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,independent_review="OPEN",VS2_M01="OPEN",merge_authorized=False)
+                  study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,SL_R01="OPEN",SL_M01="OPEN",merge_authorized=False)
     target=output/"windows-download-verification.json"
     target.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")
     print("VS2_WINDOWS_DOWNLOAD_OK",head,flush=True)

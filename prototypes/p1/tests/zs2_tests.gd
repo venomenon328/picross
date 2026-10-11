@@ -100,6 +100,6 @@ func fresh() -> void:
 	app.select_puzzle(0)
 	app._reset_selected()
 	app.open_puzzle()
-	app.board.working_size()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	app.board.hand = false
 	app.board.eraser = false

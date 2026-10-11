@@ -87,7 +87,7 @@ func run() -> void:
 	await process_frame
 	app._reset_selected()
 	app.open_puzzle()
-	app.board.working_size()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	var cells: Array = app.session.player.cells.duplicate()
 	var history: Array = app.session.player.history.duplicate(true)
 	var center: Vector2 = app.board.view.center
@@ -119,7 +119,7 @@ func run() -> void:
 	app.return_to_work()
 	app.select_puzzle(2)
 	app.set_puzzle_view(0)
-	app.board.working_size()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	await process_frame
 	for axis: String in ["row","column"]:
 		var lines: Array = app.session.definition.rows if axis == "row" else app.session.definition.columns
@@ -164,7 +164,7 @@ func matrix(corpus: bool) -> void:
 				app.select_puzzle(index)
 				for mode: int in range(2):
 					app.set_puzzle_view(mode)
-					app.board.fit_all()
+					app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 					await process_frame
 					var board = app.board
 					var data: Dictionary = Measurements.capture(board)
@@ -230,7 +230,7 @@ func rectangular_input() -> void:
 		app.set_tool("fill")
 		for mode: int in range(2):
 			app.set_puzzle_view(mode)
-			app.board.working_size()
+			app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 			await process_frame
 			var player = app.session.player
 			var expected: Array = player.cells.duplicate()

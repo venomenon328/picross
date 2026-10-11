@@ -9,7 +9,7 @@ var wave_sequence: Dictionary = {}
 func rework_wave() -> void:
 	app.select_puzzle(0)
 	empty_sample()
-	app.board.working_size()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	app.board.hover = Vector2i(1, 2)
 	await process_frame
 	await RenderingServer.frame_post_draw
@@ -51,7 +51,7 @@ func rework_motion(marker: String = "x") -> void:
 	for pitch: int in [12, 24, 36]:
 		app.select_puzzle(0)
 		empty_sample()
-		app.board.working_size()
+		app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 		while not is_equal_approx(app.board.view.cell_size, pitch):
 			app.board.zoom(1 if pitch > app.board.view.cell_size else -1, app.board.view.viewport.get_center())
 		app.board.view.center = Vector2(10, 10)
@@ -147,7 +147,7 @@ func run() -> void:
 		app.select_puzzle(spec[0])
 		install_sample(spec[0])
 		app.open_puzzle()
-		app.board.working_size()
+		app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 		for zoom_attempt: int in range(25):
 			var before: float = app.board.view.cell_size
 			if absf(before-float(spec[4])) < 0.01: break
@@ -213,7 +213,7 @@ func numeral_probe() -> void:
 func color_load_probe() -> void:
 	app.select_puzzle(6)
 	empty_sample()
-	app.board.fit_all()
+	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 	await process_frame
 	app.board.measure_draws = true
 	app.board.draw_times_us.clear()

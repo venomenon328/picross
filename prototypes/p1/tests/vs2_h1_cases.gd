@@ -22,7 +22,7 @@ static func run(c: SceneTree, app: Control) -> void:
 			app.set_ui_scale(ui)
 			for mode: int in range(2):
 				app.set_puzzle_view(mode)
-				app.board.working_size()
+				app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 				await c.process_frame
 				H1.require(c,app.board.layout_valid and Measurements.capture(app.board).glyph_collisions==0,"current regular H1 drawable non-overlapping geometry")
 				await H1.pair(c,app,"h1-vs2-%dx%d-ui%d-%s" % [dims.x,dims.y,roundi(ui*100),app.board.mode])

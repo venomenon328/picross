@@ -65,7 +65,7 @@ func run() -> void:
 				app.open_puzzle()
 				for mode: int in range(2):
 					app.set_puzzle_view(mode)
-					app.board.fit_all()
+					app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 					await process_frame
 					var board = app.board
 					var record: Dictionary = measurements.capture(board)
@@ -116,7 +116,8 @@ func run() -> void:
 						click(app.palette_row.get_child(i))
 						check(board.active_color == i+1 and not board.eraser,"native V1 moved palette hit")
 					board.active_color = 1
-					for tool: String in ["minus","plus","fit","work"]:
+					check(not app.actions.has("fit") and not app.actions.has("work"),"native no obsolete comfort actions")
+					for tool: String in ["minus","plus"]:
 						app.tools_scroll.ensure_control_visible(app.actions[tool])
 						await process_frame
 						await process_frame

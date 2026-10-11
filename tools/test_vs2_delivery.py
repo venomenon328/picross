@@ -1,5 +1,6 @@
 """Independent negative checks for VS2 delivery identity and coverage."""
 import hashlib
+import copy
 import json
 from pathlib import Path
 import struct
@@ -72,10 +73,17 @@ class DeliveryTests(unittest.TestCase):
         with self.assertRaises(ValueError): embedded_pack(executable)
 
     def test_v3_rejects_duplicate_case_failed_assertion_and_changed_picture(self):
-        names = ["v3-tight-rail.png", "v3-F01-work.png", "v3-F02-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
+        def axes(w,h,u):
+            buttons=[[w-(187.5 if w<1700 else 150)-(2-i)*58*u-20*u,h/30+12*u,44*u,44*u] for i in range(3)]
+            axis=buttons[1][0]+22*u
+            return dict(material=[0,0,w,h],navigation_buttons=buttons,navigation=axis,frames=[axis]*3,controls=[axis]*4)
+        names = ['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'] + ["v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
         for name in names: (self.root/name).write_bytes(b"native-binding")
         report = dict(checks=1000, failures=0,
-                      records=[dict(id=s, client=[w,h], ui=u, mode=m, fit=f)
+                      sidebar_metadata_sha256=hashlib.sha256((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_bytes()).hexdigest(),
+                      sidebar_assets=json.loads((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8")),
+                      frame_pixels=[dict(changed_pixels=101) for _ in range(3)],
+                      records=[dict(id=s, client=[w,h], ui=u, mode=m, fit=f,sidebar_axes=axes(w,h,u))
                                for s in ("F-01","F-02","F-08") for w,h in ((1280,720),(1600,900),(1920,1080),(2560,1440))
                                for u in (1.0,1.25) for m in ("G","V") for f in (False,True)],
                       pictures=[dict(file=n,sha256=hashlib.sha256(b"native-binding").hexdigest()) for n in names])
@@ -83,6 +91,42 @@ class DeliveryTests(unittest.TestCase):
             (self.root/"v3-report.json").write_text(json.dumps(report),encoding="utf-8")
             return vs2_delivery.verify_v3(self.root)
         self.assertEqual(len(verify()["records"]),96)
+        native_path=self.root/'v3-report.json'
+        native_value=json.loads(native_path.read_text(encoding='utf-8'))
+        native_path.write_text(json.dumps(native_value,indent=2),encoding='utf-8')
+        original_size=native_path.stat().st_size
+        vs2_delivery.compact_geometry_reports([native_path])
+        self.assertEqual(json.loads(native_path.read_text(encoding='utf-8')),native_value)
+        self.assertLess(native_path.stat().st_size,original_size)
+        self.assertEqual(len(vs2_delivery.verify_v3(self.root)['records']),96)
+        original_axes=copy.deepcopy(report['records'][0]['sidebar_axes'])
+        for kind in ('frames','controls','both','upper','missing'):
+            a=copy.deepcopy(original_axes)
+            if kind in ('frames','both','upper'): a['frames']=[v+16 for v in a['frames']]
+            if kind in ('controls','both','upper'): a['controls']=[v+16 for v in a['controls']]
+            if kind=='upper':
+                a['navigation']+=16
+                a['navigation_buttons']=[[b[0]+16,*b[1:]] for b in a['navigation_buttons']]
+            report['records'][0]['sidebar_axes']={} if kind=='missing' else a
+            with self.subTest(axis_mutation=kind), self.assertRaises(PreflightError): verify()
+        report['records'][0]['sidebar_axes']=original_axes
+        for item in report["sidebar_assets"]["derivatives"]:
+            item["safe"] = [float(format(v,".15g")) for v in item["safe"]]
+        self.assertEqual(len(verify()["records"]),96)
+        original_safe = report["sidebar_assets"]["derivatives"][0]["safe"][0]
+        report["sidebar_assets"]["derivatives"][0]["safe"][0] += 0.01
+        with self.assertRaises(PreflightError): verify()
+        report["sidebar_assets"]["derivatives"][0]["safe"][0] = original_safe
+        original_hash = report["sidebar_metadata_sha256"]
+        report["sidebar_metadata_sha256"] = "0"*64
+        with self.assertRaises(PreflightError): verify()
+        report["sidebar_metadata_sha256"] = original_hash
+        report["frame_pixels"][0]["changed_pixels"] = 0
+        with self.assertRaises(PreflightError): verify()
+        report["frame_pixels"][0]["changed_pixels"] = 101
+        report["sidebar_assets"]["source"] = "wrong asset source"
+        with self.assertRaises(PreflightError): verify()
+        report["sidebar_assets"]=json.loads((Path(__file__).resolve().parents[1]/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8"))
         original = report["records"][-1]
         report["records"][-1] = report["records"][0]
         with self.assertRaises(PreflightError): verify()

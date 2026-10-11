@@ -1,23 +1,19 @@
 # P1 · Integrierte Windows-Spielprobe
 
-Aktueller [VS2-V1-Zwischenstand](../../docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
+Integrierter Vorgänger: [VS2-V1-Zwischenstand](../../docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
 ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
 Ergänzt durch [V2](../../docs/VS2_V2_IMPLEMENTATION.md): stabile Scribble-Konturen und reine Füllminiaturen.
 [V3](../../docs/VS2_V3_IMPLEMENTATION.md) ergänzt kräftiger variierte Rasterlinien, organische Fülltexturen,
-rechte Werkzeugleiste und Bakso-Arbeitstitel. Neues unabhängiges Review, persönliche
-VS2-M01 und Mergefreigabe offen; Draft-PR #62, kein Release.
+rechte Werkzeugleiste und Bakso-Arbeitstitel. [SL-65](../../docs/SL65_IMPLEMENTATION.md) ersetzt dessen Sidebar durch sechs Aktionen und drei gezeichnete Bildrahmen. Neues unabhängiges Review, persönliche
+SL-M01 und Mergefreigabe offen; neuer Draft-PR zu #65, kein Release.
 
 VS2 / [#61](https://github.com/venomenon328/picross/issues/61) startet regulär in der
 Sammlung. Erst die Auswahl öffnet ein Blatt; Einstellungen sind auch aus der
 Sammlung erreichbar. Unter **Rätselansicht** stehen **Rasteransicht** und
 **Gesamtansicht mit allen Hinweisen**. Genau diese Option wählt den Modus; sie gilt
-für die Sitzung, nach Neustart wieder Rasteransicht. **Einpassen** passt innerhalb
-des gewählten Modus ein. **Arbeitsgröße** wünscht 24px, begrenzt durch den Fit.
+für die Sitzung, nach Neustart wieder Rasteransicht. Minus/Plus und Mausrad wählen die Zoomstufe; die interne Fitgrenze hält das Raster vollständig sichtbar.
 
-Rechts unter Miniatur und Farben stehen Füllen, Radieren, Undo, Redo, Verkleinern,
-Vergrößern, Einpassen und Arbeitsgröße in einer senkrechten Leiste. Bei knapper
-Höhe scrollt nur diese Leiste mit Rad oder sichtbarem Scrollbalken. Über dem Raster
-bleibt das Rad Zoom. Auswahlmarkierungen und Tooltips zeigen Werkzeug/Farbe;
+Rechts unter Miniatur und Farben stehen genau sechs Aktionen in zwei Spalten und drei Zeilen: Füllen/Radieren, Undo/Redo, Verkleinern/Vergrößern. Alle sechs bleiben ohne Scrollen sichtbar, auch bei 720p/UI125. Drei gezeichnete transparente Rahmen samt Miniatur, Koordinaten und Controls liegen auf der Mittelachse der unveränderten oberen Dreiernavigation. Die Miniatur hat keine Überschrift. Über dem Raster bleibt das Rad Zoom; über den Werkzeugen verändert es keine Zellen oder Rastergröße. Auswahlmarkierungen und Tooltips zeigen Werkzeug/Farbe;
 dauerhafte Werkzeug-/Farbtexte und numerische Zoomanzeige entfallen. Platz- und
 Hinweiswarnungen bleiben bei Bedarf unten auf dem Papier sichtbar.
 Eigene passive Miniatur und unabhängige lange Hinweise bleiben am Raster. Hand- und Raster-/Miniaturverschiebung entfallen. Kleine oder
@@ -25,7 +21,7 @@ kollidierende Großrasterhinweise sind kein Komfortversprechen. Optionen und Rü
 bleiben erreichbar. Speicherfehler blockieren ungesicherte Wechsel; Backupübernahme
 braucht weiter Bestätigung. Neun Inhalte und normale Schema-1-Saves bleiben erhalten.
 [Aktuelle technische Zuordnung](../../docs/VS2_VERIFICATION.md) und
-[neutrale Windows-Spielprobe](../../docs/VS2_OWNER_TRIAL.md); VS2-M01 und unabhängiges
+[neutrale Windows-Spielprobe](../../docs/VS2_OWNER_TRIAL.md); SL-M01 und unabhängiges
 Review bleiben vor Merge offen. Kein Release.
 
 Offline-Fonts: Bakso Daging für den Arbeits-Blatttitel, Fraunces für sonstige
@@ -176,7 +172,7 @@ vertikale UI-/Papiergrenze. Kleinere Fenster oder UI 125 % dürfen früher clipp
 
 - Mausrad und −/+ zoomen monoton bis zur vollständigen Raster-Fitgrenze samt Rahmen.
   Die gewünschte gültige Arbeitsstufe bleibt separat vom berechneten Fitwert erhalten.
-  Einpassen und Arbeitsgröße ändern die benannte Rätselansicht nicht.
+  Minus/Plus und Mausrad ändern die benannte Rätselansicht nicht.
 - Raster-MMB und frühere Handrouten verschieben oder bearbeiten nichts.
 - Die eigene Miniatur bleibt passiv: nur eigene Füllungen in Originalfarben,
   einschließlich Fehlern und statischer Strichvorschau. X und unbekannt erscheinen
@@ -363,11 +359,11 @@ Studienvergleich und Speicherisolation bleiben erhalten; kein Merge oder Release
 Historische VS-1-ZIPs boten G/V ohne R, Hand oder Rasterpanning. Hinweise werden
 nach tatsächlichem Mindestbedarf je Achse reserviert; zusätzliche freie Breite
 geht anschließend an ganze Zeilenhinweisslots ohne kleineren Fit. G zeigt auch während des MMB-Drags
-mindestens fünf zusammenhängende ganze Zahlen, bei kurzen Folgen alle. Einpassen
+mindestens fünf zusammenhängende ganze Zahlen, bei kurzen Folgen alle. Der interne Fit
 erreicht die flächenabhängige Raster-Vollsichtgrenze. Alte R-Ansichten werden auf G
 normalisiert; Studienstand bleibt unter `user://vs1/revision-1` getrennt.
 [Vertrag](../../docs/VS1_STUDY.md), [Prüfzuordnung](../../docs/VS1_VERIFICATION.md)
 und [Eigentümerprobe](../../docs/VS1_OWNER_TRIAL.md). VS-VB1/Erstproduktion und alte
 R-Artefakte und die begrenzte E1-Korrekturfolge sind historisch. VS-D01 ist bestätigt,
 reguläre Integration erfolgt mit VS2; der persönliche VS-M01-Bericht ist unvollständig.
-GF-M01/#59 ist historisch bestanden (PR #60, Kommentar 6076039228). Neue VS2-M01 und unabhängiges Review bleiben vor Merge offen. Separate ZS-/VS-Spielerbuilds werden nicht mehr standardmäßig erzeugt; die gebundenen Vergleiche laufen als Entwickler-Replays weiter.
+GF-M01/#59 ist historisch bestanden (PR #60, Kommentar 6076039228). Neue SL-M01 und unabhängiges Review bleiben vor Merge offen. Separate ZS-/VS-Spielerbuilds werden nicht mehr standardmäßig erzeugt; die gebundenen Vergleiche laufen als Entwickler-Replays weiter.

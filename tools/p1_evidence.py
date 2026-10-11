@@ -15,7 +15,7 @@ import p1_preflight as toolchain
 TECHNICAL_LIMIT = 20_000_000
 TOTAL_LIMIT = 75_000_000
 LOG_LIMIT = 256_000
-IMAGE_LIMIT = 12_000_000
+IMAGE_LIMIT = 15_000_000 # SL-65: eight native full views; 20MB technical cap still wins.
 
 
 def now() -> str:
@@ -179,7 +179,7 @@ class Evidence:
         # Leave room for the final phase/report/audit metadata. Reports and logs
         # take priority over optional retained images, including on failure.
         existing = sum(p.stat().st_size for p in self.technical.rglob("*") if p.is_file())
-        selection_limit = max(0, TECHNICAL_LIMIT - existing - 1_000_000)
+        selection_limit = max(0, TECHNICAL_LIMIT - existing - 250_000)
         priority = set(priority_sources)
         for path in sorted(set(sources), key=lambda p: (
                 p not in priority, "failure" not in p.name, p.suffix == ".png",

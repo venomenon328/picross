@@ -6,6 +6,7 @@ var width: int = 20
 var height: int = 20
 var palette: Array = []
 var view_rect: Rect2 = Rect2(0, 0, 1, 1)
+var draw_frame: bool = true
 var interactive: bool = false
 var dragging: bool = false
 var style_identity: String = "miniature"
@@ -15,6 +16,7 @@ func image_rect() -> Rect2:
 	return Rect2(Vector2.ZERO, Vector2(width, height) * step)
 
 func frame_strokes() -> Array:
+	if not draw_frame: return []
 	return Scribble.outline_strokes(image_rect().grow(-1.0),style_identity,1.2)
 
 func _gui_input(event: InputEvent) -> void:

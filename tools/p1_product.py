@@ -478,6 +478,11 @@ def main(argv: list[str] | None = None) -> int:
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
             evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name == "v3-renders"])
+            if args.visual:
+                required_images = {p.name for p in selected if p.parent.name == "v3-renders" and p.suffix == ".png"}
+                retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}
+                if required_images != retained_images:
+                    raise toolchain.PreflightError("Targeted SL images missing from bounded technical delivery")
             evidence.enforce_budget()
             evidence.finish()
             package_began = time.monotonic()

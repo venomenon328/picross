@@ -8,8 +8,18 @@ import tarfile
 import zipfile
 from pathlib import Path
 import p1_preflight as toolchain
+import vs2_v1_verify
 
 BASE = "fad885344874534629365917a2ab6a8d311cd3a7"
+
+
+def compact_geometry_reports(paths):
+    """Keep every current native measurement; omit only JSON indentation."""
+    for path in paths:
+        report = json.loads(path.read_text(encoding="utf-8"))
+        path.write_text(json.dumps(report, ensure_ascii=False, separators=(",", ":")) + "\n",
+                        encoding="utf-8", newline="\n")
+
 
 def capture_current(project, workspace, output, engine, render_command, environment, phase):
     """Current VS2 coverage; historical imports remain explicit separate replays."""
@@ -45,7 +55,6 @@ def capture_current(project, workspace, output, engine, render_command, environm
     finally:
         environment.pop("VS2_V1_CAPTURE_DIR", None)
     focused = json.loads((focused_dir / "v1-focused.json").read_text(encoding="utf-8"))
-    import vs2_v1_verify
     v1 = vs2_v1_verify.verify(report, focused)
     for picture in focused["pictures"] + focused["glyphs"]:
         if Path(picture["file"]).name != picture["file"]:
@@ -85,8 +94,13 @@ def capture_current(project, workspace, output, engine, render_command, environm
     finally:
         environment.pop("VS2_V3_CAPTURE_DIR", None)
     v3 = verify_v3(v3_dir)
+    v3["sidebar_plan_sha256"] = toolchain.sha256_file(Path(__file__).resolve().parents[1] / "examples/vs2/sl65-plan.json")
     v3["plan_sha256"] = toolchain.sha256_file(Path(__file__).resolve().parents[1] / "examples/vs2/v3-plan.json")
     v3["font_sha256"] = toolchain.sha256_file(font)
+    # New axis telemetry must not displace the twelve required SL images.
+    # Only these current reports are serialized compactly; historical bytes stay.
+    compact_geometry_reports([renders / "vs2-matrix.json", focused_dir / "v1-focused.json",
+                              v3_dir / "v3-report.json"])
     selected += list(v3_dir.glob("*.json")) + [v3_dir / p["file"] for p in v3["pictures"]]
     return dict(records=len(report["records"]), failures=report["failures"],
                 rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3,
@@ -102,7 +116,21 @@ def verify_v3(directory: Path) -> dict:
     actual_cases = {(r["id"], *r["client"], r["ui"], r["mode"], r["fit"]) for r in report["records"]}
     if report["failures"] or len(report["records"]) != 96 or actual_cases != expected_cases or report["checks"] < 1000:
         raise toolchain.PreflightError("Incomplete/failed V3 native coverage")
-    expected = {"v3-tight-rail.png", "v3-F01-work.png", "v3-F02-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"}
+    for record in report["records"]:
+        vs2_v1_verify.sidebar_axes(record, record["ui"])
+    expected = {"v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"}
+    expected.update(['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'])
+    metadata_path = Path(__file__).resolve().parents[1] / "prototypes/p1/art/book/frames.json"
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    def serialized_geometry(value):
+        # Godot JSON prints 15 significant digits. The exact source bytes remain
+        # independently hash-bound; sub-nanopixel JSON rounding is not a new asset.
+        if isinstance(value, float): return round(value, 9)
+        if isinstance(value, list): return [serialized_geometry(v) for v in value]
+        if isinstance(value, dict): return {k: serialized_geometry(v) for k,v in value.items()}
+        return value
+    if report.get("sidebar_metadata_sha256") != toolchain.sha256_file(metadata_path) or serialized_geometry(report.get("sidebar_assets")) != serialized_geometry(metadata) or len(report.get("frame_pixels", [])) != 3 or any(p["changed_pixels"] <= 100 for p in report["frame_pixels"]):
+        raise toolchain.PreflightError("Missing/mismatched SL frame resources or actual render usage")
     if {p["file"] for p in report["pictures"]} != expected or len(report["pictures"]) != len(expected):
         raise toolchain.PreflightError("Missing V3 targeted native pictures")
     for picture in report["pictures"]:

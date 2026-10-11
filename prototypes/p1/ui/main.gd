@@ -12,9 +12,9 @@ const BookSurface = preload("res://ui/book_surface.gd")
 const BODY_FONT = preload("res://art/book/PlexSans.ttf")
 const TITLE_FONT = preload("res://art/book/Fraunces.ttf")
 const WORK_TITLE_FONT = preload("res://art/drawing/BaksoDaging-Regular.ttf")
-const TOOL_IDS: Array[String] = ["fill","erase","undo","redo","minus","plus","fit","work"]
+const TOOL_IDS: Array[String] = ["fill","erase","undo","redo","minus","plus"]
 var tools_scroll: ScrollContainer
-var tools_column: VBoxContainer
+var tools_column: GridContainer
 var surface: BookSurface
 var information: Control
 var information_section: String = "settings"
@@ -25,7 +25,6 @@ var information_origin: String = "album"
 var view_choice: OptionButton
 var ui_scale_button: Button
 var actions: Dictionary = {}
-var mini_title: Label
 var laying_out: bool = false
 var sessions: Array[Session] = []
 var store: SaveStore
@@ -631,10 +630,9 @@ func _build_work() -> void:
 	sidebar = Control.new()
 	sidebar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	work.add_child(sidebar)
-	mini_title = label("Dein Stand",12)
-	sidebar.add_child(mini_title)
 	mini = Miniature.new()
 	mini.interactive = false
+	mini.draw_frame = false
 	sidebar.add_child(mini)
 	coordinate = label("Zeile – · Spalte –",13)
 	coordinate.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -646,24 +644,20 @@ func _build_work() -> void:
 	sidebar.add_child(palette_row)
 	tools_scroll = ScrollContainer.new()
 	tools_scroll.name = "tools-scroll"
-	tools_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	tools_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	tools_scroll.mouse_filter = Control.MOUSE_FILTER_STOP
 	tools_scroll.mouse_force_pass_scroll_events = false
 	work.add_child(tools_scroll)
-	tools_column = VBoxContainer.new()
+	tools_column = GridContainer.new()
+	tools_column.columns = 2
 	tools_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	tools_scroll.add_child(tools_column)
 	for id: String in ["fill","erase"]:
 		_icon_button(id,set_tool.bind(id),tools_column)
-	tools_column.add_child(Control.new())
 	undo_button = _icon_button("undo",_undo,tools_column)
 	redo_button = _icon_button("redo",_redo,tools_column)
-	tools_column.add_child(Control.new())
 	_icon_button("minus",func() -> void: board.zoom(-1,board.view.viewport.get_center()),tools_column)
 	_icon_button("plus",func() -> void: board.zoom(1,board.view.viewport.get_center()),tools_column)
-	_icon_button("fit",board.fit_all,tools_column)
-	actions["fit"].tooltip_text = "Einpassen"
-	_icon_button("work",board.working_size,tools_column)
 	_icon_button("help",show_information.bind("help"),work)
 	_icon_button("menu",show_information.bind("settings"),work)
 	_icon_button("nav-information",show_information.bind("settings"),work)
@@ -724,7 +718,7 @@ func _build_information() -> void:
 	help_panel.add_theme_constant_override("separation",16)
 	content.add_child(help_panel)
 	help_panel.add_child(label("Maus und Hinweise",26))
-	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nDie Werkzeuge stehen rechts unter den Farben: Füllen, Radieren, Undo, Redo, Verkleinern, Vergrößern, Einpassen, Arbeitsgröße. Bei wenig Höhe lässt sich nur diese Leiste mit Rad oder Scrollbalken verschieben. Auswahlmarkierungen zeigen Werkzeug und Farbe.\n\nRad über dem Raster und +/−: Zoom bis zur Vollsichtgrenze. Einpassen passt innerhalb der gewählten Rätselansicht ein; Arbeitsgröße stellt die gewünschte Standardgröße wieder her. Raster und eigene Miniatur bleiben fest. Die Miniatur zeigt nur eigene Füllungen in Originalfarben, auch Fehler und die aktuelle Vorschau. X und unbekannt bleiben gleich neutral. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nMittlere Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
+	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück.\n\nDie Werkzeuge stehen rechts unter den Farben: zwei Spalten und drei Zeilen: Füllen / Radieren, Undo / Redo, Verkleinern / Vergrößern. Auswahlmarkierungen zeigen Werkzeug und Farbe.\n\nRad über dem Raster und +/−: Zoom bis zur Vollsichtgrenze. Raster und eigene Miniatur bleiben fest. Die Miniatur zeigt nur eigene Füllungen in Originalfarben, auch Fehler und die aktuelle Vorschau. X und unbekannt bleiben gleich neutral. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nMittlere Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
 	help_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help_panel.add_child(help_text)
 	information.hide()
@@ -826,16 +820,27 @@ func _layout_book() -> void:
 			top += 50*u
 	_place(board,Rect2(o+Vector2(left,top),Vector2(rail-left-24*u,bottom-top-10*u)))
 	board._layout()
-	var mini_extent: float = (100.0 if (bottom-rail_top)/u < 600 else 132.0)*u
-	# V1: move the existing group and every dependent mount/control together.
-	# Limit the downward shift by the lowest label on compact/UI125 surfaces.
-	var group_down: float = minf(24*u, maxf(0.0, h-28*u-(rail_top+30*u+mini_extent+334*u)))
-	var mini_position: Vector2 = o+Vector2(rail-4*u,rail_top+30*u+group_down)
+	var mini_extent: float = (86.0 if compact or (bottom-rail_top)/u < 600 else 132.0)*u
+	var nav_x: float = w-(187.5 if compact else 150)
+	for i: int in range(3):
+		_place(actions[["help","menu","nav-information"][i]],Rect2(o+Vector2(nav_x-(2-i)*58*u-20*u,h/30+12*u),Vector2.ONE*hit))
+	# SL-R01/B-01: follow the unchanged navigation at every breakpoint/UI scale.
+	# Cropped alpha envelopes and symmetric safe interiors share this content axis.
+	var axis: float = actions["menu"].get_rect().get_center().x
+	if board is FullViewBoard and board.layout_valid and mini_extent > 86*u:
+		var ink: Rect2 = board.composition_envelope()
+		ink.position += board.position
+		var left_room: float = maxf(0,ink.position.x-(o.x+w*0.03125))
+		var preview: Rect2 = surface.frame_rect(Rect2(Vector2(axis-mini_extent/2,o.y+rail_top+26*u),Vector2.ONE*mini_extent),"preview")
+		if preview.intersects(ink) and ink.end.x-preview.position.x+0.1 > left_room:
+			mini_extent = 86*u
+	var mini_position: Vector2 = Vector2(axis-mini_extent/2, o.y+rail_top+26*u)
 	_place(mini,Rect2(mini_position,Vector2.ONE*mini_extent))
-	_place(mini_title,Rect2(mini_position-Vector2(0,26*u),Vector2(180,24)*u))
-	_place(coordinate,Rect2(mini_position+Vector2(0,mini_extent+14*u),Vector2(190,44)*u))
-	var palette_pos: Vector2 = mini_position+Vector2(0,mini_extent+66*u)
-	_place(palette_row,Rect2(palette_pos,Vector2(110,110)*u))
+	_place(coordinate,Rect2(Vector2(axis-95*u,mini_position.y+mini_extent+20*u),Vector2(190,26)*u))
+	coordinate.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var palette_extent: Vector2 = Vector2.ONE*(44 if session.definition.palette.size()==1 else 98)*u
+	var palette_pos: Vector2 = Vector2(axis-palette_extent.x/2,coordinate.position.y+coordinate.size.y+18*u)
+	_place(palette_row,Rect2(palette_pos,palette_extent))
 	for i: int in range(palette_row.get_child_count()):
 		_place(palette_row.get_child(i),Rect2(Vector2(i%2,i/2)*54*u,Vector2.ONE*hit))
 	# The former bottom toolbar now holds only conditional non-numeric notices.
@@ -846,20 +851,15 @@ func _layout_book() -> void:
 	var warning_width: float = notice_width*0.42
 	_place(layout_warning,Rect2(o+Vector2(notice_left,bottom-6*u),Vector2(warning_width,24*u)))
 	layout_warning.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	var tools_top: float = palette_pos.y + (56.0 if session.definition.palette.size()==1 else 110.0)*u + 14*u
-	# Scroll offsets are integer pixels. A fractional page height otherwise
-	# leaves the last half pixel of a revealed button clipped at UI125.
-	var tools_height: float = floorf(minf(8*hit+9*4*u, o.y+h-40*u-tools_top))
-	_place(tools_scroll,Rect2(Vector2(mini_position.x+20*u,tools_top),Vector2(hit+20*u,tools_height)))
-	tools_column.add_theme_constant_override("separation",roundi(4*u))
+	var tools_top: float = palette_pos.y+palette_extent.y+40*u
+	var tools_extent: Vector2 = Vector2(92,140)*u
+	_place(tools_scroll,Rect2(Vector2(axis-tools_extent.x/2,tools_top),tools_extent))
+	tools_column.add_theme_constant_override("h_separation",roundi(4*u))
+	tools_column.add_theme_constant_override("v_separation",roundi(4*u))
 	for id: String in TOOL_IDS:
 		actions[id].custom_minimum_size = Vector2.ONE*hit
 		actions[id].size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	surface.wells.clear()
-	surface.wells.append(tools_scroll.get_rect().grow(3*u))
-	var nav_x: float = w-(187.5 if compact else 150)
-	for i: int in range(3):
-		_place(actions[["help","menu","nav-information"][i]],Rect2(o+Vector2(nav_x-(2-i)*58*u-20*u,h/30+12*u),Vector2.ONE*hit))
+	surface.wells.assign([surface.frame_rect(tools_scroll.get_rect())])
 	_place(album_button,Rect2(o+Vector2(w/320,h*7/72),Vector2.ONE*hit))
 	# The shared heading changes font with page context, never globally.
 	if work.visible:
@@ -893,9 +893,21 @@ func _layout_book() -> void:
 	_place(status_label,Rect2(o+Vector2(180,h-104 if information.visible else 85),Vector2(w-660 if information.visible else w-550,70*u)))
 	var repair_position: Vector2 = o+Vector2(w-430,h-80*u) if information.visible else o+Vector2(180,85+78*u)
 	_place(work_repair_button,Rect2(repair_position,Vector2(340*u,hit)))
-	surface.card = Rect2(mini_position-Vector2(10,34),Vector2(mini_extent+20,mini_extent+44))
+	surface.card = surface.frame_rect(mini.get_rect(),"preview")
 	surface.miniature = mini.get_rect()
-	surface.palette = Rect2(palette_pos-Vector2(6,6),Vector2(56,56)*u if session.definition.palette.size()==1 else Vector2(110,110)*u)
+	surface.palette = surface.frame_rect(palette_row.get_rect(),"palette")
+	# Preserve the complete fit/hint budget. Only unused left paper absorbs the
+	# clearance required by the aligned sidebar; no cell, font or slot reduction.
+	if board is FullViewBoard and board.layout_valid:
+		var occupied: Rect2 = board.composition_envelope()
+		occupied.position += board.position
+		var coordinate_text: String = "Zeile %d · Spalte %d" % [session.player.height,session.player.width]
+		var coordinate_width: float = coordinate.get_theme_font("font").get_string_size(coordinate_text,HORIZONTAL_ALIGNMENT_LEFT,-1,coordinate.get_theme_font_size("font_size")).x+2
+		var coordinate_ink: Rect2 = Rect2(Vector2(axis-coordinate_width/2,coordinate.position.y),Vector2(coordinate_width,coordinate.size.y))
+		var clearance: float = 0
+		for box: Rect2 in [surface.card,surface.palette,surface.wells[0],coordinate_ink]:
+			if box.intersects(occupied): clearance = maxf(clearance,occupied.end.x-box.position.x+0.1)
+		board.position.x -= clearance
 	surface.information = information.visible
 	surface.work_visible = work.visible and page.visible
 	surface.queue_redraw()

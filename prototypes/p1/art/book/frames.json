@@ -1,0 +1,75 @@
+{
+  "source": "SL-65 native image tool, 2026-10-10",
+  "original_sha256": "9e7f10b394caf8cd6b89eb7c990fe443d113286a7ac873ca730b1938ea1c4e33",
+  "crop": [
+    97,
+    105,
+    1154,
+    1148
+  ],
+  "derivatives": [
+    {
+      "file": "frame-preview.png",
+      "size": [
+        384,
+        384
+      ],
+      "safe": [
+        44.052034058656574,
+        42.76222435282841,
+        295.89593188268685,
+        298.4755512943432
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        384,
+        384
+      ],
+      "sha256": "9187f1b1796aa3d8ef0603e01f82fde347f40fdcb5d0e3c66cc22e42657f12dd",
+      "rgba_sha256": "209a169d9533eba0bf06ba6b52e592494605faccec08b8dfd551e1812c4488b8"
+    },
+    {
+      "file": "frame-palette.png",
+      "size": [
+        288,
+        288
+      ],
+      "safe": [
+        33.78902554399244,
+        32.82166826462125,
+        220.42194891201513,
+        222.3566634707575
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        288,
+        288
+      ],
+      "sha256": "9ac25082d5bba17f5ec6dfc847fe3882d41d398f019349bb3db3677af8b76e42",
+      "rgba_sha256": "9d1698bc54e8573d76d7f90ec58e0d5d10d21b322c3ab718eec32479797aa7e7"
+    },
+    {
+      "file": "frame-tools.png",
+      "size": [
+        320,
+        480
+      ],
+      "safe": [
+        37.210028382213814,
+        52.70278044103543,
+        245.5799432355724,
+        374.59443911792914
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        320,
+        479
+      ],
+      "sha256": "d2155c30234045ec0e178322be5bdcd381c03516ca850e9152ebb64da557196d",
+      "rgba_sha256": "32d6f93877e5b5c5270621cca9f81fae9bec4084555bfb7e88eba096b9e1fcb2"
+    }
+  ]
+}
