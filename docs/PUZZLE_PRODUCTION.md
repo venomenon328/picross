@@ -6,6 +6,14 @@ Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-6 integriert; aktueller K
 
 ## 1. Geltung und Ziel
 
+Für neue Rätsel gilt ergänzend die verbindliche
+[KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md).
+Sie regelt Gestaltung, Motivfreigabe, Randregel, Schwierigkeit L1–L5 und
+dateigebundene Übergaben auf Grundlage der hier bestehenden technischen Verträge.
+Menschliches Probespielen ist für neue Rätsel kein Abnahmekriterium; Motivfreigabe
+und abschließende redaktionelle Abnahme bleiben verpflichtend. Die unten
+dokumentierten RP-Paket- und Pilotabnahmen bleiben an ihre damaligen Aufträge gebunden.
+
 Diese Spezifikation konkretisiert die Eigentümerentscheidung vom 03.10.2026 auf
 Basis der [Produktdefinition](PRODUCT_DEFINITION.md), insbesondere §§3.2–3.4 und 4,
 und der Motivtreue aus dem [Gestaltungskonzept](DESIGN_CONCEPT.md) §4.3.
