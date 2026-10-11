@@ -8,10 +8,12 @@ Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-6 integriert; aktueller K
 
 Für neue Rätsel gilt ergänzend die verbindliche
 [KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md).
-Sie regelt Gestaltung, Motivfreigabe, Randregel, Schwierigkeit L1–L5 und
+Sie beginnt mit der Auswahl und Freigabe farbiger detaillierter Abschlussbilder;
+daraus wird die separat freizugebende Motivvorlage für das Nonogramm abgeleitet.
+Sie regelt Gestaltung, beide Bildfreigaben, Randregel, Schwierigkeit L1–L5 und
 dateigebundene Übergaben auf Grundlage der hier bestehenden technischen Verträge.
-Menschliches Probespielen ist für neue Rätsel kein Abnahmekriterium; Motivfreigabe
-und abschließende redaktionelle Abnahme bleiben verpflichtend. Die unten
+Menschliches Probespielen ist für neue Rätsel kein Abnahmekriterium; Abschlussbildfreigabe,
+Abstraktionsfreigabe und abschließende redaktionelle Abnahme bleiben verpflichtend. Die unten
 dokumentierten RP-Paket- und Pilotabnahmen bleiben an ihre damaligen Aufträge gebunden.
 
 Diese Spezifikation konkretisiert die Eigentümerentscheidung vom 03.10.2026 auf
