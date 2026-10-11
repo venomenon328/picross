@@ -10,7 +10,9 @@ import tempfile
 import time
 from pathlib import Path
 
-from .contract import digest, load_json, write_json
+from tools.project_paths import current_path as relocated_path
+
+from .contract import InvalidInput, digest, load_json, write_json
 from .images import file_hash, versions
 from .p1_export import export_p1, export_pilot
 from .repair import require
@@ -22,6 +24,13 @@ BASE = "cd4a8db86e51891f13e305b589837a1a4354c5a2"
 PLAN_SHA = "090c0705ab49dd4b56107ee05baffa051225b66e9f24a79dfbf70a33a8c44610"
 
 
+def current_path(root, recorded):
+    try:
+        return relocated_path(root, recorded)
+    except ValueError as exc:
+        raise InvalidInput("Unsafe pilot path") from exc
+
+
 def plan():
     require(file_hash(PILOT / "plan.json") == PLAN_SHA, "Pilot precommit plan changed")
     data = load_json(PILOT / "plan.json")
@@ -30,7 +39,7 @@ def plan():
         for name, sha in entry["reference_files"].items():
             require(file_hash(ROOT / entry["reference_bundle"] / name) == sha, "Pilot reference changed")
         for name, sha in entry.get("retained_files", {}).items():
-            require(file_hash(ROOT / name) == sha, "F-04 compatibility changed")
+            require(file_hash(current_path(ROOT, name)) == sha, "F-04 compatibility changed")
     require(file_hash(ROOT / "examples/rp5/baseline.zip") == data["repair_archive_sha256"], "Repair archive changed")
     return data
 
@@ -51,7 +60,7 @@ def build_exports(output):
             stem = e["definition_id"].lower().replace("-", "")
             reference = ROOT / e["reference_bundle"]
             if stem == "f04":
-                export_p1(reference, e["variant"], ROOT / "prototypes/p1/art/f04.svg", e["name"], output / stem)
+                export_p1(reference, e["variant"], ROOT / "game/art/f04.svg", e["name"], output / stem)
             else:
                 bundle = repaired / e["repair_bundle"] if e["kind"] == "repair" else reference
                 if e["kind"] == "repair":
@@ -59,12 +68,12 @@ def build_exports(output):
                         require(file_hash(bundle / name) == sha, "Repair source changed")
                     raw = load_json(bundle / "repair.json")
                     require(raw["id"] == e["repair_id"] and digest(raw["matrix"]) == e["matrix_hash"], "Wrong final repair")
-                export_pilot(bundle, e["variant"], ROOT / f"prototypes/p1/art/{stem}.png", e["name"], output / stem,
+                export_pilot(bundle, e["variant"], ROOT / f"game/art/{stem}.png", e["name"], output / stem,
                              e["definition_id"], reference=reference if e["kind"] == "repair" else None)
             manifest = load_json(output / stem / "manifest.json")
             for folder, suffix in (("data", ".json"), ("art", ".svg" if stem == "f04" else ".png")):
                 relative = f"{folder}/{stem}{suffix}"
-                require(file_hash(output / stem / relative) == file_hash(ROOT / "prototypes/p1" / relative), "Registered pilot differs from fresh export")
+                require(file_hash(output / stem / relative) == file_hash(ROOT / "game" / relative), "Registered pilot differs from fresh export")
             result.append({"definition_id": e["definition_id"], "seconds": time.monotonic()-start,
                            "export_manifest_sha256": file_hash(output / stem / "manifest.json"),
                            "source": manifest.get("source", {"kind": "import", "candidate_id": manifest["candidate_id"]} ) if stem == "f04" else manifest["source"]})
@@ -93,11 +102,11 @@ def validate_manifest(manifest, data):
                 "Missing own visual judgment")
         require(isinstance(e["motif_review"].get("judgment"),str) and len(e["motif_review"]["judgment"]) > 20, "Missing pair assessment")
         require(e["motif_review"]["matrix_hash"] == e["matrix_hash"] and
-                e["motif_review"]["reveal_sha256"] == file_hash(ROOT / asset), "Stale visual pair review")
+                e["motif_review"]["reveal_sha256"] == file_hash(current_path(ROOT, asset)), "Stale visual pair review")
         required_files.update({asset, e["definition"], e["pair_view"], e["raster_view"], expected_export})
     require(required_files <= set(manifest["files"]), "Incomplete pilot file inventory")
     for relative, sha in manifest["files"].items():
-        path = ROOT / relative
+        path = current_path(ROOT, relative)
         require(not path.is_symlink() and ROOT.resolve() in path.resolve().parents and ".." not in Path(relative).parts,
                 "Unsafe pilot path")
         require(file_hash(path) == sha, "Pilot file changed: " + relative)
@@ -107,7 +116,7 @@ def validate_manifest(manifest, data):
     preparation = load_json(PILOT / "artwork/preparation.json")
     require([e["definition_id"] for e in preparation["operations"]] == expected_ids[1:], "Incomplete image preparation")
     for operation in preparation["operations"]:
-        source, asset = ROOT / operation["source"], ROOT / operation["asset"]
+        source, asset = current_path(ROOT, operation["source"]), current_path(ROOT, operation["asset"])
         require(operation["source"] in manifest["files"] and operation["asset"] in manifest["files"], "Unbound image preparation")
         require(file_hash(source) == operation["source_sha256"] and file_hash(asset) == operation["asset_sha256"], "Image preparation changed")
         if operation["definition_id"] == "F-07":
@@ -140,7 +149,7 @@ def verify_package(output):
                     "Stored export payload changed")
         from PIL import Image, ImageChops
         from .images import raster_image
-        definition = load_json(ROOT / e["definition"])
+        definition = load_json(current_path(ROOT, e["definition"]))
         mapping = fresh_manifest["color_mapping"]
         inverse = {value: key for key, value in mapping.items()}
         matrix = [[inverse[v] for v in row] for row in definition["solution"]]

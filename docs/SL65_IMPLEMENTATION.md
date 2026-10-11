@@ -64,7 +64,7 @@ Hover, Auswahl, Disabledzustand und tatsächliche Treffer bleiben Controls.
 ## Ressourcen und Save-Kompatibilität
 
 [Original, Bildauftrag und Aufbereitung](design/sidebar_frames/README.md),
-[aktives Manifest](../prototypes/p1/art/book/frames.json) und
+[aktives Manifest](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/art/book/frames.json) und
 `tools/sidebar_assets.py` binden die drei PNGs. `z2_resources.py` provisioniert
 nur elf aktive Icons; fit/work/hand/album werden nicht neu erzeugt. `nav-work`
 bleibt die Rücknavigation. Historische BP-Eingaben wurden nicht geändert.

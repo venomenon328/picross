@@ -1,55 +1,61 @@
 # picross
 
-Aktueller [VS2-V1-Zwischenstand](docs/VS2_V1_IMPLEMENTATION.md): engere Zeilenhinweise,
-ausgewogener belegter Arbeitsblock und versetzte Miniatur-/Palettengruppe.
-Ergänzt durch [V2](docs/VS2_V2_IMPLEMENTATION.md): stabile Scribble-Konturen und reine Füllminiaturen.
-[V3](docs/VS2_V3_IMPLEMENTATION.md) ergänzt kräftiger variierte Rasterlinien, organische Fülltexturen,
-rechte Werkzeugleiste und Bakso-Arbeitstitel. Neues unabhängiges Review, persönliche
-VS2-M01 und Mergefreigabe offen; Draft-PR #62, kein Release.
+Ein thematisch zusammenhängendes Nonogramm-Spiel in Entwicklung: kuratierte
+Bildrätsel, präzise Mausbedienung und ein illustriertes Album.
 
-Ein geplantes thematisch zusammenhängendes Nonogramm-Spiel für PC: kuratierte klassische und farbige Bildrätsel, ein substanzielles Angebot großer Raster und eine präzise, komfortable Bedienung. Logische Erkenntnisse und größere Projekte stehen im Mittelpunkt; ein sich füllendes illustriertes Album, Sterneprogression und freiwillige Leistungsvergleiche ergänzen das Spiel. Eine perfekte Lösung erfordert einen Durchgang ohne Fehler und ohne Undo.
+Das reguläre Godot-Spielprojekt liegt unter [game/](game/README.md). Der integrierte
+Stand bietet sechs unveränderte Katalogrätsel (F01, F02, F04, F06, F08, F09),
+Vollsicht, unabhängige Hinweisnavigation, Undo/Redo und lokale Save-/Backup-Recovery.
+Sidebar und Atlasrenderer sind über [PR #66](https://github.com/venomenon328/picross/pull/66)
+in `main` integriert. Es gibt keinen Release. Godot Standard 4.7.2-stable und
+Windows sind die aktuelle Entwicklungsbindung; die endgültige Engine- und
+Plattformentscheidung bleibt offen.
 
-Unter [prototypes/p1](prototypes/p1/README.md) liegt der integrierte P1.4/G1/H1/Z2/RP-3/GP-48-Stand:
-20×20 monochrom, 40×40 mit vier Farben und ein 100×100-UI-Stressraster. RP-3 ergänzt
-als integriertes RP-3-Blatt ein aus einer realen Bilddatei importiertes 20×20-Rätsel; RP-6 ergänzt im Draft fünf weitere Pilotblätter. Mausstriche mit
-startzustandsabhängiger Füllung↔X-Umwandlung, Undo/Redo, feinem monotonem Zoom bis zur Vollsichtgrenze, eigene passive Füllminiatur,
-unnummerierte farbige Teilhinweise mit unabhängigem Zeilen-/Spalten-Panning und
-motivtreuer Abschluss. Isolierte lokale Spielstände je Blatt mit Undo/Redo,
-Raster-/Hinweisansicht und Primary/Backup-Recovery sind ergänzt. Keine Wertung.
-P1.4 ist mit 500-Aktionen-Prüfweg und bestätigter Eigentümerprobe integriert;
-[Ergebnisbericht](docs/P1_4_VERIFICATION.md). Z2-M01/M02/M03 wurden nicht durchgeführt
-und für PR #33 als Gate aufgehoben. RP-1/RP-2 sind über #42/#43 integriert.
-[Bildwerkzeug](tools/puzzle_production/README.md), [reale Importdateien](examples/rp3/README.md)
-und [RP-3-Nachweise](docs/RP3_VERIFICATION.md) dokumentieren den Produktionsweg; RP-3 ist nach Review R2 integriert, RP-6 bleibt in PR #47 in Abnahme.
+## Entwickeln und starten
 
-GP-48 ergänzt startzustandsabhängige Schutzregeln beim Ziehen und drei Hinweiszustände
-mit kräftigeren Ziffern. [Technische Lieferung](docs/GP48_VERIFICATION.md) und
-[gezielte Eigentümerprobe](docs/GP48_OWNER_TRIAL.md) sind nach Review R1 und positiver
-GP48-M01 über PR #49 in `main` integriert. PR #47 baut nun auf diesem Stand auf.
-
-## Einstieg
-
-- [Produktdefinition](docs/PRODUCT_DEFINITION.md): abgestimmte Ausrichtung, Rätselqualität, Varianten, UX, Progression, Spielmodi, offene Entscheidungen und grober Entwicklungsablauf.
-- [Gestaltungskonzept](docs/DESIGN_CONCEPT.md): bestätigte Album-/Stilentscheidungen, noch offene Themenwahl, Umgang mit den exemplarischen Mocks und zu untersuchende Interaktionen.
-- [Rätselproduktion](docs/PUZZLE_PRODUCTION.md): spezifiziertes externes Werkzeug mit Deduktionsnachweisen, Bildimport, Motivschutz und Pilotproduktion; KI ausschließlich in ChatGPT/Codex, ohne direkte Modell-API.
-- [P1-Spezifikation](docs/PROTOTYPE_P1.md): Windows-/Godot-Bedienprototyp, bestätigte Eingaberegeln, Testdaten, Speicherung, Technikbindung und Abnahmevertrag. Auftrag und Ausführungsstand in [Issue #5](https://github.com/venomenon328/picross/issues/5).
-- [P1-Preflight](docs/P1_PREFLIGHT.md): reproduzierbarer Download-, Hash-, Smoke-, Export- und CI-Nachweis für die gebundene Godot-Toolchain.
-- [P1-Anleitung](prototypes/p1/README.md), [historischer P1.3-Prüfbericht](docs/P1_3_VERIFICATION.md) und [P1.4-Ergebnisbericht](docs/P1_4_VERIFICATION.md): Start, Mausbedienung, lokale Speicherung/Recovery und integrierte Produktprüfung mit damaliger Eigentümerabnahme.
-- [AGENTS.md](AGENTS.md): verbindlicher Einstieg für ChatGPT und Coding Agents.
-- [Projektprofil](docs/PROJECT_PROFILE.md): aktueller Projekt- und Prüfrahmen sowie situationsbezogene Pflichtquellen.
-- [Gemeinsamer Workflow](docs/dev-rules/WORKFLOW.md): Spezifikation, Umsetzung, Review und Freigaben.
-- [Herkunft und Aktivierung](docs/DEV_RULES_ADOPTION.md): exakter dev-rules-Stand und Übernahmeweg.
-- [ChatGPT-Projekteinstellungen](docs/CHATGPT_PROJECT_INSTRUCTIONS.md): nach dem Setup-Merge einzusetzender Text.
-
-Produktdefinition, Gestaltungskonzept und P1-Spezifikation trennen bestätigte Entscheidungen von Vorschlägen und offenen Details. P1 verwendet Godot Standard 4.7.2-stable als native Windows-Desktopfassung. Nach D-06 ist Maus der einzige verpflichtende P1-Eingabepfad; spätere alternative Produkteingaben bleiben unverändert. Die endgültige Produkttechnik und Betriebssystemmatrix werden damit nicht festgelegt. Python prüft Dokumente, die F-01-/F-02-Zertifikate und den isolierten Toolchain-/Produktweg. P1.1 bis P1.4, G1/H1, Z2, RP-3 und GP-48 sind in `main` integriert; RP-6 wird in PR #47 geprüft. Es gibt keinen Release.
-
-## Dokumentation prüfen
-
-Python 3.11 oder neuer; keine zusätzlichen Pakete. Im Repository-Root:
+Mit der [gebundenen Toolchain](docs/P1_PREFLIGHT.md) im Repository-Root:
 
 ```sh
-python3 -m unittest discover -s tools -p 'test_*.py' -v
-python3 tools/check_docs.py
+godot --headless --path game --import
+godot --headless --path game --script res://tests/run_tests.gd
+godot --path game
 ```
 
-Die [Setup-CI](.github/workflows/setup.yml) führt beide Prüfungen und einen vollständigen Whitespace-Diffcheck aus. Zusätzlich prüft [P1 product verification](.github/workflows/p1-product.yml) Import, Godot-Tests, kontrollierten Start und Windows-Export und liefert ein commitgebundenes ZIP. Diese technischen Nachweise ersetzen die reale Mausprobe nicht.
+[Spiel- und Windows-Anleitung](game/README.md) beschreibt Bedienung, Speicherort
+und isolierte Exportprüfung. [Werkzeuganleitung](tools/puzzle_production/README.md)
+beschreibt die separate Python-/Pillow-Umgebung für Bilder und Rätselproduktion.
+Automatische Prüfungen verwenden temporäre Projekte und Profile.
+
+## Aktuelle Entwicklungsverträge
+
+- [AGENTS.md](AGENTS.md), [Workflow](docs/dev-rules/WORKFLOW.md) und
+  [Projektprofil](docs/PROJECT_PROFILE.md): Einstieg, Pflichtquellen und Befugnisse.
+- [Produktdefinition](docs/PRODUCT_DEFINITION.md) und
+  [Gestaltungskonzept](docs/DESIGN_CONCEPT.md): beschlossene Ausrichtung und offene Entscheidungen.
+- [P1-Vertrag](docs/PROTOTYPE_P1.md): weiterhin geltende Eingabe-, Spiel- und Saveverträge.
+- [Zeichensprache](docs/UI_DRAWING_STYLE.md), [Zellrendering](docs/CELL_RENDERING.md)
+  und [Rätselproduktion](docs/PUZZLE_PRODUCTION.md): aktuelle Fachverträge.
+- [CI-Policy](docs/CI_POLICY.md): Änderungsauswahl, Pflichtgate `ci-required`, Budgets und Nachweisgrenzen.
+
+## Prüfen
+
+Python 3.11+, Standardbibliothek für den schnellen Dokument-/Toolpfad:
+
+```sh
+python -m unittest discover -s tools -p 'test_*.py' -v
+python tools/check_docs.py
+```
+
+Die [CI](.github/workflows/setup.yml) ergänzt nach dem vollständigen Diff die
+aktuellen Produkt-, Produktions- und Toolchainprüfungen. `ci-required` verlangt
+den tatsächlichen Erfolg aller ausgewählten Jobs am zugeordneten Head/Test-Merge.
+Native Renderprüfung und Windows-Spielerexport ersetzen keine persönliche Mausprobe.
+
+## Historische Nachweise
+
+P1 bleibt als Name des ursprünglichen Vertrags und der unveränderten Appidentität
+bestehen. Frühere Prüfberichte sind Nachweise ihres jeweiligen Commits.
+[Archiv und Bestandsinventar](docs/DEVELOPMENT_ARCHIVE.md) erklärt erhaltene
+Referenzen, entfernte Studienprogramme und deren Commit-/Hashbindungen.
+[Regelherkunft](docs/DEV_RULES_ADOPTION.md) bindet die lokale Workflowkopie;
+[ChatGPT-Projekteinstellungen](docs/CHATGPT_PROJECT_INSTRUCTIONS.md) werden durch den Nutzer eingesetzt.

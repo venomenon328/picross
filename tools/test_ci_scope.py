@@ -10,18 +10,34 @@ from ci_scope import FLAGS, JOBS, apply_event_policy, classify, evaluate, make_p
 
 
 class SelectionTests(unittest.TestCase):
+    def test_save_recovery_and_gameplay_keep_integration_without_manufacturer(self):
+        for path in ("game/model/save_store.gd", "game/model/gesture.gd", "game/ui/main.gd"):
+            value = classify([path])["selected"]
+            self.assertTrue(value["product"] and value["integration"] and value["visual"] and value["perf_b"])
+            self.assertFalse(value["production"] or value["preflight"])
+
+    def test_runtime_resources_select_native_regression(self):
+        for path in ("game/ui/cell_atlas.gd", "game/art/cells/x-small.png", "tools/perf_b_resources.py", "tools/cell_atlas_reference.json", "game/tests/perf_b_cases.gd"):
+            value = classify([path])["selected"]
+            self.assertTrue(value["visual"] and value["perf_b"] and value["product"])
+            self.assertFalse(value["integration"] or value["preflight"])
+
+    def test_removed_legacy_game_paths_preserve_required_coverage(self):
+        plan = classify(["prototypes/p1/model/save_store.gd", "docs/archived.md"])
+        self.assertTrue(plan["selected"]["integration"] and plan["selected"]["product"])
+
     def test_document_only_change_requires_only_docs(self):
-        plan = classify(["docs/VS2_VERIFICATION.md", "prototypes/p1/README.md"])
+        plan = classify(["docs/VS2_VERIFICATION.md", "game/README.md"])
         self.assertTrue(plan["selected"]["docs"])
         self.assertFalse(any(plan["selected"][key] for key in FLAGS))
 
     def test_renderer_selects_real_pixels_without_unrelated_pilot_replay(self):
-        selection = classify(["prototypes/p1/ui/pencil_marks.gd"])["selected"]
+        selection = classify(["game/ui/pencil_marks.gd"])["selected"]
         self.assertTrue(selection["product"] and selection["visual"])
         self.assertFalse(selection["pilots"] or selection["production"] or selection["integration"])
 
     def test_state_and_navigation_keep_500_action_route(self):
-        for path in ["prototypes/p1/model/player.gd", "prototypes/p1/ui/board.gd"]:
+        for path in ["game/model/player.gd", "game/ui/board.gd"]:
             with self.subTest(path=path):
                 self.assertTrue(classify([path])["selected"]["integration"])
 
@@ -37,15 +53,15 @@ class SelectionTests(unittest.TestCase):
         self.assertTrue(value["product"] and value["visual"])
 
     def test_hash_bound_markdown_and_actual_pilot_files_are_inputs(self):
-        for path in ["examples/rp4/SELECTION.md", "prototypes/p1/data/f05.json",
-                     "prototypes/p1/art/f05.png", "prototypes/p1/tests/rp6_probe.gd"]:
+        for path in ["examples/rp4/SELECTION.md", "game/data/f05.json",
+                     "game/art/f05.png", "game/tests/rp6_probe.gd"]:
             with self.subTest(path=path):
                 value = classify([path])["selected"]
                 self.assertTrue(value["production"] and value["pilots"])
 
     def test_active_technical_vs_corpus_keeps_production_verification(self):
-        for path in ["prototypes/p1/full_view_study/cases/vs01/definition.json",
-                     "prototypes/p1/full_view_study/catalog.json"]:
+        for path in ["game/full_view_study/cases/vs01/definition.json",
+                     "game/full_view_study/catalog.json"]:
             with self.subTest(path=path):
                 self.assertTrue(classify([path])["selected"]["production"])
 
@@ -78,7 +94,7 @@ class SelectionTests(unittest.TestCase):
                 git("init", "-q")
                 git("config", "user.name", "CI test")
                 git("config", "user.email", "ci-test@example.invalid")
-                source = Path("prototypes/p1/ui/board.gd")
+                source = Path("game/ui/board.gd")
                 source.parent.mkdir(parents=True)
                 source.write_text("old current renderer\n")
                 git("add", ".")
@@ -89,7 +105,7 @@ class SelectionTests(unittest.TestCase):
                 git("add", "-A")
                 git("commit", "-qm", "move")
                 plan = make_plan(base, git("rev-parse", "HEAD"), "auto")
-                self.assertIn("prototypes/p1/ui/board.gd", plan["changed_paths"])
+                self.assertIn("game/ui/board.gd", plan["changed_paths"])
                 self.assertIn("docs/archived.md", plan["changed_paths"])
                 self.assertTrue(plan["selected"]["integration"])
             finally:
@@ -98,7 +114,7 @@ class SelectionTests(unittest.TestCase):
 
 class RequiredGateTests(unittest.TestCase):
     def test_success_and_explicit_not_applicable_are_accepted(self):
-        for paths in [["README.md"], ["prototypes/p1/ui/board.gd"], ["new_unknown.py"]]:
+        for paths in [["README.md"], ["game/ui/board.gd"], ["new_unknown.py"]]:
             plan = classify(paths)
             results = {key: {"result": "success" if plan["selected"][key] else "skipped"} for key in JOBS}
             self.assertTrue(all(row["accepted"] for row in evaluate(plan, results)))
@@ -116,6 +132,16 @@ class RequiredGateTests(unittest.TestCase):
         for plan in [{}, {"format": "picross-ci-selection-v1", "selected": {"docs": False}}]:
             with self.assertRaises(ValueError):
                 evaluate(plan, {})
+
+    def test_incomplete_subscope_or_scope_without_product_is_rejected(self):
+        plan = classify([], force="all")
+        del plan["selected"]["perf_b"]
+        with self.assertRaises(ValueError):
+            evaluate(plan, {})
+        plan = classify([], force="all")
+        plan["selected"]["product"] = False
+        with self.assertRaises(ValueError):
+            evaluate(plan, {})
 
     def test_cli_returns_nonzero_for_failed_required_job(self):
         plan = classify([], force="all")

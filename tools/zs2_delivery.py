@@ -33,13 +33,13 @@ def before_project(root: Path, workspace: Path) -> Path:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(archive.extractfile(member).read())
     for name in ("zs1_capture.gd", "zs2_capture.gd", "vs2_measurements.gd"):
-        shutil.copyfile(root / "prototypes/p1/tests" / name, destination / "tests" / name)
+        shutil.copyfile(root / "game/tests" / name, destination / "tests" / name)
     return destination
 
 
 def capture(root, project, workspace, output, engine, render_command, environment, phase):
-    font = root / "prototypes/p1/art/drawing/Chalkboard-Regular.ttf"
-    if toolchain.sha256_file(font) != FONT_SHA256 or font.read_bytes() != (root / "prototypes/p1/study/fonts/Chalkboard-Regular.ttf").read_bytes():
+    font = root / "game/art/drawing/Chalkboard-Regular.ttf"
+    if toolchain.sha256_file(font) != FONT_SHA256 or font.read_bytes() != (root / "game/study/fonts/Chalkboard-Regular.ttf").read_bytes():
         raise toolchain.PreflightError("Selected font differs from the bound ZS1 original")
     renders = output / "zs2-renders"
     renders.mkdir()

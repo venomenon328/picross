@@ -12,7 +12,7 @@ PERF-A-Lieferhead bleibt `2bbc28eecb0c15276ebcd52b473c4fdb5ee10781`,
 Herstellerquelle bleibt `a83ecf5db0800d198bb870932bf0365341aabb28`.
 Pläne, Originalbilder, sechs Atlanten, Manifest und historische Berichte in
 [PERF-A](PERF_A_IMPLEMENTATION.md) bleiben unverändert. Das neue
-[B-Messprotokoll](../examples/perf_b/plan.json) wurde vor der Messung festgelegt.
+[B-Messprotokoll](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_b/plan.json) wurde vor der Messung festgelegt.
 
 `examples/perf_b/a-source.zip` bewahrt die sieben ursprünglich im A-Manifest
 gebundenen Hersteller-/Quell-/Consumerdateien. Prüfung von Containerhash,
@@ -88,7 +88,7 @@ Commitgebundene Ergebnisse, vollständige CI-Auswahl, frischer Windows-Download
 und getrennter Selbstreview werden im bestehenden Issue und PR nachgeführt.
 Historische SL-R02/PERF-A-R01 sind keine Abnahme dieses neuen Gesamtstands.
 
-Der [native B-Vergleich](../examples/perf_b/README.md) bindet 120 aktuelle
+Der [native B-Vergleich](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_b/README.md) bindet 120 aktuelle
 F02-Vergleichsfälle auf `8ef3a1b` einschließlich Rohintervalle, Verteilungen,
 verbliebene Commitspitzen und Speichermehrbedarf. 100×100 bleibt getrennte
 theoretische Zusatzmessung. Die frische A-Herstellung ergibt 22/22 byteidentische

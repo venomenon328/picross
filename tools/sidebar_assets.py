@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-DEST = ROOT / "prototypes/p1/art/book"
+DEST = ROOT / "game/art/book"
 ORIGINAL = ROOT / "docs/design/sidebar_frames/original.png"
 
 

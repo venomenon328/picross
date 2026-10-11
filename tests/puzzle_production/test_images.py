@@ -232,7 +232,7 @@ class ImageTests(unittest.TestCase):
         output=self.root/"export"
         result=export_p1(bundle,"area-128",EXAMPLE/"reveal.svg","Fliegenpilz",output)
         self.assertTrue(result["certified"])
-        self.assertEqual((output/"data/f04.json").read_bytes(),(ROOT/"prototypes/p1/data/f04.json").read_bytes())
+        self.assertEqual((output/"data/f04.json").read_bytes(),(ROOT/"game/data/f04.json").read_bytes())
         self.assertEqual(load_json(output/"manifest.json")["color_mapping"],{"empty":0,"ink":1})
         with self.assertRaises(InvalidInput):
             export_p1(bundle,"area-128",EXAMPLE/"reveal.svg","Fliegenpilz",output)

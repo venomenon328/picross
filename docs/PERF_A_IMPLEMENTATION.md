@@ -8,10 +8,10 @@ noch nicht; reguläre Atlasintegration und Ebenentrennung gehören zu #68.
 
 ## A1: vor dem optimierten Vergleich festgelegter Versuch
 
-Der [endliche Messplan](../examples/perf_a/plan.json) ist seit `ec5e1ad`
+Der [endliche Messplan](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_a/plan.json) ist seit `ec5e1ad`
 versioniert. Unveränderte Renderer aus `a83ecf5` und integrierter Basis `e323dcf`
 werden durch Git-Archive in temporäre Projekte kopiert. Das eigene
-[Messprogramm](../prototypes/p1/tests/perf_a_baseline.gd) wird dort ergänzt;
+[Messprogramm](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/tests/perf_a_baseline.gd) wird dort ergänzt;
 Produktquellen und normale Benutzerprofile werden nicht verändert.
 
 F02 bleibt einschließlich Definition, Lösung und Proof unverändert. Der dichte
@@ -62,8 +62,8 @@ Sie ersetzt keine Kontexte der vollständigen Ausgangsmessung. Die erste
 ergänzende Kontrolle scheiterte an einer neuen `Window.vsync_mode`-Abfrage;
 die korrigierte Fassung verwendet `DisplayServer.window_get_vsync_mode`.
 
-[Dauerhafter Ergebnisindex](../examples/perf_a/a1-windows.json) und
-[Rohdaten einschließlich aller Verteilungen und Harnessquellen](../examples/perf_a/a1-windows-raw.zip)
+[Dauerhafter Ergebnisindex](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_a/a1-windows.json) und
+[Rohdaten einschließlich aller Verteilungen und Harnessquellen](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_a/a1-windows-raw.zip)
 binden die tatsächlich geprüften Fassungen. Originale F02-Definition und Proof
 sind unverändert. Dünn: 40 Füllungen, 10 X, 1550 unbekannt; dicht: 1216/304/80.
 
@@ -101,12 +101,12 @@ gleichen Plan erneut messen und darf CPU-/Wallwerte nicht als physische Latenz a
 
 ## A2: reproduzierbare Füll-/X-Atlanten
 
-[Herstellungsplan](../examples/perf_a/atlas-plan.json),
-[Quellen und Befehle](../examples/perf_a/README.md) und
-[Manifest](../prototypes/p1/perf_a/atlases/manifest.json) binden die Übergabe.
+[Herstellungsplan](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_a/atlas-plan.json),
+[Quellen und Befehle](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_a/README.md) und
+[Manifest](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/perf_a/atlases/manifest.json) binden die Übergabe.
 Der unveränderte Projektstift aus `a83ecf5` wird offline unter nativem Windows /
 Godot 4.7.2 OpenGL3 in Schwarz-/Weiß-Basisbilder ausgerendert. Alle neun
-[Originalbilder](../examples/perf_a/sources) bleiben gespeichert. Pillow exakt
+[Originalbilder](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_a/sources) bleiben gespeichert. Pillow exakt
 12.3.0 erzeugt daraus sechs neutrale RGBA8-Koeffizientenmasken, ohne fremde Assets
 oder Modellaufruf. R trägt die Grundfarbe einschließlich dunkler Kontur, G die
 weißen Spuren, A die Deckung. Der gemeinsame kleine Shader rekonstruiert Farbe;
@@ -139,8 +139,8 @@ gleichen Bild mit 56 % Deckung innerhalb der dokumentierten Quantisierung.
 
 ### Native A2-Ergebnisse · 11.10.2026
 
-[Ergebnisindex](../examples/perf_a/a2-windows.json) und
-[Rohbilder, Logs und Reproduktionsbelege](../examples/perf_a/a2-windows-raw.zip)
+[Ergebnisindex](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_a/a2-windows.json) und
+[Rohbilder, Logs und Reproduktionsbelege](https://github.com/venomenon328/picross/blob/070d3c291fd83ab380518b01638181c809574c03/examples/perf_a/a2-windows-raw.zip)
 binden die tatsächlichen Scripts, Masken und Prüfdateien. Zwei frische native
 Herstellungen sind über alle 22 Original-/Derivat-/Import-/Manifestdateien
 bytegleich; reine Ableitung ab gespeicherten Quellen reproduziert alle sechs

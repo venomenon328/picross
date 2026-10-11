@@ -1,4 +1,10 @@
-# RP-6: fester Sechserpilot
+# RP-6: historischer Produktionsbestand
+
+Der folgende Bericht beschreibt die ursprüngliche Sechserproduktion. Aktuell
+werden F04/F06/F08/F09 sowie F01/F02 angeboten; F05/F07 bleiben Prüfinputs.
+Hashgebundene HTML-Ansichten gehören zum ursprünglichen Tree und werden dort
+mit ihren damaligen Bildpfaden geöffnet. Aktuelle Entwicklung siehe
+[Projektprofil](../../docs/PROJECT_PROFILE.md).
 
 Vorabplan vom 06.10.2026 zu [Issue #40](https://github.com/venomenon328/picross/issues/40).
 [plan.json](plan.json) bindet die sechs unveränderten Quellen, Endmatrizen,
@@ -28,8 +34,8 @@ keine neuen Raster oder Reparatursuchen. Zwei neue native Bilddateien (je ein
 Aufruf, keine verworfene Fassung), drei vorhandene Illustrationen übernommen;
 [Prompts](artwork/prompts.json), [Dateiaufbereitung](artwork/preparation.json).
 
-Paaransichten mit Motivspoiler: [F-04](views/f04.html), [F-05](views/f05.html),
-[F-06](views/f06.html), [F-07](views/f07.html), [F-08](views/f08.html), [F-09](views/f09.html).
+Paaransichten mit Motivspoiler: [F-04](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/examples/rp6/views/f04.html), [F-05](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/examples/rp6/views/f05.html),
+[F-06](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/examples/rp6/views/f06.html), [F-07](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/examples/rp6/views/f07.html), [F-08](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/examples/rp6/views/f08.html), [F-09](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/examples/rp6/views/f09.html).
 Die PNG-Raster enthalten exakt eine Bildzelle je finaler Matrixzelle; HTML zeigt
 sie ohne Glättung neben den echten Ressourcen. Ergänzende PNG-Kontaktansichten
 sind reine Ansichten, keine neuen Bildfassungen.

@@ -26,7 +26,7 @@ Strich wird programmgeneriert. Die hohe Werkzeugableitung skaliert dieselbe
 organische Zeichnung; kein Nine-Patch. Sicherheitsrechtecke sind gegenüber dem
 Original um mindestens drei Ableitungspixel eingerückt und symmetrisch zur
 beschnittenen sichtbaren Hülle. PNG-/Pixelhashes, Maße, Alpha-Hülle und freier
-Innenraum stehen im [aktiven Manifest](../../../prototypes/p1/art/book/frames.json).
+Innenraum stehen im [aktiven Manifest](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/art/book/frames.json).
 Der Pixelhash setzt ausschließlich unsichtbare RGB-Kanäle bei Alpha 0 auf 0.
 Die drei versionierten Importvorgaben deaktivieren Godots Randfarbreparatur,
 damit die gezeichneten semitransparenten Pixel unverändert bleiben. Im fertigen

@@ -1,0 +1,95 @@
+{
+  "format": "picross-cell-atlas-reference-v1",
+  "render_version": "pencil-atlas-1",
+  "variants": 16,
+  "frames": 24,
+  "duration_us": 210000,
+  "padding": 2,
+  "decoded_bytes": 48906240,
+  "atlases": [
+    {
+      "file": "fill-small.png",
+      "kind": "fill",
+      "level": "small",
+      "size": [
+        864,
+        576
+      ],
+      "bytes": 11462,
+      "decoded_bytes": 1990656,
+      "sha256": "5e1dc76ef5eb9769dd61bf49ff6aba6e68ad99ccfd1247b69715404542ac595a",
+      "pixel_sha256": "5201bc8203ae3e58449d55698d95992c41ecd896073b54e536a46d08eefa1294",
+      "import_sha256": "794d2cdd301be9677b858b26376b8ad19a5477d0e0228684ff0158a610e992a6"
+    },
+    {
+      "file": "x-small.png",
+      "kind": "x",
+      "level": "small",
+      "size": [
+        864,
+        576
+      ],
+      "bytes": 29069,
+      "decoded_bytes": 1990656,
+      "sha256": "4546d2c57eda98c21057a73668697224d16c066f159a83ed6364c3058112ecf8",
+      "pixel_sha256": "01136583d37904f3e3180d4428e6f51d83df2777b78cbbc40a764c6330d42747",
+      "import_sha256": "41760004eb51656db7d5c937e3f1b0e6d1e27f324dafb9fee1b0e62d92aee14f"
+    },
+    {
+      "file": "fill-medium.png",
+      "kind": "fill",
+      "level": "medium",
+      "size": [
+        1632,
+        1088
+      ],
+      "bytes": 62134,
+      "decoded_bytes": 7102464,
+      "sha256": "0f7223a09690d5985a2e6f79d1fec07eb152bde836f910f24c61b945511cf37d",
+      "pixel_sha256": "681c24674910033708b6c909d362b07ddfa69c2367987079b8555b0d872f7793",
+      "import_sha256": "8b0c6487f7e93693cef2f4cbc1353546569d8d6809fbba14c041fc7c7d7c03a0"
+    },
+    {
+      "file": "x-medium.png",
+      "kind": "x",
+      "level": "medium",
+      "size": [
+        1632,
+        1088
+      ],
+      "bytes": 72180,
+      "decoded_bytes": 7102464,
+      "sha256": "0fb1e0797bc4b86fe120bab358fb3e309bf6a4c08baff0d61669952183c93bb9",
+      "pixel_sha256": "677e272eb1af8de8eb52dfd662e4c051e965107686f38b069295e9318f360f71",
+      "import_sha256": "a34ab033f89922d0252e1f7ddd3cb099e5bbc8c1ce3b816a0ecf7cbebbc7ee27"
+    },
+    {
+      "file": "fill-large.png",
+      "kind": "fill",
+      "level": "large",
+      "size": [
+        2400,
+        1600
+      ],
+      "bytes": 87328,
+      "decoded_bytes": 15360000,
+      "sha256": "29ff8c8a7492d38155a58d5926ec9ec9b2c8e0e67652c1e2d614860e4d01d5f8",
+      "pixel_sha256": "3e8f6bc1e039c5285375f814c87428526457f9fe2b5be1e87d4c070b723fe322",
+      "import_sha256": "11a231ece1c40419d53548cfe43f6c50f6892153fbe3fb3a9442e9cda170fbbe"
+    },
+    {
+      "file": "x-large.png",
+      "kind": "x",
+      "level": "large",
+      "size": [
+        2400,
+        1600
+      ],
+      "bytes": 64030,
+      "decoded_bytes": 15360000,
+      "sha256": "a8efa25ece483d2574dbd8d1cca627416f37b47b6ec39cb1d0cbe0c2853cff07",
+      "pixel_sha256": "b38d03b6e510eac4b8ad212d69b66476e92cefb3ca5a391c534d6387eda3abd1",
+      "import_sha256": "dfb63e41d1e599aa4a348f739b215ece1865e3cbc0c5fd4b7f6aa9f6335001ff"
+    }
+  ]
+}

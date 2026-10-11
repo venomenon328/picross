@@ -1,24 +1,16 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-## Aktueller Vertrag · Sidebar #65
+## Aktueller Entwicklungsstand
 
-PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der neue zusammenhängende Stand A+B folgt auf `feat/65-sidebar-frames`; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.
-
-Aktuell: genau sechs Aktionen in 2×3 (Füllen/Radieren, Undo/Redo, Minus/Plus), ohne Einpassen-/Arbeitsgrößenaktion oder „Dein Stand“. Drei transparente gezeichnete Rahmen ersetzen die alten Fassungen; Miniatur, Koordinaten, Palette und Werkzeuge teilen die Mittelachse. Die interne Vollsichtgrenze, Optionsansichten G/V, Raster-/Hinweisbudgets und Albumminiaturen bleiben. Nach vollständiger unveränderter Schema-1-Validierung wird `overview=false`; gültiger Zoomwunsch, Inhalt, History/Redo und Recoverygrenzen bleiben erhalten. Neue Saves schreiben Schema 1 mit `overview=false`. SL-R02 bestätigt B-01 am Ausgangshead a83ecf5 technisch; neues kombiniertes Review, persönliche SL-M01/PERF-M01 und neue Mergefreigabe bleiben offen; kein Release. Historische Prüfpläne/-berichte bleiben unverändert.
-
-## Integrierter Vorgänger · VS2 (#61)
-
-**Historischer Paketstand vor Abschluss von #62:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
-
-Die A-Buchkomposition übernimmt reguläre Vollsicht mit achsengetrennten Reserven
-und GF1-Zusatzbreite. Acht Werkzeuge statt Hand; passive Miniatur. Keine zusätzliche
-Studiensteuerung oder Messanzeige im Arbeitsbild.
-
-Bedien-/Speichervertrag: [P1](PROTOTYPE_P1.md). Aktuelle
-[Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md).
-VS2-M01, unabhängiges technisches/visuelles Review und passende Mergefreigabe
-bleiben vor Merge offen. Historische Nachweise bleiben commitgebunden.
-
+VS2, die sechs Sidebaraktionen in 2×3 und PERF-A/B sind über PR #62/#66
+in `main` integriert. Der aktuelle Katalog enthält F01/F02/F04/F06/F08/F09,
+regulär höchstens 50×50 gemäß #68. Aktuelle Eingabe-/Saveverträge stehen in
+[P1](PROTOTYPE_P1.md), Sidebarparameter in [SL65](SL65_IMPLEMENTATION.md),
+Darstellungs-/Cacheverträge in [CELL_RENDERING](CELL_RENDERING.md).
+Historische Auswahl- und Abnahmestände sind keine erneut offenen Mergegates.
+Die früheren einleitenden Paketmeldungen bleiben im
+[gebundenen Vorgänger](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/docs/DESIGN_CONCEPT.md) erreichbar.
+Themenwahl und die unentschiedenen Designarbeiten bleiben offen.
 
 Stand: 09.10.2026 · Arbeitsfassung 0.23 · Z2/GP-48/ZV-50 integriert; zeichnerische UI spezifiziert
 
@@ -116,7 +108,7 @@ integriert. Reviewbefunde und Mergefreigabe sind dort und im
 [Paketstatus #23](https://github.com/venomenon328/picross/issues/23) abgeschlossen.
 Z2-M01/M02/M03 wurden nicht durchgeführt; der Eigentümer hob das damalige Gate
 für diesen Merge auf. RP-3 ist nach eigenem technischem/visuellem Review R2
-über PR #44 integriert; die reale Eigentümer-Lösung bleibt RP-6-Gate.
+über PR #44 integriert; die spätere RP-6-Phasenentscheidung ist im abgeschlossenen #34 gebunden.
 Die [RP-4-Sichtprüfung](RP4_VERIFICATION.md) bewertet neue Produktionsraster,
 keine neue P1-Bedienabnahme.
 

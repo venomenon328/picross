@@ -16,15 +16,15 @@ from p1_preflight import PreflightError
 
 
 class CurrentProductEvidenceTests(unittest.TestCase):
-    def test_perf_a_failure_retains_declared_native_color_inputs(self):
+    def test_perf_b_failure_retains_declared_native_color_inputs(self):
         with tempfile.TemporaryDirectory() as temporary:
             output=Path(temporary)
-            probe=output/"perf-a"; probe.mkdir()
+            probe=output/"perf-b"; probe.mkdir()
             picture=probe/"color-medium-0.png"; picture.write_bytes(b"native failure pixels")
             unbound=probe/"unbound.png"; unbound.write_bytes(b"not declared")
             report=probe/"probe.json"
             report.write_text(json.dumps(dict(pictures=[picture.name,"../escape.png"])),encoding="utf-8")
-            files,priority=p1_evidence.native_failure_sources(output,"perf-a-native-oracle-0")
+            files,priority=p1_evidence.native_failure_sources(output,"perf-b-native-oracle-0")
             self.assertIn(report,files)
             self.assertIn(picture,files)
             self.assertIn(picture,priority)

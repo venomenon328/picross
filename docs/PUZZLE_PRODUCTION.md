@@ -2,7 +2,7 @@
 
 Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
 
-Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-5 integriert; RP-6 im Draft
+Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-6 integriert; aktueller Katalog gemäß #68
 
 ## 1. Geltung und Ziel
 
@@ -431,10 +431,10 @@ Saveformat 1 und bestehende Slots bleiben erhalten; F-04 ergänzt `f04.json` sam
 Backup/Temp. Produktionsbilder und Motivname sind vor Abschluss unzugänglich.
 Der technische Durchstich ist keine reale Eigentümer-Lösung oder Pilotfreigabe.
 
-Fachliche Vorarbeiten sind [F-01](../prototypes/p1/F01_PROOF.md),
-[F-02](../prototypes/p1/F02_PROOF.md), die begrenzten
+Fachliche Vorarbeiten sind [F-01](../game/F01_PROOF.md),
+[F-02](../game/F02_PROOF.md), die begrenzten
 [Python-Prüfer](../tools/check_f01.py) und die
-[H1-Linienanalyse](../prototypes/p1/model/clue_completion.gd).
+[H1-Linienanalyse](../game/model/clue_completion.gd).
 Sie liefern Konzepte und Vergleichsfälle, aber keinen allgemeinen Produktionssolver
 oder bereits unabhängigen Prüfer beliebiger Zertifikate. P1-spezifische Formatlimits,
 Vollaufzählung von Linien und die bisherige H1-Ausgabe werden nicht unverändert zur
@@ -496,7 +496,7 @@ begrenzte CI-Job prüft alle geschriebenen Reparaturspuren und Vergleichsbindung
 unverkleinerte Fach-/Referenz-/RP-3-/RP-4-Prüfungen bleiben. Unabhängiges
 technisches/visuelles Review R1 von RP-5 ist in PR #46 abgeschlossen; integriert
 als `cd4a8db86e51891f13e305b589837a1a4354c5a2`. Die reale Eigentümer-
-Lösung bleibt ausdrücklich RP-6-Gate.
+Lösung gehörte zum RP-6-Gate; die spätere Entscheidung steht in #34/PR #47.
 
 Für jedes Paket gelten der bestehende Dokumentprüfweg und ein vollständiger
 Diffcheck. `docs` muss am aktuellen Head/zugehörigen Test-Merge erfolgreich sein.
@@ -563,5 +563,7 @@ Kein öffentlicher Import, keine Rechteckprobe in P1, kein Saveformatwechsel.
 
 [Prüfzuordnung](RP6_VERIFICATION.md), [Bilanz und Paaransichten](../examples/rp6/README.md)
 und getrennte [Eigentümeranleitung](RP6_OWNER_TRIAL.md) dokumentieren Grenzen.
-Eigene Sichtung ist keine unabhängige Zweitprüfung. M02–M04 bleiben offen;
-fehlende reale Befunde sind kein negatives Machbarkeitsergebnis.
+Eigene Sichtung ist keine unabhängige Zweitprüfung. M01–M04 und die positive
+kuratierte Machbarkeitsentscheidung sind im abgeschlossenen #34 und PR #47
+gebunden; wirtschaftliche Serienproduktion bleibt mangels menschlicher
+Arbeitszeitdaten unbewiesen. Keine neue Produkt- oder Releasefreigabe.
