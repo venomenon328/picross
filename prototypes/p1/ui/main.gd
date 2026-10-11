@@ -827,7 +827,7 @@ func _layout_book() -> void:
 	# SL-R01/B-01: follow the unchanged navigation at every breakpoint/UI scale.
 	# Cropped alpha envelopes and symmetric safe interiors share this content axis.
 	var axis: float = actions["menu"].get_rect().get_center().x
-	if board.layout_valid and mini_extent > 86*u:
+	if board is FullViewBoard and board.layout_valid and mini_extent > 86*u:
 		var ink: Rect2 = board.composition_envelope()
 		ink.position += board.position
 		var left_room: float = maxf(0,ink.position.x-(o.x+w*0.03125))
@@ -898,7 +898,7 @@ func _layout_book() -> void:
 	surface.palette = surface.frame_rect(palette_row.get_rect(),"palette")
 	# Preserve the complete fit/hint budget. Only unused left paper absorbs the
 	# clearance required by the aligned sidebar; no cell, font or slot reduction.
-	if board.layout_valid:
+	if board is FullViewBoard and board.layout_valid:
 		var occupied: Rect2 = board.composition_envelope()
 		occupied.position += board.position
 		var coordinate_text: String = "Zeile %d · Spalte %d" % [session.player.height,session.player.width]
