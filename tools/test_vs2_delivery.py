@@ -91,6 +91,14 @@ class DeliveryTests(unittest.TestCase):
             (self.root/"v3-report.json").write_text(json.dumps(report),encoding="utf-8")
             return vs2_delivery.verify_v3(self.root)
         self.assertEqual(len(verify()["records"]),96)
+        native_path=self.root/'v3-report.json'
+        native_value=json.loads(native_path.read_text(encoding='utf-8'))
+        native_path.write_text(json.dumps(native_value,indent=2),encoding='utf-8')
+        original_size=native_path.stat().st_size
+        vs2_delivery.compact_geometry_reports([native_path])
+        self.assertEqual(json.loads(native_path.read_text(encoding='utf-8')),native_value)
+        self.assertLess(native_path.stat().st_size,original_size)
+        self.assertEqual(len(vs2_delivery.verify_v3(self.root)['records']),96)
         original_axes=copy.deepcopy(report['records'][0]['sidebar_axes'])
         for kind in ('frames','controls','both','upper','missing'):
             a=copy.deepcopy(original_axes)

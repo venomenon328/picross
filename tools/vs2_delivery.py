@@ -12,6 +12,15 @@ import vs2_v1_verify
 
 BASE = "fad885344874534629365917a2ab6a8d311cd3a7"
 
+
+def compact_geometry_reports(paths):
+    """Keep every current native measurement; omit only JSON indentation."""
+    for path in paths:
+        report = json.loads(path.read_text(encoding="utf-8"))
+        path.write_text(json.dumps(report, ensure_ascii=False, separators=(",", ":")) + "\n",
+                        encoding="utf-8", newline="\n")
+
+
 def capture_current(project, workspace, output, engine, render_command, environment, phase):
     """Current VS2 coverage; historical imports remain explicit separate replays."""
     environment["VS2_PROBE_OUTPUT"] = str(output)
@@ -88,6 +97,10 @@ def capture_current(project, workspace, output, engine, render_command, environm
     v3["sidebar_plan_sha256"] = toolchain.sha256_file(Path(__file__).resolve().parents[1] / "examples/vs2/sl65-plan.json")
     v3["plan_sha256"] = toolchain.sha256_file(Path(__file__).resolve().parents[1] / "examples/vs2/v3-plan.json")
     v3["font_sha256"] = toolchain.sha256_file(font)
+    # New axis telemetry must not displace the twelve required SL images.
+    # Only these current reports are serialized compactly; historical bytes stay.
+    compact_geometry_reports([renders / "vs2-matrix.json", focused_dir / "v1-focused.json",
+                              v3_dir / "v3-report.json"])
     selected += list(v3_dir.glob("*.json")) + [v3_dir / p["file"] for p in v3["pictures"]]
     return dict(records=len(report["records"]), failures=report["failures"],
                 rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3,
