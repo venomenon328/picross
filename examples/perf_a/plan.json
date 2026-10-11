@@ -1,0 +1,30 @@
+{
+  "format": "picross-perf-a-plan-v1",
+  "baseline": "a83ecf5db0800d198bb870932bf0365341aabb28",
+  "integrated_base": "e323dcf5c83b085144e61707ef98ecab2bfac39b",
+  "warmup_frames": 6,
+  "sample_frames": 36,
+  "repetitions": 3,
+  "densities": ["sparse", "dense"],
+  "animations": [false, true],
+  "scenarios": ["hover", "fill", "x"],
+  "contexts": [
+    ["normal", 1.0, "G", 16],
+    ["normal", 1.0, "G", 18],
+    ["normal", 1.0, "G", 20],
+    ["normal", 1.0, "G", 72],
+    ["maximized", 1.0, "G", 72],
+    ["normal", 1.25, "G", 18],
+    ["maximized", 1.25, "G", 20],
+    ["maximized", 1.0, "V", 20],
+    ["normal", 1.25, "V", 16],
+    ["maximized", 1.25, "V", 72]
+  ],
+  "fixture": "F-02 unchanged; rows 0..37: dense all, sparse indices divisible by 31; value 0 if index%5==0 else 1+index%4. Rows 38/39 unknown.",
+  "inputs": "hover: cell (3*f%40,7*f%38), one motion/frame; fill/X: down (0,38/39), move (39,38/39), up at sample frame 0; then no input",
+  "overview_comparison": "false for both source heads; additional true controls on integrated main at normal/maximized UI100 G request72",
+  "metrics": ["frame_post_draw wall intervals us", "pencil_marks CPU build us", "input dispatch CPU us", "board/marks/mini draw signals", "active effects per frame", "Godot static/texture memory bytes"],
+  "unavailable": ["GPU duration", "presentation timing", "physical input-to-photon latency"],
+  "limits": {"process_seconds": 300, "technical_bytes": 20000000, "total_bytes": 75000000},
+  "acceptance": "No new FPS guarantee. Baseline distributions and structural counters frozen for PERF-B comparison on same host/renderer. Unreachable sizes reported with actual fit, never forced."
+}
