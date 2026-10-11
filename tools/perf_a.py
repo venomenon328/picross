@@ -1,12 +1,15 @@
 """Bound native PERF-A experiments; no regular renderer substitution."""
 from __future__ import annotations
 import argparse
+import ctypes
+from ctypes import wintypes
 import hashlib
 import io
 import json
 import os
 from pathlib import Path
 import platform
+import math
 import shutil
 import subprocess
 import tarfile
@@ -36,6 +39,60 @@ def run(command, env, log, marker=None):
         raise ValueError((result.returncode, str(log), text[-5000:]))
 
 
+def distribution(values):
+    if not values:
+        return dict(n=0, p50=None, p95=None, p99=None, maximum=None)
+    ordered = sorted(values)
+    return dict(n=len(values), **{"p"+str(p): ordered[max(0, math.ceil(len(values)*p/100)-1)] for p in (50, 95, 99)}, maximum=ordered[-1])
+
+
+def verify_save(data, definition):
+    """Independent baseline oracle: replay the actual saved transaction."""
+    if data["schema"] != 1 or data["definition_id"] != definition["id"] or data["definition_revision"] != definition["revision"]:
+        raise ValueError("Wrong synthetic save identity")
+    if (data["width"], data["height"]) != (40, 40) or data["completed"]:
+        raise ValueError("Wrong load dimensions/completion")
+    cells = [-1]*1600
+    for action in data["history"][:data["cursor"]]:
+        seen = set()
+        for change in action:
+            i = change["index"]
+            if i in seen or not 0 <= i < 1600 or cells[i] != change["before"] or change["before"] == change["after"] or change["after"] not in (-1, 0, 1, 2, 3, 4):
+                raise ValueError("Invalid synthetic history")
+            seen.add(i)
+            cells[i] = change["after"]
+    if cells != data["cells"] or any(v != -1 for v in cells[1520:]):
+        raise ValueError("Synthetic matrix/history or free input rows differ")
+    return dict(fills=sum(v > 0 for v in cells), x=cells.count(0), unknown=cells.count(-1))
+
+
+def summarize(output):
+    report = json.loads((output / "baseline.json").read_text(encoding="utf-8"))
+    summary = dict(plan_sha256=report["plan_sha256"], source_heads={k: v["source_commit"] for k, v in report["roles"].items()}, cases=[])
+    definition = json.loads((ROOT / "prototypes/p1/data/f02.json").read_text(encoding="utf-8"))
+    for role, data in report["roles"].items():
+        for context in data["contexts"]:
+            directory = output / context["directory"]
+            if digest(directory / "measurements.json") != context["sha256"]:
+                raise ValueError("Baseline raw data identity differs")
+            raw = json.loads((directory / "measurements.json").read_text(encoding="utf-8"))
+            for density in ("dense", "sparse"):
+                verify_save(json.loads((directory / ("synthetic-"+density+".json")).read_text(encoding="utf-8")), definition)
+                for animations in (False, True):
+                    for scenario in ("hover", "fill", "x"):
+                        records = [r for r in raw["records"] if (r["density"], r["animations"], r["scenario"]) == (density, animations, scenario)]
+                        if len(records) != 3 or {r["repetition"] for r in records} != {0, 1, 2} or any(len(r["frame_intervals_us"]) != 36 for r in records):
+                            raise ValueError("Missing baseline repetitions/raw samples")
+                        summary["cases"].append(dict(role=role, context=context["requested_context"], actual_cell=raw["actual_cell"], overview=raw["overview_actual"], density=density, animations=animations, scenario=scenario,
+                            frames_us=distribution([v for r in records for v in r["frame_intervals_us"]]),
+                            mark_build_us=distribution([v for r in records for v in r["mark_build_cpu_us"]]),
+                            dispatch_us=distribution([v for r in records for v in r["dispatch_cpu_us"]]),
+                            draws=[r["draw_signals"] for r in records], peak_effects=max(v for r in records for v in r["active_effects"]),
+                            static_memory_bytes=[r["static_memory_bytes"] for r in records], texture_memory_bytes=[r["texture_memory_bytes"] for r in records]))
+    write_json(output / "summary.json", summary)
+    return summary
+
+
 def prepare(cache, workspace):
     archive = cache / tc.EDITORS[platform.system()].name
     tc.verify_sha256(archive, tc.EDITORS[platform.system()].sha256)
@@ -57,6 +114,10 @@ def baseline(cache, output, only=None):
     result = dict(format="picross-perf-a-baseline-v1", platform=platform.platform(),
                   plan_sha256=digest(PLAN), harness_head=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
                   scripts={p.name: digest(p) for p in (Path(__file__), ROOT / "prototypes/p1/tests/perf_a_baseline.gd")}, roles={})
+    user = ctypes.windll.user32
+    user.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
+    result["windows_system_dpi"] = user.GetDpiForSystem()
+    result["windows_system_scale"] = result["windows_system_dpi"]/96
     with tempfile.TemporaryDirectory(prefix="picross-perfa-") as temporary:
         workspace = Path(temporary)
         engine = prepare(cache, workspace)
@@ -85,17 +146,21 @@ def baseline(cache, output, only=None):
                 print(role, ci, overview, "OK", measurement["actual_cell"], flush=True)
             result["roles"][role] = role_data
     write_json(output / "baseline.json", result)
+    summarize(output)
     print("PERF_A_WINDOWS_BASELINE_OK", flush=True)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["baseline"])
+    parser.add_argument("action", choices=["baseline", "summarize"])
     parser.add_argument("--cache-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--only-context", type=int)
     args = parser.parse_args()
-    baseline(args.cache_dir.resolve(), args.output_dir.resolve(), args.only_context)
+    if args.action == "baseline":
+        baseline(args.cache_dir.resolve(), args.output_dir.resolve(), args.only_context)
+    else:
+        summarize(args.output_dir.resolve())
 
 
 if __name__ == "__main__":
