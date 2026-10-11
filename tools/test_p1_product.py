@@ -7,7 +7,7 @@ import zipfile
 from pathlib import Path
 
 from p1_preflight import PreflightError
-from p1_product import (EXPECTED_PROJECT_NAME, package, package_player, player_extras,
+from p1_product import (EXPECTED_PROJECT_NAME, package, package_player, player_extras, player_guide,
                         project_name, require_clean_output, require_foreign_slot_failure)
 from gp48_delivery import PLAYER_FILES, verify_player_package
 from ci_scope import FLAGS, JOBS, classify, evaluate
@@ -41,8 +41,10 @@ class ProductHarnessTests(unittest.TestCase):
             self.assertGreater(audit["bytes"], 0)
             with zipfile.ZipFile(archive) as bundle:
                 for name, source in player_extras(root, output).items():
-                    self.assertEqual(bundle.read(name), source.read_bytes())
-                self.assertIn((root / "game/README.md").read_bytes(), bundle.read("README.txt"))
+                    expected = player_guide(root, manifest["source_commit"]).encode("utf-8") if name == "SPIELANLEITUNG.md" else source.read_bytes()
+                    self.assertEqual(bundle.read(name), expected)
+                self.assertIn(player_guide(root, manifest["source_commit"]).encode("utf-8"), bundle.read("README.txt"))
+                self.assertNotIn(b"](../", bundle.read("SPIELANLEITUNG.md"))
 
     def test_deleted_or_moved_actual_markdown_inputs_fail_docs_and_required_gate(self):
         root = Path(__file__).resolve().parents[1]

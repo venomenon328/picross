@@ -16,6 +16,7 @@ import time
 import traceback
 import zipfile
 from pathlib import Path
+from urllib.parse import quote, urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -310,10 +311,29 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
 def package_player(build: Path, output: Path, manifest: dict, root: Path) -> tuple[Path, dict]:
     """Use the same real delivery inputs in Product and the fast docs contract."""
     extras = player_extras(root, output)
-    archive = package(build, output, manifest,
-                      (root / "game/README.md").read_text(encoding="utf-8"), extras)
+    guide = player_guide(root, manifest["source_commit"])
+    packaged_guide = output / "SPIELANLEITUNG.md"
+    packaged_guide.write_text(guide, encoding="utf-8", newline="\n")
+    extras["SPIELANLEITUNG.md"] = packaged_guide
+    archive = package(build, output, manifest, guide, extras)
     expected = {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json", *extras}
     return archive, gp48_delivery.verify_player_package(archive, manifest, expected_files=expected)
+
+
+def player_guide(root: Path, source_commit: str) -> str:
+    """Make repository links usable after the player ZIP is extracted elsewhere."""
+    def bound_link(match):
+        target = match.group(2)
+        url = urlsplit(target)
+        if url.scheme or not url.path:
+            return match.group(0)
+        path = (root / "game" / url.path).resolve()
+        if not path.is_relative_to(root.resolve()) or not path.exists():
+            raise toolchain.PreflightError("Invalid player guide link: " + target)
+        bound = "https://github.com/venomenon328/picross/blob/" + source_commit + "/" + quote(path.relative_to(root.resolve()).as_posix())
+        return "[" + match.group(1) + "](" + bound + ("#" + url.fragment if url.fragment else "") + ")"
+    return re.sub(r"\[([^\]\n]*)\]\(([^)\n]*)\)", bound_link,
+                  (root / "game/README.md").read_text(encoding="utf-8"))
 
 
 def main(argv: list[str] | None = None) -> int:
