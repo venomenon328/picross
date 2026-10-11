@@ -86,7 +86,7 @@ ausgegeben. Vollständige Produktionsrekonstruktionen gehören in den Fachlauf,
 nicht zusätzlich in den Runtime-Harness.
 
 F04 prüft nach Abschluss außerdem die bekannten unveränderten F01/F02/F06-Zellstände
-(400/1600/10000 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
+(400/1600/2500 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
 F01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Die isolierte
 Partialinstanz sichert den unveränderten F01-Startstand, damit der zweite Neustart
 auch die gültig geladene Variante tatsächlich prüft. JSON-Zellwerte werden numerisch

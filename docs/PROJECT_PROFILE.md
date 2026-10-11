@@ -172,8 +172,9 @@ sind im integrierten PR #44 abgeschlossen. Die dort gebundenen Fachtests/Benchma
 bleiben historische Nachweise dieses Stands. Die reguläre Hauptszene wird
 mit F-04 in drei isolierten Prozessen bearbeitet, abgeschlossen und wieder geladen;
 echte Renderbilder prüfen eigene falsche Einträge und die Spoilergrenze.
-Die reale Eigentümer-Lösung ist RP-6-Gate. Windows-Export, Windows-Start und
-Eigentümer-Lösung sind getrennte Nachweise. Parent #34 bleibt offen.
+Die RP-6-Abnahmeentscheidungen sind im integrierten PR #47 gebunden.
+Windows-Export, Windows-Start und persönliche Lösung bleiben getrennte Nachweise.
+Parent #34 bleibt offen.
 
 ## RP-4-Regression und Herkunftsnachweis
 
@@ -221,8 +222,8 @@ Windowsregression, `docs`, `product` und `preflight` bleiben aktiv.
 
 RP5-A01 bis A06 und unabhängiges technisches/visuelles Review R1 sind
 im integrierten PR #46 abgeschlossen. Historische Baseline-/Reviewfelder
-bleiben unverändert; eigene Sichtung ersetzt weiterhin keine Zweitprüfung. Reale Eigentümer-Lösung
-und finale Pilotabnahme bleiben RP-6-Gates. Kein Merge/Release; Parent #34 offen.
+bleiben unverändert; eigene Sichtung ersetzt weiterhin keine Zweitprüfung. Persönliche Lösung und finale Pilotabnahme gehören zum historischen RP-6-Auftrag;
+dessen Entscheidungen stehen im integrierten PR #47. Parent #34 bleibt offen.
 
 ## Toolchain, Product und Betriebswirkung
 
