@@ -32,10 +32,10 @@ class PerfBTests(unittest.TestCase):
             with archive.open("ab") as stream: stream.write(b"x")
             with self.assertRaisesRegex(ValueError, "archive identity"):
                 perf_b_report.verify(root)
-            runtime = root / "prototypes/p1/ui"
+            runtime = root / "game/ui"
             runtime.mkdir(parents=True)
             for filename in report["runtime_files"]:
-                shutil.copyfile(resources.ROOT / "prototypes/p1/ui" / filename, runtime / filename)
+                shutil.copyfile(resources.ROOT / "game/ui" / filename, runtime / filename)
             with (runtime / "atlas_marks.gd").open("ab") as stream: stream.write(b"\n")
             with self.assertRaisesRegex(ValueError, "Measured runtime changed"):
                 perf_b_report.verify(source, root)

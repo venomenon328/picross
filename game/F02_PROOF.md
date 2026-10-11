@@ -12,13 +12,13 @@ Laternenfenster, Turmbänder, Oberflächendetails und gestaffelte Wasserlinien. 
 Konturen und ruhige Farbflächen orientieren sich an der bestätigten F-01-Referenz.
 Die logische Lösung und sämtliche Hinweise bleiben unverändert.
 
-[Definition](data/f02.json) und [Zertifikat](data/f02-proof.json) sind getrennt.
+[Definition](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/data/f02.json) und [Zertifikat](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/data/f02-proof.json) sind getrennt.
 Schema 2 speichert die unabhängige Abschlussressource mit Versions- und Definitions-ID;
 die Ressource wird erst nach tatsächlichem Abschluss angezeigt. Alle Zellen starten unbekannt.
 
 ## Endliche farbige Deduktion
 
-[Prüfer](../../tools/check_f02.py) ist ausschließlich auf F-02 Revision 2 begrenzt,
+[Prüfer](../tools/check_f02.py) ist ausschließlich auf F-02 Revision 2 begrenzt,
 kein Runtime-Solver oder allgemeines Produktionswerkzeug. Die zulässigen Platzierungen
 jeder Linie werden aus Länge **und Farbe** der Hinweise gebildet: gleicher Nachbarfarbe
 folgt mindestens eine Leerzelle; verschiedene Farben dürfen ohne Abstand folgen oder

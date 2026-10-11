@@ -1,6 +1,6 @@
 # Zellrendering: Sprite-Atlanten und getrennte Aktualisierung
 
-Stand: 11.10.2026 · Spezifikation 0.1 · PERF-A-Grundlage geliefert, PERF-B in technischer Prüfung
+Stand: 11.10.2026 · Spezifikation 0.1 · PERF-A/B über PR #66 integriert
 
 ## Geltung, Befund und Paketstand
 
@@ -35,11 +35,11 @@ Latenz noch FPS. Die konkrete Eigentümer-EXE ist aus ihnen nicht eindeutig gebu
 
 **Abgrenzung:** SL-R01/B-01 ist nach [SL-R02](https://github.com/venomenon328/picross/pull/66#pullrequestreview-5482654673)
 am genannten Ausgangshead technisch behoben. Das nimmt diese Performancearbeit
-nicht ab. Persönliche SL-M01 und neue PERF-M01 bleiben offen.
+nicht ab. Persönliche SL-M01/PERF-M01 wurden vor dem Merge von PR #66 bestätigt; die damaligen Nachweise bleiben dort gebunden.
 [PERF-A](PERF_A_IMPLEMENTATION.md) liefert native Ausgangsmessung, reproduzierbare
 Atlanten und einen isolierten Material-/Identitätsprüfweg. Reguläre Atlasanzeige
 und neue Caches sind in [PERF-B](PERF_B_IMPLEMENTATION.md) integriert;
-die kombinierte unabhängige und persönliche Abnahme bleibt offen.
+die kombinierte Abnahme und Integration sind in PR #66 dokumentiert.
 Die Spezifikation stammt unverändert in ihren Fachentscheidungen aus PR #69,
 Commit `4a7573f3adaf7cef6df08adafb6caa767da02ad2`; #69 wurde nicht gemergt.
 

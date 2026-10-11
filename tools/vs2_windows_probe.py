@@ -18,7 +18,16 @@ import p1_preflight as toolchain
 import vs2_delivery
 from p1_product import player_extras
 from gp48_delivery import verify_player_package
-from vs1_windows_probe import extract
+def extract(archive: Path, destination: Path) -> None:
+    destination.mkdir(parents=True)
+    with zipfile.ZipFile(archive) as bundle:
+        if len(bundle.namelist()) != len(set(bundle.namelist())):
+            raise ValueError("Duplicate archive paths")
+        for name in bundle.namelist():
+            if not (destination / name).resolve().is_relative_to(destination.resolve()):
+                raise ValueError("Unsafe archive path")
+        bundle.extractall(destination)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = "venomenon328/picross"
@@ -227,7 +236,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     events=[]
     def launch(label,delivered,script,marker):
         log=output/(label+".log")
-        command=[str(engine),"--main-pack",str(delivered/"picross-p1.exe"),"--rendering-driver","opengl3","--audio-driver","Dummy","--script",str(ROOT/"prototypes/p1/tests"/script)]
+        command=[str(engine),"--main-pack",str(delivered/"picross-p1.exe"),"--rendering-driver","opengl3","--audio-driver","Dummy","--script",str(ROOT/"game/tests"/script)]
         try:
             result=subprocess.run(command,cwd=delivered,env=env,capture_output=True,encoding="utf-8",errors="replace",timeout=300,creationflags=subprocess.CREATE_NO_WINDOW)
         except subprocess.TimeoutExpired as error:
@@ -280,7 +289,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         raise ValueError("Missing V3 fresh-process geometry comparison")
     b_output = output / "perf-b"
     b_output.mkdir()
-    env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(ROOT / "prototypes/p1/perf_a/atlases/manifest.json"))
+    env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(ROOT / "game/perf_a/atlases/manifest.json"))
     launch("perf-b-runtime", package, "perf_b_probe.gd", "PERF_B_PROBE_OK")
     b_probe = json.loads((b_output / "probe.json").read_text())
     if toolchain.sha256_file(study)!=study_hash: raise ValueError("Historical study data changed")
@@ -299,17 +308,17 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   plan_amendment_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan-amendment.json"),
                   v2_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v2-plan.json"),v2=v2,v3=v3,v3_processes=v3_processes,v3_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v3-plan.json"),
                   sidebar_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/sl65-plan.json"),
-                  sidebar_assets=json.loads((ROOT/"prototypes/p1/art/book/frames.json").read_text(encoding="utf-8")),
+                  sidebar_assets=json.loads((ROOT/"game/art/book/frames.json").read_text(encoding="utf-8")),
                   platform=platform.platform(),bindings=[player_binding,review_binding],export_files=report["export_files"],embedded_packs=packs,
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
-                  scripts={name:toolchain.sha256_file(ROOT/"prototypes/p1/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd","vs2_v1_cases.gd","vs2_v2_cases.gd","vs2_v2_tests.gd","vs2_v3_tests.gd")},
+                  scripts={name:toolchain.sha256_file(ROOT/"game/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd","vs2_v1_cases.gd","vs2_v2_cases.gd","vs2_v2_tests.gd","vs2_v3_tests.gd")},
                   matrix_records=len(matrix["records"]),historical_comparison="not repeated under CI policy #63",
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},
                   study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,
                   previous_review="SL-R02: B-01 technically confirmed at a83ecf5",
-                  perf_b=b_probe, perf_b_comparison=b_comparison, perf_b_probe_sha256=toolchain.sha256_file(ROOT / "prototypes/p1/tests/perf_b_probe.gd"),
+                  perf_b=b_probe, perf_b_comparison=b_comparison, perf_b_probe_sha256=toolchain.sha256_file(ROOT / "game/tests/perf_b_probe.gd"),
                   independent_combined_review="OPEN",PERF_01="B technical probes complete; owner acceptance OPEN",SL_M01="OPEN",PERF_M01="OPEN",merge_authorized=False)
     target=output/"windows-download-verification.json"
     target.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")

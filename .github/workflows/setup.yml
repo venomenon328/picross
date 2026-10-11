@@ -9,7 +9,7 @@ on:
       scope:
         description: Widen the changed-path selection
         type: choice
-        options: [auto, all, runtime, visual, production, toolchain]
+        options: [auto, all, runtime, visual, perf-a, perf-b, production, toolchain]
         default: all
 
 permissions:
@@ -30,6 +30,8 @@ jobs:
       integration: ${{ steps.scope.outputs.integration }}
       pilots: ${{ steps.scope.outputs.pilots }}
       visual: ${{ steps.scope.outputs.visual }}
+      perf_a: ${{ steps.scope.outputs.perf_a }}
+      perf_b: ${{ steps.scope.outputs.perf_b }}
       plan: ${{ steps.scope.outputs.plan }}
     steps:
       - name: Checkout tested integration
@@ -68,6 +70,8 @@ jobs:
       integration: ${{ needs.docs.outputs.integration == 'true' }}
       pilots: ${{ needs.docs.outputs.pilots == 'true' }}
       visual: ${{ needs.docs.outputs.visual == 'true' }}
+      perf_a: ${{ needs.docs.outputs.perf_a == 'true' }}
+      perf_b: ${{ needs.docs.outputs.perf_b == 'true' }}
 
   production:
     needs: docs

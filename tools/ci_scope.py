@@ -17,7 +17,7 @@ import sys
 
 FORMAT = "picross-ci-selection-v1"
 JOBS = ("docs", "product", "production", "preflight")
-FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual")
+FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual", "perf_a", "perf_b")
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 ZERO = "0" * 40
 
@@ -33,13 +33,28 @@ def classify(paths: list[str], force: str = "auto") -> dict:
                 reasons[key].append(reason)
 
     for path in sorted(set(paths)):
+        original = path
+        # Both sides of the one-time project rename retain their obligations.
+        if path.startswith("prototypes/p1/"):
+            path = "game/" + path.removeprefix("prototypes/p1/")
+        if path.startswith(("examples/perf_a/", "game/perf_a/", "tools/perf_a", "tools/test_perf_a")) or path in {
+            "game/tests/perf_a_baseline.gd", "game/tests/perf_a_source.gd", "game/tests/perf_a_atlas_probe.gd", "game/tests/perf_a_cases.gd",
+        }:
+            add(("product", "perf_a", "perf_b"), original)
+            continue
+        if path.startswith(("examples/perf_b/", "tools/perf_b", "tools/test_perf_b", "game/art/cells/")) or path in {
+            "game/ui/cell_atlas.gd", "game/ui/atlas_marks.gd", "game/ui/atlas_mask.gdshader",
+            "game/tests/perf_b_probe.gd", "game/tests/perf_b_measure.gd",
+        }:
+            add(("product", "visual", "perf_b"), original)
+            continue
         # Some Markdown is a hash-bound production input (e.g. RP4 SELECTION).
         # Route those contracts before treating normative prose as docs-only.
         if path.startswith(("examples/rp", "examples/vs1/")):
-            add(("production", "product", "pilots", "visual"), path)
+            add(("production", "product", "pilots", "visual", "perf_b"), path)
             continue
         if PurePosixPath(path).suffix.lower() == ".md" and (
-            path.startswith(("docs/", "prototypes/p1/", "tools/")) or "/" not in path
+            path.startswith(("docs/", "game/", "tools/")) or "/" not in path
         ):
             continue
         if path.startswith(".github/") or path in {
@@ -50,32 +65,32 @@ def classify(paths: list[str], force: str = "auto") -> dict:
             add(FLAGS, path)
         elif path.startswith(("tools/puzzle_production/", "tests/puzzle_production/",
                               "examples/rp", "examples/vs1/")):
-            add(("production", "product", "pilots", "visual"), path)
-        elif path.startswith("prototypes/p1/full_view_study/cases/") or path == "prototypes/p1/full_view_study/catalog.json":
+            add(("production", "product", "pilots", "visual", "perf_b"), path)
+        elif path.startswith("game/full_view_study/cases/") or path == "game/full_view_study/catalog.json":
             # These are still the certified technical cases for regular VS2.
             # Verify their production contracts without rebuilding the study.
-            add(("production", "product", "visual"), path)
-        elif path.startswith("prototypes/p1/"):
-            add(("product", "visual"), path)
-            if path.startswith(("prototypes/p1/data/", "prototypes/p1/fixtures/", "prototypes/p1/puzzles/")) or path in {
-                "prototypes/p1/tests/rp6_probe.gd", "prototypes/p1/tests/rp6_capture.gd",
-                "prototypes/p1/tests/rp3_probe.gd", "prototypes/p1/tests/rp3_capture.gd",
-            } or re.match(r"prototypes/p1/art/f0[4-9](?:[./_-]|$)", path):
+            add(("production", "product", "visual", "perf_b"), path)
+        elif path.startswith("game/"):
+            add(("product", "visual", "perf_b"), path)
+            if path.startswith(("game/data/", "game/fixtures/", "game/puzzles/")) or path in {
+                "game/tests/rp6_probe.gd", "game/tests/rp6_capture.gd",
+                "game/tests/rp3_probe.gd", "game/tests/rp3_capture.gd",
+            } or re.match(r"game/art/f0[4-9](?:[./_-]|$)", path):
                 add(("production", "pilots"), path)
-            if not (path.startswith("prototypes/p1/art/") or path in {
-                "prototypes/p1/ui/pencil_marks.gd", "prototypes/p1/tests/capture.gd",
-                "prototypes/p1/tests/zs2_capture.gd",
+            if not (path.startswith("game/art/") or path in {
+                "game/ui/pencil_marks.gd", "game/tests/capture.gd",
+                "game/tests/zs2_capture.gd",
             }):
                 add(("integration",), path)
         elif path.startswith("docs/design/book_inventory/"):
-            add(("product", "visual"), path)
+            add(("product", "visual", "perf_b"), path)
         elif path.startswith("tools/book_inventory/"):
             # Reusable helper tests still run in docs; archived deliveries do not.
-            add(("product", "visual"), path)
+            add(("product", "visual", "perf_b"), path)
         elif path in {"tools/check_docs.py", "tools/test_check_docs.py"}:
             continue
         elif path.startswith(("tools/z2_resources", "tools/test_z2_resources")):
-            add(("product", "visual"), path)
+            add(("product", "visual", "perf_b"), path)
         elif path.startswith(("tools/rp4_windows_check", "tools/test_rp4_windows")):
             add(("production",), path)
         else:
@@ -85,8 +100,10 @@ def classify(paths: list[str], force: str = "auto") -> dict:
     forced = {
         "auto": (), "all": FLAGS,
         "runtime": ("product", "integration"),
-        "visual": ("product", "visual"),
-        "production": ("production", "product", "pilots", "visual"),
+        "visual": ("product", "visual", "perf_b"),
+        "production": ("production", "product", "pilots", "visual", "perf_b"),
+        "perf-a": ("product", "perf_a", "perf_b"),
+        "perf-b": ("product", "visual", "perf_b"),
         "toolchain": FLAGS,
     }
     if force not in forced:
@@ -113,7 +130,7 @@ def apply_event_policy(plan: dict, event: str) -> dict:
     if event == "push":
         # Preserve the existing main-push contract: docs plus changed production
         # checks. Product integration is established by the PR/test-merge run.
-        for key in ("product", "preflight", "integration", "pilots", "visual"):
+        for key in ("product", "preflight", "integration", "pilots", "visual", "perf_a", "perf_b"):
             plan["selected"][key] = False
         plan["not_applicable_reason"] = "main integrity run; product and toolchain verification belong to the PR"
     return plan
@@ -144,6 +161,10 @@ def make_plan(base: str, head: str, force: str, fetch: bool = False, event: str 
 def evaluate(plan: dict, results: dict) -> list[dict]:
     if plan.get("format") != FORMAT or not isinstance(plan.get("selected"), dict):
         raise ValueError("Missing or invalid selection report")
+    if any(not isinstance(plan["selected"].get(key), bool) for key in FLAGS):
+        raise ValueError("Missing or invalid coverage selection")
+    if any(plan["selected"][key] for key in ("integration", "pilots", "visual", "perf_a", "perf_b")) and not plan["selected"]["product"]:
+        raise ValueError("Selected product coverage without its required job")
     rows = []
     for job in JOBS:
         required = plan["selected"].get(job)

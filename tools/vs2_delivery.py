@@ -120,7 +120,7 @@ def verify_v3(directory: Path) -> dict:
         vs2_v1_verify.sidebar_axes(record, record["ui"])
     expected = {"v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"}
     expected.update(['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'])
-    metadata_path = Path(__file__).resolve().parents[1] / "prototypes/p1/art/book/frames.json"
+    metadata_path = Path(__file__).resolve().parents[1] / "game/art/book/frames.json"
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     def serialized_geometry(value):
         # Godot JSON prints 15 significant digits. The exact source bytes remain
@@ -176,7 +176,7 @@ def reference_project(root: Path, workspace: Path) -> Path:
 
 def capture(root, project, workspace, output, engine, render_command, environment, phase):
     reference = reference_project(root, workspace)
-    shutil.copyfile(root / "prototypes/p1/tests/vs2_roundtrip.gd", reference / "tests/vs2_roundtrip.gd")
+    shutil.copyfile(root / "game/tests/vs2_roundtrip.gd", reference / "tests/vs2_roundtrip.gd")
     phase("vs2-reference-import", [engine,"--headless","--path",str(reference),"--import"])
     environment["VS2_PROBE_OUTPUT"] = str(output)
     # The old process really writes Schema 1 before the new process reads it.

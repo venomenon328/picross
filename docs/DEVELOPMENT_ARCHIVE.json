@@ -1,0 +1,161 @@
+{
+  "format": "picross-development-archive-v1",
+  "source_commit": "0f89f08729539bbb4a02a590cbd18e58fbbda305",
+  "tree": "763855363f4a3e91f2ce7d21008eb819fe8bbc6c",
+  "files": [
+    {
+      "path": "tools/gp48_review.py",
+      "blob": "1b632629d02bb742c8cc81615b65fb46512ede86",
+      "bytes": 9347,
+      "sha256": "0bd94284525abd5de7fb33b18d983b17d733d227afe2e459b0135471df82d775",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "tools/zv50_review.py",
+      "blob": "93c2bb40bedf8e3884e5ccde91cb1c5aa5a2f6b3",
+      "bytes": 8636,
+      "sha256": "9cde62582b039844659bec116f354689d403385d41b1fc52372c5c9e1e695f3c",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "tools/z2_review.py",
+      "blob": "f1cbacc85b82189c37d5786aa408c99a7a150626",
+      "bytes": 4505,
+      "sha256": "7299bb01ace7fea9f0588bac9f4ec41277fa101b7decb7c8156a0bd20a78d6e6",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "tools/h1_owner_probe.ps1",
+      "blob": "c5d2efdd3ea8adb0220112bbf2601dde35259bbb",
+      "bytes": 792,
+      "sha256": "2cbde0c6b040bdc31a0d4ab9ca3db1704a2792947cf960e458369902fc9ab909",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "tools/h1_owner_probe.gd",
+      "blob": "0f568c04e7e78a27c2010a1cc3c62e0db13c75d5",
+      "bytes": 3914,
+      "sha256": "86f32511c98593cd9299c7e69a5a63e2b89a380cecdf603754a085796504459a",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "tools/vs1_delivery.py",
+      "blob": "8c48509f206309b2784aec816129e95e4e622597",
+      "bytes": 17479,
+      "sha256": "3871f58eecedea4f4a9fabb3d62890206a8773e83c4794f3b585db6ca468d7b7",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "tools/vs1_windows_probe.py",
+      "blob": "200dcc6603c75a95648756978616920ff748afa7",
+      "bytes": 11778,
+      "sha256": "ef37409552558f8a83df510e30fb3abde28be40db251f2110a96e74ab745abb3",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "tools/test_vs1_delivery.py",
+      "blob": "4aca6c5e2269a543e9b63cb7478921487a909998",
+      "bytes": 6909,
+      "sha256": "e00cc11a48a0dad4f8d4b77a96c83a2a964dab909f19e4257bdf4a6979bbc37d",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/full_view_study/main.gd",
+      "blob": "cf883ba0262cdc49d29a4643eed5baf3bc27bf56",
+      "bytes": 11750,
+      "sha256": "ba36a5f3b9354fa912875b937f93c757f31bcbb7a8a4c8e62188b0f8d3abdaaa",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/full_view_study/main.tscn",
+      "blob": "f71f5a1f7f9aaf557cf320dfcec28be34a5e56e2",
+      "bytes": 296,
+      "sha256": "c1ac776256c150f97238310d3dade851ceee78d2c04728aafc89db9e9bbe12bd",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/full_view_study/board.gd",
+      "blob": "9191308f846e3d6abcd27244e0778cc784dc98ec",
+      "bytes": 18041,
+      "sha256": "19c7c17d4dedf50d5d803b8ce4ee24ee6b310da3383dc6242ac03df51777c6aa",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/vs1_capture.gd",
+      "blob": "be91683c9669585193afaa8c806fe74a8abc9c57",
+      "bytes": 15147,
+      "sha256": "1ca6b3b6c363dfdc7480e6b63aa648faf65faa091af9a1b234dd3c71ec8d96b9",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/vs1_e1_tests.gd",
+      "blob": "9927bff60129cd399103f1f4be01b90bd6927a91",
+      "bytes": 3934,
+      "sha256": "019f8a764b6c9269fca0bd24b5eb61774c055412ab64f8dafa8239be5890291d",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/vs1_gf1_capture.gd",
+      "blob": "680431b7cc6328d8f3a06a69728e6f38b910fe5a",
+      "bytes": 2568,
+      "sha256": "51e1c32f19b2883ca9f00166ee39f26dedc8a64ca2df033723ff288fc1718fc3",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/vs1_gf1_roundtrip.gd",
+      "blob": "7a30745a4e17ae130e63164612e04b942e4105a8",
+      "bytes": 5195,
+      "sha256": "613f99111f93da20e2e2c2d77396d11cc9a03a68be3a867ae4d92be612e73f9f",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/vs1_gf1_tests.gd",
+      "blob": "5cc6080ce0be834d90d2d54603a37c4c277ee8f5",
+      "bytes": 7485,
+      "sha256": "4408337a681d00adcf2629bd8c06661f2aecf30147c69653397db9999074c914",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/vs1_roundtrip.gd",
+      "blob": "03a2c05332b53b8b5563ddabbe9440d6a30eee93",
+      "bytes": 5152,
+      "sha256": "149827dd1287177fc78c5722e914655f36d60323f0d70b1135fb9ca0ff12bb4f",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/vs1_tests.gd",
+      "blob": "6c0718a5593c08152b1d6103e415f65fc02ee356",
+      "bytes": 11811,
+      "sha256": "0ba2d508e0dfdc006f76feb4b88aa66a80159d3caaebfaf7de49ad61a1ce452b",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/vs1_window.gd",
+      "blob": "bcfc4e01c5fbc3bdaf7191bea6dcc3f2c5b8a450",
+      "bytes": 8797,
+      "sha256": "baf2396f020460fd248d3e31bb4a2f55a2094bffc340ac2ba050a58ea44c16bf",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/z2_before_capture.gd",
+      "blob": "b6891c915e5c6ca35723f31904a339cac3eb0758",
+      "bytes": 2250,
+      "sha256": "3ca4723659fc378db84a8218cd9ff6bc0cabe87b642924c53232aa82cf5b5408",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/zv50_capture.gd",
+      "blob": "04eecdcf1f7e1cdb7fd208572c9f70d18407dd01",
+      "bytes": 4762,
+      "sha256": "f3d0b255aa2e0932cc917128ed49e2fb2641142b93dea80627a79720e06e81b1",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    },
+    {
+      "path": "prototypes/p1/tests/gp48_capture.gd",
+      "blob": "5eb994b3a4abcf49881e34d6e59268751497f286",
+      "bytes": 7673,
+      "sha256": "497cfa133e88047840581d02cc965bd767ff353b2bfabde269387bb220a3273e",
+      "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
+    }
+  ]
+}

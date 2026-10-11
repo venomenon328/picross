@@ -38,10 +38,10 @@ die ausgewählte Chalkboard-TTF samt denselben Nutzungshinweisen in den regulär
 Beide Kandidaten verwenden Plex explizit für die Navigationszeichen `…`/`–`,
 niemals für Ziffern; Begründung und tatsächliche Glyphenabdeckung im Fontinput.
 Die tatsächlich verwendeten vorhandenen Fonts und OFL bleiben im
-[Z2-Ressourcenmanifest](../prototypes/p1/art/book/manifest.json) und im historischen
+[Z2-Ressourcenmanifest](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/art/book/manifest.json) und im historischen
 [Font-Lock](design/book_inventory/composition/inputs/fonts.json) gebunden.
 Füllkontur/Textur und X sind eigene prozedurale Zeichenbefehle in
-[pencil_marks.gd](../prototypes/p1/ui/pencil_marks.gd). Historische Designpakete, Rätseldaten,
+[pencil_marks.gd](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/ui/pencil_marks.gd). Historische Designpakete, Rätseldaten,
 Proofs, ursprüngliche Paletten und Saveformat sind unverändert.
 
 Die Erstlieferung mit Baseline/Tinte/Stift und Fraunces-Hinweisvarianten ist über

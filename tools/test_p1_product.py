@@ -14,6 +14,14 @@ from ci_scope import FLAGS, JOBS, classify, evaluate
 
 
 class ProductHarnessTests(unittest.TestCase):
+    def test_regular_identity_and_study_exclusions_survive_project_move(self):
+        root = Path(__file__).resolve().parents[1] / "game"
+        project = (root / "project.godot").read_text(encoding="utf-8")
+        self.assertIn('run/main_scene="res://main.tscn"', project)
+        self.assertEqual(project_name(root / "project.godot"), EXPECTED_PROJECT_NAME)
+        export = (root / "export_presets.cfg").read_text(encoding="utf-8")
+        for prefix in ("tests/*", "study/*", "full_view_study/*", "perf_a/*"):
+            self.assertIn(prefix, export)
 
     @staticmethod
     def placeholder_build(output):
@@ -34,7 +42,7 @@ class ProductHarnessTests(unittest.TestCase):
             with zipfile.ZipFile(archive) as bundle:
                 for name, source in player_extras(root, output).items():
                     self.assertEqual(bundle.read(name), source.read_bytes())
-                self.assertIn((root / "docs/VS2_OWNER_TRIAL.md").read_bytes(), bundle.read("README.txt"))
+                self.assertIn((root / "game/README.md").read_bytes(), bundle.read("README.txt"))
 
     def test_deleted_or_moved_actual_markdown_inputs_fail_docs_and_required_gate(self):
         root = Path(__file__).resolve().parents[1]
@@ -132,7 +140,7 @@ class ProductHarnessTests(unittest.TestCase):
             require_clean_output(dict(name="tests", exit_code=0, output=""), "P1_TESTS_OK")
 
     def test_project_name_is_exact_utf8_without_mojibake(self):
-        project = Path(__file__).resolve().parents[1] / "prototypes/p1/project.godot"
+        project = Path(__file__).resolve().parents[1] / "game/project.godot"
         self.assertEqual(project_name(project), EXPECTED_PROJECT_NAME)
         self.assertNotIn("Â", project.read_text(encoding="utf-8"))
 

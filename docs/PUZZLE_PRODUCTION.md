@@ -2,7 +2,7 @@
 
 Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
 
-Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-5 integriert; RP-6 im Draft
+Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-6 integriert; aktueller Katalog gemäß #68
 
 ## 1. Geltung und Ziel
 
@@ -431,10 +431,10 @@ Saveformat 1 und bestehende Slots bleiben erhalten; F-04 ergänzt `f04.json` sam
 Backup/Temp. Produktionsbilder und Motivname sind vor Abschluss unzugänglich.
 Der technische Durchstich ist keine reale Eigentümer-Lösung oder Pilotfreigabe.
 
-Fachliche Vorarbeiten sind [F-01](../prototypes/p1/F01_PROOF.md),
-[F-02](../prototypes/p1/F02_PROOF.md), die begrenzten
+Fachliche Vorarbeiten sind [F-01](../game/F01_PROOF.md),
+[F-02](../game/F02_PROOF.md), die begrenzten
 [Python-Prüfer](../tools/check_f01.py) und die
-[H1-Linienanalyse](../prototypes/p1/model/clue_completion.gd).
+[H1-Linienanalyse](../game/model/clue_completion.gd).
 Sie liefern Konzepte und Vergleichsfälle, aber keinen allgemeinen Produktionssolver
 oder bereits unabhängigen Prüfer beliebiger Zertifikate. P1-spezifische Formatlimits,
 Vollaufzählung von Linien und die bisherige H1-Ausgabe werden nicht unverändert zur

@@ -13,7 +13,7 @@ import p1_preflight as tc
 
 ROOT = perf_a.ROOT
 PLAN = ROOT / "examples/perf_a/atlas-plan.json"
-ASSETS = ROOT / "prototypes/p1/perf_a/atlases"
+ASSETS = ROOT / "game/perf_a/atlases"
 SOURCES = ROOT / "examples/perf_a/sources"
 
 
@@ -180,7 +180,7 @@ def verify(assets=ASSETS, sources=SOURCES):
     from perf_b_resources import historical_files
     historical_files()
     for path, expected in manifest["consumer_contract"].items():
-        if perf_a.digest(ROOT / "prototypes/p1/perf_a" / path) != expected:
+        if perf_a.digest(ROOT / "game/perf_a" / path) != expected:
             raise ValueError("Atlas material/identity contract differs")
     if {a["file"] for a in manifest["atlases"]} != {f"{k}-{l}.png" for k in ("fill","x") for l in ("small","medium","large")}:
         raise ValueError("Atlas inventory incomplete")
@@ -327,7 +327,7 @@ def native_oracle(output, require_restart=True):
         texture_memory_bytes=raw["texture_memory_bytes"], negative_controls=["wrong variant", "full underdrawing", "global fade", "reversed X", "duplicate end variants", "changed imported pixels"],
         static_memory_bytes=raw["static_memory_bytes"], smallest_actual_cell=raw["smallest_actual_cell"], largest_actual_cell=raw["largest_actual_cell"],
         manifest_sha256=perf_a.digest(ASSETS / "manifest.json"),
-        scripts={p:perf_a.digest(ROOT / p) for p in ("tools/perf_a_atlas.py","prototypes/p1/tests/perf_a_atlas_probe.gd","prototypes/p1/perf_a/atlas.gd","prototypes/p1/perf_a/mask.gdshader")},
+        scripts={p:perf_a.digest(ROOT / p) for p in ("tools/perf_a_atlas.py","game/tests/perf_a_atlas_probe.gd","game/perf_a/atlas.gd","game/perf_a/mask.gdshader")},
         image_sha256={p.name:perf_a.digest(p) for p in sorted(output.glob("*.png"))},
         probe_sha256=perf_a.digest(output / "probe.json"))
     perf_a.write_json(output / "verified.json", report)
@@ -342,7 +342,7 @@ def probe(cache, output):
         workspace = Path(temporary)
         engine = perf_a.prepare(cache, workspace)
         project = workspace / "p1"
-        shutil.copytree(ROOT / "prototypes/p1", project, ignore=shutil.ignore_patterns(".godot", "build"))
+        shutil.copytree(ROOT / "game", project, ignore=shutil.ignore_patterns(".godot", "build"))
         from perf_b_resources import install_historical_probe
         install_historical_probe(project)
         environment = tc.isolated_environment(workspace / "profile", "Windows")

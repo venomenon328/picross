@@ -12,6 +12,12 @@ on:
       visual:
         type: boolean
         default: true
+      perf_a:
+        type: boolean
+        default: true
+      perf_b:
+        type: boolean
+        default: true
   workflow_dispatch:
     inputs:
       integration:
@@ -19,11 +25,19 @@ on:
         type: boolean
         default: true
       pilots:
-        description: Exercise all six registered pilot puzzles
+        description: Exercise all four current production pilot puzzles
         type: boolean
         default: true
       visual:
         description: Run the compact current native pixel matrix
+        type: boolean
+        default: true
+      perf_a:
+        description: Verify the frozen atlas manufacturer and two native A consumers
+        type: boolean
+        default: true
+      perf_b:
+        description: Verify the regular atlas renderer and cache lifecycle
         type: boolean
         default: true
 
@@ -68,6 +82,8 @@ jobs:
           ${{ inputs.integration && '--integration' || '--no-integration' }}
           ${{ inputs.pilots && '--pilots' || '--no-pilots' }}
           ${{ inputs.visual && '--visual' || '--no-visual' }}
+          ${{ inputs.perf_a && '--perf-a' || '--no-perf-a' }}
+          ${{ inputs.perf_b && '--perf-b' || '--no-perf-b' }}
       - name: Save verified toolchain archives
         if: success() && steps.toolchain.outputs.cache-hit != 'true'
         uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830

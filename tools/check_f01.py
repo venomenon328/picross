@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-DATA = Path(__file__).resolve().parents[1] / "prototypes/p1/data"
+DATA = Path(__file__).resolve().parents[1] / "game/data"
 
 
 def placements(lengths: list[int], width: int = 20) -> list[list[int]]:

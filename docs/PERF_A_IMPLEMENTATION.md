@@ -11,7 +11,7 @@ noch nicht; reguläre Atlasintegration und Ebenentrennung gehören zu #68.
 Der [endliche Messplan](../examples/perf_a/plan.json) ist seit `ec5e1ad`
 versioniert. Unveränderte Renderer aus `a83ecf5` und integrierter Basis `e323dcf`
 werden durch Git-Archive in temporäre Projekte kopiert. Das eigene
-[Messprogramm](../prototypes/p1/tests/perf_a_baseline.gd) wird dort ergänzt;
+[Messprogramm](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/tests/perf_a_baseline.gd) wird dort ergänzt;
 Produktquellen und normale Benutzerprofile werden nicht verändert.
 
 F02 bleibt einschließlich Definition, Lösung und Proof unverändert. Der dichte
@@ -103,7 +103,7 @@ gleichen Plan erneut messen und darf CPU-/Wallwerte nicht als physische Latenz a
 
 [Herstellungsplan](../examples/perf_a/atlas-plan.json),
 [Quellen und Befehle](../examples/perf_a/README.md) und
-[Manifest](../prototypes/p1/perf_a/atlases/manifest.json) binden die Übergabe.
+[Manifest](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/perf_a/atlases/manifest.json) binden die Übergabe.
 Der unveränderte Projektstift aus `a83ecf5` wird offline unter nativem Windows /
 Godot 4.7.2 OpenGL3 in Schwarz-/Weiß-Basisbilder ausgerendert. Alle neun
 [Originalbilder](../examples/perf_a/sources) bleiben gespeichert. Pillow exakt

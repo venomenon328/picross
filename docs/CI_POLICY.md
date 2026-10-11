@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 09.10.2026 · Version 1.1 · Auftrag [#63](https://github.com/venomenon328/picross/issues/63)
+Stand: 11.10.2026 · Version 1.2 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
 
 ## Geltung und Ablösung
 
@@ -32,8 +32,10 @@ Auswahlbericht und Logs nennen Head, Basis, Checkout, Run und ausgewählte Pfade
 | --- | --- |
 | Reine normative Dokumentation/Anleitung | Schnelle Tooltests, Dokumentvalidator, vollständiger Diffcheck |
 | Spielzustand, Eingabe, Save, History, Navigation | Aktuelle Kernregression, echte Prozess-Roundtrips, 500er-Route, aktuelle Pixelprüfungen und Spielerexport |
-| Reine Stiftzeichnung/Capture oder aktive Buchassets | Aktuelle Kernregression, kompakte native Pixelprüfungen und Spielerexport |
-| Rätseldaten, Pilotassets/-probes, Produktion, Proofs und Quellenkorpora | Fachtests und vollständige relevante Replays, alle sechs Piloten, aktuelle Pixelprüfungen und Spielerexport |
+| Reine Stiftzeichnung/Capture oder aktive Buchassets | Kernregression, aktuelle Pixelprüfungen, PERF-B und Spielerexport |
+| Gebundene PERF-A-Herstellung/Atlanten/Pläne | Kernregression, Hersteller-/Bildnegativtests, zwei native A-Verbraucher, PERF-B und Export |
+| Reguläre Atlasanzeige/Cache/aktive Zelltexturen | Kernregression, aktuelle Pixelprüfungen, PERF-B und Export |
+| Rätseldaten, Pilotassets/-probes, Produktion, Proofs und Quellenkorpora | Fachtests und vollständige relevante Replays, vier aktuelle Produktionspiloten, aktuelle Pixelprüfungen und Spielerexport |
 | CI/Harness/Toolchain oder nicht zugeordneter Codepfad | Alle aktuellen Bereiche einschließlich Preflight |
 
 Dateien unter `docs/` sind nicht automatisch reine Dokumentation: Buchbilder,
@@ -65,11 +67,20 @@ kontrollierten Start sowie den regulären Windows-Export. Der kurze absichtliche
 Fehler durchläuft dieselbe `check()`-/Ergebnis-/Exit-23-Strecke wie die Suite.
 
 `--integration` ergänzt die 500 Aktionen in fünf echten Prozessen plus Neustart
-und unabhängigem Python-Orakel. `--pilots` prüft die sechs RP6-Piloten vollständig;
+und unabhängigem Python-Orakel. `--pilots` prüft F04/F06/F08/F09 vollständig;
 F04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
 Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `--visual` ergänzt
 die aktuelle native Renderprüfung. Die jeweiligen `--no-*`-Schalter werden von
-CI ausdrücklich übergeben; lokal sind alle drei Bereiche standardmäßig aktiv.
+CI ausdrücklich übergeben; lokal sind alle fünf Bereiche standardmäßig aktiv.
+`--perf-a` ergänzt Hersteller-/Bildmutationstests und zwei native A-Verbraucher;
+`--perf-b` prüft den regulären Atlasrenderer samt Cache-/Invalidierungslebenszyklus.
+PERF-A wird bei gebundenen Hersteller-/Atlasquellen ausgewählt, PERF-B bei
+aktueller Darstellung und Rätselinputs. CI/Harness/Toolchain wählen alle Bereiche.
+Die unveränderten historischen B-Rohdaten werden im schnellen Toolpfad auf
+Hash-/Runtimebindung geprüft; Product berichtet ihre Commit-/Hashbindung, ohne
+sie jedes Mal zu kopieren oder neu zu erzeugen. Der positive A-Bildverifier läuft
+einmal innerhalb seiner Mutationssuite statt zusätzlich davor.
+
 Ein Lauf mit ausgeschaltetem Bereich wird nicht als dessen erfolgreicher Nachweis
 ausgegeben. Vollständige Produktionsrekonstruktionen gehören in den Fachlauf,
 nicht zusätzlich in den Runtime-Harness.
@@ -152,7 +163,7 @@ Die Fachjobs laden zusätzlich ausschließlich den benötigten RP5-Produzentenco
 verlangt weiterhin offizielle isolierte Runtime/Wheel-/Commitbindung, aber keine
 erneute Reproduktion des bekannten Fehlers eines alten Commits.
 
-## Archiv und aktive Vollsichtnacharbeit
+## Archiv und gebundene Referenzen
 
 Das [BP-Archiv](design/book_inventory/ARCHIVE.md) bindet die 136 entfernten alten
 Dateien mit 161.102.998 Bytes an unveränderliche Git-Objekte. Originalbilder,
@@ -172,13 +183,10 @@ inneres ursprüngliches Review-ZIP:
 Die neue Sicherung macht den Ablauf des ursprünglichen Actions-Artefakts am
 23.10.2026 für diese benötigten Bytes unschädlich. Sie ist kein neues Renderbild.
 
-PR #62 ist kein Bestandteil dieser Änderung. Vor seiner weiteren Umsetzung ist
-der neue CI-Stand zu integrieren und seine zusätzliche aktuelle VS2-Prüfung in
-den neuen Harness einzuordnen. Die sechs regulären und zehn technischen VS-Fälle
-sowie die zugesagten V1-Nachweise bleiben für diese fachliche Arbeit erforderlich.
-Der alte GP48-Importfehler wird nicht als bestandener aktueller Product-Lauf
-umgedeutet; #61 benötigt nach Integration passende neue Nachweise. Auf `main`
-geltende Pan-Verträge bleiben bis zur tatsächlichen Vollsichtintegration aktiv.
+VS2, Sidebar und PERF-A/B sind über PR #62/#66 integriert. Die alte offene
+Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Die sechs Katalogrätsel und
+zehn technischen VS-Fälle bleiben geprüft. Weitere Quellenentscheidungen und
+Dateibindungen stehen im [Bestandsinventar](DEVELOPMENT_ARCHIVE.md).
 
 ## Verifikation dieses Pakets
 
@@ -188,4 +196,4 @@ Löschung des alten Pfades. Gatetests prüfen Erfolg, Nichtzutreffen und sämtli
 fehlenden/abgebrochenen/fehlgeschlagenen Pflichtresultate. Dazu kommen aktuelle
 Tool-/Fachtests, Workflowvalidierung und der echte native Product-/Windowslauf.
 Konkrete gemessene Resultate, Head-/Test-Merge-Bindung und der getrennte Selbstreview
-stehen im PR zu #63. Persönliche Produktabnahmen und Mergefreigabe bleiben separat.
+stehen im PR zu #70 (Vorgängermessungen in #63/#66). Persönliche Produktabnahmen und Mergefreigabe bleiben separat.

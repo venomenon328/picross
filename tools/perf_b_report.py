@@ -63,9 +63,9 @@ def build(before: Path, after: Path, historical_after: Path, output: Path):
 def verify(directory: Path, root=resources.ROOT):
     report = json.loads((directory / "b1-windows.json").read_text(encoding="utf-8"))
     for filename, expected in report["runtime_files"].items():
-        if digest((root / "prototypes/p1/ui" / filename).read_bytes()) != expected:
+        if digest((root / "game/ui" / filename).read_bytes()) != expected:
             raise ValueError("Measured runtime changed: " + filename)
-    for key, path in (("harness_sha256", "prototypes/p1/tests/perf_b_measure.gd"),
+    for key, path in (("harness_sha256", "game/tests/perf_b_measure.gd"),
                       ("plan_sha256", "examples/perf_a/plan.json"),
                       ("b_plan_sha256", "examples/perf_b/plan.json")):
         if digest((root / path).read_bytes()) != report["bindings"]["after"][key]:

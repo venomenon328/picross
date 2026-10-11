@@ -17,7 +17,7 @@ Motivtreue wird durch gerenderten Vergleich geprüft, nicht vom Datenvalidator b
 
 ## Daten
 
-[data/f01.json](data/f01.json) enthält Schema 2, stabile ID/Revision, Dimensionen,
+[data/f01.json](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/data/f01.json) enthält Schema 2, stabile ID/Revision, Dimensionen,
 Palette (stabile Farb-ID 1), Lösung, sämtliche Hinweise und die gated Motivdaten.
 In der Lösung bedeutet 0 Hintergrund; positive IDs bezeichnen Farben. Der
 Spielerzustand ist separat: −1 unbekannt, 0 leer, positive ID gefüllt. Der Zustand
@@ -25,7 +25,7 @@ startet vollständig unbekannt. Die Palette ist unabhängig vom Zustandswert.
 
 ## Endliche Begründung ohne Raten
 
-[data/f01-proof.json](data/f01-proof.json) dokumentiert 48 logisch unveränderte aufeinanderfolgende
+[data/f01-proof.json](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/data/f01-proof.json) dokumentiert 48 logisch unveränderte aufeinanderfolgende
 Linienschlüsse. Zeilen/Spalten und Zellpositionen im Zertifikat sind einsbasiert.
 Nur der Zertifikat-Revisionsbezug wurde von 1 auf 2 aktualisiert.
 Jeder Schritt nennt Linie, Zahl der verbleibenden Platzierungen und alle neu

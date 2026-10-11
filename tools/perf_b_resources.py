@@ -10,7 +10,7 @@ SNAPSHOT = ROOT / "examples/perf_b/a-source.zip"
 
 
 def historical_files(snapshot=SNAPSHOT):
-    manifest = json.loads((ROOT / "prototypes/p1/perf_a/atlases/manifest.json").read_text())
+    manifest = json.loads((ROOT / "game/perf_a/atlases/manifest.json").read_text())
     expected = {**manifest["generator_files"],
                 **{"prototypes/p1/" + p: h for p, h in manifest["source_files"].items()},
                 **{"prototypes/p1/perf_a/" + p: h for p, h in manifest["consumer_contract"].items()}}
@@ -47,11 +47,11 @@ def install_historical_probe(project):
 
 
 def verify_runtime(root=ROOT):
-    manifest = json.loads((root / "prototypes/p1/perf_a/atlases/manifest.json").read_text())
+    manifest = json.loads((root / "game/perf_a/atlases/manifest.json").read_text())
     import perf_a_atlas
     result = {}
     for item in manifest["atlases"]:
-        path = root / "prototypes/p1/art/cells" / item["file"]
+        path = root / "game/art/cells" / item["file"]
         if hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]:
             raise ValueError("Runtime atlas differs from original A bytes")
         settings = path.with_suffix(".png.import").read_text()
@@ -62,6 +62,6 @@ def verify_runtime(root=ROOT):
         if settings != expected:
             raise ValueError("Runtime atlas import contract differs")
         result[path.name] = item["sha256"]
-    return dict(atlases=result, a_manifest_sha256=hashlib.sha256((root / "prototypes/p1/perf_a/atlases/manifest.json").read_bytes()).hexdigest(),
-                runtime_files={p: hashlib.sha256((root / "prototypes/p1/ui" / p).read_bytes()).hexdigest()
+    return dict(atlases=result, a_manifest_sha256=hashlib.sha256((root / "game/perf_a/atlases/manifest.json").read_bytes()).hexdigest(),
+                runtime_files={p: hashlib.sha256((root / "game/ui" / p).read_bytes()).hexdigest()
                                for p in ("atlas_marks.gd", "atlas_mask.gdshader", "cell_atlas.gd", "drawing_board.gd")})

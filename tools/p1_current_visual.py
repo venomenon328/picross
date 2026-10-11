@@ -29,7 +29,7 @@ def pixel_oracle(renders: Path, inputs, action):
 def verify_regular_motion(root: Path, renders: Path) -> dict:
     from PIL import Image, ImageChops
 
-    font = root / "prototypes/p1/art/drawing/Chalkboard-Regular.ttf"
+    font = root / "game/art/drawing/Chalkboard-Regular.ttf"
     if toolchain.sha256_file(font) != zs2_delivery.FONT_SHA256:
         raise toolchain.PreflightError("Current Chalkboard font differs from its bound source")
     current = json.loads((renders / "zs2-after.json").read_text(encoding="utf-8"))

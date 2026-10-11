@@ -23,13 +23,13 @@ def compare(cache, output, role, source, theoretical_stress=False):
     report = dict(source_commit=source, role=role, platform=platform.platform(),
                   windows_system_dpi=ctypes.windll.user32.GetDpiForSystem(),
                   plan_sha256=a.digest(a.PLAN), b_plan_sha256=a.digest(ROOT / "examples/perf_b/plan.json"),
-                  adapter_sha256=a.digest(__file__), harness_sha256=a.digest(ROOT / "prototypes/p1/tests/perf_b_measure.gd"), contexts=[])
+                  adapter_sha256=a.digest(__file__), harness_sha256=a.digest(ROOT / "game/tests/perf_b_measure.gd"), contexts=[])
     with tempfile.TemporaryDirectory(prefix="picross-perfb-") as temporary:
         workspace = Path(temporary)
         engine = a.prepare(cache, workspace)
         report["engine_sha256"] = a.digest(engine)
         project = a.source_project(source, workspace / "source")
-        shutil.copyfile(ROOT / "prototypes/p1/tests/perf_b_measure.gd", project / "tests/perf_b_measure.gd")
+        shutil.copyfile(ROOT / "game/tests/perf_b_measure.gd", project / "tests/perf_b_measure.gd")
         env = tc.isolated_environment(workspace / "profile", "Windows")
         env["PERF_A_PLAN"] = str(a.PLAN)
         a.run([engine, "--headless", "--path", project, "--import"], env, output / "import.log")

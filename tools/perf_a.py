@@ -69,7 +69,7 @@ def verify_save(data, definition):
 def summarize(output):
     report = json.loads((output / "baseline.json").read_text(encoding="utf-8"))
     summary = dict(plan_sha256=report["plan_sha256"], source_heads={k: v["source_commit"] for k, v in report["roles"].items()}, cases=[])
-    definition = json.loads((ROOT / "prototypes/p1/data/f02.json").read_text(encoding="utf-8"))
+    definition = json.loads((ROOT / "game/data/f02.json").read_text(encoding="utf-8"))
     for role, data in report["roles"].items():
         for context in data["contexts"]:
             directory = output / context["directory"]
@@ -100,10 +100,11 @@ def prepare(cache, workspace):
 
 
 def source_project(ref, workspace):
-    payload = subprocess.check_output(["git", "archive", ref, "prototypes/p1"], cwd=ROOT)
+    project_path = "game" if subprocess.check_output(["git", "ls-tree", "--name-only", ref, "game"], cwd=ROOT).strip() else "prototypes/p1"
+    payload = subprocess.check_output(["git", "archive", ref, project_path], cwd=ROOT)
     with tarfile.open(fileobj=io.BytesIO(payload)) as bundle:
         bundle.extractall(workspace, filter="data")
-    return workspace / "prototypes/p1"
+    return workspace / project_path
 
 
 def baseline(cache, output, only=None):
@@ -113,7 +114,7 @@ def baseline(cache, output, only=None):
     plan = json.loads(PLAN.read_text(encoding="utf-8"))
     result = dict(format="picross-perf-a-baseline-v1", platform=platform.platform(),
                   plan_sha256=digest(PLAN), harness_head=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-                  scripts={p.name: digest(p) for p in (Path(__file__), ROOT / "prototypes/p1/tests/perf_a_baseline.gd")}, roles={})
+                  scripts={p.name: digest(p) for p in (Path(__file__), ROOT / "game/tests/perf_a_baseline.gd")}, roles={})
     user = ctypes.windll.user32
     user.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
     result["windows_system_dpi"] = user.GetDpiForSystem()
@@ -126,7 +127,7 @@ def baseline(cache, output, only=None):
         for role in ("baseline", "integrated_base"):
             source = plan[role]
             project = source_project(source, workspace / role)
-            shutil.copyfile(ROOT / "prototypes/p1/tests/perf_a_baseline.gd", project / "tests/perf_a_baseline.gd")
+            shutil.copyfile(ROOT / "game/tests/perf_a_baseline.gd", project / "tests/perf_a_baseline.gd")
             env = tc.isolated_environment(workspace / (role + "-profile"), "Windows")
             env.update(PERF_A_PLAN=str(PLAN))
             run([engine, "--headless", "--path", project, "--import"], env, output / (role + "-import.log"))

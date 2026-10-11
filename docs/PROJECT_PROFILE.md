@@ -1,214 +1,108 @@
 # Projektprofil: picross
 
-Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+## Entwicklungsbasis und Grenzen
 
-Bei Zellrendering, Spriteherstellung, Cache-/Invalidierungsarbeit und PERF-01
-zusätzlich [CELL_RENDERING](CELL_RENDERING.md) vollständig lesen; die
-[PERF-A-Nachweiszuordnung](PERF_A_IMPLEMENTATION.md) bindet Herstellung und Messung.
-Native Windows-Proben verwenden die offizielle gepinnte Toolchain und isolierte
-temporäre Projekte/Profile. A2-Prüfressourcen sind im aktuellen Spielerexport
-ausgeschlossen; reguläre Integration und kombinierter Vorher-/Nachhervergleich
-sind in [PERF-B / #68](PERF_B_IMPLEMENTATION.md) zugeordnet. Technische Prüfung ersetzt PERF-M01/SL-M01 nicht.
+Das reguläre Spiel liegt unter [game/](../game/README.md). Ausgangspunkt der
+Konsolidierung #70 ist `main@0f89f08729539bbb4a02a590cbd18e58fbbda305`, einschließlich
+[PR #66](https://github.com/venomenon328/picross/pull/66) (Sidebar und PERF-A/B).
+Frühere Draft-/Mergegate-Meldungen zu #47/#55/#56/#62/#66 sind historische Lieferstände.
+Die dortigen Abnahmen bleiben an ihre jeweiligen Quellen gebunden.
 
-## Aktueller Vertrag · Sidebar #65
+Der Katalog enthält genau F01, F02, F04, F06, F08 und F09. Nach der
+[Eigentümerentscheidung #68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419)
+sind reguläre Rätsel höchstens 50×50 groß. F03/F05/F07 bleiben als historische
+Dateien mit bestehenden Speicherplätzen und Nachweisbindungen erhalten. 100×100
+ist eine optionale theoretische Stressgröße. Die Bereinigung ändert keine Rätsel,
+IDs, Revisionen, Spielregeln, Save-Schemata oder vorhandenen Spielstände.
 
-PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der neue zusammenhängende Stand A+B folgt auf `feat/65-sidebar-frames`; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.
+Aktuelle Bindung: Godot Standard 4.7.2-stable, typisiertes GDScript, native
+Windows-Desktopfassung, Maus als verpflichtender Eingabepfad (D-06), Escape als
+Gestenabbruch. Keine Wertung, Live-Fehlerhilfe oder Hypothesen. Endgültige Engine,
+Sprache, Betriebssystemmatrix, Produktpersistenz und Veröffentlichungsdetails
+bleiben offen. Der Entwicklungsablauf erteilt keine Produkt- oder Releasefreigabe.
+Die offenen Designarbeiten #25/#28 und ihre Issues bleiben unentschieden.
 
-Aktuell: genau sechs Aktionen in 2×3 (Füllen/Radieren, Undo/Redo, Minus/Plus), ohne Einpassen-/Arbeitsgrößenaktion oder „Dein Stand“. Drei transparente gezeichnete Rahmen ersetzen die alten Fassungen; Miniatur, Koordinaten, Palette und Werkzeuge teilen die Mittelachse. Die interne Vollsichtgrenze, Optionsansichten G/V, Raster-/Hinweisbudgets und Albumminiaturen bleiben. Nach vollständiger unveränderter Schema-1-Validierung wird `overview=false`; gültiger Zoomwunsch, Inhalt, History/Redo und Recoverygrenzen bleiben erhalten. Neue Saves schreiben Schema 1 mit `overview=false`. SL-R02 bestätigt B-01 am Ausgangshead a83ecf5 technisch; neues kombiniertes Review, persönliche SL-M01/PERF-M01 und neue Mergefreigabe bleiben offen; kein Release. Historische Prüfpläne/-berichte bleiben unverändert.
+## Pflichtquellen nach Auftrag
 
-## Aktueller CI-Vertrag ab #63
+Immer [AGENTS.md](../AGENTS.md), [Workflow](dev-rules/WORKFLOW.md), dieses Profil
+und den vollständigen aktuellen Issue-/Paketbody lesen; bei Review/Nacharbeit
+zusätzlich PR, tatsächlichen Diff und den konkret benannten Reviewstand.
+Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
+[Modellauswahl](dev-rules/MODEL_SELECTION.md) und den
+[Modellkatalog](dev-rules/MODEL_CATALOG.md) vollständig lesen.
 
-Bei Arbeit an CI, Prüfprogrammen, Artefakten oder Archivierung zusätzlich die
-[CI-Policy](CI_POLICY.md) vollständig lesen. Die am 09.10.2026 beauftragte
-Bereinigung ersetzt für diesen Stand ausdrücklich die älteren pauschalen
-Sechs-Job-, Altstudien-, Vollrender- und 40-Minuten-Pflichten in diesem Profil
-und den früheren Paketbeschreibungen. Maßgeblich sind die vollständige
-Änderungsauswahl, aktuelle fachliche Regression und der Status `ci-required`.
-Historische Prüfberichte und persönliche Abnahmeentscheidungen bleiben an ihren
-damaligen Stand gebunden; aktuelle Produktverträge werden nicht aufgehoben.
+| Arbeit | Zusätzlich vollständig lesen |
+| --- | --- |
+| Produkt, Regeln, Inhalte, Progression, UX/UI, Eingabe, Plattform oder Architektur | [Produktdefinition](PRODUCT_DEFINITION.md) |
+| Thematik, Album, Motiventhüllung, UX/UI oder Eingabe/Wertung | [Gestaltungskonzept](DESIGN_CONCEPT.md) |
+| Spieltechnik und P1-Verträge | [P1](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt Entscheidungen, [Preflight](P1_PREFLIGHT.md), [Spielanleitung](../game/README.md), historische [P1.1](P1_1_VERIFICATION.md), [P1.2](P1_2_VERIFICATION.md) und [P1.3](P1_3_VERIFICATION.md) |
+| Zeichensprache, statische Vorschau, Zellanimationen | [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), betroffene ZS-Verträge/-Nachweise |
+| Spriteherstellung, Zellrendering, Cache/Invalidierung, PERF-01 | [CELL_RENDERING](CELL_RENDERING.md), [PERF-A](PERF_A_IMPLEMENTATION.md), [PERF-B](PERF_B_IMPLEMENTATION.md) |
+| Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
+| Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
+| CI, Prüfprogramme, Artefakte, Archivierung | [CI_POLICY](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md) |
 
-## Integrierter Vorgänger · VS2 (#61)
+Historische Nachweise führen ihren damaligen Test-/Abnahmestand. Aktuelle
+Fachentscheidungen stehen in den verlinkten Verträgen; Auswahl und Budgets in der
+CI-Policy ersetzen deren ältere pauschale Sechs-Job-/Vollrenderpflichten.
+Bei konkreter historischer Nacharbeit zusätzlich sämtliche dort gebundenen
+Quellen und damaligen Issues lesen; Erinnerungen ersetzen keinen Quellenzugriff.
 
-**Historischer Paketstand vor Abschluss von #62:** N01–N05 und V3-01–07 umgesetzt; [V1](VS2_V1_IMPLEMENTATION.md), [V2](VS2_V2_IMPLEMENTATION.md) und [V3-Umsetzung und Nachweisweg](VS2_V3_IMPLEMENTATION.md). Neues unabhängiges Review, persönliche VS2-M01 und Mergefreigabe bleiben offen.
+## Aktuelle Spielverträge
 
-Aktuelle Integrationsbasis ist main `d7ec4e1e4a29d82b6979537a33868d57732d3713`
-mit CI-Policy #63; ursprüngliche Produktbasis `fad8853`, PR #56
-einschließlich N01–N03 integriert. ZS2-M01 und GF-M01/#59 sind historisch bestanden.
-Aktueller Prüfweg gemäß CI-Policy #63; keine Veröffentlichungs- oder Mergefreigabe.
+P1 bleibt der Vertragsname. Vollsicht und Hinweise sind nach VS2 integriert:
+Sammlungsstart, Rasteransicht/Gesamtansicht, passives proportionales Miniaturbild,
+MMB ausschließlich für eine konkrete überlaufende Hinweisfolge, keine Hand- oder
+Raster-/Miniaturverschiebung. Raster samt Außenrahmen bleibt innerhalb der
+angebotenen Fitgrenze sichtbar. Die sechs Sidebaraktionen stehen in 2×3 mit
+gezeichneten Rahmen; UI 100/125 % und Rückweg bleiben erreichbar.
 
-Bedien-/Speichervertrag: [P1](PROTOTYPE_P1.md). Aktuelle
-[Prüfzuordnung](VS2_VERIFICATION.md) und [Windows-Probe](VS2_OWNER_TRIAL.md).
-VS2-M01, unabhängiges technisches/visuelles Review und passende Mergefreigabe
-bleiben vor Merge offen. Historische Nachweise bleiben commitgebunden.
+Schema 1 und Appname `picross · P1` bleiben erhalten. Saves liegen unter
+`user://p1/saves/`. Vollständige Validierung geht der Normalisierung alter
+Ansichtswerte voraus; `overview=false`, gültiger Zoomwunsch, Inhalte, History/Redo
+und Recoverygrenzen bleiben gemäß SL65/P1 erhalten. Keine Tests an echten Saves.
 
+Startzustandsschutz und Hinweiszustände nach GP48, statische 56-%-Vorschau,
+gerichteter Strichaufbau und Gegentasten-Abbruch nach ZS2 bleiben aktiv.
+Spielaktion, History, Save und Abschluss werden durch Animation nicht verzögert.
+Chalkboard-/Bakso-Nutzungshinweise und OFL-Texte sind mitzuliefern; keine
+unbegründeten Lizenzannahmen. Details stehen in den Fachverträgen, keine neue
+Abnahme wird aus alten grünen Läufen oder Standbildern abgeleitet.
 
-## Zweck, Quellen und aktueller Rahmen
+## Befugnisse und Abnahme
 
-`venomenon328/picross` enthält Produktkonzeption, Entwicklungsregeln, Dokumentprüfung, den technischen [P1.0-Preflight](P1_PREFLIGHT.md) und den ausführbaren [P1-Mausschnitt](../prototypes/p1/README.md) unter `prototypes/p1/`. P1.1/P1.2 sind über PR #14 als `acc9c51161a18cca17813a8e44c07b2cf074cd44`, P1.3 über PR #15 als `efada37100ddfded50c432e70823b3f0dd446436`, P1.4/#12 über PR #16 als `95fee5f87a84d4e849c845ce98313144349b3dd8` und G1/#17 über PR #18 als `6dd33232977127592c2b881f73094658853dbd87` in `main` integriert. H1/#19 ist über PR #20 auf diesem Stand integriert. Der [Workflow](dev-rules/WORKFLOW.md) ist Prozessgrundlage, [AGENTS.md](../AGENTS.md) der Einstieg. Lieferumfang und Freigaben stehen im jeweiligen Issue/PR.
+Zielbranch `main`, reguläre Arbeit auf dem beauftragten Branch; Standardmerge
+Squash nur mit passender ausdrücklicher/bedingter Freigabe. #70 beauftragt
+Commit, Push und Draft-PR, keinen Merge. Kein Force-Push, Branchlöschen, Release,
+Tag, Hosting, Branchschutz-/Secretwechsel oder kostenpflichtiger Dienst.
+Technischer Branchschutz ist nicht als wirksam verifiziert; keine Schutzregeln umgehen.
 
-Die [Produktdefinition](PRODUCT_DEFINITION.md) ist bei Produktkonzept, Rätselregeln/-inhalten, Progression/Wertung, UX/UI, Eingabe, Plattformkonzept oder Produktarchitektur vollständig zu lesen. Sie unterscheidet Beschlossenes von Vorschlägen und offenen Fragen; ihr Entwicklungsablauf ist keine Implementierungsfreigabe.
+`docs` und `ci-required` sowie alle ausgewählten Fach-/Produkt-/Toolchainjobs
+müssen für den finalen Head/zugehörigen Test-Merge tatsächlich erfolgreich sein.
+Head, Basis, Checkout und Run auseinanderhalten. Fehlend, abgebrochen oder
+übersprungen ist bei Pflichtjobs kein Pass. Vollständiger Diff und getrennter
+Selbstreview sind erforderlich; eigener Selbstreview ist keine unabhängige Zweitprüfung.
+Persönliche Abnahme, technische Prüfung, Mergefreigabe und Release sind getrennt.
+Offene persönliche Befunde von Parent #34/#24 werden nicht durch Cleanup geschlossen.
 
-Das [Gestaltungskonzept](DESIGN_CONCEPT.md) ist bei Thematik, Album, Motiventhüllung, UX/UI, Eingabe/Wertung und entsprechenden Prototypen zusätzlich vollständig zu lesen. Positive Mock-Rückmeldung ist keine Abnahme aller dargestellten Details. Revision 0.16 enthält das konkrete Mausfeedback einschließlich Zelltrennung, motivtreuer Enthüllung, gemeinsamem Hinweisraster und linienweisen Lesepositionen sowie die aktive Z2-Auswahl und den Bezug zur Rätselproduktion.
+## Dokumentprüfung und Umgebungen
 
-Die [Spezifikation zur zeichnerischen Spieloberfläche](UI_DRAWING_STYLE.md) ist bei
-Arbeit an der neuen Hinweis-/Zellsprache, statischer Zellvorschau und Zellanimationen
-zusätzlich vollständig zu lesen. Sie ist am 07.10.2026 fachlich freigegeben und
-als isolierte Studie umgesetzt. E1 wählt Stiftfüllung und kurzes Timing;
-X/Strichaufbau und Chalkboard sind nach ZS1-M01 bestätigt: native Auswahl in [ZS-1/#52](https://github.com/venomenon328/picross/issues/52),
-reguläre Integration in [ZS-2/#53](https://github.com/venomenon328/picross/issues/53),
-danach längere Spielerprobung in #24. Animationen beginnen ausschließlich nach
-dem Anwenden, nicht in der Vorschau.
-
-Die [Rätselproduktionsspezifikation](PUZZLE_PRODUCTION.md) ist bei Bildimport,
-Rastererzeugung, Deduktionsnachweisen, Produktionswerkzeugen und Pilotinhalten
-zusätzlich vollständig zu lesen. Sie konkretisiert den eigenen Risikostrang
-[RP / Rätselproduktion](https://github.com/venomenon328/picross/issues/34): erstes vollständiges Linienprofil,
-unabhängige Nachweisprüfung, frühe Mehrfarben-/100×100-Fälle, motivgeschützte
-Überarbeitung und redaktioneller Pilot. KI wird ausschließlich in ChatGPT/Codex
-verwendet; das lokale Werkzeug hat keine direkte Modell-API-Anbindung.
-RP-1 liefert den separaten monochromen Prüfkern mit unabhängigem Nachweisprüfer
-und ist über PR #42 als `b18a23460708509adac2f04e724809cf0cc8b959` integriert;
-seine [Prüfzuordnung](RP1_VERIFICATION.md) und
-[Werkzeuganleitung](../tools/puzzle_production/README.md) konkretisieren Technik und
-Prüfpfad. Abnahme/Integration bleiben im Paket-PR gebunden. RP-2 erweitert denselben
-Kern um bis zu acht Farben plus Leer; die [RP-2-Prüfzuordnung](RP2_VERIFICATION.md)
-bindet Fachoracles, partielle Propagation, Kompatibilität und Farbreferenzen.
-RP-2 ist nach unabhängigem Review R1 über PR #43 als
-`742977ed17568f5f55f13b80b609687f93f1eb32` integriert. RP-3/#37 ergänzt Bildimport,
-Vergleich und F-04 und ist nach unabhängigem Review R2 über PR #44 als
-`aa9cc23244c60d647d8468a8d76a819f977e85a6` integriert;
-[Prüfzuordnung](RP3_VERIFICATION.md). RP-4/#38 ist nach R1-Nacharbeit und
-unabhängigem Review R2 über PR #45 als `80ae2c1` integriert;
-[Vergleichsbaseline](RP4_VERIFICATION.md) und Originalbindungen bleiben erhalten.
-RP-5/#39 ist nach unabhängigem Review R1 über PR #46 als `cd4a8db` integriert und liefert die begrenzte motivgeschützte Reparatursuche,
-[neun Vergleichsläufe](../examples/rp5/README.md) und
-[Prüfzuordnung](RP5_VERIFICATION.md). Keine offenen RP-5-Reviewbefunde.
-RP-6/#40 ist mit dem begrenzten [Sechserpiloten](RP6_VERIFICATION.md) über
-[PR #47](https://github.com/venomenon328/picross/pull/47) als
-`ec99954268f1ad959d9ea779dbbd9e28edf7d8fa` in main integriert; die zugehörigen
-Nachweise und Abnahmeentscheidungen bleiben in diesem PR gebunden. Die P1-Fixtures und H1 liefern
-begrenzte Vorarbeiten, keine allgemeine Generatorplattform.
-
-Für P1 außerdem vollständig lesen: [P1-Spezifikation](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt späteren Entscheidungen und das beauftragte Paket. Bei technischer P1-Arbeit zusätzlich [P1.0](P1_PREFLIGHT.md), [aktuelle Anleitung](../prototypes/p1/README.md) und die [P1.1-](P1_1_VERIFICATION.md), [P1.2-](P1_2_VERIFICATION.md) und ab #11 [P1.3-Prüfberichte](P1_3_VERIFICATION.md). Der versionierte Fachvertrag steht in der Spezifikation, Auftrag und Abnahmestand in Issue/PR.
-
-**Aktuelle Phase:** Der integrierte #12-Stand enthält den isolierten
-Zwei-Prozess-Nachweis, 500 Aktionen mit Neustart, Messung, Renderregressionen
-und ein Windows-Artefakt; M-01 bis M-04 und M-06/M-07 wurden dort vom Eigentümer
-bestätigt. G1/#17 ist als `6dd33232977127592c2b881f73094658853dbd87` integriert.
-H1/#19 ergänzt darauf die lösungsunabhängige Erfüllungsmarkierung. Die gezielten
-realen G1-/H1-Proben wurden nicht durchgeführt und werden nicht als bestanden
-umgedeutet; der Eigentümer hat ihre jeweiligen Merges nach technischer Review-
-Nacharbeit und aktuellen Checks ausdrücklich freigegeben.
-
-Die Eigentümerentscheidung Variante A nach Review R7 priorisiert geometrisch
-nächsten Hinweis-Snap und monotone direkte Dragbedienung vor maximaler gleichzeitiger
-Außenbelegung. Der direkte äußere Draganschlag ist `outer_start`; alle Tokens bleiben
-über die Zustandsfolge erreichbar. Der verbindliche Vertrag V-01 bis V-05 steht in
-#11 und P1 §5.2. Der nur per Gegenbewegung erreichbare zusätzliche Randzustand entfällt.
-
-Der [Herkunftsnachweis](DEV_RULES_ADOPTION.md) bezeichnet die unveränderte Regelkopie. Keine abschließende Produktarchitektur oder universell erprobte Produkt-Teststrategie behaupten. Weitere Pflichtquellen erst mit tatsächlich beschlossenen Inhalten anlegen.
-
-## Aktuelle Buchvorlage unter #21
-
-BP-1/#27 wurde über PR #29 als `0d3ad6a921578f94b3249ab83fbb215721549dfb`
-integriert. Nach Eigentümerfeedback ersetzt BP-1R die Doppelseiten-Geometrie durch
-eine vergrößerte linke Arbeitsseite, getrennte Register-/Seitennavigation und einen
-schematischen rechten Informationsanschluss. Für diese Vorlagenarbeit vollständig
-lesen: aktuellen #27-Body samt späteren Entscheidungen, #21, Produktdefinition,
-Gestaltungskonzept und [Produktionsanleitung](design/book_inventory/production/README.md)
-samt Briefing/Prüfbericht. P1-Fachverträge bleiben unverändert.
-
-BP-1R/K-01 bis K-05 ist über PR #30 als
-`4ef926fe033418090512d82b9aba151031534c5f` integriert; Review und Mergefreigabe
-dieses Vorlagenstands sind abgeschlossen. Die Produktionsdateien bleiben unverändert.
-BP-2/B2-01 bis B2-05 ist über PR #31 als
-`66b9d39dd3dbce908ff663a18c059351cfccf557` integriert und liefert tatsächliche
-[A/B-Hintergründe mit Kontrollmontagen](design/book_inventory/artwork/README.md).
-Native Bildherkunft, Aufbereitung und Grenzen stehen im Artworkpaket. Pflichtnachweise:
-Python-Dateiprüfungen, Sichtprüfung, Dokumentvalidator, vollständiger Diffcheck und
-aktueller erfolgreicher `docs`-Job; tatsächliche Ergebnisse der unverändert aktiven
-`product`-/`preflight`-Workflows separat ausweisen. Die BP-2-Nachweise stehen im
-historischen PR #31; unabhängiges Review und Mergefreigabe dafür sind abgeschlossen.
-BP-3/B3-01 bis B3-05 ist über PR #32 als
-`c3a5386580d7a0da29b927b41bd692f0cca59274` integriert. #27 ist als gelieferte
-Entwurfsphase abgeschlossen. GD-01 bis GD-05 wählen A, gemeinsame BP-3-UI,
-Fraunces/Plex Sans, C1 und die echte N1-Informationsseite. Die [aktive Auswahl](Z2_SELECTION.md)
-ersetzt die damalige Empfehlung B; historische Pakete werden nicht verändert.
-
-#23/Z2 implementiert ausschließlich I-01 bis I-05 im regulären P1-Kern.
-Pflichtquellen dafür: vollständiger aktueller #23-Body samt späteren Entscheidungen,
-#21, die dort gebundenen A-/BP-3-Dateien, [aktive Auswahl](Z2_SELECTION.md) und
-[Z2-Prüfbericht](Z2_VERIFICATION.md), zusätzlich zu den P1-Pflichtquellen.
-PR #25/#28 sind keine Integrationsvoraussetzung. Z2/#23 ist über PR #33 integriert;
-technisches/visuelles Review und Mergefreigabe dieses Stands sind abgeschlossen.
-Z2-M01/M02/M03 wurden nicht durchgeführt. Der Eigentümer hob das damalige Gate
-für diesen Merge ausdrücklich auf; daraus entsteht kein neues RP-3-Gate.
-#24 ist nicht begonnen. RP-3 enthält keinen Merge-/Releaseauftrag.
-
-## Beschlossene Richtung und offene Entscheidungen
-
-[H1 / Issue #19](https://github.com/venomenon328/picross/issues/19) ergänzt die
-lösungsunabhängige optionale Erfüllungsmarkierung gemäß P1 §5.2. Der sitzungsweite
-Schalter startet aktiv, bleibt bei Blattwechsel/Reset erhalten und wird nicht
-persistiert. Nur die vollständigen eigenen Linienhinweise und sichtbaren Zellen
-einschließlich Vorschau dürfen eingehen. [H1-Prüfbericht](H1_VERIFICATION.md).
-
-Produktkern: klassische und farbige kuratierte PC-Bildrätsel, reguläres Vollsichtziel gemäß [VS-D01](VS1_DECISION.md) und mögliche Großraster-Sonderfälle, präzise Eingabe, Offline-Solo-Spiel, frühe visuelle Gestaltung sowie der bestätigte Progressions-/Wertungsrahmen. Das ursprüngliche Setup hatte weder Spielmechanik noch Technik festgelegt.
-
-Visuelle Grundlage: sich füllendes Album, warme ruhige 2D-Illustration mit klaren Konturen und Farbflächen, motivtreue Abschlussbilder, Perfektion nur ohne Fehler und ohne Undo. Sammelalbum/Reisealbum bleiben Alternativen. Detailliertere Abschlussbilder dürfen die Rasterstilisierung verfeinern; pixelidentische Silhouetten sind kein allgemeines Qualitätskriterium.
-
-P1: native Windows-Desktopfassung, typisiertes GDScript, Godot Standard 4.7.2-stable mit passenden Standard-Exportvorlagen, keine Wertung/Live-Fehlerhilfe/Hypothesen. D-06 bleibt verbindlich: Maus, kein Tastatur-/Controller-Scope oder entsprechendes Gate. Escape bleibt der vereinbarte Abbruch einer Mausgeste. Spätere alternative Produkteingaben werden dadurch nicht gestrichen.
-
-Ab #9: 1080p-Startziel ohne erzwungene Zellvergrößerung, getrennte UI-/Raster-
-Skalierung, visuelle Zelltrennung auch an Fünferlinien, direkte Füllung↔X-Umwandlung
-mit links/rechts bei einmalig festgelegtem Strichmodus, detaillierteres F-01-Ergebnisbild,
-unnummerierte einzeilige farbige Hinweise direkt im Arbeitsbild sowie feiner monotoner
-Zoom. Überlaufende Folgen behalten vollständige einzelne Hinweise, verwenden gemeinsame
-feste Slots und sind je konkrete Spalte beziehungsweise Zeile unabhängig vom Raster
-und allen Nachbarfolgen pannbar. F-02 erhält wie das bestätigte F-01 ein eigenständiges
-verfeinertes Ergebnisbild. Verbindliche Details ausschließlich in P1 §§4–5; D-18 bis
-D-22 lösen widersprechende alte D-07-/D-14-/D-17-/Hinweisregeln ab.
-
-Referenzhardware aus früheren Nutzerangaben: Windows 11, 2560×1440, Maus, Ryzen 7 5800X, RTX 3070. Tatsächliche Windows-Skalierung, Fensterfläche und Versionskennung des Nutzerlaufs sind nicht aus Screenshotgrößen bestätigt. Fehlende Daten sichtbar lassen und bei der erneuten Probe erfassen.
-
-Endgültige Engine/Sprache, gesamte Betriebssystemmatrix, Produktpersistenz, weitergehende Solverprofile, Technik weiterer Produktionsstufen, Fehlerzählung, Sternschwellen, Wertungswirkung manueller Neutralisierung und Veröffentlichungsdetails bleiben außerhalb dieser begrenzten Festlegungen offen. Das erste Solver-/Produktionsprofil steht in [Rätselproduktion](PUZZLE_PRODUCTION.md); RP-1 verwendet Python 3.11+ und ausschließlich Standardbibliothek als externen Prüfkern. Keine Regeln aus anderen Projekten übernehmen. Diese Paketentscheidung legt keinen Spielstack fest.
-
-## Branches und Befugnisse
-
-Zielbranch `main`; Standardmerge Squash nach ausdrücklicher oder passender bedingter
-Freigabe. PR #14 bis #20 sind integriert. H1/#19 liegt damit auf dem aktuellen `main`-Stand einschließlich G1; die gemeinsame Regression ist im PR-#20-Nachweis gebunden. Nach Review R1
-hat der Eigentümer die B-01-Nacharbeit und den anschließenden Merge ausdrücklich
-beauftragt. Die gezielte reale H1-Probe wird nicht als bestanden behauptet, ist nach
-dieser Entscheidung aber kein Mergegate. Kein Release, Force-Push oder Branchlöschen
-ist damit beauftragt.
-
-Die ursprüngliche Initialisierung ist in #1 dokumentiert. Technischer Branchschutz ist nicht als wirksam verifiziert; die vereinbarten Prüfungen gelten unabhängig davon. Keine Schutzregeln umgehen.
-
-## Dokumentprüfung
-
-Python 3.11 oder neuer, Standardbibliothek. Kleine lokale Prüfungen in geeigneter vorhandener Umgebung sind zulässig; belastbare aktuelle CI darf die Abschlussprüfung liefern. Keine ritualisierte doppelte Vollprüfung. Unbekannte lokale Ressourcen-/Konfigurationsgrenzen vorher prüfen; globale Codex-Einstellungen der Nutzerworkstation sind nicht als geprüft bestätigt.
-
-Der `docs`-Job verwendet einen flachen Checkout mit den exakten Diff-Commits,
-schnelle Tooltests, Dokumentprüfung und vollständigen Diffcheck. Ziel ist unter
-einer Minute; hartes Joblimit drei Minuten. Die drei abgeschlossenen BP-
-Paketrekonstruktionen sind gemäß [Archiv](design/book_inventory/ARCHIVE.md)
-ausgelagert; 13 günstige BP-Hilfsregressionen bleiben erhalten.
-
-Verbindliche Befehle im Repository-Root:
+Python 3.11+, Standardbibliothek für den schnellen Pfad. Kleine lokale Prüfungen
+in geeigneter vorhandener Umgebung sind erlaubt; aktuelle CI darf die
+Abschlussprüfung liefern. Keine ritualisierte doppelte Vollprüfung.
+Unbekannte Ressourcen-/Konfigurationsgrenzen prüfen; globale Workstation-
+Einstellungen sind nicht als geprüft bestätigt.
 
 ```sh
-python3 -m unittest discover -s tools -p 'test_*.py' -v
-python3 tools/check_docs.py
+python -m unittest discover -s tools -p 'test_*.py' -v
+python tools/check_docs.py
 ```
 
-Vor Merge müssen `docs` und der Abschlussstatus `ci-required` in
-[CI verification](../.github/workflows/setup.yml) für aktuellen Head beziehungsweise
-zugehörigen Test-Merge erfolgreich sein. Die Auswahl verlangt zusätzlich alle
-betroffenen aktuellen Fach-/Produkt-/Toolchainprüfungen. Head, Basis und
-Integrationscommit zuordnen; übersprungene oder alte unpassende Checks nicht als
-bestanden ausgeben. Begründetes Nichtzutreffen bleibt ausdrücklich sichtbar.
-
-[Dokumentvalidator](../tools/check_docs.py) und [Tests](../tools/test_check_docs.py) sind aus dem dokumentierten dev-rules-Stand abgeleitet. Geprüft werden Pflichtdateien, UTF-8/LF/Abschlusszeile, nachgestellte Leerzeichen, Versionsformat und einfache lokale Inline-Markdown-Links samt Paketgrenzen. Nicht geprüft: externe URLs, Anker, Referenzlinks, vollständige Markdownvalidierung oder Byteidentität der Regelkopie. Letztere bei Regelpaketaktualisierung separat gegen den Quellcommit prüfen.
+Der [Dokumentvalidator](../tools/check_docs.py) prüft Pflichtdateien, UTF-8/LF,
+Abschlusszeile, Whitespace, Versionsformat und einfache lokale Inline-Links.
+Externe URLs, Anker, Referenzlinks und vollständige Markdownsyntax sind nicht
+abgedeckt. Die [Regelkopie](DEV_RULES_ADOPTION.md) bei deren Aktualisierung separat
+gegen den Quellcommit prüfen; keine ungefragte zentrale Regeländerung.
 
 ## RP-1/RP-2-Prüfkern
 
@@ -218,7 +112,7 @@ Nachweisvertrag, Zell-Domains, headless CLI und unabhängiger Blockpositions-Pr�
 stehen in der [Anleitung](../tools/puzzle_production/README.md).
 RP-2 unterstützt 1..8 Vordergrundfarben plus Leer, gemeinsame Farblinienlogik und
 partielle Domainverluste. Alte Monoformate/-hashes bleiben erhalten; Farbformate
-und Profile sind separat versioniert. Keine P1-Integration in diesem Paket.
+und Profile sind separat versioniert. Keine Laufzeitabhängigkeit des Spiels vom Produktionswerkzeug.
 
 ```sh
 python3 -m tools.puzzle_production solve --input tests/puzzle_production/fixtures/deductive.json --output-dir artifacts/rp1-example
@@ -316,7 +210,7 @@ python -m unittest discover -s tests/puzzle_production -p 'test_repair.py' -v
 python -m unittest discover -s tests/puzzle_production -p 'test_rp5.py' -v
 ```
 
-Gleiche isolierte Image-Umgebung. Neuer Job `rp5-repair` auf Ubuntu 24.04,
+Gleiche isolierte Image-Umgebung. Job `rp5-repair` auf Ubuntu 24.04,
 lesende Rechte, zehn Minuten hartes Joblimit, sechs Minuten Schrittlimit;
 Paketreplay kooperativ 300 s, Einzelbundle-Prüfung 60 s / 1000000 Linien.
 Der Job entpackt das bytegebundene Originalarchiv mit Mengen-/Größen-/Pfadkontrolle,
@@ -330,222 +224,34 @@ im integrierten PR #46 abgeschlossen. Historische Baseline-/Reviewfelder
 bleiben unverändert; eigene Sichtung ersetzt weiterhin keine Zweitprüfung. Reale Eigentümer-Lösung
 und finale Pilotabnahme bleiben RP-6-Gates. Kein Merge/Release; Parent #34 offen.
 
-## Toolchain- und Produktprüfung
+## Toolchain, Product und Betriebswirkung
 
-P1.0 wurde nach erfolgreichem `preflight`-/`docs`-Job über PR #13 gemergt. [Preflight-Harness](../tools/p1_preflight.py) und [CI](../.github/workflows/p1-preflight.yml) verwenden ausschließlich die gepinnten offiziellen Standard-Assets. Live-Metadaten und vollständige Archive werden gegen SHA-256 geprüft, temporär verwendet und nicht versioniert/global installiert. Bei Änderungen am Preflight echten Download-/Import-/Test-/Start-/Exportweg nachweisen, nicht nur Mocks oder Dokumenttests.
-
-Der [Produkt-Harness](../tools/p1_product.py) nutzt diese Grundlage mit temporärer Projektkopie und eigenen APPDATA-/LOCALAPPDATA- beziehungsweise XDG-Pfaden. P1.3-Saves liegen ausschließlich unter Godots `user://p1/saves/`; automatisierte Tests erhalten zusätzlich eigene temporäre Speicherroots und dürfen den normalen Benutzerpfad nicht lesen oder verändern. Lokale Windows-Prüfungen sind erlaubt. Product-Prozesslimit 300 Sekunden; CI-Downloadlimit 180 Sekunden, normales Product-Joblimit zehn Minuten, mit allen Piloten 15 Minuten. Der eigene Preflight hat fünf Minuten Jobbudget. Konkreter Umfang und Artefaktgrenzen stehen in der [CI-Policy](CI_POLICY.md).
+[Preflight](P1_PREFLIGHT.md) bindet offizielle Editor-/Exportarchive mit
+vollständigen SHA-256-Hashes. Keine globale Engineinstallation, keine gecachten
+Prüfergebnisse. Bei Preflightänderungen echten Download-/Import-/Test-/Start-/
+Exportweg nachweisen. Der [Product-Harness](../tools/p1_product.py) kopiert `game/`
+in ein temporäres Projekt und isoliert APPDATA/LOCALAPPDATA beziehungsweise XDG.
+Tests erhalten zusätzliche temporäre Speicherroots. Native Windows-Prüfungen
+sind erlaubt. Linux-Renderprüfung benötigt Xvfb/Mesa, Bildprüfung eine eigene
+Pillow-12.3.0-venv. Grenzen, Auswahl und Aufbewahrung stehen in der CI-Policy.
 
 ```powershell
-$p1Cache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
-python tools/p1_product.py --cache-dir $p1Cache --output-dir artifacts/p1-product
+$gameCache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
+python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-product
 ```
 
-Unter Linux `python3` und externen Cachepfad verwenden. Der bestehende Ablauf prüft F-01s Zertifikat, Import, Godot-Tests, erwarteten Negativtest mit Exit 23, begrenzten Start der Hauptszene und Windows-Export mit `P1 Windows x86_64`; auf Windows zusätzlich exportierten Start. Bericht, Phasenlogs und vollständiges ZIP mit EXE-Paar/Anleitung/Commitkennung werden erzeugt. Quellhead, getesteten Checkout/Test-Merge und veränderten Arbeitsbaum unterscheiden.
+Alle Bereiche sind lokal standardmäßig aktiv, CI übergibt jede Auswahl explizit.
+Der aktuelle Katalog hat vier Produktionspiloten F04/F06/F08/F09; die ursprüngliche
+Sechserproduktion einschließlich F05/F07 bleibt vollständig im Fachreplay geprüft.
+Spielerexport und tatsächlicher PCK-Inhalt sind zusätzlich zu Tests zu kontrollieren.
+Technische Daten höchstens 30.000.000 Bytes, gemeinsam mit Spielerpaket höchstens
+75.000.000 Bytes. Historische Studien-/Vergleichspakete entstehen im Standardpfad
+nicht neu. Notwendige Referenzen, Quellen, Lizenzen und Prüfinputs bleiben erhalten.
 
-#9 erweitert diesen Ablauf für F-02/F-03, direkte Gestenumwandlung und Rücknahme,
-farbige atomare In-Context-Hinweise in gemeinsamen Slots, individuelle Zeilen-/
-Spalten-Lesepositionen, feinen monotonen Zoom,
-Ansichts-/Miniaturtransformationen, Resize und unabhängige Abschlussressourcen.
-Teständerungen zu D-09 bis D-22 sind
-gezielte Vertragsanpassungen; sonstige Regressionen nicht durch Entfernen von Tests
-verdecken. F-01-Lösung/Hinweise und logische Nachweise erhalten. Keine neue allgemeine
-Solver-/Assetplattform erforderlich.
-
-Der integrierte #12-Stand hat `product`, `docs` und `preflight` samt
-500-Aktionen-Folge, Neustart, Speicher-/Recoverytests, Renderregressionen und
-Windows-Export erfolgreich durchlaufen. Diese Nachweise bleiben an PR #16 gebunden.
-Für H1 müssen dieselben aktuellen Workflows am finalen kombinierten Head erneut
-erfolgreich sein; alte Läufe ersetzen diesen Nachweis nicht.
-
-## Abnahme und Übergaben
-
-Für H1 müssen `product`, `docs` und `preflight` am finalen kombinierten
-Head/zugehörigen Test-Merge tatsächlich erfolgreich sein. Der isolierte Produktweg
-ergänzt unabhängigen Linienoracle, echte Vorher-/Nachher-Renderbilder und Cache-/
-Zustandsregressionen; 500-Aktionen-Folge, Neustart, Save-/Recoveryfälle, G1-
-Regressionen und Windows-Export bleiben Pflicht. Die gezielte H1-Eigentümerprobe
-gemäß #19 ist nicht durchgeführt; aufgrund der ausdrücklichen Mergeentscheidung ist
-sie für PR #20 kein verbleibendes Gate. Commit-, Artefakt-, Hash- und Runbindung sowie
-Review-Nacharbeit stehen im PR.
-
-Vollständigen Diff gegen den Auftrag prüfen: keine versteckten Produktentscheidungen, Secrets, ungeklärten Assets, unerreichbaren Pflichtquellen oder ungefragten Änderungen der gemeinsamen Regeln. Technischen Nachweis, Selbstreview, Nutzerprobe, Merge- und Releasefähigkeit unterscheiden. Ein getrennter Selbstreview ist keine unabhängige Zweitprüfung.
-
-Der Review R1 in PR #14 bezieht sich auf den P1.1-Head `64dcca4df9ed00cecedfdb8cabba09bcb7179ae8`, nicht auf die damaligen noch ausstehenden #9-Funktionen. K-06 wurde anschließend vom Nutzer erprobt und mit zwei Screenshots/vier Folgepunkten beantwortet. **Durchgeführt mit Änderungsbedarf** ist keine pauschale positive Abnahme aller Szenarien. Einzelbestätigungen und tatsächliche Skalierung fehlen teilweise.
-
-Review R2 bezieht sich auf `267df8cdb264070ed1f81e500475657be6f27f9d` und
-nennt B-01 (invertierbare Zoomrichtung aus der Gesamtansicht) sowie B-02 (Mojibake im
-Projekttitel). Die folgende Eigentümerprobe ergänzt D-11 bis D-15 als neuen Sollstand;
-die Probe nach Review R3 ergänzt D-16/D-17 zur Kürzung und Hinweisnavigation.
-Die Nacharbeit behebt diese technischen Punkte, ersetzt aber weder ein Review des neuen
-Heads noch die weiterhin offene reale Eigentümerprobe.
-
-Review R4 bezieht sich auf `b19f14e0f8c7a599bd04799872ccea3b7ceadc6c` und verlangt
-die Grundlagenkorrektur J-01 bis J-06: keine Hinweis-Zusatzkennungen, gemeinsame feste
-Slots, unabhängige Navigation jeder konkreten Linie, 1080p-Startbasis, verfeinertes
-F-02-Motiv und dazu passende Quellen/Nachweise. D-18 bis D-22 in P1 0.7 setzen diesen
-Sollstand um; ältere grüne Läufe und frühere Reviewstände belegen ihn nicht.
-
-Review R5 bezieht sich auf `edd7a28ce11bdb2e0aff4e41ee5fbc6b8c7b7702` und führt
-B-03/B-04 als aktive technische Nacharbeit: individuelle Hinweisfolgen müssen bei
-Zoom, Resize und UI-Skalierung ihre semantische Leseposition statt nur den numerischen
-Offset erhalten; der widersprüchliche Farbrätsel-Satz im Gestaltungskonzept ist mit
-D-22 zu vereinheitlichen. Die Nacharbeit ändert weder die übrigen D-18-bis-D-22-
-Funktionen noch die getrennte spätere Layout-/Zieldesign-Phase. A-01 bleibt offen.
-
-Review R2 zu PR #15 bezieht sich auf `1a5756f37b1e43b6d8126e5c0e4c817e7e3290c1`:
-B-01 verlangt blockierende Pflicht-Flushes bei Fehlern, B-02 die Schreibsperre
-eines aus Backup geladenen Slots auch bei fehlendem Primary. #11 ergänzt als
-ausdrücklich beauftragte Nacharbeit D-23 bis D-27. Der neue technische Head und
-seine CI-/Artefaktnachweise stehen im PR; frühere Läufe bleiben historisch.
-
-Die reale Gesamtprobe M-01 bis M-04 und M-06/M-07 des bisherigen P1-Stands wurde
-in #12 am dort gebundenen Windows-Artefakt als bestanden dokumentiert. Diese
-Bestätigung bleibt commitgebunden und wird durch H1 weder zurückgesetzt noch
-automatisch auf neue Funktionen erweitert.
-
-Für H1 sind A-H01 bis A-H07 am finalen kombinierten Head nachzuweisen. Die gezielte
-reale H1-Probe ist nicht als durchgeführt oder bestanden dokumentiert; der Eigentümer
-hat nach Review R1 jedoch ausdrücklich die B-01-Nacharbeit und den anschließenden Merge
-beauftragt, sodass sie für PR #20 kein verbleibendes Mergegate ist. M-05 bleibt nicht
-anwendbar. Ohne erfolgreiche aktuelle technische Checks kein Merge; kein Release folgt
-aus dieser Freigabe.
-
-## Daten und Betriebswirkung
-
-Keine Laufzeitdienste oder Produktionsdaten eingerichtet. Prüfungen verwenden isolierte temporäre Daten; kein Zugriff auf echte Spielstände, private Daten oder kostenpflichtige Dienste aus einer Entwicklungsfreigabe. Öffentliche gepinnte Godot-Assets dürfen für den vereinbarten Prüfweg geladen werden. Zusätzliche Assets/Abhängigkeiten auf Notwendigkeit und Nutzungsrechte prüfen; keine Secrets einchecken.
-
-Setup-, Preflight- und Produkt-CI arbeiten mit lesenden Repositoryrechten. Kein Deployment, Release, Tag oder Hosting. Externe Automatisierungen außerhalb gelesener Repositoryquellen sind nicht als geprüft behauptet.
-
-Die [ChatGPT-Projekteinstellungen](CHATGPT_PROJECT_INSTRUCTIONS.md) werden separat durch den Nutzer eingesetzt. Die lokale Modellheuristik ersetzt alte allgemeine Modellanweisungen einschließlich eines Pflichtverweises auf `Codex-Empfehlung.txt`; keine zweite Heuristik parallel aktivieren.
-
-## RP-6-Prüfumfang
-
-Der vor Bildarbeit gebundene Plan in `examples/rp6/plan.json` legt genau sechs
-Piloten fest: F-04 unverändert, F-05 bis F-09 additiv; F-01 bis F-03 zählen nicht.
-Alle neun festen Slots bleiben im scrollbar erreichbaren Album verfügbar.
-Save-Schema 1, Appidentität und normale Saves bleiben erhalten.
-`product` prüft alle sechs über reguläre Mauseingaben, je drei frische Prozesse,
-getrennte Slots und zehn native Bilder je Pilot bei 1920×1080/UI 100 % sowie
-1280×720/UI 125 %. `rp6-review` enthält technische Motivspoiler separat vom
-Windows-Spielpaket mit neutraler Eigentümeranleitung.
-
-Der aktuelle `product`-Job erzeugt ausschließlich ausgewählte aktuelle
-Prüfumfänge. Historische Vergleiche und Studienpakete entfallen bereits bei der
-Erzeugung. Der allgemeine native Capturepfad verwendet die kompakte Grenzmatrix;
-Assertions und Bildspeicherung sind getrennt. Spielerpaket und `technical/`
-werden getrennt hochgeladen, technische Daten auch bei Fehlern. Höchstens
-75 MB insgesamt, davon 30 MB technische Daten; Details und Nachweisgrenzen in
-der [CI-Policy](CI_POLICY.md). Ein pauschaler Full-Evidence-Schalter besteht
-nicht mehr; historische Diagnosen erhalten ihren konkreten eigenen Auftrag.
-
-Fachtests inklusive Export-/Manifest-/Asset-/Reparaturnegativfällen, sämtliche
-bisherigen Oracles, sechs Benchmarks und RP-3-/RP-4-/RP-5-Replays bleiben aktiv.
-Der aktuelle PR benötigt `ci-required` einschließlich sämtlicher nach
-Änderungsumfang ausgewählter Jobs. Die frühere Pflicht zu allen sechs Jobs bei
-jeder Änderung ist durch #63 abgelöst. A01–A03 und M01–M04
-bleiben das positive Mergegate aus #40; kein Merge/Releaseauftrag, Parent #34 offen.
-
-
-## GP-48: integrierter Gameplay-Vertrag
-
-[Issue #48](https://github.com/venomenon328/picross/issues/48) ist nach unabhängigem
-Review R1 und positiver GP48-M01-Eigentümerprobe über PR #49 als
-`add7a7e6aa507d54d6e0e2ac8a3a2c5e2d1d6912` in `main` integriert.
-Startzustandsschutz, drei Hinweiszustände und die kräftigere Hinweisdarstellung
-stehen in P1 §§5.1/5.2; historische Abnahmen bleiben commitgebunden.
-
-Für den jetzt kombinierten RP-6-Stand bleiben dieselben GP-Regeln verpflichtend.
-`product` vergleicht die native Darstellung zusätzlich gegen den integrierten
-GP-48-Mainstand und veröffentlicht technische GP-Vergleiche getrennt vom schlanken
-RP-6-Spielerpaket. Eine erneute GP48-M01 ist kein eigenes Gate; Integrationsregressionen
-und die offenen RP6-A01–A03/M01–M04 werden am neuen PR-#47-Head geprüft.
-
-## ZV-50: freie Rasterfläche beim Arbeitszoom
-
-[Issue #50](https://github.com/venomenon328/picross/issues/50) ergänzt den integrierten
-Z2/P1-Arbeitsbildschirm um D-28: Die historische Standardrasterbox bleibt bis 100 %
-unverändert, begrenzt aber höhere Arbeitszoomstufen nicht mehr. Im nicht kompakten
-Buchlayout wächst der Viewport oberhalb 100 % bis zu den tatsächlich verfügbaren
-Papier-/UI-Grenzen. 20×20 muss bei 1920×1080/UI 100 % bis einschließlich 150 %
-vollständig sichtbar bleiben; 167 % ist der erste gezielt geprüfte vertikale
-Überlauffall.
-
-Technische Zuordnung: [ZV50_VERIFICATION.md](ZV50_VERIFICATION.md), optionale
-Eigentümerprobe: [ZV50_OWNER_TRIAL.md](ZV50_OWNER_TRIAL.md). Pflichtjobs am
-Lieferhead/Test-Merge bleiben `docs`, `product`, `preflight`,
-`puzzle-production`, `rp4-windows` und `rp5-repair`. Das separate
-`zv50-review-<Head>` enthält native Vorher-/Nachherbilder gegen
-`main@add7a7e6…`; der kleine Spielerdownload bleibt von technischen Renders getrennt.
-Die ausdrückliche Eigentümeranweisung vom 06.10.2026 beauftragt Umsetzung und
-anschließenden Merge; die zuvor geplante ZV50-M01-Probe und unabhängige Zweitprüfung
-sind für genau diesen Merge aufgehoben, nicht als bestanden umgedeutet. Kein Release.
-
-## ZS: freigegebene nächste UI-Entwicklung
-
-[ZS-1/#52](https://github.com/venomenon328/picross/issues/52) und
-[ZS-2/#53](https://github.com/venomenon328/picross/issues/53) gehören zu #21. Die
-[Detailspezifikation](UI_DRAWING_STYLE.md) ergänzt die vorhandene A-Buchkomposition
-um kräftige kompakte Hinweisziffern, satte stabile Schraffur-/Stiftflächen,
-handschriftliche X und kurze gerichtete Zellanimationen. E1 wählt Stiftfüllung und
-historisch 140/80-ms-Timing, fordert echten räumlichen Strichaufbau und entfernt zusätzliche
-Rand-UI. Hintergrundarbeit bleibt separat zurückgestellt. Der vollständige
-Vergleich der zwei Eigentümer-TTFs verwendet die durch E2 akzeptierten Nutzungshinweise;
-[Fontinput](ZS1_FONT_INPUT.md) dokumentiert Originaldateien, Quellen, Hashes und die Eigentümerentscheidung.
-Die abschließend bestätigte Kombination ist Ergebnis von ZS-1; GD-03/GP-03 werden nur für Hinweisziffern
-und begründet gewählte gemeinsame Slotmaße geöffnet. Historische Designpakete bleiben.
-
-Vorschau ist statisch und heller/transparenter. Erst die tatsächliche atomare
-Übernahme zeichnet Setzen/Umwandeln vom Start zum finalen Abschnittsende
-(m wirksame Zellen: Δ = min(12 ms, 180 ms/(m−1)) für m > 1, sonst null;
-210 ms je Zelle, maximal 390 ms; Entfernen sofort und 120 ms). ZS2-E2 verlangt sichtbar geschriebene X-Züge und Gegentasten-Abbruch
-auch außerhalb des Boards, bis beide Tasten losgelassen sind. MMB bleibt ausschließlich Hinweisnavigation; keine zusätzliche Eingabesperre oder Verzögerung von History/Save/Abschluss. Der abschaltbare Effekt
-ist rein visuell; Sitzungsschalter nach P1-Vorbild, kein neues Saveformat.
-
-ZS-1 liefert eine isolierte native Vergleichsprobe und Eigentümerwahl; ZS-2 die
-reguläre Integration. Technische Nachweise, unabhängiges Review, jeweilige reale
-Auswahl/Probe und ausdrückliche Mergefreigabe stehen als Gates in den Paketissues.
-#24 folgt mit der längeren Nutzung der integrierten Fassung. ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer erfolgreich abgeschlossen und die Kombination bestätigt. #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md) ist über PR #56 abgeschlossen; ZS2-M01 und R3 wurden vor diesem Merge bestätigt. Kein Release.
-
-ZS2-V1 integrierte main einschließlich VS1/GF1. VS2 beendet separate Studienplayer in der Standardlieferung; notwendige historische Replays bleiben als Entwicklerprüfung aktiv.
-VS-D01 ist entschieden, GF-M01/#59 ist historisch bestanden; #61 ist der separate
-Folgeschritt nach #53. Neue Studienberichte binden ihren tatsächlichen Zeichner
-an Quellcommit und Dateihashes; historische Vergleichsbasen bleiben erhalten.
-
-Die aktuellen Prüffunktionen bleiben nach [CI-Policy](CI_POLICY.md) aktiv und
-werden nach geändertem Bereich ausgewählt. Spielerpaket und begrenzte aktuelle
-Reviewartefakte bleiben getrennt. Pflichtprüfungen werden weder durch statische
-Bilder ersetzt noch aus den Umsetzungspaketen nach #24 verschoben; abgeschlossene
-Studienproduktion ist kein allgemeiner Regressionstest.
-
-
-**ZS1-E3:** Chalkboard Regular ist gewählt. N07 setzt nur die horizontalen
-Zeilenhinweisslots der Studienfassung auf 26 logische Pixel bei UI 100 %;
-Spaltenslots bleiben 18. Die bestätigte Kombination ist Grundlage des aktuellen
-#53-Auftrags für die reguläre Arbeitsansicht; die Studie bleibt separat ausführbar.
-
-## VS-1 · experimentelle Vollsichtprobe (#57)
-
-Der [VS-1-Studienvertrag](VS1_STUDY.md) bindet zehn native Beispiele, aktuell G/V nach VS-E1-R2,
-die ausgewählte ZS-1-Zeichenschicht und getrennte Studienfortsetzung.
-[Prüfzuordnung](VS1_VERIFICATION.md) und [Eigentümerprobe](VS1_OWNER_TRIAL.md)
-trennen technische Lieferung und persönliche Komfortbefunde. [VS-D01](VS1_DECISION.md)
-ist strategisch entschieden: reguläres Vollsichtziel 40×40, mindestens 30×30,
-geeignete 40×30/50×30, 1080p, bevorzugt G und ergänzend V. Sehr große Rätsel
-bleiben mögliche Sonderfälle. PR #58 ist als `c19b3547…` integriert; VS-GF1/#59
-liefert zusätzliche Zeilenkapazität aus freier G-Breite bei unverändertem Fit.
-Die reguläre P1-Umstellung bleibt separat. VS-M01 ist nicht vollständig persönlich
-durchgeführt; GF-M01/#59 ist historisch bestanden; neues unabhängiges VS2-Review und VS2-M01 bleiben vor Merge offen.
-
-VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
-pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige
-zusammenhängende Zahlen auch im Drag und eine harte Raster-Fitgrenze sind aktiv.
-Historische Erstlieferung bleibt gebunden; normale P1-Defaults bleiben bestehen.
-
-Für VS-GF1 zusätzlich vollständig lesen: aktuelle Bodies #57/#59, #53 und PR #56,
-[Entscheidung](VS1_DECISION.md), Studien-/Prüf-/Eigentümerquellen sowie den eigenen
-[GF1-Prüfplan](../examples/vs1/gf1-plan.json). Native lokale Windows-Prüfungen bleiben
-erlaubt, ausschließlich mit isolierten Profilen. Alle sechs Pflichtjobs am
-Lieferhead/Test-Merge, tatsächlicher Downloadstart beider EXEs und GF-PCK-Proben
-sind erforderlich. Unabhängiges Review, GF-M01 und geeignete Mergefreigabe bleiben
-vor Merge offen; frühere Freigabe von #58 gilt nur für dessen integrierten Stand.
+Keine Laufzeitdienste eingerichtet. Nur isolierte temporäre Prüfdaten, keine
+echten Spielstände, privaten Daten oder Secrets. Öffentliche gebundene
+Godot-Archive dürfen geladen werden. Neue Assets/Abhängigkeiten auf Notwendigkeit
+und Nutzungsrechte prüfen. CI arbeitet mit lesenden Repositoryrechten.
+[ChatGPT-Projekteinstellungen](CHATGPT_PROJECT_INSTRUCTIONS.md) setzt der Nutzer
+separat ein. Frühere Paketchronologie ist im
+[gebundenen Profil vor Cleanup](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/docs/PROJECT_PROFILE.md) erreichbar.

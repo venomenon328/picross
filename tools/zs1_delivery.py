@@ -31,7 +31,7 @@ def before_project(root: Path, workspace: Path) -> Path:
     for relative in ("tests/zs1_capture.gd", "study/samples.gd"):
         target = destination / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(root / "prototypes/p1" / relative, target)
+        shutil.copyfile(root / "game" / relative, target)
     return destination
 
 
@@ -244,11 +244,11 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
                 bundle.write(build / name, name)
             bundle.writestr("README.txt", f"ZS-1 · Quellhead {manifest['source_commit']}\n\n" + (root / "docs/ZS1_OWNER_TRIAL.md").read_text(encoding="utf-8"))
             bundle.writestr("zs1-report.json", report)
-            for path in (root / "prototypes/p1/art/book").glob("*-OFL.txt"):
+            for path in (root / "game/art/book").glob("*-OFL.txt"):
                 bundle.write(path, "licenses/" + path.name)
-            bundle.write(root / "prototypes/p1/art/book/manifest.json", "licenses/resources.json")
+            bundle.write(root / "game/art/book/manifest.json", "licenses/resources.json")
             bundle.write(root / "docs/ZS1_FONT_INPUT.md", "FONTSTATUS.md")
-            bundle.write(root / "prototypes/p1/study/fonts/NOTICES.md", "licenses/study-fonts-NOTICES.md")
+            bundle.write(root / "game/study/fonts/NOTICES.md", "licenses/study-fonts-NOTICES.md")
         with zipfile.ZipFile(player) as bundle:
             for name, digest in files.items():
                 import hashlib
