@@ -157,5 +157,349 @@
       "sha256": "497cfa133e88047840581d02cc965bd767ff353b2bfabde269387bb220a3273e",
       "reason": "Historical standalone delivery/study; current assertions use regular VS2/ZS2/PCK paths"
     }
-  ]
+  ],
+  "historical_cleanup": {
+    "source_commit": "070d3c291fd83ab380518b01638181c809574c03",
+    "tree": "43bb6f91550501398f31f95c6deba7d6657d206f",
+    "files": [
+      {
+        "path": "examples/perf_a/README.md",
+        "blob": "d14bf58f603e9ba60f90fdb1d446c4d70779a151",
+        "bytes": 4297,
+        "sha256": "d9518a05279b6a5dedf6bd3905c487060bf4943309509ee1c6af50150ecc220b",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/a1-windows-raw.zip",
+        "blob": "e945a53358ff3e669edd553bd0d2f7c6286d1324",
+        "bytes": 346913,
+        "sha256": "18f7ccf01613cc638f20135f11a29e0beac7d3e3d7b260897b30224893f5a6a0",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/a1-windows.json",
+        "blob": "e4b58020ef0183fb8048b3a358d0adaf91d493f2",
+        "bytes": 26685,
+        "sha256": "03151c1db3e3f8d91dccedf540f79ac6fb90812ab801eef537d2821b777f53a5",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/a2-windows-raw.zip",
+        "blob": "289e54234eb3cfdce2bdd32336a11eb30aaccdd8",
+        "bytes": 5808748,
+        "sha256": "9e16486ae476c75000255123124e6d1ca5884cc0b41a4dd52a1363d66425f2b3",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/a2-windows.json",
+        "blob": "2a3c4866acf5691e746e0ca1e81b74e70e972f84",
+        "bytes": 20074,
+        "sha256": "9907d89431aa961d82e77ba5002b83ebf2e86c0bdd943b96531d3f055c185999",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/atlas-plan.json",
+        "blob": "f0f605cc740241795b537b95b94081085722b651",
+        "bytes": 792,
+        "sha256": "849933e513beb8a574c3c8cb6755772fbd95f054432674c03deabf39bf5ee92e",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/plan.json",
+        "blob": "5527714f48d84c891bb39f38001d5d67c8fb53d2",
+        "bytes": 1682,
+        "sha256": "5eeaaa729bb3bf394fb36f58771fe2359c8958825f760d9a6d866959f4a4821d",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/sources/fill-large-black.png",
+        "blob": "4b67f28a9737c59a03300ffada40bb5052c9ee6a",
+        "bytes": 103479,
+        "sha256": "17217e94e2e29dc89c95eff4543c5a7464c07ee270f931a42a1588a21e3063e7",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/sources/fill-large-white.png",
+        "blob": "fb6542b5d90b525a3e5da52c3d9c6bffbd6cb683",
+        "bytes": 102865,
+        "sha256": "a67251a76c26688c1d490cb86c6466f816985d8f4676a1f02415d1e19b4994cf",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/sources/fill-medium-black.png",
+        "blob": "7ab4f437722ad24462721fd4805178a8f3fadb23",
+        "bytes": 65620,
+        "sha256": "c9fb5e2a74cc4278a56b851fa1e8bf28fc9aaf517fcee9e9b41c0c11f7f971ce",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/sources/fill-medium-white.png",
+        "blob": "fdd28f74281072b3b6dae743a416a550095feaba",
+        "bytes": 67268,
+        "sha256": "0582c4e98cb57af65f0233837d5919faf56ff48a570f1020f0731a2cee862c02",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/sources/fill-small-black.png",
+        "blob": "f64600c843b92ee51f65bf377ad5e1d049532d5f",
+        "bytes": 15955,
+        "sha256": "7e71a5729668845d726bb641d043f05fa255ce6c3a698ae4ba829a165c99204d",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/sources/fill-small-white.png",
+        "blob": "741907d78b3e6ef852b52f839968cbdfbfab6b07",
+        "bytes": 14508,
+        "sha256": "3f6b6af2945db2571bfd6506edd2f55b356fde8b8b113d67765f1616bab41cac",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/sources/x-large-white.png",
+        "blob": "01f4dc93effe3aa756356eb035fab61eabdc3412",
+        "bytes": 113773,
+        "sha256": "aeebdc2ea2f8ecb344b0169205df78f5ed79b8866d8e7d78900b2f4aa3d68c36",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/sources/x-medium-white.png",
+        "blob": "e9ba70b67d49f48f163310c8e7634604c8d409fe",
+        "bytes": 123429,
+        "sha256": "12ff120ed40c8b40b47738d39c18adc4f4391ecbfa5ee09a3b0661113e4066b7",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_a/sources/x-small-white.png",
+        "blob": "fa4017a6b5416cd15dafbbbfd865f67468ca22d6",
+        "bytes": 51630,
+        "sha256": "f18744cbb6f21fce386bf6eab3ffb34956b5552773ded10378488b8780353b22",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_b/README.md",
+        "blob": "5248420c422f03bf01aede4f7c5a3e815ee40436",
+        "bytes": 5854,
+        "sha256": "862f10def00064b5940287564e568691714484a339e43f22b800c31112727763",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_b/a-reproduction.json",
+        "blob": "2eb89e20b723ad0c94c71df374a7cdc9bc77099e",
+        "bytes": 4433,
+        "sha256": "9df8dd9d443c25b208bb5a0ed07950113e16c5717d1583cce9fd5dc8f1b8aa1e",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_b/a-source.zip",
+        "blob": "b08f67df87fcff9994633a9d280cb3db8186ecfb",
+        "bytes": 24208,
+        "sha256": "6e184053ac26eb6f297cf292273acdd6021668afdb5a95544a5e8f34dfd8d703",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_b/b1-windows-raw.zip",
+        "blob": "85f924794507f9fdedfcd601375edd6fa98e43b6",
+        "bytes": 1164215,
+        "sha256": "17b0e0978dbd32f170dccad315c9b8a2d3bf8ff87ed8c4c4e1d3b1b2d3323622",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_b/b1-windows.json",
+        "blob": "50b8834f3577f44ee7ff57832f9f71c44d8e1e9e",
+        "bytes": 672250,
+        "sha256": "b1c8d19ca93f833cffc81ced4ee14f3d043aa2e0b8720e9cf8a294992f0d4d72",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "examples/perf_b/plan.json",
+        "blob": "53ad287e13d3e8f03f9c16013fc63c2a1e7dab34",
+        "bytes": 1177,
+        "sha256": "df37359aeabc1f62b73cf2c1cb5442253f1b78f72cf67ea28b8d224d7f3989d4",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlas.gd",
+        "blob": "7e743c1a1086f90b2ad068f4cbbad9a87d5b57ed",
+        "bytes": 1895,
+        "sha256": "9bba9577a700992b15dec4f818e0a95bae1dfca8ea17c1983d1d0272be1d37a4",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/fill-large.png",
+        "blob": "57e18927ec101ccf00cf77e710d8a19f1bf4333d",
+        "bytes": 87328,
+        "sha256": "29ff8c8a7492d38155a58d5926ec9ec9b2c8e0e67652c1e2d614860e4d01d5f8",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/fill-large.png.import",
+        "blob": "68da59adc3603b11a1f378d14868a0a6927a675d",
+        "bytes": 547,
+        "sha256": "e767e830d6f0a6a98b4f73abf4f4ad9958c8bbf431f6f4b6301e1c3e220603d4",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/fill-medium.png",
+        "blob": "a0fa56c67fdad276a495eaac2128a779774e03ef",
+        "bytes": 62134,
+        "sha256": "0f7223a09690d5985a2e6f79d1fec07eb152bde836f910f24c61b945511cf37d",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/fill-medium.png.import",
+        "blob": "1584dc48388677a0986f695239baf21a8177c7ec",
+        "bytes": 550,
+        "sha256": "aa437faad689a2abcb8f8376753a676c88db04ecf7ee25d220f041099fdabb37",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/fill-small.png",
+        "blob": "f7eda2ac3e0ec4a74ac90c27183b2711c386217c",
+        "bytes": 11462,
+        "sha256": "5e1dc76ef5eb9769dd61bf49ff6aba6e68ad99ccfd1247b69715404542ac595a",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/fill-small.png.import",
+        "blob": "3ef5f6eacff0e64473c382bc8b866ffd519de97a",
+        "bytes": 547,
+        "sha256": "9fd94830f485cf7effcbd454ebc72bb7857d66702a2e7e2ee93da810b63e1df1",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/manifest.json",
+        "blob": "17c00097d17eec4436c75d064eba8db8e3612d48",
+        "bytes": 983885,
+        "sha256": "73cfd3ccd9edee3aa0d0866f420c40a9413f0db6c5e23cdcd9dddd418cafd490",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/x-large.png",
+        "blob": "6ba0781074155a824bfec5805b907e0e4f70355d",
+        "bytes": 64030,
+        "sha256": "a8efa25ece483d2574dbd8d1cca627416f37b47b6ec39cb1d0cbe0c2853cff07",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/x-large.png.import",
+        "blob": "77b4b5cd18b6a03119bd59f16fafb9493b356b8a",
+        "bytes": 538,
+        "sha256": "43336373a17cb781d4d4ab6d035a0b447bc5e1b01ca8f30d3b80ce6c5411b5a4",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/x-medium.png",
+        "blob": "147d6c7bc53465bfec2a012743bcc72c32e7bc2a",
+        "bytes": 72180,
+        "sha256": "0fb1e0797bc4b86fe120bab358fb3e309bf6a4c08baff0d61669952183c93bb9",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/x-medium.png.import",
+        "blob": "264fe27d7e8bb926a34aa41a223a0f2b7a194d45",
+        "bytes": 541,
+        "sha256": "50318a6c8a024c0f145f9bbb531d7b2284f018af73db25ff23c4caff3f2ac4c1",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/x-small.png",
+        "blob": "aec35652009a46b412d5f6c24785df56f1b74dd2",
+        "bytes": 29069,
+        "sha256": "4546d2c57eda98c21057a73668697224d16c066f159a83ed6364c3058112ecf8",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/atlases/x-small.png.import",
+        "blob": "5333cf19d71477ce44fbb7254285ece596a017ee",
+        "bytes": 538,
+        "sha256": "3665124bf0cdf10177c1f1c2352d72b820164f05054ba5a495ad061d421d501e",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/perf_a/mask.gdshader",
+        "blob": "4cecada4ea3beebe00b77f31adc74deab06c3106",
+        "bytes": 357,
+        "sha256": "9d06a5ed8f7657468ee7d859aee5bdda7b73c41d1a80c3c6b5af643b9ec341bd",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/tests/perf_a_atlas_probe.gd",
+        "blob": "739e9ae485f417477364be4fe47020cd9ec3aea4",
+        "bytes": 11122,
+        "sha256": "62a92bcc9d0639a606f4e69980d25406204a8442b637b66de63f338e1b7bdab6",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/tests/perf_a_baseline.gd",
+        "blob": "8b1065b5371426ff5868efab344b20fc37b63a46",
+        "bytes": 6936,
+        "sha256": "a714d3171f29c8fa9d144891fe3da0a8623e76607f7feb69090c80cf9b221932",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/tests/perf_a_cases.gd",
+        "blob": "7a8b5849adcefcd5346fa5e43cc921eb2b7482ee",
+        "bytes": 1661,
+        "sha256": "6cd82a2933b1edd2f739c23200639fc5b5ca6f57f7534573b408d0d101c51fcb",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/tests/perf_a_source.gd",
+        "blob": "b605f11293e11fc5e0a4cc157fbc3356b74567f8",
+        "bytes": 2901,
+        "sha256": "f27c45899a6dce970c0484bbae8ea6347c95a97da68efabfd640e8fdcaa71efa",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "game/tests/perf_b_measure.gd",
+        "blob": "60719dfc65f7cf70716e2d016deefca6181fbe83",
+        "bytes": 8094,
+        "sha256": "d9d6ac39689329b5ee2d2d22d42abdc1af372e2d5fbe02f0fb6a3becd6b1adf5",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "tools/perf_a.py",
+        "blob": "32950a5d2aacdc824ea4e3b45359feaeb6696b41",
+        "bytes": 9329,
+        "sha256": "97d17cf305343b85f0a00d259d5580195da78981cd5ea94204aa642b150d15b2",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "tools/perf_a_atlas.py",
+        "blob": "496077f9615ddda66dd6a63fd1cf76b3c54877c2",
+        "bytes": 20179,
+        "sha256": "2805542e2932d5ee66b2df677d1191658fc88dd4435410d9e52ec238001a6113",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "tools/perf_b.py",
+        "blob": "26e37e80cc4bfca906f23fe685d8cf19859babb4",
+        "bytes": 5636,
+        "sha256": "369b064ef5ab5166ee5c531d950784abca8f67f4e15838da54903b3f04190608",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "tools/perf_b_report.py",
+        "blob": "55b8a6b3099613dcb31d763bf1a1cf0fc728c61b",
+        "bytes": 6910,
+        "sha256": "212b84e1c1a8f2c1ee606fd53fffc742bc03d5642dc16b3563d625adf14dde3e",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "tools/test_perf_a.py",
+        "blob": "3b505bfae846194ccf1559f0ac7901cc786cf636",
+        "bytes": 1628,
+        "sha256": "6c7c056cafcf52607d5ecb06f53d0c29d67d4e174807cc0cfc466402d94738e5",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      },
+      {
+        "path": "tools/test_perf_a_atlas.py",
+        "blob": "1f9862631e14cca366264f23b3e29d7b53db7f78",
+        "bytes": 4871,
+        "sha256": "c5f040bd6c98b603e675c7e5dbb8530f1fa51a8bf4fd8636bf682304e90c0352",
+        "reason": "N70-HIST-01: historical manufacture/comparison only; active runtime regression retained independently"
+      }
+    ],
+    "total_files": 48,
+    "total_bytes": 10134723
+  }
 }

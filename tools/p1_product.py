@@ -26,9 +26,7 @@ import z2_resources
 import gp48_delivery
 import p1_current_visual
 import vs2_delivery
-import perf_a_atlas
 import perf_b_resources
-import perf_b_report
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
@@ -108,7 +106,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ("integration", "500 actions and the independent cross-process restart oracle"),
         ("pilots", "all four current pilot playthroughs across real processes"),
         ("visual", "current compact native pixel and animation checks"),
-        ("perf-a", "frozen atlas manufacturer and native A consumer regression"),
         ("perf-b", "regular atlas renderer and cache lifecycle regression"),
     ):
         parser.add_argument("--" + name, action=argparse.BooleanOptionalAction, default=True,
@@ -350,7 +347,7 @@ def main(argv: list[str] | None = None) -> int:
     output.mkdir(parents=True, exist_ok=True)
     evidence = Evidence(output, host, dict(core=True, integration=args.integration,
                                           pilots=args.pilots, visual=args.visual,
-                                          perf_a=args.perf_a, perf_b=args.perf_b, export=True))
+                                          perf_b=args.perf_b, export=True))
     selected = []
 
     def python_phase(name, action, reporter=evidence):
@@ -366,9 +363,6 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         evidence.report.update(source_identity(root))
-        # Historical comparison integrity is checked by test_perf_b in docs.
-        # Its exact source commit/hash is reported; immutable raw ZIPs stay in Git.
-        evidence.report["historical_comparison"] = perf_b_report.comparison_binding(root)
         evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "game/project.godot")
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
@@ -394,8 +388,6 @@ def main(argv: list[str] | None = None) -> int:
                                                 toolchain.template_directory(workspace, host))
             project = workspace / "p1"
             shutil.copytree(root / "game", project, ignore=shutil.ignore_patterns(".godot", "build"))
-            if args.perf_a:
-                evidence.report["perf_a_historical_sources"] = perf_b_resources.install_historical_probe(project)
             evidence.report["perf_b_resources"] = perf_b_resources.verify_runtime()
             environment = toolchain.isolated_environment(workspace, host)
 
@@ -428,11 +420,6 @@ def main(argv: list[str] | None = None) -> int:
             base = [engine, "--headless", "--path", str(project)]
             phase("import", base + ["--import"])
             phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
-            if args.perf_a:
-                evidence.scope_start("perf_a")
-                # Includes test_bound_resources (the same positive verify()) and
-                # mutation tests; do not repeat the full 11-second verifier here.
-                phase("perf-a-image-negatives", [sys.executable, "-m", "unittest", "discover", "-s", str(root / "tools"), "-p", "test_perf_a_atlas.py", "-v"], "OK")
             phase("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
             phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
                   expected_failure=True)
@@ -502,30 +489,12 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.report["visual"]["pilot_native"] = "success" if args.pilots else "not selected; --no-pilots"
                 selected += visual_files
                 evidence.scope_done("visual")
-            if args.perf_a:
-                perf_output = output / "perf-a"
-                perf_output.mkdir()
-                perf_env = environment.copy()
-                perf_env.update(PERF_A_OUTPUT=str(perf_output),
-                                PERF_A_ATLAS_PLAN=str(root / "examples/perf_a/atlas-plan.json"))
-                perf_command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
-                                "--audio-driver", "Dummy", "--script", "res://tests/perf_a_atlas_probe.gd"]
-                if host == "Linux":
-                    perf_command = ["xvfb-run", "-a"] + perf_command
-                    perf_env["LIBGL_ALWAYS_SOFTWARE"] = "1"
-                for repetition in range(2):
-                    phase("perf-a-native-"+str(repetition), perf_command, "PERF_A_ATLAS_PROBE_OK", phase_env=perf_env)
-                    vs2_delivery.compact_geometry_reports([perf_output / "probe.json"])
-                    evidence.report["perf_a_native"] = python_phase("perf-a-native-oracle-"+str(repetition),
-                        lambda: perf_a_atlas.native_oracle(perf_output, require_restart=bool(repetition)))
-                selected += [perf_output / "probe.json", perf_output / "verified.json", perf_output / "flat-fill-24.0.png"]
-                evidence.scope_done("perf_a")
             if args.perf_b:
                 evidence.scope_start("perf_b")
                 b_output = output / "perf-b"
                 b_output.mkdir()
                 perf_env = environment.copy()
-                perf_env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(root / "game/perf_a/atlases/manifest.json"))
+                perf_env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(root / "tools/cell_atlas_reference.json"))
                 b_command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
                              "--audio-driver", "Dummy", "--script", "res://tests/perf_b_probe.gd"]
                 if host == "Linux":

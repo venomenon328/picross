@@ -71,7 +71,6 @@ def png_references(value) -> set[str]:
 def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[list[Path], list[Path]]:
     """Rebuild partial evidence selection when run_visual did not return."""
     reports = sorted(output.glob("renders/*.json")) + sorted(output.glob("drawing-renders/*.json")) + sorted(output.glob("vs2-renders/*.json")) + sorted(output.glob("v1-renders/*.json")) + sorted(output.glob("v2-renders/*.json")) + sorted(output.glob("v3-renders/*.json"))
-    reports += sorted(output.glob("perf-a/*.json"))
     reports += sorted(output.glob("perf-b/*.json"))
     primary = ("render-report-" + phase[len("render-"):] + ".json" if phase.startswith("render-")
                else phase.removesuffix("-render") + "-renders.json" if phase.startswith("rp6-")
@@ -79,7 +78,7 @@ def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[l
                else "zs2-after.json" if phase.startswith("current-drawing-")
                else "v2-write.json" if phase.startswith("vs2-v2-") or phase == "current-vs2-complete"
                else "v1-focused.json" if phase == "vs2-v1-focused"
-               else "probe.json" if phase.startswith(("perf-a-", "perf-b-")) else None)
+               else "probe.json" if phase.startswith("perf-b-") else None)
     bound, phase_images, native_failures = set(), set(), set()
     for path in reports:
         try:

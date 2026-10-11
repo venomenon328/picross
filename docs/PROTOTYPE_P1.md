@@ -4,7 +4,7 @@ Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venome
 
 Bei Zellrendering-/Performancearbeit zusätzlich den verbindlichen
 [PERF-Vertrag](CELL_RENDERING.md) und die [A-Prüfzuordnung](PERF_A_IMPLEMENTATION.md)
-lesen. #67 liefert eigene Referenzlast und Entwickleratlanten; [#68](PERF_B_IMPLEMENTATION.md)
+lesen. #67 dokumentiert die historische Referenzlast und Atlasherstellung; [#68](PERF_B_IMPLEMENTATION.md)
 integriert sie in den regulären Renderer. Spiel-/Save-/History-/Hinweisverträge bleiben.
 
 ## Aktueller Vertrag · Sidebar #65

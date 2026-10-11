@@ -17,7 +17,7 @@ import sys
 
 FORMAT = "picross-ci-selection-v1"
 JOBS = ("docs", "product", "production", "preflight")
-FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual", "perf_a", "perf_b")
+FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual", "perf_b")
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 ZERO = "0" * 40
 
@@ -37,14 +37,9 @@ def classify(paths: list[str], force: str = "auto") -> dict:
         # Both sides of the one-time project rename retain their obligations.
         if path.startswith("prototypes/p1/"):
             path = "game/" + path.removeprefix("prototypes/p1/")
-        if path.startswith(("examples/perf_a/", "game/perf_a/", "tools/perf_a", "tools/test_perf_a")) or path in {
-            "game/tests/perf_a_baseline.gd", "game/tests/perf_a_source.gd", "game/tests/perf_a_atlas_probe.gd", "game/tests/perf_a_cases.gd",
-        }:
-            add(("product", "perf_a", "perf_b"), original)
-            continue
-        if path.startswith(("examples/perf_b/", "tools/perf_b", "tools/test_perf_b", "game/art/cells/")) or path in {
+        if path.startswith(("tools/perf_b", "tools/test_perf_b", "game/art/cells/")) or path in {
             "game/ui/cell_atlas.gd", "game/ui/atlas_marks.gd", "game/ui/atlas_mask.gdshader",
-            "game/tests/perf_b_probe.gd", "game/tests/perf_b_measure.gd",
+            "game/tests/perf_b_probe.gd", "game/tests/perf_b_cases.gd", "tools/cell_atlas_reference.json",
         }:
             add(("product", "visual", "perf_b"), original)
             continue
@@ -102,7 +97,6 @@ def classify(paths: list[str], force: str = "auto") -> dict:
         "runtime": ("product", "integration"),
         "visual": ("product", "visual", "perf_b"),
         "production": ("production", "product", "pilots", "visual", "perf_b"),
-        "perf-a": ("product", "perf_a", "perf_b"),
         "perf-b": ("product", "visual", "perf_b"),
         "toolchain": FLAGS,
     }
@@ -130,7 +124,7 @@ def apply_event_policy(plan: dict, event: str) -> dict:
     if event == "push":
         # Preserve the existing main-push contract: docs plus changed production
         # checks. Product integration is established by the PR/test-merge run.
-        for key in ("product", "preflight", "integration", "pilots", "visual", "perf_a", "perf_b"):
+        for key in ("product", "preflight", "integration", "pilots", "visual", "perf_b"):
             plan["selected"][key] = False
         plan["not_applicable_reason"] = "main integrity run; product and toolchain verification belong to the PR"
     return plan
@@ -163,7 +157,7 @@ def evaluate(plan: dict, results: dict) -> list[dict]:
         raise ValueError("Missing or invalid selection report")
     if any(not isinstance(plan["selected"].get(key), bool) for key in FLAGS):
         raise ValueError("Missing or invalid coverage selection")
-    if any(plan["selected"][key] for key in ("integration", "pilots", "visual", "perf_a", "perf_b")) and not plan["selected"]["product"]:
+    if any(plan["selected"][key] for key in ("integration", "pilots", "visual", "perf_b")) and not plan["selected"]["product"]:
         raise ValueError("Selected product coverage without its required job")
     rows = []
     for job in JOBS:

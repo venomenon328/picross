@@ -6,7 +6,8 @@ Für Zellbilder, Varianten, Zeitabbildung und spätere Cachearbeit gilt zusätzl
 [CELL_RENDERING, PERF-D01–D08](CELL_RENDERING.md). ZS-D02/03 und V3-02 bestimmen
 weiterhin Stiftoptik und Lesbarkeit; die pro Frame berechnete Geometrie und der
 exakte frühere 18-px-Pfad sind gemäß PERF-D06 keine Pflichtarchitektur.
-[PERF-A](PERF_A_IMPLEMENTATION.md) liefert die isolierte Mess-/Atlasgrundlage.
+[PERF-A](PERF_A_IMPLEMENTATION.md) dokumentiert die historische Mess-/Atlasgrundlage;
+aktuelle Regressionen folgen N70-HIST-01 in CELL_RENDERING und CI_POLICY.
 [PERF-B / #68](PERF_B_IMPLEMENTATION.md) integriert die gebundenen Atlanten und
 getrennte Zeichenebenen. Vorschau, 210/120-ms-Vertrag, atomarer Commit und Miniatur bleiben.
 

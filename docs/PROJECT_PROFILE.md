@@ -42,6 +42,11 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
 | CI, Prüfprogramme, Artefakte, Archivierung | [CI_POLICY](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md) |
 
+PERF-A/PERF-B sind historische Lieferberichte, keine aktuellen Hersteller- oder
+A/B-Vergleichsgates. #70/N70-HIST-01 entfernt deren Reproduktion; die sechs
+aktiven Zellatlanten, Import-/Shader-/Rendererverträge und native PERF-B-/PCK-
+Prüfungen bleiben unabhängig über `tools/cell_atlas_reference.json` gebunden.
+
 Historische Nachweise führen ihren damaligen Test-/Abnahmestand. Aktuelle
 Fachentscheidungen stehen in den verlinkten Verträgen; Auswahl und Budgets in der
 CI-Policy ersetzen deren ältere pauschale Sechs-Job-/Vollrenderpflichten.
@@ -244,7 +249,7 @@ $gameCache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
 python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-product
 ```
 
-Alle Bereiche sind lokal standardmäßig aktiv, CI übergibt jede Auswahl explizit.
+Alle vier ergänzenden Bereiche sind lokal standardmäßig aktiv, CI übergibt jede Auswahl explizit.
 Der aktuelle Katalog hat vier Produktionspiloten F04/F06/F08/F09; die ursprüngliche
 Sechserproduktion einschließlich F05/F07 bleibt vollständig im Fachreplay geprüft.
 Spielerexport und tatsächlicher PCK-Inhalt sind zusätzlich zu Tests zu kontrollieren.

@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 11.10.2026 · Version 1.2 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
+Stand: 11.10.2026 · Version 1.3 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
 
 ## Geltung und Ablösung
 
@@ -12,6 +12,12 @@ Sie gilt auch dort, wo Projektprofil, ältere Paketbeschreibungen oder historisc
 Prüfberichte noch den damaligen Vollumfang nennen. Fachliche Produktverträge,
 gezielte aktuelle Abnahmen und die Zuordnung zum tatsächlichen Quell-/Basisstand
 bleiben verbindlich. Historische Berichte behalten ihr damaliges Urteil.
+
+Die [Eigentümerentscheidung N70-HIST-01](https://github.com/venomenon328/picross/pull/71#issuecomment-6111613992)
+löst historische PERF-A-Herstellung/Reproduktion, Altzeichnerproben und A/B-
+Vergleichsrekonstruktion als aktuelle Pflichten ab. R1/B-01 ist supersediert.
+Die sechs produktiven Atlanten und sämtliche aktiven Runtimeverträge bleiben.
+Es gibt keinen PERF-A-CI-Schalter und kein getarntes historisches Laufzeitbudget.
 
 Der Abschlussstatus für Pull Requests heißt `ci-required` im Workflow
 [CI verification](../.github/workflows/setup.yml). Er verlangt tatsächlichen
@@ -33,7 +39,6 @@ Auswahlbericht und Logs nennen Head, Basis, Checkout, Run und ausgewählte Pfade
 | Reine normative Dokumentation/Anleitung | Schnelle Tooltests, Dokumentvalidator, vollständiger Diffcheck |
 | Spielzustand, Eingabe, Save, History, Navigation | Aktuelle Kernregression, echte Prozess-Roundtrips, 500er-Route, aktuelle Pixelprüfungen und Spielerexport |
 | Reine Stiftzeichnung/Capture oder aktive Buchassets | Kernregression, aktuelle Pixelprüfungen, PERF-B und Spielerexport |
-| Gebundene PERF-A-Herstellung/Atlanten/Pläne | Kernregression, Hersteller-/Bildnegativtests, zwei native A-Verbraucher, PERF-B und Export |
 | Reguläre Atlasanzeige/Cache/aktive Zelltexturen | Kernregression, aktuelle Pixelprüfungen, PERF-B und Export |
 | Rätseldaten, Pilotassets/-probes, Produktion, Proofs und Quellenkorpora | Fachtests und vollständige relevante Replays, vier aktuelle Produktionspiloten, aktuelle Pixelprüfungen und Spielerexport |
 | CI/Harness/Toolchain oder nicht zugeordneter Codepfad | Alle aktuellen Bereiche einschließlich Preflight |
@@ -71,15 +76,24 @@ und unabhängigem Python-Orakel. `--pilots` prüft F04/F06/F08/F09 vollständig;
 F04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
 Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `--visual` ergänzt
 die aktuelle native Renderprüfung. Die jeweiligen `--no-*`-Schalter werden von
-CI ausdrücklich übergeben; lokal sind alle fünf Bereiche standardmäßig aktiv.
-`--perf-a` ergänzt Hersteller-/Bildmutationstests und zwei native A-Verbraucher;
-`--perf-b` prüft den regulären Atlasrenderer samt Cache-/Invalidierungslebenszyklus.
-PERF-A wird bei gebundenen Hersteller-/Atlasquellen ausgewählt, PERF-B bei
-aktueller Darstellung und Rätselinputs. CI/Harness/Toolchain wählen alle Bereiche.
-Die unveränderten historischen B-Rohdaten werden im schnellen Toolpfad auf
-Hash-/Runtimebindung geprüft; Product berichtet ihre Commit-/Hashbindung, ohne
-sie jedes Mal zu kopieren oder neu zu erzeugen. Der positive A-Bildverifier läuft
-einmal innerhalb seiner Mutationssuite statt zusätzlich davor.
+CI ausdrücklich übergeben; lokal sind alle vier ergänzenden Bereiche aktiv.
+`--perf-b` prüft den regulären Atlasrenderer samt Cache-/Invalidierungslebenszyklus,
+auch ohne den allgemeinen Visualbereich. Aktuelle Darstellung, Texturen und ihre
+Referenz wählen PERF-B; CI/Harness/Toolchain wählen alle aktuellen Bereiche.
+
+`tools/perf_b_resources.py` prüft exakt sechs aktive PNGs samt Importdateien,
+Dateihashes, RGBA8-Maßen, Speicherobergrenze und Importparametern gegen die eigene
+`tools/cell_atlas_reference.json`. Die Referenz enthält aktuelle Datei-/Pixelbindungen
+und Mappingdaten; keine Herstellerquellen, Originalbilder oder Vergleichsarchive.
+Positive Prüfung ohne diese Archive und Negativfälle für fehlende/zusätzliche/
+veränderte Ressourcen, falsche Imports, leere/doppelte/unsichere Inventare sowie
+falsche Maße/Hashes/Versionen laufen im schnellen Toolpfad. Die native B-Probe
+prüft tatsächlich importierte Pixel, sechs Texturen und 48.906.240 dekodierte
+Bytes; Pixelmutation, falsche Variante, stale Cache und Vollinvalidierung bleiben
+Gegenproben. Shaderfarbe/Alpha, Zeitbilder, Vorschau, Undo/Redo, Sessionwechsel
+und Ressourcenplateau werden im regulären Projekt und separat im gelieferten PCK
+geprüft. Aktuelle goldene Varianten-/Zeit-/Region-/Fugenfälle laufen in der Kernsuite.
+Historische Laufzeit-/Quellhashvergleiche sind keine Ersatzpflicht mehr.
 
 Ein Lauf mit ausgeschaltetem Bereich wird nicht als dessen erfolgreicher Nachweis
 ausgegeben. Vollständige Produktionsrekonstruktionen gehören in den Fachlauf,

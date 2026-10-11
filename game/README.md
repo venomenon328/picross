@@ -165,13 +165,16 @@ er zusätzlich die exportierte Fassung headless und mit nativer Oberfläche.
 Linux benötigt für die OpenGL-Prüfung Xvfb/Mesa. Preset und Appname bleiben
 `P1 Windows x86_64` und `picross · P1`, ebenso Schema 1 und Speicherort.
 
-`--integration`, `--pilots`, `--visual`, `--perf-a` und `--perf-b` sind lokal an.
+`--integration`, `--pilots`, `--visual` und `--perf-b` sind lokal an.
 Die jeweiligen `--no-*`-Formen schalten sie ausdrücklich aus; CI wählt gemäß
 [CI-Policy](../docs/CI_POLICY.md) nach vollständigem Änderungsumfang. Integration
 prüft 500 Aktionen plus Neustart. Piloten prüfen F04/F06/F08/F09 in echten
 Prozessen; der Fachlauf erhält die ursprünglichen sechs Produktionsnachweise.
-Visual prüft aktuelle Pixel-/Animationsverträge. PERF-A prüft die gebundene
-Herstellung und zwei native Verbraucher, PERF-B den regulären Renderer samt Cache.
+Visual prüft aktuelle Pixel-/Animationsverträge, PERF-B den regulären Renderer
+samt Cache. Die sechs produktiven Atlanten und Importparameter werden unabhängig
+über `tools/cell_atlas_reference.json` geprüft. Historische Hersteller- und
+A/B-Vergleichsprogramme sind gemäß #70/N70-HIST-01 archiviert; sie sind kein
+aktueller Prüfweg.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
 `technical/` enthält kompakte commitgebundene Ergebnisse, Logs und notwendige

@@ -14,16 +14,13 @@ class SelectionTests(unittest.TestCase):
         for path in ("game/model/save_store.gd", "game/model/gesture.gd", "game/ui/main.gd"):
             value = classify([path])["selected"]
             self.assertTrue(value["product"] and value["integration"] and value["visual"] and value["perf_b"])
-            self.assertFalse(value["perf_a"] or value["production"] or value["preflight"])
+            self.assertFalse(value["production"] or value["preflight"])
 
-    def test_manufacturer_and_runtime_have_separate_native_coverage(self):
-        for path in ("game/perf_a/atlases/fill-medium.png", "tools/test_perf_a_atlas.py", "examples/perf_a/atlas-plan.json"):
-            value = classify([path])["selected"]
-            self.assertTrue(value["perf_a"] and value["perf_b"] and value["product"])
-        for path in ("game/ui/cell_atlas.gd", "game/art/cells/x-small.png", "tools/perf_b_resources.py"):
+    def test_runtime_resources_select_native_regression(self):
+        for path in ("game/ui/cell_atlas.gd", "game/art/cells/x-small.png", "tools/perf_b_resources.py", "tools/cell_atlas_reference.json", "game/tests/perf_b_cases.gd"):
             value = classify([path])["selected"]
             self.assertTrue(value["visual"] and value["perf_b"] and value["product"])
-            self.assertFalse(value["perf_a"] or value["integration"] or value["preflight"])
+            self.assertFalse(value["integration"] or value["preflight"])
 
     def test_removed_legacy_game_paths_preserve_required_coverage(self):
         plan = classify(["prototypes/p1/model/save_store.gd", "docs/archived.md"])

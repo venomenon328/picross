@@ -1,6 +1,6 @@
 extends SceneTree
-## Regular scene and exported PCK probe. Reference mapping is the frozen A
-## equation, independent of the runtime's mapping, cache and vertex-color shader.
+## Regular scene and exported PCK probe. Current reference equations are
+## independent of the runtime mapping, cache and vertex-color shader.
 const Store = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
 var app: Control
@@ -92,16 +92,28 @@ func expected(blank: Image, box: Rect2, cell: Vector2i, value: int, elapsed: int
 func capture(box: Rect2) -> Image:
 	return root.get_texture().get_image().get_region(Rect2i(box))
 
+func pixel_digest(image: Image) -> String:
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(image.get_data())
+	return hash.finish().hex_encode()
+
 func identity() -> void:
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment("PERF_B_MANIFEST")))
+	check(manifest.format=="picross-cell-atlas-reference-v1" and manifest.atlases.size()==6,"current independent resource reference")
+	check(app.board.marks.textures.size()==6,"exactly six shared runtime textures")
+	var decoded: int = 0
 	for item: Dictionary in manifest.atlases:
 		var texture: Texture2D = app.board.marks.textures[item.file.trim_suffix(".png")]
 		var image: Image = texture.get_image()
 		image.convert(Image.FORMAT_RGBA8)
-		var hash := HashingContext.new()
-		hash.start(HashingContext.HASH_SHA256)
-		hash.update(image.get_data())
-		check(hash.finish().hex_encode()==item.pixel_sha256,"actual imported texture identity "+item.file)
+		check(image.get_size()==Vector2i(int(item.size[0]),int(item.size[1])),"actual imported texture dimensions "+item.file)
+		check(pixel_digest(image)==item.pixel_sha256,"actual imported texture identity "+item.file)
+		decoded+=image.get_data().size()
+		var wrong: Image = image.duplicate()
+		wrong.set_pixel(0,0,Color(1,0,0,1))
+		check(pixel_digest(wrong)!=item.pixel_sha256,"negative: changed imported pixels detected "+item.file)
+	check(decoded==48906240,"bounded decoded texture memory")
 	check(app.board.marks.ink_material.shader.resource_path=="res://ui/atlas_mask.gdshader","active runtime shader")
 
 func structural() -> void:
@@ -223,11 +235,11 @@ func pictures() -> void:
 			var actual: Image = capture(box)
 			var end: Image = await expected(blank,box,cell,value,210000)
 			var error: float = difference(actual,end)
-			check(error<=1.0,"independent A native end/color/variant "+str([zoom,value,error]))
+			check(error<=1.0,"independent current native end/color/variant "+str([zoom,value,error]))
 			var wrong: Image = await expected(blank,box,cell,value,210000,1.0,1)
 			if value>0 and box.size.x<18:
-				# A deliberately shares small-fill end tiles across all variants.
-				check(difference(actual,wrong)<=1.0,"A shared small-fill end tile")
+				# Small fills deliberately share small-fill end tiles across all variants.
+				check(difference(actual,wrong)<=1.0,"shared small-fill end tile")
 			else:
 				check(difference(actual,wrong)>1.0,"negative: wrong variant detected")
 			# Stale cache mutation must be visible to the same native pixel oracle.

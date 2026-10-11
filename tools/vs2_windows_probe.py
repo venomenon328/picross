@@ -203,10 +203,10 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         relative=Path(entry["file"])
         if relative.is_absolute() or ".." in relative.parts: raise ValueError("Unsafe evidence path")
         toolchain.verify_sha256(review/"selected"/relative,entry["sha256"])
-    import perf_b_report
-    b_comparison = perf_b_report.verify(ROOT / "examples/perf_b")
-    if perf_b_report.comparison_binding(ROOT) != review_report["historical_comparison"]:
-        raise ValueError("Commit-bound PERF-B comparison differs")
+    import perf_b_resources
+    runtime_resources = perf_b_resources.verify_runtime(ROOT)
+    if runtime_resources != review_report["perf_b_resources"]:
+        raise ValueError("Delivered current resource binding differs")
     matrix=json.loads((review/"selected/vs2-renders/vs2-matrix.json").read_text(encoding="utf-8"))
     vs2_delivery.verify_records(matrix)
     if review_report["visual"]["vs2"]["v2"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v2-plan.json"):
@@ -289,7 +289,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         raise ValueError("Missing V3 fresh-process geometry comparison")
     b_output = output / "perf-b"
     b_output.mkdir()
-    env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(ROOT / "game/perf_a/atlases/manifest.json"))
+    env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(ROOT / "tools/cell_atlas_reference.json"))
     launch("perf-b-runtime", package, "perf_b_probe.gd", "PERF_B_PROBE_OK")
     b_probe = json.loads((b_output / "probe.json").read_text())
     if toolchain.sha256_file(study)!=study_hash: raise ValueError("Historical study data changed")
@@ -313,12 +313,12 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
                   scripts={name:toolchain.sha256_file(ROOT/"game/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd","vs2_v1_cases.gd","vs2_v2_cases.gd","vs2_v2_tests.gd","vs2_v3_tests.gd")},
-                  matrix_records=len(matrix["records"]),historical_comparison="not repeated under CI policy #63",
+                  matrix_records=len(matrix["records"]),
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},
                   study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,
                   previous_review="SL-R02: B-01 technically confirmed at a83ecf5",
-                  perf_b=b_probe, perf_b_comparison=b_comparison, perf_b_probe_sha256=toolchain.sha256_file(ROOT / "game/tests/perf_b_probe.gd"),
+                  perf_b=b_probe, runtime_resources=runtime_resources, perf_b_probe_sha256=toolchain.sha256_file(ROOT / "game/tests/perf_b_probe.gd"),
                   independent_combined_review="OPEN",PERF_01="B technical probes complete; owner acceptance OPEN",SL_M01="OPEN",PERF_M01="OPEN",merge_authorized=False)
     target=output/"windows-download-verification.json"
     target.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")

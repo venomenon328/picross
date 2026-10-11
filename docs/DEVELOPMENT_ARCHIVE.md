@@ -47,7 +47,7 @@ nur mit ihrem gebundenen Checkout und damaligem Vertrag ausführen.
 | --- | --- |
 | `game/data/`, `game/art/`, einschließlich F03/F05/F07 | Unveränderte IDs, Revisionen, bestehende Speicherplätze, Hash-/Proof-/Assetbindungen. Nicht angebotene Großfälle bleiben außerhalb des Spielerexports. |
 | `game/study/`, `tests/zs1_tests.gd`, `full_view_study/cases/`, Katalog/Save-Modul | Teile werden von aktuellen ZS2-/VS2-Tests geerbt oder als zertifizierte technische Prüfinputs geladen. Namen allein belegen keine Inaktivität. |
-| `game/perf_a/`, `examples/perf_a/`, `examples/perf_b/` | Aktiver Hersteller, native A-Verbraucher, Runtime-Hashbindung und unveränderlicher B-Vergleich samt Rohintervallen. Standardartefakte liefern diese historischen ZIPs nicht erneut aus. |
+| `game/art/cells/`, `tools/cell_atlas_reference.json`, `tests/perf_b*` | Sechs unveränderte aktive Atlanten/Imports und unabhängige aktuelle Datei-/Pixel-/Mapping-/Cacheprüfung; ohne Hersteller- oder Vergleichsarchive. |
 | `examples/rp1` bis `rp6`, `examples/vs1/`, Produktionsmodule und Fixtures | Quellen, Nachweise, Originalbilder, Reparaturarchive, technische Fälle und negative Prüfinputs bleiben vollständig. Die ursprüngliche Sechserproduktion bleibt im Fachreplay. |
 | `docs/design/` mit Originalen/Manifesten, aktive Fonts/Nutzungshinweise | Historische und aktuelle Asset-/Quellenbindungen sind nicht sicher durch bloße generierte Ansichten ersetzbar. Keine ungeklärten Bilder gelöscht. |
 | [BP-Archiv](design/book_inventory/ARCHIVE.md) | Vorhandene Archivierung von 136 Dateien/161.102.998 Bytes bleibt unverändert gebunden. |
@@ -84,3 +84,37 @@ Integrationscommits: #55 `985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f`,
 #66 `0f89f08729539bbb4a02a590cbd18e58fbbda305`.
 Beide alten PRs können deshalb gemäß #70 als überholt geschlossen werden;
 kein erneuter Merge und keine Branchlöschung. Ihre ursprünglichen Diffs bleiben erreichbar.
+
+## N70-HIST-01: historische Herstellung und Vergleiche
+
+[Eigentümerentscheidung](https://github.com/venomenon328/picross/pull/71#issuecomment-6111613992),
+Archivquelle `070d3c291fd83ab380518b01638181c809574c03`, Tree
+`43bb6f91550501398f31f95c6deba7d6657d206f`. Der zusätzliche Abschnitt
+`historical_cleanup` im JSON-Manifest bindet 48 Dateien / 10.134.723 Bytes
+mit Git-Blob, SHA-256 und Bytezahl an genau diesen Quellstand.
+
+Vor Entfernung wurden tatsächliche Aufrufer mit Repositorysuche und Import-/
+Preloadprüfung verfolgt. Entfallen: `tools/perf_a.py`, `perf_a_atlas.py`,
+`perf_b.py`, `perf_b_report.py`, zwei reine A-Tests, vier A-Godotmodule,
+`perf_b_measure.gd`, der isolierte `game/perf_a/`-Bestand einschließlich sechs
+Duplikattexturen sowie `examples/perf_a/` und `examples/perf_b/` mit Plänen,
+Originalen, Roharchiven und Reproduktionsbelegen. Die Berichte PERF_A/B bleiben
+inhaltlich unverändert; ihre Quellenlinks zeigen auf diesen vollständigen Commit.
+
+Die früheren A-Goldfälle versorgen jetzt unabhängig `perf_b_cases.gd` mit
+aktueller Identitäts-, Zeit-, Region-, LOD- und Innenflächenprüfung. Product,
+Ressourcenprüfer und Windows-/PCK-Prüfer greifen ausschließlich auf die neue
+aktuelle Referenz zu. `historical_files()` und `install_historical_probe()`
+entfallen vollständig, ebenso A-Flags/-Gates/-Artefaktpfade und reine historische
+B-Quell-/Rohintervallvergleiche. Export-Denyregeln und PCK-Gegenprüfungen für
+versehentlich wieder eingeführte historische Ressourcen bleiben erhalten.
+
+Wiederherstellung als separater historischer Checkout, beispielsweise:
+
+```sh
+git archive 070d3c291fd83ab380518b01638181c809574c03 game/perf_a examples/perf_a examples/perf_b tools/perf_a.py tools/perf_a_atlas.py tools/perf_b.py tools/perf_b_report.py
+```
+
+Keine weitere RP-/VS-/ZS-/Sidebar-/Font-/Lizenzquelle entfernt. Aktuelle native
+PERF-B-, Bild-, Animation-, Save-/Session-, Paket-/PCK- und Windowsprüfungen
+bleiben verbindlich; technische und persönliche Abnahme bleiben getrennt.

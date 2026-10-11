@@ -63,8 +63,8 @@ func run() -> void:
 	await preload("res://tests/z2_cases.gd").run(self)
 	print("PHASE zv50")
 	await preload("res://tests/zv50_cases.gd").run(self)
-	print("PHASE perf_a")
-	preload("res://tests/perf_a_cases.gd").run(self)
+	print("PHASE perf_b")
+	preload("res://tests/perf_b_cases.gd").run(self)
 	finish()
 
 func finish() -> void:
