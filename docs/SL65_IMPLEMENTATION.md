@@ -77,3 +77,7 @@ Eine redundante 1080p-Farbvollansicht entfällt, deren Prüfungen bleiben erhalt
 Für abschließende Berichts-/Auditmetadaten bleiben 250 kB reserviert; das harte
 Techniklimit wird nach der Verpackung erneut geprüft. Fehlt eines der zwölf
 gezielten SL-Bilder in der begrenzten Lieferung, schlägt Product fehl.
+Die drei aktuellen Geometrieberichte (304er-Matrix, V1-Fokus und SL/V3) werden
+nach erfolgreicher Prüfung verlustfrei als kompaktes JSON serialisiert. Alle
+Messwerte, Gegenproben und Bildbindungen bleiben erhalten; nur Einrückung entfällt.
+So verdrängt die neue Achsentelemetrie keines der zwölf Pflichtbilder.
