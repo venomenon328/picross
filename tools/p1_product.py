@@ -382,7 +382,9 @@ def main(argv: list[str] | None = None) -> int:
             toolchain.extract_windows_templates(args.cache_dir.resolve() / toolchain.TEMPLATES.name,
                                                 toolchain.template_directory(workspace, host))
             project = workspace / "p1"
-            shutil.copytree(root / "game", project, ignore=shutil.ignore_patterns(".godot", "build"))
+            from product_fixtures import copy_regression_game, restore_player_catalog
+            copy_regression_game(root, project)
+            evidence.report["regression_catalog"] = "fixed test catalog; independent of authoring inventory"
             evidence.report["perf_b_resources"] = perf_b_resources.verify_runtime()
             environment = toolchain.isolated_environment(workspace, host)
 
@@ -511,6 +513,8 @@ def main(argv: list[str] | None = None) -> int:
                 selected += [b_output / "probe.json", *b_output.glob("runtime-*.png")]
                 evidence.scope_done("perf_b")
             evidence.scope_start("export")
+            if restore_player_catalog(root, project):
+                phase("player-content-import", base + ["--import"])
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])

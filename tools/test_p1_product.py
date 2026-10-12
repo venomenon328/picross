@@ -14,6 +14,31 @@ from ci_scope import FLAGS, JOBS, classify, evaluate
 
 
 class ProductHarnessTests(unittest.TestCase):
+    def test_native_fixture_catalog_is_bounded_and_player_export_keeps_real_content(self):
+        from product_fixtures import copy_regression_game, restore_player_catalog
+        import json
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as temporary:
+            temp = Path(temporary)
+            source = temp / "source"
+            (source / "game/data/content").mkdir(parents=True)
+            (source / "game/art/content").mkdir(parents=True)
+            (source / "game/model").mkdir()
+            (source / "game/model/loader.gd").write_text("runtime code\n")
+            shutil.copytree(root / "tests/puzzle_production/fixtures/catalog", source / "tests/puzzle_production/fixtures/catalog")
+            (source / "game/data/registry.json").write_text('{"actual":"catalog"}\n')
+            (source / "game/data/content/new.json").write_text("not a valid puzzle; must never be certified here")
+            (source / "game/art/content/new.png").write_bytes(b"opaque bytes")
+            project = temp / "regression"
+            copy_regression_game(source, project)
+            self.assertEqual(len(json.loads((project / "data/registry.json").read_text())["entries"]), 9)
+            self.assertFalse((project / "data/content").exists())
+            self.assertFalse((project / "art/content").exists())
+            self.assertTrue((project / "model/loader.gd").exists())
+            self.assertTrue(restore_player_catalog(source, project))
+            self.assertEqual((project / "data/registry.json").read_bytes(), (source / "game/data/registry.json").read_bytes())
+            self.assertEqual((project / "art/content/new.png").read_bytes(), b"opaque bytes")
+
     def test_regular_identity_and_study_exclusions_survive_project_move(self):
         root = Path(__file__).resolve().parents[1] / "game"
         project = (root / "project.godot").read_text(encoding="utf-8")

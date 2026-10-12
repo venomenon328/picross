@@ -19,7 +19,8 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
     from tools.puzzle_production.za1_fixtures import replay, isolated_checkout
     from tools.puzzle_production.content_registry import check_checkout
     checkout = workspace / "za1-checkout"
-    shutil.copytree(root / "game", checkout / "game", ignore=shutil.ignore_patterns(".godot", "build", "content"))
+    from product_fixtures import copy_regression_game
+    copy_regression_game(root, checkout / "game")
     isolated_checkout(checkout)
     python_phase("za1-test-only-registration", lambda: replay(workspace / "za1-replay", checkout))
     project = checkout / "game"

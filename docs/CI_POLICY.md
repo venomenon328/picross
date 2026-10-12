@@ -39,6 +39,11 @@ F01/F02-Zertifikatstests, reale RP-/VS-Korpus-Replays, der Knoblauch-Referenztes
 und deren CI-Jobs sind entfallen. Historische Daten/Proofs bleiben erhalten.
 Allgemeine Solver-, Verifier-, Import-, Reparatur- und Adaptertests verwenden feste
 synthetische Eingänge; Registrierungstests kopieren keine produktiven Pakete.
+Sämtliche nativen Funktions-/Renderläufe verwenden einen festen temporären
+Katalog; zusätzliche produktive Runtime-Inhalte werden nicht hineinkopiert.
+Erst für den regulären Spielerexport werden die tatsächliche Registry und ihre
+Runtimeassets übernommen, ohne Rätselzertifizierung. Paketgröße/Build-I/O dieses
+Code-Prüfwegs können mit dem Spiel wachsen; die Testmatrix wächst nicht.
 Save- und PCK-Funktionstests nutzen feste technische Beispiele statt einer Schleife
 über jeden neuen Katalogeintrag. Bestehende Motive als feste Eingabe allgemeiner
 Spiel-/Darstellungstests sind keine erneute Rätselzertifizierung und werden bei
@@ -109,7 +114,7 @@ der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erla
 
 Der [Product-Harness](../tools/p1_product.py) prüft die unveränderten aktiven
 Ressourcenbindungen, importiert die temporäre reguläre
-Spielkopie, führt die vollständige aktuelle Godot-Kernsuite einschließlich
+Spielkopie mit festem temporärem Testkatalog, führt die aktuelle Godot-Kernsuite einschließlich
 Save/Recovery und ZS2-Verhalten einmal aus und prüft echten Mehrprozess-Save,
 kontrollierten Start sowie den regulären Windows-Export. Der kurze absichtliche
 Fehler durchläuft dieselbe `check()`-/Ergebnis-/Exit-23-Strecke wie die Suite.
