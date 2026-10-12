@@ -3,7 +3,7 @@
   "puzzle_id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
   "revision": "r03",
   "category_id": "gemuese-pilze-kraeuter",
-  "state": "content_ready",
+  "state": "registered",
   "package": {
     "file": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/package.zip",
     "bytes": 5095565,
@@ -14,7 +14,12 @@
     "sha256": "8411cb079ac321b975cc51c01aa47f935fe492aee569060046aee917d594c06c"
   },
   "inventory_sha256": "57af3c9c896edfbccfeef50aff235d467aef7fc3acb345a7c626d8282ee52d07",
-  "approval": null,
+  "approval": {
+    "file": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/approval.json",
+    "sha256": "88329fd722faa5a1c353a15562d97fb91b36b62c98309c4415310ee17d7e5e91",
+    "evidence": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/approval-context.json",
+    "evidence_sha256": "2db896022b49750525e83a4e87f1099b0e1e221aa45f873c2b6b8262a8b84050"
+  },
   "width": 40,
   "height": 40,
   "mode": "mono",
@@ -27,11 +32,42 @@
       "L4"
     ]
   },
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
-  "next_action": "Menschliche Endabnahme des unveränderten Endkandidaten und Abschlussbilds einholen; erst danach mit gesondertem Integrationsauftrag ZA-1 export/plan/register ausführen.",
-  "integration": null,
+  "blockers": [],
+  "next_action": "Draft-PR #77 am finalen Head reviewen; schlanke Inhalts-CI docs/ci-required abwarten, ausdrückliche Mergefreigabe erforderlich. Kein Release/Deployment.",
+  "integration": {
+    "status": "registered_on_work_branch",
+    "base_commit": "02273e9a4b2f1bb70e98cee1bc071d3e74547877",
+    "branch": "feat/knoblauch-r03-integration",
+    "runtime_id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
+    "runtime_revision": 1,
+    "stem": "knoblauch_001",
+    "save_slot": "knoblauch_001",
+    "category_id": "gemuese-pilze-kraeuter",
+    "package": "content/packages/pz-3a744ae1b7cb4d38b0ac29d030ef/r03",
+    "export_manifest_sha256": "6da944b6256b0622c3068644c1460a37da92a356997339f59cbc3040071e3dfd",
+    "evidence_manifest": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/integration-r4/manifest.json",
+    "evidence_manifest_sha256": "cc2d2da44bd8a3f2f64d12379ce73b679fb471481b10df4dbf53bd9567656122",
+    "rulebook": {
+      "version": "0.4.1",
+      "document_revision": 4,
+      "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8",
+      "commit": "02273e9a4b2f1bb70e98cee1bc071d3e74547877"
+    },
+    "technical": true,
+    "editorial_approved": true,
+    "category_ready": true,
+    "catalog_ready": true,
+    "registered": true,
+    "native_new_content": "71 passed; once outside CI, isolated partial/finish/read-reset, real pointer events",
+    "player_export": "actual current Windows PCK checked once outside CI; definition/notices/pixels/exclusions pass",
+    "ci": "Only automatic content_only selection; actual final head/base/selection/checks in Draft-PR #77 and external final handoff. No general suite.",
+    "main_status": "not merged",
+    "playtest": "not_performed; optional",
+    "blockers": [],
+    "pr": "https://github.com/venomenon328/picross/pull/77",
+    "previous_integration_commit": "f169d37cae9b2930e7e4488fed1ab7fa85d5a715"
+  },
   "archive_review": {
     "date": "2026-10-12",
     "source_commit": "81ea381fe03737251751046331c6f3a383905377",

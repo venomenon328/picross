@@ -1,0 +1,24 @@
+{
+  "format": "picross-human-approval-context-v1",
+  "recorded_at_utc": "2026-10-12T09:05:40.948799+00:00",
+  "timestamp_scope": "Zeitpunkt der Aufzeichnung; die Chatnachricht enthält keinen separaten Zeitstempel.",
+  "source": "Tatsächliche neue Nutzernachricht in diesem Auftrag; keine aus Pakettext abgeleitete Freigabe.",
+  "statement": "Das angehängt Paket ist abgenommen.",
+  "attached_file": "Picross_Knoblauch_Produktion_r03.zip",
+  "attached_zip_sha256": "7013d5b29a0dda5ad9a5047730a1e71b4d06596aa284ee8a3cbdad9184dc23f1",
+  "repository_package_sha256": "7fbadeefe46870d297619fc07511b2665822bea55730221965eec0d3d5b6457e",
+  "handoff_sha256": "8411cb079ac321b975cc51c01aa47f935fe492aee569060046aee917d594c06c",
+  "inventory_sha256": "57af3c9c896edfbccfeef50aff235d467aef7fc3acb345a7c626d8282ee52d07",
+  "retained_original_files_verified": 93,
+  "original_file_count": 182,
+  "approval_sha256": "88329fd722faa5a1c353a15562d97fb91b36b62c98309c4415310ee17d7e5e91",
+  "selection": {
+    "variant": "candidate-002",
+    "matrix_hash": "2691fe2f52cf330e9500779160dd90a8446c1c7d90f174b75fdbc1df5aa81f09",
+    "logic_hash": "62a584d7b1179a30f914ec5b8decb56a5fef532b8a85422e2147ad49dbd9963e",
+    "reveal": {
+      "file": "reveals/Knoblauch_A_r01.png",
+      "sha256": "0a102f0e49cd93f9b2851d9e5d7ba82edb601102055322a1628e806d544a4674"
+    }
+  }
+}

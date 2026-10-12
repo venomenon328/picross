@@ -1,0 +1,35 @@
+{
+	"adapter": "NVIDIA GeForce RTX 3070",
+	"captures": [
+		{
+			"context": "unstarted.png",
+			"file": "unstarted-board.png",
+			"rect": [
+				515.0,
+				208.119995117188,
+				786.799987792969,
+				786.799987792969
+			]
+		},
+		{
+			"context": "partial-catalog.png",
+			"file": "partial-catalog-card.png",
+			"rect": [
+				537.0,
+				188.0,
+				431.0,
+				288.0
+			]
+		}
+	],
+	"checks": 24,
+	"display_server": "Windows",
+	"failures": [],
+	"format": "picross-kat2-native-v1",
+	"mode": "partial",
+	"quit_slot_hashes": {},
+	"test_only": true,
+	"timings_ms": {
+		"startup_ms": 482.237
+	}
+}

@@ -1,0 +1,30 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "level": "L3",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "confidence": "low",
+  "logic_hash": "62a584d7b1179a30f914ec5b8decb56a5fef532b8a85422e2147ad49dbd9963e",
+  "rule_families": {
+    "R0": "Two empty columns and late cleanup; R0 alone does not describe the observed solving path.",
+    "R1": "Initial overlapping placements of long blocks; first proof step row 17 [9,11,8] forces column 21 in an unknown line. Many wide middle rows/long columns supply progress.",
+    "R2": "Estimated need for combining several block assignments around anchors in the upper neck. Example before proof step 126: row 11 [3,2,3,1,1], mixed anchors force empty cells 25 and 27. Precise necessity/sufficiency of R2 versus R1/R3 not exhaustively established.",
+    "R3": "Full-line-mono certificate supports general complete line logic. Its use does not establish R3 necessity; cannot exclude R3 demand in some lines."
+  },
+  "bottleneck": "No defined bottleneck observed in selected full-line checkpoints above cleanup threshold 32 unresolved cells: productive lines 36,32,26,26,23,27,21,11. Sequential proof alone is not a bottleneck detector. R2/R3 labels and all weak-rule fixpoints not exhaustively checked.",
+  "evidence": "audit/difficulty-checkpoints.json",
+  "effort": {
+    "cells": 1600,
+    "filled": 795,
+    "empty": 805,
+    "proof_steps": 297,
+    "human_active_minutes": null,
+    "solve_time_minutes": null
+  },
+  "time_estimate": null,
+  "playtest": "not_performed; optional, not a gate",
+  "calibration": "No human calibration data or validated difficulty analyser; estimate can be revised without changing proof if matrix remains identical."
+}

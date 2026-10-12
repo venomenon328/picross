@@ -1,0 +1,21 @@
+{
+  "zip": "E:\\Downloads\\Picross_Knoblauch_Integration_r4_20261012\\player\\picross-p1-windows-x86_64.zip",
+  "bytes": 41330509,
+  "sha256": "54c4a7ffe78a498574f4bad9d678128992906a21991e81c39c35a89d20a8c253",
+  "manifest": {
+    "source_commit": "1c90b3ac23e8371dcc83eddbb8e90309e4242e09",
+    "source_tree_dirty": true,
+    "scope": "production-only garlic r03; not CI or full product suite",
+    "runtime_binding_sha256": "a0bb11806fb99b29a722b79737bd4ec8da4692699ce9a5e41dfa751e447ba0d2",
+    "pck_report_sha256": "00fba1de746305e043c0bfd5b6192d1a185fd7b01d3e822506874f2d14f7cf7a",
+    "reveal_pixels_equal": true,
+    "engine_archive_sha256": "731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953",
+    "templates_archive_sha256": "f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011",
+    "export_files": {
+      "picross-p1.console.exe": "4713fefc9bbe042da13a38724297710e810bcda3166dfa405c3efecf8db3cdec",
+      "picross-p1.exe": "37e68f017d105199fe55d7f0a105914be1a8cace81610f8a55ad3dd0da467c5f"
+    }
+  },
+  "reveal_pixels_equal": true,
+  "pck_exclusions": "passed actual embedded PCK traversal"
+}
