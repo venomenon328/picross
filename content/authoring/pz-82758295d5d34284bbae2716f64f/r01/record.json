@@ -1,0 +1,41 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r01",
+  "category_id": "sport-spiele",
+  "state": "reveal_review",
+  "package": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/package.zip",
+    "bytes": 4873644,
+    "sha256": "26eaea4f9a829db4b13021d8c267af0d755147e76fc185868f5aa7d16031a132"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/handoff.json",
+    "sha256": "2c796bdf9ebcfb62a65b4da82f98222df56045233c306457425b0cf9df8769c2"
+  },
+  "inventory_sha256": "abddc011e4033f60551c7b580c2a0ccef4d1985160cd4c899cd6a9b4ee9a8e69",
+  "approval": null,
+  "width": null,
+  "height": null,
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [
+    "Explicit human approval of one concrete reveal image revision required before abstraction."
+  ],
+  "next_action": "Present A-r01, B-r01 and C-r01; wait for explicit human approval of a concrete image revision.",
+  "integration": null,
+  "progress_log": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/progress.json",
+  "archive_review": {
+    "source_commit": "ee6179f6f7b6bc53f6953e2220eeeb01f060ea11",
+    "state": "package_validation_passed",
+    "image_approval": "pending"
+  },
+  "repository_delivery": {
+    "branch": "content/chess-knight-reveal-r01",
+    "pr": null
+  },
+  "validation": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/validation.json",
+    "sha256": "f9d01bf8f53ba6a8e6dfbf510a4023f1bdf70d69582213a1f79913794d7327c1"
+  }
+}
