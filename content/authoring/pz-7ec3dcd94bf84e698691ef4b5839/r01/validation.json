@@ -36,9 +36,10 @@
       "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r01/handoff.json",
       "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r01/package.zip",
       "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r01/progress.json",
-      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r01/record.json"
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r01/record.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r01/validation.json"
     ],
     "requested_scope": "auto"
   },
-  "review": "Full delivery scope: only authoring index plus new record, handoff, package and external progress. No runtime or tooling changes."
+  "review": "Full six-file delivery scope: index, handoff, sealed package, record, external progress and validation. No runtime/tooling changes; all modes 100644."
 }

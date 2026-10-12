@@ -28,7 +28,11 @@
     "source_commit": "9a45cc9d6c02a4be3b3a509159cc1158d2c1d2c1",
     "state": "package_validation_passed",
     "image_approval": "pending",
-    "ci": "pending; expected content_only=true"
+    "review_and_ci_source": "https://github.com/venomenon328/picross/pull/83"
   },
-  "progress_log": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r01/progress.json"
+  "progress_log": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r01/progress.json",
+  "repository_delivery": {
+    "branch": "chore/pea-reveal-r01",
+    "pr": 83
+  }
 }
