@@ -3,7 +3,7 @@
   "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
   "revision": "r01",
   "category_id": "sport-spiele",
-  "state": "reveal_review",
+  "state": "reveal_approved",
   "package": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/package.zip",
     "bytes": 4873644,
@@ -19,16 +19,14 @@
   "height": null,
   "mode": "mono",
   "difficulty": null,
-  "blockers": [
-    "Explicit human approval of one concrete reveal image revision required before abstraction."
-  ],
-  "next_action": "Present A-r01, B-r01 and C-r01; wait for explicit human approval of a concrete image revision.",
+  "blockers": [],
+  "next_action": "Continue with indexed r02 motif_review; explicit MA-r01/corridor approval pending.",
   "integration": null,
   "progress_log": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/progress.json",
   "archive_review": {
     "source_commit": "ee6179f6f7b6bc53f6953e2220eeeb01f060ea11",
     "state": "package_validation_passed",
-    "image_approval": "pending",
+    "image_approval": "A-r01 explicitly approved; separate reveal-approval.json. Original sealed ZIP/handoff retain historical pending status.",
     "delivery_evidence": "Final head, selected CI and separate self-review recorded in PR #93; package and readable original handoff remain sealed."
   },
   "repository_delivery": {
@@ -39,5 +37,12 @@
   "validation": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/validation.json",
     "sha256": "f9d01bf8f53ba6a8e6dfbf510a4023f1bdf70d69582213a1f79913794d7327c1"
-  }
+  },
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+  "reveal_approval": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/reveal-approval.json",
+    "sha256": "be490ece290ebf5b10ada0160bdd475adb49c7ad86851f15a488475f671a1040"
+  },
+  "superseded_by": "r02"
 }
