@@ -1,0 +1,18 @@
+{
+  "recorded_at_utc": "2026-10-12T09:35:37.244367+00:00",
+  "source": "Actual user replies in this Codex integration task",
+  "statements": [
+    "Ja, diese Testkorrektur erlauben",
+    "Ja, diese Validatorausnahme erlauben",
+    "Ja, diese zusätzliche Testkorrektur erlauben",
+    "Ja, diese Nachweisprüfer-Korrektur erlauben",
+    "Ja, beide eng begrenzten Korrekturen erlauben"
+  ],
+  "effective_scope": [
+    "Registry-aware catalog assertions preserving historical six-sheet prefix",
+    "Local-link exception only for hash-bound original ZA-1 export inputs, with positive/negative tests",
+    "Complete isolated ZA-1 testfixture checkout, including existing registered runtime files and associated test setup expectations",
+    "Registry-aware VS2 geometry verifier retaining full coverage and historical prefix, with positive/negative tests"
+  ],
+  "production_adapter_runtime_capture_and_other_harness": "unchanged"
+}

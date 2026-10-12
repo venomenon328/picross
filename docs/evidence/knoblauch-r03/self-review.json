@@ -23,8 +23,8 @@
   "old_nine_registry_entries": "unchanged; checkout replay verified",
   "generated_export": "all files byte-equal freshly verified ZA-1 export",
   "sealed_authoring_inputs": "unchanged; complete original inventory and compact derivation verified",
-  "production_tools_and_runtime_code": "unchanged",
-  "tool_changes": "only two explicitly authorized check_docs files; fixed-six assertions separately authorized",
+  "production_tools_and_runtime_code": "Production adapter, runtime code, capture scripts and remaining product harness unchanged; testfixture helper is the expressly authorized exception.",
+  "tool_changes": "Explicitly authorized narrow changes only: document-link exception/tests, isolated testfixture checkout/associated test assumptions, VS2 registry ID coverage/tests; catalog assertions separately authorized.",
   "findings": [
     {
       "id": "K03-B1",
@@ -32,7 +32,9 @@
       "location": "tools/puzzle_production/za1_fixtures.py:isolated_checkout",
       "trigger": "existing regular production entry",
       "result": "fixture checkout misses runtime files; production tests and standalone CI replay blocked",
-      "required": "authorized narrow helper correction and full recheck"
+      "required": "authorized narrow helper correction and full recheck",
+      "status": "resolved",
+      "evidence": "16 adapter tests and standalone four-package replay pass; final full-production CI still required"
     },
     {
       "id": "K03-B2",
@@ -40,7 +42,9 @@
       "location": "tools/vs2_delivery.py:verify_records",
       "trigger": "non F-/VS-numbered production ID",
       "result": "ValueError; geometry verification remains fixed to 256 cases",
-      "required": "authorized registry-aware verifier correction and full recheck"
+      "required": "authorized registry-aware verifier correction and full recheck",
+      "status": "resolved",
+      "evidence": "128 fast tests pass; all 272 unchanged native cases verified; final full-product CI still required"
     },
     {
       "id": "K03-A1",
@@ -49,5 +53,5 @@
       "required": "successful selected CI, review of named PR head, explicit merge authorization"
     }
   ],
-  "verdict": "Nacharbeit erforderlich; further narrow tool corrections await explicit authorization."
+  "verdict": "No unresolved implementation finding in separate complete diff self-review; final selected CI and human PR review/merge authorization required."
 }

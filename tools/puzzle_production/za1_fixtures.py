@@ -117,6 +117,16 @@ def isolated_checkout(root):
         shutil.copyfile(ROOT / name, target)
     if (ROOT / "content/packages").exists():
         shutil.copytree(ROOT / "content/packages", root / "content/packages")
+    # A registered production package also binds its installed runtime bytes.
+    # Keep the standalone replay/test checkout complete as the catalog grows.
+    registry = load_json(ROOT / "content/registry.json")
+    for entry in registry["entries"]:
+        if entry["production"] is None:
+            continue
+        for relative in (entry["definition"], entry["reveal"], str(Path(entry["reveal"]).with_suffix(".txt"))):
+            target = root / "game" / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / "game" / relative, target)
     return root
 
 

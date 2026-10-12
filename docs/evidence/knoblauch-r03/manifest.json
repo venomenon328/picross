@@ -7,9 +7,17 @@
   "stem": "knoblauch_001",
   "save_slot": "knoblauch_001",
   "files": {
+    "adapter-tests-final.log": {
+      "sha256": "d3f73e4f017f4900df7cff5ea3399cebba40441b9b1501a40e794ad6d8e04eef",
+      "bytes": 2718
+    },
     "checkout-verification.json": {
       "sha256": "f6f37923e64915f5b77c00a27778b7dd69a8ba5fb5e2b174fbfa8cd23968e8e6",
       "bytes": 303
+    },
+    "fast-tests-final.log": {
+      "sha256": "038fbbbe93a8bf837c2d55d930e1cc6696b9f4b1ecf404ab640204707cb6b9b0",
+      "bytes": 17908
     },
     "full-input-verification.json": {
       "sha256": "0cceafd00fc0b4ad42230e9891dd20da8ff3152e50f43a36cc446a027067258c",
@@ -28,8 +36,8 @@
       "bytes": 5411
     },
     "local-validation.json": {
-      "sha256": "851af8f497fb7b4f2fa9168590508cd7da31d1e36b0d634bafe4a37ec6fc029c",
-      "bytes": 878
+      "sha256": "b058c52b8729456b9d4fb74732d2a8104836c9d0b3d6f630c2e4ebcdbfda98ba",
+      "bytes": 1388
     },
     "native/album-artwork.png": {
       "sha256": "afa579b7500cec70cf3f7ed8e3c39095a76aa9859d4bf14216e18b327a6547b8",
@@ -124,12 +132,20 @@
       "bytes": 2819
     },
     "self-review.json": {
-      "sha256": "e0c7e0d776676fa93f16d3ad8a4e7c1ea590402935e2b8f62514aae0c3240db2",
-      "bytes": 1953
+      "sha256": "5c01c4e1978139af78de82afc914d7cb1ecab2e55d00b280841a655c12c0e7f9",
+      "bytes": 2559
+    },
+    "test-correction-authorization.json": {
+      "sha256": "a6e7905063f86f1c30403814a9d0d215194c076decf74c0ba5017cf4b6b5c113",
+      "bytes": 929
     },
     "verify-export.json": {
       "sha256": "65533d38968e1c50ce8bf247196a8f2c3f6467b39dc5caf45b63d5b6ed0fa329",
       "bytes": 5660
+    },
+    "za1-replay-corrected.json": {
+      "sha256": "2df0f07472382aad3366562d387691f71323fb936c31895bad2a8578392359c5",
+      "bytes": 12717
     }
   }
 }

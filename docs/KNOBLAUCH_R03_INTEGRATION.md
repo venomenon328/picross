@@ -46,7 +46,7 @@ und ursprüngliche Freigaben bleiben im Prüfexport erhalten.
 [Checkoutprüfung mit Replay](evidence/knoblauch-r03/checkout-verification.json)
 bestätigen exakt die drei neuen Runtime-Dateien, den Prüfexport und die beiden
 Registryprojektionen. Sämtliche neun alten Registryeinträge sind identisch.
-ZA-1-Produktionswerkzeuge und der Produktharness bleiben unverändert.
+ZA-1-Produktionsadapter und der Produktharness bleiben unverändert.
 
 Fünf isolierte native Windows-Prozesse mit Godot 4.7.2 prüfen den neuen Inhalt
 über die reguläre Szene und Mausaktionen: Kontrollstände alter Slots, Auswahl und
@@ -74,23 +74,27 @@ Ausdrücklich erlaubte Prüfanpassungen: Die zwei festen Sechser-Assertions folg
 der Registry und sichern den historischen Sechserpräfix. Nur die lokale
 Linkprüfung erkennt bytegleich manifestgebundene ZA-1-Eingangsoriginale als
 historisch; Textkonventionen und vollständige Exportprüfung bleiben verbindlich.
-Vier Positiv-/Negativtests sichern diese Grenze. Schnelle Werkzeugsuite:
-126 Tests erfolgreich, ein Windows-Symlinktest nicht ausführbar.
+Vier Positiv-/Negativtests sichern diese Grenze. Weitere ausdrücklich erlaubte
+Korrekturen ergänzen den isolierten Testfixture-Checkout um registrierte
+Runtime-Dateien und passen den VS2-Nachweisprüfer samt zwei Regressionstests an
+echte Registry-IDs an. Zwei zugehörige Fixture-Annahmen im Adaptertest verwenden
+den tatsächlichen Ausgangsbestand und bereits vorhandene Verzeichnisse.
+Schnelle Werkzeugsuite: 128 Tests erfolgreich, ein Windows-Symlinktest nicht ausführbar.
 Dokumentprüfung erfolgreich; native Kernsuite: 5.506 Prüfungen erfolgreich.
 Die vollständigen ausgewählten CI-Prüfungen müssen am finalen PR-Head bestehen.
 
-Der vollständige lokale Produktlauf endet im Geometrie-Nachweisprüfer:
-`vs2_delivery.verify_records` verarbeitet nur F-/VS-Nummern und erwartet exakt
-256 Fälle; die neue Produktions-ID löst einen `ValueError` aus. Die lokale
-Produktionssuite umfasst 124 Tests und meldet 18 Fehler, weil der isolierte
-Testfixture-Checkout registrierte Runtime-Dateien nicht mitkopiert. Derselbe
-Helfer wird vom eigenständigen CI-Testreplay verwendet. Diese beiden bestätigten
-Integrationsblocker benötigen eng begrenzte weitere Werkzeugausnahmen; die
-Zustimmung ist angefragt und noch nicht erteilt. Die positiven Einzelbelege
-ersetzen diese fehlenden Gesamtnachweise nicht.
+Die ersten lokalen Gesamtläufe deckten die feste F-/VS-ID-/256-Fall-Annahme und
+den unvollständigen Testfixture-Checkout auf. Nach ausdrücklicher Zustimmung
+prüft VS2 nun alle 272 echten Geometriefälle einschließlich der neuen Produktions-ID;
+der historische Sechserpräfix bleibt verbindlich. Der eigenständige ZA-1-Replay
+mit vier Testpaketen besteht. Historische Fehlschläge bleiben lokal erhalten.
+Die vollständige Produktionssuite mit 124 Tests und der vollständige Produktlauf
+werden für den finalen Head durch die ausgewählte CI belegt; ältere grüne
+Teilprüfungen werden nicht als dieser Gesamtnachweis ausgegeben.
 
-Offen vor Merge: Behebung der beiden CI-Blocker nach ausdrücklicher Zustimmung,
-erfolgreiche Pflicht-CI, Review des benannten PR-Stands und Mergefreigabe.
+Offen vor Merge: erfolgreiche Pflicht-CI, Review des benannten PR-Stands und
+ausdrückliche Mergefreigabe. Ergebnisse und Quellbindung stehen in
+[Draft-PR #77](https://github.com/venomenon328/picross/pull/77).
 Die redaktionelle Inhaltsfreigabe ist vorhanden; fehlendes menschliches
 Probespielen ist kein Gate. Vollständige lokale Laufbelege und ursprüngliche
 Diagnosefehlschläge liegen in `Picross_Knoblauch_Integration_20261012` außerhalb

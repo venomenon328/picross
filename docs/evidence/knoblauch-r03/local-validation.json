@@ -1,7 +1,7 @@
 {
   "format": "picross-knoblauch-local-validation-v1",
   "fast_tools": {
-    "tests": 126,
+    "tests": 128,
     "status": "passed",
     "skipped": 1,
     "skip_reason": "Windows symlink unavailable"
@@ -24,5 +24,19 @@
     "reason": "fixture checkout omits registered runtime assets",
     "log_sha256": "20fcd5c1a2366f22560636534b0dae80def71b7af5a6174d288028b02249e295"
   },
-  "authorization": "Both remaining narrow tool corrections requested; pending."
+  "authorization": "Explicit user approval received; narrow fixture/verifier corrections applied. Final full-production and product evidence belongs to current PR CI.",
+  "adapter_tests_final": {
+    "status": "passed",
+    "tests": 16
+  },
+  "standalone_za1_replay": {
+    "status": "passed",
+    "test_packages": 4
+  },
+  "native_geometry_recheck": {
+    "status": "passed",
+    "records": 272,
+    "method": "Corrected verifier on unchanged actual native capture including exact new ID",
+    "native_report_sha256": "9926b0d3d7c9d88f5bee09ff4da0ab616641b4cf7b7bade891dbd2490d09b4c7"
+  }
 }

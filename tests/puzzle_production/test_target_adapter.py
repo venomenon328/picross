@@ -287,7 +287,7 @@ class TargetTests(unittest.TestCase):
         with self.assertRaisesRegex(InvalidInput, "collision"): registration(collision, checkout, apply=True)
         second = self.export(p2, dest="second")
         registration(second, checkout, apply=True)
-        self.assertEqual(len(check_checkout(checkout, replay=True)["entries"]), 11)
+        self.assertEqual(len(check_checkout(checkout, replay=True)["entries"]), len(json.loads(before)["entries"]) + 2)
         with self.assertRaisesRegex(InvalidInput, "Test-only"): registration(second, ROOT, apply=True)
         altered = load_json(out / "manifest.json"); altered["runtime_revision"] = 8
         write_json(out / "manifest.json", altered)
@@ -297,7 +297,7 @@ class TargetTests(unittest.TestCase):
         out = self.export(self.package(), stem="occupied")
         root = isolated_checkout(self.root / "checkout")
         existing = root / "game/data/content/Occupied.json"
-        existing.parent.mkdir(); existing.write_bytes(b"foreign work")
+        existing.parent.mkdir(exist_ok=True); existing.write_bytes(b"foreign work")
         with self.assertRaisesRegex(InvalidInput, "collid"): registration(out, root, apply=True)
         self.assertEqual(existing.read_bytes(), b"foreign work")
         check_checkout(root)
