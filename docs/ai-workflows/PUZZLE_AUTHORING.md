@@ -1,9 +1,12 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.4.1 · 12.10.2026**
+**Version 0.4.1 · Dokumentrevision 2 · 12.10.2026**
+
+Die kompatible ZA-1-Vertragsversion bleibt 0.4.1; Dokumentrevision, Datei-SHA-256 und Repositorycommit identifizieren diese ergänzte Arbeitsanweisung.
+
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
-Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag über das zuerst freigegebene Abschlussbild bis zum katalogfähigen Paket. **MUSS** bezeichnet eine Pflicht, **SOLL** den begründet abweichbaren Standard, **DARF** eine Option.
+Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag über das zuerst freigegebene Abschlussbild bis zur geprüften Integration ins Spiel. **MUSS** bezeichnet eine Pflicht, **SOLL** den begründet abweichbaren Standard, **DARF** eine Option.
 
 ## 1. Einstieg und Befugnisse
 
@@ -11,7 +14,7 @@ Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag übe
 2. Einschlägige aktuelle Eigentümerentscheidungen berücksichtigen. Repository-/Toolstand mit vollständiger Commit-SHA binden. Beschluss, implementierte Funktion und eigene Annahme unterscheiden; offene PRs nicht als verfügbare Implementierung behandeln.
 3. Bestehende technische Formate, Farbregeln, Solverprofile, Nachweise und Reparaturverträge verwenden. Dieses Regelwerk ersetzt sie nicht. Fehlende Pflichtquellen oder widersprüchliche Vorgaben vor dem betroffenen Schritt klären.
 4. Tatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine Funktionen, Prüfungen oder Ergebnisse behaupten, die nicht verfügbar beziehungsweise ausgeführt sind.
-5. Keine direkte Modell-API in das Produktionswerkzeug einbauen. Werkzeugänderungen, Repository-Schreibaktionen und Veröffentlichung benötigen einen entsprechenden separaten Auftrag.
+5. Keine direkte Modell-API einbauen. Produktionsaufträge mit Repositoryablage erlauben ausschließlich die beauftragte Paketsicherung samt Index; ein Integrationsauftrag erlaubt zusätzlich den Ablauf in Abschnitt 8. Werkzeugänderungen, Merge und Veröffentlichung sind jeweils getrennte Befugnisse nach Entwicklungsworkflow. Bereits erteilte passende Aufträge nicht erneut erfragen.
 6. **Menschliches Probespielen ist optional und kein Freigabekriterium.** Ein großer Rätselbestand darf ohne Probespiele entstehen. Verpflichtend bleiben die Abschlussbildfreigabe, die Freigabe der daraus abgeleiteten Motivvorlage, die technische Prüfung und die abschließende redaktionelle Abnahme. Spätere Spielerfahrungen dienen der Verbesserung und Kalibrierung.
 
 ## 2. Abschlussbild zuerst, danach Abstraktion
@@ -74,9 +77,10 @@ Korrekturen nur an der gewählten Darstellung durchführen, zu bewahrende Merkma
 | `raster_review` | Codex/werkzeugfähige KI importiert; deterministische Werkzeuge erzeugen Matrix, Hinweise und Nachweise | Variantenbündel, echte Rasteransichten, automatische und visuelle Befunde | Parameterkorrektur, begrenzte Reparatur oder neue Motivvorlage |
 | `content_ready` | KI und Werkzeuge prüfen Endkandidat, Herkunft, Logik, Gestaltung, Schwierigkeit und Übereinstimmung mit dem freigegebenen Abschlussbild | Vollständiges Inhaltspaket ohne harte Mängel | Betroffene Prüfung/Phase wiederholen |
 | `editorially_approved` | Mensch nimmt genau die vorgelegte Paketrevision redaktionell ab | Gebundene Endfreigabe; kein Probespiel erforderlich | Konkrete Korrektur mit passenden Rücksprüngen |
-| `catalog_ready` | Codex/Werkzeug validiert einen tatsächlich passenden Export und Katalogdatensatz | Eindeutige ID, gültige Zielassets und Metadaten | Fehlenden Adapter als Blocker ausweisen |
+| `catalog_ready` | Codex prüft ZA-1-Export und Registrierungsplan | Schriftlicher Exportnachweis und konfliktfreier Plan | Endfreigabe/Quelle/Mapping korrigieren |
+| `registered` | Codex registriert nach Integrationsauftrag im Arbeitsbranch | Runtimeassets, beide Registrydateien und Prüfkopie; Produktprüfungen/PR gemäß Abschnitt 8 | Fehler beheben; bei unterbrochener Registrierung kontrollierte Recovery |
 
-`blocked`, `rejected` und `superseded` benötigen einen konkreten Grund und eine betroffene Revision. Katalogfähigkeit ist keine bereits erfolgte Integration oder Veröffentlichung. Fehlt ein passender Export, darf ein vollständig geprüftes Paket bei `editorially_approved` verbleiben; keine Pilot-ID für ein neues Rätsel wiederverwenden.
+`blocked`, `rejected` und `superseded` benötigen einen konkreten Grund und eine betroffene Revision. `registered` bezeichnet zunächst den geprüften Checkout; erst der nachgewiesene Merge macht den Inhalt auf `main` verfügbar. Katalogfähigkeit, Checkoutregistrierung, Main-Integration und Release getrennt berichten. Fehlt ein passender Export, darf ein vollständig geprüftes Paket bei `editorially_approved` verbleiben; keine Pilot-ID für ein neues Rätsel wiederverwenden.
 
 Freigaben enthalten Akteur, Zeitpunkt, tatsächliche Erklärung, Gegenstand und Hashbindung. Die KI darf menschliche Freigaben protokollieren, nicht selbst erteilen.
 
@@ -178,19 +182,23 @@ Stagniert das zulässige technische Vollprofil, ist das Rätsel nicht freigabef�
 
 ## 6. Dateien, Übergabe und Wiederaufnahme
 
-### 6.1 Ablagepflichten
+### 6.1 Repositoryablage und schlanke Pakete
 
-- Stabile motivneutrale ID vergeben, etwa `pz-000001`; im gemeinsamen Index auf Kollision prüfen. Runtime-IDs nach tatsächlichem Zielvertrag vergeben.
-- Pro ID Briefing, Originalquellen, Abschlussbildvarianten samt freigegebener Referenz, abgeleitete Motivvorlagen, unveränderte Import-/Reparaturbündel und Reviews getrennt ablegen. Konkrete Revisionen verwenden, keine Freigabe nur auf „latest“ beziehen; vorgelegte Revisionen nicht überschreiben.
-- Produktionsdateien dauerhaft verfügbar halten. Der gemeinsame Index enthält ID, Revision, Maße, Modus, Schwierigkeit, Status, Blocker und Paketort. Technische Spoilerarchive nicht ungewollt in Spieleransichten ausliefern; Produktvertrag zur Motivverdeckung beachten.
-- UTF-8-Markdown/JSON für Begleitdaten, bestehende JSON-Verträge für Matrix/Hinweise/Proof, verlustfreies Raster-PNG und zielkompatibles Reveal verwenden. Keine konkurrierenden technischen Formate erfinden.
-- Herkunft, Urheber soweit bekannt, Nutzungsgrundlage und Belege pro Quelle erfassen. Ungeklärte Rechte blockieren die Freigabe zur vorgesehenen Katalognutzung. Bei KI-Bildern Prompt, Referenzen, Datum, Oberfläche und tatsächlich bekannte Einstellungen speichern; verborgene Modellwerte als `not_exposed` führen.
-- Tatsächliche Datei-SHA-256 im Inventar erfassen; kanonische Vertrags-Hashes separat erhalten. Kein selbstreferenzieller Hash: Inventar bindet Nutz-/Nachweisdateien, Freigabe bindet dieses Inventar.
-- Jeden Versuch mit Hypothese, Parametern, Ergebnis und Annahme-/Ablehnungsgrund erfassen. Bildaufrufe, Überarbeitungsrunden, Import-/Reparaturversuche sowie aktive Menschenminuten getrennt zählen; unbekannt ist `null`, nicht `0`.
+- Zuerst `content/authoring/index.json` und die Runtime-Registry `content/registry.json` lesen. Stabile motivneutrale ID gemäß ZA-1 vergeben; ID, Revision und Pfad auf Kollision prüfen. Bei Wiederaufnahme das verzeichnete Paket am angegebenen Branch/Commit selbst laden; keinen erneuten Upload verlangen, wenn die Bytes zugänglich sind. Mehrdeutige Auswahl klären, fehlenden Binärzugriff konkret melden.
+- Ablage: `content/authoring/<puzzle_id>/<revision>/package.zip`. Daneben `handoff.json` als bytegleiche lesbare Kopie, `record.json` und gegebenenfalls die separate `approval.json`. Ein Paket pro Phasenübergabe, Freigabevorlage oder Chatwechsel; keine ZIPs nach jedem Toolaufruf. Bereits vorgelegte Revisionen niemals überschreiben. Neue Inhalte erhalten eine neue Revision; identische Bytes werden wiederverwendet.
+- `content/authoring/index.json` ist der von der KI gepflegte Arbeitsindex, **keine Runtime-Registry**. Pro ID/Revision: relativer Recordpfad. `record.json` führt Format `picross-authoring-record-v1`, ID/Revision, Phasenstatus, Paketpfad/-größe/-SHA-256, Handoffpfad/-SHA-256, Inventarhash (oder ausdrücklich noch offen), Abschlussfreigabepfad/-hash oder `null`, Maße/Modus/Schwierigkeit soweit bekannt, Blocker, nächsten erlaubten Schritt und Integrationsbeleg oder `null`. Branch/Commit der Sicherung in der Übergabe nennen; noch nicht gemergte Ablage nicht als `main` ausgeben. Paket, Handoffkopie und Index gemeinsam committen/pushen, sobald dieser Umfang beauftragt ist; Merge gemäß Entwicklungsworkflow.
+- UTF-8-Markdown/JSON, bestehende Matrix-/Proofverträge und verlustfreie Bilder verwenden. Quellenbytes, Herkunft/Nutzungsgrundlage, tatsächliche Bildprompts/-einstellungen (`not_exposed` wenn unbekannt), ausgewählte Bilder, Freigaben, Parameter und Nachweise behalten. Ungeklärte Nutzungsrechte blockieren die Katalogfreigabe. Versuchshypothese, Auswahl-/Ablehnungsgrund, Bildaufrufe, Überarbeitungsrunden, Import-/Reparaturversuche und aktive Menschenminuten getrennt erfassen; unbekannte Werte als `null` führen.
+- Vor einer Auswahl alle noch angebotenen Bildvarianten behalten. Nach der Auswahl verworfene ungebundene Bildvarianten nur in ihrer früheren Repositoryrevision belassen; im aktuellen Paket reichen Entscheidung, Hash und genauer früherer Fundort. Keine alten ZIPs in neue ZIPs einbetten. Allgemeine Projekt-/Workflowdokumente und Toolquellen über Repositorycommit/Pfad referenzieren, nicht pro Rätsel kopieren. Ausnahme: den von ZA-1 verlangten, hashgebundenen Regelwerks-Snapshot mitführen.
+- Vollständige erforderliche RP-3-/RP-5-Bündel unverändert behalten: Original-/Normalisierungsbild, Design, sämtliche manifestgebundenen Kandidaten, Eltern, Masken, Logik, Proofs und Vergleichsdateien. Auch HTML oder ein verworfener Kandidat ist Pflicht, wenn ein Manifest/Replay ihn bindet. Finale echte Rasteransicht, Bildvergleich, Schwierigkeit, Qualitätsbericht und Belege aller Freigaben/Gates behalten.
+- Ungebundene doppelte Berichte, stdout/stderr-Kopien, eingebettete Bildgalerien, temporäre Ansichten, Caches und vollständige Chat-/Repoarchive weglassen. Relevante Fehlversuche als kurze strukturierte Einträge erhalten. Dateien nicht allein anhand der Endung löschen; alle benötigten technischen **und redaktionellen** Referenzen nachverfolgen. HTML/Code aus Paketen nicht ausführen.
+- Ein neues Paket vor Inventarisierung verschlanken. Bereits versiegelte Pakete ausschließlich als deklarierte Teilkopie nach `picross-authoring-derivation-v1` ableiten: Originalhandoff/-inventar und ihre Hashes unverändert, Original-ZIP-Hash binden, tatsächlich enthaltene Dateien vollständig hashen. Weglassungen und Grund im äußeren Record dokumentieren. Keine erfundene neue Vollkopie, keine stillschweigende Neuversiegelung oder Umschreibung alter Freigaben. Nachweisbündel nicht intern kürzen. Das Original nicht destruktiv ersetzen.
+- Inventar und Handoff ohne Selbstreferenz nach ZA-1 binden; Datei-SHA-256 und kanonische Vertrags-Hashes unterscheiden. Nach Versiegelung spätere Endfreigabe und Integrationsstatus ausschließlich in separater Freigabe/Record führen; das Originalhandoff dafür nicht ändern.
+- Vor Ablage ZIP sicher öffnen, Dateimenge/Hashes und Handoffkopie prüfen. Ab `content_ready` zusätzlich ZA-1 `inspect` auf dem **geschriebenen ZIP** ausführen; fehlende Endabnahme darf als einziger entsprechender Blocker bleiben. Frühere Bildphasen sind noch kein ZA-1-Eingang: deren vorhandene Dateibindungen/Freigaben prüfen, keine Adapterzertifizierung behaupten. Für das Packen gibt es derzeit keinen eigenen CLI-Befehl; Standard-ZIP-Werkzeuge und vorhandene APIs benutzen, keinen Befehl erfinden.
+- `content/authoring/` bleibt außerhalb des Spiels. Nach Integration erzeugt ZA-1 die offline prüfbare Kopie unter `content/packages/<id>/<revision>/`; dieser Ort ist kein manuell zu befüllender Eingang. Keine zusätzlichen Voll-ZIPs dort erzeugen. Alte Produktionsstände über feste Git-Commits referenzieren; keine automatischen Löschungen, LFS-Umstellung oder Historienbereinigung. Größenwachstum messen, nicht durch Weglassen von Proofs lösen.
 
 ### 6.2 Übergabedatensatz
 
-Die KI MUSS einen aktuellen Übergabedatensatz in diesem Begleitformat führen. Er ersetzt keine Werkzeugeingabe. Platzhalter/`null` sind keine Nachweise. Alle Pfade relativ zum Paket; benötigte Dateien müssen tatsächlich mitgeliefert oder dauerhaft auflösbar sein.
+Die KI MUSS einen aktuellen Übergabedatensatz in diesem Begleitformat führen. Er ersetzt keine Werkzeugeingabe. Platzhalter/`null` sind keine Nachweise. Im Paket bleiben alle Pfade relativ; technische Prüfinputs müssen darin vollständig vorliegen. Der äußere Repositoryrecord verwendet repositoryrelative Pfade. Historische Vergleichsreferenzen dürfen auf genaue frühere Commits zeigen; sie ersetzen keinen Replayinput.
 
 ```yaml
 format: picross-authoring-handoff-v2
@@ -231,7 +239,7 @@ Gates verwenden `pending|pass|fail|blocked`. Jedes `pass` braucht einen konkrete
 
 Beim Übergang aus v1 fehlende Abschlussbildfreigabe oder Ableitungsbindung ausdrücklich als offen erfassen; niemals aus einer alten Motivfreigabe erfinden.
 
-Nach Chatwechsel zuerst Regelwerk, Übergabe, Pflichtquellen, Freigaben und referenzierte Dateien lesen; Hashes prüfen. Nur den nächsten autorisierten Schritt fortsetzen. Fehlenden Gesprächskontext nicht erfinden, gültige Freigaben nicht unnötig erneut einholen und den Toolstand nicht heimlich wechseln.
+Nach Chatwechsel zuerst den Repositoryindex auflösen, dann Regelwerk, Übergabe, Pflichtquellen, Freigaben und referenzierte Dateien lesen; Hashes prüfen. Nur den nächsten autorisierten Schritt fortsetzen. Fehlenden Gesprächskontext nicht erfinden, gültige Freigaben nicht unnötig erneut einholen und den Toolstand nicht heimlich wechseln.
 
 ## 7. Freigaben und Abschlussausgabe
 
@@ -250,18 +258,19 @@ Den Abschlussbericht auf eine kompakte Seite plus Beleglinks begrenzen. Er MUSS 
 
 Keine Ergebnis- oder Freigabefelder ohne Beleg als erfüllt ausgeben. Inhaltsfreigabe, Katalogfähigkeit und tatsächliche Integration getrennt halten. Ein unpassender oder fehlender Exportadapter darf nicht durch Umwidmung bestehender Pilotdefinitionen ersetzt werden.
 
-## 8. Regulärer Zieladapter ZA-1
+## 8. Abgenommenes Paket ins Spiel integrieren
 
-Der [ZA-1-Vertrag](../ZA1_ADAPTER.md) verarbeitet Authoring-v2 mit diesem Regelwerk
-oder unverändertem 0.4.0-Eingang. Er unterstützt 1…50 Zellen pro Achse, Rechtecke,
-Mono und höchstens vier Vordergrundfarben. Neue Runtime-IDs übernehmen die
-motivneutrale Produktions-ID. Dateistamm, Save-Slot, Motivname und numerische
-Runtime-Revision sind explizit; Paketrevision und Runtime-Revision bleiben getrennt.
-Technische Bindungen und `gate_evidence` gemäß Adaptervertrag führen, nichts aus
-Fließtext erraten.
+Voraussetzungen: tatsächlicher Integrationsauftrag, unverändertes `content_ready`-Paket mit vollständigen Inhaltsgates und gesonderte menschliche Endfreigabe nach [ZA-1](../ZA1_ADAPTER.md). Die Freigabe bindet Originalhandoff, Inventar, Endkandidat, Matrix-/Logikhash und Abschlussbild; ein `pass`-Flag genügt nicht. Die Archivablage selbst erteilt keine Endabnahme. Probespielen bleibt optional.
 
-Finale Freigabe kann getrennt vorliegen. Sie bindet Originalinventar und
-Originalhandoff, Endkandidat, Matrix-/Logikhash und Abschlussbild, dazu Akteur,
-UTC-Zeit und tatsächliche Erklärung. Das Original bleibt unverändert. Ein
-`pass`-Flag ersetzt keine Erklärung. Fehlende Endabnahme erlaubt Diagnose,
-verhindert Export/Registrierung. Eine Adapterlieferung ist keine Inhaltsabnahme.
+Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und dann:
+
+1. Paket über `content/authoring/index.json` laden; ZIP-, Handoff-, Inventar- und Freigabebindung kontrollieren. Aktuellen `main` und vorhandene Arbeit prüfen, isolierten Arbeitsbranch verwenden. Keine fremden Änderungen aufnehmen.
+2. Mit ZA-1 `inspect --input <paket> --approval <freigabe> --report <neue-datei>` frisch prüfen. Nur `technical=true` und `editorial_approved=true` erlauben den nächsten Schritt. Historische Adapterblocker im Original als historisch behandeln; aktuelle Ergebnisse im äußeren Record führen, Original nicht ändern.
+3. Produktions-ID unverändert als Runtime-ID verwenden. Motivname, kollisionsfreien Dateistamm/Save-Slot und numerische Runtime-Revision explizit wählen; bei neuen IDs gewöhnlich Revision 1. F01…F09 nicht umwidmen. ZA-1 unterstützt 1…50 pro Achse, Rechtecke, Mono und höchstens vier Vordergrundfarben; Paketrevision und Runtime-Revision bleiben getrennt.
+4. `export` mit Paket, Endfreigabe, Name, Runtime-Revision, Stem und Slot in ein neues temporäres Ziel ausführen; danach `verify-export`. Das zuerst freigegebene Abschlussbild bleibt der bytegebundene Reveal. Kein manuelles Umschreiben von Matrix, Hinweisen oder Assets.
+5. `plan --export <export> --checkout <arbeitscheckout>` ausführen, konkrete Add-/Replace-Pfade und Registryänderungen auf Scope, Kollisionen und unveränderte Bestandsinhalte prüfen. Der Integrationsauftrag erlaubt anschließend `register` mit denselben Eingängen; keine zusätzliche routinemäßige Bestätigung verlangen. Ohne Auftrag beim Plan stoppen. Kein handgeschriebener Registryeintrag als Ersatz.
+6. Tatsächliche Definition/Reveal/Nutzungshinweise, `content/registry.json`, deren Runtime-Projektion und die Prüfkopie unter `content/packages/…` kontrollieren. Identischer Wiederholungsaufruf darf `no-op` sein; Konflikte nicht überschreiben. Bei offenem Registrierungsjournal nur den dokumentierten Recoverypfad verwenden.
+7. Ausgewählte Prüfungen gemäß Projektprofil/CI-Policy ausführen und belegen; zusätzlich **dieses neue Rätsel** im isolierten regulären Spiel prüfen: Auswahl/Größe, proportionaler Raster- und Bildaufbau, eigener Teilstand und Neustart, Abschluss/Album sowie Motivverdeckung vor Abschluss. Keine echten Saves verwenden. Tatsächlichen Spielerexport/PCK-Inhalt kontrollieren: Runtimeassets/Nutzungshinweise enthalten, Produktionspakete/Proofs/Freigaben ausgeschlossen. Ein grüner allgemeiner Test ersetzt nicht den Nachweis des neuen Inhalts. Native Sichtprüfung ist keine verpflichtende menschliche Komplettlösung.
+8. Arbeitsrecord mit Registrierungs-/Prüfbelegen aktualisieren, vollständigen Diff separat selbst prüfen, committen/pushen und Draft-PR mit Head/Basis/Checks/offenen Gates erstellen. Nur mit passender ausdrücklicher Mergefreigabe nach bestandenen Pflichtprüfungen mergen; danach tatsächlichen Main-/Mergecommit prüfen. Erst dann „im Spiel auf main integriert“ melden; kein Release/Deployment ableiten.
+
+Das Endergebnis nennt Paketfundort/-hash, Freigabebeleg, Runtime-ID/Revision/Slot, Registrierung, konkrete Produktprüfung, PR/Head und gegebenenfalls Main-Mergecommit. Bei Fehlern den letzten belegten Zustand und nächsten erlaubten Schritt nennen; keine unvollständige Integration als Erfolg melden.
