@@ -1,0 +1,180 @@
+{
+  "format": "picross-codex-handoff-v1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r02",
+  "handoff_revision": "h01",
+  "source": {
+    "repository": "venomenon328/picross",
+    "commit": "12220735706b6930162f14b4a964dfddefe94bf6",
+    "package": {
+      "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/package.zip",
+      "bytes": 2655445,
+      "sha256": "850b3a2b71d7193fd92b3ba71eda54b9f5b309353d9e7e186754289a7b781dd5"
+    },
+    "handoff": {
+      "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/handoff.json",
+      "sha256": "5c46d971a5b7e0da8a059cbf870f8dc8cc8387e92bcfe220fa4ccf84068b5e52"
+    },
+    "inventory_sha256": "967aa23b3729039a64ceacdc96fd5ae19484dabd049d58594072c3b31b403368"
+  },
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 4,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8"
+  },
+  "current_state": "motif_approved",
+  "immutable_handoff_note": "Original r02 ZIP/handoff/inventory retain historical motif_review and proposed 32x48. This external handoff records actual subsequent human approval for 24x36 mono. Do not rewrite, repack or treat historical proposals as currently approved parameters.",
+  "images": {
+    "reveal": {
+      "revision": "A-r01",
+      "entry": "reveal/A-r01.png",
+      "sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89"
+    },
+    "motif": {
+      "revision": "MA-r01",
+      "entry": "motif/MA-r01.png",
+      "sha256": "21847d0e6bb804a2d3eafc5a1fc783d21166d68195cdcc11e7e9b1548c5832b0"
+    }
+  },
+  "approvals": {
+    "reveal": {
+      "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/reveal-approval.json",
+      "sha256": "be490ece290ebf5b10ada0160bdd475adb49c7ad86851f15a488475f671a1040"
+    },
+    "motif": {
+      "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/motif-approval.json",
+      "sha256": "ff4e33da34514e5d2cc0b7d1be6f1f10781d7628bc5e677befcf801d98069b6d"
+    }
+  },
+  "approved_parameters": {
+    "width": 24,
+    "height": 36,
+    "mode": "mono"
+  },
+  "superseded_recommendation": {
+    "width": 32,
+    "height": 48,
+    "state": "historical_proposal_not_approved"
+  },
+  "protected_features": [
+    "Identität",
+    "Perspektive",
+    "Proportionen",
+    "wichtige Negativflächen"
+  ],
+  "not_explicitly_approved": {
+    "exact_palette": null,
+    "crop": null
+  },
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": {
+      "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/reveal-approval.json",
+      "sha256": "be490ece290ebf5b10ada0160bdd475adb49c7ad86851f15a488475f671a1040"
+    },
+    "motif": {
+      "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/motif-approval.json",
+      "sha256": "ff4e33da34514e5d2cc0b7d1be6f1f10781d7628bc5e677befcf801d98069b6d"
+    }
+  },
+  "category_id": "sport-spiele",
+  "difficulty": null,
+  "solution_time": null,
+  "playtest": {
+    "status": "not_performed",
+    "required": false
+  },
+  "existing_artifacts": {
+    "inventory": "inventory.json",
+    "provenance": [
+      "provenance/A-r01.json",
+      "provenance/MA-r01.json"
+    ],
+    "historical_parameters": "parameters.json",
+    "report": "report.md",
+    "comparison": "comparison.md",
+    "decisions": "decisions.json",
+    "effort": "effort.json",
+    "visual_review": "visual-review.json"
+  },
+  "production_performed": {
+    "new_image_calls": 0,
+    "imports": 0,
+    "raster_candidates": 0,
+    "repairs": 0,
+    "solver_runs": 0,
+    "exports": 0
+  },
+  "authorization": "This order ends at complete file-based handoff and verified authorized archive merge. A subsequent explicit raster production order is required. No tool changes, runtime catalog, release or deployment.",
+  "next_action": "Read CODEX_HANDOFF.md; await next production order. No raster production in this step.",
+  "rule_sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d443f6e147fd896f33df6d86c8eeacd42ec50205197d383e6f9ca4b538e36d4e"
+    },
+    {
+      "path": "docs/dev-rules/WORKFLOW.md",
+      "sha256": "2e2ee24b60e40f3250a76c4729887fbda6ca9e8d8063eaf3b601621854b034f4"
+    },
+    {
+      "path": "docs/PROJECT_PROFILE.md",
+      "sha256": "eb710bc88406f8f911d88280e0ced1b35009432a8fcda44db72d2ca3f4c2a62d"
+    },
+    {
+      "path": "docs/PRODUCT_DEFINITION.md",
+      "sha256": "421f195f6c28f4f5639773383cfa2cf9aee24dfc6fc6ab79f18bff97188c597c"
+    },
+    {
+      "path": "docs/DESIGN_CONCEPT.md",
+      "sha256": "3d8602d4b748ac0f23bb0e5693d34d33eafcadd9b5510faf9795623130bf3ede"
+    },
+    {
+      "path": "docs/PUZZLE_PRODUCTION.md",
+      "sha256": "ccbd8afc75918822291ece4634923553b6499e83d9d2223366b6421d12cf4e8b"
+    },
+    {
+      "path": "tools/puzzle_production/README.md",
+      "sha256": "70e82e7e97442132253da98e42cdd7e815c18c801939f429d48c4d540e8e64b1"
+    },
+    {
+      "path": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8"
+    },
+    {
+      "path": "docs/CATEGORIES.md",
+      "sha256": "2a599a6de3c49fa0d86e8ef0ca6b14de287d5a3f221370935545874a85a589a2"
+    },
+    {
+      "path": "docs/ZA1_ADAPTER.md",
+      "sha256": "baa11957a9dd84fd9dbcf04f5c513aed41983a38c2f00c5c5113724d51a1ade4"
+    },
+    {
+      "path": "docs/CI_POLICY.md",
+      "sha256": "bc7ff200504d144e6b34c5ac9d9be80a486b53ba6dacc168506c457bac14a5ed"
+    },
+    {
+      "path": "docs/DEVELOPMENT_ARCHIVE.md",
+      "sha256": "65ba76505e46eb6da3c330fe4d11fd93323540ccde6368d58659503ed11579a0"
+    },
+    {
+      "path": "content/categories.json",
+      "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70"
+    },
+    {
+      "path": "content/registry.json",
+      "sha256": "9b8696c9539fb9fcd4c53da0a3d4979f59c5bae91e4f8635d9fbd7cb47b5520c"
+    }
+  ]
+}
