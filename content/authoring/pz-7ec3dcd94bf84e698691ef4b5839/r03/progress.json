@@ -17,11 +17,35 @@
       "actor": "assistant",
       "state": "motif_review",
       "action": "MA-r01 derived natively from exact A-r02; recommended parameters not yet approved; no raster produced."
+    },
+    {
+      "actor": "user",
+      "timestamp_utc": "2026-10-12T17:45:14Z",
+      "type": "motif_approval",
+      "evidence": {
+        "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/motif-approval.json",
+        "sha256": "dace99a2e57ef7b7427628e165da013f396c7fde142caac4ee878da0813fe485"
+      },
+      "approved_parameters": {
+        "width": 24,
+        "height": 24,
+        "mode": "color"
+      }
+    },
+    {
+      "actor": "assistant",
+      "state": "motif_approved",
+      "action": "Both actual PNGs verified against immutable r03 ZIP; separate approval and Codex handoff added externally. No repack, no image generation or raster production."
     }
   ],
   "repository_delivery": {
     "branch": "chore/pea-motif-r03",
     "source_commit": "660ea63ec90f0e6b608eb11ed036106f012cbc87",
     "status_source": "PR for chore/pea-motif-r03; final review/CI/merge kept outside sealed ZIP."
+  },
+  "handoff_delivery": {
+    "branch": "chore/pea-motif-approval-h01",
+    "source_commit": "a7ae17bfadd9ba916a6db17641c168de06b6a103",
+    "status_source": "PR for chore/pea-motif-approval-h01"
   }
 }

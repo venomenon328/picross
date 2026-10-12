@@ -3,7 +3,7 @@
   "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
   "revision": "r03",
   "category_id": "gemuese-pilze-kraeuter",
-  "state": "motif_review",
+  "state": "motif_approved",
   "package": {
     "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/package.zip",
     "bytes": 2613224,
@@ -15,8 +15,8 @@
   },
   "inventory_sha256": "97e52a7b6e2225b0783bc687df9428e37095c108eadec6cc470bf9ec2937853e",
   "approval": null,
-  "width": null,
-  "height": null,
+  "width": 24,
+  "height": 24,
   "mode": "color",
   "difficulty": null,
   "proposed_dimensions": [
@@ -24,10 +24,8 @@
     24
   ],
   "proposed_foreground_colors": 3,
-  "blockers": [
-    "Separate explicit human approval of MA-r01 and proposed parameter corridor required before any raster production."
-  ],
-  "next_action": "Present A-r02 and MA-r01 together; await explicit motif approval for proposed 24x24 three-color corridor.",
+  "blockers": [],
+  "next_action": "Read CODEX_HANDOFF.md; await next production order. Do not produce a raster in this step.",
   "integration": null,
   "previous_revision": "r02",
   "reveal_revision": "A-r02",
@@ -42,6 +40,28 @@
   "archive_review": {
     "source_commit": "660ea63ec90f0e6b608eb11ed036106f012cbc87",
     "state": "package_validation_passed",
-    "delivery_evidence": "Final head/review/CI/merge evidence in PR for branch chore/pea-motif-r03."
-  }
+    "delivery_evidence": "Final head/review/CI/merge evidence in PR for branch chore/pea-motif-r03.",
+    "approval_update": {
+      "source_commit": "a7ae17bfadd9ba916a6db17641c168de06b6a103",
+      "delivery_evidence": "PR for chore/pea-motif-approval-h01; original r03 package delivery remains PR #85."
+    }
+  },
+  "motif_approval": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/motif-approval.json",
+    "sha256": "dace99a2e57ef7b7427628e165da013f396c7fde142caac4ee878da0813fe485"
+  },
+  "codex_handoff": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/codex-handoff.json",
+    "sha256": "13832ad2296966a11a3662eab0455612c68dea3dfb9dbcd0e89caa144a7ea1cb"
+  },
+  "codex_instructions": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/CODEX_HANDOFF.md",
+    "sha256": "629cfffda2196fae60e8c56d690c50352377cf156d3fe4ecd58357cc23827f05"
+  },
+  "approved_parameters": {
+    "width": 24,
+    "height": 24,
+    "mode": "color"
+  },
+  "execution_hold": "No raster production in this handoff-only order; await subsequent production order."
 }

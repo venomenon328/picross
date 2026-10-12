@@ -1,0 +1,61 @@
+{
+  "source_commit": "a7ae17bfadd9ba916a6db17641c168de06b6a103",
+  "package_sha256": "6f248d3bcfe68441bbb9b92ae14db6f7b7f5cd74d72012e5b4049910bba9bf42",
+  "repository_package_blob": "9033cc0100ff92767217b708ecff07cdde6342a7",
+  "payload_count": 12,
+  "file_count": 14,
+  "zip_crc": "pass",
+  "safe_paths": "pass",
+  "exact_file_set": "pass",
+  "inventory_sizes_and_hashes": "pass",
+  "handoff_copy": "byte-identical",
+  "reveal_approval": "Original user declaration and file hash verified",
+  "motif_approval": "Actual 17:45:14 UTC declaration binds both exact image hashes and 24x24 color",
+  "images": {
+    "count": 2,
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "decode": "pass"
+  },
+  "no_repack": true,
+  "index": "Existing r03 index entry resolves updated record; unchanged",
+  "ci_plan": {
+    "format": "picross-ci-selection-v1",
+    "content_only": true,
+    "selected": {
+      "docs": true,
+      "product": false,
+      "production": false,
+      "preflight": false,
+      "integration": false,
+      "pilots": false,
+      "visual": false,
+      "perf_b": false
+    },
+    "reasons": {
+      "docs": [
+        "documents, tool contracts and full diff"
+      ],
+      "product": [],
+      "production": [],
+      "preflight": [],
+      "integration": [],
+      "pilots": [],
+      "visual": [],
+      "perf_b": []
+    },
+    "changed_paths": [
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/CODEX_HANDOFF.md",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/codex-handoff.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/handoff-validation.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/motif-approval.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/progress.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/record.json"
+    ],
+    "requested_scope": "auto"
+  },
+  "production_checks": "Not executed: no raster production authorized in this step."
+}
