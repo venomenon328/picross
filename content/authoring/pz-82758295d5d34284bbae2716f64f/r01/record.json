@@ -28,11 +28,13 @@
   "archive_review": {
     "source_commit": "ee6179f6f7b6bc53f6953e2220eeeb01f060ea11",
     "state": "package_validation_passed",
-    "image_approval": "pending"
+    "image_approval": "pending",
+    "delivery_evidence": "Final head, selected CI and separate self-review recorded in PR #93; package and readable original handoff remain sealed."
   },
   "repository_delivery": {
     "branch": "content/chess-knight-reveal-r01",
-    "pr": null
+    "pr": 93,
+    "evidence": "https://github.com/venomenon328/picross/pull/93"
   },
   "validation": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/validation.json",
