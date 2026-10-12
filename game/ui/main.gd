@@ -496,6 +496,7 @@ func _repair_selected() -> void:
 	if not session_indices.has(id): return
 	var index: int = int(session_indices[id])
 	var target: Session = sessions[index]
+	if target != session and not _flush_current(): return
 	var error: String = store.discard_invalid_backup(target.definition) if slot_status[index] == "backup_invalid" else store.repair_from_backup(target.definition)
 	if error.is_empty():
 		slot_status[index] = "loaded"

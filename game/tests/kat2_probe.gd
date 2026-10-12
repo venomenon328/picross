@@ -298,11 +298,16 @@ func large() -> void:
 	check(app.album.summary.text == "150 von 300 gelöst" and app.choices.size() == 24, "valid saved completions counted across all pages")
 	await shot("first-page")
 	var before: Dictionary = save_bytes()
+	var released: Array[WeakRef] = []
+	for picture: Control in app.album.reveals:
+		if picture.artwork != null: released.append(weakref(picture.artwork))
 	var started: int = Time.get_ticks_usec()
 	click(app.album.next_button)
 	await frames()
 	timings["page_ms"] = (Time.get_ticks_usec() - started) / 1000.0
 	check(app.album.page_index == 1 and app.album.visible_ids[0] == "pz-test-kat2-024", "second page canonical stable ID")
+	for reference: WeakRef in released:
+		check(reference.get_ref() == null, "old page reveal texture actually released")
 	app.album.scroll_vertical = 150
 	await frames()
 	var position: int = app.album.scroll_vertical
@@ -312,8 +317,9 @@ func large() -> void:
 	check(app.album.page_index == 1 and app.album.scroll_vertical == position, "info return preserves page and scroll")
 	check(save_bytes() == before, "paging and info do not modify saves")
 	await shot("second-page")
-	app.album.scroll_vertical = 0
+	app.album.scroll_vertical = 64
 	await frames()
+	position = app.album.scroll_vertical
 	var id: String = app.album.visible_ids[1]
 	click(app.choices[1])
 	await frames()
@@ -321,7 +327,7 @@ func large() -> void:
 	click_at(app.board.global_position + app.board.view.cell_rect(Vector2i.ZERO).get_center())
 	click(app.album_button)
 	await frames()
-	check(app.album.page_index == 1 and app.album.notes[1].text == "Begonnen", "later page resume return")
+	check(app.album.page_index == 1 and app.album.scroll_vertical == position and app.album.notes[1].text == "Begonnen", "later page resume return preserves scroll")
 	var foreign: Dictionary = save_bytes("kat2_025")
 	click(app.album.reset_buttons[id])
 	await frames()

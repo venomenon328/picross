@@ -17,9 +17,6 @@ func _ready() -> void:
 	super._ready()
 	SaveStore.test_root_override = previous_override
 	get_window().title = "picross · ZS-1 · isolierte Gestaltungsprobe"
-	for item: Node in album_content.get_children():
-		if item is Label and item.text == "Neun Blätter zum Entdecken":
-			item.text = "Drei Blätter für den Gestaltungsvergleich"
 	font_button = _text_button("", cycle_font)
 	# Reuses the title's free right-hand region, above every working surface.
 	page.add_child(font_button)
