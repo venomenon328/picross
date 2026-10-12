@@ -101,3 +101,32 @@ Vor Merge: alle ausgewählten aktuellen Checks erfolgreich, vollständiger Diff
 und getrennter Selbstreview, danach unabhängiges technisches Review einschließlich
 Sichtbelegen. Dieses unabhängige Review bleibt ein eigenes offenes Gate. Kein
 verpflichtendes menschliches Probespielen; keine Merge-/Releasefreigabe.
+
+## Nacharbeit N1 zu R1/B-01
+
+[R1](https://github.com/venomenon328/picross/pull/75#pullrequestreview-5485612196)
+und [N1](https://github.com/venomenon328/picross/pull/75#issuecomment-6115466029)
+binden die gezielte Slotkorrektur. Export-Revalidierung und Validierung neuer
+Registry-Einträge wenden zusätzlich zum unveränderten STEM-Muster dieselbe
+Windows-Pfadprüfung wie der Erstexport auf `save_slot + ".json"` an.
+Historische Reservierungen bleiben unverändert.
+
+Vier ergänzende Tests in `test_target_adapter.py` prüfen:
+
+- ausschließlich im Exportmanifest manipulierte Slots `con`, `nul`, `prn`,
+  `aux`, `com1`, `lpt9`: API-Revalidierung, Plan und Registrierung lehnen ab;
+  alle drei echten CLI-Aufrufe für `con` liefern `blocked` und Exit 2;
+- bytegleiche Eingangs-/Checkoutdateien und identische Verzeichnismengen nach
+  jeder Ablehnung, einschließlich fehlendem Paket-/Assetpfad und Journal;
+- legale ähnliche Slots `con_test` und `com10`: Export, Revalidierung, Plan,
+  Registrierung, vollständiger Checkout-Replay und wiederholter No-op bestehen;
+- manipulierte bereits registrierte künstliche Einträge: In-Memory-Validierung,
+  materialisierter Checkout mit konsistenter Runtime-Projektion sowie ein
+  manipuliertes Recoveryjournal lehnen vor Dateiänderungen ab.
+
+Lokaler Prüfweg: isolierte `.venv/za1` mit Python 3.13.14 / Pillow 12.3.0,
+16 Adaptertests erfolgreich; 122 Tooltests erfolgreich mit einem bestehenden
+Windows-Symlink-Skip. Der Dokumentvalidator prüft den isolierten versionierten
+Snapshot, ohne fremde unversionierte Ablagen einzubeziehen. Vollständige aktuelle
+CI, Commit-/Basis-/Test-Merge-Bindung und der aktualisierte getrennte Selbstreview
+werden im PR nachgewiesen. Unabhängige Nachprüfung R2 bleibt vor Merge offen.

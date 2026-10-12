@@ -1,8 +1,11 @@
 """ZA-1 contracts: fresh reconstruction, approval selection and transactional adoption."""
 import copy
+import json
 from pathlib import Path
 import shutil
 import stat
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -45,6 +48,91 @@ class TargetTests(unittest.TestCase):
 
     def reseal(self, p):
         seal(p, load_json(p / "handoff.json"))
+
+    def snapshot(self, root):
+        return {p.relative_to(root).as_posix(): p.read_bytes() if p.is_file() else None
+                for p in root.rglob("*")}
+
+    def test_manifest_reserved_save_slots_block_api_and_cli_without_writes(self):
+        out = self.export(self.package())
+        original = load_json(out / "manifest.json")
+        self.assertTrue(verify_export(out)[1]["catalog_ready"])
+        checkout = isolated_checkout(self.root / "checkout")
+        before_checkout = self.snapshot(checkout)
+        for slot in ("con", "nul", "prn", "aux", "com1", "lpt9"):
+            changed = copy.deepcopy(original)
+            changed["save_slot"] = slot  # Only this unbound manifest field changes.
+            write_json(out / "manifest.json", changed)
+            before_export = self.snapshot(out)
+            for command in ("verify-export", "plan", "register"):
+                with self.subTest(slot=slot, command=command):
+                    with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
+                        if command == "verify-export":
+                            verify_export(out)
+                        else:
+                            registration(out, checkout, apply=command == "register")
+                    if slot == "con":
+                        args = [sys.executable, "-B", "-m", "tools.puzzle_production.target_adapter",
+                                command, "--export", str(out)]
+                        if command != "verify-export":
+                            args += ["--checkout", str(checkout)]
+                        result = subprocess.run(args, cwd=ROOT, capture_output=True, text=True, timeout=60)
+                        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                        self.assertEqual(json.loads(result.stdout), {
+                            "status": "blocked", "catalog_ready": False, "registered": False,
+                            "error": "Unsafe package path"})
+                    self.assertEqual(self.snapshot(checkout), before_checkout)
+                    self.assertEqual(self.snapshot(out), before_export)
+
+    def test_similar_legal_save_slots_export_register_and_repeat(self):
+        p = self.package()
+        for slot in ("con_test", "com10"):
+            with self.subTest(slot=slot):
+                out = self.export(p, slot=slot, dest="export-" + slot)
+                self.assertEqual(verify_export(out)[0]["save_slot"], slot)
+                checkout = isolated_checkout(self.root / ("checkout-" + slot))
+                self.assertEqual(registration(out, checkout)["status"], "planned")
+                self.assertEqual(registration(out, checkout, apply=True)["status"], "registered")
+                self.assertEqual(check_checkout(checkout, replay=True)["entries"][-1]["save_slot"], slot)
+                self.assertEqual(registration(out, checkout, apply=True)["status"], "no-op")
+
+    def test_registered_reserved_save_slots_rejected_without_checkout_changes(self):
+        out = self.export(self.package())
+        checkout = isolated_checkout(self.root / "checkout")
+        registration(out, checkout, apply=True)
+        original = check_checkout(checkout, replay=True)
+        for slot in ("con", "nul", "prn", "aux", "com1", "lpt9"):
+            with self.subTest(slot=slot):
+                changed = copy.deepcopy(original)
+                changed["entries"][-1]["save_slot"] = slot
+                with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
+                    validate(changed)
+                write_json(checkout / "content/registry.json", changed)
+                # Keep projection consistent, so stale runtime data cannot mask B-01.
+                write_json(checkout / "game/data/registry.json", projection(changed))
+                before = self.snapshot(checkout)
+                for replay in (False, True):
+                    with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
+                        check_checkout(checkout, replay=replay)
+                    self.assertEqual(self.snapshot(checkout), before)
+
+    def test_recovery_rejects_reserved_journal_slot_before_mutation(self):
+        from tools.puzzle_production.content_registry import recover, REGISTRY, RUNTIME
+        out = self.export(self.package())
+        checkout = isolated_checkout(self.root / "checkout")
+        with self.assertRaises(InterruptedError):
+            registration(out, checkout, apply=True, fail_step="crash-index")
+        lock = checkout / "content/.registration-pending.json"
+        journal = load_json(lock)
+        changed = json.loads(journal["new"][REGISTRY])
+        changed["entries"][-1]["save_slot"] = "con"
+        journal["new"][REGISTRY] = json.dumps(changed)
+        journal["new"][RUNTIME] = json.dumps(projection(changed))
+        write_json(lock, journal)
+        before = self.snapshot(checkout)
+        with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
+            recover(checkout)
+        self.assertEqual(self.snapshot(checkout), before)
 
     def test_four_origins_modes_and_orientations_export_and_recheck(self):
         for i, name in enumerate(("direct-mono", "direct-color", "repair-mono", "repair-color")):

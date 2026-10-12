@@ -304,6 +304,7 @@ def verify_export(directory):
         require(approval is not None and m["approval_sha256"] == approval["sha256"], "Missing final export approval")
         require(m["stem"] + Path(m["reveal"]).suffix == Path(m["reveal"]).name and STEM.fullmatch(m["stem"]) and
                 STEM.fullmatch(m["save_slot"]), "Invalid export mapping")
+        relative(m["save_slot"]+".json")
         require(m["definition"] == "runtime/data/content/"+m["stem"]+".json" and
                 m["reveal"] == "runtime/art/content/"+m["stem"]+Path(package.handoff["reveal"]["file"]).suffix,
                 "Invalid runtime export paths")

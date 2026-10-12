@@ -60,6 +60,7 @@ def validate(registry):
                     "visible": n in (1, 2, 4, 6, 8, 9), "production": None}, "Historical reservation changed")
         else:
             require(ID.fullmatch(e["id"]) and e["key"] == e["id"] and STEM.fullmatch(e["save_slot"]), "Invalid new registry ID/slot")
+            relative(e["save_slot"]+".json")
             require(e["definition"].startswith("data/content/") and e["definition"].endswith(".json") and
                     e["reveal"].startswith("art/content/") and Path(e["reveal"]).suffix in (".png", ".svg"), "Invalid content resource path")
             p = exact_keys(e["production"], {"package", "package_sha256", "revision", "width", "height", "mode", "difficulty",
