@@ -25,6 +25,14 @@
       "repairs": 0,
       "result": "Six reconstructed independently checked incomplete fixpoints; material protected-feature loss, no eligible final candidate.",
       "evidence": "package.zip!report.md"
+    },
+    {
+      "actor": "user (Tobias)",
+      "timestamp_utc": "2026-10-12T22:54:08Z",
+      "type": "new_motif_correction_order",
+      "statement": "Korrigiere die Motivvorlage MA-r01 auf Grundlage des freigegebenen Abschlussbilds A-r01.\nÄnderung: Die Gesichtsdetails müssen nicht erhalten bleiben. Das abstrahierte Motiv soll insbesondere die Silhouette darstellen.\nRätselmodus (Abschlussbild immer farbig): monochrom.\nRätsel-ID: pz-82758295d5d34284bbae2716f64f\nVerändere nicht das Abschlussbild, um die Abstraktion passend zu machen. Speichere eine neue Motivrevision und zeige sie zusammen mit der Referenz zur erneuten Motivfreigabe. Keine Rasterproduktion vor dieser Freigabe.",
+      "next_revision": "r04",
+      "historical_result": "Original blocked r03 package/ZIP/proof bindings unchanged; no new raster run."
     }
   ]
 }
