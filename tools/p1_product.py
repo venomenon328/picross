@@ -435,6 +435,7 @@ def main(argv: list[str] | None = None) -> int:
             phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
             evidence.scope_done("core")
             vs2_future = None
+            vs2_result = None
             if args.visual:
                 # Independent current coverage overlaps the long process/pilot
                 # checks. Its project, user profile, slot root, environment and
@@ -477,6 +478,10 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_start("integration")
                 evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
                 selected += [output / "integration/summary.json"]
+                # Native popup/dialog tests must own the desktop: a concurrent
+                # capture window can close their popup on focus loss on Windows.
+                if args.visual:
+                    vs2_result = python_phase("current-vs2-complete", vs2_future.result)
                 evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
                 selected += kat2_files
                 evidence.scope_done("integration")
@@ -493,7 +498,9 @@ def main(argv: list[str] | None = None) -> int:
                 # profile/project/environment and no concurrent evidence writes.
                 if args.pilots:
                     selected += run_pilot_visual(output, workspace, project, engine, environment, phase, host)
-                evidence.report["visual"], visual_files = python_phase("current-vs2-complete", vs2_future.result)
+                if vs2_result is None:
+                    vs2_result = python_phase("current-vs2-complete", vs2_future.result)
+                evidence.report["visual"], visual_files = vs2_result
                 evidence.report["visual"]["pilot_native"] = "success" if args.pilots else "not selected; --no-pilots"
                 selected += visual_files
                 evidence.scope_done("visual")

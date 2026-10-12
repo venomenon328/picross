@@ -154,6 +154,8 @@ func run() -> void:
 	elif mode == "adapter":
 		var id: String = "pz-test-direct-mono"
 		check(app.album.items.has(id), "registered KAT1 adapter content appears in All")
+		app.album.ensure_control_visible(app.choices[-1])
+		await shot("growth-all-long-name")
 		await choose("test-only-kat2-extra")
 		check(app.album.visible_ids == [id], "new data category and adapter puzzle appear without UI changes")
 		await shot("category-growth")
@@ -266,11 +268,18 @@ func regular() -> void:
 	await new_app()
 	await choose("voegel")
 	check(app.album.notes[0].text.contains("Backup geladen") and app.album.repair_buttons.has("F-09"), "validated backup marked with repair")
+	foreign = save_bytes("f09")
 	click(app.album.repair_buttons["F-09"])
 	await frames()
 	click(app.repair_dialog.get_ok_button())
 	await frames()
 	check(app.store.load_slot(app.sessions[5].definition).status == "loaded", "card repair targets recovered slot")
+	check(save_bytes("f09") == foreign, "card repair preserves foreign slot bytes")
+	click(app.album.reset_buttons["F-09"])
+	await frames()
+	click(app.reset_dialog.get_ok_button())
+	await frames()
+	check(app.album.notes[0].text == "Neu" and app.album.summary.text == "0 von 1 gelöst", "reset of earned slot clears validated completion count")
 	for suffix: String in [".json", ".bak"]:
 		broken = FileAccess.open(app.store.path_for("f09", suffix), FileAccess.WRITE)
 		broken.store_string("{bad")
@@ -343,6 +352,15 @@ func large() -> void:
 	check(app.album.filtered_ids.size() == 250 and app.choices.size() == 24, "uneven category keeps pagination bound")
 	await choose("obst-nuesse")
 	check(app.choices.is_empty() and app.album.summary.text == "0 von 0 gelöst", "large catalog includes empty categories")
+	app.store.fail_step = "after_temp"
+	app.board.eraser = not app.board.eraser
+	app.show_information()
+	check(app.album.visible and app.album.feedback.visible, "blocked flush remains visible with active slot outside filter")
+	app.store.fail_step = ""
+	app.show_information()
+	app.return_to_work()
+	await frames()
+	check(app.album.visible and not app.album.feedback.visible, "catalog error feedback clears after successful retry")
 	await choose("")
 	for index: int in range(12):
 		app.album.turn_page(1)

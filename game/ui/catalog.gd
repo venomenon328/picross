@@ -138,7 +138,7 @@ func suspend() -> void:
 
 func show_error(id: String, message: String) -> void:
 	var index: int = visible_ids.find(id)
-	if index >= 0: notes[index].text = "Speicherfehler: " + message
+	if index >= 0: notes[index].text = "Speicherfehler"
 	# A blocked quit/switch remains visible even if the active slot is filtered out.
 	feedback.text = (items[id].neutral_title() + ": " if items.has(id) else "") + "Speicherfehler: " + message
 	feedback.show()
@@ -217,6 +217,7 @@ func _add_card(id: String) -> void:
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side: String in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 12)
 	card.add_child(margin)
+	margin.minimum_size_changed.connect(func() -> void: card.custom_minimum_size.y = maxf(240 * ui_scale, margin.get_combined_minimum_size().y))
 	var content: VBoxContainer = VBoxContainer.new()
 	margin.add_child(content)
 	var caption: Label = _label(caption_text, 18)
@@ -273,7 +274,7 @@ func _add_card(id: String) -> void:
 func _layout_cards() -> void:
 	if grid == null: return
 	grid.columns = maxi(1, mini(4, floori((size.x - 20) / (270 * ui_scale))))
-	for card: Button in choices: card.custom_minimum_size.y = 240 * ui_scale
+	for card: Button in choices: card.custom_minimum_size.y = maxf(240 * ui_scale, card.get_child(0).get_combined_minimum_size().y)
 	for node: Node in find_children("*", "Label", true, false):
 		if node.has_meta("base_font"): node.add_theme_font_size_override("font_size", roundi(float(node.get_meta("base_font")) * ui_scale))
 	for node: Node in find_children("*", "Button", true, false): node.custom_minimum_size.y = maxf(node.custom_minimum_size.y, 44 * ui_scale)

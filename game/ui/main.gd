@@ -1,6 +1,6 @@
 extends Control
 const Registry = preload("res://model/content_registry.gd")
-const Catalog = preload("res://ui/catalog.gd")
+const CatalogView = preload("res://ui/catalog.gd")
 const Definition = preload("res://model/definition.gd")
 const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
@@ -42,7 +42,7 @@ var session: Session
 var board: Board
 var mini: Miniature
 var reveal_view: Reveal
-var album: Catalog
+var album: CatalogView
 var catalog_error: String = ""
 var session_indices: Dictionary = {}
 var reset_id: String = ""
@@ -188,7 +188,7 @@ func _build() -> void:
 	page.add_child(status_label)
 	stress_label = label("UI-Testdatensatz – Rätselqualität nicht abgenommen", 14)
 	page.add_child(stress_label)
-	album = Catalog.new()
+	album = CatalogView.new()
 	page.add_child(album)
 	album.opened.connect(select_by_id)
 	album.reset_requested.connect(_ask_reset_id)

@@ -66,7 +66,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
             isolated_checkout(checkout)
             categories_path = checkout / "content/categories.json"
             categories = json.loads(categories_path.read_text(encoding="utf-8"))
-            categories["categories"].append(dict(id="test-only-kat2-extra", name="Zusätzliche Testkategorie", order=50))
+            categories["categories"].append(dict(id="test-only-kat2-extra", name="Zusätzliche Testkategorie mit einer besonders langen deutschen Bezeichnung für die datenbasierte Katalogdarstellung", order=50))
             write_json(categories_path, categories)
             # Regenerate the empty-of-new-content projection before normal registration.
             from tools.puzzle_production.content_registry import projection, registration

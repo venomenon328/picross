@@ -19,8 +19,8 @@ auch ohne Session bleiben Einstellungen/Info und Beenden erreichbar.
 Pro Seite entstehen höchstens 24 Karten. Seitenwechsel geben alte Controls und
 Revealreferenzen synchron frei; beim Öffnen eines Blatts werden die verborgenen
 Katalog-Reveals freigegeben. Die Abschlussansicht gibt ihre Referenz vor Rückkehr
-frei. Es gibt keine zweite globale Auswahlvorschau. Namen/Bilder kommen erst
-nach gültigem Abschluss aus `Session.reveal()`; eigene ungelöste Füllungen werden
+frei. Es gibt keine zweite globale Auswahlvorschau. Motivnamen folgen dem gültigen
+Sessionabschluss, Bilder kommen ausschließlich aus `Session.reveal()`; eigene ungelöste Füllungen werden
 unverändert mit der bestehenden passiven Miniatur dargestellt. X bleibt gemäß
 dem bestehenden VS2-/Zellrenderingvertrag in der Füllminiatur neutral.
 
