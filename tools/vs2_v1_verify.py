@@ -116,7 +116,7 @@ def verify(matrix, focused):
     # Apply failures to a REAL generous-case report, not a hand-built passing fixture.
     source = next(r for r in focused['records'] if r['id']=='F-01' and r['ui_scale']==1 and not r['overview'] and not r['recovery'])
     mutations = {
-        'old pitch26': lambda r: r.update(row_pitch=26),
+        'inconsistent row pitch': lambda r: r.update(row_pitch=r['row_pitch']+2),
         'smaller font': lambda r: r.update(font_px=r['font_px']-1),
         'old left placement': lambda r: r.update(translation=[0,0]),
         'empty reserve padding': lambda r: r.update(reserve=[r['max_hints'][0]+1,r['reserve'][1]]),

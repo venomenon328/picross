@@ -32,6 +32,7 @@ static func ink(text: String, fs: int) -> Rect2:
 
 static func vertical(fs: int) -> Vector2:
 	if not vertical_cache.has(fs):
+		if vertical_cache.size() >= 512: vertical_cache.clear()
 		var bounds: Vector2 = Vector2(INF, -INF)
 		for symbol: String in "0123456789…–":
 			var box: Rect2 = ink(symbol, fs)
