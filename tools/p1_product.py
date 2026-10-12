@@ -28,6 +28,7 @@ import p1_current_visual
 import vs2_delivery
 import perf_b_resources
 import za1_product
+import kat2_product
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 from check_f01 import DATA, verify
 from check_f02 import verify as verify_f02
@@ -476,6 +477,8 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_start("integration")
                 evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
                 selected += [output / "integration/summary.json"]
+                evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
+                selected += kat2_files
                 evidence.scope_done("integration")
             if args.pilots:
                 evidence.scope_start("pilots")
@@ -521,7 +524,10 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "za1")])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2")])
+            required_kat2 = {str(p.relative_to(output)) for p in selected if p.parent.name == "kat2"}
+            if not required_kat2 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
+                raise toolchain.PreflightError("Required KAT-2 evidence missing from bounded delivery")
             required_za1 = {str(p.relative_to(output)) for p in selected if p.parent.name == "za1"}
             if not required_za1 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
                 raise toolchain.PreflightError("Required ZA-1 native evidence missing from bounded delivery")

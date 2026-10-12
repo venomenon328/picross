@@ -1,0 +1,87 @@
+# KAT-2: Kategorienkatalog und Prüfzuordnung
+
+Implementierung zu [#79](https://github.com/venomenon328/picross/issues/79),
+auf `main@ca22f53caaacbae6883a6a2496d0d3e6e9381408` nach KAT-1/PR #80.
+PR #77 ist bei Arbeitsbeginn offen/Draft; Knoblauch ist nicht integriert.
+Die sechs bisherigen sichtbaren Rätsel und drei unsichtbaren Reservierungen
+bleiben unverändert. Maßgeblich sind [KAT-1](CATEGORIES.md), [P1](PROTOTYPE_P1.md)
+und die aktuelle [CI-Policy](CI_POLICY.md).
+
+## Umsetzung
+
+`game/ui/catalog.gd` stellt ausschließlich validierte Registry-Sessions dar.
+Kategorie, Seite, Scrollposition und ausgewählte Registry-ID gelten für die
+laufende Sitzung. Ein neuer Prozess beginnt bei „Alle Rätsel“, Seite 1.
+Kategorienamen, Reihenfolge und Zuordnungen stammen aus der KAT-1-Projektion.
+Gültiger Leerbestand, leere Kategorie und Ladefehler sind getrennte UI-Zustände;
+auch ohne Session bleiben Einstellungen/Info und Beenden erreichbar.
+
+Pro Seite entstehen höchstens 24 Karten. Seitenwechsel geben alte Controls und
+Revealreferenzen synchron frei; beim Öffnen eines Blatts werden die verborgenen
+Katalog-Reveals freigegeben. Die Abschlussansicht gibt ihre Referenz vor Rückkehr
+frei. Es gibt keine zweite globale Auswahlvorschau. Namen/Bilder kommen erst
+nach gültigem Abschluss aus `Session.reveal()`; eigene ungelöste Füllungen werden
+unverändert mit der bestehenden passiven Miniatur dargestellt. X bleibt gemäß
+dem bestehenden VS2-/Zellrenderingvertrag in der Füllminiatur neutral.
+
+Stabile Blattnummer, Größe, Mono/Farbe und Status stehen auf der Karte, im
+Gesamtangebot zusätzlich die Kategorie. „Begonnen“ berücksichtigt Markierungen
+und bestätigte History einschließlich Redo; ein leerer Save allein genügt nicht.
+Ungültige Saves sperren das Öffnen und bleiben zurücksetzbar; gültige Backups
+zeigen die bisherige bewusste Übernahme beziehungsweise Erneuerung.
+
+Öffnen, Reset und Reparatur lösen über Registry-ID zur Session auf. Dialoge binden
+die Ziel-ID schon beim Öffnen. Der bestehende Flush blockiert unsichere Wechsel;
+Kategorien-/Seitenwechsel selbst schreiben keine Saves. Definitionen, Slotnamen,
+Revisionen, Schema 1 und die vollständige Savevalidierung bleiben unverändert.
+Registry-Einzellookups kopieren nur den gefundenen Eintrag statt jedes Mal den
+gesamten Bestand; die Rückgabe bleibt vom validierten Cache getrennt.
+
+## Automatisierte und native Nachweise
+
+| Kriterium | Prüfweg und Orakel |
+| --- | --- |
+| A01 | Reguläre Hauptszene, sechs kanonische IDs, 20 Datenkategorien, Start ohne Werkbank; Export-Smoke `KAT2_CATALOG_START_OK` |
+| A02 | Temporärer KAT-1-Adapterexport und echte Registrierung eines künstlichen Rechteckrätsels plus zusätzlicher Kategorie; All und Filter ohne UIänderung |
+| A03 | Neue, leere gespeicherte, teilweise bearbeitete, nur Redo-, gelöste, zurückgesetzte, beschädigte und rekonstruierte Zustände; Name/Reveal/Count getrennt geprüft |
+| A04 | Gefiltertes F09 und synthetische ID 025 auf Seite 2 per Pointer öffnen/bearbeiten/zurücksetzen; fremde Slotbytes vergleichen; Dialog-ID bleibt bei Seitenänderung erhalten |
+| A05 | Hauptszene mit echten Viewport-Pointerereignissen und nativen Dialogen; Schreibfehler blockiert Rückkehr, Retry funktioniert; zusätzlicher Prozess liest Neu/Redo/Gelöst und setzt Redo fort |
+| A06 | Eigene Prozesse für gültigen leeren und ungültigen Katalog; 300 synthetische Einträge, 20 Kategorien, Verteilung 250/50/18 leer, 150 gültige Abschlusssaves; Seiten, Rückkehr, Zeiten und Ressourcenbegrenzung |
+| A07 | Native Framebuffer 1920×1080/UI100+125, 1280×720/UI125, 2560×1440/UI100; normale/gefilterte/leere/paginierte Zustände, langer Kategorienname, vor/nach Abschluss; Windows-Export/-Start und echte PCK-Prüfung |
+
+`game/tests/kat2_cases.gd` ergänzt die Kernsuite um Status-/Spoilerfälle.
+`game/tests/kat2_probe.gd` führt die native Route durch `main.tscn` aus;
+`tools/kat2_product.py` erzeugt ausschließlich isolierte `test_only`-Projekte und
+Saveprofile. Die 300 Runtimekopien dienen Last und Navigation; keine 300 echten
+Produktionen oder Solverläufe. Das zusätzliche Adapterpaket besitzt ausschließlich
+eine künstliche Testfreigabe. Nichts davon wird ins reguläre Spielerpaket kopiert.
+
+`--integration` führt KAT-2 zusammen mit der bisherigen 500er-Route aus.
+Save-/Recovery-, Pilot-, aktuelle Pixel-/PERF-B-, Ressourcen-, Export- und
+PCK-Prüfungen bleiben aktiv. Änderungen am Produktharness wählen im vollständigen
+Diff alle aktuellen Bereiche einschließlich Fachjobs und Preflight aus.
+
+Die JSON-Berichte enthalten Checks, Fehler, IDlisten, aktive Karten/Revealtexturen,
+Start-/Seiten-/Kategoriezeiten, Renderer sowie getrennte Fensterclient- und
+Framebuffermaße. Gemessene Zeiten umfassen den jeweiligen Aufbau und native
+Framewartezeiten, beim Kategoriepfad auch die Pointerbedienung; sie sind keine
+GPU- oder garantierte Eingabelatenz. Die Hauptansicht ist ein nativer SubViewport,
+nicht eine behauptete physische Monitorauflösung.
+
+Vollständige native Frames bleiben lokal. Der begrenzte technische Lieferumfang
+enthält unverkleinerte Ausschnitte der tatsächlichen Controlrechtecke, eine
+zusammenhängende enge Layoutansicht und deren Quellkoordinaten in `kat2/summary.json`.
+Die bisherigen Artefakt- und Laufzeitbudgets gelten unverändert. Pflichtnachweise
+werden auf tatsächliche Aufnahme in das technische Paket geprüft.
+
+## Stand und offene Gates
+
+Gemessene Ergebnisse und der getrennte vollständige Selbstreview werden im
+Draft-PR an tatsächlichen Head, Basis und Test-Merge gebunden. Ein grüner lokaler
+Lauf ersetzt weder aktuelle ausgewählte CI-Jobs noch `ci-required`.
+
+**Vor Merge weiterhin offen:** unabhängiges technisches/visuelles Review und
+**KAT2-M01** durch den Eigentümer am nachgewiesenen Build: Einstieg, Kategorien/Alle,
+Lesbarkeit, Öffnen/Fortsetzen und Rückkehr. Keine erneute vollständige Lösung aller
+Rätsel erforderlich. Das Langspielthema #24 bleibt separat. Dieser Auftrag erlaubt
+keinen Merge, Release oder Deployment.

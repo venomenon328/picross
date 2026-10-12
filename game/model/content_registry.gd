@@ -73,7 +73,6 @@ static func _load() -> Dictionary:
 	var raw: Variant = JSON.parse_string(file.get_as_text())
 	load_error = validate(raw)
 	if not load_error.is_empty():
-		push_error(load_error)
 		return {}
 	cached = raw
 	return cached
@@ -91,16 +90,23 @@ static func categories() -> Array[Dictionary]:
 	return result
 
 static func by_key(key: String) -> Dictionary:
-	for entry: Dictionary in entries():
+	for entry: Dictionary in _load().get("entries", []):
 		if entry.key == key:
-			return entry
+			return entry.duplicate(true)
 	return {}
 
 static func by_id(id: String) -> Dictionary:
-	for entry: Dictionary in entries():
+	for entry: Dictionary in _load().get("entries", []):
 		if entry.id == id:
-			return entry
+			return entry.duplicate(true)
 	return {}
+
+static func ordinal(id: String) -> int:
+	var index: int = 0
+	for entry: Dictionary in _load().get("entries", []):
+		index += 1
+		if entry.id == id: return index
+	return 0
 
 static func key_for_id(id: String) -> String:
 	return str(by_id(id).get("key", ""))
