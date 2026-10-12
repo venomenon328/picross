@@ -119,3 +119,16 @@ git archive 070d3c291fd83ab380518b01638181c809574c03 game/perf_a examples/perf_a
 Keine weitere RP-/VS-/ZS-/Sidebar-/Font-/Lizenzquelle entfernt. Aktuelle native
 PERF-B-, Bild-, Animation-, Save-/Session-, Paket-/PCK- und Windowsprüfungen
 bleiben verbindlich; technische und persönliche Abnahme bleiben getrennt.
+
+## Einmalige Rätselzertifizierung (12.10.2026)
+
+Quelle vor Umstellung: `60886c47098d209c4b7dc7521c3c70ea0aeffcb5`.
+Rätselspezifische F01/F02-/Knoblauch-Tests und historische RP4-/RP5-/RP6-/VS1-
+Korpusassertions sind aus der automatischen Test-Discovery entfernt; die RP4-/RP5-
+CI-Replayjobs entfallen. Allgemeine Funktions-/Sicherheitsfälle verwenden feste
+synthetische Inputs. Historische Produktionsmodule, Originalquellen und Proofs
+bleiben für gezielte Diagnose erhalten; ihre alten CI-Aufrufe sind keine Pflichten.
+Der doppelte Test-ZIP `tests/puzzle_production/fixtures/garlic-r03-reference.zip`
+ist über den genannten Commit unverändert erreichbar. Das eigentliche Paket in
+`content/authoring/` bleibt bestehen. Keine Rätsel-, Save- oder Freigabedaten geändert.
+[Aktuelle Policy](CI_POLICY.md).

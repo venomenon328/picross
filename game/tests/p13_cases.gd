@@ -5,7 +5,7 @@ const SaveStore = preload("res://model/save_store.gd")
 const Main = preload("res://ui/main.gd")
 
 static func run(t: SceneTree) -> void:
-	for id: String in Definition.catalog_ids():
+	for id: String in ["f01", "f02", "f04", "f06", "f08", "f09"]:
 		var definition: Dictionary = Definition.load_fixture(id)
 		var session: Session = Session.new(definition)
 		var store: SaveStore = SaveStore.new(SaveStore.test_root_override.path_join(id))
@@ -141,7 +141,7 @@ static func run(t: SceneTree) -> void:
 		t.check(store.reset_slot(id).is_empty() and store.load_slot(definition).status == "fresh", "P1.3 %s selected reset" % id)
 		t.check(FileAccess.get_file_as_string(neighbour) == "untouched", "P1.3 %s unrelated bytes untouched" % id)
 	var shared: SaveStore = SaveStore.new(SaveStore.test_root_override.path_join("shared"))
-	for id: String in Definition.catalog_ids():
+	for id: String in ["f01", "f02", "f04", "f06", "f08", "f09"]:
 		var item: Session = Session.new(Definition.load_fixture(id))
 		t.check(shared.write_slot(item, item.view_state).is_empty(), "P1.3 shared %s saved" % id)
 	var sentinel: String = SaveStore.test_root_override.path_join("outside-p1.bin")

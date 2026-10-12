@@ -8,7 +8,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.puzzle_production import categories
-from tools.puzzle_production.content_registry import validate, projection, check_checkout
+from tools.puzzle_production.content_registry import validate, projection
 from tools.puzzle_production.contract import InvalidInput, load_json, write_json
 from ci_scope import classify
 
@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class CategoryTests(unittest.TestCase):
     def setUp(self):
-        self.catalog = categories.load(ROOT / categories.PATH)
-        self.registry = load_json(ROOT / "content/registry.json")
+        self.catalog = categories.load(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
+        self.registry = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/registry.json")
 
     def test_frozen_pre_migration_inputs(self):
         folder = ROOT / "game/tests/fixtures/kat1"
@@ -48,7 +48,7 @@ class CategoryTests(unittest.TestCase):
         self.assertEqual([e["category_id"] for e in self.registry["entries"][:9]], [
             "fahrzeuge-verkehr", "gebaeude-bauwerke", None, "gemuese-pilze-kraeuter", None,
             "gebaeude-bauwerke", None, "blumen-pflanzen", "voegel"])
-        check_checkout(ROOT)
+        validate(self.registry, self.catalog)
 
     def test_category_fields_types_duplicates_and_limits(self):
         for field, values in {
@@ -106,4 +106,4 @@ class CategoryTests(unittest.TestCase):
         self.assertEqual(projection(self.registry, catalog)["entries"], projection(self.registry, self.catalog)["entries"])
         for path in (categories.PATH, "game/data/registry.json", "tools/puzzle_production/categories.py"):
             selected = classify([path])["selected"]
-            self.assertTrue(all(selected[k] for k in ("production", "product", "pilots", "visual")), path)
+            self.assertEqual(selected["production"], path == "tools/puzzle_production/categories.py", path)

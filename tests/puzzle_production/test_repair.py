@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def fixture(root, color=False, n=2):
-    design = load_json(ROOT / "examples/rp3/design.json")
+    design = load_json(ROOT / "tests/puzzle_production/fixtures/image-design.json")
     design.update(source_id="repair-functional", width=n, height=n, crop=[0, 0, n, n], fit="exact",
                   mode="color" if color else "mono", working_mode="faithful",
                   briefing="Technical 2x2 diagonal fixture; no catalogue motif claim.",

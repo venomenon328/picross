@@ -25,7 +25,7 @@ def seal(root, handoff):
 
 def make(root, identifier, width, height, mode, repaired=False, colors=2):
     root.mkdir(parents=True, exist_ok=True)
-    d = deepcopy(load_json(ROOT / "examples/rp3/design.json"))
+    d = deepcopy(load_json(ROOT / "tests/puzzle_production/fixtures/image-design.json"))
     d.update(source_id="test-only", width=width, height=height, mode=mode, crop=[0, 0, width, height],
              variants=[{"id": "area", "method": "area", "threshold": 128}], background="#ffffff",
              palette=[{"id": "ink", "rgb": "#202020"}] if mode == "mono" else
@@ -111,18 +111,14 @@ def approve(package, destination):
 
 
 def isolated_checkout(root):
-    for name in ("content/categories.json", "content/registry.json", "game/data/registry.json"):
+    from .content_registry import projection
+    catalog = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
+    registry = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/registry.json")
+    for name, value in (("content/categories.json", catalog), ("content/registry.json", registry),
+                        ("game/data/registry.json", projection(registry, catalog))):
         target = root / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / name, target)
-    if (ROOT / "content/packages").exists():
-        shutil.copytree(ROOT / "content/packages", root / "content/packages")
-    # Include already registered resources when running after parallel content merges.
-    for entry in load_json(ROOT / "content/registry.json")["entries"][9:]:
-        for name in (entry["definition"], entry["reveal"], str(Path(entry["reveal"]).with_suffix(".txt"))):
-            target = root / "game" / name
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(ROOT / "game" / name, target)
+        write_json(target, value)
     return root
 
 

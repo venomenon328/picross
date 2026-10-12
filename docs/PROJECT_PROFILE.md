@@ -1,5 +1,12 @@
 # Projektprofil: picross
 
+**Aktuelle Inhalts-CI (12.10.2026):** Die [CI-Policy](CI_POLICY.md) ersetzt die
+unten historisch beschriebenen RP-Korpus-/Zertifikats-Replays. Reine neue
+Rätseldateien erhalten nur Pfad-/Dateimodusprüfung und `ci-required`, keine
+Tool-/Spiel-/Render-/Exporttests. Sämtliche konkreten Rätselprüfungen erfolgen im
+Produktionsauftrag; keine rätselspezifischen Unit-Tests anlegen. Allgemeine
+Code-Regressionen verwenden einen festen technischen Testbestand.
+
 [KAT-1](CATEGORIES.md) bindet `content/categories.json`, genau eine Kategorie je sichtbarem Rätsel, Registry-/Runtimeformat v2 und kategorisierte ZA-1-v2-Exporte. Bei Kategorien-/Katalog-/Adapterarbeit zusätzlich diesen Vertrag und [ZA-1](ZA1_ADAPTER.md) vollständig lesen. [KAT-1-Prüfzuordnung](KAT1_VERIFICATION.md) ergänzt die bestehenden Prüfwege; Saves, Definitionen und Freigabebindungen bleiben unverändert. KAT-2 (#79) verwendet diesen Vertrag für den regulären Katalogstart. Bei Katalogarbeit zusätzlich [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md) lesen; unabhängiges Review und Eigentümerabnahme KAT2-M01 bleiben vor Merge erforderlich.
 
 ## Entwicklungsbasis und Grenzen

@@ -28,6 +28,13 @@ class DocumentationChecks(unittest.TestCase):
     def test_valid_tree(self) -> None:
         self.assertEqual([], check_tree(self.root))
 
+    def test_production_corpus_is_not_scanned_by_document_ci(self) -> None:
+        for folder in ("content/authoring", "content/packages", "game/data/content", "game/art/content"):
+            self.write(folder + "/fixture/evidence.md", "[package-local](not-in-checkout.md)\r\n")
+        self.assertEqual([], check_tree(self.root))
+        self.write("docs/current.md", "[broken](missing.md)\n")
+        self.assertTrue(any("missing link target" in e for e in check_tree(self.root)))
+
     def test_local_link_and_fragment(self) -> None:
         self.write("README.md", "[Rules](docs/dev-rules/WORKFLOW.md#deliberately-unchecked)\n")
         self.assertEqual([], check_tree(self.root))

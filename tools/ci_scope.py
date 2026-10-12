@@ -22,6 +22,24 @@ SHA = re.compile(r"[0-9a-f]{40}\Z")
 ZERO = "0" * 40
 
 
+def content_path(path: str) -> bool:
+    """Only inert authoring/adapter outputs; never runtime code or shared art."""
+    if path in {"content/categories.json", "content/registry.json", "content/authoring/index.json",
+                "content/authoring/README.md", "game/data/registry.json"}:
+        return True
+    if re.fullmatch(r"game/data/content/[a-z][a-z0-9_-]{0,63}\.json", path):
+        return True
+    if re.fullmatch(r"game/art/content/[a-z][a-z0-9_-]{0,63}\.(png|svg|txt)", path):
+        return True
+    parts = PurePosixPath(path).parts
+    return (len(parts) >= 5 and parts[:2] in (("content", "authoring"), ("content", "packages"))
+            and re.fullmatch(r"pz-[a-z0-9][a-z0-9-]{0,59}", parts[2]) is not None
+            and re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9._-]{0,31}", parts[3]) is not None
+            and all(part not in {".", ".."} and not part.startswith(".") for part in parts[3:])
+            and "\\" not in path and PurePosixPath(path).suffix.lower() in
+            {".json", ".png", ".jpg", ".jpeg", ".svg", ".txt", ".md", ".html", ".zip"})
+
+
 def classify(paths: list[str], force: str = "auto") -> dict:
     selected = {key: False for key in FLAGS}
     reasons = {key: [] for key in FLAGS}
@@ -34,6 +52,8 @@ def classify(paths: list[str], force: str = "auto") -> dict:
 
     for path in sorted(set(paths)):
         original = path
+        if content_path(path):
+            continue
         # Both sides of the one-time project rename retain their obligations.
         if path.startswith("prototypes/p1/"):
             path = "game/" + path.removeprefix("prototypes/p1/")
@@ -105,7 +125,8 @@ def classify(paths: list[str], force: str = "auto") -> dict:
     if force not in forced:
         raise ValueError("Unknown requested scope: " + force)
     add(forced[force], "explicit scope: " + force)
-    return {"format": FORMAT, "selected": {"docs": True, **selected},
+    content_only = bool(paths) and all(content_path(path) for path in paths) and force == "auto"
+    return {"format": FORMAT, "content_only": content_only, "selected": {"docs": True, **selected},
             "reasons": {"docs": ["documents, tool contracts and full diff"], **reasons},
             "changed_paths": sorted(set(paths)), "requested_scope": force}
 
@@ -138,14 +159,28 @@ def make_plan(base: str, head: str, force: str, fetch: bool = False, event: str 
         validate_sha(base)
     if fetch:
         refs = list(dict.fromkeys([head] + ([base] if base and base != ZERO else [])))
-        git("fetch", "--no-tags", "--depth=1", "origin", *refs)
+        git("fetch", "--filter=blob:none", "--no-tags", "--depth=1", "origin", *refs)
     if not base or base == ZERO:
         paths = git("ls-tree", "-rz", "--name-only", head).decode("utf-8").split("\0")
-        git("show", "--format=", "--check", head)
     else:
         paths = git("diff", "--no-renames", "--name-only", "-z", base, head).decode("utf-8").split("\0")
-        git("diff", "--check", base, head)
     plan = apply_event_policy(classify([path for path in paths if path], force), event)
+    if plan["content_only"] and base and base != ZERO:
+        # Tree metadata only: do not fetch/open ZIPs, images, proofs or the corpus.
+        raw = git("diff", "--raw", "--no-renames", "--no-abbrev", "-z", base, head).decode().split("\0")
+        for header, path in zip(raw[0::2], raw[1::2]):
+            old_mode, new_mode = header.lstrip(":").split()[:2]
+            if old_mode not in {"000000", "100644"} or new_mode not in {"000000", "100644"}:
+                raise ValueError("Content delivery requires regular non-executable files: " + path)
+        plan["reasons"]["docs"] = ["content-only: changed paths and regular file modes; no puzzle certification or test suite"]
+        plan["diff_check"] = "tree-metadata-only; production evidence reviewed before delivery"
+    else:
+        plan["content_only"] = False
+        if base and base != ZERO:
+            git("diff", "--check", base, head)
+        else:
+            git("show", "--format=", "--check", head)
+        plan["diff_check"] = "full-whitespace-check"
     plan.update({"source_head": head, "base_commit": base or None,
                  "tested_checkout": git("rev-parse", "HEAD").decode().strip(),
                  "comparison": "exact-base-to-head-trees-no-renames",
@@ -159,6 +194,13 @@ def evaluate(plan: dict, results: dict) -> list[dict]:
         raise ValueError("Missing or invalid selection report")
     if any(not isinstance(plan["selected"].get(key), bool) for key in FLAGS):
         raise ValueError("Missing or invalid coverage selection")
+    if not isinstance(plan.get("content_only"), bool):
+        raise ValueError("Missing content-only selection")
+    if plan["content_only"] and (any(plan["selected"][key] for key in FLAGS) or
+                                not plan.get("changed_paths") or
+                                not all(content_path(p) for p in plan["changed_paths"]) or
+                                plan.get("requested_scope") != "auto"):
+        raise ValueError("Inconsistent content-only selection")
     if any(plan["selected"][key] for key in ("integration", "pilots", "visual", "perf_b")) and not plan["selected"]["product"]:
         raise ValueError("Selected product coverage without its required job")
     rows = []
@@ -197,6 +239,7 @@ def main() -> int:
             with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as stream:
                 for key in FLAGS:
                     stream.write(f"{key}={str(result['selected'][key]).lower()}\n")
+                stream.write(f"content_only={str(result['content_only']).lower()}\n")
                 stream.write("plan=" + json.dumps(result, ensure_ascii=True, separators=(",", ":")) + "\n")
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0

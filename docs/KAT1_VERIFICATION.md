@@ -17,7 +17,7 @@ Komplett-Probespielen für die Kategorienmetadaten. #79 bleibt außerhalb des Pa
 | A04 | Plan ohne Mutation; Fehler vor und nach Indexschreiben; Abbruch nach Datei, Index und Runtime; Recovery, veränderte Kategorienquelle während Planung/Staging/Übernahme, fremde Änderungen und altes Journal. Direkte Registryänderung gegen gebundene Exportkategorie blockiert. |
 | A05 | Eingefrorener ZA-1-v1-Export wird nach altem Vertrag frisch geprüft; neuer kategorisierter Export aus denselben Inputs/Freigaben erhält die Originalbytes. Bestehende ZA-1-Tests prüfen weiterhin fehlende Endfreigabe, Pakethashes und unerlaubte reale Testregistrierung. |
 | A06 | `game/tests/kat1_cases.gd` im regulären Godot-Testlauf: neue Runtimevalidierung, Datenwachstum, Fehlbezüge und echte Schema-1-Saves vom Stand vor KAT-1; Teilstand mit Undo/Redo und abgeschlossener Stand mit Reveal. Bestehende Auswahl-/Save-/Reset-/Recoverytests bleiben aktiv. |
-| A07 | `game/tests/content_pack_probe.gd` gegen das tatsächlich exportierte Windows-PCK: Kategorien und Zuordnungen vorhanden, alle sichtbaren Definitionen gültig, historische Reservierungen und technische Daten ausgeschlossen. Product-Harness kontrolliert zusätzlich Exportressourcen und startet die Windows-EXE unter Windows. |
+| A07 | `game/tests/content_pack_probe.gd` gegen das tatsächlich exportierte Windows-PCK: Kategorien und Zuordnungen vorhanden, feste technische Beispieldefinitionen gültig, historische Reservierungen und technische Daten ausgeschlossen. Product-Harness kontrolliert zusätzlich Exportressourcen und startet die Windows-EXE unter Windows. |
 
 ## Gebundene Altinputs
 

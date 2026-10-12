@@ -30,8 +30,6 @@ import perf_b_resources
 import za1_product
 import kat2_product
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
-from check_f01 import DATA, verify
-from check_f02 import verify as verify_f02
 
 EXPECTED_PROJECT_NAME = "picross · P1"
 RENDER_STAGES = ("layout", "views", "cells-f1", "cells-f2", "gestures", "hints", "axis", "h1")
@@ -367,15 +365,8 @@ def main(argv: list[str] | None = None) -> int:
         evidence.report.update(source_identity(root))
         evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "game/project.godot")
-        from tools.puzzle_production.content_registry import check_checkout
-        registry = python_phase("content-registry-projection", lambda: check_checkout(root))
+        registry = json.loads((root / "content/registry.json").read_text(encoding="utf-8"))
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
-        evidence.report["proof_steps"] = python_phase("f01-certificate", lambda: verify(
-            json.loads((DATA / "f01.json").read_text(encoding="utf-8")),
-            json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8"))))
-        evidence.report["color_proof_steps"] = python_phase("f02-certificate", lambda: verify_f02(
-            json.loads((DATA / "f02.json").read_text(encoding="utf-8")),
-            json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8"))))
         editor = toolchain.EDITORS[host]
 
         def assets():
@@ -391,7 +382,9 @@ def main(argv: list[str] | None = None) -> int:
             toolchain.extract_windows_templates(args.cache_dir.resolve() / toolchain.TEMPLATES.name,
                                                 toolchain.template_directory(workspace, host))
             project = workspace / "p1"
-            shutil.copytree(root / "game", project, ignore=shutil.ignore_patterns(".godot", "build"))
+            from product_fixtures import copy_regression_game, restore_player_catalog
+            copy_regression_game(root, project)
+            evidence.report["regression_catalog"] = "fixed test catalog; independent of authoring inventory"
             evidence.report["perf_b_resources"] = perf_b_resources.verify_runtime()
             environment = toolchain.isolated_environment(workspace, host)
 
@@ -520,6 +513,8 @@ def main(argv: list[str] | None = None) -> int:
                 selected += [b_output / "probe.json", *b_output.glob("runtime-*.png")]
                 evidence.scope_done("perf_b")
             evidence.scope_start("export")
+            if restore_player_catalog(root, project):
+                phase("player-content-import", base + ["--import"])
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])

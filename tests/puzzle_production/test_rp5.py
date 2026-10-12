@@ -5,30 +5,13 @@ import unittest
 import zipfile
 from copy import deepcopy
 
-from tools.puzzle_production.contract import InvalidInput, load_json
+from tools.puzzle_production.contract import InvalidInput
 from tools.puzzle_production.images import file_hash
 from tools.puzzle_production import rp5
 
 
 class RP5Tests(unittest.TestCase):
-    def test_fixed_nine_plans_have_colored_and_empty_protection(self):
-        lock, plans = rp5.plans()
-        self.assertEqual(len(plans), 9)
-        self.assertEqual({rp5.load_json(rp5.RP4 / 'baseline' / t['trial'] / f"{t['variant']}-candidate.json")['design']['mode']
-                          for t, p in plans}, {'mono', 'color'})
-        for t, p in plans:
-            self.assertGreater(t['protected_empty_cells'], 0)
-            self.assertGreater(t['protected_cells'], t['protected_empty_cells'])
-            self.assertEqual((p['config']['max_candidates'], p['config']['max_steps'], p['config']['seed']), (16, 96, 39))
 
-    def test_original_48_rows_preserved_in_comparison(self):
-        report = load_json(rp5.RP5 / 'comparison.json')
-        repairs = {r['trial']: r['repair'] for r in report['rows'] if r['selected_for_repair']}
-        rebuilt = rp5.comparison(repairs)
-        self.assertEqual(report['rows'], rebuilt['rows'])
-        self.assertEqual((len(rebuilt['rows']), rebuilt['selected'], rebuilt['not_selected']), (48, 9, 39))
-        self.assertEqual(sum(r['original']['certified'] for r in rebuilt['rows']), 19)
-        self.assertEqual(sum(r['original']['certified'] and r['original_motif']['motif_usable_for_comparison'] for r in rebuilt['rows']), 14)
 
     def test_archive_bytes_member_hashes_and_path_limits(self):
         with tempfile.TemporaryDirectory() as tmp:

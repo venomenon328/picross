@@ -32,7 +32,9 @@ func run() -> void:
 	var category_ids: Array[String] = []
 	for category: Dictionary in categories:
 		category_ids.append(category.id)
-	for key: String in ids:
+	# Fixed runtime-contract samples; never extend this set when adding content.
+	for key: String in ["f01", "f02", "f04", "f06", "f08", "f09", "pz-test-direct-mono", "pz-test-direct-color", "pz-test-repair-mono", "pz-test-repair-color"]:
+		if not key in ids: continue
 		var entry: Dictionary = Registry.by_key(key)
 		check(entry.category_id in category_ids, "PCK category assignment missing " + key)
 		check(not Definition.load_fixture(key).is_empty(),"PCK definition missing "+key)

@@ -6,7 +6,6 @@ eine echte ausgewählte Änderung samt vollständigem Verlauf. Sämtliche Freiga
 sind **test-only**, keine Eigentümererklärungen. Endfreigaben entstehen ausschließlich
 im temporären Replay. Keine Katalogaufnahme.
 
-Das benachbarte `garlic-r03-reference.zip` ist ein kompaktes Prüfderivat des
-gebundenen echten Eingangs, keine künstliche Freigabe. Das Ableitungsmanifest
-bindet Original-ZIP, Handoff, Inventar und enthaltene Originaldateien;
-siehe [Nachweiszuordnung](../../../../docs/ZA1_VERIFICATION.md).
+Neue Rätsel erweitern diese technischen Fixtures nicht. Der frühere reale
+Knoblauch-Referenztest samt doppeltem Test-ZIP wurde entfernt; sein gebundener
+historischer Nachweis steht in der [Nachweiszuordnung](../../../../docs/ZA1_VERIFICATION.md).
