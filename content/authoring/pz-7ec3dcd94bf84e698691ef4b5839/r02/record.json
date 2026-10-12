@@ -29,7 +29,7 @@
   "archive_review": {
     "source_commit": "f7af54c5ec7efab4e93ca7aae82c56a17c2a505c",
     "state": "package_validation_passed",
-    "human_approval": "pending",
+    "human_approval": "reveal A-r02 approved; see reveal_approval. Motif and final editorial approval remain pending.",
     "delivery_evidence": "Authoritative final head/review/CI/merge evidence in the PR for branch chore/pea-reveal-r02."
   },
   "reveal_approval": {
