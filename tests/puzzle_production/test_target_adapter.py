@@ -43,7 +43,8 @@ class TargetTests(unittest.TestCase):
         approve(p, approval)
         out = self.root / dest
         export(p, out, name="TEST ONLY", revision=7, stem=stem or h["puzzle_id"],
-               save_slot=slot or "slot_"+h["puzzle_id"], approval_path=approval)
+               save_slot=slot or "slot_"+h["puzzle_id"], approval_path=approval,
+               category_id="gemuese-pilze-kraeuter", categories_path=ROOT / "content/categories.json")
         return out
 
     def reseal(self, p):
@@ -106,10 +107,10 @@ class TargetTests(unittest.TestCase):
                 changed = copy.deepcopy(original)
                 changed["entries"][-1]["save_slot"] = slot
                 with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
-                    validate(changed)
+                    validate(changed, load_json(ROOT / "content/categories.json"))
                 write_json(checkout / "content/registry.json", changed)
                 # Keep projection consistent, so stale runtime data cannot mask B-01.
-                write_json(checkout / "game/data/registry.json", projection(changed))
+                write_json(checkout / "game/data/registry.json", projection(changed, load_json(ROOT / "content/categories.json")))
                 before = self.snapshot(checkout)
                 for replay in (False, True):
                     with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
@@ -127,7 +128,7 @@ class TargetTests(unittest.TestCase):
         changed = json.loads(journal["new"][REGISTRY])
         changed["entries"][-1]["save_slot"] = "con"
         journal["new"][REGISTRY] = json.dumps(changed)
-        journal["new"][RUNTIME] = json.dumps(projection(changed))
+        journal["new"][RUNTIME] = json.dumps(projection(changed, load_json(ROOT / "content/categories.json")))
         write_json(lock, journal)
         before = self.snapshot(checkout)
         with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
@@ -254,7 +255,9 @@ class TargetTests(unittest.TestCase):
                 inspect(opened, a)
         write_json(a, original)
         with open_package(p) as opened:
-            self.assertTrue(inspect(opened, a)[0]["catalog_ready"])
+            self.assertTrue(inspect(opened, a)[0]["editorial_approved"])
+            self.assertFalse(inspect(opened, a)[0]["category_ready"])
+            self.assertFalse(inspect(opened, a)[0]["catalog_ready"])
 
     def test_registration_two_ids_explicit_slots_no_op_collisions_rollback(self):
         p = self.package(); out = self.export(p)

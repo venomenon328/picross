@@ -9,12 +9,14 @@ import tempfile
 
 from .authoring_package import ID, STEM, REVISION, relative, require, sha, file_hash, file_table
 from .contract import canonical_bytes, exact_keys, load_json, integer
+from . import categories
 import time
 import os
 
 REGISTRY = "content/registry.json"
 RUNTIME = "game/data/registry.json"
-FORMAT = "picross-content-registry-v1"
+FORMAT = "picross-content-registry-v2"
+JOURNAL = "picross-registration-journal-v2"
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -31,19 +33,20 @@ def atomic_bytes(path, data):
         temp.unlink(missing_ok=True)
 
 
-def projection(registry):
-    return {"format": "picross-runtime-registry-v1", "entries": [
-        {k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible")}
+def projection(registry, catalog):
+    return {"format": "picross-runtime-registry-v2", "categories": categories.ordered(catalog), "entries": [
+        {k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")}
         for e in registry["entries"]]}
 
 
-def validate(registry):
+def validate(registry, catalog):
+    categories.validate(catalog)
     exact_keys(registry, {"format", "entries"})
     require(registry["format"] == FORMAT and isinstance(registry["entries"], list) and 9 <= len(registry["entries"]) <= 10000,
             "Unsupported registry")
     seen = {k: set() for k in ("id", "key", "save_slot", "definition", "reveal")}
     for i, e in enumerate(registry["entries"]):
-        exact_keys(e, {"id", "key", "save_slot", "definition", "reveal", "visible", "production"})
+        exact_keys(e, {"id", "key", "save_slot", "definition", "reveal", "visible", "production", "category_id"})
         for field in seen:
             value = e[field]
             require(isinstance(value, str), "Invalid registry value")
@@ -53,9 +56,11 @@ def validate(registry):
             require(folded not in seen[field], "Registry collision: " + field)
             seen[field].add(folded)
         require(type(e["visible"]) is bool, "Invalid visibility")
+        if i >= 9 or e["visible"] or e["category_id"] is not None:
+            categories.lookup(catalog, e["category_id"])
         if i < 9:
             n = i+1
-            require(e == {"id": f"F-{n:02d}", "key": f"f{n:02d}", "save_slot": f"f{n:02d}",
+            require({k: v for k, v in e.items() if k != "category_id"} == {"id": f"F-{n:02d}", "key": f"f{n:02d}", "save_slot": f"f{n:02d}",
                     "definition": f"data/f{n:02d}.json", "reveal": f"art/f{n:02d}."+("svg" if n <= 4 else "png"),
                     "visible": n in (1, 2, 4, 6, 8, 9), "production": None}, "Historical reservation changed")
         else:
@@ -78,10 +83,12 @@ def validate(registry):
     return registry
 
 
-def check_checkout(root, replay=False):
+def check_checkout(root, replay=False, *, check_projection=True):
     require(not (root / "content/.registration-pending.json").exists(), "Interrupted registration: recovery required")
-    r = validate(load_json(root / REGISTRY))
-    require((root / RUNTIME).read_bytes() == canonical_bytes(projection(r))+b"\n", "Runtime registry is stale")
+    catalog = categories.load(root / categories.PATH)
+    r = validate(load_json(root / REGISTRY), catalog)
+    if check_projection:
+        require((root / RUNTIME).read_bytes() == canonical_bytes(projection(r, catalog))+b"\n", "Runtime registry is stale")
     for e in r["entries"][9:]:
         p = e["production"]
         require(not p["test_only"] or root.resolve() != ROOT.resolve(), "Test-only content cannot enter the real catalog")
@@ -89,6 +96,11 @@ def check_checkout(root, replay=False):
         require(file_hash(package / "manifest.json") == p["package_sha256"] and
                 file_hash(root / "game" / e["definition"]) == p["definition_sha256"] and
                 file_hash(root / "game" / e["reveal"]) == p["reveal_sha256"], "Registered content binding changed")
+        # Also enforce the category binding without the expensive production replay.
+        m = load_json(package / "manifest.json")
+        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2"), "Unsupported registered export")
+        if m["format"] == "picross-target-export-v2":
+            require(m.get("category_id") == e["category_id"], "Registered category differs from export")
         if replay:
             from .target_adapter import verify_export
             m, report = verify_export(package)
@@ -101,15 +113,35 @@ def check_checkout(root, replay=False):
     return r
 
 
-def registration(export_dir, root, *, apply=False, fail_step=None):
-    from .target_adapter import verify_export
+def sync_runtime(root):
+    """Explicit metadata projection; never repairs or edits the authoritative data."""
     root = root.resolve()
+    before = {REGISTRY: (root / REGISTRY).read_bytes(), categories.PATH: categories.source_bytes(root / categories.PATH)}
+    registry = check_checkout(root, replay=True, check_projection=False)
+    catalog = categories.load(root / categories.PATH)
+    require(all((root / name).read_bytes() == data for name, data in before.items()),
+            "Registry/categories changed during projection; retry")
+    require(not (root / "content/.registration-pending.json").exists(), "Interrupted registration: recovery required")
+    atomic_bytes(root / RUNTIME, canonical_bytes(projection(registry, catalog))+b"\n")
+    check_checkout(root)
+    return {"status": "projected", "entries": len(registry["entries"]), "categories": len(catalog["categories"])}
+
+
+def registration(export_dir, root, *, apply=False, fail_step=None):
+    from .target_adapter import verify_export, FORMAT as EXPORT_FORMAT
+    root = root.resolve()
+    catalog_bytes = categories.source_bytes(root / categories.PATH)
+    catalog = categories.load(root / categories.PATH)
+    require(catalog_bytes == categories.source_bytes(root / categories.PATH), "Categories changed during planning; retry")
     registry = check_checkout(root)
     m, report = verify_export(export_dir)
+    require(m["format"] == EXPORT_FORMAT, "Category-less legacy export: create a new categorized export from the unchanged approved input")
+    category = categories.lookup(catalog, m["category_id"])
     require(not m["test_only"] or root != ROOT.resolve(), "Test-only fixtures cannot be registered in the real repository")
     package_rel = "content/packages/" + m["definition_id"] + "/" + m["package_revision"]
     e = {"id": m["definition_id"], "key": m["definition_id"], "save_slot": m["save_slot"],
          "definition": m["definition"].removeprefix("runtime/"), "reveal": m["reveal"].removeprefix("runtime/"), "visible": True,
+         "category_id": category["id"],
          "production": {"package": package_rel, "package_sha256": file_hash(export_dir / "manifest.json"),
              "revision": m["package_revision"], "width": report["width"], "height": report["height"], "mode": report["mode"],
              "difficulty": report["difficulty"], "status": "registered", "blockers": [], "test_only": m["test_only"],
@@ -119,11 +151,12 @@ def registration(export_dir, root, *, apply=False, fail_step=None):
         require(existing == e, "Occupied production ID/revision: update is outside ZA-1")
         check_checkout(root, replay=True)
         require((root / package_rel / "manifest.json").read_bytes() == (export_dir / "manifest.json").read_bytes(), "Different repeated input")
-        return {"status": "no-op", "registered": True, "id": e["id"], "changes": []}
+        require(categories.source_bytes(root / categories.PATH) == catalog_bytes, "Categories changed during planning; retry")
+        return {"status": "no-op", "registered": True, "id": e["id"], "category": category, "changes": []}
     new = deepcopy(registry)
     new["entries"].append(e)
     new["entries"][9:] = sorted(new["entries"][9:], key=lambda item: item["id"])
-    validate(new)
+    validate(new, catalog)
     notice = str(Path(e["reveal"]).with_suffix(".txt")).replace("\\", "/")
     targets = ["game/" + e["definition"], "game/" + e["reveal"], "game/"+notice, package_rel]
     # Preflight ALL target components using Windows semantics on every host.
@@ -137,26 +170,31 @@ def registration(export_dir, root, *, apply=False, fail_step=None):
                         "Target path exists/collides: " + name)
             current /= part
         require(not current.exists(), "Target already exists: " + name)
-    plan = {"status": "planned", "registered": False, "id": e["id"], "changes": [
+    plan = {"status": "planned", "registered": False, "id": e["id"], "category": category, "changes": [
         {"path": n, "operation": "add"} for n in targets] + [{"path": REGISTRY, "operation": "replace"},
         {"path": RUNTIME, "operation": "replace"}], "before": registry, "after": new}
     if not apply:
+        require(categories.source_bytes(root / categories.PATH) == catalog_bytes, "Categories changed during planning; retry")
         return plan
     lock = root / "content/.registration-pending.json"
     # Exclusive lock plus recoverable journal. Runtime projection is published LAST.
     old = {name: (root / name).read_bytes() for name in (REGISTRY, RUNTIME)}
     expected = {targets[0]: m["files"][m["definition"]], targets[1]: m["files"][m["reveal"]], targets[2]: m["files"]["runtime/"+notice],
                 **{package_rel+"/"+n: file_hash(p) for n, p in file_table(export_dir, time.monotonic()+300).items()}}
-    journal = {"format": "picross-registration-journal-v1", "targets": targets, "files": expected,
+    journal = {"format": JOURNAL, "targets": targets, "files": expected,
+               "categories": catalog_bytes.decode("utf-8"),
                "old": {name: data.decode("utf-8") for name, data in old.items()},
-               "new": {REGISTRY: (canonical_bytes(new)+b"\n").decode(), RUNTIME: (canonical_bytes(projection(new))+b"\n").decode()}}
+               "new": {REGISTRY: (canonical_bytes(new)+b"\n").decode(), RUNTIME: (canonical_bytes(projection(new, catalog))+b"\n").decode()}}
+    require(old[REGISTRY] == canonical_bytes(registry)+b"\n" and old[RUNTIME] == canonical_bytes(projection(registry, catalog))+b"\n" and
+            categories.source_bytes(root / categories.PATH) == catalog_bytes, "Registry/categories changed during planning; retry")
     with lock.open("x", encoding="utf-8") as stream:
         json.dump(journal, stream)
         stream.flush()
         os.fsync(stream.fileno())
     created = []
     try:
-        require(old[REGISTRY] == canonical_bytes(registry)+b"\n" and old[RUNTIME] == canonical_bytes(projection(registry))+b"\n",
+        require(all((root / name).read_bytes() == data for name, data in old.items()) and
+                categories.source_bytes(root / categories.PATH) == catalog_bytes,
                 "Registry changed during planning; retry")
         require(all(not (root/n).exists() for n in targets), "Target appeared during planning; retry")
         with tempfile.TemporaryDirectory(prefix="za1-register-", dir=root / "content") as temp:
@@ -164,6 +202,8 @@ def registration(export_dir, root, *, apply=False, fail_step=None):
             staged_package = stage / "package"
             shutil.copytree(export_dir, staged_package)
             verify_export(staged_package)
+            require(file_hash(staged_package / "manifest.json") == e["production"]["package_sha256"], "Export changed during planning; retry")
+            require(categories.source_bytes(root / categories.PATH) == catalog_bytes, "Categories changed during staging; retry")
             for target, source in ((targets[0], staged_package / m["definition"]), (targets[1], staged_package / m["reveal"]),
                                    (targets[2], staged_package / ("runtime/"+notice)),
                                    (package_rel, staged_package)):
@@ -184,12 +224,17 @@ def registration(export_dir, root, *, apply=False, fail_step=None):
                     raise OSError("Injected registration interruption")
             verify_export(root / package_rel)
             require(all(file_hash(root/n) == expected[n] for n in targets[:3]), "Written runtime files differ")
+            require(categories.source_bytes(root / categories.PATH) == catalog_bytes, "Categories changed before publication; retry")
             atomic_bytes(root / REGISTRY, canonical_bytes(new)+b"\n")
             if fail_step == "crash-index":
                 raise InterruptedError("Injected hard interruption after index")
             if fail_step == "index":
                 raise OSError("Injected registration interruption")
-            atomic_bytes(root / RUNTIME, canonical_bytes(projection(new))+b"\n")
+            require(categories.source_bytes(root / categories.PATH) == catalog_bytes, "Categories changed during publication; retry")
+            atomic_bytes(root / RUNTIME, canonical_bytes(projection(new, catalog))+b"\n")
+            require(categories.source_bytes(root / categories.PATH) == catalog_bytes, "Categories changed during publication; retry")
+            if fail_step == "crash-runtime":
+                raise InterruptedError("Injected hard interruption after projection")
     except InterruptedError:
         raise
     except BaseException:
@@ -211,14 +256,20 @@ def recover(root):
     """Explicit rollback after process death; preflight every byte before mutation."""
     root = root.resolve()
     lock = root / "content/.registration-pending.json"
-    j = exact_keys(load_json(lock), {"format", "targets", "files", "old", "new"})
-    require(j["format"] == "picross-registration-journal-v1" and isinstance(j["files"], dict) and
+    j = load_json(lock)
+    require(isinstance(j, dict) and j.get("format") != "picross-registration-journal-v1",
+            "Legacy registration journal: preserve all files and resolve with the pre-KAT-1 tool/registry contract before migration")
+    exact_keys(j, {"format", "targets", "files", "old", "new", "categories"})
+    require(j["format"] == JOURNAL and isinstance(j["files"], dict) and
             isinstance(j["targets"], list) and len(j["targets"]) == 4, "Invalid registration journal")
     require(set(j["old"]) == set(j["new"]) == {REGISTRY, RUNTIME}, "Invalid journal indexes")
-    old_registry = validate(json.loads(j["old"][REGISTRY]))
-    new_registry = validate(json.loads(j["new"][REGISTRY]))
-    require(j["old"][RUNTIME].encode() == canonical_bytes(projection(old_registry))+b"\n" and
-            j["new"][RUNTIME].encode() == canonical_bytes(projection(new_registry))+b"\n", "Invalid journal projections")
+    require(isinstance(j["categories"], str) and categories.source_bytes(root / categories.PATH) == j["categories"].encode("utf-8"),
+            "Categories changed since interrupted registration; preserve journal for manual review")
+    catalog = categories.load(root / categories.PATH)
+    old_registry = validate(json.loads(j["old"][REGISTRY]), catalog)
+    new_registry = validate(json.loads(j["new"][REGISTRY]), catalog)
+    require(j["old"][RUNTIME].encode() == canonical_bytes(projection(old_registry, catalog))+b"\n" and
+            j["new"][RUNTIME].encode() == canonical_bytes(projection(new_registry, catalog))+b"\n", "Invalid journal projections")
     added = [e for e in new_registry["entries"] if e not in old_registry["entries"]]
     require(len(added) == 1 and [e for e in new_registry["entries"] if e not in added] == old_registry["entries"], "Invalid journal change")
     e = added[0]

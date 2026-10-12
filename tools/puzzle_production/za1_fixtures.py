@@ -111,12 +111,18 @@ def approve(package, destination):
 
 
 def isolated_checkout(root):
-    for name in ("content/registry.json", "game/data/registry.json"):
+    for name in ("content/categories.json", "content/registry.json", "game/data/registry.json"):
         target = root / name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / name, target)
     if (ROOT / "content/packages").exists():
         shutil.copytree(ROOT / "content/packages", root / "content/packages")
+    # Include already registered resources when running after parallel content merges.
+    for entry in load_json(ROOT / "content/registry.json")["entries"][9:]:
+        for name in (entry["definition"], entry["reveal"], str(Path(entry["reveal"]).with_suffix(".txt"))):
+            target = root / "game" / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / "game" / name, target)
     return root
 
 
@@ -137,7 +143,9 @@ def replay(output, checkout=None):
         approval = output / (stem+"-approval.json")
         approve(package, approval)
         dest = output / stem
-        export(package, dest, name="TEST ONLY " + stem, revision=1, stem=stem, save_slot="slot_"+stem, approval_path=approval)
+        export(package, dest, name="TEST ONLY " + stem, revision=1, stem=stem, save_slot="slot_"+stem, approval_path=approval,
+               category_id="voegel" if "color" in stem else "gemuese-pilze-kraeuter",
+               categories_path=checkout / "content/categories.json")
         registration(dest, checkout, apply=True)
         assert registration(dest, checkout, apply=True)["status"] == "no-op"
         reports.append(verify_export(dest)[1])

@@ -6,7 +6,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.puzzle_production.content_registry import check_checkout, validate
-from tools.puzzle_production.contract import InvalidInput
+from tools.puzzle_production.contract import InvalidInput, load_json
 from ci_scope import classify, FLAGS
 
 
@@ -17,7 +17,7 @@ class RegistryTests(unittest.TestCase):
         for field,value in (("save_slot","other"),("visible",True),("id","pz-new")):
             changed = deepcopy(registry)
             changed["entries"][2][field] = value
-            with self.assertRaises(InvalidInput): validate(changed)
+            with self.assertRaises(InvalidInput): validate(changed, load_json(Path(__file__).resolve().parents[1] / "content/categories.json"))
 
     def test_registry_and_new_harness_select_required_work(self):
         p = classify(["content/registry.json"])["selected"]

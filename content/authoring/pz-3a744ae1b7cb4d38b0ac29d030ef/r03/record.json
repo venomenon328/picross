@@ -2,6 +2,7 @@
   "format": "picross-authoring-record-v1",
   "puzzle_id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
   "revision": "r03",
+  "category_id": "gemuese-pilze-kraeuter",
   "state": "content_ready",
   "package": {
     "file": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/package.zip",

@@ -18,7 +18,7 @@ func walk(path: String) -> void:
 		check(not name in ["tests","production","input","packages","full_view_study","study","perf_a"],"technical directory in PCK: "+path+name)
 		walk(path.path_join(name))
 	for name: String in directory.get_files():
-		check(not "proof" in name and not name in ["handoff.json","inventory.json","approval.json","derivation.json"],"technical file in PCK: "+name)
+		check(not "proof" in name and not name.ends_with(".zip") and not name in ["handoff.json","inventory.json","approval.json","derivation.json","inspection.json","categories.json"],"technical file in PCK: "+name)
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -26,8 +26,15 @@ func _initialize() -> void:
 func run() -> void:
 	walk("res://")
 	var ids: Array[String] = Registry.catalog_ids()
+	check(Registry.load_error.is_empty(), "PCK registry/category format invalid")
+	var categories: Array[Dictionary] = Registry.categories()
+	check(not categories.is_empty(), "PCK categories projection missing")
+	var category_ids: Array[String] = []
+	for category: Dictionary in categories:
+		category_ids.append(category.id)
 	for key: String in ids:
 		var entry: Dictionary = Registry.by_key(key)
+		check(entry.category_id in category_ids, "PCK category assignment missing " + key)
 		check(not Definition.load_fixture(key).is_empty(),"PCK definition missing "+key)
 		check(Definition.validate(Definition.load_fixture(key)).is_empty(),"PCK content invalid "+key)
 		if key.begins_with("pz-"):

@@ -1,5 +1,7 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+Die Entwicklungsfassung enthält die [Kategorienprojektion nach KAT-1](../docs/CATEGORIES.md). Auswahl und Bearbeitung bleiben bis zur separaten Katalogoberfläche #79 wie beschrieben. Kategorienänderungen verändern keine Rätseldefinition, Revision oder Spielstände.
+
 Weitere freigegebene Workflow-Inhalte können über den [ZA-1-Adapter](../docs/ZA1_ADAPTER.md)
 registriert werden. Die Adapterlieferung ergänzt ausschließlich technische
 Fähigkeiten; das aktuelle Spielerangebot bleibt bei den folgenden sechs Rätseln.

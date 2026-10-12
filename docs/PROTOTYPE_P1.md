@@ -1,5 +1,7 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+[KAT-1](CATEGORIES.md) ergänzt Kategorien und Zuordnung als reine Katalogmetadaten in der Registry-/Runtimeprojektion v2. Godot lädt den vollständigen validierten Bestand; Auswahl, Definitionen, Save-Schema 1, Revisionen und Slots bleiben unverändert. Neue Exporte benötigen die explizite Kategorienbindung. Keine neue Katalogoberfläche in diesem Paket.
+
 [ZA-1](ZA1_ADAPTER.md) ergänzt eine zentrale Inhaltsregistry und deterministische
 Runtime-Projektion. Loader, Sammlung, SaveStore und Einzelreset nutzen explizite
 IDs/Slots; neue Inhalte benötigen keine Codeänderung. Neutrale Blatttitel und

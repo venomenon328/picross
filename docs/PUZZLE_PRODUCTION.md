@@ -1,5 +1,7 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
+[KAT-1](CATEGORIES.md) ergänzt den Produktionsfundus und ZA-1 um thematische Kategorien. Die Zuordnung steht spätestens vor dem kategorisierten Export fest und bleibt außerhalb von Raster-, Logik-, Proof- und Freigabeidentität. Arbeitsindex und Runtime-Registrierung bleiben getrennt.
+
 Der [ZA-1-Zieladapter](ZA1_ADAPTER.md) verbindet Authoring-v2 mit regulärem Spiel
 und kontrollierter Datenregistrierung. Frische RP-3-/vollständige RP-5-Prüfung und
 an Originalhandoff, Inventar und Auswahl gebundene Endfreigabe sind erforderlich.
