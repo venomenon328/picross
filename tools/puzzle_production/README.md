@@ -1,5 +1,7 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+KAT-1 ergänzt [Kategorien und Zuordnung](../../docs/CATEGORIES.md): neue ZA-1-Exporte verlangen `--category-id` und `--categories`; Snapshot, Manifest v2, Zielregistry und Runtimeprojektion werden gemeinsam geprüft. `sync-runtime --checkout .` übernimmt geprüfte Metadaten in die Projektion, `check-registry --checkout .` prüft inklusive Paket-Replay. Alte Exporte bleiben prüfbar, benötigen zur neuen Registrierung aber einen kategorisierten Neu-Export.
+
 ZA-1 ergänzt den allgemeinen Authoring-v2-Zieladapter und Datenregistrierung:
 [CLI, Schemas und Fehlerverhalten](../../docs/ZA1_ADAPTER.md),
 [Prüfzuordnung](../../docs/ZA1_VERIFICATION.md). Diese Befehle benötigen die

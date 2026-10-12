@@ -1,0 +1,12 @@
+{
+  "format": "picross-kat1-test-inputs-v1",
+  "test_only": true,
+  "source_commit": "0da2bb67f15c3fad90ed276518b3d31f225d9c41",
+  "engine_archive_sha256": "731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953",
+  "seed_script_sha256": "b5bc655c1582fe1ca46198067dd359c891cee15e005433e887f2ae1fd0f7a80c",
+  "saves": {
+    "f01.json": "2341c850fd914dc5defab8c8181c20d34d3a4fefa6eefc2dc93fb7e24bbd43ab",
+    "f02.json": "11c6583356bdc4a03c9fbbd754d0d66f012619c848da54ad1cd2a80dfe92521e"
+  },
+  "legacy_export_sha256": "f8c4f2d36522cbc53dd317f69a3f964e569e233aedf552fa21a8683f0020fd6b"
+}

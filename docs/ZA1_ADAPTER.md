@@ -1,10 +1,14 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+KAT-1 ergänzt den verbindlichen [Kategorien-/Kompatibilitätsvertrag](CATEGORIES.md).
+Neue Exporte verwenden v2 mit expliziter Kategorie und gehashtem Snapshot;
+Authoring-v2 und alte ZA-1-v1-Exporte bleiben technisch prüfbar.
+
 Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 12.10.2026.
 `authoring-p1-rect-color-1` ergänzt Schema-2-Exporte; die Pilotprofile v1/v2 bleiben
 unverändert. Keine neue Zertifizierungsregel, kein Solver im Spiel.
 
-Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 6 und 8. Die Dokumentrevision 2 erweitert Anweisungen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
+Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 6 und 8. Die Dokumentrevision 3 erweitert Anweisungen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
 
 ## Eingang und Grenzen
 
@@ -91,7 +95,9 @@ Die Software prüft Aufzeichnung und Dateibindungen, authentifiziert aber keinen
 menschlichen Akteur. Seine tatsächliche Erklärung muss vorliegen. Keine erfundene
 Freigabe, kein Force-Schalter. Fehlende Endabnahme erlaubt technische Diagnose
 mit konkretem Blocker, verhindert Export. `technical`, `editorial_approved`,
-`catalog_ready` und `registered` bleiben getrennt.
+`category_ready`, `catalog_ready` und `registered` bleiben getrennt.
+Diagnose ohne Kategorie behauptet keine Katalogbereitschaft; ein kategorisierter
+Export benötigt zusätzlich die ausdrücklich angegebene gültige Kategorienquelle.
 
 ## Aufruf und Ausgabe
 
@@ -100,7 +106,7 @@ Ausgabepfade müssen neu sein; `inspect` darf ohne Freigabe laufen.
 
 ```sh
 python -m tools.puzzle_production.target_adapter inspect --input <paket-oder-zip> --report <neue-diagnose.json>
-python -m tools.puzzle_production.target_adapter export --input <paket-oder-zip> --approval <echte-endfreigabe.json> --name "<Motivname>" --runtime-revision 1 --stem blatt_001 --save-slot blatt_001 --output-dir <neuer-export>
+python -m tools.puzzle_production.target_adapter export --input <paket-oder-zip> --approval <echte-endfreigabe.json> --name "<Motivname>" --runtime-revision 1 --stem blatt_001 --save-slot blatt_001 --category-id <kategorie-id> --categories content/categories.json --output-dir <neuer-export>
 python -m tools.puzzle_production.target_adapter verify-export --export <neuer-export>
 python -m tools.puzzle_production.target_adapter plan --export <neuer-export> --checkout <checkout>
 python -m tools.puzzle_production.target_adapter register --export <neuer-export> --checkout <checkout>
@@ -108,7 +114,7 @@ python -m tools.puzzle_production.target_adapter register --export <neuer-export
 
 JSON-Ausgabe: Diagnose/Erfolg Exit 0, blockierter Eingang Exit 2, Budgetabbruch
 Exit 4. API: `inspect`, `export`, `verify_export`, `registration(..., apply=False|True)`.
-Manifest `picross-target-export-v1` bindet Eingänge, separate Freigabe, frische
+Manifest `picross-target-export-v2` bindet Kategorie/Snapshot, Eingänge, separate Freigabe, frische
 Prüfung mit Toolcommit/Modulhashes, Matrix/Logik, Farbabbildung und Runtimebytes.
 Farb-IDs werden stabil nach Logikfarben auf 1…N abgebildet, Leer bleibt 0.
 PNG/SVG bleiben bytegleich, Darstellung proportional. Geschriebene Dateien
@@ -118,7 +124,8 @@ werden frisch geprüft und erst dann veröffentlicht. Bestehende Ziele sind Fehl
 
 [content/registry.json](../content/registry.json) ist autoritativ;
 [game/data/registry.json](../game/data/registry.json) ihre exakt kanonisch geprüfte
-Runtime-Projektion ohne Produktionsmetadaten. F01…F09 bleiben reserviert, nur
+Runtime-Projektion ohne Produktionsmetadaten, beide jetzt versioniert als v2.
+Kategorien/Zuordnung folgen [KAT-1](CATEGORIES.md); alle bisherigen Slots bleiben. F01…F09 bleiben reserviert, nur
 F01/F02/F04/F06/F08/F09 sichtbar. Neue IDs folgen lexikografisch. Unbekannte IDs
 und Großschreibungsaliase haben keinen Loader-/Savepfad. Hauptszene, Loader,
 SaveStore und Reset verwenden dieselbe Zuordnung. Neue ungelöste Titel:

@@ -19,12 +19,14 @@ from .contract import (Aborted, Budget, InvalidInput, InvalidProof, digest,
                        exact_keys, integer, load_json, validate_logic, write_json)
 from .images import (MAX_BYTES, file_hash, inspect_candidate, logic_from_matrix,
                      normalize, publish_bundle, versions)
+from . import categories
 
 ADAPTER = "authoring-p1-rect-color-1"
-FORMAT = "picross-target-export-v1"
+LEGACY_FORMAT = "picross-target-export-v1"
+FORMAT = "picross-target-export-v2"
 
 
-def tool_identity():
+def tool_identity(legacy=False):
     root = Path(__file__).resolve().parents[2]
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root,
@@ -33,6 +35,8 @@ def tool_identity():
         commit = None
     files = ["authoring_package.py", "target_adapter.py", "content_registry.py",
              "images.py", "repair.py", "contract.py", "verifier.py"]
+    if not legacy:
+        files.append("categories.py")
     return {"adapter": ADAPTER, "commit": commit, "versions": versions(),
             "modules": {n: file_hash(Path(__file__).with_name(n)) for n in files}}
 
@@ -96,7 +100,7 @@ def final_approval(package, selection, approval_path=None):
     return {"record": a, "sha256": file_hash(approval_path), "path": approval_path}
 
 
-def inspect(package: Package, approval_path=None):
+def inspect(package: Package, approval_path=None, *, legacy=False):
     h = package.handoff
     for name in ("brief", "report", "decisions", "effort"):
         package.file(h.get(name))
@@ -214,9 +218,18 @@ def inspect(package: Package, approval_path=None):
               "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256") if package.derivation else package.archive_sha256,
               "source": source, "width": design["width"], "height": design["height"], "mode": design["mode"],
               "difficulty": difficulty, "frame": {"left": left, "right": right, "top": top, "bottom": bottom},
-              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(),
+              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy),
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "test_only": h.get("test_only", False)}
+    if not legacy:
+        report.update(format="picross-target-inspection-v2", category_id=None,
+                      category_ready=False, catalog_ready=False)
     return report, design, matrix, logic, approval
+
+
+def categorize(report, catalog, category_id):
+    categories.lookup(catalog, category_id)
+    report.update(category_id=category_id, category_ready=True,
+                  catalog_ready=report["editorial_approved"])
 
 
 def definition(report, design, matrix, logic, name, revision, stem):
@@ -239,13 +252,17 @@ def player_notice(package):
                       "Usage basis: " + p["usage_basis"], ""))
 
 
-def export(source, output, *, name, revision, stem, save_slot, approval_path=None):
+def export(source, output, *, name, revision, stem, save_slot, approval_path=None,
+           category_id=None, categories_path=None):
     require(not output.exists(), "Export output exists; use a new path")
     require(isinstance(save_slot, str) and STEM.fullmatch(save_slot), "Invalid explicit save slot")
     relative(save_slot+".json")
     with open_package(source) as package:
         report, design, matrix, logic, approval = inspect(package, approval_path)
         require(approval is not None, "Export blocked: final_editorial approval missing")
+        require(categories_path is not None, "Explicit categories source is required")
+        catalog = categories.load(categories_path)
+        categorize(report, catalog, category_id)
         reveal_source = package.file(package.handoff["reveal"]["file"])
         require(isinstance(stem, str) and STEM.fullmatch(stem), "Invalid explicit file stem")
         relative(stem+".json")
@@ -264,6 +281,7 @@ def export(source, output, *, name, revision, stem, save_slot, approval_path=Non
                 "original_zip_sha256": report["original_zip_sha256"], "handoff_sha256": report["handoff_sha256"],
                 "inventory_sha256": report["inventory_sha256"], "files": hashes(inputs)})
             shutil.copyfile(approval["path"], stage / "approval.json")
+            write_json(stage / "categories.json", catalog)
             definition_path = "runtime/data/content/" + stem + ".json"
             reveal_path = "runtime/art/content/" + filename
             write_json(stage / definition_path, data)
@@ -273,6 +291,8 @@ def export(source, output, *, name, revision, stem, save_slot, approval_path=Non
             write_json(stage / "inspection.json", report)
             write_json(stage / "usage.txt", {"production_id": report["puzzle_id"], "sources": [package.provenance(package.handoff[k], k) for k in ("reveal", "motif")]})
             manifest = {"format": FORMAT, "adapter": ADAPTER, "definition_id": report["puzzle_id"],
+                        "category_id": category_id,
+                        "categories": {"file": "categories.json", "sha256": file_hash(stage / "categories.json")},
                         "runtime_revision": revision, "package_revision": report["package_revision"], "save_slot": save_slot,
                         "stem": stem, "definition": definition_path, "reveal": reveal_path, "color_mapping": mapping,
                         "selection": report["selection"], "handoff_sha256": report["handoff_sha256"],
@@ -292,15 +312,27 @@ def hashes(root):
 def verify_export(directory):
     from .authoring_package import file_table
     files = file_table(directory, time.monotonic()+300)
-    m = exact_keys(load_json(directory / "manifest.json"), {"format", "adapter", "definition_id", "runtime_revision", "package_revision",
+    m = load_json(directory / "manifest.json")
+    require(isinstance(m, dict) and m.get("format") in (FORMAT, LEGACY_FORMAT), "Unsupported target export format")
+    legacy = m["format"] == LEGACY_FORMAT
+    exact_keys(m, {"format", "adapter", "definition_id", "runtime_revision", "package_revision",
         "save_slot", "stem", "definition", "reveal", "color_mapping", "selection", "handoff_sha256", "inventory_sha256", "approval_sha256",
-        "technical", "editorial_approved", "catalog_ready", "registered", "test_only", "files"})
-    require(m["format"] == FORMAT and m["adapter"] == ADAPTER and isinstance(m["files"], dict) and
+        "technical", "editorial_approved", "catalog_ready", "registered", "test_only", "files"} |
+        (set() if legacy else {"category_id", "categories"}))
+    require(m["adapter"] == ADAPTER and isinstance(m["files"], dict) and
             set(files) == set(m["files"]) | {"manifest.json"}, "Invalid/incomplete target export")
     for name, expected in m["files"].items():
         require(file_hash(files[name]) == sha(expected), "Altered export file")
+    if not legacy:
+        ref = exact_keys(m["categories"], {"file", "sha256"})
+        require(ref["file"] == "categories.json" and
+                ref["sha256"] == m["files"].get("categories.json"), "Invalid categories reference")
+        catalog = categories.load(directory / "categories.json")
+        categories.lookup(catalog, m["category_id"])
     with open_package(directory / "input") as package:
-        report, design, matrix, logic, approval = inspect(package, directory / "approval.json")
+        report, design, matrix, logic, approval = inspect(package, directory / "approval.json", legacy=legacy)
+        if not legacy:
+            categorize(report, catalog, m["category_id"])
         require(approval is not None and m["approval_sha256"] == approval["sha256"], "Missing final export approval")
         require(m["stem"] + Path(m["reveal"]).suffix == Path(m["reveal"]).name and STEM.fullmatch(m["stem"]) and
                 STEM.fullmatch(m["save_slot"]), "Invalid export mapping")
@@ -331,11 +363,22 @@ def verify_export(directory):
         for value in tool["modules"].values(): sha(value)
         require(isinstance(stored["fresh_verification"], dict) and stored["fresh_verification"].get("certified") is True and
                 stored["fresh_verification"].get("status") == checked_status(report), "Invalid stored fresh verification")
+    if legacy:
+        # Preserve the stored v1 contract; current readiness is explicitly separate.
+        report = {**report, "legacy_catalog_ready": report["catalog_ready"],
+                  "catalog_ready": False, "category_ready": False, "category_id": None}
     return m, report
 
 
 def checked_status(report):
     return "found" if report["source"]["kind"] == "repair" else "solved"
+
+
+class ExplicitOnce(argparse.Action):
+    def __call__(self, parser, namespace, value, option_string=None):
+        if getattr(namespace, self.dest, None) is not None:
+            parser.error(option_string + " must be supplied exactly once")
+        setattr(namespace, self.dest, value)
 
 
 def main(argv=None):
@@ -353,13 +396,16 @@ def main(argv=None):
             p.add_argument("--runtime-revision", type=int, required=True)
             p.add_argument("--stem", required=True)
             p.add_argument("--save-slot", required=True)
+            p.add_argument("--category-id", required=True, action=ExplicitOnce)
+            p.add_argument("--categories", type=Path, required=True, action=ExplicitOnce)
     for cmd in ("verify-export", "plan", "register"):
         p = sub.add_parser(cmd)
         p.add_argument("--export", type=Path, required=True)
         if cmd != "verify-export":
             p.add_argument("--checkout", type=Path, required=True)
-    recovery = sub.add_parser("recover-registration")
-    recovery.add_argument("--checkout", type=Path, required=True)
+    for command in ("recover-registration", "sync-runtime", "check-registry"):
+        p = sub.add_parser(command)
+        p.add_argument("--checkout", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
         if args.command == "inspect":
@@ -370,12 +416,19 @@ def main(argv=None):
                 write_json(args.report, result)
         elif args.command == "export":
             result = export(args.input, args.output_dir, name=args.name, revision=args.runtime_revision,
-                            stem=args.stem, save_slot=args.save_slot, approval_path=args.approval)
+                            stem=args.stem, save_slot=args.save_slot, approval_path=args.approval,
+                            category_id=args.category_id, categories_path=args.categories)
         elif args.command == "verify-export":
             result = verify_export(args.export)[1]
         elif args.command == "recover-registration":
             from .content_registry import recover
             result = recover(args.checkout)
+        elif args.command == "sync-runtime":
+            from .content_registry import sync_runtime
+            result = sync_runtime(args.checkout)
+        elif args.command == "check-registry":
+            from .content_registry import check_checkout
+            result = {"status": "valid", "registry": check_checkout(args.checkout, replay=True)}
         else:
             from .content_registry import registration
             result = registration(args.export, args.checkout, apply=args.command == "register")

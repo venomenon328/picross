@@ -33,6 +33,8 @@ func run() -> void:
 	SaveStore.test_root_override = temporary.path_join("picross-p1-tests-%d" % Time.get_ticks_usec())
 	root.size = Vector2i(1280, 720)
 	fixture = Definition.load_f01()
+	print("PHASE kat1")
+	preload("res://tests/kat1_cases.gd").run(self)
 	print("PHASE test_definition()")
 	test_definition()
 	print("PHASE test_gesture()")
