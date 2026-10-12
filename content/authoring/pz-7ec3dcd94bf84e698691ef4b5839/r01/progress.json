@@ -1,0 +1,25 @@
+{
+  "format": "picross-authoring-progress-v1",
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "revision": "r01",
+  "sealed_package_sha256": "44571d2acafa523be54df3f762c6efc552f2d5a9105a77004c4e987703624b67",
+  "events": [
+    {
+      "state": "reveal_review",
+      "action": "Three native original illustrations saved and reviewed; no image approval or raster work."
+    },
+    {
+      "state": "reveal_review",
+      "action": "Full six-file diff reviewed against source main; package SHA-256 and human-approval boundaries unchanged. CI and final merge results recorded externally in PR #83."
+    }
+  ],
+  "repository_delivery": {
+    "branch": "chore/pea-reveal-r01",
+    "source_commit": "9a45cc9d6c02a4be3b3a509159cc1158d2c1d2c1",
+    "pr": 83,
+    "head": "6539a52c0d78b80bce91c4d8aa77e03e6f17cb7e",
+    "merge": null,
+    "head_role": "initial archive commit; final delivery/review/merge evidence in PR #83",
+    "status_source": "https://github.com/venomenon328/picross/pull/83"
+  }
+}
