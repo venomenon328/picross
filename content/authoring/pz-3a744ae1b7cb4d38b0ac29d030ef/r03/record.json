@@ -46,7 +46,7 @@
     "package": "content/packages/pz-3a744ae1b7cb4d38b0ac29d030ef/r03",
     "export_manifest_sha256": "6da944b6256b0622c3068644c1460a37da92a356997339f59cbc3040071e3dfd",
     "evidence_manifest": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/integration-r4/manifest.json",
-    "evidence_manifest_sha256": "bceaddb52a8cfc084151d6b379af13470183cd9e4ee7b78809ab1eb0b7c2e5e1",
+    "evidence_manifest_sha256": "cc2d2da44bd8a3f2f64d12379ce73b679fb471481b10df4dbf53bd9567656122",
     "rulebook": {
       "version": "0.4.1",
       "document_revision": 4,
