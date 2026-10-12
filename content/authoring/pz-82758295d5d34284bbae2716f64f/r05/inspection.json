@@ -1,0 +1,118 @@
+{
+  "adapter": "authoring-p1-rect-color-1",
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "catalog_ready": false,
+  "category_id": null,
+  "category_ready": false,
+  "checked_at_utc": "2026-10-12T23:24:16.820190+00:00",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "At all 140 verified proof checkpoints, all 60 current lines were examined for full-line opportunities. Before cleanup at <=18 unresolved cells, minimum productive lines was 8; no step met the <=2 productive lines bottleneck condition. This census does not implement weaker-rule fixpoints or human strategy calibration.",
+    "calibration": "No validated difficulty analyser and no human comparison data. Low-confidence editorial estimate; time not estimated.",
+    "confidence": "low",
+    "effort": {
+      "cells": 864,
+      "empty": 314,
+      "filled": 550,
+      "height": 36,
+      "human_active_minutes": null,
+      "proof_steps": 140,
+      "solve_time_minutes": null,
+      "width": 24
+    },
+    "evidence": "audit/difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "75ce38cea6fef91682fd82d770d36d1bb3c12f4a3a0da301fe211e7fd8b945ee",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L2",
+      "L4"
+    ],
+    "playtest": "not_performed; optional",
+    "rule_families": {
+      "R0": "Initially only empty column 24 (one-based) is directly resolved; no packed row/column. After that, each row still has at least one unit of slack; initial direct R0 seeds do not complete the puzzle. Late completed blocks give cleanup.",
+      "R1": "Main estimated demand: overlap/extension of long contiguous blocks. Initial row 7 [13] in width 24 forces columns 12–13; rows 13–15 have length 21/22 blocks; column 11 has [35] in height 36. These broad anchors spread simple progress through the silhouette.",
+      "R2": "Muzzle/neck separation and columns with two/three blocks may need combined block assignment. Necessity/sufficiency of R0+R1 versus R2 was not exhaustively tested; do not claim an instrumented L2 proof.",
+      "R3": "Certification uses full-line-mono support. That alone does not establish R3 necessity; no specifically unavoidable R3 step identified. R3 demand cannot be formally excluded, hence conservative L2–L4 uncertainty."
+    },
+    "time_estimate": null
+  },
+  "editorial_approved": false,
+  "format": "picross-target-inspection-v2",
+  "frame": {
+    "bottom": true,
+    "left": true,
+    "right": false,
+    "top": true
+  },
+  "fresh_verification": {
+    "certified": true,
+    "line_evaluations": 200,
+    "logic_hash": "75ce38cea6fef91682fd82d770d36d1bb3c12f4a3a0da301fe211e7fd8b945ee",
+    "profile": {
+      "deduction": "all-line-supported-values",
+      "id": "full-line-mono",
+      "search": false,
+      "start": "unknown",
+      "version": 1
+    },
+    "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+    "proof_verified": true,
+    "status": "solved",
+    "steps": 140
+  },
+  "handoff_sha256": "1e1daaea06694baf3a3d958e1c764995cfeab5e6ee362343464806ddc6afd31a",
+  "height": 36,
+  "inventory_sha256": "32eb89a3e411292c3c69e49e1656709829bd9dc3ee97b2b4de7c20917fac410a",
+  "mode": "mono",
+  "original_zip_sha256": "d1e5844edc1ae23072dd654b63a89d8350747cffa39fd489a362122b731cc8c7",
+  "package_revision": "r05",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "registered": false,
+  "reveal": {
+    "height": 1254,
+    "sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+    "width": 1254
+  },
+  "selection": {
+    "logic_hash": "75ce38cea6fef91682fd82d770d36d1bb3c12f4a3a0da301fe211e7fd8b945ee",
+    "matrix_hash": "6322a2e0a2b55b4fdde62b0bb9256acf6235b5d581d120b13113d9e89c96878f",
+    "reveal": {
+      "file": "reveal/A-r01.png",
+      "sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89"
+    },
+    "variant": "area-160"
+  },
+  "source": {
+    "candidate_id": "d1b5a92968d0698cd68213625a013a72d80f9f1d16c798d37aa346b65206e68e",
+    "kind": "import",
+    "variant": "area-160"
+  },
+  "technical": true,
+  "test_only": false,
+  "tool": {
+    "adapter": "authoring-p1-rect-color-1",
+    "commit": "542ba6237a8a962774b23abb195b000b079199a7",
+    "modules": {
+      "authoring_package.py": "f31be6492b229f0b113867d20df23553aac78a6c7fcece5833e8a2048b21a985",
+      "categories.py": "3790a5bce1b6bebc238e23db8e35e79c887261c57c3e41b78d190694a91758a5",
+      "content_registry.py": "d238f2cd4618463c533adbd7dc2c378ebcdb4d1e63114a4ea65829c7feaf2a0d",
+      "contract.py": "11afd92a183f28bc427ac655f80c49d015c21aa6f4c23dacbd6603a940296094",
+      "images.py": "05030b413b5c42e5eec3c5c68b67e57d203094c3a2a81efc7d85ff73722f67b3",
+      "repair.py": "d3c042337c4168977edb42f56ac2ad2a4f7913deb26969989f66233aa350ea15",
+      "target_adapter.py": "4d18ffa5db7a0847028ab76b28b39dcfdb95c36cc4e4338e562a244254b2f2c9",
+      "verifier.py": "86bd08d1d718dba5165939c63bf6b3cb71c3af978c699b149e331d12d50ac9b8"
+    },
+    "versions": {
+      "jpeg": "8.0",
+      "jpeg_turbo": "3.1.4.1",
+      "littlecms": "2.19",
+      "pillow": "12.3.0",
+      "tool": "rp3-image-1",
+      "zlib": "1.3.1.zlib-ng"
+    }
+  },
+  "width": 24
+}

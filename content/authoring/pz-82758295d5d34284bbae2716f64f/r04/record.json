@@ -3,10 +3,10 @@
   "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
   "revision": "r04",
   "category_id": "sport-spiele",
-  "state": "motif_review",
+  "state": "motif_approved",
   "package": {
-    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r04/package.zip",
     "bytes": 2281083,
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r04/package.zip",
     "sha256": "955fc703c95a0b54eac08d997a53998fb83a57b76e7e39a273734b17524ed939"
   },
   "handoff": {
@@ -19,10 +19,8 @@
   "height": 36,
   "mode": "mono",
   "difficulty": null,
-  "blockers": [
-    "Explicit separate human approval of new MA-r02 and its 24x36-mono corridor required before raster production."
-  ],
-  "next_action": "Present unchanged A-r01 and new MA-r02 side by side; await separate explicit human motif approval before any raster production.",
+  "blockers": [],
+  "next_action": "Continue at indexed r05 content_ready: exact area-160 ear allowance recorded; final editorial acceptance pending.",
   "integration": null,
   "previous_revision": "r03",
   "reveal_revision": "A-r01",
@@ -33,21 +31,24 @@
   },
   "motif_revision": "MA-r02",
   "motif_sha256": "0a79644cc797f5202a288a5d8b8e271cf1e39db4b81cc39ab744949a0202cb59",
-  "motif_approval": null,
-  "execution_hold": "No raster production before explicit new MA-r02 human approval.",
+  "motif_approval": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r04/motif-approval.json",
+    "sha256": "d9c33f3e5e29f560c8d4d2b58d3005c2154f05649e16c347e2f327910ca184a9"
+  },
+  "execution_hold": "Superseded by actual new MA-r02 approval and this explicit production order; sealed r04 handoff retains historical pending state.",
   "progress_log": "content/authoring/pz-82758295d5d34284bbae2716f64f/r04/progress.json",
   "archive_review": {
+    "delivery_evidence": "Final head/selected checks/review/authorized merge and actual main verification recorded in PR for content/knight-silhouette-r04.",
     "source_commit": "bc3286050a35cdbdd3b5fe5e6274255228517aaa",
-    "state": "package_validation_passed",
-    "delivery_evidence": "Final head/selected checks/review/authorized merge and actual main verification recorded in PR for content/knight-silhouette-r04."
+    "state": "package_validation_passed"
   },
   "repository_delivery": {
     "branch": "content/knight-silhouette-r04"
   },
   "preserved_parameters": {
-    "width": 24,
     "height": 36,
-    "mode": "mono"
+    "mode": "mono",
+    "width": 24
   },
   "changed_design_constraints": [
     "Facial interior details optional under actual new user statement; silhouette priority."
@@ -55,5 +56,10 @@
   "validation": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r04/validation.json",
     "sha256": "1a5099f6c9321201a716d474d9245df3ed33e46d32ea882a273afe8dfb917801"
-  }
+  },
+  "ear_contour_approval": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r04/ear-contour-approval.json",
+    "sha256": "6c78603f1103d3a59d5d643df5df86242bdc3cbbdd7d1a451138d6ebe54533c2"
+  },
+  "superseded_by": "r05"
 }
