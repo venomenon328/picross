@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-Die Produktionsplanung verwendet thematische Kategorien gemäß [KAT-1](CATEGORIES.md). Jedes sichtbare registrierte Rätsel hat genau eine Hauptkategorie. Kapitel werden später aus dem vorhandenen Fundus zusammengestellt; Kategorien sind keine Kapitel oder Freischaltbedingungen. In der Entwicklungsfassung sind alle sichtbaren Inhalte frei spielbar. Der initiale Bestand ist redaktionell veränderbar, ohne Mengenquoten. Die Katalogoberfläche folgt separat in #79; die allgemeinen Progressionsziele bleiben erhalten.
+Die Produktionsplanung verwendet thematische Kategorien gemäß [KAT-1](CATEGORIES.md). Jedes sichtbare registrierte Rätsel hat genau eine Hauptkategorie. Kapitel werden später aus dem vorhandenen Fundus zusammengestellt; Kategorien sind keine Kapitel oder Freischaltbedingungen. In der Entwicklungsfassung sind alle sichtbaren Inhalte frei spielbar. Der initiale Bestand ist redaktionell veränderbar, ohne Mengenquoten. KAT-2 (#79) ergänzt den datenbasierten Einstieg mit Kategorien, Statuskarten und höchstens 24 Karten pro Seite ([Prüfzuordnung](KAT2_VERIFICATION.md)); die allgemeinen Progressionsziele bleiben erhalten.
 
 ## Aktueller Entwicklungsstand
 

@@ -10,6 +10,12 @@ from ci_scope import FLAGS, JOBS, apply_event_policy, classify, evaluate, make_p
 
 
 class SelectionTests(unittest.TestCase):
+    def test_catalog_native_route_and_harness_keep_required_checks(self):
+        for path in ("game/ui/catalog.gd", "game/tests/kat2_probe.gd"):
+            selected = classify([path])["selected"]
+            self.assertTrue(selected["product"] and selected["integration"] and selected["visual"] and selected["perf_b"])
+        self.assertTrue(all(classify(["tools/kat2_product.py"])["selected"].values()))
+
     def test_save_recovery_and_gameplay_keep_integration_without_manufacturer(self):
         for path in ("game/model/save_store.gd", "game/model/gesture.gd", "game/ui/main.gd"):
             value = classify([path])["selected"]

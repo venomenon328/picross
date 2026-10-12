@@ -9,6 +9,10 @@ static func run(runner: SceneTree) -> void:
 	runner.check(Registry.validate(raw).is_empty(), "KAT1 runtime registry validates")
 	runner.check(Registry.categories().size() == 20, "KAT1 initial categories load")
 	runner.check(Registry.by_id("F-01").category_id == "fahrzeuge-verkehr", "KAT1 existing assignment")
+	var detached: Dictionary = Registry.by_id("F-01")
+	detached.category_id = "not-a-category"
+	runner.check(Registry.by_key("f01").category_id == "fahrzeuge-verkehr", "registry lookup returns a detached validated entry")
+	runner.check(Registry.ordinal("F-09") == 9 and Registry.ordinal("missing") == 0, "registry ordinal includes historical reservations")
 	var changed: Dictionary = raw.duplicate(true)
 	changed.categories.append({"id": "test-only-extra", "name": "TEST ONLY", "order": 50})
 	changed.entries[0].category_id = "test-only-extra"

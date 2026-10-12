@@ -114,6 +114,19 @@ mit 399 unbekannten Zellen erkennen und genau an der Isolationsassertion
 mit Exit 4 scheitern. Erfolg, Recovery, Parserfehler oder andere Fehler werden
 nicht als erfolgreiche Gegenprobe akzeptiert. Kein weiteres RP3-Durchspiel.
 
+## KAT-2 im Integrationspfad
+
+`--integration` ergänzt die nativen Katalogprüfungen aus
+[tools/kat2_product.py](../tools/kat2_product.py): reguläre Hauptszene mit echten
+Pointerereignissen, gesonderter Prozessneustart, gültiger Leerbestand,
+ungültige Registry, isolierter KAT-1-Adapterzuwachs und synthetische 300 Einträge.
+Jede Instanz nutzt ein temporäres Projekt und Saveprofil. Kataloglast ist keine
+300-fache Produktions-/Solverprüfung. Der Produktharness bindet alle Berichte
+und die kleinen nativen Originalausschnitte an Head/Basis/Checkout; vollständige
+Framekontexte bleiben lokal. Pflichtausschnitte dürfen nicht still aus der
+begrenzten Lieferung fallen. Die bisherigen 30-/75-MB-Grenzen und Laufzeitlimits
+bleiben unverändert. [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
+
 ## Native Renderabdeckung und Speicherung
 
 ZA-1 ergänzt im ausgewählten Pilotenpfad vier temporär registrierte künstliche

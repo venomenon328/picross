@@ -57,6 +57,7 @@ def classify(paths: list[str], force: str = "auto") -> dict:
             "tools/p1_product.py", "tools/test_p1_product.py",
             "tools/p1_preflight.py", "tools/test_p1_preflight.py",
             "tools/za1_product.py",
+            "tools/kat2_product.py", "tools/test_kat2_product.py",
         } or path.startswith("tools/p1_preflight_smoke/"):
             add(FLAGS, path)
         elif path.startswith(("tools/puzzle_production/", "tests/puzzle_production/",

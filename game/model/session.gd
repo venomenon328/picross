@@ -53,11 +53,14 @@ func visible_cells() -> Array[int]:
 		result[change.index] = change.after
 	return result
 
-func album_title() -> String:
+func neutral_title() -> String:
 	var number: String = str(definition.id).trim_prefix("F-")
 	if str(definition.id).begins_with("pz-"):
-		number = "%02d" % (DefinitionRegistry.entries().find(DefinitionRegistry.by_id(str(definition.id))) + 1)
-	return str(definition.reveal.name) if completed else "Blatt %s · %d × %d" % [number, player.width, player.height]
+		number = "%02d" % DefinitionRegistry.ordinal(str(definition.id))
+	return "Blatt %s · %d × %d" % [number, player.width, player.height]
+
+func album_title() -> String:
+	return str(definition.reveal.name) if completed else neutral_title()
 
 func reveal() -> Dictionary:
 	return definition.reveal.duplicate(true) if completed else {}

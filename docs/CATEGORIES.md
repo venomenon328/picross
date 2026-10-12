@@ -4,8 +4,8 @@ Stand 12.10.2026, [Issue #78](https://github.com/venomenon328/picross/issues/78)
 Die [Kategorienquelle](../content/categories.json) führt den initialen redaktionellen
 Arbeitsbestand von 20 Motivgruppen. Kategorien sind weder Kapitel noch Schwierigkeit
 oder Freischaltbedingungen. Alle sichtbaren registrierten Rätsel bleiben spielbar.
-Ausgewogene Mengen sind ein Planungsziel ohne Quote. Die Katalogoberfläche folgt
-separat in [#79](https://github.com/venomenon328/picross/issues/79).
+Ausgewogene Mengen sind ein Planungsziel ohne Quote. Die Katalogoberfläche aus [#79](https://github.com/venomenon328/picross/issues/79)
+verwendet diese Projektion unverändert; [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
 
 ## Daten und Grenzen
 
