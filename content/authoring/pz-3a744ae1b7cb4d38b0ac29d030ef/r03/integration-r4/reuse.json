@@ -1,0 +1,16 @@
+{
+  "original_production": "package.zip, unchanged file-bound gates, images, matrix, hints, repair and difficulty",
+  "reused_native_pixel_evidence": {
+    "commit": "f169d37cae9b2930e7e4488fed1ab7fa85d5a715",
+    "file": "docs/evidence/knoblauch-r03/native/finish.json",
+    "sha256": "2c68ca9fd90362bb0f13c22735a29905cfd2c02f44f7d0f002ef492f41b343f9",
+    "scope": "Original native 1600-cell completion raster check; exact same runtime definition, reveal and reveal renderer."
+  },
+  "unchanged_modules": {
+    "game/ui/reveal.gd": "504845bcc0e87ab01d5522bf998920f9e9352f7258802b5ee705ad7bac51286c",
+    "tools/puzzle_production/images.py": "05030b413b5c42e5eec3c5c68b67e57d203094c3a2a81efc7d85ff73722f67b3",
+    "tools/puzzle_production/repair.py": "d3c042337c4168977edb42f56ac2ad2a4f7913deb26969989f66233aa350ea15",
+    "tools/puzzle_production/verifier.py": "86bd08d1d718dba5165939c63bf6b3cb71c3af978c699b149e331d12d50ac9b8"
+  },
+  "new_checks_reason": "KAT2 changed selection/category/album UI since previous integration; targeted once-only new-content route and current real Windows PCK checked outside CI. No general suite or corpus replay."
+}

@@ -1,0 +1,55 @@
+{
+	"adapter": "NVIDIA GeForce RTX 3070",
+	"captures": [
+		{
+			"context": "completion.png",
+			"file": "completion-artwork.png",
+			"rect": [
+				895.0,
+				220.0,
+				763.000061035156,
+				763.000061035156
+			]
+		},
+		{
+			"context": "completion.png",
+			"file": "completion-raster.png",
+			"rect": [
+				100.0,
+				220.0,
+				763.0,
+				763.0
+			]
+		},
+		{
+			"context": "earned-catalog.png",
+			"file": "earned-catalog-card.png",
+			"rect": [
+				537.0,
+				188.0,
+				431.0,
+				288.0
+			]
+		},
+		{
+			"context": "earned-catalog.png",
+			"file": "earned-catalog-artwork.png",
+			"rect": [
+				549.0,
+				278.0,
+				113.0,
+				113.0
+			]
+		}
+	],
+	"checks": 26,
+	"display_server": "Windows",
+	"failures": [],
+	"format": "picross-kat2-native-v1",
+	"mode": "finish",
+	"quit_slot_hashes": {},
+	"test_only": true,
+	"timings_ms": {
+		"startup_ms": 468.489
+	}
+}

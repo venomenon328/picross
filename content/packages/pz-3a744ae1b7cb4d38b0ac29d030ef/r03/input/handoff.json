@@ -1,0 +1,113 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.0",
+    "file": "sources/repository/docs/ai-workflows/PUZZLE_AUTHORING.md",
+    "sha256": "a93b625d2368b9b45b985988f6d40c6fa7a5d43399738712dfade0209d94514a"
+  },
+  "puzzle_id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
+  "revision": "r03",
+  "repo_commit": "039f59d9a94ad6c2fea32a900d03d1d3b8a7df4c",
+  "state": "content_ready",
+  "brief": "brief.md",
+  "approved_parameters": [
+    {
+      "width": 40,
+      "height": 40,
+      "mode": "mono",
+      "method": "area",
+      "foreground_colors": 1,
+      "fit": "exact",
+      "crop_permission": "Unverzerrter motivschonender Zuschnitt ausschließlich äußeren Hintergrunds",
+      "actual_crop": [
+        66,
+        40,
+        1240,
+        1214
+      ],
+      "evidence": "approvals/motif-MA-r01.json"
+    }
+  ],
+  "reveal": {
+    "file": "reveals/Knoblauch_A_r01.png",
+    "sha256": "0a102f0e49cd93f9b2851d9e5d7ba82edb601102055322a1628e806d544a4674",
+    "approval": "approvals/reveal-A-r01.json"
+  },
+  "motif": {
+    "file": "motifs/Knoblauch_MA_r01.png",
+    "sha256": "d2cb88764e084cd8afe07449151e439539fce2c1152bc7cfb1d3aac2abcd6a19",
+    "derived_from_reveal_sha256": "0a102f0e49cd93f9b2851d9e5d7ba82edb601102055322a1628e806d544a4674",
+    "approval": "approvals/motif-MA-r01.json"
+  },
+  "candidate": {
+    "bundle": "production/repair-r01",
+    "variant": "candidate-002",
+    "proof": "production/repair-r01/final-proof.json",
+    "verification": "audit/final-verify.json",
+    "source_type": "repair",
+    "repair_id": "b34663a2e64c8a1d00c0af00b8b1f8289bbbfe84b84b62134e7ba8446c4f2344",
+    "parent_variant": "area-128",
+    "matrix_hash": "2691fe2f52cf330e9500779160dd90a8446c1c7d90f174b75fdbc1df5aa81f09",
+    "logic_hash": "62a584d7b1179a30f914ec5b8decb56a5fef532b8a85422e2147ad49dbd9963e",
+    "raster": "production/repair-r01/after.png"
+  },
+  "origin_verification": {
+    "report": "audit/repair-replay.json",
+    "input_and_derivation": "audit/input-validation.json",
+    "import_reconstruction": "audit/area-128-origin-r02.json",
+    "scope": "Input/reveal/motif: file-bound native provenance + human approvals + own visual check. Motif bytes through normalization, matrix, clues and all repair parents/proofs: deterministic reconstruction and independent replay."
+  },
+  "repair": {
+    "reference": "production/import-r01",
+    "reference_variant": "area-128",
+    "plan": "production/repair-plan-r01.json",
+    "replay": "audit/repair-replay.json"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "57af3c9c896edfbccfeef50aff235d467aef7fc3acb345a7c626d8282ee52d07"
+  },
+  "report": "report.md",
+  "quality_report": "quality-report.md",
+  "comparison": "index.html",
+  "decisions": "decisions.md",
+  "effort": "effort.json",
+  "difficulty": "difficulty.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "blocked"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json",
+    "motif": "approvals/motif-MA-r01.json",
+    "provenance": "audit/repair-replay.json",
+    "logic": "audit/final-verify.json",
+    "frame": "audit/final-checks.json",
+    "visual": "quality-report.md",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "views/final-comparison.png",
+    "final_editorial": null,
+    "target_export": "quality-report.md"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "Catalog gate only: existing target adapters fixed to historical pilot IDs; no suitable new-puzzle adapter, no export attempted.",
+    "Catalog gate only: shared production index not available/verified."
+  ],
+  "content_blockers": [],
+  "final_editorial_approval": null,
+  "next_action": "Human editorial acceptance of the shown final raster, unchanged A-r01, reports and exact r03 inventory hash. Playtest optional. Only after separate authorization address new-ID export/catalog integration; do not reuse pilot IDs.",
+  "authorization": "Current user production request plus explicit approval of MA-r01 and 40x40 mono/area/background-crop corridor. Existing deterministic tools only, bounded motif-protected repair. No tool changes, repository writes or publication.",
+  "date_utc": "2026-10-11T22:28:30.870939+00:00"
+}
