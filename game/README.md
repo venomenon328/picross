@@ -1,12 +1,12 @@
 # picross: Spiel- und Entwicklungsanleitung
 
 Weitere freigegebene Workflow-Inhalte können über den [ZA-1-Adapter](../docs/ZA1_ADAPTER.md)
-registriert werden. Die Adapterlieferung ergänzt ausschließlich technische
-Fähigkeiten; das aktuelle Spielerangebot bleibt bei den folgenden sechs Rätseln.
+registriert werden. Das aktuelle Spielerangebot umfasst sieben Rätsel.
 
 Das reguläre Projekt liegt unter `game/`. Der integrierte Stand umfasst Sidebar,
-Vollsicht, Stift-/Atlasdarstellung, Save/Recovery und genau sechs Katalogrätsel:
-F01 (20×20), F02 (40×40, vier Farben), F04 (20×20), F06 (50×50), F08/F09 (40×40).
+Vollsicht, Stift-/Atlasdarstellung, Save/Recovery und sieben Katalogrätsel:
+F01 (20×20), F02 (40×40, vier Farben), F04 (20×20), F06 (50×50), F08/F09 (40×40)
+und Blatt 10 (40×40, monochrom). Sein Motiv wird erst nach Abschluss sichtbar.
 F03/F05/F07 werden nicht angeboten; vorhandene Dateien und Speicherplätze bleiben.
 Dies ist eine unsignierte Entwicklungsfassung, kein Release.
 
@@ -27,8 +27,10 @@ CI-Lauf, Engine-/Archivhashes, EXE-Hashes und Prüfphasen. Artefaktlink im PR.
 Godot löst `user://p1/saves/` im projektbezogenen User-Data-Verzeichnis auf.
 Unter Windows liegt dieses standardmäßig unter
 `%APPDATA%\Godot\app_userdata\picross · P1\p1\saves\` (bei benutzerdefiniertem
-Godot-Datenpfad entsprechend dort). Die neun bekannten Inhalts-IDs ergeben
+Godot-Datenpfad entsprechend dort). Die neun historischen Inhalts-IDs ergeben
 `f01.json` bis `f09.json` mit gleichnamigen `f01.bak`/`f01.tmp` usw.
+Weitere registrierte Inhalte besitzen eigene explizite Slots; sie verwenden keine
+historischen Speicherplätze erneut.
 Tests verwenden nur eigene temporäre Profile; das ZIP enthält keine
 Spielstände.
 

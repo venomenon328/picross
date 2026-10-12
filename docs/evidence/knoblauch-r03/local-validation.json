@@ -1,0 +1,28 @@
+{
+  "format": "picross-knoblauch-local-validation-v1",
+  "fast_tools": {
+    "tests": 126,
+    "status": "passed",
+    "skipped": 1,
+    "skip_reason": "Windows symlink unavailable"
+  },
+  "docs": "passed",
+  "native_core": {
+    "checks": 5506,
+    "failures": 0
+  },
+  "native_new_content": "passed; five separate processes and actual PCK/exported Windows start",
+  "full_product": {
+    "status": "failed",
+    "failure": "VS2 numeric-ID/256-case assumption",
+    "report_sha256": "fb08e22a8a8726f1c65f857f1bd24ceca5832a67d1e3c2bcfe71af33d5b40966"
+  },
+  "production_tests": {
+    "tests": 124,
+    "status": "failed",
+    "errors": 18,
+    "reason": "fixture checkout omits registered runtime assets",
+    "log_sha256": "20fcd5c1a2366f22560636534b0dae80def71b7af5a6174d288028b02249e295"
+  },
+  "authorization": "Both remaining narrow tool corrections requested; pending."
+}

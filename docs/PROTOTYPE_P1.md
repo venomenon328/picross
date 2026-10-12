@@ -6,7 +6,7 @@ IDs/Slots; neue Inhalte benötigen keine Codeänderung. Neutrale Blatttitel und
 proportionale Rechteck-Reveals erhalten die Abschlussgrenze. Historische Einträge,
 Save-Schema 1 und Reservierungen bleiben erhalten. Keine neuen regulären Inhalte.
 
-Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08, F09 und das freigegebene 40×40-Monorätsel `pz-3a744ae1b7cb4d38b0ac29d030ef` (Knoblauch). F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
 
 Bei Zellrendering-/Performancearbeit zusätzlich den verbindlichen
 [PERF-Vertrag](CELL_RENDERING.md) und die [A-Prüfzuordnung](PERF_A_IMPLEMENTATION.md)
@@ -40,7 +40,7 @@ der gewünschte reguläre Arbeitswert, begrenzt durch den tatsächlichen Fit.
 Platzmangel und kleine/kollidierende Hinweise werden transparent behandelt;
 50×50 erhält keinen versteckten Pan-Ausweg oder Komfortzertifikat.
 
-Sechs Inhalte werden angeboten; neun bekannte IDs und Schema 1/Appidentität bleiben erhalten. Vollständige Validierung
+Sieben Inhalte werden angeboten; die neun historischen IDs und Schema 1/Appidentität bleiben erhalten. Vollständige Validierung
 geht der Normalisierung alter Hand-/Pan-/Zoomwerte voraus. Gültige gewünschte
 Arbeitsstufe und aktuelle Fitgröße sind getrennt; Modus wird nicht gespeichert.
 Studienkatalog und -speicher werden beim regulären Start nicht verwendet.

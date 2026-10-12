@@ -1,0 +1,10 @@
+{
+  "original_files": 182,
+  "original_inventory_entries_verified": 180,
+  "retained_original_files_byte_equal": 93,
+  "compact_files": 94,
+  "original_zip_sha256": "7013d5b29a0dda5ad9a5047730a1e71b4d06596aa284ee8a3cbdad9184dc23f1",
+  "compact_zip_sha256": "7fbadeefe46870d297619fc07511b2665822bea55730221965eec0d3d5b6457e",
+  "handoff_sha256": "8411cb079ac321b975cc51c01aa47f935fe492aee569060046aee917d594c06c",
+  "inventory_sha256": "57af3c9c896edfbccfeef50aff235d467aef7fc3acb345a7c626d8282ee52d07"
+}

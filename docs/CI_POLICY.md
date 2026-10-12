@@ -207,7 +207,7 @@ Die neue Sicherung macht den Ablauf des ursprünglichen Actions-Artefakts am
 23.10.2026 für diese benötigten Bytes unschädlich. Sie ist kein neues Renderbild.
 
 VS2, Sidebar und PERF-A/B sind über PR #62/#66 integriert. Die alte offene
-Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Die sechs Katalogrätsel und
+Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Die sieben Katalogrätsel und
 zehn technischen VS-Fälle bleiben geprüft. Weitere Quellenentscheidungen und
 Dateibindungen stehen im [Bestandsinventar](DEVELOPMENT_ARCHIVE.md).
 

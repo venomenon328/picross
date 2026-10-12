@@ -6,7 +6,7 @@ an Originalhandoff, Inventar und Auswahl gebundene Endfreigabe sind erforderlich
 [Nachweise](ZA1_VERIFICATION.md). Alte Pilotprofile bleiben unverändert; keine
 automatische Freigabe oder Katalogaufnahme des Beispiels.
 
-Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08, F09 und das freigegebene 40×40-Monorätsel `pz-3a744ae1b7cb4d38b0ac29d030ef` (Knoblauch). F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
 
 Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-6 integriert; aktueller Katalog gemäß #68
 

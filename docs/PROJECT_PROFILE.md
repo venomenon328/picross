@@ -8,7 +8,9 @@ Konsolidierung #70 ist `main@0f89f08729539bbb4a02a590cbd18e58fbbda305`, einschli
 Frühere Draft-/Mergegate-Meldungen zu #47/#55/#56/#62/#66 sind historische Lieferstände.
 Die dortigen Abnahmen bleiben an ihre jeweiligen Quellen gebunden.
 
-Der Katalog enthält genau F01, F02, F04, F06, F08 und F09. Nach der
+Der Katalog enthält F01, F02, F04, F06, F08, F09 und das freigegebene
+40×40-Monorätsel `pz-3a744ae1b7cb4d38b0ac29d030ef` (Knoblauch, Runtime-Revision 1).
+Nach der
 [Eigentümerentscheidung #68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419)
 sind reguläre Rätsel höchstens 50×50 groß. F03/F05/F07 bleiben als historische
 Dateien mit bestehenden Speicherplätzen und Nachweisbindungen erhalten. 100×100
@@ -23,7 +25,9 @@ Die Arbeitsablage ist keine Runtime-Registrierung.
 [ZA-1](ZA1_ADAPTER.md) ermöglicht weitere freigegebene Workflow-Inhalte über eine
 zentrale Datenregistry mit expliziten Slots, einschließlich Mono/Farbe und Rechtecken.
 Die Adapterlieferung fügt kein reguläres Rätsel hinzu. Künstliche Fixtures bleiben
-isoliert; Knoblauch r03 hat weiterhin keine finale redaktionelle Freigabe.
+isoliert. Knoblauch r03 ist durch die tatsächliche menschliche Erklärung im
+[Authoringrecord](../content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/record.json)
+endabgenommen und über ZA-1 registriert; Slot `knoblauch_001` bleibt separat.
 
 Aktuelle Bindung: Godot Standard 4.7.2-stable, typisiertes GDScript, native
 Windows-Desktopfassung, Maus als verpflichtender Eingabepfad (D-06), Escape als

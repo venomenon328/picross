@@ -243,10 +243,13 @@ func test_scene() -> void:
 	await process_frame
 	await process_frame
 	check(app.album.visible and not app.work.visible and app.reveal_view.payload.is_empty(), "scene starts in neutral album")
-	var expected_catalog: Array[String] = ["F-01", "F-02", "F-04", "F-06", "F-08", "F-09"]
-	check(app.sessions.size() == expected_catalog.size() and app.choices.size() == expected_catalog.size(), "album offers exactly six approved sheets")
+	var expected_catalog: Array[String] = []
+	for key: String in Definition.catalog_ids():
+		expected_catalog.append(str(Definition.load_fixture(key).id))
+	check(expected_catalog.slice(0,6) == ["F-01", "F-02", "F-04", "F-06", "F-08", "F-09"], "historical six-sheet prefix remains unchanged")
+	check(app.sessions.size() == expected_catalog.size() and app.choices.size() == expected_catalog.size(), "album offers every visible registered sheet")
 	var catalog_heading: Label = app.album_content.get_child(0) as Label
-	check(catalog_heading != null and catalog_heading.text == "6 Blätter zum Entdecken", "album heading reflects the current catalog")
+	check(catalog_heading != null and catalog_heading.text == "%d Blätter zum Entdecken" % expected_catalog.size(), "album heading reflects the current catalog")
 	for i: int in range(mini(app.sessions.size(), expected_catalog.size())):
 		var definition: Dictionary = app.sessions[i].definition
 		check(str(definition.id) == expected_catalog[i], "album includes correct sheet in position " + str(i))

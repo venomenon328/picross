@@ -13,7 +13,12 @@
     "sha256": "8411cb079ac321b975cc51c01aa47f935fe492aee569060046aee917d594c06c"
   },
   "inventory_sha256": "57af3c9c896edfbccfeef50aff235d467aef7fc3acb345a7c626d8282ee52d07",
-  "approval": null,
+  "approval": {
+    "file": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/approval.json",
+    "sha256": "88329fd722faa5a1c353a15562d97fb91b36b62c98309c4415310ee17d7e5e91",
+    "evidence": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/approval-context.json",
+    "evidence_sha256": "2db896022b49750525e83a4e87f1099b0e1e221aa45f873c2b6b8262a8b84050"
+  },
   "width": 40,
   "height": 40,
   "mode": "mono",
@@ -26,11 +31,33 @@
       "L4"
     ]
   },
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
-  "next_action": "Menschliche Endabnahme des unveränderten Endkandidaten und Abschlussbilds einholen; erst danach mit gesondertem Integrationsauftrag ZA-1 export/plan/register ausführen.",
-  "integration": null,
+  "blockers": [],
+  "next_action": "Draft-PR zur Sichtung; zwei weitere eng begrenzte Prüfanpassungen benötigen wegen Keine Werkzeugänderungen ausdrückliche Zustimmung. Danach Pflicht-CI und Review; kein Merge.",
+  "integration": {
+    "status": "registered_on_work_branch",
+    "base_commit": "0da2bb67f15c3fad90ed276518b3d31f225d9c41",
+    "branch": "feat/knoblauch-r03-integration",
+    "runtime_id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
+    "runtime_revision": 1,
+    "stem": "knoblauch_001",
+    "save_slot": "knoblauch_001",
+    "package": "content/packages/pz-3a744ae1b7cb4d38b0ac29d030ef/r03",
+    "export_manifest_sha256": "3ebdfb29b23bbc5e3c4ee455ac5abeaadc2b82751b99b596ed4fd34f506fd0a4",
+    "evidence_manifest": "docs/evidence/knoblauch-r03/manifest.json",
+    "evidence_manifest_sha256": "8aa4068460898cba1fcf6cfc4bbf0c4a62426dfbf72b498021cdec21c45c80f0",
+    "technical": true,
+    "editorial_approved": true,
+    "catalog_ready": true,
+    "registered": true,
+    "native_new_content": "passed; isolated seed/partial/finish/read/reset and actual Windows PCK",
+    "ci": "blocked locally: isolated ZA-1 fixture checkout omits registered runtime files; VS2 verifier assumes F-/VS-numbered IDs and 256 cases. Additional narrow changes await user authorization.",
+    "main_status": "not merged",
+    "playtest": "not_performed; optional",
+    "blockers": [
+      "ZA1_TEST_CHECKOUT_RUNTIME_FILES",
+      "VS2_REGISTRY_ID_COVERAGE"
+    ]
+  },
   "archive_review": {
     "date": "2026-10-12",
     "source_commit": "81ea381fe03737251751046331c6f3a383905377",
