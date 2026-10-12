@@ -1,0 +1,29 @@
+{
+  "type": "human_motif_approval",
+  "actor": "user / Tobias",
+  "timestamp_utc": "2026-10-11T22:17:00Z",
+  "timestamp_source": "UTC time read immediately after receiving explicit reply; exact message submission timestamp not exposed",
+  "statement": "MA-r01 und diesen Korridor ausdrücklich freigeben",
+  "question": "Gibst du die oben gezeigte Motivvorlage MA-r01 (SHA-256 d2cb88764e084cd8afe07449151e439539fce2c1152bc7cfb1d3aac2abcd6a19), abgeleitet aus A-r01 (SHA-256 0a102f0e49cd93f9b2851d9e5d7ba82edb601102055322a1628e806d544a4674), zur Rasterproduktion frei? Vorgeschlagener Korridor: monochrom, 40×40; vier area-Kandidaten mit gezielten Schwellenvarianten und unverzerrtem Zuschnitt ausschließlich des äußeren Hintergrunds. Ganze Knolle, Perspektive, Hauptproportionen, geneigter Hals, Wurzeln und große weiße Lappentrennungen bleiben geschützt.",
+  "file": "motifs/Knoblauch_MA_r01.png",
+  "revision": "MA-r01",
+  "sha256": "d2cb88764e084cd8afe07449151e439539fce2c1152bc7cfb1d3aac2abcd6a19",
+  "derived_from_reveal_sha256": "0a102f0e49cd93f9b2851d9e5d7ba82edb601102055322a1628e806d544a4674",
+  "parameters": {
+    "width": 40,
+    "height": 40,
+    "mode": "mono",
+    "foreground_colors": 1,
+    "method": "area",
+    "crop": "Unverzerrter Zuschnitt nur äußeren Hintergrunds, Motiv unverändert erhalten."
+  },
+  "protected_features": [
+    "ganze Knolle",
+    "Perspektive",
+    "Hauptproportionen",
+    "nach rechts geneigter Hals",
+    "Wurzeln",
+    "große weiße Lappentrennungen"
+  ],
+  "evidence": "sources/user-approval-r03.json"
+}

@@ -1,0 +1,133 @@
+{
+  "format": "picross-production-integration-evidence-v1",
+  "base_commit": "02273e9a4b2f1bb70e98cee1bc071d3e74547877",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 4,
+    "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+    "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8",
+    "commit": "02273e9a4b2f1bb70e98cee1bc071d3e74547877"
+  },
+  "files": {
+    "actual-pck.txt": {
+      "sha256": "7d6d80aa8eaf38aa4405203253f4a4732b914daf560283faf8f7a181153cdcae",
+      "bytes": 87
+    },
+    "commands.json": {
+      "sha256": "4d249b9aee3ee8f7910545213db2c2a924dd977eea2762aa0beca5991f7a1569",
+      "bytes": 1439
+    },
+    "content-bindings.json": {
+      "sha256": "b96dbdd8e78828e7aa02aed56b4d4b4172531508b771b440a1e358d3df27714c",
+      "bytes": 1143
+    },
+    "exported-start.txt": {
+      "sha256": "cb9f11c3214f20b2c4b26fca36b3a233d914580aa1319e237fc102bec4bd3276",
+      "bytes": 364
+    },
+    "foreign-slots.json": {
+      "sha256": "a389b739bb55813619929221f09a67ba17f60d1ebc35f0f15a6f49063bcb3eb2",
+      "bytes": 227
+    },
+    "input-bindings.json": {
+      "sha256": "58fe360b0b4f567813fd747fa3ba7ed1e08466d888dabbf0c26c53a5b50107dd",
+      "bytes": 1509
+    },
+    "inspect.json": {
+      "sha256": "c34219e4c2c92c2743044af49ed6e7490abebf34313357d0416c359d17caaa9d",
+      "bytes": 6690
+    },
+    "native-phases.json": {
+      "sha256": "9ae782b8889655f37e63dff590ea38a83a1f900b5b845e17161ae1e2961aae40",
+      "bytes": 378
+    },
+    "pck-report.json": {
+      "sha256": "f342369b95acd68cc5de12b333c5b58e86a94b5f422ada3414f2b354484775fb",
+      "bytes": 3721
+    },
+    "plan.json": {
+      "sha256": "bcf0bcfd2dc20e31ff361fefc39df5e47ea8d63db7858d8bb49664df461589a5",
+      "bytes": 8447
+    },
+    "player-export.json": {
+      "sha256": "d5dbdb96dfb433e1c20399c4936d5c51bd8b9ad1e20db598bfde6b4cd59cc0b4",
+      "bytes": 1133
+    },
+    "registration.json": {
+      "sha256": "0789da9b09a42a1b74c058de53ce07f25a5d265a3cc4b2b34c530ef4a4de1372",
+      "bytes": 8449
+    },
+    "report.md": {
+      "sha256": "304552d6cef0c99bc3776465dc7b77a83e38080a543d6aacfb44690b947c6c2a",
+      "bytes": 4734
+    },
+    "reuse.json": {
+      "sha256": "b0f8adfe524a0af7c76f050ea3d52835e4c74014379dca1f21d4d558d7a37d9c",
+      "bytes": 1152
+    },
+    "runtime-binding.json": {
+      "sha256": "930eed9aeab12f9c544ea18548a10d32ffdbcd6d6c2572f6836a8c6061dec309",
+      "bytes": 20461
+    },
+    "self-review.json": {
+      "sha256": "5f3a46f8d06606f7e9fbd4e96ae9f5a3b82ef4badc7ef6cdf92c3a835ee85b78",
+      "bytes": 1052
+    },
+    "verify-export.json": {
+      "sha256": "12d2c2126993f307a79d5923a4c0471ef6509521d0a992791faa3084628e49c9",
+      "bytes": 6708
+    },
+    "native/completion-artwork.png": {
+      "sha256": "5c5a76ba5f0d56b53c6be484dcbc18824c31d38109c986b5e8a72192c0c8af22",
+      "bytes": 851758
+    },
+    "native/completion-raster.png": {
+      "sha256": "17c5bb3fdf1455d687ac95cedae4c8f938afcb224ac9aba9418631b59f84c435",
+      "bytes": 4830
+    },
+    "native/completion.png": {
+      "sha256": "879f3040bff378b5d581ff6a81e59d7f9b03bc2d03de2e25794bb878aa662e98",
+      "bytes": 1951622
+    },
+    "native/earned-catalog-artwork.png": {
+      "sha256": "670cf37f4a45b3a4947782c1d94128c1ea6001c0085215914acfa004607bda07",
+      "bytes": 25886
+    },
+    "native/earned-catalog-card.png": {
+      "sha256": "121a36afcecb42a4125c0555300798519664d6b405e3783eff09991bb3fe9f0e",
+      "bytes": 39008
+    },
+    "native/earned-catalog.png": {
+      "sha256": "5569075933930aba34e17ee46eede96a760973447240136678f9e9f80ae6c4ab",
+      "bytes": 1905022
+    },
+    "native/finish.json": {
+      "sha256": "08eb578cf2143e30a15437512d33389f848bfc6865d1fd3c0059f7dd03db8990",
+      "bytes": 858
+    },
+    "native/partial-catalog-card.png": {
+      "sha256": "c5495100fde4aa19d308ee7c2632b4d8d90d4e6881523de91f1ce81f5b43649a",
+      "bytes": 10385
+    },
+    "native/partial-catalog.png": {
+      "sha256": "5abf248ca6db1f6d84f809d01391ac45aa67d6b78f4628e78f76c29788e0b956",
+      "bytes": 1871743
+    },
+    "native/partial.json": {
+      "sha256": "ce0ff52e47e9692a947a164bd2710adcfdea4eafbd7f74008c63d9c4bba2de73",
+      "bytes": 583
+    },
+    "native/read-reset.json": {
+      "sha256": "8af4a3160d48d3b8b0635c04e760e58674ecf9383d543e3975e3d369641fce12",
+      "bytes": 271
+    },
+    "native/unstarted-board.png": {
+      "sha256": "2e511e8695b6b3c8e8186dd4a09ca51f51f5a73b8a0cd604013ee46a15b702d3",
+      "bytes": 581114
+    },
+    "native/unstarted.png": {
+      "sha256": "5b150e6e4a9f0f746d99d547406dd00d32a8b8f0c9b9ccc96e37e1bbdb3a1482",
+      "bytes": 2194481
+    }
+  }
+}
