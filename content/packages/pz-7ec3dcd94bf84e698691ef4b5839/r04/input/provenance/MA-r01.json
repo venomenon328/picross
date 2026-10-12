@@ -1,0 +1,33 @@
+{
+  "format": "picross-image-provenance-v1",
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "revision": "MA-r01",
+  "file": "motif/MA-r01.png",
+  "sha256": "c9ec8c9f026b0642abaa61f71e499e8b0493e3efb00d17f0889f96821eb55751",
+  "derived_from": {
+    "file": "reveal/A-r02.png",
+    "sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
+    "approval": {
+      "file": "approvals/reveal-A-r02.json",
+      "sha256": "77cab784e5bc8ed93334202783c3370589ebc55fd921a2c005126b2cb72f0ee1"
+    }
+  },
+  "author": "OpenAI native image editing in ChatGPT, directed by assistant for Tobias",
+  "usage_basis": "User-authorized derivation of own generated and explicitly approved A-r02; no external reference.",
+  "prompt": "Edit the attached exact approved reveal A-r02 into a separate simplified motif reference MA-r01 for a future 24x24 color nonogram. This is an illustration abstraction, NOT a grid or pixel image. Preserve the single pea's identity, nearly circular slightly asymmetrical silhouette, perspective, exact framing/scale/position, major proportions and surrounding negative space. No stem, nub or peduncle. Preserve the warm quiet 2D illustration character and clear olive contour. Reduce to THREE broad flat foreground color regions: dark olive green for outer contour plus connected lower-right shade, rich medium pea green for main body, warm light lime green for one broad upper-left highlight. Plain warm ivory background. No gradients, texture, speckles, glossy micro-highlights, extra colors, text, cells, guides or clues. Simplify tiny skin creases away; retain the upper-right fold only as one broad minimal dark indentation attached to the main shade if possible, not several fine lines. Remove the small lower-left crease and the external soft cast shadow. Keep the highlight in the same upper-left location, darkness on the same lower-right side. Favor large coherent shapes with curved organic boundaries and substantial width, suitable for later 24x24 rendition; no thin isolated details. The source detailed reveal stays unchanged; output only the separate simplified motif, square composition.",
+  "settings": {
+    "transparent_background": false,
+    "model": "not_exposed",
+    "seed": "not_exposed",
+    "quality": "not_exposed",
+    "size": "not_exposed"
+  },
+  "output_dimensions": [
+    1254,
+    1254
+  ],
+  "output_mode": "RGB",
+  "tool_original": "exec-badcc9be-a1ba-459b-9fd8-aa211feaa1c6.png",
+  "generated_at_utc": "2026-10-12T17:34:25.107583+00:00",
+  "postprocessing": "none; byte-identical copy; not rasterized or quantized"
+}

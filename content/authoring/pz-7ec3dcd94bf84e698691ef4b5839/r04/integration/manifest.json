@@ -1,0 +1,181 @@
+{
+  "format": "picross-content-integration-evidence-v1",
+  "status": "pass",
+  "base_commit": "cfabcff590ef4379e77100f8ad7319d79cf3507f",
+  "tested_runtime_commit": "00ea90448e9afdcfe56cb19fb3291b631e008678",
+  "branch": "content/pz-7ec3-game-integration",
+  "checked_at_utc": "2026-10-12T19:35:01.148514+00:00",
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "revision": "r04",
+  "runtime_revision": 1,
+  "stem": "erbse_001",
+  "save_slot": "erbse_001",
+  "category": {
+    "id": "gemuese-pilze-kraeuter",
+    "name": "Gemüse, Pilze & Kräuter",
+    "source": "content/categories.json",
+    "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70"
+  },
+  "technical": true,
+  "editorial_approved": true,
+  "category_ready": true,
+  "catalog_ready": true,
+  "registered": true,
+  "main_status": "Work branch; final PR/head/CI/merge and fetched main verification recorded in the integration PR.",
+  "native": {
+    "result": "pass",
+    "processes": 3,
+    "checks": 679,
+    "scope": "Exactly the new content in regular main.tscn through actual synthetic viewport mouse events; no human playtest.",
+    "scenarios": [
+      "All/category selection; unique exact ID, 24x24, three colors, revision 1 and explicit slot.",
+      "Wrong own input, undo/redo, unchanged own miniature, hidden name/artwork, partial save.",
+      "Second process restores partial/history; normal palette/strokes fill exact solution, last-cell preview still hides reveal; committed action completes.",
+      "Third process restores earned completion and album; all 576 native solved raster pixels match exact matrix/palette; original reveal samples/proportions match."
+    ],
+    "visual_review": "Actual unstarted work, partial card, solved raster/reveal pair and earned album card inspected by Codex; clear complete grid, three-color palette, neutral pre-completion title, correct original A-r02 and category. No material motif change.",
+    "isolation": "Own temporary copied game, APPDATA/LOCALAPPDATA and SaveStore override; no real saves read or modified."
+  },
+  "player_export": {
+    "result": "pass",
+    "pck_checks": 174,
+    "scope": "Actual Windows x86_64 debug executable/PCK and real exported startup, once outside CI.",
+    "definition_and_notice": "Exact source hashes checked from embedded PCK; new ID/category/slot/dimensions/revision valid.",
+    "reveal": "Decoded 1254x1254 RGBA pixels exactly equal approved original PNG.",
+    "exclusions": "PCK traversal rejects tests, authoring, input, packages, production, old studies, proof files, ZIPs and approval/handoff/inventory/derivation/inspection metadata.",
+    "local_player_package": {
+      "file": "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\player\\picross-p1-windows-x86_64.zip",
+      "bytes": 42520626,
+      "sha256": "b1cc11212a806773672d4326ff6403f1861c7dda2cc5c2bbcfdbb6e9ff0bd937"
+    },
+    "published": false
+  },
+  "verification_copy": {
+    "path": "content/packages/pz-7ec3dcd94bf84e698691ef4b5839/r04",
+    "manifest_sha256": "054b05640e9c7050173fc3426c354492b6eb733ed4dd2c1abf547834617c1051",
+    "kind": "ZA-1 generated declared derivation, not a new full ZIP; exact original handoff/inventory and complete selected RP-3 bundle retained.",
+    "omitted_original_files": [
+      "approvals/corridor-approval.json",
+      "audit/margin-b-fresh-verify.json",
+      "audit/margin-b-origin.json",
+      "audit/tight-a-fresh-verify.json",
+      "audit/tight-a-origin.json",
+      "audit/tight-b-fresh-verify.json",
+      "audit/tight-b-origin.json",
+      "comparison.json",
+      "imports/margin-b/area-candidate.json",
+      "imports/margin-b/area-logic.json",
+      "imports/margin-b/area-proof.json",
+      "imports/margin-b/area-raster.png",
+      "imports/margin-b/area-result.json",
+      "imports/margin-b/briefing.txt",
+      "imports/margin-b/design.json",
+      "imports/margin-b/index.html",
+      "imports/margin-b/manifest.json",
+      "imports/margin-b/normalized.png",
+      "imports/margin-b/original.png",
+      "imports/tight-a/area-candidate.json",
+      "imports/tight-a/area-logic.json",
+      "imports/tight-a/area-proof.json",
+      "imports/tight-a/area-raster.png",
+      "imports/tight-a/area-result.json",
+      "imports/tight-a/briefing.txt",
+      "imports/tight-a/design.json",
+      "imports/tight-a/index.html",
+      "imports/tight-a/manifest.json",
+      "imports/tight-a/normalized.png",
+      "imports/tight-a/original.png",
+      "imports/tight-b/area-candidate.json",
+      "imports/tight-b/area-logic.json",
+      "imports/tight-b/area-proof.json",
+      "imports/tight-b/area-raster.png",
+      "imports/tight-b/area-result.json",
+      "imports/tight-b/briefing.txt",
+      "imports/tight-b/design.json",
+      "imports/tight-b/index.html",
+      "imports/tight-b/manifest.json",
+      "imports/tight-b/normalized.png",
+      "imports/tight-b/original.png",
+      "production-plan.json",
+      "review/comparison.png",
+      "review/margin-a-grid.png",
+      "review/margin-a-nearest.png",
+      "review/margin-b-grid.png",
+      "review/margin-b-nearest.png",
+      "review/tight-a-grid.png",
+      "review/tight-a-nearest.png",
+      "review/tight-b-grid.png",
+      "review/tight-b-nearest.png",
+      "sources.json"
+    ],
+    "omission_reason": "Adapter retains the referenced technical and editorial inputs plus the complete selected import bundle; unselected candidates, production comparison/planning details and unrelated gate references remain in the unchanged original r04 ZIP. Original ZIP remains authoritative for the complete production history."
+  },
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 4,
+    "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+    "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8",
+    "commit": "cfabcff590ef4379e77100f8ad7319d79cf3507f"
+  },
+  "ci_policy": "Only automatic content_only docs path/mode check and ci-required; no production/game/render/export runs or new unit/replay/snapshot cases in CI.",
+  "playtest": "not_performed; optional",
+  "blockers": [],
+  "files": {
+    "album-card.png": {
+      "bytes": 32842,
+      "sha256": "f4fa08be2f006e26386077b4be30ec95a1dfa4e701e3d70fb7689c899bcb9e3c"
+    },
+    "completion-pair.png": {
+      "bytes": 849847,
+      "sha256": "779c9480054d9f586d49e20e9571b5ee2b92083241da58fabd019d72228d258f"
+    },
+    "finish.json": {
+      "bytes": 575,
+      "sha256": "7c904f98359c3c8cef2fde07ef2d89acbcf1fc35233037f4b005df359b6a99d4"
+    },
+    "inspection.json": {
+      "bytes": 5165,
+      "sha256": "fe0fd72c650bda27efa9652b85121c8ce2fb5dada528055d4bffb1f1e31631e2"
+    },
+    "pack.json": {
+      "bytes": 6250,
+      "sha256": "1c1a311ca55cd8222842dee464883690ca71ce674c6150b33a657d403e2d5c51"
+    },
+    "partial-card.png": {
+      "bytes": 13070,
+      "sha256": "e767dfb2748234a6ce1b5c1419de256eb30bb1e06424715e82d2b4a590ff43fc"
+    },
+    "partial.json": {
+      "bytes": 760,
+      "sha256": "d5c46c6306596b7e482713d93e7f7a0bff701d8f5bcf2b3a65037f344f05260a"
+    },
+    "plan.json": {
+      "bytes": 14723,
+      "sha256": "1b15a74eaac628d63667dd8d2a51004342b35c9198c5efb3ccd384bcb6288910"
+    },
+    "player-summary.json": {
+      "bytes": 3603,
+      "sha256": "c180f554bfef34c59fea5d1700da4582243fe4d9c1aec544dedd0ffc29252cd4"
+    },
+    "read.json": {
+      "bytes": 567,
+      "sha256": "63928282040253e69a39bc6b167515cafef7c71e784001e4a588f41b07cb5d2a"
+    },
+    "registration.json": {
+      "bytes": 14725,
+      "sha256": "4b4682b427dc9e706c4f5ab8c0f02a02e5e5f308cada23dd46aa07989f881d0f"
+    },
+    "summary.json": {
+      "bytes": 4030,
+      "sha256": "16ce19d8f32e56a8df2dcce5ad8418fe539262d0447b429c2b481fe5fe3c15ff"
+    },
+    "unstarted-work.png": {
+      "bytes": 2171862,
+      "sha256": "639c0afa93a275f62af56926b4c12b9a85b059c2fd2ba28b2e712be27cb42efe"
+    },
+    "verify-export.json": {
+      "bytes": 5183,
+      "sha256": "1478aaa08e4dabb5272365e9b6aa244a84b64750287b442489a7ddb73ae0197a"
+    }
+  }
+}

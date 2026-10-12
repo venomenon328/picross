@@ -1,0 +1,116 @@
+{
+  "adapter": "authoring-p1-rect-color-1",
+  "blockers": [],
+  "catalog_ready": true,
+  "category_id": "gemuese-pilze-kraeuter",
+  "category_ready": true,
+  "checked_at_utc": "2026-10-12T19:28:44.102893+00:00",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "All 82 proof checkpoints enumerate every currently productive full-support row and column. Before cleanup at <=12 unresolved cells, at least 10 productive lines were available; no three-step run met the <=2-lines/<=4-changed-cells bottleneck condition in this path. This does not validate an exhaustive weaker-rule analyser.",
+    "calibration": "No human calibration data and no validated difficulty analyser; low-confidence editorial estimate.",
+    "confidence": "low",
+    "effort": {
+      "cells": 576,
+      "empty": 122,
+      "filled": 454,
+      "height": 24,
+      "human_active_minutes": null,
+      "proof_steps": 82,
+      "solve_time_minutes": null,
+      "width": 24
+    },
+    "evidence": "audit/difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "286699a610b2d4906f953d38d2dc52a9f92ed09d8ffdec0f3b41ce001a284efc",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L1",
+      "L3"
+    ],
+    "playtest": "not_performed; optional",
+    "rule_families": {
+      "R0": "Seven rows (10–16) and seven columns (10–16), one-based, are fully packed immediately. Rows 12/13 [19 body,5 dark] and column 12 [20 body,4 dark] give broad exact anchors; late remaining cells are routine cleanup. R0 alone was not exhaustively tested to fixpoint.",
+      "R1": "Estimated main demand: overlap and extension of the large body/highlight/shade blocks against these central anchors; outer empty corners follow from bounded blocks. This wide distribution of simple anchors supports L2 rather than rating by 576-cell size.",
+      "R2": "Some right/upper boundary color-run combinations and partial domains may require combined assignment; necessity and sufficiency of the weaker families were not exhaustively established, hence L1–L3 uncertainty.",
+      "R3": "The full-line-color certificate uses general support (including partial color exclusions), but that does not prove R3 is necessary. No specific unavoidable R3 step was identified in the editorial examination."
+    },
+    "time_estimate": null
+  },
+  "editorial_approved": true,
+  "format": "picross-target-inspection-v2",
+  "frame": {
+    "bottom": true,
+    "left": true,
+    "right": true,
+    "top": true
+  },
+  "fresh_verification": {
+    "certified": true,
+    "line_evaluations": 130,
+    "logic_hash": "286699a610b2d4906f953d38d2dc52a9f92ed09d8ffdec0f3b41ce001a284efc",
+    "profile": {
+      "deduction": "all-line-supported-values",
+      "id": "full-line-color",
+      "search": false,
+      "start": "unknown",
+      "version": 1
+    },
+    "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+    "proof_verified": true,
+    "status": "solved",
+    "steps": 82
+  },
+  "handoff_sha256": "3604b3c4fe80f1a2f7187a83e2c20dad56177abd09169e79502d590447bc4628",
+  "height": 24,
+  "inventory_sha256": "6fb6b6aa652d92a3c83a2b39a0f956f0a79b3e28658d474e0af381a9ada3c9fd",
+  "mode": "color",
+  "original_zip_sha256": "b339e16e511fc07d7e8333f8e1379fea69d7685301067b0e37547df2915fc45b",
+  "package_revision": "r04",
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "registered": false,
+  "reveal": {
+    "height": 1254,
+    "sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
+    "width": 1254
+  },
+  "selection": {
+    "logic_hash": "286699a610b2d4906f953d38d2dc52a9f92ed09d8ffdec0f3b41ce001a284efc",
+    "matrix_hash": "161565808cd30b29be225b2d8185958a40590102365bb3de0b020d588b7c7c74",
+    "reveal": {
+      "file": "reveal/A-r02.png",
+      "sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8"
+    },
+    "variant": "area"
+  },
+  "source": {
+    "candidate_id": "f777fa2120ced4fcabdfdebca920d44bfa0b67052383d95e6f5f15b780bc2d5d",
+    "kind": "import",
+    "variant": "area"
+  },
+  "technical": true,
+  "test_only": false,
+  "tool": {
+    "adapter": "authoring-p1-rect-color-1",
+    "commit": "cfabcff590ef4379e77100f8ad7319d79cf3507f",
+    "modules": {
+      "authoring_package.py": "f31be6492b229f0b113867d20df23553aac78a6c7fcece5833e8a2048b21a985",
+      "categories.py": "3790a5bce1b6bebc238e23db8e35e79c887261c57c3e41b78d190694a91758a5",
+      "content_registry.py": "d238f2cd4618463c533adbd7dc2c378ebcdb4d1e63114a4ea65829c7feaf2a0d",
+      "contract.py": "11afd92a183f28bc427ac655f80c49d015c21aa6f4c23dacbd6603a940296094",
+      "images.py": "05030b413b5c42e5eec3c5c68b67e57d203094c3a2a81efc7d85ff73722f67b3",
+      "repair.py": "d3c042337c4168977edb42f56ac2ad2a4f7913deb26969989f66233aa350ea15",
+      "target_adapter.py": "4d18ffa5db7a0847028ab76b28b39dcfdb95c36cc4e4338e562a244254b2f2c9",
+      "verifier.py": "86bd08d1d718dba5165939c63bf6b3cb71c3af978c699b149e331d12d50ac9b8"
+    },
+    "versions": {
+      "jpeg": "8.0",
+      "jpeg_turbo": "3.1.4.1",
+      "littlecms": "2.19",
+      "pillow": "12.3.0",
+      "tool": "rp3-image-1",
+      "zlib": "1.3.1.zlib-ng"
+    }
+  },
+  "width": 24
+}

@@ -1,0 +1,109 @@
+{
+  "format": "picross-content-native-production-v1",
+  "source_commit": "00ea90448e9afdcfe56cb19fb3291b631e008678",
+  "base_commit": "cfabcff590ef4379e77100f8ad7319d79cf3507f",
+  "checked_at_utc": "2026-10-12T19:32:07.328728+00:00",
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "revision": "r04",
+  "runtime_revision": 1,
+  "save_slot": "erbse_001",
+  "status": "pass",
+  "host": "Windows-11-10.0.26200-SP0",
+  "archives": {
+    "Godot_v4.7.2-stable_win64.exe.zip": "731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953",
+    "Godot_v4.7.2-stable_export_templates.tpz": "f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011"
+  },
+  "engine_sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+  "runtime_files": {
+    "data/registry.json": "236da31079b87a65774f1dc22057ef79ce8ce95b399f7391dadbbe61bde6d951",
+    "data/content/erbse_001.json": "f85c48639bfdff08bf36a087767c4fc6a67932da187ec708c1a61e184987f3c0",
+    "art/content/erbse_001.png": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
+    "art/content/erbse_001.txt": "85e344bb21d95e789dd371b85787e95f2c9293a4511dfb83921608f2127efa09"
+  },
+  "probe_sha256": "3a95bc545bba4f765f3125aff7497d58bd3d673ee49652047798fdd720167084",
+  "probe_scope": "Disposable outside repository/test discovery/CI; only new content played in three actual processes; no human playtest.",
+  "checks": 679,
+  "phases": [
+    {
+      "phase": "version",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-12T19:31:46.757756+00:00",
+      "command": [
+        "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--version"
+      ]
+    },
+    {
+      "phase": "import",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-12T19:31:47.581089+00:00",
+      "command": [
+        "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\game",
+        "--import"
+      ]
+    },
+    {
+      "phase": "partial",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-12T19:31:54.745685+00:00",
+      "command": [
+        "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\game",
+        "--rendering-driver",
+        "opengl3",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/pea_once.gd",
+        "--",
+        "--p1-capture"
+      ]
+    },
+    {
+      "phase": "finish",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-12T19:31:59.007797+00:00",
+      "command": [
+        "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\game",
+        "--rendering-driver",
+        "opengl3",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/pea_once.gd",
+        "--",
+        "--p1-capture"
+      ]
+    },
+    {
+      "phase": "read",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-12T19:32:04.253742+00:00",
+      "command": [
+        "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+        "--path",
+        "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\game",
+        "--rendering-driver",
+        "opengl3",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "res://tests/pea_once.gd",
+        "--",
+        "--p1-capture"
+      ]
+    }
+  ],
+  "isolation": {
+    "appdata": "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\appdata",
+    "localappdata": "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\localappdata",
+    "save_root": "E:\\Zeuch\\Coding\\picross-pz-work\\integration\\native\\saves",
+    "real_saves_accessed": false
+  }
+}

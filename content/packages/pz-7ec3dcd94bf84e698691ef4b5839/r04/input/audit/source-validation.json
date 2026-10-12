@@ -1,0 +1,117 @@
+{
+  "package_sha256": "6f248d3bcfe68441bbb9b92ae14db6f7b7f5cd74d72012e5b4049910bba9bf42",
+  "handoff_sha256": "222facbb7484b0950e0a128f83a411a38d81458117654a21c216ca32d78d06fd",
+  "inventory_sha256": "97e52a7b6e2225b0783bc687df9428e37095c108eadec6cc470bf9ec2937853e",
+  "exact_file_set": true,
+  "payloads": [
+    {
+      "path": "approvals/reveal-A-r02.json",
+      "bytes": 1243,
+      "sha256": "77cab784e5bc8ed93334202783c3370589ebc55fd921a2c005126b2cb72f0ee1"
+    },
+    {
+      "path": "brief.md",
+      "bytes": 816,
+      "sha256": "3c9c796adaffacea63a5023a09236eaab8eeb6a7529a26eb7a7971f273bc2bb3"
+    },
+    {
+      "path": "decisions.json",
+      "bytes": 1028,
+      "sha256": "7d68f9cdda5adb281107cd98b3c0901ba9ba3712afc2e9f5ef174203a413d4e1"
+    },
+    {
+      "path": "effort.json",
+      "bytes": 447,
+      "sha256": "71dd13d6728fe27feb5c3b58872eb8ec55a356140189b070a2f7b7a592689dda"
+    },
+    {
+      "path": "motif/MA-r01.png",
+      "bytes": 1223335,
+      "sha256": "c9ec8c9f026b0642abaa61f71e499e8b0493e3efb00d17f0889f96821eb55751"
+    },
+    {
+      "path": "parameters.json",
+      "bytes": 1954,
+      "sha256": "b0a7471bb7e51029d8ba13b01b1dc0b26482dc2d45371b92459a9c9ca12c3972"
+    },
+    {
+      "path": "provenance/A-r02.json",
+      "bytes": 2707,
+      "sha256": "b8b9c4f94891b3baff95be44a19a44aec964b6451122de6e29bdced4906b1823"
+    },
+    {
+      "path": "provenance/MA-r01.json",
+      "bytes": 2591,
+      "sha256": "fe372a3b33d852452d047563d10f5635fa237a2a8258b89948d6209158bf0a91"
+    },
+    {
+      "path": "report.md",
+      "bytes": 3524,
+      "sha256": "e36c55a20fb862ad9aee7b95b2490a95a5d459f258ce55b4c0d417d8c3ae1092"
+    },
+    {
+      "path": "reveal/A-r02.png",
+      "bytes": 1772614,
+      "sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8"
+    },
+    {
+      "path": "rules/PUZZLE_AUTHORING.md",
+      "bytes": 40731,
+      "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8"
+    },
+    {
+      "path": "sources.json",
+      "bytes": 2017,
+      "sha256": "81bbe2499e5710bf09ee3ec14c9334f0af9250bb1901acb6f2ed7e63f927317f"
+    }
+  ],
+  "images": {
+    "reveal": {
+      "file": "reveal/A-r02.png",
+      "sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
+      "mode": "RGB",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "decoded_pixels_sha256": "d4ee34ed886ff90a6c755f34eb16380cff8204f0ed3ac9ba0b5cb54733fa7cad"
+    },
+    "motif": {
+      "file": "motif/MA-r01.png",
+      "sha256": "c9ec8c9f026b0642abaa61f71e499e8b0493e3efb00d17f0889f96821eb55751",
+      "mode": "RGB",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "decoded_pixels_sha256": "98b6ed26d6577b24b40c76df63052462d6fe59f0b64d29ca893734c002a1061f"
+    }
+  },
+  "rulebook_matches_revision_4": true,
+  "external_bindings": {
+    "reveal_approval": {
+      "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r02/reveal-approval.json",
+      "sha256": "77cab784e5bc8ed93334202783c3370589ebc55fd921a2c005126b2cb72f0ee1"
+    },
+    "motif_approval": {
+      "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/motif-approval.json",
+      "sha256": "dace99a2e57ef7b7427628e165da013f396c7fde142caac4ee878da0813fe485"
+    },
+    "codex_handoff": {
+      "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/codex-handoff.json",
+      "sha256": "13832ad2296966a11a3662eab0455612c68dea3dfb9dbcd0e89caa144a7ea1cb"
+    },
+    "codex_instructions": {
+      "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/CODEX_HANDOFF.md",
+      "sha256": "629cfffda2196fae60e8c56d690c50352377cf156d3fe4ecd58357cc23827f05"
+    }
+  },
+  "source_commit": "78b49f75e68b3af2d68b274b2d3c10c083a155c9",
+  "checked_at_utc": "2026-10-12T17:59:40.287679+00:00",
+  "environment": {
+    "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "status": "pass",
+  "limits": "No raster produced; crop authorization pending. Historical sealed handoff motif_review superseded externally by actual human motif approval."
+}

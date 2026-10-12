@@ -2,7 +2,7 @@
   "format": "picross-authoring-progress-v1",
   "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
   "revision": "r04",
-  "state": "editorially_approved",
+  "state": "registered",
   "source_commit": "78b49f75e68b3af2d68b274b2d3c10c083a155c9",
   "archive_branch": "content/pz-7ec3-production",
   "events": [
@@ -51,13 +51,60 @@
       "type": "Separate full diff self-review after acceptance recording; not an independent second-person review.",
       "reviewed_base": "9c3c90b5b140d77c7b8cf9123bd2633bdc6d4515",
       "scope": "Exactly four r04 external JSON files, regular 100644 modes. Actual declaration and timestamp basis preserved; original candidate selection fully bound. Index already resolves this revision uniquely. ZIP, readable handoff and original technical reports byte-identical to main. Only the satisfied human-acceptance blocker removed; no runtime or catalog readiness asserted. Selected slim CI pending; final head/run/merge evidence recorded in archive PR."
+    },
+    {
+      "phase": "game_integration",
+      "result": "pass",
+      "source_commit": "cfabcff590ef4379e77100f8ad7319d79cf3507f",
+      "tested_runtime_commit": "00ea90448e9afdcfe56cb19fb3291b631e008678",
+      "evidence_manifest": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/integration/manifest.json",
+      "evidence_manifest_sha256": "99ab35de8b3e53a9520ef31e514273214963d68ea6f6ade25b89ca636e305085",
+      "scope": "Fresh ZA-1 inspect; explicit categorized export/verify/plan/register; one new-content native route and actual player/PCK checks outside CI. Original ZIP, handoff and approval unchanged; no tools/tests changed."
+    },
+    {
+      "phase": "integration_self_review",
+      "result": "pass",
+      "evidence": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/integration/self-review.json",
+      "sha256": "64e1c122c647a50df9b0352643a565f97399d87833ad40f2abac1ff637f8ebc8",
+      "type": "Separate full diff self-review after registration and once-only product evidence; not an independent second-person review."
     }
   ],
   "final_editorial_approval": {
     "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/approval.json",
     "sha256": "bc145fcd45dbeaab5b4befcae8477af98905d067acbe20d81e2627e3a72c5fe6"
   },
-  "runtime_integration": null,
+  "runtime_integration": {
+    "branch": "content/pz-7ec3-game-integration",
+    "base_commit": "cfabcff590ef4379e77100f8ad7319d79cf3507f",
+    "tested_runtime_commit": "00ea90448e9afdcfe56cb19fb3291b631e008678",
+    "runtime_revision": 1,
+    "stem": "erbse_001",
+    "save_slot": "erbse_001",
+    "technical": true,
+    "editorial_approved": true,
+    "category_ready": true,
+    "catalog_ready": true,
+    "registered": true,
+    "main_status": "Work branch; final PR/head/CI/merge and fetched main verification recorded in the integration PR.",
+    "playtest": "not_performed; optional",
+    "blockers": [],
+    "status": "registered_on_work_branch",
+    "runtime_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+    "category_id": "gemuese-pilze-kraeuter",
+    "package": "content/packages/pz-7ec3dcd94bf84e698691ef4b5839/r04",
+    "export_manifest_sha256": "054b05640e9c7050173fc3426c354492b6eb733ed4dd2c1abf547834617c1051",
+    "evidence_manifest": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/integration/manifest.json",
+    "evidence_manifest_sha256": "99ab35de8b3e53a9520ef31e514273214963d68ea6f6ade25b89ca636e305085",
+    "rulebook": {
+      "version": "0.4.1",
+      "document_revision": 4,
+      "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8",
+      "commit": "cfabcff590ef4379e77100f8ad7319d79cf3507f"
+    },
+    "native_new_content": "679 checks passed across three real isolated processes outside CI",
+    "player_export": "174 PCK checks plus exported Windows startup and player ZIP verification passed outside CI"
+  },
   "release": null,
   "self_review": {
     "result": "pass",
