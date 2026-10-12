@@ -1,0 +1,32 @@
+{
+  "all_candidate_source_proof_endmatrix_bindings": "pass",
+  "complete_bound_rp3_bundles": 3,
+  "exact_distinct_matrices": 6,
+  "files": 95,
+  "format": "picross-authoring-delivery-validation-v1",
+  "handoff_byte_copy": "pass",
+  "handoff_sha256": "1e1daaea06694baf3a3d958e1c764995cfeab5e6ee362343464806ddc6afd31a",
+  "historical_r01_r04_zips_and_handoffs_byte_identical": true,
+  "inventory_sha256": "32eb89a3e411292c3c69e49e1656709829bd9dc3ee97b2b4de7c20917fac410a",
+  "limits": "Own delivery validation and visual/self-review; independent proof checker is the existing separate DAG implementation. No independent second editorial reviewer or human playtest.",
+  "markdown_files": 4,
+  "no_tool_or_test_sources_in_package": true,
+  "package_bytes": 6577918,
+  "package_sha256": "d1e5844edc1ae23072dd654b63a89d8350747cffa39fd489a362122b731cc8c7",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r05",
+  "safe_zip_and_inventory": "pass via existing bounded read-only open_package; CRC/path/mode/resource limits and all hashes",
+  "scope": "Authoring archive only; no general test discovery, runtime catalog, release or deployment.",
+  "source_main": "542ba6237a8a962774b23abb195b000b079199a7",
+  "strict_json_files": 56,
+  "text_utf8_lf_trailing_whitespace_and_local_markdown_links": "pass; byte-bound rulebook links resolve in source repository context",
+  "za1_written_zip": {
+    "blockers": [
+      "final_editorial: missing bound human final approval"
+    ],
+    "editorial_approved": false,
+    "file": "inspection.json",
+    "sha256": "68dfda58b7dfa7debf3b4a0f4be6defe74d1946a104182910ecdf0ee679f4cad",
+    "technical": true
+  }
+}
