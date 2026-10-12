@@ -8,6 +8,7 @@ var fit_pitch: Vector2 = Vector2.ONE
 var fit_slots: Vector2i = Vector2i.ONE
 var next_fit_pitch: Vector2 = Vector2.ONE
 var next_fit_slots: Vector2i = Vector2i.ONE
+var next_fit_minimum: float = 1
 var type_tokens: Dictionary = {}
 var type_cache: Dictionary = {}
 const Scribble = preload("res://ui/scribble.gd")
@@ -70,8 +71,11 @@ func _layout() -> void:
 	for attempt: int in range(maxi(1,ceili(candidate*4))+1):
 		configure_typography(candidate)
 		var slots: Vector2i = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
-		var budget: Vector2 = (size-Vector2(slots)*slot_pitch-Vector2(14,14))/Vector2(session.player.width,session.player.height)
-		var fit: float = floorf(minf(candidate,minf(budget.x,budget.y))*100+0.000001)/100
+		# Keep this quotient in scalar double precision; Vector2's float32 can
+		# round an exact hundredth down and leave a feasible cell unused.
+		var width_fit: float = (size.x-slots.x*slot_pitch.x-14)/session.player.width
+		var height_fit: float = (size.y-slots.y*slot_pitch.y-14)/session.player.height
+		var fit: float = floorf(minf(candidate,minf(width_fit,height_fit))*100+0.000001)/100
 		if fit >= type_minimum-0.000001:
 			fit_ceiling = maxf(1,fit)
 			break
@@ -80,6 +84,7 @@ func _layout() -> void:
 	raw_fit = fit_ceiling
 	configure_typography(fit_ceiling+0.01)
 	next_fit_pitch = slot_pitch
+	next_fit_minimum = type_minimum
 	next_fit_slots = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
 	configure_typography(fit_ceiling)
 	fit_pitch = slot_pitch
@@ -91,7 +96,7 @@ func _layout() -> void:
 	book_inset = Vector2(minimum_slots) * slot_pitch + Vector2(6, 6)
 	var frame_space: Vector2 = Vector2.ONE * 2.0 * FRAME_MARGIN
 	var available: Vector2 = size - book_inset - Vector2(6, 6) - frame_space
-	layout_valid = view.cell_size > 4.0 and view.cell_size >= type_minimum and available.x >= session.player.width*view.cell_size and available.y >= session.player.height*view.cell_size
+	layout_valid = view.cell_size > 4.0 and view.cell_size >= type_minimum and available.x+0.0001 >= session.player.width*view.cell_size and available.y+0.0001 >= session.player.height*view.cell_size
 	book_grid_size = Vector2(session.player.width, session.player.height) * view.cell_size
 	# One-way allocation: the displayed capacity never feeds back into fit.
 	horizontal_budget = maxf(0.0, available.x - book_grid_size.x)

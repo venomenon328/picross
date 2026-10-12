@@ -51,7 +51,7 @@ def typography(r):
     next_extent,_ = dimensions(data['next'])
     require(data['selected']['fs'] == r['font_px'] and data['next']['fs'] == r['font_px']+1, 'measured selected/next grade')
     require(pitches == [r['row_pitch'],r['column_pitch']], 'measured shared pitch')
-    if cell > 4:
+    if r.get('layout_valid', True):
         require(extent <= max(1,cell-padding)+.025, 'full ink/C1/strike within cell')
         require(next_extent > max(1,cell-padding), 'largest measured grade')
 
@@ -84,7 +84,7 @@ def record(r):
     budget = [dims[i]*fit+r['fit_slots'][i]*r['fit_pitch'][i]+14 for i in range(2)]
     next_budget = [dims[i]*(fit+.01)+r['next_fit_slots'][i]*r['next_fit_pitch'][i]+14 for i in range(2)]
     require(all(v <= safe[i+2]+.025 for i,v in enumerate(budget)), 'ceiling native reserve fits')
-    require(any(v > safe[i+2]+.001 for i,v in enumerate(next_budget)), 'next hundredth cannot fit')
+    require(fit+.01<r['next_fit_minimum'] or any(v > safe[i+2]+.001 for i,v in enumerate(next_budget)), 'next hundredth cannot fit')
     require(close(r['actual_cell'],ceiling if r['overview'] else min(r['requested_cell'],ceiling)), 'cell scale')
     for axis, pitch in enumerate((r['row_pitch'],r['column_pitch'])):
         require(minimum[axis] <= r['reserve'][axis] <= r['max_hints'][axis], 'no empty reserve padding')

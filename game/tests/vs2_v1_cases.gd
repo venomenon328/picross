@@ -1,4 +1,5 @@
 extends RefCounted
+const Metrics = preload("hc92_metrics.gd")
 static func rect_values(rect: Rect2) -> Array:
 	return [rect.position.x,rect.position.y,rect.size.x,rect.size.y]
 
@@ -145,11 +146,12 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 	return {"id":app.session.definition.id,"client":[app.size.x,app.size.y],"ui_scale":u,"mode":b.mode,"overview":b.overview,
 		"safe":rect_values(b.get_global_rect()),"occupied":rect_values(occupied),"translation":[shift.x,shift.y],
 		"grid":rect_values(grid),"rows":rect_values(rows),"columns":rect_values(columns),
-		"requested_cell":b.requested_cell,"actual_cell":b.view.cell_size,"raw_fit":b.raw_fit,
+		"requested_cell":b.requested_cell,"actual_cell":b.view.cell_size,"raw_fit":b.raw_fit,"layout_valid":b.layout_valid,
 		"font_px":b.clue_font_size(),"row_pitch":pitch.x,"column_pitch":pitch.y,
-		"typography":preload("res://tests/hc92_metrics.gd").capture(b),
+		"typography":Metrics.capture(b),
 		"fit_pitch":[b.fit_pitch.x,b.fit_pitch.y],"fit_slots":[b.fit_slots.x,b.fit_slots.y],
 		"next_fit_pitch":[b.next_fit_pitch.x,b.next_fit_pitch.y],"next_fit_slots":[b.next_fit_slots.x,b.next_fit_slots.y],
+		"next_fit_minimum":b.next_fit_minimum,
 		"reserve":[b.reserve_slots.x,b.reserve_slots.y],"max_hints":[b.max_hints.x,b.max_hints.y],
 		"minimum_reserve":[b.minimum_slots.x,b.minimum_slots.y],"dimensions":[dimensions.x,dimensions.y],
 		"untranslated_grid":rect_values(b.untranslated_grid),"untranslated_occupied":rect_values(b.untranslated_occupied),
