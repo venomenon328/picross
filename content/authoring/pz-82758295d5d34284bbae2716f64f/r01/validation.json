@@ -1,0 +1,25 @@
+{
+  "format": "picross-reveal-package-validation-v1",
+  "source_commit": "ee6179f6f7b6bc53f6953e2220eeeb01f060ea11",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r01",
+  "state": "package_validation_passed",
+  "package_sha256": "26eaea4f9a829db4b13021d8c267af0d755147e76fc185868f5aa7d16031a132",
+  "handoff_sha256": "2c796bdf9ebcfb62a65b4da82f98222df56045233c306457425b0cf9df8769c2",
+  "inventory_sha256": "abddc011e4033f60551c7b580c2a0ccef4d1985160cd4c899cd6a9b4ee9a8e69",
+  "file_count": 16,
+  "checks": [
+    "safe regular ZIP paths/modes/limits and CRC",
+    "exact complete inventory and all file hashes",
+    "byte-identical readable handoff",
+    "rulebook snapshot exact main bytes, revision 4",
+    "three PNG full decompression/chunk CRC/dimensions/color",
+    "provenance and offered variant hash bindings",
+    "all human approval gates still pending"
+  ],
+  "not_performed": [
+    "ZA-1 inspect: reveal_review is not a content_ready adapter input",
+    "abstraction, raster, solver/proof/frame, runtime/export tests: no such output in this phase"
+  ],
+  "limits": "Native tool-generated images visually inspected by assistant; no human art approval. Provenance generated_at_utc is the file capture time during packaging; exact image call completion timestamp not exposed."
+}

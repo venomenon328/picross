@@ -1,0 +1,26 @@
+{
+  "format": "picross-motif-package-validation-v1",
+  "state": "package_validation_passed",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r02",
+  "source_commit": "ee6179f6f7b6bc53f6953e2220eeeb01f060ea11",
+  "package_sha256": "850b3a2b71d7193fd92b3ba71eda54b9f5b309353d9e7e186754289a7b781dd5",
+  "inventory_sha256": "967aa23b3729039a64ceacdc96fd5ae19484dabd049d58594072c3b31b403368",
+  "file_count": 16,
+  "checks": [
+    "safe ZIP complete file inventory, CRC, paths, modes and limits",
+    "all exact file hashes and byte-identical readable handoff",
+    "approved reveal bytes identical to original r01 member",
+    "actual human statement, actor, UTC timestamp and reveal hash bound",
+    "motif/reveal/provenance bindings and no invented motif approval",
+    "both PNGs full decompression/chunk CRC, RGB8 1254x1254",
+    "rulebook Revision-4 snapshot exact current main bytes",
+    "r01 sealed original ZIP and handoff unchanged",
+    "no nested ZIP, matrix, hints, proof, tools or runtime entry"
+  ],
+  "not_performed": [
+    "ZA-1 inspect: motif_review is not adapter input",
+    "raster/logic/frame/export/runtime: output not created in this phase"
+  ],
+  "review_limits": "Assistant visual comparison is not human motif approval. Cell-level fidelity and solvability await the separately authorized raster phase."
+}

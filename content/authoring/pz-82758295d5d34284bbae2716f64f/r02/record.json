@@ -1,0 +1,55 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r02",
+  "category_id": "sport-spiele",
+  "state": "motif_review",
+  "package": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/package.zip",
+    "bytes": 2655445,
+    "sha256": "850b3a2b71d7193fd92b3ba71eda54b9f5b309353d9e7e186754289a7b781dd5"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/handoff.json",
+    "sha256": "5c46d971a5b7e0da8a059cbf870f8dc8cc8387e92bcfe220fa4ccf84068b5e52"
+  },
+  "inventory_sha256": "967aa23b3729039a64ceacdc96fd5ae19484dabd049d58594072c3b31b403368",
+  "approval": null,
+  "width": null,
+  "height": null,
+  "proposed_dimensions": [
+    32,
+    48
+  ],
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [
+    "Separate explicit human approval of MA-r01 and its parameter corridor required before every raster production."
+  ],
+  "next_action": "Present unchanged A-r01 and separate MA-r01 side by side; await explicit motif/32x48-mono corridor approval. No raster production.",
+  "integration": null,
+  "previous_revision": "r01",
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+  "reveal_approval": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/reveal-approval.json",
+    "sha256": "be490ece290ebf5b10ada0160bdd475adb49c7ad86851f15a488475f671a1040"
+  },
+  "motif_revision": "MA-r01",
+  "motif_sha256": "21847d0e6bb804a2d3eafc5a1fc783d21166d68195cdcc11e7e9b1548c5832b0",
+  "progress_log": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/progress.json",
+  "archive_review": {
+    "source_commit": "ee6179f6f7b6bc53f6953e2220eeeb01f060ea11",
+    "state": "package_validation_passed",
+    "delivery_evidence": "Final head, selected checks, full self-review and authorized merge/main verification recorded in PR #93."
+  },
+  "repository_delivery": {
+    "branch": "content/chess-knight-reveal-r01",
+    "pr": 93,
+    "evidence": "https://github.com/venomenon328/picross/pull/93"
+  },
+  "validation": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/validation.json",
+    "sha256": "955f4509c1bdbec2fccaae758ad50c72173a1cc2a2698b25b57870a53d1afd7d"
+  }
+}
