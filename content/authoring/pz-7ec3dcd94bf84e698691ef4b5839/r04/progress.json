@@ -2,7 +2,7 @@
   "format": "picross-authoring-progress-v1",
   "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
   "revision": "r04",
-  "state": "content_ready",
+  "state": "editorially_approved",
   "source_commit": "78b49f75e68b3af2d68b274b2d3c10c083a155c9",
   "archive_branch": "content/pz-7ec3-production",
   "events": [
@@ -27,9 +27,36 @@
     {
       "phase": "archive_delivery",
       "result": "Complete staged diff reviewed separately after production: only new r04 archive/metadata and one index entry and r03 continuation pointer, regular 100644 modes; no tools/tests/game/registry/old package changes. No open archive self-review findings; selected content CI still required. Final head/run/merge evidence will be in PR."
+    },
+    {
+      "phase": "final_editorial_acceptance",
+      "timestamp_utc": "2026-10-12T18:34:11Z",
+      "timestamp_basis": "UTC recording time of the received human declaration; original message send time not exposed.",
+      "actor": "user",
+      "statement": "Ich nehme das Rätselpaket Repositoryindex content/authoring/index.json auf main, ID pz-7ec3dcd94bf84e698691ef4b5839, Revision r04, Revision r04, redaktionell ab.\nGebundener Gegenstand: b339e16e511fc07d7e8333f8e1379fea69d7685301067b0e37547df2915fc45b.\nIch habe das echte finale Raster, seine Abstraktion, das ursprüngliche freigegebene Abschlussbild und den Qualitätsbericht geprüft.",
+      "source_commit": "9c3c90b5b140d77c7b8cf9123bd2633bdc6d4515",
+      "package_sha256": "b339e16e511fc07d7e8333f8e1379fea69d7685301067b0e37547df2915fc45b",
+      "approval_validation": {
+        "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/approval-validation.json",
+        "sha256": "1487741b292dd4c4bc4d897e4191a5c7c8a0bde4c8da514476a2e1e2d601b572",
+        "technical": true,
+        "editorial_approved": true,
+        "registered": false
+      },
+      "result": "Actual human acceptance bound with existing ZA-1 API; unchanged complete technical production evidence reused. Original ZIP, handoff, inventory, images and proofs unchanged. No technical blockers; no runtime export or registration."
+    },
+    {
+      "phase": "approval_archive_self_review",
+      "result": "pass",
+      "type": "Separate full diff self-review after acceptance recording; not an independent second-person review.",
+      "reviewed_base": "9c3c90b5b140d77c7b8cf9123bd2633bdc6d4515",
+      "scope": "Exactly four r04 external JSON files, regular 100644 modes. Actual declaration and timestamp basis preserved; original candidate selection fully bound. Index already resolves this revision uniquely. ZIP, readable handoff and original technical reports byte-identical to main. Only the satisfied human-acceptance blocker removed; no runtime or catalog readiness asserted. Selected slim CI pending; final head/run/merge evidence recorded in archive PR."
     }
   ],
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/approval.json",
+    "sha256": "bc145fcd45dbeaab5b4befcae8477af98905d067acbe20d81e2627e3a72c5fe6"
+  },
   "runtime_integration": null,
   "release": null,
   "self_review": {
