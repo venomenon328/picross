@@ -1,11 +1,12 @@
 {
-  "approval": null,
+  "approval": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/approval.json",
+    "sha256": "bc145fcd45dbeaab5b4befcae8477af98905d067acbe20d81e2627e3a72c5fe6"
+  },
   "archive_base_commit": "78b49f75e68b3af2d68b274b2d3c10c083a155c9",
   "archive_branch": "content/pz-7ec3-production",
   "archive_delivery_evidence": "PR for content/pz-7ec3-production; final head/CI/merge recorded there after checks.",
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
+  "blockers": [],
   "category_id": "gemuese-pilze-kraeuter",
   "difficulty": {
     "assessment_type": "editorial_estimate",
@@ -50,7 +51,7 @@
   "inventory_sha256": "6fb6b6aa652d92a3c83a2b39a0f956f0a79b3e28658d474e0af381a9ada3c9fd",
   "mode": "color",
   "motif_sha256": "c9ec8c9f026b0642abaa61f71e499e8b0493e3efb00d17f0889f96821eb55751",
-  "next_action": "Present exact r04 raster, unchanged A-r02, technical/visual/difficulty evidence and inventory for actual human final editorial approval. No runtime registration under current order.",
+  "next_action": "Await separate game-integration order for categorized ZA-1 export, registration and once-only product verification. No export, runtime registration or publication authorized in this acceptance task.",
   "package": {
     "bytes": 11554402,
     "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/package.zip",
@@ -60,18 +61,26 @@
   "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
   "reveal_sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
   "revision": "r04",
-  "state": "content_ready",
+  "state": "editorially_approved",
   "width": 24,
   "inspection": {
     "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/inspection.json",
     "sha256": "de29d8adffa2974e49b321f71215766f0fdbf6df00f9b34f485734fbcfe957c5",
     "technical": true,
     "editorial_approved": false,
-    "registered": false
+    "registered": false,
+    "scope": "Historical sealed-package production inspection before the separately recorded human end acceptance; current approval validation is linked separately."
   },
   "validation": {
     "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/validation.json",
     "sha256": "5a18e71eff6b03bc791d2cf0c587ad62b14540db0875083ebca836d021b31075"
   },
-  "progress_log": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/progress.json"
+  "progress_log": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/progress.json",
+  "approval_validation": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/approval-validation.json",
+    "sha256": "1487741b292dd4c4bc4d897e4191a5c7c8a0bde4c8da514476a2e1e2d601b572",
+    "technical": true,
+    "editorial_approved": true,
+    "registered": false
+  }
 }
