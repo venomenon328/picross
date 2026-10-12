@@ -20,6 +20,23 @@ der angebotenen Fitgrenze sichtbar. „Rätselansicht“ bietet Rasteransicht un
 Gesamtansicht mit allen Hinweisen; ein Sitzungswechsel ändert keine Spielstände.
 Fonts und Bilder sind offline eingebettet; Lizenzen/Nutzungshinweise liegen im ZIP.
 
+## Aktuellen main-Player per GitHub Actions erzeugen
+
+Unter [GitHub Actions](https://github.com/venomenon328/picross/actions/workflows/build-main-player.yml)
+den Workflow **Build playable main (Windows x64)** öffnen und über
+**Run workflow** starten. Die Action checkt immer das dann aktuelle `main`
+aus, unabhängig von der im Startdialog angezeigten Branch-Auswahl.
+Nach erfolgreichem Lauf unter **Artifacts** das eine
+`picross-main-windows-x86_64-<Commit>`-Artefakt herunterladen. Das erhaltene
+ZIP **einmal** entpacken und direkt `picross-p1.exe` starten; es enthält
+kein weiteres ZIP. Die Commitkennung steht auch in `README.txt`.
+Das Artefakt wird 14 Tage aufbewahrt.
+
+Diese Action erstellt ausschließlich den unsignierten Windows-Debugplayer
+aus dem regulären Spielbestand. Sie startet weder die Product-Testmatrix
+noch ein Release/Deployment; ein tatsächlicher Windows-GUI-Start wird auf dem
+Linux-Runner nicht geprüft. Der separate CI-Playerexport bleibt unverändert.
+
 ## Windows starten
 
 Das vollständige ZIP entpacken und `picross-p1.exe` starten. Keine Godot-Installation
