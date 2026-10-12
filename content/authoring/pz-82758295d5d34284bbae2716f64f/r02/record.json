@@ -3,7 +3,7 @@
   "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
   "revision": "r02",
   "category_id": "sport-spiele",
-  "state": "motif_review",
+  "state": "motif_approved",
   "package": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/package.zip",
     "bytes": 2655445,
@@ -15,18 +15,16 @@
   },
   "inventory_sha256": "967aa23b3729039a64ceacdc96fd5ae19484dabd049d58594072c3b31b403368",
   "approval": null,
-  "width": null,
-  "height": null,
+  "width": 24,
+  "height": 36,
   "proposed_dimensions": [
-    32,
-    48
+    24,
+    36
   ],
   "mode": "mono",
   "difficulty": null,
-  "blockers": [
-    "Separate explicit human approval of MA-r01 and its parameter corridor required before every raster production."
-  ],
-  "next_action": "Present unchanged A-r01 and separate MA-r01 side by side; await explicit motif/32x48-mono corridor approval. No raster production.",
+  "blockers": [],
+  "next_action": "Read CODEX_HANDOFF.md; both images approved for 24x36 mono. Await subsequent production order.",
   "integration": null,
   "previous_revision": "r01",
   "reveal_revision": "A-r01",
@@ -41,15 +39,46 @@
   "archive_review": {
     "source_commit": "ee6179f6f7b6bc53f6953e2220eeeb01f060ea11",
     "state": "package_validation_passed",
-    "delivery_evidence": "Final head, selected checks, full self-review and authorized merge/main verification recorded in PR #93."
+    "delivery_evidence": "Final head, selected checks, full self-review and authorized merge/main verification recorded in PR #93.",
+    "approval_update": {
+      "source_commit": "12220735706b6930162f14b4a964dfddefe94bf6",
+      "delivery_evidence": "Final PR/head/selected CI/review/merge and actual main verification recorded in PR for content/knight-motif-approval-h01. Original r02 archive delivery remains PR #93."
+    }
   },
   "repository_delivery": {
     "branch": "content/chess-knight-reveal-r01",
     "pr": 93,
-    "evidence": "https://github.com/venomenon328/picross/pull/93"
+    "evidence": "https://github.com/venomenon328/picross/pull/93",
+    "approval_update_branch": "content/knight-motif-approval-h01"
   },
   "validation": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/validation.json",
     "sha256": "955f4509c1bdbec2fccaae758ad50c72173a1cc2a2698b25b57870a53d1afd7d"
+  },
+  "approved_parameters": {
+    "width": 24,
+    "height": 36,
+    "mode": "mono"
+  },
+  "motif_approval": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/motif-approval.json",
+    "sha256": "ff4e33da34514e5d2cc0b7d1be6f1f10781d7628bc5e677befcf801d98069b6d"
+  },
+  "codex_handoff": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/codex-handoff.json",
+    "sha256": "a0852a5b1d5087501234df5c12aad4e1ed59fce7e777dbd18fee37aed39d8237"
+  },
+  "codex_instructions": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/CODEX_HANDOFF.md",
+    "sha256": "66ae6dc94bb45b277272157030ba3f9ba577481d075c4009a3810b21cd26728f"
+  },
+  "execution_hold": "No raster production in this handoff-only order; await subsequent explicit production order.",
+  "superseded_recommendation": [
+    32,
+    48
+  ],
+  "approval_validation": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/approval-validation.json",
+    "sha256": "c6e013906149eff97ae0341cc649b85fad27bbc4068118848fb43d5e8a15f0d4"
   }
 }
