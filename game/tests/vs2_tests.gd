@@ -145,6 +145,7 @@ func run() -> void:
 		check(after[index] != prior[index], "positive independent clue MMB")
 		for i: int in range(prior.size()):
 			if i != index: check(after[i] == prior[i], "other clue reads unchanged")
+	await native_clue_boundaries()
 	app.queue_free()
 	await process_frame
 	app = Cases.new()
@@ -158,6 +159,53 @@ func run() -> void:
 		FileAccess.open(output.path_join("vs2-matrix.json"),FileAccess.WRITE).store_string(JSON.stringify({"records":records,"pictures":pictures,"checks":checks,"failures":failures},"\t"))
 	print("VS2_TESTS_", "OK" if failures == 0 else "FAILED", " checks=", checks, " failures=", failures)
 	quit(0 if failures == 0 else 1)
+
+func native_clue_boundaries() -> void:
+	var oracle = preload("res://tests/p12_cases.gd")
+	var b = app.board
+	var grid: Rect2 = b.view.bounds()
+	var cells: Array = app.session.player.cells.duplicate()
+	var history: Array = app.session.player.history.duplicate(true)
+	for axis: String in ["row","column"]:
+		var lines: Array[int] = oracle.overflowing_lines(b,axis)
+		check(lines.size()>=2,"HC native two independent overflowing lines per axis")
+		for index: int in lines.slice(0,2):
+			var maximum: int = b.clue_layout(axis,index).max_offset
+			var pitch: float = b.clue_layout(axis,index).slot_extent
+			var area: Rect2 = b.row_clue_area() if axis=="row" else b.column_clue_area()
+			var cross: Vector2 = b.view.cell_rect(Vector2i(index,index)).get_center()
+			var start: Vector2 = b.global_position+(Vector2(area.get_center().x,cross.y) if axis=="row" else Vector2(cross.x,area.get_center().y))
+			for anchor: int in [0,maximum/2,maximum]:
+				for fraction: float in [-1.51,-1.49,-0.51,-0.49,0.49,0.51,1.49,1.51]:
+					b.set_clue_step(axis,index,anchor)
+					var confirmed: Dictionary = b.capture_view()
+					mouse(start,MOUSE_BUTTON_MIDDLE,true)
+					var finish: Vector2 = start+(Vector2(pitch*fraction,b.view.cell_size*3) if axis=="row" else Vector2(b.view.cell_size*3,pitch*fraction))
+					motion(finish)
+					check(b.pan_target==axis and b.pan_line_index==index and b.capture_view()==confirmed,"HC native frozen line and unsaved continuous read")
+					var before: Dictionary = oracle.token_centers(b.visual_hint_units(axis,index))
+					check(before.size()>=5,"HC native drag keeps five whole consecutive clues")
+					var best: float = INF
+					for candidate: int in range(maximum+1):
+						best = minf(best,oracle.coordinate_distance(before,oracle.resting_centers(b,axis,index,candidate)).mean)
+					mouse(finish,MOUSE_BUTTON_MIDDLE,false)
+					var after: Dictionary = oracle.token_centers(b.visual_hint_units(axis,index))
+					check(oracle.coordinate_distance(before,after).mean<=best+0.001,"HC native mouse-up chooses nearest token coordinates")
+					var current: Dictionary = b.capture_view()
+					for key: String in ["row_clue_reads","column_clue_reads"]:
+						for neighbour: int in range(confirmed[key].size()):
+							if key!=("row_clue_reads" if axis=="row" else "column_clue_reads") or neighbour!=index:
+								check(current[key][neighbour]==confirmed[key][neighbour],"HC native neighbour read unchanged")
+					check(b.view.bounds()==grid and app.session.player.cells==cells and app.session.player.history==history,"HC native clue drag preserves grid/game/history")
+	var reads: Dictionary = b.capture_view()
+	for dims: Vector2i in [Vector2i(1920,1080),Vector2i(1280,720)]:
+		canvas.size = dims
+		app.size = Vector2(dims)
+		app.set_ui_scale(1 if dims.x==1920 else 1.25)
+		b.requested_cell = 16 if dims.x==1920 else 24
+		b._layout()
+		await process_frame
+		check(b.row_clue_reads==reads.row_clue_reads and b.column_clue_reads==reads.column_clue_reads,"HC native zoom/UI/resize retain independent semantic anchors")
 
 func matrix(corpus: bool) -> void:
 	for client: Vector2i in [Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080),Vector2i(2560,1440)]:

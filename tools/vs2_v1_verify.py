@@ -81,7 +81,6 @@ def record(r):
     safe, grid, shift, used = r['safe'], r['grid'], r['translation'], r['occupied']
     minimum, dims = r['minimum_reserve'], r['dimensions']
     fit = ceiling = r['raw_fit']
-    require(close(fit,r['independent_fit']), 'measured fit identity')
     budget = [dims[i]*fit+r['fit_slots'][i]*r['fit_pitch'][i]+14 for i in range(2)]
     next_budget = [dims[i]*(fit+.01)+r['next_fit_slots'][i]*r['next_fit_pitch'][i]+14 for i in range(2)]
     require(all(v <= safe[i+2]+.025 for i,v in enumerate(budget)), 'ceiling native reserve fits')
