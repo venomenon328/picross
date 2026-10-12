@@ -1,0 +1,28 @@
+{
+  "format": "picross-motif-package-validation-v1",
+  "state": "package_validation_passed",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r04",
+  "source_commit": "bc3286050a35cdbdd3b5fe5e6274255228517aaa",
+  "package_sha256": "955fc703c95a0b54eac08d997a53998fb83a57b76e7e39a273734b17524ed939",
+  "inventory_sha256": "b882ba553e0282fe4759d0f29f947d419d5486c2967abaff0350db6b099f2bb9",
+  "file_count": 16,
+  "reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+  "motif_sha256": "0a79644cc797f5202a288a5d8b8e271cf1e39db4b81cc39ab744949a0202cb59",
+  "checks": [
+    "safe complete ZIP/inventory/path/mode/resource/CRC/hash validation",
+    "readable original handoff byte-identical",
+    "A-r01 and human reveal approval byte-identical to prior package",
+    "new MA-r02 native source/provenance hash bound directly to original A-r01",
+    "both full RGB8 PNGs decoded through complete IDAT/chunk CRC checks",
+    "new motif approval correctly pending; old MA-r01 approval not transferred",
+    "Revision-4 rulebook snapshot exact current repository bytes",
+    "r01/r02/r03 ZIP and original handoff byte-unchanged",
+    "no nested archive, raster, old production/proof duplication, code or runtime entry"
+  ],
+  "not_performed": [
+    "No raster/import/solver/proof/frame/export/runtime runs in this image correction",
+    "No ZA-1 certification: motif_review is not content_ready"
+  ],
+  "limits": "Assistant visual comparison is not human new motif approval. No logical solvability claim for new silhouette."
+}

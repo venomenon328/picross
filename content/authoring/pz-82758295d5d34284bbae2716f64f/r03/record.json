@@ -27,7 +27,7 @@
     "Protected ear/pedestal/face details not sufficiently preserved; no safe <=2-cell repair candidate.",
     "No final candidate, no difficulty level, no final editorial acceptance or export."
   ],
-  "next_action": "New separately human-approved 24x36 motif abstraction, or explicit new size corridor; preserve A-r01. No further search in this completed six-candidate round.",
+  "next_action": "Continue at indexed r04 motif_review for newly requested silhouette MA-r02; new human motif approval required. Historical six-candidate r03 result remains blocked and unchanged.",
   "integration": null,
   "previous_revision": "r02",
   "reveal_revision": "A-r01",
@@ -80,5 +80,6 @@
     "archive_commit": "4509e5b97d166a3300fbab0173eaf2361cd97602",
     "evidence": "https://github.com/venomenon328/picross/pull/96",
     "final_head_and_checks": "Exact final Head/Base/Test-Merge/Run and post-merge main verification recorded in PR #96."
-  }
+  },
+  "superseded_by": "r04"
 }
