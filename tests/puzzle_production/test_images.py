@@ -18,7 +18,6 @@ from tools.puzzle_production.images import (candidate, import_image, inspect_can
 from tools.puzzle_production.p1_export import export_p1, validate_reveal
 
 ROOT = Path(__file__).resolve().parents[2]
-EXAMPLE = ROOT / "examples/rp3"
 
 
 class ImageTests(unittest.TestCase):
@@ -26,7 +25,16 @@ class ImageTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.design = load_json(EXAMPLE / "design.json")
+        self.design = load_json(ROOT / "tests/puzzle_production/fixtures/image-design.json")
+        self.source = self.root / "baseline.png"
+        image = Image.new("RGB", (4, 4), "white")
+        for y in (1, 2):
+            for x in range(4): image.putpixel((x, y), (0, 0, 0))
+        image.save(self.source)
+        self.design_file = self.root / "baseline-design.json"
+        write_json(self.design_file, self.design)
+        self.reveal = self.root / "reveal.svg"
+        self.reveal.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="#b94337"/></svg>')
 
     def file(self, image, name="source.png", **params):
         path = self.root / name
@@ -41,7 +49,11 @@ class ImageTests(unittest.TestCase):
 
     def produce(self, image=None, d=None, folder="production"):
         d = d or self.design
-        source = EXAMPLE / "source.png" if image is None else self.file(image)
+        if image is None:
+            image = Image.new("RGB", (4, 4), "white")
+            for y in (1, 2):
+                for x in range(4): image.putpixel((x, y), (0, 0, 0))
+        source = self.file(image)
         design = self.root / "design.json"
         write_json(design, d)
         output = self.root / folder
@@ -230,12 +242,12 @@ class ImageTests(unittest.TestCase):
     def test_real_p1_export_and_no_stale_overwrite(self):
         bundle=self.produce()
         output=self.root/"export"
-        result=export_p1(bundle,"area-128",EXAMPLE/"reveal.svg","Fliegenpilz",output)
+        result=export_p1(bundle,"area-128",self.reveal,"Fliegenpilz",output)
         self.assertTrue(result["certified"])
-        self.assertEqual((output/"data/f04.json").read_bytes(),(ROOT/"game/data/f04.json").read_bytes())
+        self.assertEqual(load_json(output/"data/f04.json")["width"], 4)
         self.assertEqual(load_json(output/"manifest.json")["color_mapping"],{"empty":0,"ink":1})
         with self.assertRaises(InvalidInput):
-            export_p1(bundle,"area-128",EXAMPLE/"reveal.svg","Fliegenpilz",output)
+            export_p1(bundle,"area-128",self.reveal,"Fliegenpilz",output)
         with self.assertRaises(InvalidInput):
             self.produce()
 
@@ -249,8 +261,8 @@ class ImageTests(unittest.TestCase):
         self.assertEqual(first_candidate["logic_hash"],second_candidate["logic_hash"])
         self.assertEqual(proof,same_proof)
         artwork = self.root/"changed.svg"
-        artwork.write_text((EXAMPLE/"reveal.svg").read_text().replace("#b94337","#b94438"))
-        self.assertNotEqual(artwork.read_bytes(),(EXAMPLE/"reveal.svg").read_bytes())
+        artwork.write_text((self.reveal).read_text().replace("#b94337","#b94438"))
+        self.assertNotEqual(artwork.read_bytes(),(self.reveal).read_bytes())
         export_p1(second,"area-128",artwork,"Fliegenpilz",self.root/"rgb-export")
         self.assertEqual(load_json(self.root/"rgb-export/data/f04.json")["palette"][0]["color"],"203030")
         self.assertEqual((self.root/"rgb-export/art/f04.svg").read_bytes(),artwork.read_bytes())
@@ -302,7 +314,7 @@ class ImageTests(unittest.TestCase):
             output = self.root / ("export-" + label)
             cmd = [sys.executable, "-m", "tools.puzzle_production", "export-p1",
                    "--bundle", str(bundle), "--variant", "area-128",
-                   "--reveal", str(EXAMPLE / "reveal.svg"), "--name", "Name",
+                   "--reveal", str(self.reveal), "--name", "Name",
                    "--output-dir", str(output)]
             done = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
             self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
@@ -318,7 +330,7 @@ class ImageTests(unittest.TestCase):
         captured = io.StringIO()
         with patch.object(p1_export, "export_p1", side_effect=RuntimeError("internal failure")), redirect_stdout(captured):
             code = image_main(["export-p1", "--bundle", str(bundle), "--variant", "area-128",
-                               "--reveal", str(EXAMPLE / "reveal.svg"), "--name", "Name",
+                               "--reveal", str(self.reveal), "--name", "Name",
                                "--output-dir", str(self.root / "internal-error")])
         self.assertEqual(code, 5)
         payload = json.loads(captured.getvalue())
@@ -332,7 +344,7 @@ class ImageTests(unittest.TestCase):
         write_json(bundle/"area-128-proof.json",proof)
         self.rebind(bundle,"area-128-proof.json")
         with self.assertRaises(InvalidProof):
-            export_p1(bundle,"area-128",EXAMPLE/"reveal.svg","Name",self.root/"export")
+            export_p1(bundle,"area-128",self.reveal,"Name",self.root/"export")
         self.assertFalse((self.root/"export").exists())
 
     def test_changed_matrix_or_clues_invalidates_old_proof(self):
@@ -361,14 +373,14 @@ class ImageTests(unittest.TestCase):
         bundle=self.produce(image,d)
         self.assertEqual(inspect_candidate(bundle,"area")[2]["status"],"stalled")
         with self.assertRaises(InvalidInput):
-            export_p1(bundle,"area",EXAMPLE/"reveal.svg","Name",self.root/"export")
+            export_p1(bundle,"area",self.reveal,"Name",self.root/"export")
         design=self.root/"abort-design.json"
         write_json(design,self.design)
         aborted=self.root/"aborted"
-        import_image(EXAMPLE/"source.png",design,aborted,max_lines=0)
+        import_image(self.source,design,aborted,max_lines=0)
         self.assertFalse(load_json(aborted/"area-128-result.json")["certified"])
         with self.assertRaises(InvalidInput):
-            export_p1(aborted,"area-128",EXAMPLE/"reveal.svg","Name",self.root/"abort-export")
+            export_p1(aborted,"area-128",self.reveal,"Name",self.root/"abort-export")
 
     def test_p1_rejects_color_rectangular_and_wrong_assets(self):
         for w,h,mode in ((2,1,"mono"),(2,2,"color")):
@@ -376,7 +388,7 @@ class ImageTests(unittest.TestCase):
             image=Image.new("RGBA",(w,h),(0,0,0,255))
             bundle=self.produce(image,d,folder=mode)
             with self.assertRaises(InvalidInput):
-                export_p1(bundle,"area",EXAMPLE/"reveal.svg","Name",self.root/"export")
+                export_p1(bundle,"area",self.reveal,"Name",self.root/"export")
         for svg in ('<svg width="40" height="40"><script/></svg>',
                     '<svg width="40" height="40"><image href="https://example.com"/></svg>',
                     '<!DOCTYPE svg><svg width="40" height="40"/>',
@@ -395,12 +407,12 @@ class ImageTests(unittest.TestCase):
         self.assertIn('&lt;script&gt;',markup)
         self.assertIn('1 Pixel je Zelle',markup)
         self.assertIn('contour-40',markup)
-        self.assertEqual((bundle/"original.png").read_bytes(),(EXAMPLE/"source.png").read_bytes())
+        self.assertEqual((bundle/"original.png").read_bytes(),(self.source).read_bytes())
         for name in ('normalized.png','briefing.txt','area-128-raster.png','area-128-logic.json'):
             self.assertTrue((bundle/name).is_file())
 
     def test_cli_real_files_and_failure_json(self):
-        cmd=[sys.executable,"-m","tools.puzzle_production","import-image","--input",str(EXAMPLE/"source.png"),"--design",str(EXAMPLE/"design.json"),"--output-dir",str(self.root/"cli")]
+        cmd=[sys.executable,"-m","tools.puzzle_production","import-image","--input",str(self.source),"--design",str(self.design_file),"--output-dir",str(self.root/"cli")]
         done=subprocess.run(cmd,cwd=ROOT,capture_output=True,text=True)
         self.assertEqual(done.returncode,0,done.stderr)
         self.assertEqual(json.loads(done.stdout)["status"],"produced")

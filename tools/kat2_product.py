@@ -5,6 +5,7 @@ from pathlib import Path
 import shutil
 
 import p1_preflight as toolchain
+from product_fixtures import copy_regression_game
 
 
 def write_json(path, value):
@@ -56,7 +57,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
     reports = []
     for mode in ("regular", "restart", "large", "empty", "invalid", "adapter", "information"):
         project = workspace / ("kat2-" + mode) / "game"
-        shutil.copytree(root / "game", project, ignore=shutil.ignore_patterns(".godot", "build"))
+        copy_regression_game(root, project)
         saves = workspace / ("kat2-" + ("regular" if mode == "restart" else mode) + "-saves")
         saves.mkdir(exist_ok=mode == "restart")
         if mode == "adapter":

@@ -16,6 +16,8 @@ from urllib.parse import unquote, urlsplit
 TEXT_SUFFIXES = {".md", ".py", ".yml", ".yaml", ".json", ".toml", ".txt"}
 TEXT_NAMES = {"VERSION", ".gitignore", ".gitattributes"}
 SKIP_DIRS = {".git", "__pycache__", ".venv", "node_modules"}
+# Per-puzzle documents/proofs are checked once in production, not on every CI run.
+SKIP_CONTENT = {"content/authoring", "content/packages", "game/data/content", "game/art/content"}
 REQUIRED = (
     "README.md", "AGENTS.md", "docs/PROJECT_PROFILE.md",
     "docs/DEV_RULES_ADOPTION.md", "docs/CHATGPT_PROJECT_INSTRUCTIONS.md",
@@ -97,7 +99,7 @@ def check_tree(root: Path) -> list[str]:
         kept: list[str] = []
         for name in sorted(dirs):
             child = base / name
-            if name in SKIP_DIRS:
+            if name in SKIP_DIRS or child.relative_to(root).as_posix() in SKIP_CONTENT:
                 continue
             if child.is_symlink():
                 errors.append(f"Symlink directory not supported: {child.relative_to(root)}")

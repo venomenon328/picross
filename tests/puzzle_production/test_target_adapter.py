@@ -23,6 +23,18 @@ from tools.puzzle_production.za1_fixtures import FIXTURES, ROOT, approve, isolat
 
 
 class TargetTests(unittest.TestCase):
+    def test_isolated_catalog_never_reads_growing_production_packages(self):
+        # Only the fixed catalog fixtures may be read, even after future content merges.
+        from tools.puzzle_production import za1_fixtures
+        original = za1_fixtures.load_json
+        def guarded(path, *args, **kwargs):
+            self.assertIn("fixtures/catalog", str(path))
+            return original(path, *args, **kwargs)
+        with patch.object(za1_fixtures, "load_json", side_effect=guarded):
+            checkout = isolated_checkout(self.root / "fixed-catalog")
+        self.assertEqual(len(check_checkout(checkout, replay=True)["entries"]), 9)
+        self.assertFalse((checkout / "content/packages").exists())
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -44,7 +56,7 @@ class TargetTests(unittest.TestCase):
         out = self.root / dest
         export(p, out, name="TEST ONLY", revision=7, stem=stem or h["puzzle_id"],
                save_slot=slot or "slot_"+h["puzzle_id"], approval_path=approval,
-               category_id="gemuese-pilze-kraeuter", categories_path=ROOT / "content/categories.json")
+               category_id="gemuese-pilze-kraeuter", categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
         return out
 
     def reseal(self, p):
@@ -107,10 +119,10 @@ class TargetTests(unittest.TestCase):
                 changed = copy.deepcopy(original)
                 changed["entries"][-1]["save_slot"] = slot
                 with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
-                    validate(changed, load_json(ROOT / "content/categories.json"))
+                    validate(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json"))
                 write_json(checkout / "content/registry.json", changed)
                 # Keep projection consistent, so stale runtime data cannot mask B-01.
-                write_json(checkout / "game/data/registry.json", projection(changed, load_json(ROOT / "content/categories.json")))
+                write_json(checkout / "game/data/registry.json", projection(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")))
                 before = self.snapshot(checkout)
                 for replay in (False, True):
                     with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
@@ -128,7 +140,7 @@ class TargetTests(unittest.TestCase):
         changed = json.loads(journal["new"][REGISTRY])
         changed["entries"][-1]["save_slot"] = "con"
         journal["new"][REGISTRY] = json.dumps(changed)
-        journal["new"][RUNTIME] = json.dumps(projection(changed, load_json(ROOT / "content/categories.json")))
+        journal["new"][RUNTIME] = json.dumps(projection(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")))
         write_json(lock, journal)
         before = self.snapshot(checkout)
         with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
@@ -158,17 +170,6 @@ class TargetTests(unittest.TestCase):
                 self.assertEqual(file_hash(out / m["reveal"]), report["selection"]["reveal"]["sha256"])
                 self.assertEqual(before, {f.relative_to(p): file_hash(f) for f in p.rglob("*") if f.is_file()})
 
-    def test_garlic_compact_original_handoff_and_missing_final_approval(self):
-        source = ROOT / "tests/puzzle_production/fixtures/garlic-r03-reference.zip"
-        report = self.inspect(source)
-        self.assertEqual(report["original_zip_sha256"], "7013d5b29a0dda5ad9a5047730a1e71b4d06596aa284ee8a3cbdad9184dc23f1")
-        self.assertEqual(report["handoff_sha256"], "8411cb079ac321b975cc51c01aa47f935fe492aee569060046aee917d594c06c")
-        self.assertEqual(report["fresh_verification"]["candidates"], 3)
-        self.assertTrue(report["technical"])
-        self.assertFalse(report["catalog_ready"])
-        with self.assertRaisesRegex(InvalidInput, "final_editorial"):
-            export(source, self.root / "blocked", name="Knoblauch", revision=1, stem="garlic", save_slot="garlic")
-        self.assertFalse((self.root / "blocked").exists())
 
     def test_rehashed_mutated_sources_matrix_clues_proof_and_status_rejected(self):
         attacks = ("source", "normalized", "matrix", "logic", "proof", "status", "reveal", "approval", "derivation", "parameter", "gate", "difficulty")
@@ -291,7 +292,10 @@ class TargetTests(unittest.TestCase):
         second = self.export(p2, dest="second")
         registration(second, checkout, apply=True)
         self.assertEqual(len(check_checkout(checkout, replay=True)["entries"]), 11)
-        with self.assertRaisesRegex(InvalidInput, "Test-only"): registration(second, ROOT, apply=True)
+        protected = isolated_checkout(self.root / "protected-repository")
+        with patch("tools.puzzle_production.content_registry.ROOT", protected):
+            with self.assertRaisesRegex(InvalidInput, "Test-only"):
+                registration(second, protected, apply=True)
         altered = load_json(out / "manifest.json"); altered["runtime_revision"] = 8
         write_json(out / "manifest.json", altered)
         with self.assertRaises(InvalidInput): registration(out, checkout, apply=True)

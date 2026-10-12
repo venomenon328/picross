@@ -1,5 +1,10 @@
 # F-02 / F-03 · Herkunft und Nachweis
 
+**Historischer Rätselnachweis:** Die rätselspezifischen Unit-Tests wurden am
+12.10.2026 entfernt. Das Zertifikat bleibt erhalten; keine Wiederholung in CI.
+Aktuelle [Prüfzuordnung](../docs/CI_POLICY.md). Die folgenden alten Testbefehle
+gehören zum damaligen Checkout.
+
 Prüferdokument mit Motivspoiler, vor Abschluss nicht in der Spieloberfläche verlinkt.
 
 F-02, ursprünglich Revision 1, ist ein für #9 aus eigenen Rasterkoordinaten entworfenes 40×40-Bild:

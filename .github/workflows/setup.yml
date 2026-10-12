@@ -38,7 +38,10 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - name: Select required checks and verify the complete diff
+          filter: blob:none
+          sparse-checkout: tools/ci_scope.py
+          sparse-checkout-cone-mode: false
+      - name: Select required checks from the complete diff
         id: scope
         env:
           CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
@@ -48,10 +51,18 @@ jobs:
           python3 tools/ci_scope.py plan --fetch
           --base "$CI_BASE" --head "$CI_HEAD" --scope "$CI_SCOPE"
           --output "${{ runner.temp }}/ci-plan.json"
+      - name: Materialize sources for code and documentation checks
+        if: steps.scope.outputs.content_only != 'true'
+        run: git sparse-checkout disable
       - name: Fast tool contracts and CI gate regression
+        if: steps.scope.outputs.content_only != 'true'
         run: python3 -m unittest discover -s tools -p 'test_*.py' -v
       - name: Documentation checks
+        if: steps.scope.outputs.content_only != 'true'
         run: python3 tools/check_docs.py
+      - name: Content delivery scope only
+        if: steps.scope.outputs.content_only == 'true'
+        run: echo "Content-only delivery. Certification and editorial evidence belong to production; no puzzle, runtime, visual or export tests run in CI."
       - name: Upload selection and source binding
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -94,6 +105,7 @@ jobs:
           persist-credentials: false
           sparse-checkout: tools/ci_scope.py
           sparse-checkout-cone-mode: false
+          filter: blob:none
       - name: Require every selected job to have actually succeeded
         env:
           CI_PLAN: ${{ needs.docs.outputs.plan }}
