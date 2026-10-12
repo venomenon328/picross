@@ -71,7 +71,7 @@
   },
   "validation": {
     "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/validation.json",
-    "sha256": "976eff9f02f23cb1a1fdc708d5c2283279a49b4f60d3b8f17caa83266c98bfb6"
+    "sha256": "5a18e71eff6b03bc791d2cf0c587ad62b14540db0875083ebca836d021b31075"
   },
   "progress_log": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/progress.json"
 }

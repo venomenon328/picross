@@ -21,6 +21,6 @@
   ],
   "original_r03_unchanged": true,
   "remaining_gate": "Actual bound human final editorial approval; no runtime catalog requested",
-  "archive_growth_bytes": 11571043,
-  "archive_growth_note": "Exact sum of added r04 Git file bytes plus index file byte delta from source main; excludes .git and temporary production files."
+  "archive_growth_bytes": 11571264,
+  "archive_growth_note": "Exact added r04 file bytes plus index and r03 external record byte deltas from source main; excludes .git and temporary production files."
 }
