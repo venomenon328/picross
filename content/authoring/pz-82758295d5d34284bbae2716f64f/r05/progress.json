@@ -27,6 +27,12 @@
       "original_archive_unchanged_since_sealing": true,
       "technical": true,
       "type": "written_zip_validation"
+    },
+    {
+      "type": "actual_human_revision_request",
+      "revision": "r06",
+      "evidence": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/change-request.json",
+      "old_zip_handoff_unchanged": true
     }
   ],
   "format": "picross-authoring-progress-v1",

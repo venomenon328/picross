@@ -1,0 +1,28 @@
+{
+  "format": "picross-authoring-progress-v1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r06",
+  "events": [
+    {
+      "type": "actual_human_change_request",
+      "evidence": "change-request.json",
+      "final_editorial": "pending"
+    },
+    {
+      "type": "exact_manual_derivation",
+      "changed_cells": 3,
+      "other_cells_unchanged": 861,
+      "proof_steps": 142,
+      "deductive_solution": true,
+      "fresh_independent_proof": true
+    },
+    {
+      "type": "sealed_archive",
+      "package_sha256": "2c89f961d543451504c572fda281c9bbd18544196bc43b5ae47d1d76193ddee3",
+      "inventory_sha256": "e0a75a440ba1ac49c9ab4cf6f0da59c84a2fdeb25af68180cf5a2e50d19357cc",
+      "workflow_state": "raster_review",
+      "adapter_blocked": true,
+      "final_editorial": "pending"
+    }
+  ]
+}

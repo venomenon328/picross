@@ -78,7 +78,7 @@
   "mode": "mono",
   "motif_revision": "MA-r02",
   "motif_sha256": "0a79644cc797f5202a288a5d8b8e271cf1e39db4b81cc39ab744949a0202cb59",
-  "next_action": "Present r05 actual raster, unchanged reveal, report and inventory for human final editorial acceptance. Archive merge may proceed under explicit conditional authorization; no runtime registration.",
+  "next_action": "Continue at indexed r06: exact requested manual three-cell deletion, certified new logic, human review pending; ZA-1 manual-source support blocked.",
   "package": {
     "bytes": 6577918,
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r05/package.zip",
@@ -116,5 +116,6 @@
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r05/validation.json",
     "sha256": "876b520edf9b97163bad268dfcdf39d4b3a96a5dafea7a63f49843729ba4612b"
   },
-  "width": 24
+  "width": 24,
+  "superseded_by": "r06"
 }
