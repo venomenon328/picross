@@ -1,0 +1,47 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "revision": "r03",
+  "category_id": "gemuese-pilze-kraeuter",
+  "state": "motif_review",
+  "package": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/package.zip",
+    "bytes": 2613224,
+    "sha256": "6f248d3bcfe68441bbb9b92ae14db6f7b7f5cd74d72012e5b4049910bba9bf42"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/handoff.json",
+    "sha256": "222facbb7484b0950e0a128f83a411a38d81458117654a21c216ca32d78d06fd"
+  },
+  "inventory_sha256": "97e52a7b6e2225b0783bc687df9428e37095c108eadec6cc470bf9ec2937853e",
+  "approval": null,
+  "width": null,
+  "height": null,
+  "mode": "color",
+  "difficulty": null,
+  "proposed_dimensions": [
+    24,
+    24
+  ],
+  "proposed_foreground_colors": 3,
+  "blockers": [
+    "Separate explicit human approval of MA-r01 and proposed parameter corridor required before any raster production."
+  ],
+  "next_action": "Present A-r02 and MA-r01 together; await explicit motif approval for proposed 24x24 three-color corridor.",
+  "integration": null,
+  "previous_revision": "r02",
+  "reveal_revision": "A-r02",
+  "reveal_sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
+  "reveal_approval": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r02/reveal-approval.json",
+    "sha256": "77cab784e5bc8ed93334202783c3370589ebc55fd921a2c005126b2cb72f0ee1"
+  },
+  "motif_revision": "MA-r01",
+  "motif_sha256": "c9ec8c9f026b0642abaa61f71e499e8b0493e3efb00d17f0889f96821eb55751",
+  "progress_log": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/progress.json",
+  "archive_review": {
+    "source_commit": "660ea63ec90f0e6b608eb11ed036106f012cbc87",
+    "state": "package_validation_passed",
+    "delivery_evidence": "Final head/review/CI/merge evidence in PR for branch chore/pea-motif-r03."
+  }
+}
