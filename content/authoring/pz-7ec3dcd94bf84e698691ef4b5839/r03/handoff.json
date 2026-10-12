@@ -1,0 +1,78 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 4,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8"
+  },
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "revision": "r03",
+  "repo_commit": "660ea63ec90f0e6b608eb11ed036106f012cbc87",
+  "state": "motif_review",
+  "brief": "brief.md",
+  "category_id": "gemuese-pilze-kraeuter",
+  "requested_mode": "color",
+  "approved_parameters": [
+    "color mode as expressly requested"
+  ],
+  "proposed_parameters": "parameters.json",
+  "reveal": {
+    "file": "reveal/A-r02.png",
+    "revision": "A-r02",
+    "sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
+    "approval": {
+      "file": "approvals/reveal-A-r02.json",
+      "sha256": "77cab784e5bc8ed93334202783c3370589ebc55fd921a2c005126b2cb72f0ee1"
+    }
+  },
+  "reveal_provenance": "provenance/A-r02.json",
+  "motif": {
+    "file": "motif/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "c9ec8c9f026b0642abaa61f71e499e8b0493e3efb00d17f0889f96821eb55751",
+    "derived_from_reveal_sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
+    "approval": null
+  },
+  "motif_provenance": "provenance/MA-r01.json",
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "97e52a7b6e2225b0783bc687df9428e37095c108eadec6cc470bf9ec2937853e"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "Separate explicit human approval of MA-r01 and proposed parameter corridor required before any raster production."
+  ],
+  "next_action": "Present A-r02 and MA-r01 together; await explicit motif approval for proposed 24x24 three-color corridor.",
+  "authorization": "Archive, commit/push, draft PR and conditional merge after full diff/self-review and selected mandatory checks. No runtime catalog, tools, release or deployment."
+}

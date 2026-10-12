@@ -19,10 +19,8 @@
   "height": null,
   "mode": "color",
   "difficulty": null,
-  "blockers": [
-    "Explicit human approval of reveal A-r02 required before abstraction."
-  ],
-  "next_action": "Await explicit human approval of A-r02; no abstraction or raster work.",
+  "blockers": [],
+  "next_action": "Continue with r03 motif_review; reveal A-r02 approved, new motif approval pending.",
   "integration": null,
   "previous_revision": "r01",
   "reveal_revision": "A-r02",
@@ -33,5 +31,10 @@
     "state": "package_validation_passed",
     "human_approval": "pending",
     "delivery_evidence": "Authoritative final head/review/CI/merge evidence in the PR for branch chore/pea-reveal-r02."
-  }
+  },
+  "reveal_approval": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r02/reveal-approval.json",
+    "sha256": "77cab784e5bc8ed93334202783c3370589ebc55fd921a2c005126b2cb72f0ee1"
+  },
+  "superseded_by": "r03"
 }
