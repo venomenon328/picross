@@ -1,0 +1,42 @@
+{
+  "format": "picross-authoring-progress-v1",
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "revision": "r04",
+  "state": "content_ready",
+  "source_commit": "78b49f75e68b3af2d68b274b2d3c10c083a155c9",
+  "archive_branch": "content/pz-7ec3-production",
+  "events": [
+    {
+      "phase": "source_check",
+      "result": "r03 ZIP/handoff/inventory/both PNGs/human approvals/derivation passed; historical r03 bytes retained."
+    },
+    {
+      "phase": "parameters",
+      "result": "Actual user reply approves exterior-background square crop and three source-derived greens; evidence sealed in new production revision."
+    },
+    {
+      "phase": "production",
+      "imports": 4,
+      "repairs": 0,
+      "result": "Four distinct candidates certified; margin-a selected by actual raster/source comparison."
+    },
+    {
+      "phase": "packaging_qa",
+      "result": "Prepublication ZIP candidate had one stale reveal gate-evidence path; corrected before delivery. No raster/proof/image altered. Final written ZIP technical inspection passes; only human final editorial approval missing."
+    },
+    {
+      "phase": "archive_delivery",
+      "result": "Complete staged diff reviewed separately after production: only new r04 archive/metadata and one index entry, regular 100644 modes; no tools/tests/game/registry/old package changes. No open archive self-review findings; selected content CI still required. Final head/run/merge evidence will be in PR."
+    }
+  ],
+  "final_editorial_approval": null,
+  "runtime_integration": null,
+  "release": null,
+  "self_review": {
+    "result": "pass",
+    "type": "separate full self-review; not independent human review",
+    "reviewed_base": "78b49f75e68b3af2d68b274b2d3c10c083a155c9",
+    "scope": "Seven intended authoring files; ZIP contents validated and actual raster comparisons visually reviewed",
+    "remaining_content_gate": "Human final editorial approval, intentionally not an archive merge gate under this order."
+  }
+}

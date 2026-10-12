@@ -1,0 +1,77 @@
+{
+  "approval": null,
+  "archive_base_commit": "78b49f75e68b3af2d68b274b2d3c10c083a155c9",
+  "archive_branch": "content/pz-7ec3-production",
+  "archive_delivery_evidence": "PR for content/pz-7ec3-production; final head/CI/merge recorded there after checks.",
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "category_id": "gemuese-pilze-kraeuter",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "All 82 proof checkpoints enumerate every currently productive full-support row and column. Before cleanup at <=12 unresolved cells, at least 10 productive lines were available; no three-step run met the <=2-lines/<=4-changed-cells bottleneck condition in this path. This does not validate an exhaustive weaker-rule analyser.",
+    "calibration": "No human calibration data and no validated difficulty analyser; low-confidence editorial estimate.",
+    "confidence": "low",
+    "effort": {
+      "cells": 576,
+      "empty": 122,
+      "filled": 454,
+      "height": 24,
+      "human_active_minutes": null,
+      "proof_steps": 82,
+      "solve_time_minutes": null,
+      "width": 24
+    },
+    "evidence": "audit/difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "286699a610b2d4906f953d38d2dc52a9f92ed09d8ffdec0f3b41ce001a284efc",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L1",
+      "L3"
+    ],
+    "playtest": "not_performed; optional",
+    "rule_families": {
+      "R0": "Seven rows (10–16) and seven columns (10–16), one-based, are fully packed immediately. Rows 12/13 [19 body,5 dark] and column 12 [20 body,4 dark] give broad exact anchors; late remaining cells are routine cleanup. R0 alone was not exhaustively tested to fixpoint.",
+      "R1": "Estimated main demand: overlap and extension of the large body/highlight/shade blocks against these central anchors; outer empty corners follow from bounded blocks. This wide distribution of simple anchors supports L2 rather than rating by 576-cell size.",
+      "R2": "Some right/upper boundary color-run combinations and partial domains may require combined assignment; necessity and sufficiency of the weaker families were not exhaustively established, hence L1–L3 uncertainty.",
+      "R3": "The full-line-color certificate uses general support (including partial color exclusions), but that does not prove R3 is necessary. No specific unavoidable R3 step was identified in the editorial examination."
+    },
+    "time_estimate": null,
+    "evidence_package": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/package.zip"
+  },
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/handoff.json",
+    "sha256": "3604b3c4fe80f1a2f7187a83e2c20dad56177abd09169e79502d590447bc4628"
+  },
+  "height": 24,
+  "integration": null,
+  "inventory_sha256": "6fb6b6aa652d92a3c83a2b39a0f956f0a79b3e28658d474e0af381a9ada3c9fd",
+  "mode": "color",
+  "motif_sha256": "c9ec8c9f026b0642abaa61f71e499e8b0493e3efb00d17f0889f96821eb55751",
+  "next_action": "Present exact r04 raster, unchanged A-r02, technical/visual/difficulty evidence and inventory for actual human final editorial approval. No runtime registration under current order.",
+  "package": {
+    "bytes": 11554402,
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/package.zip",
+    "sha256": "b339e16e511fc07d7e8333f8e1379fea69d7685301067b0e37547df2915fc45b"
+  },
+  "previous_revision": "r03",
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "reveal_sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
+  "revision": "r04",
+  "state": "content_ready",
+  "width": 24,
+  "inspection": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/inspection.json",
+    "sha256": "de29d8adffa2974e49b321f71215766f0fdbf6df00f9b34f485734fbcfe957c5",
+    "technical": true,
+    "editorial_approved": false,
+    "registered": false
+  },
+  "validation": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/validation.json",
+    "sha256": "d20a8ac88e38a77e13f6201330688764e935519a5e646b16f58f57b3b4ad9196"
+  },
+  "progress_log": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r04/progress.json"
+}
