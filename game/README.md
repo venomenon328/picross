@@ -20,13 +20,32 @@ der angebotenen Fitgrenze sichtbar. „Rätselansicht“ bietet Rasteransicht un
 Gesamtansicht mit allen Hinweisen; ein Sitzungswechsel ändert keine Spielstände.
 Fonts und Bilder sind offline eingebettet; Lizenzen/Nutzungshinweise liegen im ZIP.
 
+## Aktuellen main-Player per GitHub Actions erzeugen
+
+Unter [GitHub Actions](https://github.com/venomenon328/picross/actions/workflows/build-main-player.yml)
+den Workflow **Build playable main (Windows x64)** öffnen und über
+**Run workflow** starten. Die Action checkt immer das dann aktuelle `main`
+aus, unabhängig von der im Startdialog angezeigten Branch-Auswahl.
+Nach erfolgreichem Lauf unter **Artifacts** das eine
+`picross-main-windows-x86_64-<Commit>`-Artefakt herunterladen. Das erhaltene
+ZIP **einmal** entpacken und direkt `picross-p1.exe` starten; es enthält
+kein weiteres ZIP. Die Commitkennung steht auch in `README.txt`.
+Das Artefakt wird 14 Tage aufbewahrt.
+
+Diese Action erstellt ausschließlich den unsignierten Windows-Debugplayer
+aus dem regulären Spielbestand. Sie startet weder die Product-Testmatrix
+noch ein Release/Deployment; ein tatsächlicher Windows-GUI-Start wird auf dem
+Linux-Runner nicht geprüft. Der separate CI-Playerexport bleibt unverändert.
+
 ## Windows starten
 
 Das vollständige ZIP entpacken und `picross-p1.exe` starten. Keine Godot-Installation
 nötig. `picross-p1.console.exe` zeigt technische Ausgaben. Dies ist eine unsignierte
 Debug-Spielprobe, kein Release/Installer. Die Quellcommitkennung steht im beigefügten
-README.txt; `product-report.json` bindet Head, getesteten Checkout/Test-Merge, Basis,
-CI-Lauf, Engine-/Archivhashes, EXE-Hashes und Prüfphasen. Artefaktlink im PR.
+README.txt. Ausschließlich das **Product-CI-Artefakt** enthält zusätzlich
+`product-report.json` mit Head, getestetem Checkout/Test-Merge, Basis, CI-Lauf,
+Engine-/Archivhashes, EXE-Hashes und Prüfphasen (Artefaktlink im PR). Der manuelle
+main-Player hat bewusst keinen solchen Prüfbericht; sein Link steht im Actions-Lauf.
 
 Godot löst `user://p1/saves/` im projektbezogenen User-Data-Verzeichnis auf.
 Unter Windows liegt dieses standardmäßig unter
@@ -187,7 +206,7 @@ aktueller Prüfweg.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
 `technical/` enthält kompakte commitgebundene Ergebnisse, Logs und notwendige
-native Bilder/Fehlerdiagnostik; Budget 30 MB, mit Spieler-ZIP 75 MB. Das ZIP
+native Bilder/Fehlerdiagnostik; Budget 30 MB, mit Spieler-ZIP 75 MB. Das reguläre Product-CI-ZIP
 enthält Spielanleitung, Commit-/Hashbericht, `rp6-owner.ps1` für isolierte persönliche
 Proben und notwendige Lizenzen. Technische Motivspoiler sind separat.
 Keine automatisierte Prüfung ersetzt eine persönliche Maus-/Komfortprobe.

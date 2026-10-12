@@ -1,0 +1,63 @@
+name: Build playable main (Windows x64)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-main-player
+  cancel-in-progress: false
+
+jobs:
+  windows-player:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout current main (not the selected dispatch ref)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: refs/heads/main
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Bind checked-out main SHA
+        id: source
+        shell: bash
+        run: |
+          sha="$(git rev-parse HEAD)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "short=${sha:0:12}" >> "$GITHUB_OUTPUT"
+          echo "Building main at $sha"
+
+      - name: Restore verified official Godot archives
+        id: toolchain
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/p1-toolchain-cache
+          key: ${{ runner.os }}-godot-4.7.2-cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4-f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011
+
+      - name: Build Windows player only
+        run: >-
+          python3 tools/build_main_player.py
+          --cache-dir "${{ runner.temp }}/p1-toolchain-cache"
+          --output-dir "${{ runner.temp }}/picross-main-player"
+          --download-timeout-seconds 600
+          --process-timeout-seconds 300
+
+      - name: Save verified official archives
+        if: success() && steps.toolchain.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/p1-toolchain-cache
+          key: ${{ steps.toolchain.outputs.cache-primary-key }}
+
+      - name: Upload one flat, playable ZIP artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: picross-main-windows-x86_64-${{ steps.source.outputs.short }}
+          path: ${{ runner.temp }}/picross-main-player/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
