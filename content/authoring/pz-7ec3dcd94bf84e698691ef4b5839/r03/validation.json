@@ -1,0 +1,62 @@
+{
+  "source_commit": "660ea63ec90f0e6b608eb11ed036106f012cbc87",
+  "package_sha256": "6f248d3bcfe68441bbb9b92ae14db6f7b7f5cd74d72012e5b4049910bba9bf42",
+  "file_count": 14,
+  "payload_count": 12,
+  "zip_crc": "pass",
+  "safe_paths": "pass",
+  "inventory_file_hashes": "pass",
+  "handoff_copy": "byte-identical",
+  "source_reveal": "byte-identical with indexed approved r02 A-r02",
+  "reveal_approval_binding": "pass; original human statement, UTC timestamp, file/revision/hash verified",
+  "old_sealed_packages": "r01/r02 hashes unchanged",
+  "images": {
+    "count": 2,
+    "format": "PNG",
+    "mode": "RGB",
+    "size": [
+      1254,
+      1254
+    ]
+  },
+  "visual_review": "report.md; motif human approval pending",
+  "ci_plan": {
+    "format": "picross-ci-selection-v1",
+    "content_only": true,
+    "selected": {
+      "docs": true,
+      "product": false,
+      "production": false,
+      "preflight": false,
+      "integration": false,
+      "pilots": false,
+      "visual": false,
+      "perf_b": false
+    },
+    "reasons": {
+      "docs": [
+        "documents, tool contracts and full diff"
+      ],
+      "product": [],
+      "production": [],
+      "preflight": [],
+      "integration": [],
+      "pilots": [],
+      "visual": [],
+      "perf_b": []
+    },
+    "changed_paths": [
+      "content/authoring/index.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r02/progress.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r02/record.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r02/reveal-approval.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/handoff.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/package.zip",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/progress.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/record.json",
+      "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/r03/validation.json"
+    ],
+    "requested_scope": "auto"
+  },
+  "no_raster_or_adapter_certification": true
+}
