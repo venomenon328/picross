@@ -550,8 +550,8 @@ func _smoke() -> void:
 	if board is ChalkboardBoard:
 		var digest: HashingContext = HashingContext.new()
 		digest.start(HashingContext.HASH_SHA256)
-		digest.update(ChalkboardBoard.Fonts.CHALKBOARD.data)
-		if digest.finish().hex_encode() != ChalkboardBoard.Fonts.SHA256:
+		digest.update(board.clue_font().data)
+		if digest.finish().hex_encode() != FullViewBoard.Typography.SHA256:
 			push_error("ZS2 selected embedded font bytes differ")
 			get_tree().quit(10)
 			return
@@ -559,7 +559,7 @@ func _smoke() -> void:
 			push_error("ZS2 regular export contains the isolated study")
 			get_tree().quit(11)
 			return
-		print("ZS2_REGULAR_RESOURCES_OK Chalkboard=", ChalkboardBoard.Fonts.SHA256)
+		print("ZS2_REGULAR_RESOURCES_OK DelightCoffee=", FullViewBoard.Typography.SHA256)
 	if BODY_FONT.get_font_name() != "IBM Plex Sans" or TITLE_FONT.get_font_name() != "Fraunces" or surface.ART.get_width() != 2560:
 		push_error("Z2 bundled offline resource mismatch")
 		get_tree().quit(8)

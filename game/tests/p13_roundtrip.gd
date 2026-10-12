@@ -53,6 +53,9 @@ func run() -> void:
 	await process_frame
 	await process_frame
 	var board: Control = app.board
+	# Explicit component budget retains two overflowing lines per axis with HC.
+	board.size.x = 560
+	board._layout()
 	var row: int = -1
 	var row_other: int = -1
 	var column: int = -1

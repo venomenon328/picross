@@ -1,5 +1,9 @@
 # ZS-1 · Fontinput und Verwendung nach E2
 
+Historischer Fontvergleich: Für aktive Hinweisziffern ersetzt
+[HC / #92](CLUE_TYPOGRAPHY.md) Chalkboard und dessen feste Slotmaße.
+Die folgenden Quellen und Lieferbindungen bleiben historisch unverändert.
+
 Stand: 07.10.2026 · **Beide Kandidaten gemäß Eigentümerentscheidung E2 aufgenommen**
 
 Die beiden Original-TTFs aus `E:\Downloads\zs1-fonts` wurden vollständig gelesen,

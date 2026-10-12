@@ -75,6 +75,12 @@ Quellen und damaligen Issues lesen; Erinnerungen ersetzen keinen Quellenzugriff.
 
 ## Aktuelle Spielverträge
 
+[HC / #92](CLUE_TYPOGRAPHY.md) bindet Delight Coffee für Hinweisziffern samt
+gemeinsamer gemessener Schrift-/Slot-/Fit-/Draggeometrie und Exportnachweis.
+Bei Hinweisarbeit zusätzlich diesen Vertrag lesen. Originalhinweise und
+HC-E01-Quellenentscheidung werden mitgeliefert; HC-M01 und unabhängiges Review
+bleiben vor Merge offen. Historische Chalkboard-/24/18-Maße sind abgelöst.
+
 P1 bleibt der Vertragsname. Vollsicht und Hinweise sind nach VS2 integriert:
 Sammlungsstart, Rasteransicht/Gesamtansicht, passives proportionales Miniaturbild,
 MMB ausschließlich für eine konkrete überlaufende Hinweisfolge, keine Hand- oder

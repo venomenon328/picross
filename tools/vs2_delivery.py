@@ -9,6 +9,7 @@ import zipfile
 from pathlib import Path
 import p1_preflight as toolchain
 import vs2_v1_verify
+import hc92_verify
 
 BASE = "fad885344874534629365917a2ab6a8d311cd3a7"
 
@@ -102,8 +103,19 @@ def capture_current(project, workspace, output, engine, render_command, environm
     compact_geometry_reports([renders / "vs2-matrix.json", focused_dir / "v1-focused.json",
                               v3_dir / "v3-report.json"])
     selected += list(v3_dir.glob("*.json")) + [v3_dir / p["file"] for p in v3["pictures"]]
+    hc_dir = output / "hc92-renders"
+    hc_dir.mkdir()
+    environment["HC92_OUTPUT"] = str(hc_dir)
+    try:
+        phase("hc92-native-font-pixels", ["res://tests/hc92_capture.gd" if part == "res://tests/capture.gd" else part
+                                        for part in render_command], "HC92_NATIVE_OK")
+    finally:
+        environment.pop("HC92_OUTPUT", None)
+    hc = hc92_verify.verify(hc_dir)
+    (hc_dir / "hc92-acceptance.json").write_text(json.dumps(hc,indent=2)+"\n",encoding="utf-8")
+    selected += list(hc_dir.glob("*.json")) + list(hc_dir.glob("*.png"))
     return dict(records=len(report["records"]), failures=report["failures"],
-                rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3,
+                rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3, hc92=hc,
                 historical_comparison="not run; CI policy #63",
                 legacy_reader="separate downloaded Windows old-writer/new-reader probe"), selected
 

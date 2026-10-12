@@ -267,6 +267,11 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         env.update(VS2_STAGE=stage,VS2_PACK_AUDIT="1")
         launch("new-"+stage,package,"vs2_roundtrip.gd","VS2_ROUNDTRIP_"+stage.upper()+"_OK")
     env.pop("VS2_STAGE",None)
+    env["HC92_OUTPUT"] = str(output)
+    launch("hc92-pck-font",package,"hc92_pack.gd","HC92_PACK_OK")
+    hc_pack=json.loads((output/"hc92-pack.json").read_text(encoding="utf-8"))
+    for name,digest in hc_pack["notices"].items():
+        toolchain.verify_sha256(ROOT/"game/art/drawing/delight-coffee"/name,digest)
     launch("native-window",package,"vs2_window.gd","VS2_WINDOW_OK")
     env["VS2_V2_CAPTURE_DIR"] = str(output)
     for stage in ("write", "read"):
@@ -313,7 +318,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
                   scripts={name:toolchain.sha256_file(ROOT/"game/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd","vs2_v1_cases.gd","vs2_v2_cases.gd","vs2_v2_tests.gd","vs2_v3_tests.gd")},
-                  matrix_records=len(matrix["records"]),
+                  matrix_records=len(matrix["records"]),hc92_pck=hc_pack,
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},
                   study_sentinel_unchanged=True,study_sentinel_sha256=study_hash,

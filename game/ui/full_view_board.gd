@@ -1,6 +1,15 @@
 extends "res://ui/chalkboard_board.gd"
 ## Regular full view: one selected renderer, no study lifecycle or persistence.
-const ROW_SLOT: float = 24.0 # V1-A: same font, shared tighter horizontal pitch
+const Typography = preload("res://ui/clue_typography.gd")
+var type_size: int = 1
+var type_minimum: float = 1
+var slot_pitch: Vector2 = Vector2.ONE
+var fit_pitch: Vector2 = Vector2.ONE
+var fit_slots: Vector2i = Vector2i.ONE
+var next_fit_pitch: Vector2 = Vector2.ONE
+var next_fit_slots: Vector2i = Vector2i.ONE
+var type_tokens: Dictionary = {}
+var type_cache: Dictionary = {}
 const Scribble = preload("res://ui/scribble.gd")
 const FRAME_MARGIN: float = 1.0 # 0.28 deviation + 0.82 half-width + 1 AA - 1.10 inward
 var composition_shift: Vector2 = Vector2.ZERO
@@ -48,24 +57,47 @@ func _layout() -> void:
 		max_hints.x = maxi(max_hints.x, line.size())
 	for line: Array in session.definition.columns:
 		max_hints.y = maxi(max_hints.y, line.size())
+	# Descend measured grade intervals. Hinting/reserve changes need not be
+	# monotone: the first feasible interval gives the largest actual cell.
+	type_tokens = {"row": {"…": true, "–": true}, "column": {"…": true, "–": true}}
+	for axis: String in ["row", "column"]:
+		for line: Array in (session.definition.rows if axis == "row" else session.definition.columns):
+			for clue: Dictionary in line:
+				type_tokens[axis][clue_token(clue)] = true
+	var upper: int = floori(minf((size.x-14)/session.player.width, (size.y-14)/session.player.height)*100)
+	var candidate: float = maxi(100,upper) / 100.0
+	fit_ceiling = 1
+	for attempt: int in range(maxi(1,ceili(candidate*4))+1):
+		configure_typography(candidate)
+		var slots: Vector2i = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
+		var budget: Vector2 = (size-Vector2(slots)*slot_pitch-Vector2(14,14))/Vector2(session.player.width,session.player.height)
+		var fit: float = floorf(minf(candidate,minf(budget.x,budget.y))*100+0.000001)/100
+		if fit >= type_minimum-0.000001:
+			fit_ceiling = maxf(1,fit)
+			break
+		if type_size == 1: break
+		candidate = (ceili(type_minimum*100)-1)/100.0
+	raw_fit = fit_ceiling
+	configure_typography(fit_ceiling+0.01)
+	next_fit_pitch = slot_pitch
+	next_fit_slots = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
+	configure_typography(fit_ceiling)
+	fit_pitch = slot_pitch
+	fit_slots = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
+	view.cell_size = minf(requested_cell, fit_ceiling)
+	configure_typography(view.cell_size)
 	minimum_slots = max_hints if mode == "V" else Vector2i(required_slots("row"), required_slots("column"))
 	reserve_slots = minimum_slots
-	book_inset = Vector2(minimum_slots) * Vector2(ROW_SLOT, 18) * ui_scale + Vector2(6, 6)
+	book_inset = Vector2(minimum_slots) * slot_pitch + Vector2(6, 6)
 	var frame_space: Vector2 = Vector2.ONE * 2.0 * FRAME_MARGIN
 	var available: Vector2 = size - book_inset - Vector2(6, 6) - frame_space
-	raw_fit = minf(available.x / session.player.width, available.y / session.player.height)
-	# The bound pen uses a two-pixel inset. Below four pixels even its interior
-	# disappears: report failure rather than feeding negative rectangles to it.
-	layout_valid = raw_fit > 4.0
-	fit_ceiling = maxf(1.0, floorf(raw_fit * 100.0) / 100.0)
-	view.cell_size = minf(requested_cell, fit_ceiling)
-	layout_valid = layout_valid and view.cell_size > 4.0
+	layout_valid = view.cell_size > 4.0 and view.cell_size >= type_minimum and available.x >= session.player.width*view.cell_size and available.y >= session.player.height*view.cell_size
 	book_grid_size = Vector2(session.player.width, session.player.height) * view.cell_size
 	# One-way allocation: the displayed capacity never feeds back into fit.
 	horizontal_budget = maxf(0.0, available.x - book_grid_size.x)
 	horizontal_used = 0.0
 	if mode == "G" and layout_valid:
-		var pitch: float = ROW_SLOT * ui_scale
+		var pitch: float = slot_pitch.x
 		var offered: int = mini(max_hints.x, minimum_slots.x + floori((horizontal_budget + 0.000001) / pitch))
 		for capacity: int in range(offered, minimum_slots.x, -1):
 			if suitable_slots("row", capacity):
@@ -100,14 +132,14 @@ func _layout() -> void:
 		for line: Array in (session.definition.rows if axis == "row" else session.definition.columns):
 			for clue: Dictionary in line:
 				var box: Rect2 = glyph_box(clue_token(clue), Vector2.ZERO, fs)
-				if (box.size.y if axis == "row" else box.size.x) > view.cell_size or (box.size.x if axis == "row" else box.size.y) > (ROW_SLOT if axis == "row" else 18.0) * ui_scale:
+				if (box.size.y if axis == "row" else box.size.x) > view.cell_size or (box.size.x if axis == "row" else box.size.y) > pitch_for(axis):
 					glyph_risk = true
 	ensure_clue_steps()
 	normalize_clue_steps()
 	cancel_gesture()
 
-func shared_clue_slot_extent(axis: String, font: Font, fs: int) -> float:
-	return ROW_SLOT * ui_scale if book_layout and axis == "row" else super.shared_clue_slot_extent(axis, font, fs)
+func shared_clue_slot_extent(axis: String, _font: Font, _fs: int) -> float:
+	return pitch_for(axis)
 
 func row_clue_area() -> Rect2:
 	var area: Rect2 = super.row_clue_area()
@@ -262,7 +294,7 @@ func token_ink(text: String, axis: String, fs: int) -> Vector2:
 	return result
 
 func sequence_units(entries: Array, capacity: int, origin_slot: int, shift: float, axis: String, fs: int, low: float, high: float, ink_bound: Vector2 = Vector2(-1,-1)) -> Dictionary:
-	var pitch: float = (ROW_SLOT if axis == "row" else 18.0) * ui_scale
+	var pitch: float = pitch_for(axis)
 	var origin: float = high - capacity * pitch
 	var candidates: Array[Dictionary] = []
 	if ink_bound.x < 0:
@@ -301,7 +333,7 @@ func sequence_units(entries: Array, capacity: int, origin_slot: int, shift: floa
 # Visibility changes only at these glyph/area/marker boundaries. Testing both
 # sides and each open interval proves the entire continuous drag, not samples.
 func sequence_transitions(entries: Array, capacity: int, axis: String, fs: int) -> Array[float]:
-	var pitch: float = (ROW_SLOT if axis == "row" else 18.0) * ui_scale
+	var pitch: float = pitch_for(axis)
 	var high: float = capacity * pitch + 6.0
 	var maximum: float = (entries.size() - capacity + 1) * pitch
 	var start: float = 6.0 + pitch * 0.5
@@ -325,7 +357,7 @@ func sequence_transitions(entries: Array, capacity: int, axis: String, fs: int) 
 
 func required_slots(axis: String) -> int:
 	var lines: Array = session.definition.rows if axis == "row" else session.definition.columns
-	var key: String = "%s/%s/%s/%s" % [JSON.stringify(lines), axis, ui_scale, ROW_SLOT]
+	var key: String = "%s/%s/%s/%s/%s" % [JSON.stringify(lines), axis, ui_scale, type_size, slot_pitch]
 	if reserve_cache.has(key):
 		return int(reserve_cache[key])
 	var maximum: int = max_hints.x if axis == "row" else max_hints.y
@@ -339,13 +371,13 @@ func required_slots(axis: String) -> int:
 
 func suitable_slots(axis: String, capacity: int) -> bool:
 	var lines: Array = session.definition.rows if axis == "row" else session.definition.columns
-	var minimum_key: String = "%s/%s/%s/%s" % [JSON.stringify(lines),axis,ui_scale,ROW_SLOT]
+	var minimum_key: String = "%s/%s/%s/%s/%s" % [JSON.stringify(lines),axis,ui_scale,type_size,slot_pitch]
 	if reserve_cache.has(minimum_key) and capacity >= int(reserve_cache[minimum_key]):
 		# Increasing capacity moves the prefix marker outward, keeps the suffix
 		# edge fixed and shortens the shift interval. Every previously whole
 		# token remains whole; a proven minimum therefore proves all supersets.
 		return true
-	var key: String = "safe/%s/%s/%s/%d/%s" % [JSON.stringify(lines), axis, ui_scale, capacity, ROW_SLOT]
+	var key: String = "safe/%s/%s/%s/%d/%s/%s" % [JSON.stringify(lines), axis, ui_scale, capacity, type_size, slot_pitch]
 	if reserve_cache.has(key):
 		return bool(reserve_cache[key])
 	var suitable: bool = true
@@ -360,12 +392,12 @@ func suitable_slots(axis: String, capacity: int) -> bool:
 		if seen.has(tokens):
 			continue
 		seen[tokens] = true
-		for fs: int in range(Fonts.pixel_size(8), Fonts.pixel_size(roundi(14 * ui_scale)) + 1):
+		for fs: int in [type_size]:
 			var ink_bound: Vector2 = Vector2.ZERO
 			for entry: Dictionary in entries:
 				ink_bound = ink_bound.max(token_ink(str(entry.text),axis,fs))
 			for shift: float in sequence_transitions(entries, capacity, axis, fs):
-				var drawn: Array = sequence_units(entries, capacity, capacity - entries.size(), shift, axis, fs, 0.0, capacity * (ROW_SLOT if axis == "row" else 18.0) * ui_scale + 6.0, ink_bound).units
+				var drawn: Array = sequence_units(entries, capacity, capacity - entries.size(), shift, axis, fs, 0.0, capacity * pitch_for(axis) + 6.0, ink_bound).units
 				if drawn.filter(func(unit: Dictionary) -> bool: return unit.kind == "token").size() < mini(5, line.size()):
 					suitable = false
 					break
@@ -397,19 +429,70 @@ func draw_hint_units(axis: String, index: int, cross: float, font: Font, fs: int
 		draw_clue_number(font, baseline, text, fs, color, clue_status(axis, index, int(unit.index)))
 
 func glyph_box(text: String, baseline: Vector2, fs: int) -> Rect2:
-	var font: Font = clue_text_font(clue_font(), text)
-	var ts: TextServer = TextServerManager.get_primary_interface()
-	var rid: RID = font.get_rids()[0]
-	var result: Rect2
-	var advance: float = 0.0
-	var first: bool = true
-	for c: String in text:
-		var glyph: int = ts.font_get_glyph_index(rid, fs, c.unicode_at(0), 0)
-		var box: Rect2 = Rect2(baseline + Vector2(advance, 0) + ts.font_get_glyph_offset(rid, Vector2i(fs, 0), glyph), ts.font_get_glyph_size(rid, Vector2i(fs, 0), glyph))
-		result = box if first else result.merge(box)
-		first = false
-		advance += font.get_string_size(c, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	# Bound C1/AA and all three statuses, independent of current completion state.
-	var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	result = result.merge(Rect2(baseline - Vector2(0, fs * 0.32 + 1), Vector2(width, 2)))
-	return result.grow(maxf(0.5, ui_scale / 4.0))
+	var result: Rect2 = Typography.envelope(text, fs, ui_scale)
+	var width: float = clue_text_font(clue_font(), text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	result.position += baseline + Vector2(width / 2.0, -clue_baseline_offset(fs))
+	return result
+
+func clue_font() -> Font:
+	return Typography.selected()
+
+func clue_text_font(_font: Font, text: String) -> Font:
+	return Typography.text_font(text)
+
+func clue_font_size() -> int:
+	return type_size
+
+func clue_baseline_offset(fs: int) -> float:
+	return Typography.baseline(fs)
+
+func clue_vertical_extents(fs: int) -> Vector2:
+	var bounds: Vector2 = Typography.vertical(fs)
+	return Vector2(-bounds.x - Typography.baseline(fs), bounds.y + Typography.baseline(fs))
+
+func clue_tooltip_font_size() -> int:
+	return Fonts.pixel_size(roundi(16 * ui_scale))
+
+func pitch_for(axis: String) -> float:
+	return slot_pitch.x if axis == "row" else slot_pitch.y
+
+func configure_typography(cell: float) -> void:
+	var key: String = "%s/%s/%s" % [type_tokens, cell, ui_scale]
+	if type_cache.has(key):
+		type_size = type_cache[key].fs
+		type_minimum = type_cache[key].minimum
+		slot_pitch = type_cache[key].pitch
+		return
+	# The search scales with the available cell, without a fixed font cap.
+	var padding: float = 2.0 * ui_scale
+	var limit: float = maxf(1, cell - padding)
+	type_size = 1
+	for fs: int in range(maxi(1, ceili(cell * 4.0)), 0, -1):
+		var fits: bool = true
+		for axis: String in ["row", "column"]:
+			for text: String in type_tokens[axis]:
+				var box: Rect2 = Typography.envelope(text, fs, ui_scale)
+				if 2.0 * maxf(-box.position.y, box.end.y) > limit or (axis == "column" and 2.0 * maxf(-box.position.x, box.end.x) > limit):
+					fits = false
+					break
+			if not fits: break
+		if fits:
+			type_size = fs
+			break
+	slot_pitch = Vector2.ZERO
+	type_minimum = 0
+	for axis: String in ["row", "column"]:
+		for text: String in type_tokens[axis]:
+			var box: Rect2 = Typography.envelope(text, type_size, ui_scale)
+			type_minimum = maxf(type_minimum,2.0*maxf(-box.position.y,box.end.y)+padding)
+			if axis == "column": type_minimum = maxf(type_minimum,2.0*maxf(-box.position.x,box.end.x)+padding)
+			if axis == "row":
+				slot_pitch.x = maxf(slot_pitch.x, 2.0 * maxf(-box.position.x, box.end.x) + padding)
+			else:
+				slot_pitch.y = maxf(slot_pitch.y, 2.0 * maxf(-box.position.y, box.end.y) + padding)
+	slot_pitch = slot_pitch.ceil()
+	# Geometry caches are transient and bounded across zoom/resize/session changes.
+	if type_cache.size() >= 128: type_cache.clear()
+	if reserve_cache.size() >= 512: reserve_cache.clear()
+	if ink_cache.size() >= 2048: ink_cache.clear()
+	type_cache[key] = {"fs":type_size, "minimum":type_minimum, "pitch":slot_pitch}

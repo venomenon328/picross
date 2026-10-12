@@ -124,6 +124,9 @@ func run() -> void:
 	app.set_puzzle_view(0)
 	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 	await process_frame
+	# Native component route keeps genuine overflow after HC compaction.
+	app.board.size.x = 560
+	app.board._layout()
 	for axis: String in ["row","column"]:
 		var lines: Array = app.session.definition.rows if axis == "row" else app.session.definition.columns
 		var index: int = 0

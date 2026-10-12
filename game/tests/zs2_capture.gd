@@ -189,7 +189,7 @@ func shot(name: String) -> void:
 	record.file = filename
 	if role == "after":
 		check(app.board.get_script().resource_path == "res://ui/full_view_board.gd", "actual regular renderer")
-		check(app.board.clue_font().get_font_name() == "Chalkboard", "actual regular Chalkboard")
+		check(app.board.clue_font().get_font_name() == "Delight Coffee", "actual regular Delight Coffee")
 
 func empty_sample() -> void:
 	app._reset_selected()

@@ -298,6 +298,9 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
         ("licenses/resources.json", "game/art/book/manifest.json"),
         ("licenses/Chalkboard-NOTICES.md", "game/art/drawing/NOTICES.md"),
         ("licenses/Bakso-NOTICES.md", "game/art/drawing/Bakso-NOTICES.md"),
+        ("licenses/DelightCoffee-NOTICES.md", "game/art/drawing/DelightCoffee-NOTICES.md"),
+        ("licenses/DelightCoffee-More-Info.txt", "game/art/drawing/delight-coffee/More Info.txt"),
+        ("licenses/DelightCoffee-Read-Me.pdf", "game/art/drawing/delight-coffee/Read Me.pdf"),
     ):
         extras[name] = root / source
     for path in sorted((root / "game/art/book").glob("*.txt")):
