@@ -7,6 +7,18 @@ import p1_preflight as toolchain
 from vs2_v1_verify import require, typography
 
 
+def verify_retained(directory: Path) -> list[str]:
+    """The bounded delivery must keep all twelve open mono zoom comparisons."""
+    report = json.loads((directory/'hc92-native.json').read_text(encoding='utf-8'))
+    samples = [r for r in report['records'] if r['status']==0 and not r['colored']]
+    expected = {(cell,ui,before) for cell in (16,24,40) for ui in (1,1.25) for before in (False,True)}
+    require(len(samples)==12 and {(r['cell'],r['ui_scale'],r['before']) for r in samples}==expected,
+            'HC retained zoom comparison coverage')
+    for sample in samples:
+        toolchain.verify_sha256(directory/sample['file'],sample['sha256'])
+    return [r['file'] for r in samples]
+
+
 def verify(directory: Path) -> dict:
     from PIL import Image, ImageChops
     report = json.loads((directory/'hc92-native.json').read_text(encoding='utf-8'))

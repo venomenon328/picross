@@ -1,6 +1,8 @@
 extends SceneTree
 ## External developer probe also runs against the downloaded regular PCK.
 const Store = preload("res://model/save_store.gd")
+# Fixed technical save examples, independent of growth of the real catalog.
+const ROUNDTRIP_IDS: Array[String] = ["F-01","F-02","F-04","F-06","F-08","F-09"]
 var app: Control
 var stage: String
 var output: String
@@ -35,9 +37,11 @@ func run() -> void:
 	var prefix: String = "legacy" if stage.begins_with("legacy") else "new"
 	var expected_path: String = output.path_join(prefix+"-expected.json")
 	var records: Array = []
+	var visited: Array[String] = []
 	if stage.ends_with("write"):
 		for index: int in range(app.sessions.size()):
-			if app.sessions[index].player.width>50 or app.sessions[index].player.height>50: continue
+			if not str(app.sessions[index].definition.id) in ROUNDTRIP_IDS: continue
+			visited.append(str(app.sessions[index].definition.id))
 			app.select_puzzle(index)
 			app._reset_selected()
 			app.open_puzzle()
@@ -82,12 +86,15 @@ func run() -> void:
 		records = JSON.parse_string(FileAccess.get_file_as_string(expected_path))
 		check(app.board.mode == "G","mode is session-only default")
 		for index: int in range(app.sessions.size()):
+			if not str(app.sessions[index].definition.id) in ROUNDTRIP_IDS: continue
+			visited.append(str(app.sessions[index].definition.id))
 			app.select_puzzle(index)
 			var actual: Dictionary = Store.snapshot(app.session,app.board.capture_view())
 			var expected: Dictionary = {}
 			for saved: Dictionary in records:
 				if saved.definition_id==app.session.definition.id: expected=saved
 			check(not expected.is_empty(),"matching stable save identity")
+			if expected.is_empty(): continue
 			check(Store.validate(expected,app.session.definition).is_empty(),"old full snapshot valid before presentation normalization")
 			for bad: Variant in [null,0,"true"]:
 				var invalid: Dictionary = expected.duplicate(true)
@@ -107,6 +114,7 @@ func run() -> void:
 				check(app.session.player.redo() and app.session.player.cells[1] == 0,"real redo retained after restart")
 			else:
 				check(app.ending.visible and not app.session.reveal().is_empty(),"completed opens proportional reveal only on selection")
+	check(visited.size()==ROUNDTRIP_IDS.size() and ROUNDTRIP_IDS.all(func(id: String)->bool:return id in visited),"all six fixed roundtrip examples exercised")
 	var resources: Array[String] = []
 	collect("res://",resources)
 	if OS.get_environment("VS2_PACK_AUDIT") == "1":

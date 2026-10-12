@@ -73,6 +73,9 @@ Die reguläre Product-Prüfung nach [CI-Policy](CI_POLICY.md) enthält:
   16/24/40 Pixel Zelle, UI 100/125 %, Mono/Farbe, drei Zuständen, `1/11/17/40`
   auf beiden Achsen. Pixelgrenzen, sichtbares Wachstum und kompakte Slots.
   Der alte Renderer dient nur als enger Fontvergleich.
+  Der begrenzte technische Download enthält verpflichtend zwölf unveränderte
+  offene Mono-Vorher-/Nachher-PNGs (alle drei Zellmaße, beide UI-Skalierungen)
+  und Messdaten aller 72 Proben. Weitere PNGs bleiben budgetabhängig optional.
 - Frisch heruntergeladener Windows-Player: native Starts und Save-Neustarts,
   tatsächliches eingebettetes PCK, Fontdatenhash, Glyphen 0–9 aus dessen Font-RID
   und unveränderte Originalhinweise (`hc92_pack.gd`).

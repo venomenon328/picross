@@ -16,6 +16,7 @@ import zipfile
 from pathlib import Path
 import p1_preflight as toolchain
 import vs2_delivery
+import hc92_verify
 from p1_product import player_extras
 from gp48_delivery import verify_player_package
 def extract(archive: Path, destination: Path) -> None:
@@ -203,6 +204,9 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         relative=Path(entry["file"])
         if relative.is_absolute() or ".." in relative.parts: raise ValueError("Unsafe evidence path")
         toolchain.verify_sha256(review/"selected"/relative,entry["sha256"])
+    hc_samples = hc92_verify.verify_retained(review/"selected/hc92-renders")
+    if hc_samples != review_report["visual"]["vs2"]["hc92"]["retained_samples"]:
+        raise ValueError("Missing bound HC native font samples")
     import perf_b_resources
     runtime_resources = perf_b_resources.verify_runtime(ROOT)
     if runtime_resources != review_report["perf_b_resources"]:
