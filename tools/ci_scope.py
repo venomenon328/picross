@@ -56,10 +56,11 @@ def classify(paths: list[str], force: str = "auto") -> dict:
             "tools/ci_scope.py", "tools/test_ci_scope.py",
             "tools/p1_product.py", "tools/test_p1_product.py",
             "tools/p1_preflight.py", "tools/test_p1_preflight.py",
+            "tools/za1_product.py",
         } or path.startswith("tools/p1_preflight_smoke/"):
             add(FLAGS, path)
         elif path.startswith(("tools/puzzle_production/", "tests/puzzle_production/",
-                              "examples/rp", "examples/vs1/")):
+                              "examples/rp", "examples/vs1/", "content/")):
             add(("production", "product", "pilots", "visual", "perf_b"), path)
         elif path.startswith("game/full_view_study/cases/") or path == "game/full_view_study/catalog.json":
             # These are still the certified technical cases for regular VS2.

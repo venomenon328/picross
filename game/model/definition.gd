@@ -1,17 +1,22 @@
 extends RefCounted
 ## JSON boundary. 0 is background; positive IDs refer to palette entries.
-const FILES: Dictionary = {"f01": "res://data/f01.json", "f02": "res://data/f02.json", "f03": "res://data/f03.json", "f04": "res://data/f04.json", "f05": "res://data/f05.json", "f06": "res://data/f06.json", "f07": "res://data/f07.json", "f08": "res://data/f08.json", "f09": "res://data/f09.json"}
+const Registry = preload("res://model/content_registry.gd")
 const MAX_DIMENSION = 50
-const CATALOG_IDS: Array[String] = ["f01", "f02", "f04", "f06", "f08", "f09"]
+static func catalog_ids() -> Array[String]:
+	return Registry.catalog_ids()
 
 static func load_f01() -> Dictionary:
 	return load_fixture("f01")
 
 static func load_fixture(id: String) -> Dictionary:
-	if not FILES.has(id):
+	var entry: Dictionary = Registry.by_key(id)
+	if entry.is_empty():
 		return {}
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(FILES[id]))
-	return parsed if parsed is Dictionary else {}
+	var path: String = "res://" + str(entry.definition)
+	if not FileAccess.file_exists(path):
+		return {}
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return parsed if parsed is Dictionary and parsed.get("id") == entry.id else {}
 
 static func integer(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value))
@@ -93,14 +98,16 @@ static func validate(data: Dictionary, study_assets: Dictionary = {}) -> String:
 	var study_asset: bool = study_assets.has(data.id) and path == study_assets[data.id]
 	if not path is String or (not study_asset and not path.begins_with("res://art/")) or ".." in path or not (path.ends_with(".svg") or path.ends_with(".png")):
 		return "Ungültiger lokaler Bildpfad."
-	var fixed_assets: Dictionary = {"F-04": "res://art/f04.svg", "F-05": "res://art/f05.png", "F-06": "res://art/f06.png", "F-07": "res://art/f07.png", "F-08": "res://art/f08.png", "F-09": "res://art/f09.png"}
-	if fixed_assets.has(data.id) and path != fixed_assets[data.id]:
+	var registration: Dictionary = Registry.by_id(data.id)
+	if not study_asset and (registration.is_empty() or path != "res://" + str(registration.reveal)):
 		return "Falsche feste Abschlussressource."
 	if not ResourceLoader.exists(path, "Texture2D"):
 		return "Abschlussbild fehlt."
 	var texture: Texture2D = load(path) as Texture2D
 	if texture == null or texture.get_width() < 1 or texture.get_height() < 1:
 		return "Defektes Abschlussbild."
-	if fixed_assets.has(data.id) and (texture.get_width() != texture.get_height() or texture.get_width() < 2 * int(data.width) or texture.get_width() > 8192):
+	if data.id in ["F-04", "F-05", "F-06", "F-07", "F-08", "F-09"] and (texture.get_width() != texture.get_height() or texture.get_width() < 2 * int(data.width) or texture.get_width() > 8192):
 		return "Ungültige quadratische Abschlussgröße."
+	if str(data.id).begins_with("pz-") and (data.palette.size() > 4 or texture.get_width() < 2 * int(data.width) or texture.get_height() < 2 * int(data.height) or texture.get_width() > 8192 or texture.get_height() > 8192):
+		return "Ungültige Abschlussgröße oder Farbzahl."
 	return ""

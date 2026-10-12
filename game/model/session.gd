@@ -1,4 +1,5 @@
 extends RefCounted
+const DefinitionRegistry = preload("res://model/content_registry.gd")
 const Player = preload("res://model/player.gd")
 const Gesture = preload("res://model/gesture.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
@@ -53,7 +54,10 @@ func visible_cells() -> Array[int]:
 	return result
 
 func album_title() -> String:
-	return str(definition.reveal.name) if completed else "Blatt %s · %d × %d" % [str(definition.id).trim_prefix("F-"), player.width, player.height]
+	var number: String = str(definition.id).trim_prefix("F-")
+	if str(definition.id).begins_with("pz-"):
+		number = "%02d" % (DefinitionRegistry.entries().find(DefinitionRegistry.by_id(str(definition.id))) + 1)
+	return str(definition.reveal.name) if completed else "Blatt %s · %d × %d" % [number, player.width, player.height]
 
 func reveal() -> Dictionary:
 	return definition.reveal.duplicate(true) if completed else {}

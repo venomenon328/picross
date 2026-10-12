@@ -116,6 +116,15 @@ nicht als erfolgreiche Gegenprobe akzeptiert. Kein weiteres RP3-Durchspiel.
 
 ## Native Renderabdeckung und Speicherung
 
+ZA-1 ergänzt im ausgewählten Pilotenpfad vier temporär registrierte künstliche
+Authoring-Pakete und zehn echte Prozesse für Mono/Farbe, Rechtecke, Neustarts und
+Slotisolation. Native Pixelprüfungen liefern kleine Originalausschnitte samt
+Koordinaten/Reports; vollständige Kontexte bleiben lokal. Der echte Windows-PCK
+wird für regulären und isolierten Katalog geprüft. Produktionsreplay liefert
+nur den kompakten Bericht. `content/` wählt Produktion/Produkt/Piloten/Visual/PERF-B;
+der neue Produktharness wählt zusätzlich Integration und Preflight. Keine
+Budgetausnahme. [Prüfzuordnung](ZA1_VERIFICATION.md).
+
 Im Standardpfad gilt `--ci-compact` für den allgemeinen Capture-Harness:
 
 - Zellgrößen 12/16/18/22/24/72 decken Minimum, Maximum und beide Seiten der

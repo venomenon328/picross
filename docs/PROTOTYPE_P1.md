@@ -1,5 +1,11 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+[ZA-1](ZA1_ADAPTER.md) ergänzt eine zentrale Inhaltsregistry und deterministische
+Runtime-Projektion. Loader, Sammlung, SaveStore und Einzelreset nutzen explizite
+IDs/Slots; neue Inhalte benötigen keine Codeänderung. Neutrale Blatttitel und
+proportionale Rechteck-Reveals erhalten die Abschlussgrenze. Historische Einträge,
+Save-Schema 1 und Reservierungen bleiben erhalten. Keine neuen regulären Inhalte.
+
 Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
 
 Bei Zellrendering-/Performancearbeit zusätzlich den verbindlichen
