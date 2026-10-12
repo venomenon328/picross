@@ -246,6 +246,21 @@ Der Fachjob führt nur allgemeine Tests, sechs synthetische Leistungsreferenzen
 und den festen künstlichen Adapterdurchstich aus. Keine historischen
 Produzentencommits oder RP4-/RP5-Korpus-/Windows-Replays mehr in CI.
 
+## Separater manueller main-Player-Build
+
+Der Workflow [Build playable main](../.github/workflows/build-main-player.yml) wird
+ausschließlich über `workflow_dispatch` gestartet und checkt ausdrücklich den
+aktuellen `main` aus. Er nutzt die bestehende verifizierte Godot-Toolchain und
+den regulären tatsächlichen Spielkatalog, führt aber **keine** Kern-, Integrations-,
+Render-, Solver- oder Rätseltests aus. Er erstellt nur den unsignierten
+Windows-x64-Debugexport und kontrolliert vollständige, nicht leere Exportdateien.
+
+`upload-artifact` übernimmt das direkte Player-Verzeichnis (EXEs, gegebenenfalls
+PCK, Anleitung und benötigte Lizenzen) und erzeugt selbst das einzige
+herunterladbare ZIP; kein weiteres Spieler-ZIP oder Technikartefakt. Der
+bestehende Product-Verifikationsworkflow und dessen gebundene Nachweise bleiben
+unverändert. Ein Build ist weder persönliche Windows-Abnahme noch Release.
+
 ## Archiv und gebundene Referenzen
 
 Das [BP-Archiv](design/book_inventory/ARCHIVE.md) bindet die 136 entfernten alten
