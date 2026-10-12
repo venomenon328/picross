@@ -497,7 +497,15 @@ func _repair_selected() -> void:
 	var index: int = int(session_indices[id])
 	var target: Session = sessions[index]
 	if target != session and not _flush_current(): return
-	var error: String = store.discard_invalid_backup(target.definition) if slot_status[index] == "backup_invalid" else store.repair_from_backup(target.definition)
+	var renew: bool = slot_status[index] == "backup_invalid"
+	var error: String = store.discard_invalid_backup(target.definition) if renew else store.repair_from_backup(target.definition)
+	# Renewal previously used _save_current() because only the active slot had
+	# a repair action. A card can target another slot: rotate that valid primary
+	# into a new backup without switching the board or writing the active slot.
+	if error.is_empty() and renew and target != session:
+		error = store.write_slot(target, target.view_state)
+		var disk_state: String = str(store.load_slot(target.definition).status)
+		slot_status[index] = disk_state
 	if error.is_empty():
 		slot_status[index] = "loaded"
 		slot_errors[index] = ""
