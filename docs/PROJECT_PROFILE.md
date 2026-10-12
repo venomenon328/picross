@@ -15,6 +15,11 @@ Dateien mit bestehenden Speicherplätzen und Nachweisbindungen erhalten. 100×10
 ist eine optionale theoretische Stressgröße. Die Bereinigung ändert keine Rätsel,
 IDs, Revisionen, Spielregeln, Save-Schemata oder vorhandenen Spielstände.
 
+Arbeitsstände und ZIPs der Rätselproduktion liegen in
+[content/authoring](../content/authoring/README.md); Wiederaufnahme und Integration
+folgen [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitten 6 und 8.
+Die Arbeitsablage ist keine Runtime-Registrierung.
+
 [ZA-1](ZA1_ADAPTER.md) ermöglicht weitere freigegebene Workflow-Inhalte über eine
 zentrale Datenregistry mit expliziten Slots, einschließlich Mono/Farbe und Rechtecken.
 Die Adapterlieferung fügt kein reguläres Rätsel hinzu. Künstliche Fixtures bleiben

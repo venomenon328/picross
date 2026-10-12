@@ -1,0 +1,239 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
+  "revision": "r03",
+  "state": "content_ready",
+  "package": {
+    "file": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/package.zip",
+    "bytes": 5095565,
+    "sha256": "7fbadeefe46870d297619fc07511b2665822bea55730221965eec0d3d5b6457e"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/handoff.json",
+    "sha256": "8411cb079ac321b975cc51c01aa47f935fe492aee569060046aee917d594c06c"
+  },
+  "inventory_sha256": "57af3c9c896edfbccfeef50aff235d467aef7fc3acb345a7c626d8282ee52d07",
+  "approval": null,
+  "width": 40,
+  "height": 40,
+  "mode": "mono",
+  "difficulty": {
+    "level": "L3",
+    "assessment_type": "editorial_estimate",
+    "confidence": "low",
+    "plausible_range": [
+      "L2",
+      "L4"
+    ]
+  },
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "next_action": "Menschliche Endabnahme des unveränderten Endkandidaten und Abschlussbilds einholen; erst danach mit gesondertem Integrationsauftrag ZA-1 export/plan/register ausführen.",
+  "integration": null,
+  "archive_review": {
+    "date": "2026-10-12",
+    "source_commit": "81ea381fe03737251751046331c6f3a383905377",
+    "original_zip_sha256": "7013d5b29a0dda5ad9a5047730a1e71b4d06596aa284ee8a3cbdad9184dc23f1",
+    "original_zip_bytes": 33631879,
+    "original_file_count": 182,
+    "retained_original_file_count": 93,
+    "compact_file_count": 94,
+    "omitted_files": [
+      "Knoblauch_Vergleich_r02.html",
+      "README.md",
+      "audit/area-128-origin-r02.stderr.txt",
+      "audit/area-128-origin-r02.stdout.txt",
+      "audit/area-128-origin.stderr.txt",
+      "audit/area-128-origin.stdout.txt",
+      "audit/area-128-verify.stderr.txt",
+      "audit/area-128-verify.stdout.txt",
+      "audit/area-160-origin-r02.stderr.txt",
+      "audit/area-160-origin-r02.stdout.txt",
+      "audit/area-160-origin.stderr.txt",
+      "audit/area-160-origin.stdout.txt",
+      "audit/area-160-verify.stderr.txt",
+      "audit/area-160-verify.stdout.txt",
+      "audit/area-192-origin-r02.stderr.txt",
+      "audit/area-192-origin-r02.stdout.txt",
+      "audit/area-192-origin.stderr.txt",
+      "audit/area-192-origin.stdout.txt",
+      "audit/area-192-verify.stderr.txt",
+      "audit/area-192-verify.stdout.txt",
+      "audit/area-96-origin-r02.stderr.txt",
+      "audit/area-96-origin-r02.stdout.txt",
+      "audit/area-96-origin.stderr.txt",
+      "audit/area-96-origin.stdout.txt",
+      "audit/area-96-verify.stderr.txt",
+      "audit/area-96-verify.stdout.txt",
+      "audit/final-verify.stderr.txt",
+      "audit/final-verify.stdout.txt",
+      "audit/import-command.json",
+      "audit/import.stderr.txt",
+      "audit/import.stdout.json",
+      "audit/origin-commands-r02.json",
+      "audit/raster-metrics.json",
+      "audit/repair-replay.stderr.txt",
+      "audit/repair-replay.stdout.txt",
+      "audit/repair-search-command.json",
+      "audit/repair-search.stderr.txt",
+      "audit/repair-search.stdout.json",
+      "audit/repository-status.json",
+      "audit/self-review.json",
+      "audit/verification-commands.json",
+      "history/Picross_Knoblauch_Abschlussbilder_r01.zip",
+      "history/Picross_Knoblauch_Abstraktion_r02.zip",
+      "index-entry.json",
+      "index.html",
+      "reveals/Knoblauch_B_r01.png",
+      "reveals/Knoblauch_B_r01.provenance.json",
+      "reveals/Knoblauch_C_r01.png",
+      "reveals/Knoblauch_C_r01.provenance.json",
+      "sources/repository/AGENTS.md",
+      "sources/repository/docs/CI_POLICY.md",
+      "sources/repository/docs/DESIGN_CONCEPT.md",
+      "sources/repository/docs/DEVELOPMENT_ARCHIVE.md",
+      "sources/repository/docs/PRODUCT_DEFINITION.md",
+      "sources/repository/docs/PROJECT_PROFILE.md",
+      "sources/repository/docs/PUZZLE_PRODUCTION.md",
+      "sources/repository/docs/RP5_VERIFICATION.md",
+      "sources/repository/docs/dev-rules/WORKFLOW.md",
+      "sources/repository/examples/rp5/README.md",
+      "sources/repository/tools/puzzle_production/README.md",
+      "sources/tool-repository/tools/project_paths.py",
+      "sources/tool-repository/tools/puzzle_production/README.md",
+      "sources/tool-repository/tools/puzzle_production/__init__.py",
+      "sources/tool-repository/tools/puzzle_production/__main__.py",
+      "sources/tool-repository/tools/puzzle_production/benchmark.py",
+      "sources/tool-repository/tools/puzzle_production/cli.py",
+      "sources/tool-repository/tools/puzzle_production/contract.py",
+      "sources/tool-repository/tools/puzzle_production/image_cli.py",
+      "sources/tool-repository/tools/puzzle_production/images.py",
+      "sources/tool-repository/tools/puzzle_production/p1_export.py",
+      "sources/tool-repository/tools/puzzle_production/repair.py",
+      "sources/tool-repository/tools/puzzle_production/requirements-image.txt",
+      "sources/tool-repository/tools/puzzle_production/rp3_demo.py",
+      "sources/tool-repository/tools/puzzle_production/rp4.py",
+      "sources/tool-repository/tools/puzzle_production/rp5.py",
+      "sources/tool-repository/tools/puzzle_production/rp6.py",
+      "sources/tool-repository/tools/puzzle_production/solver.py",
+      "sources/tool-repository/tools/puzzle_production/verifier.py",
+      "sources/tool-repository/tools/puzzle_production/vs1.py",
+      "views/area-128-grid.png",
+      "views/area-128-nearest.png",
+      "views/area-160-grid.png",
+      "views/area-160-nearest.png",
+      "views/area-192-grid.png",
+      "views/area-192-nearest.png",
+      "views/area-96-grid.png",
+      "views/area-96-nearest.png",
+      "views/candidates-r01.png",
+      "views/repair-allowed-r01.png"
+    ],
+    "reason": "Keine eingebetteten Alt-ZIPs, verworfenen Abschlussbilddateien, kopierten allgemeinen Repo-/Toolquellen, ungebundenen Doppelgalerien oder stdout/stderr-Kopien. Vollständige Import-/Reparaturbündel, echte Rasteransichten, Freigaben, Herkunft, Regeln, Belege, Entscheidungen und Aufwand erhalten. Originalhandoff und -inventar unverändert; zusätzliche derivation.json deklariert die Teilkopie.",
+    "historical_references": "Verweise auf weggelassene Dateien im unveränderten Originalhandoff/Altbericht sind historisch (insbesondere comparison=index.html und damaliger fehlender Adapter). Für aktuelle Endsichtung views/final-comparison.png, views/final-grid.png und das ausgewählte Abschlussbild verwenden. Alte Archiv-/Variantenverweise sind kein Prüfinput und nicht als hier vorhanden behauptet.",
+    "fresh_check": {
+      "technical": true,
+      "editorial_approved": false,
+      "registered": false,
+      "source": {
+        "kind": "repair",
+        "repair_id": "b34663a2e64c8a1d00c0af00b8b1f8289bbbfe84b84b62134e7ba8446c4f2344",
+        "variant": "candidate-002",
+        "reference": {
+          "candidate_id": "c811f37ce7cf17c6d6968cfc3715c76d0b6bf81f3376bd3861cd85d741f74604",
+          "manifest_sha256": "606d363c6a0e0edc3217b648cfa06ca3cb58fbcb9e81659149f93c715261e7bc",
+          "variant": "area-128"
+        }
+      },
+      "selection": {
+        "variant": "candidate-002",
+        "matrix_hash": "2691fe2f52cf330e9500779160dd90a8446c1c7d90f174b75fdbc1df5aa81f09",
+        "logic_hash": "62a584d7b1179a30f914ec5b8decb56a5fef532b8a85422e2147ad49dbd9963e",
+        "reveal": {
+          "file": "reveals/Knoblauch_A_r01.png",
+          "sha256": "0a102f0e49cd93f9b2851d9e5d7ba82edb601102055322a1628e806d544a4674"
+        }
+      },
+      "fresh_verification": {
+        "accepted": true,
+        "repair_id": "b34663a2e64c8a1d00c0af00b8b1f8289bbbfe84b84b62134e7ba8446c4f2344",
+        "certified": true,
+        "status": "found",
+        "candidates": 3,
+        "steps": 3,
+        "reference_id": "c811f37ce7cf17c6d6968cfc3715c76d0b6bf81f3376bd3861cd85d741f74604",
+        "matrix_hash": "2691fe2f52cf330e9500779160dd90a8446c1c7d90f174b75fdbc1df5aa81f09",
+        "fresh_candidates": [
+          {
+            "status": "stalled",
+            "proof_verified": true,
+            "certified": false,
+            "logic_hash": "ea0ec1ea25827a6ac42e4854f324bc611ef0a9d21a82ae68049d23ae43859116",
+            "profile": {
+              "id": "full-line-mono",
+              "version": 1,
+              "start": "unknown",
+              "deduction": "all-line-supported-values",
+              "search": false
+            },
+            "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+            "steps": 290,
+            "line_evaluations": 370
+          },
+          {
+            "status": "stalled",
+            "proof_verified": true,
+            "certified": false,
+            "logic_hash": "9e44f7d44f92a20267283b419ec435467d882959991063893534c83d31cf98bf",
+            "profile": {
+              "id": "full-line-mono",
+              "version": 1,
+              "start": "unknown",
+              "deduction": "all-line-supported-values",
+              "search": false
+            },
+            "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+            "steps": 297,
+            "line_evaluations": 377
+          },
+          {
+            "status": "solved",
+            "proof_verified": true,
+            "certified": true,
+            "logic_hash": "62a584d7b1179a30f914ec5b8decb56a5fef532b8a85422e2147ad49dbd9963e",
+            "profile": {
+              "id": "full-line-mono",
+              "version": 1,
+              "start": "unknown",
+              "deduction": "all-line-supported-values",
+              "search": false
+            },
+            "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+            "steps": 297,
+            "line_evaluations": 377
+          }
+        ],
+        "editorial_release": false
+      },
+      "tool_modules": {
+        "authoring_package.py": "f31be6492b229f0b113867d20df23553aac78a6c7fcece5833e8a2048b21a985",
+        "target_adapter.py": "3b8397f0c7bd215b503049e7fcfe1ffe049350f6814d0d31d41603b4920dec02",
+        "content_registry.py": "fc2be1d26f5c67bb127400534e5bbcb55cd67a43f4fb51d4c82aafe5b7be7caf",
+        "images.py": "05030b413b5c42e5eec3c5c68b67e57d203094c3a2a81efc7d85ff73722f67b3",
+        "repair.py": "d3c042337c4168977edb42f56ac2ad2a4f7913deb26969989f66233aa350ea15",
+        "contract.py": "11afd92a183f28bc427ac655f80c49d015c21aa6f4c23dacbd6603a940296094",
+        "verifier.py": "86bd08d1d718dba5165939c63bf6b3cb71c3af978c699b149e331d12d50ac9b8"
+      },
+      "environment": {
+        "tool": "rp3-image-1",
+        "pillow": "12.3.0",
+        "jpeg": "6.2",
+        "jpeg_turbo": "3.1.4.1",
+        "littlecms": "2.19",
+        "zlib": "1.3"
+      },
+      "evidence_scope": "Eigene Prüfung am geschriebenen kompakten ZIP mit aus genanntem main-Commit geladenen ZA-1-Modulen und unverändertem vorhandenen RP-Prüfkern; kein Spielstart, Export oder Registrierungsaufruf."
+    }
+  }
+}
