@@ -1,6 +1,6 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
-[KAT-1](CATEGORIES.md) ergänzt Kategorien und Zuordnung als reine Katalogmetadaten in der Registry-/Runtimeprojektion v2. Godot lädt den vollständigen validierten Bestand; Auswahl, Definitionen, Save-Schema 1, Revisionen und Slots bleiben unverändert. Neue Exporte benötigen die explizite Kategorienbindung. Keine neue Katalogoberfläche in diesem Paket.
+[KAT-1](CATEGORIES.md) ergänzt Kategorien und Zuordnung als reine Katalogmetadaten in der Registry-/Runtimeprojektion v2. Godot lädt den vollständigen validierten Bestand; Auswahl, Definitionen, Save-Schema 1, Revisionen und Slots bleiben unverändert. Neue Exporte benötigen die explizite Kategorienbindung. Die Oberfläche folgt jetzt KAT-2 (#79), siehe [Prüfzuordnung](KAT2_VERIFICATION.md).
 
 [ZA-1](ZA1_ADAPTER.md) ergänzt eine zentrale Inhaltsregistry und deterministische
 Runtime-Projektion. Loader, Sammlung, SaveStore und Einzelreset nutzen explizite
@@ -142,7 +142,7 @@ Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
 
 ### 3.1 Enthalten
 
-- Kleine Album-Testauswahl mit neutraler Kennung, Größe, Rätselart und Bearbeitungsstand. Alle Testfälle direkt zugänglich; keine Freischaltlogik.
+- Datenbasierter Katalog mit neutraler Kennung, Größe, Rätselart, Kategorie und Bearbeitungsstand. Alle sichtbaren Registryeinträge direkt zugänglich; höchstens 24 Karten pro Seite, keine Freischaltlogik.
 - Zellbearbeitung, Farbwahl, Achsenbindung, elastische Vorschau, kontrollierte Rücknahmen sowie Undo/Redo.
 - Arbeitsansicht mit unnummerierten, farbigen einzeiligen Hinweisen, atomaren Teilfolgen in einem gemeinsamen Slotraster und eigener Leseposition je Zeile/Spalte, passiver eigener Miniatur, fitbegrenztem Rasterzoom und getrennt skalierbarer Oberfläche.
 - Mit #11 ein fortsetzbarer lokaler Arbeitsstand je Testfall einschließlich Ansicht und Undo/Redo.
