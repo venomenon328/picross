@@ -14,11 +14,46 @@ def close(a, b):
     return abs(a-b) < .025
 
 
-def font_size(cell, ui):
-    # Unchanged board -> selected Chalkboard scale, independently transcribed.
-    rnd = lambda x: math.floor(x + .5)
-    nominal = min(rnd((13 if cell < 24 else 14)*ui), max(8, math.floor(cell-4)))
-    return min(rnd(nominal*1.35), max(rnd(8*1.35), math.floor(cell-4)))
+def typography(r):
+    """Reconstruct bounds from native RID ink/advance, independently of layout."""
+    data = r['typography']
+    require(data['sha256'] == '4031afdb556558ffdecd48488fd1ae7eee857e804f4622ac5154cc7bb0c4cb23', 'original font bytes')
+    ui, cell = r['ui_scale'], r['actual_cell']
+    padding, aa = 2*ui, max(.5, ui/4)
+    def dimensions(sample):
+        fs = sample['fs']
+        ref = sample['reference']
+        require({v['text'] for v in ref} == set('0123456789…–'), 'native digit/marker reference')
+        baseline = -(min(v['ink'][1] for v in ref)+max(v['ink'][1]+v['ink'][3] for v in ref))/2
+        require(close(baseline,sample['baseline']), 'native vertical centering')
+        cross, pitches = 0, []
+        for axis in ('row','column'):
+            along = 0
+            for token in sample[axis]:
+                text = token['text']
+                require(token['font'] == ('Delight Coffee' if text.isdecimal() else 'IBM Plex Sans'), 'explicit glyph source')
+                require(all(g['index'] > 0 for g in token['glyphs']), 'no missing digit/marker')
+                x,y,w,h = token['ink']
+                left, right = x-token['advance']/2, x+w-token['advance']/2
+                top, bottom = y+baseline,y+h+baseline
+                if text.isdecimal():
+                    thickness = max(1,fs/14)
+                    left, right = min(left,-token['advance']/2),max(right,token['advance']/2)
+                    top = min(top,baseline-.32*fs-thickness/2)
+                    bottom = max(bottom,baseline-.32*fs+thickness/2)
+                width = 2*max(-left+aa,right+aa)
+                height = 2*max(-top+aa,bottom+aa)
+                cross = max(cross,height,width if axis=='column' else 0)
+                along = max(along,width if axis=='row' else height)
+            pitches.append(math.ceil(along+padding))
+        return cross,pitches
+    extent,pitches = dimensions(data['selected'])
+    next_extent,_ = dimensions(data['next'])
+    require(data['selected']['fs'] == r['font_px'] and data['next']['fs'] == r['font_px']+1, 'measured selected/next grade')
+    require(pitches == [r['row_pitch'],r['column_pitch']], 'measured shared pitch')
+    if r.get('layout_valid', True):
+        require(extent <= max(1,cell-padding)+.025, 'full ink/C1/strike within cell')
+        require(next_extent > max(1,cell-padding), 'largest measured grade')
 
 
 def sidebar_axes(r, ui):
@@ -42,15 +77,16 @@ def sidebar_axes(r, ui):
 
 def record(r):
     ui = r['ui_scale']
-    require(close(r['row_pitch'],24*ui) and close(r['column_pitch'],18*ui), 'pitch')
-    require(r['font_px'] == font_size(r['actual_cell'],ui), 'unchanged type policy')
+    typography(r)
     safe, grid, shift, used = r['safe'], r['grid'], r['translation'], r['occupied']
     minimum, dims = r['minimum_reserve'], r['dimensions']
-    fit = min((safe[2]-minimum[0]*24*ui-14)/dims[0], (safe[3]-minimum[1]*18*ui-14)/dims[1])
-    require(close(fit,r['raw_fit']) and close(fit,r['independent_fit']), 'original safe fit budget')
-    ceiling = max(1, math.floor(fit*100+.000001)/100)
+    fit = ceiling = r['raw_fit']
+    budget = [dims[i]*fit+r['fit_slots'][i]*r['fit_pitch'][i]+14 for i in range(2)]
+    next_budget = [dims[i]*(fit+.01)+r['next_fit_slots'][i]*r['next_fit_pitch'][i]+14 for i in range(2)]
+    require(all(v <= safe[i+2]+.025 for i,v in enumerate(budget)), 'ceiling native reserve fits')
+    require(fit+.01<r['next_fit_minimum'] or any(v > safe[i+2]+.001 for i,v in enumerate(next_budget)), 'next hundredth cannot fit')
     require(close(r['actual_cell'],ceiling if r['overview'] else min(r['requested_cell'],ceiling)), 'cell scale')
-    for axis, pitch in enumerate((24*ui,18*ui)):
+    for axis, pitch in enumerate((r['row_pitch'],r['column_pitch'])):
         require(minimum[axis] <= r['reserve'][axis] <= r['max_hints'][axis], 'no empty reserve padding')
         require(close(grid[axis]-shift[axis],r['reserve'][axis]*pitch+7), 'whole block translation')
         require(close(grid[axis],r['untranslated_grid'][axis]+shift[axis]), 'untranslated grid binding')
@@ -80,7 +116,7 @@ def verify(matrix, focused):
     # Apply failures to a REAL generous-case report, not a hand-built passing fixture.
     source = next(r for r in focused['records'] if r['id']=='F-01' and r['ui_scale']==1 and not r['overview'] and not r['recovery'])
     mutations = {
-        'old pitch26': lambda r: r.update(row_pitch=26),
+        'inconsistent row pitch': lambda r: r.update(row_pitch=r['row_pitch']+2),
         'smaller font': lambda r: r.update(font_px=r['font_px']-1),
         'old left placement': lambda r: r.update(translation=[0,0]),
         'empty reserve padding': lambda r: r.update(reserve=[r['max_hints'][0]+1,r['reserve'][1]]),

@@ -26,6 +26,7 @@ import z2_resources
 import gp48_delivery
 import p1_current_visual
 import vs2_delivery
+import hc92_verify
 import perf_b_resources
 import za1_product
 import kat2_product
@@ -298,6 +299,9 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
         ("licenses/resources.json", "game/art/book/manifest.json"),
         ("licenses/Chalkboard-NOTICES.md", "game/art/drawing/NOTICES.md"),
         ("licenses/Bakso-NOTICES.md", "game/art/drawing/Bakso-NOTICES.md"),
+        ("licenses/DelightCoffee-NOTICES.md", "game/art/drawing/DelightCoffee-NOTICES.md"),
+        ("licenses/delight-coffee/More Info.txt", "game/art/drawing/delight-coffee/More Info.txt"),
+        ("licenses/delight-coffee/Read Me.pdf", "game/art/drawing/delight-coffee/Read Me.pdf"),
     ):
         extras[name] = root / source
     for path in sorted((root / "game/art/book").glob("*.txt")):
@@ -526,7 +530,10 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2")])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
+            if args.visual:
+                evidence.report["visual"]["vs2"]["hc92"]["retained_samples"] = python_phase(
+                    "retained-hc92-font-samples", lambda: hc92_verify.verify_retained(evidence.technical / "selected/hc92-renders"))
             required_kat2 = {str(p.relative_to(output)) for p in selected if p.parent.name == "kat2"}
             if not required_kat2 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
                 raise toolchain.PreflightError("Required KAT-2 evidence missing from bounded delivery")

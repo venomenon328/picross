@@ -22,9 +22,9 @@ func run() -> void:
 			app.set_ui_scale(scale)
 			var board = app.board
 			var fs: int = board.clue_font_size()
-			check(is_equal_approx(board.shared_clue_slot_extent("row", board.clue_font(), fs), 24.0 * scale), "V1 row pitch on every regular sheet, same selected font")
-			check(is_equal_approx(board.shared_clue_slot_extent("column", board.clue_font(), fs), 18.0 * scale), "unchanged column slots on every sheet")
-			check(board.clue_font().get_font_name() == "Chalkboard" and not board.clue_font().allow_system_fallback, "selected offline font")
+			check(is_equal_approx(board.shared_clue_slot_extent("row", board.clue_font(), fs), board.slot_pitch.x), "V1 row pitch on every regular sheet, same selected font")
+			check(is_equal_approx(board.shared_clue_slot_extent("column", board.clue_font(), fs), board.slot_pitch.y), "unchanged column slots on every sheet")
+			check(board.clue_font().get_font_name() == "Delight Coffee" and not board.clue_font().allow_system_fallback, "selected offline font")
 			for symbol: String in "…–":
 				check(board.clue_text_font(board.clue_font(), symbol) == Regular.Fonts.REFERENCE, "explicit Plex punctuation")
 	app.set_ui_scale(1.0)

@@ -146,11 +146,11 @@ func glyph_probe() -> void:
 			await RenderingServer.frame_post_draw
 			var measurement: Dictionary = Measurements.capture(b)
 			check(measurement.clipped_glyphs == 0 and measurement.glyph_collisions == 0,"V1 real 1/11/17/40 C1/AA and three drawn status bounds")
-			check(b.clue_font_size() == (19 if u == 1.0 else 20),"V1 glyph proof cannot shrink font")
+			check(measurement.glyph_max[1] >= b.view.cell_size*0.6 and measurement.glyph_max[1] <= b.view.cell_size,"HC visible glyph height occupies the real cell")
 			var crop: Rect2i = Rect2i(b.row_clue_area().grow(3))
 			var name: String = "v1-glyphs-u%d-status%d.png" % [roundi(u*100),status]
 			check(canvas.get_texture().get_image().get_region(crop).save_png(output.path_join(name)) == OK,"V1 native 1:1 glyph strip")
-			glyphs.append({"file":name,"sha256":FileAccess.get_sha256(output.path_join(name)),"ui_scale":u,"font_px":b.clue_font_size(),"status":status,"row_pitch":24*u,"clipped":measurement.clipped_glyphs,"collisions":measurement.glyph_collisions})
+			glyphs.append({"file":name,"sha256":FileAccess.get_sha256(output.path_join(name)),"ui_scale":u,"font_px":b.clue_font_size(),"status":status,"row_pitch":b.slot_pitch.x,"clipped":measurement.clipped_glyphs,"collisions":measurement.glyph_collisions})
 	b.queue_free()
 	await process_frame
 	# Continuous boundaries/intervals on BOTH axes of the current renderer.

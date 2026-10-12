@@ -162,7 +162,9 @@ und deren Integration in [ZS-2 / #53](https://github.com/venomenon328/picross/is
 Ein vollständiger Themen- oder Layoutwechsel folgt daraus nicht.
 
 
-**ZS1-E3:** Für die ausgewählte ZS-Fassung ist Chalkboard Regular der Hinweisfont.
+**HC / #92:** Aktive Hinweisziffern verwenden Delight Coffee mit gemessener
+zellabhängiger Schrift-/Slotgeometrie; [HC-Vertrag](CLUE_TYPOGRAPHY.md).
+Die folgende ZS1-E3-Bindung ist historisch: Chalkboard war deren Hinweisfont.
 Zeilenhinweise links vom Raster verwenden kompaktere gemeinsame 26-px-Slots bei
 UI 100 % (UI-skaliert); die vertikalen Spaltenslots bleiben unverändert. Die
 kombinierte Sichtprüfung ist nach dem Merge von PR #55 auf `main` erfolgreich

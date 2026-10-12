@@ -8,6 +8,7 @@ import p1_preflight as toolchain
 from p1_evidence import png_references
 import zs1_delivery
 import zs2_delivery
+from vs2_v1_verify import typography
 
 CURRENT_CASES = {
     "f01-work", "f02-color", "f06-small", "f02-compact", "f01-1600",
@@ -29,9 +30,9 @@ def pixel_oracle(renders: Path, inputs, action):
 def verify_regular_motion(root: Path, renders: Path) -> dict:
     from PIL import Image, ImageChops
 
-    font = root / "game/art/drawing/Chalkboard-Regular.ttf"
-    if toolchain.sha256_file(font) != zs2_delivery.FONT_SHA256:
-        raise toolchain.PreflightError("Current Chalkboard font differs from its bound source")
+    font = root / "game/art/drawing/DelightCoffee-Regular.ttf"
+    if toolchain.sha256_file(font) != "4031afdb556558ffdecd48488fd1ae7eee857e804f4622ac5154cc7bb0c4cb23":
+        raise toolchain.PreflightError("Current Delight Coffee font differs from its bound source")
     current = json.loads((renders / "zs2-after.json").read_text(encoding="utf-8"))
     captures = current["captures"]
     if (current.get("role") != "after" or current["failures"] != 0
@@ -41,8 +42,13 @@ def verify_regular_motion(root: Path, renders: Path) -> dict:
     if current["display"] == "headless" or not current["renderer"]:
         raise toolchain.PreflightError("Current drawing evidence requires a native renderer")
     for item in captures:
-        if item["font"] != "Chalkboard" or item["spoiler_free"] is not True:
+        if item["font"] != "Delight Coffee" or item["spoiler_free"] is not True:
             raise toolchain.PreflightError("Current font/spoiler contract failed")
+        metrics = item["font_metrics"]
+        typography(dict(typography=metrics["typography"], font_px=item["font_size"],
+                        actual_cell=item["full_view"]["cell_pitch"], ui_scale=item["ui_scale"],
+                        row_pitch=metrics["row_slot"], column_pitch=metrics["column_slot"],
+                        layout_valid=item["full_view"]["layout_valid"]))
         with Image.open(renders / item["file"]) as picture:
             if list(picture.size) != item["size"]:
                 raise toolchain.PreflightError("Current drawing capture dimensions differ")
@@ -68,7 +74,7 @@ def verify_regular_motion(root: Path, renders: Path) -> dict:
                              lambda: zs2_delivery.verify_fill_sizes(renders, current["fill_sequences"], atlas_frames=True))
     wave = pixel_oracle(renders, current["wave_sequence"],
                        lambda: zs2_delivery.verify_wave(renders, current["wave_sequence"]))
-    return dict(font_sha256=zs2_delivery.FONT_SHA256, cases=sorted(CURRENT_CASES),
+    return dict(font_sha256="4031afdb556558ffdecd48488fd1ae7eee857e804f4622ac5154cc7bb0c4cb23", cases=sorted(CURRENT_CASES),
                 renderer=current["renderer"], movements=current["frames"],
                 stroke_evidence=strokes, x_size_evidence=x_sizes,
                 fill_size_evidence=fill_sizes, wave_evidence=wave,

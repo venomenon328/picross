@@ -39,7 +39,7 @@ func shot(name: String) -> void:
 		var step: float = app.mini.image_rect().size.x / app.session.player.width
 		var point: Vector2i = Vector2i(app.mini.global_position + Vector2(3.5,3.5)*step)
 		check(image.get_pixelv(point).is_equal_approx(Color(app.session.definition.palette[0].color)), "native own wrong miniature pixel")
-		check(app.board.clue_font().get_font_name() == "Chalkboard", "bound regular clue font")
+		check(app.board.clue_font().get_font_name() == "Delight Coffee", "bound regular clue font")
 		check(not app.minimum_message.visible and app.work.visible, "work and critical controls accessible")
 		if not app.board.layout_valid:
 			check(app.layout_warning.text.contains("Zu wenig Platz") and not app.board.marks.visible,"invalid geometry is explicit and has no marks")

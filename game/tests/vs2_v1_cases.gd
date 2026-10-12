@@ -1,4 +1,5 @@
 extends RefCounted
+const Metrics = preload("hc92_metrics.gd")
 static func rect_values(rect: Rect2) -> Array:
 	return [rect.position.x,rect.position.y,rect.size.x,rect.size.y]
 
@@ -87,13 +88,13 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 	var columns: Rect2 = b.column_clue_area()
 	var shift: Vector2 = b.composition_shift
 	var dimensions: Vector2 = Vector2(b.session.player.width, b.session.player.height)
-	var independent_fit: float = minf((b.size.x-b.minimum_slots.x*24*u-14)/dimensions.x, (b.size.y-b.minimum_slots.y*18*u-14)/dimensions.y)
-	check.call(is_equal_approx(b.raw_fit, independent_fit), "V1 fit uses unchanged safe budget before translation")
+	var pitch: Vector2 = b.slot_pitch
+	check.call((Vector2(b.fit_slots)*b.fit_pitch+dimensions*b.fit_ceiling+Vector2(14,14)).x<=b.size.x+0.02 and (Vector2(b.fit_slots)*b.fit_pitch+dimensions*b.fit_ceiling+Vector2(14,14)).y<=b.size.y+0.02, "HC measured ceiling budget fits")
 	check.call(b.reserve_slots.x <= b.max_hints.x and b.reserve_slots.y <= b.max_hints.y, "V1 no artificial empty slots")
-	check.call(near(grid.position-shift, Vector2(b.reserve_slots.x*24*u+7, b.reserve_slots.y*18*u+7)), "V1 raster and both reserves share translation")
+	check.call(near(grid.position-shift, Vector2(b.reserve_slots.x*pitch.x+7, b.reserve_slots.y*pitch.y+7)), "V1 raster and both reserves share translation")
 	check.call(near(rows.position, Vector2(shift.x, grid.position.y)) and near(columns.position, Vector2(grid.position.x, shift.y)), "V1 hint hit regions translate with raster")
 	check.call(near(grid.size, dimensions*b.view.cell_size), "V1 translation never changes cell scale")
-	check.call(b.shared_clue_slot_extent("row",b.clue_font(),b.clue_font_size()) == 24*u and b.shared_clue_slot_extent("column",b.clue_font(),b.clue_font_size()) == 18*u, "V1 fixed independent pitch targets")
+	check.call(b.shared_clue_slot_extent("row",b.clue_font(),b.clue_font_size()) == pitch.x and b.shared_clue_slot_extent("column",b.clue_font(),b.clue_font_size()) == pitch.y, "HC both layout hooks use the common measured pitches")
 	var occupied: Rect2 = b.composition_envelope()
 	if b.layout_valid:
 		check.call(Rect2(Vector2.ZERO,b.size).grow(0.02).encloses(grid.grow(1)), "V1 full frame within original safe budget")
@@ -145,8 +146,12 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 	return {"id":app.session.definition.id,"client":[app.size.x,app.size.y],"ui_scale":u,"mode":b.mode,"overview":b.overview,
 		"safe":rect_values(b.get_global_rect()),"occupied":rect_values(occupied),"translation":[shift.x,shift.y],
 		"grid":rect_values(grid),"rows":rect_values(rows),"columns":rect_values(columns),
-		"requested_cell":b.requested_cell,"actual_cell":b.view.cell_size,"raw_fit":b.raw_fit,"independent_fit":independent_fit,
-		"font_px":b.clue_font_size(),"row_pitch":24*u,"column_pitch":18*u,
+		"requested_cell":b.requested_cell,"actual_cell":b.view.cell_size,"raw_fit":b.raw_fit,"layout_valid":b.layout_valid,
+		"font_px":b.clue_font_size(),"row_pitch":pitch.x,"column_pitch":pitch.y,
+		"typography":Metrics.capture(b),
+		"fit_pitch":[b.fit_pitch.x,b.fit_pitch.y],"fit_slots":[b.fit_slots.x,b.fit_slots.y],
+		"next_fit_pitch":[b.next_fit_pitch.x,b.next_fit_pitch.y],"next_fit_slots":[b.next_fit_slots.x,b.next_fit_slots.y],
+		"next_fit_minimum":b.next_fit_minimum,
 		"reserve":[b.reserve_slots.x,b.reserve_slots.y],"max_hints":[b.max_hints.x,b.max_hints.y],
 		"minimum_reserve":[b.minimum_slots.x,b.minimum_slots.y],"dimensions":[dimensions.x,dimensions.y],
 		"untranslated_grid":rect_values(b.untranslated_grid),"untranslated_occupied":rect_values(b.untranslated_occupied),

@@ -291,6 +291,10 @@ static func ui_cases(t: SceneTree) -> void:
 	await t.process_frame
 	await t.process_frame
 	t.check(not app.stress_label.visible, "F06 is a regular bounded pilot")
+	# HC compact slots can fit every F06 row in the regular free width. Keep
+	# these component input oracles overflowing with an explicit narrow budget.
+	b.size.x = 560
+	b._layout()
 	var longest_row: int = longest_line(app.session.definition.rows)
 	var longest_column: int = longest_line(app.session.definition.columns)
 	b.navigate_to(Vector2(float(longest_column) / 50.0, float(longest_row) / 50.0))
@@ -320,6 +324,8 @@ static func ui_cases(t: SceneTree) -> void:
 				t.check(row_window.end > row_window.start and column_window.end > column_window.start, "J-02 real F-06 clues at UI/pitch/slot %s/%s/%s" % [scale, step, position])
 				t.check((row_window.prefix_hidden or row_window.suffix_hidden) == (row_window.entries.size()>row_window.slot_count), "J-02 markers match actual overflow or complete visibility")
 	app.set_ui_scale(1.25)
+	b.size.x = 560
+	b._layout()
 	b.restore_view(b.capture_view().merged({"zoom":24,"overview":false},true))
 	b.reset_clue_pan()
 	await semantic_clue_geometry_routes(t, app)
@@ -426,6 +432,8 @@ static func followup_input_geometry(t: SceneTree, app: Main) -> void:
 
 static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: int) -> void:
 	var b: Board = app.board
+	b.size.x = 560
+	b._layout()
 	b.navigate_to(Vector2(float(column) / 50.0, float(row) / 50.0))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
@@ -642,6 +650,8 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	await t.process_frame
 	app.select_puzzle(3)
 	board = app.board
+	board.size.x = 560
+	board._layout()
 	board.reset_clue_pan()
 	board.navigate_to(Vector2(float(column) / 50.0, float(row) / 50.0))
 	monotone_clue_route(t, board, "row", row)
@@ -657,6 +667,8 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	app.set_ui_scale(1.25)
 	await t.process_frame
 	await t.process_frame
+	b.size.x = 560
+	b._layout()
 	b.reset_clue_pan()
 	set_work_zoom(b, 12.0)
 	var rows: Array[int] = overflowing_lines(b, "row")
@@ -687,17 +699,25 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	current = check_semantic_transition(t, b, cases, current, "100 to 50 percent")
 	check_restored_windows(t, current, initial, "50 to 100 to 50 percent")
 	app.set_ui_scale(1.0)
+	b.size.x = 560
+	b._layout()
 	current = check_semantic_transition(t, b, cases, current, "UI 125 to 100 percent")
 	app.set_ui_scale(1.25)
+	b.size.x = 560
+	b._layout()
 	current = check_semantic_transition(t, b, cases, current, "UI 100 to 125 percent")
 	check_restored_windows(t, current, initial, "UI round trip")
 	t.root.size = Vector2i(1920, 1080)
 	await t.process_frame
 	await t.process_frame
+	b.size.x = 700
+	b._layout()
 	current = check_semantic_transition(t, b, cases, current, "resize larger")
 	t.root.size = Vector2i(1280, 720)
 	await t.process_frame
 	await t.process_frame
+	b.size.x = 560
+	b._layout()
 	current = check_semantic_transition(t, b, cases, current, "resize smaller")
 	check_restored_windows(t, current, initial, "resize round trip")
 	b.reset_clue_pan()
@@ -706,6 +726,8 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	await t.process_frame
 	await t.process_frame
 	set_work_zoom(b, original_zoom)
+	b.size.x = 560
+	b._layout()
 	b.view.center = original_center
 	b.view.reframe()
 
@@ -902,11 +924,14 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	t.check(b.row_clue_steps.count(0) == b.row_clue_steps.size() and b.column_clue_steps.count(0) == b.column_clue_steps.size(), "J-03 reset control restores every grid-side clue window")
 	app.return_to_work()
 	app.set_ui_scale(1.25)
+	b.size.x = 560
+	b._layout()
 	b.set_clue_step("row", longest_row, 1)
 	b.set_clue_step("column", longest_column, 1)
+	var switch_reads: Dictionary = b.capture_view()
 	app.select_puzzle(1)
 	app.select_puzzle(3)
-	t.check(b.clue_step("row", longest_row) == 1 and b.clue_step("column", longest_column) == 1, "P1.3 fixture switch retains each clue view")
+	t.check(b.row_clue_reads == switch_reads.row_clue_reads and b.column_clue_reads == switch_reads.column_clue_reads, "P1.3 fixture switch retains each semantic clue view across capacity changes")
 	t.check(b.clue_layout("row", longest_row).end > b.clue_layout("row", longest_row).start and b.clue_layout("column", longest_column).end > b.clue_layout("column", longest_column).start, "J-03 mapping remains valid after route sequence")
 
 static func visible_overflowing_lines(board: Control, axis: String) -> Array[int]:

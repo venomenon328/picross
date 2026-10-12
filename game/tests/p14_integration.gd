@@ -35,6 +35,14 @@ func run() -> void:
 	app.set_ui_scale(1.25)
 	await process_frame
 	await process_frame
+	# HC compaction fits the former F06 row at the regular window budget.
+	# Keep genuine overflow on both fixed target lines for all 500 actions
+	# and the separate-process restart; retain the semantic-change oracle.
+	app.board.size.x = 560
+	app.board._layout()
+	if not app.board.layout_valid or app.board.clue_layout("row",41).max_offset < 2 or app.board.clue_layout("column",17).max_offset < 2:
+		fail("integration component budget must provide middle reads on both target lines")
+		return
 	if not app.mark_completed_clues or not app.board.mark_completed_clues:
 		fail("H1 completion marking must remain enabled for the 500-action run and restart")
 		return
@@ -86,6 +94,8 @@ func run() -> void:
 		"cursor": app.session.player.cursor, "undo_used": app.session.player.undo_used,
 		"view": view_record(), "row_reads": app.board.row_clue_reads,
 		"column_reads": app.board.column_clue_reads,
+		"logical_window": [root.size.x,root.size.y], "ui_scale": app.ui_scale,
+		"board_component": [app.board.size.x,app.board.size.y],
 		"elapsed_us": Time.get_ticks_usec() - begun,
 		"engine": Engine.get_version_info(), "renderer": {"display": DisplayServer.get_name(), "configured_method": str(ProjectSettings.get_setting("rendering/renderer/rendering_method", "unknown"))}}
 	var final_file: FileAccess = FileAccess.open(trace_path + ".final.json", FileAccess.WRITE)
