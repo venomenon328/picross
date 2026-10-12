@@ -69,12 +69,16 @@
   },
   "archive_review": {
     "source_commit": "a26df0a3ebd7b320c0f1f3bcb9d5c46f2428ee46",
-    "state": "written_zip_validation_passed; final diff/self-review and selected CI recorded in delivery PR"
+    "state": "complete_separate_diff_and_package_self_review_passed",
+    "reviewed_archive_commit": "4509e5b97d166a3300fbab0173eaf2361cd97602",
+    "evidence": "https://github.com/venomenon328/picross/pull/96",
+    "limits": "Own self-review, not independent editorial review. All six proof statuses independently checked by the existing separate verifier. Content remains blocked."
   },
   "repository_delivery": {
     "branch": "chore/pz-82758295-production",
-    "pr": null,
-    "head": null,
-    "evidence": null
+    "pr": 96,
+    "archive_commit": "4509e5b97d166a3300fbab0173eaf2361cd97602",
+    "evidence": "https://github.com/venomenon328/picross/pull/96",
+    "final_head_and_checks": "Exact final Head/Base/Test-Merge/Run and post-merge main verification recorded in PR #96."
   }
 }
