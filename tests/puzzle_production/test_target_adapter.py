@@ -292,7 +292,10 @@ class TargetTests(unittest.TestCase):
         second = self.export(p2, dest="second")
         registration(second, checkout, apply=True)
         self.assertEqual(len(check_checkout(checkout, replay=True)["entries"]), 11)
-        with self.assertRaisesRegex(InvalidInput, "Test-only"): registration(second, ROOT, apply=True)
+        protected = isolated_checkout(self.root / "protected-repository")
+        with patch("tools.puzzle_production.content_registry.ROOT", protected):
+            with self.assertRaisesRegex(InvalidInput, "Test-only"):
+                registration(second, protected, apply=True)
         altered = load_json(out / "manifest.json"); altered["runtime_revision"] = 8
         write_json(out / "manifest.json", altered)
         with self.assertRaises(InvalidInput): registration(out, checkout, apply=True)

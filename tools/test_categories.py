@@ -8,7 +8,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.puzzle_production import categories
-from tools.puzzle_production.content_registry import validate, projection, check_checkout
+from tools.puzzle_production.content_registry import validate, projection
 from tools.puzzle_production.contract import InvalidInput, load_json, write_json
 from ci_scope import classify
 
@@ -48,7 +48,7 @@ class CategoryTests(unittest.TestCase):
         self.assertEqual([e["category_id"] for e in self.registry["entries"][:9]], [
             "fahrzeuge-verkehr", "gebaeude-bauwerke", None, "gemuese-pilze-kraeuter", None,
             "gebaeude-bauwerke", None, "blumen-pflanzen", "voegel"])
-        check_checkout(ROOT)
+        validate(self.registry, self.catalog)
 
     def test_category_fields_types_duplicates_and_limits(self):
         for field, values in {
