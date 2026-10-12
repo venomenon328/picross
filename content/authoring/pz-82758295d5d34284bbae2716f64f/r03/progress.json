@@ -1,0 +1,30 @@
+{
+  "format": "picross-authoring-progress-v1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r03",
+  "events": [
+    {
+      "actor": "user",
+      "type": "production_and_archive_authorization",
+      "statement": "Importiere die freigegebene Motivvorlage mit den vorhandenen deterministischen Werkzeugen.",
+      "merge_statement": "Ich beauftrage ausdrücklich auch den Merge dieses Ablage-/Integrations-PRs nach bestandenem vollständigem Diff-/Selbstreview und allen ausgewählten Pflichtprüfungen gemäß Entwicklungsworkflow; danach main tatsächlich verifizieren.",
+      "timestamp_utc": null,
+      "timestamp_note": "Exact user message time not exposed; no invented UTC approval timestamp."
+    },
+    {
+      "actor": "user",
+      "type": "crop_approval",
+      "statement": "Ja, präzisierten Crop freigeben (empfohlen)",
+      "evidence": "package.zip!approvals/crop.json"
+    },
+    {
+      "actor": "assistant",
+      "type": "production_result",
+      "state": "blocked",
+      "candidates": 6,
+      "repairs": 0,
+      "result": "Six reconstructed independently checked incomplete fixpoints; material protected-feature loss, no eligible final candidate.",
+      "evidence": "package.zip!report.md"
+    }
+  ]
+}

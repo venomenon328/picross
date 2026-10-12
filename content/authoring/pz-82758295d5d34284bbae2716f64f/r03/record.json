@@ -1,0 +1,84 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r03",
+  "category_id": "sport-spiele",
+  "state": "blocked",
+  "package": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r03/package.zip",
+    "bytes": 6788658,
+    "sha256": "fd2fe7bb8cb494544f03da4f640b849dc5ad701ffcbe2f7cbe0635b3aaedd978"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r03/handoff.json",
+    "sha256": "82bab7c70fa4ebcdc18ea735a5bae0dd0a7c7c3ed0e99a7b2978362b3d2ca97c"
+  },
+  "inventory_sha256": "809915d7cf5b76bcd42ac1cd4504bbfc11a9697bd4e5f97931dd8bed800f7c55",
+  "approval": null,
+  "width": 24,
+  "height": 36,
+  "mode": "mono",
+  "difficulty": {
+    "level": null,
+    "reason": "All six candidates stalled; no L1-L5 classification permitted."
+  },
+  "blockers": [
+    "All six candidates are independently verified incomplete full-line-mono fixpoints.",
+    "Protected ear/pedestal/face details not sufficiently preserved; no safe <=2-cell repair candidate.",
+    "No final candidate, no difficulty level, no final editorial acceptance or export."
+  ],
+  "next_action": "New separately human-approved 24x36 motif abstraction, or explicit new size corridor; preserve A-r01. No further search in this completed six-candidate round.",
+  "integration": null,
+  "previous_revision": "r02",
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+  "motif_revision": "MA-r01",
+  "motif_sha256": "21847d0e6bb804a2d3eafc5a1fc783d21166d68195cdcc11e7e9b1548c5832b0",
+  "approved_parameters": [
+    {
+      "width": 24,
+      "height": 36,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        209,
+        10,
+        1017,
+        1222
+      ]
+    }
+  ],
+  "progress_log": "content/authoring/pz-82758295d5d34284bbae2716f64f/r03/progress.json",
+  "validation": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r03/validation.json",
+    "sha256": "fbb8d29e0d5ac814d79036f8ce2eeccde5bbd1afc1f571cafe2f028a8f532aed"
+  },
+  "production_result": {
+    "candidate_count": 6,
+    "solved": 0,
+    "stalled": 6,
+    "frame_pass": 5,
+    "visual_pass": 0,
+    "repairs": 0,
+    "logic_profile": "full-line-mono v1",
+    "final_candidate": null,
+    "report": "package.zip!report.md",
+    "comparison": "package.zip!comparison.md"
+  },
+  "archive_review": {
+    "source_commit": "a26df0a3ebd7b320c0f1f3bcb9d5c46f2428ee46",
+    "state": "complete_separate_diff_and_package_self_review_passed",
+    "reviewed_archive_commit": "4509e5b97d166a3300fbab0173eaf2361cd97602",
+    "evidence": "https://github.com/venomenon328/picross/pull/96",
+    "limits": "Own self-review, not independent editorial review. All six proof statuses independently checked by the existing separate verifier. Content remains blocked."
+  },
+  "repository_delivery": {
+    "branch": "chore/pz-82758295-production",
+    "pr": 96,
+    "archive_commit": "4509e5b97d166a3300fbab0173eaf2361cd97602",
+    "evidence": "https://github.com/venomenon328/picross/pull/96",
+    "final_head_and_checks": "Exact final Head/Base/Test-Merge/Run and post-merge main verification recorded in PR #96."
+  }
+}
