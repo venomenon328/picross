@@ -12,6 +12,7 @@ var checks: int = 0
 var failures: Array[String] = []
 var captures: Array = []
 var timings: Dictionary = {}
+var quit_slot_hashes: Dictionary = {}
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -151,6 +152,8 @@ func run() -> void:
 		check(save_bytes().is_empty(), "empty/error path writes no saves")
 	elif mode == "large":
 		await large()
+	elif mode == "information":
+		await information_saves()
 	elif mode == "adapter":
 		var id: String = "pz-test-direct-mono"
 		check(app.album.items.has(id), "registered KAT1 adapter content appears in All")
@@ -170,12 +173,172 @@ func run() -> void:
 		check(app.session.definition.id == "F-02" and app.session.player.cells[0] == 1, "pointer resumes restored redo history")
 	else:
 		await regular()
-	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
+	if mode == "information":
+		# The actual Beenden callback must end this process. A blocked quit resumes
+		# below and rewrites the report as a failure; no test stub replaces quit().
+		for filename: String in save_bytes():
+			quit_slot_hashes[filename] = FileAccess.get_sha256(Store.test_root_override.path_join(filename))
+		write_report()
+		print("KAT2_QUIT_ATTEMPT catalog-origin information")
+		click(caption_button(app.settings_panel, "Beenden"))
+		await frames()
+		check(false, "catalog-origin information permits regular process quit")
+	write_report()
+	quit(0 if failures.is_empty() else 4)
+
+func write_report() -> void:
+	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()
 	if failures.is_empty(): print("KAT2_PROBE_OK ", mode, " checks=", checks, " timings_ms=", timings)
-	quit(0 if failures.is_empty() else 4)
+
+func caption_button(parent: Node, caption: String) -> Button:
+	for node: Node in parent.find_children("*", "Button", true, false):
+		if node.text == caption: return node
+	check(false, "UI button exists: " + caption)
+	return null
+
+func choose_view(index: int) -> void:
+	click(app.view_choice)
+	await frames()
+	var popup: PopupMenu = app.view_choice.get_popup()
+	check(popup.visible, "puzzle view popup opens by pointer")
+	# Native popup hit testing, including the actual item_selected signal.
+	for y: int in range(4, popup.size.y - 4, 4):
+		var point: Vector2 = Vector2(popup.position) + Vector2(60, y)
+		var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+		motion.position = point
+		motion.global_position = point
+		motion.relative = Vector2(0, 4)
+		motion.velocity = Vector2(0, 240)
+		surface.push_input(motion, true)
+		if popup.get_focused_item() == index:
+			for down: bool in [true, false]:
+				var event: InputEventMouseButton = InputEventMouseButton.new()
+				event.position = point
+				event.global_position = point
+				event.button_index = MOUSE_BUTTON_LEFT
+				event.pressed = down
+				surface.push_input(event, true)
+			break
+	await frames()
+	check(app.board.mode == ("V" if index == 1 else "G") and not popup.visible, "pointer changes puzzle view")
+
+func information_profile(base: String, state: String) -> void:
+	if app != null:
+		app.free()
+		app = null
+	Store.test_root_override = base.path_join(state)
+	DirAccess.make_dir_recursive_absolute(Store.test_root_override)
+	var valid: PackedByteArray = FileAccess.get_file_as_bytes("res://tests/fixtures/kat1/f01.json")
+	for suffix: String in [".json", ".bak"]:
+		if state == "recovered_missing" and suffix == ".json": continue
+		var file: FileAccess = FileAccess.open(Store.test_root_override.path_join("f01" + suffix), FileAccess.WRITE)
+		var damaged: bool = state == "error" or (state == "recovered" and suffix == ".json") or (state == "backup_invalid" and suffix == ".bak")
+		file.store_buffer(("{TEST ONLY damaged " + suffix).to_utf8_buffer() if damaged else valid)
+		file.close()
+	# A separate valid slot makes unintended writes/rotation observable too.
+	var foreign: FileAccess = FileAccess.open(Store.test_root_override.path_join("f02.json"), FileAccess.WRITE)
+	foreign.store_buffer(FileAccess.get_file_as_bytes("res://tests/fixtures/kat1/f02.json"))
+	foreign.close()
+	await new_app()
+
+func information_saves() -> void:
+	var base: String = Store.test_root_override
+	for state: String in ["error", "recovered", "recovered_missing", "backup_invalid"]:
+		await information_profile(base, state)
+		var expected: String = "recovered" if state == "recovered_missing" else state
+		check(app.slot_status[0] == expected, state + ": isolated F01 state loaded")
+		var original: Dictionary = save_bytes()
+		var history: Array = app.session.player.history.duplicate(true)
+		await choose("fahrzeuge-verkehr")
+		click(caption_button(app.album, "Einstellungen / Info"))
+		await frames()
+		check(app.information.visible and app.information_origin == "album", state + ": pointer opens catalog information")
+		await choose_view(1)
+		check(app.save_timer.is_stopped(), state + ": catalog view change schedules no slot save")
+		await create_timer(0.5).timeout
+		check(app.slot_errors[0].is_empty() and save_bytes() == original, state + ": no save attempt after debounce")
+		click(app.ui_scale_button)
+		await frames()
+		click(app.clue_reset_button)
+		click(app.clue_completion_toggle)
+		click(app.animation_toggle)
+		click(app.actions["nav-work"])
+		await frames()
+		check(app.album.visible and app.album.category_id == "fahrzeuge-verkehr", state + ": return preserves catalog selection and reset access")
+		check(save_bytes() == original and app.session.player.history == history, state + ": information navigation preserves all slot bytes and history")
+		if not app.album.visible: continue # Keep the original failure evidence; next case has its own profile.
+		var foreign: Dictionary = save_bytes("f01")
+		var dialog: ConfirmationDialog = app.reset_dialog if state == "error" else app.repair_dialog
+		var action: Button = app.album.reset_buttons["F-01"] if state == "error" else app.album.repair_buttons["F-01"]
+		click(action)
+		await frames()
+		check(dialog.visible and save_bytes() == original, state + ": repair/reset requires confirmation")
+		click(dialog.get_cancel_button())
+		await frames()
+		check(not dialog.visible and save_bytes() == original, state + ": cancellation preserves damaged bytes")
+		if state != "error":
+			click(app.choices[0])
+			await frames()
+			click_at(app.board.global_position + app.board.view.cell_rect(Vector2i(2, 0)).get_center())
+			check(not app.slot_errors[0].is_empty() and save_bytes() == original, state + ": real work edit cannot bypass recovery lock")
+			click(app.album_button)
+			check(app.work.visible, state + ": unsaved recovery edit blocks leaving work")
+			click(app.work_repair_button)
+		else:
+			click(app.album.reset_buttons["F-01"])
+		await frames()
+		click(dialog.get_ok_button())
+		await frames()
+		check(app.album.visible and app.slot_status[0] in ["fresh", "loaded"], state + ": explicit confirmation restores navigation")
+		check(save_bytes("f01") == foreign, state + ": explicit action preserves foreign slots")
+		if state != "error":
+			var loaded: Dictionary = app.store.load_slot(app.sessions[0].definition)
+			check(loaded.status == "loaded" and int(loaded.data.cells[2]) == 1 and FileAccess.file_exists(app.store.path_for("f01", ".bak")), state + ": confirmation persists actual work and valid backup")
+	# Real unsaved work: both immediate cell save and debounced work-origin view.
+	await information_profile(base, "dirty")
+	click(app.choices[0])
+	await frames()
+	app.store.fail_step = "after_temp"
+	click_at(app.board.global_position + app.board.view.cell_rect(Vector2i(2, 0)).get_center())
+	check(app.session.player.cells[2] == 1 and not app.slot_errors[0].is_empty(), "dirty: actual pointer edit remains unsaved on write failure")
+	click(app.actions["menu"])
+	click(app.album_button)
+	app.select_by_id("F-02")
+	app.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	await frames()
+	check(app.work.visible and app.session.definition.id == "F-01" and app.status_label.visible, "dirty: failed flush blocks info, catalog, slot switch and WM close")
+	app.store.fail_step = ""
+	click(app.actions["menu"])
+	await frames()
+	check(app.information.visible and app.information_origin == "work", "dirty: successful retry permits work-origin information")
+	check(int(app.store.load_slot(app.session.definition).data.cells[2]) == 1, "dirty: retry persists confirmed cell")
+	app.store.fail_step = "after_temp"
+	await choose_view(1)
+	check(not app.save_timer.is_stopped(), "dirty: work-origin view still schedules mandatory save")
+	click(app.actions["nav-work"])
+	click(caption_button(app.settings_panel, "Beenden"))
+	app.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	await create_timer(0.5).timeout
+	check(app.information.visible and app.status_label.visible and not app.slot_errors[0].is_empty(), "dirty: view failure blocks return, Beenden and WM close")
+	app.store.fail_step = ""
+	click(app.actions["nav-work"])
+	await frames()
+	check(app.work.visible and app.slot_errors[0].is_empty(), "dirty: retry clears failure and restores work")
+	# A fresh damaged profile tests the real Beenden path at the end of run().
+	await information_profile(base, "error-quit")
+	for suffix: String in [".json", ".bak"]:
+		var file: FileAccess = FileAccess.open(app.store.path_for("f01", suffix), FileAccess.WRITE)
+		file.store_string("{TEST ONLY damaged quit")
+		file.close()
+	await new_app()
+	click(caption_button(app.album, "Einstellungen / Info"))
+	await frames()
+	await choose_view(1)
+	await create_timer(0.5).timeout
+	check(app.slot_status[0] == "error" and app.slot_errors[0].is_empty(), "quit: damaged slot remains untouched before regular Beenden")
 
 func regular() -> void:
 	check(app.album.category_choice.item_count == 21 and app.sessions.size() == 6, "six regular puzzles and all twenty categories")
@@ -366,6 +529,7 @@ func large() -> void:
 	check(app.choices.is_empty() and app.album.summary.text == "0 von 0 gelöst", "large catalog includes empty categories")
 	app.store.fail_step = "after_temp"
 	app.board.eraser = not app.board.eraser
+	check(not app._save_current(), "pending failed save prepared for filtered-out active slot")
 	app.show_information()
 	check(app.album.visible and app.album.feedback.visible, "blocked flush remains visible with active slot outside filter")
 	app.store.fail_step = ""

@@ -54,7 +54,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
     directory = output / "kat2"
     directory.mkdir()
     reports = []
-    for mode in ("regular", "restart", "large", "empty", "invalid", "adapter"):
+    for mode in ("regular", "restart", "large", "empty", "invalid", "adapter", "information"):
         project = workspace / ("kat2-" + mode) / "game"
         shutil.copytree(root / "game", project, ignore=shutil.ignore_patterns(".godot", "build"))
         saves = workspace / ("kat2-" + ("regular" if mode == "restart" else mode) + "-saves")
@@ -83,7 +83,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
                 category_id="test-only-kat2-extra", categories_path=categories_path))
             python_phase("kat2-adapter-register", lambda: registration(exported, checkout, apply=True))
         else:
-            fixture(project, saves, "regular" if mode == "restart" else mode)
+            fixture(project, saves, "regular" if mode in ("restart", "information") else mode)
         env = environment.copy()
         env.update(P1_TEST_SAVE_ROOT=str(saves), KAT2_OUTPUT=str(directory), KAT2_MODE=mode)
         phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
@@ -96,6 +96,12 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
         report = json.loads((directory / (mode + ".json")).read_text(encoding="utf-8"))
         if report["failures"] or not report["checks"]:
             raise toolchain.PreflightError("KAT2 native assertions failed")
+        if mode == "information":
+            after_quit = {p.name: toolchain.sha256_file(p) for p in (saves / "error-quit").iterdir() if p.is_file()}
+            if not report["quit_slot_hashes"] or after_quit != report["quit_slot_hashes"]:
+                raise toolchain.PreflightError("Catalog information quit changed damaged or foreign slot bytes")
+            report["regular_quit"] = "success; process exit 0 and all slot bytes unchanged"
+            write_json(directory / (mode + ".json"), report)
         reports.append(report)
     # Keep compact native images without repeating the large paper background.
     # Full framebuffer originals remain local; crops preserve exact native pixels.

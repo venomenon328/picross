@@ -61,6 +61,24 @@ Save-/Recovery-, Pilot-, aktuelle Pixel-/PERF-B-, Ressourcen-, Export- und
 PCK-Prüfungen bleiben aktiv. Änderungen am Produktharness wählen im vollständigen
 Diff alle aktuellen Bereiche einschließlich Fachjobs und Preflight aus.
 
+Die gezielte Nacharbeit zu [R1/B-01](https://github.com/venomenon328/picross/pull/81#issuecomment-6124420290)
+unterscheidet eine geöffnete Rätselansicht von Katalog und katalogseitiger Info.
+Nur die Werkbank, ihr Abschluss und ihre Informationsseite erzeugen neue
+Ansichts-Speicherpflichten. Bereits ausstehende Timer und Speicherfehler werden
+unabhängig davon weiterhin geflusht; Schreibfehler blockieren den Übergang.
+SaveStore, Schema, Recovery und Bestätigungen bleiben unverändert.
+
+Der zusätzliche native Modus `information` reproduziert mit echten Dropdown-,
+Button- und Zellereignissen F01-Primary/Backupfehler, `recovered` mit defektem
+beziehungsweise fehlendem Primary sowie `backup_invalid` in getrennten Profilen.
+Er wartet über das Saveintervall, prüft Rückkehr und unveränderte Slotbytes,
+Abbrechen/Bestätigen von Reset und Reparatur sowie tatsächliche ungesicherte
+Werkbankänderungen mit Schreibfehler und Retry. Der letzte Beenden-Klick muss den
+Prozess regulär beenden; der Pythonharness vergleicht danach sämtliche Slotdateien.
+Die native Reproduktion am Ausgangshead und die neuen commitgebundenen Ergebnisse
+stehen im bestehenden Draft-PR. Selbstreview, unabhängiges Nachreview und
+Eigentümerabnahme bleiben getrennt.
+
 Die JSON-Berichte enthalten Checks, Fehler, IDlisten, aktive Karten/Revealtexturen,
 Start-/Seiten-/Kategoriezeiten, Renderer sowie getrennte Fensterclient- und
 Framebuffermaße. Gemessene Zeiten umfassen den jeweiligen Aufbau und native

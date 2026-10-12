@@ -296,7 +296,7 @@ func _activate_session(index: int) -> bool:
 	if index < 0 or index >= sessions.size(): return false
 	_cancel_interaction()
 	if not _flush_current(): return false
-	if session != null: session.view_state = board.capture_view()
+	if session != null and _puzzle_view_active(): session.view_state = board.capture_view()
 	session = sessions[index]
 	board.session = session
 	_layout_book()
@@ -381,8 +381,13 @@ func _notification(what: int) -> void:
 func _on_commit() -> void:
 	_save_current()
 
+func _puzzle_view_active() -> bool:
+	# An internal session on the catalog is not an opened puzzle. Information
+	# inherits its origin even though opening it hides both catalog and work.
+	return work.visible or ending.visible or (information.visible and information_origin != "album")
+
 func _schedule_view_save() -> void:
-	if save_timer != null and session != null and not album.visible:
+	if save_timer != null and session != null and _puzzle_view_active():
 		save_timer.start()
 
 func _undo() -> void:
@@ -419,7 +424,7 @@ func _save_current() -> bool:
 	return save_error.is_empty()
 
 func _flush_current() -> bool:
-	if (save_timer != null and not save_timer.is_stopped()) or (board != null and session != null and (board.capture_view() != session.view_state or not slot_errors[sessions.find(session)].is_empty())):
+	if (save_timer != null and not save_timer.is_stopped()) or (board != null and session != null and ((_puzzle_view_active() and board.capture_view() != session.view_state) or not slot_errors[sessions.find(session)].is_empty())):
 		return _save_current()
 	return true
 
