@@ -1,5 +1,14 @@
 # Projektprofil: picross
 
+**Aktuelle Inhalts-CI (12.10.2026):** Die [CI-Policy](CI_POLICY.md) ersetzt die
+unten historisch beschriebenen RP-Korpus-/Zertifikats-Replays. Reine neue
+Rätseldateien erhalten nur Pfad-/Dateimodusprüfung und `ci-required`, keine
+Tool-/Spiel-/Render-/Exporttests. Sämtliche konkreten Rätselprüfungen erfolgen im
+Produktionsauftrag; keine rätselspezifischen Unit-Tests anlegen. Allgemeine
+Code-Regressionen verwenden einen festen technischen Testbestand.
+
+[KAT-1](CATEGORIES.md) bindet `content/categories.json`, genau eine Kategorie je sichtbarem Rätsel, Registry-/Runtimeformat v2 und kategorisierte ZA-1-v2-Exporte. Bei Kategorien-/Katalog-/Adapterarbeit zusätzlich diesen Vertrag und [ZA-1](ZA1_ADAPTER.md) vollständig lesen. [KAT-1-Prüfzuordnung](KAT1_VERIFICATION.md) ergänzt die bestehenden Prüfwege; Saves, Definitionen und Freigabebindungen bleiben unverändert. KAT-2 (#79) verwendet diesen Vertrag für den regulären Katalogstart. Bei Katalogarbeit zusätzlich [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md) lesen; unabhängiges Review und Eigentümerabnahme KAT2-M01 bleiben vor Merge erforderlich.
+
 ## Entwicklungsbasis und Grenzen
 
 Das reguläre Spiel liegt unter [game/](../game/README.md). Ausgangspunkt der
@@ -8,9 +17,7 @@ Konsolidierung #70 ist `main@0f89f08729539bbb4a02a590cbd18e58fbbda305`, einschli
 Frühere Draft-/Mergegate-Meldungen zu #47/#55/#56/#62/#66 sind historische Lieferstände.
 Die dortigen Abnahmen bleiben an ihre jeweiligen Quellen gebunden.
 
-Der Katalog enthält F01, F02, F04, F06, F08, F09 und das freigegebene
-40×40-Monorätsel `pz-3a744ae1b7cb4d38b0ac29d030ef` (Knoblauch, Runtime-Revision 1).
-Nach der
+Der Katalog enthält genau F01, F02, F04, F06, F08 und F09. Nach der
 [Eigentümerentscheidung #68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419)
 sind reguläre Rätsel höchstens 50×50 groß. F03/F05/F07 bleiben als historische
 Dateien mit bestehenden Speicherplätzen und Nachweisbindungen erhalten. 100×100
@@ -25,9 +32,7 @@ Die Arbeitsablage ist keine Runtime-Registrierung.
 [ZA-1](ZA1_ADAPTER.md) ermöglicht weitere freigegebene Workflow-Inhalte über eine
 zentrale Datenregistry mit expliziten Slots, einschließlich Mono/Farbe und Rechtecken.
 Die Adapterlieferung fügt kein reguläres Rätsel hinzu. Künstliche Fixtures bleiben
-isoliert. Knoblauch r03 ist durch die tatsächliche menschliche Erklärung im
-[Authoringrecord](../content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/record.json)
-endabgenommen und über ZA-1 registriert; Slot `knoblauch_001` bleibt separat.
+isoliert; Knoblauch r03 hat weiterhin keine finale redaktionelle Freigabe.
 
 Aktuelle Bindung: Godot Standard 4.7.2-stable, typisiertes GDScript, native
 Windows-Desktopfassung, Maus als verpflichtender Eingabepfad (D-06), Escape als

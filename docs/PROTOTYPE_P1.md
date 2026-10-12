@@ -1,12 +1,14 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+[KAT-1](CATEGORIES.md) ergänzt Kategorien und Zuordnung als reine Katalogmetadaten in der Registry-/Runtimeprojektion v2. Godot lädt den vollständigen validierten Bestand; Auswahl, Definitionen, Save-Schema 1, Revisionen und Slots bleiben unverändert. Neue Exporte benötigen die explizite Kategorienbindung. Die Oberfläche folgt jetzt KAT-2 (#79), siehe [Prüfzuordnung](KAT2_VERIFICATION.md).
+
 [ZA-1](ZA1_ADAPTER.md) ergänzt eine zentrale Inhaltsregistry und deterministische
 Runtime-Projektion. Loader, Sammlung, SaveStore und Einzelreset nutzen explizite
 IDs/Slots; neue Inhalte benötigen keine Codeänderung. Neutrale Blatttitel und
 proportionale Rechteck-Reveals erhalten die Abschlussgrenze. Historische Einträge,
 Save-Schema 1 und Reservierungen bleiben erhalten. Keine neuen regulären Inhalte.
 
-Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08, F09 und das freigegebene 40×40-Monorätsel `pz-3a744ae1b7cb4d38b0ac29d030ef` (Knoblauch). F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
 
 Bei Zellrendering-/Performancearbeit zusätzlich den verbindlichen
 [PERF-Vertrag](CELL_RENDERING.md) und die [A-Prüfzuordnung](PERF_A_IMPLEMENTATION.md)
@@ -40,7 +42,7 @@ der gewünschte reguläre Arbeitswert, begrenzt durch den tatsächlichen Fit.
 Platzmangel und kleine/kollidierende Hinweise werden transparent behandelt;
 50×50 erhält keinen versteckten Pan-Ausweg oder Komfortzertifikat.
 
-Sieben Inhalte werden angeboten; die neun historischen IDs und Schema 1/Appidentität bleiben erhalten. Vollständige Validierung
+Sechs Inhalte werden angeboten; neun bekannte IDs und Schema 1/Appidentität bleiben erhalten. Vollständige Validierung
 geht der Normalisierung alter Hand-/Pan-/Zoomwerte voraus. Gültige gewünschte
 Arbeitsstufe und aktuelle Fitgröße sind getrennt; Modus wird nicht gespeichert.
 Studienkatalog und -speicher werden beim regulären Start nicht verwendet.
@@ -140,7 +142,7 @@ Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
 
 ### 3.1 Enthalten
 
-- Kleine Album-Testauswahl mit neutraler Kennung, Größe, Rätselart und Bearbeitungsstand. Alle Testfälle direkt zugänglich; keine Freischaltlogik.
+- Datenbasierter Katalog mit neutraler Kennung, Größe, Rätselart, Kategorie und Bearbeitungsstand. Alle sichtbaren Registryeinträge direkt zugänglich; höchstens 24 Karten pro Seite, keine Freischaltlogik.
 - Zellbearbeitung, Farbwahl, Achsenbindung, elastische Vorschau, kontrollierte Rücknahmen sowie Undo/Redo.
 - Arbeitsansicht mit unnummerierten, farbigen einzeiligen Hinweisen, atomaren Teilfolgen in einem gemeinsamen Slotraster und eigener Leseposition je Zeile/Spalte, passiver eigener Miniatur, fitbegrenztem Rasterzoom und getrennt skalierbarer Oberfläche.
 - Mit #11 ein fortsetzbarer lokaler Arbeitsstand je Testfall einschließlich Ansicht und Undo/Redo.

@@ -28,9 +28,8 @@ import p1_current_visual
 import vs2_delivery
 import perf_b_resources
 import za1_product
+import kat2_product
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
-from check_f01 import DATA, verify
-from check_f02 import verify as verify_f02
 
 EXPECTED_PROJECT_NAME = "picross · P1"
 RENDER_STAGES = ("layout", "views", "cells-f1", "cells-f2", "gestures", "hints", "axis", "h1")
@@ -366,15 +365,8 @@ def main(argv: list[str] | None = None) -> int:
         evidence.report.update(source_identity(root))
         evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "game/project.godot")
-        from tools.puzzle_production.content_registry import check_checkout
-        registry = python_phase("content-registry-projection", lambda: check_checkout(root))
+        registry = json.loads((root / "content/registry.json").read_text(encoding="utf-8"))
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
-        evidence.report["proof_steps"] = python_phase("f01-certificate", lambda: verify(
-            json.loads((DATA / "f01.json").read_text(encoding="utf-8")),
-            json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8"))))
-        evidence.report["color_proof_steps"] = python_phase("f02-certificate", lambda: verify_f02(
-            json.loads((DATA / "f02.json").read_text(encoding="utf-8")),
-            json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8"))))
         editor = toolchain.EDITORS[host]
 
         def assets():
@@ -390,7 +382,9 @@ def main(argv: list[str] | None = None) -> int:
             toolchain.extract_windows_templates(args.cache_dir.resolve() / toolchain.TEMPLATES.name,
                                                 toolchain.template_directory(workspace, host))
             project = workspace / "p1"
-            shutil.copytree(root / "game", project, ignore=shutil.ignore_patterns(".godot", "build"))
+            from product_fixtures import copy_regression_game, restore_player_catalog
+            copy_regression_game(root, project)
+            evidence.report["regression_catalog"] = "fixed test catalog; independent of authoring inventory"
             evidence.report["perf_b_resources"] = perf_b_resources.verify_runtime()
             environment = toolchain.isolated_environment(workspace, host)
 
@@ -434,6 +428,7 @@ def main(argv: list[str] | None = None) -> int:
             phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
             evidence.scope_done("core")
             vs2_future = None
+            vs2_result = None
             if args.visual:
                 # Independent current coverage overlaps the long process/pilot
                 # checks. Its project, user profile, slot root, environment and
@@ -476,6 +471,12 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_start("integration")
                 evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
                 selected += [output / "integration/summary.json"]
+                # Native popup/dialog tests must own the desktop: a concurrent
+                # capture window can close their popup on focus loss on Windows.
+                if args.visual:
+                    vs2_result = python_phase("current-vs2-complete", vs2_future.result)
+                evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
+                selected += kat2_files
                 evidence.scope_done("integration")
             if args.pilots:
                 evidence.scope_start("pilots")
@@ -490,7 +491,9 @@ def main(argv: list[str] | None = None) -> int:
                 # profile/project/environment and no concurrent evidence writes.
                 if args.pilots:
                     selected += run_pilot_visual(output, workspace, project, engine, environment, phase, host)
-                evidence.report["visual"], visual_files = python_phase("current-vs2-complete", vs2_future.result)
+                if vs2_result is None:
+                    vs2_result = python_phase("current-vs2-complete", vs2_future.result)
+                evidence.report["visual"], visual_files = vs2_result
                 evidence.report["visual"]["pilot_native"] = "success" if args.pilots else "not selected; --no-pilots"
                 selected += visual_files
                 evidence.scope_done("visual")
@@ -510,6 +513,8 @@ def main(argv: list[str] | None = None) -> int:
                 selected += [b_output / "probe.json", *b_output.glob("runtime-*.png")]
                 evidence.scope_done("perf_b")
             evidence.scope_start("export")
+            if restore_player_catalog(root, project):
+                phase("player-content-import", base + ["--import"])
             build = project / "build/windows"
             build.mkdir(parents=True)
             phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
@@ -521,7 +526,10 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "za1")])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2")])
+            required_kat2 = {str(p.relative_to(output)) for p in selected if p.parent.name == "kat2"}
+            if not required_kat2 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
+                raise toolchain.PreflightError("Required KAT-2 evidence missing from bounded delivery")
             required_za1 = {str(p.relative_to(output)) for p in selected if p.parent.name == "za1"}
             if not required_za1 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
                 raise toolchain.PreflightError("Required ZA-1 native evidence missing from bounded delivery")

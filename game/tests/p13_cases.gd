@@ -5,7 +5,7 @@ const SaveStore = preload("res://model/save_store.gd")
 const Main = preload("res://ui/main.gd")
 
 static func run(t: SceneTree) -> void:
-	for id: String in Definition.catalog_ids():
+	for id: String in ["f01", "f02", "f04", "f06", "f08", "f09"]:
 		var definition: Dictionary = Definition.load_fixture(id)
 		var session: Session = Session.new(definition)
 		var store: SaveStore = SaveStore.new(SaveStore.test_root_override.path_join(id))
@@ -141,7 +141,7 @@ static func run(t: SceneTree) -> void:
 		t.check(store.reset_slot(id).is_empty() and store.load_slot(definition).status == "fresh", "P1.3 %s selected reset" % id)
 		t.check(FileAccess.get_file_as_string(neighbour) == "untouched", "P1.3 %s unrelated bytes untouched" % id)
 	var shared: SaveStore = SaveStore.new(SaveStore.test_root_override.path_join("shared"))
-	for id: String in Definition.catalog_ids():
+	for id: String in ["f01", "f02", "f04", "f06", "f08", "f09"]:
 		var item: Session = Session.new(Definition.load_fixture(id))
 		t.check(shared.write_slot(item, item.view_state).is_empty(), "P1.3 shared %s saved" % id)
 	var sentinel: String = SaveStore.test_root_override.path_join("outside-p1.bin")
@@ -201,7 +201,7 @@ static func run(t: SceneTree) -> void:
 	var recovery_ui: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(recovery_ui)
 	await t.process_frame
-	t.check(recovery_ui.slot_status[0] == "backup_invalid" and recovery_ui.status_label.visible and recovery_ui.repair_button.visible, "P1.3 broken backup visibly reported at startup")
+	t.check(recovery_ui.slot_status[0] == "backup_invalid" and recovery_ui.album.notes[0].text.contains("Backup beschädigt") and recovery_ui.album.repair_buttons.has("F-01"), "P1.3 broken backup visibly reported at startup")
 	recovery_ui._ask_repair()
 	recovery_ui.repair_dialog.confirmed.emit()
 	t.check(recovery_ui.store.load_slot(f01).status == "loaded" and recovery_ui.status_label.text.is_empty(), "P1.3 confirmed backup renewal restores saving")
@@ -213,7 +213,7 @@ static func run(t: SceneTree) -> void:
 	var backup_ui: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(backup_ui)
 	await t.process_frame
-	t.check(backup_ui.slot_status[0] == "recovered" and backup_ui.status_label.visible and backup_ui.repair_button.visible, "P1.3 backup recovery visibly reported at startup")
+	t.check(backup_ui.slot_status[0] == "recovered" and backup_ui.album.notes[0].text.contains("Backup geladen") and backup_ui.album.repair_buttons.has("F-01"), "P1.3 backup recovery visibly reported at startup")
 	backup_ui._ask_repair()
 	backup_ui.repair_dialog.confirmed.emit()
 	t.check(backup_ui.store.load_slot(f01).status == "loaded" and backup_ui.status_label.text.is_empty(), "P1.3 confirmed recovery resumes saving")
@@ -259,7 +259,7 @@ static func run(t: SceneTree) -> void:
 	var missing_ui: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(missing_ui)
 	await t.process_frame
-	t.check(missing_ui.slot_status[0] == "recovered" and missing_ui.repair_button.visible and not FileAccess.file_exists(missing_ui.store.path_for("f01")), "N-02 missing primary loads backup visibly after restart")
+	t.check(missing_ui.slot_status[0] == "recovered" and missing_ui.album.repair_buttons.has("F-01") and not FileAccess.file_exists(missing_ui.store.path_for("f01")), "N-02 missing primary loads backup visibly after restart")
 	missing_ui.open_puzzle()
 	t.check(missing_ui.work_repair_button.visible, "N-02 recovery takeover remains available from work view")
 	missing_ui.board.zoom(1, missing_ui.board.view.viewport.get_center())

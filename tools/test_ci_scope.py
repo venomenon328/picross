@@ -6,10 +6,56 @@ import subprocess
 import tempfile
 import unittest
 
-from ci_scope import FLAGS, JOBS, apply_event_policy, classify, evaluate, make_plan
+from ci_scope import FLAGS, JOBS, apply_event_policy, classify, content_path, evaluate, make_plan
 
 
 class SelectionTests(unittest.TestCase):
+    def test_puzzle_deliveries_select_no_test_suites_at_any_catalog_size(self):
+        paths = ["content/registry.json", "game/data/registry.json", "content/authoring/index.json"]
+        for i in range(500):
+            paths += [f"content/authoring/pz-{i}/r01/package.zip",
+                      f"content/packages/pz-{i}/r01/input/import/area-proof.json",
+                      f"game/data/content/puzzle_{i}.json", f"game/art/content/puzzle_{i}.png"]
+        plan = classify(paths)
+        self.assertTrue(plan["content_only"])
+        self.assertFalse(any(plan["selected"][k] for k in FLAGS))
+        self.assertTrue(apply_event_policy(plan, "push")["content_only"])
+
+    def test_content_shortcut_cannot_hide_code_assets_or_explicit_widening(self):
+        for path in ["game/data/content/loader.gd", "game/art/content/importer.py",
+                     "content/authoring/pz-a/r01/run.py", "content/packages/pz-a/r01/plugin.gd",
+                     "content/.registration-pending.json", "game/art/book/paper.png",
+                     ".github/workflows/setup.yml", "unknown.json"]:
+            with self.subTest(path=path):
+                self.assertFalse(content_path(path))
+                plan = classify(["game/data/content/a.json", path])
+                self.assertFalse(plan["content_only"])
+                self.assertTrue(any(plan["selected"][k] for k in FLAGS))
+        self.assertFalse(classify(["content/registry.json", "docs/CI_POLICY.md"])["content_only"])
+        self.assertFalse(classify(["content/registry.json"], "all")["content_only"])
+
+    def test_content_diff_uses_no_blob_reads_and_rejects_executable_or_symlink(self):
+        from unittest.mock import patch
+        calls = []
+        def fake_git(*args):
+            calls.append(args)
+            if "--name-only" in args: return b"content/authoring/pz-a/r01/package.zip\0"
+            if "--raw" in args: return (f":000000 {mode} {'0'*40} {'a'*40} A\0content/authoring/pz-a/r01/package.zip\0").encode()
+            if args[0] == "rev-parse": return b"c"*40
+            raise AssertionError("Unexpected corpus/blob access: " + repr(args))
+        mode = "100644"
+        with patch("ci_scope.git", side_effect=fake_git):
+            self.assertTrue(make_plan("a"*40, "b"*40, "auto")["content_only"])
+            for mode in ["100755", "120000", "160000"]:
+                with self.subTest(mode=mode), self.assertRaises(ValueError):
+                    make_plan("a"*40, "b"*40, "auto")
+
+    def test_catalog_native_route_and_harness_keep_required_checks(self):
+        for path in ("game/ui/catalog.gd", "game/tests/kat2_probe.gd"):
+            selected = classify([path])["selected"]
+            self.assertTrue(selected["product"] and selected["integration"] and selected["visual"] and selected["perf_b"])
+        self.assertTrue(all(classify(["tools/kat2_product.py"])["selected"].values()))
+
     def test_save_recovery_and_gameplay_keep_integration_without_manufacturer(self):
         for path in ("game/model/save_store.gd", "game/model/gesture.gd", "game/ui/main.gd"):
             value = classify([path])["selected"]
@@ -113,6 +159,15 @@ class SelectionTests(unittest.TestCase):
 
 
 class RequiredGateTests(unittest.TestCase):
+    def test_content_result_still_requires_successful_scope_job(self):
+        plan = classify(["content/registry.json"])
+        results = {key: {"result": "success" if key == "docs" else "skipped"} for key in JOBS}
+        self.assertTrue(all(row["accepted"] for row in evaluate(plan, results)))
+        results["docs"]["result"] = "failure"
+        self.assertFalse(all(row["accepted"] for row in evaluate(plan, results)))
+        plan["selected"]["production"] = True
+        with self.assertRaises(ValueError): evaluate(plan, results)
+
     def test_success_and_explicit_not_applicable_are_accepted(self):
         for paths in [["README.md"], ["game/ui/board.gd"], ["new_unknown.py"]]:
             plan = classify(paths)

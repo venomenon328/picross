@@ -1,5 +1,7 @@
 # Arbeitsablage für die Rätselproduktion
 
+[KAT-1](../../docs/CATEGORIES.md): Zu Beginn Kategorienquelle und vorhandenen Fundus lesen. Neue äußere Records führen `category_id`, sobald die Motivzuordnung feststeht; ein offenes Briefing darf `null` führen. Alte Records ohne Kategorie bleiben lesbar. Vor kategorisiertem ZA-1-v2-Export ist eine gültige ID Pflicht. Bei versiegelten Paketen nur den äußeren Record ergänzen: Paket, Handoff, Inventar, Freigaben, Phasenstatus und bestehende Integrationsbelege bleiben erhalten.
+
 Einstieg: [Produktionsindex](index.json), verbindliche Regeln in
 [PUZZLE_AUTHORING](../../docs/ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 6 und 8.
 

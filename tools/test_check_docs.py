@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 import subprocess
-import hashlib
-import json
 import sys
 import tempfile
 import unittest
@@ -30,51 +28,19 @@ class DocumentationChecks(unittest.TestCase):
     def test_valid_tree(self) -> None:
         self.assertEqual([], check_tree(self.root))
 
+    def test_production_corpus_is_not_scanned_by_document_ci(self) -> None:
+        for folder in ("content/authoring", "content/packages", "game/data/content", "game/art/content"):
+            self.write(folder + "/fixture/evidence.md", "[package-local](not-in-checkout.md)\r\n")
+        self.assertEqual([], check_tree(self.root))
+        self.write("docs/current.md", "[broken](missing.md)\n")
+        self.assertTrue(any("missing link target" in e for e in check_tree(self.root)))
+
     def test_local_link_and_fragment(self) -> None:
         self.write("README.md", "[Rules](docs/dev-rules/WORKFLOW.md#deliberately-unchecked)\n")
         self.assertEqual([], check_tree(self.root))
 
     def test_missing_target(self) -> None:
         self.write("README.md", "[Missing](missing.md)\n")
-        self.assertTrue(any("missing link target" in e for e in check_tree(self.root)))
-
-    def bind_export_input(self, text: str, relative: str = "input/report.md") -> Path:
-        package = "content/packages/pz-example/r03/"
-        self.write(package + relative, text)
-        self.write(package + "manifest.json", json.dumps({
-            "format": "picross-target-export-v1", "definition_id": "pz-example",
-            "package_revision": "r03",
-            "files": {relative: hashlib.sha256(text.encode("utf-8")).hexdigest()},
-        }) + "\n")
-        return self.root / (package + relative)
-
-    def test_sealed_export_original_retains_historical_link_context(self) -> None:
-        self.bind_export_input("[Historical comparison](views/omitted.png)\n")
-        self.assertEqual([], check_tree(self.root))
-        self.write("docs/current.md", "[Current comparison](missing.png)\n")
-        self.assertTrue(any("docs/current.md: missing link target" in e for e in check_tree(self.root)))
-
-    def test_changed_or_unbound_export_original_keeps_link_check(self) -> None:
-        path = self.bind_export_input("[Original](omitted.png)\n")
-        path.write_bytes(b"[Changed](also-omitted.png)\n")
-        self.assertTrue(any("missing link target" in e for e in check_tree(self.root)))
-        for manifest_text in ("{}\n", "not JSON\n", json.dumps({
-            "format": "picross-target-export-v1", "definition_id": "pz-other",
-            "package_revision": "r03", "files": {"input/report.md": hashlib.sha256(path.read_bytes()).hexdigest()},
-        }) + "\n"):
-            with self.subTest(manifest=manifest_text):
-                self.write("content/packages/pz-example/r03/manifest.json", manifest_text)
-                self.assertTrue(any("missing link target" in e for e in check_tree(self.root)))
-
-    def test_sealed_export_text_conventions_still_apply(self) -> None:
-        self.bind_export_input("[Historical](omitted.png) \r\nNo final newline")
-        errors = check_tree(self.root)
-        self.assertTrue(any("LF line endings" in e for e in errors))
-        self.assertTrue(any("trailing whitespace" in e for e in errors))
-        self.assertTrue(any("final newline" in e for e in errors))
-
-    def test_export_manifest_does_not_exempt_runtime_documentation(self) -> None:
-        self.bind_export_input("[Missing](missing.png)\n", "runtime/guide.md")
         self.assertTrue(any("missing link target" in e for e in check_tree(self.root)))
 
     def test_code_examples_do_not_create_links(self) -> None:

@@ -1,5 +1,10 @@
 # F-01: Herkunft und Deduktionsnachweis
 
+**Historischer Rätselnachweis:** Die rätselspezifischen Unit-Tests wurden am
+12.10.2026 entfernt. Das Zertifikat bleibt erhalten; keine Wiederholung in CI.
+Aktuelle [Prüfzuordnung](../docs/CI_POLICY.md). Die folgenden alten Testbefehle
+gehören zum damaligen Checkout.
+
 **Prüferdokument mit Motivspoiler.** In der Spieloberfläche vor Abschluss nicht verlinkt.
 
 F-01, ursprünglich Revision 1, ist ein eigens für #8 am 22.09.2026 aus Rasterkoordinaten

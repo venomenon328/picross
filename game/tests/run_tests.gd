@@ -33,6 +33,9 @@ func run() -> void:
 	SaveStore.test_root_override = temporary.path_join("picross-p1-tests-%d" % Time.get_ticks_usec())
 	root.size = Vector2i(1280, 720)
 	fixture = Definition.load_f01()
+	print("PHASE kat1")
+	preload("res://tests/kat1_cases.gd").run(self)
+	preload("res://tests/kat2_cases.gd").run(self)
 	print("PHASE test_definition()")
 	test_definition()
 	print("PHASE test_gesture()")
@@ -243,13 +246,10 @@ func test_scene() -> void:
 	await process_frame
 	await process_frame
 	check(app.album.visible and not app.work.visible and app.reveal_view.payload.is_empty(), "scene starts in neutral album")
-	var expected_catalog: Array[String] = []
-	for key: String in Definition.catalog_ids():
-		expected_catalog.append(str(Definition.load_fixture(key).id))
-	check(expected_catalog.slice(0,6) == ["F-01", "F-02", "F-04", "F-06", "F-08", "F-09"], "historical six-sheet prefix remains unchanged")
-	check(app.sessions.size() == expected_catalog.size() and app.choices.size() == expected_catalog.size(), "album offers every visible registered sheet")
-	var catalog_heading: Label = app.album_content.get_child(0) as Label
-	check(catalog_heading != null and catalog_heading.text == "%d Blätter zum Entdecken" % expected_catalog.size(), "album heading reflects the current catalog")
+	var expected_catalog: Array[String] = ["F-01", "F-02", "F-04", "F-06", "F-08", "F-09"]
+	check(app.sessions.size() == expected_catalog.size() and app.choices.size() == expected_catalog.size(), "album offers exactly six approved sheets")
+	var catalog_heading: Label = app.album.summary
+	check(catalog_heading != null and catalog_heading.text == "0 von 6 gelöst", "album heading reflects the current catalog")
 	for i: int in range(mini(app.sessions.size(), expected_catalog.size())):
 		var definition: Dictionary = app.sessions[i].definition
 		check(str(definition.id) == expected_catalog[i], "album includes correct sheet in position " + str(i))
@@ -308,8 +308,8 @@ func test_scene() -> void:
 	check(not app.reveal_view.payload.is_empty(), "real completion artwork")
 	app.show_album()
 	check(app.title.get_theme_font("font").get_font_name() == "Fraunces", "V3 completed album does not inherit work font")
-	check(app.open_button.text.contains(fixture.reveal.name), "completed album entry")
-	check(app.album_picture.visible and not app.album_mini.visible and app.album_picture.payload == fixture.reveal, "completed album has colored earned image")
+	check(app.choices[0].text.contains(fixture.reveal.name), "completed album entry")
+	check(app.album_reveals[0].visible and not app.album_previews[0].visible and app.album_reveals[0].payload == fixture.reveal, "completed album has colored earned image")
 	if app.sessions.size() >= 3:
 		check(app.choices[2].text == app.sessions[2].album_title(), "album refresh does not restore obsolete F03 UI-test suffix on F04")
 	app.queue_free()

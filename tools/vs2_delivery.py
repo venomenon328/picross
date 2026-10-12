@@ -213,18 +213,10 @@ def capture(root, project, workspace, output, engine, render_command, environmen
     (renders/"vs2-matrix.json").write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     return evidence
 
-def registered_regular_ids() -> list[str]:
-    registry = json.loads((Path(__file__).resolve().parents[1] / "content/registry.json").read_bytes())
-    return [entry["id"] for entry in registry["entries"] if entry["visible"]]
-
-
 def verify_records(report: dict) -> None:
-    regular_ids = registered_regular_ids()
-    if regular_ids[:6] != ["F-01", "F-02", "F-04", "F-06", "F-08", "F-09"] or len(set(regular_ids)) != len(regular_ids):
-        raise toolchain.PreflightError("VS2 historical catalog prefix or unique IDs differ")
-    expected = {(corpus,key,w,ui,mode) for corpus,ids in ((False,regular_ids),(True,[f"VS{i:02d}" for i in range(1,11)])) for key in ids for w in (1280,1600,1920,2560) for ui in (1.0,1.25) for mode in ("G","V")}
-    actual = {(r["corpus"],r["id"],r["client"][0],r["ui_scale"],r["mode"]) for r in report["records"]}
-    if report["failures"] or actual != expected or len(report["records"]) != len(expected):
+    expected = {(corpus,index,w,ui,mode) for corpus,indices in ((False,(0,1,3,5,7,8)),(True,range(10))) for index in indices for w in (1280,1600,1920,2560) for ui in (1.0,1.25) for mode in ("G","V")}
+    actual = {(r["corpus"], int(r["id"].replace("F-","").replace("VS",""))-1,r["client"][0],r["ui_scale"],r["mode"]) for r in report["records"]}
+    if report["failures"] or actual != expected or len(report["records"]) != 256:
         raise toolchain.PreflightError("Incomplete/failed VS2 regular matrix")
     for record in report["records"]:
         if record["layout_valid"] and not record["grid_fit"]:

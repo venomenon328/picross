@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 11.10.2026 · Version 1.3 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
+Stand: 12.10.2026 · Version 1.4 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
 
 ## Geltung und Ablösung
 
@@ -25,6 +25,30 @@ Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 übersprungene erforderliche Jobs sind kein Pass. Nichtzutreffen wird mit
 Änderungsauswahl und Grund ausgewiesen. Es wurde kein Branchschutz verändert.
 
+## Einmalige Inhaltsprüfung und feste Regressionen
+
+Eigentümerentscheidung vom 12.10.2026: Rätsel werden bei ihrer Erstellung und
+gezielten Integration vollständig geprüft; diese Prüfungen werden **kein Teil
+der CI**. Nachweise bleiben dateigebunden im Produktionspaket. Änderungen an
+Raster/Quelle verlangen die im [Regelwerk](ai-workflows/PUZZLE_AUTHORING.md)
+bestimmten Neuprüfungen außerhalb der CI. Das gilt auch bei späteren Codeänderungen:
+keine routinemäßige Neuzertifizierung vorhandener Rätsel.
+
+Keine rätselspezifischen Unit-Tests oder Testgenerierung aus dem Produktionsfundus.
+F01/F02-Zertifikatstests, reale RP-/VS-Korpus-Replays, der Knoblauch-Referenztest
+und deren CI-Jobs sind entfallen. Historische Daten/Proofs bleiben erhalten.
+Allgemeine Solver-, Verifier-, Import-, Reparatur- und Adaptertests verwenden feste
+synthetische Eingänge; Registrierungstests kopieren keine produktiven Pakete.
+Sämtliche nativen Funktions-/Renderläufe verwenden einen festen temporären
+Katalog; zusätzliche produktive Runtime-Inhalte werden nicht hineinkopiert.
+Erst für den regulären Spielerexport werden die tatsächliche Registry und ihre
+Runtimeassets übernommen, ohne Rätselzertifizierung. Paketgröße/Build-I/O dieses
+Code-Prüfwegs können mit dem Spiel wachsen; die Testmatrix wächst nicht.
+Save- und PCK-Funktionstests nutzen feste technische Beispiele statt einer Schleife
+über jeden neuen Katalogeintrag. Bestehende Motive als feste Eingabe allgemeiner
+Spiel-/Darstellungstests sind keine erneute Rätselzertifizierung und werden bei
+Inhaltserweiterungen nicht ergänzt.
+
 ## Auswahl nach vollständigem Änderungsumfang
 
 [ci_scope.py](../tools/ci_scope.py) vergleicht die exakten Base-/Head-Dateibäume.
@@ -36,12 +60,36 @@ Auswahlbericht und Logs nennen Head, Basis, Checkout, Run und ausgewählte Pfade
 
 | Änderung | Automatischer Pflichtumfang im PR |
 | --- | --- |
+| Nur neue/geänderte Rätselpakete, Registry/Kategorien und einzelne Runtime-Inhalte | `docs`: Pfad-/Dateimodusprüfung; `ci-required`: Ergebnisgate. Keine Tests, Rekonstruktion, Bilder oder Exporte. |
 | Reine normative Dokumentation/Anleitung | Schnelle Tooltests, Dokumentvalidator, vollständiger Diffcheck |
 | Spielzustand, Eingabe, Save, History, Navigation | Aktuelle Kernregression, echte Prozess-Roundtrips, 500er-Route, aktuelle Pixelprüfungen und Spielerexport |
 | Reine Stiftzeichnung/Capture oder aktive Buchassets | Kernregression, aktuelle Pixelprüfungen, PERF-B und Spielerexport |
 | Reguläre Atlasanzeige/Cache/aktive Zelltexturen | Kernregression, aktuelle Pixelprüfungen, PERF-B und Export |
-| Rätseldaten, Pilotassets/-probes, Produktion, Proofs und Quellenkorpora | Fachtests und vollständige relevante Replays, vier aktuelle Produktionspiloten, aktuelle Pixelprüfungen und Spielerexport |
+| Produktionswerkzeug-/Adaptercode, technische Fixtures oder Pilotprobes | Allgemeine Fachtests mit festen synthetischen Eingängen; ausgewählte allgemeine Spiel-/Pixel-/Exportregressionen. Keine echten Rätselreplays. |
 | CI/Harness/Toolchain oder nicht zugeordneter Codepfad | Alle aktuellen Bereiche einschließlich Preflight |
+
+
+**Schlanker Inhaltspfad:** Ausschließlich `content/categories.json`,
+`content/registry.json`, `content/authoring/index.json`/`README.md`,
+`content/authoring/<pz-ID>/<Revision>/…`, `content/packages/<pz-ID>/<Revision>/…`,
+`game/data/registry.json`, `game/data/content/<stem>.json` und
+`game/art/content/<stem>.png|svg|txt` gemäß der engen Positivliste in `ci_scope.py`.
+Pakete erlauben ausschließlich bekannte Dokument-/Bild-/ZIP-Endungen; keine
+Code-, Workflow-, Importkonfigurations- oder gemeinsamen UI-Assetpfade.
+Umbenennung/Löschung zählt auf beiden Seiten. Geänderte Symlinks, ausführbare
+Dateien und Submodule werden im Inhaltspfad abgewiesen.
+
+Dieser Pfad gilt für PR und Main-Push. Sparse-/Partial-Checkout lädt nur den
+Auswahlprüfer; der Git-Treevergleich liest keine Paket-, Bild- oder Proofblobs.
+`docs` startet weder Tooltests noch Dokumentbaumscan. Das abschließende Gate
+verlangt trotzdem Erfolg und korrekte Nichtauswahl aller übrigen Jobs.
+Der CI-Bericht behauptet ausdrücklich keine Inhaltsabnahme. Kein Solver,
+Proof-Replay, Hashscan des Fundus, Godot, Screenshot, PCK-Export oder Artefaktpaket
+pro Rätsel. Die Job-/Testanzahl ist unabhängig vom Fundus; Git-Metadaten und der
+Änderungsbericht hängen weiterhin von der Anzahl geänderter Dateien ab.
+Code/Dokumentation im selben PR oder ausdrücklich erweiterter Scope verlässt
+den reinen Inhaltspfad. Allgemeine Dokumentprüfung überspringt die vier
+rätselspezifischen Ablagebäume; gebundene Paketdokumente prüft die Produktion.
 
 Dateien unter `docs/` sind nicht automatisch reine Dokumentation: Buchbilder,
 Fontinputs und Manifeste gehören zum Produkt. Ebenso können Markdowndateien wie
@@ -65,8 +113,8 @@ der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erla
 ## Aktuelle Produktregression
 
 Der [Product-Harness](../tools/p1_product.py) prüft die unveränderten aktiven
-Ressourcenbindungen und F-01/F-02-Nachweise, importiert die temporäre reguläre
-Spielkopie, führt die vollständige aktuelle Godot-Kernsuite einschließlich
+Ressourcenbindungen, importiert die temporäre reguläre
+Spielkopie mit festem temporärem Testkatalog, führt die aktuelle Godot-Kernsuite einschließlich
 Save/Recovery und ZS2-Verhalten einmal aus und prüft echten Mehrprozess-Save,
 kontrollierten Start sowie den regulären Windows-Export. Der kurze absichtliche
 Fehler durchläuft dieselbe `check()`-/Ergebnis-/Exit-23-Strecke wie die Suite.
@@ -96,8 +144,8 @@ geprüft. Aktuelle goldene Varianten-/Zeit-/Region-/Fugenfälle laufen in der Ke
 Historische Laufzeit-/Quellhashvergleiche sind keine Ersatzpflicht mehr.
 
 Ein Lauf mit ausgeschaltetem Bereich wird nicht als dessen erfolgreicher Nachweis
-ausgegeben. Vollständige Produktionsrekonstruktionen gehören in den Fachlauf,
-nicht zusätzlich in den Runtime-Harness.
+ausgegeben. Vollständige Produktionsrekonstruktionen echter Inhalte gehören ausschließlich
+in deren Produktionsauftrag, nicht in den Fachlauf oder Runtime-Harness.
 
 F04 prüft nach Abschluss außerdem die bekannten unveränderten F01/F02/F06-Zellstände
 (400/1600/2500 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
@@ -114,15 +162,28 @@ mit 399 unbekannten Zellen erkennen und genau an der Isolationsassertion
 mit Exit 4 scheitern. Erfolg, Recovery, Parserfehler oder andere Fehler werden
 nicht als erfolgreiche Gegenprobe akzeptiert. Kein weiteres RP3-Durchspiel.
 
+## KAT-2 im Integrationspfad
+
+`--integration` ergänzt die nativen Katalogprüfungen aus
+[tools/kat2_product.py](../tools/kat2_product.py): reguläre Hauptszene mit echten
+Pointerereignissen, gesonderter Prozessneustart, gültiger Leerbestand,
+ungültige Registry, isolierter KAT-1-Adapterzuwachs und synthetische 300 Einträge.
+Jede Instanz nutzt ein temporäres Projekt und Saveprofil. Kataloglast ist keine
+300-fache Produktions-/Solverprüfung. Der Produktharness bindet alle Berichte
+und die kleinen nativen Originalausschnitte an Head/Basis/Checkout; vollständige
+Framekontexte bleiben lokal. Pflichtausschnitte dürfen nicht still aus der
+begrenzten Lieferung fallen. Die bisherigen 30-/75-MB-Grenzen und Laufzeitlimits
+bleiben unverändert. [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
+
 ## Native Renderabdeckung und Speicherung
 
 ZA-1 ergänzt im ausgewählten Pilotenpfad vier temporär registrierte künstliche
 Authoring-Pakete und zehn echte Prozesse für Mono/Farbe, Rechtecke, Neustarts und
 Slotisolation. Native Pixelprüfungen liefern kleine Originalausschnitte samt
 Koordinaten/Reports; vollständige Kontexte bleiben lokal. Der echte Windows-PCK
-wird für regulären und isolierten Katalog geprüft. Produktionsreplay liefert
-nur den kompakten Bericht. `content/` wählt Produktion/Produkt/Piloten/Visual/PERF-B;
-der neue Produktharness wählt zusätzlich Integration und Preflight. Keine
+wird für regulären und isolierten Katalog geprüft. Der feste synthetische Adapterdurchstich liefert
+nur den kompakten Bericht. Reine Inhalte wählen ausschließlich den schlanken
+Inhaltspfad; Änderungen am Produktharness wählen Integration und Preflight. Keine
 Budgetausnahme. [Prüfzuordnung](ZA1_VERIFICATION.md).
 
 Im Standardpfad gilt `--ci-compact` für den allgemeinen Capture-Harness:
@@ -181,10 +242,9 @@ Warteschlangenzeit und Runnerzeit werden getrennt betrachtet.
 Godot-Editor und Exportvorlagen bleiben offiziell und exakt hashgebunden. Ein
 nach OS/Version/Archivhashes benannter Cache speichert nur Downloadarchive;
 jedes wiederhergestellte Archiv wird erneut geprüft. Keine Prüfergebnisse cachen.
-Die Fachjobs laden zusätzlich ausschließlich den benötigten RP5-Produzentencommit
-`55f9e0f143bc79a4d5ff81d83d1c901b90f1797c`. Die aktuelle Windows-RP4-Regression
-verlangt weiterhin offizielle isolierte Runtime/Wheel-/Commitbindung, aber keine
-erneute Reproduktion des bekannten Fehlers eines alten Commits.
+Der Fachjob führt nur allgemeine Tests, sechs synthetische Leistungsreferenzen
+und den festen künstlichen Adapterdurchstich aus. Keine historischen
+Produzentencommits oder RP4-/RP5-Korpus-/Windows-Replays mehr in CI.
 
 ## Archiv und gebundene Referenzen
 
@@ -207,8 +267,8 @@ Die neue Sicherung macht den Ablauf des ursprünglichen Actions-Artefakts am
 23.10.2026 für diese benötigten Bytes unschädlich. Sie ist kein neues Renderbild.
 
 VS2, Sidebar und PERF-A/B sind über PR #62/#66 integriert. Die alte offene
-Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Die sieben Katalogrätsel und
-zehn technischen VS-Fälle bleiben geprüft. Weitere Quellenentscheidungen und
+Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Ihre ursprünglichen Rätselzertifikate bleiben gebunden erhalten; CI prüft
+sie nicht erneut. Weitere Quellenentscheidungen und
 Dateibindungen stehen im [Bestandsinventar](DEVELOPMENT_ARCHIVE.md).
 
 ## Verifikation dieses Pakets

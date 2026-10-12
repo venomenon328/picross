@@ -1,12 +1,16 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+Die Entwicklungsfassung enthält die [Kategorienprojektion nach KAT-1](../docs/CATEGORIES.md). Das Spiel startet im Rätselkatalog mit „Alle Rätsel“. Die scrollbare Kategorienauswahl enthält auch leere Kategorien; je Seite erscheinen höchstens 24 Karten. Eine Karte öffnet oder setzt genau ihr Blatt fort. Zurückkehren erhält Kategorie, Seite und Scrollposition; ein Neustart beginnt wieder bei „Alle Rätsel“, Seite 1. Einstellungen/Info und Beenden sind direkt erreichbar.
+
+Karten zeigen „Neu“, „Begonnen“ (auch mit ausschließlich Redohistorie) oder „Gelöst“. Die Vorschau zeigt nur eigene Füllungen, ohne Korrekturen; Name und Motivbild erscheinen erst nach gültigem Abschluss. Ein leerer automatisch angelegter Save bleibt „Neu“. Reset und Backupaktionen gehören zur jeweiligen Karte und verlangen weiterhin Bestätigung. Ein gültiger leerer Bestand und ein Katalogladefehler haben unterschiedliche Anzeigen. Kategorienänderungen verändern keine Rätseldefinition, Revision oder Spielstände.
+
 Weitere freigegebene Workflow-Inhalte können über den [ZA-1-Adapter](../docs/ZA1_ADAPTER.md)
-registriert werden. Das aktuelle Spielerangebot umfasst sieben Rätsel.
+registriert werden. Die Adapterlieferung ergänzt ausschließlich technische
+Fähigkeiten; das aktuelle Spielerangebot bleibt bei den folgenden sechs Rätseln.
 
 Das reguläre Projekt liegt unter `game/`. Der integrierte Stand umfasst Sidebar,
-Vollsicht, Stift-/Atlasdarstellung, Save/Recovery und sieben Katalogrätsel:
-F01 (20×20), F02 (40×40, vier Farben), F04 (20×20), F06 (50×50), F08/F09 (40×40)
-und Blatt 10 (40×40, monochrom). Sein Motiv wird erst nach Abschluss sichtbar.
+Vollsicht, Stift-/Atlasdarstellung, Save/Recovery und genau sechs Katalogrätsel:
+F01 (20×20), F02 (40×40, vier Farben), F04 (20×20), F06 (50×50), F08/F09 (40×40).
 F03/F05/F07 werden nicht angeboten; vorhandene Dateien und Speicherplätze bleiben.
 Dies ist eine unsignierte Entwicklungsfassung, kein Release.
 
@@ -27,10 +31,8 @@ CI-Lauf, Engine-/Archivhashes, EXE-Hashes und Prüfphasen. Artefaktlink im PR.
 Godot löst `user://p1/saves/` im projektbezogenen User-Data-Verzeichnis auf.
 Unter Windows liegt dieses standardmäßig unter
 `%APPDATA%\Godot\app_userdata\picross · P1\p1\saves\` (bei benutzerdefiniertem
-Godot-Datenpfad entsprechend dort). Die neun historischen Inhalts-IDs ergeben
+Godot-Datenpfad entsprechend dort). Die neun bekannten Inhalts-IDs ergeben
 `f01.json` bis `f09.json` mit gleichnamigen `f01.bak`/`f01.tmp` usw.
-Weitere registrierte Inhalte besitzen eigene explizite Slots; sie verwenden keine
-historischen Speicherplätze erneut.
 Tests verwenden nur eigene temporäre Profile; das ZIP enthält keine
 Spielstände.
 
@@ -175,7 +177,8 @@ Linux benötigt für die OpenGL-Prüfung Xvfb/Mesa. Preset und Appname bleiben
 Die jeweiligen `--no-*`-Formen schalten sie ausdrücklich aus; CI wählt gemäß
 [CI-Policy](../docs/CI_POLICY.md) nach vollständigem Änderungsumfang. Integration
 prüft 500 Aktionen plus Neustart. Piloten prüfen F04/F06/F08/F09 in echten
-Prozessen; der Fachlauf erhält die ursprünglichen sechs Produktionsnachweise.
+Prozessen als feste Funktionsregression; der Fachlauf zertifiziert keine
+Bestandsrätsel erneut. Reine Rätselergänzungen starten keinen dieser Tests.
 Visual prüft aktuelle Pixel-/Animationsverträge, PERF-B den regulären Renderer
 samt Cache. Die sechs produktiven Atlanten und Importparameter werden unabhängig
 über `tools/cell_atlas_reference.json` geprüft. Historische Hersteller- und

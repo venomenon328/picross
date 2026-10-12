@@ -1,5 +1,7 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+KAT-2 (#79) ergänzt den Entwicklungsstart als warmes Kartenraster auf dem vorhandenen Buch. Oberhalb stehen eine scrollbare Kategorienauswahl einschließlich leerer Gruppen und „x von y gelöst“. Native Controls, vorhandene lokale Schriften und klare Hover-/Fokus-/Auswahlrahmen bleiben maßgeblich. Höchstens 24 Karten teilen sich eine Seite; Spaltenzahl und Scrollfläche richten sich nach Fenster und UI-Skalierung. Jede Karte trägt die stabile Blattkennung, Größe, Mono/Farbe und Status, in „Alle Rätsel“ zusätzlich die Kategorie. Eigene ungelöste Füllungen bleiben unkorrigiert; Motivname und proportionales Reveal erscheinen erst nach gültigem Abschluss. Die bisherige zusätzliche globale Auswahlvorschau entfällt. [Nachweise und offene KAT2-M01-Abnahme](KAT2_VERIFICATION.md).
+
 ## Aktueller Entwicklungsstand
 
 VS2, die sechs Sidebaraktionen in 2×3 und PERF-A/B sind über PR #62/#66

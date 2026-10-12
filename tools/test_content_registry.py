@@ -6,21 +6,21 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.puzzle_production.content_registry import check_checkout, validate
-from tools.puzzle_production.contract import InvalidInput
+from tools.puzzle_production.contract import InvalidInput, load_json
 from ci_scope import classify, FLAGS
 
 
 class RegistryTests(unittest.TestCase):
     def test_runtime_is_exact_projection_and_old_reservations_immutable(self):
-        registry = check_checkout(Path(__file__).resolve().parents[1])
+        registry = load_json(Path(__file__).resolve().parents[1] / "tests/puzzle_production/fixtures/catalog/registry.json")
         self.assertEqual([e["key"] for e in registry["entries"] if e["visible"]][:6], ["f01","f02","f04","f06","f08","f09"])
         for field,value in (("save_slot","other"),("visible",True),("id","pz-new")):
             changed = deepcopy(registry)
             changed["entries"][2][field] = value
-            with self.assertRaises(InvalidInput): validate(changed)
+            with self.assertRaises(InvalidInput): validate(changed, load_json(Path(__file__).resolve().parents[1] / "tests/puzzle_production/fixtures/catalog/categories.json"))
 
     def test_registry_and_new_harness_select_required_work(self):
         p = classify(["content/registry.json"])["selected"]
-        self.assertTrue(all(p[k] for k in ("production","product","pilots","visual","perf_b")))
+        self.assertFalse(any(p[k] for k in FLAGS))
         p = classify(["tools/za1_product.py"])["selected"]
         self.assertTrue(all(p[k] for k in FLAGS))
