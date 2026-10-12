@@ -21,6 +21,30 @@
       "state": "motif_review",
       "motif_approval": null,
       "statement": "Faithful native abstraction; proposed 32x48 mono. No raster."
+    },
+    {
+      "actor": "user (Tobias)",
+      "timestamp_utc": "2026-10-12T21:06:59Z",
+      "type": "motif_approval",
+      "statement": "Ich gebe die abstrahierte Motivvorlage MA-r01 frei. Verbindliche Referenz bleibt das bereits freigegebene Abschlussbild A-r01.\nParameterkorridor: 24x36.\nZu bewahren: Identität, Perspektive, Proportionen und wichtige Negativflächen.\nBinde diese Freigabe an beide tatsächlich vorliegenden Dateien und Hashes. Erstelle die vollständige dateibasierte Übergabe für Codex mit beiden Bilddateien und ihren getrennten Freigabebelegen. Noch keine Rasterproduktion in diesem Schritt.",
+      "motif": {
+        "revision": "MA-r01",
+        "entry": "motif/MA-r01.png",
+        "sha256": "21847d0e6bb804a2d3eafc5a1fc783d21166d68195cdcc11e7e9b1548c5832b0"
+      },
+      "binding_reveal": {
+        "revision": "A-r01",
+        "entry": "reveal/A-r01.png",
+        "sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89"
+      },
+      "approved_parameters": {
+        "width": 24,
+        "height": 36,
+        "mode": "mono"
+      },
+      "approval_file": "motif-approval.json",
+      "execution_limit": "No raster production in this step.",
+      "merge_authorization": "Ich beauftrage ausdrücklich auch den Merge dieses Ablage-/Integrations-PRs nach bestandenem vollständigem Diff-/Selbstreview und allen ausgewählten Pflichtprüfungen gemäß Entwicklungsworkflow; danach main tatsächlich verifizieren."
     }
   ]
 }
