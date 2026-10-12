@@ -42,8 +42,10 @@ Linux-Runner nicht geprüft. Der separate CI-Playerexport bleibt unverändert.
 Das vollständige ZIP entpacken und `picross-p1.exe` starten. Keine Godot-Installation
 nötig. `picross-p1.console.exe` zeigt technische Ausgaben. Dies ist eine unsignierte
 Debug-Spielprobe, kein Release/Installer. Die Quellcommitkennung steht im beigefügten
-README.txt; `product-report.json` bindet Head, getesteten Checkout/Test-Merge, Basis,
-CI-Lauf, Engine-/Archivhashes, EXE-Hashes und Prüfphasen. Artefaktlink im PR.
+README.txt. Ausschließlich das **Product-CI-Artefakt** enthält zusätzlich
+`product-report.json` mit Head, getestetem Checkout/Test-Merge, Basis, CI-Lauf,
+Engine-/Archivhashes, EXE-Hashes und Prüfphasen (Artefaktlink im PR). Der manuelle
+main-Player hat bewusst keinen solchen Prüfbericht; sein Link steht im Actions-Lauf.
 
 Godot löst `user://p1/saves/` im projektbezogenen User-Data-Verzeichnis auf.
 Unter Windows liegt dieses standardmäßig unter
@@ -204,7 +206,7 @@ aktueller Prüfweg.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
 `technical/` enthält kompakte commitgebundene Ergebnisse, Logs und notwendige
-native Bilder/Fehlerdiagnostik; Budget 30 MB, mit Spieler-ZIP 75 MB. Das ZIP
+native Bilder/Fehlerdiagnostik; Budget 30 MB, mit Spieler-ZIP 75 MB. Das reguläre Product-CI-ZIP
 enthält Spielanleitung, Commit-/Hashbericht, `rp6-owner.ps1` für isolierte persönliche
 Proben und notwendige Lizenzen. Technische Motivspoiler sind separat.
 Keine automatisierte Prüfung ersetzt eine persönliche Maus-/Komfortprobe.
