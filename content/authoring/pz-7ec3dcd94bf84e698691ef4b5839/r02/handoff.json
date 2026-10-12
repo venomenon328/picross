@@ -1,0 +1,70 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 4,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8"
+  },
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "revision": "r02",
+  "repo_commit": "f7af54c5ec7efab4e93ca7aae82c56a17c2a505c",
+  "state": "reveal_review",
+  "brief": "brief.md",
+  "category_id": "gemuese-pilze-kraeuter",
+  "requested_mode": "color",
+  "approved_parameters": [],
+  "reveal": {
+    "file": "reveal/A-r02.png",
+    "sha256": "1fb67e28c130e50eeafd3aac92e575d83688d95e752e0cfe8361ceb8b15e29e8",
+    "approval": null
+  },
+  "reveal_provenance": "provenance/A-r02.json",
+  "reveal_variants": "variants.json",
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "f48a0de5d636888bbb0908c523d0ed307f8a7851d04f6e105951240963a32ab2"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "Explicit human approval of reveal A-r02 required before abstraction."
+  ],
+  "next_action": "Await explicit human approval of A-r02; no abstraction or raster work.",
+  "authorization": "Store revision, commit/push, draft PR and conditional merge after full diff/self-review and selected mandatory checks; no catalog entry, tool changes, release/deployment."
+}
