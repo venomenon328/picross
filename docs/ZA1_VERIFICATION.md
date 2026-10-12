@@ -1,5 +1,9 @@
 # ZA-1: Prüfzuordnung und Referenzeingang
 
+**Aktuell:** Der reale Knoblauch-Test/ZIP ist aus der Test-Discovery entfernt.
+Allgemeine Adaptertests behalten feste synthetische Pakete; neue Inhalte werden
+einmalig außerhalb der CI geprüft. [CI-Policy](CI_POLICY.md).
+
 Scope: [#74](https://github.com/venomenon328/picross/issues/74),
 [Adaptervertrag](ZA1_ADAPTER.md), Arbeitsbasis
 `039f59d9a94ad6c2fea32a900d03d1d3b8a7df4c` (aktueller main beim Start).
@@ -28,7 +32,7 @@ Auswahl `candidate-002`, Referenz `area-128`, Endproof solved/certified,
 `final_editorial: missing bound human final approval`. Export bleibt blockiert,
 kein neuer echter Katalogeintrag und keine Änderung der Eingangsbytes.
 
-Für CI liegt [garlic-r03-reference.zip](../tests/puzzle_production/fixtures/garlic-r03-reference.zip)
+Für die damalige ZA-1-Abnahme lag [historische garlic-r03-reference.zip](https://github.com/venomenon328/picross/blob/60886c47098d209c4b7dc7521c3c70ea0aeffcb5/tests/puzzle_production/fixtures/garlic-r03-reference.zip)
 als etwa 5,1-MB-Prüfderivat vor. Es enthält 69 benötigte Originaldateien plus
 Ableitungsmanifest (6.614.689 entpackte Bytes), einschließlich unverändertem
 Originalhandoff und Inventar, aller Importvarianten, vollständiger Reparatur,
@@ -42,13 +46,13 @@ sind getrennte Belege; das Derivat ersetzt keinen vollständigen ZIP-Hashnachwei
 
 | Kriterium | Ausführbare Prüfung |
 | --- | --- |
-| ZA-A01 | `TargetTests.test_garlic_compact_original_handoff_and_missing_final_approval`; gebundene lokale Originalprüfung |
+| ZA-A01 | Gebundene einmalige Originalprüfung; früherer Knoblauch-Test aus CI entfernt |
 | ZA-A02 | vier versionierte künstliche Authoring-Pakete, `za1_fixtures.replay`, Exportprüfung und isolierte Registrierung; zwei unterschiedliche IDs im Produktlauf |
 | ZA-A03 | `test_target_adapter.py`: neu gehashte Quelle/Normalisierung/Matrix/Hinweise/Proofs, ursprüngliche Abbrüche, alle Reparaturbindungen, Bild-/Endfreigabe, Parameter, Gates, Schwierigkeit, Größen/Farben/Randregel, ZIP/JSON/Pfade/Budgets |
 | ZA-A04 | Registrytests: ID/Slot/Zielpfad/Windows-Kollision, No-op, Rollback/Prozesskill/Recovery; Runtimeprobe unbekannte IDs und Dateisuffixe; fremde Saves bytegleich über Spiel/Reset hinweg |
 | ZA-A05 | `game/tests/za1_probe.gd` über `tools/za1_product.py`: reguläre Hauptszene, Album-Mauswahl, falsche eigene Eingabe, Undo/Redo, Teilstand, Neustart/Fortsetzung, Abschluss, erneuter Neustart/Albumbild; Mono 6×4 und Farbe 4×6 |
 | ZA-A06 | native Pixelassertions für ungelöst/Teilstand/Abschluss, quadratische Zellen/proportionales Reveal, echte Windows-Ausgabe und externes `content_pack_probe.gd` gegen eingebetteten PCK |
-| ZA-A07 | vollständige Produktionstests, bestehende v1/v2-Replays, Kern-/Save-/Recoverytests, 500-Aktionen-Integration, vier Piloten, aktuelle Render-/PERF-B-Prüfung gemäß CI-Auswahl |
+| ZA-A07 | allgemeine Produktionstests, feste synthetische v1/v2-Fixtures, Kern-/Save-/Recoverytests, 500-Aktionen-Integration, vier Piloten, aktuelle Render-/PERF-B-Prüfung gemäß CI-Auswahl |
 | ZA-A08 | [Adaptervertrag](ZA1_ADAPTER.md), Werkzeuganleitung, Authoring 0.4.1, P1-/Produktionsvertrag und Projektprofil |
 
 Die vier künstlichen Pakete sind ausdrücklich `test_only`; Endfreigaben werden

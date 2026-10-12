@@ -1,5 +1,14 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+**Aktuelle Prüfregel (12.10.2026):** Konkrete Rätsel werden während ihrer Produktion
+und Integration geprüft, niemals routinemäßig in CI. Keine rätselspezifischen
+Unit-Tests anlegen. CI führt bei Werkzeugänderungen allgemeine Tests an festen
+synthetischen Eingängen aus; reine Rätseldateien erhalten nur den schlanken
+Inhaltspfad. Die unten beschriebenen RP3-/RP4-/RP5-/RP6-Korpusläufe sind gezielte
+Diagnosemöglichkeiten, keine CI-Pflicht; frühere Jobangaben sind abgelöst.
+Maßgeblich: [CI-Policy](../../docs/CI_POLICY.md) und
+[Regelwerk](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
+
 KAT-1 ergänzt [Kategorien und Zuordnung](../../docs/CATEGORIES.md): neue ZA-1-Exporte verlangen `--category-id` und `--categories`; Snapshot, Manifest v2, Zielregistry und Runtimeprojektion werden gemeinsam geprüft. `sync-runtime --checkout .` übernimmt geprüfte Metadaten in die Projektion, `check-registry --checkout .` prüft inklusive Paket-Replay. Alte Exporte bleiben prüfbar, benötigen zur neuen Registrierung aber einen kategorisierten Neu-Export.
 
 ZA-1 ergänzt den allgemeinen Authoring-v2-Zieladapter und Datenregistrierung:

@@ -1,5 +1,12 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
+**Prüfzuordnung für neue Arbeit (12.10.2026):** Sämtliche konkreten Rätselprüfungen
+finden einmalig je relevanter Revision während der Produktion/Integration statt,
+nicht in CI. Keine rätselspezifischen Unit-Tests oder Bestands-Replays hinzufügen.
+[Regelwerk](ai-workflows/PUZZLE_AUTHORING.md) und [CI-Policy](CI_POLICY.md) ersetzen
+die unten historisch dokumentierten pauschalen RP-Paket-/CI-Prüfpflichten.
+Allgemeine Werkzeugtests mit festem synthetischem Testbestand bleiben erforderlich.
+
 [KAT-1](CATEGORIES.md) ergänzt den Produktionsfundus und ZA-1 um thematische Kategorien. Die Zuordnung steht spätestens vor dem kategorisierten Export fest und bleibt außerhalb von Raster-, Logik-, Proof- und Freigabeidentität. Arbeitsindex und Runtime-Registrierung bleiben getrennt.
 
 Der [ZA-1-Zieladapter](ZA1_ADAPTER.md) verbindet Authoring-v2 mit regulärem Spiel

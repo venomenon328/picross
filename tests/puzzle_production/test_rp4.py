@@ -1,8 +1,5 @@
-"""RP-4 coverage, pairing and result-integrity regressions."""
-import copy
-import importlib.util
+"""Generic import-result integrity with a synthetic 2x2 image."""
 from pathlib import Path
-import shutil
 import tempfile
 import unittest
 
@@ -10,153 +7,7 @@ from PIL import Image
 
 from tools.puzzle_production.contract import InvalidInput, load_json, write_json
 from tools.puzzle_production.images import file_hash, import_image, validate_design
-from tools.puzzle_production.rp4 import CORPUS, check_reviews, inspect_trial, local, validate_inputs
-
-
-ILLUSTRATIONS = ('illustration-sailboat.png', 'illustration-teapot.png', 'illustration-tulip.png')
-
-
-class CorpusTests(unittest.TestCase):
-    def setUp(self):
-        self.temp = tempfile.TemporaryDirectory()
-        self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name) / 'corpus'
-        shutil.copytree(CORPUS, self.root, ignore=shutil.ignore_patterns('baseline', 'views', '__pycache__'))
-
-    def assert_same_decoded_image(self, actual, expected):
-        with Image.open(actual, formats=('PNG',)) as current, Image.open(expected, formats=('PNG',)) as original:
-            self.assertEqual(current.mode, original.mode, 'Decoded image mode differs')
-            self.assertEqual(current.size, original.size, 'Decoded image dimensions differ')
-            self.assertTrue(current.tobytes() == original.tobytes(), 'Decoded image pixels differ')
-
-    def test_complete_paired_input_and_icc_reference_reconstruction(self):
-        plan, lock = validate_inputs(self.root)
-        self.assertEqual(len(plan['sources']), 12)
-        self.assertEqual(len(lock['trials']), 24)
-        self.assertEqual(sum(len(t['design']['variants']) for t in lock['trials']), 48)
-        self.assertEqual(len({t['source_id'] for t in lock['trials'] if t['design']['width'] == t['design']['height'] == 100}), 4)
-
-    def test_missing_duplicate_or_wrong_class_sources_rejected(self):
-        original = load_json(self.root / 'plan.json')
-        for change in ('missing', 'duplicate', 'class'):
-            plan = copy.deepcopy(original)
-            if change == 'missing':
-                plan['sources'].pop()
-            elif change == 'duplicate':
-                plan['sources'][-1] = plan['sources'][-2]
-            else:
-                plan['sources'][-1]['class'] = 'illustration'
-            write_json(self.root / 'plan.json', plan)
-            with self.assertRaises(InvalidInput):
-                validate_inputs(self.root)
-
-    def test_removed_pair_or_changed_palette_rejected(self):
-        original = load_json(self.root / 'inputs.json')
-        for change in ('missing', 'palette', 'dimensions', 'duplicate'):
-            lock = copy.deepcopy(original)
-            if change == 'missing':
-                lock['trials'].pop()
-            elif change == 'palette':
-                lock['trials'][-1]['design']['palette'][0]['rgb'] = '#000001'
-            elif change == 'dimensions':
-                lock['trials'][-1]['design']['width'] = 99
-            else:
-                lock['trials'][-1] = lock['trials'][-2]
-            write_json(self.root / 'inputs.json', lock)
-            with self.assertRaisesRegex(InvalidInput, 'paired trial'):
-                validate_inputs(self.root)
-
-    def test_prompt_change_is_not_hidden_by_unchanged_images(self):
-        (self.root / 'briefings/p01-stylized.txt').write_text('different prompt\n')
-        with self.assertRaisesRegex(InvalidInput, 'input bindings'):
-            validate_inputs(self.root)
-
-    def test_reference_pixel_change_and_missing_image_rejected(self):
-        p = self.root / 'references/p01.png'
-        with Image.open(p) as im:
-            im.putpixel((0, 0), (255, 0, 0))
-            im.save(p)
-        with self.assertRaisesRegex(InvalidInput, 'Style reference'):
-            validate_inputs(self.root)
-        (self.root / 'stylized/p01.png').unlink()
-        with self.assertRaises(InvalidInput):
-            validate_inputs(self.root)
-
-    def test_paths_do_not_escape_corpus(self):
-        for path in ('../other.png', '/etc/passwd', 'sources\\other.png'):
-            with self.assertRaises(InvalidInput):
-                local(self.root, path)
-
-    def test_original_illustrations_reproduce_without_solver(self):
-        spec = importlib.util.spec_from_file_location('rp4_illustrations', CORPUS / 'create_illustrations.py')
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        output = Path(self.temp.name) / 'illustrations'
-        module.create(output)
-        self.assertEqual({path.name for path in output.iterdir()}, set(ILLUSTRATIONS))
-        for name in ILLUSTRATIONS:
-            with self.subTest(illustration=name):
-                self.assert_same_decoded_image(output / name, CORPUS / 'sources' / name)
-        invalid = Path(self.temp.name) / 'not-directory'
-        invalid.write_text('existing file')
-        with self.assertRaises(OSError):
-            module.create(invalid)
-
-    def test_illustration_reencoding_preserves_decoded_image(self):
-        for name in ILLUSTRATIONS:
-            with self.subTest(illustration=name):
-                original = CORPUS / 'sources' / name
-                reencoded = Path(self.temp.name) / name
-                with Image.open(original) as image:
-                    image.save(reencoded, compress_level=0)
-                self.assertNotEqual(file_hash(reencoded), file_hash(original))
-                self.assert_same_decoded_image(reencoded, original)
-
-    def test_illustration_pixel_change_rejected(self):
-        original = CORPUS / 'sources' / 'illustration-sailboat.png'
-        changed = Path(self.temp.name) / 'changed-pixel.png'
-        with Image.open(original) as image:
-            red, green, blue = image.getpixel((0, 0))
-            image.putpixel((0, 0), (red ^ 1, green, blue))
-            image.save(changed)
-        with self.assertRaisesRegex(AssertionError, 'Decoded image pixels differ'):
-            self.assert_same_decoded_image(changed, original)
-
-    def test_illustration_dimensions_change_rejected(self):
-        original = CORPUS / 'sources' / 'illustration-sailboat.png'
-        changed = Path(self.temp.name) / 'changed-dimensions.png'
-        with Image.open(original) as image:
-            # Preserve every decoded byte so only the dimensions distinguish this file.
-            reshaped = Image.frombytes(image.mode, (image.width * 2, image.height // 2), image.tobytes())
-            reshaped.save(changed)
-        with self.assertRaisesRegex(AssertionError, 'Decoded image dimensions differ'):
-            self.assert_same_decoded_image(changed, original)
-
-    def test_illustration_mode_change_rejected(self):
-        original = CORPUS / 'sources' / 'illustration-sailboat.png'
-        changed = Path(self.temp.name) / 'changed-mode.png'
-        with Image.open(original) as image:
-            image.convert('RGBA').save(changed)
-        with self.assertRaisesRegex(AssertionError, 'Decoded image mode differs'):
-            self.assert_same_decoded_image(changed, original)
-
-    def test_reencoded_stored_original_is_rejected(self):
-        original = CORPUS / 'sources' / 'illustration-sailboat.png'
-        reencoded = self.root / 'sources' / original.name
-        with Image.open(original) as image:
-            image.save(reencoded, compress_level=0)
-        self.assertNotEqual(file_hash(reencoded), file_hash(original))
-        self.assert_same_decoded_image(reencoded, original)
-        with self.assertRaisesRegex(InvalidInput, 'Source changed after selection'):
-            validate_inputs(self.root)
-
-    def test_missing_visual_judgment_is_an_open_evidence_gap(self):
-        lock = load_json(self.root / 'inputs.json')
-        reviews = load_json(self.root / 'reviews.json')
-        reviews.pop(next(iter(reviews)))
-        write_json(self.root / 'reviews.json', reviews)
-        with self.assertRaisesRegex(InvalidInput, 'visual review coverage'):
-            check_reviews(self.root, lock, [])
+from tools.puzzle_production.rp4 import inspect_trial
 
 
 class ResultTests(unittest.TestCase):
@@ -172,7 +23,7 @@ class ResultTests(unittest.TestCase):
         if stalled:
             im.putpixel((1, 1), (0, 0, 0))
         im.save(self.root / 'source.png')
-        design = load_json(CORPUS / 'designs/i01-direct-40x40.json')
+        design = load_json(Path(__file__).parent / 'fixtures/image-design.json')
         design.update(width=2, height=2, crop=[0, 0, 2, 2], variants=design['variants'][:1])
         design = validate_design(design)
         write_json(self.root / 'design.json', design)

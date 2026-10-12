@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class CategoryTests(unittest.TestCase):
     def setUp(self):
-        self.catalog = categories.load(ROOT / categories.PATH)
-        self.registry = load_json(ROOT / "content/registry.json")
+        self.catalog = categories.load(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
+        self.registry = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/registry.json")
 
     def test_frozen_pre_migration_inputs(self):
         folder = ROOT / "game/tests/fixtures/kat1"
@@ -106,4 +106,4 @@ class CategoryTests(unittest.TestCase):
         self.assertEqual(projection(self.registry, catalog)["entries"], projection(self.registry, self.catalog)["entries"])
         for path in (categories.PATH, "game/data/registry.json", "tools/puzzle_production/categories.py"):
             selected = classify([path])["selected"]
-            self.assertTrue(all(selected[k] for k in ("production", "product", "pilots", "visual")), path)
+            self.assertEqual(selected["production"], path == "tools/puzzle_production/categories.py", path)

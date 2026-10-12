@@ -30,8 +30,6 @@ import perf_b_resources
 import za1_product
 import kat2_product
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
-from check_f01 import DATA, verify
-from check_f02 import verify as verify_f02
 
 EXPECTED_PROJECT_NAME = "picross · P1"
 RENDER_STAGES = ("layout", "views", "cells-f1", "cells-f2", "gestures", "hints", "axis", "h1")
@@ -367,15 +365,8 @@ def main(argv: list[str] | None = None) -> int:
         evidence.report.update(source_identity(root))
         evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "game/project.godot")
-        from tools.puzzle_production.content_registry import check_checkout
-        registry = python_phase("content-registry-projection", lambda: check_checkout(root))
+        registry = json.loads((root / "content/registry.json").read_text(encoding="utf-8"))
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
-        evidence.report["proof_steps"] = python_phase("f01-certificate", lambda: verify(
-            json.loads((DATA / "f01.json").read_text(encoding="utf-8")),
-            json.loads((DATA / "f01-proof.json").read_text(encoding="utf-8"))))
-        evidence.report["color_proof_steps"] = python_phase("f02-certificate", lambda: verify_f02(
-            json.loads((DATA / "f02.json").read_text(encoding="utf-8")),
-            json.loads((DATA / "f02-proof.json").read_text(encoding="utf-8"))))
         editor = toolchain.EDITORS[host]
 
         def assets():

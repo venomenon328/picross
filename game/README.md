@@ -177,7 +177,8 @@ Linux benötigt für die OpenGL-Prüfung Xvfb/Mesa. Preset und Appname bleiben
 Die jeweiligen `--no-*`-Formen schalten sie ausdrücklich aus; CI wählt gemäß
 [CI-Policy](../docs/CI_POLICY.md) nach vollständigem Änderungsumfang. Integration
 prüft 500 Aktionen plus Neustart. Piloten prüfen F04/F06/F08/F09 in echten
-Prozessen; der Fachlauf erhält die ursprünglichen sechs Produktionsnachweise.
+Prozessen als feste Funktionsregression; der Fachlauf zertifiziert keine
+Bestandsrätsel erneut. Reine Rätselergänzungen starten keinen dieser Tests.
 Visual prüft aktuelle Pixel-/Animationsverträge, PERF-B den regulären Renderer
 samt Cache. Die sechs produktiven Atlanten und Importparameter werden unabhängig
 über `tools/cell_atlas_reference.json` geprüft. Historische Hersteller- und

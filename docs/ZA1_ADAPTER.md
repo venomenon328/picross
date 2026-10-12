@@ -8,7 +8,7 @@ Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 12.10.2026
 `authoring-p1-rect-color-1` ergänzt Schema-2-Exporte; die Pilotprofile v1/v2 bleiben
 unverändert. Keine neue Zertifizierungsregel, kein Solver im Spiel.
 
-Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 6 und 8. Die Dokumentrevision 3 erweitert Anweisungen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
+Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 6 und 8. Die Dokumentrevision 4 erweitert Anweisungen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
 
 ## Eingang und Grenzen
 
@@ -155,7 +155,8 @@ bindet deren Hashes und gegebenenfalls Original-ZIP-Hash und enthält alle erneu
 benötigten Originaldateien. Es behauptet keine vollständige Paketkopie.
 Der Spieler erhält Runtime-Ressourcen und einen `.txt`-Hinweis aus
 Urheber/Nutzungsgrundlage. Proofs, Quellen, Freigabeprotokolle und Testpakete
-bleiben ausgeschlossen. Der echte Windows-PCK wird nativ geprüft.
+bleiben ausgeschlossen. Der echte Windows-PCK wird bei der konkreten Inhaltsproduktion einmalig nativ
+geprüft; dieser Nachweis wird nicht als rätselspezifischer CI-Test übernommen.
 
 Künstliche Freigaben sind `test_only=true`; Registrierung im echten eigenen
 Checkout wird verweigert. Reproduzierbarer Durchstich ausschließlich temporär:

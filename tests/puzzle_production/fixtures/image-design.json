@@ -1,0 +1,43 @@
+{
+  "format": "picross-image-design-v1",
+  "source_id": "test-only",
+  "origin": "Synthetic test pixels",
+  "rights": "Repository-owned synthetic test input",
+  "briefing": "Technical fixture, not a catalog puzzle",
+  "working_mode": "faithful",
+  "width": 4,
+  "height": 4,
+  "crop": [
+    0,
+    0,
+    4,
+    4
+  ],
+  "fit": "exact",
+  "background": "#ffffff",
+  "alpha_below": 128,
+  "mode": "mono",
+  "palette": [
+    {
+      "id": "ink",
+      "rgb": "#293e3d"
+    }
+  ],
+  "variants": [
+    {
+      "id": "area-128",
+      "method": "area",
+      "threshold": 128
+    },
+    {
+      "id": "area-160",
+      "method": "area",
+      "threshold": 160
+    },
+    {
+      "id": "contour-40",
+      "method": "contour",
+      "threshold": 40
+    }
+  ]
+}
