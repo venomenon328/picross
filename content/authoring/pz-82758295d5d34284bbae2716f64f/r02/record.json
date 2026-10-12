@@ -24,7 +24,7 @@
   "mode": "mono",
   "difficulty": null,
   "blockers": [],
-  "next_action": "Read CODEX_HANDOFF.md; both images approved for 24x36 mono. Await subsequent production order.",
+  "next_action": "Read indexed r03 production result: six stalled candidates; obtain a new explicit motif or size decision. r02 images/approvals remain valid and unchanged.",
   "integration": null,
   "previous_revision": "r01",
   "reveal_revision": "A-r01",
@@ -72,7 +72,7 @@
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/CODEX_HANDOFF.md",
     "sha256": "66ae6dc94bb45b277272157030ba3f9ba577481d075c4009a3810b21cd26728f"
   },
-  "execution_hold": "No raster production in this handoff-only order; await subsequent explicit production order.",
+  "execution_hold": "Historical handoff-only hold superseded by subsequent explicit production order; r03 records completed bounded production.",
   "superseded_recommendation": [
     32,
     48
@@ -80,5 +80,6 @@
   "approval_validation": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r02/approval-validation.json",
     "sha256": "c6e013906149eff97ae0341cc649b85fad27bbc4068118848fb43d5e8a15f0d4"
-  }
+  },
+  "superseded_by": "r03"
 }
