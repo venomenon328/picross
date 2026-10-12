@@ -25,7 +25,7 @@
   ],
   "proposed_foreground_colors": 3,
   "blockers": [],
-  "next_action": "Read CODEX_HANDOFF.md; await next production order. Do not produce a raster in this step.",
+  "next_action": "Continue with indexed r04 content_ready package for final editorial approval. The h01 execution hold remains historical; a subsequent explicit production order authorized r04.",
   "integration": null,
   "previous_revision": "r02",
   "reveal_revision": "A-r02",
@@ -63,5 +63,6 @@
     "height": 24,
     "mode": "color"
   },
-  "execution_hold": "No raster production in this handoff-only order; await subsequent production order."
+  "execution_hold": "No raster production in this handoff-only order; await subsequent production order.",
+  "superseded_by": "r04"
 }
