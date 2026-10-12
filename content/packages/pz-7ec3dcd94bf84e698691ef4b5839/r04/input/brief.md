@@ -1,0 +1,3 @@
+# Grüne Erbse · Produktionsauftrag r04
+
+24×24, farbig, drei vorlagenbasierte Grüntöne plus Leer. Quelle ist unveränderte MA-r01 aus ausdrücklich freigegebenem A-r02. Identität, Perspektive, Proportionen und wichtige Negativflächen bewahren. Der tatsächliche zusätzliche Crop-/Dreifarbentscheid steht in approvals/corridor-approval.json. Kategorie gemuese-pilze-kraeuter. Vier gezielte Designs, vollständige technische und visuelle Prüfung, Qualitäts-/Schwierigkeitsbericht und Übergabe zur menschlichen Endabnahme. Repositoryablage samt bedingtem Merge ist beauftragt; kein Spielkatalog, keine Werkzeugänderungen und kein Release.
