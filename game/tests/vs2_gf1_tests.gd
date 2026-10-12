@@ -84,14 +84,18 @@ func run() -> void:
 			board.size = Vector2(1800,900)
 			board._layout()
 			var minimum: Vector2i = board.minimum_slots
+			var pitch: float = board.slot_pitch.x
 			var index: int = 0
 			for i: int in range(data.rows.size()):
 				if data.rows[i].size() > data.rows[index].size(): index = i
 			for added: int in range(0,board.max_hints.x-minimum.x+2):
 				for delta: float in [-0.01,0.0,0.01]:
-					board.size.x = minimum.x*24*ui+14+data.width*12+added*24*ui+delta
+					board.size.x = minimum.x*pitch+14+data.width*12+added*pitch+delta
 					board._layout()
-					var expected: int = mini(board.max_hints.x,minimum.x+maxi(0,added-(1 if delta < 0 else 0)))
+					# Crossing a grade boundary can compact the pitch at fractional
+					# fit. Allocate from the actually rendered grade/cell budget.
+					var free: float = board.size.x-14-data.width*board.view.cell_size-board.minimum_slots.x*board.slot_pitch.x
+					var expected: int = mini(board.max_hints.x,board.minimum_slots.x+maxi(0,floori((free+0.000001)/board.slot_pitch.x)))
 					check(board.reserve_slots.x == expected, "only whole fitting slots; no demand padding")
 					check(board.minimum_slots == minimum and board.reserve_slots.y == minimum.y, "minimum and independent upper reserve stable")
 					check(board.view.cell_size <= 12 and board.view.cell_size >= 11.99, "new capacity never feeds back into zoom")

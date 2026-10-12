@@ -275,7 +275,9 @@ die längere reale Nutzung. Die Spezifikationsfreigabe beginnt keines dieser
 Umsetzungspakete und ersetzt keine spätere Gestaltungs- oder Bedienabnahme.
 
 
-**ZS1-E3:** Chalkboard Regular ist die ausgewählte Hinweisfont. Die
+**HC / #92:** Delight Coffee ist die aktive Hinweisfont mit zellabhängiger Größe
+und gemeinsamen gemessenen Slots; [aktueller Vertrag](CLUE_TYPOGRAPHY.md).
+Die folgende ZS1-E3-Auswahl ist historisch: Chalkboard Regular war gewählt. Die
 Zeilenhinweise links vom Raster werden gegenüber dem 30-px-Studienstand moderat
 verdichtet und verwenden 26 logische Pixel gemeinsame Slotweite bei UI 100 %;
 die vertikale Staffel der Spaltenhinweise bleibt unverändert. Die kombinierte

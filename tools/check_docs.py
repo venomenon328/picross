@@ -7,6 +7,7 @@ links, external URLs and game behavior are not verified. Standard library only.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import re
 import sys
@@ -18,6 +19,9 @@ TEXT_NAMES = {"VERSION", ".gitignore", ".gitattributes"}
 SKIP_DIRS = {".git", "__pycache__", ".venv", "node_modules"}
 # Per-puzzle documents/proofs are checked once in production, not on every CI run.
 SKIP_CONTENT = {"content/authoring", "content/packages", "game/data/content", "game/art/content"}
+# Byte-bound upstream notices retain their original whitespace/line endings.
+ORIGINAL_NOTICES = {"game/art/drawing/delight-coffee/More Info.txt":
+                    "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0"}
 REQUIRED = (
     "README.md", "AGENTS.md", "docs/PROJECT_PROFILE.md",
     "docs/DEV_RULES_ADOPTION.md", "docs/CHATGPT_PROJECT_INSTRUCTIONS.md",
@@ -116,6 +120,10 @@ def check_tree(root: Path) -> list[str]:
                 continue
             try:
                 data = path.read_bytes()
+                if label in ORIGINAL_NOTICES:
+                    if hashlib.sha256(data).hexdigest() != ORIGINAL_NOTICES[label]:
+                        errors.append(f"{label}: original notice bytes differ")
+                    continue
                 text = data.decode("utf-8")
             except (OSError, UnicodeError) as exc:
                 errors.append(f"{label}: cannot read UTF-8 text: {exc}")

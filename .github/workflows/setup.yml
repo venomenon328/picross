@@ -39,7 +39,9 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
           filter: blob:none
-          sparse-checkout: tools/ci_scope.py
+          sparse-checkout: |
+            tools/ci_scope.py
+            .gitattributes
           sparse-checkout-cone-mode: false
       - name: Select required checks from the complete diff
         id: scope

@@ -81,7 +81,7 @@ static func capture(board) -> Dictionary:
 		original_grid.position -= board.composition_shift
 		original_rows.position -= board.composition_shift
 		original_columns.position -= board.composition_shift
-	var fit_dimensions: Vector2 = (size - Vector2(minimum_slots) * Vector2(board.shared_clue_slot_extent("row",board.clue_font(),fs)/ui_scale,18) * ui_scale - Vector2(14,14)) / Vector2(view.dimensions)
+	var fit_dimensions: Vector2 = (size - Vector2(minimum_slots) * board.slot_pitch - Vector2(14,14)) / Vector2(view.dimensions)
 	return {"mode": mode, "cell_pitch": view.cell_size, "raw_fit_ceiling": raw_fit, "zoom_ceiling": fit_ceiling, "reserve_slots": [reserve_slots.x,reserve_slots.y],
 		"minimum_reserve_slots": [minimum_slots.x,minimum_slots.y], "axis_counts": axis_counts,
 		"horizontal_budget_px": horizontal_budget, "horizontal_used_px": horizontal_used, "horizontal_remaining_px": horizontal_budget-horizontal_used,

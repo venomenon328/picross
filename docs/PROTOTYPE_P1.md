@@ -1,5 +1,9 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+[HC / #92](CLUE_TYPOGRAPHY.md) ersetzt aktive Chalkboard-/24/18-Maße durch
+Delight Coffee und native zellabhängige Schrift-/Slotmaße, einschließlich Fit,
+G/V, Zusatzkapazität und Drag/Snap. Frühere D-33-/ZS-/VS2-Maße sind historisch.
+
 [KAT-1](CATEGORIES.md) ergänzt Kategorien und Zuordnung als reine Katalogmetadaten in der Registry-/Runtimeprojektion v2. Godot lädt den vollständigen validierten Bestand; Auswahl, Definitionen, Save-Schema 1, Revisionen und Slots bleiben unverändert. Neue Exporte benötigen die explizite Kategorienbindung. Die Oberfläche folgt jetzt KAT-2 (#79), siehe [Prüfzuordnung](KAT2_VERIFICATION.md).
 
 [ZA-1](ZA1_ADAPTER.md) ergänzt eine zentrale Inhaltsregistry und deterministische

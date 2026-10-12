@@ -1,1 +1,3 @@
 * text=auto eol=lf
+# Upstream notice is byte-bound (including CRLF/trailing spaces) by check_docs.
+"game/art/drawing/delight-coffee/More Info.txt" binary

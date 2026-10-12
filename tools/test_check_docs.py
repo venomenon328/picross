@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from check_docs import REQUIRED, check_links, check_tree, prose_only
+from check_docs import REQUIRED, ORIGINAL_NOTICES, check_links, check_tree, prose_only
 
 
 class DocumentationChecks(unittest.TestCase):
@@ -27,6 +27,16 @@ class DocumentationChecks(unittest.TestCase):
 
     def test_valid_tree(self) -> None:
         self.assertEqual([], check_tree(self.root))
+
+    def test_original_notice_bytes_are_required(self) -> None:
+        name = next(iter(ORIGINAL_NOTICES))
+        path = self.root / name
+        path.parent.mkdir(parents=True)
+        original = Path(__file__).resolve().parents[1] / name
+        path.write_bytes(original.read_bytes())
+        self.assertEqual([], check_tree(self.root))
+        path.write_bytes(path.read_bytes()+b"\n")
+        self.assertTrue(any("original notice bytes differ" in e for e in check_tree(self.root)))
 
     def test_production_corpus_is_not_scanned_by_document_ci(self) -> None:
         for folder in ("content/authoring", "content/packages", "game/data/content", "game/art/content"):

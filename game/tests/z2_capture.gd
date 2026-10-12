@@ -169,14 +169,18 @@ func detail_shots() -> void:
 	if SaveStore.snapshot(app.session,app.board.capture_view()) != tooltip_state or app.session.gesture.active:
 		record_failure("c1-tooltip", "Z2 rendered tooltip allowed a board action")
 	app.board.clear_clue_hover()
-	# F02 fits all row clues. Use the longest F06 row at the smaller surface through
-	# the regular scene for the unchanged continuous 14.7px C1 drag oracle.
+	# HC compaction also fits F06 at the regular window budget. Use a narrow
+	# component in the regular scene for the continuous 14.7px C1 drag oracle.
 	surface.size = Vector2i(1280,720)
 	app.size = Vector2(surface.size)
 	app.set_ui_scale(1.25)
 	app.select_puzzle(3)
 	await process_frame
 	await process_frame
+	app.board.size.x = 560
+	app.board._layout()
+	if not app.board.layout_valid or app.board.clue_layout("row",41).max_offset <= 0:
+		record_failure("c1-drag", "Z2 C1 component must provide actual row overflow")
 	var area: Rect2 = app.board.row_clue_area()
 	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,41)).get_center().y)
 	var press: InputEventMouseButton = InputEventMouseButton.new()

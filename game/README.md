@@ -147,7 +147,9 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   Hinweis mit Umbruch direkt über dem Arbeitsbild. Das ist ein Zusatzweg; Anfang,
   Mitte und Ende bleiben auch durch Hinweis-Panning erreichbar. Eine separate
   Hinweisansicht gibt es nicht.
-- UI 100/125 % vergrößert Oberfläche und Hinweise unabhängig vom Arbeitszoom.
+- UI 100/125 % vergrößert die Oberfläche. Delight-Coffee-Hinweisziffern und ihre
+  gemeinsamen Zeilen-/Spaltenplätze passen sich dem tatsächlichen Zellmaß an:
+  kompakt bei kleinem Zoom, größer beim Hineinzoomen, innerhalb der Fitgrenze.
   Geänderte Slotkapazitäten erhalten je konkrete Folge die semantische Leseposition:
   äußerer Anfang und rasterseitiges Ende bleiben am gewählten Rand verankert,
   mittlere Ausschnitte behalten den gelesenen Tokenbereich mit größtmöglicher

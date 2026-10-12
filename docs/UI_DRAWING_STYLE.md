@@ -1,5 +1,10 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
+**Aktive Hinweisgeometrie HC / #92:** [CLUE_TYPOGRAPHY](CLUE_TYPOGRAPHY.md)
+ersetzt ausschließlich ältere Chalkboard-/24/18-Aussagen für reguläre Hinweise.
+Delight Coffee, zellabhängiger Schriftgrad und gemessene gemeinsame Slots gelten
+einschließlich Fit, G/V, Drag/Snap und Status. Übrige Fonts und C1 bleiben.
+
 ## Zellrendering-Vertrag · PERF
 
 Für Zellbilder, Varianten, Zeitabbildung und spätere Cachearbeit gilt zusätzlich

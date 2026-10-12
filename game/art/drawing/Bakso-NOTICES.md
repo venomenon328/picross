@@ -14,7 +14,7 @@ ausdrücklich beauftragt durch VS2-E2/V3-07 in Issue #61 am 10.10.2026.
   [Erweiterung auf den regulären Titel](https://github.com/venomenon328/picross/issues/61).
 
 Offline eingebettet. Keine Systemfontsuche oder Änderung der Originalkonturen.
-Chalkboard bleibt Hinweisfont; andere Überschriften behalten Fraunces.
+Hinweisziffern verwenden seit HC/#92 Delight Coffee; andere Überschriften behalten Fraunces.
 
 Bakso enthält das tatsächliche Titelzeichen `·` nicht. Ausschließlich fehlende
 Glyphen erhalten das bereits gebündelte IBM Plex Sans als expliziten Fallback;
