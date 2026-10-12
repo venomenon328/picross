@@ -1,0 +1,88 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 4,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8"
+  },
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r04",
+  "repo_commit": "bc3286050a35cdbdd3b5fe5e6274255228517aaa",
+  "state": "motif_review",
+  "brief": "brief.md",
+  "category_id": "sport-spiele",
+  "requested_mode": "mono",
+  "approved_parameters": [
+    {
+      "width": 24,
+      "height": 36,
+      "mode": "mono",
+      "basis": "previous actual human dimension/mode corridor; new motif approval pending"
+    }
+  ],
+  "proposed_parameters": "parameters.json",
+  "reveal": {
+    "file": "reveal/A-r01.png",
+    "revision": "A-r01",
+    "sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+    "approval": {
+      "file": "approvals/reveal-A-r01.json",
+      "sha256": "be490ece290ebf5b10ada0160bdd475adb49c7ad86851f15a488475f671a1040"
+    }
+  },
+  "reveal_provenance": "provenance/A-r01.json",
+  "motif": {
+    "file": "motif/MA-r02.png",
+    "revision": "MA-r02",
+    "sha256": "0a79644cc797f5202a288a5d8b8e271cf1e39db4b81cc39ab744949a0202cb59",
+    "derived_from_reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+    "approval": null
+  },
+  "motif_provenance": "provenance/MA-r02.json",
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "b882ba553e0282fe4759d0f29f947d419d5486c2967abaff0350db6b099f2bb9"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": [
+      "approvals/reveal-A-r01.json"
+    ]
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "Explicit separate human approval of new MA-r02 and its 24x36-mono corridor required before raster production."
+  ],
+  "next_action": "Present unchanged A-r01 and new MA-r02 side by side; await separate explicit human motif approval before any raster production.",
+  "authorization": "Native silhouette correction and slim authoring archive, commit/push/Draft-PR and explicitly conditional merge after full diff/self-review and selected mandatory checks; verify actual main. No raster, tool changes, runtime catalog, release or deployment."
+}
