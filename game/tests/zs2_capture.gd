@@ -195,6 +195,26 @@ func empty_sample() -> void:
 	app._reset_selected()
 	app.open_puzzle()
 
+func font_metrics() -> Dictionary:
+	if role != "after": return super.font_metrics()
+	# The inherited study oracle intentionally fixes 24/18. Current captures
+	# carry raw native measurements for the independent HC Python oracle.
+	var board = app.board
+	var font: Font = board.clue_font()
+	var fs: int = board.clue_font_size()
+	var metrics: Dictionary = load("res://tests/hc92_metrics.gd").capture(board)
+	var widths: Array[float] = []
+	for axis: String in ["row","column"]:
+		var width: float = 0
+		for token: Dictionary in metrics.selected[axis]:
+			width = maxf(width,float(token.advance))
+		widths.append(width)
+	var extents: Vector2 = board.clue_vertical_extents(fs)
+	return {"font_size":fs,"max_actual_token_width":maxf(widths[0],widths[1]),
+		"row_slot":board.pitch_for("row"),"column_slot":board.pitch_for("column"),
+		"axis_widths":widths,"ink_above_center":extents.x,"ink_below_center":extents.y,
+		"ascent":font.get_ascent(fs),"descent":font.get_descent(fs),"typography":metrics}
+
 func numeral_probe() -> void:
 	var specimen = load("res://tests/zs2_numerals.gd").new()
 	specimen.session = Session.new(app.sessions[1].definition)

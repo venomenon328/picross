@@ -8,6 +8,7 @@ import p1_preflight as toolchain
 from p1_evidence import png_references
 import zs1_delivery
 import zs2_delivery
+from vs2_v1_verify import typography
 
 CURRENT_CASES = {
     "f01-work", "f02-color", "f06-small", "f02-compact", "f01-1600",
@@ -43,6 +44,11 @@ def verify_regular_motion(root: Path, renders: Path) -> dict:
     for item in captures:
         if item["font"] != "Delight Coffee" or item["spoiler_free"] is not True:
             raise toolchain.PreflightError("Current font/spoiler contract failed")
+        metrics = item["font_metrics"]
+        typography(dict(typography=metrics["typography"], font_px=item["font_size"],
+                        actual_cell=item["full_view"]["cell_pitch"], ui_scale=item["ui_scale"],
+                        row_pitch=metrics["row_slot"], column_pitch=metrics["column_slot"],
+                        layout_valid=item["full_view"]["layout_valid"]))
         with Image.open(renders / item["file"]) as picture:
             if list(picture.size) != item["size"]:
                 raise toolchain.PreflightError("Current drawing capture dimensions differ")
