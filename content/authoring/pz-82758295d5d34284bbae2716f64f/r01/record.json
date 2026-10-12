@@ -1,0 +1,48 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r01",
+  "category_id": "sport-spiele",
+  "state": "reveal_approved",
+  "package": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/package.zip",
+    "bytes": 4873644,
+    "sha256": "26eaea4f9a829db4b13021d8c267af0d755147e76fc185868f5aa7d16031a132"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/handoff.json",
+    "sha256": "2c796bdf9ebcfb62a65b4da82f98222df56045233c306457425b0cf9df8769c2"
+  },
+  "inventory_sha256": "abddc011e4033f60551c7b580c2a0ccef4d1985160cd4c899cd6a9b4ee9a8e69",
+  "approval": null,
+  "width": null,
+  "height": null,
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "Continue with indexed r02 motif_review; explicit MA-r01/corridor approval pending.",
+  "integration": null,
+  "progress_log": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/progress.json",
+  "archive_review": {
+    "source_commit": "ee6179f6f7b6bc53f6953e2220eeeb01f060ea11",
+    "state": "package_validation_passed",
+    "image_approval": "A-r01 explicitly approved; separate reveal-approval.json. Original sealed ZIP/handoff retain historical pending status.",
+    "delivery_evidence": "Final head, selected CI and separate self-review recorded in PR #93; package and readable original handoff remain sealed."
+  },
+  "repository_delivery": {
+    "branch": "content/chess-knight-reveal-r01",
+    "pr": 93,
+    "evidence": "https://github.com/venomenon328/picross/pull/93"
+  },
+  "validation": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/validation.json",
+    "sha256": "f9d01bf8f53ba6a8e6dfbf510a4023f1bdf70d69582213a1f79913794d7327c1"
+  },
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+  "reveal_approval": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r01/reveal-approval.json",
+    "sha256": "be490ece290ebf5b10ada0160bdd475adb49c7ad86851f15a488475f671a1040"
+  },
+  "superseded_by": "r02"
+}
