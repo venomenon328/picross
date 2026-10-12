@@ -1,0 +1,110 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r06",
+  "previous_revision": "r05",
+  "state": "raster_review",
+  "category_id": "sport-spiele",
+  "package": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/package.zip",
+    "bytes": 4044657,
+    "sha256": "2c89f961d543451504c572fda281c9bbd18544196bc43b5ae47d1d76193ddee3"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/handoff.json",
+    "sha256": "96e4b560bebdfe2b38485387a7d02900093c53d628ed15022e156b7bccce8d74"
+  },
+  "inventory_sha256": "e0a75a440ba1ac49c9ab4cf6f0da59c84a2fdeb25af68180cf5a2e50d19357cc",
+  "approval": null,
+  "integration": null,
+  "width": 24,
+  "height": 36,
+  "mode": "mono",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "All 142 new proof checkpoints enumerate all 60 currently productive full-line opportunities. Before cleanup at <=18 unresolved cells, at least nine productive lines are available; no numeric bottleneck observed. Not a validated weaker-rule fixpoint analysis.",
+    "calibration": "No validated difficulty analyser and no human comparison data. Low-confidence editorial estimate; time not estimated.",
+    "confidence": "low",
+    "effort": {
+      "width": 24,
+      "height": 36,
+      "cells": 864,
+      "filled": 547,
+      "empty": 317,
+      "proof_steps": 142,
+      "human_active_minutes": null,
+      "solve_time_minutes": null
+    },
+    "evidence": "audit/difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "0e59b1e543c1d29cfd9915af1fc17c23bea5974cde04b8fe0a4b40f9a84d2fe9",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L2",
+      "L4"
+    ],
+    "playtest": "not_performed; optional",
+    "rule_families": {
+      "R0": "Initially only empty column 24 (one-based) is directly resolved; no packed row/column. After that, each row still has at least one unit of slack; initial direct R0 seeds do not complete the puzzle. Late completed blocks give cleanup.",
+      "R1": "Main estimated demand: overlap/extension of long contiguous blocks. Initial row 7 [13] in width 24 forces columns 12–13; rows 13–15 have length 21/22 blocks; column 11 has [35] in height 36. These broad anchors spread simple progress through the silhouette.",
+      "R2": "Muzzle/neck separation and columns with two/three blocks may need combined block assignment. Necessity/sufficiency of R0+R1 versus R2 was not exhaustively tested; do not claim an instrumented L2 proof.",
+      "R3": "Certification uses full-line-mono support. That alone does not establish R3 necessity; no specifically unavoidable R3 step identified. R3 demand cannot be formally excluded, hence conservative L2–L4 uncertainty."
+    },
+    "time_estimate": null
+  },
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+  "motif_revision": "MA-r02",
+  "motif_sha256": "0a79644cc797f5202a288a5d8b8e271cf1e39db4b81cc39ab744949a0202cb59",
+  "blockers": [
+    "ZA-1 supports import/RP-5 search only; this exact user-directed manual derivation has no supported adapter input. No tool changes authorized.",
+    "Final bound human editorial acceptance of r06 pending."
+  ],
+  "next_action": "Human review of exact r06 raster/report; any adapter implementation is a separate explicitly authorized task. Preserve sealed ZIP and old approvals.",
+  "change_request": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/change-request.json",
+    "sha256": "8470493f0150e715e462b56c23d5fef56a601e3c1643469003ba4afd60e18f24"
+  },
+  "production_result": {
+    "candidate": "area-160-minus3",
+    "matrix_hash": "0f57810cd333d9875b7ce2d4d6dbbf49eac75bb7597116fca29180be7b4018f1",
+    "logic_hash": "0e59b1e543c1d29cfd9915af1fc17c23bea5974cde04b8fe0a4b40f9a84d2fe9",
+    "deductively_solved": true,
+    "independent_proof_verified": true,
+    "proof_steps": 142,
+    "removed_cells_one_based": [
+      [
+        4,
+        34
+      ],
+      [
+        4,
+        35
+      ],
+      [
+        7,
+        29
+      ]
+    ],
+    "other_cells_unchanged": 861,
+    "report": "package.zip!report.md",
+    "comparison": "package.zip!views/before-after-diff.png",
+    "manual_replay": "package.zip!audit/manual-replay.json"
+  },
+  "adapter": {
+    "status": "unsupported_manual_derivation",
+    "technical": null,
+    "inspection_performed": false,
+    "evidence": "package.zip!adapter-status.json"
+  },
+  "repository_delivery": {
+    "branch": "chore/authoring-pz-82758295-r06",
+    "source_main": "d614229e767c4a41fe5a8ea47a6f37047e456e59",
+    "evidence": "Final Head/Base/Test-Merge/CI/self-review and authorized archive merge/main verification in associated PR."
+  },
+  "progress_log": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/progress.json",
+  "validation": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/validation.json",
+    "sha256": "7c19dc9aab0509738f16cb6e65d7ccc27a876a7dcfdef0f4dd7305b82c7aa3a8"
+  }
+}
