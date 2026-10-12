@@ -56,7 +56,7 @@ class TargetTests(unittest.TestCase):
         out = self.root / dest
         export(p, out, name="TEST ONLY", revision=7, stem=stem or h["puzzle_id"],
                save_slot=slot or "slot_"+h["puzzle_id"], approval_path=approval,
-               category_id="gemuese-pilze-kraeuter", categories_path=ROOT / "content/categories.json")
+               category_id="gemuese-pilze-kraeuter", categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
         return out
 
     def reseal(self, p):
@@ -119,10 +119,10 @@ class TargetTests(unittest.TestCase):
                 changed = copy.deepcopy(original)
                 changed["entries"][-1]["save_slot"] = slot
                 with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
-                    validate(changed, load_json(ROOT / "content/categories.json"))
+                    validate(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json"))
                 write_json(checkout / "content/registry.json", changed)
                 # Keep projection consistent, so stale runtime data cannot mask B-01.
-                write_json(checkout / "game/data/registry.json", projection(changed, load_json(ROOT / "content/categories.json")))
+                write_json(checkout / "game/data/registry.json", projection(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")))
                 before = self.snapshot(checkout)
                 for replay in (False, True):
                     with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
@@ -140,7 +140,7 @@ class TargetTests(unittest.TestCase):
         changed = json.loads(journal["new"][REGISTRY])
         changed["entries"][-1]["save_slot"] = "con"
         journal["new"][REGISTRY] = json.dumps(changed)
-        journal["new"][RUNTIME] = json.dumps(projection(changed, load_json(ROOT / "content/categories.json")))
+        journal["new"][RUNTIME] = json.dumps(projection(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")))
         write_json(lock, journal)
         before = self.snapshot(checkout)
         with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):

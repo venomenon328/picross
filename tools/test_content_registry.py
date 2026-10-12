@@ -17,7 +17,7 @@ class RegistryTests(unittest.TestCase):
         for field,value in (("save_slot","other"),("visible",True),("id","pz-new")):
             changed = deepcopy(registry)
             changed["entries"][2][field] = value
-            with self.assertRaises(InvalidInput): validate(changed, load_json(Path(__file__).resolve().parents[1] / "content/categories.json"))
+            with self.assertRaises(InvalidInput): validate(changed, load_json(Path(__file__).resolve().parents[1] / "tests/puzzle_production/fixtures/catalog/categories.json"))
 
     def test_registry_and_new_harness_select_required_work(self):
         p = classify(["content/registry.json"])["selected"]
