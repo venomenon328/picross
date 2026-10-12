@@ -13,7 +13,7 @@ func run() -> void:
 	surface.add_child(app)
 	await process_frame
 	check(app.board is Regular and app.store.root == saved_root, "regular scene and isolated test save root")
-	check(app.sessions.size() == 6, "all six regular sheets available")
+	check(app.sessions.size() == app.puzzle_definitions().size(), "all registered regular sheets available")
 	check(app.animation_toggle.button_pressed and app.board.animations, "new session starts enabled")
 	check(not app.has_method("cycle_font") and not app.has_method("empty_sample"), "no study controls in regular app")
 	for index: int in range(app.sessions.size()):

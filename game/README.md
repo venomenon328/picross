@@ -1,5 +1,9 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+Weitere freigegebene Workflow-Inhalte können über den [ZA-1-Adapter](../docs/ZA1_ADAPTER.md)
+registriert werden. Die Adapterlieferung ergänzt ausschließlich technische
+Fähigkeiten; das aktuelle Spielerangebot bleibt bei den folgenden sechs Rätseln.
+
 Das reguläre Projekt liegt unter `game/`. Der integrierte Stand umfasst Sidebar,
 Vollsicht, Stift-/Atlasdarstellung, Save/Recovery und genau sechs Katalogrätsel:
 F01 (20×20), F02 (40×40, vier Farben), F04 (20×20), F06 (50×50), F08/F09 (40×40).

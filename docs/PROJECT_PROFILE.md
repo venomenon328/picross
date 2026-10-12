@@ -15,6 +15,11 @@ Dateien mit bestehenden Speicherplätzen und Nachweisbindungen erhalten. 100×10
 ist eine optionale theoretische Stressgröße. Die Bereinigung ändert keine Rätsel,
 IDs, Revisionen, Spielregeln, Save-Schemata oder vorhandenen Spielstände.
 
+[ZA-1](ZA1_ADAPTER.md) ermöglicht weitere freigegebene Workflow-Inhalte über eine
+zentrale Datenregistry mit expliziten Slots, einschließlich Mono/Farbe und Rechtecken.
+Die Adapterlieferung fügt kein reguläres Rätsel hinzu. Künstliche Fixtures bleiben
+isoliert; Knoblauch r03 hat weiterhin keine finale redaktionelle Freigabe.
+
 Aktuelle Bindung: Godot Standard 4.7.2-stable, typisiertes GDScript, native
 Windows-Desktopfassung, Maus als verpflichtender Eingabepfad (D-06), Escape als
 Gestenabbruch. Keine Wertung, Live-Fehlerhilfe oder Hypothesen. Endgültige Engine,

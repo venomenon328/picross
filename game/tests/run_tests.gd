@@ -75,7 +75,7 @@ func finish() -> void:
 
 func test_definition() -> void:
 	check(Definition.validate(fixture).is_empty(), "F-01 validates")
-	check(Definition.CATALOG_IDS==["f01","f02","f04","f06","f08","f09"],"current catalog excludes retired oversized sheets")
+	check(Definition.catalog_ids().slice(0,6)==["f01","f02","f04","f06","f08","f09"],"historical catalog prefix excludes retired oversized sheets")
 	var largest: Dictionary = Definition.load_fixture("f06")
 	check(largest.width==50 and largest.height==50 and Definition.validate(largest).is_empty(),"50x50 boundary remains playable")
 	for axis: String in ["width","height"]:
@@ -120,7 +120,7 @@ func test_definition() -> void:
 		"solution": [[1, 2, 0, 2]], "rows": [[{"length": 1, "color": 1}, {"length": 1, "color": 2}, {"length": 1, "color": 2}]],
 		"columns": [[{"length": 1, "color": 1}], [{"length": 1, "color": 2}], [], [{"length": 1, "color": 2}]],
 		"reveal": {"version": 1, "definition_id": "test", "name": "test", "image": "res://art/f01.svg"}}
-	check(Definition.validate(colored).is_empty(), "valid color boundary definition")
+	check(Definition.validate(colored,{"test":"res://art/f01.svg"}).is_empty(), "valid color boundary definition")
 	colored.rows[0] = [{"length": 1, "color": 1}, {"length": 2, "color": 2}]
 	check(not Definition.validate(colored).is_empty(), "same-color separated clues cannot merge")
 

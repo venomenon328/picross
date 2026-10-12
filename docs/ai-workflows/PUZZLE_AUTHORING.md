@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.4.0 · 11.10.2026**
+**Version 0.4.1 · 12.10.2026**
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
 Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag über das zuerst freigegebene Abschlussbild bis zum katalogfähigen Paket. **MUSS** bezeichnet eine Pflicht, **SOLL** den begründet abweichbaren Standard, **DARF** eine Option.
@@ -194,7 +194,7 @@ Die KI MUSS einen aktuellen Übergabedatensatz in diesem Begleitformat führen. 
 
 ```yaml
 format: picross-authoring-handoff-v2
-rulebook: {version: "0.4.0", file: "<Regelwerk>", sha256: null}
+rulebook: {version: "0.4.1", file: "<Regelwerk>", sha256: null}
 puzzle_id: "<stabile ID>"
 revision: "<Paketrevision>"
 repo_commit: "<vollständige tatsächlich gelesene SHA>"
@@ -249,3 +249,19 @@ Den Abschlussbericht auf eine kompakte Seite plus Beleglinks begrenzen. Er MUSS 
 - Offene Blocker und nächsten erlaubten Schritt. Vorhandene menschliche Spieldaten optional ergänzen; ihr Fehlen ist kein Blocker.
 
 Keine Ergebnis- oder Freigabefelder ohne Beleg als erfüllt ausgeben. Inhaltsfreigabe, Katalogfähigkeit und tatsächliche Integration getrennt halten. Ein unpassender oder fehlender Exportadapter darf nicht durch Umwidmung bestehender Pilotdefinitionen ersetzt werden.
+
+## 8. Regulärer Zieladapter ZA-1
+
+Der [ZA-1-Vertrag](../ZA1_ADAPTER.md) verarbeitet Authoring-v2 mit diesem Regelwerk
+oder unverändertem 0.4.0-Eingang. Er unterstützt 1…50 Zellen pro Achse, Rechtecke,
+Mono und höchstens vier Vordergrundfarben. Neue Runtime-IDs übernehmen die
+motivneutrale Produktions-ID. Dateistamm, Save-Slot, Motivname und numerische
+Runtime-Revision sind explizit; Paketrevision und Runtime-Revision bleiben getrennt.
+Technische Bindungen und `gate_evidence` gemäß Adaptervertrag führen, nichts aus
+Fließtext erraten.
+
+Finale Freigabe kann getrennt vorliegen. Sie bindet Originalinventar und
+Originalhandoff, Endkandidat, Matrix-/Logikhash und Abschlussbild, dazu Akteur,
+UTC-Zeit und tatsächliche Erklärung. Das Original bleibt unverändert. Ein
+`pass`-Flag ersetzt keine Erklärung. Fehlende Endabnahme erlaubt Diagnose,
+verhindert Export/Registrierung. Eine Adapterlieferung ist keine Inhaltsabnahme.

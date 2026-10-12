@@ -51,6 +51,10 @@ jobs:
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: python3 -m tools.puzzle_production.rp4 verify --output-dir artifacts/puzzle-production/rp4
+      - name: ZA-1 isolated authoring export and registration replay
+        run: |
+          python3 -m tools.puzzle_production.za1_fixtures --output-dir "${{ runner.temp }}/za1-replay"
+          cp "${{ runner.temp }}/za1-replay/replay.json" artifacts/puzzle-production/za1-replay.json
       - name: Upload reports, proofs and measurements
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

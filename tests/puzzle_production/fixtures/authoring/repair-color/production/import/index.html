@@ -1,0 +1,40 @@
+<!doctype html><html lang="de"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RP-3 Produktionsvergleich</title><style>
+body{font:16px system-ui;margin:24px;color:#243b3b;background:#faf6ed}h1{font-size:26px}
+.images{display:flex;gap:24px;flex-wrap:wrap}figure{margin:0 0 24px}img.source{width:320px;height:320px;object-fit:contain;background:#ddd}
+img.cells{image-rendering:pixelated;width:400px;max-width:90vw}pre{white-space:pre-wrap;overflow-wrap:anywhere}
+table{border-collapse:collapse}td,th{border:1px solid #aaa;padding:4px}section{border-top:2px solid #999;margin-top:32px}
+</style><h1>RP-3 Produktionsvergleich</h1>
+<p>Produktionsansicht mit Motivspoiler. Technische Zertifizierung, Motivqualität und redaktionelle Freigabe sind getrennt. Motiv-/Spielabnahme: offen.</p>
+<p>Quelle: test-only · Datei: source.png</p>
+<p>Original SHA-256: ad74b27ee958cb216a111b110a69de21d912feaf059af17ea717600d861a3079<br>Normalisiert SHA-256: 07018c8835b0806db83826247f6e429951cfc28a625465927db306b73bc5fabf</p>
+<div class="images">
+<figure><figcaption>Original (Orientierung nach Browser)</figcaption><img class="source" src="original.png" alt="Originaldatei"></figure>
+<figure><figcaption>Normalisiert: sRGB / EXIF angewendet / Alpha erhalten</figcaption><img class="source" src="normalized.png" alt="Normalisierung"></figure></div>
+<h2>Entwurf, Herkunft und Normalisierung</h2>
+<pre>{&#x27;alpha_below&#x27;: 128, &#x27;background&#x27;: &#x27;#ffffff&#x27;, &#x27;briefing&#x27;: &#x27;Artificial fixture, no editorial catalog approval&#x27;, &#x27;crop&#x27;: [0, 0, 6, 4], &#x27;fit&#x27;: &#x27;exact&#x27;, &#x27;format&#x27;: &#x27;picross-image-design-v1&#x27;, &#x27;height&#x27;: 4, &#x27;mode&#x27;: &#x27;color&#x27;, &#x27;origin&#x27;: &#x27;Artificial ZA-1 test-only source&#x27;, &#x27;palette&#x27;: [{&#x27;id&#x27;: &#x27;blue&#x27;, &#x27;rgb&#x27;: &#x27;#2858b8&#x27;}, {&#x27;id&#x27;: &#x27;red&#x27;, &#x27;rgb&#x27;: &#x27;#d52b2b&#x27;}], &#x27;rights&#x27;: &#x27;Repository-owned test pixels only&#x27;, &#x27;source_id&#x27;: &#x27;test-only&#x27;, &#x27;variants&#x27;: [{&#x27;id&#x27;: &#x27;area&#x27;, &#x27;method&#x27;: &#x27;area&#x27;, &#x27;threshold&#x27;: 128}], &#x27;width&#x27;: 6, &#x27;working_mode&#x27;: &#x27;faithful&#x27;}
+{&#x27;format&#x27;: &#x27;PNG&#x27;, &#x27;source_size&#x27;: [6, 4], &#x27;source_mode&#x27;: &#x27;RGB&#x27;, &#x27;orientation&#x27;: 1, &#x27;normalized_size&#x27;: [6, 4], &#x27;color_treatment&#x27;: &#x27;untagged/sRGB RGB or gray interpreted as sRGB&#x27;, &#x27;icc_sha256&#x27;: None, &#x27;alpha&#x27;: &#x27;preserved, composited against design background only during rasterization&#x27;}
+{&#x27;tool&#x27;: &#x27;rp3-image-1&#x27;, &#x27;pillow&#x27;: &#x27;12.3.0&#x27;, &#x27;jpeg&#x27;: &#x27;8.0&#x27;, &#x27;jpeg_turbo&#x27;: &#x27;3.1.4.1&#x27;, &#x27;littlecms&#x27;: &#x27;2.19&#x27;, &#x27;zlib&#x27;: &#x27;1.3.1.zlib-ng&#x27;}</pre>
+<section><h2>area · stalled</h2>
+<pre>{&#x27;status&#x27;: &#x27;stalled&#x27;, &#x27;proof_verified&#x27;: True, &#x27;certified&#x27;: False, &#x27;logic_hash&#x27;: &#x27;de760aa5903d6ae57c5e57d22b59852dbb2a733895bc8bf3ac23d78007832509&#x27;, &#x27;profile&#x27;: {&#x27;id&#x27;: &#x27;full-line-color&#x27;, &#x27;version&#x27;: 1, &#x27;start&#x27;: &#x27;unknown&#x27;, &#x27;deduction&#x27;: &#x27;all-line-supported-values&#x27;, &#x27;search&#x27;: False}, &#x27;profile_hash&#x27;: &#x27;f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f&#x27;, &#x27;steps&#x27;: 10, &#x27;line_evaluations&#x27;: 20, &#x27;elapsed_seconds&#x27;: 0.02497640000365209}</pre>
+<pre>Kandidat: 3507f7311dc1106683efd619eaca735358f54fbf400a90421cf811bdb60fec3e
+{&#x27;id&#x27;: &#x27;area&#x27;, &#x27;method&#x27;: &#x27;area&#x27;, &#x27;threshold&#x27;: 128}</pre>
+<div class="images"><figure><figcaption>1 Pixel je Zelle (6×4); Datei in Originalgröße öffnen</figcaption><a href="area-raster.png"><img src="area-raster.png" alt="Raster bei Zellauflösung"></a></figure>
+<figure><figcaption>Vergrößert ohne Zwischenfarben</figcaption><img class="cells" src="area-raster.png" alt="Diskretes Raster vergrößert"></figure></div>
+<h3>Zeilen</h3><table><tr><th>Linie</th><th>Vollständige Hinweise (Länge:Farb-ID)</th></tr>
+<tr><td>1</td><td>1:red</td></tr>
+<tr><td>2</td><td>1:red</td></tr>
+<tr><td>3</td><td>–</td></tr>
+<tr><td>4</td><td>1:blue</td></tr>
+</table>
+<h3>Spalten</h3><table><tr><th>Linie</th><th>Vollständige Hinweise (Länge:Farb-ID)</th></tr>
+<tr><td>1</td><td>1:red</td></tr>
+<tr><td>2</td><td>1:red</td></tr>
+<tr><td>3</td><td>–</td></tr>
+<tr><td>4</td><td>–</td></tr>
+<tr><td>5</td><td>–</td></tr>
+<tr><td>6</td><td>1:blue</td></tr>
+</table>
+</section>
+</html>
