@@ -3,7 +3,7 @@
   "puzzle_id": "pz-eedd1fe72af54714908d5b5aff34",
   "revision": "r02",
   "category_id": "insekten-kleine-tiere",
-  "state": "motif_review",
+  "state": "superseded",
   "package": {
     "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r02/package.zip",
     "bytes": 4473711,
@@ -32,7 +32,7 @@
   "blockers": [
     "Ausdrückliche menschliche Freigabe der konkreten Motivdatei MA-r03 samt Korridor vor Rasterproduktion erforderlich."
   ],
-  "next_action": "Menschliche Freigabe von MA-r03 samt parameters.json; dann Standardauftrag 3 mit Codex-Übergabe. Noch keine Rasterproduktion.",
+  "next_action": "Use current indexed r03 content_ready for final editorial acceptance.",
   "integration": null,
   "repository_delivery": {
     "branch": "content/earthworm-reveal-r01",
@@ -44,5 +44,7 @@
   "validation": {
     "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r02/validation.json",
     "sha256": "4f439875626ded381258985c34816a6fbf851652b5e93fe24d55b1b17a59b85f"
-  }
+  },
+  "superseded_by": "r03",
+  "superseded_reason": "Actual user explicitly chose older MA-r01 and25x35; production delivered r03. Sealed r02 ZIP/handoff unchanged."
 }
