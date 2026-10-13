@@ -1,0 +1,96 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r04",
+  "previous_revision": "r03",
+  "motif_name": "Hamburger",
+  "category_id": "gerichte-herzhaftes",
+  "state": "blocked",
+  "package": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r04/package.zip",
+  "package_bytes": 4915790,
+  "package_sha256": "8311f0623794e93916d1c9576753616a046f66e1ae1c2251f84ffb1f37bf1f6a",
+  "handoff": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r04/handoff.json",
+  "handoff_sha256": "977cc4fa7007d292363f1cebb84b4dcf9f99687a57ae271f4daf80108eba4638",
+  "inventory_sha256": "8600bb43119cb892b3a816b1f80b73e90bc790b432a911960d3ddfe306da97ff",
+  "approval": null,
+  "approval_sha256": null,
+  "width": 25,
+  "height": 22,
+  "mode": "mono",
+  "difficulty": {
+    "method": "picross-difficulty-0.1",
+    "assessment_type": "editorial_estimate",
+    "logic_hash": "4c1cbf8cf02c5edae4c6742b63fc6f426951656af63f0d6b36e8eb33c585f230",
+    "level": "L2",
+    "plausible_range": [
+      "L1",
+      "L4"
+    ],
+    "confidence": "low",
+    "evidence": "audit/difficulty-checkpoints.json",
+    "rule_families": {
+      "R0": "Zwei leere Außenkolonnen 1 und 25 liefern direkte Anfangsschritte. Danach sind Zeilen 7,8,11,15,16,19 (1-basiert) im verbleibenden Bereich 2..24 vollständig gepackt. Diese zusätzlichen R0-Anker vereinfachen den Einstieg; R0-Suffizienz wurde nicht mit validierter Methode bis zum Fixpunkt geprüft. L1 kann nicht ausgeschlossen werden.",
+      "R1": "Geschätzt weiterhin dominante Anforderung: Überlappungen und Verlängerungen breiter Brötchen-/Pattyblöcke. Hinweislängen unverändert in Zeile4 [3,9,4] und Zeile5 [21], deren Überlappungen schon vom unbekannten Start Fortschritt ermöglichen; neue direkt gepackte Reihen können diese Schritte teilweise ersetzen.",
+      "R2": "Sesamaussparungen, Salatlappen und Mehrfachblöcke in Spalten können kombinierte Blockzuordnungen erfordern. R0+R1 wurden nicht mit einem validierten schwächeren Regelanalysator vollständig bis zum Fixpunkt geprüft; R1-Suffizienz und R2-Notwendigkeit sind unsicher.",
+      "R3": "Vollständige Linienunterstützung ist zertifiziert, beweist aber nicht R3-Notwendigkeit. Kein konkret unvermeidbarer R3-Schritt identifiziert; mangels validierter schwächerer Regelfamilien ist R3-Bedarf nicht ausgeschlossen. Daher vorsichtiger Bereich L1–L4."
+    },
+    "bottleneck": "Alle 47 Linien vor allen 81 neuen Proofschritten geprüft. Vor Restaufräumen mindestens 7 produktive Linien; keine numerische Engstelle beobachtet. Keine validierte schwächere Regelfamilienanalyse.",
+    "calibration": "Kein validierter Bewertungsanalysator und keine menschlichen Vergleichsdaten; begründete KI-Schätzung, keine instrumentierte Einstufung.",
+    "effort": {
+      "width": 25,
+      "height": 22,
+      "cells": 550,
+      "filled": 335,
+      "empty": 215,
+      "proof_steps": 81,
+      "human_active_minutes": null,
+      "solve_time_minutes": null
+    },
+    "time_estimate": null,
+    "playtest": "not_performed; optional, kein Gate"
+  },
+  "blockers": [
+    "FRAME-R04: Beide äußeren Spalten sind leer; (left OR right) AND (top OR bottom) ist false.",
+    "ZA1-R04: Explizite manuelle Ableitung mit Einfügen; vorhandener ZA-1-manual-Vertrag unterstützt nur ink→empty. Kein unveränderter Originalimport und keine Adapterfreigabe behauptet."
+  ],
+  "next_action": "Nutzerentscheidung zum Randkonflikt; keine weiteren Rasteränderungen ohne Auftrag. Endabnahme/Export aktuell blockiert.",
+  "integration": null,
+  "repo_commit": "a3cce246ac946704e60809747681545664824c7a",
+  "selection": {
+    "variant": "manual-128",
+    "matrix_hash": "f7ec4030410046086fb80e7407a709b011f0dc503cc15dd57414512905d934ee",
+    "logic_hash": "4c1cbf8cf02c5edae4c6742b63fc6f426951656af63f0d6b36e8eb33c585f230",
+    "reveal": {
+      "file": "images/A-r01.png",
+      "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074"
+    }
+  },
+  "manual_edits": [
+    {
+      "row": 11,
+      "column": 1,
+      "before": "ink",
+      "after": "empty"
+    },
+    {
+      "row": 13,
+      "column": 2,
+      "before": "empty",
+      "after": "ink"
+    }
+  ],
+  "logic_certified": true,
+  "frame": {
+    "left": false,
+    "right": false,
+    "top": true,
+    "bottom": true
+  },
+  "frame_pass": false,
+  "target_export": "blocked",
+  "inspection": null,
+  "self_review": {
+    "file": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r04/self-review.json",
+    "sha256": "f90eb744e921ec58439199dfd81d91f68d80376542172f123822f4a692dc60d7"
+  }
+}
