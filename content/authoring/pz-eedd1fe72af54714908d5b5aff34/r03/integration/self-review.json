@@ -1,0 +1,27 @@
+{
+  "format": "picross-content-integration-self-review-v1",
+  "timestamp_utc": "2026-10-13T11:20:24.001756+00:00",
+  "reviewer": "Codex separate self-review, not independent second review",
+  "base_commit": "ecc6fcc3e90c4cfcbaa75a3ceb462b25ed6ed6ee",
+  "complete_diff": {
+    "files_before_this_review_record": 73,
+    "diff_bytes": 10335969,
+    "path_mode_scope_check": true,
+    "all_staged_bytes_match_local": true,
+    "copied_export_inputs": "All57 export files retain exact adapter bytes; original production input subset bound by derivation/original inventory. Large checkpoint/proof copies reviewed by exact custody and prior accepted evidence rather than rewriting.",
+    "old_entries": "All12 pre-existing registry entries and all old runtime entries unchanged; canonical projection gains only this ID."
+  },
+  "findings": [],
+  "judgment": "mergeable after current-head docs/ci-required success and unchanged head/base; actual conditional user merge order present",
+  "approval_identifier_resolution": "User ID/r03 and given40-character Git archival commit uniquely identify unchanged package; actual64-character inventory digest calculated and explicitly documented while statement stays literal.",
+  "validation": [
+    "export independently validated input and written output internally",
+    "plan reviewed before register",
+    "register succeeded and internally checked installed files",
+    "separate byte/matrix/clue/category/registry checks passed",
+    "sealed original ZIP/handoff/inventory preserved"
+  ],
+  "native_tests": "nicht erforderlich: reine Inhaltsintegration",
+  "manual_playtest": "not performed; optional, not a gate",
+  "ci": "pending final head after commit/push"
+}

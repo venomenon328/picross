@@ -1,0 +1,24 @@
+{
+  "width": 25,
+  "height": 35,
+  "cells": 875,
+  "filled": 343,
+  "empty": 532,
+  "occupancy": 0.392,
+  "black_components": [
+    343
+  ],
+  "isolated_black_cells": 0,
+  "enclosed_empty_components": [
+    14
+  ],
+  "empty_rows": [],
+  "empty_columns": [],
+  "frame": {
+    "left": true,
+    "right": true,
+    "top": true,
+    "bottom": true
+  },
+  "interpretation": "4-neighbor connected silhouette and enclosed white belt. No requirement that all four outer edges be filled."
+}

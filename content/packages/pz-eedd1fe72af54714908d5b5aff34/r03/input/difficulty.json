@@ -1,0 +1,31 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "level": "L2",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "confidence": "low",
+  "logic_hash": "8b4da5d9e8123966f99096f83637544ffb10a267578142f871baca53b6cb34d3",
+  "rule_families": {
+    "R0": "Keine initial leeren oder voll gepackten Zeilen/Spalten. R0 kann vom völlig unbekannten Start keinen ersten Schritt liefern; L1 damit ausgeschlossen. Restleerfelder und fertige Blöcke dienen später dem Aufräumen.",
+    "R1": "Voraussichtlich dominante Anforderung sind Überlappungen langer Körperblöcke und deren Verlängerung: erste Zeile6 (1-basiert) [7,9] erzwingt eine Zelle, Zeile7 [3,15] liefert sofort9 erzwungene Zellen. Breite Körperarme bieten räumlich verteilte Anker.",
+    "R2": "Mehrfachblockzuordnung am Gürtel und in Spalten mit beiden Körperbögen kann kombinierte Anker benötigen. R0+R1 wurden nicht mit einem validierten schwächeren Regelanalysator bis zum Fixpunkt geprüft; formale R1-Suffizienz und R2-Notwendigkeit bleiben unsicher.",
+    "R3": "Das Zertifikat nutzt allgemeine vollständige Linienunterstützung. Dies beweist keine R3-Notwendigkeit; R3 kann mangels geprüfter schwächerer Familien nicht ausgeschlossen werden. Daher konservativ L2–L4."
+  },
+  "bottleneck": "Vor jedem der168 Proofschritte wurden alle60 Linien im damaligen Wissensstand geprüft. Vor Aufräumen bei<=18 unbekannten Zellen bestehen mindestens7 produktive Linien; keine numerische Engstelle im geprüften Verlauf. Keine instrumentierte Bewertung oder menschliche Kalibrierung behauptet.",
+  "evidence": "audit/difficulty-checkpoints.json",
+  "calibration": "No validated difficulty analyser or human comparison data; low-confidence editorial estimate. Human playtest optional.",
+  "time_estimate": null,
+  "effort": {
+    "width": 25,
+    "height": 35,
+    "cells": 875,
+    "filled": 343,
+    "empty": 532,
+    "proof_steps": 168,
+    "human_active_minutes": null,
+    "solve_time_minutes": null
+  }
+}

@@ -3,7 +3,7 @@
   "puzzle_id": "pz-eedd1fe72af54714908d5b5aff34",
   "revision": "r03",
   "category_id": "insekten-kleine-tiere",
-  "state": "content_ready",
+  "state": "registered",
   "package": {
     "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/package.zip",
     "bytes": 7849830,
@@ -14,7 +14,10 @@
     "sha256": "8dd9dc9edda35719682abe45f64a51b8d3dd50a31df89ecbc243312c288fb823"
   },
   "inventory_sha256": "13808cf40aa0eec6693f820a9b433b78279c1aaf9979083cb9e658fdbf7873df",
-  "approval": null,
+  "approval": {
+    "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/approval.json",
+    "sha256": "7a3bc26f9ce2d2458e88c9790e9c603f347af5d583a2c1fa0996660f50c835de"
+  },
   "reveal_revision": "A-r01",
   "reveal_sha256": "585e51ace5904ad634f4ca3606b4a34aeff05759a1885927da8441f1d5afeef7",
   "motif_revision": "MA-r01",
@@ -53,11 +56,49 @@
       "solve_time_minutes": null
     }
   },
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
-  "next_action": "Present final raster/reveal/report and bound inventory for actual human editorial acceptance. Archive PR merge authorized after required checks; no game registration before standard request4.",
-  "integration": null,
+  "blockers": [],
+  "next_action": "No production or integration work remains after verified authorized PR merge. Release/player build separate.",
+  "integration": {
+    "format": "picross-authoring-integration-v1",
+    "status": "registered",
+    "scope": "checked working checkout; main integration requires verified PR merge",
+    "runtime_id": "pz-eedd1fe72af54714908d5b5aff34",
+    "runtime_revision": 1,
+    "name": "Regenwurm",
+    "save_slot": "regenwurm_001",
+    "stem": "regenwurm_001",
+    "category_id": "insekten-kleine-tiere",
+    "approval": {
+      "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/approval.json",
+      "sha256": "7a3bc26f9ce2d2458e88c9790e9c603f347af5d583a2c1fa0996660f50c835de"
+    },
+    "approval_context": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/integration/approval-context.json",
+    "source_commit": "ecc6fcc3e90c4cfcbaa75a3ceb462b25ed6ed6ee",
+    "branch": "content/earthworm-r03-integration",
+    "merge_evidence": "Associated integration PR final head and verified main merge comment; cannot embed own commit hash",
+    "export_manifest": {
+      "file": "content/packages/pz-eedd1fe72af54714908d5b5aff34/r03/manifest.json",
+      "sha256": "0575f10e2616cfbc8f62eb14e13c6d6f9ded0714c16bc95ca17a51d909280028"
+    },
+    "inspection": {
+      "file": "content/packages/pz-eedd1fe72af54714908d5b5aff34/r03/inspection.json",
+      "sha256": "7bacaf6067e90170cd932c84345ca6e9b9ca51c4ae0f765e3faf9da15bd4ff12",
+      "technical": true,
+      "editorial_approved": true,
+      "category_ready": true,
+      "catalog_ready": true
+    },
+    "registration": {
+      "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/integration/registration.json",
+      "sha256": "6fff96fe9d0fd6e23f9ef5df63dc73c3dced49ec30708dd429e95f786da2f9a1"
+    },
+    "file_verification": {
+      "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/integration/file-verification.json",
+      "sha256": "d7ad454ff1870f18646b9211620041fd57a30406c96be5a075ddc4ce786b0a79"
+    },
+    "native_tests": "nicht erforderlich: reine Inhaltsintegration",
+    "additional_probes": null
+  },
   "repository_delivery": {
     "branch": "content/earthworm-reveal-r01",
     "pr": 105,
@@ -97,5 +138,12 @@
     "comparison": "ZIP:views/final-comparison.png",
     "raster": "ZIP:views/final-raster.png",
     "reveal": "ZIP:reveal/A-r01.png"
+  },
+  "historical_inspection_note": "Top-level inspection is the immutable original pre-acceptance production inspection. Current accepted/category-ready export inspection under integration; no rewriting sealed original handoff/gates.",
+  "editorial_acceptance": {
+    "source_commit_named_by_user": "ecc6fcc3e90c4cfcbaa75a3ceb462b25ed6ed6ee",
+    "actual_inventory_sha256": "13808cf40aa0eec6693f820a9b433b78279c1aaf9979083cb9e658fdbf7873df",
+    "approval_evidence": "integration/approval-context.json",
+    "accepted": true
   }
 }
