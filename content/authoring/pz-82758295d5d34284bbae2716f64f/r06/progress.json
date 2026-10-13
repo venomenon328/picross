@@ -36,6 +36,17 @@
       "adapter_technical": null,
       "adapter_blocked": true,
       "meaning": "Human end approval received; historical pending statements inside sealed ZIP/old validation remain unchanged."
+    },
+    {
+      "type": "actual_owner_override_manual_derivation",
+      "timestamp_utc": "2026-10-13T08:10:17Z",
+      "evidence": "override.json",
+      "validation": "override-validation.json",
+      "workflow_state": "editorially_approved",
+      "content_blockers": [],
+      "za1_technical": null,
+      "export_ready": false,
+      "original_zip_handoff_approval_unchanged": true
     }
   ]
 }
