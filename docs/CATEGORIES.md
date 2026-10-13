@@ -117,20 +117,15 @@ blindes Umschreiben des Journals. Rollback von KAT-1 ist nur ohne neue v2-Inhalt
 und ohne offene Transaktion als geprüfte Rücknahme der Metadatendateien möglich;
 Spielstände benötigen keine Migration.
 
-## Produktionsfundus und Parallelstand
+## Produktionsfundus und Wiederaufnahme
 
 Neue äußere Authoring-Records führen `category_id`, sobald die Motivzuordnung
 feststeht; ein offenes Briefing darf ausdrücklich `null` führen. Alte Records ohne
 Feld bleiben lesbar. Vor kategorisiertem Export ist die Zuordnung Pflicht.
 Arbeitsindex/Record sind keine Runtime-Registrierung; Freigaben bleiben separat.
 
-Startbasis dieses Pakets ist `main@0da2bb67f15c3fad90ed276518b3d31f225d9c41`.
-PR #77 ist dort noch nicht integriert. Am vorhandenen Knoblauch-r03-Record wird
-ausschließlich `category_id=gemuese-pilze-kraeuter` außen ergänzt. Die neuere
-Endfreigabe und Registrierung auf PR #77 werden dadurch weder zurückgesetzt noch
-übernommen. Vor Abschluss und bei einem der parallelen Merges beide Stände erneut
-abgleichen: den neueren Record samt Integrationsbelegen erhalten, ein bereits
-integriertes siebtes Rätsel derselben Kategorie zuordnen und betroffene Prüfungen
-erneut ausführen. Kein erneuter Knoblauchexport oder Eingriff in dessen Branch.
+Bei Wiederaufnahme den aktuellen Arbeitsindex und die Zielregistry verwenden.
+Neuere Records, Freigaben und Integrationsbelege erhalten. Historische Parallel-
+oder Lieferstände erzeugen keine neuen Prüf-/Exportaufträge für Bestandsrätsel.
 
 Prüfwege und gebundene Testinputs: [KAT1_VERIFICATION](KAT1_VERIFICATION.md).
