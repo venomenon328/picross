@@ -9,7 +9,7 @@ Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 13.10.2026
 `authoring-p1-rect-color-1` ergänzt Schema-2-Exporte; die Pilotprofile v1/v2 bleiben
 unverändert. Keine neue Zertifizierungsregel, kein Solver im Spiel.
 
-Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 3, 6 und 8. Die Dokumentrevision 5 bündelt den Standardablauf; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
+Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 3, 6 und 8. Die Dokumentrevision 6 ergänzt gebundene manuelle Ableitungen und Ausnahmen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
 
 ## Eingang und Grenzen
 

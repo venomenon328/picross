@@ -68,7 +68,7 @@ def import_authorization(package, path, raw):
         "inventory_sha256", "selection", "plan_sha256", "reference", "owner_override",
         "superseded_content_blockers", "frame_exception"})
     h, c = package.handoff, package.handoff.get("candidate", {})
-    require(c.get("source_type") == "import" and h.get("repair") is None and
+    require(isinstance(c, dict) and c.get("source_type") == "import" and h.get("repair") is None and
             isinstance(h.get("manual_edit_record"), str), "V2 authorization requires a fixed edited import")
     original = package.derivation["original_zip_sha256"] if package.derivation else package.archive_sha256
     if a["original_zip_sha256"] is not None:

@@ -121,6 +121,16 @@ class EditedImportAdapterTests(unittest.TestCase):
         write_json(self.auth, a)
         with self.assertRaisesRegex(InvalidInput, "scope mismatch"): self.inspect()
 
+    def test_malformed_candidate_and_numeric_frame_permission_are_rejected(self):
+        a = load_json(self.auth); a["frame_exception"] = 1; write_json(self.auth, a)
+        with self.assertRaisesRegex(InvalidInput, "frame exception permission"): self.inspect()
+        self.authorize()
+        h = load_json(self.package / "handoff.json")
+        h.update(state="content_ready", candidate=[])
+        write_json(self.package / "handoff.json", h)
+        seal(self.package, h)
+        with self.assertRaisesRegex(InvalidInput, "requires a fixed edited import"): self.inspect()
+
     def test_bad_input_selection_plan_and_reference_bindings(self):
         for key, value in (("handoff_sha256", "0"*64), ("inventory_sha256", "0"*64), ("original_zip_sha256", "0"*64),
                            ("plan_sha256", "0"*64), ("selection", {}), ("superseded_content_blockers", [])):
