@@ -1,0 +1,45 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+  "revision": "r02",
+  "category_id": "insekten-kleine-tiere",
+  "state": "motif_review",
+  "package": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r02/package.zip",
+    "bytes": 3456947,
+    "sha256": "731abd5975f084bcdd630be27cd1cc7b0bd43fe2f7174fc721827ffda30ddfac"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r02/handoff.json",
+    "sha256": "085a2875308ff3fca62a8f54e7ed05850e8e4449e08857fe9850abf912632bfe"
+  },
+  "inventory_sha256": "29cfa9e779c1025a1cbdf1432be8c971eb5c4cdcdc9f6dc5b5da6c76376969fa",
+  "approval": null,
+  "reveal_approval": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r02/reveal-approval.json",
+    "sha256": "d555f2728664762e3c1db1dbe0c8ae74fb979753a13b646fcd1fc1a9e3d9f6c1"
+  },
+  "motif_approval": null,
+  "width": null,
+  "height": null,
+  "proposed_width": 50,
+  "proposed_height": 22,
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [
+    "Ausdrückliche menschliche Freigabe von MA-r01 samt vorgeschlagenem Parameterkorridor fehlt; keine Rasterproduktion autorisiert."
+  ],
+  "next_action": "Standardauftrag 3 nach ausdrücklicher Freigabe MA-r01 samt configuration.json; Produktion bis content_ready, keine Spielregistrierung.",
+  "integration": null,
+  "repository_delivery": {
+    "branch": "content/stirnlappenbasilisk-reveal-r01",
+    "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+    "previous_head": "ee2f2d0844ad63e6542c855f76b86c7c09e7502f",
+    "commit_evidence": "Publication commit reported in PR; cannot embed into its own bytes."
+  },
+  "validation": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r02/validation.json",
+    "sha256": "4332638a482898703b11e256e96582f1fe936258f03581988fd86e6b49cdd676"
+  },
+  "previous_revision": "r01"
+}
