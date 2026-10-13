@@ -12,8 +12,8 @@
   "handoff": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r04/handoff.json",
   "handoff_sha256": "977cc4fa7007d292363f1cebb84b4dcf9f99687a57ae271f4daf80108eba4638",
   "inventory_sha256": "8600bb43119cb892b3a816b1f80b73e90bc790b432a911960d3ddfe306da97ff",
-  "approval": null,
-  "approval_sha256": null,
+  "approval": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r04/approval.json",
+  "approval_sha256": "25883c7a910380409ecab00f488ee5be77f56d3ff265407f4340b6d223b5d964",
   "width": 25,
   "height": 22,
   "mode": "mono",
@@ -50,11 +50,20 @@
     "playtest": "not_performed; optional, kein Gate"
   },
   "blockers": [
-    "FRAME-R04: Beide äußeren Spalten sind leer; (left OR right) AND (top OR bottom) ist false.",
-    "ZA1-R04: Explizite manuelle Ableitung mit Einfügen; vorhandener ZA-1-manual-Vertrag unterstützt nur ink→empty. Kein unveränderter Originalimport und keine Adapterfreigabe behauptet."
+    "ADAPTER-R04: Vorhandener Exportadapter unterstützt die extern akzeptierte Randregel-Ausnahme und feste manuelle Einfügung für dieses versiegelte Paket nicht."
   ],
-  "next_action": "Nutzerentscheidung zum Randkonflikt; keine weiteren Rasteränderungen ohne Auftrag. Endabnahme/Export aktuell blockiert.",
-  "integration": null,
+  "next_action": "Gesonderter Auftrag zur begrenzten Adaptererweiterung gemäß adapter-gap.md; danach bestehenden Integrationsauftrag ohne erneute Inhaltsfreigabe fortsetzen.",
+  "integration": {
+    "status": "blocked",
+    "attempt": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r04/export-attempt.json",
+    "attempt_sha256": "6c3d101f42d196d99c9ab4134c85f602736aad2e4ac8f403f16a092bfe872391",
+    "runtime_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+    "runtime_revision": 1,
+    "stem": "hamburger_001",
+    "save_slot": "hamburger_001",
+    "category_id": "gerichte-herzhaftes",
+    "registered": false
+  },
   "repo_commit": "a3cce246ac946704e60809747681545664824c7a",
   "selection": {
     "variant": "manual-128",
@@ -92,5 +101,18 @@
   "self_review": {
     "file": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r04/self-review.json",
     "sha256": "f90eb744e921ec58439199dfd81d91f68d80376542172f123822f4a692dc60d7"
+  },
+  "editorial_state": "editorially_approved",
+  "editorial_approval_status": "pass",
+  "owner_override": {
+    "file": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r04/owner-override.json",
+    "sha256": "09ea1981acbdb7cb74aa68be8ab7320e22b94b140a57cdb1ccf4525b132c832b"
+  },
+  "accepted_content_exceptions": [
+    "FRAME-R04"
+  ],
+  "adapter_gap": {
+    "file": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r04/adapter-gap.md",
+    "sha256": "4508ecbfeeea1fc4f0532ab12c97737aa80fba43fc5ec64ddcaca570b076c852"
   }
 }

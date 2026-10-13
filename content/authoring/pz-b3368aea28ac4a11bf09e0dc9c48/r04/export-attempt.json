@@ -1,0 +1,44 @@
+{
+  "tool_commit": "bba5e078b42549d4f646ea2f268e3d33715b64ef",
+  "command": [
+    "-m",
+    "tools.puzzle_production.target_adapter",
+    "export",
+    "--input",
+    "content\\authoring\\pz-b3368aea28ac4a11bf09e0dc9c48\\r04\\package.zip",
+    "--approval",
+    "content\\authoring\\pz-b3368aea28ac4a11bf09e0dc9c48\\r04\\approval.json",
+    "--name",
+    "Hamburger",
+    "--runtime-revision",
+    "1",
+    "--stem",
+    "hamburger_001",
+    "--save-slot",
+    "hamburger_001",
+    "--category-id",
+    "gerichte-herzhaftes",
+    "--categories",
+    "content/categories.json",
+    "--output-dir",
+    "artifacts/hamburger-integration-r04/export"
+  ],
+  "exit_code": 2,
+  "response": {
+    "status": "blocked",
+    "catalog_ready": false,
+    "registered": false,
+    "error": "Package is not content_ready"
+  },
+  "package_sha256": "8311f0623794e93916d1c9576753616a046f66e1ae1c2251f84ffb1f37bf1f6a",
+  "approval_sha256": "25883c7a910380409ecab00f488ee5be77f56d3ff265407f4340b6d223b5d964",
+  "registry_modified": false,
+  "output_created": false,
+  "proposed_runtime": {
+    "id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+    "revision": 1,
+    "stem": "hamburger_001",
+    "save_slot": "hamburger_001",
+    "category_id": "gerichte-herzhaftes"
+  }
+}
