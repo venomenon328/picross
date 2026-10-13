@@ -1,0 +1,24 @@
+{
+  "format": "picross-integration-authorization-v1",
+  "actor": "user (Tobias)",
+  "timestamp_utc": "2026-10-13T09:21:24.312792+00:00",
+  "timestamp_basis": "First audit observation; exact client submit timestamp not exposed.",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r06",
+  "registration_statement": "Integriere das fertig geprüfte und tatsächlich redaktionell abgenommene Paket Repositoryindex content/authoring/index.json auf main, ID pz-82758295d5d34284bbae2716f64f, Revision r06 ins reguläre Spiel.",
+  "merge_statement": "Ich beauftrage ausdrücklich auch den Merge dieses Ablage-/Integrations-PRs nach bestandenem vollständigem Diff-/Selbstreview und allen ausgewählten Pflichtprüfungen gemäß Entwicklungsworkflow; danach main tatsächlich verifizieren.",
+  "adapter_merge_statement": "PR #102 separat prüfen und bedingt mergen",
+  "limits": "No additional tool changes, no release/deployment; no existing saves changed.",
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/approval.json",
+    "sha256": "f6797174d331089832bb7ab02928745e6b404a81aa62530af8558d6fb3471c31"
+  },
+  "owner_override": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/override.json",
+    "sha256": "ae88114dade2c7b4d50dfce731bcb508907fdfc6478ecd638f87087b62d4791b",
+    "validation": {
+      "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/override-validation.json",
+      "sha256": "7594eb1722ce0940eb84c9cd2620677f9d2a04c7668b35c3abe49a5ba92da33a"
+    }
+  }
+}
