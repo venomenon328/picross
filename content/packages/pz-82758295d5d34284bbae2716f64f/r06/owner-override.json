@@ -1,0 +1,34 @@
+{
+  "format": "picross-owner-override-v1",
+  "actor": "user (Tobias)",
+  "timestamp_utc": "2026-10-13T08:10:17Z",
+  "timestamp_basis": "First UTC clock observation after receipt; exact client submit timestamp not exposed.",
+  "statement": "Die manuelle Ableitung ist in Ordnung. Da ZA-1 von mir stammt, sind meine Anweisungen ein gültiger Override der Vorgaben.",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r06",
+  "source_main": "4bdca03ed63c82714aa4ad7ea466e981709a21a1",
+  "package_sha256": "2c89f961d543451504c572fda281c9bbd18544196bc43b5ae47d1d76193ddee3",
+  "handoff_sha256": "96e4b560bebdfe2b38485387a7d02900093c53d628ed15022e156b7bccce8d74",
+  "inventory_sha256": "e0a75a440ba1ac49c9ab4cf6f0da59c84a2fdeb25af68180cf5a2e50d19357cc",
+  "approval_sha256": "f6797174d331089832bb7ab02928745e6b404a81aa62530af8558d6fb3471c31",
+  "selection": {
+    "variant": "area-160-minus3",
+    "matrix_hash": "0f57810cd333d9875b7ce2d4d6dbbf49eac75bb7597116fca29180be7b4018f1",
+    "logic_hash": "0e59b1e543c1d29cfd9915af1fc17c23bea5974cde04b8fe0a4b40f9a84d2fe9",
+    "reveal": {
+      "file": "reveal/A-r01.png",
+      "sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89"
+    }
+  },
+  "scope": "Exact approved manual derivation of r06 is admissible under owner override; it does not prevent content/editorial acceptance. No blanket override for other revisions or technical claims.",
+  "overridden_requirement": "ZA-1 import/repair-only input restriction as an acceptance prerequisite for this r06 editorial workflow; its unchanged executable export interface is separate.",
+  "preserved_requirements": [
+    "Exact provenance/manual edit history and protected cells",
+    "Exact hints and full deductive solution",
+    "Independent proof verification and final matrix equality",
+    "Original reveal/motif/human approval bindings",
+    "Selected CI and merge workflow"
+  ],
+  "effect": "Record editorially_approved using actual final approval and unchanged checked production evidence. Existing ZA-1 implementation remains unsupported for export; no fabricated technical=true.",
+  "authorization_limits": "No tool changes, registration, release or deployment. Sealed ZIP, original handoff and approval unchanged."
+}

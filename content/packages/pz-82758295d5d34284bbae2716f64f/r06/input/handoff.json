@@ -1,0 +1,111 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r06",
+  "repo_commit": "d614229e767c4a41fe5a8ea47a6f37047e456e59",
+  "state": "raster_review",
+  "category_id": "sport-spiele",
+  "rulebook": {
+    "document_revision": 4,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "c6636824924c6ba784bfcffd19ccbf3aeeaa481e2533d623299b84165f3cb4e8",
+    "version": "0.4.1"
+  },
+  "brief": "brief.md",
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        215,
+        11,
+        1021,
+        1220
+      ],
+      "basis": "Actual human approval of 24x36 mono and exterior-background-only unwarped crop; exact coordinates documented by assistant.",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 36,
+      "method": "area",
+      "mode": "mono",
+      "width": 24
+    }
+  ],
+  "reveal": {
+    "approval": "approvals/reveal-A-r01.json",
+    "file": "reveal/A-r01.png",
+    "provenance": "provenance/A-r01.json",
+    "revision": "A-r01",
+    "sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89"
+  },
+  "motif": {
+    "approval": "approvals/motif-effective.json",
+    "derived_from_reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+    "file": "motif/MA-r02.png",
+    "provenance": "provenance/MA-r02.json",
+    "revision": "MA-r02",
+    "sha256": "0a79644cc797f5202a288a5d8b8e271cf1e39db4b81cc39ab744949a0202cb59"
+  },
+  "candidate": {
+    "source_type": "manual",
+    "bundle": "manual",
+    "variant": "area-160-minus3",
+    "matrix_hash": "0f57810cd333d9875b7ce2d4d6dbbf49eac75bb7597116fca29180be7b4018f1",
+    "logic_hash": "0e59b1e543c1d29cfd9915af1fc17c23bea5974cde04b8fe0a4b40f9a84d2fe9",
+    "proof": "manual/certificate/proof.json",
+    "verification": "audit/independent-proof-verification.json",
+    "candidate": "manual/candidate.json"
+  },
+  "origin_verification": "audit/manual-replay.json",
+  "repair": {
+    "type": "manual",
+    "reference": "production/import",
+    "reference_variant": "area-160",
+    "plan": "manual/plan.json",
+    "replay": "audit/manual-replay.json",
+    "changes": 3
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "e0a75a440ba1ac49c9ab4cf6f0da59c84a2fdeb25af68180cf5a2e50d19357cc"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "difficulty": "difficulty.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "blocked"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json",
+    "motif": "approvals/motif-effective.json",
+    "provenance": "audit/manual-replay.json",
+    "logic": "audit/independent-proof-verification.json",
+    "frame": "audit/manual-replay.json",
+    "visual": "visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "comparison.md"
+  },
+  "adapter_status": "adapter-status.json",
+  "final_editorial_approval": null,
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "ZA-1 supports import/RP-5 search only; this exact user-directed manual derivation has no supported adapter input. No tool changes authorized.",
+    "Final bound human editorial acceptance of r06 pending."
+  ],
+  "content_blockers": [
+    "ZA-1 supports import/RP-5 search only; this exact user-directed manual derivation has no supported adapter input. No tool changes authorized."
+  ],
+  "next_action": "Human review of exact r06 raster/report; any adapter implementation is a separate explicitly authorized task. Preserve sealed ZIP and old approvals.",
+  "authorization": "Exact three-cell follow-up within existing production/archive instruction; commit/push/Draft PR and conditional archive merge after full diff/self-review and selected checks. No tools/runtime/release/deployment."
+}

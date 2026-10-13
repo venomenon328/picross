@@ -47,6 +47,73 @@
       "za1_technical": null,
       "export_ready": false,
       "original_zip_handoff_approval_unchanged": true
+    },
+    {
+      "type": "authorized_game_integration",
+      "timestamp_utc": "2026-10-13T09:21:24.313618+00:00",
+      "source_commit": "fd42962641752db290f8b10427d1679456f585a4",
+      "tested_runtime_commit": "f4e5a66c8a9d5e7ed8ad02e1fa43abe9da5b0773",
+      "result": "pass",
+      "evidence_manifest": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/integration/manifest.json",
+      "evidence_manifest_sha256": "140d875cf3ddc16c6f2f9cabb0b03f6b4196fae91ea4450342f789b19e451d5f",
+      "original_zip_handoff_approval_override_unchanged": true,
+      "scope": "Fresh ZA-1 and exactly new content native/actual player/PCK outside CI; no tools/tests changed."
+    },
+    {
+      "type": "integration_self_review",
+      "result": "pass",
+      "evidence": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/integration/self-review.json",
+      "sha256": "e0e4fe74899697003756a62f5f09733a3a47ca46c3be6dce8bb119e9170df8e9",
+      "scope": "Separate complete diff self-review after actual production integration; not independent second-person review."
     }
-  ]
+  ],
+  "state": "registered",
+  "runtime_integration": {
+    "branch": "feat/schachspringer-r06-integration",
+    "base_commit": "fd42962641752db290f8b10427d1679456f585a4",
+    "tested_runtime_commit": "f4e5a66c8a9d5e7ed8ad02e1fa43abe9da5b0773",
+    "runtime_revision": 1,
+    "stem": "schachspringer_001",
+    "save_slot": "schachspringer_001",
+    "technical": true,
+    "editorial_approved": true,
+    "category_ready": true,
+    "catalog_ready": true,
+    "registered": true,
+    "main_status": "Registered work branch; actual PR head/checks/conditional merge and fetched main verification recorded in associated PR.",
+    "playtest": "not_performed; optional",
+    "blockers": [],
+    "status": "registered_on_work_branch",
+    "runtime_id": "pz-82758295d5d34284bbae2716f64f",
+    "category_id": "sport-spiele",
+    "package": "content/packages/pz-82758295d5d34284bbae2716f64f/r06",
+    "export_manifest_sha256": "c526eb5af2a65862ce71c092a17a5817192a63a38bd4ccbec2402f972ed10542",
+    "evidence_manifest": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/integration/manifest.json",
+    "evidence_manifest_sha256": "140d875cf3ddc16c6f2f9cabb0b03f6b4196fae91ea4450342f789b19e451d5f",
+    "native_new_content": "967 successful checks outside CI; three successful phases plus one targeted album oracle retry",
+    "player_export": "186 actual PCK checks plus exported Windows start and local player ZIP pass",
+    "verification_copy": {
+      "path": "content/packages/pz-82758295d5d34284bbae2716f64f/r06",
+      "manifest_sha256": "c526eb5af2a65862ce71c092a17a5817192a63a38bd4ccbec2402f972ed10542",
+      "kind": "ZA-1 generated declared derivation, not a new full ZIP",
+      "omitted_original_files": [
+        "adapter-status.json",
+        "approvals/motif-MA-r02.json",
+        "approvals/motif-statement.json",
+        "audit/source-bindings.json",
+        "reference/r05-handoff.json",
+        "reference/r05-inventory.json",
+        "views/area-160-minus3-enlarged.png",
+        "views/area-160-minus3-grid.png",
+        "views/area-160-minus3-highlighted.png",
+        "views/area-160-minus3-native.png",
+        "views/before-after-diff.png",
+        "views/changes.png",
+        "views/protected-mask.png",
+        "views/r05-before-grid.png",
+        "views/reveal-motif-raster-comparison.png"
+      ],
+      "omission_reason": "Adapter preserves every consumed technical/editorial input and the complete original RP-3 reference bundle. Unconsumed detailed view/planning/historical-reference files remain in the unchanged authoritative r06 ZIP; no proof bundle shortened."
+    }
+  }
 }

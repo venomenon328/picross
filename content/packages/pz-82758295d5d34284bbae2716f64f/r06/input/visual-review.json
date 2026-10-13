@@ -1,0 +1,85 @@
+{
+  "final_editorial": "pending",
+  "format": "picross-visual-review-v1",
+  "material_allowance": "approvals/ear-contour-statement.json (r05 exact ear contour); approvals/raster-change-request.json (explicit r06 delta)",
+  "matrix_hash": "0f57810cd333d9875b7ce2d4d6dbbf49eac75bb7597116fca29180be7b4018f1",
+  "repairs": 3,
+  "representations": {
+    "motif": {
+      "details_negative_spaces": {
+        "reason": "Exterior ears and muzzle concavity present; interior drawing removed under actual correction/approval.",
+        "status": "erfüllt"
+      },
+      "palette_mono": {
+        "reason": "Strong black on white; no required interior colors.",
+        "status": "erfüllt"
+      },
+      "recognition": {
+        "reason": "Same knight identity; connected black silhouette.",
+        "status": "erfüllt"
+      },
+      "series_style": {
+        "reason": "Quiet coherent simplified outline suitable for deterministic mono import.",
+        "status": "erfüllt"
+      },
+      "silhouette_proportions": {
+        "reason": "Same left view, head/neck/base proportions; native source derivation documented.",
+        "status": "erfüllt"
+      }
+    },
+    "raster": {
+      "recognition": {
+        "status": "erfüllt",
+        "reason": "Left-facing chess knight remains clear at native size and enlargement; identity/head are unchanged."
+      },
+      "silhouette_proportions": {
+        "status": "erfüllt",
+        "reason": "Only two lower-left base edge cells and one left waist cell removed as expressly requested; no stretching or new contour elsewhere."
+      },
+      "details_negative_spaces": {
+        "status": "erfüllt",
+        "reason": "Muzzle gap, neck arch and stepped pedestal retained. The previously accepted merged ear contour is identical; exact user change request preserves all other cells."
+      },
+      "palette_mono": {
+        "status": "erfüllt",
+        "reason": "547/864 filled (63.31%), ink #202020 plus empty. No isolated filled cells or empty interior lines; outer empty column 24 allowed."
+      },
+      "series_style": {
+        "status": "erfüllt",
+        "reason": "Clean connected silhouette; requested base/waist edge simplification is consistent with original reveal. No extra repairs."
+      }
+    },
+    "reveal": {
+      "details_negative_spaces": {
+        "reason": "Wood grain, eye/mane/base carving and open neck concavity support identity.",
+        "status": "erfüllt"
+      },
+      "palette_mono": {
+        "reason": "Warm gold/brown finished illustration, retained unchanged for mono reward.",
+        "status": "erfüllt"
+      },
+      "recognition": {
+        "reason": "Detailed left-facing wooden chess knight on turned pedestal.",
+        "status": "erfüllt"
+      },
+      "series_style": {
+        "reason": "Calm outlined 2D illustration with coherent surfaces and quiet background.",
+        "status": "erfüllt"
+      },
+      "silhouette_proportions": {
+        "reason": "Distinct lowered muzzle, arched neck, two ears and balanced base.",
+        "status": "erfüllt"
+      }
+    }
+  },
+  "reviewer": "assistant; own visual review, not independent editorial acceptance",
+  "selected_variant": "area-160-minus3",
+  "soft_exceptions": [],
+  "views": [
+    "views/area-160-minus3-native.png",
+    "views/area-160-minus3-enlarged.png",
+    "views/area-160-minus3-grid.png",
+    "views/before-after-diff.png",
+    "views/reveal-motif-raster-comparison.png"
+  ]
+}
