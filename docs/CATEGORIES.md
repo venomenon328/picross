@@ -54,7 +54,9 @@ category_id=..., categories_path=Path(...))`. Keine Ableitung aus Dateiname, Mot
 ID, Bild oder Schwierigkeit. Die Kategorienquelle wird vollständig validiert und
 als kanonischer `categories.json`-Snapshot mitgeliefert. Manifest
 `picross-target-export-v2` bindet `category_id` und `categories={file,sha256}`;
-Dateiinventar und `inspection.json` binden dieselbe Auswahl. `verify-export` prüft
+Dateiinventar und `inspection.json` binden dieselbe Auswahl. Der autorisierte
+manuelle ZA-1-v3-Export ergänzt dieselbe Kategoriebindung um seine externe
+Autorisierung; Runtimeprojektion und Kategorienvertrag bleiben gleich. `verify-export` prüft
 Snapshot, Hash, Referenz und Bericht offline sowie den vollständigen ZA-1-Vertrag.
 
 `plan`/`register` verlangen zusätzlich die ID im aktuellen Zielcheckout. Der Plan
