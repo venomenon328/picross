@@ -1,0 +1,25 @@
+{
+  "format": "picross-manual-authorization-v1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r06",
+  "original_zip_sha256": "2c89f961d543451504c572fda281c9bbd18544196bc43b5ae47d1d76193ddee3",
+  "handoff_sha256": "96e4b560bebdfe2b38485387a7d02900093c53d628ed15022e156b7bccce8d74",
+  "inventory_sha256": "e0a75a440ba1ac49c9ab4cf6f0da59c84a2fdeb25af68180cf5a2e50d19357cc",
+  "selection": {
+    "variant": "area-160-minus3",
+    "matrix_hash": "0f57810cd333d9875b7ce2d4d6dbbf49eac75bb7597116fca29180be7b4018f1",
+    "logic_hash": "0e59b1e543c1d29cfd9915af1fc17c23bea5974cde04b8fe0a4b40f9a84d2fe9",
+    "reveal": {
+      "file": "reveal/A-r01.png",
+      "sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89"
+    }
+  },
+  "plan_sha256": "93fd976c6fd727c57750fd794f1ca8443716643746eb9cde8b993434c601ef25",
+  "owner_override": {
+    "file": "owner-override.json",
+    "sha256": "ae88114dade2c7b4d50dfce731bcb508907fdfc6478ecd638f87087b62d4791b"
+  },
+  "superseded_content_blockers": [
+    "ZA-1 supports import/RP-5 search only; this exact user-directed manual derivation has no supported adapter input. No tool changes authorized."
+  ]
+}

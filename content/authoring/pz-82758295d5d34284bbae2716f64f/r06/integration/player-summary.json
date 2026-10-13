@@ -1,0 +1,92 @@
+{
+  "manifest": {
+    "format": "picross-content-player-production-v1",
+    "source_commit": "f4e5a66c8a9d5e7ed8ad02e1fa43abe9da5b0773",
+    "source_tree_dirty": false,
+    "base_commit": "fd42962641752db290f8b10427d1679456f585a4",
+    "checked_at_utc": "2026-10-13T09:18:22.138082+00:00",
+    "host": "Windows-11-10.0.26200-SP0",
+    "scope": "One new registered content, native game and actual Windows player/PCK production checks outside CI. No general test suite or release.",
+    "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+    "revision": "r06",
+    "runtime_revision": 1,
+    "save_slot": "schachspringer_001",
+    "phases": [
+      {
+        "phase": "windows-export",
+        "exit_code": 0,
+        "command": [
+          "D:\\AppData\\Local\\Temp\\picross-schachspringer-r06-integration\\native\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+          "--headless",
+          "--path",
+          "D:\\AppData\\Local\\Temp\\picross-schachspringer-r06-integration\\native\\game",
+          "--export-debug",
+          "P1 Windows x86_64",
+          "D:\\AppData\\Local\\Temp\\picross-schachspringer-r06-integration\\native\\build\\picross-p1.exe"
+        ]
+      },
+      {
+        "phase": "actual-pck",
+        "exit_code": 0,
+        "command": [
+          "D:\\AppData\\Local\\Temp\\picross-schachspringer-r06-integration\\native\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+          "--headless",
+          "--main-pack",
+          "D:\\AppData\\Local\\Temp\\picross-schachspringer-r06-integration\\native\\build\\picross-p1.exe",
+          "--script",
+          "D:\\AppData\\Local\\Temp\\picross-schachspringer-r06-integration\\pack_once.gd"
+        ]
+      },
+      {
+        "phase": "exported-start",
+        "exit_code": 0,
+        "command": [
+          "D:\\AppData\\Local\\Temp\\picross-schachspringer-r06-integration\\native\\build\\picross-p1.console.exe",
+          "--headless",
+          "--",
+          "--p1-smoke"
+        ]
+      }
+    ],
+    "runtime_files": {
+      "data/registry.json": "0451b1cb3202e65043e90d79411e5f651fa67d0452a8cac7f1ad39046118de54",
+      "data/content/schachspringer_001.json": "ed95c0b9ded61132a972402ad3aa04e3c7204549f2337c0fd7941273ac5ad1f2",
+      "art/content/schachspringer_001.png": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+      "art/content/schachspringer_001.txt": "600e2d286b3134170dd5e073955cf652fe38efa0b9949489b379e02514e51140"
+    },
+    "pck_report_sha256": "ab12abbc06f6e6c2335b4719b32194cc6df2f03355b50af5a8878f0b7c5e51ed",
+    "probe_sha256": "6b06d34a16ecaf94ab85739df9bfa91f1cd68e38a8a78f45aa2b75e38988484b",
+    "reveal_decoded_rgba_sha256": "77469903379a9c98833b32b5fd53c33ea1b900df84256e60bde22c11fdc44097",
+    "export_files": {
+      "picross-p1.console.exe": "4713fefc9bbe042da13a38724297710e810bcda3166dfa405c3efecf8db3cdec",
+      "picross-p1.exe": "bea2be61a6b745f1bb2a921d131b96c516bd05c38b841c1de6e16891a33835a5"
+    }
+  },
+  "package_validation": {
+    "file": "picross-p1-windows-x86_64.zip",
+    "sha256": "de15c3463e4bd6bc3934866b7875380420864920463ab9a87241eecc0d3874cd",
+    "files": [
+      "picross-p1.console.exe",
+      "picross-p1.exe",
+      "README.txt",
+      "product-report.json",
+      "rp6-owner.ps1",
+      "SPIELANLEITUNG.md",
+      "licenses/resources.json",
+      "licenses/Chalkboard-NOTICES.md",
+      "licenses/Bakso-NOTICES.md",
+      "licenses/DelightCoffee-NOTICES.md",
+      "licenses/delight-coffee/More Info.txt",
+      "licenses/delight-coffee/Read Me.pdf",
+      "licenses/Fraunces-OFL.txt",
+      "licenses/PlexSans-OFL.txt",
+      "licenses/Sidebar-NOTICES.txt"
+    ],
+    "bytes": 44179044
+  },
+  "archive": {
+    "file": "D:\\AppData\\Local\\Temp\\picross-schachspringer-r06-integration\\native\\player\\picross-p1-windows-x86_64.zip",
+    "bytes": 44179044,
+    "sha256": "de15c3463e4bd6bc3934866b7875380420864920463ab9a87241eecc0d3874cd"
+  }
+}

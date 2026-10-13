@@ -3,7 +3,7 @@
   "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
   "revision": "r06",
   "previous_revision": "r05",
-  "state": "editorially_approved",
+  "state": "registered",
   "category_id": "sport-spiele",
   "package": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/package.zip",
@@ -19,7 +19,54 @@
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/approval.json",
     "sha256": "f6797174d331089832bb7ab02928745e6b404a81aa62530af8558d6fb3471c31"
   },
-  "integration": null,
+  "integration": {
+    "branch": "feat/schachspringer-r06-integration",
+    "base_commit": "fd42962641752db290f8b10427d1679456f585a4",
+    "tested_runtime_commit": "f4e5a66c8a9d5e7ed8ad02e1fa43abe9da5b0773",
+    "runtime_revision": 1,
+    "stem": "schachspringer_001",
+    "save_slot": "schachspringer_001",
+    "technical": true,
+    "editorial_approved": true,
+    "category_ready": true,
+    "catalog_ready": true,
+    "registered": true,
+    "main_status": "Registered work branch; actual PR head/checks/conditional merge and fetched main verification recorded in associated PR.",
+    "playtest": "not_performed; optional",
+    "blockers": [],
+    "status": "registered_on_work_branch",
+    "runtime_id": "pz-82758295d5d34284bbae2716f64f",
+    "category_id": "sport-spiele",
+    "package": "content/packages/pz-82758295d5d34284bbae2716f64f/r06",
+    "export_manifest_sha256": "c526eb5af2a65862ce71c092a17a5817192a63a38bd4ccbec2402f972ed10542",
+    "evidence_manifest": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/integration/manifest.json",
+    "evidence_manifest_sha256": "140d875cf3ddc16c6f2f9cabb0b03f6b4196fae91ea4450342f789b19e451d5f",
+    "native_new_content": "967 successful checks outside CI; three successful phases plus one targeted album oracle retry",
+    "player_export": "186 actual PCK checks plus exported Windows start and local player ZIP pass",
+    "verification_copy": {
+      "path": "content/packages/pz-82758295d5d34284bbae2716f64f/r06",
+      "manifest_sha256": "c526eb5af2a65862ce71c092a17a5817192a63a38bd4ccbec2402f972ed10542",
+      "kind": "ZA-1 generated declared derivation, not a new full ZIP",
+      "omitted_original_files": [
+        "adapter-status.json",
+        "approvals/motif-MA-r02.json",
+        "approvals/motif-statement.json",
+        "audit/source-bindings.json",
+        "reference/r05-handoff.json",
+        "reference/r05-inventory.json",
+        "views/area-160-minus3-enlarged.png",
+        "views/area-160-minus3-grid.png",
+        "views/area-160-minus3-highlighted.png",
+        "views/area-160-minus3-native.png",
+        "views/before-after-diff.png",
+        "views/changes.png",
+        "views/protected-mask.png",
+        "views/r05-before-grid.png",
+        "views/reveal-motif-raster-comparison.png"
+      ],
+      "omission_reason": "Adapter preserves every consumed technical/editorial input and the complete original RP-3 reference bundle. Unconsumed detailed view/planning/historical-reference files remain in the unchanged authoritative r06 ZIP; no proof bundle shortened."
+    }
+  },
   "width": 24,
   "height": 36,
   "mode": "mono",
@@ -59,10 +106,8 @@
   "reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
   "motif_revision": "MA-r02",
   "motif_sha256": "0a79644cc797f5202a288a5d8b8e271cf1e39db4b81cc39ab744949a0202cb59",
-  "blockers": [
-    "Export pending: current ZA-1 implementation does not support manual r06 input. Owner override admits the content; no export or game registration is authorized."
-  ],
-  "next_action": "r06 is editorially approved under the explicit owner override. A later integration order must define an executable export route; no renewed content approval solely because of this documented manual origin. No registration/publication now.",
+  "blockers": [],
+  "next_action": "Complete full diff/separate self-review, automatic content_only CI and authorized squash merge; verify actual main. No release/deployment.",
   "change_request": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/change-request.json",
     "sha256": "8470493f0150e715e462b56c23d5fef56a601e3c1643469003ba4afd60e18f24"
@@ -94,10 +139,13 @@
     "manual_replay": "package.zip!audit/manual-replay.json"
   },
   "adapter": {
-    "status": "unsupported_manual_derivation",
-    "technical": null,
-    "inspection_performed": false,
-    "evidence": "package.zip!adapter-status.json"
+    "status": "supported_authorized_manual_derivation",
+    "technical": true,
+    "inspection_performed": true,
+    "tool_commit": "fd42962641752db290f8b10427d1679456f585a4",
+    "evidence": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/integration/inspection.json",
+    "sha256": "427efdce3f58d9f9a547ff6edb1999fc07539f6ad0162f1679060aebd5bfdbb9",
+    "historical_status": "Original sealed adapter-status.json remains unchanged and historical."
   },
   "repository_delivery": {
     "branch": "chore/authoring-pz-82758295-r06",
@@ -121,7 +169,7 @@
       "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/approval-validation.json",
       "sha256": "8c7a50e43f60d50245b8345b00ea956cd4989283e89fe5e962b5abfd86b5f8c1"
     },
-    "scope": "Actual human end acceptance plus explicit owner override admits the exact checked manual r06 derivation; no executable ZA-1 export certificate claimed."
+    "scope": "Actual bound human r06 end acceptance and owner override unchanged. Current technical/catalog/registration evidence is separately recorded under integration; no new human acceptance invented."
   },
   "approval_delivery": {
     "branch": "chore/authoring-pz-82758295-r06-approval",
@@ -138,10 +186,12 @@
   },
   "content_blockers": [],
   "export_status": {
-    "ready": false,
-    "catalog_ready": false,
-    "registered": false,
-    "reason": "Current unchanged ZA-1 executable interface rejects manual source; owner override is documented separately, no technical certificate fabricated."
+    "ready": true,
+    "catalog_ready": true,
+    "registered": true,
+    "format": "picross-target-export-v3",
+    "manifest_sha256": "c526eb5af2a65862ce71c092a17a5817192a63a38bd4ccbec2402f972ed10542",
+    "reason": "Fresh main ZA-1 export/verification and authorized registration succeeded; sealed source unchanged."
   },
   "override_delivery": {
     "branch": "chore/authoring-pz-82758295-r06-override",
