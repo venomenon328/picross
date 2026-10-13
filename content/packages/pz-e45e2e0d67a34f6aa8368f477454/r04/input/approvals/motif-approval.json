@@ -1,0 +1,63 @@
+{
+  "format": "picross-image-approval-v1",
+  "type": "human_motif_approval",
+  "kind": "motif",
+  "puzzle_id": "pz-e45e2e0d67a34f6aa8368f477454",
+  "revision": "MA-r02",
+  "source_package_revision": "r03",
+  "source_commit": "149f3d9e2fda926fc36843f7e4ee2856c31fe3ea",
+  "source_package_sha256": "97a3bdb75d44ccfdabacdd6cbfde567ac00580160bdfc8a4ae84145479dd712a",
+  "file": "motif/MA-r02.png",
+  "sha256": "1bf3b95478586d129dd36fc0fbd0ba0d1bba7f012c32a4b6884bbbf14a606139",
+  "derived_from_reveal_sha256": "8325ef5ee94d88312b968ad058f6cddcf35cda68946db7e9598a97f26ac17998",
+  "actor": "Tobias Schröder (Nutzer)",
+  "timestamp_utc": "2026-10-13T23:12:14Z",
+  "timestamp_basis": "Freigabe in diesem Chat tatsächlich erhalten; Zeitpunkt der Protokollierung. Exakter ursprünglicher Nachrichtenzeitpunkt nicht zugänglich.",
+  "statement": "Ich gebe die Motivvorlage r03 frei; Parameter: 30 × 50. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "resolution": "Paketrevision r03 enthält genau die angebotene Motivdatei MA-r02; keine Bildrevision MA-r03 vorhanden. Freigabe auf MA-r02-Bytes aus r03 gebunden.",
+  "evidence": "approvals/motif-user-statement.txt",
+  "parameters": {
+    "width": 30,
+    "height": 50,
+    "mode": "mono",
+    "foreground_colors": 1,
+    "method": "area",
+    "fit": "contain",
+    "thresholds": [
+      100,
+      120,
+      140,
+      160
+    ],
+    "crop_policy": "Vorgelegter Korridor: nur weißen Außenraum ändern, vollständige Silhouette und Innenräume erhalten, kein Strecken. Der Nutzer fixiert 30x50; konkrete Importdetails werden innerhalb dieses Korridors gewählt.",
+    "proposed_crop": [
+      52,
+      6,
+      972,
+      1520
+    ],
+    "production_crops": [
+      [
+        52,
+        6,
+        972,
+        1520
+      ],
+      [
+        56,
+        0,
+        968,
+        1520
+      ]
+    ]
+  },
+  "invariants": [
+    "Kölner Dom als alleinstehendes Gebäude ohne Umgebung oder andere Bauwerke",
+    "Strikt frontale Westfassade",
+    "Zwei gleich hohe schlanke Westtürme samt vollständigen Spitzen und breitem offenem Zwischenraum",
+    "Turmhöhen, Turmabstand, Mittelgiebel und breite gestufte Basis",
+    "Lage der großen Spitzbogenfenster und drei Portale",
+    "Keine Streckung, kein Wechsel der Perspektive"
+  ],
+  "test_only": false
+}

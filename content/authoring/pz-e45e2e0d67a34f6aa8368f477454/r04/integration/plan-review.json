@@ -1,0 +1,41 @@
+{
+  "status": "pass",
+  "plan_sha256": "c71e7ba6c95061567cb6e296316526e77d40e8a288612f0f6a133e9c1975f6f7",
+  "changes": [
+    {
+      "operation": "add",
+      "path": "game/data/content/koelner_dom_001.json"
+    },
+    {
+      "operation": "add",
+      "path": "game/art/content/koelner_dom_001.png"
+    },
+    {
+      "operation": "add",
+      "path": "game/art/content/koelner_dom_001.txt"
+    },
+    {
+      "operation": "add",
+      "path": "content/packages/pz-e45e2e0d67a34f6aa8368f477454/r04"
+    },
+    {
+      "operation": "replace",
+      "path": "content/registry.json"
+    },
+    {
+      "operation": "replace",
+      "path": "game/data/registry.json"
+    }
+  ],
+  "unchanged_existing_entries": 13,
+  "new_entries": 1,
+  "category": {
+    "id": "gebaeude-bauwerke",
+    "name": "Gebäude & Bauwerke",
+    "order": 11
+  },
+  "runtime_revision": 1,
+  "stem": "koelner_dom_001",
+  "save_slot": "koelner_dom_001",
+  "existing_journal": false
+}

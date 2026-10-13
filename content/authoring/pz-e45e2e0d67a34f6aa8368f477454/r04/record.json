@@ -3,7 +3,7 @@
   "puzzle_id": "pz-e45e2e0d67a34f6aa8368f477454",
   "revision": "r04",
   "category_id": "gebaeude-bauwerke",
-  "state": "content_ready",
+  "state": "registered",
   "package": {
     "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/package.zip",
     "bytes": 7942005,
@@ -14,7 +14,10 @@
     "sha256": "a8b755a054582b3992dca53451deb935228a68d74ef7ee258580c1eb608effe6"
   },
   "inventory_sha256": "5714eb711cf258cca33c7e182a833a69bf6b38cefc2710e4bad21d63b888adea",
-  "approval": null,
+  "approval": {
+    "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/approval.json",
+    "sha256": "0f8a40b52e3454efda207c1f6959eefbdb3009c2970597a48fb34ab62649e1e0"
+  },
   "width": 30,
   "height": 50,
   "mode": "mono",
@@ -58,11 +61,47 @@
     },
     "variant": "area-140-fit"
   },
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
-  "next_action": "r04 anhand des Inventars redaktionell endabnehmen; Standardauftrag 4 erst mit tatsächlicher Endabnahme und Integrationsauftrag.",
-  "integration": null,
+  "blockers": [],
+  "next_action": "Draft-PR #112 mit finalem Head und schlankem CI-Nachweis prüfen; Merge nur mit ausdrücklichem Auftrag. Keine weiteren Inhaltsgates offen.",
+  "integration": {
+    "source_commit": "34d687e5e7f03a1978dabf88cbe68778e570c006",
+    "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+    "branch": "content/cologne-cathedral-reveal-r01",
+    "runtime_id": "pz-e45e2e0d67a34f6aa8368f477454",
+    "runtime_revision": 1,
+    "name": "Kölner Dom",
+    "stem": "koelner_dom_001",
+    "save_slot": "koelner_dom_001",
+    "category_id": "gebaeude-bauwerke",
+    "export_manifest": {
+      "file": "content/packages/pz-e45e2e0d67a34f6aa8368f477454/r04/manifest.json",
+      "sha256": "e95bedee5a3bd58183472caa8ed0f16f54efa1268a5a737fb9bd1e82fdecc3fc"
+    },
+    "plan": {
+      "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/integration/plan.json",
+      "sha256": "c71e7ba6c95061567cb6e296316526e77d40e8a288612f0f6a133e9c1975f6f7"
+    },
+    "registration": {
+      "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/integration/register.json",
+      "sha256": "cbeba7061b1da1e7bc15dc7ca2a98706a7c648ca331e1750d8aae5fa0d1d1749"
+    },
+    "file_verification": {
+      "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/integration/file-verification.json",
+      "sha256": "e1823e954f0d3eec9dbae1b8c7bd51239e7d33eb53a762bcb60f09948751e448"
+    },
+    "report": {
+      "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/integration/report.md",
+      "sha256": "aa7a55a7d416b2450410ba0017c7ea192b59664c7acbd8139fabf3caf59c3748"
+    },
+    "self_review": {
+      "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/integration/self-review.json",
+      "sha256": "942abea46064e79ec1d95f3ede70a446d9eccee6c9a52b285c9425473390df3c"
+    },
+    "main_merged": false,
+    "main_merge_commit": null,
+    "additional_native_checks": "nicht erforderlich: reine Inhaltsintegration",
+    "registered": true
+  },
   "reveal_approval": {
     "package_file": "approvals/reveal-approval.json",
     "sha256": "7529ad658ab16d46a6de0c8c95af0e44f96ef3dd29333bfd7e9f35d3529d89c6"
@@ -74,12 +113,14 @@
     "motif_revision": "MA-r02"
   },
   "inspection": {
-    "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/inspection.json",
-    "sha256": "77d2615f7b12e4b9f52402a1c9a7d3dc88ea74de0725f0841d9de156f4c0e16e",
+    "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/integration/inspection.json",
+    "sha256": "aff1392166336ffabfa964e5c428a436eea67b13644b459c68e1a7a768859c9c",
     "technical": true,
-    "editorial_approved": false,
-    "catalog_ready": false,
-    "registered": false
+    "editorial_approved": true,
+    "category_ready": true,
+    "catalog_ready": true,
+    "registered": false,
+    "registered_evidence": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/integration/register.json"
   },
   "review": {
     "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/review.md",
@@ -104,7 +145,8 @@
     "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
     "source_commit": "149f3d9e2fda926fc36843f7e4ee2856c31fe3ea",
     "pr": "https://github.com/venomenon328/picross/pull/112",
-    "merge_authorized": false
+    "merge_authorized": false,
+    "integration_source_commit": "34d687e5e7f03a1978dabf88cbe68778e570c006"
   },
   "size": {
     "previous_r03_zip_bytes": 4214146,
@@ -113,5 +155,13 @@
     "uncompressed_bytes": 10456649,
     "file_count": 80,
     "reason": "Two complete required RP-3 bundles, six proofs, final raster/visual/difficulty evidence; no embedded old ZIPs or repository/tool snapshots except bound rulebook."
+  },
+  "production_inspection": {
+    "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/inspection.json",
+    "sha256": "77d2615f7b12e4b9f52402a1c9a7d3dc88ea74de0725f0841d9de156f4c0e16e",
+    "technical": true,
+    "editorial_approved": false,
+    "catalog_ready": false,
+    "registered": false
   }
 }

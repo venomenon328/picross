@@ -1,0 +1,22 @@
+{
+  "source": "Actual user instruction in this conversation",
+  "approval_file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/approval.json",
+  "approval_sha256": "0f8a40b52e3454efda207c1f6959eefbdb3009c2970597a48fb34ab62649e1e0",
+  "statement_file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r04/integration/user-statement.txt",
+  "statement_sha256": "174a2f2f4e1064f9127d0a2da804f2696134376934bb41ee3cb144ebe753f2c0",
+  "timestamp_basis": "First tool-observed UTC time after this instruction was received; exact original message timestamp not exposed. This is the recording time.",
+  "source_commit": "34d687e5e7f03a1978dabf88cbe68778e570c006",
+  "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "original_zip_sha256": "7c0f588870e0c4a5e465a8c672d8062e970e252aac24535e1f24137aa656e2f2",
+  "handoff_sha256": "a8b755a054582b3992dca53451deb935228a68d74ef7ee258580c1eb608effe6",
+  "inventory_sha256": "5714eb711cf258cca33c7e182a833a69bf6b38cefc2710e4bad21d63b888adea",
+  "authorization": "Standardauftrag 4: export, plan, register, file review, commit/push and existing Draft-PR #112; no merge.",
+  "runtime": {
+    "id": "pz-e45e2e0d67a34f6aa8368f477454",
+    "revision": 1,
+    "name": "Kölner Dom",
+    "stem": "koelner_dom_001",
+    "save_slot": "koelner_dom_001",
+    "category_id": "gebaeude-bauwerke"
+  }
+}

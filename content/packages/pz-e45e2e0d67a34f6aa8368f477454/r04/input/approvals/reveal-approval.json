@@ -1,0 +1,24 @@
+{
+  "format": "picross-image-approval-v1",
+  "kind": "reveal",
+  "puzzle_id": "pz-e45e2e0d67a34f6aa8368f477454",
+  "revision": "F-r01",
+  "file": "reveal/F-r01.png",
+  "sha256": "8325ef5ee94d88312b968ad058f6cddcf35cda68946db7e9598a97f26ac17998",
+  "actor": "Tobias Schröder (Nutzer)",
+  "timestamp_utc": "2026-10-13T22:36:55Z",
+  "statement": "Ich gebe das Abschlussbild F-r01 frei.",
+  "invariants": [
+    "Kölner Dom als alleinstehendes Gebäude ohne Umgebung oder andere Bauwerke",
+    "Strikt frontale Westfassade",
+    "Zwei gleich hohe schlanke Westtürme samt vollständigen Spitzen und breitem offenem Zwischenraum",
+    "Turmhöhen, Turmabstand, Mittelgiebel und breite gestufte Basis",
+    "Lage der großen Spitzbogenfenster und drei Portale",
+    "Keine Streckung, kein Wechsel der Perspektive"
+  ],
+  "source_revision": "r02",
+  "source_inventory_sha256": "fa7f76a4f1caca336135ecd844e4a4c80e5f0aacc6100a32e7904d60e68d8803",
+  "test_only": false,
+  "type": "human_reveal_approval",
+  "evidence": "approvals/user-statement.txt"
+}

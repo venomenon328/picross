@@ -1,0 +1,31 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "level": "L2",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "confidence": "low",
+  "logic_hash": "b12f4f7cf1403cc71e80faa6307f3de9814636a107bb34f37f2bda1b3891ad1d",
+  "evidence": "audit/difficulty-checkpoints.json",
+  "rule_families": {
+    "R0": "Initial nur Zeile 1 leer; keine volle oder exakt gepackte Linie. Nach deren Auflösung bleiben alle übrigen Zeilen ungepackt, Spalten benötigen höchstens 39 von 49 verfügbaren Positionen inklusive Trennern. R0 kommt damit nicht über diese Leerzeile hinaus; L1 ausgeschlossen. Später Restleerfelder/Aufräumen.",
+    "R1": "Voraussichtlich dominante Anforderung: Überlappungen und Verlängerungen langer Bauteilblöcke. Zeile 23 [10,10] in Breite 30 liefert zwei erzwungene Zellen; Zeilen 40/41 [28] liefern je 26; Spalte 19 [39] bietet einen langen Anker. Breite, räumlich verteilte Fortschritte sprechen für L2, unabhängig von 1500 Zellen.",
+    "R2": "Zuordnung mehrerer Blöcke rund um Fenster und drei Portale kann kombinierte Anker benötigen, etwa Zeile 36 [5,1,2,2,1,5] vor Schritt 61. R0+R1 wurden nicht mit einem validierten schwächeren Regelanalysator bis zum Fixpunkt geprüft. R1-Suffizienz und R2-Notwendigkeit bleiben unsicher.",
+    "R3": "Das Zertifikat nutzt full-line-mono, allgemeine vollständige Linienunterstützung. Dies beweist keine Notwendigkeit von R3. Ohne validierte Analyse schwächerer Familien bleibt R3 möglich; deshalb konservativer Bereich L2–L4."
+  },
+  "bottleneck": "Vor jedem der 126 Proofschritte wurden alle 80 Linien im jeweiligen Wissensstand geprüft. Vor Aufräumen bei höchstens 30 unbekannten Zellen bestehen mindestens 16 produktive Linien; keine numerische Engstelle im geprüften Verlauf. Die Zählung ist kein validierter R0–R3-Analysator.",
+  "calibration": "Keine menschliche Kalibrierung und kein validierter Bewertungsanalysator. Begründete KI-Schätzung; Probespiel optional.",
+  "effort": {
+    "width": 30,
+    "height": 50,
+    "cells": 1500,
+    "filled": 747,
+    "empty": 753,
+    "proof_steps": 126,
+    "human_active_minutes": null,
+    "solve_time_minutes": null
+  },
+  "time_estimate": null
+}
