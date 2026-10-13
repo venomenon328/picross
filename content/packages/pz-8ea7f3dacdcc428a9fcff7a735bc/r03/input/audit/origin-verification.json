@@ -1,0 +1,116 @@
+{
+  "tool_commit": "ac3d1b504c3cbab9480e29764bbc107a4cbec470",
+  "checked_at_utc": "2026-10-13T13:07:12.555141+00:00",
+  "selected": "a-center",
+  "motif_sha256": "73bf4dc8c1e03642105c2f367cf44892bdefd8bf7a4212dd7d1e82759f68da87",
+  "candidates": [
+    {
+      "variant": "a-center",
+      "candidate_id": "d41a0f7e402a3421ec9941241b46954ceeb94f001fd0434917292eec6f7fa7cc",
+      "matrix_hash": "aefca45777add77d5699b55cafdcfd0636e1c5cbe29ef580a74580fdb55d6f1d",
+      "logic_hash": "2455b708c5d2ac7646a9e5c31f6ca9743e209fb7b6bc44ce2adebb2eab69c487",
+      "manifest_sha256": "d04312588bb4ec868dfc2cbde85ce4bf172c3af37c8e1ff7f8b2cb119ffe65ed",
+      "original_sha256": "73bf4dc8c1e03642105c2f367cf44892bdefd8bf7a4212dd7d1e82759f68da87",
+      "normalization_sha256": "4208fb406e039c6ce2c1f67728605da7dc9d32475a567862f028e8e00982ea6a",
+      "verification": {
+        "status": "solved",
+        "proof_verified": true,
+        "certified": true,
+        "logic_hash": "2455b708c5d2ac7646a9e5c31f6ca9743e209fb7b6bc44ce2adebb2eab69c487",
+        "profile": {
+          "id": "full-line-color",
+          "version": 1,
+          "start": "unknown",
+          "deduction": "all-line-supported-values",
+          "search": false
+        },
+        "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+        "steps": 190,
+        "line_evaluations": 260
+      },
+      "reconstruction": "Original decoded; exact normalized RGBA pixels/metadata, design, matrix, clues, candidate identity and raster pixels independently reconstructed.",
+      "final_matrix_equality": true
+    },
+    {
+      "variant": "b-center",
+      "candidate_id": "1375b90f029c199e0de5061c5f8f8e50b370afbc1c5dd123c1c89696541f0b91",
+      "matrix_hash": "81801f37926fd586cdf3afc094a5d66a21aeef0bc978957d37b6e0979b7ba31c",
+      "logic_hash": "87ffe3149335da23275432781c619324d1a21744cc7d3f5e8606f631badfd730",
+      "manifest_sha256": "0b76d4d2617e515295eea2a5a1927253439099f5e2d27904f6528467a51157fe",
+      "original_sha256": "73bf4dc8c1e03642105c2f367cf44892bdefd8bf7a4212dd7d1e82759f68da87",
+      "normalization_sha256": "4208fb406e039c6ce2c1f67728605da7dc9d32475a567862f028e8e00982ea6a",
+      "verification": {
+        "status": "stalled",
+        "proof_verified": true,
+        "certified": false,
+        "logic_hash": "87ffe3149335da23275432781c619324d1a21744cc7d3f5e8606f631badfd730",
+        "profile": {
+          "id": "full-line-color",
+          "version": 1,
+          "start": "unknown",
+          "deduction": "all-line-supported-values",
+          "search": false
+        },
+        "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+        "steps": 198,
+        "line_evaluations": 268
+      },
+      "reconstruction": "Original decoded; exact normalized RGBA pixels/metadata, design, matrix, clues, candidate identity and raster pixels independently reconstructed.",
+      "final_matrix_equality": null
+    },
+    {
+      "variant": "a-lower",
+      "candidate_id": "c8cd710bca5ea41e3124b37f6d446fb4b1a045cb1da68a5756f749683147c424",
+      "matrix_hash": "5bced6572421496e8d339bc0f8459a4115498d1ad1ddc5437a13f8b6b5c5ea51",
+      "logic_hash": "ed629eddffdd1dca23bd1b265841b692cde13e2d973f83749234664175e2ddb1",
+      "manifest_sha256": "a03ae03c9571432eb3f284996a34b4cd9f3a88fd0136c090532f9252b85da6f2",
+      "original_sha256": "73bf4dc8c1e03642105c2f367cf44892bdefd8bf7a4212dd7d1e82759f68da87",
+      "normalization_sha256": "4208fb406e039c6ce2c1f67728605da7dc9d32475a567862f028e8e00982ea6a",
+      "verification": {
+        "status": "stalled",
+        "proof_verified": true,
+        "certified": false,
+        "logic_hash": "ed629eddffdd1dca23bd1b265841b692cde13e2d973f83749234664175e2ddb1",
+        "profile": {
+          "id": "full-line-color",
+          "version": 1,
+          "start": "unknown",
+          "deduction": "all-line-supported-values",
+          "search": false
+        },
+        "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+        "steps": 206,
+        "line_evaluations": 276
+      },
+      "reconstruction": "Original decoded; exact normalized RGBA pixels/metadata, design, matrix, clues, candidate identity and raster pixels independently reconstructed.",
+      "final_matrix_equality": null
+    },
+    {
+      "variant": "b-lower",
+      "candidate_id": "85d3c6f57b873329ad81c7370b5163ffce48c56a0848906c36efe2798956dd4d",
+      "matrix_hash": "d474098735ac6d088779c8626b6ea7c7ac839a5524230e66b6f8768385a645ff",
+      "logic_hash": "c9a86103adc7d42048e07d439fe46e9dec5a55da8a54b0775e009ad496f37b2c",
+      "manifest_sha256": "895291281756854d2f414f6e03aece910d6df43c3b3fdeaca6f0da68ada4cdf1",
+      "original_sha256": "73bf4dc8c1e03642105c2f367cf44892bdefd8bf7a4212dd7d1e82759f68da87",
+      "normalization_sha256": "4208fb406e039c6ce2c1f67728605da7dc9d32475a567862f028e8e00982ea6a",
+      "verification": {
+        "status": "solved",
+        "proof_verified": true,
+        "certified": true,
+        "logic_hash": "c9a86103adc7d42048e07d439fe46e9dec5a55da8a54b0775e009ad496f37b2c",
+        "profile": {
+          "id": "full-line-color",
+          "version": 1,
+          "start": "unknown",
+          "deduction": "all-line-supported-values",
+          "search": false
+        },
+        "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+        "steps": 186,
+        "line_evaluations": 256
+      },
+      "reconstruction": "Original decoded; exact normalized RGBA pixels/metadata, design, matrix, clues, candidate identity and raster pixels independently reconstructed.",
+      "final_matrix_equality": true
+    }
+  ]
+}

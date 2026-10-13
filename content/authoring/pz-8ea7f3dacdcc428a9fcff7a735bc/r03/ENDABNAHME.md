@@ -1,3 +1,5 @@
+> Historische Endabnahmevorlage aus Standardauftrag 3. Die inzwischen erteilte Endfreigabe und aktuelle Registrierung stehen im [Integrationsbericht](INTEGRATION.md).
+
 # Efeutute r03 · Endabnahmevorlage
 
 `pz-8ea7f3dacdcc428a9fcff7a735bc` · **content_ready** · 13.10.2026 · Regelwerk 0.4.1, Dokumentrevision 5.
