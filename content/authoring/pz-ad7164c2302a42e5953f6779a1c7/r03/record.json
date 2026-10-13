@@ -1,0 +1,89 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "revision": "r03",
+  "state": "content_ready",
+  "motif_name": "Glas Bier mit Schaumkrone",
+  "category_id": "suesses-getraenke",
+  "repo_commit": "f3ea7808c8a1da517429603bf35ed837ab3aa052",
+  "storage_branch": "content/bierglas-abschlussbild-r01",
+  "previous_revision": {
+    "revision": "r02",
+    "commit": "f3ea7808c8a1da517429603bf35ed837ab3aa052"
+  },
+  "package": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/package.zip",
+    "bytes": 10836014,
+    "sha256": "f723bd3b6a417d94daaf4fa6e76452a8101a097d2f98689944a5ff570130c47c"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/handoff.json",
+    "sha256": "792a27b00fed69e5f3955afd64f4509d1e15fa3cf825ecaa0bc2e1fd2f6a7181"
+  },
+  "inventory_sha256": "c211e4c7f6876b883788a6840df2cde6f332a088069dd2464e9626bc0ac6e5c5",
+  "approval": null,
+  "width": 25,
+  "height": 30,
+  "mode": "mono",
+  "difficulty": {
+    "method": "picross-difficulty-0.1",
+    "assessment_type": "editorial_estimate",
+    "level": "L2",
+    "plausible_range": [
+      "L2",
+      "L4"
+    ],
+    "confidence": "low",
+    "logic_hash": "70e1211b881c2705667dece55a8fc623329976b21e26fda5f210f01a0be6e19a",
+    "evidence": "audit/difficulty-checkpoints.json",
+    "rule_families": {
+      "R0": "Initially only empty row 30; no packed lines. After removing it, no newly packed line is created, so pure direct R0 cannot start filling the unknown board: L1 excluded. Completed blocks and empty tails give later cleanup (e.g. step 92 row 11).",
+      "R1": "Estimated dominant work: overlap and extension of long body blocks, then uniquely assigned foam blocks. Initial row 7 [1,15] forces 7 cells, rows 8/9 force 10/18 cells. At step 91 column 19 has one length-25 block with 24 consecutive ink cells bounded below; extension forces row 4. Step 93 row 4 [2,3] assigns the right endpoint to length-3, forcing the two cells before it and a separator.",
+      "R2": "Multiple blocks/anchors may require combined assignment in columns 5/6/17 and foam crown. Example step 90 column 5 [2,5,6] has its last length-6 block closed and a four-cell earlier anchor bounded above; the middle length-5 must extend downward. Weak-family necessity and R0+R1 sufficiency not exhaustively established.",
+      "R3": "General full-line-mono certificate does not establish R3 necessity. No unavoidable R3 step identified in sampled detailed states; cannot formally exclude R3 demand without validated weak-rule analyser."
+    },
+    "bottleneck": "Every proof state checks all 55 currently available full-support lines. Steps 90–93 have only two productive lines, with 1/1/1/3 changes and 88–85 cells unknown (cleanup threshold 15). This is a numeric narrow chain, but step 91 is one-block R1 extension and step 92 is R0 cleanup; therefore it is not three successive informative R2/R3 applications and does not by itself meet the defined difficulty bottleneck. Other paths and exhaustive weak-family fixpoints unvalidated.",
+    "calibration": "No validated difficulty analyser or human comparison data. L2 is a low-confidence editorial estimate; L3/L4 remain plausible. Human playtest optional.",
+    "time_estimate": null,
+    "effort": {
+      "cells": 750,
+      "width": 25,
+      "height": 30,
+      "filled": 478,
+      "empty": 272,
+      "proof_steps": 122,
+      "human_active_minutes": null,
+      "solve_time_minutes": null
+    }
+  },
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "next_action": "Standardauftrag 4: separate menschliche Endabnahme genau dieses Inventars/Handoffs und Integrationsauftrag; bis dahin kein Export/Registrieren.",
+  "integration": null,
+  "inspection": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/inspection.json",
+    "sha256": "66a9b11f28cef575dbb09810021d96fc1b1d3b0c22ca098e059bb21384de8cb5",
+    "technical": true,
+    "editorial_approved": false,
+    "catalog_ready": false,
+    "blockers": [
+      "final_editorial: missing bound human final approval"
+    ]
+  },
+  "previous_files_unchanged": true,
+  "final_cell_edits": 0,
+  "package_growth_bytes_vs_r02": 7781630,
+  "verification": {
+    "written_zip": "pass: safe bounded extraction, complete inventory set/sizes/SHA256, CRC, regular 0644 modes",
+    "files": 327,
+    "expanded_bytes": 17356212,
+    "outer_copies": "pass: byte-identical handoff, report, final image previews and motif approval",
+    "source_images": "pass: original reveal/motif hashes unchanged",
+    "final_logic": "pass: full-line-mono v1 solved, fresh independent verification, origin reconstruction and exact final matrix",
+    "frame": "pass: left/right/top true, bottom false",
+    "repair_replays": "pass: both original budget-exhausted attempts freshly reconstructed, no repaired result claimed or applied",
+    "native_game_build_tests": "not_required: production only, no runtime changes",
+    "ci": "final-head docs/ci-required results recorded in PR after push"
+  }
+}
