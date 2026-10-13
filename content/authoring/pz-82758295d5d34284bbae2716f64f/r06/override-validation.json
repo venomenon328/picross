@@ -1,0 +1,30 @@
+{
+  "format": "picross-owner-override-validation-v1",
+  "source_main": "4bdca03ed63c82714aa4ad7ea466e981709a21a1",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "r06",
+  "override_sha256": "ae88114dade2c7b4d50dfce731bcb508907fdfc6478ecd638f87087b62d4791b",
+  "package_sha256": "2c89f961d543451504c572fda281c9bbd18544196bc43b5ae47d1d76193ddee3",
+  "handoff_sha256": "96e4b560bebdfe2b38485387a7d02900093c53d628ed15022e156b7bccce8d74",
+  "inventory_sha256": "e0a75a440ba1ac49c9ab4cf6f0da59c84a2fdeb25af68180cf5a2e50d19357cc",
+  "approval_sha256": "f6797174d331089832bb7ab02928745e6b404a81aa62530af8558d6fb3471c31",
+  "selection": {
+    "variant": "area-160-minus3",
+    "matrix_hash": "0f57810cd333d9875b7ce2d4d6dbbf49eac75bb7597116fca29180be7b4018f1",
+    "logic_hash": "0e59b1e543c1d29cfd9915af1fc17c23bea5974cde04b8fe0a4b40f9a84d2fe9",
+    "reveal": {
+      "file": "reveal/A-r01.png",
+      "sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89"
+    }
+  },
+  "actual_zip_files_and_hashes": 68,
+  "unchanged_evidence": "Existing exact r06 manual replay and fresh independent full-line-mono v1 proof, 142 steps; no solver/proof rerun.",
+  "production_logic_certified": true,
+  "human_editorial_approval_bound": true,
+  "manual_derivation_admissible_by_actual_owner_override": true,
+  "content_blockers": [],
+  "workflow_state": "editorially_approved",
+  "za1_technical": null,
+  "export_status": "unsupported_by_current_implementation",
+  "scope": "Metadata only; no tool/runtime/test/CI edits, no integration or publication."
+}
