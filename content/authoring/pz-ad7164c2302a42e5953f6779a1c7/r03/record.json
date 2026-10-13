@@ -2,7 +2,7 @@
   "format": "picross-authoring-record-v1",
   "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
   "revision": "r03",
-  "state": "content_ready",
+  "state": "registered",
   "motif_name": "Glas Bier mit Schaumkrone",
   "category_id": "suesses-getraenke",
   "repo_commit": "f3ea7808c8a1da517429603bf35ed837ab3aa052",
@@ -21,7 +21,10 @@
     "sha256": "792a27b00fed69e5f3955afd64f4509d1e15fa3cf825ecaa0bc2e1fd2f6a7181"
   },
   "inventory_sha256": "c211e4c7f6876b883788a6840df2cde6f332a088069dd2464e9626bc0ac6e5c5",
-  "approval": null,
+  "approval": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/approval.json",
+    "sha256": "09b80c4d4608f64daea486be4b0817781b7c8923a0f7aad17e08894fac489830"
+  },
   "width": 25,
   "height": 30,
   "mode": "mono",
@@ -56,11 +59,50 @@
       "solve_time_minutes": null
     }
   },
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
-  "next_action": "Standardauftrag 4: separate menschliche Endabnahme genau dieses Inventars/Handoffs und Integrationsauftrag; bis dahin kein Export/Registrieren.",
-  "integration": null,
+  "blockers": [],
+  "next_action": "Draft-PR #107 prüfen; Merge ausschließlich nach gesonderter ausdrücklicher Freigabe. Noch nicht auf main integriert.",
+  "integration": {
+    "status": "registered",
+    "scope": "working branch, no merge",
+    "runtime_id": "pz-ad7164c2302a42e5953f6779a1c7",
+    "runtime_revision": 1,
+    "save_slot": "bierglas_001",
+    "stem": "bierglas_001",
+    "category_id": "suesses-getraenke",
+    "source_head": "1147aeb27d5cee911d408624904cefadd09b3c19",
+    "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+    "main_merge_commit": null,
+    "export_package": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03",
+    "manifest_sha256": "61444bab41a9fb953eed9e2488bdce0d4bbe11764a559a9d97cba395d9abb06e",
+    "technical": true,
+    "editorial_approved": true,
+    "category_ready": true,
+    "catalog_ready": true,
+    "evidence": {
+      "export": {
+        "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/integration/export-result.json",
+        "sha256": "d3cc2d2167bbb45470765b016e29dfee05500ef01a8350c181b56a2081cecf5f"
+      },
+      "inspection": {
+        "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/integration/inspection.json",
+        "sha256": "ddc5de40bac57996d99c2f052ffd4bea6c4937004bd9b1bf103ccb9f1901f872"
+      },
+      "plan": {
+        "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/integration/plan.json",
+        "sha256": "6fcc784df56b35babb80912e9d18441b6ae0a7d3841b2d99a9ef3eaf6c6494a5"
+      },
+      "registration": {
+        "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/integration/registration.json",
+        "sha256": "8d8acd863ea09c9a3f1b909dfe75b4fbe3f674b4e632bfefb28af67b10288aa5"
+      },
+      "files": {
+        "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/integration/file-verification.json",
+        "sha256": "760e5341b676e25457e20dcec882cab455f71d69e0e1e39481401e4ec24dd68f"
+      }
+    },
+    "native_checks": "nicht erforderlich: reine Inhaltsintegration; nicht ausgeführt",
+    "ci": "Final-head docs and ci-required results recorded in PR after push."
+  },
   "inspection": {
     "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/inspection.json",
     "sha256": "66a9b11f28cef575dbb09810021d96fc1b1d3b0c22ca098e059bb21384de8cb5",
@@ -69,7 +111,8 @@
     "catalog_ready": false,
     "blockers": [
       "final_editorial: missing bound human final approval"
-    ]
+    ],
+    "scope": "historical production-before-editorial-approval; current approved export inspection under integration/inspection.json"
   },
   "previous_files_unchanged": true,
   "final_cell_edits": 0,
