@@ -4,7 +4,7 @@
   "revision": "r02",
   "motif_name": "Efeutute",
   "category_id": "blumen-pflanzen",
-  "state": "motif_review",
+  "state": "motif_approved",
   "package": {
     "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r02/package.zip",
     "bytes": 4470074,
@@ -30,10 +30,8 @@
   "recommended_height": 40,
   "mode": "color",
   "difficulty": null,
-  "blockers": [
-    "Ausdrückliche menschliche Freigabe der Motivdatei MA-r01 und des vorgeschlagenen Parameterkorridors offen."
-  ],
-  "next_action": "Standardauftrag 3 erst nach tatsächlicher MA-r01-/Korridorfreigabe; codex-handoff.md enthält die Promptvorlage.",
+  "blockers": [],
+  "next_action": "Continue with indexed r03 content_ready; original r02 ZIP/Handoff/inventory remain unchanged.",
   "integration": null,
   "repository_delivery": {
     "branch": "authoring/efeutute-selection",
@@ -44,5 +42,12 @@
   "validation": {
     "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r02/validation.json",
     "sha256": "e0c4a188529ea5580806c2db160044d4e9367ce9b0b60e36fc260c4442ea1a22"
-  }
+  },
+  "motif_approval": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r03/motif-approval.json",
+    "sha256": "e96f504ef1d663fdcce65f188aa179bcd4d1fce7606af41709e1a0ecdc714893"
+  },
+  "approved_width": 35,
+  "approved_height": 35,
+  "superseded_by": "r03"
 }
