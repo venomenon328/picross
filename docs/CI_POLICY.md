@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 12.10.2026 · Version 1.4 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
+Stand: 13.10.2026 · Version 1.5 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
 
 ## Geltung und Ablösung
 
@@ -33,6 +33,13 @@ der CI**. Nachweise bleiben dateigebunden im Produktionspaket. Änderungen an
 Raster/Quelle verlangen die im [Regelwerk](ai-workflows/PUZZLE_AUTHORING.md)
 bestimmten Neuprüfungen außerhalb der CI. Das gilt auch bei späteren Codeänderungen:
 keine routinemäßige Neuzertifizierung vorhandener Rätsel.
+
+Für reine Inhaltsintegration gilt [PUZZLE_AUTHORING §8](ai-workflows/PUZZLE_AUTHORING.md):
+Adapterexport, Registrierungsplan/-transaktion und Kontrolle der übernommenen Dateien
+genügen. Keine obligatorischen nativen Spiel-/Neustart-/Render-/PCK-Tests oder
+Spielerbuilds außerhalb der CI je Rätsel. Zusätzliche Proben nur bei konkretem
+Befund; keine doppelten manuellen Adapter-/Bestands-Replays. Allgemeine Regressionen
+bei relevanten Codeänderungen bleiben unverändert.
 
 Keine rätselspezifischen Unit-Tests oder Testgenerierung aus dem Produktionsfundus.
 F01/F02-Zertifikatstests, reale RP-/VS-Korpus-Replays, der Knoblauch-Referenztest
