@@ -3,7 +3,7 @@
   "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
   "revision": "r06",
   "previous_revision": "r05",
-  "state": "raster_review",
+  "state": "editorially_approved",
   "category_id": "sport-spiele",
   "package": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/package.zip",
@@ -60,9 +60,9 @@
   "motif_revision": "MA-r02",
   "motif_sha256": "0a79644cc797f5202a288a5d8b8e271cf1e39db4b81cc39ab744949a0202cb59",
   "blockers": [
-    "ZA-1 supports import/RP-5 search only; this exact user-directed manual derivation has no supported adapter input. No tool changes authorized."
+    "Export pending: current ZA-1 implementation does not support manual r06 input. Owner override admits the content; no export or game registration is authorized."
   ],
-  "next_action": "Human editorial acceptance is recorded. Resolve unsupported manual-source ZA-1 input in a separate authorized tool task before technical content_ready/export. No game registration or publication authorized.",
+  "next_action": "r06 is editorially approved under the explicit owner override. A later integration order must define an executable export route; no renewed content approval solely because of this documented manual origin. No registration/publication now.",
   "change_request": {
     "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/change-request.json",
     "sha256": "8470493f0150e715e462b56c23d5fef56a601e3c1643469003ba4afd60e18f24"
@@ -121,11 +121,31 @@
       "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/approval-validation.json",
       "sha256": "8c7a50e43f60d50245b8345b00ea956cd4989283e89fe5e962b5abfd86b5f8c1"
     },
-    "scope": "Actual human end acceptance recorded; no ZA-1 technical certificate or workflow promotion while unsupported manual source remains blocked."
+    "scope": "Actual human end acceptance plus explicit owner override admits the exact checked manual r06 derivation; no executable ZA-1 export certificate claimed."
   },
   "approval_delivery": {
     "branch": "chore/authoring-pz-82758295-r06-approval",
     "source_main": "2649a23c3441da05465b49cf73beb8dd7742d86d",
     "evidence": "Final head/base/test-merge/selected CI/separate self-review/authorized metadata merge/main verification recorded in associated PR."
+  },
+  "owner_override": {
+    "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/override.json",
+    "sha256": "ae88114dade2c7b4d50dfce731bcb508907fdfc6478ecd638f87087b62d4791b",
+    "validation": {
+      "file": "content/authoring/pz-82758295d5d34284bbae2716f64f/r06/override-validation.json",
+      "sha256": "7594eb1722ce0940eb84c9cd2620677f9d2a04c7668b35c3abe49a5ba92da33a"
+    }
+  },
+  "content_blockers": [],
+  "export_status": {
+    "ready": false,
+    "catalog_ready": false,
+    "registered": false,
+    "reason": "Current unchanged ZA-1 executable interface rejects manual source; owner override is documented separately, no technical certificate fabricated."
+  },
+  "override_delivery": {
+    "branch": "chore/authoring-pz-82758295-r06-override",
+    "source_main": "4bdca03ed63c82714aa4ad7ea466e981709a21a1",
+    "evidence": "Final head/base/CI/self-review/authorized metadata merge and actual main verification in associated PR."
   }
 }
