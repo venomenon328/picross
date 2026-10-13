@@ -1,10 +1,11 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
 KAT-1 ergänzt den verbindlichen [Kategorien-/Kompatibilitätsvertrag](CATEGORIES.md).
-Neue Exporte verwenden v2 mit expliziter Kategorie und gehashtem Snapshot;
+Neue Direkt-/Reparaturexporte verwenden v2, autorisierte manuelle Ableitungen v3,
+jeweils mit expliziter Kategorie und gehashtem Snapshot;
 Authoring-v2 und alte ZA-1-v1-Exporte bleiben technisch prüfbar.
 
-Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 12.10.2026.
+Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 13.10.2026.
 `authoring-p1-rect-color-1` ergänzt Schema-2-Exporte; die Pilotprofile v1/v2 bleiben
 unverändert. Keine neue Zertifizierungsregel, kein Solver im Spiel.
 
@@ -49,7 +50,8 @@ Produktions-ID: `pz-[a-z0-9][a-z0-9-]{0,59}`. Explizite Dateistämme/Save-Slots:
 Diagnose prüft Inventar, Regelwerk, Briefing/Bericht/Entscheidungen/Aufwand als
 Dateien, beide Bildfreigaben samt Beleg, Provenienz/Nutzungsgrundlage,
 Motivableitung, Parameterkorridor und alle acht Inhaltsgates.
-`candidate.source_type` ist ausdrücklich `import` oder `repair`. Direktimporte
+`candidate.source_type` ist ausdrücklich `import`, `repair` oder das unten
+beschriebene, gesondert autorisierte `manual`. Direktimporte
 binden `bundle`, `variant`, `proof`, `matrix_hash`, `logic_hash`; Reparaturen
 zusätzlich `repair_id`, `parent_variant`. `repair` bindet `reference`,
 `reference_variant`, `plan`. Endkandidat und Referenzvariante sind getrennt.
@@ -168,3 +170,62 @@ python tools/p1_product.py --cache-dir <toolchain-cache> --output-dir <neuer-pro
 ```
 
 Referenzeingang und Beleggrenzen: [ZA1_VERIFICATION.md](ZA1_VERIFICATION.md).
+
+## Autorisierte manuelle Ableitungen
+
+Die ausdrückliche Eigentümerentscheidung vom 13.10.2026 stellt die geprüfte
+manuelle Ableitung dem technischen Produktionsweg gleich. Dafür unterstützen
+`inspect` und `export` zusätzlich `--manual-authorization <datei>`; die übrigen
+Inhalts-, Nachweis-, Bild- und Endfreigabegates bleiben bestehen. Kein Force-Modus,
+keine Änderung des versiegelten Pakets oder seiner ursprünglichen Freigabe.
+
+Der begrenzte erste Vertrag unterstützt monochrome, feste `ink`→`empty`-Edits.
+`picross-manual-edit-plan-v1` enthält Referenzbundle/-variante/-kandidat/-manifest-
+und Matrixhash, exakte Editfolge, boolesche Schutzmaske für jede andere Position,
+Änderungs-/Schritt-/Prüfbudgets, genau einen Kandidaten, Operator
+`remove-ink-only` und `seed=null`. `picross-manual-candidate-v1` bindet Planhash,
+Referenz, unveränderten Entwurf, jede Elternmatrix, vollständigen Zell-Diff und
+Endmatrix. Quelle/Normalisierung werden mit RP-3 rekonstruiert; dann wird jede
+Entfernung motivgeschützt replayt. Hinweise müssen exakt aus dem Ergebnis folgen.
+Der abgeschlossene `picross-result-v1` und geschriebene Proof unter
+`<bundle>/certificate/` werden mit dem bestehenden unabhängigen Prüfer bestätigt;
+Enddomains müssen exakt der Matrix entsprechen. Kein Raten oder neues Solverprofil.
+
+Die externe `picross-manual-authorization-v1`-Datei hat genau diese Felder:
+
+```json
+{
+  "format": "picross-manual-authorization-v1",
+  "puzzle_id": "<ID>",
+  "revision": "<Revision>",
+  "original_zip_sha256": "<Original-ZIP-Hash, bei unverpacktem Eingang null>",
+  "handoff_sha256": "<unveränderter Originalhandoff>",
+  "inventory_sha256": "<Originalinventar>",
+  "selection": {"variant": "<Endkandidat>", "matrix_hash": "<Matrix>", "logic_hash": "<Logik>", "reveal": {"file": "<Reveal>", "sha256": "<Hash>"}},
+  "plan_sha256": "<Plan-Dateihash>",
+  "owner_override": {"file": "owner-override.json", "sha256": "<Dateihash>"},
+  "superseded_content_blockers": ["<exakt autorisierte historische Metadatenblocker>"]
+}
+```
+
+Daneben liegt die bytegebundene tatsächliche `picross-owner-override-v1`-Erklärung
+mit Akteur, UTC-Zeit, Erklärung, ID/Revision, Paket-/Handoff-/Inventarhash,
+exakter Auswahl und `approval_sha256`. Die Software prüft Bindungen, authentifiziert
+keinen menschlichen Akteur. `superseded_content_blockers` muss exakt dem alten
+Handoff entsprechen; keine anderen Inhaltsgates werden dadurch aufgehoben.
+Ein historischer `raster_review`-Handoff wird nur bei explizitem manuellem Eingang
+gelesen und danach vollständig geprüft. Alle anderen Zustände/Quelltypen behalten
+ihren bisherigen Prüfweg. Freigabe und Autorisierung liegen außerhalb des Inventars.
+
+Manuelle Exporte verwenden **`picross-target-export-v3`** mit Kategorie und
+zusätzlicher `manual_authorization={file,sha256}`. Autorisierung und tatsächliche
+Eigentümererklärung werden unverändert mitgeliefert; Originalhandoff/-inventar
+bleiben in der deklarierten Prüfkopie bytegleich. `verify-export` und
+`plan`/`register` prüfen diesen Weg offline erneut. Reveal bleibt bytegleich zum
+zuerst freigegebenen Abschlussbild. Runtime-Schema 2, IDs, Slots, Saveformat und
+Registrierungstransaktion bleiben gleich. v1/v2-Direkt-/RP-5-Exporte bleiben
+unverändert lesbar; v1 wird weiterhin nicht neu registriert.
+
+Die allgemeinen Regressionen liegen in `test_manual_adapter.py` und erzeugen nur
+feste synthetische Eingänge. Reale Pakete/Overrides werden nicht in Tests oder CI
+aufgenommen. Der konkrete Produktionsexport bleibt eine getrennte Einzelprüfung.
