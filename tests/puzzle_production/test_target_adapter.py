@@ -28,7 +28,7 @@ class TargetTests(unittest.TestCase):
         from tools.puzzle_production import za1_fixtures
         original = za1_fixtures.load_json
         def guarded(path, *args, **kwargs):
-            self.assertIn("fixtures/catalog", str(path))
+            self.assertIn("fixtures/catalog", Path(path).as_posix())
             return original(path, *args, **kwargs)
         with patch.object(za1_fixtures, "load_json", side_effect=guarded):
             checkout = isolated_checkout(self.root / "fixed-catalog")

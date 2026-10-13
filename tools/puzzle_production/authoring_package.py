@@ -95,10 +95,10 @@ def file_table(root, deadline):
 
 
 @contextmanager
-def open_package(source: Path):
+def open_package(source: Path, *, allow_manual_review=False):
     deadline = time.monotonic() + SECONDS
     if source.is_dir():
-        yield Package(source, deadline)
+        yield Package(source, deadline, allow_manual_review=allow_manual_review)
         return
     require(source.is_file() and not source.is_symlink() and source.stat().st_size <= MAX_ZIP,
             "Missing/oversized ZIP")
@@ -145,13 +145,14 @@ def open_package(source: Path):
                     require(count == info.file_size, "ZIP size mismatch")
         except (zipfile.BadZipFile, NotImplementedError, RuntimeError) as exc:
             raise InvalidInput(f"Invalid ZIP: {exc}") from exc
-        package = Package(root / next(iter(roots)) if has_root else root, deadline)
+        package = Package(root / next(iter(roots)) if has_root else root, deadline,
+                          allow_manual_review=allow_manual_review)
         package.archive_sha256 = archive_hash
         yield package
 
 
 class Package:
-    def __init__(self, root, deadline):
+    def __init__(self, root, deadline, *, allow_manual_review=False):
         self.root, self.deadline = root, deadline
         self.archive_sha256 = None
         self.files = file_table(root, deadline)
@@ -161,7 +162,12 @@ class Package:
         require(isinstance(h, dict) and h.get("format") == "picross-authoring-handoff-v2", "Unsupported Authoring handoff")
         require(isinstance(h.get("puzzle_id"), str) and ID.fullmatch(h["puzzle_id"]), "Invalid production ID")
         require(isinstance(h.get("revision"), str) and REVISION.fullmatch(h["revision"]), "Invalid package revision")
-        require(h.get("state") in ("content_ready", "editorially_approved", "catalog_ready"), "Package is not content_ready")
+        # Reading a historical manual handoff is not its acceptance. inspect()
+        # still requires the external, exactly bound manual authorization.
+        require(h.get("state") in ("content_ready", "editorially_approved", "catalog_ready") or
+                allow_manual_review and h.get("state") == "raster_review" and
+                isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "manual",
+                "Package is not content_ready")
         require(isinstance(h.get("repo_commit"), str) and re.fullmatch(r"[0-9a-f]{40}", h["repo_commit"]), "Missing producer commit")
         rule = h.get("rulebook")
         require(isinstance(rule, dict) and rule.get("version") in ("0.4.0", "0.4.1"), "Unsupported authoring rulebook")

@@ -24,9 +24,10 @@ from . import categories
 ADAPTER = "authoring-p1-rect-color-1"
 LEGACY_FORMAT = "picross-target-export-v1"
 FORMAT = "picross-target-export-v2"
+MANUAL_FORMAT = "picross-target-export-v3"
 
 
-def tool_identity(legacy=False):
+def tool_identity(legacy=False, manual=False):
     root = Path(__file__).resolve().parents[2]
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root,
@@ -37,6 +38,8 @@ def tool_identity(legacy=False):
              "images.py", "repair.py", "contract.py", "verifier.py"]
     if not legacy:
         files.append("categories.py")
+    if manual:
+        files.append("manual_derivation.py")
     return {"adapter": ADAPTER, "commit": commit, "versions": versions(),
             "modules": {n: file_hash(Path(__file__).with_name(n)) for n in files}}
 
@@ -100,7 +103,7 @@ def final_approval(package, selection, approval_path=None):
     return {"record": a, "sha256": file_hash(approval_path), "path": approval_path}
 
 
-def inspect(package: Package, approval_path=None, *, legacy=False):
+def inspect(package: Package, approval_path=None, *, legacy=False, manual_authorization=None):
     h = package.handoff
     for name in ("brief", "report", "decisions", "effort"):
         package.file(h.get(name))
@@ -114,7 +117,15 @@ def inspect(package: Package, approval_path=None, *, legacy=False):
     for gate in required:
         require(gates.get(gate) == "pass", "Unresolved content gate: " + gate)
         package.file(evidence.get(gate))
-    require(h.get("content_blockers", []) == [], "Unresolved content blockers")
+    manual = isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "manual"
+    auth = None
+    if manual:
+        require(not legacy, "Manual derivation requires export v3")
+        from .manual_derivation import authorization
+        auth = authorization(package, manual_authorization)
+    else:
+        require(manual_authorization is None, "Manual authorization requires a manual source")
+        require(h.get("content_blockers", []) == [], "Unresolved content blockers")
     for kind in ("reveal", "motif"):
         record = h.get(kind)
         package.bound(record)
@@ -155,6 +166,10 @@ def inspect(package: Package, approval_path=None, *, legacy=False):
         proof = load_json(bundle / "final-proof.json", validate_logic(logic_from_matrix(matrix, design)).proof_byte_limit)
         expected_proof = c["bundle"] + "/final-proof.json"
         source = {"kind": kind, "repair_id": raw["id"], "variant": c["variant"], "reference": raw["reference"]}
+    elif kind == "manual":
+        from .manual_derivation import inspect_manual
+        design, matrix, proof, checked, source, reference = inspect_manual(package, budget)
+        expected_proof = c["bundle"] + "/certificate/proof.json"
     else:
         raise InvalidInput("Unsupported/ambiguous candidate source_type")
     require(c.get("proof") == expected_proof, "Handoff proof selection differs")
@@ -172,7 +187,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False):
         require(isinstance(p.get("method"),str) and isinstance(p.get("fit"),str) and
                 isinstance(p.get("actual_crop"),list) and len(p["actual_crop"]) == 4 and
                 all(type(v) is int for v in p["actual_crop"]), "Invalid approved method/fit/crop")
-    variant = source["reference"]["variant"] if kind == "repair" else c["variant"]
+    variant = source["reference"]["variant"] if kind in ("repair", "manual") else c["variant"]
     v = next(v for v in design["variants"] if v["id"] == variant)
     require(any(isinstance(p, dict) and p.get("width") == design["width"] and p.get("height") == design["height"] and
                 p.get("mode") == design["mode"] and p.get("foreground_colors") == len(design["palette"]) and
@@ -210,6 +225,8 @@ def inspect(package: Package, approval_path=None, *, legacy=False):
     selection = {"variant": c["variant"], "matrix_hash": digest(matrix), "logic_hash": digest(logic),
                  "reveal": {"file": h["reveal"]["file"], "sha256": h["reveal"]["sha256"]}}
     approval = final_approval(package, selection, approval_path)
+    if auth is not None and approval is not None:
+        require(auth["owner"]["approval_sha256"] == approval["sha256"], "Owner override final approval binding mismatch")
     report = {"format": "picross-target-inspection-v1", "adapter": ADAPTER, "technical": True,
               "editorial_approved": approval is not None, "catalog_ready": approval is not None, "registered": False,
               "blockers": [] if approval else ["final_editorial: missing bound human final approval"],
@@ -218,11 +235,14 @@ def inspect(package: Package, approval_path=None, *, legacy=False):
               "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256") if package.derivation else package.archive_sha256,
               "source": source, "width": design["width"], "height": design["height"], "mode": design["mode"],
               "difficulty": difficulty, "frame": {"left": left, "right": right, "top": top, "bottom": bottom},
-              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy),
+              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual),
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "test_only": h.get("test_only", False)}
     if not legacy:
         report.update(format="picross-target-inspection-v2", category_id=None,
                       category_ready=False, catalog_ready=False)
+    if auth is not None:
+        report.update(format="picross-target-inspection-v3", manual_authorization_sha256=auth["sha256"],
+                      owner_override_sha256=auth["record"]["owner_override"]["sha256"])
     return report, design, matrix, logic, approval
 
 
@@ -253,12 +273,12 @@ def player_notice(package):
 
 
 def export(source, output, *, name, revision, stem, save_slot, approval_path=None,
-           category_id=None, categories_path=None):
+           category_id=None, categories_path=None, manual_authorization=None):
     require(not output.exists(), "Export output exists; use a new path")
     require(isinstance(save_slot, str) and STEM.fullmatch(save_slot), "Invalid explicit save slot")
     relative(save_slot+".json")
-    with open_package(source) as package:
-        report, design, matrix, logic, approval = inspect(package, approval_path)
+    with open_package(source, allow_manual_review=manual_authorization is not None) as package:
+        report, design, matrix, logic, approval = inspect(package, approval_path, manual_authorization=manual_authorization)
         require(approval is not None, "Export blocked: final_editorial approval missing")
         require(categories_path is not None, "Explicit categories source is required")
         catalog = categories.load(categories_path)
@@ -281,6 +301,11 @@ def export(source, output, *, name, revision, stem, save_slot, approval_path=Non
                 "original_zip_sha256": report["original_zip_sha256"], "handoff_sha256": report["handoff_sha256"],
                 "inventory_sha256": report["inventory_sha256"], "files": hashes(inputs)})
             shutil.copyfile(approval["path"], stage / "approval.json")
+            if manual_authorization is not None:
+                from .manual_derivation import authorization, AUTH_FILE, OWNER_FILE
+                auth = authorization(package, manual_authorization)
+                shutil.copyfile(auth["path"], stage / AUTH_FILE)
+                shutil.copyfile(auth["owner_path"], stage / OWNER_FILE)
             write_json(stage / "categories.json", catalog)
             definition_path = "runtime/data/content/" + stem + ".json"
             reveal_path = "runtime/art/content/" + filename
@@ -290,7 +315,8 @@ def export(source, output, *, name, revision, stem, save_slot, approval_path=Non
             (stage / ("runtime/art/content/"+stem+".txt")).write_text(player_notice(package), encoding="utf-8", newline="\n")
             write_json(stage / "inspection.json", report)
             write_json(stage / "usage.txt", {"production_id": report["puzzle_id"], "sources": [package.provenance(package.handoff[k], k) for k in ("reveal", "motif")]})
-            manifest = {"format": FORMAT, "adapter": ADAPTER, "definition_id": report["puzzle_id"],
+            manifest = {"format": MANUAL_FORMAT if manual_authorization is not None else FORMAT,
+                        "adapter": ADAPTER, "definition_id": report["puzzle_id"],
                         "category_id": category_id,
                         "categories": {"file": "categories.json", "sha256": file_hash(stage / "categories.json")},
                         "runtime_revision": revision, "package_revision": report["package_revision"], "save_slot": save_slot,
@@ -299,6 +325,8 @@ def export(source, output, *, name, revision, stem, save_slot, approval_path=Non
                         "inventory_sha256": report["inventory_sha256"], "approval_sha256": approval["sha256"],
                         "technical": True, "editorial_approved": True, "catalog_ready": True, "registered": False,
                         "test_only": report["test_only"], "files": hashes(stage)}
+            if manual_authorization is not None:
+                manifest["manual_authorization"] = {"file": AUTH_FILE, "sha256": file_hash(stage / AUTH_FILE)}
             write_json(stage / "manifest.json", manifest)
             verify_export(stage)
             publish_bundle(stage, output)
@@ -313,12 +341,13 @@ def verify_export(directory):
     from .authoring_package import file_table
     files = file_table(directory, time.monotonic()+300)
     m = load_json(directory / "manifest.json")
-    require(isinstance(m, dict) and m.get("format") in (FORMAT, LEGACY_FORMAT), "Unsupported target export format")
+    require(isinstance(m, dict) and m.get("format") in (FORMAT, LEGACY_FORMAT, MANUAL_FORMAT), "Unsupported target export format")
     legacy = m["format"] == LEGACY_FORMAT
+    manual = m["format"] == MANUAL_FORMAT
     exact_keys(m, {"format", "adapter", "definition_id", "runtime_revision", "package_revision",
         "save_slot", "stem", "definition", "reveal", "color_mapping", "selection", "handoff_sha256", "inventory_sha256", "approval_sha256",
         "technical", "editorial_approved", "catalog_ready", "registered", "test_only", "files"} |
-        (set() if legacy else {"category_id", "categories"}))
+        (set() if legacy else {"category_id", "categories"}) | ({"manual_authorization"} if manual else set()))
     require(m["adapter"] == ADAPTER and isinstance(m["files"], dict) and
             set(files) == set(m["files"]) | {"manifest.json"}, "Invalid/incomplete target export")
     for name, expected in m["files"].items():
@@ -329,8 +358,17 @@ def verify_export(directory):
                 ref["sha256"] == m["files"].get("categories.json"), "Invalid categories reference")
         catalog = categories.load(directory / "categories.json")
         categories.lookup(catalog, m["category_id"])
-    with open_package(directory / "input") as package:
-        report, design, matrix, logic, approval = inspect(package, directory / "approval.json", legacy=legacy)
+    manual_path = None
+    if manual:
+        from .manual_derivation import AUTH_FILE
+        ref = exact_keys(m["manual_authorization"], {"file", "sha256"})
+        require(ref["file"] == AUTH_FILE and file_hash(files[AUTH_FILE]) == sha(ref["sha256"]),
+                "Manual export authorization binding mismatch")
+        manual_path = files[AUTH_FILE]
+    with open_package(directory / "input", allow_manual_review=manual) as package:
+        report, design, matrix, logic, approval = inspect(package, directory / "approval.json", legacy=legacy,
+                                                        manual_authorization=manual_path)
+        require((report["source"]["kind"] == "manual") == manual, "Export format/source mismatch")
         if not legacy:
             categorize(report, catalog, m["category_id"])
         require(approval is not None and m["approval_sha256"] == approval["sha256"], "Missing final export approval")
@@ -398,6 +436,7 @@ def main(argv=None):
             p.add_argument("--save-slot", required=True)
             p.add_argument("--category-id", required=True, action=ExplicitOnce)
             p.add_argument("--categories", type=Path, required=True, action=ExplicitOnce)
+        p.add_argument("--manual-authorization", type=Path)
     for cmd in ("verify-export", "plan", "register"):
         p = sub.add_parser(cmd)
         p.add_argument("--export", type=Path, required=True)
@@ -409,15 +448,16 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if args.command == "inspect":
-            with open_package(args.input) as package:
-                result = inspect(package, args.approval)[0]
+            with open_package(args.input, allow_manual_review=args.manual_authorization is not None) as package:
+                result = inspect(package, args.approval, manual_authorization=args.manual_authorization)[0]
             if args.report:
                 require(not args.report.exists(), "Inspection output exists")
                 write_json(args.report, result)
         elif args.command == "export":
             result = export(args.input, args.output_dir, name=args.name, revision=args.runtime_revision,
                             stem=args.stem, save_slot=args.save_slot, approval_path=args.approval,
-                            category_id=args.category_id, categories_path=args.categories)
+                            category_id=args.category_id, categories_path=args.categories,
+                            manual_authorization=args.manual_authorization)
         elif args.command == "verify-export":
             result = verify_export(args.export)[1]
         elif args.command == "recover-registration":

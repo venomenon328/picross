@@ -410,6 +410,12 @@ Eigentümer-Lösung gehörte zum RP-6-Gate; der Abschluss steht in #34/PR #47.
 
 ## RP-5: motivgeschützte Reparatur
 
+Für ausdrücklich autorisierte feste manuelle Mono-Entfernungen ohne Suchlauf
+unterstützt ZA-1 zusätzlich einen versionierten Replay-/Autorisierungsweg.
+Vertrag, `--manual-authorization`, unveränderte Originalbindungen und v3-Export:
+[ZA-1: manuelle Ableitungen](../../docs/ZA1_ADAPTER.md#autorisierte-manuelle-ableitungen).
+Dieser Weg ersetzt weder RP-5 noch dessen Such-/Nachweisvertrag.
+
 [Versionierter Vertrag, Status-/Exitcodes, Schema-/Hash-/Ressourcengrenzen](../../examples/rp5/README.md),
 [Prüfzuordnung](../../docs/RP5_VERIFICATION.md), [Offlinevergleich](../../examples/rp5/index.html).
 Gleiche isolierte Image-Umgebung; keine neue Abhängigkeit. P1-Export und Spiel

@@ -98,8 +98,8 @@ def check_checkout(root, replay=False, *, check_projection=True):
                 file_hash(root / "game" / e["reveal"]) == p["reveal_sha256"], "Registered content binding changed")
         # Also enforce the category binding without the expensive production replay.
         m = load_json(package / "manifest.json")
-        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2"), "Unsupported registered export")
-        if m["format"] == "picross-target-export-v2":
+        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3"), "Unsupported registered export")
+        if m["format"] in ("picross-target-export-v2", "picross-target-export-v3"):
             require(m.get("category_id") == e["category_id"], "Registered category differs from export")
         if replay:
             from .target_adapter import verify_export
@@ -128,14 +128,14 @@ def sync_runtime(root):
 
 
 def registration(export_dir, root, *, apply=False, fail_step=None):
-    from .target_adapter import verify_export, FORMAT as EXPORT_FORMAT
+    from .target_adapter import verify_export, FORMAT as EXPORT_FORMAT, MANUAL_FORMAT
     root = root.resolve()
     catalog_bytes = categories.source_bytes(root / categories.PATH)
     catalog = categories.load(root / categories.PATH)
     require(catalog_bytes == categories.source_bytes(root / categories.PATH), "Categories changed during planning; retry")
     registry = check_checkout(root)
     m, report = verify_export(export_dir)
-    require(m["format"] == EXPORT_FORMAT, "Category-less legacy export: create a new categorized export from the unchanged approved input")
+    require(m["format"] in (EXPORT_FORMAT, MANUAL_FORMAT), "Category-less legacy export: create a new categorized export from the unchanged approved input")
     category = categories.lookup(catalog, m["category_id"])
     require(not m["test_only"] or root != ROOT.resolve(), "Test-only fixtures cannot be registered in the real repository")
     package_rel = "content/packages/" + m["definition_id"] + "/" + m["package_revision"]
