@@ -1,0 +1,52 @@
+[
+  {
+    "command": [
+      "-m",
+      "tools.puzzle_production.target_adapter",
+      "export",
+      "--input",
+      "E:\\Zeuch\\Coding\\picross-pz-2a8481f6\\content\\authoring\\pz-2a8481f61e6443bda174bd3da67c\\r06\\package.zip",
+      "--approval",
+      "E:\\Zeuch\\Coding\\picross-pz-2a8481f6\\content\\authoring\\pz-2a8481f61e6443bda174bd3da67c\\r06\\approval.json",
+      "--name",
+      "Brandenburger Tor",
+      "--runtime-revision",
+      "1",
+      "--stem",
+      "brandenburger_tor_001",
+      "--save-slot",
+      "brandenburger_tor_001",
+      "--category-id",
+      "gebaeude-bauwerke",
+      "--categories",
+      "E:\\Zeuch\\Coding\\picross-pz-2a8481f6\\content\\categories.json",
+      "--output-dir",
+      "E:\\Zeuch\\Coding\\picross-pz-2a8481f6\\artifacts\\pz-production\\integration-r06\\export"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "-m",
+      "tools.puzzle_production.target_adapter",
+      "plan",
+      "--export",
+      "E:\\Zeuch\\Coding\\picross-pz-2a8481f6\\artifacts\\pz-production\\integration-r06\\export",
+      "--checkout",
+      "E:\\Zeuch\\Coding\\picross-pz-2a8481f6"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "-m",
+      "tools.puzzle_production.target_adapter",
+      "register",
+      "--export",
+      "E:\\Zeuch\\Coding\\picross-pz-2a8481f6\\artifacts\\pz-production\\integration-r06\\export",
+      "--checkout",
+      "E:\\Zeuch\\Coding\\picross-pz-2a8481f6"
+    ],
+    "exit_code": 0
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "route": "Bound reference import -> exact authorised three-cell replay -> new correction PNG -> fresh RP-3 import",
+  "reference_matrix_hash": "05d56b2d3e5f1c1072579e0d297bc3c9a7731386636e55b6b2ddd898152deb0e",
+  "manual_replay": "manual-replay.json",
+  "correction_sha256": "0d6e50aa8d445d7b245e3f0e870fdc4dc0506680bd411dd45ad98a1c1cc7bf5b",
+  "selected_matrix_hash": "1435c918fa22a2fb9b4b17bb063cfb767c96073473294d536c8106dfe3d8b39c",
+  "logic_hash": "1d903136572645a36579e2232a5826f90c1f85642ed45faf1240f483ee72a483",
+  "new_import_reconstruction": {
+    "status": "solved",
+    "proof_verified": true,
+    "certified": true,
+    "logic_hash": "1d903136572645a36579e2232a5826f90c1f85642ed45faf1240f483ee72a483",
+    "profile": {
+      "id": "full-line-mono",
+      "version": 1,
+      "start": "unknown",
+      "deduction": "all-line-supported-values",
+      "search": false
+    },
+    "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+    "steps": 101,
+    "line_evaluations": 171
+  },
+  "exact_requested_changes": true,
+  "all_other_cells_unchanged": true,
+  "end_matrix_equal": true
+}

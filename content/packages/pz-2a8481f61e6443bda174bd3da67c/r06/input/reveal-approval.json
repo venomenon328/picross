@@ -1,0 +1,21 @@
+{
+  "type": "human_reveal_approval",
+  "actor": "Tobias Schröder",
+  "timestamp_utc": "2026-10-13T20:56:07Z",
+  "statement": "Ich gebe das Abschlussbild A-r02 frei.",
+  "revision": "A-r02",
+  "file": "reveals/A-r02.png",
+  "sha256": "b2d10a0490dbce384ab9fd5df94c523b901c3d79731931fbebe60d790be2519a",
+  "evidence": "reveal-approval-evidence.md",
+  "puzzle_id": "pz-2a8481f61e6443bda174bd3da67c",
+  "source_package_revision": "r03",
+  "source_commit": "e7152544bf1ba2453fcf3a2add8c03aab1e8cf8a",
+  "preserve": [
+    "Bauwerksidentität",
+    "Frontalansicht",
+    "Hauptproportionen",
+    "Fünf Durchgänge",
+    "Vierpferdegruppe/Quadriga",
+    "Fehlende Seitengebäude"
+  ]
+}

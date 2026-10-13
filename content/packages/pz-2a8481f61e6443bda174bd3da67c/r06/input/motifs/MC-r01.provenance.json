@@ -1,0 +1,20 @@
+{
+  "puzzle_id": "pz-2a8481f61e6443bda174bd3da67c",
+  "file": "motifs/MC-r01.png",
+  "sha256": "0d6e50aa8d445d7b245e3f0e870fdc4dc0506680bd411dd45ad98a1c1cc7bf5b",
+  "author": "Codex deterministic raster transcription of exact user-requested cell edits",
+  "usage_basis": "Same commissioned original AI artwork/approved motif; exact owner-requested correction; no third-party asset.",
+  "derived_from": {
+    "file": "reveals/A-r02.png",
+    "sha256": "b2d10a0490dbce384ab9fd5df94c523b901c3d79731931fbebe60d790be2519a"
+  },
+  "input": "manual-replay.json",
+  "chain": [
+    "A-r02",
+    "MA-r02",
+    "r05/area-184",
+    "three explicit empty-to-ink edits",
+    "MC-r01 discrete correction input"
+  ],
+  "not_a_native_image_generation": true
+}
