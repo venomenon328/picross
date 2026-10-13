@@ -1,0 +1,101 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-eedd1fe72af54714908d5b5aff34",
+  "revision": "r03",
+  "category_id": "insekten-kleine-tiere",
+  "state": "content_ready",
+  "package": {
+    "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/package.zip",
+    "bytes": 7849830,
+    "sha256": "8b2684c16ce1718f1b09d6592c0b26d17348f4bc68a16559b104970fe6b4c393"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/handoff.json",
+    "sha256": "8dd9dc9edda35719682abe45f64a51b8d3dd50a31df89ecbc243312c288fb823"
+  },
+  "inventory_sha256": "13808cf40aa0eec6693f820a9b433b78279c1aaf9979083cb9e658fdbf7873df",
+  "approval": null,
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "585e51ace5904ad634f4ca3606b4a34aeff05759a1885927da8441f1d5afeef7",
+  "motif_revision": "MA-r01",
+  "motif_sha256": "475a264d04b252fffb0be46476e35681beac250782a1e746dfd6fb2848bfae06",
+  "width": 25,
+  "height": 35,
+  "mode": "mono",
+  "difficulty": {
+    "method": "picross-difficulty-0.1",
+    "assessment_type": "editorial_estimate",
+    "level": "L2",
+    "plausible_range": [
+      "L2",
+      "L4"
+    ],
+    "confidence": "low",
+    "logic_hash": "8b4da5d9e8123966f99096f83637544ffb10a267578142f871baca53b6cb34d3",
+    "rule_families": {
+      "R0": "Keine initial leeren oder voll gepackten Zeilen/Spalten. R0 kann vom völlig unbekannten Start keinen ersten Schritt liefern; L1 damit ausgeschlossen. Restleerfelder und fertige Blöcke dienen später dem Aufräumen.",
+      "R1": "Voraussichtlich dominante Anforderung sind Überlappungen langer Körperblöcke und deren Verlängerung: erste Zeile6 (1-basiert) [7,9] erzwingt eine Zelle, Zeile7 [3,15] liefert sofort9 erzwungene Zellen. Breite Körperarme bieten räumlich verteilte Anker.",
+      "R2": "Mehrfachblockzuordnung am Gürtel und in Spalten mit beiden Körperbögen kann kombinierte Anker benötigen. R0+R1 wurden nicht mit einem validierten schwächeren Regelanalysator bis zum Fixpunkt geprüft; formale R1-Suffizienz und R2-Notwendigkeit bleiben unsicher.",
+      "R3": "Das Zertifikat nutzt allgemeine vollständige Linienunterstützung. Dies beweist keine R3-Notwendigkeit; R3 kann mangels geprüfter schwächerer Familien nicht ausgeschlossen werden. Daher konservativ L2–L4."
+    },
+    "bottleneck": "Vor jedem der168 Proofschritte wurden alle60 Linien im damaligen Wissensstand geprüft. Vor Aufräumen bei<=18 unbekannten Zellen bestehen mindestens7 produktive Linien; keine numerische Engstelle im geprüften Verlauf. Keine instrumentierte Bewertung oder menschliche Kalibrierung behauptet.",
+    "evidence": "audit/difficulty-checkpoints.json",
+    "calibration": "No validated difficulty analyser or human comparison data; low-confidence editorial estimate. Human playtest optional.",
+    "time_estimate": null,
+    "effort": {
+      "width": 25,
+      "height": 35,
+      "cells": 875,
+      "filled": 343,
+      "empty": 532,
+      "proof_steps": 168,
+      "human_active_minutes": null,
+      "solve_time_minutes": null
+    }
+  },
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "next_action": "Present final raster/reveal/report and bound inventory for actual human editorial acceptance. Archive PR merge authorized after required checks; no game registration before standard request4.",
+  "integration": null,
+  "repository_delivery": {
+    "branch": "content/earthworm-reveal-r01",
+    "pr": 105,
+    "base_commit": "57c5ef4df44602d89d5679d744b7327deda7645f",
+    "previous_archive_commit": "d6b8e0f7c5afea5880f94d67664355cb3edb64f8",
+    "commit_evidence": "Final PR head and verified main merge in PR; self commit cannot be embedded"
+  },
+  "archive_validation": {
+    "safe_zip_exact_files_hashes_handoff": true,
+    "zip_files": 104,
+    "inventory_files": 102
+  },
+  "inspection": {
+    "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/inspection.json",
+    "sha256": "1faf9a3013c833d5d9cde99b1d75ffc65d89a228aeceaa93b4366e98f37e09a3",
+    "technical": true,
+    "editorial_approved": false,
+    "only_blocker": "final_editorial: missing bound human final approval"
+  },
+  "growth": {
+    "new_zip_bytes": 7849830,
+    "required_inputs": "All three complete RP3 bundles retained. No old ZIPs embedded; later unused motif edits omitted with fixed historical references."
+  },
+  "selection": {
+    "logic_hash": "8b4da5d9e8123966f99096f83637544ffb10a267578142f871baca53b6cb34d3",
+    "matrix_hash": "4a683c9beb7befa900832470290eeb662a2464db02bfcfdd51f3334e93afeefe",
+    "reveal": {
+      "file": "reveal/A-r01.png",
+      "sha256": "585e51ace5904ad634f4ca3606b4a34aeff05759a1885927da8441f1d5afeef7"
+    },
+    "variant": "area-232"
+  },
+  "report_errata": [
+    "Inside report.md, “sechs logisch erfolgreiche Vorvarianten” is a count typo: five certified visually rejected predecessors (four in round1 plus area216 in round2); eight of all ten candidates are certified, three connected including selected area232. Decisions and audit contain exact per-candidate records."
+  ],
+  "review_files": {
+    "comparison": "ZIP:views/final-comparison.png",
+    "raster": "ZIP:views/final-raster.png",
+    "reveal": "ZIP:reveal/A-r01.png"
+  }
+}
