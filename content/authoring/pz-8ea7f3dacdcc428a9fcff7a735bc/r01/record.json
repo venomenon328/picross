@@ -4,7 +4,7 @@
   "revision": "r01",
   "motif_name": "Efeutute",
   "category_id": "blumen-pflanzen",
-  "state": "reveal_review",
+  "state": "reveal_approved",
   "package": {
     "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r01/package.zip",
     "bytes": 5891418,
@@ -16,15 +16,16 @@
   },
   "inventory_sha256": "e7adc8e2fcd212106c42c3f36b05eb29f46262e88fc3072cd6371ee0133307ee",
   "approval": null,
-  "reveal_approval": null,
+  "reveal_approval": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r02/reveal-approval.json",
+    "sha256": "fdc113e09da34ea6918f8fedb63d89b2a2da404134d9a7c6e8c1ce5c25bc71aa"
+  },
   "width": null,
   "height": null,
   "mode": "color",
   "difficulty": null,
-  "blockers": [
-    "Abschlussbildauswahl und ausdrückliche menschliche Freigabe offen."
-  ],
-  "next_action": "Standardauftrag 2: konkrete Abschlussbilddatei ausdrücklich freigeben; anschließend Konfiguration empfehlen und Motivvorlage ableiten.",
+  "blockers": [],
+  "next_action": "Continue with indexed r02 motif_review; original ZIP/Handoff/inventory remain unchanged.",
   "integration": null,
   "repository_delivery": {
     "branch": "authoring/efeutute-selection",
@@ -34,5 +35,8 @@
   "validation": {
     "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r01/validation.json",
     "sha256": "66f12fd650cef45697cb6770dc1d28ac3d4d8f4a7501acced2278126e0e58d3c"
-  }
+  },
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "72ceb119b341b7ad8c96770a2042449f4f3d47ede648225e43062a3bae564472",
+  "superseded_by": "r02"
 }
