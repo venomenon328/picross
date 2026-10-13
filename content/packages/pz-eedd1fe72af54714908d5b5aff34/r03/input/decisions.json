@@ -1,0 +1,288 @@
+{
+  "selected_reveal": "A-r01",
+  "selected_motif": "MA-r01",
+  "effective_user_approval": "approvals/motif-approval.json",
+  "supersedes": "r02 recommended MA-r03 and28x40 superseded by actual explicit user choice of olderMA-r01 and25x35.",
+  "rounds": [
+    {
+      "round": 1,
+      "candidates": 6,
+      "reason": "Four fixed-size occupancy variants plus two full-width variants after disconnected belt observation."
+    },
+    {
+      "round": 2,
+      "candidates": 4,
+      "plan": "production/round2-plan.json"
+    }
+  ],
+  "candidates": [
+    {
+      "bundle": "production/import",
+      "variant": "area-128",
+      "id": "f7f8e50a4c54f8a38675e5245fdf6f1e190b1183f61f7e797c4c68b9138325a4",
+      "matrix_hash": "c8eb075b0044286c3e57d2ba202cdfe318504961b4ed7c181332fdfd52c8591f",
+      "exact_matrix_palette_identity": "0aaa7c37ec5086e93f5a70904ff31a7c924f7e05f6b307ad999aead80dbd9bd3",
+      "duplicate_of": null,
+      "status": "stalled",
+      "certified": false,
+      "filled": 269,
+      "frame": {
+        "left": true,
+        "right": false,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        187,
+        82
+      ],
+      "proof_steps": 10,
+      "selected": false,
+      "reason": "Incomplete full-line proof and disconnected belt rails; no ambiguity or unsolvability claim."
+    },
+    {
+      "bundle": "production/import",
+      "variant": "area-160",
+      "id": "4d406e3166d09492abb602e7c971834ce04a5367c0ac03ffa3ee184cc54d2216",
+      "matrix_hash": "91571d274cd8455c81237d889644664e12b34e02bab92872cc69d3a192b5baff",
+      "exact_matrix_palette_identity": "81755708310ca2b70f0a1a641b471222bf95cdd5d35cb5d54fe2ddb3540e18b6",
+      "duplicate_of": null,
+      "status": "solved",
+      "certified": true,
+      "filled": 288,
+      "frame": {
+        "left": true,
+        "right": false,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        199,
+        89
+      ],
+      "proof_steps": 209,
+      "selected": false,
+      "reason": "Certified logic but visual rejection: disconnected black silhouette at the thin belt rails."
+    },
+    {
+      "bundle": "production/import",
+      "variant": "area-192",
+      "id": "e64e461788eb22281cbc99598670c87270e5600870a5663bf75ff305629ec04e",
+      "matrix_hash": "e41009967116f87ab49cdf8ad23b55ceb6e251f1367e3e6c2adff9f4d14fe945",
+      "exact_matrix_palette_identity": "774ec5464a4e1d5edb777b6eff328e1503ee08835324fc235b02201ce133022a",
+      "duplicate_of": null,
+      "status": "solved",
+      "certified": true,
+      "filled": 312,
+      "frame": {
+        "left": true,
+        "right": false,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        217,
+        93,
+        2
+      ],
+      "proof_steps": 183,
+      "selected": false,
+      "reason": "Certified logic but visual rejection: disconnected black silhouette at the thin belt rails."
+    },
+    {
+      "bundle": "production/import",
+      "variant": "area-96",
+      "id": "44486552ca351fdbcce5ff915e3eb8c5418252757e4c46117c94132680e4678d",
+      "matrix_hash": "c979f035931c7acd7e4475e58a9d2487948a838e239119becfc53eb940620854",
+      "exact_matrix_palette_identity": "9edb41c9ccc2570d8eb4df0d9e06bab229051e849034531a52457eecd8f043dd",
+      "duplicate_of": null,
+      "status": "stalled",
+      "certified": false,
+      "filled": 240,
+      "frame": {
+        "left": true,
+        "right": false,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        169,
+        71
+      ],
+      "proof_steps": 2,
+      "selected": false,
+      "reason": "Incomplete full-line proof and disconnected belt rails; no ambiguity or unsolvability claim."
+    },
+    {
+      "bundle": "production/import-full-width",
+      "variant": "area-160",
+      "id": "b6127ea33dfe7990c531408069622dc3e7ee9d8faac640a1f9b42274a9f075a0",
+      "matrix_hash": "500b9905190c8c1bf20a2c3b3ecc72ce65fd55560b2c118165a20f277cdebfde",
+      "exact_matrix_palette_identity": "a10c5771dd1f56703940fe55a486a863e51c6382155db2e6190dc36e8966f93c",
+      "duplicate_of": null,
+      "status": "solved",
+      "certified": true,
+      "filled": 297,
+      "frame": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        205,
+        92
+      ],
+      "proof_steps": 200,
+      "selected": false,
+      "reason": "Certified logic but visual rejection: disconnected black silhouette at the thin belt rails."
+    },
+    {
+      "bundle": "production/import-full-width",
+      "variant": "area-192",
+      "id": "3877080a7bd3f460d3587191903bda6c4cf2c8c2afe50be3981fcad7427c2d49",
+      "matrix_hash": "5b1444b91772e67c8b0e1df2cf800e1bceba8c36dcfb076d723201bc8254c1e5",
+      "exact_matrix_palette_identity": "21d043bb81928666b0464035ea82befe595b9da098996a35d3bcd965019bdcf2",
+      "duplicate_of": null,
+      "status": "solved",
+      "certified": true,
+      "filled": 310,
+      "frame": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        213,
+        95,
+        2
+      ],
+      "proof_steps": 226,
+      "selected": false,
+      "reason": "Certified logic but visual rejection: disconnected black silhouette at the thin belt rails."
+    },
+    {
+      "bundle": "production/import-rails",
+      "variant": "area-216",
+      "id": "5e50d9d0cd8a94b28b522d26f036b2085f317441c9f9e9a3397cf11c58ea1e2f",
+      "matrix_hash": "321aa1323facc59b875e4253b15fff7a1246644955cdc951df2cb7a8c6d7bc84",
+      "exact_matrix_palette_identity": "0ef5b81c08594c3dc41fe89e32fbe4144e86e0c165e073e314511c09064878ec",
+      "duplicate_of": null,
+      "status": "solved",
+      "certified": true,
+      "filled": 329,
+      "frame": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        230,
+        97,
+        2
+      ],
+      "proof_steps": 201,
+      "selected": false,
+      "reason": "Certified logic but visual rejection: disconnected black silhouette at the thin belt rails."
+    },
+    {
+      "bundle": "production/import-rails",
+      "variant": "area-232",
+      "id": "f7233fb5c2888c15186fa3d25b888dba09837061de320b1dc8bb4d53abb4475d",
+      "matrix_hash": "4a683c9beb7befa900832470290eeb662a2464db02bfcfdd51f3334e93afeefe",
+      "exact_matrix_palette_identity": "d6a9f0eeaa3b043130bc4bbc2a7686563787257474054a33946a4c3cc3c40346",
+      "duplicate_of": null,
+      "status": "solved",
+      "certified": true,
+      "filled": 343,
+      "frame": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        343
+      ],
+      "proof_steps": 168,
+      "selected": true,
+      "reason": "Lowest tested threshold preserving connected silhouette and broad white belt; certified, less contour expansion than240/248."
+    },
+    {
+      "bundle": "production/import-rails",
+      "variant": "area-240",
+      "id": "a24582c49665020c014e010afe53e0ffb3d4bca3bdffb04e3b588ef8d43f5993",
+      "matrix_hash": "b38bf54bca92e2c787693613093e9e898e78937c0ef78fa7991a226dad17cf06",
+      "exact_matrix_palette_identity": "49967802ed53b9065afaf0feb24e101c8a61ee1a67381cdbf67c28de548ce594",
+      "duplicate_of": null,
+      "status": "solved",
+      "certified": true,
+      "filled": 352,
+      "frame": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        352
+      ],
+      "proof_steps": 150,
+      "selected": false,
+      "reason": "Certified and connected, but stronger contour expansion without additional retained detail; prefer232."
+    },
+    {
+      "bundle": "production/import-rails",
+      "variant": "area-248",
+      "id": "ddc75a8908b3f696ebd00461f77b408b388ccfe66c1642741d72daae36eac26d",
+      "matrix_hash": "31db2306d6398edf9c900a2e5fed85a041121036d3751dc7f12a08f0fb05efe4",
+      "exact_matrix_palette_identity": "7a0f15a971e9f7d52ee76e04a9f6f57d5727bcf5ee9fd61a8361b8f65a93c6b3",
+      "duplicate_of": null,
+      "status": "solved",
+      "certified": true,
+      "filled": 364,
+      "frame": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      },
+      "frame_pass": true,
+      "black_components": [
+        364
+      ],
+      "proof_steps": 138,
+      "selected": false,
+      "reason": "Certified and connected, but stronger contour expansion without additional retained detail; prefer232."
+    }
+  ],
+  "unique_matrix_count": 10,
+  "repair": "not_required; unchanged imported final candidate, zero cell edits",
+  "omitted_unbound_history": {
+    "commit": "d6b8e0f7c5afea5880f94d67664355cb3edb64f8",
+    "package": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r02/package.zip",
+    "files": [
+      {
+        "path": "attempts/MA-r02.png",
+        "sha256": "2d916f58004fd8905c6809fb2decc60409a45ef721185fac3c7bd86d7e47fb24"
+      },
+      {
+        "path": "motif/MA-r03.png",
+        "sha256": "d3a61b2eed25db159ff1225e08f334578474bbb17e31544ba90fb24c199f1b47"
+      }
+    ],
+    "reason": "User selected olderMA-r01 directly derived fromA-r01; these later edits are not parents or technical inputs. Originalr02 remains unchanged."
+  },
+  "metadata_correction": "production/metadata-correction.json"
+}

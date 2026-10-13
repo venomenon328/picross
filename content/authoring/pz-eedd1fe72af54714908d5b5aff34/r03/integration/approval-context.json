@@ -1,0 +1,17 @@
+{
+  "format": "picross-editorial-approval-context-v1",
+  "actual_user_statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch nehme das Rätselpaket pz-eedd1fe72af54714908d5b5aff34 · r03, Revision r03, mit Inventar ecc6fcc3e90c4cfcbaa75a3ceb462b25ed6ed6ee redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\n\nIch beauftrage auch den Merge dieses Ablage-/Integrations-PRs nach den Pflichtprüfungen gemäß Entwicklungsworkflow.",
+  "approval_sha256": "7a3bc26f9ce2d2458e88c9790e9c603f347af5d583a2c1fa0996660f50c835de",
+  "timestamp_basis": "UTC recording time after user message; message submission seconds not exposed",
+  "provided_inventory_identifier": "ecc6fcc3e90c4cfcbaa75a3ceb462b25ed6ed6ee",
+  "resolved_identifier_kind": "Git main/archival commit, not an inventory SHA256",
+  "resolution": "The exact ID/revision and supplied archival commit identify a unique unchanged r03 package. Genuine inventory SHA256 computed from that ZIP and bound in separate approval; literal statement retained unchanged.",
+  "source_commit": "ecc6fcc3e90c4cfcbaa75a3ceb462b25ed6ed6ee",
+  "record_at_commit": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r03/record.json",
+  "package_sha256": "8b2684c16ce1718f1b09d6592c0b26d17348f4bc68a16559b104970fe6b4c393",
+  "handoff_sha256": "8dd9dc9edda35719682abe45f64a51b8d3dd50a31df89ecbc243312c288fb823",
+  "inventory_sha256": "13808cf40aa0eec6693f820a9b433b78279c1aaf9979083cb9e658fdbf7873df",
+  "human_editorial_acceptance": true,
+  "integration_order": true,
+  "conditional_merge_order": true
+}

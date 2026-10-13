@@ -1,0 +1,32 @@
+{
+  "operation": "images.inspect_candidate in a fresh process",
+  "certified": true,
+  "matrix_hash": "4a683c9beb7befa900832470290eeb662a2464db02bfcfdd51f3334e93afeefe",
+  "logic_hash": "8b4da5d9e8123966f99096f83637544ffb10a267578142f871baca53b6cb34d3",
+  "source_sha256": "475a264d04b252fffb0be46476e35681beac250782a1e746dfd6fb2848bfae06",
+  "approved_motif_sha256": "475a264d04b252fffb0be46476e35681beac250782a1e746dfd6fb2848bfae06",
+  "source_matches": true,
+  "final_domains_match": true,
+  "checks": [
+    "Original decoding and normalization RGBA pixels/metadata reconstructed",
+    "All manifest file hashes including every retained candidate/proof/view verified",
+    "Matrix and clues deterministically regenerated from saved source bytes",
+    "Written proof independently replayed with block-interval DAG"
+  ],
+  "verification": {
+    "status": "solved",
+    "proof_verified": true,
+    "certified": true,
+    "logic_hash": "8b4da5d9e8123966f99096f83637544ffb10a267578142f871baca53b6cb34d3",
+    "profile": {
+      "id": "full-line-mono",
+      "version": 1,
+      "start": "unknown",
+      "deduction": "all-line-supported-values",
+      "search": false
+    },
+    "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+    "steps": 168,
+    "line_evaluations": 228
+  }
+}

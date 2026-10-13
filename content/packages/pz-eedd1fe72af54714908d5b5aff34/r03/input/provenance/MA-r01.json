@@ -1,0 +1,35 @@
+{
+  "format": "picross-image-provenance-v1",
+  "puzzle_id": "pz-eedd1fe72af54714908d5b5aff34",
+  "revision": "MA-r01",
+  "file": "attempts/MA-r01.png",
+  "sha256": "475a264d04b252fffb0be46476e35681beac250782a1e746dfd6fb2848bfae06",
+  "author": "OpenAI native image generation on the user commission",
+  "usage_basis": "Native image edit of this project’s newly generated and explicitly approved reveal, then localized revisions; no third-party references.",
+  "derived_from": {
+    "file": "reveal/A-r01.png",
+    "sha256": "585e51ace5904ad634f4ca3606b4a34aeff05759a1885927da8441f1d5afeef7"
+  },
+  "immediate_parent": {
+    "file": "reveal/A-r01.png",
+    "sha256": "585e51ace5904ad634f4ca3606b4a34aeff05759a1885927da8441f1d5afeef7"
+  },
+  "prompt": "Use case: precise-object-edit / sketch-to-render abstraction. Edit target: the attached approved earthworm reveal artwork A-r01. Create a separate monochrome simplified motif template MA-r01 for a 28 columns by 40 rows nonogram, NOT the puzzle itself. Preserve the exact identity, S-shaped pose, near top-down perspective, placement, external silhouette, body thicknesses, bend locations, tapered lower-left tail, rounded upper-right front end, clitellum position and the two broad negative spaces between bends. Keep the original square canvas framing and worm position; do not rotate, mirror, shorten, crop, stretch, or recompose the worm. Remove ALL warm colors, shading, highlights and fine surface texture. White uniform background, rich solid black connected worm body with a smooth clean continuous exterior contour. Preserve the broad lighter clitellum saddle around the upper-left bend as a simple white curved interior band, inset from both outside edges so the black body remains connected around its boundaries; the band should be broad and clearly readable, no texture. Keep only SIX broad white partial transverse groove marks along the remaining body, each short and smoothly curved to suggest ring segments, all inset within the black silhouette and stopping before both body edges, distributed with two on the upper arm, two around the middle/lower bend and two near the lower arm. Each groove must be thick enough to survive coarse abstraction, not a hairline, no fully cutting the worm into parts. Prefer clean broad black masses and broad meaningful white spaces over intricate details. No thin external outline around white fill, no grey fill, no gradient, no hatching, no shadows, no face, eyes, mouth, legs or antennae. No text, labels, grid, numbers, mosaic, pixels, border, or extra objects. This is a high-resolution binary-style black-on-white illustration, not raster production. The approved color original remains untouched; output only the new derived motif template.",
+  "tool": "image_gen.imagegen",
+  "settings": {
+    "transparent_background": false,
+    "model": "not_exposed",
+    "quality": "not_exposed",
+    "seed": "not_exposed",
+    "output_size_parameter": "not_exposed"
+  },
+  "observed_output": {
+    "format": "PNG",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGB",
+    "bytes": 1002905
+  },
+  "postprocessing": [],
+  "changes": "Monochrome simplification; localized belt corrections recorded separately. Original reveal is byte-identical."
+}
