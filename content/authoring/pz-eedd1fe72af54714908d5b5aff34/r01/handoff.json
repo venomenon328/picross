@@ -1,0 +1,74 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 5,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "dafd09bdcbe36010637944319994383d877948c02be2393e7e16db54f5402c4e"
+  },
+  "puzzle_id": "pz-eedd1fe72af54714908d5b5aff34",
+  "revision": "r01",
+  "repo_commit": "57c5ef4df44602d89d5679d744b7327deda7645f",
+  "state": "reveal_review",
+  "brief": "brief.md",
+  "category_id": "insekten-kleine-tiere",
+  "requested_mode": "mono",
+  "approved_parameters": [],
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_variants": "variants.json",
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "b3155f0744700b1aa34bc672ad988c76ac05ced87f29b949749dcc3b05f271fd"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "Ausdrückliche menschliche Freigabe einer konkreten Abschlussbilddatei vor Abstraktion erforderlich."
+  ],
+  "next_action": "Standardauftrag 2: ausdrückliche Abschlussbildfreigabe einer tatsächlichen Revision; erst danach Konfigurationsempfehlung und Abstraktion.",
+  "authorization": "Standardauftrag 1 samt Repositoryablage nach §6, Commit/Push und Draft-PR; kein Merge. Keine Abstraktion, Rasterproduktion, Registrierung, Werkzeugänderung, Release oder Veröffentlichung.",
+  "repository_delivery": {
+    "branch": "content/earthworm-reveal-r01",
+    "base_commit": "57c5ef4df44602d89d5679d744b7327deda7645f",
+    "commit_evidence": "Draft-PR; publication commit cannot be embedded in its own bytes."
+  }
+}
