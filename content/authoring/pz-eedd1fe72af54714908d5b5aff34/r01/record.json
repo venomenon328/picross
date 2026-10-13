@@ -3,7 +3,7 @@
   "puzzle_id": "pz-eedd1fe72af54714908d5b5aff34",
   "revision": "r01",
   "category_id": "insekten-kleine-tiere",
-  "state": "reveal_review",
+  "state": "reveal_approved",
   "package": {
     "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r01/package.zip",
     "bytes": 4736393,
@@ -15,15 +15,16 @@
   },
   "inventory_sha256": "b3155f0744700b1aa34bc672ad988c76ac05ced87f29b949749dcc3b05f271fd",
   "approval": null,
-  "reveal_approval": null,
+  "reveal_approval": {
+    "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r02/reveal-approval.json",
+    "sha256": "b71e911c5ee6bb58e212b43a40d0d58df14877ba897640c0d5c60fd66ef96075"
+  },
   "width": null,
   "height": null,
   "mode": "mono",
   "difficulty": null,
-  "blockers": [
-    "Ausdrückliche menschliche Freigabe einer konkreten Abschlussbilddatei vor Abstraktion erforderlich."
-  ],
-  "next_action": "Standardauftrag 2: ausdrückliche Abschlussbildfreigabe einer tatsächlichen Revision; erst danach Konfigurationsempfehlung und Abstraktion.",
+  "blockers": [],
+  "next_action": "Continue with indexed r02 motif_review; explicit MA-r03/corridor approval pending.",
   "integration": null,
   "repository_delivery": {
     "branch": "content/earthworm-reveal-r01",
@@ -33,5 +34,8 @@
   "validation": {
     "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/r01/validation.json",
     "sha256": "a564eb077f5ed7d4a95de088f723b3b08c6e7b596c2a64726c4c21c8cd19b19f"
-  }
+  },
+  "superseded_by": "r02",
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "585e51ace5904ad634f4ca3606b4a34aeff05759a1885927da8441f1d5afeef7"
 }
