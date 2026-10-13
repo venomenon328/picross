@@ -1,0 +1,30 @@
+{
+  "review_type": "self_review",
+  "reviewed_previous_head": "1639035d1ab983dfeb485c4e6df4a3fbed44ad7a",
+  "reviewed_base": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "scope": "Complete current staged diff and package inspected; only new r04 and index. r01/r02/r03 unchanged, no tools/game/docs/tests/CI changes.",
+  "archive_validation": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r04/validation.json",
+    "sha256": "70fc94f88cec859418e328294ac82acc097b562ae0bc0e3496b5a97e5b90af35"
+  },
+  "all_outer_copies_byte_equal": true,
+  "native_output_bytes_preserved": true,
+  "original_reveal_and_motif_bytes_preserved": true,
+  "utf8_metadata_verified": true,
+  "four_old_motif_imports": "Fresh independent reconstruction/proof replay accepted stalled statuses; all fail hard frame rule. Do not count produced/exit0 as certified.",
+  "new_motif": "Viewed full native output and reveal comparison; same identity/pose/long tail/negative spaces. Native simplification changes details and requires concrete human approval. No new-motif raster or solver run.",
+  "color_constraint": "Three-color palette planned; all proposed outputs must reject used colors with only1 cell. Existing three-color attempts have substantial counts but fail other gates.",
+  "remaining": [
+    {
+      "id": "A02",
+      "category": "A",
+      "actor": "Tobias Schröder",
+      "scenario": "Approve exact MA-r02 hash and configuration50x25/3 colors",
+      "gate": "before any raster import from MA-r02",
+      "status": "pending"
+    }
+  ],
+  "no_final_approval_inferred": true,
+  "ci": "Only content paths/modes docs and ci-required; final results in PR after push.",
+  "limitations": "Selfreview, not independent human review. No certification for unfinished puzzles and no ZA1 inspection for motif_review claimed."
+}
