@@ -23,6 +23,19 @@
       "workflow_state": "raster_review",
       "adapter_blocked": true,
       "final_editorial": "pending"
+    },
+    {
+      "type": "actual_human_final_editorial_acceptance",
+      "timestamp_utc": "2026-10-13T07:59:23Z",
+      "approval": "approval.json",
+      "approval_sha256": "f6797174d331089832bb7ab02928745e6b404a81aa62530af8558d6fb3471c31",
+      "evidence": "approval-evidence.json",
+      "validation": "approval-validation.json",
+      "original_zip_handoff_unchanged": true,
+      "workflow_state": "raster_review",
+      "adapter_technical": null,
+      "adapter_blocked": true,
+      "meaning": "Human end approval received; historical pending statements inside sealed ZIP/old validation remain unchanged."
     }
   ]
 }
