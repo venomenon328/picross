@@ -237,3 +237,73 @@ unverändert lesbar; v1 wird weiterhin nicht neu registriert.
 Die allgemeinen Regressionen liegen in `test_manual_adapter.py` und erzeugen nur
 feste synthetische Eingänge. Reale Pakete/Overrides werden nicht in Tests oder CI
 aufgenommen. Der konkrete Produktionsexport bleibt eine getrennte Einzelprüfung.
+
+### Feste bearbeitete Rasterimporte und gebundene Randregel-Ausnahme (v2)
+
+`picross-manual-authorization-v2` ergänzt v1 für bereits versiegelte monochrome
+RP-3-Ableitungen mit festen Entfernungen **und Einfügungen**. Das Originalhandoff
+bleibt unverändert: `candidate.source_type=import`, `repair=null` und
+`manual_edit_record` bezeichnet die gespeicherte feste Änderungsliste. Auch
+`state=blocked` darf mit ausdrücklich übergebener v2-Autorisierung eingelesen
+werden; das allein erteilt keine technische Freigabe. Andere Quelltypen und die
+bisherigen v1-Verträge bleiben unverändert.
+
+Die externe Autorisierung hat genau folgende Felder:
+
+```json
+{
+  "format": "picross-manual-authorization-v2",
+  "puzzle_id": "<ID>",
+  "revision": "<Originalrevision>",
+  "original_zip_sha256": "<ZIP-Hash oder null bei unverpacktem Eingang>",
+  "handoff_sha256": "<Originalhandoff>",
+  "inventory_sha256": "<Originalinventar>",
+  "selection": {"variant": "<Endvariante>", "matrix_hash": "<Matrix>", "logic_hash": "<Logik>", "reveal": {"file": "<Reveal>", "sha256": "<Hash>"}},
+  "plan_sha256": "<Dateihash von manual_edit_record>",
+  "reference": {"bundle": "<Originalimport>", "variant": "<Referenzvariante>", "candidate_id": "<Kandidat>", "manifest_sha256": "<Manifest>", "matrix_hash": "<Referenzmatrix>"},
+  "owner_override": {"file": "owner-override.json", "sha256": "<Dateihash>"},
+  "superseded_content_blockers": ["<exakt gebundene historische Metadatenblocker>"],
+  "frame_exception": true
+}
+```
+
+Daneben liegt die tatsächliche `picross-owner-override-v2`-Erklärung mit Akteur,
+UTC-Zeit, Wortlaut, `package_sha256`, `approval_sha256`, sämtlichen gemeinsamen
+Identitäts-/Auswahl-/Plan-/Referenz-/Blockerbindungen und exakt
+`permissions={fixed_mono_edits:true, frame_exception:<bool>}`. Beide
+Ausnahmeberechtigungen müssen typisiert übereinstimmen; ein allgemeiner
+Force-Schalter existiert nicht. Die Erklärung muss tatsächlich vorliegen;
+Software prüft Bindungen, authentifiziert aber weiterhin keinen menschlichen Akteur.
+
+Die inventarisierte Änderungsliste führt `puzzle_id`, `revision`, `reference`
+mit Bundle/Variante/Kandidaten-/Matrixbindung, `edits` als geordnete
+`{column,row,before,after}`-Objekte (**1-basierte** Spalte/Zeile), die boolesche
+Maske `protected`, `max_changes`, `seed=null`, `search=false` sowie
+`solve_seconds`, `verify_seconds` (1…120) und `solve_lines`, `verify_lines`
+(1…1.000.000). Redaktionelle Begleitfelder bleiben erhalten. Jede Position darf
+nur einmal geändert werden; ausschließlich `ink`↔`empty`, tatsächlicher
+Vorwert, genau diese ungeschützten Positionen, alle anderen Zellen geschützt.
+Die feste Liste und ihre Grenzen sind vor der Bearbeitung zu speichern.
+
+Der Adapter rekonstruiert zuerst den vollständigen Originalimport, replayt
+sämtliche Edits und rekonstruiert anschließend das vollständige neue RP-3-Bündel.
+Endmatrix, Maße, Palette, Hintergrund, Alpha und Fit müssen passen; Herkunft und
+freigegebener Parameterkorridor werden am **Originalimport** geprüft. Hinweise
+und geschriebener Endproof werden unabhängig neu geprüft; ursprünglicher
+Produktionsstatus muss vollständig zertifiziert sein. Der neue Rasterquellimport
+wird ausdrücklich als manuelle Ableitung exportiert, nicht als unveränderter
+Motivimport. Die Endfreigabe ist bei diesem Weg auch zur Diagnose zwingend.
+
+Alle Inhaltsgates bleiben Pflicht. Ausschließlich `frame=fail` kann mit
+ausdrücklich freigegebener `frame_exception=true` akzeptiert werden. Die
+Randformel wird weiterhin berechnet; Berichtsfelder `frame_valid=false` und
+`frame_exception_accepted=true` zeigen die Abweichung sichtbar. Kein Überschreiben
+des Originalgates, keine zusätzlichen Randpixel und keine Lockerung von
+Logik-, Herkunfts-, Rechte-, Bild- oder sonstigen Gates. Dies setzt die ausdrückliche
+Eigentümerentscheidung für die exakte Auswahl voraus, keine pauschale Randfreigabe.
+
+CLI bleibt `--manual-authorization <v2-Datei>`; Exportformat bleibt v3.
+Autorisierung, Eigentümererklärung und unveränderte Originalbindungen werden
+offline mitgeliefert und bei `plan`/`register` erneut geprüft. Allgemeine
+Positiv-/Negativtests stehen in `test_edited_import_adapter.py`; keine realen
+Produktionspakete als Test- oder CI-Eingänge.
