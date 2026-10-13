@@ -1,0 +1,48 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r01",
+  "motif_name": "Warnemünde",
+  "category_id": "gebaeude-bauwerke",
+  "state": "reveal_review",
+  "package": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r01/package.zip",
+    "bytes": 11323096,
+    "sha256": "a26f0296d8479faa6dc50f79b93bfdb00145c5a9dde6402097b4c512984ced23"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r01/handoff.json",
+    "sha256": "25c85fdd399f44a4a6882eb35376a973bb68efd53f036efef4065137f04a1a93"
+  },
+  "inventory_sha256": "25d0ab88d119c76f4407847b39cb9144e2d43ab3d2df929d1d39bc17eca725b6",
+  "approval": null,
+  "reveal_approval": null,
+  "width": null,
+  "height": null,
+  "requested_dimensions": {
+    "width": 30,
+    "height": 40,
+    "approximate": true
+  },
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [
+    "Ausdrückliche menschliche Abschlussbildfreigabe vor Abstraktion offen."
+  ],
+  "next_action": "Standardauftrag 2: konkrete Abschlussbildrevision freigeben; danach Konfiguration und abgeleitete Motivvorlage.",
+  "integration": null,
+  "repository_delivery": {
+    "branch": "content/warnemuende-reveal-r01",
+    "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+    "commit_evidence": "Draft-PR"
+  },
+  "offered_revisions": [
+    "A-r02",
+    "B-r02",
+    "C-r02"
+  ],
+  "validation": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r01/validation.json",
+    "sha256": "ce6978b4f9a355fb36ca513a93dc0b98d310d40a1bbd1245555ca2b854b89de1"
+  }
+}
