@@ -9,7 +9,7 @@ Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 13.10.2026
 `authoring-p1-rect-color-1` ergänzt Schema-2-Exporte; die Pilotprofile v1/v2 bleiben
 unverändert. Keine neue Zertifizierungsregel, kein Solver im Spiel.
 
-Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 6 und 8. Die Dokumentrevision 4 erweitert Anweisungen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
+Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 3, 6 und 8. Die Dokumentrevision 5 bündelt den Standardablauf; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
 
 ## Eingang und Grenzen
 
@@ -105,6 +105,10 @@ Export benötigt zusätzlich die ausdrücklich angegebene gültige Kategorienque
 
 Aus dem Repository-Root; Platzhalter bezeichnen echte bereitgestellte Eingänge.
 Ausgabepfade müssen neu sein; `inspect` darf ohne Freigabe laufen.
+Standardintegration: `export` → `plan` → `register`. `export` prüft den Eingang
+und seinen geschriebenen Export intern; `plan` und `register` prüfen ihn erneut.
+Die unten zusätzlich gezeigten `inspect`-/`verify-export`-Befehle dienen gezielter
+Diagnose oder separater Prüfung, nicht einer verpflichtenden Doppelrunde.
 
 ```sh
 python -m tools.puzzle_production.target_adapter inspect --input <paket-oder-zip> --report <neue-diagnose.json>
@@ -157,11 +161,15 @@ bindet deren Hashes und gegebenenfalls Original-ZIP-Hash und enthält alle erneu
 benötigten Originaldateien. Es behauptet keine vollständige Paketkopie.
 Der Spieler erhält Runtime-Ressourcen und einen `.txt`-Hinweis aus
 Urheber/Nutzungsgrundlage. Proofs, Quellen, Freigabeprotokolle und Testpakete
-bleiben ausgeschlossen. Der echte Windows-PCK wird bei der konkreten Inhaltsproduktion einmalig nativ
-geprüft; dieser Nachweis wird nicht als rätselspezifischer CI-Test übernommen.
+bleiben ausgeschlossen. Für reine Inhaltsintegration gelten die Adapter-/Dateiprüfungen
+aus [PUZZLE_AUTHORING §8](ai-workflows/PUZZLE_AUTHORING.md); kein obligatorischer
+nativer Spiel-/Neustart-/PCK-Test oder Spielerbuild je Rätsel. Zusätzliche Proben
+nur wegen konkreter Befunde; allgemeine Code-/Exportregressionen bleiben separat.
 
 Künstliche Freigaben sind `test_only=true`; Registrierung im echten eigenen
-Checkout wird verweigert. Reproduzierbarer Durchstich ausschließlich temporär:
+Checkout wird verweigert. Die folgenden allgemeinen Entwicklungsprüfungen gehören
+zu passenden Werkzeug-/Spieländerungen, nicht zur Produktion einzelner Rätsel.
+Reproduzierbarer Durchstich ausschließlich temporär:
 
 ```sh
 python -m tools.puzzle_production.za1_fixtures --output-dir artifacts/za1-replay
