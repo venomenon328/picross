@@ -1,4 +1,0 @@
-r03 beibehalten, exakt Spalte22/Zeile23 ink hinzufügen; requested-edit-plan.json und manual-edit-record.json; kein neuer Bildentwurf.
-
-Working mode: faithful
-Motif and gameplay review: open
