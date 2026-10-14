@@ -5,8 +5,10 @@ Die Produktionsplanung verwendet thematische Kategorien gemäß [KAT-1](CATEGORI
 ## Aktueller Entwicklungsstand
 
 VS2, die sechs Sidebaraktionen in 2×3 und PERF-A/B sind über PR #62/#66
-in `main` integriert. Der aktuelle Katalog enthält F01/F02/F04/F06/F08/F09,
-regulär höchstens 50×50 gemäß #68. Aktuelle Eingabe-/Saveverträge stehen in
+in `main` integriert. Der aktuelle Katalog enthält ausschließlich die registrierten
+Workflow-Inhalte aus `content/registry.json`, regulär höchstens 50×50 gemäß #68.
+[#114](https://github.com/venomenon328/picross/issues/114) entfernt die historischen
+F-01 bis F-09 aus Spielerangebot und Runtime-Ressourcen. Aktuelle Eingabe-/Saveverträge stehen in
 [P1](PROTOTYPE_P1.md), Sidebarparameter in [SL65](SL65_IMPLEMENTATION.md),
 Darstellungs-/Cacheverträge in [CELL_RENDERING](CELL_RENDERING.md).
 Historische Auswahl- und Abnahmestände sind keine erneut offenen Mergegates.

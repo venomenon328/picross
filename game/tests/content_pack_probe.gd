@@ -33,7 +33,7 @@ func run() -> void:
 	for category: Dictionary in categories:
 		category_ids.append(category.id)
 	# Fixed runtime-contract samples; never extend this set when adding content.
-	for key: String in ["f01", "f02", "f04", "f06", "f08", "f09", "pz-test-direct-mono", "pz-test-direct-color", "pz-test-repair-mono", "pz-test-repair-color"]:
+	for key: String in ["t01", "t02", "t04", "t06", "t08", "t09", "pz-test-direct-mono", "pz-test-direct-color", "pz-test-repair-mono", "pz-test-repair-color"]:
 		if not key in ids: continue
 		var entry: Dictionary = Registry.by_key(key)
 		check(entry.category_id in category_ids, "PCK category assignment missing " + key)
@@ -41,8 +41,6 @@ func run() -> void:
 		check(Definition.validate(Definition.load_fixture(key)).is_empty(),"PCK content invalid "+key)
 		if key.begins_with("pz-"):
 			check(FileAccess.file_exists("res://"+str(entry.reveal).get_basename()+".txt"),"PCK usage notice missing")
-	for key: String in ["f03","f05","f07"]:
-		check(not FileAccess.file_exists("res://data/"+key+".json"),"reserved definition exported")
 	check(ids.size() == int(OS.get_environment("ZA1_PACK_COUNT")),"PCK selection count")
 	if failures == 0: print("CONTENT_PACK_OK count=",ids.size())
 	quit(0 if failures == 0 else 4)

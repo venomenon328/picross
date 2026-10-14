@@ -181,7 +181,7 @@ static func stroke(t: SceneTree, board: Board, start: Vector2i, end: Vector2i, b
 static func scene_cases(t: SceneTree) -> void:
 	# Isolated synthetic definition only for precise 3/5 versus 3/3 ambiguity.
 	# It is not registered in the album or SaveStore's three-fixture whitelist.
-	var data: Dictionary = Definition.load_f01()
+	var data: Dictionary = Definition.load_fixture("t01")
 	data.rows[0] = clues([3, 5])
 	data.rows[1] = clues([3, 3])
 	data.rows[2] = clues([3])
@@ -283,7 +283,7 @@ static func scene_cases(t: SceneTree) -> void:
 	await t.process_frame
 	# Integration regression with G1: an H1 marker from the abandoned arm must
 	# disappear when the pointer actually returns to the start cell and switches axis.
-	var switch_data: Dictionary = Definition.load_f01()
+	var switch_data: Dictionary = Definition.load_fixture("t01")
 	switch_data.rows[4] = clues([3])
 	switch_data.columns[5] = clues([3])
 	var switch_board: Board = Board.new()
@@ -337,7 +337,7 @@ static func app_cases(t: SceneTree) -> void:
 	t.check(app.board.mark_completed_clues, "H1 re-enable immediately uses current cells")
 	app.select_puzzle(0)
 	await t.process_frame
-	# First F-01 row with a clue: fill its exact intervals through UI events.
+	# First T-01 row with a clue: fill its exact intervals through UI events.
 	var y: int = 0
 	while app.session.definition.rows[y].is_empty():
 		y += 1
@@ -349,7 +349,7 @@ static func app_cases(t: SceneTree) -> void:
 	var states: Array[int] = app.board.completion_states("row", y)
 	t.check(flags.has(true), "H1 actual fixture filled row marks")
 	var saved: Dictionary = SaveStore.snapshot(app.session, app.board.capture_view())
-	var path: String = app.store.path_for("f01")
+	var path: String = app.store.path_for("t01")
 	var disk_before: String = FileAccess.get_file_as_string(path)
 	app.set_clue_completion(false)
 	app.board.completion_flags("row", y)

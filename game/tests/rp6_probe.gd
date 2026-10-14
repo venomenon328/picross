@@ -10,21 +10,21 @@ func setup(viewport: Viewport) -> void:
 	await process_frame
 	await process_frame
 	check(app.sessions.size() == Definition.catalog_ids().size(), "all current registrations load")
-	# Retain RP3's registration/path guards when its duplicate F04 playthrough
+	# Retain RP3's registration/path guards when its duplicate T04 playthrough
 	# is omitted. RP6 still uses the same real scene, single clicks and strokes.
-	check(app.sessions[2].definition.id == "F-04", "regular neutral F-04 registration")
-	check(Definition.load_fixture("../art/f04").is_empty() and Definition.load_fixture("unknown").is_empty(), "fixed definition paths reject unregistered IDs")
-	check(app.store.path_for("../f04").is_empty(), "save paths reject traversal")
+	check(app.sessions[2].definition.id == "T-04", "regular neutral T-04 registration")
+	check(Definition.load_fixture("../art/t04").is_empty() and Definition.load_fixture("unknown").is_empty(), "fixed definition paths reject unregistered IDs")
+	check(app.store.path_for("../t04").is_empty(), "save paths reject traversal")
 	for i: int in range(app.sessions.size()):
 		check(Definition.validate(app.sessions[i].definition).is_empty(), "valid definition %d" % i)
 		var wrong: Dictionary = app.sessions[i].definition.duplicate(true)
 		if i >= 2:
-			wrong.reveal.image = "res://art/f01.svg"
+			wrong.reveal.image = "res://art/fixtures/t01.svg"
 			check(not Definition.validate(wrong).is_empty(), "wrong pilot asset rejected")
 	if pilot_index == 2 and OS.get_environment("RP6_STAGE") == "partial":
-		# Seed a valid unchanged F01 save so the later real restart exercises
+		# Seed a valid unchanged T01 save so the later real restart exercises
 		# loaded cell semantics as well as the permitted initial fresh state.
-		check(app._save_current(), "isolated F04 seeds unchanged F01 save")
+		check(app._save_current(), "isolated T04 seeds unchanged T01 save")
 	await select_pilot()
 
 func select_pilot() -> void:
@@ -100,12 +100,12 @@ func finish() -> void:
 	check(app.session.completed and app.session.is_solution() and app.ending.visible, "committed regular mouse path completes pilot")
 	check(app.reveal_view.payload == app.session.definition.reveal and app.completion_title.text == app.session.definition.reveal.name, "exact completion asset and name")
 	if pilot_index == 2:
-		check(app.completion_title.text == "Fliegenpilz" and app.reveal_view.payload.image == "res://art/f04.svg", "retained F-04 name and SVG binding")
+		check(app.completion_title.text == "TEST ONLY Muster 4" and app.reveal_view.payload.image == "res://art/fixtures/t04.svg", "retained T-04 name and SVG binding")
 	check(app.session.player.cells.count(-1) > 0, "unknown background allowed")
 	app.show_album()
 	check(app.album_reveals[pilot_index].visible and app.album_reveals[pilot_index].payload.definition_id == app.session.definition.id, "earned pilot artwork bound to its album slot")
 	if pilot_index == 2:
-		check(app.sessions[0].player.cells.count(-1) == 400 and app.sessions[1].player.cells.count(-1) == 1600 and app.sessions[3].player.cells.count(-1) == 2500, "isolated F04 leaves F01/F02/F06 cells unknown")
+		check(app.sessions[0].player.cells.count(-1) == 400 and app.sessions[1].player.cells.count(-1) == 1600 and app.sessions[3].player.cells.count(-1) == 2500, "isolated T04 leaves T01/T02/T06 cells unknown")
 
 func restored() -> void:
 	check(app.session.completed and app.session.is_solution() and app.session.player.undo_used, "second restart restores completed pilot")
@@ -115,8 +115,8 @@ func restored() -> void:
 	if pilot_index == 2:
 		var first: Dictionary = app.store.load_slot(app.sessions[0].definition)
 		var unknown: int = saved_unknown_count(first)
-		print("RP6_F01_SAVE status=%s unknown=%d" % [first.status, unknown])
-		check(first.status == "fresh" or first.status == "loaded" and unknown == 400, "isolated F04 preserves F01 cells after restart")
+		print("RP6_T01_SAVE status=%s unknown=%d" % [first.status, unknown])
+		check(first.status == "fresh" or first.status == "loaded" and unknown == 400, "isolated T04 preserves T01 cells after restart")
 
 func saved_unknown_count(slot: Dictionary) -> int:
 	if slot.status != "loaded":
@@ -131,14 +131,14 @@ func saved_unknown_count(slot: Dictionary) -> int:
 
 func write_foreign_slot_control() -> void:
 	# Only the harness's disposable profile copy uses this short control stage.
-	check(pilot_index == 2 and app.sessions[0].player.cells.count(-1) == 400, "foreign control starts from unchanged F01")
+	check(pilot_index == 2 and app.sessions[0].player.cells.count(-1) == 400, "foreign control starts from unchanged T01")
 	app.select_puzzle(0)
 	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
-	check(app._save_current(), "foreign control can create an unchanged F01 save")
+	check(app._save_current(), "foreign control can create an unchanged T01 save")
 	var first: Dictionary = app.store.load_slot(app.sessions[0].definition)
-	check(saved_unknown_count(first) == 400, "valid unchanged persisted F01 cells are accepted")
+	check(saved_unknown_count(first) == 400, "valid unchanged persisted T01 cells are accepted")
 	click(cell_point(Vector2i.ZERO))
-	check(app.session == app.sessions[0] and app.session.player.cells.count(-1) == 399, "real F01 cell action seeds foreign-slot control")
+	check(app.session == app.sessions[0] and app.session.player.cells.count(-1) == 399, "real T01 cell action seeds foreign-slot control")
 	check(app._flush_current(), "foreign-slot control write succeeds")
 	first = app.store.load_slot(app.sessions[0].definition)
 	check(saved_unknown_count(first) == 399, "foreign-slot control is a valid persisted save")

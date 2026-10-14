@@ -123,7 +123,7 @@ func structural() -> void:
 	check(app.session.player.commit(changes),"valid dense synthetic history")
 	app.refresh()
 	await settle()
-	root.get_texture().get_image().save_png(output.path_join("runtime-dense-f02.png"))
+	root.get_texture().get_image().save_png(output.path_join("runtime-dense-t02.png"))
 	var before: Dictionary = app.board.marks.stats.duplicate()
 	var draws: Array[int] = draw_counts.duplicate()
 	for i: int in range(12):

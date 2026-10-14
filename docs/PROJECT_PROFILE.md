@@ -17,12 +17,15 @@ Konsolidierung #70 ist `main@0f89f08729539bbb4a02a590cbd18e58fbbda305`, einschli
 Frühere Draft-/Mergegate-Meldungen zu #47/#55/#56/#62/#66 sind historische Lieferstände.
 Die dortigen Abnahmen bleiben an ihre jeweiligen Quellen gebunden.
 
-Der Katalog enthält genau F01, F02, F04, F06, F08 und F09. Nach der
-[Eigentümerentscheidung #68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419)
-sind reguläre Rätsel höchstens 50×50 groß. F03/F05/F07 bleiben als historische
-Dateien mit bestehenden Speicherplätzen und Nachweisbindungen erhalten. 100×100
-ist eine optionale theoretische Stressgröße. Die Bereinigung ändert keine Rätsel,
-IDs, Revisionen, Spielregeln, Save-Schemata oder vorhandenen Spielstände.
+Der Katalog enthält ausschließlich registrierte Workflow-Inhalte aus
+`content/registry.json`, aktuell zehn Rätsel einschließlich Brandenburger Tor und
+Kölner Dom. [#114](https://github.com/venomenon328/picross/issues/114) ersetzt die
+frühere aktive Reservierung der Prototypen F-01 bis F-09. Definitionen und Reveals
+werden nicht mehr mit dem Spieler ausgeliefert. Historische Nachweise bleiben
+commitgebunden; eingefrorene Save-Kompatibilitätsinputs liegen nur unter Tests.
+Reguläre Rätsel sind gemäß #68 höchstens 50×50 groß. IDs, Revisionen, Dateien und
+Freigabebindungen aller Workflow-Rätsel bleiben unverändert. Appidentität, Save-Schema
+und Speicherroot bleiben erhalten; verwaiste Savedateien werden nicht angefasst.
 
 Arbeitsstände und ZIPs der Rätselproduktion liegen in
 [content/authoring](../content/authoring/README.md); Wiederaufnahme und Integration
@@ -31,8 +34,8 @@ Die Arbeitsablage ist keine Runtime-Registrierung.
 
 [ZA-1](ZA1_ADAPTER.md) ermöglicht weitere freigegebene Workflow-Inhalte über eine
 zentrale Datenregistry mit expliziten Slots, einschließlich Mono/Farbe und Rechtecken.
-Die Adapterlieferung fügt kein reguläres Rätsel hinzu. Künstliche Fixtures bleiben
-isoliert; Knoblauch r03 hat weiterhin keine finale redaktionelle Freigabe.
+Künstliche Fixtures bleiben isoliert. Registrierte Pakete tragen ihre eigenen
+gebundenen Freigaben; frühere Aussagen zu offenen Einzelfreigaben sind historisch.
 
 Aktuelle Bindung: Godot Standard 4.7.2-stable, typisiertes GDScript, native
 Windows-Desktopfassung, Maus als verpflichtender Eingabepfad (D-06), Escape als
@@ -170,7 +173,7 @@ Langlinienreferenzen bleiben erhalten; gemeinsame CI ergänzt vierfarbige
 Bestehende `docs`-/`product`-/`preflight`-Workflows bleiben aktiv.
 Eine reale Motiv-/Spielprobe ist für den reinen RP-1/RP-2-Logikkern nicht anwendbar.
 
-## RP-3-Bildimport und früher P1-Export
+## RP-3-Bildimport und historischer P1-Export
 
 Python 3.11+ und **Pillow exakt 12.3.0** in einer eigenen venv; nur Bildbefehle
 laden Pillow. Die bisherigen Kernbefehle bleiben ohne Zusatzpakete nutzbar.
@@ -201,7 +204,7 @@ Nachweisdatei unabhängig neu; bewiesene Enddomains müssen der Matrix entsprech
 RP3-A01 bis A06 einschließlich unabhängigem technischem/visuellem Review R2
 sind im integrierten PR #44 abgeschlossen. Die dort gebundenen Fachtests/Benchmark,
 `docs`, `product`, `preflight`, Diffcheck, Windows-Artefakt und Sichtkontrolle
-bleiben historische Nachweise dieses Stands. Die reguläre Hauptszene wird
+bleiben historische Nachweise dieses Stands. Die damalige reguläre Hauptszene wurde
 mit F-04 in drei isolierten Prozessen bearbeitet, abgeschlossen und wieder geladen;
 echte Renderbilder prüfen eigene falsche Einträge und die Spoilergrenze.
 Die RP-6-Abnahmeentscheidungen sind im integrierten PR #47 gebunden.
@@ -276,8 +279,9 @@ python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-prod
 ```
 
 Alle vier ergänzenden Bereiche sind lokal standardmäßig aktiv, CI übergibt jede Auswahl explizit.
-Der aktuelle Katalog hat vier Produktionspiloten F04/F06/F08/F09; die ursprüngliche
-Sechserproduktion einschließlich F05/F07 bleibt vollständig im Fachreplay geprüft.
+Der allgemeine Harness verwendet sechs feste synthetische Muster T-01/T-02/T-04/
+T-06/T-08/T-09, unabhängig vom Produktionsbestand. Der weiterhin `--pilots` genannte
+Bereich prüft vier dieser technischen Fälle; echte Rätsel werden nicht replayt.
 Spielerexport und tatsächlicher PCK-Inhalt sind zusätzlich zu Tests zu kontrollieren.
 Technische Daten höchstens 30.000.000 Bytes, gemeinsam mit Spielerpaket höchstens
 75.000.000 Bytes. Historische Studien-/Vergleichspakete entstehen im Standardpfad

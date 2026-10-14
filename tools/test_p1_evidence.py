@@ -170,7 +170,7 @@ class CurrentProductEvidenceTests(unittest.TestCase):
 
     def test_native_failure_frames_use_phase_reports_and_reject_unbound_paths(self):
         for phase, filename in (("current-book-capture", "z2-renders.json"),
-                                ("rp6-f07-render", "rp6-f07-renders.json")):
+                                ("rp6-t07-render", "rp6-t07-renders.json")):
             with self.subTest(phase=phase), tempfile.TemporaryDirectory() as temporary:
                 output = Path(temporary)
                 renders = output / "renders"

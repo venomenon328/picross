@@ -58,9 +58,8 @@ static func validate(raw: Variant) -> String:
 				return "Invalid registry resource path"
 		if not str(item.definition).begins_with("data/") or not str(item.definition).ends_with(".json") or not str(item.reveal).begins_with("art/"):
 			return "Invalid registry resource type"
-		if item.visible or item.category_id != null or not item.id in ["F-03", "F-05", "F-07"]:
-			if not valid_category_id(item.category_id) or not category_ids.has(item.category_id):
-				return "Missing or unknown category for " + str(item.id)
+		if not valid_category_id(item.category_id) or not category_ids.has(item.category_id):
+			return "Missing or unknown category for " + str(item.id)
 	return ""
 
 static func _load() -> Dictionary:

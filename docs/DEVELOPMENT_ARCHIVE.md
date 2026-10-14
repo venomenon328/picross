@@ -46,7 +46,7 @@ nur mit ihrem gebundenen Checkout und damaligem Vertrag ausführen.
 
 | Bestand | Bindung und Grund |
 | --- | --- |
-| `game/data/`, `game/art/`, einschließlich F03/F05/F07 | Unveränderte IDs, Revisionen, bestehende Speicherplätze, Hash-/Proof-/Assetbindungen. Nicht angebotene Großfälle bleiben außerhalb des Spielerexports. |
+| `game/data/content/`, `game/art/content/` | Unveränderte Workflow-IDs, Revisionen, Slots, Freigabe-/Hash-/Assetbindungen. Die frühere F-Bewahrung ist durch #114 aufgehoben. |
 | `game/study/`, `tests/zs1_tests.gd`, `full_view_study/cases/`, Katalog/Save-Modul | Teile werden von aktuellen ZS2-/VS2-Tests geerbt oder als zertifizierte technische Prüfinputs geladen. Namen allein belegen keine Inaktivität. |
 | `game/art/cells/`, `tools/cell_atlas_reference.json`, `tests/perf_b*` | Sechs unveränderte aktive Atlanten/Imports und unabhängige aktuelle Datei-/Pixel-/Mapping-/Cacheprüfung; ohne Hersteller- oder Vergleichsarchive. |
 | `examples/rp1` bis `rp6`, `examples/vs1/`, Produktionsmodule und Fixtures | Quellen, Nachweise, Originalbilder, Reparaturarchive, technische Fälle und negative Prüfinputs bleiben vollständig. Die ursprüngliche Sechserproduktion bleibt im Fachreplay. |
@@ -132,3 +132,13 @@ Der doppelte Test-ZIP `tests/puzzle_production/fixtures/garlic-r03-reference.zip
 ist über den genannten Commit unverändert erreichbar. Das eigentliche Paket in
 `content/authoring/` bleibt bestehen. Keine Rätsel-, Save- oder Freigabedaten geändert.
 [Aktuelle Policy](CI_POLICY.md).
+
+## Prototypbestand entfernt · #114
+
+Die 23 bisherigen Runtime-Dateien für F-01 bis F-09 (6.737.175 Git-Bytes) sind
+unter `prototype_cleanup` im [Manifest](DEVELOPMENT_ARCHIVE.json) mit Pfad, Blob,
+SHA-256 und Quellcommit `a401b73f2f0bb42bf93589fcf0bc382010616d3c` gebunden.
+Git-Historie und historische `examples/`-Nachweise bleiben erhalten. Nur die
+F01/F02-Definitionen werden bytegleich unter `game/tests/fixtures/kat1/definitions/`
+für eingefrorene Save-Kompatibilitätsbelege weiterverwendet; keine alten Reveals.
+Der synthetische Regressionstestbestand wird ausschließlich temporär erzeugt.

@@ -2,7 +2,7 @@ extends SceneTree
 ## External developer probe also runs against the downloaded regular PCK.
 const Store = preload("res://model/save_store.gd")
 # Fixed technical save examples, independent of growth of the real catalog.
-const ROUNDTRIP_IDS: Array[String] = ["F-01","F-02","F-04","F-06","F-08","F-09"]
+const ROUNDTRIP_IDS: Array[String] = ["T-01","T-02","T-04","T-06","T-08","T-09"]
 var app: Control
 var stage: String
 var output: String
@@ -48,7 +48,7 @@ func run() -> void:
 			var player = app.session.player
 			check(player.commit([{"index":0,"before":-1,"after":1}]),"write first action")
 			check(player.commit([{"index":1,"before":-1,"after":0}]) and player.undo(),"write real redo branch")
-			if app.session.definition.id == "F-04" or (index == 0 and OS.get_environment("VS2_COMPLETE_FIRST") == "1"):
+			if app.session.definition.id == "T-04" or (index == 0 and OS.get_environment("VS2_COMPLETE_FIRST") == "1"):
 				var changes: Array = []
 				for y: int in range(player.height):
 					for x: int in range(player.width):
@@ -121,7 +121,6 @@ func run() -> void:
 		check(not app.board.has_method("measurements"),"PCK excludes developer matrix diagnosis")
 		check(app.board.marks.textures.size()==6 and app.board.marks.ink_material.shader.resource_path=="res://ui/atlas_mask.gdshader","PCK active six atlas textures and runtime shader")
 		for path: String in resources:
-			check(not path.get_file().get_basename() in ["f03","f05","f07"],"PCK excludes retired 100x100 definitions and reveal assets")
 			check(not path.get_file().get_basename() in ["fit","work","hand","album"],"PCK has no obsolete action icons")
 			check(not path.contains("/study/") and not path.contains("/full_view_study/") and not path.contains("/tests/") and not path.contains("/perf_a/") and not path.contains("pencil_marks") and not path.contains("Shantell") and not path.contains("Virgil"),"PCK excludes developer/study/PERF-A probe resources: "+path)
 	var report: Dictionary = {"stage":stage,"failures":failures,"root":app.store.root,"app_data":OS.get_user_data_dir(),"client":[root.size.x,root.size.y],"display":DisplayServer.get_name(),"resources":resources}

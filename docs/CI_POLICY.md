@@ -126,9 +126,18 @@ Save/Recovery und ZS2-Verhalten einmal aus und prüft echten Mehrprozess-Save,
 kontrollierten Start sowie den regulären Windows-Export. Der kurze absichtliche
 Fehler durchläuft dieselbe `check()`-/Ergebnis-/Exit-23-Strecke wie die Suite.
 
+Die native Regression verwendet ausschließlich den festen technischen Katalog aus
+`tests/puzzle_production/fixtures/catalog/runtime.json`. `tools/product_fixtures.py`
+erzeugt sechs synthetische Definitionen/Reveals nur in temporären Projekten.
+Eingefrorene KAT-1-Saves behalten separate Definitionsinputs unter `game/tests/`.
+Vor dem Spielerexport ersetzt der Harness die temporären Ressourcen durch den
+Produktionsbestand. Echte Inhalte werden nicht erneut zertifiziert und erhalten
+keine rätselspezifischen CI-Tests. Die einmalige Katalog-/PCK-Sichtung für #114
+ist ein PR-Liefernachweis, keine neue Testmatrix.
+
 `--integration` ergänzt die 500 Aktionen in fünf echten Prozessen plus Neustart
-und unabhängigem Python-Orakel. `--pilots` prüft F04/F06/F08/F09 vollständig;
-F04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
+und unabhängigem Python-Orakel. `--pilots` prüft die synthetischen Muster T04/T06/T08/T09 vollständig;
+T04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
 Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `--visual` ergänzt
 die aktuelle native Renderprüfung. Die jeweiligen `--no-*`-Schalter werden von
 CI ausdrücklich übergeben; lokal sind alle vier ergänzenden Bereiche aktiv.
@@ -154,16 +163,16 @@ Ein Lauf mit ausgeschaltetem Bereich wird nicht als dessen erfolgreicher Nachwei
 ausgegeben. Vollständige Produktionsrekonstruktionen echter Inhalte gehören ausschließlich
 in deren Produktionsauftrag, nicht in den Fachlauf oder Runtime-Harness.
 
-F04 prüft nach Abschluss außerdem die bekannten unveränderten F01/F02/F06-Zellstände
+T04 prüft nach Abschluss außerdem die bekannten unveränderten T01/T02/T06-Zellstände
 (400/1600/2500 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
-F01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Die isolierte
-Partialinstanz sichert den unveränderten F01-Startstand, damit der zweite Neustart
+T01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Die isolierte
+Partialinstanz sichert den unveränderten T01-Startstand, damit der zweite Neustart
 auch die gültig geladene Variante tatsächlich prüft. JSON-Zellwerte werden numerisch
 verglichen. Erstmals erzeugte Dateien und reguläre Start-/Flush-Metadaten bleiben
 zulässig. Eine zusätzliche kurze
-F04-Lesegegenprobe verwendet ausschließlich eine Kopie des temporären Profils:
-Ein kurzer Schreibprozess erzeugt dort über eine echte F01-Zellaktion den gültigen
-veränderten Save samt History, auch wenn zuvor noch keine F01-Datei existierte.
+T04-Lesegegenprobe verwendet ausschließlich eine Kopie des temporären Profils:
+Ein kurzer Schreibprozess erzeugt dort über eine echte T01-Zellaktion den gültigen
+veränderten Save samt History, auch wenn zuvor noch keine T01-Datei existierte.
 Die neue Leseinstanz muss ihn nativ als `loaded`
 mit 399 unbekannten Zellen erkennen und genau an der Isolationsassertion
 mit Exit 4 scheitern. Erfolg, Recovery, Parserfehler oder andere Fehler werden
@@ -224,6 +233,12 @@ PERF-B-E1 / #68 vom 11.10.2026 hebt ausschließlich das technische Budget auf
 30.000.000 Bytes an; Gesamtgrenze, Laufzeiten und Pflichtnachweise bleiben erhalten.
 
 ## Artefakte und Laufzeitbudgets
+
+Die vollständigen aktuellen VS2-/V1-Geometriematrizen werden als `.json.gz`
+verlustfrei aufbewahrt; der Artefaktleser unterstützt diese und frühere JSON-Dateien.
+Die Kompression prüft den bytegleichen Rückweg. Pflichtbilder bleiben native PNGs;
+die deckenden V3-Aufnahmen verwenden pixelgleiches RGB statt redundantem RGBA.
+Messumfang, Pflichtnachweise und die folgenden Budgets bleiben unverändert.
 
 | Bereich | Ziel/Budget |
 | --- | --- |

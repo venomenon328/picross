@@ -9,21 +9,21 @@ const Board = preload("res://ui/board.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
 
 static func run(t: SceneTree) -> void:
-	for id: String in ["f01", "f02", "f06"]:
+	for id: String in ["t01", "t02", "t06"]:
 		var data: Dictionary = Definition.load_fixture(id)
 		t.check(Definition.validate(data).is_empty(), id + " valid independent artwork")
 		for key: String in ["version", "definition_id", "image"]:
 			var bad: Dictionary = data.duplicate(true)
 			bad.reveal.erase(key)
 			t.check(not Definition.validate(bad).is_empty(), id + " missing reveal " + key)
-		for path: String in ["res://art/../data/f01.json", "res://art/missing.svg", "user://private.svg"]:
+		for path: String in ["res://art/../data/fixtures/t01.json", "res://art/missing.svg", "user://private.svg"]:
 			var bad: Dictionary = data.duplicate(true)
 			bad.reveal.image = path
 			t.check(not Definition.validate(bad).is_empty(), "invalid resource path")
 		var s: Session = Session.new(data)
-		if id == "f02":
+		if id == "t02":
 			var artwork: Texture2D = load(data.reveal.image) as Texture2D
-			t.check(data.revision == 2 and artwork != null and artwork.get_width() == 800 and artwork.get_height() == 800, "J-05 F-02 revision binds independent 800px lighthouse artwork")
+			t.check(data.revision == 2 and artwork != null and artwork.get_width() == 800 and artwork.get_height() == 800, "J-05 T-02 revision binds independent 800px lighthouse artwork")
 		for y: int in range(s.player.height):
 			for x: int in range(s.player.width):
 				if data.solution[y][x] > 0:
@@ -189,9 +189,9 @@ static func ui_cases(t: SceneTree) -> void:
 	var empty_layout: Dictionary = b.clue_layout("row", empty_row)
 	t.check(empty_layout.entries.size() == 1 and empty_layout.entries[0].text == "–" and empty_layout.units[-1].slot == empty_layout.slot_count - 1, "J-01/J-02 empty line remains a grid-near dash")
 	t.check(b.clue_token({"length": 12, "color": 1}) == "12", "J-01 multi-digit clue remains one horizontal token")
-	# J-02: actual F-02 geometry uses common slots and exposes start/middle/end.
+	# J-02: actual T-02 geometry uses common slots and exposes start/middle/end.
 	var column_22: Array = app.session.definition.columns[21]
-	t.check(column_22.size() == 12 and int(column_22[0].length) == 6 and int(column_22[0].color) == 4 and int(column_22[1].length) == 3 and int(column_22[1].color) == 3 and int(column_22[2].length) == 3 and int(column_22[2].color) == 2, "J-02 F-02 column 22 starts blue 6, red 3, yellow 3")
+	t.check(column_22.size() == 12 and int(column_22[0].length) == 6 and int(column_22[0].color) == 4 and int(column_22[1].length) == 3 and int(column_22[1].color) == 3 and int(column_22[2].length) == 3 and int(column_22[2].color) == 2, "J-02 T-02 column 22 starts blue 6, red 3, yellow 3")
 	for step: float in [22.0, 24.0]:
 		set_work_zoom(b, step)
 		var base_layout: Dictionary = b.clue_layout("column", 21)
@@ -211,8 +211,8 @@ static func ui_cases(t: SceneTree) -> void:
 		var middle: Dictionary = b.clue_layout("column", 21)
 		b.set_clue_step("column", 21, int(grid_end.max_offset))
 		var outer: Dictionary = b.clue_layout("column", 21)
-		t.check(grid_end.end == column_22.size() and grid_end.prefix_hidden and not grid_end.suffix_hidden, "J-02 grid-near F-02 suffix retained at pitch " + str(step))
-		t.check(middle.prefix_hidden and middle.suffix_hidden and outer.start == 0 and outer.suffix_hidden, "J-02 F-02 middle and outer marker states at pitch " + str(step))
+		t.check(grid_end.end == column_22.size() and grid_end.prefix_hidden and not grid_end.suffix_hidden, "J-02 grid-near T-02 suffix retained at pitch " + str(step))
+		t.check(middle.prefix_hidden and middle.suffix_hidden and outer.start == 0 and outer.suffix_hidden, "J-02 T-02 middle and outer marker states at pitch " + str(step))
 	set_work_zoom(b, 24.0)
 	var short_row_layout: Dictionary = b.clue_layout("row", 34)
 	var long_row_layout: Dictionary = b.clue_layout("row", 35)
@@ -290,8 +290,8 @@ static func ui_cases(t: SceneTree) -> void:
 	t.root.size = Vector2i(1280, 720)
 	await t.process_frame
 	await t.process_frame
-	t.check(not app.stress_label.visible, "F06 is a regular bounded pilot")
-	# HC compact slots can fit every F06 row in the regular free width. Keep
+	t.check(not app.stress_label.visible, "T06 is a regular bounded pilot")
+	# HC compact slots can fit every T06 row in the regular free width. Keep
 	# these component input oracles overflowing with an explicit narrow budget.
 	b.size.x = 560
 	b._layout()
@@ -301,7 +301,7 @@ static func ui_cases(t: SceneTree) -> void:
 	var clue_point: Vector2 = b.get_global_transform() * Vector2(b.row_clue_area().get_center().x, b.view.cell_rect(Vector2i(0, longest_row)).get_center().y)
 	t.mouse_motion(clue_point, false)
 	t.check(b.clue_hover_axis == "row" and b.clue_hover_index == longest_row, "H-03 real pointer route opens in-work clue tooltip")
-	t.check(b.row_hint_overflows(longest_row), "long F06 row uses token-level overflow")
+	t.check(b.row_hint_overflows(longest_row), "long T06 row uses token-level overflow")
 	var tooltip: Array = b.tooltip_entries("row", longest_row)
 	var complete_tooltip: bool = tooltip.size() == app.session.definition.rows[longest_row].size()
 	for i: int in range(tooltip.size()):
@@ -321,7 +321,7 @@ static func ui_cases(t: SceneTree) -> void:
 				b.set_clue_step("column", longest_column, [0, int(float(column_base.max_offset) / 2.0), int(column_base.max_offset)][position])
 				var row_window: Dictionary = b.clue_layout("row", longest_row)
 				var column_window: Dictionary = b.clue_layout("column", longest_column)
-				t.check(row_window.end > row_window.start and column_window.end > column_window.start, "J-02 real F-06 clues at UI/pitch/slot %s/%s/%s" % [scale, step, position])
+				t.check(row_window.end > row_window.start and column_window.end > column_window.start, "J-02 real T-06 clues at UI/pitch/slot %s/%s/%s" % [scale, step, position])
 				t.check((row_window.prefix_hidden or row_window.suffix_hidden) == (row_window.entries.size()>row_window.slot_count), "J-02 markers match actual overflow or complete visibility")
 	app.set_ui_scale(1.25)
 	b.size.x = 560
@@ -335,7 +335,7 @@ static func ui_cases(t: SceneTree) -> void:
 	await followup_input_geometry(t, app)
 	b.restore_view(b.capture_view().merged({"zoom":72,"overview":false},true))
 	var below_work_range: float = b.view.cell_size
-	t.check(below_work_range <= b.fit_ceiling, "F06 fits within its current ceiling")
+	t.check(below_work_range <= b.fit_ceiling, "T06 fits within its current ceiling")
 	b.zoom(-1, b.view.viewport.get_center())
 	t.check(b.view.cell_size <= below_work_range and not b.overview, "zoom out never zooms in")
 	b.zoom(1, b.view.viewport.get_center())
@@ -528,14 +528,14 @@ static func snap_geometry_case(t: SceneTree, board: Board, axis: String, index: 
 	t.mouse_button(point + (Vector2(delta, 2) if axis == "row" else Vector2(2, delta)), false, MOUSE_BUTTON_MIDDLE)
 	var after: Dictionary = token_centers(board.visual_hint_units(axis, index))
 	var actual: Dictionary = coordinate_distance(before, after)
-	if label.begins_with("F-02 row 12"):
+	if label.begins_with("T-02 row 12"):
 		var layout: Dictionary = board.clue_layout(axis, index)
 		var area: Rect2 = board.row_clue_area()
 		var owner_snapped: bool = false
 		if before.has(0) and after.has(0):
 			var nearest_slot: int = roundi((float(before[0]) - board.clue_slot_origin(axis, area, layout)) / pitch - 0.5)
 			owner_snapped = is_equal_approx(float(after[0]), board.clue_slot_center(axis, area, layout, nearest_slot))
-		t.check(owner_snapped, "B-04 F-02 row 12 token 4 remains on its nearest visible slot after Mouse-Up")
+		t.check(owner_snapped, "B-04 T-02 row 12 token 4 remains on its nearest visible slot after Mouse-Up")
 		t.check(before.has(0) and after.has(0) and absf(float(before.get(0, -1)) - 51.2) < 0.001 and absf(float(after.get(0, -1)) - 56.0) < 0.001, "V-01 exact owner reference remains 51.2 to 56")
 	t.check(float(actual.mean) <= float(best.mean) + 0.001 and (absf(float(actual.mean) - float(best.mean)) > 0.001 or int(actual.count) >= int(best.count)), "B-04 %s mouse-up chooses nearest visible token coordinates" % label)
 	if float(best.mean) <= pitch * pitch * 0.25 + 0.001:
@@ -619,7 +619,7 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	var lengths: Array[int] = []
 	for clue: Dictionary in app.session.definition.rows[row_index]:
 		lengths.append(int(clue.length))
-	t.check(lengths == [4, 7, 8, 1, 7, 1, 10], "B-04 F-02 owner case is row 12 with exact clue sequence")
+	t.check(lengths == [4, 7, 8, 1, 7, 1, 10], "B-04 T-02 owner case is row 12 with exact clue sequence")
 	# Preserve the exact historical 24px/six-slot owner reproduction.
 	# Native 30/18px BP-3 geometry is covered separately by Z2 routes.
 	board.book_layout = false
@@ -630,7 +630,7 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	board.normalize_clue_steps()
 	board.navigate_to(Vector2(0.5, 11.0 / 40.0))
 	t.check(board.clue_capacity("row") == 6, "B-04 owner reproduction uses six real common row slots")
-	snap_geometry_case(t, board, "row", row_index, 0, 1.8, "F-02 row 12 owner +1.8 slots")
+	snap_geometry_case(t, board, "row", row_index, 0, 1.8, "T-02 row 12 owner +1.8 slots")
 	var row_maximum: int = int(board.clue_layout("row", row_index).max_offset)
 	t.check(board.clue_step("row", row_index) == row_maximum and board.row_clue_reads[row_index].anchor == ClueLayout.OUTER_START, "V-01 owner snap is the direct outer stop")
 	monotone_clue_drag(t, board, "row", row_index, 1, true)
@@ -642,7 +642,7 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	board.normalize_clue_steps()
 	board.navigate_to(Vector2(float(column_index) / 40.0, float(row_index) / 40.0))
 	var column_capacity: int = board.clue_capacity("column")
-	t.check(column_capacity == 4 and app.session.definition.columns[column_index].size() == 5, "V-02 F-02 column route has four real slots and five clues")
+	t.check(column_capacity == 4 and app.session.definition.columns[column_index].size() == 5, "V-02 T-02 column route has four real slots and five clues")
 	if column_capacity == 4:
 		monotone_clue_route(t, board, "column", column_index)
 	t.root.remove_child(historical)
@@ -673,7 +673,7 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	set_work_zoom(b, 12.0)
 	var rows: Array[int] = overflowing_lines(b, "row")
 	var columns: Array[int] = overflowing_lines(b, "column")
-	t.check(rows.size() >= 2 and columns.size() >= 2, "V-04 two overflowing F-06 lines per axis plus a fitting grid-end control")
+	t.check(rows.size() >= 2 and columns.size() >= 2, "V-04 two overflowing T-06 lines per axis plus a fitting grid-end control")
 	if rows.size() < 2 or columns.size() < 2:
 		return
 	var cases: Array[Dictionary] = [

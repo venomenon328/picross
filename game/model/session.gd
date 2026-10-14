@@ -54,9 +54,7 @@ func visible_cells() -> Array[int]:
 	return result
 
 func neutral_title() -> String:
-	var number: String = str(definition.id).trim_prefix("F-")
-	if str(definition.id).begins_with("pz-"):
-		number = "%02d" % DefinitionRegistry.ordinal(str(definition.id))
+	var number: String = "%02d" % DefinitionRegistry.ordinal(str(definition.id))
 	return "Blatt %s · %d × %d" % [number, player.width, player.height]
 
 func album_title() -> String:

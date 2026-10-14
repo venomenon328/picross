@@ -35,7 +35,7 @@ func run() -> void:
 	app.set_ui_scale(1.25)
 	await process_frame
 	await process_frame
-	# HC compaction fits the former F06 row at the regular window budget.
+	# HC compaction fits the former T06 row at the regular window budget.
 	# Keep genuine overflow on both fixed target lines for all 500 actions
 	# and the separate-process restart; retain the semantic-change oracle.
 	app.board.size.x = 560
@@ -69,7 +69,7 @@ func run() -> void:
 		var before_cursor: int = app.session.player.cursor
 		await perform(action)
 		if app.session == null:
-			fail("missing F-06 session at action %d" % int(action.number))
+			fail("missing T-06 session at action %d" % int(action.number))
 			return
 		var changes: Array[Dictionary] = []
 		for i: int in range(before.size()):
