@@ -412,7 +412,7 @@ die Freigabe dieses Sollstands belegen bereits dessen Implementierung.
 | Themenwahl | Thematisches Sammelalbum oder Reisealbum, Kapitel und Motivzusammenhang; nicht mit dem gewählten Arbeitsasset A verwechseln. Bestehende Progressionsanforderungen nicht neu öffnen. |
 | Album/Designsystem | ZS-1 bestätigt nach E1-Nacharbeit die gewählte Stiftgrundlage mit neuem X/Strichaufbau und zwei durch E2 akzeptierten Eigentümer-TTFs; ZS-2 integriert diese Auswahl ohne zusätzliche Rand-UI. Ein vollständiger Albumneubau ist nicht beauftragt. |
 | Rücknahmen/Wertung | Direkte Neutralisierung ist für die Bedienung festgelegt; Fehlerzählung, Sterne und Hypothesenwirkung bleiben offen. |
-| P1-Bedienung | P1/Z2 ist integriert; Z2-M01/M02 wurden nicht durchgeführt, ihr damaliges Mergegate aufgehoben. Eigene aktuelle RP-3-Nachweise stehen im [Prüfbericht](RP3_VERIFICATION.md). |
+| P1-Bedienung | P1/Z2 ist integriert; Z2-M01/M02 wurden nicht durchgeführt, ihr damaliges Mergegate aufgehoben. Eigene aktuelle RP-3-Nachweise stehen im [Prüfbericht](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP3_VERIFICATION.md). |
 | Fortsetzung | Speicherung/Recovery bleiben Regressionsumfang; Z2-M03 wurde nicht durchgeführt und für PR #33 als Gate aufgehoben. F-04 erhält einen eigenen isolierten Neustartnachweis. |
 | Designphase | Längere reale Nutzung und Phasenabschluss folgen in #24 nach der technisch geprüften ZS-2-Fassung. Pflichtregressionen gehören bereits zur Umsetzung. |
 

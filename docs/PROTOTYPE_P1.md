@@ -592,7 +592,7 @@ quadratisches Mono und ein lokales SVG unter `res://art/f04.svg`.
 Der reguläre Hauptszenenweg wird in isolierten Profilen über echte Viewport-
 Ereignisse geprüft: Auswahl, falscher Eintrag/eigene Miniatur, Undo/Redo,
 Teilstand, Neustart, Abschluss und erneuter Neustart samt Album. Vor Abschluss
-bleiben Name, Reveal und Lösungsausschnitt verborgen. Die [RP-3-Prüfzuordnung](RP3_VERIFICATION.md)
+bleiben Name, Reveal und Lösungsausschnitt verborgen. Die [RP-3-Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP3_VERIFICATION.md)
 bindet native Renderbilder; F-01/F-02 samt Proofs/Bildern und F-03 bleiben erhalten.
 RP-3 ist nach unabhängigem Review R2 über PR #44 integriert; die reale
 Eigentümer-Lösung ist RP-6-Gate. Parent #34 bleibt offen; kein Merge/Release.

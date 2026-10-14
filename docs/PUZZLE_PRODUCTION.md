@@ -222,7 +222,7 @@ Paletten-IDs 1..N, ausdrücklich im Manifest; erster registrierter Inhalt ist F-
 Andere als quadratische monochrome Kandidaten und lokale SVG-Enthüllungen werden
 in diesem ersten Adapter abgewiesen. Die Produktion unterstützt weiterhin Farben,
 Rechtecke und 100×100. Details/Grenzen: [Anleitung](../tools/puzzle_production/README.md),
-[reales Beispiel](../examples/rp3/README.md), [Prüfzuordnung](RP3_VERIFICATION.md).
+[reales Beispiel](../examples/rp3/README.md), [Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP3_VERIFICATION.md).
 
 ### 4.4 Technische Konkretisierung RP-5
 

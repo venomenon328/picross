@@ -24,7 +24,7 @@ Prüfzuordnung: [RP1_VERIFICATION.md](../../docs/RP1_VERIFICATION.md).
 Farberweiterung: [RP2_VERIFICATION.md](../../docs/RP2_VERIFICATION.md).
 RP-1/RP-2 sind nach unabhängigem Review über PR #42/#43 in `main` integriert.
 RP-3-Bildbefehle benötigen die separate Image-Umgebung weiter unten; die bisherigen
-Kernbefehle bleiben ohne Pillow nutzbar. [RP-3-Prüfzuordnung](../../docs/RP3_VERIFICATION.md).
+Kernbefehle bleiben ohne Pillow nutzbar. [RP-3-Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP3_VERIFICATION.md).
 
 ## Aufruf an gespeicherten Beispielen
 

@@ -1,46 +1,15 @@
-# RP-5: motivgeschützte Reparatur und Baselinevergleich
+# Motivgeschützte Reparatur: technischer Vertrag
 
-Auftrag [#39](https://github.com/venomenon328/picross/issues/39), vollständiger Body
-einschließlich Umsetzungsvorbereitung vom 05.10.2026. Branch
-`feat/39-motif-repair-search` von `main@80ae2c19eb6f85bbac58a247badf65b3e0669132`.
-Bei Start keine neueren Main-Änderungen, RP-5-Branches/PRs oder späteren
-Kommentarentscheidungen. [Parent #34](https://github.com/venomenon328/picross/issues/34)
-bleibt offen. RP-5 ist nach unabhängigem technischem/visuellem Review R1
-über PR #46 als `cd4a8db` integriert; keine offenen Reviewbefunde.
+Dieser Vertrag beschreibt das weiterhin verwendete allgemeine Reparaturformat.
+Die abgeschlossene RP5-Vergleichsproduktion und ihre Ergebnisse liegen im
+[gebundenen historischen Stand](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/README.md).
+Sie werden nicht mitgeliefert oder in CI wiederholt.
 
-## Festlegung vor dem ersten Vergleichslauf
+## Suchverfahren
 
-[plans.json](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/plans.json) bindet genau die neun im Issue festgelegten Referenzen,
-ihre unveränderten RP-3-Kandidaten und Manifestbytes sowie vollständige boolesche
-Masken. `true` schützt sowohl Farben als auch Leerzellen. Die halboffenen
-Rechtecke in nullbasierten Zellkoordinaten stehen im Lock; die eigentliche
-Maske steht je Referenz unter `plans/`. Alle neun Maskenansichten wurden vor dem
-ersten Suchlauf tatsächlich geöffnet. Die Schutzbereiche umfassen Mast/Segellücke,
-Stiel/Blattanschlüsse, Augen/Gesicht/Schnabel, Füße/Astkontakt, Gesicht/Kamera/
-Stativinnenräume, Tassenrand/-innenraum/Henkel/Löffel und Gesicht/Halsring/Visier.
-Nach dieser Sichtung wurde der Schutz am vollständigen stilisierten Tassenrand
-und den linken Halsringrändern erweitert, vor irgendeinem Reparaturlauf.
-
-| Referenz | Maximal geänderte Zellpositionen |
-| --- | ---: |
-| i02-direct-60x40 | 2 |
-| i03-direct-40x40 | 2 |
-| a01-direct-40x40 | 2 |
-| a01-direct-100x100 | 8 |
-| p01-stylized-40x40 | 4 |
-| p02-direct-100x100 | 4 |
-| p02-stylized-100x100 | 4 |
-| h02-direct-50x50 | 1 |
-| h02-stylized-50x50 | 4 |
-
-Kleine Reste erhalten kleine Änderungsbudgets; die texturreiche große Eule acht,
-Fotograf und weitere Fotos vier, der empfindliche direkte Porträtfall nur eine
-Zelle. Alle neun: einzelner Zelloperator, Seed 39, `seeded-frontier-v1`, höchstens
-96 Vorschläge und 16 begonnene Bewertungen einschließlich unveränderter Referenz.
-30 s / 250000 Linienarbeit für die Suche einschließlich Importrekonstruktion,
-Solve, Dateischreiben und unabhängiger Kandidatenprüfung; separat 10 s / 100000
-Linien für frischen Solve und Prüfung des geschriebenen Endnachweises.
-Keine Lockerung nach einem ungünstigen Ergebnis.
+Die aktuelle Produktion legt Referenz, vollständige boolesche Schutzmaske,
+Änderungsabstand, Seed sowie Such-/Prüfparameter vor der Suche ausdrücklich fest.
+`true` schützt Farbe und Leerzustand gleichermaßen.
 
 Vorschläge priorisieren Manhattan-Abstand zu den ursprünglich offenen Zellen.
 Innerhalb desselben Abstands sortiert kanonisches SHA-256 von Seed und
@@ -59,16 +28,11 @@ einmal; Rücknahme auf Referenzwert reduziert den Abstand, niemals Suchzähler.
 Ein gemeinsames `Budget` begrenzt alle Linien der Suche; kein Reset je Kandidat.
 
 Zeitgrenzen sind kooperativ an Linien-/Phasengrenzen; eine laufende polynomiale
-Linie oder begrenzte Datei-/Bildoperation kann das Limit überschreiten. Der
-separate CI-Job hat ein hartes Limit von zehn Minuten. Kein OS-RSS-Limit der
-Reparatur wird behauptet. Ausgangsprüfung, Suche und Abschlussprüfung werden
-gemessen. Neue Gesamtmessungen schließen die Bildausgabe ein und enden vor
-abschließender Hashbindung/Publikation. Im ursprünglichen Produzentenstand
-`55f9e0f` endete die Gesamtmessung bereits vor der Kontaktbildausgabe; seine
-Originalwerte bleiben erhalten und werden nicht als Vollprozesszeiten ausgegeben.
-Gleicher Seed mit Zeitlimit
-verspricht auf anderer Hardware keinen gleichen Suchausgang. Gespeicherte
-Teilfolgen bleiben unabhängig rekonstruierbar und prüfbar.
+Linie oder begrenzte Datei-/Bildoperation kann das Limit überschreiten.
+Es wird kein OS-RSS-Limit der Reparatur behauptet. Gleicher Seed und Zeitlimit
+versprechen auf anderer Hardware keinen gleichen Suchausgang. Während der
+Produktion bleiben geschriebene Teilfolgen unabhängig prüfbar. Nach finaler
+Integration gilt die Bereinigung aus PUZZLE_AUTHORING §9.
 
 ## Eigener Reparaturvertrag
 
@@ -99,78 +63,18 @@ separat. Manuelle Korrektur: geändertes Bild als neue Datei/Importrevision füh
 neuen Plan und neue vollständige Prüfung erstellen; Bundle nicht nachträglich
 umetikettieren.
 
-RP-5 selbst ließ P1 unverändert. Der bestehende v1-`export-p1` weist Reparaturbundles am
-abweichenden Manifest zurück. Kein Reparaturraster wird als unveränderter
-`picross-image-candidate-v1` ausgegeben. RP-6 ergänzt den separaten v2-Export unter vollständiger Prüfung des
-gesamten Reparaturvertrags; das ändert diese eingefrorene RP-5-Lieferung nicht.
+Der v1-`export-p1` weist Reparaturbundles am abweichenden Manifest zurück.
+Kein Reparaturraster darf als unveränderter `picross-image-candidate-v1`
+ausgegeben werden. Der spätere Adaptervertrag für Reparatur- und manuelle
+Ableitungen steht in [ZA-1](../../docs/ZA1_ADAPTER.md).
 
-## Ursprünglicher Lauf, Sichtprüfung und Ergebnis
+## Befehle und Exitcodes
 
-Der erste Lauf stammt aus Commit
-`55f9e0f143bc79a4d5ff81d83d1c901b90f1797c`, Tree
-`ed7c30cd4b6e0ad9f9c463f3fdc6fba9c250314e`. Der Baum war vor Laufbeginn sauber;
-das originale Reportfeld `source_tree_dirty: true` wurde nach der Produktion
-erfasst und bezeichnet die damals neu erzeugten, noch unversionierten Dateien.
-Es wird nicht nachträglich geändert. Originalresultate einschließlich des
-Zeitabbruchs bleiben als beobachteter Erstlauf erhalten.
-
-[baseline.zip](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/baseline.zip) enthält alle 321 Originaldateien byteidentisch:
-neun komplette Reparaturbundles und den vollständigen Vergleich. Unkomprimiert
-93233249 Bytes; ZIP 2138683 Bytes, SHA-256
-`812c558198408ef750764ad18426f5e1ce4bdb336fad1a59c903bd0068459b8a`.
-[archive.json](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/archive.json) bindet jede expandierte Datei, Produzentencommit und
-Tree. Der Prüfer liest immer das versionierte ZIP, nicht eine zufällig vorhandene
-lokale Entpackung. Grenzen: 8 MiB ZIP, 128 MiB expandiert, 512 Dateien; keine
-absoluten Pfade, Traversals, Symlinks oder doppelte Namen. Temporäre Stagingkopien
-wurden nach vollständigem Bytehashvergleich als Duplikate in ignorierten
-Entwicklungsartefakten erhalten; sie sind keine weiteren Suchläufe.
-
-[Offlineansicht](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/index.html), [alle 48 Originalresultate plus neun Reparaturen](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/comparison.json),
-[dateigebundene Einzelurteile](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/reviews.json). Alle neun Vierfachansichten wurden
-tatsächlich geöffnet: Vorher, Nachher, sämtliche Änderungen in Pink und Schutz
-in Blau. Die sechs RP-4-Kontaktansichten der betroffenen Quellen wurden ebenfalls
-geöffnet. Sensible Innenräume wurden vor und nach dem Lauf kontrolliert.
-
-| Referenz | Status / Grenze | Offen vorher → nachher | Änderungen | Schritte / Kandidaten | Suche (s) | Sichturteil |
-| --- | --- | ---: | ---: | ---: | ---: | --- |
-| i02-direct-60x40 | erschöpft / Schritte | 12 → 4 | 2 | 96 / 10 | 0,860 | verschlechtert: neue Farbpixel an den Wellen |
-| i03-direct-40x40 | Fund | 16 → 0 | 2 | 5 / 5 | 0,328 | erhalten: zwei Blatt-Randpixel entfernt |
-| a01-direct-40x40 | Fund | 8 → 0 | 2 | 3 / 4 | 0,438 | erhalten: zwei untere Flügelrandfarben angepasst |
-| a01-direct-100x100 | abgebrochen / Zeit | 394 → 339 | 5 | 15 / 16 | 30,188 | verschlechtert: Feder-Ausreißer und helle Lücke |
-| p01-stylized-40x40 | erschöpft / Kandidaten | 242 → 242 | 0 | 15 / 16 | 2,266 | unverändert; Mono-Enthüllung weiter erforderlich |
-| p02-direct-100x100 | erschöpft / Kandidaten | 14 → 14 | 0 | 15 / 16 | 14,281 | unverändert |
-| p02-stylized-100x100 | erschöpft / Kandidaten | 13 → 13 | 0 | 15 / 16 | 24,078 | unverändert |
-| h02-direct-50x50 | erschöpft / Kandidaten | 4 → 4 | 0 | 15 / 16 | 4,594 | unverändert |
-| h02-stylized-50x50 | erschöpft / Schritte | 117 → 81 | 4 | 96 / 14 | 5,766 | verschlechtert: isolierter Punkt und Raketenränder |
-
-Zwei neue logische Zertifikate sind nach eigener Sichtprüfung motivisch erhalten.
-Die potentielle Vergleichsausbeute steigt damit von 19 auf 21 logisch geprüfte
-und von 14 auf 16 zusätzlich motivisch geeignete Varianten; die 48 ursprünglichen
-Ergebnisse bleiben unverändert. Varianten derselben Motive sind keine unabhängigen
-Katalogrätsel. Keine Pilotfreigabe und kein unabhängiges RP-5-Review daraus ableiten.
-Drei andere bessere logische Teilstände beschädigen lokale Bilddetails. Die
-Suche liefert bei vier Referenzen kein besseres gewähltes Raster; der größere
-Eulenfall erreicht das Zeitlimit. Diese Grenzen gehören zum Nutzeneffekt.
-
-113 begonnene Bewertungen und 275 kumulative Vorschläge; verworfene Vorschläge,
-Duplikate und Zwischenstände bleiben im Verlauf sichtbar. Die Suche einschließlich
-Referenzprüfung, Solve, Serialisierung und Kandidatenprüfung benötigt zusammen
-rund 82,799 s auf der beobachteten Windows-/Python-3.12.10-/Pillow-12.3.0-Umgebung.
-Abschlussprüfungen und Gesamtdauern stehen ungerundet in den Originalresultaten;
-späterer Replay-Aufwand bleibt getrennt. Keine menschlichen Minuten beobachtet,
-keine manuellen Zellkorrekturen, keine Modellaufrufe. Maskenarbeit und Sichtprüfung
-sind Agentenarbeit, keine Null-Minuten-Kuration oder Produktivitätsquote.
-
-## Befehle
-
-Aus der vorhandenen isolierten Image-Umgebung mit Pillow exakt 12.3.0:
+Aus der isolierten Image-Umgebung mit Pillow exakt 12.3.0:
 
 ```sh
-python -m tools.puzzle_production.repair search --reference examples/rp4/baseline/i02-direct-60x40 --plan examples/rp5/plans/i02-direct-60x40.json --output-dir artifacts/rp5-boat
-python -m tools.puzzle_production.repair verify --reference examples/rp4/baseline/i02-direct-60x40 --bundle artifacts/rp5-boat --report artifacts/rp5-boat-replay.json
-python -m tools.puzzle_production.rp5 produce --output-dir artifacts/rp5-new
-python -m tools.puzzle_production.rp5 verify --output-dir artifacts/rp5-replay
-python -m tools.puzzle_production.rp5 unpack --output-dir artifacts/rp5-frozen
+python -m tools.puzzle_production.repair search --reference <aktuelles-importbundle> --plan <reparaturplan.json> --output-dir <neues-reparaturbundle>
+python -m tools.puzzle_production.repair verify --reference <aktuelles-importbundle> --bundle <reparaturbundle> --report <neuer-pruefbericht.json>
 python -m unittest discover -s tests/puzzle_production -p 'test_repair.py' -v
 ```
 
@@ -180,8 +84,3 @@ Jedes Ausgabeziel muss neu sein. `repair search`: 0 für Fund/Suchbudget erschö
 gespeicherten Nichtfund/Abbruch; `certified` bleibt das Originalergebnis.
 Abbruch schon während Eingangsprüfung liefert JSON/4 ohne behauptetes gültiges
 Rasterbundle. Harte Prozessbeendigung kann keine Abschlussdatei garantieren.
-`rp5 verify` verlangt alle neun Bundles, vollständige 48er-Vergleichsübersicht
-und dateigebundene Sichturteile. Ein aktueller erfolgreicher CI-Lauf und die
-[Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP5_VERIFICATION.md) binden den Abschlussstand.
-Die `unpack`-Ausgabe enthält die ursprünglich geschriebenen Einzelbundles samt
-Offline-HTML; sie kann mit `repair verify --bundle <entpackter-fall>` geprüft werden.

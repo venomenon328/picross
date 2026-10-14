@@ -28,7 +28,7 @@ Quelle vor dieser Bereinigung: `37f500d5e6599a6c8ff85c8ca8edb4d190474c5f`.
 | Vollständige Prüfkopien dieser Rätsel | [Pakete](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/content/packages); ersetzt durch kompakte Manifestbindung, keine neue Zertifizierung. |
 | RP4-Vergleichsproduktion, RP5-Archiv/Versuche, RP6-Pilot, VS1-Produktion | [Beispiele](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples); aktuelle technische VS1-UI-Fälle unter `game/full_view_study/` bleiben. RP5-README bleibt als Reparaturformatvertrag. |
 | RP3 gespeicherte Ergebnisse/Exporte | Quelle, Design und Reveal bleiben als kleines ausführbares Importbeispiel; alte Ergebnisdateien entfallen. |
-| RP4–RP6-Lieferberichte, alte F01/F02-Proofberichte und früheres Archivmanifest | Über den gebundenen Vorgänger erreichbar; aktuelle technische Verträge bleiben. |
+| RP3–RP6-Lieferberichte, alte F01/F02-Proofberichte und früheres Archivmanifest | Über den gebundenen Vorgänger erreichbar; aktuelle technische Verträge bleiben. |
 | Historische Korpus-/Review-/Ownerprogramme | [Werkzeuge](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/tools); keine RP6-Ownerhilfe mehr im Spielerpaket. RP4/RP5 behalten nur noch die vorhandenen getesteten Hilfsfunktionen. |
 
 Die Git-Historie wird nicht umgeschrieben. Ein vollständiger Commit-/PR-Verweis
