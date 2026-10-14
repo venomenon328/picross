@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.4.1 · Dokumentrevision 7 · 14.10.2026**
+**Version 0.4.1 · Dokumentrevision 8 · 14.10.2026**
 
 Die kompatible ZA-1-Vertragsversion bleibt 0.4.1; Dokumentrevision, Datei-SHA-256 und Repositorycommit identifizieren diese ergänzte Arbeitsanweisung.
 
@@ -283,6 +283,14 @@ ZA-1-v2-Autorisierung mit tatsächlicher Endfreigabe und gegebenenfalls explizit
 Randregel-Ausnahme integriert werden. Originalzustand und Nachweise bleiben
 unverändert; der Adapter muss die festen Edits und alle übrigen Gates vollständig
 frisch prüfen. Kein Umschreiben des Handoffs zur Herstellung von `content_ready`.
+
+Für bereits versiegelte feste **Farbkorrekturen** unterstützt die gesondert
+beauftragte ZA-1-v3-Autorisierung einen `raster_review`-Import mit offenem
+Motivgate. Die tatsächliche nachträgliche Annahme bindet Motivdatei, vorgeschlagenen
+Parameterkorridor, feste Ableitungskette und Endabnahme extern; Originalhandoff
+und Inventar bleiben unverändert. Alle anderen Inhaltsgates einschließlich
+Randregel und sämtliche Herkunfts-/Proofprüfungen bleiben Pflicht. Dies ist
+keine automatische Freigabe oder rückdatierte Motivannahme.
 
 Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und dann:
 

@@ -310,6 +310,79 @@ offline mitgeliefert und bei `plan`/`register` erneut geprüft. Allgemeine
 Positiv-/Negativtests stehen in `test_edited_import_adapter.py`; keine realen
 Produktionspakete als Test- oder CI-Eingänge.
 
+### Feste Farbkorrekturen mit nachträglicher Motivannahme (v3)
+
+Eigentümerauftrag vom 14.10.2026 zur Nacharbeit B-PZ-03: Die additive
+`picross-manual-authorization-v3` unterstützt versiegelte `raster_review`-
+Farbimporte mit `editorial_manual_derivation`, `repair=null`, offenem Motivgate,
+`motif.approval=null` und leerem `approved_parameters`. Keine Änderung des alten
+Handoffs, kein rückdatiertes Gate. Die ausdrücklich nachträgliche menschliche
+Annahme wird separat sichtbar. Alle übrigen Inhaltsgates müssen bestehen;
+auch die Randregel bleibt ohne Ausnahme Pflicht. Die echten Endfreigabebytes
+werden weiterhin über `--approval` gebunden. Bestehende v1/v2-Wege bleiben gleich.
+
+Die Autorisierung hat genau die Felder `format`, `puzzle_id`, `revision`,
+`original_zip_sha256`, `handoff_sha256`, `inventory_sha256`, `selection`,
+`owner_override`, `superseded_content_blockers`, `accepted_motif`, `base`, `steps`.
+Identität, Auswahl, Original-ZIP/Teilkopie und Owner-Dateireferenz folgen den
+oben beschriebenen Bindungen. `superseded_content_blockers` stimmt exakt mit
+den historischen `blockers` überein; zusätzlich vorhandene `content_blockers`
+sind unzulässig. Keine anderen Gates werden dadurch aufgehoben.
+
+- `accepted_motif` enthält genau `file`, `sha256`, `derived_from_reveal_sha256`,
+  `revision`, `parameters`. Datei, Revealbezug und Revision entsprechen dem
+  Originalhandoff. `parameters` ist ein tatsächlich vorgeschlagener Korridor
+  mit Breite, Höhe, Modus, Vordergrundfarbzahl, Methode, Fit und tatsächlichem
+  Crop; er muss zum geprüften finalen Design passen. Motivprovenienz und
+  Abschlussbildfreigabe werden weiterhin aus dem Original geprüft.
+- `base` enthält genau `source_type` (`import|repair`), `bundle`, `variant`,
+  `reference_bundle`, `reference_variant`, `matrix_hash`. Bei Import sind beide
+  Referenzfelder `null`; bei RP-5 werden der vollständige ursprüngliche RP-3-
+  Import, die Reparatur, alle Eltern und Proofs rekonstruiert. Der ausgewählte
+  Reparaturkandidat muss zertifiziert sein. Maße höchstens 50 je Achse, Modus
+  `color`, höchstens vier Vordergrundfarben.
+- `steps` enthält 1–8 Objekte mit genau `record`, `plan`, `output`. Record/Plan
+  sind `{file,sha256}`-Bindungen inventarisierter Dateien; Output enthält genau
+  `bundle`, `variant`. Die letzte Stufe entspricht Handoff und
+  `editorial_manual_derivation`. Jede Stufe replayt unveränderliche
+  `picross-editorial-raster-redraw-v1`- oder
+  `picross-editorial-fixed-cell-derivation-v1`-Records. Ihr zugehöriger
+  `picross-editorial-raster-redraw-plan-v1` bzw.
+  `picross-editorial-fixed-cell-plan-v1` bindet den Auftrag über `puzzle_id`.
+  Redraw bindet den Plan-Dateihash; die feste Ableitung bindet dessen Pfad und
+  identische Editliste. Eltern-/Ergebnismatrixhash und tatsächliche Editzahl
+  müssen übereinstimmen. `search=false`, `seed=null` beziehungsweise nicht
+  vorhanden; keine Suche oder neue Rasterwahl.
+
+Edits sind eindeutige 1-basierte `{column,row,before,after}`-Objekte mit echten
+Vorwerten und unterschiedlichen gültigen Leer-/Palettenwerten. Die boolesche
+Schutzmaske steht beim Redraw im Record, bei der festen Ableitung im Plan;
+exakt alle anderen Positionen sind geschützt. Redraw-Limits stehen unter
+`limits` (`max_changed_positions`, `solve_seconds`, `verify_seconds`, `max_lines`),
+sonst im Plan (`max_changes`, `solve_seconds`, `verify_seconds`, `max_lines`).
+Zellbudget höchstens Rastergröße, Sekunden 1–120, Linien 1–1.000.000. Der globale
+Adapterbudgetrahmen bleibt bestehen. Jede geschriebene Zwischen-/Endstufe wird
+mit RP-3 frisch rekonstruiert und unabhängig vollständig zertifiziert; Matrix,
+Maße, Palette, Hintergrund, Alpha und Fit müssen zur festen Ableitung passen.
+Crop und Methode werden am final akzeptierten Pixelquellimport gebunden.
+
+`picross-owner-override-v3` enthält genau alle gemeinsamen Felder der
+Autorisierung außer `format`, `original_zip_sha256`, `owner_override`, dazu
+`format`, `actor`, `statement`, `timestamp_utc`, `package_sha256`,
+`approval_sha256`, `permissions`. Die letzten Berechtigungen sind genau
+`{fixed_color_edits:true, late_motif_acceptance:true}`. Originalpaket und echte
+Endfreigabe sind hashgebunden. Software prüft Dateibindungen, authentifiziert
+keinen menschlichen Akteur. Ein technischer Auftrag allein erfindet keine
+Inhaltsabnahme; diese muss für die exakte Auswahl tatsächlich vorliegen.
+
+CLI bleibt `--manual-authorization`; Exportformat bleibt
+`picross-target-export-v3`. Autorisierung/Owner und alle benötigten Originale
+werden offline mitgeliefert; Exportprüfung, Plan und Register prüfen sie erneut.
+Der Prüfbericht führt historische Phase/Motivgate, externe Motivannahme,
+überholte Metadatenblocker und frische feste Ableitungskette ausdrücklich.
+Runtime-/Save-/Registryverträge bleiben gleich. Allgemeine Regressionen in
+`test_color_derivation_adapter.py` verwenden ausschließlich synthetische Raster.
+
 ## Abgeschlossene Produktion (14.10.2026, #116)
 
 Nach nachgewiesener Endabnahme und Main-Integration ersetzt `retire-production`

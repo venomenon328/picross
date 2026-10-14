@@ -21,6 +21,9 @@ def authorization(package, path):
     path = Path(path)
     require(path.is_file() and not path.is_symlink(), "Unsafe/missing manual authorization")
     raw = load_json(path, 256 * 1024)
+    if isinstance(raw, dict) and raw.get("format") == "picross-manual-authorization-v3":
+        from .color_derivation import authorization as color_authorization
+        return color_authorization(package, path, raw)
     if isinstance(raw, dict) and raw.get("format") == IMPORT_AUTH_FORMAT:
         return import_authorization(package, path, raw)
     a = exact_keys(raw, {

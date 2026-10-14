@@ -361,6 +361,13 @@ gebundene Randregel-Ausnahme. Beide RP-3-Bündel, sämtliche feste Edits und der
 Endproof werden frisch geprüft; Original-ZIP/Handoff/Inventar bleiben unverändert.
 Schema, Grenzen und synthetische Tests: [ZA-1-v2-Vertrag](../../docs/ZA1_ADAPTER.md).
 
+Die additive v3-Autorisierung bindet bereits versiegelte feste Farbkorrekturen
+mit nachträglicher menschlicher Motiv-/Parameterannahme. Sie replayt eine begrenzte
+Kette gespeicherter Edits mit exakten Schutzmasken und prüft sämtliche RP-3-/RP-5-
+Herkunfts- und Proofbindungen frisch. Originale bleiben unverändert, alle übrigen
+Inhaltsgates einschließlich Randregel Pflicht. CLI bleibt `--manual-authorization`,
+Exportformat v3. [ZA-1-v3-Vertrag](../../docs/ZA1_ADAPTER.md).
+
 [Versionierter Vertrag, Status-/Exitcodes, Schema-/Hash-/Ressourcengrenzen](../../examples/rp5/README.md),
 [Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP5_VERIFICATION.md), [Offlinevergleich](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/index.html).
 Gleiche isolierte Image-Umgebung; keine neue Abhängigkeit. P1-Export und Spiel
