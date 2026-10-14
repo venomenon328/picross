@@ -1,0 +1,40 @@
+{
+  "built_in": true,
+  "calls": [
+    {
+      "arguments": {
+        "transparent_background": false
+      },
+      "label": "B-r01",
+      "model": "not_exposed",
+      "output": {
+        "approval": null,
+        "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+        "file": "reveals/B-r01.png",
+        "label": "B-r01",
+        "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+        "pixels": [
+          1122,
+          1402
+        ],
+        "sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471",
+        "title": "Diagonal verzweigte Knolle",
+        "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+      },
+      "prompt": "Use case: stylized-concept. Asset type: detailed colored reveal illustration for a nonogram game. Subject: ginger rhizome (Ingwer), recognizable natural irregular knobby finger-like branches, warm golden tan skin with characteristic joint rings, fine short skin creases, rounded blunt ends. Calm warm hand-drawn 2D illustration with clean dark-brown well-controlled outlines, substantial saturated coherent color fields, restrained cel-like shading, carefully finished botanical surface details. Not photorealistic, no 3D, no pixel art, no grid, no text, no watermark, no faces. Plain warm ivory background, no props, no scenery, no leaves, no loose decorative fragments. Portrait canvas and object composition approximately 4:5 to support a later strictly 20-wide x 25-high monochrome abstraction; this image itself remains fully colored and detailed. Keep the entire rhizome inside canvas with modest margins, dominant easily abstractable silhouette, no thin root hairs. Single broad ginger rhizome rising diagonally from lower left to upper right, three distinct stout branching fingers with organic knuckles and open ivory gaps; lower left thick elbow and upper right fork form an energetic but quiet diagonal arrangement. Whole intact rhizome, no slices, no cut ends.",
+      "quality": "not_exposed",
+      "reference_images": [],
+      "seed": "not_exposed",
+      "size_setting": "not_exposed"
+    }
+  ],
+  "format": "picross-reveal-generation-log-v1",
+  "original_package": {
+    "commit": "3584353cc44249b0c481a2b30a3dccb32734ab5c",
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r01/package.zip",
+    "sha256": "20b5c18a12398e32fe94656de8097f25317068e7555fbc6688ecec8c1fd1e33f"
+  },
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "tool": "image_gen.imagegen",
+  "working_mode": "free"
+}

@@ -1,0 +1,116 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1: drei farbige Abschlussbilder; Repositoryablage nach §6, Commit/Push und Draft-PR; kein Merge.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "gemuese-pilze-kraeuter",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "59bb9858160611574fcb5d71c4f2b57b9ac8e3dfda13334a109061627a2ca1e3"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "Ausdrückliche menschliche Abschlussbildfreigabe A-r01/B-r01/C-r01; danach Standardauftrag 2 zur Motivvorlage für exakt 20 × 25 mono.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "62e290bfce56071b6870f2ed2896fce776c7ae03",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": false,
+    "fixed": true,
+    "height": 25,
+    "mode": "mono",
+    "width": 20
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/A-r01.png",
+      "label": "A-r01",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "7b4fc7d873485687f51d28aeb3c7dfbdb2264518f9606f92bb9016660c166dbc",
+      "title": "Aufrechte verzweigte Knolle",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/B-r01.png",
+      "label": "B-r01",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471",
+      "title": "Diagonal verzweigte Knolle",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/C-r01.png",
+      "label": "C-r01",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "21294dca9c524141f37a10687d2c0594eda0f548a13cc1da2b7cfae56bf1180d",
+      "title": "Knolle mit heller Schnittfläche",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549",
+    "version": "0.4.1"
+  },
+  "state": "reveal_review"
+}

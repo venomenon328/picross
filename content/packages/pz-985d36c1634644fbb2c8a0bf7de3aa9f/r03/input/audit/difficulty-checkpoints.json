@@ -1,0 +1,745 @@
+{
+  "assessment_scope": "All 45 lines before each of 92 certified steps; available supported-value deductions only. Not a validated R0-R3 classifier, no weakest-family fixpoint claim.",
+  "cleanup_threshold": 10,
+  "format": "picross-editorial-difficulty-checkpoints-v1",
+  "logic_hash": "40c3e2a33e78ac0806727dbbfc5567b70873c5c47c13be610d065a4dc4ba00e3",
+  "min_productive_lines_before_cleanup": 8,
+  "records": [
+    {
+      "axis": "row",
+      "changed_cells": 7,
+      "index_1based": 9,
+      "productive_lines": 16,
+      "step_0based": 0,
+      "unresolved_before": 500
+    },
+    {
+      "axis": "row",
+      "changed_cells": 7,
+      "index_1based": 10,
+      "productive_lines": 17,
+      "step_0based": 1,
+      "unresolved_before": 493
+    },
+    {
+      "axis": "row",
+      "changed_cells": 10,
+      "index_1based": 11,
+      "productive_lines": 15,
+      "step_0based": 2,
+      "unresolved_before": 486
+    },
+    {
+      "axis": "row",
+      "changed_cells": 8,
+      "index_1based": 12,
+      "productive_lines": 16,
+      "step_0based": 3,
+      "unresolved_before": 476
+    },
+    {
+      "axis": "row",
+      "changed_cells": 4,
+      "index_1based": 13,
+      "productive_lines": 15,
+      "step_0based": 4,
+      "unresolved_before": 468
+    },
+    {
+      "axis": "row",
+      "changed_cells": 6,
+      "index_1based": 16,
+      "productive_lines": 14,
+      "step_0based": 5,
+      "unresolved_before": 464
+    },
+    {
+      "axis": "row",
+      "changed_cells": 6,
+      "index_1based": 17,
+      "productive_lines": 13,
+      "step_0based": 6,
+      "unresolved_before": 458
+    },
+    {
+      "axis": "row",
+      "changed_cells": 2,
+      "index_1based": 20,
+      "productive_lines": 12,
+      "step_0based": 7,
+      "unresolved_before": 452
+    },
+    {
+      "axis": "row",
+      "changed_cells": 2,
+      "index_1based": 21,
+      "productive_lines": 11,
+      "step_0based": 8,
+      "unresolved_before": 450
+    },
+    {
+      "axis": "row",
+      "changed_cells": 20,
+      "index_1based": 25,
+      "productive_lines": 10,
+      "step_0based": 9,
+      "unresolved_before": 448
+    },
+    {
+      "axis": "column",
+      "changed_cells": 10,
+      "index_1based": 7,
+      "productive_lines": 9,
+      "step_0based": 10,
+      "unresolved_before": 428
+    },
+    {
+      "axis": "column",
+      "changed_cells": 6,
+      "index_1based": 8,
+      "productive_lines": 13,
+      "step_0based": 11,
+      "unresolved_before": 418
+    },
+    {
+      "axis": "column",
+      "changed_cells": 5,
+      "index_1based": 9,
+      "productive_lines": 13,
+      "step_0based": 12,
+      "unresolved_before": 412
+    },
+    {
+      "axis": "column",
+      "changed_cells": 15,
+      "index_1based": 10,
+      "productive_lines": 12,
+      "step_0based": 13,
+      "unresolved_before": 407
+    },
+    {
+      "axis": "column",
+      "changed_cells": 11,
+      "index_1based": 11,
+      "productive_lines": 15,
+      "step_0based": 14,
+      "unresolved_before": 392
+    },
+    {
+      "axis": "column",
+      "changed_cells": 11,
+      "index_1based": 12,
+      "productive_lines": 14,
+      "step_0based": 15,
+      "unresolved_before": 381
+    },
+    {
+      "axis": "column",
+      "changed_cells": 6,
+      "index_1based": 13,
+      "productive_lines": 15,
+      "step_0based": 16,
+      "unresolved_before": 370
+    },
+    {
+      "axis": "column",
+      "changed_cells": 4,
+      "index_1based": 14,
+      "productive_lines": 14,
+      "step_0based": 17,
+      "unresolved_before": 364
+    },
+    {
+      "axis": "column",
+      "changed_cells": 5,
+      "index_1based": 15,
+      "productive_lines": 13,
+      "step_0based": 18,
+      "unresolved_before": 360
+    },
+    {
+      "axis": "row",
+      "changed_cells": 5,
+      "index_1based": 7,
+      "productive_lines": 13,
+      "step_0based": 19,
+      "unresolved_before": 355
+    },
+    {
+      "axis": "row",
+      "changed_cells": 6,
+      "index_1based": 8,
+      "productive_lines": 14,
+      "step_0based": 20,
+      "unresolved_before": 350
+    },
+    {
+      "axis": "row",
+      "changed_cells": 9,
+      "index_1based": 9,
+      "productive_lines": 15,
+      "step_0based": 21,
+      "unresolved_before": 344
+    },
+    {
+      "axis": "row",
+      "changed_cells": 5,
+      "index_1based": 13,
+      "productive_lines": 17,
+      "step_0based": 22,
+      "unresolved_before": 335
+    },
+    {
+      "axis": "row",
+      "changed_cells": 9,
+      "index_1based": 14,
+      "productive_lines": 16,
+      "step_0based": 23,
+      "unresolved_before": 330
+    },
+    {
+      "axis": "row",
+      "changed_cells": 6,
+      "index_1based": 15,
+      "productive_lines": 16,
+      "step_0based": 24,
+      "unresolved_before": 321
+    },
+    {
+      "axis": "row",
+      "changed_cells": 3,
+      "index_1based": 16,
+      "productive_lines": 15,
+      "step_0based": 25,
+      "unresolved_before": 315
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 17,
+      "productive_lines": 15,
+      "step_0based": 26,
+      "unresolved_before": 312
+    },
+    {
+      "axis": "row",
+      "changed_cells": 6,
+      "index_1based": 18,
+      "productive_lines": 14,
+      "step_0based": 27,
+      "unresolved_before": 311
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 19,
+      "productive_lines": 17,
+      "step_0based": 28,
+      "unresolved_before": 305
+    },
+    {
+      "axis": "row",
+      "changed_cells": 17,
+      "index_1based": 21,
+      "productive_lines": 16,
+      "step_0based": 29,
+      "unresolved_before": 304
+    },
+    {
+      "axis": "row",
+      "changed_cells": 17,
+      "index_1based": 22,
+      "productive_lines": 19,
+      "step_0based": 30,
+      "unresolved_before": 287
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 12,
+      "productive_lines": 19,
+      "step_0based": 31,
+      "unresolved_before": 270
+    },
+    {
+      "axis": "column",
+      "changed_cells": 12,
+      "index_1based": 1,
+      "productive_lines": 18,
+      "step_0based": 32,
+      "unresolved_before": 269
+    },
+    {
+      "axis": "column",
+      "changed_cells": 16,
+      "index_1based": 2,
+      "productive_lines": 22,
+      "step_0based": 33,
+      "unresolved_before": 257
+    },
+    {
+      "axis": "column",
+      "changed_cells": 15,
+      "index_1based": 3,
+      "productive_lines": 26,
+      "step_0based": 34,
+      "unresolved_before": 241
+    },
+    {
+      "axis": "column",
+      "changed_cells": 11,
+      "index_1based": 6,
+      "productive_lines": 26,
+      "step_0based": 35,
+      "unresolved_before": 226
+    },
+    {
+      "axis": "column",
+      "changed_cells": 18,
+      "index_1based": 16,
+      "productive_lines": 30,
+      "step_0based": 36,
+      "unresolved_before": 215
+    },
+    {
+      "axis": "column",
+      "changed_cells": 12,
+      "index_1based": 5,
+      "productive_lines": 31,
+      "step_0based": 37,
+      "unresolved_before": 197
+    },
+    {
+      "axis": "column",
+      "changed_cells": 5,
+      "index_1based": 14,
+      "productive_lines": 30,
+      "step_0based": 38,
+      "unresolved_before": 185
+    },
+    {
+      "axis": "column",
+      "changed_cells": 18,
+      "index_1based": 4,
+      "productive_lines": 30,
+      "step_0based": 39,
+      "unresolved_before": 180
+    },
+    {
+      "axis": "column",
+      "changed_cells": 14,
+      "index_1based": 17,
+      "productive_lines": 29,
+      "step_0based": 40,
+      "unresolved_before": 162
+    },
+    {
+      "axis": "column",
+      "changed_cells": 7,
+      "index_1based": 18,
+      "productive_lines": 28,
+      "step_0based": 41,
+      "unresolved_before": 148
+    },
+    {
+      "axis": "column",
+      "changed_cells": 11,
+      "index_1based": 19,
+      "productive_lines": 27,
+      "step_0based": 42,
+      "unresolved_before": 141
+    },
+    {
+      "axis": "column",
+      "changed_cells": 12,
+      "index_1based": 20,
+      "productive_lines": 26,
+      "step_0based": 43,
+      "unresolved_before": 130
+    },
+    {
+      "axis": "column",
+      "changed_cells": 7,
+      "index_1based": 8,
+      "productive_lines": 25,
+      "step_0based": 44,
+      "unresolved_before": 118
+    },
+    {
+      "axis": "column",
+      "changed_cells": 7,
+      "index_1based": 9,
+      "productive_lines": 24,
+      "step_0based": 45,
+      "unresolved_before": 111
+    },
+    {
+      "axis": "column",
+      "changed_cells": 6,
+      "index_1based": 7,
+      "productive_lines": 23,
+      "step_0based": 46,
+      "unresolved_before": 104
+    },
+    {
+      "axis": "column",
+      "changed_cells": 4,
+      "index_1based": 13,
+      "productive_lines": 21,
+      "step_0based": 47,
+      "unresolved_before": 98
+    },
+    {
+      "axis": "column",
+      "changed_cells": 6,
+      "index_1based": 15,
+      "productive_lines": 20,
+      "step_0based": 48,
+      "unresolved_before": 94
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 10,
+      "productive_lines": 19,
+      "step_0based": 49,
+      "unresolved_before": 88
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 2,
+      "productive_lines": 18,
+      "step_0based": 50,
+      "unresolved_before": 87
+    },
+    {
+      "axis": "row",
+      "changed_cells": 4,
+      "index_1based": 3,
+      "productive_lines": 18,
+      "step_0based": 51,
+      "unresolved_before": 86
+    },
+    {
+      "axis": "row",
+      "changed_cells": 4,
+      "index_1based": 4,
+      "productive_lines": 20,
+      "step_0based": 52,
+      "unresolved_before": 82
+    },
+    {
+      "axis": "row",
+      "changed_cells": 3,
+      "index_1based": 5,
+      "productive_lines": 19,
+      "step_0based": 53,
+      "unresolved_before": 78
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 6,
+      "productive_lines": 21,
+      "step_0based": 54,
+      "unresolved_before": 75
+    },
+    {
+      "axis": "row",
+      "changed_cells": 3,
+      "index_1based": 10,
+      "productive_lines": 20,
+      "step_0based": 55,
+      "unresolved_before": 74
+    },
+    {
+      "axis": "row",
+      "changed_cells": 3,
+      "index_1based": 11,
+      "productive_lines": 20,
+      "step_0based": 56,
+      "unresolved_before": 71
+    },
+    {
+      "axis": "row",
+      "changed_cells": 2,
+      "index_1based": 17,
+      "productive_lines": 19,
+      "step_0based": 57,
+      "unresolved_before": 68
+    },
+    {
+      "axis": "row",
+      "changed_cells": 5,
+      "index_1based": 18,
+      "productive_lines": 18,
+      "step_0based": 58,
+      "unresolved_before": 66
+    },
+    {
+      "axis": "row",
+      "changed_cells": 7,
+      "index_1based": 24,
+      "productive_lines": 19,
+      "step_0based": 59,
+      "unresolved_before": 61
+    },
+    {
+      "axis": "row",
+      "changed_cells": 2,
+      "index_1based": 12,
+      "productive_lines": 22,
+      "step_0based": 60,
+      "unresolved_before": 54
+    },
+    {
+      "axis": "row",
+      "changed_cells": 4,
+      "index_1based": 19,
+      "productive_lines": 21,
+      "step_0based": 61,
+      "unresolved_before": 52
+    },
+    {
+      "axis": "row",
+      "changed_cells": 3,
+      "index_1based": 20,
+      "productive_lines": 20,
+      "step_0based": 62,
+      "unresolved_before": 48
+    },
+    {
+      "axis": "row",
+      "changed_cells": 2,
+      "index_1based": 23,
+      "productive_lines": 19,
+      "step_0based": 63,
+      "unresolved_before": 45
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 16,
+      "productive_lines": 18,
+      "step_0based": 64,
+      "unresolved_before": 43
+    },
+    {
+      "axis": "row",
+      "changed_cells": 5,
+      "index_1based": 8,
+      "productive_lines": 16,
+      "step_0based": 65,
+      "unresolved_before": 42
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 13,
+      "productive_lines": 14,
+      "step_0based": 66,
+      "unresolved_before": 37
+    },
+    {
+      "axis": "row",
+      "changed_cells": 3,
+      "index_1based": 7,
+      "productive_lines": 12,
+      "step_0based": 67,
+      "unresolved_before": 36
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 15,
+      "productive_lines": 12,
+      "step_0based": 68,
+      "unresolved_before": 33
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 13,
+      "productive_lines": 12,
+      "step_0based": 69,
+      "unresolved_before": 32
+    },
+    {
+      "axis": "column",
+      "changed_cells": 2,
+      "index_1based": 14,
+      "productive_lines": 12,
+      "step_0based": 70,
+      "unresolved_before": 31
+    },
+    {
+      "axis": "column",
+      "changed_cells": 5,
+      "index_1based": 18,
+      "productive_lines": 12,
+      "step_0based": 71,
+      "unresolved_before": 29
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 7,
+      "productive_lines": 11,
+      "step_0based": 72,
+      "unresolved_before": 24
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 19,
+      "productive_lines": 10,
+      "step_0based": 73,
+      "unresolved_before": 23
+    },
+    {
+      "axis": "column",
+      "changed_cells": 2,
+      "index_1based": 5,
+      "productive_lines": 10,
+      "step_0based": 74,
+      "unresolved_before": 22
+    },
+    {
+      "axis": "column",
+      "changed_cells": 2,
+      "index_1based": 11,
+      "productive_lines": 10,
+      "step_0based": 75,
+      "unresolved_before": 20
+    },
+    {
+      "axis": "column",
+      "changed_cells": 3,
+      "index_1based": 12,
+      "productive_lines": 11,
+      "step_0based": 76,
+      "unresolved_before": 18
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 3,
+      "productive_lines": 11,
+      "step_0based": 77,
+      "unresolved_before": 15
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 4,
+      "productive_lines": 10,
+      "step_0based": 78,
+      "unresolved_before": 14
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 8,
+      "productive_lines": 8,
+      "step_0based": 79,
+      "unresolved_before": 13
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 1,
+      "productive_lines": 8,
+      "step_0based": 80,
+      "unresolved_before": 12
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 6,
+      "productive_lines": 8,
+      "step_0based": 81,
+      "unresolved_before": 11
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 13,
+      "productive_lines": 8,
+      "step_0based": 82,
+      "unresolved_before": 10
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 12,
+      "productive_lines": 6,
+      "step_0based": 83,
+      "unresolved_before": 9
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 19,
+      "productive_lines": 6,
+      "step_0based": 84,
+      "unresolved_before": 8
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 22,
+      "productive_lines": 6,
+      "step_0based": 85,
+      "unresolved_before": 7
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 7,
+      "productive_lines": 5,
+      "step_0based": 86,
+      "unresolved_before": 6
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 20,
+      "productive_lines": 3,
+      "step_0based": 87,
+      "unresolved_before": 5
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 5,
+      "productive_lines": 2,
+      "step_0based": 88,
+      "unresolved_before": 4
+    },
+    {
+      "axis": "column",
+      "changed_cells": 1,
+      "index_1based": 1,
+      "productive_lines": 2,
+      "step_0based": 89,
+      "unresolved_before": 3
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 7,
+      "productive_lines": 2,
+      "step_0based": 90,
+      "unresolved_before": 2
+    },
+    {
+      "axis": "row",
+      "changed_cells": 1,
+      "index_1based": 23,
+      "productive_lines": 2,
+      "step_0based": 91,
+      "unresolved_before": 1
+    }
+  ]
+}
