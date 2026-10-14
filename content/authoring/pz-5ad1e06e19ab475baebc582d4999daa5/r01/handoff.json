@@ -1,0 +1,116 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1: Abschlussbildauswahl Gecko; Repositoryablage gemäß §6 einschließlich Commit/Push und Draft-PR, kein Merge.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "insekten-kleine-tiere",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "b0e163a005dd98acb3317f4b1aa0431d7c130b6be6d84c914016fddafb79ab1b"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "Ausdrückliche menschliche Abschlussbildfreigabe A-r01/B-r01/C-r01; danach Standardauftrag 2 mit Konfiguration und daraus abgeleiteter Motivvorlage. Größenwunsch ungefähr 30 breit × 15 hoch, monochrom.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "22a3da76336fead97f87a4a0b229447ee1b36c69",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "height": 15,
+    "mode": "mono",
+    "width": 30
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/A-r01.png",
+      "label": "A-r01",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1774,
+        887
+      ],
+      "sha256": "f9d08ab6d2964d6cff7da6abb593f646034369e3839af9b4199a6153c5a339f9",
+      "title": "Grüner Gecko in gestreckter Draufsicht",
+      "usage_basis": "Eigenständige beauftragte KI-Generierung für Picross; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/B-r01.png",
+      "label": "B-r01",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1774,
+        887
+      ],
+      "sha256": "4d3270feca1cc35cdaf58370d94941b93024612e3a5073fe4da2db35c25ae300",
+      "title": "Türkiser Gecko mit angehobenem Kopf",
+      "usage_basis": "Eigenständige beauftragte KI-Generierung für Picross; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/C-r01.png",
+      "label": "C-r01",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1774,
+        887
+      ],
+      "sha256": "436d87cae0ebfb4b36818533d19bda04b9510dcbda18d31b967f4f838d338489",
+      "title": "Olivfarbener Gecko in gebogener Pose",
+      "usage_basis": "Eigenständige beauftragte KI-Generierung für Picross; keine Fremdbilder oder Fremdassets eingebracht."
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549",
+    "version": "0.4.1"
+  },
+  "state": "reveal_review"
+}
