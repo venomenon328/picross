@@ -1,0 +1,39 @@
+{
+  "format": "picross-authoring-self-review-v1",
+  "reviewed_at_utc": "2026-10-13T13:15:44.789819+00:00",
+  "kind": "separate_self_review",
+  "independent_second_review": false,
+  "source_head": "ac3d1b504c3cbab9480e29764bbc107a4cbec470",
+  "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "package_sha256": "297d5375e1337760b503742945c47f1ebf22db2308659d28a0e0d7289e6d8b39",
+  "scope": "Complete PR diff against main and additional staged Standardauftrag 3 delivery. Text diff, binary package inventories and exact images inspected.",
+  "checks": {
+    "scope_only_authoring_package_and_index": true,
+    "all_file_modes_regular_100644": true,
+    "no_runtime_or_tool_changes": true,
+    "no_secret_private_foreign_asset": true,
+    "sealed_r01_r02_zip_handoff_unchanged": true,
+    "new_inventory_no_self_reference": true,
+    "independent_proof_and_origin_binding": true,
+    "written_zip_inspection": true,
+    "actual_final_raster_visual_review": true,
+    "no_false_final_approval_export_registration": true
+  },
+  "findings": [
+    {
+      "id": "PZ8-A01",
+      "category": "A",
+      "status": "open",
+      "actor": "Tobias",
+      "gate": "Before export/registration",
+      "scenario": "Review actual 35x35 a-center and A-r01 using bound ENDABNAHME.md, comparison and r03 inventory; give actual editorial decision."
+    },
+    {
+      "id": "PZ8-O01",
+      "category": "O",
+      "status": "clarified",
+      "reason": "Ambiguous difficulty prose in sealed archive clarified in outer record; checkpoint data and rating unaffected."
+    }
+  ],
+  "verdict": "Prüfung/Abnahme offen: technische Produktion abgeschlossen, Endabnahmevorlage bereit; menschliche Endabnahme offen. Draft only, no merge authorization."
+}

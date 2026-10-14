@@ -1,0 +1,52 @@
+{
+  "format": "picross-authoring-export-evidence-v1",
+  "source_head": "b9ad036b39ecd5b0b9afc9466b76f53fedeec28c",
+  "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "recorded_at_utc": "2026-10-13T13:22:53.578298+00:00",
+  "adapter": "authoring-p1-rect-color-1",
+  "manifest_format": "picross-target-export-v2",
+  "export_manifest_sha256": "9ec7c2b5bc6acf4ec192f488ea381af3b159be8c6a3d859e1d5938e3474afd40",
+  "export_inspection_sha256": "d522dba95e0aeee3e80962b27a53202b98cce21b1941b5c7ad16240d54112ed2",
+  "approval_sha256": "7428c650c27bd9b475b4636c83ca8d1a8fa82120fe68d79376794dca1ad192c7",
+  "original_zip_sha256": "297d5375e1337760b503742945c47f1ebf22db2308659d28a0e0d7289e6d8b39",
+  "handoff_sha256": "d88862f2550f2c2e9934fb1a63510145db854669546372a516d277b96821dcc8",
+  "inventory_sha256": "e66d8ca4e0b324589fe24f0289d8b9ad8f224005298296b933e8d2cb950603c8",
+  "runtime_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+  "runtime_revision": 1,
+  "package_revision": "r03",
+  "stem": "efeutute_001",
+  "save_slot": "efeutute_001",
+  "category_id": "blumen-pflanzen",
+  "technical": true,
+  "editorial_approved": true,
+  "category_ready": true,
+  "catalog_ready": true,
+  "registered": false,
+  "fresh_verification": {
+    "certified": true,
+    "line_evaluations": 260,
+    "logic_hash": "2455b708c5d2ac7646a9e5c31f6ca9743e209fb7b6bc44ce2adebb2eab69c487",
+    "profile": {
+      "deduction": "all-line-supported-values",
+      "id": "full-line-color",
+      "search": false,
+      "start": "unknown",
+      "version": 1
+    },
+    "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+    "proof_verified": true,
+    "status": "solved",
+    "steps": 190
+  },
+  "selection": {
+    "logic_hash": "2455b708c5d2ac7646a9e5c31f6ca9743e209fb7b6bc44ce2adebb2eab69c487",
+    "matrix_hash": "aefca45777add77d5699b55cafdcfd0636e1c5cbe29ef580a74580fdb55d6f1d",
+    "reveal": {
+      "file": "reveal/A-r01.png",
+      "sha256": "72ceb119b341b7ad8c96770a2042449f4f3d47ede648225e43062a3bae564472"
+    },
+    "variant": "a-center"
+  },
+  "verification": "export performs fresh package/approval inspection and independently verifies written export; no extra inspect/verify-export call",
+  "durable_export_location": "content/packages/pz-8ea7f3dacdcc428a9fcff7a735bc/r03 (populated only by subsequent register)"
+}

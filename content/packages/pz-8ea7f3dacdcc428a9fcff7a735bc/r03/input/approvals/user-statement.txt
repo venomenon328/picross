@@ -1,0 +1,5 @@
+Tobias · 2026-10-13T12:46:49Z
+Ich gebe das Abschlussbild A-r01 frei.
+Führe Standardauftrag 2 bis zur Motivvorlage samt Konfiguration und Codex-Übergabe aus.
+Rätselmodus (Abschlussbild immer farbig): farbig.
+Repositoryablage nach §6 ist beauftragt. Draft-PR; kein Merge.

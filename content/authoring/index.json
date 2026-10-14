@@ -105,6 +105,21 @@
       "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
       "revision": "r03",
       "record": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/record.json"
+    },
+    {
+      "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+      "revision": "r01",
+      "record": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r01/record.json"
+    },
+    {
+      "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+      "revision": "r02",
+      "record": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r02/record.json"
+    },
+    {
+      "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+      "revision": "r03",
+      "record": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r03/record.json"
     }
   ]
 }

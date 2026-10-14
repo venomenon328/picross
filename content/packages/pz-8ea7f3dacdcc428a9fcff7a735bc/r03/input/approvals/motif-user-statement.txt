@@ -1,0 +1,6 @@
+Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.
+
+Paket: pz-8ea7f3dacdcc428a9fcff7a735bc · eindeutiger aktueller Record.
+Ich gebe die Motivvorlage MA-r01 frei; Parameter: 35x35. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.
+
+Repositoryablage nach §6 ist beauftragt. Draft-PR; kein Merge.
