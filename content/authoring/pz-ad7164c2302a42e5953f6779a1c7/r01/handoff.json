@@ -1,0 +1,107 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 5,
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "dafd09bdcbe36010637944319994383d877948c02be2393e7e16db54f5402c4e"
+  },
+  "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "revision": "r01",
+  "repo_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "state": "reveal_review",
+  "brief": "brief.md",
+  "category_id": "suesses-getraenke",
+  "requested_parameters": {
+    "mode": "mono",
+    "width": null,
+    "height": null
+  },
+  "approved_parameters": [],
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_variants": [
+    {
+      "label": "A-r01",
+      "file": "reveal/A-r01.png",
+      "sha256": "36c61f564d02bf86c2365ff934b20b600f530f1425551a2f148821e61da3acb6",
+      "bytes": 1781584,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "provenance": "reveal/A-r01.provenance.json",
+      "approval": null
+    },
+    {
+      "label": "B-r01",
+      "file": "reveal/B-r01.png",
+      "sha256": "5979f3f1284d7d28abce3d201a8b6f4063d680952992dd8899d07ccea00e852e",
+      "bytes": 1578576,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "provenance": "reveal/B-r01.provenance.json",
+      "approval": null
+    },
+    {
+      "label": "C-r01",
+      "file": "reveal/C-r01.png",
+      "sha256": "54d053af4c1022dade010581b5b70823f4acc9a406057221ef638fc9f1a1c804",
+      "bytes": 2101035,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "provenance": "reveal/C-r01.provenance.json",
+      "approval": null
+    }
+  ],
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "f9e002caaf67c5dc5c8a435644d76fae1cd13f0dd02426ff9680462e4288179b"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "human_reveal_approval_pending"
+  ],
+  "next_action": "Standardauftrag 2 nach ausdrücklicher Freigabe von A-r01, B-r01 oder C-r01: Freigabe binden, 2–3 Rasterkonfigurationen vergleichen, empfohlene Motivvorlage ableiten und zur Motivfreigabe vorlegen.",
+  "authorization": "Standardauftrag 1 und Repositoryablage nach §6, Commit/Push/Draft-PR; kein Merge, keine Abstraktion oder Rasterproduktion ohne Freigabe."
+}

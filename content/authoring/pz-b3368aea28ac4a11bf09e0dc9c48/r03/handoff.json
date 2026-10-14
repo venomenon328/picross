@@ -1,0 +1,99 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 5,
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "dafd09bdcbe36010637944319994383d877948c02be2393e7e16db54f5402c4e"
+  },
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r03",
+  "repo_commit": "cdf8f572344aa26e50f6ceac597567f7c912ce47",
+  "main_base": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "state": "content_ready",
+  "brief": "brief.md",
+  "category_id": "gerichte-herzhaftes",
+  "approved_parameters": [
+    {
+      "width": 25,
+      "height": 22,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        14,
+        87,
+        1239,
+        1165
+      ]
+    }
+  ],
+  "configuration": "configuration.json",
+  "design_proposed": "design-proposed.json",
+  "reveal": {
+    "file": "images/A-r01.png",
+    "revision": "A-r01",
+    "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "images/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "images/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "ef92af29d902b39a9bdc574a41031a8500ffb01fbe1312d00cc7943e088fb6b4",
+    "derived_from_reveal_sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "approval": "approvals/motif-MA-r01.json",
+    "provenance": "images/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "production",
+    "variant": "area-080",
+    "proof": "production/area-080-proof.json",
+    "verification": "audit/fresh-proof-verification.json",
+    "matrix_hash": "52d9dea323d89b7117285bac242d6f8d99bc37c94f8eee320c1a0abda1cbef72",
+    "logic_hash": "45bce6babb28ab2abb0f7232c34dac81fb3ca48b0ba280d440169c700721925d"
+  },
+  "origin_verification": "audit/area-080-origin-verification.json",
+  "repair": null,
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "e36c9713d2215f0622cda08c53b57b445e4c031e473e00f60c16c1b640fd94aa"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json",
+    "motif": "approvals/motif-MA-r01.json",
+    "provenance": "audit/area-080-origin-verification.json",
+    "logic": "audit/fresh-proof-verification.json",
+    "frame": "audit/area-080-origin-verification.json",
+    "visual": "audit/visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "audit/visual-review.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "Menschliche Endabnahme genau dieses r03-Pakets; erst danach gesonderter Standardauftrag 4 mit Integration.",
+  "authorization": "Tatsächlicher Nutzerauftrag: Standardauftrag 3 bis zur Endabnahmevorlage; Repositoryablage nach §6, bestehender Draft-PR #110; kein Merge.",
+  "created_at_utc": "2026-10-13T16:49:38.713951+00:00",
+  "difficulty": "difficulty.json",
+  "content_blockers": []
+}

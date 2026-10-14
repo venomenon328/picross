@@ -1,0 +1,54 @@
+{
+  "format": "picross-image-generation-log-v1",
+  "tool": "image_gen.imagegen",
+  "model": "not_exposed",
+  "settings": {
+    "transparent_background": false,
+    "resolution_requested": "square canvas; exact resolution not exposed",
+    "quality": "not_exposed",
+    "seed": "not_exposed",
+    "referenced_images": [],
+    "num_last_images_to_include": "omitted"
+  },
+  "calls": [
+    {
+      "label": "A-r01",
+      "prompt": "Use case: stylized-concept. Asset type: detailed colored reveal illustration for a Picross game collection. Create ONE single high-quality finished warm hand-drawn 2D illustration of a glass of golden beer with a generous creamy white foam crown, NOT a grid or a puzzle. Subject A: a classic handleless beer tumbler with a broad gently flared rim and a slightly tapered body, thick clear glass bottom, upright, seen almost straight on with a slight view of the elliptical top. Spacious square canvas, entire glass and foam visible, centered with comfortable empty margins, no cropping. Rich golden amber beer, clearly separate rounded ivory foam lobes that form a foamy crown above the rim; a few small foam bubbles, several subtle rising bubbles in the beer, restrained condensation droplets, intentional broad glass reflections, warm amber shading. Clean confident dark brown hand-drawn contours, coherent substantial color areas, delicate finished interior detail and subtle matte shading, warm calm storybook album aesthetic. Plain warm off-white background without a table, scenery or cast shadow. Important: finished detailed illustration, not just a colored silhouette, not photorealistic, not 3D, not pixel art; main glass/beer/foam shapes remain clear and easy to abstract later. No handle, no foot or stem in this variant. No human, mascot, face, hops, barley, bottle, coaster, decoration, text, logo or watermark. Output only the single illustration, no contact sheet.",
+      "output": {
+        "file": "reveal/A-r01.png",
+        "sha256": "36c61f564d02bf86c2365ff934b20b600f530f1425551a2f148821e61da3acb6",
+        "bytes": 1781584,
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGB"
+      },
+      "postprocessing": "none; original PNG bytes copied unchanged"
+    },
+    {
+      "label": "B-r01",
+      "prompt": "Use case: stylized-concept. Asset type: detailed colored reveal illustration for a Picross game collection. Create ONE single high-quality finished warm hand-drawn 2D illustration of a slender footed pilsner glass of golden beer with a generous creamy white foam crown, NOT a grid or a puzzle. Subject B: an elegant pilsner glass, elongated trumpet bowl with a broad rounded rim, narrowing gently toward a short thick stem and a clearly visible round glass foot, upright, seen almost straight on with a slight view of the elliptical top. Spacious square canvas, entire foot, glass and foam visible, centered with comfortable empty margins, no cropping. Rich honey-gold beer, clearly separate rounded ivory foam lobes forming a fluffy crown above the rim; a few fine foam bubbles, restrained rising bubbles and condensation, intentional broad clear glass reflections with pale blue-gray accents, delicate honey/amber shading. Clean confident dark brown hand-drawn contours, coherent substantial color areas, delicate finished interior detail and subtle matte shading, warm calm storybook album aesthetic. Plain warm off-white background without a table, scenery or cast shadow. Important: finished detailed illustration, not just a colored silhouette, not photorealistic, not 3D, not pixel art; main glass/beer/foam shapes remain clear and easy to abstract later. No handle. No human, mascot, face, hops, barley, bottle, coaster, decoration, text, logo or watermark. Output only the single illustration, no contact sheet.",
+      "output": {
+        "file": "reveal/B-r01.png",
+        "sha256": "5979f3f1284d7d28abce3d201a8b6f4063d680952992dd8899d07ccea00e852e",
+        "bytes": 1578576,
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGB"
+      },
+      "postprocessing": "none; original PNG bytes copied unchanged"
+    },
+    {
+      "label": "C-r01",
+      "prompt": "Use case: stylized-concept. Asset type: detailed colored reveal illustration for a Picross game collection. Create ONE single high-quality finished warm hand-drawn 2D illustration of a transparent glass beer mug filled with golden amber beer and a generous creamy white foam crown, NOT a grid or a puzzle. Subject C: a sturdy cylindrical glass beer mug with a broad rim, thick rounded base, a few deliberate vertical glass facets and ONE substantial rounded glass handle on its right. The handle has an unmistakable broad empty interior opening. Upright, viewed near front with a small three-quarter turn so the handle and opening are fully clear. Spacious square canvas, entire mug, handle and foam visible, centered with comfortable empty margins, no cropping. Rich amber beer, clearly separate rounded ivory foam lobes forming a fluffy crown above the rim with one short small overflow on left; a few fine foam bubbles, restrained rising bubbles and condensation, broad intentional glass reflections and gentle warm shading. Clean confident dark brown hand-drawn contours, coherent substantial color areas, finished interior material detail and subtle matte shading, warm calm storybook album aesthetic. Plain warm off-white background without table, scenery or cast shadow. Important: detailed finished illustration, not just a colored silhouette, not photorealistic, not 3D, not pixel art; main glass/beer/foam shapes and handle negative space remain clear and easy to abstract later. No human, mascot, face, hops, barley, bottle, coaster, extra objects, text, logo or watermark. Output only the single illustration, no contact sheet.",
+      "output": {
+        "file": "reveal/C-r01.png",
+        "sha256": "54d053af4c1022dade010581b5b70823f4acc9a406057221ef638fc9f1a1c804",
+        "bytes": 2101035,
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGB"
+      },
+      "postprocessing": "none; original PNG bytes copied unchanged"
+    }
+  ]
+}
