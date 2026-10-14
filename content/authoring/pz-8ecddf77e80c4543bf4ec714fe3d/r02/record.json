@@ -4,7 +4,7 @@
   "revision": "r02",
   "motif_name": "Warnemünde",
   "category_id": "gebaeude-bauwerke",
-  "state": "motif_review",
+  "state": "motif_approved",
   "package": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r02/package.zip",
     "bytes": 2804821,
@@ -32,10 +32,8 @@
   },
   "mode": "color",
   "difficulty": null,
-  "blockers": [
-    "Ausdrückliche menschliche Freigabe von MA-r01 samt vorgeschlagenem Parameterkorridor vor Rasterproduktion offen."
-  ],
-  "next_action": "Standardauftrag 3 nach ausdrücklicher MA-r01-/Korridorfreigabe.",
+  "blockers": [],
+  "next_action": "Continue with indexed r03 content_ready; human final editorial acceptance remains open.",
   "integration": null,
   "repository_delivery": {
     "branch": "content/warnemuende-reveal-r01",
@@ -46,5 +44,10 @@
   "validation": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r02/validation.json",
     "sha256": "1a44346078dac5a24544a0dce96437be8eee12634e293c5a1c71634629afe74b"
-  }
+  },
+  "motif_approval": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r03/motif-approval.json",
+    "sha256": "fecd20e4e4e4f5ea02e58731bc625cfd828d7406aa0ee8ff6cdba1f90c7423c9"
+  },
+  "superseded_by": "r03"
 }
