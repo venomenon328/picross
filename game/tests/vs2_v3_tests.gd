@@ -166,6 +166,14 @@ func shot(name: String, region: Rect2 = Rect2()) -> void:
 	await RenderingServer.frame_post_draw
 	var image: Image = canvas.get_texture().get_image()
 	if region.has_area(): image = image.get_region(Rect2i(region))
+	# The composed viewport is opaque. Keep every native pixel while avoiding
+	# a redundant alpha channel in the twelve mandatory evidence images.
+	if image.get_format() == Image.FORMAT_RGBA8:
+		var original: PackedByteArray = image.get_data()
+		image.convert(Image.FORMAT_RGB8)
+		var restored: Image = image.duplicate()
+		restored.convert(Image.FORMAT_RGBA8)
+		check(restored.get_data() == original, "RGB evidence preserves every native RGBA pixel")
 	var path: String = output.path_join(name+".png")
 	check(image.save_png(path)==OK,"native picture saved")
 	pictures.append({"file":name+".png","sha256":FileAccess.get_sha256(path)})
