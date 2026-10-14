@@ -1,0 +1,111 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 5,
+    "file": "PUZZLE_AUTHORING.md",
+    "sha256": "dafd09bdcbe36010637944319994383d877948c02be2393e7e16db54f5402c4e"
+  },
+  "puzzle_id": "pz-2a8481f61e6443bda174bd3da67c",
+  "revision": "r03",
+  "repo_commit": "dd8a8ed1168ae1cca0c4a96c9858c781234cf26f",
+  "state": "reveal_review",
+  "brief": "brief.md",
+  "category_id": "gebaeude-bauwerke",
+  "approved_parameters": [],
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_variants": [
+    {
+      "code": "A-r02",
+      "file": "reveals/A-r02.png",
+      "sha256": "b2d10a0490dbce384ab9fd5df94c523b901c3d79731931fbebe60d790be2519a",
+      "bytes": 1870614,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "image_mode": "RGB",
+      "status": "offered",
+      "approval": null,
+      "description": "Symmetrische Frontalansicht aus A-r01 ohne niedrigere Seitengebäude."
+    },
+    {
+      "code": "B-r02",
+      "file": "reveals/B-r02.png",
+      "sha256": "ed75c32abd56553ab2eded611ad6fa8b576b0c9b5181367adf7eb17387a1d071",
+      "bytes": 2007251,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "image_mode": "RGB",
+      "status": "offered",
+      "approval": null,
+      "description": "B-r01 mit entfernten niedrigen Gebäuden links und rechts; freistehendes Haupttor in gleicher Schrägansicht."
+    }
+  ],
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "3dc02079a609594cf8497592d5213ee8e347301a455b89c38ca0449b73943853"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "Menschliche Abschlussbildfreigabe offen."
+  ],
+  "next_action": "A-r02 oder B-r02 ausdrücklich freigeben; Standardauftrag 2.",
+  "authorization": "Beauftragte zusätzliche Korrektur A-r01 → A-r02, Erhalt B-r02 und fortgeltende Repositoryablage §6; kein Merge.",
+  "revision_request": "revision-request.json",
+  "previous_package": {
+    "commit": "dd8a8ed1168ae1cca0c4a96c9858c781234cf26f",
+    "package": {
+      "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r02/package.zip",
+      "bytes": 4058151,
+      "sha256": "0575657708091abf4d0138f36481dcfbfe8a05e9bba083d38f5ffc0cdecf0c2a"
+    },
+    "handoff": {
+      "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r02/handoff.json",
+      "sha256": "89b1d37c6fd634336690b43663f803a85ea54162a446ebf3c9df8f99bdedfa7e"
+    },
+    "inventory_sha256": "10fcd00282ce58ace0d1bb54933c22bf0e15af3c1166bbe3f99ba22d0a75a4d7"
+  }
+}

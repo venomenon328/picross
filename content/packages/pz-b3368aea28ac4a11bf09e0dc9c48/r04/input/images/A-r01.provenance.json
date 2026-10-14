@@ -1,0 +1,14 @@
+{
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "file": "images/A-r01.png",
+  "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+  "author": "ChatGPT native image generation, commissioned by user",
+  "usage_basis": "Für das eigene Picross-Projekt beauftragte KI-Erzeugung ohne Fremdbildreferenz; keine Marken-/Fremdassets. Keine Exklusivrechtsbehauptung.",
+  "prompt_file": "generation.json",
+  "original_package": {
+    "revision": "r01",
+    "commit": "4ff96270675b873f6c770eee4df3abe8516327b6",
+    "path": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r01/package.zip",
+    "sha256": "40f4b46d02f306d6e2bae1e2d5692d34178690ac58585084bb19773af6a23931"
+  }
+}

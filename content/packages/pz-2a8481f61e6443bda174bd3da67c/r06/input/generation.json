@@ -1,0 +1,59 @@
+{
+  "calls": [
+    {
+      "revision": "MA-r01",
+      "prompt": "Use case: precise-object-edit / style-transfer. Edit target and only design reference: supplied APPROVED A-r02 Brandenburg Gate completion illustration.\nCreate a saved monochrome MOTIF TEMPLATE MA-r01 for eventual nonogram import at approximately 42 columns by 30 rows (alternatives 49x35). This is a smooth continuous black-and-white illustration, NOT pixel art, NOT a grid or a puzzle. Preserve the actual approved image's perfectly frontal near-symmetrical composition, exact broad horizontal gate proportions and existing silhouette, main column positions and five passage negative spaces, flat stepped entablature/central attic, and original quadriga's position, scale and outline. No low side buildings.\nReplace sandstone and all decorative shaded surfaces with solid flat black, on pure white. Main roof/attic and six main supports must form clear strong continuous black masses. Five clearly separated white open passages, with the wider central passage, must remain in the same places and retain the characteristic proportions. Remove stone joints, frieze figures, fluting, wall panels, medallions, lighting/shading and all pavement/ground lines or cast shadows. Plain white background, no grey shading, no text, borders, frames, texture, grid or hints.\nSimplify the quadriga into recognizable connected black masses while keeping FOUR distinct horse heads/necks and overall horse arrangement, central winged driver/chariot group, tall staff and compact eagle silhouette. Preserve useful white separations between horse heads/necks and legs; eliminate fiddly reins and tiny sculptural details. Do NOT add or remove horses, substitute a generic horse sculpture, enlarge the quadriga, change viewpoint/perspective, straighten away major original shapes, alter gate geometry or add artificial border pixels. Use sufficiently robust shapes for later monochrome sampling but do not quantize cells yet. Same landscape canvas and similar object framing as reference; whole silhouette visible. Final image black ink on opaque white, the approved detailed color original remains unchanged.",
+      "inputs": [
+        {
+          "file": "reveals/A-r02.png",
+          "sha256": "b2d10a0490dbce384ab9fd5df94c523b901c3d79731931fbebe60d790be2519a"
+        }
+      ],
+      "status": "correction_needed",
+      "reason": "Durchgänge zu breit/hoch; sichtbare Wand- und Deckentiefe zu stark entfernt.",
+      "result": {
+        "file": "motifs/MA-r01.png",
+        "sha256": "70481b982a95285c1d697724660a475fdd913e44432229eb6f744eaa3c4cf17a"
+      }
+    },
+    {
+      "revision": "MA-r02",
+      "prompt": "Use case: precise-object-edit. Image 1 is the current black-and-white motif template MA-r01, the edit target. Image 2 is the approved colorful A-r02, the binding geometry reference. Correct image 1 to MA-r02 by making its five WHITE passage openings match the actual visible open spaces in Image 2. Current Image 1 makes the openings too broad and tall by discarding the visible deep side walls and underside of the ceiling. Incorporate ALL the visible masonry side/back walls and the ceiling depth from Image 2 into the solid black supports and overhead beam. The white openings begin BELOW the visible underside ceiling in Image 2, not at the front architrave; their left/right edges correspond to the end of the side/back walls in Image 2, not merely the front-column spacing. Carefully align all five opening shapes and their widths to Image 2, including the wider middle passage. Preserve the frontal view, positions and widths of the six front columns, overall outer silhouette, stepped attic, image framing, main gate size, quadriga scale and arrangement.\nKeep Image 1's black-on-white simplified style: flat solid black masses on pure white, no shading/texture/stone relief/fluting/pavement, no new objects/side buildings/text/grid. Preserve four distinct horse heads/necks and useful leg separations, central driver/chariot, staff and compact eagle; remove the remaining tiny threadlike reins, do not enlarge or replace the sculpture. Fill thin decorative horizontal white slits across the attic that are not structural openings, so the attic remains a strong connected mass with its stepped outer edge. Do not remove any of the FIVE passage openings or close them. This is a continuous motif illustration, not a cell raster. Ground stays white and all six feet visible. Only the geometry correction of passage voids and cleanup of irrelevant hairlines are requested.",
+      "inputs": [
+        {
+          "file": "motifs/MA-r01.png",
+          "sha256": "70481b982a95285c1d697724660a475fdd913e44432229eb6f744eaa3c4cf17a"
+        },
+        {
+          "file": "reveals/A-r02.png",
+          "sha256": "b2d10a0490dbce384ab9fd5df94c523b901c3d79731931fbebe60d790be2519a"
+        }
+      ],
+      "status": "offered_for_human_approval",
+      "result": {
+        "file": "motifs/MA-r02.png",
+        "sha256": "dab4dbd6882627e96c61c376c684f9b30ac5b7c89932e6f263ea56512e4eb779"
+      }
+    }
+  ],
+  "settings": {
+    "tool": "image_gen.imagegen",
+    "transparent_background": false,
+    "model": "not_exposed",
+    "seed": "not_exposed"
+  },
+  "approval_statement": "Ich gebe das Abschlussbild A-r02 frei.",
+  "approval_actor": "Tobias Schröder",
+  "approval_timestamp_utc": "2026-10-13T20:56:07Z",
+  "timestamp_utc": "2026-10-13T21:03:48.621820Z",
+  "output_processing": "Original-PNG-Bytes unverändert; keine Rasterisierung oder Bildnachbearbeitung.",
+  "reveal_prompt": "Use case: precise-object-edit. Edit target: the supplied A-r01 colorful illustration of Berlin's Brandenburg Gate. Create A-r02 by removing ONLY the low side buildings at the far left and far right, including ALL their lower columns, walls, portals, cornices and green roof wings attached beside the main gate. The monumental main gate must stand alone with both outer edges visible; replace the removed wings with the same quiet warm ivory backdrop and natural continuation of the existing paved ground. Preserve the MAIN gate almost exactly: perfectly frontal symmetrical viewpoint, position and scale within the landscape canvas, broad horizontal proportions, six front Doric columns and five open passages with a wider central passage, existing main gate side/back walls, stepped flat entablature and central attic, sandstone reliefs/fluting, original green quadriga with FOUR horses, chariot and winged driver, warm honey palette, existing sunlight/shadows, clear hand-drawn contours and finished 2D illustration style. Keep whole quadriga and feet. Do NOT change camera angle, perspective, zoom, scale or architecture, enlarge the sculpture, redraw the core composition, add objects, scenery, flags, text, grid, watermark or monochrome abstraction. Nontransparent background stays. Only remove the flanking lower buildings.",
+  "reveal_generation_history": {
+    "commit": "e7152544bf1ba2453fcf3a2add8c03aab1e8cf8a",
+    "package": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r03/package.zip",
+    "entry": "generation.json",
+    "entry_sha256": "c744f9e0144598594ac91bde3002231c38be958b37009f1d76cd2ebaff9b7fbf",
+    "path_scope": "Historical paths in that entry refer to the original r03 package."
+  },
+  "prompt_capture_note": "Exact actual image-tool inputs captured into the current package; earlier immutable archives retain their original metadata."
+}

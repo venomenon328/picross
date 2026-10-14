@@ -1,0 +1,20 @@
+{
+  "checked_at_utc": "2026-10-13T15:16:17.397264+00:00",
+  "safe_zip": true,
+  "crc": true,
+  "exact_inventory_file_set": true,
+  "all_file_sizes_hashes": true,
+  "outer_handoff_byte_equal": true,
+  "all_outer_review_copies_byte_equal": true,
+  "original_reveal_and_motifs_byte_unchanged": true,
+  "native_motif_output_byte_unchanged": true,
+  "raster_and_nearest_scale_exact": true,
+  "utf8_metadata_verified": true,
+  "archive_files": 859,
+  "expanded_bytes": 99367245,
+  "all_nine_independent_replays_accepted": true,
+  "za1_technical": true,
+  "only_pending_gate": "Human final editorial acceptance of bound r05 inventory/selection and disclosed visual abstractions.",
+  "inventory_sha256": "3ec4d593e7b435e9377de3340cf62f8c33b43eea12b96463b99839c1d22771e1",
+  "zip_sha256": "f3a31a6ef1eefa6b9a06e9aec516aeb406abdadebe3368e3c17ad4b01483336c"
+}

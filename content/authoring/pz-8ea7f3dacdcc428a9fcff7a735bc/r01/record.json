@@ -1,0 +1,42 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+  "revision": "r01",
+  "motif_name": "Efeutute",
+  "category_id": "blumen-pflanzen",
+  "state": "reveal_approved",
+  "package": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r01/package.zip",
+    "bytes": 5891418,
+    "sha256": "23bf297dcebb24bc9179a04357e63e8b1d6104dffe2aa4a20f05e99a5a9f31fa"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r01/handoff.json",
+    "sha256": "d9b90b99f9de823111dbfd8c4f94ec0a5932061c48d98d6fda3cc1249feae9b5"
+  },
+  "inventory_sha256": "e7adc8e2fcd212106c42c3f36b05eb29f46262e88fc3072cd6371ee0133307ee",
+  "approval": null,
+  "reveal_approval": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r02/reveal-approval.json",
+    "sha256": "fdc113e09da34ea6918f8fedb63d89b2a2da404134d9a7c6e8c1ce5c25bc71aa"
+  },
+  "width": null,
+  "height": null,
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "Continue with indexed r02 motif_review; original ZIP/Handoff/inventory remain unchanged.",
+  "integration": null,
+  "repository_delivery": {
+    "branch": "authoring/efeutute-selection",
+    "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+    "commit_evidence": "Draft-PR"
+  },
+  "validation": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r01/validation.json",
+    "sha256": "66f12fd650cef45697cb6770dc1d28ac3d4d8f4a7501acced2278126e0e58d3c"
+  },
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "72ceb119b341b7ad8c96770a2042449f4f3d47ede648225e43062a3bae564472",
+  "superseded_by": "r02"
+}

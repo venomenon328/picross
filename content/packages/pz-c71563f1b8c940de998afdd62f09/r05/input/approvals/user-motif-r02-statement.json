@@ -1,0 +1,13 @@
+{
+  "actor": "Tobias Schröder",
+  "timestamp_utc": "2026-10-13T14:49:08.062750+00:00",
+  "statement": "Die Motivdatei ist freigegeben und von den gerasterten Varianten bevorzuge ich safe-3.",
+  "resolved_motif_file": "motifs/MA-r02.png",
+  "resolved_motif_sha256": "9468fb1b5a883bd550026c08f718732a44c7fbf8d9b2cd006a08e348cc7d9928",
+  "preference": {
+    "variant": "safe-3",
+    "source_revision": "r04",
+    "meaning": "Aesthetic preference for the existing three-color, conservative-crop depiction; not approval of its stalled proof or a frame-rule exception. New imports use the separately approved MA-r02.",
+    "source_matrix_hash": "6972a0f82638b236463b15a9a28e8812b4cf6079ed914aab4028ee4b5bbb23dd"
+  }
+}

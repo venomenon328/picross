@@ -1,0 +1,62 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-2a8481f61e6443bda174bd3da67c",
+  "revision": "r02",
+  "category_id": "gebaeude-bauwerke",
+  "title": "Brandenburger Tor",
+  "state": "reveal_review",
+  "package": {
+    "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r02/package.zip",
+    "bytes": 4058151,
+    "sha256": "0575657708091abf4d0138f36481dcfbfe8a05e9bba083d38f5ffc0cdecf0c2a"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r02/handoff.json",
+    "sha256": "89b1d37c6fd634336690b43663f803a85ea54162a446ebf3c9df8f99bdedfa7e"
+  },
+  "inventory_sha256": "10fcd00282ce58ace0d1bb54933c22bf0e15af3c1166bbe3f99ba22d0a75a4d7",
+  "approval": null,
+  "reveal_approval": null,
+  "width": null,
+  "height": null,
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [
+    "Menschliche Abschlussbildfreigabe offen."
+  ],
+  "next_action": "B-r02 ausdrücklich freigeben; Standardauftrag 2.",
+  "integration": null,
+  "repository_binding": {
+    "source_commit": "8c27e2729c09799092ac9f1f1823316a88e734f0",
+    "branch": "content/brandenburger-tor-reveal-r01"
+  },
+  "offered_variants": [
+    {
+      "code": "B-r02",
+      "file": "reveals/B-r02.png",
+      "sha256": "ed75c32abd56553ab2eded611ad6fa8b576b0c9b5181367adf7eb17387a1d071",
+      "bytes": 2007251,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "image_mode": "RGB",
+      "status": "offered",
+      "approval": null,
+      "description": "B-r01 mit entfernten niedrigen Gebäuden links und rechts; freistehendes Haupttor in gleicher Schrägansicht."
+    }
+  ],
+  "previous_package": {
+    "commit": "8c27e2729c09799092ac9f1f1823316a88e734f0",
+    "package": {
+      "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r01/package.zip",
+      "bytes": 6279241,
+      "sha256": "44ba9f7387872b1d90e6ff1b8acc614d07f7b42bfe8ec0087cdacca38cffc88c"
+    },
+    "handoff": {
+      "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r01/handoff.json",
+      "sha256": "262b6311331a5ebd2732c0de28f06bbb0a68ca94b697d95812663a1e14ff71bd"
+    },
+    "inventory_sha256": "c7e132b42736d284c771d92f2c70c915761eb9999a75173de1cc8ff9787c00d5"
+  }
+}

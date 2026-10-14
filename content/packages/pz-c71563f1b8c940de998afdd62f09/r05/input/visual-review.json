@@ -1,0 +1,66 @@
+{
+  "review_type": "self_review",
+  "files": {
+    "reveal": "reveals/A-r01.png",
+    "approved_motif": "motifs/MA-r02.png",
+    "raster": "views/final-raster.png",
+    "large": "views/final-large.png",
+    "grid": "views/final-grid.png",
+    "comparison": "views/final-comparison.png",
+    "repair_diff": "production/repair-08/view.png"
+  },
+  "checks": {
+    "recognizability": {
+      "status": "erfüllt",
+      "reason": "Left-facing green lizard, large head crest, dorsal/proximal-tail sails and very long recurved tail remain readable in the actual color raster."
+    },
+    "silhouette_proportions": {
+      "status": "erfüllt",
+      "reason": "No stretching; selected exact2:1 exterior crop, source pose/proportions retained. All filled/empty positions identical to direct crop3 reference; repair changes only3 color values."
+    },
+    "details_negative_spaces": {
+      "status": "erfüllt",
+      "reason": "Head crest silhouette, leg spaces and large open tail interior retained. Eye/pupil and thin face/foot contours merge at cell scale. The terminal four-cell taper is detached by quantization, explicitly assessed as a soft motif-based abstraction exception, not hidden as continuous geometry."
+    },
+    "palette_readability": {
+      "status": "erfüllt",
+      "reason": "Exactly3 foreground values: green169, light103, turquoise44. Pale versus white has lower miniature contrast but remains visible; no singleton foreground color. No color-vision simulation claimed."
+    },
+    "series_aesthetic": {
+      "status": "erfüllt",
+      "reason": "Quiet flat abstraction coheres with approved MA-r02 and detailed unchanged A-r01; no noise/décor/frame-pass markers."
+    }
+  },
+  "soft_exceptions": [
+    "Terminal four pale cells at zero-basedrow20,x34..37 form a separate8-connected component. The source has a naturally very thin taper that BOX quantization partly drops. Four-cell group is anatomically motivated, not a decorative speck; long open tail arc remains recognizable. This visible gap is explicitly offered for final human editorial judgement.",
+    "Some contour segments touch diagonally;8-connectivity is not conflated with4-connectivity. Components4=[298,11,4,3], components8=[312,4].",
+    "Four empty bottom rows22–25 preserve requested50x25 dimensions and top-positioned source. No empty interior row or column; frame passes left/right/top.",
+    "Eye/pupil and fine mouth/scale/rib/claw outlines are not separately retained in the raster."
+  ],
+  "repair_review": {
+    "status": "erfüllt",
+    "changes": [
+      {
+        "after": "green",
+        "before": "light",
+        "x": 40,
+        "y": 19
+      },
+      {
+        "after": "turquoise",
+        "before": "light",
+        "x": 41,
+        "y": 19
+      },
+      {
+        "after": "green",
+        "before": "light",
+        "x": 46,
+        "y": 19
+      }
+    ],
+    "note": "Only existing lower-tail pale pixels recolored green/turquoise; all silhouette/negative-space cells unchanged. Selected08 over certified07 because07 removes a filled taper pixel. Trial09 for stronger taper continuity did not certify and is not silently substituted."
+  },
+  "human_final_approval": "pending",
+  "independent_human_review": false
+}

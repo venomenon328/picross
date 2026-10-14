@@ -1,0 +1,15 @@
+{
+  "format": "picross-authoring-storage-validation-v1",
+  "timestamp_utc": "2026-10-13T12:54:00.529819Z",
+  "scope": "motif_review",
+  "safe_paths": true,
+  "exact_file_set": true,
+  "file_hashes": true,
+  "handoff_copy_byte_equal": true,
+  "reveal_approval_copy_byte_equal": true,
+  "reveal_unchanged": true,
+  "motif_derivation_bound": true,
+  "inventory_binding": true,
+  "adapter_inspect": "not_applicable: early image phase",
+  "motif_approval": "pending"
+}

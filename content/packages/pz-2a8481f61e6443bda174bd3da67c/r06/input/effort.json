@@ -1,0 +1,12 @@
+{
+  "native_image_calls_this_order": 0,
+  "native_image_calls_total": 7,
+  "fixed_manual_cell_additions": 3,
+  "import_attempts_this_order": 1,
+  "candidates_this_order": 1,
+  "solver_calls_this_order": 1,
+  "fresh_verifier_processes_this_order": 1,
+  "automatic_repair_searches": 0,
+  "human_active_minutes": null,
+  "solve_time_estimate": null
+}
