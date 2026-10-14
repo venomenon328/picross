@@ -1,4 +1,0 @@
-Ingwer, vorlagentreu zu B-r01; Invarianten und zulässige Detailreduktion in configuration.json. Genau 20 breit × 25 hoch, mono. Import erst nach ausdrücklicher Motivfreigabe.
-
-Working mode: faithful
-Motif and gameplay review: open
