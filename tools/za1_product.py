@@ -7,12 +7,19 @@ import p1_preflight as toolchain
 
 
 def audit_pack(root, engine, executable, environment, phase, count, label):
+    pack = executable.with_suffix(".pck")
+    if not pack.is_file() or pack.stat().st_size <= 4:
+        raise toolchain.PreflightError("Missing/empty separate player PCK")
+    with pack.open("rb") as stream:
+        if stream.read(4) != b"GDPC":
+            raise toolchain.PreflightError("Invalid separate player PCK header")
     env = environment.copy()
     env["ZA1_PACK_COUNT"] = str(count)
-    phase(label, [engine, "--headless", "--main-pack", str(executable), "--script",
+    phase(label, [engine, "--headless", "--main-pack", str(pack), "--script",
                   str(root / "game/tests/content_pack_probe.gd")], "CONTENT_PACK_OK", phase_env=env)
     return {"status": "success", "selected": count, "executable_sha256": toolchain.sha256_file(executable),
-            "method": "external native probe against actual embedded PCK"}
+            "pack_file": pack.name, "pack_sha256": toolchain.sha256_file(pack), "pack_bytes": pack.stat().st_size,
+            "method": "external native probe against actual separate PCK"}
 
 
 def run(root, workspace, output, engine, environment, phase, python_phase, host):

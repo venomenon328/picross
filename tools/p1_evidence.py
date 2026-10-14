@@ -1,4 +1,4 @@
-"""Progressive, bounded evidence for the current P1 CI scope."""
+"""Progressive evidence and size measurements for the current P1 CI scope."""
 from __future__ import annotations
 
 import json
@@ -12,10 +12,6 @@ from pathlib import Path
 
 import p1_preflight as toolchain
 
-TECHNICAL_LIMIT = 30_000_000
-TOTAL_LIMIT = 75_000_000
-LOG_LIMIT = 256_000
-IMAGE_LIMIT = 18_000_000 # 15 MB SL views plus 3 MB compact PERF-B strips; 30 MB total technical cap.
 
 
 def now() -> str:
@@ -52,10 +48,6 @@ def source_identity(root: Path) -> dict:
 def bound_log(path: Path) -> dict:
     data = path.read_bytes()
     original = len(data)
-    if original > LOG_LIMIT:
-        notice = b"\n[CI log abbreviated: full middle output omitted; start and end retained]\n"
-        data = data[:LOG_LIMIT // 4] + notice + data[-(LOG_LIMIT * 3 // 4 - len(notice)):]
-        path.write_bytes(data)
     return dict(file=str(path.name), original_bytes=original, retained_bytes=len(data),
                 abbreviated=original != len(data), sha256=toolchain.sha256_file(path))
 
@@ -183,11 +175,6 @@ class Evidence:
             shutil.rmtree(selection_root)
         selected, omitted = [], []
         image_bytes = 0
-        selected_bytes = 0
-        # Leave room for the final phase/report/audit metadata. Reports and logs
-        # take priority over optional retained images, including on failure.
-        existing = sum(p.stat().st_size for p in self.technical.rglob("*") if p.is_file())
-        selection_limit = max(0, TECHNICAL_LIMIT - existing - 250_000)
         priority = set(priority_sources)
         for path in sorted(set(sources), key=lambda p: (
                 p not in priority, "failure" not in p.name, p.suffix == ".png",
@@ -196,30 +183,19 @@ class Evidence:
                 continue
             relative = path.relative_to(self.output)
             size = path.stat().st_size
-            if selected_bytes + size > selection_limit:
-                omitted.append(dict(file=str(relative), bytes=size, reason="technical artifact byte budget"))
-                continue
-            if path.suffix == ".png" and image_bytes + size > IMAGE_LIMIT:
-                omitted.append(dict(file=str(relative), bytes=size, reason="selected native image byte budget"))
-                continue
             target = self.technical / "selected" / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(path, target)
-            selected_bytes += size
             if path.suffix == ".png":
                 image_bytes += size
             selected.append(dict(file=str(relative), bytes=size, sha256=toolchain.sha256_file(path),
                                  failure_priority=path in priority, priority=path in priority))
         self.report["selected_evidence"] = dict(files=selected, omitted=omitted,
-                                                 image_bytes=image_bytes, image_limit=IMAGE_LIMIT)
+                                                 image_bytes=image_bytes)
         self.flush()
 
-    def enforce_budget(self, player: Path | None = None) -> dict:
+    def measure_size(self, player: Path | None = None) -> dict:
         technical = sum(p.stat().st_size for p in self.technical.rglob("*") if p.is_file())
         player_bytes = player.stat().st_size if player and player.is_file() else 0
-        result = dict(technical_bytes=technical, player_bytes=player_bytes,
-                      total_bytes=technical + player_bytes,
-                      technical_limit=TECHNICAL_LIMIT, total_limit=TOTAL_LIMIT)
-        if technical > TECHNICAL_LIMIT or technical + player_bytes > TOTAL_LIMIT:
-            raise toolchain.PreflightError(f"Evidence byte budget exceeded: {result}")
-        return result
+        return dict(technical_bytes=technical, player_bytes=player_bytes,
+                    total_bytes=technical + player_bytes)

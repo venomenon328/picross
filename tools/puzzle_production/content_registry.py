@@ -91,6 +91,10 @@ def check_checkout(root, replay=False, *, check_projection=True):
                 file_hash(root / "game" / e["reveal"]) == p["reveal_sha256"], "Registered content binding changed")
         # Also enforce the category binding without the expensive production replay.
         m = load_json(package / "manifest.json")
+        from . import integrated_content
+        if m.get("format") == integrated_content.FORMAT:
+            integrated_content.check(root, e, m)
+            continue  # Final integration is checked by runtime hashes, never by production replay.
         require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3"), "Unsupported registered export")
         if m["format"] in ("picross-target-export-v2", "picross-target-export-v3"):
             require(m.get("category_id") == e["category_id"], "Registered category differs from export")
@@ -141,6 +145,11 @@ def registration(export_dir, root, *, apply=False, fail_step=None):
              "definition_sha256": m["files"][m["definition"]], "reveal_sha256": m["files"][m["reveal"]]}}
     existing = next((item for item in registry["entries"] if item["id"].casefold() == e["id"].casefold()), None)
     if existing is not None:
+        from . import integrated_content
+        retained = load_json(root / existing["production"]["package"] / "manifest.json")
+        if retained.get("format") == integrated_content.FORMAT:
+            require(retained["entry"] == e, "Occupied production ID/revision: update is outside ZA-1")
+            return {"status": "no-op", "registered": True, "id": e["id"], "category": category, "changes": []}
         require(existing == e, "Occupied production ID/revision: update is outside ZA-1")
         check_checkout(root, replay=True)
         require((root / package_rel / "manifest.json").read_bytes() == (export_dir / "manifest.json").read_bytes(), "Different repeated input")

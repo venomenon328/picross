@@ -146,10 +146,9 @@ def capture_current(project, workspace, output, engine, render_command, environm
 def verify_v3(directory: Path) -> dict:
     report = json.loads((directory / "v3-report.json").read_text(encoding="utf-8"))
     expected_cases = {(sheet, w, h, ui, mode, fit) for sheet in ("T-01", "T-02", "T-08")
-                      for w, h in ((1280, 720), (1600, 900), (1920, 1080), (2560, 1440))
-                      for ui in (1.0, 1.25) for mode in ("G", "V") for fit in (False, True)}
+                      for w, h, ui in vs2_v1_verify.VISUAL_CONFIGURATIONS for mode in ("G", "V") for fit in (False, True)}
     actual_cases = {(r["id"], *r["client"], r["ui"], r["mode"], r["fit"]) for r in report["records"]}
-    if report["failures"] or len(report["records"]) != 96 or actual_cases != expected_cases or report["checks"] < 1000:
+    if report["failures"] or len(report["records"]) != len(expected_cases) or actual_cases != expected_cases or report["checks"] < 1000:
         raise toolchain.PreflightError("Incomplete/failed V3 native coverage")
     for record in report["records"]:
         vs2_v1_verify.sidebar_axes(record, record["ui"])
@@ -243,15 +242,15 @@ def capture(root, project, workspace, output, engine, render_command, environmen
                                 regular={k:current[k] for k in ("board_rect","cell_pitch","reserve_slots","font_px","horizontal_budget_px")}))
         if current["id"]=="VS08" and (current["reserve_slots"][0]!=13 or current["axis_counts"]["row"]["hidden_numbers"]):
             raise toolchain.PreflightError("Regular 1080 VS08 does not show all 13 row hints")
-    if len(comparisons)!=6: raise toolchain.PreflightError("Missing GF1 regular/reference geometry comparisons")
+    if len(comparisons)!=3: raise toolchain.PreflightError("Missing GF1 regular/reference geometry comparisons")
     evidence["reference_comparisons"]=comparisons
     (renders/"vs2-matrix.json").write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     return evidence
 
 def verify_records(report: dict) -> None:
-    expected = {(corpus,index,w,ui,mode) for corpus,indices in ((False,(0,1,3,5,7,8)),(True,range(10))) for index in indices for w in (1280,1600,1920,2560) for ui in (1.0,1.25) for mode in ("G","V")}
-    actual = {(r["corpus"], int(r["id"].replace("T-","").replace("VS",""))-1,r["client"][0],r["ui_scale"],r["mode"]) for r in report["records"]}
-    if report["failures"] or actual != expected or len(report["records"]) != 256:
+    expected = {(corpus,index,w,h,ui,mode) for corpus,indices in ((False,(0,1,3,5,7,8)),(True,range(10))) for index in indices for w,h,ui in vs2_v1_verify.VISUAL_CONFIGURATIONS for mode in ("G","V")}
+    actual = {(r["corpus"], int(r["id"].replace("T-","").replace("VS",""))-1,*r["client"],r["ui_scale"],r["mode"]) for r in report["records"]}
+    if report["failures"] or actual != expected or len(report["records"]) != len(expected):
         raise toolchain.PreflightError("Incomplete/failed VS2 regular matrix")
     for record in report["records"]:
         if record["layout_valid"] and not record["grid_fit"]:
@@ -273,8 +272,8 @@ def verify(renders: Path) -> dict:
         if picture["file"].startswith(("regular-","corpus-")) and set(picture.get("frame_pixels",{})) != {"top","bottom","left","right"}:
             raise toolchain.PreflightError("VS2 rendered frame evidence incomplete")
     expected_images = {"album.png","options.png"}
-    expected_images.update(f"regular-T-{i:02d}-G-ui{ui}.png" for i in (1,6) for ui in (100,125))
-    expected_images.update(f"corpus-VS{i:02d}-{mode}-ui{ui}.png" for i in (4,8,9) for mode in ("G","V") for ui in (100,125))
+    expected_images.update(f"regular-T-{i:02d}-G-ui{ui}.png" for i in (1,6) for ui in (100,))
+    expected_images.update(f"corpus-VS{i:02d}-{mode}-ui{ui}.png" for i in (4,8,9) for mode in ("G","V") for ui in (100,))
     expected_images.update(f"rectangular-VS{i:02d}-reveal.png" for i in (1,3,5,7,9))
     if {p["file"] for p in report["pictures"]} != expected_images or len(report["pictures"]) != len(expected_images):
         raise toolchain.PreflightError("VS2 native image coverage incomplete")

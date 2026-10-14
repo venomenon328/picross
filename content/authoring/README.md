@@ -15,3 +15,11 @@ Bildphasen und noch nicht endabgenommene Pakete dürfen hier liegen. Der Status
 und nächste erlaubte Schritt müssen diese Grenzen ausdrücklich nennen.
 Registrierte Inhalte verwaltet der Adapter unter `content/packages/` und in
 `content/registry.json`. Das Offline-Cheat-Sheet gehört nicht ins Repository.
+
+## Abschluss
+
+Diese Ablage enthält ausschließlich laufende Produktion. Nach Endabnahme und
+nachgewiesenem Merge auf main werden alle Arbeitsrevisionen der fertigen ID samt
+Indexeinträgen entfernt, gemäß PUZZLE_AUTHORING §9. Unter `content/packages/`
+bleibt nur der kompakte Integrationsdatensatz. Keine dauerhafte Replaypflicht;
+Runtime-Dateien und Nutzungshinweise bleiben erhalten.

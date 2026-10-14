@@ -257,7 +257,9 @@ Ein einzelner Endzustands-Screenshot oder die reine Dateiexistenz genügt nicht.
 
 Die [aktuelle CI-Policy](CI_POLICY.md) bleibt maßgeblich: vollständige Diffauswahl,
 erfolgreiche ausgewählte Jobs und `ci-required`, kompakte statt pauschaler
-Screenshotmatrix, höchstens 30 MB technische und 75 MB gesamte Artefaktdaten.
+Screenshotmatrix und gemessene Laufzeiten/Artefaktgrößen ohne feste Obergrenzen
+(Eigentümerentscheidung #116). Die aktuelle CI-Policy bestimmt auch die reduzierte
+Fenstermatrix und die Ablösung erzwungener historischer Raster-Clipping-Replays.
 Die Laufzeitpakete brauchen frische reguläre Windows-EXE-Starts und Prüfung der
 tatsächlich exportierten PCK-Ressourcen am Lieferhead. Alte Messungen, Renderer-
 und Reviewstände sind keine Nachweise für die neue Integration.

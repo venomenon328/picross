@@ -1,4 +1,0 @@
-24x36 mono chess knight, left facing. Preserve both ear tips, exterior muzzle opening, neck curve and stepped base. Interior face lines optional by actual human decision. Crop only exterior background [215,11,1021,1220], exact 806x1209 ratio 2:3; no stretch, no subject removal. Compare four planned thresholds; no contour or artificial edge pixels.
-
-Working mode: faithful
-Motif and gameplay review: open

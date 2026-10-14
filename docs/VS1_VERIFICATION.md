@@ -71,7 +71,7 @@ Der aktuelle Lieferhead und die neuen Download-/Windowsbindungen stehen im Draft
 Selbstreview ist Implementierungsprüfung; unabhängiges Review und GF-M01 bleiben offen.
 
 Die historischen Produktions-/Manifestbindungen bleiben unverändert und prüfen die
-bytegleiche Kopie [plan-vb1.json](../examples/vs1/plan-vb1.json). Der aktuelle Plan
+bytegleiche Kopie [plan-vb1.json](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/plan-vb1.json). Der aktuelle Plan
 muss ohne seinen E1-Abschnitt genau diesen historischen Inhalt behalten. Negative
 Prüfungen weisen geänderte Altslots, fehlenden E1-Abschnitt und andere Archivbytes ab.
 
@@ -96,7 +96,7 @@ Keine Komfortabnahme; G und sämtliche Fehlfälle bleiben in der vollständigen 
 ## Historische Ergebnisse der Erstlieferung bbc91821
 
 Die folgenden Zahlen und Einordnungen gelten ausschließlich für den historischen
-Erststand, nicht für VS-E1-R2. [Dateibindung](../examples/vs1/historical-reference.json).
+Erststand, nicht für VS-E1-R2. [Dateibindung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/historical-reference.json).
 Zellabstände bei maximalem Fit in V, logischer Client 1920 × 1080. Werte sind
 geometrische Messwerte, keine menschlich bestätigten Komfortgrenzen:
 
@@ -158,7 +158,7 @@ diese Proben nicht. Motivation/Motivqualität der Transponate bleibt eingeschrä
 Die damaligen offenen Gates sind historisch. VS-D01 ist inzwischen bestätigt und
 die frühere Integration ausdrücklich freigegeben; der persönliche VS-M01-Bericht
 bleibt unvollständig. Für GF1 gilt das neue leere
-[Eigentümerprotokoll](../examples/vs1/gf1-owner-protocol.json): gezielte GF-M01-Probe
+[Eigentümerprotokoll](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/gf1-owner-protocol.json): gezielte GF-M01-Probe
 vor GF1-Merge. Die Strategieentscheidung wird dabei nicht erneut geöffnet.
 
 Vor Merge außerdem: getrennter Selbstreview, unabhängiges technisches/visuelles

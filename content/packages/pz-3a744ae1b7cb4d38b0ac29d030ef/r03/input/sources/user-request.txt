@@ -1,8 +1,0 @@
-Repository: venomenon328/picross. Lies aktuelle AGENTS.md und ihre Pflichtquellen. Verbindliches Regelwerk: docs/ai-workflows/PUZZLE_AUTHORING.md.
-
-Motiv: Knoblauch (ganze Knoblauchzwiebel)
-Rätselmodus (Abschlussbild immer farbig): monochrom.
-
-Erzeuge als ersten gestalterischen Schritt drei unterschiedliche farbige, detaillierte Abschlussbilder im verbindlichen warmen, ruhigen 2D-Illustrationsstil mit klaren Konturen und kräftigen Farbflächen. Verwende native Bildgenerierung und gegebenenfalls mein Bild als Referenz. Keine Zellgrafik, keine Hinweise und noch keine abstrahierte Motivvorlage. Das Abschlussbild bleibt auch beim Mono-Rätsel farbig. Speichere jede Variante einzeln mit Herkunft und Hash und lege sie mit kurzem Vergleich zur Auswahl vor. Offene Rastermaße oder ein offener Rätselmodus dürfen die Bildauswahl nicht aufhalten. Warte auf meine ausdrückliche Freigabe einer konkreten Abschlussbildrevision.
-
-Keine Werkzeugänderungen, Repository-Schreibaktionen oder Veröffentlichung. Ergebnisse und vollständige Übergabe als Dateien sichern.

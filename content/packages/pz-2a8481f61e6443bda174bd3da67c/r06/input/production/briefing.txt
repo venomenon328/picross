@@ -1,4 +1,0 @@
-Reimport the exact 40x30 discrete correction input MC-r01. Preserve every cell except user-requested column,row (2,9),(39,9),(18,29). This is a manual derivation, not unchanged original motif rasterisation. No search or resizing.
-
-Working mode: faithful
-Motif and gameplay review: open

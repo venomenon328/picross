@@ -1,6 +1,0 @@
-{
-  "question": "Gibst du die oben gezeigte Motivvorlage MA-r01 (SHA-256 d2cb88764e084cd8afe07449151e439539fce2c1152bc7cfb1d3aac2abcd6a19), abgeleitet aus A-r01 (SHA-256 0a102f0e49cd93f9b2851d9e5d7ba82edb601102055322a1628e806d544a4674), zur Rasterproduktion frei? Vorgeschlagener Korridor: monochrom, 40×40; vier area-Kandidaten mit gezielten Schwellenvarianten und unverzerrtem Zuschnitt ausschließlich des äußeren Hintergrunds. Ganze Knolle, Perspektive, Hauptproportionen, geneigter Hals, Wurzeln und große weiße Lappentrennungen bleiben geschützt.",
-  "answer": "MA-r01 und diesen Korridor ausdrücklich freigeben",
-  "received_logged_utc": "2026-10-11T22:17:00Z",
-  "note": "UTC time read immediately after receiving explicit reply; exact message submission timestamp not exposed"
-}

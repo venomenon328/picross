@@ -229,6 +229,7 @@ def main() -> int:
     plan_parser.add_argument("--output", type=Path, required=True)
     finish = commands.add_parser("finish")
     finish.add_argument("--plan", default=os.environ.get("CI_PLAN", ""))
+    finish.add_argument("--plan-file", type=Path)
     finish.add_argument("--results", default=os.environ.get("CI_RESULTS", ""))
     args = parser.parse_args()
     if args.command == "plan":
@@ -240,10 +241,10 @@ def main() -> int:
                 for key in FLAGS:
                     stream.write(f"{key}={str(result['selected'][key]).lower()}\n")
                 stream.write(f"content_only={str(result['content_only']).lower()}\n")
-                stream.write("plan=" + json.dumps(result, ensure_ascii=True, separators=(",", ":")) + "\n")
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
-    rows = evaluate(json.loads(args.plan), json.loads(args.results))
+    plan = args.plan_file.read_text(encoding="utf-8") if args.plan_file else args.plan
+    rows = evaluate(json.loads(plan), json.loads(args.results))
     report = {"format": "picross-ci-result-v1", "accepted": all(row["accepted"] for row in rows),
               "jobs": rows}
     print(json.dumps(report, ensure_ascii=False, indent=2))

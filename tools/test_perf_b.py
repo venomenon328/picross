@@ -26,22 +26,18 @@ class PerfBTests(unittest.TestCase):
             bundle.finish()
             self.assertEqual(bundle.report["status"], "success")
 
-    def test_e1_exact_technical_and_total_boundaries(self):
-        self.assertEqual((evidence.TECHNICAL_LIMIT, evidence.TOTAL_LIMIT), (30_000_000, 75_000_000))
+    def test_large_evidence_is_measured_without_a_size_gate(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             bundle = evidence.Evidence(root, "Windows", {})
             technical = bundle.technical / "native-evidence.bin"
             player = root / "player.zip"
-            existing = bundle.enforce_budget()["technical_bytes"]
-            with technical.open("wb") as stream: stream.truncate(30_000_000 - existing)
-            with player.open("wb") as stream: stream.truncate(45_000_000)
-            self.assertEqual(bundle.enforce_budget(player)["total_bytes"], 75_000_000)
-            with technical.open("ab") as stream: stream.write(b"x")
-            with self.assertRaises(PreflightError): bundle.enforce_budget()
-            with technical.open("r+b") as stream: stream.truncate(30_000_000 - existing)
-            with player.open("ab") as stream: stream.write(b"x")
-            with self.assertRaises(PreflightError): bundle.enforce_budget(player)
+            with technical.open("wb") as stream: stream.truncate(31_000_000)
+            with player.open("wb") as stream: stream.truncate(76_000_000)
+            measured = bundle.measure_size(player)
+            self.assertGreaterEqual(measured["technical_bytes"], 31_000_000)
+            self.assertEqual(measured["player_bytes"], 76_000_000)
+            self.assertGreaterEqual(measured["total_bytes"], 107_000_000)
 
     def copy_runtime(self, root):
         # Deliberately no manufacturer, old project, source archive or B report.

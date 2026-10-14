@@ -1,4 +1,0 @@
-Hamburger r04: only S1/Z11 ink->empty and S2/Z13 empty->ink; no other edits or crop. New explicit raster source, not native motif revision. A-r01 and MA-r01 references unchanged.
-
-Working mode: faithful
-Motif and gameplay review: open

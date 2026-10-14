@@ -5,7 +5,7 @@ Review R1 ohne offene B-/A-Befunde über [PR #43](https://github.com/venomenon32
 als `742977ed17568f5f55f13b80b609687f93f1eb32` in `main` integriert.
 Die folgenden Entwicklungsstände, Draftangaben und damaligen Gates bleiben
 historische Nachweise ihrer benannten Commits. Aktuelle RP-3-Nachweise stehen in
-[RP3_VERIFICATION.md](RP3_VERIFICATION.md); Parent #34 bleibt offen.
+[RP3_VERIFICATION.md](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP3_VERIFICATION.md); Parent #34 bleibt offen.
 
 Stand: 04.10.2026 · Arbeitsfassung 0.1 · implementiert, unabhängiges Review offen
 

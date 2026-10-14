@@ -1,8 +1,0 @@
-{
-  "statement_evidence": "user-request.txt",
-  "timestamp_basis": "UTC recording time observed with clock tool on receipt of this task; original message timestamp not exposed. No exact message-send time invented.",
-  "resolution": "The explicit Revision r03 and unique supplied inventory hash identify r03. The r02 · r03 wording references prior/current package context, not approval of the historical r02 inventory.",
-  "authorization": "Standardauftrag 4 export/plan/register, record maintenance, commit/push and continuation of Draft-PR #107; no merge.",
-  "source_head": "1147aeb27d5cee911d408624904cefadd09b3c19",
-  "base": "f666f87d36a0ea7fa3740202d08706f2215bc303"
-}
