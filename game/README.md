@@ -5,7 +5,7 @@ Die Entwicklungsfassung enthält die [Kategorienprojektion nach KAT-1](../docs/C
 Karten zeigen „Neu“, „Begonnen“ (auch mit ausschließlich Redohistorie) oder „Gelöst“. Die Vorschau zeigt nur eigene Füllungen, ohne Korrekturen; Name und Motivbild erscheinen erst nach gültigem Abschluss. Ein leerer automatisch angelegter Save bleibt „Neu“. Reset und Backupaktionen gehören zur jeweiligen Karte und verlangen weiterhin Bestätigung. Ein gültiger leerer Bestand und ein Katalogladefehler haben unterschiedliche Anzeigen. Kategorienänderungen verändern keine Rätseldefinition, Revision oder Spielstände.
 
 Der reguläre Spielbestand folgt `content/registry.json` und enthält ausschließlich
-freigegebene Workflow-Inhalte, aktuell zehn Rätsel. Weitere Inhalte werden über den
+freigegebene Workflow-Inhalte, aktuell elf Rätsel. Weitere Inhalte werden über den
 [ZA-1-Adapter](../docs/ZA1_ADAPTER.md) registriert. Historische Prototypen F-01 bis
 F-09 sind seit #114 nicht mehr Bestandteil des Spielerangebots oder Exports.
 

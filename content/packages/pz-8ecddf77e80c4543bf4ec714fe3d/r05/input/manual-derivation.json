@@ -1,0 +1,24 @@
+{
+  "format": "picross-editorial-fixed-cell-derivation-v1",
+  "reference_matrix_hash": "b93ee63dc591041c1252d67a0d083700ff7e312261e31fbcf62ae00474915eda",
+  "matrix_hash": "02180ea54cff6a7e6587772e5e7b2be3f87ce73633b0f9504a9b77d22d47c505",
+  "plan": "sun-edit-plan.json",
+  "edits": [
+    {
+      "column": 25,
+      "row": 5,
+      "before": "green",
+      "after": "gold"
+    },
+    {
+      "column": 26,
+      "row": 8,
+      "before": "green",
+      "after": "blue"
+    }
+  ],
+  "actual_changed_positions": 2,
+  "search": false,
+  "seed": null,
+  "note": "Declared manual source correction; not sampling unchanged MA-r01."
+}

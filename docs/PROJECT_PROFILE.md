@@ -24,7 +24,7 @@ Frühere Draft-/Mergegate-Meldungen zu #47/#55/#56/#62/#66 sind historische Lief
 Die dortigen Abnahmen bleiben an ihre jeweiligen Quellen gebunden.
 
 Der Katalog enthält ausschließlich registrierte Workflow-Inhalte aus
-`content/registry.json`, aktuell zehn Rätsel einschließlich Brandenburger Tor und
+`content/registry.json`, aktuell elf Rätsel einschließlich Warnemünde, Brandenburger Tor und
 Kölner Dom. [#114](https://github.com/venomenon328/picross/issues/114) ersetzt die
 frühere aktive Reservierung der Prototypen F-01 bis F-09. Definitionen und Reveals
 werden nicht mehr mit dem Spieler ausgeliefert. Historische Nachweise bleiben

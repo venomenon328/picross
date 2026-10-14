@@ -1,0 +1,14 @@
+{
+  "source": "Direkte folgende Nutzernachricht im aktuellen Chat",
+  "statement": "Bitte nimm die Erweiterung vor, integriere das Rätsel und merge dann.",
+  "recorded_at_utc": "2026-10-14T13:48:10.077505+00:00",
+  "timestamp_semantics": "Zeit der Protokollierung, keine bereitgestellte genaue Sendezeit.",
+  "context": "Ausdrückliche Beauftragung der zuvor in integration.md / B-PZ-03 beschriebenen Erweiterung, danach Integration des exakt abgenommenen r05 und Merge.",
+  "prior_editorial_approval": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/approval.json",
+    "sha256": "c5ffcd738a20c334280eedc54a53fee149030555d4bee9837cae5775d360a238"
+  },
+  "accepted_inventory_sha256": "8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34",
+  "scope": "ZA-1 feste Farbkorrekturen und nachträgliche Motiv-/Parameterannahme gemäß B-PZ-03; Runtimeintegration und anschließender Merge nach erfolgreichen Pflichtprüfungen.",
+  "supersedes_prior_no_merge_for_this_delivery": true
+}

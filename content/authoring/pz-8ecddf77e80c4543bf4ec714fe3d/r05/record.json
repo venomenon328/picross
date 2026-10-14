@@ -4,7 +4,7 @@
   "revision": "r05",
   "motif_name": "Warnemünde",
   "category_id": "gebaeude-bauwerke",
-  "state": "blocked",
+  "state": "registered",
   "package": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/package.zip",
     "bytes": 5599921,
@@ -49,35 +49,59 @@
       "human_active_minutes": null
     }
   },
-  "blockers": [
-    "B-PZ-03: unchanged r05 raster_review/import package has no supported external approval path for its fixed color derivation and motif/parameter metadata; ZA-1 export failed before technical inspection. Separate tool authorization required."
-  ],
-  "next_action": "Separaten ZA-1-Werkzeugauftrag gemäß integration.md beauftragen; anschließend bestehenden Integrationsauftrag für unverändertes r05 fortsetzen. Keine erneute Endabnahme desselben Inventars nötig; Draft-PR, kein Merge.",
+  "blockers": [],
+  "next_action": "Pflicht-CI und getrennten Selbstreview abschließen; beauftragten Merge ausführen, anschließend §9-Produktionsbereinigung als eigenen Draft-PR liefern.",
   "integration": {
-    "status": "blocked",
-    "finding": "B-PZ-03",
-    "report": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration.md",
-    "export_attempt": {
-      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/export-attempt.json",
-      "sha256": "5f92cd77a7b08c8c05fc6267cbdc7cd52de9ffb8cbf62885c5cd32530c572e70"
+    "status": "registered",
+    "export": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration-export.json",
+      "sha256": "37816c400bd896db1e100353c36fbd5301b932311b6e32be420c6d04f0ed88fc"
     },
-    "export": null,
-    "plan": null,
-    "registration": null,
-    "runtime_intent": {
+    "plan": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration-plan.json",
+      "sha256": "dae57831202a958c65ed292a18e314d7520ccd6aa3954dbf60b4c59a99059560"
+    },
+    "registration": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration-registration.json",
+      "sha256": "f147bebdfe50802767b811c100d7b0dc3428944735fdcf6126b408d3dc20b4bc"
+    },
+    "validation": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration-validation.json",
+      "sha256": "c5c15b18a65390c9c082b6c0b6983140c45f11e43c695378a61e2d389d759eef"
+    },
+    "package_manifest": {
+      "file": "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r05/manifest.json",
+      "sha256": "cedf18f860c4dbb0618ca5e5e4cfe422a932e35c7878545b95ed6724efc9a35c"
+    },
+    "runtime": {
       "id": "pz-8ecddf77e80c4543bf4ec714fe3d",
       "revision": 1,
       "name": "Warnemünde",
       "stem": "warnemuende_001",
       "save_slot": "warnemuende_001",
       "category_id": "gebaeude-bauwerke"
+    },
+    "main_merge": null,
+    "resolved_findings": [
+      "B-PZ-03"
+    ],
+    "tool_authorization": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/tool-authorization-evidence.json",
+      "sha256": "0875dff777bed1bbddcfb077eeec8b0b4f0a0569080f4a9ca5c25dd50f4b826f"
     }
   },
   "motif": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/motif.png",
     "sha256": "5ea1d54eeb80f12e0bc869257edf53a28245d2e2a595de2fd0bdae2b7bc2a865",
     "revision": "MR-r04",
-    "approval": null
+    "approval": {
+      "external": {
+        "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/owner-override.json",
+        "sha256": "5879f0e37f79ebee8966a3deb8f6b1da34dace9b760217025f2fd25bb100ff55"
+      },
+      "kind": "late_motif_acceptance_v3",
+      "historical_handoff_unchanged": true
+    }
   },
   "edits": [
     {
@@ -116,5 +140,9 @@
     "inventory_sha256": "8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34",
     "evidence": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/acceptance-evidence.json"
   },
-  "current_report": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration.md"
+  "current_report": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration.md",
+  "authorization": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/manual-authorization.json",
+    "sha256": "315994fe9e7291dbb98e955997538856bc048163922b3a7cdb69fddb2e6aba8e"
+  }
 }

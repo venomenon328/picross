@@ -1,0 +1,4 @@
+Same symmetric lighthouse and Teepott, 30x40 and four colors. Exactly upper sun cell green to existing gold and lower-right green fringe to sky blue. No other change. Explicit manually corrected cell source.
+
+Working mode: faithful
+Motif and gameplay review: open

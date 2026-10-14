@@ -1,0 +1,91 @@
+{
+  "status": "planned",
+  "registered": false,
+  "id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "category": {
+    "id": "gebaeude-bauwerke",
+    "name": "Gebäude & Bauwerke",
+    "order": 11
+  },
+  "changes": [
+    {
+      "path": "game/data/content/warnemuende_001.json",
+      "operation": "add"
+    },
+    {
+      "path": "game/art/content/warnemuende_001.png",
+      "operation": "add"
+    },
+    {
+      "path": "game/art/content/warnemuende_001.txt",
+      "operation": "add"
+    },
+    {
+      "path": "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r05",
+      "operation": "add"
+    },
+    {
+      "path": "content/registry.json",
+      "operation": "replace"
+    },
+    {
+      "path": "game/data/registry.json",
+      "operation": "replace"
+    }
+  ],
+  "recorded_at_utc": "2026-10-14T13:49:16.508080+00:00",
+  "command": "target_adapter plan --export artifacts/warnemuende/r05-color-v3-export-01 --checkout .",
+  "before_registry_canonical_hash": "993e529aabda28e3ddc59ae7ad673212356a854ad9ee9be14edaa7a1e2ec493c",
+  "after_registry_canonical_hash": "42f01b612a3c42caae4134f640958dbe0a72bdc9be5ed8c3f4de7bbda1b1705d",
+  "new_entry": {
+    "id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+    "key": "pz-8ecddf77e80c4543bf4ec714fe3d",
+    "save_slot": "warnemuende_001",
+    "definition": "data/content/warnemuende_001.json",
+    "reveal": "art/content/warnemuende_001.png",
+    "visible": true,
+    "category_id": "gebaeude-bauwerke",
+    "production": {
+      "package": "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r05",
+      "package_sha256": "cedf18f860c4dbb0618ca5e5e4cfe422a932e35c7878545b95ed6724efc9a35c",
+      "revision": "r05",
+      "width": 30,
+      "height": 40,
+      "mode": "color",
+      "difficulty": {
+        "method": "picross-difficulty-0.1",
+        "assessment_type": "editorial_estimate",
+        "level": "L2",
+        "plausible_range": [
+          "L1",
+          "L4"
+        ],
+        "confidence": "low",
+        "logic_hash": "04f68c02f64d3db0ae1cf2750d52027641d1bd9acef1e8477270d64ccde6568f",
+        "rule_families": {
+          "R0": "21 direkt gepackte Farbzeilen und sechs untere Leerzeilen erlauben einen breiten Einstieg. R0-Suffizienz nicht vollständig mit einem validierten schwächeren Regelanalysator getestet.",
+          "R1": "Geschätzter Hauptbedarf sind Überlappungen langer Himmelsblöcke und Verlängerungen an den bereits gesetzten Turm-/Dachankern. Symmetrie wird niemals als Schlussgrund verwendet.",
+          "R2": "Möglicherweise kombinierte Zuordnung der mehrteiligen Navy-/Gold-/Blaufolgen in Galerien und Fassade. Notwendigkeit und R1-Suffizienz nicht formal nachgewiesen.",
+          "R3": "Full-line-color beweist vollständige Deduktion, nicht die Notwendigkeit allgemeiner R3-Linienunterstützung. R3 bleibt im Unsicherheitsbereich."
+        },
+        "bottleneck": "Alle70 Linien vor jedem der102 Proofschritte frisch geprüft. Vor Restaufräumen bei<=24 unbekannten Zellen mindestens7 produktive Linien; keine numerische Engstelle.",
+        "evidence": "audit/difficulty.json",
+        "time_estimate": null,
+        "effort": {
+          "cells": 1200,
+          "filled": 915,
+          "empty": 285,
+          "proof_steps": 102,
+          "human_active_minutes": null
+        }
+      },
+      "status": "registered",
+      "blockers": [],
+      "test_only": false,
+      "definition_sha256": "4e37b8adba11be71e4a8870a1ffdfa7ca6ebab1e16c816554316be6db9ca9f1b",
+      "reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74"
+    }
+  },
+  "existing_entries_unchanged": true,
+  "collision_check": "pass"
+}
