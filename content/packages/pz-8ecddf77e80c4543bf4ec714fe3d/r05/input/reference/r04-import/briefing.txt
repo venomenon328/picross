@@ -1,0 +1,4 @@
+Keep approved Warnemuende layout, blue sky/sun, lighthouse left and Teepott right. Both buildings independently mirror around vertical cell axes. Tower width9/body5 with central one-cell door/windows/spike. Teepott width19, concave roof and two-storey facade. Manually redrawn cell source; not original MA-r01 area sampling.
+
+Working mode: faithful
+Motif and gameplay review: open

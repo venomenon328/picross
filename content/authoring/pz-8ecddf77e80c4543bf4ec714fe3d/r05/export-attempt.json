@@ -1,0 +1,60 @@
+{
+  "attempt_recorded_at_utc": "2026-10-14T13:26:19.535906+00:00",
+  "tool_commit": "45ee27ad2bec9172c65f2bf1b19728ea2b9b98f6",
+  "base_commit": "b57d8da3dd8c0965727759eb027c10686abb3630",
+  "command": [
+    ".venv/rp3/Scripts/python.exe",
+    "-m",
+    "tools.puzzle_production.target_adapter",
+    "export",
+    "--input",
+    "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/package.zip",
+    "--approval",
+    "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/approval.json",
+    "--name",
+    "Warnemünde",
+    "--runtime-revision",
+    "1",
+    "--stem",
+    "warnemuende_001",
+    "--save-slot",
+    "warnemuende_001",
+    "--category-id",
+    "gebaeude-bauwerke",
+    "--categories",
+    "content/categories.json",
+    "--output-dir",
+    "artifacts/warnemuende/r05-approved-export-01"
+  ],
+  "shell_exit_code": 1,
+  "stdout_json": {
+    "status": "blocked",
+    "catalog_ready": false,
+    "registered": false,
+    "error": "Package is not content_ready"
+  },
+  "stderr": "",
+  "package_sha256": "455540730bc87a3dbda5af59cc0bccc4d8892943d7f2ffd5a5321cca70605f6b",
+  "handoff_sha256": "cad59a1a303e4db1b1bc7acae47cd72619dd74e4eb91ee5521bd752044a56150",
+  "inventory_sha256": "8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34",
+  "approval_sha256": "c5ffcd738a20c334280eedc54a53fee149030555d4bee9837cae5775d360a238",
+  "output_created": false,
+  "plan": "not run: export blocked",
+  "register": "not run: export blocked",
+  "technical_adapter_acceptance": "not reached",
+  "editorial_acceptance": "actual human final approval recorded separately; no successful adapter acceptance claimed",
+  "registration_journal_present": false,
+  "runtime_changes": false,
+  "unchanged_files_sha256": {
+    "content/registry.json": "1f8b662905640559f1eb41cf58772dd32a331e1d9fe2c69296b6928df49e21ea",
+    "game/data/registry.json": "373347154d61c2e483c270b9af7fca5a2dd0d323a984b27ddd0fd0d87db4e526",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70"
+  },
+  "collision_precheck": "ID, slot and intended runtime paths unused; not a ZA-1 plan",
+  "finding": "B-PZ-03",
+  "modules_sha256": {
+    "authoring_package.py": "dfdc243153f3ca1561ad377322d41cba8301b161560ab7d9b78a7ae366f7d5ec",
+    "target_adapter.py": "daac199d4b067e32251613bd09f860a02e4cde2bc6d6053c4fd7bb0ed0890bd4",
+    "manual_derivation.py": "65b4b6bd3f6ec6bdf3f6c4fd5a18037d4569f7748ed7990a08eb470e22c4669f"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "format": "picross-editorial-approval-v1",
+  "actor": "Nutzer (direkter Chat-Auftrag)",
+  "timestamp_utc": "2026-10-14T13:23:20.736666+00:00",
+  "statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch nehme das Rätselpaket pz-8ecddf77e80c4543bf4ec714fe3d · r05, Revision r05, mit Inventar 8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34 redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\n\nDraft-PR; kein Merge.",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r05",
+  "handoff_sha256": "cad59a1a303e4db1b1bc7acae47cd72619dd74e4eb91ee5521bd752044a56150",
+  "inventory_sha256": "8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34",
+  "selection": {
+    "variant": "sun-fixed",
+    "matrix_hash": "02180ea54cff6a7e6587772e5e7b2be3f87ce73633b0f9504a9b77d22d47c505",
+    "logic_hash": "04f68c02f64d3db0ae1cf2750d52027641d1bd9acef1e8477270d64ccde6568f",
+    "reveal": {
+      "file": "images/C-r02.png",
+      "sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74"
+    }
+  },
+  "test_only": false
+}

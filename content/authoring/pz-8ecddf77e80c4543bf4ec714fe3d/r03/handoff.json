@@ -1,0 +1,156 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 7,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "d3179c6b58b0c356d716177d7040790ffd7db5748523e0e365aa62080fa36d2c"
+  },
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r03",
+  "repo_commit": "d1c23130c1e54897699ca0795f49a8526bc62b67",
+  "state": "content_ready",
+  "brief": "brief.md",
+  "category_id": "gebaeude-bauwerke",
+  "approved_parameters": [
+    {
+      "width": 30,
+      "height": 40,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "design": "designs/area-30x40.json",
+      "hypothesis": "Bevorzugter Wunschmaß-Kandidat: breite Hauptformen bei 1200 Zellen."
+    },
+    {
+      "width": 33,
+      "height": 44,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "design": "designs/area-33x44.json",
+      "hypothesis": "Etwas mehr Raum für Galerien, Dachspitzen und Fenster ohne Motivänderung."
+    },
+    {
+      "width": 36,
+      "height": 48,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "design": "designs/area-36x48.json",
+      "hypothesis": "Größenreserve für empfindliche Architekturformen; keine bloße Komfortgarantie."
+    },
+    {
+      "width": 27,
+      "height": 36,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "design": "designs/area-27x36.json",
+      "hypothesis": "Kompakter Vergleich: prüft, ob die reduzierten Hauptformen ohne feine Reststrukturen tragen."
+    }
+  ],
+  "reveal": {
+    "file": "images/C-r02.png",
+    "sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "revision": "C-r02",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "images/C-r02.provenance.json"
+  },
+  "motif": {
+    "file": "images/MA-r01.png",
+    "sha256": "e68df0b10cbc8ad419dc9a943a2bd6dbffe0b8496196d84a4868d10249100276",
+    "revision": "MA-r01",
+    "derived_from_reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "approval": "approvals/motif-approval.json",
+    "provenance": "images/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "source_type": "repair",
+    "bundle": "repair/roof-tones",
+    "variant": "candidate-001",
+    "repair_id": "2df7afac59b715f8683c777126bf3b8efa0f67cd8f4dac35b59b11111d71994b",
+    "parent_variant": "area-main",
+    "proof": "repair/roof-tones/final-proof.json",
+    "verification": "audit/repair-replay.json",
+    "matrix_hash": "b5f29349f44fc52131a23ba1fa735cfc6a5de0f7f77d7436066f083516c9ccf9",
+    "logic_hash": "a26537828a9fa3e102f619f6db3c6e8084e718235e83abf3957292cc895ca763"
+  },
+  "origin_verification": "audit/imports-verification.json",
+  "repair": {
+    "reference": "production/area-30x40",
+    "reference_variant": "area-main",
+    "plan": "repair-plan.json",
+    "replay": "audit/repair-replay.json"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "8144d64788f8122de194408ff8061b4824e30e358b92fac895e224c54ea7881c"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "difficulty": "difficulty.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json",
+    "motif": "approvals/motif-approval.json",
+    "provenance": "audit/imports-verification.json",
+    "logic": "audit/repair-replay.json",
+    "frame": "audit/raster-metrics.json",
+    "visual": "visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "visual-review.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "content_blockers": [],
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "next_action": "Menschliche Endabnahme für r03/Inventar/Endauswahl; mit Integrationsauftrag Standardauftrag4. Kein Runtimeeintrag vor Endabnahme.",
+  "authorization": "Aktueller Nutzerauftrag Standardauftrag3 einschließlich §6-Repositoryablage, Commit/Push und bestehender Draft-PR113; kein Merge.",
+  "production_plan": "production-plan.json",
+  "test_only": false
+}

@@ -1,0 +1,35 @@
+{
+  "checked_at_utc": "2026-10-14T13:23:20.736666+00:00",
+  "checkout_head": "45ee27ad2bec9172c65f2bf1b19728ea2b9b98f6",
+  "base_commit": "b57d8da3dd8c0965727759eb027c10686abb3630",
+  "package": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/package.zip",
+    "bytes": 5599921,
+    "sha256": "455540730bc87a3dbda5af59cc0bccc4d8892943d7f2ffd5a5321cca70605f6b"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/handoff.json",
+    "sha256": "cad59a1a303e4db1b1bc7acae47cd72619dd74e4eb91ee5521bd752044a56150"
+  },
+  "inventory_sha256": "8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34",
+  "files": 101,
+  "safe_paths_and_archive_limits": "pass",
+  "crc": "pass",
+  "all_inventory_hashes_sizes": "pass",
+  "handoff_copy": "byte_equal",
+  "selected_matrix_logic_reveal_motif": "pass",
+  "approval": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/approval.json",
+    "sha256": "c5ffcd738a20c334280eedc54a53fee149030555d4bee9837cae5775d360a238"
+  },
+  "evidence": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/acceptance-evidence.json",
+    "sha256": "40a2ce0c9fffcd1392cf9b449d3a743a13bb77e9e704cdd7b9b1ecfedd15dc2c"
+  },
+  "editorial_approval_binding": "pass",
+  "za1_export": {
+    "status": "blocked",
+    "evidence": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/export-attempt.json"
+  },
+  "technical_adapter_acceptance": "not claimed"
+}

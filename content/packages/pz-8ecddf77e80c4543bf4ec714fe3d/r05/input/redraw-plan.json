@@ -1,0 +1,49 @@
+{
+  "format": "picross-editorial-raster-redraw-plan-v1",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r04",
+  "recorded_at_utc": "2026-10-14T12:47:38.233205+00:00",
+  "request": "Bitte überarbeite das Raster. Sowohl Teepott, als auch Leuchtturm sollten symmetrisch sein. Der Leuchtturm sollte in der Breite eine ungerade Anzahl an Zellen haben. Dadurch könnte die Tür, die Fenster und die Spitze zentriert werden.",
+  "reference": {
+    "commit": "f26a3740d2902ddfe50fea1ccd14cb976e7d64da",
+    "package_revision": "r03",
+    "package_sha256": "f300ef08de55caf4119c55b78144e5a2dd5f34a9967391c22d67000394b3cf73",
+    "matrix_hash": "b5f29349f44fc52131a23ba1fa735cfc6a5de0f7f77d7436066f083516c9ccf9",
+    "repair_id": "2df7afac59b715f8683c777126bf3b8efa0f67cd8f4dac35b59b11111d71994b"
+  },
+  "dimensions": {
+    "width": 30,
+    "height": 40
+  },
+  "palette": [
+    {
+      "id": "blue",
+      "rgb": "#2894d5"
+    },
+    {
+      "id": "gold",
+      "rgb": "#e4ae46"
+    },
+    {
+      "id": "green",
+      "rgb": "#568b76"
+    },
+    {
+      "id": "navy",
+      "rgb": "#18384b"
+    }
+  ],
+  "empty_rgb": "#fff1cb",
+  "working_mode": "faithful with expressly requested local architectural symmetrization",
+  "operators": "Fixed manual cell replacement; no solver-driven repair search",
+  "seed": null,
+  "search": false,
+  "limits": {
+    "max_changed_positions": 550,
+    "max_proposals": 4,
+    "solve_seconds": 120,
+    "verify_seconds": 120,
+    "max_lines": 100000
+  },
+  "rationale": "User requests structural redraw, exceeding prior two-cell repair scope. Fixed building regions may be redrawn; sky/sun/foreground elsewhere protected. All 30x40 dimensions/palette values remain unchanged. Each building separately mirrors every cell value about its own vertical cell axis; tower maximum width9, body5, windows/door/spike1. Teepott width19. This proposal is a declared manual derivation, not an unchanged import of MA-r01. Changed geometry requires renewed human approval under authoring4.4 before content_ready."
+}

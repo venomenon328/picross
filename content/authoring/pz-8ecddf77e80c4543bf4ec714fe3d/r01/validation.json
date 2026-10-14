@@ -1,0 +1,24 @@
+{
+  "format": "picross-authoring-validation-v1",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r01",
+  "timestamp_utc": "2026-10-13T23:48:06.251042+00:00",
+  "package_sha256": "a26f0296d8479faa6dc50f79b93bfdb00145c5a9dde6402097b4c512984ced23",
+  "inventory_sha256": "25d0ab88d119c76f4407847b39cb9144e2d43ab3d2df929d1d39bc17eca725b6",
+  "checks": {
+    "safe_zip_paths": true,
+    "zip_crc": true,
+    "exact_file_set": true,
+    "all_file_hashes_and_sizes": true,
+    "handoff_byte_equal": true,
+    "six_pngs_decode": true,
+    "offered_images": 3,
+    "pending_approvals_preserved": true,
+    "index_existing_entries_unchanged": true
+  },
+  "file_count": 19,
+  "unpacked_bytes": 12152384,
+  "adapter_inspect": "not_applicable: reveal_review is not a ZA-1 content_ready input",
+  "puzzle_and_native_tests": "not_required: image selection only",
+  "self_review": "Separate file/diff review, not independent second review."
+}

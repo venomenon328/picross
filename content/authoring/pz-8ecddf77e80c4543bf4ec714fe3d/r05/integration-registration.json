@@ -1,0 +1,41 @@
+{
+  "status": "registered",
+  "registered": true,
+  "id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "category": {
+    "id": "gebaeude-bauwerke",
+    "name": "Gebäude & Bauwerke",
+    "order": 11
+  },
+  "changes": [
+    {
+      "path": "game/data/content/warnemuende_001.json",
+      "operation": "add"
+    },
+    {
+      "path": "game/art/content/warnemuende_001.png",
+      "operation": "add"
+    },
+    {
+      "path": "game/art/content/warnemuende_001.txt",
+      "operation": "add"
+    },
+    {
+      "path": "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r05",
+      "operation": "add"
+    },
+    {
+      "path": "content/registry.json",
+      "operation": "replace"
+    },
+    {
+      "path": "game/data/registry.json",
+      "operation": "replace"
+    }
+  ],
+  "recorded_at_utc": "2026-10-14T13:49:24.662562+00:00",
+  "command": "target_adapter register --export artifacts/warnemuende/r05-color-v3-export-01 --checkout .",
+  "plan": "integration-plan.json",
+  "registry_canonical_hash": "42f01b612a3c42caae4134f640958dbe0a72bdc9be5ed8c3f4de7bbda1b1705d",
+  "registration_journal_present": false
+}

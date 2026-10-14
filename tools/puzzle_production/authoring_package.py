@@ -169,6 +169,9 @@ class Package:
                 isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "manual" or
                 allow_manual_review and h.get("state") == "blocked" and
                 isinstance(h.get("manual_edit_record"), str) and
+                isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "import" or
+                allow_manual_review and h.get("state") == "raster_review" and
+                isinstance(h.get("editorial_manual_derivation"), str) and
                 isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "import",
                 "Package is not content_ready")
         require(isinstance(h.get("repo_commit"), str) and re.fullmatch(r"[0-9a-f]{40}", h["repo_commit"]), "Missing producer commit")

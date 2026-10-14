@@ -1,0 +1,148 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r05",
+  "motif_name": "Warnemünde",
+  "category_id": "gebaeude-bauwerke",
+  "state": "registered",
+  "package": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/package.zip",
+    "bytes": 5599921,
+    "sha256": "455540730bc87a3dbda5af59cc0bccc4d8892943d7f2ffd5a5321cca70605f6b"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/handoff.json",
+    "sha256": "cad59a1a303e4db1b1bc7acae47cd72619dd74e4eb91ee5521bd752044a56150"
+  },
+  "inventory_sha256": "8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34",
+  "approval": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/approval.json",
+    "sha256": "c5ffcd738a20c334280eedc54a53fee149030555d4bee9837cae5775d360a238"
+  },
+  "width": 30,
+  "height": 40,
+  "mode": "color",
+  "difficulty": {
+    "method": "picross-difficulty-0.1",
+    "assessment_type": "editorial_estimate",
+    "level": "L2",
+    "plausible_range": [
+      "L1",
+      "L4"
+    ],
+    "confidence": "low",
+    "logic_hash": "04f68c02f64d3db0ae1cf2750d52027641d1bd9acef1e8477270d64ccde6568f",
+    "rule_families": {
+      "R0": "21 direkt gepackte Farbzeilen und sechs untere Leerzeilen erlauben einen breiten Einstieg. R0-Suffizienz nicht vollständig mit einem validierten schwächeren Regelanalysator getestet.",
+      "R1": "Geschätzter Hauptbedarf sind Überlappungen langer Himmelsblöcke und Verlängerungen an den bereits gesetzten Turm-/Dachankern. Symmetrie wird niemals als Schlussgrund verwendet.",
+      "R2": "Möglicherweise kombinierte Zuordnung der mehrteiligen Navy-/Gold-/Blaufolgen in Galerien und Fassade. Notwendigkeit und R1-Suffizienz nicht formal nachgewiesen.",
+      "R3": "Full-line-color beweist vollständige Deduktion, nicht die Notwendigkeit allgemeiner R3-Linienunterstützung. R3 bleibt im Unsicherheitsbereich."
+    },
+    "bottleneck": "Alle70 Linien vor jedem der102 Proofschritte frisch geprüft. Vor Restaufräumen bei<=24 unbekannten Zellen mindestens7 produktive Linien; keine numerische Engstelle.",
+    "evidence": "audit/difficulty.json",
+    "time_estimate": null,
+    "effort": {
+      "cells": 1200,
+      "filled": 915,
+      "empty": 285,
+      "proof_steps": 102,
+      "human_active_minutes": null
+    }
+  },
+  "blockers": [],
+  "next_action": "Pflicht-CI und getrennten Selbstreview abschließen; beauftragten Merge ausführen, anschließend §9-Produktionsbereinigung als eigenen Draft-PR liefern.",
+  "integration": {
+    "status": "registered",
+    "export": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration-export.json",
+      "sha256": "37816c400bd896db1e100353c36fbd5301b932311b6e32be420c6d04f0ed88fc"
+    },
+    "plan": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration-plan.json",
+      "sha256": "dae57831202a958c65ed292a18e314d7520ccd6aa3954dbf60b4c59a99059560"
+    },
+    "registration": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration-registration.json",
+      "sha256": "f147bebdfe50802767b811c100d7b0dc3428944735fdcf6126b408d3dc20b4bc"
+    },
+    "validation": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration-validation.json",
+      "sha256": "c5c15b18a65390c9c082b6c0b6983140c45f11e43c695378a61e2d389d759eef"
+    },
+    "package_manifest": {
+      "file": "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r05/manifest.json",
+      "sha256": "cedf18f860c4dbb0618ca5e5e4cfe422a932e35c7878545b95ed6724efc9a35c"
+    },
+    "runtime": {
+      "id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+      "revision": 1,
+      "name": "Warnemünde",
+      "stem": "warnemuende_001",
+      "save_slot": "warnemuende_001",
+      "category_id": "gebaeude-bauwerke"
+    },
+    "main_merge": null,
+    "resolved_findings": [
+      "B-PZ-03"
+    ],
+    "tool_authorization": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/tool-authorization-evidence.json",
+      "sha256": "0875dff777bed1bbddcfb077eeec8b0b4f0a0569080f4a9ca5c25dd50f4b826f"
+    }
+  },
+  "motif": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/motif.png",
+    "sha256": "5ea1d54eeb80f12e0bc869257edf53a28245d2e2a595de2fd0bdae2b7bc2a865",
+    "revision": "MR-r04",
+    "approval": {
+      "external": {
+        "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/owner-override.json",
+        "sha256": "5879f0e37f79ebee8966a3deb8f6b1da34dace9b760217025f2fd25bb100ff55"
+      },
+      "kind": "late_motif_acceptance_v3",
+      "historical_handoff_unchanged": true
+    }
+  },
+  "edits": [
+    {
+      "column": 25,
+      "row": 5,
+      "before": "green",
+      "after": "gold"
+    },
+    {
+      "column": 26,
+      "row": 8,
+      "before": "green",
+      "after": "blue"
+    }
+  ],
+  "changed_positions": 2,
+  "all_other_cells_identical_to_r04": true,
+  "technical_core": {
+    "certified": true,
+    "proof_verified": true,
+    "fresh_origin_checked": true,
+    "symmetry_checked": true,
+    "matrix_hash": "02180ea54cff6a7e6587772e5e7b2be3f87ce73633b0f9504a9b77d22d47c505",
+    "logic_hash": "04f68c02f64d3db0ae1cf2750d52027641d1bd9acef1e8477270d64ccde6568f"
+  },
+  "report": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/report.md",
+  "repository_delivery": {
+    "branch": "content/warnemuende-reveal-r01",
+    "base_commit": "b57d8da3dd8c0965727759eb027c10686abb3630",
+    "producer_commit": "c75552f52ab847414e0a5ec9281c2e20cb063433",
+    "commit_evidence": "Final delivery commit/CI in Draft-PR113",
+    "integration_base_commit": "b57d8da3dd8c0965727759eb027c10686abb3630"
+  },
+  "editorial_acceptance": {
+    "status": "approved",
+    "inventory_sha256": "8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34",
+    "evidence": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/acceptance-evidence.json"
+  },
+  "current_report": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration.md",
+  "authorization": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/manual-authorization.json",
+    "sha256": "315994fe9e7291dbb98e955997538856bc048163922b3a7cdb69fddb2e6aba8e"
+  }
+}

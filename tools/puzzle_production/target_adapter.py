@@ -27,7 +27,7 @@ FORMAT = "picross-target-export-v2"
 MANUAL_FORMAT = "picross-target-export-v3"
 
 
-def tool_identity(legacy=False, manual=False):
+def tool_identity(legacy=False, manual=False, color=False):
     root = Path(__file__).resolve().parents[2]
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root,
@@ -40,6 +40,8 @@ def tool_identity(legacy=False, manual=False):
         files.append("categories.py")
     if manual:
         files.append("manual_derivation.py")
+    if color:
+        files.append("color_derivation.py")
     return {"adapter": ADAPTER, "commit": commit, "versions": versions(),
             "modules": {n: file_hash(Path(__file__).with_name(n)) for n in files}}
 
@@ -116,25 +118,30 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(isinstance(evidence, dict), "Gate evidence missing")
     manual = isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "manual"
     edited_import = h.get("manual_edit_record") is not None
+    color_import = h.get("editorial_manual_derivation") is not None
     auth = None
-    if manual or edited_import:
+    if manual or edited_import or color_import:
         require(not legacy, "Manual derivation requires export v3")
         from .manual_derivation import authorization, IMPORT_AUTH_FORMAT
         auth = authorization(package, manual_authorization)
-        require((auth["record"]["format"] == IMPORT_AUTH_FORMAT) == edited_import,
+        require((auth["record"]["format"] == IMPORT_AUTH_FORMAT) == edited_import and
+                (auth["record"]["format"] == "picross-manual-authorization-v3") == color_import,
                 "Manual authorization/source version mismatch")
     else:
         require(manual_authorization is None, "Manual authorization requires a manual source")
         require(h.get("content_blockers", []) == [], "Unresolved content blockers")
     frame_exception = bool(edited_import and auth["record"]["frame_exception"])
     for gate in required:
-        require(gates.get(gate) == "pass" or gate == "frame" and frame_exception and gates.get(gate) == "fail",
+        require(gates.get(gate) == "pass" or gate == "frame" and frame_exception and gates.get(gate) == "fail" or
+                gate == "motif" and color_import and gates.get(gate) == "pending",
                 "Unresolved content gate: " + gate)
-        package.file(evidence.get(gate))
+        if not (gate == "motif" and color_import):
+            package.file(evidence.get(gate))
     for kind in ("reveal", "motif"):
         record = h.get(kind)
         package.bound(record)
-        package.approval(record, kind)
+        if not (kind == "motif" and color_import):
+            package.approval(record, kind)
         package.provenance(record, kind)
     require(h["motif"].get("derived_from_reveal_sha256") == h["reveal"]["sha256"], "Wrong motif/reveal derivation")
     c = h.get("candidate")
@@ -142,7 +149,11 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     bundle = package.bundle(c.get("bundle"))
     kind = c.get("source_type")
     budget = Budget(min(120, max(0, package.deadline - time.monotonic())), 1_000_000)
-    if edited_import:
+    if color_import:
+        from .color_derivation import inspect_chain
+        design, matrix, proof, checked, source, reference = inspect_chain(package, auth, budget)
+        expected_proof = c["bundle"] + "/" + c["variant"] + "-proof.json"
+    elif edited_import:
         from .manual_derivation import inspect_edited_import
         design, matrix, proof, checked, source, reference = inspect_edited_import(package, auth, budget)
         expected_proof = c["bundle"] + "/" + c["variant"] + "-proof.json"
@@ -187,7 +198,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(proof["final_domains"] == [[[v] for v in row] for row in matrix], "Proof enddomains differ")
     manifest = load_json(reference / "manifest.json")
     require(file_hash(reference / manifest["original"]) == h["motif"]["sha256"], "Import source is not the approved motif")
-    params = h.get("approved_parameters")
+    params = [auth["record"]["accepted_motif"]["parameters"]] if color_import else h.get("approved_parameters")
     require(isinstance(params, list) and params, "Missing explicit approved parameters")
     for p in params:
         require(isinstance(p,dict), "Invalid approved parameters")
@@ -202,7 +213,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
                 p.get("mode") == design["mode"] and p.get("foreground_colors") == len(design["palette"]) and
                 p.get("method") == v["method"] and p.get("fit") == design["fit"] and
                 p.get("actual_crop") == design["crop"] for p in params), "Selected design lies outside approved parameter binding")
-    motif_approval = package.json(h["motif"]["approval"])
+    motif_approval = auth["record"]["accepted_motif"] if color_import else package.json(h["motif"]["approval"])
     corridor = motif_approval.get("parameters")
     require(isinstance(corridor,dict), "Missing motif parameter corridor")
     for key in ("width","height","foreground_colors"):
@@ -235,7 +246,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     selection = {"variant": c["variant"], "matrix_hash": digest(matrix), "logic_hash": digest(logic),
                  "reveal": {"file": h["reveal"]["file"], "sha256": h["reveal"]["sha256"]}}
     approval = final_approval(package, selection, approval_path)
-    if edited_import:
+    if edited_import or color_import:
         require(approval is not None, "Edited import requires bound final approval")
     if auth is not None and approval is not None:
         require(auth["owner"]["approval_sha256"] == approval["sha256"], "Owner override final approval binding mismatch")
@@ -247,7 +258,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
               "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256") if package.derivation else package.archive_sha256,
               "source": source, "width": design["width"], "height": design["height"], "mode": design["mode"],
               "difficulty": difficulty, "frame": {"left": left, "right": right, "top": top, "bottom": bottom},
-              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import),
+              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_import, color_import),
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "test_only": h.get("test_only", False)}
     if not legacy:
         report.update(format="picross-target-inspection-v2", category_id=None,
@@ -257,6 +268,10 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
                       owner_override_sha256=auth["record"]["owner_override"]["sha256"])
     if edited_import:
         report.update(frame_valid=frame_valid, frame_exception_accepted=frame_exception and not frame_valid)
+    if color_import:
+        report.update(original_state=h["state"], original_motif_gate=gates["motif"],
+                      late_motif_acceptance=True, accepted_motif=auth["record"]["accepted_motif"],
+                      superseded_content_blockers=auth["record"]["superseded_content_blockers"])
     return report, design, matrix, logic, approval
 
 

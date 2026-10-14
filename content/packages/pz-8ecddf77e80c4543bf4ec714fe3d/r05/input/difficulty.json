@@ -1,0 +1,27 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "level": "L2",
+  "plausible_range": [
+    "L1",
+    "L4"
+  ],
+  "confidence": "low",
+  "logic_hash": "04f68c02f64d3db0ae1cf2750d52027641d1bd9acef1e8477270d64ccde6568f",
+  "rule_families": {
+    "R0": "21 direkt gepackte Farbzeilen und sechs untere Leerzeilen erlauben einen breiten Einstieg. R0-Suffizienz nicht vollständig mit einem validierten schwächeren Regelanalysator getestet.",
+    "R1": "Geschätzter Hauptbedarf sind Überlappungen langer Himmelsblöcke und Verlängerungen an den bereits gesetzten Turm-/Dachankern. Symmetrie wird niemals als Schlussgrund verwendet.",
+    "R2": "Möglicherweise kombinierte Zuordnung der mehrteiligen Navy-/Gold-/Blaufolgen in Galerien und Fassade. Notwendigkeit und R1-Suffizienz nicht formal nachgewiesen.",
+    "R3": "Full-line-color beweist vollständige Deduktion, nicht die Notwendigkeit allgemeiner R3-Linienunterstützung. R3 bleibt im Unsicherheitsbereich."
+  },
+  "bottleneck": "Alle70 Linien vor jedem der102 Proofschritte frisch geprüft. Vor Restaufräumen bei<=24 unbekannten Zellen mindestens7 produktive Linien; keine numerische Engstelle.",
+  "evidence": "audit/difficulty.json",
+  "time_estimate": null,
+  "effort": {
+    "cells": 1200,
+    "filled": 915,
+    "empty": 285,
+    "proof_steps": 102,
+    "human_active_minutes": null
+  }
+}

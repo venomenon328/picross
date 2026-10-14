@@ -1,0 +1,14 @@
+{
+  "current_phase": {
+    "native_image_calls": 0,
+    "fixed_edit_positions": 2,
+    "import_attempts": 1,
+    "solver_runs": 1,
+    "fresh_verify_processes": 1,
+    "fresh_origin_processes": 1,
+    "repair_search_attempts": 0,
+    "human_active_minutes": null
+  },
+  "cumulative_native_image_calls": 7,
+  "time_estimate": null
+}

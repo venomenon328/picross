@@ -1,0 +1,50 @@
+{
+  "review_type": "self_review",
+  "reviewed_at_utc": "2026-10-14T13:12:11.751673+00:00",
+  "files": [
+    "review/raster.png",
+    "review/sun-comparison.png",
+    "review/comparison.png"
+  ],
+  "criteria": {
+    "recognition": {
+      "status": "erfüllt",
+      "reason": "Warnemünde mit Leuchtturm links, Teepott rechts und Sonne erhalten."
+    },
+    "silhouette_proportions": {
+      "status": "erfüllt",
+      "reason": "Gebäude zellgleich zu r04; weiterhin eigene vertikale Spiegelachsen und ungerade Turmbreite."
+    },
+    "details_negative_spaces": {
+      "status": "erfüllt",
+      "reason": "Mittige Tür, Fenster und Spitze unverändert. Sonnenfranse unten rechts ist Himmel, obere Sonnenzelle ist Gelb."
+    },
+    "palette": {
+      "status": "erfüllt",
+      "reason": "Bestehendes Gold #e4ae46 als Gelb der Sonne, Blau #2894d5 als Himmel; keine neue Farbe oder Zwischenfarbe."
+    },
+    "series_style": {
+      "status": "erfüllt",
+      "reason": "Ruhige klare Flächen und dunkle Architekturkonturen unverändert."
+    }
+  },
+  "exact_edits": [
+    {
+      "column": 25,
+      "row": 5,
+      "before": "green",
+      "after": "gold"
+    },
+    {
+      "column": 26,
+      "row": 8,
+      "before": "green",
+      "after": "blue"
+    }
+  ],
+  "all_other_cells_identical": true,
+  "buildings_identical": true,
+  "new_material_building_change": false,
+  "human_feedback": "Rest of r04 positively assessed in the current correction request. Corrected r05 file and inventory have not been explicitly finally approved.",
+  "limitations": "Own visual review; no independent editorial second review or human playtest."
+}
