@@ -1,0 +1,39 @@
+{
+  "blockers": [
+    {
+      "evidence": "generation-error.json",
+      "id": "IMG-01",
+      "phase": "reveal_generation",
+      "reason": "Native Bildgenerierung: HTTP 400, moderation_blocked, moderation_stage=output, category=other; keine Bilddatei zurückgegeben.",
+      "status": "blocked"
+    }
+  ],
+  "category_id": "sport-spiele",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-cc522b3f66bc4d6eafe1f8a387d18d1f/r01/handoff.json",
+    "sha256": "0939aed1a14df302f148b2f4d882a379126bba3fb9773c27e69d123b0bfad3b0"
+  },
+  "height": 20,
+  "integration": null,
+  "inventory_sha256": "1f88921b586857bb57f7912a44ea87c4ed65170fbb506229690d0e763bc7a644",
+  "mode": "color",
+  "motif_name": "Level 1-1",
+  "next_action": "Bildschritt blockiert: Nutzerentscheidung über eine andere Motivvorgabe oder einen geeigneten bereitgestellten Bildeingang. Kein erneuter Versuch zur Umgehung der Bilddienstablehnung. Standardauftrag 2 erst mit gespeicherter und ausdrücklich freigegebener Abschlussbilddatei.",
+  "package": {
+    "bytes": 26578,
+    "file": "content/authoring/pz-cc522b3f66bc4d6eafe1f8a387d18d1f/r01/package.zip",
+    "sha256": "6b4f548b1ff0d96401729cb3730157d2238372bb8c202feed0557330b6cccfd9"
+  },
+  "puzzle_id": "pz-cc522b3f66bc4d6eafe1f8a387d18d1f",
+  "repo_commit": "a2ceb065d56d2de44158f45386ef3c3a0db8f840",
+  "reveal_options": [],
+  "revision": "r01",
+  "state": "blocked",
+  "updated_at_utc": "2026-10-14T20:15:40.878691+00:00",
+  "width": 30
+}

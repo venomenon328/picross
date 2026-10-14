@@ -1,0 +1,81 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1: Abschlussbildauswahl; Repositoryablage nach §6 samt Commit/Push und Draft-PR. Merge dieses Ablage-PRs nach Pflichtprüfungen ausdrücklich beauftragt. Keine Bild-, Motiv- oder Endfreigabe erteilt.",
+  "blockers": [
+    {
+      "evidence": "generation-error.json",
+      "id": "IMG-01",
+      "phase": "reveal_generation",
+      "reason": "Native Bildgenerierung: HTTP 400, moderation_blocked, moderation_stage=output, category=other; keine Bilddatei zurückgegeben.",
+      "status": "blocked"
+    }
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "sport-spiele",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "blocked",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "1f88921b586857bb57f7912a44ea87c4ed65170fbb506229690d0e763bc7a644"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "Bildschritt blockiert: Nutzerentscheidung über eine andere Motivvorgabe oder einen geeigneten bereitgestellten Bildeingang. Kein erneuter Versuch zur Umgehung der Bilddienstablehnung. Standardauftrag 2 erst mit gespeicherter und ausdrücklich freigegebener Abschlussbilddatei.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-cc522b3f66bc4d6eafe1f8a387d18d1f",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "a2ceb065d56d2de44158f45386ef3c3a0db8f840",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "height": 20,
+    "mode": "color",
+    "width": 30
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549",
+    "version": "0.4.1"
+  },
+  "state": "blocked"
+}
