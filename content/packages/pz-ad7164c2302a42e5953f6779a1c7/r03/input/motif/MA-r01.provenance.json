@@ -1,0 +1,16 @@
+{
+  "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "file": "motif/MA-r01.png",
+  "sha256": "dc4ed2300d35eeff6c92edd91ab69952231ce0a1805793b8a4f06ba8aaf74093",
+  "revision": "MA-r01",
+  "author": "OpenAI image generation in ChatGPT, commissioned by Tobias Schröder",
+  "usage_basis": "Native Bearbeitung des aus Nutzertext erzeugten und freigegebenen C-r01 für dieses Projekt; keine weitere fremde Bildquelle.",
+  "derived_from": {
+    "file": "reveal/C-r01.png",
+    "sha256": "54d053af4c1022dade010581b5b70823f4acc9a406057221ef638fc9f1a1c804"
+  },
+  "prompt_file": "generation-motif.json",
+  "input": "reveal/C-r01.png",
+  "operation": "faithful monochrome abstraction",
+  "approval": null
+}
