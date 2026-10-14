@@ -1,0 +1,16 @@
+{
+  "actor": "Tobias Schröder",
+  "effect": "Keine Freigabe der neuen Datei. Konkrete Änderungswünsche noch nicht benannt; Rückfrage gestellt. Keine weitere Motivänderung oder Rasterproduktion bis zur Klärung.",
+  "file": "motifs/MA-r03.png",
+  "format": "picross-authoring-human-feedback-v1",
+  "handoff_sha256": "f6bb66c4f3a8ec7b0c87112697df3c9fdae7b5bb69c6053a22cd9088bf531c62",
+  "inventory_sha256": "0785ec2504ac2e1f2cb4786e6f69eff979311e3d6be9b806631f19b9f5918bfd",
+  "package_sha256": "7769c6addbc6cbe8d7045174ef733e64aaf37a5e3732d6b70b1169399c35f610",
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "question": "Die vier neuen Raster aus MA-r02 bestehen die Logikprüfung, verlieren aber den hellen Schnurrbart. Die zuletzt gezeigte Korrekturvorlage MA-r03 ersetzt die dünnen Striche durch zusammenhängende helle Haarflächen und kräftige Gesichts-/Hemdformen; die Haarführung wurde nochmals an A-r02 angeglichen. Gibst du MA-r03 für die nächste Rasterproduktion frei? Korridor wie zuvor: 33×44 oder bevorzugt 36×48, area/exact, Vollbild, vier Vordergrundfarben plus Weiß, ursprüngliches oder mittleres Konturbraun.",
+  "recorded_at_utc": "2026-10-14T19:29:07.324571+00:00",
+  "revision": "r06",
+  "sha256": "91cec433b0866f2b45a21a8b08fbd181e457dd18b2fad79d680e3248a3cf02f6",
+  "statement": "Vorlage noch korrigieren",
+  "timestamp_basis": "Zeitpunkt der Protokollierung der tatsächlichen Nutzerantwort; separater Nachrichtenzeitpunkt nicht verfügbar."
+}

@@ -1,0 +1,17 @@
+{
+  "all_sizes_hashes": "pass",
+  "format": "picross-authoring-storage-verification-v1",
+  "handoff_byte_equal": true,
+  "handoff_sha256": "f6bb66c4f3a8ec7b0c87112697df3c9fdae7b5bb69c6053a22cd9088bf531c62",
+  "inventory_file_set": "pass",
+  "inventory_sha256": "0785ec2504ac2e1f2cb4786e6f69eff979311e3d6be9b806631f19b9f5918bfd",
+  "members": 26,
+  "new_motif_size": [
+    1086,
+    1448
+  ],
+  "package_sha256": "7769c6addbc6cbe8d7045174ef733e64aaf37a5e3732d6b70b1169399c35f610",
+  "safe_regular_members": true,
+  "za1_inspect": "not_applicable: early motif phase; no MA-r03 raster/certification",
+  "zip_crc": "pass"
+}
