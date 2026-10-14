@@ -17,7 +17,7 @@ Sammlungsstart, passive eigene Füllminiatur, unabhängige lange Hinweise und se
 Sidebaraktionen in 2×3 bleiben aktiv. Das Raster samt Rahmen bleibt innerhalb
 der angebotenen Fitgrenze sichtbar. „Rätselansicht“ bietet Rasteransicht und
 Gesamtansicht mit allen Hinweisen; ein Sitzungswechsel ändert keine Spielstände.
-Fonts und Bilder sind offline eingebettet; Lizenzen/Nutzungshinweise liegen im ZIP.
+Fonts, Bilder und Spieldaten liegen offline in `picross-p1.pck`; Lizenzen/Nutzungshinweise liegen im ZIP.
 
 ## Aktuellen main-Player per GitHub Actions erzeugen
 
@@ -38,7 +38,8 @@ Linux-Runner nicht geprüft. Der separate CI-Playerexport bleibt unverändert.
 
 ## Windows starten
 
-Das vollständige ZIP entpacken und `picross-p1.exe` starten. Keine Godot-Installation
+Das vollständige ZIP entpacken und `picross-p1.exe` starten. Die EXE und
+`picross-p1.pck` müssen im selben Ordner bleiben. Keine Godot-Installation
 nötig. `picross-p1.console.exe` zeigt technische Ausgaben. Dies ist eine unsignierte
 Debug-Spielprobe, kein Release/Installer. Die Quellcommitkennung steht im beigefügten
 README.txt. Ausschließlich das **Product-CI-Artefakt** enthält zusätzlich

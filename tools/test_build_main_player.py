@@ -19,6 +19,7 @@ class MainPlayerBuildTests(unittest.TestCase):
         self.build.mkdir()
         (self.build / "picross-p1.exe").write_bytes(b"win-main")
         (self.build / "picross-p1.console.exe").write_bytes(b"win-console")
+        (self.build / "picross-p1.pck").write_bytes(b"pack")
         self.output = self.workspace / "output"
         self.license = self.workspace / "LICENSE.txt"
         self.license.write_text("license\n", encoding="utf-8")
@@ -43,14 +44,19 @@ class MainPlayerBuildTests(unittest.TestCase):
         self.assertFalse(list(self.output.rglob("*.zip")))
         self.assertFalse((self.output / "rp6-owner.ps1").exists())
 
-    def test_no_empty_or_missing_executables(self):
-        (self.build / "picross-p1.exe").write_bytes(b"")
-        with self.assertRaisesRegex(toolchain.PreflightError, "Empty Windows"):
-            self.stage()
-        self.assertFalse(self.output.exists())
-        (self.build / "picross-p1.exe").unlink()
-        with self.assertRaisesRegex(toolchain.PreflightError, "Incomplete"):
-            self.stage()
+    def test_no_empty_or_missing_executables_or_pack(self):
+        for name in ("picross-p1.exe", "picross-p1.console.exe", "picross-p1.pck"):
+            path = self.build / name
+            original = path.read_bytes()
+            with self.subTest(name=name):
+                path.write_bytes(b"")
+                with self.assertRaisesRegex(toolchain.PreflightError, "Empty Windows"):
+                    self.stage()
+                self.assertFalse(self.output.exists())
+                path.unlink()
+                with self.assertRaisesRegex(toolchain.PreflightError, "Incomplete"):
+                    self.stage()
+                path.write_bytes(original)
 
     def test_reject_unexpected_export_or_preexisting_output(self):
         (self.build / "unknown.txt").write_bytes(b"oops")

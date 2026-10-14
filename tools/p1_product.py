@@ -33,7 +33,7 @@ import kat2_product
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 
 EXPECTED_PROJECT_NAME = "picross · P1"
-RENDER_STAGES = ("layout", "views", "cells-f1", "cells-f2", "gestures", "hints", "axis", "h1")
+RENDER_STAGES = ("layout", "cells-f1", "cells-f2", "axis", "h1")
 
 
 def project_name(project_file: Path) -> str:
@@ -77,9 +77,9 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
 
 
 def package(build: Path, output: Path, manifest: dict, readme: str, extras: dict[str, Path] | None = None) -> Path:
-    required = {"picross-p1.exe", "picross-p1.console.exe"}
+    required = {"picross-p1.exe", "picross-p1.console.exe", "picross-p1.pck"}
     files = {path.name for path in build.iterdir() if path.is_file()}
-    if not required <= files or files - required - {"picross-p1.pck"}:
+    if files != required:
         raise toolchain.PreflightError(f"Unexpected/incomplete Windows export: {sorted(files)}")
     if any((build / name).stat().st_size == 0 for name in files):
         raise toolchain.PreflightError("Empty Windows export file")

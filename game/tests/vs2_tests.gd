@@ -1,4 +1,5 @@
 extends SceneTree
+const VisualCases = preload("res://tests/current_visual_cases.gd")
 const Measurements = preload("res://tests/vs2_measurements.gd")
 const Store = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
@@ -208,44 +209,45 @@ func native_clue_boundaries() -> void:
 		check(b.row_clue_reads==reads.row_clue_reads and b.column_clue_reads==reads.column_clue_reads,"HC native zoom/UI/resize retain independent semantic anchors")
 
 func matrix(corpus: bool) -> void:
-	for client: Vector2i in [Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080),Vector2i(2560,1440)]:
+	for configuration: Array in VisualCases.CONFIGURATIONS:
+		var client: Vector2i = configuration[0]
+		var ui: float = configuration[1]
 		print("VS2_MATRIX corpus=",corpus," client=",client)
 		canvas.size = client
 		app.size = Vector2(client)
-		for ui: float in [1.0,1.25]:
-			app.set_ui_scale(ui)
-			for index: int in range(app.sessions.size()):
-				app.select_puzzle(index)
-				for mode: int in range(2):
-					app.set_puzzle_view(mode)
-					app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
-					await process_frame
-					var board = app.board
-					var data: Dictionary = Measurements.capture(board)
-					data.merge({"id":app.session.definition.id,"corpus":corpus,"client":[client.x,client.y],"ui_scale":ui,"board_rect":Measurements.rect_values(board.get_global_rect())})
-					check(not data.layout_valid or data.grid_fit, "all four outer frame edges fit")
-					check(mode == 0 or data.hidden_tokens == 0, "V retains all hints")
-					var old: float = board.view.cell_size
-					for i: int in range(22): board.zoom(1,board.view.viewport.get_center())
-					check(board.view.cell_size <= board.fit_ceiling and is_equal_approx(board.view.cell_size,old), "all zoom-up routes stop at fit")
-					check(board.capture_view().zoom in Store.ZOOMS, "computed fractional fit is never saved as desired zoom")
-					if data.layout_valid:
-						for cell: Vector2i in [Vector2i.ZERO,Vector2i(board.session.player.width-1,0),Vector2i(0,board.session.player.height-1),Vector2i(board.session.player.width-1,board.session.player.height-1)]:
-							check(board.view.hit(board.view.cell_rect(cell).get_center()) == cell, "four rectangular corner hits")
-					else:
-						var untouched: Array = board.session.player.cells.duplicate()
-						var cursor: int = board.session.player.cursor
-						board.pointer_press(board.view.viewport.get_center(),MOUSE_BUTTON_LEFT)
-						board.pointer_release(board.view.viewport.get_center(),true)
-						check(not board.session.gesture.active and board.session.player.cells==untouched and board.session.player.cursor==cursor,"undrawable geometry offers no broken cell input")
-						check(board.view.cell_size>=1 and not board.marks.visible and board.navigation_target(board.view.viewport.get_center()).is_empty(),"undrawable geometry has no negative marks or pan escape")
-					check(is_equal_approx(app.mini.image_rect().size.x/app.mini.image_rect().size.y,float(app.session.player.width)/app.session.player.height), "proportional passive own miniature")
-					check(not app.mini.interactive and app.mini.cells == app.session.visible_cells(), "miniature exclusively own cells")
-					data.v1 = preload("res://tests/vs2_v1_cases.gd").layout(app, check)
-					data.v2 = preload("res://tests/vs2_v2_cases.gd").layout(app, check)
-					records.append(data)
-					if client.x == 1920 and (mode == 0 or corpus) and ((corpus and index in [3,7,8]) or (not corpus and index in [0,3])):
-						await shot("%s-%s-%s-ui%d" % ["corpus" if corpus else "regular",app.session.definition.id,board.mode,roundi(ui*100)])
+		app.set_ui_scale(ui)
+		for index: int in range(app.sessions.size()):
+			app.select_puzzle(index)
+			for mode: int in range(2):
+				app.set_puzzle_view(mode)
+				app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
+				await process_frame
+				var board = app.board
+				var data: Dictionary = Measurements.capture(board)
+				data.merge({"id":app.session.definition.id,"corpus":corpus,"client":[client.x,client.y],"ui_scale":ui,"board_rect":Measurements.rect_values(board.get_global_rect())})
+				check(not data.layout_valid or data.grid_fit, "all four outer frame edges fit")
+				check(mode == 0 or data.hidden_tokens == 0, "V retains all hints")
+				var old: float = board.view.cell_size
+				for i: int in range(22): board.zoom(1,board.view.viewport.get_center())
+				check(board.view.cell_size <= board.fit_ceiling and is_equal_approx(board.view.cell_size,old), "all zoom-up routes stop at fit")
+				check(board.capture_view().zoom in Store.ZOOMS, "computed fractional fit is never saved as desired zoom")
+				if data.layout_valid:
+					for cell: Vector2i in [Vector2i.ZERO,Vector2i(board.session.player.width-1,0),Vector2i(0,board.session.player.height-1),Vector2i(board.session.player.width-1,board.session.player.height-1)]:
+						check(board.view.hit(board.view.cell_rect(cell).get_center()) == cell, "four rectangular corner hits")
+				else:
+					var untouched: Array = board.session.player.cells.duplicate()
+					var cursor: int = board.session.player.cursor
+					board.pointer_press(board.view.viewport.get_center(),MOUSE_BUTTON_LEFT)
+					board.pointer_release(board.view.viewport.get_center(),true)
+					check(not board.session.gesture.active and board.session.player.cells==untouched and board.session.player.cursor==cursor,"undrawable geometry offers no broken cell input")
+					check(board.view.cell_size>=1 and not board.marks.visible and board.navigation_target(board.view.viewport.get_center()).is_empty(),"undrawable geometry has no negative marks or pan escape")
+				check(is_equal_approx(app.mini.image_rect().size.x/app.mini.image_rect().size.y,float(app.session.player.width)/app.session.player.height), "proportional passive own miniature")
+				check(not app.mini.interactive and app.mini.cells == app.session.visible_cells(), "miniature exclusively own cells")
+				data.v1 = preload("res://tests/vs2_v1_cases.gd").layout(app, check)
+				data.v2 = preload("res://tests/vs2_v2_cases.gd").layout(app, check)
+				records.append(data)
+				if client.x == 1920 and (mode == 0 or corpus) and ((corpus and index in [3,7,8]) or (not corpus and index in [0,3])):
+					await shot("%s-%s-%s-ui%d" % ["corpus" if corpus else "regular",app.session.definition.id,board.mode,roundi(ui*100)])
 
 
 func frame_pixels(image: Image) -> Dictionary:

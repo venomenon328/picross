@@ -84,33 +84,34 @@ func recovery_matrix() -> void:
 	app = load("res://main.tscn").instantiate()
 	canvas.add_child(app)
 	await process_frame
-	for dims: Vector2i in [Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080),Vector2i(2560,1440)]:
+	for configuration: Array in VisualCases.CONFIGURATIONS:
+		var dims: Vector2i = configuration[0]
+		var u: float = configuration[1]
 		canvas.size = dims
 		app.size = Vector2(dims)
-		for u: float in [1.0,1.25]:
-			app.set_ui_scale(u)
-			for index: int in [0,1,3]:
-				app.select_puzzle(index)
-				app._reset_selected()
-				app.open_puzzle()
-				check(app._save_current(),"V1 recovery initial valid save")
-				app.board.eraser = not app.board.eraser
-				app.store.fail_step = "after_rotation"
-				check(not app._save_current() and app.work_repair_button.visible,"V1 actual interrupted write shows recovery")
-				app.store.fail_step = ""
-				for mode: int in range(2):
-					app.set_puzzle_view(mode)
-					await process_frame
-					focused.append(V1.layout(app,check))
-					if dims.x == 1280 and u == 1.25 and index == 1 and mode == 0:
-						await shot("v1-recovery-1280-ui125")
-				var p: Vector2 = app.work_repair_button.get_global_rect().get_center()
-				mouse(p,MOUSE_BUTTON_LEFT,true)
-				mouse(p,MOUSE_BUTTON_LEFT,false)
-				check(app.repair_dialog.visible,"V1 moved recovery action real hit")
-				app.repair_dialog.confirmed.emit()
-				app.repair_dialog.hide()
-				check(not app.work_repair_button.visible and app.store.load_slot(app.session.definition).status == "loaded","V1 confirmed recovery restores valid saving")
+		app.set_ui_scale(u)
+		for index: int in [0,1,3]:
+			app.select_puzzle(index)
+			app._reset_selected()
+			app.open_puzzle()
+			check(app._save_current(),"V1 recovery initial valid save")
+			app.board.eraser = not app.board.eraser
+			app.store.fail_step = "after_rotation"
+			check(not app._save_current() and app.work_repair_button.visible,"V1 actual interrupted write shows recovery")
+			app.store.fail_step = ""
+			for mode: int in range(2):
+				app.set_puzzle_view(mode)
+				await process_frame
+				focused.append(V1.layout(app,check))
+				if dims.x == 1280 and u == 1.25 and index == 1 and mode == 0:
+					await shot("v1-recovery-1280-ui125")
+			var p: Vector2 = app.work_repair_button.get_global_rect().get_center()
+			mouse(p,MOUSE_BUTTON_LEFT,true)
+			mouse(p,MOUSE_BUTTON_LEFT,false)
+			check(app.repair_dialog.visible,"V1 moved recovery action real hit")
+			app.repair_dialog.confirmed.emit()
+			app.repair_dialog.hide()
+			check(not app.work_repair_button.visible and app.store.load_slot(app.session.definition).status == "loaded","V1 confirmed recovery restores valid saving")
 
 func glyph_probe() -> void:
 	app.queue_free()

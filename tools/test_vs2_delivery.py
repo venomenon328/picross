@@ -31,13 +31,12 @@ class DeliveryTests(unittest.TestCase):
         records=[]
         for corpus,ids in ((False,(1,2,4,6,8,9)),(True,range(1,11))):
             for i in ids:
-                for w,h in ((1280,720),(1600,900),(1920,1080),(2560,1440)):
-                    for ui in (1.0,1.25):
-                        for mode in ("G","V"):
-                            records.append(dict(corpus=corpus,id=f"VS{i:02d}" if corpus else f"T-{i:02d}",client=[w,h],ui_scale=ui,mode=mode,layout_valid=True,grid_fit=True,hidden_tokens=0,status="geometric_fit_owner_open",clipped_glyphs=0,glyph_collisions=0,cell_pitch=24))
+                for w,h,ui in ((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25)):
+                    for mode in ("G","V"):
+                        records.append(dict(corpus=corpus,id=f"VS{i:02d}" if corpus else f"T-{i:02d}",client=[w,h],ui_scale=ui,mode=mode,layout_valid=True,grid_fit=True,hidden_tokens=0,status="geometric_fit_owner_open",clipped_glyphs=0,glyph_collisions=0,cell_pitch=24))
         names={"album.png","options.png"}
-        names.update(f"regular-T-{i:02d}-G-ui{ui}.png" for i in (1,6) for ui in (100,125))
-        names.update(f"corpus-VS{i:02d}-{mode}-ui{ui}.png" for i in (4,8,9) for mode in ("G","V") for ui in (100,125))
+        names.update(f"regular-T-{i:02d}-G-ui{ui}.png" for i in (1,6) for ui in (100,))
+        names.update(f"corpus-VS{i:02d}-{mode}-ui{ui}.png" for i in (4,8,9) for mode in ("G","V") for ui in (100,))
         names.update(f"rectangular-VS{i:02d}-reveal.png" for i in (1,3,5,7,9))
         for name in names: (self.root/name).write_bytes(b"bound-test-image")
         self.report=dict(failures=0,records=records,pictures=[dict(file=n,sha256=hashlib.sha256(b"bound-test-image").hexdigest()) for n in names])
@@ -52,7 +51,7 @@ class DeliveryTests(unittest.TestCase):
         return vs2_delivery.verify(self.root)
 
     def test_complete_matrix(self):
-        self.assertEqual(len(self.verify()["records"]),256)
+        self.assertEqual(len(self.verify()["records"]),96)
         path = self.root / "vs2-matrix.json"
         original = path.read_bytes()
         packed = vs2_delivery.compress_geometry_report(path)
@@ -66,6 +65,28 @@ class DeliveryTests(unittest.TestCase):
     def test_missing_and_duplicate_case(self):
         self.report["records"][-1]=self.report["records"][0]
         with self.assertRaises(PreflightError): self.verify()
+
+    def test_wrong_client_height_cannot_replace_expected_case(self):
+        self.report["records"][0]["client"][1] += 1
+        with self.assertRaises(PreflightError): self.verify()
+
+    def test_focused_and_recovery_identity_not_just_count(self):
+        from vs2_v1_verify import verify_focused_coverage
+        records = [dict(recovery=False, id=s, client=[1920,1080], ui_scale=u,
+                        mode=m, requested_cell=z)
+                   for s in ("T-01", "VS04", "VS08", "VS09")
+                   for u in (1,1.25) for m in ("G","V") for z in (24,72)]
+        records += [dict(recovery=True, id=s, client=[w,h], ui_scale=u, mode=m)
+                    for s in ("T-01","T-02","T-06")
+                    for w,h,u in ((1280,720,1.25),(1920,1080,1),(2560,1440,1.25))
+                    for m in ("G","V")]
+        report = dict(failures=0, records=records)
+        verify_focused_coverage(report)
+        for index in (0,32):
+            broken = copy.deepcopy(report)
+            broken['records'][index] = broken['records'][index+1]
+            with self.subTest(index=index), self.assertRaises(PreflightError):
+                verify_focused_coverage(broken)
 
     def test_v_cannot_hide_hints(self):
         self.report["records"][1]["hidden_tokens"]=1
@@ -107,13 +128,12 @@ class DeliveryTests(unittest.TestCase):
                       sidebar_assets=json.loads((Path(__file__).resolve().parents[1]/"game/art/book/frames.json").read_text(encoding="utf-8")),
                       frame_pixels=[dict(changed_pixels=101) for _ in range(3)],
                       records=[dict(id=s, client=[w,h], ui=u, mode=m, fit=f,sidebar_axes=axes(w,h,u))
-                               for s in ("T-01","T-02","T-08") for w,h in ((1280,720),(1600,900),(1920,1080),(2560,1440))
-                               for u in (1.0,1.25) for m in ("G","V") for f in (False,True)],
+                               for s in ("T-01","T-02","T-08") for w,h,u in ((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25)) for m in ("G","V") for f in (False,True)],
                       pictures=[dict(file=n,sha256=hashlib.sha256(b"native-binding").hexdigest()) for n in names])
         def verify():
             (self.root/"v3-report.json").write_text(json.dumps(report),encoding="utf-8")
             return vs2_delivery.verify_v3(self.root)
-        self.assertEqual(len(verify()["records"]),96)
+        self.assertEqual(len(verify()["records"]),36)
         native_path=self.root/'v3-report.json'
         native_value=json.loads(native_path.read_text(encoding='utf-8'))
         native_path.write_text(json.dumps(native_value,indent=2),encoding='utf-8')
@@ -121,7 +141,7 @@ class DeliveryTests(unittest.TestCase):
         vs2_delivery.compact_geometry_reports([native_path])
         self.assertEqual(json.loads(native_path.read_text(encoding='utf-8')),native_value)
         self.assertLess(native_path.stat().st_size,original_size)
-        self.assertEqual(len(vs2_delivery.verify_v3(self.root)['records']),96)
+        self.assertEqual(len(vs2_delivery.verify_v3(self.root)['records']),36)
         original_axes=copy.deepcopy(report['records'][0]['sidebar_axes'])
         for kind in ('frames','controls','both','upper','missing'):
             a=copy.deepcopy(original_axes)
@@ -135,7 +155,7 @@ class DeliveryTests(unittest.TestCase):
         report['records'][0]['sidebar_axes']=original_axes
         for item in report["sidebar_assets"]["derivatives"]:
             item["safe"] = [float(format(v,".15g")) for v in item["safe"]]
-        self.assertEqual(len(verify()["records"]),96)
+        self.assertEqual(len(verify()["records"]),36)
         original_safe = report["sidebar_assets"]["derivatives"][0]["safe"][0]
         report["sidebar_assets"]["derivatives"][0]["safe"][0] += 0.01
         with self.assertRaises(PreflightError): verify()

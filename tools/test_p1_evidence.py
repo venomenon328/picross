@@ -177,7 +177,7 @@ class CurrentProductEvidenceTests(unittest.TestCase):
                 failed.write_bytes(b"original failed frame")
                 outside = output / "outside.png"
                 outside.write_bytes(b"outside report directory")
-                report = {"captures": [{"file": "missing.png"}, {"file": "../outside.png"}],
+                report = {"compact": True, "captures": [{"file": "", "retained": False}, {"file": "missing.png"}, {"file": "../outside.png"}],
                           "failure_captures": [{"file": failed.name}]}
                 (renders / filename).write_text(json.dumps(report))
                 files, priority = p1_evidence.native_failure_sources(output, phase, [outside])

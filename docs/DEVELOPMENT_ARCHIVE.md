@@ -31,6 +31,13 @@ Quelle vor dieser Bereinigung: `37f500d5e6599a6c8ff85c8ca8edb4d190474c5f`.
 | RP3–RP6-Lieferberichte, alte F01/F02-Proofberichte und früheres Archivmanifest | Über den gebundenen Vorgänger erreichbar; aktuelle technische Verträge bleiben. |
 | Historische Korpus-/Review-/Ownerprogramme | [Werkzeuge](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/tools); keine RP6-Ownerhilfe mehr im Spielerpaket. RP4/RP5 behalten nur noch die vorhandenen getesteten Hilfsfunktionen. |
 
+Die freigegebene Folgearbeit entfernt außerdem die wirkungslose Ansichts-/Pan-
+Galerie und die erzwungenen alten Raster-/Hinweis-Replays aus `capture.gd` sowie
+den alten H1-Komponentenlauf. Ihre Quelle liegt im
+[Stand vor der Testkürzung](https://github.com/venomenon328/picross/tree/2519695767c6fabf0b23970ab9ae17024de44bae/game/tests).
+Die aktuellen Vollansichts-, Hinweis-, Eingabe-, Schrift- und Animationsverträge
+bleiben gemäß CI-Policy geprüft; aktive gemeinsame Renderer werden nicht entfernt.
+
 Die Git-Historie wird nicht umgeschrieben. Ein vollständiger Commit-/PR-Verweis
 ersetzt neue riesige Archivmanifeste oder Kopien gelöschter Dateien. Bei Bedarf
 historische Untersuchungen in einem getrennten Checkout durchführen; keine

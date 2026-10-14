@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 14.10.2026 · Version 1.6 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
+Stand: 14.10.2026 · Version 1.7 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
 
 ## Geltung und Ablösung
 
@@ -206,26 +206,44 @@ wird für regulären und isolierten Katalog geprüft. Der feste synthetische Ada
 nur den kompakten Bericht. Reine Inhalte wählen ausschließlich den schlanken
 Inhaltspfad; Änderungen am Produktharness wählen Integration und Preflight. Keine zusätzliche CI-Fallliste je Inhalt. [Prüfzuordnung](ZA1_VERIFICATION.md).
 
-Im Standardpfad gilt `--ci-compact` für den allgemeinen Capture-Harness:
+Eigentümerfreigabe vom 14.10.2026 / #116: Die wiederholten Grafikmatrizen
+verwenden drei gemeinsame Konfigurationen: **1280×720/UI125, 1920×1080/UI100
+und 2560×1440/UI125**. Das deckt enge, normale und große Fenster ab; der frühere
+vollständige Kreuzvergleich aller vier Auflösungen mit beiden UI-Skalierungen
+ist keine Standardpflicht mehr. Gezielte Sonderfälle dürfen weitere Größen nutzen.
+
+- Reguläre Vollansicht: alle 16 technischen Muster, beide Ansichten G/V,
+  96 statt 256 Fälle. Rahmen, Hinweisgeometrie und Schriftgrenzen bleiben geprüft.
+- Arbeits-/Fit-, Eingabe- und Schriftsonderfälle: 32 unverändert; Wiederherstellung
+  für drei Muster in beiden Ansichten: 18 statt 48. Zusammen 50 statt 80 Fälle.
+- Sidebar-/Arbeits-/Fit-Matrix: drei Muster und beide Ansichten, 36 statt 96 Fälle.
+  Gezielte Ressourcen-, Rahmen-, Warnungs- und Wiederherstellungsprüfungen bleiben.
+- H1: sechs aktuelle Off/On-Paare (drei Konfigurationen × G/V) sowie sechs
+  Reveal-/Albumzustände. Keine Wiederholung der ersetzten Rasterkomponente.
+
+Im allgemeinen Capture-Harness gilt `--ci-compact`:
 
 - Zellgrößen 12/16/18/22/24/72 decken Minimum, Maximum und beide Seiten der
-  tatsächlichen Zeichen-/Fontwechsel ab: 54 statt 180 Zellszenarien.
+  tatsächlichen Zeichen-/Fontwechsel ab: 54 Zellszenarien.
 - Layout: Album und drei Fixtures bei 720p/UI125 sowie 1080p/UI100+125,
-  insgesamt zehn statt 41 Bilderzustände.
-- H1: acht ausgewählte Off/On-Paare statt 64, ergänzt um Partialzustand,
-  identische Zahlen, Tooltip und echte Drag-/Dropfälle auf beiden Achsen.
+  insgesamt zehn Bilderzustände.
+- Die wirkungslose Ansichts-/Pan-Galerie ohne Pixelassertionen sowie die erzwungenen
+  alten Raster-Clipping-/Pan- und Hinweis-Drag-Replays entfallen. Die aktuellen
+  Vollansichts-/Rahmenprüfungen bleiben; Rasterpanning ist keine Spielfunktion.
 - Beide Hinweisachsen, Einrastgrenzen .49/.51, Richtungen und aktuelle
-  Außenanschläge bleiben nativ geprüft. Das alte erzwungene Six-Slot-Layout
-  gehört nicht mehr zum Standardpfad.
-- Alpha, Papierfugen, alle Farben, X-Clipping, Hoverkreuz, Vorschau, Hinweisink,
-  echte aktuelle Buch-/ZS2-Pixelverträge und Spoilergrenzen bleiben erhalten.
+  Außenanschläge bleiben in den gezielten nativen VS2-Prüfungen erhalten.
+- Alpha, Papierfugen, alle Farben, Hoverkreuz und G1-Zähler, Vorschau, Hinweisink,
+  aktuelle Buch-/ZS2-Pixelverträge und Spoilergrenzen bleiben erhalten.
 
 Die vollständigen günstigen Logik-/Zoom-/Geometrietests bleiben bestehen.
 Gerenderte Bilder werden für Assertions direkt im Speicher verwendet. Der
 allgemeine kompakte Capturepfad speichert fünf ausgewählte Erfolgsbilder;
-Fehler sichern die zuletzt relevanten Originalframes. Die aktuelle Buch-/ZS2-
-und gegebenenfalls Pilotprüfung liefert ebenfalls nur eine begrenzte Auswahl
-an technischen Bildern. Anzahl gerenderter und gespeicherter Fälle sind getrennt.
+Fehler sichern die zuletzt relevanten Originalframes. Die Buchprüfung wertet
+alle bisherigen 17 Bildzustände und Textkontraste weiter aus, schreibt im
+kompakten Erfolgspfad aber keine ungenutzten PNGs. Fehlerbilder bleiben erhalten.
+ZS2 und gegebenenfalls Pilotprüfungen liefern ihre gezielte technische Auswahl.
+Anzahl gerenderter und gespeicherter Fälle sind getrennt. Unabhängige Prüfungen
+verlangen die genaue erwartete Matrix und erkennen auch doppelte/fehlende Fälle.
 
 Abgeschlossene ZS1-/VS1-Studien, GP48-/ZV50-/Z2-Vorherprojekte, H1-Ownerprogramme
 und alte Review-ZIPs werden im Standardlauf weder importiert, gerendert noch
@@ -275,6 +293,19 @@ Der Fachjob führt nur allgemeine Tests, sechs synthetische Leistungsreferenzen
 und den festen künstlichen Adapterdurchstich aus. Keine historischen
 Produzentencommits oder RP4-/RP5-Korpus-/Windows-Replays mehr in CI.
 
+## Spielerexport mit separaten Ressourcen
+
+Der reguläre Export verwendet `binary_format/embed_pck=false`. Das offizielle
+Debug-Template bleibt unverändert. `picross-p1.exe`, die Konsolenhilfe und
+`picross-p1.pck` sind verpflichtende, nicht leere Paketdateien. EXE und PCK müssen
+nach dem Entpacken im selben Ordner liegen. Das verschiebt Ressourcen aus der
+EXE, reduziert aber nicht automatisch die Gesamtgröße des Downloads.
+
+Product prüft die tatsächlich exportierte PCK mit einem externen nativen Probe-
+Skript, einschließlich ausgeschlossener Test-/Produktionsdateien, und bindet
+EXE sowie PCK per Hash an den Bericht. Der manuelle main-Build prüft weiterhin
+nur Paketvollständigkeit; er ersetzt keinen Product-Prüflauf.
+
 ## Separater manueller main-Player-Build
 
 Der Workflow [Build playable main](../.github/workflows/build-main-player.yml) wird
@@ -284,7 +315,7 @@ den regulären tatsächlichen Spielkatalog, führt aber **keine** Kern-, Integra
 Render-, Solver- oder Rätseltests aus. Er erstellt nur den unsignierten
 Windows-x64-Debugexport und kontrolliert vollständige, nicht leere Exportdateien.
 
-`upload-artifact` übernimmt das direkte Player-Verzeichnis (EXEs, gegebenenfalls
+`upload-artifact` übernimmt das direkte Player-Verzeichnis (EXEs, separate
 PCK, Anleitung und benötigte Lizenzen) und erzeugt selbst das einzige
 herunterladbare ZIP; kein weiteres Spieler-ZIP oder Technikartefakt. Der
 bestehende Product-Verifikationsworkflow und dessen gebundene Nachweise bleiben
