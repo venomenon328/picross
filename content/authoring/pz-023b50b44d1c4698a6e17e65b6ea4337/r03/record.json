@@ -1,0 +1,129 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 40,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "width": 36
+    }
+  ],
+  "blockers": [
+    "B-PZ-01: Geschützter Jackenkragen und zentrale Knopfleiste gehen in allen drei zulässigen Importen weitgehend verloren; breite olivgrüne Fläche mit vereinzelten dunklen Restzellen ersetzt die Gliederung.",
+    "B-PZ-02: Heller schmaler Schnurrbart wird auch bei 36×48 zu getrennten Flecken; die Mund-/Blickzeichnung verliert den freigegebenen freundlichen Ausdruck."
+  ],
+  "category_id": "menschen-berufe",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "Vor jedem der 149 Proofschritte alle 84 Linien im jeweiligen Wissensstand geprüft. Vor Restaufräumen bei höchstens 35 mehrdeutigen Zellen mindestens 13 produktive Linien; keine numerische Engstelle im überprüften Verlauf. Keine erschöpfende Untersuchung alternativer Pfade oder validierte Technikklassifikation.",
+    "calibration": "Keine menschlichen Vergleichsdaten oder validierte Bewertungsinstrumentierung.",
+    "candidate": "area-36x48",
+    "confidence": "low",
+    "effort": {
+      "cells": 1728,
+      "empty": 559,
+      "filled": 1169,
+      "human_active_minutes": null,
+      "proof_steps": 149
+    },
+    "evidence": "audit/difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "cd52bc48311d2ac66893ad45beebad929a73d6073e8a1f350b582e79420b3627",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L1",
+      "L4"
+    ],
+    "playtest": "not_performed; optional, kein Gate",
+    "rule_families": {
+      "R0": "18 vollständig gepackte untere Zeilen 31–48 und vollständig gepackte Spalten 17/18 (1-basiert) liefern starke Anfangsanker. Später Restleerfelder. R0-Suffizienz nicht mit validiertem schwächerem Analysator bis Fixpunkt untersucht; L1 bleibt möglich.",
+      "R1": "Geschätzt überwiegend Überlappungen und Verlängerungen längerer Haut-/Jacken-/Haarblöcke gegen diese Anker. Spalte18 enthält initial Haut15 und Haar10; die breiten unteren Jackenlinien geben räumlich verteilten Fortschritt. Dies begründet die vorläufige L2-Schätzung, nicht die Rastergröße.",
+      "R2": "Kombinierte Zuordnung wechselnder Farben an Gesicht, Ohren und Bart kann erforderlich sein. Spalte17 hat 14 geordnete Farbblöcke, siehe initial_R0_lines und genaue Domains in audit/difficulty-samples.json. R2-Notwendigkeit und R0+R1-Suffizienz sind nicht validiert.",
+      "R3": "Allgemeine vollständige Linienunterstützung unter full-line-color ist zertifiziert, beweist jedoch keine Notwendigkeit von R3. Mangels validierter Regelfamilienklassifikation bleibt R3 möglich; konservativer Bereich bis L4."
+    },
+    "samples": "audit/difficulty-samples.json",
+    "scope": "Nur technisch zertifizierter Diagnosekandidat; keine Katalogfreigabe.",
+    "time_estimate": null
+  },
+  "dimensions_scope": "diagnostic candidate; no final selection",
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r03/handoff.json",
+    "sha256": "8757d28d5b4e6774772e12ee7fc391bd9a2d282610eb62dd94abe6aa4b5a6e5b"
+  },
+  "height": 48,
+  "integration": null,
+  "inventory_sha256": "adc5b62a241695ac9bd4532925b7dc0b1df815b65bc0fe4b626b5c77c5fdb3a8",
+  "mode": "color",
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1",
+    "file": "motifs/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "93f69db43b8d6afbd18a18d07e9a6fdb57a55e8fa7769775c2e23d256f38bc1a"
+  },
+  "motif_name": "Ho Chi Minh",
+  "next_action": "MA-r02 aus unverändertem A-r02 überarbeiten und menschlich freigeben lassen; danach neue Rasterproduktion. Keine Endabnahme oder Spielintegration dieses Diagnosekandidaten.",
+  "package": {
+    "bytes": 11016955,
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r03/package.zip",
+    "sha256": "f43104a6ef584f923e6c8e832e12c83c0cb41e2f5c95f17e666e0671d5c1bb0f"
+  },
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "repo_commit": "b736ae1e0bcd41151ebc956480e7feb9531c4945",
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/A-r02.png",
+    "revision": "A-r02",
+    "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1"
+  },
+  "review_view": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r03/diagnostic-comparison.png",
+    "purpose": "Bound read-only review view: exact candidate raster with grid plus scaled byte-bound approved reveal; no altered source image.",
+    "sha256": "3764ab9df30f5ce827cac5c16b180ef2ca578ec6c09215b7857663795d69b3fa"
+  },
+  "revision": "r03",
+  "state": "blocked",
+  "storage_verification": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r03/storage-verification.json",
+    "sha256": "3e06b8a93659a9ce4062945586cf9604c1a1d6adca16706ecb37ec933e9e1afb"
+  },
+  "updated_at_utc": "2026-10-14T18:31:06.245000+00:00",
+  "width": 36
+}
