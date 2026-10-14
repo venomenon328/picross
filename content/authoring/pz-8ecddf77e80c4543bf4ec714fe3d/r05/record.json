@@ -4,7 +4,7 @@
   "revision": "r05",
   "motif_name": "Warnemünde",
   "category_id": "gebaeude-bauwerke",
-  "state": "raster_review",
+  "state": "blocked",
   "package": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/package.zip",
     "bytes": 5599921,
@@ -15,7 +15,10 @@
     "sha256": "cad59a1a303e4db1b1bc7acae47cd72619dd74e4eb91ee5521bd752044a56150"
   },
   "inventory_sha256": "8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34",
-  "approval": null,
+  "approval": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/approval.json",
+    "sha256": "c5ffcd738a20c334280eedc54a53fee149030555d4bee9837cae5775d360a238"
+  },
   "width": 30,
   "height": 40,
   "mode": "color",
@@ -47,11 +50,29 @@
     }
   },
   "blockers": [
-    "motif: acceptance of exact corrected MR-r04 source pending; positive assessment of unchanged rest recorded",
-    "final_editorial: corrected r05 file/inventory has not been explicitly finally approved"
+    "B-PZ-03: unchanged r05 raster_review/import package has no supported external approval path for its fixed color derivation and motif/parameter metadata; ZA-1 export failed before technical inspection. Separate tool authorization required."
   ],
-  "next_action": "Konkretes r05/MR-r04 freigeben; Freigabebelege separat binden, neues content_ready-Paket erstellen. Kein Merge/keine Integration ohne passenden Auftrag.",
-  "integration": null,
+  "next_action": "Separaten ZA-1-Werkzeugauftrag gemäß integration.md beauftragen; anschließend bestehenden Integrationsauftrag für unverändertes r05 fortsetzen. Keine erneute Endabnahme desselben Inventars nötig; Draft-PR, kein Merge.",
+  "integration": {
+    "status": "blocked",
+    "finding": "B-PZ-03",
+    "report": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration.md",
+    "export_attempt": {
+      "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/export-attempt.json",
+      "sha256": "5f92cd77a7b08c8c05fc6267cbdc7cd52de9ffb8cbf62885c5cd32530c572e70"
+    },
+    "export": null,
+    "plan": null,
+    "registration": null,
+    "runtime_intent": {
+      "id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+      "revision": 1,
+      "name": "Warnemünde",
+      "stem": "warnemuende_001",
+      "save_slot": "warnemuende_001",
+      "category_id": "gebaeude-bauwerke"
+    }
+  },
   "motif": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/motif.png",
     "sha256": "5ea1d54eeb80f12e0bc869257edf53a28245d2e2a595de2fd0bdae2b7bc2a865",
@@ -87,6 +108,13 @@
     "branch": "content/warnemuende-reveal-r01",
     "base_commit": "b57d8da3dd8c0965727759eb027c10686abb3630",
     "producer_commit": "c75552f52ab847414e0a5ec9281c2e20cb063433",
-    "commit_evidence": "Final delivery commit/CI in Draft-PR113"
-  }
+    "commit_evidence": "Final delivery commit/CI in Draft-PR113",
+    "integration_base_commit": "b57d8da3dd8c0965727759eb027c10686abb3630"
+  },
+  "editorial_acceptance": {
+    "status": "approved",
+    "inventory_sha256": "8b506c2444cc98eda9d7c8dea7eb4bbb22eebd5fc549926bb07f6af46138aa34",
+    "evidence": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/acceptance-evidence.json"
+  },
+  "current_report": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/integration.md"
 }
