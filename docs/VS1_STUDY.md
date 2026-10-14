@@ -26,16 +26,16 @@ quadratische Produktionsadapter behalten ihre Schranke.
 
 ## VS-P1: Daten und begrenzte Herstellung
 
-[Plan](../examples/vs1/plan.json) und [leeres Eigentümerprotokoll](../examples/vs1/owner-protocol.json)
+[Plan](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/plan.json) und [leeres Eigentümerprotokoll](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/owner-protocol.json)
 wurden mit `48d302b` vor dem ersten Import versioniert. 26 gebundene Kandidaten
 wurden tatsächlich ausgewertet, 40 waren maximal erlaubt. Keine neue Reparatur,
 keine KI-Aufrufe, keine zusätzlichen Illustrationen. Die neue unabhängige Prüfung
 bekam pro Kandidat dieselben getrennten 30 s / 100.000 Linien wie der Solver.
 Der unveränderte F-09-Bestand durchläuft seinen bestehenden vollständigen RP5-Replay.
-[Produktion](../examples/vs1/production.json) enthält Zeiten und alle Varianten,
+[Produktion](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/production.json) enthält Zeiten und alle Varianten,
 auch nicht vollständig gelöste. Menschliche Arbeitszeit ist unbekannt.
 
-Das [Fallmanifest](../examples/vs1/manifest.json) bindet zehn spielbare Fälle,
+Das [Fallmanifest](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/manifest.json) bindet zehn spielbare Fälle,
 Quellen, Nutzungsgrundlage über die bestehenden RP-Quellen, Varianten,
 Matrix-/Dateihashes, unabhängige Proofs, Orientierung, Palette, Hinweise,
 Reveal, Motivsichtung sowie contain-Ränder. Die Aussage „zertifiziert“ gilt nur
@@ -122,7 +122,7 @@ Komfortnachweis. Fehlfälle bleiben vollständig in der Matrix.
 
 ## VS-P3 / VS-GF1: Messung und Lieferung
 
-Der eigenständige [GF1-Plan](../examples/vs1/gf1-plan.json) wurde vor den Vergleichen
+Der eigenständige [GF1-Plan](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/gf1-plan.json) wurde vor den Vergleichen
 versioniert. Er bindet vier native Vorher-/Nachherpaare an die GF1-Basis: VS08 bei
 1920×1080/UI100 und UI125, VS04/UI125 und VS09/UI100. Die ersten beiden zeigen alle
 13 Zeilenhinweise bei unverändertem Fit 18,77 beziehungsweise 17,06 px. Zusätzlich
@@ -153,7 +153,7 @@ VS04/VS06, VS08 und VS10 ergänzen reale farbige Folgen; VS-D11/D12 bleiben die
 ursprünglichen zwei Status-/Farbdiagnosen. Die Fünfergarantie zählt dieselben ganzen
 Tokens, die der Zeichenpfad verwendet, einschließlich aller kritischen Dragübergänge.
 Historische R-/Erststanddateien sind in
-[historical-reference.json](../examples/vs1/historical-reference.json) mit Head,
+[historical-reference.json](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/historical-reference.json) mit Head,
 Reviewarchiv, konkreten Dateihashes und Download gebunden; keine neuen R-Messungen.
 
 Historisch begrenzte der Erstplan den Layoutversuch auf L1 plus zwei Korrekturen:

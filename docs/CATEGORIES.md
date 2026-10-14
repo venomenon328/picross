@@ -20,15 +20,14 @@ Tags oder Unterkategorien. Unbekannte Formate/Felder, doppelte JSON-Schlüssel/I
 Reihenfolgen und nichtendliche Zahlen werden zurückgewiesen.
 
 `content/registry.json` verwendet `picross-content-registry-v2`. Jeder Eintrag
-besitzt genau ein `category_id`. Sichtbare und neue Einträge referenzieren eine
-vorhandene Kategorie. Nur die unsichtbaren historischen Reservierungen F03/F05/F07
-dürfen `null` führen. Alle neun historischen Einträge behalten ihre übrigen Felder
-exakt; keine Umnummerierung, Slotänderung oder neue Sichtbarkeit. Maximum bleibt
-10000 Einträge und 8 MiB Inhaltsregistry. Neue Inhalte folgen nach den neun
-Reservierungen lexikografisch nach ID.
+besitzt genau ein `category_id`, das unabhängig von Sichtbarkeit eine vorhandene
+Kategorie referenziert. Die Registry enthält ausschließlich Produktionsbindungen;
+ein leerer Bestand ist gültig. Alle Einträge stehen lexikografisch nach ID.
+Maximum: 10000 Einträge und 8 MiB Inhaltsregistry. Die aktive F01–F09-Reservierung
+ist durch [#114](https://github.com/venomenon328/picross/issues/114) aufgehoben.
+Workflow-Zuordnungen und Kategorienquelle einschließlich leerer Kategorien bleiben
+unverändert.
 
-Bestandszuordnung: F01 → `fahrzeuge-verkehr`, F02/F06 → `gebaeude-bauwerke`,
-F04 → `gemuese-pilze-kraeuter`, F08 → `blumen-pflanzen`, F09 → `voegel`.
 Der prägende Hauptgegenstand entscheidet; Nebenobjekte erzeugen keine weitere
 Zuordnung. Die Gruppen sind keine biologische Taxonomie oder Essbarkeitsaussage.
 
@@ -74,7 +73,7 @@ python -m tools.puzzle_production.target_adapter sync-runtime --checkout .
 python -m tools.puzzle_production.target_adapter check-registry --checkout .
 ```
 
-`sync-runtime` validiert die Quellen und alle registrierten Pakete frisch vor
+`sync-runtime` validiert die Quellen und registrierten Bindungen vor
 atomarem Ersetzen der Projektion. Fehlende Referenzen oder offene Journale stoppen
 vor Änderungen. Kein Umklassifizierungseditor: Zuordnungsänderungen registrierter
 v2-Exporte benötigen eine ausdrücklich geprüfte Metadaten-/Exportbindung.
@@ -125,7 +124,9 @@ Feld bleiben lesbar. Vor kategorisiertem Export ist die Zuordnung Pflicht.
 Arbeitsindex/Record sind keine Runtime-Registrierung; Freigaben bleiben separat.
 
 Bei Wiederaufnahme den aktuellen Arbeitsindex und die Zielregistry verwenden.
-Neuere Records, Freigaben und Integrationsbelege erhalten. Historische Parallel-
+Neuere Records, Freigaben und Integrationsbelege laufender Produktionen erhalten.
+Final integrierte Produktionen werden gemäß PUZZLE_AUTHORING §9 entfernt; ihre
+kompakten Integrationsbindungen benötigen keinen Paket-Replay. Historische Parallel-
 oder Lieferstände erzeugen keine neuen Prüf-/Exportaufträge für Bestandsrätsel.
 
 Prüfwege und gebundene Testinputs: [KAT1_VERIFICATION](KAT1_VERIFICATION.md).

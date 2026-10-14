@@ -22,7 +22,7 @@ on:
         type: boolean
         default: true
       pilots:
-        description: Exercise all four current production pilot puzzles
+        description: Exercise four fixed synthetic interaction cases
         type: boolean
         default: true
       visual:
@@ -44,7 +44,6 @@ concurrency:
 jobs:
   product:
     runs-on: ubuntu-24.04
-    timeout-minutes: ${{ inputs.pilots && 15 || 10 }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1

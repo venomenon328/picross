@@ -169,7 +169,7 @@ static func gui_cases(t: SceneTree) -> void:
 	t.mouse_motion(point(b, old), true)
 	t.mouse_motion(point(b, start), true)
 	t.mouse_motion(point(b, finish), true)
-	t.check(app.session.gesture.target == 3 and app.mini.cells[finish.y * 40 + finish.x] == 3, "G-05 F-02 frozen color in miniature")
+	t.check(app.session.gesture.target == 3 and app.mini.cells[finish.y * 40 + finish.x] == 3, "G-05 T-02 frozen color in miniature")
 	app.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 	t.check(not app.session.gesture.active, "G-04 focus loss discards changed axis")
 	app.select_puzzle(3)
@@ -184,7 +184,7 @@ static func gui_cases(t: SceneTree) -> void:
 	t.mouse_motion(point(b, old), true)
 	t.mouse_motion(point(b, start), true)
 	t.mouse_motion(point(b, finish), true)
-	t.check(b.gesture_length() == 3 and app.mini.cells[finish.y * 50 + finish.x] == 1, "G-05 F-06 small zoom route")
+	t.check(b.gesture_length() == 3 and app.mini.cells[finish.y * 50 + finish.x] == 1, "G-05 T-06 small zoom route")
 	var held: Vector2i = app.session.gesture.endpoint
 	t.mouse_motion(b.get_global_rect().position - Vector2(10, 10), true)
 	t.check(app.session.gesture.endpoint == held, "G-05 outside board holds last endpoint")

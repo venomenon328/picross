@@ -9,7 +9,7 @@ Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 13.10.2026
 `authoring-p1-rect-color-1` ergänzt Schema-2-Exporte; die Pilotprofile v1/v2 bleiben
 unverändert. Keine neue Zertifizierungsregel, kein Solver im Spiel.
 
-Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 3, 6 und 8. Die Dokumentrevision 5 bündelt den Standardablauf; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
+Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 3, 6 und 8. Die Dokumentrevision 7 ergänzt die Bereinigung abgeschlossener Produktionen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
 
 ## Eingang und Grenzen
 
@@ -131,12 +131,14 @@ werden frisch geprüft und erst dann veröffentlicht. Bestehende Ziele sind Fehl
 [content/registry.json](../content/registry.json) ist autoritativ;
 [game/data/registry.json](../game/data/registry.json) ihre exakt kanonisch geprüfte
 Runtime-Projektion ohne Produktionsmetadaten, beide jetzt versioniert als v2.
-Kategorien/Zuordnung folgen [KAT-1](CATEGORIES.md); alle bisherigen Slots bleiben. F01…F09 bleiben reserviert, nur
-F01/F02/F04/F06/F08/F09 sichtbar. Neue IDs folgen lexikografisch. Unbekannte IDs
+Kategorien/Zuordnung folgen [KAT-1](CATEGORIES.md). Alle Produktions-IDs folgen
+lexikografisch, ohne reservierten Präfixbestand; auch null Einträge sind gültig.
+Die früheren F01…F09-Reservierungen sind durch #114 aufgehoben. Unbekannte IDs
 und Großschreibungsaliase haben keinen Loader-/Savepfad. Hauptszene, Loader,
 SaveStore und Reset verwenden dieselbe Zuordnung. Neue ungelöste Titel:
-`Blatt NN · W × H`. Appidentität, Save-Schema 1, historische Dateinamen,
-Revisionen und Recoveryregeln bleiben erhalten; keine Save-Migration.
+`Blatt NN · W × H`. Appidentität, Save-Schema 1, registrierte Slots,
+Revisionen und Recoveryregeln bleiben erhalten; keine Save-Migration. Verwaiste
+Savedateien bleiben unberührt und erzeugen keine Katalogeinträge.
 
 Der Produktionsindex führt Paketort/-hash, Revision, Maße, Modus, Schwierigkeit
 samt Unsicherheit, Status und Blocker. Runtime lädt nur mitgelieferte Pfade.
@@ -237,3 +239,97 @@ unverändert lesbar; v1 wird weiterhin nicht neu registriert.
 Die allgemeinen Regressionen liegen in `test_manual_adapter.py` und erzeugen nur
 feste synthetische Eingänge. Reale Pakete/Overrides werden nicht in Tests oder CI
 aufgenommen. Der konkrete Produktionsexport bleibt eine getrennte Einzelprüfung.
+
+### Feste bearbeitete Rasterimporte und gebundene Randregel-Ausnahme (v2)
+
+`picross-manual-authorization-v2` ergänzt v1 für bereits versiegelte monochrome
+RP-3-Ableitungen mit festen Entfernungen **und Einfügungen**. Das Originalhandoff
+bleibt unverändert: `candidate.source_type=import`, `repair=null` und
+`manual_edit_record` bezeichnet die gespeicherte feste Änderungsliste. Auch
+`state=blocked` darf mit ausdrücklich übergebener v2-Autorisierung eingelesen
+werden; das allein erteilt keine technische Freigabe. Andere Quelltypen und die
+bisherigen v1-Verträge bleiben unverändert.
+
+Die externe Autorisierung hat genau folgende Felder:
+
+```json
+{
+  "format": "picross-manual-authorization-v2",
+  "puzzle_id": "<ID>",
+  "revision": "<Originalrevision>",
+  "original_zip_sha256": "<ZIP-Hash oder null bei unverpacktem Eingang>",
+  "handoff_sha256": "<Originalhandoff>",
+  "inventory_sha256": "<Originalinventar>",
+  "selection": {"variant": "<Endvariante>", "matrix_hash": "<Matrix>", "logic_hash": "<Logik>", "reveal": {"file": "<Reveal>", "sha256": "<Hash>"}},
+  "plan_sha256": "<Dateihash von manual_edit_record>",
+  "reference": {"bundle": "<Originalimport>", "variant": "<Referenzvariante>", "candidate_id": "<Kandidat>", "manifest_sha256": "<Manifest>", "matrix_hash": "<Referenzmatrix>"},
+  "owner_override": {"file": "owner-override.json", "sha256": "<Dateihash>"},
+  "superseded_content_blockers": ["<exakt gebundene historische Metadatenblocker>"],
+  "frame_exception": true
+}
+```
+
+Daneben liegt die tatsächliche `picross-owner-override-v2`-Erklärung mit Akteur,
+UTC-Zeit, Wortlaut, `package_sha256`, `approval_sha256`, sämtlichen gemeinsamen
+Identitäts-/Auswahl-/Plan-/Referenz-/Blockerbindungen und exakt
+`permissions={fixed_mono_edits:true, frame_exception:<bool>}`. Beide
+Ausnahmeberechtigungen müssen typisiert übereinstimmen; ein allgemeiner
+Force-Schalter existiert nicht. Die Erklärung muss tatsächlich vorliegen;
+Software prüft Bindungen, authentifiziert aber weiterhin keinen menschlichen Akteur.
+
+Die inventarisierte Änderungsliste führt `puzzle_id`, `revision`, `reference`
+mit Bundle/Variante/Kandidaten-/Matrixbindung, `edits` als geordnete
+`{column,row,before,after}`-Objekte (**1-basierte** Spalte/Zeile), die boolesche
+Maske `protected`, `max_changes`, `seed=null`, `search=false` sowie
+`solve_seconds`, `verify_seconds` (1…120) und `solve_lines`, `verify_lines`
+(1…1.000.000). Redaktionelle Begleitfelder bleiben erhalten. Jede Position darf
+nur einmal geändert werden; ausschließlich `ink`↔`empty`, tatsächlicher
+Vorwert, genau diese ungeschützten Positionen, alle anderen Zellen geschützt.
+Die feste Liste und ihre Grenzen sind vor der Bearbeitung zu speichern.
+
+Der Adapter rekonstruiert zuerst den vollständigen Originalimport, replayt
+sämtliche Edits und rekonstruiert anschließend das vollständige neue RP-3-Bündel.
+Endmatrix, Maße, Palette, Hintergrund, Alpha und Fit müssen passen; Herkunft und
+freigegebener Parameterkorridor werden am **Originalimport** geprüft. Hinweise
+und geschriebener Endproof werden unabhängig neu geprüft; ursprünglicher
+Produktionsstatus muss vollständig zertifiziert sein. Der neue Rasterquellimport
+wird ausdrücklich als manuelle Ableitung exportiert, nicht als unveränderter
+Motivimport. Die Endfreigabe ist bei diesem Weg auch zur Diagnose zwingend.
+
+Alle Inhaltsgates bleiben Pflicht. Ausschließlich `frame=fail` kann mit
+ausdrücklich freigegebener `frame_exception=true` akzeptiert werden. Die
+Randformel wird weiterhin berechnet; Berichtsfelder `frame_valid=false` und
+`frame_exception_accepted=true` zeigen die Abweichung sichtbar. Kein Überschreiben
+des Originalgates, keine zusätzlichen Randpixel und keine Lockerung von
+Logik-, Herkunfts-, Rechte-, Bild- oder sonstigen Gates. Dies setzt die ausdrückliche
+Eigentümerentscheidung für die exakte Auswahl voraus, keine pauschale Randfreigabe.
+
+CLI bleibt `--manual-authorization <v2-Datei>`; Exportformat bleibt v3.
+Autorisierung, Eigentümererklärung und unveränderte Originalbindungen werden
+offline mitgeliefert und bei `plan`/`register` erneut geprüft. Allgemeine
+Positiv-/Negativtests stehen in `test_edited_import_adapter.py`; keine realen
+Produktionspakete als Test- oder CI-Eingänge.
+
+## Abgeschlossene Produktion (14.10.2026, #116)
+
+Nach nachgewiesener Endabnahme und Main-Integration ersetzt `retire-production`
+die Prüfkopie durch `content/packages/<id>/<revision>/manifest.json` im Format
+`picross-integrated-content-v1`. Es enthält exakt `format`, `entry` (ursprünglicher
+Registryeintrag einschließlich ursprünglichem Exporthash), `integrated_commit`
+und `notice_sha256`. Die Registry bindet jetzt den Hash dieses kleinen Manifests.
+Definition, Reveal und Hinweisdatei unter `game/` bleiben bytegleich; deren Hashes,
+Identität, Kategorie und Metadaten werden weiterhin geprüft. Die Runtimeprojektion
+ändert sich nicht. Das ist kein neuer Export und keine neue Inhaltsfreigabe.
+
+`check-registry`, `sync-runtime`, neue Registrierungen und identische Wiederholung
+akzeptieren solche abgeschlossenen Einträge ohne Produktionsreplay. Ein fehlender
+beliebiger Export wird nicht als abgeschlossen ausgegeben: dafür ist das explizite,
+hashgebundene Format erforderlich. Neue Eingänge durchlaufen weiterhin den vollen
+Export-/Freigabepfad. Kompakte Manifeste sind keine `verify-export`-Eingänge.
+
+`retire-production --checkout <pfad> --integrated-commit <SHA> --puzzle-id <ID>`
+prüft die SHA gegen das zuvor aktualisierte `origin/main`, die exakten damaligen
+Registry-/Runtime-/Paket-/Arbeitsbytes und den Arbeitsindex vor jeder Löschung.
+Neuere/unversionierte Arbeit und offene Registrierungsjournale blockieren. Der Befehl
+bereitet ausschließlich einen Git-Diff vor; Commit, PR und Merge folgen dem Workflow.
+Kein automatischer Nach-Merge-Job und kein wachsender CI-Testbestand.

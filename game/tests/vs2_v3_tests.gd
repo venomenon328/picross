@@ -1,4 +1,5 @@
 extends SceneTree
+var VisualCases: Script
 ## Current source and external downloaded-PCK probe; no developer code exported.
 const Store = preload("res://model/save_store.gd")
 var Sidebar: Script
@@ -125,6 +126,7 @@ func axis_negatives() -> void:
 		check(not Sidebar.clear_of_board(app,box),"negative: complete hint hit/travel collision rejected")
 
 func _initialize() -> void:
+	VisualCases = load(get_script().resource_path.get_base_dir().path_join("current_visual_cases.gd"))
 	geometry = load(get_script().resource_path.get_base_dir().path_join("vs2_v2_cases.gd"))
 	Sidebar = load(get_script().resource_path.get_base_dir().path_join("vs2_v1_cases.gd"))
 	call_deferred("run")
@@ -166,6 +168,14 @@ func shot(name: String, region: Rect2 = Rect2()) -> void:
 	await RenderingServer.frame_post_draw
 	var image: Image = canvas.get_texture().get_image()
 	if region.has_area(): image = image.get_region(Rect2i(region))
+	# The composed viewport is opaque. Keep every native pixel while avoiding
+	# a redundant alpha channel in the twelve mandatory evidence images.
+	if image.get_format() == Image.FORMAT_RGBA8:
+		var original: PackedByteArray = image.get_data()
+		image.convert(Image.FORMAT_RGB8)
+		var restored: Image = image.duplicate()
+		restored.convert(Image.FORMAT_RGBA8)
+		check(restored.get_data() == original, "RGB evidence preserves every native RGBA pixel")
 	var path: String = output.path_join(name+".png")
 	check(image.save_png(path)==OK,"native picture saved")
 	pictures.append({"file":name+".png","sha256":FileAccess.get_sha256(path)})
@@ -243,7 +253,7 @@ func fingerprint() -> Dictionary:
 func diverse(traces: Array) -> bool:
 	var unique: Dictionary = {}
 	for trace: Variant in traces: unique[str(trace)]=true
-	return unique.size()>=10 # The bound twelve F01 cells select ten distinct variants.
+	return unique.size()>=10 # The bound twelve T01 cells select ten distinct variants.
 
 func max_deviation(lines: Array) -> float:
 	var result: float = 0
@@ -275,20 +285,21 @@ func run() -> void:
 		app.select_puzzle(index)
 		for c: String in app.title.text:
 			check(font.has_char(c.unicode_at(0)),"all six actual title glyphs "+c)
-	for dimensions: Vector2i in [Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080),Vector2i(2560,1440)]:
+	for configuration: Array in VisualCases.CONFIGURATIONS:
+		var dimensions: Vector2i = configuration[0]
+		var u: float = configuration[1]
 		canvas.size = dimensions
 		app.size = Vector2(dimensions)
-		for u: float in [1.0,1.25]:
-			app.set_ui_scale(u)
-			for index: int in [0,1,4]:
-				app.select_puzzle(index)
-				for mode: int in [0,1]:
-					app.set_puzzle_view(mode)
-					for fit: bool in [false,true]:
-						if fit: app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
-						else: app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
-						await settle()
-						check_layout()
+		app.set_ui_scale(u)
+		for index: int in [0,1,4]:
+			app.select_puzzle(index)
+			for mode: int in [0,1]:
+				app.set_puzzle_view(mode)
+				for fit: bool in [false,true]:
+					if fit: app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
+					else: app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
+					await settle()
+					check_layout()
 	# Tight actual wheel route: scrolling never changes board/model, all buttons reachable.
 	canvas.size = Vector2i(1280,720)
 	app.size = Vector2(canvas.size)
@@ -420,7 +431,7 @@ func run() -> void:
 			if app.session.player.cells[4*app.session.player.width+x]<0:
 				mouse(q,MOUSE_BUTTON_LEFT,true)
 				mouse(q,MOUSE_BUTTON_LEFT,false)
-		if index!=1: await shot("v3-F%02d-work" % int(app.session.definition.id.trim_prefix("F-")))
+		if index!=1: await shot("v3-T%02d-work" % int(app.session.definition.id.trim_prefix("T-")))
 		if index==0:
 			var region: Rect2 = app.board.view.cell_rect(Vector2i(3,4))
 			region.position+=app.board.global_position

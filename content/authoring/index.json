@@ -1,5 +1,4 @@
 {
-  "format": "picross-authoring-index-v1",
   "entries": [
     {
       "puzzle_id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
@@ -81,5 +80,6 @@
       "revision": "r02",
       "record": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r02/record.json"
     }
-  ]
+  ],
+  "format": "picross-authoring-index-v1"
 }

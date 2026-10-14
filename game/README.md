@@ -4,21 +4,20 @@ Die Entwicklungsfassung enthält die [Kategorienprojektion nach KAT-1](../docs/C
 
 Karten zeigen „Neu“, „Begonnen“ (auch mit ausschließlich Redohistorie) oder „Gelöst“. Die Vorschau zeigt nur eigene Füllungen, ohne Korrekturen; Name und Motivbild erscheinen erst nach gültigem Abschluss. Ein leerer automatisch angelegter Save bleibt „Neu“. Reset und Backupaktionen gehören zur jeweiligen Karte und verlangen weiterhin Bestätigung. Ein gültiger leerer Bestand und ein Katalogladefehler haben unterschiedliche Anzeigen. Kategorienänderungen verändern keine Rätseldefinition, Revision oder Spielstände.
 
-Weitere freigegebene Workflow-Inhalte können über den [ZA-1-Adapter](../docs/ZA1_ADAPTER.md)
-registriert werden. Die Adapterlieferung ergänzt ausschließlich technische
-Fähigkeiten; das aktuelle Spielerangebot bleibt bei den folgenden sechs Rätseln.
+Der reguläre Spielbestand folgt `content/registry.json` und enthält ausschließlich
+freigegebene Workflow-Inhalte, aktuell zehn Rätsel. Weitere Inhalte werden über den
+[ZA-1-Adapter](../docs/ZA1_ADAPTER.md) registriert. Historische Prototypen F-01 bis
+F-09 sind seit #114 nicht mehr Bestandteil des Spielerangebots oder Exports.
 
-Das reguläre Projekt liegt unter `game/`. Der integrierte Stand umfasst Sidebar,
-Vollsicht, Stift-/Atlasdarstellung, Save/Recovery und genau sechs Katalogrätsel:
-F01 (20×20), F02 (40×40, vier Farben), F04 (20×20), F06 (50×50), F08/F09 (40×40).
-F03/F05/F07 werden nicht angeboten; vorhandene Dateien und Speicherplätze bleiben.
-Dies ist eine unsignierte Entwicklungsfassung, kein Release.
+Das reguläre Projekt liegt unter `game/`. Sidebar, Vollsicht, Stift-/Atlasdarstellung
+und Save/Recovery sind integriert. Dies ist eine unsignierte Entwicklungsfassung,
+kein Release.
 
 Sammlungsstart, passive eigene Füllminiatur, unabhängige lange Hinweise und sechs
 Sidebaraktionen in 2×3 bleiben aktiv. Das Raster samt Rahmen bleibt innerhalb
 der angebotenen Fitgrenze sichtbar. „Rätselansicht“ bietet Rasteransicht und
 Gesamtansicht mit allen Hinweisen; ein Sitzungswechsel ändert keine Spielstände.
-Fonts und Bilder sind offline eingebettet; Lizenzen/Nutzungshinweise liegen im ZIP.
+Fonts, Bilder und Spieldaten liegen offline in `picross-p1.pck`; Lizenzen/Nutzungshinweise liegen im ZIP.
 
 ## Aktuellen main-Player per GitHub Actions erzeugen
 
@@ -39,7 +38,8 @@ Linux-Runner nicht geprüft. Der separate CI-Playerexport bleibt unverändert.
 
 ## Windows starten
 
-Das vollständige ZIP entpacken und `picross-p1.exe` starten. Keine Godot-Installation
+Das vollständige ZIP entpacken und `picross-p1.exe` starten. Die EXE und
+`picross-p1.pck` müssen im selben Ordner bleiben. Keine Godot-Installation
 nötig. `picross-p1.console.exe` zeigt technische Ausgaben. Dies ist eine unsignierte
 Debug-Spielprobe, kein Release/Installer. Die Quellcommitkennung steht im beigefügten
 README.txt. Ausschließlich das **Product-CI-Artefakt** enthält zusätzlich
@@ -50,8 +50,9 @@ main-Player hat bewusst keinen solchen Prüfbericht; sein Link steht im Actions-
 Godot löst `user://p1/saves/` im projektbezogenen User-Data-Verzeichnis auf.
 Unter Windows liegt dieses standardmäßig unter
 `%APPDATA%\Godot\app_userdata\picross · P1\p1\saves\` (bei benutzerdefiniertem
-Godot-Datenpfad entsprechend dort). Die neun bekannten Inhalts-IDs ergeben
-`f01.json` bis `f09.json` mit gleichnamigen `f01.bak`/`f01.tmp` usw.
+Godot-Datenpfad entsprechend dort). Dateinamen folgen dem jeweiligen Registry-Slot:
+`<slot>.json`, `<slot>.bak` und `<slot>.tmp`. Vorhandene alte `f01`…`f09`-Dateien
+bleiben unbenutzt auf Datenträger; sie werden weder migriert noch gelöscht.
 Tests verwenden nur eigene temporäre Profile; das ZIP enthält keine
 Spielstände.
 
@@ -99,7 +100,7 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
   Rückgängig/Wiederholen stellt ganze Striche mit exakten Vorzuständen wieder her.
-- F-02/F-06: Farbe über die unbeschrifteten Farbfelder in den Originalfarben wählen.
+- Bei Farbrätseln: Farbe über die unbeschrifteten Farbfelder in den Originalfarben wählen.
   Eckmarkierungen zeigen die Auswahl; Status und Tooltip nennen „Farbe 1“ bis „Farbe 4“.
   Farbwahl aktiviert Füllen, auch nach Radierer. Die frühere A–D-Beschriftung
   der Mauspalette entfällt; Lösungshinweise zeigen weiterhin nur die Zahl in ihrer Farbe.
@@ -163,23 +164,21 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
 
 Für den Abschluss genügen alle richtigen Füllungen ohne Zusatzfüllungen.
 Hintergrund muss nicht vollständig ausgekreuzt sein. Name und Ergebnisbild erscheinen
-erst nach bestätigtem Abschluss. F-01 zeigt das ursprüngliche Raster neben einer
-detaillierteren Illustration desselben Motivs. F-02 zeigt einen verfeinerten Leuchtturm
-mit Sonne, Laterne, Turmbändern, Fenstern, Tür und Wasserlinien im klaren F-01-Stil.
+erst nach bestätigtem Abschluss. Die registrierte Definition bindet Motivname und
+freigegebenes Ergebnisbild; vorher bleibt nur die eigene Füllminiatur sichtbar.
 Die früheren 100×100-Blätter werden nicht mehr angeboten.
 
 ## Entwicklung und technische Prüfung
 
-Im Repository-Root mit Godot Standard 4.7.2-stable:
+Regulärer Entwicklerstart im Repository-Root mit Godot Standard 4.7.2-stable:
 
 ```sh
 godot --headless --path game --import
-godot --headless --path game --script res://tests/run_tests.gd
 godot --path game
 ```
 
 Direkter Entwicklerstart verwendet das normale Profil. Für isolierte technische
-Tests und Windows-Export den Harness mit der separaten Python-/Pillow-Umgebung
+Tests (mit temporär erzeugtem synthetischem Katalog) und Windows-Export den Harness mit der separaten Python-/Pillow-Umgebung
 nach der [Werkzeuganleitung](../tools/puzzle_production/README.md) verwenden:
 
 ```powershell
@@ -197,7 +196,7 @@ Linux benötigt für die OpenGL-Prüfung Xvfb/Mesa. Preset und Appname bleiben
 `--integration`, `--pilots`, `--visual` und `--perf-b` sind lokal an.
 Die jeweiligen `--no-*`-Formen schalten sie ausdrücklich aus; CI wählt gemäß
 [CI-Policy](../docs/CI_POLICY.md) nach vollständigem Änderungsumfang. Integration
-prüft 500 Aktionen plus Neustart. Piloten prüfen F04/F06/F08/F09 in echten
+prüft 500 Aktionen plus Neustart. Der `--pilots`-Bereich prüft vier synthetische Muster in echten
 Prozessen als feste Funktionsregression; der Fachlauf zertifiziert keine
 Bestandsrätsel erneut. Reine Rätselergänzungen starten keinen dieser Tests.
 Visual prüft aktuelle Pixel-/Animationsverträge, PERF-B den regulären Renderer
@@ -208,13 +207,14 @@ aktueller Prüfweg.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
 `technical/` enthält kompakte commitgebundene Ergebnisse, Logs und notwendige
-native Bilder/Fehlerdiagnostik; Budget 30 MB, mit Spieler-ZIP 75 MB. Das reguläre Product-CI-ZIP
-enthält Spielanleitung, Commit-/Hashbericht, `rp6-owner.ps1` für isolierte persönliche
-Proben und notwendige Lizenzen. Technische Motivspoiler sind separat.
+native Bilder/Fehlerdiagnostik. Größen werden gemessen, ohne feste Bytegrenzen.
+Das reguläre Product-CI-ZIP enthält Spielanleitung, Commit-/Hashbericht und
+notwendige Lizenzen. Historische Produktionshilfen werden nicht ausgeliefert.
+Technische Motivspoiler sind separat.
 Keine automatisierte Prüfung ersetzt eine persönliche Maus-/Komfortprobe.
 
 Aktuelle Verträge und Pflichtquellen: [Projektprofil](../docs/PROJECT_PROFILE.md).
 Historische Studien, alte Abnahmen und Quellenbindungen:
 [Bestandsinventar](../docs/DEVELOPMENT_ARCHIVE.md). Die ursprüngliche Anleitung ist
 [am Stand vor Cleanup](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/README.md) erreichbar.
-Prüferdokumente mit Motivspoiler: [F01](F01_PROOF.md), [F02/F03](F02_PROOF.md).
+Historische Prüferdokumente mit Motivspoiler: [F01](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F01_PROOF.md), [F02/F03](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F02_PROOF.md).

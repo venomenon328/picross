@@ -33,7 +33,7 @@ import kat2_product
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 
 EXPECTED_PROJECT_NAME = "picross · P1"
-RENDER_STAGES = ("layout", "views", "cells-f1", "cells-f2", "gestures", "hints", "axis", "h1")
+RENDER_STAGES = ("layout", "cells-f1", "cells-f2", "axis", "h1")
 
 
 def project_name(project_file: Path) -> str:
@@ -77,9 +77,9 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
 
 
 def package(build: Path, output: Path, manifest: dict, readme: str, extras: dict[str, Path] | None = None) -> Path:
-    required = {"picross-p1.exe", "picross-p1.console.exe"}
+    required = {"picross-p1.exe", "picross-p1.console.exe", "picross-p1.pck"}
     files = {path.name for path in build.iterdir() if path.is_file()}
-    if not required <= files or files - required - {"picross-p1.pck"}:
+    if files != required:
         raise toolchain.PreflightError(f"Unexpected/incomplete Windows export: {sorted(files)}")
     if any((build / name).stat().st_size == 0 for name in files):
         raise toolchain.PreflightError("Empty Windows export file")
@@ -105,7 +105,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--download-timeout-seconds", type=int, default=1200)
     for name, description in (
         ("integration", "500 actions and the independent cross-process restart oracle"),
-        ("pilots", "all four current pilot playthroughs across real processes"),
+        ("pilots", "four synthetic interaction cases across real processes"),
         ("visual", "current compact native pixel and animation checks"),
         ("perf-b", "regular atlas renderer and cache lifecycle regression"),
     ):
@@ -161,9 +161,9 @@ def run_pilots(workspace: Path, environment: dict, base: list[str], phase) -> di
             environment["RP6_INDEX"] = str(index)
             for stage in ("partial", "finish", "read"):
                 untouched = {p.name: toolchain.sha256_file(p) for p in pilot_saves.glob("*")
-                             if p.is_file() and not p.name.startswith(("f01.", f"f{number:02d}."))}
+                             if p.is_file() and not p.name.startswith(("t01.", f"t{number:02d}."))}
                 environment["RP6_STAGE"] = stage
-                phase(f"rp6-f{number:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
+                phase(f"rp6-t{number:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
                       "RP6_" + stage.upper() + "_OK")
                 if any(not (pilot_saves / name).is_file() or toolchain.sha256_file(pilot_saves / name) != digest
                        for name, digest in untouched.items()):
@@ -180,19 +180,19 @@ def run_pilots(workspace: Path, environment: dict, base: list[str], phase) -> di
 
 
 def require_foreign_slot_failure(result: dict) -> None:
-    """Accept only the semantic F01 guard, with a natively valid loaded save."""
+    """Accept only the semantic T01 guard, with a natively valid loaded save."""
     output = result["output"]
     errors = [line.strip() for line in output.splitlines() if "ERROR:" in line]
     if (result["exit_code"] != 4
-            or errors != ["ERROR: RP3_FAIL: isolated F04 preserves F01 cells after restart"]
-            or "RP6_F01_SAVE status=loaded unknown=399" not in output
+            or errors != ["ERROR: RP3_FAIL: isolated T04 preserves T01 cells after restart"]
+            or "RP6_T01_SAVE status=loaded unknown=399" not in output
             or not re.search(r"RP6_RESULT index=2 stage=read checks=\d+ failures=1\b", output)
             or "RP6_READ_OK" in output):
-        raise toolchain.PreflightError("Foreign-slot control did not fail solely on valid changed F01 cells")
+        raise toolchain.PreflightError("Foreign-slot control did not fail solely on valid changed T01 cells")
 
 
 def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[str], phase) -> dict:
-    """Re-read F04 once with a valid changed F01 in a disposable profile copy."""
+    """Re-read T04 once with a valid changed T01 in a disposable profile copy."""
     original = environment["P1_TEST_SAVE_ROOT"]
     original_stage = environment["RP6_STAGE"]
     control = workspace / "rp6-isolation-control"
@@ -200,15 +200,15 @@ def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[s
     try:
         environment["P1_TEST_SAVE_ROOT"] = str(control)
         environment["RP6_STAGE"] = "foreign_write"
-        phase("rp6-f04-foreign-slot-write", base + ["--script", "res://tests/rp6_probe.gd"],
+        phase("rp6-t04-foreign-slot-write", base + ["--script", "res://tests/rp6_probe.gd"],
               "RP6_FOREIGN_WRITE_OK")
         environment["RP6_STAGE"] = "read"
-        phase("rp6-f04-foreign-slot-control", base + ["--script", "res://tests/rp6_probe.gd"],
+        phase("rp6-t04-foreign-slot-control", base + ["--script", "res://tests/rp6_probe.gd"],
               validator=require_foreign_slot_failure)
     finally:
         environment["P1_TEST_SAVE_ROOT"] = original
         environment["RP6_STAGE"] = original_stage
-    return dict(status="success", processes=2, slot="F-01", native_load="loaded",
+    return dict(status="success", processes=2, slot="T-01", native_load="loaded",
                 unknown_cells=399, expected_exit=4, expected_failures=1)
 
 
@@ -279,8 +279,8 @@ def run_pilot_visual(output, workspace, project, engine, environment, phase, hos
     try:
         for index, number in ((2,4),(3,6),(4,8),(5,9)):
             environment["RP6_INDEX"] = str(index)
-            phase(f"rp6-f{number:02d}-render",command,"RP6_CAPTURE_OK")
-        return list(renders.glob("rp6-*.json")) + [renders / "rp6-f06-completion-1920-ui100.png"]
+            phase(f"rp6-t{number:02d}-render",command,"RP6_CAPTURE_OK")
+        return list(renders.glob("rp6-*.json")) + [renders / "rp6-t06-completion-1920-ui100.png"]
     finally:
         for key in ("P1_CAPTURE_DIR","P1_TEST_SAVE_ROOT","RP6_INDEX"):
             environment.pop(key,None)
@@ -288,12 +288,6 @@ def run_pilot_visual(output, workspace, project, engine, environment, phase, hos
 
 def player_extras(root: Path, output: Path) -> dict[str, Path]:
     extras = {}
-    for source, filename in (
-        ("tools/rp6_owner.ps1", "rp6-owner.ps1"),
-    ):
-        path = output / filename
-        path.write_text((root / source).read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
-        extras[filename] = path
     for name, source in (
         ("SPIELANLEITUNG.md", "game/README.md"),
         ("licenses/resources.json", "game/art/book/manifest.json"),
@@ -477,7 +471,8 @@ def main(argv: list[str] | None = None) -> int:
                 selected += [output / "integration/summary.json"]
                 # Native popup/dialog tests must own the desktop: a concurrent
                 # capture window can close their popup on focus loss on Windows.
-                if args.visual:
+                # Linux runs each native process on its own xvfb-run -a display.
+                if args.visual and host == "Windows":
                     vs2_result = python_phase("current-vs2-complete", vs2_future.result)
                 evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
                 selected += kat2_files
@@ -490,7 +485,7 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_done("pilots")
             if args.visual:
                 evidence.scope_start("visual")
-                # Pilot captures consume completed real saves. Other native checks
+                # Synthetic captures consume completed isolated saves. Other native checks
                 # run independently in the existing isolated worker, with separate
                 # profile/project/environment and no concurrent evidence writes.
                 if args.pilots:
@@ -530,26 +525,26 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
             if args.visual:
                 evidence.report["visual"]["vs2"]["hc92"]["retained_samples"] = python_phase(
                     "retained-hc92-font-samples", lambda: hc92_verify.verify_retained(evidence.technical / "selected/hc92-renders"))
             required_kat2 = {str(p.relative_to(output)) for p in selected if p.parent.name == "kat2"}
             if not required_kat2 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
-                raise toolchain.PreflightError("Required KAT-2 evidence missing from bounded delivery")
+                raise toolchain.PreflightError("Required KAT-2 evidence missing from technical delivery")
             required_za1 = {str(p.relative_to(output)) for p in selected if p.parent.name == "za1"}
             if not required_za1 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
-                raise toolchain.PreflightError("Required ZA-1 native evidence missing from bounded delivery")
+                raise toolchain.PreflightError("Required ZA-1 native evidence missing from technical delivery")
             required_b = {str(p.relative_to(output)) for p in selected if p.parent.name == "perf-b"}
             retained_b = {p["file"] for p in evidence.report["selected_evidence"]["files"]}
             if not required_b <= retained_b:
-                raise toolchain.PreflightError("Required PERF-B native evidence missing from bounded delivery")
+                raise toolchain.PreflightError("Required PERF-B native evidence missing from technical delivery")
             if args.visual:
                 required_images = {p.name for p in selected if p.parent.name == "v3-renders" and p.suffix == ".png"}
                 retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}
                 if required_images != retained_images:
-                    raise toolchain.PreflightError("Targeted SL images missing from bounded technical delivery")
-            evidence.enforce_budget()
+                    raise toolchain.PreflightError("Targeted SL images missing from technical delivery")
+            evidence.measure_size()
             evidence.finish()
             package_began = time.monotonic()
             archive, delivery = package_player(build, output, evidence.report, root)
@@ -558,8 +553,8 @@ def main(argv: list[str] | None = None) -> int:
             evidence.flush()
             audit = evidence.technical / "player-audit.json"
             audit.write_text(json.dumps(delivery, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-            budget = evidence.enforce_budget(archive)
-            print("EVIDENCE_BYTES " + json.dumps(budget, sort_keys=True), flush=True)
+            sizes = evidence.measure_size(archive)
+            print("EVIDENCE_BYTES " + json.dumps(sizes, sort_keys=True), flush=True)
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)
     except Exception as exc:

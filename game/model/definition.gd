@@ -5,9 +5,6 @@ const MAX_DIMENSION = 50
 static func catalog_ids() -> Array[String]:
 	return Registry.catalog_ids()
 
-static func load_f01() -> Dictionary:
-	return load_fixture("f01")
-
 static func load_fixture(id: String) -> Dictionary:
 	var entry: Dictionary = Registry.by_key(id)
 	if entry.is_empty():
@@ -106,8 +103,6 @@ static func validate(data: Dictionary, study_assets: Dictionary = {}) -> String:
 	var texture: Texture2D = load(path) as Texture2D
 	if texture == null or texture.get_width() < 1 or texture.get_height() < 1:
 		return "Defektes Abschlussbild."
-	if data.id in ["F-04", "F-05", "F-06", "F-07", "F-08", "F-09"] and (texture.get_width() != texture.get_height() or texture.get_width() < 2 * int(data.width) or texture.get_width() > 8192):
-		return "Ungültige quadratische Abschlussgröße."
 	if str(data.id).begins_with("pz-") and (data.palette.size() > 4 or texture.get_width() < 2 * int(data.width) or texture.get_height() < 2 * int(data.height) or texture.get_width() > 8192 or texture.get_height() > 8192):
 		return "Ungültige Abschlussgröße oder Farbzahl."
 	return ""

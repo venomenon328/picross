@@ -36,18 +36,6 @@ OLD_HEAD = "8b762dd9aaf976361cba44e3b25004e09edde348"
 OLD_RUN = "37921979562"
 
 
-def embedded_pack(executable: Path) -> dict:
-    data = executable.read_bytes()
-    # Godot appends the pack length (uint64 LE) and GDPC magic after the pack.
-    if data[-4:] != b"GDPC":
-        raise ValueError("Missing embedded PCK footer")
-    length = struct.unpack("<Q", data[-12:-4])[0]
-    start = len(data) - 12 - length
-    if start < 0 or data[start:start+4] != b"GDPC":
-        raise ValueError("Invalid embedded PCK bounds/header")
-    return dict(offset=start, bytes=length, sha256=hashlib.sha256(data[start:-12]).hexdigest())
-
-
 def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
     """No arguments or player test entry point; inspect only our owned window."""
     from PIL import Image
@@ -211,7 +199,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     runtime_resources = perf_b_resources.verify_runtime(ROOT)
     if runtime_resources != review_report["perf_b_resources"]:
         raise ValueError("Delivered current resource binding differs")
-    matrix=json.loads((review/"selected/vs2-renders/vs2-matrix.json").read_text(encoding="utf-8"))
+    matrix=vs2_delivery.read_geometry_report(review/"selected/vs2-renders/vs2-matrix.json")
     vs2_delivery.verify_records(matrix)
     if review_report["visual"]["vs2"]["v2"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v2-plan.json"):
         raise ValueError("Delivered V2 plan identity differs")
@@ -219,7 +207,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         raise ValueError("Delivered V3 plan identity differs")
     if review_report["visual"]["vs2"]["v3"]["sidebar_plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/sl65-plan.json"):
         raise ValueError("Delivered SL plan identity differs")
-    if review_report["visual"]["vs2"]["records"]!=256 or review_report["visual"]["vs2"]["rendered"]!=23:
+    if review_report["visual"]["vs2"]["records"]!=96 or review_report["visual"]["vs2"]["rendered"]!=15:
         raise ValueError("Missing current native VS2 coverage")
     archive=cache/toolchain.EDITORS["Windows"].name
     toolchain.verify_sha256(archive,toolchain.EDITORS["Windows"].sha256)
@@ -240,7 +228,9 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     events=[]
     def launch(label,delivered,script,marker):
         log=output/(label+".log")
-        command=[str(engine),"--main-pack",str(delivered/"picross-p1.exe"),"--rendering-driver","opengl3","--audio-driver","Dummy","--script",str(ROOT/"game/tests"/script)]
+        # The historical writer has an embedded pack; the current player requires its sibling PCK.
+        pack = delivered/("picross-p1.pck" if delivered == package else "picross-p1.exe")
+        command=[str(engine),"--main-pack",str(pack),"--rendering-driver","opengl3","--audio-driver","Dummy","--script",str(ROOT/"game/tests"/script)]
         try:
             result=subprocess.run(command,cwd=delivered,env=env,capture_output=True,encoding="utf-8",errors="replace",timeout=300,creationflags=subprocess.CREATE_NO_WINDOW)
         except subprocess.TimeoutExpired as error:
@@ -302,26 +292,21 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     launch("perf-b-runtime", package, "perf_b_probe.gd", "PERF_B_PROBE_OK")
     b_probe = json.loads((b_output / "probe.json").read_text())
     if toolchain.sha256_file(study)!=study_hash: raise ValueError("Historical study data changed")
-    packs={"picross-p1.exe":embedded_pack(package/"picross-p1.exe")}
-    console=package/"picross-p1.console.exe"
-    if console.read_bytes()[-4:]==b"GDPC":
-        packs[console.name]=embedded_pack(console)
-        if packs["picross-p1.exe"]["sha256"]!=packs[console.name]["sha256"]:
-            raise ValueError("EXE pair embeds different packs")
-    else:
-        # Official Godot console shim starts the same-name regular EXE; its
-        # actual owned native process is checked by the no-argument launches.
-        packs[console.name]=dict(console_shim=True,load_target="picross-p1.exe",sha256=packs["picross-p1.exe"]["sha256"])
+    pack = package/"picross-p1.pck"
+    with pack.open("rb") as stream:
+        if stream.read(4) != b"GDPC": raise ValueError("Invalid separate resource pack")
+    resource_pack = dict(file=pack.name, bytes=pack.stat().st_size,
+                         sha256=toolchain.sha256_file(pack))
     evidence=dict(source_commit=head,base_commit=report["base_commit"],tested_checkout_commit=report["tested_checkout_commit"],github_run_id=run_id,
                   plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan.json"),
                   plan_amendment_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v1-plan-amendment.json"),
                   v2_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v2-plan.json"),v2=v2,v3=v3,v3_processes=v3_processes,v3_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/v3-plan.json"),
                   sidebar_plan_sha256=toolchain.sha256_file(ROOT/"examples/vs2/sl65-plan.json"),
                   sidebar_assets=json.loads((ROOT/"game/art/book/frames.json").read_text(encoding="utf-8")),
-                  platform=platform.platform(),bindings=[player_binding,review_binding],export_files=report["export_files"],embedded_packs=packs,
+                  platform=platform.platform(),bindings=[player_binding,review_binding],export_files=report["export_files"],resource_pack=resource_pack,
                   engine_archive_sha256=toolchain.sha256_file(archive),engine_sha256=toolchain.sha256_file(engine),events=events,
                   old_writer=dict(source_commit=OLD_HEAD,main_integration=vs2_delivery.BASE,github_run_id=OLD_RUN,binding=old_binding,export_files=old_report["export_files"]),
-                  scripts={name:toolchain.sha256_file(ROOT/"game/tests"/name) for name in ("vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd","vs2_v1_cases.gd","vs2_v2_cases.gd","vs2_v2_tests.gd","vs2_v3_tests.gd")},
+                  scripts={name:toolchain.sha256_file(ROOT/"game/tests"/name) for name in ("current_visual_cases.gd","vs2_window.gd","vs2_roundtrip.gd","vs2_measurements.gd","vs2_v1_cases.gd","vs2_v2_cases.gd","vs2_v2_tests.gd","vs2_v3_tests.gd")},
                   matrix_records=len(matrix["records"]),hc92_pck=hc_pack,
                   rounds={p.name:json.loads(p.read_text(encoding="utf-8")) for p in output.glob("vs2-*.json")},
                   images={p.relative_to(output).as_posix():toolchain.sha256_file(p) for p in [*output.glob("*.png"),*output.glob("v3-*/*.png")]},

@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 13.10.2026 · Version 1.5 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
+Stand: 14.10.2026 · Version 1.7 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
 
 ## Geltung und Ablösung
 
@@ -29,7 +29,8 @@ Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 
 Eigentümerentscheidung vom 12.10.2026: Rätsel werden bei ihrer Erstellung und
 gezielten Integration vollständig geprüft; diese Prüfungen werden **kein Teil
-der CI**. Nachweise bleiben dateigebunden im Produktionspaket. Änderungen an
+der CI**. Nachweise bleiben bis zur finalen Integration dateigebunden im Produktionspaket;
+danach gilt die Bereinigung aus PUZZLE_AUTHORING §9. Änderungen an
 Raster/Quelle verlangen die im [Regelwerk](ai-workflows/PUZZLE_AUTHORING.md)
 bestimmten Neuprüfungen außerhalb der CI. Das gilt auch bei späteren Codeänderungen:
 keine routinemäßige Neuzertifizierung vorhandener Rätsel.
@@ -43,7 +44,7 @@ bei relevanten Codeänderungen bleiben unverändert.
 
 Keine rätselspezifischen Unit-Tests oder Testgenerierung aus dem Produktionsfundus.
 F01/F02-Zertifikatstests, reale RP-/VS-Korpus-Replays, der Knoblauch-Referenztest
-und deren CI-Jobs sind entfallen. Historische Daten/Proofs bleiben erhalten.
+und deren CI-Jobs sind entfallen. Historische Daten/Proofs müssen nicht im aktiven Tree erhalten bleiben.
 Allgemeine Solver-, Verifier-, Import-, Reparatur- und Adaptertests verwenden feste
 synthetische Eingänge; Registrierungstests kopieren keine produktiven Pakete.
 Sämtliche nativen Funktions-/Renderläufe verwenden einen festen temporären
@@ -64,6 +65,11 @@ Die beiden Commitobjekte werden gezielt flach geladen. Bei divergierter Basis
 können zusätzliche Prüfungen ausgewählt werden; Basisänderungen werden dadurch
 nicht versehentlich übersehen. Der tatsächliche Checkout bleibt der Test-Merge.
 Auswahlbericht und Logs nennen Head, Basis, Checkout, Run und ausgewählte Pfade.
+Der vollständige Auswahlbericht wird als Datei über das Artefakt desselben Laufs
+an das Ergebnisgate übergeben. Joboutputs enthalten nur die Auswahlflags;
+Umgebungsvariablen enthalten nur die vier Jobergebnisse. Große Aufräum-PRs dürfen
+nicht an Betriebssystemgrenzen für Argumente/Umgebungsvariablen scheitern; die
+Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 
 | Änderung | Automatischer Pflichtumfang im PR |
 | --- | --- |
@@ -126,9 +132,18 @@ Save/Recovery und ZS2-Verhalten einmal aus und prüft echten Mehrprozess-Save,
 kontrollierten Start sowie den regulären Windows-Export. Der kurze absichtliche
 Fehler durchläuft dieselbe `check()`-/Ergebnis-/Exit-23-Strecke wie die Suite.
 
+Die native Regression verwendet ausschließlich den festen technischen Katalog aus
+`tests/puzzle_production/fixtures/catalog/runtime.json`. `tools/product_fixtures.py`
+erzeugt sechs synthetische Definitionen/Reveals nur in temporären Projekten.
+Eingefrorene KAT-1-Saves behalten separate Definitionsinputs unter `game/tests/`.
+Vor dem Spielerexport ersetzt der Harness die temporären Ressourcen durch den
+Produktionsbestand. Echte Inhalte werden nicht erneut zertifiziert und erhalten
+keine rätselspezifischen CI-Tests. Die einmalige Katalog-/PCK-Sichtung für #114
+ist ein PR-Liefernachweis, keine neue Testmatrix.
+
 `--integration` ergänzt die 500 Aktionen in fünf echten Prozessen plus Neustart
-und unabhängigem Python-Orakel. `--pilots` prüft F04/F06/F08/F09 vollständig;
-F04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
+und unabhängigem Python-Orakel. `--pilots` prüft die synthetischen Muster T04/T06/T08/T09 vollständig;
+T04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
 Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `--visual` ergänzt
 die aktuelle native Renderprüfung. Die jeweiligen `--no-*`-Schalter werden von
 CI ausdrücklich übergeben; lokal sind alle vier ergänzenden Bereiche aktiv.
@@ -154,16 +169,16 @@ Ein Lauf mit ausgeschaltetem Bereich wird nicht als dessen erfolgreicher Nachwei
 ausgegeben. Vollständige Produktionsrekonstruktionen echter Inhalte gehören ausschließlich
 in deren Produktionsauftrag, nicht in den Fachlauf oder Runtime-Harness.
 
-F04 prüft nach Abschluss außerdem die bekannten unveränderten F01/F02/F06-Zellstände
+T04 prüft nach Abschluss außerdem die bekannten unveränderten T01/T02/T06-Zellstände
 (400/1600/2500 unbekannte Zellen) und nach dem zweiten Neustart den semantischen
-F01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Die isolierte
-Partialinstanz sichert den unveränderten F01-Startstand, damit der zweite Neustart
+T01-Save (`fresh` oder gültig `loaded` mit 400 unbekannten Zellen). Die isolierte
+Partialinstanz sichert den unveränderten T01-Startstand, damit der zweite Neustart
 auch die gültig geladene Variante tatsächlich prüft. JSON-Zellwerte werden numerisch
 verglichen. Erstmals erzeugte Dateien und reguläre Start-/Flush-Metadaten bleiben
 zulässig. Eine zusätzliche kurze
-F04-Lesegegenprobe verwendet ausschließlich eine Kopie des temporären Profils:
-Ein kurzer Schreibprozess erzeugt dort über eine echte F01-Zellaktion den gültigen
-veränderten Save samt History, auch wenn zuvor noch keine F01-Datei existierte.
+T04-Lesegegenprobe verwendet ausschließlich eine Kopie des temporären Profils:
+Ein kurzer Schreibprozess erzeugt dort über eine echte T01-Zellaktion den gültigen
+veränderten Save samt History, auch wenn zuvor noch keine T01-Datei existierte.
 Die neue Leseinstanz muss ihn nativ als `loaded`
 mit 399 unbekannten Zellen erkennen und genau an der Isolationsassertion
 mit Exit 4 scheitern. Erfolg, Recovery, Parserfehler oder andere Fehler werden
@@ -179,8 +194,7 @@ Jede Instanz nutzt ein temporäres Projekt und Saveprofil. Kataloglast ist keine
 300-fache Produktions-/Solverprüfung. Der Produktharness bindet alle Berichte
 und die kleinen nativen Originalausschnitte an Head/Basis/Checkout; vollständige
 Framekontexte bleiben lokal. Pflichtausschnitte dürfen nicht still aus der
-begrenzten Lieferung fallen. Die bisherigen 30-/75-MB-Grenzen und Laufzeitlimits
-bleiben unverändert. [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
+begrenzten Lieferung fallen. Größen und Laufzeiten werden ohne feste Optimierungsbudgets gemessen. [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
 
 ## Native Renderabdeckung und Speicherung
 
@@ -190,29 +204,46 @@ Slotisolation. Native Pixelprüfungen liefern kleine Originalausschnitte samt
 Koordinaten/Reports; vollständige Kontexte bleiben lokal. Der echte Windows-PCK
 wird für regulären und isolierten Katalog geprüft. Der feste synthetische Adapterdurchstich liefert
 nur den kompakten Bericht. Reine Inhalte wählen ausschließlich den schlanken
-Inhaltspfad; Änderungen am Produktharness wählen Integration und Preflight. Keine
-Budgetausnahme. [Prüfzuordnung](ZA1_VERIFICATION.md).
+Inhaltspfad; Änderungen am Produktharness wählen Integration und Preflight. Keine zusätzliche CI-Fallliste je Inhalt. [Prüfzuordnung](ZA1_VERIFICATION.md).
 
-Im Standardpfad gilt `--ci-compact` für den allgemeinen Capture-Harness:
+Eigentümerfreigabe vom 14.10.2026 / #116: Die wiederholten Grafikmatrizen
+verwenden drei gemeinsame Konfigurationen: **1280×720/UI125, 1920×1080/UI100
+und 2560×1440/UI125**. Das deckt enge, normale und große Fenster ab; der frühere
+vollständige Kreuzvergleich aller vier Auflösungen mit beiden UI-Skalierungen
+ist keine Standardpflicht mehr. Gezielte Sonderfälle dürfen weitere Größen nutzen.
+
+- Reguläre Vollansicht: alle 16 technischen Muster, beide Ansichten G/V,
+  96 statt 256 Fälle. Rahmen, Hinweisgeometrie und Schriftgrenzen bleiben geprüft.
+- Arbeits-/Fit-, Eingabe- und Schriftsonderfälle: 32 unverändert; Wiederherstellung
+  für drei Muster in beiden Ansichten: 18 statt 48. Zusammen 50 statt 80 Fälle.
+- Sidebar-/Arbeits-/Fit-Matrix: drei Muster und beide Ansichten, 36 statt 96 Fälle.
+  Gezielte Ressourcen-, Rahmen-, Warnungs- und Wiederherstellungsprüfungen bleiben.
+- H1: sechs aktuelle Off/On-Paare (drei Konfigurationen × G/V) sowie sechs
+  Reveal-/Albumzustände. Keine Wiederholung der ersetzten Rasterkomponente.
+
+Im allgemeinen Capture-Harness gilt `--ci-compact`:
 
 - Zellgrößen 12/16/18/22/24/72 decken Minimum, Maximum und beide Seiten der
-  tatsächlichen Zeichen-/Fontwechsel ab: 54 statt 180 Zellszenarien.
+  tatsächlichen Zeichen-/Fontwechsel ab: 54 Zellszenarien.
 - Layout: Album und drei Fixtures bei 720p/UI125 sowie 1080p/UI100+125,
-  insgesamt zehn statt 41 Bilderzustände.
-- H1: acht ausgewählte Off/On-Paare statt 64, ergänzt um Partialzustand,
-  identische Zahlen, Tooltip und echte Drag-/Dropfälle auf beiden Achsen.
+  insgesamt zehn Bilderzustände.
+- Die wirkungslose Ansichts-/Pan-Galerie ohne Pixelassertionen sowie die erzwungenen
+  alten Raster-Clipping-/Pan- und Hinweis-Drag-Replays entfallen. Die aktuellen
+  Vollansichts-/Rahmenprüfungen bleiben; Rasterpanning ist keine Spielfunktion.
 - Beide Hinweisachsen, Einrastgrenzen .49/.51, Richtungen und aktuelle
-  Außenanschläge bleiben nativ geprüft. Das alte erzwungene Six-Slot-Layout
-  gehört nicht mehr zum Standardpfad.
-- Alpha, Papierfugen, alle Farben, X-Clipping, Hoverkreuz, Vorschau, Hinweisink,
-  echte aktuelle Buch-/ZS2-Pixelverträge und Spoilergrenzen bleiben erhalten.
+  Außenanschläge bleiben in den gezielten nativen VS2-Prüfungen erhalten.
+- Alpha, Papierfugen, alle Farben, Hoverkreuz und G1-Zähler, Vorschau, Hinweisink,
+  aktuelle Buch-/ZS2-Pixelverträge und Spoilergrenzen bleiben erhalten.
 
 Die vollständigen günstigen Logik-/Zoom-/Geometrietests bleiben bestehen.
 Gerenderte Bilder werden für Assertions direkt im Speicher verwendet. Der
 allgemeine kompakte Capturepfad speichert fünf ausgewählte Erfolgsbilder;
-Fehler sichern die zuletzt relevanten Originalframes. Die aktuelle Buch-/ZS2-
-und gegebenenfalls Pilotprüfung liefert ebenfalls nur eine begrenzte Auswahl
-an technischen Bildern. Anzahl gerenderter und gespeicherter Fälle sind getrennt.
+Fehler sichern die zuletzt relevanten Originalframes. Die Buchprüfung wertet
+alle bisherigen 17 Bildzustände und Textkontraste weiter aus, schreibt im
+kompakten Erfolgspfad aber keine ungenutzten PNGs. Fehlerbilder bleiben erhalten.
+ZS2 und gegebenenfalls Pilotprüfungen liefern ihre gezielte technische Auswahl.
+Anzahl gerenderter und gespeicherter Fälle sind getrennt. Unabhängige Prüfungen
+verlangen die genaue erwartete Matrix und erkennen auch doppelte/fehlende Fälle.
 
 Abgeschlossene ZS1-/VS1-Studien, GP48-/ZV50-/Z2-Vorherprojekte, H1-Ownerprogramme
 und alte Review-ZIPs werden im Standardlauf weder importiert, gerendert noch
@@ -220,19 +251,29 @@ verpackt. Für einen konkreten historischen Vergleich wird ein separater Checkou
 des gebundenen ursprünglichen Commits verwendet. Dabei dessen damalige Quellen
 und Verträge lesen; keine alten Studienharnesses unbemerkt gegen neue APIs ausführen.
 
-PERF-B-E1 / #68 vom 11.10.2026 hebt ausschließlich das technische Budget auf
-30.000.000 Bytes an; Gesamtgrenze, Laufzeiten und Pflichtnachweise bleiben erhalten.
+Die früheren 30-/75-MB-Grenzen aus PERF-B-E1 sind durch #116 aufgehoben.
 
-## Artefakte und Laufzeitbudgets
+## Artefakte und Laufzeiten
 
-| Bereich | Ziel/Budget |
-| --- | --- |
-| Dokumentjob | Ziel unter einer Minute; hartes Joblimit drei Minuten |
-| Gewöhnlicher Product-Lauf | Ziel fünf bis acht Minuten; hartes Joblimit zehn Minuten |
-| Product einschließlich aller Piloten | Hartes Joblimit 15 Minuten |
-| Toolchain-Preflight | Hartes Joblimit fünf Minuten; nur relevante Änderungen/manueller Auftrag |
-| Regulärer Spieler plus technische Product-Daten | Höchstens 75.000.000 Bytes vor äußerem Actions-Container |
-| Technische Product-Daten | Höchstens 30.000.000 Bytes |
+Eigentümerentscheidung vom 14.10.2026 / #116: Laufzeit und Artefaktvolumen möglichst
+klein halten, **ohne feste CI-Joblaufzeit- oder Artefaktgrößenbudgets**. Die Workflows
+setzen keine projektspezifischen `timeout-minutes`; Anbietergrenzen gelten weiterhin.
+Es gibt kein 30-/75-MB-Erfolgsgate und keine bytebedingte Auslassung angeforderter
+Nachweise. Reports messen Phasen und tatsächlich gelieferte Bytes. Beibehalten:
+gezielte Auswahl kompakter Originalbilder, verlustfreie JSON-Kompression und kurze
+Aufbewahrung. Keine historischen Produktionsarchive, vollständigen Arbeitsgalerien
+oder obsoleten Ownerhilfen in Spielerpaketen.
+
+Prozess-/Netzwerk-Abbruchschutz und explizite funktionale Solver-/Import-/Reparatur-
+Ressourcenverträge sind Schutz vor Hängern bzw. Teil des getesteten Fehlerverhaltens,
+keine CI-Optimierungsziele. Diese werden nicht stillschweigend als Tests entfernt.
+Der Umfang bestehender Prüfbereiche wird erst nach verständlicher Kosten-/Zweckliste
+und Eigentümerentscheidung reduziert. Kein Test gilt wegen seines alten Namens als
+obsolet; aktuelle Aufrufer und Verhalten sind maßgeblich.
+
+Die vollständigen aktuellen VS2-/V1-Geometriematrizen bleiben verlustfrei `.json.gz`;
+der bytegleiche Rückweg ist geprüft. Native Bilder bleiben unverändert. Eine
+größere Lieferung ist ein zu erklärender Messwert, kein automatischer Fehler.
 
 Erfolgreiche Product-Läufe liefern das reguläre Windows-Spielerpaket und eine
 begrenzte technische Auswahl. Technische Daten werden sieben Tage, Spielerpakete
@@ -241,8 +282,7 @@ dauerhaft gesichert. Preflight exportiert weiterhin wirklich, lädt standardmä�
 aber nur den kleinen Bericht und Logs hoch. Fachberichte sind ebenfalls begrenzt.
 
 Product schreibt Bericht und laufende Phasenlogs von Anfang an unter `technical/`;
-dieser Ordner wird auch nach Fehlern/Abbrüchen hochgeladen. Fehlermarker werden vor
-einer eventuellen Logkürzung geprüft. Abgebrochene Phasen bleiben als solche sichtbar.
+dieser Ordner wird auch nach Fehlern/Abbrüchen hochgeladen. Fehlermarker werden am vollständigen Log geprüft; Logs werden nicht bytebedingt gekürzt. Abgebrochene Phasen bleiben als solche sichtbar.
 Laufzeitziele werden erst durch neue Messungen als erreicht ausgewiesen;
 Warteschlangenzeit und Runnerzeit werden getrennt betrachtet.
 
@@ -253,6 +293,19 @@ Der Fachjob führt nur allgemeine Tests, sechs synthetische Leistungsreferenzen
 und den festen künstlichen Adapterdurchstich aus. Keine historischen
 Produzentencommits oder RP4-/RP5-Korpus-/Windows-Replays mehr in CI.
 
+## Spielerexport mit separaten Ressourcen
+
+Der reguläre Export verwendet `binary_format/embed_pck=false`. Das offizielle
+Debug-Template bleibt unverändert. `picross-p1.exe`, die Konsolenhilfe und
+`picross-p1.pck` sind verpflichtende, nicht leere Paketdateien. EXE und PCK müssen
+nach dem Entpacken im selben Ordner liegen. Das verschiebt Ressourcen aus der
+EXE, reduziert aber nicht automatisch die Gesamtgröße des Downloads.
+
+Product prüft die tatsächlich exportierte PCK mit einem externen nativen Probe-
+Skript, einschließlich ausgeschlossener Test-/Produktionsdateien, und bindet
+EXE sowie PCK per Hash an den Bericht. Der manuelle main-Build prüft weiterhin
+nur Paketvollständigkeit; er ersetzt keinen Product-Prüflauf.
+
 ## Separater manueller main-Player-Build
 
 Der Workflow [Build playable main](../.github/workflows/build-main-player.yml) wird
@@ -262,7 +315,7 @@ den regulären tatsächlichen Spielkatalog, führt aber **keine** Kern-, Integra
 Render-, Solver- oder Rätseltests aus. Er erstellt nur den unsignierten
 Windows-x64-Debugexport und kontrolliert vollständige, nicht leere Exportdateien.
 
-`upload-artifact` übernimmt das direkte Player-Verzeichnis (EXEs, gegebenenfalls
+`upload-artifact` übernimmt das direkte Player-Verzeichnis (EXEs, separate
 PCK, Anleitung und benötigte Lizenzen) und erzeugt selbst das einzige
 herunterladbare ZIP; kein weiteres Spieler-ZIP oder Technikartefakt. Der
 bestehende Product-Verifikationsworkflow und dessen gebundene Nachweise bleiben
@@ -271,8 +324,8 @@ unverändert. Ein Build ist weder persönliche Windows-Abnahme noch Release.
 ## Archiv und gebundene Referenzen
 
 Das [BP-Archiv](design/book_inventory/ARCHIVE.md) bindet die 136 entfernten alten
-Dateien mit 161.102.998 Bytes an unveränderliche Git-Objekte. Originalbilder,
-aktives Papier, Fonts/Lizenzen, Manifeste und fachliche RP-/VS-Quellen bleiben.
+Dateien mit 161.102.998 Bytes an unveränderliche Git-Objekte. Aktive Ressourcen, Fonts/Lizenzen und noch verwendete technische Testinputs bleiben.
+Abgeschlossene RP-/VS-Produktionsquellen liegen ausschließlich in der Git-Historie.
 Die drei großen Paketrekonstruktionen entfallen aus `unittest discover -s tools`;
 die 13 günstigen BP-Hilfsregressionen bleiben. Keine Historienumschreibung.
 
@@ -289,8 +342,7 @@ Die neue Sicherung macht den Ablauf des ursprünglichen Actions-Artefakts am
 23.10.2026 für diese benötigten Bytes unschädlich. Sie ist kein neues Renderbild.
 
 VS2, Sidebar und PERF-A/B sind über PR #62/#66 integriert. Die alte offene
-Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Ihre ursprünglichen Rätselzertifikate bleiben gebunden erhalten; CI prüft
-sie nicht erneut. Weitere Quellenentscheidungen und
+Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Ihre ursprünglichen Rätselzertifikate liegen in der Git-Historie; CI prüft sie nicht erneut. Weitere Quellenentscheidungen und
 Dateibindungen stehen im [Bestandsinventar](DEVELOPMENT_ARCHIVE.md).
 
 ## Verifikation dieses Pakets

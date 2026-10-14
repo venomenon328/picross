@@ -44,17 +44,17 @@ func setup(viewport: Viewport) -> void:
 	target.add_child(app)
 	await process_frame
 	await process_frame
-	check(app.sessions.size() == Definition.catalog_ids().size() and app.sessions[2].definition.id == "F-04", "regular registration of neutral F-04")
-	check(Definition.load_fixture("../art/f04").is_empty() and Definition.load_fixture("unknown").is_empty(), "fixed definition paths reject unregistered IDs")
-	check(app.store.path_for("../f04").is_empty(), "save paths reject traversal")
+	check(app.sessions.size() == Definition.catalog_ids().size() and app.sessions[2].definition.id == "T-04", "regular registration of neutral T-04")
+	check(Definition.load_fixture("../art/t04").is_empty() and Definition.load_fixture("unknown").is_empty(), "fixed definition paths reject unregistered IDs")
+	check(app.store.path_for("../t04").is_empty(), "save paths reject traversal")
 	check(Definition.validate(app.sessions[2].definition).is_empty(), "schema/hints/reveal validate")
 	click(app.choices[2].get_global_rect().get_center())
 	await process_frame
-	check((app.ending.visible if app.session.completed else app.work.visible) and app.session == app.sessions[2], "real album choice opens F-04 according to saved completion")
+	check((app.ending.visible if app.session.completed else app.work.visible) and app.session == app.sessions[2], "real album choice opens T-04 according to saved completion")
 	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 
 func partial() -> void:
-	check(not app.session.completed and app.session.reveal().is_empty() and not app.title.text.contains("Fliegenpilz"), "unknown state has no motif name or reveal")
+	check(not app.session.completed and app.session.reveal().is_empty() and not app.title.text.contains("TEST ONLY Muster 4"), "unknown state has no motif name or reveal")
 	check(app.session.definition.solution[0][0] == 0, "wrong input is deliberately outside motif")
 	click(cell_point(Vector2i(0,0)))
 	check(app.session.player.cells[0] == 1 and app.mini.cells[0] == 1 and not app.session.completed, "wrong own input remains in miniature")
@@ -63,7 +63,7 @@ func partial() -> void:
 	click(app.redo_button.get_global_rect().get_center())
 	check(app.mini.cells[0] == 1 and app.session.player.undo_used, "real Redo restores own wrong input")
 	app.show_album()
-	check(app.album_previews[3].cells[0] == 1 and app.album_reveals[3].payload.is_empty() and not app.choices[2].text.contains("Fliegenpilz"), "album partial thumbnail has same wrong input without reveal")
+	check(app.album_previews[3].cells[0] == 1 and app.album_reveals[3].payload.is_empty() and not app.choices[2].text.contains("TEST ONLY Muster 4"), "album partial thumbnail has same wrong input without reveal")
 
 func finish() -> void:
 	check(app.session.player.cells[0] == 1 and app.session.player.undo_used and not app.session.completed, "real new process restored partial/history/undo")
@@ -84,16 +84,16 @@ func finish() -> void:
 	check(not app.session.completed and app.session.reveal().is_empty() and app.mini.cells[last.y*20+last.x] == 1, "last-cell preview visible only as own input")
 	event(cell_point(last),false)
 	check(app.session.completed and app.ending.visible and not app.work.visible, "real committed last event opens completion")
-	check(app.completion_title.text == "Fliegenpilz" and app.reveal_view.payload.image == "res://art/f04.svg", "new name and matching refined asset only after completion")
+	check(app.completion_title.text == "TEST ONLY Muster 4" and app.reveal_view.payload.image == "res://art/fixtures/t04.svg", "new name and matching refined asset only after completion")
 	check(app.session.player.cells.count(-1) > 0, "completion without mandatory background crosses")
 	app.show_album()
-	check(app.album_reveals[3].visible and app.album_reveals[3].payload.definition_id == "F-04", "earned album artwork bound to F-04")
+	check(app.album_reveals[3].visible and app.album_reveals[3].payload.definition_id == "T-04", "earned album artwork bound to T-04")
 	check(app.sessions[0].player.cells.count(-1) == 400 and app.sessions[1].player.cells.count(-1) == 1600 and app.sessions[3].player.cells.count(-1) == 2500, "old slots remain untouched")
 
 func restored() -> void:
 	check(app.session.completed and app.session.is_solution() and app.session.player.undo_used, "second real restart restores full completion/history")
 	app.show_album()
-	check(app.album_reveals[3].visible and app.choices[2].text.contains("Fliegenpilz"), "new process earned album state")
+	check(app.album_reveals[3].visible and app.choices[2].text.contains("TEST ONLY Muster 4"), "new process earned album state")
 	var first: Dictionary = app.store.load_slot(app.sessions[0].definition)
 	check(first.status == "fresh" or first.status == "loaded" and first.data.cells.count(-1) == 400, "isolated new slot has not changed old fixture cells")
 
