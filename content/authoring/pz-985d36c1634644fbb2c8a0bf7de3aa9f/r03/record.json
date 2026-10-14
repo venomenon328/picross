@@ -1,0 +1,132 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        21,
+        22,
+        1101,
+        1354
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "fixed": true,
+      "foreground_colors": 1,
+      "height": 25,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "thresholds": [
+        96,
+        128,
+        160,
+        192
+      ],
+      "width": 20
+    }
+  ],
+  "authoring_parent_commit": "07a618764e97abe5c66ee515926640292305f21d",
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "category_id": "gemuese-pilze-kraeuter",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "Alle 45 Linien vor allen 92 Proofschritten geprüft. Vor Aufräumen bei höchstens 10 unbekannten Zellen mindestens acht produktive Linien; keine numerische Engstelle in diesem Verlauf. Keine validierte Technikklassifikation oder erschöpfende Prüfung alternativer Lösungspfade.",
+    "calibration": "Begründete KI-Schätzung ohne validierten Bewertungsanalysator oder menschliche Vergleichsdaten. Probespiel optional, nicht durchgeführt.",
+    "confidence": "low",
+    "effort": {
+      "cells": 500,
+      "empty": 268,
+      "filled": 232,
+      "height": 25,
+      "human_active_minutes": null,
+      "proof_steps": 92,
+      "solve_time_minutes": null,
+      "width": 20
+    },
+    "evidence": "audit/difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "40c3e2a33e78ac0806727dbbfc5567b70873c5c47c13be610d065a4dc4ba00e3",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L2",
+      "L4"
+    ],
+    "rule_families": {
+      "R0": "Initial nur leere Zeile 25, keine nichtleere voll gepackte Linie. Nach Entfernen dieser Leerzeile bleiben Spalten ungepackt (maximale Packung 18 von 24), Zeilen ohnehin ungepackt. R0 kann keinen ersten Füllfortschritt liefern: L1 ausgeschlossen. Später Blockabschluss und Restleerfelder.",
+      "R1": "Voraussichtlich dominant: Überlappung und Verlängerung der breiten Knollen-/Astblöcke. Zeile 9 [5,10] in Breite 20 erzwingt initial sieben Zellen (Proofschritt 0); Spalte 7 [18] bietet langen Überlappungsanker (Schritt 10). Schritt 60, Zeile 12 [14], verlängert den bekannten Block. Diese Einschätzung folgt Hinweisen und bekannten Domains, nicht dem Motiv.",
+      "R2": "Mehrfachblockzuordnung in Zeile 8 [5,4,2] (Schritt 20) und Spalte 17 [6,5] (Schritt 40) kann kombinierte Anker/Trennungen erfordern. R0+R1-Suffizienz und R2-Notwendigkeit nicht mit validiertem schwächerem Regelanalysator bis zum Fixpunkt nachgewiesen.",
+      "R3": "Zertifiziert ist allgemeine vollständige Linienunterstützung, keine Notwendigkeit von R3. Mangels validierter schwächerer Regelfamilien bleibt R3 möglich; konservativer Bereich L2–L4."
+    },
+    "samples": "audit/difficulty-samples.json",
+    "time_estimate": null
+  },
+  "dimensions_approximate": false,
+  "dimensions_fixed": true,
+  "editorial_approved": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/handoff.json",
+    "sha256": "501851ba5d57116725c6900a9fbb2e459b58225c89ae75196c690f4a39b57d8f"
+  },
+  "height": 25,
+  "inspection": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/inspection.json",
+    "sha256": "7b83fbb5a31cd411081b680c30fbd05a3fe462d34154ca5881d49d35b9604ae9"
+  },
+  "integration": null,
+  "inventory_sha256": "b538d147dc8ef9a83a7cc83dab3b1eaa2ff913d97e1609178e3f4967cf8fd6ac",
+  "mode": "mono",
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471",
+    "file": "motifs/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "974bda0232439ecc4d9acc3c7f43cf5d79ce193ffce9f758c9d5882fff6170eb"
+  },
+  "motif_name": "Ingwer",
+  "next_action": "Menschliche Endabnahme der unveränderten r03-Auswahl area-160 samt gebundenem Inventar und B-r01; danach beauftragter Standardauftrag 4. Keine Registrierung oder Merge in Auftrag 3.",
+  "package": {
+    "bytes": 5174189,
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/package.zip",
+    "sha256": "293a8c706e1dbfe49fc517a75e840b47f00af4a7ad70e5b4fc0d2f4494df2096"
+  },
+  "preview": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/preview.png",
+    "sha256": "320aa207b4fc50c20829d76e9418e05d4d1f3c45ae21bccbbef05924e32bb4ae"
+  },
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "repo_commit": "835c102ba76f26683b4dc42a8077b650e1725303",
+  "report": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/report.md",
+    "sha256": "a095605c2f2341f998bb66b2e71220989a4a3c244f6d24fa421e80436d1ee3e4"
+  },
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/B-r01.png",
+    "revision": "B-r01",
+    "sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471"
+  },
+  "revision": "r03",
+  "selection": {
+    "logic_hash": "40c3e2a33e78ac0806727dbbfc5567b70873c5c47c13be610d065a4dc4ba00e3",
+    "matrix_hash": "16fcff78f1a2fb69adcc27c7a62ba519e3e79ff5766f16dced9e5e28d21637b4",
+    "reveal": {
+      "file": "reveals/B-r01.png",
+      "sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471"
+    },
+    "variant": "area-160"
+  },
+  "state": "content_ready",
+  "target_export": "not_performed: final editorial approval pending; outside Standardauftrag 3",
+  "technical": true,
+  "updated_at_utc": "2026-10-14T15:28:25.405019+00:00",
+  "width": 20
+}
