@@ -1,0 +1,36 @@
+{
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r04",
+  "state": "registered",
+  "scope": "Authorized adapter extension and Standardauftrag 4; Draft-PR, no merge.",
+  "checks": {
+    "original_package": "unchanged",
+    "original_handoff": "byte_equal",
+    "original_inventory": "unchanged",
+    "final_approval": "pass; original hash retained",
+    "fixed_edits": "exact two edits replayed; remaining cells preserved",
+    "frame_rule": "fail, explicitly accepted bound exception; frame_valid=false/frame_exception_accepted=true",
+    "fresh_proof": "solved/certified; final domains match exact matrix",
+    "export": "v3; internally reconstructed and written outputs independently verified",
+    "plan": "six expected changes, category correct, no existing entries changed",
+    "registration": "registered once via adapter; no pending journal",
+    "file_bytes": "all installed manifest file hashes verified; runtime reveal matches approved A-r01",
+    "runtime": "stable ID/revision1/hamburger_001; exactly one category mapping",
+    "native_game_test": "not required for pure content delivery; general code CI separately selected",
+    "general_tests": "123-test full suite PASS; subsequent defensive malformed-input check plus 7 focused edited-import tests PASS; final CI full suite pending.",
+    "docs": "clean staged checkout PASS; initial local tree scan included ignored unpacked snapshots and reported 9 missing relative links there",
+    "self_review": "separate code and delivery diff review; not an independent second review",
+    "code_review": "Separate manual review of authoring admission, v1/v2 dispatch, typed owner permissions, exact plan/reference binding, masked replay, child reconstruction, gates and independent final proof; malformed candidate rejected explicitly."
+  },
+  "tool_commit": "4b4cfce6ef006c8ded1c3616488050cca11c0c6c",
+  "base": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "binding": {
+    "package_sha256": "8311f0623794e93916d1c9576753616a046f66e1ae1c2251f84ffb1f37bf1f6a",
+    "handoff_sha256": "977cc4fa7007d292363f1cebb84b4dcf9f99687a57ae271f4daf80108eba4638",
+    "inventory_sha256": "8600bb43119cb892b3a816b1f80b73e90bc790b432a911960d3ddfe306da97ff",
+    "approval_sha256": "25883c7a910380409ecab00f488ee5be77f56d3ff265407f4340b6d223b5d964"
+  },
+  "native_save_access": "none; no real user saves touched",
+  "release": false,
+  "main_merge": null
+}

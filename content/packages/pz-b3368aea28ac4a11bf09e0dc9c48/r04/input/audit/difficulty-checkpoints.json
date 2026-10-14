@@ -1,0 +1,9190 @@
+{
+  "logic_hash": "4c1cbf8cf02c5edae4c6742b63fc6f426951656af63f0d6b36e8eb33c585f230",
+  "cleanup_threshold": 11,
+  "minimum_productive_lines_before_cleanup": 7,
+  "method": "All 47 full-support lines before each of 81 proof steps; no hidden solution used, no validated weaker-rule classifier.",
+  "checkpoints": [
+    {
+      "before_step": 0,
+      "unresolved": 550,
+      "productive_lines": 29,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 19
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 3,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 1,
+      "unresolved": 548,
+      "productive_lines": 28,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 19
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 4,
+        "changed_cells": 17
+      }
+    },
+    {
+      "before_step": 2,
+      "unresolved": 531,
+      "productive_lines": 28,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 19
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 5,
+        "changed_cells": 19
+      }
+    },
+    {
+      "before_step": 3,
+      "unresolved": 512,
+      "productive_lines": 26,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 6,
+        "changed_cells": 21
+      }
+    },
+    {
+      "before_step": 4,
+      "unresolved": 491,
+      "productive_lines": 29,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 7,
+        "changed_cells": 21
+      }
+    },
+    {
+      "before_step": 5,
+      "unresolved": 470,
+      "productive_lines": 30,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 9,
+        "changed_cells": 17
+      }
+    },
+    {
+      "before_step": 6,
+      "unresolved": 453,
+      "productive_lines": 29,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 10,
+        "changed_cells": 12
+      }
+    },
+    {
+      "before_step": 7,
+      "unresolved": 441,
+      "productive_lines": 28,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 14,
+        "changed_cells": 21
+      }
+    },
+    {
+      "before_step": 8,
+      "unresolved": 420,
+      "productive_lines": 27,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 15,
+        "changed_cells": 21
+      }
+    },
+    {
+      "before_step": 9,
+      "unresolved": 399,
+      "productive_lines": 26,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 16,
+        "changed_cells": 15
+      }
+    },
+    {
+      "before_step": 10,
+      "unresolved": 384,
+      "productive_lines": 25,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 21
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 18,
+        "changed_cells": 21
+      }
+    },
+    {
+      "before_step": 11,
+      "unresolved": 363,
+      "productive_lines": 25,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 19,
+        "changed_cells": 17
+      }
+    },
+    {
+      "before_step": 12,
+      "unresolved": 346,
+      "productive_lines": 24,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 20,
+        "changed_cells": 13
+      }
+    },
+    {
+      "before_step": 13,
+      "unresolved": 333,
+      "productive_lines": 23,
+      "opportunities": [
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 22
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 0,
+        "changed_cells": 22
+      }
+    },
+    {
+      "before_step": 14,
+      "unresolved": 311,
+      "productive_lines": 35,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 2,
+        "changed_cells": 8
+      }
+    },
+    {
+      "before_step": 15,
+      "unresolved": 303,
+      "productive_lines": 38,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 3,
+        "changed_cells": 10
+      }
+    },
+    {
+      "before_step": 16,
+      "unresolved": 293,
+      "productive_lines": 37,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 4,
+        "changed_cells": 3
+      }
+    },
+    {
+      "before_step": 17,
+      "unresolved": 290,
+      "productive_lines": 36,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 5,
+        "changed_cells": 7
+      }
+    },
+    {
+      "before_step": 18,
+      "unresolved": 283,
+      "productive_lines": 35,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 6,
+        "changed_cells": 9
+      }
+    },
+    {
+      "before_step": 19,
+      "unresolved": 274,
+      "productive_lines": 34,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 7,
+        "changed_cells": 8
+      }
+    },
+    {
+      "before_step": 20,
+      "unresolved": 266,
+      "productive_lines": 33,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 18
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 8,
+        "changed_cells": 10
+      }
+    },
+    {
+      "before_step": 21,
+      "unresolved": 256,
+      "productive_lines": 32,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 11
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 9,
+        "changed_cells": 5
+      }
+    },
+    {
+      "before_step": 22,
+      "unresolved": 251,
+      "productive_lines": 31,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 16
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 10,
+        "changed_cells": 4
+      }
+    },
+    {
+      "before_step": 23,
+      "unresolved": 247,
+      "productive_lines": 30,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 11,
+        "changed_cells": 4
+      }
+    },
+    {
+      "before_step": 24,
+      "unresolved": 243,
+      "productive_lines": 29,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 12,
+        "changed_cells": 7
+      }
+    },
+    {
+      "before_step": 25,
+      "unresolved": 236,
+      "productive_lines": 28,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 13,
+        "changed_cells": 5
+      }
+    },
+    {
+      "before_step": 26,
+      "unresolved": 231,
+      "productive_lines": 27,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 18
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 14,
+        "changed_cells": 5
+      }
+    },
+    {
+      "before_step": 27,
+      "unresolved": 226,
+      "productive_lines": 26,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 18
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 15,
+        "changed_cells": 5
+      }
+    },
+    {
+      "before_step": 28,
+      "unresolved": 221,
+      "productive_lines": 25,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 18
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 16,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 16,
+        "changed_cells": 10
+      }
+    },
+    {
+      "before_step": 29,
+      "unresolved": 211,
+      "productive_lines": 24,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 17,
+        "changed_cells": 8
+      }
+    },
+    {
+      "before_step": 30,
+      "unresolved": 203,
+      "productive_lines": 24,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 17
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 18,
+        "changed_cells": 10
+      }
+    },
+    {
+      "before_step": 31,
+      "unresolved": 193,
+      "productive_lines": 23,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 16
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 19,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 19,
+        "changed_cells": 11
+      }
+    },
+    {
+      "before_step": 32,
+      "unresolved": 182,
+      "productive_lines": 22,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 13
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 15
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 20,
+        "changed_cells": 5
+      }
+    },
+    {
+      "before_step": 33,
+      "unresolved": 177,
+      "productive_lines": 21,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 13
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 21,
+        "changed_cells": 5
+      }
+    },
+    {
+      "before_step": 34,
+      "unresolved": 172,
+      "productive_lines": 20,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 11
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 22,
+        "changed_cells": 9
+      }
+    },
+    {
+      "before_step": 35,
+      "unresolved": 163,
+      "productive_lines": 21,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 11
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 13
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 24,
+          "changed_cells": 22
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 24,
+        "changed_cells": 22
+      }
+    },
+    {
+      "before_step": 36,
+      "unresolved": 141,
+      "productive_lines": 19,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 0,
+        "changed_cells": 10
+      }
+    },
+    {
+      "before_step": 37,
+      "unresolved": 131,
+      "productive_lines": 26,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 1,
+        "changed_cells": 9
+      }
+    },
+    {
+      "before_step": 38,
+      "unresolved": 122,
+      "productive_lines": 26,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 12
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 17,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 2,
+        "changed_cells": 12
+      }
+    },
+    {
+      "before_step": 39,
+      "unresolved": 110,
+      "productive_lines": 25,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 3,
+        "changed_cells": 6
+      }
+    },
+    {
+      "before_step": 40,
+      "unresolved": 104,
+      "productive_lines": 25,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 4,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 41,
+      "unresolved": 103,
+      "productive_lines": 24,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 3
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 5,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 42,
+      "unresolved": 102,
+      "productive_lines": 23,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 3
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 6,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 43,
+      "unresolved": 100,
+      "productive_lines": 22,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 3
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 7,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 44,
+      "unresolved": 98,
+      "productive_lines": 23,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 8,
+        "changed_cells": 10
+      }
+    },
+    {
+      "before_step": 45,
+      "unresolved": 88,
+      "productive_lines": 23,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 9,
+        "changed_cells": 5
+      }
+    },
+    {
+      "before_step": 46,
+      "unresolved": 83,
+      "productive_lines": 22,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 10,
+        "changed_cells": 9
+      }
+    },
+    {
+      "before_step": 47,
+      "unresolved": 74,
+      "productive_lines": 21,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 4
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 11,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 48,
+      "unresolved": 73,
+      "productive_lines": 20,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 4
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 14,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 49,
+      "unresolved": 71,
+      "productive_lines": 19,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 6
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 15,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 50,
+      "unresolved": 69,
+      "productive_lines": 18,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 5
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 16,
+        "changed_cells": 5
+      }
+    },
+    {
+      "before_step": 51,
+      "unresolved": 64,
+      "productive_lines": 17,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 5
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 17,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 52,
+      "unresolved": 63,
+      "productive_lines": 16,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 5
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 18,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 53,
+      "unresolved": 61,
+      "productive_lines": 15,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 7
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 19,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 54,
+      "unresolved": 60,
+      "productive_lines": 14,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 8
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 21,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 55,
+      "unresolved": 58,
+      "productive_lines": 13,
+      "opportunities": [
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 7
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 1,
+        "changed_cells": 6
+      }
+    },
+    {
+      "before_step": 56,
+      "unresolved": 52,
+      "productive_lines": 16,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 7
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 10,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 57,
+      "unresolved": 50,
+      "productive_lines": 15,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 7
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 11,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 58,
+      "unresolved": 48,
+      "productive_lines": 14,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 7
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 13,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 59,
+      "unresolved": 46,
+      "productive_lines": 13,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 7
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 14,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 60,
+      "unresolved": 44,
+      "productive_lines": 12,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 7
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 23,
+        "changed_cells": 7
+      }
+    },
+    {
+      "before_step": 61,
+      "unresolved": 37,
+      "productive_lines": 14,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 9,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 62,
+      "unresolved": 35,
+      "productive_lines": 13,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 15,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 63,
+      "unresolved": 34,
+      "productive_lines": 12,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 4,
+        "changed_cells": 5
+      }
+    },
+    {
+      "before_step": 64,
+      "unresolved": 29,
+      "productive_lines": 11,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 5,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 65,
+      "unresolved": 27,
+      "productive_lines": 10,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 21,
+          "changed_cells": 4
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 21,
+        "changed_cells": 4
+      }
+    },
+    {
+      "before_step": 66,
+      "unresolved": 23,
+      "productive_lines": 9,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 20,
+          "changed_cells": 4
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 20,
+        "changed_cells": 4
+      }
+    },
+    {
+      "before_step": 67,
+      "unresolved": 19,
+      "productive_lines": 10,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 2,
+        "changed_cells": 3
+      }
+    },
+    {
+      "before_step": 68,
+      "unresolved": 16,
+      "productive_lines": 9,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 4,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 69,
+      "unresolved": 15,
+      "productive_lines": 9,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 5,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 70,
+      "unresolved": 14,
+      "productive_lines": 9,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 11,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 71,
+      "unresolved": 13,
+      "productive_lines": 7,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 12,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 72,
+      "unresolved": 12,
+      "productive_lines": 7,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 13,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 73,
+      "unresolved": 10,
+      "productive_lines": 7,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 20,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 74,
+      "unresolved": 9,
+      "productive_lines": 7,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 16,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 75,
+      "unresolved": 8,
+      "productive_lines": 6,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 17,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 76,
+      "unresolved": 7,
+      "productive_lines": 4,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 23,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 8,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 77,
+      "unresolved": 6,
+      "productive_lines": 2,
+      "opportunities": [
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 22,
+          "changed_cells": 2
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 22,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 78,
+      "unresolved": 4,
+      "productive_lines": 3,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 2
+        }
+      ],
+      "selected": {
+        "axis": "column",
+        "index": 3,
+        "changed_cells": 2
+      }
+    },
+    {
+      "before_step": 79,
+      "unresolved": 2,
+      "productive_lines": 2,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 19,
+        "changed_cells": 1
+      }
+    },
+    {
+      "before_step": 80,
+      "unresolved": 1,
+      "productive_lines": 2,
+      "opportunities": [
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 1
+        }
+      ],
+      "selected": {
+        "axis": "row",
+        "index": 17,
+        "changed_cells": 1
+      }
+    }
+  ]
+}

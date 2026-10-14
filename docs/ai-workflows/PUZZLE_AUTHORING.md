@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.4.1 · Dokumentrevision 5 · 13.10.2026**
+**Version 0.4.1 · Dokumentrevision 6 · 13.10.2026**
 
 Die kompatible ZA-1-Vertragsversion bleibt 0.4.1; Dokumentrevision, Datei-SHA-256 und Repositorycommit identifizieren diese ergänzte Arbeitsanweisung.
 
@@ -124,6 +124,14 @@ gültig := (left OR right) AND (top OR bottom)
 ```
 
 Jede Vordergrundfarbe zählt als gefüllt. **Nicht alle vier Kanten müssen belegt sein.** Die Formel gilt auch bei Breite/Höhe 1; ein vollständig leeres Raster scheitert. Keine motivfremden Randpixel oder Rahmenlinien nur zum Bestehen der Prüfung hinzufügen.
+
+Eine ausdrücklich erteilte menschliche Ausnahme für eine konkrete Endrevision
+darf nach dem [ZA-1-v2-Autorisierungsvertrag](../ZA1_ADAPTER.md) extern an
+Originalpaket, Handoff, Inventar, Auswahl und Endfreigabe gebunden werden. Die
+verletzte Randregel bleibt als solche im Original und Prüfbericht sichtbar;
+keine pauschale Lockerung und kein einfaches `pass`-Flag. Alle anderen
+Inhalts-/Nachweisgates bleiben erforderlich. Die menschliche Entscheidung und
+eine gegebenenfalls beauftragte Werkzeugerweiterung sind getrennt zu protokollieren.
 
 Ein vollständig gültiger deduktiver Nachweis belegt auch Eindeutigkeit. `stalled` belegt weder Mehrdeutigkeit noch Unlösbarkeit; `aborted` ist ein Abbruch. Exitcode 0 oder ein erzeugtes Importbündel allein ist keine Zertifizierung. Ein generiertes Zahlenbild oder eine KI-Erfolgsaussage ist niemals ein Nachweis.
 
@@ -266,6 +274,13 @@ Keine Ergebnis- oder Freigabefelder ohne Beleg als erfüllt ausgeben. Inhaltsfre
 ## 8. Abgenommenes Paket ins Spiel integrieren
 
 Voraussetzungen: tatsächlicher Integrationsauftrag, unverändertes `content_ready`-Paket mit vollständigen Inhaltsgates und gesonderte menschliche Endfreigabe nach [ZA-1](../ZA1_ADAPTER.md). Die Freigabe bindet Originalhandoff, Inventar, Endkandidat, Matrix-/Logikhash und Abschlussbild; ein `pass`-Flag genügt nicht. Die Archivablage selbst erteilt keine Endabnahme. Probespielen bleibt optional.
+
+Ausnahme für bereits versiegelte manuelle Rasterimporte: Ein historisches
+`blocked`-Paket darf ausschließlich über die extern gebundene
+ZA-1-v2-Autorisierung mit tatsächlicher Endfreigabe und gegebenenfalls expliziter
+Randregel-Ausnahme integriert werden. Originalzustand und Nachweise bleiben
+unverändert; der Adapter muss die festen Edits und alle übrigen Gates vollständig
+frisch prüfen. Kein Umschreiben des Handoffs zur Herstellung von `content_ready`.
 
 Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und dann:
 

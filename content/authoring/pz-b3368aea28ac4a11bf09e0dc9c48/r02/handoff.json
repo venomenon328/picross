@@ -1,0 +1,93 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 5,
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "dafd09bdcbe36010637944319994383d877948c02be2393e7e16db54f5402c4e"
+  },
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r02",
+  "repo_commit": "4ff96270675b873f6c770eee4df3abe8516327b6",
+  "main_base": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "state": "motif_review",
+  "brief": "brief.md",
+  "category_id": "gerichte-herzhaftes",
+  "approved_parameters": [],
+  "proposed_parameters": [
+    {
+      "width": 25,
+      "height": 22,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        14,
+        87,
+        1239,
+        1165
+      ]
+    }
+  ],
+  "configuration": "configuration.json",
+  "design_proposed": "design-proposed.json",
+  "reveal": {
+    "file": "images/A-r01.png",
+    "revision": "A-r01",
+    "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "images/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "images/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "ef92af29d902b39a9bdc574a41031a8500ffb01fbe1312d00cc7943e088fb6b4",
+    "derived_from_reveal_sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "approval": null,
+    "provenance": "images/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "28c1226c560f974dfc6203b5927e569ff1b278891a9094d79ed6ffef7831d270"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "codex_handoff": "codex-handoff.md",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "Menschliche Freigabe von MA-r01 mit dem vorgeschlagenen 25×22-Mono-Korridor; anschließend Standardauftrag 3.",
+  "authorization": "Standardauftrag 2 und Repositoryablage nach §6 mit bestehendem Draft-PR #110; kein Merge.",
+  "created_at_utc": "2026-10-13T16:11:03.553411+00:00"
+}

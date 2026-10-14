@@ -1,0 +1,57 @@
+{
+  "manual_derivation": "manual-edits.json",
+  "reference_bundle": "reference",
+  "reference_variant": "area-080",
+  "edited_bundle": "production",
+  "edited_variant": "manual-128",
+  "matrix_hash": "f7ec4030410046086fb80e7407a709b011f0dc503cc15dd57414512905d934ee",
+  "logic_hash": "4c1cbf8cf02c5edae4c6742b63fc6f426951656af63f0d6b36e8eb33c585f230",
+  "exact_requested_changes": [
+    {
+      "row": 11,
+      "column": 1,
+      "before": "ink",
+      "after": "empty"
+    },
+    {
+      "row": 13,
+      "column": 2,
+      "before": "empty",
+      "after": "ink"
+    }
+  ],
+  "all_other_548_cells_unchanged": true,
+  "manual_source_hash": "b6d8a02b1554c63da703e85cdd3d914dee095697c9fa0870b64e822c183add78",
+  "raster_png_equals_manual_source": true,
+  "reconstruction": "Original motif RP-3 bundle reconstructed, two fixed user edits replayed, fresh edited-source RP-3 bundle independently reconstructed; regenerated hints equal written hints; no unchanged MA-r01 import claimed.",
+  "proof_endmatrix_equal": true,
+  "independent_verification": {
+    "status": "solved",
+    "proof_verified": true,
+    "certified": true,
+    "logic_hash": "4c1cbf8cf02c5edae4c6742b63fc6f426951656af63f0d6b36e8eb33c585f230",
+    "profile": {
+      "id": "full-line-mono",
+      "version": 1,
+      "start": "unknown",
+      "deduction": "all-line-supported-values",
+      "search": false
+    },
+    "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+    "steps": 81,
+    "line_evaluations": 128
+  },
+  "product_dimensions_pass": true,
+  "frame": {
+    "left": false,
+    "right": false,
+    "top": true,
+    "bottom": true
+  },
+  "frame_pass": false,
+  "isolated_filled_cells_row_column_1based": [],
+  "empty_interior_rows": [],
+  "empty_interior_columns": [],
+  "filled": 335,
+  "empty": 215
+}
