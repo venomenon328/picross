@@ -1,0 +1,74 @@
+{
+  "blockers": [],
+  "category_id": "insekten-kleine-tiere",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/r02/handoff.json",
+    "sha256": "89c3b52bbdb9f675b161c4ada462504ff6f744ef5d264c38d466df3356332010"
+  },
+  "height": 15,
+  "integration": null,
+  "inventory_sha256": "ad0442637213fc2eec3f6657088d2e7c63645a9df5ab21a6fd1a6e5a5d322332",
+  "mode": "mono",
+  "motif_name": "Gecko",
+  "next_action": "Ausdrückliche menschliche Abschlussbildfreigabe A-r02/B-r02/C-r02; danach Standardauftrag 2 mit Konfiguration und daraus abgeleiteter Motivvorlage. Größenwunsch ungefähr 30 breit × 15 hoch, monochrom.",
+  "package": {
+    "bytes": 5052080,
+    "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/r02/package.zip",
+    "sha256": "d32402cd0a65a39ddfcf54e169fb1065d2065eeb2ce126fdf926a79360a8f637"
+  },
+  "puzzle_id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+  "repo_commit": "1271d37a28e024e4f510b94890fb5229ea747b46",
+  "reveal_options": [
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/A-r02.png",
+      "label": "A-r02",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1774,
+        887
+      ],
+      "sha256": "f6a7aa1b67e2a336b39f6a79fa638dad7a3ae57487e6ae975e1d28fa239f632d",
+      "title": "Grüner Gecko · gestreckte Draufsicht",
+      "usage_basis": "Eigenständige beauftragte KI-Generierung für Picross; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/B-r02.png",
+      "label": "B-r02",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1774,
+        887
+      ],
+      "sha256": "61351af96a397e2a85b1f3d4339ed7bb7a33a62bc1ac5a9f680bdef5688d822c",
+      "title": "Ockerfarbener Gecko · leicht gebogene Draufsicht",
+      "usage_basis": "Eigenständige beauftragte KI-Generierung für Picross; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/C-r02.png",
+      "label": "C-r02",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1774,
+        887
+      ],
+      "sha256": "3129c761422e56c7bf534c0f5c072675c2d7fca0f64af14106cc0f01ec258dc7",
+      "title": "Türkiser Gecko · Draufsicht mit offenem Schwanzbogen",
+      "usage_basis": "Eigenständige beauftragte KI-Generierung für Picross; keine Fremdbilder oder Fremdassets eingebracht."
+    }
+  ],
+  "revision": "r02",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-14T16:53:32.553610+00:00",
+  "width": 30
+}
