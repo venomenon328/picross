@@ -1,0 +1,10 @@
+{
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "file": "reveals/A-r01.png",
+  "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+  "author": "OpenAI image generation im Auftrag von Tobias Schröder",
+  "usage_basis": "Eigenständige native KI-Generierung im ausdrücklich beauftragten Picross-Produktionsauftrag; keine Fremdbilder oder Fremdassets eingebracht.",
+  "prompt_file": "prompts.json",
+  "source_commit": "5209d30c48957318412adfce98999e78487dc18c",
+  "source_package_revision": "r01"
+}

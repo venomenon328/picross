@@ -1,0 +1,158 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "r04",
+  "state": "registered",
+  "category_id": "saeuger",
+  "motif_name": "Giraffe",
+  "repo_commit": "8489f249e55ada95ac5776ba634b597d96e4f012",
+  "main_commit": "62e290bfce56071b6870f2ed2896fce776c7ae03",
+  "package": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/package.zip",
+    "bytes": 5434605,
+    "sha256": "b793659245057fee7183c11935b0267c2f5126b4d03021cea5eca998b1fc752d"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/handoff.json",
+    "sha256": "14f6d1e4b9b3d399b0c42e32e557016e87b8e6bfdaea54b3c84229b25cf398f7"
+  },
+  "inventory_sha256": "570fe3c3ec445d65d197b4c57433dbe285f739885312660f5f503feb9d80d2d2",
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/approval.json",
+    "sha256": "0411cba680749ba57e09b6616abc7f5c6d247e313601385e7115b4d403936b62"
+  },
+  "width": 24,
+  "height": 36,
+  "mode": "mono",
+  "difficulty": {
+    "method": "picross-difficulty-0.1",
+    "assessment_type": "editorial_estimate",
+    "level": "L2",
+    "plausible_range": [
+      "L2",
+      "L4"
+    ],
+    "confidence": "low",
+    "logic_hash": "bab23c2505579a59f123f32351bae42cc76e187cd24638b15f42fc4ebed1a241",
+    "rule_families": {
+      "R0": "Initial ausschließlich Spalte1 leer; keine nichtleere gepackte Zeile/Spalte. Nach Entfernen dieser Leerlinie bleiben alle Reihen bei maximal15 Packungspositionen kürzer als23. R0 allein kann keinen ersten Füllfortschritt erzeugen; L1 ausgeschlossen. Später Blockabschluss und Restleerfelder.",
+      "R1": "Dominant geschätzt: Überlappung/Verlängerung langer Hals-/Körperblöcke. Neuer Proofschritt0: Zeile19 [13] erzwingt zwei Überlappungszellen. Kopf und Einzelblockspalten liefern einfache Verlängerungen und Grenzen. R0+R1-Suffizienz nicht mit validiertem schwächeren Analysator bewiesen.",
+      "R2": "Mehrfachblockzuordnung an vier Beinen/Schwanz kann kombinierte Anker benötigen. Neue Zeile23 hat [13,1] statt [13], neue Spalte22 [3] statt [2]. Stichproben im neuen Nachweis gespeichert; R2-Notwendigkeit/Suffizienz unsicher.",
+      "R3": "Allgemeine vollständige Linienunterstützung zertifiziert; keine R3-Notwendigkeit bewiesen oder durch schwächeren Regelfixpunkt ausgeschlossen. L2-Schätzung mit konservativem Bereich L2–L4 und low-Vertrauen."
+    },
+    "bottleneck": "Alle60 Linien vor allen153 neuen Proofschritten geprüft; vor Aufräumen bei<=18 offenen Zellen mindestens7 produktive Linien. Keine numerische Engstelle beobachtet. Keine validierte schwächere Technikklassifikation.",
+    "evidence": "audit/difficulty-checkpoints.json",
+    "samples": "audit/difficulty-samples.json",
+    "effort": {
+      "width": 24,
+      "height": 36,
+      "cells": 864,
+      "filled": 253,
+      "empty": 611,
+      "proof_steps": 153,
+      "human_active_minutes": null,
+      "solve_time_minutes": null
+    },
+    "time_estimate": null,
+    "calibration": "Kein validierter Bewertungsanalysator oder menschliche Kalibrierung; begründete KI-Schätzung. Probespiel optional, nicht durchgeführt."
+  },
+  "reveal": {
+    "label": "A-r01",
+    "file": "reveals/A-r01.png",
+    "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+    "approval": "reveal-approval.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "label": "MA-r01",
+    "file": "motifs/MA-r01.png",
+    "sha256": "96fe95aec4e2e38ffdfb265ff2ba2f7b3ac6e66f4d449b96c5c094b3fec0ca4b",
+    "derived_from_reveal_sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+    "approval": "motif-approval-24x36.json",
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "manual-r04",
+    "variant": "fixed-r04",
+    "proof": "manual-r04/fixed-r04-proof.json",
+    "verification": "edit-verification.json",
+    "matrix_hash": "e959cbcfcd07c3d92cbf7edffab3a6719482ac4179abbdb5d4a0dd9ecad06703",
+    "logic_hash": "bab23c2505579a59f123f32351bae42cc76e187cd24638b15f42fc4ebed1a241"
+  },
+  "manual_edit_record": "manual-edit-record.json",
+  "inspection": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/inspection.json",
+    "sha256": "811d2e712a9c649e9bcf07afc34177361e2e14bc4e40f12d2f6b910ad629dadb",
+    "technical": null,
+    "catalog_ready": false
+  },
+  "validation": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/validation.json",
+    "sha256": "b68d2d260c4b88c6846d762e1836e46e088bc6f956ca29513380ae932bd4f94f"
+  },
+  "technical_production": {
+    "certified": true,
+    "proof_verified": true,
+    "status": "solved",
+    "steps": 153,
+    "exact_diff_from_r03": [
+      {
+        "column": 22,
+        "row": 23,
+        "before": "empty",
+        "after": "ink"
+      }
+    ],
+    "evidence": "manual-replay.json"
+  },
+  "blockers": [],
+  "next_action": "Pflicht-CI und getrennten Selbstreview abschließen, PR118 gemäß tatsächlichem bedingten Mergeauftrag mergen; Main-Integration nachweisen. Danach Produktionsabschluss gemäß §9.",
+  "integration": {
+    "runtime_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+    "runtime_revision": 1,
+    "name": "Giraffe",
+    "stem": "giraffe_001",
+    "save_slot": "giraffe_001",
+    "category_id": "saeuger",
+    "category_name": "Säugetiere",
+    "registered_checkout": true,
+    "main_integrated": false,
+    "export_manifest": {
+      "file": "content/packages/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/manifest.json",
+      "sha256": "e960010195d836517b41c9a5443f5aa568e6f599bba3e5385a2637a7904c4f45"
+    },
+    "inspection": {
+      "file": "content/packages/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/inspection.json",
+      "sha256": "c1d7defc2e5a1e3a99f219b3cbed1268398e28fb07c2c5d3ef4199ab8fcb002a"
+    },
+    "plan": {
+      "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/registration-plan.json",
+      "sha256": "7e08b58d2884b711a9f28f082641d7716d9f143b034a8bc04a60ae0162208042"
+    },
+    "registration": {
+      "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/registration-result.json",
+      "sha256": "e21f4f9a3859db46cea5f4c6022977d6840333ee7439c91d067352c367ecbb21"
+    },
+    "file_check": {
+      "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/integration-check.json",
+      "sha256": "2dbe922173764694d6109dbd6292dbce2f6529c878b43f1477e9fbd468a7bba1"
+    }
+  },
+  "previous_revision": {
+    "revision": "r03",
+    "commit": "8489f249e55ada95ac5776ba634b597d96e4f012",
+    "record": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r03/record.json",
+    "package_sha256": "f894d4a3cc0d1ef006c854bf36abc0ee92818435312980d5dd6cb0ea0eec1ba3"
+  },
+  "updated_at_utc": "2026-10-14T14:35:51Z",
+  "difficulty_metadata_note": "Die ursprüngliche R0-Begründung übernimmt maximal14 Packungspositionen aus r03. Der neue Hinweis [13,1] in Zeile23 benötigt15 einschließlich Trenner. Auch15 ist kleiner als23; R0-Ausschluss und Einstufung bleiben unverändert. Präzisierung im äußeren Record; versiegelte ZIP-/Handoff-/Inventarbytes unverändert.",
+  "manual_authorization": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/manual-authorization.json",
+    "sha256": "9c52de284e982f29e7e2ea61f921220704a1cc5c8eef72cd302f688467308d68"
+  },
+  "approval_evidence": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/final-approval-evidence.md",
+    "sha256": "0de848bf69d4c058c06d26877259ef2bdb48f22aeb7123bb74a814b5cfa83ef3"
+  }
+}

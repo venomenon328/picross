@@ -1,0 +1,32 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "level": "L2",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "confidence": "low",
+  "logic_hash": "bab23c2505579a59f123f32351bae42cc76e187cd24638b15f42fc4ebed1a241",
+  "rule_families": {
+    "R0": "Initial ausschließlich Spalte1 leer; keine nichtleere gepackte Zeile/Spalte. Nach Entfernen dieser Leerlinie bleiben alle Reihen bei maximal14 Packungspositionen kürzer als23. R0 allein kann keinen ersten Füllfortschritt erzeugen; L1 ausgeschlossen. Später Blockabschluss und Restleerfelder.",
+    "R1": "Dominant geschätzt: Überlappung/Verlängerung langer Hals-/Körperblöcke. Neuer Proofschritt0: Zeile19 [13] erzwingt zwei Überlappungszellen. Kopf und Einzelblockspalten liefern einfache Verlängerungen und Grenzen. R0+R1-Suffizienz nicht mit validiertem schwächeren Analysator bewiesen.",
+    "R2": "Mehrfachblockzuordnung an vier Beinen/Schwanz kann kombinierte Anker benötigen. Neue Zeile23 hat [13,1] statt [13], neue Spalte22 [3] statt [2]. Stichproben im neuen Nachweis gespeichert; R2-Notwendigkeit/Suffizienz unsicher.",
+    "R3": "Allgemeine vollständige Linienunterstützung zertifiziert; keine R3-Notwendigkeit bewiesen oder durch schwächeren Regelfixpunkt ausgeschlossen. L2-Schätzung mit konservativem Bereich L2–L4 und low-Vertrauen."
+  },
+  "bottleneck": "Alle60 Linien vor allen153 neuen Proofschritten geprüft; vor Aufräumen bei<=18 offenen Zellen mindestens7 produktive Linien. Keine numerische Engstelle beobachtet. Keine validierte schwächere Technikklassifikation.",
+  "evidence": "audit/difficulty-checkpoints.json",
+  "samples": "audit/difficulty-samples.json",
+  "effort": {
+    "width": 24,
+    "height": 36,
+    "cells": 864,
+    "filled": 253,
+    "empty": 611,
+    "proof_steps": 153,
+    "human_active_minutes": null,
+    "solve_time_minutes": null
+  },
+  "time_estimate": null,
+  "calibration": "Kein validierter Bewertungsanalysator oder menschliche Kalibrierung; begründete KI-Schätzung. Probespiel optional, nicht durchgeführt."
+}

@@ -1,0 +1,199 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549"
+  },
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "r04",
+  "repo_commit": "8489f249e55ada95ac5776ba634b597d96e4f012",
+  "main_commit": "62e290bfce56071b6870f2ed2896fce776c7ae03",
+  "state": "blocked",
+  "category_id": "saeuger",
+  "brief": "brief.md",
+  "requested_parameters": {
+    "width": 30,
+    "height": 20,
+    "approximate": true,
+    "mode": "mono"
+  },
+  "approved_parameters": [
+    {
+      "width": 20,
+      "height": 30,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    },
+    {
+      "width": 24,
+      "height": 36,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    }
+  ],
+  "proposed_parameters": [
+    {
+      "width": 20,
+      "height": 30,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    },
+    {
+      "width": 24,
+      "height": 36,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    }
+  ],
+  "configuration": "configuration.json",
+  "reveal": {
+    "label": "A-r01",
+    "file": "reveals/A-r01.png",
+    "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+    "approval": "reveal-approval.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "label": "MA-r01",
+    "file": "motifs/MA-r01.png",
+    "sha256": "96fe95aec4e2e38ffdfb265ff2ba2f7b3ac6e66f4d449b96c5c094b3fec0ca4b",
+    "derived_from_reveal_sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+    "approval": "motif-approval-24x36.json",
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "manual-r04",
+    "variant": "fixed-r04",
+    "proof": "manual-r04/fixed-r04-proof.json",
+    "verification": "edit-verification.json",
+    "matrix_hash": "e959cbcfcd07c3d92cbf7edffab3a6719482ac4179abbdb5d4a0dd9ecad06703",
+    "logic_hash": "bab23c2505579a59f123f32351bae42cc76e187cd24638b15f42fc4ebed1a241"
+  },
+  "origin_verification": "origin-verification.json",
+  "repair": null,
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "570fe3c3ec445d65d197b4c57433dbe285f739885312660f5f503feb9d80d2d2"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "codex_handoff": "codex-handoff.md",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "reveal-approval.json",
+    "motif": "motif-approval-24x36.json",
+    "provenance": "origin-verification.json",
+    "logic": "edit-verification.json",
+    "frame": "audit/technical.json",
+    "visual": "raster-visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "raster-visual-review.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "final_editorial: missing bound human final approval and associated ZA-1-v2 authorization"
+  ],
+  "next_action": "r04 redaktionell abnehmen; bei Integrationsauftrag echte Endfreigabe und ZA-1-v2-Autorisierung extern binden. Kein Merge.",
+  "authorization": "Fortgeltende Repository-/Draft-PR-Beauftragung; aktueller Nutzerauftrag exakt ein Pixel in Spalte22/Zeile23. Keine Endabnahme oder Integration erteilt.",
+  "difficulty": "difficulty.json",
+  "manual_edit_record": "manual-edit-record.json",
+  "content_blockers": []
+}

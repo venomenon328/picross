@@ -1,0 +1,70 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "r01",
+  "state": "reveal_review",
+  "category_id": "saeuger",
+  "package": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r01/package.zip",
+    "bytes": 4924447,
+    "sha256": "3e87260b5b8dddc0e910be2854cf9cdce73755f3333bd3b419ba241dfbc8e458"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r01/handoff.json",
+    "sha256": "e154fff0ebff1a14bd9ecb46528b4110c0631f650e7911361e6f5614272260a8"
+  },
+  "inventory_sha256": "bdab7c0a5bca501573ed951ee37f5d8b428fab1cc280d3a3129c30739b011b8c",
+  "final_editorial_approval": null,
+  "width": 20,
+  "height": 30,
+  "dimensions_approximate": true,
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "Ausdrückliche menschliche Abschlussbildfreigabe A-r01/B-r01/C-r01; danach Standardauftrag 2 zur Motivvorlage.",
+  "integration": null,
+  "motif_name": "Giraffe",
+  "repo_commit": "b57d8da3dd8c0965727759eb027c10686abb3630",
+  "reveal_options": [
+    {
+      "label": "A-r01",
+      "file": "reveals/A-r01.png",
+      "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+      "pixels": [
+        1024,
+        1536
+      ],
+      "approval": null,
+      "origin": "native image_gen, neue Generierung ohne Bildreferenz",
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "usage_basis": "Eigenständige KI-Generierung für den ausdrücklich beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "label": "B-r01",
+      "file": "reveals/B-r01.png",
+      "sha256": "09098e40ab51d5fd4643ce74620b00d508a8e10933d2631dbca3b5532372ab58",
+      "pixels": [
+        1024,
+        1536
+      ],
+      "approval": null,
+      "origin": "native image_gen, neue Generierung ohne Bildreferenz",
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "usage_basis": "Eigenständige KI-Generierung für den ausdrücklich beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "label": "C-r01",
+      "file": "reveals/C-r01.png",
+      "sha256": "655ff614335b6e686856d02148ad8cf23802f3b97ce04ca1c2a8e34b85d35fa5",
+      "pixels": [
+        1024,
+        1536
+      ],
+      "approval": null,
+      "origin": "native image_gen, neue Generierung ohne Bildreferenz",
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "usage_basis": "Eigenständige KI-Generierung für den ausdrücklich beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    }
+  ],
+  "updated_at_utc": "2026-10-14T12:28:23.514775+00:00"
+}

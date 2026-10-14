@@ -1,0 +1,1232 @@
+{
+  "method": "All60 independent full-line supports before every proof step; no validated weak-rule classifier",
+  "logic_hash": "bab23c2505579a59f123f32351bae42cc76e187cd24638b15f42fc4ebed1a241",
+  "cleanup_threshold": 18,
+  "minimum_productive_before_cleanup": 7,
+  "checkpoints": [
+    {
+      "step": 0,
+      "unknown": 864,
+      "productive_lines": 8,
+      "selected_axis": "row",
+      "selected_index": 18,
+      "changes": 2
+    },
+    {
+      "step": 1,
+      "unknown": 862,
+      "productive_lines": 8,
+      "selected_axis": "row",
+      "selected_index": 19,
+      "changes": 2
+    },
+    {
+      "step": 2,
+      "unknown": 860,
+      "productive_lines": 7,
+      "selected_axis": "row",
+      "selected_index": 20,
+      "changes": 4
+    },
+    {
+      "step": 3,
+      "unknown": 856,
+      "productive_lines": 7,
+      "selected_axis": "row",
+      "selected_index": 21,
+      "changes": 4
+    },
+    {
+      "step": 4,
+      "unknown": 852,
+      "productive_lines": 7,
+      "selected_axis": "row",
+      "selected_index": 22,
+      "changes": 4
+    },
+    {
+      "step": 5,
+      "unknown": 848,
+      "productive_lines": 7,
+      "selected_axis": "column",
+      "selected_index": 0,
+      "changes": 36
+    },
+    {
+      "step": 6,
+      "unknown": 812,
+      "productive_lines": 12,
+      "selected_axis": "column",
+      "selected_index": 7,
+      "changes": 11
+    },
+    {
+      "step": 7,
+      "unknown": 801,
+      "productive_lines": 20,
+      "selected_axis": "column",
+      "selected_index": 8,
+      "changes": 10
+    },
+    {
+      "step": 8,
+      "unknown": 791,
+      "productive_lines": 19,
+      "selected_axis": "column",
+      "selected_index": 9,
+      "changes": 9
+    },
+    {
+      "step": 9,
+      "unknown": 782,
+      "productive_lines": 18,
+      "selected_axis": "column",
+      "selected_index": 10,
+      "changes": 9
+    },
+    {
+      "step": 10,
+      "unknown": 773,
+      "productive_lines": 17,
+      "selected_axis": "column",
+      "selected_index": 12,
+      "changes": 23
+    },
+    {
+      "step": 11,
+      "unknown": 750,
+      "productive_lines": 23,
+      "selected_axis": "column",
+      "selected_index": 13,
+      "changes": 22
+    },
+    {
+      "step": 12,
+      "unknown": 728,
+      "productive_lines": 22,
+      "selected_axis": "row",
+      "selected_index": 0,
+      "changes": 1
+    },
+    {
+      "step": 13,
+      "unknown": 727,
+      "productive_lines": 21,
+      "selected_axis": "row",
+      "selected_index": 1,
+      "changes": 1
+    },
+    {
+      "step": 14,
+      "unknown": 726,
+      "productive_lines": 20,
+      "selected_axis": "row",
+      "selected_index": 2,
+      "changes": 1
+    },
+    {
+      "step": 15,
+      "unknown": 725,
+      "productive_lines": 19,
+      "selected_axis": "row",
+      "selected_index": 3,
+      "changes": 1
+    },
+    {
+      "step": 16,
+      "unknown": 724,
+      "productive_lines": 19,
+      "selected_axis": "row",
+      "selected_index": 4,
+      "changes": 1
+    },
+    {
+      "step": 17,
+      "unknown": 723,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 5,
+      "changes": 1
+    },
+    {
+      "step": 18,
+      "unknown": 722,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 6,
+      "changes": 1
+    },
+    {
+      "step": 19,
+      "unknown": 721,
+      "productive_lines": 16,
+      "selected_axis": "row",
+      "selected_index": 8,
+      "changes": 16
+    },
+    {
+      "step": 20,
+      "unknown": 705,
+      "productive_lines": 21,
+      "selected_axis": "row",
+      "selected_index": 9,
+      "changes": 14
+    },
+    {
+      "step": 21,
+      "unknown": 691,
+      "productive_lines": 20,
+      "selected_axis": "row",
+      "selected_index": 10,
+      "changes": 14
+    },
+    {
+      "step": 22,
+      "unknown": 677,
+      "productive_lines": 19,
+      "selected_axis": "row",
+      "selected_index": 11,
+      "changes": 14
+    },
+    {
+      "step": 23,
+      "unknown": 663,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 12,
+      "changes": 12
+    },
+    {
+      "step": 24,
+      "unknown": 651,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 13,
+      "changes": 13
+    },
+    {
+      "step": 25,
+      "unknown": 638,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 14,
+      "changes": 13
+    },
+    {
+      "step": 26,
+      "unknown": 625,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 15,
+      "changes": 11
+    },
+    {
+      "step": 27,
+      "unknown": 614,
+      "productive_lines": 16,
+      "selected_axis": "row",
+      "selected_index": 16,
+      "changes": 9
+    },
+    {
+      "step": 28,
+      "unknown": 605,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 17,
+      "changes": 9
+    },
+    {
+      "step": 29,
+      "unknown": 596,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 18,
+      "changes": 6
+    },
+    {
+      "step": 30,
+      "unknown": 590,
+      "productive_lines": 16,
+      "selected_axis": "row",
+      "selected_index": 19,
+      "changes": 5
+    },
+    {
+      "step": 31,
+      "unknown": 585,
+      "productive_lines": 15,
+      "selected_axis": "row",
+      "selected_index": 20,
+      "changes": 3
+    },
+    {
+      "step": 32,
+      "unknown": 582,
+      "productive_lines": 14,
+      "selected_axis": "row",
+      "selected_index": 21,
+      "changes": 3
+    },
+    {
+      "step": 33,
+      "unknown": 579,
+      "productive_lines": 14,
+      "selected_axis": "row",
+      "selected_index": 22,
+      "changes": 1
+    },
+    {
+      "step": 34,
+      "unknown": 578,
+      "productive_lines": 13,
+      "selected_axis": "column",
+      "selected_index": 11,
+      "changes": 15
+    },
+    {
+      "step": 35,
+      "unknown": 563,
+      "productive_lines": 18,
+      "selected_axis": "column",
+      "selected_index": 10,
+      "changes": 3
+    },
+    {
+      "step": 36,
+      "unknown": 560,
+      "productive_lines": 17,
+      "selected_axis": "column",
+      "selected_index": 14,
+      "changes": 9
+    },
+    {
+      "step": 37,
+      "unknown": 551,
+      "productive_lines": 17,
+      "selected_axis": "column",
+      "selected_index": 15,
+      "changes": 11
+    },
+    {
+      "step": 38,
+      "unknown": 540,
+      "productive_lines": 16,
+      "selected_axis": "column",
+      "selected_index": 16,
+      "changes": 20
+    },
+    {
+      "step": 39,
+      "unknown": 520,
+      "productive_lines": 19,
+      "selected_axis": "column",
+      "selected_index": 17,
+      "changes": 13
+    },
+    {
+      "step": 40,
+      "unknown": 507,
+      "productive_lines": 21,
+      "selected_axis": "column",
+      "selected_index": 18,
+      "changes": 9
+    },
+    {
+      "step": 41,
+      "unknown": 498,
+      "productive_lines": 21,
+      "selected_axis": "column",
+      "selected_index": 19,
+      "changes": 17
+    },
+    {
+      "step": 42,
+      "unknown": 481,
+      "productive_lines": 22,
+      "selected_axis": "column",
+      "selected_index": 20,
+      "changes": 3
+    },
+    {
+      "step": 43,
+      "unknown": 478,
+      "productive_lines": 21,
+      "selected_axis": "column",
+      "selected_index": 6,
+      "changes": 1
+    },
+    {
+      "step": 44,
+      "unknown": 477,
+      "productive_lines": 20,
+      "selected_axis": "column",
+      "selected_index": 13,
+      "changes": 2
+    },
+    {
+      "step": 45,
+      "unknown": 475,
+      "productive_lines": 19,
+      "selected_axis": "column",
+      "selected_index": 9,
+      "changes": 4
+    },
+    {
+      "step": 46,
+      "unknown": 471,
+      "productive_lines": 18,
+      "selected_axis": "column",
+      "selected_index": 12,
+      "changes": 1
+    },
+    {
+      "step": 47,
+      "unknown": 470,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 12,
+      "changes": 1
+    },
+    {
+      "step": 48,
+      "unknown": 469,
+      "productive_lines": 16,
+      "selected_axis": "row",
+      "selected_index": 14,
+      "changes": 5
+    },
+    {
+      "step": 49,
+      "unknown": 464,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 15,
+      "changes": 5
+    },
+    {
+      "step": 50,
+      "unknown": 459,
+      "productive_lines": 16,
+      "selected_axis": "row",
+      "selected_index": 16,
+      "changes": 1
+    },
+    {
+      "step": 51,
+      "unknown": 458,
+      "productive_lines": 15,
+      "selected_axis": "row",
+      "selected_index": 25,
+      "changes": 1
+    },
+    {
+      "step": 52,
+      "unknown": 457,
+      "productive_lines": 15,
+      "selected_axis": "row",
+      "selected_index": 26,
+      "changes": 7
+    },
+    {
+      "step": 53,
+      "unknown": 450,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 27,
+      "changes": 6
+    },
+    {
+      "step": 54,
+      "unknown": 444,
+      "productive_lines": 19,
+      "selected_axis": "row",
+      "selected_index": 28,
+      "changes": 5
+    },
+    {
+      "step": 55,
+      "unknown": 439,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 29,
+      "changes": 3
+    },
+    {
+      "step": 56,
+      "unknown": 436,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 30,
+      "changes": 3
+    },
+    {
+      "step": 57,
+      "unknown": 433,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 23,
+      "changes": 8
+    },
+    {
+      "step": 58,
+      "unknown": 425,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 24,
+      "changes": 7
+    },
+    {
+      "step": 59,
+      "unknown": 418,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 3,
+      "changes": 8
+    },
+    {
+      "step": 60,
+      "unknown": 410,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 4,
+      "changes": 10
+    },
+    {
+      "step": 61,
+      "unknown": 400,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 22,
+      "changes": 3
+    },
+    {
+      "step": 62,
+      "unknown": 397,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 20,
+      "changes": 3
+    },
+    {
+      "step": 63,
+      "unknown": 394,
+      "productive_lines": 17,
+      "selected_axis": "row",
+      "selected_index": 21,
+      "changes": 8
+    },
+    {
+      "step": 64,
+      "unknown": 386,
+      "productive_lines": 15,
+      "selected_axis": "column",
+      "selected_index": 6,
+      "changes": 7
+    },
+    {
+      "step": 65,
+      "unknown": 379,
+      "productive_lines": 21,
+      "selected_axis": "column",
+      "selected_index": 3,
+      "changes": 22
+    },
+    {
+      "step": 66,
+      "unknown": 357,
+      "productive_lines": 28,
+      "selected_axis": "column",
+      "selected_index": 4,
+      "changes": 22
+    },
+    {
+      "step": 67,
+      "unknown": 335,
+      "productive_lines": 28,
+      "selected_axis": "column",
+      "selected_index": 5,
+      "changes": 4
+    },
+    {
+      "step": 68,
+      "unknown": 331,
+      "productive_lines": 27,
+      "selected_axis": "column",
+      "selected_index": 9,
+      "changes": 8
+    },
+    {
+      "step": 69,
+      "unknown": 323,
+      "productive_lines": 26,
+      "selected_axis": "column",
+      "selected_index": 10,
+      "changes": 5
+    },
+    {
+      "step": 70,
+      "unknown": 318,
+      "productive_lines": 25,
+      "selected_axis": "column",
+      "selected_index": 2,
+      "changes": 20
+    },
+    {
+      "step": 71,
+      "unknown": 298,
+      "productive_lines": 33,
+      "selected_axis": "column",
+      "selected_index": 20,
+      "changes": 8
+    },
+    {
+      "step": 72,
+      "unknown": 290,
+      "productive_lines": 36,
+      "selected_axis": "column",
+      "selected_index": 14,
+      "changes": 1
+    },
+    {
+      "step": 73,
+      "unknown": 289,
+      "productive_lines": 35,
+      "selected_axis": "column",
+      "selected_index": 15,
+      "changes": 6
+    },
+    {
+      "step": 74,
+      "unknown": 283,
+      "productive_lines": 34,
+      "selected_axis": "column",
+      "selected_index": 22,
+      "changes": 16
+    },
+    {
+      "step": 75,
+      "unknown": 267,
+      "productive_lines": 33,
+      "selected_axis": "column",
+      "selected_index": 23,
+      "changes": 18
+    },
+    {
+      "step": 76,
+      "unknown": 249,
+      "productive_lines": 32,
+      "selected_axis": "column",
+      "selected_index": 18,
+      "changes": 15
+    },
+    {
+      "step": 77,
+      "unknown": 234,
+      "productive_lines": 32,
+      "selected_axis": "column",
+      "selected_index": 17,
+      "changes": 11
+    },
+    {
+      "step": 78,
+      "unknown": 223,
+      "productive_lines": 30,
+      "selected_axis": "column",
+      "selected_index": 7,
+      "changes": 8
+    },
+    {
+      "step": 79,
+      "unknown": 215,
+      "productive_lines": 29,
+      "selected_axis": "row",
+      "selected_index": 5,
+      "changes": 7
+    },
+    {
+      "step": 80,
+      "unknown": 208,
+      "productive_lines": 33,
+      "selected_axis": "row",
+      "selected_index": 6,
+      "changes": 3
+    },
+    {
+      "step": 81,
+      "unknown": 205,
+      "productive_lines": 34,
+      "selected_axis": "row",
+      "selected_index": 7,
+      "changes": 4
+    },
+    {
+      "step": 82,
+      "unknown": 201,
+      "productive_lines": 31,
+      "selected_axis": "row",
+      "selected_index": 8,
+      "changes": 1
+    },
+    {
+      "step": 83,
+      "unknown": 200,
+      "productive_lines": 30,
+      "selected_axis": "row",
+      "selected_index": 9,
+      "changes": 1
+    },
+    {
+      "step": 84,
+      "unknown": 199,
+      "productive_lines": 29,
+      "selected_axis": "row",
+      "selected_index": 10,
+      "changes": 2
+    },
+    {
+      "step": 85,
+      "unknown": 197,
+      "productive_lines": 29,
+      "selected_axis": "row",
+      "selected_index": 11,
+      "changes": 2
+    },
+    {
+      "step": 86,
+      "unknown": 195,
+      "productive_lines": 28,
+      "selected_axis": "row",
+      "selected_index": 0,
+      "changes": 1
+    },
+    {
+      "step": 87,
+      "unknown": 194,
+      "productive_lines": 27,
+      "selected_axis": "row",
+      "selected_index": 1,
+      "changes": 4
+    },
+    {
+      "step": 88,
+      "unknown": 190,
+      "productive_lines": 29,
+      "selected_axis": "row",
+      "selected_index": 12,
+      "changes": 1
+    },
+    {
+      "step": 89,
+      "unknown": 189,
+      "productive_lines": 28,
+      "selected_axis": "row",
+      "selected_index": 16,
+      "changes": 3
+    },
+    {
+      "step": 90,
+      "unknown": 186,
+      "productive_lines": 30,
+      "selected_axis": "row",
+      "selected_index": 17,
+      "changes": 6
+    },
+    {
+      "step": 91,
+      "unknown": 180,
+      "productive_lines": 30,
+      "selected_axis": "row",
+      "selected_index": 18,
+      "changes": 4
+    },
+    {
+      "step": 92,
+      "unknown": 176,
+      "productive_lines": 30,
+      "selected_axis": "row",
+      "selected_index": 19,
+      "changes": 3
+    },
+    {
+      "step": 93,
+      "unknown": 173,
+      "productive_lines": 28,
+      "selected_axis": "row",
+      "selected_index": 25,
+      "changes": 6
+    },
+    {
+      "step": 94,
+      "unknown": 167,
+      "productive_lines": 27,
+      "selected_axis": "row",
+      "selected_index": 26,
+      "changes": 1
+    },
+    {
+      "step": 95,
+      "unknown": 166,
+      "productive_lines": 27,
+      "selected_axis": "row",
+      "selected_index": 27,
+      "changes": 2
+    },
+    {
+      "step": 96,
+      "unknown": 164,
+      "productive_lines": 27,
+      "selected_axis": "row",
+      "selected_index": 28,
+      "changes": 4
+    },
+    {
+      "step": 97,
+      "unknown": 160,
+      "productive_lines": 27,
+      "selected_axis": "row",
+      "selected_index": 29,
+      "changes": 6
+    },
+    {
+      "step": 98,
+      "unknown": 154,
+      "productive_lines": 26,
+      "selected_axis": "row",
+      "selected_index": 30,
+      "changes": 7
+    },
+    {
+      "step": 99,
+      "unknown": 147,
+      "productive_lines": 26,
+      "selected_axis": "row",
+      "selected_index": 31,
+      "changes": 9
+    },
+    {
+      "step": 100,
+      "unknown": 138,
+      "productive_lines": 25,
+      "selected_axis": "row",
+      "selected_index": 32,
+      "changes": 7
+    },
+    {
+      "step": 101,
+      "unknown": 131,
+      "productive_lines": 24,
+      "selected_axis": "row",
+      "selected_index": 33,
+      "changes": 6
+    },
+    {
+      "step": 102,
+      "unknown": 125,
+      "productive_lines": 23,
+      "selected_axis": "row",
+      "selected_index": 34,
+      "changes": 2
+    },
+    {
+      "step": 103,
+      "unknown": 123,
+      "productive_lines": 22,
+      "selected_axis": "row",
+      "selected_index": 35,
+      "changes": 1
+    },
+    {
+      "step": 104,
+      "unknown": 122,
+      "productive_lines": 21,
+      "selected_axis": "row",
+      "selected_index": 22,
+      "changes": 4
+    },
+    {
+      "step": 105,
+      "unknown": 118,
+      "productive_lines": 21,
+      "selected_axis": "row",
+      "selected_index": 2,
+      "changes": 5
+    },
+    {
+      "step": 106,
+      "unknown": 113,
+      "productive_lines": 20,
+      "selected_axis": "row",
+      "selected_index": 24,
+      "changes": 3
+    },
+    {
+      "step": 107,
+      "unknown": 110,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 23,
+      "changes": 2
+    },
+    {
+      "step": 108,
+      "unknown": 108,
+      "productive_lines": 17,
+      "selected_axis": "column",
+      "selected_index": 1,
+      "changes": 3
+    },
+    {
+      "step": 109,
+      "unknown": 105,
+      "productive_lines": 18,
+      "selected_axis": "column",
+      "selected_index": 2,
+      "changes": 1
+    },
+    {
+      "step": 110,
+      "unknown": 104,
+      "productive_lines": 17,
+      "selected_axis": "column",
+      "selected_index": 3,
+      "changes": 1
+    },
+    {
+      "step": 111,
+      "unknown": 103,
+      "productive_lines": 17,
+      "selected_axis": "column",
+      "selected_index": 4,
+      "changes": 5
+    },
+    {
+      "step": 112,
+      "unknown": 98,
+      "productive_lines": 20,
+      "selected_axis": "column",
+      "selected_index": 8,
+      "changes": 18
+    },
+    {
+      "step": 113,
+      "unknown": 80,
+      "productive_lines": 26,
+      "selected_axis": "column",
+      "selected_index": 20,
+      "changes": 2
+    },
+    {
+      "step": 114,
+      "unknown": 78,
+      "productive_lines": 26,
+      "selected_axis": "column",
+      "selected_index": 21,
+      "changes": 6
+    },
+    {
+      "step": 115,
+      "unknown": 72,
+      "productive_lines": 27,
+      "selected_axis": "column",
+      "selected_index": 9,
+      "changes": 3
+    },
+    {
+      "step": 116,
+      "unknown": 69,
+      "productive_lines": 27,
+      "selected_axis": "column",
+      "selected_index": 5,
+      "changes": 1
+    },
+    {
+      "step": 117,
+      "unknown": 68,
+      "productive_lines": 26,
+      "selected_axis": "column",
+      "selected_index": 6,
+      "changes": 3
+    },
+    {
+      "step": 118,
+      "unknown": 65,
+      "productive_lines": 28,
+      "selected_axis": "column",
+      "selected_index": 13,
+      "changes": 1
+    },
+    {
+      "step": 119,
+      "unknown": 64,
+      "productive_lines": 27,
+      "selected_axis": "column",
+      "selected_index": 16,
+      "changes": 3
+    },
+    {
+      "step": 120,
+      "unknown": 61,
+      "productive_lines": 26,
+      "selected_axis": "column",
+      "selected_index": 15,
+      "changes": 2
+    },
+    {
+      "step": 121,
+      "unknown": 59,
+      "productive_lines": 25,
+      "selected_axis": "column",
+      "selected_index": 22,
+      "changes": 1
+    },
+    {
+      "step": 122,
+      "unknown": 58,
+      "productive_lines": 24,
+      "selected_axis": "column",
+      "selected_index": 10,
+      "changes": 2
+    },
+    {
+      "step": 123,
+      "unknown": 56,
+      "productive_lines": 24,
+      "selected_axis": "column",
+      "selected_index": 19,
+      "changes": 5
+    },
+    {
+      "step": 124,
+      "unknown": 51,
+      "productive_lines": 25,
+      "selected_axis": "column",
+      "selected_index": 7,
+      "changes": 7
+    },
+    {
+      "step": 125,
+      "unknown": 44,
+      "productive_lines": 21,
+      "selected_axis": "row",
+      "selected_index": 25,
+      "changes": 3
+    },
+    {
+      "step": 126,
+      "unknown": 41,
+      "productive_lines": 22,
+      "selected_axis": "row",
+      "selected_index": 0,
+      "changes": 1
+    },
+    {
+      "step": 127,
+      "unknown": 40,
+      "productive_lines": 22,
+      "selected_axis": "row",
+      "selected_index": 1,
+      "changes": 1
+    },
+    {
+      "step": 128,
+      "unknown": 39,
+      "productive_lines": 21,
+      "selected_axis": "row",
+      "selected_index": 8,
+      "changes": 1
+    },
+    {
+      "step": 129,
+      "unknown": 38,
+      "productive_lines": 20,
+      "selected_axis": "row",
+      "selected_index": 23,
+      "changes": 2
+    },
+    {
+      "step": 130,
+      "unknown": 36,
+      "productive_lines": 21,
+      "selected_axis": "row",
+      "selected_index": 24,
+      "changes": 2
+    },
+    {
+      "step": 131,
+      "unknown": 34,
+      "productive_lines": 20,
+      "selected_axis": "row",
+      "selected_index": 26,
+      "changes": 3
+    },
+    {
+      "step": 132,
+      "unknown": 31,
+      "productive_lines": 19,
+      "selected_axis": "row",
+      "selected_index": 27,
+      "changes": 3
+    },
+    {
+      "step": 133,
+      "unknown": 28,
+      "productive_lines": 18,
+      "selected_axis": "row",
+      "selected_index": 28,
+      "changes": 1
+    },
+    {
+      "step": 134,
+      "unknown": 27,
+      "productive_lines": 16,
+      "selected_axis": "row",
+      "selected_index": 32,
+      "changes": 1
+    },
+    {
+      "step": 135,
+      "unknown": 26,
+      "productive_lines": 16,
+      "selected_axis": "row",
+      "selected_index": 33,
+      "changes": 1
+    },
+    {
+      "step": 136,
+      "unknown": 25,
+      "productive_lines": 15,
+      "selected_axis": "row",
+      "selected_index": 34,
+      "changes": 2
+    },
+    {
+      "step": 137,
+      "unknown": 23,
+      "productive_lines": 15,
+      "selected_axis": "row",
+      "selected_index": 35,
+      "changes": 3
+    },
+    {
+      "step": 138,
+      "unknown": 20,
+      "productive_lines": 13,
+      "selected_axis": "row",
+      "selected_index": 20,
+      "changes": 1
+    },
+    {
+      "step": 139,
+      "unknown": 19,
+      "productive_lines": 12,
+      "selected_axis": "row",
+      "selected_index": 9,
+      "changes": 1
+    },
+    {
+      "step": 140,
+      "unknown": 18,
+      "productive_lines": 10,
+      "selected_axis": "row",
+      "selected_index": 14,
+      "changes": 1
+    },
+    {
+      "step": 141,
+      "unknown": 17,
+      "productive_lines": 9,
+      "selected_axis": "row",
+      "selected_index": 15,
+      "changes": 2
+    },
+    {
+      "step": 142,
+      "unknown": 15,
+      "productive_lines": 8,
+      "selected_axis": "row",
+      "selected_index": 16,
+      "changes": 1
+    },
+    {
+      "step": 143,
+      "unknown": 14,
+      "productive_lines": 6,
+      "selected_axis": "row",
+      "selected_index": 12,
+      "changes": 1
+    },
+    {
+      "step": 144,
+      "unknown": 13,
+      "productive_lines": 6,
+      "selected_axis": "row",
+      "selected_index": 18,
+      "changes": 1
+    },
+    {
+      "step": 145,
+      "unknown": 12,
+      "productive_lines": 5,
+      "selected_axis": "row",
+      "selected_index": 19,
+      "changes": 2
+    },
+    {
+      "step": 146,
+      "unknown": 10,
+      "productive_lines": 5,
+      "selected_axis": "column",
+      "selected_index": 5,
+      "changes": 2
+    },
+    {
+      "step": 147,
+      "unknown": 8,
+      "productive_lines": 6,
+      "selected_axis": "column",
+      "selected_index": 6,
+      "changes": 1
+    },
+    {
+      "step": 148,
+      "unknown": 7,
+      "productive_lines": 6,
+      "selected_axis": "column",
+      "selected_index": 7,
+      "changes": 3
+    },
+    {
+      "step": 149,
+      "unknown": 4,
+      "productive_lines": 6,
+      "selected_axis": "column",
+      "selected_index": 11,
+      "changes": 1
+    },
+    {
+      "step": 150,
+      "unknown": 3,
+      "productive_lines": 4,
+      "selected_axis": "column",
+      "selected_index": 20,
+      "changes": 1
+    },
+    {
+      "step": 151,
+      "unknown": 2,
+      "productive_lines": 2,
+      "selected_axis": "row",
+      "selected_index": 33,
+      "changes": 1
+    },
+    {
+      "step": 152,
+      "unknown": 1,
+      "productive_lines": 2,
+      "selected_axis": "row",
+      "selected_index": 35,
+      "changes": 1
+    }
+  ]
+}

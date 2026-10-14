@@ -1,0 +1,14 @@
+{
+  "type": "human_reveal_approval",
+  "actor": "Tobias Schröder",
+  "timestamp_utc": "2026-10-14T13:18:47Z",
+  "statement": "Ich gebe das Abschlussbild A-r01 frei.",
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "A-r01",
+  "file": "reveals/A-r01.png",
+  "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+  "evidence": "user-approval-evidence.md",
+  "source_commit": "5209d30c48957318412adfce98999e78487dc18c",
+  "source_package_revision": "r01",
+  "source_package_sha256": "3e87260b5b8dddc0e910be2854cf9cdce73755f3333bd3b419ba241dfbc8e458"
+}
