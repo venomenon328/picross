@@ -1,0 +1,4 @@
+Approved motif MA-r01, user-fixed 25x30 mono. Preserve upright mug, organic foam crown and left spill, open right handle, two white vertical reflections, broad connected rounded base. Full silhouette exact 5:6 crop; no stretching. Compare area96/128/160/192. Round 2: changed raster phase without clipping any motif pixel, 192/224 compare crown continuity.
+
+Working mode: faithful
+Motif and gameplay review: open

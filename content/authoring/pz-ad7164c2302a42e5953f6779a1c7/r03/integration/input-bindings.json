@@ -1,0 +1,34 @@
+{
+  "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "revision": "r03",
+  "package": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/package.zip",
+    "bytes": 10836014,
+    "sha256": "f723bd3b6a417d94daaf4fa6e76452a8101a097d2f98689944a5ff570130c47c"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r03/handoff.json",
+    "sha256": "792a27b00fed69e5f3955afd64f4509d1e15fa3cf825ecaa0bc2e1fd2f6a7181"
+  },
+  "inventory_sha256": "c211e4c7f6876b883788a6840df2cde6f332a088069dd2464e9626bc0ac6e5c5",
+  "approval_sha256": "09b80c4d4608f64daea486be4b0817781b7c8923a0f7aad17e08894fac489830",
+  "selected": {
+    "logic_hash": "70e1211b881c2705667dece55a8fc623329976b21e26fda5f210f01a0be6e19a",
+    "matrix_hash": "16e0710e38d354fbb294812b3542a8acf0be0f31d2772f349243f5ed2e84b4cf",
+    "reveal": {
+      "file": "reveal/C-r01.png",
+      "sha256": "54d053af4c1022dade010581b5b70823f4acc9a406057221ef638fc9f1a1c804"
+    },
+    "variant": "area-240"
+  },
+  "category_id": "suesses-getraenke",
+  "runtime": {
+    "id": "pz-ad7164c2302a42e5953f6779a1c7",
+    "revision": 1,
+    "name": "Glas Bier mit Schaumkrone",
+    "stem": "bierglas_001",
+    "save_slot": "bierglas_001"
+  },
+  "unchanged_mandatory_sources_except_authoring_index": true,
+  "prior_production_evidence_reused": "r03 immutable package, all eight content gates pass; prior inspection technical=true; no extra routine inspect/re-solve/game tests."
+}

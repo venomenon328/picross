@@ -1,0 +1,239 @@
+{
+  "status": "pass",
+  "source_head": "1147aeb27d5cee911d408624904cefadd09b3c19",
+  "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "runtime_id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "runtime_revision": 1,
+  "save_slot": "bierglas_001",
+  "category_id": "suesses-getraenke",
+  "category_name": "Süßes & Getränke",
+  "registered_in_checkout": true,
+  "registered_on_main": false,
+  "new_registry_entries": 1,
+  "existing_registry_entries_unchanged": true,
+  "existing_runtime_entries_unchanged": true,
+  "categories_unchanged": true,
+  "runtime_projection_exact": true,
+  "runtime_definition_matrix_clues_match_approved_input": true,
+  "reveal_byte_identical": true,
+  "original_package_handoff_inventory_unchanged": true,
+  "approval_byte_identical": true,
+  "written_export_copy_exact": true,
+  "manifest_file_hashes_exact": true,
+  "registered_package_files": 49,
+  "registered_package_bytes": 7233069,
+  "no_pending_journal": true,
+  "runtime_files": [
+    {
+      "file": "game/data/content/bierglas_001.json",
+      "sha256": "d7c7bb015690d099f321528469d85487bc72ea963e186838717bafc8ffe859a0"
+    },
+    {
+      "file": "game/art/content/bierglas_001.png",
+      "sha256": "54d053af4c1022dade010581b5b70823f4acc9a406057221ef638fc9f1a1c804"
+    },
+    {
+      "file": "game/art/content/bierglas_001.txt",
+      "sha256": "e46785ebabdb8221b911dedbdcb04656f5b52d99b5990d3433c204854264aec4"
+    }
+  ],
+  "manifest_sha256": "61444bab41a9fb953eed9e2488bdce0d4bbe11764a559a9d97cba395d9abb06e",
+  "approval_sha256": "09b80c4d4608f64daea486be4b0817781b7c8923a0f7aad17e08894fac489830",
+  "file_bindings": [
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/approval.json",
+      "sha256": "09b80c4d4608f64daea486be4b0817781b7c8923a0f7aad17e08894fac489830"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/categories.json",
+      "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/approvals/motif-MA-r01.json",
+      "sha256": "5582adb481f08754e247dfb7fac6fe8f98fc9b35cd7ea3dceab52c127fb9a7cc"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/approvals/reveal-C-r01.json",
+      "sha256": "3b13dc0eee1ada7019b5b976526f3fab94b201d046a61286846637deeafff7ae"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/approvals/user-request-standardauftrag-2.txt",
+      "sha256": "db0e47dce0260a86bf3966c60f82c33c3d4a8bb3b3621fe750db0a9719bc5106"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/approvals/user-request-standardauftrag-3.txt",
+      "sha256": "9beccfa18f3016d2917977e8dd97c456e9efb2594643cd07c902f42ceb7d7c02"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/audit/difficulty-checkpoints.json",
+      "sha256": "13b6047ef7f0d913c0a528786de8179ecb3b766fc07a7c42d21e738f26932dbf"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/audit/final-checks.json",
+      "sha256": "0859b3fb3b3d243bf0917c722581340cb97d7b41ba81f201f5503cdefb1bbcdd"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/audit/final-fresh-verify.json",
+      "sha256": "065616983558df2993d72c3f7470845e270a4eb01762760cb5026c4256de1b60"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/audit/origin-verification.json",
+      "sha256": "1b8b4d28fafb422936dc67760185fd476804971b0806b49c2f2058a1884632d9"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/audit/visual-review.json",
+      "sha256": "2c6594a99f3981876381e338b411d59c42fd5d309ad8f4b29cafa7cdeac1fb90"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/brief.md",
+      "sha256": "40f9d191f13fcb1ceca04d17950236cfaf32e4d2e43abc10970a29f84e6ec347"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/decisions.json",
+      "sha256": "7b848d86d0aeabcb1d4c21f92c06dc71e9555ea6de6a61ca6ea081495bf5d594"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/derivation.json",
+      "sha256": "ef197171b99416a65a6b87ad02cc542ba107a6af649a3e31988736d1c886dcb6"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/difficulty.json",
+      "sha256": "c41e3b55bf27a136fda477352428e1da9b52b214c519583c27bcd17185cf3d15"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/effort.json",
+      "sha256": "d9a7038bef7f0bc7bb0ae0678d089c952af5577cf3d4d0fd9ff65aabc009515e"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/generation-motif.json",
+      "sha256": "d053a621f8e918d9a26cf64ccf8d288e7144d5a3250910b33210b9efcadcb3f2"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/generation.json",
+      "sha256": "4a62252b96f9bae0d67e7dfe2745589f1803ff835f77afa4cc6d986ce090070d"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/handoff.json",
+      "sha256": "792a27b00fed69e5f3955afd64f4509d1e15fa3cf825ecaa0bc2e1fd2f6a7181"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/inventory.json",
+      "sha256": "c211e4c7f6876b883788a6840df2cde6f332a088069dd2464e9626bc0ac6e5c5"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/motif/MA-r01.png",
+      "sha256": "dc4ed2300d35eeff6c92edd91ab69952231ce0a1805793b8a4f06ba8aaf74093"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/motif/MA-r01.provenance.json",
+      "sha256": "b62369417e4c14e6a31e49784b3bee0511ea2b7d7e931b12f1effe6440aeebf8"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-240-candidate.json",
+      "sha256": "85973152ddb65d507f6ee117cc7d483bdf9f8c22dcaef1377ac3301022289e3c"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-240-logic.json",
+      "sha256": "6c839fbdafe64ae141b2e549a794bc7cc0accd8efd56439aa7a99b987c57c794"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-240-proof.json",
+      "sha256": "18fbb7e92bafa9032f5027e7caa2b6553bc9f6e6f661d5a6a8bb8125c9d90147"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-240-raster.png",
+      "sha256": "d81ccd76be621490611976bf53f18e4b8d85f342690a868c81669ca5d66a9f7a"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-240-result.json",
+      "sha256": "fb04aedf3674bf62962eb7f668d3bfdf1d54fed749cd727fbe43b89ac8e92a88"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-248-candidate.json",
+      "sha256": "37b06ff24b75f43cf0ebda11de8ef2c5a770cf22f712ea25aea8f2080918236d"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-248-logic.json",
+      "sha256": "5b902d0928bd99a5233c3473b8fa63d1b307816d2ba384e21d2e9fe3d4cace9a"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-248-proof.json",
+      "sha256": "a2f2b60e04ce756c7b54da7f097913b4a88bb6929f825d841e3a9c2822364087"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-248-raster.png",
+      "sha256": "7ad5575c82560ba21ece575312fa5a1c5a2bf23b6e9eb49e9fd583db00e0190a"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/area-248-result.json",
+      "sha256": "be3d1e5dc5922a31866ed4df8644b78c064c3242905ce5cd5d509a01968f6e7a"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/briefing.txt",
+      "sha256": "f584088ae4558de4d6fc442d2c2d678f7a7b45ac29d1e4cb26ea4980cb14001c"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/design.json",
+      "sha256": "261341ee0167d9c77a6db07302bea78148df5f5466397331e17ee369ff75a10d"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/index.html",
+      "sha256": "96a9547327ded43ccf4f24418d5c02737074292e24752d5ebf4f4226cbd50d05"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/manifest.json",
+      "sha256": "2acba2033e26a25ec9af27b684a244c6727fbbec5be69c78f4ff1c9c996ee20f"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/normalized.png",
+      "sha256": "f3946cb5153d7fa04ca01e263a8527b8690e954e7bcf05325937e59597f878f1"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/production/alignment-a-extra/original.png",
+      "sha256": "dc4ed2300d35eeff6c92edd91ab69952231ce0a1805793b8a4f06ba8aaf74093"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/report.md",
+      "sha256": "d5e64007c6dbe931f2f3f7d35150f2e567f25de5ce390ff220553b7d3bc4c417"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/reveal/C-r01.png",
+      "sha256": "54d053af4c1022dade010581b5b70823f4acc9a406057221ef638fc9f1a1c804"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/reveal/C-r01.provenance.json",
+      "sha256": "6bf56f88ad9e441832fd99a399c17ca163a29a9b3f304b30653e23859bad3e76"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/rulebook/PUZZLE_AUTHORING.md",
+      "sha256": "dafd09bdcbe36010637944319994383d877948c02be2393e7e16db54f5402c4e"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/input/user-request.txt",
+      "sha256": "606f48e82f825d97740f11d0d8e7d3e3f71f2f740f1d9595594a5bef71014576"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/inspection.json",
+      "sha256": "09b89594f4b49392a76b3f690a91f115389d08fc498398fd9b1dd3a23dc396a5"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/runtime/art/content/bierglas_001.png",
+      "sha256": "54d053af4c1022dade010581b5b70823f4acc9a406057221ef638fc9f1a1c804"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/runtime/art/content/bierglas_001.txt",
+      "sha256": "e46785ebabdb8221b911dedbdcb04656f5b52d99b5990d3433c204854264aec4"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/runtime/data/content/bierglas_001.json",
+      "sha256": "d7c7bb015690d099f321528469d85487bc72ea963e186838717bafc8ffe859a0"
+    },
+    {
+      "file": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/usage.txt",
+      "sha256": "650d97c3af4e1238778f00e1c19ec07dd138002aabc93b7057a2a34e6a56a219"
+    }
+  ],
+  "native_checks": "nicht erforderlich: reine Inhaltsintegration; nicht ausgeführt",
+  "extra_probes": null,
+  "routine_inspect_verify_export_check_registry_sync_runtime_calls": 0
+}

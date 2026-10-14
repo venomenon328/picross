@@ -1,0 +1,29 @@
+{
+  "format": "picross-authoring-effort-v1",
+  "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "revision": "r03",
+  "this_phase": {
+    "image_calls": 0,
+    "image_revision_rounds": 0,
+    "correction_rounds": 0,
+    "import_rounds": 2,
+    "import_attempts": 5,
+    "raster_candidates": 12,
+    "repair_attempts": 2,
+    "repair_candidate_evaluations": 84,
+    "repair_proposals": 162,
+    "final_cell_edits": 0,
+    "human_active_minutes": null
+  },
+  "cumulative": {
+    "image_calls": 4,
+    "successful_image_calls": 4,
+    "failed_image_calls": 0,
+    "image_revision_rounds": null,
+    "correction_rounds": 0,
+    "import_attempts": 5,
+    "repair_attempts": 2,
+    "human_active_minutes": null
+  },
+  "notes": "Five import CLI calls form two targeted rounds (6 candidates each). Native generation provenance/effort prior to production from r02. Search time/limits in unchanged RP-5 results. Agent work is not measured human time; solver milliseconds are not human solve time."
+}

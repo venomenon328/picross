@@ -1,0 +1,38 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "revision": "r01",
+  "state": "reveal_review",
+  "motif_name": "Glas Bier mit Schaumkrone",
+  "category_id": "suesses-getraenke",
+  "repo_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "storage_branch": "content/bierglas-abschlussbild-r01",
+  "package": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r01/package.zip",
+    "bytes": 5526751,
+    "sha256": "adabd246d6efde8bdfbad92f9845c7ad59a9946a35d02ea792d8d295c16191f2"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r01/handoff.json",
+    "sha256": "e851afab455f1f4ba806d5447ab6d445bb84ef6120c327948f1e3a07cde39562"
+  },
+  "inventory_sha256": "f9e002caaf67c5dc5c8a435644d76fae1cd13f0dd02426ff9680462e4288179b",
+  "approval": null,
+  "width": null,
+  "height": null,
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [
+    "human_reveal_approval_pending"
+  ],
+  "next_action": "Standardauftrag 2 nach ausdrücklicher Freigabe von A-r01, B-r01 oder C-r01: Freigabe binden, 2–3 Rasterkonfigurationen vergleichen, empfohlene Motivvorlage ableiten und zur Motivfreigabe vorlegen.",
+  "integration": null,
+  "verification": {
+    "written_zip": "pass: safe names, exact member set, regular 0644 modes, CRC, full SHA-256 inventory and byte-identical outer handoff",
+    "image_files": "pass: three PNG originals verified and decoded; 1254x1254 RGB",
+    "visual_review": "self-review: three originals inspected, criterion judgments in report.md",
+    "za1_inspect": "not_applicable: early image phase reveal_review",
+    "solver_and_game_checks": "not_applicable: no motif or raster",
+    "ci": "PR checks recorded externally after push"
+  }
+}
