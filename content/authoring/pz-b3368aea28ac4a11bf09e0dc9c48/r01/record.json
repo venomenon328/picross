@@ -1,0 +1,69 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r01",
+  "motif_name": "Hamburger",
+  "category_id": "gerichte-herzhaftes",
+  "state": "reveal_review",
+  "package": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r01/package.zip",
+  "package_bytes": 7191563,
+  "package_sha256": "40f4b46d02f306d6e2bae1e2d5692d34178690ac58585084bb19773af6a23931",
+  "handoff": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r01/handoff.json",
+  "handoff_sha256": "3f5018d1a7fe55dc1fced1bfa7b469a2b36609009266845b3fbfa2ce9083a71d",
+  "inventory_sha256": "01aad17b9bb58c569ffa1e3740a07a29a02b005a2f7a9e6c573af3a57eb5dac0",
+  "approval": null,
+  "approval_sha256": null,
+  "width": 25,
+  "height": 25,
+  "dimensions_status": "approximate_request; not produced/approved",
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "Menschliche Abschlussbildfreigabe; anschließend Standardauftrag 2 auf genau deren gespeicherten Bytes.",
+  "integration": null,
+  "reveal_variants": [
+    {
+      "id": "A-r01",
+      "file": "images/A-r01.png",
+      "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+      "bytes": 2293113,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "description": "Frontansicht mit Sesamdeckel und klaren horizontalen Schichten",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "file": "images/B-r01.png",
+      "sha256": "c17b8360d635c79a8c80d075e3730221dd8c432a2a6b066d4bf041a4ecbce9be",
+      "bytes": 2606147,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "description": "Leichte Dreiviertelansicht mit Sesamdeckel und violetten Zwiebelstücken",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "file": "images/C-r01.png",
+      "sha256": "7abd5a0b153cc79c3ab062b894d3399f8be4b654d66893b4191dd0133f61f568",
+      "bytes": 2479417,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "description": "Frontansicht mit glattem Briochedeckel und heller Mayonnaiseschicht",
+      "approval": null
+    }
+  ],
+  "repo_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303"
+}

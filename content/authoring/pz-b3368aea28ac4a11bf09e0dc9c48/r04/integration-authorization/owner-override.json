@@ -1,0 +1,39 @@
+{
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r04",
+  "handoff_sha256": "977cc4fa7007d292363f1cebb84b4dcf9f99687a57ae271f4daf80108eba4638",
+  "inventory_sha256": "8600bb43119cb892b3a816b1f80b73e90bc790b432a911960d3ddfe306da97ff",
+  "selection": {
+    "variant": "manual-128",
+    "matrix_hash": "f7ec4030410046086fb80e7407a709b011f0dc503cc15dd57414512905d934ee",
+    "logic_hash": "4c1cbf8cf02c5edae4c6742b63fc6f426951656af63f0d6b36e8eb33c585f230",
+    "reveal": {
+      "file": "images/A-r01.png",
+      "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074"
+    }
+  },
+  "plan_sha256": "564aaa7c92e96edad65f809f673d06f797864d9a76a6bf23c53115eabd5ce74b",
+  "reference": {
+    "bundle": "reference",
+    "variant": "area-080",
+    "candidate_id": "162736919f2932cf71ebc00c24203f3005d43faa5db1573202340f1acf7497d9",
+    "matrix_hash": "52d9dea323d89b7117285bac242d6f8d99bc37c94f8eee320c1a0abda1cbef72",
+    "manifest_sha256": "ee9219120a4a253dc2591b4939d4dd83734b858ab625b82da0ffd9febd7626d7"
+  },
+  "superseded_content_blockers": [
+    "FRAME-R04: Beide äußeren Spalten sind leer; (left OR right) AND (top OR bottom) ist false.",
+    "ZA1-R04: Explizite manuelle Ableitung mit Einfügen; vorhandener ZA-1-manual-Vertrag unterstützt nur ink→empty. Kein unveränderter Originalimport und keine Adapterfreigabe behauptet."
+  ],
+  "format": "picross-owner-override-v2",
+  "actor": "Tobias Schröder (Nutzer)",
+  "timestamp_utc": "2026-10-13T18:56:15Z",
+  "statement": "Hiermit ist diese Version abgenommen und das Verletzen der Randregel akzeptiert.\nBitte integriere das Rätselpaket ins Spiel gemäß Standardauftrag 4.\n\nBitte integriere es gemäß Standardauftrag 4, unter Berücksichtigung der ausdrücklichen Freigabe der manuellen Anpassung und Randregel-Ausnahme.\n\nJa, Adapter dafür erweitern und anschließend integrieren; Draft-PR, kein Merge.",
+  "package_sha256": "8311f0623794e93916d1c9576753616a046f66e1ae1c2251f84ffb1f37bf1f6a",
+  "approval_sha256": "25883c7a910380409ecab00f488ee5be77f56d3ff265407f4340b6d223b5d964",
+  "permissions": {
+    "fixed_mono_edits": true,
+    "frame_exception": true
+  },
+  "timestamp_basis": "Zeit der Protokollierung der tatsächlichen Nutzererklärungen; genaue Nachrichtenzeitpunkte nicht exponiert.",
+  "scope": "Nur exakt gebundenes r04; S1/Z11 entfernen, S2/Z13 setzen. Allgemeine Nachweisgates bleiben wirksam; kein Merge."
+}

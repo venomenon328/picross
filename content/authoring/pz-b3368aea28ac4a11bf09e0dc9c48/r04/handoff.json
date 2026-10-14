@@ -1,0 +1,104 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 5,
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "dafd09bdcbe36010637944319994383d877948c02be2393e7e16db54f5402c4e"
+  },
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r04",
+  "repo_commit": "a3cce246ac946704e60809747681545664824c7a",
+  "main_base": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "state": "blocked",
+  "brief": "brief.md",
+  "category_id": "gerichte-herzhaftes",
+  "approved_parameters": [
+    {
+      "width": 25,
+      "height": 22,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        14,
+        87,
+        1239,
+        1165
+      ]
+    }
+  ],
+  "reveal": {
+    "file": "images/A-r01.png",
+    "revision": "A-r01",
+    "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "images/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "images/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "ef92af29d902b39a9bdc574a41031a8500ffb01fbe1312d00cc7943e088fb6b4",
+    "derived_from_reveal_sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "approval": "approvals/motif-MA-r01.json",
+    "provenance": "images/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "production",
+    "variant": "manual-128",
+    "proof": "production/manual-128-proof.json",
+    "verification": "audit/fresh-proof-verification.json",
+    "matrix_hash": "f7ec4030410046086fb80e7407a709b011f0dc503cc15dd57414512905d934ee",
+    "logic_hash": "4c1cbf8cf02c5edae4c6742b63fc6f426951656af63f0d6b36e8eb33c585f230"
+  },
+  "origin_verification": "audit/edited-origin-verification.json",
+  "repair": null,
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "8600bb43119cb892b3a816b1f80b73e90bc790b432a911960d3ddfe306da97ff"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "fail",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "blocked"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json",
+    "motif": "approvals/motif-MA-r01.json",
+    "provenance": "audit/edited-origin-verification.json",
+    "logic": "audit/fresh-proof-verification.json",
+    "frame": "audit/edited-origin-verification.json",
+    "visual": "audit/visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "audit/visual-review.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "FRAME-R04: Beide äußeren Spalten sind leer; (left OR right) AND (top OR bottom) ist false.",
+    "ZA1-R04: Explizite manuelle Ableitung mit Einfügen; vorhandener ZA-1-manual-Vertrag unterstützt nur ink→empty. Kein unveränderter Originalimport und keine Adapterfreigabe behauptet."
+  ],
+  "next_action": "Nutzerentscheidung zum Randkonflikt; keine weiteren Rasteränderungen ohne Auftrag. Endabnahme/Export aktuell blockiert.",
+  "authorization": "Fortgeltende Repositoryablage/Draft-PR; exakter Nutzerauftrag zu zwei Zelländerungen. Kein Merge.",
+  "created_at_utc": "2026-10-13T18:03:16.128155+00:00",
+  "difficulty": "difficulty.json",
+  "content_blockers": [
+    "FRAME-R04: Beide äußeren Spalten sind leer; (left OR right) AND (top OR bottom) ist false.",
+    "ZA1-R04: Explizite manuelle Ableitung mit Einfügen; vorhandener ZA-1-manual-Vertrag unterstützt nur ink→empty. Kein unveränderter Originalimport und keine Adapterfreigabe behauptet."
+  ],
+  "manual_edit_record": "manual-edits.json"
+}

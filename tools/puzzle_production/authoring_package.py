@@ -166,7 +166,10 @@ class Package:
         # still requires the external, exactly bound manual authorization.
         require(h.get("state") in ("content_ready", "editorially_approved", "catalog_ready") or
                 allow_manual_review and h.get("state") == "raster_review" and
-                isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "manual",
+                isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "manual" or
+                allow_manual_review and h.get("state") == "blocked" and
+                isinstance(h.get("manual_edit_record"), str) and
+                isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "import",
                 "Package is not content_ready")
         require(isinstance(h.get("repo_commit"), str) and re.fullmatch(r"[0-9a-f]{40}", h["repo_commit"]), "Missing producer commit")
         rule = h.get("rulebook")

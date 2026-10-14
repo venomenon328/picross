@@ -1,0 +1,117 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 5,
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "dafd09bdcbe36010637944319994383d877948c02be2393e7e16db54f5402c4e"
+  },
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r01",
+  "repo_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "state": "reveal_review",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": 25,
+    "height": 25,
+    "approximate": true,
+    "mode": "mono"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_variants": [
+    {
+      "id": "A-r01",
+      "file": "images/A-r01.png",
+      "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+      "bytes": 2293113,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "description": "Frontansicht mit Sesamdeckel und klaren horizontalen Schichten",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "file": "images/B-r01.png",
+      "sha256": "c17b8360d635c79a8c80d075e3730221dd8c432a2a6b066d4bf041a4ecbce9be",
+      "bytes": 2606147,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "description": "Leichte Dreiviertelansicht mit Sesamdeckel und violetten Zwiebelstücken",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "file": "images/C-r01.png",
+      "sha256": "7abd5a0b153cc79c3ab062b894d3399f8be4b654d66893b4191dd0133f61f568",
+      "bytes": 2479417,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "description": "Frontansicht mit glattem Briochedeckel und heller Mayonnaiseschicht",
+      "approval": null
+    }
+  ],
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "01aad17b9bb58c569ffa1e3740a07a29a02b005a2f7a9e6c573af3a57eb5dac0"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {},
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "Menschliche Abschlussbildfreigabe; anschließend Standardauftrag 2 auf genau deren gespeicherten Bytes.",
+  "authorization": "Standardauftrag 1, Repositoryablage nach §6 und Draft-PR; kein Merge, keine Abstraktion/Rasterproduktion vor Freigabe.",
+  "created_at_utc": "2026-10-13T15:36:26.664859+00:00"
+}

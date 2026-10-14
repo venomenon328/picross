@@ -416,6 +416,12 @@ Vertrag, `--manual-authorization`, unveränderte Originalbindungen und v3-Export
 [ZA-1: manuelle Ableitungen](../../docs/ZA1_ADAPTER.md#autorisierte-manuelle-ableitungen).
 Dieser Weg ersetzt weder RP-5 noch dessen Such-/Nachweisvertrag.
 
+Die additive v2-Autorisierung unterstützt auch feste manuelle Einfügungen in
+gespeicherten Mono-Rasterimporten und eine ausdrücklich an die Endauswahl
+gebundene Randregel-Ausnahme. Beide RP-3-Bündel, sämtliche feste Edits und der
+Endproof werden frisch geprüft; Original-ZIP/Handoff/Inventar bleiben unverändert.
+Schema, Grenzen und synthetische Tests: [ZA-1-v2-Vertrag](../../docs/ZA1_ADAPTER.md).
+
 [Versionierter Vertrag, Status-/Exitcodes, Schema-/Hash-/Ressourcengrenzen](../../examples/rp5/README.md),
 [Prüfzuordnung](../../docs/RP5_VERIFICATION.md), [Offlinevergleich](../../examples/rp5/index.html).
 Gleiche isolierte Image-Umgebung; keine neue Abhängigkeit. P1-Export und Spiel

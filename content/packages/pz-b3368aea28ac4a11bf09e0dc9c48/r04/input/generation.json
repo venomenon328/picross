@@ -1,0 +1,48 @@
+{
+  "format": "picross-image-generation-log-v1",
+  "tool": "image_gen.imagegen",
+  "mode": "native built-in",
+  "reveal_call_reused": {
+    "variant": "A-r01",
+    "prompt": "Use case: illustration-story. Asset: detailed full-color completion illustration for a curated nonogram game, not the puzzle grid. Subject: one hamburger, isolated, with a real grilled beef patty, upper and lower golden bread bun, red tomato and green lettuce. Style: warm, calm hand-drawn 2D illustration; clean confident dark brown single contours, strong cohesive color areas, carefully finished interior drawing and modest shading, restrained appetizing surface detail. Background: plain warm ivory, no environment. Framing: square canvas, entire hamburger fully visible, occupies roughly 85 percent of canvas width and 72 percent of canvas height. Detailed finished artwork, not clipart, not a silhouette, not pixel art. Its main shapes and layer separation should support a later approximate 25x25 monochrome abstraction, but do NOT simplify to a grid yet. No lettering, numbers, labels, grid, watermark, face, hands, plate, fries, toothpick, flag, decorative objects, photorealism or 3D. Variant A: straight-on eye-level front view, an orderly classic single-patty hamburger with a broad gently domed sesame top bun, a single clear red tomato band, neatly ruffled green lettuce and a thick dark brown patty above the lower bun. No cheese. Rounded compact substantial silhouette, slightly natural asymmetrical lettuce folds, not an exploded view. Several carefully drawn sesame seeds, fine baked crust marks, sparse grill detail.",
+    "arguments": {
+      "transparent_background": false
+    },
+    "model": "not_exposed",
+    "other_settings": "not_exposed",
+    "output": {
+      "id": "A-r01",
+      "file": "images/A-r01.png",
+      "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+      "bytes": 2293113,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "description": "Frontansicht mit Sesamdeckel und klaren horizontalen Schichten",
+      "approval": null
+    },
+    "operation": "generate",
+    "postprocessing": "none; original bytes copied unchanged"
+  },
+  "motif_call": {
+    "variant": "MA-r01",
+    "prompt": "Use case: precise-object-edit. Input image role: approved full-color completion illustration A-r01, immutable reference. Create one separately saved simplified monochrome motif illustration derived faithfully from THIS hamburger for a future approximately 25 by 25 cell nonogram. Preserve its straight-on frontal perspective, broad rounded compact silhouette, top bun dome and lower bun proportions, and exact layer ORDER: sesame top bun, ruffled lettuce, tomato slice, thick beef patty, lower bun. Preserve overall subject placement and natural slight asymmetry. Do not modify the reference file. Output is NOT a puzzle, not a grid, not pixel art. Style: clean hand-drawn 2D shape abstraction, bold smooth organic contours, pure black filled shapes on a plain pure white background; no grey shading, texture, gradients or sketch noise. Top bun is a substantial solid black domed mass, reduce dozens of sesame seeds to ONLY THREE widely spaced broad white sesame cutouts in its interior; no small islands or other bun highlights. Lettuce becomes one simple bold scalloped black layer with a few broad lobes, separate it from the top bun using a clear smooth white gap. Tomato becomes a clearly readable broad horizontal white band between the lettuce and the black patty, with simple stout black curved ends; no fine lines or tomato seeds. Patty is one thick solid black horizontal mass with a gently irregular edge, no grill marks or internal detail. Separate patty and lower bun by a clear broad white gap. Lower bun is one solid black rounded base, no highlight holes. Keep all separating gaps broad enough to survive downsampling to about 25 cells, with no tiny hairline gaps, no excessive detached contours, no complex lettuce holes. Maintain the major source shape proportions; naturally stylize details only. Entire hamburger fully visible in the same square framing; no plate, shadow, fries, cheese, additional ingredients, labels, letters, numbers, grid or watermark. This must be a simplified illustration with coherent shape masses, not an outlined coloring-book tracing.",
+    "arguments": {
+      "transparent_background": false,
+      "referenced_image_paths": [
+        "images/A-r01.png"
+      ]
+    },
+    "input_sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "model": "not_exposed",
+    "other_settings": "not_exposed",
+    "output_file": "images/MA-r01.png",
+    "output_sha256": "ef92af29d902b39a9bdc574a41031a8500ffb01fbe1312d00cc7943e088fb6b4",
+    "operation": "edit/faithful monochrome abstraction",
+    "postprocessing": "none; original native output bytes copied unchanged"
+  },
+  "older_unselected_variants": "B-r01 and C-r01 remain only in r01 at the exact referenced commit."
+}
