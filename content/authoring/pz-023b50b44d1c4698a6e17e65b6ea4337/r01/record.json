@@ -1,0 +1,77 @@
+{
+  "blockers": [],
+  "category_id": "menschen-berufe",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r01/handoff.json",
+    "sha256": "9ccd7884f9c414956b7e02ddb0a842a5c6575463b17fcd3195a8546535fa16fb"
+  },
+  "height": 40,
+  "integration": null,
+  "inventory_sha256": "ca523b8c1d2586cb7509a173ef9fe786e99ac81403bbfd0fa87f7dc55c1d839a",
+  "mode": "color",
+  "motif_name": "Ho Chi Minh",
+  "next_action": "Ausdrückliche menschliche Abschlussbildfreigabe A-r02, B-r01 oder C-r01; danach Standardauftrag 2: Konfiguration und Motivvorlage aus genau dieser Datei. Keine Abstraktion vor Freigabe.",
+  "package": {
+    "bytes": 8661676,
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r01/package.zip",
+    "sha256": "cddc8c508d99f6cec30915da93921e059d0a7d7151a6140af0c44ffbe8dbe741"
+  },
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "repo_commit": "4758417b441fd01f40e14ed215203958d2ff2b67",
+  "reveal_options": [
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/A-r02.png",
+      "label": "A-r02",
+      "origin": "Native image_gen, eigenständige Generierung ohne Referenzbild",
+      "pixels": [
+        1086,
+        1448
+      ],
+      "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1",
+      "status": "offered",
+      "title": "Frontales Porträt",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/B-r01.png",
+      "label": "B-r01",
+      "origin": "Native image_gen, eigenständige Generierung ohne Referenzbild",
+      "pixels": [
+        1086,
+        1448
+      ],
+      "sha256": "e6bd66ec2a842b814966437383b3b99937dddbf53fa56aa7142d5275209a9ea3",
+      "status": "offered",
+      "title": "Dreiviertelporträt",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/C-r01.png",
+      "label": "C-r01",
+      "origin": "Native image_gen, eigenständige Generierung ohne Referenzbild",
+      "pixels": [
+        1086,
+        1448
+      ],
+      "sha256": "044b39b40c8aeba38d31b5e95c66d7b96097c568c7bef28630c7482bd7374304",
+      "status": "offered",
+      "title": "Porträt mit Grußhand",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    }
+  ],
+  "revision": "r01",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-14T18:02:27.423592+00:00",
+  "width": 30
+}

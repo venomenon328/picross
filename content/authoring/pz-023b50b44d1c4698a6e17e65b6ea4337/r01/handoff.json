@@ -1,0 +1,119 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1: Abschlussbildauswahl; Repositoryablage nach §6, Commit/Push und Draft-PR; kein Merge.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "menschen-berufe",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "ca523b8c1d2586cb7509a173ef9fe786e99ac81403bbfd0fa87f7dc55c1d839a"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "Ausdrückliche menschliche Abschlussbildfreigabe A-r02, B-r01 oder C-r01; danach Standardauftrag 2: Konfiguration und Motivvorlage aus genau dieser Datei. Keine Abstraktion vor Freigabe.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "4758417b441fd01f40e14ed215203958d2ff2b67",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "height": 40,
+    "mode": "color",
+    "width": 30
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/A-r02.png",
+      "label": "A-r02",
+      "origin": "Native image_gen, eigenständige Generierung ohne Referenzbild",
+      "pixels": [
+        1086,
+        1448
+      ],
+      "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1",
+      "status": "offered",
+      "title": "Frontales Porträt",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/B-r01.png",
+      "label": "B-r01",
+      "origin": "Native image_gen, eigenständige Generierung ohne Referenzbild",
+      "pixels": [
+        1086,
+        1448
+      ],
+      "sha256": "e6bd66ec2a842b814966437383b3b99937dddbf53fa56aa7142d5275209a9ea3",
+      "status": "offered",
+      "title": "Dreiviertelporträt",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/C-r01.png",
+      "label": "C-r01",
+      "origin": "Native image_gen, eigenständige Generierung ohne Referenzbild",
+      "pixels": [
+        1086,
+        1448
+      ],
+      "sha256": "044b39b40c8aeba38d31b5e95c66d7b96097c568c7bef28630c7482bd7374304",
+      "status": "offered",
+      "title": "Porträt mit Grußhand",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549",
+    "version": "0.4.1"
+  },
+  "state": "reveal_review"
+}
