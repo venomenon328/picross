@@ -1,0 +1,44 @@
+{
+  "approval_sha256": "d909c54d6ae532b6a5acb2193420537ff994a88fdc893a92236f1576523d1fc1",
+  "catalog_ready": false,
+  "editorial_approved": true,
+  "execution_assessment": {
+    "preferred_path": "Codex",
+    "self_implementable": "Ja; Python/Pillow environment, git, GitHub and remote CI available. Separate tool authorization still required."
+  },
+  "export_attempt": {
+    "command": "python -m tools.puzzle_production.target_adapter export --input <original-r07.zip> --approval approval.json --name \"Ho Chi Minh\" --runtime-revision 1 --stem ho_chi_minh_001 --save-slot ho_chi_minh_001 --category-id menschen-berufe --categories content/categories.json --output-dir <new-temporary-output>",
+    "exit_code": 1,
+    "result": {
+      "catalog_ready": false,
+      "error": "Package is not content_ready",
+      "registered": false,
+      "status": "blocked"
+    }
+  },
+  "format": "picross-integration-status-v1",
+  "incompatible_contracts": {
+    "manual_v1": "Only fixed monochrome ink-to-empty edits; requires repair.type=manual and manual-candidate bundle. r07 is color with repair.type=fixed_color_editorial_redraw.",
+    "manual_v2": "Only fixed monochrome edited imports with source_type=import, repair=null and manual_edit_record. r07 is a manual color derivation.",
+    "manual_v3": "Requires source_type=import, repair=null, editorial_manual_derivation and an originally pending motif approval; r07 retains the actual approved MA-r02 and manual source."
+  },
+  "native_tests": "not required: pure approval/status storage; no runtime integration performed",
+  "package_sha256": "897c2742926ae5eae2199f7b4995edd40cd4c55675b8af34a5398e63d328b57a",
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "recorded_at_utc": "2026-10-14T19:49:44.708465+00:00",
+  "registered": false,
+  "required_change": {
+    "authorization": "Not yet authorized as a tool change; PUZZLE_AUTHORING section1.5 requires separate authorization.",
+    "no_gate_waiver": true,
+    "no_puzzle_specific_tests": "Use synthetic general adapter regression cases only.",
+    "scope": "Add an explicitly authorized route for sealed fixed-color manual derivations with an already approved motif, preserving original r07 ZIP, handoff, inventory and image approvals.",
+    "verification": "Fresh original import and fixed-edit replay, exact protected mask and final matrix, independent proof, unchanged motif approval, all content gates, actual external final approval, offline export/registration checks."
+  },
+  "revision": "r07",
+  "source_main_commit": "3fee2f7c5f07dc1b797bba89dd600cae87e39991",
+  "status": "blocked",
+  "targeted_diagnosis": {
+    "method": "open_package(original ZIP, allow_manual_review=True); inspect(package, approval.json)",
+    "result": "InvalidInput: Manual source requires explicit manual authorization"
+  }
+}
