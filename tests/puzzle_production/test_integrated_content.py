@@ -63,6 +63,18 @@ class IntegratedContentTests(unittest.TestCase):
             integrated_content.retire(self.checkout, [entry["id"]], commit)
         self.assertEqual(before, self.snapshot(self.checkout))
 
+    def test_staged_work_blocks_even_if_worktree_matches_main(self):
+        _, commit = self.prepare()
+        path = self.checkout / registry.REGISTRY
+        original = path.read_bytes()
+        path.write_bytes(original + b"\n")
+        subprocess.check_call(["git", "add", registry.REGISTRY], cwd=self.checkout)
+        path.write_bytes(original)
+        before = self.snapshot(self.checkout)
+        with self.assertRaises(InvalidInput):
+            integrated_content.retire(self.checkout, ["pz-test-direct-mono"], commit)
+        self.assertEqual(before, self.snapshot(self.checkout))
+
 
     def test_receipt_runtime_notice_and_metadata_tampering(self):
         _, commit = self.prepare()

@@ -75,6 +75,12 @@ def retire(root, ids, integrated_commit):
         receipt = {"format": FORMAT, "entry": deepcopy(entry), "integrated_commit": integrated_commit,
                    "notice_sha256": file_hash((root/"game"/entry["reveal"]).with_suffix(".txt"))}
         plans.append((entry, package, authoring, receipt, len(files), sum(p.stat().st_size for p in files.values())))
+    affected = [registry.REGISTRY, str(index_path.relative_to(root))]
+    for _, package, authoring, _, _, _ in plans:
+        affected.extend([str(package.relative_to(root)), str(authoring.relative_to(root))])
+    require(subprocess.run(["git", "diff", "--cached", "--quiet", "--", *affected],
+                           cwd=root, capture_output=True).returncode == 0,
+            "Staged production changes must be resolved before retirement")
     for entry, package, authoring, receipt, _, _ in plans:
         # Runtime files and projection are never rewritten. Git retains the prior production.
         shutil.rmtree(package)
