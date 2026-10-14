@@ -83,7 +83,7 @@
     }
   ],
   "authoring_parent_commit": "bb79b6a265c6dc2cd3865925bf6c03e5a71d7ca6",
-  "authorization": "Standardauftrag 3 bis Endabnahmevorlage; Repositoryablage, Commit/Push und Merge dieses Ablage-PRs nach PflichtprÃ¼fungen ausdrÃ¼cklich beauftragt.",
+  "authorization": "Standardauftrag 3 bis Endabnahmevorlage; Repositoryablage, Commit/Push und Merge dieses Ablage-PRs nach Pflichtprüfungen ausdrücklich beauftragt.",
   "blockers": [
     "final_editorial: missing bound human final approval"
   ],

@@ -4,7 +4,7 @@
     "exact_file_set": true,
     "handoff_byte_equal": true,
     "safe_zip": true,
-    "uncompressed_bytes": 8920860
+    "uncompressed_bytes": 8920856
   },
   "blockers": [
     "final_editorial: missing bound human final approval"
@@ -12,7 +12,7 @@
   "category_id": "insekten-kleine-tiere",
   "difficulty": {
     "assessment_type": "editorial_estimate",
-    "bottleneck": "Alle44 Linien vor jedem der59 Proofschritte geprÃƒÂ¼ft. Vor RestaufrÃƒÂ¤umen bei<=8 unbekannten Zellen mindestens9 produktive Linien; keine numerische Engstelle im ÃƒÂ¼berprÃƒÂ¼ften Verlauf. Keine validierte Technikklassifikation oder menschliche Kalibrierung.",
+    "bottleneck": "Alle44 Linien vor jedem der59 Proofschritte geprüft. Vor Restaufräumen bei<=8 unbekannten Zellen mindestens9 produktive Linien; keine numerische Engstelle im überprüften Verlauf. Keine validierte Technikklassifikation oder menschliche Kalibrierung.",
     "confidence": "low",
     "effort": {
       "cells": 384,
@@ -34,10 +34,10 @@
     ],
     "playtest": "not_performed; optional, kein Gate",
     "rule_families": {
-      "R0": "Initial Zeile12 leer; nach Entfernen vollstÃƒÂ¤ndig gepackte Spalte14 [11] und Spalte26 [3,3,3] in elf Positionen. Diese R0-Anker erleichtern den Einstieg. R0-Suffizienz nicht validiert bis Fixpunkt geprÃƒÂ¼ft; L1 bleibt mÃƒÂ¶glich. SpÃƒÂ¤ter fertige BlÃƒÂ¶cke und Restleerfelder.",
-      "R1": "GeschÃƒÂ¤tzte Hauptanforderung: ÃƒÅ“berlappungen langer KÃƒÂ¶rperblÃƒÂ¶cke und VerlÃƒÂ¤ngerung einzelner SpaltenblÃƒÂ¶cke. Proofschritt0: Zeile5 [2,23] erzwingt Spalten10..26. Zeile6 [30] liefert breite ÃƒÅ“berlappung. Schritt40: Spalte16 [7], sechs zusammenhÃƒÂ¤ngende sichere Zellen und obere Grenze erzwingen Zeile3 und leere Zeile2.",
-      "R2": "Zuordnung mehrerer BlÃƒÂ¶cke an FÃƒÂ¼ÃƒÅ¸en und Kopf kann kombinierte Anker benÃƒÂ¶tigen. Schritt30: Zeile2 [3,2], getrennte Anker an Spalten14 und26 schrÃƒÂ¤nken beide Segmente ein. Notwendigkeit von R2 und Suffizienz von R0+R1 sind ohne validierten schwÃƒÂ¤cheren Regelfixpunkt unsicher.",
-      "R3": "Full-line-mono zertifiziert allgemeine vollstÃƒÂ¤ndige LinienunterstÃƒÂ¼tzung, beweist keine R3-Notwendigkeit. Kein unvermeidbarer R3-Schritt identifiziert; mangels validiertem schwÃƒÂ¤cheren Analysator nicht ausgeschlossen. Konservativer Bereich L1Ã¢â‚¬â€œL4."
+      "R0": "Initial Zeile12 leer; nach Entfernen vollständig gepackte Spalte14 [11] und Spalte26 [3,3,3] in elf Positionen. Diese R0-Anker erleichtern den Einstieg. R0-Suffizienz nicht validiert bis Fixpunkt geprüft; L1 bleibt möglich. Später fertige Blöcke und Restleerfelder.",
+      "R1": "Geschätzte Hauptanforderung: Überlappungen langer Körperblöcke und Verlängerung einzelner Spaltenblöcke. Proofschritt0: Zeile5 [2,23] erzwingt Spalten10..26. Zeile6 [30] liefert breite Überlappung. Schritt40: Spalte16 [7], sechs zusammenhängende sichere Zellen und obere Grenze erzwingen Zeile3 und leere Zeile2.",
+      "R2": "Zuordnung mehrerer Blöcke an Füßen und Kopf kann kombinierte Anker benötigen. Schritt30: Zeile2 [3,2], getrennte Anker an Spalten14 und26 schränken beide Segmente ein. Notwendigkeit von R2 und Suffizienz von R0+R1 sind ohne validierten schwächeren Regelfixpunkt unsicher.",
+      "R3": "Full-line-mono zertifiziert allgemeine vollständige Linienunterstützung, beweist keine R3-Notwendigkeit. Kein unvermeidbarer R3-Schritt identifiziert; mangels validiertem schwächeren Analysator nicht ausgeschlossen. Konservativer Bereich L1–L4."
     },
     "samples": "audit/difficulty-samples.json",
     "time_estimate": null
@@ -45,11 +45,11 @@
   "final_editorial_approval": null,
   "format": "picross-authoring-record-v1",
   "growth": {
-    "added_zip_bytes": 7489663
+    "added_zip_bytes": 7489659
   },
   "handoff": {
     "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/r04/handoff.json",
-    "sha256": "9b48770aac47dc197e25dfe1e924a957debc94e79a055f30f4fa3e0b4bb1c153"
+    "sha256": "c7610daf1083dbc7aa8b1bc6ca6066d5f3248e33255b2aecfe293192057da3e2"
   },
   "height": 12,
   "inspection": {
@@ -58,7 +58,7 @@
     ],
     "editorial_approved": false,
     "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/r04/inspection.json",
-    "sha256": "e85aa4cd6aef4dc2db02b10986f0c4535ab9eb2947822c835dc3f5688a7f4ac6",
+    "sha256": "1f4bb85cff95affe110d28b2aef41188e8d7c0031555bb94bbccf84291e91150",
     "technical": true
   },
   "integration": null,
@@ -74,9 +74,9 @@
   "motif_name": "Gecko",
   "next_action": "Menschliche Endabnahme r04; danach Standardauftrag4 mit Integrationsauftrag.",
   "package": {
-    "bytes": 7489663,
+    "bytes": 7489659,
     "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/r04/package.zip",
-    "sha256": "d9129ab98beefb92080d022e1f4333c441d2fe1499915c526e23f61461218bd1"
+    "sha256": "b85d3aed797b2c201a8075aab05c3a3e95109ae532093b2ff5de1f3db1c87fae"
   },
   "puzzle_id": "pz-5ad1e06e19ab475baebc582d4999daa5",
   "repo_commit": "4e331844171a116932192b817fb2d296776e408e",
