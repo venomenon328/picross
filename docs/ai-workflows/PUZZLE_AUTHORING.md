@@ -1,11 +1,13 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 10 · 15.10.2026**
+**Version 0.5.0 · Dokumentrevision 11 · 15.10.2026**
 
 Version 0.5.0 ergänzt ausdrücklich die Paarlinienprofile und Schwierigkeit 0.2
 aus #139/B/C. Alte versiegelte 0.4.x-Pakete bleiben unter ihrem Linienvertrag
 prüfbar; sie werden nicht umetikettiert. Dokumentrevision, Datei-SHA-256 und
 Repositorycommit binden den tatsächlich verwendeten Snapshot.
+Dokumentrevision 11 konkretisiert Profilwahl, Dateibindungen und Export im
+Produktionsablauf; die technischen Formate und Freigabekriterien bleiben gleich.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
@@ -13,7 +15,7 @@ Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag übe
 
 ## 1. Einstieg und Befugnisse
 
-1. Aktuelle `AGENTS.md` tatsächlich abrufen und deren Pflichtquellen einschließlich Workflow und Projektprofil lesen. Außerdem vollständig lesen: `docs/PRODUCT_DEFINITION.md`, `docs/DESIGN_CONCEPT.md`, `docs/PUZZLE_PRODUCTION.md` und `tools/puzzle_production/README.md`.
+1. Aktuelle `AGENTS.md` tatsächlich abrufen und deren Pflichtquellen einschließlich Workflow und Projektprofil lesen. Außerdem vollständig lesen: `docs/PRODUCT_DEFINITION.md`, `docs/DESIGN_CONCEPT.md`, `docs/PUZZLE_PRODUCTION.md` und `tools/puzzle_production/README.md`. Vor Paarlinienprüfung oder Übergabe eines Paarprofilpakets zusätzlich `docs/PAIRED_LINES.md` vollständig lesen.
 2. Zu Beginn Kategorienquelle, Arbeitsindex und Runtime-Registry lesen; Bestandsrätsel nicht einzeln laden oder nachprüfen. Kategorie nach Auftrag oder prägendem Hauptgegenstand gemäß [Kategorienvertrag](../CATEGORIES.md) zuordnen und in Briefing/Record führen. Repository-/Toolstand mit vollständiger Commit-SHA binden. Aktuelle Dateien und tatsächlich benötigte Fähigkeiten prüfen, keine historischen PR-Statuslisten abarbeiten. Abgeschlossene Lieferungen sind keine erneut offenen Voraussetzungen; nur eine konkrete aktuelle Lücke verfolgen.
 3. Bestehende technische Formate, Farbregeln, Solverprofile, Nachweise und Reparaturverträge verwenden. Dieses Regelwerk ersetzt sie nicht. Fehlende Pflichtquellen oder widersprüchliche Vorgaben vor dem betroffenen Schritt klären.
 4. Tatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine Funktionen, Prüfungen oder Ergebnisse behaupten, die nicht verfügbar beziehungsweise ausgeführt sind.
@@ -35,7 +37,7 @@ Zulässiger Input: Motivtext beliebiger Ausführlichkeit und/oder Ausgangsbild; 
 
 Die KI MUSS Hauptmotiv, unverzichtbare Merkmale, erlaubte Umgestaltung und Einschränkungen erfassen. Fehlende reversible Details sinnvoll ergänzen. Nur wesentliche offene Produktentscheidungen beim Nutzer erfragen, jeweils mit Empfehlung und Konsequenzen.
 
-Der erste gestalterische Schritt ist immer die Erstellung mehrerer **farbiger, detaillierter Abschlussbilder** aus dem Input. Noch keine abstrahierte Motivvorlage, Zellmatrix oder Hinweise erzeugen. Fehlende Rastermaße oder ein offener Rätselmodus blockieren diese Bildauswahl nicht. Die spätere Darstellbarkeit bei der Komposition berücksichtigen, ohne das Abschlussbild vorzeitig auf Zellniveau zu vereinfachen. Auch ein eigenes Ausgangsbild ist zunächst Referenz und keine automatisch freigegebene Abschlussbilddatei.
+Der erste gestalterische Schritt ist immer die Erstellung mehrerer **farbiger, detaillierter Abschlussbilder** aus dem Input. Noch keine abstrahierte Motivvorlage, Zellmatrix oder Hinweise erzeugen. Fehlende Rastermaße oder ein offener Rätselmodus blockieren diese Bildauswahl nicht. Die spätere Darstellbarkeit bei der Kompositionierung berücksichtigen, ohne das Abschlussbild vorzeitig auf Zellniveau zu vereinfachen. Auch ein eigenes Ausgangsbild ist zunächst Referenz und keine automatisch freigegebene Abschlussbilddatei.
 
 Wenn Größe oder Farbmodus offen sind, nach der Abschlussbildfreigabe **2–3 konkrete Konfigurationen** vergleichen und eine empfehlen. Motivtreue, Darstellbarkeit, erwartetes Lösbarkeitsrisiko und Spielgefühl getrennt begründen. Auch ungefähre Wunschmaße dürfen hinterfragt werden; feste Grenzen nicht eigenmächtig überschreiten. Rechtecke gleichberechtigt berücksichtigen.
 
@@ -70,7 +72,7 @@ Im Raster nur diskrete Werte, keine Zwischenfarben oder Textur als Zellzustand. 
 1. Standardmäßig **drei sinnvoll unterschiedliche Abschlussbilder** erzeugen. Komposition, Pose oder Farbgebung variieren; Stil, Detailanspruch und Auftrag bewahren. Bei bindender Referenz (`faithful`) Identität und geschützte Geometrie erhalten; freie Interpretation (`free`) ausdrücklich festhalten. Eine ausdrückliche Vorgabe darf die Variantenanzahl reduzieren.
 2. Native Bildgenerierung verwenden. Jede Variante als tatsächliche Einzeldatei speichern und zeigen; eine Kontaktübersicht ist nur Auswahlhilfe. Ohne verfügbare Bildfunktion den Bildschritt als blockiert melden; Konzepte oder behauptete Dateien ersetzen keine Abschlussbildauswahl.
 3. Der Mensch wählt und korrigiert. **Vor jeder Abstraktion MUSS das konkrete Abschlussbild ausdrücklich freigegeben sein**, gebunden an Datei, Revision/Hash und zu bewahrende Merkmale. Eine Auswahl mit Korrekturwunsch ist noch keine Freigabe der korrigierten Fassung.
-4. Danach geeignete Rasterkonfiguration empfehlen und aus den gespeicherten Bytes des freigegebenen Abschlussbilds eine Motivvorlage ableiten. Standardmäßig eine gezielte Abstraktion für die empfohlene Konfiguration erstellen; zusätzliche Varianten nur bei einem konkreten Darstellungs-/Detailkonflikt. Abschlussbild und Abstraktion nebeneinander vorlegen und Detailverluste benennen.
+4. Danach geeignete Rasterkonfiguration empfehlen und aus den gespeicherten Bytes des freigegebenen Abschlussbilds eine Motivvorlage ableiten. Standardmäßig eine gezielte Abstraktion für ihre Empfehlung; zusätzliche Varianten nur bei einem konkreten Darstellungs-/Detailkonflikt. Abschlussbild und Abstraktion nebeneinander vorlegen und Detailverluste benennen.
 5. **Vor jeder eigentlichen Rasterproduktion MUSS die konkrete abstrahierte Motivdatei freigegeben sein**, einschließlich Revision/Hash, Abschlussbildbezug, Motivinvarianten und zulässiger Größen-/Modus-/Crop-Varianten. Die Abschlussbildfreigabe ersetzt diese Abstraktionsfreigabe nicht. Schweigen oder unverbindliches Interesse ist keine Freigabe.
 
 Korrekturen nur an der gewählten Darstellung durchführen, zu bewahrende Merkmale nennen und eine neue Revision speichern. Nach zwei erfolglosen Runden Ursache und geänderten Plan vorlegen. Ist die Abstraktion ungeeignet, zunächst Vereinfachung, Größe oder Rasterpalette korrigieren. Ein anderes Abschlussbild benötigt erneut die ausdrückliche Bildfreigabe; es darf nicht stillschweigend an technische Fehlschläge angepasst werden.
@@ -83,7 +85,7 @@ Ein Auftrag umfasst sämtliche nötigen Arbeiten bis zur nächsten menschlichen 
 | --- | --- | --- |
 | **1 · Abschlussbildauswahl** | Bildfähige KI erfasst Text/Bild, liest Quellen und erzeugt drei Abschlussbilder nach Abschnitt 2. | `brief_ready` → `reveal_review`: Einzeldateien, kurzer Vergleich, gesicherte Übergabe; auf menschliche Abschlussbildfreigabe warten. |
 | **2 · Abschlussbildfreigabe und Abstraktion** | KI bindet die tatsächliche Freigabe, empfiehlt bei offenen Angaben 2–3 Konfigurationen und erstellt unmittelbar die Abstraktion für ihre Empfehlung. Keine zusätzliche Konfigurationsrunde, sofern keine feste Grenze verletzt wird. | `reveal_approved` → `motif_review`: Bildvergleich, Detailverluste, eindeutiger vorgeschlagener Parameterkorridor und vollständige Dateiübergabe für Codex; auf Motivfreigabe warten. |
-| **3 · Motivfreigabe und Produktion** | Codex protokolliert die menschliche Freigabe der Motivdatei samt Parameterkorridor; führt Abschnitte 4–7 einschließlich Variantenwahl, begrenzter Reparatur, technischer und visueller Prüfung sowie Schwierigkeit aus. | `motif_approved` → `raster_review` → `content_ready`: echtes Endraster, Abschlussbild, kompakter Bericht und geprüftes Paket zur Endabnahme. Keine Spielregistrierung. |
+| **3 · Motivfreigabe und Produktion** | Codex protokolliert die menschliche Freigabe der Motivdatei samt Parameterkorridor; führt Abschnitte 4–7 einschließlich Variantenwahl, Profilprüfung nach 4.2.1, begrenzter Reparatur, technischer und visueller Prüfung sowie Schwierigkeit aus. | `motif_approved` → `raster_review` → `content_ready`: echtes Endraster, Abschlussbild, kompakter Bericht und geprüftes Paket zur Endabnahme. Keine Spielregistrierung. |
 | **4 · Endabnahme und Integration** | Codex bindet die menschliche Endabnahme separat und führt mit dem im Auftrag enthaltenen Integrationsauftrag Abschnitt 8 vollständig aus. | `editorially_approved` → `catalog_ready` → `registered`: gesicherte Integrationsbelege, geprüfter Draft-PR; bei bereits ausdrücklich erteiltem bedingtem Mergeauftrag auch Merge und Main-Nachweis. |
 
 Standardarbeitsteilung: ChatGPT für 1–2, Codex für 3–4. Eine Umgebung darf beides übernehmen, wenn sie die tatsächlichen Bild-, Datei-, Repository- und Werkzeugfähigkeiten besitzt. Modell/Reasoning wählt der Nutzer in der Oberfläche; keine Modell-API einbauen. Ein zusätzlicher Mergeauftrag ist nur ohne vorherige passende Freigabe nötig; Korrekturrunden und echte Zugriffsprobleme können weitere Nachrichten erfordern.
@@ -147,13 +149,65 @@ prüft Dateibindungen und Zeugen, replayt aber keine vollständige Suche.
 und verändert keine Schwierigkeitsbewertung. Die neue Methode 0.2 folgt ausschließlich
 dem unabhängig belegten Deduktionsbedarf aus Abschnitt 5.
 
-Das [Paarlinienprofil](../PAIRED_LINES.md) darf ausdrücklich gewählt werden,
-wenn Linienlogik nicht genügt. Baseline, stärkerer Proof und Assessmentdatei
-gemeinsam mitführen. Ein unvollständiger Paarfixpunkt bleibt ohne Freigabe;
-Budgetende ist kein Fixpunkt. Handoff-Auswahl bindet die `certification` des
-Produktionsmanifests. Alte 0.4.x-Snapshots legitimieren diese Profile nicht.
+Das [Paarlinienprofil](../PAIRED_LINES.md) ist als zusätzliches Deduktionsprofil
+zugelassen. Seine ausdrückliche Auswahl, Produktionsbindung und Grenzen folgen
+Abschnitt 4.2.1. Ein unvollständiger Paarfixpunkt bleibt ohne Freigabe;
+Budgetende ist kein Fixpunkt. Alte 0.4.x-Snapshots legitimieren diese Profile nicht.
 
 Die Logik separat in einem frischen Prüferprozess verifizieren. Herkunft zusätzlich mit der vorhandenen Rekonstruktionsprüfung prüfen, beispielsweise `inspect_candidate` beziehungsweise Reparaturverifikation/passendem Export. Nur tatsächlich vorhandene Befehle/API-Funktionen verwenden. Zeit-/Zeilenbudgets je Befehl aus der README übernehmen; fehlgeschlagene Versuche nicht nachträglich umetikettieren.
+
+#### 4.2.1 Profilwahl und Produktionsnachweise
+
+1. **Linienlogik als Ausgangspunkt:** Den zur Mono-/Farbsemantik passenden
+   `full-line-mono`-/`full-line-color`-Nachweis auswerten. Ein vollständig
+   unabhängig bestätigtes Ergebnis genügt; kein zusätzlicher Paar- oder
+   Eindeutigkeitssuchlauf als Routinepflicht für bereits gelöste Kandidaten.
+2. **Vor rein logikbedingter Rasteränderung:** Bei einem visuell tragfähigen
+   Kandidaten mit unabhängig bestätigtem Linienfixpunkt `stalled` SOLL zunächst
+   das passende Paarlinienprofil am unveränderten Raster geprüft werden.
+   Eine begründete Abweichung, etwa eine ausdrücklich auf einfachere Techniken
+   begrenzte Vorgabe oder ein dokumentierter Ressourcenblocker, festhalten.
+   Die bereits zugelassene Profilwahl verlangt keine neue Grundsatzfreigabe;
+   Vorgaben zu Motiv, Parametern und Schwierigkeit bleiben wirksam. Die Prüfung
+   einer unveränderten Matrix zählt nicht als zusätzliche Rastervariante.
+3. **Ausdrücklich und vor dem Lauf binden:** Profil-ID und Zeit-/Linien-/Paarbudgets
+   dokumentieren. Bei `import-image` ausdrücklich `--profile paired-lines-mono`
+   beziehungsweise `--profile paired-lines-color` und die vorgesehenen Paarbudgets
+   verwenden; die Standardaufrufe bleiben Linienlogik. Für einen vorhandenen
+   Direktimport dieselbe freigegebene Quelle mit demselben Design in ein neues
+   Ausgabeziel importieren und Matrix-/Logikgleichheit kontrollieren. Ein isoliertes
+   `solve --profile ...` ist ein Logiknachweis, noch kein exportfähiges Produktionsbündel.
+   Niemals nur den Proof in einem alten Manifest austauschen.
+4. **Beide Nachweise prüfen:** Der Paarproduktionslauf erzeugt zusätzlich den
+   eigenen `full-line-*`-Baselineproof und die Assessmentdatei. Baseline und
+   Paarproof derselben Logik in einem frischen unabhängigen Prüferprozess prüfen,
+   etwa gemeinsam mit `assess --input ... --proof ... --baseline ...` gemäß
+   [Werkzeuganleitung](../../tools/puzzle_production/README.md). Das ersetzt nicht
+   Herkunftsrekonstruktion, Endmatrixvergleich und Prüfung der gebundenen
+   Produktionsdateien. `assess` erzeugt `picross-quality-report-v1`; dieser
+   Zusatzbericht ersetzt weder `picross-deduction-assessment-v1` noch
+   `difficulty.json` oder eine menschliche Freigabe.
+5. **Ergebnis statt Profilname werten:** Nur eine verifizierte `stalled`-Baseline
+   und ein vollständiger verifizierter Paarproof belegen R4 nach Abschnitt 5.
+   Eine `aborted`-Baseline, ein unvollständiger Paarproof oder eine bloße
+   Eindeutigkeitsmeldung genügen nicht. Bei `stalled`/`aborted` den betroffenen
+   Profilnamen, offene Zellen, tatsächlich verbrauchte Budgets und Endgrund
+   berichten; keine absolute Aussage, das Rätsel verlange grundsätzlich Raten.
+   Budgets nicht nachträglich zur Herstellung eines Erfolgs umdeuten.
+6. **Kandidat und Weitergabe:** Importmanifest v2 beziehungsweise Reparaturplan,
+   -verlauf und -manifest v2 sowie die passenden versionierten manuellen
+   Ableitungen aus [PAIRED_LINES](../PAIRED_LINES.md) verwenden. Die exakte
+   `certification` durch alle betroffenen Stufen und `candidate.certification`
+   im Handoff führen. Eine Paarreferenz darf nicht in einen alten Ableitungsvertrag
+   zurückfallen. Quelle, Motivschutz, Bildfreigaben und Endabnahme bleiben Pflicht.
+   Bleibt kein freigabefähiger Kandidat, nach 4.4 innerhalb der bestehenden
+   Befugnisse weiterarbeiten oder den konkreten Blocker dokumentieren.
+
+Die separate Diagnose A ist bei einer konkreten offenen Eindeutigkeitsfrage
+optional. Sie ersetzt keinen der beiden Deduktionsnachweise und ist keine
+Voraussetzung, um das zugelassene Paarprofil auszuwählen. Ihre eigene Suche
+und die unabhängige Prüfung ihrer Lösungszeugen bleiben als solche bezeichnet.
+Keine zusätzlichen CI-Fälle oder erneute Prüfung unveränderter Bestandsrätsel.
 
 ### 4.3 Redaktionelle Kriterien
 
@@ -163,7 +217,7 @@ Belegungsanteile unter 15 % oder über 85 %, isolierte Einzelzellen und vollstä
 
 ### 4.4 Reparaturen und Änderungen
 
-Reparatur nur an visuell tragfähigen Kandidaten und mit vorab gespeichertem bestehenden Reparaturplan: Referenz, Schutzmaske, Operatoren, Seed und Budgets. Wichtige gefüllte **und leere** Positionen schützen. Erster Versuch standardmäßig höchstens zwei Zellpositionen ändern, bei empfindlichen Motiven weniger. Höhere Grenzen brauchen vorab eine motivbezogene Begründung; keine nachträgliche Budgetlockerung.
+Reparatur nur an visuell tragfähigen Kandidaten und mit vorab gespeichertem bestehenden Reparaturplan: Referenz, Schutzmaske, Operatoren, Seed und Budgets. Wichtige gefüllte **und leere** Positionen schützen. Erster Versuch standardmäßig höchstens zwei Zellpositionen ändern, bei empfindlichen Motiven weniger. Höhere Grenzen brauchen vorab eine motivbezogene Begründung; keine nachträgliche Budgetlockerung. Vor einer allein wegen des Linienfixpunkts geplanten Zelländerung die Profilprüfung aus 4.2.1 berücksichtigen. Bei gewähltem Paarprofil muss bereits der Plan dessen versionierte `certification` binden; neue Hinweise nach einer Reparatur brauchen eigene Baseline und eigenen vollständigen Endnachweis.
 
 Referenz, Ergebnis und markierten Zell-Diff vergleichen. `found` allein genügt nicht: Endnachweis, unabhängige Prüfung, Replay und redaktionelle Bewertung sind erforderlich. Bei schlechter Ausgangsform zuerst Abstraktion/Größe/Rasterpalette korrigieren; die freigegebene Abschlussbildreferenz dabei erhalten.
 
@@ -174,6 +228,7 @@ Referenz, Ergebnis und markierten Zell-Diff vergleichen. `found` allein genügt 
 | Materielle Motivänderung | Zusätzlich erneute ausdrückliche menschliche Motivfreigabe |
 | Abschlussbild geändert | Neue Bildrevision und menschliche Abschlussbildfreigabe; Ableitung, Motiv-/Rasterkonsistenz und Endabnahme erneut prüfen. Materielle Änderungen setzen abhängige Motivfreigaben zurück. Kein neuer Logiklauf allein für eine Bildänderung bei nachweislich unverändertem Raster/Logikeingang; nötige Rasteränderungen vollständig neu nachweisen |
 | Nur Schwierigkeit/Kategorie/Metadaten | Keine neue Bild-/Rasterproduktion und keine neue Bild-/Endfreigabe allein wegen Kategorieänderung. Metadaten bei versiegelten Paketen außen ergänzen, neue Exportbindung separat aufzeichnen. Bewertungs-/Metadatenrevision; unveränderte Matrix-/Nachweisbindung erhalten |
+| Erstmals Paarprofil bei unveränderter Matrix | Neue ausdrücklich profilierte Produktionsbindung, eigener Baseline-/Paarproof und Assessment; keine geänderten Rasterwerte oder umetikettierten Altproofs. Bereits versiegelte Originale erhalten; die neue Lieferung als neue Revision mit echter Regelwerksbindung 0.5.0 führen. Bildfreigaben nur bei unverändertem Gegenstand passend wiederverwenden; Endfreigabe muss das tatsächlich gelieferte Handoff/Inventar binden. |
 
 Materiell sind Änderungen an Identität, Pose, charakteristischen Proportionen, wichtigen Innenräumen, Gesichtszügen oder ausdrücklich geschützten Merkmalen. Eine einzelne Zelle kann materiell sein. Auch das Abschneiden ausschließlich leerer Außenlinien verändert das Rastermaß und benötigt neue Nachweise. Manuelle Ableitungen offen kennzeichnen, nicht als unveränderten Originalimport ausgeben.
 
@@ -238,7 +293,7 @@ Die folgenden Aufbewahrungs- und Replaypflichten gelten bis zur finalen Integrat
 - `content/authoring/index.json` ist der von der KI gepflegte Arbeitsindex, **keine Runtime-Registry**. Pro ID/Revision: relativer Recordpfad. `record.json` führt zusätzlich `category_id`, sobald die Motivzuordnung feststeht (bei offenem Briefing ausdrücklich `null`; alte Records ohne Feld bleiben lesbar). Spätestens vor kategorisiertem Export ist eine gültige Zuordnung Pflicht. `record.json` führt Format `picross-authoring-record-v1`, ID/Revision, Phasenstatus, Paketpfad/-größe/-SHA-256, Handoffpfad/-SHA-256, Inventarhash (oder ausdrücklich noch offen), Abschlussfreigabepfad/-hash oder `null`, Maße/Modus/Schwierigkeit soweit bekannt, Blocker, nächsten erlaubten Schritt und Integrationsbeleg oder `null`. Branch/Commit der Sicherung in der Übergabe nennen; noch nicht gemergte Ablage nicht als `main` ausgeben. Paket, Handoffkopie und Index gemeinsam committen/pushen, sobald dieser Umfang beauftragt ist; Merge gemäß Entwicklungsworkflow.
 - UTF-8-Markdown/JSON, bestehende Matrix-/Proofverträge und verlustfreie Bilder verwenden. Quellenbytes, Herkunft/Nutzungsgrundlage, tatsächliche Bildprompts/-einstellungen (`not_exposed` wenn unbekannt), ausgewählte Bilder, Freigaben, Parameter und Nachweise behalten. Ungeklärte Nutzungsrechte blockieren die Katalogfreigabe. Versuchshypothese, Auswahl-/Ablehnungsgrund, Bildaufrufe, Überarbeitungsrunden, Import-/Reparaturversuche und aktive Menschenminuten getrennt erfassen; unbekannte Werte als `null` führen.
 - Vor einer Auswahl alle noch angebotenen Bildvarianten behalten. Nach der Auswahl verworfene ungebundene Bildvarianten nur in ihrer früheren Repositoryrevision belassen; im aktuellen Paket reichen Entscheidung, Hash und genauer früherer Fundort. Keine alten ZIPs in neue ZIPs einbetten. Allgemeine Projekt-/Workflowdokumente und Toolquellen über Repositorycommit/Pfad referenzieren, nicht pro Rätsel kopieren. Ausnahme: den von ZA-1 verlangten, hashgebundenen Regelwerks-Snapshot mitführen.
-- Vollständige erforderliche RP-3-/RP-5-Bündel unverändert behalten: Original-/Normalisierungsbild, Design, sämtliche manifestgebundenen Kandidaten, Eltern, Masken, Logik, Proofs und Vergleichsdateien. Auch HTML oder ein verworfener Kandidat ist Pflicht, wenn ein Manifest/Replay ihn bindet. Finale echte Rasteransicht, Bildvergleich, Schwierigkeit, Qualitätsbericht und Belege aller Freigaben/Gates behalten.
+- Vollständige erforderliche RP-3-/RP-5-Bündel unverändert behalten: Original-/Normalisierungsbild, Design, sämtliche manifestgebundenen Kandidaten, Eltern, Masken, Logik, Proofs und Vergleichsdateien. Bei Paarprofilen gehören auch sämtliche manifestgebundenen Baselineproofs und Assessmentdateien dazu, einschließlich Kandidaten- und frischer Abschlussnachweise einer Reparatur. Auch HTML oder ein verworfener Kandidat ist Pflicht, wenn ein Manifest/Replay ihn bindet. Finale echte Rasteransicht, Bildvergleich, Schwierigkeit, Qualitätsbericht und Belege aller Freigaben/Gates behalten.
 - Ungebundene doppelte Berichte, stdout/stderr-Kopien, eingebettete Bildgalerien, temporäre Ansichten, Caches und vollständige Chat-/Repoarchive weglassen. Relevante Fehlversuche als kurze strukturierte Einträge erhalten. Dateien nicht allein anhand der Endung löschen; alle benötigten technischen **und redaktionellen** Referenzen nachverfolgen. HTML/Code aus Paketen nicht ausführen.
 - Ein neues Paket vor Inventarisierung verschlanken. Bereits versiegelte Pakete ausschließlich als deklarierte Teilkopie nach `picross-authoring-derivation-v1` ableiten: Originalhandoff/-inventar und ihre Hashes unverändert, Original-ZIP-Hash binden, tatsächlich enthaltene Dateien vollständig hashen. Weglassungen und Grund im äußeren Record dokumentieren. Keine erfundene neue Vollkopie, keine stillschweigende Neuversiegelung oder Umschreibung alter Freigaben. Nachweisbündel nicht intern kürzen. Das Original nicht destruktiv ersetzen.
 - Inventar und Handoff ohne Selbstreferenz nach ZA-1 binden; Datei-SHA-256 und kanonische Vertrags-Hashes unterscheiden. Nach Versiegelung spätere Endfreigabe und Integrationsstatus ausschließlich in separater Freigabe/Record führen; das Originalhandoff dafür nicht ändern.
@@ -260,10 +315,11 @@ brief: "<Datei mit Auftrag, Invarianten, Grenzen und Herkunft>"
 approved_parameters: []
 reveal: {file: null, sha256: null, approval: null}
 motif: {file: null, sha256: null, derived_from_reveal_sha256: null, approval: null}
-candidate: {bundle: null, variant: null, proof: null, verification: null}
+candidate: {bundle: null, variant: null, proof: null, verification: null, certification: null}
 origin_verification: null
 repair: {reference: null, plan: null, replay: null}
 inventory: {file: null, sha256: null}
+difficulty: null
 report: null
 decisions: "<Varianten-/Entscheidungsprotokoll>"
 effort: "<Aufwandsprotokoll>"
@@ -284,6 +340,16 @@ next_action: "<nächster erlaubter Schritt>"
 authorization: "<tatsächlich erteilter Arbeitsumfang>"
 ```
 
+Bei einem Paarprofilkandidaten `candidate.certification` vor Versiegelung durch
+exakt `{profile, max_pair_work, max_pair_records}` aus dem geprüften
+Produktionsmanifest beziehungsweise Plan ersetzen; keine frei abweichenden
+Budgetangaben. `difficulty` verweist auf die Datei nach Abschnitt 5. Deren
+`evidence` ist genau die zugehörige inventarisierte Assessmentdatei neben dem
+gewählten Proof: beim Import `<variant>-assessment.json`, bei einer Reparatur
+`final-assessment.json`, bei fester Mono-Entfernung `certificate/assessment.json`
+unter dem jeweiligen Bundlepfad. Zugehörige Baseline und Paarproof mitführen.
+Frühe Bildphasen benötigen diese noch nicht entstandenen Dateien nicht.
+
 Gates verwenden `pending|pass|fail|blocked`. Jedes `pass` braucht einen konkreten Beleg im Bericht/Inventar. Fehlende Probespiele sind kein Blocker und benötigen keinen Ausnahmeentscheid. Menschliche Freigaben müssen Gegenstand/Hash, Akteur, UTC-Zeitpunkt und tatsächliche Erklärung enthalten.
 
 Beim Übergang aus v1 fehlende Abschlussbildfreigabe oder Ableitungsbindung ausdrücklich als offen erfassen; niemals aus einer alten Motivfreigabe erfinden.
@@ -300,7 +366,7 @@ Den Abschlussbericht auf eine kompakte Seite plus Beleglinks begrenzen. Er MUSS 
 - Abschlussbildfreigabe, Abstraktionsfreigabe und Endabnahme mit Beleg beziehungsweise ausdrücklich offenem Status.
 - Gewählten Kandidaten, wesentliche Ablehnungsgründe und echte Raster-/Abschlussbilddateien.
 - Maße, Zellzahl, Modus, Palette; Motivqualität, Änderungen, Reparaturdiff und begründete weiche Ausnahmen.
-- Ergebnisse und Dateibelege für Produktmaße, Randregel, Herkunft, Hinweise, vollständigen Nachweis unter benanntem Profil, unabhängige Prüfung und Endmatrixgleichheit.
+- Ergebnisse und Dateibelege für Produktmaße, Randregel, Herkunft, Hinweise, vollständigen Nachweis unter benanntem Profil, unabhängige Prüfung und Endmatrixgleichheit. Bei Paarprofilen Baseline-/Paarstatus und Assessmentbindung getrennt nennen; eine optionale Suchdiagnose nicht als Deduktionsnachweis ausgeben.
 - Schwierigkeit L1–L5, plausiblen Bereich, Methode, Vertrauen und Technik-/Engstellenbegründung; getrennt Bearbeitungsumfang und belastbare Zeitdaten oder „nicht geschätzt“.
 - Nutzungsgrundlage, tatsächlichen Zieladapter-/Exportstatus, KI-Durchläufe und aktive Menschenzeit oder „nicht erfasst“.
 - Offene Blocker und nächsten erlaubten Schritt. Vorhandene menschliche Spieldaten optional ergänzen; ihr Fehlen ist kein Blocker.
@@ -310,6 +376,12 @@ Keine Ergebnis- oder Freigabefelder ohne Beleg als erfüllt ausgeben. Inhaltsfre
 ## 8. Abgenommenes Paket ins Spiel integrieren
 
 Voraussetzungen: tatsächlicher Integrationsauftrag, unverändertes `content_ready`-Paket mit vollständigen Inhaltsgates und gesonderte menschliche Endfreigabe nach [ZA-1](../ZA1_ADAPTER.md). Die Freigabe bindet Originalhandoff, Inventar, Endkandidat, Matrix-/Logikhash und Abschlussbild; ein `pass`-Flag genügt nicht. Die Archivablage selbst erteilt keine Endabnahme. Probespielen bleibt optional.
+
+Paarprofilpakete verlangen die tatsächliche Regelwerksbindung 0.5.0, passende
+`candidate.certification` und Schwierigkeit 0.2 mit den gebundenen Nachweisen.
+ZA-1 erzeugt dafür `picross-target-inspection-v4` und `picross-target-export-v4`.
+Diese Exportversion ist von den Versionen menschlicher Änderungsautorisierungen
+zu unterscheiden; sie erteilt selbst keine Ausnahme oder Freigabe.
 
 Ausnahme für bereits versiegelte manuelle Rasterimporte: Ein historisches
 `blocked`-Paket darf ausschließlich über die extern gebundene
@@ -339,8 +411,8 @@ Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und da
 1. Paket über `content/authoring/index.json` laden; ZIP-, Handoff-, Inventar- und Freigabebindung kontrollieren. Aktuellen `main` und vorhandene Arbeit prüfen, isolierten Arbeitsbranch verwenden. Keine fremden Änderungen aufnehmen.
 2. Vorliegende Produktionsbelege und echte Endfreigabe zuordnen. Kein zusätzliches routinemäßiges `inspect`: Der nachfolgende `export` prüft Eingang/Freigabe frisch und verifiziert seine geschriebenen Ausgaben selbst. Nur `technical=true` und `editorial_approved=true` erlauben den Export; Fehler stoppen. `inspect` separat nur zur Diagnose einer konkreten Lücke. Aktuelle Ergebnisse außen führen, versiegelte Originale nicht ändern.
 3. Produktions-ID unverändert als Runtime-ID verwenden. Motivname, kollisionsfreien Dateistamm/Save-Slot und numerische Runtime-Revision explizit wählen; bei neuen IDs gewöhnlich Revision 1. F01…F09 nicht umwidmen. ZA-1 unterstützt 1…50 pro Achse, Rechtecke, Mono und höchstens vier Vordergrundfarben; Paketrevision und Runtime-Revision bleiben getrennt.
-4. Kategorie-ID im äußeren Record und in der aktuellen Kategorienquelle abgleichen. `export` mit Paket, Endfreigabe, Name, Runtime-Revision, Stem, Slot sowie `--category-id <id> --categories content/categories.json` in ein neues temporäres Ziel ausführen. Erfolgsbericht und `inspection.json` binden; kein zusätzlicher Routineaufruf von `verify-export`. Ein bereits passend gebundener kategorisierter Export darf direkt dem Plan dienen. Kategorienlose Altexporte neu kategorisiert exportieren. Autorisierte manuelle Ableitungen benötigen den gesonderten ZA-1-Vertrag samt Autorisierung und v3-Export; keine automatische Ausnahme. Das freigegebene Abschlussbild bleibt der bytegebundene Reveal. Matrix, Hinweise und Assets nicht manuell umschreiben.
-5. `plan --export <export> --checkout <arbeitscheckout>` ausführen, Kategorie-ID/aktuellen Anzeigenamen, konkrete Add-/Replace-Pfade und Registryänderungen auf Scope, Kollisionen und unveränderte Bestandsinhalte prüfen. Der Integrationsauftrag erlaubt anschließend `register` mit denselben Eingängen; keine zusätzliche routinemäßige Bestätigung verlangen. Ohne Auftrag beim Plan stoppen. Kein handgeschriebener Registryeintrag als Ersatz.
+4. Kategorie-ID im äußeren Record und in der aktuellen Kategorienquelle abgleichen. `export` mit Paket, Endfreigabe, Name, Runtime-Revision, Stem, Slot sowie `--category-id <id> --categories content/categories.json` in ein neues temporäres Ziel ausführen. Erfolgsbericht und `inspection.json` binden; kein zusätzlicher Routineaufruf von `verify-export`. Ein bereits passend gebundener kategorisierter Export darf direkt dem Plan dienen. Kategorienlose Altexporte neu kategorisiert exportieren. Autorisierte manuelle Ableitungen benötigen weiterhin den gesonderten ZA-1-Vertrag samt tatsächlicher Autorisierung. Linienprofile verwenden Direkt-/Reparaturexport v2 beziehungsweise manuellen Export v3; Paarprofile verwenden auch bei manuellen Ableitungen Export v4. Keine automatische Ausnahme und keine manuelle Änderung der Exportversion. Das freigegebene Abschlussbild bleibt der bytegebundene Reveal. Matrix, Hinweise und Assets nicht manuell umschreiben.
+5. `plan --export <export> --checkout <arbeitscheckout>` ausführen, Kategorie-ID/aktuellen Anzeigenamen, konkrete Add-/Replace-Pfade und Registryänderungen auf Scope, Kollisionen und unveränderten Bestandsinhalt prüfen. Der Integrationsauftrag erlaubt anschließend `register` mit denselben Eingängen; keine zusätzliche routinemäßige Bestätigung verlangen. Ohne Auftrag beim Plan stoppen. Kein handgeschriebener Registryeintrag als Ersatz.
 6. Tatsächliche Definition/Reveal/Nutzungshinweise, `content/registry.json`, deren Runtime-Projektion und die Prüfkopie unter `content/packages/…` kontrollieren, einschließlich Kategorienprojektion und eindeutiger Zuordnung im Katalog. Identischer Wiederholungsaufruf darf `no-op` sein; Konflikte nicht überschreiben. Bei offenem Registrierungsjournal nur den dokumentierten Recoverypfad verwenden.
 7. **Für reine Rätselinhalte genügt die Adapter-/Dateiprüfung aus 4–6.** Keine obligatorischen Godot-Spielstarts, Teilstand-/Neustart-, Undo-/Save-, Abschluss-/Album-, Render- oder Windows-/PCK-Tests je Rätsel; keinen Product-Harness und keinen Buildauftrag automatisch starten. Die visuelle Raster-/Abschlussbildprüfung gehört bereits zur Produktion. Nur bei konkretem Befund eine gezielte zusätzliche Probe mit benanntem Zweck ausführen, isoliert von echten Saves. Allgemeine Spiel-/Exportregressionen gehören zu relevanten Codeänderungen. Keine zusätzlich manuell gestarteten Bestands-Replays, `check-registry`-/`sync-runtime`-Vollprüfungen oder wiederholten `register`-Aufrufe zur Bestätigung; interne Adapterprüfungen unverändert lassen. Nicht ausgeführte native Prüfungen als `nicht erforderlich: reine Inhaltsintegration` vermerken, niemals als bestanden.
 8. Arbeitsrecord mit einmaligen Registrierungs-/Prüfbelegen aktualisieren, vollständigen Diff separat selbst prüfen, committen/pushen und Draft-PR mit Head/Basis/Checks/offenen Gates erstellen. Reine Rätseldateien müssen im Auswahlbericht `content_only=true` ergeben; dann sind nur `docs` (Pfad-/Dateimodusprüfung) und `ci-required` Pflicht. Keine vollständige Testsuite zusätzlich lokal oder per CI wiederholen. Bei unerwartet breiter Auswahl die tatsächlich geänderten Pfade prüfen; notwendige Codeänderungen getrennt behandeln, nichts am Gate vorbeischleusen. Nur mit passender ausdrücklicher Mergefreigabe nach bestandenen Pflichtprüfungen mergen; danach tatsächlichen Main-/Mergecommit prüfen. Erst dann „im Spiel auf main integriert“ melden; kein Release/Deployment ableiten.
