@@ -27,12 +27,12 @@ func run() -> void:
 	var demos: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/z2-demo.json"))
 	for i: int in range(2):
 		var changes: Array = []
-		var cells: Array = demos[["f01","f02"][i]]
+		var cells: Array = demos[["t01","t02"][i]]
 		for index: int in range(cells.size()):
 			if int(cells[index]) != -1:
 				changes.append({"index":index,"before":-1,"after":int(cells[index])})
 		app.sessions[i].player.commit(changes)
-	for spec: Array in [[1,1920,1080,1.0,18,"f02-1920"],[1,2560,1440,1.0,18,"f02-2560"],[0,2560,1440,1.0,24,"f01-2560"],[3,1920,1080,1.0,24,"f06-1920"],[1,1280,720,1.25,22,"f02-1280"]]:
+	for spec: Array in [[1,1920,1080,1.0,18,"t02-1920"],[1,2560,1440,1.0,18,"t02-2560"],[0,2560,1440,1.0,24,"t01-2560"],[3,1920,1080,1.0,24,"t06-1920"],[1,1280,720,1.25,22,"t02-1280"]]:
 		surface.size = Vector2i(spec[1],spec[2])
 		app.size = Vector2(surface.size)
 		app.set_ui_scale(spec[3])
@@ -42,9 +42,9 @@ func run() -> void:
 		app.board._layout()
 		app._save_current()
 		await shot(spec[5])
-		if spec[5] == "f02-1920":
+		if spec[5] == "t02-1920":
 			await detail_shots()
-		if spec[5] == "f02-1920" or spec[5] == "f02-1280":
+		if spec[5] == "t02-1920" or spec[5] == "t02-1280":
 			app.show_information("settings")
 			await shot(spec[5]+"-information")
 			app.show_information("help")
@@ -134,7 +134,7 @@ func shot(name: String) -> void:
 	var picture: Image = surface.get_texture().get_image()
 	if picture.save_png(output.path_join("z2-"+name+".png")) != OK:
 		record_failure(name, "Z2 native render could not be written: "+name)
-	if name == "f02-1280":
+	if name == "t02-1280":
 		picture.get_region(Rect2i(90,102,850,180)).save_png(output.path_join("z2-detail-clues-ui125-1to1.png"))
 		picture.get_region(Rect2i(245,608,590,65)).save_png(output.path_join("z2-detail-tools-ui125-1to1.png"))
 	var grid: Rect2 = app.board.view.visible_bounds()
@@ -169,7 +169,7 @@ func detail_shots() -> void:
 	if SaveStore.snapshot(app.session,app.board.capture_view()) != tooltip_state or app.session.gesture.active:
 		record_failure("c1-tooltip", "Z2 rendered tooltip allowed a board action")
 	app.board.clear_clue_hover()
-	# HC compaction also fits F06 at the regular window budget. Use a narrow
+	# HC compaction also fits T06 at the regular window budget. Use a narrow
 	# component in the regular scene for the continuous 14.7px C1 drag oracle.
 	surface.size = Vector2i(1280,720)
 	app.size = Vector2(surface.size)

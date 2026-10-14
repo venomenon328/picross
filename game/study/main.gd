@@ -115,7 +115,7 @@ func study_smoke() -> void:
 		return
 	board.pointer_press(board.view.cell_rect(Vector2i(0, 0)).get_center(), MOUSE_BUTTON_LEFT)
 	board.pointer_release(board.view.cell_rect(Vector2i(0, 0)).get_center(), true)
-	if session.player.cells[0] != 1 or not FileAccess.file_exists(store.path_for("f01")):
+	if session.player.cells[0] != 1 or not FileAccess.file_exists(store.path_for("t01")):
 		get_tree().quit(5)
 		return
 	print("ZS1_STUDY_OK root=", store.root, " style=", board.style, " own_cell=", session.player.cells[0])

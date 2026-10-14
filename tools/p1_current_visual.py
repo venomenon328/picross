@@ -11,8 +11,8 @@ import zs2_delivery
 from vs2_v1_verify import typography
 
 CURRENT_CASES = {
-    "f01-work", "f02-color", "f06-small", "f02-compact", "f01-1600",
-    "f01-z150", "f06-z300", "f06-color50", "f06-compact",
+    "t01-work", "t02-color", "t06-small", "t02-compact", "t01-1600",
+    "t01-z150", "t06-z300", "t06-color50", "t06-compact",
     "hint-row-drag", "hint-row-tooltip", "hint-column-drag", "hint-column-tooltip",
     "status-0", "status-1", "status-2",
 }
@@ -52,7 +52,7 @@ def verify_regular_motion(root: Path, renders: Path) -> dict:
         with Image.open(renders / item["file"]) as picture:
             if list(picture.size) != item["size"]:
                 raise toolchain.PreflightError("Current drawing capture dimensions differ")
-    if len(current["frames"]) != 1 or {m["fixture"] for m in current["measurements"]} != {"F-06"}:
+    if len(current["frames"]) != 1 or {m["fixture"] for m in current["measurements"]} != {"T-06"}:
         raise toolchain.PreflightError("Missing current motion/large color load")
     for motion in current["frames"]:
         if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"] < 210):
@@ -85,7 +85,7 @@ def selected_motion_files(renders: Path) -> list[Path]:
     """Keep native animation crops plus two current contexts, within the global cap."""
     selected = [renders / name for name in (
         "zs2-after.json", "current-drawing-report.json", "zs2-numerals.png",
-        "zs2-after-f02-color.png", "zs2-after-f06-compact.png")]
+        "zs2-after-t02-color.png", "zs2-after-t06-compact.png")]
     for pattern in ("zs1-motion-*.png", "zs1-strokes-*.png", "zs2-x-*.png",
                     "zs2-fill-*.png", "zs2-wave-*.png"):
         selected.extend(path for path in renders.glob(pattern) if not path.name.endswith("-context.png"))

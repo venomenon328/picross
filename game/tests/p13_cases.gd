@@ -5,7 +5,7 @@ const SaveStore = preload("res://model/save_store.gd")
 const Main = preload("res://ui/main.gd")
 
 static func run(t: SceneTree) -> void:
-	for id: String in ["f01", "f02", "f04", "f06", "f08", "f09"]:
+	for id: String in ["t01", "t02", "t04", "t06", "t08", "t09"]:
 		var definition: Dictionary = Definition.load_fixture(id)
 		var session: Session = Session.new(definition)
 		var store: SaveStore = SaveStore.new(SaveStore.test_root_override.path_join(id))
@@ -141,7 +141,7 @@ static func run(t: SceneTree) -> void:
 		t.check(store.reset_slot(id).is_empty() and store.load_slot(definition).status == "fresh", "P1.3 %s selected reset" % id)
 		t.check(FileAccess.get_file_as_string(neighbour) == "untouched", "P1.3 %s unrelated bytes untouched" % id)
 	var shared: SaveStore = SaveStore.new(SaveStore.test_root_override.path_join("shared"))
-	for id: String in ["f01", "f02", "f04", "f06", "f08", "f09"]:
+	for id: String in ["t01", "t02", "t04", "t06", "t08", "t09"]:
 		var item: Session = Session.new(Definition.load_fixture(id))
 		t.check(shared.write_slot(item, item.view_state).is_empty(), "P1.3 shared %s saved" % id)
 	var sentinel: String = SaveStore.test_root_override.path_join("outside-p1.bin")
@@ -149,25 +149,25 @@ static func run(t: SceneTree) -> void:
 	marker.store_string("outside stays byte-identical")
 	marker.close()
 	shared.fail_step = "reset"
-	t.check(not shared.reset_slot("f02").is_empty() and shared.load_slot(Definition.load_fixture("f02")).status == "loaded", "P1.3 failed reset stays visible and leaves slot intact")
+	t.check(not shared.reset_slot("t02").is_empty() and shared.load_slot(Definition.load_fixture("t02")).status == "loaded", "P1.3 failed reset stays visible and leaves slot intact")
 	shared.fail_step = ""
-	t.check(shared.reset_slot("f02").is_empty(), "P1.3 selected shared slot reset")
-	t.check(shared.load_slot(Definition.load_fixture("f01")).status == "loaded" and shared.load_slot(Definition.load_fixture("f06")).status == "loaded" and shared.load_slot(Definition.load_fixture("f02")).status == "fresh", "P1.3 other two slots survive reset")
+	t.check(shared.reset_slot("t02").is_empty(), "P1.3 selected shared slot reset")
+	t.check(shared.load_slot(Definition.load_fixture("t01")).status == "loaded" and shared.load_slot(Definition.load_fixture("t06")).status == "loaded" and shared.load_slot(Definition.load_fixture("t02")).status == "fresh", "P1.3 other two slots survive reset")
 	t.check(FileAccess.get_file_as_string(sentinel) == "outside stays byte-identical", "P1.3 data outside save root untouched")
-	var f01: Dictionary = Definition.load_fixture("f01")
-	marker = FileAccess.open(shared.path_for("f01", ".tmp"), FileAccess.WRITE)
+	var t01: Dictionary = Definition.load_fixture("t01")
+	marker = FileAccess.open(shared.path_for("t01", ".tmp"), FileAccess.WRITE)
 	marker.store_string("{orphan")
 	marker.close()
-	t.check(shared.load_slot(f01).status == "loaded", "P1.3 orphan temp never outranks valid primary")
-	marker = FileAccess.open(shared.path_for("f01"), FileAccess.WRITE)
+	t.check(shared.load_slot(t01).status == "loaded", "P1.3 orphan temp never outranks valid primary")
+	marker = FileAccess.open(shared.path_for("t01"), FileAccess.WRITE)
 	marker.store_string("{corrupt")
 	marker.close()
-	t.check(shared.load_slot(f01).status == "error", "P1.3 corrupt primary plus temp is not silently fresh")
-	t.check(not shared.write_slot(Session.new(f01), Session.new(f01).view_state).is_empty(), "P1.3 invalid data cannot be silently overwritten")
+	t.check(shared.load_slot(t01).status == "error", "P1.3 corrupt primary plus temp is not silently fresh")
+	t.check(not shared.write_slot(Session.new(t01), Session.new(t01).view_state).is_empty(), "P1.3 invalid data cannot be silently overwritten")
 	var retired: SaveStore = SaveStore.new(SaveStore.test_root_override)
 	DirAccess.make_dir_recursive_absolute(retired.root)
-	for id: String in ["f03","f05","f07"]:
-		var untouched: FileAccess = FileAccess.open(retired.path_for(id),FileAccess.WRITE)
+	for id: String in ["orphan-a","orphan-b","orphan-c"]:
+		var untouched: FileAccess = FileAccess.open(retired.root.path_join(id + ".json"),FileAccess.WRITE)
 		untouched.store_string("retired slot preserved " + id)
 		untouched.close()
 	var app: Main = load("res://main.tscn").instantiate()
@@ -191,9 +191,9 @@ static func run(t: SceneTree) -> void:
 	t.check(app.sessions[0].player.cells[0] == 1 and app.store.load_slot(app.sessions[0].definition).status == "loaded" and app.sessions[3].player.cells[0] == -1, "P1.3 UI reset preserves both other sessions")
 	app.select_puzzle(0)
 	app._save_current()
-	for id: String in ["f03","f05","f07"]:
-		t.check(FileAccess.get_file_as_string(retired.path_for(id))=="retired slot preserved " + id,"P1.3 catalog startup/switch/save/reset preserves retired slot bytes")
-	var broken_backup: FileAccess = FileAccess.open(app.store.path_for("f01", ".bak"), FileAccess.WRITE)
+	for id: String in ["orphan-a","orphan-b","orphan-c"]:
+		t.check(FileAccess.get_file_as_string(retired.root.path_join(id + ".json"))=="retired slot preserved " + id,"P1.3 catalog startup/switch/save/reset preserves retired slot bytes")
+	var broken_backup: FileAccess = FileAccess.open(app.store.path_for("t01", ".bak"), FileAccess.WRITE)
 	broken_backup.store_string("{bad backup")
 	broken_backup.close()
 	app.queue_free()
@@ -201,11 +201,11 @@ static func run(t: SceneTree) -> void:
 	var recovery_ui: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(recovery_ui)
 	await t.process_frame
-	t.check(recovery_ui.slot_status[0] == "backup_invalid" and recovery_ui.album.notes[0].text.contains("Backup beschädigt") and recovery_ui.album.repair_buttons.has("F-01"), "P1.3 broken backup visibly reported at startup")
+	t.check(recovery_ui.slot_status[0] == "backup_invalid" and recovery_ui.album.notes[0].text.contains("Backup beschädigt") and recovery_ui.album.repair_buttons.has("T-01"), "P1.3 broken backup visibly reported at startup")
 	recovery_ui._ask_repair()
 	recovery_ui.repair_dialog.confirmed.emit()
-	t.check(recovery_ui.store.load_slot(f01).status == "loaded" and recovery_ui.status_label.text.is_empty(), "P1.3 confirmed backup renewal restores saving")
-	var broken_primary: FileAccess = FileAccess.open(recovery_ui.store.path_for("f01"), FileAccess.WRITE)
+	t.check(recovery_ui.store.load_slot(t01).status == "loaded" and recovery_ui.status_label.text.is_empty(), "P1.3 confirmed backup renewal restores saving")
+	var broken_primary: FileAccess = FileAccess.open(recovery_ui.store.path_for("t01"), FileAccess.WRITE)
 	broken_primary.store_string("{bad primary")
 	broken_primary.close()
 	recovery_ui.queue_free()
@@ -213,10 +213,10 @@ static func run(t: SceneTree) -> void:
 	var backup_ui: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(backup_ui)
 	await t.process_frame
-	t.check(backup_ui.slot_status[0] == "recovered" and backup_ui.album.notes[0].text.contains("Backup geladen") and backup_ui.album.repair_buttons.has("F-01"), "P1.3 backup recovery visibly reported at startup")
+	t.check(backup_ui.slot_status[0] == "recovered" and backup_ui.album.notes[0].text.contains("Backup geladen") and backup_ui.album.repair_buttons.has("T-01"), "P1.3 backup recovery visibly reported at startup")
 	backup_ui._ask_repair()
 	backup_ui.repair_dialog.confirmed.emit()
-	t.check(backup_ui.store.load_slot(f01).status == "loaded" and backup_ui.status_label.text.is_empty(), "P1.3 confirmed recovery resumes saving")
+	t.check(backup_ui.store.load_slot(t01).status == "loaded" and backup_ui.status_label.text.is_empty(), "P1.3 confirmed recovery resumes saving")
 	backup_ui.queue_free()
 	await t.process_frame
 	var failure_ui: Main = load("res://main.tscn").instantiate()
@@ -253,39 +253,39 @@ static func run(t: SceneTree) -> void:
 	failure_ui.board.eraser = not failure_ui.board.eraser # Guaranteed pending valid view change, even at fit.
 	t.check(not failure_ui._save_current() and failure_ui.slot_status[0] == "recovered" and failure_ui.work_repair_button.visible, "N-02 interrupted replacement exposes same-process recovery")
 	failure_ui.store.fail_step = ""
-	var saved_backup: String = FileAccess.get_file_as_string(failure_ui.store.path_for("f01", ".bak"))
+	var saved_backup: String = FileAccess.get_file_as_string(failure_ui.store.path_for("t01", ".bak"))
 	failure_ui.queue_free()
 	await t.process_frame
 	var missing_ui: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(missing_ui)
 	await t.process_frame
-	t.check(missing_ui.slot_status[0] == "recovered" and missing_ui.album.repair_buttons.has("F-01") and not FileAccess.file_exists(missing_ui.store.path_for("f01")), "N-02 missing primary loads backup visibly after restart")
+	t.check(missing_ui.slot_status[0] == "recovered" and missing_ui.album.repair_buttons.has("T-01") and not FileAccess.file_exists(missing_ui.store.path_for("t01")), "N-02 missing primary loads backup visibly after restart")
 	missing_ui.open_puzzle()
 	t.check(missing_ui.work_repair_button.visible, "N-02 recovery takeover remains available from work view")
 	missing_ui.board.zoom(1, missing_ui.board.view.viewport.get_center())
-	t.check(not missing_ui._save_current() and missing_ui.slot_status[0] == "recovered" and not FileAccess.file_exists(missing_ui.store.path_for("f01")) and FileAccess.get_file_as_string(missing_ui.store.path_for("f01", ".bak")) == saved_backup, "N-02 normal view save cannot acknowledge recovered backup")
+	t.check(not missing_ui._save_current() and missing_ui.slot_status[0] == "recovered" and not FileAccess.file_exists(missing_ui.store.path_for("t01")) and FileAccess.get_file_as_string(missing_ui.store.path_for("t01", ".bak")) == saved_backup, "N-02 normal view save cannot acknowledge recovered backup")
 	var free_index: int = missing_ui.session.player.cells.find(-1)
-	t.check(missing_ui.session.player.commit([{"index": free_index, "before": -1, "after": 1}]) and not missing_ui._save_current() and missing_ui.slot_status[0] == "recovered" and not FileAccess.file_exists(missing_ui.store.path_for("f01")), "N-02 confirmed cell cannot autosave before takeover")
+	t.check(missing_ui.session.player.commit([{"index": free_index, "before": -1, "after": 1}]) and not missing_ui._save_current() and missing_ui.slot_status[0] == "recovered" and not FileAccess.file_exists(missing_ui.store.path_for("t01")), "N-02 confirmed cell cannot autosave before takeover")
 	missing_ui.set_tool("hand")
-	t.check(missing_ui.slot_status[0] == "recovered" and not FileAccess.file_exists(missing_ui.store.path_for("f01")), "N-02 tool save remains blocked")
+	t.check(missing_ui.slot_status[0] == "recovered" and not FileAccess.file_exists(missing_ui.store.path_for("t01")), "N-02 tool save remains blocked")
 	missing_ui._ask_repair()
 	missing_ui.repair_dialog.confirmed.emit()
-	t.check(missing_ui.store.load_slot(f01).status == "loaded" and missing_ui.status_label.text.is_empty(), "N-02 confirmed takeover permits saving")
+	t.check(missing_ui.store.load_slot(t01).status == "loaded" and missing_ui.status_label.text.is_empty(), "N-02 confirmed takeover permits saving")
 	missing_ui.queue_free()
 	await t.process_frame
-	var f02: Dictionary = Definition.load_fixture("f02")
+	var t02: Dictionary = Definition.load_fixture("t02")
 	var color_store: SaveStore = SaveStore.new(SaveStore.test_root_override)
 	color_store.fail_step = "after_rotation"
-	t.check(not color_store.write_slot(Session.new(f02), Session.new(f02).view_state).is_empty() and color_store.load_slot(f02).status == "recovered", "N-02 color fixture interrupted after rotation")
-	var color_backup: String = FileAccess.get_file_as_string(color_store.path_for("f02", ".bak"))
+	t.check(not color_store.write_slot(Session.new(t02), Session.new(t02).view_state).is_empty() and color_store.load_slot(t02).status == "recovered", "N-02 color fixture interrupted after rotation")
+	var color_backup: String = FileAccess.get_file_as_string(color_store.path_for("t02", ".bak"))
 	var color_ui: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(color_ui)
 	await t.process_frame
 	color_ui.select_puzzle(1)
 	color_ui.board.active_color = 2
 	color_ui.set_tool("fill")
-	t.check(color_ui.slot_status[1] == "recovered" and not FileAccess.file_exists(color_store.path_for("f02")) and FileAccess.get_file_as_string(color_store.path_for("f02", ".bak")) == color_backup, "N-02 changed color cannot autosave before takeover")
+	t.check(color_ui.slot_status[1] == "recovered" and not FileAccess.file_exists(color_store.path_for("t02")) and FileAccess.get_file_as_string(color_store.path_for("t02", ".bak")) == color_backup, "N-02 changed color cannot autosave before takeover")
 	color_ui._ask_repair()
 	color_ui.repair_dialog.confirmed.emit()
-	t.check(color_store.load_slot(f02).status == "loaded" and int(color_store.load_slot(f02).data.view.active_color) == 2, "N-02 confirmed color-slot takeover saves changed color")
+	t.check(color_store.load_slot(t02).status == "loaded" and int(color_store.load_slot(t02).data.view.active_color) == 2, "N-02 confirmed color-slot takeover saves changed color")
 	color_ui.queue_free()

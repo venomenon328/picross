@@ -5,7 +5,7 @@ from pathlib import Path
 import shutil
 
 import p1_preflight as toolchain
-from product_fixtures import copy_regression_game
+from product_fixtures import copy_regression_game, install_runtime_fixtures
 
 
 def write_json(path, value):
@@ -23,8 +23,8 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
     elif mode == "invalid":
         registry["entries"][0]["category_id"] = "missing-test-only-category"
     elif mode == "large":
-        source = json.loads((project / "data/f01.json").read_text(encoding="utf-8"))
-        old_save = json.loads((project / "tests/fixtures/kat1/f01.json").read_text(encoding="utf-8"))
+        source = json.loads((project / "data/fixtures/t01.json").read_text(encoding="utf-8"))
+        old_save = json.loads((project / "tests/fixtures/runtime/t01.json").read_text(encoding="utf-8"))
         registry["entries"] = []
         for index in range(300):
             identifier, stem = f"pz-test-kat2-{index:03d}", f"kat2_{index:03d}"
@@ -32,7 +32,7 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
             data.update(id=identifier, test_only=True)
             data["reveal"].update(definition_id=identifier, name=f"TEST ONLY Motiv {index}", image=f"res://art/{stem}.svg")
             write_json(project / f"data/{stem}.json", data)
-            shutil.copyfile(project / "art/f01.svg", project / f"art/{stem}.svg")
+            shutil.copyfile(project / "art/fixtures/t01.svg", project / f"art/{stem}.svg")
             registry["entries"].append(dict(id=identifier, key=stem, save_slot=stem, definition=f"data/{stem}.json",
                 reveal=f"art/{stem}.svg", visible=True, category_id="gebaeude-bauwerke" if index < 250 else "voegel"))
             if index % 2 == 0:
@@ -83,6 +83,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
                 name="TEST ONLY Motiv", revision=1, stem="kat2_adapter", save_slot="kat2_adapter",
                 category_id="test-only-kat2-extra", categories_path=categories_path))
             python_phase("kat2-adapter-register", lambda: registration(exported, checkout, apply=True))
+            install_runtime_fixtures(root, project, append=True)
         else:
             fixture(project, saves, "regular" if mode in ("restart", "information") else mode)
         env = environment.copy()

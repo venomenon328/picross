@@ -60,7 +60,7 @@ func run() -> void:
 	canvas.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(canvas)
 	var board: Swatch = Swatch.new()
-	board.session = Session.new(Definition.load_fixture("f08"))
+	board.session = Session.new(Definition.load_fixture("t08"))
 	board.size = Vector2(canvas.size)
 	canvas.add_child(board)
 	var records: Array = []

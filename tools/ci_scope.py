@@ -92,7 +92,7 @@ def classify(paths: list[str], force: str = "auto") -> dict:
             if path.startswith(("game/data/", "game/fixtures/", "game/puzzles/")) or path in {
                 "game/tests/rp6_probe.gd", "game/tests/rp6_capture.gd",
                 "game/tests/rp3_probe.gd", "game/tests/rp3_capture.gd",
-            } or re.match(r"game/art/f0[4-9](?:[./_-]|$)", path):
+            }:
                 add(("production", "pilots"), path)
             if not (path.startswith("game/art/") or path in {
                 "game/ui/pencil_marks.gd", "game/tests/capture.gd",

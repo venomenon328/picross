@@ -31,7 +31,7 @@ class ProductHarnessTests(unittest.TestCase):
             (source / "game/art/content/new.png").write_bytes(b"opaque bytes")
             project = temp / "regression"
             copy_regression_game(source, project)
-            self.assertEqual(len(json.loads((project / "data/registry.json").read_text())["entries"]), 9)
+            self.assertEqual(len(json.loads((project / "data/registry.json").read_text())["entries"]), 6)
             self.assertFalse((project / "data/content").exists())
             self.assertFalse((project / "art/content").exists())
             self.assertTrue((project / "model/loader.gd").exists())
@@ -117,8 +117,8 @@ class ProductHarnessTests(unittest.TestCase):
                                 path.write_bytes(content)
 
     def test_foreign_slot_control_requires_valid_load_and_exact_semantic_failure(self):
-        valid = dict(exit_code=4, output="RP6_F01_SAVE status=loaded unknown=399\n"
-                     "ERROR: RP3_FAIL: isolated F04 preserves F01 cells after restart\n"
+        valid = dict(exit_code=4, output="RP6_T01_SAVE status=loaded unknown=399\n"
+                     "ERROR: RP3_FAIL: isolated T04 preserves T01 cells after restart\n"
                      "RP6_RESULT index=2 stage=read checks=41 failures=1\n")
         require_foreign_slot_failure(valid)
         for result in [dict(valid, exit_code=0),

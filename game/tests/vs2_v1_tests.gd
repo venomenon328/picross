@@ -115,7 +115,7 @@ func recovery_matrix() -> void:
 func glyph_probe() -> void:
 	app.queue_free()
 	await process_frame
-	var data: Dictionary = Definition.load_fixture("f02").duplicate(true)
+	var data: Dictionary = Definition.load_fixture("t02").duplicate(true)
 	data.width = 40
 	data.height = 5
 	data.solution = []
@@ -156,7 +156,7 @@ func glyph_probe() -> void:
 	# Continuous boundaries/intervals on BOTH axes of the current renderer.
 	for transpose: bool in [false,true]:
 		var board = load("res://ui/full_view_board.gd").new()
-		board.session = Session.new(Drag.fixture(Definition.load_fixture("f01"),25,true,transpose))
+		board.session = Session.new(Drag.fixture(Definition.load_fixture("t01"),25,true,transpose))
 		board.book_layout = true
 		board.size = Vector2(780,620)
 		canvas.add_child(board)

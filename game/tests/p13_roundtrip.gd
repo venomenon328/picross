@@ -30,7 +30,7 @@ func run() -> void:
 		await process_frame
 		await process_frame
 		var first_slot: Vector2 = app.board.view.cell_rect(Vector2i(10, 10)).get_center()
-		if not require(app.board.view.viewport.has_point(first_slot), "F-01 first cell visible"):
+		if not require(app.board.view.viewport.has_point(first_slot), "T-01 first cell visible"):
 			return
 		app.board.pointer_press(first_slot, MOUSE_BUTTON_LEFT)
 		app.board.pointer_release(first_slot, true)
@@ -72,7 +72,7 @@ func run() -> void:
 			else:
 				column_other=i
 				break
-	if not require(row_other>=0 and column_other>=0,"two independently overflowing F06 lines per axis"):
+	if not require(row_other>=0 and column_other>=0,"two independently overflowing T06 lines per axis"):
 		return
 	if OS.get_cmdline_user_args().has("--write"):
 		board.navigate_to(Vector2(0.55, 0.45))
@@ -122,10 +122,10 @@ func run() -> void:
 		if not require(app.sessions[0].player.cells[10 * 20 + 10] == 1 and app.sessions[1].player.cells[10 * 40 + 10] == 3, "other two slots restored independently"):
 			return
 		app.select_puzzle(0)
-		if not require(app.board.capture_view().zoom == 26 and app.board.view.cell_size <= app.board.fit_ceiling and app.board.eraser, "F-01 own zoom/tool survives fixture switch"):
+		if not require(app.board.capture_view().zoom == 26 and app.board.view.cell_size <= app.board.fit_ceiling and app.board.eraser, "T-01 own zoom/tool survives fixture switch"):
 			return
 		app.select_puzzle(1)
-		if not require(not app.board.overview and not app.board.hand and app.board.active_color == 3, "F-02 own overview/tool/color survives fixture switch"):
+		if not require(not app.board.overview and not app.board.hand and app.board.active_color == 3, "T-02 own overview/tool/color survives fixture switch"):
 			return
 		print("P1_ROUNDTRIP_READ_OK")
 		quit(0)

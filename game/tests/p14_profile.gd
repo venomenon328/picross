@@ -1,5 +1,5 @@
 extends SceneTree
-## Narrow diagnostic for the F-03 row-slot redraw regression; not an FPS claim.
+## Narrow diagnostic for the T-03 row-slot redraw regression; not an FPS claim.
 const SaveStore = preload("res://model/save_store.gd")
 const Main = preload("res://ui/main.gd")
 

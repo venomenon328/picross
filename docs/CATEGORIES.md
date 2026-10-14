@@ -20,15 +20,14 @@ Tags oder Unterkategorien. Unbekannte Formate/Felder, doppelte JSON-Schlüssel/I
 Reihenfolgen und nichtendliche Zahlen werden zurückgewiesen.
 
 `content/registry.json` verwendet `picross-content-registry-v2`. Jeder Eintrag
-besitzt genau ein `category_id`. Sichtbare und neue Einträge referenzieren eine
-vorhandene Kategorie. Nur die unsichtbaren historischen Reservierungen F03/F05/F07
-dürfen `null` führen. Alle neun historischen Einträge behalten ihre übrigen Felder
-exakt; keine Umnummerierung, Slotänderung oder neue Sichtbarkeit. Maximum bleibt
-10000 Einträge und 8 MiB Inhaltsregistry. Neue Inhalte folgen nach den neun
-Reservierungen lexikografisch nach ID.
+besitzt genau ein `category_id`, das unabhängig von Sichtbarkeit eine vorhandene
+Kategorie referenziert. Die Registry enthält ausschließlich Produktionsbindungen;
+ein leerer Bestand ist gültig. Alle Einträge stehen lexikografisch nach ID.
+Maximum: 10000 Einträge und 8 MiB Inhaltsregistry. Die aktive F01–F09-Reservierung
+ist durch [#114](https://github.com/venomenon328/picross/issues/114) aufgehoben.
+Workflow-Zuordnungen und Kategorienquelle einschließlich leerer Kategorien bleiben
+unverändert.
 
-Bestandszuordnung: F01 → `fahrzeuge-verkehr`, F02/F06 → `gebaeude-bauwerke`,
-F04 → `gemuese-pilze-kraeuter`, F08 → `blumen-pflanzen`, F09 → `voegel`.
 Der prägende Hauptgegenstand entscheidet; Nebenobjekte erzeugen keine weitere
 Zuordnung. Die Gruppen sind keine biologische Taxonomie oder Essbarkeitsaussage.
 

@@ -22,7 +22,7 @@ func run() -> void:
 	# A poisoned default/override must not be opened by the study constructor.
 	Store.test_root_override = "user://zs1-forbidden-normal"
 	DirAccess.make_dir_recursive_absolute(Store.test_root_override)
-	var sentinel: FileAccess = FileAccess.open(Store.test_root_override.path_join("f01.json"), FileAccess.WRITE)
+	var sentinel: FileAccess = FileAccess.open(Store.test_root_override.path_join("t01.json"), FileAccess.WRITE)
 	sentinel.store_string("normal-save-sentinel")
 	sentinel.close()
 	surface = SubViewport.new()
@@ -32,7 +32,7 @@ func run() -> void:
 	surface.add_child(app)
 	await process_frame
 	check(app.store.root == app.study_root and not app.store.root.contains("forbidden"), "isolation before slot load")
-	check(FileAccess.get_file_as_string(Store.test_root_override.path_join("f01.json")) == "normal-save-sentinel", "normal sentinel untouched")
+	check(FileAccess.get_file_as_string(Store.test_root_override.path_join("t01.json")) == "normal-save-sentinel", "normal sentinel untouched")
 	check(app.board.style == 2, "selected pencil is startup default")
 	check(app.board.font_choice == 2, "owner-selected Chalkboard is startup default")
 	font_probe()
@@ -56,7 +56,7 @@ func run() -> void:
 		for variant: int in [0, 2]:
 			app.board.set_style(variant)
 			check(app.board.view.viewport == rect and app.board.capture_view() == view and app.session.player.cells == before_cells, "variant same geometry/state")
-	check(FileAccess.get_file_as_string(Store.test_root_override.path_join("f01.json")) == "normal-save-sentinel", "normal sentinel still untouched")
+	check(FileAccess.get_file_as_string(Store.test_root_override.path_join("t01.json")) == "normal-save-sentinel", "normal sentinel still untouched")
 	print("ZS1_TESTS checks=", checks, " failures=", failures)
 	if failures == 0:
 		print("ZS1_TESTS_OK")
@@ -95,12 +95,12 @@ func gesture_probe() -> void:
 	mouse(a, MOUSE_BUTTON_RIGHT, false)
 	check(int(app.board.effects[0].after) == -1 and float(app.board.effects[0].seconds) == 0.12, "erase effect only neutral target")
 	var cursor: int = app.session.player.cursor
-	var bytes: String = FileAccess.get_file_as_string(app.store.path_for("f01"))
+	var bytes: String = FileAccess.get_file_as_string(app.store.path_for("t01"))
 	app.board.set_animations(false)
 	check(app.board.effects.is_empty() and not app.board.is_processing(), "disable clears and stops ticking")
 	app.board.set_animations(true)
 	check(app.board.effects.is_empty() and app.session.player.cursor == cursor, "enable no replay/history")
-	check(FileAccess.get_file_as_string(app.store.path_for("f01")) == bytes, "toggle does not save")
+	check(FileAccess.get_file_as_string(app.store.path_for("t01")) == bytes, "toggle does not save")
 	# Unknown start protects the existing fills in the middle of a long stroke.
 	mouse(a, MOUSE_BUTTON_RIGHT, true)
 	motion(b)
@@ -185,7 +185,7 @@ func font_probe() -> void:
 		app.board.set_clue_step("column", 22 if index > 0 else 2, 3)
 		app.session.player.commit([{"index": 0, "before": app.session.player.cells[0], "after": 1 if app.session.player.cells[0] != 1 else 0}])
 		app._save_current()
-		var save_path: String = app.store.path_for("f%02d" % (index + 1))
+		var save_path: String = app.store.path_for("t%02d" % (index + 1))
 		check(FileAccess.file_exists(save_path), "font switch has a real saved nonempty history")
 		var before: Dictionary = app.board.capture_view()
 		var cells: Array[int] = app.session.player.cells.duplicate()

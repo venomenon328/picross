@@ -170,7 +170,7 @@ func run() -> void:
 		click(app.choices[0])
 		await frames()
 		click(app.redo_button)
-		check(app.session.definition.id == "F-02" and app.session.player.cells[0] == 1, "pointer resumes restored redo history")
+		check(app.session.definition.id == "T-02" and app.session.player.cells[0] == 1, "pointer resumes restored redo history")
 	else:
 		await regular()
 	if mode == "information":
@@ -231,16 +231,16 @@ func information_profile(base: String, state: String) -> void:
 		app = null
 	Store.test_root_override = base.path_join(state)
 	DirAccess.make_dir_recursive_absolute(Store.test_root_override)
-	var valid: PackedByteArray = FileAccess.get_file_as_bytes("res://tests/fixtures/kat1/f01.json")
+	var valid: PackedByteArray = FileAccess.get_file_as_bytes("res://tests/fixtures/runtime/t01.json")
 	for suffix: String in [".json", ".bak"]:
 		if state == "recovered_missing" and suffix == ".json": continue
-		var file: FileAccess = FileAccess.open(Store.test_root_override.path_join("f01" + suffix), FileAccess.WRITE)
+		var file: FileAccess = FileAccess.open(Store.test_root_override.path_join("t01" + suffix), FileAccess.WRITE)
 		var damaged: bool = state == "error" or (state == "recovered" and suffix == ".json") or (state == "backup_invalid" and suffix == ".bak")
 		file.store_buffer(("{TEST ONLY damaged " + suffix).to_utf8_buffer() if damaged else valid)
 		file.close()
 	# A separate valid slot makes unintended writes/rotation observable too.
-	var foreign: FileAccess = FileAccess.open(Store.test_root_override.path_join("f02.json"), FileAccess.WRITE)
-	foreign.store_buffer(FileAccess.get_file_as_bytes("res://tests/fixtures/kat1/f02.json"))
+	var foreign: FileAccess = FileAccess.open(Store.test_root_override.path_join("t02.json"), FileAccess.WRITE)
+	foreign.store_buffer(FileAccess.get_file_as_bytes("res://tests/fixtures/runtime/t02.json"))
 	foreign.close()
 	await new_app()
 
@@ -249,7 +249,7 @@ func information_saves() -> void:
 	for state: String in ["error", "recovered", "recovered_missing", "backup_invalid"]:
 		await information_profile(base, state)
 		var expected: String = "recovered" if state == "recovered_missing" else state
-		check(app.slot_status[0] == expected, state + ": isolated F01 state loaded")
+		check(app.slot_status[0] == expected, state + ": isolated T01 state loaded")
 		var original: Dictionary = save_bytes()
 		var history: Array = app.session.player.history.duplicate(true)
 		await choose("fahrzeuge-verkehr")
@@ -270,9 +270,9 @@ func information_saves() -> void:
 		check(app.album.visible and app.album.category_id == "fahrzeuge-verkehr", state + ": return preserves catalog selection and reset access")
 		check(save_bytes() == original and app.session.player.history == history, state + ": information navigation preserves all slot bytes and history")
 		if not app.album.visible: continue # Keep the original failure evidence; next case has its own profile.
-		var foreign: Dictionary = save_bytes("f01")
+		var foreign: Dictionary = save_bytes("t01")
 		var dialog: ConfirmationDialog = app.reset_dialog if state == "error" else app.repair_dialog
-		var action: Button = app.album.reset_buttons["F-01"] if state == "error" else app.album.repair_buttons["F-01"]
+		var action: Button = app.album.reset_buttons["T-01"] if state == "error" else app.album.repair_buttons["T-01"]
 		click(action)
 		await frames()
 		check(dialog.visible and save_bytes() == original, state + ": repair/reset requires confirmation")
@@ -288,15 +288,15 @@ func information_saves() -> void:
 			check(app.work.visible, state + ": unsaved recovery edit blocks leaving work")
 			click(app.work_repair_button)
 		else:
-			click(app.album.reset_buttons["F-01"])
+			click(app.album.reset_buttons["T-01"])
 		await frames()
 		click(dialog.get_ok_button())
 		await frames()
 		check(app.album.visible and app.slot_status[0] in ["fresh", "loaded"], state + ": explicit confirmation restores navigation")
-		check(save_bytes("f01") == foreign, state + ": explicit action preserves foreign slots")
+		check(save_bytes("t01") == foreign, state + ": explicit action preserves foreign slots")
 		if state != "error":
 			var loaded: Dictionary = app.store.load_slot(app.sessions[0].definition)
-			check(loaded.status == "loaded" and int(loaded.data.cells[2]) == 1 and FileAccess.file_exists(app.store.path_for("f01", ".bak")), state + ": confirmation persists actual work and valid backup")
+			check(loaded.status == "loaded" and int(loaded.data.cells[2]) == 1 and FileAccess.file_exists(app.store.path_for("t01", ".bak")), state + ": confirmation persists actual work and valid backup")
 	# Real unsaved work: both immediate cell save and debounced work-origin view.
 	await information_profile(base, "dirty")
 	click(app.choices[0])
@@ -306,10 +306,10 @@ func information_saves() -> void:
 	check(app.session.player.cells[2] == 1 and not app.slot_errors[0].is_empty(), "dirty: actual pointer edit remains unsaved on write failure")
 	click(app.actions["menu"])
 	click(app.album_button)
-	app.select_by_id("F-02")
+	app.select_by_id("T-02")
 	app.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
 	await frames()
-	check(app.work.visible and app.session.definition.id == "F-01" and app.status_label.visible, "dirty: failed flush blocks info, catalog, slot switch and WM close")
+	check(app.work.visible and app.session.definition.id == "T-01" and app.status_label.visible, "dirty: failed flush blocks info, catalog, slot switch and WM close")
 	app.store.fail_step = ""
 	click(app.actions["menu"])
 	await frames()
@@ -330,7 +330,7 @@ func information_saves() -> void:
 	# A fresh damaged profile tests the real Beenden path at the end of run().
 	await information_profile(base, "error-quit")
 	for suffix: String in [".json", ".bak"]:
-		var file: FileAccess = FileAccess.open(app.store.path_for("f01", suffix), FileAccess.WRITE)
+		var file: FileAccess = FileAccess.open(app.store.path_for("t01", suffix), FileAccess.WRITE)
 		file.store_string("{TEST ONLY damaged quit")
 		file.close()
 	await new_app()
@@ -341,8 +341,8 @@ func information_saves() -> void:
 	check(app.slot_status[0] == "error" and app.slot_errors[0].is_empty(), "quit: damaged slot remains untouched before regular Beenden")
 
 func regular() -> void:
-	check(app.album.category_choice.item_count == 21 and app.sessions.size() == 6, "six regular puzzles and all twenty categories")
-	check(app.album.visible_ids == ["F-01", "F-02", "F-04", "F-06", "F-08", "F-09"], "canonical order without retired slots")
+	check(app.album.category_choice.item_count == 21 and app.sessions.size() == 6, "six technical puzzles and all twenty categories")
+	check(app.album.visible_ids == ["T-01", "T-02", "T-04", "T-06", "T-08", "T-09"], "fixed technical catalog order")
 	await choose(str(app.album.categories[-1].id))
 	await choose("")
 	for spec: Array in [[1920,1080,1.0], [1920,1080,1.25], [1280,720,1.25], [2560,1440,1.0]]:
@@ -374,10 +374,10 @@ func regular() -> void:
 	var original: Dictionary = save_bytes()
 	await choose("voegel")
 	check(save_bytes() == original, "category change writes no save")
-	check(app.album.visible_ids == ["F-09"] and app.choices[0].text.begins_with("Blatt 09"), "filtered zero is global five and keeps number")
+	check(app.album.visible_ids == ["T-09"] and app.choices[0].text.begins_with("Blatt 06"), "filtered zero is global five and keeps number")
 	click(app.choices[0])
 	await frames()
-	check(app.session.definition.id == "F-09" and app.work.visible, "pointer opens stable filtered ID")
+	check(app.session.definition.id == "T-09" and app.work.visible, "pointer opens stable filtered ID")
 	var point: Vector2 = app.board.global_position + app.board.view.cell_rect(Vector2i.ZERO).get_center()
 	click_at(point)
 	click(app.undo_button)
@@ -399,13 +399,13 @@ func regular() -> void:
 	await frames()
 	check(app.album.visible and app.album.previews[0].cells[0] == 1, "retry returns own uncorrected progress")
 	await shot("begun")
-	var foreign: Dictionary = save_bytes("f09")
-	click(app.album.reset_buttons["F-09"])
+	var foreign: Dictionary = save_bytes("t09")
+	click(app.album.reset_buttons["T-09"])
 	await frames()
-	check(app.reset_id == "F-09" and app.reset_dialog.visible, "reset confirmation bound to filtered ID")
+	check(app.reset_id == "T-09" and app.reset_dialog.visible, "reset confirmation bound to filtered ID")
 	click(app.reset_dialog.get_ok_button())
 	await frames()
-	check(app.album.notes[0].text == "Neu" and save_bytes("f09") == foreign, "confirmed reset affects only target bytes")
+	check(app.album.notes[0].text == "Neu" and save_bytes("t09") == foreign, "confirmed reset affects only target bytes")
 	# Earned state and corrupted/recovered saves are loaded by fresh scene instances.
 	var target: Session = app.sessions[5]
 	var changes: Array[Dictionary] = []
@@ -417,12 +417,12 @@ func regular() -> void:
 	check(app.store.write_slot(target, target.view_state).is_empty(), "valid earned save written")
 	await new_app()
 	await choose("voegel")
-	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].text == "Eule", "validated solved card/name/count after restart")
+	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
 	check(app.album.reveals[0].artwork != null, "earned image loaded only for visible card")
 	await shot("solved")
-	var path: String = app.store.path_for("f09")
+	var path: String = app.store.path_for("t09")
 	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
-	var backup: FileAccess = FileAccess.open(app.store.path_for("f09", ".bak"), FileAccess.WRITE)
+	var backup: FileAccess = FileAccess.open(app.store.path_for("t09", ".bak"), FileAccess.WRITE)
 	backup.store_buffer(bytes)
 	backup.close()
 	var broken: FileAccess = FileAccess.open(path, FileAccess.WRITE)
@@ -430,33 +430,33 @@ func regular() -> void:
 	broken.close()
 	await new_app()
 	await choose("voegel")
-	check(app.album.notes[0].text.contains("Backup geladen") and app.album.repair_buttons.has("F-09"), "validated backup marked with repair")
-	foreign = save_bytes("f09")
-	click(app.album.repair_buttons["F-09"])
+	check(app.album.notes[0].text.contains("Backup geladen") and app.album.repair_buttons.has("T-09"), "validated backup marked with repair")
+	foreign = save_bytes("t09")
+	click(app.album.repair_buttons["T-09"])
 	await frames()
 	click(app.repair_dialog.get_ok_button())
 	await frames()
 	check(app.store.load_slot(app.sessions[5].definition).status == "loaded", "card repair targets recovered slot")
-	check(save_bytes("f09") == foreign, "card repair preserves foreign slot bytes")
-	broken = FileAccess.open(app.store.path_for("f09", ".bak"), FileAccess.WRITE)
+	check(save_bytes("t09") == foreign, "card repair preserves foreign slot bytes")
+	broken = FileAccess.open(app.store.path_for("t09", ".bak"), FileAccess.WRITE)
 	broken.store_string("{bad")
 	broken.close()
 	await new_app()
 	await choose("voegel")
-	check(app.session.definition.id == "F-01" and app.slot_status[5] == "backup_invalid", "nonactive filtered slot has damaged backup")
-	click(app.album.repair_buttons["F-09"])
+	check(app.session.definition.id == "T-01" and app.slot_status[5] == "backup_invalid", "nonactive filtered slot has damaged backup")
+	click(app.album.repair_buttons["T-09"])
 	await frames()
 	click(app.repair_dialog.get_ok_button())
 	await frames()
-	check(app.store.load_slot(app.sessions[5].definition).status == "loaded" and FileAccess.file_exists(app.store.path_for("f09", ".bak")), "foreign card renewal actually creates a valid backup")
-	check(save_bytes("f09") == foreign, "foreign backup renewal leaves active slot bytes unchanged")
-	click(app.album.reset_buttons["F-09"])
+	check(app.store.load_slot(app.sessions[5].definition).status == "loaded" and FileAccess.file_exists(app.store.path_for("t09", ".bak")), "foreign card renewal actually creates a valid backup")
+	check(save_bytes("t09") == foreign, "foreign backup renewal leaves active slot bytes unchanged")
+	click(app.album.reset_buttons["T-09"])
 	await frames()
 	click(app.reset_dialog.get_ok_button())
 	await frames()
 	check(app.album.notes[0].text == "Neu" and app.album.summary.text == "0 von 1 gelöst", "reset of earned slot clears validated completion count")
 	for suffix: String in [".json", ".bak"]:
-		broken = FileAccess.open(app.store.path_for("f09", suffix), FileAccess.WRITE)
+		broken = FileAccess.open(app.store.path_for("t09", suffix), FileAccess.WRITE)
 		broken.store_string("{bad")
 		broken.close()
 	await new_app()
@@ -465,7 +465,7 @@ func regular() -> void:
 	await shot("invalid-save")
 	# Leave independently validated solved and redo-only slots for another process.
 	for suffix: String in [".json", ".bak"]:
-		var restored: FileAccess = FileAccess.open(app.store.path_for("f09", suffix), FileAccess.WRITE)
+		var restored: FileAccess = FileAccess.open(app.store.path_for("t09", suffix), FileAccess.WRITE)
 		restored.store_buffer(bytes)
 		restored.close()
 	await choose("gebaeude-bauwerke")

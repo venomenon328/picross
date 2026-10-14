@@ -1,5 +1,9 @@
 # F-02 / F-03 · Herkunft und Nachweis
 
+**Archivierung #114:** Definitionen, Bilder und Proofdateien dieses historischen
+Spielerbestands sind am [gebundenen Quellstand](https://github.com/venomenon328/picross/tree/a401b73f2f0bb42bf93589fcf0bc382010616d3c/game)
+nachvollziehbar; sie gehören nicht mehr zum regulären Spielerexport.
+
 **Historischer Rätselnachweis:** Die rätselspezifischen Unit-Tests wurden am
 12.10.2026 entfernt. Das Zertifikat bleibt erhalten; keine Wiederholung in CI.
 Aktuelle [Prüfzuordnung](../docs/CI_POLICY.md). Die folgenden alten Testbefehle

@@ -447,7 +447,8 @@ Referenzen, RP-3-Demo, RP-4-Replay und Windowsregression bleiben aktiv.
 `python -m tools.puzzle_production.rp6 --output-dir artifacts/rp6-replay`
 prüft den vorab gebundenen Plan, vollständiges Manifest, tatsächliche native
 Bilddateien/Rahmenanpassung und alle sechs historischen Manifestbindungen.
-F04/F06/F08/F09 werden frisch gegen die registrierten `game/`-Dateien exportiert;
+Historische Reproduktion erfordert den im Archiv gebundenen Altcheckout:
+F04/F06/F08/F09 wurden gegen dessen `game/`-Dateien exportiert;
 F05/F07 bleiben historische Inputs, ohne erneuten übergroßen Spielerexport. Neues Ausgabeziel verwenden; keine Baseline überschreiben. Gleiche
 isolierte Python-3.11+-Umgebung mit Pillow exakt 12.3.0.
 

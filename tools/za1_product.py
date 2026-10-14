@@ -19,11 +19,13 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
     from tools.puzzle_production.za1_fixtures import replay, isolated_checkout
     from tools.puzzle_production.content_registry import check_checkout
     checkout = workspace / "za1-checkout"
-    from product_fixtures import copy_regression_game
+    from product_fixtures import copy_regression_game, install_runtime_fixtures
     copy_regression_game(root, checkout / "game")
     isolated_checkout(checkout)
     python_phase("za1-test-only-registration", lambda: replay(workspace / "za1-replay", checkout))
     project = checkout / "game"
+    check_checkout(checkout)
+    install_runtime_fixtures(root, project, append=True)
     directory = output / "za1"
     directory.mkdir()
     saves = workspace / "za1-saves"
@@ -45,7 +47,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
         env["ZA1_ID"] = key
         stages = ("partial","finish","read","oldreset","reset") if key.endswith("color") else ("partial","finish","read","reset")
         for stage in stages:
-            changed_slot = "f01" if stage == "oldreset" else "slot_"+key
+            changed_slot = "t01" if stage == "oldreset" else "slot_"+key
             before = {p.name:toolchain.sha256_file(p) for p in saves.glob("*")
                       if p.is_file() and not p.name.startswith(changed_slot+".")}
             env["ZA1_STAGE"] = stage
@@ -59,7 +61,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
     build.mkdir(parents=True)
     phase("za1-windows-export",[engine,"--headless","--path",str(project),"--export-debug","P1 Windows x86_64",str(build/"picross-p1.exe")],phase_env=env)
     pack = audit_pack(root,engine,build/"picross-p1.exe",env,phase,
-                      sum(e["visible"] for e in check_checkout(checkout)["entries"]),"za1-pck-resources")
+                      sum(e["visible"] for e in json.loads((project / "data/registry.json").read_text(encoding="utf-8"))["entries"]),"za1-pck-resources")
     if host == "Windows":
         phase("za1-windows-exported-start",[str(build/"picross-p1.console.exe"),"--headless","--","--p1-smoke"],"P1_START_OK",phase_env=env)
     summary = {"format":"picross-za1-product-v1","test_only":True,"registered":4,"regular_processes":10,

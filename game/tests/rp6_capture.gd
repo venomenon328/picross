@@ -13,7 +13,7 @@ func check(condition: bool, description: String) -> void:
 		pending_failures.append(description)
 
 func write_report() -> void:
-	var report: FileAccess = FileAccess.open(output.path_join("rp6-f%02d-renders.json" % [int(app.session.definition.id.trim_prefix("F-"))]),FileAccess.WRITE)
+	var report: FileAccess = FileAccess.open(output.path_join("rp6-t%02d-renders.json" % [int(app.session.definition.id.trim_prefix("T-"))]),FileAccess.WRITE)
 	if report == null:
 		check(false, "RP6 render report could not be written")
 		quit(4)
@@ -26,7 +26,7 @@ func shot(name: String) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = surface.get_texture().get_image()
-	var filename: String = "rp6-f%02d-%s.png" % [int(app.session.definition.id.trim_prefix("F-")), name]
+	var filename: String = "rp6-t%02d-%s.png" % [int(app.session.definition.id.trim_prefix("T-")), name]
 	check(image.save_png(output.path_join(filename)) == OK, "native render " + filename)
 	captures.append({"file":filename,"size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,
 		"completed":app.session.completed,"reveal":app.session.reveal(),

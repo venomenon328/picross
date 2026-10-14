@@ -18,7 +18,7 @@ static func run(t: SceneTree) -> void:
 		for spec: Array in cases:
 			var b: Board = Board.new()
 			b.size = Vector2(1100, 700)
-			b.session = Session.new(Definition.load_fixture("f02"))
+			b.session = Session.new(Definition.load_fixture("t02"))
 			t.root.add_child(b)
 			await t.process_frame
 			b.view.center = Vector2(8, 8)
@@ -64,7 +64,7 @@ static func run(t: SceneTree) -> void:
 	legacy_replay(t)
 
 static func legacy_replay(t: SceneTree) -> void:
-	var s: Session = Session.new(Definition.load_fixture("f02"))
+	var s: Session = Session.new(Definition.load_fixture("t02"))
 	s.player.commit([{"index": 1, "before": -1, "after": 0}])
 	# Pre-GP gesture: started on unknown and converted the adjacent X as well.
 	s.player.commit([{"index": 0, "before": -1, "after": 4}, {"index": 1, "before": 0, "after": 4}])
@@ -79,7 +79,7 @@ static func legacy_replay(t: SceneTree) -> void:
 	t.check(restored.player.cells == s.player.cells, "GP48 legacy action redo replays original conversion, not new gesture rules")
 
 static func status_events(t: SceneTree) -> void:
-	var data: Dictionary = Definition.load_f01()
+	var data: Dictionary = Definition.load_fixture("t01")
 	data.rows[3] = H1.clues([3])
 	data.columns[3] = H1.clues([3])
 	var b: Board = Board.new()

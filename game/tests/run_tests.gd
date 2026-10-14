@@ -32,7 +32,7 @@ func run() -> void:
 		temporary = "/tmp"
 	SaveStore.test_root_override = temporary.path_join("picross-p1-tests-%d" % Time.get_ticks_usec())
 	root.size = Vector2i(1280, 720)
-	fixture = Definition.load_f01()
+	fixture = Definition.load_fixture("t01")
 	print("PHASE kat1")
 	preload("res://tests/kat1_cases.gd").run(self)
 	preload("res://tests/kat2_cases.gd").run(self)
@@ -77,9 +77,9 @@ func finish() -> void:
 	quit(0 if failures == 0 else 23)
 
 func test_definition() -> void:
-	check(Definition.validate(fixture).is_empty(), "F-01 validates")
-	check(Definition.catalog_ids().slice(0,6)==["f01","f02","f04","f06","f08","f09"],"historical catalog prefix excludes retired oversized sheets")
-	var largest: Dictionary = Definition.load_fixture("f06")
+	check(Definition.validate(fixture).is_empty(), "T-01 validates")
+	check(Definition.catalog_ids().slice(0,6)==["t01","t02","t04","t06","t08","t09"],"fixed synthetic catalog order")
+	var largest: Dictionary = Definition.load_fixture("t06")
 	check(largest.width==50 and largest.height==50 and Definition.validate(largest).is_empty(),"50x50 boundary remains playable")
 	for axis: String in ["width","height"]:
 		var oversized: Dictionary = largest.duplicate(true)
@@ -117,13 +117,13 @@ func test_definition() -> void:
 	broken = fixture.duplicate(true)
 	broken.palette.append(broken.palette[0].duplicate())
 	check(not Definition.validate(broken).is_empty(), "duplicate color IDs")
-	# A fully valid tiny colored definition exercises the validator, not F-02 UX.
+	# A fully valid tiny colored definition exercises the validator, not T-02 UX.
 	var colored: Dictionary = {"schema": 2, "id": "test", "revision": 1, "width": 4, "height": 1,
 		"palette": [{"id": 1, "color": "#123456", "symbol": "A"}, {"id": 2, "color": "#abcdef", "symbol": "B"}],
 		"solution": [[1, 2, 0, 2]], "rows": [[{"length": 1, "color": 1}, {"length": 1, "color": 2}, {"length": 1, "color": 2}]],
 		"columns": [[{"length": 1, "color": 1}], [{"length": 1, "color": 2}], [], [{"length": 1, "color": 2}]],
-		"reveal": {"version": 1, "definition_id": "test", "name": "test", "image": "res://art/f01.svg"}}
-	check(Definition.validate(colored,{"test":"res://art/f01.svg"}).is_empty(), "valid color boundary definition")
+		"reveal": {"version": 1, "definition_id": "test", "name": "test", "image": "res://art/fixtures/t01.svg"}}
+	check(Definition.validate(colored,{"test":"res://art/fixtures/t01.svg"}).is_empty(), "valid color boundary definition")
 	colored.rows[0] = [{"length": 1, "color": 1}, {"length": 2, "color": 2}]
 	check(not Definition.validate(colored).is_empty(), "same-color separated clues cannot merge")
 
@@ -246,8 +246,8 @@ func test_scene() -> void:
 	await process_frame
 	await process_frame
 	check(app.album.visible and not app.work.visible and app.reveal_view.payload.is_empty(), "scene starts in neutral album")
-	var expected_catalog: Array[String] = ["F-01", "F-02", "F-04", "F-06", "F-08", "F-09"]
-	check(app.sessions.size() == expected_catalog.size() and app.choices.size() == expected_catalog.size(), "album offers exactly six approved sheets")
+	var expected_catalog: Array[String] = ["T-01", "T-02", "T-04", "T-06", "T-08", "T-09"]
+	check(app.sessions.size() == expected_catalog.size() and app.choices.size() == expected_catalog.size(), "album offers exactly six technical sheets")
 	var catalog_heading: Label = app.album.summary
 	check(catalog_heading != null and catalog_heading.text == "0 von 6 gelöst", "album heading reflects the current catalog")
 	for i: int in range(mini(app.sessions.size(), expected_catalog.size())):
@@ -257,7 +257,7 @@ func test_scene() -> void:
 		if definition.get("stress", false): expected_title += " · UI-Test"
 		check(app.choices[i].text == expected_title, "album label uses semantic stress flag for " + str(definition.id))
 	if app.sessions.size() >= 3:
-		check(app.sessions[2].definition.id == "F-04" and not app.choices[2].text.contains("UI-Test"), "retired F03 test label does not follow the third slot")
+		check(app.sessions[2].definition.id == "T-04" and app.choices[2].text.contains("Blatt"), "synthetic third sheet has a neutral title")
 	app.open_puzzle()
 	await process_frame
 	var board: Control = app.board
@@ -311,7 +311,7 @@ func test_scene() -> void:
 	check(app.choices[0].text.contains(fixture.reveal.name), "completed album entry")
 	check(app.album_reveals[0].visible and not app.album_previews[0].visible and app.album_reveals[0].payload == fixture.reveal, "completed album has colored earned image")
 	if app.sessions.size() >= 3:
-		check(app.choices[2].text == app.sessions[2].album_title(), "album refresh does not restore obsolete F03 UI-test suffix on F04")
+		check(app.choices[2].text == app.sessions[2].album_title(), "album refresh preserves the session title")
 	app.queue_free()
 	await process_frame
 

@@ -211,7 +211,7 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     runtime_resources = perf_b_resources.verify_runtime(ROOT)
     if runtime_resources != review_report["perf_b_resources"]:
         raise ValueError("Delivered current resource binding differs")
-    matrix=json.loads((review/"selected/vs2-renders/vs2-matrix.json").read_text(encoding="utf-8"))
+    matrix=vs2_delivery.read_geometry_report(review/"selected/vs2-renders/vs2-matrix.json")
     vs2_delivery.verify_records(matrix)
     if review_report["visual"]["vs2"]["v2"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v2-plan.json"):
         raise ValueError("Delivered V2 plan identity differs")

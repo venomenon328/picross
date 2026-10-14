@@ -34,13 +34,13 @@ func run() -> void:
 	fresh()
 	mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
 	mouse(point(0, 0), MOUSE_BUTTON_LEFT, false)
-	var bytes: String = FileAccess.get_file_as_string(app.store.path_for("f01"))
+	var bytes: String = FileAccess.get_file_as_string(app.store.path_for("t01"))
 	var state: Dictionary = app.board.capture_view()
 	var history: Array = app.session.player.history.duplicate(true)
 	app.animation_toggle.button_pressed = false
 	check(app.board.effects.is_empty() and not app.board.animations, "checkbox ends active effects")
 	check(app.board.capture_view() == state and app.session.player.history == history, "checkbox preserves view/history")
-	check(FileAccess.get_file_as_string(app.store.path_for("f01")) == bytes, "checkbox preserves save bytes")
+	check(FileAccess.get_file_as_string(app.store.path_for("t01")) == bytes, "checkbox preserves save bytes")
 	for index: int in range(app.sessions.size()):
 		app.select_puzzle(index)
 		app.show_information()

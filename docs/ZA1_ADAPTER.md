@@ -131,12 +131,14 @@ werden frisch geprüft und erst dann veröffentlicht. Bestehende Ziele sind Fehl
 [content/registry.json](../content/registry.json) ist autoritativ;
 [game/data/registry.json](../game/data/registry.json) ihre exakt kanonisch geprüfte
 Runtime-Projektion ohne Produktionsmetadaten, beide jetzt versioniert als v2.
-Kategorien/Zuordnung folgen [KAT-1](CATEGORIES.md); alle bisherigen Slots bleiben. F01…F09 bleiben reserviert, nur
-F01/F02/F04/F06/F08/F09 sichtbar. Neue IDs folgen lexikografisch. Unbekannte IDs
+Kategorien/Zuordnung folgen [KAT-1](CATEGORIES.md). Alle Produktions-IDs folgen
+lexikografisch, ohne reservierten Präfixbestand; auch null Einträge sind gültig.
+Die früheren F01…F09-Reservierungen sind durch #114 aufgehoben. Unbekannte IDs
 und Großschreibungsaliase haben keinen Loader-/Savepfad. Hauptszene, Loader,
 SaveStore und Reset verwenden dieselbe Zuordnung. Neue ungelöste Titel:
-`Blatt NN · W × H`. Appidentität, Save-Schema 1, historische Dateinamen,
-Revisionen und Recoveryregeln bleiben erhalten; keine Save-Migration.
+`Blatt NN · W × H`. Appidentität, Save-Schema 1, registrierte Slots,
+Revisionen und Recoveryregeln bleiben erhalten; keine Save-Migration. Verwaiste
+Savedateien bleiben unberührt und erzeugen keine Katalogeinträge.
 
 Der Produktionsindex führt Paketort/-hash, Revision, Maße, Modus, Schwierigkeit
 samt Unsicherheit, Status und Blocker. Runtime lädt nur mitgelieferte Pfade.
