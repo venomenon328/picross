@@ -1,0 +1,74 @@
+{
+  "bindings": {
+    "certificate-bundle/manifest.json": "1e8d2bc1e5b005fd4043ba35564988e9146e2932ee911179348d0ca1e50d00f9",
+    "corrected-raster-source.png": "1bef404662889a83c2dea8a33031f50bd1ab8029db10e5b1279f1361e139aa5d",
+    "fixed-derivation.json": "eea69c7bf6375664f6416e5d2e60c906dd7726811252212932bf0c7c3803ba70",
+    "fixed-plan.json": "8601474a5945db8b379f6a5f7b06b3697c8ad9a9364491124201c407f5130e72",
+    "fresh-verification.json": "97c84305985e540951736157696e090d7a0774facd579a68c322e6ef07217620",
+    "motifs/MA-r02.png": "22c4f25bf8332dd950f5944cffb0a2b739569a7e5739a36754404e0bba1849a5",
+    "reference-36x48-medium/manifest.json": "192704cb631160a87cb897caad9e13a401db6cec30bc276adaffe289f8e9f821",
+    "reveals/A-r02.png": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1"
+  },
+  "chain": [
+    "request.json",
+    "reveal-approval.json",
+    "reveals/A-r02.png",
+    "motif-derivation.json",
+    "motif-approval.json",
+    "motifs/MA-r02.png",
+    "reference-36x48-medium/manifest.json",
+    "fixed-plan.json",
+    "fixed-derivation.json",
+    "corrected-raster-source.png",
+    "certificate-bundle/manifest.json"
+  ],
+  "clues_reconstructed": true,
+  "exact_pixel_source_reconstructed": true,
+  "final_certificate": {
+    "certified": true,
+    "line_evaluations": 242,
+    "logic_hash": "fc71dc5aad9029c3de23fc5bcd370b96a5472deed85dac9f13cfe405d0504cad",
+    "profile": {
+      "deduction": "all-line-supported-values",
+      "id": "full-line-color",
+      "search": false,
+      "start": "unknown",
+      "version": 1
+    },
+    "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+    "proof_verified": true,
+    "status": "solved",
+    "steps": 158
+  },
+  "final_domains_equal_matrix": true,
+  "final_matrix_hash": "526bad4f65909b80c767623818f96744a78c677f27b3b8728420cf3a7de04d86",
+  "fixed_edits_replayed": 79,
+  "format": "picross-fixed-color-origin-verification-v1",
+  "fresh_separate_verifier": "fresh-verification.json",
+  "matrix_equal_to_fixed_replay": true,
+  "original_motif_byte_equal": true,
+  "passed": true,
+  "protected_cells_unchanged": true,
+  "reference_certificate": {
+    "certified": true,
+    "line_evaluations": 241,
+    "logic_hash": "24b83fbc8e422b9c00bca27abe65e74bb217e37c7c90f49ef99a55b30d5ca294",
+    "profile": {
+      "deduction": "all-line-supported-values",
+      "id": "full-line-color",
+      "search": false,
+      "start": "unknown",
+      "version": 1
+    },
+    "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+    "proof_verified": true,
+    "status": "solved",
+    "steps": 157
+  },
+  "reference_import_reconstructed": true,
+  "reference_matrix_hash": "0af97711031db63db6e0867967f1498714a035c160f3c83b01ea30780d0aad74",
+  "shirt_rows_27_to_48_unchanged": true,
+  "silhouette_unchanged": true,
+  "source_semantics": "The certificate-bundle original is the manually edited exact-cell raster, not MA-r02. The complete original MA-r02 import remains in reference-36x48-medium.",
+  "tool_commit": "bdb2054eb2d05501b4d83635afbaf3e46b414778"
+}

@@ -1,0 +1,4 @@
+Direkte motivbezogene Rasterkorrektur gemäß Nutzerauftrag; MA-r02 unverändert. Augen, Gesichtslinien und heller Schnurrbart korrigiert; Hemd und Silhouette exakt geschützt. Keine automatische Reparatursuche.
+
+Working mode: faithful
+Motif and gameplay review: open
