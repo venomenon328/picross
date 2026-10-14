@@ -181,7 +181,7 @@ func font_metrics() -> Dictionary:
 		width = maxf(width, axis_width)
 	var extents: Vector2 = Vector2.ZERO if baseline else board.clue_vertical_extents(fs)
 	if not baseline and variant > 0:
-		# Advance includes glyph side bearings. T07's widest 12px column token
+		# Advance includes glyph side bearings. The widest historical 12px column token
 		# exactly fills the 12px column advance; no invented extra 1px gap.
 		if board.has_method("set_mode"):
 			check(axis_widths[0] <= rows,"regular horizontal token pitch retained")

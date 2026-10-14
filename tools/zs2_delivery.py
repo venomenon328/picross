@@ -14,7 +14,7 @@ import p1_preflight as toolchain
 import zs1_delivery
 import zs_hatching
 
-BASE = "985ct08e0cd7dda4186c3dd42b5eccbba1b80e3f"
+BASE = "985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f"
 FONT_SHA256 = "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d"
 
 
@@ -121,7 +121,7 @@ def verify(renders: Path) -> dict:
                 raise toolchain.PreflightError("ZS2 regular rendering was not integrated")
         pairs.append({"case": new["case"], "before": old["file"], "study": chosen["file"], "after": new["file"]})
     current = reports["after"]
-    if len(current["frames"]) != 1 or {m["fixture"] for m in current["measurements"]} != {"T-03", "T-07"}:
+    if len(current["frames"]) != 1 or {m["fixture"] for m in current["measurements"]} != {"F-03", "F-07"}:
         raise toolchain.PreflightError("Missing ZS2 motion/large color load")
     for motion in current["frames"]:
         if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"] < 210):
@@ -338,7 +338,7 @@ def verify_full_view(renders, reports):
             if not (renders/record["file"]).is_file(): raise toolchain.PreflightError("Missing ZS2 native image")
         pairs.append({"case":new["case"],"before":old["file"],"study":chosen["file"],"after":new["file"],"geometry_change":"VS2 regular full-view; no whole-screen pixel identity claimed"})
     current=reports["after"]
-    if len(current["frames"])!=1 or {m["fixture"] for m in current["measurements"]}!={"T-03","T-07"}:
+    if len(current["frames"])!=1 or {m["fixture"] for m in current["measurements"]}!={"F-03","F-07"}:
         raise toolchain.PreflightError("Missing current ZS2 motion/load evidence")
     for motion in current["frames"]:
         if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"]<210):

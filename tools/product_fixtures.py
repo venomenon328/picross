@@ -20,6 +20,7 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
     colors = ["#343f42", "#edca78", "#bd604a", "#6c9aab"]
     for entry in catalog["entries"]:
         number = int(entry["id"][2:])
+        palette_colors = ["#253342", "#637b58", "#c89d56", "#b55848"] if number == 6 else colors
         size = 20 if number in (1, 4) else 50 if number == 6 else 40
         count = 1 if number in (1, 4) else 4
         block = 4 if number == 6 else 3
@@ -57,7 +58,7 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
             return result
         definition = dict(schema=2, id=entry["id"], revision=2, width=size, height=size,
                           test_only=True, palette=[dict(id=i+1, color=color, symbol=chr(65+i))
-                                                   for i, color in enumerate(colors[:count])],
+                                                   for i, color in enumerate(palette_colors[:count])],
                           solution=matrix, rows=[hints(row) for row in matrix],
                           columns=[hints(column) for column in zip(*matrix)],
                           reveal=dict(version=1, definition_id=entry["id"],
