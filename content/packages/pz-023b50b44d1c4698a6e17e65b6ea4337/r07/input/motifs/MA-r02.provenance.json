@@ -1,0 +1,12 @@
+{
+  "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+  "derived_from": {
+    "file": "reveals/A-r02.png",
+    "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1"
+  },
+  "file": "motifs/MA-r02.png",
+  "prompt_file": "motif-prompt.txt",
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "sha256": "22c4f25bf8332dd950f5944cffb0a2b739569a7e5739a36754404e0bba1849a5",
+  "usage_basis": "Native KI-Ableitung des eigenen freigegebenen A-r02 im beauftragten Picross-Workflow; keine Fremdassets."
+}

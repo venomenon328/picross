@@ -1,0 +1,487 @@
+{
+  "actual_changed_positions": 79,
+  "edits": [
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 16,
+      "row": 2
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 17,
+      "row": 2
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 25,
+      "row": 7
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 11,
+      "row": 8
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 11,
+      "row": 9
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 11,
+      "row": 10
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 25,
+      "row": 10
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 14,
+      "row": 11
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 22,
+      "row": 11
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 23,
+      "row": 11
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 25,
+      "row": 11
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 26,
+      "row": 11
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 11,
+      "row": 12
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 13,
+      "row": 12
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 14,
+      "row": 12
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 15,
+      "row": 12
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 21,
+      "row": 12
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 22,
+      "row": 12
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 26,
+      "row": 12
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 10,
+      "row": 13
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 11,
+      "row": 13
+    },
+    {
+      "after": "contour",
+      "before": "skin",
+      "column": 13,
+      "row": 13
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 14,
+      "row": 13
+    },
+    {
+      "after": "contour",
+      "before": "skin",
+      "column": 15,
+      "row": 13
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 16,
+      "row": 13
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 17,
+      "row": 13
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 20,
+      "row": 13
+    },
+    {
+      "after": "hair",
+      "before": "jacket",
+      "column": 21,
+      "row": 13
+    },
+    {
+      "after": "contour",
+      "before": "skin",
+      "column": 22,
+      "row": 13
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 23,
+      "row": 13
+    },
+    {
+      "after": "contour",
+      "before": "skin",
+      "column": 24,
+      "row": 13
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 26,
+      "row": 13
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 9,
+      "row": 14
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 11,
+      "row": 14
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 14,
+      "row": 14
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 15,
+      "row": 14
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 16,
+      "row": 14
+    },
+    {
+      "after": "skin",
+      "before": "jacket",
+      "column": 17,
+      "row": 14
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 20,
+      "row": 14
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 21,
+      "row": 14
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 22,
+      "row": 14
+    },
+    {
+      "after": "skin",
+      "before": "jacket",
+      "column": 23,
+      "row": 14
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 27,
+      "row": 14
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 10,
+      "row": 15
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 26,
+      "row": 15
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 10,
+      "row": 17
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 11,
+      "row": 17
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 26,
+      "row": 17
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 16,
+      "row": 18
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 12,
+      "row": 19
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 17,
+      "row": 19
+    },
+    {
+      "after": "skin",
+      "before": "jacket",
+      "column": 18,
+      "row": 19
+    },
+    {
+      "after": "contour",
+      "before": "skin",
+      "column": 19,
+      "row": 19
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 25,
+      "row": 19
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 15,
+      "row": 20
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 16,
+      "row": 20
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 17,
+      "row": 20
+    },
+    {
+      "after": "hair",
+      "before": "jacket",
+      "column": 18,
+      "row": 20
+    },
+    {
+      "after": "hair",
+      "before": "jacket",
+      "column": 19,
+      "row": 20
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 20,
+      "row": 20
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 21,
+      "row": 20
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 22,
+      "row": 20
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 14,
+      "row": 21
+    },
+    {
+      "after": "hair",
+      "before": "jacket",
+      "column": 15,
+      "row": 21
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 16,
+      "row": 21
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 17,
+      "row": 21
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 18,
+      "row": 21
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 19,
+      "row": 21
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 20,
+      "row": 21
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 21,
+      "row": 21
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 22,
+      "row": 21
+    },
+    {
+      "after": "hair",
+      "before": "skin",
+      "column": 23,
+      "row": 21
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 18,
+      "row": 23
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 19,
+      "row": 23
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 14,
+      "row": 24
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 15,
+      "row": 25
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 13,
+      "row": 26
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 24,
+      "row": 26
+    },
+    {
+      "after": "contour",
+      "before": "jacket",
+      "column": 25,
+      "row": 26
+    }
+  ],
+  "format": "picross-editorial-fixed-cell-derivation-v1",
+  "matrix_hash": "526bad4f65909b80c767623818f96744a78c677f27b3b8728420cf3a7de04d86",
+  "plan": "fixed-plan.json",
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "reference_matrix_hash": "0af97711031db63db6e0867967f1498714a035c160f3c83b01ea30780d0aad74",
+  "revision": "r07",
+  "search": false,
+  "seed": null
+}

@@ -1,0 +1,29 @@
+{
+  "cells": 1728,
+  "changed_cells": 79,
+  "counts": {
+    "contour": 245,
+    "empty": 565,
+    "hair": 85,
+    "jacket": 521,
+    "skin": 312
+  },
+  "edges": {
+    "bottom": true,
+    "left": true,
+    "right": true,
+    "top": false
+  },
+  "empty_interior_columns": [],
+  "empty_interior_rows": [],
+  "filled": 1163,
+  "frame_pass": true,
+  "height": 48,
+  "isolated_filled": [],
+  "logic_hash": "fc71dc5aad9029c3de23fc5bcd370b96a5472deed85dac9f13cfe405d0504cad",
+  "matrix_hash": "526bad4f65909b80c767623818f96744a78c677f27b3b8728420cf3a7de04d86",
+  "max_column_clues": 20,
+  "max_row_clues": 17,
+  "occupancy": 0.6730324074074074,
+  "width": 36
+}

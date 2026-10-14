@@ -1,0 +1,43 @@
+{
+  "changes": 79,
+  "criteria": {
+    "details_negative_spaces": {
+      "reason": "Augen mit hellen Innenflächen/Pupillen, braune Lider, Nasenpunkte, zusammenhängendes helles Schnurrbartband. Kragen, Taschen, Knopfleiste und Falten des besten MA-r02-Imports exakt erhalten.",
+      "status": "erfüllt"
+    },
+    "palette": {
+      "reason": "Vier freigegebene Vordergrundfarben plus Weiß; olivgrüne Gesichtslinien durch mittleres Konturbraun ersetzt.",
+      "status": "erfüllt"
+    },
+    "recognizability": {
+      "reason": "Älterer Mann mit hoher Stirn, hellem Seitenhaar, sichtbarem Schnurrbart und langem Kinnbart; der Identitätskern ist gegenüber dem automatischen Raster wiederhergestellt.",
+      "status": "erfüllt"
+    },
+    "series_aesthetic": {
+      "reason": "Ruhige Flächen und klare Formen bleiben. Bei36×48 werden Haarsträhnen, Fältchen und Knopflöcher zusammengefasst; Mimik bleibt gröber als MA-r02.",
+      "status": "erfüllt"
+    },
+    "silhouette_proportions": {
+      "reason": "Alle Leer-/Füllpositionen unverändert. Kopf, Ohren, Haaraußenform, Schulterlinie und Bartlänge erhalten. Keine Änderung der Vorlage.",
+      "status": "erfüllt"
+    }
+  },
+  "final_editorial_approval": null,
+  "findings": {
+    "B-PZ-01": "Hemdgliederung gegenüber erstem Entwurf verbessert; r05-Details exakt geschützt.",
+    "B-PZ-02": "Heller Schnurrbart wieder als zusammenhängende Fläche vorhanden, Gesichtslinien nun braun; menschliche Bewertung des Ausdrucks offen."
+  },
+  "protected": "All non-edited cells, occupancy silhouette, shirt rows27–48",
+  "reviewer": "Codex visual self-review; human final approval pending",
+  "soft_exceptions": [
+    "Einzelne Haarsträhnen und feine Nähte werden zusammengefasst; der Rasterausdruck bleibt abstrahiert. Keine zusätzlichen Farben oder Größen."
+  ],
+  "viewed": [
+    "views/comparison-ma02.png",
+    "views/comparison-first-and-motif.png",
+    "views/final-nearest.png",
+    "views/final-grid.png",
+    "views/fixed-diff.png",
+    "reveals/A-r02.png"
+  ]
+}
