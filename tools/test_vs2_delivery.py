@@ -1,5 +1,6 @@
 """Independent negative checks for VS2 delivery identity and coverage."""
 import hashlib
+import gzip
 import copy
 import json
 from pathlib import Path
@@ -50,7 +51,17 @@ class DeliveryTests(unittest.TestCase):
         (self.root/"vs2-matrix.json").write_text(json.dumps(self.report),encoding="utf-8")
         return vs2_delivery.verify(self.root)
 
-    def test_complete_matrix(self): self.assertEqual(len(self.verify()["records"]),256)
+    def test_complete_matrix(self):
+        self.assertEqual(len(self.verify()["records"]),256)
+        path = self.root / "vs2-matrix.json"
+        original = path.read_bytes()
+        packed = vs2_delivery.compress_geometry_report(path)
+        compressed = packed.read_bytes()
+        self.assertEqual(gzip.decompress(compressed), original)
+        self.assertEqual(vs2_delivery.compress_geometry_report(path).read_bytes(), compressed)
+        self.assertEqual(vs2_delivery.read_geometry_report(packed), self.report)
+        path.unlink()
+        self.assertEqual(vs2_delivery.verify(self.root), self.report)
 
     def test_missing_and_duplicate_case(self):
         self.report["records"][-1]=self.report["records"][0]

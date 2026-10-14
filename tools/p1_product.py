@@ -530,7 +530,7 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
             if args.visual:
                 evidence.report["visual"]["vs2"]["hc92"]["retained_samples"] = python_phase(
                     "retained-hc92-font-samples", lambda: hc92_verify.verify_retained(evidence.technical / "selected/hc92-renders"))

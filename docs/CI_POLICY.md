@@ -234,6 +234,12 @@ PERF-B-E1 / #68 vom 11.10.2026 hebt ausschließlich das technische Budget auf
 
 ## Artefakte und Laufzeitbudgets
 
+Die vollständigen aktuellen VS2-/V1-Geometriematrizen werden als `.json.gz`
+verlustfrei aufbewahrt; der Artefaktleser unterstützt diese und frühere JSON-Dateien.
+Die Kompression prüft den bytegleichen Rückweg. Pflichtbilder bleiben native PNGs;
+die deckenden V3-Aufnahmen verwenden pixelgleiches RGB statt redundantem RGBA.
+Messumfang, Pflichtnachweise und die folgenden Budgets bleiben unverändert.
+
 | Bereich | Ziel/Budget |
 | --- | --- |
 | Dokumentjob | Ziel unter einer Minute; hartes Joblimit drei Minuten |

@@ -1,6 +1,7 @@
 """VS2 regular delivery and explicit frozen developer-reference replay."""
 from __future__ import annotations
 import io
+import gzip
 import json
 import shutil
 import subprocess
@@ -20,6 +21,23 @@ def compact_geometry_reports(paths):
         report = json.loads(path.read_text(encoding="utf-8"))
         path.write_text(json.dumps(report, ensure_ascii=False, separators=(",", ":")) + "\n",
                         encoding="utf-8", newline="\n")
+
+
+def compress_geometry_report(path: Path) -> Path:
+    """Retain every report byte in a deterministic, lossless delivery wrapper."""
+    original = path.read_bytes()
+    compressed = gzip.compress(original, mtime=0)
+    if gzip.decompress(compressed) != original:
+        raise toolchain.PreflightError("Geometry report compression changed bytes")
+    target = path.with_suffix(path.suffix + ".gz")
+    target.write_bytes(compressed)
+    return target
+
+
+def read_geometry_report(path: Path) -> dict:
+    source = path if path.is_file() else path.with_suffix(path.suffix + ".gz")
+    data = source.read_bytes()
+    return json.loads(gzip.decompress(data) if source.suffix == ".gz" else data)
 
 
 def capture_current(project, workspace, output, engine, render_command, environment, phase):
@@ -114,6 +132,11 @@ def capture_current(project, workspace, output, engine, render_command, environm
     hc = hc92_verify.verify(hc_dir)
     (hc_dir / "hc92-acceptance.json").write_text(json.dumps(hc,indent=2)+"\n",encoding="utf-8")
     selected += list(hc_dir.glob("*.json")) + list(hc_dir.glob("*.png"))
+    # Keep full matrix telemetry without displacing mandatory native pictures
+    # or increasing the shared player/evidence budget.
+    packed = {p: compress_geometry_report(p) for p in
+              (renders / "vs2-matrix.json", focused_dir / "v1-focused.json")}
+    selected = [packed.get(p, p) for p in selected]
     return dict(records=len(report["records"]), failures=report["failures"],
                 rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3, hc92=hc,
                 historical_comparison="not run; CI policy #63",
@@ -240,7 +263,7 @@ def verify_records(report: dict) -> None:
 
 
 def verify(renders: Path) -> dict:
-    report = json.loads((renders/"vs2-matrix.json").read_text(encoding="utf-8"))
+    report = read_geometry_report(renders / "vs2-matrix.json")
     verify_records(report)
     for picture in report["pictures"]:
         if Path(picture["file"]).name != picture["file"] or toolchain.sha256_file(renders/picture["file"]) != picture["sha256"]:
