@@ -388,6 +388,53 @@ Der Prüfbericht führt historische Phase/Motivgate, externe Motivannahme,
 Runtime-/Save-/Registryverträge bleiben gleich. Allgemeine Regressionen in
 `test_color_derivation_adapter.py` verwenden ausschließlich synthetische Raster.
 
+### Feste Farbkorrekturen bei bereits freigegebener Motivvorlage (v4)
+
+Eigentümerauftrag vom 14.10.2026: Der additive Weg
+`picross-manual-authorization-v4` ergänzt die ausdrücklich beauftragte
+Integration fester Farbkorrekturen aus einer bereits freigegebenen Motivdatei.
+Das versiegelte Original bleibt unverändert, einschließlich seiner tatsächlichen
+Motivfreigabe. Keine nachträgliche Motivannahme und keine Gate-Ausnahme.
+
+Der Eingang hat `state=raster_review`, `candidate.source_type=manual` und
+`repair.type=fixed_color_editorial_redraw`. `repair` bindet `reference`,
+`reference_variant`, `plan` und `record`; `editorial_manual_derivation` und
+`manual_edit_record` sind nicht gesetzt. Alle acht Inhaltsgates einschließlich
+`motif=pass` und Randregel bleiben Pflicht. Die separate tatsächliche Endabnahme
+ist auch zur Diagnose zwingend.
+
+Die Autorisierung hat dieselben Identitäts-, Auswahl-, Original-, Owner-,
+Blocker-, `base`- und `steps`-Felder wie v3, ersetzt aber `accepted_motif` durch
+`approved_motif`. Dieses enthält `file`, `sha256`,
+`derived_from_reveal_sha256`, `revision`, `parameters` und zusätzlich
+`approval={file,sha256}` für die ursprüngliche inventarisierte Motivfreigabe.
+Die Parameter müssen im ursprünglichen `approved_parameters` liegen. Der
+Originalimport (`base.source_type=import`) und seine Variante entsprechen
+`repair.reference`/`reference_variant`. Die letzte Stufe entspricht
+`repair.plan`/`record` und der Handoff-Auswahl.
+
+`picross-owner-override-v4` folgt den gemeinsamen v3-Feldern mit
+`approved_motif` und exakt `permissions={fixed_color_edits:true}`. Die echte
+Erklärung bindet Paket, Handoff, Inventar, Auswahl und Endfreigabebytes. Es gibt
+keine Berechtigung zur späten Motivannahme oder Randregel-Ausnahme. Historische
+Blocker werden exakt extern gebunden; kein ursprüngliches Handoff wird geändert.
+
+Der Adapter rekonstruiert den vollständig zertifizierten Originalimport aus der
+unveränderten freigegebenen Motivdatei und prüft dort Crop, Methode und
+Parameterkorridor. Danach werden alle festen Stufen wie bei v3 mit echten
+Vorwerten, exakten Schutzmasken, Budgets, Eltern-/Ergebnishashes und vollständigem
+unabhängigem Proof geprüft. Enthält ein fester Plan eine `reference`, bindet
+sie exakt Bundle, Variante, Kandidaten-ID und Manifesthash des jeweiligen
+Elternimports. Kindimporte dürfen Maße, Modus, Palette, Hintergrund, Alpha und
+Fit nicht ändern. Ihre Pixelquellen sind Replayausgaben, keine Ersatzmotive.
+
+CLI bleibt `--manual-authorization`, Exportformat bleibt v3. Offlineprüfung,
+Plan und Register prüfen die vollständige Kette erneut. Der Bericht führt
+`original_motif_gate=pass`, `late_motif_acceptance=false` und die tatsächliche
+ursprüngliche Motivfreigabe. Allgemeine Positiv-/Negativregressionen in
+`test_approved_color_adapter.py` verwenden ausschließlich synthetische Inputs.
+Die bestehenden Autorisierungswege v1/v2/v3 bleiben getrennt und unverändert.
+
 ## Abgeschlossene Produktion (14.10.2026, #116)
 
 Nach nachgewiesener Endabnahme und Main-Integration ersetzt `retire-production`

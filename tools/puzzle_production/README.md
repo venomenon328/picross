@@ -368,6 +368,13 @@ Herkunfts- und Proofbindungen frisch. Originale bleiben unverändert, alle übri
 Inhaltsgates einschließlich Randregel Pflicht. CLI bleibt `--manual-authorization`,
 Exportformat v3. [ZA-1-v3-Vertrag](../../docs/ZA1_ADAPTER.md).
 
+Die additive v4-Autorisierung unterstützt feste manuelle Farbkorrekturen aus
+einer bereits freigegebenen Motivvorlage. Original-ZIP, Handoff, Inventar und
+Motivfreigabe bleiben unverändert; Parameter werden am Originalimport geprüft,
+danach die exakte feste Zellkette und sämtliche unabhängigen Proofs. Alle
+Inhaltsgates und echte Endabnahme bleiben Pflicht. CLI und v3-Exportformat
+bleiben gleich. [ZA-1-v4-Vertrag](../../docs/ZA1_ADAPTER.md).
+
 [Versionierter Vertrag, Status-/Exitcodes, Schema-/Hash-/Ressourcengrenzen](../../examples/rp5/README.md),
 [Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP5_VERIFICATION.md), [Offlinevergleich](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/index.html).
 Gleiche isolierte Image-Umgebung; keine neue Abhängigkeit. P1-Export und Spiel
