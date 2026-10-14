@@ -1,0 +1,26 @@
+{
+  "format": "picross-authoring-validation-v1",
+  "checked_at_utc": "2026-10-14T12:30:48.284128+00:00",
+  "zip_sha256": "f300ef08de55caf4119c55b78144e5a2dd5f34a9967391c22d67000394b3cf73",
+  "file_count": 98,
+  "crc": "pass",
+  "exact_file_set": "pass",
+  "all_inventory_hashes_sizes": "pass",
+  "handoff_copy": "byte_equal",
+  "motif_approval_copy": "byte_equal",
+  "preview_copies": "byte_equal",
+  "source_images": "byte_equal_to_r02",
+  "technical_inspection": {
+    "file": "inspection.json",
+    "sha256": "4d5f12dbf5d242aa4c1bc2ce483f479ec41eb30bd77c683749475e040a2c71e0",
+    "technical": true,
+    "only_blocker": "final_editorial: missing bound human final approval"
+  },
+  "no_nested_zip": true,
+  "original_r01_r02_zip_handoff_unchanged": true,
+  "index_paths_exist": true,
+  "production_growth_bytes": 13072044,
+  "scope": "Production/authoring only, no runtime/tool/test changes",
+  "limits": "128MiB ZIP,64MiB/file,512MiB total,2048files; enforced by ZA1 written-ZIP inspection",
+  "editorial_approved": false
+}

@@ -1,0 +1,4 @@
+Faithful abstraction of C-r02. Preserve lighthouse left, Teepott right, saddle roof, green dome, blue sky and gold sun. Reduce fine interior lines; no other viewpoints, artificial frame pixels or extra objects.
+
+Working mode: faithful
+Motif and gameplay review: open

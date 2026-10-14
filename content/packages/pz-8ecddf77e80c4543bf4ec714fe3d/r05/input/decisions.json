@@ -1,0 +1,27 @@
+{
+  "reference_revision": "r04",
+  "reference_commit": "c75552f52ab847414e0a5ec9281c2e20cb063433",
+  "reference_package_sha256": "83ab39d189a8b9f24f62456fc7c918a678e738b29b0c682321ddebd3ad7fb5e7",
+  "scope": "Exactly two fixed sun colors, all other cells protected.",
+  "edits": [
+    {
+      "column": 25,
+      "row": 5,
+      "before": "green",
+      "after": "gold"
+    },
+    {
+      "column": 26,
+      "row": 8,
+      "before": "green",
+      "after": "blue"
+    }
+  ],
+  "attempts": 1,
+  "repair_search": false,
+  "selected_bundle": "production/sun",
+  "selected_variant": "sun-fixed",
+  "manual_source": "images/MR-r04.png",
+  "older_rejected_work": "Unbound earlier proposals remain in r03/r04 packages at their fixed commits; no nested ZIP. Required reference RP3/RP5 and selected r04 import bundles preserved whole.",
+  "feedback_binding": "approvals/sun-correction.json"
+}

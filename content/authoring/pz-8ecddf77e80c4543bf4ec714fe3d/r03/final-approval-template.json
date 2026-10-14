@@ -1,0 +1,20 @@
+{
+  "format": "picross-editorial-approval-v1",
+  "actor": null,
+  "timestamp_utc": null,
+  "statement": null,
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r03",
+  "handoff_sha256": "4dd35fdbfbeb2a9a0b0ba36053ab02c2418e4ce11cf6b091e8d506556b9eb1df",
+  "inventory_sha256": "8144d64788f8122de194408ff8061b4824e30e358b92fac895e224c54ea7881c",
+  "selection": {
+    "logic_hash": "a26537828a9fa3e102f619f6db3c6e8084e718235e83abf3957292cc895ca763",
+    "matrix_hash": "b5f29349f44fc52131a23ba1fa735cfc6a5de0f7f77d7436066f083516c9ccf9",
+    "reveal": {
+      "file": "images/C-r02.png",
+      "sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74"
+    },
+    "variant": "candidate-001"
+  },
+  "test_only": false
+}

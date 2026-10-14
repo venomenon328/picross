@@ -1,0 +1,106 @@
+{
+  "format": "picross-image-approval-v1",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "MA-r01",
+  "actor": "Tobias Schröder (user)",
+  "timestamp_utc": "2026-10-14T12:22:12.787854+00:00",
+  "timestamp_basis": "UTC recording time of the user statement in this task; exact message timestamp not exposed",
+  "statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nPaket: pz-8ecddf77e80c4543bf4ec714fe3d · eindeutiger aktueller Record.\nIch gebe die Motivvorlage r02 frei; Parameter: genau der im Paket vorgeschlagene eindeutige Parameterkorridor. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.\n\nRepositoryablage nach §6 ist beauftragt. Draft-PR; kein Merge.",
+  "file": "images/MA-r01.png",
+  "sha256": "e68df0b10cbc8ad419dc9a943a2bd6dbffe0b8496196d84a4868d10249100276",
+  "source_package_revision": "r02",
+  "source_commit": "ffc7b53d0c2734afde89471880073ca3e7172112",
+  "derived_from_reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+  "invariants": [
+    "Nahezu frontale Perspektive und Bildaufbau: Leuchtturm links, Teepott rechts, Sonne rechts oben.",
+    "Schlanker Turm, grüne Kuppel, Galerien; niedriger Teepott mit geschwungenem Schalendach und hochgezogenen Enden.",
+    "Blauer Himmel, sichtbare runde Sonne und wichtige Negativflächen.",
+    "Sonne als eigene runde Fläche, Freiraum zwischen Sonne/Turm und darüberliegenden Himmel erhalten.",
+    "Teepott-Dachkurve, hochgezogene äußere Spitzen und Glas-/Untergeschossgliederung erhalten.",
+    "Kein anderer Blickwinkel, keine geometrische Streckung, keine zusätzlichen Gegenstände."
+  ],
+  "parameters": {
+    "width": 30,
+    "height": 40,
+    "mode": "color",
+    "foreground_colors": 4,
+    "method": "area",
+    "fit": "exact",
+    "actual_crop": [
+      0,
+      0,
+      1086,
+      1448
+    ],
+    "design": "designs/area-30x40.json",
+    "hypothesis": "Bevorzugter Wunschmaß-Kandidat: breite Hauptformen bei 1200 Zellen."
+  },
+  "approved_corridor": [
+    {
+      "width": 30,
+      "height": 40,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "design": "designs/area-30x40.json",
+      "hypothesis": "Bevorzugter Wunschmaß-Kandidat: breite Hauptformen bei 1200 Zellen."
+    },
+    {
+      "width": 33,
+      "height": 44,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "design": "designs/area-33x44.json",
+      "hypothesis": "Etwas mehr Raum für Galerien, Dachspitzen und Fenster ohne Motivänderung."
+    },
+    {
+      "width": 36,
+      "height": 48,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "design": "designs/area-36x48.json",
+      "hypothesis": "Größenreserve für empfindliche Architekturformen; keine bloße Komfortgarantie."
+    },
+    {
+      "width": 27,
+      "height": 36,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "design": "designs/area-27x36.json",
+      "hypothesis": "Kompakter Vergleich: prüft, ob die reduzierten Hauptformen ohne feine Reststrukturen tragen."
+    }
+  ],
+  "evidence": "approvals/motif-evidence.txt",
+  "type": "human_motif_approval"
+}

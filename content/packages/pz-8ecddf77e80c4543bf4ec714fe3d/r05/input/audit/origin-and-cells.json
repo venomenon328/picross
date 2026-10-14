@@ -1,0 +1,58 @@
+{
+  "reference_revision": "r04",
+  "reference_commit": "c75552f52ab847414e0a5ec9281c2e20cb063433",
+  "reference_package_sha256": "83ab39d189a8b9f24f62456fc7c918a678e738b29b0c682321ddebd3ad7fb5e7",
+  "reference_matrix_hash": "b93ee63dc591041c1252d67a0d083700ff7e312261e31fbcf62ae00474915eda",
+  "matrix_hash": "02180ea54cff6a7e6587772e5e7b2be3f87ce73633b0f9504a9b77d22d47c505",
+  "logic_hash": "04f68c02f64d3db0ae1cf2750d52027641d1bd9acef1e8477270d64ccde6568f",
+  "fresh_source_reconstruction": {
+    "status": "solved",
+    "proof_verified": true,
+    "certified": true,
+    "logic_hash": "04f68c02f64d3db0ae1cf2750d52027641d1bd9acef1e8477270d64ccde6568f",
+    "profile": {
+      "id": "full-line-color",
+      "version": 1,
+      "start": "unknown",
+      "deduction": "all-line-supported-values",
+      "search": false
+    },
+    "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+    "steps": 102,
+    "line_evaluations": 172
+  },
+  "fixed_edit_replay": "pass",
+  "actual_changed_positions": 2,
+  "edits": [
+    {
+      "column": 25,
+      "row": 5,
+      "before": "green",
+      "after": "gold"
+    },
+    {
+      "column": 26,
+      "row": 8,
+      "before": "green",
+      "after": "blue"
+    }
+  ],
+  "all_other_cells_identical": true,
+  "building_symmetry_mismatches": 0,
+  "building_values_identical_to_r04": true,
+  "end_domains_equal_matrix": true,
+  "frame": {
+    "left": true,
+    "right": true,
+    "top": true,
+    "bottom": false
+  },
+  "counts": {
+    "blue": 708,
+    "navy": 121,
+    "green": 20,
+    "gold": 66,
+    "empty": 285
+  },
+  "note": "Source MR-r04 is an explicit manually corrected cell image; no claim of unchanged MA-r01 rasterization. Symmetry is not supplied to the solver."
+}
