@@ -1,0 +1,35 @@
+{
+  "format": "picross-editorial-approval-context-v1",
+  "actual_user_statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch nehme das Rätselpaket pz-c71563f1b8c940de998afdd62f09 · candidate-003, Revision candidate-003, mit Inventar 3ec4d593e7b435e9377de3340cf62f8c33b43eea12b96463b99839c1d22771e1 redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\n\nDraft-PR; kein Merge.",
+  "approval_sha256": "cd1b645886e9b847e6eb6508347d5a6a5b44eb927a56385dc7e13f465c72511b",
+  "timestamp_basis": "UTC recording time while processing actual user message; message arrival seconds not exposed.",
+  "provided_revision": "candidate-003",
+  "resolved_package_revision": "r05",
+  "resolved_variant": "candidate-003",
+  "resolution": "Exact supplied inventory SHA256 uniquely selects r05 and its candidate-003. User repeats variant as revision; original wording preserved, technical package revision read from unchanged handoff. No candidate or file change.",
+  "source_commit": "31003a00b94874cc7dc18a769fa096e73c6b7989",
+  "main_base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "package_sha256": "f3a31a6ef1eefa6b9a06e9aec516aeb406abdadebe3368e3c17ad4b01483336c",
+  "handoff_sha256": "0b74302ebc41b76d2e38cfdcfadfb6ba404917a5bac0934e235adba2fa0c4bf1",
+  "inventory_sha256": "3ec4d593e7b435e9377de3340cf62f8c33b43eea12b96463b99839c1d22771e1",
+  "safe_zip_and_complete_inventory_checked": true,
+  "original_handoff_byte_equal": true,
+  "archive_files": 859,
+  "expanded_bytes": 99367245,
+  "human_editorial_acceptance": true,
+  "integration_order": true,
+  "merge_order": false,
+  "runtime": {
+    "id": "pz-c71563f1b8c940de998afdd62f09",
+    "name": "Stirnlappenbasilisk",
+    "revision": 1,
+    "stem": "stirnlappenbasilisk_001",
+    "save_slot": "stirnlappenbasilisk_001",
+    "category": {
+      "id": "insekten-kleine-tiere",
+      "name": "Insekten & kleine Tiere",
+      "order": 8
+    }
+  },
+  "production_evidence": "Existing immutable r05 production inspection/validation/proof/visual review retained. Fresh export will perform required current technical and approval validation; no duplicate routine inspect."
+}

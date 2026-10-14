@@ -1,0 +1,33 @@
+{
+  "review_type": "self_review",
+  "checked_at_utc": "2026-10-13T15:30:14.905948+00:00",
+  "reviewed_previous_head": "31003a00b94874cc7dc18a769fa096e73c6b7989",
+  "reviewed_base": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "scope": "Complete integration staged diff, every path/mode/blob, full exported file table, runtime definition/color mapping/clues/reveal/notice, structured before/after registry diff and outer approval/record/context/report. Existing branch production changes already reviewed at31003a0 and unchanged.",
+  "all_staged_blobs_equal_checked_files": true,
+  "all_regular_100644": true,
+  "all_changed_paths_content_only": true,
+  "existing_registry_entries_unchanged": true,
+  "categories_unchanged": true,
+  "sealed_zip_handoff_inventory_and_prior_revisions_unchanged": true,
+  "actual_approval_bound": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r05/approval.json",
+    "sha256": "cd1b645886e9b847e6eb6508347d5a6a5b44eb927a56385dc7e13f465c72511b"
+  },
+  "approval_resolution": "Exact supplied inventory uniquely selects package r05/candidate-003; actual wording preserves repeated candidate label as revision. No extra human decision inferred. A03 resolved by current genuine endacceptance.",
+  "export": "ZA1 v2 fresh technical/editorial/category/catalog validation and internal written-output verification passed. No duplicate manual inspect/verify-export.",
+  "plan_and_registration": "Reviewed six-target plan, one actual register execution. Plan/register before/after/paths identical, no pending journal. Existing entries and resources untouched.",
+  "file_verification": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r05/integration/file-verification.json",
+    "sha256": "18a8acfc5a474a1f91cf3d7b1647d683628c2aee1f97b62c9829392234c31697"
+  },
+  "declared_partial_copy": "64 exported files/10392003 bytes retain original handoff/inventory and all needed selected proof/import/repair inputs. All other attempts retained in unchanged original ZIP; no new full ZIP.",
+  "historical_metadata": "Original pending gate/source-phase wording remains in immutable handoff/provenance. Separate current approval/inspection/record establish present accepted/registered status. No sealed metadata rewriting.",
+  "visual": "No image/raster edit in integration; original reveal bytes and exact approved matrix retained. Previously disclosed tail-tip separation/detail reductions remain part of accepted inventory.",
+  "checks_not_required": "No native game/start/save/render/PCK/build, full unittest suite, new puzzle-specific test or CI replay under current content-only policy.",
+  "remaining_content_gates": [],
+  "merge_authorized": false,
+  "main_merge_commit": null,
+  "ci": "Final head/run/base/tested-checkout and actual docs/ci-required results to be bound in PR after push.",
+  "limitations": "Separate selfreview, not an independent human/code review. Registered means this branch checkout; no main integration or release claimed."
+}

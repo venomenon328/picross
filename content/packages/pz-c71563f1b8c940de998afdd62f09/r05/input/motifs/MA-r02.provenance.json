@@ -1,0 +1,27 @@
+{
+  "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+  "file": "motifs/MA-r02.png",
+  "sha256": "9468fb1b5a883bd550026c08f718732a44c7fbf8d9b2cd006a08e348cc7d9928",
+  "author": "OpenAI Imagegen in Codex, native built-in image editing under current user production correction",
+  "usage_basis": "Native AI abstraction/edit using only the previously approved own reveal A-r01 and own motif MA-r01; no foreign image assets. Proposed source, not yet approved for production.",
+  "derived_from": {
+    "file": "reveals/A-r01.png",
+    "sha256": "9da4019b8755311b24338dcfdd76cf7e9d31e57081cd009cccc05a7c48c7ea2c",
+    "revision": "A-r01"
+  },
+  "input": "reveals/A-r01.png",
+  "supporting_edit_target": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "d84db09715ca600b3ecc9e290d84592ad4638664104b8fd810e7a6a08e5b6c40"
+  },
+  "prompt_file": "motif-prompt-r02.txt",
+  "created_on": "2026-10-13",
+  "surface": "Codex imagegen built-in",
+  "model": "not_exposed",
+  "seed": "not_exposed",
+  "quality": "not_exposed",
+  "transparent_background": false,
+  "original_output": "C:/Users/tobia/.codex/generated_images/01a13590-4f90-74f3-a588-5d83997704b4/exec-ebbe3f7d-b194-4b4a-933e-ae048c19244a.png",
+  "operations": "Output copied byte-for-byte to MA-r02.png; no post-edit/re-encoding/crop applied. Separate proposed designs contain background-only crop hypotheses.",
+  "approval": null
+}

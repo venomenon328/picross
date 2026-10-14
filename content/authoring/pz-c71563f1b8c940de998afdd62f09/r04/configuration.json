@@ -1,0 +1,107 @@
+{
+  "format": "picross-motif-configuration-proposal-v1",
+  "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+  "revision": "r04",
+  "motif_revision": "MA-r02",
+  "motif_sha256": "9468fb1b5a883bd550026c08f718732a44c7fbf8d9b2cd006a08e348cc7d9928",
+  "status": "pending_human_motif_approval",
+  "requested_dimensions": {
+    "width": 50,
+    "height": 25
+  },
+  "mode": "color",
+  "foreground_colors": 3,
+  "palette": [
+    {
+      "id": "green",
+      "rgb": "#6aa633"
+    },
+    {
+      "id": "light",
+      "rgb": "#d3dc85"
+    },
+    {
+      "id": "turquoise",
+      "rgb": "#53babb"
+    }
+  ],
+  "empty_background": "#ffffff",
+  "method": "area",
+  "fit": "exact",
+  "alpha_below": 128,
+  "crops": [
+    [
+      20,
+      0,
+      1774,
+      877
+    ],
+    [
+      24,
+      0,
+      1772,
+      874
+    ],
+    [
+      28,
+      0,
+      1772,
+      872
+    ],
+    [
+      30,
+      0,
+      1774,
+      872
+    ]
+  ],
+  "designs": [
+    {
+      "file": "proposed-designs/50x25-1.json",
+      "sha256": "b190ba07b8a418f1e990fb826512525875183f9e21102d832d7b917e04d07af0",
+      "crop": [
+        20,
+        0,
+        1774,
+        877
+      ],
+      "hypothesis": "Most conservative exterior-background crop and exact2:1 framing."
+    },
+    {
+      "file": "proposed-designs/50x25-2.json",
+      "sha256": "07e073b67c42820a82ecab1ee095d61e8f3485080ca2981fce6df6dcf20ea9c2",
+      "crop": [
+        24,
+        0,
+        1772,
+        874
+      ],
+      "hypothesis": "Slightly tighter sides/bottom; preserve all anatomy."
+    },
+    {
+      "file": "proposed-designs/50x25-3.json",
+      "sha256": "05d599e13f0c54db2100eec547e10352edf21b2e1a828e61d90d0a374f13d92f",
+      "crop": [
+        28,
+        0,
+        1772,
+        872
+      ],
+      "hypothesis": "Tighter left background; aim to retain head/side contact with no distortion."
+    },
+    {
+      "file": "proposed-designs/50x25-4.json",
+      "sha256": "08ebeb6a9662ecd4dede84020191974152318da4f07a393ab84d40c862ef36f9",
+      "crop": [
+        30,
+        0,
+        1774,
+        872
+      ],
+      "hypothesis": "Shift exact crop slightly right relative to variant3; exterior white only."
+    }
+  ],
+  "additional_acceptance": "Every used foreground color must occupy at least2 cells; do not invent extra cells merely to retain a rare color. Remove/merge rare color and rerun source-bound import/proof instead.",
+  "crop_scope": "Exterior white only, no anatomical clipping; proposed exact2:1 crops within1774x887 source. No raster produced from MA-r02.",
+  "expected_benefit": "Top-positioned crest on2:1 canvas can avoid centered vertical padding; actual frame/color/logic outcomes remain unverified until human approval."
+}

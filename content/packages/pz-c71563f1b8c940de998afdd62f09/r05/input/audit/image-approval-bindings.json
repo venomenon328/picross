@@ -1,0 +1,21 @@
+{
+  "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+  "source_commit": "23f9fafa60c2233a8bc178ef6984b7197b506292",
+  "source_revision": "r04",
+  "source_zip_sha256": "a80b43a7cd65b02d5c090acc39725f368651a66b538b333238d3989f83fc7a0c",
+  "source_inventory_sha256": "2737a6e292d6bf85f05cd9641b1c2daa867b7c4edb5a7956d792d265b53b3df6",
+  "source_files_verified": 79,
+  "original_reveal_unchanged": true,
+  "approved_motif_unchanged": true,
+  "reveal_approval": "reveal-approval.json",
+  "motif_approval": "motif-approval.json",
+  "actual_current_user_statement": "Die Motivdatei ist freigegeben und von den gerasterten Varianten bevorzuge ich safe-3.",
+  "user_preference": {
+    "variant": "safe-3",
+    "source_revision": "r04",
+    "meaning": "Aesthetic preference for the existing three-color, conservative-crop depiction; not approval of its stalled proof or a frame-rule exception. New imports use the separately approved MA-r02.",
+    "source_matrix_hash": "6972a0f82638b236463b15a9a28e8812b4cf6079ed914aab4028ee4b5bbb23dd"
+  },
+  "source_rights": "Own native AI images under user request; prompts/provenance/input images retained. No foreign image bytes. No exclusive copyright asserted.",
+  "derivation": "Native MA-r02 provenance binds exact approved A-r01 and own MA-r01 edit target; deterministic reproduction starts at stored MA-r02 bytes, not the prompt."
+}

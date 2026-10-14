@@ -1,0 +1,41 @@
+{
+  "format": "picross-authoring-validation-v1",
+  "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+  "revision": "r02",
+  "timestamp_utc": "2026-10-13T13:55:05.371416Z",
+  "checks": {
+    "safe_zip": true,
+    "exact_file_set": true,
+    "inventory_hashes": true,
+    "handoff_copy_byte_equal": true,
+    "rulebook_hash_bound": true,
+    "reveal_bytes_unchanged_from_r01": true,
+    "actual_human_reveal_approval": true,
+    "motif_derived_from_reveal": true,
+    "png_decode_dimensions_modes": true,
+    "strict_design_schema_proposals": true,
+    "motif_approval_correctly_pending": true,
+    "no_raster_generated": true
+  },
+  "reveal": {
+    "width": 1850,
+    "height": 850,
+    "mode": "RGB",
+    "bytes": 2123818,
+    "sha256": "9da4019b8755311b24338dcfdd76cf7e9d31e57081cd009cccc05a7c48c7ea2c"
+  },
+  "motif": {
+    "width": 1808,
+    "height": 870,
+    "mode": "RGB",
+    "bytes": 1249285,
+    "sha256": "d84db09715ca600b3ecc9e290d84592ad4638664104b8fd810e7a6a08e5b6c40"
+  },
+  "package_bytes": 3456947,
+  "package_sha256": "731abd5975f084bcdd630be27cd1cc7b0bd43fe2f7174fc721827ffda30ddfac",
+  "inventory_sha256": "29cfa9e779c1025a1cbdf1432be8c971eb5c4cdcdc9f6dc5b5da6c76376969fa",
+  "handoff_sha256": "085a2875308ff3fca62a8f54e7ed05850e8e4449e08857fe9850abf912632bfe",
+  "za1_inspect": "not_applicable: motif_review is not content_ready",
+  "production_tests": "not_performed: motif approval pending",
+  "self_review": "Independent step opening written ZIP and reviewing the two original image files; own review, not independent second review."
+}

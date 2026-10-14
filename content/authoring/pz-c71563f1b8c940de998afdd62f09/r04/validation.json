@@ -1,0 +1,17 @@
+{
+  "safe_zip": true,
+  "crc": true,
+  "exact_inventory_file_set": true,
+  "all_file_sizes_hashes": true,
+  "outer_handoff_byte_equal": true,
+  "reveal_original_bytes_unchanged": true,
+  "old_motif_original_bytes_unchanged": true,
+  "new_motif_native_output_bytes_unchanged": true,
+  "proposed_designs_strict_valid": true,
+  "new_motif_imports": 0,
+  "old_motif_imports_independently_replayed": 4,
+  "old_imports_certified": false,
+  "archive_files": 79,
+  "expanded_bytes": 16681370,
+  "za1_inspect": "not applicable: motif_review; not claimed content_ready"
+}

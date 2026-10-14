@@ -1,0 +1,17 @@
+{
+  "cumulative_image_calls": 5,
+  "this_phase_image_calls": 0,
+  "this_phase_edit_calls": 0,
+  "direct_import_attempts": 4,
+  "repair_search_runs": 9,
+  "repair_proposals": 1600,
+  "repair_evaluations_including_references": 326,
+  "solver_calls_including_imports_and_fresh_final_solves": 332,
+  "fresh_independent_bundle_replays": 9,
+  "total_measured_repair_seconds": 42.050439599996025,
+  "seed08_hash_trials_without_solver": 1071,
+  "active_human_minutes": null,
+  "human_time_status": "not_recorded",
+  "solve_time_estimate_minutes": null,
+  "ai_elapsed_minutes": null
+}

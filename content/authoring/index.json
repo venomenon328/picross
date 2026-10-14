@@ -120,6 +120,31 @@
       "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
       "revision": "r03",
       "record": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r03/record.json"
+    },
+    {
+      "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+      "revision": "r01",
+      "record": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r01/record.json"
+    },
+    {
+      "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+      "revision": "r02",
+      "record": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r02/record.json"
+    },
+    {
+      "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+      "revision": "r03",
+      "record": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r03/record.json"
+    },
+    {
+      "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+      "revision": "r04",
+      "record": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r04/record.json"
+    },
+    {
+      "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+      "revision": "r05",
+      "record": "content/authoring/pz-c71563f1b8c940de998afdd62f09/r05/record.json"
     }
   ]
 }

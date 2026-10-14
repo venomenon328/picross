@@ -1,0 +1,32 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "level": "L3",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "confidence": "low",
+  "logic_hash": "3b53b556bb8d64e3433a98ffcb0b4e46efa553674ff0e10f67f220a556ad1449",
+  "rule_families": {
+    "R0": "Four initially empty outer rows22–25 give direct seeds; no nonempty packed row/column. Palette exclusions and completed-block cleanup provide simple progress. No validated R0-only fixpoint analysis claimed.",
+    "R1": "Long green body/neck and pale belly runs support overlap/extension. One-color two-cell column50 constrains the tail edge through ordinary limits, exemplified by step125 removing row11 (zero-based step, one-based row).",
+    "R2": "Estimated main demand is combined assignment of ordered color blocks against several anchors. Column15 has eight alternating green/turquoise/pale blocks; step150 forces the turquoise pair at rows7/8. Column14 step175 links green5/turquoise2/green1/light2/green1 to existing anchors and forces the light assignment at row14. Multi-block partial color exclusions support L3 rather than a size-based rating. Necessity/sufficiency of weak families not formally established.",
+    "R3": "Full-line-color certificate uses general supported-value logic. That proves no necessity of R3; absent a validated weaker-rule classifier, R3 demand cannot be excluded and L4 remains plausible."
+  },
+  "bottleneck": "All276 proof checkpoints examine all75 currently available row/column deductions. Before cleanup at<=25 unresolved cells, at least5 productive lines are available. No numeric bottleneck run, hence no defined R2/R3 bottleneck in this checked path. Not a validated technique classifier or human calibration.",
+  "evidence": "audit/difficulty-checkpoints.json",
+  "samples": "audit/difficulty-samples.json",
+  "time_estimate": null,
+  "calibration": "No validated difficulty analyser/human comparison data; low-confidence editorial estimate. Human playtest optional.",
+  "effort": {
+    "width": 50,
+    "height": 25,
+    "cells": 1250,
+    "filled": 316,
+    "empty": 934,
+    "proof_steps": 276,
+    "human_active_minutes": null,
+    "solve_time_minutes": null
+  }
+}

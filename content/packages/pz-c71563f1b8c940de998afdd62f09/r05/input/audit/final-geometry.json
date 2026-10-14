@@ -1,0 +1,113 @@
+{
+  "width": 50,
+  "height": 25,
+  "cells": 1250,
+  "counts": {
+    "empty": 934,
+    "light": 103,
+    "green": 169,
+    "turquoise": 44
+  },
+  "occupancy": 0.2528,
+  "palette": [
+    {
+      "id": "green",
+      "rgb": "#6aa633"
+    },
+    {
+      "id": "light",
+      "rgb": "#d3dc85"
+    },
+    {
+      "id": "turquoise",
+      "rgb": "#53babb"
+    }
+  ],
+  "no_singleton_foreground_color": true,
+  "frame": {
+    "left": true,
+    "right": true,
+    "top": true,
+    "bottom": false
+  },
+  "frame_pass": true,
+  "empty_rows": [
+    22,
+    23,
+    24,
+    25
+  ],
+  "empty_columns": [],
+  "components_4_sizes": [
+    298,
+    11,
+    4,
+    3
+  ],
+  "components_8_sizes": [
+    312,
+    4
+  ],
+  "small_foreground_components": [
+    [
+      [
+        20,
+        34
+      ],
+      [
+        20,
+        35
+      ],
+      [
+        20,
+        36
+      ],
+      [
+        20,
+        37
+      ]
+    ],
+    [
+      [
+        16,
+        49
+      ],
+      [
+        15,
+        49
+      ],
+      [
+        15,
+        48
+      ]
+    ]
+  ],
+  "changes": [
+    {
+      "after": "green",
+      "before": "light",
+      "x": 40,
+      "y": 19
+    },
+    {
+      "after": "turquoise",
+      "before": "light",
+      "x": 41,
+      "y": 19
+    },
+    {
+      "after": "green",
+      "before": "light",
+      "x": 46,
+      "y": 19
+    }
+  ],
+  "unchanged_occupancy": true,
+  "matrix_hash": "38283ac912fb1a5dd26bc9d715cf2545969ccda716f92cd0404cf71ab1123822",
+  "logic_hash": "3b53b556bb8d64e3433a98ffcb0b4e46efa553674ff0e10f67f220a556ad1449",
+  "hints_equal_reconstructed": true,
+  "enddomains_equal_matrix": true,
+  "proof_steps": 276,
+  "preferred_conservative_crop_to_selected_import_changes": 47,
+  "reference_to_final_changes": 3
+}
