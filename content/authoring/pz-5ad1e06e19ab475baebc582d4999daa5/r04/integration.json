@@ -1,0 +1,68 @@
+{
+  "base_commit": "218a7493d497e8a07498e6950ed817be84f7f87e",
+  "category": {
+    "id": "insekten-kleine-tiere",
+    "name": "Insekten & kleine Tiere",
+    "order": 8
+  },
+  "export": {
+    "catalog_ready": true,
+    "editorial_approved": true,
+    "inspection": "content/packages/pz-5ad1e06e19ab475baebc582d4999daa5/r04/inspection.json",
+    "inspection_sha256": "870454f13907f8644dce44055b8d88ceeff9fcd2c3aea5af76ba424f7b98d9f5",
+    "manifest": "content/packages/pz-5ad1e06e19ab475baebc582d4999daa5/r04/manifest.json",
+    "sha256": "e9bce95dc7629088217ed53b8a70a4f1033134dfbc8146750ec9f056a0edb2a3",
+    "technical": true
+  },
+  "file_checks": {
+    "category_valid_unique": true,
+    "exact_written_package_files": true,
+    "export_all_file_hashes": true,
+    "journal_absent": true,
+    "reveal_equal_approved_bytes": true,
+    "runtime_files_equal_export": true,
+    "runtime_projection_equal": true,
+    "solution_equal_approved_matrix": true
+  },
+  "format": "picross-integration-evidence-v1",
+  "native_checks": "nicht erforderlich: reine Inhaltsintegration",
+  "package_revision": "r04",
+  "puzzle_id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+  "registration": {
+    "after_registry_sha256": "d25f7747111865adb04d3c2864fde67ab66d16a45038a65b979c19508cb58e81",
+    "before_registry_sha256": "33e5f68cb4f7ce8f30fd5ffe114039f4dd6d6981f0f2f08d164df7e910435020",
+    "changes": [
+      {
+        "operation": "add",
+        "path": "game/data/content/gecko_001.json"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/gecko_001.png"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/gecko_001.txt"
+      },
+      {
+        "operation": "add",
+        "path": "content/packages/pz-5ad1e06e19ab475baebc582d4999daa5/r04"
+      },
+      {
+        "operation": "replace",
+        "path": "content/registry.json"
+      },
+      {
+        "operation": "replace",
+        "path": "game/data/registry.json"
+      }
+    ],
+    "new_count": 14,
+    "old_count": 13,
+    "old_entries_unchanged": true,
+    "status": "registered"
+  },
+  "runtime_revision": 1,
+  "save_slot": "gecko_001",
+  "source_zip_sha256": "b85d3aed797b2c201a8075aab05c3a3e95109ae532093b2ff5de1f3db1c87fae"
+}

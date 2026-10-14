@@ -1,0 +1,32 @@
+{
+  "assessment_type": "editorial_estimate",
+  "bottleneck": "Alle44 Linien vor jedem der59 Proofschritte geprüft. Vor Restaufräumen bei<=8 unbekannten Zellen mindestens9 produktive Linien; keine numerische Engstelle im überprüften Verlauf. Keine validierte Technikklassifikation oder menschliche Kalibrierung.",
+  "confidence": "low",
+  "effort": {
+    "cells": 384,
+    "empty": 247,
+    "filled": 137,
+    "height": 12,
+    "human_active_minutes": null,
+    "proof_steps": 59,
+    "solve_time_minutes": null,
+    "width": 32
+  },
+  "evidence": "audit/difficulty-checkpoints.json",
+  "level": "L2",
+  "logic_hash": "4d2c6fe6d7a8ee5d29885afef01698ae9df04d65ceee4e1270b1570898460ad8",
+  "method": "picross-difficulty-0.1",
+  "plausible_range": [
+    "L1",
+    "L4"
+  ],
+  "playtest": "not_performed; optional, kein Gate",
+  "rule_families": {
+    "R0": "Initial Zeile12 leer; nach Entfernen vollständig gepackte Spalte14 [11] und Spalte26 [3,3,3] in elf Positionen. Diese R0-Anker erleichtern den Einstieg. R0-Suffizienz nicht validiert bis Fixpunkt geprüft; L1 bleibt möglich. Später fertige Blöcke und Restleerfelder.",
+    "R1": "Geschätzte Hauptanforderung: Überlappungen langer Körperblöcke und Verlängerung einzelner Spaltenblöcke. Proofschritt0: Zeile5 [2,23] erzwingt Spalten10..26. Zeile6 [30] liefert breite Überlappung. Schritt40: Spalte16 [7], sechs zusammenhängende sichere Zellen und obere Grenze erzwingen Zeile3 und leere Zeile2.",
+    "R2": "Zuordnung mehrerer Blöcke an Füßen und Kopf kann kombinierte Anker benötigen. Schritt30: Zeile2 [3,2], getrennte Anker an Spalten14 und26 schränken beide Segmente ein. Notwendigkeit von R2 und Suffizienz von R0+R1 sind ohne validierten schwächeren Regelfixpunkt unsicher.",
+    "R3": "Full-line-mono zertifiziert allgemeine vollständige Linienunterstützung, beweist keine R3-Notwendigkeit. Kein unvermeidbarer R3-Schritt identifiziert; mangels validiertem schwächeren Analysator nicht ausgeschlossen. Konservativer Bereich L1–L4."
+  },
+  "samples": "audit/difficulty-samples.json",
+  "time_estimate": null
+}

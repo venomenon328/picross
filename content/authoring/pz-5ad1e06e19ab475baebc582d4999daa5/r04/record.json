@@ -6,9 +6,7 @@
     "safe_zip": true,
     "uncompressed_bytes": 8920856
   },
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
+  "blockers": [],
   "category_id": "insekten-kleine-tiere",
   "difficulty": {
     "assessment_type": "editorial_estimate",
@@ -42,7 +40,10 @@
     "samples": "audit/difficulty-samples.json",
     "time_estimate": null
   },
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/r04/approval.json",
+    "sha256": "a5b00369cb59b2a95e8ab1ef83aa38056b4d09d101cf78f11309cbfc0a96f555"
+  },
   "format": "picross-authoring-record-v1",
   "growth": {
     "added_zip_bytes": 7489659
@@ -61,7 +62,14 @@
     "sha256": "1f4bb85cff95affe110d28b2aef41188e8d7c0031555bb94bbccf84291e91150",
     "technical": true
   },
-  "integration": null,
+  "integration": {
+    "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/r04/integration.json",
+    "runtime_id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+    "runtime_revision": 1,
+    "save_slot": "gecko_001",
+    "sha256": "44f77cd3f93b05f3297434825daa3eb5736ded9865af63471ef9cc50fc31fc09",
+    "status": "registered"
+  },
   "inventory_sha256": "f7c8c824fe8b0ea9a3c846f3f9717ea7f233d6d77dd2099a60aa88094e1cda6d",
   "mode": "mono",
   "motif": {
@@ -72,7 +80,7 @@
     "sha256": "1a302fe0744cceebf81d5e2b0693deef60af483017ffb4da6424d75c7909f039"
   },
   "motif_name": "Gecko",
-  "next_action": "Menschliche Endabnahme r04; danach Standardauftrag4 mit Integrationsauftrag.",
+  "next_action": "Main-Merge nach Pflicht-CI; anschließend Produktionsabschluss gemäß PUZZLE_AUTHORING §9.",
   "package": {
     "bytes": 7489659,
     "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/r04/package.zip",
@@ -89,7 +97,7 @@
   "revision": "r04",
   "source_package_sha256": "8bcb4f7d9224d44c51f9a9d8b45c5dd983789170ac9155195264f7be35e26da3",
   "source_revision": "r03",
-  "state": "content_ready",
+  "state": "registered",
   "updated_at_utc": "2026-10-14T17:37:29.576716+00:00",
   "width": 32
 }

@@ -1,0 +1,126 @@
+{
+  "actor": "Tobias Schröder (Nutzer dieses Chats)",
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        28,
+        107,
+        1753,
+        751
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "fixed": false,
+      "foreground_colors": 1,
+      "height": 12,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        28,
+        107,
+        1753,
+        751
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "fixed": false,
+      "foreground_colors": 1,
+      "height": 12,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 32
+    },
+    {
+      "actual_crop": [
+        28,
+        107,
+        1753,
+        751
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "fixed": false,
+      "foreground_colors": 1,
+      "height": 13,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 34
+    }
+  ],
+  "configuration_sha256": "c30be792196f1dd403227c2b92287d1a37c1b9eeb73b30f997108ab0ac060e1c",
+  "derived_from_reveal_sha256": "f6a7aa1b67e2a336b39f6a79fa638dad7a3ae57487e6ae975e1d28fa239f632d",
+  "evidence": "approvals/motif-evidence.md",
+  "file": "motifs/MA-r01.png",
+  "parameters": {
+    "actual_crop": [
+      28,
+      107,
+      1753,
+      751
+    ],
+    "alpha_below": 128,
+    "background": "#ffffff",
+    "fit": "contain",
+    "fixed": false,
+    "foreground_colors": 1,
+    "height": 12,
+    "method": "area",
+    "mode": "mono",
+    "palette": [
+      {
+        "id": "ink",
+        "rgb": "#000000"
+      }
+    ],
+    "thresholds": [
+      128,
+      160
+    ],
+    "width": 32
+  },
+  "puzzle_id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+  "revision": "MA-r01",
+  "sha256": "1a302fe0744cceebf81d5e2b0693deef60af483017ffb4da6424d75c7909f039",
+  "source_package_revision": "r03",
+  "source_package_sha256": "8bcb4f7d9224d44c51f9a9d8b45c5dd983789170ac9155195264f7be35e26da3",
+  "statement": "Ich gebe die Motivvorlage r03 frei; Parameter: genau der im Paket vorgeschlagene eindeutige Parameterkorridor. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "timestamp_basis": "Zeitpunkt der Protokollierung der vorliegenden Chatfreigabe; Nachrichtenzeit nicht separat verfügbar",
+  "timestamp_utc": "2026-10-14T17:31:40Z",
+  "type": "human_motif_approval"
+}
