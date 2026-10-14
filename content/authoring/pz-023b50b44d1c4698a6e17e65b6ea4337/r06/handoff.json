@@ -1,0 +1,133 @@
+{
+  "approved_parameters": [],
+  "authorization": "Fortsetzung des beauftragten neuen Rasters mit vorlagentreueren Haaren, mehr Gesichts-/Hemddetails; notwendige Vorlagenkorrektur nach konkret belegtem Farbmittelungsverlust, keine Freigabe der neu erzeugten Datei erfunden. Repositoryablage samt bedingtem Merge bleibt beauftragt.",
+  "blockers": [
+    "Menschliche Freigabe der neuen Datei MA-r03 und ihres vorgeschlagenen Korridors vor Rasterproduktion offen."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "menschen-berufe",
+  "configuration": "configuration.json",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "provenance": "motif-derivation.json",
+    "reveal_approval": "reveal-approval.json"
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "0785ec2504ac2e1f2cb4786e6f69eff979311e3d6be9b806631f19b9f5918bfd"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1",
+    "file": "motifs/MA-r03.png",
+    "revision": "MA-r03",
+    "sha256": "91cec433b0866f2b45a21a8b08fbd181e457dd18b2fad79d680e3248a3cf02f6"
+  },
+  "next_action": "MA-r03 und configuration.json freigeben lassen; anschließend vier neue Rasterimporte samt Proof, Herkunft, Gestaltung und Schwierigkeit bis zur Endabnahmevorlage.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "prior_motif_approval": "motif-approval.json",
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 36
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 36
+    }
+  ],
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "repair": null,
+  "repo_commit": "bdb2054eb2d05501b4d83635afbaf3e46b414778",
+  "report": "report.md",
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/A-r02.png",
+    "revision": "A-r02",
+    "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1"
+  },
+  "revision": "r06",
+  "rulebook": {
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549",
+    "version": "0.4.1"
+  },
+  "state": "motif_review"
+}

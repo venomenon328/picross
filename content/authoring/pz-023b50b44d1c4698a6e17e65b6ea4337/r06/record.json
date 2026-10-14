@@ -1,0 +1,123 @@
+{
+  "approved_parameters": [],
+  "blockers": [
+    "Menschliche Rückmeldung zu MA-r03: Vorlage noch korrigieren. Konkrete Merkmale und gewünschte Änderungen noch offen; Rückfrage gestellt."
+  ],
+  "category_id": "menschen-berufe",
+  "difficulty": null,
+  "dimensions_scope": "proposed recommendation; no MA-r03 raster",
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r06/handoff.json",
+    "sha256": "f6bb66c4f3a8ec7b0c87112697df3c9fdae7b5bb69c6053a22cd9088bf531c62"
+  },
+  "height": 48,
+  "human_feedback": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r06/feedback.json",
+    "sha256": "1eb5dee40988af1828958bcd889a6e935235de9f11c34e6b0242a1bafc0683b6"
+  },
+  "integration": null,
+  "inventory_sha256": "0785ec2504ac2e1f2cb4786e6f69eff979311e3d6be9b806631f19b9f5918bfd",
+  "mode": "color",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1",
+    "file": "motifs/MA-r03.png",
+    "revision": "MA-r03",
+    "sha256": "91cec433b0866f2b45a21a8b08fbd181e457dd18b2fad79d680e3248a3cf02f6"
+  },
+  "motif_name": "Ho Chi Minh",
+  "motif_preview": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r06/motif-preview.png",
+    "sha256": "91cec433b0866f2b45a21a8b08fbd181e457dd18b2fad79d680e3248a3cf02f6"
+  },
+  "next_action": "Konkrete Korrekturwünsche an MA-r03 klären; danach neue Motivrevision erstellen und freigeben lassen. Kein Rasterimport aus der nicht freigegebenen MA-r03.",
+  "package": {
+    "bytes": 6101407,
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r06/package.zip",
+    "sha256": "7769c6addbc6cbe8d7045174ef733e64aaf37a5e3732d6b70b1169399c35f610"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 36
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 36
+    }
+  ],
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "repo_commit": "bdb2054eb2d05501b4d83635afbaf3e46b414778",
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/A-r02.png",
+    "revision": "A-r02",
+    "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1"
+  },
+  "review_view": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r06/motif-comparison.png",
+    "sha256": "23cb9ea66756dbd0bfcdf5f4de9d0c2761cff2fa962e355d2e4deaa52fd3ee8d"
+  },
+  "revision": "r06",
+  "state": "motif_review",
+  "storage_verification": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r06/storage-verification.json",
+    "sha256": "a5dae08caac8b231b6cf41a7583ac4f7345206e20c9a45ee8177efe8119925a3"
+  },
+  "updated_at_utc": "2026-10-14T19:29:07.333652+00:00",
+  "width": 36
+}
