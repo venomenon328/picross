@@ -1,0 +1,25 @@
+{
+  "format": "picross-owner-override-v1",
+  "actor": "Tobias Schröder (Nutzer)",
+  "timestamp_utc": "2026-10-13T18:13:40Z",
+  "statement": "Hiermit ist diese Version abgenommen und das Verletzen der Randregel akzeptiert.\nBitte integriere das Rätselpaket ins Spiel gemäß Standardauftrag 4.",
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r04",
+  "package_sha256": "8311f0623794e93916d1c9576753616a046f66e1ae1c2251f84ffb1f37bf1f6a",
+  "handoff_sha256": "977cc4fa7007d292363f1cebb84b4dcf9f99687a57ae271f4daf80108eba4638",
+  "inventory_sha256": "8600bb43119cb892b3a816b1f80b73e90bc790b432a911960d3ddfe306da97ff",
+  "selection": {
+    "variant": "manual-128",
+    "matrix_hash": "f7ec4030410046086fb80e7407a709b011f0dc503cc15dd57414512905d934ee",
+    "logic_hash": "4c1cbf8cf02c5edae4c6742b63fc6f426951656af63f0d6b36e8eb33c585f230",
+    "reveal": {
+      "file": "images/A-r01.png",
+      "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074"
+    }
+  },
+  "approval_sha256": "25883c7a910380409ecab00f488ee5be77f56d3ff265407f4340b6d223b5d964",
+  "accepted_exception": "FRAME-R04: die dokumentierte Verletzung der Randregel wird ausschließlich für diese exakte r04-Auswahl akzeptiert.",
+  "retained_requirements": "Matrix/Proof/Rekonstruktion/Rechte/Reveal unverändert prüfen; keine allgemeine Lockerung, keine weiteren Zelländerungen oder Mergefreigabe.",
+  "timestamp_basis": "Zeit der Protokollierung der tatsächlichen Erklärung; genauer Nachrichtenzeitpunkt nicht exponiert.",
+  "evidence": "acceptance-evidence.md"
+}

@@ -1,0 +1,46 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r02",
+  "motif_name": "Hamburger",
+  "category_id": "gerichte-herzhaftes",
+  "state": "motif_review",
+  "package": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r02/package.zip",
+  "package_bytes": 2965261,
+  "package_sha256": "afeca5e69b6f1fd0d6c29caaf2a4f87c37840cd38140b6343a425ce009d2e9b5",
+  "handoff": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/r02/handoff.json",
+  "handoff_sha256": "b719f7de6a8a9ce1177e778c64ad1fb6758170b3ced6849cbb58cfc6489bae81",
+  "inventory_sha256": "28c1226c560f974dfc6203b5927e569ff1b278891a9094d79ed6ffef7831d270",
+  "approval": null,
+  "approval_sha256": null,
+  "reveal_approval": {
+    "file": "approvals/reveal-A-r01.json",
+    "sha256": "b832eb5676066ff6dc120b717e60d181c9fd095bd9eed1aa3f0138617bcfd53c",
+    "location": "member of package.zip"
+  },
+  "width": 25,
+  "height": 22,
+  "dimensions_status": "proposed corridor; motif approval pending",
+  "mode": "mono",
+  "difficulty": null,
+  "reveal": {
+    "file": "images/A-r01.png",
+    "revision": "A-r01",
+    "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "images/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "images/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "ef92af29d902b39a9bdc574a41031a8500ffb01fbe1312d00cc7943e088fb6b4",
+    "derived_from_reveal_sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "approval": null,
+    "provenance": "images/MA-r01.provenance.json"
+  },
+  "blockers": [],
+  "next_action": "Menschliche Freigabe von MA-r01 mit dem vorgeschlagenen 25×22-Mono-Korridor; anschließend Standardauftrag 3.",
+  "integration": null,
+  "repo_commit": "4ff96270675b873f6c770eee4df3abe8516327b6",
+  "previous_revision": "r01"
+}
