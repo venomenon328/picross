@@ -1,0 +1,112 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 5,
+    "file": "rulebook.md",
+    "sha256": "dafd09bdcbe36010637944319994383d877948c02be2393e7e16db54f5402c4e"
+  },
+  "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+  "revision": "r01",
+  "repo_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "state": "reveal_review",
+  "brief": "brief.md",
+  "category_id": "blumen-pflanzen",
+  "approved_parameters": [],
+  "requested_mode": "color",
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_variants": [
+    {
+      "id": "A-r01",
+      "title": "Kompakte Topfpflanze",
+      "file": "reveal/A-r01.png",
+      "sha256": "72ceb119b341b7ad8c96770a2042449f4f3d47ede648225e43062a3bae564472",
+      "bytes": 2260308,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "hypothesis": "Kompakte geschlossene Hauptform mit gutem Verhältnis von Blattmasse und Topf.",
+      "selection": "pending"
+    },
+    {
+      "id": "B-r01",
+      "title": "Topf mit hängenden Ranken",
+      "file": "reveal/B-r01.png",
+      "sha256": "1dd6d13f339d456ab6f0027317d13d0bf8e26278b8742b14573995607d8b0a09",
+      "bytes": 1978989,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGB",
+      "hypothesis": "Die längeren Ranken betonen den typischen Wuchs und bieten klare Negativflächen.",
+      "selection": "pending"
+    },
+    {
+      "id": "C-r01",
+      "title": "Geschwungene Einzelranke",
+      "file": "reveal/C-r01.png",
+      "sha256": "4ccc4873ce6b3482ffe5c106030065bdea9d933745ebd39f1deed90ca92cb234",
+      "bytes": 1910194,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "hypothesis": "Blattform und Panaschierung stehen ohne konkurrierenden Topf im Mittelpunkt.",
+      "selection": "pending"
+    }
+  ],
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "e7adc8e2fcd212106c42c3f36b05eb29f46262e88fc3072cd6371ee0133307ee"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "Abschlussbildauswahl und ausdrückliche menschliche Freigabe offen."
+  ],
+  "next_action": "Standardauftrag 2: konkrete Abschlussbilddatei ausdrücklich freigeben; anschließend Konfiguration empfehlen und Motivvorlage ableiten.",
+  "authorization": "Standardauftrag 1, Repositoryablage nach §6, Commit/Push/Draft-PR; kein Merge."
+}

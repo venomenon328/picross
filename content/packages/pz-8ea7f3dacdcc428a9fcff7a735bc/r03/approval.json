@@ -1,0 +1,20 @@
+{
+  "format": "picross-editorial-approval-v1",
+  "actor": "Tobias",
+  "timestamp_utc": "2026-10-13T13:22:52.666436+00:00",
+  "statement": "Ja, ich nehme genau dieses r03-Inventar redaktionell ab.",
+  "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+  "revision": "r03",
+  "handoff_sha256": "d88862f2550f2c2e9934fb1a63510145db854669546372a516d277b96821dcc8",
+  "inventory_sha256": "e66d8ca4e0b324589fe24f0289d8b9ad8f224005298296b933e8d2cb950603c8",
+  "selection": {
+    "variant": "a-center",
+    "matrix_hash": "aefca45777add77d5699b55cafdcfd0636e1c5cbe29ef580a74580fdb55d6f1d",
+    "logic_hash": "2455b708c5d2ac7646a9e5c31f6ca9743e209fb7b6bc44ce2adebb2eab69c487",
+    "reveal": {
+      "file": "reveal/A-r01.png",
+      "sha256": "72ceb119b341b7ad8c96770a2042449f4f3d47ede648225e43062a3bae564472"
+    }
+  },
+  "test_only": false
+}

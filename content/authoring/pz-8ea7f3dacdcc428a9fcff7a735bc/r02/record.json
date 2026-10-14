@@ -1,0 +1,53 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+  "revision": "r02",
+  "motif_name": "Efeutute",
+  "category_id": "blumen-pflanzen",
+  "state": "motif_approved",
+  "package": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r02/package.zip",
+    "bytes": 4470074,
+    "sha256": "579d8905834f24e03d1d49e69a5685b883a6a8828757b01efd854f50b8651958"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r02/handoff.json",
+    "sha256": "495a0b6c567c002be0312527f802a4232aaeb90ac3674fd91eeb8032d09b86b8"
+  },
+  "inventory_sha256": "702cac5cb5e5d130de8d1c285fe5c2c264fdd5e431dff71418bd475e17470868",
+  "approval": null,
+  "reveal_approval": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r02/reveal-approval.json",
+    "sha256": "fdc113e09da34ea6918f8fedb63d89b2a2da404134d9a7c6e8c1ce5c25bc71aa"
+  },
+  "reveal_revision": "A-r01",
+  "reveal_sha256": "72ceb119b341b7ad8c96770a2042449f4f3d47ede648225e43062a3bae564472",
+  "motif_revision": "MA-r01",
+  "motif_sha256": "73bf4dc8c1e03642105c2f367cf44892bdefd8bf7a4212dd7d1e82759f68da87",
+  "width": null,
+  "height": null,
+  "recommended_width": 40,
+  "recommended_height": 40,
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "Continue with indexed r03 content_ready; original r02 ZIP/Handoff/inventory remain unchanged.",
+  "integration": null,
+  "repository_delivery": {
+    "branch": "authoring/efeutute-selection",
+    "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+    "source_commit": "30cd3179d2a245d7c01b3d0e448ad759eda0365d",
+    "commit_evidence": "Draft-PR #108"
+  },
+  "validation": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r02/validation.json",
+    "sha256": "e0c4a188529ea5580806c2db160044d4e9367ce9b0b60e36fc260c4442ea1a22"
+  },
+  "motif_approval": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/r03/motif-approval.json",
+    "sha256": "e96f504ef1d663fdcce65f188aa179bcd4d1fce7606af41709e1a0ecdc714893"
+  },
+  "approved_width": 35,
+  "approved_height": 35,
+  "superseded_by": "r03"
+}

@@ -1,0 +1,101 @@
+{
+  "format": "picross-authoring-quality-review-v1",
+  "actor": "Codex",
+  "kind": "self_review",
+  "timestamp_utc": "2026-10-13T13:11:59.506775+00:00",
+  "candidate": "a-center",
+  "matrix_hash": "aefca45777add77d5699b55cafdcfd0636e1c5cbe29ef580a74580fdb55d6f1d",
+  "logic_hash": "2455b708c5d2ac7646a9e5c31f6ca9743e209fb7b6bc44ce2adebb2eab69c487",
+  "comparison": "final/comparison.png",
+  "views": [
+    "final/raster-35x35.png",
+    "final/raster-nearest.png",
+    "final/raster-grid.png"
+  ],
+  "reveal": {
+    "file": "reveal/A-r01.png",
+    "sha256": "72ceb119b341b7ad8c96770a2042449f4f3d47ede648225e43062a3bae564472"
+  },
+  "motif": {
+    "file": "motif/MA-r01.png",
+    "sha256": "73bf4dc8c1e03642105c2f367cf44892bdefd8bf7a4212dd7d1e82759f68da87"
+  },
+  "criteria": {
+    "recognizability": {
+      "status": "erfüllt",
+      "reveal": "Ausgearbeitete goldpanaschierte Efeutute mit ganzen Herzblättern und Topf.",
+      "motif": "Herzblätter, zentrale Blattlagen und Ranke eindeutig vereinfacht.",
+      "raster": "Topfpflanze mit grünen/goldenen Blättern, aufrechter Mitte und Seitenranke auch ohne Reveal erkennbar; botanische Detailtiefe erwartbar geringer."
+    },
+    "silhouette_proportions": {
+      "status": "erfüllt",
+      "reveal": "Asymmetrische Krone und Terrakottatopf mit rechter Ranke.",
+      "motif": "Gleiche Perspektive und Blatt-/Topfpositionen.",
+      "raster": "Hauptblätter, breites linkes Vorderblatt, zentraler Blattbereich, Topf und rechte Ranke bleiben am gleichen Ort; mittlere Blattgrenzen verschmelzen teilweise bei 35 Zellen."
+    },
+    "details_negative_spaces": {
+      "status": "erfüllt",
+      "reveal": "Ausgeführte Adern und Oberflächen, geöffnete Blattzwischenräume.",
+      "motif": "Große Panaschierungsflächen und wichtige Zwischenräume, weniger Adern.",
+      "raster": "Weiße Zwischenräume um obere Mitte, links und zwischen rechter Krone/Ranke bleiben. Feine Adern, Rankeninnenräume und Topfrandlinie gehen weitgehend verloren; kein Identitätswechsel."
+    },
+    "palette_readability": {
+      "status": "erfüllt",
+      "reveal": "Warme satte Grün-/Gold-/Terrakottatöne mit klaren Konturen.",
+      "motif": "Vier beabsichtigte Farbrollen plus Antialiasing/Resttöne.",
+      "raster": "Exakte Palette A: Dunkelgrün, Blattgrün, Gold, Terrakotta plus Weiß. Blattmasse/Topf in nativer Miniatur und großer Ansicht erkennbar; RGB-Flächenmittelung erzeugt einzelne Terrakotta-/Goldrandzellen. Keine Farbsinnsimulation durchgeführt."
+    },
+    "series_aesthetic": {
+      "status": "erfüllt",
+      "reveal": "Ruhige warme gezeichnete 2D-Illustration mit sauberer Binnenzeichnung.",
+      "motif": "Kohärente ruhige abstrahierte Farbflächen.",
+      "raster": "Zusammenhängende grün-gelbe Flächen und schlichter Topf; gestufte diskrete Kontur erwartete Abstraktion. Reveal bleibt ausgearbeitet und bytegleich."
+    }
+  },
+  "soft_exceptions": [
+    {
+      "kind": "isolated_foreground_cell",
+      "coordinate_zero_based": [
+        7,
+        0
+      ],
+      "value": "gold",
+      "decision": "accepted",
+      "reason": "Diagonale äußere Spitze des linken oberen Blatts; im Quellmotiv vorhanden, nicht zur Randprüfung erfunden. Kein beliebiger Punkt; Spitzenform behalten."
+    },
+    {
+      "kind": "isolated_same_color_cells",
+      "count": 82,
+      "decision": "accepted",
+      "reason": "Kleine Panaschierungs- und Konturanteile, überwiegend in zusammenhängender Blattmasse. Keine isolierte Vordergrundstreuung außerhalb der beschriebenen Blattspitze."
+    },
+    {
+      "kind": "quantization_color_leakage",
+      "decision": "accepted",
+      "reason": "Wenige Terrakottatöne in Blatt-/Konturrandzellen sowie Gold am Topfrand durch bestehende RGB-Flächenmittelung. Sichtbar, aber Hauptpalette, Blattidentität, Topf und Pose bleiben lesbar. B-Varianten zeigen stärkere Fragmentierung."
+    },
+    {
+      "kind": "fine_detail_loss",
+      "decision": "accepted",
+      "reason": "Feine Adern, enge Rankeninnenräume und Teile der dunklen Blatt-/Topfrandtrennung reduziert; Hauptproportionen und charakteristische Blattlagen erhalten."
+    }
+  ],
+  "frame": {
+    "left": true,
+    "right": true,
+    "top": true,
+    "bottom": true,
+    "valid": true
+  },
+  "fill_fraction": 0.5983673469387755,
+  "empty_interior_rows": [],
+  "empty_interior_columns": [],
+  "repair_diff": {
+    "changed_cells": 0,
+    "reason": "Unveränderter deterministischer Import; keine Reparatur."
+  },
+  "material_identity_change": false,
+  "open_content_deviations": [],
+  "human_final_editorial": "pending",
+  "independent_human_review": "not_performed; self-review only"
+}

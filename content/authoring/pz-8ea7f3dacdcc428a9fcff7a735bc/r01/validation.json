@@ -1,0 +1,14 @@
+{
+  "format": "picross-authoring-storage-validation-v1",
+  "timestamp_utc": "2026-10-13T12:40:56.941892Z",
+  "scope": "early_image_phase",
+  "zip_safe_paths": true,
+  "exact_file_set": true,
+  "file_hashes": true,
+  "handoff_copy_byte_equal": true,
+  "inventory_binding": true,
+  "image_decode": true,
+  "id_revision_collision": false,
+  "adapter_inspect": "not_applicable: reveal_review",
+  "files": 12
+}

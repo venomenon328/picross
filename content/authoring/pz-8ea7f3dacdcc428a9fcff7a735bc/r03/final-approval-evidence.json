@@ -1,0 +1,14 @@
+{
+  "format": "picross-editorial-approval-evidence-v1",
+  "actor": "Tobias",
+  "recorded_at_utc": "2026-10-13T13:22:52.666436+00:00",
+  "timestamp_basis": "Actual UTC recording time; message transport timestamps not exposed. Statements are preserved verbatim.",
+  "initial_user_statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch nehme das Rätselpaket pz-8ea7f3dacdcc428a9fcff7a735bc · r03, Revision r03, mit Inventar ac3d1b504c3cbab9480e29764bbc107a4cbec470 redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\n\nDraft-PR; kein Merge.",
+  "clarification_question": "Deine Erklärung nennt bei „Inventar“ den Toolcommit ac3d1b504c3cbab9480e29764bbc107a4cbec470. Bestätigst du die redaktionelle Endabnahme des vorgelegten Efeutute-Pakets r03 mit dem tatsächlichen Inventar-SHA-256 e66d8ca4e0b324589fe24f0289d8b9ad8f224005298296b933e8d2cb950603c8? Die eindeutige Hashbindung verlangt PUZZLE_AUTHORING §8 zusammen mit dem ZA-1-Freigabevertrag.",
+  "clarification_answer": "Ja, ich nehme genau dieses r03-Inventar redaktionell ab.",
+  "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+  "revision": "r03",
+  "inventory_sha256": "e66d8ca4e0b324589fe24f0289d8b9ad8f224005298296b933e8d2cb950603c8",
+  "zip_sha256": "297d5375e1337760b503742945c47f1ebf22db2308659d28a0e0d7289e6d8b39",
+  "authorization": "Standardauftrag 4 including game integration, commit/push and continuation of Draft-PR #108; no merge."
+}
