@@ -51,7 +51,7 @@ def authorization(package, path, raw):
         require(base["reference_bundle"] is None and base["reference_variant"] is None, "Ambiguous color import base")
     require(isinstance(a["steps"], list) and 1 <= len(a["steps"]) <= 8, "Invalid fixed-color chain length")
     for step in a["steps"]:
-        exact_keys(step, {"record", "plan", "output"})
+        exact_keys(step, {"record", "plan", "output", "protected"})
         for key in ("record", "plan"):
             exact_keys(step[key], {"file", "sha256"})
             package.bound(step[key])
@@ -81,7 +81,7 @@ def authorization(package, path, raw):
     return {"record": a, "path": path, "sha256": file_hash(path), "owner": owner, "owner_path": owner_path}
 
 
-def replay(matrix, design, record, plan, budget):
+def replay(matrix, design, record, plan, protected, budget):
     """Read the two historical fixed-record formats without rewriting their bytes."""
     require(record.get("format") in ("picross-editorial-raster-redraw-v1", "picross-editorial-fixed-cell-derivation-v1") and
             record.get("search") is False and record.get("seed") is None and
@@ -106,6 +106,8 @@ def replay(matrix, design, record, plan, budget):
     integer(maximum, 1, design["width"] * design["height"], "fixed-color change budget")
     require(isinstance(mask, list) and len(mask) == design["height"] and all(isinstance(row, list) and
             len(row) == design["width"] and all(type(v) is bool for v in row) for row in mask), "Invalid color protection mask")
+    require(isinstance(protected, list) and len(protected) == design["height"] and all(isinstance(row, list) and
+            len(row) == design["width"] and all(type(v) is bool for v in row) for row in protected), "Invalid effective color mask")
     edits = record.get("edits")
     require(isinstance(edits, list) and 1 <= len(edits) <= maximum, "Color edit budget exceeded")
     result, changed = deepcopy(matrix), set()
@@ -115,12 +117,14 @@ def replay(matrix, design, record, plan, budget):
         exact_keys(edit, {"column", "row", "before", "after"})
         x = integer(edit["column"], 1, design["width"], "color column") - 1
         y = integer(edit["row"], 1, design["height"], "color row") - 1
-        require((x, y) not in changed and not mask[y][x] and edit["before"] in values and edit["after"] in values and
+        require((x, y) not in changed and not mask[y][x] and not protected[y][x] and edit["before"] in values and edit["after"] in values and
                 edit["before"] != edit["after"] and result[y][x] == edit["before"], "Invalid/protected color edit")
         result[y][x] = edit["after"]
         changed.add((x, y))
-    require(changed == {(x, y) for y, row in enumerate(mask) for x, protected in enumerate(row) if not protected},
+    require(changed == {(x, y) for y, row in enumerate(protected) for x, value in enumerate(row) if not value},
             "Color mask must protect every other position")
+    if record["format"] == "picross-editorial-fixed-cell-derivation-v1":
+        require(mask == protected, "Fixed plan differs from effective color mask")
     require(record.get("matrix_hash") == digest(result) and record.get("actual_changed_positions") == len(changed),
             "Color replay result mismatch")
     return result, len(changed)
@@ -153,7 +157,7 @@ def inspect_chain(package, auth, budget):
             require(record.get("plan_sha256") == step["plan"]["sha256"], "Color redraw plan binding mismatch")
         else:
             require(record.get("plan") == step["plan"]["file"], "Color fixed plan binding mismatch")
-        matrix, count = replay(matrix, design, record, plan, budget)
+        matrix, count = replay(matrix, design, record, plan, step["protected"], budget)
         out = step["output"]
         directory = package.bundle(out["bundle"])
         current, proof, checked = inspect_candidate(directory, out["variant"], budget)
@@ -163,7 +167,8 @@ def inspect_chain(package, auth, budget):
         require(result.get("status") == "solved" and result.get("certified") is True and
                 result.get("proof_verified") is True and checked["certified"] and checked["status"] == "solved" and
                 proof["final_domains"] == [[[v] for v in row] for row in matrix], "Color child certificate incomplete")
-        chain.append({"record_sha256": step["record"]["sha256"], "matrix_hash": digest(matrix), "changed_cells": count})
+        chain.append({"record_sha256": step["record"]["sha256"], "matrix_hash": digest(matrix), "changed_cells": count,
+                      "all_other_cells_preserved": True})
     source = {"kind": "manual", "variant": h["candidate"]["variant"], "candidate_id": current["id"],
               "reference": {"variant": h["candidate"]["variant"]}, "chain": chain,
               "changed_cells": sum(s["changed_cells"] for s in chain)}

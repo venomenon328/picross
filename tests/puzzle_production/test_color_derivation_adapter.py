@@ -45,7 +45,7 @@ class ColorDerivationTests(unittest.TestCase):
                 "seed": None, "edits": plan["edits"], "actual_changed_positions": 1, "plan": f"plan-{i}.json"})
             self.steps.append({"record": {"file": f"edits-{i}.json", "sha256": file_hash(p / f"edits-{i}.json")},
                                "plan": {"file": f"plan-{i}.json", "sha256": file_hash(p / f"plan-{i}.json")},
-                               "output": {"bundle": f"child-{i}", "variant": "area"}})
+                               "output": {"bundle": f"child-{i}", "variant": "area"}, "protected": plan["protected"]})
             before = matrix
         c = load_json(p / "child-1/area-candidate.json")
         h.update(state="raster_review", editorial_manual_derivation="edits-1.json", approved_parameters=[],
@@ -166,6 +166,7 @@ class ColorDerivationTests(unittest.TestCase):
         record = load_json(self.p / "edits-0.json")
         record.update(format="picross-editorial-raster-redraw-v1", protected=old["protected"],
                       plan_sha256=file_hash(self.p / "plan-0.json"))
+        record["protected"][2][2] = False  # Historical allowed region; effective mask stays exact.
         write_json(self.p / "edits-0.json", record)
         for key, name in (("record", "edits-0.json"), ("plan", "plan-0.json")):
             self.steps[0][key]["sha256"] = file_hash(self.p / name)
@@ -204,7 +205,7 @@ class ColorDerivationTests(unittest.TestCase):
             "edits": edits, "seed": None, "search": False})
         self.steps = [{"record": {"file": "fixed-record.json", "sha256": file_hash(p / "fixed-record.json")},
                        "plan": {"file": "fixed-plan.json", "sha256": file_hash(p / "fixed-plan.json")},
-                       "output": {"bundle": "corrected", "variant": "area"}}]
+                       "output": {"bundle": "corrected", "variant": "area"}, "protected": plan["protected"]}]
         params = h["approved_parameters"]
         h.update(state="raster_review", repair=None, approved_parameters=[], proposed_parameters=params,
                  editorial_manual_derivation="fixed-record.json", blockers=["TEST ONLY late correction acceptance"],

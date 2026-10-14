@@ -341,7 +341,7 @@ sind unzulässig. Keine anderen Gates werden dadurch aufgehoben.
   Import, die Reparatur, alle Eltern und Proofs rekonstruiert. Der ausgewählte
   Reparaturkandidat muss zertifiziert sein. Maße höchstens 50 je Achse, Modus
   `color`, höchstens vier Vordergrundfarben.
-- `steps` enthält 1–8 Objekte mit genau `record`, `plan`, `output`. Record/Plan
+- `steps` enthält 1–8 Objekte mit genau `record`, `plan`, `output`, `protected`. Record/Plan
   sind `{file,sha256}`-Bindungen inventarisierter Dateien; Output enthält genau
   `bundle`, `variant`. Die letzte Stufe entspricht Handoff und
   `editorial_manual_derivation`. Jede Stufe replayt unveränderliche
@@ -355,9 +355,14 @@ sind unzulässig. Keine anderen Gates werden dadurch aufgehoben.
   vorhanden; keine Suche oder neue Rasterwahl.
 
 Edits sind eindeutige 1-basierte `{column,row,before,after}`-Objekte mit echten
-Vorwerten und unterschiedlichen gültigen Leer-/Palettenwerten. Die boolesche
-Schutzmaske steht beim Redraw im Record, bei der festen Ableitung im Plan;
-exakt alle anderen Positionen sind geschützt. Redraw-Limits stehen unter
+Vorwerten und unterschiedlichen gültigen Leer-/Palettenwerten. Die historische
+boolesche Schutzmaske steht beim Redraw im Record, bei der festen Ableitung im Plan.
+Zusätzlich bindet jede externe Stufe `protected` als exakte wirksame Maske:
+ausschließlich die gelisteten Edits sind ungeschützt. Eine historische
+Redraw-Regionsmaske darf mehr Positionen freilassen; Edits dürfen keine ihrer
+geschützten Positionen berühren, und jede übrige Zelle bleibt durch die externe
+Maske und vollständige Ergebnismatrixprüfung unverändert. Bei festen Edits sind
+historische und wirksame Maske identisch. Redraw-Limits stehen unter
 `limits` (`max_changed_positions`, `solve_seconds`, `verify_seconds`, `max_lines`),
 sonst im Plan (`max_changes`, `solve_seconds`, `verify_seconds`, `max_lines`).
 Zellbudget höchstens Rastergröße, Sekunden 1–120, Linien 1–1.000.000. Der globale
