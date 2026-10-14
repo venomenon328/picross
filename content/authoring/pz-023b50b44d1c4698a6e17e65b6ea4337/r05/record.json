@@ -1,0 +1,151 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 36
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 36
+    }
+  ],
+  "blockers": [
+    "B-PZ-02 weiterhin offen: Heller Schnurrbart und charakteristische Gesichtszeichnung bleiben im freigegebenen area-/Vierfarbenkorridor nicht ausreichend erhalten; in Zeilen19–22/Spalten13–24 ist keine hair-Zelle vorhanden."
+  ],
+  "category_id": "menschen-berufe",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "Vor allen157 Proofschritten alle84 Linien im jeweiligen Wissensstand geprüft. Vor Aufräumen bei≤35 offenen Zellen mindestens7 produktive Linien; keine numerische Engstelle im geprüften Verlauf. Keine erschöpfende Untersuchung aller alternativen Pfade oder instrumentierte Technikklassifikation.",
+    "calibration": "Keine menschlichen Vergleichsdaten und kein validierter Bewertungsanalysator.",
+    "candidate": "area-36x48-medium",
+    "confidence": "low",
+    "effort": {
+      "cells": 1728,
+      "empty": 565,
+      "filled": 1163,
+      "human_active_minutes": null,
+      "max_column_clues": 19,
+      "max_row_clues": 17,
+      "proof_steps": 157
+    },
+    "evidence": "audit/difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "24b83fbc8e422b9c00bca27abe65e74bb217e37c7c90f49ef99a55b30d5ca294",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L1",
+      "L4"
+    ],
+    "playtest": "not_performed; optional, kein Gate",
+    "rule_families": {
+      "R0": "Initial leere Zeile1 und vollständig gepackte Zeilen31–48 (1-basiert) liefern breite direkte Anker. Keine initial gepackte Spalte. R0-Suffizienz wurde nicht mit einem validierten schwächeren Analysator bis Fixpunkt untersucht; L1 bleibt möglich.",
+      "R1": "Voraussichtlich dominante Arbeit: Überlappungen und Verlängerungen langer Haut-/Haar-/Jackenblöcke gegen untere Anker. Beispielsweise Spalte17 besitzt Haut10, weitere Haut4/Haut3 und Haar6; breite Hautreihen und vorhandene Hemdanker erlauben räumlich verteilten Fortschritt. L2 ist eine Schätzung, keine instrumentierte R1-Suffizienz.",
+      "R2": "Mehrfachzuordnungen gleicher/verschiedener Farbblöcke an Hemd- und Gesichtsgrenzen können kombinierte Anker erfordern. Beispiel Proofschritt120: Spalte13 mit wiederholten Jacken-/Konturblöcken erzwingt zwei Änderungen aus dem bekannten Zustand; genaue Domains in audit/difficulty-samples.json. R2-Notwendigkeit und R0+R1-Suffizienz unvalidiert.",
+      "R3": "Full-line-color zertifiziert allgemeine vollständige Linienunterstützung einschließlich partieller Farbausschlüsse. Das beweist keine R3-Notwendigkeit. Mangels validierter schwächerer Regelfamilienklassifikation bleibt R3 möglich; konservativ bisL4."
+    },
+    "samples": "audit/difficulty-samples.json",
+    "scope": "Nur technisch zertifizierter Diagnosekandidat; visuelle Inhaltsfreigabe scheitert.",
+    "time_estimate": null
+  },
+  "dimensions_scope": "diagnostic candidate; no approvable final selection",
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r05/handoff.json",
+    "sha256": "88e569d4c5c735d9d169f4f9f370ad68229092e7d2c7f3025ae451046a313742"
+  },
+  "height": 48,
+  "integration": null,
+  "inventory_sha256": "94ebbccc08910def23e2b47e82f52d229112cc65e312307dfdadab8d0c17430f",
+  "mode": "color",
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1",
+    "file": "motifs/MA-r02.png",
+    "revision": "MA-r02",
+    "sha256": "22c4f25bf8332dd950f5944cffb0a2b739569a7e5739a36754404e0bba1849a5"
+  },
+  "motif_name": "Ho Chi Minh",
+  "next_action": "Geänderten Form-/Farbflächenplan gemäß revised-production-plan.json vorlegen; konkrete neue Motivdatei freigeben lassen, dann erneut produzieren. Keine Endabnahme/Spielregistrierung dieses Diagnosekandidaten.",
+  "package": {
+    "bytes": 16125878,
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r05/package.zip",
+    "sha256": "48092598eaa6409a7d9c799d7f9d0c2a5655210b0cc6a496972df560d05a46b7"
+  },
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "repo_commit": "acf46f323ac51ca8f1bfefe759c5a8ba7e7f6014",
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/A-r02.png",
+    "revision": "A-r02",
+    "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1"
+  },
+  "review_view": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r05/raster-comparison.png",
+    "sha256": "5742326ae4287999e75da9ea84675ba3fb39a89bf093210fb85901e2dbe5f2c8"
+  },
+  "revised_plan": {
+    "package_member": "revised-production-plan.json",
+    "sha256": "f3b2c89a8b6f445fa9d47bae50ff905c099322b9cefd5fc4c3cfe9c7b1bd99fa"
+  },
+  "revision": "r05",
+  "state": "blocked",
+  "storage_verification": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/r05/storage-verification.json",
+    "sha256": "d8745df6f102dace946e6cd9f661a8255dc9edd1ecbff4ffd2b93b645b2982df"
+  },
+  "updated_at_utc": "2026-10-14T19:16:23.141915+00:00",
+  "width": 36
+}
