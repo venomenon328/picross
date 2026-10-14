@@ -36,18 +36,6 @@ OLD_HEAD = "8b762dd9aaf976361cba44e3b25004e09edde348"
 OLD_RUN = "37921979562"
 
 
-def embedded_pack(executable: Path) -> dict:
-    data = executable.read_bytes()
-    # Godot appends the pack length (uint64 LE) and GDPC magic after the pack.
-    if data[-4:] != b"GDPC":
-        raise ValueError("Missing embedded PCK footer")
-    length = struct.unpack("<Q", data[-12:-4])[0]
-    start = len(data) - 12 - length
-    if start < 0 or data[start:start+4] != b"GDPC":
-        raise ValueError("Invalid embedded PCK bounds/header")
-    return dict(offset=start, bytes=length, sha256=hashlib.sha256(data[start:-12]).hexdigest())
-
-
 def direct_start(executable: Path, env: dict, output: Path, label: str) -> dict:
     """No arguments or player test entry point; inspect only our owned window."""
     from PIL import Image

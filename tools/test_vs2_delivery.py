@@ -4,13 +4,12 @@ import gzip
 import copy
 import json
 from pathlib import Path
-import struct
 import tempfile
 import unittest
 import zipfile
 import vs2_delivery
 from p1_preflight import PreflightError
-from vs2_windows_probe import embedded_pack, extract
+from vs2_windows_probe import extract
 
 
 class DeliveryTests(unittest.TestCase):
@@ -107,14 +106,6 @@ class DeliveryTests(unittest.TestCase):
     def test_missing_frame_edge(self):
         self.report["pictures"][0]["frame_pixels"]={"right":{"minimum_ink_pixels":0}}
         with self.assertRaises(PreflightError): self.verify()
-
-    def test_embedded_pack_hash_and_bounds(self):
-        pack=b"GDPCexact embedded payload"
-        executable=self.root/"test.exe"
-        executable.write_bytes(b"MZtemplate"+pack+struct.pack("<Q",len(pack))+b"GDPC")
-        self.assertEqual(embedded_pack(executable)["sha256"],hashlib.sha256(pack).hexdigest())
-        executable.write_bytes(b"MZtemplate"+pack+struct.pack("<Q",len(pack)+999)+b"GDPC")
-        with self.assertRaises(ValueError): embedded_pack(executable)
 
     def test_v3_rejects_duplicate_case_failed_assertion_and_changed_picture(self):
         def axes(w,h,u):

@@ -415,8 +415,8 @@ func capture_compact_layout(app: Main) -> void:
 
 func capture_cells(app: Main, fixtures: Array) -> void:
 	# Same L/block at normal and five-cell boundaries, every color/work step.
-	# This spatial renderer oracle deliberately covers every historical work
-	# pitch; regular fit-bounded geometry is checked by VS2's native matrix.
+	# This spatial renderer oracle covers the current cell-size boundaries;
+	# regular fit-bounded geometry is checked by VS2's native matrix.
 	var regular: Board = use_renderer_component(app)
 	for fixture: int in fixtures:
 		app.select_puzzle(fixture)
@@ -484,6 +484,37 @@ func capture_h1(app: Main) -> void:
 		app.show_album()
 		await snapshot(app, "f%d-earned-album" % (index + 1))
 
+
+func use_renderer_component(app: Main) -> Board:
+	# Exercise the active shared cell renderer at exact boundary pitches.
+	# Full-view fit caps vary with the fixture; VS2 tests cover that composition.
+	var regular: Board = app.board
+	var component = load("res://ui/chalkboard_board.gd").new()
+	component.session = app.session
+	component.size = regular.size
+	component.position = regular.position
+	component.ui_scale = regular.ui_scale
+	component.book_layout = true
+	component.book_inset = Vector2(210,126) * regular.ui_scale
+	component.book_grid_size = component.size - component.book_inset - Vector2(12,12)
+	regular.hide()
+	app.work.add_child(component)
+	app.board = component
+	component.edited.connect(app.refresh)
+	component.resized.connect(func() -> void:
+		component.book_grid_size = (component.size-component.book_inset-Vector2(12,12)).max(Vector2.ONE)
+		component._layout())
+	return regular
+
+func restore_regular_board(app: Main, regular: Board) -> void:
+	var component: Board = app.board
+	component.get_parent().remove_child(component)
+	component.queue_free()
+	app.board = regular
+	regular.session = app.session
+	regular.layout_key = ""
+	regular._layout()
+	regular.show()
 
 func set_pitch(app: Main, pitch: float) -> void:
 	if app.board.has_method("set_mode"):
