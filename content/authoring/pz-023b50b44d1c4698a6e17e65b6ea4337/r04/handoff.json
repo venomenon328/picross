@@ -1,0 +1,132 @@
+{
+  "approved_parameters": [],
+  "authorization": "Bitte erstelle ein neues Raster, ggf. mit mehr Farben wenn nötig. Halte dich bei den Haaren mehr an die Vorlage, ergänze mehr Gesichtsdetails, erhalte mehr Details des Hemds.",
+  "blockers": [
+    "Menschliche Freigabe der neuen Datei MA-r02 und des vorgeschlagenen Korridors vor Rasterproduktion offen."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "menschen-berufe",
+  "configuration": "configuration.json",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "provenance": "motif-derivation.json",
+    "reveal_approval": "reveal-approval.json"
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "ecea798c8f598fce9b7613587990a18879d223f357a2fc051287e88a10b8456a"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1",
+    "file": "motifs/MA-r02.png",
+    "revision": "MA-r02",
+    "sha256": "22c4f25bf8332dd950f5944cffb0a2b739569a7e5739a36754404e0bba1849a5"
+  },
+  "next_action": "MA-r02 und configuration.json freigeben lassen, anschließend vier gezielte Rasterimporte und Standardauftrag3 bis zur Endabnahmevorlage.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 36
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 36
+    }
+  ],
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "repair": null,
+  "repo_commit": "cd07de474f3e2e498bf014cb25db1153a768be0c",
+  "report": "report.md",
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/A-r02.png",
+    "revision": "A-r02",
+    "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1"
+  },
+  "revision": "r04",
+  "rulebook": {
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549",
+    "version": "0.4.1"
+  },
+  "state": "motif_review"
+}
