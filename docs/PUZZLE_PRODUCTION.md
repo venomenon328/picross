@@ -340,6 +340,34 @@ dem beabsichtigten Raster geprüft. Geänderte Logikdaten machen
 einen alten Nachweis ungültig; reine Assetänderungen erhalten einen neuen
 Manifeststand und eine erneute Zuordnungs-/Motivprüfung.
 
+### 5.5 Separate Eindeutigkeitsdiagnose (#139, Paket A)
+
+Die additive Diagnose untersucht ausschließlich validierte Logikeingänge v1/v2,
+ohne Zielmatrix, Motivwissen oder Vorbelegungen. Die intern verzweigende vollständige
+Domain-Suche erzeugt keine Deduktionsschritte. Bestehende Profile, Proof-/Logikhashes,
+Import-/Reparatur-/ZA-1-Zertifizierung und Produktionsfreigaben bleiben unverändert.
+
+`unique` (eindeutig) verlangt genau einen unabhängig geprüften Lösungszeugen und
+vollständige Erschöpfung aller Suchzweige. `no_solution` (keine Lösung) verlangt
+vollständige Erschöpfung ohne Lösung. `multiple` (mehrdeutig) verlangt zwei verschiedene,
+unabhängig gegen dieselben Hinweise geprüfte Endmatrizen; danach endet die Suche.
+`unknown` erlaubt kein abschließendes Urteil, auch nach einer gefundenen Lösung.
+Ungültiger Eingang und technische Fehler bleiben gesonderte Fehlerzustände.
+
+Ein neues Diagnoseverzeichnis bindet exakte Eingabebytes und geprüfte Lösungsdateien
+per SHA-256 und Bytezahl an `picross-uniqueness-v1` mit Werkzeugversion, Methode,
+kumulativen Budgets, tatsächlichen Zählern und Endgrund. Die notwendige Prüfung der
+geschriebenen Zeugen gehört zum Suchbudget. `check-diagnosis` prüft Dateibindungen und
+Zeugen unabhängig durch direkte Runextraktion; es replayt keinen Suchbaum und
+bestätigt allein aus einem Zeugen weder Eindeutigkeit noch Unlösbarkeit.
+Vollständigkeitsargument, Reihenfolge, Formate, Grenzen und CLI stehen in der
+[Werkzeuganleitung](../tools/puzzle_production/README.md).
+
+Die Diagnose ersetzt weder Produktionsmanifest noch vollständigen Deduktionsnachweis;
+`certified` bleibt stets falsch. `unique` bei bisherigem `stalled` erlaubt keine
+Produktionsfreigabe oder neue Schwierigkeitsstufe. Mehrlinienregeln und deren
+Schwierigkeitseinordnung gehören zu den gesondert zu entscheidenden Paketen B/C.
+
 ## 6. Überarbeitung und Motivschutz
 
 Ein zur Reparatur ausgewählter Entwurf ist die unveränderte Vergleichsreferenz.

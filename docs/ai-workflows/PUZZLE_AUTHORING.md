@@ -135,6 +135,14 @@ eine gegebenenfalls beauftragte Werkzeugerweiterung sind getrennt zu protokollie
 
 Ein vollständig gültiger deduktiver Nachweis belegt auch Eindeutigkeit. `stalled` belegt weder Mehrdeutigkeit noch Unlösbarkeit; `aborted` ist ein Abbruch. Exitcode 0 oder ein erzeugtes Importbündel allein ist keine Zertifizierung. Ein generiertes Zahlenbild oder eine KI-Erfolgsaussage ist niemals ein Nachweis.
 
+Die separate [Eindeutigkeitsdiagnose](../PUZZLE_PRODUCTION.md#55-separate-eindeutigkeitsdiagnose-139-paket-a)
+aus #139/A untersucht Hinweise zusätzlich auf `unique`, `multiple`, `no_solution`
+oder `unknown`. Sie sucht intern und liefert eigene dateigebundene Lösungszeugen.
+`unknown` nach genau einer Lösung bestätigt keine Eindeutigkeit. `check-diagnosis`
+prüft Dateibindungen und Zeugen, replayt aber keine vollständige Suche.
+`unique` hebt `stalled` nicht als Produktionshindernis auf, erzeugt keine Freigabe
+und verändert weder `picross-difficulty-0.1` noch L1–L5.
+
 Die Logik separat in einem frischen Prüferprozess verifizieren. Herkunft zusätzlich mit der vorhandenen Rekonstruktionsprüfung prüfen, beispielsweise `inspect_candidate` beziehungsweise Reparaturverifikation/passendem Export. Nur tatsächlich vorhandene Befehle/API-Funktionen verwenden. Zeit-/Zeilenbudgets je Befehl aus der README übernehmen; fehlgeschlagene Versuche nicht nachträglich umetikettieren.
 
 ### 4.3 Redaktionelle Kriterien

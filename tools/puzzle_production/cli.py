@@ -19,6 +19,9 @@ EXIT = {"solved": 0, "stalled": 0, "contradiction": 0, "invalid_input": 2,
 
 def main(argv=None) -> int:
     actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] in ("diagnose", "check-diagnosis"):
+        from .diagnosis_cli import main as diagnosis_main
+        return diagnosis_main(actual)
     if actual and actual[0] in ("import-image", "export-p1"):
         from .image_cli import main as image_main
         return image_main(actual)
