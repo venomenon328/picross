@@ -1,0 +1,32 @@
+{
+  "assessment_type": "editorial_estimate",
+  "bottleneck": "Alle 45 Linien vor allen 92 Proofschritten geprüft. Vor Aufräumen bei höchstens 10 unbekannten Zellen mindestens acht produktive Linien; keine numerische Engstelle in diesem Verlauf. Keine validierte Technikklassifikation oder erschöpfende Prüfung alternativer Lösungspfade.",
+  "calibration": "Begründete KI-Schätzung ohne validierten Bewertungsanalysator oder menschliche Vergleichsdaten. Probespiel optional, nicht durchgeführt.",
+  "confidence": "low",
+  "effort": {
+    "cells": 500,
+    "empty": 268,
+    "filled": 232,
+    "height": 25,
+    "human_active_minutes": null,
+    "proof_steps": 92,
+    "solve_time_minutes": null,
+    "width": 20
+  },
+  "evidence": "audit/difficulty-checkpoints.json",
+  "level": "L2",
+  "logic_hash": "40c3e2a33e78ac0806727dbbfc5567b70873c5c47c13be610d065a4dc4ba00e3",
+  "method": "picross-difficulty-0.1",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "rule_families": {
+    "R0": "Initial nur leere Zeile 25, keine nichtleere voll gepackte Linie. Nach Entfernen dieser Leerzeile bleiben Spalten ungepackt (maximale Packung 18 von 24), Zeilen ohnehin ungepackt. R0 kann keinen ersten Füllfortschritt liefern: L1 ausgeschlossen. Später Blockabschluss und Restleerfelder.",
+    "R1": "Voraussichtlich dominant: Überlappung und Verlängerung der breiten Knollen-/Astblöcke. Zeile 9 [5,10] in Breite 20 erzwingt initial sieben Zellen (Proofschritt 0); Spalte 7 [18] bietet langen Überlappungsanker (Schritt 10). Schritt 60, Zeile 12 [14], verlängert den bekannten Block. Diese Einschätzung folgt Hinweisen und bekannten Domains, nicht dem Motiv.",
+    "R2": "Mehrfachblockzuordnung in Zeile 8 [5,4,2] (Schritt 20) und Spalte 17 [6,5] (Schritt 40) kann kombinierte Anker/Trennungen erfordern. R0+R1-Suffizienz und R2-Notwendigkeit nicht mit validiertem schwächerem Regelanalysator bis zum Fixpunkt nachgewiesen.",
+    "R3": "Zertifiziert ist allgemeine vollständige Linienunterstützung, keine Notwendigkeit von R3. Mangels validierter schwächerer Regelfamilien bleibt R3 möglich; konservativer Bereich L2–L4."
+  },
+  "samples": "audit/difficulty-samples.json",
+  "time_estimate": null
+}

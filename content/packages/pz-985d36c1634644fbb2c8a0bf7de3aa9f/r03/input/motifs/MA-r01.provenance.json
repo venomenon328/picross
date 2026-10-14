@@ -1,0 +1,15 @@
+{
+  "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+  "derived_from": {
+    "file": "reveals/B-r01.png",
+    "sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471"
+  },
+  "file": "motifs/MA-r01.png",
+  "input": "reveals/B-r01.png",
+  "origin": "Native image_gen Edit aus genau den freigegebenen B-r01-Bytes",
+  "prompt_file": "motif-generation.json",
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "replay_guarantee": "Keine deterministische Neugenerierung; technische Rasterreproduktion beginnt an gespeicherten MA-r01-Bytes.",
+  "sha256": "974bda0232439ecc4d9acc3c7f43cf5d79ce193ffce9f758c9d5882fff6170eb",
+  "usage_basis": "Eigenständige beauftragte KI-Generierung für Picross; keine Fremdbilder oder Fremdassets eingebracht."
+}

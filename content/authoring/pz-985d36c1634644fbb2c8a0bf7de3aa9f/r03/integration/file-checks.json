@@ -1,0 +1,111 @@
+{
+  "approval": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/approval.json",
+    "sha256": "8da7a52237eb18791b923fd07dbf067ac9cfa166d51670ecf8726773281b53c5"
+  },
+  "assertions": {
+    "approval_byte_bound": true,
+    "canonical_runtime_projection": true,
+    "existing_twelve_registry_entries_unchanged": true,
+    "matrix_and_clues_equal_selected_production": true,
+    "no_pending_registration_journal": true,
+    "original_handoff_inventory_bytes_preserved": true,
+    "original_reveal_bytes_preserved": true,
+    "original_zip_unchanged": true,
+    "registered_runtime_files_byte_equal_export": true,
+    "runtime_id_revision_name_paths_palette_correct": true,
+    "single_visible_ingwer_entry": true,
+    "unique_ids_slots_and_category_projection": true,
+    "usage_notice_present": true,
+    "written_export_complete_file_set_and_hashes": true
+  },
+  "base_commit": "835c102ba76f26683b4dc42a8077b650e1725303",
+  "category_id": "gemuese-pilze-kraeuter",
+  "checked_at_utc": "2026-10-14T15:37:59.617198+00:00",
+  "checkout_head_before_integration": "a4e5f2eb1518fc258b1a1ed43e75532b2423d782",
+  "export_inspection": {
+    "file": "content/packages/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/inspection.json",
+    "sha256": "fb8bb406be07ea61fa54a14b27a265ce2050666ca882c61abba469e453b3beb5"
+  },
+  "export_manifest": {
+    "file": "content/packages/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/manifest.json",
+    "sha256": "0c8354dbd3ef789493afa0c4548d232209eb4e468319c38ffdfb4f0c1df0cf2e"
+  },
+  "extra_probe": null,
+  "format": "picross-authoring-integration-file-check-v1",
+  "git_byte_preservation": {
+    "diff_check": {
+      "command": "git -c core.whitespace=cr-at-eol diff --cached --check",
+      "reason": "Only original immutable CRLF delimiters produced default trailing-whitespace findings; no actual trailing spaces/tabs. No repository/global Git setting changed.",
+      "result": "pass"
+    },
+    "fresh_checkout_index_bytes": "pass",
+    "method": "git hash-object --no-filters and update-index for original immutable bytes; no .gitattributes/code change",
+    "note": "text=auto retains the now tracked original CRLF blobs. All export file hashes checked against staged Git blobs.",
+    "raw_bound_files": [
+      "content/packages/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/input/approvals/motif-approval.json",
+      "content/packages/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/input/approvals/motif-evidence.md",
+      "content/packages/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/input/audit/candidate-metrics.json",
+      "content/packages/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/input/audit/difficulty-checkpoints.json"
+    ]
+  },
+  "inventory_sha256": "b538d147dc8ef9a83a7cc83dab3b1eaa2ff913d97e1609178e3f4967cf8fd6ac",
+  "main_merge_commit": null,
+  "native_tests": "nicht erforderlich: reine Inhaltsintegration",
+  "package_revision": "r03",
+  "proof_status": {
+    "certified": true,
+    "line_evaluations": 137,
+    "logic_hash": "40c3e2a33e78ac0806727dbbfc5567b70873c5c47c13be610d065a4dc4ba00e3",
+    "profile": {
+      "deduction": "all-line-supported-values",
+      "id": "full-line-mono",
+      "search": false,
+      "start": "unknown",
+      "version": 1
+    },
+    "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+    "proof_verified": true,
+    "status": "solved",
+    "steps": 92
+  },
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "registry_after": {
+    "file": "content/registry.json",
+    "sha256": "33e5f68cb4f7ce8f30fd5ffe114039f4dd6d6981f0f2f08d164df7e910435020"
+  },
+  "registry_before_sha256": "c40f98ca92836237bc61db2d07fc1046c340ccbb8ce910b5fa9f056f55f7a4bc",
+  "registry_count_after": 13,
+  "registry_count_before": 12,
+  "result": "pass",
+  "runtime_files": [
+    {
+      "file": "game/data/content/ingwer_001.json",
+      "sha256": "14dbbf1dc064d9674a96b964100267213bca3535ecf6e1bef9d083ce8ac6200f"
+    },
+    {
+      "file": "game/art/content/ingwer_001.png",
+      "sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471"
+    },
+    {
+      "file": "game/art/content/ingwer_001.txt",
+      "sha256": "0644c815ac7ffc3ed3926b134b6291fea2ac1c9d31ddefc140487742c5736e62"
+    }
+  ],
+  "runtime_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "runtime_projection": {
+    "file": "game/data/registry.json",
+    "sha256": "e22fe9ee2a9be68d67a37b1d87ef168c6c6df06293a6d7e099697122cef1d90b"
+  },
+  "runtime_revision": 1,
+  "save_slot": "ingwer_001",
+  "scope": "File and data checks only, no extra inspect/verify-export/check-registry/sync-runtime/solve calls.",
+  "source_handoff": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/handoff.json",
+    "sha256": "501851ba5d57116725c6900a9fbb2e459b58225c89ae75196c690f4a39b57d8f"
+  },
+  "source_package": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/package.zip",
+    "sha256": "293a8c706e1dbfe49fc517a75e840b47f00af4a7ad70e5b4fc0d2f4494df2096"
+  }
+}

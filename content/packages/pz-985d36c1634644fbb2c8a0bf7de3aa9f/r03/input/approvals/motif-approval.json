@@ -1,0 +1,48 @@
+{
+  "actor": "Tobias Schröder (Nutzer dieser Sitzung)",
+  "configuration_sha256": "500b5cbabcb4efb373b4a493311f8ac7b4732f9feb686507c3c43f9a2f5ba9fa",
+  "derived_from_reveal_sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471",
+  "evidence": "approvals/motif-evidence.md",
+  "file": "motifs/MA-r01.png",
+  "parameters": {
+    "actual_crop": [
+      21,
+      22,
+      1101,
+      1354
+    ],
+    "alpha_below": 128,
+    "background": "#ffffff",
+    "fit": "contain",
+    "fixed": true,
+    "foreground_colors": 1,
+    "height": 25,
+    "method": "area",
+    "mode": "mono",
+    "palette": [
+      {
+        "id": "ink",
+        "rgb": "#000000"
+      }
+    ],
+    "thresholds": [
+      96,
+      128,
+      160,
+      192
+    ],
+    "width": 20
+  },
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "revision": "MA-r01",
+  "sha256": "974bda0232439ecc4d9acc3c7f43cf5d79ce193ffce9f758c9d5882fff6170eb",
+  "source_package": {
+    "commit": "07a618764e97abe5c66ee515926640292305f21d",
+    "revision": "r02",
+    "sha256": "3d70d6ef0dc87dfb5a809ffe7b5c87e56890f86c419ef33cb4839612f2702288"
+  },
+  "statement": "Ich gebe die Motivvorlage MA-r01 frei; Parameter: genau der im Paket vorgeschlagene eindeutige Parameterkorridor.",
+  "timestamp_basis": "Zeitpunkt der Aufzeichnung der tatsächlichen Erklärung dieser Sitzung; Nachrichtenzeit nicht separat verfügbar.",
+  "timestamp_utc": "2026-10-14T15:23:07.852998+00:00",
+  "type": "human_motif_approval"
+}
