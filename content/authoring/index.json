@@ -19,6 +19,11 @@
       "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
       "revision": "r04",
       "record": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r04/record.json"
+    },
+    {
+      "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+      "revision": "r05",
+      "record": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r05/record.json"
     }
   ],
   "format": "picross-authoring-index-v1"

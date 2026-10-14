@@ -4,7 +4,7 @@
   "revision": "r04",
   "motif_name": "Warnemünde",
   "category_id": "gebaeude-bauwerke",
-  "state": "raster_review",
+  "state": "superseded",
   "package": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r04/package.zip",
     "bytes": 5808148,
@@ -50,7 +50,7 @@
     "motif: renewed human approval of exact manually redrawn MR-r03 geometry/source required",
     "final_editorial: human acceptance pending"
   ],
-  "next_action": "MR-r03/r04-Geometrie konkret freigeben; neues content_ready-Paket mit dieser Freigabe erstellen. Keine Spielintegration.",
+  "next_action": "Use current r05 corrected raster; no acceptance of superseded r04 inventory required.",
   "integration": null,
   "motif": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r04/motif.png",
@@ -83,5 +83,7 @@
     "base_commit": "b57d8da3dd8c0965727759eb027c10686abb3630",
     "producer_commit": "f26a3740d2902ddfe50fea1ccd14cb976e7d64da",
     "commit_evidence": "Final commit/CI in Draft-PR113"
-  }
+  },
+  "superseded_by": "r05",
+  "superseded_reason": "Exactly two sun color cells corrected by user request; rest positively assessed. Old package/handoff remain unchanged."
 }
