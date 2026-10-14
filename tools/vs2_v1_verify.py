@@ -114,7 +114,7 @@ def verify(matrix, focused):
     for ui in (1,1.25):
         require(len({g['sha256'] for g in focused['glyphs'] if g['ui_scale'] == ui}) == 3, 'three distinct rendered statuses')
     # Apply failures to a REAL generous-case report, not a hand-built passing fixture.
-    source = next(r for r in focused['records'] if r['id']=='F-01' and r['ui_scale']==1 and not r['overview'] and not r['recovery'])
+    source = next(r for r in focused['records'] if r['id']=='T-01' and r['ui_scale']==1 and not r['overview'] and not r['recovery'])
     mutations = {
         'inconsistent row pitch': lambda r: r.update(row_pitch=r['row_pitch']+2),
         'smaller font': lambda r: r.update(font_px=r['font_px']-1),

@@ -32,7 +32,7 @@ class TargetTests(unittest.TestCase):
             return original(path, *args, **kwargs)
         with patch.object(za1_fixtures, "load_json", side_effect=guarded):
             checkout = isolated_checkout(self.root / "fixed-catalog")
-        self.assertEqual(len(check_checkout(checkout, replay=True)["entries"]), 9)
+        self.assertEqual(len(check_checkout(checkout, replay=True)["entries"]), 0)
         self.assertFalse((checkout / "content/packages").exists())
 
     def setUp(self):
@@ -291,7 +291,7 @@ class TargetTests(unittest.TestCase):
         with self.assertRaisesRegex(InvalidInput, "collision"): registration(collision, checkout, apply=True)
         second = self.export(p2, dest="second")
         registration(second, checkout, apply=True)
-        self.assertEqual(len(check_checkout(checkout, replay=True)["entries"]), 11)
+        self.assertEqual(len(check_checkout(checkout, replay=True)["entries"]), 2)
         protected = isolated_checkout(self.root / "protected-repository")
         with patch("tools.puzzle_production.content_registry.ROOT", protected):
             with self.assertRaisesRegex(InvalidInput, "Test-only"):

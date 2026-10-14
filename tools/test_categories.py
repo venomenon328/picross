@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class CategoryTests(unittest.TestCase):
     def setUp(self):
         self.catalog = categories.load(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
-        self.registry = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/registry.json")
+        self.registry = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/validation.json")
 
     def test_frozen_pre_migration_inputs(self):
         folder = ROOT / "game/tests/fixtures/kat1"
@@ -45,9 +45,8 @@ class CategoryTests(unittest.TestCase):
             ("mythen-fantasie", "Mythen & Fantasie")]
         self.assertEqual([(c["id"], c["name"]) for c in categories.ordered(self.catalog)], expected)
         self.assertEqual([c["order"] for c in categories.ordered(self.catalog)], list(range(1, 21)))
-        self.assertEqual([e["category_id"] for e in self.registry["entries"][:9]], [
-            "fahrzeuge-verkehr", "gebaeude-bauwerke", None, "gemuese-pilze-kraeuter", None,
-            "gebaeude-bauwerke", None, "blumen-pflanzen", "voegel"])
+        self.assertEqual([e["category_id"] for e in self.registry["entries"]], [
+            "fahrzeuge-verkehr", "voegel"])
         validate(self.registry, self.catalog)
 
     def test_category_fields_types_duplicates_and_limits(self):

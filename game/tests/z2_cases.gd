@@ -20,7 +20,7 @@ static func run(t: SceneTree) -> void:
 	await t.process_frame
 	click(t,app.choices[1])
 	await t.process_frame
-	t.check(app.work.visible and app.session == app.sessions[1],"Z2-A01 album opens regular F-02")
+	t.check(app.work.visible and app.session == app.sessions[1],"Z2-A01 album opens regular T-02")
 	t.check(app.theme.default_font.get_font_name() == "IBM Plex Sans" and app.TITLE_FONT.get_font_name() == "Fraunces","Z2-A01 bundled font families")
 	for tool: String in ["fill","erase"]:
 		click(t,app.actions[tool])
@@ -134,11 +134,11 @@ static func run(t: SceneTree) -> void:
 	app.store.fail_step = "after_rotation"
 	click(t,app.actions.menu)
 	t.check(app.work.visible and not app.information.visible and state(app) == pending and app.status_label.visible and app.work_repair_button.is_visible_in_tree(),"Z2-A04 failed flush keeps view, error and recovery reachable")
-	t.check(not FileAccess.file_exists(app.store.path_for("f02")) and app.slot_status[1] == "recovered","Z2-A04 primary missing, backup retained")
-	var backup: String = FileAccess.get_file_as_string(app.store.path_for("f02",".bak"))
+	t.check(not FileAccess.file_exists(app.store.path_for("t02")) and app.slot_status[1] == "recovered","Z2-A04 primary missing, backup retained")
+	var backup: String = FileAccess.get_file_as_string(app.store.path_for("t02",".bak"))
 	app.store.fail_step = ""
 	click(t,app.work_repair_button)
-	t.check(app.repair_dialog.visible and not FileAccess.file_exists(app.store.path_for("f02")),"Z2-A04 repair requires explicit confirmation")
+	t.check(app.repair_dialog.visible and not FileAccess.file_exists(app.store.path_for("t02")),"Z2-A04 repair requires explicit confirmation")
 	var modal_history: Array = app.session.player.history.duplicate(true)
 	var behind: Vector2 = app.board.global_position+app.board.view.viewport.get_center()
 	t.mouse_button(behind,true)
@@ -146,7 +146,7 @@ static func run(t: SceneTree) -> void:
 	t.check(app.session.player.history == modal_history and not app.session.gesture.active,"Z2-A04 modal does not click through")
 	app.repair_dialog.hide()
 	click(t,app.actions.menu)
-	t.check(app.work.visible and FileAccess.get_file_as_string(app.store.path_for("f02",".bak")) == backup,"Z2-A04 cancelled repair and retry preserve backup")
+	t.check(app.work.visible and FileAccess.get_file_as_string(app.store.path_for("t02",".bak")) == backup,"Z2-A04 cancelled repair and retry preserve backup")
 	click(t,app.work_repair_button)
 	app.repair_dialog.hide()
 	app.repair_dialog.confirmed.emit()

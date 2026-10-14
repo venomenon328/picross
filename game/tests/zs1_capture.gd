@@ -45,13 +45,13 @@ func run() -> void:
 			app.board.set_font_choice(choice)
 			app.update_variant()
 		for spec: Array in [
-			[0, 1920, 1080, 1.0, 24.0, "f01-work"],
-			[1, 1920, 1080, 1.0, 24.0, "f02-color"],
-			[2, 1920, 1080, 1.0, 12.0, "f03-small"],
-			[1, 1280, 720, 1.25, 24.0, "f02-compact"],
-			[0, 1600, 900, 1.0, 36.0, "f01-1600"],
-			[0, 1920, 1080, 1.0, 36.0, "f01-z150"],
-			[2, 2560, 1440, 1.0, 72.0, "f03-z300"]]:
+			[0, 1920, 1080, 1.0, 24.0, "t01-work"],
+			[1, 1920, 1080, 1.0, 24.0, "t02-color"],
+			[2, 1920, 1080, 1.0, 12.0, "t03-small"],
+			[1, 1280, 720, 1.25, 24.0, "t02-compact"],
+			[0, 1600, 900, 1.0, 36.0, "t01-1600"],
+			[0, 1920, 1080, 1.0, 36.0, "t01-z150"],
+			[2, 2560, 1440, 1.0, 72.0, "t03-z300"]]:
 			surface.size = Vector2i(spec[1], spec[2])
 			app.size = Vector2(surface.size)
 			app.set_ui_scale(spec[3])
@@ -67,7 +67,7 @@ func run() -> void:
 			app.board.view.reframe()
 			app.board.clear_pointer_hover()
 			await shot(spec[5])
-			if spec[5] == "f02-compact":
+			if spec[5] == "t02-compact":
 				for axis: String in ["row", "column"]:
 					await hint_probe(axis)
 		await status_probe()
@@ -181,7 +181,7 @@ func font_metrics() -> Dictionary:
 		width = maxf(width, axis_width)
 	var extents: Vector2 = Vector2.ZERO if baseline else board.clue_vertical_extents(fs)
 	if not baseline and variant > 0:
-		# Advance includes glyph side bearings. F07's widest 12px column token
+		# Advance includes glyph side bearings. T07's widest 12px column token
 		# exactly fills the 12px column advance; no invented extra 1px gap.
 		if board.has_method("set_mode"):
 			check(axis_widths[0] <= rows,"regular horizontal token pitch retained")
@@ -315,7 +315,7 @@ func load_probe() -> void:
 	check(app.board.completion_searches == searches, "animation ticks do not search clues")
 	check(not app.board.is_processing(), "animation ticker stops")
 	check(app.session.player.cursor == 1, "50-cell stroke remains one action")
-	measurements.append({"style": 2, "font_choice": variant, "fixture": "F-06", "overview": true, "cells": 50,
+	measurements.append({"style": 2, "font_choice": variant, "fixture": "T-06", "overview": true, "cells": 50,
 		"input_commit_us": commit_us, "draw_us": app.board.draw_times_us.duplicate(), "frame_us": frame_times,
 		"renderer": RenderingServer.get_video_adapter_name(), "real_mouse_acceptance": "OPEN ZS1-M01"})
 	app.board.measure_draws = false

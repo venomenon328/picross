@@ -22,7 +22,7 @@ on:
         type: boolean
         default: true
       pilots:
-        description: Exercise all four current production pilot puzzles
+        description: Exercise four fixed synthetic interaction cases
         type: boolean
         default: true
       visual:

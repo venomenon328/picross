@@ -243,7 +243,7 @@ func fingerprint() -> Dictionary:
 func diverse(traces: Array) -> bool:
 	var unique: Dictionary = {}
 	for trace: Variant in traces: unique[str(trace)]=true
-	return unique.size()>=10 # The bound twelve F01 cells select ten distinct variants.
+	return unique.size()>=10 # The bound twelve T01 cells select ten distinct variants.
 
 func max_deviation(lines: Array) -> float:
 	var result: float = 0
@@ -420,7 +420,7 @@ func run() -> void:
 			if app.session.player.cells[4*app.session.player.width+x]<0:
 				mouse(q,MOUSE_BUTTON_LEFT,true)
 				mouse(q,MOUSE_BUTTON_LEFT,false)
-		if index!=1: await shot("v3-F%02d-work" % int(app.session.definition.id.trim_prefix("F-")))
+		if index!=1: await shot("v3-T%02d-work" % int(app.session.definition.id.trim_prefix("T-")))
 		if index==0:
 			var region: Rect2 = app.board.view.cell_rect(Vector2i(3,4))
 			region.position+=app.board.global_position

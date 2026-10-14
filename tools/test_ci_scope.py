@@ -98,9 +98,9 @@ class SelectionTests(unittest.TestCase):
         value = classify(["docs/design/book_inventory/composition/inputs/fonts.json"])["selected"]
         self.assertTrue(value["product"] and value["visual"])
 
-    def test_hash_bound_markdown_and_actual_pilot_files_are_inputs(self):
-        for path in ["examples/rp4/SELECTION.md", "game/data/f05.json",
-                     "game/art/f05.png", "game/tests/rp6_probe.gd"]:
+    def test_hash_bound_markdown_and_technical_fixture_files_are_inputs(self):
+        for path in ["examples/rp4/SELECTION.md", "game/data/technical.json",
+                     "tests/puzzle_production/fixtures/catalog/runtime.json", "game/tests/rp6_probe.gd"]:
             with self.subTest(path=path):
                 value = classify([path])["selected"]
                 self.assertTrue(value["production"] and value["pilots"])

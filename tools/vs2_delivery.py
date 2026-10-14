@@ -64,7 +64,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     (focused_dir / "v1-acceptance.json").write_text(json.dumps(v1,indent=2)+"\n",encoding="utf-8")
     selected = [renders / "vs2-matrix.json", output / "vs2-write.json", output / "vs2-read.json",
                 focused_dir / "v1-focused.json", focused_dir / "v1-acceptance.json"]
-    selected += [focused_dir / name for name in ("v1-F-01-fit.png", "v1-F-01-work.png", "v1-VS09-work.png", "v1-VS08-fit.png", "v1-VS04-fit.png", "v1-recovery-1280-ui125.png")]
+    selected += [focused_dir / name for name in ("v1-T-01-fit.png", "v1-T-01-work.png", "v1-VS09-work.png", "v1-VS08-fit.png", "v1-VS04-fit.png", "v1-recovery-1280-ui125.png")]
     selected += [focused_dir / g["file"] for g in focused["glyphs"]]
     v2_dir = output / "v2-renders"
     v2_dir.mkdir()
@@ -122,7 +122,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
 
 def verify_v3(directory: Path) -> dict:
     report = json.loads((directory / "v3-report.json").read_text(encoding="utf-8"))
-    expected_cases = {(sheet, w, h, ui, mode, fit) for sheet in ("F-01", "F-02", "F-08")
+    expected_cases = {(sheet, w, h, ui, mode, fit) for sheet in ("T-01", "T-02", "T-08")
                       for w, h in ((1280, 720), (1600, 900), (1920, 1080), (2560, 1440))
                       for ui in (1.0, 1.25) for mode in ("G", "V") for fit in (False, True)}
     actual_cases = {(r["id"], *r["client"], r["ui"], r["mode"], r["fit"]) for r in report["records"]}
@@ -130,7 +130,7 @@ def verify_v3(directory: Path) -> dict:
         raise toolchain.PreflightError("Incomplete/failed V3 native coverage")
     for record in report["records"]:
         vs2_v1_verify.sidebar_axes(record, record["ui"])
-    expected = {"v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"}
+    expected = {"v3-tight-rail.png", "v3-T01-work.png", "v3-T08-work.png", "v3-title.png", "v3-fills-five.png"}
     expected.update(['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'])
     metadata_path = Path(__file__).resolve().parents[1] / "game/art/book/frames.json"
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
@@ -227,7 +227,7 @@ def capture(root, project, workspace, output, engine, render_command, environmen
 
 def verify_records(report: dict) -> None:
     expected = {(corpus,index,w,ui,mode) for corpus,indices in ((False,(0,1,3,5,7,8)),(True,range(10))) for index in indices for w in (1280,1600,1920,2560) for ui in (1.0,1.25) for mode in ("G","V")}
-    actual = {(r["corpus"], int(r["id"].replace("F-","").replace("VS",""))-1,r["client"][0],r["ui_scale"],r["mode"]) for r in report["records"]}
+    actual = {(r["corpus"], int(r["id"].replace("T-","").replace("VS",""))-1,r["client"][0],r["ui_scale"],r["mode"]) for r in report["records"]}
     if report["failures"] or actual != expected or len(report["records"]) != 256:
         raise toolchain.PreflightError("Incomplete/failed VS2 regular matrix")
     for record in report["records"]:
@@ -250,7 +250,7 @@ def verify(renders: Path) -> dict:
         if picture["file"].startswith(("regular-","corpus-")) and set(picture.get("frame_pixels",{})) != {"top","bottom","left","right"}:
             raise toolchain.PreflightError("VS2 rendered frame evidence incomplete")
     expected_images = {"album.png","options.png"}
-    expected_images.update(f"regular-F-{i:02d}-G-ui{ui}.png" for i in (1,6) for ui in (100,125))
+    expected_images.update(f"regular-T-{i:02d}-G-ui{ui}.png" for i in (1,6) for ui in (100,125))
     expected_images.update(f"corpus-VS{i:02d}-{mode}-ui{ui}.png" for i in (4,8,9) for mode in ("G","V") for ui in (100,125))
     expected_images.update(f"rectangular-VS{i:02d}-reveal.png" for i in (1,3,5,7,9))
     if {p["file"] for p in report["pictures"]} != expected_images or len(report["pictures"]) != len(expected_images):

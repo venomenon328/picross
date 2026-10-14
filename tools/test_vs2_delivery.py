@@ -33,9 +33,9 @@ class DeliveryTests(unittest.TestCase):
                 for w,h in ((1280,720),(1600,900),(1920,1080),(2560,1440)):
                     for ui in (1.0,1.25):
                         for mode in ("G","V"):
-                            records.append(dict(corpus=corpus,id=f"VS{i:02d}" if corpus else f"F-{i:02d}",client=[w,h],ui_scale=ui,mode=mode,layout_valid=True,grid_fit=True,hidden_tokens=0,status="geometric_fit_owner_open",clipped_glyphs=0,glyph_collisions=0,cell_pitch=24))
+                            records.append(dict(corpus=corpus,id=f"VS{i:02d}" if corpus else f"T-{i:02d}",client=[w,h],ui_scale=ui,mode=mode,layout_valid=True,grid_fit=True,hidden_tokens=0,status="geometric_fit_owner_open",clipped_glyphs=0,glyph_collisions=0,cell_pitch=24))
         names={"album.png","options.png"}
-        names.update(f"regular-F-{i:02d}-G-ui{ui}.png" for i in (1,6) for ui in (100,125))
+        names.update(f"regular-T-{i:02d}-G-ui{ui}.png" for i in (1,6) for ui in (100,125))
         names.update(f"corpus-VS{i:02d}-{mode}-ui{ui}.png" for i in (4,8,9) for mode in ("G","V") for ui in (100,125))
         names.update(f"rectangular-VS{i:02d}-reveal.png" for i in (1,3,5,7,9))
         for name in names: (self.root/name).write_bytes(b"bound-test-image")
@@ -89,14 +89,14 @@ class DeliveryTests(unittest.TestCase):
             buttons=[[w-(187.5 if w<1700 else 150)-(2-i)*58*u-20*u,h/30+12*u,44*u,44*u] for i in range(3)]
             axis=buttons[1][0]+22*u
             return dict(material=[0,0,w,h],navigation_buttons=buttons,navigation=axis,frames=[axis]*3,controls=[axis]*4)
-        names = ['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'] + ["v3-tight-rail.png", "v3-F01-work.png", "v3-F08-work.png", "v3-title.png", "v3-fills-five.png"]
+        names = ['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'] + ["v3-tight-rail.png", "v3-T01-work.png", "v3-T08-work.png", "v3-title.png", "v3-fills-five.png"]
         for name in names: (self.root/name).write_bytes(b"native-binding")
         report = dict(checks=1000, failures=0,
                       sidebar_metadata_sha256=hashlib.sha256((Path(__file__).resolve().parents[1]/"game/art/book/frames.json").read_bytes()).hexdigest(),
                       sidebar_assets=json.loads((Path(__file__).resolve().parents[1]/"game/art/book/frames.json").read_text(encoding="utf-8")),
                       frame_pixels=[dict(changed_pixels=101) for _ in range(3)],
                       records=[dict(id=s, client=[w,h], ui=u, mode=m, fit=f,sidebar_axes=axes(w,h,u))
-                               for s in ("F-01","F-02","F-08") for w,h in ((1280,720),(1600,900),(1920,1080),(2560,1440))
+                               for s in ("T-01","T-02","T-08") for w,h in ((1280,720),(1600,900),(1920,1080),(2560,1440))
                                for u in (1.0,1.25) for m in ("G","V") for f in (False,True)],
                       pictures=[dict(file=n,sha256=hashlib.sha256(b"native-binding").hexdigest()) for n in names])
         def verify():

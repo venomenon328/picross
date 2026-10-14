@@ -501,5 +501,174 @@
     ],
     "total_files": 48,
     "total_bytes": 10134723
+  },
+  "prototype_cleanup": {
+    "source_commit": "a401b73f2f0bb42bf93589fcf0bc382010616d3c",
+    "tree": "478ac9d15d70e89199b6800aa8c31b13abbf6501",
+    "files": [
+      {
+        "path": "game/art/f01.svg",
+        "blob": "c55290411401f2055a035ee2aab282e1541979c0",
+        "bytes": 1745,
+        "sha256": "7d797807621cefd0f3a64b163a2468f99e526f9dab4591f7c7c386c292aeb87c",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f01.svg.import",
+        "blob": "a83b8a4a96efe3ffc9ccfa2512eeba919f03ff75",
+        "bytes": 1013,
+        "sha256": "29e29f967e19cfe8f6727b5b49302a4dec205748a53a854c775485335e3c85d0",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f02.svg",
+        "blob": "d12da2a8370ef231fa4b457379b156341cfcc394",
+        "bytes": 2971,
+        "sha256": "88b714e347f03979f370145864500c581389d275e64ba7af0cd57686a9d6893b",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f02.svg.import",
+        "blob": "7a3e6103e3dac70b43b88f8490001de29dc2db10",
+        "bytes": 1013,
+        "sha256": "7b125d33ab93e4d7170e8be3dc3bd63cfcba6d3b3a2201a4c6caea31684d901a",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f03.svg",
+        "blob": "26a6211677a81bd87ae071c721d1e9782e3e4887",
+        "bytes": 520424,
+        "sha256": "81fce39086326ca257529b8ec96137c9eed66d068b679a5aef3a9950971c5878",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f03.svg.import",
+        "blob": "6e863f89883b719d0862b27091cdd7f93c1747d0",
+        "bytes": 1014,
+        "sha256": "7d23b95f94e4500c01b59ae7c3ab28dfb929f05d4233a2257402ea6e3658d6e2",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f04.svg",
+        "blob": "06998b0da9e8c2f0e0165a518fb2d5000be553ac",
+        "bytes": 2231,
+        "sha256": "602b5fa22cec2255292e209afb0a64c1d696aa5cd711c9d4b21044263bf1b15a",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f05.png",
+        "blob": "a1b0384f02c75bccc11cb4bfedc1979fe93646a7",
+        "bytes": 1415599,
+        "sha256": "91304a15c6f2f6106b7169d224422da7c781cb630d7b6b1e727cf85fef47ec2d",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f06.png",
+        "blob": "2c4560fcb1e2ff179244c8a413e01663497fc556",
+        "bytes": 887395,
+        "sha256": "5017066bf077dbfede6009d160a6986218dfe4a5795a2027b9aeec0160b7d96b",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f07.png",
+        "blob": "ca5803728f599587086b8647ca2960f86989b6d3",
+        "bytes": 1328021,
+        "sha256": "cfc81aed5ea28927c314d33e814c9877c1161f324088363d43a5f90cfde78e3b",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f08.png",
+        "blob": "e730b69a0ca90e66f0936b076a3ae4aba653fa92",
+        "bytes": 991170,
+        "sha256": "f654720341d5a11d0e7aec6b9be1f37b902eef20d3de5364d525cb0905a05d0e",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/art/f09.png",
+        "blob": "15687934108437f5ed0ed0b6e40980832f5bca8d",
+        "bytes": 942363,
+        "sha256": "50493120121531a15cdc6352a85efc2b08ac6b12793b22740f3fdfa468bf0562",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f01-proof.json",
+        "blob": "29ebabfb0a0c47ccf94b30ee9149f6da43599575",
+        "bytes": 6501,
+        "sha256": "ae32854c8a74d5e576e3169d0e1da3c79d0d05c5dbf48e999adb6840ad0874c3",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f01.json",
+        "blob": "16bfe42171c99d1e06bbd8e9c425f885150b1111",
+        "bytes": 3394,
+        "sha256": "4cb13e7d2de777e463b75b60f6e336d4fcf1ae4cab3fb6dd6de2b7218a43954a",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f02-proof.json",
+        "blob": "579a71f7b56e52939d388a70d05ed771bce06a8d",
+        "bytes": 15589,
+        "sha256": "c3426d5c8c643d1ac9634ea74e04a0a6204bde215a677c99dd4e8e9ff2d4121d",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f02.json",
+        "blob": "ce44a812620544ea967333ba24b08129b6b94d19",
+        "bytes": 14096,
+        "sha256": "0c9884102866c16d73e8a27ffd7bdcd186a30cdfa3596bfae42bc800fb5794f7",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f03.json",
+        "blob": "1dfc3f771b8c646d0ae1fa9701de428294ac8e4f",
+        "bytes": 436568,
+        "sha256": "68d1a0a137c4439f8067785a7f362f903a7350c0df501c092d002d2760a1bd73",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f04.json",
+        "blob": "e2d26df2343f4f6b99e95928adada03b463b54db",
+        "bytes": 1870,
+        "sha256": "c575bd448f736045da13dd5553550f5154e1215d2eac743806245b776a7d4587",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f05.json",
+        "blob": "39db12224e7d3b9d26d77f970f57b2812fe0c07a",
+        "bytes": 26000,
+        "sha256": "8ae92da6e279e959cfa8b2dc27b9aeff2ac66e36a19ece4bca2c0d0dc281eff0",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f06.json",
+        "blob": "71bf1ddf5520ae68e0ba44b61708a4682aaf094d",
+        "bytes": 26710,
+        "sha256": "1cf6ffc79794e02af854ea756f35572236d6be3217f04c0bc0b2849480761fb9",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f07.json",
+        "blob": "75d9cc27ec147c8629b23fb38f5d6d027b8f50f0",
+        "bytes": 89969,
+        "sha256": "aa0f8ee226c26bc081c6ccc033598a6731eee5266473b34ec72dc43931f36c5d",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f08.json",
+        "blob": "b96213c243c7e9d763e9728e8b4208eba55b8097",
+        "bytes": 7022,
+        "sha256": "71130dae5fb29bd835c6d10f54f4f827574887204421344926077ae88a63f4ff",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      },
+      {
+        "path": "game/data/f09.json",
+        "blob": "f9ef8a5da9c14fe4eeea8aaacf060d02a3a525b0",
+        "bytes": 14497,
+        "sha256": "49bd8e1e7bd443df2700cd466668a5bb72dcd35505cb96d576f259c0bb56cd2d",
+        "reason": "Issue #114: retired player resource; original bytes remain in this source commit"
+      }
+    ],
+    "total_files": 23,
+    "total_bytes": 6737175
   }
 }

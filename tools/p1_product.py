@@ -105,7 +105,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--download-timeout-seconds", type=int, default=1200)
     for name, description in (
         ("integration", "500 actions and the independent cross-process restart oracle"),
-        ("pilots", "all four current pilot playthroughs across real processes"),
+        ("pilots", "four synthetic interaction cases across real processes"),
         ("visual", "current compact native pixel and animation checks"),
         ("perf-b", "regular atlas renderer and cache lifecycle regression"),
     ):
@@ -161,9 +161,9 @@ def run_pilots(workspace: Path, environment: dict, base: list[str], phase) -> di
             environment["RP6_INDEX"] = str(index)
             for stage in ("partial", "finish", "read"):
                 untouched = {p.name: toolchain.sha256_file(p) for p in pilot_saves.glob("*")
-                             if p.is_file() and not p.name.startswith(("f01.", f"f{number:02d}."))}
+                             if p.is_file() and not p.name.startswith(("t01.", f"t{number:02d}."))}
                 environment["RP6_STAGE"] = stage
-                phase(f"rp6-f{number:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
+                phase(f"rp6-t{number:02d}-{stage}", base + ["--script", "res://tests/rp6_probe.gd"],
                       "RP6_" + stage.upper() + "_OK")
                 if any(not (pilot_saves / name).is_file() or toolchain.sha256_file(pilot_saves / name) != digest
                        for name, digest in untouched.items()):
@@ -180,19 +180,19 @@ def run_pilots(workspace: Path, environment: dict, base: list[str], phase) -> di
 
 
 def require_foreign_slot_failure(result: dict) -> None:
-    """Accept only the semantic F01 guard, with a natively valid loaded save."""
+    """Accept only the semantic T01 guard, with a natively valid loaded save."""
     output = result["output"]
     errors = [line.strip() for line in output.splitlines() if "ERROR:" in line]
     if (result["exit_code"] != 4
-            or errors != ["ERROR: RP3_FAIL: isolated F04 preserves F01 cells after restart"]
-            or "RP6_F01_SAVE status=loaded unknown=399" not in output
+            or errors != ["ERROR: RP3_FAIL: isolated T04 preserves T01 cells after restart"]
+            or "RP6_T01_SAVE status=loaded unknown=399" not in output
             or not re.search(r"RP6_RESULT index=2 stage=read checks=\d+ failures=1\b", output)
             or "RP6_READ_OK" in output):
-        raise toolchain.PreflightError("Foreign-slot control did not fail solely on valid changed F01 cells")
+        raise toolchain.PreflightError("Foreign-slot control did not fail solely on valid changed T01 cells")
 
 
 def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[str], phase) -> dict:
-    """Re-read F04 once with a valid changed F01 in a disposable profile copy."""
+    """Re-read T04 once with a valid changed T01 in a disposable profile copy."""
     original = environment["P1_TEST_SAVE_ROOT"]
     original_stage = environment["RP6_STAGE"]
     control = workspace / "rp6-isolation-control"
@@ -200,15 +200,15 @@ def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[s
     try:
         environment["P1_TEST_SAVE_ROOT"] = str(control)
         environment["RP6_STAGE"] = "foreign_write"
-        phase("rp6-f04-foreign-slot-write", base + ["--script", "res://tests/rp6_probe.gd"],
+        phase("rp6-t04-foreign-slot-write", base + ["--script", "res://tests/rp6_probe.gd"],
               "RP6_FOREIGN_WRITE_OK")
         environment["RP6_STAGE"] = "read"
-        phase("rp6-f04-foreign-slot-control", base + ["--script", "res://tests/rp6_probe.gd"],
+        phase("rp6-t04-foreign-slot-control", base + ["--script", "res://tests/rp6_probe.gd"],
               validator=require_foreign_slot_failure)
     finally:
         environment["P1_TEST_SAVE_ROOT"] = original
         environment["RP6_STAGE"] = original_stage
-    return dict(status="success", processes=2, slot="F-01", native_load="loaded",
+    return dict(status="success", processes=2, slot="T-01", native_load="loaded",
                 unknown_cells=399, expected_exit=4, expected_failures=1)
 
 
@@ -279,8 +279,8 @@ def run_pilot_visual(output, workspace, project, engine, environment, phase, hos
     try:
         for index, number in ((2,4),(3,6),(4,8),(5,9)):
             environment["RP6_INDEX"] = str(index)
-            phase(f"rp6-f{number:02d}-render",command,"RP6_CAPTURE_OK")
-        return list(renders.glob("rp6-*.json")) + [renders / "rp6-f06-completion-1920-ui100.png"]
+            phase(f"rp6-t{number:02d}-render",command,"RP6_CAPTURE_OK")
+        return list(renders.glob("rp6-*.json")) + [renders / "rp6-t06-completion-1920-ui100.png"]
     finally:
         for key in ("P1_CAPTURE_DIR","P1_TEST_SAVE_ROOT","RP6_INDEX"):
             environment.pop(key,None)
@@ -490,7 +490,7 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_done("pilots")
             if args.visual:
                 evidence.scope_start("visual")
-                # Pilot captures consume completed real saves. Other native checks
+                # Synthetic captures consume completed isolated saves. Other native checks
                 # run independently in the existing isolated worker, with separate
                 # profile/project/environment and no concurrent evidence writes.
                 if args.pilots:

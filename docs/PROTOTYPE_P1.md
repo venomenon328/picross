@@ -1,5 +1,14 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+**Aktueller Inhaltsvertrag (#114, 14.10.2026):** Der reguläre Katalog und Export
+enthalten ausschließlich registrierte Workflow-Rätsel. Die früheren F-01 bis F-09
+und ihre Runtimebilder sind entfernt; aktive Reservierungs-/Bewahrungspflichten
+in den historischen P1/RP-3/RP-6-Abschnitten sind aufgehoben. Produktionsdateien,
+IDs und Freigaben bleiben unverändert. Allgemeine Regressionen verwenden sechs
+isolierte synthetische Muster; historische Savebelege bleiben unter Tests.
+Appname, Speicherroot und Schema 1 bleiben gleich, verwaiste Saves unberührt.
+Maßgeblich sind [KAT-1](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md) und [CI-Policy](CI_POLICY.md).
+
 [HC / #92](CLUE_TYPOGRAPHY.md) ersetzt aktive Chalkboard-/24/18-Maße durch
 Delight Coffee und native zellabhängige Schrift-/Slotmaße, einschließlich Fit,
 G/V, Zusatzkapazität und Drag/Snap. Frühere D-33-/ZS-/VS2-Maße sind historisch.
@@ -46,7 +55,7 @@ der gewünschte reguläre Arbeitswert, begrenzt durch den tatsächlichen Fit.
 Platzmangel und kleine/kollidierende Hinweise werden transparent behandelt;
 50×50 erhält keinen versteckten Pan-Ausweg oder Komfortzertifikat.
 
-Sechs Inhalte werden angeboten; neun bekannte IDs und Schema 1/Appidentität bleiben erhalten. Vollständige Validierung
+Registrierte Workflow-Inhalte werden angeboten; Schema 1 und Appidentität bleiben erhalten. Vollständige Validierung
 geht der Normalisierung alter Hand-/Pan-/Zoomwerte voraus. Gültige gewünschte
 Arbeitsstufe und aktuelle Fitgröße sind getrennt; Modus wird nicht gespeichert.
 Studienkatalog und -speicher werden beim regulären Start nicht verwendet.
@@ -166,6 +175,10 @@ Warmes, ruhiges handgezeichnetes 2D-Album mit klaren Konturen und Farbflächen. 
 Vor Abschluss weder fertiges Motivbild noch Motivname oder verräterischer Albumplatzhalter. Während des Lösens stets eine Miniatur nur des eigenen Zustands einschließlich Fehlern. Mocks sind Stilreferenzen, keine gültigen Rätseldaten oder vorweggenommenen Produktabnahmen.
 
 ## 4. Testdaten und Datenvertrag
+
+Die folgende F-Tabelle dokumentiert den historischen P1-Ausgangsbestand. Aktuelle
+Regressionen verwenden T-01/T-02/T-04/T-06/T-08/T-09 aus dem isolierten Harness;
+Produktionsdefinitionen und Freigaben folgen ZA-1.
 
 | Kennung | Testfall | Zweck und Nachweis |
 | --- | --- | --- |
@@ -408,7 +421,7 @@ Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
 
-P1.3 verwendet ausschließlich `user://p1/saves/` mit aus den neun fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gewünschte gültige Arbeitszoomstufe und Einpassen-Flag (overview), aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
+Historischer P1.3-Ausgangsstand (Slots heute aus der Registry): `user://p1/saves/` mit aus den neun fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gewünschte gültige Arbeitszoomstufe und Einpassen-Flag (overview), aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 
 Vor Anwendung werden Schema, exakte Definition/Revision, Matrix/Palette, jede nichtleere atomare History-Aktion mit eindeutigen Indizes und gültigen Vor-/Nachwerten, das widerspruchsfreie Replay ab unbekanntem Raster einschließlich Redo, Cursor-Matrix-Gleichheit, `undo_used`, Abschluss und View vollständig geprüft. Unbekannte oder unpassende Daten werden weder teilweise geladen noch still migriert. Der Rasterfokus wird bei Resize gültig begrenzt; Hinweis-Offsets werden aus Rasterende, äußerem Anfang oder mittlerem Tokenfenster für die aktuelle Geometrie neu abgeleitet.
 
@@ -464,7 +477,7 @@ optionale Route wird als nicht zutreffend ausgewiesen, nicht als ausgeführt.
 
 | ID | Prüffall und Erfolg |
 | --- | --- |
-| A-01 | Definitionen/Hinweise einschließlich Farben, Leerlinien und ungültiger Daten validieren; F-01/F-02 mit Deduktionsfolge, F-06 als 50×50-Obergrenze; 51 je Achse wird abgewiesen. Abschlussressourcen technisch unabhängig von Rasterauflösung prüfen. |
+| A-01 | Synthetische Definitionen/Hinweise einschließlich Farben, Leerlinien und ungültiger Daten validieren; T-01/T-02 für Mono/Farbe, T-06 als 50×50-Obergrenze; 51 je Achse wird abgewiesen. Abschlussressourcen technisch unabhängig von Rasterauflösung prüfen. |
 | A-02 | Setz-/Neutralisierungs-/Radiergesten: direkte Füllung↔X-Umwandlung, Achsenbindung und erneute Wahl nur nach tatsächlichem Startzelltreffer, diagonaler Start, Sprünge ohne Starttreffer, elastisches Zurückziehen, gemischte Vorbelegung, Rand/UI, Abbruch und No-op. Nur zum eingefrorenen Modus passende Zellen ändern sich. |
 | A-03 | Atomarer Strich, exakte Vorzustände bei Undo/Redo, korrekte Verzweigung; Neutralisieren nicht als versteckten Undo-Aufruf behandeln. |
 | A-04 | Gemeinsame Ansichts-/Hit-Test-/Miniaturtransformation bei fitbegrenztem Zoom, negativen Raster-/Miniaturpanversuchen, UI-Skalierung und Resize; echte Mauspfade bewegen nur die konkret gestartete Zeile/Spalte kontinuierlich und rasten beim Drop in gemeinsame Slots ein, einschließlich Abbruch/Grenzen. Navigation mutiert keine Zellen. Zellgröße bleibt bei reinem Resize im Arbeitszoom stabil. |
@@ -566,7 +579,7 @@ Z2 ist über PR #33 integriert. Z2-M01/M02/M03 sind nicht durchgeführt; der
 Eigentümer hob das damalige Gate für diesen Merge auf. Sie sind kein RP-3-Gate.
 Z2 ist keine Abnahme von #24 und keine Releasefreigabe.
 
-## 11. RP-3: erster importierter Inhalt
+## 11. Historischer RP-3-Lieferstand: erster importierter Inhalt
 
 F-04 erweitert die festen Definition-/Save-Registrierungen additiv. Appname,
 Speicherroot, Schema 1 und bestehende ID-/Revisionsbindungen bleiben erhalten.
@@ -600,7 +613,7 @@ in `main` integriert. Der kombinierte RP-6-Stand muss diese Regeln regressionsfr
 erhalten. Kein Release folgt daraus.
 
 
-## 13. RP-6: sechs feste Pilotinhalte
+## 13. Historischer RP-6-Lieferstand: sechs feste Pilotinhalte
 
 F-04 bleibt byteidentisch einschließlich Revision und SVG. F-05 bis F-09 sind
 zusätzliche Schema-2-Definitionen/Save-Slots: 100×100 Mono, 50×50 Farbe,

@@ -42,10 +42,10 @@ def projection(registry, catalog):
 def validate(registry, catalog):
     categories.validate(catalog)
     exact_keys(registry, {"format", "entries"})
-    require(registry["format"] == FORMAT and isinstance(registry["entries"], list) and 9 <= len(registry["entries"]) <= 10000,
+    require(registry["format"] == FORMAT and isinstance(registry["entries"], list) and len(registry["entries"]) <= 10000,
             "Unsupported registry")
     seen = {k: set() for k in ("id", "key", "save_slot", "definition", "reveal")}
-    for i, e in enumerate(registry["entries"]):
+    for e in registry["entries"]:
         exact_keys(e, {"id", "key", "save_slot", "definition", "reveal", "visible", "production", "category_id"})
         for field in seen:
             value = e[field]
@@ -56,30 +56,23 @@ def validate(registry, catalog):
             require(folded not in seen[field], "Registry collision: " + field)
             seen[field].add(folded)
         require(type(e["visible"]) is bool, "Invalid visibility")
-        if i >= 9 or e["visible"] or e["category_id"] is not None:
-            categories.lookup(catalog, e["category_id"])
-        if i < 9:
-            n = i+1
-            require({k: v for k, v in e.items() if k != "category_id"} == {"id": f"F-{n:02d}", "key": f"f{n:02d}", "save_slot": f"f{n:02d}",
-                    "definition": f"data/f{n:02d}.json", "reveal": f"art/f{n:02d}."+("svg" if n <= 4 else "png"),
-                    "visible": n in (1, 2, 4, 6, 8, 9), "production": None}, "Historical reservation changed")
-        else:
-            require(ID.fullmatch(e["id"]) and e["key"] == e["id"] and STEM.fullmatch(e["save_slot"]), "Invalid new registry ID/slot")
-            relative(e["save_slot"]+".json")
-            require(e["definition"].startswith("data/content/") and e["definition"].endswith(".json") and
-                    e["reveal"].startswith("art/content/") and Path(e["reveal"]).suffix in (".png", ".svg"), "Invalid content resource path")
-            p = exact_keys(e["production"], {"package", "package_sha256", "revision", "width", "height", "mode", "difficulty",
-                                             "status", "blockers", "test_only", "definition_sha256", "reveal_sha256"})
-            relative(p["package"])
-            require(p["package"].startswith("content/packages/") and p["status"] == "registered" and p["blockers"] == [] and
-                    type(p["test_only"]) is bool, "Invalid production index")
-            for field in ("package_sha256", "definition_sha256", "reveal_sha256"):
-                sha(p[field])
-            for field in ("width","height"):
-                integer(p[field],1,50,"index "+field)
-            require(isinstance(p["revision"],str) and REVISION.fullmatch(p["revision"]) and
-                    p["mode"] in ("mono","color") and isinstance(p["difficulty"],dict), "Invalid index metadata")
-    require(registry["entries"][9:] == sorted(registry["entries"][9:], key=lambda e: e["id"]), "New registry entries must be sorted")
+        categories.lookup(catalog, e["category_id"])
+        require(ID.fullmatch(e["id"]) and e["key"] == e["id"] and STEM.fullmatch(e["save_slot"]), "Invalid new registry ID/slot")
+        relative(e["save_slot"]+".json")
+        require(e["definition"].startswith("data/content/") and e["definition"].endswith(".json") and
+                e["reveal"].startswith("art/content/") and Path(e["reveal"]).suffix in (".png", ".svg"), "Invalid content resource path")
+        p = exact_keys(e["production"], {"package", "package_sha256", "revision", "width", "height", "mode", "difficulty",
+                                         "status", "blockers", "test_only", "definition_sha256", "reveal_sha256"})
+        relative(p["package"])
+        require(p["package"].startswith("content/packages/") and p["status"] == "registered" and p["blockers"] == [] and
+                type(p["test_only"]) is bool, "Invalid production index")
+        for field in ("package_sha256", "definition_sha256", "reveal_sha256"):
+            sha(p[field])
+        for field in ("width","height"):
+            integer(p[field],1,50,"index "+field)
+        require(isinstance(p["revision"],str) and REVISION.fullmatch(p["revision"]) and
+                p["mode"] in ("mono","color") and isinstance(p["difficulty"],dict), "Invalid index metadata")
+    require(registry["entries"] == sorted(registry["entries"], key=lambda e: e["id"]), "Registry entries must be sorted")
     return registry
 
 
@@ -89,7 +82,7 @@ def check_checkout(root, replay=False, *, check_projection=True):
     r = validate(load_json(root / REGISTRY), catalog)
     if check_projection:
         require((root / RUNTIME).read_bytes() == canonical_bytes(projection(r, catalog))+b"\n", "Runtime registry is stale")
-    for e in r["entries"][9:]:
+    for e in r["entries"]:
         p = e["production"]
         require(not p["test_only"] or root.resolve() != ROOT.resolve(), "Test-only content cannot enter the real catalog")
         package = root / p["package"]
@@ -155,7 +148,7 @@ def registration(export_dir, root, *, apply=False, fail_step=None):
         return {"status": "no-op", "registered": True, "id": e["id"], "category": category, "changes": []}
     new = deepcopy(registry)
     new["entries"].append(e)
-    new["entries"][9:] = sorted(new["entries"][9:], key=lambda item: item["id"])
+    new["entries"].sort(key=lambda item: item["id"])
     validate(new, catalog)
     notice = str(Path(e["reveal"]).with_suffix(".txt")).replace("\\", "/")
     targets = ["game/" + e["definition"], "game/" + e["reveal"], "game/"+notice, package_rel]
