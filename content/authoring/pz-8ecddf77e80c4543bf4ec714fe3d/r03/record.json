@@ -4,7 +4,7 @@
   "revision": "r03",
   "motif_name": "Warnemünde",
   "category_id": "gebaeude-bauwerke",
-  "state": "content_ready",
+  "state": "superseded",
   "package": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r03/package.zip",
     "bytes": 13072044,
@@ -59,7 +59,7 @@
   "blockers": [
     "final_editorial: missing bound human final approval"
   ],
-  "next_action": "Menschliche Endabnahme für r03/Inventar/Endauswahl; mit Integrationsauftrag Standardauftrag4. Kein Runtimeeintrag vor Endabnahme.",
+  "next_action": "Use r04 raster_review; no final approval of superseded r03 requested.",
   "integration": null,
   "selection": {
     "logic_hash": "a26537828a9fa3e102f619f6db3c6e8084e718235e83abf3957292cc895ca763",
@@ -88,5 +88,7 @@
     "producer_commit": "d1c23130c1e54897699ca0795f49a8526bc62b67",
     "commit_evidence": "Final delivery commit and CI binding in Draft-PR113; cannot embed final self commit."
   },
-  "metadata_note": "configuration.json and image provenance retain r02 proposal metadata as historical input; current approval/state are authoritative in handoff.json and approvals/motif-approval.json. Native image bytes unchanged."
+  "metadata_note": "configuration.json and image provenance retain r02 proposal metadata as historical input; current approval/state are authoritative in handoff.json and approvals/motif-approval.json. Native image bytes unchanged.",
+  "superseded_by": "r04",
+  "superseded_reason": "User requested symmetric lighthouse/Teepott and odd tower width. New manually redrawn geometry in r04; old sealed package/handoff remain unchanged."
 }

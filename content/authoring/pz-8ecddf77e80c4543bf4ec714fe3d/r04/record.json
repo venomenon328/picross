@@ -1,0 +1,87 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r04",
+  "motif_name": "Warnemünde",
+  "category_id": "gebaeude-bauwerke",
+  "state": "raster_review",
+  "package": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r04/package.zip",
+    "bytes": 5808148,
+    "sha256": "83ab39d189a8b9f24f62456fc7c918a678e738b29b0c682321ddebd3ad7fb5e7"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r04/handoff.json",
+    "sha256": "e3f25e5e0f9093d018f845176b545c2083e4682af31dd334b56a37e85c10178b"
+  },
+  "inventory_sha256": "1e3718a9eb373956c324c45b5ccf0d3ce988c10b495a423db342203ee2a5de48",
+  "approval": null,
+  "width": 30,
+  "height": 40,
+  "mode": "color",
+  "difficulty": {
+    "method": "picross-difficulty-0.1",
+    "assessment_type": "editorial_estimate",
+    "level": "L2",
+    "plausible_range": [
+      "L1",
+      "L4"
+    ],
+    "confidence": "low",
+    "logic_hash": "84eca4dda369866d25d96a7de6ea10169148656deb91874bcca2ca53d0c44240",
+    "rule_families": {
+      "R0": "21 direkt gepackte Farbzeilen und sechs untere Leerzeilen erlauben einen breiten Einstieg. R0-Suffizienz nicht vollständig mit einem validierten schwächeren Regelanalysator getestet.",
+      "R1": "Geschätzter Hauptbedarf sind Überlappungen langer Himmelsblöcke und Verlängerungen an den bereits gesetzten Turm-/Dachankern. Symmetrie wird niemals als Schlussgrund verwendet.",
+      "R2": "Möglicherweise kombinierte Zuordnung der mehrteiligen Navy-/Gold-/Blaufolgen in Galerien und Fassade. Notwendigkeit und R1-Suffizienz nicht formal nachgewiesen.",
+      "R3": "Full-line-color beweist vollständige Deduktion, nicht die Notwendigkeit allgemeiner R3-Linienunterstützung. R3 bleibt im Unsicherheitsbereich."
+    },
+    "bottleneck": "Alle 70 Linien vor jedem der 102 Proofschritte geprüft. Vor <=24 unbekannten Zellen mindestens 7 produktive Linien; numerische Engstelle nach Methodendefinition: False.",
+    "evidence": "audit/difficulty.json",
+    "time_estimate": null,
+    "effort": {
+      "cells": 1200,
+      "filled": 915,
+      "empty": 285,
+      "proof_steps": 102,
+      "human_active_minutes": null
+    }
+  },
+  "blockers": [
+    "motif: renewed human approval of exact manually redrawn MR-r03 geometry/source required",
+    "final_editorial: human acceptance pending"
+  ],
+  "next_action": "MR-r03/r04-Geometrie konkret freigeben; neues content_ready-Paket mit dieser Freigabe erstellen. Keine Spielintegration.",
+  "integration": null,
+  "motif": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r04/motif.png",
+    "sha256": "386bf8a223c5e2f6f3fa8bb6954151d8dc8caa5500fbff604e596eff4b9ec1b1",
+    "revision": "MR-r03",
+    "approval": null
+  },
+  "technical_core": {
+    "certified": true,
+    "proof_verified": true,
+    "fresh_origin_checked": true,
+    "symmetry_checked": true,
+    "matrix_hash": "b93ee63dc591041c1252d67a0d083700ff7e312261e31fbcf62ae00474915eda",
+    "logic_hash": "84eca4dda369866d25d96a7de6ea10169148656deb91874bcca2ca53d0c44240",
+    "note": "Diagnostic/content checks; not ZA1 acceptance because new geometry approval is pending."
+  },
+  "tower": {
+    "width": 9,
+    "shaft_width": 5,
+    "axis_column": 6
+  },
+  "teepott": {
+    "width": 19,
+    "axis_column": 20
+  },
+  "changed_positions": 260,
+  "report": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r04/report.md",
+  "repository_delivery": {
+    "branch": "content/warnemuende-reveal-r01",
+    "base_commit": "b57d8da3dd8c0965727759eb027c10686abb3630",
+    "producer_commit": "f26a3740d2902ddfe50fea1ccd14cb976e7d64da",
+    "commit_evidence": "Final commit/CI in Draft-PR113"
+  }
+}
