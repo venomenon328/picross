@@ -1,0 +1,56 @@
+{
+  "source_commit": "149f3d9e2fda926fc36843f7e4ee2856c31fe3ea",
+  "source_package_revision": "r03",
+  "reveal": {
+    "revision": "F-r01",
+    "file": "reveal/F-r01.png",
+    "sha256": "8325ef5ee94d88312b968ad058f6cddcf35cda68946db7e9598a97f26ac17998",
+    "approval": "approvals/reveal-approval.json"
+  },
+  "motif": {
+    "revision": "MA-r02",
+    "file": "motif/MA-r02.png",
+    "sha256": "1bf3b95478586d129dd36fc0fbd0ba0d1bba7f012c32a4b6884bbbf14a606139",
+    "approval": "approvals/motif-approval.json"
+  },
+  "dimensions": {
+    "width": 30,
+    "height": 50,
+    "source": "Nutzerfreigabe in diesem Chat; vorgeschlagene alternative Größe 28x46 nicht produziert."
+  },
+  "attempts": [
+    {
+      "bundle": "production/import-r01",
+      "variants": [
+        "area-100",
+        "area-120",
+        "area-140",
+        "area-160"
+      ],
+      "status": "rejected",
+      "reason": "Alle logisch zertifiziert; ursprünglicher 920x1514-Crop führt zu 30x49 contain-Fit und leerem oberen/unteren Rand. Randregel verletzt."
+    },
+    {
+      "bundle": "production/import-r02",
+      "variant": "area-120-fit",
+      "status": "rejected",
+      "reason": "Randregel und Logik erfüllt, aber zwei isolierte Spitzenzellen (Zeile 2/Spalten 10 und 21) sowie leere Innenzeile 3; schlechtere Kontinuität der geschützten Türme."
+    },
+    {
+      "bundle": "production/import-r02",
+      "variant": "area-140-fit",
+      "status": "selected",
+      "reason": "Randregel und Logik erfüllt, zusammenhängende gleich hohe Turmspitzen, klare Fenster und Portale, keine isolierten Zellen oder leeren Innenlinien."
+    }
+  ],
+  "exact_matrix_comparison": "audit/candidate-comparison.json; sechs verschiedene 30x50-Matrizen mit identischer Mono-Palette.",
+  "crop_refinement": "Von [52,6,972,1520] auf [56,0,968,1520]. Entfernt nur weißen seitlichen Außenraum und ergänzt oberen Weißraum. Exaktes 3:5 ohne Streckung/Letterbox. Motivbbox unter Luminanz 240: [56,12,967,1513].",
+  "repair": null,
+  "rejected_image_history": {
+    "commit": "149f3d9e2fda926fc36843f7e4ee2856c31fe3ea",
+    "package": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/r03/package.zip",
+    "decision": "decisions.json",
+    "hashes": "history/r02-inventory.json",
+    "note": "Keine verworfenen ungebundenen Bildvarianten neu eingebettet. MA-r01 bleibt notwendiger Provenienzeingang von MA-r02."
+  }
+}

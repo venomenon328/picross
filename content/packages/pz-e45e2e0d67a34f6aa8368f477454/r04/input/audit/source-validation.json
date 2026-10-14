@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "source_commit": "149f3d9e2fda926fc36843f7e4ee2856c31fe3ea",
+  "source_revision": "r03",
+  "package_sha256": "97a3bdb75d44ccfdabacdd6cbfde567ac00580160bdfc8a4ae84145479dd712a",
+  "handoff_sha256": "54025aaffcd03f8489254cf8fe1f1601d64d7880253b3771974ad0ba57456770",
+  "inventory_sha256": "695f0f4a6e9641e763fe1e579fe2d14d1a81f912edb50f186c76277abb68b2b9",
+  "inventory_files_checked": 19,
+  "checks": [
+    "ZIP CRC, safe paths and exact file set",
+    "all inventory sizes and SHA-256",
+    "readable handoff byte equality",
+    "reveal and motif exact source bytes",
+    "reveal approval and MA-r01 to MA-r02 recorded derivation"
+  ],
+  "rulebook_snapshot_matches_repository": true,
+  "historical_limit": "r02 recovery is a retained historical report; r03 supplies all current production inputs. No fresh recovery of the unavailable broken r02 archive claimed."
+}

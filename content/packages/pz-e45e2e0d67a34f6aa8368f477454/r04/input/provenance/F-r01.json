@@ -1,0 +1,20 @@
+{
+  "puzzle_id": "pz-e45e2e0d67a34f6aa8368f477454",
+  "file": "reveal/F-r01.png",
+  "sha256": "8325ef5ee94d88312b968ad058f6cddcf35cda68946db7e9598a97f26ac17998",
+  "author": "OpenAI image generation in ChatGPT",
+  "usage_basis": "Neue KI-Illustration im ausdrücklichen Nutzerauftrag ohne Fremdassets oder Bildreferenzen. Keine Exklusivität oder konkrete Rechtegarantie behauptet.",
+  "tool": "image_gen.imagegen",
+  "prompt": "Use case: illustration-story. Create ONE full-color hand-drawn 2D album illustration of Kölner Dom / Cologne Cathedral seen EXACTLY FRONTALLY from the west: centered symmetrical west facade, absolutely no angled side view. Complete isolated single cathedral, both tall matching openwork Gothic spires fully visible and well separated by the characteristic deep open U-shaped space between them. Recognizable real Cologne Cathedral proportions, monumental long pointed spires over tiered tower bodies, central large pointed tracery window, three Gothic entry portals, stepped buttresses and small pinnacles. Entire building base and spire tips within image, narrow calm margins. Plain uniform warm white background, no ground or environment at all, no other buildings, no people, no trees, no skyline, no pavement, no sky or clouds. Warm calm confident hand-drawn 2D style, clear clean slightly organic dark contours, rich substantial coherent colored areas, finished internal architectural details and restrained shading. Detailed reveal artwork, not monochrome, not a silhouette or nonogram abstraction. Not photorealistic, not 3D, not technical engraving, no hatching noise or obsessive tiny brick marks, no text or watermark. Portrait canvas. Variant F-r01: polished storybook/gouache color illustration, brighter light gray-limestone and pale warm taupe stone, bold dark gray-blue outlines, blue-green principal window panes and subtle golden portal details. Architectural masses have broader calmer solid-color treatment with clear thick major contours; keep attractive finished detail in selected Gothic tracery, portal carvings and statues but do NOT cover every stone with miniature lines. Maintain majestic real cathedral proportions rather than chibi or fantasy architecture, and the characteristic frontal twin towers. This is a colorful detailed reveal, no flat icon or silhouette.",
+  "settings": {
+    "transparent_background": false,
+    "model": "not_exposed",
+    "seed": "not_exposed",
+    "resolution_setting": "not_exposed"
+  },
+  "reference_images": [],
+  "operations": [
+    "Native Neugenerierung",
+    "Unveränderte Originalbytes kopiert"
+  ]
+}

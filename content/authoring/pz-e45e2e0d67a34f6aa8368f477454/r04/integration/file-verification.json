@@ -1,0 +1,44 @@
+{
+  "status": "pass",
+  "runtime_identity": {
+    "id": "pz-e45e2e0d67a34f6aa8368f477454",
+    "revision": 1,
+    "width": 30,
+    "height": 50
+  },
+  "runtime_name": "Kölner Dom",
+  "definition_keys": [
+    "columns",
+    "height",
+    "id",
+    "palette",
+    "reveal",
+    "revision",
+    "rows",
+    "schema",
+    "solution",
+    "width"
+  ],
+  "runtime_files": {
+    "game/data/content/koelner_dom_001.json": "a21ecffd4b751ed71b97768eb8afa1f96331dc1fb193ccfdf85eeb7797314ef7",
+    "game/art/content/koelner_dom_001.png": "8325ef5ee94d88312b968ad058f6cddcf35cda68946db7e9598a97f26ac17998",
+    "game/art/content/koelner_dom_001.txt": "3556f4532bcfe01259a2caffff43ba45923613ebbf8134d918870be913849c4e"
+  },
+  "registered_manifest_sha256": "e95bedee5a3bd58183472caa8ed0f16f54efa1268a5a737fb9bd1e82fdecc3fc",
+  "original_zip_sha256": "7c0f588870e0c4a5e465a8c672d8062e970e252aac24535e1f24137aa656e2f2",
+  "original_handoff_sha256": "a8b755a054582b3992dca53451deb935228a68d74ef7ee258580c1eb608effe6",
+  "approval_sha256": "0f8a40b52e3454efda207c1f6959eefbdb3009c2970597a48fb34ab62649e1e0",
+  "package_files_byte_equal": 46,
+  "exact_manifest_file_set": true,
+  "original_handoff_inventory_byte_equal": true,
+  "selected_matrix_hints_equal_runtime": true,
+  "approved_reveal_byte_equal": true,
+  "existing_registry_entries_unchanged": 13,
+  "added_entries": 1,
+  "runtime_projection_byte_equal": true,
+  "category_source_unchanged": true,
+  "category_id": "gebaeude-bauwerke",
+  "category_name": "Gebäude & Bauwerke",
+  "pending_journal": false,
+  "extra_native_probe": "not_required: pure content integration without concrete defect"
+}
