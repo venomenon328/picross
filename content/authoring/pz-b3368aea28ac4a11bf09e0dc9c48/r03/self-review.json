@@ -1,0 +1,38 @@
+{
+  "format": "picross-authoring-self-review-v1",
+  "puzzle_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "revision": "r03",
+  "base": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "parent": "cdf8f572344aa26e50f6ceac597567f7c912ce47",
+  "independent_review": false,
+  "package_sha256": "709b0167be9df7eb018a3dbed4b299c646517f4adb19c3fa6d88a5630d1b6871",
+  "handoff_sha256": "f24a0a7a67efc109204ae7f2bfcc4ef4f6253de22fc0a87b73b0c2de8e0eeb64",
+  "inventory_sha256": "e36c9713d2215f0622cda08c53b57b445e4c031e473e00f60c16c1b640fd94aa",
+  "inspection_sha256": "a4313737b58fc845987794b5340ddf5d8a3d82f283c86ab258ed28a65a0dd9b5",
+  "zip_files": 60,
+  "expanded_bytes": 5726144,
+  "checks": {
+    "zip_safe_modes_crc_file_set": "pass; adapter also validates paths/resources",
+    "inventory_all_file_bytes_sha256": "pass",
+    "handoff_copy": "byte_equal",
+    "native_image_hashes": "pass; unchanged",
+    "rp3_manifest_all_candidates_proofs_html": "pass; preserved in full",
+    "json_utf8_lf_final_newline": "pass",
+    "index_existing_entries": "all preserved; one r03 entry added",
+    "prior_r01_r02": "unchanged in git diff",
+    "scope": "only authoring r03 and one index entry; no game/tool/CI files",
+    "separate_visual_self_review": "actual final comparison viewed after packaging; no identity defect",
+    "content_ready": "all eight content gates pass; no content blocker",
+    "human_final_approval": "pending; not fabricated",
+    "registry_export": "not performed; outside Standardauftrag 3",
+    "playtest": "not performed; optional",
+    "difficulty": "editorial estimate low; uncertainty explicit"
+  },
+  "open_acceptance": {
+    "id": "A-HAMBURGER-01",
+    "actor": "Tobias Schröder",
+    "scenario": "Genau r03 mit area-080 und unverändertem A-r01 anhand echten Endrasters/Abschlussbildvergleichs redaktionell abnehmen; Inventar und Originalhandoff binden.",
+    "gate": "Vor Standardauftrag 4 / Zieladapterexport und Registrierung"
+  },
+  "ci": "awaiting commit/push; docs and ci-required expected under content_only auto; CI is not puzzle-quality evidence"
+}

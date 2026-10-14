@@ -1,0 +1,67 @@
+{
+  "format": "picross-authoring-decisions-v1",
+  "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "revision": "r03",
+  "selected": "production/alignment-a-extra/area-240",
+  "candidate_id": "91644a0fc42650b019ad5faef316c68c33f8a9a8ece4c9ab2ecc031ef38bde48",
+  "selected_reason": "Full deductive certificate, frame pass, intact readable foam/handle/reflections, no cell repair. Selected after visual comparison of all twelve distinct matrices, not first logical success.",
+  "previous_reveal_decisions": [
+    {
+      "revision": "A-r01",
+      "sha256": "36c61f564d02bf86c2365ff934b20b600f530f1425551a2f148821e61da3acb6",
+      "reason": "Nicht ausgewählt; keine Bewertung als mangelhafte Variante.",
+      "location": {
+        "repo_commit": "a3fad9647f77af5d3c522063977ee1f629084e13",
+        "package": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r01/package.zip",
+        "file": "reveal/A-r01.png"
+      }
+    },
+    {
+      "revision": "B-r01",
+      "sha256": "5979f3f1284d7d28abce3d201a8b6f4063d680952992dd8899d07ccea00e852e",
+      "reason": "Nicht ausgewählt; keine Bewertung als mangelhafte Variante.",
+      "location": {
+        "repo_commit": "a3fad9647f77af5d3c522063977ee1f629084e13",
+        "package": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/r01/package.zip",
+        "file": "reveal/B-r01.png"
+      }
+    }
+  ],
+  "attempt_evidence": "audit/candidates.json",
+  "rounds": [
+    {
+      "round": 1,
+      "candidates": 6,
+      "hypotheses": "production-plan.json",
+      "extra": "production/extra-hypothesis.json",
+      "rejections": "96 solved but crown lost/frame fail; 128 crown lost/frame fail/stalled; 160 fragmented crown/stalled; 192 visually best but stalled; 208/224 still stalled."
+    },
+    {
+      "round": 2,
+      "candidates": 6,
+      "hypotheses": "production/round2-plan.json",
+      "extra": "production/round2-extra-hypothesis.json",
+      "rejections": "alignment-a/b at 192/224 all stalled. 248 solved but irregular foam notches and less coherent reflection opening; 240 selected."
+    }
+  ],
+  "repairs": [
+    {
+      "plan": "production/repair-plan-r01.json",
+      "status": "budget_exhausted",
+      "reason": "candidate_limit",
+      "attempts": 66,
+      "candidates": 64,
+      "applied": false
+    },
+    {
+      "plan": "production/repair-plan-r02.json",
+      "status": "budget_exhausted",
+      "reason": "step_limit",
+      "attempts": 96,
+      "candidates": 20,
+      "applied": false
+    }
+  ],
+  "final_cell_edits": 0,
+  "parameters_decision": "User fixed 25x30; previous 28x32/35x40 proposal superseded. Faithful empty-margin crop adaptation and thresholds chosen within this production, no source edit."
+}

@@ -114,18 +114,23 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
             "Invalid gate statuses")
     evidence = h.get("gate_evidence")
     require(isinstance(evidence, dict), "Gate evidence missing")
-    for gate in required:
-        require(gates.get(gate) == "pass", "Unresolved content gate: " + gate)
-        package.file(evidence.get(gate))
     manual = isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "manual"
+    edited_import = h.get("manual_edit_record") is not None
     auth = None
-    if manual:
+    if manual or edited_import:
         require(not legacy, "Manual derivation requires export v3")
-        from .manual_derivation import authorization
+        from .manual_derivation import authorization, IMPORT_AUTH_FORMAT
         auth = authorization(package, manual_authorization)
+        require((auth["record"]["format"] == IMPORT_AUTH_FORMAT) == edited_import,
+                "Manual authorization/source version mismatch")
     else:
         require(manual_authorization is None, "Manual authorization requires a manual source")
         require(h.get("content_blockers", []) == [], "Unresolved content blockers")
+    frame_exception = bool(edited_import and auth["record"]["frame_exception"])
+    for gate in required:
+        require(gates.get(gate) == "pass" or gate == "frame" and frame_exception and gates.get(gate) == "fail",
+                "Unresolved content gate: " + gate)
+        package.file(evidence.get(gate))
     for kind in ("reveal", "motif"):
         record = h.get(kind)
         package.bound(record)
@@ -137,7 +142,11 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     bundle = package.bundle(c.get("bundle"))
     kind = c.get("source_type")
     budget = Budget(min(120, max(0, package.deadline - time.monotonic())), 1_000_000)
-    if kind == "import":
+    if edited_import:
+        from .manual_derivation import inspect_edited_import
+        design, matrix, proof, checked, source, reference = inspect_edited_import(package, auth, budget)
+        expected_proof = c["bundle"] + "/" + c["variant"] + "-proof.json"
+    elif kind == "import":
         require(h.get("repair") is None, "Ambiguous import/repair origin")
         candidate, proof, checked = inspect_candidate(bundle, c.get("variant"), budget)
         design, matrix = candidate["design"], candidate["matrix"]
@@ -187,7 +196,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
         require(isinstance(p.get("method"),str) and isinstance(p.get("fit"),str) and
                 isinstance(p.get("actual_crop"),list) and len(p["actual_crop"]) == 4 and
                 all(type(v) is int for v in p["actual_crop"]), "Invalid approved method/fit/crop")
-    variant = source["reference"]["variant"] if kind in ("repair", "manual") else c["variant"]
+    variant = source["reference"]["variant"] if kind in ("repair", "manual") or edited_import else c["variant"]
     v = next(v for v in design["variants"] if v["id"] == variant)
     require(any(isinstance(p, dict) and p.get("width") == design["width"] and p.get("height") == design["height"] and
                 p.get("mode") == design["mode"] and p.get("foreground_colors") == len(design["palette"]) and
@@ -206,7 +215,8 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     left = any(row[0] != "empty" for row in matrix)
     right = any(row[-1] != "empty" for row in matrix)
     top, bottom = (any(v != "empty" for v in row) for row in (matrix[0], matrix[-1]))
-    require((left or right) and (top or bottom), "Authoring frame rule failed: (left OR right) AND (top OR bottom)")
+    frame_valid = (left or right) and (top or bottom)
+    require(frame_valid or frame_exception, "Authoring frame rule failed: (left OR right) AND (top OR bottom)")
     reveal = validate_reveal(package.file(h["reveal"]["file"]), design["width"], design["height"])
     difficulty = package.json(h.get("difficulty"))
     require(isinstance(difficulty, dict) and difficulty.get("method") == "picross-difficulty-0.1" and
@@ -225,6 +235,8 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     selection = {"variant": c["variant"], "matrix_hash": digest(matrix), "logic_hash": digest(logic),
                  "reveal": {"file": h["reveal"]["file"], "sha256": h["reveal"]["sha256"]}}
     approval = final_approval(package, selection, approval_path)
+    if edited_import:
+        require(approval is not None, "Edited import requires bound final approval")
     if auth is not None and approval is not None:
         require(auth["owner"]["approval_sha256"] == approval["sha256"], "Owner override final approval binding mismatch")
     report = {"format": "picross-target-inspection-v1", "adapter": ADAPTER, "technical": True,
@@ -235,7 +247,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
               "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256") if package.derivation else package.archive_sha256,
               "source": source, "width": design["width"], "height": design["height"], "mode": design["mode"],
               "difficulty": difficulty, "frame": {"left": left, "right": right, "top": top, "bottom": bottom},
-              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual),
+              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import),
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "test_only": h.get("test_only", False)}
     if not legacy:
         report.update(format="picross-target-inspection-v2", category_id=None,
@@ -243,6 +255,8 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     if auth is not None:
         report.update(format="picross-target-inspection-v3", manual_authorization_sha256=auth["sha256"],
                       owner_override_sha256=auth["record"]["owner_override"]["sha256"])
+    if edited_import:
+        report.update(frame_valid=frame_valid, frame_exception_accepted=frame_exception and not frame_valid)
     return report, design, matrix, logic, approval
 
 
