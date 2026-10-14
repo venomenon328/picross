@@ -477,7 +477,8 @@ def main(argv: list[str] | None = None) -> int:
                 selected += [output / "integration/summary.json"]
                 # Native popup/dialog tests must own the desktop: a concurrent
                 # capture window can close their popup on focus loss on Windows.
-                if args.visual:
+                # Linux runs each native process on its own xvfb-run -a display.
+                if args.visual and host == "Windows":
                     vs2_result = python_phase("current-vs2-complete", vs2_future.result)
                 evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
                 selected += kat2_files
