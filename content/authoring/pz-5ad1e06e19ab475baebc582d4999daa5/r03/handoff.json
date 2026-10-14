@@ -1,0 +1,163 @@
+{
+  "approved_parameters": [],
+  "authoring_parent_commit": "bb79b6a265c6dc2cd3865925bf6c03e5a71d7ca6",
+  "authorization": "Standardauftrag 2 bis Motivvorlage/Konfiguration/Codex-Übergabe; Repositoryablage, Commit/Push und Merge des Ablage-PRs #123 nach Pflichtprüfung ausdrücklich beauftragt. Keine Motiv-/Endabnahme oder Runtime-Registrierung.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "insekten-kleine-tiere",
+  "codex_handoff": "codex-handoff.md",
+  "configuration": "configuration.json",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json"
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "1a723bc881323484411d6a11a36927c1ff727afcf15653de2be9d5b90d3b4005"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "f6a7aa1b67e2a336b39f6a79fa638dad7a3ae57487e6ae975e1d28fa239f632d",
+    "file": "motifs/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "1a302fe0744cceebf81d5e2b0693deef60af483017ffb4da6424d75c7909f039"
+  },
+  "next_action": "Ausdrückliche menschliche Motivfreigabe MA-r01 samt configuration.json (30×12/32×12/34×13 mono, Empfehlung 32×12); danach Standardauftrag 3 bis content_ready/Endabnahmevorlage gemäß codex-handoff.md. Keine Registrierung.",
+  "origin_verification": "derivation.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        28,
+        107,
+        1753,
+        751
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "fixed": false,
+      "foreground_colors": 1,
+      "height": 12,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        28,
+        107,
+        1753,
+        751
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "fixed": false,
+      "foreground_colors": 1,
+      "height": 12,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 32
+    },
+    {
+      "actual_crop": [
+        28,
+        107,
+        1753,
+        751
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "fixed": false,
+      "foreground_colors": 1,
+      "height": 13,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 34
+    }
+  ],
+  "puzzle_id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "bb79b6a265c6dc2cd3865925bf6c03e5a71d7ca6",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "height": 15,
+    "mode": "mono",
+    "width": 30
+  },
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r02.png",
+    "revision": "A-r02",
+    "sha256": "f6a7aa1b67e2a336b39f6a79fa638dad7a3ae57487e6ae975e1d28fa239f632d"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549",
+    "version": "0.4.1"
+  },
+  "state": "motif_review"
+}
