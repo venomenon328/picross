@@ -1,0 +1,116 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "r02",
+  "state": "motif_review",
+  "category_id": "saeuger",
+  "package": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r02/package.zip",
+    "bytes": 2284895,
+    "sha256": "274bafbd1e5bdc36d13ada7aa034e0f09145c3367f0fc81b3b1f6e594b3d705f"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r02/handoff.json",
+    "sha256": "c8c3900c63bb6f058b0021eecd19ccddd66550eef47e9c3532de50d4cd0179e5"
+  },
+  "inventory_sha256": "cdac0737007e49400d5d89f183363848f94e550e5049587399e089b36208403a",
+  "final_editorial_approval": null,
+  "width": 20,
+  "height": 30,
+  "dimensions_status": "recommended_not_approved",
+  "requested_parameters": {
+    "width": 30,
+    "height": 20,
+    "approximate": true,
+    "mode": "mono"
+  },
+  "mode": "mono",
+  "difficulty": null,
+  "reveal_approval": {
+    "inner_file": "reveal-approval.json",
+    "sha256": "b558b69f7507ce84eb79f56754220938f9143b43d4c60330d63c2cb38275dd9c"
+  },
+  "motif_approval": null,
+  "blockers": [],
+  "next_action": "Menschliche Freigabe von MA-r01 samt configuration.json; anschließend Standardauftrag 3 bis zum geprüften Endraster/Paket.",
+  "integration": null,
+  "motif_name": "Giraffe",
+  "repo_commit": "5209d30c48957318412adfce98999e78487dc18c",
+  "main_commit": "b57d8da3dd8c0965727759eb027c10686abb3630",
+  "reveal": {
+    "label": "A-r01",
+    "file": "reveals/A-r01.png",
+    "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+    "approval": "reveal-approval.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "label": "MA-r01",
+    "file": "motifs/MA-r01.png",
+    "sha256": "96fe95aec4e2e38ffdfb265ff2ba2f7b3ac6e66f4d449b96c5c094b3fec0ca4b",
+    "derived_from_reveal_sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "proposed_parameters": [
+    {
+      "width": 20,
+      "height": 30,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    },
+    {
+      "width": 24,
+      "height": 36,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    }
+  ],
+  "previous_revision": {
+    "revision": "r01",
+    "commit": "5209d30c48957318412adfce98999e78487dc18c",
+    "record": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r01/record.json",
+    "package_sha256": "3e87260b5b8dddc0e910be2854cf9cdce73755f3333bd3b419ba241dfbc8e458"
+  },
+  "updated_at_utc": "2026-10-14T13:26:48.507916+00:00"
+}

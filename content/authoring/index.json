@@ -4,6 +4,11 @@
       "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
       "revision": "r01",
       "record": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r01/record.json"
+    },
+    {
+      "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+      "revision": "r02",
+      "record": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r02/record.json"
     }
   ],
   "format": "picross-authoring-index-v1"

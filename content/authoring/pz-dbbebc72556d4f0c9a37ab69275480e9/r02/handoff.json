@@ -1,0 +1,135 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.4.1",
+    "document_revision": 7,
+    "file": "rulebook.md",
+    "sha256": "d3179c6b58b0c356d716177d7040790ffd7db5748523e0e365aa62080fa36d2c"
+  },
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "r02",
+  "repo_commit": "5209d30c48957318412adfce98999e78487dc18c",
+  "main_commit": "b57d8da3dd8c0965727759eb027c10686abb3630",
+  "state": "motif_review",
+  "category_id": "saeuger",
+  "brief": "brief.md",
+  "requested_parameters": {
+    "width": 30,
+    "height": 20,
+    "approximate": true,
+    "mode": "mono"
+  },
+  "approved_parameters": [],
+  "proposed_parameters": [
+    {
+      "width": 20,
+      "height": 30,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    },
+    {
+      "width": 24,
+      "height": 36,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    }
+  ],
+  "configuration": "configuration.json",
+  "reveal": {
+    "label": "A-r01",
+    "file": "reveals/A-r01.png",
+    "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+    "approval": "reveal-approval.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "label": "MA-r01",
+    "file": "motifs/MA-r01.png",
+    "sha256": "96fe95aec4e2e38ffdfb265ff2ba2f7b3ac6e66f4d449b96c5c094b3fec0ca4b",
+    "derived_from_reveal_sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "cdac0737007e49400d5d89f183363848f94e550e5049587399e089b36208403a"
+  },
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "codex_handoff": "codex-handoff.md",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "reveal-approval.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "Menschliche Freigabe von MA-r01 samt configuration.json; anschließend Standardauftrag 3 bis zum geprüften Endraster/Paket.",
+  "authorization": "Standardauftrag 2 nach ausdrücklicher A-r01-Freigabe; Motivvorlage, Konfiguration, Codex-Übergabe und Repositoryablage. Draft-PR #118 fortführen; kein Merge."
+}
