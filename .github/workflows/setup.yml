@@ -30,7 +30,6 @@ jobs:
       pilots: ${{ steps.scope.outputs.pilots }}
       visual: ${{ steps.scope.outputs.visual }}
       perf_b: ${{ steps.scope.outputs.perf_b }}
-      plan: ${{ steps.scope.outputs.plan }}
     steps:
       - name: Checkout tested integration
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -106,8 +105,16 @@ jobs:
           sparse-checkout: tools/ci_scope.py
           sparse-checkout-cone-mode: false
           filter: blob:none
+      - name: Download complete selection for the result gate
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/ci-selection
       - name: Require every selected job to have actually succeeded
         env:
-          CI_PLAN: ${{ needs.docs.outputs.plan }}
-          CI_RESULTS: ${{ toJSON(needs) }}
-        run: python3 tools/ci_scope.py finish
+          CI_RESULTS: >-
+            {"docs":{"result":"${{ needs.docs.result }}"},
+            "product":{"result":"${{ needs.product.result }}"},
+            "production":{"result":"${{ needs.production.result }}"},
+            "preflight":{"result":"${{ needs.preflight.result }}"}}
+        run: python3 tools/ci_scope.py finish --plan-file "${{ runner.temp }}/ci-selection/ci-plan.json"

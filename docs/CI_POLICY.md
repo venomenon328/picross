@@ -65,6 +65,11 @@ Die beiden Commitobjekte werden gezielt flach geladen. Bei divergierter Basis
 können zusätzliche Prüfungen ausgewählt werden; Basisänderungen werden dadurch
 nicht versehentlich übersehen. Der tatsächliche Checkout bleibt der Test-Merge.
 Auswahlbericht und Logs nennen Head, Basis, Checkout, Run und ausgewählte Pfade.
+Der vollständige Auswahlbericht wird als Datei über das Artefakt desselben Laufs
+an das Ergebnisgate übergeben. Joboutputs enthalten nur die Auswahlflags;
+Umgebungsvariablen enthalten nur die vier Jobergebnisse. Große Aufräum-PRs dürfen
+nicht an Betriebssystemgrenzen für Argumente/Umgebungsvariablen scheitern; die
+Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 
 | Änderung | Automatischer Pflichtumfang im PR |
 | --- | --- |
