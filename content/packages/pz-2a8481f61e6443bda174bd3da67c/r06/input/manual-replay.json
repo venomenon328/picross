@@ -1,0 +1,44 @@
+{
+  "reference_bundle": "reference",
+  "reference_variant": "area-184",
+  "reference_manifest_sha256": "83b8a56d9af3c481faa342561504467df3372ac9d24b5fe531ea252a99aedaf6",
+  "reference_matrix_hash": "05d56b2d3e5f1c1072579e0d297bc3c9a7731386636e55b6b2ddd898152deb0e",
+  "source_motif": "motifs/MA-r02.png",
+  "request": "change-request.json",
+  "history": [
+    {
+      "edit": {
+        "x": 1,
+        "y": 8,
+        "before": "empty",
+        "after": "ink"
+      },
+      "parent_matrix_hash": "05d56b2d3e5f1c1072579e0d297bc3c9a7731386636e55b6b2ddd898152deb0e",
+      "matrix_hash": "c94b48b8eaf0950a19b391913bfcce7800099a7bdcd4a117c2f7a1aa79cadae0"
+    },
+    {
+      "edit": {
+        "x": 38,
+        "y": 8,
+        "before": "empty",
+        "after": "ink"
+      },
+      "parent_matrix_hash": "c94b48b8eaf0950a19b391913bfcce7800099a7bdcd4a117c2f7a1aa79cadae0",
+      "matrix_hash": "23ff24dea96ac4685342d894c43321624fef2382130a87c93d276bc1bb48b6db"
+    },
+    {
+      "edit": {
+        "x": 17,
+        "y": 28,
+        "before": "empty",
+        "after": "ink"
+      },
+      "parent_matrix_hash": "23ff24dea96ac4685342d894c43321624fef2382130a87c93d276bc1bb48b6db",
+      "matrix_hash": "1435c918fa22a2fb9b4b17bb063cfb767c96073473294d536c8106dfe3d8b39c"
+    }
+  ],
+  "result_file": "motifs/MC-r01.png",
+  "result_sha256": "0d6e50aa8d445d7b245e3f0e870fdc4dc0506680bd411dd45ad98a1c1cc7bf5b",
+  "result_matrix_hash": "1435c918fa22a2fb9b4b17bb063cfb767c96073473294d536c8106dfe3d8b39c",
+  "claim": "Explicit manual raster correction input, not unchanged MA-r02 import or native illustration."
+}

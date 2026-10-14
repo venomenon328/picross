@@ -1,0 +1,3 @@
+Production ID: pz-2a8481f61e6443bda174bd3da67c
+Artwork: Native ChatGPT-Bildgenerierung/-bearbeitung im Eigentümerauftrag
+Usage basis: Eigener beauftragter KI-Inhalt, keine fremden Bildbytes.

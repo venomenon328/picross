@@ -1,0 +1,77 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-2a8481f61e6443bda174bd3da67c",
+  "revision": "r01",
+  "category_id": "gebaeude-bauwerke",
+  "title": "Brandenburger Tor",
+  "state": "reveal_review",
+  "package": {
+    "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r01/package.zip",
+    "bytes": 6279241,
+    "sha256": "44ba9f7387872b1d90e6ff1b8acc614d07f7b42bfe8ec0087cdacca38cffc88c"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r01/handoff.json",
+    "sha256": "262b6311331a5ebd2732c0de28f06bbb0a68ca94b697d95812663a1e14ff71bd"
+  },
+  "inventory_sha256": "c7e132b42736d284c771d92f2c70c915761eb9999a75173de1cc8ff9787c00d5",
+  "approval": null,
+  "reveal_approval": null,
+  "width": null,
+  "height": null,
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [
+    "Menschliche Abschlussbildfreigabe offen."
+  ],
+  "next_action": "Konkretes Abschlussbild ausdrücklich freigeben; Standardauftrag 2.",
+  "integration": null,
+  "repository_binding": {
+    "source_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+    "branch": "content/brandenburger-tor-reveal-r01"
+  },
+  "offered_variants": [
+    {
+      "code": "A-r01",
+      "file": "reveals/A-r01.png",
+      "sha256": "555aff017bd9272c796e7e27e3c247c326b134b44035faf8ee60d5fc95d7e2bf",
+      "bytes": 2106547,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "image_mode": "RGB",
+      "status": "offered",
+      "approval": null,
+      "description": "Symmetrische Frontalansicht, heller honigfarbener Sandstein, ruhige Lichtführung. Empfehlung für Mono: gleichmäßig getrennte fünf Durchgänge und klare breite Hauptformen."
+    },
+    {
+      "code": "B-r01",
+      "file": "reveals/B-r01.png",
+      "sha256": "6118f5920b0e796715e0c50f6b429fc38882ade4b5bcd523e9b04937dd3da36e",
+      "bytes": 2231918,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "image_mode": "RGB",
+      "status": "offered",
+      "approval": null,
+      "description": "Leichte Schrägansicht mit sichtbarer Gebäudetiefe und wärmeren Schatten. Räumlich lebendig; Überlagerungen und ungleiche Durchgangsbreiten erhöhen das spätere Abstraktionsrisiko."
+    },
+    {
+      "code": "C-r01",
+      "file": "reveals/C-r01.png",
+      "sha256": "0ab2688d005db7b08fd02d5c63b43ea21569f5a5e465d40d2fc04da488bb6d2a",
+      "bytes": 2210839,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "image_mode": "RGB",
+      "status": "offered",
+      "approval": null,
+      "description": "Nahezu frontale Ansicht aus etwas niedrigerer Position, kräftiges Abendgold und stärkere kühle Schatten. Ausdrucksstark; Schattenflächen später gezielt reduzieren."
+    }
+  ]
+}

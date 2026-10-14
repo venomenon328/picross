@@ -1,0 +1,10 @@
+{
+  "selected": "owner-edit",
+  "reason": "Exactly three owner-requested additions to r05/area-184; one fixed result, no variant search.",
+  "changes": "change-request.json",
+  "replay": "manual-replay.json",
+  "manual_derivation_disclosed": true,
+  "technical_route": "New discrete correction input MC-r01, fresh RP-3 reimport per PUZZLE_PRODUCTION §4.4. Original reference bundle retained unchanged.",
+  "earlier_revision": "r05 remains immutable",
+  "native_images_modified": false
+}

@@ -1,0 +1,13 @@
+{
+  "puzzle_id": "pz-2a8481f61e6443bda174bd3da67c",
+  "file": "reveals/A-r02.png",
+  "sha256": "b2d10a0490dbce384ab9fd5df94c523b901c3d79731931fbebe60d790be2519a",
+  "author": "Native ChatGPT-Bildgenerierung/-bearbeitung im Eigentümerauftrag",
+  "usage_basis": "Eigener beauftragter KI-Inhalt, keine fremden Bildbytes.",
+  "prompt_file": "generation.json",
+  "previous_location": {
+    "commit": "e7152544bf1ba2453fcf3a2add8c03aab1e8cf8a",
+    "package": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/r03/package.zip",
+    "entry": "reveals/A-r02.png"
+  }
+}

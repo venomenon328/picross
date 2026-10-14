@@ -1,0 +1,18 @@
+{
+  "statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch nehme das Rätselpaket pz-2a8481f61e6443bda174bd3da67c · r06, Revision r06, mit Inventar c2297db491e758a67a64dd93a64a42baf3cc300048ebb12a8103351078f7a2c9 redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\n\nDraft-PR; kein Merge.",
+  "actor": "user (Tobias)",
+  "timestamp_basis": "First observed UTC clock after receipt; exact client submission time not exposed.",
+  "timestamp_utc": "2026-10-13T21:54:00Z",
+  "approval_sha256": "bb79359e62e1ec478a2a644487984494d2d3aadb2f3d5e4a2ee8e829f8a4c939",
+  "source_head": "97459499e57e6c2d555fcf47832e0a0038104991",
+  "base_main": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "original_zip_sha256": "8778ae8a093ed7a143b7d23d8b046d014fae25e1e8048026ad6602d778c2f144",
+  "reference_hashes": {
+    "reveals/A-r02.png": "b2d10a0490dbce384ab9fd5df94c523b901c3d79731931fbebe60d790be2519a",
+    "motifs/MA-r02.png": "dab4dbd6882627e96c61c376c684f9b30ac5b7c89932e6f263ea56512e4eb779",
+    "motifs/MC-r01.png": "0d6e50aa8d445d7b245e3f0e870fdc4dc0506680bd411dd45ad98a1c1cc7bf5b",
+    "manual-replay.json": "aab7fa1e8dc9d3dd325bb94ff469d73b83b67e48b9e4888edbee98e6181c132e",
+    "change-request.json": "c6d55725f43969c5cb2db8be0aad607a31b8d3aa22e7ca144daacd5d71c21e1d"
+  },
+  "scope": "Standardauftrag 4 integration/commit/push/existing Draft PR; no merge."
+}

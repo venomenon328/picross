@@ -1,0 +1,29 @@
+{
+  "result": "pass",
+  "registered_in_checkout": "E:\\Zeuch\\Coding\\picross-pz-2a8481f6",
+  "runtime_id": "pz-2a8481f61e6443bda174bd3da67c",
+  "runtime_revision": 1,
+  "save_slot": "brandenburger_tor_001",
+  "category_id": "gebaeude-bauwerke",
+  "authoring_zip_sha256": "8778ae8a093ed7a143b7d23d8b046d014fae25e1e8048026ad6602d778c2f144",
+  "handoff_sha256": "ff13dfa8ddb30ddab7dbb6a80945d1f86c9a5a5d9027f1ab380498c1314ee191",
+  "inventory_sha256": "c2297db491e758a67a64dd93a64a42baf3cc300048ebb12a8103351078f7a2c9",
+  "approval_sha256": "bb79359e62e1ec478a2a644487984494d2d3aadb2f3d5e4a2ee8e829f8a4c939",
+  "export_manifest_sha256": "7926567fe79324094063a951ce08fd51bba4ef3306a2c7e7b6fd7c9ee22a3f2c",
+  "definition_sha256": "9021e828087d070457210b75dccdbf35fb01f2dde4be739eee3dd433ff29f831",
+  "reveal_sha256": "b2d10a0490dbce384ab9fd5df94c523b901c3d79731931fbebe60d790be2519a",
+  "usage_notice_sha256": "b22a503c0a7bab883ed2d3abbe20397055802f2ec20c21bafd073d23936352ef",
+  "registered_export_files": 43,
+  "checks": [
+    "Actual runtime resources byte-identical to verified export",
+    "Runtime solution equals approved r06 matrix",
+    "Original ZIP/handoff/inventory and reveal remain unchanged",
+    "Separate human approval matches copied export approval",
+    "Registry adds exactly one ID/category; all 13 existing entries unchanged",
+    "Runtime projection exact canonical bytes, existing entries/categories unchanged",
+    "Registered export manifest/files match verified export byte-for-byte",
+    "No pending registration journal"
+  ],
+  "native_tests": "nicht erforderlich: reine Inhaltsintegration",
+  "main_integration": false
+}

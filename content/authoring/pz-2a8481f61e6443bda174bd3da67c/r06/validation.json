@@ -1,0 +1,32 @@
+{
+  "result": "pass",
+  "reference_head": "a7e901313156195fa56f530e07b8fc57103c43ad",
+  "package_sha256": "8778ae8a093ed7a143b7d23d8b046d014fae25e1e8048026ad6602d778c2f144",
+  "inventory_sha256": "c2297db491e758a67a64dd93a64a42baf3cc300048ebb12a8103351078f7a2c9",
+  "zip_files": 74,
+  "exact_added_cells_one_based_column_row": [
+    [
+      2,
+      9
+    ],
+    [
+      39,
+      9
+    ],
+    [
+      18,
+      29
+    ]
+  ],
+  "unchanged_other_cells": 1197,
+  "checks": [
+    "Written ZIP CRC, safe paths, complete inventory/size/hash set",
+    "Exact request and protection-mask replay; all intermediate/final hashes",
+    "Discrete source PNG exactly equals changed matrix",
+    "RP-3 fresh import/hints/certificate and separate process DAG verifier",
+    "ZA-1 written ZIP technical=true, only final_editorial missing",
+    "Original revisions/tools/runtime untouched, unique index entry",
+    "Presentation copies and UTF-8/LF/JSON/local report links"
+  ],
+  "final_editorial": "pending"
+}

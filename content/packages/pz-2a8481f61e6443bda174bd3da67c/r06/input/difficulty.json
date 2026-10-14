@@ -1,0 +1,28 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "level": "L2",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "confidence": "low",
+  "logic_hash": "1d903136572645a36579e2232a5826f90c1f85642ed45faf1240f483ee72a483",
+  "rule_families": {
+    "R0": "Initial direct seeds are full row 12 [40] and empty row 30 (1-based). These alone do not place the long pillar blocks or resolve the sculpture; late completed runs support cleanup. R0-only sufficiency was not tested by a validated restricted analyser.",
+    "R1": "Dominant estimated demand: overlap/extension of long roof and pillar runs. Changed row 9 [38] in width 40 forces columns 3–38; column 3 [21] in height 30 forces rows 10–21. Multiple spatial anchors remain.",
+    "R2": "Multiple-run assignments around sculpture/head gaps and the pillar feet may combine anchors/separations. Necessity and sufficiency of R0+R1 versus R2 were not exhaustively established.",
+    "R3": "Certificate uses general full-line-mono support; this does not prove R3 necessary. No unavoidable R3 step identified in editorial review, but a restricted-rule analysis is absent."
+  },
+  "bottleneck": "All 70 lines checked before each of the 101 new proof steps. Before cleanup at <=24 unresolved cells, at least 16 productive lines; no numerical bottleneck observed. Restricted rule necessity not instrumented.",
+  "evidence": "audit/difficulty-checkpoints.json",
+  "time_estimate": null,
+  "effort": {
+    "cells": 1200,
+    "filled": 601,
+    "empty": 599,
+    "proof_steps": 101,
+    "human_active_minutes": null
+  },
+  "playtest": "not_performed; optional"
+}
