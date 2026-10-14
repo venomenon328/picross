@@ -1,0 +1,143 @@
+{
+  "actor": "Tobias Schröder",
+  "approved_palettes": [
+    {
+      "id": "original",
+      "palette": [
+        {
+          "id": "contour",
+          "rgb": "#493529"
+        },
+        {
+          "id": "hair",
+          "rgb": "#ede3bd"
+        },
+        {
+          "id": "jacket",
+          "rgb": "#727638"
+        },
+        {
+          "id": "skin",
+          "rgb": "#e9aa72"
+        }
+      ]
+    },
+    {
+      "id": "medium-contour",
+      "palette": [
+        {
+          "id": "contour",
+          "rgb": "#6c4c34"
+        },
+        {
+          "id": "hair",
+          "rgb": "#ede3bd"
+        },
+        {
+          "id": "jacket",
+          "rgb": "#727638"
+        },
+        {
+          "id": "skin",
+          "rgb": "#e9aa72"
+        }
+      ]
+    }
+  ],
+  "approved_parameter_corridor": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "original",
+      "width": 36
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "palette_id": "medium-contour",
+      "width": 36
+    }
+  ],
+  "derived_from_reveal_sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1",
+  "evidence": "production-request.json",
+  "file": "motifs/MA-r02.png",
+  "parameters": {
+    "actual_crop": [
+      0,
+      0,
+      1086,
+      1448
+    ],
+    "fit": "exact",
+    "foreground_colors": 4,
+    "height": 48,
+    "method": "area",
+    "mode": "color",
+    "palette_id": "medium-contour",
+    "width": 36
+  },
+  "preserved_features": [
+    "Frontaler Blick und geschlossenes leichtes Lächeln",
+    "Hohe zurückweichende Stirn, langes schmales Gesicht und seitliche Ohren",
+    "Helle zurückgestrichene Seitenhaare, schmaler Schnurrbart und langer spitzer Kinnbart",
+    "Olivgrüne geschlossene Jacke mit Kragen und zentraler Knopfleiste",
+    "Kopf-/Schulterproportionen und 3:4-Komposition ohne zusätzliche Objekte"
+  ],
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "revision": "MA-r02",
+  "selected_parameter_binding_note": "Technische Zuordnung des Diagnosekandidaten zu einem Mitglied des tatsächlich freigegebenen gesamten Korridors; kein neuer menschlicher Auswahlentscheid.",
+  "sha256": "22c4f25bf8332dd950f5944cffb0a2b739569a7e5739a36754404e0bba1849a5",
+  "source_package_sha256": "9d8daa3f680beb3a8c4fe8436d6a4a06f9f3712f5881ad64e2a87b0cfb45315d",
+  "statement": "MA-r02 und diesen Korridor freigeben",
+  "timestamp_basis": "Zeitpunkt der Protokollierung der tatsächlichen Nutzerantwort; separater UTC-Nachrichtenzeitpunkt nicht verfügbar.",
+  "timestamp_utc": "2026-10-14T19:09:06.820878+00:00",
+  "type": "human_motif_approval"
+}

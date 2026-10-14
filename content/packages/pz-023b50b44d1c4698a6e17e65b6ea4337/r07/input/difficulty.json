@@ -1,0 +1,33 @@
+{
+  "assessment_type": "editorial_estimate",
+  "bottleneck": "Vor jedem der158 Proofschritte alle84 Linien geprüft; bei mehr als35 offenen Zellen mindestens7 produktive Linien. Keine numerische Engstelle auf diesem Verlauf. Keine erschöpfende Prüfung alternativer Lösungswege.",
+  "calibration": "Keine menschlichen Vergleichsdaten; kein validierter Technikklassifikator.",
+  "candidate": "fixed-36x48",
+  "confidence": "low",
+  "effort": {
+    "cells": 1728,
+    "empty": 565,
+    "filled": 1163,
+    "human_active_minutes": null,
+    "max_column_clues": 20,
+    "max_row_clues": 17,
+    "proof_steps": 158
+  },
+  "evidence": "audit/difficulty-checkpoints.json",
+  "level": "L2",
+  "logic_hash": "fc71dc5aad9029c3de23fc5bcd370b96a5472deed85dac9f13cfe405d0504cad",
+  "method": "picross-difficulty-0.1",
+  "plausible_range": [
+    "L1",
+    "L4"
+  ],
+  "playtest": "not_performed; optional",
+  "rule_families": {
+    "R0": "Leere Zeile1 und die unveränderten vollständig gepackten Hemdzeilen31–48 liefern direkte Anfangsanker. R0-Suffizienz nicht bis Fixpunkt klassifiziert; L1 möglich.",
+    "R1": "Breite Haut-/Haarflächen und lange Hemdblöcke lassen Überlappung und Verlängerung als dominante Arbeit erwarten; L2 ist eine redaktionelle Schätzung.",
+    "R2": "Augen-, Schnurrbart- und Hemdkonturen erzeugen wiederholte kurze Farbblöcke. Kombinierte Zuordnung kann nötig sein, ist jedoch nicht durch einen validierten schwächeren Regelsatz nachgewiesen.",
+    "R3": "Full-line-color enthält vollständige Linienunterstützung einschließlich Farbausschlüssen. Der Zertifikatslauf belegt keine Notwendigkeit dieser stärksten Familie; konservativer Bereich bisL4."
+  },
+  "samples": "audit/difficulty-samples.json",
+  "time_estimate": null
+}

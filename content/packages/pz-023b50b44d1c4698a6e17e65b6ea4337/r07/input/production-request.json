@@ -1,0 +1,7 @@
+{
+  "actor": "Tobias Schröder",
+  "answer": "MA-r02 und diesen Korridor freigeben",
+  "continuing_scope": "Standardauftrag 3 bis zur Endabnahmevorlage, Repositoryablage samt bedingtem Merge wie ursprünglich beauftragt; keine Spielregistrierung ohne gesonderte Endabnahme.",
+  "question": "Die neue Motivvorlage MA-r02 ist oben gezeigt: Haare näher am Abschlussbild, mehr Gesichtszeichnung sowie deutlichere Kragen-, Taschen-, Falten- und Knopfdetails. Gibst du diese konkrete Datei für die Rasterproduktion frei? Vorgeschlagener Korridor: 33×44 und bevorzugt 36×48, area/exact, unverändertes Vollbild; vier Vordergrundfarben plus Weiß. Ich vergleiche dabei die ursprüngliche dunkelbraune Konturfarbe mit einem mittleren Braun, damit feine Linien beim Import besser erhalten bleiben.",
+  "source": "Tatsächliche Antwort auf request_user_input_async in dieser Sitzung"
+}

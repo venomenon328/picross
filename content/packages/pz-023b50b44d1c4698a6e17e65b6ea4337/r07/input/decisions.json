@@ -1,0 +1,23 @@
+{
+  "abandoned_motif_revision": {
+    "branch": "chore/pz-023b50b4-motif-r06",
+    "pr": 131,
+    "revision": "MA-r03",
+    "state": "closed, not merged; not used"
+  },
+  "changed_cells": 79,
+  "fixed_derivation": "fixed-derivation.json",
+  "fixed_plan": "fixed-plan.json",
+  "motif_unchanged": "MA-r02",
+  "reference_package_sha256": "48092598eaa6409a7d9c799d7f9d0c2a5655210b0cc6a496972df560d05a46b7",
+  "rejected_options": [
+    "Weitere Motivänderung: Nutzer verlangt Rasterkorrektur.",
+    "Mehr als vier Farben: für diese Verbesserung nicht nötig.",
+    "Werkzeugumbau: außerhalb dieses Inhaltsauftrags."
+  ],
+  "request": "raster-correction-request.json",
+  "selection": "fixed-36x48",
+  "selection_reason": "Direkte Korrektur des detailreichsten freigegebenen36×48-medium-Imports statt weiterer Motivänderung. Vier ursprüngliche Importkandidaten und ihre Entscheidungen bleiben inr05; kein erneuter Variantenlauf nötig.",
+  "source_commit": "bdb2054eb2d05501b4d83635afbaf3e46b414778",
+  "source_revision": "r05"
+}

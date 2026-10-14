@@ -1,0 +1,798 @@
+{
+  "checkpoints": [
+    {
+      "before_step": 1,
+      "productive_lines": 84,
+      "unresolved_cells": 1728
+    },
+    {
+      "before_step": 2,
+      "productive_lines": 83,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 3,
+      "productive_lines": 82,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 4,
+      "productive_lines": 81,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 5,
+      "productive_lines": 80,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 6,
+      "productive_lines": 79,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 7,
+      "productive_lines": 78,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 8,
+      "productive_lines": 77,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 9,
+      "productive_lines": 76,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 10,
+      "productive_lines": 75,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 11,
+      "productive_lines": 74,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 12,
+      "productive_lines": 73,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 13,
+      "productive_lines": 72,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 14,
+      "productive_lines": 71,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 15,
+      "productive_lines": 70,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 16,
+      "productive_lines": 69,
+      "unresolved_cells": 1692
+    },
+    {
+      "before_step": 17,
+      "productive_lines": 68,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 18,
+      "productive_lines": 67,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 19,
+      "productive_lines": 66,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 20,
+      "productive_lines": 65,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 21,
+      "productive_lines": 64,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 22,
+      "productive_lines": 63,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 23,
+      "productive_lines": 62,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 24,
+      "productive_lines": 61,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 25,
+      "productive_lines": 60,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 26,
+      "productive_lines": 59,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 27,
+      "productive_lines": 58,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 28,
+      "productive_lines": 57,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 29,
+      "productive_lines": 56,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 30,
+      "productive_lines": 55,
+      "unresolved_cells": 1691
+    },
+    {
+      "before_step": 31,
+      "productive_lines": 54,
+      "unresolved_cells": 1682
+    },
+    {
+      "before_step": 32,
+      "productive_lines": 53,
+      "unresolved_cells": 1646
+    },
+    {
+      "before_step": 33,
+      "productive_lines": 52,
+      "unresolved_cells": 1610
+    },
+    {
+      "before_step": 34,
+      "productive_lines": 51,
+      "unresolved_cells": 1574
+    },
+    {
+      "before_step": 35,
+      "productive_lines": 50,
+      "unresolved_cells": 1538
+    },
+    {
+      "before_step": 36,
+      "productive_lines": 49,
+      "unresolved_cells": 1502
+    },
+    {
+      "before_step": 37,
+      "productive_lines": 48,
+      "unresolved_cells": 1466
+    },
+    {
+      "before_step": 38,
+      "productive_lines": 47,
+      "unresolved_cells": 1430
+    },
+    {
+      "before_step": 39,
+      "productive_lines": 46,
+      "unresolved_cells": 1394
+    },
+    {
+      "before_step": 40,
+      "productive_lines": 45,
+      "unresolved_cells": 1358
+    },
+    {
+      "before_step": 41,
+      "productive_lines": 44,
+      "unresolved_cells": 1322
+    },
+    {
+      "before_step": 42,
+      "productive_lines": 43,
+      "unresolved_cells": 1286
+    },
+    {
+      "before_step": 43,
+      "productive_lines": 42,
+      "unresolved_cells": 1250
+    },
+    {
+      "before_step": 44,
+      "productive_lines": 41,
+      "unresolved_cells": 1214
+    },
+    {
+      "before_step": 45,
+      "productive_lines": 40,
+      "unresolved_cells": 1178
+    },
+    {
+      "before_step": 46,
+      "productive_lines": 39,
+      "unresolved_cells": 1142
+    },
+    {
+      "before_step": 47,
+      "productive_lines": 38,
+      "unresolved_cells": 1106
+    },
+    {
+      "before_step": 48,
+      "productive_lines": 37,
+      "unresolved_cells": 1070
+    },
+    {
+      "before_step": 49,
+      "productive_lines": 36,
+      "unresolved_cells": 1034
+    },
+    {
+      "before_step": 50,
+      "productive_lines": 64,
+      "unresolved_cells": 1005
+    },
+    {
+      "before_step": 51,
+      "productive_lines": 63,
+      "unresolved_cells": 976
+    },
+    {
+      "before_step": 52,
+      "productive_lines": 58,
+      "unresolved_cells": 965
+    },
+    {
+      "before_step": 53,
+      "productive_lines": 57,
+      "unresolved_cells": 936
+    },
+    {
+      "before_step": 54,
+      "productive_lines": 56,
+      "unresolved_cells": 925
+    },
+    {
+      "before_step": 55,
+      "productive_lines": 54,
+      "unresolved_cells": 924
+    },
+    {
+      "before_step": 56,
+      "productive_lines": 57,
+      "unresolved_cells": 896
+    },
+    {
+      "before_step": 57,
+      "productive_lines": 56,
+      "unresolved_cells": 887
+    },
+    {
+      "before_step": 58,
+      "productive_lines": 55,
+      "unresolved_cells": 886
+    },
+    {
+      "before_step": 59,
+      "productive_lines": 54,
+      "unresolved_cells": 885
+    },
+    {
+      "before_step": 60,
+      "productive_lines": 53,
+      "unresolved_cells": 882
+    },
+    {
+      "before_step": 61,
+      "productive_lines": 52,
+      "unresolved_cells": 864
+    },
+    {
+      "before_step": 62,
+      "productive_lines": 51,
+      "unresolved_cells": 840
+    },
+    {
+      "before_step": 63,
+      "productive_lines": 51,
+      "unresolved_cells": 811
+    },
+    {
+      "before_step": 64,
+      "productive_lines": 50,
+      "unresolved_cells": 782
+    },
+    {
+      "before_step": 65,
+      "productive_lines": 49,
+      "unresolved_cells": 753
+    },
+    {
+      "before_step": 66,
+      "productive_lines": 48,
+      "unresolved_cells": 724
+    },
+    {
+      "before_step": 67,
+      "productive_lines": 47,
+      "unresolved_cells": 695
+    },
+    {
+      "before_step": 68,
+      "productive_lines": 46,
+      "unresolved_cells": 667
+    },
+    {
+      "before_step": 69,
+      "productive_lines": 45,
+      "unresolved_cells": 638
+    },
+    {
+      "before_step": 70,
+      "productive_lines": 44,
+      "unresolved_cells": 609
+    },
+    {
+      "before_step": 71,
+      "productive_lines": 43,
+      "unresolved_cells": 588
+    },
+    {
+      "before_step": 72,
+      "productive_lines": 42,
+      "unresolved_cells": 564
+    },
+    {
+      "before_step": 73,
+      "productive_lines": 40,
+      "unresolved_cells": 545
+    },
+    {
+      "before_step": 74,
+      "productive_lines": 39,
+      "unresolved_cells": 539
+    },
+    {
+      "before_step": 75,
+      "productive_lines": 38,
+      "unresolved_cells": 534
+    },
+    {
+      "before_step": 76,
+      "productive_lines": 37,
+      "unresolved_cells": 532
+    },
+    {
+      "before_step": 77,
+      "productive_lines": 36,
+      "unresolved_cells": 523
+    },
+    {
+      "before_step": 78,
+      "productive_lines": 35,
+      "unresolved_cells": 515
+    },
+    {
+      "before_step": 79,
+      "productive_lines": 34,
+      "unresolved_cells": 487
+    },
+    {
+      "before_step": 80,
+      "productive_lines": 33,
+      "unresolved_cells": 486
+    },
+    {
+      "before_step": 81,
+      "productive_lines": 32,
+      "unresolved_cells": 475
+    },
+    {
+      "before_step": 82,
+      "productive_lines": 31,
+      "unresolved_cells": 446
+    },
+    {
+      "before_step": 83,
+      "productive_lines": 30,
+      "unresolved_cells": 435
+    },
+    {
+      "before_step": 84,
+      "productive_lines": 29,
+      "unresolved_cells": 406
+    },
+    {
+      "before_step": 85,
+      "productive_lines": 28,
+      "unresolved_cells": 377
+    },
+    {
+      "before_step": 86,
+      "productive_lines": 38,
+      "unresolved_cells": 357
+    },
+    {
+      "before_step": 87,
+      "productive_lines": 36,
+      "unresolved_cells": 355
+    },
+    {
+      "before_step": 88,
+      "productive_lines": 35,
+      "unresolved_cells": 352
+    },
+    {
+      "before_step": 89,
+      "productive_lines": 34,
+      "unresolved_cells": 346
+    },
+    {
+      "before_step": 90,
+      "productive_lines": 33,
+      "unresolved_cells": 336
+    },
+    {
+      "before_step": 91,
+      "productive_lines": 33,
+      "unresolved_cells": 330
+    },
+    {
+      "before_step": 92,
+      "productive_lines": 32,
+      "unresolved_cells": 319
+    },
+    {
+      "before_step": 93,
+      "productive_lines": 32,
+      "unresolved_cells": 311
+    },
+    {
+      "before_step": 94,
+      "productive_lines": 31,
+      "unresolved_cells": 298
+    },
+    {
+      "before_step": 95,
+      "productive_lines": 30,
+      "unresolved_cells": 291
+    },
+    {
+      "before_step": 96,
+      "productive_lines": 29,
+      "unresolved_cells": 285
+    },
+    {
+      "before_step": 97,
+      "productive_lines": 28,
+      "unresolved_cells": 279
+    },
+    {
+      "before_step": 98,
+      "productive_lines": 27,
+      "unresolved_cells": 271
+    },
+    {
+      "before_step": 99,
+      "productive_lines": 26,
+      "unresolved_cells": 268
+    },
+    {
+      "before_step": 100,
+      "productive_lines": 25,
+      "unresolved_cells": 267
+    },
+    {
+      "before_step": 101,
+      "productive_lines": 24,
+      "unresolved_cells": 260
+    },
+    {
+      "before_step": 102,
+      "productive_lines": 23,
+      "unresolved_cells": 257
+    },
+    {
+      "before_step": 103,
+      "productive_lines": 22,
+      "unresolved_cells": 248
+    },
+    {
+      "before_step": 104,
+      "productive_lines": 21,
+      "unresolved_cells": 236
+    },
+    {
+      "before_step": 105,
+      "productive_lines": 20,
+      "unresolved_cells": 230
+    },
+    {
+      "before_step": 106,
+      "productive_lines": 19,
+      "unresolved_cells": 223
+    },
+    {
+      "before_step": 107,
+      "productive_lines": 18,
+      "unresolved_cells": 216
+    },
+    {
+      "before_step": 108,
+      "productive_lines": 17,
+      "unresolved_cells": 211
+    },
+    {
+      "before_step": 109,
+      "productive_lines": 17,
+      "unresolved_cells": 203
+    },
+    {
+      "before_step": 110,
+      "productive_lines": 16,
+      "unresolved_cells": 199
+    },
+    {
+      "before_step": 111,
+      "productive_lines": 15,
+      "unresolved_cells": 196
+    },
+    {
+      "before_step": 112,
+      "productive_lines": 16,
+      "unresolved_cells": 191
+    },
+    {
+      "before_step": 113,
+      "productive_lines": 17,
+      "unresolved_cells": 187
+    },
+    {
+      "before_step": 114,
+      "productive_lines": 17,
+      "unresolved_cells": 177
+    },
+    {
+      "before_step": 115,
+      "productive_lines": 21,
+      "unresolved_cells": 170
+    },
+    {
+      "before_step": 116,
+      "productive_lines": 21,
+      "unresolved_cells": 166
+    },
+    {
+      "before_step": 117,
+      "productive_lines": 20,
+      "unresolved_cells": 155
+    },
+    {
+      "before_step": 118,
+      "productive_lines": 21,
+      "unresolved_cells": 147
+    },
+    {
+      "before_step": 119,
+      "productive_lines": 18,
+      "unresolved_cells": 140
+    },
+    {
+      "before_step": 120,
+      "productive_lines": 20,
+      "unresolved_cells": 134
+    },
+    {
+      "before_step": 121,
+      "productive_lines": 17,
+      "unresolved_cells": 132
+    },
+    {
+      "before_step": 122,
+      "productive_lines": 17,
+      "unresolved_cells": 131
+    },
+    {
+      "before_step": 123,
+      "productive_lines": 17,
+      "unresolved_cells": 129
+    },
+    {
+      "before_step": 124,
+      "productive_lines": 19,
+      "unresolved_cells": 124
+    },
+    {
+      "before_step": 125,
+      "productive_lines": 21,
+      "unresolved_cells": 116
+    },
+    {
+      "before_step": 126,
+      "productive_lines": 21,
+      "unresolved_cells": 108
+    },
+    {
+      "before_step": 127,
+      "productive_lines": 19,
+      "unresolved_cells": 100
+    },
+    {
+      "before_step": 128,
+      "productive_lines": 18,
+      "unresolved_cells": 98
+    },
+    {
+      "before_step": 129,
+      "productive_lines": 14,
+      "unresolved_cells": 87
+    },
+    {
+      "before_step": 130,
+      "productive_lines": 13,
+      "unresolved_cells": 77
+    },
+    {
+      "before_step": 131,
+      "productive_lines": 16,
+      "unresolved_cells": 69
+    },
+    {
+      "before_step": 132,
+      "productive_lines": 14,
+      "unresolved_cells": 64
+    },
+    {
+      "before_step": 133,
+      "productive_lines": 13,
+      "unresolved_cells": 63
+    },
+    {
+      "before_step": 134,
+      "productive_lines": 12,
+      "unresolved_cells": 59
+    },
+    {
+      "before_step": 135,
+      "productive_lines": 12,
+      "unresolved_cells": 54
+    },
+    {
+      "before_step": 136,
+      "productive_lines": 13,
+      "unresolved_cells": 52
+    },
+    {
+      "before_step": 137,
+      "productive_lines": 13,
+      "unresolved_cells": 48
+    },
+    {
+      "before_step": 138,
+      "productive_lines": 12,
+      "unresolved_cells": 47
+    },
+    {
+      "before_step": 139,
+      "productive_lines": 11,
+      "unresolved_cells": 46
+    },
+    {
+      "before_step": 140,
+      "productive_lines": 10,
+      "unresolved_cells": 46
+    },
+    {
+      "before_step": 141,
+      "productive_lines": 8,
+      "unresolved_cells": 45
+    },
+    {
+      "before_step": 142,
+      "productive_lines": 8,
+      "unresolved_cells": 41
+    },
+    {
+      "before_step": 143,
+      "productive_lines": 7,
+      "unresolved_cells": 40
+    },
+    {
+      "before_step": 144,
+      "productive_lines": 9,
+      "unresolved_cells": 35
+    },
+    {
+      "before_step": 145,
+      "productive_lines": 8,
+      "unresolved_cells": 33
+    },
+    {
+      "before_step": 146,
+      "productive_lines": 8,
+      "unresolved_cells": 32
+    },
+    {
+      "before_step": 147,
+      "productive_lines": 7,
+      "unresolved_cells": 30
+    },
+    {
+      "before_step": 148,
+      "productive_lines": 6,
+      "unresolved_cells": 23
+    },
+    {
+      "before_step": 149,
+      "productive_lines": 4,
+      "unresolved_cells": 22
+    },
+    {
+      "before_step": 150,
+      "productive_lines": 4,
+      "unresolved_cells": 21
+    },
+    {
+      "before_step": 151,
+      "productive_lines": 4,
+      "unresolved_cells": 18
+    },
+    {
+      "before_step": 152,
+      "productive_lines": 5,
+      "unresolved_cells": 16
+    },
+    {
+      "before_step": 153,
+      "productive_lines": 4,
+      "unresolved_cells": 14
+    },
+    {
+      "before_step": 154,
+      "productive_lines": 5,
+      "unresolved_cells": 11
+    },
+    {
+      "before_step": 155,
+      "productive_lines": 5,
+      "unresolved_cells": 10
+    },
+    {
+      "before_step": 156,
+      "productive_lines": 3,
+      "unresolved_cells": 9
+    },
+    {
+      "before_step": 157,
+      "productive_lines": 5,
+      "unresolved_cells": 5
+    },
+    {
+      "before_step": 158,
+      "productive_lines": 2,
+      "unresolved_cells": 1
+    }
+  ],
+  "classification_validated": false,
+  "cleanup_threshold": 35,
+  "method": "all84lines-before-each158proofsteps",
+  "minimum_productive_before_cleanup": 7
+}

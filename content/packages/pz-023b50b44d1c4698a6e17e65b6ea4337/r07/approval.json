@@ -1,0 +1,20 @@
+{
+  "actor": "Nutzer",
+  "format": "picross-editorial-approval-v1",
+  "handoff_sha256": "90387a5487a9fa130e7d2ea5a3cfbc1987ae7f75637b079018873171769c8507",
+  "inventory_sha256": "6b22c72ee98b8f3caa63f5385cff722a0a0bc55636fb6e0c8c8d0270e8973456",
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "revision": "r07",
+  "selection": {
+    "logic_hash": "fc71dc5aad9029c3de23fc5bcd370b96a5472deed85dac9f13cfe405d0504cad",
+    "matrix_hash": "526bad4f65909b80c767623818f96744a78c677f27b3b8728420cf3a7de04d86",
+    "reveal": {
+      "file": "reveals/A-r02.png",
+      "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1"
+    },
+    "variant": "fixed-36x48"
+  },
+  "statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch nehme das Rätselpaket pz-023b50b44d1c4698a6e17e65b6ea4337 · r07, Revision r07, mit Inventar 897c2742926ae5eae2199f7b4995edd40cd4c55675b8af34a5398e63d328b57a redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\n\nIch beauftrage auch den Merge dieses Ablage-/Integrations-PRs nach den Pflichtprüfungen gemäß Entwicklungsworkflow.",
+  "test_only": false,
+  "timestamp_utc": "2026-10-14T19:48:52.147635+00:00"
+}
