@@ -173,7 +173,7 @@ Langlinienreferenzen bleiben erhalten; gemeinsame CI ergänzt vierfarbige
 Bestehende `docs`-/`product`-/`preflight`-Workflows bleiben aktiv.
 Eine reale Motiv-/Spielprobe ist für den reinen RP-1/RP-2-Logikkern nicht anwendbar.
 
-## RP-3-Bildimport und früher P1-Export
+## RP-3-Bildimport und historischer P1-Export
 
 Python 3.11+ und **Pillow exakt 12.3.0** in einer eigenen venv; nur Bildbefehle
 laden Pillow. Die bisherigen Kernbefehle bleiben ohne Zusatzpakete nutzbar.
@@ -204,7 +204,7 @@ Nachweisdatei unabhängig neu; bewiesene Enddomains müssen der Matrix entsprech
 RP3-A01 bis A06 einschließlich unabhängigem technischem/visuellem Review R2
 sind im integrierten PR #44 abgeschlossen. Die dort gebundenen Fachtests/Benchmark,
 `docs`, `product`, `preflight`, Diffcheck, Windows-Artefakt und Sichtkontrolle
-bleiben historische Nachweise dieses Stands. Die reguläre Hauptszene wird
+bleiben historische Nachweise dieses Stands. Die damalige reguläre Hauptszene wurde
 mit F-04 in drei isolierten Prozessen bearbeitet, abgeschlossen und wieder geladen;
 echte Renderbilder prüfen eigene falsche Einträge und die Spoilergrenze.
 Die RP-6-Abnahmeentscheidungen sind im integrierten PR #47 gebunden.

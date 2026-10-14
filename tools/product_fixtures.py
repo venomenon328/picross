@@ -11,7 +11,7 @@ def runtime_catalog(root: Path) -> dict:
 def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False) -> None:
     """Install six synthetic geometry/interaction samples only in a disposable game.
 
-    T02/T06 retain historical clue-route shapes as isolated geometry inputs,
+    T01/T02/T06 retain historical clue shapes as isolated geometry inputs,
     without the original puzzles or reveals. Frozen KAT1 saves have separate inputs.
     No solver, real production package or catalog-size-dependent generation.
     """
@@ -26,6 +26,11 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
         block = 4 if number == 6 else 3
         matrix = [[0 if x == 0 or y == 0 or x == size-1 or y == size-1 else
                    1 + ((x // block + y // block) % count) for x in range(size)] for y in range(size)]
+        if number == 1:
+            # Pending, ambiguous and bounded-complete clue-status specimens.
+            matrix[3] = [0]*8 + [1]*3 + [0]*9
+            for y, value in enumerate([0]*10 + [1]*3 + [0,1] + [0]*5):
+                matrix[y][1] = value
         if number == 2:
             # Exact line lengths exercise the established nearest-slot drop oracle.
             matrix[11] = [0] + [4]*4 + [2]*7 + [4]*8 + [1] + [2]*7 + [1] + [4]*10 + [0]
