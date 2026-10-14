@@ -1,0 +1,39 @@
+{
+  "after_registry_file_sha256": "33e5f68cb4f7ce8f30fd5ffe114039f4dd6d6981f0f2f08d164df7e910435020",
+  "before_registry_file_sha256": "c40f98ca92836237bc61db2d07fc1046c340ccbb8ce910b5fa9f056f55f7a4bc",
+  "category": {
+    "id": "gemuese-pilze-kraeuter",
+    "name": "Gemüse, Pilze & Kräuter",
+    "order": 2
+  },
+  "changes": [
+    {
+      "operation": "add",
+      "path": "game/data/content/ingwer_001.json"
+    },
+    {
+      "operation": "add",
+      "path": "game/art/content/ingwer_001.png"
+    },
+    {
+      "operation": "add",
+      "path": "game/art/content/ingwer_001.txt"
+    },
+    {
+      "operation": "add",
+      "path": "content/packages/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03"
+    },
+    {
+      "operation": "replace",
+      "path": "content/registry.json"
+    },
+    {
+      "operation": "replace",
+      "path": "game/data/registry.json"
+    }
+  ],
+  "id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "registered": true,
+  "reviewed_plan_sha256": "4db7631679927e12a85b1f8d4ab582352033b81ba90cb52df71a7770c952d2a0",
+  "status": "registered"
+}

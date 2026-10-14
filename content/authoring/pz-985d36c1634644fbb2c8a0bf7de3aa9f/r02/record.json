@@ -1,0 +1,75 @@
+{
+  "authoring_parent_commit": "3584353cc44249b0c481a2b30a3dccb32734ab5c",
+  "blockers": [],
+  "category_id": "gemuese-pilze-kraeuter",
+  "difficulty": null,
+  "dimensions_approximate": false,
+  "dimensions_fixed": true,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r02/handoff.json",
+    "sha256": "99369fdfa1693c97e95c3fec8769b4349a429ecb7a48d0add601f93cee00e8ec"
+  },
+  "height": 25,
+  "integration": null,
+  "inventory_sha256": "f96f79a7ada2004499860f91ebf15596f37a1a2f51b1ade523143bbab684abbf",
+  "mode": "mono",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471",
+    "file": "motifs/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "974bda0232439ecc4d9acc3c7f43cf5d79ce193ffce9f758c9d5882fff6170eb"
+  },
+  "motif_name": "Ingwer",
+  "next_action": "Ausdrückliche menschliche Motivfreigabe MA-r01 samt configuration.json für exakt 20 × 25 mono; danach Standardauftrag 3 bis content_ready/Endabnahmevorlage, keine Registrierung.",
+  "package": {
+    "bytes": 2872965,
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r02/package.zip",
+    "sha256": "3d70d6ef0dc87dfb5a809ffe7b5c87e56890f86c419ef33cb4839612f2702288"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        21,
+        22,
+        1101,
+        1354
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "fixed": true,
+      "foreground_colors": 1,
+      "height": 25,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "thresholds": [
+        96,
+        128,
+        160,
+        192
+      ],
+      "width": 20
+    }
+  ],
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "repo_commit": "835c102ba76f26683b4dc42a8077b650e1725303",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/B-r01.png",
+    "revision": "B-r01",
+    "sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471"
+  },
+  "revision": "r02",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-14T15:13:39.601523+00:00",
+  "width": 20
+}

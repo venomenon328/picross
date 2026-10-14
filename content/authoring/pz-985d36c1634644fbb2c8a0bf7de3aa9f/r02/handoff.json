@@ -1,0 +1,110 @@
+{
+  "approved_parameters": [],
+  "authoring_parent_commit": "3584353cc44249b0c481a2b30a3dccb32734ab5c",
+  "authorization": "Standardauftrag 2 bis Motivvorlage/Konfiguration/Codex-Übergabe; Repositoryablage nach §6, Commit/Push, Draft-PR #121 fortführen; kein Merge.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "gemuese-pilze-kraeuter",
+  "configuration": "configuration.json",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json"
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "f96f79a7ada2004499860f91ebf15596f37a1a2f51b1ade523143bbab684abbf"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471",
+    "file": "motifs/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "974bda0232439ecc4d9acc3c7f43cf5d79ce193ffce9f758c9d5882fff6170eb"
+  },
+  "next_action": "Ausdrückliche menschliche Motivfreigabe MA-r01 samt configuration.json für exakt 20 × 25 mono; danach Standardauftrag 3 bis content_ready/Endabnahmevorlage, keine Registrierung.",
+  "origin_verification": "derivation.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        21,
+        22,
+        1101,
+        1354
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "fixed": true,
+      "foreground_colors": 1,
+      "height": 25,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "thresholds": [
+        96,
+        128,
+        160,
+        192
+      ],
+      "width": 20
+    }
+  ],
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "835c102ba76f26683b4dc42a8077b650e1725303",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": false,
+    "fixed": true,
+    "height": 25,
+    "mode": "mono",
+    "width": 20
+  },
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/B-r01.png",
+    "revision": "B-r01",
+    "sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471"
+  },
+  "revision": "r02",
+  "rulebook": {
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549",
+    "version": "0.4.1"
+  },
+  "state": "motif_review"
+}

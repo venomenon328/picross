@@ -1,0 +1,74 @@
+{
+  "blockers": [],
+  "category_id": "gemuese-pilze-kraeuter",
+  "difficulty": null,
+  "dimensions_approximate": false,
+  "dimensions_fixed": true,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r01/handoff.json",
+    "sha256": "87264232b1c549bfe4a76fce88c6d5b52d96ad0158a07269b5967afec15d4ba9"
+  },
+  "height": 25,
+  "integration": null,
+  "inventory_sha256": "59bb9858160611574fcb5d71c4f2b57b9ac8e3dfda13334a109061627a2ca1e3",
+  "mode": "mono",
+  "motif_name": "Ingwer",
+  "next_action": "Ausdrückliche menschliche Abschlussbildfreigabe A-r01/B-r01/C-r01; danach Standardauftrag 2 zur Motivvorlage für exakt 20 × 25 mono.",
+  "package": {
+    "bytes": 5757869,
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r01/package.zip",
+    "sha256": "20b5c18a12398e32fe94656de8097f25317068e7555fbc6688ecec8c1fd1e33f"
+  },
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "repo_commit": "62e290bfce56071b6870f2ed2896fce776c7ae03",
+  "reveal_options": [
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/A-r01.png",
+      "label": "A-r01",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "7b4fc7d873485687f51d28aeb3c7dfbdb2264518f9606f92bb9016660c166dbc",
+      "title": "Aufrechte verzweigte Knolle",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/B-r01.png",
+      "label": "B-r01",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471",
+      "title": "Diagonal verzweigte Knolle",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    },
+    {
+      "approval": null,
+      "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+      "file": "reveals/C-r01.png",
+      "label": "C-r01",
+      "origin": "Native image_gen; neue Generierung ohne Referenzbild",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "21294dca9c524141f37a10687d2c0594eda0f548a13cc1da2b7cfae56bf1180d",
+      "title": "Knolle mit heller Schnittfläche",
+      "usage_basis": "Eigenständige KI-Generierung für den beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+    }
+  ],
+  "revision": "r01",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-14T15:00:13.853500+00:00",
+  "width": 20
+}
