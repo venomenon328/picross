@@ -65,19 +65,19 @@ def retire(root, ids, integrated_commit):
         if authoring.exists():
             files.update({p.relative_to(root).as_posix(): p for p in file_table(authoring, float("inf")).values()})
         original_files = git("ls-tree", "-rz", "--name-only", integrated_commit, "--",
-                             str(package.relative_to(root)), str(authoring.relative_to(root)))
+                             package.relative_to(root).as_posix(), authoring.relative_to(root).as_posix())
         require(set(files) == set(original_files.decode().rstrip("\0").split("\0")),
                 "Unmerged additions/deletions in production: " + id)
         for name in ["game/"+entry["definition"], "game/"+entry["reveal"],
-                     str((root/"game"/entry["reveal"]).with_suffix(".txt").relative_to(root)), *files]:
+                     (root/"game"/entry["reveal"]).with_suffix(".txt").relative_to(root).as_posix(), *files]:
             require((root/name).read_bytes() == git("show", integrated_commit+":"+name),
                     "Unmerged or modified production file: " + name)
         receipt = {"format": FORMAT, "entry": deepcopy(entry), "integrated_commit": integrated_commit,
                    "notice_sha256": file_hash((root/"game"/entry["reveal"]).with_suffix(".txt"))}
         plans.append((entry, package, authoring, receipt, len(files), sum(p.stat().st_size for p in files.values())))
-    affected = [registry.REGISTRY, str(index_path.relative_to(root))]
+    affected = [registry.REGISTRY, index_path.relative_to(root).as_posix()]
     for _, package, authoring, _, _, _ in plans:
-        affected.extend([str(package.relative_to(root)), str(authoring.relative_to(root))])
+        affected.extend([package.relative_to(root).as_posix(), authoring.relative_to(root).as_posix()])
     require(subprocess.run(["git", "diff", "--cached", "--quiet", "--", *affected],
                            cwd=root, capture_output=True).returncode == 0,
             "Staged production changes must be resolved before retirement")
