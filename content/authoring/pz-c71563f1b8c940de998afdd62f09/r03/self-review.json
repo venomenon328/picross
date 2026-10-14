@@ -1,0 +1,45 @@
+{
+  "review_type": "self_review",
+  "reviewed_base": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+  "previous_head": "1d71e8a888da63a6d97fa0627345ded782a11f3c",
+  "scope": "Complete PR changes confined to authoring index and this production ID r01/r02/r03. Previous revisions byte-identical to source head; no runtime/tool/docs/test/CI changes. Final head supplied in PR.",
+  "archive": {
+    "format": "picross-authoring-archive-validation-v1",
+    "safe_zip": true,
+    "crc": true,
+    "exact_inventory_file_set": true,
+    "all_file_sizes_and_hashes": true,
+    "outer_handoff_byte_equal": true,
+    "outer_review_files_byte_equal": true,
+    "utf8_metadata_verified": true,
+    "zip_sha256": "4b0a05700906faadf45c6c1bec0b02d125ba067e63f44f58b2efa916b4282161",
+    "handoff_sha256": "26735fdd11ba33589153d78d7e0b0611d8c900dc66fd269d24261924ffaad0d9",
+    "inventory_sha256": "7987246e8ed63753fb0ba5a658827caf33652e6b730f1ccb32989316ae5198c5",
+    "zip_files": 75,
+    "inventory_files": 73,
+    "zip_bytes": 8022341,
+    "expanded_bytes": 10778455,
+    "technical": true,
+    "sole_inspection_blocker": "final_editorial: missing bound human final approval",
+    "preview_pixel_equality": true,
+    "unchanged_normative_tool_runtime_sources": true
+  },
+  "visual": "Viewed actual original reveal/motif, both direct rasters, protection mask before search, repair before/after/diff, final nearest raster/grid and corrected comparison. Detail losses disclosed; no independent human review.",
+  "resolved_prepublication_findings": [
+    "Windows default text decoding garbled imported protected-feature metadata and outer-record punctuation; switched to explicit UTF-8/contract load_json, rebuilt unpublished r03 inventory and freshly inspected final ZIP. No image/matrix/hints/proof changes. Preliminary package/inspection retained only in ignored artifacts.",
+    "Temporary comparison initially failed to enlarge raster; corrected presentation and verified final image before sealing."
+  ],
+  "remaining": [
+    {
+      "id": "A01",
+      "category": "A",
+      "scenario": "Human editorial acceptance of final raster/reveal and disclosed detail losses",
+      "actor": "Tobias Schröder",
+      "gate": "before standard request4 export/registration",
+      "status": "pending"
+    }
+  ],
+  "production_tests": "Independent RP5 replay, source reconstruction, hints and endmatrix equality, geometry, all178 difficulty checkpoints, safe written-ZIP inspection passed.",
+  "ci": "Only docs content path/mode check and ci-required; remote CI result in PR after push. No puzzle-specific tests or replay jobs added.",
+  "merge_authorization": false
+}
