@@ -1,0 +1,51 @@
+{
+  "details_negative_spaces": {
+    "reason": "Große Freiräume zwischen Beinpaaren, Kopf/Füßen und Schwanzbogen erhalten. Vier terminale Fußflächen erkennbar; einzelne Zehen und weiße Augen entfallen wie freigegeben. Fußfächer stark reduziert, im Endvergleich offen sichtbar.",
+    "status": "erfüllt"
+  },
+  "format": "picross-authoring-quality-v1",
+  "frame": {
+    "bottom": false,
+    "left": true,
+    "right": true,
+    "top": true,
+    "valid": true
+  },
+  "matrix_hash": "9845bd4c5a002652f7f6fdb32cfdb1596e3e66f2fc5af505814b6300d9c34bdf",
+  "palette_mono_readability": {
+    "reason": "Exakt ink #000000/empty #ffffff; 137/384=35,68% belegt; keine isolierten vierfach benachbarten Einzelzellen oder leeren Innenlinien.",
+    "status": "erfüllt"
+  },
+  "recognizability": {
+    "reason": "Draufsicht auf flach gespreizten Gecko, Kopf rechts, langer links aufgebogener Schwanz; farbiges Reveal verdeutlicht Art.",
+    "status": "erfüllt"
+  },
+  "repair_diff": [],
+  "reveal_consistency": {
+    "reason": "Dasselbe Motiv, Draufsicht, Kopf rechts, Schwanz links, vier gespreizte Gliedmaßen. Verlust von Schuppen/Farbe/Augen/Einzelzehen freigegeben; keine Umgestaltung des Reveals.",
+    "status": "erfüllt"
+  },
+  "reviewer": "Codex Selbstprüfung; unabhängig implementierter technischer Proofprüfer separat, kein unabhängiges menschliches Review",
+  "selection": "selection.json",
+  "series_style": {
+    "reason": "Ruhige organische Figur; Raster bewusst grob, detailreiches warmes grünes Reveal unverändert.",
+    "status": "erfüllt"
+  },
+  "silhouette_proportions": {
+    "reason": "Breiter länglicher Körper, vier geknickte getrennte Beine; keine neue Pose oder Streckung. Pixelige diagonale Verbindungen gehören zur Abstraktion.",
+    "status": "erfüllt"
+  },
+  "soft_exceptions": [
+    "Letzte Zeile leer durch contain-Quantisierung; Randformel dennoch erfüllt. Nicht beschnitten.",
+    "Schwanzübergang teilweise diagonal; keine Fremdpixel ergänzt."
+  ],
+  "views": [
+    "views/final-raster-native.png",
+    "views/final-raster-large.png",
+    "views/final-raster-grid.png",
+    "views/reveal-motif-raster-comparison.png",
+    "views/candidate-comparison.png",
+    "views/34x13-128-grid.png",
+    "views/34x13-160-grid.png"
+  ]
+}

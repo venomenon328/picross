@@ -1,0 +1,192 @@
+{
+  "budget_each": {
+    "max_lines": 100000,
+    "seconds": 120
+  },
+  "candidates": [
+    {
+      "bundle": "production/mono-30x12",
+      "candidate_id": "26fe2ab0b97eff54c0e91fcda2d33a906a9138c64a20d0f0da4c5aa21e606d05",
+      "cells": 360,
+      "certified": false,
+      "duplicate_of": null,
+      "edges": {
+        "bottom": false,
+        "left": true,
+        "right": true,
+        "top": true
+      },
+      "empty_internal_columns": [],
+      "empty_internal_rows": [],
+      "endmatrix_equal": null,
+      "filled": 115,
+      "frame_valid": true,
+      "height": 12,
+      "isolated_4_neighbor_cells": [
+        {
+          "column": 2,
+          "row": 5
+        }
+      ],
+      "label": "30x12/128",
+      "manifest_sha256": "a0ba067ccb070b2282641ed3173288eb70f9830bf7d7741c4b34ab0ec3380641",
+      "matrix_hash": "75b8c5a505faf1ec34085bfa86c21b1736c0a16f10aa29e49f2bad7f661282cd",
+      "occupancy": 0.3194444444444444,
+      "proof_independently_replayed": true,
+      "source_normalization_matrix_clues_reconstructed": true,
+      "status": "stalled",
+      "width": 30
+    },
+    {
+      "bundle": "production/mono-30x12",
+      "candidate_id": "555e77ade239acb8a24e8f85c8d9e0532d49ef7765915088dcb0bdd8544aa33f",
+      "cells": 360,
+      "certified": false,
+      "duplicate_of": null,
+      "edges": {
+        "bottom": false,
+        "left": true,
+        "right": true,
+        "top": true
+      },
+      "empty_internal_columns": [],
+      "empty_internal_rows": [],
+      "endmatrix_equal": null,
+      "filled": 129,
+      "frame_valid": true,
+      "height": 12,
+      "isolated_4_neighbor_cells": [
+        {
+          "column": 2,
+          "row": 5
+        }
+      ],
+      "label": "30x12/160",
+      "manifest_sha256": "a0ba067ccb070b2282641ed3173288eb70f9830bf7d7741c4b34ab0ec3380641",
+      "matrix_hash": "87c8c833805691c7e48362b748a76b97264530f037f8b7868a92d2ca27b7ccbb",
+      "occupancy": 0.35833333333333334,
+      "proof_independently_replayed": true,
+      "source_normalization_matrix_clues_reconstructed": true,
+      "status": "stalled",
+      "width": 30
+    },
+    {
+      "bundle": "production/mono-32x12",
+      "candidate_id": "ff2c29ac7385613add3b95e0ab698798fbe523fb054e3bbe0f4dd32c72b499e8",
+      "cells": 384,
+      "certified": false,
+      "duplicate_of": null,
+      "edges": {
+        "bottom": false,
+        "left": true,
+        "right": true,
+        "top": true
+      },
+      "empty_internal_columns": [],
+      "empty_internal_rows": [],
+      "endmatrix_equal": null,
+      "filled": 123,
+      "frame_valid": true,
+      "height": 12,
+      "isolated_4_neighbor_cells": [
+        {
+          "column": 2,
+          "row": 5
+        }
+      ],
+      "label": "32x12/128",
+      "manifest_sha256": "cdaacb7599367ec43024e377c3dd7eaab8ec72abc85709f2a783024711583571",
+      "matrix_hash": "b595846f0bbe8332c95c7d039e785f1c5111c240bd2156be3398ce0f5aac082c",
+      "occupancy": 0.3203125,
+      "proof_independently_replayed": true,
+      "source_normalization_matrix_clues_reconstructed": true,
+      "status": "stalled",
+      "width": 32
+    },
+    {
+      "bundle": "production/mono-32x12",
+      "candidate_id": "32564aed3e1b2d28e6708e78f98dfa9153947357ffdfb94c2824dc6061adc289",
+      "cells": 384,
+      "certified": true,
+      "duplicate_of": null,
+      "edges": {
+        "bottom": false,
+        "left": true,
+        "right": true,
+        "top": true
+      },
+      "empty_internal_columns": [],
+      "empty_internal_rows": [],
+      "endmatrix_equal": true,
+      "filled": 137,
+      "frame_valid": true,
+      "height": 12,
+      "isolated_4_neighbor_cells": [],
+      "label": "32x12/160",
+      "manifest_sha256": "cdaacb7599367ec43024e377c3dd7eaab8ec72abc85709f2a783024711583571",
+      "matrix_hash": "9845bd4c5a002652f7f6fdb32cfdb1596e3e66f2fc5af505814b6300d9c34bdf",
+      "occupancy": 0.3567708333333333,
+      "proof_independently_replayed": true,
+      "source_normalization_matrix_clues_reconstructed": true,
+      "status": "solved",
+      "width": 32
+    },
+    {
+      "bundle": "production/mono-34x13",
+      "candidate_id": "77d09236bd8133c2b0ff7678d1ec45ea51e57d6df5b3aaa80e2fc2f2c8281796",
+      "cells": 442,
+      "certified": true,
+      "duplicate_of": null,
+      "edges": {
+        "bottom": false,
+        "left": true,
+        "right": true,
+        "top": true
+      },
+      "empty_internal_columns": [],
+      "empty_internal_rows": [],
+      "endmatrix_equal": true,
+      "filled": 147,
+      "frame_valid": true,
+      "height": 13,
+      "isolated_4_neighbor_cells": [],
+      "label": "34x13/128",
+      "manifest_sha256": "166dc8fceceb18e3f21a625e0199620b952bd6cff7b89959b1240f0190c49620",
+      "matrix_hash": "14854ba6de9f4d41fa344f1e72d09ae3bd512c092e74125b7d16f085debb8146",
+      "occupancy": 0.332579185520362,
+      "proof_independently_replayed": true,
+      "source_normalization_matrix_clues_reconstructed": true,
+      "status": "solved",
+      "width": 34
+    },
+    {
+      "bundle": "production/mono-34x13",
+      "candidate_id": "29ccb42b6b1c52a0eb69d2468a9a326c75cc16ade5f117f96e10822b0a2f9213",
+      "cells": 442,
+      "certified": true,
+      "duplicate_of": null,
+      "edges": {
+        "bottom": false,
+        "left": true,
+        "right": true,
+        "top": true
+      },
+      "empty_internal_columns": [],
+      "empty_internal_rows": [],
+      "endmatrix_equal": true,
+      "filled": 158,
+      "frame_valid": true,
+      "height": 13,
+      "isolated_4_neighbor_cells": [],
+      "label": "34x13/160",
+      "manifest_sha256": "166dc8fceceb18e3f21a625e0199620b952bd6cff7b89959b1240f0190c49620",
+      "matrix_hash": "abc78a0846d19859d43ba94f868388b1cc6c9d9eec34109793658acaab44cc74",
+      "occupancy": 0.3574660633484163,
+      "proof_independently_replayed": true,
+      "source_normalization_matrix_clues_reconstructed": true,
+      "status": "solved",
+      "width": 34
+    }
+  ],
+  "tool_commit": "4e331844171a116932192b817fb2d296776e408e"
+}
