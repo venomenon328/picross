@@ -21,6 +21,7 @@ from .contract import (Aborted, Budget, InvalidInput, digest, exact_keys, intege
                        load_json, validate_logic, write_json)
 from .solver import solve
 from .verifier import verify
+from . import certification
 
 VERSION = "rp3-image-1"
 PILLOW_VERSION = "12.3.0"
@@ -269,11 +270,13 @@ def raster_image(matrix: list, design: dict) -> Image.Image:
 
 def inspect_candidate(directory: Path, variant_id: str, budget: Budget | None = None) -> tuple[dict, dict, dict]:
     """Rebuild identity/hints and freshly replay the written proof, ignoring flags."""
-    manifest = exact_keys(load_json(directory / "manifest.json"), {
+    raw = load_json(directory / "manifest.json")
+    paired = isinstance(raw, dict) and raw.get("format") == "picross-image-manifest-v2"
+    manifest = exact_keys(raw, {
         "format", "versions", "design", "original", "original_filename",
         "normalization", "limits", "candidates", "files",
-    })
-    if manifest["format"] != "picross-image-manifest-v1":
+    } | ({"certification"} if paired else set()))
+    if manifest["format"] not in ("picross-image-manifest-v1", "picross-image-manifest-v2"):
         raise InvalidInput("Unsupported production manifest")
     producer = exact_keys(manifest["versions"], set(versions()))
     d = validate_design(manifest["design"])
@@ -293,6 +296,10 @@ def inspect_candidate(directory: Path, variant_id: str, budget: Budget | None = 
     required = {manifest["original"], "normalized.png", "design.json", "index.html", "briefing.txt"}
     required.update(f'{v["id"]}-{suffix}' for v in d["variants"] for suffix in
                     ("candidate.json", "logic.json", "proof.json", "result.json", "raster.png"))
+    if paired:
+        certification.validate_config(manifest["certification"])
+        required.update(f'{v["id"]}-{suffix}' for v in d["variants"] for suffix in
+                        ("baseline-proof.json", "assessment.json"))
     if set(manifest["files"]) != required or d != load_json(directory / "design.json"):
         raise InvalidInput("Incomplete/inconsistent production file bindings")
     image, meta, _ = normalize(directory / manifest["original"])
@@ -321,8 +328,12 @@ def inspect_candidate(directory: Path, variant_id: str, budget: Budget | None = 
     if wire != load_json(directory / f"{variant_id}-logic.json"):
         raise InvalidInput("Stored clues differ from the final matrix")
     puzzle = validate_logic(wire)
-    proof = load_json(directory / f"{variant_id}-proof.json", puzzle.proof_byte_limit)
-    verified = verify(puzzle, proof, budget)
+    if paired:
+        proof, verified = certification.inspect(puzzle, directory, variant_id + "-", manifest["certification"], budget)
+    else:
+        proof = load_json(directory / f"{variant_id}-proof.json", puzzle.proof_byte_limit)
+        certification.require_legacy(puzzle, proof)
+        verified = verify(puzzle, proof, budget)
     if verified["certified"] and proof["final_domains"] != [[[v] for v in row] for row in c["matrix"]]:
         raise InvalidInput("Proven final raster differs from export matrix")
     return c, proof, verified
@@ -363,9 +374,13 @@ def comparison(directory: Path, manifest: dict, records: list[dict]) -> None:
     (directory / "index.html").write_text('\n'.join(parts) + '\n', encoding="utf-8", newline="\n")
 
 
-def import_image(source: Path, design_path: Path, output: Path, seconds: float = 120, max_lines: int = 100_000) -> dict:
+def import_image(source: Path, design_path: Path, output: Path, seconds: float = 120, max_lines: int = 100_000,
+                 *, profile=None, max_pair_work=20_000_000, max_pair_records=250_000) -> dict:
     Budget(seconds, max_lines)  # Validate budgets before creating any output.
     d = validate_design(load_json(design_path, 64 * 1024))
+    sample = [["empty"] * d["width"] for _ in range(d["height"])]
+    config = certification.configuration(validate_logic(logic_from_matrix(sample, d)), profile,
+                                         max_pair_work, max_pair_records)
     image, normalization, original = normalize(source)
     if output.exists():
         raise InvalidInput("Output already exists; use a new directory to avoid stale certificates")
@@ -387,12 +402,20 @@ def import_image(source: Path, design_path: Path, output: Path, seconds: float =
             raster_image(c["matrix"], d).save(stage / f"{name}-raster.png")
             puzzle = validate_logic(wire)
             started = time.perf_counter()
-            proof = solve(puzzle, Budget(seconds, max_lines))
-            write_json(stage / f"{name}-proof.json", proof)
-            try:
-                status = verify(puzzle, load_json(stage / f"{name}-proof.json", puzzle.proof_byte_limit), Budget(seconds, max_lines))
-            except Aborted as exc:
-                status = {"status": "aborted", "certified": False, "proof_verified": False, "reason": str(exc)}
+            if config:
+                solver_budget = certification.bounded_budget(seconds, max_lines, config)
+                verifier_budget = certification.bounded_budget(seconds, max_lines, config)
+                proof, status = certification.produce(puzzle, stage, name + "-", config, solver_budget, verifier_budget)
+                status["pair_resources"] = {"solver_work": solver_budget.pair_work,
+                    "verifier_work": verifier_budget.pair_work, "solver_peak_records": solver_budget.pair_peak_records,
+                    "verifier_peak_records": verifier_budget.pair_peak_records}
+            else:
+                proof = solve(puzzle, Budget(seconds, max_lines))
+                write_json(stage / f"{name}-proof.json", proof)
+                try:
+                    status = verify(puzzle, load_json(stage / f"{name}-proof.json", puzzle.proof_byte_limit), Budget(seconds, max_lines))
+                except Aborted as exc:
+                    status = {"status": "aborted", "certified": False, "proof_verified": False, "reason": str(exc)}
             if status["certified"] and proof["final_domains"] != [[[v] for v in row] for row in c["matrix"]]:
                 raise InvalidInput("Proven final raster differs from intended matrix")
             status["elapsed_seconds"] = time.perf_counter() - started
@@ -406,6 +429,8 @@ def import_image(source: Path, design_path: Path, output: Path, seconds: float =
                                     "motif_review": "open", "editorial_release": "open"} for r in records],
                     "files": {p.name: file_hash(p) for p in sorted(stage.iterdir())}}
         comparison(stage, manifest, records)
+        if config:
+            manifest.update(format="picross-image-manifest-v2", certification=config)
         (stage / "briefing.txt").write_text(d["briefing"] + '\n\nWorking mode: ' + d["working_mode"] + '\nMotif and gameplay review: open\n', encoding="utf-8", newline="\n")
         manifest["files"].update({n: file_hash(stage / n) for n in ("index.html", "briefing.txt")})
         write_json(stage / "manifest.json", manifest)

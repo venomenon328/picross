@@ -176,8 +176,11 @@ class Package:
                 "Package is not content_ready")
         require(isinstance(h.get("repo_commit"), str) and re.fullmatch(r"[0-9a-f]{40}", h["repo_commit"]), "Missing producer commit")
         rule = h.get("rulebook")
-        require(isinstance(rule, dict) and rule.get("version") in ("0.4.0", "0.4.1"), "Unsupported authoring rulebook")
-        self.bound(rule)
+        require(isinstance(rule, dict) and rule.get("version") in ("0.4.0", "0.4.1", "0.5.0"), "Unsupported authoring rulebook")
+        rule_path = self.bound(rule)
+        if rule["version"] == "0.5.0":
+            require(re.search(r"^\*\*Version 0\.5\.0(?: | ·)", rule_path.read_text(encoding="utf-8"), re.M) is not None,
+                    "Rulebook 0.5.0 requires a matching versioned snapshot")
         inv = h.get("inventory")
         require(isinstance(inv, dict) and inv.get("file") == "inventory.json", "Missing inventory binding")
         self.bound(inv)
@@ -245,6 +248,12 @@ class Package:
         require(members, "Missing production bundle")
         for n in members:
             self.file(n)
+        manifest_path = self.root / name / "manifest.json"
+        if manifest_path.is_file():
+            manifest = load_json(manifest_path)
+            if isinstance(manifest, dict) and manifest.get("format") in ("picross-image-manifest-v2", "picross-repair-manifest-v2"):
+                require(self.handoff["rulebook"]["version"] == "0.5.0",
+                        "Paired production requires authoring rulebook 0.5.0")
         return self.root / name
 
     def approval(self, record, kind):

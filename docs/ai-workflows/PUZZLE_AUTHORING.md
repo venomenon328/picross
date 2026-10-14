@@ -1,8 +1,11 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.4.1 · Dokumentrevision 9 · 14.10.2026**
+**Version 0.5.0 · Dokumentrevision 10 · 15.10.2026**
 
-Die kompatible ZA-1-Vertragsversion bleibt 0.4.1; Dokumentrevision, Datei-SHA-256 und Repositorycommit identifizieren diese ergänzte Arbeitsanweisung.
+Version 0.5.0 ergänzt ausdrücklich die Paarlinienprofile und Schwierigkeit 0.2
+aus #139/B/C. Alte versiegelte 0.4.x-Pakete bleiben unter ihrem Linienvertrag
+prüfbar; sie werden nicht umetikettiert. Dokumentrevision, Datei-SHA-256 und
+Repositorycommit binden den tatsächlich verwendeten Snapshot.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
@@ -141,7 +144,14 @@ oder `unknown`. Sie sucht intern und liefert eigene dateigebundene Lösungszeuge
 `unknown` nach genau einer Lösung bestätigt keine Eindeutigkeit. `check-diagnosis`
 prüft Dateibindungen und Zeugen, replayt aber keine vollständige Suche.
 `unique` hebt `stalled` nicht als Produktionshindernis auf, erzeugt keine Freigabe
-und verändert weder `picross-difficulty-0.1` noch L1–L5.
+und verändert keine Schwierigkeitsbewertung. Die neue Methode 0.2 folgt ausschließlich
+dem unabhängig belegten Deduktionsbedarf aus Abschnitt 5.
+
+Das [Paarlinienprofil](../PAIRED_LINES.md) darf ausdrücklich gewählt werden,
+wenn Linienlogik nicht genügt. Baseline, stärkerer Proof und Assessmentdatei
+gemeinsam mitführen. Ein unvollständiger Paarfixpunkt bleibt ohne Freigabe;
+Budgetende ist kein Fixpunkt. Handoff-Auswahl bindet die `certification` des
+Produktionsmanifests. Alte 0.4.x-Snapshots legitimieren diese Profile nicht.
 
 Die Logik separat in einem frischen Prüferprozess verifizieren. Herkunft zusätzlich mit der vorhandenen Rekonstruktionsprüfung prüfen, beispielsweise `inspect_candidate` beziehungsweise Reparaturverifikation/passendem Export. Nur tatsächlich vorhandene Befehle/API-Funktionen verwenden. Zeit-/Zeilenbudgets je Befehl aus der README übernehmen; fehlgeschlagene Versuche nicht nachträglich umetikettieren.
 
@@ -171,7 +181,11 @@ Materiell sind Änderungen an Identität, Pose, charakteristischen Proportionen,
 
 **Logische Schwierigkeit, Rastergröße, Bearbeitungsumfang und Lösungszeit getrennt angeben.** Große Matrizen oder viele Eingaben sind nicht automatisch schwierig. Sterne-/Fehlerbewertung im Spiel bleibt unabhängig.
 
-Bewertungsmethode `picross-difficulty-0.1` verwenden. Den Lösungsverlauf anhand von Hinweisen und jeweiligem Wissensstand beurteilen, ohne versteckte Lösung als Schlussgrund. Das vollständige Solverprofil beweist Lösbarkeit, nicht die Notwendigkeit seiner stärksten Technik.
+Für neue Paarprofilbewertungen `picross-difficulty-0.2` verwenden; reine Linienfälle
+dürfen weiterhin nach 0.1 bewertet werden. Alte Bewertungen nicht überschreiben
+oder als rückwirkende 0.2-Berechnung ausgeben. Den Lösungsverlauf anhand von
+Hinweisen und bisher bewiesenen Domains beurteilen. Profilverwendung allein
+beweist keine Notwendigkeit seiner stärksten Technik.
 
 | Technik | Bedeutung |
 | --- | --- |
@@ -179,6 +193,7 @@ Bewertungsmethode `picross-difficulty-0.1` verwenden. Den Lösungsverlauf anhand
 | R1 | Überlappungen sowie Grenzen/Verlängerungen eindeutig zugeordneter Blöcke |
 | R2 | Kombinierte Zuordnung mehrerer Blöcke/Segmente; mehrere Anker, Trennungen oder Farbregeln zusammenführen |
 | R3 | Allgemeine vollständige Zeilenunterstützung, komplexe Alternativen und partielle Farbdomänen, soweit nicht durch R0–R2 erklärt |
+| R4 (0.2) | Notwendige gemeinsame Paarlinienlogik gemäß B-D01, belegt durch separat verifizierten unvollständigen Linienfixpunkt und vollständigen Paarproof derselben Logik |
 
 | Stufe | Einstufungskriterium |
 | --- | --- |
@@ -186,7 +201,7 @@ Bewertungsmethode `picross-difficulty-0.1` verwenden. Den Lösungsverlauf anhand
 | **L2 – leicht** | R1 erforderlich, R0+R1 reichen. |
 | **L3 – mittel** | R2 erforderlich und ausreichend; keine definierte Engstelle beobachtet. |
 | **L4 – schwer** | R2 mit Engstelle oder R3 ohne Engstelle. |
-| **L5 – sehr schwer** | R3 mit Engstelle. |
+| **L5 – sehr schwer** | R3 mit Engstelle oder unter 0.2 notwendige R4; diese zusätzlich ausdrücklich als „linienübergreifend / besonders hoher logischer Anspruch“ kennzeichnen. Keine L6-Stufe. |
 
 **Vorläufige Engstellendefinition:** mindestens drei aufeinanderfolgende informative R2/R3-Schritte; jeweils höchstens zwei produktive Linien und höchstens vier Zellen mit Domänenänderung pro Schritt. Ein Schritt ist eine Regelanwendung an einer Linie einschließlich ihrer begründeten Änderungen. Restaufräumen ignorieren, sobald höchstens `max(5, ceil(0.02 × W × H))` Zellen mehrdeutig bleiben. Die Schwellen gehören zur Methodenversion, nicht zum mathematischen Lösbarkeitsvertrag.
 
@@ -199,7 +214,18 @@ Vorgehen:
 5. Vertrauen: `low` bei KI-Schätzung/ungeklärten Technikgrenzen; `medium` bei vollständig überprüfter Bewertung ohne belastbare menschliche Kalibrierung; `high` erst mit validierter Methode und passenden Vergleichsdaten. Geringes Vertrauen oder fehlende Kalibrierung ist kein Abnahmeblocker; eine unbegründete Stufenzahl ist unvollständig.
 6. Lösungszeit ohne belastbare Daten als `null`/„nicht geschätzt“ ausgeben. Optionale spätere Versuche mit Erfahrungsgruppe, aktiver Zeit, Hilfen, Abbruch und getrennten Urteilen zu Logik/Arbeitsumfang erfassen. Darauf Methode und Zeitprognosen versioniert kalibrieren; Produktion nicht auf diesen Datensatz warten lassen.
 
-Stagniert das zulässige technische Vollprofil, ist das Rätsel nicht freigabefähig; es bekommt keine zusätzliche Schwierigkeitsstufe. Neue Bewertungen bei unverändertem Raster benötigen keinen neuen Logiknachweis.
+Für R4 lautet `assessment_type=instrumented`, `confidence=medium`, Stufe und
+plausibler Bereich L5. Das belegt nur R4-Notwendigkeit, keinen vollständigen
+R0–R3-Analysator und keine menschliche Kalibrierung. `evidence` referenziert die
+inventarisierte Assessmentdatei; `profile_hash` bindet den geprüften Paarproof,
+`logical_demand` enthält die obige Kennzeichnung. ZA-1 prüft Baseline und stärkeren
+Proof frisch. Ohne notwendigen R4 bleiben die R0–R3-Kriterien und Schätzgrenzen.
+
+Stagniert das gewählte Profil, ist das Rätsel nicht freigabefähig; es bekommt
+keine zusätzliche Stufe. Neue Bewertung unveränderter Hinweise braucht keine
+Bild-/Rasterproduktion; ein erstmals beanspruchter stärkerer Technikbedarf
+verlangt die dazugehörigen neuen Nachweise. Ein Abbruch oder bloß verwendeter
+Paarschritt belegt keine Notwendigkeit. Keine Aussage über sämtliche denkbaren Regeln.
 
 ## 6. Dateien, Übergabe und Wiederaufnahme
 
@@ -225,7 +251,7 @@ Die KI MUSS einen aktuellen Übergabedatensatz in diesem Begleitformat führen. 
 
 ```yaml
 format: picross-authoring-handoff-v2
-rulebook: {version: "0.4.1", file: "<Regelwerk>", sha256: null}
+rulebook: {version: "0.5.0", file: "<Regelwerk>", sha256: null}
 puzzle_id: "<stabile ID>"
 revision: "<Paketrevision>"
 repo_commit: "<vollständige tatsächlich gelesene SHA>"

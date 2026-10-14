@@ -91,6 +91,9 @@ def _matches_clues(values: list[int], clues: tuple[int | Clue, ...]) -> bool:
 
 def verify(puzzle: Puzzle, proof: object, budget: Budget | None = None) -> dict:
     budget = budget if budget is not None else Budget()
+    if isinstance(proof, dict) and proof.get("format") == "picross-proof-v3":
+        from .paired_verifier import verify_paired
+        return verify_paired(puzzle, proof, budget)
     start_lines = budget.lines
     obj = exact_keys(proof, {
         "format", "logic_hash", "profile", "profile_hash", "steps", "status",

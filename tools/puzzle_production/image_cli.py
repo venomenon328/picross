@@ -14,6 +14,9 @@ def main(argv=None) -> int:
     image = sub.add_parser("import-image")
     image.add_argument("--input", type=Path, required=True)
     image.add_argument("--design", type=Path, required=True)
+    image.add_argument("--profile", choices=("full-line-mono", "full-line-color", "paired-lines-mono", "paired-lines-color"))
+    image.add_argument("--max-pair-work", type=int, default=20_000_000)
+    image.add_argument("--max-pair-records", type=int, default=250_000)
     export = sub.add_parser("export-p1")
     export.add_argument("--bundle", type=Path, required=True)
     export.add_argument("--variant", required=True)
@@ -29,7 +32,9 @@ def main(argv=None) -> int:
         from .images import import_image
         from .p1_export import export_p1
         if args.command == "import-image":
-            result = import_image(args.input, args.design, args.output_dir, args.seconds, args.max_lines)
+            result = import_image(args.input, args.design, args.output_dir, args.seconds, args.max_lines,
+                                  profile=args.profile, max_pair_work=args.max_pair_work,
+                                  max_pair_records=args.max_pair_records)
         else:
             result = export_p1(args.bundle, args.variant, args.reveal, args.name, args.output_dir,
                                args.revision, args.seconds, args.max_lines)

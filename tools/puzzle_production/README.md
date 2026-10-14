@@ -262,7 +262,45 @@ Deduktionsnachweis und keine redaktionelle Abnahme. Der verifizierte Linienfixpu
 bleibt `stalled`, auch wenn die Suche `unique` ergibt. Import, Reparatur, ZA-1
 und Schwierigkeit L1–L5 werden durch diese Diagnose nicht verändert.
 
-## Verfahren und Ressourcen
+## Paarlinienprofil und Schwierigkeit 0.2 (#139 B/C)
+
+Der [Paarlinienvertrag](../../docs/PAIRED_LINES.md) ergänzt ausdrücklich gewählte
+`paired-lines-mono`/`paired-lines-color` v1 und `picross-proof-v3`. Exakte Beziehungen
+zweier beliebiger paralleler Linien werden nach dem vollständigen Linienfixpunkt
+ausgewertet. Der getrennte Prüfer leitet sie selbst her. Standardaufrufe,
+`full-line-*`, alte Proofbytes und Diagnose A behalten ihren Vertrag.
+
+```sh
+python -m tools.puzzle_production solve --input tests/puzzle_production/fixtures/unique-stalled.json --profile paired-lines-mono --output-dir artifacts/paired-example
+python -m tools.puzzle_production verify --input tests/puzzle_production/fixtures/unique-stalled.json --proof artifacts/paired-example/proof.json
+python -m tools.puzzle_production assess --input tests/puzzle_production/fixtures/unique-stalled.json --proof artifacts/paired-example/proof.json --baseline artifacts/paired-example/baseline-proof.json --report artifacts/paired-assessment.json
+```
+
+`solve` schreibt zusätzlich `baseline-proof.json` und `assessment.json`, prüft
+beide Proofdateien unabhängig und berichtet die gemeinsame Arbeit unter
+`certification_line_evaluations`/`certification_seconds`. `--max-pair-work`
+(20.000.000) und `--max-pair-records` (250.000) begrenzen innere Arbeit und
+gleichzeitig gespeicherte Struktureinträge, auch im unabhängigen Prüfer.
+Verbrauchte Arbeit wird niemals zurückgesetzt; unvollständige Projektionen
+werden nicht angewendet. Ressourcenende ist `aborted`, kein starker Fixpunkt.
+
+`import-image` erhält dieselbe ausdrückliche `--profile`-Auswahl und Paarbudgets.
+Es schreibt Manifest v2 mit `certification` und je Variante Baseline/Assessment.
+Reparaturen binden diese Konfiguration im [Plan v2](../../examples/rp5/README.md).
+Handoff-v2 bindet sie in `candidate.certification`; Regelwerk 0.5.0 ist Pflicht.
+Alte Import-/Reparaturmanifeste und Authoring 0.4.x legitimieren keine Paarproofs.
+Neue ZA-1-Exporte verwenden v4, unveränderte Linienfälle weiter v2/v3.
+
+`assess` prüft die übergebenen gespeicherten Proofs frisch. Optionales
+`--diagnosis <A-Verzeichnis>` ergänzt den unveränderten A-Dateicheck, ohne eine
+erschöpfende Suche als unabhängig nachgewiesen auszugeben. Der Bericht trennt
+`multiple`, `reported_unique_without_complete_deduction`, `diagnosis_incomplete`,
+`line_logic_solved`, `paired_lines_solved` und vollständige Deduktion ohne
+Notwendigkeitsbeleg. Difficulty 0.2 meldet R4/L5 nur bei geprüfter Linienbaseline
+`stalled` und vollständigem Paarproof derselben Logik. Umfang, Zeit und
+redaktionelle Freigabe bleiben eigene Angaben; kein vollständiger R0–R3-Analysator.
+
+## Linienverfahren und Ressourcen
 
 Solver: Vorwärts-/Rückwärtserreichbarkeit eines Zellautomaten aus Gap- und
 Blockfortschrittszuständen, Aufwand O(n·(Summe der Blocklängen + Blockzahl + 1)).

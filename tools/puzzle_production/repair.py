@@ -14,6 +14,7 @@ from .images import (file_hash, inspect_candidate, logic_from_matrix,
                      publish_bundle, raster_image, validate_design)
 from .solver import solve
 from .verifier import verify
+from . import certification
 
 VERSION = "rp5-single-cell-1"
 PLAN_FORMAT = "picross-repair-plan-v1"
@@ -31,12 +32,17 @@ def require(condition, message):
 
 
 def validate_plan(raw, reference):
-    p = exact_keys(raw, {"format", "tool", "reference", "mask", "config", "rationale"})
-    require(p["format"] == PLAN_FORMAT and p["tool"] == VERSION, "Unsupported repair plan/tool")
+    paired = isinstance(raw, dict) and raw.get("format") == "picross-repair-plan-v2"
+    p = exact_keys(raw, {"format", "tool", "reference", "mask", "config", "rationale"} |
+                   ({"certification"} if paired else set()))
+    require((p["format"], p["tool"]) in ((PLAN_FORMAT, VERSION),
+            ("picross-repair-plan-v2", "rp5-single-cell-2")), "Unsupported repair plan/tool")
     reference = exact_keys(reference, {"id", "format", "revision", "source_id", "normalized_sha256", "versions",
                                        "design", "variant", "matrix", "logic_hash"})
     require(reference["format"] == "picross-image-candidate-v1", "Invalid import reference format")
     d = validate_design(reference["design"])
+    if paired:
+        certification.validate_config(p["certification"], validate_logic(logic_from_matrix(reference["matrix"], d)))
     exact_keys(reference["variant"], {"id", "method", "threshold"})
     r = exact_keys(p["reference"], {"candidate_id", "manifest_sha256", "variant"})
     require(r["candidate_id"] == reference["id"] and r["variant"] == reference["variant"]["id"],
@@ -150,11 +156,21 @@ class Frontier:
         return parent, edit
 
 
-def evaluate(matrix, design, directory, prefix, budget):
+def evaluate(matrix, design, directory, prefix, budget, config=None):
     start, lines = time.monotonic(), budget.lines
     puzzle = validate_logic(logic_from_matrix(matrix, design))
-    proof = solve(puzzle, budget)
     write_json(directory / f"{prefix}-logic.json", puzzle.to_wire())
+    if config:
+        start_work = budget.pair_work
+        proof, result = certification.produce(puzzle, directory, prefix + "-", config, budget)
+        if result["certified"]:
+            require(proof["final_domains"] == [[[v] for v in row] for row in matrix],
+                    "Paired final raster differs from repaired matrix")
+        return proof, {"status": result["status"], "proof_verified": result["proof_verified"],
+            "certified": result["certified"], "reason": result.get("reason", proof["reason"]),
+            "line_evaluations": budget.lines-lines, "seconds": time.monotonic()-start,
+            "pair_work": budget.pair_work-start_work, "pair_peak_records": budget.pair_peak_records}
+    proof = solve(puzzle, budget)
     write_json(directory / f"{prefix}-proof.json", proof)
     checked, reason = False, proof["reason"]
     try:
@@ -176,16 +192,22 @@ def search(reference_dir, plan, output, cancelled=None):
     require(not output.exists(), "Use a fresh repair output directory")
     start = time.monotonic()
     # Validate the small plan before allocating the search data structures.
-    exact_keys(plan, {"format", "tool", "reference", "mask", "config", "rationale"})
+    paired = isinstance(plan, dict) and plan.get("format") == "picross-repair-plan-v2"
+    exact_keys(plan, {"format", "tool", "reference", "mask", "config", "rationale"} |
+               ({"certification"} if paired else set()))
     r = exact_keys(plan["reference"], {"candidate_id", "manifest_sha256", "variant"})
     raw = load_json(reference_dir / f'{r["variant"]}-candidate.json') if isinstance(r["variant"], str) and \
         r["variant"].isascii() and r["variant"].replace("-", "").replace("_", "").isalnum() else None
     require(raw is not None, "Invalid reference variant path")
     plan = validate_plan(plan, raw)
     config = plan["config"]
-    budget = Budget(config["search_seconds"], config["search_lines"], cancelled)
+    cert_config = plan.get("certification")
+    budget = (certification.bounded_budget(config["search_seconds"], config["search_lines"], cert_config, cancelled)
+              if paired else Budget(config["search_seconds"], config["search_lines"], cancelled))
     require(file_hash(reference_dir / "manifest.json") == r["manifest_sha256"], "Reference manifest changed")
     reference, original_proof, reference_checked = inspect_candidate(reference_dir, r["variant"], budget)
+    require(paired or original_proof["format"] != "picross-proof-v3",
+            "Paired reference requires a versioned paired repair plan")
     budget.check()
     matrix, design = reference["matrix"], reference["design"]
     colors = tuple(e["id"] for e in design["palette"])
@@ -199,7 +221,7 @@ def search(reference_dir, plan, output, cancelled=None):
 
     def add(state, parent, edit):
         index = len(history)
-        proof, evaluation = evaluate(state, design, stage, f"candidate-{index:03d}", budget)
+        proof, evaluation = evaluate(state, design, stage, f"candidate-{index:03d}", budget, cert_config)
         score = metrics(proof, state, matrix, colors)
         history.append({"parent": parent, "edit": edit, "matrix_hash": digest(state),
                         "logic_hash": digest(logic_from_matrix(state, design)), "score": score,
@@ -251,16 +273,19 @@ def search(reference_dir, plan, output, cancelled=None):
     search_seconds = time.monotonic()-start
     final = None
     if status == "found":
-        final_budget = Budget(config["final_seconds"], config["final_lines"], cancelled)
+        final_budget = (certification.bounded_budget(config["final_seconds"], config["final_lines"], cert_config, cancelled)
+                        if paired else Budget(config["final_seconds"], config["final_lines"], cancelled))
         try:
             final_budget.check()
-            proof, final = evaluate(frontier.states[selected]["matrix"], design, stage, "final", final_budget)
+            proof, final = evaluate(frontier.states[selected]["matrix"], design, stage, "final", final_budget, cert_config)
             if not final["certified"]:
                 status, reason = "aborted", final["reason"] or "final_verification_aborted"
         except (Aborted, KeyboardInterrupt, MemoryError) as exc:
             status, reason = "aborted", str(exc) if isinstance(exc, Aborted) else type(exc).__name__
             final = {"status": "aborted", "certified": False, "proof_verified": False, "reason": reason,
                      "line_evaluations": final_budget.lines, "seconds": time.monotonic()-(final_budget.deadline-config["final_seconds"])}
+            if paired:
+                final.update(pair_work=final_budget.pair_work, pair_peak_records=final_budget.pair_peak_records)
     best = min(range(len(history)), key=lambda i: (rank(history[i]["score"]), i)) if history else None
     chosen = selected if selected is not None else best
     final_matrix = frontier.states[chosen]["matrix"] if chosen is not None else matrix
@@ -269,16 +294,21 @@ def search(reference_dir, plan, output, cancelled=None):
     core = {"format": FORMAT, "tool": VERSION, "plan_hash": digest(plan), "reference": r,
             "history": [{k: v for k, v in h.items() if k != "evaluation"} for h in history],
             "attempts": attempts, "selected": chosen, "matrix": final_matrix, "changes": changes}
+    if paired:
+        core.update(format="picross-repair-v2", tool="rp5-single-cell-2", certification=cert_config)
     result = {"status": status, "reason": reason, "certified": status == "found" and bool(final and final["certified"]),
               "candidates": len(history) + sum(a["outcome"] == "evaluation_aborted" for a in attempts),
               "steps": len(attempts), "search_lines": budget.lines,
               "reference_lines": reference_checked["line_evaluations"],
               "search_seconds": search_seconds, "final": final, "total_seconds": time.monotonic()-start,
               "evaluations": [h["evaluation"] for h in history], "editorial_release": False}
+    if paired:
+        result.update(pair_work=budget.pair_work, pair_peak_records=budget.pair_peak_records)
     make_views(stage, matrix, final_matrix, plan["mask"], design, changes, status)
     result["total_seconds"] = time.monotonic()-start
     write_json(stage / "result.json", result)
-    write_json(stage / "manifest.json", {"format": "picross-repair-manifest-v1", "repair_id": digest(core)})
+    write_json(stage / "manifest.json", {"format": "picross-repair-manifest-v2" if paired else "picross-repair-manifest-v1",
+                                        "repair_id": digest(core)})
     files = {p.name: file_hash(p) for p in stage.iterdir() if p.is_file()}
     require(sum(p.stat().st_size for p in stage.iterdir()) <= TOTAL_BYTES, "Repair bundle exceeds 256 MiB")
     write_json(stage / "repair.json", {"id": digest(core), **core, "files": files})
@@ -326,10 +356,12 @@ def make_views(directory, before, after, mask, design, changes, status):
 def inspect_repair(directory, reference_dir, budget=None):
     """Reconstruct parents, exact deterministic proposals and each written proof."""
     budget = budget if budget is not None else Budget(600, 1_000_000)
-    raw = exact_keys(load_json(directory / "repair.json", HISTORY_BYTES),
-                     {"id", "format", "tool", "plan_hash", "reference", "history", "attempts", "selected", "matrix", "changes", "files"})
-    require(raw["format"] == FORMAT and raw["tool"] == VERSION, "Unsupported repair bundle")
-    require(isinstance(raw["files"], dict) and 1 <= len(raw["files"]) <= 2*MAX_CANDIDATES+12,
+    raw = load_json(directory / "repair.json", HISTORY_BYTES)
+    paired = isinstance(raw, dict) and raw.get("format") == "picross-repair-v2"
+    raw = exact_keys(raw, {"id", "format", "tool", "plan_hash", "reference", "history", "attempts", "selected", "matrix", "changes", "files"} |
+                    ({"certification"} if paired else set()))
+    require((raw["format"], raw["tool"]) in ((FORMAT, VERSION), ("picross-repair-v2", "rp5-single-cell-2")), "Unsupported repair bundle")
+    require(isinstance(raw["files"], dict) and 1 <= len(raw["files"]) <= (4*MAX_CANDIDATES+16 if paired else 2*MAX_CANDIDATES+12),
             "Invalid repair file count")
     total_bytes = 0
     for name, sha in raw["files"].items():
@@ -347,7 +379,11 @@ def inspect_repair(directory, reference_dir, budget=None):
     r = exact_keys(raw["reference"], {"candidate_id", "manifest_sha256", "variant"})
     require(file_hash(reference_dir / "manifest.json") == r["manifest_sha256"], "Reference bytes changed")
     reference, original, reference_checked = inspect_candidate(reference_dir, r["variant"], budget)
+    require(paired or original["format"] != "picross-proof-v3",
+            "Paired reference requires a versioned paired repair plan")
     p = validate_plan(p, reference)
+    require(paired == (p["format"] == "picross-repair-plan-v2") and
+            (not paired or raw["certification"] == p["certification"]), "Repair profile/plan mismatch")
     require(digest(p) == raw["plan_hash"] and p["reference"] == r, "Plan/reference binding mismatch")
     config, matrix, design = p["config"], reference["matrix"], reference["design"]
     colors = tuple(e["id"] for e in design["palette"])
@@ -356,7 +392,11 @@ def inspect_repair(directory, reference_dir, budget=None):
             isinstance(attempts, list) and len(attempts) <= config["max_steps"], "Search counters exceed plan")
     result = exact_keys(load_json(directory / "result.json", HISTORY_BYTES),
                         {"status", "reason", "certified", "candidates", "steps", "search_lines", "reference_lines", "search_seconds", "final",
-                         "total_seconds", "evaluations", "editorial_release"})
+                         "total_seconds", "evaluations", "editorial_release"} |
+                        ({"pair_work", "pair_peak_records"} if paired else set()))
+    if paired:
+        integer(result["pair_work"], 0, p["certification"]["max_pair_work"], "cumulative pair work")
+        integer(result["pair_peak_records"], 0, p["certification"]["max_pair_records"], "peak pair records")
     started = len(history)+sum(a.get("outcome") == "evaluation_aborted" for a in attempts)
     integer(started, 0, config["max_candidates"], "started candidates")
     require(result["candidates"] == started and result["steps"] == len(attempts) and
@@ -372,7 +412,7 @@ def inspect_repair(directory, reference_dir, budget=None):
     frontier = Frontier(matrix, p["mask"], config["seed"], original["final_domains"])
     seen, fresh = set(), []
     expected_files = {"plan.json", "result.json", "manifest.json", "before.png", "after.png", "changes.png", "mask.png", "view.png", "index.html"}
-    require(load_json(directory / "manifest.json") == {"format": "picross-repair-manifest-v1", "repair_id": raw["id"]},
+    require(load_json(directory / "manifest.json") == {"format": "picross-repair-manifest-v2" if paired else "picross-repair-manifest-v1", "repair_id": raw["id"]},
             "Wrong repair manifest; this is not an image import")
 
     def check_candidate(i, state, parent, edit):
@@ -385,18 +425,27 @@ def inspect_repair(directory, reference_dir, budget=None):
         expected_files.update((f"{prefix}-logic.json", f"{prefix}-proof.json"))
         require(load_json(directory / f"{prefix}-logic.json") == wire, "Clues differ from reconstructed candidate")
         puzzle = validate_logic(wire)
-        proof = load_json(directory / f"{prefix}-proof.json", puzzle.proof_byte_limit)
-        checked = verify(puzzle, proof, budget)
+        if paired:
+            expected_files.update((f"{prefix}-baseline-proof.json", f"{prefix}-assessment.json"))
+            proof, checked = certification.inspect(puzzle, directory, prefix + "-", p["certification"], budget)
+        else:
+            proof = load_json(directory / f"{prefix}-proof.json", puzzle.proof_byte_limit)
+            certification.require_legacy(puzzle, proof)
+            checked = verify(puzzle, proof, budget)
         require(not checked["certified"] or proof["final_domains"] == [[[v] for v in row] for row in state],
                 "Proof belongs to another final matrix")
         score = metrics(proof, state, matrix, colors)
         require(digest(h["score"]) == digest(score), "Forged logical/visual score")
-        e = exact_keys(result["evaluations"][i], {"status", "proof_verified", "certified", "reason", "line_evaluations", "seconds"})
+        e = exact_keys(result["evaluations"][i], {"status", "proof_verified", "certified", "reason", "line_evaluations", "seconds"} |
+                       ({"pair_work", "pair_peak_records"} if paired else set()))
+        if paired:
+            integer(e["pair_work"], 0, result["pair_work"], "evaluation pair work")
+            integer(e["pair_peak_records"], 0, result["pair_peak_records"], "evaluation peak pair records")
         require(type(e["certified"]) is bool and type(e["proof_verified"]) is bool and
                 e["certified"] == (e["proof_verified"] and checked["certified"]), "Forged original certification")
         require((e["proof_verified"] and e["status"] == checked["status"] and e["reason"] == proof["reason"]) or
                 (not e["proof_verified"] and e["status"] == "aborted" and e["reason"] in
-                 ("time_limit", "work_limit", "cancelled")), "Inconsistent evaluation status")
+                 ("time_limit", "work_limit", "cancelled", "pair_work_limit", "pair_memory_limit")), "Inconsistent evaluation status")
         integer(e["line_evaluations"], 0, config["search_lines"], "evaluation lines")
         require(type(e["seconds"]) in (int, float) and math.isfinite(e["seconds"]) and e["seconds"] >= 0,
                 "Invalid evaluation time")
@@ -438,6 +487,9 @@ def inspect_repair(directory, reference_dir, budget=None):
     require(next_candidate == len(history) if history else not attempts, "Unbound candidates")
     require(result["search_lines"] >= result["reference_lines"] + sum(e["line_evaluations"] for e in result["evaluations"]),
             "Cumulative work reset between candidates")
+    if paired:
+        require(result["pair_work"] >= sum(e["pair_work"] for e in result["evaluations"]),
+                "Cumulative pair work reset between candidates")
     chosen = raw["selected"]
     if history:
         integer(chosen, 0, len(history)-1, "selected candidate")
@@ -465,18 +517,27 @@ def inspect_repair(directory, reference_dir, budget=None):
         for name in ("changes.png", "mask.png", "view.png"):
             with Image.open(directory / name) as a, Image.open(Path(tmp) / name) as b:
                 require(a.mode == b.mode and a.size == b.size and a.tobytes() == b.tobytes(), "Altered change/mask display")
-    certified = False
+    certified, final = False, None
     if (directory / "final-proof.json").exists():
         expected_files.update(("final-logic.json", "final-proof.json"))
         wire = logic_from_matrix(end, design)
         require(load_json(directory / "final-logic.json") == wire, "Stale final logic")
         puzzle = validate_logic(wire)
-        proof = load_json(directory / "final-proof.json", puzzle.proof_byte_limit)
-        final = verify(puzzle, proof, budget)
+        if paired:
+            expected_files.update(("final-baseline-proof.json", "final-assessment.json"))
+            proof, final = certification.inspect(puzzle, directory, "final-", p["certification"], budget)
+        else:
+            proof = load_json(directory / "final-proof.json", puzzle.proof_byte_limit)
+            certification.require_legacy(puzzle, proof)
+            final = verify(puzzle, proof, budget)
         require(not final["certified"] or proof["final_domains"] == [[[v] for v in row] for row in end],
                 "Final proof matrix mismatch")
         certified = final["certified"]
-        recorded = exact_keys(result["final"], {"status", "certified", "proof_verified", "reason", "line_evaluations", "seconds"})
+        recorded = exact_keys(result["final"], {"status", "certified", "proof_verified", "reason", "line_evaluations", "seconds"} |
+                              ({"pair_work", "pair_peak_records"} if paired else set()))
+        if paired:
+            integer(recorded["pair_work"], 0, p["certification"]["max_pair_work"], "final pair work")
+            integer(recorded["pair_peak_records"], 0, p["certification"]["max_pair_records"], "final peak pair records")
         integer(recorded["line_evaluations"], 0, config["final_lines"], "final cumulative lines")
         require(type(recorded["seconds"]) in (int, float) and math.isfinite(recorded["seconds"]) and recorded["seconds"] >= 0,
                 "Invalid final time")
@@ -498,13 +559,14 @@ def inspect_repair(directory, reference_dir, budget=None):
         require(result["reason"] == reason and (reason != "frontier_exhausted" or frontier.next() is None),
                 "Search falsely claims budget/frontier exhaustion")
     elif result["status"] == "aborted":
-        require(result["reason"] in ("time_limit", "work_limit", "cancelled", "KeyboardInterrupt", "MemoryError", "final_verification_aborted"),
+        require(result["reason"] in ("time_limit", "work_limit", "cancelled", "pair_work_limit", "pair_memory_limit", "KeyboardInterrupt", "MemoryError", "final_verification_aborted"),
                 "Missing supported abort reason")
     require(set(raw["files"]) == expected_files, "Incomplete/excessive repair file bindings")
     return {"accepted": True, "repair_id": raw["id"], "certified": result["certified"],
             "status": result["status"], "candidates": started, "steps": len(attempts),
             "reference_id": reference["id"], "matrix_hash": digest(end), "fresh_candidates": fresh,
-            "editorial_release": False}
+            "editorial_release": False, **({"assessment": final.get("assessment") if final else None,
+                                           "certification": p["certification"]} if paired else {})}
 
 
 def main(argv=None):

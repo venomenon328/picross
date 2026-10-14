@@ -51,6 +51,8 @@ def export_p1(bundle: Path, variant: str, reveal: Path, name: str, output: Path,
     if not isinstance(name, str) or not 1 <= len(name) <= 128:
         raise InvalidInput("Reveal name requires 1..128 characters")
     c, proof, checked = inspect_candidate(bundle, variant, Budget(seconds, max_lines))
+    if proof.get("format") == "picross-proof-v3":
+        raise InvalidInput("Paired certification requires the versioned Authoring/ZA-1 export")
     d = c["design"]
     if d["width"] > 50 or d["height"] > 50:
         raise InvalidInput("P1 puzzles support at most 50 cells per axis")
@@ -140,6 +142,8 @@ def export_pilot(bundle: Path, variant: str, reveal: Path, name: str, output: Pa
         source = {"kind": "repair", "repair_id": raw["id"], "reference": raw["reference"],
                   "repair_sha256": file_hash(bundle / "repair.json"),
                   "manifest_sha256": file_hash(bundle / "manifest.json")}
+    if proof.get("format") == "picross-proof-v3":
+        raise InvalidInput("Paired certification requires the versioned Authoring/ZA-1 export")
     if design["width"] > 50 or design["height"] > 50:
         raise InvalidInput("P1 puzzles support at most 50 cells per axis")
     if not certified:
