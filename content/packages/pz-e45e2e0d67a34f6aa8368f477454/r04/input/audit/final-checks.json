@@ -1,0 +1,49 @@
+{
+  "status": "pass",
+  "width": 30,
+  "height": 50,
+  "cells": 1500,
+  "mode": "mono",
+  "palette": [
+    {
+      "id": "ink",
+      "rgb": "#000000"
+    }
+  ],
+  "empty_rgb": "#ffffff",
+  "filled": 747,
+  "filled_percent": 49.8,
+  "candidate_id": "631cfc0df796bd5d6f827794778d3c7bc8b709ee9be4e757180937afe06318b0",
+  "matrix_hash": "589d177cf134a9a7bc0adfbcd17a8c0a86663db4dac9a21cfe1778ea3ea69666",
+  "logic_hash": "b12f4f7cf1403cc71e80faa6307f3de9814636a107bb34f37f2bda1b3891ad1d",
+  "profile": {
+    "deduction": "all-line-supported-values",
+    "id": "full-line-mono",
+    "search": false,
+    "start": "unknown",
+    "version": 1
+  },
+  "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+  "proof_steps": 126,
+  "full_unknown_start": true,
+  "proof_endmatrix_exact": true,
+  "frame": {
+    "left": true,
+    "right": true,
+    "top": false,
+    "bottom": true
+  },
+  "frame_valid": true,
+  "independent_verification": "audit/final-verify.json",
+  "origin_verification": "audit/origin-verification.json",
+  "visual": "audit/visual-review.json",
+  "difficulty": "difficulty.json",
+  "soft_exceptions": [],
+  "repair": null,
+  "manual_cell_changes": 0,
+  "target": {
+    "adapter": "ZA-1 / authoring-p1-rect-color-1",
+    "dimensions_supported": true,
+    "export": "not_performed: Standardauftrag 3 stops before final editorial approval and registration"
+  }
+}

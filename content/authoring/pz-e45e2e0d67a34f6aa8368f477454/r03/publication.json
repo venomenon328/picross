@@ -1,0 +1,17 @@
+{
+  "published_revisions": [
+    "r01",
+    "r03"
+  ],
+  "current_revision": "r03",
+  "historical_r02": {
+    "included_in_repository": false,
+    "reason": "Beschädigtes, nicht lesbares Archiv; seine Bytes sind zusätzlich oberhalb des GitHub-Connector-Requestlimits. Originale lokal und in früherer Dateiübergabe erhalten, keine historische Revision überschrieben.",
+    "recovery_evidence": "r03/package.zip → source-recovery.json und history/r02-inventory.json",
+    "all_required_current_inputs_present_in_r03": true
+  },
+  "sealed_r03_package_sha256": "97a3bdb75d44ccfdabacdd6cbfde567ac00580160bdfc8a4ae84145479dd712a",
+  "sealed_handoff_unchanged": true,
+  "current_scope": "Nur Authoring-Ablage und additiver Index; keine Motivfreigabe, Rasterproduktion oder Spielregistrierung.",
+  "historic_access_notes": "Fehlende Remoteablage in versiegelten Handoffs beschreibt den früheren Übergabezeitpunkt. Aktueller Ablagestand wird durch Record, Branchhead und Draft-PR belegt."
+}
