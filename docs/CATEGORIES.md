@@ -73,7 +73,7 @@ python -m tools.puzzle_production.target_adapter sync-runtime --checkout .
 python -m tools.puzzle_production.target_adapter check-registry --checkout .
 ```
 
-`sync-runtime` validiert die Quellen und alle registrierten Pakete frisch vor
+`sync-runtime` validiert die Quellen und registrierten Bindungen vor
 atomarem Ersetzen der Projektion. Fehlende Referenzen oder offene Journale stoppen
 vor Änderungen. Kein Umklassifizierungseditor: Zuordnungsänderungen registrierter
 v2-Exporte benötigen eine ausdrücklich geprüfte Metadaten-/Exportbindung.
@@ -124,7 +124,9 @@ Feld bleiben lesbar. Vor kategorisiertem Export ist die Zuordnung Pflicht.
 Arbeitsindex/Record sind keine Runtime-Registrierung; Freigaben bleiben separat.
 
 Bei Wiederaufnahme den aktuellen Arbeitsindex und die Zielregistry verwenden.
-Neuere Records, Freigaben und Integrationsbelege erhalten. Historische Parallel-
+Neuere Records, Freigaben und Integrationsbelege laufender Produktionen erhalten.
+Final integrierte Produktionen werden gemäß PUZZLE_AUTHORING §9 entfernt; ihre
+kompakten Integrationsbindungen benötigen keinen Paket-Replay. Historische Parallel-
 oder Lieferstände erzeugen keine neuen Prüf-/Exportaufträge für Bestandsrätsel.
 
 Prüfwege und gebundene Testinputs: [KAT1_VERIFICATION](KAT1_VERIFICATION.md).

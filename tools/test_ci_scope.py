@@ -159,6 +159,22 @@ class SelectionTests(unittest.TestCase):
 
 
 class RequiredGateTests(unittest.TestCase):
+    def test_large_selection_file_keeps_every_path_and_rejects_failed_jobs(self):
+        plan = classify([f"content/authoring/pz-{i}/r01/production/area-128-proof.json" for i in range(5000)])
+        results = {key: {"result": "success" if key == "docs" else "skipped"} for key in JOBS}
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "selection.json"
+            path.write_text(json.dumps(plan), encoding="utf-8")
+            self.assertGreater(path.stat().st_size, 131072)
+            for status, expected in [("success", 0), ("failure", 1)]:
+                results["docs"]["result"] = status
+                run = subprocess.run([os.sys.executable, str(Path(__file__).with_name("ci_scope.py")), "finish",
+                                      "--plan-file", str(path), "--results", json.dumps(results)],
+                                     capture_output=True, text=True, timeout=10)
+                self.assertEqual(run.returncode, expected, run.stderr)
+                self.assertEqual(json.loads(run.stdout)["accepted"], expected == 0)
+            self.assertEqual(len(json.loads(path.read_text())["changed_paths"]), 5000)
+
     def test_content_result_still_requires_successful_scope_job(self):
         plan = classify(["content/registry.json"])
         results = {key: {"result": "success" if key == "docs" else "skipped"} for key in JOBS}

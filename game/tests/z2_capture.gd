@@ -8,11 +8,14 @@ var records: Array = []
 var contrast_records: Array = []
 var failure_captures: Array = []
 var failed: bool = false
+var compact: bool = false
+var recent_images: Dictionary = {}
 
 func _initialize() -> void:
 	call_deferred("run")
 
 func run() -> void:
+	compact = OS.get_cmdline_user_args().has("--ci-compact")
 	SaveStore.test_root_override = "user://z2-capture-saves-%d" % Time.get_ticks_usec()
 	output = OS.get_environment("P1_CAPTURE_DIR")
 	surface = SubViewport.new()
@@ -112,7 +115,7 @@ func write_report() -> void:
 		push_error("Z2 render report could not be written")
 		quit(5)
 		return
-	report.store_string(JSON.stringify({"captures":records,"normal_text_contrasts":contrast_records,"failed":failed,"failure_captures":failure_captures,"body_font":app.BODY_FONT.get_font_name(),"title_font":app.TITLE_FONT.get_font_name(),"c1_outer_radius_px":0.25,"reference_outer_radius_px":0.275},"\t"))
+	report.store_string(JSON.stringify({"compact":compact,"captures":records,"normal_text_contrasts":contrast_records,"failed":failed,"failure_captures":failure_captures,"body_font":app.BODY_FONT.get_font_name(),"title_font":app.TITLE_FONT.get_font_name(),"c1_outer_radius_px":0.25,"reference_outer_radius_px":0.275},"\t"))
 
 func record_failure(name: String, message: String) -> void:
 	failed = true
@@ -123,6 +126,9 @@ func record_failure(name: String, message: String) -> void:
 			item.reasons.append(message)
 			write_report()
 			return
+	var picture: Image = recent_images[name] if recent_images.has(name) else surface.get_texture().get_image()
+	if picture.save_png(output.path_join(filename)) != OK:
+		push_error("Cannot retain failed book capture: "+name)
 	failure_captures.append({"file":filename,"reasons":[message],"crop":false})
 	write_report()
 
@@ -132,9 +138,12 @@ func shot(name: String) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var picture: Image = surface.get_texture().get_image()
-	if picture.save_png(output.path_join("z2-"+name+".png")) != OK:
+	recent_images[name] = picture
+	if recent_images.size() > 3:
+		recent_images.erase(recent_images.keys()[0])
+	if not compact and picture.save_png(output.path_join("z2-"+name+".png")) != OK:
 		record_failure(name, "Z2 native render could not be written: "+name)
-	if name == "t02-1280":
+	if not compact and name == "t02-1280":
 		picture.get_region(Rect2i(90,102,850,180)).save_png(output.path_join("z2-detail-clues-ui125-1to1.png"))
 		picture.get_region(Rect2i(245,608,590,65)).save_png(output.path_join("z2-detail-tools-ui125-1to1.png"))
 	var grid: Rect2 = app.board.view.visible_bounds()
@@ -146,15 +155,16 @@ func shot(name: String) -> void:
 		var dimensions: Vector2 = Vector2(app.session.player.width,app.session.player.height)
 		if not app.board.layout_valid or not grid.is_equal_approx(whole) or not grid.size.is_equal_approx(dimensions*app.board.view.cell_size) or not Rect2(Vector2.ZERO,app.board.size).encloses(whole.grow(1)) or app.board.view.cell_size > app.board.fit_ceiling:
 			record_failure(name, "Z2 complete frame/fit geometry: "+name)
-	records.append({"file":"z2-"+name+".png","size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,"grid":[grid.position.x+app.board.position.x,grid.position.y+app.board.position.y,grid.size.x,grid.size.y],"cell":app.board.view.cell_size,"visible_cells":[grid.size.x/app.board.view.cell_size,grid.size.y/app.board.view.cell_size],"information":app.information.visible})
+	records.append({"name":name,"file":"" if compact else "z2-"+name+".png","retained":not compact,"size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,"grid":[grid.position.x+app.board.position.x,grid.position.y+app.board.position.y,grid.size.x,grid.size.y],"cell":app.board.view.cell_size,"visible_cells":[grid.size.x/app.board.view.cell_size,grid.size.y/app.board.view.cell_size],"information":app.information.visible})
 	await contrast_check(name,picture)
 	if failed:
 		write_report()
 
 func detail_shots() -> void:
-	var image: Image = surface.get_texture().get_image()
-	for entry: Array in [["clues",Rect2i(300,125,935,190)],["tools",Rect2i(295,970,480,60)],["palette",Rect2i(1395,452,125,125)],["fold",Rect2i(1770,0,150,1080)]]:
-		image.get_region(entry[1]).save_png(output.path_join("z2-detail-"+entry[0]+"-1to1.png"))
+	if not compact:
+		var image: Image = surface.get_texture().get_image()
+		for entry: Array in [["clues",Rect2i(300,125,935,190)],["tools",Rect2i(295,970,480,60)],["palette",Rect2i(1395,452,125,125)],["fold",Rect2i(1770,0,150,1080)]]:
+			image.get_region(entry[1]).save_png(output.path_join("z2-detail-"+entry[0]+"-1to1.png"))
 	app.board.set_clue_hover("row",11)
 	await shot("c1-tooltip")
 	var tooltip_state: Dictionary = SaveStore.snapshot(app.session,app.board.capture_view())

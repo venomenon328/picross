@@ -101,7 +101,7 @@ VS-M01-Protokoll ist dennoch nicht vollständig persönlich durchgeführt.
 die horizontale G-Flächenverteilung der integrierten Studie. Mindestreserve und
 Fit zuerst, zusätzliche sichere Zeilenkapazität anschließend; unveränderter
 Lesemaßstab, obere Reserve, vollständiger Rahmen und semantische Fortsetzung.
-Der eigene [Prüfplan](../examples/vs1/gf1-plan.json) und die
+Der eigene [Prüfplan](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/gf1-plan.json) und die
 [Prüfzuordnung](VS1_VERIFICATION.md) binden die technische Lieferung.
 GF-M01 und das Review von #59 sind nach PR #60 abgeschlossen; maßgeblich ist
 [die abschließende Klarstellung](https://github.com/venomenon328/picross/pull/60#issuecomment-6076039228).
@@ -122,5 +122,5 @@ Alte Reports, `manifest.json`, `production.json`, `plan-vb1.json` und die endlic
 E1-initial/correction-1/correction-2-Reihe bleiben bytegebundene historische
 Nachweise. Ihre damaligen offenen Entscheidungsfelder werden nicht nachträglich
 überschrieben. Aktuelle Berichte referenzieren die neue Entscheidung separat;
-[GF-M01-Protokoll](../examples/vs1/gf1-owner-protocol.json) bleibt als historische
+[GF-M01-Protokoll](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/vs1/gf1-owner-protocol.json) bleibt als historische
 Lieferdatei unausgefüllt, die spätere positive GF-M01-Bestätigung bleibt maßgeblich.

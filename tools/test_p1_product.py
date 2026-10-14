@@ -52,7 +52,7 @@ class ProductHarnessTests(unittest.TestCase):
     def placeholder_build(output):
         build = output / "build"
         build.mkdir()
-        for name in ("picross-p1.exe", "picross-p1.console.exe"):
+        for name in ("picross-p1.exe", "picross-p1.console.exe", "picross-p1.pck"):
             (build / name).write_bytes(b"packaging contract placeholder; not a Windows build")
         return build
 
@@ -136,14 +136,14 @@ class ProductHarnessTests(unittest.TestCase):
             root = Path(temporary)
             build = root / "build"
             build.mkdir()
-            for name in ("picross-p1.exe", "picross-p1.console.exe"):
+            for name in ("picross-p1.exe", "picross-p1.console.exe", "picross-p1.pck"):
                 (build / name).write_bytes(name.encode())
             extra = root / "extra.txt"
             extra.write_text("neutral", encoding="utf-8")
             extras = {name: extra for name in PLAYER_FILES - {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json"}}
             manifest = dict(source_commit="b" * 40, source_tree_dirty=False, render_metrics={2: (0.25, 0.78)})
             artifact = package(build, root, manifest, "neutral instructions", extras)
-            self.assertEqual(set(verify_player_package(artifact, manifest)["files"]), PLAYER_FILES)
+            self.assertEqual(set(verify_player_package(artifact, manifest)["files"]), PLAYER_FILES | {"picross-p1.pck"})
             with zipfile.ZipFile(artifact, "a") as bundle:
                 bundle.writestr("renders/screenshot.png", b"technical")
             with self.assertRaisesRegex(PreflightError, "contents"):
@@ -178,7 +178,29 @@ class ProductHarnessTests(unittest.TestCase):
             with self.assertRaises(PreflightError):
                 project_name(project)
 
-    def test_artifact_requires_executable_pair_and_binds_identity(self):
+    def test_native_pack_audit_targets_separate_pack_and_binds_its_bytes(self):
+        from za1_product import audit_pack
+        from unittest.mock import Mock
+        import hashlib
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            executable = root / "picross-p1.exe"
+            executable.write_bytes(b"MZengine")
+            pack = executable.with_suffix(".pck")
+            phase = Mock()
+            for data in (None, b"", b"MZinvalid"):
+                if data is not None: pack.write_bytes(data)
+                with self.subTest(data=data), self.assertRaises(PreflightError):
+                    audit_pack(root, "godot", executable, {}, phase, 10, "pack-audit")
+                phase.assert_not_called()
+            pack.write_bytes(b"GDPCactual-resources")
+            result = audit_pack(root, "godot", executable, {}, phase, 10, "pack-audit")
+            command = phase.call_args.args[1]
+            self.assertEqual(command[command.index("--main-pack")+1], str(pack))
+            self.assertEqual(result['pack_sha256'], hashlib.sha256(pack.read_bytes()).hexdigest())
+            self.assertEqual(phase.call_args.kwargs['phase_env']['ZA1_PACK_COUNT'], '10')
+
+    def test_artifact_requires_executables_and_pack_and_binds_identity(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             build = root / "build"
@@ -188,9 +210,15 @@ class ProductHarnessTests(unittest.TestCase):
             with self.assertRaises(PreflightError):
                 package(build, root, manifest, "instructions")
             (build / "picross-p1.console.exe").write_bytes(b"console")
+            with self.assertRaises(PreflightError):
+                package(build, root, manifest, "instructions")
+            (build / "picross-p1.pck").write_bytes(b"")
+            with self.assertRaises(PreflightError):
+                package(build, root, manifest, "instructions")
+            (build / "picross-p1.pck").write_bytes(b"GDPCresources")
             artifact = package(build, root, manifest, "instructions")
             with zipfile.ZipFile(artifact) as archive:
-                self.assertEqual(set(archive.namelist()), {"picross-p1.exe", "picross-p1.console.exe", "README.txt", "product-report.json"})
+                self.assertEqual(set(archive.namelist()), {"picross-p1.exe", "picross-p1.console.exe", "picross-p1.pck", "README.txt", "product-report.json"})
                 self.assertIn(b"a" * 40, archive.read("README.txt"))
             (build / "unrelated.txt").write_text("unrelated")
             with self.assertRaises(PreflightError):

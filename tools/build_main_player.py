@@ -13,15 +13,14 @@ import zipfile
 import p1_preflight as toolchain
 
 
-EXPECTED_EXPORTS = {"picross-p1.exe", "picross-p1.console.exe"}
-ALLOWED_EXPORTS = EXPECTED_EXPORTS | {"picross-p1.pck"}
+EXPECTED_EXPORTS = {"picross-p1.exe", "picross-p1.console.exe", "picross-p1.pck"}
 
 
 def stage_player(build: Path, destination: Path, source_commit: str,
                  guide: str, extras: dict[str, Path]) -> list[str]:
     """Stage direct download contents. GitHub upload-artifact supplies the only ZIP."""
     export_files = {path.name: path for path in build.iterdir() if path.is_file()}
-    if not EXPECTED_EXPORTS <= export_files.keys() or set(export_files) - ALLOWED_EXPORTS:
+    if not EXPECTED_EXPORTS <= export_files.keys() or set(export_files) - EXPECTED_EXPORTS:
         raise toolchain.PreflightError(f"Incomplete/unexpected Windows export: {sorted(export_files)}")
     if any(path.stat().st_size == 0 for path in export_files.values()):
         raise toolchain.PreflightError("Empty Windows export file")
@@ -59,6 +58,7 @@ def stage_player(build: Path, destination: Path, source_commit: str,
         f"Quellcommit (main): {source_commit}\n"
         f"Godot: {toolchain.RELEASE_TAG}\n\n"
         "Dieses eine Archiv vollständig entpacken und picross-p1.exe starten.\n"
+        "picross-p1.exe und picross-p1.pck müssen im selben Ordner bleiben.\n"
         "picross-p1.console.exe zeigt bei Bedarf technische Meldungen.\n"
         "Spielanleitung: SPIELANLEITUNG.md; Nutzungsrechte: licenses/.\n"
         "Keine Godot-Installation erforderlich. Spielstände gehören nicht zum Archiv.\n",

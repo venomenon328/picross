@@ -592,7 +592,7 @@ quadratisches Mono und ein lokales SVG unter `res://art/f04.svg`.
 Der reguläre Hauptszenenweg wird in isolierten Profilen über echte Viewport-
 Ereignisse geprüft: Auswahl, falscher Eintrag/eigene Miniatur, Undo/Redo,
 Teilstand, Neustart, Abschluss und erneuter Neustart samt Album. Vor Abschluss
-bleiben Name, Reveal und Lösungsausschnitt verborgen. Die [RP-3-Prüfzuordnung](RP3_VERIFICATION.md)
+bleiben Name, Reveal und Lösungsausschnitt verborgen. Die [RP-3-Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP3_VERIFICATION.md)
 bindet native Renderbilder; F-01/F-02 samt Proofs/Bildern und F-03 bleiben erhalten.
 RP-3 ist nach unabhängigem Review R2 über PR #44 integriert; die reale
 Eigentümer-Lösung ist RP-6-Gate. Parent #34 bleibt offen; kein Merge/Release.
@@ -621,7 +621,7 @@ zusätzliche Schema-2-Definitionen/Save-Slots: 100×100 Mono, 50×50 Farbe,
 bis `art/f09.png` sind je ID fest gebunden. Adapter v2 prüft Import oder
 vollständigen RP-5-Reparaturvertrag; technische Zertifizierung ist keine
 redaktionelle Freigabe. Quelle/Palette/Matrix/Proof und Ressourcen stehen im
-[Pilotmanifest](../examples/rp6/manifest.json).
+[Pilotmanifest](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp6/manifest.json).
 
 Das vorhandene Album erhält ein scrollbar erreichbares Dreispaltenraster; alle
 neun Blätter sind auch bei 1280×720/UI 125 % wählbar. Keine neue Progression
@@ -631,7 +631,7 @@ für die neuen Paletten unverändert. Vor Abschluss nur eigene Miniatur, danach
 korrekt gebundener Name und Ressource; alle sechs mit isolierter Fortsetzung
 und tatsächlichen nativen Renderbildern geprüft.
 
-[RP-6-Nachweise](RP6_VERIFICATION.md) und [neutrale Spielprobe](RP6_OWNER_TRIAL.md).
+[RP-6-Nachweise](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP6_VERIFICATION.md) und [neutrale Spielprobe](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP6_OWNER_TRIAL.md).
 Unabhängiges technisches/visuelles Review und M01–M04 aus #40 bleiben
 Abnahmegates. Eine automatisierte Lösung ersetzt keine Eigentümerprobe.
 

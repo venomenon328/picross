@@ -1,5 +1,0 @@
-Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.
-
-Ich nehme das Rätselpaket pz-e45e2e0d67a34f6aa8368f477454 · r04, Revision r04, mit Inventar 5714eb711cf258cca33c7e182a833a69bf6b38cefc2710e4bad21d63b888adea redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.
-
-Draft-PR; kein Merge.

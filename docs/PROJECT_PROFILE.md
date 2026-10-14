@@ -9,6 +9,12 @@ Code-Regressionen verwenden einen festen technischen Testbestand.
 
 [KAT-1](CATEGORIES.md) bindet `content/categories.json`, genau eine Kategorie je sichtbarem Rätsel, Registry-/Runtimeformat v2 und kategorisierte ZA-1-v2-Exporte. Bei Kategorien-/Katalog-/Adapterarbeit zusätzlich diesen Vertrag und [ZA-1](ZA1_ADAPTER.md) vollständig lesen. [KAT-1-Prüfzuordnung](KAT1_VERIFICATION.md) ergänzt die bestehenden Prüfwege; Saves, Definitionen und Freigabebindungen bleiben unverändert. KAT-2 (#79) verwendet diesen Vertrag für den regulären Katalogstart. Bei Katalogarbeit zusätzlich [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md) lesen; unabhängiges Review und Eigentümerabnahme KAT2-M01 bleiben vor Merge erforderlich.
 
+**CI-Folgearbeit #116 (14.10.2026):** Die freigegebene aktuelle Grafikabdeckung
+und ihre drei gemeinsamen Fenster-/UI-Konfigurationen stehen in der
+[CI-Policy](CI_POLICY.md). Historische erzwungene Raster-Replays entfallen;
+aktuelle gezielte Funktions-/Pixelprüfungen bleiben. Der Windows-Debugexport
+liefert Ressourcen separat in `picross-p1.pck`; EXE und PCK gehören zusammen.
+
 ## Entwicklungsbasis und Grenzen
 
 Das reguläre Spiel liegt unter [game/](../game/README.md). Ausgangspunkt der
@@ -27,10 +33,12 @@ Reguläre Rätsel sind gemäß #68 höchstens 50×50 groß. IDs, Revisionen, Dat
 Freigabebindungen aller Workflow-Rätsel bleiben unverändert. Appidentität, Save-Schema
 und Speicherroot bleiben erhalten; verwaiste Savedateien werden nicht angefasst.
 
-Arbeitsstände und ZIPs der Rätselproduktion liegen in
+Laufende Arbeitsstände und ZIPs der Rätselproduktion liegen in
 [content/authoring](../content/authoring/README.md); Wiederaufnahme und Integration
 folgen [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitten 6 und 8.
-Die Arbeitsablage ist keine Runtime-Registrierung.
+Die Arbeitsablage ist keine Runtime-Registrierung. Nach Endabnahme und Main-Merge
+werden Produktionsdaten nach PUZZLE_AUTHORING §9 entfernt; kompakte Integrations-
+bindung und Runtime-Dateien genügen. Keine dauerhafte Wiederholbarkeitspflicht.
 
 [ZA-1](ZA1_ADAPTER.md) ermöglicht weitere freigegebene Workflow-Inhalte über eine
 zentrale Datenregistry mit expliziten Slots, einschließlich Mono/Farbe und Rechtecken.
@@ -57,7 +65,7 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | --- | --- |
 | Produkt, Regeln, Inhalte, Progression, UX/UI, Eingabe, Plattform oder Architektur | [Produktdefinition](PRODUCT_DEFINITION.md) |
 | Thematik, Album, Motiventhüllung, UX/UI oder Eingabe/Wertung | [Gestaltungskonzept](DESIGN_CONCEPT.md) |
-| Spieltechnik und P1-Verträge | [P1](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt Entscheidungen, [Preflight](P1_PREFLIGHT.md), [Spielanleitung](../game/README.md), historische [P1.1](P1_1_VERIFICATION.md), [P1.2](P1_2_VERIFICATION.md) und [P1.3](P1_3_VERIFICATION.md) |
+| Spieltechnik und P1-Verträge | [P1](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt Entscheidungen, [Preflight](P1_PREFLIGHT.md), [Spielanleitung](../game/README.md) |
 | Zeichensprache, statische Vorschau, Zellanimationen | [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), betroffene ZS-Verträge/-Nachweise |
 | Spriteherstellung, Zellrendering, Cache/Invalidierung, PERF-01 | [CELL_RENDERING](CELL_RENDERING.md), [PERF-A](PERF_A_IMPLEMENTATION.md), [PERF-B](PERF_B_IMPLEMENTATION.md) |
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
@@ -71,7 +79,7 @@ aktiven Zellatlanten, Import-/Shader-/Rendererverträge und native PERF-B-/PCK-
 Prüfungen bleiben unabhängig über `tools/cell_atlas_reference.json` gebunden.
 
 Historische Nachweise führen ihren damaligen Test-/Abnahmestand. Aktuelle
-Fachentscheidungen stehen in den verlinkten Verträgen; Auswahl und Budgets in der
+Fachentscheidungen stehen in den verlinkten Verträgen; Auswahl und Aufbewahrung in der
 CI-Policy ersetzen deren ältere pauschale Sechs-Job-/Vollrenderpflichten.
 Bei konkreter historischer Nacharbeit zusätzlich sämtliche dort gebundenen
 Quellen und damaligen Issues lesen; Erinnerungen ersetzen keinen Quellenzugriff.
@@ -139,128 +147,25 @@ Externe URLs, Anker, Referenzlinks und vollständige Markdownsyntax sind nicht
 abgedeckt. Die [Regelkopie](DEV_RULES_ADOPTION.md) bei deren Aktualisierung separat
 gegen den Quellcommit prüfen; keine ungefragte zentrale Regeländerung.
 
-## RP-1/RP-2-Prüfkern
+## Produktionswerkzeuge
 
-Eigenes Werkzeug unter `tools/puzzle_production/`, Fachtests unter
-`tests/puzzle_production/`; kein P1-Code übernommen. Versionierter Logik-/Profil-/
-Nachweisvertrag, Zell-Domains, headless CLI und unabhängiger Blockpositions-Prüfer
-stehen in der [Anleitung](../tools/puzzle_production/README.md).
-RP-2 unterstützt 1..8 Vordergrundfarben plus Leer, gemeinsame Farblinienlogik und
-partielle Domainverluste. Alte Monoformate/-hashes bleiben erhalten; Farbformate
-und Profile sind separat versioniert. Keine Laufzeitabhängigkeit des Spiels vom Produktionswerkzeug.
+Eigenes headless Werkzeug unter `tools/puzzle_production/`, Python 3.11+;
+Bildbefehle nutzen Pillow exakt 12.3.0. Fachtests unter `tests/puzzle_production/`
+verwenden feste synthetische Inputs für Solver, unabhängigen Verifier, Import,
+Reparatur, Export, Registrierung und abgeschlossene Integrationsbindungen.
+Der Spieler benötigt weder Python noch Produktionspakete. Aktuelle Befehle und
+Formate stehen in der [Werkzeuganleitung](../tools/puzzle_production/README.md)
+und [ZA-1](ZA1_ADAPTER.md). CI-Auswahl und Nachweise regelt ausschließlich die Policy.
 
 ```sh
-python3 -m tools.puzzle_production solve --input tests/puzzle_production/fixtures/deductive.json --output-dir artifacts/rp1-example
-python3 -m tools.puzzle_production verify --input tests/puzzle_production/fixtures/deductive.json --proof artifacts/rp1-example/proof.json
-python3 -m tools.puzzle_production solve --input tests/puzzle_production/fixtures/color-four.json --output-dir artifacts/rp2-example
-python3 -m tools.puzzle_production verify --input tests/puzzle_production/fixtures/color-four.json --proof artifacts/rp2-example/proof.json
 python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
 python3 -m tools.puzzle_production.benchmark --output-dir artifacts/puzzle-production
 ```
 
-[Eigene CI](../.github/workflows/puzzle-production.yml), Job `puzzle-production`:
-Ubuntu 24.04, Python 3.11+, lesende Rechte, 15 Minuten. Fachoracles,
-Negativtests und Referenzläufe bleiben für RP-3 vollständig aktiv. Referenzbudgets:
-120 Sekunden je Fall inklusive frischer Prüfung, 512 MiB gemessener Peak-RSS je
-Linux-Prozess; separates hartes virtuelles Speicherlimit 1024 MiB im Benchmark.
-Fehlende Messung oder Abbruch ist keine Abnahme. Reports und geprüfte Nachweise
-unter `artifacts/puzzle-production/` werden als CI-Artefakt mit Commitbindung bereitgestellt.
-Historische RP-2-Ergebnisse/Integrationsbindung stehen im abgeschlossenen PR #43.
-#41/#42/#43 sind integriert;
-die alte gestapelte Basis gehört ausschließlich zur RP-1-Historie. Mono-Balken-/
-Langlinienreferenzen bleiben erhalten; gemeinsame CI ergänzt vierfarbige
-40×40-/100×100-Fälle und schwierige farbige 100er-Linien mit frischer Prüfung.
-Bestehende `docs`-/`product`-/`preflight`-Workflows bleiben aktiv.
-Eine reale Motiv-/Spielprobe ist für den reinen RP-1/RP-2-Logikkern nicht anwendbar.
-
-## RP-3-Bildimport und historischer P1-Export
-
-Python 3.11+ und **Pillow exakt 12.3.0** in einer eigenen venv; nur Bildbefehle
-laden Pillow. Die bisherigen Kernbefehle bleiben ohne Zusatzpakete nutzbar.
-Installation und vollständiger Daten-/Normalisierungsvertrag stehen in der
-[Werkzeuganleitung](../tools/puzzle_production/README.md), reale Dateien in
-[examples/rp3](../examples/rp3/README.md). Keine Modell-API oder Laufzeitdienste.
-
-```sh
-python3 -m venv .venv/rp3
-.venv/rp3/bin/python -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
-.venv/rp3/bin/python -m tools.puzzle_production.rp3_demo --output-dir artifacts/rp3-demo
-```
-
-Unter Windows die venv über `.venv/rp3/Scripts/python.exe` verwenden. Die
-betroffenen CI-Jobs `puzzle-production` und `product` installieren diese separate
-Anforderung ausschließlich in einer temporären venv. `docs` und `preflight`
-benötigen weiterhin nur Standardbibliothek. Vollständige Fachtests benötigen
-wegen der neuen Bildtests die Image-Umgebung.
-
-Grenzen: PNG/JPEG, 32 MiB kodiert, 8 Millionen dekodierte Pixel, 8192 je
-Quellachse, 1..8 Varianten, 1..100 Zielzellen je Achse und 1..8 Vordergrundfarben
-plus Leer. P1-Adapter v1 bleibt quadratisch monochrom mit F-04/SVG. RP-6 ergänzt
-versioniert v2: quadratische F-05 bis F-09, bis vier Farben plus Leer, lokale
-begrenzte PNG-/SVG-Ressourcen und vollständiger RP-5-Replay für Reparaturen. Kein öffentlicher Import oder Saveformatwechsel.
-Die Exportfreigabe rekonstruiert Quelle/Raster/Hinweise und prüft die geschriebene
-Nachweisdatei unabhängig neu; bewiesene Enddomains müssen der Matrix entsprechen.
-
-RP3-A01 bis A06 einschließlich unabhängigem technischem/visuellem Review R2
-sind im integrierten PR #44 abgeschlossen. Die dort gebundenen Fachtests/Benchmark,
-`docs`, `product`, `preflight`, Diffcheck, Windows-Artefakt und Sichtkontrolle
-bleiben historische Nachweise dieses Stands. Die damalige reguläre Hauptszene wurde
-mit F-04 in drei isolierten Prozessen bearbeitet, abgeschlossen und wieder geladen;
-echte Renderbilder prüfen eigene falsche Einträge und die Spoilergrenze.
-Die RP-6-Abnahmeentscheidungen sind im integrierten PR #47 gebunden.
-Windows-Export, Windows-Start und persönliche Lösung bleiben getrennte Nachweise.
-Die Machbarkeitsphase #34 ist seit 07.10.2026 abgeschlossen; wirtschaftliche
-Serienproduktion und weitergehende Produktionsoberfläche bleiben Folgearbeiten.
-
-## RP-4-Regression und Herkunftsnachweis
-
-R1-N1 zu PR #45 prüft Neuerzeugungen der drei eigenen Illustrationen auf exakte
-Dateimenge, Modus, Abmessungen und dekodierte Pixel. Gespeicherte Originale,
-Erzeugungsskript und Input-Lock bleiben bytegebunden. Der tatsächliche ursprüngliche
-Commitpayload wird als kleine Datei bereitgestellt und mit seinem Git-Objekthash,
-Tree und unverändertem Produktionsreport verbunden; [Prüfzuordnung](RP4_VERIFICATION.md).
-
-Der aktuelle Linux-Fachjob bleibt für Produktionsänderungen aktiv. Ein begrenzter
-Windows-x64-Job im Fachworkflow führt nur `test_rp4*.py` aus: Python 3.12.10,
-offizielles Pillow-12.3.0-Wheel in temporärer venv, `contents: read`, zehn Minuten
-hartes Joblimit. Er verlangt erfolgreiche aktuelle Tests ohne erneute Produktion
-des alten R1-Fehlers. Die isolierte historische Reproduktion bleibt ein gezielter
-Diagnoseweg. Tatsächliche Laufzeit-/Codec-
-daten und Head/Basis/Checkout/Run stehen im kleinen Nachweisartefakt. Kein Windows-
-Benchmark, keine zusätzliche P1-/Eigentümerprobe. R2 hat beide R1-Befunde
-und die aktuellen technischen Checks bestätigt; RP-4 ist über PR #45 integriert.
-Die eingefrorenen Daten und historischen offenen Felder behalten ihre Bindung.
-
-## RP-5-Reparaturprüfung
-
-Eigener additiver Reparatur-/Replayvertrag nach dem bestehenden Importprüfpfad;
-Mono und Farbe, einzelne Zelländerungen, harte Masken und separate kumulative
-Änderungs-/Vorschlags-/Kandidaten-/Linien-/Zeitgrenzen. Alle Parameter wurden vor
-dem ersten Vergleichslauf in Commit `55f9e0f` fixiert. Endnachweise entstehen
-frisch vom unbekannten Raster und werden unabhängig geprüft; keine neue Regel
-im Zertifizierer. Der v1-P1-Export weist Reparaturbundles weiterhin zurück. RP-5 selbst
-veränderte keine P1-Datei; RP-6 ergänzt dafür den getrennten v2-Adapter.
-
-```sh
-python -m tools.puzzle_production.rp5 verify --output-dir artifacts/rp5-replay
-python -m unittest discover -s tests/puzzle_production -p 'test_repair.py' -v
-python -m unittest discover -s tests/puzzle_production -p 'test_rp5.py' -v
-```
-
-Gleiche isolierte Image-Umgebung. Job `rp5-repair` auf Ubuntu 24.04,
-lesende Rechte, zehn Minuten hartes Joblimit, sechs Minuten Schrittlimit;
-Paketreplay kooperativ 300 s, Einzelbundle-Prüfung 60 s / 1000000 Linien.
-Der Job entpackt das bytegebundene Originalarchiv mit Mengen-/Größen-/Pfadkontrolle,
-prüft alle Kandidaten/Eltern/Proofs, 48 Originalresultate und neun Sichturteile.
-Source-Head, Basis, Test-Merge und Run stehen im Artefakt. Gemeinsamer Fachjob
-behält sämtliche Oracles, sechs Referenzen, RP-3-Demo und RP-4-Replay;
-Windowsregression, `docs`, `product` und `preflight` bleiben aktiv.
-
-RP5-A01 bis A06 und unabhängiges technisches/visuelles Review R1 sind
-im integrierten PR #46 abgeschlossen. Historische Baseline-/Reviewfelder
-bleiben unverändert; eigene Sichtung ersetzt weiterhin keine Zweitprüfung. Persönliche Lösung und finale Pilotabnahme gehören zum historischen RP-6-Auftrag;
-dessen Entscheidungen stehen im integrierten PR #47. Die Machbarkeitsphase #34 ist seit 07.10.2026 abgeschlossen; wirtschaftliche
-Serienproduktion und weitergehende Produktionsoberfläche bleiben Folgearbeiten.
+Abgeschlossene RP1–RP6-Korpusproduktionen, Codec-/Reparaturstudien und damalige
+Abnahmen sind [historische Quellen](DEVELOPMENT_ARCHIVE.md). Sie sind keine
+aktuellen Start-, Replay- oder CI-Pflichten. Allgemeine Code- und Sicherheits-
+regressionen bleiben bis zu einer gesonderten Umfangsentscheidung aktiv.
 
 ## Toolchain, Product und Betriebswirkung
 
@@ -283,8 +188,7 @@ Der allgemeine Harness verwendet sechs feste synthetische Muster T-01/T-02/T-04/
 T-06/T-08/T-09, unabhängig vom Produktionsbestand. Der weiterhin `--pilots` genannte
 Bereich prüft vier dieser technischen Fälle; echte Rätsel werden nicht replayt.
 Spielerexport und tatsächlicher PCK-Inhalt sind zusätzlich zu Tests zu kontrollieren.
-Technische Daten höchstens 30.000.000 Bytes, gemeinsam mit Spielerpaket höchstens
-75.000.000 Bytes. Historische Studien-/Vergleichspakete entstehen im Standardpfad
+Laufzeiten und Artefaktgrößen werden ohne feste CI-Optimierungsbudgets gemessen. Historische Studien-/Vergleichspakete entstehen im Standardpfad
 nicht neu. Notwendige Referenzen, Quellen, Lizenzen und Prüfinputs bleiben erhalten.
 
 Keine Laufzeitdienste eingerichtet. Nur isolierte temporäre Prüfdaten, keine

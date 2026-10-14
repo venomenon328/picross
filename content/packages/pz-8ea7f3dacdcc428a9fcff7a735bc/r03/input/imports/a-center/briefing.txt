@@ -1,4 +1,0 @@
-Faithful 35x35 color golden pothos in terracotta pot. Preserve leaf positions, pointed heart shapes, green-gold variegation, central leaf, left front leaf, right vine and important empty gaps. Palette A; tight centered square includes all motif pixels above 5 luminance-distance units from white.
-
-Working mode: faithful
-Motif and gameplay review: open

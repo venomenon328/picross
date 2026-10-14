@@ -1,5 +1,5 @@
 extends SceneTree
-## External probe runs against the actual embedded Windows PCK, never source fallbacks.
+## External probe runs against the actual separate Windows PCK, never source fallbacks.
 const Registry = preload("res://model/content_registry.gd")
 const Definition = preload("res://model/definition.gd")
 var failures: int = 0
