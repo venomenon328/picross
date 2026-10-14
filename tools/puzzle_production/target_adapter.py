@@ -119,13 +119,16 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     manual = isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "manual"
     edited_import = h.get("manual_edit_record") is not None
     color_import = h.get("editorial_manual_derivation") is not None
+    approved_color = isinstance(h.get("repair"), dict) and h["repair"].get("type") == "fixed_color_editorial_redraw"
+    color_chain = color_import or approved_color
     auth = None
-    if manual or edited_import or color_import:
+    if manual or edited_import or color_chain:
         require(not legacy, "Manual derivation requires export v3")
         from .manual_derivation import authorization, IMPORT_AUTH_FORMAT
         auth = authorization(package, manual_authorization)
         require((auth["record"]["format"] == IMPORT_AUTH_FORMAT) == edited_import and
-                (auth["record"]["format"] == "picross-manual-authorization-v3") == color_import,
+                (auth["record"]["format"] == "picross-manual-authorization-v3") == color_import and
+                (auth["record"]["format"] == "picross-manual-authorization-v4") == approved_color,
                 "Manual authorization/source version mismatch")
     else:
         require(manual_authorization is None, "Manual authorization requires a manual source")
@@ -149,7 +152,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     bundle = package.bundle(c.get("bundle"))
     kind = c.get("source_type")
     budget = Budget(min(120, max(0, package.deadline - time.monotonic())), 1_000_000)
-    if color_import:
+    if color_chain:
         from .color_derivation import inspect_chain
         design, matrix, proof, checked, source, reference = inspect_chain(package, auth, budget)
         expected_proof = c["bundle"] + "/" + c["variant"] + "-proof.json"
@@ -198,7 +201,8 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(proof["final_domains"] == [[[v] for v in row] for row in matrix], "Proof enddomains differ")
     manifest = load_json(reference / "manifest.json")
     require(file_hash(reference / manifest["original"]) == h["motif"]["sha256"], "Import source is not the approved motif")
-    params = [auth["record"]["accepted_motif"]["parameters"]] if color_import else h.get("approved_parameters")
+    params = ([auth["record"]["accepted_motif" if color_import else "approved_motif"]["parameters"]]
+              if color_chain else h.get("approved_parameters"))
     require(isinstance(params, list) and params, "Missing explicit approved parameters")
     for p in params:
         require(isinstance(p,dict), "Invalid approved parameters")
@@ -246,7 +250,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     selection = {"variant": c["variant"], "matrix_hash": digest(matrix), "logic_hash": digest(logic),
                  "reveal": {"file": h["reveal"]["file"], "sha256": h["reveal"]["sha256"]}}
     approval = final_approval(package, selection, approval_path)
-    if edited_import or color_import:
+    if edited_import or color_chain:
         require(approval is not None, "Edited import requires bound final approval")
     if auth is not None and approval is not None:
         require(auth["owner"]["approval_sha256"] == approval["sha256"], "Owner override final approval binding mismatch")
@@ -258,7 +262,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
               "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256") if package.derivation else package.archive_sha256,
               "source": source, "width": design["width"], "height": design["height"], "mode": design["mode"],
               "difficulty": difficulty, "frame": {"left": left, "right": right, "top": top, "bottom": bottom},
-              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_import, color_import),
+              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_chain, color_chain),
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "test_only": h.get("test_only", False)}
     if not legacy:
         report.update(format="picross-target-inspection-v2", category_id=None,
@@ -271,6 +275,10 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     if color_import:
         report.update(original_state=h["state"], original_motif_gate=gates["motif"],
                       late_motif_acceptance=True, accepted_motif=auth["record"]["accepted_motif"],
+                      superseded_content_blockers=auth["record"]["superseded_content_blockers"])
+    if approved_color:
+        report.update(original_state=h["state"], original_motif_gate=gates["motif"],
+                      late_motif_acceptance=False, approved_motif=auth["record"]["approved_motif"],
                       superseded_content_blockers=auth["record"]["superseded_content_blockers"])
     return report, design, matrix, logic, approval
 
