@@ -1,0 +1,37 @@
+{
+  "product_dimensions": true,
+  "width": 24,
+  "height": 36,
+  "cells": 864,
+  "filled": 253,
+  "empty": 611,
+  "occupancy": 0.29282407407407407,
+  "frame": {
+    "left": false,
+    "right": true,
+    "top": true,
+    "bottom": true,
+    "valid": true
+  },
+  "matrix_hash": "e959cbcfcd07c3d92cbf7edffab3a6719482ac4179abbdb5d4a0dd9ecad06703",
+  "logic_hash": "bab23c2505579a59f123f32351bae42cc76e187cd24638b15f42fc4ebed1a241",
+  "exact_endmatrix": true,
+  "proof_steps": 153,
+  "profile": {
+    "deduction": "all-line-supported-values",
+    "id": "full-line-mono",
+    "search": false,
+    "start": "unknown",
+    "version": 1
+  },
+  "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+  "changes_from_r03": [
+    {
+      "column": 22,
+      "row": 23,
+      "before": "empty",
+      "after": "ink"
+    }
+  ],
+  "minimum_productive_before_cleanup": 7
+}

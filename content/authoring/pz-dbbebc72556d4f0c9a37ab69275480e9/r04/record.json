@@ -2,7 +2,7 @@
   "format": "picross-authoring-record-v1",
   "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
   "revision": "r04",
-  "state": "blocked",
+  "state": "registered",
   "category_id": "saeuger",
   "motif_name": "Giraffe",
   "repo_commit": "8489f249e55ada95ac5776ba634b597d96e4f012",
@@ -17,7 +17,10 @@
     "sha256": "14f6d1e4b9b3d399b0c42e32e557016e87b8e6bfdaea54b3c84229b25cf398f7"
   },
   "inventory_sha256": "570fe3c3ec445d65d197b4c57433dbe285f739885312660f5f503feb9d80d2d2",
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/approval.json",
+    "sha256": "0411cba680749ba57e09b6616abc7f5c6d247e313601385e7115b4d403936b62"
+  },
   "width": 24,
   "height": 36,
   "mode": "mono",
@@ -103,11 +106,39 @@
     ],
     "evidence": "manual-replay.json"
   },
-  "blockers": [
-    "final_editorial: missing bound human final approval and associated ZA-1-v2 authorization"
-  ],
-  "next_action": "r04 redaktionell abnehmen; bei Integrationsauftrag echte Endfreigabe und ZA-1-v2-Autorisierung extern binden. Kein Merge.",
-  "integration": null,
+  "blockers": [],
+  "next_action": "Pflicht-CI und getrennten Selbstreview abschließen, PR118 gemäß tatsächlichem bedingten Mergeauftrag mergen; Main-Integration nachweisen. Danach Produktionsabschluss gemäß §9.",
+  "integration": {
+    "runtime_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+    "runtime_revision": 1,
+    "name": "Giraffe",
+    "stem": "giraffe_001",
+    "save_slot": "giraffe_001",
+    "category_id": "saeuger",
+    "category_name": "Säugetiere",
+    "registered_checkout": true,
+    "main_integrated": false,
+    "export_manifest": {
+      "file": "content/packages/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/manifest.json",
+      "sha256": "e960010195d836517b41c9a5443f5aa568e6f599bba3e5385a2637a7904c4f45"
+    },
+    "inspection": {
+      "file": "content/packages/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/inspection.json",
+      "sha256": "c1d7defc2e5a1e3a99f219b3cbed1268398e28fb07c2c5d3ef4199ab8fcb002a"
+    },
+    "plan": {
+      "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/registration-plan.json",
+      "sha256": "7e08b58d2884b711a9f28f082641d7716d9f143b034a8bc04a60ae0162208042"
+    },
+    "registration": {
+      "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/registration-result.json",
+      "sha256": "e21f4f9a3859db46cea5f4c6022977d6840333ee7439c91d067352c367ecbb21"
+    },
+    "file_check": {
+      "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/integration-check.json",
+      "sha256": "2dbe922173764694d6109dbd6292dbce2f6529c878b43f1477e9fbd468a7bba1"
+    }
+  },
   "previous_revision": {
     "revision": "r03",
     "commit": "8489f249e55ada95ac5776ba634b597d96e4f012",
@@ -115,5 +146,13 @@
     "package_sha256": "f894d4a3cc0d1ef006c854bf36abc0ee92818435312980d5dd6cb0ea0eec1ba3"
   },
   "updated_at_utc": "2026-10-14T14:35:51Z",
-  "difficulty_metadata_note": "Die ursprüngliche R0-Begründung übernimmt maximal14 Packungspositionen aus r03. Der neue Hinweis [13,1] in Zeile23 benötigt15 einschließlich Trenner. Auch15 ist kleiner als23; R0-Ausschluss und Einstufung bleiben unverändert. Präzisierung im äußeren Record; versiegelte ZIP-/Handoff-/Inventarbytes unverändert."
+  "difficulty_metadata_note": "Die ursprüngliche R0-Begründung übernimmt maximal14 Packungspositionen aus r03. Der neue Hinweis [13,1] in Zeile23 benötigt15 einschließlich Trenner. Auch15 ist kleiner als23; R0-Ausschluss und Einstufung bleiben unverändert. Präzisierung im äußeren Record; versiegelte ZIP-/Handoff-/Inventarbytes unverändert.",
+  "manual_authorization": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/manual-authorization.json",
+    "sha256": "9c52de284e982f29e7e2ea61f921220704a1cc5c8eef72cd302f688467308d68"
+  },
+  "approval_evidence": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/final-approval-evidence.md",
+    "sha256": "0de848bf69d4c058c06d26877259ef2bdb48f22aeb7123bb74a814b5cfa83ef3"
+  }
 }
