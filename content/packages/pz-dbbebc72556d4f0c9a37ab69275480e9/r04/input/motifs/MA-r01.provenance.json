@@ -1,0 +1,14 @@
+{
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "file": "motifs/MA-r01.png",
+  "sha256": "96fe95aec4e2e38ffdfb265ff2ba2f7b3ac6e66f4d449b96c5c094b3fec0ca4b",
+  "author": "OpenAI image generation, native Bildbearbeitung im Auftrag von Tobias Schröder",
+  "usage_basis": "Eigenständige native KI-Generierung im ausdrücklich beauftragten Picross-Produktionsauftrag; keine Fremdbilder oder Fremdassets eingebracht.",
+  "derived_from": {
+    "file": "reveals/A-r01.png",
+    "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33"
+  },
+  "prompt_file": "prompts.json",
+  "operation": "faithful: gespeicherte freigegebene A-r01-Bytes als Bildbearbeitungsreferenz, Umwandlung in Schwarzweiß-Silhouette",
+  "material_changes": "Flecken, Farbigkeit, Felltextur, Gesichts-/Hufdetails entfernt; Pose und Hauptproportionen visuell erhalten."
+}

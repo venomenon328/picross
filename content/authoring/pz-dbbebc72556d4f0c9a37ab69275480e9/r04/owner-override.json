@@ -1,0 +1,34 @@
+{
+  "format": "picross-owner-override-v2",
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "r04",
+  "handoff_sha256": "14f6d1e4b9b3d399b0c42e32e557016e87b8e6bfdaea54b3c84229b25cf398f7",
+  "inventory_sha256": "570fe3c3ec445d65d197b4c57433dbe285f739885312660f5f503feb9d80d2d2",
+  "selection": {
+    "variant": "fixed-r04",
+    "matrix_hash": "e959cbcfcd07c3d92cbf7edffab3a6719482ac4179abbdb5d4a0dd9ecad06703",
+    "logic_hash": "bab23c2505579a59f123f32351bae42cc76e187cd24638b15f42fc4ebed1a241",
+    "reveal": {
+      "file": "reveals/A-r01.png",
+      "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33"
+    }
+  },
+  "plan_sha256": "13ed0e2705cb97f8c78fe72edfe1307e31aa3905ca6dc3306391d67c4672748e",
+  "reference": {
+    "bundle": "production/24x36",
+    "variant": "area-160",
+    "candidate_id": "87c3c499316c38457b848ac79102a71b2a6d08982c7370560e320e4c461589d4",
+    "manifest_sha256": "a402c64c45354fbcbe938af3d3e48feaa28ffc1fc004a9238d7af2df60567e01",
+    "matrix_hash": "4004e2797799165d048d36e83949bad73d78a66f769f71f09feac89e3af465ef"
+  },
+  "superseded_content_blockers": [],
+  "actor": "Tobias Schröder",
+  "timestamp_utc": "2026-10-14T14:49:51Z",
+  "statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch nehme das Rätselpaket pz-dbbebc72556d4f0c9a37ab69275480e9 · r04, Revision r04, mit Inventar 570fe3c3ec445d65d197b4c57433dbe285f739885312660f5f503feb9d80d2d2 redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\n\nIch beauftrage auch den Merge dieses Ablage-/Integrations-PRs nach den Pflichtprüfungen gemäß Entwicklungsworkflow.",
+  "package_sha256": "b793659245057fee7183c11935b0267c2f5126b4d03021cea5eca998b1fc752d",
+  "approval_sha256": "0411cba680749ba57e09b6616abc7f5c6d247e313601385e7115b4d403936b62",
+  "permissions": {
+    "fixed_mono_edits": true,
+    "frame_exception": false
+  }
+}

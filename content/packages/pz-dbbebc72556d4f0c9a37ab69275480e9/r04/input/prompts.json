@@ -1,0 +1,53 @@
+{
+  "format": "picross-image-generation-log-v1",
+  "tool": "image_gen.imagegen",
+  "calls": [
+    {
+      "label": "A-r01",
+      "prompt": "Use case: illustration-story. Asset type: detailed full-color reveal illustration for a nonogram album; this is the finished colored illustration, NOT a puzzle grid or monochrome abstraction. Subject: one adult giraffe, anatomically coherent, with very long neck, small two-tufted ossicones, broad ears, gentle dark eyes, patterned golden coat with large chestnut patches, short dark mane, four slender legs with cloven hooves and tufted tail. Style: warm, quiet hand-drawn 2D illustration with confident clean dark-brown outlines, strong connected color fields, carefully drawn inner detail and subtle matte shading. Charming but believable adult proportions, neither infant chibi nor photo nor 3D. Background plain ivory, no landscape, objects, lettering, labels or watermark, no grid or pixels. Portrait canvas 2:3, whole giraffe including horns, all hooves and tail comfortably inside, subject occupies most height and useful width; no wide empty border. Make the silhouette and spaces between legs clear for a future roughly 20-cell-wide by 30-cell-high monochrome abstraction, but maintain rich colored illustration detail now. One image only.\nA calm standing giraffe in clean SIDE PROFILE, facing left. Neck rises upright with a gentle forward curve, head horizontal. Body in lower half, slightly sloping back. Four legs visibly distinguishable in a naturally offset standing stance, no missing or extra legs. Tail curves to the right, large readable chestnut patches. Quiet dignified pose.",
+      "transparent_background": false,
+      "referenced_images": [],
+      "model": "not_exposed",
+      "size_setting": "not_exposed",
+      "quality_setting": "not_exposed",
+      "seed": "not_exposed",
+      "result": {
+        "label": "A-r01",
+        "file": "reveals/A-r01.png",
+        "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+        "pixels": [
+          1024,
+          1536
+        ],
+        "approval": null,
+        "origin": "native image_gen, neue Generierung ohne Bildreferenz",
+        "author": "OpenAI image generation, im Auftrag von Tobias Schröder",
+        "usage_basis": "Eigenständige KI-Generierung für den ausdrücklich beauftragten Picross-Inhalt; keine Fremdbilder oder Fremdassets eingebracht."
+      }
+    },
+    {
+      "label": "MA-r01",
+      "prompt": "Use case: precise-object-edit. Asset type: saved monochrome MOTIF ABSTRACTION for a future 20-cell-wide by 30-cell-high nonogram, NOT the final colored reveal and NOT a puzzle grid.\nEDIT TARGET: the provided approved full-color giraffe A-r01. Preserve this exact animal's identity, side view facing LEFT, upright neck, head angle, two ossicones and visible ears, gently sloping back and body proportions, all FOUR legs and their existing stance, gaps between legs, belly space, right-side tail and tuft. Do not invent a new pose or rotate, squash, widen or crop the animal.\nTransform the illustration into a clean BLACK SOLID SILHOUETTE on a pure opaque WHITE background. Black (#000000) foreground and white (#ffffff) background, only slight edge antialiasing permitted. Smooth, confident connected shapes with no texture, gray shading, patterns, isolated ornamental strokes, fine hairs, text, watermark or grid. Remove all coat spots, fur texture, shading, hoof grooves, facial detail and internal mane strokes; their exact detail belongs to the approved colored reveal. Recognition must come from the characteristic long neck, long left-facing muzzle, horns/ears, torso, four legs and tail. Keep important WHITE negative spaces between the legs and under the belly. Ossicone tufts and tail tuft become simple rounded/tapered masses. Merge the short mane into a compact smooth silhouette edge while retaining its line. Gently strengthen the thinnest existing tail/leg connections only as necessary to withstand small 20x30 rasterization, without materially changing proportions or pose. Do NOT turn the giraffe into an outline-only drawing, generic quadruped, pixel art or low-resolution raster.\nCanvas exactly 1024x1536, portrait 2:3 like the original. Preserve full giraffe framing with all horns, hooves and tail inside. Avoid large empty margins; tightly useful composition, not stretched. Produce ONE image only.",
+      "referenced_images": [
+        {
+          "file": "reveals/A-r01.png",
+          "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+          "role": "edit_target"
+        }
+      ],
+      "transparent_background": false,
+      "model": "not_exposed",
+      "size_setting": "not_exposed",
+      "quality_setting": "not_exposed",
+      "seed": "not_exposed",
+      "result": {
+        "file": "motifs/MA-r01.png",
+        "sha256": "96fe95aec4e2e38ffdfb265ff2ba2f7b3ac6e66f4d449b96c5c094b3fec0ca4b",
+        "pixels": [
+          1024,
+          1536
+        ]
+      }
+    }
+  ]
+}

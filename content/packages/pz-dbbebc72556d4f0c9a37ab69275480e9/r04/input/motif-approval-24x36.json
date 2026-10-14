@@ -1,0 +1,95 @@
+{
+  "type": "human_motif_approval",
+  "actor": "Tobias Schröder",
+  "timestamp_utc": "2026-10-14T14:22:16Z",
+  "timestamp_basis": "Erfassungszeit der vorliegenden Nutzererklärung; Sendezeitpunkt nicht exponiert",
+  "statement": "Ich gebe die Motivvorlage MA-r01 frei; Parameter: genau der im Paket vorgeschlagene eindeutige Parameterkorridor. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "MA-r01",
+  "file": "motifs/MA-r01.png",
+  "sha256": "96fe95aec4e2e38ffdfb265ff2ba2f7b3ac6e66f4d449b96c5c094b3fec0ca4b",
+  "derived_from_reveal_sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+  "evidence": "motif-approval-evidence.md",
+  "parameters": {
+    "width": 24,
+    "height": 36,
+    "mode": "mono",
+    "foreground_colors": 1,
+    "method": "area",
+    "fit": "exact",
+    "actual_crop": [
+      16,
+      8,
+      1016,
+      1508
+    ],
+    "palette": [
+      {
+        "id": "ink",
+        "rgb": "#000000"
+      }
+    ],
+    "background": "#ffffff",
+    "alpha_below": 128,
+    "thresholds": [
+      96,
+      160
+    ]
+  },
+  "approved_corridor": [
+    {
+      "width": 20,
+      "height": 30,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    },
+    {
+      "width": 24,
+      "height": 36,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        16,
+        8,
+        1016,
+        1508
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "background": "#ffffff",
+      "alpha_below": 128,
+      "thresholds": [
+        96,
+        160
+      ]
+    }
+  ],
+  "configuration_sha256": "680a21ba0f23df800b296a50f0efb9d2c23093df019c8b1db73a1fbe1c1f9846",
+  "source_package_sha256": "274bafbd1e5bdc36d13ada7aa034e0f09145c3367f0fc81b3b1f6e594b3d705f"
+}

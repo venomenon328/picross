@@ -1,0 +1,35 @@
+{
+  "status": "pass",
+  "parent_matrix_hash": "ad6a6f3b8bbcb64a4455bc62aa42274a6d87be3cff8cd50afdd5f796405d4287",
+  "matrix_hash": "e959cbcfcd07c3d92cbf7edffab3a6719482ac4179abbdb5d4a0dd9ecad06703",
+  "logic_hash": "bab23c2505579a59f123f32351bae42cc76e187cd24638b15f42fc4ebed1a241",
+  "exact_diff_from_r03": [
+    {
+      "column": 22,
+      "row": 23,
+      "before": "empty",
+      "after": "ink"
+    }
+  ],
+  "other_863_cells_unchanged": true,
+  "source_reconstruction": {
+    "status": "solved",
+    "proof_verified": true,
+    "certified": true,
+    "logic_hash": "bab23c2505579a59f123f32351bae42cc76e187cd24638b15f42fc4ebed1a241",
+    "profile": {
+      "id": "full-line-mono",
+      "version": 1,
+      "start": "unknown",
+      "deduction": "all-line-supported-values",
+      "search": false
+    },
+    "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+    "steps": 153,
+    "line_evaluations": 213
+  },
+  "exact_endmatrix": true,
+  "request_plan_sha256": "46b2fe71f6273d80f4616e53bd8523833e75f595e4ba143bde441501896d6a4e",
+  "manual_record_sha256": "13ed0e2705cb97f8c78fe72edfe1307e31aa3905ca6dc3306391d67c4672748e",
+  "human_final_approval": false
+}
