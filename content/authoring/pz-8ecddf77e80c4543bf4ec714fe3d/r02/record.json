@@ -1,0 +1,50 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r02",
+  "motif_name": "Warnemünde",
+  "category_id": "gebaeude-bauwerke",
+  "state": "motif_review",
+  "package": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r02/package.zip",
+    "bytes": 2804821,
+    "sha256": "1dd534f27f9f6ae04a6889f87ff8b8aaee0d786e1b3953bb20d75c590ca47a1c"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r02/handoff.json",
+    "sha256": "a1f4aa3b29eee73f3fab46508d10ebcb8def8d2eae8728b054c3cd43b370165b"
+  },
+  "inventory_sha256": "2b03f0ea17027dbf300e03130cb259819c72f8f3fac91810cac13a53c1a46c52",
+  "approval": null,
+  "reveal_approval": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r02/reveal-approval.json",
+    "sha256": "7d45ab9a392640b2deec852a1a0f9ecdd4d101950520fd448fff43378092f8d3"
+  },
+  "reveal_revision": "C-r02",
+  "reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+  "motif_revision": "MA-r01",
+  "motif_sha256": "e68df0b10cbc8ad419dc9a943a2bd6dbffe0b8496196d84a4868d10249100276",
+  "width": null,
+  "height": null,
+  "recommended_dimensions": {
+    "width": 30,
+    "height": 40
+  },
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [
+    "Ausdrückliche menschliche Freigabe von MA-r01 samt vorgeschlagenem Parameterkorridor vor Rasterproduktion offen."
+  ],
+  "next_action": "Standardauftrag 3 nach ausdrücklicher MA-r01-/Korridorfreigabe.",
+  "integration": null,
+  "repository_delivery": {
+    "branch": "content/warnemuende-reveal-r01",
+    "base_commit": "f666f87d36a0ea7fa3740202d08706f2215bc303",
+    "parent_commit": "e195066318376aa9c697e681ef8c2e7176a9ebe2",
+    "commit_evidence": "Draft-PR; final commit cannot be embedded in its own bytes."
+  },
+  "validation": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r02/validation.json",
+    "sha256": "1a44346078dac5a24544a0dce96437be8eee12634e293c5a1c71634629afe74b"
+  }
+}

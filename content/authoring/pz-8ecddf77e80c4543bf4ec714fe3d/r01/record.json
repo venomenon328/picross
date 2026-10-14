@@ -4,7 +4,7 @@
   "revision": "r01",
   "motif_name": "Warnemünde",
   "category_id": "gebaeude-bauwerke",
-  "state": "reveal_review",
+  "state": "reveal_approved",
   "package": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r01/package.zip",
     "bytes": 11323096,
@@ -16,7 +16,10 @@
   },
   "inventory_sha256": "25d0ab88d119c76f4407847b39cb9144e2d43ab3d2df929d1d39bc17eca725b6",
   "approval": null,
-  "reveal_approval": null,
+  "reveal_approval": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r02/reveal-approval.json",
+    "sha256": "7d45ab9a392640b2deec852a1a0f9ecdd4d101950520fd448fff43378092f8d3"
+  },
   "width": null,
   "height": null,
   "requested_dimensions": {
@@ -26,10 +29,8 @@
   },
   "mode": "color",
   "difficulty": null,
-  "blockers": [
-    "Ausdrückliche menschliche Abschlussbildfreigabe vor Abstraktion offen."
-  ],
-  "next_action": "Standardauftrag 2: konkrete Abschlussbildrevision freigeben; danach Konfiguration und abgeleitete Motivvorlage.",
+  "blockers": [],
+  "next_action": "Continue with indexed r02 motif_review; original r01 ZIP/handoff remain unchanged.",
   "integration": null,
   "repository_delivery": {
     "branch": "content/warnemuende-reveal-r01",
@@ -44,5 +45,8 @@
   "validation": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r01/validation.json",
     "sha256": "ce6978b4f9a355fb36ca513a93dc0b98d310d40a1bbd1245555ca2b854b89de1"
-  }
+  },
+  "reveal_revision": "C-r02",
+  "reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+  "superseded_by": "r02"
 }
