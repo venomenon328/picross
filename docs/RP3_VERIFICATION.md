@@ -5,7 +5,7 @@ und visuellem Review R2 über [PR #44](https://github.com/venomenon328/picross/p
 als `aa9cc23244c60d647d8468a8d76a819f977e85a6` in `main` integriert. R2 bindet
 den Quellhead `3a1a9386750b50568f63d8277cdf67b9d2884c2c`; keine offenen B-/A-Befunde.
 Die folgenden Draft-/Gateangaben sind historische Entwicklungsnachweise.
-Aktuelle Vergleichsproduktion: [RP4_VERIFICATION.md](RP4_VERIFICATION.md).
+Aktuelle Vergleichsproduktion: [RP4_VERIFICATION.md](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP4_VERIFICATION.md).
 
 Historischer Stand: 04.10.2026 · #37 · damalige Implementierung im Draft
 

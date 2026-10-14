@@ -621,7 +621,7 @@ zusätzliche Schema-2-Definitionen/Save-Slots: 100×100 Mono, 50×50 Farbe,
 bis `art/f09.png` sind je ID fest gebunden. Adapter v2 prüft Import oder
 vollständigen RP-5-Reparaturvertrag; technische Zertifizierung ist keine
 redaktionelle Freigabe. Quelle/Palette/Matrix/Proof und Ressourcen stehen im
-[Pilotmanifest](../examples/rp6/manifest.json).
+[Pilotmanifest](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp6/manifest.json).
 
 Das vorhandene Album erhält ein scrollbar erreichbares Dreispaltenraster; alle
 neun Blätter sind auch bei 1280×720/UI 125 % wählbar. Keine neue Progression
@@ -631,7 +631,7 @@ für die neuen Paletten unverändert. Vor Abschluss nur eigene Miniatur, danach
 korrekt gebundener Name und Ressource; alle sechs mit isolierter Fortsetzung
 und tatsächlichen nativen Renderbildern geprüft.
 
-[RP-6-Nachweise](RP6_VERIFICATION.md) und [neutrale Spielprobe](RP6_OWNER_TRIAL.md).
+[RP-6-Nachweise](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP6_VERIFICATION.md) und [neutrale Spielprobe](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP6_OWNER_TRIAL.md).
 Unabhängiges technisches/visuelles Review und M01–M04 aus #40 bleiben
 Abnahmegates. Eine automatisierte Lösung ersetzt keine Eigentümerprobe.
 

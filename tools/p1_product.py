@@ -288,12 +288,6 @@ def run_pilot_visual(output, workspace, project, engine, environment, phase, hos
 
 def player_extras(root: Path, output: Path) -> dict[str, Path]:
     extras = {}
-    for source, filename in (
-        ("tools/rp6_owner.ps1", "rp6-owner.ps1"),
-    ):
-        path = output / filename
-        path.write_text((root / source).read_text(encoding="utf-8"), encoding="utf-8-sig", newline="\n")
-        extras[filename] = path
     for name, source in (
         ("SPIELANLEITUNG.md", "game/README.md"),
         ("licenses/resources.json", "game/art/book/manifest.json"),
@@ -537,20 +531,20 @@ def main(argv: list[str] | None = None) -> int:
                     "retained-hc92-font-samples", lambda: hc92_verify.verify_retained(evidence.technical / "selected/hc92-renders"))
             required_kat2 = {str(p.relative_to(output)) for p in selected if p.parent.name == "kat2"}
             if not required_kat2 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
-                raise toolchain.PreflightError("Required KAT-2 evidence missing from bounded delivery")
+                raise toolchain.PreflightError("Required KAT-2 evidence missing from technical delivery")
             required_za1 = {str(p.relative_to(output)) for p in selected if p.parent.name == "za1"}
             if not required_za1 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
-                raise toolchain.PreflightError("Required ZA-1 native evidence missing from bounded delivery")
+                raise toolchain.PreflightError("Required ZA-1 native evidence missing from technical delivery")
             required_b = {str(p.relative_to(output)) for p in selected if p.parent.name == "perf-b"}
             retained_b = {p["file"] for p in evidence.report["selected_evidence"]["files"]}
             if not required_b <= retained_b:
-                raise toolchain.PreflightError("Required PERF-B native evidence missing from bounded delivery")
+                raise toolchain.PreflightError("Required PERF-B native evidence missing from technical delivery")
             if args.visual:
                 required_images = {p.name for p in selected if p.parent.name == "v3-renders" and p.suffix == ".png"}
                 retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}
                 if required_images != retained_images:
-                    raise toolchain.PreflightError("Targeted SL images missing from bounded technical delivery")
-            evidence.enforce_budget()
+                    raise toolchain.PreflightError("Targeted SL images missing from technical delivery")
+            evidence.measure_size()
             evidence.finish()
             package_began = time.monotonic()
             archive, delivery = package_player(build, output, evidence.report, root)
@@ -559,8 +553,8 @@ def main(argv: list[str] | None = None) -> int:
             evidence.flush()
             audit = evidence.technical / "player-audit.json"
             audit.write_text(json.dumps(delivery, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-            budget = evidence.enforce_budget(archive)
-            print("EVIDENCE_BYTES " + json.dumps(budget, sort_keys=True), flush=True)
+            sizes = evidence.measure_size(archive)
+            print("EVIDENCE_BYTES " + json.dumps(sizes, sort_keys=True), flush=True)
             print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)
     except Exception as exc:

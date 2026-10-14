@@ -459,9 +459,16 @@ def main(argv=None):
     for command in ("recover-registration", "sync-runtime", "check-registry"):
         p = sub.add_parser(command)
         p.add_argument("--checkout", type=Path, required=True)
+    p = sub.add_parser("retire-production")
+    p.add_argument("--checkout", type=Path, required=True)
+    p.add_argument("--integrated-commit", required=True)
+    p.add_argument("--puzzle-id", action="append", required=True)
     args = parser.parse_args(argv)
     try:
-        if args.command == "inspect":
+        if args.command == "retire-production":
+            from .integrated_content import retire
+            result = retire(args.checkout, args.puzzle_id, args.integrated_commit)
+        elif args.command == "inspect":
             with open_package(args.input, allow_manual_review=args.manual_authorization is not None) as package:
                 result = inspect(package, args.approval, manual_authorization=args.manual_authorization)[0]
             if args.report:

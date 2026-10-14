@@ -206,13 +206,14 @@ aktueller Prüfweg.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
 `technical/` enthält kompakte commitgebundene Ergebnisse, Logs und notwendige
-native Bilder/Fehlerdiagnostik; Budget 30 MB, mit Spieler-ZIP 75 MB. Das reguläre Product-CI-ZIP
-enthält Spielanleitung, Commit-/Hashbericht, `rp6-owner.ps1` für isolierte persönliche
-Proben und notwendige Lizenzen. Technische Motivspoiler sind separat.
+native Bilder/Fehlerdiagnostik. Größen werden gemessen, ohne feste Bytegrenzen.
+Das reguläre Product-CI-ZIP enthält Spielanleitung, Commit-/Hashbericht und
+notwendige Lizenzen. Historische Produktionshilfen werden nicht ausgeliefert.
+Technische Motivspoiler sind separat.
 Keine automatisierte Prüfung ersetzt eine persönliche Maus-/Komfortprobe.
 
 Aktuelle Verträge und Pflichtquellen: [Projektprofil](../docs/PROJECT_PROFILE.md).
 Historische Studien, alte Abnahmen und Quellenbindungen:
 [Bestandsinventar](../docs/DEVELOPMENT_ARCHIVE.md). Die ursprüngliche Anleitung ist
 [am Stand vor Cleanup](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/README.md) erreichbar.
-Historische Prüferdokumente mit Motivspoiler: [F01](F01_PROOF.md), [F02/F03](F02_PROOF.md).
+Historische Prüferdokumente mit Motivspoiler: [F01](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F01_PROOF.md), [F02/F03](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F02_PROOF.md).

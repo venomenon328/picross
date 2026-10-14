@@ -4,8 +4,8 @@
 und Integration geprüft, niemals routinemäßig in CI. Keine rätselspezifischen
 Unit-Tests anlegen. CI führt bei Werkzeugänderungen allgemeine Tests an festen
 synthetischen Eingängen aus; reine Rätseldateien erhalten nur den schlanken
-Inhaltspfad. Die unten beschriebenen RP3-/RP4-/RP5-/RP6-Korpusläufe sind gezielte
-Diagnosemöglichkeiten, keine CI-Pflicht; frühere Jobangaben sind abgelöst.
+Inhaltspfad. Historische Korpusläufe sind nur im gebundenen Altcheckout verfügbar;
+frühere Jobangaben sind abgelöst.
 Maßgeblich: [CI-Policy](../../docs/CI_POLICY.md) und
 [Regelwerk](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
 
@@ -224,7 +224,7 @@ Diese technischen Referenzen behaupten keine Motiv-/Pilotqualität.
 
 [puzzle-production.yml](../../.github/workflows/puzzle-production.yml) läuft bei
 PRs und Pushes nach `main` auf Ubuntu 24.04, Python 3.11+, lesenden Repositoryrechten
-und 15 Minuten Joblimit. Der eigene Testort liegt außerhalb des bestehenden
+ohne projektspezifisches CI-Joblaufzeitbudget. Der eigene Testort liegt außerhalb des bestehenden
 `tools`-Discoverys. `docs`, `product` und `preflight` bleiben unverändert aktiv.
 
 `artifacts/puzzle-production/benchmark.json` (`picross-benchmark-v2`) bindet Source-Head,
@@ -247,7 +247,6 @@ python3 -m venv .venv/rp3
 .venv/rp3/bin/python -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
 .venv/rp3/bin/python -m tools.puzzle_production import-image --input examples/rp3/source.png --design examples/rp3/design.json --output-dir artifacts/rp3-import
 .venv/rp3/bin/python -m tools.puzzle_production export-p1 --bundle artifacts/rp3-import --variant area-128 --reveal examples/rp3/reveal.svg --name Fliegenpilz --output-dir artifacts/rp3-export
-.venv/rp3/bin/python -m tools.puzzle_production.rp3_demo --output-dir artifacts/rp3-demo
 .venv/rp3/bin/python -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
 ```
 
@@ -344,69 +343,9 @@ Adapter ausdrücklich abgewiesen. Kein automatisches Überschreiben/Registrieren
 beliebiger Inhalte, keine öffentliche Importoberfläche oder zweite Spiellogik.
 
 `picross-p1-export-v1` bindet Produktionsmanifest, Kandidat, Logik/Proof,
-Definition/Revision, Farbzuordnung und Reveal-Dateihash. `rp3_demo` importiert real
-erneut, prüft das eingecheckte Bundle frisch und vergleicht Matrix/Logik/Entwurf
-sowie den neuen Definitions-/Assetexport bytegenau mit dem registrierten P1-Inhalt.
-Auch der gespeicherte Export wird aus seinem gebundenen Produktionsbundle frisch
-rekonstruiert. Der Bericht führt ursprüngliche und neu erzeugte Kandidatenkennung
-samt beiden Codecständen. `product` ergänzt reguläre Hauptszene,
-drei isolierte Neustartprozesse und native Arbeits-/Abschluss-/Albumrenders.
-RP3-A01 bis A06 einschließlich unabhängigem technischem/visuellem Review R2
-sind über PR #44 integriert. Die spätere RP-6-Eigentümerentscheidung ist im abgeschlossenen #34 gebunden.
-
-## RP-4: feste Vergleichsbaseline
-
-[Zwölf Quellen und Offlinevergleich](../../examples/rp4/README.md),
-[Methodik/Ergebnis/Prüfzuordnung](../../docs/RP4_VERIFICATION.md).
-Gleiche Image-Umgebung, keine neue Abhängigkeit. Beispiel für eine eigene venv:
-
-```sh
-python3 -m venv .venv/rp4
-.venv/rp4/bin/python -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
-.venv/rp4/bin/python -m tools.puzzle_production.rp4 verify --output-dir artifacts/rp4-replay
-.venv/rp4/bin/python -m unittest discover -s tests/puzzle_production -p 'test_rp4*.py' -v
-```
-
-Der Korpusprüfer validiert alle zwölf Quellen, sechs Fotopaare, vier zusätzliche
-100×100-Quellen, vollständige Entwürfe/Budgets und sämtliche originalen Resultate.
-Die vorhandene RP-3-Rekonstruktion erzeugt Normalisierung/Matrix/Hinweise neu und
-replayt die geschriebenen Proofs unabhängig. Original und Replay bleiben getrennt;
-ein später erfolgreich geprüftes ursprüngliches Abbruchresultat erhöht die
-Originalausbeute nicht. Raster-/Kandidathashes binden die 48 redaktionellen Urteile.
-Maschinelle Urteilsbindung ersetzt keine echte Sichtprüfung.
-
-Eigene Illustrationen werden getrennt in temporären Dateien neu erzeugt und auf
-exakte Dateimenge, ursprünglichen Modus, Abmessungen und dekodierte Pixel geprüft.
-Andere PNG-Kompression bei gleichem Bild ist zulässig. Gespeicherte Originaldateien
-und das ebenfalls im Input-Lock enthaltene Erzeugungsskript bleiben dagegen strikt
-per SHA-256 gebunden. Positive Codec- sowie negative Pixel-/Modus-/Dimensionsfälle
-und die Zurückweisung umkodierter gespeicherter Originale sichern R1/B-01 ab.
-
-Der gemeinsame CI-Job führt das Replay mit 600 s Gesamtbudget und maximal 11 Minuten
-für diesen Schritt aus; bestehende Fachoracles, Referenzbudgets und P1-Demo bleiben
-aktiv. Ergebnisse stehen im Fachartefakt unter `rp4/verification.json` mit
-Source-/Checkout-/Basis-/Runbindung. Kein nativer Bildaufruf in CI.
-
-Ein separater Windows-x64-Job führt ausschließlich die RP-4-Tests mit Python 3.12.10
-und dem offiziellen Pillow-12.3.0-Wheel in temporärer venv aus. Er hat lesende Rechte
-und zehn Minuten hartes Joblimit, reproduziert die dokumentierte R1-PNG-Abweichung
-am Ausgangstest und verlangt danach vollständig erfolgreiche aktuelle Tests.
-Laufzeit-/Codec- und Commitbindung stehen in einem kleinen separaten Artefakt.
-Die Linux-RSS-Referenzen und der vollständige Fachjob bleiben erhalten.
-
-R1/A-01: Der [tatsächlich ausgelesene Original-Commitpayload](../../examples/rp4/provenance/producer-726e89d.commit)
-ist im Paket erhalten. [Prüfanleitung](../../examples/rp4/README.md) und zusätzlicher
-Fachtest binden die Originalbytes an Git-Objekt-ID, veröffentlichten Tree und
-unveränderten Produktionsreport. Dafür ist kein historisches Originalobjekt in der
-lokalen Git-Datenbank erforderlich.
-
-Optional `rp4 produce --output-dir <neuer-pfad>` für neue deterministische Imports;
-die versionierte Baseline niemals überschreiben. `freeze` verweigert erneutes
-Fixieren bereits gesperrter Inputs. `views` und `index` bauen nur Dateiansichten.
-19 Zertifikate bedeuten hier 14 zusätzlich motivisch brauchbare Varianten aus
-sechs Quellen, keine abgeschlossene Pilotproduktion. RP-4 ist nach R1-Nacharbeit
-und unabhängigem R2 über PR #45 als `80ae2c1` integriert; B-01/A-01 geschlossen.
-Eigentümer-Lösung gehörte zum RP-6-Gate; der Abschluss steht in #34/PR #47.
+Definition/Revision, Farbzuordnung und Reveal-Dateihash. Der historische
+RP3-Demo-Replay gehört nicht mehr zum aktiven Checkout. Für neue Inhalte gilt
+ZA-1 mit expliziter Freigabe, Kategorie und Registrierung.
 
 ## RP-5: motivgeschützte Reparatur
 
@@ -423,44 +362,38 @@ Endproof werden frisch geprüft; Original-ZIP/Handoff/Inventar bleiben unveränd
 Schema, Grenzen und synthetische Tests: [ZA-1-v2-Vertrag](../../docs/ZA1_ADAPTER.md).
 
 [Versionierter Vertrag, Status-/Exitcodes, Schema-/Hash-/Ressourcengrenzen](../../examples/rp5/README.md),
-[Prüfzuordnung](../../docs/RP5_VERIFICATION.md), [Offlinevergleich](../../examples/rp5/index.html).
+[Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP5_VERIFICATION.md), [Offlinevergleich](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/index.html).
 Gleiche isolierte Image-Umgebung; keine neue Abhängigkeit. P1-Export und Spiel
 bleiben unverändert; `export-p1` weist das eigene Reparaturmanifest zurück.
 
 ```sh
-python -m tools.puzzle_production.repair search --reference examples/rp4/baseline/i02-direct-60x40 --plan examples/rp5/plans/i02-direct-60x40.json --output-dir artifacts/rp5-boat
-python -m tools.puzzle_production.repair verify --reference examples/rp4/baseline/i02-direct-60x40 --bundle artifacts/rp5-boat --report artifacts/rp5-boat-replay.json
-python -m tools.puzzle_production.rp5 verify --output-dir artifacts/rp5-replay
-python -m tools.puzzle_production.rp5 unpack --output-dir artifacts/rp5-frozen
+python -m tools.puzzle_production.repair search --reference <aktuelles-importbundle> --plan <reparaturplan.json> --output-dir <neues-reparaturbundle>
+python -m tools.puzzle_production.repair verify --reference <aktuelles-importbundle> --bundle <reparaturbundle> --report <neuer-pruefbericht.json>
 ```
 
-Alle Ausgabepfade neu. Der erste originale Vergleich ist bytegebunden im
-Paketarchiv erhalten; Replay rekonstruiert jeden Kandidaten und Proof unabhängig,
-auch bei Nichtfund/Abbruch. Eine spätere Prüfung wertet einen ursprünglichen
-Abbruch nicht zur logischen Freigabe auf. Vorher/Nachher, alle Änderungen,
-Schutzmaske und Einzelurteile stehen offline bereit. Neuer begrenzter
-`rp5-repair`-CI-Job mit zehn Minuten hartem Joblimit; die bisherigen Fachtests,
-Referenzen, RP-3-Demo, RP-4-Replay und Windowsregression bleiben aktiv.
+Alle Ausgabepfade neu. Während der Produktion rekonstruiert der Verifier jeden
+Kandidaten und Proof unabhängig, auch bei Nichtfund/Abbruch. Ein ursprünglicher
+Abbruch wird nicht zur logischen Freigabe aufgewertet. Vorher/Nachher, feste
+Änderungen und Schutzmaske gehören bis zur Endabnahme zum aktuellen Paket.
+Die CI prüft das allgemeine Verfahren mit synthetischen Eingängen; der alte
+RP5-Korpus, seine Suchpläne und der separate Replayjob werden nicht benötigt.
 
-## RP-6 · begrenzter Sechserpilot
+## Historische Produktionen und Abschluss
 
-`python -m tools.puzzle_production.rp6 --output-dir artifacts/rp6-replay`
-prüft den vorab gebundenen Plan, vollständiges Manifest, tatsächliche native
-Bilddateien/Rahmenanpassung und alle sechs historischen Manifestbindungen.
-Historische Reproduktion erfordert den im Archiv gebundenen Altcheckout:
-F04/F06/F08/F09 wurden gegen dessen `game/`-Dateien exportiert;
-F05/F07 bleiben historische Inputs, ohne erneuten übergroßen Spielerexport. Neues Ausgabeziel verwenden; keine Baseline überschreiben. Gleiche
-isolierte Python-3.11+-Umgebung mit Pillow exakt 12.3.0.
+RP3-Demo, RP4-Vergleichskorpus, RP5-Korpusreplay, RP6-Sechserpilot und VS1-Produktion
+werden im aktuellen Checkout nicht neu aufgebaut. Für historische Untersuchungen
+steht der [damalige vollständige Stand](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/tools/puzzle_production/README.md)
+zur Verfügung. Die kleinen `rp4.inspect_trial`-/`rp5.unpack_archive`-Hilfen bleiben
+vorerst für bestehende synthetische Tests; ihre alten Produktions-CLIs entfallen.
 
-Additiver Adapter `rp6-p1-square-color-1` / `picross-p1-export-v2`: feste
-F-05 bis F-09, quadratisch, höchstens vier Farben; vollständiger RP-3-Import-
-oder RP-5-Reparaturreplay, exakte Enddomains, lokale begrenzte SVG/PNG-Dateien.
-`export_pilot` ist der interne Adapter; keine öffentliche Spieler-Importfunktion.
-Der alte v1-Adapter/F-04 und seine Negativfälle bleiben erhalten.
+Nach endgültiger Integration auf main:
 
-Gezielte Tests: `python -m unittest discover -s tests/puzzle_production -p test_rp6.py -v`.
-Vollständige Fachtests und bestehende Replays bleiben zusätzlich erforderlich.
-[Plan/Bilanz/Paaransichten](../../examples/rp6/README.md),
-[Prüfzuordnung](../../docs/RP6_VERIFICATION.md). Eigentümerentscheidungen und
-Phasenabschluss sind im abgeschlossenen [#34](https://github.com/venomenon328/picross/issues/34)
-und PR #47 gebunden. Wirtschaftliche Serienproduktion bleibt unbewiesen; kein Release.
+```sh
+python -m tools.puzzle_production.target_adapter retire-production --checkout . --integrated-commit <main-SHA> --puzzle-id <pz-ID>
+```
+
+[Authoring §9](../../docs/ai-workflows/PUZZLE_AUTHORING.md) und
+[Integrationsformat](../../docs/ZA1_ADAPTER.md) regeln die Bereinigung.
+Bestandsprüfungen lesen danach Runtimehashes und kompakte Integrationsdaten,
+keine Quellen, Proofs, ZIPs oder Produktionsreplays. Die Entwicklung neuer Rätsel
+verwendet weiterhin vollständige neue Eingänge/Freigaben und technische Prüfung.

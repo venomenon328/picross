@@ -15,7 +15,7 @@ an Originalhandoff, Inventar und Auswahl gebundene Endfreigabe sind erforderlich
 [Nachweise](ZA1_VERIFICATION.md). Alte Pilotprofile bleiben unverändert; keine
 automatische Freigabe oder Katalogaufnahme des Beispiels.
 
-Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält F01, F02, F04, F06, F08 und F09. F03/F05/F07 entfallen aus dem Spielerangebot; ihre Dateien, bestehenden Speicherplätze und historischen Nachweisbindungen bleiben erhalten. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
+Eigentümerentscheidung vom 11.10.2026 in [PERF-B/#68](https://github.com/venomenon328/picross/issues/68#issuecomment-6109644419): Reguläre Rätsel sind auf höchstens **50×50** begrenzt. Der aktuelle Katalog enthält ausschließlich Workflow-Inhalte. F01–F09 sind gemäß #114 aus dem Spiel entfernt. 100×100 ist ausschließlich eine optionale theoretische Performance-Stressgröße, keine aktuelle Produktabnahme. Frühere Größenpflichten in historischen Paketbeschreibungen gelten für neue Produktprüfungen nicht mehr.
 
 Stand: 06.10.2026 · Arbeitsfassung 0.8 · RP-1 bis RP-6 integriert; aktueller Katalog gemäß #68
 
@@ -231,7 +231,7 @@ binden unveränderten geprüften Import, Farbsemantik, boolesche Schutzmaske,
 festgelegte Suchkonfiguration/Seed, tatsächliche Vorschläge/Elternänderungen,
 alle Kandidaten und Endmatrix. Keine Umetikettierung als unveränderter RP-3-Import.
 Der [Paketvertrag](../examples/rp5/README.md) dokumentiert genaue Hash-/Zähler-/
-Ressourcengrenzen und Abbruch-/Replayregeln; [Prüfzuordnung](RP5_VERIFICATION.md).
+Ressourcengrenzen und Abbruch-/Replayregeln; [Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP5_VERIFICATION.md).
 
 Einzellokale Änderungen, Manhattan-Priorität um ursprünglich offene Zellen,
 SHA-256-Tiereihenfolge und begrenzte Frontier genügen dem Paket. Partielle
@@ -383,212 +383,16 @@ berichtet. CPU-Zeit oder Schrittzahl allein ergeben keine menschliche Schwierigk
 Reihenfolge/Strategie der Auswertung und Aggregation sind zu dokumentieren; keine
 verbindlichen Stern- oder Schwierigkeitsstufen und keine Spielerwertung entstehen.
 
-### 7.2 Vergleichsproduktion RP-4
+## Historische Machbarkeitsphase
 
-Vor der Auswertung wird ein Korpus von zwölf Quellen festgelegt: je drei klare
-Illustrationen, gezielt in ChatGPT/Codex erzeugte Vorlagen, Fotos mit gut
-abgrenzbarem Hauptobjekt und schwierigere Fotos mit relevanten Innenstrukturen,
-Texturen oder Überlagerungen. Herkunft und tatsächlich verfügbare Dateien müssen
-geklärt sein. Ein späterer Austausch wird begründet; Fehlschläge verschwinden
-nicht durch stilles Aussortieren.
+RP-1 bis RP-6 sind abgeschlossen. Vergleichskorpus, Sechserpilot, damalige Exporte,
+Abnahmen und Paketfolge sind im [gebundenen Vorgänger](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/PUZZLE_PRODUCTION.md)
+und den ursprünglichen Issues/PRs dokumentiert. Sie werden weder erneut produziert
+noch dauerhaft im aktiven Tree aufbewahrt. Aktuelle Registrierung folgt
+[ZA-1](ZA1_ADAPTER.md), neue Rätsel dem [Authoringworkflow](ai-workflows/PUZZLE_AUTHORING.md).
+Nach bestätigter Main-Integration werden Produktionsunterlagen entfernt; benötigt
+bleiben nur Runtime-Inhalte, Nutzungsgrundlage, Metadaten und kompakte Integrationsbindung.
+Reproduzierbarkeit während der Produktion ist keine lebenslange Aufbewahrungspflicht.
 
-Für die sechs Fotofälle werden direkte Verarbeitung und eine in ChatGPT/Codex
-erstellte Stilisierung paarweise verglichen, mit gleicher Zielgröße, gleichem
-Motivauftrag und vergleichbarem Variantenbudget. Weitere Paare sind möglich,
-aber keine vollständige Kombination aller Größen/Filter/Quellen erforderlich.
-Jede Quelle hat eine passende Hauptgröße; mindestens vier unterschiedliche
-Quellen erhalten einen echten 100×100-Versuch. Mono- und Mehrfarbenfälle sowie
-mindestens ein rechteckiges Format werden untersucht. Hochskalierte kleine Raster
-zählen nicht als echte Großmotivproduktion.
-
-Zu jedem Versuch gehören Dateien/Hashes, Einstellungen, alle ausgewerteten
-Kandidaten, logischer Status, Motivurteil und verbleibender Änderungsbedarf.
-Menschliche Arbeitszeit wird getrennt nach Vorbereitung, ChatGPT-/Codex-Runden,
-Rasterkorrektur und Sichtprüfung erfasst; Schätzungen werden gekennzeichnet.
-KI-Runden, Rechenzeit, Solveraufrufe und Variantenanzahl werden separat gezählt.
-Zielmaß ist brauchbarer Inhalt pro menschlichem Arbeitsaufwand, keine API-Kostenrechnung.
-
-### 7.3 Pilot RP-6 und Aussagegrenzen
-
-Angestrebt werden sechs redaktionell freigegebene Rätsel mit mindestens zwei
-monochromen und zwei farbigen, mindestens zwei Motiven mit beiden Dimensionen
-größer als 40, darunter ein echtes 100×100-Motiv. Dieses Größenkriterium dient
-der Pilotabdeckung, nicht einer allgemeinen Definition großer Rätsel.
-Diese Produktionsziele sind Untersuchungsziele, keine
-Erlaubnis, Qualitätsgrenzen zu senken oder zusätzliche unbegrenzte Arbeit anzuhängen.
-Nicht erreichte Ziele werden mit Ursache, Daten und konkretem Folgevorschlag
-ausgewiesen. Ein negativer Machbarkeitsbefund kann ein korrekt abgeschlossener
-Versuch sein; er ist kein Nachweis erreichter Katalog-/Großrasterqualität.
-
-Jeder tatsächlich als freigegeben bezeichnete Pilotdatensatz erfüllt alle
-Qualitätsbedingungen und besitzt ein zum finalen Raster passendes Abschlussbild.
-Die gezielte Sichtprüfung vergleicht zunächst Raster und Enthüllung sinnvoll,
-danach bei Bedarf die Quelle. Die bestehende erlaubte Verfeinerung von Konturen,
-Details und Schattierung bleibt erhalten; keine Pflicht pixelidentischer Silhouetten.
-Abschlussbilder können in ChatGPT/Codex entstehen und werden als Dateien übernommen.
-
-Reale Eigentümerproben prüfen mindestens ein neues monochromes und ein neues
-farbiges Rätsel mit dem benannten Windows-Artefakt, Lösungsverlauf und Abschluss.
-Eine repräsentative große Probe wird vollständig gelöst oder über dokumentierte
-Sitzungen fortgesetzt; ihr konkreter Umfang wird vor dem Versuch festgelegt.
-Fehlende Proben bleiben offen. Technische Tests oder eine Screenshotfreigabe
-werden nicht nachträglich als vollständige reale Lösung ausgegeben.
-
-## 8. Früher P1-Export und bestehende Grundlagen
-
-Der erste Export in RP-3 enthält einen neuen, logisch akzeptierten Kandidaten,
-ein geeignetes zugehöriges Abschlussbild und einen technischen Prüfnachweis.
-Der vorhandene P1-Definitionsvertrag wird über einen begrenzten Adapter bedient.
-Erforderliche additive Registrierung neuer Testinhalte und Pfadvalidierung sind
-auf diesen Durchstich begrenzt; keine zweite Spiellogik oder neue öffentliche
-Importoberfläche. Der neue Inhalt wird in einer isolierten Produktprobe tatsächlich
-geladen, bearbeitet und abgeschlossen. Kein Zugriff auf normale Benutzerspielstände.
-
-Vor Abschluss bleiben Motivname und fertiges Bild verborgen; die Miniatur zeigt
-den eigenen Bearbeitungsstand einschließlich Fehlern. Bestehende F-01/F-02-Daten,
-Proofs und Bilder werden nicht zur Erleichterung des neuen Nachweises verändert.
-F-03 bleibt ein UI-Stressdatensatz ohne Rätselqualitätsabnahme.
-
-RP-3 liefert F-04 als neu aus einer realen eigenen Bilddatei importiertes
-20×20-Beispiel mit detaillierterer eigener SVG-Enthüllung. Definition, Hauptszene
-und SaveStore registrieren ausschließlich feste Pfade/IDs. Appidentität,
-Saveformat 1 und bestehende Slots bleiben erhalten; F-04 ergänzt `f04.json` samt
-Backup/Temp. Produktionsbilder und Motivname sind vor Abschluss unzugänglich.
-Der technische Durchstich ist keine reale Eigentümer-Lösung oder Pilotfreigabe.
-
-Fachliche Vorarbeiten sind [F-01](../game/F01_PROOF.md),
-[F-02](../game/F02_PROOF.md), die begrenzten
-[Python-Prüfer](../tools/check_f01.py) und die
-[H1-Linienanalyse](../game/model/clue_completion.gd).
-Sie liefern Konzepte und Vergleichsfälle, aber keinen allgemeinen Produktionssolver
-oder bereits unabhängigen Prüfer beliebiger Zertifikate. P1-spezifische Formatlimits,
-Vollaufzählung von Linien und die bisherige H1-Ausgabe werden nicht unverändert zur
-allgemeinen Produktionsarchitektur erklärt.
-
-## 9. Pakete und Abhängigkeiten
-
-| Paket | Ergebnis | Voraussetzung |
-| --- | --- | --- |
-| [RP-1](https://github.com/venomenon328/picross/issues/35) | Allgemeiner monochromer Deduktionskern, unabhängige Nachweisprüfung, Datenvertrag und frühe Großrasterbelege. | Diese Spezifikation; aktuelle Startprüfung. |
-| [RP-2](https://github.com/venomenon328/picross/issues/36) | Mehrfarben-Domains, vollständige Farb-Linienlogik und gemeinsame Großrasterprüfung. | RP-1. |
-| [RP-3](https://github.com/venomenon328/picross/issues/37) | Dateibasierter Bildimport, reproduzierbare Rastervarianten, einfache Vergleichsansicht und erster echter P1-Export. | RP-2 für den Paketabschluss; monochrome Vorarbeit ab RP-1 möglich. |
-| [RP-4](https://github.com/venomenon328/picross/issues/38) | Zwölf Quellen, kontrollierter Direkt-/ChatGPT-Codex-Vergleich, Baseline und Aufwandserhebung. | RP-2 und RP-3; Quellenplanung kann vorher erfolgen. |
-| [RP-5](https://github.com/venomenon328/picross/issues/39) | Begrenzte Reparatursuche mit hartem Motivschutz und Vorher-/Nachher-Auswertung. | RP-2, RP-3 und die Baseline aus RP-4. |
-| [RP-6](https://github.com/venomenon328/picross/issues/40) | Zusammenhängender Pilot einschließlich Abschlussbildern, realer Spielerprobung und Produktionsentscheidung. | RP-4 und RP-5. |
-
-Ein Paket entspricht standardmäßig einem eigenen Draft-PR. Parallel vorbereitete
-Quellen oder Oberflächen umgehen keine fachlichen Abhängigkeiten. Implementierung
-beginnt erst mit gesondertem Auftrag; Modellwahl und Ausführungsprüfung erfolgen
-dann gemäß der lokalen Workflowfassung. Die Issues sind keine rückwirkende
-Freigabe einer bestimmten Sprache, Modellkonfiguration oder fertigen Oberfläche.
-
-## 10. Prüfwege und Abnahme
-
-Alle Implementierungspakete halten aktuelle AGENTS-/Workflow-/Profilquellen ein.
-Der verwendete lokale Werkzeug-Stack und erforderliche Abhängigkeiten werden vor
-der betroffenen Implementierung konkret begründet; die vorhandenen Python-Werkzeuge
-legen keine Produktsprache fest. Das erste Paket bindet ausführbare Testbefehle,
-Umgebung, Ressourcenlimits und CI-Ausführung in Anleitung und Projektprofil.
-Ohne diesen konkreten Prüfpfad keine Behauptung umsetzungsbereiter Folgepakete.
-
-RP-1/RP-2 binden diesen Pfad im [Projektprofil](PROJECT_PROFILE.md), in der
-[Anleitung](../tools/puzzle_production/README.md) und im
-[RP-1-Prüfvertrag](RP1_VERIFICATION.md) und in der [RP-2-Prüfzuordnung](RP2_VERIFICATION.md).
-Eigener `puzzle-production`-Job auf Ubuntu 24.04
-mit Python 3.11+, lesenden Rechten und 15 Minuten führt Fachoracles, Negativtests
-und tatsächliche Referenzläufe aus. Je 40×40-/100×100-Fall gelten vorab 120 Sekunden
-für Solve/Serialisierung/frische Prüfung und 512 MiB gemessener Linux-Peak-RSS je
-Prozess; getrennt davon erzwingt der Benchmark 1024 MiB virtuelles Speicherlimit.
-Informationsarme Langlinien und echte Propagation sind eingeschlossen. Der PR
-führt aktuelle Messwerte, Commit-/Basis-/CI-Artefaktbindung und offene Abnahme;
-RP-1/RP-2 einschließlich des unabhängigen technischen Reviews sind über #42/#43
-integriert; historische Nachweise behalten ihren ursprünglichen Commitbezug.
-RP-3 ergänzt gezielte Bildtests und den realen Dateiimport/Export im gemeinsamen
-Fachjob. `product` ergänzt denselben Import samt Bindungsprüfung sowie reguläre
-Lade-/Bearbeitungs-/Abschluss-/Neustartprozesse und native Renderbilder.
-RP3-A01 bis A06 und unabhängiges technisches/visuelles Review R2 sind über PR #44
-abgeschlossen. RP-4 liefert die [unveränderte Vergleichsbaseline](RP4_VERIFICATION.md)
-mit eigener Sichtprüfung und unabhängigem Daten-/Methodik-/Bildreview R1.
-R1-N1 ergänzt den exakten Pixel-/Modus-/Dimensionsvergleich neuer Illustrationen,
-einen begrenzten Windows-Regressionslauf und die Originalbytes des Produzentencommits.
-Gespeicherte Eingänge und Baseline behalten sämtliche Dateihashes. R2 hat R1/B-01
-und A-01 sowie die aktuellen technischen Nachweise bestätigt; RP-4 ist über
-PR #45 als `80ae2c1` integriert. RP-5 führt genau die neun vorab ausgewählten
-motivisch geeigneten Fixpunkte weiter; alle 48 Originalresultate bleiben in
-der Übersicht. Eigene Sichtprüfung, zwei neue Zertifikate und auch logisch
-bessere, motivisch verschlechterte Stände stehen im RP-5-Paket. Der separate
-begrenzte CI-Job prüft alle geschriebenen Reparaturspuren und Vergleichsbindungen;
-unverkleinerte Fach-/Referenz-/RP-3-/RP-4-Prüfungen bleiben. Unabhängiges
-technisches/visuelles Review R1 von RP-5 ist in PR #46 abgeschlossen; integriert
-als `cd4a8db86e51891f13e305b589837a1a4354c5a2`. Die reale Eigentümer-
-Lösung gehörte zum RP-6-Gate; die spätere Entscheidung steht in #34/PR #47.
-
-Für jedes Paket gelten der bestehende Dokumentprüfweg und ein vollständiger
-Diffcheck. `docs` muss am aktuellen Head/zugehörigen Test-Merge erfolgreich sein.
-Neue ausführbare Werkzeuge brauchen passende positive und negative Funktionstests
-in einem dokumentierten automatisierten Prüfweg. Diese Tests und nötige
-Dokumentation gehören zum jeweiligen Paket, nicht in eine spätere Restphase.
-
-Bei P1-Export-/Produktänderungen gelten zusätzlich die vollständigen relevanten
-P1-Pflichtquellen, isolierte Tests, aktuelle `product`-/`preflight`-Nachweise und
-die jeweils benannten Artefakt-/Render-/Spielproben. Unveränderte Workflows werden
-nicht deaktiviert. Ihre Ergebnisse sind getrennt von neuen Generatornachweisen
-zu berichten. Keine neue Pflicht zu redundanten lokalen Vollprüfungen bei bereits
-belastbarer passender CI.
-
-Technischer Review auf konkrete Commits, erforderliche Sichtproben und tatsächliche
-Eigentümerabnahmen bleiben getrennt. Die Issues legen die Mergegates je Paket
-fest. Für den reinen Spezifikations-PR sind aktuelle Dokumentprüfung und fachlicher
-Diffcheck relevant; er liefert keine Generator-, Bild- oder Spielabnahme.
-
-## 11. Bewusst spätere Entscheidungen
-
-Noch zu spezifizieren sind weitergehende linienübergreifende Regelprofile,
-belastbar mit Menschen kalibrierte Schwierigkeitsstufen, der Ausbau einer vollständigen
-Produktionsoberfläche, höhere Größen-/Palettengrenzen und die endgültige Stückzahl
-des Veröffentlichungskatalogs. Der Pilot liefert hierzu Entscheidungsdaten.
-Spielerhilfe, öffentlicher Bildimport/Editor, Community-Inhalte, Verbundraster,
-Regionenbedingungen, Wertung, Plattformwechsel und Veröffentlichung gehören
-nicht in diese Phase.
-
-## 12. Technische Hintergrundquellen
-
-Die folgenden Primärquellen begründen Untersuchungsansätze, ersetzen aber nicht
-die oben definierten Produktregeln. Insbesondere bedeutet ein fremder Solverstatus
-gelöst oder human-like nicht automatisch die Erfüllung von RP-D05.
-
-- [Batenburg et al.: Constructing Simple Nonograms of Varying Difficulty](https://liacs.leidenuniv.nl/~kosterswa/constru.pdf): Bild-/Rasteranpassung mit wiederholter Linienprüfung; Motivschutz und 100×100-Leistung sind für unser Werkzeug eigenständig nachzuweisen.
-- [Batenburg/Kosters: Solving Nonograms by combining relaxations](https://homepages.cwi.nl/~kbatenbu/papers/bako_pr_2009.pdf): vollständige Linieninformation und weitergehende logische Beziehungen; stärkere Versuchssolver des Papers gehören nicht automatisch zu unserem Profil.
-- [Gerstner et al.: Pixelated Image Abstraction](https://pixl.cs.princeton.edu/gfx/pubs/Gerstner_2012_PIA/index.php): klassische gemeinsame Abstraktion von Bildmerkmalen und Farbpalette, ohne Nonogramm-Garantie.
-- [Wolter: pbnsolve](https://webpbn.com/pbnsolve.html): Unterscheidung von Linien-/Farblogik und nachgelagerter Suche; Referenz, keine beschlossene Abhängigkeit.
-
-## 12. Konkreter RP-6-Pilotvertrag
-
-Der [Vorabplan](../examples/rp6/plan.json) und #40 vom 06.10.2026 binden sechs
-verschiedene Bestandsmotive vor neuer Bildarbeit: F-04 unverändert (20 Mono),
-F-05 (100 Mono), F-06 (50 Farbe), F-07 (100 Farbe), F-08/F-09 (40 Farbe, RP-5).
-Keine neue Raster-/Reparatursuche. Maximal zwei native Bildaufrufe je neuem
-Motiv und zehn insgesamt, einschließlich Fehlversuchen; vorhandene detaillierte
-Illustrationen dürfen nach tatsächlicher Paarprüfung dienen. Nur unverzerrte
-Rahmenanpassung; Dateihashes und Operationen werden protokolliert.
-
-`picross-p1-export-v2` / `rp6-p1-square-color-1` unterstützt feste F-05 bis F-09,
-quadratisch und höchstens vier Vordergrundfarben. Leer 0, stabile numerische
-Palettenzuordnung, neu abgeleitete Hinweise, vollständige identische
-Singleton-Enddomains. Importquellen durchlaufen RP-3 einschließlich Rekonstruktion,
-Reparaturen den gesamten RP-5-Vertrag einschließlich Referenz, Schutz, Eltern,
-Änderungen und geschriebenem Endproof. Nur `found` plus Zertifizierung erlaubt
-Reparaturexport; Quelle bleibt ausdrücklich `repair`. v1/F-04 bleibt kompatibel.
-
-Lokale SVGs bleiben begrenzt validiert; PNGs durchlaufen dieselben Bildlimits,
-Format PNG, Orientierung 1, quadratisch und mindestens zwei Pixel je Rasterzelle.
-Definition und Manifest binden exakte lokale Dateien. Detailqualität und
-Motivtreue bleiben tatsächliche redaktionelle Sichturteile, keine Pixelzahlheuristik.
-Kein öffentlicher Import, keine Rechteckprobe in P1, kein Saveformatwechsel.
-
-[Prüfzuordnung](RP6_VERIFICATION.md), [Bilanz und Paaransichten](../examples/rp6/README.md)
-und getrennte [Eigentümeranleitung](RP6_OWNER_TRIAL.md) dokumentieren Grenzen.
-Eigene Sichtung ist keine unabhängige Zweitprüfung. M01–M04 und die positive
-kuratierte Machbarkeitsentscheidung sind im abgeschlossenen #34 und PR #47
-gebunden; wirtschaftliche Serienproduktion bleibt mangels menschlicher
-Arbeitszeitdaten unbewiesen. Keine neue Produkt- oder Releasefreigabe.
+Weitergehende Regelprofile, menschlich kalibrierte Schwierigkeit, öffentliche
+Editoren und Veröffentlichung bleiben gesonderte Folgeentscheidungen.

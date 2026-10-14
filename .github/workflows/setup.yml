@@ -22,7 +22,6 @@ concurrency:
 jobs:
   docs:
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
     outputs:
       product: ${{ steps.scope.outputs.product }}
       production: ${{ steps.scope.outputs.production }}
@@ -98,7 +97,6 @@ jobs:
     if: always()
     needs: [docs, product, production, preflight]
     runs-on: ubuntu-24.04
-    timeout-minutes: 2
     steps:
       - name: Checkout only the result evaluator
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1

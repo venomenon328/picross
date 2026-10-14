@@ -9,7 +9,7 @@ Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 13.10.2026
 `authoring-p1-rect-color-1` ergänzt Schema-2-Exporte; die Pilotprofile v1/v2 bleiben
 unverändert. Keine neue Zertifizierungsregel, kein Solver im Spiel.
 
-Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 3, 6 und 8. Die Dokumentrevision 6 ergänzt gebundene manuelle Ableitungen und Ausnahmen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
+Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 3, 6 und 8. Die Dokumentrevision 7 ergänzt die Bereinigung abgeschlossener Produktionen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
 
 ## Eingang und Grenzen
 
@@ -309,3 +309,27 @@ Autorisierung, Eigentümererklärung und unveränderte Originalbindungen werden
 offline mitgeliefert und bei `plan`/`register` erneut geprüft. Allgemeine
 Positiv-/Negativtests stehen in `test_edited_import_adapter.py`; keine realen
 Produktionspakete als Test- oder CI-Eingänge.
+
+## Abgeschlossene Produktion (14.10.2026, #116)
+
+Nach nachgewiesener Endabnahme und Main-Integration ersetzt `retire-production`
+die Prüfkopie durch `content/packages/<id>/<revision>/manifest.json` im Format
+`picross-integrated-content-v1`. Es enthält exakt `format`, `entry` (ursprünglicher
+Registryeintrag einschließlich ursprünglichem Exporthash), `integrated_commit`
+und `notice_sha256`. Die Registry bindet jetzt den Hash dieses kleinen Manifests.
+Definition, Reveal und Hinweisdatei unter `game/` bleiben bytegleich; deren Hashes,
+Identität, Kategorie und Metadaten werden weiterhin geprüft. Die Runtimeprojektion
+ändert sich nicht. Das ist kein neuer Export und keine neue Inhaltsfreigabe.
+
+`check-registry`, `sync-runtime`, neue Registrierungen und identische Wiederholung
+akzeptieren solche abgeschlossenen Einträge ohne Produktionsreplay. Ein fehlender
+beliebiger Export wird nicht als abgeschlossen ausgegeben: dafür ist das explizite,
+hashgebundene Format erforderlich. Neue Eingänge durchlaufen weiterhin den vollen
+Export-/Freigabepfad. Kompakte Manifeste sind keine `verify-export`-Eingänge.
+
+`retire-production --checkout <pfad> --integrated-commit <SHA> --puzzle-id <ID>`
+prüft die SHA gegen das zuvor aktualisierte `origin/main`, die exakten damaligen
+Registry-/Runtime-/Paket-/Arbeitsbytes und den Arbeitsindex vor jeder Löschung.
+Neuere/unversionierte Arbeit und offene Registrierungsjournale blockieren. Der Befehl
+bereitet ausschließlich einen Git-Diff vor; Commit, PR und Merge folgen dem Workflow.
+Kein automatischer Nach-Merge-Job und kein wachsender CI-Testbestand.

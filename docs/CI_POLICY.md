@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 13.10.2026 · Version 1.5 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
+Stand: 14.10.2026 · Version 1.6 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
 
 ## Geltung und Ablösung
 
@@ -29,7 +29,8 @@ Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 
 Eigentümerentscheidung vom 12.10.2026: Rätsel werden bei ihrer Erstellung und
 gezielten Integration vollständig geprüft; diese Prüfungen werden **kein Teil
-der CI**. Nachweise bleiben dateigebunden im Produktionspaket. Änderungen an
+der CI**. Nachweise bleiben bis zur finalen Integration dateigebunden im Produktionspaket;
+danach gilt die Bereinigung aus PUZZLE_AUTHORING §9. Änderungen an
 Raster/Quelle verlangen die im [Regelwerk](ai-workflows/PUZZLE_AUTHORING.md)
 bestimmten Neuprüfungen außerhalb der CI. Das gilt auch bei späteren Codeänderungen:
 keine routinemäßige Neuzertifizierung vorhandener Rätsel.
@@ -43,7 +44,7 @@ bei relevanten Codeänderungen bleiben unverändert.
 
 Keine rätselspezifischen Unit-Tests oder Testgenerierung aus dem Produktionsfundus.
 F01/F02-Zertifikatstests, reale RP-/VS-Korpus-Replays, der Knoblauch-Referenztest
-und deren CI-Jobs sind entfallen. Historische Daten/Proofs bleiben erhalten.
+und deren CI-Jobs sind entfallen. Historische Daten/Proofs müssen nicht im aktiven Tree erhalten bleiben.
 Allgemeine Solver-, Verifier-, Import-, Reparatur- und Adaptertests verwenden feste
 synthetische Eingänge; Registrierungstests kopieren keine produktiven Pakete.
 Sämtliche nativen Funktions-/Renderläufe verwenden einen festen temporären
@@ -188,8 +189,7 @@ Jede Instanz nutzt ein temporäres Projekt und Saveprofil. Kataloglast ist keine
 300-fache Produktions-/Solverprüfung. Der Produktharness bindet alle Berichte
 und die kleinen nativen Originalausschnitte an Head/Basis/Checkout; vollständige
 Framekontexte bleiben lokal. Pflichtausschnitte dürfen nicht still aus der
-begrenzten Lieferung fallen. Die bisherigen 30-/75-MB-Grenzen und Laufzeitlimits
-bleiben unverändert. [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
+begrenzten Lieferung fallen. Größen und Laufzeiten werden ohne feste Optimierungsbudgets gemessen. [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
 
 ## Native Renderabdeckung und Speicherung
 
@@ -199,8 +199,7 @@ Slotisolation. Native Pixelprüfungen liefern kleine Originalausschnitte samt
 Koordinaten/Reports; vollständige Kontexte bleiben lokal. Der echte Windows-PCK
 wird für regulären und isolierten Katalog geprüft. Der feste synthetische Adapterdurchstich liefert
 nur den kompakten Bericht. Reine Inhalte wählen ausschließlich den schlanken
-Inhaltspfad; Änderungen am Produktharness wählen Integration und Preflight. Keine
-Budgetausnahme. [Prüfzuordnung](ZA1_VERIFICATION.md).
+Inhaltspfad; Änderungen am Produktharness wählen Integration und Preflight. Keine zusätzliche CI-Fallliste je Inhalt. [Prüfzuordnung](ZA1_VERIFICATION.md).
 
 Im Standardpfad gilt `--ci-compact` für den allgemeinen Capture-Harness:
 
@@ -229,25 +228,29 @@ verpackt. Für einen konkreten historischen Vergleich wird ein separater Checkou
 des gebundenen ursprünglichen Commits verwendet. Dabei dessen damalige Quellen
 und Verträge lesen; keine alten Studienharnesses unbemerkt gegen neue APIs ausführen.
 
-PERF-B-E1 / #68 vom 11.10.2026 hebt ausschließlich das technische Budget auf
-30.000.000 Bytes an; Gesamtgrenze, Laufzeiten und Pflichtnachweise bleiben erhalten.
+Die früheren 30-/75-MB-Grenzen aus PERF-B-E1 sind durch #116 aufgehoben.
 
-## Artefakte und Laufzeitbudgets
+## Artefakte und Laufzeiten
 
-Die vollständigen aktuellen VS2-/V1-Geometriematrizen werden als `.json.gz`
-verlustfrei aufbewahrt; der Artefaktleser unterstützt diese und frühere JSON-Dateien.
-Die Kompression prüft den bytegleichen Rückweg. Pflichtbilder bleiben native PNGs;
-die deckenden V3-Aufnahmen verwenden pixelgleiches RGB statt redundantem RGBA.
-Messumfang, Pflichtnachweise und die folgenden Budgets bleiben unverändert.
+Eigentümerentscheidung vom 14.10.2026 / #116: Laufzeit und Artefaktvolumen möglichst
+klein halten, **ohne feste CI-Joblaufzeit- oder Artefaktgrößenbudgets**. Die Workflows
+setzen keine projektspezifischen `timeout-minutes`; Anbietergrenzen gelten weiterhin.
+Es gibt kein 30-/75-MB-Erfolgsgate und keine bytebedingte Auslassung angeforderter
+Nachweise. Reports messen Phasen und tatsächlich gelieferte Bytes. Beibehalten:
+gezielte Auswahl kompakter Originalbilder, verlustfreie JSON-Kompression und kurze
+Aufbewahrung. Keine historischen Produktionsarchive, vollständigen Arbeitsgalerien
+oder obsoleten Ownerhilfen in Spielerpaketen.
 
-| Bereich | Ziel/Budget |
-| --- | --- |
-| Dokumentjob | Ziel unter einer Minute; hartes Joblimit drei Minuten |
-| Gewöhnlicher Product-Lauf | Ziel fünf bis acht Minuten; hartes Joblimit zehn Minuten |
-| Product einschließlich aller Piloten | Hartes Joblimit 15 Minuten |
-| Toolchain-Preflight | Hartes Joblimit fünf Minuten; nur relevante Änderungen/manueller Auftrag |
-| Regulärer Spieler plus technische Product-Daten | Höchstens 75.000.000 Bytes vor äußerem Actions-Container |
-| Technische Product-Daten | Höchstens 30.000.000 Bytes |
+Prozess-/Netzwerk-Abbruchschutz und explizite funktionale Solver-/Import-/Reparatur-
+Ressourcenverträge sind Schutz vor Hängern bzw. Teil des getesteten Fehlerverhaltens,
+keine CI-Optimierungsziele. Diese werden nicht stillschweigend als Tests entfernt.
+Der Umfang bestehender Prüfbereiche wird erst nach verständlicher Kosten-/Zweckliste
+und Eigentümerentscheidung reduziert. Kein Test gilt wegen seines alten Namens als
+obsolet; aktuelle Aufrufer und Verhalten sind maßgeblich.
+
+Die vollständigen aktuellen VS2-/V1-Geometriematrizen bleiben verlustfrei `.json.gz`;
+der bytegleiche Rückweg ist geprüft. Native Bilder bleiben unverändert. Eine
+größere Lieferung ist ein zu erklärender Messwert, kein automatischer Fehler.
 
 Erfolgreiche Product-Läufe liefern das reguläre Windows-Spielerpaket und eine
 begrenzte technische Auswahl. Technische Daten werden sieben Tage, Spielerpakete
@@ -256,8 +259,7 @@ dauerhaft gesichert. Preflight exportiert weiterhin wirklich, lädt standardmä�
 aber nur den kleinen Bericht und Logs hoch. Fachberichte sind ebenfalls begrenzt.
 
 Product schreibt Bericht und laufende Phasenlogs von Anfang an unter `technical/`;
-dieser Ordner wird auch nach Fehlern/Abbrüchen hochgeladen. Fehlermarker werden vor
-einer eventuellen Logkürzung geprüft. Abgebrochene Phasen bleiben als solche sichtbar.
+dieser Ordner wird auch nach Fehlern/Abbrüchen hochgeladen. Fehlermarker werden am vollständigen Log geprüft; Logs werden nicht bytebedingt gekürzt. Abgebrochene Phasen bleiben als solche sichtbar.
 Laufzeitziele werden erst durch neue Messungen als erreicht ausgewiesen;
 Warteschlangenzeit und Runnerzeit werden getrennt betrachtet.
 
@@ -286,8 +288,8 @@ unverändert. Ein Build ist weder persönliche Windows-Abnahme noch Release.
 ## Archiv und gebundene Referenzen
 
 Das [BP-Archiv](design/book_inventory/ARCHIVE.md) bindet die 136 entfernten alten
-Dateien mit 161.102.998 Bytes an unveränderliche Git-Objekte. Originalbilder,
-aktives Papier, Fonts/Lizenzen, Manifeste und fachliche RP-/VS-Quellen bleiben.
+Dateien mit 161.102.998 Bytes an unveränderliche Git-Objekte. Aktive Ressourcen, Fonts/Lizenzen und noch verwendete technische Testinputs bleiben.
+Abgeschlossene RP-/VS-Produktionsquellen liegen ausschließlich in der Git-Historie.
 Die drei großen Paketrekonstruktionen entfallen aus `unittest discover -s tools`;
 die 13 günstigen BP-Hilfsregressionen bleiben. Keine Historienumschreibung.
 
@@ -304,8 +306,7 @@ Die neue Sicherung macht den Ablauf des ursprünglichen Actions-Artefakts am
 23.10.2026 für diese benötigten Bytes unschädlich. Sie ist kein neues Renderbild.
 
 VS2, Sidebar und PERF-A/B sind über PR #62/#66 integriert. Die alte offene
-Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Ihre ursprünglichen Rätselzertifikate bleiben gebunden erhalten; CI prüft
-sie nicht erneut. Weitere Quellenentscheidungen und
+Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Ihre ursprünglichen Rätselzertifikate liegen in der Git-Historie; CI prüft sie nicht erneut. Weitere Quellenentscheidungen und
 Dateibindungen stehen im [Bestandsinventar](DEVELOPMENT_ARCHIVE.md).
 
 ## Verifikation dieses Pakets

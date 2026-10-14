@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.4.1 · Dokumentrevision 6 · 13.10.2026**
+**Version 0.4.1 · Dokumentrevision 7 · 14.10.2026**
 
 Die kompatible ZA-1-Vertragsversion bleibt 0.4.1; Dokumentrevision, Datei-SHA-256 und Repositorycommit identifizieren diese ergänzte Arbeitsanweisung.
 
@@ -93,7 +93,7 @@ Freigaben müssen eindeutig die vorgelegten Dateien/Revisionen beziehungsweise d
 
 ### 4.1 Import und Rastervarianten
 
-1. Von der **freigegebenen gespeicherten Motivvorlage** ausgehen; ihre Ableitung aus dem freigegebenen Abschlussbild anhand der Dateien, Hashes und dokumentierten Bearbeitung prüfen. Das Abschlussbild nicht als austauschbare nachträgliche Illustration behandeln. Originalbytes, SHA-256, Normalisierung, Rechte, Parameter und Toolversion erhalten. Die deterministische Reproduktion beginnt bei Bildbytes, nicht beim Prompt.
+1. Von der **freigegebenen gespeicherten Motivvorlage** ausgehen; ihre Ableitung aus dem freigegebenen Abschlussbild anhand der Dateien, Hashes und dokumentierten Bearbeitung prüfen. Das Abschlussbild nicht als austauschbare nachträgliche Illustration behandeln. Originalbytes, SHA-256, Normalisierung, Rechte, Parameter und Toolversion erhalten. Während der Produktion beginnt die deterministische Prüfung bei Bildbytes, nicht beim Prompt. Nach finaler Integration besteht keine dauerhafte Wiederholbarkeitspflicht (Abschnitt 9).
 2. Striktes bestehendes Designformat verwenden; aktuelle Format-/Ressourcengrenzen der README einhalten. Redaktionelle Zusatzfelder in Begleitdateien speichern. Crop-Koordinaten und Seitenverhältnis beachten; nicht stillschweigend strecken.
 3. Zunächst **vier gezielte Rasterkandidaten**, mit begründeter Zusatzhypothese höchstens sechs pro Runde erzeugen. Innerhalb der Motivfreigabe beispielsweise zwei Größen mit zwei sinnvollen Parametrierungen vergleichen. Keine blinde Kreuzprodukt-Suche.
 4. Unterschiedliche globale Maße, Crops oder Paletten benötigen getrennte Designs. Beim vorhandenen farbigen `area`-Pfad ist der Schwellenwert wirkungslos; reine Schwellenvarianten sind dort keine unterschiedlichen Ansätze. Mono-Schwellen anhand des Bilds wählen.
@@ -195,7 +195,9 @@ Stagniert das zulässige technische Vollprofil, ist das Rätsel nicht freigabef�
 
 ## 6. Dateien, Übergabe und Wiederaufnahme
 
-### 6.1 Repositoryablage und schlanke Pakete
+### 6.1 Repositoryablage während der laufenden Produktion
+
+Die folgenden Aufbewahrungs- und Replaypflichten gelten bis zur finalen Integration. Danach löst Abschnitt 9 sie ab.
 
 - Zuerst `content/authoring/index.json` und die Runtime-Registry `content/registry.json` lesen. Stabile motivneutrale ID gemäß ZA-1 vergeben; ID, Revision und Pfad auf Kollision prüfen. Bei Wiederaufnahme das verzeichnete Paket am angegebenen Branch/Commit selbst laden; keinen erneuten Upload verlangen, wenn die Bytes zugänglich sind. Mehrdeutige Auswahl klären, fehlenden Binärzugriff konkret melden.
 - Ablage: `content/authoring/<puzzle_id>/<revision>/package.zip`. Daneben `handoff.json` als bytegleiche lesbare Kopie, `record.json` und gegebenenfalls die separate `approval.json`. Ein Paket pro Phasenübergabe, Freigabevorlage oder Chatwechsel; keine ZIPs nach jedem Toolaufruf. Bereits vorgelegte Revisionen niemals überschreiben. Neue Inhalte erhalten eine neue Revision; identische Bytes werden wiederverwendet.
@@ -207,7 +209,7 @@ Stagniert das zulässige technische Vollprofil, ist das Rätsel nicht freigabef�
 - Ein neues Paket vor Inventarisierung verschlanken. Bereits versiegelte Pakete ausschließlich als deklarierte Teilkopie nach `picross-authoring-derivation-v1` ableiten: Originalhandoff/-inventar und ihre Hashes unverändert, Original-ZIP-Hash binden, tatsächlich enthaltene Dateien vollständig hashen. Weglassungen und Grund im äußeren Record dokumentieren. Keine erfundene neue Vollkopie, keine stillschweigende Neuversiegelung oder Umschreibung alter Freigaben. Nachweisbündel nicht intern kürzen. Das Original nicht destruktiv ersetzen.
 - Inventar und Handoff ohne Selbstreferenz nach ZA-1 binden; Datei-SHA-256 und kanonische Vertrags-Hashes unterscheiden. Nach Versiegelung spätere Endfreigabe und Integrationsstatus ausschließlich in separater Freigabe/Record führen; das Originalhandoff dafür nicht ändern.
 - Vor Ablage ZIP sicher öffnen, Dateimenge/Hashes und Handoffkopie prüfen. Ab `content_ready` zusätzlich ZA-1 `inspect` auf dem **geschriebenen ZIP** ausführen; fehlende Endabnahme darf als einziger entsprechender Blocker bleiben. Frühere Bildphasen sind noch kein ZA-1-Eingang: deren vorhandene Dateibindungen/Freigaben prüfen, keine Adapterzertifizierung behaupten. Für das Packen gibt es derzeit keinen eigenen CLI-Befehl; Standard-ZIP-Werkzeuge und vorhandene APIs benutzen, keinen Befehl erfinden.
-- `content/authoring/` bleibt außerhalb des Spiels. Nach Integration erzeugt ZA-1 die offline prüfbare Kopie unter `content/packages/<id>/<revision>/`; dieser Ort ist kein manuell zu befüllender Eingang. Keine zusätzlichen Voll-ZIPs dort erzeugen. Alte Produktionsstände über feste Git-Commits referenzieren; keine automatischen Löschungen, LFS-Umstellung oder Historienbereinigung. Größenwachstum messen, nicht durch Weglassen von Proofs lösen.
+- `content/authoring/` bleibt außerhalb des Spiels. Nach Integration erzeugt ZA-1 die offline prüfbare Kopie unter `content/packages/<id>/<revision>/`; dieser Ort ist kein manuell zu befüllender Eingang. Keine zusätzlichen Voll-ZIPs dort erzeugen. Alte Produktionsstände über feste Git-Commits referenzieren; Bis zur finalen Integration keine gebundenen Nachweise löschen. Danach ist Abschnitt 9 Pflicht; keine LFS-Umstellung oder Git-Historienbereinigung.
 
 ### 6.2 Übergabedatensatz
 
@@ -294,3 +296,42 @@ Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und da
 8. Arbeitsrecord mit einmaligen Registrierungs-/Prüfbelegen aktualisieren, vollständigen Diff separat selbst prüfen, committen/pushen und Draft-PR mit Head/Basis/Checks/offenen Gates erstellen. Reine Rätseldateien müssen im Auswahlbericht `content_only=true` ergeben; dann sind nur `docs` (Pfad-/Dateimodusprüfung) und `ci-required` Pflicht. Keine vollständige Testsuite zusätzlich lokal oder per CI wiederholen. Bei unerwartet breiter Auswahl die tatsächlich geänderten Pfade prüfen; notwendige Codeänderungen getrennt behandeln, nichts am Gate vorbeischleusen. Nur mit passender ausdrücklicher Mergefreigabe nach bestandenen Pflichtprüfungen mergen; danach tatsächlichen Main-/Mergecommit prüfen. Erst dann „im Spiel auf main integriert“ melden; kein Release/Deployment ableiten.
 
 Das Endergebnis nennt Paketfundort/-hash, Freigabebeleg, Runtime-ID/Revision/Slot, Export-/Registrierungs- und Dateiprüfbelege, gegebenenfalls begründete Zusatzprobe, PR/Head und Main-Mergecommit. Bei Fehlern den letzten belegten Zustand und nächsten erlaubten Schritt nennen; keine unvollständige Integration als Erfolg melden.
+
+## 9. Produktionsabschluss und Bereinigung
+
+Eigentümerentscheidung vom 14.10.2026: **Ein fertiggestelltes und final auf `main`
+integriertes Rätsel muss nicht erneut produzierbar sein.** Produktionsunterlagen
+sind Arbeitsmaterial, kein dauerhaft wachsender Spiel- oder CI-Bestand.
+
+1. Tatsächliche Endabnahme und Merge nachweisen; `registered` auf einem Draftbranch
+   allein genügt nicht. `origin/main` aktualisieren und den vollständigen enthaltenen
+   Commit nennen. Offene Nacharbeit oder neuere Arbeitsstände derselben ID zuerst
+   klären; fremde/offene Produktionen erhalten.
+2. Nach dem Merge in einem eigenen kleinen Cleanup-Diff ausführen:
+
+   ```sh
+   python -m tools.puzzle_production.target_adapter retire-production --checkout . --integrated-commit <vollstaendige-main-SHA> --puzzle-id <pz-ID>
+   ```
+
+   Mehrere bestätigte IDs können mit wiederholtem `--puzzle-id` zusammengefasst
+   werden. Der Befehl prüft Main-Abstammung und unveränderte Integrations-/Arbeitsbytes,
+   entfernt die Authoringrevisionen samt Indexeinträgen und ersetzt das Produktionspaket
+   durch einen kompakten Integrationsdatensatz. Kein Solver, Proof- oder Bildreplay.
+3. Dauerhaft bleiben Runtime-Definition samt Matrix/Hinweisen, Abschlussbild,
+   Nutzungshinweise/Lizenzen, ID/Runtime-Revision/Save-Slot, Kategorie und relevante
+   Schwierigkeitsmetadaten. Der kleine Integrationsdatensatz bindet diese Daten,
+   den ursprünglichen Exporthash und den bestätigten Main-Commit.
+4. Entfernt werden Quellen-/Abstraktionsbilder, verworfene Varianten, Prompts,
+   ZIPs, duplizierte Exporte, Proofs, Reparaturspuren, Galerien und Zwischenberichte.
+   Keine Kopien in einem neuen Archivordner, in Builds oder CI-Artefakten aufheben.
+   Ein Commit-/PR-Verweis genügt für den Entscheidungsverlauf; Git-Historie bleibt
+   unangetastet. Fortbestehende Nutzungsrechte/Attributionen dürfen nicht verloren gehen.
+5. Diff und unveränderte Runtime-Dateien kontrollieren; Cleanup committen/pushen
+   und als Draft-PR liefern. Ein separater Merge braucht die passende bestehende
+   oder neue Mergefreigabe. Reine Datenbereinigung nutzt den schlanken Inhaltspfad.
+   Weder ein zusätzlicher Spielerbuild noch neue rätselspezifische Tests sind nötig.
+
+Spätere echte Rätseländerungen sind ein neuer Produktionsauftrag. Fehlende alte
+Arbeitsdateien sind kein Defekt und rechtfertigen keine Wiederherstellungspflicht.
+Neue Exporte werden weiterhin vollständig geprüft; Bestandsregistrierung und
+Kategorienpflege verwenden nach Abschluss nur noch die kompakte Integrationsbindung.

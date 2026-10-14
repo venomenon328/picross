@@ -1,4 +1,0 @@
-Frontale Westfassade des Kölner Doms, zwei gleich hohe schlanke Türme mit tiefem offenem Zwischenraum, Mittelgiebel, gestufte breite Basis, wichtige Spitzbogenfenster und drei Portale erhalten. 30x50 Mono fest freigegeben. Keine Streckung. Vier area-Schwellen vergleichen: 100/120/140/160 für feine Öffnungen, Stege, Spitze und Randbelegung; keine Motiv- oder Matrixkorrektur. Zusatzhypothese: Weißraumcrop [56,0,968,1520] hat exakt 3:5 und beseitigt contain-Rundungsleerraum; sämtliche dunklen Motivpixel bleiben erhalten. Schwellen 120/140, maximal sechs Kandidaten dieser Runde.
-
-Working mode: faithful
-Motif and gameplay review: open

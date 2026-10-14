@@ -4,7 +4,7 @@ Stand: 04.10.2026 · versioniertes Dateibeispiel, technischer Durchstich
 
 `source.png` ist eine tatsächlich vorhandene 640×640-RGBA-Datei: eine breite
 Pilzkappe mit mittigem Stiel und transparentem Umfeld. Die einfachen geometrischen
-Formen wurden für diesen Auftrag mit dem eigenen [Quellskript](create_source.py)
+Formen wurden für diesen Auftrag mit dem eigenen [Quellskript](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp3/create_source.py)
 gezeichnet, ohne Fremdasset, Foto, KI-Modell oder injizierte Rätselmatrix.
 Das Skript erzeugt ausschließlich Bildpixel; der echte Import erzeugt Matrix und
 Hinweise. Nutzungsgrundlage: eigene geometrische Illustration dieses Repositorys,
@@ -24,12 +24,12 @@ Stiel stimmen mit dem Raster überein; Farbe/Details verfeinern das monochrome
 Motiv. Sie wurde für diesen Auftrag aus eigenen SVG-Formen erstellt, ohne
 Fremdassets. Sie entspricht bytegenau `prototypes/p1/art/f04.svg`.
 
-Produktionsansicht mit Motivspoiler: [production/index.html](production/index.html)
+Produktionsansicht mit Motivspoiler: [production/index.html](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp3/production/index.html)
 offline im Browser öffnen. Original/Normalisierung, echte Zellauflösung,
 vergrößerter Vergleich, alle Hinweise, Parameter, Herkunft, technische Status,
 Hashes und Briefing liegen daneben als Dateien für ChatGPT/Codex.
-[production/manifest.json](production/manifest.json) bindet diese Dateien;
-[p1-export/manifest.json](p1-export/manifest.json) bindet unabhängigen Proof,
+[production/manifest.json](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp3/production/manifest.json) bindet diese Dateien;
+[p1-export/manifest.json](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp3/p1-export/manifest.json) bindet unabhängigen Proof,
 Logik, F-04-Definition/Revision und Reveal. Laufzeiten sind Messwerte des
 ursprünglichen Imports, keine reproduzierbaren Identitätsbestandteile.
 

@@ -71,17 +71,17 @@ class CurrentProductEvidenceTests(unittest.TestCase):
             self.assertIsNone(timed["exit_code"])
             self.assertIn("before timeout", (logs / "timeout.log").read_text())
 
-    def test_log_abbreviation_cannot_hide_a_success_exit_engine_error(self):
+    def test_full_log_cannot_hide_a_success_exit_engine_error(self):
         with tempfile.TemporaryDirectory() as temporary, contextlib.redirect_stdout(io.StringIO()):
             command = [sys.executable, "-c", "print('A'*100000); print('SCRIPT ERROR: middle'); print('B'*400000); print('OK')"]
             result = p1_product.run_phase("large", command, os.environ.copy(), 5, Path(temporary))
-            self.assertLessEqual((Path(temporary) / "large.log").stat().st_size, p1_evidence.LOG_LIMIT)
-            self.assertTrue(result["log"]["abbreviated"])
+            self.assertGreater((Path(temporary) / "large.log").stat().st_size, 500000)
+            self.assertFalse(result["log"]["abbreviated"])
             with self.assertRaisesRegex(PreflightError, "engine error"):
                 p1_product.require_clean_output(result, "OK")
 
-    def test_native_selection_preserves_original_bytes_and_records_budget_omissions(self):
-        with tempfile.TemporaryDirectory() as temporary, patch.object(p1_evidence, "IMAGE_LIMIT", 8):
+    def test_native_selection_preserves_all_requested_original_bytes(self):
+        with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary)
             renders = output / "renders"
             renders.mkdir()
@@ -92,7 +92,8 @@ class CurrentProductEvidenceTests(unittest.TestCase):
             evidence.retain_files([first, second])
             selected = output / "technical/selected/renders/first.png"
             self.assertEqual(selected.read_bytes(), first.read_bytes())
-            self.assertEqual(len(evidence.report["selected_evidence"]["omitted"]), 1)
+            self.assertEqual(evidence.report["selected_evidence"]["omitted"], [])
+            self.assertEqual((selected.parent / second.name).read_bytes(), second.read_bytes())
             evidence.retain_files([second])
             self.assertFalse(selected.exists())
 
@@ -102,11 +103,8 @@ class CurrentProductEvidenceTests(unittest.TestCase):
             evidence = p1_evidence.Evidence(output, "Linux", {"core": True})
             player = output / "player.zip"
             player.write_bytes(b"player")
-            exact = evidence.enforce_budget(player)
+            exact = evidence.measure_size(player)
             self.assertEqual(exact["total_bytes"], exact["technical_bytes"] + 6)
-            with patch.object(p1_evidence, "TOTAL_LIMIT", exact["total_bytes"] - 1):
-                with self.assertRaisesRegex(PreflightError, "byte budget"):
-                    evidence.enforce_budget(player)
 
     def test_source_override_does_not_hide_dirty_checkout_or_change_tested_identity(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -143,7 +141,7 @@ class CurrentProductEvidenceTests(unittest.TestCase):
             self.assertIn("download unavailable", (output / "technical/logs/failure.log").read_text())
 
     def test_failed_pixel_oracle_keeps_its_report_bound_crops_before_other_images(self):
-        with tempfile.TemporaryDirectory() as temporary, patch.object(p1_evidence, "IMAGE_LIMIT", 8):
+        with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary)
             renders = output / "drawing-renders"
             renders.mkdir()
@@ -165,7 +163,7 @@ class CurrentProductEvidenceTests(unittest.TestCase):
             selected = output / "technical/selected/drawing-renders"
             self.assertEqual((selected / crop.name).read_bytes(), crop.read_bytes())
             self.assertEqual((selected / context.name).read_bytes(), context.read_bytes())
-            self.assertFalse((selected / unrelated.name).exists())
+            self.assertTrue((selected / unrelated.name).exists())
             self.assertTrue((selected / "zs2-after.json").is_file())
 
     def test_native_failure_frames_use_phase_reports_and_reject_unbound_paths(self):

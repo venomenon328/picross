@@ -113,7 +113,7 @@ integriert. Reviewbefunde und Mergefreigabe sind dort und im
 Z2-M01/M02/M03 wurden nicht durchgeführt; der Eigentümer hob das damalige Gate
 für diesen Merge auf. RP-3 ist nach eigenem technischem/visuellem Review R2
 über PR #44 integriert; die spätere RP-6-Phasenentscheidung ist im abgeschlossenen #34 gebunden.
-Die [RP-4-Sichtprüfung](RP4_VERIFICATION.md) bewertet neue Produktionsraster,
+Die [RP-4-Sichtprüfung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP4_VERIFICATION.md) bewertet neue Produktionsraster,
 keine neue P1-Bedienabnahme.
 
 Die neue ZS-Folgearbeit aus Abschnitt 4.4 öffnet GD-03 ausschließlich für die

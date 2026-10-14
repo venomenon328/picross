@@ -10,7 +10,7 @@ bleibt offen. RP-5 ist nach unabhängigem technischem/visuellem Review R1
 
 ## Festlegung vor dem ersten Vergleichslauf
 
-[plans.json](plans.json) bindet genau die neun im Issue festgelegten Referenzen,
+[plans.json](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/plans.json) bindet genau die neun im Issue festgelegten Referenzen,
 ihre unveränderten RP-3-Kandidaten und Manifestbytes sowie vollständige boolesche
 Masken. `true` schützt sowohl Farben als auch Leerzellen. Die halboffenen
 Rechtecke in nullbasierten Zellkoordinaten stehen im Lock; die eigentliche
@@ -114,19 +114,19 @@ erfasst und bezeichnet die damals neu erzeugten, noch unversionierten Dateien.
 Es wird nicht nachträglich geändert. Originalresultate einschließlich des
 Zeitabbruchs bleiben als beobachteter Erstlauf erhalten.
 
-[baseline.zip](baseline.zip) enthält alle 321 Originaldateien byteidentisch:
+[baseline.zip](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/baseline.zip) enthält alle 321 Originaldateien byteidentisch:
 neun komplette Reparaturbundles und den vollständigen Vergleich. Unkomprimiert
 93233249 Bytes; ZIP 2138683 Bytes, SHA-256
 `812c558198408ef750764ad18426f5e1ce4bdb336fad1a59c903bd0068459b8a`.
-[archive.json](archive.json) bindet jede expandierte Datei, Produzentencommit und
+[archive.json](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/archive.json) bindet jede expandierte Datei, Produzentencommit und
 Tree. Der Prüfer liest immer das versionierte ZIP, nicht eine zufällig vorhandene
 lokale Entpackung. Grenzen: 8 MiB ZIP, 128 MiB expandiert, 512 Dateien; keine
 absoluten Pfade, Traversals, Symlinks oder doppelte Namen. Temporäre Stagingkopien
 wurden nach vollständigem Bytehashvergleich als Duplikate in ignorierten
 Entwicklungsartefakten erhalten; sie sind keine weiteren Suchläufe.
 
-[Offlineansicht](index.html), [alle 48 Originalresultate plus neun Reparaturen](comparison.json),
-[dateigebundene Einzelurteile](reviews.json). Alle neun Vierfachansichten wurden
+[Offlineansicht](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/index.html), [alle 48 Originalresultate plus neun Reparaturen](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/comparison.json),
+[dateigebundene Einzelurteile](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/reviews.json). Alle neun Vierfachansichten wurden
 tatsächlich geöffnet: Vorher, Nachher, sämtliche Änderungen in Pink und Schutz
 in Blau. Die sechs RP-4-Kontaktansichten der betroffenen Quellen wurden ebenfalls
 geöffnet. Sensible Innenräume wurden vor und nach dem Lauf kontrolliert.
@@ -182,6 +182,6 @@ Abbruch schon während Eingangsprüfung liefert JSON/4 ohne behauptetes gültige
 Rasterbundle. Harte Prozessbeendigung kann keine Abschlussdatei garantieren.
 `rp5 verify` verlangt alle neun Bundles, vollständige 48er-Vergleichsübersicht
 und dateigebundene Sichturteile. Ein aktueller erfolgreicher CI-Lauf und die
-[Prüfzuordnung](../../docs/RP5_VERIFICATION.md) binden den Abschlussstand.
+[Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP5_VERIFICATION.md) binden den Abschlussstand.
 Die `unpack`-Ausgabe enthält die ursprünglich geschriebenen Einzelbundles samt
 Offline-HTML; sie kann mit `repair verify --bundle <entpackter-fall>` geprüft werden.
