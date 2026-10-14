@@ -1,0 +1,176 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 40,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "width": 36
+    }
+  ],
+  "authorization": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nPaket: pz-023b50b44d1c4698a6e17e65b6ea4337 · eindeutiger aktueller Record.\nIch gebe die Motivvorlage MA-r01 frei; Parameter: genau der im Paket vorgeschlagene eindeutige Parameterkorridor. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.\n\nRepositoryablage nach §6 ist beauftragt. Ich beauftrage auch den Merge dieses Ablage-/Integrations-PRs nach den Pflichtprüfungen gemäß Entwicklungsworkflow.",
+  "blockers": [
+    "B-PZ-01: Geschützter Jackenkragen und zentrale Knopfleiste gehen in allen drei zulässigen Importen weitgehend verloren; breite olivgrüne Fläche mit vereinzelten dunklen Restzellen ersetzt die Gliederung.",
+    "B-PZ-02: Heller schmaler Schnurrbart wird auch bei 36×48 zu getrennten Flecken; die Mund-/Blickzeichnung verliert den freigegebenen freundlichen Ausdruck."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "bundle-36x48",
+    "logic_hash": "cd52bc48311d2ac66893ad45beebad929a73d6073e8a1f350b582e79420b3627",
+    "matrix_hash": "70a2bc01da0e8da0923be43c087389656237d86a67af6fca85aa047144344454",
+    "proof": "bundle-36x48/area-36x48-proof.json",
+    "selection_status": "diagnostic_only; not approved for final editorial review",
+    "source_type": "import",
+    "variant": "area-36x48",
+    "verification": "fresh-verification.json"
+  },
+  "category_id": "menschen-berufe",
+  "configuration": "configuration.json",
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "difficulty.json",
+    "frame": "audit/candidate-statistics.json",
+    "logic": "fresh-verification.json",
+    "motif": "motif-approval.json",
+    "provenance": "audit/origin-verification.json",
+    "reveal_approval": "reveal-approval.json",
+    "reveal_consistency": "visual-review.json",
+    "visual": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "blocked",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "fail",
+    "target_export": "blocked",
+    "visual": "fail"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "adc5b62a241695ac9bd4532925b7dc0b1df815b65bc0fe4b626b5c77c5fdb3a8"
+  },
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1",
+    "file": "motifs/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "93f69db43b8d6afbd18a18d07e9a6fdb57a55e8fa7769775c2e23d256f38bc1a"
+  },
+  "next_action": "MA-r02 aus unverändertem A-r02 überarbeiten und menschlich freigeben lassen; danach neue Rasterproduktion. Keine Endabnahme oder Spielintegration dieses Diagnosekandidaten.",
+  "origin_verification": "audit/origin-verification.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 40,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 44,
+      "method": "area",
+      "mode": "color",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 48,
+      "method": "area",
+      "mode": "color",
+      "width": 36
+    }
+  ],
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "repair": null,
+  "repo_commit": "b736ae1e0bcd41151ebc956480e7feb9531c4945",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "height": 40,
+    "mode": "color",
+    "width": 30
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/A-r02.png",
+    "revision": "A-r02",
+    "sha256": "4a192182d637c185d46f4128640200c68c663639e0e30a477363677c1e5eebe1"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 8,
+    "file": "rulebook.md",
+    "sha256": "9a6d9070a8a4eeeb3aa3fc13b6083074e4c505ca323f5dcc863a205f53ae5549",
+    "version": "0.4.1"
+  },
+  "state": "blocked"
+}
