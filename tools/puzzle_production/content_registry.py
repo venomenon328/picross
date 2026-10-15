@@ -95,8 +95,8 @@ def check_checkout(root, replay=False, *, check_projection=True):
         if m.get("format") == integrated_content.FORMAT:
             integrated_content.check(root, e, m)
             continue  # Final integration is checked by runtime hashes, never by production replay.
-        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3"), "Unsupported registered export")
-        if m["format"] in ("picross-target-export-v2", "picross-target-export-v3"):
+        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4"), "Unsupported registered export")
+        if m["format"] in ("picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4"):
             require(m.get("category_id") == e["category_id"], "Registered category differs from export")
         if replay:
             from .target_adapter import verify_export
@@ -125,14 +125,14 @@ def sync_runtime(root):
 
 
 def registration(export_dir, root, *, apply=False, fail_step=None):
-    from .target_adapter import verify_export, FORMAT as EXPORT_FORMAT, MANUAL_FORMAT
+    from .target_adapter import verify_export, FORMAT as EXPORT_FORMAT, MANUAL_FORMAT, PAIRED_FORMAT
     root = root.resolve()
     catalog_bytes = categories.source_bytes(root / categories.PATH)
     catalog = categories.load(root / categories.PATH)
     require(catalog_bytes == categories.source_bytes(root / categories.PATH), "Categories changed during planning; retry")
     registry = check_checkout(root)
     m, report = verify_export(export_dir)
-    require(m["format"] in (EXPORT_FORMAT, MANUAL_FORMAT), "Category-less legacy export: create a new categorized export from the unchanged approved input")
+    require(m["format"] in (EXPORT_FORMAT, MANUAL_FORMAT, PAIRED_FORMAT), "Category-less legacy export: create a new categorized export from the unchanged approved input")
     category = categories.lookup(catalog, m["category_id"])
     require(not m["test_only"] or root != ROOT.resolve(), "Test-only fixtures cannot be registered in the real repository")
     package_rel = "content/packages/" + m["definition_id"] + "/" + m["package_revision"]

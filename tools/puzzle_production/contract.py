@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from contextlib import contextmanager
 import hashlib
 import json
 import math
@@ -22,6 +23,8 @@ COLOR_LOGIC_FORMAT = "picross-logic-v2"
 COLOR_PROOF_FORMAT = "picross-proof-v2"
 MAX_COLORS = 8
 COLOR_PROFILE = {**PROFILE, "id": "full-line-color"}
+PAIRED_PROOF_FORMAT = "picross-proof-v3"
+PAIRED_IDS = ("paired-lines-mono", "paired-lines-color")
 LOGIC_BYTE_LIMIT = 2 * 1024 * 1024
 COLOR_PROOF_BYTE_LIMIT = 64 * 1024 * 1024
 
@@ -225,7 +228,8 @@ class Budget:
     """Cooperative line-evaluation budget, separate from measured RSS limits."""
 
     def __init__(self, seconds: float = 120, max_lines: int = 100_000,
-                 cancelled=None):
+                 cancelled=None, *, max_pair_work: int = 20_000_000,
+                 max_pair_records: int = 250_000):
         if not math.isfinite(seconds) or seconds < 0:
             raise InvalidInput("Time budget must be finite and nonnegative")
         integer(max_lines, 0, 1_000_000, "max_lines")
@@ -233,6 +237,33 @@ class Budget:
         self.max_lines = max_lines
         self.lines = 0
         self.cancelled = cancelled
+        self.max_pair_work = integer(max_pair_work, 0, 100_000_000, "max_pair_work")
+        self.max_pair_records = integer(max_pair_records, 0, 1_000_000, "max_pair_records")
+        self.pair_work = self.pair_records = self.pair_peak_records = 0
+
+    def pair_tick(self) -> None:
+        self.check()
+        if self.pair_work >= self.max_pair_work:
+            raise Aborted("pair_work_limit")
+        self.pair_work += 1
+
+    def hold(self, count: int = 1) -> None:
+        self.check()
+        if self.pair_records + count > self.max_pair_records:
+            raise Aborted("pair_memory_limit")
+        self.pair_records += count
+        self.pair_peak_records = max(self.pair_peak_records, self.pair_records)
+
+    def release(self, count: int) -> None:
+        self.pair_records -= count
+
+    @contextmanager
+    def pair_scope(self):
+        before = self.pair_records
+        try:
+            yield
+        finally:
+            self.pair_records = before
 
     def check(self) -> None:
         if self.cancelled is not None and self.cancelled():
@@ -250,3 +281,12 @@ class Budget:
 def proof_header(puzzle: Puzzle) -> dict:
     return {"format": puzzle.proof_format, "logic_hash": puzzle.logic_hash,
             "profile": puzzle.profile, "profile_hash": digest(puzzle.profile)}
+
+
+def selected_profile(puzzle: Puzzle, profile: str | None = None) -> dict:
+    if profile is None or profile == puzzle.profile["id"]:
+        return puzzle.profile
+    expected = PAIRED_IDS[0 if puzzle.format == LOGIC_FORMAT else 1]
+    if profile != expected:
+        raise InvalidInput("Profile is not supported for this logic format")
+    return {**puzzle.profile, "id": expected, "deduction": "all-paired-line-supported-values"}
