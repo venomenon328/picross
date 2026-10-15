@@ -9,6 +9,7 @@ import tempfile
 import time
 from playwright.sync_api import sync_playwright
 from serve import serve
+from browser_runtime import options, graphics
 
 DIAGNOSTIC_OUTPUT = None
 
@@ -84,12 +85,14 @@ def exercise(pw, name, root, update, url, output, evidence):
     with tempfile.TemporaryDirectory(prefix='picross-web-profile-', ignore_cleanup_errors=True) as profile:
         browser = getattr(pw, name)
         def launch(scale=1):
-            return browser.launch_persistent_context(profile, headless=True,
+            return browser.launch_persistent_context(profile, **options(name),
                 viewport={'width':1920,'height':1122}, device_scale_factor=scale)
         context = launch()
         page, errors = open_page(context, url)
         version = context.browser.version if context.browser else page.evaluate('navigator.userAgent')
         evidence['version'] = version
+        evidence['launch_options'] = options(name)
+        evidence['graphics'] = graphics(page)
         passed('export/catalog startup')
         control(page, text='Blatt 01')
         wait(page, 'picrossProbe.work')
@@ -278,7 +281,7 @@ def exercise(pw, name, root, update, url, output, evidence):
         passed('own quit acknowledges durable sync and displays restart instruction')
         context.close()
         with tempfile.TemporaryDirectory(prefix='picross-blocked-',ignore_cleanup_errors=True) as blocked_profile:
-            blocked = browser.launch_persistent_context(blocked_profile,headless=True)
+            blocked = browser.launch_persistent_context(blocked_profile,**options(name))
             try:
                 blocked.add_init_script("indexedDB.open = () => { throw new DOMException('blocked by test policy','SecurityError'); };")
                 denied = blocked.pages[0]; denied.goto(url)

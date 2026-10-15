@@ -6,6 +6,7 @@ import platform
 import tempfile
 from playwright.sync_api import sync_playwright
 from serve import serve
+from browser_runtime import options, graphics
 
 
 def main():
@@ -20,8 +21,8 @@ def main():
         with sync_playwright() as pw:
             for name in ('chromium', 'firefox'):
                 with tempfile.TemporaryDirectory(prefix='picross-player-', ignore_cleanup_errors=True) as profile:
-                    context = getattr(pw, name).launch_persistent_context(profile, headless=True, viewport={'width':1920,'height':1122})
-                    evidence = dict(browser=name, status='failed', errors=[])
+                    context = getattr(pw, name).launch_persistent_context(profile, **options(name), viewport={'width':1920,'height':1122})
+                    evidence = dict(browser=name, status='failed', errors=[], launch_options=options(name))
                     report['results'].append(evidence)
                     try:
                         page = context.pages[0]
@@ -32,6 +33,7 @@ def main():
                         page.goto(url)
                         page.wait_for_function('window.picrossStorage && picrossStorage.ready && !picrossStorage.pending && document.getElementById("message").hidden', timeout=60000)
                         assert page.evaluate('window.picrossProbe === undefined')
+                        evidence['graphics'] = graphics(page)
                         context.set_offline(True)
                         page.wait_for_timeout(2000)
                         assert not errors, errors
