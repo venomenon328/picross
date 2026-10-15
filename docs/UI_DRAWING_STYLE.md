@@ -126,6 +126,10 @@ Normal, abgeschwächt und durchgestrichen bleiben dieselben drei GP-48-Zustände
 Farb-IDs, Hinweisreihenfolge und Originalindex sowie die lösungsunabhängige H1/GP-48-
 Analyse einschließlich Vorschau bleiben unverändert. Alle Zustände müssen auf beiden
 Achsen, im kontinuierlichen Hinweisdrag und im vollständigen Tooltip funktionieren.
+HF / #149 verwendet dort die vorhandene kleinere Fraunces-Überschrift und
+Delight-Zahlen auf ruhigem A-Papier mit wiederverwendetem SL-65-Bildrahmen.
+Gemessene Hüllen, Statusstriche und skalierte Innenränder verhindern Überlappung;
+Rahmenkanten werden gekachelt, nicht unnötig gedehnt.
 Helle Rätselfarben bleiben durch C1 erkennbar; Statuswechsel verändern weder Slot
 noch Schriftgröße. Auslassungsmarker und Leerlinienzeichen erhalten keine neue Bedeutung.
 
@@ -400,7 +404,7 @@ Palettengruppe und andere Controls, nicht blind die ganze Fenstermitte.
 Bei knapper Breite haben vollständige Inhalte und Bedienbarkeit Vorrang.
 
 Reihenfolge: tatsächliche Mindestreserven und Fit, GF1-Zusatzkapazität für vollständige
-Zeilenhinweise, danach Ausgleich des verbleibenden Freiraums. Nicht durch künstliche
+Zeilen- und Spaltenhinweise aus freier Breite/Höhe (HF / #149), danach Ausgleich des verbleibenden Freiraums. Nicht durch künstliche
 leere Hinweisslots, Kürzen sichtbarer Zahlen, kleinere gewählte Zellen oder Schrift
 zentrieren. Der Anordnungsschritt darf die gültige Fitgrenze nicht nochmals senken.
 Alle Hinweise, Rasterdarstellung, Cursor-/Gestenabbildung und Hit-Tests teilen den
