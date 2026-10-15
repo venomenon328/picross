@@ -1,6 +1,0 @@
-{
-  "approval_sha256": "4d19f0ae0f48dcb79639a2e84ac579f554a0eb5fd7304796a83b083d20e9fad8",
-  "format": "picross-editorial-approval-evidence-v1",
-  "timestamp_basis": "Aufzeichnungszeitpunkt der Endabnahme aus dem aktuellen Nutzerauftrag; Nachrichtenzeit nicht separat verfügbar.",
-  "user_message": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch nehme das Rätselpaket content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r04/package.zip · r04, Revision r04, Inventar-SHA-256 be3b751a9d27a6c2ac211d223d12c0738664c656c904804990a84d4de235f63f redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\nQuellbranch / Commit: main / 199c75c219a56bd9e14ac3b2c6a163b2756eff79.\n\nAblage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen. Nach tatsächlicher Main-Integration die Bereinigung gemäß §9 prüfen und direkt mergen."
-}
