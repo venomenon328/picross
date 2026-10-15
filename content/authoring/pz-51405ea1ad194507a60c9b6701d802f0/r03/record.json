@@ -1,12 +1,12 @@
 {
   "blockers": [
-    "final_editorial: missing bound human final approval"
+    "superseded: UTF-8 metadata correction delivered as r04; do not approve r03"
   ],
   "category_id": "haushalt-alltag",
   "difficulty": {
     "assessment_type": "editorial_estimate",
-    "bottleneck": "Vor allen172 Proofschritten alle55 Linien auf volle UnterstÃ¼tzung geprÃ¼ft. Vor RestaufrÃ¤umen bei hÃ¶chstens15 offenen Zellen mindestens3 produktive Linien; somit keine definierte <=2-Linien-Engstelle auf diesem Verlauf. Keine erschÃ¶pfende PrÃ¼fung alternativer Regelfamilien.",
-    "calibration": "Keine menschlichen Vergleichsdaten oder validierter R0â€“R3-Analysator.",
+    "bottleneck": "Vor allen172 Proofschritten alle55 Linien auf volle Unterstützung geprüft. Vor Restaufräumen bei höchstens15 offenen Zellen mindestens3 produktive Linien; somit keine definierte <=2-Linien-Engstelle auf diesem Verlauf. Keine erschöpfende Prüfung alternativer Regelfamilien.",
+    "calibration": "Keine menschlichen Vergleichsdaten oder validierter R0–R3-Analysator.",
     "confidence": "low",
     "effort": {
       "cells": 750,
@@ -29,10 +29,10 @@
     ],
     "playtest": "not_performed; optional",
     "rule_families": {
-      "R0": "Keine initial vollstÃ¤ndig gepackte oder leere Linie. SpÃ¤ter fertige BlÃ¶cke und Restleerfelder; kein validierter R0-Fixpunkt analysiert.",
-      "R1": "GeschÃ¤tzter Hauptbedarf: Ãœberlappung/VerlÃ¤ngerung der langen KorpusblÃ¶cke. Zeile12 [3,19] erzwingt im unbekannten 30er-Raster Spalten12â€“23; nachfolgende breite Zeilen verteilen Anker. Der dÃ¼nne BÃ¼gel erfordert lÃ¤ngere Folge dieser SchlÃ¼sse.",
-      "R2": "Zuordnung von bis zu drei BlÃ¶cken je Zeile und zwei je Spalte rund um Knopf, HenkelÃ¶ffnung und Ausguss kann kombinierte Anker benÃ¶tigen. Notwendigkeit/Suffizienz gegenÃ¼ber R1 nicht erschÃ¶pfend instrumentiert.",
-      "R3": "Full-line-mono zertifiziert vollstÃ¤ndige LinienunterstÃ¼tzung; dies beweist keine R3-Notwendigkeit. Kein unvermeidbarer R3-Schritt identifiziert, aber ohne schwÃ¤cheren validierten Fixpunkt nicht ausgeschlossen."
+      "R0": "Keine initial vollständig gepackte oder leere Linie. Später fertige Blöcke und Restleerfelder; kein validierter R0-Fixpunkt analysiert.",
+      "R1": "Geschätzter Hauptbedarf: Überlappung/Verlängerung der langen Korpusblöcke. Zeile12 [3,19] erzwingt im unbekannten 30er-Raster Spalten12–23; nachfolgende breite Zeilen verteilen Anker. Der dünne Bügel erfordert längere Folge dieser Schlüsse.",
+      "R2": "Zuordnung von bis zu drei Blöcken je Zeile und zwei je Spalte rund um Knopf, Henkelöffnung und Ausguss kann kombinierte Anker benötigen. Notwendigkeit/Suffizienz gegenüber R1 nicht erschöpfend instrumentiert.",
+      "R3": "Full-line-mono zertifiziert vollständige Linienunterstützung; dies beweist keine R3-Notwendigkeit. Kein unvermeidbarer R3-Schritt identifiziert, aber ohne schwächeren validierten Fixpunkt nicht ausgeschlossen."
     },
     "time_estimate": null
   },
@@ -62,7 +62,7 @@
     "sha256": "6f6ec5ec68b7c039296566b6dfd4a5f39c5b6a0dd24f203abc2bd107f11c0cb0"
   },
   "motif_name": "Japanische Teekanne",
-  "next_action": "4 Â· Abnehmen & ins Spiel integrieren",
+  "next_action": "Gespeicherte Arbeit fortsetzen: r04",
   "package": {
     "bytes": 5828846,
     "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r03/package.zip",
@@ -92,6 +92,7 @@
     }
   },
   "revision": "r03",
-  "state": "content_ready",
+  "state": "superseded",
+  "superseded_by": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r04/record.json",
   "width": 30
 }
