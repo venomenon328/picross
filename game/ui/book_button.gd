@@ -66,7 +66,7 @@ func _draw() -> void:
 	if disabled:
 		body = Color("e9e2d4")
 	elif selected:
-		body = Color("293f3e")
+		body = Color("42645b") if is_pressed() else Color("34514d") if is_hovered() else Color("293f3e")
 	elif is_pressed():
 		body = Color("c5d6cd")
 	elif is_hovered():
@@ -99,4 +99,7 @@ func _draw() -> void:
 		var ink: Color = PAPER if selected else Color("757970") if disabled else INK
 		draw_multiline_string(font,Vector2((size.x-extent.x)/2,(size.y-extent.y)/2+font.get_ascent(fs)),text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,-1,ink)
 	if has_focus():
-		draw_polyline(points(box.grow(-5*u),2*u),INK,1.0,true)
+		# Keep focus outside the unchanged swatch; light ink remains visible on
+		# selected dark paper and does not disappear into the selection colour.
+		var inset: float = 3*u if swatch.a > 0 else 5*u
+		draw_polyline(points(box.grow(-inset),2*u),PAPER if selected else INK,u,true)
