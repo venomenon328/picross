@@ -155,6 +155,7 @@ func set_clue_hover(axis: String, index: int) -> void:
 	super.set_clue_hover(axis,index)
 
 func clear_pointer_hover() -> void:
+	clue_pointer_known = false
 	if style == 0:
 		super.clear_pointer_hover()
 		return

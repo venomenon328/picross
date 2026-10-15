@@ -1,5 +1,12 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+Zusätzlich gibt es den [WEB-1-Browserentwicklungsweg](../docs/WEB_HOSTING.md):
+statischer Export für Chromium/Firefox mit Maus und dauerhaftem Browserspeicher.
+Die Kopfzeile zeigt Build und tatsächlichen Speicherstatus. Bei Speicherfehler
+offen lassen und erneut versuchen. Nur ein schreibender Tab je Origin ist erlaubt.
+Build, SSH-Update, Rollback, Hostingvoraussetzungen und Speichergrenzen stehen in
+der verlinkten Anleitung. Persönliche Webprobe und Live-Deployment bleiben separat.
+
 Die Entwicklungsfassung enthält die [Kategorienprojektion nach KAT-1](../docs/CATEGORIES.md). Das Spiel startet im Rätselkatalog mit „Alle Rätsel“. Die scrollbare Kategorienauswahl enthält auch leere Kategorien; je Seite erscheinen höchstens 24 Karten. Eine Karte öffnet oder setzt genau ihr Blatt fort. Zurückkehren erhält Kategorie, Seite und Scrollposition; ein Neustart beginnt wieder bei „Alle Rätsel“, Seite 1. Einstellungen/Info und Beenden sind direkt erreichbar.
 
 Karten zeigen „Neu“, „Begonnen“ (auch mit ausschließlich Redohistorie) oder „Gelöst“. Die Vorschau zeigt nur eigene Füllungen, ohne Korrekturen; Name und Motivbild erscheinen erst nach gültigem Abschluss. Ein leerer automatisch angelegter Save bleibt „Neu“. Reset und Backupaktionen gehören zur jeweiligen Karte und verlangen weiterhin Bestätigung. Ein gültiger leerer Bestand und ein Katalogladefehler haben unterschiedliche Anzeigen. Kategorienänderungen verändern keine Rätseldefinition, Revision oder Spielstände.
@@ -154,8 +161,13 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   zurückspringen. Alle Zahlen bleiben über die Folge der Lesepositionen erreichbar.
   „Hinweise rasterseitig ausrichten“ stellt
   alle Linien auf ihren rasterseitigen Standardausschnitt zurück.
+- Freie Breite und Höhe zeigen nach dem Fit zusätzliche vollständige Zeilen- und
+  Spaltenhinweise, ohne kleinere Zellen dafür zu erzwingen. Passende Folgen haben
+  keine Auslassungsmarker und lassen sich nicht in Leerraum verschieben.
 - Darüberfahren einer gekürzten Folge zeigt weiterhin den vollständigen farbigen
-  Hinweis mit Umbruch direkt über dem Arbeitsbild. Das ist ein Zusatzweg; Anfang,
+  Hinweis mit Umbruch direkt über dem Arbeitsbild: kleine Fraunces-Überschrift,
+  gut lesbare Delight-Zahlen und ruhiges Papier mit gezeichnetem Rahmen.
+  Die Overlaylesegröße folgt der UI-Skalierung unabhängig vom Rasterzoom. Das ist ein Zusatzweg; Anfang,
   Mitte und Ende bleiben auch durch Hinweis-Panning erreichbar. Eine separate
   Hinweisansicht gibt es nicht.
 - UI 100/125 % vergrößert die Oberfläche. Delight-Coffee-Hinweisziffern und ihre
@@ -165,7 +177,8 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   äußerer Anfang und rasterseitiges Ende bleiben am gewählten Rand verankert,
   mittlere Ausschnitte behalten den gelesenen Tokenbereich mit größtmöglicher
   Überdeckung. Das gilt auch bei Arbeitszoom und Resize; alle Zustände bleiben
-  in ganzen Slots eingerastet.
+  in ganzen Slots eingerastet. Vorübergehende Vollanzeige bewahrt die Anker auch
+  beim Speichern und Neustart; beim Verengen kehrt derselbe Lesebereich zurück.
   Die UI-Skalierung, Hinweisrücksetzung und H1 stehen auf der Informationsseite.
   `?` führt direkt zur dort scrollbar erreichbaren Bedienhilfe; Menü und rechter
   Pfeil zu den Einstellungen. Auch bei 1280×720/UI 125 % bleiben Werkzeuge,

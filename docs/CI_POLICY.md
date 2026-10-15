@@ -81,6 +81,9 @@ Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 | Produktionswerkzeug-/Adaptercode, technische Fixtures oder Pilotprobes | Allgemeine Fachtests mit festen synthetischen Eingängen; ausgewählte allgemeine Spiel-/Pixel-/Exportregressionen. Keine echten Rätselreplays. |
 | CI/Harness/Toolchain oder nicht zugeordneter Codepfad | Alle aktuellen Bereiche einschließlich Preflight |
 
+Jede Product-Auswahl ergänzt auch den WEB-1-Export mit Browser-/Persistenz- und
+isolierter SSH-Referenzprüfung. Der reine Inhaltspfad bleibt davon ausgenommen.
+
 
 **Schlanker Inhaltspfad:** Ausschließlich `content/categories.json`,
 `content/registry.json`, `content/authoring/index.json`/`README.md`,
@@ -124,6 +127,23 @@ einem Merge nicht nochmals automatisch wiederholt; ihre maßgebliche Bindung ist
 der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erlaubt.
 
 ## Aktuelle Produktregression
+
+WEB-1 ergänzt den Pflichtjob [Webprüfung](../.github/workflows/web.yml), wenn
+der aktuelle Diff Produkt-/Exportprüfungen verlangt. Reine Inhalte wählen ihn
+weiterhin nicht; Main-Merges veröffentlichen nichts. Der Job exportiert den
+regulären Spieler und eine getrennte feste technische Testfassung, prüft echte
+Chromium-/Firefox-Ereignisse samt Browserpersistenz und eine isolierte Loopback-
+OpenSSH-/HTTP-Referenz. `ci-required` verlangt den tatsächlichen Erfolg dieses
+ausgewählten Jobs. Spielerdateien bleiben 14 Tage, kompakte Berichte/Bilder und
+Fehlerlogs sieben Tage. Keine echten Saves, VPS-Zugangsdaten oder Testprofile im
+Artefakt. [WEB-1-Anleitung und Abnahmegrenzen](WEB_HOSTING.md).
+
+Der GPU-lose Linux-Webjob verwendet Mesa-Software-Rendering und aktiviert dafür
+`webgl.force-enabled` ausschließlich im temporären Firefox-Prüfprofil
+([Mozilla-Treiberhinweise](https://wiki.mozilla.org/Blocklisting/Blocked_Graphics_Drivers)).
+Browserberichte protokollieren Profiloptionen und den tatsächlich erzeugten
+WebGL-2-Kontext. Lokale Windows-Proben verwenden die Browserdefaults; der Spieler
+verlangt keine solche Voreinstellung und meldet fehlende WebGL-2-Unterstützung.
 
 Der [Product-Harness](../tools/p1_product.py) prüft die unveränderten aktiven
 Ressourcenbindungen, importiert die temporäre reguläre

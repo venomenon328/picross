@@ -3,7 +3,7 @@
 Vertrag: [CELL_DRAG](CELL_DRAG.md), Paket [#143](https://github.com/venomenon328/picross/issues/143),
 gemeinsamer [Draft-PR #145](https://github.com/venomenon328/picross/pull/145).
 Diese Zuordnung beschreibt die Prüfwege; konkrete Ergebnisse sind im PR an Head,
-Basis, tatsächlichen Checkout, Run und Exporthashes gebunden. Kein Merge oder Release.
+Basis, tatsächlichen Checkout, Run und Exporthashes gebunden. Kein Releaseauftrag.
 
 ## Implementierung
 
@@ -90,6 +90,10 @@ Der Eigentümer prüft am selben gebundenen Windows-Export schnelle linke/rechte
 Randzüge, Außenloslassen, sichtbaren Randzähler und Lesbarkeit bei UI100/125 sowie
 kleinem/großem angebotenen Rasterzoom. Ergebnis und tatsächliche Metadaten wie oben
 festhalten. Technische Bilder ersetzen weder reale Mausbedienung noch Gestaltung.
-ZR-M01 und das unabhängige Review des Implementierungsheads sind **offen**.
-Der getrennte Selbstreview ersetzt diese Gates nicht; [#24](https://github.com/venomenon328/picross/issues/24)
+Der Eigentümer hat am 15.10.2026 den Merge beauftragt und ausdrücklich auf ZR-M01
+und das unabhängige technische Review für diesen Merge verzichtet. Beide sind
+**nicht durchgeführt**, die Gates für PR #145 ausdrücklich aufgehoben.
+Der getrennte Selbstreview und technische Tests werden dadurch nicht zur
+Eigentümerabnahme oder unabhängigen Prüfung. Pflicht-CI und technische native
+Windows-Probe bleiben erforderlich; [#24](https://github.com/venomenon328/picross/issues/24)
 bleibt die separate längere Spielerprobung.
