@@ -10,6 +10,8 @@ import time
 from playwright.sync_api import sync_playwright
 from serve import serve
 
+DIAGNOSTIC_OUTPUT = None
+
 
 def state(page):
     return page.evaluate('window.picrossProbe')
@@ -37,6 +39,8 @@ def control(page, text=None, name=None, tooltip=None, dialog=None):
              (name is None or item['name'] == name) and
              (dialog is None or item['dialog'] == dialog) and
              (tooltip is None or item['tooltip'].startswith(tooltip))]
+    if len(found) != 1 and DIAGNOSTIC_OUTPUT:
+        page.screenshot(path=str(DIAGNOSTIC_OUTPUT/'control-failure.png'))
     assert len(found) == 1, (text, name, tooltip, items)
     page.mouse.click(*point(page, found[0]['center']))
     page.wait_for_timeout(180)
@@ -167,11 +171,12 @@ def exercise(pw, name, root, update, url, output, evidence):
             control(page,name='undo'); assert state(page)['cells'] == before and state(page)['fit']
             cdp.send('Emulation.clearDeviceMetricsOverride')
             passed('live DPI change to 150 percent preserves hit geometry')
-        control(page,name='nav-album'); control(page,text='Blatt 02')
-        page.set_viewport_size({'width':1280,'height':762}); page.wait_for_timeout(300)
-        before = state(page)['cells']
-        # Longest fixed technical row/column; a short fully visible line cannot pan.
+        # The rectangular row and square column really overflow at this geometry.
         for axis in ('row','column'):
+            page.set_viewport_size({'width':1920,'height':1122}); page.wait_for_timeout(300)
+            control(page,name='nav-album'); control(page,text='Blatt 06' if axis=='row' else 'Blatt 02')
+            page.set_viewport_size({'width':1280,'height':762}); page.wait_for_timeout(300)
+            before = state(page)['cells']
             data = state(page); area = data[axis+'_area']; origin = data['origin']; step = data['cell_size']
             lines = data['rows' if axis=='row' else 'columns']
             index = max(range(len(lines)), key=lambda i:len(lines[i]))
@@ -183,7 +188,7 @@ def exercise(pw, name, root, update, url, output, evidence):
             page.mouse.up(button='middle'); page.wait_for_timeout(250)
             assert state(page)['cells'] == before
             assert state(page)[axis+'_steps'] != old_steps, (axis,old_steps,state(page)[axis+'_steps'])
-        page.screenshot(path=str(output/f'{name}-colour-clues.png'))
+            page.screenshot(path=str(output/f'{name}-colour-{axis}-clues.png'))
         passed('middle mouse moves long row/column clue windows and preserves cells')
         page.set_viewport_size({'width':1920,'height':1122}); page.wait_for_timeout(300)
         control(page,name='nav-album'); control(page,text='Blatt 03')
@@ -280,12 +285,14 @@ def exercise(pw, name, root, update, url, output, evidence):
 
 
 def main():
+    global DIAGNOSTIC_OUTPUT
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--update-build',type=Path,required=True)
     parser.add_argument('--browser',choices=['chromium','firefox','both'],default='both')
     args=parser.parse_args(); args.output.mkdir(parents=True,exist_ok=True)
+    DIAGNOSTIC_OUTPUT = args.output
     hosting = tempfile.TemporaryDirectory(prefix='picross-browser-host-')
     root = Path(hosting.name)/'site'
     shutil.copytree(args.build,root)
