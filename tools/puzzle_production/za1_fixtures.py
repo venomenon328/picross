@@ -30,7 +30,8 @@ def make(root, identifier, width, height, mode, repaired=False, colors=2):
              variants=[{"id": "area", "method": "area", "threshold": 128}], background="#ffffff",
              palette=[{"id": "ink", "rgb": "#202020"}] if mode == "mono" else
                      [{"id": key, "rgb": rgb} for key,rgb in
-                      (("red","#d52b2b"),("blue","#2858b8"),("green","#218121"),("gold","#e5aa21"),("violet","#912191"))[:colors]],
+                      (("red","#d52b2b"),("blue","#2858b8"),("green","#218121"),("gold","#e5aa21"),("violet","#912191"),
+                       ("teal","#218181"),("orange","#c86521"),("brown","#654321"),("pink","#c82165"))[:colors]],
              origin="Artificial ZA-1 test-only source", rights="Repository-owned test pixels only",
              briefing="Artificial fixture, no editorial catalog approval")
     source = Image.new("RGB", (width, height), "white")

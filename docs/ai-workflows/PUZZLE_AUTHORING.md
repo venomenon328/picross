@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 11 · 15.10.2026**
+**Version 0.5.0 · Dokumentrevision 12 · 15.10.2026**
 
 Version 0.5.0 ergänzt ausdrücklich die Paarlinienprofile und Schwierigkeit 0.2
 aus #139/B/C. Alte versiegelte 0.4.x-Pakete bleiben unter ihrem Linienvertrag
@@ -8,6 +8,8 @@ prüfbar; sie werden nicht umetikettiert. Dokumentrevision, Datei-SHA-256 und
 Repositorycommit binden den tatsächlich verwendeten Snapshot.
 Dokumentrevision 11 konkretisiert Profilwahl, Dateibindungen und Export im
 Produktionsablauf; die technischen Formate und Freigabekriterien bleiben gleich.
+Dokumentrevision 12 ergänzt die Zielunterstützung für bis zu acht Farben und den
+explizit beauftragten Rasterersatz nach dem ZA-1-Updatevertrag (#144).
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
@@ -410,9 +412,14 @@ Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und da
 
 1. Paket über `content/authoring/index.json` laden; ZIP-, Handoff-, Inventar- und Freigabebindung kontrollieren. Aktuellen `main` und vorhandene Arbeit prüfen, isolierten Arbeitsbranch verwenden. Keine fremden Änderungen aufnehmen.
 2. Vorliegende Produktionsbelege und echte Endfreigabe zuordnen. Kein zusätzliches routinemäßiges `inspect`: Der nachfolgende `export` prüft Eingang/Freigabe frisch und verifiziert seine geschriebenen Ausgaben selbst. Nur `technical=true` und `editorial_approved=true` erlauben den Export; Fehler stoppen. `inspect` separat nur zur Diagnose einer konkreten Lücke. Aktuelle Ergebnisse außen führen, versiegelte Originale nicht ändern.
-3. Produktions-ID unverändert als Runtime-ID verwenden. Motivname, kollisionsfreien Dateistamm/Save-Slot und numerische Runtime-Revision explizit wählen; bei neuen IDs gewöhnlich Revision 1. F01…F09 nicht umwidmen. ZA-1 unterstützt 1…50 pro Achse, Rechtecke, Mono und höchstens vier Vordergrundfarben; Paketrevision und Runtime-Revision bleiben getrennt.
+3. Produktions-ID unverändert als Runtime-ID verwenden. Motivname, kollisionsfreien Dateistamm/Save-Slot und numerische Runtime-Revision explizit wählen; bei neuen IDs gewöhnlich Revision 1. F01…F09 nicht umwidmen. ZA-1 unterstützt 1…50 pro Achse, Rechtecke, Mono und höchstens acht Vordergrundfarben; Paketrevision und Runtime-Revision bleiben getrennt.
 4. Kategorie-ID im äußeren Record und in der aktuellen Kategorienquelle abgleichen. `export` mit Paket, Endfreigabe, Name, Runtime-Revision, Stem, Slot sowie `--category-id <id> --categories content/categories.json` in ein neues temporäres Ziel ausführen. Erfolgsbericht und `inspection.json` binden; kein zusätzlicher Routineaufruf von `verify-export`. Ein bereits passend gebundener kategorisierter Export darf direkt dem Plan dienen. Kategorienlose Altexporte neu kategorisiert exportieren. Autorisierte manuelle Ableitungen benötigen weiterhin den gesonderten ZA-1-Vertrag samt tatsächlicher Autorisierung. Linienprofile verwenden Direkt-/Reparaturexport v2 beziehungsweise manuellen Export v3; Paarprofile verwenden auch bei manuellen Ableitungen Export v4. Keine automatische Ausnahme und keine manuelle Änderung der Exportversion. Das freigegebene Abschlussbild bleibt der bytegebundene Reveal. Matrix, Hinweise und Assets nicht manuell umschreiben.
 5. `plan --export <export> --checkout <arbeitscheckout>` ausführen, Kategorie-ID/aktuellen Anzeigenamen, konkrete Add-/Replace-Pfade und Registryänderungen auf Scope, Kollisionen und unveränderte Bestandsinhalte prüfen. Der Integrationsauftrag erlaubt anschließend `register` mit denselben Eingängen; keine zusätzliche routinemäßige Bestätigung verlangen. Ohne Auftrag beim Plan stoppen. Kein handgeschriebener Registryeintrag als Ersatz.
+   Bei ausdrücklich beauftragtem Ersatz einer bestehenden Fassung stattdessen
+   `plan-update` → `update` mit demselben Erwartungshash der bisherigen Definition
+   nach [ZA-1](../ZA1_ADAPTER.md) verwenden. Höhere Runtime-Revision, neue Paketrevision;
+   feste Identität/Slot/Kategorie und Revealbytes erhalten. Alte Saves bleiben
+   unberührt und gelten bei anderer Runtime-Revision als inkompatibel.
 6. Tatsächliche Definition/Reveal/Nutzungshinweise, `content/registry.json`, deren Runtime-Projektion und die Prüfkopie unter `content/packages/…` kontrollieren, einschließlich Kategorienprojektion und eindeutiger Zuordnung im Katalog. Identischer Wiederholungsaufruf darf `no-op` sein; Konflikte nicht überschreiben. Bei offenem Registrierungsjournal nur den dokumentierten Recoverypfad verwenden.
 7. **Für reine Rätselinhalte genügt die Adapter-/Dateiprüfung aus 4–6.** Keine obligatorischen Godot-Spielstarts, Teilstand-/Neustart-, Undo-/Save-, Abschluss-/Album-, Render- oder Windows-/PCK-Tests je Rätsel; keinen Product-Harness und keinen Buildauftrag automatisch starten. Die visuelle Raster-/Abschlussbildprüfung gehört bereits zur Produktion. Nur bei konkretem Befund eine gezielte zusätzliche Probe mit benanntem Zweck ausführen, isoliert von echten Saves. Allgemeine Spiel-/Exportregressionen gehören zu relevanten Codeänderungen. Keine zusätzlich manuell gestarteten Bestands-Replays, `check-registry`-/`sync-runtime`-Vollprüfungen oder wiederholten `register`-Aufrufe zur Bestätigung; interne Adapterprüfungen unverändert lassen. Nicht ausgeführte native Prüfungen als `nicht erforderlich: reine Inhaltsintegration` vermerken, niemals als bestanden.
 8. Arbeitsrecord mit einmaligen Registrierungs-/Prüfbelegen aktualisieren, vollständigen Diff separat selbst prüfen, committen/pushen und Draft-PR mit Head/Basis/Checks/offenen Gates erstellen. Reine Rätseldateien müssen im Auswahlbericht `content_only=true` ergeben; dann sind nur `docs` (Pfad-/Dateimodusprüfung) und `ci-required` Pflicht. Keine vollständige Testsuite zusätzlich lokal oder per CI wiederholen. Bei unerwartet breiter Auswahl die tatsächlich geänderten Pfade prüfen; notwendige Codeänderungen getrennt behandeln, nichts am Gate vorbeischleusen. Nur mit passender ausdrücklicher Mergefreigabe nach bestandenen Pflichtprüfungen mergen; danach tatsächlichen Main-/Mergecommit prüfen. Erst dann „im Spiel auf main integriert“ melden; kein Release/Deployment ableiten.

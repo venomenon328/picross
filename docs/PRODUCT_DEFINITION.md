@@ -50,6 +50,14 @@ Die bestätigte [Vollsichtstrategie VS-D01](VS1_DECISION.md) setzt 40×40 als re
 
 Ein größeres Rätsel darf sich über mehrere Sitzungen erstrecken. Die Bedienung und Fortschrittsspeicherung müssen diesen Nutzungsfall von Anfang an berücksichtigen.
 
+Eigentümerauftrag vom 15.10.2026 / [#144](https://github.com/venomenon328/picross/issues/144):
+Mehr als vier Vordergrundfarben werden unterstützt. Der aktuelle Zielvertrag
+begrenzt sie auf acht plus Leer, passend zum Produktionskern. Farbwahl und
+Rasterhinweise müssen alle unterstützten IDs unverändert zugänglich halten.
+Der [ZA-1-Updatevertrag](ZA1_ADAPTER.md) erlaubt ausdrücklich beauftragten Ersatz
+eines Rasters unter gleicher ID und höherer Runtime-Revision; alte Spielstände
+werden dabei nicht stillschweigend auf eine geänderte Definition übertragen.
+
 ### 3.2 Lösbarkeit und Schwierigkeit
 
 Die Rätsel sollen eindeutig und vollständig deduktiv lösbar sein. Notwendiges Raten beziehungsweise das versuchsweise Durchspielen von Annahmen mit anschließendem Zurückspringen ist ausgeschlossen. Eindeutigkeit allein reicht nicht als Nachweis dieses Versprechens.
