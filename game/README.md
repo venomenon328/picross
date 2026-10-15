@@ -197,6 +197,10 @@ Für den Abschluss genügen alle richtigen Füllungen ohne Zusatzfüllungen.
 Hintergrund muss nicht vollständig ausgekreuzt sein. Name und Ergebnisbild erscheinen
 erst nach bestätigtem Abschluss. Die registrierte Definition bindet Motivname und
 freigegebenes Ergebnisbild; vorher bleibt nur die eigene Füllminiatur sichtbar.
+Beim neuen Abschluss treten Raster, Hinweise und Werkzeuge zurück. Deine Füllungen bewegen sich zur Papiermitte, werden zu lückenlosen Farbflächen und gehen in das fertige Bild über. Die Folge dauert etwa 2,15 Sekunden; der Spielstand ist bereits gespeichert. Danach erscheinen Motivname und „Rätsel zurücksetzen“. Der Titel bleibt „Blatt NN · W × H“, der Buchreiter führt zur Sammlung.
+
+Bereits gelöste Blätter öffnen direkt das fertige Bild. Fenster- oder UI-Größenänderung und Fokusverlust beenden eine laufende Enthüllung; sie wird danach nicht wiederholt. Bestätigtes Zurücksetzen unter dem Bild öffnet dasselbe Blatt leer. Abbrechen erhält den Stand. Der Reset einer Katalogkarte bleibt im Katalog. Nach erneutem Lösen läuft die Enthüllung wieder.
+
 Die früheren 100×100-Blätter werden nicht mehr angeboten.
 
 ## Entwicklung und technische Prüfung

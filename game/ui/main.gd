@@ -8,6 +8,7 @@ const ChalkboardBoard = preload("res://ui/chalkboard_board.gd")
 const FullViewBoard = preload("res://ui/full_view_board.gd")
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
+const Completion = preload("res://ui/completion.gd")
 const SaveStore = preload("res://model/save_store.gd")
 const WebStorage = preload("res://model/web_storage.gd")
 var web_lifecycle_callback: JavaScriptObject
@@ -44,14 +45,16 @@ var work_repair_button: Button
 var session: Session
 var board: Board
 var mini: Miniature
-var reveal_view: Reveal
+var reveal_view: Completion
 var album: CatalogView
 var catalog_error: String = ""
 var session_indices: Dictionary = {}
 var reset_id: String = ""
+var reset_origin: String = "album"
 var repair_id: String = ""
 var work: Control
-var ending: VBoxContainer
+var ending: Control
+var completion_reset: BookButton
 var title: Label
 var album_button: Button
 var undo_button: Button
@@ -209,7 +212,7 @@ func _build() -> void:
 	reset_dialog.title = "Arbeitsstand zurücksetzen?"
 	reset_dialog.dialog_text = "Nur das ausgewählte Blatt wird vollständig zurückgesetzt."
 	reset_dialog.confirmed.connect(_reset_selected)
-	reset_dialog.canceled.connect(func() -> void: reset_id = "")
+	reset_dialog.canceled.connect(_cancel_reset)
 	add_child(reset_dialog)
 	reset_dialog.get_ok_button().text = "Zurücksetzen"
 	reset_dialog.get_cancel_button().text = "Abbrechen"
@@ -222,16 +225,19 @@ func _build() -> void:
 	repair_dialog.get_cancel_button().text = "Abbrechen"
 	_build_work()
 	_build_information()
-	ending = VBoxContainer.new()
-	ending.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	ending = Control.new()
+	ending.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	page.add_child(ending)
-	completion_title = label("", 28)
-	ending.add_child(completion_title)
-	ending.add_child(label("Prototyp ohne Wertung · Dein Bild ist im Album.", 18))
-	reveal_view = Reveal.new()
-	reveal_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	reveal_view = Completion.new()
 	ending.add_child(reveal_view)
-	ending.add_child(button("Zurück ins Album", show_album))
+	reveal_view.progressed.connect(_completion_progress)
+	reveal_view.finished.connect(_completion_finished)
+	completion_title = label("", 28)
+	completion_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	completion_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ending.add_child(completion_title)
+	completion_reset = _icon_button("reset", func() -> void: _ask_reset_id(str(session.definition.id), "ending"), ending)
+	completion_reset.tooltip_text = "Rätsel zurücksetzen"
 
 	minimum_message = label("Mindestens 1280 × 720 logische Fensterfläche benötigt.\nBitte das Fenster vergrößern oder die Anzeigeskalierung prüfen.", 20)
 	minimum_message.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -307,6 +313,7 @@ func _activate_session(index: int) -> bool:
 	_cancel_interaction()
 	if not _flush_current(): return false
 	if session != null and _puzzle_view_active(): session.view_state = board.capture_view()
+	reveal_view.clear()
 	session = sessions[index]
 	board.session = session
 	_layout_book()
@@ -333,8 +340,7 @@ func show_album() -> void:
 	stress_label.hide()
 	title.text = "Rätselkatalog"
 	# Hidden completion views must release their textures as well as old cards.
-	reveal_view.payload = {}
-	reveal_view.solved = []
+	reveal_view.clear()
 	album.present(sessions, slot_status, slot_errors, catalog_error, str(session.definition.id) if session != null else "")
 	_scale_labels(album)
 	_update_status()
@@ -346,10 +352,13 @@ func open_puzzle() -> void:
 	album.hide()
 	album.suspend()
 	album_button.show()
+	work.modulate.a = 1
+	surface.work_alpha = 1
 	work.visible = not session.completed
 	ending.visible = session.completed
 	stress_label.visible = session.definition.get("stress", false)
-	title.text = session.album_title()
+	title.text = session.neutral_title()
+	completion_title.text = session.album_title() if session.completed else ""
 	_layout_book()
 	refresh()
 
@@ -371,16 +380,55 @@ func refresh() -> void:
 	layout_warning.visible = not layout_warning.text.is_empty()
 	undo_button.disabled = session.gesture.active or session.player.cursor == 0
 	redo_button.disabled = session.gesture.active or session.player.cursor == session.player.history.size()
-	if session.completed and work.visible:
+	if session.completed and (work.visible or ending.visible) and not reveal_view.active:
 		work.hide()
 		ending.show()
-		title.text = session.album_title()
-		_layout_book()
-	completion_title.text = session.album_title() if session.completed else ""
-	reveal_view.payload = session.reveal()
-	reveal_view.solved = session.definition.solution if session.completed else []
-	reveal_view.palette = session.definition.palette
-	reveal_view.queue_redraw()
+		completion_title.text = session.album_title()
+		_layout_completion()
+		reveal_view.finish()
+		surface.work_visible = false
+		surface.queue_redraw()
+	elif not session.completed:
+		reveal_view.clear()
+
+func _layout_completion() -> void:
+	if reveal_view == null or session == null: return
+	var paper: Rect2 = surface.material_rect()
+	var u := ui_scale
+	var left := paper.position.x + 100*u
+	var width := paper.size.x - 200*u
+	var top := paper.position.y + maxf(paper.size.y*0.039+57*u, 94*u)
+	if status_label.visible:
+		top = maxf(top, paper.position.y+85+78*u+(56*u if work_repair_button.visible else 0.0))
+	_place(ending, Rect2(Vector2.ZERO, size))
+	_place(reveal_view, Rect2(Vector2.ZERO, size))
+	completion_title.size = Vector2(width, 0)
+	var caption_height := completion_title.get_minimum_size().y
+	var bottom := paper.end.y - 68*u
+	_place(completion_reset, Rect2(Vector2(paper.get_center().x-22*u,bottom-44*u),Vector2.ONE*44*u))
+	_place(completion_title, Rect2(Vector2(left,bottom-56*u-caption_height),Vector2(width,caption_height)))
+	var bounds := Rect2(Vector2(left,top),Vector2(width,maxf(1,completion_title.position.y-16*u-top)))
+	var matrix: Array = []
+	if session.completed:
+		for y: int in range(session.player.height):
+			matrix.append(session.player.cells.slice(y*session.player.width,(y+1)*session.player.width))
+	reveal_view.configure(session.reveal(),matrix,session.definition.palette,bounds)
+
+func _completion_progress(work_alpha: float, caption_alpha: float) -> void:
+	work.modulate.a = work_alpha
+	surface.work_alpha = work_alpha
+	surface.queue_redraw()
+	completion_title.modulate.a = caption_alpha
+	completion_reset.modulate.a = caption_alpha
+	completion_reset.disabled = reveal_view.active
+
+func _completion_finished() -> void:
+	work.hide()
+	work.modulate.a = 1
+	surface.work_alpha = 1
+	surface.work_visible = false
+	surface.queue_redraw()
+	board.marks.hide_fills = false
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and board != null:
@@ -389,7 +437,28 @@ func _notification(what: int) -> void:
 		leave_app()
 
 func _on_commit() -> void:
+	# Capture before saving: a new error card may change the board layout.
+	var animate: bool = session.completed and work.visible and not reveal_view.active
+	var origin: Rect2
+	var commands: Array = []
+	if animate:
+		board.clear_effects()
+		board.preview.clear()
+		board.marks.sync()
+		origin = Rect2(board.position+board.view.origin,Vector2(session.player.width,session.player.height)*board.view.cell_size)
+		for i: int in range(session.player.cells.size()):
+			if session.player.cells[i] <= 0: continue
+			var command: Array = board.marks.paint_command(i,session.player.cells[i],23,1.0)
+			if not command.is_empty():
+				command[1].position -= board.view.origin
+				commands.append(command)
 	_save_current()
+	if animate:
+		ending.show()
+		completion_title.text = session.album_title()
+		_layout_completion()
+		board.marks.hide_fills = true
+		reveal_view.begin(origin,commands,board.marks.ink_material)
 
 func _puzzle_view_active() -> bool:
 	# An internal session on the catalog is not an opened puzzle. Information
@@ -454,16 +523,21 @@ func _update_status() -> void:
 	if work_repair_button != null:
 		work_repair_button.visible = state in ["recovered", "backup_invalid"] and not album.visible
 		work_repair_button.text = "Backup erneuern" if state == "backup_invalid" else "Backup zum Speichern übernehmen"
-	if work != null and work.visible and (previous_visibility != status_label.visible or previous_repair != work_repair_button.visible):
+	if work != null and (work.visible or ending.visible) and (previous_visibility != status_label.visible or previous_repair != work_repair_button.visible):
 		_layout_book()
 
 func _ask_reset() -> void:
 	if session != null: _ask_reset_id(str(session.definition.id))
 
-func _ask_reset_id(id: String) -> void:
+func _cancel_reset() -> void:
+	reset_id = ""
+	reset_origin = "album"
+
+func _ask_reset_id(id: String, origin: String = "album") -> void:
 	if not session_indices.has(id): return
 	_cancel_interaction()
 	reset_id = id
+	reset_origin = origin
 	reset_dialog.dialog_text = sessions[int(session_indices[id])].album_title() + " vollständig zurücksetzen? Nur dieses Blatt wird verändert."
 	reset_dialog.popup_centered()
 
@@ -491,8 +565,12 @@ func _reset_selected() -> void:
 		board.restore_view(session.view_state)
 		session.view_state = board.capture_view()
 		save_error = ""
-	reset_id = ""
-	show_album()
+	var reopen := reset_origin == "ending"
+	_cancel_reset()
+	if reopen:
+		select_puzzle(index)
+	else:
+		show_album()
 
 func _ask_repair() -> void:
 	if session != null: _ask_repair_id(str(session.definition.id))
@@ -767,6 +845,7 @@ func _text_button(caption: String, action: Callable) -> BookButton:
 func _cancel_interaction() -> void:
 	BookButton.dismiss_all(get_tree())
 	if board == null: return
+	if reveal_view != null and reveal_view.active: reveal_view.finish()
 	board.cancel_gesture()
 	board.clear_pointer_hover()
 	if mini != null:
@@ -780,6 +859,7 @@ func show_information(section: String = "settings") -> void:
 	work.hide()
 	album.hide()
 	ending.hide()
+	reveal_view.clear()
 	information.show()
 	album_button.hide()
 	_information_section(section)
@@ -834,6 +914,7 @@ func _layout_book() -> void:
 	if size.x < 1280 or size.y < 720:
 		return
 	laying_out = true
+	if reveal_view != null and reveal_view.active: reveal_view.finish()
 	BookButton.dismiss_all(get_tree())
 	var u: float = ui_scale
 	var material: Rect2 = surface.material_rect()
@@ -903,7 +984,7 @@ func _layout_book() -> void:
 	surface.wells.assign([surface.frame_rect(tools_scroll.get_rect())])
 	_place(album_button,Rect2(o+Vector2(w/320,h*7/72),Vector2.ONE*hit))
 	# The shared heading changes font with page context, never globally.
-	if work.visible or album.visible:
+	if work.visible or album.visible or ending.visible:
 		title.add_theme_font_override("font",WORK_TITLE_FONT)
 	else:
 		var heading: FontVariation = FontVariation.new()
@@ -916,7 +997,7 @@ func _layout_book() -> void:
 	album.ui_scale = u
 	_place(album,Rect2(o+Vector2(90,100)*u,Vector2(w-180*u,h-155*u)))
 	album._layout_cards()
-	_place(ending,Rect2(o+Vector2(100,120),Vector2(w-200,h-180)))
+	if ending != null and ending.visible: _layout_completion()
 	_place(information,Rect2(Vector2.ZERO,size))
 	_place(actions["nav-work"],Rect2(o+Vector2(100,110),Vector2.ONE*hit))
 	_place(information.get_node("settings-access"),Rect2(o+Vector2(180,110),Vector2(210*u,hit)))

@@ -232,14 +232,33 @@ def exercise(pw, name, root, update, url, output, evidence):
         game_viewport(page,1920,1080)
         control(page,name='nav-album'); control(page,text='Blatt 03')
         draw(page,(0,2),(4,2)); wait(page,'picrossProbe.ending && picrossProbe.completed')
-        control(page,text='Zurück ins Album')
+        wait(page,'!picrossProbe.ea_active && !picrossProbe.ea_processing && picrossProbe.ea_caption_alpha===1')
+        assert state(page)['ea_title'].startswith('Blatt 03') and state(page)['ea_art']
+        saved(page)
+        completed_slot = state(page)['slots'][2]
+        control(page,name='reset',tooltip='Rätsel zurücksetzen')
+        control(page,text='Abbrechen',dialog=True)
+        assert state(page)['ending'] and state(page)['slots'][2] == completed_slot
+        page.reload(); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
+        control(page,text='Blatt 03')
+        assert state(page)['ending'] and not state(page)['ea_active'] and not state(page)['ea_processing']
+        assert state(page)['slots'][2] == completed_slot
+        foreign_slot = state(page)['slots'][0]
+        control(page,name='reset',tooltip='Rätsel zurücksetzen')
+        control(page,text='Zurücksetzen',dialog=True); saved(page)
+        assert state(page)['work'] and not state(page)['completed'] and not state(page)['ea_art']
+        assert state(page)['slots'][2]['history'] == [] and state(page)['slots'][0] == foreign_slot
+        draw(page,(0,2),(4,2)); wait(page,'picrossProbe.ending && picrossProbe.completed')
+        assert state(page)['ea_active']
+        passed('EA completion, late caption, neutral heading, cancel, durable browser reload, origin-bound reset and repeated animation')
+        control(page,name='nav-album')
         control(page,text='Blatt 05')
         for index in range(8):
             control(page,name=f'color-{index+1}')
             draw(page,(index,2))
         wait(page,'picrossProbe.ending && picrossProbe.completed'); saved(page)
         passed('mono and eight-colour completion through real mouse events')
-        control(page,text='Zurück ins Album'); control(page,text='Blatt 06')
+        control(page,name='nav-album'); control(page,text='Blatt 06')
         assert state(page)['dimensions'] == [50,30] and state(page)['fit']
         control(page,name='color-8'); draw(page,(2,2)); assert state(page)['cells'][102] == 8
         passed('50x30 rectangle, colour ID 8 and full-grid fit')

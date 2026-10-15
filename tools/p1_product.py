@@ -30,6 +30,7 @@ import hc92_verify
 import perf_b_resources
 import za1_product
 import kat2_product
+import ea_product
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 
 EXPECTED_PROJECT_NAME = "picross · P1"
@@ -476,6 +477,8 @@ def main(argv: list[str] | None = None) -> int:
                     vs2_result = python_phase("current-vs2-complete", vs2_future.result)
                 evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
                 selected += kat2_files
+                evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, phase, host)
+                selected += ea_files
                 evidence.scope_done("integration")
             if args.pilots:
                 evidence.scope_start("pilots")
@@ -525,10 +528,13 @@ def main(argv: list[str] | None = None) -> int:
                       "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
             evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2", "ea") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
             if args.visual:
                 evidence.report["visual"]["vs2"]["hc92"]["retained_samples"] = python_phase(
                     "retained-hc92-font-samples", lambda: hc92_verify.verify_retained(evidence.technical / "selected/hc92-renders"))
+            required_ea = {str(p.relative_to(output)) for p in selected if p.parent.name == "ea"}
+            if not required_ea <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
+                raise toolchain.PreflightError("Required EA motion/native evidence missing from technical delivery")
             required_kat2 = {str(p.relative_to(output)) for p in selected if p.parent.name == "kat2"}
             if not required_kat2 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
                 raise toolchain.PreflightError("Required KAT-2 evidence missing from technical delivery")

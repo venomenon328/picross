@@ -307,8 +307,8 @@ func test_scene() -> void:
 	await process_frame
 	await process_frame
 	check(app.ending.visible and not app.work.visible and app.completion_title.text == fixture.reveal.name, "real completion scene and name")
-	check(app.title.get_theme_font("font").get_font_name() == "Fraunces", "V3 earned completion title retains Fraunces")
-	check(app.ending.get_global_rect().end.y <= 697, "1280x720 completion leaves footer visible")
+	check(app.title.get_theme_font("font") == app.WORK_TITLE_FONT and app.title.text == app.session.neutral_title(), "EA earned page keeps neutral Bakso heading")
+	check(app.completion_reset.get_global_rect().end.y <= 697, "1280x720 completion leaves footer visible")
 	check(not app.reveal_view.payload.is_empty(), "real completion artwork")
 	app.show_album()
 	check(app.title.get_theme_font("font") == app.WORK_TITLE_FONT, "KB completed catalog explicitly uses original Bakso")
