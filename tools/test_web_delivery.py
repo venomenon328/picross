@@ -11,6 +11,7 @@ import zipfile
 import build_web_player
 import deploy_web
 import web_bundle
+from p1_product import player_extras
 
 
 class Delivery(unittest.TestCase):
@@ -45,6 +46,22 @@ class Delivery(unittest.TestCase):
 
     def test_nested_manifest_is_not_hidden(self):
         (self.root/'releases'/self.build/'build-manifest.json').write_text('{}')
+        with self.assertRaises(ValueError): web_bundle.validate(self.root)
+
+    def test_current_license_inputs_and_legacy_kb_boundary(self):
+        source = Path(__file__).resolve().parents[1]
+        licenses = {name.removeprefix('licenses/') for name in player_extras(source, self.root)
+                    if name.startswith('licenses/')}
+        self.assertEqual(licenses, web_bundle.LICENSES | web_bundle.ADDITIONAL_LICENSES)
+        self.assertIn('KB-168-NOTICE.txt', licenses)
+        # The pre-KB v1 fixture remains a valid rollback bundle.
+        web_bundle.validate(self.root)
+        notice = self.root/'releases'/self.build/'licenses/KB-168-NOTICE.txt'
+        notice.write_bytes((source/'game/art/book/KB-168-NOTICE.txt').read_bytes())
+        self.manifest['files'] = web_bundle.inventory(self.root)
+        self.write_manifest()
+        web_bundle.validate(self.root)
+        notice.write_bytes(b'changed')
         with self.assertRaises(ValueError): web_bundle.validate(self.root)
 
     def test_injected_paths_hashes_and_schema(self):
