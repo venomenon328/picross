@@ -131,7 +131,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
         auth = authorization(package, manual_authorization)
         require((auth["record"]["format"] == IMPORT_AUTH_FORMAT) == edited_import and
                 (auth["record"]["format"] == "picross-manual-authorization-v3") == color_import and
-                (auth["record"]["format"] == "picross-manual-authorization-v4") == approved_color,
+                (auth["record"]["format"] in ("picross-manual-authorization-v4", "picross-manual-authorization-v5")) == approved_color,
                 "Manual authorization/source version mismatch")
     else:
         require(manual_authorization is None, "Manual authorization requires a manual source")
