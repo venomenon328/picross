@@ -1,0 +1,100 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r08",
+  "repo_commit": "582e706c0d58be9119314ba3ae6286c241020d6a",
+  "state": "blocked",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 11,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "97b09e7225f07e13483d142f78eebac9a9ba3b5a3b7fbf553d273630d1e32aea"
+  },
+  "brief": "brief.md",
+  "category_id": "gebaeude-bauwerke",
+  "approved_parameters": [],
+  "proposed_parameters": [
+    {
+      "width": 30,
+      "height": 35,
+      "mode": "color",
+      "foreground_colors": 5,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        30,
+        35
+      ]
+    }
+  ],
+  "reveal": {
+    "file": "images/C-r02.png",
+    "sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "revision": "C-r02",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "images/C-r02.provenance.json"
+  },
+  "motif": {
+    "file": "images/MR-r07.png",
+    "sha256": "4cf932f1f4a3c664c874e83d6780dc196c10a05788ec76312c7e2e989a738620",
+    "revision": "MR-r07",
+    "approval": null,
+    "derived_from_reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "provenance": "images/MR-r07.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "production/revised",
+    "variant": "revised",
+    "candidate_id": "ca26f8b1456a071aee329c05c967db200b522d4c43f0ceb4caabcc33cab9529b",
+    "matrix_hash": "54a00d734fa10f30fbfbea5e5610be4bf09b24b699310581c4997bd0f958a8cc",
+    "logic_hash": "167ed70217816a0da2b6cf3aef64130db79f4e35c62cb9306ce4d0b7e8f5f0b2",
+    "proof": "production/revised/revised-proof.json",
+    "verification": "proof-verification.json"
+  },
+  "manual_edit_record": "manual-edit-record.json",
+  "origin_verification": "origin-verification.json",
+  "repair": null,
+  "difficulty": "difficulty.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "fadc6fdb9fcf9760041ba6009cf37a178231ba2101834da92bd6735fb11921f6"
+  },
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "blocked"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json",
+    "provenance": "origin-verification.json",
+    "logic": "proof-verification.json",
+    "frame": "origin-verification.json",
+    "visual": "visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "visual-review.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "target_export: five foreground colors; adapter/runtime extension #144 not implemented",
+    "motif and final_editorial: new roof-filled revision awaits actual human acceptance"
+  ],
+  "next_action": "Review and accept exact revised motif/raster; implement #144 before target integration and final acceptance.",
+  "authorization": "request.txt",
+  "test_only": false
+}

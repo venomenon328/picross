@@ -36,5 +36,9 @@
   "base_commit": "de0127db75411ac90105bc59621a96f755813eaa",
   "previous_integrated_revision": "r05",
   "previous_runtime_revision": 1,
-  "runtime_unchanged": true
+  "runtime_unchanged": true,
+  "superseded_by": {
+    "revision": "r08",
+    "record": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r08/record.json"
+  }
 }
