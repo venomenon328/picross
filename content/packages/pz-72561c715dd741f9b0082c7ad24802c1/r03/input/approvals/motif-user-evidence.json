@@ -1,0 +1,9 @@
+{
+  "actor": "user",
+  "motif_sha256": "e016b71b81ad31376444ad139b803513a4f669e7ca0360cb32c71cc5f6ab2f73",
+  "parameter_proposal_sha256": "c0aebaf0a79e0b41c183e643a1966964429bf8aef3328c97a26254c470b652f8",
+  "recorded_at_utc": "2026-10-15T15:40:57.072512+00:00",
+  "source_commit": "4fe8e42d3b2751feba7df4a03ad1b5cd1f354e7e",
+  "statement": "Ich gebe die Motivvorlage motif/MA-r01.png · MA-r01 frei; Parameter: parameterkorridor.json · C1, 28–34 × 28–34, farbig, bevorzugt 3 Farben. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "timestamp_meaning": "UTC recording time; original message timestamp not exposed"
+}
