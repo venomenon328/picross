@@ -416,8 +416,11 @@ func _layout_completion() -> void:
 
 func _completion_progress(work_alpha: float, caption_alpha: float) -> void:
 	work.modulate.a = work_alpha
+	if work_alpha <= 0: work.hide()
 	surface.work_alpha = work_alpha
 	surface.queue_redraw()
+	completion_title.visible = caption_alpha > 0
+	completion_reset.visible = caption_alpha > 0
 	completion_title.modulate.a = caption_alpha
 	completion_reset.modulate.a = caption_alpha
 	completion_reset.disabled = reveal_view.active
@@ -442,6 +445,7 @@ func _on_commit() -> void:
 	var origin: Rect2
 	var commands: Array = []
 	if animate:
+		BookButton.dismiss_all(get_tree())
 		board.clear_effects()
 		board.preview.clear()
 		board.marks.sync()
