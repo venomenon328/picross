@@ -17,6 +17,11 @@ func digest(bytes: PackedByteArray) -> String:
 	hash.update(bytes)
 	return hash.finish().hex_encode()
 
+func texture_digest(texture: Texture2D) -> String:
+	var image: Image = texture.get_image()
+	image.convert(Image.FORMAT_RGBA8)
+	return digest(image.get_data())
+
 func _initialize() -> void:
 	call_deferred("run")
 
@@ -239,6 +244,9 @@ func captures() -> void:
 		var name: String = "hf-rectangle-z%d.png" % wish
 		root.get_texture().get_image().save_png(output.path_join(name))
 		records.append({"kind":"reported", "file":name, "wish":wish, "cell":b.view.cell_size, "reserve":[b.reserve_slots.x,b.reserve_slots.y], "demand":[b.max_hints.x,b.max_hints.y], "overlay":not b.clue_hover_axis.is_empty()})
+	b.size = Vector2(100,100)
+	b._layout()
+	check(not b.layout_valid and b.clue_hover_axis.is_empty() and b.clue_tooltip_rect == Rect2(), "invalid geometry has no invisible overlay hit box")
 
 func run() -> void:
 	output = OS.get_environment("HF149_OUTPUT")
@@ -255,7 +263,7 @@ func run() -> void:
 	else:
 		if stage != "capture": geometry()
 		await captures()
-	var resources: Dictionary = {"font_sha256":digest(app.board.clue_font().data), "heading_sha256":digest(app.board.ClueOverlay.TITLE_SOURCE.data), "frame_rgba_sha256":digest(app.board.ClueOverlay.FRAME.get_image().get_data()), "paper_rgba_sha256":digest(app.board.ClueOverlay.PAPER.get_image().get_data())}
+	var resources: Dictionary = {"font_sha256":digest(app.board.clue_font().data), "heading_sha256":digest(app.board.ClueOverlay.TITLE_SOURCE.data), "frame_rgba_sha256":texture_digest(app.board.ClueOverlay.FRAME), "paper_rgba_sha256":texture_digest(app.board.ClueOverlay.PAPER)}
 	var report: Dictionary = {"stage":stage, "checks":checks, "failures":failures, "records":records, "resources":resources, "display":DisplayServer.get_name(), "os":OS.get_name(), "dpi":DisplayServer.screen_get_dpi(), "screen_scale":DisplayServer.screen_get_scale(), "screen":[DisplayServer.screen_get_size().x,DisplayServer.screen_get_size().y], "renderer":RenderingServer.get_video_adapter_name()}
 	FileAccess.open(output.path_join("hf-"+(stage if not stage.is_empty() else "native")+".json"),FileAccess.WRITE).store_string(JSON.stringify(report))
 	print("HF149_",stage.to_upper() if not stage.is_empty() else "NATIVE", "_", "OK" if failures == 0 else "FAILED", " checks=",checks," failures=",failures)
