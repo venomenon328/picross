@@ -81,6 +81,9 @@ Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 | Produktionswerkzeug-/Adaptercode, technische Fixtures oder Pilotprobes | Allgemeine Fachtests mit festen synthetischen Eingängen; ausgewählte allgemeine Spiel-/Pixel-/Exportregressionen. Keine echten Rätselreplays. |
 | CI/Harness/Toolchain oder nicht zugeordneter Codepfad | Alle aktuellen Bereiche einschließlich Preflight |
 
+Jede Product-Auswahl ergänzt auch den WEB-1-Export mit Browser-/Persistenz- und
+isolierter SSH-Referenzprüfung. Der reine Inhaltspfad bleibt davon ausgenommen.
+
 
 **Schlanker Inhaltspfad:** Ausschließlich `content/categories.json`,
 `content/registry.json`, `content/authoring/index.json`/`README.md`,

@@ -37,7 +37,8 @@ def main():
             'environment':'isolated loopback POSIX/OpenSSH', 'scenarios':[], 'status':'running'}
     def passed(label):
         report['scenarios'].append(label); print('SSH PASS',label,flush=True)
-    with tempfile.TemporaryDirectory(prefix='picross-ssh-') as temporary:
+    # AuthorizedKeysFile must have safe ancestors under StrictModes (not /tmp).
+    with tempfile.TemporaryDirectory(prefix='picross-ssh-', dir=Path.home()) as temporary:
         work=Path(temporary); root=work/'site'/'picross-web'; root.mkdir(parents=True)
         (root/'.picross-web').write_text('picross-web-v1\n')
         for name in ('client','host'):
@@ -52,7 +53,7 @@ PidFile {work}/pid
 AuthorizedKeysFile {work}/client.pub
 PasswordAuthentication no
 KbdInteractiveAuthentication no
-UsePAM no
+UsePAM yes
 StrictModes yes
 AllowUsers {getpass.getuser()}
 Subsystem sftp internal-sftp
@@ -148,6 +149,7 @@ Subsystem sftp internal-sftp
                 if pidfile.exists(): subprocess.run(['sudo','kill',pidfile.read_text().strip()],check=False)
                 process.wait(timeout=10)
             log.close()
+            report['sshd_diagnostics'] = log.name and (work/'sshd.log').read_text().replace(str(work),'<reference>')
             (args.output/'ssh-report.json').write_text(json.dumps(report,indent=2)+'\n')
 
 
