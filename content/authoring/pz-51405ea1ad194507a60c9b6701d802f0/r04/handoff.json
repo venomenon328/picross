@@ -1,0 +1,121 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        146,
+        5,
+        1327,
+        999
+      ],
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 23,
+      "method": "area",
+      "mode": "mono",
+      "width": 28
+    },
+    {
+      "actual_crop": [
+        146,
+        5,
+        1327,
+        999
+      ],
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 25,
+      "method": "area",
+      "mode": "mono",
+      "width": 30
+    }
+  ],
+  "authorization": "Aktueller Nutzerauftrag: MA-r01 und Parameterkorridor freigegeben, Standardauftrag3 vollständig bis zur Endabnahmevorlage; Repositoryablage und Merge des Ablage-PRs nach Pflichtprüfungen. Endabnahme noch nicht erteilt.",
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "production/30x25",
+    "candidate_id": "5ab3843055cecbeb7156e3a8444d1fbdf00b77a8c9d53ed5de3e6892d20ca211",
+    "certification": null,
+    "logic_hash": "fd1bcd282618684a4015001e93ec446c3975548e5c72439026934a767146a0dd",
+    "matrix_hash": "cb53f279e1499f6a85e3a9b669de3bae888221e3f7adaf42c5da88441fc80d07",
+    "proof": "production/30x25/area-144-proof.json",
+    "source_type": "import",
+    "variant": "area-144",
+    "verification": "fresh-proof-verification.json"
+  },
+  "category_id": "haushalt-alltag",
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "difficulty.json",
+    "frame": "origin-verification.json",
+    "logic": "fresh-proof-verification.json",
+    "motif": "motif-approval.json",
+    "provenance": "origin-verification.json",
+    "reveal_approval": "reveal-approval.json",
+    "reveal_consistency": "visual-review-r04.json",
+    "visual": "visual-review-r04.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "be3b751a9d27a6c2ac211d223d12c0738664c656c904804990a84d4de235f63f"
+  },
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "7754db5a3214634db0eb41a4cbb5ed8496b2cce812fc0ec9ae2102d017a388f2",
+    "file": "motif/MA-r01.png",
+    "provenance": "motif-provenance.json",
+    "revision": "MA-r01",
+    "sha256": "6f6ec5ec68b7c039296566b6dfd4a5f39c5b6a0dd24f203abc2bd107f11c0cb0"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "origin-verification.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": "parameters.json",
+  "puzzle_id": "pz-51405ea1ad194507a60c9b6701d802f0",
+  "repair": null,
+  "repo_commit": "a54316d0cbb1cc1ec53ac63d22d6667c4f4640a4",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "color_count_exact": true,
+    "foreground_colors": 1,
+    "height": 20,
+    "mode": "mono",
+    "width": 30
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveal/B-r01.png",
+    "provenance": "reveal-provenance.json",
+    "revision": "B-r01",
+    "sha256": "7754db5a3214634db0eb41a4cbb5ed8496b2cce812fc0ec9ae2102d017a388f2"
+  },
+  "revision": "r04",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}
