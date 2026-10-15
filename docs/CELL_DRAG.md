@@ -15,8 +15,8 @@ Die Spezifikationsbasis ist `main@3b64e1368735a1e9221389a48c51eaed0b881515`.
 Die Umsetzung führt PR #145 nach Abgleich und konfliktfreier Integration von
 `main@662453af36befdd4b61041d69f0229075f949a3e` fort. Laufzeit und
 [Spielanleitung](../game/README.md) sind umgestellt; [Prüfzuordnung](CELL_DRAG_VERIFICATION.md),
-Issue und PR trennen automatisierte Nachweise von noch offenen nativen Windows-/
-Eigentümergates. Dieses Dokument ersetzt ausschließlich
+Issue und PR trennen CI, native Windows-Nachweise und Eigentümergates.
+Dieses Dokument ersetzt ausschließlich
 die folgenden entgegenstehenden Sollformulierungen; historische Nachweise bleiben
 an ihren jeweiligen Commit gebunden:
 

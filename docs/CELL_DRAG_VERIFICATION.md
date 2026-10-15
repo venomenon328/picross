@@ -32,7 +32,7 @@ transiente Cursor-/Darstellungsdaten; kein neues Savefeld oder Historyeintrag.
 | ZR-A01/A03/A05 | `zr_cases.gd`: 30×30 und beide Rechtecke, vier Richtungen, Ziele X/1/8, Sprünge, elastischer Rückzug, asymmetrisches Clamping, Gleichstand, echte/projizierte Starttreffer, Vorbelegungsschutz, geometrische 26, atomare History und exaktes Undo/Redo. G1-/GP48-Regressionen bleiben. |
 | ZR-A02 | `capture.gd` im bestehenden Axis-Pfad: drei gemeinsame Client-/UI-Konfigurationen, kleiner/großer angebotener Zoom, Subzellbewegung, Sidebar, alle Ränder/Ecken einschließlich Außenposition. Native Glyphenpixel, transparente Ecken/Fläche und vollständige Konturhülle gegen separat gerenderten Untergrund; drei Vollkontexte und sechs unveränderte Randdetails. Diese GPU-Bilder sind keine OS-Zustellungsprüfung. |
 | ZR-A04/A07 | `zr_cases.gd`: tatsächlicher Viewport-Ereignisweg, beide Tasten/vier Richtungen, Mouse-Up ohne letztes Motion, finale Miniatur/Änderungen/Effektrichtung An/Aus, Release über Undo ohne Buttonaktion, verlorene Maske ohne Nachholen, frisches Down, valide Schema-1-History ohne transiente Felder. Bestehende ZS2-, H1-, Save-/Recovery-, Prozess-/500-Aktionen- und PCK-Prüfungen nach CI-Policy. |
-| ZR-A06 | Separater technischer nativer Windows-Eingabenachweis am gebundenen Export; **offen**, nicht aus SubViewport, Headless-Start, Preflight oder Linux-CI abgeleitet. |
+| ZR-A06 | Separater technischer nativer Windows-Eingabenachweis am gebundenen Export; konkreter Head, Bericht und Ergebnis im PR. Nicht aus SubViewport, Headless-Start, Preflight oder Linux-CI abgeleitet. |
 
 Einige frühere synthetische Motionhelfer lieferten bei gehaltener Taste eine leere
 Buttonmaske. Ihre Masken bilden jetzt den tatsächlich gehaltenen Ursprung ab;
@@ -49,16 +49,23 @@ prüfen und EXE/PCK zusammen entpacken. Ausschließlich ein temporäres Profil v
 beispielsweise APPDATA/LOCALAPPDATA nur für den gestarteten Kindprozess setzen.
 Keinen echten Benutzerstand kopieren oder globale Einstellungen ändern.
 
-`tools/zr_windows_probe.py --player <entpackt>/picross-p1.exe --head <SHA> --output-dir <neuer-Ordner>`
+`tools/zr_windows_probe.py --player <entpackt>/picross-p1.exe --engine <gebundener-Godot> --head <SHA> --output-dir <neuer-Ordner>`
 prüft den sauberen Exportbericht und EXE-/PCK-Hashes und startet genau dessen Player
-mit externem `zr_windows_probe.gd`. Das feste 30×30-Raster entsteht nur im isolierten
-Prüfprozess. Stimuli gehen über Win32-Mauseingaben und das tatsächliche native HWND,
+ohne Testskript oder besondere Laufzeitargumente. Das Exporttemplate unterstützt
+kein externes `--script`: `zr_windows_probe.gd` liest deshalb nur den Layoutplan des
+ersten regulären Blatts aus dem gelieferten PCK mit dem gebundenen Editor, in einem
+separaten Profil. Es führt keine Zellgeste aus und ersetzt keine EXE-Prüfung.
+Die native EXE erhält ein frisches isoliertes Profil; geprüft wird ein technischer
+Strich, keine Rätsellösung oder Bestandszertifizierung. Die feste synthetische
+30×30-/26-Prüfung bleibt in der Kernsuite. Stimuli gehen über Win32 und das native HWND,
 nicht über Godot-Inputsimulation. Der Bericht unterscheidet diese automatisierte
 native Zustellungsprobe ausdrücklich von einer physischen Eigentümer-Mausprobe.
-Er enthält Ereignispositionen/-masken, Fokus, Endzustände, eigene Fensterbilder,
-Windows-DPI und Exportbindung. Rückzug/Achsenwechsel, native Undo-/Redo-Buttons und
+Er enthält isolierte Save-Endzustände, Fokus, freien sichtbaren Cursor, freigegebene
+native Erfassung, eigene Fensterbilder, Bildschirm-/Clientgröße, Windows-DPI und
+Exportbindung. Rückzug/Achsenwechsel, native Undo-/Redo-Buttons und
 ein eigenes neutrales Fokuszielfenster gehören zur Probe. Niemals fremde Anwendungen
-als Fokusziel oder Desktopbilder aufnehmen.
+als Fokusziel oder Desktopbilder aufnehmen. Nur das eigene temporäre Prüffenster
+wird zum Test nach vorn gebracht; globale Fenster-/Anzeigeeinstellungen bleiben.
 
 Für links und rechts jeweils getrennt protokollieren:
 

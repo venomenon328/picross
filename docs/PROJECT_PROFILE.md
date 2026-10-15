@@ -9,7 +9,8 @@ Fokusverlust bleibt vollständiger Abbruch. Der Vertrag ersetzt gezielt die alte
 P1-/Designregeln zu sichtbarer 1, Strichendanker und eingefrorenem Außenendpunkt;
 Laufzeit, Spielanleitung und native Hilfe folgen dem ZR-Vertrag.
 [Prüfzuordnung](CELL_DRAG_VERIFICATION.md) und #143/#145 führen aktuelle Nachweise;
-native Windows-Eingabeprüfung, unabhängiges Review und ZR-M01 bleiben vor Merge offen.
+native Windows-Eingabeprüfung bleibt getrennt von CI und Eigentümerprobe gebunden.
+Unabhängiges Review und ZR-M01 bleiben vor Merge offen.
 
 **Aktuelle Inhalts-CI (12.10.2026):** Die [CI-Policy](CI_POLICY.md) ersetzt die
 unten historisch beschriebenen RP-Korpus-/Zertifikats-Replays. Reine neue

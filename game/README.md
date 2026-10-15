@@ -103,8 +103,9 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   26 Felder bis Spalte 30. Loslassen wertet seine eigene letzte Position aus und
   übernimmt genau einen Strich; ein darunterliegender Button wird dabei nicht geklickt.
   Der sichtbare Zeiger bleibt frei. Bei erhaltenem Spielfokus ist auch Loslassen
-  außerhalb der Fensterclientfläche vorgesehen; der technische native Windows-Nachweis
-  und die Eigentümerprobe sind für #143 noch offen, siehe [Prüfzuordnung](../docs/CELL_DRAG_VERIFICATION.md).
+  außerhalb der Fensterclientfläche möglich. Technischer Windows-Nachweis und noch
+  offene Eigentümerprobe sind getrennt in der [Prüfzuordnung](../docs/CELL_DRAG_VERIFICATION.md)
+  und PR #145 gebunden; diese Anleitung ist keine persönliche Abnahme.
   Esc, Fokusverlust, verlorene Tastenzuordnung oder Albumwechsel verwerfen den Strich
   vollständig. Rückkehr startet keine Geste ohne frischen Tastendruck. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
