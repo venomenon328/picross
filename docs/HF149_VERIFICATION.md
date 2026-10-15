@@ -27,6 +27,12 @@ danach `read` wählen zwei frische headless Prozesse; ohne Stage laufen Geometri
 und native Bilder. `capture` ist nur die kurze Entwicklungsroute ohne Grenzmatrix.
 Für Exportproben das lokale Skript als externen `--script`-Pfad und die gelieferte
 PCK als `--main-pack` verwenden. Testskripte werden nicht in den Spieler exportiert.
+`tools/hf149_windows_probe.py --head <SHA> --run <Run-ID> --engine <gebundene
+Konsolen-EXE> --cache-dir <Archivcache> --output-dir <neue Ablage>` prüft den
+frischen Actions-Download, beide EXEs und dieselben drei Prozesse gegen die PCK.
+Geladene Delight-/Fraunces-Bytes und Rahmen-/Papierpixel müssen den lokalen
+unveränderten Quellen entsprechen. Zwei zusätzliche 30×35-Szenen zeigen den
+gemeldeten Wechsel zwischen kleinem vollständigem und größerem gekürztem Hinweis.
 
 HF-R01 (unabhängiges technisches/visuelles Review) und HF-M01 (gezielte persönliche
 Windows-Probe durch den Eigentümer bei UI100/125) bleiben vor Merge separate Gates.
