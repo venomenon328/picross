@@ -45,7 +45,7 @@ func finish_stroke(last: Vector2i) -> void:
 	check(app.reveal_view.ink.commands.size() == app.session.player.cells.filter(func(v: int) -> bool: return v > 0).size(), "EA every confirmed fill including last stroke captured")
 	app._undo()
 	check(app.session.completed and app.session.player.history.size() == history+1 and app.undo_button.disabled, "EA completed board cannot be undone during fade")
-	check(app.completion_title.modulate.a == 0 and app.completion_reset.disabled, "EA name/reset absent until image and no release clickthrough")
+	check(app.completion_title.modulate.a == 0 and app.completion_reset.disabled and not app.completion_reset.visible, "EA name/reset absent until image and no release clickthrough")
 	var saved: Dictionary = app.store.load_slot(app.session.definition)
 	var restored := Session.new(app.session.definition)
 	if saved.status == "loaded": Store.apply(saved.data,restored)
