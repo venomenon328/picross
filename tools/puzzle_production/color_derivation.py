@@ -182,7 +182,7 @@ def inspect_chain(package, auth, budget):
                 original_result.get("certified") is True and original_result.get("status") == "solved" and
                 original_result.get("proof_verified") is True, "Color import base certificate incomplete")
         design, matrix = candidate["design"], candidate["matrix"]
-    require(design["mode"] == "color" and 1 <= len(design["palette"]) <= 4 and
+    require(design["mode"] == "color" and 1 <= len(design["palette"]) <= 8 and
             1 <= design["width"] <= 50 and 1 <= design["height"] <= 50 and
             digest(matrix) == base["matrix_hash"], "Color base design/matrix mismatch")
     paired_parent = checked.get("certification") is not None
