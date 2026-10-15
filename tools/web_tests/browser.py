@@ -290,7 +290,7 @@ def exercise(pw, name, root, update, url, output, evidence):
         passed('incompatible revisions rejected without migration or overwrite')
         # Reset is exercised via the real confirmation dialog and preserves other slots.
         other = state(page)['slots'][4]
-        control(page,tooltip='Blatt 01',text='Zurücksetzen')
+        control(page,name='reset-T-01',tooltip='Rätsel zurücksetzen')
         control(page,text='Zurücksetzen',dialog=True)
         saved(page)
         assert state(page)['slots'][0]['history'] == [] and state(page)['slots'][4] == other

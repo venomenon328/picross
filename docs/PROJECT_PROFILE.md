@@ -1,5 +1,12 @@
 # Projektprofil: picross
 
+**KB / #168:** Kompakte responsive Katalogkarten, Bakso-Katalogtitel und dieselben
+Papierbuttons für Katalog, Werkbank und Information. [KB-Prüfzuordnung](KB_VERIFICATION.md)
+ist bei dieser Arbeit zusätzlich zu KAT-1/ZA-1/KAT-2 zu lesen. Play/Reset bleiben
+getrennte Registry-ID-Aktionen; Save-/Spoiler-/Recoverygrenzen und 2×3-Werkzeuge
+bleiben. KB-T01 bindet technische Lieferung einschließlich Windows und Web;
+unabhängiges KB-R01 und persönliche KB-M01 bleiben getrennte Gates vor Merge.
+
 **ZR / #143 (15.10.2026):** [Zellstriche und Cursorzähler](CELL_DRAG.md) ist als
 Sollvertrag freigegeben und im PR #145 umgesetzt. Zähler ab Länge 2 in der aktiven
 Hinweisfont, ohne Kasten, am tatsächlichen Cursor; außerhalb des Fensters bleibt er

@@ -26,6 +26,18 @@ func _initialize() -> void:
 func run() -> void:
 	walk("res://")
 	var ids: Array[String] = Registry.catalog_ids()
+	# Fixed shared KB resources, independent of the growing puzzle catalog.
+	var book_manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/manifest.json"))
+	var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
+	check(icons.size() == 13 and icons.has("play") and icons.has("reset"), "PCK active KB icon inventory")
+	for name: String in ["play","reset"]:
+		var texture: Texture2D = load("res://art/book/"+name+".svg")
+		check(texture != null and texture.get_size() == Vector2(26,26), "PCK imported KB icon available "+name)
+		var bound: bool = false
+		for entry: Dictionary in book_manifest.files:
+			if entry.file == name+".svg": bound = true
+		check(bound, "PCK icon bound to resource manifest "+name)
+	check(FileAccess.file_exists("res://art/book/KB-168-NOTICE.txt"), "PCK KB icon provenance notice")
 	check(Registry.load_error.is_empty(), "PCK registry/category format invalid")
 	var categories: Array[Dictionary] = Registry.categories()
 	check(not categories.is_empty(), "PCK categories projection missing")
