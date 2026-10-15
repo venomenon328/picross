@@ -1,0 +1,98 @@
+{
+  "blockers": [
+    "superseded: UTF-8 metadata correction delivered as r04; do not approve r03"
+  ],
+  "category_id": "haushalt-alltag",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "Vor allen172 Proofschritten alle55 Linien auf volle Unterstützung geprüft. Vor Restaufräumen bei höchstens15 offenen Zellen mindestens3 produktive Linien; somit keine definierte <=2-Linien-Engstelle auf diesem Verlauf. Keine erschöpfende Prüfung alternativer Regelfamilien.",
+    "calibration": "Keine menschlichen Vergleichsdaten oder validierter R0–R3-Analysator.",
+    "confidence": "low",
+    "effort": {
+      "cells": 750,
+      "empty": 355,
+      "filled": 395,
+      "height": 25,
+      "human_active_minutes": null,
+      "max_column_clues": 2,
+      "max_row_clues": 3,
+      "proof_steps": 172,
+      "width": 30
+    },
+    "evidence": "difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "fd1bcd282618684a4015001e93ec446c3975548e5c72439026934a767146a0dd",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L2",
+      "L4"
+    ],
+    "playtest": "not_performed; optional",
+    "rule_families": {
+      "R0": "Keine initial vollständig gepackte oder leere Linie. Später fertige Blöcke und Restleerfelder; kein validierter R0-Fixpunkt analysiert.",
+      "R1": "Geschätzter Hauptbedarf: Überlappung/Verlängerung der langen Korpusblöcke. Zeile12 [3,19] erzwingt im unbekannten 30er-Raster Spalten12–23; nachfolgende breite Zeilen verteilen Anker. Der dünne Bügel erfordert längere Folge dieser Schlüsse.",
+      "R2": "Zuordnung von bis zu drei Blöcken je Zeile und zwei je Spalte rund um Knopf, Henkelöffnung und Ausguss kann kombinierte Anker benötigen. Notwendigkeit/Suffizienz gegenüber R1 nicht erschöpfend instrumentiert.",
+      "R3": "Full-line-mono zertifiziert vollständige Linienunterstützung; dies beweist keine R3-Notwendigkeit. Kein unvermeidbarer R3-Schritt identifiziert, aber ohne schwächeren validierten Fixpunkt nicht ausgeschlossen."
+    },
+    "time_estimate": null
+  },
+  "final_editorial_approval": null,
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r03/handoff.json",
+    "sha256": "87c6aa2c7a2bb291ebc853450b3acc125526213f79707cffe10c789c0a728792"
+  },
+  "height": 25,
+  "inspection": {
+    "editorial_approved": false,
+    "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r03/inspection.json",
+    "sha256": "146de612f7470af2f49719dd52e996539b2b21e6084069d3cffd0345ca58bcfe",
+    "technical": true
+  },
+  "integration": null,
+  "inventory_sha256": "d71cdc950031417a6e872b939fefa88c06d1204d7fcfd9a46925a9746c6bba89",
+  "mode": "mono",
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "7754db5a3214634db0eb41a4cbb5ed8496b2cce812fc0ec9ae2102d017a388f2",
+    "file": "motif/MA-r01.png",
+    "provenance": "motif-provenance.json",
+    "revision": "MA-r01",
+    "sha256": "6f6ec5ec68b7c039296566b6dfd4a5f39c5b6a0dd24f203abc2bd107f11c0cb0"
+  },
+  "motif_name": "Japanische Teekanne",
+  "next_action": "Gespeicherte Arbeit fortsetzen: r04",
+  "package": {
+    "bytes": 5828846,
+    "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r03/package.zip",
+    "sha256": "c3360d0e8ae6d3891d20d6df992a8d8b017a7a30a0ac694512898c56827da64e"
+  },
+  "previous_revision": {
+    "commit": "4d749335b14ee9f4576cc8e755fb7e70b69eb8ec",
+    "record": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r02/record.json"
+  },
+  "puzzle_id": "pz-51405ea1ad194507a60c9b6701d802f0",
+  "repo_commit": "a54316d0cbb1cc1ec53ac63d22d6667c4f4640a4",
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveal/B-r01.png",
+    "provenance": "reveal-provenance.json",
+    "revision": "B-r01",
+    "sha256": "7754db5a3214634db0eb41a4cbb5ed8496b2cce812fc0ec9ae2102d017a388f2"
+  },
+  "review_assets": {
+    "final-comparison.png": {
+      "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r03/final-comparison.png",
+      "sha256": "1b5a2ee83a41dbb4d4a3e23da907d950b76110aec40700b0418fc35d4a09c017"
+    },
+    "final-raster.png": {
+      "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r03/final-raster.png",
+      "sha256": "9f720e72d028a8a5e64bcce13a2c2c04de968b383c06416d1819cf1385240e2f"
+    }
+  },
+  "revision": "r03",
+  "state": "superseded",
+  "superseded_by": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r04/record.json",
+  "width": 30
+}
