@@ -1,0 +1,44 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r07",
+  "motif_name": "Warnemünde mit Strand und leerem Himmel",
+  "category_id": "gebaeude-bauwerke",
+  "state": "blocked",
+  "package": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r07/package.zip",
+    "bytes": 1727759,
+    "sha256": "37c8b7d258d78bc05b7997c21b32d701b8c7db4710194d18e7e473ac59f9d4e9"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r07/handoff.json",
+    "sha256": "36be12eac6f68b2e228f60d99bb997d3672bf491ecd43e30726e65de490f3bd3"
+  },
+  "inventory_sha256": "cd4f5dc0a21e2484ecf34c4968f2245725c10ecd5e511cc97f6dee913145d2cc",
+  "approval": null,
+  "width": 30,
+  "height": 35,
+  "mode": "color",
+  "foreground_colors": 5,
+  "difficulty": null,
+  "blockers": [
+    "logic: two independently verified solutions; incomplete deduction",
+    "target_export: five foreground colors require extension tracked in issue #144",
+    "motif and final_editorial: exact new revision not yet accepted"
+  ],
+  "next_action": "Review exact raster; separately resolve uniqueness and implement color-support issue #144 before final acceptance/integration.",
+  "integration": null,
+  "report": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r07/report.md",
+  "diagnosis": "multiple",
+  "independently_checked_witnesses": 2,
+  "color_support_issue": "https://github.com/venomenon328/picross/issues/144",
+  "branch": "content/warnemuende-ohne-himmel-r06",
+  "base_commit": "de0127db75411ac90105bc59621a96f755813eaa",
+  "previous_integrated_revision": "r05",
+  "previous_runtime_revision": 1,
+  "runtime_unchanged": true,
+  "superseded_by": {
+    "revision": "r08",
+    "record": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/r08/record.json"
+  }
+}

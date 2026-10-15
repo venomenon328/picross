@@ -1,0 +1,4 @@
+Meaningful roof/window correction with exact symmetry and empty exterior sky retained.
+
+Working mode: faithful
+Motif and gameplay review: open
