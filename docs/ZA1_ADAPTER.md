@@ -516,6 +516,36 @@ ursprüngliche Motivfreigabe. Allgemeine Positiv-/Negativregressionen in
 `test_approved_color_adapter.py` verwenden ausschließlich synthetische Inputs.
 Die bestehenden Autorisierungswege v1/v2/v3 bleiben getrennt und unverändert.
 
+### Feste Farbkorrekturen aus einem bestätigten Linienfixpunkt (v5)
+
+Der Integrationsauftrag vom 15.10.2026 zur vorgelegten korrigierten Nelke erlaubt
+den notwendigen additiven Weg `picross-manual-authorization-v5`. Sein Schema
+entspricht v4; die Eigentümerdatei verwendet `picross-owner-override-v5` und
+exakt `permissions={fixed_color_edits:true, stalled_color_base:true}`. Beide
+Wahrheitswerte und alle konkreten Paket-/Auswahl-/Freigabe-/Editbindungen sind
+Pflicht. V1–v4 behalten ihre bisherigen Anforderungen.
+
+Nur ein ursprünglicher Direktimport aus einer bereits freigegebenen Motivdatei
+ist zulässig. Quelle, Normalisierung, Matrix und Hinweise werden rekonstruiert;
+sein gespeicherter und frisch unabhängig bestätigter Status muss `stalled`,
+`proof_verified=true`, `certified=false` sein. Bei Paarprofilen muss zusätzlich
+die getrennte Linienbaseline unabhängig als `stalled` bestätigt sein.
+Abbruch, Widerspruch, ungültiger Proof oder bloße Ergebnisflags genügen nicht.
+Der Originalfixpunkt wird nicht in einen vollständigen Lösungsnachweis umgedeutet.
+
+Alle festen Kindstufen benötigen weiterhin vollständige unabhängige Zertifikate
+und exakte Endmatrixgleichheit; Schutzmasken, Originalparameter, Randregel,
+Bild-/Motivfreigaben und tatsächliche Endabnahme bleiben Pflicht. Eine getrennte
+Eindeutigkeitssuche an der Originalbasis ist nicht erforderlich: Die geprüfte
+Originalmatrix belegt ihre Existenz, das vollständige Endzertifikat die
+Eindeutigkeit des korrigierten Rasters. Kein Solver im Spiel.
+
+Der Bericht führt unter `source.base_deduction` ausdrücklich den bestätigten
+Originalstatus und dessen fehlende Vollzertifizierung. CLI, Runtime-/Saveformat
+und die Exportversionen v3 beziehungsweise v4 bei Paarprofilen bleiben erhalten;
+die Autorisierungsversion v5 ist keine neue Exportversion. Allgemeine Prüfungen
+in `test_stalled_color_adapter.py` verwenden ausschließlich synthetische Raster.
+
 ## Abgeschlossene Produktion (14.10.2026, #116)
 
 Nach nachgewiesener Endabnahme und Main-Integration ersetzt `retire-production`

@@ -1,0 +1,59 @@
+{
+  "actor": "user",
+  "timestamp_utc": "2026-10-14T21:07:10Z",
+  "timestamp_basis": "Time of recording the current chat declaration; message receipt time not exposed.",
+  "statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nPaket: pz-d7e68d1138a3448c8b2a4b07e8632350 · eindeutiger aktueller Record.\nIch gebe die Motivvorlage r02 frei; Parameter: genau der im Paket vorgeschlagene eindeutige Parameterkorridor. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.\n\nRepositoryablage nach §6 ist beauftragt. Draft-PR; kein Merge.",
+  "evidence": "motif-approval-evidence.txt",
+  "file": "motif/MA-r01.png",
+  "sha256": "bdc2dcb33cce3aa7960423655c487bee5792d75dedd9da0001d167cd1ed23a19",
+  "revision": "MA-r01",
+  "package_revision_approved": "r02",
+  "package_sha256": "63f042fb00e1c0d3f258de19d8eafa389c0b050ad86a29e540272cd62d98d47b",
+  "derived_from_reveal_sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe",
+  "parameters": {
+    "actual_crop": [
+      45,
+      16,
+      1200,
+      1248
+    ],
+    "fit": "exact",
+    "foreground_colors": 4,
+    "height": 32,
+    "method": "area",
+    "mode": "color",
+    "width": 30
+  },
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        45,
+        16,
+        1200,
+        1248
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 32,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        32,
+        5,
+        1200,
+        1246
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 34,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    }
+  ],
+  "configuration_sha256": "bd5f2b04f1b465bfc897b0e2569ae1874a65135e5f2b8dfad2d2706766c468b3",
+  "type": "human_motif_approval"
+}

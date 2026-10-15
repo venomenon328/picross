@@ -1,0 +1,20 @@
+{
+  "call": {
+    "id": "C-r01",
+    "model": "not_exposed",
+    "other_settings": "not_exposed",
+    "output": "reveal/C-r01.png",
+    "prompt": "Use case: illustration-story.\nAsset type: detailed full-color completion illustration for the Picross illustrated album, not a puzzle grid or abstraction.\nPrimary request: one red carnation (Dianthus caryophyllus), unmistakably a carnation, with many layered frilled petals and finely serrated petal edges, rich scarlet and carmine red, green tubular calyx and slender blue-green lanceolate leaves.\nStyle/medium: warm calm hand-drawn 2D illustration, clean confident dark burgundy/green contours, vivid cohesive color areas, carefully finished internal petal folds, restrained shadows and highlights. Detailed attractive botanical storybook art, not photorealistic, not 3D, not flat silhouette, not a rose.\nScene/backdrop: plain warm ivory-white, no scenery or other objects.\nComposition: square canvas, single isolated flower complete within margins, strong legible principal forms with eventual approximately 30x30 colored nonogram adaptation in mind but NEVER render pixel art, a grid or numbered clues. No text, label, watermark, border, decorative extras.\nA compact red carnation in side profile facing toward the upper left, generous bowl-shaped tuft of frilled petals and visible elongated green tubular calyx. Short slightly curved upright stem below, with two narrow opposite leaves, one extending right and one left. Broad layered ruffled flower head occupies the upper half and about two-thirds of image width. Distinct profile rather than frontal round flower.",
+    "referenced_images": [],
+    "seed": "not_exposed",
+    "status": "success",
+    "transparent_background": false
+  },
+  "earlier_package": {
+    "commit": "f70be8dcda166bf049303507dce800a042e168e2",
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/r01/package.zip",
+    "sha256": "4103200f343471e1aeb963dd0a461d8e2c70ce1762a26af05822828250f0b734"
+  },
+  "mode": "built_in_native",
+  "tool": "image_gen.imagegen"
+}
