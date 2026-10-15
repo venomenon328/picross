@@ -144,8 +144,13 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   zurückspringen. Alle Zahlen bleiben über die Folge der Lesepositionen erreichbar.
   „Hinweise rasterseitig ausrichten“ stellt
   alle Linien auf ihren rasterseitigen Standardausschnitt zurück.
+- Freie Breite und Höhe zeigen nach dem Fit zusätzliche vollständige Zeilen- und
+  Spaltenhinweise, ohne kleinere Zellen dafür zu erzwingen. Passende Folgen haben
+  keine Auslassungsmarker und lassen sich nicht in Leerraum verschieben.
 - Darüberfahren einer gekürzten Folge zeigt weiterhin den vollständigen farbigen
-  Hinweis mit Umbruch direkt über dem Arbeitsbild. Das ist ein Zusatzweg; Anfang,
+  Hinweis mit Umbruch direkt über dem Arbeitsbild: kleine Fraunces-Überschrift,
+  gut lesbare Delight-Zahlen und ruhiges Papier mit gezeichnetem Rahmen.
+  Die Overlaylesegröße folgt der UI-Skalierung unabhängig vom Rasterzoom. Das ist ein Zusatzweg; Anfang,
   Mitte und Ende bleiben auch durch Hinweis-Panning erreichbar. Eine separate
   Hinweisansicht gibt es nicht.
 - UI 100/125 % vergrößert die Oberfläche. Delight-Coffee-Hinweisziffern und ihre
@@ -155,7 +160,8 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   äußerer Anfang und rasterseitiges Ende bleiben am gewählten Rand verankert,
   mittlere Ausschnitte behalten den gelesenen Tokenbereich mit größtmöglicher
   Überdeckung. Das gilt auch bei Arbeitszoom und Resize; alle Zustände bleiben
-  in ganzen Slots eingerastet.
+  in ganzen Slots eingerastet. Vorübergehende Vollanzeige bewahrt die Anker auch
+  beim Speichern und Neustart; beim Verengen kehrt derselbe Lesebereich zurück.
   Die UI-Skalierung, Hinweisrücksetzung und H1 stehen auf der Informationsseite.
   `?` führt direkt zur dort scrollbar erreichbaren Bedienhilfe; Menü und rechter
   Pfeil zu den Einstellungen. Auch bei 1280×720/UI 125 % bleiben Werkzeuge,

@@ -47,11 +47,15 @@ passende Intervall liefert das größte Zellmaß auf Hundertstelpixel. Das Budge
 × Zelle + Reserve × Slot + 14 Pixel pro Achse. G beweist an allen Glyph-/Marker-/
 Clip-Übergängen mindestens min(5,n) vollständige zusammenhängende Hinweise im
 kontinuierlichen Drag. V reserviert alle Hinweise. Erst nach Fit bietet freie
-Breite weitere ganze Zeilenslots, ohne Rasterverkleinerung. Die anschließende
+Breite beziehungsweise Höhe weitere ganze Zeilen- beziehungsweise Spaltenslots,
+je Achse maximal sicher passend und durch den tatsächlichen Bedarf begrenzt, ohne
+Raster-, Schrift- oder Slotverkleinerung (HF / #149). Die anschließende
 gemeinsame Translation balanciert die tatsächliche Hülle ohne Leerplätze.
 
 Drag, Marker, Snap, Tooltipzuordnung und semantische Anker verwenden dieselben
 aktuellen Slotmaße. Nur bestätigte semantische Lesepositionen werden gespeichert;
+Vorübergehende Vollanzeige überschreibt weder Rand- noch Mittelanker, auch nicht
+beim Speichern. Nach erneutem Verengen wird daraus die Lesestelle rekonstruiert.
 Zoomwunsch und Schema 1 bleiben. Größen-/UI-/Modus-/Definitionswechsel messen neu.
 Typografie-, Reserve- und Glyphcaches sind transient und begrenzt; ihre Schlüssel
 enthalten relevante Tokens, Achse, Schriftgrad, Slotmaße und UI-Skalierung.
@@ -87,3 +91,18 @@ HC-M01 verlangt ein geeignetes Farbrätsel im gebundenen Windows-Export bei
 kleinem, mittlerem und großem Zoom samt Lesbarkeit, Zellraumnutzung, beiden
 Slotabständen und MMB-Bedienung. Technische Bilder ersetzen diese Sichtabnahme
 nicht. Commit, Push und Draft-PR sind beauftragt; kein Merge oder Release.
+
+## HF · vollständiges Hinweis-Overlay (#149)
+
+Die nichtmodale Ergänzung zeigt ausschließlich bei echtem Überlauf die ganze Folge.
+„Vollständiger Hinweis“ verwendet die vorhandene Fraunces 600 bei 13 × UI;
+Delight-Zahlen behalten ihre vom Rasterzoom unabhängige Overlaylesegröße.
+Native Glyphenhüllen einschließlich C1/AA und Statusstrich bestimmen Innenränder,
+Zeilenhöhen, Tokenumbruch und den sichtbaren Abstand zur kleineren Überschrift.
+Die inhaltsabhängige Box bleibt im geschützten Board-/Papierbereich. Das ruhige
+Papier ist ein Ausschnitt des vorhandenen A-Arbeitsassets; der unveränderte
+SL-65-Vorschaurahmen wird mit festen Ecken und gekachelten Kanten wiederverwendet.
+Dessen sichere Innenfläche bleibt frei. Keine neue Bild- oder Fontauswahl.
+Layout-/Kapazitäts-/Blattwechsel prüfen Quelle und Trefferrechteck auch unter
+ruhender Maus neu; Boxklicks werden konsumiert. Vollständige Folgen öffnen keine
+Box und bieten keine wirkungslose Navigation. [Prüfzuordnung](HF149_VERIFICATION.md).
