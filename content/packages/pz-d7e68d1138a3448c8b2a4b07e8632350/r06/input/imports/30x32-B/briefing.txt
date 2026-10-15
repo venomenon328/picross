@@ -1,4 +1,0 @@
-Prepared, not executed. Use only after actual MA-r01 plus corridor approval. Preserve invariants.json; compare configuration.json.
-
-Working mode: faithful
-Motif and gameplay review: open
