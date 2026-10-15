@@ -19,6 +19,7 @@ func _process(delta: float) -> void:
 		"origin": [origin.x, origin.y], "cell_size": board.view.cell_size,
 		"dimensions": [session.player.width, session.player.height], "gesture": session.gesture.active,
 		"canvas": [size.x, size.y], "ui_scale": ui_scale,
+		"viewport": [get_viewport_rect().size.x, get_viewport_rect().size.y],
 		"root": ProjectSettings.globalize_path("user://p1/saves"),
 		"rows": session.definition.rows, "columns": session.definition.columns,
 		"row_steps": board.row_clue_steps, "column_steps": board.column_clue_steps,

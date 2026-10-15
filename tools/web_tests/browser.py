@@ -26,6 +26,33 @@ def saved(page):
     wait(page, 'window.picrossStorage.ready && !picrossStorage.pending && !picrossStorage.error')
 
 
+def game_viewport(page, width, height):
+    # Browser/OS button metrics change the header height. The contract names
+    # logical game area, not outer HTML viewport minus a guessed 42 pixels.
+    page.set_viewport_size({'width':width, 'height':height+80})
+    def settled():
+        wait(page, f'''window.picrossProbe && innerWidth==={width} &&
+          picrossProbe.viewport[0]===document.getElementById('surface').clientWidth &&
+          picrossProbe.viewport[1]===document.getElementById('surface').clientHeight''')
+        # At narrow widths the pending/saved label can wrap the header. Measure
+        # its stable saved state, after Godot has handled the actual resize.
+        saved(page)
+    settled()
+    overhead = page.evaluate('innerHeight - document.getElementById("surface").clientHeight')
+    page.set_viewport_size({'width':width, 'height':height+overhead})
+    settled()
+    try:
+        wait(page, f'window.picrossProbe && picrossProbe.viewport[0]==={width} && picrossProbe.viewport[1]==={height}')
+    except Exception:
+        print('VIEWPORT FAILURE', page.evaluate('''() => {
+          const surface=document.getElementById('surface');
+          return {html:[innerWidth,innerHeight],surface:[surface.clientWidth,surface.clientHeight],
+            viewport:window.picrossProbe?.viewport,canvas:window.picrossProbe?.canvas,minimum:window.picrossProbe?.minimum,
+            fit:window.picrossProbe?.fit}; }'''),flush=True)
+        if DIAGNOSTIC_OUTPUT: page.screenshot(path=str(DIAGNOSTIC_OUTPUT/'viewport-failure.png'))
+        raise
+
+
 def point(page, position):
     box = page.locator('canvas').bounding_box()
     dims = state(page)['canvas']
@@ -70,6 +97,7 @@ def open_page(context, url):
     page.on('console', lambda msg: errors.append(msg.text) if msg.type == 'error' else None)
     page.goto(url)
     wait(page, 'window.picrossProbe && picrossStorage.ready && document.getElementById("message").hidden')
+    game_viewport(page,1920,1080)
     saved(page)
     assert not errors, errors
     return page, errors
@@ -152,9 +180,13 @@ def exercise(pw, name, root, update, url, output, evidence):
         # Input and fit stay paired under CSS/browser scale, resize and fullscreen.
         control(page, name='menu'); control(page, text='UI ')
         control(page, name='nav-work')
-        for width,height in ((1280,762),(1920,1122)):
-            page.set_viewport_size({'width':width,'height':height}); page.wait_for_timeout(300)
-            assert state(page)['fit'] and not state(page)['minimum']
+        evidence['viewports'] = []
+        for width,height in ((1280,720),(1920,1080)):
+            game_viewport(page,width,height)
+            data = state(page)
+            evidence['viewports'].append({'html':page.viewport_size, 'viewport':data['viewport'], 'canvas':data['canvas'],
+                                          'fit':data['fit'], 'minimum':data['minimum']})
+            assert data['fit'] and not data['minimum'], evidence['viewports']
             before = state(page)['cells']
             draw(page,(0,0)); assert state(page)['cells'][0] == 1
             control(page,name='undo'); assert state(page)['cells'] == before
@@ -163,14 +195,14 @@ def exercise(pw, name, root, update, url, output, evidence):
         page.locator('#fullscreen').click(); page.wait_for_timeout(400)
         assert page.evaluate('!!document.fullscreenElement') and state(page)['fit']
         page.locator('#fullscreen').click(); page.wait_for_timeout(300)
-        page.set_viewport_size({'width':640,'height':480}); page.wait_for_timeout(300)
+        game_viewport(page,640,480)
         assert state(page)['minimum']
-        page.set_viewport_size({'width':1920,'height':1122}); page.wait_for_timeout(300)
+        game_viewport(page,1920,1080)
         assert state(page)['fit'] and not state(page)['minimum']
         passed('UI125, 720p/1080p, wheel zoom, fullscreen fit and hit geometry')
         if name == 'chromium':
             cdp = context.new_cdp_session(page)
-            cdp.send('Emulation.setDeviceMetricsOverride',dict(width=1920,height=1122,deviceScaleFactor=1.5,mobile=False))
+            cdp.send('Emulation.setDeviceMetricsOverride',dict(**page.viewport_size,deviceScaleFactor=1.5,mobile=False))
             page.wait_for_timeout(300)
             assert page.evaluate('devicePixelRatio') == 1.5
             before = state(page)['cells']
@@ -180,9 +212,9 @@ def exercise(pw, name, root, update, url, output, evidence):
             passed('live DPI change to 150 percent preserves hit geometry')
         # The rectangular row and square column really overflow at this geometry.
         for axis in ('row','column'):
-            page.set_viewport_size({'width':1920,'height':1122}); page.wait_for_timeout(300)
+            game_viewport(page,1920,1080)
             control(page,name='nav-album'); control(page,text='Blatt 06' if axis=='row' else 'Blatt 02')
-            page.set_viewport_size({'width':1280,'height':762}); page.wait_for_timeout(300)
+            game_viewport(page,1280,720)
             before = state(page)['cells']
             data = state(page); area = data[axis+'_area']; origin = data['origin']; step = data['cell_size']
             lines = data['rows' if axis=='row' else 'columns']
@@ -197,7 +229,7 @@ def exercise(pw, name, root, update, url, output, evidence):
             assert state(page)[axis+'_steps'] != old_steps, (axis,old_steps,state(page)[axis+'_steps'])
             page.screenshot(path=str(output/f'{name}-colour-{axis}-clues.png'))
         passed('middle mouse moves long row/column clue windows and preserves cells')
-        page.set_viewport_size({'width':1920,'height':1122}); page.wait_for_timeout(300)
+        game_viewport(page,1920,1080)
         control(page,name='nav-album'); control(page,text='Blatt 03')
         draw(page,(0,2),(4,2)); wait(page,'picrossProbe.ending && picrossProbe.completed')
         control(page,text='Zurück ins Album')
