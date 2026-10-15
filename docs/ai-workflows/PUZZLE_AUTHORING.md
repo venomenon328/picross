@@ -1,15 +1,10 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 12 · 15.10.2026**
+**Version 0.5.0 · Dokumentrevision 13 · 15.10.2026**
 
-Version 0.5.0 ergänzt ausdrücklich die Paarlinienprofile und Schwierigkeit 0.2
-aus #139/B/C. Alte versiegelte 0.4.x-Pakete bleiben unter ihrem Linienvertrag
-prüfbar; sie werden nicht umetikettiert. Dokumentrevision, Datei-SHA-256 und
-Repositorycommit binden den tatsächlich verwendeten Snapshot.
-Dokumentrevision 11 konkretisiert Profilwahl, Dateibindungen und Export im
-Produktionsablauf; die technischen Formate und Freigabekriterien bleiben gleich.
-Dokumentrevision 12 ergänzt die Zielunterstützung für bis zu acht Farben und den
-explizit beauftragten Rasterersatz nach dem ZA-1-Updatevertrag (#144).
+Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
+0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
+Dokumentrevision, Datei-SHA-256 und Repositorycommit binden den verwendeten Snapshot.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
@@ -21,7 +16,7 @@ Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag übe
 2. Zu Beginn Kategorienquelle, Arbeitsindex und Runtime-Registry lesen; Bestandsrätsel nicht einzeln laden oder nachprüfen. Kategorie nach Auftrag oder prägendem Hauptgegenstand gemäß [Kategorienvertrag](../CATEGORIES.md) zuordnen und in Briefing/Record führen. Repository-/Toolstand mit vollständiger Commit-SHA binden. Aktuelle Dateien und tatsächlich benötigte Fähigkeiten prüfen, keine historischen PR-Statuslisten abarbeiten. Abgeschlossene Lieferungen sind keine erneut offenen Voraussetzungen; nur eine konkrete aktuelle Lücke verfolgen.
 3. Bestehende technische Formate, Farbregeln, Solverprofile, Nachweise und Reparaturverträge verwenden. Dieses Regelwerk ersetzt sie nicht. Fehlende Pflichtquellen oder widersprüchliche Vorgaben vor dem betroffenen Schritt klären.
 4. Tatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine Funktionen, Prüfungen oder Ergebnisse behaupten, die nicht verfügbar beziehungsweise ausgeführt sind.
-5. Keine direkte Modell-API einbauen. Produktionsaufträge mit Repositoryablage erlauben ausschließlich die beauftragte Paketsicherung samt Index; ein Integrationsauftrag erlaubt zusätzlich den Ablauf in Abschnitt 8. Werkzeugänderungen, Merge und Veröffentlichung sind jeweils getrennte Befugnisse nach Entwicklungsworkflow. Bereits erteilte passende Aufträge nicht erneut erfragen.
+5. Keine direkte Modell-API einbauen. Produktionsaufträge mit Repositoryablage erlauben ausschließlich die beauftragte Paketsicherung samt Index; ein Integrationsauftrag erlaubt zusätzlich Abschnitt 8 und die anschließende Bereinigung nach Abschnitt 9. Ablage-/Integrationsmerge braucht den passenden ausdrücklichen oder bedingten Auftrag. Für den zugehörigen Cleanup gilt die Eigentümerfreigabe in Abschnitt 9. Werkzeugänderungen und Veröffentlichung bleiben getrennte Befugnisse. Bereits erteilte passende Aufträge nicht erneut erfragen.
 6. **Menschliches Probespielen ist optional und kein Freigabekriterium.** Ein großer Rätselbestand darf ohne Probespiele entstehen. Verpflichtend bleiben die Abschlussbildfreigabe, die Freigabe der daraus abgeleiteten Motivvorlage, die technische Prüfung und die abschließende redaktionelle Abnahme. Spätere Spielerfahrungen dienen der Verbesserung und Kalibrierung.
 
 ### Prüfungen gehören zur Produktion, nicht zur CI
@@ -35,7 +30,7 @@ Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag übe
 
 ### 2.1 Eingaben und Konfiguration
 
-Zulässiger Input: Motivtext beliebiger Ausführlichkeit und/oder Ausgangsbild; optional ungefähre Breite × Höhe, Mono/Farbe und weitere Einschränkungen. Eine verlinkte oder angezeigte Bildvorschau ersetzt keine gespeicherte Quelldatei.
+Zulässiger Input: Motivtext beliebiger Ausführlichkeit und/oder Ausgangsbild; optional Breite × Höhe (ungefähr/fest), Mono/Farbe, gewünschte Vordergrundfarbzahl (ungefähr/genau) und weitere Einschränkungen. Eine verlinkte oder angezeigte Bildvorschau ersetzt keine gespeicherte Quelldatei.
 
 Die KI MUSS Hauptmotiv, unverzichtbare Merkmale, erlaubte Umgestaltung und Einschränkungen erfassen. Fehlende reversible Details sinnvoll ergänzen. Nur wesentliche offene Produktentscheidungen beim Nutzer erfragen, jeweils mit Empfehlung und Konsequenzen.
 
@@ -45,8 +40,15 @@ Wenn Größe oder Farbmodus offen sind, nach der Abschlussbildfreigabe **2–3 k
 
 - Reguläre Rätsel: **Breite ≤ 50 und Höhe ≤ 50**. Ein weiter gefasstes technisches Werkzeuglimit ist keine Produktfreigabe.
 - Klein (längste Achse ≤ 20): dominante Silhouette und wenige Binnenformen. Mittel (21–35): charakteristische Details und Negativflächen. Groß (36–50): gegliederte zusätzliche Details, keine bloße Vergrößerung. Diese Arbeitsklassen bestimmen keine Schwierigkeit.
-- Für das Lösungsraster Mono oder gewöhnlich 2–4 Vordergrundfarben empfehlen; mehr Rasterfarben nur mit motivischem Nutzen und nachgewiesener Zielunterstützung. Das Abschlussbild bleibt auch bei einem monochromen Rätsel farbig; seine Farbigkeit und Detailtiefe sind nicht auf die Rasterpalette begrenzt.
+- **Acht Vordergrundfarben plus Leer sind die technische Obergrenze, kein Produktionsziel.** Die kleinste Palette empfehlen, die Identität, wichtige Flächen und Lesbarkeit angemessen erhält; gewöhnlicher Ausgangspunkt sind Mono oder 2–4 Farben. 5–8 sind mit konkretem motivischem Nutzen zulässig. Keine zusätzlichen Farben allein wegen Verfügbarkeit, Größe, Solvererfolg oder künstlich höherer Schwierigkeit.
+- Farbzahl bezeichnet die tatsächlich in der Matrix verwendeten Vordergrund-IDs; `EMPTY` zählt nicht, auch Weiß kann eine Vordergrundfarbe sein. Unbenutzte Paletteinträge, nahezu gleiche Schattierungen und dekorative Einzelzellen erfüllen keinen Farbwunsch. Vor Versiegelung Palette auf tatsächlich nötige Einträge reduzieren und nötige Neuprüfungen aus 4.4 ausführen.
+- Eine **genaue** Farbzahl ist eine feste Vorgabe; bei Konflikt mit Motivqualität oder Nachweis vor Abweichung eine begründete Alternative vorlegen. **Ungefähr** ist ein Ziel: Abweichung begründen und im vorgeschlagenen, später freizugebenden Parameterkorridor konkretisieren; kein stilles Ausweiten auf acht. Mono verwendet genau eine Vordergrundfarbe; widersprüchliche Eingaben vor der betroffenen Abstraktion klären.
+- Bei offener Farbzahl in Auftrag 2 die empfohlene Palette und eine sinnvoll reduzierte Alternative gegenüberstellen. Jede zusätzliche Farbe benötigt eine benannte Funktion, etwa die Trennung charakteristischer Bauteile. Bei 5–8 Farben ausdrücklich erklären, welcher erkennbare Verlust durch weitere Zusammenlegung entsteht. Varianten mit verschiedener Farbzahl in die vorhandene Kandidatenauswahl integrieren, keine zusätzliche Vollmatrix verlangen. Unverzichtbare Farbtrennungen nicht mechanisch reduzieren. Das Abschlussbild bleibt immer farbig, detailliert und unabhängig von der Rasterfarbzahl.
 - Größe, Seitenverhältnis und Palette müssen zum Motiv passen. Vor dem Nachweis keine Lösbarkeit versprechen.
+
+Spätere Formularwünsche dürfen einen bereits freigegebenen Parameterkorridor nicht
+stillschweigend ändern. Widersprüche vor Produktion/Integration klären; die konkret
+vorgelegte Fassung und ihre tatsächliche Freigabe bleiben maßgeblich.
 
 ### 2.2 Darstellungen auseinanderhalten
 
@@ -88,7 +90,7 @@ Ein Auftrag umfasst sämtliche nötigen Arbeiten bis zur nächsten menschlichen 
 | **1 · Abschlussbildauswahl** | Bildfähige KI erfasst Text/Bild, liest Quellen und erzeugt drei Abschlussbilder nach Abschnitt 2. | `brief_ready` → `reveal_review`: Einzeldateien, kurzer Vergleich, gesicherte Übergabe; auf menschliche Abschlussbildfreigabe warten. |
 | **2 · Abschlussbildfreigabe und Abstraktion** | KI bindet die tatsächliche Freigabe, empfiehlt bei offenen Angaben 2–3 Konfigurationen und erstellt unmittelbar die Abstraktion für ihre Empfehlung. Keine zusätzliche Konfigurationsrunde, sofern keine feste Grenze verletzt wird. | `reveal_approved` → `motif_review`: Bildvergleich, Detailverluste, eindeutiger vorgeschlagener Parameterkorridor und vollständige Dateiübergabe für Codex; auf Motivfreigabe warten. |
 | **3 · Motivfreigabe und Produktion** | Codex protokolliert die menschliche Freigabe der Motivdatei samt Parameterkorridor; führt Abschnitte 4–7 einschließlich Variantenwahl, Profilprüfung nach 4.2.1, begrenzter Reparatur, technischer und visueller Prüfung sowie Schwierigkeit aus. | `motif_approved` → `raster_review` → `content_ready`: echtes Endraster, Abschlussbild, kompakter Bericht und geprüftes Paket zur Endabnahme. Keine Spielregistrierung. |
-| **4 · Endabnahme und Integration** | Codex bindet die menschliche Endabnahme separat und führt mit dem im Auftrag enthaltenen Integrationsauftrag Abschnitt 8 vollständig aus. | `editorially_approved` → `catalog_ready` → `registered`: gesicherte Integrationsbelege, geprüfter Draft-PR; bei bereits ausdrücklich erteiltem bedingtem Mergeauftrag auch Merge und Main-Nachweis. |
+| **4 · Endabnahme und Integration** | Codex bindet die menschliche Endabnahme separat und führt Abschnitte 8–9 aus. | `editorially_approved` → `catalog_ready` → `registered`: Integrationsbelege und PR; bei passendem Mergeauftrag Main-Merge, anschließend geprüfte Bereinigung samt eigenem Merge. Ohne Integrationsmerge beim PR stoppen. |
 
 Standardarbeitsteilung: ChatGPT für 1–2, Codex für 3–4. Eine Umgebung darf beides übernehmen, wenn sie die tatsächlichen Bild-, Datei-, Repository- und Werkzeugfähigkeiten besitzt. Modell/Reasoning wählt der Nutzer in der Oberfläche; keine Modell-API einbauen. Ein zusätzlicher Mergeauftrag ist nur ohne vorherige passende Freigabe nötig; Korrekturrunden und echte Zugriffsprobleme können weitere Nachrichten erfordern.
 
@@ -113,6 +115,7 @@ Freigaben müssen eindeutig die vorgelegten Dateien/Revisionen beziehungsweise d
 Ein freigabefähiger Kandidat MUSS sämtliche folgenden Bedingungen erfüllen:
 
 - Gültige Maße, Zellwerte, Palette und Formate gemäß Projekt-/Zielvertrag; regulär höchstens 50 je Achse.
+- Vordergrundfarbzahl automatisch als `len({v für v in allen Zellen, wenn v != EMPTY})` zählen; sie muss zur endgültigen Palette, zur genauen Nutzervorgabe (falls gesetzt) und zum freigegebenen Parameterkorridor passen. Wunsch, Istzahl und Palettenrollen im Bericht führen; bloße Paletteinträge zählen nicht als Verwendung.
 - Hinweise deterministisch aus der exakten Matrix berechnet; geltende Farbregeln eingehalten. Gleichfarbige aufeinanderfolgende Blöcke benötigen mindestens eine Leerzelle, verschiedenfarbige dürfen sich berühren.
 - Vollständige deduktive Lösung vom unbekannten Start, ohne vorgefüllte Zellen, notwendiges Raten, Suchannahmen oder Motivwissen.
 - Vollständiger Nachweis unter benanntem Solverprofil; unabhängiger Prüfer akzeptiert ihn. Endzustand entspricht exakt dem Kandidaten.
@@ -172,6 +175,8 @@ Die Logik separat in einem frischen Prüferprozess verifizieren. Herkunft zusät
    Die bereits zugelassene Profilwahl verlangt keine neue Grundsatzfreigabe;
    Vorgaben zu Motiv, Parametern und Schwierigkeit bleiben wirksam. Die Prüfung
    einer unveränderten Matrix zählt nicht als zusätzliche Rastervariante.
+   Bereits durch zwei geprüfte Lösungen belegtes `multiple` direkt nach 4.4
+   bearbeiten; ein stärkeres korrektes Deduktionsprofil beseitigt keine Mehrdeutigkeit.
 3. **Ausdrücklich und vor dem Lauf binden:** Profil-ID und Zeit-/Linien-/Paarbudgets
    dokumentieren. Bei `import-image` ausdrücklich `--profile paired-lines-mono`
    beziehungsweise `--profile paired-lines-color` und die vorgesehenen Paarbudgets
@@ -219,7 +224,56 @@ Belegungsanteile unter 15 % oder über 85 %, isolierte Einzelzellen und vollstä
 
 ### 4.4 Reparaturen und Änderungen
 
-Reparatur nur an visuell tragfähigen Kandidaten und mit vorab gespeichertem bestehenden Reparaturplan: Referenz, Schutzmaske, Operatoren, Seed und Budgets. Wichtige gefüllte **und leere** Positionen schützen. Erster Versuch standardmäßig höchstens zwei Zellpositionen ändern, bei empfindlichen Motiven weniger. Höhere Grenzen brauchen vorab eine motivbezogene Begründung; keine nachträgliche Budgetlockerung. Vor einer allein wegen des Linienfixpunkts geplanten Zelländerung die Profilprüfung aus 4.2.1 berücksichtigen. Bei gewähltem Paarprofil muss bereits der Plan dessen versionierte `certification` binden; neue Hinweise nach einer Reparatur brauchen eigene Baseline und eigenen vollständigen Endnachweis.
+**Aktiver Reparaturauftrag:** Wenn kein visuell tragfähiger Kandidat vollständig
+zertifiziert ist, MUSS Codex gezielte Verbesserungen versuchen, bevor es die
+Produktion allein wegen `stalled` oder belegtem `multiple` zurückgibt. Bereits
+geeignete Kandidaten brauchen keine Reparatur. Ein Suchurteil `unique` genügt nicht.
+
+Nur visuell tragfähige Kandidaten reparieren. Sind schon die Hauptformen ungeeignet,
+zunächst Abstraktion/Größe/Palette nach 2.4 überarbeiten und nötige Freigaben einholen.
+
+1. Ursache trennen: `stalled` betrifft das benannte Profil; Profilwahl nach 4.2.1
+   ausschöpfen. Bei offener Mehrdeutigkeitsfrage darf `diagnose` helfen; für
+   `multiple` beide Zeugen prüfen und ihre Differenzbereiche auswerten. `no_solution`
+   oder `contradiction` bei aus derselben Matrix abgeleiteten Hinweisen ist zunächst
+   ein Eingangs-/Werkzeugwiderspruch: Matrix, Hinweise und Dateibindung abgleichen,
+   keinen Bildfehler daraus erfinden. `unknown`/`aborted` verlangt Ressourcenanalyse,
+   keine Behauptung der Unlösbarkeit. Werkzeugfehler separat melden.
+2. **Standard: bis zu zwei gezielte Reparaturrunden**, bei Erfolg sofort stoppen.
+   Runde 1 bearbeitet den besten geeigneten Kandidaten. Offene Domains, betroffene
+   Kreuzlinien und gegebenenfalls Zeugenunterschiede bestimmen die zulässigen
+   Regionen. Motivisch plausible Kontur-, Flächen- oder Negativraumkorrekturen
+   begründen; kein Rauschpixel, Zusatzrahmen oder neue Farbe nur als Logikanker.
+3. Vor jedem Lauf einen bestehenden RP-5-Plan speichern: unveränderte Referenz,
+   Schutzmaske für wichtige gefüllte **und leere** Zellen, Operatoren, Seed und
+   Änderungs-/Such-/Abschlussbudgets. Runde 1 standardmäßig höchstens zwei
+   geänderte Positionen, bis zu 64 bewertete Kandidaten und 512 Vorschläge.
+   Zeit-/Linien-/Paarbudgets passend zur gemessenen Referenz innerhalb der
+   Werkzeuggrenzen festlegen; frische Abschlussprüfung separat reservieren.
+   Kleinere Suchbudgets nur mit konkretem Grund, nicht als Alibiversuch.
+4. Ohne brauchbaren Fund eine **andere begründete Hypothese** prüfen: andere
+   geeignete Referenz oder andere motivisch zulässige Änderungsregion. Runde 2
+   darf bis zu 128 Kandidaten/1024 Vorschläge nutzen. Ein höheres Zellbudget nur
+   vorab motivbezogen begründen; Schutzmerkmale und Freigabekorridor bleiben hart.
+   Nicht bloß denselben Lauf wiederholen oder alte Abbrüche umwerten. Ressourcen-
+   oder Replaygrenzen können kleinere Runden erfordern; tatsächliche Reichweite
+   und Abbruchgrund berichten. Ein früher Stopp ist nur bei Erfolg, fehlendem
+   zulässigem Änderungsraum, materieller Motivänderung oder konkretem technischen
+   Blocker zulässig. Dann den erforderlichen nächsten Schritt nennen.
+5. RP-5 priorisiert offene Zellen und ihre Umgebung, durchsucht aber nur begrenzt
+   Einzellokaländerungen; es optimiert nicht selbst anhand der Diagnosezeugen.
+   Codex legt daraus Hypothese und Maske fest. Reicht das nicht, eine konkrete
+   lokale Formkorrektur oder andere Abstraktion/Größe/Palette vorschlagen und nur
+   innerhalb vorhandener Befugnisse umsetzen. Feste manuelle Ableitungen brauchen
+   den tatsächlich unterstützten ZA-1-Vertrag und dessen gesonderte Autorisierung;
+   keine freie Matrixmanipulation als regulären Import ausgeben. Materielle
+   Änderungen vor Fortsetzung erneut zur Motivfreigabe vorlegen.
+
+Für jede Runde genügen Hypothese, Referenz-/Plankennung, tatsächliche Kandidaten-/
+Änderungszahl, Endgrund und Auswahlentscheidung im bestehenden Entscheidungsprotokoll.
+Kein Erfolg nach begrenzter Suche ist zulässig, aber kein Beweis, dass eine Reparatur
+unmöglich wäre. Bei Paarprofilen muss bereits der Plan die versionierte
+`certification` binden; neue Hinweise brauchen eigene Baseline und Endnachweis.
 
 Referenz, Ergebnis und markierten Zell-Diff vergleichen. `found` allein genügt nicht: Endnachweis, unabhängige Prüfung, Replay und redaktionelle Bewertung sind erforderlich. Bei schlechter Ausgangsform zuerst Abstraktion/Größe/Rasterpalette korrigieren; die freigegebene Abschlussbildreferenz dabei erhalten.
 
@@ -368,12 +422,76 @@ Den Abschlussbericht auf eine kompakte Seite plus Beleglinks begrenzen. Er MUSS 
 - Abschlussbildfreigabe, Abstraktionsfreigabe und Endabnahme mit Beleg beziehungsweise ausdrücklich offenem Status.
 - Gewählten Kandidaten, wesentliche Ablehnungsgründe und echte Raster-/Abschlussbilddateien.
 - Maße, Zellzahl, Modus, Palette; Motivqualität, Änderungen, Reparaturdiff und begründete weiche Ausnahmen.
+- Gewünschte und tatsächlich verwendete Farbzahl, Funktion der Farben und begründete Abweichung; Ergebnis beziehungsweise konkreter Entfallgrund der Reparaturrunden.
 - Ergebnisse und Dateibelege für Produktmaße, Randregel, Herkunft, Hinweise, vollständigen Nachweis unter benanntem Profil, unabhängige Prüfung und Endmatrixgleichheit. Bei Paarprofilen Baseline-/Paarstatus und Assessmentbindung getrennt nennen; eine optionale Suchdiagnose nicht als Deduktionsnachweis ausgeben.
 - Schwierigkeit L1–L5, plausiblen Bereich, Methode, Vertrauen und Technik-/Engstellenbegründung; getrennt Bearbeitungsumfang und belastbare Zeitdaten oder „nicht geschätzt“.
 - Nutzungsgrundlage, tatsächlichen Zieladapter-/Exportstatus, KI-Durchläufe und aktive Menschenzeit oder „nicht erfasst“.
 - Offene Blocker und nächsten erlaubten Schritt. Vorhandene menschliche Spieldaten optional ergänzen; ihr Fehlen ist kein Blocker.
 
 Keine Ergebnis- oder Freigabefelder ohne Beleg als erfüllt ausgeben. Inhaltsfreigabe, Katalogfähigkeit und tatsächliche Integration getrennt halten. Ein unpassender oder fehlender Exportadapter darf nicht durch Umwidmung bestehender Pilotdefinitionen ersetzt werden.
+
+### Einheitliche Chatübergabe
+
+Jede Phasenabschluss-, Korrektur-, Wiederaufnahme- oder Blockermeldung verwendet
+genau diese Reihenfolge; kurze Arbeitsfortschrittsmeldungen benötigen keinen Datensatz:
+
+1. **Ergebnis:** höchstens drei knappe Punkte zu Ergebnis, wesentlichen Änderungen
+   und offenen Blockern. Die für die Freigabe nötigen echten Bilder und Datei-/PR-
+   Links unmittelbar dabei zeigen; technische Details bleiben in den Paketbelegen.
+2. **Sheet-Daten:** genau ein kopierbarer JSON-Block nach folgendem Format. Dieselben
+   Bezeichnungen wie im Cheat-Sheet verwenden, alle Schlüssel ausgeben; unbekannte
+   Werte sind `null`. Keine Platzhalter oder erfundenen Hashes. Dies ist eine
+   Bedienhilfe aus den bestehenden Dateien, kein zusätzlicher Nachweisvertrag und
+   keine eigene Pflichtdatei im ZIP. Der Import erteilt keine Freigabe.
+3. **Nächster Schritt:** denselben Auftragsnamen wie im JSON nennen und in einem
+   Satz die noch erforderliche menschliche Auswahl/Freigabe oder Blockerbehebung.
+   Ohne echten Stopp bereits autorisierte Arbeiten selbst fortsetzen.
+
+```json
+{
+  "format": "picross-cheatsheet-update-v1",
+  "Motiv": null,
+  "Rasterbreite": null,
+  "Rasterhöhe": null,
+  "Größenvorgabe": "Ungefähr",
+  "Rätselmodus": "KI empfiehlt",
+  "Farbanzahl": null,
+  "Farbvorgabe": "Ungefähr",
+  "Verwendete Farben": null,
+  "Rätsel-ID": null,
+  "Paketrevision": null,
+  "Paketpfad": null,
+  "Abschlussbild": null,
+  "Motivvorlage": null,
+  "Parameterkorridor": null,
+  "Inventar-SHA-256": null,
+  "Quellbranch / Commit": null,
+  "PR": null,
+  "Produktionsstatus": null,
+  "Nächster Schritt": "1 · Abschlussbilder erzeugen"
+}
+```
+
+`Größenvorgabe`: `Ungefähr|Fest`; `Rätselmodus`: `KI empfiehlt|Monochrom|Farbig`;
+`Farbvorgabe`: `Ungefähr|Genau`. Maße und Farbzahlen sind Ganzzahlen oder `null`.
+`Farbanzahl` bleibt der Nutzerwunsch, bei offener Vorgabe `null`; `Verwendete Farben`
+wird erst an einer tatsächlichen Matrix gezählt. Konkrete Empfehlung/Istmaße und
+Modus samt zulässigen Varianten stehen im `Parameterkorridor`; seine Bestätigung
+folgt weiterhin der echten Motivfreigabe. Bildfelder enthalten eindeutigen Pfad
+und Dateirevision; bei noch offener Auswahl `null`. `Inventar-SHA-256` enthält nur
+den 64-stelligen Hash des Originalinventars, keinen ZIP-, Matrix- oder Logikhash.
+`Quellbranch / Commit` ist ein tatsächlich erreichbarer Paketstand, bevorzugt eine
+volle Commit-SHA; ungesicherte lokale Arbeit als `null` plus Blocker berichten.
+Der Paketstand ist vom Stand des zu lesenden Regelwerks zu unterscheiden.
+
+`Nächster Schritt` verwendet genau einen dieser Namen: `1 · Abschlussbilder erzeugen`,
+`2 · Bild freigeben & abstrahieren`, `3 · Motiv freigeben & produzieren`,
+`4 · Abnehmen & ins Spiel integrieren`, `Korrigieren oder Fehler beheben`,
+`Gespeicherte Arbeit fortsetzen`, `Merge freigeben` oder `Abgeschlossen`.
+Nach bereits beauftragtem Integrationsmerge ist erst nach Abschnitt 9
+`Abgeschlossen` zulässig. Dann auf den erhaltenen Integrationsdatensatz statt
+auf gelöschte ZIPs verweisen, `Paketpfad` und entfernte Bild-/Parameterreferenzen
+auf `null` setzen; Reveal und Runtime-Inhalte bleiben erreichbar.
 
 ## 8. Abgenommenes Paket ins Spiel integrieren
 
@@ -385,28 +503,13 @@ ZA-1 erzeugt dafür `picross-target-inspection-v4` und `picross-target-export-v4
 Diese Exportversion ist von den Versionen menschlicher Änderungsautorisierungen
 zu unterscheiden; sie erteilt selbst keine Ausnahme oder Freigabe.
 
-Ausnahme für bereits versiegelte manuelle Rasterimporte: Ein historisches
-`blocked`-Paket darf ausschließlich über die extern gebundene
-ZA-1-v2-Autorisierung mit tatsächlicher Endfreigabe und gegebenenfalls expliziter
-Randregel-Ausnahme integriert werden. Originalzustand und Nachweise bleiben
-unverändert; der Adapter muss die festen Edits und alle übrigen Gates vollständig
-frisch prüfen. Kein Umschreiben des Handoffs zur Herstellung von `content_ready`.
-
-Für bereits versiegelte feste **Farbkorrekturen** unterstützt die gesondert
-beauftragte ZA-1-v3-Autorisierung einen `raster_review`-Import mit offenem
-Motivgate. Die tatsächliche nachträgliche Annahme bindet Motivdatei, vorgeschlagenen
-Parameterkorridor, feste Ableitungskette und Endabnahme extern; Originalhandoff
-und Inventar bleiben unverändert. Alle anderen Inhaltsgates einschließlich
-Randregel und sämtliche Herkunfts-/Proofprüfungen bleiben Pflicht. Dies ist
-keine automatische Freigabe oder rückdatierte Motivannahme.
-
-Für versiegelte feste Farbkorrekturen aus einer **bereits freigegebenen**
-Motivvorlage unterstützt die gesondert beauftragte ZA-1-v4-Autorisierung den
-manuellen `raster_review`-Eingang. Originalpaket und tatsächliche Motivfreigabe
-bleiben unverändert. Der ursprüngliche Motivimport, feste Zellkorrekturen,
-Schutzmasken, sämtliche Inhaltsgates und die separat gebundene Endabnahme werden
-vollständig geprüft. Keine künstliche Rücksetzung des Motivgates und keine
-neue Freigabe des unveränderten Inhalts. Details im [ZA-1-v4-Vertrag](../ZA1_ADAPTER.md).
+Manuelle Ableitungen benötigen den passenden externen ZA-1-Autorisierungsvertrag
+(v1–v4) und die tatsächliche Erklärung für die konkrete Auswahl. Originalhandoff,
+Inventar und ursprüngliche Freigaben unverändert lassen; feste Edits, Schutzmasken,
+Herkunft und Endproof frisch prüfen. Historische `blocked`-/`raster_review`-Eingänge,
+späte Motivannahme oder eine Randregel-Ausnahme sind ausschließlich unter den
+jeweils ausdrücklich zugelassenen Bedingungen aus [ZA-1](../ZA1_ADAPTER.md) möglich.
+Keine pauschale Ausnahme aus einem manuellen Quelltyp oder einem neuen Solver ableiten.
 
 Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und dann:
 
@@ -455,10 +558,15 @@ sind Arbeitsmaterial, kein dauerhaft wachsender Spiel- oder CI-Bestand.
    Keine Kopien in einem neuen Archivordner, in Builds oder CI-Artefakten aufheben.
    Ein Commit-/PR-Verweis genügt für den Entscheidungsverlauf; Git-Historie bleibt
    unangetastet. Fortbestehende Nutzungsrechte/Attributionen dürfen nicht verloren gehen.
-5. Diff und unveränderte Runtime-Dateien kontrollieren; Cleanup committen/pushen
-   und als Draft-PR liefern. Ein separater Merge braucht die passende bestehende
-   oder neue Mergefreigabe. Reine Datenbereinigung nutzt den schlanken Inhaltspfad.
-   Weder ein zusätzlicher Spielerbuild noch neue rätselspezifische Tests sind nötig.
+5. Diff und unveränderte Runtime-Dateien kontrollieren; Cleanup committen/pushen,
+   separat selbst prüfen und nach erfolgreichen Pflichtchecks **unmittelbar mergen**.
+   Eigentümerfreigabe vom 15.10.2026: Dieser eng begrenzte Nachintegrations-Cleanup
+   ist einschließlich Merge beauftragt, auch wenn der vorausgehende Integrations-PR
+   zunächst als Draft vorgelegt wurde. Kein weiterer Routineprompt, kein dauerhaft
+   offener Cleanup-Draft. Vor dem tatsächlichen Integrationsmerge nichts bereinigen;
+   bei Blocker genau diesen melden. Reine Datenbereinigung nutzt den schlanken
+   Inhaltspfad, ohne Spielerbuild oder rätselspezifische Tests. Danach Main-Commit
+   und erhaltene Runtime-Dateien nachweisen.
 
 Spätere echte Rätseländerungen sind ein neuer Produktionsauftrag. Fehlende alte
 Arbeitsdateien sind kein Defekt und rechtfertigen keine Wiederherstellungspflicht.
