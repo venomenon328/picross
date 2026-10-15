@@ -13,6 +13,11 @@ def run(root, workspace, output, engine, environment, phase, host):
     copy_regression_game(root, project)
     from web_tests.fixtures import adapt
     adapt(project)
+    # Deliberately different from the 50x30 raster: a real imported portrait.
+    (project / "art/fixtures/t09.svg").write_text(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="800">'
+        '<rect width="300" height="800" fill="#6c9aab"/>'
+        '<circle cx="150" cy="400" r="100" fill="#ffffff"/></svg>\n', encoding="utf-8", newline="\n")
     saves = workspace / "ea-saves"
     saves.mkdir()
     env = environment.copy()
@@ -43,4 +48,4 @@ def run(root, workspace, output, engine, environment, phase, host):
     # The APNG contains all frames. Keep only five additional static phase samples.
     selected = {min(range(len(sequence)), key=lambda i:abs(sequence[i]["seconds"]-t)) for t in (0, .5, 1.1, 1.65, 2.15)}
     retained = [directory / sequence[i]["file"] for i in sorted(selected)]
-    return dict(test_only=True, reports=reports, animation="motion.apng"), retained + sorted(directory.glob("final-*.png")) + sorted(directory.glob("*.json")) + [directory / "motion.apng"]
+    return dict(test_only=True, reports=reports, animation="motion.apng"), retained + sorted(directory.glob("final-*.png")) + sorted(directory.glob("rectangle-*.png")) + sorted(directory.glob("*.json")) + [directory / "motion.apng"]
