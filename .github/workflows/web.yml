@@ -28,12 +28,13 @@ jobs:
         run: |
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-player
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test --test
+          python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test-update --test
+      - name: Real isolated SSH and static HTTP reference
+        run: python3 tools/web_tests/ssh_reference.py --build artifacts/web-player --output artifacts/web-evidence
       - name: Actual Chromium and Firefox event and persistence routes
         run: |
           xvfb-run -a "${{ runner.temp }}/web-venv/bin/python" tools/web_tests/smoke.py --build artifacts/web-player --output artifacts/web-evidence
-          xvfb-run -a "${{ runner.temp }}/web-venv/bin/python" tools/web_tests/browser.py --build artifacts/web-test --output artifacts/web-evidence
-      - name: Real isolated SSH and static HTTP reference
-        run: python3 tools/web_tests/ssh_reference.py --build artifacts/web-player --output artifacts/web-evidence
+          xvfb-run -a "${{ runner.temp }}/web-venv/bin/python" tools/web_tests/browser.py --build artifacts/web-test --update-build artifacts/web-test-update --output artifacts/web-evidence
       - name: Upload regular static player
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -51,4 +52,6 @@ jobs:
             artifacts/web-player-logs/
             artifacts/web-test-logs/
             artifacts/web-test/build-manifest.json
+            artifacts/web-test-update-logs/
+            artifacts/web-test-update/build-manifest.json
           retention-days: 7

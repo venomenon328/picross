@@ -30,7 +30,7 @@ Der Windows-main-Build bleibt separat unverändert benutzbar.
 ## Einmaliges Zielsetup (separater Liveauftrag)
 
 Die Referenz ist POSIX/OpenSSH mit SFTP, `sh` und GNU-Coreutils (`mv -T`, `cp`,
-`sha256sum`, `mkdir`, `rmdir`, `cat`, `cut`, `rm`), `find`, `grep`, `sed`, `cmp`.
+`sha256sum`, `mkdir`, `rmdir`, `cat`, `cut`, `rm`, `wc`), `find`, `grep`, `sed`, `cmp`.
 Keine Python-/Godot-/Dockerinstallation auf dem Ziel nötig. Der SSH-Benutzer
 braucht Schreib-/Suchrechte ausschließlich im eigenen dedizierten Verzeichnis.
 Ein vorhandener statischer HTTPS-Webserver muss dieses Verzeichnis ausliefern.

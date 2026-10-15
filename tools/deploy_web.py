@@ -72,7 +72,7 @@ class Remote:
 
     def preflight(self) -> None:
         root = shlex.quote(self.cfg['root'])
-        self.run(f'''for command in sh mkdir rmdir mv cp sha256sum find sed cmp cat grep cut rm; do command -v "$command" >/dev/null; done
+        self.run(f'''for command in sh mkdir rmdir mv cp sha256sum find sed cmp cat grep cut rm wc; do command -v "$command" >/dev/null; done
 test -d {root} && test ! -L {root}
 cd {root}
 test "$(pwd -P)" = {root}
@@ -111,10 +111,15 @@ cat releases/{build}/build-manifest.json
         manifest = web_bundle.validate_manifest(json.loads(raw))
         if manifest['build_id'] != build:
             raise ValueError('Retained manifest mismatch')
+        present = set(self.run(self.prefix()+f'find releases/{build} -type f -print\n').splitlines())
+        expected = {name for name in manifest['files'] if name != 'index.html'} | {f'releases/{build}/build-manifest.json'}
+        if present != expected:
+            raise ValueError('Retained file inventory mismatch')
         checks = []
         for name, entry in manifest['files'].items():
             target = f'releases/{build}/entry.html' if name == 'index.html' else name
             checks.append(f'test "$(sha256sum {shlex.quote(target)} | cut -d " " -f 1)" = {entry["sha256"]}')
+            checks.append(f'test "$(wc -c < {shlex.quote(target)})" -eq {entry["size"]}')
         self.run(self.prefix()+'\n'.join(checks)+'\n')
         return manifest
 
@@ -146,8 +151,8 @@ if test -e releases/{build}; then
   {compare}
   cmp {stage}/build-manifest.json releases/{build}/build-manifest.json
 else
+  cp {stage}/build-manifest.json {stage}/releases/{build}/build-manifest.json
   mv -T {stage}/releases/{build} releases/{build}
-  cp {stage}/build-manifest.json releases/{build}/build-manifest.json
 fi
 ''')
 
@@ -202,8 +207,7 @@ def deploy(cfg: dict, bundle: Path | None, *, dry_run=False, rollback: str | Non
             remote.validate_release(before)
         if bundle:
             remote.upload(bundle, manifest)
-        else:
-            remote.validate_release(manifest['build_id'])
+        remote.validate_release(manifest['build_id'])
         remote.activate(manifest['build_id'])
         check_http(cfg['url'], manifest)
         return 'DEPLOY PASS: '+manifest['build_id']
