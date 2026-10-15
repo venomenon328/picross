@@ -311,7 +311,7 @@ func test_scene() -> void:
 	check(app.ending.get_global_rect().end.y <= 697, "1280x720 completion leaves footer visible")
 	check(not app.reveal_view.payload.is_empty(), "real completion artwork")
 	app.show_album()
-	check(app.title.get_theme_font("font").get_font_name() == "Fraunces", "V3 completed album does not inherit work font")
+	check(app.title.get_theme_font("font") == app.WORK_TITLE_FONT, "KB completed catalog explicitly uses original Bakso")
 	check(app.choices[0].text.contains(fixture.reveal.name), "completed album entry")
 	check(app.album_reveals[0].visible and not app.album_previews[0].visible and app.album_reveals[0].payload == fixture.reveal, "completed album has colored earned image")
 	if app.sessions.size() >= 3:

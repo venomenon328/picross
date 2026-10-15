@@ -96,7 +96,9 @@ func _draw() -> void:
 		var font: Font = get_theme_font("font")
 		var fs: int = get_theme_font_size("font_size")
 		var extent: Vector2 = font.get_multiline_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs)
-		var ink: Color = PAPER if selected else Color("757970") if disabled else INK
+		# Honour theme alpha, including the existing native contrast probe.
+		var ink: Color = get_theme_color("font_color")
+		if selected and ink.a > 0: ink = PAPER
 		draw_multiline_string(font,Vector2((size.x-extent.x)/2,(size.y-extent.y)/2+font.get_ascent(fs)),text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,-1,ink)
 	if has_focus():
 		# Keep focus outside the unchanged swatch; light ink remains visible on
