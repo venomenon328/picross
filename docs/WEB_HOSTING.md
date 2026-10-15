@@ -27,6 +27,16 @@ Der reguläre exportierte PCK wird mit der bestehenden externen Paketprüfung au
 Runtime-Katalog und unerlaubte technische Beigaben geprüft.
 Der Windows-main-Build bleibt separat unverändert benutzbar.
 
+Für die getrennte persönliche lokale Probe, ohne SSH oder Veröffentlichung:
+
+```powershell
+python tools/web_tests/serve.py --build artifacts/web-player --port 8000
+```
+
+`http://127.0.0.1:8000/` im Browser öffnen; mit Strg+C den lokalen Server beenden.
+Für Wiederaufnahme denselben Browser, dasselbe Profil und denselben Port verwenden.
+`index.html` nicht direkt als lokale Datei öffnen.
+
 ## Einmaliges Zielsetup (separater Liveauftrag)
 
 Die Referenz ist POSIX/OpenSSH mit SFTP, `sh` und GNU-Coreutils (`mv -T`, `cp`,
@@ -66,7 +76,7 @@ Sitewurzel und Unterpfad verwenden dieselben relativen Ressourcenpfade.
 ```powershell
 python tools/deploy_web.py --build artifacts/web-player --dry-run
 python tools/deploy_web.py --build artifacts/web-player
-python tools/deploy_web.py --rollback <vorherige-build_id>
+python tools/deploy_web.py --rollback "vorherige-build_id-aus-dem-Deployprotokoll"
 ```
 
 Ein Update prüft das lokale Bundle vollständig, prüft lesend die Zielfähigkeiten,
@@ -74,6 +84,7 @@ erwirbt `.deploy-lock`, überträgt über SFTP in einen eigenen Stagingbereich,
 vergleicht alle Hashes und aktiviert erst dann. Dry-Run verbindet sich zum
 konfigurierten Ziel, schreibt aber keine Dateien. In #162 wird ausschließlich
 die isolierte Referenz verwendet; kein Kontakt zum Eigentümer-VPS.
+Beim Rollback den Platzhalter durch die vollständige frühere Buildkennung ersetzen.
 
 Alle Dateien eines Exports liegen unter `releases/<build_id>/`. `index.html`
 wird durch eine Umbenennung im selben Verzeichnis atomar ersetzt und referenziert

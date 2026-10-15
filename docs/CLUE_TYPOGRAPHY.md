@@ -116,3 +116,9 @@ Messwerte, Schriftwahl, Suchmenge und Fitgrenze bleiben unverändert; es gibt
 keine neue Schriftgradkappung. Dies verhindert Heaperschöpfung bei kleinen
 Rastern im begrenzten WebAssembly-Speicher. Der native Pfad bleibt unverändert.
 Die Webregression öffnet und beendet dafür einen festen 5×5-Monofall.
+
+Vor teurer Rasterisierung verwirft die Websuche außerdem Kandidaten, deren
+gemessener numerischer Spaltenstrich einschließlich C1/AA bereits breiter als
+die verfügbare Hülle ist. Dieser zentrierte Strich ist stets Bestandteil von
+`envelope()` und damit eine sichere Untergrenze. Alle übrigen Kandidaten werden
+unverändert vollständig gemessen; keine Monotonieannahme oder geänderte Fitgrenze.

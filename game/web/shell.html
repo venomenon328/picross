@@ -56,6 +56,17 @@ async function start() {
   // The lock precedes IDBFS hydration. Never start a second stale writable filesystem.
   await navigator.locks.request('picross-p1-userfs', {ifAvailable:true}, async lock => {
     if (!lock) throw new Error('picross ist bereits in einem anderen Tab geöffnet. Diesen Tab schließen und hier neu laden.');
+    // Open the same IDBFS database before the expensive engine startup. Godot
+    // owns its schema/version upgrade; this only reports browser policy errors.
+    await new Promise((resolve, reject) => {
+      const denied = () => reject(new Error('Browserspeicher nicht verfügbar. Websitedaten erlauben und neu laden.'));
+      try {
+        const request = indexedDB.open('/userfs');
+        request.onerror = denied;
+        request.onblocked = denied;
+        request.onsuccess = () => { request.result.close(); resolve(); };
+      } catch (_) { denied(); }
+    });
     const engine = new Engine($GODOT_CONFIG);
     window.picrossStorage.engine = engine;
     await engine.startGame({canvas, canvasResizePolicy:0, persistentPaths:['/userfs'],

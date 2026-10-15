@@ -160,6 +160,10 @@ def exercise(pw, name, root, update, url, output, evidence):
         page.locator('#fullscreen').click(); page.wait_for_timeout(400)
         assert page.evaluate('!!document.fullscreenElement') and state(page)['fit']
         page.locator('#fullscreen').click(); page.wait_for_timeout(300)
+        page.set_viewport_size({'width':640,'height':480}); page.wait_for_timeout(300)
+        assert state(page)['minimum']
+        page.set_viewport_size({'width':1920,'height':1122}); page.wait_for_timeout(300)
+        assert state(page)['fit'] and not state(page)['minimum']
         passed('UI125, 720p/1080p, wheel zoom, fullscreen fit and hit geometry')
         if name == 'chromium':
             cdp = context.new_cdp_session(page)
@@ -267,6 +271,7 @@ def exercise(pw, name, root, update, url, output, evidence):
         control(page,name='undo'); assert state(page)['cells'] == before
         saved(page); context.set_offline(False)
         passed('real subpath startup, stable saves and offline-after-load input')
+        assert not errors, errors
         control(page,name='nav-album')
         control(page,text='Beenden'); page.wait_for_function('document.getElementById("message").textContent.includes("Spiel beendet")')
         assert not page.evaluate('picrossStorage.pending')
@@ -277,7 +282,12 @@ def exercise(pw, name, root, update, url, output, evidence):
             try:
                 blocked.add_init_script("indexedDB.open = () => { throw new DOMException('blocked by test policy','SecurityError'); };")
                 denied = blocked.pages[0]; denied.goto(url)
-                denied.wait_for_function('document.getElementById("message").textContent.includes("Browserspeicher nicht verfügbar")',timeout=60000)
+                try:
+                    denied.wait_for_function('document.getElementById("message").textContent.includes("Browserspeicher nicht verfügbar")',timeout=60000)
+                except Exception:
+                    denied.screenshot(path=str(output/f'{name}-blocked-failure.png'))
+                    evidence['blocked_failure_message'] = denied.locator('#message').inner_text()
+                    raise
                 assert not denied.evaluate('picrossStorage.ready')
                 passed('blocked IndexedDB startup displays failure before gameplay')
             finally: blocked.close()
