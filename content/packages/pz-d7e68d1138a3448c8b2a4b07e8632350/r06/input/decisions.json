@@ -1,0 +1,14 @@
+{
+  "accepted_revision": "r05",
+  "metadata_revision": "r06",
+  "acceptance": "acceptance.json",
+  "new_cell_changes": 0,
+  "metadata_changes": [
+    "Actual user acceptance closes the displayed thin-leaf visual review.",
+    "Remove the R4 rule-family entry from difficulty metadata because the verified full-line baseline is solved; keep L3/L2-L4/low estimate unchanged.",
+    "Use additive, exactly bound v5 stalled-base authorization for the necessary source lineage."
+  ],
+  "previous_production": "c4443dad3b67ef6e58920d4b448c081f572a1415:content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/r05/package.zip",
+  "preserved": "Full required original import and fixed child bundles, exact four fixed edits and masks, original image/motif approvals. Previous failed repair/search histories remain in r05; they are not integration replay inputs.",
+  "merge_authorized": false
+}

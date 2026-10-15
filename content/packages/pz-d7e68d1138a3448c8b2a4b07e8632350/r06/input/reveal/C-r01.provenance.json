@@ -1,0 +1,8 @@
+{
+  "author": "ChatGPT native image generation",
+  "file": "reveal/C-r01.png",
+  "prompt_file": "reveal-generation.json",
+  "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe",
+  "usage_basis": "Original user-requested native generation from text; no external input assets."
+}
