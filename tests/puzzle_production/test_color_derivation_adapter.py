@@ -19,8 +19,12 @@ class ColorDerivationTests(unittest.TestCase):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         self.root = Path(temp.name)
-        self.p = p = self.root / "package"
-        make(p, "pz-test-color-chain", 6, 3, "color", colors=4)
+        self.prepare()
+
+    def prepare(self, colors=4):
+        self.p = p = self.root / f"package-{colors}"
+        width = max(6, colors+1)
+        make(p, "pz-test-color-chain", width, 3, "color", colors=colors)
         h = load_json(p / "handoff.json")
         d = load_json(p / "design.json")
         before = load_json(p / "production/import/area-candidate.json")["matrix"]
@@ -37,7 +41,7 @@ class ColorDerivationTests(unittest.TestCase):
             plan = {"format": "picross-editorial-fixed-cell-plan-v1", "puzzle_id": h["puzzle_id"],
                     "revision": h["revision"], "reference_matrix_hash": digest(before), "max_changes": 1,
                     "search": False, "seed": None, "solve_seconds": 30, "verify_seconds": 30, "max_lines": 100000,
-                    "protected": [[(xx, y) != (x, 1) for xx in range(6)] for y in range(3)],
+                    "protected": [[(xx, y) != (x, 1) for xx in range(width)] for y in range(3)],
                     "edits": [{"column": x + 1, "row": 2, "before": before[1][x], "after": after}]}
             write_json(p / f"plan-{i}.json", plan)
             write_json(p / f"edits-{i}.json", {"format": "picross-editorial-fixed-cell-derivation-v1",
@@ -84,6 +88,20 @@ class ColorDerivationTests(unittest.TestCase):
     def inspect(self, approval=True):
         with open_package(self.p, allow_manual_review=True) as p:
             return inspect(p, self.approval if approval else None, manual_authorization=self.auth)[0]
+
+    def test_eight_color_fixed_chain_exports_and_registers(self):
+        self.prepare(8)
+        self.assertTrue(self.inspect()["technical"])
+        out=self.root/"eight-export"
+        export(self.p,out,name="TEST ONLY",revision=1,stem="eight_chain",save_slot="eight_chain",
+               approval_path=self.approval,manual_authorization=self.auth,category_id="voegel",
+               categories_path=ROOT/"tests/puzzle_production/fixtures/catalog/categories.json")
+        manifest,report=verify_export(out)
+        definition=load_json(out/manifest["definition"])
+        self.assertEqual(len(definition["palette"]),8)
+        self.assertEqual(set(v for row in definition["solution"] for v in row)-{0},set(range(1,9)))
+        checkout=isolated_checkout(self.root/"eight-checkout")
+        self.assertEqual(registration(out,checkout,apply=True)["status"],"registered")
 
     def test_zip_export_offline_registration_preserves_original_review(self):
         archive = self.root / "package.zip"

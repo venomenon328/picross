@@ -124,6 +124,17 @@ def sync_runtime(root):
     return {"status": "projected", "entries": len(registry["entries"]), "categories": len(catalog["categories"])}
 
 
+def export_entry(export_dir, m, report, category):
+    return {"id": m["definition_id"], "key": m["definition_id"], "save_slot": m["save_slot"],
+         "definition": m["definition"].removeprefix("runtime/"), "reveal": m["reveal"].removeprefix("runtime/"), "visible": True,
+         "category_id": category["id"],
+         "production": {"package": "content/packages/" + m["definition_id"] + "/" + m["package_revision"],
+             "package_sha256": file_hash(export_dir / "manifest.json"),
+             "revision": m["package_revision"], "width": report["width"], "height": report["height"], "mode": report["mode"],
+             "difficulty": report["difficulty"], "status": "registered", "blockers": [], "test_only": m["test_only"],
+             "definition_sha256": m["files"][m["definition"]], "reveal_sha256": m["files"][m["reveal"]]}}
+
+
 def registration(export_dir, root, *, apply=False, fail_step=None):
     from .target_adapter import verify_export, FORMAT as EXPORT_FORMAT, MANUAL_FORMAT, PAIRED_FORMAT
     root = root.resolve()
@@ -136,13 +147,7 @@ def registration(export_dir, root, *, apply=False, fail_step=None):
     category = categories.lookup(catalog, m["category_id"])
     require(not m["test_only"] or root != ROOT.resolve(), "Test-only fixtures cannot be registered in the real repository")
     package_rel = "content/packages/" + m["definition_id"] + "/" + m["package_revision"]
-    e = {"id": m["definition_id"], "key": m["definition_id"], "save_slot": m["save_slot"],
-         "definition": m["definition"].removeprefix("runtime/"), "reveal": m["reveal"].removeprefix("runtime/"), "visible": True,
-         "category_id": category["id"],
-         "production": {"package": package_rel, "package_sha256": file_hash(export_dir / "manifest.json"),
-             "revision": m["package_revision"], "width": report["width"], "height": report["height"], "mode": report["mode"],
-             "difficulty": report["difficulty"], "status": "registered", "blockers": [], "test_only": m["test_only"],
-             "definition_sha256": m["files"][m["definition"]], "reveal_sha256": m["files"][m["reveal"]]}}
+    e = export_entry(export_dir, m, report, category)
     existing = next((item for item in registry["entries"] if item["id"].casefold() == e["id"].casefold()), None)
     if existing is not None:
         from . import integrated_content
@@ -258,7 +263,10 @@ def recover(root):
     """Explicit rollback after process death; preflight every byte before mutation."""
     root = root.resolve()
     lock = root / "content/.registration-pending.json"
-    j = load_json(lock)
+    j = load_json(lock, 24 * 1024 * 1024)
+    if isinstance(j, dict) and j.get("format") == "picross-content-update-journal-v1":
+        from .content_update import recover_update
+        return recover_update(root)
     require(isinstance(j, dict) and j.get("format") != "picross-registration-journal-v1",
             "Legacy registration journal: preserve all files and resolve with the pre-KAT-1 tool/registry contract before migration")
     exact_keys(j, {"format", "targets", "files", "old", "new", "categories"})
