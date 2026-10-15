@@ -25,6 +25,8 @@ func setup(viewport: Viewport) -> void:
 	await select_pilot()
 
 func shot(stage: String) -> void:
+	# Contrast/pixel oracle describes the final view; EA covers the moving phases.
+	while app.reveal_view.active: await process_frame
 	app.refresh()
 	await process_frame
 	await process_frame

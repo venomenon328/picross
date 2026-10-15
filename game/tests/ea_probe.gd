@@ -30,6 +30,7 @@ func prepare(index: int = 2) -> Vector2i:
 				app.session.gesture.begin(app.session.player, Vector2i(x,y), value)
 				app.session.finish()
 	app.refresh()
+	click_at(cell(Vector2i.ZERO),MOUSE_BUTTON_RIGHT)
 	app.board.active_color = app.session.definition.solution[last.y][last.x]
 	return last
 
@@ -42,6 +43,8 @@ func finish_stroke(last: Vector2i) -> void:
 	check(app.session.completed and app.reveal_view.active and app.session.player.history.size() == history+1, "EA committed stroke completes immediately; one history action")
 	check(app.reveal_view.source == origin and app.reveal_view.ink.position == origin.position and app.reveal_view.ink.scale == Vector2.ONE, "EA exact source geometry without fit/zoom jump")
 	check(app.reveal_view.ink.commands.size() == app.session.player.cells.filter(func(v: int) -> bool: return v > 0).size(), "EA every confirmed fill including last stroke captured")
+	app._undo()
+	check(app.session.completed and app.session.player.history.size() == history+1 and app.undo_button.disabled, "EA completed board cannot be undone during fade")
 	check(app.completion_title.modulate.a == 0 and app.completion_reset.disabled, "EA name/reset absent until image and no release clickthrough")
 	var saved: Dictionary = app.store.load_slot(app.session.definition)
 	var restored := Session.new(app.session.definition)
@@ -92,6 +95,7 @@ func run() -> void:
 			var bytes := save_bytes()
 			var started := Time.get_ticks_msec()
 			var next_frame := 0.0
+			var target_rect: Rect2 = app.reveal_view.artwork_rect()
 			while app.reveal_view.active:
 				await process_frame
 				if app.reveal_view.elapsed >= next_frame:
@@ -102,6 +106,7 @@ func run() -> void:
 						sequence.append({"file":name+".png","seconds":app.reveal_view.elapsed})
 					next_frame += 0.10
 			final_checks()
+			check(app.reveal_view.artwork_rect() == target_rect, "EA caption arrival never changes image geometry")
 			check(save_bytes() == bytes, "EA presentation never rewrites save/history")
 			measurements.append({"window":context,"duration_ms":Time.get_ticks_msec()-started,"source":str(app.reveal_view.source),"area":str(app.reveal_view.area),"art":str(app.reveal_view.artwork_rect())})
 			await frame("final-%d" % context[0])
@@ -133,14 +138,30 @@ func run() -> void:
 		var before_raster: Image
 		await RenderingServer.frame_post_draw
 		before_raster = surface.get_texture().get_image()
+		app.reveal_view.raster.hide()
+		await RenderingServer.frame_post_draw
+		var paper_only: Image = surface.get_texture().get_image()
+		app.reveal_view.raster.show()
 		var rect: Rect2 = app.reveal_view.raster_rect()
 		var step: float = rect.size.x / app.session.player.width
 		for y: int in range(app.session.player.height):
 			for x: int in range(app.session.player.width):
 				var value: int = app.session.player.cells[y*app.session.player.width+x]
-				if value <= 0: continue
-				var color: Color = app.board.cell_color(value)
-				check(before_raster.get_pixelv(Vector2i(rect.position+Vector2(x+0.5,y+0.5)*step)).is_equal_approx(color), "EA native raster cell retains exact palette color")
+				var sample := Vector2i(rect.position+Vector2(x+0.5,y+0.5)*step)
+				var color: Color = app.board.cell_color(value) if value > 0 else paper_only.get_pixelv(sample)
+				check(before_raster.get_pixelv(sample).is_equal_approx(color), "EA native raster cell retains exact palette color")
+		# Every pixel across the filled row, including all cell boundaries.
+		var row_y := int(rect.position.y+2.5*step)
+		for pixel_x: int in range(ceili(rect.position.x),floori(rect.end.x)):
+			# Native rasterization chooses either adjacent cell at a fractional edge.
+			# Require an opaque original neighbor color; paper/blending is a seam.
+			var low := clampi(floori((pixel_x-0.5-rect.position.x)/step),0,49)
+			var high := clampi(floori((pixel_x+0.5-rect.position.x)/step),0,49)
+			var actual := before_raster.get_pixel(pixel_x,row_y)
+			var matches := false
+			for column: int in range(low,high+1):
+				matches = matches or actual.is_equal_approx(app.board.cell_color(app.session.player.cells[2*app.session.player.width+column]))
+			check(matches, "EA native filled row has no residual seams")
 		app.reveal_view.finish()
 		await frames()
 		final_checks()
@@ -152,11 +173,27 @@ func run() -> void:
 		var portrait: Rect2 = app.reveal_view.artwork_rect()
 		check(is_equal_approx(portrait.size.aspect(),30.0/80.0) and portrait.get_center().is_equal_approx(rect.get_center()), "EA portrait artwork independent of landscape raster, same center")
 		app.reveal_view.artwork = landscape
+		# Failed final save and mandatory leave flush preserve the visible end/error.
+		var failed_last := prepare()
+		await frames()
+		app._save_current()
+		app.store.fail_step = "after_temp"
+		event(cell(failed_last), true)
+		event(cell(failed_last), false)
+		check(app.session.completed and app.status_label.visible and not app.save_error.is_empty(), "EA final-save failure remains explicit")
+		app.show_album()
+		check(not app.album.visible and app.ending.visible and app.status_label.visible, "EA failed mandatory flush blocks catalog without hiding error")
+		app.store.fail_step = ""
+		app._save_current()
+		app.show_album()
+		check(app.album.visible, "EA retry permits normal navigation")
 		# Interruption paths and origin-bound reset, including changed selection.
 		for interruption: String in ["focus","scale","resize","catalog","switch","web"]:
 			var last := prepare()
 			await frames()
 			finish_stroke(last)
+			if interruption in ["catalog","switch"]:
+				await create_timer(0.6 if interruption == "catalog" else 1.8).timeout
 			match interruption:
 				"focus": app._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 				"scale": app.set_ui_scale(1.0)
