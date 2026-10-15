@@ -1,0 +1,170 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        45,
+        16,
+        1200,
+        1248
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 32,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        32,
+        5,
+        1200,
+        1246
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 34,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    }
+  ],
+  "authorization": "Sehr gut. Bitte integriere dieses Rätsel. Actual integration of the reviewed four-cell raster, including the disclosed necessary v5 adapter path. Existing Draft-PR/no-merge boundary remains.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "source_type": "manual",
+    "bundle": "fixed-import",
+    "variant": "area",
+    "proof": "fixed-import/area-proof.json",
+    "verification": "final-verification.json",
+    "matrix_hash": "2a4fde4aacfa5b4011d9439d9102b199a684b67627b24113b13c92fe3b1879b9",
+    "logic_hash": "396b05aaff3ff587c135d5713d3ad9e1e7a2996084fd16bc21db3172d7fa692a",
+    "certification": {
+      "max_pair_records": 250000,
+      "max_pair_work": 100000000,
+      "profile": "paired-lines-color"
+    }
+  },
+  "category_id": "blumen-pflanzen",
+  "configuration": "configuration.json",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": "reveal-approval.json",
+    "motif": "motif-approval.json",
+    "provenance": "final-verification.json",
+    "logic": "final-verification.json",
+    "frame": "final-verification.json",
+    "visual": "visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "invariants": "invariants.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "5d7f62a1f35df94ee9649972bd9789bd4f8bb0369ada866f9d03f6d0ee626fdf"
+  },
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe",
+    "file": "motif/MA-r01.png",
+    "sha256": "bdc2dcb33cce3aa7960423655c487bee5792d75dedd9da0001d167cd1ed23a19",
+    "revision": "MA-r01"
+  },
+  "next_action": "Export with the separately bound actual final approval and v5 fixed-color authorization, plan and register in the commissioned working branch; no merge.",
+  "origin_verification": "final-verification.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        45,
+        16,
+        1200,
+        1248
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 32,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        32,
+        5,
+        1200,
+        1246
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 34,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    }
+  ],
+  "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "repair": {
+    "type": "fixed_color_editorial_redraw",
+    "reference": "imports/30x32-B",
+    "reference_variant": "area",
+    "plan": "fixed-plan.json",
+    "record": "fixed-record.json"
+  },
+  "repo_commit": "e379eae6c4c4705eecc9b9384c3a381417682625",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "height": 30,
+    "mode": "color",
+    "width": 30
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveal/C-r01.png",
+    "sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe"
+  },
+  "revision": "r06",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874"
+  },
+  "state": "raster_review",
+  "diagnostic_reference": {
+    "bundle": "imports/30x32-B",
+    "variant": "area"
+  },
+  "repair_attempts": {
+    "historical_revision": "r05",
+    "commit": "c4443dad3b67ef6e58920d4b448c081f572a1415"
+  },
+  "difficulty": "difficulty.json",
+  "diagnostic_candidates": [
+    "30x32-B"
+  ],
+  "recheck_plan": [
+    "fixed-plan.json"
+  ],
+  "content_blockers": [],
+  "final_editorial_approval": null
+}

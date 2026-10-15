@@ -3,7 +3,7 @@
   "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
   "revision": "r05",
   "category_id": "blumen-pflanzen",
-  "state": "raster_review",
+  "state": "editorially_approved",
   "repo_commit": "fbb74f96abc223d3b42437ff5d6c48d54121ef39",
   "package": {
     "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/r05/package.zip",
@@ -15,18 +15,20 @@
     "sha256": "553da12772fdde420984c8051ce7d2b504eda983fccc8fb5191d34347d6c46d6"
   },
   "inventory_sha256": "61890cafaa3da70b72480b4a0746d0b594969ad83d04328fe564984bf221ceb1",
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/r05/approval.json",
+    "sha256": "85d8c569d2bcde9d552928d4396a8ee4275a853303eb17f7fa874cb296821ae4"
+  },
   "width": 30,
   "height": 32,
   "mode": "color",
   "difficulty": "L3",
   "blockers": [
-    "ZA-1: current approved-motif fixed-color integration requires a fully certified base import; original30x32-B is multiple. No supported export readiness or manual authorization claimed.",
-    "Visual: thin diagonal leaf portions remain a documented limitation and await editorial raster review."
+    "Historical r05 handoff remains unchanged; actual acceptance and resolved metadata/adapter binding are recorded in r06."
   ],
-  "next_action": "Review the corrected raster and remaining thin-leaf visual limitation. Before game integration, resolve the explicitly documented ZA-1 requirement for a certified original base; no end approval, export or merge authorized.",
+  "next_action": "Accepted unchanged raster is integrated through metadata revisionr06; preserve sealed r05 original.",
   "integration": null,
-  "updated_at_utc": "2026-10-15T11:48:42.382823+00:00",
+  "updated_at_utc": "2026-10-15T12:11:05.499348+00:00",
   "verification": {
     "status": "pass",
     "performed_at_utc": "2026-10-15T11:48:43.065722+00:00",

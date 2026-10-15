@@ -1,0 +1,9 @@
+{
+  "current_image_calls": 0,
+  "new_raster_variants": 0,
+  "new_repairs": 0,
+  "new_cell_changes": 0,
+  "human_active_minutes": null,
+  "playtest": "not_performed; optional",
+  "tool_changes": "Necessary additive v5 adapter path, generic synthetic regressions; no real puzzle added to CI."
+}

@@ -1,0 +1,20 @@
+{
+  "format": "picross-editorial-approval-v1",
+  "actor": "user",
+  "timestamp_utc": "2026-10-15T12:11:05.499348+00:00",
+  "statement": "Sehr gut. Bitte integriere dieses Rätsel.",
+  "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "revision": "r05",
+  "handoff_sha256": "553da12772fdde420984c8051ce7d2b504eda983fccc8fb5191d34347d6c46d6",
+  "inventory_sha256": "61890cafaa3da70b72480b4a0746d0b594969ad83d04328fe564984bf221ceb1",
+  "selection": {
+    "variant": "area",
+    "matrix_hash": "2a4fde4aacfa5b4011d9439d9102b199a684b67627b24113b13c92fe3b1879b9",
+    "logic_hash": "396b05aaff3ff587c135d5713d3ad9e1e7a2996084fd16bc21db3172d7fa692a",
+    "reveal": {
+      "file": "reveal/C-r01.png",
+      "sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe"
+    }
+  },
+  "test_only": false
+}
