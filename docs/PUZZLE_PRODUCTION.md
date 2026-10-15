@@ -60,7 +60,7 @@ Produktimplementierung und keine Mergefreigabe.
 | RP-D03 | Der Übergang zwischen KI-Arbeit und Werkzeug erfolgt über tatsächlich vorhandene Dateien und nachvollziehbare Briefings. Codex darf die deterministischen lokalen Werkzeuge ausführen. |
 | RP-D04 | Exakte Zellwerte und Randhinweise werden durch Programmlogik erzeugt. Ein generiertes Bild mit sichtbarem Raster ist noch kein validierter Rätseldatensatz. |
 | RP-D05 | Erstes ausreichendes Zertifizierungsprofil ist vollständige Linienlogik aus einem vollständig unbekannten Raster. Zusätzliche Startfelder sowie notwendige hypothetische Spielfortsetzungen mit Rücksprung sind ausgeschlossen. |
-| RP-D06 | Die bereits erlaubten linienübergreifenden Deduktionen bleiben als späterer Ausbau möglich. Das erste Profil ist keine endgültige Beschränkung des Produkts; zusätzliche Regeln brauchen einen eigenen nachvollziehbaren Vertrag. |
+| RP-D06 | #139/B-D01 ergänzt die unabhängig prüfbaren Profile `paired-lines-mono` / `paired-lines-color` v1 gemäß [Paarlinienvertrag](PAIRED_LINES.md). B-D02 bindet notwendige Paarlinienlogik als R4/L5 unter Schwierigkeit 0.2. Weitere Regeln brauchen einen eigenen Vertrag. |
 | RP-D07 | Logische Zulässigkeit, Motivqualität, Schwierigkeit, Bearbeitungsumfang und redaktionelle Freigabe werden getrennt erfasst. Ein technischer Erfolg ersetzt keine Motiv- oder Spielabnahme. |
 | RP-D08 | Der Generator darf Entwurfsvarianten suchen, verwerfen und verändern. Jeder zur Freigabe vorgesehene Endstand braucht einen neuen, an genau diesen Stand gebundenen Nachweis vom unbekannten Raster aus. |
 | RP-D09 | Motivschutz, Änderungsbudget und Suchbudget begrenzen automatische Reparaturen. Kein brauchbarer Kandidat gefunden ist ein reguläres Ergebnis; die Grenzen werden nicht zur Erzwingung eines Erfolgs gelockert. |
@@ -365,8 +365,39 @@ Vollständigkeitsargument, Reihenfolge, Formate, Grenzen und CLI stehen in der
 
 Die Diagnose ersetzt weder Produktionsmanifest noch vollständigen Deduktionsnachweis;
 `certified` bleibt stets falsch. `unique` bei bisherigem `stalled` erlaubt keine
-Produktionsfreigabe oder neue Schwierigkeitsstufe. Mehrlinienregeln und deren
-Schwierigkeitseinordnung gehören zu den gesondert zu entscheidenden Paketen B/C.
+Produktionsfreigabe oder neue Schwierigkeitsstufe. Die bestätigten B/C-Regeln
+stehen im folgenden Abschnitt; Diagnose A bleibt davon getrennt.
+
+### 5.6 Paarlinienprofil und nachgewiesener Technikbedarf (#139 B/C)
+
+Der [vollständige Vertrag](PAIRED_LINES.md) definiert Regel, unabhängige Herleitung,
+Proof-v3, Reihenfolge und kumulative Ressourcen. Zwei beliebige gleichgerichtete
+Linien werden gemeinsam betrachtet. Jede Kreuzlinie liefert die exakte Relation
+der Werte an beiden Kreuzungen. Entfernt werden ausschließlich Werte außerhalb
+der vollständigen Projektion aller kompatiblen Linienpaare. Keine hypothetische
+Rasterfortsetzung, keine Sollwerte und keine Eindeutigkeitsprämisse.
+
+Neue Profile werden ausdrücklich gewählt. Alte Logik-/Proofbytes und Standardaufrufe
+bleiben unverändert. Neue Import-/Reparaturversionen binden Profil, Budgets,
+eigenen Linienbaseline-Proof und Assessmentdatei. Endmatrix, ursprüngliche Abbrüche,
+Motivschutz und menschliche Freigaben behalten ihre Wirkung. Ein starker Fixpunkt
+schöpft alle Einzel- und alle ungeordneten Paarlinien aus; Zeit-/Arbeitsende ist
+Abbruch. Ein Widerspruch wird ohne Anwendung einer leeren Projektion belegt.
+
+`picross-difficulty-0.2` ergänzt R4 innerhalb L1–L5. Ausschließlich ein separat
+dateigebundener, unabhängig bestätigter `full-line-* / stalled` und vollständiger
+geprüfter Paarproof derselben Logik begründen R4, L5 und „linienübergreifend /
+besonders hoher logischer Anspruch“. Solververwendung allein genügt nicht.
+R0–R3-Kriterien und alte 0.1-Bewertungen bleiben erhalten. Instrumentiert wird
+R4-Notwendigkeit, kein vollständiger R0–R3-Analysator und keine menschliche
+Kalibrierung. Unvollständige Nachweise erhalten keine Freigabe durch eine hohe Zahl.
+
+`assess` berichtet Diagnose, Deduktion, Technikbedarf und Umfang getrennt.
+Ein aus A übernommenes `unique` bleibt ausdrücklich ein berichtetes Suchurteil:
+der Zeugenchecker replayt keine erschöpfende Suche. Zwei geprüfte verschiedene
+Zeugen bestätigen Mehrdeutigkeit. Vollständige Deduktion beweist selbst Eindeutigkeit.
+Authoring 0.5.0 und ZA-1-v4 binden die neuen Profile ausdrücklich; alte Snapshots
+oder alte Exportformate können sie nicht durch gelockerte Flags legitimieren.
 
 ## 6. Überarbeitung und Motivschutz
 
@@ -422,5 +453,5 @@ Nach bestätigter Main-Integration werden Produktionsunterlagen entfernt; benöt
 bleiben nur Runtime-Inhalte, Nutzungsgrundlage, Metadaten und kompakte Integrationsbindung.
 Reproduzierbarkeit während der Produktion ist keine lebenslange Aufbewahrungspflicht.
 
-Weitergehende Regelprofile, menschlich kalibrierte Schwierigkeit, öffentliche
+Über das Paarlinienprofil hinausgehende Regeln, menschlich kalibrierte Schwierigkeit, öffentliche
 Editoren und Veröffentlichung bleiben gesonderte Folgeentscheidungen.

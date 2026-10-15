@@ -55,7 +55,9 @@ als kanonischer `categories.json`-Snapshot mitgeliefert. Manifest
 `picross-target-export-v2` bindet `category_id` und `categories={file,sha256}`;
 Dateiinventar und `inspection.json` binden dieselbe Auswahl. Der autorisierte
 manuelle ZA-1-v3-Export ergänzt dieselbe Kategoriebindung um seine externe
-Autorisierung; Runtimeprojektion und Kategorienvertrag bleiben gleich. `verify-export` prüft
+Autorisierung; der Paarprofil-Export v4 führt dieselben Kategoriebindungen und
+zusätzlich seinen geprüften Deduktionsvertrag. Runtimeprojektion und
+Kategorienvertrag bleiben gleich. `verify-export` prüft
 Snapshot, Hash, Referenz und Bericht offline sowie den vollständigen ZA-1-Vertrag.
 
 `plan`/`register` verlangen zusätzlich die ID im aktuellen Zielcheckout. Der Plan

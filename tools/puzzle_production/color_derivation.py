@@ -111,17 +111,20 @@ def authorization(package, path, raw):
 
 def replay(matrix, design, record, plan, protected, budget):
     """Read the two historical fixed-record formats without rewriting their bytes."""
-    require(record.get("format") in ("picross-editorial-raster-redraw-v1", "picross-editorial-fixed-cell-derivation-v1") and
+    require(record.get("format") in ("picross-editorial-raster-redraw-v1", "picross-editorial-fixed-cell-derivation-v1",
+                                    "picross-editorial-raster-redraw-v2", "picross-editorial-fixed-cell-derivation-v2") and
             record.get("search") is False and record.get("seed") is None and
             plan.get("search") is False and plan.get("seed") is None, "Color edits cannot search")
     require(record.get("reference_matrix_hash") == digest(matrix), "Color chain parent mismatch")
-    if record["format"] == "picross-editorial-raster-redraw-v1":
-        require(plan.get("format") == "picross-editorial-raster-redraw-plan-v1", "Invalid redraw plan")
+    paired = record["format"].endswith("-v2")
+    suffix = "v2" if paired else "v1"
+    if record["format"].startswith("picross-editorial-raster-redraw-"):
+        require(plan.get("format") == "picross-editorial-raster-redraw-plan-" + suffix, "Invalid redraw plan")
         maximum = plan["limits"]["max_changed_positions"]
         mask = record.get("protected")
         limits = plan["limits"]
     else:
-        require(plan.get("format") == "picross-editorial-fixed-cell-plan-v1" and
+        require(plan.get("format") == "picross-editorial-fixed-cell-plan-" + suffix and
                 plan.get("edits") == record.get("edits") and
                 plan.get("reference_matrix_hash") == record["reference_matrix_hash"], "Invalid fixed-color plan")
         maximum, mask = plan.get("max_changes"), plan.get("protected")
@@ -151,7 +154,7 @@ def replay(matrix, design, record, plan, protected, budget):
         changed.add((x, y))
     require(changed == {(x, y) for y, row in enumerate(protected) for x, value in enumerate(row) if not value},
             "Color mask must protect every other position")
-    if record["format"] == "picross-editorial-fixed-cell-derivation-v1":
+    if record["format"].startswith("picross-editorial-fixed-cell-derivation-"):
         require(mask == protected, "Fixed plan differs from effective color mask")
     require(record.get("matrix_hash") == digest(result) and record.get("actual_changed_positions") == len(changed),
             "Color replay result mismatch")
@@ -182,12 +185,13 @@ def inspect_chain(package, auth, budget):
     require(design["mode"] == "color" and 1 <= len(design["palette"]) <= 4 and
             1 <= design["width"] <= 50 and 1 <= design["height"] <= 50 and
             digest(matrix) == base["matrix_hash"], "Color base design/matrix mismatch")
+    paired_parent = checked.get("certification") is not None
     chain = []
     parent_bundle, parent_variant = base["bundle"], base["variant"]
     for step in a["steps"]:
         record, plan = package.json(step["record"]["file"]), package.json(step["plan"]["file"])
         require(plan.get("puzzle_id") == h["puzzle_id"], "Color plan identity mismatch")
-        if record["format"] == "picross-editorial-raster-redraw-v1":
+        if record["format"].startswith("picross-editorial-raster-redraw-"):
             require(record.get("plan_sha256") == step["plan"]["sha256"], "Color redraw plan binding mismatch")
         else:
             require(record.get("plan") == step["plan"]["file"], "Color fixed plan binding mismatch")
@@ -201,6 +205,11 @@ def inspect_chain(package, auth, budget):
         out = step["output"]
         directory = package.bundle(out["bundle"])
         current, proof, checked = inspect_candidate(directory, out["variant"], budget)
+        paired = proof["format"] == "picross-proof-v3"
+        require(not paired_parent or paired, "Paired reference requires a versioned paired color child")
+        require(paired == record["format"].endswith("-v2") and
+                (not paired or plan.get("certification") == checked.get("certification")),
+                "Color derivation lacks explicit paired plan/version binding")
         require(current["matrix"] == matrix and all(current["design"][k] == design[k] for k in
                 ("width", "height", "mode", "palette", "background", "alpha_below", "fit")), "Color child changes other cells or design")
         result = load_json(directory / (out["variant"] + "-result.json"))
@@ -210,6 +219,7 @@ def inspect_chain(package, auth, budget):
         chain.append({"record_sha256": step["record"]["sha256"], "matrix_hash": digest(matrix), "changed_cells": count,
                       "all_other_cells_preserved": True})
         candidate, parent_bundle, parent_variant = current, out["bundle"], out["variant"]
+        paired_parent = paired
     source = {"kind": "manual", "variant": h["candidate"]["variant"], "candidate_id": current["id"],
               "reference": {"variant": base["variant"] if approved else h["candidate"]["variant"]}, "chain": chain,
               "changed_cells": sum(s["changed_cells"] for s in chain)}
