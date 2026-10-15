@@ -25,6 +25,8 @@ var reserve_slots: Vector2i = Vector2i.ONE
 var minimum_slots: Vector2i = Vector2i.ONE
 var horizontal_budget: float = 0.0
 var horizontal_used: float = 0.0
+var vertical_budget: float = 0.0
+var vertical_used: float = 0.0
 var reserve_cache: Dictionary = {}
 var ink_cache: Dictionary = {}
 var layout_valid: bool = true
@@ -101,15 +103,21 @@ func _layout() -> void:
 	# One-way allocation: the displayed capacity never feeds back into fit.
 	horizontal_budget = maxf(0.0, available.x - book_grid_size.x)
 	horizontal_used = 0.0
+	vertical_budget = maxf(0.0, available.y - book_grid_size.y)
+	vertical_used = 0.0
 	if mode == "G" and layout_valid:
-		var pitch: float = slot_pitch.x
-		var offered: int = mini(max_hints.x, minimum_slots.x + floori((horizontal_budget + 0.000001) / pitch))
-		for capacity: int in range(offered, minimum_slots.x, -1):
-			if suitable_slots("row", capacity):
-				reserve_slots.x = capacity
-				break
-		horizontal_used = (reserve_slots.x - minimum_slots.x) * pitch
-		book_inset.x += horizontal_used
+		for axis_index: int in range(2):
+			var axis: String = "row" if axis_index == 0 else "column"
+			var pitch: float = slot_pitch[axis_index]
+			var budget: float = horizontal_budget if axis_index == 0 else vertical_budget
+			var offered: int = mini(max_hints[axis_index], minimum_slots[axis_index] + floori((budget + 0.000001) / pitch))
+			for capacity: int in range(offered, minimum_slots[axis_index], -1):
+				if suitable_slots(axis, capacity):
+					reserve_slots[axis_index] = capacity
+					break
+		horizontal_used = (reserve_slots.x - minimum_slots.x) * slot_pitch.x
+		vertical_used = (reserve_slots.y - minimum_slots.y) * slot_pitch.y
+		book_inset += Vector2(horizontal_used, vertical_used)
 	composition_shift = Vector2.ZERO
 	view.configure(Rect2(book_inset, book_grid_size + frame_space), Vector2i(session.player.width, session.player.height))
 	view.center = Vector2(view.dimensions) / 2.0
@@ -142,9 +150,16 @@ func _layout() -> void:
 	ensure_clue_steps()
 	normalize_clue_steps()
 	cancel_gesture()
+	refresh_clue_hover()
 
 func shared_clue_slot_extent(axis: String, _font: Font, _fs: int) -> float:
 	return pitch_for(axis)
+
+func refresh_clue_hover() -> void:
+	if not layout_valid:
+		clear_clue_hover()
+		return
+	super.refresh_clue_hover()
 
 func row_clue_area() -> Rect2:
 	var area: Rect2 = super.row_clue_area()
@@ -217,6 +232,8 @@ func zoom(direction: int, anchor: Vector2) -> void:
 		return
 	overview = false
 	requested_cell = step
+	# Reuse the book's actual-hull sidebar correction after a capacity change.
+	viewport_layout_requested.emit()
 	_layout()
 	view_changed.emit()
 
