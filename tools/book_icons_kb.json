@@ -1,0 +1,4 @@
+{
+  "play": ["Spielen", "Spielen", "M9 5 L21 13 L9 21 Z"],
+  "reset": ["Rätsel zurücksetzen", "Rätsel zurücksetzen", "M5 10 A9 9 0 1 1 5 17 M5 4 V10 H11 M10 13 H17 M10 17 H15"]
+}

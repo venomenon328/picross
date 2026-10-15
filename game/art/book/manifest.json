@@ -1,7 +1,32 @@
 {
   "source_commit": "c3a5386580d7a0da29b927b41bd692f0cca59274",
   "sidebar_source": "SL-65; frames.json",
+  "kb_icon_source": "tools/book_icons_kb.json; KB-168-NOTICE.txt",
   "files": [
+    {
+      "file": "Fraunces-OFL.txt",
+      "sha256": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48"
+    },
+    {
+      "file": "Fraunces.ttf",
+      "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb"
+    },
+    {
+      "file": "KB-168-NOTICE.txt",
+      "sha256": "5a34a51eb0e99c969029cfeba719847344384441c6f83cbd82b5abd7ffece51b"
+    },
+    {
+      "file": "PlexSans-OFL.txt",
+      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
+    },
+    {
+      "file": "PlexSans.ttf",
+      "sha256": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3"
+    },
+    {
+      "file": "Sidebar-NOTICES.txt",
+      "sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d"
+    },
     {
       "file": "bp2-a-inventarband.png",
       "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a"
@@ -31,20 +56,12 @@
       "sha256": "0fcf84d17c01943cba6a86b342023b35926d05f862c8110cf6dcfd813234de3d"
     },
     {
-      "file": "Fraunces-OFL.txt",
-      "sha256": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48"
-    },
-    {
-      "file": "Fraunces.ttf",
-      "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb"
-    },
-    {
       "file": "help.svg",
       "sha256": "0a2834ac56c5793fa5780ea54e2a85ab71f0d86e5e1564d7c03c97f0cc605894"
     },
     {
       "file": "icons.json",
-      "sha256": "94064020a6ba9619625119f037bb78ffc3ccebe55f9c4ae4c9cd050aa42c4039"
+      "sha256": "375481714d83df76eea4443f6d5ae99c13dad5b87f32b98608fcb44894a9579d"
     },
     {
       "file": "menu.svg",
@@ -67,12 +84,8 @@
       "sha256": "32a4a956c766f016ea2355ea03a8872306e7b83010d79e3f21f62736be185d3e"
     },
     {
-      "file": "PlexSans-OFL.txt",
-      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
-    },
-    {
-      "file": "PlexSans.ttf",
-      "sha256": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3"
+      "file": "play.svg",
+      "sha256": "33f4c15c549acdcc13e872f1576ad5455e731ec647dea2b6b6739eaa8add0250"
     },
     {
       "file": "plus.svg",
@@ -83,8 +96,8 @@
       "sha256": "850f07276d7d01879fbf7e7564ec5b0966ebdb7f88d3a2054ccabf2e913a54e6"
     },
     {
-      "file": "Sidebar-NOTICES.txt",
-      "sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d"
+      "file": "reset.svg",
+      "sha256": "1b3413c0433e617a283876d5947e646ff0513889f7cdd8eae5f820d2768de89d"
     },
     {
       "file": "undo.svg",

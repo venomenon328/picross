@@ -274,7 +274,7 @@ func run() -> void:
 	app = load("res://main.tscn").instantiate()
 	canvas.add_child(app)
 	await settle()
-	check(not title_ok(),"collection retains Fraunces")
+	check(title_ok(),"KB catalog explicitly uses original Bakso")
 	var font = app.WORK_TITLE_FONT
 	check(font.data.size()==128924,"embedded font byte count")
 	var hash: HashingContext = HashingContext.new()

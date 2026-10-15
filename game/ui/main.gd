@@ -176,7 +176,9 @@ func _build() -> void:
 	dialog_paper.bg_color = Color("fffaf0")
 	dialog_paper.set_content_margin_all(16)
 	theme.set_stylebox("panel","AcceptDialog",dialog_paper)
-	theme.set_stylebox("panel","TooltipPanel",dialog_paper)
+	var tooltip_paper: StyleBoxFlat = dialog_paper.duplicate()
+	tooltip_paper.set_content_margin_all(4)
+	theme.set_stylebox("panel","TooltipPanel",tooltip_paper)
 	theme.set_color("font_color","TooltipLabel",Board.INK)
 	surface = BookSurface.new()
 	surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -763,6 +765,7 @@ func _text_button(caption: String, action: Callable) -> BookButton:
 	return item
 
 func _cancel_interaction() -> void:
+	BookButton.dismiss_all(get_tree())
 	if board == null: return
 	board.cancel_gesture()
 	board.clear_pointer_hover()
@@ -831,6 +834,7 @@ func _layout_book() -> void:
 	if size.x < 1280 or size.y < 720:
 		return
 	laying_out = true
+	BookButton.dismiss_all(get_tree())
 	var u: float = ui_scale
 	var material: Rect2 = surface.material_rect()
 	var o: Vector2 = material.position
@@ -899,7 +903,7 @@ func _layout_book() -> void:
 	surface.wells.assign([surface.frame_rect(tools_scroll.get_rect())])
 	_place(album_button,Rect2(o+Vector2(w/320,h*7/72),Vector2.ONE*hit))
 	# The shared heading changes font with page context, never globally.
-	if work.visible:
+	if work.visible or album.visible:
 		title.add_theme_font_override("font",WORK_TITLE_FONT)
 	else:
 		var heading: FontVariation = FontVariation.new()

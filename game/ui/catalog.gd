@@ -4,6 +4,7 @@ const Registry = preload("res://model/content_registry.gd")
 const Session = preload("res://model/session.gd")
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
+const BookButton = preload("res://ui/book_button.gd")
 const PAGE_SIZE: int = 24
 signal opened(id: String)
 signal reset_requested(id: String)
@@ -29,6 +30,7 @@ var previews: Array[Miniature] = []
 var reveals: Array[Reveal] = []
 var notes: Array[Label] = []
 var reset_buttons: Dictionary = {}
+var play_buttons: Dictionary = {}
 var repair_buttons: Dictionary = {}
 var visible_ids: Array[String] = []
 var filtered_ids: Array[String] = []
@@ -70,11 +72,13 @@ func _ready() -> void:
 	all_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	add_child(all_button)
 	scroll = ScrollContainer.new()
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	# Child widths are recomputed on resize; old grid minima must not force the
+	# entire page beyond the client before that container sort can run.
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(scroll)
 	grid = GridContainer.new()
-	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	grid.add_theme_constant_override("h_separation", 16)
 	grid.add_theme_constant_override("v_separation", 14)
 	scroll.add_child(grid)
@@ -88,6 +92,7 @@ func _ready() -> void:
 	next_button = _button("Weiter →", turn_page.bind(1))
 	pager.add_child(next_button)
 	resized.connect(_layout_cards)
+	scroll.resized.connect(_layout_cards)
 
 func present(sessions: Array[Session], slot_status: Array[String], slot_errors: Array[String], error: String, selection: String) -> void:
 	feedback.hide()
@@ -149,6 +154,7 @@ static func progress(item: Session) -> String:
 	return "Neu"
 
 func _render(position: int) -> void:
+	BookButton.dismiss_all(get_tree())
 	generation += 1
 	for child: Node in grid.get_children():
 		# Synchronous release bounds live cards AND reveal textures during page turns.
@@ -159,6 +165,7 @@ func _render(position: int) -> void:
 	reveals.clear()
 	notes.clear()
 	reset_buttons.clear()
+	play_buttons.clear()
 	repair_buttons.clear()
 	visible_ids.clear()
 	filtered_ids = _ids(category_id)
@@ -194,11 +201,20 @@ func _add_card(id: String) -> void:
 	var column: VBoxContainer = VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.add_child(column)
-	var card: Button = _button(item.album_title(), func() -> void: opened.emit(id))
+	var card: BookButton = BookButton.new()
+	card.content_surface = true
+	# Retain the existing semantic button text; only the wrapping labels draw it.
+	card.text = item.album_title()
+	card.focus_mode = Control.FOCUS_ALL
+	card.pressed.connect(func() -> void: opened.emit(id))
 	card.clip_text = true
 	card.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	var caption_text: String = item.neutral_title() + ("\n" + item.album_title() if item.completed else "")
+	# Dimensions belong only to metadata, never to this neutral catalog heading.
+	# Registry order is the canonical numbering used by Session.neutral_title().
+	var leaf: String = item.neutral_title().split(" · ")[0]
+	var caption_text: String = (item.album_title() + "\n" + leaf) if item.completed and statuses[id] != "error" else leaf
 	card.tooltip_text = caption_text
+	card.accessibility_name = caption_text
 	# Native button supplies the whole-card hit/focus surface. Its caption is laid
 	# out by a wrapping label so long names cannot force the grid wider than paper.
 	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color", "font_disabled_color"]:
@@ -217,7 +233,7 @@ func _add_card(id: String) -> void:
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side: String in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 12)
 	card.add_child(margin)
-	margin.minimum_size_changed.connect(func() -> void: card.custom_minimum_size.y = maxf(240 * ui_scale, margin.get_combined_minimum_size().y))
+	margin.minimum_size_changed.connect(func() -> void: card.custom_minimum_size.y = margin.get_combined_minimum_size().y)
 	var content: VBoxContainer = VBoxContainer.new()
 	margin.add_child(content)
 	var caption: Label = _label(caption_text, 18)
@@ -229,7 +245,31 @@ func _add_card(id: String) -> void:
 			if category.id == metadata.get(id, {}).get("category_id"): meta += "\n" + str(category.name)
 	var detail: Label = _label(meta, 14)
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	content.add_child(detail)
+	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var row: HBoxContainer = HBoxContainer.new()
+	row.name = "metadata-actions"
+	content.add_child(row)
+	row.add_child(detail)
+	var actions: VBoxContainer = VBoxContainer.new()
+	row.add_child(actions)
+	var play: BookButton = _button("", func() -> void: opened.emit(id))
+	play.action_id = "play"
+	play.name = "play-" + id
+	play.image = preload("res://art/book/play.svg")
+	play.tooltip_text = "Ansehen" if item.completed else "Fortsetzen" if progress(item) == "Begonnen" else "Spielen"
+	play.disabled = statuses[id] == "error"
+	if play.disabled: play.tooltip_text = "Speicherdaten ungültig · Reset erforderlich"
+	play.accessibility_name = play.tooltip_text + " · " + leaf
+	actions.add_child(play)
+	play_buttons[id] = play
+	var reset: BookButton = _button("", func() -> void: reset_requested.emit(id))
+	reset.action_id = "reset"
+	reset.name = "reset-" + id
+	reset.image = preload("res://art/book/reset.svg")
+	reset.tooltip_text = "Rätsel zurücksetzen"
+	reset.accessibility_name = "Rätsel zurücksetzen · " + leaf
+	actions.add_child(reset)
+	reset_buttons[id] = reset
 	var preview: Miniature = Miniature.new()
 	preview.cells = item.player.cells.duplicate()
 	preview.width = item.player.width
@@ -262,10 +302,6 @@ func _add_card(id: String) -> void:
 	content.add_child(note)
 	notes.append(note)
 	_ignore_pointer(margin)
-	var reset: Button = _button("Zurücksetzen", func() -> void: reset_requested.emit(id))
-	reset.tooltip_text = item.album_title() + " zurücksetzen"
-	column.add_child(reset)
-	reset_buttons[id] = reset
 	if statuses[id] in ["recovered", "backup_invalid"]:
 		var repair: Button = _button("Backup erneuern" if statuses[id] == "backup_invalid" else "Backup übernehmen", func() -> void: repair_requested.emit(id))
 		column.add_child(repair)
@@ -273,11 +309,33 @@ func _add_card(id: String) -> void:
 
 func _layout_cards() -> void:
 	if grid == null: return
-	grid.columns = maxi(1, mini(4, floori((size.x - 20) / (270 * ui_scale))))
-	for card: Button in choices: card.custom_minimum_size.y = maxf(240 * ui_scale, card.get_child(0).get_combined_minimum_size().y)
+	var gap: int = roundi(12 * ui_scale)
+	grid.add_theme_constant_override("h_separation", gap)
+	grid.add_theme_constant_override("v_separation", gap)
+	# Reserve the actual scrollbar width even before the first container sort.
+	var available: float = maxf(1, scroll.size.x - scroll.get_v_scroll_bar().get_combined_minimum_size().x - 2*ui_scale)
+	var capacity: int = maxi(1, floori((available + gap) / (220*ui_scale + gap)))
+	grid.columns = maxi(1, mini(capacity, choices.size()))
+	var card_width: float = minf(240*ui_scale, floorf((available-(capacity-1)*gap)/capacity))
 	for node: Node in find_children("*", "Label", true, false):
 		if node.has_meta("base_font"): node.add_theme_font_size_override("font_size", roundi(float(node.get_meta("base_font")) * ui_scale))
-	for node: Node in find_children("*", "Button", true, false): node.custom_minimum_size.y = maxf(node.custom_minimum_size.y, 44 * ui_scale)
+	for node: Node in find_children("*", "Button", true, false):
+		if node is BookButton:
+			node.ui_scale = ui_scale
+			if node.content_surface: continue
+			node.add_theme_font_size_override("font_size", roundi(14*ui_scale))
+			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.image != null else Vector2(node.get_theme_font("font").get_multiline_string_size(node.text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(14*ui_scale)).x+24*ui_scale,44*ui_scale)
+	for card: Button in choices:
+		card.get_parent().custom_minimum_size.x = card_width
+		card.custom_minimum_size.x = card_width
+		var margin: MarginContainer = card.get_child(0)
+		for side: String in ["left","right","top","bottom"]: margin.add_theme_constant_override("margin_"+side,roundi(10*ui_scale))
+		var content: VBoxContainer = margin.get_child(0)
+		content.add_theme_constant_override("separation",roundi(8*ui_scale))
+		var row: HBoxContainer = content.get_node("metadata-actions")
+		row.add_theme_constant_override("separation",roundi(8*ui_scale))
+		row.get_child(1).add_theme_constant_override("separation",roundi(8*ui_scale))
+		card.custom_minimum_size.y = margin.get_combined_minimum_size().y
 	category_choice.custom_minimum_size.y = 44 * ui_scale
 	category_choice.get_popup().max_size = Vector2i(roundi(size.x), roundi(minf(480 * ui_scale, size.y * 0.8)))
 	category_choice.get_popup().prefer_native_menu = false
@@ -286,6 +344,8 @@ func ensure_control_visible(control: Control) -> void:
 	scroll.ensure_control_visible(control)
 
 static func _ignore_pointer(control: Control) -> void:
+	# Only decoration passes through. Each action consumes its own down/up route.
+	if control is BaseButton: return
 	control.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for child: Node in control.get_children():
 		if child is Control: _ignore_pointer(child)
@@ -297,8 +357,8 @@ static func _label(text: String, font_size: int) -> Label:
 	result.add_theme_font_size_override("font_size", font_size)
 	return result
 
-static func _button(text: String, action: Callable) -> Button:
-	var result: Button = Button.new()
+static func _button(text: String, action: Callable) -> BookButton:
+	var result: BookButton = BookButton.new()
 	result.text = text
 	result.focus_mode = Control.FOCUS_ALL
 	result.pressed.connect(action)
