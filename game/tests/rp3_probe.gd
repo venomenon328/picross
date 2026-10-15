@@ -21,6 +21,7 @@ func event(point: Vector2, pressed: bool, button: MouseButton = MOUSE_BUTTON_LEF
 	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
 	motion.position = point
 	motion.global_position = point
+	motion.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
 	target.push_input(motion,true)
 	var mouse: InputEventMouseButton = InputEventMouseButton.new()
 	mouse.position = point

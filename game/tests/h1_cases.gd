@@ -166,11 +166,13 @@ static func send(t: SceneTree, board: Board, cell: Vector2i, button: MouseButton
 	event.position = board.global_position + board.view.cell_rect(cell).get_center()
 	event.button_index = button
 	event.pressed = pressed
+	event.button_mask = (MOUSE_BUTTON_MASK_RIGHT if button == MOUSE_BUTTON_RIGHT else MOUSE_BUTTON_MASK_LEFT) if pressed else 0
 	t.root.push_input(event, true)
 
 static func move(t: SceneTree, board: Board, cell: Vector2i) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
 	event.position = board.global_position + board.view.cell_rect(cell).get_center()
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT if board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if board.held_button == MOUSE_BUTTON_RIGHT else 0)
 	t.root.push_input(event, true)
 
 static func stroke(t: SceneTree, board: Board, start: Vector2i, end: Vector2i, button: MouseButton = MOUSE_BUTTON_LEFT) -> void:

@@ -24,6 +24,7 @@ func check(ok: bool, label: String) -> void:
 func motion(p: Vector2) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
 	event.position = p
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
 	root.push_input(event,true)
 
 func mouse(p: Vector2, button: MouseButton, down: bool) -> void:

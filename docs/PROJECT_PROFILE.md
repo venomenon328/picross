@@ -1,5 +1,19 @@
 # Projektprofil: picross
 
+**ZR / #143 (15.10.2026):** [Zellstriche und Cursorzähler](CELL_DRAG.md) ist als
+Sollvertrag freigegeben und im PR #145 umgesetzt. Zähler ab Länge 2 in der aktiven
+Hinweisfont, ohne Kasten, am tatsächlichen Cursor; außerhalb des Fensters bleibt er
+am inneren Clientrand sichtbar. Begonnene Striche folgen der Maus bis zum Rasterrand,
+auch über anderer UI und bei fokussiertem Windows-Fenster außerhalb der Clientfläche.
+Fokusverlust bleibt vollständiger Abbruch. Der Vertrag ersetzt gezielt die alten
+P1-/Designregeln zu sichtbarer 1, Strichendanker und eingefrorenem Außenendpunkt;
+Laufzeit, Spielanleitung und native Hilfe folgen dem ZR-Vertrag.
+[Prüfzuordnung](CELL_DRAG_VERIFICATION.md) und #143/#145 führen aktuelle Nachweise;
+native Windows-Eingabeprüfung bleibt getrennt von CI und Eigentümerprobe gebunden.
+Der Eigentümer hat am 15.10.2026 für diesen Merge ausdrücklich auf das unabhängige
+Review und ZR-M01 verzichtet. Beide gelten damit nicht als durchgeführt;
+Pflicht-CI und technische native Windows-Probe bleiben erforderlich.
+
 **WEB-1 / #162:** Zusätzlich ist ein statischer Godot-Webentwicklungsweg für
 Desktop/Maus in Chromium und Firefox beauftragt. [Webanleitung und Grenzen](WEB_HOSTING.md)
 binden Browserpersistenz, getrennten Build, manuelles SSH-Deployment und isolierte
@@ -77,6 +91,7 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | Produkt, Regeln, Inhalte, Progression, UX/UI, Eingabe, Plattform oder Architektur | [Produktdefinition](PRODUCT_DEFINITION.md) |
 | Thematik, Album, Motiventhüllung, UX/UI oder Eingabe/Wertung | [Gestaltungskonzept](DESIGN_CONCEPT.md) |
 | Spieltechnik und P1-Verträge | [P1](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt Entscheidungen, [Preflight](P1_PREFLIGHT.md), [Spielanleitung](../game/README.md) |
+| Zellgesten, Cursorzähler oder deren Raster-/Fenstergrenzen | [ZR-Vertrag](CELL_DRAG.md), aktuelles [Paket #143](https://github.com/venomenon328/picross/issues/143), [Hinweisfont](CLUE_TYPOGRAPHY.md) |
 | Zeichensprache, statische Vorschau, Zellanimationen | [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), betroffene ZS-Verträge/-Nachweise |
 | Spriteherstellung, Zellrendering, Cache/Invalidierung, PERF-01 | [CELL_RENDERING](CELL_RENDERING.md), [PERF-A](PERF_A_IMPLEMENTATION.md), [PERF-B](PERF_B_IMPLEMENTATION.md) |
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
@@ -91,7 +106,7 @@ Prüfungen bleiben unabhängig über `tools/cell_atlas_reference.json` gebunden.
 
 Historische Nachweise führen ihren damaligen Test-/Abnahmestand. Aktuelle
 Fachentscheidungen stehen in den verlinkten Verträgen; Auswahl und Aufbewahrung in der
-CI-Policy ersetzen deren ältere pauschale Sechs-Job-/Vollrenderpflichten.
+CI-Policy ersetzen deren ältere pauschalen Sechs-Job-/Vollrenderpflichten.
 Bei konkreter historischer Nacharbeit zusätzlich sämtliche dort gebundenen
 Quellen und damaligen Issues lesen; Erinnerungen ersetzen keinen Quellenzugriff.
 

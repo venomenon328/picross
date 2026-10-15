@@ -3,6 +3,8 @@ const Session = preload("res://model/session.gd")
 const GridView = preload("res://ui/grid_view.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
 const ClueCompletion = preload("res://model/clue_completion.gd")
+const GestureCounter = preload("res://ui/gesture_counter.gd")
+var gesture_counter: GestureCounter
 const ClueOverlay = preload("res://ui/clue_overlay.gd")
 signal edited
 signal committed
@@ -60,6 +62,13 @@ func _ready() -> void:
 	clip_contents = true
 	resized.connect(_layout)
 	mouse_exited.connect(clear_pointer_hover)
+	var counter_layer: CanvasLayer = CanvasLayer.new()
+	counter_layer.layer = 20
+	add_child(counter_layer)
+	gesture_counter = GestureCounter.new()
+	gesture_counter.board = self
+	counter_layer.add_child(gesture_counter)
+	visibility_changed.connect(sync_gesture_counter)
 	_layout()
 
 func _layout() -> void:
@@ -81,6 +90,7 @@ func cancel_gesture() -> void:
 	pan_target = ""
 	pan_line_index = -1
 	pan_drag_distance = 0.0
+	sync_gesture_counter()
 	queue_redraw()
 	edited.emit()
 
@@ -283,7 +293,16 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if local is InputEventMouseMotion:
+		var origin_mask: int = MOUSE_BUTTON_MASK_LEFT if held_button == MOUSE_BUTTON_LEFT else MOUSE_BUTTON_MASK_RIGHT
+		var chord: bool = (int(local.button_mask) & CELL_BUTTONS) == CELL_BUTTONS
+		if chord or (int(local.button_mask) & origin_mask) == 0:
+			# Missing release or ambiguous delivery: discard, never catch up.
+			cancel_gesture()
+			cell_buttons_blocked = chord
+			get_viewport().set_input_as_handled()
+			return
 		pointer_move(local.position, get_viewport().gui_get_hovered_control() == self)
+		get_viewport().set_input_as_handled()
 	elif local is InputEventMouseButton and not local.pressed and local.button_index == held_button:
 		pointer_release(local.position, get_viewport().gui_get_hovered_control() == self)
 		get_viewport().set_input_as_handled()
@@ -406,12 +425,23 @@ func pointer_press(point: Vector2, button: MouseButton) -> void:
 	if session.gesture.begin(session.player, view.hit(point), target):
 		held_button = button
 		hover = session.gesture.endpoint
+		sync_gesture_counter(point)
 		queue_redraw()
 		edited.emit()
 
-func pointer_move(point: Vector2, over_board: bool) -> void:
-	if over_board:
-		session.gesture.move(view.hit(point))
+func update_gesture_endpoint(point: Vector2) -> void:
+	if session.gesture.active:
+		session.gesture.move(view.unbounded_cell(point), view.hit(point) == session.gesture.start)
+		sync_gesture_counter(point)
+
+func sync_gesture_counter(point: Vector2 = Vector2.INF) -> void:
+	if gesture_counter != null:
+		if point != Vector2.INF:
+			gesture_counter.cursor = get_global_transform_with_canvas() * point
+		gesture_counter.refresh()
+
+func pointer_move(point: Vector2, _over_board: bool) -> void:
+	update_gesture_endpoint(point)
 	if session.gesture.active:
 		hover = session.gesture.endpoint
 		pointed.emit(hover)
@@ -419,10 +449,13 @@ func pointer_move(point: Vector2, over_board: bool) -> void:
 	edited.emit()
 
 func pointer_release(point: Vector2, over_board: bool) -> void:
-	if over_board:
-		session.gesture.move(view.hit(point))
+	update_gesture_endpoint(point)
+	finish_gesture()
+
+func finish_gesture() -> void:
 	var changed: bool = session.finish()
 	held_button = MOUSE_BUTTON_NONE
+	sync_gesture_counter()
 	if changed:
 		committed.emit()
 	queue_redraw()
@@ -539,21 +572,7 @@ func draw_preview() -> void:
 			draw_clipped_preview_outline(box)
 
 func _draw_gesture_counter() -> void:
-	if not session.gesture.active:
-		return
-	var font: Font = BODY_FONT
-	var fs: int = roundi(15 * ui_scale)
-	var caption: String = str(gesture_length())
-	var box_size: Vector2 = font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs) + Vector2(14, 10)
-	var end_point: Vector2 = view.cell_rect(session.gesture.endpoint).get_center()
-	var place: Vector2 = (end_point + Vector2(12, -box_size.y - 8)).clamp(view.viewport.position + Vector2(2, 2), view.viewport.end - box_size - Vector2(2, 2))
-	var box: Rect2 = Rect2(place, box_size)
-	_draw_counter_box(box, caption, font, fs)
-
-func _draw_counter_box(box: Rect2, caption: String, font: Font, fs: int) -> void:
-	draw_rect(box, Color("fffaf0"))
-	draw_rect(box, ACCENT, false, 1.0)
-	draw_string(font, box.position + Vector2(7, box.size.y - 5), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
+	sync_gesture_counter()
 
 func _draw_clues(first: Vector2i, last: Vector2i) -> void:
 	var font: Font = clue_font()

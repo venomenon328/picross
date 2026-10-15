@@ -13,6 +13,10 @@ Maßgeblich sind [KAT-1](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md) und [CI-Policy](
 Delight Coffee und native zellabhängige Schrift-/Slotmaße, einschließlich Fit,
 G/V, Zusatzkapazität und Drag/Snap. Frühere D-33-/ZS-/VS2-Maße sind historisch.
 
+[ZR / #143](CELL_DRAG.md) ersetzt sichtbare 1, Strichend-/Rasterviewportanker und
+eingefrorene Außenendpunkte. Laufzeit und Anleitung sind umgestellt; native Windows-
+Eingabeprüfung wird separat gebunden. Unabhängiges Review und Eigentümerprobe bleiben offen.
+
 [KAT-1](CATEGORIES.md) ergänzt Kategorien und Zuordnung als reine Katalogmetadaten in der Registry-/Runtimeprojektion v2. Godot lädt den vollständigen validierten Bestand; Auswahl, Definitionen, Save-Schema 1, Revisionen und Slots bleiben unverändert. Neue Exporte benötigen die explizite Kategorienbindung. Die Oberfläche folgt jetzt KAT-2 (#79), siehe [Prüfzuordnung](KAT2_VERIFICATION.md).
 
 [ZA-1](ZA1_ADAPTER.md) ergänzt eine zentrale Inhaltsregistry und deterministische
@@ -235,13 +239,24 @@ Neutralisierung zeigt bereits unbekannt mit dezenter statischer Vorschaukontur;
 keine alte Markierung für einen späteren Löscheffekt wieder einblenden. Vollständige
 Prioritäts-/Abbruch-/Lebenszyklusregeln stehen in [ZS-D06 bis D09](UI_DRAWING_STYLE.md).
 
-Während einer linken oder rechten Zellgeste zeigt ein kleiner Zähler am aktuellen
-Strichende, am Viewportrand nach innen versetzt, die geometrische Länge des aktuellen
-geraden Abschnitts einschließlich Start und Ende. 5→12 zeigt 8, zurück auf 9 zeigt 5,
-ein Einzelfeldabschnitt zeigt 1. Vorbelegungen und Eingabesprünge verkürzen den Zähler
-nicht. Nach Übernahme oder Abbruch verschwindet er; Navigation zeigt keinen Zähler.
+Während linker/rechter Zellgesten zeigt ein freistehender Zähler ab geometrischer
+Länge 2 den aktuellen geraden Abschnitt einschließlich Start und Ende. 5→12 zeigt 8,
+zurück auf 9 zeigt 5; ein Einzelfeldabschnitt bleibt intern 1 und hat keine Anzeige.
+Vorbelegungen und Eingabesprünge zählen mit. Aktive Hinweisfont, dunkle Zahl und helle
+Kontur ohne Kasten folgen dem tatsächlichen Cursor, bei Außenposition dem inneren
+Clientrand. UI-Skalierung verändert seine Größe, Rasterzoom nicht. Übernahme/Abbruch
+blenden ihn aus; Hover und Hinweisnavigation zeigen keinen Zähler. Details: ZR-D01/D02.
 
-Escape oder Fokusverlust verwirft vollständig. Außerhalb des sichtbaren Rasterbereichs bleibt der letzte gültige Endpunkt stehen. Kein Zeichnen unter UI-Flächen, kein Auto-Scrollen, kein Zoom/Pan während Zellgesten. Werkzeug-/Farbwechsel wirken frühestens in der nächsten Geste. Reguläres Verlassen verwirft eine laufende Vorschau vor einem späteren Speichern.
+Begonnene Zellgesten folgen der unbegrenzten relativen Rasterposition entlang der
+gebundenen Achse bis zur gültigen Rastergrenze, auch über anderer UI. Die Achsenwahl
+erfolgt vor der Begrenzung; nur ein echter Startzelltreffer entriegelt. Mouse-Up wertet
+seine eigene Position vor finaler Änderungsliste, Animation und atomarem Commit aus.
+Bei erhaltenem Windows-Spielfokus gilt dies auch außerhalb der Clientfläche; der
+Zeiger bleibt frei und sichtbar. Escape, echter Fokusverlust oder nicht verlässlich
+zuordenbare Eingabe verwerfen vollständig. Kein Zeichnen unter UI-Flächen, kein
+Auto-Scrollen, kein Zoom/Pan während Zellgesten. Werkzeug-/Farbwechsel wirken frühestens
+in der nächsten Geste. Reguläres Verlassen verwirft die Vorschau vor späterem Speichern.
+Der native Zustellungsnachweis ist ein getrenntes Mergegate gemäß ZR-D05.
 
 Ein wirksamer Strich ist ein Undo-Schritt; Redo stellt exakt wieder her. Neue wirksame Änderung nach Undo verwirft den Redo-Zweig; No-ops nicht. Navigation ist keine Zellaktion. Direktes Neutralisieren wird als normale Bearbeitungsaktion rückgängig machbar, ruft nicht heimlich Undo auf und löscht kein bestehendes Undo-verwendet-Merkmal. Keine Wertungsentscheidung daraus ableiten.
 

@@ -185,11 +185,10 @@ static func gui_cases(t: SceneTree) -> void:
 	t.mouse_motion(point(b, start), true)
 	t.mouse_motion(point(b, finish), true)
 	t.check(b.gesture_length() == 3 and app.mini.cells[finish.y * 50 + finish.x] == 1, "G-05 T-06 small zoom route")
-	var held: Vector2i = app.session.gesture.endpoint
 	t.mouse_motion(b.get_global_rect().position - Vector2(10, 10), true)
-	t.check(app.session.gesture.endpoint == held, "G-05 outside board holds last endpoint")
+	t.check(app.session.gesture.endpoint == Vector2i(start.x,0), "ZR G-05 outside board reaches bound vertical edge")
 	t.mouse_button(b.get_global_rect().position - Vector2(10, 10), false)
-	t.check(app.session.player.cells[finish.y * 50 + finish.x] == 1, "G-05 outside release commits held endpoint")
+	t.check(app.session.player.cells[start.x] == 1 and app.session.player.cells[finish.y * 50 + finish.x] == -1, "ZR G-05 outside release commits final elastic arm")
 	app.queue_free()
 	await t.process_frame
 

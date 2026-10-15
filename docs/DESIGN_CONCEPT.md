@@ -325,10 +325,14 @@ stehen in [UI_DRAWING_STYLE.md](UI_DRAWING_STYLE.md). ZS2-E2 ergänzt den Abbruc
 durch Gegentasten-Down auch außerhalb des Boards: beide Tasten loslassen, dann
 frisch starten; MMB-Hinweisnavigation bleibt erhalten.
 
-Für P1 zeigt ein Live-Zähler während linker und rechter Zellgesten die gesamte
-geometrische aktuelle Strichlänge inklusive Start/Ende, auch bei Vorbelegungen und
-Eingabesprüngen; er folgt dem elastischen Zurückziehen und zeigt bei tatsächlicher Rückkehr zum Ursprung 1 sowie danach die Länge des neuen geraden Abschnitts. Ein Linealmodus und
-weitergehende Eingabealternativen bleiben Vorschläge.
+Für P1 zeigt der [ZR-Zähler](CELL_DRAG.md) während linker/rechter Zellgesten ab Länge 2
+die gesamte geometrische aktuelle Strichlänge inklusive Start/Ende, Vorbelegungen und
+Eingabesprüngen. Er folgt elastischem Rückzug; am Ursprung bleibt die interne Länge 1
+ohne Anzeige. Dieselbe aktive Hinweisfont, dunkle Zahl mit dünner heller Kontur ohne
+Kasten, tatsächlicher Cursoranker und innerer Clientrand gelten auch über anderer UI.
+Begonnene Striche laufen bis zur gültigen Rastergrenze weiter; die eigene finale
+Mouse-Up-Position bestimmt Commit und Animation. Fokusverlust bricht vollständig ab.
+Ein Linealmodus und weitergehende Eingabealternativen bleiben Vorschläge.
 Für große Raster sind vollständig zugeordnete, unnummerierte Hinweise direkt im
 Arbeitskontext, aktive Linien und eine passive eigene Miniatur wichtig. Lange
 Folgen werden nur an Grenzen vollständiger Einzelhinweise gekürzt; ein möglichst

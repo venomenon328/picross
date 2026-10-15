@@ -21,6 +21,7 @@ var compact: bool = false
 var failed: bool = false
 var failure_message: String = ""
 var pixel_checks: int = 0
+var zr_samples: Array = []
 
 func _initialize() -> void:
 	compact = OS.get_cmdline_user_args().has("--ci-compact")
@@ -47,7 +48,7 @@ func write_report() -> void:
 		"compact": compact, "failed": failed, "failure": failure_message, "pixel_checks": pixel_checks,
 		"rendered_count": frames.size(), "retained_count": captures.size() + failure_captures.size(),
 		"clue_contract": "single-line colored numbers; shared fixed slots; exact prefix/suffix markers; snapped per-line panning; complete hover tooltip",
-		"physical_dpi_acceptance": "OPEN: owner", "captures": captures, "frames": frames, "failure_captures": failure_captures}, "  ") + "\n")
+		"physical_dpi_acceptance": "OPEN: owner", "zr_samples": zr_samples, "captures": captures, "frames": frames, "failure_captures": failure_captures}, "  ") + "\n")
 
 func fail_capture(message: String, code: int = 5) -> void:
 	if failed:
@@ -172,23 +173,17 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 			return picture
 		pixel_checks += 4
 	if name == "gesture-counter-8" or name.begins_with("g1-counter-"):
-		var font: Font = Board.BODY_FONT
-		var fs: int = roundi(15 * app.board.ui_scale)
 		var caption: String = "8" if name == "gesture-counter-8" else name.get_slice("-", 2)
-		var box_size: Vector2 = font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs) + Vector2(14, 10)
-		var end_point: Vector2 = app.board.view.cell_rect(app.session.gesture.endpoint).get_center()
-		var place: Vector2 = (end_point + Vector2(12, -box_size.y - 8)).clamp(app.board.view.viewport.position + Vector2(2, 2), app.board.view.viewport.end - box_size - Vector2(2, 2))
-		var sample: Vector2i = Vector2i(app.board.global_position + place + Vector2(3, 3))
 		var dark_pixels: int = 0
-		var area: Rect2i = Rect2i(Rect2(app.board.global_position + place, box_size))
-		for y: int in range(area.position.y + 3, area.end.y - 3):
-			for x: int in range(area.position.x + 3, area.end.x - 3):
+		var area: Rect2i = Rect2i(app.board.gesture_counter.placement().rect)
+		for y: int in range(area.position.y, area.end.y):
+			for x: int in range(area.position.x, area.end.x):
 				if picture.get_pixel(x, y).r < 0.5:
 					dark_pixels += 1
-		if not picture.get_pixelv(sample).is_equal_approx(Color("fffaf0")) or dark_pixels < 3:
+		if app.board.gesture_counter.visible != (caption != "1") or (caption != "1" and dark_pixels < 3):
 			fail_capture("Rendered live counter absent", 5)
 			return picture
-		pixel_checks += 2
+		pixel_checks += 1
 	if name.ends_with("reveal"):
 		var texture_image: Image = app.reveal_view.artwork.get_image()
 		if texture_image == null or texture_image.is_empty():
@@ -467,6 +462,64 @@ func capture_axis(app: Main) -> void:
 	app.board.clear_clue_hover()
 	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 	await snapshot(app, "t06-overview")
+	await capture_zr_counter(app)
+
+func capture_zr_counter(app: Main) -> void:
+	# Targeted native glyph pixels; these SubViewport cases do not prove OS input.
+	for configuration: Array in [[Vector2i(1280,720),1.25],[Vector2i(1920,1080),1.0],[Vector2i(2560,1440),1.25]]:
+		surface.size=configuration[0]
+		app.set_ui_scale(configuration[1])
+		app.select_puzzle(0)
+		var values: Array[int] = app.session.player.cells.duplicate()
+		values.fill(-1)
+		replace_render_cells(app,values)
+		for zoom: float in [12.0,72.0]:
+			set_pitch(app,zoom)
+			await process_frame
+			var b: Control = app.board
+			b.pointer_press(b.view.cell_rect(Vector2i(4,4)).get_center(),MOUSE_BUTTON_LEFT)
+			if b.gesture_counter.visible:
+				fail_capture("ZR length one must be hidden")
+				return
+			b.pointer_move(b.view.cell_rect(Vector2i(8,4)).get_center(),true)
+			var s: Vector2 = Vector2(surface.size)
+			var samples: Array[Vector2] = [b.gesture_counter.cursor,b.gesture_counter.cursor+Vector2(1,1),
+				app.undo_button.get_global_rect().get_center(),Vector2(-50,s.y/2),Vector2(s.x+50,s.y/2),
+				Vector2(s.x/2,-50),Vector2(s.x/2,s.y+50),Vector2(-50,-50),Vector2(s.x+50,-50),
+				Vector2(-50,s.y+50),s+Vector2(50,50)]
+			for i: int in range(samples.size()):
+				b.pointer_move(b.get_global_transform_with_canvas().affine_inverse()*samples[i],false)
+				var name: String = "zr-%d-ui%d-z%d-%d" % [surface.size.x,roundi(app.ui_scale*100),roundi(zoom),i]
+				var picture: Image = await snapshot(app,name)
+				var p: Dictionary = b.gesture_counter.placement()
+				var a: Vector2i = Vector2i(p.rect.position.floor())
+				var area: Rect2i = Rect2i(a,Vector2i(p.rect.end.ceil())-a)
+				if not b.gesture_counter.visible or not Rect2i(Vector2i.ZERO,surface.size).encloses(area) or p.font.get_font_name()!="Delight Coffee" or p.font_size!=roundi(24*app.ui_scale):
+					fail_capture("ZR counter visibility/font/client envelope: "+name)
+					return
+				b.gesture_counter.hide()
+				await process_frame
+				await RenderingServer.frame_post_draw
+				var underlay: Image = surface.get_texture().get_image()
+				var masked: Image = picture.duplicate()
+				masked.blit_rect(underlay,area,area.position)
+				var changed: int = region_difference(picture,underlay,area)
+				# Real glyphs leave transparent space. A panel/rectangle, clipped
+				# outline, missing text or drawing outside its measured ink fails.
+				var corner: Rect2i = Rect2i(area.position,Vector2i(2,2))
+				if changed<3 or changed>=area.size.x*area.size.y*0.8 or region_difference(picture,underlay,corner)!=0 or masked.get_data()!=underlay.get_data():
+					fail_capture("ZR native glyph/background/outline bounds: "+name)
+					return
+				pixel_checks+=5
+				var record: Dictionary = {"name":name,"cursor":[samples[i].x,samples[i].y],"length":b.gesture_length(),"rect":[area.position.x,area.position.y,area.size.x,area.size.y],"font_size":p.font_size,"ui":app.ui_scale,"requested_zoom":zoom,"actual_cell":b.view.cell_size,"changed_pixels":changed}
+				if i==2 and zoom==12.0 or i==10:
+					var image: Image = picture if i==2 else picture.get_region(area.grow(4).intersection(Rect2i(Vector2i.ZERO,surface.size)))
+					image.save_png(output.path_join(name+".png"))
+					record["file"]=name+".png"
+					captures.append({"name":name,"file":name+".png","crop":i!=2,"retained":true})
+				zr_samples.append(record)
+				b.sync_gesture_counter()
+			b.cancel_gesture()
 
 func capture_h1(app: Main) -> void:
 	await preload("res://tests/vs2_h1_cases.gd").run(self, app)
