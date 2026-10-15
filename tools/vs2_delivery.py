@@ -11,6 +11,7 @@ from pathlib import Path
 import p1_preflight as toolchain
 import vs2_v1_verify
 import hc92_verify
+import hf149_verify
 
 BASE = "fad885344874534629365917a2ab6a8d311cd3a7"
 
@@ -55,6 +56,21 @@ def capture_current(project, workspace, output, engine, render_command, environm
             environment.pop(key, None)
     phase("vs2-gf1-tests", [engine, "--headless", "--path", str(project), "--script",
                           "res://tests/vs2_gf1_tests.gd"], "VS2_GF1_TESTS_OK")
+    hf_dir = output / "hf149"
+    hf_dir.mkdir()
+    environment["HF149_OUTPUT"] = str(hf_dir)
+    try:
+        for stage in ("write", "read"):
+            environment["HF149_STAGE"] = stage
+            phase("hf149-" + stage, [engine, "--headless", "--path", str(project),
+                  "--script", "res://tests/hf149_probe.gd"], "HF149_" + stage.upper() + "_OK")
+        environment.pop("HF149_STAGE", None)
+        phase("hf149-native", ["res://tests/hf149_probe.gd" if part == "res://tests/capture.gd" else part
+              for part in render_command], "HF149_NATIVE_OK")
+    finally:
+        environment.pop("HF149_OUTPUT", None)
+        environment.pop("HF149_STAGE", None)
+    hf = hf149_verify.verify(hf_dir)
     renders = output / "vs2-renders"
     renders.mkdir()
     environment["VS2_CAPTURE_DIR"] = str(renders)
@@ -82,6 +98,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     (focused_dir / "v1-acceptance.json").write_text(json.dumps(v1,indent=2)+"\n",encoding="utf-8")
     selected = [renders / "vs2-matrix.json", output / "vs2-write.json", output / "vs2-read.json",
                 focused_dir / "v1-focused.json", focused_dir / "v1-acceptance.json"]
+    selected += list(hf_dir.glob("*.json")) + list(hf_dir.glob("*.png"))
     selected += [focused_dir / name for name in ("v1-T-01-fit.png", "v1-T-01-work.png", "v1-VS09-work.png", "v1-VS08-fit.png", "v1-VS04-fit.png", "v1-recovery-1280-ui125.png")]
     selected += [focused_dir / g["file"] for g in focused["glyphs"]]
     v2_dir = output / "v2-renders"
@@ -138,7 +155,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
               (renders / "vs2-matrix.json", focused_dir / "v1-focused.json")}
     selected = [packed.get(p, p) for p in selected]
     return dict(records=len(report["records"]), failures=report["failures"],
-                rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3, hc92=hc,
+                rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3, hc92=hc, hf149=hf,
                 historical_comparison="not run; CI policy #63",
                 legacy_reader="separate downloaded Windows old-writer/new-reader probe"), selected
 

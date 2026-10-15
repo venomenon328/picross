@@ -1,7 +1,7 @@
 # Projektprofil: picross
 
 **ZR / #143 (15.10.2026):** [Zellstriche und Cursorzähler](CELL_DRAG.md) ist als
-Sollvertrag freigegeben und im Draft-PR #145 umgesetzt. Zähler ab Länge 2 in der aktiven
+Sollvertrag freigegeben und im PR #145 umgesetzt. Zähler ab Länge 2 in der aktiven
 Hinweisfont, ohne Kasten, am tatsächlichen Cursor; außerhalb des Fensters bleibt er
 am inneren Clientrand sichtbar. Begonnene Striche folgen der Maus bis zum Rasterrand,
 auch über anderer UI und bei fokussiertem Windows-Fenster außerhalb der Clientfläche.
@@ -10,7 +10,15 @@ P1-/Designregeln zu sichtbarer 1, Strichendanker und eingefrorenem Außenendpunk
 Laufzeit, Spielanleitung und native Hilfe folgen dem ZR-Vertrag.
 [Prüfzuordnung](CELL_DRAG_VERIFICATION.md) und #143/#145 führen aktuelle Nachweise;
 native Windows-Eingabeprüfung bleibt getrennt von CI und Eigentümerprobe gebunden.
-Unabhängiges Review und ZR-M01 bleiben vor Merge offen.
+Der Eigentümer hat am 15.10.2026 für diesen Merge ausdrücklich auf das unabhängige
+Review und ZR-M01 verzichtet. Beide gelten damit nicht als durchgeführt;
+Pflicht-CI und technische native Windows-Probe bleiben erforderlich.
+
+**WEB-1 / #162:** Zusätzlich ist ein statischer Godot-Webentwicklungsweg für
+Desktop/Maus in Chromium und Firefox beauftragt. [Webanleitung und Grenzen](WEB_HOSTING.md)
+binden Browserpersistenz, getrennten Build, manuelles SSH-Deployment und isolierte
+Referenztests. Windows bleibt erhalten; keine endgültige Plattformmatrix oder
+Livefreigabe. Bei Web-/Hostingarbeit diese Anleitung zusätzlich vollständig lesen.
 
 **Aktuelle Inhalts-CI (12.10.2026):** Die [CI-Policy](CI_POLICY.md) ersetzt die
 unten historisch beschriebenen RP-Korpus-/Zertifikats-Replays. Reine neue

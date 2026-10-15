@@ -1,6 +1,6 @@
 # ZR: Zellstriche am Rasterrand und Cursorzähler
 
-Stand: 15.10.2026 · Spezifikation 0.2 · **Laufzeit umgesetzt; Verifikation und Abnahme getrennt**
+Stand: 15.10.2026 · Spezifikation 0.3 · **Laufzeit umgesetzt; Verifikation und Abnahme getrennt**
 
 ## Geltung und Entscheidungsbindung
 
@@ -194,6 +194,12 @@ prüft schnellen linken/rechten Randzug, Außenloslassen, Randzähler und Lesbar
 Die längere [Spielerprobung #24](https://github.com/venomenon328/picross/issues/24)
 bleibt separat; alte Abnahmen werden weder erweitert noch wieder geöffnet.
 Eine passende spätere Mergefreigabe bleibt erforderlich.
+
+**Eigentümerentscheidung vom 15.10.2026 für PR #145:** Merge beauftragt und
+ausdrücklich auf ZR-M01 sowie das unabhängige technische Review für diesen Merge
+verzichtet. Diese beiden Nachweise sind nicht durchgeführt und werden nicht als
+bestanden bezeichnet. Ausgewählte Pflicht-CI und technische native Windows-Probe
+am aktuellen kombinierten Stand bleiben erforderlich; #24 bleibt separat.
 
 Nicht enthalten sind neue Rätsel, Solver-/Adapterarbeit, Fontproduktion, Hinweis-
 oder Sidebarlayout, Zellstil-/Timingänderung, Saveformatmigration, Wertung, zusätzliche

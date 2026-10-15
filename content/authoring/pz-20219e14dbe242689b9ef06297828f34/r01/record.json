@@ -1,0 +1,64 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-20219e14dbe242689b9ef06297828f34",
+  "revision": "r01",
+  "motif_name": "Windspiel",
+  "category_id": "musik-buehne",
+  "state": "reveal_review",
+  "package": {
+    "file": "content/authoring/pz-20219e14dbe242689b9ef06297828f34/r01/package.zip",
+    "bytes": 3995067,
+    "sha256": "399b357793d77649ce435a449b89cc2b88d9b87100b4cb2a74ca406efc161568"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-20219e14dbe242689b9ef06297828f34/r01/handoff.json",
+    "sha256": "98e3aae34d44385685b2fd190b2e7c2ecff59f7a17cc84df875d00d1f72b0eca"
+  },
+  "inventory_sha256": "a4fb62ee7c6c0a77ca566a59844abd00ef4b08da1f867e33aceea0ebd0c8c61c",
+  "final_editorial_approval": null,
+  "width": null,
+  "height": 30,
+  "dimension_constraints": {
+    "width": "open",
+    "height": "fixed"
+  },
+  "mode": "mono",
+  "requested_parameters": {
+    "width": null,
+    "width_constraint": "open",
+    "height": 30,
+    "height_constraint": "fixed",
+    "mode": "mono",
+    "foreground_color_count_requested": null,
+    "foreground_color_count_implied_by_mode": 1
+  },
+  "difficulty": null,
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "file": "A-r01.png",
+      "sha256": "87f79ddc0ec3f4c258e55cf6a8d077cfaf1823867b4eaff886cc93c1aa91030a",
+      "description": "Klassisch: Messingröhren und Blattsegel",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "file": "B-r01.png",
+      "sha256": "a73fa52b453e1b77c104affaa061dd03d75f772f1431ac8986cbfd84cffef0ff",
+      "description": "Bambus: Naturmaterial und Terrakottasegel",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "file": "C-r01.png",
+      "sha256": "82a90396033ea58038de07396a5d741e8edea745f711f91a07232ab912e2c278",
+      "description": "Kupferröhren: Bogen und ovales Segel",
+      "approval": null
+    }
+  ],
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "integration": null,
+  "repo_commit": "23997f73dc33399fcdaf8e360412028c31e42da4",
+  "updated_at_utc": "2026-10-15T15:59:29.186157+00:00"
+}

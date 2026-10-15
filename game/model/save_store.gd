@@ -4,6 +4,7 @@ const Definition = preload("res://model/definition.gd")
 const Session = preload("res://model/session.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
 const Registry = preload("res://model/content_registry.gd")
+const WebStorage = preload("res://model/web_storage.gd")
 const ZOOMS: Array[int] = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40, 44, 48, 54, 60, 66, 72]
 static var test_root_override: String = ""
 var root: String
@@ -199,6 +200,11 @@ func _absolute(path: String) -> String:
 	return ProjectSettings.globalize_path(path) if path.begins_with("user://") else path
 
 func write_slot(session: Session, view: Dictionary) -> String:
+	var error: String = _write_slot(session, view)
+	WebStorage.finished(str(session.definition.id), error)
+	return error
+
+func _write_slot(session: Session, view: Dictionary) -> String:
 	var id: String = key_for_definition(str(session.definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
@@ -242,6 +248,11 @@ func write_slot(session: Session, view: Dictionary) -> String:
 	return ""
 
 func reset_slot(id: String) -> String:
+	var error: String = _reset_slot(id)
+	WebStorage.finished(str(Registry.by_key(id).get("id", id)), error)
+	return error
+
+func _reset_slot(id: String) -> String:
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	if fail_step == "reset":
@@ -253,6 +264,11 @@ func reset_slot(id: String) -> String:
 	return ""
 
 func repair_from_backup(definition: Dictionary) -> String:
+	var error: String = _repair_from_backup(definition)
+	WebStorage.finished(str(definition.id), error)
+	return error
+
+func _repair_from_backup(definition: Dictionary) -> String:
 	var id: String = key_for_definition(str(definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
@@ -280,6 +296,11 @@ func repair_from_backup(definition: Dictionary) -> String:
 	return ""
 
 func discard_invalid_backup(definition: Dictionary) -> String:
+	var error: String = _discard_invalid_backup(definition)
+	WebStorage.finished(str(definition.id), error)
+	return error
+
+func _discard_invalid_backup(definition: Dictionary) -> String:
 	var id: String = key_for_definition(str(definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."

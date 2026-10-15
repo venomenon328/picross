@@ -9,6 +9,9 @@ const FullViewBoard = preload("res://ui/full_view_board.gd")
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const SaveStore = preload("res://model/save_store.gd")
+const WebStorage = preload("res://model/web_storage.gd")
+var web_lifecycle_callback: JavaScriptObject
+var web_leaving: bool = false
 const BookButton = preload("res://ui/book_button.gd")
 const BookSurface = preload("res://ui/book_surface.gd")
 const BODY_FONT = preload("res://art/book/PlexSans.ttf")
@@ -95,6 +98,11 @@ func validate_definition(data: Dictionary) -> String:
 	return Definition.validate(data)
 
 func _ready() -> void:
+	if OS.has_feature("web"):
+		if not JavaScriptBridge.eval("window.picrossStorage.attach(FS, GodotFS, IDBFS)"):
+			return
+		web_lifecycle_callback = JavaScriptBridge.create_callback(_web_lifecycle)
+		JavaScriptBridge.get_interface("window").picrossLifecycle = web_lifecycle_callback
 	var work_font: FontFile = WORK_TITLE_FONT
 	work_font.allow_system_fallback = false
 	# Bakso lacks only the middle dot in real work titles; all other title
@@ -104,7 +112,7 @@ func _ready() -> void:
 	work_font.fallbacks = [punctuation]
 	get_tree().auto_accept_quit = false
 	store = create_store()
-	if DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
+	if not OS.has_feature("web") and DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
 		var usable: Rect2i = DisplayServer.screen_get_usable_rect()
 		var decorations: Vector2i = (DisplayServer.window_get_size_with_decorations() - DisplayServer.window_get_size()).max(Vector2i(16, 48))
 		var client_offset: Vector2i = DisplayServer.window_get_position() - DisplayServer.window_get_position_with_decorations()
@@ -388,6 +396,7 @@ func _puzzle_view_active() -> bool:
 
 func _schedule_view_save() -> void:
 	if save_timer != null and session != null and _puzzle_view_active():
+		WebStorage.view_changed()
 		save_timer.start()
 
 func _undo() -> void:
@@ -413,6 +422,7 @@ func _save_current() -> bool:
 		save_timer.stop()
 	session.view_state = board.capture_view()
 	save_error = "Backup vor weiterem Speichern bewusst übernehmen." if slot_status[sessions.find(session)] == "recovered" else store.write_slot(session, session.view_state)
+	if slot_status[sessions.find(session)] == "recovered": WebStorage.finished(str(session.definition.id), save_error)
 	slot_errors[sessions.find(session)] = save_error
 	if save_error.is_empty():
 		slot_status[sessions.find(session)] = "loaded"
@@ -524,9 +534,27 @@ func _repair_selected() -> void:
 	show_album()
 
 func leave_app() -> void:
+	if web_leaving: return
 	_cancel_interaction()
 	if _flush_current():
+		if OS.has_feature("web"):
+			web_leaving = true
+			get_tree().paused = true
+			WebStorage.changed()
+			var deadline: int = Time.get_ticks_msec() + 15000
+			while JavaScriptBridge.eval("window.picrossStorage.pending", true):
+				if not str(JavaScriptBridge.eval("window.picrossStorage.error", true)).is_empty() or Time.get_ticks_msec() > deadline:
+					JavaScriptBridge.eval("window.picrossStorage.syncError = 'Beenden nicht möglich: Sicherung ausstehend. Erneut versuchen.'; window.picrossStorage.render()", true)
+					get_tree().paused = false
+					web_leaving = false
+					return
+				await get_tree().create_timer(0.05).timeout
 		get_tree().quit()
+
+func _web_lifecycle(_arguments: Array) -> void:
+	if web_leaving: return
+	_cancel_interaction()
+	_flush_current()
 
 static func label(text: String, font_size: int) -> Label:
 	var item: Label = Label.new()
@@ -722,7 +750,7 @@ func _build_information() -> void:
 	help_panel.add_theme_constant_override("separation",16)
 	content.add_child(help_panel)
 	help_panel.add_child(label("Maus und Hinweise",26))
-	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück. Begonnene Striche folgen auch über der Seitenleiste bis zum Rasterrand; die letzte Loslassposition zählt.\n\nAb Länge 2 folgt die Zahl mit heller Kontur dem Zeiger; bei Länge 1 verschwindet sie. Vorbelegte Felder zählen mit. Am Fensterrand bleibt die vollständige Zahl innen sichtbar. Der Zeiger bleibt frei. Bei erhaltenem Spielfokus übernimmt auch Loslassen außerhalb des Fensters den Strich. Fokusverlust verwirft ihn vollständig.\n\nDie Werkzeuge stehen rechts unter den Farben: zwei Spalten und drei Zeilen: Füllen / Radieren, Undo / Redo, Verkleinern / Vergrößern. Auswahlmarkierungen zeigen Werkzeug und Farbe.\n\nRad über dem Raster und +/−: Zoom bis zur Vollsichtgrenze. Raster und eigene Miniatur bleiben fest. Die Miniatur zeigt nur eigene Füllungen in Originalfarben, auch Fehler und die aktuelle Vorschau. X und unbekannt bleiben gleich neutral. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nMittlere Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
+	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück. Begonnene Striche folgen auch über der Seitenleiste bis zum Rasterrand; die letzte Loslassposition zählt.\n\nAb Länge 2 folgt die Zahl mit heller Kontur dem Zeiger; bei Länge 1 verschwindet sie. Vorbelegte Felder zählen mit. Am Fensterrand bleibt die vollständige Zahl innen sichtbar. Der Zeiger bleibt frei. Bei erhaltenem Spielfokus übernimmt auch Loslassen außerhalb des Fensters den Strich. Fokusverlust verwirft ihn vollständig.\n\nDie Werkzeuge stehen rechts unter den Farben: zwei Spalten und drei Zeilen: Füllen / Radieren, Undo / Redo, Verkleinern / Vergrößern. Auswahlmarkierungen zeigen Werkzeug und Farbe.\n\nRad über dem Raster und +/−: Zoom bis zur Vollsichtgrenze. Raster und eigene Miniatur bleiben fest. Die Miniatur zeigt nur eigene Füllungen in Originalfarben, auch Fehler und die aktuelle Vorschau. X und unbekannt bleiben gleich neutral. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nMittlere Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. Freie Breite und Höhe zeigen nach dem Fit zusätzliche ganze Hinweise, ohne kleinere Zellen. Vollständig passende Folgen haben keine Marker und lassen sich nicht verschieben. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge auf Papier mit gezeichnetem Rahmen und kleinerer Überschrift. Die Overlaylesegröße folgt der UI-Skalierung unabhängig vom Rasterzoom. Vorübergehende Vollanzeige bewahrt die Leseposition auch beim Speichern.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; abgeschwächt = eindeutig vollständig gesetzt; durchgestrichen = zusätzlich an beiden Enden abgegrenzt. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
 	help_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help_panel.add_child(help_text)
 	information.hide()
@@ -916,6 +944,7 @@ func _layout_book() -> void:
 		for box: Rect2 in [surface.card,surface.palette,surface.wells[0],coordinate_ink]:
 			if box.intersects(occupied): clearance = maxf(clearance,occupied.end.x-box.position.x+0.1)
 		board.position.x -= clearance
+	board.refresh_clue_hover()
 	surface.information = information.visible
 	surface.work_visible = work.visible and page.visible
 	surface.queue_redraw()

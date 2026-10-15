@@ -72,11 +72,13 @@ static func capture(board) -> Dictionary:
 	var grid_fit: bool = view.viewport.grow(0.01).encloses(grid_frame) and layout_valid
 	var complete: bool = grid_fit and hidden == 0 and clipped == 0 and collisions == 0
 	var original_grid: Rect2 = view.bounds()
-	original_grid.position.x -= horizontal_used
+	original_grid.position -= Vector2(horizontal_used, board.vertical_used)
 	var original_rows: Rect2 = board.row_clue_area()
 	original_rows.size.x -= horizontal_used
 	var original_columns: Rect2 = board.column_clue_area()
 	original_columns.position.x -= horizontal_used
+	original_columns.size.y -= board.vertical_used
+	original_rows.position.y -= board.vertical_used
 	if board.has_method("composition_envelope"):
 		original_grid.position -= board.composition_shift
 		original_rows.position -= board.composition_shift
@@ -84,6 +86,7 @@ static func capture(board) -> Dictionary:
 	var fit_dimensions: Vector2 = (size - Vector2(minimum_slots) * board.slot_pitch - Vector2(14,14)) / Vector2(view.dimensions)
 	return {"mode": mode, "cell_pitch": view.cell_size, "raw_fit_ceiling": raw_fit, "zoom_ceiling": fit_ceiling, "reserve_slots": [reserve_slots.x,reserve_slots.y],
 		"minimum_reserve_slots": [minimum_slots.x,minimum_slots.y], "axis_counts": axis_counts,
+		"vertical_budget_px": board.vertical_budget, "vertical_used_px": board.vertical_used,
 		"horizontal_budget_px": horizontal_budget, "horizontal_used_px": horizontal_used, "horizontal_remaining_px": horizontal_budget-horizontal_used,
 		"minimum_grid": rect_values(original_grid), "minimum_row_clues": rect_values(original_rows), "minimum_column_clues": rect_values(original_columns),
 		"fit_axis_cells": [fit_dimensions.x,fit_dimensions.y], "limiting_axis": "width" if fit_dimensions.x < fit_dimensions.y else "height", "frame_area_px": grid_frame.get_area(),

@@ -1,5 +1,11 @@
 # Produktdefinition: picross
 
+**WEB-1 / #162:** Der zusätzliche [Browserentwicklungsweg](WEB_HOSTING.md) verwendet
+denselben Godot-Spieler und dieselben Regeln. Desktop mit Maus, statisches Hosting,
+Browserpersistenz und manuelles SSH-Deployment sind dessen technischer Scope.
+Das entscheidet keine endgültige Produktplattformmatrix. Nach vollständigem Laden
+läuft das Spiel ohne Anwendungsserver; Offline-Neustart/PWA ist nicht zugesagt.
+
 Die Produktionsplanung verwendet thematische Kategorien gemäß [KAT-1](CATEGORIES.md). Jedes sichtbare registrierte Rätsel hat genau eine Hauptkategorie. Kapitel werden später aus dem vorhandenen Fundus zusammengestellt; Kategorien sind keine Kapitel oder Freischaltbedingungen. In der Entwicklungsfassung sind alle sichtbaren Inhalte frei spielbar. Der initiale Bestand ist redaktionell veränderbar, ohne Mengenquoten. KAT-2 (#79) ergänzt den datenbasierten Einstieg mit Kategorien, Statuskarten und höchstens 24 Karten pro Seite ([Prüfzuordnung](KAT2_VERIFICATION.md)); die allgemeinen Progressionsziele bleiben erhalten.
 
 ## Aktueller Entwicklungsstand
@@ -108,7 +114,7 @@ Regionenbedingungen würden zusätzliche Bedingungen für markierte Bereiche erg
 
 ### 5.1 Verbindliche Leitlinien
 
-Die Handhabung soll intuitiv, präzise und unkompliziert sein. Reguläres Ziel ist das vollständig sichtbare Raster einschließlich Rahmen ohne erforderliches Rasterverschieben. G ist bevorzugt: mindestens min(5,n) vollständige zusammenhängende Zahlen je Folge, bei Bedarf unabhängig bewegt; freie Breite darf mehr Zeilenhinweise zeigen. V ergänzt die vollständige Blattansicht mit allen Hinweisen. 1080p ist als maßgebliches Mindestziel beziehungsweise spätere Mindestauflösung akzeptiert; Clientfläche, Windows- und UI-Skalierung bleiben getrennt zu prüfen. 720p bleibt zusätzlicher Befund/Fallback. VS2 stellt die reguläre P1-Navigation gemäß den oben gebundenen Regeln um, auch für bestehende Großfälle. Eine künftige komfortable Sondernavigation für sehr große Rätsel liegt außerhalb dieses Pakets; Platzmangel und eingeschränkte Lesbarkeit bleiben ausdrücklich ausgewiesen.
+Die Handhabung soll intuitiv, präzise und unkompliziert sein. Reguläres Ziel ist das vollständig sichtbare Raster einschließlich Rahmen ohne erforderliches Rasterverschieben. G ist bevorzugt: mindestens min(5,n) vollständige zusammenhängende Zahlen je Folge, bei Bedarf unabhängig bewegt; freie Breite und Höhe zeigen nach dem Fit möglichst viele vollständige Zeilen- und Spaltenhinweise, ohne die Zellen dafür zu verkleinern (HF / #149). V ergänzt die vollständige Blattansicht mit allen Hinweisen. 1080p ist als maßgebliches Mindestziel beziehungsweise spätere Mindestauflösung akzeptiert; Clientfläche, Windows- und UI-Skalierung bleiben getrennt zu prüfen. 720p bleibt zusätzlicher Befund/Fallback. VS2 stellt die reguläre P1-Navigation gemäß den oben gebundenen Regeln um, auch für bestehende Großfälle. Eine künftige komfortable Sondernavigation für sehr große Rätsel liegt außerhalb dieses Pakets; Platzmangel und eingeschränkte Lesbarkeit bleiben ausdrücklich ausgewiesen.
 
 Maus und Tastatur sind die primäre Eingabeform. Controller werden von Beginn an als alternative Eingabemethode vorgesehen und in die Interaktionskonzeption einbezogen, nicht erst nachträglich auf eine ausschließlich mausabhängige Oberfläche aufgesetzt. Touch oder eine Mobile-Version sind nicht beschlossen.
 

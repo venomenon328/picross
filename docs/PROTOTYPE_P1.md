@@ -53,7 +53,7 @@ oder Hinweisspalte vertikal. Die eigene Miniatur bleibt proportional und passiv.
 
 Mindestreserven werden pro Achse aus tatsächlichen vollständigen Glyphen bestimmt;
 Rasteransicht zeigt mindestens min(5,n) zusammenhängende Zahlen auch im Drag.
-Erst danach nutzt GF1 freie horizontale Breite für weitere sichere ganze Slots,
+Erst danach nutzt HF / #149 freie Breite und Höhe unabhängig für weitere sichere ganze Slots,
 ohne Fit-/Schriftverlust. Gesamtansicht reserviert sämtliche Hinweise. 24px bleibt
 der gewünschte reguläre Arbeitswert, begrenzt durch den tatsächlichen Fit.
 Platzmangel und kleine/kollidierende Hinweise werden transparent behandelt;
@@ -104,7 +104,7 @@ bleibt als isolierter Vergleich ausführbar; ZS-2 verwendet die bestätigte Komb
 
 | ID | Entscheidung für P1 | Stand und Grenze |
 | --- | --- | --- |
-| D-01 | Native Windows-Desktopfassung mit Godot Standard und typisiertem GDScript, Windows-11-Testplattform. | Kein C#/.NET-/Browserparallelweg; keine endgültige Produktstackentscheidung. Versionsbindung in Abschnitt 7. |
+| D-01 | Native Windows-Desktopfassung mit Godot Standard und typisiertem GDScript, Windows-11-Testplattform; zusätzlich WEB-1-Entwicklungsfassung im Browser. | Kein C#/.NET; keine endgültige Produktstackentscheidung. Versionsbindung in Abschnitt 7, Webgrenzen in [WEB-1](WEB_HOSTING.md). |
 | D-02 | Reduzierte Spielprobe: reale Bearbeitung, Abschluss und später Speicherung; keine Sterne-/Fehlerwertung, Live-Fehlerhilfe oder Hypothesen. | Bestätigte Funktionen des späteren Produkts werden nicht gestrichen. |
 | D-03A | Elastische Strichvorschau: Rückwärtsziehen verkürzt; Loslassen übernimmt eine atomare Aktion. | Unverändert, auch für die neuen Rücknahmestriche. |
 | D-03B | Werkzeug und Modus bleiben je Strich eingefroren; kein Mehrfachtoggle beim Zurückziehen. | GP-01/#48 bindet zusätzlich die ursprüngliche Startzustandskategorie; unbekannter Start schützt Gegenmarkierungen. |
@@ -168,7 +168,7 @@ Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
 
 ### 3.2 Nicht enthalten
 
-Keine Sterneberechnung, Perfektionsanzeige, Fehlerstatistik, Rangliste, Freischaltungen, Bonuslogik, Live-Fehlerhilfe oder Hypothesen. Kein allgemeiner Solver, Produktionseditor, Bildimport, Community-Funktion, Audio, aufwendige Buchanimation, finale A/B-Entscheidung, Verbundraster oder Regionenregeln. Kein Hosting, Steam, Release, Installer, Cloudkonto oder kostenpflichtiger Dienst. Keine Tastatur-/Controllerbedienung, globale Tastenumbelegung oder vollständiges Accessibility-Optionsmenü. Der ausdrücklich vereinbarte Escape-Abbruch bleibt Teil des Mausgestenvertrags.
+Keine Sterneberechnung, Perfektionsanzeige, Fehlerstatistik, Rangliste, Freischaltungen, Bonuslogik, Live-Fehlerhilfe oder Hypothesen. Kein allgemeiner Solver, Produktionseditor, Bildimport, Community-Funktion, Audio, aufwendige Buchanimation, finale A/B-Entscheidung, Verbundraster oder Regionenregeln. WEB-1 ergänzt den statischen Build und die technische SSH-Deploymentvorbereitung; tatsächliches Livehosting bleibt ein separater Auftrag. Kein Steam, Release, Installer, Cloudkonto oder kostenpflichtiger Dienst. Keine Tastatur-/Controllerbedienung, globale Tastenumbelegung oder vollständiges Accessibility-Optionsmenü. Der ausdrücklich vereinbarte Escape-Abbruch bleibt Teil des Mausgestenvertrags.
 
 Die spätere Perfektionsregel „ohne Fehler und ohne Undo“ bleibt erhalten. P1 weist mangels Wertung keinen Durchgang als perfekt aus. Ob direktes Neutralisieren oder Radieren später wertungsrelevante Rücknahmen sind, bleibt offen. D-09 entscheidet Bedienung, nicht Fehlerzählung, Sterne oder Perfektion.
 
@@ -336,7 +336,7 @@ jeder langen Folge bleiben erreichbar; „Hinweise rasterseitig ausrichten“ se
 Einzelpositionen bewusst zurück.
 
 Die wirkungslosen Raster-/Miniaturnavigationsversuche erhalten sämtliche individuellen Lesepositionen.
-Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,
+Vorübergehende Vollanzeige erhält alle semantischen Rand-/Mittelanker, auch beim Speichern und frischen Neustart; erneutes Verengen rekonstruiert die Lesestelle. Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,
 begrenzen danach gültig und bleiben auf dem gemeinsamen Slotraster. Beim bewussten
 Testblattwechsel wird ab P1.3 die individuelle Hinweisansicht des Zielblatts
 wiederhergestellt; nur dessen bestätigter Reset initialisiert sie neu.
@@ -345,7 +345,7 @@ Während einer Zellgeste ist Hinweisnavigation gesperrt. Freigabe, Escape und
 Fokusverlust beenden sie; falsche Tastenfreigabe nicht. Hinweis-Panning verändert
 weder Zellen/Preview, History/Undo-Metadatum oder Abschluss noch Rasterzentrum,
 Rasterzoom oder Miniaturrahmen. Darüberfahren einer gekürzten Folge zeigt weiterhin
-die vollständige farbige Folge als umbrechenden Tooltip im Arbeitsbild. Dieser ist
+die vollständige farbige Folge als umbrechendes Overlay im Arbeitsbild. HF / #149 vermisst Fraunces-Überschrift und Delight-Zahlen getrennt, nutzt vorhandenes Papier und gezeichnete Bildrahmen, hält sämtliche Texte innerhalb der sicheren Fläche und aktualisiert Hover-/Trefferrechtecke auch ohne neue Mausbewegung. Die Overlaylesegröße folgt UI100/125 unabhängig vom Rasterzoom; sichtbare Boxklicks lösen keine Zellaktion aus. Dieser ist
 Ergänzung, nicht der einzige Zugriff; es gibt keinen eigenen Hinweisbildschirm oder
 modalen Ersatzdialog. Keine automatische Fehler-/Erfüllungsmarkierung durch
 Lösungsvergleich. Manuelles Hinweisabhaken ist nicht erforderlich.
@@ -435,6 +435,13 @@ Pflicht-Neuzeichnung aller späteren Rätsel folgt daraus nicht. F-03 ist auch n
 Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
+
+WEB-1 ergänzt für den Browser die bestätigte IDBFS-Synchronisation, Einzeltab-
+Schreibsperre und eigene Beenden-Aktion gemäß [Webvertrag](WEB_HOSTING.md).
+Schema/Validierung/Recovery bleiben gleich. Browsergesteuertes Schließen kann
+anders als die eigene Beenden-Aktion nicht universell blockiert werden; laufende
+Sicherung, Fehleranzeige und das dokumentierte Verlustfenster gelten zusätzlich.
+Der native Pflicht-Flush-/Close-Vertrag bleibt unverändert.
 
 Historischer P1.3-Ausgangsstand (Slots heute aus der Registry): `user://p1/saves/` mit aus den neun fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gewünschte gültige Arbeitszoomstufe und Einpassen-Flag (overview), aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 

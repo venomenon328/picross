@@ -52,15 +52,8 @@ static func pair(c: SceneTree, app: Main, name: String) -> void:
 	var colors: Dictionary = {}
 	var tooltip_box: Rect2 = Rect2()
 	if not app.board.clue_hover_axis.is_empty():
-		var tooltip_width: float = minf(520 * app.ui_scale, app.board.size.x - app.board.view.viewport.position.x - 32)
-		var cursor: Vector2 = Vector2(14, 44 * app.ui_scale)
-		for entry: Dictionary in app.board.tooltip_entries(app.board.clue_hover_axis, app.board.clue_hover_index):
-			var width: float = app.board.clue_text_font(font, entry.text).get_string_size(entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, app.board.clue_tooltip_font_size()).x
-			if cursor.x + width > tooltip_width - 14:
-				cursor.x = 14
-				cursor.y += 22 * app.ui_scale
-			cursor.x += width + 9 * app.ui_scale
-		tooltip_box = Rect2(app.board.global_position + app.board.view.viewport.position + Vector2(12, 12), Vector2(tooltip_width, cursor.y + 12 * app.ui_scale))
+		tooltip_box = app.board.clue_tooltip_rect
+		tooltip_box.position += app.board.global_position
 	for axis: String in ["row", "column"]:
 		var count: int = app.session.player.height if axis == "row" else app.session.player.width
 		for index: int in range(count):
@@ -96,16 +89,11 @@ static func pair(c: SceneTree, app: Main, name: String) -> void:
 	else:
 		var entries: Array = app.board.tooltip_entries(app.board.clue_hover_axis, app.board.clue_hover_index)
 		var tooltip_fs: int = app.board.clue_tooltip_font_size()
-		var box_width: float = minf(520 * app.ui_scale, app.board.size.x - app.board.view.viewport.position.x - 32)
-		var cursor: Vector2 = Vector2(14, 44 * app.ui_scale)
-		for entry: Dictionary in entries:
-			var width: float = app.board.clue_text_font(font, entry.text).get_string_size(entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, tooltip_fs).x
-			if cursor.x + width > box_width - 14:
-				cursor.x = 14
-				cursor.y += 22 * app.ui_scale
-			var baseline: Vector2 = app.board.global_position + app.board.view.viewport.position + Vector2(12, 12) + cursor
+		var geometry: Dictionary = app.board.tooltip_geometry()
+		for i: int in range(entries.size()):
+			var entry: Dictionary = entries[i]
+			var baseline: Vector2 = app.board.global_position + geometry.rect.position + geometry.positions[i]
 			require(c, (changed_pixels(off, on, token_ink_rect(app.board.clue_text_font(font, entry.text), entry.text, tooltip_fs, baseline)) > 0) == (int(entry.get("status", 0)) > 0), name + " tooltip original token")
-			cursor.x += width + 9 * app.ui_scale
 	require(c, same_region(off, on, app.mini.get_global_rect()), name + " miniature unchanged")
 	require(c, marked.row > 0 and marked.column > 0, name + " both axes drawn with marks")
 	c.frames[-1]["h1_pair"] = {"off_frame": name + "-off", "marked_tokens": marked, "colors": colors.keys(), "searches_on_toggle": app.board.completion_searches - searches}

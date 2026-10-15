@@ -5,6 +5,7 @@ const ClueLayout = preload("res://ui/clue_layout.gd")
 const ClueCompletion = preload("res://model/clue_completion.gd")
 const GestureCounter = preload("res://ui/gesture_counter.gd")
 var gesture_counter: GestureCounter
+const ClueOverlay = preload("res://ui/clue_overlay.gd")
 signal edited
 signal committed
 signal view_changed
@@ -17,6 +18,10 @@ var book_layout: bool = false
 var book_inset: Vector2 = Vector2(210,126)
 var book_grid_size: Vector2 = Vector2(720,720)
 var clue_tooltip_rect: Rect2
+var clue_overlay_geometry: Dictionary = {}
+var clue_overlay_key: String = ""
+var clue_pointer_global: Vector2
+var clue_pointer_known: bool = false
 var session: Session
 var view: GridView = GridView.new()
 var eraser: bool = false
@@ -143,6 +148,9 @@ func set_clue_step(axis: String, index: int, value: int) -> void:
 	ensure_clue_steps()
 	var count: int = clue_entry_count(axis, index)
 	var capacity: int = clue_capacity(axis)
+	# Full visibility has no navigation intent; retain the last confirmed anchor.
+	if count <= capacity:
+		return
 	var window: Dictionary = ClueLayout.select_window(count, capacity, value)
 	var position: Dictionary = ClueLayout.read_position(count, capacity, int(window.offset))
 	if axis == "row":
@@ -341,9 +349,13 @@ func _gui_input(event: InputEvent) -> void:
 func clear_clue_hover() -> void:
 	clue_hover_axis = ""
 	clue_hover_index = -1
+	clue_tooltip_rect = Rect2()
+	clue_overlay_geometry.clear()
+	clue_overlay_key = ""
 	queue_redraw()
 
 func clear_pointer_hover() -> void:
+	clue_pointer_known = false
 	clear_clue_hover()
 	if not session.gesture.active:
 		hover = Vector2i(-1, -1)
@@ -352,9 +364,13 @@ func clear_pointer_hover() -> void:
 func set_clue_hover(axis: String, index: int) -> void:
 	clue_hover_axis = axis
 	clue_hover_index = index
+	clue_overlay_key = ""
+	tooltip_geometry()
 	queue_redraw()
 
 func update_clue_hover(point: Vector2) -> void:
+	clue_pointer_global = global_position + point
+	clue_pointer_known = true
 	var cell: Vector2i = Vector2i(((point - view.origin) / view.cell_size).floor())
 	if row_clue_area().has_point(point) and cell.y >= 0 and cell.y < view.dimensions.y and row_hint_overflows(cell.y):
 		set_clue_hover("row", cell.y)
@@ -362,6 +378,17 @@ func update_clue_hover(point: Vector2) -> void:
 		set_clue_hover("column", cell.x)
 	else:
 		clear_clue_hover()
+
+func refresh_clue_hover() -> void:
+	# Relayout can change capacity or source under an unmoved pointer.
+	clue_overlay_key = ""
+	clue_tooltip_rect = Rect2()
+	if clue_pointer_known:
+		update_clue_hover(clue_pointer_global - global_position)
+	elif not clue_hover_axis.is_empty():
+		clear_clue_hover()
+	if not clue_hover_axis.is_empty(): tooltip_geometry()
+	queue_redraw()
 
 func navigation_target(point: Vector2) -> String:
 	if row_clue_area().has_point(point):
@@ -853,27 +880,22 @@ func _draw_clue_tooltip() -> void:
 	if clue_hover_axis.is_empty() or clue_hover_index < 0:
 		return
 	var entries: Array = tooltip_entries(clue_hover_axis, clue_hover_index)
-	var font: Font = clue_font()
-	var fs: int = clue_tooltip_font_size()
-	var line_height: float = 22 * ui_scale
-	var box_width: float = minf(520 * ui_scale, size.x - view.viewport.position.x - 32)
-	var positions: Array[Vector2] = []
-	var cursor: Vector2 = Vector2(14, 44 * ui_scale)
-	for entry: Dictionary in entries:
-		var width: float = clue_text_font(font, entry.text).get_string_size(entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		if cursor.x + width > box_width - 14:
-			cursor.x = 14
-			cursor.y += line_height
-		positions.append(cursor)
-		cursor.x += width + 9 * ui_scale
-	var box_height: float = cursor.y + 12 * ui_scale
-	var box: Rect2 = Rect2(view.viewport.position + Vector2(12, 12), Vector2(box_width, box_height))
-	clue_tooltip_rect = box
-	draw_rect(box, Color("fffaf0"))
-	draw_rect(box, ACCENT, false, 2)
-	draw_string(BODY_FONT, box.position + Vector2(14, 26 * ui_scale), "Vollständiger Hinweis", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
+	var geometry: Dictionary = tooltip_geometry()
+	var box: Rect2 = geometry.rect
+	ClueOverlay.paint(self, box, ui_scale)
+	draw_string(ClueOverlay.title_font(), box.position + geometry.title_baseline, ClueOverlay.TITLE, HORIZONTAL_ALIGNMENT_LEFT, -1, geometry.title_size, INK)
 	for i: int in range(entries.size()):
-		draw_clue_number(font, box.position + positions[i], entries[i].text, fs, entries[i].color, entries[i].get("status", ClueCompletion.Status.OPEN))
+		draw_clue_number(clue_font(), box.position + geometry.positions[i], entries[i].text, geometry.font_size, entries[i].color, entries[i].get("status", ClueCompletion.Status.OPEN))
+
+func tooltip_geometry() -> Dictionary:
+	if clue_hover_axis.is_empty() or clue_hover_index < 0: return {}
+	var entries: Array = clue_entries(session.definition.rows[clue_hover_index] if clue_hover_axis == "row" else session.definition.columns[clue_hover_index])
+	var key: String = str([entries, ui_scale, size, view.viewport, clue_tooltip_font_size(), clue_font().get_instance_id()])
+	if clue_overlay_key != key:
+		clue_overlay_geometry = ClueOverlay.measure(self, entries)
+		clue_overlay_key = key
+	clue_tooltip_rect = clue_overlay_geometry.rect
+	return clue_overlay_geometry
 
 static func _paper_style() -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
