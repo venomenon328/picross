@@ -51,7 +51,8 @@ def provision():
     (DEST / "icons.json").write_text(json.dumps(icons, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     for name, entry in icons.items():
         (DEST / (name + ".svg")).write_text(icon_svg(entry), encoding="utf-8", newline="\n")
-    for path in sorted(DEST.iterdir()):
+    # Path ordering differs between Windows and POSIX; manifest bytes must not.
+    for path in sorted(DEST.iterdir(), key=lambda path: path.name):
         if path.suffix in (".ttf", ".txt", ".png", ".svg", ".json") and path.name != "manifest.json":
             records.append(dict(file=path.name, sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
     (DEST / "manifest.json").write_text(json.dumps(dict(source_commit="c3a5386580d7a0da29b927b41bd692f0cca59274", sidebar_source="SL-65; frames.json", kb_icon_source="tools/book_icons_kb.json; KB-168-NOTICE.txt", files=records), indent=2) + "\n", encoding="utf-8", newline="\n")

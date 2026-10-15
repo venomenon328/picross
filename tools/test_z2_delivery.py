@@ -4,6 +4,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 import shutil
+import hashlib
 
 import z2_resources
 
@@ -24,10 +25,10 @@ class Z2DeliveryTests(unittest.TestCase):
             destination = Path(temporary) / "book"
             shutil.copytree(z2_resources.DEST, destination)
             with patch.object(z2_resources, "DEST", destination):
-                before = {p.name: p.read_bytes() for p in destination.iterdir() if p.is_file()}
+                before = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in destination.iterdir() if p.is_file()}
                 z2_resources.provision()
                 z2_resources.verify()
-                self.assertEqual(before, {p.name: p.read_bytes() for p in destination.iterdir() if p.is_file()})
+                self.assertEqual(before, {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in destination.iterdir() if p.is_file()})
                 self.assertNotEqual((destination / "reset.svg").read_bytes(), (destination / "undo.svg").read_bytes())
                 (destination / "play.svg").write_text("corrupted", encoding="utf-8")
                 with self.assertRaises(AssertionError):
