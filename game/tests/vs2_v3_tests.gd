@@ -145,6 +145,7 @@ func settle() -> void:
 func mouse(p: Vector2, button: MouseButton, down: bool) -> void:
 	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
 	motion.position = p
+	motion.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
 	canvas.push_input(motion,true)
 	var event: InputEventMouseButton = InputEventMouseButton.new()
 	event.position = p

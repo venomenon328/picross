@@ -53,6 +53,7 @@ func mouse(cell: Vector2i, button: MouseButton, down: bool) -> void:
 func motion(cell: Vector2i) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
 	event.position = app.board.global_position+app.board.view.cell_rect(cell).get_center()
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
 	canvas.push_input(event,true)
 
 func click(cell: Vector2i, button: MouseButton) -> void:
