@@ -66,14 +66,16 @@ class Remote:
     def run(self, script: str) -> str:
         # The script is stdin, never a locally interpreted shell command.
         try:
+            # Binary stdin preserves POSIX LF on Windows; TextIOWrapper would
+            # translate it to CRLF and make the remote sh script invalid.
             result = subprocess.run(['ssh', *self.options(), self.host(), 'sh -s'],
-                                    input='set -eu\n'+script, text=True, capture_output=True, timeout=180)
+                                    input=('set -eu\n'+script).encode('utf-8'), capture_output=True, timeout=180)
         except subprocess.TimeoutExpired:
             raise RuntimeError('SSH operation timed out; inspect local connection/target configuration') from None
         if result.returncode:
             # No SSH config, host, key path or server output is copied into public reports.
             raise RuntimeError(f'SSH operation failed (exit {result.returncode}); inspect local connection/target configuration')
-        return result.stdout.strip()
+        return result.stdout.decode('utf-8').strip()
 
     def prefix(self) -> str:
         return f'cd {shlex.quote(self.cfg["root"])}\n'

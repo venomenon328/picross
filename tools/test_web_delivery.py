@@ -2,6 +2,7 @@
 import copy
 import json
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import MagicMock, patch
@@ -88,6 +89,13 @@ class Delivery(unittest.TestCase):
         with patch.object(deploy_web,'Remote') as remote:
             with self.assertRaises(ValueError): deploy_web.deploy({},Path('unsafe\npath'))
             remote.assert_not_called()
+
+    def test_ssh_stdin_preserves_posix_lf_on_windows(self):
+        result = subprocess.CompletedProcess([],0,stdout=b'checked\n',stderr=b'')
+        with patch.object(deploy_web.subprocess,'run',return_value=result) as command:
+            self.assertEqual(deploy_web.Remote({'host':'example-alias'}).run('true\n'),'checked')
+            self.assertEqual(command.call_args.kwargs['input'],b'set -eu\ntrue\n')
+            self.assertFalse(command.call_args.kwargs.get('text',False))
 
 
 if __name__ == '__main__':
