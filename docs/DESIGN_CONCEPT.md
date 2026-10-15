@@ -206,7 +206,7 @@ von der benannten Ansichtsoption getrennt.
 
 Die gefüllten Zellen brauchen einen erkennbaren Zwischenraum beziehungsweise eine kontrastierende Trennung auch zu dunklen Fünferlinien. Innenabstand, Linienbreite, Farben und Ebenenreihenfolge gemeinsam prüfen. Der in der Mausprobe gezeigte Fall dreier angrenzender Füllzellen an einer Fünfergrenze darf nicht wie eine einzige umgedrehte L-Form aussehen. Fünfergruppen sollen dabei weiterhin gut zählbar bleiben. Prüfung an dunklen und allen angebotenen Farbzellen, Arbeitszoom und Vorschau, nicht nur an einem leeren Raster.
 
-Für reguläre Rätsel gilt [VS-D01](VS1_DECISION.md): Vollsicht einschließlich Rahmen, bevorzugt G, ergänzend V, Format-/Hinweislastprüfung bei 1080p. VS-GF1 nutzt freie rechte Papierbreite für Zeilenhinweise und versetzt Raster samt Spaltenhinweisen und Treffergeometrie gemeinsam, ohne Zell-/Schriftverkleinerung. Die reguläre P1-Integration erfolgt mit VS2/#61. Für mögliche Großraster-Sonderfälle ist ein verdichteter Rahmen mit kompakteren Werkzeugen denkbar. Er soll Identität bewahren, ohne Arbeitsfläche zu verschwenden. Schriftgrößen, Abstände, Kontraste und Fokuszustände sind noch kein endgültiges Designsystem.
+Für reguläre Rätsel gilt [VS-D01](VS1_DECISION.md): Vollsicht einschließlich Rahmen, bevorzugt G, ergänzend V, Format-/Hinweislastprüfung bei 1080p. HF / #149 erweitert VS-GF1 um die freie Papierhöhe für Spaltenhinweise; beide Achsen nutzen nach dem Fit ihre maximal sichere gemeinsame Kapazität. VS-GF1 nutzt freie rechte Papierbreite für Zeilenhinweise und versetzt Raster samt Spaltenhinweisen und Treffergeometrie gemeinsam, ohne Zell-/Schriftverkleinerung. Die reguläre P1-Integration erfolgt mit VS2/#61. Für mögliche Großraster-Sonderfälle ist ein verdichteter Rahmen mit kompakteren Werkzeugen denkbar. Er soll Identität bewahren, ohne Arbeitsfläche zu verschwenden. Schriftgrößen, Abstände, Kontraste und Fokuszustände sind noch kein endgültiges Designsystem.
 
 ### 4.2 Bildplätze und Vollständigkeit
 
@@ -343,7 +343,7 @@ Spalte lässt sich nur für sich vertikal, jede konkrete Zeile nur für sich hor
 kontinuierlich ziehen und beim Loslassen in ganzen gemeinsamen Slots einrasten
 lassen, ohne X-/Y-Zuordnung oder Nachbarfolgen zu ändern. Der temporäre Versatz
 ist weder gespeicherte Leseposition noch Spielzustand.
-Der vollständige Hover-Tooltip ergänzt diese Navigation statt sie zu ersetzen; eine
+Der vollständige Hover-Tooltip ergänzt diese Navigation mit kleinerer Fraunces-Überschrift, Delight-Zahlen und vorhandener warmer Papier-/Bildrahmung. Gemessene Textgrenzen halten Überschrift, Zahlen und Rahmen getrennt; eine
 separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze Linien,
 nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich
 Fehlern, niemals eine korrigierte Lösung. VS2 konkretisiert fitbegrenzten Zoom und

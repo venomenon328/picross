@@ -49,7 +49,7 @@ oder Hinweisspalte vertikal. Die eigene Miniatur bleibt proportional und passiv.
 
 Mindestreserven werden pro Achse aus tatsächlichen vollständigen Glyphen bestimmt;
 Rasteransicht zeigt mindestens min(5,n) zusammenhängende Zahlen auch im Drag.
-Erst danach nutzt GF1 freie horizontale Breite für weitere sichere ganze Slots,
+Erst danach nutzt HF / #149 freie Breite und Höhe unabhängig für weitere sichere ganze Slots,
 ohne Fit-/Schriftverlust. Gesamtansicht reserviert sämtliche Hinweise. 24px bleibt
 der gewünschte reguläre Arbeitswert, begrenzt durch den tatsächlichen Fit.
 Platzmangel und kleine/kollidierende Hinweise werden transparent behandelt;
@@ -321,7 +321,7 @@ jeder langen Folge bleiben erreichbar; „Hinweise rasterseitig ausrichten“ se
 Einzelpositionen bewusst zurück.
 
 Die wirkungslosen Raster-/Miniaturnavigationsversuche erhalten sämtliche individuellen Lesepositionen.
-Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,
+Vorübergehende Vollanzeige erhält alle semantischen Rand-/Mittelanker, auch beim Speichern und frischen Neustart; erneutes Verengen rekonstruiert die Lesestelle. Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,
 begrenzen danach gültig und bleiben auf dem gemeinsamen Slotraster. Beim bewussten
 Testblattwechsel wird ab P1.3 die individuelle Hinweisansicht des Zielblatts
 wiederhergestellt; nur dessen bestätigter Reset initialisiert sie neu.
@@ -330,7 +330,7 @@ Während einer Zellgeste ist Hinweisnavigation gesperrt. Freigabe, Escape und
 Fokusverlust beenden sie; falsche Tastenfreigabe nicht. Hinweis-Panning verändert
 weder Zellen/Preview, History/Undo-Metadatum oder Abschluss noch Rasterzentrum,
 Rasterzoom oder Miniaturrahmen. Darüberfahren einer gekürzten Folge zeigt weiterhin
-die vollständige farbige Folge als umbrechenden Tooltip im Arbeitsbild. Dieser ist
+die vollständige farbige Folge als umbrechendes Overlay im Arbeitsbild. HF / #149 vermisst Fraunces-Überschrift und Delight-Zahlen getrennt, nutzt vorhandenes Papier und gezeichnete Bildrahmen, hält sämtliche Texte innerhalb der sicheren Fläche und aktualisiert Hover-/Trefferrechtecke auch ohne neue Mausbewegung. Die Overlaylesegröße folgt UI100/125 unabhängig vom Rasterzoom; sichtbare Boxklicks lösen keine Zellaktion aus. Dieser ist
 Ergänzung, nicht der einzige Zugriff; es gibt keinen eigenen Hinweisbildschirm oder
 modalen Ersatzdialog. Keine automatische Fehler-/Erfüllungsmarkierung durch
 Lösungsvergleich. Manuelles Hinweisabhaken ist nicht erforderlich.

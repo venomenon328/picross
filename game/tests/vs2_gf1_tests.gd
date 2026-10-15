@@ -97,7 +97,7 @@ func run() -> void:
 					var free: float = board.size.x-14-data.width*board.view.cell_size-board.minimum_slots.x*board.slot_pitch.x
 					var expected: int = mini(board.max_hints.x,board.minimum_slots.x+maxi(0,floori((free+0.000001)/board.slot_pitch.x)))
 					check(board.reserve_slots.x == expected, "only whole fitting slots; no demand padding")
-					check(board.minimum_slots == minimum and board.reserve_slots.y == minimum.y, "minimum and independent upper reserve stable")
+					check(board.minimum_slots == minimum and board.reserve_slots.y == mini(board.max_hints.y,board.minimum_slots.y+floori((board.vertical_budget+0.000001)/board.slot_pitch.y)), "minimum and independent maximal upper reserve stable")
 					check(board.view.cell_size <= 12 and board.view.cell_size >= 11.99, "new capacity never feeds back into zoom")
 					check(Measurements.capture(board).grid_fit and board.horizontal_used <= board.horizontal_budget+0.00001, "frame and added budget fit")
 					if delta == 0 and expected > minimum.x:
