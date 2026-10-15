@@ -1,4 +1,5 @@
 import tempfile
+import os
 import shutil
 import subprocess
 import sys
@@ -14,6 +15,33 @@ from ci_scope import FLAGS, JOBS, classify, evaluate
 
 
 class ProductHarnessTests(unittest.TestCase):
+    def test_import_override_is_temporary_even_after_failed_process(self):
+        from p1_product import run_phase
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            project = root / "project.godot"
+            project.write_bytes(b"original project\n")
+            program = ("import pathlib,sys; p=pathlib.Path(sys.argv[-1]); "
+                       "assert (p/'override.cfg').read_text() == '[editor]\\nimport/use_multiple_threads=false\\n'; "
+                       "sys.exit(3)")
+            result = run_phase("import-probe", [sys.executable, "-c", program, "--import", "--path", str(root)],
+                               os.environ.copy(), 10, root)
+            self.assertEqual(result["exit_code"], 3)
+            self.assertFalse((root / "override.cfg").exists())
+            self.assertEqual(project.read_bytes(), b"original project\n")
+
+    def test_import_override_never_replaces_existing_settings_or_affects_runtime(self):
+        from p1_product import import_settings
+        with tempfile.TemporaryDirectory() as temporary:
+            override = Path(temporary) / "override.cfg"
+            override.write_bytes(b"caller settings\n")
+            with self.assertRaises(FileExistsError):
+                with import_settings(["engine", "--path", temporary, "--import"]):
+                    self.fail("must not run with overwritten settings")
+            with import_settings(["engine", "--path", temporary, "--export-release", "Windows"]):
+                self.assertEqual(override.read_bytes(), b"caller settings\n")
+            self.assertEqual(override.read_bytes(), b"caller settings\n")
+
     def test_native_fixture_catalog_is_bounded_and_player_export_keeps_real_content(self):
         from product_fixtures import copy_regression_game, restore_player_catalog
         import json

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 import argparse
 import json
 import os
@@ -53,13 +54,34 @@ def require_clean_output(result: dict, marker: str | None = None) -> None:
         raise toolchain.PreflightError(f"{result['name']} logged an engine error")
 
 
+@contextmanager
+def import_settings(command: list[str]):
+    """Serialize only editor import workers in disposable test projects.
+
+    4.7.2's parallel font imports twice crashed CI in propagate_notification().
+    The override is absent during all runtime tests and player exports.
+    """
+    if "--import" not in command:
+        yield
+        return
+    project = Path(command[command.index("--path") + 1])
+    override = project / "override.cfg"
+    # Exclusive creation also prevents silently replacing caller settings.
+    with override.open("x", encoding="utf-8", newline="\n") as stream:
+        stream.write("[editor]\nimport/use_multiple_threads=false\n")
+    try:
+        yield
+    finally:
+        override.unlink()
+
+
 def run_phase(name: str, command: list[str], environment: dict, timeout: int, logs: Path) -> dict:
     """Write live diagnostic output even if the runner is cancelled mid-phase."""
     print(f"RUN {name}", flush=True)
     started = time.monotonic()
     path = logs / f"{name}.log"
     timed_out = False
-    with path.open("wb") as stream:
+    with path.open("wb") as stream, import_settings(command):
         try:
             process = subprocess.run(command, env=environment, stdout=stream,
                                      stderr=subprocess.STDOUT, timeout=timeout, check=False)
