@@ -1,8 +1,0 @@
-{
-  "puzzle_id": "pz-20219e14dbe242689b9ef06297828f34",
-  "file": "C-r01.png",
-  "sha256": "82a90396033ea58038de07396a5d741e8edea745f711f91a07232ab912e2c278",
-  "author": "OpenAI image_gen, auf Nutzerauftrag",
-  "usage_basis": "Neu generierter Projektinhalt ohne fremde Bildreferenz; freigegebenes C-r01 unverändert weiterverwendet.",
-  "prompt_file": "reveal-generation.json"
-}
