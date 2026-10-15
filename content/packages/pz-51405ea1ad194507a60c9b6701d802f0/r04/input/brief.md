@@ -1,7 +1,0 @@
-# Japanische Teekanne – Produktionsauftrag 3
-
-pz-51405ea1ad194507a60c9b6701d802f0 · r04 · content_ready · a54316d0cbb1cc1ec53ac63d22d6667c4f4640a4.
-Ausgangspaket r02 auf main@4d749335b14ee9f4576cc8e755fb7e70b69eb8ec, ZIP-SHA-256 5e106efb1033759e43490a4068c3ef7e9494909e9a6b0066aff50971242b8e98; Inventar/Handoff und alle Dateibindungen vor Verarbeitung geprüft. Aktueller main zusätzlich mit UI-Korrektur #153; Produktionswerkzeuge/Regelwerk unverändert. Kategorie haushalt-alltag.
-Der aktuelle Nutzerauftrag gibt MA-r01 und parameters.json frei; originaler Wortlaut: motif-approval-evidence.txt. B-r01 samt tatsächlicher früherer Freigabe unverändert. Originaler Größenwunsch ungefähr30×20; freigegeben empfohlen30×25, zulässig28×23/30×25, monochrom, genau eine Vordergrundfarbe ohne Leer.
-Geschützt: gleiche Ansicht, niedriger breiter Korpus, linker Ausguss, runder Knopf, zusammenhängender Bügel und großer Innenraum, Knopf/Bügel-Trennung. Nur äußerer Leerraum-Crop; contain ohne Streckung. Oberflächendetails dürfen gemäß parameters.json entfallen. Keine freie neue Motivzeichnung. Herkunft: native Projektgenerierung ohne fremde Referenzbilder; Reveal- und Motivprovenienz mit Prompts/Einstellungen bleiben erhalten. A/C nur im r01-Paket am genauen Commit aus decisions.json.
-Beauftragt: vollständige Produktion bis Endabnahmevorlage, Paketsicherung/Index und Merge des Ablage-PRs nach Pflichtchecks. Endabnahme ist offen; keine Spielregistrierung in Standardauftrag3. Menschliche Spielzeit unbekannt; Probespiel optional.

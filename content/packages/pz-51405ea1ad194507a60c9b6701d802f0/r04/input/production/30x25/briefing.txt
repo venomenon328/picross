@@ -1,4 +1,0 @@
-Preserve broad low teapot body, left-facing attached spout, round lid knob, arch handle and its open interior from B-r01. Remove surface texture; faithful black silhouette, white background. Motif MA-r01 approved in the current user commission; see motif-approval.json.
-
-Working mode: faithful
-Motif and gameplay review: open

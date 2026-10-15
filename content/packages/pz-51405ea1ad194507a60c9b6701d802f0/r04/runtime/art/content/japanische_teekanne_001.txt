@@ -1,3 +1,0 @@
-Production ID: pz-51405ea1ad194507a60c9b6701d802f0
-Artwork: Native image_gen.imagegen in user-authorized project
-Usage basis: Original project generation with no external reference images; actual original prompt and settings in reveal-generation.json.
