@@ -43,8 +43,11 @@ def probe(player: Path, output: Path, expected_head: str) -> None:
     user.GetForegroundWindow.restype = w.HWND
     user.SetForegroundWindow.argtypes = [w.HWND]
     user.GetDpiForWindow.argtypes = [w.HWND]
+    original_cursor = w.POINT()
+    user.GetCursorPos(ctypes.byref(original_cursor))
     command_id = 0
     results = []
+    held = set()
 
     def status(predicate=lambda _: True, timeout=10):
         deadline = time.monotonic() + timeout
@@ -75,6 +78,7 @@ def probe(player: Path, output: Path, expected_head: str) -> None:
     def button(right, down):
         # Native Win32 input route; no Input.parse_input_event/Viewport events.
         user.mouse_event((0x8 if down else 0x10) if right else (0x2 if down else 0x4), 0, 0, 0, 0)
+        held.add(right) if down else held.discard(right)
         time.sleep(.15)
 
     def require(condition, label, data):
@@ -90,6 +94,8 @@ def probe(player: Path, output: Path, expected_head: str) -> None:
                    script_sha256=toolchain.sha256_file(script), results=results)
     try:
         initial = status()
+        if any(user.GetAsyncKeyState(key) & 0x8000 for key in (1, 2)):
+            raise RuntimeError("Mouse button already held; native probe did not take input")
         hwnd = initial["hwnd"]
         origin = w.POINT(0, 0)
         if not user.ClientToScreen(hwnd, ctypes.byref(origin)):
@@ -115,12 +121,22 @@ def probe(player: Path, output: Path, expected_head: str) -> None:
                 button(right, False)
                 final = status(lambda data: not data["active"])
                 count = final["empty"] if right else final["filled"]
-                require(final["history"] == 1 and count == 26 and not final["counter"] and final["focus"],
+                delivered = any(e.get("button") == (2 if right else 1) and e.get("pressed") is False
+                                and e["focus"] and (e["position"][0] < 0 or e["position"][0] >= final["client"][0])
+                                for e in final["events"])
+                require(delivered and final["history"] == 1 and count == 26 and not final["counter"] and final["focus"],
                         f"outside-release right={right} dir={direction}", final)
                 move(start)
                 back = status()
                 require(not back["active"] and back["history"] == 1 and not back["blocked"],
                         f"return-after-release right={right} dir={direction}", back)
+                for action, expected in enumerate((0, 26)):
+                    move(back["actions"][action])
+                    button(False, True)
+                    button(False, False)
+                    history = status(lambda data: data["history_cursor"] == action)
+                    require((history["empty"] if right else history["filled"]) == expected,
+                            f"native-history action={action} right={right} dir={direction}", history)
 
             command("reset")
             start = status()["starts"][0]
@@ -175,7 +191,10 @@ def probe(player: Path, output: Path, expected_head: str) -> None:
         if process.poll() is None:
             process.terminate()
             process.wait(timeout=10)
+        for right in held:
+            user.mouse_event(0x10 if right else 0x4, 0, 0, 0, 0)
         log.close()
+        user.SetCursorPos(original_cursor.x, original_cursor.y)
         binding["images"] = {p.name: toolchain.sha256_file(p) for p in output.glob("*.png")}
         (output / "zr-windows-report.json").write_text(json.dumps(binding, ensure_ascii=False, indent=2)+"\n",
                                                     encoding="utf-8", newline="\n")
