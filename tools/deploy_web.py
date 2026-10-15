@@ -65,8 +65,11 @@ class Remote:
 
     def run(self, script: str) -> str:
         # The script is stdin, never a locally interpreted shell command.
-        result = subprocess.run(['ssh', *self.options(), self.host(), 'sh -s'],
-                                input='set -eu\n'+script, text=True, capture_output=True, timeout=180)
+        try:
+            result = subprocess.run(['ssh', *self.options(), self.host(), 'sh -s'],
+                                    input='set -eu\n'+script, text=True, capture_output=True, timeout=180)
+        except subprocess.TimeoutExpired:
+            raise RuntimeError('SSH operation timed out; inspect local connection/target configuration') from None
         if result.returncode:
             # No SSH config, host, key path or server output is copied into public reports.
             raise RuntimeError(f'SSH operation failed (exit {result.returncode}); inspect local connection/target configuration')
@@ -84,7 +87,7 @@ test "$(pwd -P)" = {root}
 test -f .picross-web && test ! -L .picross-web
 test "$(cat .picross-web)" = picross-web-v1
 test -w . && test -x .
-for name in releases index.html .previous; do test ! -L "$name"; done
+for name in releases index.html .previous .previous-next; do test ! -L "$name"; done
 if test -e releases; then test -d releases && test -w releases; fi
 if test -e index.html; then test -f index.html && grep -q 'data-build="[0-9a-f]' index.html; fi
 mv --version >/dev/null
@@ -147,7 +150,10 @@ cat releases/{build}/build-manifest.json
             lines += ['put '+quoted(bundle/n)+' '+quoted(self.cfg['root']+'/'+stage+'/'+n) for n in manifest['files']]
             lines += ['put '+quoted(bundle/'build-manifest.json')+' '+quoted(self.cfg['root']+'/'+stage+'/build-manifest.json')]
             batch.write_text('\n'.join(lines)+'\n', encoding='utf-8', newline='\n')
-            result = subprocess.run(['sftp', *self.options(True), '-b', str(batch), self.host()], capture_output=True, timeout=300)
+            try:
+                result = subprocess.run(['sftp', *self.options(True), '-b', str(batch), self.host()], capture_output=True, timeout=300)
+            except subprocess.TimeoutExpired:
+                raise RuntimeError('SFTP upload timed out; current version unchanged') from None
             if result.returncode:
                 raise RuntimeError(f'SFTP upload failed (exit {result.returncode}); current version unchanged')
         checks = '\n'.join(f'test "$(sha256sum {shlex.quote(stage+"/"+n)} | cut -d " " -f 1)" = {entry["sha256"]}' for n,entry in manifest['files'].items())
@@ -173,7 +179,8 @@ fi
         if old and not web_bundle.BUILD_ID.fullmatch(old):
             raise ValueError('Unrecognized active entry')
         previous = f'printf %s {old} > .previous-next\nmv -Tf .previous-next .previous\n' if old and old != build else ''
-        self.run(self.owned()+f'''test -d releases/{build} && test ! -L releases/{build}
+        self.run(self.owned()+f'''test ! -L .previous-next && test ! -L .entry-{self.token}
+test -d releases/{build} && test ! -L releases/{build}
 test -f releases/{build}/entry.html && test ! -L releases/{build}/entry.html
 cp releases/{build}/entry.html .entry-{self.token}
 {previous}mv -Tf .entry-{self.token} index.html

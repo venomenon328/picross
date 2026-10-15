@@ -159,7 +159,12 @@ Subsystem sftp internal-sftp
             (root/'.marker-held').rename(root/'.picross-web')
             alias=work/'alias'; alias.symlink_to(root.parent,target_is_directory=True)
             check_failure(deploy_web.Remote({**cfg,'root':str(alias/'picross-web')}).preflight)
-            passed('broad/symlink target and missing ownership marker rejected')
+            outside=work/'unrelated'; outside.write_text('untouched')
+            (root/'.previous-next').symlink_to(outside)
+            try: check_failure(lambda:deploy_web.deploy(cfg,args.build.resolve()))
+            finally: (root/'.previous-next').unlink()
+            assert outside.read_text()=='untouched'
+            passed('broad/symlink target, symlink scratch path and missing ownership marker rejected')
             # Same entry and resources also work below a URL prefix.
             parent_server,parent_url=serve(work)
             try: deploy_web.check_http(parent_url+'site/picross-web/',first)
