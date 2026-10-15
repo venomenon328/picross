@@ -1,5 +1,11 @@
 # Projektprofil: picross
 
+**EA / #170:** Abschlussenthüllung auf dem integrierten KB-Stand aus PR #169.
+[EA-Prüfzuordnung](EA_VERIFICATION.md) zusätzlich lesen: sofortiger Commit/Save,
+transiente 2,15-s-Präsentation, neutrale Blattüberschrift, proportionale Bildfläche,
+ursprungsgebundener Reset. EA-T01 verlangt aktuelle technische Lieferung samt
+nativer Bewegung, Windows und Browsern; EA-R01 und EA-M01 bleiben getrennt vor Merge.
+
 **KB / #168:** Kompakte responsive Katalogkarten, Bakso-Katalogtitel und dieselben
 Papierbuttons für Katalog, Werkbank und Information. [KB-Prüfzuordnung](KB_VERIFICATION.md)
 ist bei dieser Arbeit zusätzlich zu KAT-1/ZA-1/KAT-2 zu lesen. Play/Reset bleiben
