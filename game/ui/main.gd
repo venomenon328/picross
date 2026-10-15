@@ -9,6 +9,9 @@ const FullViewBoard = preload("res://ui/full_view_board.gd")
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const SaveStore = preload("res://model/save_store.gd")
+const WebStorage = preload("res://model/web_storage.gd")
+var web_lifecycle_callback: JavaScriptObject
+var web_leaving: bool = false
 const BookButton = preload("res://ui/book_button.gd")
 const BookSurface = preload("res://ui/book_surface.gd")
 const BODY_FONT = preload("res://art/book/PlexSans.ttf")
@@ -95,6 +98,11 @@ func validate_definition(data: Dictionary) -> String:
 	return Definition.validate(data)
 
 func _ready() -> void:
+	if OS.has_feature("web"):
+		if not JavaScriptBridge.eval("window.picrossStorage.attach(FS, GodotFS, IDBFS)"):
+			return
+		web_lifecycle_callback = JavaScriptBridge.create_callback(_web_lifecycle)
+		JavaScriptBridge.get_interface("window").picrossLifecycle = web_lifecycle_callback
 	var work_font: FontFile = WORK_TITLE_FONT
 	work_font.allow_system_fallback = false
 	# Bakso lacks only the middle dot in real work titles; all other title
@@ -104,7 +112,7 @@ func _ready() -> void:
 	work_font.fallbacks = [punctuation]
 	get_tree().auto_accept_quit = false
 	store = create_store()
-	if DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
+	if not OS.has_feature("web") and DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
 		var usable: Rect2i = DisplayServer.screen_get_usable_rect()
 		var decorations: Vector2i = (DisplayServer.window_get_size_with_decorations() - DisplayServer.window_get_size()).max(Vector2i(16, 48))
 		var client_offset: Vector2i = DisplayServer.window_get_position() - DisplayServer.window_get_position_with_decorations()
@@ -388,6 +396,7 @@ func _puzzle_view_active() -> bool:
 
 func _schedule_view_save() -> void:
 	if save_timer != null and session != null and _puzzle_view_active():
+		WebStorage.view_changed()
 		save_timer.start()
 
 func _undo() -> void:
@@ -413,6 +422,7 @@ func _save_current() -> bool:
 		save_timer.stop()
 	session.view_state = board.capture_view()
 	save_error = "Backup vor weiterem Speichern bewusst übernehmen." if slot_status[sessions.find(session)] == "recovered" else store.write_slot(session, session.view_state)
+	if slot_status[sessions.find(session)] == "recovered": WebStorage.finished(str(session.definition.id), save_error)
 	slot_errors[sessions.find(session)] = save_error
 	if save_error.is_empty():
 		slot_status[sessions.find(session)] = "loaded"
@@ -524,9 +534,27 @@ func _repair_selected() -> void:
 	show_album()
 
 func leave_app() -> void:
+	if web_leaving: return
 	_cancel_interaction()
 	if _flush_current():
+		if OS.has_feature("web"):
+			web_leaving = true
+			get_tree().paused = true
+			WebStorage.changed()
+			var deadline: int = Time.get_ticks_msec() + 15000
+			while JavaScriptBridge.eval("window.picrossStorage.pending", true):
+				if not str(JavaScriptBridge.eval("window.picrossStorage.error", true)).is_empty() or Time.get_ticks_msec() > deadline:
+					JavaScriptBridge.eval("window.picrossStorage.syncError = 'Beenden nicht möglich: Sicherung ausstehend. Erneut versuchen.'; window.picrossStorage.render()", true)
+					get_tree().paused = false
+					web_leaving = false
+					return
+				await get_tree().create_timer(0.05).timeout
 		get_tree().quit()
+
+func _web_lifecycle(_arguments: Array) -> void:
+	if web_leaving: return
+	_cancel_interaction()
+	_flush_current()
 
 static func label(text: String, font_size: int) -> Label:
 	var item: Label = Label.new()

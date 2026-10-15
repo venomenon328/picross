@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 .venv/
 artifacts/
+web-deploy.local.json
 .godot/
 game/build/
 examples/rp5/baseline/
