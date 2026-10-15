@@ -125,6 +125,16 @@ der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erla
 
 ## Aktuelle Produktregression
 
+WEB-1 ergänzt den Pflichtjob [Webprüfung](../.github/workflows/web.yml), wenn
+der aktuelle Diff Produkt-/Exportprüfungen verlangt. Reine Inhalte wählen ihn
+weiterhin nicht; Main-Merges veröffentlichen nichts. Der Job exportiert den
+regulären Spieler und eine getrennte feste technische Testfassung, prüft echte
+Chromium-/Firefox-Ereignisse samt Browserpersistenz und eine isolierte Loopback-
+OpenSSH-/HTTP-Referenz. `ci-required` verlangt den tatsächlichen Erfolg dieses
+ausgewählten Jobs. Spielerdateien bleiben 14 Tage, kompakte Berichte/Bilder und
+Fehlerlogs sieben Tage. Keine echten Saves, VPS-Zugangsdaten oder Testprofile im
+Artefakt. [WEB-1-Anleitung und Abnahmegrenzen](WEB_HOSTING.md).
+
 Der [Product-Harness](../tools/p1_product.py) prüft die unveränderten aktiven
 Ressourcenbindungen, importiert die temporäre reguläre
 Spielkopie mit festem temporärem Testkatalog, führt die aktuelle Godot-Kernsuite einschließlich

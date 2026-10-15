@@ -30,6 +30,7 @@ jobs:
       pilots: ${{ steps.scope.outputs.pilots }}
       visual: ${{ steps.scope.outputs.visual }}
       perf_b: ${{ steps.scope.outputs.perf_b }}
+      web: ${{ steps.scope.outputs.web }}
     steps:
       - name: Checkout tested integration
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -92,9 +93,14 @@ jobs:
     if: needs.docs.outputs.preflight == 'true'
     uses: ./.github/workflows/p1-preflight.yml
 
+  web:
+    needs: docs
+    if: needs.docs.outputs.web == 'true'
+    uses: ./.github/workflows/web.yml
+
   ci-required:
     if: always()
-    needs: [docs, product, production, preflight]
+    needs: [docs, product, production, preflight, web]
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout only the result evaluator
@@ -116,5 +122,6 @@ jobs:
             {"docs":{"result":"${{ needs.docs.result }}"},
             "product":{"result":"${{ needs.product.result }}"},
             "production":{"result":"${{ needs.production.result }}"},
-            "preflight":{"result":"${{ needs.preflight.result }}"}}
+            "preflight":{"result":"${{ needs.preflight.result }}"},
+            "web":{"result":"${{ needs.web.result }}"}}
         run: python3 tools/ci_scope.py finish --plan-file "${{ runner.temp }}/ci-selection/ci-plan.json"
