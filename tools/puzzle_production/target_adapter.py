@@ -25,9 +25,10 @@ ADAPTER = "authoring-p1-rect-color-1"
 LEGACY_FORMAT = "picross-target-export-v1"
 FORMAT = "picross-target-export-v2"
 MANUAL_FORMAT = "picross-target-export-v3"
+PAIRED_FORMAT = "picross-target-export-v4"
 
 
-def tool_identity(legacy=False, manual=False, color=False):
+def tool_identity(legacy=False, manual=False, color=False, paired=False):
     root = Path(__file__).resolve().parents[2]
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root,
@@ -42,6 +43,8 @@ def tool_identity(legacy=False, manual=False, color=False):
         files.append("manual_derivation.py")
     if color:
         files.append("color_derivation.py")
+    if paired:
+        files.extend(("certification.py", "paired_verifier.py"))
     return {"adapter": ADAPTER, "commit": commit, "versions": versions(),
             "modules": {n: file_hash(Path(__file__).with_name(n)) for n in files}}
 
@@ -196,6 +199,11 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     else:
         raise InvalidInput("Unsupported/ambiguous candidate source_type")
     require(c.get("proof") == expected_proof, "Handoff proof selection differs")
+    paired = proof["format"] == "picross-proof-v3"
+    if paired:
+        require(not legacy and h["rulebook"]["version"] == "0.5.0" and
+                c.get("certification") == checked.get("certification") and c.get("certification") is not None,
+                "Paired proof requires explicit authoring 0.5.0 profile binding")
     logic = logic_from_matrix(matrix, design)
     require(c.get("matrix_hash") == digest(matrix) and c.get("logic_hash") == digest(logic), "Selected matrix/logic binding differs")
     require(proof["final_domains"] == [[[v] for v in row] for row in matrix], "Proof enddomains differ")
@@ -234,7 +242,8 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(frame_valid or frame_exception, "Authoring frame rule failed: (left OR right) AND (top OR bottom)")
     reveal = validate_reveal(package.file(h["reveal"]["file"]), design["width"], design["height"])
     difficulty = package.json(h.get("difficulty"))
-    require(isinstance(difficulty, dict) and difficulty.get("method") == "picross-difficulty-0.1" and
+    require(isinstance(difficulty, dict) and difficulty.get("method") in
+            (("picross-difficulty-0.2",) if paired else ("picross-difficulty-0.1", "picross-difficulty-0.2")) and
             difficulty.get("assessment_type") in ("editorial_estimate", "instrumented") and
             difficulty.get("level") in ("L1", "L2", "L3", "L4", "L5") and
             difficulty.get("confidence") in ("low", "medium", "high") and difficulty.get("logic_hash") == digest(logic),
@@ -243,8 +252,25 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(isinstance(levels, list) and len(levels) == 2 and all(v in ("L1", "L2", "L3", "L4", "L5") for v in levels) and
             levels[0] <= difficulty["level"] <= levels[1] and isinstance(difficulty.get("rule_families"), dict) and
             difficulty["rule_families"], "Missing difficulty uncertainty/reasoning")
-    require(all(k in ("R0","R1","R2","R3") and isinstance(v,str) and bool(v.strip())
+    require(all(k in (("R0","R1","R2","R3","R4") if paired else ("R0","R1","R2","R3")) and isinstance(v,str) and bool(v.strip())
                 for k,v in difficulty["rule_families"].items()), "Invalid difficulty rule reasoning")
+    if difficulty["method"] == "picross-difficulty-0.2":
+        require(h["rulebook"]["version"] == "0.5.0", "Difficulty 0.2 requires authoring 0.5.0")
+    if paired:
+        from .certification import LABEL
+        assessment = checked.get("assessment")
+        require(isinstance(assessment, dict) and assessment["proof_verified"] and assessment["baseline_verified"] and
+                assessment["outcome"] in ("paired_lines_solved", "line_logic_solved"),
+                "Missing completed independent baseline/paired assessment")
+        assessment_path = expected_proof.removesuffix("proof.json") + "assessment.json"
+        require(difficulty.get("evidence") == assessment_path and package.json(assessment_path) == assessment and
+                difficulty.get("profile_hash") == proof["profile_hash"], "Difficulty evidence/profile mismatch")
+        if assessment["r4_required"]:
+            require("R4" in difficulty["rule_families"] and difficulty["level"] == "L5" and levels == ["L5", "L5"] and
+                    difficulty["assessment_type"] == "instrumented" and difficulty["confidence"] == "medium" and
+                    difficulty.get("logical_demand") == LABEL, "Necessary R4 requires explicit L5/high logical demand")
+        else:
+            require("R4" not in difficulty["rule_families"], "Used paired profile does not prove R4 necessity")
     if difficulty.get("evidence") is not None:
         package.file(difficulty["evidence"])
     selection = {"variant": c["variant"], "matrix_hash": digest(matrix), "logic_hash": digest(logic),
@@ -262,7 +288,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
               "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256") if package.derivation else package.archive_sha256,
               "source": source, "width": design["width"], "height": design["height"], "mode": design["mode"],
               "difficulty": difficulty, "frame": {"left": left, "right": right, "top": top, "bottom": bottom},
-              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_chain, color_chain),
+              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_chain, color_chain, paired),
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "test_only": h.get("test_only", False)}
     if not legacy:
         report.update(format="picross-target-inspection-v2", category_id=None,
@@ -270,6 +296,9 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     if auth is not None:
         report.update(format="picross-target-inspection-v3", manual_authorization_sha256=auth["sha256"],
                       owner_override_sha256=auth["record"]["owner_override"]["sha256"])
+    if paired:
+        report.update(format="picross-target-inspection-v4", deduction={"profile": proof["profile"],
+                      "profile_hash": proof["profile_hash"], "assessment": assessment})
     if edited_import:
         report.update(frame_valid=frame_valid, frame_exception_accepted=frame_exception and not frame_valid)
     if color_import:
@@ -364,6 +393,8 @@ def export(source, output, *, name, revision, stem, save_slot, approval_path=Non
                         "test_only": report["test_only"], "files": hashes(stage)}
             if manual_authorization is not None:
                 manifest["manual_authorization"] = {"file": AUTH_FILE, "sha256": file_hash(stage / AUTH_FILE)}
+            if "deduction" in report:
+                manifest.update(format=PAIRED_FORMAT, deduction=report["deduction"])
             write_json(stage / "manifest.json", manifest)
             verify_export(stage)
             publish_bundle(stage, output)
@@ -378,13 +409,15 @@ def verify_export(directory):
     from .authoring_package import file_table
     files = file_table(directory, time.monotonic()+300)
     m = load_json(directory / "manifest.json")
-    require(isinstance(m, dict) and m.get("format") in (FORMAT, LEGACY_FORMAT, MANUAL_FORMAT), "Unsupported target export format")
+    require(isinstance(m, dict) and m.get("format") in (FORMAT, LEGACY_FORMAT, MANUAL_FORMAT, PAIRED_FORMAT), "Unsupported target export format")
     legacy = m["format"] == LEGACY_FORMAT
-    manual = m["format"] == MANUAL_FORMAT
+    paired = m["format"] == PAIRED_FORMAT
+    manual = m["format"] == MANUAL_FORMAT or paired and "manual_authorization" in m
     exact_keys(m, {"format", "adapter", "definition_id", "runtime_revision", "package_revision",
         "save_slot", "stem", "definition", "reveal", "color_mapping", "selection", "handoff_sha256", "inventory_sha256", "approval_sha256",
         "technical", "editorial_approved", "catalog_ready", "registered", "test_only", "files"} |
-        (set() if legacy else {"category_id", "categories"}) | ({"manual_authorization"} if manual else set()))
+        (set() if legacy else {"category_id", "categories"}) | ({"manual_authorization"} if manual else set()) |
+        ({"deduction"} if paired else set()))
     require(m["adapter"] == ADAPTER and isinstance(m["files"], dict) and
             set(files) == set(m["files"]) | {"manifest.json"}, "Invalid/incomplete target export")
     for name, expected in m["files"].items():
@@ -406,6 +439,8 @@ def verify_export(directory):
         report, design, matrix, logic, approval = inspect(package, directory / "approval.json", legacy=legacy,
                                                         manual_authorization=manual_path)
         require((report["source"]["kind"] == "manual") == manual, "Export format/source mismatch")
+        require(paired == ("deduction" in report) and (not paired or m["deduction"] == report["deduction"]),
+                "Export format/deduction binding mismatch")
         if not legacy:
             categorize(report, catalog, m["category_id"])
         require(approval is not None and m["approval_sha256"] == approval["sha256"], "Missing final export approval")

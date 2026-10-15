@@ -19,6 +19,9 @@ EXIT = {"solved": 0, "stalled": 0, "contradiction": 0, "invalid_input": 2,
 
 def main(argv=None) -> int:
     actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] == "assess":
+        from .quality import main as quality_main
+        return quality_main(actual)
     if actual and actual[0] in ("diagnose", "check-diagnosis"):
         from .diagnosis_cli import main as diagnosis_main
         return diagnosis_main(actual)
@@ -32,7 +35,11 @@ def main(argv=None) -> int:
         child.add_argument("--input", type=Path, required=True)
         child.add_argument("--seconds", type=float, default=120)
         child.add_argument("--max-lines", type=int, default=100_000)
+        child.add_argument("--max-pair-work", type=int, default=20_000_000)
+        child.add_argument("--max-pair-records", type=int, default=250_000)
         if command == "solve":
+            child.add_argument("--profile", choices=("full-line-mono", "full-line-color",
+                                                     "paired-lines-mono", "paired-lines-color"))
             child.add_argument("--output-dir", type=Path, required=True)
             child.add_argument("--order", choices=("rows-first", "columns-first", "reverse"),
                                default="rows-first")
@@ -47,7 +54,8 @@ def main(argv=None) -> int:
     try:
         if sys.version_info < (3, 11):
             raise InvalidInput("Python 3.11 or newer is required")
-        budget = Budget(args.seconds, args.max_lines)
+        budget = Budget(args.seconds, args.max_lines, max_pair_work=args.max_pair_work,
+                        max_pair_records=args.max_pair_records)
         puzzle = validate_logic(load_json(args.input, max_bytes=LOGIC_BYTE_LIMIT))
         if args.command == "verify" and report_path:
             if (report_path.exists() or report_path.resolve() in
@@ -56,17 +64,26 @@ def main(argv=None) -> int:
         if args.command == "solve":
             # Refuse stale certificates and accidental input overwrites on reruns.
             if any((args.output_dir / name).exists()
-                   for name in ("proof.json", "result.json")):
+                   for name in ("proof.json", "result.json", "baseline-proof.json", "assessment.json")):
                 raise InvalidInput("Output directory already has puzzle output; use a new directory")
             at = time.perf_counter()
-            proof = solve(puzzle, budget, args.order)
-            timings["solve_seconds"] = time.perf_counter() - at
+            from .certification import configuration, produce
+            config = configuration(puzzle, args.profile, args.max_pair_work, args.max_pair_records)
+            if config and args.order != "rows-first":
+                raise InvalidInput("Paired profiles require rows-first order")
+            if config:
+                proof, paired_result = produce(puzzle, args.output_dir, "", config, budget)
+            else:
+                proof = solve(puzzle, budget, args.order)
+            timings["certification_seconds" if config else "solve_seconds"] = time.perf_counter() - at
             solver_lines = budget.lines
             at = time.perf_counter()
             proof_path = args.output_dir / "proof.json"
             write_json(proof_path, proof)
             timings["serialization_seconds"] = time.perf_counter() - at
-            if proof["status"] == "aborted":
+            if config:
+                result = paired_result
+            elif proof["status"] == "aborted":
                 result = {"status": "aborted", "certified": False,
                           "proof_verified": False, "reason": proof["reason"],
                           "logic_hash": puzzle.logic_hash, "profile": puzzle.profile,
@@ -75,7 +92,10 @@ def main(argv=None) -> int:
                 at = time.perf_counter()
                 result = verify(puzzle, load_json(proof_path, puzzle.proof_byte_limit), budget)
                 timings["verification_seconds"] = time.perf_counter() - at
-            result["solver_line_evaluations"] = solver_lines
+            result["certification_line_evaluations" if config else "solver_line_evaluations"] = solver_lines
+            if config:
+                result["pair_resources"] = {"work": budget.pair_work, "peak_records": budget.pair_peak_records,
+                                            "max_work": budget.max_pair_work, "max_records": budget.max_pair_records}
         else:
             try:
                 proof = load_json(args.proof, puzzle.proof_byte_limit)

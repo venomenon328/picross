@@ -56,11 +56,18 @@ def line_support(clues: tuple[int | Clue, ...], domains: list[int]) -> list[int]
 
 
 def solve(puzzle: Puzzle, budget: Budget | None = None,
-          order: str = "rows-first") -> dict:
+          order: str = "rows-first", *, profile: str | None = None) -> dict:
     """Generate an untrusted proof; callers must run the independent verifier."""
     if order not in {"rows-first", "columns-first", "reverse"}:
         raise ValueError("Unsupported line order")
     budget = budget if budget is not None else Budget()
+    from .contract import selected_profile
+    chosen = selected_profile(puzzle, profile)
+    if chosen != puzzle.profile:
+        if order != "rows-first":
+            raise ValueError("Paired profile requires its documented rows-first order")
+        from .paired_solver import solve_paired
+        return solve_paired(puzzle, budget, chosen["id"])
     grid = puzzle.unknown_grid()
     rows = [("row", i) for i in range(puzzle.height)]
     columns = [("column", i) for i in range(puzzle.width)]

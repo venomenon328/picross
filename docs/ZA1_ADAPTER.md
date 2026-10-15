@@ -1,15 +1,16 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
 KAT-1 ergänzt den verbindlichen [Kategorien-/Kompatibilitätsvertrag](CATEGORIES.md).
-Neue Direkt-/Reparaturexporte verwenden v2, autorisierte manuelle Ableitungen v3,
+Direkt-/Reparaturexporte mit Linienprofil verwenden v2, autorisierte manuelle Ableitungen v3,
 jeweils mit expliziter Kategorie und gehashtem Snapshot;
 Authoring-v2 und alte ZA-1-v1-Exporte bleiben technisch prüfbar.
 
 Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 13.10.2026.
 `authoring-p1-rect-color-1` ergänzt Schema-2-Exporte; die Pilotprofile v1/v2 bleiben
-unverändert. Keine neue Zertifizierungsregel, kein Solver im Spiel.
+unverändert. #139 B/C ergänzt ausdrücklich gebundene Paarprofile und Export v4;
+kein Solver im Spiel.
 
-Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 3, 6 und 8. Die Dokumentrevision 7 ergänzt die Bereinigung abgeschlossener Produktionen; die kompatible Vertragsversion 0.4.1 bleibt erhalten.
+Workflow, schlanke Repositoryablage und Integration: [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitte 3, 6 und 8. Version 0.5.0 ergänzt die Paarprofile; alte versiegelte 0.4.x-Pakete behalten ihren bisherigen Vertrag.
 
 ## Eingang und Grenzen
 
@@ -19,7 +20,7 @@ Ordner oder ein ZIP mit optional genau einem Wurzelordner. Mitgeliefertes HTML,
 Code und historische Archive werden niemals ausgeführt oder weiter entpackt.
 Das Werkzeug ruft weder Netzwerk noch Git-Schreibaktionen auf.
 
-Unterstützt: `picross-authoring-handoff-v2`, Regelwerk 0.4.0/0.4.1,
+Unterstützt: `picross-authoring-handoff-v2`, Regelwerk 0.4.0/0.4.1/0.5.0,
 `picross-authoring-file-inventory-v1` sowie unveränderte RP-3/RP-5-Verträge.
 Redaktionelle Zusatzfelder bleiben erhalten. Pflichtbindungen sind typisiert;
 unbekannte technische Schemas, doppelte JSON-Schlüssel, nichtendliche Zahlen
@@ -44,6 +45,35 @@ Produktions-ID: `pz-[a-z0-9][a-z0-9-]{0,59}`. Explizite Dateistämme/Save-Slots:
 `[a-z][a-z0-9_-]{0,63}` unter denselben Pfadgrenzen. Paketrevision:
 `[a-zA-Z0-9][a-zA-Z0-9._-]{0,31}`. Runtime-Revision: explizite Ganzzahl
 1…1.000.000, keine Ableitung aus `r03`. Grenzen führen zum Fehler ohne Zertifikat.
+
+## Paarprofile, Schwierigkeit 0.2 und Export v4
+
+Der [Paarlinienvertrag](PAIRED_LINES.md) gilt zusätzlich für ausdrücklich gewählte
+Paarprofile. Authoring 0.5.0 samt tatsächlich als 0.5.0 bezeichnetem gebundenem
+Regelwerksnapshot ist Pflicht. Handoff `candidate.certification` muss exakt der
+aus Import/Reparatur/Manuellplan geprüften Konfiguration entsprechen. Alte
+Produktionsformate und 0.4.x-Snapshots weisen diese Nachweise zurück.
+
+`difficulty.method=picross-difficulty-0.2` bindet `profile_hash` und unter
+`evidence` die tatsächliche Assessmentdatei neben dem ausgewählten Proof.
+Baseline und Paarproof werden unabhängig frisch geprüft. R4 setzt einen
+vollständigen Paarproof plus `full-line-* / stalled` derselben Logik voraus.
+Dann sind `level=L5`, `plausible_range=[L5,L5]`, `assessment_type=instrumented`,
+`confidence=medium`, Technikfamilie R4 und
+`logical_demand="linienübergreifend / besonders hoher logischer Anspruch"` Pflicht.
+Ein bereits mit Linien lösbarer Paarprofilfall darf R4 nicht beanspruchen und
+behält die R0–R3-Kriterien. Fehlende/abgebrochene Baseline genügt nicht. Methode
+0.1 bleibt für Linienfälle unter ihrem alten Vertrag lesbar; keine Umwertung.
+
+Inspektionsbericht und Export verwenden v4 mit zusätzlichem `deduction`-Objekt
+aus Profil, Profilhash und unabhängig rekonstruiertem Assessment. `tool_identity`
+bindet auch `certification.py` und `paired_verifier.py`. Offline-Exportprüfung
+vergleicht diese Bindung mit dem frischen vollständigen Replay; Registrierung
+unterstützt v4 mit unverändertem Kategorie-/Slot-/Runtimevertrag.
+Manuelle Exporte führen weiterhin ihre externe Autorisierung mit. Die folgenden
+v1–v4-Autorisierungsverträge bleiben bestehen; lediglich ein ausdrücklich neu
+profilierter Ableitungsplan/-datensatz verwendet seine in PAIRED_LINES benannte
+v2-Variante. Keine neue Freigabe wird aus dem stärkeren Profil abgeleitet.
 
 ## Technische Bindungen und Freigabe
 
