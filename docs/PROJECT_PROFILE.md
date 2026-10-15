@@ -1,5 +1,11 @@
 # Projektprofil: picross
 
+**WEB-1 / #162:** Zusätzlich ist ein statischer Godot-Webentwicklungsweg für
+Desktop/Maus in Chromium und Firefox beauftragt. [Webanleitung und Grenzen](WEB_HOSTING.md)
+binden Browserpersistenz, getrennten Build, manuelles SSH-Deployment und isolierte
+Referenztests. Windows bleibt erhalten; keine endgültige Plattformmatrix oder
+Livefreigabe. Bei Web-/Hostingarbeit diese Anleitung zusätzlich vollständig lesen.
+
 **Aktuelle Inhalts-CI (12.10.2026):** Die [CI-Policy](CI_POLICY.md) ersetzt die
 unten historisch beschriebenen RP-Korpus-/Zertifikats-Replays. Reine neue
 Rätseldateien erhalten nur Pfad-/Dateimodusprüfung und `ci-required`, keine

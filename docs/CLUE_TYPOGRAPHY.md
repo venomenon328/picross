@@ -106,3 +106,13 @@ Dessen sichere Innenfläche bleibt frei. Keine neue Bild- oder Fontauswahl.
 Layout-/Kapazitäts-/Blattwechsel prüfen Quelle und Trefferrechteck auch unter
 ruhender Maus neu; Boxklicks werden konsumiert. Vollständige Folgen öffnen keine
 Box und bieten keine wirkungslose Navigation. [Prüfzuordnung](HF149_VERIFICATION.md).
+
+## WEB-1: temporäre Glyphenatlanten
+
+Der Webexport behält bei der vollständigen Schriftgradsuche höchstens acht
+zuletzt gemessene Rastergrößen je Font-RID. Weitere Größenatlanten werden über
+TextServer freigegeben und bei Bedarf identisch neu erzeugt. Die numerischen
+Messwerte, Schriftwahl, Suchmenge und Fitgrenze bleiben unverändert; es gibt
+keine neue Schriftgradkappung. Dies verhindert Heaperschöpfung bei kleinen
+Rastern im begrenzten WebAssembly-Speicher. Der native Pfad bleibt unverändert.
+Die Webregression öffnet und beendet dafür einen festen 5×5-Monofall.

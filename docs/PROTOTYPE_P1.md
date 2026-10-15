@@ -100,7 +100,7 @@ bleibt als isolierter Vergleich ausführbar; ZS-2 verwendet die bestätigte Komb
 
 | ID | Entscheidung für P1 | Stand und Grenze |
 | --- | --- | --- |
-| D-01 | Native Windows-Desktopfassung mit Godot Standard und typisiertem GDScript, Windows-11-Testplattform. | Kein C#/.NET-/Browserparallelweg; keine endgültige Produktstackentscheidung. Versionsbindung in Abschnitt 7. |
+| D-01 | Native Windows-Desktopfassung mit Godot Standard und typisiertem GDScript, Windows-11-Testplattform; zusätzlich WEB-1-Entwicklungsfassung im Browser. | Kein C#/.NET; keine endgültige Produktstackentscheidung. Versionsbindung in Abschnitt 7, Webgrenzen in [WEB-1](WEB_HOSTING.md). |
 | D-02 | Reduzierte Spielprobe: reale Bearbeitung, Abschluss und später Speicherung; keine Sterne-/Fehlerwertung, Live-Fehlerhilfe oder Hypothesen. | Bestätigte Funktionen des späteren Produkts werden nicht gestrichen. |
 | D-03A | Elastische Strichvorschau: Rückwärtsziehen verkürzt; Loslassen übernimmt eine atomare Aktion. | Unverändert, auch für die neuen Rücknahmestriche. |
 | D-03B | Werkzeug und Modus bleiben je Strich eingefroren; kein Mehrfachtoggle beim Zurückziehen. | GP-01/#48 bindet zusätzlich die ursprüngliche Startzustandskategorie; unbekannter Start schützt Gegenmarkierungen. |
@@ -420,6 +420,13 @@ Pflicht-Neuzeichnung aller späteren Rätsel folgt daraus nicht. F-03 ist auch n
 Solltreffer ausdrücklich technischer Test, kein kuratiertes Rätsel.
 
 ## 6. Speicherung und Wiederaufnahme
+
+WEB-1 ergänzt für den Browser die bestätigte IDBFS-Synchronisation, Einzeltab-
+Schreibsperre und eigene Beenden-Aktion gemäß [Webvertrag](WEB_HOSTING.md).
+Schema/Validierung/Recovery bleiben gleich. Browsergesteuertes Schließen kann
+anders als die eigene Beenden-Aktion nicht universell blockiert werden; laufende
+Sicherung, Fehleranzeige und das dokumentierte Verlustfenster gelten zusätzlich.
+Der native Pflicht-Flush-/Close-Vertrag bleibt unverändert.
 
 Historischer P1.3-Ausgangsstand (Slots heute aus der Registry): `user://p1/saves/` mit aus den neun fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gewünschte gültige Arbeitszoomstufe und Einpassen-Flag (overview), aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 
