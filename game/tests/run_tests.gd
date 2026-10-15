@@ -58,6 +58,8 @@ func run() -> void:
 	await preload("res://tests/p13_cases.gd").run(self)
 	print("PHASE p14")
 	await preload("res://tests/p14_cases.gd").run(self)
+	print("PHASE multicolor")
+	await preload("res://tests/multicolor_cases.gd").run(self)
 	print("PHASE h1")
 	await preload("res://tests/h1_cases.gd").run(self)
 	print("PHASE gp48")

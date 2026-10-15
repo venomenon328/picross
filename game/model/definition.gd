@@ -2,6 +2,7 @@ extends RefCounted
 ## JSON boundary. 0 is background; positive IDs refer to palette entries.
 const Registry = preload("res://model/content_registry.gd")
 const MAX_DIMENSION = 50
+const MAX_COLORS = 8
 static func catalog_ids() -> Array[String]:
 	return Registry.catalog_ids()
 
@@ -59,6 +60,8 @@ static func validate(data: Dictionary, study_assets: Dictionary = {}) -> String:
 			return "Ungültige Dimension."
 	if not data.get("palette") is Array or data.palette.is_empty():
 		return "Palette fehlt."
+	if data.palette.size() > MAX_COLORS:
+		return "Zu viele Vordergrundfarben."
 	var ids: Array[int] = []
 	for entry: Variant in data.palette:
 		if not entry is Dictionary or not integer(entry.get("id")) or entry.id < 1 or entry.id in ids:
@@ -103,6 +106,6 @@ static func validate(data: Dictionary, study_assets: Dictionary = {}) -> String:
 	var texture: Texture2D = load(path) as Texture2D
 	if texture == null or texture.get_width() < 1 or texture.get_height() < 1:
 		return "Defektes Abschlussbild."
-	if str(data.id).begins_with("pz-") and (data.palette.size() > 4 or texture.get_width() < 2 * int(data.width) or texture.get_height() < 2 * int(data.height) or texture.get_width() > 8192 or texture.get_height() > 8192):
+	if str(data.id).begins_with("pz-") and (texture.get_width() < 2 * int(data.width) or texture.get_height() < 2 * int(data.height) or texture.get_width() > 8192 or texture.get_height() > 8192):
 		return "Ungültige Abschlussgröße oder Farbzahl."
 	return ""

@@ -344,9 +344,17 @@ class TargetTests(unittest.TestCase):
                 with self.assertRaises(InvalidInput): self.inspect(p)
             else:
                 self.assertTrue(self.inspect(p)["technical"])
-        p = self.root / "colors-5"
-        make(p,"pz-test-five",6,4,"color",colors=5)
-        with self.assertRaisesRegex(InvalidInput,"foreground colors"): self.inspect(p)
+        for count in (5, 8):
+            p = self.root / f"colors-{count}"
+            make(p,f"pz-test-colors-{count}",count+1,4,"color",colors=count)
+            self.assertTrue(self.inspect(p)["technical"])
+            out = self.export(p,dest=f"export-colors-{count}")
+            checkout = isolated_checkout(self.root / f"checkout-colors-{count}")
+            self.assertEqual(registration(out,checkout,apply=True)["status"],"registered")
+            manifest,report=verify_export(out)
+            self.assertEqual(len(load_json(out/manifest["definition"])["palette"]),count)
+        with self.assertRaises(InvalidInput):
+            make(self.root/"colors-9","pz-test-nine",10,4,"color",colors=9)
         p4 = self.root / "colors-4"
         make(p4,"pz-test-four",6,4,"color",colors=4)
         self.assertTrue(self.inspect(p4)["technical"])
