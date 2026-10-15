@@ -1,0 +1,58 @@
+{
+  "archive_note": "Handoff und Original-ZIP sind versiegelte historische Dateisnapshots und enthalten damalige REPO-01 Meldung; aktueller Ablagestatus steht in diesem äußeren Record.",
+  "blockers": [
+    {
+      "id": "DOC-01",
+      "phase": "production_readiness",
+      "reason": "Der von ZA-1 verlangte vollständige Regelwerk-Rohsnapshot befindet sich noch nicht im Paket; vor Produktion muss Codex diesen aus main am gebundenen Commit beziehen und SHA-256 sowie Inventar verifizieren.",
+      "status": "pending"
+    }
+  ],
+  "category_id": "obst-nuesse",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/r02/handoff.json",
+    "sha256": "0a41f575188fc5911e86c51d7110b541886d3802df64c48c689b5195b2c07ef6"
+  },
+  "height": 30,
+  "integration": null,
+  "inventory_sha256": "f196caa11e465cc1fc175ad41d90889a0ccad8344928e5da914d2b7cf18856b8",
+  "mode": null,
+  "motif": {
+    "approval": null,
+    "sha256": "e016b71b81ad31376444ad139b803513a4f669e7ca0360cb32c71cc5f6ab2f73",
+    "variant": "MA-r01"
+  },
+  "motif_name": "Pfirsich",
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "package": {
+    "bytes": 281247,
+    "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/r02/package.zip",
+    "sha256": "cdc360dff6d68f1dc5ba7ec82d1241c6f4326b90e3ca3cdf0f50a20067459bf3"
+  },
+  "proposed_foreground_colors": 3,
+  "proposed_mode": "color",
+  "puzzle_id": "pz-72561c715dd741f9b0082c7ad24802c1",
+  "repo_commit": null,
+  "repository_saved": true,
+  "requested_foreground_colors": null,
+  "requested_mode": null,
+  "reveal": {
+    "sha256": "02805fd71b357341b2bd354d5ce9761b55a36cce3e90b6f36a4fc66e1fc1b4ab",
+    "variant": "B-r01"
+  },
+  "reveal_approval": {
+    "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/r02/approval.json",
+    "sha256": "8d17b175e1d0a4183b8ea9f23c3a6aa5e84d359cc4df4aeac8ca09c6e0468b49"
+  },
+  "revision": "r02",
+  "source_repo_commit": "112770455606f15c455ce784ffd0188c1d0f6c3b",
+  "state": "motif_review",
+  "storage_branch": "content/pfirsich-r01-r02",
+  "updated_at_utc": "2026-10-15T15:11:06+00:00",
+  "width": 30
+}
