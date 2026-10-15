@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import MagicMock, patch
 import zipfile
 
 import build_web_player
@@ -72,6 +73,21 @@ class Delivery(unittest.TestCase):
         with zipfile.ZipFile(archive,'w') as bundle:
             bundle.writestr('templates/version.txt','4.7.2.stable')
         with self.assertRaises(ValueError): build_web_player.extract_web_templates(archive,self.root/'templates')
+
+    def test_connection_loss_reports_unknown_activation_and_retained_lock(self):
+        remote = MagicMock()
+        remote.locked = True
+        remote.current.side_effect = ['', '', RuntimeError('connection lost')]
+        remote.upload.side_effect = RuntimeError('upload interrupted')
+        remote.release.side_effect = RuntimeError('connection lost')
+        with patch.object(deploy_web,'Remote',return_value=remote):
+            with self.assertRaisesRegex(RuntimeError,'active=unknown.*Lock cleanup not confirmed'):
+                deploy_web.deploy({'url':'https://example.invalid/'}, self.root)
+
+    def test_batch_line_break_rejected_before_remote_access(self):
+        with patch.object(deploy_web,'Remote') as remote:
+            with self.assertRaises(ValueError): deploy_web.deploy({},Path('unsafe\npath'))
+            remote.assert_not_called()
 
 
 if __name__ == '__main__':

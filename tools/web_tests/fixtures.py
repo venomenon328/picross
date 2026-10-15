@@ -15,7 +15,7 @@ def hints(line):
 
 
 def adapt(project):
-    # Force overflow on both axes at the bounded browser fallback geometry.
+    # Fixed long column; the rectangle below supplies the overflowing row.
     path = project/'data/fixtures/t02.json'
     data = json.loads(path.read_text(encoding='utf-8'))
     for i in range(40):

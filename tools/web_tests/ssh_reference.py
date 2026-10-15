@@ -4,6 +4,7 @@ import argparse
 import getpass
 import json
 import os
+import platform
 from pathlib import Path
 import shutil
 import socket
@@ -22,7 +23,7 @@ from serve import serve, Handler
 def check_failure(action):
     try:
         action()
-    except (ValueError, RuntimeError):
+    except (ValueError, RuntimeError, OSError):
         return
     raise AssertionError('Expected failure did not occur')
 
@@ -34,7 +35,9 @@ def main():
     args=parser.parse_args(); args.output.mkdir(parents=True,exist_ok=True)
     first=web_bundle.validate(args.build.resolve())
     report={'source_commit':first['source_commit'],'build_id':first['build_id'],
-            'environment':'isolated loopback POSIX/OpenSSH', 'scenarios':[], 'status':'running'}
+            'environment':'isolated loopback POSIX/OpenSSH', 'os':platform.platform(),
+            'ssh':subprocess.run(['ssh','-V'],capture_output=True,text=True,check=True).stderr.strip(),
+            'scenarios':[], 'status':'running'}
     def passed(label):
         report['scenarios'].append(label); print('SSH PASS',label,flush=True)
     # AuthorizedKeysFile must have safe ancestors under StrictModes (not /tmp).
@@ -78,7 +81,11 @@ Subsystem sftp internal-sftp
             deploy_web.deploy(cfg,args.build.resolve(),dry_run=True)
             assert before=={p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
             passed('dry run has no file mutations')
-            deploy_web.deploy(cfg,args.build.resolve())
+            local_config = work/'deployment.json'
+            local_config.write_text(json.dumps(cfg))
+            cli = subprocess.run([sys.executable,str(Path(deploy_web.__file__)), '--config',str(local_config),
+                                  '--build',str(args.build.resolve())],capture_output=True,text=True,check=True)
+            assert 'DEPLOY PASS: '+first['build_id'] in cli.stdout
             assert remote.current()==first['build_id']
             passed('real SFTP transfer, verified staging, atomic activation and HTTP resources')
             deploy_web.deploy(cfg,args.build.resolve())
@@ -124,18 +131,35 @@ Subsystem sftp internal-sftp
             deploy_web.deploy(cfg,None,rollback=old)
             assert remote.current()==old
             passed('scripted rollback restores retained version')
+            # A retained but corrupted version must not become a rollback target.
+            retained_pack=root/'releases'/new/'index.pck'
+            retained_pack.write_bytes(b'corrupt reference test')
+            check_failure(lambda:deploy_web.deploy(cfg,None,rollback=new))
+            assert remote.current()==old
+            shutil.copyfile(second_dir/'releases'/new/'index.pck',retained_pack)
+            passed('corrupt retained rollback target rejected before activation')
             previous_mime=Handler.extensions_map['.wasm']; Handler.extensions_map['.wasm']='text/plain'
             try: check_failure(lambda:deploy_web.deploy(cfg,second_dir))
             finally: Handler.extensions_map['.wasm']=previous_mime
             assert remote.current()==old
             passed('failed HTTP completion check reports failure and restores previous entry')
+            Handler.cache_override='public, max-age=3600'
+            try: check_failure(lambda:deploy_web.check_http(url,first))
+            finally: Handler.cache_override=None
+            wasm=root/'releases'/old/'index.wasm'
+            wasm.rename(wasm.with_suffix('.held'))
+            try: check_failure(lambda:deploy_web.check_http(url,first))
+            finally: wasm.with_suffix('.held').rename(wasm)
+            passed('actual wrong cache policy and missing HTTP resource are rejected')
             bad={**cfg,'root':str(work)}
             config_file=work/'invalid.json'; config_file.write_text(json.dumps(bad))
             check_failure(lambda:deploy_web.config(config_file))
             (root/'.picross-web').rename(root/'.marker-held')
             check_failure(remote.preflight)
             (root/'.marker-held').rename(root/'.picross-web')
-            passed('broad target and missing ownership marker rejected')
+            alias=work/'alias'; alias.symlink_to(root.parent,target_is_directory=True)
+            check_failure(deploy_web.Remote({**cfg,'root':str(alias/'picross-web')}).preflight)
+            passed('broad/symlink target and missing ownership marker rejected')
             # Same entry and resources also work below a URL prefix.
             parent_server,parent_url=serve(work)
             try: deploy_web.check_http(parent_url+'site/picross-web/',first)

@@ -37,7 +37,11 @@ def config(path: Path) -> dict:
             or not (url.scheme == 'https' or (url.scheme == 'http' and url.hostname in {'localhost', '127.0.0.1'}))):
         raise ValueError('URL must be HTTPS with trailing slash (loopback HTTP allowed for reference tests)')
     if 'ssh_config' in value:
+        if not isinstance(value['ssh_config'], str) or not value['ssh_config']:
+            raise ValueError('SSH configuration must name a local file')
         value['ssh_config'] = str(Path(value['ssh_config']).resolve(strict=True))
+        if not Path(value['ssh_config']).is_file():
+            raise ValueError('SSH configuration must be a file')
     return value
 
 
@@ -133,6 +137,8 @@ cat releases/{build}/build-manifest.json
         with tempfile.TemporaryDirectory(prefix='picross-sftp-') as temporary:
             batch = Path(temporary)/'batch.txt'
             def quoted(value):
+                if any(character in str(value) for character in '\r\n\x00'):
+                    raise ValueError('SFTP paths may not contain line breaks or NUL')
                 return '"'+str(value).replace('\\', '/').replace('"', '\\"')+'"'
             directories = set()
             for name in manifest['files']:
@@ -190,6 +196,8 @@ def check_http(url: str, manifest: dict) -> None:
 
 
 def deploy(cfg: dict, bundle: Path | None, *, dry_run=False, rollback: str | None = None) -> str:
+    if bundle and any(character in str(bundle) for character in '\r\n\x00'):
+        raise ValueError('SFTP bundle path may not contain line breaks or NUL')
     manifest = web_bundle.validate(bundle) if bundle else None
     remote = Remote(cfg)
     remote.preflight()
@@ -202,6 +210,8 @@ def deploy(cfg: dict, bundle: Path | None, *, dry_run=False, rollback: str | Non
     if dry_run:
         return 'DRY RUN: validated bundle/configuration and read-only target preflight; no files changed'
     before = remote.current()
+    failure = ''
+    cause = None
     try:
         remote.acquire()
         # Recheck the root after acquiring, then bind the previous entry under the lock.
@@ -214,15 +224,30 @@ def deploy(cfg: dict, bundle: Path | None, *, dry_run=False, rollback: str | Non
         remote.validate_release(manifest['build_id'])
         remote.activate(manifest['build_id'])
         check_http(cfg['url'], manifest)
-        return 'DEPLOY PASS: '+manifest['build_id']
     except Exception as error:
-        active = remote.current()
-        if remote.locked and before and before != manifest['build_id'] and active == manifest['build_id']:
-            remote.activate(before)
+        cause = error
+        try:
             active = remote.current()
-        raise RuntimeError(f'Deployment failed; active={active or "none"}; prior={before or "none"}. {error}') from error
+        except Exception:
+            active = 'unknown (SSH unavailable)'
+        recovery = ''
+        if remote.locked and before and before != manifest['build_id'] and active == manifest['build_id']:
+            try:
+                remote.activate(before)
+                active = remote.current()
+            except Exception:
+                active = 'unknown (rollback not confirmed)'
+                recovery = ' Restore SSH, inspect the entry and run the explicit rollback.'
+        failure = f'Deployment failed; active={active or "none"}; prior={before or "none"}. {error}{recovery}'
     finally:
-        remote.release()
+        try:
+            remote.release()
+        except Exception as error:
+            failure = (failure or f'HTTP-verified activation={manifest["build_id"]}.') + ' Lock cleanup not confirmed; restore SSH and inspect the lock before retrying.'
+            cause = cause or error
+    if failure:
+        raise RuntimeError(failure) from cause
+    return 'DEPLOY PASS: '+manifest['build_id']
 
 
 def main() -> int:

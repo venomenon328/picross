@@ -33,6 +33,12 @@ static func selected() -> Font:
 static func text_font(text: String) -> Font:
 	return selected() if text.is_valid_int() else REFERENCE
 
+static func strike_width(text: String, fs: int, ui: float) -> float:
+	var f: Font = text_font(text)
+	retain_web_size(f, fs)
+	# envelope() always includes this centered numeric status strike plus C1/AA.
+	return f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 2.0 * maxf(0.5, ui / 4.0)
+
 static func ink(text: String, fs: int) -> Rect2:
 	var f: Font = text_font(text)
 	retain_web_size(f, fs)
