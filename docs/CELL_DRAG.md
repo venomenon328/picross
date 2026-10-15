@@ -1,6 +1,6 @@
 # ZR: Zellstriche am Rasterrand und Cursorzähler
 
-Stand: 15.10.2026 · Spezifikation 0.1 · **freigegebener Sollvertrag, noch nicht implementiert**
+Stand: 15.10.2026 · Spezifikation 0.2 · **Laufzeit umgesetzt; Verifikation und Abnahme getrennt**
 
 ## Geltung und Entscheidungsbindung
 
@@ -11,9 +11,12 @@ und ausdrücklich entschieden: Bei Cursor außerhalb des Fensters bleibt die Zah
 inneren Fensterrand sichtbar. Die Spezifikationspflege ist kein Implementierungs-,
 Merge- oder Releaseauftrag und keine bestandene Maus-/Sichtprüfung.
 
-Die Ausgangsbasis ist `main@3b64e1368735a1e9221389a48c51eaed0b881515`.
-Der dortige Code und die bisherige [Spielanleitung](../game/README.md) beschreiben
-noch das alte Verhalten. Dieses Dokument ersetzt für neue Umsetzung ausschließlich
+Die Spezifikationsbasis ist `main@3b64e1368735a1e9221389a48c51eaed0b881515`.
+Die Umsetzung führt PR #145 nach Abgleich und konfliktfreier Integration von
+`main@662453af36befdd4b61041d69f0229075f949a3e` fort. Laufzeit und
+[Spielanleitung](../game/README.md) sind umgestellt; [Prüfzuordnung](CELL_DRAG_VERIFICATION.md),
+Issue und PR trennen automatisierte Nachweise von noch offenen nativen Windows-/
+Eigentümergates. Dieses Dokument ersetzt ausschließlich
 die folgenden entgegenstehenden Sollformulierungen; historische Nachweise bleiben
 an ihren jeweiligen Commit gebunden:
 
@@ -26,9 +29,8 @@ an ihren jeweiligen Commit gebunden:
 
 Die [Produktdefinition](PRODUCT_DEFINITION.md), nicht ersetzte P1-Regeln,
 [Zeichensprache](UI_DRAWING_STYLE.md) und das [Projektprofil](PROJECT_PROFILE.md)
-bleiben verbindlich. Die Anleitung und native Bedienhilfe werden im späteren
-Implementierungspaket auf das tatsächlich gelieferte Verhalten umgestellt; sie
-behaupten durch diese Spezifikation noch keine neue Funktion. Aktueller Paketstatus
+bleiben verbindlich. Anleitung und native Bedienhilfe beschreiben die gelieferte
+Randfortsetzung und den Cursorzähler. Aktueller Paketstatus
 steht in #143, nicht in historischen offenen Gate-Texten älterer Lieferberichte.
 
 ## ZR-D01: Bedeutung und Darstellung des Zählers
@@ -164,7 +166,8 @@ geforderte fokussierte Außenloslassen. Beides muss getrennt berichtet werden.
 Ein gemeinsames Entwicklungspaket in #143 umfasst Endpunkt-/Ereignisverarbeitung,
 Cursoranzeige, notwendige Tests und aktualisierte Bedienhilfe. Keine unabhängigen
 Zwischenmerges mit widersprüchlichem Zähler-/Gestenverhalten. Die Spezifikation ist
-freigegeben; Implementierung, konkrete Umgebungs-Startprüfung und Abnahme stehen aus.
+freigegeben; die Laufzeitumsetzung liegt im selben Draft-PR. Konkrete Prüfergebnisse
+und offene Abnahmen sind commitgebunden im Issue/PR auszuweisen.
 
 Die Akzeptanzkennungen ZR-A01–A07 im Issue konkretisieren diesen Vertrag. Automatisierte
 gezielte Regressionen verwenden feste synthetische technische Eingaben und isolierte

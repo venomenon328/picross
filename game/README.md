@@ -94,10 +94,19 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   eine bloße Projektion oder ein Eingabesprung reicht nicht.
 - Ein kleiner Live-Zähler zeigt während linker/rechter Zellgesten die gesamte
   geometrische Länge inklusive beider Endfelder: 5→12 zeigt 8, zurück auf 9 zeigt 5.
-  Vorbelegte oder übersprungene Zellen zählen mit; am Ursprung zeigt er 1, danach
-  die Länge des neuen geraden Abschnitts. Bei Abbruch/Drop verschwindet er.
-- Außerhalb des sichtbaren Rasters bleibt der letzte gültige Endpunkt stehen.
-  Esc, Fokusverlust oder Albumwechsel verwerfen den Strich. Kein Auto-Scrollen.
+  Vorbelegte oder übersprungene Zellen zählen mit. Ab Länge 2 folgt die dunkle Zahl
+  mit heller Kontur dem tatsächlichen Zeiger, auch über der Seitenleiste; bei Länge 1,
+  Abbruch oder Drop verschwindet sie. Ihre UI-skalierte Größe bleibt beim Rasterzoom
+  gleich. Kein Kasten; am Fensterrand bleibt die vollständige Zahl innen sichtbar.
+- Begonnene Striche folgen der Maus entlang ihrer Achse bis zum gültigen Rasterrand,
+  auch über anderen Bedienelementen. Spalte 5→rechts hinaus bei 30 Spalten ergibt
+  26 Felder bis Spalte 30. Loslassen wertet seine eigene letzte Position aus und
+  übernimmt genau einen Strich; ein darunterliegender Button wird dabei nicht geklickt.
+  Der sichtbare Zeiger bleibt frei. Bei erhaltenem Spielfokus ist auch Loslassen
+  außerhalb der Fensterclientfläche vorgesehen; der technische native Windows-Nachweis
+  und die Eigentümerprobe sind für #143 noch offen, siehe [Prüfzuordnung](../docs/CELL_DRAG_VERIFICATION.md).
+  Esc, Fokusverlust, verlorene Tastenzuordnung oder Albumwechsel verwerfen den Strich
+  vollständig. Rückkehr startet keine Geste ohne frischen Tastendruck. Kein Auto-Scrollen.
 - Radierer links neutralisiert alle Markierungen; rechts gilt die Kreuzregel.
   Rückgängig/Wiederholen stellt ganze Striche mit exakten Vorzuständen wieder her.
 - Bei Farbrätseln: Farbe über die unbeschrifteten Farbfelder in den Originalfarben wählen.
