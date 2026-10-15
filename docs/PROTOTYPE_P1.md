@@ -164,7 +164,7 @@ Detaillierung; es ist keine Freigabe für unabhängige Belohnungsbilder.
 
 ### 3.2 Nicht enthalten
 
-Keine Sterneberechnung, Perfektionsanzeige, Fehlerstatistik, Rangliste, Freischaltungen, Bonuslogik, Live-Fehlerhilfe oder Hypothesen. Kein allgemeiner Solver, Produktionseditor, Bildimport, Community-Funktion, Audio, aufwendige Buchanimation, finale A/B-Entscheidung, Verbundraster oder Regionenregeln. Kein Hosting, Steam, Release, Installer, Cloudkonto oder kostenpflichtiger Dienst. Keine Tastatur-/Controllerbedienung, globale Tastenumbelegung oder vollständiges Accessibility-Optionsmenü. Der ausdrücklich vereinbarte Escape-Abbruch bleibt Teil des Mausgestenvertrags.
+Keine Sterneberechnung, Perfektionsanzeige, Fehlerstatistik, Rangliste, Freischaltungen, Bonuslogik, Live-Fehlerhilfe oder Hypothesen. Kein allgemeiner Solver, Produktionseditor, Bildimport, Community-Funktion, Audio, aufwendige Buchanimation, finale A/B-Entscheidung, Verbundraster oder Regionenregeln. WEB-1 ergänzt den statischen Build und die technische SSH-Deploymentvorbereitung; tatsächliches Livehosting bleibt ein separater Auftrag. Kein Steam, Release, Installer, Cloudkonto oder kostenpflichtiger Dienst. Keine Tastatur-/Controllerbedienung, globale Tastenumbelegung oder vollständiges Accessibility-Optionsmenü. Der ausdrücklich vereinbarte Escape-Abbruch bleibt Teil des Mausgestenvertrags.
 
 Die spätere Perfektionsregel „ohne Fehler und ohne Undo“ bleibt erhalten. P1 weist mangels Wertung keinen Durchgang als perfekt aus. Ob direktes Neutralisieren oder Radieren später wertungsrelevante Rücknahmen sind, bleibt offen. D-09 entscheidet Bedienung, nicht Fehlerzählung, Sterne oder Perfektion.
 

@@ -15,6 +15,15 @@ def hints(line):
 
 
 def adapt(project):
+    # Force overflow on both axes at the bounded browser fallback geometry.
+    path = project/'data/fixtures/t02.json'
+    data = json.loads(path.read_text(encoding='utf-8'))
+    for i in range(40):
+        data['solution'][11][i] = i % 4 + 1
+        data['solution'][i][11] = i % 4 + 1
+    data['rows'] = [hints(row) for row in data['solution']]
+    data['columns'] = [hints(col) for col in zip(*data['solution'])]
+    path.write_text(json.dumps(data)+'\n',encoding='utf-8',newline='\n')
     for key, width, height, colors in [('t04',5,5,1), ('t08',8,5,8), ('t09',50,30,8)]:
         path = project/'data/fixtures'/f'{key}.json'
         data = json.loads(path.read_text(encoding='utf-8'))

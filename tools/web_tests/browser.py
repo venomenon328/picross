@@ -170,10 +170,12 @@ def exercise(pw, name, root, update, url, output, evidence):
         control(page,name='nav-album'); control(page,text='Blatt 02')
         page.set_viewport_size({'width':1280,'height':762}); page.wait_for_timeout(300)
         before = state(page)['cells']
-        # Long row 12 and column 12 from the established fixed fixture.
+        # Longest fixed technical row/column; a short fully visible line cannot pan.
         for axis in ('row','column'):
             data = state(page); area = data[axis+'_area']; origin = data['origin']; step = data['cell_size']
-            position = [area[0]+area[2]/2, origin[1]+11.5*step] if axis=='row' else [origin[0]+11.5*step,area[1]+area[3]/2]
+            lines = data['rows' if axis=='row' else 'columns']
+            index = max(range(len(lines)), key=lambda i:len(lines[i]))
+            position = [area[0]+area[2]/2, origin[1]+(index+.5)*step] if axis=='row' else [origin[0]+(index+.5)*step,area[1]+area[3]/2]
             start = point(page,position)
             old_steps = data[axis+'_steps']
             page.mouse.move(*start); page.mouse.down(button='middle')
