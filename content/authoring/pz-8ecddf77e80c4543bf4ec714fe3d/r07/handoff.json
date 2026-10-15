@@ -1,0 +1,100 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r07",
+  "repo_commit": "de0127db75411ac90105bc59621a96f755813eaa",
+  "state": "blocked",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 11,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "97b09e7225f07e13483d142f78eebac9a9ba3b5a3b7fbf553d273630d1e32aea"
+  },
+  "brief": "brief.md",
+  "category_id": "gebaeude-bauwerke",
+  "approved_parameters": [],
+  "proposed_parameters": [
+    {
+      "width": 30,
+      "height": 35,
+      "mode": "color",
+      "foreground_colors": 5,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        30,
+        35
+      ]
+    }
+  ],
+  "reveal": {
+    "file": "images/C-r02.png",
+    "sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "revision": "C-r02",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "images/C-r02.provenance.json"
+  },
+  "motif": {
+    "file": "images/MR-r06.png",
+    "sha256": "c871cf9636316f6bd8a237533a1d57d820059a24348e3663ecb9fcb7d51f2eff",
+    "revision": "MR-r06",
+    "approval": null,
+    "derived_from_reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "provenance": "images/MR-r06.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "production/import",
+    "variant": "sand",
+    "candidate_id": "cf2d72e2cead3282ce78d838e99be543853b84a88cfd4c16374c44af67e07d47",
+    "matrix_hash": "dfa174ee8efd9a0c3e9953af854e56a059ef9f32ea1defef493012ba4c299793",
+    "logic_hash": "dcbd845ecc1a5b66da72190f509f3333336b0da3300e4dce045998416b6fa306",
+    "proof": "production/import/sand-proof.json",
+    "verification": "origin-verification.json"
+  },
+  "origin_verification": "origin-verification.json",
+  "repair": null,
+  "difficulty": "difficulty.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "cd4f5dc0a21e2484ecf34c4968f2245725c10ecd5e511cc97f6dee913145d2cc"
+  },
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pass",
+    "logic": "fail",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "blocked",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "blocked"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json",
+    "provenance": "origin-verification.json",
+    "logic": "diagnosis-verification.json",
+    "frame": "layout-validation.json",
+    "visual": "visual-review.json",
+    "reveal_consistency": "visual-review.json",
+    "target_export": "color-support.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "logic: two independently verified solutions; incomplete deduction",
+    "target_export: five foreground colors require extension tracked in issue #144",
+    "motif and final_editorial: exact new revision not yet accepted"
+  ],
+  "next_action": "Review exact raster; separately resolve uniqueness and implement color-support issue #144 before final acceptance/integration.",
+  "authorization": "request.txt",
+  "test_only": false
+}

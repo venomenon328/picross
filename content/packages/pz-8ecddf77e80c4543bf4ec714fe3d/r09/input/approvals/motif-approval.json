@@ -1,0 +1,27 @@
+{
+  "type": "human_motif_approval",
+  "actor": "Tobias Schröder (user)",
+  "timestamp_utc": "2026-10-15T09:34:25.092774+00:00",
+  "statement": "Bitte integriere diese Fassung ins Spiel und ersetze die vorherige Version.",
+  "revision": "MR-r07",
+  "file": "images/MR-r07.png",
+  "sha256": "4cf932f1f4a3c664c874e83d6780dc196c10a05788ec76312c7e2e989a738620",
+  "derived_from_reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+  "parameters": {
+    "width": 30,
+    "height": 35,
+    "mode": "color",
+    "foreground_colors": 5,
+    "method": "area",
+    "fit": "exact",
+    "actual_crop": [
+      0,
+      0,
+      30,
+      35
+    ]
+  },
+  "evidence": "approvals/acceptance-evidence.txt",
+  "source_acceptance": "approvals/r08-acceptance.json",
+  "note": "Actual acceptance of the exact already offered r08 source; new integration packaging changes no motif cells."
+}

@@ -1,0 +1,28 @@
+{
+  "review_type": "self_review",
+  "same_raster_as_accepted_r08": true,
+  "criteria": {
+    "recognition": {
+      "status": "erfüllt",
+      "reason": "Lighthouse/Teepott/sun unchanged from accepted r08."
+    },
+    "silhouette_proportions": {
+      "status": "erfüllt",
+      "reason": "Both exact color symmetries, odd-width tower and centered details retained."
+    },
+    "details_negative_spaces": {
+      "status": "erfüllt",
+      "reason": "Empty exterior sky, six sand rows, baseline row33 and crossed rectangle sun retained."
+    },
+    "palette": {
+      "status": "erfüllt",
+      "reason": "Five discrete foreground colors, now supported by technical prerequisite #146."
+    },
+    "series_style": {
+      "status": "erfüllt",
+      "reason": "Same approved roof-filled source and original reveal, no new assets."
+    }
+  },
+  "human_source_acceptance": "approvals/r08-acceptance.json",
+  "rulebook": "0.5.0/12"
+}
