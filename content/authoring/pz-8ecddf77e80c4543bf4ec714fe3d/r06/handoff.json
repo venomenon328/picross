@@ -1,0 +1,104 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r06",
+  "repo_commit": "3b64e1368735a1e9221389a48c51eaed0b881515",
+  "state": "blocked",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 11,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "97b09e7225f07e13483d142f78eebac9a9ba3b5a3b7fbf553d273630d1e32aea"
+  },
+  "brief": "brief.md",
+  "category_id": "gebaeude-bauwerke",
+  "approved_parameters": [],
+  "proposed_parameters": [
+    {
+      "width": 28,
+      "height": 32,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        28,
+        32
+      ]
+    }
+  ],
+  "reveal": {
+    "file": "images/C-r02.png",
+    "sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "revision": "C-r02",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "images/C-r02.provenance.json"
+  },
+  "motif": {
+    "file": "images/MR-r05.png",
+    "sha256": "63e3297f0ff63f99ce551fde0a2c07d31f093fdbdf5c36581389731f5b701069",
+    "revision": "MR-r05",
+    "approval": null,
+    "derived_from_reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "provenance": "images/MR-r05.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "production/paired",
+    "variant": "skyless",
+    "candidate_id": "ebafa435840ca79f4520898cdead12617af56d1b9232cc8cdd716f892f7f6a21",
+    "matrix_hash": "bb513307c8b07ed9ed402f6fde33e8d2f3e729fdc0b2a45f6ebf2154f3500194",
+    "logic_hash": "7acb772f26982a5aafc611e7746bb6d78df1b85c60748976a7fef92c0c9ca5ec",
+    "proof": "production/paired/skyless-proof.json",
+    "verification": "quality.json",
+    "certification": {
+      "max_pair_records": 250000,
+      "max_pair_work": 20000000,
+      "profile": "paired-lines-color"
+    }
+  },
+  "origin_verification": "origin-verification.json",
+  "repair": null,
+  "difficulty": "difficulty.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "1385804e5814d7cf3ee58a58f7352629fd1045b7d92a22af5fab156ce31a0585"
+  },
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pass",
+    "logic": "fail",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "blocked",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "blocked"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json",
+    "provenance": "origin-verification.json",
+    "logic": "quality.json",
+    "frame": "origin-verification.json",
+    "visual": "visual-review.json",
+    "reveal_consistency": "visual-review.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "logic: independently confirmed multiple solutions; full-line and paired-lines both stalled",
+    "motif: new skyless/cropped proposal not yet accepted",
+    "final_editorial: new revision not accepted"
+  ],
+  "next_action": "Review skyless raster; plan additional motif-preserving logic correction before any final acceptance/integration.",
+  "authorization": "Wir müssen das Rätsel überarbeiten. Ich möchte den ausgefüllten Himmel entfernen. Bitte erstelle ein entsprechendes Raster.",
+  "test_only": false
+}
