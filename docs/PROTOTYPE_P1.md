@@ -15,7 +15,7 @@ G/V, Zusatzkapazität und Drag/Snap. Frühere D-33-/ZS-/VS2-Maße sind historisc
 
 [ZR / #143](CELL_DRAG.md) ersetzt sichtbare 1, Strichend-/Rasterviewportanker und
 eingefrorene Außenendpunkte. Laufzeit und Anleitung sind umgestellt; native Windows-
-Eingabeprüfung, unabhängiges Review und Eigentümerprobe bleiben vor Merge offen.
+Eingabeprüfung wird separat gebunden. Unabhängiges Review und Eigentümerprobe bleiben offen.
 
 [KAT-1](CATEGORIES.md) ergänzt Kategorien und Zuordnung als reine Katalogmetadaten in der Registry-/Runtimeprojektion v2. Godot lädt den vollständigen validierten Bestand; Auswahl, Definitionen, Save-Schema 1, Revisionen und Slots bleiben unverändert. Neue Exporte benötigen die explizite Kategorienbindung. Die Oberfläche folgt jetzt KAT-2 (#79), siehe [Prüfzuordnung](KAT2_VERIFICATION.md).
 
