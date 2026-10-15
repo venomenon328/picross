@@ -232,6 +232,8 @@ func zoom(direction: int, anchor: Vector2) -> void:
 		return
 	overview = false
 	requested_cell = step
+	# Reuse the book's actual-hull sidebar correction after a capacity change.
+	viewport_layout_requested.emit()
 	_layout()
 	view_changed.emit()
 

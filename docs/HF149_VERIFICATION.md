@@ -33,6 +33,9 @@ frischen Actions-Download, beide EXEs und dieselben drei Prozesse gegen die PCK.
 Geladene Delight-/Fraunces-Bytes und Rahmen-/Papierpixel müssen den lokalen
 unveränderten Quellen entsprechen. Zwei zusätzliche 30×35-Szenen zeigen den
 gemeldeten Wechsel zwischen kleinem vollständigem und größerem gekürztem Hinweis.
+Eine breite 50×10-Gegenprobe zoomt über den echten Boardpfad hin und zurück:
+Die vorhandene Sidebar-Hüllenkorrektur muss bei jeder Kapazitätsänderung erneut
+greifen, ohne das Zellmaß oder den Fit zu reduzieren.
 
 HF-R01 (unabhängiges technisches/visuelles Review) und HF-M01 (gezielte persönliche
 Windows-Probe durch den Eigentümer bei UI100/125) bleiben vor Merge separate Gates.

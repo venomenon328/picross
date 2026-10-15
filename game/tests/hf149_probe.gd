@@ -247,6 +247,22 @@ func captures() -> void:
 	b.size = Vector2(100,100)
 	b._layout()
 	check(not b.layout_valid and b.clue_hover_axis.is_empty() and b.clue_tooltip_rect == Rect2(), "invalid geometry has no invisible overlay hit box")
+	# Zoom must re-evaluate the existing actual-sidebar clearance, too.
+	var wide: Dictionary = fixture(50,10)
+	wide.rows.clear()
+	wide.columns.clear()
+	for y: int in range(10):
+		wide.solution[y].fill(1)
+		wide.rows.append([{"length":50,"color":1}])
+	for x: int in range(50): wide.columns.append([{"length":10,"color":1}])
+	install(wide)
+	for direction: int in [1,-1]:
+		for step: int in range(12):
+			b.zoom(direction,b.view.viewport.get_center())
+			var occupied: Rect2 = b.composition_envelope()
+			occupied.position += b.position
+			for box: Rect2 in [app.surface.card,app.surface.palette,app.surface.wells[0]]:
+				check(not box.intersects(occupied), "real zoom retains protected sidebar clearance")
 
 func run() -> void:
 	output = OS.get_environment("HF149_OUTPUT")
