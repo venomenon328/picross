@@ -1,0 +1,106 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1; Repositoryablage einschließlich Ablage-PR-Merge nach bestandenen Pflichtprüfungen beauftragt; keine fachliche Bildfreigabe/Spielintegration.",
+  "blockers": [
+    {
+      "id": "REPO-01",
+      "phase": "repository_storage",
+      "reason": "Authoring-ZIP mit nativen PNG-Binärbytes konnte nicht direkt an GitHub hochgeladen werden; kein PR und keine CI erzeugt.",
+      "status": "blocked"
+    },
+    {
+      "id": "DOC-01",
+      "phase": "production_readiness",
+      "reason": "Vollständiger Regelwerk-Snapshot fehlt im lokalen Auswahlpaket; vor späterer technischen Produktion nachzuführen.",
+      "status": "pending"
+    }
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "obst-nuesse",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "07ca8fb8cbb8db333d9e77b6368c15094b594f8cc2c2f87966c602138d832790"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-72561c715dd741f9b0082c7ad24802c1",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "199c75c219a56bd9e14ac3b2c6a163b2756eff79",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "foreground_colors": null,
+    "height": 30,
+    "mode": null,
+    "width": 30
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "file": "reveal/A-r01.png",
+      "sha256": "1792c1b6dd280ca2211a64246cfca43892d6587820d673ffc1958bfc8522fadc",
+      "variant": "A-r01"
+    },
+    {
+      "file": "reveal/B-r01.png",
+      "sha256": "02805fd71b357341b2bd354d5ce9761b55a36cce3e90b6f36a4fc66e1fc1b4ab",
+      "variant": "B-r01"
+    },
+    {
+      "file": "reveal/C-r01.png",
+      "sha256": "d841434e0031c20592b9068032b79819edb8b6e29c03484a7f3ae85c4d0f3a48",
+      "variant": "C-r01"
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 14,
+    "file": null,
+    "reference": "rulebook-reference.json",
+    "sha256": null,
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
