@@ -1,0 +1,78 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-20219e14dbe242689b9ef06297828f34",
+  "revision": "r03",
+  "motif_name": "Windspiel",
+  "category_id": "musik-buehne",
+  "state": "blocked",
+  "package": {
+    "file": "content/authoring/pz-20219e14dbe242689b9ef06297828f34/r03/package.zip",
+    "bytes": 7362982,
+    "sha256": "88369ca369e2bd1cb44d9abb52b0546dbe2f28c362fc791edac42de23b72f919"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-20219e14dbe242689b9ef06297828f34/r03/handoff.json",
+    "sha256": "dd9fa4b42ba136b511b90e29f06d732208aff3ec90588a5c07692ebe32c3a729"
+  },
+  "inventory_sha256": "834c2a196a84b468a37e9b73df2e1dbedd80f787275d24cd4c8dc96e4c0316e7",
+  "final_editorial_approval": null,
+  "width": null,
+  "height": 30,
+  "dimension_constraints": {
+    "width": "14 or 15 approved; no final selection",
+    "height": "fixed"
+  },
+  "mode": "mono",
+  "requested_parameters": {
+    "width": null,
+    "width_constraint": "open",
+    "height": 30,
+    "height_constraint": "fixed",
+    "mode": "mono",
+    "foreground_color_count_requested": null,
+    "foreground_color_count_implied_by_mode": 1
+  },
+  "parameter_corridor": {
+    "file_in_package": "parameterkorridor.json",
+    "sha256": "74a9835c58bcea5d4ca218fbe9069209866be8625857119cf69425b9337a638b"
+  },
+  "foreground_colors_used_by_each_candidate": 1,
+  "reveal": {
+    "file": "C-r01.png",
+    "revision": "C-r01",
+    "sha256": "82a90396033ea58038de07396a5d741e8edea745f711f91a07232ab912e2c278",
+    "approval": "reveal-approval.json",
+    "provenance": "C-r01.provenance.json"
+  },
+  "motif": {
+    "file": "MA-r02.png",
+    "revision": "MA-r02",
+    "sha256": "1cbb869b0301f0b6ba95c9f3327d61dbe0c595fceabcca3e64664d59fe0feaaa",
+    "derived_from_reveal_sha256": "82a90396033ea58038de07396a5d741e8edea745f711f91a07232ab912e2c278",
+    "approval": "motif-approval.json",
+    "provenance": "MA-r02.provenance.json"
+  },
+  "difficulty": null,
+  "blockers": [
+    "B-WIND-01: Alle sechs Raster verlieren die ausdrücklich geschützte Ringöffnung.",
+    "B-WIND-02: Alle sechs Raster schließen den geschützten Abstand zwischen Klöppel und inneren Röhren; 15×30/176 verschmilzt zusätzlich die Röhrenpaare."
+  ],
+  "next_action": "Korrigieren oder Fehler beheben",
+  "integration": null,
+  "repo_commit": "ef6ec4f6dcb202d3e0590a0ded1259c7cc93d4fa",
+  "source_package_commit": "abb88bb51f5f2cda6c037e979e5c23fb096f0540",
+  "updated_at_utc": "2026-10-15T20:18:24.712940+00:00",
+  "production_evidence": {
+    "candidate_count": 6,
+    "distinct_matrices": 6,
+    "line_solved": 4,
+    "line_stalled": 2,
+    "visually_viable": 0,
+    "repair_rounds": 0,
+    "all_origin_and_proof_checks_passed": true,
+    "zip_crc_complete_file_set_sizes_and_hashes": "pass",
+    "handoff_copy_byte_equal": true,
+    "adapter_inspect": "not_applicable: blocked phase; no content_ready candidate",
+    "native_game_tests": "nicht erforderlich: reine Produktionsablage"
+  }
+}
