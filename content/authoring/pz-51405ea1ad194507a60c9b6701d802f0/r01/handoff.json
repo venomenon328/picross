@@ -1,0 +1,119 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1: Abschlussbildauswahl; Repositoryablage nach §6. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen. Keine Abschlussbild-, Motiv- oder Endfreigabe erteilt.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "haushalt-alltag",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "4dca9063f0b512be5b48bd93c5cb52eac5987afdb60eb9cfefca1e6b943a1dae"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren: ausdrückliche menschliche Freigabe von A-r01, B-r01 oder C-r01 binden, dann Motivvorlage ableiten.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-51405ea1ad194507a60c9b6701d802f0",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "c93b4075ae3df2ec8053d74182d310c129bf3e80",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "foreground_colors": 1,
+    "height": 20,
+    "mode": "mono",
+    "width": 30
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "bytes": 1968862,
+      "color_mode": "RGB",
+      "dimensions_px": [
+        1536,
+        1024
+      ],
+      "file": "reveal/A-r01.png",
+      "id": "A-r01",
+      "name": "Rote Kyūsu mit Seitengriff",
+      "revision": "A-r01",
+      "sha256": "80db0bb58e4afb47b5e0763d70ae62bbfad8ebc84f32530c926b6a1ddddd11b3"
+    },
+    {
+      "approval": null,
+      "bytes": 1958146,
+      "color_mode": "RGB",
+      "dimensions_px": [
+        1536,
+        1024
+      ],
+      "file": "reveal/B-r01.png",
+      "id": "B-r01",
+      "name": "Grüne Gusseisenkanne mit Bügelhenkel",
+      "revision": "B-r01",
+      "sha256": "7754db5a3214634db0eb41a4cbb5ed8496b2cce812fc0ec9ae2102d017a388f2"
+    },
+    {
+      "approval": null,
+      "bytes": 2137274,
+      "color_mode": "RGB",
+      "dimensions_px": [
+        1536,
+        1024
+      ],
+      "file": "reveal/C-r01.png",
+      "id": "C-r01",
+      "name": "Blaue Keramikkanne mit Bambushenkel",
+      "revision": "C-r01",
+      "sha256": "caae51cb266699dd297bcf72f713a6db9adb0214bbf2926db220a29f94f05ad6"
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
