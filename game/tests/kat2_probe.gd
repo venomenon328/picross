@@ -13,6 +13,7 @@ var failures: Array[String] = []
 var captures: Array = []
 var timings: Dictionary = {}
 var quit_slot_hashes: Dictionary = {}
+var kb_measurements: Array = []
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -97,6 +98,9 @@ func shot(name: String) -> void:
 	if not app.choices.is_empty(): regions["card"] = region(app.choices[0].get_parent())
 	else: regions["empty"] = region(app.album.empty_message, true)
 	if app.album.next_button.get_parent().visible: regions["page"] = region(app.album.page_label, true)
+	if mode == "kb":
+		regions["layout"] = region(app.album if app.album.visible else app.work)
+		regions["title"] = region(app.title)
 	for card: Button in app.choices:
 		for label: Node in card.find_children("*", "Label", true, false):
 			check(card.get_global_rect().grow(1).encloses(label.get_global_rect()), "card labels fit without overlap")
@@ -138,6 +142,9 @@ func run() -> void:
 	surface.size = Vector2i(1920, 1080)
 	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(surface)
+	# Offscreen native SubViewport has no container to deliver mouse-enter.
+	# This enables the same built-in hover delay/tooltip path as a real window.
+	surface.notify_mouse_entered()
 	await new_app()
 	if mode in ["empty", "invalid"]:
 		check(app.session == null and app.choices.is_empty(), "no fake session for absent catalog")
@@ -154,6 +161,8 @@ func run() -> void:
 		await large()
 	elif mode == "information":
 		await information_saves()
+	elif mode == "kb":
+		await compact_buttons()
 	elif mode == "adapter":
 		var id: String = "pz-test-direct-mono"
 		check(app.album.items.has(id), "registered KAT1 adapter content appears in All")
@@ -187,7 +196,7 @@ func run() -> void:
 	quit(0 if failures.is_empty() else 4)
 
 func write_report() -> void:
-	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
+	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()
@@ -385,6 +394,7 @@ func regular() -> void:
 	click(app.album_button)
 	await frames()
 	check(app.album.category_id == "voegel" and app.album.notes[0].text == "Begonnen", "return and redo-only status")
+	check(app.album.play_buttons["T-09"].tooltip_text == "Fortsetzen", "KB redo-only action continues")
 	check(app.album.reveals[0].payload.is_empty() and app.album.reveals[0].artwork == null, "no unearned texture")
 	click(app.choices[0])
 	await frames()
@@ -419,7 +429,11 @@ func regular() -> void:
 	await choose("voegel")
 	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
 	check(app.album.reveals[0].artwork != null, "earned image loaded only for visible card")
+	check(app.album.play_buttons["T-09"].tooltip_text == "Ansehen", "KB solved action views existing completion")
 	await shot("solved")
+	app.sessions[5].definition.reveal.name = "TEST ONLY Ein besonders langer verdienter Motivname mit Umlauten und mehreren umbrochenen Zeilen auf derselben kompakten Karte"
+	app.show_album()
+	await shot("long-earned-name")
 	var path: String = app.store.path_for("t09")
 	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
 	var backup: FileAccess = FileAccess.open(app.store.path_for("t09", ".bak"), FileAccess.WRITE)
@@ -462,6 +476,7 @@ func regular() -> void:
 	await new_app()
 	await choose("voegel")
 	check(app.choices[0].disabled and app.album.notes[0].text.contains("ungültig") and app.album.summary.text == "0 von 1 gelöst", "invalid saves are neither new nor solved")
+	check(app.album.play_buttons["T-09"].disabled and not app.album.reset_buttons["T-09"].disabled, "KB damaged save blocks play but retains reset")
 	await shot("invalid-save")
 	# Leave independently validated solved and redo-only slots for another process.
 	for suffix: String in [".json", ".bak"]:
@@ -517,8 +532,7 @@ func large() -> void:
 	await frames()
 	# Changing the page with an outstanding request cannot retarget the dialog.
 	app.album.turn_page(1)
-	app.reset_dialog.confirmed.emit()
-	app.reset_dialog.hide()
+	click(app.reset_dialog.get_ok_button())
 	await frames()
 	check(app.sessions[25].player.cells.count(-1) == 400 and save_bytes("kat2_025") == foreign, "later-page reset owns ID and preserves foreign slots")
 	started = Time.get_ticks_usec()
@@ -544,3 +558,149 @@ func large() -> void:
 	await frames()
 	check(app.choices.size() == 12 and app.album.next_button.disabled, "last page contains remainder")
 	await shot("last-page")
+
+func hover(control: Control) -> void:
+	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+	motion.position = control.get_global_rect().get_center()
+	surface.push_input(motion, true)
+	await frames()
+
+func button_pixels(control: Control) -> PackedByteArray:
+	await frames()
+	await RenderingServer.frame_post_draw
+	return surface.get_texture().get_image().get_region(Rect2i(control.get_global_rect())).get_data()
+
+func compact_buttons() -> void:
+	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
+		surface.size = Vector2i(spec[0],spec[1])
+		app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		app.set_ui_scale(float(spec[2]))
+		await frames()
+		var u: float = app.ui_scale
+		check(app.title.get_theme_font("font") == app.WORK_TITLE_FONT, "KB catalog uses original Bakso")
+		var title_rid: RID = app.WORK_TITLE_FONT.get_rids()[0]
+		for character: String in "Rätselkatalog":
+			check(TextServerManager.get_primary_interface().font_has_char(title_rid,character.unicode_at(0)), "KB catalog title glyph bound offline: "+character)
+		var widths: Array = []
+		var interiors: Array = []
+		for index: int in range(app.choices.size()):
+			var card: Button = app.choices[index]
+			var id: String = app.album.visible_ids[index]
+			var play: Button = app.album.play_buttons[id]
+			var reset: Button = app.album.reset_buttons[id]
+			widths.append(card.size.x)
+			check(card.size.x/u >= 220 and card.size.x/u <= 240, "KB compact card target width")
+			check(card.get_global_rect().encloses(play.get_global_rect()) and card.get_global_rect().encloses(reset.get_global_rect()), "KB icons inside card")
+			check(play.size.x >= 44*u and play.size.y >= 44*u and reset.size.x >= 44*u and reset.size.y >= 44*u, "KB 44/55 pointer targets")
+			check(reset.position.y >= play.position.y+play.size.y+7*u, "KB separated vertical icons")
+			check(play.focus_mode == Control.FOCUS_ALL and reset.focus_mode == Control.FOCUS_ALL and card.focus_mode == Control.FOCUS_ALL, "KB catalog focus preserved")
+			var labels: Array[Node] = card.find_children("*","Label",true,false)
+			check(not labels[0].text.contains("×") and labels[1].text.count("×") == 1, "KB dimensions exactly once")
+			check(labels[1].get_global_rect().end.x <= play.get_global_rect().position.x-7*u, "KB metadata does not enter actions")
+			interiors.append({"card":region(card),"meta":region(labels[1]),"play":region(play),"reset":region(reset),"preview":region(app.album.previews[index]),"status":region(app.album.notes[index])})
+		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0, "KB no horizontal overflow")
+		check(app.album.grid.columns > 4 if spec[0] >= 1920 else app.album.grid.columns >= 2, "KB responsive columns without four-column cap")
+		kb_measurements.append({"surface":spec,"columns":app.album.grid.columns,"widths":widths,"interiors":interiors})
+		await shot("compact-%d-ui%d" % [spec[0],spec[2]*100])
+		await choose("voegel")
+		check(app.choices.size() == 1 and app.choices[0].size.x <= 240*u, "KB single filtered card stays compact")
+		await choose("")
+	# Return to a normal frame and exercise real down/up actions independently.
+	surface.size = Vector2i(1920,1080)
+	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	app.set_ui_scale(1.0)
+	await frames()
+	var counts: Dictionary = {"open":0,"reset":0,"repair":0}
+	app.album.opened.connect(func(_id: String) -> void: counts.open += 1)
+	app.album.reset_requested.connect(func(_id: String) -> void: counts.reset += 1)
+	app.album.repair_requested.connect(func(_id: String) -> void: counts.repair += 1)
+	check(app.album.play_buttons["T-01"].tooltip_text == "Spielen", "KB new action label")
+	var original: Dictionary = save_bytes()
+	click(app.album.reset_buttons["T-01"])
+	await frames()
+	check(counts == {"open":0,"reset":1,"repair":0} and app.reset_dialog.visible and app.album.visible and save_bytes() == original, "KB reset emits only reset and writes nothing before confirmation")
+	click(app.reset_dialog.get_cancel_button())
+	await frames()
+	check(save_bytes() == original and app.album.visible, "KB reset cancellation inert")
+	click(app.album.play_buttons["T-01"])
+	await frames()
+	check(counts.open == 1 and counts.reset == 1 and app.work.visible, "KB play opens once through existing route")
+	# ZR: a grid-origin up over a tool must not activate that button.
+	var start: Vector2 = app.board.global_position+app.board.view.cell_rect(Vector2i(2,0)).get_center()
+	var down: InputEventMouseButton = InputEventMouseButton.new()
+	down.position = start; down.button_index = MOUSE_BUTTON_LEFT; down.pressed = true
+	surface.push_input(down,true)
+	var up: InputEventMouseButton = InputEventMouseButton.new()
+	up.position = app.undo_button.get_global_rect().get_center(); up.button_index = MOUSE_BUTTON_LEFT
+	surface.push_input(up,true)
+	await frames()
+	check(app.session.player.cursor == 1 and app.session.player.history.size() == 1, "KB ZR release over Undo commits once without undo")
+	click(app.album_button)
+	await frames()
+	check(app.album.play_buttons["T-01"].tooltip_text == "Fortsetzen", "KB begun action label")
+	click(app.album.play_buttons["T-01"])
+	await frames()
+	for id: String in app.TOOL_IDS:
+		var tool: Control = app.actions[id]
+		check(tool.size == Vector2(44,44), "KB work targets retain exact sidebar geometry")
+		if id in ["fill","undo","minus"]: check(tool.position.x == app.actions.fill.position.x, "KB left tool column")
+		else: check(tool.position.x > app.actions.fill.position.x, "KB right tool column")
+	click(app.undo_button)
+	click(app.redo_button)
+	click(app.actions.erase)
+	check(app.board.eraser, "KB eraser remains usable")
+	click(app.actions.fill)
+	check(not app.board.eraser, "KB fill remains usable")
+	click(app.actions.minus)
+	click(app.actions.plus)
+	# Actual rendered state differences and stable repeated ink.
+	var tool: Button = app.actions.fill
+	tool.selected = false
+	tool.release_focus()
+	await hover(app.actions.menu)
+	var normal: PackedByteArray = await button_pixels(tool)
+	var repeat: PackedByteArray = await button_pixels(tool)
+	check(normal == repeat, "KB contour stable across redraws")
+	await hover(tool)
+	check(normal != await button_pixels(tool), "KB native hover visible")
+	var held: InputEventMouseButton = InputEventMouseButton.new()
+	held.position = tool.get_global_rect().get_center(); held.button_index = MOUSE_BUTTON_LEFT; held.pressed = true
+	surface.push_input(held,true)
+	check(tool.is_pressed() and normal != await button_pixels(tool), "KB native pressed visible")
+	held = held.duplicate(); held.pressed = false
+	surface.push_input(held,true)
+	tool.release_focus()
+	tool.selected = false
+	await hover(app.actions.menu)
+	tool.selected = true
+	check(normal != await button_pixels(tool), "KB programmatic selected immediately redraws")
+	tool.selected = false
+	tool.disabled = true
+	check(normal != await button_pixels(tool), "KB programmatic disabled immediately redraws")
+	tool.disabled = false
+	tool.grab_focus()
+	check(normal != await button_pixels(tool), "KB native focus visible")
+	await shot("work-focus")
+	tool.release_focus()
+	# Native tooltip creation, clamping and dismissal across an information switch.
+	tool.tooltip_text = "Lange technische Prüfbeschriftung mit Umlauten: Rätsel zurücksetzen, Änderungen bestätigen und zum ursprünglichen Arbeitsstand zurückkehren."
+	await hover(tool)
+	await create_timer(0.8).timeout
+	var tip: Control = tool.tooltip_ref.get_ref() if tool.tooltip_ref != null else null
+	check(tip != null and tip.is_visible_in_tree(), "KB tooltip created through real hover")
+	if tip != null:
+		var popup: Window = tip.get_window()
+		check(Rect2(Vector2.ZERO,Vector2(surface.size)).encloses(Rect2(Vector2(popup.position),Vector2(popup.size))), "KB complete tooltip fits client")
+		kb_measurements.append({"tooltip_position":popup.position,"tooltip_size":popup.size,"scale":app.ui_scale})
+		await shot("tooltip")
+	click(app.actions.menu)
+	await frames()
+	check(app.information.visible and (tip == null or not is_instance_valid(tip) or not tip.is_visible_in_tree()), "KB switch dismisses stale tooltip")
+	click(app.actions["nav-work"])
+	click(app.album_button)
+	await frames()
+	check(app.title.get_theme_font("font") == app.WORK_TITLE_FONT, "KB Bakso preserved after Work/Info return")
+	for u: float in [1.25,1.0]:
+		app.set_ui_scale(u)
+		await frames()
+		check(app.album.play_buttons["T-01"].size == Vector2.ONE*44*u, "KB UI roundtrip has no stale button minima")

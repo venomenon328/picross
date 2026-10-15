@@ -1,5 +1,17 @@
 # Z2: aktive Auswahl und native Integration
 
+## Aktuelle Fortschreibung KB / #168
+
+Bakso Daging gilt zusätzlich für „Rätselkatalog“, bei unveränderten Fontbytes und
+lokalem Fallback. Die gemeinsame BookButton-Komponente trägt warme Papierflächen,
+stabile gezeichnete Konturen und UI-skalierte, begrenzte Tooltips auf Katalog,
+Werkbank und Information. Katalogkarten bleiben kompakt mit getrennten Play-/
+Resettreffern. Sechs Werkzeuge in 2×3, Originalpalette und SL-65-Rahmen bleiben.
+Aktiv sind nun **13 Icons**: elf bisherige Z2-Symbole plus zwei eigene KB-Pfade aus
+`tools/book_icons_kb.json`. Sie sind keine historischen BP-3-Originale;
+`KB-168-NOTICE.txt`, Ressourcenmanifest und Provisionierung binden ihre Herkunft.
+[Prüfzuordnung und Gates](KB_VERIFICATION.md).
+
 ## Aktueller Vertrag · Sidebar #65
 
 PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der neue zusammenhängende Stand A+B folgt auf `feat/65-sidebar-frames`; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.

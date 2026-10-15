@@ -1,22 +1,54 @@
 extends Button
-## BP-3 mounting and icon are separate from the unchanged colour sample.
+## Shared KB paper button. Precise rectangular hits; identity-bound ink decoration.
 const INK = Color("293e3d")
 const PAPER = Color("fffaf0")
 const Scribble = preload("res://ui/scribble.gd")
+const BookTooltip = preload("res://ui/book_tooltip.gd")
 var action_id: String = ""
-var selected: bool = false
+var content_surface: bool = false
+var selected: bool = false:
+	set(value):
+		selected = value
+		queue_redraw()
 var swatch: Color = Color.TRANSPARENT
 var image: Texture2D
-var ui_scale: float = 1.0
+var ui_scale: float = 1.0:
+	set(value):
+		if ui_scale != value: dismiss_tooltip()
+		ui_scale = value
+		queue_redraw()
+var tooltip_ref: WeakRef
 
 func _ready() -> void:
-	focus_mode = Control.FOCUS_NONE
+	add_to_group("book-buttons")
 	for state: String in ["normal", "hover", "pressed", "disabled", "focus"]:
-		add_theme_stylebox_override(state, StyleBoxEmpty.new())
+		if not content_surface: add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	mouse_entered.connect(queue_redraw)
 	mouse_exited.connect(queue_redraw)
 	button_down.connect(queue_redraw)
 	button_up.connect(queue_redraw)
+	focus_entered.connect(queue_redraw)
+	focus_exited.connect(queue_redraw)
+	visibility_changed.connect(func() -> void:
+		if not is_visible_in_tree(): dismiss_tooltip())
+	resized.connect(dismiss_tooltip)
+	if accessibility_name.is_empty(): accessibility_name = text if not text.is_empty() else tooltip_text
+
+func _make_custom_tooltip(for_text: String) -> Object:
+	var tip: BookTooltip = BookTooltip.new()
+	tip.configure(for_text, ui_scale, get_viewport_rect().size.x, get_theme_font("font"))
+	tooltip_ref = weakref(tip)
+	return tip
+
+func dismiss_tooltip() -> void:
+	if tooltip_ref == null: return
+	var tip: Control = tooltip_ref.get_ref()
+	if tip != null and tip.is_inside_tree() and tip.get_window() != get_window():
+		tip.get_window().hide()
+	tooltip_ref = null
+
+static func dismiss_all(tree: SceneTree) -> void:
+	for item: Node in tree.get_nodes_in_group("book-buttons"): item.dismiss_tooltip()
 
 static func points(box: Rect2, cut: float) -> PackedVector2Array:
 	var p: Vector2 = box.position
@@ -27,9 +59,10 @@ func swatch_strokes() -> Array:
 	return Scribble.outline_strokes(Rect2(Vector2.ZERO,size).grow(-1.0),"swatch/"+action_id,1.2)
 
 func _draw() -> void:
+	if content_surface: return
 	var u: float = ui_scale
 	var box: Rect2 = Rect2(Vector2.ZERO, size)
-	var body: Color = Color("f4ead4")
+	var body: Color = Color("f6eedb")
 	if disabled:
 		body = Color("e9e2d4")
 	elif selected:
@@ -38,15 +71,13 @@ func _draw() -> void:
 		body = Color("c5d6cd")
 	elif is_hovered():
 		body = Color("e0ece6")
-	draw_colored_polygon(points(box.grow(-0.5), 4*u), Color("a68a55"))
+	draw_colored_polygon(points(box.grow(-1.5*u), 3*u), body)
 	if swatch.a > 0:
 		for line: Dictionary in swatch_strokes():
 			Scribble.paint(self,line,Color("68583f"))
 	else:
-		draw_polyline(points(box.grow(-0.5), 4*u), Color("68583f"), 1, true)
-	draw_colored_polygon(points(box.grow(-2*u), 3*u), body)
-	draw_line(Vector2(6,4)*u,Vector2(size.x-6*u,4*u),Color("fff5d6"),0.7,true)
-	draw_line(Vector2(6*u,size.y-3*u),size-Vector2(6,3)*u,Color("74664d"),0.7,true)
+		for line: Dictionary in Scribble.outline_strokes(box.grow(-2*u),"book-button/"+action_id,1.2*u):
+			Scribble.paint(self,line,Color("6d624d"))
 	if swatch.a > 0:
 		draw_rect(box.grow(-5*u), swatch)
 		if selected:
@@ -64,7 +95,8 @@ func _draw() -> void:
 	if not text.is_empty():
 		var font: Font = get_theme_font("font")
 		var fs: int = get_theme_font_size("font_size")
-		var width: float = font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x
-		draw_string(font,Vector2((size.x-width)/2,(size.y+font.get_ascent(fs)-font.get_descent(fs))/2),text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,get_theme_color("font_color"))
+		var extent: Vector2 = font.get_multiline_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs)
+		var ink: Color = PAPER if selected else Color("757970") if disabled else INK
+		draw_multiline_string(font,Vector2((size.x-extent.x)/2,(size.y-extent.y)/2+font.get_ascent(fs)),text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,-1,ink)
 	if has_focus():
 		draw_polyline(points(box.grow(-5*u),2*u),INK,1.0,true)

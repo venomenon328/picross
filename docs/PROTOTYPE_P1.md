@@ -1,5 +1,13 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+**KB / #168:** Der kompakte Katalog ergänzt den bestehenden KAT-2-Weg: Bakso-
+Katalogtitel, neutrale Blattkennung ohne wiederholte Dimensionen und gestapelte
+Play-/Reseticons neben Metadaten. Play heißt je validiertem Zustand Spielen,
+Fortsetzen oder Ansehen; ungültige Saves sperren Öffnen. Kartenfläche und Play
+verwenden denselben Registry-ID-Weg; Reset/Recovery verlangen die bestehenden
+gebundenen Bestätigungen. Gemeinsame BookButtons, Fokus und Tooltips ändern
+keinen Save-/Flush-/Gesten-/Hinweisvertrag. [KB-Prüfzuordnung](KB_VERIFICATION.md).
+
 **Aktueller Inhaltsvertrag (#114, 14.10.2026):** Der reguläre Katalog und Export
 enthalten ausschließlich registrierte Workflow-Rätsel. Die früheren F-01 bis F-09
 und ihre Runtimebilder sind entfernt; aktive Reservierungs-/Bewahrungspflichten
@@ -571,7 +579,7 @@ I-01 bis I-05 gemäß [GD-01 bis GD-05](Z2_SELECTION.md). Der reguläre Kern,
 Appname/Speicherort, Saveformat und Rätseldaten bleiben erhalten. A-Papier,
 Montierungen, UI und Raster sind getrennt; C1 konturiert nur Hinweisfarben 2/4.
 Fraunces/Plex Sans sind gepinnt und offline gebündelt; VS2-V3 ergänzt das
-unveränderte Bakso nur für Arbeits-Blatttitel. Farbwahl aktiviert Füllen.
+unveränderte Bakso für Arbeits-Blatttitel, KB zusätzlich für den Katalogtitel. Farbwahl aktiviert Füllen.
 Acht Arbeitsaktionen, eigene Miniatur, Koordinaten und aktive Farbe/Werkzeug bleiben
 auf der Arbeitsseite, Trefferflächen mindestens 44/55 px bei UI 100/125 %.
 VS2-V3 ordnet die acht Aktionen senkrecht rechts unter Miniatur/Palette an;

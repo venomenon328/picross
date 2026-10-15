@@ -1,5 +1,14 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**KB / #168** erweitert Bakso gezielt um den Katalogtitel; andere Fraunces-
+Überschriften und Plex-Bedientexte bleiben. Kompakte Karten tragen eine neutrale
+Blattkennung, nach Abschluss zusätzlich den Motivnamen, einmalige Größenmetadaten,
+zwei rechts gestapelte Symbolaktionen sowie eigene Vorschau/Status. Die responsive
+Spaltenzahl hat keine Vier-Spalten-Grenze; wenige Karten bleiben kompakt.
+BookButton verbindet warme Papierflächen, stabile gezeichnete Konturen und klare
+Hover-/Druck-/Auswahl-/Disabled-/Fokuszustände. Rechteckige 44/55-Treffer, originale
+Palettenflächen und 2×3-Werkzeuge bleiben. [Aktuelle Prüfzuordnung](KB_VERIFICATION.md).
+
 KAT-2 (#79) ergänzt den Entwicklungsstart als warmes Kartenraster auf dem vorhandenen Buch. Oberhalb stehen eine scrollbare Kategorienauswahl einschließlich leerer Gruppen und „x von y gelöst“. Native Controls, vorhandene lokale Schriften und klare Hover-/Fokus-/Auswahlrahmen bleiben maßgeblich. Höchstens 24 Karten teilen sich eine Seite; Spaltenzahl und Scrollfläche richten sich nach Fenster und UI-Skalierung. Jede Karte trägt die stabile Blattkennung, Größe, Mono/Farbe und Status, in „Alle Rätsel“ zusätzlich die Kategorie. Eigene ungelöste Füllungen bleiben unkorrigiert; Motivname und proportionales Reveal erscheinen erst nach gültigem Abschluss. Die bisherige zusätzliche globale Auswahlvorschau entfällt. [Nachweise und offene KAT2-M01-Abnahme](KAT2_VERIFICATION.md).
 
 ## Aktueller Entwicklungsstand
@@ -117,7 +126,7 @@ Die [RP-4-Sichtprüfung](https://github.com/venomenon328/picross/blob/37f500d5e6
 keine neue P1-Bedienabnahme.
 
 Die neue ZS-Folgearbeit aus Abschnitt 4.4 öffnet GD-03 ausschließlich für die
-Gestaltung der Hinweisziffern. VS2-E2/V3 ergänzt Bakso für Arbeits-Blatttitel;
+Gestaltung der Hinweisziffern. VS2-E2/V3 ergänzt Bakso für Arbeits-Blatttitel, KB zusätzlich für den Katalogtitel;
 Fraunces bleibt für sonstige Überschriften, Plex Sans für übrige UI,
 A-Arbeitsasset, Buchkomposition, N1 und die C1-Farb-/Kontursemantik bleiben die
 Grundlage. Konkrete abweichende Ziffern-, Schriftgrad- oder Slotwerte werden
