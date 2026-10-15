@@ -11,6 +11,12 @@ var app: Control
 var output: String
 var stage: String
 
+func digest(bytes: PackedByteArray) -> String:
+	var hash: HashingContext = HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(bytes)
+	return hash.finish().hex_encode()
+
 func _initialize() -> void:
 	call_deferred("run")
 
@@ -214,6 +220,25 @@ func captures() -> void:
 			app.session.player.cells.fill(value)
 			b._layout()
 			check(b.view.bounds() == geometry_before, "progress never moves composition")
+	# The reported rectangle at two genuinely different rendered zoom levels.
+	root.size = Vector2i(1920,1080)
+	app.set_ui_scale(1)
+	install(fixture(30,35))
+	for wish: int in [12,72]:
+		b.requested_cell = wish
+		app._layout_book()
+		await process_frame
+		await process_frame
+		var source: Vector2 = Vector2(b.view.origin.x+b.view.cell_size/2,b.column_clue_area().get_center().y)
+		root.warp_mouse(b.global_position+source)
+		b.update_clue_hover(source)
+		check(b.column_hint_overflows(0) == (wish == 72), "reported rectangle transitions complete to overflow")
+		b.queue_redraw()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var name: String = "hf-rectangle-z%d.png" % wish
+		root.get_texture().get_image().save_png(output.path_join(name))
+		records.append({"kind":"reported", "file":name, "wish":wish, "cell":b.view.cell_size, "reserve":[b.reserve_slots.x,b.reserve_slots.y], "demand":[b.max_hints.x,b.max_hints.y], "overlay":not b.clue_hover_axis.is_empty()})
 
 func run() -> void:
 	output = OS.get_environment("HF149_OUTPUT")
@@ -230,7 +255,8 @@ func run() -> void:
 	else:
 		if stage != "capture": geometry()
 		await captures()
-	var report: Dictionary = {"stage":stage, "checks":checks, "failures":failures, "records":records, "display":DisplayServer.get_name(), "os":OS.get_name(), "dpi":DisplayServer.screen_get_dpi(), "screen_scale":DisplayServer.screen_get_scale(), "screen":[DisplayServer.screen_get_size().x,DisplayServer.screen_get_size().y], "renderer":RenderingServer.get_video_adapter_name()}
+	var resources: Dictionary = {"font_sha256":digest(app.board.clue_font().data), "heading_sha256":digest(app.board.ClueOverlay.TITLE_SOURCE.data), "frame_rgba_sha256":digest(app.board.ClueOverlay.FRAME.get_image().get_data()), "paper_rgba_sha256":digest(app.board.ClueOverlay.PAPER.get_image().get_data())}
+	var report: Dictionary = {"stage":stage, "checks":checks, "failures":failures, "records":records, "resources":resources, "display":DisplayServer.get_name(), "os":OS.get_name(), "dpi":DisplayServer.screen_get_dpi(), "screen_scale":DisplayServer.screen_get_scale(), "screen":[DisplayServer.screen_get_size().x,DisplayServer.screen_get_size().y], "renderer":RenderingServer.get_video_adapter_name()}
 	FileAccess.open(output.path_join("hf-"+(stage if not stage.is_empty() else "native")+".json"),FileAccess.WRITE).store_string(JSON.stringify(report))
 	print("HF149_",stage.to_upper() if not stage.is_empty() else "NATIVE", "_", "OK" if failures == 0 else "FAILED", " checks=",checks," failures=",failures)
 	quit(0 if failures == 0 else 1)
