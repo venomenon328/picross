@@ -156,6 +156,22 @@ static func run(t: SceneTree) -> void:
 	t.mouse_button(a,true)
 	t.mouse_button(a,false)
 	t.check(app.session.player.cursor==cursor_before+1,"ZR fresh Down works after lost input")
+	# A lost opposite Down is still visible in the native Motion mask.
+	t.mouse_button(a,true)
+	var chord: InputEventMouseMotion = InputEventMouseMotion.new()
+	chord.position=point(b,Vector2i(8,4))
+	chord.button_mask=MOUSE_BUTTON_MASK_LEFT|MOUSE_BUTTON_MASK_RIGHT
+	t.root.push_input(chord,true)
+	t.check(not app.session.gesture.active and b.cell_buttons_blocked,"ZR ambiguous chord motion cancels and retains release barrier")
+	var right_up: InputEventMouseButton = InputEventMouseButton.new()
+	right_up.position=a
+	right_up.button_index=MOUSE_BUTTON_RIGHT
+	right_up.pressed=false
+	right_up.button_mask=MOUSE_BUTTON_MASK_LEFT
+	t.root.push_input(right_up,true)
+	t.check(b.cell_buttons_blocked and not app.session.gesture.active,"ZR chord barrier survives first Up while origin held")
+	t.mouse_button(a,false)
+	t.check(not b.cell_buttons_blocked,"ZR ambiguous chord clears after releases")
 	app.queue_free()
 	await t.process_frame
 	Store.test_root_override=old_root

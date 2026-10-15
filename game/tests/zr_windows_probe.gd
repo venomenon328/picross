@@ -88,6 +88,9 @@ func poll() -> void:
 		"screen":[DisplayServer.screen_get_size().x,DisplayServer.screen_get_size().y],"focus":root.has_focus(),
 		"active":app.session.gesture.active,"length":b.gesture_length(),"counter":b.gesture_counter.visible,
 		"counter_rect":str(counter.get("rect","")),"cursor":str(b.gesture_counter.cursor),"starts":starts,
+		"history_cursor":app.session.player.cursor,
+		"actions":[[app.undo_button.get_global_rect().get_center().x,app.undo_button.get_global_rect().get_center().y],
+			[app.redo_button.get_global_rect().get_center().x,app.redo_button.get_global_rect().get_center().y]],
 		"endpoint":[app.session.gesture.endpoint.x,app.session.gesture.endpoint.y],"mouse_mode":Input.mouse_mode,
 		"history":app.session.player.history.size(),"filled":app.session.player.cells.count(1),"empty":app.session.player.cells.count(0),
 		"blocked":b.cell_buttons_blocked,"events":events}

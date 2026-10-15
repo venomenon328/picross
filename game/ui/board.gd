@@ -286,9 +286,11 @@ func _input(event: InputEvent) -> void:
 		return
 	if local is InputEventMouseMotion:
 		var origin_mask: int = MOUSE_BUTTON_MASK_LEFT if held_button == MOUSE_BUTTON_LEFT else MOUSE_BUTTON_MASK_RIGHT
-		if (int(local.button_mask) & origin_mask) == 0:
+		var chord: bool = (int(local.button_mask) & CELL_BUTTONS) == CELL_BUTTONS
+		if chord or (int(local.button_mask) & origin_mask) == 0:
 			# Missing release or ambiguous delivery: discard, never catch up.
 			cancel_gesture()
+			cell_buttons_blocked = chord
 			get_viewport().set_input_as_handled()
 			return
 		pointer_move(local.position, get_viewport().gui_get_hovered_control() == self)

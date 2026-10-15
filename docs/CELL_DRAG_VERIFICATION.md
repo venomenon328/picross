@@ -14,6 +14,10 @@ Release benutzt. Die Zeichenschicht erfasst erst danach Vorschau, Änderungsmeng
 Richtung; `finish_gesture()` übernimmt atomar. Fehlende Ursprungstaste in einer
 Motion verwirft die Geste. Die bestehende Windows-Ereigniszustellung der gebundenen
 Engine wird verwendet; kein neuer nativer Runtimebaustein, Mausmoduswechsel oder Warp.
+Die [gebundene Enginequelle](https://github.com/godotengine/godot/blob/4.7.2-stable/platform/windows/display_server_windows.cpp)
+setzt beim nativen Button-Down vorübergehend `SetCapture`, gibt die Erfassung bei Up
+und Fokusverlust frei. Das begründet den untersuchten Zustellungsweg, ersetzt aber
+keinen tatsächlich ausgeführten Windows-Test.
 
 `gesture_counter.gd` zeichnet in einer eigenen CanvasLayer über Board und Sidebar.
 Die aktive Fontressource bleibt gemeinsam. 24×UI Schriftgrad, dünne helle Kontur,
@@ -44,6 +48,17 @@ Den im PR gebundenen Product-Export herunterladen, Hashes gegen `product-report.
 prüfen und EXE/PCK zusammen entpacken. Ausschließlich ein temporäres Profil verwenden,
 beispielsweise APPDATA/LOCALAPPDATA nur für den gestarteten Kindprozess setzen.
 Keinen echten Benutzerstand kopieren oder globale Einstellungen ändern.
+
+`tools/zr_windows_probe.py --player <entpackt>/picross-p1.exe --head <SHA> --output-dir <neuer-Ordner>`
+prüft den sauberen Exportbericht und EXE-/PCK-Hashes und startet genau dessen Player
+mit externem `zr_windows_probe.gd`. Das feste 30×30-Raster entsteht nur im isolierten
+Prüfprozess. Stimuli gehen über Win32-Mauseingaben und das tatsächliche native HWND,
+nicht über Godot-Inputsimulation. Der Bericht unterscheidet diese automatisierte
+native Zustellungsprobe ausdrücklich von einer physischen Eigentümer-Mausprobe.
+Er enthält Ereignispositionen/-masken, Fokus, Endzustände, eigene Fensterbilder,
+Windows-DPI und Exportbindung. Rückzug/Achsenwechsel, native Undo-/Redo-Buttons und
+ein eigenes neutrales Fokuszielfenster gehören zur Probe. Niemals fremde Anwendungen
+als Fokusziel oder Desktopbilder aufnehmen.
 
 Für links und rechts jeweils getrennt protokollieren:
 
