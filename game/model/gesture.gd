@@ -34,10 +34,12 @@ func begin(player: Player, cell: Vector2i, frozen_target: int) -> bool:
 	active = true
 	return true
 
-func move(cell: Vector2i) -> void:
-	if not active or cell.x < 0 or cell.y < 0 or cell.x >= width or cell.y >= height:
+func move(cell: Vector2i, actual_start_hit: bool = true) -> void:
+	if not active:
 		return
-	if cell == start:
+	# Axis choice uses the unbounded position. Only a strict raster hit can
+	# unlock G1; projection or boundary clamping must never invent that hit.
+	if actual_start_hit and cell == start:
 		endpoint = start
 		axis = Axis.UNLOCKED
 		return
@@ -48,9 +50,9 @@ func move(cell: Vector2i) -> void:
 		elif absi(delta.y) > absi(delta.x):
 			axis = Axis.VERTICAL
 	if axis == Axis.HORIZONTAL:
-		endpoint = Vector2i(cell.x, start.y)
+		endpoint = Vector2i(clampi(cell.x, 0, width - 1), start.y)
 	elif axis == Axis.VERTICAL:
-		endpoint = Vector2i(start.x, cell.y)
+		endpoint = Vector2i(start.x, clampi(cell.y, 0, height - 1))
 
 func changes() -> Array:
 	var result: Array = []

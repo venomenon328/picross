@@ -40,7 +40,10 @@ func normalized_view() -> Rect2:
 func hit(point: Vector2) -> Vector2i:
 	if not viewport.has_point(point) or not bounds().has_point(point):
 		return Vector2i(-1, -1)
-	return Vector2i(floori((point.x - origin.x) / cell_size), floori((point.y - origin.y) / cell_size))
+	return unbounded_cell(point)
+
+func unbounded_cell(point: Vector2) -> Vector2i:
+	return Vector2i(((point - origin) / cell_size).floor())
 
 func cell_rect(cell: Vector2i) -> Rect2:
 	return Rect2(origin + Vector2(cell) * cell_size, Vector2.ONE * cell_size)

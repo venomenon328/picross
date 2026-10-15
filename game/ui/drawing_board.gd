@@ -66,8 +66,7 @@ func pointer_move(point: Vector2, over_board: bool) -> void:
 	sync_preview()
 
 func pointer_release(point: Vector2, over_board: bool) -> void:
-	if over_board:
-		session.gesture.move(view.hit(point))
+	update_gesture_endpoint(point)
 	sync_preview()
 	var changes: Array = session.gesture.changes()
 	# changes() is model/index ordered. Capture the final G1 direction before
@@ -76,7 +75,7 @@ func pointer_release(point: Vector2, over_board: bool) -> void:
 	if direction.x < 0 or direction.y < 0:
 		changes.reverse()
 	var old_cursor: int = session.player.cursor
-	super.pointer_release(point, over_board)
+	finish_gesture()
 	preview.clear()
 	if style != 0 and animations and not session.completed and session.player.cursor != old_cursor:
 		var started: int = animation_clock.call()
