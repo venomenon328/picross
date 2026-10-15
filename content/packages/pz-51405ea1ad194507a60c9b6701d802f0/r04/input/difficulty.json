@@ -1,0 +1,33 @@
+{
+  "assessment_type": "editorial_estimate",
+  "bottleneck": "Vor allen172 Proofschritten alle55 Linien auf volle Unterstützung geprüft. Vor Restaufräumen bei höchstens15 offenen Zellen mindestens3 produktive Linien; somit keine definierte <=2-Linien-Engstelle auf diesem Verlauf. Keine erschöpfende Prüfung alternativer Regelfamilien.",
+  "calibration": "Keine menschlichen Vergleichsdaten oder validierter R0–R3-Analysator.",
+  "confidence": "low",
+  "effort": {
+    "cells": 750,
+    "empty": 355,
+    "filled": 395,
+    "height": 25,
+    "human_active_minutes": null,
+    "max_column_clues": 2,
+    "max_row_clues": 3,
+    "proof_steps": 172,
+    "width": 30
+  },
+  "evidence": "difficulty-checkpoints.json",
+  "level": "L2",
+  "logic_hash": "fd1bcd282618684a4015001e93ec446c3975548e5c72439026934a767146a0dd",
+  "method": "picross-difficulty-0.1",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "playtest": "not_performed; optional",
+  "rule_families": {
+    "R0": "Keine initial vollständig gepackte oder leere Linie. Später fertige Blöcke und Restleerfelder; kein validierter R0-Fixpunkt analysiert.",
+    "R1": "Geschätzter Hauptbedarf: Überlappung/Verlängerung der langen Korpusblöcke. Zeile12 [3,19] erzwingt im unbekannten 30er-Raster Spalten12–23; nachfolgende breite Zeilen verteilen Anker. Der dünne Bügel erfordert längere Folge dieser Schlüsse.",
+    "R2": "Zuordnung von bis zu drei Blöcken je Zeile und zwei je Spalte rund um Knopf, Henkelöffnung und Ausguss kann kombinierte Anker benötigen. Notwendigkeit/Suffizienz gegenüber R1 nicht erschöpfend instrumentiert.",
+    "R3": "Full-line-mono zertifiziert vollständige Linienunterstützung; dies beweist keine R3-Notwendigkeit. Kein unvermeidbarer R3-Schritt identifiziert, aber ohne schwächeren validierten Fixpunkt nicht ausgeschlossen."
+  },
+  "time_estimate": null
+}
