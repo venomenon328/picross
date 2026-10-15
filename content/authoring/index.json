@@ -1,1 +1,15 @@
-{"entries":[{"puzzle_id":"pz-cc522b3f66bc4d6eafe1f8a387d18d1f","record":"content/authoring/pz-cc522b3f66bc4d6eafe1f8a387d18d1f/r01/record.json","revision":"r01"}],"format":"picross-authoring-index-v1"}
+{
+  "entries": [
+    {
+      "puzzle_id": "pz-51405ea1ad194507a60c9b6701d802f0",
+      "record": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r01/record.json",
+      "revision": "r01"
+    },
+    {
+      "puzzle_id": "pz-cc522b3f66bc4d6eafe1f8a387d18d1f",
+      "record": "content/authoring/pz-cc522b3f66bc4d6eafe1f8a387d18d1f/r01/record.json",
+      "revision": "r01"
+    }
+  ],
+  "format": "picross-authoring-index-v1"
+}
