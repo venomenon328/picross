@@ -27,7 +27,7 @@
   "next_action": "Push integration in the commissioned branch, complete selected CI and retain Draft PR #138; no merge. Section9 cleanup only after proven main integration.",
   "integration": {
     "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/r06/integration.json",
-    "sha256": "f3a2ac9b74f7ceb23ccc54d78390f025d313c49bb51fd7fecdf5b0f01d432230"
+    "sha256": "cd01e8d3d67f3808ecaa89ea11d70fd131ba9ecd328cc1206f354eb74e8ef342"
   },
   "updated_at_utc": "2026-10-15T12:17:17.752223+00:00",
   "verification": {
