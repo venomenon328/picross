@@ -1,0 +1,8 @@
+Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.
+
+Ich gebe das Abschlussbild C-r02 frei. Führe Standardauftrag 2 bis zur Motivvorlage samt Konfiguration und Codex-Übergabe aus.
+Größenwunsch: 30 × 40 Zellen (ungefähr).
+Rätselmodus (Abschlussbild immer farbig): farbig.
+Vermeiden / weitere Wünsche: Leuchtturm, Teepott, blauer Himmel und Sonne
+
+Repositoryablage nach §6 ist beauftragt. Draft-PR; kein Merge.

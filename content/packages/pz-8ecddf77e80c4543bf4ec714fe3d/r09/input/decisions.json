@@ -1,0 +1,16 @@
+{
+  "actual_request": "approvals/acceptance-evidence.txt",
+  "accepted_revision": "r08",
+  "delivery_revision": "r09",
+  "no_content_change": true,
+  "fresh_import_after_actual_motif_acceptance": true,
+  "runtime_revision": 2,
+  "previous_runtime_revision": 1,
+  "stem": "warnemuende_001",
+  "save_slot": "warnemuende_001",
+  "technical_dependency": "https://github.com/venomenon328/picross/pull/146",
+  "target_branch": "feat/144-color-content-updates",
+  "replace_path": "plan-update then update, expected old definition hash; no hand-written registry entry",
+  "old_user_saves": "untouched; incompatible with new runtime revision under existing contract",
+  "merge": false
+}

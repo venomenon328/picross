@@ -1,0 +1,94 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "r09",
+  "repo_commit": "dcccfb45d126d8c4009e4ef4fa54111fd914a325",
+  "state": "editorially_approved",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 12,
+    "file": "rules/PUZZLE_AUTHORING.md",
+    "sha256": "592d9b157235b8b99d52a6720d82bcb0bd149e9e41ffb4e502868b7bb8f3a4f2"
+  },
+  "brief": "brief.md",
+  "category_id": "gebaeude-bauwerke",
+  "approved_parameters": [
+    {
+      "width": 30,
+      "height": 35,
+      "mode": "color",
+      "foreground_colors": 5,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        30,
+        35
+      ]
+    }
+  ],
+  "reveal": {
+    "file": "images/C-r02.png",
+    "sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "revision": "C-r02",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "images/C-r02.provenance.json"
+  },
+  "motif": {
+    "file": "images/MR-r07.png",
+    "sha256": "4cf932f1f4a3c664c874e83d6780dc196c10a05788ec76312c7e2e989a738620",
+    "revision": "MR-r07",
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "provenance": "images/MR-r07.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "production/import",
+    "variant": "revised",
+    "candidate_id": "ca26f8b1456a071aee329c05c967db200b522d4c43f0ceb4caabcc33cab9529b",
+    "matrix_hash": "54a00d734fa10f30fbfbea5e5610be4bf09b24b699310581c4997bd0f958a8cc",
+    "logic_hash": "167ed70217816a0da2b6cf3aef64130db79f4e35c62cb9306ce4d0b7e8f5f0b2",
+    "proof": "production/import/revised-proof.json",
+    "verification": "production/import/revised-result.json"
+  },
+  "repair": null,
+  "origin_verification": "source-continuity.json",
+  "difficulty": "difficulty.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "cec8ba9d03ac7e7f85a648e1a022ae31a5f6392f08c61f202feb5f7ead2816d4"
+  },
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json",
+    "motif": "approvals/motif-approval.json",
+    "provenance": "source-continuity.json",
+    "logic": "production/import/revised-result.json",
+    "frame": "source-continuity.json",
+    "visual": "visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "visual-review.json"
+  },
+  "content_blockers": [],
+  "blockers": [],
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "next_action": "Export and explicit raster update to runtime revision2; no merge.",
+  "test_only": false
+}
