@@ -35,6 +35,7 @@ func _probe_controls(node: Node, result: Array[Dictionary]) -> void:
 		if node.get_window() != get_tree().root:
 			box.position += Vector2(node.get_window().position)
 		result.append({"name": node.name, "text": node.text if node is Button else "", "tooltip": node.tooltip_text, "disabled": node.disabled,
+			"dialog": node.get_window() != get_tree().root,
 			"center": [box.get_center().x, box.get_center().y]})
 	for child: Node in node.get_children():
 		_probe_controls(child, result)

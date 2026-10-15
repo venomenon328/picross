@@ -29,12 +29,13 @@ def point(page, position):
     return box['x']+position[0]*box['width']/dims[0], box['y']+position[1]*box['height']/dims[1]
 
 
-def control(page, text=None, name=None, tooltip=None):
+def control(page, text=None, name=None, tooltip=None, dialog=None):
     page.wait_for_timeout(150)
     items = state(page)['controls']
     found = [item for item in items if not item['disabled'] and
              (text is None or item['text'].startswith(text)) and
              (name is None or item['name'] == name) and
+             (dialog is None or item['dialog'] == dialog) and
              (tooltip is None or item['tooltip'].startswith(tooltip))]
     assert len(found) == 1, (text, name, tooltip, items)
     page.mouse.click(*point(page, found[0]['center']))
@@ -69,16 +70,18 @@ def open_page(context, url):
     return page, errors
 
 
-def exercise(pw, name, root, url, output, evidence):
+def exercise(pw, name, root, update, url, output, evidence):
     results = evidence['scenarios']
+    began = time.monotonic()
     def passed(label):
         results.append(label)
+        evidence['elapsed_seconds'] = round(time.monotonic()-began, 2)
         print(name, 'PASS', label, flush=True)
     with tempfile.TemporaryDirectory(prefix='picross-web-profile-', ignore_cleanup_errors=True) as profile:
         browser = getattr(pw, name)
-        def launch():
+        def launch(scale=1):
             return browser.launch_persistent_context(profile, headless=True,
-                viewport={'width':1920,'height':1122}, device_scale_factor=1)
+                viewport={'width':1920,'height':1122}, device_scale_factor=scale)
         context = launch()
         page, errors = open_page(context, url)
         version = context.browser.version if context.browser else page.evaluate('navigator.userAgent')
@@ -119,12 +122,26 @@ def exercise(pw, name, root, url, output, evidence):
         for key in expected: assert state(page)[key] == expected[key], key
         passed('reload restores cells, complete history/redo and view')
         context.close()
-        context = launch(); page, errors = open_page(context, url)
+        context = launch(1.25); page, errors = open_page(context, url)
+        assert page.evaluate('devicePixelRatio') == 1.25
         control(page, text='Blatt 01')
         for key in expected: assert state(page)[key] == expected[key], key
         control(page, name='redo'); assert state(page)['cursor'] == 2
         saved(page)
-        passed('real browser process restart restores history and redo works')
+        passed('real browser process restart at DPI125 restores history and redo works')
+        expected_update = {key:state(page)[key] for key in ('cells','history','cursor','view')}
+        identity = state(page)['root']
+        # Install a second genuine export at the same entry; keep old resources.
+        for release in (update/'releases').iterdir():
+            shutil.copytree(release, root/'releases'/release.name, dirs_exist_ok=True)
+        shutil.copyfile(update/'index.html',root/'next.html')
+        (root/'next.html').replace(root/'index.html')
+        page.reload(); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
+        assert page.locator('body').get_attribute('data-build') == json.loads((update/'build-manifest.json').read_text())['build_id']
+        control(page,text='Blatt 01')
+        assert state(page)['root'] == identity
+        for key in expected_update: assert state(page)[key] == expected_update[key], key
+        passed('second genuine compatible export retains IndexedDB identity and progress')
         # Input and fit stay paired under CSS/browser scale, resize and fullscreen.
         control(page, name='menu'); control(page, text='UI ')
         control(page, name='nav-work')
@@ -140,19 +157,33 @@ def exercise(pw, name, root, url, output, evidence):
         assert page.evaluate('!!document.fullscreenElement') and state(page)['fit']
         page.locator('#fullscreen').click(); page.wait_for_timeout(300)
         passed('UI125, 720p/1080p, wheel zoom, fullscreen fit and hit geometry')
+        if name == 'chromium':
+            cdp = context.new_cdp_session(page)
+            cdp.send('Emulation.setDeviceMetricsOverride',dict(width=1920,height=1122,deviceScaleFactor=1.5,mobile=False))
+            page.wait_for_timeout(300)
+            assert page.evaluate('devicePixelRatio') == 1.5
+            before = state(page)['cells']
+            draw(page,(1,0)); assert state(page)['cells'][1] == 1
+            control(page,name='undo'); assert state(page)['cells'] == before and state(page)['fit']
+            cdp.send('Emulation.clearDeviceMetricsOverride')
+            passed('live DPI change to 150 percent preserves hit geometry')
         control(page,name='nav-album'); control(page,text='Blatt 02')
+        page.set_viewport_size({'width':1280,'height':762}); page.wait_for_timeout(300)
         before = state(page)['cells']
         # Long row 12 and column 12 from the established fixed fixture.
         for axis in ('row','column'):
             data = state(page); area = data[axis+'_area']; origin = data['origin']; step = data['cell_size']
             position = [area[0]+area[2]/2, origin[1]+11.5*step] if axis=='row' else [origin[0]+11.5*step,area[1]+area[3]/2]
             start = point(page,position)
+            old_steps = data[axis+'_steps']
             page.mouse.move(*start); page.mouse.down(button='middle')
             page.mouse.move(start[0]+(180 if axis=='row' else 0),start[1]+(180 if axis=='column' else 0),steps=8)
             page.mouse.up(button='middle'); page.wait_for_timeout(250)
             assert state(page)['cells'] == before
+            assert state(page)[axis+'_steps'] != old_steps, (axis,old_steps,state(page)[axis+'_steps'])
         page.screenshot(path=str(output/f'{name}-colour-clues.png'))
-        passed('middle mouse clue routes preserve cells')
+        passed('middle mouse moves long row/column clue windows and preserves cells')
+        page.set_viewport_size({'width':1920,'height':1122}); page.wait_for_timeout(300)
         control(page,name='nav-album'); control(page,text='Blatt 03')
         draw(page,(0,2),(4,2)); wait(page,'picrossProbe.ending && picrossProbe.completed')
         control(page,text='Zurück ins Album')
@@ -174,27 +205,75 @@ def exercise(pw, name, root, url, output, evidence):
         control(page,name='menu'); control(page,text='Beenden')
         page.wait_for_timeout(500)
         assert page.locator('#retry').is_visible() and not page.locator('#message').is_visible()
-        page.evaluate('IDBDatabase.prototype.transaction = window.originalTransaction')
+        page.evaluate('() => { IDBDatabase.prototype.transaction = window.originalTransaction; }')
         page.locator('#retry').click(); saved(page)
         passed('actual IndexedDB write failure is visible; own quit stays open; retry commits')
+        # End a document without beforeunload while a real transaction fails.
+        control(page,name='nav-work')
+        durable = state(page)['cells']
+        page.evaluate('''() => { IDBDatabase.prototype.transaction = function(...args) { if(args[1]==='readwrite') throw new DOMException('blocked','QuotaExceededError'); return originalTransaction.apply(this,args); }; }''')
+        draw(page,(4,2)); wait(page,'!!picrossStorage.error')
+        page.close(run_before_unload=False)
+        page, errors = open_page(context,url)
+        control(page,text='Blatt 06')
+        assert state(page)['cells'] == durable
+        passed('abrupt tab close loses unacknowledged edit but retains last acknowledged state')
         # Corrupt only a test slot primary, persist it, and load real recovery after reload.
-        control(page,name='nav-work'); control(page,name='nav-album'); control(page,text='Blatt 01')
+        control(page,name='nav-album'); control(page,text='Blatt 01')
         draw(page,(8,8)); saved(page)
         page.evaluate('''() => { picrossStorage.fs.writeFile(picrossProbe.root+'/t01.json','broken'); picrossStorage.changed(); }''')
         saved(page); page.reload(); wait(page,'window.picrossProbe && picrossProbe.album')
         assert state(page)['slot_status'][0] == 'recovered'
         passed('corrupt primary reload uses valid backup without silent overwrite')
+        assert page.evaluate("picrossStorage.fs.readFile(picrossProbe.root+'/t01.json',{encoding:'utf8'})") == 'broken'
+        control(page,text='Backup übernehmen'); control(page,text='Übernehmen',dialog=True)
+        saved(page)
+        assert state(page)['slot_status'][0] == 'loaded'
+        passed('explicit backup confirmation repairs primary through existing validation')
+        # Both copies become incompatible; startup must leave their bytes intact.
+        page.evaluate('''() => { for (const suffix of ['.json','.bak']) {
+          const path=picrossProbe.root+'/t01'+suffix;
+          const data=JSON.parse(picrossStorage.fs.readFile(path,{encoding:'utf8'}));
+          data.definition_revision+=1; picrossStorage.fs.writeFile(path,JSON.stringify(data));
+        } picrossStorage.changed(); }''')
+        saved(page)
+        incompatible = page.evaluate("picrossStorage.fs.readFile(picrossProbe.root+'/t01.json',{encoding:'utf8'})")
+        page.reload(); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
+        assert state(page)['slot_status'][0] == 'error'
+        assert page.evaluate("picrossStorage.fs.readFile(picrossProbe.root+'/t01.json',{encoding:'utf8'})") == incompatible
+        passed('incompatible revisions rejected without migration or overwrite')
         # Reset is exercised via the real confirmation dialog and preserves other slots.
         other = state(page)['slots'][4]
         control(page,tooltip='Blatt 01',text='Zurücksetzen')
-        control(page,text='Zurücksetzen')
+        control(page,text='Zurücksetzen',dialog=True)
         saved(page)
         assert state(page)['slots'][0]['history'] == [] and state(page)['slots'][4] == other
         passed('confirmed reset and slot isolation')
+        # Same origin under a path prefix still runs the real export and shares saves.
+        nested = root/'nested'
+        if not nested.exists(): shutil.copytree(update,nested)
+        page.goto(url+'nested/'); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
+        assert state(page)['slots'][4] == other
+        control(page,text='Blatt 06')
+        context.set_offline(True)
+        before = state(page)['cells']; draw(page,(7,7)); assert state(page)['cells'] != before
+        control(page,name='undo'); assert state(page)['cells'] == before
+        saved(page); context.set_offline(False)
+        passed('real subpath startup, stable saves and offline-after-load input')
+        control(page,name='nav-album')
         control(page,text='Beenden'); page.wait_for_function('document.getElementById("message").textContent.includes("Spiel beendet")')
         assert not page.evaluate('picrossStorage.pending')
         passed('own quit acknowledges durable sync and displays restart instruction')
         context.close()
+        with tempfile.TemporaryDirectory(prefix='picross-blocked-',ignore_cleanup_errors=True) as blocked_profile:
+            blocked = browser.launch_persistent_context(blocked_profile,headless=True)
+            try:
+                blocked.add_init_script("indexedDB.open = () => { throw new DOMException('blocked by test policy','SecurityError'); };")
+                denied = blocked.pages[0]; denied.goto(url)
+                denied.wait_for_function('document.getElementById("message").textContent.includes("Browserspeicher nicht verfügbar")',timeout=60000)
+                assert not denied.evaluate('picrossStorage.ready')
+                passed('blocked IndexedDB startup displays failure before gameplay')
+            finally: blocked.close()
     evidence['status'] = 'passed'
 
 
@@ -202,19 +281,26 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--update-build',type=Path,required=True)
     parser.add_argument('--browser',choices=['chromium','firefox','both'],default='both')
     args=parser.parse_args(); args.output.mkdir(parents=True,exist_ok=True)
-    server,url=serve(args.build.resolve())
-    report=dict(os=platform.platform(), manifest=json.loads((args.build/'build-manifest.json').read_text()),results=[])
+    hosting = tempfile.TemporaryDirectory(prefix='picross-browser-host-')
+    root = Path(hosting.name)/'site'
+    shutil.copytree(args.build,root)
+    server,url=serve(root)
+    report=dict(os=platform.platform(), manifest=json.loads((args.build/'build-manifest.json').read_text()),
+                update_manifest=json.loads((args.update_build/'build-manifest.json').read_text()),results=[])
     try:
         with sync_playwright() as pw:
             for name in (('chromium','firefox') if args.browser=='both' else (args.browser,)):
                 evidence = dict(browser=name, scenarios=[], status='failed')
                 report['results'].append(evidence)
-                exercise(pw,name,args.build,url,args.output,evidence)
+                shutil.copyfile(args.build/'index.html',root/'index.html')
+                exercise(pw,name,root,args.update_build,url,args.output,evidence)
     finally:
         (args.output/'browser-report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
         server.shutdown()
+        hosting.cleanup()
 
 
 if __name__=='__main__': main()
