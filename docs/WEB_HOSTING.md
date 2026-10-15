@@ -4,6 +4,8 @@ Zusätzliche statische Entwicklungsfassung aus [#162](https://github.com/venomen
 Godot Standard 4.7.2-stable, Single-Thread, WebGL 2 und WebAssembly; Desktop mit
 Maus in Chromium und Firefox. Windows, Regeln, Schema 1 und Savevalidierung
 bleiben erhalten. Kein Backend, PWA, Cloudsave oder automatisches Deployment.
+P1 enthält kein Audio; der Webstart verwendet deshalb Godots Dummy-Audiotreiber
+und erzeugt keine unbenötigten Browser-Audiokontexte.
 Technische Ergebnisse und Artefaktbindung stehen im zugehörigen Draft-PR.
 
 ## Build unter Windows/PowerShell
@@ -141,6 +143,15 @@ bei Fehler bleibt ein sichtbarer Retryweg. Ansichtsänderungen werden bis zu
 350 ms gebündelt. Fokus-/Sichtbarkeitswechsel fordern einen Flush an und verwerfen
 Gesten. Die eigene Beenden-Aktion wartet auf Persistenz; bei Fehler bleibt sie
 offen. Erfolg zeigt einen beendeten Zustand mit Neuladehinweis.
+
+Technischer Diagnosebefund der gebundenen Engine: Firefox kann beim Engineabschluss
+die Konsolenmeldung `Pages in use exist at exit in PagedAllocator` für
+`WorkerThreadPool::Group` ausgeben, auch im regulären Export. Dieser Cleanupbefund
+ist nicht behoben; die Nachweise führen ihn separat. Die Beenden-Prüfung verlangt
+weiterhin Exitcode 0, abgeschlossene Sicherung und erfolgreiche Wiederaufnahme
+per Reload. Andere Spiel-/Navigationsfehler sowie neue Fehler nach dem Reload
+bleiben Testfehler. Eine Wiederverwendung der beendeten Engine innerhalb derselben
+Seite ist nicht vorgesehen.
 
 Zwischen bestätigter Aktion und abgeschlossener IndexedDB-Transaktion bleibt ein
 asynchrones Verlustfenster; bei Ansichten zusätzlich die Bündelzeit. Abruptes
