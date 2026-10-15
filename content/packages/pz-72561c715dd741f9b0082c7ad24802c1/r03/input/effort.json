@@ -1,0 +1,18 @@
+{
+  "abstraction_rounds_prior_reported": 1,
+  "deduction_solver_calls": 4,
+  "format": "picross-authoring-effort-v1",
+  "generation_prompts_and_settings": "not_exposed",
+  "human_active_minutes": null,
+  "import_attempts": 4,
+  "independent_cli_verify_processes": 4,
+  "native_image_explorations_r02_reported": 3,
+  "native_image_generation_calls_current": 0,
+  "native_image_generation_calls_r01": 2,
+  "origin_reconstruction_checks": 4,
+  "raster_candidates": 4,
+  "repair_candidates": 0,
+  "repair_rounds": 0,
+  "time_estimate": null,
+  "total_native_image_generation_calls": null
+}
