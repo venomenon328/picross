@@ -105,6 +105,10 @@ func run() -> void:
 						motion_images.append(surface.get_texture().get_image())
 						sequence.append({"file":name+".png","seconds":app.reveal_view.elapsed})
 					next_frame += 0.10
+			if context[0] == 1280:
+				await RenderingServer.frame_post_draw
+				motion_images.append(surface.get_texture().get_image())
+				sequence.append({"file":"motion-%03d.png" % sequence.size(),"seconds":(Time.get_ticks_usec()-app.reveal_view.started_usec)/1000000.0})
 			final_checks()
 			check(app.reveal_view.artwork_rect() == target_rect, "EA caption arrival never changes image geometry")
 			check(save_bytes() == bytes, "EA presentation never rewrites save/history")
