@@ -8,10 +8,12 @@ from .images import inspect_candidate
 
 FORMAT = "picross-manual-authorization-v3"
 APPROVED_FORMAT = "picross-manual-authorization-v4"
+STALLED_FORMAT = "picross-manual-authorization-v5"
 
 
 def authorization(package, path, raw):
-    approved = raw.get("format") == APPROVED_FORMAT
+    stalled = raw.get("format") == STALLED_FORMAT
+    approved = raw.get("format") in (APPROVED_FORMAT, STALLED_FORMAT)
     motif_key = "approved_motif" if approved else "accepted_motif"
     a = exact_keys(raw, {"format", "puzzle_id", "revision", "original_zip_sha256", "handoff_sha256",
         "inventory_sha256", "selection", "owner_override", "superseded_content_blockers",
@@ -96,7 +98,8 @@ def authorization(package, path, raw):
     owner = load_json(owner_path, 256 * 1024)
     common = set(a) - {"format", "original_zip_sha256", "owner_override"}
     exact_keys(owner, common | {"format", "actor", "statement", "timestamp_utc", "package_sha256", "approval_sha256", "permissions"})
-    require(owner["format"] == ("picross-owner-override-v4" if approved else "picross-owner-override-v3") and
+    owner_format = "picross-owner-override-v5" if stalled else "picross-owner-override-v4" if approved else "picross-owner-override-v3"
+    require(owner["format"] == owner_format and
             all(owner[k] == a[k] for k in common) and
             owner["package_sha256"] == original, "Color owner input binding mismatch")
     for key in ("actor", "statement"):
@@ -104,7 +107,7 @@ def authorization(package, path, raw):
     timestamp(owner["timestamp_utc"])
     sha(owner["approval_sha256"])
     permissions = exact_keys(owner["permissions"], {"fixed_color_edits"} |
-                             (set() if approved else {"late_motif_acceptance"}))
+                             ({"stalled_color_base"} if stalled else set() if approved else {"late_motif_acceptance"}))
     require(all(v is True for v in permissions.values()), "Color owner permission scope mismatch")
     return {"record": a, "path": path, "sha256": file_hash(path), "owner": owner, "owner_path": owner_path}
 
@@ -163,7 +166,8 @@ def replay(matrix, design, record, plan, protected, budget):
 
 def inspect_chain(package, auth, budget):
     a, h = auth["record"], package.handoff
-    approved = a["format"] == APPROVED_FORMAT
+    stalled = a["format"] == STALLED_FORMAT
+    approved = a["format"] in (APPROVED_FORMAT, STALLED_FORMAT)
     base = a["base"]
     bundle = package.bundle(base["bundle"])
     if base["source_type"] == "repair":
@@ -178,10 +182,21 @@ def inspect_chain(package, auth, budget):
     else:
         candidate, _, checked = inspect_candidate(bundle, base["variant"], budget)
         original_result = load_json(bundle / (base["variant"] + "-result.json"))
-        require(checked["certified"] and checked["status"] == "solved" and
-                original_result.get("certified") is True and original_result.get("status") == "solved" and
-                original_result.get("proof_verified") is True, "Color import base certificate incomplete")
+        if stalled:
+            require(checked.get("proof_verified") is True and checked["status"] == "stalled" and
+                    checked["certified"] is False and original_result.get("status") == "stalled" and
+                    original_result.get("certified") is False and original_result.get("proof_verified") is True,
+                    "V5 requires an independently verified original stalled import")
+            if checked.get("certification") is not None:
+                assessment = checked.get("assessment", {})
+                require(assessment.get("baseline_verified") is True and assessment.get("baseline_status") == "stalled",
+                        "V5 requires a verified original line fixed point")
+        else:
+            require(checked["certified"] and checked["status"] == "solved" and
+                    original_result.get("certified") is True and original_result.get("status") == "solved" and
+                    original_result.get("proof_verified") is True, "Color import base certificate incomplete")
         design, matrix = candidate["design"], candidate["matrix"]
+    base_status = checked["status"]
     require(design["mode"] == "color" and 1 <= len(design["palette"]) <= 8 and
             1 <= design["width"] <= 50 and 1 <= design["height"] <= 50 and
             digest(matrix) == base["matrix_hash"], "Color base design/matrix mismatch")
@@ -223,6 +238,8 @@ def inspect_chain(package, auth, budget):
     source = {"kind": "manual", "variant": h["candidate"]["variant"], "candidate_id": current["id"],
               "reference": {"variant": base["variant"] if approved else h["candidate"]["variant"]}, "chain": chain,
               "changed_cells": sum(s["changed_cells"] for s in chain)}
+    if stalled:
+        source["base_deduction"] = {"status": base_status, "proof_verified": True, "certified": False}
     if approved:
         # The unchanged approved motif and its crop bind the original import.
         # Child pixel sources are only replay outputs, never replacement motifs.

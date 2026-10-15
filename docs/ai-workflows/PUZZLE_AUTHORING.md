@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 13 · 15.10.2026**
+**Version 0.5.0 · Dokumentrevision 14 · 15.10.2026**
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
@@ -504,12 +504,19 @@ Diese Exportversion ist von den Versionen menschlicher Änderungsautorisierungen
 zu unterscheiden; sie erteilt selbst keine Ausnahme oder Freigabe.
 
 Manuelle Ableitungen benötigen den passenden externen ZA-1-Autorisierungsvertrag
-(v1–v4) und die tatsächliche Erklärung für die konkrete Auswahl. Originalhandoff,
+(v1–v5) und die tatsächliche Erklärung für die konkrete Auswahl. Originalhandoff,
 Inventar und ursprüngliche Freigaben unverändert lassen; feste Edits, Schutzmasken,
 Herkunft und Endproof frisch prüfen. Historische `blocked`-/`raster_review`-Eingänge,
 späte Motivannahme oder eine Randregel-Ausnahme sind ausschließlich unter den
 jeweils ausdrücklich zugelassenen Bedingungen aus [ZA-1](../ZA1_ADAPTER.md) möglich.
 Keine pauschale Ausnahme aus einem manuellen Quelltyp oder einem neuen Solver ableiten.
+
+ZA-1-v5 erlaubt bei einer bereits freigegebenen Motivvorlage eine ausdrücklich
+autorisierte feste Farbkorrektur aus einem unabhängig bestätigten ursprünglichen
+`stalled`-Direktimport. Das vollständige Endzertifikat bleibt Pflicht. Die
+Originalbasis wird nicht als vollständig gelöst umetikettiert; v1–v4 behalten
+ihre bisherigen Anforderungen. Ein neuer Metadatenstand kann die tatsächliche
+Endabnahme aufnehmen, ohne versiegelte frühere Originale zu verändern.
 
 Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und dann:
 

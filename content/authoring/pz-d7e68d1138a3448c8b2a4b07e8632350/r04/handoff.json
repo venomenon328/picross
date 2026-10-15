@@ -1,0 +1,162 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        45,
+        16,
+        1200,
+        1248
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 32,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        32,
+        5,
+        1200,
+        1246
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 34,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    }
+  ],
+  "authorization": "Original Standardauftrag 3 with section 6 repository storage and same Draft-PR, no merge; current focused recheck expanded to all four original candidates. No new raster edits or repairs.",
+  "blockers": [
+    "logic: all four original candidates have at least two independently verified solutions; paired-line profiles stalled",
+    "visual: previous thin-leaf diagonal finding remains open on unchanged rasters"
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "category_id": "blumen-pflanzen",
+  "configuration": "configuration.json",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": "reveal-approval.json",
+    "motif": "motif-approval.json",
+    "provenance": "candidate-audit.json",
+    "logic": "candidate-audit.json",
+    "frame": "candidate-audit.json",
+    "visual": "visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "blocked",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "blocked",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "blocked",
+    "visual": "blocked"
+  },
+  "invariants": "invariants.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "40b9ef08749debc1df34841baede3c340461f684ad1986e9fb964b178a5e6bad"
+  },
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe",
+    "file": "motif/MA-r01.png",
+    "sha256": "bdc2dcb33cce3aa7960423655c487bee5792d75dedd9da0001d167cd1ed23a19"
+  },
+  "next_action": "Prepare a concrete revised production plan; unchanged candidates are ambiguous. Material motif changes require new motif approval. No final approval, integration or merge of r04.",
+  "origin_verification": "candidate-audit.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        45,
+        16,
+        1200,
+        1248
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 32,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        32,
+        5,
+        1200,
+        1246
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 34,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    }
+  ],
+  "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "repair": null,
+  "repo_commit": "3b64e1368735a1e9221389a48c51eaed0b881515",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "height": 30,
+    "mode": "color",
+    "width": 30
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveal/C-r01.png",
+    "sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe"
+  },
+  "revision": "r04",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 11,
+    "file": "rulebook.md",
+    "sha256": "97b09e7225f07e13483d142f78eebac9a9ba3b5a3b7fbf553d273630d1e32aea"
+  },
+  "state": "blocked",
+  "diagnostic_reference": {
+    "bundle": "imports/30x32-B",
+    "variant": "area"
+  },
+  "repair_attempts": {
+    "current_revision": null,
+    "historical_revision": "r03",
+    "historical_commit": "3c80f563210ca09ffa6bad5c077c1b4a5bacde00"
+  },
+  "difficulty": "difficulty.json",
+  "diagnostic_candidates": [
+    "30x32-A",
+    "30x32-B",
+    "32x34-A",
+    "32x34-B"
+  ],
+  "recheck_plan": [
+    "analysis-plan.json",
+    "analysis-plan-additional.json"
+  ]
+}

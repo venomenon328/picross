@@ -1,0 +1,30 @@
+{
+  "reviewer": "Prior assistant visual review plus actual current user acceptance",
+  "comparison": "comparison.png",
+  "checks": {
+    "recognition": {
+      "status": "erfüllt",
+      "reason": "Single oblique carnation with asymmetric crown, calyx, stem and two leaves remains recognizable."
+    },
+    "silhouette_proportions": {
+      "status": "erfüllt",
+      "reason": "Exactly one local leaf-edge addition; flower/calyx/stem and leaf endpoints unchanged. All956 other positions are byte-exact in the matrix."
+    },
+    "details_negative_spaces": {
+      "status": "erfüllt",
+      "reason": "Thin diagonal sections and some corner contacts remain exactly as shown in r05. The user accepted this concrete corrected raster and requested integration after that limitation was disclosed. No geometric improvement or new image claimed.",
+      "previous_status": "Korrektur nötig"
+    },
+    "palette_readability": {
+      "status": "erfüllt",
+      "reason": "Exactly the four approved red/dark-red and green/dark-green colors remain used. Three leaf shade changes introduce no new color; no color-vision simulation performed."
+    },
+    "series_aesthetics": {
+      "status": "erfüllt",
+      "reason": "Same crown shape, composition, palette and flat pixel treatment; no arbitrary red logic anchor or new decoration selected."
+    }
+  },
+  "material_motif_change": false,
+  "release_status": "Accepted corrected raster; unchanged thin-leaf limitation explicitly disclosed before the integration request.",
+  "acceptance": "acceptance.json"
+}

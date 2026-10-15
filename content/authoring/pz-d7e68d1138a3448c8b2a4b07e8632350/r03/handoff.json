@@ -1,0 +1,147 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        45,
+        16,
+        1200,
+        1248
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 32,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        32,
+        5,
+        1200,
+        1246
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 34,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    }
+  ],
+  "authorization": "Current user: Standardauftrag 3, exact r02 motif/corridor approval, section 6 commit/push and existing Draft-PR; no merge or integration.",
+  "blockers": [
+    "logic: all four imports stalled; two bounded repair rounds without full certificate",
+    "visual: thin leaf diagonals need a revised motif review"
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null
+  },
+  "category_id": "blumen-pflanzen",
+  "configuration": "configuration.json",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": "reveal-approval.json",
+    "motif": "motif-approval.json",
+    "provenance": "candidate-audit.json",
+    "logic": "candidate-audit.json",
+    "frame": "candidate-audit.json",
+    "visual": "visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "blocked",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "blocked",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "blocked",
+    "visual": "blocked"
+  },
+  "invariants": "invariants.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "ec11dece09a3f369d8879b0dcc77c52e04942510960398968f1c5a6b1e8f1a8a"
+  },
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe",
+    "file": "motif/MA-r01.png",
+    "sha256": "bdc2dcb33cce3aa7960423655c487bee5792d75dedd9da0001d167cd1ed23a19"
+  },
+  "next_action": "Prepare and explicitly approve a revised motif following next-plan.md before new raster production. No end approval or integration of r03.",
+  "origin_verification": "candidate-audit.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        45,
+        16,
+        1200,
+        1248
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 32,
+      "method": "area",
+      "mode": "color",
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        32,
+        5,
+        1200,
+        1246
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 34,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    }
+  ],
+  "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "repair": null,
+  "repo_commit": "993fc7502e5ebbceacb794844aece990b2009dc8",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "height": 30,
+    "mode": "color",
+    "width": 30
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveal/C-r01.png",
+    "sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 9,
+    "file": "rulebook.md",
+    "sha256": "aeab6bd7ea3c749f03eb175759477450fa4ed2eea31d11fc464cbe3a30d41b9e",
+    "version": "0.4.1"
+  },
+  "state": "blocked",
+  "diagnostic_reference": {
+    "bundle": "imports/30x32-B",
+    "variant": "area"
+  },
+  "repair_attempts": "repair-audit.json",
+  "difficulty": "difficulty.json"
+}
