@@ -1,0 +1,37 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "revision": "r04",
+  "category_id": "blumen-pflanzen",
+  "state": "blocked",
+  "repo_commit": "3b64e1368735a1e9221389a48c51eaed0b881515",
+  "package": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/r04/package.zip",
+    "bytes": 21606557,
+    "sha256": "c95adb6d8ccb83a05957a200f13172cbee1c8e1d3ff027c9e52a4ab9fedd8499"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/r04/handoff.json",
+    "sha256": "3b5a09ec8b6b97ed5e6ed6f537c4fa07aec87012695435b1485b9c10e6014ea6"
+  },
+  "inventory_sha256": "40b9ef08749debc1df34841baede3c340461f684ad1986e9fb964b178a5e6bad",
+  "final_editorial_approval": null,
+  "width": null,
+  "height": null,
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [
+    "logic: all four original candidates have at least two independently verified solutions; paired-line profiles stalled",
+    "visual: previous thin-leaf diagonal finding remains open on unchanged rasters"
+  ],
+  "next_action": "Prepare a concrete revised production plan; unchanged candidates are ambiguous. Material motif changes require new motif approval. No final approval, integration or merge of r04.",
+  "integration": null,
+  "updated_at_utc": "2026-10-15T00:21:16.674026+00:00",
+  "verification": {
+    "status": "pass",
+    "performed_at_utc": "2026-10-15T00:21:17.890201+00:00",
+    "scope": "Written ZIP: 164 files, exact inventory/handoff hashes and safe paths/modes/CRC/limits. Four current-source reconstructions match all original candidate/matrix/logic bytes; four independently verified line and paired fixpoints; eight independently verified distinct solution witnesses; all four frame rules pass. No complete certificate, no final difficulty or approval.",
+    "self_review": "Separate review of written ZIP inventory/bindings, exact handoff, source approvals, complete staged diff and all current reports completed. Corrected label font before final seal. UTF-8/LF and final newlines checked. Prior r01/r02/r03 and all runtime/tool/category files unchanged against their appropriate baselines. No independent human reviewer.",
+    "evidence": "https://github.com/venomenon328/picross/pull/138"
+  }
+}
