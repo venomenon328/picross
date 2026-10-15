@@ -21,9 +21,12 @@ def main():
             for name in ('chromium', 'firefox'):
                 with tempfile.TemporaryDirectory(prefix='picross-player-', ignore_cleanup_errors=True) as profile:
                     context = getattr(pw, name).launch_persistent_context(profile, headless=True, viewport={'width':1920,'height':1122})
+                    evidence = dict(browser=name, status='failed', errors=[])
+                    report['results'].append(evidence)
                     try:
                         page = context.pages[0]
-                        errors = []
+                        evidence['user_agent'] = page.evaluate('navigator.userAgent')
+                        errors = evidence['errors']
                         page.on('pageerror', lambda error: errors.append(str(error)))
                         page.on('console', lambda msg: errors.append(msg.text) if msg.type=='error' else None)
                         page.goto(url)
@@ -33,8 +36,14 @@ def main():
                         page.wait_for_timeout(2000)
                         assert not errors, errors
                         page.screenshot(path=str(args.output/f'{name}-regular-catalog.png'))
-                        report['results'].append(dict(browser=name, user_agent=page.evaluate('navigator.userAgent'), status='passed'))
+                        evidence['status'] = 'passed'
                         print('PLAYER PASS', name, flush=True)
+                    except Exception:
+                        evidence['message'] = page.locator('#message').inner_text()
+                        evidence['storage'] = page.locator('#storage').inner_text()
+                        page.screenshot(path=str(args.output/f'{name}-regular-failure.png'))
+                        print('PLAYER FAILURE', json.dumps(evidence), flush=True)
+                        raise
                     finally:
                         context.close()
     finally:
