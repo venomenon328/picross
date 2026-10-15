@@ -12,9 +12,9 @@ Merge der KB-Arbeit durch EA. Ein Paket, keine neuen Assets oder Produktoptionen
 | EA-A01 | Bestätigter Commit startet `completion.gd`: 250/650/400/650/200 ms. `ea_probe.gd` prüft Previewgrenze, sofortigen Save/History, Ausgangsgeometrie, vollständige Füllungen und reale native Bewegungsframes. |
 | EA-A02 | Gapless Raster aus bestätigten Spielerzellen, Originalpalette und leere Hintergründe; vorhandener Atlaszeichner liefert exakt dieselben Schraffurkommandos. Native Farb-/Rechteckprobe, keine neue Zelltextur. |
 | EA-A03 | Eigene Seitenverhältnisse, gemeinsamer Mittelpunkt im reservierten Papierbereich. Drei Kontexte 1280×720/UI125, 1920×1080/UI100, 2560×1440/UI125; zusätzlicher langer Name, Rechteck und Hochformat. |
-| EA-A04 | Wiederöffnung ohne Replay; zweiter tatsächlicher Prozess mit demselben isolierten Profil. Browser-Reinitialisierung nach bestätigtem IndexedDB-Sync. |
-| EA-A05 | Vorhandener BookButton/reset.svg, 44/55-Ziel. Zeiger öffnet Bestätigung, Abbruch unverändert, Fehler sichtbar, stabile ID und Dialogursprung auch bei zwischenzeitlichem Blattwechsel; erfolgreicher Abschlussreset öffnet das leere Blatt. Katalogreset bleibt bestehend. |
-| EA-A06 | Fokusverlust, Resize, UI-Skalierung, Web-Lifecycle, Katalog und Blattwechsel stoppen den Controller. Bestehende Save-/Recovery-/Quitregressionen bleiben im Pflichtpfad. |
+| EA-A04 | Vorhandener BookButton/reset.svg, 44/55-Ziel. Zeiger öffnet Bestätigung, Abbruch unverändert, Fehler sichtbar, stabile ID und Dialogursprung auch bei zwischenzeitlichem Blattwechsel; erfolgreicher Abschlussreset öffnet das leere Blatt. Katalogreset bleibt bestehend. |
+| EA-A05 | Fokusverlust, Resize, UI-Skalierung, Web-Lifecycle, Katalog und Blattwechsel stoppen den Controller. Bestehende Save-/Recovery-/Quitregressionen bleiben im Pflichtpfad. |
+| EA-A06 | Wiederöffnung ohne Replay; zweiter tatsächlicher Prozess mit demselben isolierten Profil. Browser-Reinitialisierung nach bestätigtem IndexedDB-Sync. |
 | EA-A07 | Keine Animation im Save, keine Timer je Zelle, keine dauerhafte Frameverarbeitung. Transiente Kommandos/Materialreferenz werden am Ende freigegeben; Artwork beim Verlassen. Regulärer Export-/PCK-Audit und PERF-B bleiben verpflichtend. |
 | EA-A08 | Vertragstexte und Spielanleitung aktualisiert; tatsächlicher Voll-Diff, getrenntes Selbstreview und aktuelle Head-/Basis-/Checkout-/Run-Bindung im Draft-PR. |
 

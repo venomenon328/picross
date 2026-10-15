@@ -378,8 +378,8 @@ func refresh() -> void:
 	if board is FullViewBoard and (not board.layout_valid or board.glyph_risk or board.view.cell_size < 16):
 		layout_warning.text = ("Zu wenig Platz" if not board.layout_valid else "Kleine / eng stehende Hinweise")
 	layout_warning.visible = not layout_warning.text.is_empty()
-	undo_button.disabled = session.gesture.active or session.player.cursor == 0
-	redo_button.disabled = session.gesture.active or session.player.cursor == session.player.history.size()
+	undo_button.disabled = session.completed or session.gesture.active or session.player.cursor == 0
+	redo_button.disabled = session.completed or session.gesture.active or session.player.cursor == session.player.history.size()
 	if session.completed and (work.visible or ending.visible) and not reveal_view.active:
 		work.hide()
 		ending.show()
@@ -471,6 +471,7 @@ func _schedule_view_save() -> void:
 		save_timer.start()
 
 func _undo() -> void:
+	if session.completed: return
 	board.clear_effects()
 	var old: int = session.player.cursor
 	session.undo()
@@ -479,11 +480,12 @@ func _undo() -> void:
 	refresh()
 
 func _redo() -> void:
+	if session.completed: return
 	board.clear_effects()
 	var old: int = session.player.cursor
 	session.redo()
 	if session.player.cursor != old:
-		_save_current()
+		_on_commit()
 	refresh()
 
 func _save_current() -> bool:
