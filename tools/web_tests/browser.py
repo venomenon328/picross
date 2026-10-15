@@ -310,7 +310,21 @@ def exercise(pw, name, root, update, url, output, evidence):
         control(page,name='nav-album')
         control(page,text='Beenden'); page.wait_for_function('document.getElementById("message").textContent.includes("Spiel beendet")')
         assert not page.evaluate('picrossStorage.pending')
-        passed('own quit acknowledges durable sync and displays restart instruction')
+        assert page.evaluate('picrossStorage.exitCode') == 0
+        # This pinned-engine diagnostic occurs only during engine teardown,
+        # including in the uninstrumented player. Keep it visible in evidence;
+        # gameplay/navigation errors above and all new restart errors still fail.
+        exit_errors = list(errors)
+        known_exit = ['ERROR: Pages in use exist at exit in PagedAllocator: N16WorkerThreadPool5GroupE',
+                      '   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)']
+        evidence['exit_diagnostics'] = exit_errors
+        assert exit_errors in ([], known_exit), exit_errors
+        page.reload()
+        wait(page,'window.picrossProbe && picrossProbe.album && picrossStorage.ready && document.getElementById("message").hidden')
+        saved(page)
+        assert state(page)['slots'][4] == other
+        assert errors == exit_errors, errors
+        passed('own quit acknowledges durable sync, exits zero and reload restores saved state')
         context.close()
         with tempfile.TemporaryDirectory(prefix='picross-blocked-',ignore_cleanup_errors=True) as blocked_profile:
             blocked = browser.launch_persistent_context(blocked_profile,**options(name))

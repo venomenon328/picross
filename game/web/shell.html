@@ -69,9 +69,14 @@ async function start() {
     });
     const engine = new Engine($GODOT_CONFIG);
     window.picrossStorage.engine = engine;
-    await engine.startGame({canvas, canvasResizePolicy:0, persistentPaths:['/userfs'],
+    // P1 has no audio. Avoid creating unused AudioContexts and their pending
+    // resume/suspend promises during browser navigation (notably Firefox).
+    await engine.startGame({canvas, canvasResizePolicy:0, persistentPaths:['/userfs'], args:['--audio-driver','Dummy'],
       onProgress: (done,total) => { message.textContent = total ? `Spiel wird geladen: ${Math.round(done/total*100)} %` : 'Spiel wird geladen …'; },
-      onExit: () => { showError('Spiel beendet. Zum Neustart diese Seite neu laden.'); },
+      onExit: code => {
+        window.picrossStorage.exitCode = code;
+        showError(code === 0 ? 'Spiel beendet. Zum Neustart diese Seite neu laden.' : 'Spiel mit Fehler beendet. Bitte diese Seite neu laden.');
+      },
       onPrintError: text => console.error(text)});
     if (!window.picrossStorage.ready) throw new Error('Browserspeicher nicht verfügbar. Websitedaten erlauben und neu laden.');
     message.hidden = true;
