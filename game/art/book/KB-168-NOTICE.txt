@@ -1,0 +1,10 @@
+KB / Issue #168, 16.10.2026
+
+Play and reset are original local SVG paths authored for picross in this package.
+Source: tools/book_icons_kb.json. Play opens the existing session; the circular
+reset arrow with small document lines opens the existing reset confirmation.
+The reset symbol is distinct from the historical open undo arrow.
+No third-party icon collection, emoji or system font is used.
+The other eleven icons retain their BP-3/Z2 sources. The historical source_commit
+in manifest.json identifies that original base, not the two new KB symbols.
+Font bytes, A book artwork and the three SL-65 frame images remain unchanged.

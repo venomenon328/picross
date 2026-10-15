@@ -11,6 +11,9 @@ BUILD_ID = re.compile(r"[0-9a-f]{40}-(player|test|dirty)-[0-9]{14}\Z")
 LICENSES = {'resources.json', 'Chalkboard-NOTICES.md', 'Bakso-NOTICES.md',
             'DelightCoffee-NOTICES.md', 'delight-coffee/More Info.txt',
             'delight-coffee/Read Me.pdf', 'Fraunces-OFL.txt', 'PlexSans-OFL.txt', 'Sidebar-NOTICES.txt'}
+# New exports include this notice through player_extras(). Keep previous WEB-1
+# bundles valid for explicit rollback; every present byte remains hash-bound.
+ADDITIONAL_LICENSES = {'KB-168-NOTICE.txt'}
 
 
 def digest(path: Path) -> str:
@@ -61,7 +64,7 @@ def validate_manifest(manifest: dict, *, allow_test: bool = False) -> dict:
         raise ValueError('Incomplete bundle')
     allowed = {'entry.html', 'index.js', 'index.wasm', 'index.pck', 'storage.js', 'SPIELANLEITUNG.md',
                'index.audio.worklet.js', 'index.audio.position.worklet.js', 'index.icon.png', 'index.apple-touch-icon.png', 'index.png'}
-    allowed.update('licenses/'+name for name in LICENSES)
+    allowed.update('licenses/'+name for name in LICENSES | ADDITIONAL_LICENSES)
     for name, entry in files.items():
         if not safe_name(name) or (name != 'index.html' and (not name.startswith(prefix) or
                 name[len(prefix):] not in allowed)):

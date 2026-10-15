@@ -1,5 +1,13 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+Der kompakte Katalog trägt denselben Bakso-Titel wie das Arbeitsblatt.
+Rechts neben den Metadaten stehen zwei kleine Symbolbuttons: Play öffnet mit
+„Spielen“, „Fortsetzen“ oder „Ansehen“ den vorhandenen Stand. Der kreisförmige
+Neustartpfeil („Rätsel zurücksetzen“) verlangt Bestätigung; Abbrechen lässt den
+Stand unverändert. Auch die übrige Kartenfläche öffnet das Blatt. Ungültige Saves
+sperren Öffnen; notwendige Backupaktionen bleiben als Text erreichbar.
+Papierbuttons und Tooltips folgen UI100/125, unabhängig vom Rasterzoom.
+
 Zusätzlich gibt es den [WEB-1-Browserentwicklungsweg](../docs/WEB_HOSTING.md):
 statischer Export für Chromium/Firefox mit Maus und dauerhaftem Browserspeicher.
 Die Kopfzeile zeigt Build und tatsächlichen Speicherstatus. Bei Speicherfehler
