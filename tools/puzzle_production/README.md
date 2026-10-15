@@ -15,6 +15,12 @@ ZA-1 ergänzt den allgemeinen Authoring-v2-Zieladapter und Datenregistrierung:
 [CLI, Schemas und Fehlerverhalten](../../docs/ZA1_ADAPTER.md),
 [Prüfzuordnung](../../docs/ZA1_VERIFICATION.md). Diese Befehle benötigen die
 isolierte Image-Umgebung mit Pillow 12.3.0. Alte Pilotprofile bleiben erhalten.
+Das reguläre Ziel unterstützt 1…8 Vordergrundfarben plus Leer. Ein ausdrücklich
+beauftragter Rasterersatz verwendet `plan-update` → `update` mit
+`--expected-definition-sha256`, höherer Runtime-Revision und neuer Paketrevision;
+Identität, Slot, Kategorie und Reveal bleiben erhalten. Recovery nutzt weiterhin
+`recover-registration`; Details und Grenzen im ZA-1-Vertrag. `register` allein
+überschreibt weiterhin keine vorhandenen Inhalte.
 
 Python **3.11+**, ausschließlich Standardbibliothek, ohne Installation von Paketen,
 Netzwerk-/Modellaufrufe oder P1-Abhängigkeit. Aus dem Repository-Root ausführen;

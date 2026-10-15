@@ -233,8 +233,9 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(isinstance(corridor, dict) and all(corridor.get(k) == design[k] for k in ("width", "height", "mode")) and
             corridor.get("foreground_colors") == len(design["palette"]) and corridor.get("method") == v["method"],
             "Motif approval parameter corridor differs")
-    require(1 <= design["width"] <= 50 and 1 <= design["height"] <= 50 and 1 <= len(design["palette"]) <= 4,
-            "Target profile requires 1..50 per axis and 1..4 foreground colors; no conversion")
+    color_limit = 4 if legacy else 8
+    require(1 <= design["width"] <= 50 and 1 <= design["height"] <= 50 and 1 <= len(design["palette"]) <= color_limit,
+            f"Target profile requires 1..50 per axis and 1..{color_limit} foreground colors; no conversion")
     left = any(row[0] != "empty" for row in matrix)
     right = any(row[-1] != "empty" for row in matrix)
     top, bottom = (any(v != "empty" for v in row) for row in (matrix[0], matrix[-1]))
@@ -509,11 +510,13 @@ def main(argv=None):
             p.add_argument("--category-id", required=True, action=ExplicitOnce)
             p.add_argument("--categories", type=Path, required=True, action=ExplicitOnce)
         p.add_argument("--manual-authorization", type=Path)
-    for cmd in ("verify-export", "plan", "register"):
+    for cmd in ("verify-export", "plan", "register", "plan-update", "update"):
         p = sub.add_parser(cmd)
         p.add_argument("--export", type=Path, required=True)
         if cmd != "verify-export":
             p.add_argument("--checkout", type=Path, required=True)
+        if cmd in ("plan-update", "update"):
+            p.add_argument("--expected-definition-sha256", required=True)
     for command in ("recover-registration", "sync-runtime", "check-registry"):
         p = sub.add_parser(command)
         p.add_argument("--checkout", type=Path, required=True)
@@ -548,6 +551,10 @@ def main(argv=None):
         elif args.command == "check-registry":
             from .content_registry import check_checkout
             result = {"status": "valid", "registry": check_checkout(args.checkout, replay=True)}
+        elif args.command in ("plan-update", "update"):
+            from .content_update import update
+            result = update(args.export, args.checkout, args.expected_definition_sha256,
+                            apply=args.command == "update")
         else:
             from .content_registry import registration
             result = registration(args.export, args.checkout, apply=args.command == "register")
