@@ -1,0 +1,67 @@
+{
+  "type": "human_motif_approval",
+  "actor": "Nutzer (Tobias)",
+  "timestamp_utc": "2026-10-15T20:11:00.803042+00:00",
+  "timestamp_basis": "Zeitpunkt der Protokollierung dieser im aktiven Nutzerauftrag tatsächlich erteilten Freigabe; Nachrichtenzeit nicht separat exponiert.",
+  "statement": "Ich gebe die Motivvorlage MA-r02.png im Paket r02 · MA-r02 frei; Parameter: parameterkorridor.json im Paket r02.",
+  "revision": "MA-r02",
+  "file": "MA-r02.png",
+  "sha256": "1cbb869b0301f0b6ba95c9f3327d61dbe0c595fceabcca3e64664d59fe0feaaa",
+  "puzzle_id": "pz-20219e14dbe242689b9ef06297828f34",
+  "derived_from_reveal_sha256": "82a90396033ea58038de07396a5d741e8edea745f711f91a07232ab912e2c278",
+  "evidence": "motif-approval-evidence.md",
+  "parameters": {
+    "width": 14,
+    "height": 30,
+    "mode": "mono",
+    "foreground_colors": 1,
+    "method": "area",
+    "fit": "exact",
+    "actual_crop": [
+      36,
+      0,
+      848,
+      1740
+    ]
+  },
+  "approved_alternatives": [
+    {
+      "width": 14,
+      "height": 30,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        36,
+        0,
+        848,
+        1740
+      ]
+    },
+    {
+      "width": 15,
+      "height": 30,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        9,
+        0,
+        879,
+        1740
+      ]
+    }
+  ],
+  "parameter_corridor": {
+    "file": "parameterkorridor.json",
+    "sha256": "74a9835c58bcea5d4ca218fbe9069209866be8625857119cf69425b9337a638b"
+  },
+  "source_package": {
+    "revision": "r02",
+    "repo_commit": "abb88bb51f5f2cda6c037e979e5c23fb096f0540",
+    "file": "content/authoring/pz-20219e14dbe242689b9ef06297828f34/r02/package.zip",
+    "sha256": "8d20a49073b3ff1fb39399b8777451afc8668cf4caaab156a9589594ceb7c48b"
+  }
+}

@@ -1,0 +1,7 @@
+# Windspiel · r04 · angenommene Endauswahl
+
+pz-20219e14dbe242689b9ef06297828f34, musik-buehne. Aktueller Quellen-/Toolcommit 7c6bb0902bdc1b7d2edf78eee95e466a7e7bed0c, Regelwerk 0.5.0/r14. Wiederaufnahme von unverändertem r03 nach tatsächlicher Nutzererklärung in [selection-acceptance.json](selection-acceptance.json). Die Pflichtquellen sind gegen aktuellen Main geprüft; Änderungen seit r03 betreffen Zellgesten, nicht Authoring-/Adapterverträge. Vorhandene Prüfbelege sind für unveränderte Quelle, Matrix, Hinweise und Proof passend weiterverwendet; ZA-1 prüft den geschriebenen ZIP-Eingang beim Export frisch.
+
+Auswahl genau import-14x30/area-128: 14×30, 420 Zellen, 140 ink/280 empty, eine Vordergrundfarbe; area/exact, Crop [36,0,848,1740], Schwelle 128. C-r01 und MA-r02 unverändert. Ringöffnung/obere Schnüre und Klöppelfreiraum sind die ausdrücklich vorgelegten Abweichungen. Der Nutzer nimmt die erste Version ausdrücklich ab; damit werden die redaktionellen Befunde für genau diese Matrix abgelöst, keine generelle Motivregel gelockert. Technische Gates bleiben vollständig erforderlich.
+
+Auftrag: Endabnahme dateigebunden sichern, bestehende Freigabe für Ablage-/Integrations-PR nach bestandenen Pflichtchecks umsetzen. Keine erneute Inhaltsauswahl, keine Matrix-/Bildkorrektur oder Werkzeugänderung. Runtime-ID bleibt Produktions-ID, Revision 1, Name Windspiel, Stem/Slot windspiel_001, Kategorie musik-buehne. Kein Release/Deployment. Nach bestätigtem Main-Merge Cleanup nach §9.

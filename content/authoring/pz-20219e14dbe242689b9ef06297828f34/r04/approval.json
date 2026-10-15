@@ -1,0 +1,20 @@
+{
+  "format": "picross-editorial-approval-v1",
+  "actor": "Nutzer (Tobias)",
+  "timestamp_utc": "2026-10-15T21:49:07.179954+00:00",
+  "statement": "Ich nehme die erste Version (14x30 area-128) ausdrücklich ab.",
+  "puzzle_id": "pz-20219e14dbe242689b9ef06297828f34",
+  "revision": "r04",
+  "handoff_sha256": "b107a2d70b1082039514e1ebf5f08683c85026ffbdaa571423ef1ccf30ccbd7d",
+  "inventory_sha256": "629732e5108cdf73a880762faabc8059918e5bb5e3387a75f79b0ddda874831b",
+  "selection": {
+    "variant": "area-128",
+    "matrix_hash": "44caa2899c4a52efb4f119b00a10fcd321eb35d6772cad691147ca4e51bb1dc2",
+    "logic_hash": "02749783538296b6244062243613179e6d1e4f1aae14940a1fc23c238b82cdd9",
+    "reveal": {
+      "file": "C-r01.png",
+      "sha256": "82a90396033ea58038de07396a5d741e8edea745f711f91a07232ab912e2c278"
+    }
+  },
+  "test_only": false
+}
