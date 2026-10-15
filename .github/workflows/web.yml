@@ -32,6 +32,9 @@ jobs:
       - name: Real isolated SSH and static HTTP reference
         run: python3 tools/web_tests/ssh_reference.py --build artifacts/web-player --output artifacts/web-evidence
       - name: Actual Chromium and Firefox event and persistence routes
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          PICROSS_WEB_SOFTWARE: '1'
         run: |
           xvfb-run -a "${{ runner.temp }}/web-venv/bin/python" tools/web_tests/smoke.py --build artifacts/web-player --output artifacts/web-evidence
           xvfb-run -a "${{ runner.temp }}/web-venv/bin/python" tools/web_tests/browser.py --build artifacts/web-test --update-build artifacts/web-test-update --output artifacts/web-evidence

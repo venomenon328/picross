@@ -138,6 +138,13 @@ ausgewählten Jobs. Spielerdateien bleiben 14 Tage, kompakte Berichte/Bilder und
 Fehlerlogs sieben Tage. Keine echten Saves, VPS-Zugangsdaten oder Testprofile im
 Artefakt. [WEB-1-Anleitung und Abnahmegrenzen](WEB_HOSTING.md).
 
+Der GPU-lose Linux-Webjob verwendet Mesa-Software-Rendering und aktiviert dafür
+`webgl.force-enabled` ausschließlich im temporären Firefox-Prüfprofil
+([Mozilla-Treiberhinweise](https://wiki.mozilla.org/Blocklisting/Blocked_Graphics_Drivers)).
+Browserberichte protokollieren Profiloptionen und den tatsächlich erzeugten
+WebGL-2-Kontext. Lokale Windows-Proben verwenden die Browserdefaults; der Spieler
+verlangt keine solche Voreinstellung und meldet fehlende WebGL-2-Unterstützung.
+
 Der [Product-Harness](../tools/p1_product.py) prüft die unveränderten aktiven
 Ressourcenbindungen, importiert die temporäre reguläre
 Spielkopie mit festem temporärem Testkatalog, führt die aktuelle Godot-Kernsuite einschließlich
