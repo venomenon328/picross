@@ -1,0 +1,12 @@
+{
+  "ai_production_rounds_this_revision": 1,
+  "completion_image_calls_in_prior_revision": 3,
+  "human_active_minutes": null,
+  "motif_image_calls_this_revision": 0,
+  "motif_revision_rounds": 1,
+  "new_image_calls": 0,
+  "raster_candidates": 4,
+  "raster_imports": 2,
+  "repair_attempts": 0,
+  "solve_time_minutes": null
+}

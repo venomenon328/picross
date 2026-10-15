@@ -1,7 +1,5 @@
 {
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
+  "blockers": [],
   "category_id": "haushalt-alltag",
   "difficulty": {
     "assessment_type": "editorial_estimate",
@@ -36,7 +34,10 @@
     },
     "time_estimate": null
   },
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r04/approval.json",
+    "sha256": "4d19f0ae0f48dcb79639a2e84ac579f554a0eb5fd7304796a83b083d20e9fad8"
+  },
   "foreground_colors": 1,
   "format": "picross-authoring-record-v1",
   "handoff": {
@@ -50,7 +51,23 @@
     "sha256": "5e27e9adea081912340e79865e96d0c37f82872803548f04b7c899185fc0bb01",
     "technical": true
   },
-  "integration": null,
+  "integration": {
+    "export_manifest_sha256": "574050ff57d696f7e23418d3c0d03b3518b3370b74d85879b266131a87e437af",
+    "file_review": {
+      "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r04/integration-file-review.json",
+      "sha256": "ba5bb529c71685b5c7c1e966841e946656ec6373970f2df31ff4f32f341c1398"
+    },
+    "inspection_sha256": "713ea1c270eaf20922579b1f61f3567765143089e9b8e92f81e0363ee58238e2",
+    "main_merge_commit": null,
+    "package": "content/packages/pz-51405ea1ad194507a60c9b6701d802f0/r04",
+    "registration": {
+      "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r04/registration-result.json",
+      "sha256": "84336254a24194ba94dd3294520aefdd52013f7959b527ae890cdd3caa4c2d71"
+    },
+    "runtime_id": "pz-51405ea1ad194507a60c9b6701d802f0",
+    "runtime_revision": 1,
+    "save_slot": "japanische_teekanne_001"
+  },
   "inventory_sha256": "be3b751a9d27a6c2ac211d223d12c0738664c656c904804990a84d4de235f63f",
   "mode": "mono",
   "motif": {
@@ -62,7 +79,7 @@
     "sha256": "6f6ec5ec68b7c039296566b6dfd4a5f39c5b6a0dd24f203abc2bd107f11c0cb0"
   },
   "motif_name": "Japanische Teekanne",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Nach Integrationsmerge Bereinigung gemäß §9",
   "package": {
     "bytes": 5828828,
     "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/r04/package.zip",
@@ -92,7 +109,7 @@
     }
   },
   "revision": "r04",
-  "state": "content_ready",
+  "state": "registered",
   "supersedes": {
     "commit": "8d63196998e425ec4454efd0091e58ba0187bf54",
     "reason": "Windows locale default decoded UTF-8 descriptive metadata incorrectly; rebuilt new revision from pristine r02 with explicit UTF-8. Unchanged source images, candidates, matrices and proofs reused.",
