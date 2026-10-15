@@ -16,8 +16,8 @@ import sys
 
 
 FORMAT = "picross-ci-selection-v1"
-JOBS = ("docs", "product", "production", "preflight")
-FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual", "perf_b")
+JOBS = ("docs", "product", "production", "preflight", "web")
+FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual", "perf_b", "web")
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 ZERO = "0" * 40
 
@@ -125,6 +125,8 @@ def classify(paths: list[str], force: str = "auto") -> dict:
     if force not in forced:
         raise ValueError("Unknown requested scope: " + force)
     add(forced[force], "explicit scope: " + force)
+    if selected["product"]:
+        add(("web",), "runtime/export changes require the browser contract")
     content_only = bool(paths) and all(content_path(path) for path in paths) and force == "auto"
     return {"format": FORMAT, "content_only": content_only, "selected": {"docs": True, **selected},
             "reasons": {"docs": ["documents, tool contracts and full diff"], **reasons},
@@ -147,7 +149,7 @@ def apply_event_policy(plan: dict, event: str) -> dict:
     if event == "push":
         # Preserve the existing main-push contract: docs plus changed production
         # checks. Product integration is established by the PR/test-merge run.
-        for key in ("product", "preflight", "integration", "pilots", "visual", "perf_b"):
+        for key in ("product", "preflight", "integration", "pilots", "visual", "perf_b", "web"):
             plan["selected"][key] = False
         plan["not_applicable_reason"] = "main integrity run; product and toolchain verification belong to the PR"
     return plan

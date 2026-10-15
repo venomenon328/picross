@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="./releases/@@BUILD@@/">
+<title>picross · Entwicklungsfassung</title>
+<style>
+html,body{margin:0;height:100%;background:#eee6d4;color:#302d26;font:16px sans-serif}
+body{display:flex;flex-direction:column} header{padding:6px 12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+main{position:relative;flex:1;min-height:0} canvas{display:block;width:100%;height:100%;outline:none}
+#message{position:absolute;inset:0;display:grid;place-content:center;background:#eee6d4eF;padding:24px;z-index:2}
+#message[hidden]{display:none} button{padding:5px 12px} #storage{margin-left:auto} #retry[hidden]{display:none}
+</style>
+</head>
+<body data-build="@@BUILD@@">
+<header><span>picross · Entwicklung · @@SHORT@@</span><a href="SPIELANLEITUNG.md">Anleitung</a>
+<button id="fullscreen">Vollbild</button><span id="storage" role="status">Speicher wird geprüft …</span><button id="retry" hidden>Speichern erneut versuchen</button></header>
+<main id="surface"><canvas id="canvas" tabindex="0">WebGL 2 und WebAssembly werden benötigt.</canvas><div id="message" role="status">Spiel wird geladen …</div></main>
+<script src="storage.js"></script>
+<script src="$GODOT_URL"></script>
+<script>
+"use strict";
+const canvas = document.getElementById('canvas');
+const message = document.getElementById('message');
+const resizeCanvas = () => {
+  const surface = document.getElementById('surface');
+  canvas.width = Math.max(1, surface.clientWidth);
+  canvas.height = Math.max(1, surface.clientHeight);
+};
+new ResizeObserver(resizeCanvas).observe(document.getElementById('surface'));
+resizeCanvas();
+const showError = text => { message.hidden = false; message.textContent = text; };
+window.picrossStorage = new PicrossStorage(document.getElementById('storage'), document.getElementById('retry'));
+// Browser actions are suppressed only on the game canvas.
+canvas.addEventListener('contextmenu', event => event.preventDefault());
+canvas.addEventListener('mousedown', event => { if (event.button === 1) event.preventDefault(); });
+canvas.addEventListener('wheel', event => event.preventDefault(), {passive:false});
+document.getElementById('fullscreen').onclick = () => {
+  const action = document.fullscreenElement ? document.exitFullscreen() : document.body.requestFullscreen();
+  action.catch(() => showError('Vollbild ist in diesem Browser nicht verfügbar. Bitte neu laden.'));
+};
+window.picrossLifecycle = null;
+const flush = () => { if (window.picrossLifecycle) window.picrossLifecycle(); };
+canvas.addEventListener('blur', flush);
+window.addEventListener('blur', flush);
+document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
+window.addEventListener('pagehide', flush);
+window.addEventListener('beforeunload', event => {
+  flush();
+  if (window.picrossStorage.pending || window.picrossStorage.error) { event.preventDefault(); event.returnValue = ''; }
+});
+async function start() {
+  if (!window.isSecureContext || !navigator.locks) throw new Error('HTTPS und ein Browser mit Web Locks werden benötigt.');
+  if (typeof WebAssembly === 'undefined' || !Engine.isWebGLAvailable(2)) throw new Error('WebAssembly und WebGL 2 werden benötigt.');
+  // The lock precedes IDBFS hydration. Never start a second stale writable filesystem.
+  await navigator.locks.request('picross-p1-userfs', {ifAvailable:true}, async lock => {
+    if (!lock) throw new Error('picross ist bereits in einem anderen Tab geöffnet. Diesen Tab schließen und hier neu laden.');
+    // Open the same IDBFS database before the expensive engine startup. Godot
+    // owns its schema/version upgrade; this only reports browser policy errors.
+    await new Promise((resolve, reject) => {
+      const denied = () => reject(new Error('Browserspeicher nicht verfügbar. Websitedaten erlauben und neu laden.'));
+      try {
+        const request = indexedDB.open('/userfs');
+        request.onerror = denied;
+        request.onblocked = denied;
+        request.onsuccess = () => { request.result.close(); resolve(); };
+      } catch (_) { denied(); }
+    });
+    const engine = new Engine($GODOT_CONFIG);
+    window.picrossStorage.engine = engine;
+    // P1 has no audio. Avoid creating unused AudioContexts and their pending
+    // resume/suspend promises during browser navigation (notably Firefox).
+    await engine.startGame({canvas, canvasResizePolicy:0, persistentPaths:['/userfs'], args:['--audio-driver','Dummy'],
+      onProgress: (done,total) => { message.textContent = total ? `Spiel wird geladen: ${Math.round(done/total*100)} %` : 'Spiel wird geladen …'; },
+      onExit: code => {
+        window.picrossStorage.exitCode = code;
+        showError(code === 0 ? 'Spiel beendet. Zum Neustart diese Seite neu laden.' : 'Spiel mit Fehler beendet. Bitte diese Seite neu laden.');
+      },
+      onPrintError: text => console.error(text)});
+    if (!window.picrossStorage.ready) throw new Error('Browserspeicher nicht verfügbar. Websitedaten erlauben und neu laden.');
+    message.hidden = true;
+    canvas.focus();
+    // Keep the lock until the document is destroyed, including the ended state.
+    await new Promise(() => {});
+  });
+}
+start().catch(error => showError('Start fehlgeschlagen: ' + error.message));
+</script>
+</body>
+</html>

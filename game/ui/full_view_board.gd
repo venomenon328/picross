@@ -491,6 +491,15 @@ func configure_typography(cell: float) -> void:
 	type_size = 1
 	for fs: int in range(maxi(1, ceili(cell * 4.0)), 0, -1):
 		var fits: bool = true
+		if OS.has_feature("web"):
+			# Reject only a measured, already impossible column envelope before
+			# rasterizing twelve baseline glyphs. No monotonicity or font cap:
+			# the centered numeric strike alone is a lower bound on its width.
+			for text: String in type_tokens.column:
+				if text.is_valid_int() and Typography.strike_width(text, fs, ui_scale) > limit:
+					fits = false
+					break
+			if not fits: continue
 		for axis: String in ["row", "column"]:
 			for text: String in type_tokens[axis]:
 				var box: Rect2 = Typography.envelope(text, fs, ui_scale)

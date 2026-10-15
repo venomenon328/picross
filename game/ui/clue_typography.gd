@@ -5,6 +5,22 @@ const REFERENCE = preload("res://ui/clue_font.tres")
 const SHA256: String = "4031afdb556558ffdecd48488fd1ae7eee857e804f4622ac5154cc7bb0c4cb23"
 static var font: FontFile
 static var vertical_cache: Dictionary = {}
+static var web_sizes: Dictionary = {}
+
+static func retain_web_size(f: Font, fs: int) -> void:
+	if not OS.has_feature("web"):
+		return
+	# Exact measurements survive in the numeric caches. Retain only a small
+	# working set of rasterized sizes while the exhaustive fit search runs;
+	# otherwise a tiny grid can exhaust the WebAssembly heap with glyph atlases.
+	var ts: TextServer = TextServerManager.get_primary_interface()
+	for rid: RID in f.get_rids():
+		var sizes: Array = web_sizes.get(rid, [])
+		sizes.erase(fs)
+		sizes.append(fs)
+		while sizes.size() > 8:
+			ts.font_remove_size_cache(rid, Vector2i(int(sizes.pop_front()), 0))
+		web_sizes[rid] = sizes
 
 static func selected() -> Font:
 	if font == null:
@@ -17,8 +33,15 @@ static func selected() -> Font:
 static func text_font(text: String) -> Font:
 	return selected() if text.is_valid_int() else REFERENCE
 
+static func strike_width(text: String, fs: int, ui: float) -> float:
+	var f: Font = text_font(text)
+	retain_web_size(f, fs)
+	# envelope() always includes this centered numeric status strike plus C1/AA.
+	return f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 2.0 * maxf(0.5, ui / 4.0)
+
 static func ink(text: String, fs: int) -> Rect2:
 	var f: Font = text_font(text)
+	retain_web_size(f, fs)
 	var ts: TextServer = TextServerManager.get_primary_interface()
 	var rid: RID = f.get_rids()[0]
 	var result: Rect2
@@ -47,6 +70,7 @@ static func baseline(fs: int) -> float:
 
 static func envelope(text: String, fs: int, ui: float) -> Rect2:
 	var f: Font = text_font(text)
+	retain_web_size(f, fs)
 	var width: float = f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	var origin: Vector2 = Vector2(-width / 2.0, baseline(fs))
 	var box: Rect2 = ink(text, fs)
