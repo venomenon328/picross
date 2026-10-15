@@ -843,11 +843,15 @@ func _layout_book() -> void:
 	_place(mini,Rect2(mini_position,Vector2.ONE*mini_extent))
 	_place(coordinate,Rect2(Vector2(axis-95*u,mini_position.y+mini_extent+20*u),Vector2(190,26)*u))
 	coordinate.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var palette_extent: Vector2 = Vector2.ONE*(44 if session == null or session.definition.palette.size()==1 else 98)*u
+	var palette_count: int = session.definition.palette.size() if session != null else 1
+	# Extra colors use a wider two-row group, retaining the existing vertical
+	# budget and 44px targets at the smallest supported window/UI scale.
+	var palette_columns: int = 4 if palette_count > 4 else 2
+	var palette_extent: Vector2 = Vector2.ONE*44*u if palette_count == 1 else Vector2((palette_columns-1)*54+44,98)*u
 	var palette_pos: Vector2 = Vector2(axis-palette_extent.x/2,coordinate.position.y+coordinate.size.y+18*u)
 	_place(palette_row,Rect2(palette_pos,palette_extent))
 	for i: int in range(palette_row.get_child_count()):
-		_place(palette_row.get_child(i),Rect2(Vector2(i%2,i/2)*54*u,Vector2.ONE*hit))
+		_place(palette_row.get_child(i),Rect2(Vector2(i%palette_columns,i/palette_columns)*54*u,Vector2.ONE*hit))
 	# The former bottom toolbar now holds only conditional non-numeric notices.
 	# Both notices share the cleared footer horizontally. Stacking them would
 	# cross the sloped paper edge on taller canvases; the board keeps its budget.

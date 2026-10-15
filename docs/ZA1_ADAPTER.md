@@ -5,7 +5,7 @@ Direkt-/Reparaturexporte mit Linienprofil verwenden v2, autorisierte manuelle Ab
 jeweils mit expliziter Kategorie und gehashtem Snapshot;
 Authoring-v2 und alte ZA-1-v1-Exporte bleiben technisch prüfbar.
 
-Issue [#74](https://github.com/venomenon328/picross/issues/74), Stand 13.10.2026.
+Issue [#74](https://github.com/venomenon328/picross/issues/74), Fortschreibung [#144](https://github.com/venomenon328/picross/issues/144), Stand 15.10.2026.
 `authoring-p1-rect-color-1` ergänzt Schema-2-Exporte; die Pilotprofile v1/v2 bleiben
 unverändert. #139 B/C ergänzt ausdrücklich gebundene Paarprofile und Export v4;
 kein Solver im Spiel.
@@ -34,7 +34,7 @@ alle anderen Originaldateien bindet es mit Größe und SHA-256.
 | Eingangsprüfung inklusive Extraktion | 300 Sekunden |
 | Importprüfung / vollständiger Reparatur-Replay | höchstens 120 / 60 Sekunden |
 | Proof-Linienbudget | 1.000.000; weitere RP-Budgets bleiben bestehen |
-| Raster | 1…50 pro Achse, Mono oder 1…4 Vordergrundfarben plus Leer |
+| Raster | 1…50 pro Achse, Mono oder 1…8 Vordergrundfarben plus Leer |
 | Reveal | PNG/SVG, 32 MiB, 8192 pro Achse, 8.000.000 Pixel |
 | Detailauflösung | mindestens zwei Pixel pro Zelle auf jeder Achse |
 | SVG | lokales begrenztes Formprofil, höchstens 10.000 Elemente |
@@ -185,7 +185,8 @@ python -m tools.puzzle_production.target_adapter recover-registration --checkout
 Recovery prüft vor jeder Änderung alte/neue Indizes, sichere Ziele und vorhandene
 Zielbytes. Fremdänderungen stoppen zur manuellen Prüfung. Identische erneute
 Übernahme ist `no-op`; abweichende Daten unter belegter ID/Revision sind Konflikte.
-Allgemeine Inhaltsupdates sind außerhalb ZA-1.
+`register` überschreibt belegte IDs weiterhin nicht. Für ausdrücklich beauftragte
+Rasterersetzungen gilt der unten beschriebene gesonderte Updatepfad.
 
 Prüfketten: `content/packages/<id>/<revision>/`, außerhalb des Spiels.
 `picross-authoring-derivation-v1` erhält Originalinventar und Handoff unverändert,
@@ -210,6 +211,56 @@ python tools/p1_product.py --cache-dir <toolchain-cache> --output-dir <neuer-pro
 ```
 
 Referenzeingang und Beleggrenzen: [ZA1_VERIFICATION.md](ZA1_VERIFICATION.md).
+
+## Expliziter Ersatz eines registrierten Rasters (#144)
+
+Die Eigentümeraufträge vom 15.10.2026 erlauben mehr als vier Vordergrundfarben
+und den Ersatz der bisherigen Warnemünde-Fassung. Die gemeinsame technische
+Obergrenze ist acht, passend zum bestehenden Produktionskern. Das reguläre
+Zielprofil und feste Farbableitungen unterstützen 1…8 Farben plus Leer; der
+eingefrorene v1-Exportweg behält seine Vierfarbgrenze. Neue Farben bleiben normale
+stabile IDs; keine Zusammenlegung oder geänderte Leer-Semantik. Die Spielpalette
+nutzt bei 5…8 Farben vier Spalten und zwei Reihen mit unveränderten Treffermaßen;
+1…4 Farben behalten ihre bisherige Geometrie.
+
+Ein neuer vollständig geprüfter und redaktionell freigegebener Export kann ein
+vorhandenes Raster mit **höherer Runtime-Revision** ersetzen. Produktions-ID,
+Key, Save-Slot, Runtimepfade, Sichtbarkeit, Kategorie und Revealbytes bleiben
+gleich. Das neue Paket benötigt eine neue Paketrevision; das alte Produktions-
+oder kompakte Integrationspaket wird unverändert behalten. Änderungen des
+Abschlussbilds oder der Identität sind außerhalb dieses begrenzten Updatepfads.
+
+```sh
+python -m tools.puzzle_production.target_adapter plan-update --export <neuer-export> --checkout <checkout> --expected-definition-sha256 <Hash-der-bisherigen-Definition>
+python -m tools.puzzle_production.target_adapter update --export <neuer-export> --checkout <checkout> --expected-definition-sha256 <derselbe-Hash>
+```
+
+API: `content_update.update(export_dir, checkout, expected_definition_sha256,
+apply=False|True)`. Der Plan ist lesend, nennt alle Add-/Replace-/Unchanged-Pfade,
+vorherige/neue Registry, Revisionen und den Hash des Updatemoduls. Der explizite
+Erwartungshash verhindert ein Überschreiben eines inzwischen geänderten Rasters.
+Die aktuelle Registry und der neue Export werden vollständig geprüft. Frischer
+Staging-Replay, exakte Dateihashes und unveränderte Ausgangsbytes gehen der
+Publikation voraus. Die Runtimeprojektion wird zuletzt geschrieben.
+
+Das exklusive `content/.registration-pending.json` verwendet bei Updates
+`picross-content-update-journal-v1`: alte/neue UTF-8-Bytes der beiden Indizes,
+Definition und Nutzungshinweise, unveränderte Kategorienbytes, sicherer neuer
+Paketpfad und dessen vollständige Dateihashes. Höchstens24 MiB Journal, bestehende
+Paket-/Dateigrenzen unverändert. Normale Fehler rollen zurück. Nach Prozessabbruch
+nutzt `recover-registration` denselben expliziten Recoverybefehl; alle aktuellen
+Bytes müssen entweder dem alten oder neuen Stand entsprechen, und vorhandene
+neue Paketdateien müssen ihren Hashes entsprechen. Fremdänderungen blockieren
+vor jeder Mutation. Nur das neue Paket wird beim Rollback entfernt.
+
+Keine echten Saves werden gelesen, migriert oder gelöscht. Schema1 bleibt;
+ein Save der alten Runtime-Revision wird nach bestehendem Vertrag als inkompatibel
+abgewiesen und nicht auf neue Maße/Farben angewendet. Ein explizit vom Nutzer
+ausgelöster Neustart unterliegt weiterhin dem bestehenden Save-/Recoverydialog.
+Gleicher Export mit aktuellem Erwartungshash darf `no-op` sein; der frühere Hash
+bleibt nach erfolgreichem Update absichtlich veraltet. Allgemeine Regressionen
+verwenden ausschließlich synthetische Inputs in `test_content_update.py` und
+`game/tests/multicolor_cases.gd`; keine reale Rätselprüfung in CI.
 
 ## Autorisierte manuelle Ableitungen
 
@@ -370,7 +421,7 @@ sind unzulässig. Keine anderen Gates werden dadurch aufgehoben.
   Referenzfelder `null`; bei RP-5 werden der vollständige ursprüngliche RP-3-
   Import, die Reparatur, alle Eltern und Proofs rekonstruiert. Der ausgewählte
   Reparaturkandidat muss zertifiziert sein. Maße höchstens 50 je Achse, Modus
-  `color`, höchstens vier Vordergrundfarben.
+  `color`, höchstens acht Vordergrundfarben.
 - `steps` enthält 1–8 Objekte mit genau `record`, `plan`, `output`, `protected`. Record/Plan
   sind `{file,sha256}`-Bindungen inventarisierter Dateien; Output enthält genau
   `bundle`, `variant`. Die letzte Stufe entspricht Handoff und
