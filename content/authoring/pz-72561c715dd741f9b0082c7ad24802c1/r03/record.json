@@ -1,7 +1,5 @@
 {
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
+  "blockers": [],
   "category_id": "obst-nuesse",
   "difficulty": {
     "assessment_type": "editorial_estimate",
@@ -36,8 +34,11 @@
     "samples": "audit/difficulty-samples.json",
     "time_estimate": null
   },
-  "editorial_approved": false,
-  "final_editorial_approval": null,
+  "editorial_approved": true,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/r03/approval.json",
+    "sha256": "67c8585de44e0e5e6b3c68e725398e1022427ddd885bf60a3911084cadf85ddd"
+  },
   "format": "picross-authoring-record-v1",
   "handoff": {
     "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/r03/handoff.json",
@@ -48,7 +49,17 @@
     "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/r03/inspection.json",
     "sha256": "aaa628f375e217ff655372ddc3c6c3f01730be1f88bfa395ecef8120fcaea03a"
   },
-  "integration": null,
+  "integration": {
+    "evidence": {
+      "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/r03/integration-evidence.json",
+      "sha256": "a462d590093e296bdc26f95a6ddbd66975ad82632468b7bc5b5350e8d7aa375e"
+    },
+    "export_manifest_sha256": "0535e1b8264500386d484028a73d6296ee55319abe839080225234ae76f934c6",
+    "package": "content/packages/pz-72561c715dd741f9b0082c7ad24802c1/r03",
+    "runtime_revision": 1,
+    "save_slot": "pfirsich_001",
+    "state": "registered"
+  },
   "inventory_sha256": "c42dbfdbccec3b3698e5fce2672c28a55a9567ca61e2b27bf924530a1ee1d507",
   "mode": "color",
   "motif": {
@@ -60,8 +71,8 @@
     "variant": "MA-r01"
   },
   "motif_name": "Pfirsich",
-  "native_checks": "nicht erforderlich: reine Authoring-Inhalte",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "native_checks": "nicht erforderlich: reine Inhaltsintegration",
+  "next_action": "Beauftragten Integrationsmerge nach Pflichtprüfungen ausführen; anschließend §9-Bereinigung.",
   "package": {
     "bytes": 3026190,
     "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/r03/package.zip",
@@ -93,11 +104,11 @@
   },
   "revision": "r03",
   "source_repo_commit": "4fe8e42d3b2751feba7df4a03ad1b5cd1f354e7e",
-  "state": "content_ready",
-  "storage_branch": "chore/pz-72561c71-r03",
-  "target_export_status": "not_performed: awaiting human final approval",
+  "state": "registered",
+  "storage_branch": "content/pfirsich-r03-integration",
+  "target_export_status": "passed: categorized ZA-1-v2 export",
   "technical": true,
-  "updated_at_utc": "2026-10-15T15:46:20.454368+00:00",
+  "updated_at_utc": "2026-10-15T15:54:44.728266+00:00",
   "used_foreground_colors": 3,
   "width": 32
 }

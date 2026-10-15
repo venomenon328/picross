@@ -1,0 +1,15 @@
+{
+  "author": "Native AI image generation in ChatGPT under user commission",
+  "derivation": "abstraction.json",
+  "derived_from": {
+    "file": "reveal/B-r01.png",
+    "sha256": "02805fd71b357341b2bd354d5ce9761b55a36cce3e90b6f36a4fc66e1fc1b4ab"
+  },
+  "file": "motif/MA-r01.png",
+  "generation_prompts": "not_exposed",
+  "generation_settings": "not_exposed",
+  "input": "source/generation.json",
+  "puzzle_id": "pz-72561c715dd741f9b0082c7ad24802c1",
+  "sha256": "e016b71b81ad31376444ad139b803513a4f669e7ca0360cb32c71cc5f6ab2f73",
+  "usage_basis": "Original commissioned image; original brief records no third-party reference. No publication or release performed."
+}
