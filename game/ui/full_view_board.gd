@@ -155,6 +155,12 @@ func _layout() -> void:
 func shared_clue_slot_extent(axis: String, _font: Font, _fs: int) -> float:
 	return pitch_for(axis)
 
+func refresh_clue_hover() -> void:
+	if not layout_valid:
+		clear_clue_hover()
+		return
+	super.refresh_clue_hover()
+
 func row_clue_area() -> Rect2:
 	var area: Rect2 = super.row_clue_area()
 	area.position.x += composition_shift.x
