@@ -1,0 +1,37 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "revision": "r05",
+  "category_id": "blumen-pflanzen",
+  "state": "raster_review",
+  "repo_commit": "fbb74f96abc223d3b42437ff5d6c48d54121ef39",
+  "package": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/r05/package.zip",
+    "bytes": 5624147,
+    "sha256": "55fcfcd83d8ea6249359d620a0d371e1f2a973a62443598dffb398f2e1e130d7"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/r05/handoff.json",
+    "sha256": "553da12772fdde420984c8051ce7d2b504eda983fccc8fb5191d34347d6c46d6"
+  },
+  "inventory_sha256": "61890cafaa3da70b72480b4a0746d0b594969ad83d04328fe564984bf221ceb1",
+  "final_editorial_approval": null,
+  "width": 30,
+  "height": 32,
+  "mode": "color",
+  "difficulty": "L3",
+  "blockers": [
+    "ZA-1: current approved-motif fixed-color integration requires a fully certified base import; original30x32-B is multiple. No supported export readiness or manual authorization claimed.",
+    "Visual: thin diagonal leaf portions remain a documented limitation and await editorial raster review."
+  ],
+  "next_action": "Review the corrected raster and remaining thin-leaf visual limitation. Before game integration, resolve the explicitly documented ZA-1 requirement for a certified original base; no end approval, export or merge authorized.",
+  "integration": null,
+  "updated_at_utc": "2026-10-15T11:48:42.382823+00:00",
+  "verification": {
+    "status": "pass",
+    "performed_at_utc": "2026-10-15T11:48:43.065722+00:00",
+    "scope": "Written ZIP 129 files: exact inventory, hashes, handoff copy, safe paths/modes/CRC/limits and UTF-8/LF. Exact four-cell replay,956 unchanged cells; independently solved baseline and paired proof with target equality, unique diagnosis, four colors and frame rule. Both aborted RP5 bundles replayed without status upgrade. Visual and target-adapter limitations remain explicitly open.",
+    "self_review": "Separate complete staged diff and written-package review completed: all parent/child/plan/proof bindings, exact four-cell changes, protected positions, real approvals, report/difficulty uncertainty and open adapter/visual gates checked. Comparison image visually reviewed. Earlier r01-r04 unchanged; no tool/runtime/test/category diff against current main. No independent human reviewer.",
+    "evidence": "https://github.com/venomenon328/picross/pull/138"
+  }
+}
