@@ -1,4 +1,0 @@
-Fixed local raster correction, not unchanged motif import. Original motif/reveal approvals retained; current manual derivation is for raster review and has no external ZA-1 authorization or final approval.
-
-Working mode: faithful
-Motif and gameplay review: open
