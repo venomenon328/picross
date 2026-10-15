@@ -1,0 +1,81 @@
+{
+  "format": "picross-editorial-final-assessment-v1",
+  "puzzle_id": "pz-20219e14dbe242689b9ef06297828f34",
+  "revision": "r04",
+  "selection": {
+    "variant": "area-128",
+    "matrix_hash": "44caa2899c4a52efb4f119b00a10fcd321eb35d6772cad691147ca4e51bb1dc2",
+    "logic_hash": "02749783538296b6244062243613179e6d1e4f1aae14940a1fc23c238b82cdd9",
+    "reveal": {
+      "file": "C-r01.png",
+      "sha256": "82a90396033ea58038de07396a5d741e8edea745f711f91a07232ab912e2c278"
+    }
+  },
+  "earlier_review": "visual-review.json",
+  "original_findings": {
+    "bundle": "import-14x30",
+    "variant": "area-128",
+    "matrix_hash": "44caa2899c4a52efb4f119b00a10fcd321eb35d6772cad691147ca4e51bb1dc2",
+    "raster": "import-14x30/area-128-raster.png",
+    "recognition": {
+      "status": "Korrektur nötig",
+      "reason": "Vier unterschiedlich lange Stäbe und Oval lassen das Windspiel erahnen; geschützte Aufhängung und freier Klöppel sind beschädigt."
+    },
+    "silhouette_proportions": {
+      "status": "Korrektur nötig",
+      "reason": "Grundlängenfolge und Oval erhalten, aber Ring und feine Verbindungen werden nicht erhalten."
+    },
+    "important_details_negative_spaces": {
+      "status": "verfehlt",
+      "reason": "Ringöffnung fehlt; Klöppel bildet mindestens eine horizontale Brücke zu beiden inneren Röhren. Explizit geschützte Negativräume geschlossen."
+    },
+    "palette_mono_readability": {
+      "status": "erfüllt",
+      "reason": "Genau ink plus empty, Schwarz auf Weiß. Keine Farbverwechslung; keine Farbsinnsimulation für Mono erforderlich."
+    },
+    "series_style": {
+      "status": "Korrektur nötig",
+      "reason": "Ruhige Hauptflächen und Oval bleiben, die defekten Verbindungen entsprechen nicht der sauberen Motivvorlage."
+    },
+    "additional_findings": [
+      "Obere Ring- und Diagonalaufhängung verschwindet vollständig; leere Zeilen 1–4 und 7 unterbrechen den Aufbau."
+    ],
+    "suitable_for_logic_repair": false,
+    "selected": false,
+    "frame": {
+      "left": true,
+      "right": true,
+      "top": false,
+      "bottom": true,
+      "valid": true
+    },
+    "soft_threshold_review": {
+      "occupancy_percent": 33.33,
+      "occupancy_warning": false,
+      "isolated_cells": [],
+      "empty_rows": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        21
+      ],
+      "empty_columns": [],
+      "assessment": "Keine Warnung aus Belegungsanteil (20,22–40,22 %). Einzelpixel und Leerlinien sind konkret mit den verlorenen Verbindungen verglichen; harte Motivbefunde werden nicht als weiche Ausnahme akzeptiert."
+    }
+  },
+  "human_acceptance": "selection-acceptance.json",
+  "status": "accepted_by_owner_with_visible_deviations",
+  "gate_decision": "visual/reveal_consistency bestanden für genau die vom Nutzer ausdrücklich angenommene Stilisierung; keine Behauptung, Ringloch und Klöppelfreiraum seien technisch erhalten.",
+  "recognition": "Vier vertikale Röhren mit gestaffelten Längen und ovalem Windsegel bleiben erkennbar; Enthüllung C-r01 klärt die Monoabstraktion.",
+  "silhouette_proportions": "Grundaufbau, Röhrenfolge und Oval erhalten; oben reduzierte Aufhängung ausdrücklich vorgelegt und angenommen.",
+  "negative_spaces": "Ringlochverlust und zentrale Röhrenbrücke bleiben tatsächliche Abweichungen, durch konkrete Nutzerabnahme für diese Auswahl redaktionell akzeptiert.",
+  "mono_palette": "Eine tatsächliche Vordergrundfarbe ink #000000 plus empty #ffffff, gut unterscheidbar.",
+  "series_style": "Ruhige Mono-Flächen als akzeptierte Stilisierung zum unveränderten farbigen C-r01.",
+  "soft_findings": "33,33 % belegt, keine Belegungswarnung. Leere Zeilen und getrennte obere Elemente sind bekannt und zusammen mit Ring-/Schnurverlust angenommen.",
+  "matrix_edits": 0,
+  "repair_rounds": 0,
+  "repair_diff": null,
+  "remaining_content_blockers": []
+}

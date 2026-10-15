@@ -1,0 +1,5310 @@
+{
+  "format": "picross-editorial-progress-checkpoints-v1",
+  "logic_hash": "02749783538296b6244062243613179e6d1e4f1aae14940a1fc23c238b82cdd9",
+  "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+  "proof_file_sha256": "4f5729d35876b9d41072d42ef7e90696e0e3d362fabcdf89cdb1cce5c6537f07",
+  "method": "Unabhängige Linienunterstützung aller 44 Linien vor jedem gespeicherten Proofschritt; descriptive progress counts, no R0-R3 classification.",
+  "cleanup_threshold": 9,
+  "minimum_productive_lines_before_cleanup": 8,
+  "checkpoints": [
+    {
+      "before_step": 0,
+      "open_cells": 420,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 0,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 6
+        }
+      ]
+    },
+    {
+      "before_step": 1,
+      "open_cells": 406,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 1,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 8
+        }
+      ]
+    },
+    {
+      "before_step": 2,
+      "open_cells": 392,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 2,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 10
+        }
+      ]
+    },
+    {
+      "before_step": 3,
+      "open_cells": 378,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 3,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 4,
+      "open_cells": 364,
+      "cleanup": false,
+      "productive_line_count": 9,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 2
+        }
+      ]
+    },
+    {
+      "before_step": 5,
+      "open_cells": 358,
+      "cleanup": false,
+      "productive_line_count": 11,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 6,
+          "changed_cells": 14
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 3
+        }
+      ]
+    },
+    {
+      "before_step": 6,
+      "open_cells": 344,
+      "cleanup": false,
+      "productive_line_count": 11,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        }
+      ]
+    },
+    {
+      "before_step": 7,
+      "open_cells": 340,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 16
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        }
+      ]
+    },
+    {
+      "before_step": 8,
+      "open_cells": 339,
+      "cleanup": false,
+      "productive_line_count": 9,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 20,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 4
+        }
+      ]
+    },
+    {
+      "before_step": 9,
+      "open_cells": 325,
+      "cleanup": false,
+      "productive_line_count": 8,
+      "productive_lines": [
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 20
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 24
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 23
+        }
+      ]
+    },
+    {
+      "before_step": 10,
+      "open_cells": 305,
+      "cleanup": false,
+      "productive_line_count": 16,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 2,
+          "changed_cells": 24
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 23
+        }
+      ]
+    },
+    {
+      "before_step": 11,
+      "open_cells": 281,
+      "cleanup": false,
+      "productive_line_count": 29,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 23
+        }
+      ]
+    },
+    {
+      "before_step": 12,
+      "open_cells": 264,
+      "cleanup": false,
+      "productive_line_count": 29,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 23
+        }
+      ]
+    },
+    {
+      "before_step": 13,
+      "open_cells": 252,
+      "cleanup": false,
+      "productive_line_count": 28,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 23
+        }
+      ]
+    },
+    {
+      "before_step": 14,
+      "open_cells": 251,
+      "cleanup": false,
+      "productive_line_count": 27,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 23
+        }
+      ]
+    },
+    {
+      "before_step": 15,
+      "open_cells": 250,
+      "cleanup": false,
+      "productive_line_count": 26,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 23
+        }
+      ]
+    },
+    {
+      "before_step": 16,
+      "open_cells": 233,
+      "cleanup": false,
+      "productive_line_count": 25,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 9,
+          "changed_cells": 23
+        }
+      ]
+    },
+    {
+      "before_step": 17,
+      "open_cells": 210,
+      "cleanup": false,
+      "productive_line_count": 24,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        }
+      ]
+    },
+    {
+      "before_step": 18,
+      "open_cells": 204,
+      "cleanup": false,
+      "productive_line_count": 25,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 18
+        }
+      ]
+    },
+    {
+      "before_step": 19,
+      "open_cells": 198,
+      "cleanup": false,
+      "productive_line_count": 25,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 18
+        }
+      ]
+    },
+    {
+      "before_step": 20,
+      "open_cells": 192,
+      "cleanup": false,
+      "productive_line_count": 24,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 16
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 17
+        }
+      ]
+    },
+    {
+      "before_step": 21,
+      "open_cells": 186,
+      "cleanup": false,
+      "productive_line_count": 24,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 19
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 16
+        }
+      ]
+    },
+    {
+      "before_step": 22,
+      "open_cells": 180,
+      "cleanup": false,
+      "productive_line_count": 23,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 18
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 16
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 15
+        }
+      ]
+    },
+    {
+      "before_step": 23,
+      "open_cells": 176,
+      "cleanup": false,
+      "productive_line_count": 22,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 18
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 16
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 14
+        }
+      ]
+    },
+    {
+      "before_step": 24,
+      "open_cells": 172,
+      "cleanup": false,
+      "productive_line_count": 21,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 16
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 13
+        }
+      ]
+    },
+    {
+      "before_step": 25,
+      "open_cells": 166,
+      "cleanup": false,
+      "productive_line_count": 20,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 16
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 12
+        }
+      ]
+    },
+    {
+      "before_step": 26,
+      "open_cells": 160,
+      "cleanup": false,
+      "productive_line_count": 19,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 17,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 13
+        }
+      ]
+    },
+    {
+      "before_step": 27,
+      "open_cells": 150,
+      "cleanup": false,
+      "productive_line_count": 19,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 18,
+          "changed_cells": 10
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 12
+        }
+      ]
+    },
+    {
+      "before_step": 28,
+      "open_cells": 140,
+      "cleanup": false,
+      "productive_line_count": 19,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 11
+        }
+      ]
+    },
+    {
+      "before_step": 29,
+      "open_cells": 138,
+      "cleanup": false,
+      "productive_line_count": 18,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 11
+        }
+      ]
+    },
+    {
+      "before_step": 30,
+      "open_cells": 136,
+      "cleanup": false,
+      "productive_line_count": 17,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 23,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 11
+        }
+      ]
+    },
+    {
+      "before_step": 31,
+      "open_cells": 128,
+      "cleanup": false,
+      "productive_line_count": 16,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 24,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 12
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 19
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 10
+        }
+      ]
+    },
+    {
+      "before_step": 32,
+      "open_cells": 120,
+      "cleanup": false,
+      "productive_line_count": 15,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 25,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 11
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 18
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 9
+        }
+      ]
+    },
+    {
+      "before_step": 33,
+      "open_cells": 112,
+      "cleanup": false,
+      "productive_line_count": 14,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 26,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 10
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 17
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 8
+        }
+      ]
+    },
+    {
+      "before_step": 34,
+      "open_cells": 104,
+      "cleanup": false,
+      "productive_line_count": 13,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 27,
+          "changed_cells": 8
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 16
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        }
+      ]
+    },
+    {
+      "before_step": 35,
+      "open_cells": 96,
+      "cleanup": false,
+      "productive_line_count": 12,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 6
+        }
+      ]
+    },
+    {
+      "before_step": 36,
+      "open_cells": 94,
+      "cleanup": false,
+      "productive_line_count": 11,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 6
+        }
+      ]
+    },
+    {
+      "before_step": 37,
+      "open_cells": 92,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 6
+        }
+      ]
+    },
+    {
+      "before_step": 38,
+      "open_cells": 89,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 15
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 7
+        }
+      ]
+    },
+    {
+      "before_step": 39,
+      "open_cells": 86,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 6
+        }
+      ]
+    },
+    {
+      "before_step": 40,
+      "open_cells": 83,
+      "cleanup": false,
+      "productive_line_count": 9,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 9
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 8
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 6
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 14
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 6
+        }
+      ]
+    },
+    {
+      "before_step": 41,
+      "open_cells": 74,
+      "cleanup": false,
+      "productive_line_count": 8,
+      "productive_lines": [
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 3,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 5
+        }
+      ]
+    },
+    {
+      "before_step": 42,
+      "open_cells": 71,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 5
+        }
+      ]
+    },
+    {
+      "before_step": 43,
+      "open_cells": 70,
+      "cleanup": false,
+      "productive_line_count": 9,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 7,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 5
+        }
+      ]
+    },
+    {
+      "before_step": 44,
+      "open_cells": 65,
+      "cleanup": false,
+      "productive_line_count": 13,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 7
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 13
+        },
+        {
+          "axis": "column",
+          "index": 12,
+          "changed_cells": 5
+        }
+      ]
+    },
+    {
+      "before_step": 45,
+      "open_cells": 60,
+      "cleanup": false,
+      "productive_line_count": 12,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 6
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 6,
+          "changed_cells": 7
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 13
+        }
+      ]
+    },
+    {
+      "before_step": 46,
+      "open_cells": 53,
+      "cleanup": false,
+      "productive_line_count": 13,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 13
+        }
+      ]
+    },
+    {
+      "before_step": 47,
+      "open_cells": 50,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 5
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 5
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 13
+        }
+      ]
+    },
+    {
+      "before_step": 48,
+      "open_cells": 37,
+      "cleanup": false,
+      "productive_line_count": 17,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 19,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 1,
+          "changed_cells": 2
+        }
+      ]
+    },
+    {
+      "before_step": 49,
+      "open_cells": 35,
+      "cleanup": false,
+      "productive_line_count": 15,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 4
+        }
+      ]
+    },
+    {
+      "before_step": 50,
+      "open_cells": 34,
+      "cleanup": false,
+      "productive_line_count": 15,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 7,
+          "changed_cells": 3
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 2
+        }
+      ]
+    },
+    {
+      "before_step": 51,
+      "open_cells": 31,
+      "cleanup": false,
+      "productive_line_count": 15,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 14,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 52,
+      "open_cells": 29,
+      "cleanup": false,
+      "productive_line_count": 14,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 21,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 53,
+      "open_cells": 25,
+      "cleanup": false,
+      "productive_line_count": 15,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 22,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 54,
+      "open_cells": 21,
+      "cleanup": false,
+      "productive_line_count": 14,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 28,
+          "changed_cells": 4
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 2
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 55,
+      "open_cells": 17,
+      "cleanup": false,
+      "productive_line_count": 13,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 29,
+          "changed_cells": 4
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 56,
+      "open_cells": 13,
+      "cleanup": false,
+      "productive_line_count": 10,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 8,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 57,
+      "open_cells": 12,
+      "cleanup": false,
+      "productive_line_count": 9,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 9,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 58,
+      "open_cells": 11,
+      "cleanup": false,
+      "productive_line_count": 8,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 4,
+          "changed_cells": 2
+        },
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 0,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 59,
+      "open_cells": 9,
+      "cleanup": true,
+      "productive_line_count": 7,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 60,
+      "open_cells": 8,
+      "cleanup": true,
+      "productive_line_count": 6,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 11,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 61,
+      "open_cells": 7,
+      "cleanup": true,
+      "productive_line_count": 5,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 12,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 62,
+      "open_cells": 6,
+      "cleanup": true,
+      "productive_line_count": 4,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 13,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 63,
+      "open_cells": 5,
+      "cleanup": true,
+      "productive_line_count": 3,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 15,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 64,
+      "open_cells": 4,
+      "cleanup": true,
+      "productive_line_count": 2,
+      "productive_lines": [
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 11,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 65,
+      "open_cells": 3,
+      "cleanup": true,
+      "productive_line_count": 2,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 10,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 66,
+      "open_cells": 2,
+      "cleanup": true,
+      "productive_line_count": 2,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "row",
+          "index": 16,
+          "changed_cells": 1
+        }
+      ]
+    },
+    {
+      "before_step": 67,
+      "open_cells": 1,
+      "cleanup": true,
+      "productive_line_count": 2,
+      "productive_lines": [
+        {
+          "axis": "row",
+          "index": 5,
+          "changed_cells": 1
+        },
+        {
+          "axis": "column",
+          "index": 13,
+          "changed_cells": 1
+        }
+      ]
+    }
+  ]
+}

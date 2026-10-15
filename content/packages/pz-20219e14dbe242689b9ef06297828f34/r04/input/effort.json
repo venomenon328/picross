@@ -1,0 +1,27 @@
+{
+  "current_phase_native_image_calls": 0,
+  "current_phase_image_revision_rounds": 0,
+  "cumulative_native_image_calls": 5,
+  "imports": 3,
+  "repairs": 0,
+  "human_active_minutes": null,
+  "solve_time_minutes": null,
+  "playtest": "not_performed; optional",
+  "previous_phases_native_image_calls": 5,
+  "raster_candidates": 6,
+  "repair_rounds": 0,
+  "independent_origin_replays": 6,
+  "separate_verify_cli_calls": 4,
+  "ai_production_rounds_this_phase": 1,
+  "additional_candidate_hypotheses": 2,
+  "technical_failed_attempts": [
+    {
+      "operation": "Rastervergleich erstellen",
+      "reason": "Zunächst falscher Dateisuffix .png statt -raster.png angenommen; vor Ausgabe korrigiert, keine Produktionsdatei verändert."
+    }
+  ],
+  "current_phase_imports": 0,
+  "current_phase_repairs": 0,
+  "current_phase_new_proof_solves": 0,
+  "current_phase_difficulty_review": 1
+}
