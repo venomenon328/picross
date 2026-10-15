@@ -49,6 +49,7 @@ class Remote:
 
     def options(self, sftp=False) -> list[str]:
         result = ['-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=yes',
+                  '-o', 'UpdateHostKeys=no',
                   '-o', 'ConnectTimeout=15', '-o', 'ServerAliveInterval=15', '-o', 'ServerAliveCountMax=3',
                   '-P' if sftp else '-p', str(self.cfg.get('port', 22))]
         if 'ssh_config' in self.cfg:
@@ -86,6 +87,9 @@ mv --version >/dev/null
 ''')
 
     def acquire(self) -> None:
+        if self.locked:
+            raise RuntimeError('This deployment already owns a lock')
+        self.token = uuid.uuid4().hex
         self.run(self.prefix()+f'mkdir .deploy-lock\nprintf %s {self.token} > .deploy-lock/owner\n')
         self.locked = True
 

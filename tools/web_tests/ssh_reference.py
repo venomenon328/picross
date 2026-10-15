@@ -142,6 +142,10 @@ Subsystem sftp internal-sftp
             finally: parent_server.shutdown()
             passed('site root and subpath MIME/cache/integrity checks')
             report['status']='passed'
+        except Exception as error:
+            report['status']='failed'
+            report['error']=str(error)
+            raise
         finally:
             server.shutdown()
             if process.poll() is None:
@@ -149,7 +153,10 @@ Subsystem sftp internal-sftp
                 if pidfile.exists(): subprocess.run(['sudo','kill',pidfile.read_text().strip()],check=False)
                 process.wait(timeout=10)
             log.close()
-            report['sshd_diagnostics'] = log.name and (work/'sshd.log').read_text().replace(str(work),'<reference>')
+            diagnostics = (work/'sshd.log').read_text().replace(str(work),'<reference>')
+            report['accepted_ssh_sessions'] = diagnostics.count('Accepted publickey')
+            report['sshd_errors'] = [line for line in diagnostics.splitlines()
+                if any(word in line.lower() for word in ('error', 'fatal', 'not allowed', 'refused'))][-20:]
             (args.output/'ssh-report.json').write_text(json.dumps(report,indent=2)+'\n')
 
 
