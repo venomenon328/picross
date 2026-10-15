@@ -167,7 +167,140 @@ Eine erfolgreiche Prozessausführung ist von vollständiger Zertifizierung zu un
 Python-API: zuerst `validate_logic`, dann `solve` und separat `verify`;
 `solve(Puzzle, Budget, order)` allein liefert einen **ungeprüften** Nachweis.
 
-## Verfahren und Ressourcen
+## Separate Eindeutigkeitsdiagnose (#139/A)
+
+```sh
+python -m tools.puzzle_production diagnose --input tests/puzzle_production/fixtures/unique-stalled.json --output-dir artifacts/uniqueness-1
+python -m tools.puzzle_production check-diagnosis --input tests/puzzle_production/fixtures/unique-stalled.json --bundle artifacts/uniqueness-1
+```
+
+Python-API: `diagnosis.diagnose(Puzzle, DiagnosisBudget)` liefert unabhängig
+geprüfte Zeugenobjekte im Speicher; `diagnosis.diagnose_file(input_path, output_dir,
+DiagnosisBudget)` schreibt das dateigebundene Bundle.
+`diagnosis_verifier.verify_witness` prüft vollständige Matrizen durch eigene
+Runextraktion ohne Solverimport. Kein Sollraster wird akzeptiert; Eingang bleibt
+das strikte Logikformat v1/v2 mit Rechtecken/1D, 1..100 je Achse und 1..8
+Vordergrundfarben im Farbformat. Keine zusätzliche Produktionszertifizierung.
+
+| Diagnose / Exitcode | Voraussetzung |
+| --- | --- |
+| `unique` / 0 | Genau eine unabhängig geprüfte Lösung; Suchraum vollständig erschöpft. |
+| `multiple` / 0 | Zwei verschiedene unabhängig geprüfte Lösungen; weitere Suche endet. |
+| `no_solution` / 0 | Suchraum vollständig erschöpft, keine Lösung. |
+| `unknown` / 4 | Untersuchung unvollständig, auch nach genau einer gefundenen Lösung. |
+| `invalid_input` / 2 | Ungültiges Logikformat, Budget oder bereits vorhandenes Ausgabeziel. |
+| `invalid_diagnosis` / 3 | Checker: beschädigte, unpassende oder ungültige Belege. |
+| `technical_error` / 5 | Datei-/interner Fehler; kein logisches Negativurteil. |
+
+Aufruffehler verwenden argparse-Exitcode 2. Alle JSON-Ausgaben setzen
+`certified=false`. Fehler verwenden `picross-uniqueness-error-v1` mit `status`,
+`error` und `message`. Harte OS-Abbrüche garantieren keinen Abschluss. Nur
+geschriebene Berichte nach beendetem Aufruf übernehmen; Exitcode 4 kennzeichnet
+ausschließlich eine Teiluntersuchung.
+
+**Vollständigkeit und Reihenfolge:** `domain-dfs-line-support` Version 1 startet
+mit voller Domain jeder Zelle. Der vorhandene Zellautomat entfernt ausschließlich
+Werte ohne Unterstützung in einer zulässigen Linienbelegung. Jede tatsächliche
+Lösung des aktuellen Zweigs bleibt erhalten. Nach vollständiger Linienpropagation
+wird die erste Zelle mit kleinster mehrwertiger Domain gewählt (Gleichstand:
+Zeile, Spalte). Ihre Werte werden aufsteigend untersucht: Leer, danach sortierte
+Palette. Diese Zweige sind disjunkt und decken den Elternsuchraum vollständig ab.
+Jeder Abstieg bestimmt mindestens eine weitere Zelle; Tiefe höchstens Breite·Höhe.
+Unmögliche Linien verwerfen nur ihren aktuellen Zweig. Ein reversibler Änderungspfad
+stellt beim Rücksprung den Elternzustand wieder her; iterative Tiefensuche vermeidet
+Rekursionslimits und vollständige Rasterkopien je Knoten. Endmatrizen werden
+separat direkt gegen alle Hinweise geprüft. Erschöpfung beweist daher Eindeutigkeit
+beziehungsweise Unlösbarkeit; zwei verschiedene geprüfte Matrizen beweisen
+Mehrdeutigkeit. Worst-Case-Aufwand bleibt exponentiell; Erfolg im Budget ist keine Zusage.
+
+**Kumulative Budgets:** `--seconds` 120, `--max-lines` 100000 und `--max-nodes`
+100000 standardmäßig; Zählergrenzen jeweils 0..1000000. Ein Knoten ist die Wurzel
+oder ein betretenes Kind vor Propagation. Jede Linienauswertung und jede Zeilen-/
+Spaltenprüfung eines Zeugen verbraucht denselben Linienvorrat. Kein Zweig erhält
+neue Budgets. Die monotone CLI-Deadline beginnt vor Eingabelesen und umfasst
+Schreiben/Neueinlesen sowie notwendige Prüfung der Zeugen; abschließende kleine
+Berichtsserialisierung erfolgt danach. Kooperative Grenzen gelten zwischen den
+durch 100 Zellen begrenzten Linienoperationen; kein hartes RSS-/OS-Limit.
+`node_limit`, `work_limit`, `time_limit`, `cancelled` und `memory_limit` ergeben
+`unknown`. Ein während der Prüfung abgebrochener Zeuge zählt nicht als Lösung.
+Nullbudgets erlauben deterministische Abbruchproben. Zeitlimits garantieren
+keine identischen Teilverläufe auf anderer Hardware.
+
+**Dateivertrag:** Das Ausgabeziel muss neu/nicht vorhanden sein, auch ein leerer
+vorhandener Ordner wird zurückgewiesen. Es enthält `input.json` als exakte
+Eingabekopie, null bis zwei `solution-1.json`/`solution-2.json` und `diagnosis.json`.
+Unvollständig geprüfte Kandidaten können unreferenziert zurückbleiben; nur
+referenzierte Zeugen zählen. Fehler können eine Eingabekopie hinterlassen,
+niemals einen erfolgreichen Bericht. Limits: Logik 2 MiB, einzelne Zeugen 512 KiB,
+Berichte 64 KiB. 100×100 Werte mit maximal langen IDs passen ins Zeugenlimit.
+Dateihashes umfassen tatsächliche Bytes einschließlich Abschlusszeile.
+
+`picross-solution-witness-v1` hat exakt `format`, normalisierten `logic_hash`
+und `matrix`: vollständige Zellmatrix aus Leer-/Paletten-IDs, keine Domains.
+`picross-uniqueness-v1` hat exakt `format`, `tool` (`picross-uniqueness`, Version 1),
+`method` (ID/Version, obige `branch_order`/`value_order`, `search=true`), `logic_hash`,
+`status`, `search_complete`, `reason`, `certified`, `budgets` (`seconds`, `max_lines`,
+`max_nodes`), `statistics` (`nodes`, `line_evaluations`, `witness_line_evaluations`,
+`elapsed_seconds`), `input` und `witnesses`. Die letzten beiden binden `file`,
+`sha256` und `bytes`. In der Speicher-API stehen unter `witnesses` stattdessen
+Zeugenobjekte; `input` fehlt. `search_complete=true` gilt ausschließlich bei
+`unique`/`no_solution` mit `exhausted`; `multiple` endet mit `two_solutions`.
+
+`check-diagnosis` prüft Berichtskonsistenz, exakte Eingabebytes, referenzierte
+Dateibindungen, vollständige gültige Zeugen und deren Verschiedenheit. Feste lokale
+Dateinamen verhindern frei gewählte Pfade; Symlinks werden zurückgewiesen.
+Sein `picross-uniqueness-check-v1` meldet `file_bindings_verified`, die Zahl
+`witnesses_verified`, `reported_status`, `logic_hash`, `search_replayed=false`
+und `certified=false`. `confirmed_status` ist nur mit zwei Zeugen `multiple`, sonst
+`null`: keine unabhängige Bestätigung der erschöpfenden Suche oder Zertifizierung
+für `unique`/`no_solution`. Dafür ist der Diagnosealgorithmus mit vollständiger
+Suchraumabdeckung zu reviewen. Hashbindungen sind keine Signaturen. Der Checker
+hat ein eigenes kumulatives Zeit-/Linienbudget; Abbruch liefert keinen Prüferfolg.
+
+Ein Eindeutigkeitsurteil ersetzt kein Produktionsmanifest, keinen vollständigen
+Deduktionsnachweis und keine redaktionelle Abnahme. Der verifizierte Linienfixpunkt
+bleibt `stalled`, auch wenn die Suche `unique` ergibt. Import, Reparatur, ZA-1
+und Schwierigkeit L1–L5 werden durch diese Diagnose nicht verändert.
+
+## Paarlinienprofil und Schwierigkeit 0.2 (#139 B/C)
+
+Der [Paarlinienvertrag](../../docs/PAIRED_LINES.md) ergänzt ausdrücklich gewählte
+`paired-lines-mono`/`paired-lines-color` v1 und `picross-proof-v3`. Exakte Beziehungen
+zweier beliebiger paralleler Linien werden nach dem vollständigen Linienfixpunkt
+ausgewertet. Der getrennte Prüfer leitet sie selbst her. Standardaufrufe,
+`full-line-*`, alte Proofbytes und Diagnose A behalten ihren Vertrag.
+
+```sh
+python -m tools.puzzle_production solve --input tests/puzzle_production/fixtures/unique-stalled.json --profile paired-lines-mono --output-dir artifacts/paired-example
+python -m tools.puzzle_production verify --input tests/puzzle_production/fixtures/unique-stalled.json --proof artifacts/paired-example/proof.json
+python -m tools.puzzle_production assess --input tests/puzzle_production/fixtures/unique-stalled.json --proof artifacts/paired-example/proof.json --baseline artifacts/paired-example/baseline-proof.json --report artifacts/paired-assessment.json
+```
+
+`solve` schreibt zusätzlich `baseline-proof.json` und `assessment.json`, prüft
+beide Proofdateien unabhängig und berichtet die gemeinsame Arbeit unter
+`certification_line_evaluations`/`certification_seconds`. `--max-pair-work`
+(20.000.000) und `--max-pair-records` (250.000) begrenzen innere Arbeit und
+gleichzeitig gespeicherte Struktureinträge, auch im unabhängigen Prüfer.
+Verbrauchte Arbeit wird niemals zurückgesetzt; unvollständige Projektionen
+werden nicht angewendet. Ressourcenende ist `aborted`, kein starker Fixpunkt.
+
+`import-image` erhält dieselbe ausdrückliche `--profile`-Auswahl und Paarbudgets.
+Es schreibt Manifest v2 mit `certification` und je Variante Baseline/Assessment.
+Reparaturen binden diese Konfiguration im [Plan v2](../../examples/rp5/README.md).
+Handoff-v2 bindet sie in `candidate.certification`; Regelwerk 0.5.0 ist Pflicht.
+Alte Import-/Reparaturmanifeste und Authoring 0.4.x legitimieren keine Paarproofs.
+Neue ZA-1-Exporte verwenden v4, unveränderte Linienfälle weiter v2/v3.
+
+`assess` prüft die übergebenen gespeicherten Proofs frisch. Optionales
+`--diagnosis <A-Verzeichnis>` ergänzt den unveränderten A-Dateicheck, ohne eine
+erschöpfende Suche als unabhängig nachgewiesen auszugeben. Der Bericht trennt
+`multiple`, `reported_unique_without_complete_deduction`, `diagnosis_incomplete`,
+`line_logic_solved`, `paired_lines_solved` und vollständige Deduktion ohne
+Notwendigkeitsbeleg. Difficulty 0.2 meldet R4/L5 nur bei geprüfter Linienbaseline
+`stalled` und vollständigem Paarproof derselben Logik. Umfang, Zeit und
+redaktionelle Freigabe bleiben eigene Angaben; kein vollständiger R0–R3-Analysator.
+
+## Linienverfahren und Ressourcen
 
 Solver: Vorwärts-/Rückwärtserreichbarkeit eines Zellautomaten aus Gap- und
 Blockfortschrittszuständen, Aufwand O(n·(Summe der Blocklängen + Blockzahl + 1)).

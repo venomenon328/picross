@@ -45,6 +45,11 @@ zentrale Datenregistry mit expliziten Slots, einschließlich Mono/Farbe und Rech
 Künstliche Fixtures bleiben isoliert. Registrierte Pakete tragen ihre eigenen
 gebundenen Freigaben; frühere Aussagen zu offenen Einzelfreigaben sind historisch.
 
+[#139 B/C](PAIRED_LINES.md) ergänzt ausdrücklich gewählte Paarlinienprofile,
+unabhängige Proof-v3-Prüfung und Schwierigkeit 0.2/R4 innerhalb L5. Authoring
+0.5.0 und ZA-1-v4 binden die neue Zertifizierung; Paket A und alte Linienverträge
+bleiben erhalten. Diese Werkzeugänderung registriert keine neuen Inhalte.
+
 Aktuelle Bindung: Godot Standard 4.7.2-stable, typisiertes GDScript, native
 Windows-Desktopfassung, Maus als verpflichtender Eingabepfad (D-06), Escape als
 Gestenabbruch. Keine Wertung, Live-Fehlerhilfe oder Hypothesen. Endgültige Engine,

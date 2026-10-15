@@ -68,6 +68,25 @@ Kein Reparaturraster darf als unveränderter `picross-image-candidate-v1`
 ausgegeben werden. Der spätere Adaptervertrag für Reparatur- und manuelle
 Ableitungen steht in [ZA-1](../../docs/ZA1_ADAPTER.md).
 
+## Explizites Paarprofil: Reparatur v2
+
+Für #139 B/C ergänzt `picross-repair-plan-v2` genau das Pflichtfeld
+`certification={profile,max_pair_work,max_pair_records}` gemäß
+[Paarlinienvertrag](../../docs/PAIRED_LINES.md). Zulässig sind die zur Matrix
+passenden `paired-lines-mono`/`paired-lines-color`. Der Verlauf verwendet
+`picross-repair-v2`, das Manifest `picross-repair-manifest-v2` und die
+Werkzeugkennung `rp5-single-cell-2`. V1 behält ausschließlich `full-line-*`.
+
+Referenzprüfung, alle Kandidaten und deren Baseline-/Paarproofs teilen das
+vorher festgelegte Suchbudget einschließlich innerer Paararbeit. Die frische
+Endprüfung verwendet ihr separat festgelegtes Abschlussbudget mit denselben
+Paargrenzen. Ergebnisdateien nennen `pair_work` und `pair_peak_records`.
+Der vollständige Replay prüft jede Baseline und jeden Paarproof unabhängig,
+rekonstruiert das dateigebundene Assessment und erhält ursprüngliche Abbrüche.
+Das Inventar bindet zusätzlich die beiden Dateien pro Kandidat und Abschluss;
+die Gesamtgrenze von 256 MiB bleibt bestehen. Masken, Vorschläge, Änderungen,
+Endmatrixgleichheit und menschliche Abnahme behalten ihre bisherigen Regeln.
+
 ## Befehle und Exitcodes
 
 Aus der isolierten Image-Umgebung mit Pillow exakt 12.3.0:

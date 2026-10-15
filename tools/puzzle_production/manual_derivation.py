@@ -8,6 +8,7 @@ from .contract import exact_keys, integer, load_json, digest, validate_logic
 from .images import inspect_candidate, logic_from_matrix
 from .repair import apply_edit
 from .verifier import verify
+from . import certification
 
 AUTH_FORMAT = "picross-manual-authorization-v1"
 IMPORT_AUTH_FORMAT = "picross-manual-authorization-v2"
@@ -118,7 +119,7 @@ def inspect_edited_import(package, auth, budget):
     h, c = package.handoff, package.handoff["candidate"]
     ref = auth["record"]["reference"]
     reference_dir = package.bundle(ref["bundle"])
-    reference, _, _ = inspect_candidate(reference_dir, ref["variant"], budget)
+    reference, reference_proof, _ = inspect_candidate(reference_dir, ref["variant"], budget)
     design, before = reference["design"], reference["matrix"]
     require(design["mode"] == "mono" and ref["candidate_id"] == reference["id"] and
             ref["matrix_hash"] == digest(before) and ref["manifest_sha256"] == file_hash(reference_dir / "manifest.json"),
@@ -126,6 +127,9 @@ def inspect_edited_import(package, auth, budget):
     plan = package.json(h["manual_edit_record"])
     require(isinstance(plan, dict) and plan.get("puzzle_id") == h["puzzle_id"] and plan.get("revision") == h["revision"],
             "Edited import plan identity mismatch")
+    require(reference_proof["format"] != "picross-proof-v3" or
+            plan.get("format") == "picross-fixed-mono-import-plan-v2",
+            "Paired reference requires a versioned paired edit plan")
     parent = plan.get("reference")
     require(isinstance(parent, dict) and all(parent.get(k) == ref[k] for k in ("bundle", "variant", "candidate_id", "matrix_hash")),
             "Edited import plan reference mismatch")
@@ -158,6 +162,12 @@ def inspect_edited_import(package, auth, budget):
     budget.max_lines = min(budget.max_lines, budget.lines + plan["verify_lines"])
     bundle = package.bundle(c["bundle"])
     current, proof, checked = inspect_candidate(bundle, c["variant"], budget)
+    paired = proof["format"] == "picross-proof-v3"
+    require(paired == (plan.get("format") == "picross-fixed-mono-import-plan-v2"),
+            "Fixed import plan/proof version mismatch")
+    if paired:
+        require(plan.get("format") == "picross-fixed-mono-import-plan-v2" and
+                plan.get("certification") == checked.get("certification"), "Fixed import lacks paired plan binding")
     require(current["matrix"] == matrix and all(current["design"][k] == design[k] for k in
             ("width", "height", "mode", "palette", "background", "alpha_below", "fit")), "Edited import changes other cells or design")
     result = load_json(bundle / (c["variant"] + "-result.json"))
@@ -176,14 +186,19 @@ def inspect_manual(package, budget):
     h = package.handoff
     c, repair = h["candidate"], h["repair"]
     reference_dir = package.bundle(repair.get("reference"))
-    reference, _, _ = inspect_candidate(reference_dir, repair.get("reference_variant"), budget)
+    reference, reference_proof, _ = inspect_candidate(reference_dir, repair.get("reference_variant"), budget)
     design, before = reference["design"], reference["matrix"]
     require(design["mode"] == "mono", "Manual removal contract is monochrome only")
     plan_path = package.file(repair.get("plan"))
-    plan = exact_keys(load_json(plan_path, 256 * 1024), {
+    raw_plan = load_json(plan_path, 256 * 1024)
+    paired = isinstance(raw_plan, dict) and raw_plan.get("format") == "picross-manual-edit-plan-v2"
+    require(paired or reference_proof["format"] != "picross-proof-v3",
+            "Paired reference requires a versioned paired manual plan")
+    plan = exact_keys(raw_plan, {
         "format", "puzzle_id", "revision", "reference", "authorization", "coordinates",
-        "edits_in_requested_order", "mask", "budgets", "operators", "seed", "randomness", "rationale", "tool_boundary"})
-    require(plan["format"] == "picross-manual-edit-plan-v1" and
+        "edits_in_requested_order", "mask", "budgets", "operators", "seed", "randomness", "rationale", "tool_boundary"} |
+        ({"certification"} if paired else set()))
+    require(plan["format"] in ("picross-manual-edit-plan-v1", "picross-manual-edit-plan-v2") and
             plan["puzzle_id"] == h["puzzle_id"] and plan["revision"] == h["revision"], "Manual plan identity mismatch")
     ref = plan["reference"]
     require(isinstance(ref, dict) and ref.get("candidate_id") == reference["id"] and
@@ -214,7 +229,7 @@ def inspect_manual(package, budget):
             "Manual edit budget exceeded")
     raw = exact_keys(package.json(c.get("candidate")), {"format", "puzzle_id", "revision", "variant", "source_type",
         "matrix", "matrix_hash", "logic_hash", "design", "plan_sha256", "source_candidate_id", "history", "changes", "claim"})
-    require(raw["format"] == "picross-manual-candidate-v1" and raw["source_type"] == "manual" and
+    require(raw["format"] == ("picross-manual-candidate-v2" if paired else "picross-manual-candidate-v1") and raw["source_type"] == "manual" and
             raw["puzzle_id"] == h["puzzle_id"] and raw["revision"] == h["revision"] and
             raw["variant"] == c["variant"] and raw["design"] == design and raw["source_candidate_id"] == reference["id"] and
             raw["plan_sha256"] == file_hash(plan_path), "Manual candidate identity mismatch")
@@ -246,7 +261,13 @@ def inspect_manual(package, budget):
     budget.deadline = min(budget.deadline, time.monotonic() + limits["verify_seconds"])
     budget.max_lines = min(budget.max_lines, budget.lines + limits["verify_lines"])
     # The existing independent DAG verifier receives hints/domains, never the matrix.
-    checked = verify(puzzle, proof, budget)
+    if paired:
+        require(h["rulebook"]["version"] == "0.5.0", "Paired manual derivation requires authoring 0.5.0")
+        proof, checked = certification.inspect(puzzle, package.bundle(c["bundle"]) / "certificate", "",
+                                                plan["certification"], budget)
+    else:
+        certification.require_legacy(puzzle, proof)
+        checked = verify(puzzle, proof, budget)
     require(checked["certified"] and checked["status"] == "solved" and
             proof["final_domains"] == [[[v] for v in row] for row in matrix], "Manual final certificate differs from matrix")
     recorded = package.json(c["bundle"] + "/certificate/result.json")

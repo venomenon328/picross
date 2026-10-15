@@ -10,6 +10,26 @@ Scope: [#74](https://github.com/venomenon328/picross/issues/74),
 Commit/Head, Basis, tatsächlicher CI-Test-Merge und Run werden im Draft-PR gebunden.
 Diese Zuordnung ist keine unabhängige Zweitprüfung oder Inhaltsabnahme.
 
+## Aktuelle Ergänzung #139 B/C
+
+Die folgende Ergänzung prüft ausschließlich allgemeine künstliche Eingänge;
+die historischen Originalprüfungen weiter unten werden nicht wiederholt.
+Vertrag: [PAIRED_LINES](PAIRED_LINES.md), [ZA-1](ZA1_ADAPTER.md), Authoring 0.5.0.
+
+| Akzeptanz | Ausführbare Prüfung |
+| --- | --- |
+| BC-01 / B-T01, B-T02 | `test_paired.py`: separate alte Baseline, vollständiger Paarproof, Transponate, getrennte Paare, Farbkontakt/-abstand, partielle Domains und vollständige kleine Relations-/Projektionsorakel |
+| BC-01 / unabhängiger Prüfer | Solverherleitung beim Replay gesperrt; veränderte Zell-/Paarbezüge, Ausschlüsse, Vorzustände, Profile, Hashes, Abschlüsse, unechter Paarfixpunkt und falscher Widerspruch abgewiesen |
+| BC-01 / Ressourcen | exakte innere Arbeits-/Speichergrenze und ein Eintrag darunter für beide Implementierungen, Abbruchspuren, 1D/100 Zellen/acht Farben, Größen-/Datei-/Schrittgrenzen |
+| BC-02 | `test_paired_production.py`: Mono/Farbe mit Import und vollständigem Reparatur-Replay; echte synthetische Reparaturänderung; manuelle Mono-Entfernung, fester Mono-Import, beide Farbautorisierungswege; Export v4, Offlineprüfung und Registrierung |
+| BC-03 | R4/L5 nur aus gebundener geprüfter `stalled`-Baseline; reine Linienfälle ohne R4; manipulierte Baseline/Assessment, alte Regelwerkversion oder fehlende Profilbindung abgewiesen; Diagnose-, Deduktions- und Schwierigkeitsbericht getrennt |
+| BC-04 | vollständige bestehende Produktionssuite, Werkzeug-/Dokumentprüfung und nach tatsächlichem Diff gewählte Produkt-Piloten/Visual/PERF-B; finaler Head/Basis/Test-Merge, CI-Ergebnisse und getrennter Selbstreview im Draft-PR |
+
+Es entstehen keine realen Rätsel, Bildfreigaben oder Katalogeinträge. Die temporären
+Testfreigaben gelten ausschließlich für synthetische Fixtures. Die unabhängige
+Prüfung eines konkreten B/C-Heads bleibt ein empfohlener gesonderter Reviewauftrag;
+Eigentümerabnahme und ausdrückliche Mergefreigabe stehen aus. #139 bleibt offen.
+
 ## Original und reproduzierbares Derivat
 
 Vor Verwendung wurde das bereitgestellte Original-ZIP gehasht:
