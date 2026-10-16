@@ -27,7 +27,7 @@ func point(cell: Vector2i) -> Vector2:
 func motion(p: Vector2) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
 	event.position = p
-	event.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.pan_button == MOUSE_BUTTON_LEFT else MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
 	canvas.push_input(event, true)
 
 func mouse(p: Vector2, button: MouseButton, down: bool) -> void:
@@ -139,12 +139,12 @@ func run() -> void:
 		var local: Vector2 = Vector2(area.get_center().x,cross.y) if axis == "row" else Vector2(cross.x,area.get_center().y)
 		var start: Vector2 = app.board.global_position+local
 		var prior: Array = app.board.row_clue_reads.duplicate(true) if axis == "row" else app.board.column_clue_reads.duplicate(true)
-		mouse(start,MOUSE_BUTTON_MIDDLE,true)
+		mouse(start,MOUSE_BUTTON_LEFT,true)
 		motion(start+(Vector2(100,60) if axis=="row" else Vector2(60,100)))
-		check(app.board.pan_target == axis and app.board.pan_line_index == index, "MMB target freezes across lines")
-		mouse(start+(Vector2(100,60) if axis=="row" else Vector2(60,100)),MOUSE_BUTTON_MIDDLE,false)
+		check(app.board.pan_target == axis and app.board.pan_line_index == index, "left drag target freezes across lines")
+		mouse(start+(Vector2(100,60) if axis=="row" else Vector2(60,100)),MOUSE_BUTTON_LEFT,false)
 		var after: Array = app.board.row_clue_reads if axis == "row" else app.board.column_clue_reads
-		check(after[index] != prior[index], "positive independent clue MMB")
+		check(after[index] != prior[index], "positive independent clue left drag")
 		for i: int in range(prior.size()):
 			if i != index: check(after[i] == prior[i], "other clue reads unchanged")
 	await native_clue_boundaries()
@@ -181,7 +181,7 @@ func native_clue_boundaries() -> void:
 				for fraction: float in [-1.51,-1.49,-0.51,-0.49,0.49,0.51,1.49,1.51]:
 					b.set_clue_step(axis,index,anchor)
 					var confirmed: Dictionary = b.capture_view()
-					mouse(start,MOUSE_BUTTON_MIDDLE,true)
+					mouse(start,MOUSE_BUTTON_LEFT,true)
 					var finish: Vector2 = start+(Vector2(pitch*fraction,b.view.cell_size*3) if axis=="row" else Vector2(b.view.cell_size*3,pitch*fraction))
 					motion(finish)
 					check(b.pan_target==axis and b.pan_line_index==index and b.capture_view()==confirmed,"HC native frozen line and unsaved continuous read")
@@ -190,7 +190,7 @@ func native_clue_boundaries() -> void:
 					var best: float = INF
 					for candidate: int in range(maximum+1):
 						best = minf(best,oracle.coordinate_distance(before,oracle.resting_centers(b,axis,index,candidate)).mean)
-					mouse(finish,MOUSE_BUTTON_MIDDLE,false)
+					mouse(finish,MOUSE_BUTTON_LEFT,false)
 					var after: Dictionary = oracle.token_centers(b.visual_hint_units(axis,index))
 					check(oracle.coordinate_distance(before,after).mean<=best+0.001,"HC native mouse-up chooses nearest token coordinates")
 					var current: Dictionary = b.capture_view()

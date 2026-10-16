@@ -196,6 +196,9 @@ func perform(action: Dictionary) -> void:
 			var button: MouseButton = MOUSE_BUTTON_RIGHT if action.button == "right" else MOUSE_BUTTON_LEFT
 			var start: Vector2 = cell_point(action.start)
 			var end: Vector2 = cell_point(action.end)
+			# A physical pointer enters the grid before its fresh Down. This
+			# closes the prior full-clue overlay through the actual hover route.
+			motion(start, MOUSE_BUTTON_NONE)
 			press(start, button)
 			if action.has("via"):
 				motion(cell_point(action.via), button)
@@ -225,9 +228,9 @@ func perform(action: Dictionary) -> void:
 			var point: Vector2 = board.get_global_transform() * local
 			var pitch: float = float(board.clue_layout(axis, index).slot_extent)
 			var delta: Vector2 = Vector2(pitch * float(action.slots), 0) if axis == "row" else Vector2(0, pitch * float(action.slots))
-			press(point, MOUSE_BUTTON_MIDDLE)
-			motion(point + delta, MOUSE_BUTTON_MIDDLE)
-			release(point + delta, MOUSE_BUTTON_MIDDLE)
+			press(point, MOUSE_BUTTON_LEFT)
+			motion(point + delta, MOUSE_BUTTON_LEFT)
+			release(point + delta, MOUSE_BUTTON_LEFT)
 		"undo":
 			ui_command(app.undo_button)
 		"redo":

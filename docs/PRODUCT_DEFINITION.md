@@ -160,7 +160,7 @@ Vorschau oder Änderung derselben Zelle hat Vorrang. Die visuelle Vorschau ist
 keine zusätzliche Hypothesenebene. ZS2-E2 präzisiert den X-Aufbau ohne volle
 Unterzeichnung während des aktiven Zuges. Das Down der Gegentaste bricht eine
 laufende Zellgeste auch außerhalb des Boards ab; erst beide Tasten loslassen und
-frisch drücken. Mittlere Taste bleibt ausschließlich Hinweisnavigation. Details: ZS-D07/D08.
+frisch drücken. Links zieht ausschließlich die begonnene überlaufende Hinweisfolge; MMB navigiert keine Hinweise mehr ([HN](CLUE_INTERACTION.md)). Details: ZS-D07/D08.
 
 Hypothesen als mögliche Zustände „unsicher gesetzt“ und „unsicher leer“ wurden zur Untersuchung vorgeschlagen. Die Funktion ist noch nicht abschließend spezifiziert; insbesondere ist nicht entschieden, ob ihre Nutzung mit einer perfekten Bewertung vereinbar ist. Der Nutzer setzt selbst überwiegend nur sicher hergeleitete Felder. Hypothesen ändern nicht das Versprechen, dass Rätsel ohne notwendiges Raten lösbar sein müssen.
 

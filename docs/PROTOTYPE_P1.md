@@ -59,7 +59,7 @@ Einstellungen sind dort ohne Rätselöffnung erreichbar. **Rätselansicht** biet
 Die Wahl bleibt bis zum nächsten Start erhalten. Einpassen ändert den Modus nicht.
 Das ganze Raster samt Außenrahmen bleibt bei jedem angebotenen Zoom sichtbar;
 Hand-, Raster- und Miniaturverschiebung entfallen auch für bestehende Großfälle.
-MMB bewegt ausschließlich eine angefasste überlaufende Hinweiszeile horizontal
+Linksdrag bewegt ausschließlich eine angefasste überlaufende Hinweiszeile horizontal
 oder Hinweisspalte vertikal. Die eigene Miniatur bleibt proportional und passiv.
 
 Mindestreserven werden pro Achse aus tatsächlichen vollständigen Glyphen bestimmt;
@@ -140,7 +140,7 @@ bleibt als isolierter Vergleich ausführbar; ZS-2 verwendet die bestätigte Komb
 | D-22 | F-02 erhält wie F-01 ein eigenständiges verfeinertes Abschlussmotiv. | Leuchtturm, Bildaufbau, Proportionen und Farbverteilung bleiben klar zum Raster zugehörig; Rätsellogik bleibt unverändert. |
 | D-23 | Nur die angefasste Hinweisfolge folgt während des Drags kontinuierlich der Maus. | Achse und Linie bleiben fest; beim Drop aus den unmittelbar zuvor sichtbaren Positionen derselben Zahlen die geometrisch nächste gültige ganzzahlige Slotlage wählen und erst dann den semantischen Lesezustand bestätigen. Markerwechsel dürfen keine zusätzliche Zahlenverschiebung erzeugen. Abbruch verwirft den temporären Versatz. |
 | D-24 | Füllungen und Vorschau belegen geringfügig mehr Zellfläche. | Der kontrastierende Zwischenraum aus D-08 bleibt an normalen und kräftigen Fünferlinien in allen Farben und Arbeitszoomstufen erhalten. |
-| D-25 | Die gültige Cursorzeile und -spalte werden im Raster dezent hervorgehoben. | Schnittpunkt nicht doppelt betonen; Inhalte und Linien bleiben lesbar. Ohne Zellgeste verschwindet das Band beim Verlassen der Rasterfläche. |
+| D-25 | Die gültige Cursorzeile und -spalte werden im Raster dezent hervorgehoben. | Schnittpunkt nicht doppelt betonen; Inhalte und Linien bleiben lesbar. Über Zeilenhinweisen nur die Zeile, über Spaltenhinweisen nur die Spalte; auch bei Vollhinweis. Hinweisdrag markiert seine Quellenlinie gemäß [HN](CLUE_INTERACTION.md). |
 | D-26 | X und Preview-X werden an angeschnittenen Zellen geometrisch am Rasterviewport geclippt. | Normale X-Geometrie beibehalten, nicht in den sichtbaren Rest verschieben oder eine teilweise sichtbare Zelle pauschal verwerfen. |
 | D-27 | Linke und rechte Zellgesten zeigen einen kleinen Live-Zähler der gesamten aktuellen Strichlänge. | Geometrisches gerades Segment inklusive Start/Ende und übersprungener oder vorbesetzter Zellen; elastisches Zurückziehen aktualisiert sofort. Keine Navigation und kein gespeicherter Zustand. |
 | D-28 | Die kompakte Standardrasterfläche ist keine Zoom-Clippinggrenze. | Im nicht kompakten Buchlayout wächst der Rasterviewport erst oberhalb 100 % in freie Papierfläche; tatsächliche UI-/Papiergrenzen erzeugen den Ausschnitt. 20×20 bleibt bei 1920×1080/UI 100 % bis einschließlich 150 % vollständig sichtbar. |
@@ -298,8 +298,10 @@ Rückweg bleiben erreichbar. Gemeinsame Draw-/Hit-Geometrie, keine Zell-/History
 D-08: Füllungen haben zu anderen Füllungen und insbesondere den Fünferlinien einen sichtbar kontrastierenden Zwischenraum. Dunkle Füllung und dunkle Linie dürfen an Kreuzungen nicht zu einer gemeinsamen L-/Blockform verschmelzen. Fünfergruppen bleiben erkennbar; Umrissstärke, Füll-Inset und Renderingreihenfolge gemeinsam abstimmen. Dies gilt für alle vier Farben, Vorschau und die angebotenen Bearbeitungszoomstufen. Eine verdichtete Gesamtansicht ist kein Ersatz für diese Arbeitsansicht. Zeichnung und tatsächliche Trefferflächen bleiben korrekt zugeordnet.
 
 D-24 vergrößert die Füllfläche geringfügig innerhalb dieser Trennungsgrenze. D-25
-betont die gültige Cursorzeile und -spalte als dezente Hintergrundbänder nur im
-sichtbaren Raster. Die Kreuzung erhält dieselbe Stärke wie jedes Band; Füllungen,
+betont im Raster die gültige Cursorzeile und -spalte als dezente Hintergrundbänder.
+Über Hinweisen gilt ausschließlich deren eine Linie, auch bei vollständigen Folgen
+und geöffnetem Overlay; während Hinweisdrag bleibt die Quellenlinie eingefroren
+([HN-D03/D04](CLUE_INTERACTION.md)). Die Kreuzung erhält dieselbe Stärke wie jedes Band; Füllungen,
 X, Vorschau und Rasterlinien werden darüber gezeichnet. D-26 clippt die normalen
 X-Liniensegmente bestätigter und vorläufiger Leermarkierungen am Viewportrand,
 auch bei nur teilweise sichtbaren Zellen und Ecken. Wo kein X-Segment den sichtbaren
@@ -326,7 +328,7 @@ einen festen Randplatz nur auf tatsächlich verborgenen Seiten. Keine zusätzlic
 sichtbaren Hinweisgitterlinien.
 
 Jede konkrete Zeile und Spalte besitzt eine eigene ganzzahlige bestätigte Leseposition.
-Nur die mittlere Taste friert Achse und Linienindex am
+Nur die linke Taste im überlaufenden Hinweisbereich friert Achse und Linienindex am
 Gestenstart ein. Während des Drags bewegt sich nur die angefasste Folge kontinuierlich
 entlang ihrer Achse, auch zwischen Slots; beim Loslassen rastet sie auf die nächste
 gültige ganzzahlige Position ein. Escape, Fokusverlust oder regulärer Übergang
@@ -699,7 +701,7 @@ Folge nach D-31/ZS-D07; Schutzlücken bleiben ohne Zeitlücke. Das aktive X schr
 Zug eins vor Zug zwei ohne vollständige Unterzeichnung. Gegentasten-Down verwirft
 die ganze aktive Zellgeste samt Zähler, auch außerhalb des Boards. Nach beiden
 Ups erlaubt erst ein frisches Down die nächste Geste. Escape/Fokus dürfen keine
-Phantomaktion oder hängende Sperre erzeugen; MMB bleibt ausschließlich Hinweisnavigation.
+Phantomaktion oder hängende Sperre erzeugen; Linksdrag der Hinweise folgt [HN](CLUE_INTERACTION.md); MMB navigiert keine Hinweise mehr.
 Die nächste Eingabe liest sofort den bestätigten Zustand. Neue Vorschau oder ein
 neuer Zustand derselben Zelle beendet veraltete Effekte; Rückzug spielt sie nicht
 erneut ab. Undo/Redo bleiben unmittelbar und ohne eigene Setzanimation. Abschluss,
