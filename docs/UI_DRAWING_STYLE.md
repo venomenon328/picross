@@ -1,14 +1,14 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**KB / #168** erweitert V3-07 gezielt um die Bakso-Katalogüberschrift. Die
-kompakten Katalogkarten und gemeinsamen BookButtons ersetzen die bisherige breite
-Darstellung mit separatem Resetbalken sowie die bisherigen Buttonoberflächen.
-Papier, dunkle Icons und identitätsgebundene ruhige Konturen verbinden Katalog,
-Werkbanknavigation, Werkzeuge und Information. Zustände einschließlich Fokus sind
-sichtbar; Treffer bleiben rechteckig und mindestens 44/55 Pixel. UI-skalierte
-Buttontooltips umbrechen innerhalb des Clients und enden bei Ansichtswechsel.
-HF-Vollhinweis, originale Farbflächen, Gruppenrahmen und Zellstil bleiben erhalten.
-[Prüfzuordnung](KB_VERIFICATION.md).
+**KK / #174** erweitert die vorhandene Bakso-Rolle gezielt um Motivüberschriften
+und `???` in Katalogkarten. Feste zweizeilige Titel, begrenzte Metadaten, gleicher
+proportionaler Bildraum und feste Fußzeile ersetzen die inhaltsabhängigen KB-Höhen.
+Öffnen erfolgt über die Karte, Reset allein oben rechts mit reservierter Fläche,
+10 × UI Innenrand und unverändertem BookButton/reset.svg. Treffer bleiben 44/55 px.
+Speicherdiagnose und Backupaktionen nutzen bei Bedarf den festen Bildraum.
+Der Kacheltooltip entfällt, auch bei gekürzten Labels; Resettooltip und übrige
+Tooltips bleiben. Keine Font-/Assetbytes oder Zell-/Hinweisänderung.
+[Prüfzuordnung](KK_VERIFICATION.md).
 
 **Aktive Hinweisgeometrie HC / #92:** [CLUE_TYPOGRAPHY](CLUE_TYPOGRAPHY.md)
 ersetzt ausschließlich ältere Chalkboard-/24/18-Aussagen für reguläre Hinweise.

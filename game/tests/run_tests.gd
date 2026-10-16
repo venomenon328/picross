@@ -257,11 +257,9 @@ func test_scene() -> void:
 	for i: int in range(mini(app.sessions.size(), expected_catalog.size())):
 		var definition: Dictionary = app.sessions[i].definition
 		check(str(definition.id) == expected_catalog[i], "album includes correct sheet in position " + str(i))
-		var expected_title: String = app.sessions[i].album_title()
-		if definition.get("stress", false): expected_title += " · UI-Test"
-		check(app.choices[i].text == expected_title, "album label uses semantic stress flag for " + str(definition.id))
+		check(app.choices[i].caption.text == "???" and app.choices[i].accessibility_name.contains("Blatt"), "KK unfinished caption and accessible sheet for " + str(definition.id))
 	if app.sessions.size() >= 3:
-		check(app.sessions[2].definition.id == "T-04" and app.choices[2].text.contains("Blatt"), "synthetic third sheet has a neutral title")
+		check(app.sessions[2].definition.id == "T-04" and app.choices[2].leaf.text == "Blatt 03", "synthetic third sheet has a neutral title")
 	app.open_puzzle()
 	await process_frame
 	var board: Control = app.board
@@ -312,10 +310,10 @@ func test_scene() -> void:
 	check(not app.reveal_view.payload.is_empty(), "real completion artwork")
 	app.show_album()
 	check(app.title.get_theme_font("font") == app.WORK_TITLE_FONT, "KB completed catalog explicitly uses original Bakso")
-	check(app.choices[0].text.contains(fixture.reveal.name), "completed album entry")
+	check(app.choices[0].caption.text == fixture.reveal.name, "completed album entry")
 	check(app.album_reveals[0].visible and not app.album_previews[0].visible and app.album_reveals[0].payload == fixture.reveal, "completed album has colored earned image")
 	if app.sessions.size() >= 3:
-		check(app.choices[2].text == app.sessions[2].album_title(), "album refresh preserves the session title")
+		check(app.choices[2].caption.text == "???", "album refresh preserves the session title")
 	app.queue_free()
 	await process_frame
 

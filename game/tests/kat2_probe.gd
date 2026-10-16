@@ -4,6 +4,7 @@ const Main = preload("res://ui/main.gd")
 const Session = preload("res://model/session.gd")
 const Registry = preload("res://model/content_registry.gd")
 const Store = preload("res://model/save_store.gd")
+const Card = preload("res://ui/catalog_card.gd")
 var app: Main
 var surface: SubViewport
 var output: String
@@ -14,6 +15,8 @@ var captures: Array = []
 var timings: Dictionary = {}
 var quit_slot_hashes: Dictionary = {}
 var kb_measurements: Array = []
+var kk_measurements: Array = []
+var kk_pointer_measurements: Array = []
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -42,11 +45,16 @@ func click_at(point: Vector2, button: MouseButton = MOUSE_BUTTON_LEFT) -> void:
 
 func click(control: Control) -> void:
 	var point: Vector2 = control.get_global_rect().get_center()
+	if control is Card: point = control.leaf.get_global_rect().get_center()
 	if control.get_window() != root: point += Vector2(control.get_window().position)
 	click_at(point)
 
 func choose(id: String) -> void:
 	click(app.album.category_choice)
+	# The offscreen SubViewport is not a Window: unlike the real player it
+	# gets no focus-out when an embedded popup opens. Deliver that native
+	# notification so the opener's left-button capture cannot retain wheels.
+	surface.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_OUT)
 	await frames()
 	var popup: PopupMenu = app.album.category_choice.get_popup()
 	check(popup.visible, "category popup opens by pointer")
@@ -81,6 +89,7 @@ func choose(id: String) -> void:
 		check(hit, "category item reached through popup pointer hit testing")
 		break
 	await frames()
+	check(not popup.visible, "category popup closes after real item click")
 	check(app.album.category_id == id and app.album.page_index == 0 and app.album.scroll_vertical == 0, "category resets page and scroll")
 
 func shot(name: String) -> void:
@@ -98,11 +107,11 @@ func shot(name: String) -> void:
 	if not app.choices.is_empty(): regions["card"] = region(app.choices[0].get_parent())
 	else: regions["empty"] = region(app.album.empty_message, true)
 	if app.album.next_button.get_parent().visible: regions["page"] = region(app.album.page_label, true)
-	if mode == "kb":
+	if mode in ["kb", "kk"]:
 		regions["layout"] = region(app.album if app.album.visible else app.work)
 		regions["title"] = region(app.title)
 	for card: Button in app.choices:
-		for label: Node in card.find_children("*", "Label", true, false):
+		for label: Label in [card.caption,card.detail,card.leaf,card.note]:
 			check(card.get_global_rect().grow(1).encloses(label.get_global_rect()), "card labels fit without overlap")
 	captures.append({"file": filename, "framebuffer": [image.get_width(), image.get_height()], "window_client": [root.size.x, root.size.y], "ui_scale": app.ui_scale, "category": app.album.category_id, "page": app.album.page_index, "scroll": app.album.scroll_vertical, "cards": app.choices.size(), "textures": textures, "summary": app.album.summary.text, "ids": app.album.visible_ids.duplicate(), "regions": regions})
 
@@ -163,6 +172,8 @@ func run() -> void:
 		await information_saves()
 	elif mode == "kb":
 		await compact_buttons()
+	elif mode == "kk":
+		await fixed_cards()
 	elif mode == "adapter":
 		var id: String = "pz-test-direct-mono"
 		check(app.album.items.has(id), "registered KAT1 adapter content appears in All")
@@ -196,7 +207,7 @@ func run() -> void:
 	quit(0 if failures.is_empty() else 4)
 
 func write_report() -> void:
-	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
+	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()
@@ -383,7 +394,7 @@ func regular() -> void:
 	var original: Dictionary = save_bytes()
 	await choose("voegel")
 	check(save_bytes() == original, "category change writes no save")
-	check(app.album.visible_ids == ["T-09"] and app.choices[0].text.begins_with("Blatt 06"), "filtered zero is global five and keeps number")
+	check(app.album.visible_ids == ["T-09"] and app.choices[0].leaf.text == "Blatt 06", "filtered zero is global five and keeps number")
 	click(app.choices[0])
 	await frames()
 	check(app.session.definition.id == "T-09" and app.work.visible, "pointer opens stable filtered ID")
@@ -394,7 +405,7 @@ func regular() -> void:
 	click(app.album_button)
 	await frames()
 	check(app.album.category_id == "voegel" and app.album.notes[0].text == "Begonnen", "return and redo-only status")
-	check(app.album.play_buttons["T-09"].tooltip_text == "Fortsetzen", "KB redo-only action continues")
+	check(app.choices[0].accessibility_name.contains("Fortsetzen"), "KB redo-only action continues")
 	check(app.album.reveals[0].payload.is_empty() and app.album.reveals[0].artwork == null, "no unearned texture")
 	click(app.choices[0])
 	await frames()
@@ -427,9 +438,9 @@ func regular() -> void:
 	check(app.store.write_slot(target, target.view_state).is_empty(), "valid earned save written")
 	await new_app()
 	await choose("voegel")
-	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
+	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
 	check(app.album.reveals[0].artwork != null, "earned image loaded only for visible card")
-	check(app.album.play_buttons["T-09"].tooltip_text == "Ansehen", "KB solved action views existing completion")
+	check(app.choices[0].accessibility_name.contains("Ansehen"), "KB solved action views existing completion")
 	await shot("solved")
 	app.sessions[5].definition.reveal.name = "TEST ONLY Ein besonders langer verdienter Motivname mit Umlauten und mehreren umbrochenen Zeilen auf derselben kompakten Karte"
 	app.show_album()
@@ -444,7 +455,16 @@ func regular() -> void:
 	broken.close()
 	await new_app()
 	await choose("voegel")
-	check(app.album.notes[0].text.contains("Backup geladen") and app.album.repair_buttons.has("T-09"), "validated backup marked with repair")
+	check(app.choices[0].diagnosis.text.contains("Backup geladen") and app.album.repair_buttons.has("T-09"), "validated backup marked with repair")
+	var recovered_card: Card = app.choices[0]
+	var recovered_point: Vector2 = recovered_card.diagnosis.get_global_rect().position + Vector2(8, 8)
+	check(recovered_card.recovery.get_global_rect().has_point(recovered_point), "KK recovered diagnosis has visible interior pointer target")
+	click_at(recovered_point)
+	await frames()
+	check(app.session.definition.id == "T-09" and app.ending.visible and not app.album.visible, "KK recovered diagnosis pointer opens valid earned card")
+	click(app.album_button)
+	await frames()
+	check(app.album.visible and app.album.category_id == "voegel", "KK recovery card returns to same filter")
 	foreign = save_bytes("t09")
 	click(app.album.repair_buttons["T-09"])
 	await frames()
@@ -458,6 +478,15 @@ func regular() -> void:
 	await new_app()
 	await choose("voegel")
 	check(app.session.definition.id == "T-01" and app.slot_status[5] == "backup_invalid", "nonactive filtered slot has damaged backup")
+	var damaged_backup_card: Card = app.choices[0]
+	var damaged_backup_point: Vector2 = damaged_backup_card.diagnosis.get_global_rect().position + Vector2(8, 8)
+	check(damaged_backup_card.recovery.get_global_rect().has_point(damaged_backup_point), "KK invalid-backup diagnosis has visible interior pointer target")
+	click_at(damaged_backup_point)
+	await frames()
+	check(app.session.definition.id == "T-09" and app.ending.visible and not app.album.visible, "KK invalid-backup diagnosis pointer opens valid earned card")
+	click(app.album_button)
+	await frames()
+	check(app.album.visible and app.album.category_id == "voegel", "KK invalid-backup card returns to same filter")
 	click(app.album.repair_buttons["T-09"])
 	await frames()
 	click(app.repair_dialog.get_ok_button())
@@ -475,9 +504,28 @@ func regular() -> void:
 		broken.close()
 	await new_app()
 	await choose("voegel")
-	check(app.choices[0].disabled and app.album.notes[0].text.contains("ungültig") and app.album.summary.text == "0 von 1 gelöst", "invalid saves are neither new nor solved")
-	check(app.album.play_buttons["T-09"].disabled and not app.album.reset_buttons["T-09"].disabled, "KB damaged save blocks play but retains reset")
+	check(app.choices[0].disabled and app.album.notes[0].text == "Ungültig" and app.album.summary.text == "0 von 1 gelöst", "invalid saves are neither new nor solved")
+	check(app.choices[0].disabled and app.album.reset_buttons["T-09"].visible and not app.album.reset_buttons["T-09"].disabled, "KB damaged save blocks play but retains reset")
+	var corrupted_primary: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09"))
+	var corrupted_backup: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09", ".bak"))
+	check(app._flush_current(), "KK unrelated pending state flushed before cross-slot reset comparison")
+	var unaffected_slots: Dictionary = save_bytes("t09")
+	click(app.album.reset_buttons["T-09"])
+	await frames()
+	check(app.reset_dialog.visible and app.reset_id == "T-09" and app.album.visible, "KK disabled invalid card exposes reset to real pointer")
+	click(app.reset_dialog.get_cancel_button())
+	await frames()
+	check(FileAccess.get_file_as_bytes(app.store.path_for("t09")) == corrupted_primary and FileAccess.get_file_as_bytes(app.store.path_for("t09", ".bak")) == corrupted_backup, "KK error reset cancellation preserves invalid slot bytes")
 	await shot("invalid-save")
+	click(app.album.reset_buttons["T-09"])
+	await frames()
+	check(app.reset_dialog.visible and app.reset_id == "T-09", "KK disabled card reset remains accessible after cancel")
+	click(app.reset_dialog.get_ok_button())
+	await frames()
+	check(app.album.visible, "KK confirmed invalid reset stays in catalog")
+	check(app.slot_status[5] == "fresh", "KK confirmed invalid reset clears only target status")
+	check(not app.choices[0].disabled and not app.album.reset_buttons["T-09"].visible, "KK confirmed invalid reset restores fresh clickable card")
+	check(save_bytes("t09") == unaffected_slots, "KK confirmed invalid reset keeps every unrelated flushed slot byte")
 	# Leave independently validated solved and redo-only slots for another process.
 	for suffix: String in [".json", ".bak"]:
 		var restored: FileAccess = FileAccess.open(app.store.path_for("t09", suffix), FileAccess.WRITE)
@@ -528,8 +576,11 @@ func large() -> void:
 	await frames()
 	check(app.album.page_index == 1 and app.album.scroll_vertical == position and app.album.notes[1].text == "Begonnen", "later page resume return preserves scroll")
 	var foreign: Dictionary = save_bytes("kat2_025")
+	app.album.ensure_control_visible(app.album.reset_buttons[id])
+	await frames()
 	click(app.album.reset_buttons[id])
 	await frames()
+	check(app.reset_dialog.visible and app.reset_id == id,"KK later-page reset reached through an unclipped pointer target")
 	# Changing the page with an outstanding request cannot retarget the dialog.
 	app.album.turn_page(1)
 	click(app.reset_dialog.get_ok_button())
@@ -557,6 +608,8 @@ func large() -> void:
 		check(app.choices.size() <= 24, "every page bounded during repeated navigation")
 	await frames()
 	check(app.choices.size() == 12 and app.album.next_button.disabled, "last page contains remainder")
+	for card: Control in app.choices:
+		check(card.size == app.choices[0].size and card.get_parent().size == app.choices[0].get_parent().size,"KK last mixed completion page has identical bounded grid cells")
 	await shot("last-page")
 
 func hover(control: Control) -> void:
@@ -569,6 +622,300 @@ func button_pixels(control: Control) -> PackedByteArray:
 	await frames()
 	await RenderingServer.frame_post_draw
 	return surface.get_texture().get_image().get_region(Rect2i(control.get_global_rect())).get_data()
+
+func card_geometry() -> Array:
+	var result: Array = []
+	for card: Control in app.choices:
+		result.append({"cell":card.get_parent().get_global_rect(),"card":card.get_global_rect(),"title":Rect2(card.caption.position,card.caption.size),"meta":Rect2(card.detail.position,card.detail.size),"image":card.image_area,"leaf":Rect2(card.leaf.position,card.leaf.size),"status":Rect2(card.note.position,card.note.size),"reset":Rect2(card.reset.position,card.reset.size)})
+	return result
+
+func fixed_cards() -> void:
+	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
+		surface.size = Vector2i(spec[0],spec[1])
+		app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		app.set_ui_scale(float(spec[2]))
+		await frames()
+		var initial: Array = card_geometry()
+		var u: float = app.ui_scale
+		for card: Control in app.choices:
+			check(card.size == app.choices[0].size and card.get_parent().size == app.choices[0].get_parent().size,"KK shared actual card AND grid cell dimensions")
+			check(card.caption.text == "???" and card.text.is_empty(),"KK only neutral question marks; no native hidden caption")
+			check(card.caption.get_theme_font("font") == app.WORK_TITLE_FONT and card.caption.get_theme_font_size("font_size") < app.title.get_theme_font_size("font_size"),"KK original smaller Bakso role")
+			check(card.caption.max_lines_visible == 2 and card.caption.text_overrun_behavior == TextServer.OVERRUN_TRIM_ELLIPSIS,"KK two-line bounded ellipsis")
+			check(not card.reset.visible and card.reset.focus_mode == Control.FOCUS_NONE,"KK new reset invisible and unfocusable")
+			check(card.find_children("play-*","Button",true,false).is_empty(),"KK play control, hit and focus station absent")
+			check(card.leaf.get_global_rect().end.x < card.note.get_global_rect().position.x and card.leaf.position.y == card.note.position.y,"KK fixed one-line footer without overlap")
+			check(card.image_area.encloses(Rect2(card.preview.position,card.preview.size)),"KK proportional own preview inside fixed area")
+			check(is_equal_approx(card.preview.size.x/card.preview.size.y,float(card.preview.width)/card.preview.height),"KK own preview preserves aspect")
+		await shot("new-%d" % spec[0])
+		# Actual validated empty save stays new, while the same slot's redo-only
+		# history stays begun. The native card controls are rebuilt in each step.
+		check(app._save_current(),"KK valid empty save written")
+		app.show_album()
+		await frames()
+		check(card_geometry() == initial and not app.album.reset_buttons["T-01"].visible,"KK empty save never changes geometry or reset visibility")
+		click(app.choices[0])
+		await frames()
+		click_at(app.board.global_position+app.board.view.cell_rect(Vector2i(2,0)).get_center())
+		click(app.undo_button)
+		click(app.album_button)
+		await frames()
+		check(card_geometry() == initial and app.choices[0].note.text == "Begonnen" and app.choices[0].reset.visible,"KK pointer edit/undo changes status but no rectangles")
+		check(app.album.previews[0].cells == app.sessions[0].player.cells and app.album.reveals[0].payload.is_empty(),"KK uncorrected own state and no early reveal")
+		await shot("begun-%d" % spec[0])
+		# Finish the fixed synthetic input via the normal Session boundary.
+		var item: Session = app.sessions[0]
+		for y: int in range(item.player.height):
+			for x: int in range(item.player.width):
+				if int(item.definition.solution[y][x]) > 0:
+					item.gesture.begin(item.player,Vector2i(x,y),int(item.definition.solution[y][x]))
+					item.finish()
+		check(item.completed and app.store.write_slot(item,item.view_state).is_empty(),"KK synthetic completion validated and saved")
+		app.show_album()
+		await frames()
+		check(card_geometry() == initial and app.choices[0].caption.text == item.definition.reveal.name,"KK completion adds earned title without moving following rows")
+		await shot("solved-%d" % spec[0])
+		for aspect: Vector2i in [Vector2i(320,80),Vector2i(80,320)]:
+			var image: Image = Image.create(aspect.x,aspect.y,false,Image.FORMAT_RGBA8)
+			image.fill(Color("376a60"))
+			app.choices[0].picture.artwork = ImageTexture.create_from_image(image)
+			app.choices[0].picture.queue_redraw()
+			await frames()
+			var fitted: Rect2 = app.choices[0].picture.artwork_rect()
+			check(Rect2(Vector2.ZERO,app.choices[0].picture.size).encloses(fitted) and is_equal_approx(fitted.size.x/fitted.size.y,float(aspect.x)/aspect.y),"KK wide/tall earned image fits completely without distortion")
+			check(card_geometry() == initial,"KK image aspect never changes grid geometry")
+			kk_measurements.append({"surface":spec,"artwork_size":aspect,"fitted":fitted})
+		item.definition.reveal.name = "TEST ONLY Ein außerordentlich langer verdienter Motivname mit Umlauten und mehr als zwei möglichen Zeilen ohne Änderung der Kachelgeometrie"
+		app.show_album()
+		await frames()
+		check(card_geometry() == initial and app.choices[0].caption.get_line_count() > 2 and app.choices[0].caption.get_visible_line_count() == 2,"KK long name overflows exactly the reserved two lines")
+		check(app.choices[0].accessibility_name.contains(item.definition.reveal.name),"KK full earned name remains accessible")
+		var category_name: String = app.album.categories[0].name
+		app.album.categories[0].name = "Äußerst lange technische Kategorienbezeichnung ".repeat(3).left(128)
+		app.album._render(0)
+		await frames()
+		check(card_geometry() == initial and app.choices[0].detail.get_visible_line_count() <= 2,"KK legal 128-character category cannot grow metadata or grid")
+		app.album.categories[0].name = category_name
+		app.album._render(0)
+		await frames()
+		var card: Control = app.choices[0]
+		await hover(card.caption)
+		await create_timer(0.8).timeout
+		check(card.tooltip_text.is_empty() and card.tooltip_ref == null and card.caption.get_tooltip().is_empty() and card.picture.get_tooltip().is_empty(),"KK actual card hover has no tooltip")
+		await hover(card.reset)
+		await create_timer(0.8).timeout
+		var tip: Control = card.reset.tooltip_ref.get_ref() if card.reset.tooltip_ref != null else null
+		check(tip != null and tip.is_visible_in_tree() and card.reset.tooltip_text == "Rätsel zurücksetzen","KK real reset hover retains tooltip")
+		await shot("long-name-%d" % spec[0])
+		app.set_ui_scale(1.0 if u == 1.25 else 1.25)
+		await frames()
+		check(tip == null or not is_instance_valid(tip) or not tip.is_visible_in_tree(),"KK UI change dismisses existing reset popup")
+		app.set_ui_scale(u)
+		await frames()
+		check(card_geometry() == initial,"KK UI roundtrip restores exact rectangles")
+		await choose("fahrzeuge-verkehr")
+		check(app.choices[0].size == initial[0].card.size and app.choices[0].image_area == initial[0].image and Rect2(app.choices[0].note.position,app.choices[0].note.size) == initial[0].status,"KK category removal reserves same metadata/image/footer space")
+		var foreign: Dictionary = save_bytes("t01")
+		click(app.album.reset_buttons["T-01"])
+		await frames()
+		check(app.reset_dialog.visible and app.reset_id == "T-01" and app.album.visible,"KK reset pointer never also opens earned card")
+		# While modal, change the underlying filter directly: the bound ID must
+		# survive; this is a target-stability counterexample, not a pointer claim.
+		app.album.choose_category("voegel")
+		click(app.reset_dialog.get_ok_button())
+		await frames()
+		check(app.album.visible and not app.sessions[0].completed and save_bytes("t01") == foreign,"KK confirmed catalog reset remains catalog and owns only captured slot")
+		await choose("")
+		check(card_geometry() == initial and app.choices[0].caption.text == "???" and not app.choices[0].reset.visible,"KK reset returns exact original geometry with no stale hit")
+		await shot("reset-%d" % spec[0])
+		kk_measurements.append({"surface":spec,"initial":initial,"after_reset":card_geometry(),"columns":app.album.grid.columns})
+	await recovery_pointer_cases()
+	# A small resize band crosses real column thresholds, no content-dependent
+	# width/height response or horizontal catalogue scroll is allowed.
+	for width: int in [1279,1281,1599,1601,1919,1921]:
+		surface.size = Vector2i(width,1080)
+		app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		await frames()
+		for card: Control in app.choices: check(card.size == app.choices[0].size,"KK resize has one shared geometry")
+		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0,"KK column boundary has no horizontal scroll")
+		kk_measurements.append({"resize_width":width,"columns":app.album.grid.columns,"geometry":card_geometry()})
+	await empty_write_error()
+
+func pointer_button(point: Vector2, button: MouseButton, down: bool, mask: int = 0) -> void:
+	var event: InputEventMouseButton = InputEventMouseButton.new()
+	event.position = point
+	event.global_position = point
+	event.button_index = button
+	event.button_mask = mask
+	event.pressed = down
+	surface.push_input(event, true)
+
+func pointer_move(from: Vector2, to: Vector2, mask: int = 0) -> void:
+	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+	motion.position = to
+	motion.global_position = to
+	motion.relative = to-from
+	motion.button_mask = mask
+	surface.push_input(motion, true)
+
+func recovery_pointer_cases() -> void:
+	var stable: Array = card_geometry()
+	var counts: Dictionary = {"open":0,"reset":0,"repair":0,"id":""}
+	app.album.opened.connect(func(id: String) -> void: counts.open += 1; counts.id = id)
+	app.album.reset_requested.connect(func(id: String) -> void: counts.reset += 1; counts.id = id)
+	app.album.repair_requested.connect(func(id: String) -> void: counts.repair += 1; counts.id = id)
+	for state: String in ["error","recovered","backup_invalid"]:
+		app.slot_status[0] = state
+		var display_errors: Array[String] = app.slot_errors.duplicate()
+		display_errors[0] = "TEST ONLY ausführliche Dateidiagnose. ".repeat(30)
+		# Long text is a presentation fixture, not pending unsaved work.
+		app.album.present(app.sessions,app.slot_status,display_errors,"","T-01")
+		await frames()
+		var card: Card = app.choices[0]
+		check(card.recovery.mouse_filter == Control.MOUSE_FILTER_STOP and card.recovery_content.mouse_filter == Control.MOUSE_FILTER_PASS,"KK "+state+": wheel ownership and text click routing stay explicitly separated")
+		check(card_geometry() == stable,"KK "+state+": fixed card and grid geometry")
+		check(card.reset.visible and card.recovery.visible,"KK "+state+": reset and diagnosis visible")
+		check(card.note.text == ("Ungültig" if state == "error" else "Neu"),"KK "+state+": short validated progress")
+		check(card.diagnosis.text.contains("TEST ONLY"),"KK "+state+": complete storage diagnosis")
+		check(card.diagnosis.get_line_count() > 2,"KK "+state+": long diagnosis wraps")
+		var bar: VScrollBar = card.recovery.get_v_scroll_bar()
+		var inner_range: float = bar.max_value-bar.page
+		check(bar.visible and inner_range > 0,"KK "+state+": real inner scroll range")
+		var point: Vector2 = card.recovery.get_global_rect().position + Vector2(10,10)
+		var outer_before: int = app.album.scroll_vertical
+		var opened_before: int = counts.open
+		var repaired_before: int = counts.repair
+		# Wheel down AND up: an unmatched down retains Viewport mouse capture,
+		# routing the next action to the old content even at correct coordinates.
+		click_at(point,MOUSE_BUTTON_WHEEL_DOWN)
+		await frames()
+		var wheel_after: int = card.recovery.scroll_vertical
+		check(wheel_after > 0,"KK "+state+": wheel scrolls inside bounded diagnosis")
+		check(app.album.scroll_vertical == outer_before,"KK "+state+": inner wheel keeps outer scroll")
+		check(counts.open == opened_before and counts.repair == repaired_before and counts.reset == 0,"KK "+state+": wheel emits no card action")
+		# A text drag out and back must not turn into a neutral click.
+		pointer_move(point,point)
+		pointer_button(point,MOUSE_BUTTON_LEFT,true,MOUSE_BUTTON_MASK_LEFT)
+		pointer_move(point,point+Vector2(30,0),MOUSE_BUTTON_MASK_LEFT)
+		pointer_move(point+Vector2(30,0),point,MOUSE_BUTTON_MASK_LEFT)
+		pointer_button(point,MOUSE_BUTTON_LEFT,false)
+		await frames()
+		check(counts.open == opened_before,"KK "+state+": returning text drag never opens card")
+		# Scroll down and back during a held left click. Equal final offset does
+		# not make this a neutral click; the scroll gesture must cancel activation.
+		pointer_button(point,MOUSE_BUTTON_LEFT,true,MOUSE_BUTTON_MASK_LEFT)
+		for wheel: MouseButton in [MOUSE_BUTTON_WHEEL_DOWN,MOUSE_BUTTON_WHEEL_UP]:
+			pointer_button(point,wheel,true,MOUSE_BUTTON_MASK_LEFT)
+			pointer_button(point,wheel,false,MOUSE_BUTTON_MASK_LEFT)
+			await frames()
+		pointer_button(point,MOUSE_BUTTON_LEFT,false)
+		await frames()
+		check(counts.open == opened_before,"KK "+state+": wheel during held click cancels opening even after reverse scroll")
+		# Native scrollbar page-click and thumb drag use their own hit targets.
+		card.recovery.scroll_vertical = 0
+		await frames()
+		var bar_point: Vector2 = bar.get_global_rect().position + Vector2(bar.size.x/2,bar.size.y*0.65)
+		click_at(bar_point)
+		await frames()
+		check(card.recovery.scroll_vertical > 0,"KK "+state+": scrollbar track really scrolls")
+		check(counts.open == opened_before and counts.repair == repaired_before,"KK "+state+": scrollbar track never activates card or repair")
+		card.recovery.scroll_vertical = 0
+		await frames()
+		var arrow_height: float = bar.get_theme_icon("decrement").get_height()
+		var grabber_height: float = bar.get_theme_stylebox("grabber").get_minimum_size().y
+		bar_point = bar.get_global_rect().position + Vector2(bar.size.x/2,arrow_height+grabber_height/2)
+		var drag_before: int = card.recovery.scroll_vertical
+		pointer_move(point,bar_point)
+		pointer_button(bar_point,MOUSE_BUTTON_LEFT,true,MOUSE_BUTTON_MASK_LEFT)
+		check(card.recovery.scroll_vertical == drag_before,"KK "+state+": thumb down itself does not page scroll")
+		pointer_move(bar_point,bar_point+Vector2(0,bar.size.y*0.45),MOUSE_BUTTON_MASK_LEFT)
+		pointer_button(bar_point+Vector2(0,bar.size.y*0.45),MOUSE_BUTTON_LEFT,false)
+		await frames()
+		check(card.recovery.scroll_vertical > 0,"KK "+state+": scrollbar drag really scrolls")
+		check(counts.open == opened_before and counts.repair == repaired_before,"KK "+state+": scrollbar drag never activates card or repair")
+		card.recovery.scroll_vertical = 0
+		await frames()
+		check(card.recovery.scroll_vertical == 0,"KK "+state+": restore capture scroll")
+		if state != "error":
+			check(app.album.repair_buttons.has("T-01"),"KK "+state+": text recovery action retained")
+			card.recovery.ensure_control_visible(card.repair)
+			await frames()
+			check(card.recovery.get_global_rect().encloses(card.repair.get_global_rect()),"KK "+state+": scrolled repair pointer target fully inside clip")
+			click(card.repair)
+			await frames()
+			check(app.repair_dialog.visible,"KK "+state+": repair pointer opens confirmation")
+			check(app.repair_id == "T-01" and counts.id == "T-01" and counts.repair == repaired_before+1,"KK "+state+": repair emits once for stable registry ID")
+			check(counts.open == opened_before and app.album.visible,"KK "+state+": repair keeps catalog and never opens card")
+			check(not app.work.visible and not app.ending.visible,"KK "+state+": repair opens neither work nor ending")
+			var before_cancel: Dictionary = save_bytes()
+			if app.repair_dialog.visible:
+				click(app.repair_dialog.get_cancel_button())
+				await frames()
+			check(not app.repair_dialog.visible and save_bytes() == before_cancel,"KK "+state+": repair cancellation preserves bytes")
+		await shot(state)
+		# Neutral text after inner scrolling opens valid cards once; the invalid
+		# card remains blocked. Keep capture state independent from navigation.
+		card.recovery.scroll_vertical = 30
+		await frames()
+		click_at(point)
+		await frames()
+		check(counts.open == opened_before+(0 if state == "error" else 1),"KK "+state+": neutral diagnosis click respects validity")
+		if state != "error":
+			check(counts.id == "T-01" and app.work.visible and not app.album.visible,"KK "+state+": neutral click opens bound new slot")
+			# Synthetic long diagnostics are display fixtures, not disk corruption.
+			# Remove only this fixture state before returning through normal flush.
+			app.slot_status[0] = "fresh"
+			app.slot_errors[0] = ""
+			click(app.album_button)
+			await frames()
+		check(app.album.visible,"KK "+state+": catalog remains or returns after neutral click")
+		kk_pointer_measurements.append({"state":state,"inner_range":inner_range,"wheel_after":wheel_after,"outer_before":outer_before,"counts":counts.duplicate(),"neutral_point":point,"scrollbar_thumb_point":bar_point})
+	app.slot_status[0] = "fresh"
+	app.slot_errors[0] = ""
+	app.show_album()
+	await frames()
+
+func empty_write_error() -> void:
+	# A separate empty profile exercises the real SaveStore failure path without
+	# inheriting pointer capture, synthetic recovery status or history.
+	Store.test_root_override = Store.test_root_override.path_join("empty-write-error")
+	DirAccess.make_dir_recursive_absolute(Store.test_root_override)
+	await new_app()
+	check(app.slot_status[0] == "fresh" and save_bytes().is_empty(),"KK runtime error starts with absent saves")
+	app.store.fail_step = "after_temp"
+	check(not app._save_current(),"KK empty slot real write fails before primary publication")
+	await frames()
+	var card: Card = app.choices[0]
+	check(card.reset.visible and not card.reset.disabled,"KK empty write failure exposes enabled reset")
+	check(card.note.text == "Neu" and app.session.player.history.is_empty() and not app.session.completed,"KK empty write failure never invents progress")
+	check(card.recovery.visible and card.diagnosis.text.contains(app.slot_errors[0]) and not app.slot_errors[0].is_empty(),"KK empty write failure has actual storage diagnosis")
+	check(app.album.feedback.visible and app.album.feedback.text.contains(app.slot_errors[0]),"KK empty write failure has global feedback")
+	check(not FileAccess.file_exists(app.store.path_for("t01")) and FileAccess.file_exists(app.store.path_for("t01",".tmp")),"KK empty failed save has temp only")
+	var original: Dictionary = save_bytes()
+	var foreign: FileAccess = FileAccess.open(app.store.path_for("t02"),FileAccess.WRITE)
+	foreign.store_buffer(FileAccess.get_file_as_bytes("res://tests/fixtures/runtime/t02.json"))
+	foreign.close()
+	var unaffected: Dictionary = save_bytes("t01")
+	click(card.reset)
+	await frames()
+	check(app.reset_dialog.visible and app.reset_id == "T-01" and app.album.visible,"KK empty write failure reset pointer reaches bound confirmation")
+	click(app.reset_dialog.get_cancel_button())
+	await frames()
+	check(save_bytes("t02") == original and save_bytes("t01") == unaffected,"KK empty write failure reset cancellation preserves all bytes")
+	check(app.choices[0].reset.visible,"KK empty failed slot retains reset after cancellation")
+	click(app.choices[1])
+	await frames()
+	check(app.album.visible and app.session.definition.id == "T-01" and not app.slot_errors[0].is_empty(),"KK empty write failure blocks slot switch on failed mandatory flush")
+	click(app.choices[0].reset)
+	await frames()
+	check(app.reset_dialog.visible,"KK empty failed slot reset remains reachable after blocked switch")
+	click(app.reset_dialog.get_ok_button())
+	await frames()
+	check(app.album.visible and app.slot_status[0] == "fresh" and app.slot_errors[0].is_empty(),"KK empty write failure confirmed reset restores fresh catalog state")
+	check(save_bytes("t02").is_empty(),"KK empty write failure reset removes target primary backup and temp")
+	check(save_bytes("t01") == unaffected,"KK empty write failure reset preserves foreign slot bytes")
+	check(not app.choices[0].reset.visible and not app.choices[0].recovery.visible,"KK empty write failure reset clears diagnosis and reset hit")
+	app.store.fail_step = ""
 
 func compact_buttons() -> void:
 	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
@@ -586,18 +933,17 @@ func compact_buttons() -> void:
 		for index: int in range(app.choices.size()):
 			var card: Button = app.choices[index]
 			var id: String = app.album.visible_ids[index]
-			var play: Button = app.album.play_buttons[id]
 			var reset: Button = app.album.reset_buttons[id]
 			widths.append(card.size.x)
 			check(card.size.x/u >= 220 and card.size.x/u <= 240, "KB compact card target width")
-			check(card.get_global_rect().encloses(play.get_global_rect()) and card.get_global_rect().encloses(reset.get_global_rect()), "KB icons inside card")
-			check(play.size.x >= 44*u and play.size.y >= 44*u and reset.size.x >= 44*u and reset.size.y >= 44*u, "KB 44/55 pointer targets")
-			check(reset.position.y >= play.position.y+play.size.y+7*u, "KB separated vertical icons")
-			check(play.focus_mode == Control.FOCUS_ALL and reset.focus_mode == Control.FOCUS_ALL and card.focus_mode == Control.FOCUS_ALL, "KB catalog focus preserved")
+			check(card.get_global_rect().encloses(reset.get_global_rect()), "KB icons inside card")
+			check(reset.size.x >= 44*u and reset.size.y >= 44*u, "KB 44/55 pointer targets")
+			check(reset.position == Vector2(card.size.x-roundf(10*u)-44*u,roundf(10*u)), "KK fixed top/right reset anchor")
+			check(card.focus_mode == Control.FOCUS_ALL and reset.focus_mode == Control.FOCUS_NONE and not reset.visible, "KB catalog focus preserved")
 			var labels: Array[Node] = card.find_children("*","Label",true,false)
 			check(not labels[0].text.contains("×") and labels[1].text.count("×") == 1, "KB dimensions exactly once")
-			check(labels[1].get_global_rect().end.x <= play.get_global_rect().position.x-7*u, "KB metadata does not enter actions")
-			interiors.append({"card":region(card),"meta":region(labels[1]),"play":region(play),"reset":region(reset),"preview":region(app.album.previews[index]),"status":region(app.album.notes[index])})
+			check(labels[0].get_global_rect().end.x <= reset.get_global_rect().position.x-7*u, "KB metadata does not enter actions")
+			interiors.append({"card":region(card),"meta":region(labels[1]),"reset":region(reset),"preview":region(app.album.previews[index]),"status":region(app.album.notes[index])})
 		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0, "KB no horizontal overflow")
 		check(app.album.grid.columns > 4 if spec[0] >= 1920 else app.album.grid.columns >= 2, "KB responsive columns without four-column cap")
 		kb_measurements.append({"surface":spec,"columns":app.album.grid.columns,"widths":widths,"interiors":interiors})
@@ -614,17 +960,10 @@ func compact_buttons() -> void:
 	app.album.opened.connect(func(_id: String) -> void: counts.open += 1)
 	app.album.reset_requested.connect(func(_id: String) -> void: counts.reset += 1)
 	app.album.repair_requested.connect(func(_id: String) -> void: counts.repair += 1)
-	check(app.album.play_buttons["T-01"].tooltip_text == "Spielen", "KB new action label")
-	var original: Dictionary = save_bytes()
-	click(app.album.reset_buttons["T-01"])
+	check(app.choices[0].accessibility_name.contains("Spielen") and not app.album.reset_buttons["T-01"].visible, "KK fresh card action and hidden reset")
+	click(app.choices[0])
 	await frames()
-	check(counts == {"open":0,"reset":1,"repair":0} and app.reset_dialog.visible and app.album.visible and save_bytes() == original, "KB reset emits only reset and writes nothing before confirmation")
-	click(app.reset_dialog.get_cancel_button())
-	await frames()
-	check(save_bytes() == original and app.album.visible, "KB reset cancellation inert")
-	click(app.album.play_buttons["T-01"])
-	await frames()
-	check(counts.open == 1 and counts.reset == 1 and app.work.visible, "KB play opens once through existing route")
+	check(counts.open == 1 and counts.reset == 0 and app.work.visible, "KK card opens once through pointer")
 	# ZR: a grid-origin up over a tool must not activate that button.
 	var start: Vector2 = app.board.global_position+app.board.view.cell_rect(Vector2i(2,0)).get_center()
 	var down: InputEventMouseButton = InputEventMouseButton.new()
@@ -637,8 +976,15 @@ func compact_buttons() -> void:
 	check(app.session.player.cursor == 1 and app.session.player.history.size() == 1, "KB ZR release over Undo commits once without undo")
 	click(app.album_button)
 	await frames()
-	check(app.album.play_buttons["T-01"].tooltip_text == "Fortsetzen", "KB begun action label")
-	click(app.album.play_buttons["T-01"])
+	check(app.choices[0].accessibility_name.contains("Fortsetzen"), "KK begun action label")
+	var original: Dictionary = save_bytes()
+	click(app.album.reset_buttons["T-01"])
+	await frames()
+	check(counts == {"open":1,"reset":1,"repair":0} and app.reset_dialog.visible and app.album.visible and save_bytes() == original, "KK reset emits only reset and writes nothing before confirmation")
+	click(app.reset_dialog.get_cancel_button())
+	await frames()
+	check(save_bytes() == original and app.album.visible, "KK reset cancellation inert")
+	click(app.choices[0])
 	await frames()
 	for id: String in app.TOOL_IDS:
 		var tool: Control = app.actions[id]
@@ -703,4 +1049,4 @@ func compact_buttons() -> void:
 	for u: float in [1.25,1.0]:
 		app.set_ui_scale(u)
 		await frames()
-		check(app.album.play_buttons["T-01"].size == Vector2.ONE*44*u, "KB UI roundtrip has no stale button minima")
+		check(app.album.reset_buttons["T-01"].size == Vector2.ONE*44*u, "KB UI roundtrip has no stale button minima")

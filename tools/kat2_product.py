@@ -55,7 +55,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
     directory = output / "kat2"
     directory.mkdir()
     reports = []
-    for mode in ("regular", "restart", "large", "empty", "invalid", "adapter", "information", "kb"):
+    for mode in ("regular", "restart", "large", "empty", "invalid", "adapter", "information", "kb", "kk"):
         project = workspace / ("kat2-" + mode) / "game"
         copy_regression_game(root, project)
         saves = workspace / ("kat2-" + ("regular" if mode == "restart" else mode) + "-saves")
@@ -85,7 +85,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
             python_phase("kat2-adapter-register", lambda: registration(exported, checkout, apply=True))
             install_runtime_fixtures(root, project, append=True)
         else:
-            fixture(project, saves, "regular" if mode in ("restart", "information", "kb") else mode)
+            fixture(project, saves, "regular" if mode in ("restart", "information", "kb", "kk") else mode)
         env = environment.copy()
         env.update(P1_TEST_SAVE_ROOT=str(saves), KAT2_OUTPUT=str(directory), KAT2_MODE=mode)
         phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)

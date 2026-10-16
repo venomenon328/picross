@@ -201,7 +201,7 @@ static func run(t: SceneTree) -> void:
 	var recovery_ui: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(recovery_ui)
 	await t.process_frame
-	t.check(recovery_ui.slot_status[0] == "backup_invalid" and recovery_ui.album.notes[0].text.contains("Backup beschädigt") and recovery_ui.album.repair_buttons.has("T-01"), "P1.3 broken backup visibly reported at startup")
+	t.check(recovery_ui.slot_status[0] == "backup_invalid" and recovery_ui.choices[0].diagnosis.text.contains("Backup beschädigt") and recovery_ui.album.repair_buttons.has("T-01"), "P1.3 broken backup visibly reported at startup")
 	recovery_ui._ask_repair()
 	recovery_ui.repair_dialog.confirmed.emit()
 	t.check(recovery_ui.store.load_slot(t01).status == "loaded" and recovery_ui.status_label.text.is_empty(), "P1.3 confirmed backup renewal restores saving")
@@ -213,7 +213,7 @@ static func run(t: SceneTree) -> void:
 	var backup_ui: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(backup_ui)
 	await t.process_frame
-	t.check(backup_ui.slot_status[0] == "recovered" and backup_ui.album.notes[0].text.contains("Backup geladen") and backup_ui.album.repair_buttons.has("T-01"), "P1.3 backup recovery visibly reported at startup")
+	t.check(backup_ui.slot_status[0] == "recovered" and backup_ui.choices[0].diagnosis.text.contains("Backup geladen") and backup_ui.album.repair_buttons.has("T-01"), "P1.3 backup recovery visibly reported at startup")
 	backup_ui._ask_repair()
 	backup_ui.repair_dialog.confirmed.emit()
 	t.check(backup_ui.store.load_slot(t01).status == "loaded" and backup_ui.status_label.text.is_empty(), "P1.3 confirmed recovery resumes saving")
