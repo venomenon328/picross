@@ -1,0 +1,113 @@
+{
+  "approved_parameters": [],
+  "authorization": "Ausdrücklicher Rücksprung zu Standardauftrag 1: neue Abschlussbildentwürfe nur des Carabao-Kopfes. Fortgeltende Repositoryablage nach §6 samt Ablagemerge nach erfolgreichen Pflichtchecks. Keine neue Bild-/Motiv-/Endfreigabe, keine Rasterproduktion oder Spielregistrierung.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "saeuger",
+  "composition": "head_only",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "b9aa8ee2c4e39586d034ea72f2e21bd21cb7aad17bcc9c7eef90ecdb11cd11dc"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren: A-r02, B-r02 oder C-r02 ausdrücklich wählen/freigeben; danach neue Konfiguration und vorlagentreue Motivabstraktion.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "repair": null,
+  "repo_commit": "40484d5b59377f1c2830a5e999c4c28eb7ba8d5d",
+  "report": "report.md",
+  "request": "request.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "height": null,
+    "mode": "mono",
+    "width": 40
+  },
+  "restart_from": {
+    "handoff": {
+      "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r05/handoff.json",
+      "sha256": "0403171b361ea7187a23f0691d61a915e7eb705ec3e1bfbb5f5d8f52941db14c"
+    },
+    "inventory_sha256": "0a8ee95dd26a67244230a3cc096fc9c2652e6895941df7e96d774f5731539957",
+    "package": {
+      "bytes": 10484367,
+      "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r05/package.zip",
+      "sha256": "590e8bbc39ef3c633b72a8a2a2560d831135cd057bb9b322142d54206672b495"
+    },
+    "repository_commit": "40484d5b59377f1c2830a5e999c4c28eb7ba8d5d",
+    "revision": "r05",
+    "state": "content_ready"
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "file": "reveal/A-r02.png",
+      "revision": "r02",
+      "sha256": "e9d8b7590fdee718a9790c13e915eea99221c8b34dd3a36cc858c6ad0d709dc6",
+      "title": "Frontal",
+      "variant": "A-r02"
+    },
+    {
+      "approval": null,
+      "file": "reveal/B-r02.png",
+      "revision": "r02",
+      "sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280",
+      "title": "Dreiviertel nach links",
+      "variant": "B-r02"
+    },
+    {
+      "approval": null,
+      "file": "reveal/C-r02.png",
+      "revision": "r02",
+      "sha256": "d89563c041d37ce4087090b9a8a78165091d79a04a055a6336d36bb92a5b2aa9",
+      "title": "Seitenbetont nach rechts",
+      "variant": "C-r02"
+    }
+  ],
+  "revision": "r06",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
