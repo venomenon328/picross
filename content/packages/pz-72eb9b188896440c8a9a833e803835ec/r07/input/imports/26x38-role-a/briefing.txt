@@ -1,0 +1,4 @@
+Ast und Tier farblich klar getrennt erhalten: branch nur Ast, fur Tier einschließlich Greifkontakte/Schwanz/Iris, cream helle Innenflächen, dark Konturen/Pupillen. Kopfneigung, Sitzpose, Oberschenkelbogen, diagonalen Ast und S-Schwanz erhalten. Leicht versetzte Farb-Anker zur Erhaltung gemischter Kontur-/Flächenpixel, gleiche vier Rollen und deutliche Hell-Dunkel-Ordnung; keine Schwellen-Dublette. Targeted role-separation palette anchors; same approved four roles, source, geometry and full crop. No cell editing.
+
+Working mode: faithful
+Motif and gameplay review: open

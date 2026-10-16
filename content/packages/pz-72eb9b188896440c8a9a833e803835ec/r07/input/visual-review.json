@@ -1,0 +1,41 @@
+{
+  "criteria": {
+    "Erkennbarkeit": {
+      "reason": "Zwei versetzt große dunkle Augenbereiche, große Ohren, geneigter Dreiviertelkopf, seitliche Sitzpose, diagonaler Ast und langer S-Schwanz bleiben erkennbar. Irisringe und Mund werden im kleinen Raster stark reduziert.",
+      "status": "erfüllt"
+    },
+    "Palette/Lesbarkeit": {
+      "reason": "Vier tatsächlich verwendete, visuell getrennte Töne: kühles Blau #185c8a für Ast(38 Zellen), Orangebraun #d18a48 für Tier/Greiflappen/Schwanz(181), helles Creme #ead09c(58), dunkles Braun #493d36 für Augen/Konturen(79). Alle38 blauen Zellen an der Astdiagonale geprüft, keine blauen Kopf-/Rücken-/Schwanzkonturen. Dunkler Anker gegenüber bevorzugtem Fastschwarz aufgehellt, damit Mischkonturen nicht in Astfarbe fallen; weiterhin deutlich dunkler als Fell/Creme. Astkanten haben zusätzlich dunkle Kontur und helle/warme Mischpixel, keine zweite Grundfläche. Keine fünfte nahe Farbe. Keine Farbblindheits- oder Zugänglichkeitszertifizierung.",
+      "status": "erfüllt"
+    },
+    "Serienästhetik/Revealkonsistenz": {
+      "reason": "Ruhige Farbflächen und diskretes Raster; B-r01 bleibt unverändert. Natürlicher brauner Ast im detaillierten Reveal wird wie in der freigegebenen MA-r03 gestalterisch blau abstrahiert. Pose, Motiv, Astlage und Schwanzform bleiben identisch.",
+      "status": "erfüllt"
+    },
+    "Silhouette/Proportionen": {
+      "reason": "Kopfneigung, hochstehendes linkes Ohr, angewinkelter Oberschenkel und Greifkontakte bleiben erhalten. Dunkle Konturstücke gliedern den Oberschenkel; keine glatte geschlossene Bogenform auf Zellniveau behauptet.",
+      "status": "erfüllt"
+    },
+    "Wichtige Details/Negativräume": {
+      "reason": "Tatsächliche EMPTY-Zelle Z17/S14 unter dem Unterarm erhalten. Freier Hintergrund unter dem Ast und um den zusammenhängenden Schwanz bleibt. Finger/Zehen und feinste Zwischenräume verschmelzen zulässig zu Greiflappen.",
+      "status": "erfüllt"
+    }
+  },
+  "images": [
+    "B-r01.png",
+    "MA-r03.png",
+    "candidate-comparison.png",
+    "final-raster.png",
+    "final-raster-large.png",
+    "final-raster-grid.png"
+  ],
+  "reviewer": "Codex, visueller Selbstreview; keine unabhängige redaktionelle Zweitprüfung",
+  "selected": "26x38-role-a",
+  "soft_notes": [
+    "36,03% gefüllt; keine15/85-Warnschwelle.",
+    "Keine isolierte gefüllte Zelle bei8-Nachbarschaft.",
+    "Nur leere Außenzeile38 und Außenspalte26, keine leeren Innenlinien.",
+    "Pupillen sind als dunkle Augenbereiche erhalten; Iris-/Gesichtsringe und Fingerdetails stark vereinfacht. Zur tatsächlichen menschlichen Endabnahme vorgelegt."
+  ],
+  "verdict": "Visuelle KI-Prüfung bestanden; menschliche Endabnahme offen."
+}

@@ -1,0 +1,13 @@
+{
+  "author": "OpenAI image_gen.imagegen im Nutzerauftrag",
+  "file": "B-r01.png",
+  "prompt_file": "reveal-prompts.json",
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea",
+  "source": {
+    "commit": "15e54e3e35794edd1d34b18fbdaab17ccea780a3",
+    "entry": "B-r01.png",
+    "package": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r01/package.zip"
+  },
+  "usage_basis": "KI-erzeugtes Original ohne Fremdbildbytes; beauftragte Projektverwendung."
+}
