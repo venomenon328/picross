@@ -60,7 +60,7 @@
   },
   "final_editorial_approval": {
     "file": "content/authoring/pz-9a79befc7a834e2d9d5896a477328962/r05/approval.json",
-    "sha256": "6c5170b4c683e2058cdb82b5e382c91b82464d2b048174e35fb136fee37d686f"
+    "sha256": "7f9ee89bc6b6fcd7c3573ffe3ad2660d9c722b3d8088ab7be1687ba1778ad52a"
   },
   "final_editorial_approval_template": {
     "file": "content/authoring/pz-9a79befc7a834e2d9d5896a477328962/r05/end-acceptance.md",
@@ -76,22 +76,22 @@
     "category_id": "voegel",
     "export": {
       "file": "content/authoring/pz-9a79befc7a834e2d9d5896a477328962/r05/integration-export.json",
-      "sha256": "eeb5229ebb2807a1f0d5b12088445107929a525ead293f9665fbdb371fa8c28f"
+      "sha256": "ec933b1a4371309035ade81e4b9107fd9c241ca0c7d189869cec4b07072aa4f6"
     },
     "file_audit": {
       "file": "content/authoring/pz-9a79befc7a834e2d9d5896a477328962/r05/integration-file-audit.json",
-      "sha256": "1c54a4b5fd849bf8fa393cf54443615207888934f17276a69b227b41cec328f7"
+      "sha256": "91afca578248617e025dd29b8d455038971b4102f3050ddfe152feb2a6cb93bb"
     },
     "on_main": false,
     "package": "content/packages/pz-9a79befc7a834e2d9d5896a477328962/r05",
-    "package_sha256": "83c678e857429a7edf2fbb5299a3084e02d33b4a548d63eec3dfaed0f09ee833",
+    "package_sha256": "1779e4aeeecce76f288a164d23605e9fcf724035f8fb2dd151e668682e1289f0",
     "plan": {
       "file": "content/authoring/pz-9a79befc7a834e2d9d5896a477328962/r05/integration-plan.json",
-      "sha256": "0c51f6fc593b08e82af8f5741c22a3853a77d1a53b59d15ca38d4c271ef5b5b0"
+      "sha256": "ff56b778497ac218ac8a9b691c1ebbb26e743019c1a75db5d856dbb843b9de34"
     },
     "register": {
       "file": "content/authoring/pz-9a79befc7a834e2d9d5896a477328962/r05/integration-register.json",
-      "sha256": "d287f1f77f70d7a2982c2ac0af9679e15c8c8a58cafa19aba995c39b4c9b423e"
+      "sha256": "f37725ba0dc4fd1b7186b74d2f64223eb3283dbb07dd58bd1b580067cf99d208"
     },
     "registered": true,
     "runtime_id": "pz-9a79befc7a834e2d9d5896a477328962",
@@ -133,10 +133,10 @@
     "blockers": [],
     "editorial_approved": true,
     "file": "content/authoring/pz-9a79befc7a834e2d9d5896a477328962/r05/integration-inspection.json",
-    "sha256": "3543f73acb72a286f71273aa2c014b1194f3166af2449eb1a143bae20f8cd17a",
+    "sha256": "1fb95df9c10a095393a918a01f46fd144281715fe8a144c94d74465e6c2742c0",
     "technical": true
   },
-  "updated_at_utc": "2026-10-16T12:08:38.122857+00:00",
+  "updated_at_utc": "2026-10-16T12:10:45.671358+00:00",
   "used_foreground_colors": 4,
   "width": 23
 }

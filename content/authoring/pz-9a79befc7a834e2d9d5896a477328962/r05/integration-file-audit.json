@@ -1,6 +1,6 @@
 {
   "additional_replays": "nicht erforderlich: reine Inhaltsintegration",
-  "checked_at_utc": "2026-10-16T12:08:38.122857+00:00",
+  "checked_at_utc": "2026-10-16T12:10:45.671358+00:00",
   "checks": {
     "actual_registry_equals_reviewed_plan": true,
     "all_export_files_hash_equal": true,
