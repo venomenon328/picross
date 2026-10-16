@@ -35,7 +35,7 @@ def run(head: str, run_id: str, engine: Path, cache: Path, output: Path) -> dict
                                    'hn-direct-' + name))
     bound.update(windows_hn=measurements, direct_starts=starts,
                  hn_probe_sha256=toolchain.sha256_file(script),
-                 hn_original_files={p.name: toolchain.sha256_file(p) for p in sorted(native.iterdir())},
+                 hn_original_files={p.name: toolchain.sha256_file(p) for p in sorted(native.iterdir()) if p.is_file()},
                  owner_acceptance='HN-M01 open; automation is not owner acceptance',
                  independent_review='HN-R01 open')
     (output / 'hn-windows-proof.json').write_text(json.dumps(bound, indent=2)+'\n', encoding='utf-8')
