@@ -1,0 +1,125 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        68,
+        25,
+        1022,
+        1423
+      ],
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 20,
+      "method": "area",
+      "mode": "mono",
+      "width": 14
+    },
+    {
+      "actual_crop": [
+        68,
+        25,
+        1022,
+        1423
+      ],
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "width": 15
+    }
+  ],
+  "authorization": "Standardauftrag 3 bis Endabnahmevorlage; tatsächliche MA-r01-/Parameterfreigabe, Repositoryablage nach §6 und Ablagemerge nach erfolgreichen Pflichtprüfungen beauftragt. Keine menschliche Endabnahme oder Spielregistrierung vorweggenommen.",
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "import-15x22",
+    "certification": null,
+    "logic_hash": "ca959db2ef3749b97dae4450cc9baa608dfe1856c8d85fa63aa2293ace4830e0",
+    "matrix_hash": "c29b1eb071ce61aca7bbb0d6721a61485b7f5a040a295eb4949c30e4e82e3587",
+    "proof": "import-15x22/area-112-proof.json",
+    "source_type": "import",
+    "variant": "area-112",
+    "verification": "audit/verify-15x22-112.json"
+  },
+  "category_id": "blumen-pflanzen",
+  "comparison": "previews/final-comparison.png",
+  "content_blockers": [],
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "final_editorial_approval": null,
+  "final_raster": "previews/final-raster-clues.png",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "difficulty.json",
+    "frame": "audit/candidates.json",
+    "logic": "audit/verify-15x22-112.json",
+    "motif": "motif-approval-evidence.md",
+    "provenance": "audit/candidates.json",
+    "reveal_approval": "reveal-approval-evidence.md",
+    "reveal_consistency": "visual-review.json",
+    "visual": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "7f1e4c9143f2911a03d4591b58022ed44ef3065e2266b78ce07e82d3562557e0"
+  },
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "0738b9ebabcbe20c3403f0654440ff08e1aed1a1caf626719613378d326d93f1",
+    "file": "motif/MA-r01.png",
+    "provenance": "motif/MA-r01.provenance.json",
+    "revision": "MA-r01",
+    "sha256": "1a52522ac580f6a09bc484eb4cd69419f9284bc473a55447845c5508430b8642"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "audit/candidates.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": "parameterkorridor.json",
+  "puzzle_id": "pz-a358a1bf1b994efcbebeb55abf825789",
+  "repair": null,
+  "repo_commit": "35465bed49055b01583a20aab7add9b37536c129",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "foreground_colors": 1,
+    "height": 20,
+    "mode": "mono",
+    "user_color_count": null,
+    "width": 15
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "reveals/A-r01.provenance.json",
+    "revision": "A-r01",
+    "sha256": "0738b9ebabcbe20c3403f0654440ff08e1aed1a1caf626719613378d326d93f1"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}
