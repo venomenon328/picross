@@ -1,0 +1,54 @@
+{
+  "calls": [
+    {
+      "arguments": {
+        "transparent_background": false
+      },
+      "model": "not_exposed",
+      "output": "reveals/A-r01.png",
+      "prompt": "Use case: stylized-concept. Asset type: detailed colorful reveal illustration for a hand-drawn nonogram game, variant A-r01, one standalone portrait image. Subject: one classic green branching cactus growing directly from a small sandy base, a tall rounded central column and two substantial upward-curving arms at unequal heights, clear open negative spaces between arms and trunk. Broad balanced shape for later monochrome simplification around 15 cells wide by 20 high. Warm calm hand-drawn 2D illustration, crisp dark organic outlines, rich coherent green planes, modest soft shading, gently curved vertical ribs and carefully spaced small spine clusters, subtle surface detail. Quiet uniform warm ivory background, cactus fills most of the portrait frame without clipping, no landscape or additional objects. Elaborate polished colored illustration, not a pixel drawing, not a monochrome stencil. No face, no text, no labels, no watermark, no frame, no photorealism or 3D.",
+      "quality": "not_exposed",
+      "returned_dimensions_px": [
+        1086,
+        1448
+      ],
+      "sha256": "0738b9ebabcbe20c3403f0654440ff08e1aed1a1caf626719613378d326d93f1",
+      "size_setting": "not_exposed",
+      "variant": "A-r01"
+    },
+    {
+      "arguments": {
+        "transparent_background": false
+      },
+      "model": "not_exposed",
+      "output": "reveals/B-r01.png",
+      "prompt": "Use case: stylized-concept. Asset type: detailed colorful reveal illustration for a hand-drawn nonogram game, variant B-r01, one standalone portrait image. Subject: a single upright prickly pear cactus, a large central oval pad supporting a larger upper pad and two broad asymmetrically branching side pads, clearly separated silhouettes and open gaps; rooted in a small simple sandy base. Main silhouette suitable for later monochrome simplification near 15 cells wide by 20 high. Warm calm hand-drawn 2D illustration with crisp dark organic outlines, rich sage and jade green color planes, modest soft shading, elegantly spaced areoles and short fine spine clusters, careful botanical surface details. Uniform warm ivory background, whole cactus fully visible and fills most of portrait frame. Detailed finished color illustration, no pixel art or diagram. No face, no text, no labels, no watermark, no frame, no additional plants, no busy desert scene, no photorealism or 3D.",
+      "quality": "not_exposed",
+      "returned_dimensions_px": [
+        1086,
+        1448
+      ],
+      "sha256": "127b896361e5509c98a6233c0de8064e88d318f325f7e064c6d8e72a9c7ffb51",
+      "size_setting": "not_exposed",
+      "variant": "B-r01"
+    },
+    {
+      "arguments": {
+        "transparent_background": false
+      },
+      "model": "not_exposed",
+      "output": "reveals/C-r01.png",
+      "prompt": "Use case: stylized-concept. Asset type: detailed colorful reveal illustration for a hand-drawn nonogram game, variant C-r01, one standalone portrait image. Subject: one slender upright ribbed columnar cactus in a simple warm terracotta flowerpot, one smaller short thick offset shoot attached low on the side. Rounded tall crown, broad vertical ribs, clean visible distinction between main stem and side shoot; simple wide pot rim and tapered pot base. Whole composition tall and compact, suitable for later monochrome abstraction around 15 cells wide by 20 high. Warm calm hand-drawn 2D illustration, crisp dark organic contours, saturated deep green planes and warm terracotta orange, subtle soft shading and carefully spaced short spine clusters, detailed ceramic texture without visual noise. Uniform warm ivory background, portrait framing, entire plant and pot fully visible, subject fills most of the frame. Finished detailed color artwork, not a pixel drawing or colored silhouette. No text, labels, watermark, face, frame, extra decor, landscape, photorealism or 3D.",
+      "quality": "not_exposed",
+      "returned_dimensions_px": [
+        1086,
+        1448
+      ],
+      "sha256": "f9c2c3be924ea7e6fa574bf2b06a23237fcaa002afcd93dc4fc254b9acae8d57",
+      "size_setting": "not_exposed",
+      "variant": "C-r01"
+    }
+  ],
+  "mode": "built-in",
+  "tool": "image_gen.imagegen"
+}

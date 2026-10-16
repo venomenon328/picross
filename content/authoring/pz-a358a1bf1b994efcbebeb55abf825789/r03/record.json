@@ -29,9 +29,7 @@
       "width": 15
     }
   ],
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
+  "blockers": [],
   "candidate": {
     "bundle": "import-15x22",
     "certification": null,
@@ -80,14 +78,41 @@
   },
   "dimensions_approximate": true,
   "dimensions_fixed": false,
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "evidence": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/r03/approval-evidence.md",
+    "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/r03/approval.json",
+    "sha256": "727ed3d7c216640f5875ff4b5d4d8e8c24bbd70529e41667619f2661465aa8c1"
+  },
   "format": "picross-authoring-record-v1",
   "handoff": {
     "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/r03/handoff.json",
     "sha256": "99b402b50ff19f33cb6eb4a65669b34d69b5dfe42f6789da6046860234f33ba1"
   },
   "height": 22,
-  "integration": null,
+  "integration": {
+    "category_id": "blumen-pflanzen",
+    "export": {
+      "file": "content/packages/pz-a358a1bf1b994efcbebeb55abf825789/r03/manifest.json",
+      "sha256": "e42f2941902b02c7b01c32c767ccba090391276a1602a23e9801295867153e08"
+    },
+    "file_check": {
+      "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/r03/integration-check.json",
+      "sha256": "69065c14e120c94a8317287a0d2cd82da137da7b736977400f3d7e8e3c3fdb14"
+    },
+    "inspection": {
+      "file": "content/packages/pz-a358a1bf1b994efcbebeb55abf825789/r03/inspection.json",
+      "sha256": "feab5fcd2f3c3524baccbbb01bcc478c66aae63d1d96f9c5bbc3394eff493ea8"
+    },
+    "main_merge": null,
+    "registration": {
+      "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/r03/registration.json",
+      "sha256": "2de6f8c36a559020255935f842337286d7c4de2ff8219188b6364b7fc7a6a786"
+    },
+    "runtime_id": "pz-a358a1bf1b994efcbebeb55abf825789",
+    "runtime_revision": 1,
+    "save_slot": "kaktus_001",
+    "status": "registered"
+  },
   "inventory_sha256": "7f1e4c9143f2911a03d4591b58022ed44ef3065e2266b78ce07e82d3562557e0",
   "mode": "mono",
   "motif": {
@@ -99,7 +124,7 @@
     "sha256": "1a52522ac580f6a09bc484eb4cd69419f9284bc473a55447845c5508430b8642"
   },
   "motif_name": "Kaktus",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Beauftragten Integrationsmerge nach Pflicht-CI durchführen, danach §9 bereinigen.",
   "package": {
     "bytes": 5822040,
     "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/r03/package.zip",
@@ -116,7 +141,7 @@
     "sha256": "0738b9ebabcbe20c3403f0654440ff08e1aed1a1caf626719613378d326d93f1"
   },
   "revision": "r03",
-  "state": "content_ready",
+  "state": "registered",
   "technical_inspection": {
     "blockers": [
       "final_editorial: missing bound human final approval"
@@ -127,7 +152,7 @@
     "sha256": "57ba61836bab12895ad357328eeed1bc1af2aa3307659c92c6a6d1eba466bbb8",
     "technical": true
   },
-  "updated_at_utc": "2026-10-16T08:27:40.150003+00:00",
+  "updated_at_utc": "2026-10-16T08:48:03.060116+00:00",
   "used_foreground_colors": 1,
   "width": 15
 }
