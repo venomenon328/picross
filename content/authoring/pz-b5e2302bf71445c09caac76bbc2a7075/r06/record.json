@@ -1,0 +1,75 @@
+{
+  "blockers": [],
+  "category_id": "saeuger",
+  "composition": "head_only",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r06/handoff.json",
+    "sha256": "ffe307099cc7e3b51cd9c7f1efb2bfd2b4a4aaaef4a489b4bcff1edf39814992"
+  },
+  "height": null,
+  "integration": null,
+  "inventory_sha256": "b9aa8ee2c4e39586d034ea72f2e21bd21cb7aad17bcc9c7eef90ecdb11cd11dc",
+  "mode": "mono",
+  "motif_name": "Carabao – Kopf",
+  "next_action": "2 · Bild freigeben & abstrahieren: A-r02, B-r02 oder C-r02 ausdrücklich wählen/freigeben; danach neue Konfiguration und vorlagentreue Motivabstraktion.",
+  "package": {
+    "bytes": 6296458,
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r06/package.zip",
+    "sha256": "04f0b5a3e67e46f387ffbcecdd139a07f6a0658f6bb16342ba25cfad2fca9c0d"
+  },
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "repo_commit": "40484d5b59377f1c2830a5e999c4c28eb7ba8d5d",
+  "restart_from": {
+    "handoff": {
+      "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r05/handoff.json",
+      "sha256": "0403171b361ea7187a23f0691d61a915e7eb705ec3e1bfbb5f5d8f52941db14c"
+    },
+    "inventory_sha256": "0a8ee95dd26a67244230a3cc096fc9c2652e6895941df7e96d774f5731539957",
+    "package": {
+      "bytes": 10484367,
+      "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r05/package.zip",
+      "sha256": "590e8bbc39ef3c633b72a8a2a2560d831135cd057bb9b322142d54206672b495"
+    },
+    "repository_commit": "40484d5b59377f1c2830a5e999c4c28eb7ba8d5d",
+    "revision": "r05",
+    "state": "content_ready"
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "member": "reveal/A-r02.png",
+      "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r06/package.zip",
+      "revision": "r02",
+      "sha256": "e9d8b7590fdee718a9790c13e915eea99221c8b34dd3a36cc858c6ad0d709dc6",
+      "title": "Frontal",
+      "variant": "A-r02"
+    },
+    {
+      "approval": null,
+      "member": "reveal/B-r02.png",
+      "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r06/package.zip",
+      "revision": "r02",
+      "sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280",
+      "title": "Dreiviertel nach links",
+      "variant": "B-r02"
+    },
+    {
+      "approval": null,
+      "member": "reveal/C-r02.png",
+      "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r06/package.zip",
+      "revision": "r02",
+      "sha256": "d89563c041d37ce4087090b9a8a78165091d79a04a055a6336d36bb92a5b2aa9",
+      "title": "Seitenbetont nach rechts",
+      "variant": "C-r02"
+    }
+  ],
+  "revision": "r06",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-16T21:23:49.382298+00:00",
+  "width": 40
+}
