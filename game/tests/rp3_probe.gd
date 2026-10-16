@@ -84,7 +84,7 @@ func finish() -> void:
 	event(cell_point(last),true)
 	check(not app.session.completed and app.session.reveal().is_empty() and app.mini.cells[last.y*20+last.x] == 1, "last-cell preview visible only as own input")
 	event(cell_point(last),false)
-	check(app.session.completed and app.ending.visible and not app.work.visible, "real committed last event opens completion")
+	check(app.session.completed and app.ending.visible and app.reveal_view.active, "real committed last event opens completion")
 	check(app.completion_title.text == "TEST ONLY Muster 4" and app.reveal_view.payload.image == "res://art/fixtures/t04.svg", "new name and matching refined asset only after completion")
 	check(app.session.player.cells.count(-1) > 0, "completion without mandatory background crosses")
 	app.show_album()
