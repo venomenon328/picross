@@ -1,0 +1,31 @@
+{
+  "format": "picross-manual-authorization-v2",
+  "frame_exception": false,
+  "handoff_sha256": "8f848eafbac184351737a5c29d6f383f02509a3122cd4984fe6a285c0d9b69e8",
+  "inventory_sha256": "f68250bbe81b820a1d73ea64340c4bca08db631c27b2b60d1d3101017740ba24",
+  "original_zip_sha256": "5ff3d5c0c447cf53dbb2b7e7a723c75926a564e06bbeecfcdf551e39ea09ddfc",
+  "owner_override": {
+    "file": "owner-override.json",
+    "sha256": "1ae7c050de411d91bbe8ad005b9ff07cac93ea0103c159ca72ec4bd4acd87c70"
+  },
+  "plan_sha256": "a35932f6d8daa1d5b3defc6235e1aaa054e3a976759c720131772bf3a3c7d6e4",
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "reference": {
+    "bundle": "imports/40x26",
+    "candidate_id": "175c57a4afd55e28e80076c4dd356dead0da9569bbc8a082e865b14380e133ad",
+    "manifest_sha256": "ad5743f7f46124bda030cf4adad3c0ad205bbd9c5f3c9ea875ffb83983ae39f3",
+    "matrix_hash": "52cd2aa6b4270e3ccc0c2e2f6dd30ed38e91ff26044b6fdd40785ab9b0a1333d",
+    "variant": "area-160"
+  },
+  "revision": "r11",
+  "selection": {
+    "logic_hash": "e21609d1e7b4408c3010e1cdd64a27a7ac924be4a2ccc891af110b30bd3613ef",
+    "matrix_hash": "6a48e53854d39c03df8510b44316bd086fc7b8c7649bb560a1de52ee3d2e3c32",
+    "reveal": {
+      "file": "reveal/B-r02.png",
+      "sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280"
+    },
+    "variant": "contour"
+  },
+  "superseded_content_blockers": []
+}

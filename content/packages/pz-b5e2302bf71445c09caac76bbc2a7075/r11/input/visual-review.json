@@ -1,0 +1,59 @@
+{
+  "changes": [
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 10,
+      "row": 2
+    },
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 38,
+      "row": 4
+    }
+  ],
+  "criteria": {
+    "details_negative_spaces": {
+      "reason": "Geschützte Nutzerpositionen Z3/S36 leer undZ5/S8 ink unverändert; alle anderen1038 Werte identisch zu C-r02. Schnauze33 und Unterlippe3 Leerzellen separat vierfach geschlossen, Augen/Ohren und Gesicht unverändert.",
+      "status": "erfüllt"
+    },
+    "palette_mono_readability": {
+      "reason": "Unverändert ink#000000+EMPTY, Schwarz trägt Kopf/Konturen, Weiß Hintergrund/Binnenräume, kein Grau.",
+      "status": "erfüllt"
+    },
+    "recognition": {
+      "reason": "Gleicher Carabao-Kopf mit geschlossener Schnauze, separater Unterlippe und zwei asymmetrischen Hornbögen.",
+      "status": "erfüllt"
+    },
+    "series_aesthetics": {
+      "reason": "Keine neue Pose/Farbe/Bilddatei, keine zusätzlichen Anker/Frames. Beide neuen Zellen liegen an vorhandenen Hornkonturen.",
+      "status": "erfüllt"
+    },
+    "silhouette_proportions": {
+      "reason": "Zwei lokale zusammenhängende Hornkantenergänzungen: Z2/S10 verlängert innere linke Spitze nach unten; Z4/S38 schließt die Ecke im rechten Hornbogen. Große Innenräume und Hauptproportionen bleiben erhalten.",
+      "status": "erfüllt"
+    }
+  },
+  "final_editorial": "pending",
+  "format": "picross-raster-visual-review-v1",
+  "material_change": false,
+  "review_type": "self_review",
+  "reviewed_at_utc": "2026-10-16T23:27:01.007730+00:00",
+  "soft_exceptions": [
+    {
+      "cell_1based": [
+        1,
+        36
+      ],
+      "reason": "Vorhandene obere rechte Hornspitze ist diagonal angebunden; nicht künstlich hinzugefügt. Feine Pupillen/Lippen/Hornkurven bleiben grob."
+    }
+  ],
+  "views": [
+    "preview/C-r03-comparison.png",
+    "preview/C-r03-acceptance.png",
+    "preview/C-r03-raster.png",
+    "preview/C-r03-grid.png",
+    "repairs/round-2/view.png"
+  ]
+}

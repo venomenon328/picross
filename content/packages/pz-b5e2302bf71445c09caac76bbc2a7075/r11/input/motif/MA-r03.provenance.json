@@ -1,0 +1,15 @@
+{
+  "author": "OpenAI ChatGPT native image edits, commissioned by Tobias",
+  "derived_from": {
+    "file": "reveal/B-r02.png",
+    "sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280"
+  },
+  "edit_chain": "edit-chain.json",
+  "file": "motif/MA-r03.png",
+  "input": "reveal/B-r02.png",
+  "processing": "Zwei native vorlagentreue Edits aus B-r02: Schwarzweißabstraktion, dann gezielte Verstärkung von Horn-/Ohrrändern nach innen. Beide Eingänge, Ausgänge und tatsächlichen Prompts gebunden. Finale Ausgabe unverändert gespeichert; keine Zellmatrix erzeugt.",
+  "prompt_file": "prompts/motif.txt",
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "sha256": "e3809bbc30017c59bfae6420e330df7853b9c2c7e8aa31cbc2c7cdaf99588c69",
+  "usage_basis": "Im Nutzerauftrag nativ erzeugte KI-Illustration ohne Fremdassets; keine Exklusivität oder urheberrechtliche Schutzfähigkeit behauptet."
+}
