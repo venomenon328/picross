@@ -222,6 +222,7 @@ func _add_card(id: String) -> void:
 	card.content_surface = true
 	card.focus_mode = Control.FOCUS_ALL
 	card.pressed.connect(func() -> void: opened.emit(id))
+	card.recovery_activated.connect(func() -> void: opened.emit(id))
 	for state: String in ["normal", "hover", "pressed", "focus", "disabled"]:
 		var paper: StyleBoxFlat = StyleBoxFlat.new()
 		paper.bg_color = Color("fff8e8") if state == "normal" else Color("e0e9d9")

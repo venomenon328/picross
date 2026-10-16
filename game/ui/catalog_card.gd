@@ -3,6 +3,7 @@ extends "res://ui/book_button.gd"
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const MOTIF_FONT = preload("res://art/drawing/BaksoDaging-Regular.ttf")
+signal recovery_activated
 class CardLabel extends Label:
 	# Label otherwise offers its clipped text as a replacement tooltip.
 	func _get_tooltip(_at_position: Vector2) -> String: return ""
@@ -18,6 +19,9 @@ var recovery: ScrollContainer
 var recovery_content: VBoxContainer
 var repair: Button
 var image_area: Rect2
+var recovery_armed: bool = false
+var recovery_press_position: Vector2 = Vector2.ZERO
+var recovery_press_scroll: int = 0
 
 func _make_custom_tooltip(_for_text: String) -> Object:
 	# BookButton's custom factory also runs for empty native tooltip text.
@@ -57,17 +61,35 @@ func configure(title: String, meta: String, number: String) -> void:
 	# area, never by adding a variable strip beneath the grid cell.
 	recovery = ScrollContainer.new()
 	recovery.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	# Wheel/scrollbar changes are consumed here; ordinary left clicks bubble to
-	# the valid parent card. Repair controls still consume their own clicks.
-	recovery.mouse_filter = Control.MOUSE_FILTER_PASS
+	# The scroll view owns wheel/scrollbar events. Plain left clicks on its
+	# noninteractive text are relayed explicitly; repair buttons remain isolated.
+	recovery.mouse_filter = Control.MOUSE_FILTER_STOP
+	recovery.gui_input.connect(_recovery_input)
 	add_child(recovery)
 	recovery_content = VBoxContainer.new()
+	recovery_content.mouse_filter = Control.MOUSE_FILTER_PASS
 	recovery_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	recovery.add_child(recovery_content)
 	diagnosis = Label.new()
 	diagnosis.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	diagnosis.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	recovery_content.add_child(diagnosis)
+
+func _recovery_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse: InputEventMouseButton = event
+		if mouse.button_index != MOUSE_BUTTON_LEFT: return
+		if mouse.pressed:
+			recovery_armed = true
+			recovery_press_position = mouse.position
+			recovery_press_scroll = recovery.scroll_vertical
+		else:
+			var can_open: bool = recovery_armed and not disabled and recovery.visible and Rect2(Vector2.ZERO,recovery.size).has_point(mouse.position) and recovery_press_position.distance_to(mouse.position) <= 8.0*ui_scale and recovery.scroll_vertical == recovery_press_scroll
+			recovery_armed = false
+			if can_open: recovery_activated.emit()
+	elif event is InputEventMouseMotion and recovery_armed:
+		var motion: InputEventMouseMotion = event
+		if recovery_press_position.distance_to(motion.position) > 8.0*ui_scale: recovery_armed = false
 
 func label(value: String, font_size: int, wrap: bool = true) -> Label:
 	var result: Label = CardLabel.new()
@@ -81,6 +103,7 @@ func label(value: String, font_size: int, wrap: bool = true) -> Label:
 	return result
 
 func set_diagnosis(message: String, reset_allowed: bool) -> void:
+	recovery_armed = false
 	diagnosis.text = message
 	recovery.visible = not message.is_empty()
 	preview.visible = message.is_empty() and picture.payload.is_empty() and not disabled
