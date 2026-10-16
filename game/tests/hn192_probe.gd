@@ -127,7 +127,9 @@ func routes() -> void:
 		mouse(p,true)
 		if index != 2: check(b.pan_button == MOUSE_BUTTON_NONE, "A01 fitting/empty no navigation")
 		var grid: Vector2 = b.global_position+b.view.cell_rect(Vector2i(10,10)).get_center()
-		if index != 2: motion(grid,MOUSE_BUTTON_MASK_LEFT)
+		if index != 2:
+			motion(grid,MOUSE_BUTTON_MASK_LEFT)
+			check(b.cursor_context() == Vector2i(10,10) and not app.session.gesture.active, "A04 fitting clue press updates orientation without painting")
 		mouse(grid,false)
 		invariant(before,"A02 clue click/entry cannot paint")
 	for reason: String in ["escape","focus","missing","chord","repeated","releasechord","resize","ui","mode","page","session"]:
