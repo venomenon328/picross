@@ -1,0 +1,4 @@
+Carabao-Kopf: Blick nach links, asymmetrische Hörner, Ohren und schwere Schnauze erhalten. Nur Detailreduktion gemäß parameterkorridor.json. MA-r03 und Korridor menschlich freigegeben; siehe approvals/motif.json.
+
+Working mode: faithful
+Motif and gameplay review: open
