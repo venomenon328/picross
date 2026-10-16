@@ -1,0 +1,98 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1: Abschlussbildauswahl. Repositoryablage nach §6 einschließlich Commit, Push und PR; Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen. Keine menschliche Bild-, Motiv- oder Endfreigabe erteilt; keine Runtimeintegration in dieser Phase.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "voegel",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "0dcf19501b2fd16a5c840a9c83e2c61583dfeb934f918c8db27957d4d70c2744"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-9a79befc7a834e2d9d5896a477328962",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "88638df1a6ba71d1b7a336444b232b1b97477f23",
+  "report": "report.md",
+  "requested_parameters": {
+    "color_requirement": "approximate",
+    "dimensions": "approximate",
+    "foreground_colors": null,
+    "height": 30,
+    "mode": "color",
+    "width": null
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "file": "reveal/A-r01.png",
+      "id": "A-r01",
+      "revision": "r01",
+      "sha256": "a6fba345c136c8f55abeea23f31fb7f7b7cacd5588a16de3b9c74db10cf83d6c"
+    },
+    {
+      "approval": null,
+      "file": "reveal/B-r01.png",
+      "id": "B-r01",
+      "revision": "r01",
+      "sha256": "450ab64b7b83c18d3c5206c36c9950d494b0f6cb80984cf79937f8558cf32be3"
+    },
+    {
+      "approval": null,
+      "file": "reveal/C-r01.png",
+      "id": "C-r01",
+      "revision": "r01",
+      "sha256": "c3cf564ed59343b95b70c75a53bfabd0fdb98fe76031570f6aebe8f3f4f386af"
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
