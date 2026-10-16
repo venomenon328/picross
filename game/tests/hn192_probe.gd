@@ -181,9 +181,29 @@ func routes() -> void:
 		check(app.session.gesture.active and b.pan_button == MOUSE_BUTTON_NONE, "A02 cell owns hint crossing")
 		mouse(source("row",10),false,button)
 		check(app.session.player.history.size() == 1, "A02 normal cell route single commit")
+		check(b.cursor_context() == Vector2i(-1,10), "A04 cell release resolves physical hint context")
 		app._undo()
 		app.session.player.history.clear()
 		app.session.player.cursor = 0
+	for reason: String in ["escape","chord","missing"]:
+		var start: Vector2 = b.global_position+b.view.cell_rect(Vector2i(10,10)).get_center()
+		var end: Vector2 = source("column",11)
+		motion(start)
+		mouse(start,true)
+		motion(end if reason == "escape" else source("column",12),MOUSE_BUTTON_MASK_LEFT)
+		if reason == "escape":
+			var e := InputEventKey.new()
+			e.keycode = KEY_ESCAPE
+			e.pressed = true
+			root.push_input(e,true)
+		elif reason == "missing":
+			motion(end)
+		else:
+			mouse(end,true,MOUSE_BUTTON_RIGHT,MOUSE_BUTTON_MASK_LEFT|MOUSE_BUTTON_MASK_RIGHT)
+		check(not app.session.gesture.active and b.cursor_context() == Vector2i(11,-1), "A04 cell abort resolves physical hint context "+reason)
+		mouse(end,false)
+		mouse(end,false,MOUSE_BUTTON_RIGHT)
+		check(app.session.player.history.is_empty(), "A02 cancelled cell creates no history "+reason)
 	b.clear_effects()
 
 func pixels(label: String, context: Vector2i, baseline: Image) -> void:
