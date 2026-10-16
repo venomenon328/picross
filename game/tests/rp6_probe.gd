@@ -53,7 +53,7 @@ func partial() -> void:
 	check(app.mini.cells[0] == 1 and app.session.player.undo_used, "mouse redo")
 	check(app._flush_current(), "partial flush")
 	app.show_album()
-	check(app.album_previews[pilot_index].cells[0] == 1 and app.album_reveals[pilot_index].payload.is_empty() and not app.choices[pilot_index].text.contains(app.session.definition.reveal.name), "album own wrong miniature and no spoiler/name")
+	check(app.album_previews[pilot_index].cells[0] == 1 and app.album_reveals[pilot_index].payload.is_empty() and not app.choices[pilot_index].caption.text.contains(app.session.definition.reveal.name), "album own wrong miniature and no spoiler/name")
 
 func choose_color(color: int) -> void:
 	click(app.palette_row.get_child(color - 1).get_global_rect().get_center())
@@ -111,7 +111,7 @@ func restored() -> void:
 	check(app.session.completed and app.session.is_solution() and app.session.player.undo_used, "second restart restores completed pilot")
 	check(app.store.load_slot(app.session.definition).status == "loaded", "separate fixed slot loaded")
 	app.show_album()
-	check(app.album_reveals[pilot_index].payload == app.session.definition.reveal and app.choices[pilot_index].text.contains(app.session.definition.reveal.name), "restored correct earned album asset and name")
+	check(app.album_reveals[pilot_index].payload == app.session.definition.reveal and app.choices[pilot_index].caption.text.contains(app.session.definition.reveal.name), "restored correct earned album asset and name")
 	if pilot_index == 2:
 		var first: Dictionary = app.store.load_slot(app.sessions[0].definition)
 		var unknown: int = saved_unknown_count(first)

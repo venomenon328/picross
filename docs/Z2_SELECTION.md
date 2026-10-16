@@ -1,16 +1,16 @@
 # Z2: aktive Auswahl und native Integration
 
-## Aktuelle Fortschreibung KB / #168
+## Aktuelle Fortschreibung KK / #174
 
-Bakso Daging gilt zusätzlich für „Rätselkatalog“, bei unveränderten Fontbytes und
-lokalem Fallback. Die gemeinsame BookButton-Komponente trägt warme Papierflächen,
-stabile gezeichnete Konturen und UI-skalierte, begrenzte Tooltips auf Katalog,
-Werkbank und Information. Katalogkarten bleiben kompakt mit getrennten Play-/
-Resettreffern. Sechs Werkzeuge in 2×3, Originalpalette und SL-65-Rahmen bleiben.
-Aktiv sind nun **13 Icons**: elf bisherige Z2-Symbole plus zwei eigene KB-Pfade aus
-`tools/book_icons_kb.json`. Sie sind keine historischen BP-3-Originale;
-`KB-168-NOTICE.txt`, Ressourcenmanifest und Provisionierung binden ihre Herkunft.
-[Prüfzuordnung und Gates](KB_VERIFICATION.md).
+Bakso Daging gilt zusätzlich für Kachel-Motivüberschriften/`???`, mit denselben
+unveränderten Bytes und lokalem Fallback. Feste gleiche Kartenbereiche und die
+Fußzeile ersetzen die variablen KB-Höhen; Kartenfläche öffnet, Reset allein oben
+rechts. Der Resetplatz bleibt reserviert, bei gültigem fehlerfreiem Neu unsichtbar.
+Kacheltooltips entfallen; übrige BookButtonzustände und Buttontooltips bleiben.
+Fehler-/Recoveryaktionen bleiben im begrenzten Bildraum erreichbar. Die 13 aktiven
+Icons samt KB-Herkunft bleiben provisioniert; das Entfernen des Playcontrols ändert
+keine Ressourcenbytes oder Inventarverträge. Originalpalette, sechs Werkzeuge und
+SL-65-Rahmen bleiben. [Prüfzuordnung und Gates](KK_VERIFICATION.md).
 
 ## Aktueller Vertrag · Sidebar #65
 

@@ -1,6 +1,7 @@
 extends "res://ui/main.gd"
 ## Read-only observability in the separate technical export; never in player bundles.
 var probe_elapsed: float = 0.0
+const Card = preload("res://ui/catalog_card.gd")
 
 func _process(delta: float) -> void:
 	probe_elapsed += delta
@@ -37,9 +38,13 @@ func _probe_rect(rect: Rect2) -> Array[float]:
 func _probe_controls(node: Node, result: Array[Dictionary]) -> void:
 	if node is BaseButton and node.is_visible_in_tree() and node.get_window().visible:
 		var box: Rect2 = node.get_global_rect()
+		var caption: String = node.text if node is Button else ""
+		if node is Card:
+			caption = node.leaf.text + " · " + node.accessibility_name
+			box = node.leaf.get_global_rect()
 		if node.get_window() != get_tree().root:
 			box.position += Vector2(node.get_window().position)
-		result.append({"name": node.name, "text": node.text if node is Button else "", "tooltip": node.tooltip_text, "disabled": node.disabled,
+		result.append({"name": node.name, "text": caption, "tooltip": node.tooltip_text, "disabled": node.disabled,
 			"dialog": node.get_window() != get_tree().root,
 			"center": [box.get_center().x, box.get_center().y]})
 	for child: Node in node.get_children(true):

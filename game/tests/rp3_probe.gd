@@ -64,7 +64,7 @@ func partial() -> void:
 	click(app.redo_button.get_global_rect().get_center())
 	check(app.mini.cells[0] == 1 and app.session.player.undo_used, "real Redo restores own wrong input")
 	app.show_album()
-	check(app.album_previews[3].cells[0] == 1 and app.album_reveals[3].payload.is_empty() and not app.choices[2].text.contains("TEST ONLY Muster 4"), "album partial thumbnail has same wrong input without reveal")
+	check(app.album_previews[3].cells[0] == 1 and app.album_reveals[3].payload.is_empty() and not app.choices[2].caption.text.contains("TEST ONLY Muster 4"), "album partial thumbnail has same wrong input without reveal")
 
 func finish() -> void:
 	check(app.session.player.cells[0] == 1 and app.session.player.undo_used and not app.session.completed, "real new process restored partial/history/undo")
@@ -94,7 +94,7 @@ func finish() -> void:
 func restored() -> void:
 	check(app.session.completed and app.session.is_solution() and app.session.player.undo_used, "second real restart restores full completion/history")
 	app.show_album()
-	check(app.album_reveals[3].visible and app.choices[2].text.contains("TEST ONLY Muster 4"), "new process earned album state")
+	check(app.album_reveals[3].visible and app.choices[2].caption.text.contains("TEST ONLY Muster 4"), "new process earned album state")
 	var first: Dictionary = app.store.load_slot(app.sessions[0].definition)
 	check(first.status == "fresh" or first.status == "loaded" and first.data.cells.count(-1) == 400, "isolated new slot has not changed old fixture cells")
 

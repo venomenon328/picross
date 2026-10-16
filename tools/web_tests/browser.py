@@ -240,7 +240,7 @@ def exercise(pw, name, root, update, url, output, evidence):
         control(page,text='Abbrechen',dialog=True)
         assert state(page)['ending'] and state(page)['slots'][2] == completed_slot
         page.reload(); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
-        control(page,name='play-T-04')
+        control(page,text='Blatt 03')
         assert state(page)['ending'] and not state(page)['ea_active'] and not state(page)['ea_processing']
         assert state(page)['slots'][2] == completed_slot
         foreign_slot = state(page)['slots'][0]
