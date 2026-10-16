@@ -33,14 +33,47 @@ static func selected() -> Font:
 static func text_font(text: String) -> Font:
 	return selected() if text.is_valid_int() else REFERENCE
 
-static func strike_width(text: String, fs: int, ui: float) -> float:
-	var f: Font = text_font(text)
-	retain_web_size(f, fs)
-	# envelope() always includes this centered numeric status strike plus C1/AA.
-	return f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 2.0 * maxf(0.5, ui / 4.0)
+static func cross_width(fs: int, stroke: int = 0) -> float:
+	return maxf(1.0, fs / 18.0) * (1.08 if stroke == 0 else 0.96)
 
-static func ink(text: String, fs: int) -> Rect2:
-	var f: Font = text_font(text)
+static func cross_inset(box: Rect2, fs: int, ui: float) -> float:
+	return minf(cross_width(fs) / 2.0 + ui / 4.0 + 0.5, maxf(0, minf(box.size.x, box.size.y) / 2.0 - 0.05))
+
+static func cross_strokes(text: String, fs: int, identity: String, face: Font = null, ui: float = 1.0) -> Array[PackedVector2Array]:
+	var strokes: Array[PackedVector2Array] = []
+	if not text.is_valid_int(): return strokes
+	var box: Rect2 = ink(text, fs, face)
+	# Centerlines inset by the largest stroke/C1 radius: the visible X reaches
+	# the whole token's edges without avoidable new slot/font reserves.
+	box = box.grow(-cross_inset(box, fs, ui))
+	# FNV-1a over the original puzzle/axis/line/token identity. No screen, status,
+	# clock or font-size input: zoom, tooltip wrapping and restore retain the form.
+	var seed: int = 2166136261
+	for byte: int in identity.to_utf8_buffer():
+		seed = ((seed ^ byte) * 16777619) & 0xffffffff
+	var bend: float = [-0.035, 0.025, -0.02, 0.04][seed % 4]
+	var end: float = [0.0, 0.025, 0.04, 0.015][(seed >> 2) % 4]
+	# All vertices lie within the native whole-token ink rectangle. Both strokes
+	# span its full width/height; bounded kinks suggest a single pencil movement.
+	for points: Array in [
+		[Vector2(0, end), Vector2(0.32, 0.32 + bend), Vector2(0.68, 0.68 - bend), Vector2(1, 1 - end)],
+		[Vector2(1 - end, 0), Vector2(0.67 + bend, 0.34), Vector2(0.31 - bend, 0.70), Vector2(end, 1)]]:
+		var path: PackedVector2Array = []
+		for point: Vector2 in points: path.append(box.position + point * box.size)
+		strokes.append(path)
+	return strokes
+
+static func number_envelope(text: String, fs: int, ui: float) -> Rect2:
+	# Baseline-relative, status/identity-independent maximum for glyph, C1, both
+	# pencil widths and AA. Convex rectangle contains every segment/variant.
+	var box: Rect2 = ink(text, fs)
+	var margin: float = maxf(0.5, ui / 4.0)
+	# Native polyline AA extends up to one pixel; glyph AA reserves 0.5 px.
+	if text.is_valid_int(): margin = maxf(margin, cross_width(fs) / 2.0 + ui / 4.0 + 1.0 - cross_inset(box, fs, ui))
+	return box.grow(margin)
+
+static func ink(text: String, fs: int, face: Font = null) -> Rect2:
+	var f: Font = text_font(text) if face == null else face
 	retain_web_size(f, fs)
 	var ts: TextServer = TextServerManager.get_primary_interface()
 	var rid: RID = f.get_rids()[0]
@@ -73,10 +106,6 @@ static func envelope(text: String, fs: int, ui: float) -> Rect2:
 	retain_web_size(f, fs)
 	var width: float = f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	var origin: Vector2 = Vector2(-width / 2.0, baseline(fs))
-	var box: Rect2 = ink(text, fs)
+	var box: Rect2 = number_envelope(text, fs, ui)
 	box.position += origin
-	# Include the actual strike thickness and C1/AA, even while status is open.
-	if text.is_valid_int():
-		var thickness: float = maxf(1.0, fs / 14.0)
-		box = box.merge(Rect2(origin - Vector2(0, fs * 0.32 + thickness / 2.0), Vector2(width, thickness)))
-	return box.grow(maxf(0.5, ui / 4.0))
+	return box
