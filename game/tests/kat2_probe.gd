@@ -733,6 +733,7 @@ func fixed_cards() -> void:
 		await frames()
 		var card: Control = app.choices[0]
 		check(card_geometry() == stable and card.reset.visible and card.recovery.visible,"KK fault/recovery keeps grid geometry and reset")
+		check(card.recovery.mouse_filter == Control.MOUSE_FILTER_STOP and card.recovery_content.mouse_filter == Control.MOUSE_FILTER_PASS,"KK wheel ownership and text click routing stay explicitly separated")
 		check(card.note.text == ("Ungültig" if state == "error" else "Neu") and card.diagnosis.text.contains("TEST ONLY"),"KK short progress separated from full storage diagnosis")
 		check(card.diagnosis.get_line_count() > 2 and card.recovery.get_v_scroll_bar().max_value > card.recovery.size.y,"KK full long diagnosis wraps and remains scroll-accessible")
 		var wheel_before: float = card.recovery.scroll_vertical
@@ -749,7 +750,7 @@ func fixed_cards() -> void:
 			await frames()
 			click(card.repair)
 			await frames()
-			check(app.repair_dialog.visible,"KK recovery action reachable by real pointer after inner scroll")
+			check(app.repair_dialog.visible and app.album.visible and not app.ending.visible,"KK recovery repair pointer acts alone after inner scroll")
 			click(app.repair_dialog.get_cancel_button())
 			await frames()
 		await shot(state)
