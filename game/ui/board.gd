@@ -300,6 +300,10 @@ func _input(event: InputEvent) -> void:
 				var total_delta: Vector2 = local.position - pan_origin
 				pan_drag_distance = total_delta.x if pan_target == "row" else total_delta.y
 				hover = Vector2i(-1, -1)
+			else:
+				# A fitting clue owns its press, but has no frozen navigation
+				# source. Orientation still follows the current pointer context.
+				update_pointer_hover(local.position)
 			pan_last = local.position
 			edited.emit()
 			queue_redraw()
