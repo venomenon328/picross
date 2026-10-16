@@ -132,13 +132,15 @@ verwenden gemeinsame regelmäßige Slots. Eine Anpassung ihrer Maße ist nur als
 dokumentierte Auswahl zulässig und erhält unabhängige Liniennavigation, vollständige
 Erreichbarkeit, Randmarker, geometrischen Snap und semantische gespeicherte Lesepositionen.
 
-Normal, abgeschwächt und durchgestrichen bleiben dieselben drei GP-48-Zustände.
+Normal, abgeschwächt und zusätzlich ausgekreuzt bleiben dieselben drei GP-48-Zustände.
+[HS](CLUE_STATUS.md) zeichnet FILLED und CLOSED gleich blass mit 60 % Zahl-/C1-Deckkraft;
+CLOSED erhält zwei stabile handschriftliche Diagonalzüge mit 76 % über das ganze Token.
 Farb-IDs, Hinweisreihenfolge und Originalindex sowie die lösungsunabhängige H1/GP-48-
 Analyse einschließlich Vorschau bleiben unverändert. Alle Zustände müssen auf beiden
 Achsen, im kontinuierlichen Hinweisdrag und im vollständigen Tooltip funktionieren.
 HF / #149 verwendet dort die vorhandene kleinere Fraunces-Überschrift und
 Delight-Zahlen auf ruhigem A-Papier mit wiederverwendetem SL-65-Bildrahmen.
-Gemessene Hüllen, Statusstriche und skalierte Innenränder verhindern Überlappung;
+Gemeinsame gemessene Zahlen-/X-/C1-/AA-Hüllen und skalierte Innenränder verhindern Überlappung;
 Rahmenkanten werden gekachelt, nicht unnötig gedehnt.
 Helle Rätselfarben bleiben durch C1 erkennbar; Statuswechsel verändern weder Slot
 noch Schriftgröße. Auslassungsmarker und Leerlinienzeichen erhalten keine neue Bedeutung.

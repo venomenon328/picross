@@ -6,6 +6,7 @@ const ClueCompletion = preload("res://model/clue_completion.gd")
 const GestureCounter = preload("res://ui/gesture_counter.gd")
 var gesture_counter: GestureCounter
 const ClueOverlay = preload("res://ui/clue_overlay.gd")
+const ClueStatusDrawing = preload("res://ui/clue_typography.gd")
 signal edited
 signal committed
 signal view_changed
@@ -13,7 +14,8 @@ signal viewport_layout_requested
 signal pointed(cell: Vector2i)
 const BODY_FONT = preload("res://art/book/PlexSans.ttf")
 const CLUE_FONT = preload("res://ui/clue_font.tres")
-const FILLED_ALPHA: float = 0.78
+const FILLED_ALPHA: float = 0.60
+const CROSS_ALPHA: float = 0.76
 var book_layout: bool = false
 var book_inset: Vector2 = Vector2(210,126)
 var book_grid_size: Vector2 = Vector2(720,720)
@@ -636,21 +638,34 @@ func clue_status(axis: String, index: int, token: int) -> int:
 	var states: Array[int] = completion_cache["%s/%d" % [axis, index]].states
 	return states[token] if token < states.size() else ClueCompletion.Status.OPEN
 
-func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, status: int) -> void:
+func clue_identity(axis: String, line: int, token: int) -> String:
+	return "%s/%s/%d/%d" % [session.definition.id, axis, line, token]
+
+func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, status: int, identity: String = "") -> void:
 	font = clue_text_font(font, text)
-	var alpha: float = FILLED_ALPHA if status == ClueCompletion.Status.FILLED else 1.0
+	if not text.is_valid_int(): status = ClueCompletion.Status.OPEN
+	var alpha: float = FILLED_ALPHA if status != ClueCompletion.Status.OPEN else 1.0
+	var outlined: bool = text.is_valid_int() and session.definition.palette.size() > 1 and (color.is_equal_approx(cell_color(2)) or color.is_equal_approx(cell_color(4)))
 	# Quarter-pixel outline: a 4x glyph drawn at 1/4 scale gives a 0.25px
 	# outer contour (C1 reference: 0.275px). Keep the original fill last.
-	if text.is_valid_int() and session.definition.palette.size() > 1 and (color.is_equal_approx(cell_color(2)) or color.is_equal_approx(cell_color(4))):
+	if outlined:
 		var contour_scale: float = ui_scale/4.0
 		draw_set_transform(Vector2.ZERO,0,Vector2.ONE*contour_scale)
 		draw_string_outline(font,baseline/contour_scale,text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(fs/contour_scale),1,Color(Color("293e3d"),alpha))
 		draw_set_transform(Vector2.ZERO)
 	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(color, alpha))
 	if status == ClueCompletion.Status.CLOSED:
-		var width: float = clue_text_font(font, text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		var start: Vector2 = baseline - Vector2(0, float(fs) * 0.32)
-		draw_line(start, start + Vector2(width, 0), Color(color, 0.72), maxf(1.0, float(fs) / 14.0), true)
+		draw_clue_cross(font, baseline, text, fs, color, outlined, identity)
+
+func draw_clue_cross(font: Font, baseline: Vector2, text: String, fs: int, color: Color, outlined: bool, identity: String) -> void:
+	var strokes: Array[PackedVector2Array] = ClueStatusDrawing.cross_strokes(text, fs, identity, font, ui_scale)
+	for i: int in range(strokes.size()):
+		var points: PackedVector2Array = strokes[i]
+		for p: int in range(points.size()): points[p] += baseline
+		var thickness: float = ClueStatusDrawing.cross_width(fs, i)
+		if outlined:
+			draw_polyline(points, Color(Color("293e3d"), CROSS_ALPHA), thickness + ui_scale / 2.0, true)
+		draw_polyline(points, Color(color, CROSS_ALPHA), thickness, true)
 
 func clue_font_size() -> int:
 	if book_layout:
@@ -863,7 +878,7 @@ func _draw_row_hint(index: int, py: float, font: Font, fs: int) -> void:
 		var center: float = float(unit.center)
 		var width: float = clue_text_font(font, text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if center - width / 2.0 >= area.position.x and center + width / 2.0 <= area.end.x:
-			draw_clue_number(font, Vector2(center - width / 2.0, py + clue_baseline_offset(fs)), text, fs, color, clue_status("row", index, int(unit.index)))
+			draw_clue_number(font, Vector2(center - width / 2.0, py + clue_baseline_offset(fs)), text, fs, color, clue_status("row", index, int(unit.index)), clue_identity("row", index, int(unit.index)))
 
 func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 	var layout: Dictionary = visible_clue_layout("column", index)
@@ -874,7 +889,7 @@ func _draw_column_hint(index: int, px: float, font: Font, fs: int) -> void:
 		var center: float = float(unit.center)
 		var width: float = clue_text_font(font, text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		if center - clue_vertical_extents(fs).x >= area.position.y and center + clue_vertical_extents(fs).y <= area.end.y:
-			draw_clue_number(font, Vector2(px - width / 2.0, center + clue_baseline_offset(fs)), text, fs, color, clue_status("column", index, int(unit.index)))
+			draw_clue_number(font, Vector2(px - width / 2.0, center + clue_baseline_offset(fs)), text, fs, color, clue_status("column", index, int(unit.index)), clue_identity("column", index, int(unit.index)))
 
 func _draw_clue_tooltip() -> void:
 	if clue_hover_axis.is_empty() or clue_hover_index < 0:
@@ -885,7 +900,7 @@ func _draw_clue_tooltip() -> void:
 	ClueOverlay.paint(self, box, ui_scale)
 	draw_string(ClueOverlay.title_font(), box.position + geometry.title_baseline, ClueOverlay.TITLE, HORIZONTAL_ALIGNMENT_LEFT, -1, geometry.title_size, INK)
 	for i: int in range(entries.size()):
-		draw_clue_number(clue_font(), box.position + geometry.positions[i], entries[i].text, geometry.font_size, entries[i].color, entries[i].get("status", ClueCompletion.Status.OPEN))
+		draw_clue_number(clue_font(), box.position + geometry.positions[i], entries[i].text, geometry.font_size, entries[i].color, entries[i].get("status", ClueCompletion.Status.OPEN), clue_identity(clue_hover_axis, clue_hover_index, i))
 
 func tooltip_geometry() -> Dictionary:
 	if clue_hover_axis.is_empty() or clue_hover_index < 0: return {}

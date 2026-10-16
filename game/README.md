@@ -144,6 +144,14 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
 
 ## Navigieren und Hinweise lesen
 
+- Offene Hinweise bleiben kräftig. Eindeutig vollständig gesetzte Zahlen werden
+  deutlich blasser; sind ihre Blöcke zusätzlich an beiden Enden abgegrenzt, bleibt
+  die Zahl gleich blass und erhält ein handschriftliches X über die ganze Zahl.
+  X, echter Linienrand und direkt andere Füllfarbe begrenzen; unbekannte Nachbarn
+  nicht. Beide Achsen und der vollständige Tooltip zeigen dieselben Zustände.
+  „Erfüllte Hinweise markieren“ gilt für die Sitzung: Aus zeigt normale Zahlen,
+  An den aktuellen Stand. Nur eigene sichtbare Zellen einschließlich Vorschau und
+  die vollständige Linie zählen, kein Lösungsvergleich. `…` und `–` bleiben unmarkiert.
 - Mausrad und −/+ zoomen monoton bis zur vollständigen Raster-Fitgrenze samt Rahmen.
   Die gewünschte gültige Arbeitsstufe bleibt separat vom berechneten Fitwert erhalten.
   Minus/Plus und Mausrad ändern die benannte Rätselansicht nicht.

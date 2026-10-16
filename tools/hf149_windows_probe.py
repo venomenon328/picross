@@ -53,8 +53,13 @@ def run(head: str, run_id: str, engine: Path, cache: Path, output: Path) -> dict
         if report[key] != technical[key]: raise ValueError("Player/technical identity mismatch")
     if report["source_commit"] != head or report["source_tree_dirty"] or str(report["github_run_id"]) != run_id:
         raise ValueError("Wrong delivered source/run")
-    if report["base_commit"] != git("merge-base",head,"origin/main"):
-        raise ValueError("Wrong integration basis")
+    # Event/selection base and actual merge parent can differ when main moves.
+    # Preserve both, and verify the actual checked-out integration via Git.
+    git("fetch","--no-tags","origin",report["tested_checkout_commit"])
+    parents = git("show","-s","--format=%P",report["tested_checkout_commit"]).split()
+    if len(parents) != 2 or parents[1] != head:
+        raise ValueError("Wrong tested integration parents")
+    git("merge-base","--is-ancestor",report["base_commit"],parents[0])
     for name,digest in report["export_files"].items(): toolchain.verify_sha256(package/name,digest)
     for item in technical["selected_evidence"]["files"]:
         path = Path(item["file"])
@@ -95,7 +100,8 @@ def run(head: str, run_id: str, engine: Path, cache: Path, output: Path) -> dict
             expected[kind+"_rgba_sha256"] = hashlib.sha256(image.convert("RGBA").tobytes()).hexdigest()
     if measurements["resources"] != expected:
         raise ValueError("Actual PCK font/frame/paper pixels differ")
-    result = {"head":head,"base":report["base_commit"],"checkout":report["tested_checkout_commit"],"run":run_id,
+    result = {"head":head,"base":parents[0],"selection_base":report["base_commit"],
+              "checkout":report["tested_checkout_commit"],"run":run_id,
               "artifacts":bindings,"inner_sha256":toolchain.sha256_file(inner),"exports":report["export_files"],
               "phases":phases,"ci_hf":ci_hf,"windows_hf":native_hf,"resources":expected,
               "host":platform.platform(),"display":{k:measurements[k] for k in ("dpi","screen_scale","screen","renderer")},
