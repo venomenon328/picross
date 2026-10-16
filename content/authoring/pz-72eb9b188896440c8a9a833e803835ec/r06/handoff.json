@@ -1,0 +1,83 @@
+{
+  "approved_parameters": [],
+  "authorization": "Tatsächlicher Nutzerauftrag zur zusätzlichen klaren Farbtrennung und Rückkehr zu Schritt3. Repositoryablage samt bedingtem Ablagemerge aus fortgeltendem Auftrag beauftragt. Neue Motivdatei noch nicht freigegeben; keine Endabnahme/Spielregistrierung.",
+  "blockers": [
+    "Neue konkrete Motivfreigabe von MA-r03 und Vierfarbkorridor vor Rasterproduktion erforderlich."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "saeuger",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": "reveal-approval.json"
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "4e68e9871d9ac5730c65527c25dac2c4bc9599a4f2d8b310484a3ac98a0fb21d"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea",
+    "file": "MA-r03.png",
+    "provenance": "MA-r03.provenance.json",
+    "sha256": "e920879aa6e4fdcf8737da685a20f6932165acedfa6f4c934105c3a87235976a"
+  },
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": "parameterkorridor.json",
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "8577f707038d410672032765fa09b711b5b5b5a2",
+  "report": "report.md",
+  "requested_parameters": {
+    "color_change": "more than r05(3), separate branch/body, clearly distinguishable",
+    "foreground_colors": null,
+    "height": 35,
+    "mode": "color",
+    "size_constraint": "approximate",
+    "width": null
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "B-r01.png",
+    "provenance": "B-r01.provenance.json",
+    "sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea"
+  },
+  "revision": "r06",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "motif_review"
+}
