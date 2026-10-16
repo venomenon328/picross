@@ -1,0 +1,17 @@
+{
+  "actor": "Tobias (Nutzer)",
+  "evidence": "approvals/reveal-evidence.md",
+  "file": "reveal/B-r02.png",
+  "revision": "B-r02",
+  "sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280",
+  "source_package": {
+    "inventory_sha256": "b9aa8ee2c4e39586d034ea72f2e21bd21cb7aad17bcc9c7eef90ecdb11cd11dc",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r06/package.zip",
+    "package_sha256": "04f0b5a3e67e46f387ffbcecdd139a07f6a0658f6bb16342ba25cfad2fca9c0d",
+    "repository_commit": "1e6fd2e41785357c27235ba63af7044275012777",
+    "revision": "r06"
+  },
+  "statement": "Ich gebe das Abschlussbild B-r02 frei.",
+  "timestamp_utc": "2026-10-16T21:38:03Z",
+  "type": "human_reveal_approval"
+}

@@ -1,6 +1,13 @@
 # Carabao – Kopf · C-r03 · r11
 
-**Mehrdeutigkeit behoben; gesonderte Endabnahme offen.**
+**Endabgenommen und lokal registriert; Integrationsmerge ausstehend.**
+
+Aktueller Integrationsstand: [Endabnahme](approval.json), [Autorisierung](manual-authorization.json),
+[Erklärung](approval-evidence.md), [Datei-/Registrierungsprüfung](integration.json).
+ZA-1-v3-Export erfolgreich: technical/editorial_approved/catalog_ready=true.
+Runtime-Revision 1, Save-Slot `carabao_kopf_001`, Kategorie `saeuger`;22 Bestandsrätsel unverändert.
+Original-ZIP/Handoff bytegleich. Native Prüfungen: nicht erforderlich, reine Inhaltsintegration.
+Die folgenden Angaben dokumentieren den ursprünglichen Produktionsabschluss vor Endabnahme.
 [Bild-/Rastervergleich](abnahme.png),[Vorher/nachher](vergleich.png),
 [C-r03](kandidat-C-r03.png),[Paket](package.zip),[Datei-/Produktionsprüfung](validation.json).
 
@@ -52,3 +59,7 @@ Handoff-SHA-256: `8f848eafbac184351737a5c29d6f383f02509a3122cd4984fe6a285c0d9b69
 
 **4 · Abnehmen & ins Spiel integrieren:** Endfreigabe für r11/C-r03 samt
 Inventar/Originalhandoff,Matrix-/Logikhash und B-r02 separat binden; OriginalZIP erhalten.
+
+
+Aktueller nächster Schritt: Pflicht-CI und Integrationsmerge; erst nach nachgewiesenem Main-Commit
+die beauftragte §9-Bereinigung in einem eigenen PR ausführen.

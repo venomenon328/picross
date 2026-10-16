@@ -1,7 +1,5 @@
 {
-  "blockers": [
-    "Separate human final approval and exactly bound ZA-1-v2 fixed-mono authorization pending."
-  ],
+  "blockers": [],
   "candidate_revision": "C-r03",
   "category_id": "saeuger",
   "changes_from_C_r02": [
@@ -51,7 +49,10 @@
     "samples": "audit/C-r03-difficulty-samples.json",
     "time_estimate": null
   },
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/approval.json",
+    "sha256": "b7548cce0f01015ad9999dd4c2f35cc87254fd3ebacf824d15a3ccaabebf8203"
+  },
   "fixed_edit_record": {
     "member": "plans/C-r03.json",
     "sha256": "a35932f6d8daa1d5b3defc6235e1aaa054e3a976759c720131772bf3a3c7d6e4"
@@ -63,7 +64,12 @@
     "sha256": "8f848eafbac184351737a5c29d6f383f02509a3122cd4984fe6a285c0d9b69e8"
   },
   "height": 26,
-  "integration": null,
+  "integration": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/integration.json",
+    "sha256": "18b083b09445698e91e4019e191eb33659e9e1474b0e329ac46cdc0e0aae2dae",
+    "status": "registered",
+    "main_integration_pending": true
+  },
   "inventory_sha256": "f68250bbe81b820a1d73ea64340c4bca08db631c27b2b60d1d3101017740ba24",
   "mode": "mono",
   "motif": {
@@ -75,7 +81,7 @@
     "sha256": "e3809bbc30017c59bfae6420e330df7853b9c2c7e8aa31cbc2c7cdaf99588c69"
   },
   "motif_name": "Carabao – Kopf",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Integrations-PR prüfen und mergen; danach §9-Bereinigung",
   "package": {
     "bytes": 7654555,
     "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/package.zip",
@@ -114,13 +120,20 @@
     "variant": "contour",
     "verification": "audit/C-r03-final.json"
   },
-  "state": "blocked",
-  "target_adapter_inspection": null,
-  "updated_at_utc": "2026-10-16T23:28:08.222783+00:00",
+  "state": "registered",
+  "target_adapter_inspection": {
+    "file": "content/packages/pz-b5e2302bf71445c09caac76bbc2a7075/r11/inspection.json",
+    "sha256": "f6d7d2f9090fb719e29689287dce16ce9a6c4b30316ee5d3fb805f0f6699578d"
+  },
+  "updated_at_utc": "2026-10-16T23:38:23.159031+00:00",
   "user_pins_preserved": true,
   "validation": {
     "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/validation.json",
     "sha256": "21fc4447e4a42eab3a9de8d6e923e4dbc683260f0253279bed1afb6b58ea323b"
   },
-  "width": 40
+  "width": 40,
+  "manual_authorization": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/manual-authorization.json",
+    "sha256": "775822c14cfea28aea90651186e5e14d440baaa3da93817d3676d5c9e2e91bdc"
+  }
 }
