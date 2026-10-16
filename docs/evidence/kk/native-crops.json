@@ -4,8 +4,8 @@
   "platform": "Windows-11-10.0.26200-SP0",
   "display_server": "Windows",
   "adapter": "NVIDIA GeForce RTX 3070",
-  "base": "35465bed49055b01583a20aab7add9b37536c129",
-  "source": "Original captures from initial Windows run on prior KK head 3f1ec25; source-byte hashes were re-bound to the review-fix code. Exact crop reproduction on this new final head is REQUIRED and not established by this edit. This manifest is not an independent review or owner acceptance.",
+  "base": "f6a605088c634467ae29e6848c8ac96a96f3ed9d",
+  "source": "Fresh native Windows/NVIDIA OpenGL captures from KK review repair, with the source bytes below. The final clean-head rerun and CI EXE/PCK start are bound in PR #176; this manifest alone is neither independent review nor owner acceptance.",
   "runtime_files": {
     "game/ui/atlas_marks.gd": "3c9151874a5a22fcf7c657e996df65c7494b0a88fd27417933b0174165e017b5",
     "game/ui/board.gd": "dc4a8e4f5dea81a187321625bfecff12427ff15446b0c6243beb5df5f5b46322",
@@ -13,7 +13,7 @@
     "game/ui/book_surface.gd": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7",
     "game/ui/book_tooltip.gd": "a3b4a50f6852e4a052e8370a65af4238d72ce071c41d37583545b927b63f22f8",
     "game/ui/catalog.gd": "7bb4a89f3bc19ed31eda5d8325eaf74d40e833c89583c7ceb68c5a7814b88553",
-    "game/ui/catalog_card.gd": "88987ef1a131c05b38e846445ba92c8eaf449f5c4d4b7f30da0b16ae53a7c926",
+    "game/ui/catalog_card.gd": "8ad0db74aaa8c8aff5608d5e22472b15b5e094eb05b4326fa0cb2c0b2ed851f3",
     "game/ui/cell_atlas.gd": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d",
     "game/ui/chalkboard_board.gd": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad",
     "game/ui/clue_layout.gd": "960d29e4254cea067aafed888332cceb3d31b323b60d601c82b69b714a2c0b45",
@@ -32,7 +32,7 @@
     "game/ui/scribble.gd": "74af9c0a6140644ae456a7f6d530dcb6c4ccb5fbc490af24615c8f3b796efbee",
     "game/project.godot": "cd1a917360eddb036d317a29bec78b8cf54eff92b6eb5eb2f8cf7bc1b9dba8bc",
     "game/main.tscn": "2607c9dcc378f0a6c9f2ed195527adadc2f7d52e50988847071b40770e48ba0c",
-    "game/tests/kat2_probe.gd": "2827f41ea6bccf945762603cf2982d39f19dec772736f50430d167cfe2d7e842",
+    "game/tests/kat2_probe.gd": "4a30960eeac9a65546402053cad54c369279bbb5c96b49427700122df8c4589d",
     "tools/product_fixtures.py": "212b8397e0098f8b1f82b661048b55dc5865b0e522b68bc198612fa0644d564f",
     "tools/kat2_product.py": "36d10cf0ebc3d1eeb8c3b6e4865da0c38edac40b1a0acdf2ba73af4d50fb7e94"
   },
@@ -130,7 +130,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1,
+      "ui_scale": 1.0,
       "sha256": "ed709ecc540a40bcc94bc0a35d31e94167c5337e643c142bdac69572845ca48f"
     },
     {
@@ -146,7 +146,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1,
+      "ui_scale": 1.0,
       "sha256": "9e1f8e06ad9b582a7001c4a908f906e43987c5978de77a6f0558295075204654"
     },
     {
@@ -162,7 +162,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1,
+      "ui_scale": 1.0,
       "sha256": "8143c91e0c37a9004a39eea40a3f97f075ca68c1fcb63a68c85c26b0c5b74671"
     },
     {
@@ -178,7 +178,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1,
+      "ui_scale": 1.0,
       "sha256": "c5cb88ac229b6a2ae5208442662e03b655caa3ca1e4cb6e3d282996048844d23"
     },
     {
@@ -194,7 +194,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1,
+      "ui_scale": 1.0,
       "sha256": "ed709ecc540a40bcc94bc0a35d31e94167c5337e643c142bdac69572845ca48f"
     },
     {
@@ -291,7 +291,7 @@
         1440
       ],
       "ui_scale": 1.25,
-      "sha256": "57bb410a7da741f68682da8f94b0306079db6a65d5d574ec7e9b4477a737c317"
+      "sha256": "f64ea348573dae3f9e5326aba203983226aa9b72c89f468605b7cbf9ec965cf0"
     },
     {
       "file": "kk-recovered-card.png",
@@ -483,7 +483,7 @@
       "surface": [
         1920,
         1080,
-        1
+        1.0
       ]
     },
     {
@@ -492,7 +492,7 @@
       "surface": [
         1920,
         1080,
-        1
+        1.0
       ]
     },
     {
@@ -624,7 +624,7 @@
       "surface": [
         1920,
         1080,
-        1
+        1.0
       ]
     },
     {
@@ -1174,6 +1174,50 @@
       "resize_width": 1921
     }
   ],
-  "checks": 768,
-  "failures": []
+  "checks": 850,
+  "failures": [],
+  "pointer_measurements": [
+    {
+      "counts": {
+        "id": "",
+        "open": 0,
+        "repair": 0,
+        "reset": 0
+      },
+      "inner_range": 1180.0,
+      "neutral_point": "(135.5, 404.0)",
+      "outer_before": 0,
+      "scrollbar_thumb_point": "(372.5, 398.0)",
+      "state": "error",
+      "wheel_after": 17
+    },
+    {
+      "counts": {
+        "id": "T-01",
+        "open": 1,
+        "repair": 1,
+        "reset": 0
+      },
+      "inner_range": 1243.0,
+      "neutral_point": "(135.5, 404.0)",
+      "outer_before": 0,
+      "scrollbar_thumb_point": "(372.5, 398.0)",
+      "state": "recovered",
+      "wheel_after": 17
+    },
+    {
+      "counts": {
+        "id": "T-01",
+        "open": 2,
+        "repair": 2,
+        "reset": 0
+      },
+      "inner_range": 1216.0,
+      "neutral_point": "(135.5, 404.0)",
+      "outer_before": 0,
+      "scrollbar_thumb_point": "(372.5, 398.0)",
+      "state": "backup_invalid",
+      "wheel_after": 17
+    }
+  ]
 }

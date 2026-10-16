@@ -78,7 +78,11 @@ func configure(title: String, meta: String, number: String) -> void:
 func _recovery_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mouse: InputEventMouseButton = event
-		if mouse.button_index != MOUSE_BUTTON_LEFT: return
+		if mouse.button_index != MOUSE_BUTTON_LEFT:
+			# A wheel gesture is not a neutral click, even when reverse scrolling
+			# returns to the original offset before the held left button is released.
+			recovery_armed = false
+			return
 		if mouse.pressed:
 			recovery_armed = true
 			recovery_press_position = mouse.position
