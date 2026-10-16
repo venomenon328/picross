@@ -772,6 +772,7 @@ func recovery_pointer_cases() -> void:
 		app.album.present(app.sessions,app.slot_status,display_errors,"","T-01")
 		await frames()
 		var card: Card = app.choices[0]
+		check(card.recovery.mouse_filter == Control.MOUSE_FILTER_STOP and card.recovery_content.mouse_filter == Control.MOUSE_FILTER_PASS,"KK "+state+": wheel ownership and text click routing stay explicitly separated")
 		check(card_geometry() == stable,"KK "+state+": fixed card and grid geometry")
 		check(card.reset.visible and card.recovery.visible,"KK "+state+": reset and diagnosis visible")
 		check(card.note.text == ("Ungültig" if state == "error" else "Neu"),"KK "+state+": short validated progress")
