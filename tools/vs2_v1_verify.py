@@ -36,13 +36,16 @@ def typography(r):
                 x,y,w,h = token['ink']
                 left, right = x-token['advance']/2, x+w-token['advance']/2
                 top, bottom = y+baseline,y+h+baseline
+                # HS: every cross vertex is inside the native whole-token ink
+                # rectangle. Reserve the largest pencil half-width, C1 and AA
+                # for every status and identity (independent RID reconstruction).
+                margin = aa
                 if text.isdecimal():
-                    thickness = max(1,fs/14)
-                    left, right = min(left,-token['advance']/2),max(right,token['advance']/2)
-                    top = min(top,baseline-.32*fs-thickness/2)
-                    bottom = max(bottom,baseline-.32*fs+thickness/2)
-                width = 2*max(-left+aa,right+aa)
-                height = 2*max(-top+aa,bottom+aa)
+                    radius = max(1,fs/18)*1.08/2 + ui/4
+                    inset = min(radius+.5,max(0,min(w,h)/2-.05))
+                    margin = max(aa,radius+1-inset)
+                width = 2*max(-left+margin,right+margin)
+                height = 2*max(-top+margin,bottom+margin)
                 cross = max(cross,height,width if axis=='column' else 0)
                 along = max(along,width if axis=='row' else height)
             pitches.append(math.ceil(along+padding))
@@ -52,7 +55,7 @@ def typography(r):
     require(data['selected']['fs'] == r['font_px'] and data['next']['fs'] == r['font_px']+1, 'measured selected/next grade')
     require(pitches == [r['row_pitch'],r['column_pitch']], 'measured shared pitch')
     if r.get('layout_valid', True):
-        require(extent <= max(1,cell-padding)+.025, 'full ink/C1/strike within cell')
+        require(extent <= max(1,cell-padding)+.025, 'full ink/C1/X within cell')
         require(next_extent > max(1,cell-padding), 'largest measured grade')
 
 

@@ -12,6 +12,7 @@ import p1_preflight as toolchain
 import vs2_v1_verify
 import hc92_verify
 import hf149_verify
+import hs186_verify
 
 BASE = "fad885344874534629365917a2ab6a8d311cd3a7"
 
@@ -149,13 +150,23 @@ def capture_current(project, workspace, output, engine, render_command, environm
     hc = hc92_verify.verify(hc_dir)
     (hc_dir / "hc92-acceptance.json").write_text(json.dumps(hc,indent=2)+"\n",encoding="utf-8")
     selected += list(hc_dir.glob("*.json")) + list(hc_dir.glob("*.png"))
+    hs_dir = output / "hs186"
+    hs_dir.mkdir()
+    environment["HS186_OUTPUT"] = str(hs_dir)
+    try:
+        phase("hs186-native-number-cross-pixels", ["res://tests/hs186_capture.gd" if part == "res://tests/capture.gd" else part
+                                                 for part in render_command], "HS186_NATIVE_OK")
+    finally:
+        environment.pop("HS186_OUTPUT", None)
+    hs = hs186_verify.verify(hs_dir, hf_dir)
+    selected += list(hs_dir.glob("*.json")) + list(hs_dir.glob("*.png"))
     # Keep full matrix telemetry without displacing mandatory native pictures
     # or increasing the shared player/evidence budget.
     packed = {p: compress_geometry_report(p) for p in
               (renders / "vs2-matrix.json", focused_dir / "v1-focused.json")}
     selected = [packed.get(p, p) for p in selected]
     return dict(records=len(report["records"]), failures=report["failures"],
-                rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3, hc92=hc, hf149=hf,
+                rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3, hc92=hc, hf149=hf, hs186=hs,
                 historical_comparison="not run; CI policy #63",
                 legacy_reader="separate downloaded Windows old-writer/new-reader probe"), selected
 
