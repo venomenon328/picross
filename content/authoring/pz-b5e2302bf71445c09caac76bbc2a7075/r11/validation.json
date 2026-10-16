@@ -1,0 +1,40 @@
+{
+  "all_other1038_cells_unchanged": true,
+  "certified": true,
+  "changes_from_C_r02": [
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 10,
+      "row": 2
+    },
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 38,
+      "row": 4
+    }
+  ],
+  "checked_at_utc": "2026-10-16T23:28:08.222783+00:00",
+  "closed_muzzle_and_lip_unchanged": true,
+  "editorial_approved": false,
+  "exact_inventory_hashes_and_file_set_pass": true,
+  "format": "picross-authoring-repair-validation-v1",
+  "full_line_proof_verified": true,
+  "handoff_byte_copy_pass": true,
+  "handoff_sha256": "8f848eafbac184351737a5c29d6f383f02509a3122cd4984fe6a285c0d9b69e8",
+  "inventory_sha256": "f68250bbe81b820a1d73ea64340c4bca08db631c27b2b60d1d3101017740ba24",
+  "package_sha256": "5ff3d5c0c447cf53dbb2b7e7a723c75926a564e06bbeecfcdf551e39ea09ddfc",
+  "proof_end_equals_matrix": true,
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "registered": false,
+  "revision": "r11",
+  "rp5_both_rounds_replayed": true,
+  "rp5_result_equals_final_import": true,
+  "source_and_fixed_edit_replay": true,
+  "target_adapter_inspect": "not_performed: ZA-1-v2 fixed mono requires separate final approval/exact external authorization",
+  "uniqueness": "proved_by_complete_independently_verified_deduction",
+  "user_pins_preserved": true,
+  "za1_safe_package_container_open_pass": true,
+  "zip_crc_pass": true
+}

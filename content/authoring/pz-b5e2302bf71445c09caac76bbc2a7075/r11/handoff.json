@@ -1,0 +1,141 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        50,
+        28,
+        1504,
+        983
+      ],
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 25,
+      "method": "area",
+      "mode": "mono",
+      "width": 38
+    },
+    {
+      "actual_crop": [
+        50,
+        28,
+        1504,
+        983
+      ],
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 26,
+      "method": "area",
+      "mode": "mono",
+      "width": 40
+    },
+    {
+      "actual_crop": [
+        50,
+        28,
+        1504,
+        983
+      ],
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 28,
+      "method": "area",
+      "mode": "mono",
+      "width": 42
+    }
+  ],
+  "authorization": "Nutzer beauftragt Korrektur der Mehrdeutigkeit von C-r02; bestehende zwei Zellvorgaben und Schnauzenkontur geschützt. Zwei zusätzliche Hornkonturzellen zertifiziert. Repositoryablage und bedingter Ablagemerge weiterhin beauftragt; gesonderte Endabnahme offen.",
+  "blockers": [
+    "Separate human final approval and exactly bound ZA-1-v2 fixed-mono authorization pending."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "candidates/C-r03/import",
+    "certification": null,
+    "logic_hash": "e21609d1e7b4408c3010e1cdd64a27a7ac924be4a2ccc891af110b30bd3613ef",
+    "matrix_hash": "6a48e53854d39c03df8510b44316bd086fc7b8c7649bb560a1de52ee3d2e3c32",
+    "proof": "candidates/C-r03/import/contour-proof.json",
+    "source_type": "import",
+    "variant": "contour",
+    "verification": "audit/C-r03-final.json"
+  },
+  "candidate_revision": "C-r03",
+  "category_id": "saeuger",
+  "composition": "head_only",
+  "content_blockers": [],
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "difficulty.json",
+    "frame": "audit/C-r03-final.json",
+    "logic": "audit/C-r03-final.json",
+    "motif": "approvals/motif.json",
+    "provenance": "audit/C-r03-final.json",
+    "reveal_approval": "approvals/reveal.json",
+    "reveal_consistency": "visual-review.json",
+    "visual": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "f68250bbe81b820a1d73ea64340c4bca08db631c27b2b60d1d3101017740ba24"
+  },
+  "manual_edit_record": "plans/C-r03.json",
+  "motif": {
+    "approval": "approvals/motif.json",
+    "derived_from_reveal_sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280",
+    "file": "motif/MA-r03.png",
+    "provenance": "motif/MA-r03.provenance.json",
+    "revision": "MA-r03",
+    "sha256": "e3809bbc30017c59bfae6420e330df7853b9c2c7e8aa31cbc2c7cdaf99588c69"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "audit/C-r03-final.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": "parameterkorridor.json",
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "repair": null,
+  "repair_evidence": {
+    "bundle": "repairs/round-2",
+    "replay": "audit/round-2-replay.json"
+  },
+  "repo_commit": "74b5827894ab67683d9ce7c8963a0e73ee8015fc",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "height": null,
+    "mode": "mono",
+    "width": 40
+  },
+  "reveal": {
+    "approval": "approvals/reveal.json",
+    "file": "reveal/B-r02.png",
+    "provenance": "reveal/B-r02.provenance.json",
+    "revision": "B-r02",
+    "sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280"
+  },
+  "revision": "r11",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "blocked"
+}
