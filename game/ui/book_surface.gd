@@ -14,6 +14,7 @@ var miniature: Rect2
 var palette: Rect2
 var wells: Array[Rect2] = []
 var work_visible: bool = false
+var work_alpha: float = 1.0
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -35,9 +36,9 @@ func _draw() -> void:
 	if not work_visible:
 		return
 	for box: Rect2 in wells:
-		draw_texture_rect(frames.tools,box,false)
-	draw_texture_rect(frames.palette,palette,false)
-	draw_texture_rect(frames.preview,card,false)
+		draw_texture_rect(frames.tools,box,false,Color(1,1,1,work_alpha))
+	draw_texture_rect(frames.palette,palette,false,Color(1,1,1,work_alpha))
+	draw_texture_rect(frames.preview,card,false,Color(1,1,1,work_alpha))
 
 func frame_rect(content: Rect2, kind: String = "tools") -> Rect2:
 	for item: Dictionary in frame_metadata.derivatives:

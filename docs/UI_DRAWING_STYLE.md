@@ -282,7 +282,7 @@ einer tatsächlich aktiven Zellgeste werden dadurch weder erweitert noch aufgeho
 | Undo/Redo | Exakten Zustand sofort herstellen, betroffene Effekte beenden; keine eigene neue Setzanimation und keine zusätzliche Eingabesperre. |
 | Escape/Fokusverlust/Gegentaste | Vorschau verwerfen und aktive sowie wartende Effekte beenden. Kein Commit oder verspäteter Wiederanlauf. |
 | Blattwechsel, Reset, Restore, Album/Informationsseite | Keine Effekte in eine andere Session übertragen, speichern oder beim Wiederöffnen erneut abspielen. Bestehender Abbruch-/Flush-/Recoveryvertrag bleibt. |
-| Letzter erfolgreicher Strich | Sofortiger bestehender Abschluss-/Speicher-/Enthüllungspfad; laufende Effekte dürfen enden. Kein neues Warten auf das Animationsende. |
+| Letzter erfolgreicher Strich | Sofortiger Abschluss-/Speicherpfad; laufende Zelleffekte dürfen enden. EA / #170 übernimmt anschließend ausschließlich die Präsentation (250/650/400/650/200 ms) bis zum vorhandenen Motivbild mit Name und Reset. Kein Warten von Logik oder Sicherung auf das Animationsende; [EA-Prüfzuordnung](EA_VERIFICATION.md). |
 | Pan/Zoom/Resize nach Commit | Aktive und wartende Effekte beenden; keine Eingabe- oder Navigationssperre durch Effekte. |
 
 Während einer linken/rechten Zellgeste bricht das Down der jeweils anderen
