@@ -1,0 +1,30 @@
+{
+  "arguments": {
+    "referenced_image_paths": [
+      "approved-A-r01.png"
+    ],
+    "transparent_background": false
+  },
+  "calls": 1,
+  "correction_rounds": 0,
+  "input": {
+    "file": "reveals/A-r01.png",
+    "sha256": "0738b9ebabcbe20c3403f0654440ff08e1aed1a1caf626719613378d326d93f1"
+  },
+  "intent": "edit",
+  "model": "not_exposed",
+  "output": {
+    "dimensions_px": [
+      1086,
+      1448
+    ],
+    "file": "motif/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "1a52522ac580f6a09bc484eb4cd69419f9284bc473a55447845c5508430b8642"
+  },
+  "processing": "Original returned PNG bytes retained without recoloring, thresholding or resampling.",
+  "prompt": "Use case: style-transfer. Asset type: monochrome source motif MA-r01 for a nonogram, derived faithfully from the supplied approved reveal A-r01. Input image 1 is the ONLY edit target and binding geometry reference. Convert exactly this cactus into a clean flat BLACK filled silhouette on pure WHITE background. Preserve the same frontal viewpoint and proportions: tall upright rounded central column; left arm curving outward and upward, its crown significantly lower than the right crown; right arm curving up to a height just below the central crown. Preserve the substantial curved elbows, the trunk below the arms, and both open white negative spaces between arms and central stem. Preserve overall width-to-height proportion and relative arm thickness. Smooth the outer silhouette to follow the green fleshy body, OMIT all tiny protruding spines. Remove all interior ribs, scratches, areoles, shading, highlights, texture and color. Remove the sandy mound entirely, end the central column with a simple gently rounded bottom in the same place. No floor line or cast shadow. No pot, flowers, extra limbs, symbols, border, text, grid, pixel cells or hints. One black connected cactus body, no outline-only drawing and no gray filled areas. Maintain full height portrait composition around 3:4 with small plain white margin, no clipping. This is an illustrated continuous-shape abstraction, NOT the final discrete puzzle matrix. Do not redesign or symmetrize the cactus.",
+  "quality": "not_exposed",
+  "size_setting": "not_exposed",
+  "tool": "image_gen.imagegen"
+}

@@ -1,0 +1,35 @@
+{
+  "assessment_type": "editorial_estimate",
+  "bottleneck": "Alle 37 aktuell verfügbaren Linien vor jedem der 60 gespeicherten Proofschritte ausgewertet. Vor Restaufräumen bei höchstens 7 offenen Zellen mindestens 5 produktive Linien; keine numerische Engstelle auf diesem Verlauf. Alternative schwächere Strategien nicht erschöpfend geprüft.",
+  "calibration": "Begründete KI-Schätzung, kein validierter R0–R3-Analysator und keine menschlichen Vergleichsdaten.",
+  "confidence": "low",
+  "effort": {
+    "cells": 330,
+    "empty": 176,
+    "filled": 154,
+    "height": 22,
+    "human_active_minutes": null,
+    "max_column_clues": 1,
+    "max_row_clues": 3,
+    "proof_steps": 60,
+    "solve_time_minutes": null,
+    "width": 15
+  },
+  "evidence": "audit/difficulty-checkpoints.json",
+  "level": "L2",
+  "logic_hash": "ca959db2ef3749b97dae4450cc9baa608dfe1856c8d85fa63aa2293ace4830e0",
+  "method": "picross-difficulty-0.1",
+  "plausible_range": [
+    "L1",
+    "L4"
+  ],
+  "playtest": "not_performed; optional, kein Gate",
+  "rule_families": {
+    "R0": "Leere Zeile 22 ist direkt bestimmbar; danach sind die Einblockspalten 7/8 mit Länge 21 vollständig gepackt. Fertige Blöcke liefern Restleerfelder. R0-Suffizienz nicht mit validiertem schwächeren Regelsatz bis Fixpunkt geprüft; L1 bleibt möglich.",
+    "R1": "Dominant geschätzt: Überlappung und Verlängerung der langen Einblockspalten 6–9 sowie der breiten Stamm-/Ellenbogenzeilen. Zeile 13 [11] in Breite 15 besitzt sieben anfängliche Überlappungszellen.",
+    "R2": "Armzeilen mit drei Blöcken können kombinierte Zuordnung mehrerer Anker und Trenner erfordern. Vor Schritt 1 liefert Zeile 7 [3,5,3] fünf erzwungene Zellen. R0+R1-Suffizienz und R2-Notwendigkeit sind nicht vollständig klassifiziert.",
+    "R3": "Full-line-mono zertifiziert allgemeine vollständige Linienunterstützung, keine Notwendigkeit der stärksten Familie. R3-Bedarf mangels validierter schwächerer Klassifikation nicht ausgeschlossen; konservativer Bereich bis L4. Kein Paarprofil nötig."
+  },
+  "samples": "audit/difficulty-samples.json",
+  "time_estimate": null
+}
