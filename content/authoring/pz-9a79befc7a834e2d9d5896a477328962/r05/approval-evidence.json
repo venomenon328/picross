@@ -1,0 +1,8 @@
+{
+  "additional_order": "Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen. Nach tatsächlicher Main-Integration die Bereinigung gemäß §9 prüfen und direkt mergen.",
+  "observed_at_utc": "2026-10-16T12:07:26.371635+00:00",
+  "source_branch": "main",
+  "source_commit": "f6a605088c634467ae29e6848c8ac96a96f3ed9d",
+  "statement": "Ich nehme das Rätselpaket content/authoring/pz-9a79befc7a834e2d9d5896a477328962/r05/package.zip · r05, Revision r05, Inventar-SHA-256 bd400eae78c9ccc5ae6885acb8a04b77132694824a4026b4a10740a83055553b redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.",
+  "timestamp_basis": "Zeit der Aufzeichnung der tatsächlich vorliegenden Nutzererklärung; Nachrichtenzeitstempel nicht verfügbar."
+}
