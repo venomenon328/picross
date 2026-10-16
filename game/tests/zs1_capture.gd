@@ -208,14 +208,14 @@ func hint_probe(axis: String) -> void:
 	var area: Rect2 = app.board.row_clue_area() if axis == "row" else app.board.column_clue_area()
 	var cell: Vector2 = app.board.view.cell_rect(Vector2i(22, 12)).get_center()
 	var p: Vector2 = app.board.global_position + (Vector2(area.get_center().x, cell.y) if axis == "row" else Vector2(cell.x, area.get_center().y))
-	mouse(p, MOUSE_BUTTON_MIDDLE, true)
+	mouse(p, MOUSE_BUTTON_LEFT, true)
 	var end: Vector2 = p + (Vector2(67, 0) if axis == "row" else Vector2(0, 40))
 	motion(end)
 	var expected: String = app.board.navigation_target(p-app.board.global_position) if app.board.has_method("set_mode") else axis
 	check(app.board.pan_target == expected, "overflow-only clue drag " + axis)
 	var neighbor: Dictionary = app.board.capture_view()
 	await shot("hint-" + axis + "-drag")
-	mouse(end, MOUSE_BUTTON_MIDDLE, false)
+	mouse(end, MOUSE_BUTTON_LEFT, false)
 	check(app.board.pan_target.is_empty(), "clue drop")
 	var after: Dictionary = app.board.capture_view()
 	check(after.column_clue_reads == neighbor.column_clue_reads if axis == "row" else after.row_clue_reads == neighbor.row_clue_reads, "other axis unchanged")
@@ -354,7 +354,7 @@ func point(x: int, y: int) -> Vector2:
 func motion(p: Vector2) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
 	event.position = p
-	event.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.pan_button == MOUSE_BUTTON_LEFT else MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
 	surface.push_input(event, true)
 
 func mouse(p: Vector2, button: MouseButton, down: bool) -> void:

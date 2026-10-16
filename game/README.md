@@ -139,7 +139,10 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   der Mauspalette entfällt; Lösungshinweise zeigen weiterhin nur die Zahl in ihrer Farbe.
   Gleiche Farbblöcke brauchen Abstand; verschiedene dürfen angrenzen.
 - Etwas größere Füllflächen bleiben durch Zwischenräume und Rasterlinien getrennt.
-  Die gültige Cursorzeile und -spalte sind im Grid dezent hinterlegt. Angeschnittene
+  Im Raster sind Cursorzeile und -spalte dezent hinterlegt. Über Zeilenhinweisen
+  bleibt nur die Zeile, über Spaltenhinweisen nur die Spalte markiert, auch bei
+  vollständigen Folgen und geöffnetem Vollhinweis. Während Hinweisdrag bleibt
+  ausschließlich seine Quellenlinie markiert. Angeschnittene
   X und Preview-X werden am sichtbaren Rasterrand geometrisch abgeschnitten.
 
 ## Navigieren und Hinweise lesen
@@ -169,7 +172,7 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   vollständiger Zahlen sichtbar. `…` links/oben markiert einen verborgenen Anfang,
   rechts/unten ein verborgenes Ende; mittlere Ausschnitte dürfen beide Marker haben.
   Zahlen werden nie geteilt; bestätigte Lesepositionen liegen in ganzen Slots.
-- Nur die mittlere Taste im oberen Hinweisbereich verschiebt nur die
+- Die linke Taste im oberen Hinweisbereich verschiebt nur die
   beim Start angefasste Spaltenfolge vertikal. Dieselbe Geste im linken Hinweisbereich
   verschiebt nur die angefasste Zeilenfolge horizontal. Während des Ziehens folgt
   sie der Maus flüssig zwischen den Slots. `…` zeigt dabei auf der jeweiligen Seite
@@ -179,6 +182,9 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   behalten ihre eigene Position. Ziel, Linie und Achse bleiben auch beim Überqueren anderer Bereiche
   eingefroren. Raster, Miniatur, Zellen und Undo/Redo ändern sich nicht. `Esc` oder
   Fokusverlust oder ein regulärer Übergang verwirft den temporären Versatz.
+  MMB navigiert keine Hinweise. Ein Hinweisdrag wird auch über Raster oder Buttons
+  nicht zur Zell- oder Buttonaktion. Verlorene Freigabe oder ein Tastenakkord
+  verwirft den Versatz; nach dem Loslassen beginnt erst ein frischer Druck eine Geste.
   Weiteres Ziehen in derselben Richtung führt bis zum äußeren Anfang; zurück
   geht es durchgehend in Gegenrichtung. Am Anschlag bleibt die Folge stehen.
   Dort darf ein Platz frei bleiben, damit die Zahlen beim Einrasten nicht

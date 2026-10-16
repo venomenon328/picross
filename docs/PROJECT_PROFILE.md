@@ -136,7 +136,8 @@ bleiben vor Merge offen. Historische Chalkboard-/24/18-Maße sind abgelöst.
 
 P1 bleibt der Vertragsname. Vollsicht und Hinweise sind nach VS2 integriert:
 Sammlungsstart, Rasteransicht/Gesamtansicht, passives proportionales Miniaturbild,
-MMB ausschließlich für eine konkrete überlaufende Hinweisfolge, keine Hand- oder
+Linksdrag ausschließlich für eine konkrete überlaufende Hinweisfolge gemäß
+[HN](CLUE_INTERACTION.md), MMB ohne Hinweisnavigation, keine Hand- oder
 Raster-/Miniaturverschiebung. Raster samt Außenrahmen bleibt innerhalb der
 angebotenen Fitgrenze sichtbar. Die sechs Sidebaraktionen stehen in 2×3 mit
 gezeichneten Rahmen; UI 100/125 % und Rückweg bleiben erreichbar.
