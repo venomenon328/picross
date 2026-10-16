@@ -279,6 +279,13 @@ func captures() -> void:
 		motion(source("row",49))
 		await settle()
 		pixels(prefix+"-complete-row",Vector2i(-1,49),baseline)
+		var size_before: Vector2 = b.size
+		b.size = Vector2(100,100)
+		b._layout()
+		check(not b.layout_valid and b.cursor_context() == Vector2i(-1,-1) and b.clue_tooltip_rect == Rect2(), "A05 invalid layout clears bands and hit box")
+		b.size = size_before
+		b._layout()
+		check(b.cursor_context() == Vector2i(-1,49), "A05 valid layout re-resolves stationary pointer")
 
 func run() -> void:
 	output = OS.get_environment("HN192_OUTPUT")
