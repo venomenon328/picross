@@ -1,5 +1,19 @@
 # HC · aktive Hinweis-Typografie (#92)
 
+## Freigegebene Fortschreibung HS / #186
+
+Bei Hinweisarbeit zusätzlich [Hinweisstatus HS](CLUE_STATUS.md) vollständig lesen.
+HS-D01–D04 ersetzen als freigegebener Sollvertrag die bisherige 78-%-Abschwächung
+nur des mittleren Zustands und den geraden Durchstrich: beide positiven Zustände
+bleiben gleich blass (60 % Ausgangswert), CLOSED erhält zusätzlich ein deutlicheres
+handschriftliches X über dem gesamten Token. Zahlfarbe, C1-Semantik und H1/GP48 bleiben.
+Zeichnung, tatsächliche Hüllen, Tooltipmessung und Web-Fit-Vorselektion werden
+zusammen angepasst. Die dort benannte gezielte Ablösung gilt auch gegenüber älteren
+P1-/Design-/Zeichensprachepassagen; deren Inline-Nachführung gehört zur Implementierung.
+**HS ist noch nicht implementiert oder visuell abgenommen.** Die folgenden
+Querstrichbeschreibungen dokumentieren bis dahin die technische Ausgangsfassung,
+nicht die Zielgeometrie des neuen X. Fonts und übrige HC-/HF-Verträge bleiben.
+
 [Issue #92](https://github.com/venomenon328/picross/issues/92) ersetzt für aktive
 Hinweise Chalkboard und feste 24/18-Slots. Historische ZS1-/VS2-Lieferberichte
 behalten ihre Bindung. Bakso, Fraunces und Plex behalten ihre übrigen UI-Rollen.
