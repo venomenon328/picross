@@ -1,0 +1,50 @@
+{
+  "blockers": [],
+  "category_id": "saeuger",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r01/handoff.json",
+    "sha256": "da08e0ca333e9cf47ad6cde1a84a016e997ffc7643c78d7203050537f4645b00"
+  },
+  "height": 35,
+  "integration": null,
+  "inventory_sha256": "56017824b6a5f3c352411ed183968182e6f3308e957e9670b06bd3508dc77887",
+  "mode": "color",
+  "motif_name": "Koboldmaki",
+  "next_action": "2 · Bild freigeben & abstrahieren: Auswahl und ausdrückliche Freigabe einer Abschlussbilddatei erforderlich.",
+  "package": {
+    "bytes": 5396721,
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r01/package.zip",
+    "sha256": "75aaf2f7d3df861abda3ad344fc502c19a628d28dc1b85478e5adf8c4b3f3553"
+  },
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "repo_commit": "09ffa51f2cc2bb8a97c71b26113d2892f98be6c9",
+  "reveal_options": [
+    {
+      "approval": null,
+      "file": "A-r01.png",
+      "id": "A-r01",
+      "sha256": "9e7f00bcada2144b9ca728edf5439d8a3e3972d418752695db0d378c6509eaf5"
+    },
+    {
+      "approval": null,
+      "file": "B-r01.png",
+      "id": "B-r01",
+      "sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea"
+    },
+    {
+      "approval": null,
+      "file": "C-r01.png",
+      "id": "C-r01",
+      "sha256": "bd94596a184848f348c9c6b733df1a26ce94e6be269f810a4855135afc6c2e58"
+    }
+  ],
+  "revision": "r01",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-16T13:34:32.206957+00:00",
+  "width": null
+}
