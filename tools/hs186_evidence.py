@@ -67,7 +67,8 @@ def package(directory: Path, target: Path) -> dict:
         archive.writestr('ci/product-report.json',data)
         hashes['ci/product-report.json'] = digest(data)
     original = target.read_bytes()
-    return dict(head=proof['head'],base=proof['base'],checkout=proof['checkout'],run=proof['run'],
+    return dict(head=proof['head'],base=proof['base'],selection_base=proof['selection_base'],
+                checkout=proof['checkout'],run=proof['run'],
                 exports=proof['exports'],artifacts=proof['artifacts'],
                 filename=target.name,bytes=len(original),sha256=digest(original),files=hashes)
 
@@ -86,7 +87,8 @@ def publish(target: Path, manifest: dict) -> dict:
     files['README.md'] = {'content':f'''# HS-R01/R1 B-01 / A-01: native Windows originals
 
 PR https://github.com/venomenon328/picross/pull/187 · Issue #186 V2.
-Head `{manifest['head']}`, base `{manifest['base']}`,
+Head `{manifest['head']}`, actual merge base parent `{manifest['base']}`,
+CI event/selection base `{manifest['selection_base']}`,
 tested merge `{manifest['checkout']}`, CI run `{manifest['run']}`.
 ZIP SHA-256 `{manifest['sha256']}` ({manifest['bytes']} bytes).
 EXE/PCK and Actions artifact digests: `manifest.json` and original binding report.

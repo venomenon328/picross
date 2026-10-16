@@ -17,7 +17,7 @@ class EvidenceTests(unittest.TestCase):
             for name in ('logs','hs186','hf149','technical','profile','hf149/isolated-saves'):
                 (root/name).mkdir(parents=True,exist_ok=True)
             proof = dict(host='Windows-11',windows_hs=dict(status='success'),head='head',
-                         base='base',checkout='merge',run='run',exports={},artifacts=[])
+                         base='base',selection_base='event-base',checkout='merge',run='run',exports={},artifacts=[])
             (root/'hs-windows-proof.json').write_text(json.dumps(proof))
             for name in ('windows-proof.json','technical/product-report.json',
                          'hf149/hf-write.json','hf149/hf-read.json','hf149/hf-native.json',
