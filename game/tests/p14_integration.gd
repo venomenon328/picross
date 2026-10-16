@@ -196,6 +196,9 @@ func perform(action: Dictionary) -> void:
 			var button: MouseButton = MOUSE_BUTTON_RIGHT if action.button == "right" else MOUSE_BUTTON_LEFT
 			var start: Vector2 = cell_point(action.start)
 			var end: Vector2 = cell_point(action.end)
+			# A physical pointer enters the grid before its fresh Down. This
+			# closes the prior full-clue overlay through the actual hover route.
+			motion(start, MOUSE_BUTTON_NONE)
 			press(start, button)
 			if action.has("via"):
 				motion(cell_point(action.via), button)
