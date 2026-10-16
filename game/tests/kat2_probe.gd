@@ -503,7 +503,7 @@ func regular() -> void:
 	var corrupted_primary: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09"))
 	var corrupted_backup: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09", ".bak"))
 	check(app._flush_current(), "KK unrelated pending state flushed before cross-slot reset comparison")
-	var unaffected_slot: Dictionary = save_bytes("t01")
+	var unaffected_slots: Dictionary = save_bytes("t09")
 	click(app.album.reset_buttons["T-09"])
 	await frames()
 	check(app.reset_dialog.visible and app.reset_id == "T-09" and app.album.visible, "KK disabled invalid card exposes reset to real pointer")
@@ -519,7 +519,7 @@ func regular() -> void:
 	check(app.album.visible, "KK confirmed invalid reset stays in catalog")
 	check(app.slot_status[5] == "fresh", "KK confirmed invalid reset clears only target status")
 	check(not app.choices[0].disabled and not app.album.reset_buttons["T-09"].visible, "KK confirmed invalid reset restores fresh clickable card")
-	check(save_bytes("t01") == unaffected_slot, "KK confirmed invalid reset keeps unrelated flushed slot bytes")
+	check(save_bytes("t09") == unaffected_slots, "KK confirmed invalid reset keeps every unrelated flushed slot byte")
 	# Leave independently validated solved and redo-only slots for another process.
 	for suffix: String in [".json", ".bak"]:
 		var restored: FileAccess = FileAccess.open(app.store.path_for("t09", suffix), FileAccess.WRITE)
