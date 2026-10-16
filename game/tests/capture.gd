@@ -110,11 +110,17 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 		material = surface.get_texture().get_image()
 		app.board.marks.show()
 	if (name.begins_with("separation-") and name.ends_with("-confirmed")) or name == "t06-grid-focus":
+		var focus_before_hide: Vector2i = app.board.hover
 		app.board.hide()
 		await process_frame
 		await RenderingServer.frame_post_draw
 		material = surface.get_texture().get_image()
 		app.board.show()
+		if name == "t06-grid-focus":
+			# Material capture hides the board and therefore clears its transient
+			# pointer. Restore the measured sample through the shared resolver;
+			# HN separately verifies real main-scene event routing.
+			app.board.update_pointer_hover(app.board.view.cell_rect(focus_before_hide).get_center())
 	app.refresh()
 	await process_frame
 	await process_frame
