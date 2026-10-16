@@ -19,8 +19,9 @@
   "motif": {
     "approval": null,
     "derived_from_reveal_sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea",
-    "file": "MA-r01.png",
-    "provenance": "MA-r01.provenance.json",
+    "member": "MA-r01.png",
+    "package": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r02/package.zip",
+    "provenance_member": "MA-r01.provenance.json",
     "sha256": "904ef168b3542acbf96172f1ba1891a9be2fb436c334fd294876b44b6c0b50df"
   },
   "motif_name": "Koboldmaki",
@@ -31,21 +32,22 @@
     "sha256": "2d8068a368ec261859cfaa7213a609dd96794a521c55be0163e6e884515d680a"
   },
   "proposed_parameters": {
-    "file": "parameterkorridor.json",
-    "location": "package.zip!parameterkorridor.json",
+    "member": "parameterkorridor.json",
+    "package": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r02/package.zip",
     "sha256": "b91a8e08d4cf767ae03053ccaf4989c21d61e0d0cdcd0595289211cf438a917c"
   },
   "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
   "repo_commit": "15e54e3e35794edd1d34b18fbdaab17ccea780a3",
   "reveal": {
-    "approval": "reveal-approval.json",
-    "file": "B-r01.png",
-    "provenance": "B-r01.provenance.json",
+    "approval_member": "reveal-approval.json",
+    "member": "B-r01.png",
+    "package": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r02/package.zip",
+    "provenance_member": "B-r01.provenance.json",
     "sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea"
   },
   "reveal_approval": {
-    "file": "reveal-approval.json",
-    "location": "package.zip!reveal-approval.json",
+    "member": "reveal-approval.json",
+    "package": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r02/package.zip",
     "sha256": "ebddc1ad744019a1b54352f3af6feef089ac7641c6a5cbc0afbcbe456a247bad"
   },
   "revision": "r02",
