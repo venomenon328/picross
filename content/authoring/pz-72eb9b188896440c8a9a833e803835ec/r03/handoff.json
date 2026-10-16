@@ -1,0 +1,159 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 35,
+      "method": "area",
+      "mode": "color",
+      "width": 24
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 35,
+      "method": "area",
+      "mode": "color",
+      "width": 24
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 38,
+      "method": "area",
+      "mode": "color",
+      "width": 26
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 38,
+      "method": "area",
+      "mode": "color",
+      "width": 26
+    }
+  ],
+  "authorization": "Standardauftrag3 bis Endabnahmevorlage; Repositoryablage§6 und bedingter Ablagemerge beauftragt. Motivfreigabe tatsächlich erteilt; Endabnahme und Spielregistrierung nicht erteilt.",
+  "blockers": [
+    "B-PZ72-V01: geschützte Greif-Freiräume/Oberschenkelgliederung fehlen; visuelle Motivkorrektur mit neuer Freigabe erforderlich."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "repair-r2-final",
+    "certification": {
+      "max_pair_records": 250000,
+      "max_pair_work": 20000000,
+      "profile": "paired-lines-color"
+    },
+    "logic_hash": "2265fcb04543bb5ef7ad3463d68fd08a9527715bfe7000df1ad90146b0d7d139",
+    "matrix_hash": "b0db76cf2f187e20688c564771330f088bf9ed584116f64da1b02a20d47160a9",
+    "parent_variant": "area",
+    "proof": "repair-r2-final/final-proof.json",
+    "repair_id": "79c3c81b77e1c8141fcb1e88af8fbab16209ba3eaa39bb57aa703b2a26c66587",
+    "source_type": "repair",
+    "variant": "candidate-001",
+    "verification": "checks/final-repair-replay.json"
+  },
+  "category_id": "saeuger",
+  "content_blockers": [
+    "B-PZ72-V01: geschützte Greif-Freiräume/Oberschenkelgliederung fehlen; visuelle Motivkorrektur mit neuer Freigabe erforderlich."
+  ],
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "difficulty.json",
+    "frame": "checks/matrix-metrics.json",
+    "logic": "checks/final-repair-replay.json",
+    "motif": "motif-approval.json",
+    "provenance": "checks/final-repair-replay.json",
+    "reveal_approval": "reveal-approval.json",
+    "reveal_consistency": "visual-review.json",
+    "visual": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "fail",
+    "target_export": "blocked",
+    "visual": "fail"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "586f4a8449b46107b4f2803fa6fe8494a29875c660245b415f0e41296cb6b390"
+  },
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea",
+    "file": "MA-r01.png",
+    "provenance": "MA-r01.provenance.json",
+    "sha256": "904ef168b3542acbf96172f1ba1891a9be2fb436c334fd294876b44b6c0b50df"
+  },
+  "next_action": "Korrigieren oder Fehler beheben",
+  "origin_verification": "checks/final-repair-replay.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": "parameterkorridor.json",
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "repair": {
+    "plan": "repair-plan-r2-final.json",
+    "reference": "imports/24x35-4c",
+    "reference_variant": "area",
+    "replay": "checks/final-repair-replay.json"
+  },
+  "repo_commit": "7910f4cdcaf904e7c28395dc2e61e5f3ebe76035",
+  "report": "report.md",
+  "requested_parameters": {
+    "foreground_colors": null,
+    "height": 35,
+    "mode": "color",
+    "size_constraint": "approximate",
+    "width": null
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "B-r01.png",
+    "provenance": "B-r01.provenance.json",
+    "sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "blocked"
+}
