@@ -1,0 +1,12 @@
+{
+  "active_human_minutes": null,
+  "distinct_raster_hypotheses": 6,
+  "image_calls_this_phase": 0,
+  "image_calls_total": 6,
+  "import_runs_this_phase": 6,
+  "line_import_runs": 6,
+  "paired_import_runs": 0,
+  "repair_runs": 0,
+  "solve_time_estimate": null,
+  "source": "Four approved initial variants + two preplanned role-separation palettes; no source or manual cell edit."
+}

@@ -1,0 +1,5 @@
+# Koboldmaki · Produktionspaket r07
+
+Standardauftrag3 aus r06@ca5223981e8594c3fa8638ce38385c0477f96658. MA-r03 samt Vierfarbkorridor tatsächlich im aktuellen Nutzerauftrag freigegeben; Beleg motif-approval.json. B-r01 bytegleich und früher ausdrücklich freigegeben. Kategorie saeuger.
+Freigegeben24×35 oder26×38, genau4 tatsächlich verwendete Vordergrundrollen, voller Crop1024×1536/contain, unveränderte Pose. Astfarbe exklusiv dem Ast; Tier/Greifkontakte/Schwanz warm orangebraun. Palette besitzt bevorzugte RGB-Anker, keine exakte RGB-Zwangsvorgabe. Zwei gezielte Zusatzvarianten beseitigen blaue Mischkonturen am Körper durch andere Anker derselben Rollen; dunkelster Ton nun dunkles Braun. Quelle/Geometrie unverändert.
+Sechs gezielte Hypothesen, keine blinde Suche. Auswahl26×38/4, vollständig full-line-color-zertifiziert, keine Reparatur. Alle Inhaltsgates bestanden, content_ready; menschliche Endabnahme separat offen. Repositoryablage§6 und bedingter Ablagemerge beauftragt; Spielregistrierung erst nach echter Endabnahme/Standardauftrag4.
