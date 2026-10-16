@@ -1,4 +1,0 @@
-C-r03: ambiguity repaired by2 connected horn contour fills; preserve user pins3/36 empty,5/8 ink and closed muzzle.
-
-Working mode: faithful
-Motif and gameplay review: open
