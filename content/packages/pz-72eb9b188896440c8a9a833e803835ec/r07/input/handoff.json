@@ -1,0 +1,145 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 38,
+      "method": "area",
+      "mode": "color",
+      "width": 26
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 38,
+      "method": "area",
+      "mode": "color",
+      "width": 26
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 35,
+      "method": "area",
+      "mode": "color",
+      "width": 24
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 35,
+      "method": "area",
+      "mode": "color",
+      "width": 24
+    }
+  ],
+  "authorization": "Standardauftrag3 vollständig bis Endabnahmevorlage. Tatsächliche MA-r03-/Korridorfreigabe und Repositoryablage§6 samt bedingtem Ablagemerge beauftragt. Menschliche Endabnahme/Spielregistrierung noch offen.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "imports/26x38-role-a",
+    "certification": null,
+    "logic_hash": "5af35f42cbc447ce3daa5dc1f8a0257c88230e9bbcd1c70ae34d1d54157db260",
+    "matrix_hash": "9d89385688bd4bb83beb7dc46a52e4514d08fdab8355ee1e1e61104b371d979b",
+    "proof": "imports/26x38-role-a/area-proof.json",
+    "source_type": "import",
+    "variant": "area",
+    "verification": "checks/final-proof-verification.json"
+  },
+  "category_id": "saeuger",
+  "content_blockers": [],
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "difficulty.json",
+    "frame": "checks/matrix-metrics.json",
+    "logic": "checks/final-proof-verification.json",
+    "motif": "motif-approval.json",
+    "provenance": "checks/final-origin.json",
+    "reveal_approval": "reveal-approval.json",
+    "reveal_consistency": "visual-review.json",
+    "visual": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "15d7374df4ae85f9eb4d01b177d315697bb658016aeda9fd0e59dc55f23a932f"
+  },
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea",
+    "file": "MA-r03.png",
+    "provenance": "MA-r03.provenance.json",
+    "sha256": "e920879aa6e4fdcf8737da685a20f6932165acedfa6f4c934105c3a87235976a"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "checks/final-origin.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": "parameterkorridor.json",
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "repair": null,
+  "repo_commit": "ca5223981e8594c3fa8638ce38385c0477f96658",
+  "report": "report.md",
+  "requested_parameters": {
+    "color_change": "more than r05(3), separate branch/body, clearly distinguishable",
+    "foreground_colors": null,
+    "height": 35,
+    "mode": "color",
+    "size_constraint": "approximate",
+    "width": null
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "B-r01.png",
+    "provenance": "B-r01.provenance.json",
+    "sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea"
+  },
+  "revision": "r07",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}

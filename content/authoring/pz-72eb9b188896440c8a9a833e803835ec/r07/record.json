@@ -42,7 +42,10 @@
     "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r07/ENDABNAHME.md",
     "sha256": "a14326cc484479b4ac288cbe9b79d4fd692a494b3cb379d6e60d9e00a384f863"
   },
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r07/approval.json",
+    "sha256": "6eba325ca96883f0cc53e3aa5bd7a7e51741ba9c08a6339341d119c1e37790f5"
+  },
   "foreground_colors": 4,
   "format": "picross-authoring-record-v1",
   "handoff": {
@@ -59,11 +62,24 @@
     "sha256": "07aa587ca06cd240ea566f4daedbed611c400b8deee3cc14c6508ab3827e645e",
     "technical": true
   },
-  "integration": null,
+  "integration": {
+    "category_id": "saeuger",
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r07/integration.json",
+    "inspection": {
+      "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r07/integration-inspection.json",
+      "sha256": "a05be9030a0500586dd28fd597db4f4b01e71ae9196ae8566bcbe9ee36b56188"
+    },
+    "main_commit": null,
+    "runtime_revision": 1,
+    "save_slot": "koboldmaki_001",
+    "sha256": "1096168c5bb6858e120ba1220d166821f05d1437cd9110ccbf683eac710f4cd5",
+    "status": "registered_in_checkout"
+  },
   "inventory_sha256": "15d7374df4ae85f9eb4d01b177d315697bb658016aeda9fd0e59dc55f23a932f",
+  "merge_authorization": "Bedingter Merge und anschließender §9-Cleanup samt direktem Merge im tatsächlichen Nutzerauftrag erteilt.",
   "mode": "color",
   "motif_name": "Koboldmaki",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Gespeicherte Arbeit fortsetzen",
   "package": {
     "bytes": 18075740,
     "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r07/package.zip",
@@ -93,7 +109,7 @@
   },
   "source_package_sha256": "70f692675d2cab0be7901afc9b0e22aef9319885488280126b76c56c0c5460f1",
   "source_revision": "r06",
-  "state": "content_ready",
-  "updated_at_utc": "2026-10-16T16:57:55.765009+00:00",
+  "state": "registered",
+  "updated_at_utc": "2026-10-16T17:57:06.718665+00:00",
   "width": 26
 }
