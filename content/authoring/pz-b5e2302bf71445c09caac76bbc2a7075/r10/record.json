@@ -1,0 +1,110 @@
+{
+  "blockers": [
+    "logic: two independently verified distinct solutions satisfy the same clues; C-r02 is not uniquely solvable.",
+    "Separate human final approval and exact fixed-mono authorization pending; no target export/registration."
+  ],
+  "candidate_revision": "C-r02",
+  "category_id": "saeuger",
+  "composition": "head_only",
+  "difficulty": {
+    "assessment_type": "not_assessed",
+    "confidence": null,
+    "effort": {
+      "cells": 1040,
+      "empty": 592,
+      "filled": 448,
+      "height": 26,
+      "line_steps": 248,
+      "unknown_cells": 10,
+      "width": 40
+    },
+    "evidence": "audit/final.json",
+    "level": null,
+    "logic_hash": "7ca5da60d5329367425db5644c55bbaf938c0c30d71dfdff5ff2d73dae20ade0",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": null,
+    "reason": "Candidate is not releasable: line and paired fixpoints stalled, multiple solutions independently confirmed. Do not copy L2 rating from previous C.",
+    "time_estimate": null
+  },
+  "final_editorial_approval": null,
+  "fixed_edit_record": {
+    "member": "plans/C-r02.json",
+    "sha256": "2853380ee675b03cb95e9ef58c9b521b66ed4ad105f8444f9b0e331a542ff889"
+  },
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r10/handoff.json",
+    "sha256": "cd9f26b70b782ebb63445fc8fcfa3a65dc0bc2730ea56eb4bb78e8f1f5b83477"
+  },
+  "height": 26,
+  "integration": null,
+  "inventory_sha256": "23ac3d0ad50c02d5f5200dc80c9b3342278ad7702a60cff9d1a16b45dcd59edb",
+  "mode": "mono",
+  "motif": {
+    "approval": "approvals/motif.json",
+    "derived_from_reveal_sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280",
+    "member": "motif/MA-r03.png",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r10/package.zip",
+    "revision": "MA-r03",
+    "sha256": "e3809bbc30017c59bfae6420e330df7853b9c2c7e8aa31cbc2c7cdaf99588c69"
+  },
+  "motif_name": "Carabao – Kopf",
+  "next_action": "Korrigieren oder Fehler beheben",
+  "package": {
+    "bytes": 6573620,
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r10/package.zip",
+    "sha256": "e2ddc3c7be474ecd5c40b407a9b9fd9a85164feba51d6ef1997646d520f34266"
+  },
+  "parameter_corridor": {
+    "member": "parameterkorridor.json",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r10/package.zip",
+    "sha256": "425f7a4f6d6a926f7fffba3c56c5a091cb779df2b616a02cbf4aa074439a9867"
+  },
+  "preview": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r10/vergleich.png",
+    "sha256": "a5f184a3f3a95f56bc1a8bc81f249955387d999045b22c1a08aab583b236f417"
+  },
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "repo_commit": "19fa32e3b4e80cec35c89773f2b019d8d0ae7e0a",
+  "requested_edits": [
+    {
+      "after": "empty",
+      "before": "ink",
+      "column": 36,
+      "row": 3
+    },
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 8,
+      "row": 5
+    }
+  ],
+  "reveal": {
+    "approval": "approvals/reveal.json",
+    "member": "reveal/B-r02.png",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r10/package.zip",
+    "revision": "B-r02",
+    "sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280"
+  },
+  "revision": "r10",
+  "selection": {
+    "bundle": "candidates/C-r02/import",
+    "certification": null,
+    "logic_hash": "7ca5da60d5329367425db5644c55bbaf938c0c30d71dfdff5ff2d73dae20ade0",
+    "matrix_hash": "1fae786a0865b1c6ae3896bb6e6cb2a3cdb40958d0237b3bea7e707806bdfcf5",
+    "proof": "candidates/C-r02/import/contour-proof.json",
+    "source_type": "import",
+    "variant": "contour",
+    "verification": "audit/final.json"
+  },
+  "state": "blocked",
+  "target_adapter_inspection": null,
+  "updated_at_utc": "2026-10-16T23:09:54.190518+00:00",
+  "validation": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r10/validation.json",
+    "sha256": "a18fc1a20d60dc8ed7b69e81337a7e4385230d978dbb394fb57cf72db21af161"
+  },
+  "width": 40
+}
