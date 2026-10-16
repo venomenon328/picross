@@ -6,6 +6,7 @@ var payload: Dictionary = {}:
 		payload = value
 		artwork = null if value.is_empty() else load(value.image) as Texture2D
 var paired: bool = true
+var fit_available: bool = false
 var solved: Array = []
 var palette: Array = []
 
@@ -19,6 +20,9 @@ func raster_rect() -> Rect2:
 
 func artwork_rect() -> Rect2:
 	if artwork == null: return Rect2()
+	if fit_available:
+		var fitted: Vector2 = artwork.get_size()*minf(size.x/artwork.get_width(),size.y/artwork.get_height())
+		return Rect2((size-fitted)/2,fitted)
 	var offset: Vector2 = Vector2(panel_edge()+32,32) if paired else Vector2.ZERO
 	return Rect2(offset, artwork.get_size() * (panel_edge() / maxf(artwork.get_width(),artwork.get_height())))
 

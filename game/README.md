@@ -1,12 +1,20 @@
 # picross: Spiel- und Entwicklungsanleitung
 
-Der kompakte Katalog trägt denselben Bakso-Titel wie das Arbeitsblatt.
-Rechts neben den Metadaten stehen zwei kleine Symbolbuttons: Play öffnet mit
-„Spielen“, „Fortsetzen“ oder „Ansehen“ den vorhandenen Stand. Der kreisförmige
-Neustartpfeil („Rätsel zurücksetzen“) verlangt Bestätigung; Abbrechen lässt den
-Stand unverändert. Auch die übrige Kartenfläche öffnet das Blatt. Ungültige Saves
-sperren Öffnen; notwendige Backupaktionen bleiben als Text erreichbar.
-Papierbuttons und Tooltips folgen UI100/125, unabhängig vom Rasterzoom.
+Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
+Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
+„Rätselkatalog“. Lange Namen nutzen zwei Zeilen, danach eine Auslassung. Größe,
+Mono/Farbe und Kategorie stehen darunter; unten links die Blattkennung, rechts
+„Neu“, „Begonnen“ oder „Gelöst“. Vorschau und Motiv passen proportional in denselben
+Bildraum.
+
+Die Karte öffnet oder setzt ihr Blatt fort; gelöste Blätter öffnen die Endansicht.
+Oben rechts steht bei bearbeiteten Blättern der Neustartpfeil mit „Rätsel zurücksetzen“.
+Er verlangt Bestätigung; Abbrechen erhält den Stand. Bei gültigem leerem Stand ist
+er verborgen, bei Speicher-/Recoveryproblemen bleibt er erreichbar. Ungültige Saves
+sperren Öffnen und zeigen „Ungültig“. Speicherhinweise und „Backup übernehmen“ /
+„Backup erneuern“ stehen im Bildraum, bei langen Diagnosen dort scrollbar.
+Die Karte selbst hat keinen Tooltip; der Resettooltip und die übrigen
+UI100/125-skalierenden Buttontooltips bleiben. [KK-Prüfzuordnung](../docs/KK_VERIFICATION.md).
 
 Zusätzlich gibt es den [WEB-1-Browserentwicklungsweg](../docs/WEB_HOSTING.md):
 statischer Export für Chromium/Firefox mit Maus und dauerhaftem Browserspeicher.

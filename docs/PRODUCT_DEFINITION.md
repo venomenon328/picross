@@ -1,12 +1,13 @@
 # Produktdefinition: picross
 
-**KB / #168:** Der Katalog verwendet kompakte, UI-skalierte Karten (Ziel 220–240
-logische Pixel bei UI100), responsive Spalten ohne Vier-Spalten-Grenze und Bakso
-für „Rätselkatalog“. Dimensionen stehen einmal in den Metadaten. Rechts daneben
-öffnen Play und Reset getrennte vorhandene Aktionen; Reset verlangt Bestätigung.
-Gemeinsame Papierbuttons und UI-skalierte Tooltips gelten auch auf Werkbank und
-Informationsseite. Zustands-/Spoiler-/Speichergrenzen bleiben gemäß P1/KAT-2.
-[Prüfzuordnung und getrennte Gates](KB_VERIFICATION.md).
+**KK / #174** führt den kompakten Katalog aus KB fort: Alle Karten und Grid-Zellen
+haben je Fenster/UI dieselben festen Bereiche. Einzige Überschrift ist das verdiente
+Motiv, vorher `???`, in kleinerem Bakso; höchstens zwei Zeilen mit Auslassung.
+Metadaten enthalten die Größe einmal, die feste Fußzeile Blattkennung und Kurzstatus.
+Die Karte öffnet das Blatt; ausschließlich Reset steht oben rechts und erscheint
+bei Bearbeitung oder Speicher-/Recoveryproblemen. Fehler und Backupaktionen nutzen
+den begrenzten Bildraum. Kein Kacheltooltip. Gemeinsame Papierbuttons, übrige
+Tooltips und Save-/Spoilergrenzen bleiben. [Prüfzuordnung und Gates](KK_VERIFICATION.md).
 
 **WEB-1 / #162:** Der zusätzliche [Browserentwicklungsweg](WEB_HOSTING.md) verwendet
 denselben Godot-Spieler und dieselben Regeln. Desktop mit Maus, statisches Hosting,

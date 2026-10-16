@@ -5,6 +5,7 @@ const Session = preload("res://model/session.gd")
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const BookButton = preload("res://ui/book_button.gd")
+const Card = preload("res://ui/catalog_card.gd")
 const PAGE_SIZE: int = 24
 signal opened(id: String)
 signal reset_requested(id: String)
@@ -30,7 +31,6 @@ var previews: Array[Miniature] = []
 var reveals: Array[Reveal] = []
 var notes: Array[Label] = []
 var reset_buttons: Dictionary = {}
-var play_buttons: Dictionary = {}
 var repair_buttons: Dictionary = {}
 var visible_ids: Array[String] = []
 var filtered_ids: Array[String] = []
@@ -142,8 +142,9 @@ func suspend() -> void:
 	for picture: Reveal in reveals: picture.payload = {}
 
 func show_error(id: String, message: String) -> void:
+	errors[id] = message
 	var index: int = visible_ids.find(id)
-	if index >= 0: notes[index].text = "Speicherfehler"
+	if index >= 0: _diagnose(choices[index], id)
 	# A blocked quit/switch remains visible even if the active slot is filtered out.
 	feedback.text = (items[id].neutral_title() + ": " if items.has(id) else "") + "Speicherfehler: " + message
 	feedback.show()
@@ -165,7 +166,6 @@ func _render(position: int) -> void:
 	reveals.clear()
 	notes.clear()
 	reset_buttons.clear()
-	play_buttons.clear()
 	repair_buttons.clear()
 	visible_ids.clear()
 	filtered_ids = _ids(category_id)
@@ -195,30 +195,33 @@ func _restore_scroll(position: int, expected_generation: int) -> void:
 	# Container sorting precedes deferred calls; a stale rebuild cannot move a newer page.
 	if generation == expected_generation: scroll_vertical = position
 
+static func reset_allowed(item: Session, state: String, error: String) -> bool:
+	return progress(item) != "Neu" or state in ["error", "recovered", "backup_invalid"] or not error.is_empty()
+
+func _diagnose(card: Card, id: String) -> void:
+	var state: String = str(statuses[id])
+	card.note.text = "Ungültig" if state == "error" else progress(items[id])
+	var message: String = ""
+	if state == "error": message = "Speicherdaten ungültig. Öffnen gesperrt; bitte zurücksetzen."
+	elif state == "recovered": message = "Backup geladen. Zum Speichern bitte bewusst übernehmen."
+	elif state == "backup_invalid": message = "Backup beschädigt. Zum Speichern bitte erneuern."
+	if not str(errors[id]).is_empty():
+		message += ("\n" if not message.is_empty() else "") + "Speicherfehler: " + str(errors[id])
+	card.set_diagnosis(message, reset_allowed(items[id],state,str(errors[id])))
+	var action: String = "Öffnen gesperrt" if state == "error" else "Ansehen" if items[id].completed else "Fortsetzen" if progress(items[id]) == "Begonnen" else "Spielen"
+	card.accessibility_name = "%s · %s · %s · %s" % [card.caption.text,card.leaf.text,card.note.text,action]
+	card.reset.accessibility_name = "Rätsel zurücksetzen · " + card.leaf.text + " · " + card.note.text
+	if card.repair != null: card.repair.accessibility_name = card.repair.text + " · " + card.leaf.text + " · " + card.note.text
+
 func _add_card(id: String) -> void:
 	var item: Session = items[id]
 	visible_ids.append(id)
 	var column: VBoxContainer = VBoxContainer.new()
-	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.add_child(column)
-	var card: BookButton = BookButton.new()
+	var card: Card = Card.new()
 	card.content_surface = true
-	# Retain the existing semantic button text; only the wrapping labels draw it.
-	card.text = item.album_title()
 	card.focus_mode = Control.FOCUS_ALL
 	card.pressed.connect(func() -> void: opened.emit(id))
-	card.clip_text = true
-	card.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	# Dimensions belong only to metadata, never to this neutral catalog heading.
-	# Registry order is the canonical numbering used by Session.neutral_title().
-	var leaf: String = item.neutral_title().split(" · ")[0]
-	var caption_text: String = (item.album_title() + "\n" + leaf) if item.completed and statuses[id] != "error" else leaf
-	card.tooltip_text = caption_text
-	card.accessibility_name = caption_text
-	# Native button supplies the whole-card hit/focus surface. Its caption is laid
-	# out by a wrapping label so long names cannot force the grid wider than paper.
-	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color", "font_disabled_color"]:
-		card.add_theme_color_override(state, Color.TRANSPARENT)
 	for state: String in ["normal", "hover", "pressed", "focus", "disabled"]:
 		var paper: StyleBoxFlat = StyleBoxFlat.new()
 		paper.bg_color = Color("fff8e8") if state == "normal" else Color("e0e9d9")
@@ -229,83 +232,38 @@ func _add_card(id: String) -> void:
 	card.disabled = statuses[id] == "error"
 	column.add_child(card)
 	choices.append(card)
-	var margin: MarginContainer = MarginContainer.new()
-	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for side: String in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 12)
-	card.add_child(margin)
-	margin.minimum_size_changed.connect(func() -> void: card.custom_minimum_size.y = margin.get_combined_minimum_size().y)
-	var content: VBoxContainer = VBoxContainer.new()
-	margin.add_child(content)
-	var caption: Label = _label(caption_text, 18)
-	caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	content.add_child(caption)
-	var meta: String = "%d × %d · %s" % [item.player.width, item.player.height, "Mono" if item.definition.palette.size() == 1 else "Farbe"]
+	var leaf: String = item.neutral_title().split(" · ")[0]
+	var meta: String = "%d × %d · %s" % [item.player.width,item.player.height,"Mono" if item.definition.palette.size() == 1 else "Farbe"]
 	if category_id.is_empty():
 		for category: Dictionary in categories:
 			if category.id == metadata.get(id, {}).get("category_id"): meta += "\n" + str(category.name)
-	var detail: Label = _label(meta, 14)
-	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var row: HBoxContainer = HBoxContainer.new()
-	row.name = "metadata-actions"
-	content.add_child(row)
-	row.add_child(detail)
-	var actions: VBoxContainer = VBoxContainer.new()
-	row.add_child(actions)
-	var play: BookButton = _button("", func() -> void: opened.emit(id))
-	play.action_id = "play"
-	play.name = "play-" + id
-	play.image = preload("res://art/book/play.svg")
-	play.tooltip_text = "Ansehen" if item.completed else "Fortsetzen" if progress(item) == "Begonnen" else "Spielen"
-	play.disabled = statuses[id] == "error"
-	if play.disabled: play.tooltip_text = "Speicherdaten ungültig · Reset erforderlich"
-	play.accessibility_name = play.tooltip_text + " · " + leaf
-	actions.add_child(play)
-	play_buttons[id] = play
-	var reset: BookButton = _button("", func() -> void: reset_requested.emit(id))
+	card.configure(item.album_title() if item.completed and statuses[id] != "error" else "???",meta,leaf)
+	var reset: BookButton = _button("",func() -> void: reset_requested.emit(id))
 	reset.action_id = "reset"
 	reset.name = "reset-" + id
 	reset.image = preload("res://art/book/reset.svg")
 	reset.tooltip_text = "Rätsel zurücksetzen"
 	reset.accessibility_name = "Rätsel zurücksetzen · " + leaf
-	actions.add_child(reset)
+	card.add_child(reset)
+	card.reset = reset
 	reset_buttons[id] = reset
-	var preview: Miniature = Miniature.new()
-	preview.cells = item.player.cells.duplicate()
-	preview.width = item.player.width
-	preview.height = item.player.height
-	preview.palette = item.definition.palette
-	preview.style_identity = id + "/miniature"
-	preview.interactive = false
-	preview.draw_frame = false
-	preview.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	preview.custom_minimum_size = Vector2(96, 96)
-	preview.visible = not item.completed and statuses[id] != "error"
-	content.add_child(preview)
-	previews.append(preview)
-	var picture: Reveal = Reveal.new()
-	picture.paired = false
-	picture.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	picture.custom_minimum_size = Vector2(96, 96)
-	# reveal() is the only source; no unearned image is loaded speculatively.
-	picture.payload = item.reveal() if statuses[id] != "error" else {}
-	picture.visible = not picture.payload.is_empty()
-	content.add_child(picture)
-	reveals.append(picture)
-	var status: String = progress(item)
-	if statuses[id] == "error": status = "Speicherdaten ungültig · Reset erforderlich"
-	elif statuses[id] == "recovered": status += " · Backup geladen"
-	elif statuses[id] == "backup_invalid": status += " · Backup beschädigt"
-	elif not str(errors[id]).is_empty(): status += " · Speicherfehler"
-	var note: Label = _label(status, 15)
-	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	content.add_child(note)
-	notes.append(note)
-	_ignore_pointer(margin)
+	card.preview.cells = item.player.cells.duplicate()
+	card.preview.width = item.player.width
+	card.preview.height = item.player.height
+	card.preview.palette = item.definition.palette
+	card.preview.style_identity = id + "/miniature"
+	previews.append(card.preview)
+	# Session.reveal remains the only gate; unearned resources are never loaded.
+	card.picture.payload = item.reveal() if statuses[id] != "error" else {}
+	reveals.append(card.picture)
+	notes.append(card.note)
 	if statuses[id] in ["recovered", "backup_invalid"]:
-		var repair: Button = _button("Backup erneuern" if statuses[id] == "backup_invalid" else "Backup übernehmen", func() -> void: repair_requested.emit(id))
-		column.add_child(repair)
+		var repair: BookButton = _button("Backup erneuern" if statuses[id] == "backup_invalid" else "Backup übernehmen",func() -> void: repair_requested.emit(id))
+		repair.accessibility_name = repair.text + " · " + leaf
+		card.recovery_content.add_child(repair)
+		card.repair = repair
 		repair_buttons[id] = repair
+	_diagnose(card,id)
 
 func _layout_cards() -> void:
 	if grid == null: return
@@ -325,17 +283,11 @@ func _layout_cards() -> void:
 			if node.content_surface: continue
 			node.add_theme_font_size_override("font_size", roundi(14*ui_scale))
 			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.image != null else Vector2(node.get_theme_font("font").get_multiline_string_size(node.text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(14*ui_scale)).x+24*ui_scale,44*ui_scale)
-	for card: Button in choices:
-		card.get_parent().custom_minimum_size.x = card_width
+	for card: Card in choices:
+		card.ui_scale = ui_scale
 		card.custom_minimum_size.x = card_width
-		var margin: MarginContainer = card.get_child(0)
-		for side: String in ["left","right","top","bottom"]: margin.add_theme_constant_override("margin_"+side,roundi(10*ui_scale))
-		var content: VBoxContainer = margin.get_child(0)
-		content.add_theme_constant_override("separation",roundi(8*ui_scale))
-		var row: HBoxContainer = content.get_node("metadata-actions")
-		row.add_theme_constant_override("separation",roundi(8*ui_scale))
-		row.get_child(1).add_theme_constant_override("separation",roundi(8*ui_scale))
-		card.custom_minimum_size.y = margin.get_combined_minimum_size().y
+		card.size.x = card_width
+		card.layout_content()
 	category_choice.custom_minimum_size.y = 44 * ui_scale
 	category_choice.get_popup().max_size = Vector2i(roundi(size.x), roundi(minf(480 * ui_scale, size.y * 0.8)))
 	category_choice.get_popup().prefer_native_menu = false

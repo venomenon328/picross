@@ -6,12 +6,15 @@ transiente 2,15-s-Präsentation, neutrale Blattüberschrift, proportionale Bildf
 ursprungsgebundener Reset. EA-T01 verlangt aktuelle technische Lieferung samt
 nativer Bewegung, Windows und Browsern; EA-R01 und EA-M01 bleiben getrennt vor Merge.
 
-**KB / #168:** Kompakte responsive Katalogkarten, Bakso-Katalogtitel und dieselben
-Papierbuttons für Katalog, Werkbank und Information. [KB-Prüfzuordnung](KB_VERIFICATION.md)
-ist bei dieser Arbeit zusätzlich zu KAT-1/ZA-1/KAT-2 zu lesen. Play/Reset bleiben
-getrennte Registry-ID-Aktionen; Save-/Spoiler-/Recoverygrenzen und 2×3-Werkzeuge
-bleiben. KB-T01 bindet technische Lieferung einschließlich Windows und Web;
-unabhängiges KB-R01 und persönliche KB-M01 bleiben getrennte Gates vor Merge.
+**KK / #174:** Feste gleiche Katalogkarten/-Grid-Zellen, zweizeilige kleinere
+Bakso-Motivüberschrift oder `???`, feste Metadaten/Bildfläche/Fußzeile. Kartenfläche
+öffnet; Reset allein oben rechts, bei gültigem fehlerfreiem Neu verborgen, bei
+Bearbeitung und Speicher-/Recoveryzuständen erreichbar. Fehler und Backupaktionen
+bleiben innerhalb des Bildraums, Kacheltooltips entfallen. KK löst gezielt die
+betroffenen KB-D01/D02-Regeln ab; BookButtons, Ressourcen, KAT/EA und Saveverträge
+bleiben. [KK-Prüfzuordnung](KK_VERIFICATION.md) zusätzlich zu
+[KB](KB_VERIFICATION.md), KAT-1/ZA-1/KAT-2 und EA lesen. KK-T01 bindet technische
+Lieferung samt Windows/Web; **KK-R01 und KK-M01 bleiben getrennt vor Merge**.
 
 **ZR / #143 (15.10.2026):** [Zellstriche und Cursorzähler](CELL_DRAG.md) ist als
 Sollvertrag freigegeben und im PR #145 umgesetzt. Zähler ab Länge 2 in der aktiven
