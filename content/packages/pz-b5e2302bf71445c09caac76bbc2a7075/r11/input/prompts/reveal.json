@@ -1,0 +1,20 @@
+{
+  "format": "picross-image-generation-log-v1",
+  "intent": "generate",
+  "model": "not_exposed",
+  "provider": "ChatGPT native image_gen",
+  "settings": {
+    "quality": "not_exposed",
+    "seed": "not_exposed",
+    "size": "not_exposed",
+    "transparent_background": false
+  },
+  "variants": [
+    {
+      "composition": "Head-only three-quarter portrait looking toward the lower LEFT. Show the leftward projection of the broad muzzle and depth of the forehead, near eye fully visible and far eye subtly visible. Both horn tips fully visible, one horn more prominent because of perspective. Do not add shoulders or torso; maintain the same illustrated species and restrained palette.",
+      "key": "B-r02",
+      "prompt": "Use case: illustration-story. Asset type: full-color reveal illustration draft for a hand-drawn nonogram game, image selection stage, not a puzzle grid.\nPrimary request: ONLY THE HEAD of a Philippine carabao, a domesticated swamp water buffalo. A single calm adult carabao head portrait with both horns and ears complete. No body, torso, shoulders, legs or scenery. A minimal natural throat contour immediately below the jaw may close the portrait shape. Large characteristic lateral horns sweep outward and backward, with upward curving tips; distinct separate horn bases, natural broad forehead, NO African buffalo fused horn boss. Broad heavy muzzle, wide dark nostrils, long gentle bovine face, broad ears. Clearly a Philippine water buffalo, not a bison, goat, Highland cow or bull mascot.\nStyle: warm quiet characterful hand-drawn 2D children's natural-history illustration, clean confident contours and coherent rich color planes, distinctly illustrated rather than photographic. Developed colorful illustration with simple intentional face details and restrained two-tone shading. Slate-gray hide with warm taupe highlights, ivory/gray horns with dark tips, warm muted pink inside ears, calm dark eyes. Natural adult proportions; no human eyelashes, grinning human mouth or chibi head. A few broad brow folds and horn divisions, no dense fur/skin texture, no fine hatching or sketch noise. This is a detailed colored reveal, not a monochrome silhouette.\nPlain quiet warm ivory background. Wide landscape 3:2 canvas, head centered large, horn tips and ears entirely inside the image with modest breathing room. No text, labels, letters, watermark, border, harness, jewelry, plants, other animals or props.\nLater monochrome puzzle approximately 40 cells wide: emphasize broad recognizable horn curves, clear ear/muzzle shapes and useful negative space, while retaining a finished colorful illustration. No grid, pixel art, numbers or low-resolution abstraction.\nComposition: Head-only three-quarter portrait looking toward the lower LEFT. Show the leftward projection of the broad muzzle and depth of the forehead, near eye fully visible and far eye subtly visible. Both horn tips fully visible, one horn more prominent because of perspective. Do not add shoulders or torso; maintain the same illustrated species and restrained palette.",
+      "title": "Dreiviertel nach links"
+    }
+  ]
+}

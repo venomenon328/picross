@@ -1,0 +1,117 @@
+{
+  "format": "picross-authoring-integration-evidence-v1",
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "package_revision": "r11",
+  "source_commit": "8d2f6160895938ce2681349a13c40c93e79c1160",
+  "original_zip_sha256": "5ff3d5c0c447cf53dbb2b7e7a723c75926a564e06bbeecfcdf551e39ea09ddfc",
+  "inventory_sha256": "f68250bbe81b820a1d73ea64340c4bca08db631c27b2b60d1d3101017740ba24",
+  "handoff_sha256": "8f848eafbac184351737a5c29d6f383f02509a3122cd4984fe6a285c0d9b69e8",
+  "registration": {
+    "category": {
+      "id": "saeuger",
+      "name": "Säugetiere",
+      "order": 5
+    },
+    "changes": [
+      {
+        "operation": "add",
+        "path": "game/data/content/carabao_kopf_001.json"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/carabao_kopf_001.png"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/carabao_kopf_001.txt"
+      },
+      {
+        "operation": "add",
+        "path": "content/packages/pz-b5e2302bf71445c09caac76bbc2a7075/r11"
+      },
+      {
+        "operation": "replace",
+        "path": "content/registry.json"
+      },
+      {
+        "operation": "replace",
+        "path": "game/data/registry.json"
+      }
+    ],
+    "id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+    "registered": true,
+    "status": "registered"
+  },
+  "registered_entry": {
+    "category_id": "saeuger",
+    "definition": "data/content/carabao_kopf_001.json",
+    "id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+    "key": "pz-b5e2302bf71445c09caac76bbc2a7075",
+    "production": {
+      "blockers": [],
+      "definition_sha256": "61c4a6d8e76237dbf5dafa7ec24693fe96a8ddc8680b5dc51b8513d4feeb53ff",
+      "difficulty": {
+        "assessment_type": "editorial_estimate",
+        "bottleneck": "Alle66 Linien vor allen252 Proofschritten unabhängig auf Fortschritt geprüft. Vor Aufräumen bei<=21 offenen Zellen mindestens3 produktive Linien, keine numerische Engstelle nach <=2-Kriterium. Kein validierter schwächerer Technikklassifikator.",
+        "calibration": "Keine menschliche Kalibrierung; Probespiel optional, nicht durchgeführt. Neue Schätzung für neue Hinweise.",
+        "confidence": "low",
+        "effort": {
+          "cells": 1040,
+          "empty": 590,
+          "filled": 450,
+          "height": 26,
+          "max_column_clues": 7,
+          "max_row_clues": 5,
+          "proof_steps": 252,
+          "width": 40
+        },
+        "evidence": "audit/C-r03-difficulty-checkpoints.json",
+        "level": "L2",
+        "logic_hash": "e21609d1e7b4408c3010e1cdd64a27a7ac924be4a2ccc891af110b30bd3613ef",
+        "method": "picross-difficulty-0.1",
+        "plausible_range": [
+          "L1",
+          "L4"
+        ],
+        "rule_families": {
+          "R0": "Initial leere Spalte40, später abgeschlossene Blöcke und Restleerfelder. Kein validierter R0-only-Fixpunkt.",
+          "R1": "Geschätzt dominant: Überlappung/Verlängerung breiter Kopfblöcke und der geschlossenen Schnauzenkontur, Weitergabe in Horn- und Ohrlinien.",
+          "R2": "Zuordnung mehrerer kurzer Horn-/Augen-/Nasenblöcke kann kombinierte Anker benötigen; R0+R1-Suffizienz und R2-Notwendigkeit ungeprüft.",
+          "R3": "Vollständige allgemeine Linienunterstützung zertifiziert; keine R3-Notwendigkeit aus Profilname oder Schritten abgeleitet. Konservativer Bereich bisL4."
+        },
+        "samples": "audit/C-r03-difficulty-samples.json",
+        "time_estimate": null
+      },
+      "height": 26,
+      "mode": "mono",
+      "package": "content/packages/pz-b5e2302bf71445c09caac76bbc2a7075/r11",
+      "package_sha256": "31206bf0d4a63b610b4e12dceddbb1f9fe8d88f5c30641c6d7d1a4783fb0017b",
+      "reveal_sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280",
+      "revision": "r11",
+      "status": "registered",
+      "test_only": false,
+      "width": 40
+    },
+    "reveal": "art/content/carabao_kopf_001.png",
+    "save_slot": "carabao_kopf_001",
+    "visible": true
+  },
+  "export_manifest_sha256": "31206bf0d4a63b610b4e12dceddbb1f9fe8d88f5c30641c6d7d1a4783fb0017b",
+  "inspection": {
+    "file": "content/packages/pz-b5e2302bf71445c09caac76bbc2a7075/r11/inspection.json",
+    "sha256": "f6d7d2f9090fb719e29689287dce16ce9a6c4b30316ee5d3fb805f0f6699578d"
+  },
+  "checks": {
+    "approved_matrix_equal": true,
+    "user_pins_preserved": true,
+    "repair_cells_preserved": true,
+    "all_export_file_hashes_match": true,
+    "runtime_export_bytes_equal": true,
+    "original_zip_and_handoff_unchanged": true,
+    "existing_22_entries_unchanged": true,
+    "runtime_projection_exact": true,
+    "registration_journal_absent": true
+  },
+  "native_tests": "nicht erforderlich: reine Inhaltsintegration",
+  "main_integration": "pending PR and mandatory CI; registered is local status only"
+}
