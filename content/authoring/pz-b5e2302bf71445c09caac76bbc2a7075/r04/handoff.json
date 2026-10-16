@@ -1,0 +1,78 @@
+{
+  "approved_parameters": [],
+  "authorization": "Gezielte Korrektur nach tatsächlichem Nutzerwunsch: Kopf/Hörner besser erhalten. Repositoryablage/bedingter Ablagemerge gilt fort. MA-r02 und neuer Parameterkorridor noch nicht freigegeben; keine Rasterproduktion daraus.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "saeuger",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal.json"
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "73208b4740136276a313afa92b4f370b53c5437a87e55ca5cb1bb1193daaa8cf"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "8fa226c1a2e5b463f3e2c09551631bcf63f0a70ae46402f1ef1ae03b2050fd7f",
+    "file": "motif/MA-r02.png",
+    "provenance": "motif/MA-r02.provenance.json",
+    "revision": "MA-r02",
+    "sha256": "32198b712fb9e544a758c44717af0b4ac6560d7294a1b1307dc9c0d38f112e64"
+  },
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": "parameterkorridor.json",
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "repair": null,
+  "repo_commit": "0fb6057079d75fcfa5ba03ba4d6d416794002057",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "height": null,
+    "mode": "mono",
+    "width": 40
+  },
+  "reveal": {
+    "approval": "approvals/reveal.json",
+    "file": "reveal/A-r01.png",
+    "provenance": "reveal/A-r01.provenance.json",
+    "revision": "A-r01",
+    "sha256": "8fa226c1a2e5b463f3e2c09551631bcf63f0a70ae46402f1ef1ae03b2050fd7f"
+  },
+  "revision": "r04",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "motif_review"
+}
