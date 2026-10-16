@@ -157,7 +157,13 @@ func shared_clue_slot_extent(axis: String, _font: Font, _fs: int) -> float:
 
 func refresh_clue_hover() -> void:
 	if not layout_valid:
-		clear_pointer_hover()
+		# Keep the known physical point so a later valid layout can resolve it
+		# without requiring mouse motion; discard only its invalid context.
+		hover = Vector2i(-1,-1)
+		clue_context_axis = ""
+		clue_context_index = -1
+		clear_clue_hover()
+		if marks != null: marks.sync_cursor()
 		return
 	super.refresh_clue_hover()
 	if marks != null: marks.sync_cursor()
