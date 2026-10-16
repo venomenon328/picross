@@ -1,13 +1,14 @@
 # HN: Hinweisnavigation und Cursororientierung
 
-Stand: 16.10.2026 · Spezifikation 0.1 · freigegeben, noch nicht implementiert
+Stand: 16.10.2026 · Spezifikation 0.2 · implementiert; technische Lieferung und Abnahmen getrennt
 
 ## Geltung und Auftrag
 
 [Issue #192](https://github.com/venomenon328/picross/issues/192) führt ein gemeinsames
 Paket für Linksdrag überlaufender Hinweisfolgen und passende Linienhervorhebung.
 Der Eigentümer hat den besprochenen Sollstand ausdrücklich freigegeben und
-Spezifikation samt Umsetzungsvorbereitung beauftragt, keine Produktimplementierung.
+zunächst Spezifikation samt Umsetzungsvorbereitung und anschließend die
+Implementierung auf demselben Branch/Draft-PR #193 beauftragt.
 Die Freigabe bestätigt die geklärte Lesart: linke statt mittlere Maustaste.
 
 Dieses Dokument führt dauerhafte Entscheidungen; Issue und PR führen Akzeptanz,
@@ -146,14 +147,13 @@ Sollregeln. Nicht betroffene Verträge und historische Nachweise bleiben erhalte
 | [Hinweis-Typografie](CLUE_TYPOGRAPHY.md) und [Zellgesten](CELL_DRAG.md) | Aktuelle Bedienverweise zu MMB folgen HN; Typografie und Ausschluss des Zellzählers bei Hinweisnavigation bleiben. |
 | [Projektprofil](PROJECT_PROFILE.md) und aktive Hilfe-/Prüftexte | Nach Implementierung tatsächliche Tasten-/Orientierungsbeschreibung konsistent führen, historische MMB-Prüfberichte nicht umschreiben. |
 
-**Jetzt ist nur die Spezifikation geliefert.** Die Laufzeit und die
-[Spielanleitung](../game/README.md) beschreiben weiterhin den bisher implementierten
-Stand. Spätestens im zugehörigen Implementierungs-PR werden betroffene aktive
-Fachstellen, native Hilfe, Anwenderanleitung und aktuelle Prüfzuordnung inline
-nachgeführt; dann auch den Sollstand-Hinweis in AGENTS aktualisieren. Dieser
-explizite Übergang verhindert eine falsche Behauptung bereits gelieferter Bedienung.
-Die neue Pflichtquelle ist unmittelbar im Agenteneinstieg eingebunden; keine
-Änderung oder zentrale Aktualisierung von `docs/dev-rules/`.
+Laufzeit, aktive Fachstellen, native Hilfe und [Spielanleitung](../game/README.md)
+sind auf Linksdrag und einachsige Hinweisorientierung nachgeführt. Der Cursorpfad
+verwendet denselben Quellenkontext auf beiden Ereigniswegen; vollständige Folgen
+orientieren ohne Overlay. Eingabebesitz und bestätigte semantische Leseanker bleiben
+getrennt. [Prüfzuordnung](HN_VERIFICATION.md) bindet die technischen Szenarien;
+konkrete Ergebnisse und Originalbelege stehen commitgebunden in Issue/PR.
+Historische Berichte und `docs/dev-rules/` bleiben unverändert.
 
 ## Prüfung und Abnahme
 

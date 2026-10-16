@@ -157,9 +157,10 @@ func shared_clue_slot_extent(axis: String, _font: Font, _fs: int) -> float:
 
 func refresh_clue_hover() -> void:
 	if not layout_valid:
-		clear_clue_hover()
+		clear_pointer_hover()
 		return
 	super.refresh_clue_hover()
+	if marks != null: marks.sync_cursor()
 
 func row_clue_area() -> Rect2:
 	var area: Rect2 = super.row_clue_area()

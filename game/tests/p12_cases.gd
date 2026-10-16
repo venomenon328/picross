@@ -376,26 +376,27 @@ static func followup_input_geometry(t: SceneTree, app: Main) -> void:
 	var neighbour: int = rows[1] if rows.size() > 1 else index
 	var neighbour_layout: Array = window_signature(b.clue_layout("row", neighbour))
 	b.hover = b.view.hit(b.view.viewport.get_center())
-	t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(point, true, MOUSE_BUTTON_LEFT)
 	t.check(b.hover == Vector2i(-1, -1), "N-05 hint navigation clears stale grid focus without a cell gesture")
-	t.mouse_motion(point + Vector2(pitch * 0.35, 2 * b.view.cell_size), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_motion(point + Vector2(pitch * 0.35, 2 * b.view.cell_size), true, MOUSE_BUTTON_LEFT)
 	t.check(b.clue_step("row", index) == 0 and is_equal_approx(float(b.visible_clue_layout("row", index).visual_shift), pitch * 0.35) and b.capture_view() == confirmed, "N-03 subslot movement stays visual and unsaved")
 	t.check(window_signature(b.clue_layout("row", neighbour)) == neighbour_layout, "N-03 adjacent clue remains fixed during drag")
 	var confirmed_window: Array = window_signature(b.clue_layout("row", index))
 	for fraction: float in [0.49, 0.51, 1.49, 1.51]:
-		t.mouse_motion(point + Vector2(pitch * fraction, 2 * b.view.cell_size), true, MOUSE_BUTTON_MIDDLE)
+		t.mouse_motion(point + Vector2(pitch * fraction, 2 * b.view.cell_size), true, MOUSE_BUTTON_LEFT)
 		var visual: Dictionary = b.visible_clue_layout("row", index)
 		t.check(visual.offset == 0 and window_signature(visual) == confirmed_window and is_equal_approx(float(visual.visual_shift), pitch * fraction), "N-03 visible tokens cross slot boundary continuously before drop " + str(fraction))
-	t.mouse_motion(point + Vector2(pitch * 1.6, 2 * b.view.cell_size), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_motion(point + Vector2(pitch * 1.6, 2 * b.view.cell_size), true, MOUSE_BUTTON_LEFT)
 	t.check(b.clue_step("row", index) == 0 and b.visible_clue_layout("row", index).offset == 0, "N-03 dragged clue crosses slots without visual or semantic snap")
 	var escape: InputEventKey = InputEventKey.new()
 	escape.keycode = KEY_ESCAPE
 	escape.pressed = true
 	t.root.push_input(escape, true)
+	t.mouse_button(Vector2.ZERO, false, MOUSE_BUTTON_LEFT)
 	t.check(b.capture_view() == confirmed and b.pan_drag_distance == 0.0, "N-03 Escape restores last snapped semantic read")
-	t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_motion(point + Vector2(pitch * 1.6, 0), true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_button(point, false, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(point, true, MOUSE_BUTTON_LEFT)
+	t.mouse_motion(point + Vector2(pitch * 1.6, 0), true, MOUSE_BUTTON_LEFT)
+	t.mouse_button(point, false, MOUSE_BUTTON_LEFT)
 	t.check(b.capture_view() != confirmed and b.pan_drag_distance == 0.0, "N-03 drop commits one semantic read")
 	var cells: Array[int] = app.session.player.cells.duplicate()
 	var history: Array = app.session.player.history.duplicate(true)
@@ -444,10 +445,10 @@ static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: i
 			var confirmed: Dictionary = b.capture_view()
 			var pitch: float = float(b.clue_layout(axis, index).slot_extent)
 			var direction: float = -1.0 if anchor == maximum else 1.0
-			t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
+			t.mouse_button(point, true, MOUSE_BUTTON_LEFT)
 			for fraction: float in [0.0, 0.49, 0.51, 1.49, 1.51]:
 				var delta: float = direction * pitch * fraction
-				t.mouse_motion(point + (Vector2(delta, 2) if axis == "row" else Vector2(2, delta)), true, MOUSE_BUTTON_MIDDLE)
+				t.mouse_motion(point + (Vector2(delta, 2) if axis == "row" else Vector2(2, delta)), true, MOUSE_BUTTON_LEFT)
 				var layout: Dictionary = b.visible_clue_layout(axis, index)
 				var visual: Dictionary = b.visual_hint_units(axis, index)
 				var area: Rect2 = b.row_clue_area() if axis == "row" else b.column_clue_area()
@@ -475,6 +476,7 @@ static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: i
 				t.check(visual.prefix_hidden == prefix and visual.suffix_hidden == suffix and prefix_units == int(prefix) and suffix_units == int(suffix), "R3/B-03 %s markers match actual hidden tokens at %d/%.2f" % [axis, anchor, fraction])
 				t.check(b.clue_step(axis, index) == anchor and b.capture_view() == confirmed and is_equal_approx(float(layout.visual_shift), delta), "R3/B-03 %s subslot marker updates do not confirm or persist %d/%.2f" % [axis, anchor, fraction])
 			b.cancel_gesture()
+			t.mouse_button(point, false, MOUSE_BUTTON_LEFT)
 			t.check(b.capture_view() == confirmed and b.pan_drag_distance == 0.0, "R3/B-03 %s cancel restores confirmed read at %d" % [axis, anchor])
 	b.reset_clue_pan()
 
@@ -515,8 +517,8 @@ static func snap_geometry_case(t: SceneTree, board: Board, axis: String, index: 
 	var point: Vector2 = clue_point(board, axis, index)
 	var pitch: float = float(board.clue_layout(axis, index).slot_extent)
 	var delta: float = pitch * fraction
-	t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_motion(point + (Vector2(delta, 2) if axis == "row" else Vector2(2, delta)), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(point, true, MOUSE_BUTTON_LEFT)
+	t.mouse_motion(point + (Vector2(delta, 2) if axis == "row" else Vector2(2, delta)), true, MOUSE_BUTTON_LEFT)
 	var before: Dictionary = token_centers(board.visual_hint_units(axis, index))
 	t.check(not before.is_empty() and board.capture_view() == confirmed and window_signature(board.clue_layout(axis, neighbour)) == neighbour_before, "B-04 %s drag leaves confirmed view and neighbour intact" % label)
 	var best: Dictionary = {"mean": INF, "count": -1, "total": INF}
@@ -525,7 +527,7 @@ static func snap_geometry_case(t: SceneTree, board: Board, axis: String, index: 
 		var score: Dictionary = coordinate_distance(before, resting_centers(board, axis, index, candidate))
 		if float(score.mean) < float(best.mean) - 0.001 or (absf(float(score.mean) - float(best.mean)) <= 0.001 and (int(score.count) > int(best.count) or (int(score.count) == int(best.count) and float(score.total) < float(best.total)))):
 			best = score
-	t.mouse_button(point + (Vector2(delta, 2) if axis == "row" else Vector2(2, delta)), false, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(point + (Vector2(delta, 2) if axis == "row" else Vector2(2, delta)), false, MOUSE_BUTTON_LEFT)
 	var after: Dictionary = token_centers(board.visual_hint_units(axis, index))
 	var actual: Dictionary = coordinate_distance(before, after)
 	if label.begins_with("T-02 row 12"):
@@ -550,9 +552,9 @@ static func monotone_clue_drag(t: SceneTree, board: Board, axis: String, index: 
 	var confirmed: Dictionary = board.capture_view()
 	var start: Dictionary = token_centers(board.visual_hint_units(axis, index))
 	var neighbour: Array = window_signature(board.clue_layout(axis, index + 1))
-	t.mouse_button(point, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(point, true, MOUSE_BUTTON_LEFT)
 	for fraction: float in [0.25, 0.49, 0.51, 0.75, 1.0]:
-		t.mouse_motion(point + move * fraction, true, MOUSE_BUTTON_MIDDLE)
+		t.mouse_motion(point + move * fraction, true, MOUSE_BUTTON_LEFT)
 		var moving: Dictionary = token_centers(board.visual_hint_units(axis, index))
 		for token: int in moving:
 			if start.has(token):
@@ -560,7 +562,7 @@ static func monotone_clue_drag(t: SceneTree, board: Board, axis: String, index: 
 		t.check(board.capture_view() == confirmed and window_signature(board.clue_layout(axis, index + 1)) == neighbour, "V-03 %s drag preserves confirmed read and neighbour" % axis)
 	var visual: Dictionary = board.visual_hint_units(axis, index)
 	var before: Dictionary = token_centers(visual)
-	t.mouse_button(point + move, false, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(point + move, false, MOUSE_BUTTON_LEFT)
 	var resting: Dictionary = board.clue_layout(axis, index)
 	var after_visual: Dictionary = board.visual_hint_units(axis, index)
 	var after: Dictionary = token_centers(after_visual)
@@ -806,36 +808,36 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	var row_b_window_before: Array = window_signature(b.clue_layout("row", row_b))
 	var column_b_window_before: Array = window_signature(b.clue_layout("column", column_b))
 	var row_pitch: float = float(b.clue_layout("row", row_a).slot_extent)
-	# Middle-button diagonal motion below one slot does not flicker. Crossing one
+	# Left-button diagonal motion below one slot does not flicker. Crossing one
 	# horizontal slot changes only the row selected at gesture start.
 	t.mouse_motion(row_point_a, false)
-	t.mouse_button(row_point_a, true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_motion(row_point_a + Vector2(row_pitch * 0.8, row_pitch * 0.7), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(row_point_a, true, MOUSE_BUTTON_LEFT)
+	t.mouse_motion(row_point_a + Vector2(row_pitch * 0.8, row_pitch * 0.7), true, MOUSE_BUTTON_LEFT)
 	t.check(b.clue_step("row", row_a) == 0 and b.pan_line_index == row_a, "J-03 sub-slot diagonal motion stays snapped to its start row")
-	t.mouse_motion(row_point_a + Vector2(row_pitch * 1.2, row_pitch * 0.7), true, MOUSE_BUTTON_MIDDLE)
-	t.check(b.pan_target == "row" and b.pan_line_index == row_a and b.row_clue_steps == rows_before and absf(float(b.visible_clue_layout("row", row_a).visual_shift)) > 0.0, "N-03 middle drag is continuous without confirming slots")
+	t.mouse_motion(row_point_a + Vector2(row_pitch * 1.2, row_pitch * 0.7), true, MOUSE_BUTTON_LEFT)
+	t.check(b.pan_target == "row" and b.pan_line_index == row_a and b.row_clue_steps == rows_before and absf(float(b.visible_clue_layout("row", row_a).visual_shift)) > 0.0, "N-03 left clue drag is continuous without confirming slots")
 	t.check(window_signature(b.clue_layout("row", row_b)) == row_b_window_before, "J-03 neighbouring row window remains byte-for-byte equivalent")
 	var outside: Vector2 = b.get_global_rect().end + Vector2(40, 40)
-	t.mouse_button(outside, false, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(outside, false, MOUSE_BUTTON_LEFT)
 	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty() and only_line_changed(rows_before, b.row_clue_steps, row_a), "N-03 row drag snaps on release outside")
 	# Hand/left independently moves a second row by two fixed slots.
 	app.set_tool("fill")
 	var rows_after_first: Array[int] = b.row_clue_steps.duplicate()
 	t.mouse_motion(row_point_b, false)
-	t.mouse_button(row_point_b, true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_motion(row_point_b + Vector2(float(b.clue_layout("row", row_b).slot_extent) * 2.2, 0), true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_button(row_point_b, false, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(row_point_b, true, MOUSE_BUTTON_LEFT)
+	t.mouse_motion(row_point_b + Vector2(float(b.clue_layout("row", row_b).slot_extent) * 2.2, 0), true, MOUSE_BUTTON_LEFT)
+	t.mouse_button(row_point_b, false, MOUSE_BUTTON_LEFT)
 	t.check(only_line_changed(rows_after_first, b.row_clue_steps, row_b), "J-03 second row keeps an independent snapped position")
-	# Wrong release cannot finish a middle-button drag on one concrete column.
+	# Wrong release cannot finish a left-button drag on one concrete column.
 	app.set_tool("fill")
 	t.mouse_motion(column_point_a, false)
-	t.mouse_button(column_point_a, true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_button(column_point_a, false, MOUSE_BUTTON_LEFT)
-	t.check(b.pan_button == MOUSE_BUTTON_MIDDLE and b.pan_target == "column" and b.pan_line_index == column_a, "J-03 wrong release keeps frozen column target")
+	t.mouse_button(column_point_a, true, MOUSE_BUTTON_LEFT)
+	t.mouse_button(column_point_a, false, MOUSE_BUTTON_RIGHT)
+	t.check(b.pan_button == MOUSE_BUTTON_LEFT and b.pan_target == "column" and b.pan_line_index == column_a, "J-03 wrong release keeps frozen column target")
 	var column_pitch: float = float(b.clue_layout("column", column_a).slot_extent)
-	t.mouse_motion(column_point_a + Vector2(column_pitch * 0.7, column_pitch * 1.2), true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_motion(column_point_a + Vector2(column_pitch * 0.7, column_pitch * 1.2), true, MOUSE_BUTTON_LEFT)
 	t.check(b.visible_clue_layout("column", column_a).offset == 0 and is_equal_approx(float(b.visible_clue_layout("column", column_a).visual_shift), column_pitch * 1.2), "N-03 column passes slot boundary without visual snap")
-	t.mouse_button(outside, false, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(outside, false, MOUSE_BUTTON_LEFT)
 	t.check(only_line_changed(columns_before, b.column_clue_steps, column_a), "J-03 diagonal column drag changes only its vertical slot")
 	t.check(window_signature(b.clue_layout("column", column_b)) == column_b_window_before, "J-03 neighbouring column window remains byte-for-byte equivalent")
 	# Hand/left follows the same route for a second column and freezes its line
@@ -843,29 +845,31 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	app.set_tool("fill")
 	var columns_after_first: Array[int] = b.column_clue_steps.duplicate()
 	t.mouse_motion(column_point_b, false)
-	t.mouse_button(column_point_b, true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_motion(column_point_b + Vector2(b.view.cell_size * 3.0, float(b.clue_layout("column", column_b).slot_extent) * 2.2), true, MOUSE_BUTTON_MIDDLE)
-	t.mouse_button(column_point_b, false, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(column_point_b, true, MOUSE_BUTTON_LEFT)
+	t.mouse_motion(column_point_b + Vector2(b.view.cell_size * 3.0, float(b.clue_layout("column", column_b).slot_extent) * 2.2), true, MOUSE_BUTTON_LEFT)
+	t.mouse_button(column_point_b, false, MOUSE_BUTTON_LEFT)
 	t.check(only_line_changed(columns_after_first, b.column_clue_steps, column_b), "J-03 second column ignores crossed neighbours")
 	# Escape and focus loss terminate clue navigation without state changes.
 	t.mouse_motion(row_point_a, false)
-	t.mouse_button(row_point_a, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(row_point_a, true, MOUSE_BUTTON_LEFT)
 	var escape: InputEventKey = InputEventKey.new()
 	escape.keycode = KEY_ESCAPE
 	escape.pressed = true
 	t.root.push_input(escape, true)
+	t.mouse_button(Vector2.ZERO, false, MOUSE_BUTTON_LEFT)
 	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "J-03 Escape ends clue drag")
 	t.mouse_motion(row_point_a, false)
-	t.mouse_button(row_point_a, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(row_point_a, true, MOUSE_BUTTON_LEFT)
 	app.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	t.mouse_button(Vector2.ZERO, false, MOUSE_BUTTON_LEFT)
 	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.pan_target.is_empty(), "J-03 focus loss ends clue drag")
 	# Empty/short fitting lines never pan into empty space.
 	var short_row: int = first_fitting_line(b, "row")
 	var short_point: Vector2 = clue_point(b, "row", short_row)
 	t.mouse_motion(short_point, false)
-	t.mouse_button(short_point, true, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(short_point, true, MOUSE_BUTTON_LEFT)
 	t.check(b.pan_button == MOUSE_BUTTON_NONE and b.clue_step("row", short_row) == 0, "J-03 empty or short row does not start clue panning")
-	t.mouse_button(short_point, false, MOUSE_BUTTON_MIDDLE)
+	t.mouse_button(short_point, false, MOUSE_BUTTON_LEFT)
 	# A normal clue click cannot paint, and an active cell gesture blocks clue panning.
 	app.set_tool("fill")
 	var prior_rows: Array[int] = b.row_clue_steps.duplicate()
@@ -880,6 +884,7 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	t.mouse_button(row_point_a, true, MOUSE_BUTTON_MIDDLE)
 	t.check(app.session.gesture.active and b.pan_button == MOUSE_BUTTON_NONE, "J-03 cell gesture blocks clue navigation")
 	t.root.push_input(escape, true)
+	t.mouse_button(Vector2.ZERO, false, MOUSE_BUTTON_LEFT)
 	# Raster pan, miniature, zoom, UI scale and resize preserve all individual
 	# read positions where the same offsets remain valid.
 	var expected_rows: Array[int] = b.row_clue_steps.duplicate()
