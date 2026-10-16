@@ -5,7 +5,7 @@
   "display_server": "Windows",
   "adapter": "NVIDIA GeForce RTX 3070",
   "base": "35465bed49055b01583a20aab7add9b37536c129",
-  "source": "Windows source run before commit; bind to the final clean head by matching runtime bytes and rerunning kk_windows_probe.py. This manifest is not independent or owner acceptance.",
+  "source": "Original captures from initial Windows run on prior KK head 3f1ec25; source-byte hashes were re-bound to the review-fix code. Exact crop reproduction on this new final head is REQUIRED and not established by this edit. This manifest is not an independent review or owner acceptance.",
   "runtime_files": {
     "game/ui/atlas_marks.gd": "3c9151874a5a22fcf7c657e996df65c7494b0a88fd27417933b0174165e017b5",
     "game/ui/board.gd": "dc4a8e4f5dea81a187321625bfecff12427ff15446b0c6243beb5df5f5b46322",
@@ -13,7 +13,7 @@
     "game/ui/book_surface.gd": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7",
     "game/ui/book_tooltip.gd": "a3b4a50f6852e4a052e8370a65af4238d72ce071c41d37583545b927b63f22f8",
     "game/ui/catalog.gd": "359e66196db4c21c81b880ed1f35169178be7ba1e111259860f2f36c519f77ff",
-    "game/ui/catalog_card.gd": "76943f12d116f974b8c72822c57534a66528ab2b7342836b539dac45b6de0e5d",
+    "game/ui/catalog_card.gd": "af11c8f17e56e1e870230f3a1dd5c320852fc5901d903996c6f8e3a56e945ea8",
     "game/ui/cell_atlas.gd": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d",
     "game/ui/chalkboard_board.gd": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad",
     "game/ui/clue_layout.gd": "960d29e4254cea067aafed888332cceb3d31b323b60d601c82b69b714a2c0b45",
@@ -32,7 +32,7 @@
     "game/ui/scribble.gd": "74af9c0a6140644ae456a7f6d530dcb6c4ccb5fbc490af24615c8f3b796efbee",
     "game/project.godot": "cd1a917360eddb036d317a29bec78b8cf54eff92b6eb5eb2f8cf7bc1b9dba8bc",
     "game/main.tscn": "2607c9dcc378f0a6c9f2ed195527adadc2f7d52e50988847071b40770e48ba0c",
-    "game/tests/kat2_probe.gd": "08fd0452a8b9d64785055be4c2787a56b46f62f70b16f34aeff693ac867cf4fa",
+    "game/tests/kat2_probe.gd": "5f07b0144822b0b9e1f1ce19e2b125be53ab13e10cde4bc949fc7c050fa128b1",
     "tools/product_fixtures.py": "212b8397e0098f8b1f82b661048b55dc5865b0e522b68bc198612fa0644d564f",
     "tools/kat2_product.py": "36d10cf0ebc3d1eeb8c3b6e4865da0c38edac40b1a0acdf2ba73af4d50fb7e94"
   },
@@ -130,7 +130,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1.0,
+      "ui_scale": 1,
       "sha256": "ed709ecc540a40bcc94bc0a35d31e94167c5337e643c142bdac69572845ca48f"
     },
     {
@@ -146,7 +146,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1.0,
+      "ui_scale": 1,
       "sha256": "9e1f8e06ad9b582a7001c4a908f906e43987c5978de77a6f0558295075204654"
     },
     {
@@ -162,7 +162,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1.0,
+      "ui_scale": 1,
       "sha256": "8143c91e0c37a9004a39eea40a3f97f075ca68c1fcb63a68c85c26b0c5b74671"
     },
     {
@@ -178,7 +178,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1.0,
+      "ui_scale": 1,
       "sha256": "c5cb88ac229b6a2ae5208442662e03b655caa3ca1e4cb6e3d282996048844d23"
     },
     {
@@ -194,7 +194,7 @@
         1920,
         1080
       ],
-      "ui_scale": 1.0,
+      "ui_scale": 1,
       "sha256": "ed709ecc540a40bcc94bc0a35d31e94167c5337e643c142bdac69572845ca48f"
     },
     {
@@ -483,7 +483,7 @@
       "surface": [
         1920,
         1080,
-        1.0
+        1
       ]
     },
     {
@@ -492,7 +492,7 @@
       "surface": [
         1920,
         1080,
-        1.0
+        1
       ]
     },
     {
@@ -624,7 +624,7 @@
       "surface": [
         1920,
         1080,
-        1.0
+        1
       ]
     },
     {
