@@ -13,7 +13,9 @@ Bei Hinweisarbeit zusammen mit [Typografie](CLUE_TYPOGRAPHY.md),
 
 Der Eigentümer bestätigt die deutlichere Abschwächung und das handschriftliche X
 als Spezifikation. Der anschließende Implementierungsauftrag führt denselben
-Branch und Draft-PR #187 fort. Eigentümerabnahme und Mergefreigabe bleiben separat.
+Branch und Draft-PR #187 fort. HS-M01 ist laut Issue #186/V2 persönlich erteilt
+für die unveränderte Darstellung auf `154ab42`; konkrete Prüfmetadaten wurden nicht
+nachgereicht. Technisches Review und Mergefreigabe bleiben separat offen.
 Historische Quellendiagnose: `main@09ffa51f2cc2bb8a97c71b26113d2892f98be6c9` zeichnet nur
 FILLED mit 78 %, CLOSED dagegen mit voller Zahlendeckkraft plus geradem Querstrich.
 Dies wird gezielt gestalterisch ersetzt; kein Fehler der Erkennung ist nachgewiesen.
@@ -28,7 +30,7 @@ Der bereitgestellte Screenshot ist Feedback ohne verifizierte Build-/DPI-Bindung
 | CLOSED: zusätzlich beidseitig abgegrenzt | Genau dieselbe Abschwächung wie FILLED | Handschriftliches X über der ganzen Zahl |
 
 Die Implementierung behält den freigegebenen Ausgangswert von 60 % bei.
-Dies ist keine persönliche Eigentümerabnahme. Eine begründete Feinabstimmung bleibt
+Die persönliche HS-M01-Freigabe steht getrennt im Issue #186/V2. Eine begründete Feinabstimmung bleibt
 reversibles Ausarbeitungsdetail; Wert und Sichtbefund im PR festhalten. Beide positiven Zustände verwenden
 immer denselben Wert. Beim Abgrenzen darf die Zahl nicht wieder kräftiger werden.
 

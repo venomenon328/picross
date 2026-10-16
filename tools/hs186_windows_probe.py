@@ -15,7 +15,7 @@ def run(head: str, run_id: str, engine: Path, cache: Path, output: Path) -> dict
     # evidence hash, head/base/checkout/run, EXE/PCK, both actual Windows starts
     # and the HF source/PCK geometry/tooltip/save/restore regression.
     bound = hf149_windows_probe.run(head,run_id,engine,cache,output)
-    ci_hs = hs186_verify.verify(output/'technical/selected/hs186')
+    ci_hs = hs186_verify.verify(output/'technical/selected/hs186',output/'technical/selected/hf149')
     native = output/'hs186'
     native.mkdir()
     env = toolchain.isolated_environment(output/'hs-profile','Windows')
@@ -29,13 +29,14 @@ def run(head: str, run_id: str, engine: Path, cache: Path, output: Path) -> dict
     text = log.decode('utf-8',errors='replace')
     if result.returncode or 'HS186_NATIVE_OK' not in text or 'ERROR:' in text:
         raise ValueError('HS native PCK probe failed; retained log: '+str(output/'logs/hs186-pck.log'))
-    windows_hs = hs186_verify.verify(native)
+    windows_hs = hs186_verify.verify(native,output/'hf149')
     measurements = json.loads((native/'hs-native.json').read_text(encoding='utf-8'))
     bound.update(ci_hs=ci_hs,windows_hs=windows_hs,
                  hs_display={k:measurements[k] for k in ('dpi','screen_scale','screen','renderer','font_sha256')},
                  hs_probe_sha256=toolchain.sha256_file(script),
                  hs_original_files={p.name:toolchain.sha256_file(p) for p in sorted(native.iterdir())},
-                 owner_acceptance='HS-M01 OPEN',independent_review='HS-R01 OPEN')
+                 owner_acceptance='HS-M01 granted for unchanged 154ab42 appearance; issue #186 V2',
+                 independent_review='renewed HS review OPEN')
     (output/'hs-windows-proof.json').write_text(json.dumps(bound,indent=2)+'\n',encoding='utf-8')
     return bound
 

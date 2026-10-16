@@ -57,29 +57,32 @@ func run() -> void:
 	root.add_child(canvas)
 	var board: Swatch = Swatch.new()
 	board.size = Vector2(canvas.size)
+	root.size = canvas.size
 	# Self-contained synthetic swatch; also executable externally against a
 	# shipped PCK that correctly excludes test catalog/fixture resources.
 	board.session = Session.new({"id":"hs186-swatch","width":1,"height":1,"rows":[[]],"columns":[[]],"solution":[[0]],
 		"palette":[{"id":1,"color":"#293e3d"},{"id":2,"color":"#d5ad46"},{"id":3,"color":"#9d5553"},{"id":4,"color":"#4b7c8a"}]})
 	canvas.add_child(board)
-	for config: Vector3 in [Vector3(1280,720,1.25),Vector3(1920,1080,1),Vector3(2560,1440,1.25)]:
-		root.size = Vector2i(int(config.x),int(config.y))
+	# Deliberately fixed drawing isolation, NOT a window/layout matrix. Real
+	# main-scene layouts and their measured HS context come from hf149_probe.
+	for ui: float in [1.0,1.25]:
 		for cell: float in [16,24,40,23.37]:
-			board.prepare(cell,config.z)
+			board.prepare(cell,ui)
 			var files: Dictionary = {}
 			var closed: Image
 			for layer: String in ["open","filled","closed","closed-number","cross"]:
 				board.layer = layer
 				var image: Image = await capture(board,canvas)
-				var name: String = "hs-%d-u%d-c%s-%s.png" % [config.x,roundi(config.z*100),str(cell).replace(".","_"),layer]
+				var name: String = "hs-swatch-u%d-c%s-%s.png" % [roundi(ui*100),str(cell).replace(".","_"),layer]
 				if image.save_png(output.path_join(name)) != OK: failures += 1
-				files[layer] = {"file":name,"sha256":FileAccess.get_sha256(output.path_join(name))}
+				if image.get_size() != canvas.size or Vector2(canvas.size) != board.size: failures += 1
+				files[layer] = {"file":name,"sha256":FileAccess.get_sha256(output.path_join(name)),"image_size":[image.get_width(),image.get_height()]}
 				if layer == "closed": closed = image
 			board.layer = "closed"
 			var redraw: Image = await capture(board,canvas)
-			board.prepare(20,config.z)
+			board.prepare(20,ui)
 			await capture(board,canvas)
-			board.prepare(cell,config.z)
+			board.prepare(cell,ui)
 			var zoom_back: Image = await capture(board,canvas)
 			board.session = Session.new(board.session.definition)
 			var restored: Image = await capture(board,canvas)
@@ -89,12 +92,12 @@ func run() -> void:
 			for sample: Dictionary in board.samples:
 				var box: Rect2 = sample.box
 				var points: Array = []
-				for stroke: PackedVector2Array in board.Typography.cross_strokes(sample.text,board.clue_font_size(),sample.identity,null,config.z):
+				for stroke: PackedVector2Array in board.Typography.cross_strokes(sample.text,board.clue_font_size(),sample.identity,null,ui):
 					var vertices: Array = []
 					for p: Vector2 in stroke: vertices.append([p.x,p.y])
 					points.append(vertices)
 				samples.append({"axis":sample.axis,"text":sample.text,"color_id":sample.color_id,"box":[box.position.x,box.position.y,box.size.x,box.size.y],"strokes":points})
-			records.append({"client":[config.x,config.y],"ui":config.z,"cell":cell,"fs":board.clue_font_size(),"pitch":[board.slot_pitch.x,board.slot_pitch.y],"stable":stable,"files":files,"samples":samples})
+			records.append({"kind":"fixed-swatch","client":[DisplayServer.window_get_size().x,DisplayServer.window_get_size().y],"root_viewport":[root.size.x,root.size.y],"render_size":[canvas.size.x,canvas.size.y],"board_size":[board.size.x,board.size.y],"ui":ui,"cell":cell,"fs":board.clue_font_size(),"pitch":[board.slot_pitch.x,board.slot_pitch.y],"stable":stable,"files":files,"samples":samples})
 	var hash: HashingContext = HashingContext.new()
 	hash.start(HashingContext.HASH_SHA256)
 	hash.update(board.clue_font().data)
