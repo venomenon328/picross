@@ -1,0 +1,320 @@
+{
+  "blockers": [
+    "Exact human selection/final approval and ZA-1-v2 fixed-mono authorization pending; no target inspection/export yet."
+  ],
+  "category_id": "saeuger",
+  "composition": "head_only",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "Alle66 Linien vor allen250 Schritten geprüft, vor Aufräumen mindestens5 produktive Linien. Keine numerische Engstelle; kein vollständiger Technikklassifikator.",
+    "confidence": "low",
+    "effort": {
+      "cells": 1040,
+      "empty": 596,
+      "filled": 444,
+      "proof_steps": 250
+    },
+    "evidence": "audit/A-difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "6814b3ec8b430315b0abfd6c22c50aa7a66385861fea75d3183126d1f0c12965",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L1",
+      "L4"
+    ],
+    "rule_families": {
+      "R0": "Initial leere Spalte40, später Restleerfelder. Kein validierter R0-only-Fixpunkt.",
+      "R1": "Geschätzt dominante Überlappungen/Verlängerungen breiter Kopfflächen und jetzt geschlossener Schnauzenkontur.",
+      "R2": "Mehrfachblockzuordnung bei Hornbögen, Auge und zwei Nasenformen kann nötig sein; schwächere Suffizienz ungeprüft.",
+      "R3": "Allgemeine Linienunterstützung vollständig bestätigt, R3-Notwendigkeit unklassifiziert; konservativer Bereich bisL4."
+    },
+    "time_estimate": null
+  },
+  "final_editorial_approval": null,
+  "fixed_edit_record": {
+    "member": "plans/A.json",
+    "sha256": "9420b85d67d215820848ac7253891c916a3b58adf868f2e8a73b2869b3d9b831"
+  },
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r09/handoff.json",
+    "sha256": "8e12bf5de366ef38a74603319ee0699a3977ca8457ad66f31ecf2ac079ea6565"
+  },
+  "height": 26,
+  "human_candidate_selection": null,
+  "integration": null,
+  "inventory_sha256": "04a5af1ccf63d3839e7f2b5f9f9fc9fe0aeb594b56f6ceeae8640117a5c29bbb",
+  "mode": "mono",
+  "motif": {
+    "approval": "approvals/motif.json",
+    "derived_from_reveal_sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280",
+    "member": "motif/MA-r03.png",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r09/package.zip",
+    "revision": "MA-r03",
+    "sha256": "e3809bbc30017c59bfae6420e330df7853b9c2c7e8aa31cbc2c7cdaf99588c69"
+  },
+  "motif_name": "Carabao – Kopf",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "offered_candidates": [
+    {
+      "added_muzzle_cells_from_r08": 16,
+      "bundle": "candidates/A/import",
+      "candidate_id": "67923dbebed829fffec955207270bb58c0752cb32d01e7bf8428cf39e32a316d",
+      "closed_lower_lip_white_cells": 3,
+      "closed_nose_white_cells": 33,
+      "closure_check": "4-neighbour EMPTY floodfill: nose and lower-lip spaces separated and neither reaches any grid edge",
+      "difficulty": {
+        "assessment_type": "editorial_estimate",
+        "bottleneck": "Alle66 Linien vor allen250 Schritten geprüft, vor Aufräumen mindestens5 produktive Linien. Keine numerische Engstelle; kein vollständiger Technikklassifikator.",
+        "confidence": "low",
+        "effort": {
+          "cells": 1040,
+          "empty": 596,
+          "filled": 444,
+          "proof_steps": 250
+        },
+        "evidence": "audit/A-difficulty-checkpoints.json",
+        "level": "L2",
+        "logic_hash": "6814b3ec8b430315b0abfd6c22c50aa7a66385861fea75d3183126d1f0c12965",
+        "method": "picross-difficulty-0.1",
+        "plausible_range": [
+          "L1",
+          "L4"
+        ],
+        "rule_families": {
+          "R0": "Initial leere Spalte40, später Restleerfelder. Kein validierter R0-only-Fixpunkt.",
+          "R1": "Geschätzt dominante Überlappungen/Verlängerungen breiter Kopfflächen und jetzt geschlossener Schnauzenkontur.",
+          "R2": "Mehrfachblockzuordnung bei Hornbögen, Auge und zwei Nasenformen kann nötig sein; schwächere Suffizienz ungeprüft.",
+          "R3": "Allgemeine Linienunterstützung vollständig bestätigt, R3-Notwendigkeit unklassifiziert; konservativer Bereich bisL4."
+        },
+        "time_estimate": null
+      },
+      "edges": {
+        "bottom": true,
+        "left": true,
+        "right": false,
+        "top": true
+      },
+      "empty": 596,
+      "filled": 444,
+      "fixed_edit_replay": true,
+      "frame_valid": true,
+      "fresh_verification": {
+        "certified": true,
+        "line_evaluations": 316,
+        "logic_hash": "6814b3ec8b430315b0abfd6c22c50aa7a66385861fea75d3183126d1f0c12965",
+        "profile": {
+          "deduction": "all-line-supported-values",
+          "id": "full-line-mono",
+          "search": false,
+          "start": "unknown",
+          "version": 1
+        },
+        "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+        "proof_verified": true,
+        "status": "solved",
+        "steps": 250
+      },
+      "key": "A",
+      "logic_hash": "6814b3ec8b430315b0abfd6c22c50aa7a66385861fea75d3183126d1f0c12965",
+      "matrix_hash": "7ffc65af071bd1bccb643b3c847c9693750c77e74aaeec50b67cc3c4e2567482",
+      "minimum_productive_lines_before_cleanup": 5,
+      "plan": "plans/A.json",
+      "plan_sha256": "9420b85d67d215820848ac7253891c916a3b58adf868f2e8a73b2869b3d9b831",
+      "proof_end_equals_matrix": true,
+      "r08_horns_eyes_ears_rows1_16_unchanged": true,
+      "reference_edits": 19,
+      "source_type": "fixed_mono_edited_import",
+      "title": "Schmale geschlossene Kontur",
+      "variant": "contour"
+    },
+    {
+      "added_muzzle_cells_from_r08": 18,
+      "bundle": "candidates/B/import",
+      "candidate_id": "038db96818a352fb8e588089527a85f565fdf762a9348fc828f0ba56ab851220",
+      "closed_lower_lip_white_cells": 3,
+      "closed_nose_white_cells": 33,
+      "closure_check": "4-neighbour EMPTY floodfill: nose and lower-lip spaces separated and neither reaches any grid edge",
+      "difficulty": {
+        "assessment_type": "editorial_estimate",
+        "bottleneck": "Alle66 Linien vor allen256 Schritten geprüft, vor Aufräumen mindestens6 produktive Linien. Keine numerische Engstelle; kein vollständiger Technikklassifikator.",
+        "confidence": "low",
+        "effort": {
+          "cells": 1040,
+          "empty": 594,
+          "filled": 446,
+          "proof_steps": 256
+        },
+        "evidence": "audit/B-difficulty-checkpoints.json",
+        "level": "L2",
+        "logic_hash": "684b42f69171c7627c9c39b66ee594f3fab0efad3b96c67baa5242e09576d302",
+        "method": "picross-difficulty-0.1",
+        "plausible_range": [
+          "L1",
+          "L4"
+        ],
+        "rule_families": {
+          "R0": "Initial leere Spalte40, später Restleerfelder. Kein validierter R0-only-Fixpunkt.",
+          "R1": "Geschätzt dominante Überlappungen/Verlängerungen breiter Kopfflächen und jetzt geschlossener Schnauzenkontur.",
+          "R2": "Mehrfachblockzuordnung bei Hornbögen, Auge und zwei Nasenformen kann nötig sein; schwächere Suffizienz ungeprüft.",
+          "R3": "Allgemeine Linienunterstützung vollständig bestätigt, R3-Notwendigkeit unklassifiziert; konservativer Bereich bisL4."
+        },
+        "time_estimate": null
+      },
+      "edges": {
+        "bottom": true,
+        "left": true,
+        "right": false,
+        "top": true
+      },
+      "empty": 594,
+      "filled": 446,
+      "fixed_edit_replay": true,
+      "frame_valid": true,
+      "fresh_verification": {
+        "certified": true,
+        "line_evaluations": 322,
+        "logic_hash": "684b42f69171c7627c9c39b66ee594f3fab0efad3b96c67baa5242e09576d302",
+        "profile": {
+          "deduction": "all-line-supported-values",
+          "id": "full-line-mono",
+          "search": false,
+          "start": "unknown",
+          "version": 1
+        },
+        "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+        "proof_verified": true,
+        "status": "solved",
+        "steps": 256
+      },
+      "key": "B",
+      "logic_hash": "684b42f69171c7627c9c39b66ee594f3fab0efad3b96c67baa5242e09576d302",
+      "matrix_hash": "baf2e0b7d7535f6e953b3c6e3016110f189c94c2a1e5e8ca46df8ca3d70a075b",
+      "minimum_productive_lines_before_cleanup": 6,
+      "plan": "plans/B.json",
+      "plan_sha256": "d78f0e5d6be6113152d347dbec391f8bb73f56b1d3a8814d15a002ebf6bf4280",
+      "proof_end_equals_matrix": true,
+      "r08_horns_eyes_ears_rows1_16_unchanged": true,
+      "reference_edits": 21,
+      "source_type": "fixed_mono_edited_import",
+      "title": "Rundere Unterlippe",
+      "variant": "contour"
+    },
+    {
+      "added_muzzle_cells_from_r08": 20,
+      "bundle": "candidates/C/import",
+      "candidate_id": "060d69bcb40d7d6eafdad3030ded01498ab12392d6e42ee8b6d252aa8ecd8f33",
+      "closed_lower_lip_white_cells": 3,
+      "closed_nose_white_cells": 33,
+      "closure_check": "4-neighbour EMPTY floodfill: nose and lower-lip spaces separated and neither reaches any grid edge",
+      "difficulty": {
+        "assessment_type": "editorial_estimate",
+        "bottleneck": "Alle66 Linien vor allen252 Schritten geprüft, vor Aufräumen mindestens7 produktive Linien. Keine numerische Engstelle; kein vollständiger Technikklassifikator.",
+        "confidence": "low",
+        "effort": {
+          "cells": 1040,
+          "empty": 592,
+          "filled": 448,
+          "proof_steps": 252
+        },
+        "evidence": "audit/C-difficulty-checkpoints.json",
+        "level": "L2",
+        "logic_hash": "cd1be906a8268b170fadba34c03c778065ef5cf799bdbfc2c9261a18efe6374f",
+        "method": "picross-difficulty-0.1",
+        "plausible_range": [
+          "L1",
+          "L4"
+        ],
+        "rule_families": {
+          "R0": "Initial leere Spalte40, später Restleerfelder. Kein validierter R0-only-Fixpunkt.",
+          "R1": "Geschätzt dominante Überlappungen/Verlängerungen breiter Kopfflächen und jetzt geschlossener Schnauzenkontur.",
+          "R2": "Mehrfachblockzuordnung bei Hornbögen, Auge und zwei Nasenformen kann nötig sein; schwächere Suffizienz ungeprüft.",
+          "R3": "Allgemeine Linienunterstützung vollständig bestätigt, R3-Notwendigkeit unklassifiziert; konservativer Bereich bisL4."
+        },
+        "time_estimate": null
+      },
+      "edges": {
+        "bottom": true,
+        "left": true,
+        "right": false,
+        "top": true
+      },
+      "empty": 592,
+      "filled": 448,
+      "fixed_edit_replay": true,
+      "frame_valid": true,
+      "fresh_verification": {
+        "certified": true,
+        "line_evaluations": 318,
+        "logic_hash": "cd1be906a8268b170fadba34c03c778065ef5cf799bdbfc2c9261a18efe6374f",
+        "profile": {
+          "deduction": "all-line-supported-values",
+          "id": "full-line-mono",
+          "search": false,
+          "start": "unknown",
+          "version": 1
+        },
+        "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+        "proof_verified": true,
+        "status": "solved",
+        "steps": 252
+      },
+      "key": "C",
+      "logic_hash": "cd1be906a8268b170fadba34c03c778065ef5cf799bdbfc2c9261a18efe6374f",
+      "matrix_hash": "a0b882745de6129ca83f59398d493da29d55c5caf02e2cf529cf934f6e1012c3",
+      "minimum_productive_lines_before_cleanup": 7,
+      "plan": "plans/C.json",
+      "plan_sha256": "e95acbbb064ace34fb72fa4d03eff731ab356d1627f76acbeca857f4b696185b",
+      "proof_end_equals_matrix": true,
+      "r08_horns_eyes_ears_rows1_16_unchanged": true,
+      "reference_edits": 23,
+      "source_type": "fixed_mono_edited_import",
+      "title": "Kraeftigere Vorderkante",
+      "variant": "contour"
+    }
+  ],
+  "package": {
+    "bytes": 7645421,
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r09/package.zip",
+    "sha256": "fa589108bf2f26a51946fd9321965fb3570c9c960b10178c63eef82b43a10608"
+  },
+  "parameter_corridor": {
+    "member": "parameterkorridor.json",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r09/package.zip",
+    "sha256": "425f7a4f6d6a926f7fffba3c56c5a091cb779df2b616a02cbf4aa074439a9867"
+  },
+  "preview": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r09/kandidaten.png",
+    "sha256": "818d94e78898a939aaffdd232992718ee4bbda4fef8403aa83af3dc72287cf02"
+  },
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "recommended_candidate": "A",
+  "repo_commit": "b8253c6d5b38d43a59dc77988a697bd2d59d52e5",
+  "reveal": {
+    "approval": "approvals/reveal.json",
+    "member": "reveal/B-r02.png",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r09/package.zip",
+    "revision": "B-r02",
+    "sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280"
+  },
+  "revision": "r09",
+  "selection": {
+    "bundle": "candidates/A/import",
+    "certification": null,
+    "logic_hash": "6814b3ec8b430315b0abfd6c22c50aa7a66385861fea75d3183126d1f0c12965",
+    "matrix_hash": "7ffc65af071bd1bccb643b3c847c9693750c77e74aaeec50b67cc3c4e2567482",
+    "proof": "candidates/A/import/contour-proof.json",
+    "source_type": "import",
+    "variant": "contour",
+    "verification": "audit/candidates.json"
+  },
+  "state": "blocked",
+  "target_adapter_inspection": null,
+  "updated_at_utc": "2026-10-16T22:51:47.312728+00:00",
+  "validation": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r09/validation.json",
+    "sha256": "3f0bde73adb7ad038082c16de590f6a88ccf4c9bb53d64f65f232c269aff4778"
+  },
+  "width": 40
+}
