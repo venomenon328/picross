@@ -106,7 +106,7 @@ Checkout und Run, einschließlich getrenntem vollständigem Selbstreview.
 Unabhängiges Review und **HC-M01 durch den Eigentümer vor Merge bleiben offen**.
 HC-M01 verlangt ein geeignetes Farbrätsel im gebundenen Windows-Export bei
 kleinem, mittlerem und großem Zoom samt Lesbarkeit, Zellraumnutzung, beiden
-Slotabständen und MMB-Bedienung. Technische Bilder ersetzen diese Sichtabnahme
+Slotabständen und Linksdrag gemäß [HN](CLUE_INTERACTION.md). Technische Bilder ersetzen diese Sichtabnahme
 nicht. Commit, Push und Draft-PR sind beauftragt; kein Merge oder Release.
 
 ## HF · vollständiges Hinweis-Overlay (#149)

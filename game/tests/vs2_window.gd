@@ -24,7 +24,7 @@ func check(ok: bool, label: String) -> void:
 func motion(p: Vector2) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
 	event.position = p
-	event.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT if app.board.pan_button == MOUSE_BUTTON_LEFT else MOUSE_BUTTON_MASK_LEFT if app.board.held_button == MOUSE_BUTTON_LEFT else (MOUSE_BUTTON_MASK_RIGHT if app.board.held_button == MOUSE_BUTTON_RIGHT else 0)
 	root.push_input(event,true)
 
 func mouse(p: Vector2, button: MouseButton, down: bool) -> void:
@@ -134,12 +134,12 @@ func run() -> void:
 							var area: Rect2 = board.row_clue_area() if axis=="row" else board.column_clue_area()
 							var cross: float = (board.view.origin.y if axis=="row" else board.view.origin.x)+(line+.5)*board.view.cell_size
 							var start: Vector2 = board.global_position+(Vector2(area.get_center().x,cross) if axis=="row" else Vector2(cross,area.get_center().y))
-							mouse(start,MOUSE_BUTTON_MIDDLE,true)
+							mouse(start,MOUSE_BUTTON_LEFT,true)
 							motion(start+(Vector2(44.5,90) if axis=="row" else Vector2(90,44.5)))
-							check(board.pan_target == axis and board.pan_line_index == line,"native positive frozen clue MMB")
+							check(board.pan_target == axis and board.pan_line_index == line,"native positive frozen clue left drag")
 							var tokens: Array = board.visual_hint_units(axis,line).units.filter(func(unit: Dictionary)->bool:return unit.kind=="token")
 							check(tokens.size() >= mini(5,lines[line].size()),"native complete minimum tokens")
-							mouse(start+(Vector2(44.5,90) if axis=="row" else Vector2(90,44.5)),MOUSE_BUTTON_MIDDLE,false)
+							mouse(start+(Vector2(44.5,90) if axis=="row" else Vector2(90,44.5)),MOUSE_BUTTON_LEFT,false)
 							check(board.clue_step(axis,line)>0,"native clue snap saved")
 					if index==0 and not output.is_empty():
 						board.clear_pointer_hover()

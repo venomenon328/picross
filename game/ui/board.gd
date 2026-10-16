@@ -35,6 +35,7 @@ var held_button: MouseButton = MOUSE_BUTTON_NONE
 const CELL_BUTTONS: int = MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT
 var cell_buttons_blocked: bool = false
 var pan_button: MouseButton = MOUSE_BUTTON_NONE
+var clue_press_owned: bool = false
 var pan_target: String = ""
 var pan_line_index: int = -1
 var pan_last: Vector2
@@ -47,6 +48,8 @@ var column_clue_reads: Array[Dictionary] = []
 var hover: Vector2i = Vector2i(-1, -1)
 var clue_hover_axis: String = ""
 var clue_hover_index: int = -1
+var clue_context_axis: String = ""
+var clue_context_index: int = -1
 var row_slot_extent_cache: Dictionary = {}
 var mark_completed_clues: bool = true
 var completion_searches: int = 0
@@ -71,6 +74,10 @@ func _ready() -> void:
 	gesture_counter.board = self
 	counter_layer.add_child(gesture_counter)
 	visibility_changed.connect(sync_gesture_counter)
+	visibility_changed.connect(func() -> void:
+		if not is_visible_in_tree():
+			cancel_gesture()
+			clear_pointer_hover())
 	_layout()
 
 func _layout() -> void:
@@ -85,6 +92,11 @@ func _layout() -> void:
 	cancel_gesture()
 
 func cancel_gesture() -> void:
+	var was_clue: bool = clue_press_owned or pan_button != MOUSE_BUTTON_NONE
+	var was_cell: bool = session != null and session.gesture.active
+	if was_clue:
+		cell_buttons_blocked = true
+	clue_press_owned = false
 	if session != null:
 		session.gesture.cancel()
 	held_button = MOUSE_BUTTON_NONE
@@ -92,6 +104,8 @@ func cancel_gesture() -> void:
 	pan_target = ""
 	pan_line_index = -1
 	pan_drag_distance = 0.0
+	if (was_clue or was_cell) and clue_pointer_known and is_visible_in_tree():
+		update_pointer_hover(clue_pointer_global - global_position)
 	sync_gesture_counter()
 	queue_redraw()
 	edited.emit()
@@ -247,6 +261,7 @@ func restore_view(state: Dictionary) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		cancel_gesture()
+		clear_pointer_hover()
 		# Releases can happen outside the application. A later fresh Down uses
 		# its physical mask to detect a still-held opposite button.
 		cell_buttons_blocked = false
@@ -265,16 +280,41 @@ func _input(event: InputEvent) -> void:
 		cancel_gesture()
 		get_viewport().set_input_as_handled()
 	var local: InputEvent = make_input_local(event)
-	if pan_button != MOUSE_BUTTON_NONE:
+	if local is InputEventMouse and session.gesture.active:
+		clue_pointer_global = global_position + local.position
+		clue_pointer_known = true
+	if pan_button != MOUSE_BUTTON_NONE or clue_press_owned:
+		# Own the whole mouse route, including releases over another Control.
+		if local is InputEventMouse:
+			get_viewport().set_input_as_handled()
+		if local is InputEventMouseButton and local.pressed and local.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
+			# A second Down (including a lost prior Up) is ambiguous, not a
+			# confirmation or a new gesture behind the owned route.
+			cancel_gesture()
+			return
 		if local is InputEventMouseMotion:
+			clue_pointer_global = global_position + local.position
+			clue_pointer_known = true
+			var mask: int = int(local.button_mask) & CELL_BUTTONS
+			if mask != MOUSE_BUTTON_MASK_LEFT:
+				cancel_gesture()
+				cell_buttons_blocked = mask != 0
+				return
 			if pan_target in ["row", "column"] and pan_line_index >= 0:
 				var total_delta: Vector2 = local.position - pan_origin
 				pan_drag_distance = total_delta.x if pan_target == "row" else total_delta.y
 				hover = Vector2i(-1, -1)
+			else:
+				# A fitting clue owns its press, but has no frozen navigation
+				# source. Orientation still follows the current pointer context.
+				update_pointer_hover(local.position)
 			pan_last = local.position
 			edited.emit()
 			queue_redraw()
-		elif local is InputEventMouseButton and not local.pressed and local.button_index == pan_button:
+		elif local is InputEventMouseButton and not local.pressed and local.button_index == MOUSE_BUTTON_LEFT:
+			if (int(local.button_mask) & CELL_BUTTONS) != 0:
+				cancel_gesture()
+				return
 			if pan_target in ["row", "column"] and pan_line_index >= 0:
 				var old_step: int = clue_step(pan_target, pan_line_index)
 				set_clue_step(pan_target, pan_line_index, closest_clue_snap(pan_target, pan_line_index))
@@ -284,6 +324,8 @@ func _input(event: InputEvent) -> void:
 			pan_target = ""
 			pan_line_index = -1
 			pan_drag_distance = 0.0
+			clue_press_owned = false
+			update_pointer_hover(local.position)
 			queue_redraw()
 			get_viewport().set_input_as_handled()
 		return
@@ -313,22 +355,24 @@ func _gui_input(event: InputEvent) -> void:
 	if session.completed:
 		return
 	if event is InputEventMouseButton and not clue_hover_axis.is_empty() and clue_tooltip_rect.has_point(event.position):
-		clear_clue_hover()
+		clear_pointer_hover()
 		accept_event()
 		return
 	if event is InputEventMouseMotion and not session.gesture.active and pan_button == MOUSE_BUTTON_NONE:
-		var cell: Vector2i = view.hit(event.position)
-		hover = cell
-		if cell.x >= 0:
-			pointed.emit(hover)
-		update_clue_hover(event.position)
+		update_pointer_hover(event.position)
 		queue_redraw()
 	if event is InputEventMouseButton and event.pressed:
 		if session.gesture.active or pan_button != MOUSE_BUTTON_NONE:
 			return
 		if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			zoom(1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else -1, event.position)
-		elif event.button_index == MOUSE_BUTTON_MIDDLE:
+		elif event.button_index == MOUSE_BUTTON_LEFT and not clue_source(event.position).is_empty():
+			if (int(event.button_mask) & CELL_BUTTONS) == CELL_BUTTONS or cell_buttons_blocked:
+				cell_buttons_blocked = true
+				accept_event()
+				return
+			clue_press_owned = true
+			update_pointer_hover(event.position)
 			pan_target = navigation_target(event.position)
 			if not pan_target.is_empty():
 				pan_line_index = navigation_line(event.position, pan_target)
@@ -358,6 +402,8 @@ func clear_clue_hover() -> void:
 
 func clear_pointer_hover() -> void:
 	clue_pointer_known = false
+	clue_context_axis = ""
+	clue_context_index = -1
 	clear_clue_hover()
 	if not session.gesture.active:
 		hover = Vector2i(-1, -1)
@@ -373,6 +419,8 @@ func set_clue_hover(axis: String, index: int) -> void:
 func update_clue_hover(point: Vector2) -> void:
 	clue_pointer_global = global_position + point
 	clue_pointer_known = true
+	clue_context_axis = clue_source(point)
+	clue_context_index = navigation_line(point, clue_context_axis)
 	var cell: Vector2i = Vector2i(((point - view.origin) / view.cell_size).floor())
 	if row_clue_area().has_point(point) and cell.y >= 0 and cell.y < view.dimensions.y and row_hint_overflows(cell.y):
 		set_clue_hover("row", cell.y)
@@ -386,11 +434,37 @@ func refresh_clue_hover() -> void:
 	clue_overlay_key = ""
 	clue_tooltip_rect = Rect2()
 	if clue_pointer_known:
-		update_clue_hover(clue_pointer_global - global_position)
+		update_pointer_hover(clue_pointer_global - global_position)
 	elif not clue_hover_axis.is_empty():
 		clear_clue_hover()
 	if not clue_hover_axis.is_empty(): tooltip_geometry()
 	queue_redraw()
+
+func update_pointer_hover(point: Vector2) -> void:
+	hover = view.hit(point)
+	if hover.x >= 0:
+		pointed.emit(hover)
+	update_clue_hover(point)
+
+func clue_source(point: Vector2) -> String:
+	for axis: String in ["row", "column"]:
+		var area: Rect2 = row_clue_area() if axis == "row" else column_clue_area()
+		if area.has_point(point) and navigation_line(point, axis) >= 0:
+			return axis
+	return ""
+
+func cursor_context() -> Vector2i:
+	if session == null:
+		return Vector2i(-1, -1)
+	if session.gesture.active:
+		return session.gesture.endpoint
+	var axis: String = pan_target if pan_button != MOUSE_BUTTON_NONE else clue_context_axis
+	var index: int = pan_line_index if pan_button != MOUSE_BUTTON_NONE else clue_context_index
+	if axis == "row" and index >= 0 and index < view.dimensions.y:
+		return Vector2i(-1, index)
+	if axis == "column" and index >= 0 and index < view.dimensions.x:
+		return Vector2i(index, -1)
+	return hover
 
 func navigation_target(point: Vector2) -> String:
 	if row_clue_area().has_point(point):
@@ -425,6 +499,8 @@ func pointer_press(point: Vector2, button: MouseButton) -> void:
 		return
 	var target: int = 0 if button == MOUSE_BUTTON_RIGHT else (-1 if eraser else active_color)
 	if session.gesture.begin(session.player, view.hit(point), target):
+		clue_pointer_global = global_position + point
+		clue_pointer_known = true
 		held_button = button
 		hover = session.gesture.endpoint
 		sync_gesture_counter(point)
@@ -433,6 +509,8 @@ func pointer_press(point: Vector2, button: MouseButton) -> void:
 
 func update_gesture_endpoint(point: Vector2) -> void:
 	if session.gesture.active:
+		clue_pointer_global = global_position + point
+		clue_pointer_known = true
 		session.gesture.move(view.unbounded_cell(point), view.hit(point) == session.gesture.start)
 		sync_gesture_counter(point)
 
@@ -457,6 +535,8 @@ func pointer_release(point: Vector2, over_board: bool) -> void:
 func finish_gesture() -> void:
 	var changed: bool = session.finish()
 	held_button = MOUSE_BUTTON_NONE
+	if clue_pointer_known:
+		update_pointer_hover(clue_pointer_global - global_position)
 	sync_gesture_counter()
 	if changed:
 		committed.emit()
@@ -521,8 +601,14 @@ func _draw() -> void:
 	sync_clue_completion(values)
 	var first: Vector2i = Vector2i(((grid.position - view.origin) / view.cell_size).floor()).max(Vector2i.ZERO)
 	var last: Vector2i = Vector2i(((grid.end - view.origin) / view.cell_size).ceil()).min(view.dimensions)
-	var active: Vector2i = session.gesture.endpoint if session.gesture.active else hover
+	var active: Vector2i = cursor_context()
 	draw_active_bands(grid, active)
+	if active.y >= 0 and active.y < view.dimensions.y:
+		var area: Rect2 = row_clue_area()
+		draw_rect(area.intersection(Rect2(area.position.x, view.cell_rect(active).position.y, area.size.x, view.cell_size)), Color("d8ddcc"))
+	if active.x >= 0 and active.x < view.dimensions.x:
+		var area: Rect2 = column_clue_area()
+		draw_rect(area.intersection(Rect2(view.cell_rect(active).position.x, area.position.y, view.cell_size, area.size.y)), Color("d8ddcc"))
 	for y: int in range(first.y, last.y):
 		for x: int in range(first.x, last.x):
 			var box: Rect2 = view.cell_rect(Vector2i(x, y))
@@ -547,15 +633,19 @@ func draw_grid_line(start: Vector2, end: Vector2, _axis: String, index: int) -> 
 	draw_line(start, end, INK if index % 5 == 0 else Color("b5b6ab"), 2.0 if index % 5 == 0 else 1.0)
 
 func draw_active_bands(grid: Rect2, active: Vector2i) -> void:
-	if active.x >= 0 and active.y >= 0 and active.x < view.dimensions.x and active.y < view.dimensions.y:
+	var has_row: bool = active.y >= 0 and active.y < view.dimensions.y
+	var has_column: bool = active.x >= 0 and active.x < view.dimensions.x
+	if has_row or has_column:
 		var active_box: Rect2 = view.cell_rect(active)
-		var row: Rect2 = Rect2(Vector2(grid.position.x, active_box.position.y), Vector2(grid.size.x, active_box.size.y)).intersection(grid)
-		var column: Rect2 = Rect2(Vector2(active_box.position.x, grid.position.y), Vector2(active_box.size.x, grid.size.y)).intersection(grid)
+		var row: Rect2 = Rect2(Vector2(grid.position.x, active_box.position.y), Vector2(grid.size.x, active_box.size.y)).intersection(grid) if has_row else Rect2()
+		var column: Rect2 = Rect2(Vector2(active_box.position.x, grid.position.y), Vector2(active_box.size.x, grid.size.y)).intersection(grid) if has_column else Rect2()
 		var band: Color = Color("e8e9d9")
-		if row.has_area() and column.has_area():
-			draw_rect(row, band)
-			draw_rect(Rect2(column.position, Vector2(column.size.x, maxf(0.0, row.position.y - column.position.y))), band)
-			draw_rect(Rect2(Vector2(column.position.x, row.end.y), Vector2(column.size.x, maxf(0.0, column.end.y - row.end.y))), band)
+		if row.has_area(): draw_rect(row, band)
+		if column.has_area():
+			if row.has_area():
+				draw_rect(Rect2(column.position, Vector2(column.size.x, maxf(0.0, row.position.y - column.position.y))), band)
+				draw_rect(Rect2(Vector2(column.position.x, row.end.y), Vector2(column.size.x, maxf(0.0, column.end.y - row.end.y))), band)
+			else: draw_rect(column, band)
 
 # Rendering seams shared by the isolated ZS-1 study; regular defaults unchanged.
 func clue_font() -> Font:
@@ -579,20 +669,15 @@ func _draw_gesture_counter() -> void:
 func _draw_clues(first: Vector2i, last: Vector2i) -> void:
 	var font: Font = clue_font()
 	var fs: int = clue_font_size()
-	var near_grid: Vector2 = view.visible_bounds().position
 	for y: int in range(first.y, last.y):
 		var py: float = view.cell_rect(Vector2i(0, y)).get_center().y
 		if py < view.viewport.position.y or py > view.viewport.end.y:
 			continue
-		if y == hover.y:
-			draw_rect(Rect2(4, py - view.cell_size / 2, near_grid.x - 8, view.cell_size), Color("d8ddcc"))
 		_draw_row_hint(y, py, font, fs)
 	for x: int in range(first.x, last.x):
 		var px: float = view.cell_rect(Vector2i(x, 0)).get_center().x
 		if px < view.viewport.position.x or px > view.viewport.end.x:
 			continue
-		if x == hover.x:
-			draw_rect(Rect2(px - view.cell_size / 2, 4, view.cell_size, near_grid.y - 8), Color("d8ddcc"))
 		_draw_column_hint(x, px, font, fs)
 
 ## One entry per complete row/column, never a growing cache of past previews.
