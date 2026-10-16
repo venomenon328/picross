@@ -57,7 +57,9 @@ func configure(title: String, meta: String, number: String) -> void:
 	# area, never by adding a variable strip beneath the grid cell.
 	recovery = ScrollContainer.new()
 	recovery.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	recovery.mouse_filter = Control.MOUSE_FILTER_STOP
+	# Wheel/scrollbar changes are consumed here; ordinary left clicks bubble to
+	# the valid parent card. Repair controls still consume their own clicks.
+	recovery.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(recovery)
 	recovery_content = VBoxContainer.new()
 	recovery_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
