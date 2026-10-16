@@ -16,8 +16,9 @@ Prüfergebnis, tatsächliche Bereichsmaße und Runtime-Dateihashes.
 scrollbarer Diagnose. Die Recoveryausschnitte zeigen den nach unten gescrollten
 Textaktionsbereich; die vollständige Diagnose bleibt nach oben erreichbar.
 
-Die Bilder wurden vor dem Implementierungscommit aus den manifestgebundenen
-Runtimebytes aufgenommen. `tools/kk_windows_probe.py` verlangt am finalen sauberen
+Die Bilder wurden im neuen nativen Windows-Lauf der KK-Reviewnacharbeit aus
+den manifestgebundenen Runtimebytes aufgenommen. Die 17 unveränderten Ausschnitte
+wurden neu erzeugt; die Fehlerkarte zeigt den aktuellen Scrollbar-Hoverzustand. `tools/kk_windows_probe.py` verlangt am finalen sauberen
 Head dieselben Bytes und reproduziert alle 18 PNG-Hashes. Der PR führt diesen
 erneuten Windows-Lauf samt finaler Head-/Basis-/CI-/Checkout-/EXE-/PCK-Bindung.
 Erst dieser Nachweis bindet die Bilder an den finalen Stand. Quellprobe und echter

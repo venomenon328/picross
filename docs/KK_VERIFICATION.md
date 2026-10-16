@@ -34,7 +34,21 @@ Speicherzustand, einschließlich Fehler bei intern leerer Session.
 | A06 | Unveränderte feste technische Inputs, `Session.reveal()` als einzige Abschlussgrenze; 300 synthetische Einträge, höchstens 24 aktive Karten/Revealreferenzen und letzte Restseite. Keine Rätseltests aus Produktionsinhalten. |
 | A07 | Vollständiger Diff, getrenntes Selbstreview und aktuelle Pflicht-CI nach [Policy](CI_POLICY.md), einschließlich echter Chromium-/Firefox-/Persistenz- und isolierter SSH-/HTTP-Referenz. Native Windows-Geometrie/Sicht/Pointer und gestartetes CI-EXE/PCK-Paar werden im PR an Head/Basis/Checkout/Run/Artefakte gebunden. |
 
-Die gezielte Nacharbeit zu [Review R1](https://github.com/venomenon328/picross/pull/176#pullrequestreview-5545825024) ergänzt echte Pointer-Down/Up auf einen neutralen Punkt des Recovery-Textbereichs (gültiges Backup / beschädigtes Backup), Scrollradregressionen und den tatsächlichen Resetklick aus einer deaktivierten ungültigen Kachel samt Abbruch, Bestätigung und Slotisolation. Der Scrollcontainer behält `STOP` für Wheel- und Scrollbar-Ereignisse. Nur neutrale Linksklicks werden nach echtem Down/Up ohne Zieh-/Scrollbewegung über ein separates Kartensignal an den vorhandenen Registry-ID-Öffnungsweg geleitet; Reparatur- und Scrollbalken-Controls fangen ihre Aktionen weiterhin selbst ab. Die zugehörige Ausführung wird durch die aktuelle neue Pflicht-CI und den danach erforderlichen nativen Windows-Nachweis belegt, nicht durch diese Prüfzuordnung.\n\n`tools/kat2_product.py` nimmt KK in den vorhandenen Integrationspfad auf; kompakte
+Die Nacharbeit zu [Review R1](https://github.com/venomenon328/picross/pull/176#pullrequestreview-5545825024)
+prüft neutrale Diagnoseklicks für gültige Backups, den realen Reset einer
+deaktivierten Fehlerkarte und getrennte Down/Up-Routen für Rad, Scrollbar,
+Textdrag und Reparatur. Lange Diagnosen müssen tatsächlich innen scrollen,
+ohne den äußeren Katalog oder eine Kartenaktion auszulösen. Auch nach
+Rückscrollen während gehaltener Linkstaste bleibt die Kartenöffnung verworfen.
+Der innere Scrollcontainer behält `STOP`; nur neutrale Linksklicks ohne
+Zieh-/Scrollaktion aktivieren den bestehenden Registry-ID-Öffnungsweg.
+Die nativen JSON-Berichte enthalten Scrollbereiche, Pointerpunkte und
+Aktionszähler je Speicherzustand. Ein separates leeres Profil prüft den echten
+SaveStore-Schreibfehler vor Primary-Veröffentlichung: Diagnose, neutralen
+Fortschritt, Flushsperre und tatsächlichen Reset mit Abbruch/Bestätigung und
+unveränderten fremden Slotbytes. Ausführung und Ergebnisse stehen im PR.
+
+`tools/kat2_product.py` nimmt KK in den vorhandenen Integrationspfad auf; kompakte
 native Originalausschnitte und JSON-Messdaten gehören zur technischen Lieferung,
 vollständige Framekontexte bleiben lokal. Der Web-Beobachter der separaten Testfassung
 benennt Karten über ihre zugängliche Blattzuordnung und benutzt einen tatsächlichen

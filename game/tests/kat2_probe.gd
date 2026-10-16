@@ -16,6 +16,7 @@ var timings: Dictionary = {}
 var quit_slot_hashes: Dictionary = {}
 var kb_measurements: Array = []
 var kk_measurements: Array = []
+var kk_pointer_measurements: Array = []
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -50,6 +51,10 @@ func click(control: Control) -> void:
 
 func choose(id: String) -> void:
 	click(app.album.category_choice)
+	# The offscreen SubViewport is not a Window: unlike the real player it
+	# gets no focus-out when an embedded popup opens. Deliver that native
+	# notification so the opener's left-button capture cannot retain wheels.
+	surface.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_OUT)
 	await frames()
 	var popup: PopupMenu = app.album.category_choice.get_popup()
 	check(popup.visible, "category popup opens by pointer")
@@ -84,6 +89,7 @@ func choose(id: String) -> void:
 		check(hit, "category item reached through popup pointer hit testing")
 		break
 	await frames()
+	check(not popup.visible, "category popup closes after real item click")
 	check(app.album.category_id == id and app.album.page_index == 0 and app.album.scroll_vertical == 0, "category resets page and scroll")
 
 func shot(name: String) -> void:
@@ -201,7 +207,7 @@ func run() -> void:
 	quit(0 if failures.is_empty() else 4)
 
 func write_report() -> void:
-	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
+	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()
@@ -723,49 +729,7 @@ func fixed_cards() -> void:
 		check(card_geometry() == initial and app.choices[0].caption.text == "???" and not app.choices[0].reset.visible,"KK reset returns exact original geometry with no stale hit")
 		await shot("reset-%d" % spec[0])
 		kk_measurements.append({"surface":spec,"initial":initial,"after_reset":card_geometry(),"columns":app.album.grid.columns})
-	# Faults with internally new replacement/backup sessions retain explicit
-	# diagnosis and reachable actions inside the exact same bounded grid cells.
-	var stable: Array = card_geometry()
-	for state: String in ["error","recovered","backup_invalid"]:
-		app.slot_status[0] = state
-		app.slot_errors[0] = "TEST ONLY ausführliche Dateidiagnose. ".repeat(30)
-		app.album.present(app.sessions,app.slot_status,app.slot_errors,"","T-01")
-		await frames()
-		var card: Control = app.choices[0]
-		check(card_geometry() == stable and card.reset.visible and card.recovery.visible,"KK fault/recovery keeps grid geometry and reset")
-		check(card.recovery.mouse_filter == Control.MOUSE_FILTER_STOP and card.recovery_content.mouse_filter == Control.MOUSE_FILTER_PASS,"KK wheel ownership and text click routing stay explicitly separated")
-		check(card.note.text == ("Ungültig" if state == "error" else "Neu") and card.diagnosis.text.contains("TEST ONLY"),"KK short progress separated from full storage diagnosis")
-		check(card.diagnosis.get_line_count() > 2 and card.recovery.get_v_scroll_bar().max_value > card.recovery.size.y,"KK full long diagnosis wraps and remains scroll-accessible")
-		var wheel_before: float = card.recovery.scroll_vertical
-		var wheel: InputEventMouseButton = InputEventMouseButton.new()
-		wheel.position = card.recovery.get_global_rect().position + Vector2(10, 10)
-		wheel.button_index = MOUSE_BUTTON_WHEEL_DOWN
-		wheel.pressed = true
-		surface.push_input(wheel, true)
-		await frames()
-		check(float(card.recovery.scroll_vertical) > wheel_before, "KK wheel still scrolls inside bounded diagnosis")
-		card.recovery.scroll_vertical = int(wheel_before)
-		await frames()
-		check(card.recovery.scroll_vertical == int(wheel_before), "KK wheel test restores reference capture scroll position")
-		if state != "error":
-			check(app.album.repair_buttons.has("T-01"),"KK text recovery action retained")
-			card.recovery.ensure_control_visible(card.repair)
-			await frames()
-			click(card.repair)
-			await frames()
-			check(app.repair_dialog.visible and app.album.visible and not app.ending.visible,"KK recovery repair pointer acts alone after inner scroll")
-			click(app.repair_dialog.get_cancel_button())
-			await frames()
-		await shot(state)
-	app.slot_status[0] = "fresh"
-	app.slot_errors[0] = ""
-	app.album.present(app.sessions,app.slot_status,app.slot_errors,"","T-01")
-	app.album.show_error("T-01","TEST ONLY write failed while empty")
-	await frames()
-	check(app.choices[0].reset.visible and app.choices[0].note.text == "Neu" and app.album.feedback.visible,"KK runtime error on new slot shows diagnosis and reset without false progress")
-	app.slot_errors[0] = ""
-	app.show_album()
-	await frames()
+	await recovery_pointer_cases()
 	# A small resize band crosses real column thresholds, no content-dependent
 	# width/height response or horizontal catalogue scroll is allowed.
 	for width: int in [1279,1281,1599,1601,1919,1921]:
@@ -775,6 +739,182 @@ func fixed_cards() -> void:
 		for card: Control in app.choices: check(card.size == app.choices[0].size,"KK resize has one shared geometry")
 		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0,"KK column boundary has no horizontal scroll")
 		kk_measurements.append({"resize_width":width,"columns":app.album.grid.columns,"geometry":card_geometry()})
+	await empty_write_error()
+
+func pointer_button(point: Vector2, button: MouseButton, down: bool, mask: int = 0) -> void:
+	var event: InputEventMouseButton = InputEventMouseButton.new()
+	event.position = point
+	event.global_position = point
+	event.button_index = button
+	event.button_mask = mask
+	event.pressed = down
+	surface.push_input(event, true)
+
+func pointer_move(from: Vector2, to: Vector2, mask: int = 0) -> void:
+	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+	motion.position = to
+	motion.global_position = to
+	motion.relative = to-from
+	motion.button_mask = mask
+	surface.push_input(motion, true)
+
+func recovery_pointer_cases() -> void:
+	var stable: Array = card_geometry()
+	var counts: Dictionary = {"open":0,"reset":0,"repair":0,"id":""}
+	app.album.opened.connect(func(id: String) -> void: counts.open += 1; counts.id = id)
+	app.album.reset_requested.connect(func(id: String) -> void: counts.reset += 1; counts.id = id)
+	app.album.repair_requested.connect(func(id: String) -> void: counts.repair += 1; counts.id = id)
+	for state: String in ["error","recovered","backup_invalid"]:
+		app.slot_status[0] = state
+		var display_errors: Array[String] = app.slot_errors.duplicate()
+		display_errors[0] = "TEST ONLY ausführliche Dateidiagnose. ".repeat(30)
+		# Long text is a presentation fixture, not pending unsaved work.
+		app.album.present(app.sessions,app.slot_status,display_errors,"","T-01")
+		await frames()
+		var card: Card = app.choices[0]
+		check(card_geometry() == stable,"KK "+state+": fixed card and grid geometry")
+		check(card.reset.visible and card.recovery.visible,"KK "+state+": reset and diagnosis visible")
+		check(card.note.text == ("Ungültig" if state == "error" else "Neu"),"KK "+state+": short validated progress")
+		check(card.diagnosis.text.contains("TEST ONLY"),"KK "+state+": complete storage diagnosis")
+		check(card.diagnosis.get_line_count() > 2,"KK "+state+": long diagnosis wraps")
+		var bar: VScrollBar = card.recovery.get_v_scroll_bar()
+		var inner_range: float = bar.max_value-bar.page
+		check(bar.visible and inner_range > 0,"KK "+state+": real inner scroll range")
+		var point: Vector2 = card.recovery.get_global_rect().position + Vector2(10,10)
+		var outer_before: int = app.album.scroll_vertical
+		var opened_before: int = counts.open
+		var repaired_before: int = counts.repair
+		# Wheel down AND up: an unmatched down retains Viewport mouse capture,
+		# routing the next action to the old content even at correct coordinates.
+		click_at(point,MOUSE_BUTTON_WHEEL_DOWN)
+		await frames()
+		var wheel_after: int = card.recovery.scroll_vertical
+		check(wheel_after > 0,"KK "+state+": wheel scrolls inside bounded diagnosis")
+		check(app.album.scroll_vertical == outer_before,"KK "+state+": inner wheel keeps outer scroll")
+		check(counts.open == opened_before and counts.repair == repaired_before and counts.reset == 0,"KK "+state+": wheel emits no card action")
+		# A text drag out and back must not turn into a neutral click.
+		pointer_move(point,point)
+		pointer_button(point,MOUSE_BUTTON_LEFT,true,MOUSE_BUTTON_MASK_LEFT)
+		pointer_move(point,point+Vector2(30,0),MOUSE_BUTTON_MASK_LEFT)
+		pointer_move(point+Vector2(30,0),point,MOUSE_BUTTON_MASK_LEFT)
+		pointer_button(point,MOUSE_BUTTON_LEFT,false)
+		await frames()
+		check(counts.open == opened_before,"KK "+state+": returning text drag never opens card")
+		# Scroll down and back during a held left click. Equal final offset does
+		# not make this a neutral click; the scroll gesture must cancel activation.
+		pointer_button(point,MOUSE_BUTTON_LEFT,true,MOUSE_BUTTON_MASK_LEFT)
+		for wheel: MouseButton in [MOUSE_BUTTON_WHEEL_DOWN,MOUSE_BUTTON_WHEEL_UP]:
+			pointer_button(point,wheel,true,MOUSE_BUTTON_MASK_LEFT)
+			pointer_button(point,wheel,false,MOUSE_BUTTON_MASK_LEFT)
+			await frames()
+		pointer_button(point,MOUSE_BUTTON_LEFT,false)
+		await frames()
+		check(counts.open == opened_before,"KK "+state+": wheel during held click cancels opening even after reverse scroll")
+		# Native scrollbar page-click and thumb drag use their own hit targets.
+		card.recovery.scroll_vertical = 0
+		await frames()
+		var bar_point: Vector2 = bar.get_global_rect().position + Vector2(bar.size.x/2,bar.size.y*0.65)
+		click_at(bar_point)
+		await frames()
+		check(card.recovery.scroll_vertical > 0,"KK "+state+": scrollbar track really scrolls")
+		check(counts.open == opened_before and counts.repair == repaired_before,"KK "+state+": scrollbar track never activates card or repair")
+		card.recovery.scroll_vertical = 0
+		await frames()
+		var arrow_height: float = bar.get_theme_icon("decrement").get_height()
+		var grabber_height: float = bar.get_theme_stylebox("grabber").get_minimum_size().y
+		bar_point = bar.get_global_rect().position + Vector2(bar.size.x/2,arrow_height+grabber_height/2)
+		var drag_before: int = card.recovery.scroll_vertical
+		pointer_move(point,bar_point)
+		pointer_button(bar_point,MOUSE_BUTTON_LEFT,true,MOUSE_BUTTON_MASK_LEFT)
+		check(card.recovery.scroll_vertical == drag_before,"KK "+state+": thumb down itself does not page scroll")
+		pointer_move(bar_point,bar_point+Vector2(0,bar.size.y*0.45),MOUSE_BUTTON_MASK_LEFT)
+		pointer_button(bar_point+Vector2(0,bar.size.y*0.45),MOUSE_BUTTON_LEFT,false)
+		await frames()
+		check(card.recovery.scroll_vertical > 0,"KK "+state+": scrollbar drag really scrolls")
+		check(counts.open == opened_before and counts.repair == repaired_before,"KK "+state+": scrollbar drag never activates card or repair")
+		card.recovery.scroll_vertical = 0
+		await frames()
+		check(card.recovery.scroll_vertical == 0,"KK "+state+": restore capture scroll")
+		if state != "error":
+			check(app.album.repair_buttons.has("T-01"),"KK "+state+": text recovery action retained")
+			card.recovery.ensure_control_visible(card.repair)
+			await frames()
+			check(card.recovery.get_global_rect().encloses(card.repair.get_global_rect()),"KK "+state+": scrolled repair pointer target fully inside clip")
+			click(card.repair)
+			await frames()
+			check(app.repair_dialog.visible,"KK "+state+": repair pointer opens confirmation")
+			check(app.repair_id == "T-01" and counts.id == "T-01" and counts.repair == repaired_before+1,"KK "+state+": repair emits once for stable registry ID")
+			check(counts.open == opened_before and app.album.visible,"KK "+state+": repair keeps catalog and never opens card")
+			check(not app.work.visible and not app.ending.visible,"KK "+state+": repair opens neither work nor ending")
+			var before_cancel: Dictionary = save_bytes()
+			if app.repair_dialog.visible:
+				click(app.repair_dialog.get_cancel_button())
+				await frames()
+			check(not app.repair_dialog.visible and save_bytes() == before_cancel,"KK "+state+": repair cancellation preserves bytes")
+		await shot(state)
+		# Neutral text after inner scrolling opens valid cards once; the invalid
+		# card remains blocked. Keep capture state independent from navigation.
+		card.recovery.scroll_vertical = 30
+		await frames()
+		click_at(point)
+		await frames()
+		check(counts.open == opened_before+(0 if state == "error" else 1),"KK "+state+": neutral diagnosis click respects validity")
+		if state != "error":
+			check(counts.id == "T-01" and app.work.visible and not app.album.visible,"KK "+state+": neutral click opens bound new slot")
+			# Synthetic long diagnostics are display fixtures, not disk corruption.
+			# Remove only this fixture state before returning through normal flush.
+			app.slot_status[0] = "fresh"
+			app.slot_errors[0] = ""
+			click(app.album_button)
+			await frames()
+		check(app.album.visible,"KK "+state+": catalog remains or returns after neutral click")
+		kk_pointer_measurements.append({"state":state,"inner_range":inner_range,"wheel_after":wheel_after,"outer_before":outer_before,"counts":counts.duplicate(),"neutral_point":point,"scrollbar_thumb_point":bar_point})
+	app.slot_status[0] = "fresh"
+	app.slot_errors[0] = ""
+	app.show_album()
+	await frames()
+
+func empty_write_error() -> void:
+	# A separate empty profile exercises the real SaveStore failure path without
+	# inheriting pointer capture, synthetic recovery status or history.
+	Store.test_root_override = Store.test_root_override.path_join("empty-write-error")
+	DirAccess.make_dir_recursive_absolute(Store.test_root_override)
+	await new_app()
+	check(app.slot_status[0] == "fresh" and save_bytes().is_empty(),"KK runtime error starts with absent saves")
+	app.store.fail_step = "after_temp"
+	check(not app._save_current(),"KK empty slot real write fails before primary publication")
+	await frames()
+	var card: Card = app.choices[0]
+	check(card.reset.visible and not card.reset.disabled,"KK empty write failure exposes enabled reset")
+	check(card.note.text == "Neu" and app.session.player.history.is_empty() and not app.session.completed,"KK empty write failure never invents progress")
+	check(card.recovery.visible and card.diagnosis.text.contains(app.slot_errors[0]) and not app.slot_errors[0].is_empty(),"KK empty write failure has actual storage diagnosis")
+	check(app.album.feedback.visible and app.album.feedback.text.contains(app.slot_errors[0]),"KK empty write failure has global feedback")
+	check(not FileAccess.file_exists(app.store.path_for("t01")) and FileAccess.file_exists(app.store.path_for("t01",".tmp")),"KK empty failed save has temp only")
+	var original: Dictionary = save_bytes()
+	var foreign: FileAccess = FileAccess.open(app.store.path_for("t02"),FileAccess.WRITE)
+	foreign.store_buffer(FileAccess.get_file_as_bytes("res://tests/fixtures/runtime/t02.json"))
+	foreign.close()
+	var unaffected: Dictionary = save_bytes("t01")
+	click(card.reset)
+	await frames()
+	check(app.reset_dialog.visible and app.reset_id == "T-01" and app.album.visible,"KK empty write failure reset pointer reaches bound confirmation")
+	click(app.reset_dialog.get_cancel_button())
+	await frames()
+	check(save_bytes("t02") == original and save_bytes("t01") == unaffected,"KK empty write failure reset cancellation preserves all bytes")
+	check(app.choices[0].reset.visible,"KK empty failed slot retains reset after cancellation")
+	click(app.choices[1])
+	await frames()
+	check(app.album.visible and app.session.definition.id == "T-01" and not app.slot_errors[0].is_empty(),"KK empty write failure blocks slot switch on failed mandatory flush")
+	click(app.choices[0].reset)
+	await frames()
+	check(app.reset_dialog.visible,"KK empty failed slot reset remains reachable after blocked switch")
+	click(app.reset_dialog.get_ok_button())
+	await frames()
+	check(app.album.visible and app.slot_status[0] == "fresh" and app.slot_errors[0].is_empty(),"KK empty write failure confirmed reset restores fresh catalog state")
+	check(save_bytes("t02").is_empty(),"KK empty write failure reset removes target primary backup and temp")
+	check(save_bytes("t01") == unaffected,"KK empty write failure reset preserves foreign slot bytes")
+	check(not app.choices[0].reset.visible and not app.choices[0].recovery.visible,"KK empty write failure reset clears diagnosis and reset hit")
+	app.store.fail_step = ""
 
 func compact_buttons() -> void:
 	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
