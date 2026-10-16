@@ -97,7 +97,7 @@ Die reguläre Product-Prüfung nach [CI-Policy](CI_POLICY.md) enthält:
   offene Mono-Vorher-/Nachher-PNGs (alle drei Zellmaße, beide UI-Skalierungen)
   und Messdaten aller 72 Proben. Weitere PNGs bleiben budgetabhängig optional.
 - Frisch heruntergeladener Windows-Player: native Starts und Save-Neustarts,
-  tatsächliches eingebettetes PCK, Fontdatenhash, Glyphen 0–9 aus dessen Font-RID
+  tatsächliche separate PCK, Fontdatenhash, Glyphen 0–9 aus deren Font-RID
   und unveränderte Originalhinweise (`hc92_pack.gd`).
 
 Konkrete Ergebnisse stehen im Draft-PR, gebunden an Head, Basis, getesteten
