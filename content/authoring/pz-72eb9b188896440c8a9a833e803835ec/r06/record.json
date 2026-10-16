@@ -1,0 +1,46 @@
+{
+  "blockers": [
+    "Neue konkrete Motivfreigabe von MA-r03 und Vierfarbkorridor vor Rasterproduktion erforderlich."
+  ],
+  "category_id": "saeuger",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_status": "recommendation_pending_new_motif_approval",
+  "final_editorial_approval": null,
+  "foreground_colors_recommended": 4,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r06/handoff.json",
+    "sha256": "024c150b318991cc528b74c51ac0a3dc89391b1eb5d231e003f97ebb981d9204"
+  },
+  "height": 38,
+  "integration": null,
+  "inventory_sha256": "4e68e9871d9ac5730c65527c25dac2c4bc9599a4f2d8b310484a3ac98a0fb21d",
+  "mode": "color",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea",
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r06/MA-r03.png",
+    "member": "MA-r03.png",
+    "sha256": "e920879aa6e4fdcf8737da685a20f6932165acedfa6f4c934105c3a87235976a"
+  },
+  "motif_name": "Koboldmaki",
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "package": {
+    "bytes": 4785160,
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r06/package.zip",
+    "sha256": "70f692675d2cab0be7901afc9b0e22aef9319885488280126b76c56c0c5460f1"
+  },
+  "previous_production": "r05",
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "repo_commit": "8577f707038d410672032765fa09b711b5b5b5a2",
+  "requested_foreground_colors": null,
+  "review_preview": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r06/review.png",
+    "sha256": "3eb85b486cfe0db13e2724e9cfcdc58424acfabfa45dffd6ef04e4b46b1aa558"
+  },
+  "revision": "r06",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-16T16:38:20.344185+00:00",
+  "width": 26
+}
