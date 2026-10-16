@@ -1,0 +1,39 @@
+{
+  "all_other_cells_unchanged": true,
+  "certified": false,
+  "checked_at_utc": "2026-10-16T23:09:54.190518+00:00",
+  "editorial_approved": false,
+  "exact_inventory_hashes_and_file_set_pass": true,
+  "exact_requested_edits": [
+    {
+      "after": "empty",
+      "before": "ink",
+      "column": 36,
+      "row": 3
+    },
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 8,
+      "row": 5
+    }
+  ],
+  "format": "picross-authoring-exact-cell-validation-v1",
+  "handoff_byte_copy_pass": true,
+  "handoff_sha256": "cd9f26b70b782ebb63445fc8fcfa3a65dc0bc2730ea56eb4bb78e8f1f5b83477",
+  "independent_witnesses_verified": 2,
+  "inventory_sha256": "23ac3d0ad50c02d5f5200dc80c9b3342278ad7702a60cff9d1a16b45dcd59edb",
+  "line_proof_verified": true,
+  "line_status": "stalled",
+  "package_sha256": "e2ddc3c7be474ecd5c40b407a9b9fd9a85164feba51d6ef1997646d520f34266",
+  "paired_proof_and_baseline_verified": true,
+  "paired_status": "stalled",
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "registered": false,
+  "revision": "r10",
+  "source_and_fixed_edit_replay": true,
+  "target_adapter_inspect": "not_performed: logic fail and final approval pending",
+  "uniqueness": "multiple",
+  "za1_safe_package_container_open_pass": true,
+  "zip_crc_pass": true
+}
