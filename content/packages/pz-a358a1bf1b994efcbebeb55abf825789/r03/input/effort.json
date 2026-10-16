@@ -1,0 +1,16 @@
+{
+  "ai_production_passes_this_revision": 1,
+  "changed_positions": 0,
+  "correction_rounds_this_revision": 0,
+  "fresh_proof_verifier_processes": 4,
+  "human_active_minutes": null,
+  "image_calls_this_revision": 0,
+  "image_calls_total": 4,
+  "import_attempts_this_revision": 2,
+  "pair_profile_runs": 0,
+  "raster_candidates_this_revision": 4,
+  "reconstruction_inspections": 4,
+  "repair_rounds": 0,
+  "timestamp_packaged_utc": "2026-10-16T08:27:39.152372+00:00",
+  "uniqueness_search_runs": 0
+}

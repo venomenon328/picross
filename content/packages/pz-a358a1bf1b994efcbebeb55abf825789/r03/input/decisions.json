@@ -1,0 +1,96 @@
+{
+  "earlier_decisions": {
+    "entries": [
+      {
+        "decision": "A-r01 explizit vom Nutzer freigegeben; Beleg reveal-approval.json. B/C nicht gewählt.",
+        "phase": "reveal_approved"
+      },
+      {
+        "decision": "Ein nativer quellbildgebundener Edit erzeugt MA-r01. Keine Rasterproduktion vor menschlicher Motivfreigabe.",
+        "phase": "motif_review"
+      },
+      {
+        "decision": "Nach Seitenverhältnisprüfung 14 × 20 bevorzugt, 15 × 22 Alternative. Beide ersetzen den geometrisch ungeeigneten unveränderten contain-Weg bei exakt 15 × 20; Wunsch war ungefähr.",
+        "phase": "motif_review"
+      },
+      {
+        "decision": "Korridor und Designs nur vorgeschlagen, approved_parameters bleibt leer. Übergabeprompt ist Freigabevorlage, keine Freigabe.",
+        "phase": "handoff"
+      }
+    ],
+    "prior_revision": {
+      "commit": "8171954ce4ff3694d09adb013176ac3f829c3e33",
+      "omitted_options": [
+        {
+          "file": "reveals/B-r01.png",
+          "id": "B-r01",
+          "reason": "Nicht gewählte, ungebundene Variante; exakt im r01-Paket am genannten Commit erhalten.",
+          "sha256": "127b896361e5509c98a6233c0de8064e88d318f325f7e064c6d8e72a9c7ffb51"
+        },
+        {
+          "file": "reveals/C-r01.png",
+          "id": "C-r01",
+          "reason": "Nicht gewählte, ungebundene Variante; exakt im r01-Paket am genannten Commit erhalten.",
+          "sha256": "f9c2c3be924ea7e6fa574bf2b06a23237fcaa002afcd93dc4fc254b9acae8d57"
+        }
+      ],
+      "package": {
+        "bytes": 5680044,
+        "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/r01/package.zip",
+        "sha256": "1d9702ff25bce2a7bbbbaa5359ae89ebbf72fcca14c43ce1c325508a4f955cea"
+      },
+      "record": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/r01/record.json"
+    },
+    "puzzle_id": "pz-a358a1bf1b994efcbebeb55abf825789",
+    "revision": "r02"
+  },
+  "entries": [
+    {
+      "decision": "Tatsächliche Nutzerfreigabe vor Rasterproduktion protokolliert. Korridor/Quellbilder bleiben unverändert.",
+      "phase": "motif_approved"
+    },
+    {
+      "duplicates": 0,
+      "hypothesis": "Je zwei freigegebene Größen und area-Schwellen 112/160 vergleichen; niedrigere Schwelle hält Armzwischenräume weiter offen, höhere kräftigt Flächen.",
+      "phase": "raster_review",
+      "proof_status": "Alle vier solved/full-line-mono, frisch unabhängig bestätigt.",
+      "variants": 4
+    },
+    {
+      "phase": "selection",
+      "reasons": "Besser abgestufte Ellenbogen und verjüngter Fuß als 14 × 20, ohne verdickte Arme der 160-Schwelle. 50 zusätzliche Zellen gegenüber 14 × 20 sind innerhalb des freigegebenen Korridors.",
+      "selected": "import-15x22/area-112"
+    },
+    {
+      "candidate": "import-14x20/area-112",
+      "phase": "rejected",
+      "reason": "Zertifiziert und erkennbar, aber gerader schmaler Stamm und gröbere Ellenbogen/Fußkontur; geringerer Formgewinn."
+    },
+    {
+      "candidate": "import-14x20/area-160",
+      "phase": "rejected",
+      "reason": "Zertifiziert, aber unterer Mittelstamm breiter/stufiger und rechter Arm flach gedeckelt; Armzwischenräume enger."
+    },
+    {
+      "candidate": "import-15x22/area-160",
+      "phase": "rejected",
+      "reason": "Zertifiziert, aber kräftigere Seitenarme und engerer rechter Armzwischenraum als 112; zusätzliche Füllungen ohne Identitätsgewinn."
+    },
+    {
+      "phase": "repair",
+      "reason": "Bereits geeigneter vollständig zertifizierter Kandidat; Reparatur/Paar-/Suchdiagnose entfällt begründet nach §4.2.1/4.4.",
+      "rounds": 0
+    },
+    {
+      "decision": "Technische/visuelle Inhaltsgates erfüllt; separate menschliche Endabnahme und nachfolgender Zieladapterexport offen. Nur Ablagemerge beauftragt.",
+      "phase": "content_ready"
+    }
+  ],
+  "previous_revision": {
+    "commit": "35465bed49055b01583a20aab7add9b37536c129",
+    "package": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/r02/package.zip",
+    "sha256": "5c5e4de1bfd54c5f8a9c51c35c88891925fe1f83e0e1fabb6a0b164a7690b72a"
+  },
+  "puzzle_id": "pz-a358a1bf1b994efcbebeb55abf825789",
+  "revision": "r03"
+}

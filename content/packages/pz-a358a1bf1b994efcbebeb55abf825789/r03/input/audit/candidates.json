@@ -1,0 +1,170 @@
+[
+  {
+    "bundle": "import-14x20",
+    "candidate_id": "a91e751ae2e3b5279f032719eee2d33bf58280399c0d1870334602e82de9ea08",
+    "cells": 280,
+    "empty_columns": [
+      14
+    ],
+    "empty_rows": [],
+    "filled": 121,
+    "filled_components_4": [
+      121
+    ],
+    "foreground_colors": 1,
+    "frame": {
+      "bottom": true,
+      "left": true,
+      "right": false,
+      "top": true
+    },
+    "frame_valid": true,
+    "height": 20,
+    "logic_hash": "3dcf33ec5c32a7f3d5e38d197bd35689d362659fc071fdafa401b730723d74f1",
+    "matrix_hash": "80826110bc3028173bbbfc88e7ea40fc1de224fd5089124f2593f6b1fb805eae",
+    "variant": "area-112",
+    "verification": {
+      "certified": true,
+      "line_evaluations": 81,
+      "logic_hash": "3dcf33ec5c32a7f3d5e38d197bd35689d362659fc071fdafa401b730723d74f1",
+      "profile": {
+        "deduction": "all-line-supported-values",
+        "id": "full-line-mono",
+        "search": false,
+        "start": "unknown",
+        "version": 1
+      },
+      "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+      "proof_verified": true,
+      "status": "solved",
+      "steps": 47
+    },
+    "width": 14
+  },
+  {
+    "bundle": "import-14x20",
+    "candidate_id": "dcb3df9c8861b222a3fef97f6d2611a573e0e7e3c12a6704a61e9abfd8f59e1a",
+    "cells": 280,
+    "empty_columns": [
+      14
+    ],
+    "empty_rows": [],
+    "filled": 140,
+    "filled_components_4": [
+      140
+    ],
+    "foreground_colors": 1,
+    "frame": {
+      "bottom": true,
+      "left": true,
+      "right": false,
+      "top": true
+    },
+    "frame_valid": true,
+    "height": 20,
+    "logic_hash": "13a95895e5c102307dc4ebd068f11df22251d7cd61f0032d9a6861099a95311e",
+    "matrix_hash": "19a75fe0d5adc6da18af79e7cb2976b90527825794cf6a11751ff9d08e10434f",
+    "variant": "area-160",
+    "verification": {
+      "certified": true,
+      "line_evaluations": 81,
+      "logic_hash": "13a95895e5c102307dc4ebd068f11df22251d7cd61f0032d9a6861099a95311e",
+      "profile": {
+        "deduction": "all-line-supported-values",
+        "id": "full-line-mono",
+        "search": false,
+        "start": "unknown",
+        "version": 1
+      },
+      "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+      "proof_verified": true,
+      "status": "solved",
+      "steps": 47
+    },
+    "width": 14
+  },
+  {
+    "bundle": "import-15x22",
+    "candidate_id": "eb26bcd67a54a0b4f75b25bc9137c348fec5b052424048138fed116a02c8d62d",
+    "cells": 330,
+    "empty_columns": [],
+    "empty_rows": [
+      22
+    ],
+    "filled": 154,
+    "filled_components_4": [
+      154
+    ],
+    "foreground_colors": 1,
+    "frame": {
+      "bottom": false,
+      "left": true,
+      "right": true,
+      "top": true
+    },
+    "frame_valid": true,
+    "height": 22,
+    "logic_hash": "ca959db2ef3749b97dae4450cc9baa608dfe1856c8d85fa63aa2293ace4830e0",
+    "matrix_hash": "c29b1eb071ce61aca7bbb0d6721a61485b7f5a040a295eb4949c30e4e82e3587",
+    "variant": "area-112",
+    "verification": {
+      "certified": true,
+      "line_evaluations": 97,
+      "logic_hash": "ca959db2ef3749b97dae4450cc9baa608dfe1856c8d85fa63aa2293ace4830e0",
+      "profile": {
+        "deduction": "all-line-supported-values",
+        "id": "full-line-mono",
+        "search": false,
+        "start": "unknown",
+        "version": 1
+      },
+      "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+      "proof_verified": true,
+      "status": "solved",
+      "steps": 60
+    },
+    "width": 15
+  },
+  {
+    "bundle": "import-15x22",
+    "candidate_id": "4637ae19130d3290d0c7b7b86d835226532b4204ed9299ca4608020a204d5477",
+    "cells": 330,
+    "empty_columns": [],
+    "empty_rows": [
+      22
+    ],
+    "filled": 170,
+    "filled_components_4": [
+      170
+    ],
+    "foreground_colors": 1,
+    "frame": {
+      "bottom": false,
+      "left": true,
+      "right": true,
+      "top": true
+    },
+    "frame_valid": true,
+    "height": 22,
+    "logic_hash": "7f3d0e677a8319baaccca60703f763bcbd9afc8a304fb5389b3cfbdc915652d1",
+    "matrix_hash": "c9f44498502139ec4fc9d62a7bef76b9328c7d75e0381e1b9a6f0265af67b26a",
+    "variant": "area-160",
+    "verification": {
+      "certified": true,
+      "line_evaluations": 89,
+      "logic_hash": "7f3d0e677a8319baaccca60703f763bcbd9afc8a304fb5389b3cfbdc915652d1",
+      "profile": {
+        "deduction": "all-line-supported-values",
+        "id": "full-line-mono",
+        "search": false,
+        "start": "unknown",
+        "version": 1
+      },
+      "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+      "proof_verified": true,
+      "status": "solved",
+      "steps": 52
+    },
+    "width": 15
+  }
+]
