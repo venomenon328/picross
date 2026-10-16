@@ -1,0 +1,45 @@
+{
+  "blockers": [
+    "MA-r02: neue Motivdatei noch nicht menschlich freigegeben."
+  ],
+  "category_id": "saeuger",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_status": "recommendation_pending_new_motif_approval",
+  "final_editorial_approval": null,
+  "foreground_colors_recommended": 4,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r04/handoff.json",
+    "sha256": "d9d7270081a4c333c6564e9bd31336ed3ced8ecd0a10cb343a0a0c19b6fc9ef4"
+  },
+  "height": 35,
+  "integration": null,
+  "inventory_sha256": "d32a5cda09473a9bbe49d32a24db8c3d2a137e0062527bc5af72d0be117a2783",
+  "mode": "color",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea",
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r04/MA-r02.png",
+    "member": "MA-r02.png",
+    "sha256": "1841b0f3ac5f6dfd48b9b8072f8a4946694bff65c12395c26e9fa8a252339805"
+  },
+  "motif_name": "Koboldmaki",
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "package": {
+    "bytes": 3731761,
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r04/package.zip",
+    "sha256": "d1af78f1dc88d91588f554b315f1af12484c44a18bd802b61d71270f903d240d"
+  },
+  "previous_production": "r03",
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "repo_commit": "7910f4cdcaf904e7c28395dc2e61e5f3ebe76035",
+  "review_preview": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r04/review.png",
+    "sha256": "2f723cad3fa8dcb8f88487c49aa3fca5637b1830d20272593d6ce9fee3ddbd7a"
+  },
+  "revision": "r04",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-16T16:02:47.457415+00:00",
+  "width": 24
+}
