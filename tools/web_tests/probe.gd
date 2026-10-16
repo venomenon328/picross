@@ -13,6 +13,9 @@ func _process(delta: float) -> void:
 		slots.append(SaveStore.snapshot(item, item.view_state))
 	var origin: Vector2 = board.global_position + board.view.origin
 	var data: Dictionary = {"controls": controls, "slots": slots, "slot_status": slot_status,
+		"ea_active": reveal_view.active, "ea_processing": reveal_view.is_processing(),
+		"ea_caption_alpha": completion_title.modulate.a, "ea_reset_disabled": completion_reset.disabled,
+		"ea_title": title.text, "ea_art": reveal_view.artwork != null,
 		"album": album.visible, "work": work.visible, "ending": ending.visible, "information": information.visible,
 		"id": session.definition.id, "cells": session.player.cells, "history": session.player.history,
 		"cursor": session.player.cursor, "completed": session.completed, "view": board.capture_view(),

@@ -15,6 +15,11 @@ var cursor_state: Array = []
 var stats: Dictionary = {"rest_draws": 0, "rest_cells": 0, "transition_draws": 0, "transition_cells": 0, "cursor_draws": 0, "syncs": 0}
 var textures: Dictionary = {}
 var ink_material: ShaderMaterial
+var hide_fills: bool = false:
+	set(value):
+		hide_fills = value
+		for chunk: Control in chunks: chunk.queue_redraw()
+		if transitions != null: transitions.queue_redraw()
 
 class Chunk extends Control:
 	var owner_marks: Control
@@ -24,7 +29,7 @@ class Chunk extends Control:
 		owner_marks.stats.rest_draws += 1
 		for index: int in range(start, mini(start + CHUNK_SIZE, owner_marks.values.size())):
 			owner_marks.stats.rest_cells += 1
-			if not owner_marks.suppressed.has(index):
+			if not owner_marks.suppressed.has(index) and not (owner_marks.hide_fills and owner_marks.values[index] > 0):
 				owner_marks.paint(self, index, owner_marks.values[index], 23, 1.0)
 		owner_marks.record_time(began)
 
@@ -36,6 +41,7 @@ class Transitions extends Control:
 		for index: int in owner_marks.suppressed:
 			owner_marks.stats.transition_cells += 1
 			var state: Dictionary = owner_marks.presentation(index)
+			if owner_marks.hide_fills and int(state.value) > 0: continue
 			owner_marks.paint(self, index, int(state.value), int(state.frame), float(state.alpha))
 		owner_marks.record_time(began)
 
@@ -187,18 +193,23 @@ func presentation(index: int) -> Dictionary:
 	return {"value": value, "frame": frame, "alpha": alpha, "progress": progress}
 
 func paint(canvas: CanvasItem, index: int, value: int, frame: int, alpha: float) -> void:
-	if value < 0 or (value > 0 and board.view.cell_size <= 4.0): return
+	var command := paint_command(index, value, frame, alpha)
+	if not command.is_empty():
+		canvas.draw_texture_rect_region(command[0], command[1], command[2], command[3], false, true)
+
+func paint_command(index: int, value: int, frame: int, alpha: float) -> Array:
+	if value < 0 or (value > 0 and board.view.cell_size <= 4.0): return []
 	var cell: Rect2 = board.view.cell_rect(Vector2i(index % board.view.dimensions.x, index / board.view.dimensions.x))
 	var lod: String = Atlas.level(board.view.cell_size)
 	var target: Rect2 = Atlas.mapped_box(cell, lod) if value > 0 else cell
 	var clipped: Rect2 = target.intersection(board.view.viewport)
-	if not clipped.has_area(): return
+	if not clipped.has_area(): return []
 	var source: Rect2 = Atlas.region(lod, variants[index], frame)
 	var ratio: Vector2 = source.size / target.size
 	source = Rect2(source.position + (clipped.position-target.position)*ratio, clipped.size*ratio)
 	var color: Color = board.cell_color(value) if value > 0 else board.INK
 	color.a = alpha
-	canvas.draw_texture_rect_region(textures[("fill" if value > 0 else "x") + "-" + lod], clipped, source, color, false, true)
+	return [textures[("fill" if value > 0 else "x") + "-" + lod], clipped, source, color]
 
 func _draw() -> void:
 	# Neutral erasure contours have no coefficient material or previous ink.
