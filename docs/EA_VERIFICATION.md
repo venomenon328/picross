@@ -34,11 +34,13 @@ Downloadbindungen und der native Windows-EXE/PCK-Nachweis stehen im aktuellen PR
 diese Zuordnung allein behauptet keinen bestandenen Lauf.
 
 Der Produktharness serialisiert ausschließlich die Editor-Importworker über eine
-vorübergehende `override.cfg` (`editor/import/use_multiple_threads=false`). Zwei
-Linux-CI-Läufe stürzten zuvor im parallelen Fontimport mit
-`propagate_notification()` / Signal 11 ab. Die Datei wird auch nach Fehlern
-entfernt; Laufzeitprüfungen und Spielerexport verwenden wieder das unveränderte
-Projekt. Vorhandene Overrides werden nicht überschrieben, Fehler nicht ignoriert.
+vorübergehende Einstellung in der isolierten `project.godot`
+(`editor/import/use_multiple_threads=false`). Linux-CI-Läufe stürzten zuvor im
+parallelen Fontimport mit `propagate_notification()` / Signal 11 ab.
+`override.cfg` genügt hierfür nicht: Godot ignoriert Overrides im Editormodus.
+Die ursprünglichen Projektbytes werden auch nach Fehlern wiederhergestellt;
+Laufzeitprüfungen und Spielerexport verwenden das unveränderte Projekt.
+Vorhandene Importeinstellungen/Overrides werden nicht überschrieben, Fehler nicht ignoriert.
 Die Einstellung ist im [gebundenen Godot-Quellstand](https://github.com/godotengine/godot/blob/4.7.2-stable/editor/file_system/editor_file_system.cpp)
 vorhanden; Engine, Importressourcen und Pflichtselektion bleiben unverändert.
 

@@ -58,21 +58,28 @@ def require_clean_output(result: dict, marker: str | None = None) -> None:
 def import_settings(command: list[str]):
     """Serialize only editor import workers in disposable test projects.
 
-    4.7.2's parallel font imports twice crashed CI in propagate_notification().
-    The override is absent during all runtime tests and player exports.
+    Godot ignores override.cfg in editor mode, including --import. Temporarily
+    set the disposable project's editor setting, then restore its exact bytes.
     """
     if "--import" not in command:
         yield
         return
     project = Path(command[command.index("--path") + 1])
-    override = project / "override.cfg"
-    # Exclusive creation also prevents silently replacing caller settings.
-    with override.open("x", encoding="utf-8", newline="\n") as stream:
-        stream.write("[editor]\nimport/use_multiple_threads=false\n")
+    if (project / "override.cfg").exists():
+        raise FileExistsError("Import project already has override.cfg")
+    settings = project / "project.godot"
+    original = settings.read_bytes()
+    text = original.decode("utf-8")
+    if re.search(r"(?m)^import/use_multiple_threads\s*=", text):
+        raise ValueError("Import threading already configured by caller")
+    section = re.search(r"(?m)^\[editor\]\r?$", text)
+    value = "\nimport/use_multiple_threads=false\n"
+    patched = text[:section.end()] + value + text[section.end():] if section else text + "\n[editor]" + value
     try:
+        settings.write_bytes(patched.encode("utf-8"))
         yield
     finally:
-        override.unlink()
+        settings.write_bytes(original)
 
 
 def run_phase(name: str, command: list[str], environment: dict, timeout: int, logs: Path) -> dict:
