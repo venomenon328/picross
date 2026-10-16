@@ -1,0 +1,120 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1; Repositoryablage nach §6 einschließlich Commit/Push und Draft-PR. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen. Noch keine Abschlussbild-, Motiv- oder Endfreigabe.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "blumen-pflanzen",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "b7e2d435996ba10c990ca1f5cc1d440476023b8297994dd1bfea977af9c1fbfd"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren: Mensch wählt A-r01, B-r01 oder C-r01 und gibt die konkrete unveränderte Abschlussbilddatei ausdrücklich frei; danach daraus Motivvorlage ableiten.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-a358a1bf1b994efcbebeb55abf825789",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "bdf22e5e226a058ce47d00cea59853ec2db01a8b",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "foreground_colors": 1,
+    "height": 20,
+    "mode": "mono",
+    "user_color_count": null,
+    "width": 15
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "bytes": 1936816,
+      "dimensions_px": [
+        1086,
+        1448
+      ],
+      "file": "reveals/A-r01.png",
+      "id": "A-r01",
+      "image_mode": "RGB",
+      "invariants": "Hoher Stamm, zwei aufwärts gebogene Arme in verschiedener Höhe, offene Zwischenräume; ohne Topf.",
+      "sha256": "0738b9ebabcbe20c3403f0654440ff08e1aed1a1caf626719613378d326d93f1",
+      "title": "Armkaktus"
+    },
+    {
+      "approval": null,
+      "bytes": 2018784,
+      "dimensions_px": [
+        1086,
+        1448
+      ],
+      "file": "reveals/B-r01.png",
+      "id": "B-r01",
+      "image_mode": "RGB",
+      "invariants": "Vier breite ovale Glieder, asymmetrisch verzweigte Form, kleine sandige Standfläche.",
+      "sha256": "127b896361e5509c98a6233c0de8064e88d318f325f7e064c6d8e72a9c7ffb51",
+      "title": "Feigenkaktus"
+    },
+    {
+      "approval": null,
+      "bytes": 1901767,
+      "dimensions_px": [
+        1086,
+        1448
+      ],
+      "file": "reveals/C-r01.png",
+      "id": "C-r01",
+      "image_mode": "RGB",
+      "invariants": "Hohe gerippte Säule, niedriger linker Seitentrieb, breiter Terrakottatopf mit Rand.",
+      "sha256": "f9c2c3be924ea7e6fa574bf2b06a23237fcaa002afcd93dc4fc254b9acae8d57",
+      "title": "Säulenkaktus im Topf"
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
