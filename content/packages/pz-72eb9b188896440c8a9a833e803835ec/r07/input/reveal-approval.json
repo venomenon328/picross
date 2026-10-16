@@ -1,0 +1,17 @@
+{
+  "actor": "Tobias Schröder (Nutzer)",
+  "evidence": "user-reveal-approval.md",
+  "file": "B-r01.png",
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "revision": "B-r01",
+  "sha256": "38ae36da53346a92ef6d9bccb1146ccf8a152593594405ce28d0a7d1d40322ea",
+  "source_package": {
+    "commit": "15e54e3e35794edd1d34b18fbdaab17ccea780a3",
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r01/package.zip",
+    "revision": "r01",
+    "sha256": "75aaf2f7d3df861abda3ad344fc502c19a628d28dc1b85478e5adf8c4b3f3553"
+  },
+  "statement": "Ich gebe das Abschlussbild B-r01 frei.",
+  "timestamp_utc": "2026-10-16T13:46:06Z",
+  "type": "human_reveal_approval"
+}
