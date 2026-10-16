@@ -1,0 +1,126 @@
+{
+  "blockers": [
+    "Separate human final approval and exactly bound ZA-1-v2 fixed-mono authorization pending."
+  ],
+  "candidate_revision": "C-r03",
+  "category_id": "saeuger",
+  "changes_from_C_r02": [
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 10,
+      "row": 2
+    },
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 38,
+      "row": 4
+    }
+  ],
+  "composition": "head_only",
+  "difficulty": {
+    "assessment_type": "editorial_estimate",
+    "bottleneck": "Alle66 Linien vor allen252 Proofschritten unabhängig auf Fortschritt geprüft. Vor Aufräumen bei<=21 offenen Zellen mindestens3 produktive Linien, keine numerische Engstelle nach <=2-Kriterium. Kein validierter schwächerer Technikklassifikator.",
+    "calibration": "Keine menschliche Kalibrierung; Probespiel optional, nicht durchgeführt. Neue Schätzung für neue Hinweise.",
+    "confidence": "low",
+    "effort": {
+      "cells": 1040,
+      "empty": 590,
+      "filled": 450,
+      "height": 26,
+      "max_column_clues": 7,
+      "max_row_clues": 5,
+      "proof_steps": 252,
+      "width": 40
+    },
+    "evidence": "audit/C-r03-difficulty-checkpoints.json",
+    "level": "L2",
+    "logic_hash": "e21609d1e7b4408c3010e1cdd64a27a7ac924be4a2ccc891af110b30bd3613ef",
+    "method": "picross-difficulty-0.1",
+    "plausible_range": [
+      "L1",
+      "L4"
+    ],
+    "rule_families": {
+      "R0": "Initial leere Spalte40, später abgeschlossene Blöcke und Restleerfelder. Kein validierter R0-only-Fixpunkt.",
+      "R1": "Geschätzt dominant: Überlappung/Verlängerung breiter Kopfblöcke und der geschlossenen Schnauzenkontur, Weitergabe in Horn- und Ohrlinien.",
+      "R2": "Zuordnung mehrerer kurzer Horn-/Augen-/Nasenblöcke kann kombinierte Anker benötigen; R0+R1-Suffizienz und R2-Notwendigkeit ungeprüft.",
+      "R3": "Vollständige allgemeine Linienunterstützung zertifiziert; keine R3-Notwendigkeit aus Profilname oder Schritten abgeleitet. Konservativer Bereich bisL4."
+    },
+    "samples": "audit/C-r03-difficulty-samples.json",
+    "time_estimate": null
+  },
+  "final_editorial_approval": null,
+  "fixed_edit_record": {
+    "member": "plans/C-r03.json",
+    "sha256": "a35932f6d8daa1d5b3defc6235e1aaa054e3a976759c720131772bf3a3c7d6e4"
+  },
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/handoff.json",
+    "sha256": "8f848eafbac184351737a5c29d6f383f02509a3122cd4984fe6a285c0d9b69e8"
+  },
+  "height": 26,
+  "integration": null,
+  "inventory_sha256": "f68250bbe81b820a1d73ea64340c4bca08db631c27b2b60d1d3101017740ba24",
+  "mode": "mono",
+  "motif": {
+    "approval": "approvals/motif.json",
+    "derived_from_reveal_sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280",
+    "member": "motif/MA-r03.png",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/package.zip",
+    "revision": "MA-r03",
+    "sha256": "e3809bbc30017c59bfae6420e330df7853b9c2c7e8aa31cbc2c7cdaf99588c69"
+  },
+  "motif_name": "Carabao – Kopf",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "package": {
+    "bytes": 7654555,
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/package.zip",
+    "sha256": "5ff3d5c0c447cf53dbb2b7e7a723c75926a564e06bbeecfcdf551e39ea09ddfc"
+  },
+  "parameter_corridor": {
+    "member": "parameterkorridor.json",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/package.zip",
+    "sha256": "425f7a4f6d6a926f7fffba3c56c5a091cb779df2b616a02cbf4aa074439a9867"
+  },
+  "preview": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/abnahme.png",
+    "sha256": "6b984d8174cc435788f2523da51190b08a6accdad60d071b14a8c98243ef79c7"
+  },
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "repair_evidence": {
+    "bundle": "repairs/round-2",
+    "replay": "audit/round-2-replay.json"
+  },
+  "repo_commit": "74b5827894ab67683d9ce7c8963a0e73ee8015fc",
+  "reveal": {
+    "approval": "approvals/reveal.json",
+    "member": "reveal/B-r02.png",
+    "package": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/package.zip",
+    "revision": "B-r02",
+    "sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280"
+  },
+  "revision": "r11",
+  "selection": {
+    "bundle": "candidates/C-r03/import",
+    "certification": null,
+    "logic_hash": "e21609d1e7b4408c3010e1cdd64a27a7ac924be4a2ccc891af110b30bd3613ef",
+    "matrix_hash": "6a48e53854d39c03df8510b44316bd086fc7b8c7649bb560a1de52ee3d2e3c32",
+    "proof": "candidates/C-r03/import/contour-proof.json",
+    "source_type": "import",
+    "variant": "contour",
+    "verification": "audit/C-r03-final.json"
+  },
+  "state": "blocked",
+  "target_adapter_inspection": null,
+  "updated_at_utc": "2026-10-16T23:28:08.222783+00:00",
+  "user_pins_preserved": true,
+  "validation": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r11/validation.json",
+    "sha256": "21fc4447e4a42eab3a9de8d6e923e4dbc683260f0253279bed1afb6b58ea323b"
+  },
+  "width": 40
+}
