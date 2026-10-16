@@ -225,9 +225,9 @@ func perform(action: Dictionary) -> void:
 			var point: Vector2 = board.get_global_transform() * local
 			var pitch: float = float(board.clue_layout(axis, index).slot_extent)
 			var delta: Vector2 = Vector2(pitch * float(action.slots), 0) if axis == "row" else Vector2(0, pitch * float(action.slots))
-			press(point, MOUSE_BUTTON_MIDDLE)
-			motion(point + delta, MOUSE_BUTTON_MIDDLE)
-			release(point + delta, MOUSE_BUTTON_MIDDLE)
+			press(point, MOUSE_BUTTON_LEFT)
+			motion(point + delta, MOUSE_BUTTON_LEFT)
+			release(point + delta, MOUSE_BUTTON_LEFT)
 		"undo":
 			ui_command(app.undo_button)
 		"redo":

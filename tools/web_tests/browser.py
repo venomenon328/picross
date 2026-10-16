@@ -222,13 +222,13 @@ def exercise(pw, name, root, update, url, output, evidence):
             position = [area[0]+area[2]/2, origin[1]+(index+.5)*step] if axis=='row' else [origin[0]+(index+.5)*step,area[1]+area[3]/2]
             start = point(page,position)
             old_steps = data[axis+'_steps']
-            page.mouse.move(*start); page.mouse.down(button='middle')
+            page.mouse.move(*start); page.mouse.down(button='left')
             page.mouse.move(start[0]+(180 if axis=='row' else 0),start[1]+(180 if axis=='column' else 0),steps=8)
-            page.mouse.up(button='middle'); page.wait_for_timeout(250)
+            page.mouse.up(button='left'); page.wait_for_timeout(250)
             assert state(page)['cells'] == before
             assert state(page)[axis+'_steps'] != old_steps, (axis,old_steps,state(page)[axis+'_steps'])
             page.screenshot(path=str(output/f'{name}-colour-{axis}-clues.png'))
-        passed('middle mouse moves long row/column clue windows and preserves cells')
+        passed('left mouse moves long row/column clue windows and preserves cells')
         game_viewport(page,1920,1080)
         control(page,name='nav-album'); control(page,text='Blatt 03')
         draw(page,(0,2),(4,2)); wait(page,'picrossProbe.ending && picrossProbe.completed')

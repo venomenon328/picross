@@ -51,24 +51,31 @@ class Cursor extends Control:
 		var began: int = Time.get_ticks_usec()
 		owner_marks.stats.cursor_draws += 1
 		var b: Control = owner_marks.board
-		var active: Vector2i = b.session.gesture.endpoint if b.session.gesture.active else b.hover
+		var active: Vector2i = b.cursor_context()
 		var grid: Rect2 = b.view.visible_bounds()
 		if not b.book_layout:
 			draw_style_box(b._paper_style(),Rect2(Vector2.ZERO,b.size))
 			draw_rect(grid,b.PAPER)
-		if active.x >= 0 and active.y >= 0 and active.x < b.view.dimensions.x and active.y < b.view.dimensions.y:
+		var has_row: bool = active.y >= 0 and active.y < b.view.dimensions.y
+		var has_column: bool = active.x >= 0 and active.x < b.view.dimensions.x
+		if has_row or has_column:
 			var box: Rect2 = b.view.cell_rect(active)
-			var near_grid: Vector2 = grid.position
 			# Same clue bands as Board; below the cached clue glyphs.
-			if b.hover.y >= 0:
-				draw_rect(Rect2(4, box.position.y, near_grid.x-8, box.size.y), Color("d8ddcc"))
-			if b.hover.x >= 0:
-				draw_rect(Rect2(box.position.x, 4, box.size.x, near_grid.y-8), Color("d8ddcc"))
-			var row: Rect2 = Rect2(grid.position.x, box.position.y, grid.size.x, box.size.y).intersection(grid)
-			var column: Rect2 = Rect2(box.position.x, grid.position.y, box.size.x, grid.size.y).intersection(grid)
-			draw_rect(row, Color("e8e9d9"))
-			draw_rect(Rect2(column.position, Vector2(column.size.x, maxf(0, row.position.y-column.position.y))), Color("e8e9d9"))
-			draw_rect(Rect2(Vector2(column.position.x, row.end.y), Vector2(column.size.x, maxf(0, column.end.y-row.end.y))), Color("e8e9d9"))
+			if has_row:
+				var hint: Rect2 = b.row_clue_area().intersection(Rect2(b.row_clue_area().position.x, box.position.y, b.row_clue_area().size.x, box.size.y))
+				if hint.has_area(): draw_rect(hint, Color("d8ddcc"))
+			if has_column:
+				var hint: Rect2 = b.column_clue_area().intersection(Rect2(box.position.x, b.column_clue_area().position.y, box.size.x, b.column_clue_area().size.y))
+				if hint.has_area(): draw_rect(hint, Color("d8ddcc"))
+			var row: Rect2 = Rect2(grid.position.x, box.position.y, grid.size.x, box.size.y).intersection(grid) if has_row else Rect2()
+			var column: Rect2 = Rect2(box.position.x, grid.position.y, box.size.x, grid.size.y).intersection(grid) if has_column else Rect2()
+			if row.has_area(): draw_rect(row, Color("e8e9d9"))
+			if column.has_area():
+				if row.has_area():
+					draw_rect(Rect2(column.position, Vector2(column.size.x, maxf(0, row.position.y-column.position.y))), Color("e8e9d9"))
+					draw_rect(Rect2(Vector2(column.position.x, row.end.y), Vector2(column.size.x, maxf(0, column.end.y-row.end.y))), Color("e8e9d9"))
+				else:
+					draw_rect(column, Color("e8e9d9"))
 		owner_marks.record_time(began)
 
 func _ready() -> void:
@@ -162,7 +169,7 @@ func sync() -> void:
 
 func sync_cursor() -> void:
 	if cursor_layer == null or board.session == null: return
-	var state: Array = [board.hover, board.session.gesture.active, board.session.gesture.endpoint, board.view.origin, board.view.viewport, board.view.cell_size, board.size, board.book_layout]
+	var state: Array = [board.session.get_instance_id(), board.cursor_context(), board.view.origin, board.view.viewport, board.view.cell_size, board.size, board.book_layout, board.ui_scale, board.row_clue_area(), board.column_clue_area()]
 	if state != cursor_state:
 		cursor_state = state
 		cursor_layer.queue_redraw()

@@ -160,13 +160,32 @@ def capture_current(project, workspace, output, engine, render_command, environm
         environment.pop("HS186_OUTPUT", None)
     hs = hs186_verify.verify(hs_dir, hf_dir)
     selected += list(hs_dir.glob("*.json")) + list(hs_dir.glob("*.png"))
+    hn_dir = output / "hn192"
+    hn_dir.mkdir()
+    environment["HN192_OUTPUT"] = str(hn_dir)
+    try:
+        phase("hn192-native-input-cursor", ["res://tests/hn192_probe.gd" if part == "res://tests/capture.gd" else part
+                                          for part in render_command], "HN192_NATIVE_OK")
+    finally:
+        environment.pop("HN192_OUTPUT", None)
+    hn = json.loads((hn_dir / "hn-native.json").read_text(encoding="utf-8"))
+    expected = {(width, axis) for width in (1280,1920,2560)
+                for axis in ("row", "column", "grid", "complete-row", "drag-row")}
+    pixel_records = [r for r in hn["records"] if r["kind"] == "pixels"]
+    actual = {(r["client"][0], r["file"].split("-",3)[3].removesuffix(".png"))
+              for r in pixel_records}
+    if (hn["failures"] or hn["checks"] < 1000 or actual != expected
+            or len(pixel_records) != len(expected)
+            or {r["file"] for r in pixel_records} != {p.name for p in hn_dir.glob("*.png")}):
+        raise toolchain.PreflightError("Missing/failed HN native routes and original pixels")
+    selected += list(hn_dir.glob("*.json")) + list(hn_dir.glob("*.png"))
     # Keep full matrix telemetry without displacing mandatory native pictures
     # or increasing the shared player/evidence budget.
     packed = {p: compress_geometry_report(p) for p in
               (renders / "vs2-matrix.json", focused_dir / "v1-focused.json")}
     selected = [packed.get(p, p) for p in selected]
     return dict(records=len(report["records"]), failures=report["failures"],
-                rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3, hc92=hc, hf149=hf, hs186=hs,
+                rendered=len(report["pictures"]), v1=v1, v2=v2, v3=v3, hc92=hc, hf149=hf, hs186=hs, hn192=hn,
                 historical_comparison="not run; CI policy #63",
                 legacy_reader="separate downloaded Windows old-writer/new-reader probe"), selected
 

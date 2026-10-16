@@ -334,7 +334,7 @@ Animationsfortschritt. Zellanimationen lassen sich abschalten; der endgültige
 Zustand erscheint dann unmittelbar. Einzelheiten und gezielte Prüffälle
 stehen in [UI_DRAWING_STYLE.md](UI_DRAWING_STYLE.md). ZS2-E2 ergänzt den Abbruch
 durch Gegentasten-Down auch außerhalb des Boards: beide Tasten loslassen, dann
-frisch starten; MMB-Hinweisnavigation bleibt erhalten.
+frisch starten; Linksdrag der Hinweise folgt [HN](CLUE_INTERACTION.md); MMB navigiert keine Hinweise mehr.
 
 Für P1 zeigt der [ZR-Zähler](CELL_DRAG.md) während linker/rechter Zellgesten ab Länge 2
 die gesamte geometrische aktuelle Strichlänge inklusive Start/Ende, Vorbelegungen und

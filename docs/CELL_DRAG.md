@@ -37,7 +37,7 @@ steht in #143, nicht in historischen offenen Gate-Texten älterer Lieferberichte
 
 Nur aktive linke und rechte Zellgesten mit geometrischer Länge mindestens 2 zeigen
 eine Zahl. Die vorhandenen Setz-, Umwandlungs-, Rücknahme- und Radiermodi bleiben
-Zellgesten; Hover und MMB-Hinweisnavigation zeigen keinen Zähler. Die Länge umfasst
+Zellgesten; Hover und Links-Hinweisnavigation gemäß [HN](CLUE_INTERACTION.md) zeigen keinen Zähler. Die Länge umfasst
 Start- und Endfeld sowie alle Zwischenfelder des aktuellen geraden Abschnitts.
 Vorbelegungen, geschützte Felder und ausgelassene Mausabtastpositionen zählen mit.
 Die Anzahl wirksamer Änderungen ist ausdrücklich nicht die Zählgrundlage.
