@@ -32,7 +32,7 @@
     "game/ui/scribble.gd": "74af9c0a6140644ae456a7f6d530dcb6c4ccb5fbc490af24615c8f3b796efbee",
     "game/project.godot": "cd1a917360eddb036d317a29bec78b8cf54eff92b6eb5eb2f8cf7bc1b9dba8bc",
     "game/main.tscn": "2607c9dcc378f0a6c9f2ed195527adadc2f7d52e50988847071b40770e48ba0c",
-    "game/tests/kat2_probe.gd": "5f07b0144822b0b9e1f1ce19e2b125be53ab13e10cde4bc949fc7c050fa128b1",
+    "game/tests/kat2_probe.gd": "52364776e655ef571f8bfe252ca2bd5fb134f74338355bfecdf6131abed7a224",
     "tools/product_fixtures.py": "212b8397e0098f8b1f82b661048b55dc5865b0e522b68bc198612fa0644d564f",
     "tools/kat2_product.py": "36d10cf0ebc3d1eeb8c3b6e4865da0c38edac40b1a0acdf2ba73af4d50fb7e94"
   },
