@@ -93,6 +93,7 @@ func _layout() -> void:
 
 func cancel_gesture() -> void:
 	var was_clue: bool = clue_press_owned or pan_button != MOUSE_BUTTON_NONE
+	var was_cell: bool = session != null and session.gesture.active
 	if was_clue:
 		cell_buttons_blocked = true
 	clue_press_owned = false
@@ -103,7 +104,7 @@ func cancel_gesture() -> void:
 	pan_target = ""
 	pan_line_index = -1
 	pan_drag_distance = 0.0
-	if was_clue and clue_pointer_known and is_visible_in_tree():
+	if (was_clue or was_cell) and clue_pointer_known and is_visible_in_tree():
 		update_pointer_hover(clue_pointer_global - global_position)
 	sync_gesture_counter()
 	queue_redraw()
@@ -279,6 +280,9 @@ func _input(event: InputEvent) -> void:
 		cancel_gesture()
 		get_viewport().set_input_as_handled()
 	var local: InputEvent = make_input_local(event)
+	if local is InputEventMouse and session.gesture.active:
+		clue_pointer_global = global_position + local.position
+		clue_pointer_known = true
 	if pan_button != MOUSE_BUTTON_NONE or clue_press_owned:
 		# Own the whole mouse route, including releases over another Control.
 		if local is InputEventMouse:
@@ -495,6 +499,8 @@ func pointer_press(point: Vector2, button: MouseButton) -> void:
 		return
 	var target: int = 0 if button == MOUSE_BUTTON_RIGHT else (-1 if eraser else active_color)
 	if session.gesture.begin(session.player, view.hit(point), target):
+		clue_pointer_global = global_position + point
+		clue_pointer_known = true
 		held_button = button
 		hover = session.gesture.endpoint
 		sync_gesture_counter(point)
@@ -503,6 +509,8 @@ func pointer_press(point: Vector2, button: MouseButton) -> void:
 
 func update_gesture_endpoint(point: Vector2) -> void:
 	if session.gesture.active:
+		clue_pointer_global = global_position + point
+		clue_pointer_known = true
 		session.gesture.move(view.unbounded_cell(point), view.hit(point) == session.gesture.start)
 		sync_gesture_counter(point)
 
@@ -527,6 +535,8 @@ func pointer_release(point: Vector2, over_board: bool) -> void:
 func finish_gesture() -> void:
 	var changed: bool = session.finish()
 	held_button = MOUSE_BUTTON_NONE
+	if clue_pointer_known:
+		update_pointer_hover(clue_pointer_global - global_position)
 	sync_gesture_counter()
 	if changed:
 		committed.emit()
