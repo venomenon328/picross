@@ -1,0 +1,108 @@
+{
+  "blockers": [],
+  "category_id": "saeuger",
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "bottleneck": "R4-Notwendigkeit aus zwei unabhängig geprüften Profilen; keine zusätzliche R0-R3-Engstellenklassifikation beansprucht.",
+    "calibration": "Keine menschliche Kalibrierung; medium bezieht sich auf den überprüften R4-Nachweis.",
+    "confidence": "medium",
+    "effort": {
+      "baseline_steps": 213,
+      "cells": 988,
+      "empty": 640,
+      "filled": 348,
+      "height": 38,
+      "human_active_minutes": null,
+      "informative_pair_steps": 5,
+      "max_column_clues": 13,
+      "max_row_clues": 11,
+      "paired_proof_steps": 260,
+      "solve_time_minutes": null,
+      "width": 26
+    },
+    "evidence": "paired/26x38-detail-used3c/area-assessment.json",
+    "instrumentation": "R4 necessity only; R0-R3 not classified; no human calibration",
+    "level": "L5",
+    "logic_hash": "3c3a8581fd36c409126854def9ae543a9cb09cff7c96fc0be644b2a58821b818",
+    "logical_demand": "linienübergreifend / besonders hoher logischer Anspruch",
+    "method": "picross-difficulty-0.2",
+    "pair_steps": "checks/paired-steps.json",
+    "plausible_range": [
+      "L5",
+      "L5"
+    ],
+    "playtest": "not_performed; optional",
+    "profile_hash": "9dfe08bdb9738dc64d778149490cc3dd43815aee68900291d2e84a3f9ef55727",
+    "r4_required": true,
+    "rule_families": {
+      "R0": "Leere Außenzeile38 und Außenspalte26 erlauben direkte Leerbelegung; keine erschöpfende R0-Klassifikation.",
+      "R1": "Breite Körper-/Astflächen ermöglichen Überlappungen/Verlängerungen; keine separate R1-Notwendigkeitsanalyse.",
+      "R2": "Mehrere Farbblöcke an Gesicht, Oberschenkel und Ast benötigen kombinierte Zuordnung; unter R0-R3 nicht instrumentiert klassifiziert.",
+      "R3": "Vollständige Linienbaseline ist unabhängig als stalled bestätigt,121 Zellen bleiben offen; auch allgemeine Linienunterstützung reicht für diesen Kandidaten nicht.",
+      "R4": "Separat unabhängig verifizierte Linienbaseline stalled und vollständiger paired-lines-color-Proof derselben Logik belegen notwendige Paarlinienlogik.5 informative Zeilenpaarschritte:25/26,25/27,25/28,25/29,25/30 (1-basiert), danach Linienfortsetzung bis zur exakten Endmatrix."
+    },
+    "time_estimate": null
+  },
+  "editorial_review_request": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r05/ENDABNAHME.md",
+    "sha256": "06e5802eccd3e6465c89307eb465ade8170207c5009487de5e42b4dfecad46de"
+  },
+  "final_editorial_approval": null,
+  "foreground_colors": 3,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r05/handoff.json",
+    "sha256": "be947d0ca776e79d2f9840a3e31ca37824a65281aa8f3076ffcac91235da3698"
+  },
+  "height": 38,
+  "inspection": {
+    "blockers": [
+      "final_editorial: missing bound human final approval"
+    ],
+    "editorial_approved": false,
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r05/inspection.json",
+    "sha256": "8fade3c53ac8f2305915caf93b70ba14f755a292108ce31d6717dcd7a6dc9737",
+    "technical": true
+  },
+  "integration": null,
+  "inventory_sha256": "ecf958759cef069eeab6ad0d235696eade60dd886ae617a3d2e6d0a98cc3145f",
+  "mode": "color",
+  "motif_name": "Koboldmaki",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "package": {
+    "bytes": 22868830,
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r05/package.zip",
+    "sha256": "ded89f5cbcb3d35c53174c22aede6a9b88e1e598d35da97348894ce05eb2d8b9"
+  },
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "raster_grid": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r05/final-raster-grid.png",
+    "sha256": "2dea141a9cfb0a3cc30e4a29bcb9e0c0c2ba934269b50bc99a3e908ae8025086"
+  },
+  "repo_commit": "8dfe9665acf877e84f36ca8e09393eb1113fbd8a",
+  "requested_foreground_colors": null,
+  "review_preview": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/r05/review.png",
+    "sha256": "39a68eae655f8249d6650b159ec160dcff43536259434c5c8b4983136ec91def"
+  },
+  "revision": "r05",
+  "selected_candidate": {
+    "bundle": "paired/26x38-detail-used3c",
+    "certification": {
+      "max_pair_records": 250000,
+      "max_pair_work": 20000000,
+      "profile": "paired-lines-color"
+    },
+    "logic_hash": "3c3a8581fd36c409126854def9ae543a9cb09cff7c96fc0be644b2a58821b818",
+    "matrix_hash": "a7356562a4155b41f1766fce1e1d23e9c76d5b9e1385c52d4fb229fcdf68edff",
+    "proof": "paired/26x38-detail-used3c/area-proof.json",
+    "source_type": "import",
+    "variant": "area",
+    "verification": "checks/final-assess-3c.json"
+  },
+  "source_package_sha256": "d1af78f1dc88d91588f554b315f1af12484c44a18bd802b61d71270f903d240d",
+  "source_revision": "r04",
+  "state": "content_ready",
+  "updated_at_utc": "2026-10-16T16:23:19.379335+00:00",
+  "width": 26
+}
