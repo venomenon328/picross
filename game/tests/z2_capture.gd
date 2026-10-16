@@ -197,18 +197,21 @@ func detail_shots() -> void:
 	var point: Vector2 = Vector2(area.end.x-10,app.board.view.cell_rect(Vector2i(0,41)).get_center().y)
 	var press: InputEventMouseButton = InputEventMouseButton.new()
 	press.position = app.board.global_position+point
-	press.button_index = MOUSE_BUTTON_MIDDLE
+	press.button_index = MOUSE_BUTTON_LEFT
 	press.pressed = true
 	surface.push_input(press,true)
 	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
 	motion.position = press.position+Vector2(14.7,0)
 	motion.relative = Vector2(14.7,0)
-	motion.button_mask = MOUSE_BUTTON_MASK_MIDDLE
+	motion.button_mask = MOUSE_BUTTON_MASK_LEFT
 	surface.push_input(motion,true)
 	if app.board.pan_target != "row" or not is_equal_approx(app.board.pan_drag_distance,14.7):
 		record_failure("c1-drag", "Z2 C1 capture did not enter a continuous clue drag")
 	await shot("c1-drag")
 	app.board.cancel_gesture()
+	press.pressed = false
+	press.button_mask = 0
+	surface.push_input(press,true)
 	app.board.clear_pointer_hover()
 	surface.size = Vector2i(1920,1080)
 	app.size = Vector2(surface.size)

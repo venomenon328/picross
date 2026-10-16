@@ -139,9 +139,7 @@ func _draw() -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	if style != 0 and session != null and not session.completed and event is InputEventMouseMotion and not session.gesture.active and pan_button == MOUSE_BUTTON_NONE:
-		hover = view.hit(event.position)
-		if hover.x >= 0: pointed.emit(hover)
-		update_clue_hover(event.position)
+		update_pointer_hover(event.position)
 		if marks != null: marks.sync_cursor()
 		return
 	super._gui_input(event)
@@ -156,6 +154,8 @@ func set_clue_hover(axis: String, index: int) -> void:
 
 func clear_pointer_hover() -> void:
 	clue_pointer_known = false
+	clue_context_axis = ""
+	clue_context_index = -1
 	if style == 0:
 		super.clear_pointer_hover()
 		return

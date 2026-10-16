@@ -89,7 +89,7 @@ static func run(t: SceneTree) -> void:
 		elif gesture == "row" or gesture == "column":
 			app.board.navigate_to(Vector2(0.8,0.8))
 			point = P12.clue_point(app.board,gesture,35 if gesture == "row" else 21)
-			button = MOUSE_BUTTON_MIDDLE
+			button = MOUSE_BUTTON_LEFT
 		elif gesture == "mini":
 			point = app.mini.get_global_rect().get_center()
 		var history: Array = app.session.player.history.duplicate(true)

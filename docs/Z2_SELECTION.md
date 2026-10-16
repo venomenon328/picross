@@ -94,8 +94,8 @@ durch E2 akzeptierten Grundlage. Hintergrundarbeit bleibt separat.
 Nach ZS2-E2 beginnen die kurzen gerichteten Animationen ausschließlich nach dem
 atomaren Anwenden: höchstens 180 ms Startspreizung plus 210 ms je Zelle; Entfernen
 sofort/120 ms. Das aktive X schreibt ohne volle Unterzeichnung. Gegentasten-Down
-bricht die aktive Zellgeste bis zum Loslassen beider Tasten ab; MMB bleibt nach VS2
-ausschließlich Hinweisnavigation. Die Vorschau beim Ziehen bleibt statisch und
+bricht die aktive Zellgeste bis zum Loslassen beider Tasten ab; Linksdrag folgt [HN](CLUE_INTERACTION.md);
+MMB navigiert keine Hinweise mehr. Die Vorschau beim Ziehen bleibt statisch und
 heller/transparenter. VS2-E1 verändert diese Bewegungsregeln nicht.
 
 ZS1-E3 wählt Chalkboard Regular. Die damalige Studien-/ZS2-Fassung verwendet
