@@ -1,4 +1,0 @@
-Faithful abstraction: left-facing climbing great spotted woodpecker beside right-hand brown trunk. Preserve head pattern, shoulder patch, red nape/undertail, beak, two grasping feet and stiff tail; simplify details, do not add motifs. See brief.md and parameterkorridor.json.
-
-Working mode: faithful
-Motif and gameplay review: open
