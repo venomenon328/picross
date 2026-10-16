@@ -370,8 +370,9 @@ mindestens eine kompatible vollständige Linienbelegung gibt, sein Block in alle
 solchen Belegungen dasselbe Intervall hat und dieses bereits vollständig in der
 richtigen Farbe gesetzt ist. Eindeutig erzwungene, aber noch unbekannte Zellen genügen
 nicht. GP-02/#48 unterscheidet jetzt drei Anzeigezustände: normal (offen),
-leicht abgeschwächt (eindeutig vollständig gesetzt), durchgestrichen (zusätzlich
-beidseitig abgegrenzt). Ein mehrdeutiger Mittelblock bei `3 3` bleibt auch
+abgeschwächt (eindeutig vollständig gesetzt), gleich abgeschwächt plus handschriftliches
+Ganzzahl-X (zusätzlich beidseitig abgegrenzt), gemäß [HS](CLUE_STATUS.md).
+Ein mehrdeutiger Mittelblock bei `3 3` bleibt auch
 mit Rand-X normal. Existiert keine kompatible Belegung, bleiben alle Hinweise
 dieser Linie unmarkiert. Andere Linien werden unabhängig bewertet.
 
@@ -384,7 +385,7 @@ frisch abgeleitet. Die nebenwirkungsfreie Analyse verwendet begrenzte dynamische
 Programmierung statt vollständiger Enumeration. Ein Cache hält nur den letzten
 Eingang jeder Linie; reine Geometrie-/Hover-/Panänderungen starten keine neue Suche.
 
-Für das Durchstreichen muss jedes Ende unmittelbar an X, den tatsächlichen
+Für das Auskreuzen muss jedes Ende unmittelbar an X, den tatsächlichen
 Linienrand oder eine vorhandene Füllung mit anderer Farb-ID grenzen. Gemischte
 Abgrenzungen sind erlaubt; der andere Farbblock muss nicht selbst vollständig sein.
 Unbekannte Nachbarn, entfernte X und Ausschnittränder aus Zoom/Pan zählen nicht.
@@ -396,14 +397,15 @@ Die integrierte GP-03-Baseline zeichnet alle Hinweiszahlen kräftiger mit dem vo
 Plex-Sans-Variationsgewicht 600 bei bisherigem Schriftgrad. Der ZS-Folgevertrag
 öffnet gezielt die Hinweisziffern für eine native Auswahl von Form, Gewicht, optischer
 Größe und gegebenenfalls bewusst gewählten gemeinsamen Slotmaßen; bis zu dieser
-Umsetzung bleibt die Baseline der Iststand. Der gesetzte,
-noch offene Block erhält 78 % Deckkraft, die Rätselfarbe und C1-Kontur bleiben
-erkennbar. Abgegrenzte Zahlen werden durchgestrichen. Alle drei Zustände behalten
+Umsetzung blieb die Baseline der Iststand. HC verwendet inzwischen Delight Coffee.
+HS zeichnet gesetzte und abgegrenzte Zahlen mit derselben 60-%-Deckkraft;
+Rätselfarbe und C1-Kontur bleiben erkennbar. Abgegrenzte Zahlen erhalten zusätzlich
+ein handschriftliches X aus zwei 76-%-Stiftzügen über das ganze Token. Alle drei Zustände behalten
 Größe, Slot und Originalindex. Das gilt für beide Achsen, Überlauf,
 kontinuierlichen Drag und vollständigen Tooltip. `…` und `–` bleiben unverändert.
 Der Schalter „Erfüllte Hinweise markieren“ gilt sitzungsweit für alle Blätter, bleibt
 bei Album-/Blattwechsel und Reset erhalten und startet nach App-Neustart wieder an.
-Aus zeigt alle Zahlen ohne Abschwächung/Strich, erneutes Einschalten den aktuellen Stand. Schalter und
+Aus zeigt alle Zahlen ohne Abschwächung/X, erneutes Einschalten den aktuellen Stand. Schalter und
 Analyse erzeugen weder Rasteraktion noch History, `undo_used`, Save/Autosave oder
 Abschluss und verändern keine semantische Leseposition. Flags und Option gehören
 nicht zum Puzzle-Saveformat; Pflicht-Flush und Recovery bleiben unverändert.

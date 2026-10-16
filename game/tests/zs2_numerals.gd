@@ -14,4 +14,4 @@ func _draw() -> void:
 		for i: int in range(NUMBERS.size()):
 			var color: Color = cell_color(i % 4 + 1)
 			draw_clue_number(font, Vector2(118 + i * 41, y), NUMBERS[i], fs, color, status)
-	draw_string(BODY_FONT, Vector2(18, 418), "C1-Kontur, 78 % bei gesetzten Hinweisen; gleiche Größe in allen Zuständen.", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, INK)
+	draw_string(BODY_FONT, Vector2(18, 418), "HS: Zahl/C1 60 %; abgegrenzt zusätzlich X. Gleiche Größe in allen Zuständen.", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, INK)

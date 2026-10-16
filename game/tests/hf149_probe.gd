@@ -149,17 +149,53 @@ func geometry() -> void:
 							check(b.view.hit(b.view.cell_rect(cell).get_center()) == cell, "all four corners hit")
 						records.append({"kind":"slots", "axis":axis, "delta":delta, "size":[b.size.x,b.size.y], "dimensions":[dimensions.x,dimensions.y], "cell":b.view.cell_size, "ui":u, "pitch":[b.slot_pitch.x,b.slot_pitch.y], "minimum":[b.minimum_slots.x,b.minimum_slots.y], "reserve":[b.reserve_slots.x,b.reserve_slots.y], "demand":[b.max_hints.x,b.max_hints.y]})
 
+func dimensions(v: Vector2) -> Array:
+	return [v.x,v.y]
+
+func rect_values(r: Rect2) -> Array:
+	return [r.position.x,r.position.y,r.size.x,r.size.y]
+
+func hs_window_evidence(image: Image, requested: Vector2i) -> Dictionary:
+	var b: Control = app.board
+	check(image.get_size() == root.size and root.size == requested, "HS actual framebuffer equals requested client")
+	check(DisplayServer.window_get_size() == requested, "HS actual native window client equals framebuffer")
+	check(app.size == Vector2(root.size), "HS real main scene follows client resize")
+	var samples: Array = []
+	for axis: String in ["row","column"]:
+		var layout: Dictionary = b.visible_clue_layout(axis,0)
+		for unit: Dictionary in b.visual_hint_units(axis,0).units:
+			if unit.kind != "token": continue
+			var token: int = int(unit.index)
+			var entry: Dictionary = layout.entries[token]
+			var fs: int = b.clue_font_size()
+			var width: float = b.clue_font().get_string_size(entry.text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x
+			var cross: float = b.view.origin.y+b.view.cell_size/2 if axis == "row" else b.view.origin.x+b.view.cell_size/2
+			var baseline: Vector2 = Vector2(unit.center-width/2,cross+b.clue_baseline_offset(fs)) if axis == "row" else Vector2(cross-width/2,unit.center+b.clue_baseline_offset(fs))
+			var box: Rect2 = b.glyph_box(entry.text,baseline,fs)
+			check(Rect2(Vector2.ZERO,b.size).encloses(box), "HS visible original token envelope inside real board")
+			samples.append({"axis":axis,"index":token,"text":entry.text,"status":b.clue_status(axis,0,token),"identity":b.clue_identity(axis,0,token),"box":rect_values(box)})
+	return {"requested_client":dimensions(Vector2(requested)),"client":dimensions(Vector2(DisplayServer.window_get_size())),"viewport":dimensions(Vector2(root.size)),"image_size":dimensions(Vector2(image.get_size())),"app_size":dimensions(app.size),"board_rect":rect_values(Rect2(b.global_position,b.size)),"composition":rect_values(b.composition_envelope()),"cell":b.view.cell_size,"fs":b.clue_font_size(),"pitch":dimensions(b.slot_pitch),"samples":samples}
+
 func captures() -> void:
 	var b: Control = app.board
 	for config: Vector3 in [Vector3(1280,720,1.25),Vector3(1920,1080,1),Vector3(2560,1440,1.25)]:
 		root.size = Vector2i(config.x, config.y)
 		app.set_ui_scale(config.z)
 		install(fixture(50,50))
+		# Visible first blocks: CLOSED, CLOSED, FILLED, then OPEN. Both axes
+		# use genuine H1 states; no forced status painter or replacement layout.
+		for axis: String in ["row","column"]:
+			for i: int in range(3):
+				var cell: Vector2i = Vector2i(i,0) if axis == "row" else Vector2i(0,i)
+				app.session.player.cells[cell.y*50+cell.x] = app.session.definition.solution[cell.y][cell.x]
 		for zoom: int in [20,72]:
 			b.requested_cell = zoom
 			app._layout_book()
 			await process_frame
 			await process_frame
+			b.sync_clue_completion(app.session.visible_cells())
+			for axis: String in ["row","column"]:
+				b.set_clue_step(axis,0,b.clue_layout(axis,0).max_offset)
 			for axis: String in ["row", "column"]:
 				var index: int = 0
 				if b.clue_layout(axis,index).max_offset == 0:
@@ -168,10 +204,6 @@ func captures() -> void:
 					check(b.clue_hover_axis.is_empty(), "complete native line has no overlay or marker")
 					records.append({"kind":"complete", "client":[root.size.x,root.size.y], "ui":config.z, "zoom":zoom, "axis":axis})
 					continue
-				for i: int in range(6):
-					var cell: Vector2i = Vector2i(i,0) if axis == "row" else Vector2i(0,i)
-					app.session.player.cells[cell.y*50+cell.x] = app.session.definition.solution[cell.y][cell.x]
-				b.sync_clue_completion(app.session.visible_cells())
 				var statuses: Array = b.completion_states(axis,index)
 				check(statuses.has(0) and statuses.has(1) and statuses.has(2), "all three actual states in overlay")
 				var source: Vector2 = Vector2(b.row_clue_area().get_center().x,b.view.origin.y+b.view.cell_size/2) if axis == "row" else Vector2(b.view.origin.x+b.view.cell_size/2,b.column_clue_area().get_center().y)
@@ -188,6 +220,7 @@ func captures() -> void:
 					check(not box.intersects(g.title_box) and box.position.y >= g.title_box.end.y+9*config.z, "measured heading/number gap")
 					check(Rect2(Vector2.ONE*g.padding,g.rect.size-Vector2.ONE*2*g.padding).grow(0.01).encloses(box), "all ink/contour/status inside safe padding")
 				var image: Image = root.get_texture().get_image()
+				var hs_window: Dictionary = hs_window_evidence(image,Vector2i(config.x,config.y))
 				var name: String = "hf-%d-%d-%s-z%d" % [config.x,roundi(config.z*100),axis,zoom]
 				var global_box: Rect2 = Rect2(b.global_position+g.rect.position,g.rect.size).grow(3)
 				image.get_region(Rect2i(global_box)).save_png(output.path_join(name+".png"))
@@ -195,7 +228,7 @@ func captures() -> void:
 				var entries: Array = b.tooltip_entries(axis,index)
 				var token_boxes: Array = []
 				for box: Rect2 in g.boxes: token_boxes.append([box.position.x,box.position.y,box.size.x,box.size.y])
-				records.append({"kind":"overlay", "file":name+".png", "client":[root.size.x,root.size.y], "ui":config.z, "zoom":zoom, "axis":axis, "rows":g.rows, "font":b.clue_font().get_font_name(), "heading":b.ClueOverlay.title_font().get_font_name(), "fs":g.font_size, "title_fs":g.title_size, "rect":[g.rect.position.x,g.rect.position.y,g.rect.size.x,g.rect.size.y], "title_box":[g.title_box.position.x,g.title_box.position.y,g.title_box.size.x,g.title_box.size.y], "boxes":token_boxes, "tokens":entries.map(func(e:Dictionary)->String:return e.text), "statuses":statuses})
+				records.append({"kind":"overlay", "file":name+".png", "scene_file":name+"-scene.png" if zoom == 72 else "", "hs_window":hs_window, "client":[root.size.x,root.size.y], "ui":config.z, "zoom":zoom, "axis":axis, "rows":g.rows, "font":b.clue_font().get_font_name(), "heading":b.ClueOverlay.title_font().get_font_name(), "fs":g.font_size, "title_fs":g.title_size, "rect":[g.rect.position.x,g.rect.position.y,g.rect.size.x,g.rect.size.y], "title_box":[g.title_box.position.x,g.title_box.position.y,g.title_box.size.x,g.title_box.size.y], "boxes":token_boxes, "tokens":entries.map(func(e:Dictionary)->String:return e.text), "statuses":statuses})
 				var before: int = app.session.player.cursor
 				var click: InputEventMouseButton = InputEventMouseButton.new()
 				click.position = g.rect.get_center()
