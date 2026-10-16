@@ -33,8 +33,10 @@ def main():
     repo = "repos/venomenon328/picross"
     info = json.loads(gh("api", f"{repo}/actions/runs/{args.run}"))
     if info["head_sha"] != args.head: raise ValueError("Run/source mismatch")
-    jobs = json.loads(gh("api", f"{repo}/actions/runs/{args.run}/jobs"))["jobs"]
-    if next(j for j in jobs if j["name"] == "product / product")["conclusion"] != "success":
+    # A web-only retry omits the already successful product job from filter=latest.
+    jobs = json.loads(gh("api", f"{repo}/actions/runs/{args.run}/jobs?filter=all&per_page=100"))["jobs"]
+    product_job = max((j for j in jobs if j["name"] == "product / product"), key=lambda j: j["id"])
+    if product_job["conclusion"] != "success":
         raise ValueError("Product run has not succeeded")
     artifacts = json.loads(gh("api", f"{repo}/actions/runs/{args.run}/artifacts"))["artifacts"]
     bindings = []
@@ -83,7 +85,8 @@ def main():
         product.require_clean_output(result, "EA_PACK_OK")
         phases.append({k:v for k,v in result.items() if k != "output"})
     binding = dict(head=args.head, base=report["base_commit"], checkout=report["tested_checkout_commit"], run=args.run,
-        platform=platform.platform(), artifacts=bindings, inner_zip_sha256=tc.sha256_file(inner), export_files=report["export_files"],
+        platform=platform.platform(), product_job_id=product_job["id"], product_run_attempt=report["github_run_attempt"],
+        artifacts=bindings, inner_zip_sha256=tc.sha256_file(inner), export_files=report["export_files"],
         verified_technical_files=len(technical["selected_evidence"]["files"]), phases=phases, native_window=native_window,
         native_pck=[json.loads(p.read_text(encoding="utf-8")) for p in sorted(native.glob("*.json"))],
         probe_sha256=tc.sha256_file(script), engine_sha256=tc.sha256_file(args.engine),
