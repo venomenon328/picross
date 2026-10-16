@@ -1,18 +1,17 @@
 # HC · aktive Hinweis-Typografie (#92)
 
-## Freigegebene Fortschreibung HS / #186
+## Fortschreibung HS / #186
 
 Bei Hinweisarbeit zusätzlich [Hinweisstatus HS](CLUE_STATUS.md) vollständig lesen.
-HS-D01–D04 ersetzen als freigegebener Sollvertrag die bisherige 78-%-Abschwächung
+HS-D01–D04 ersetzen die bisherige 78-%-Abschwächung
 nur des mittleren Zustands und den geraden Durchstrich: beide positiven Zustände
-bleiben gleich blass (60 % Ausgangswert), CLOSED erhält zusätzlich ein deutlicheres
+bleiben gleich blass (60 %), CLOSED erhält zusätzlich ein deutlicheres
 handschriftliches X über dem gesamten Token. Zahlfarbe, C1-Semantik und H1/GP48 bleiben.
 Zeichnung, tatsächliche Hüllen, Tooltipmessung und Web-Fit-Vorselektion werden
-zusammen angepasst. Die dort benannte gezielte Ablösung gilt auch gegenüber älteren
-P1-/Design-/Zeichensprachepassagen; deren Inline-Nachführung gehört zur Implementierung.
-**HS ist noch nicht implementiert oder visuell abgenommen.** Die folgenden
-Querstrichbeschreibungen dokumentieren bis dahin die technische Ausgangsfassung,
-nicht die Zielgeometrie des neuen X. Fonts und übrige HC-/HF-Verträge bleiben.
+zusammen angepasst. Die aktiven P1-/Design-/Zeichensprachepassagen und Anleitungen
+sind inline nachgeführt. [HS-Prüfzuordnung](HS_VERIFICATION.md) bindet die technische
+Lieferung; unabhängiges Review und Eigentümerabnahme bleiben getrennt offen.
+Fonts und übrige HC-/HF-Verträge bleiben.
 
 [Issue #92](https://github.com/venomenon328/picross/issues/92) ersetzt für aktive
 Hinweise Chalkboard und feste 24/18-Slots. Historische ZS1-/VS2-Lieferberichte
@@ -43,8 +42,11 @@ proportional, vollständig und ungeteilt.
 Für jede reale Zelle wählt `full_view_board.gd` den größten passenden ganzen
 Schriftgrad. Die Suchschranke wächst mit der Zelle (4× Zelle, oberhalb der nativen
 Glyphengröße dieser gebundenen Schrift); es gibt keine feste Fontobergrenze.
-Die Hüllen schließen Durchstrich samt tatsächlicher Dicke und mindestens
-0,5 Pixel für Antialiasing/C1 ein. Zusätzlich bleiben 2× UI-Skalierung Pixel
+Die gemeinsamen Hüllen schließen beide X-Züge mit größter Stärke, Variation,
+C1 und AA ein. Die Zugmittellinien liegen um Stift-/C1-Radius plus 0,5 Pixel
+innerhalb des nativen Zahlentokens; Polyline-AA reserviert 1 Pixel, Glyphen-AA
+mindestens 0,5 Pixel. Das nutzt den kompakten Zahlenraum ohne unnötige Kreuzreserven.
+Zusätzlich bleiben 2× UI-Skalierung Pixel
 Abstand. Zeilenhöhe und Spaltenbreite müssen in die reale Zelle passen;
 mehrstellige Spaltenhinweise können den gemeinsamen Schriftgrad begrenzen.
 
@@ -111,7 +113,7 @@ nicht. Commit, Push und Draft-PR sind beauftragt; kein Merge oder Release.
 Die nichtmodale Ergänzung zeigt ausschließlich bei echtem Überlauf die ganze Folge.
 „Vollständiger Hinweis“ verwendet die vorhandene Fraunces 600 bei 13 × UI;
 Delight-Zahlen behalten ihre vom Rasterzoom unabhängige Overlaylesegröße.
-Native Glyphenhüllen einschließlich C1/AA und Statusstrich bestimmen Innenränder,
+Dieselbe baselinebezogene Zahlen-/X-Hülle einschließlich C1/AA bestimmt Innenränder,
 Zeilenhöhen, Tokenumbruch und den sichtbaren Abstand zur kleineren Überschrift.
 Die inhaltsabhängige Box bleibt im geschützten Board-/Papierbereich. Das ruhige
 Papier ist ein Ausschnitt des vorhandenen A-Arbeitsassets; der unveränderte
@@ -131,8 +133,8 @@ keine neue Schriftgradkappung. Dies verhindert Heaperschöpfung bei kleinen
 Rastern im begrenzten WebAssembly-Speicher. Der native Pfad bleibt unverändert.
 Die Webregression öffnet und beendet dafür einen festen 5×5-Monofall.
 
-Vor teurer Rasterisierung verwirft die Websuche außerdem Kandidaten, deren
-gemessener numerischer Spaltenstrich einschließlich C1/AA bereits breiter als
-die verfügbare Hülle ist. Dieser zentrierte Strich ist stets Bestandteil von
-`envelope()` und damit eine sichere Untergrenze. Alle übrigen Kandidaten werden
-unverändert vollständig gemessen; keine Monotonieannahme oder geänderte Fitgrenze.
+HS entfernt die frühere Vorablehnung anhand der Vorschubbreite des geraden
+Querstrichs. Das X folgt der tatsächlichen Glyphenhülle; die alte Breite wäre
+keine sichere Untergrenze mehr. Web und nativ messen jeden Kandidaten vollständig
+mit derselben Hülle, ohne neue Monotonieannahme oder Schriftgradkappung.
+Die acht temporären Größenatlanten pro Font-RID bleiben erhalten.

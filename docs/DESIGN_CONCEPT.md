@@ -250,7 +250,7 @@ Strichstärken kompakter wirken. Ziffernform, Gewicht, Größe und Ausrichtung
 werden zuerst beurteilt; geänderte Slotabstände benötigen eine begründete
 Wahl im Vergleich und erhalten das gemeinsame regelmäßige Hinweisraster.
 Ein- und mehrstellige Zahlen einschließlich `1`, `11`, `17`, `40` und `100`
-müssen in normalem, abgeschwächtem und durchgestrichenem Zustand lesbar
+müssen in normalem, abgeschwächtem und zusätzlich ausgekreuztem Zustand lesbar
 bleiben. Unregelmäßige Handschrift, abgeschnittene Ziffern und verdrängte
 Überlaufmarker erfüllen das Ziel nicht.
 
@@ -372,16 +372,17 @@ durch unbeschriftete Originalfarbfelder mit formaler Auswahlmarkierung und numer
 Status/Tooltip; die Hinweisregeln bleiben erhalten. Unabhängige UI-/
 Rasterskalierung unterstützt die Lesbarkeit. H1 aus [#19](https://github.com/venomenon328/picross/issues/19)
 bleibt die exakte eindeutige Zuordnungsgrundlage. GP-02/#48 unterscheidet normale
-Zahlen, leicht abgeschwächte eindeutig gesetzte Blöcke und durchgestrichene
-zusätzlich beidseitig abgegrenzte Blöcke. X, echter Rasterrand und direkt andere
+Zahlen, abgeschwächte eindeutig gesetzte Blöcke und gleich blasse, zusätzlich
+handschriftlich ausgekreuzte beidseitig abgegrenzte Blöcke. X, echter Rasterrand und direkt andere
 Füllfarbe zählen; unbekannte Nachbarn und Viewportränder nicht. GP-03 verwendet
 auf dem integrierten Stand kräftigere Plex-Sans-Ziffern mit Gewicht 600 bei bisherigem
 Schriftgrad; ZS darf diese Darstellung nach dem engen nativen Vergleich gemäß
-Abschnitt 4.4 weiterentwickeln. Nur der
-mittlere Zustand erhält 78 % Deckkraft, einschließlich seiner C1-Kontur. Farben
+Abschnitt 4.4 weiterentwickeln. [HS](CLUE_STATUS.md) verwendet
+für beide positiven Zustände 60 % Deckkraft, einschließlich ihrer C1-Kontur.
+Das zusätzliche Ganzzahl-X besteht aus zwei stabilen Stiftzügen mit 76 % Deckkraft. Farben
 bleiben unterscheidbar; Statuswechsel ändern weder Größe noch Slotposition. Es hängt am Originalindex und gilt ebenso
 im vollständigen Tooltip und während des Hinweisdrags. `…` und Leerlinien-`–`
-werden nicht durchgestrichen. Nur die sichtbaren Zellen einschließlich elastischer
+bleiben unmarkiert. Nur die sichtbaren Zellen einschließlich elastischer
 Vorschau und die eigenen Hinweise der vollständigen Linie bestimmen den Status;
 kein verdeckter Lösungsvergleich. Widerspruch oder weggefallene Eindeutigkeit nimmt
 die Markierung zurück. „Erfüllte Hinweise markieren“ startet aktiv, gilt sitzungsweit

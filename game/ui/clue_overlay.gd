@@ -1,4 +1,5 @@
 extends RefCounted
+const Typography = preload("res://ui/clue_typography.gd")
 ## HF: measured text on existing book paper and tiled SL-65 frame strokes.
 const TITLE: String = "Vollständiger Hinweis"
 const TITLE_SOURCE = preload("res://art/book/Fraunces.ttf")
@@ -38,12 +39,7 @@ static func measure(board: Control, entries: Array) -> Dictionary:
 	var wrap_width: float = max_width - 2 * padding
 	var bounds: Array[Rect2] = []
 	for entry: Dictionary in entries:
-		var font: Font = board.clue_text_font(board.clue_font(), entry.text)
-		var box: Rect2 = ink(font, entry.text, fs)
-		var width: float = font.get_string_size(entry.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		var thickness: float = maxf(1, fs / 14.0)
-		box = box.merge(Rect2(Vector2(0, -fs * 0.32 - thickness / 2), Vector2(width, thickness)))
-		bounds.append(box.grow(maxf(0.5, u / 4)))
+		bounds.append(Typography.number_envelope(entry.text, fs, u))
 	# Wrap complete tokens. Each row uses its actual maximum ink/status height.
 	var rows: Array[Dictionary] = []
 	var row: Dictionary = {"start": 0, "end": 0, "width": 0.0, "top": INF, "bottom": -INF}
