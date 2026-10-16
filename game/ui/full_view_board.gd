@@ -303,7 +303,7 @@ func draw_grid_line(start: Vector2, end: Vector2, axis: String, index: int) -> v
 func clue_capacity(axis: String, _available_override: float = -1.0) -> int:
 	return reserve_slots.x if axis == "row" else reserve_slots.y
 
-# Full glyph + C1/AA + status-strike bounds in the moving direction. Status
+# Full glyph + C1/AA + status-X bounds in the moving direction. Status
 # never reduces the geometry; the reserve is stable while solving or zooming.
 func token_ink(text: String, axis: String, fs: int) -> Vector2:
 	var key: String = "%s/%s/%d/%s" % [text, axis, fs, ui_scale]
