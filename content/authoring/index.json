@@ -1,6 +1,11 @@
 {
   "entries": [
     {
+      "puzzle_id": "pz-25d245061b0c49c190788de8e5d0e45b",
+      "record": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/r01/record.json",
+      "revision": "r01"
+    },
+    {
       "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
       "record": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/r01/record.json",
       "revision": "r01"
