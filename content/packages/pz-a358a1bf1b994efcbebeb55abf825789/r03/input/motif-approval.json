@@ -1,0 +1,71 @@
+{
+  "actor": "Tobias Schröder",
+  "approved_configurations": [
+    {
+      "actual_crop": [
+        68,
+        25,
+        1022,
+        1423
+      ],
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 20,
+      "method": "area",
+      "mode": "mono",
+      "width": 14
+    },
+    {
+      "actual_crop": [
+        68,
+        25,
+        1022,
+        1423
+      ],
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "width": 15
+    }
+  ],
+  "derived_from_reveal_sha256": "0738b9ebabcbe20c3403f0654440ff08e1aed1a1caf626719613378d326d93f1",
+  "evidence": "motif-approval-evidence.md",
+  "file": "motif/MA-r01.png",
+  "parameter_corridor": {
+    "file": "parameterkorridor.json",
+    "sha256": "9f2bb3e420bb3418497c0b7191eead685b94fe1b80df40938880df2b0fc9c60b"
+  },
+  "parameters": {
+    "actual_crop": [
+      68,
+      25,
+      1022,
+      1423
+    ],
+    "fit": "contain",
+    "foreground_colors": 1,
+    "height": 22,
+    "method": "area",
+    "mode": "mono",
+    "width": 15
+  },
+  "preserve": [
+    "Frontaler einzelner Armkaktus ohne Topf",
+    "Mittelstamm bleibt höchste Hauptform",
+    "Linker Arm deutlich niedriger als rechter Arm",
+    "Aufwärts gerichtete Arme mit kräftigen gebogenen Ellenbogen",
+    "Beide Zwischenräume zwischen Armen und Mittelstamm bleiben offen",
+    "Eine zusammenhängende gefüllte Pflanzenform",
+    "Relatives Verhältnis von Stamm und Armdicken erhalten; keine neue Symmetrie"
+  ],
+  "puzzle_id": "pz-a358a1bf1b994efcbebeb55abf825789",
+  "revision": "MA-r01",
+  "selection_note": "15 × 22 / area-112 selected from the two explicitly approved configurations after four-candidate comparison; no new approval inferred.",
+  "sha256": "1a52522ac580f6a09bc484eb4cd69419f9284bc473a55447845c5508430b8642",
+  "statement": "Ich gebe die Motivvorlage motif/MA-r01.png · MA-r01 frei; Parameter: parameterkorridor.json.",
+  "timestamp_basis": "UTC recording time after receiving the user instruction; exact message arrival timestamp not exposed",
+  "timestamp_utc": "2026-10-16T08:21:02Z",
+  "type": "human_motif_approval"
+}
