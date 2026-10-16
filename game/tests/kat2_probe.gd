@@ -744,6 +744,9 @@ func fixed_cards() -> void:
 		surface.push_input(wheel, true)
 		await frames()
 		check(float(card.recovery.scroll_vertical) > wheel_before, "KK wheel still scrolls inside bounded diagnosis")
+		card.recovery.scroll_vertical = int(wheel_before)
+		await frames()
+		check(card.recovery.scroll_vertical == int(wheel_before), "KK wheel test restores reference capture scroll position")
 		if state != "error":
 			check(app.album.repair_buttons.has("T-01"),"KK text recovery action retained")
 			card.recovery.ensure_control_visible(card.repair)
