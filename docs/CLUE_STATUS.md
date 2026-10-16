@@ -1,6 +1,6 @@
 # HS: klar unterscheidbare Erledigtzustände der Hinweiszahlen
 
-Stand: 16.10.2026 · Spezifikation 0.1 · vom Eigentümer freigegeben, noch nicht implementiert
+Stand: 16.10.2026 · Spezifikation 0.2 · implementiert; technische Belege im PR, Abnahmen getrennt
 
 ## Geltung und Liefergrenze
 
@@ -12,9 +12,9 @@ Bei Hinweisarbeit zusammen mit [Typografie](CLUE_TYPOGRAPHY.md),
 [Projektprofil](PROJECT_PROFILE.md) lesen. Einstieg bleibt [AGENTS](../AGENTS.md).
 
 Der Eigentümer bestätigt die deutlichere Abschwächung und das handschriftliche X
-als Spezifikation. Das ist keine Bestätigung einer schon gelieferten Darstellung,
-kein Auftrag zur jetzigen Produktimplementierung und keine Mergefreigabe.
-Quellendiagnose: `main@09ffa51f2cc2bb8a97c71b26113d2892f98be6c9` zeichnet nur
+als Spezifikation. Der anschließende Implementierungsauftrag führt denselben
+Branch und Draft-PR #187 fort. Eigentümerabnahme und Mergefreigabe bleiben separat.
+Historische Quellendiagnose: `main@09ffa51f2cc2bb8a97c71b26113d2892f98be6c9` zeichnet nur
 FILLED mit 78 %, CLOSED dagegen mit voller Zahlendeckkraft plus geradem Querstrich.
 Dies wird gezielt gestalterisch ersetzt; kein Fehler der Erkennung ist nachgewiesen.
 Der bereitgestellte Screenshot ist Feedback ohne verifizierte Build-/DPI-Bindung.
@@ -27,9 +27,9 @@ Der bereitgestellte Screenshot ist Feedback ohne verifizierte Build-/DPI-Bindung
 | FILLED: eindeutig vollständig gesetzt, noch nicht beidseitig abgegrenzt | Deutlich blasser als bisher; gemeinsamer Ausarbeitungs-Ausgangswert 60 % | Keine |
 | CLOSED: zusätzlich beidseitig abgegrenzt | Genau dieselbe Abschwächung wie FILLED | Handschriftliches X über der ganzen Zahl |
 
-Die 60 % sind ein freigegebener Ausgangswert, keine bereits erfolgte native
-Sichtabnahme. Eine begründete Feinabstimmung bleibt reversibles Ausarbeitungsdetail;
-gewählten Wert und Sichtbefund im PR festhalten. Beide positiven Zustände verwenden
+Die Implementierung behält den freigegebenen Ausgangswert von 60 % bei.
+Dies ist keine persönliche Eigentümerabnahme. Eine begründete Feinabstimmung bleibt
+reversibles Ausarbeitungsdetail; Wert und Sichtbefund im PR festhalten. Beide positiven Zustände verwenden
 immer denselben Wert. Beim Abgrenzen darf die Zahl nicht wieder kräftiger werden.
 
 Die tatsächliche Rätselfarbe bleibt erhalten. Ausgrauen bedeutet reduzierte
@@ -135,10 +135,19 @@ Hinweisdarstellung durch HS-D01–D04 ersetzt:
 | [Zeichensprache](UI_DRAWING_STYLE.md), ZS-D01 | Die drei semantischen Zustände bleiben, die beiden positiven Darstellungen ändern sich. |
 | [Hinweis-Typografie](CLUE_TYPOGRAPHY.md) | Alte Querstrichhülle und davon abhängige Web-Untergrenze als unveränderte Zielgeometrie. |
 
-Bis zur Inline-Nachführung in der zugehörigen Implementierung gilt diese ausdrückliche
-Ablösung. Die technische alte Darstellung bleibt bis dahin der Iststand; weder neue
-Spezifikation noch grüne Dokumentprüfung ändern den Player. Bei Umsetzung betroffene
-aktive Fachpassagen sowie Anwenderanleitung und native Hilfe konsistent nachführen.
+Die Implementierung führt diese aktiven Fachpassagen, Anwenderanleitung und native
+Hilfe inline nach. Zeichnung und Messung teilen `clue_typography.gd`:
+Zahl/C1 60 %, X 76 %, Stiftbreiten `max(1, fs/18) × 1,08/0,96`.
+Zwei Vierpunktzüge verwenden FNV-1a über Rätsel-ID/Achse/Linie/Originaltokenindex
+für begrenzte Biegungs-/Endvarianten; keine Bildschirm-/Zeit-/Statusschlüssel.
+Mittellinien liegen um den maximalen Stift-/C1-Radius plus 0,5 px innen;
+1 px Polyline-AA und mindestens 0,5 px Glyphen-AA bleiben eingeschlossen.
+Die alte Querstrich-Vorablehnung entfällt; acht temporäre Webatlanten bleiben.
+Die gemeinsame Hülle bleibt statusunabhängig, benötigt regulär keine größere
+Reserve als die native Glyphenhülle plus bisheriger C1/AA-Rand. Entfernte alte
+Querstrichüberstände können einzelne Slots/Fontgrade verbessern; G/V-/Fitziele bleiben.
+Mess-/Pixelregressionen und der frische Windows-/PCK-Weg stehen in der
+[HS-Prüfzuordnung](HS_VERIFICATION.md), konkrete Ergebnisse und Grenzen im PR.
 Nicht betroffene Quellen, Font-/Assetbytes, historische Pläne, Reports und Abnahmen
 bleiben unverändert. Das Projektprofil routet Hinweisarbeit bereits über
 CLUE_TYPOGRAPHY und damit auf diese Spezifikation; keine Änderung gemeinsamer dev-rules.
@@ -153,5 +162,5 @@ Ein nicht ausgeführter Windows-Start oder eine fehlende Eigentümerprobe wird n
 als bestanden ausgegeben. Die [aktuelle CI-Policy](CI_POLICY.md) entscheidet die
 Prüfauswahl, einschließlich Web bei Product, ohne Bestandsrätsel neu zu zertifizieren.
 
-Das gesamte Paket bleibt bis zur beauftragten Implementierung und Abnahme offen.
+Das Paket bleibt bis zu vollständiger technischer Lieferung und Abnahme offen.
 Kein automatischer Merge, Release oder Deployment durch diese Spezifikation.

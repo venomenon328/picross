@@ -139,8 +139,10 @@ dieser Linie. Nur deren eigene Hinweise, Farben, Füllungen und X zählen; kein 
 mit der hinterlegten Lösung oder kreuzenden Hinweisen. Das ist keine Fehlerhilfe,
 kein manuelles Abhaken und kein automatisches Setzen. Der begrenzte P1-Vertrag samt
 Vorschau und Sitzungsschalter steht in P1 §5.2. GP-02/#48 ergänzt drei Zustände:
-normal, eindeutig gesetzt und abgeschwächt, zusätzlich beidseitig abgegrenzt und
-durchgestrichen. X, echter Linienrand und direkt andere Füllfarbe begrenzen;
+normal, eindeutig gesetzt und abgeschwächt, zusätzlich beidseitig abgegrenzt.
+[HS](CLUE_STATUS.md) zeichnet beide positiven Zustände mit 60 % Zahl-/C1-Deckkraft,
+den abgegrenzten zusätzlich mit einem handschriftlichen X über der ganzen Zahl.
+X, echter Linienrand und direkt andere Füllfarbe begrenzen;
 Ausschnittränder und unbekannte Nachbarn nicht. Der Abschluss verlangt keine
 vollständige Hintergrundauskreuzung. GP-01 schützt bei unbekanntem Gestenstart
 Vorbelegungen; bewusste Umwandlung startet auf X beziehungsweise Füllung.

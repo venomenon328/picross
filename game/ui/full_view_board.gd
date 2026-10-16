@@ -448,7 +448,7 @@ func draw_hint_units(axis: String, index: int, cross: float, font: Font, fs: int
 		var color: Color = ACCENT if unit.kind != "token" else Color(layout.entries[int(unit.index)].color)
 		var width: float = clue_text_font(font, text).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		var baseline: Vector2 = Vector2(float(unit.center) - width/2.0, cross + clue_baseline_offset(fs)) if axis == "row" else Vector2(cross - width/2.0, float(unit.center) + clue_baseline_offset(fs))
-		draw_clue_number(font, baseline, text, fs, color, clue_status(axis, index, int(unit.index)))
+		draw_clue_number(font, baseline, text, fs, color, clue_status(axis, index, int(unit.index)), clue_identity(axis, index, int(unit.index)))
 
 func glyph_box(text: String, baseline: Vector2, fs: int) -> Rect2:
 	var result: Rect2 = Typography.envelope(text, fs, ui_scale)
@@ -491,15 +491,8 @@ func configure_typography(cell: float) -> void:
 	type_size = 1
 	for fs: int in range(maxi(1, ceili(cell * 4.0)), 0, -1):
 		var fits: bool = true
-		if OS.has_feature("web"):
-			# Reject only a measured, already impossible column envelope before
-			# rasterizing twelve baseline glyphs. No monotonicity or font cap:
-			# the centered numeric strike alone is a lower bound on its width.
-			for text: String in type_tokens.column:
-				if text.is_valid_int() and Typography.strike_width(text, fs, ui_scale) > limit:
-					fits = false
-					break
-			if not fits: continue
+		# HS measures the actual glyph/X envelope on both native and web paths.
+		# The former advance-width strike is no longer a valid lower bound.
 		for axis: String in ["row", "column"]:
 			for text: String in type_tokens[axis]:
 				var box: Rect2 = Typography.envelope(text, fs, ui_scale)
