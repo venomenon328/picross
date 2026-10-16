@@ -1,0 +1,21 @@
+{
+  "all_three_certified_full_line_mono": true,
+  "all_three_closed_nose_and_lip_floodfill_pass": true,
+  "all_three_fixed_edits_replayed": true,
+  "all_three_source_matrix_clues_proofs_replayed": true,
+  "checked_at_utc": "2026-10-16T22:51:47.312728+00:00",
+  "editorial_approved": false,
+  "exact_inventory_hashes_and_file_set_pass": true,
+  "format": "picross-authoring-candidate-file-validation-v1",
+  "handoff_byte_copy_pass": true,
+  "handoff_sha256": "8e12bf5de366ef38a74603319ee0699a3977ca8457ad66f31ecf2ac079ea6565",
+  "inventory_sha256": "04a5af1ccf63d3839e7f2b5f9f9fc9fe0aeb594b56f6ceeae8640117a5c29bbb",
+  "package_sha256": "fa589108bf2f26a51946fd9321965fb3570c9c960b10178c63eef82b43a10608",
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "registered": false,
+  "revision": "r09",
+  "target_adapter_inspect": "not_performed",
+  "target_adapter_reason": "ZA-1-v2 fixed edited mono import requires exact external human authorization and final approval even for inspect; no such evidence fabricated.",
+  "za1_safe_package_container_open_pass": true,
+  "zip_crc_pass": true
+}
