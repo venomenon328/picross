@@ -502,6 +502,7 @@ func regular() -> void:
 	check(app.choices[0].disabled and app.album.reset_buttons["T-09"].visible and not app.album.reset_buttons["T-09"].disabled, "KB damaged save blocks play but retains reset")
 	var corrupted_primary: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09"))
 	var corrupted_backup: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09", ".bak"))
+	check(app._flush_current(), "KK unrelated pending state flushed before cross-slot reset comparison")
 	var unaffected_slot: Dictionary = save_bytes("t01")
 	click(app.album.reset_buttons["T-09"])
 	await frames()
@@ -515,7 +516,10 @@ func regular() -> void:
 	check(app.reset_dialog.visible and app.reset_id == "T-09", "KK disabled card reset remains accessible after cancel")
 	click(app.reset_dialog.get_ok_button())
 	await frames()
-	check(app.album.visible and app.slot_status[5] == "fresh" and not app.choices[0].disabled and not app.album.reset_buttons["T-09"].visible and save_bytes("t01") == unaffected_slot, "KK confirmed invalid reset only clears bound slot and restores new card")
+	check(app.album.visible, "KK confirmed invalid reset stays in catalog")
+	check(app.slot_status[5] == "fresh", "KK confirmed invalid reset clears only target status")
+	check(not app.choices[0].disabled and not app.album.reset_buttons["T-09"].visible, "KK confirmed invalid reset restores fresh clickable card")
+	check(save_bytes("t01") == unaffected_slot, "KK confirmed invalid reset keeps unrelated flushed slot bytes")
 	# Leave independently validated solved and redo-only slots for another process.
 	for suffix: String in [".json", ".bak"]:
 		var restored: FileAccess = FileAccess.open(app.store.path_for("t09", suffix), FileAccess.WRITE)
