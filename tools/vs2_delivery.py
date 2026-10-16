@@ -158,7 +158,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
                                                  for part in render_command], "HS186_NATIVE_OK")
     finally:
         environment.pop("HS186_OUTPUT", None)
-    hs = hs186_verify.verify(hs_dir)
+    hs = hs186_verify.verify(hs_dir, hf_dir)
     selected += list(hs_dir.glob("*.json")) + list(hs_dir.glob("*.png"))
     # Keep full matrix telemetry without displacing mandatory native pictures
     # or increasing the shared player/evidence budget.

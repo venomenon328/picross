@@ -10,7 +10,8 @@ handschriftliches X über dem gesamten Token. Zahlfarbe, C1-Semantik und H1/GP48
 Zeichnung, tatsächliche Hüllen, Tooltipmessung und Web-Fit-Vorselektion werden
 zusammen angepasst. Die aktiven P1-/Design-/Zeichensprachepassagen und Anleitungen
 sind inline nachgeführt. [HS-Prüfzuordnung](HS_VERIFICATION.md) bindet die technische
-Lieferung; unabhängiges Review und Eigentümerabnahme bleiben getrennt offen.
+Lieferung; erneutes unabhängiges Review bleibt offen. HS-M01 ist für die unveränderte
+Darstellung persönlich erteilt (Issue #186/V2), ohne nachgereichte Prüfmetadaten.
 Fonts und übrige HC-/HF-Verträge bleiben.
 
 [Issue #92](https://github.com/venomenon328/picross/issues/92) ersetzt für aktive

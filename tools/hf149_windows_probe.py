@@ -53,8 +53,12 @@ def run(head: str, run_id: str, engine: Path, cache: Path, output: Path) -> dict
         if report[key] != technical[key]: raise ValueError("Player/technical identity mismatch")
     if report["source_commit"] != head or report["source_tree_dirty"] or str(report["github_run_id"]) != run_id:
         raise ValueError("Wrong delivered source/run")
-    if report["base_commit"] != git("merge-base",head,"origin/main"):
-        raise ValueError("Wrong integration basis")
+    # The CI base is the actual target SHA, not the older merge-base when main
+    # advanced. Bind it to the delivered selection and the tested merge parents.
+    git("fetch","--no-tags","origin",report["tested_checkout_commit"])
+    parents = git("show","-s","--format=%P",report["tested_checkout_commit"]).split()
+    if parents != [report["base_commit"],head]:
+        raise ValueError("Wrong tested integration parents")
     for name,digest in report["export_files"].items(): toolchain.verify_sha256(package/name,digest)
     for item in technical["selected_evidence"]["files"]:
         path = Path(item["file"])
