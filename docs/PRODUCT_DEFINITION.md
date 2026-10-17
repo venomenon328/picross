@@ -1,5 +1,13 @@
 # Produktdefinition: picross
 
+**KE / #233, freigegebenes Soll vom 17.10.2026, noch nicht implementiert:**
+[Katalogdarstellung](CATALOG_PRESENTATION.md) bindet eine passive Papierinfobox
+mit Größe, Mono-/Farbpiktogramm, vorhandener Schwierigkeit samt Schätzkennzeichnung
+und Status Neu/Begonnen/Fertig. Neue Rätsel zeigen ein gezeichnetes Fragezeichen;
+begonnene nur eigene Füllungen, fertige das verdiente farbige Reveal. Keine neue
+Schwierigkeitsbewertung, Progression oder Saveänderung. Dieser Sollvertrag ersetzt
+gezielt die nachfolgend beschriebene integrierte KK-Metadaten-/Fußzeilenanordnung.
+
 **KK / #174** führt den kompakten Katalog aus KB fort: Alle Karten und Grid-Zellen
 haben je Fenster/UI dieselben festen Bereiche. Einzige Überschrift ist das verdiente
 Motiv, vorher `???`, in kleinerem Bakso; höchstens zwei Zeilen mit Auslassung.

@@ -1,5 +1,14 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
+**KE / #233, freigegebenes Soll vom 17.10.2026, noch nicht implementiert:**
+[KE-D06](CATALOG_PRESENTATION.md) ergänzt künftig minimale typisierte
+Schwierigkeitsmetadaten aus `production.difficulty` in der Runtimeprojektion.
+Der nachfolgende v2-/Siebenfeldervertrag beschreibt weiterhin den Iststand.
+Writer/Loader/Validierung sind gemeinsam kompatibel fortzuschreiben; gültige
+Alteinträge ohne Einstufung bleiben ladbar. Exaktes Schema/Versionsverhalten im
+Implementierungs-PR hier dokumentieren. Kategorienquelle, Zuordnung, Definitionen,
+Saves und Freigabebindungen bleiben unverändert; keine Produktionsfreitexte im Spieler.
+
 Stand 12.10.2026, [Issue #78](https://github.com/venomenon328/picross/issues/78).
 Die [Kategorienquelle](../content/categories.json) führt den initialen redaktionellen
 Arbeitsbestand von 20 Motivgruppen. Kategorien sind weder Kapitel noch Schwierigkeit

@@ -1,5 +1,14 @@
 # Z2: aktive Auswahl und native Integration
 
+## Freigegebenes Soll · KE / #233
+
+[Katalogdarstellung](CATALOG_PRESENTATION.md) ergänzt Papieretikett sowie eigene
+gezeichnete Modus-/Statussymbole und das Fragezeichen für Neu. Noch nicht
+implementiert; konkrete Asset-/Zeichenform im Implementierungs-PR dokumentieren.
+Vorhandene Fonts, Icons, Werkzeuge und deren Herkunft bleiben; die folgenden
+KK-Aussagen beschreiben die integrierte Ausgangsbasis. KE ändert weder Zellatlanten
+noch Hinweisgestaltung und führt keine neue Animation ein.
+
 ## Aktuelle Fortschreibung KK / #174
 
 Bakso Daging gilt zusätzlich für Kachel-Motivüberschriften/`???`, mit denselben

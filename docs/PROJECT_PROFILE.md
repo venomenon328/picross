@@ -1,5 +1,15 @@
 # Projektprofil: picross
 
+**KE / #233 (17.10.2026), freigegebenes Soll, noch nicht implementiert:**
+Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](CATALOG_PRESENTATION.md)
+vollständig lesen. Papieretikett mit Größe, Moduspiktogramm, Schwierigkeit und
+Status; gezeichnetes Fragezeichen nur für Neu. KE ersetzt gezielt KK-Metadaten,
+Fußzeilenstatus und leere Neu-Vorschau, ergänzt gezielte Modus-/Schwierigkeits-
+Tooltips und eine minimale kompatible Runtimeprojektion der Schwierigkeit.
+KE-T01, KE-R01 und KE-M01 sind getrennte Gates vor Merge gemäß #233.
+Der folgende KK-Abschnitt beschreibt die integrierte Ausgangsbasis; die historischen
+offenen KK-R01/KK-M01 in #174 werden durch KE weder erledigt noch erneut beauftragt.
+
 **EA / #170:** Abschlussenthüllung auf dem integrierten KB-Stand aus PR #169.
 [EA-Prüfzuordnung](EA_VERIFICATION.md) zusätzlich lesen: sofortiger Commit/Save,
 transiente 2,15-s-Präsentation, neutrale Blattüberschrift, proportionale Bildfläche,

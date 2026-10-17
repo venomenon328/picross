@@ -1,5 +1,14 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+**KE / #233, freigegebenes Soll vom 17.10.2026, noch nicht implementiert:**
+[KE-D06](CATALOG_PRESENTATION.md) erlaubt ausschließlich die benötigten typisierten
+Schwierigkeits-/Unsicherheitsangaben als neue Katalogmetadaten in der Runtime.
+Die unten beschriebene v2-Projektion ohne Produktionsmetadaten ist der Iststand;
+kein Export ganzer Produktionsobjekte. Projektion, kanonische Prüfung sowie
+Registrierungs-/Update-/Recoverypfade gemeinsam kompatibel fortschreiben und das
+Schema hier dokumentieren. Paket-/Integrationsbindungen und abgeschlossene
+Freigaben bleiben erhalten; keine Reproduktion entfernter Produktionspakete.
+
 KAT-1 ergänzt den verbindlichen [Kategorien-/Kompatibilitätsvertrag](CATEGORIES.md).
 Direkt-/Reparaturexporte mit Linienprofil verwenden v2, autorisierte manuelle Ableitungen v3,
 jeweils mit expliziter Kategorie und gehashtem Snapshot;
