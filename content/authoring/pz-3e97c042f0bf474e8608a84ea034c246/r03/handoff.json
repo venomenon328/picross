@@ -1,0 +1,142 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        16,
+        15,
+        1231,
+        1230
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 25,
+      "method": "area",
+      "mode": "mono",
+      "width": 25
+    },
+    {
+      "actual_crop": [
+        16,
+        15,
+        1231,
+        1230
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 27,
+      "method": "area",
+      "mode": "mono",
+      "width": 27
+    },
+    {
+      "actual_crop": [
+        16,
+        15,
+        1231,
+        1230
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 30,
+      "method": "area",
+      "mode": "mono",
+      "width": 30
+    }
+  ],
+  "authorization": "Aktueller Nutzerauftrag: Standardauftrag3 inklusive Motivfreigabe und Repositoryablage, bedingter Ablagemerge. Keine menschliche Endfreigabe vorhanden; daher keine Spielregistrierung.",
+  "blockers": [
+    "B-LOGIC: Kein vollständig zertifizierter Endkandidat aus sechs Importvarianten und zwei begrenzten Reparaturhypothesen.",
+    "B-RESOURCE: Beide Reparaturhypothesen am zulässigen100M-Paararbeitsbudget abgebrochen; vollständige Kandidatenlimits nicht erreicht.",
+    "B-VISUAL: Dünne rechte Außenkontur zerfällt bei25/27/30 Zellen; neue gezielte Motivvorlage mit kräftigerem bestehenden Umriss empfohlen, danach separate Motivfreigabe."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "paired-27",
+    "certification": {
+      "max_pair_records": 250000,
+      "max_pair_work": 20000000,
+      "profile": "paired-lines-mono"
+    },
+    "logic_hash": "873df1f6bf94b558b1f295af34ed567838994ed1ffb40da03fa49d41ef0300cb",
+    "matrix_hash": "7b38383b28f9b08ce146d1b8efd24320ee376ac3d75ad79956b56b88f59b0fe9",
+    "proof": "paired-27/area-144-proof.json",
+    "selection_status": "diagnostic_reference_only_not_final",
+    "source_type": "import",
+    "variant": "area-144",
+    "verification": "checks/origin-27-144.json"
+  },
+  "category_id": "mythen-fantasie",
+  "codex_handoff": "codex-handoff.md",
+  "configurations": "configurations.json",
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "difficulty.json",
+    "frame": "checks/candidates.json",
+    "logic": "checks/repair-summary.json",
+    "motif": "approvals/motif.json",
+    "provenance": "checks/candidates.json",
+    "reveal_approval": "approvals/reveal.json",
+    "reveal_consistency": "checks/raster-visual-review.json",
+    "visual": "checks/raster-visual-review.json"
+  },
+  "gates": {
+    "difficulty": "blocked",
+    "final_editorial": "blocked",
+    "frame": "pass",
+    "logic": "blocked",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "blocked",
+    "visual": "fail"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "3d923f465a97bae681d0098dd2b53e15d199dab79d5a1fe33e7e1bd238d505fc"
+  },
+  "motif": {
+    "approval": "approvals/motif.json",
+    "derived_from_reveal_sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e",
+    "file": "motif/MA-r01.png",
+    "provenance": "motif/MA-r01.provenance.json",
+    "sha256": "4bbeb41207b1efbb56e92b4168e374f403d6a57141731f8d875d3320d1c77f46"
+  },
+  "next_action": "Korrigieren oder Fehler beheben",
+  "origin_verification": "checks/candidates.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": "parameters.json",
+  "puzzle_id": "pz-3e97c042f0bf474e8608a84ea034c246",
+  "repair": null,
+  "repo_commit": "c2cdf866e22c6065f67ae3b6ef539af2b206a8f6",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "foreground_colors": 1,
+    "height": null,
+    "mode": "mono",
+    "width": 25
+  },
+  "reveal": {
+    "approval": "approvals/reveal.json",
+    "file": "reveal/A-r01.png",
+    "provenance": "reveal/A-r01.provenance.json",
+    "sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e"
+  },
+  "reveal_options": [],
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "blocked"
+}

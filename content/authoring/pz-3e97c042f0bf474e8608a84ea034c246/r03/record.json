@@ -1,0 +1,67 @@
+{
+  "blockers": [
+    "B-LOGIC: Kein vollständig zertifizierter Endkandidat aus sechs Importvarianten und zwei begrenzten Reparaturhypothesen.",
+    "B-RESOURCE: Beide Reparaturhypothesen am zulässigen100M-Paararbeitsbudget abgebrochen; vollständige Kandidatenlimits nicht erreicht.",
+    "B-VISUAL: Dünne rechte Außenkontur zerfällt bei25/27/30 Zellen; neue gezielte Motivvorlage mit kräftigerem bestehenden Umriss empfohlen, danach separate Motivfreigabe."
+  ],
+  "category_id": "mythen-fantasie",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r03/handoff.json",
+    "sha256": "df736a794b841c73cafdd551cbf4aa317eb90d9c6d5e37a3df0d5b7517ecb7c2"
+  },
+  "height": null,
+  "integration": null,
+  "inventory_sha256": "3d923f465a97bae681d0098dd2b53e15d199dab79d5a1fe33e7e1bd238d505fc",
+  "mode": "mono",
+  "motif": {
+    "approval": "approvals/motif.json",
+    "derived_from_reveal_sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e",
+    "file": "motif/MA-r01.png",
+    "provenance": "motif/MA-r01.provenance.json",
+    "sha256": "4bbeb41207b1efbb56e92b4168e374f403d6a57141731f8d875d3320d1c77f46"
+  },
+  "motif_name": "Yin-Yang",
+  "next_action": "Korrigieren oder Fehler beheben",
+  "package": {
+    "bytes": 13755872,
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r03/package.zip",
+    "sha256": "0320ff78f5a116c3778f9011baf08219c06c146cf71f5045cde48bebfd16d0b2"
+  },
+  "package_verification": {
+    "all_bytes_and_hashes": true,
+    "crc_pass": true,
+    "exact_file_set": true,
+    "handoff_copy_equal": true,
+    "inventory_files": 318,
+    "safe_zip": true,
+    "source_r02_bindings": "checks/source-r02.json",
+    "target_inspect": "not_applicable: blocked before content_ready; no ZA-1 certification claimed"
+  },
+  "pending_approvals": [
+    "New motif revision after concrete correction; no final acceptance candidate exists."
+  ],
+  "puzzle_id": "pz-3e97c042f0bf474e8608a84ea034c246",
+  "recommended_dimensions": [
+    25,
+    25
+  ],
+  "repo_commit": "c2cdf866e22c6065f67ae3b6ef539af2b206a8f6",
+  "reveal": {
+    "approval": "approvals/reveal.json",
+    "file": "reveal/A-r01.png",
+    "provenance": "reveal/A-r01.provenance.json",
+    "sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e"
+  },
+  "review_reference_dimensions": [
+    27,
+    27
+  ],
+  "revision": "r03",
+  "state": "blocked",
+  "updated_at_utc": "2026-10-17T09:38:46.469713+00:00",
+  "width": null
+}
