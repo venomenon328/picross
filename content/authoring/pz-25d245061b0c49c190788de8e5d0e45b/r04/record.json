@@ -15,9 +15,7 @@
       "width": 40
     }
   ],
-  "blockers": [
-    "Redaktionelle Endabnahme r04 offen; danach externe ZA-1-v2-Autorisierung an diese tatsächliche Endfreigabe binden."
-  ],
+  "blockers": [],
   "candidate": {
     "bundle": "fixed-import",
     "certification": {
@@ -69,7 +67,10 @@
   },
   "dimensions_approximate": false,
   "dimensions_fixed": true,
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/r04/approval.json",
+    "sha256": "b262fd4f1584bde374abf4cc0412646418e7158786600262fbcb2aaefbcbf019"
+  },
   "fixed_axes": [
     "height"
   ],
@@ -83,8 +84,32 @@
     "file": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/r04/inspection.json",
     "sha256": "749c9b00cd752f016970cbcea41c3361a8f0c31751d190e5b73210fdfa11fd02"
   },
-  "integration": null,
+  "integration": {
+    "category_id": "voegel",
+    "export_manifest": {
+      "file": "content/packages/pz-25d245061b0c49c190788de8e5d0e45b/r04/manifest.json",
+      "sha256": "a006cac09912819338cf8b83b75fe5e8f4ce4f30647ecf206564546f5e89551e"
+    },
+    "inspection": {
+      "file": "content/packages/pz-25d245061b0c49c190788de8e5d0e45b/r04/inspection.json",
+      "sha256": "e65623a598bfe5dd40e2aff90fee68f73e4f3746f4316616c1ee4cb91a16b225"
+    },
+    "main_merge": "pending",
+    "plan": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/r04/integration-plan.json",
+    "registration": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/r04/registration.json",
+    "runtime_id": "pz-25d245061b0c49c190788de8e5d0e45b",
+    "runtime_revision": 1,
+    "save_slot": "kolibri_001",
+    "verification": {
+      "file": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/r04/integration-verification.json",
+      "sha256": "306ada31f12e384337b37cbfa4813a14fa63b8de6818c62f206d91a225cb9a16"
+    }
+  },
   "inventory_sha256": "a42195ade514778bfc6b9f968edbe8c5050a5f075e9fcdec992158ab1ef8ce56",
+  "manual_authorization": {
+    "file": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/r04/manual-authorization.json",
+    "sha256": "f52c84e383adb1a876e2c427114a8ce87e66f5b13f98b8bbfe0cde7bae527bff"
+  },
   "manual_edit_record": "edit-plan.json",
   "mode": "mono",
   "motif": {
@@ -96,7 +121,7 @@
     "sha256": "ef408ac399ea684f6253912c32d88410a2adc8032784c9861854dd841125b94e"
   },
   "motif_name": "Kolibri",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Nach bestätigtem Main-Merge Produktionscleanup gemäß §9.",
   "package": {
     "bytes": 4238785,
     "file": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/r04/package.zip",
@@ -128,11 +153,11 @@
     "sha256": "9b4fa04b16efebcd19d350e347d54537f992ea4e340766623aec05d5abe09dbe"
   },
   "revision": "r04",
-  "state": "content_ready",
+  "state": "registered",
   "technical_replay": {
     "file": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/r04/technical-replay.json",
     "sha256": "69d6262f3df687d7afca3d011200583b9f5c6f30128255d2f10a272a02a6be36"
   },
-  "updated_at_utc": "2026-10-17T00:18:03.679118+00:00",
+  "updated_at_utc": "2026-10-17T00:30:28.129153+00:00",
   "width": 40
 }

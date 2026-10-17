@@ -1,0 +1,38 @@
+{
+  "approval_sha256": "b262fd4f1584bde374abf4cc0412646418e7158786600262fbcb2aaefbcbf019",
+  "catalog_ready": true,
+  "category_id": "voegel",
+  "checked_at_utc": "2026-10-17T00:30:28.124892+00:00",
+  "dimensions": [
+    40,
+    30
+  ],
+  "editorial_approved": true,
+  "exact_matrix_and_clues": true,
+  "existing_23_entries_unchanged": true,
+  "export_format": "picross-target-export-v4",
+  "export_manifest_sha256": "a006cac09912819338cf8b83b75fe5e8f4ce4f30647ecf206564546f5e89551e",
+  "files": {
+    "game/art/content/kolibri_001.png": "9b4fa04b16efebcd19d350e347d54537f992ea4e340766623aec05d5abe09dbe",
+    "game/art/content/kolibri_001.txt": "9c006d94ab4f71329d1f9c1a4c96d106b5d02043f1f4463dd8ce197e5157af23",
+    "game/data/content/kolibri_001.json": "6c3525419f9ca193efd72bab11b9d6ca85fc7ba09507c65388d21921db291592"
+  },
+  "filled_cells": 361,
+  "inventory_sha256": "a42195ade514778bfc6b9f968edbe8c5050a5f075e9fcdec992158ab1ef8ce56",
+  "native_tests": "nicht erforderlich: reine Inhaltsintegration",
+  "original_package_sha256": "1534312a740cb73f8b3d66f7a6b4dc80739827ba5b1beeaa4eb39fe1f4555060",
+  "original_zip_handoff_unchanged": true,
+  "player_build": "nicht beauftragt",
+  "registered": true,
+  "reveal_byte_identical": true,
+  "review": "Getrennter Selbstreview; keine unabhängige Zweitprüfung",
+  "runtime_id": "pz-25d245061b0c49c190788de8e5d0e45b",
+  "runtime_projection_byte_exact": true,
+  "runtime_revision": 1,
+  "save_slot": "kolibri_001",
+  "source_commit": "66789f4a740fa9fff8432892526d0b83b1020ceb",
+  "technical": true,
+  "unique_catalog_entry": true,
+  "usage_notice_preserved": true,
+  "used_foreground_colors": 1
+}
