@@ -1,5 +1,15 @@
 # Projektprofil: picross
 
+**KE / #233 (17.10.2026), Implementierung auf `feat/233-katalogetiketten`, Abnahmen getrennt offen:**
+Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](CATALOG_PRESENTATION.md)
+vollständig lesen. Papieretikett mit Größe, Moduspiktogramm, Schwierigkeit und
+Status; gezeichnetes Fragezeichen nur für Neu. KE ersetzt gezielt KK-Metadaten,
+Fußzeilenstatus und leere Neu-Vorschau, ergänzt gezielte Modus-/Schwierigkeits-
+Tooltips und eine minimale kompatible Runtimeprojektion der Schwierigkeit.
+KE-T01, KE-R01 und KE-M01 sind getrennte Gates vor Merge gemäß #233.
+Der folgende KK-Abschnitt beschreibt die integrierte Ausgangsbasis; die historischen
+offenen KK-R01/KK-M01 in #174 werden durch KE weder erledigt noch erneut beauftragt.
+
 **EA / #170:** Abschlussenthüllung auf dem integrierten KB-Stand aus PR #169.
 [EA-Prüfzuordnung](EA_VERIFICATION.md) zusätzlich lesen: sofortiger Commit/Save,
 transiente 2,15-s-Präsentation, neutrale Blattüberschrift, proportionale Bildfläche,
@@ -43,7 +53,7 @@ Tool-/Spiel-/Render-/Exporttests. Sämtliche konkreten Rätselprüfungen erfolge
 Produktionsauftrag; keine rätselspezifischen Unit-Tests anlegen. Allgemeine
 Code-Regressionen verwenden einen festen technischen Testbestand.
 
-[KAT-1](CATEGORIES.md) bindet `content/categories.json`, genau eine Kategorie je sichtbarem Rätsel, Registry-/Runtimeformat v2 und kategorisierte ZA-1-v2-Exporte. Bei Kategorien-/Katalog-/Adapterarbeit zusätzlich diesen Vertrag und [ZA-1](ZA1_ADAPTER.md) vollständig lesen. [KAT-1-Prüfzuordnung](KAT1_VERIFICATION.md) ergänzt die bestehenden Prüfwege; Saves, Definitionen und Freigabebindungen bleiben unverändert. KAT-2 (#79) verwendet diesen Vertrag für den regulären Katalogstart. Bei Katalogarbeit zusätzlich [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md) lesen; unabhängiges Review und Eigentümerabnahme KAT2-M01 bleiben vor Merge erforderlich.
+[KAT-1](CATEGORIES.md) bindet `content/categories.json`, genau eine Kategorie je sichtbarem Rätsel, Inhaltsregistry v2 und Runtimeprojektion v3 (Loader auch v2, KE) und kategorisierte ZA-1-v2-Exporte. Bei Kategorien-/Katalog-/Adapterarbeit zusätzlich diesen Vertrag und [ZA-1](ZA1_ADAPTER.md) vollständig lesen. [KAT-1-Prüfzuordnung](KAT1_VERIFICATION.md) ergänzt die bestehenden Prüfwege; Saves, Definitionen und Freigabebindungen bleiben unverändert. KAT-2 (#79) verwendet diesen Vertrag für den regulären Katalogstart. Bei Katalogarbeit zusätzlich [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md) lesen; unabhängiges Review und Eigentümerabnahme KAT2-M01 bleiben vor Merge erforderlich.
 
 **CI-Folgearbeit #116 (14.10.2026):** Die freigegebene aktuelle Grafikabdeckung
 und ihre drei gemeinsamen Fenster-/UI-Konfigurationen stehen in der

@@ -10,6 +10,7 @@ import tempfile
 from .authoring_package import ID, STEM, REVISION, relative, require, sha, file_hash, file_table
 from .contract import canonical_bytes, exact_keys, load_json, integer
 from . import categories
+from . import catalog_difficulty
 import time
 import os
 
@@ -34,8 +35,9 @@ def atomic_bytes(path, data):
 
 
 def projection(registry, catalog):
-    return {"format": "picross-runtime-registry-v2", "categories": categories.ordered(catalog), "entries": [
-        {k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")}
+    return {"format": "picross-runtime-registry-v3", "categories": categories.ordered(catalog), "entries": [
+        {**{k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")},
+         "difficulty": catalog_difficulty.project(e["production"]["difficulty"])}
         for e in registry["entries"]]}
 
 
@@ -72,6 +74,7 @@ def validate(registry, catalog):
             integer(p[field],1,50,"index "+field)
         require(isinstance(p["revision"],str) and REVISION.fullmatch(p["revision"]) and
                 p["mode"] in ("mono","color") and isinstance(p["difficulty"],dict), "Invalid index metadata")
+        catalog_difficulty.project(p["difficulty"])
     require(registry["entries"] == sorted(registry["entries"], key=lambda e: e["id"]), "Registry entries must be sorted")
     return registry
 
@@ -259,10 +262,60 @@ def registration(export_dir, root, *, apply=False, fail_step=None):
     return {**plan, "status": "registered", "registered": True}
 
 
+def recovery_projection(journal, before, after, catalog):
+    """Accept exactly one canonical journal generation; return the current goal."""
+    versions = []
+    for side, registry in (("old", before), ("new", after)):
+        require(journal[side][REGISTRY].encode() == canonical_bytes(registry)+b"\n",
+                "Noncanonical journal registry")
+        current = projection(registry, catalog)  # Also validates present difficulty.
+        legacy = deepcopy(current)
+        legacy["format"] = "picross-runtime-registry-v2"
+        for entry in legacy["entries"]:
+            del entry["difficulty"]
+        raw = journal[side][RUNTIME].encode()
+        require(raw in (canonical_bytes(legacy)+b"\n", canonical_bytes(current)+b"\n"),
+                "Invalid journal projections")
+        versions.append(json.loads(raw)["format"])
+    require(versions[0] == versions[1], "Mixed journal projection versions")
+    return canonical_bytes(projection(before, catalog))+b"\n"
+
+
+def recovery_target(root, journal, registry, runtime):
+    """Validate the entire rollback view without writing into the checkout.
+
+    Only runtime bindings and retained manifests/notices are copied. No solver,
+    export reconstruction, historical production replay or user data is involved.
+    """
+    from .content_update import path_in, notice_path
+    overrides = {name: value.encode() for name, value in journal["old"].items()}
+    overrides[RUNTIME] = runtime
+    names = {REGISTRY, RUNTIME, categories.PATH}
+    for entry in registry["entries"]:
+        p = entry["production"]
+        require(not p["test_only"] or root != ROOT.resolve(), "Test-only content cannot enter the real catalog")
+        manifest = p["package"]+"/manifest.json"
+        notice = notice_path(entry)
+        names.update((manifest, "game/"+entry["definition"], "game/"+entry["reveal"], notice))
+        if load_json(path_in(root, manifest)).get("format") != "picross-integrated-content-v1":
+            names.add(p["package"]+"/runtime/"+notice.removeprefix("game/"))
+    with tempfile.TemporaryDirectory(prefix="za1-recovery-check-") as directory:
+        staged = Path(directory)
+        for name in sorted(names):
+            source = path_in(root, name)
+            data = overrides[name] if name in overrides else source.read_bytes()
+            destination = staged/name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(data)
+        check_checkout(staged)
+    return names
+
+
 def recover(root):
     """Explicit rollback after process death; preflight every byte before mutation."""
     root = root.resolve()
-    lock = root / "content/.registration-pending.json"
+    from .content_update import path_in
+    lock = path_in(root, "content/.registration-pending.json")
     j = load_json(lock, 24 * 1024 * 1024)
     if isinstance(j, dict) and j.get("format") == "picross-content-update-journal-v1":
         from .content_update import recover_update
@@ -272,35 +325,51 @@ def recover(root):
     exact_keys(j, {"format", "targets", "files", "old", "new", "categories"})
     require(j["format"] == JOURNAL and isinstance(j["files"], dict) and
             isinstance(j["targets"], list) and len(j["targets"]) == 4, "Invalid registration journal")
-    require(set(j["old"]) == set(j["new"]) == {REGISTRY, RUNTIME}, "Invalid journal indexes")
+    require(isinstance(j["old"], dict) and isinstance(j["new"], dict) and
+            set(j["old"]) == set(j["new"]) == {REGISTRY, RUNTIME} and
+            all(isinstance(value, str) for side in ("old", "new") for value in j[side].values()), "Invalid journal indexes")
     require(isinstance(j["categories"], str) and categories.source_bytes(root / categories.PATH) == j["categories"].encode("utf-8"),
             "Categories changed since interrupted registration; preserve journal for manual review")
     catalog = categories.load(root / categories.PATH)
     old_registry = validate(json.loads(j["old"][REGISTRY]), catalog)
     new_registry = validate(json.loads(j["new"][REGISTRY]), catalog)
-    require(j["old"][RUNTIME].encode() == canonical_bytes(projection(old_registry, catalog))+b"\n" and
-            j["new"][RUNTIME].encode() == canonical_bytes(projection(new_registry, catalog))+b"\n", "Invalid journal projections")
+    runtime = recovery_projection(j, old_registry, new_registry, catalog)
     added = [e for e in new_registry["entries"] if e not in old_registry["entries"]]
     require(len(added) == 1 and [e for e in new_registry["entries"] if e not in added] == old_registry["entries"], "Invalid journal change")
     e = added[0]
     notice = str(Path(e["reveal"]).with_suffix(".txt")).replace("\\", "/")
     require(j["targets"] == ["game/"+e["definition"], "game/"+e["reveal"], "game/"+notice, e["production"]["package"]], "Invalid journal targets")
     for name in (REGISTRY, RUNTIME):
-        require((root/name).read_text(encoding="utf-8") in (j["old"][name], j["new"][name]), "Index changed since interrupted registration")
+        allowed = [j[side][name].encode() for side in ("old", "new")]
+        if name == RUNTIME:
+            allowed.append(runtime)  # Exact, derived recovery intermediate only.
+        require(path_in(root,name).read_bytes() in allowed, "Index changed since interrupted registration")
+    for name, value in j["files"].items():
+        relative(name); sha(value)
+        require(name in j["targets"][:3] or name.startswith(j["targets"][3]+"/"), "Invalid journal file target")
+    for name, digest in ((j["targets"][0], e["production"]["definition_sha256"]),
+                         (j["targets"][1], e["production"]["reveal_sha256"]),
+                         (j["targets"][3]+"/manifest.json", e["production"]["package_sha256"])):
+        require(j["files"].get(name) == digest, "Invalid journal file binding")
+    for name in j["targets"][:3]:
+        require(name in j["files"] and j["files"][name] == j["files"].get(j["targets"][3]+"/runtime/"+name.removeprefix("game/")),
+                "Invalid journal runtime package binding")
     existing = []
     for name in j["targets"]:
         relative(name)
-        path = root/name
-        require(path.resolve().is_relative_to(root) and not path.is_symlink(), "Unsafe recovery target")
+        path = path_in(root,name)
         if path.exists():
             present = file_table(path, time.monotonic()+300) if path.is_dir() else {"": path}
             for suffix, file in present.items():
                 key = name+("/"+suffix if suffix else "")
                 require(key in j["files"] and file_hash(file) == sha(j["files"][key]), "Recovery target changed; preserve files for manual review")
             existing.append(path)
-    # All checks passed; restore old indexes before removing only journal-owned bytes.
+    retained = recovery_target(root, j, old_registry, runtime)
+    require(not any(n == target or n.startswith(target+"/") for n in retained for target in j["targets"]),
+            "Recovery target overlaps retained content")
+    # All checks passed; restore old indexes and the validated current projection.
     for name, text in j["old"].items():
-        atomic_bytes(root/name,text.encode("utf-8"))
+        atomic_bytes(root/name, runtime if name == RUNTIME else text.encode("utf-8"))
     for path in reversed(existing):
         shutil.rmtree(path) if path.is_dir() else path.unlink()
     lock.unlink()

@@ -90,12 +90,14 @@ def draw(page, start, end=None, button='left', retract=None):
     page.wait_for_timeout(180)
 
 
-def open_page(context, url):
+def open_page(context, url, before_start=None):
     page = context.new_page()
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.on('console', lambda msg: errors.append(msg.text) if msg.type == 'error' else None)
     page.goto(url)
+    if before_start:
+        before_start(page)
     wait(page, 'window.picrossProbe && picrossStorage.ready && document.getElementById("message").hidden')
     game_viewport(page,1920,1080)
     saved(page)
@@ -116,12 +118,46 @@ def exercise(pw, name, root, update, url, output, evidence):
             return browser.launch_persistent_context(profile, **options(name),
                 viewport={'width':1920,'height':1122}, device_scale_factor=scale)
         context = launch()
-        page, errors = open_page(context, url)
+        # Deterministic contention with a real other document. It releases only
+        # after the new player's request is queued and has not touched IDBFS.
+        (root/'lock-owner.html').write_text('<title>Temporary test lock owner</title>')
+        owner = context.new_page(); owner.goto(url+'lock-owner.html')
+        owner.evaluate('''() => { navigator.locks.request('picross-p1-userfs', () =>
+          new Promise(resolve => { window.releaseLock=resolve; })); }''')
+        owner.wait_for_function('!!window.releaseLock')
+        context.add_init_script('''(() => {
+          const open=indexedDB.open.bind(indexedDB);
+          window.testIdbOpens=0;
+          indexedDB.open=(...args) => { ++window.testIdbOpens; return open(...args); };
+        })();''')
+        def handoff(candidate):
+            owner.wait_for_function('''async () =>
+              (await navigator.locks.query()).pending.some(lock => lock.name==='picross-p1-userfs')''')
+            candidate.wait_for_timeout(250)
+            assert candidate.evaluate('testIdbOpens===0 && !picrossStorage.ready && !picrossStorage.engine')
+            evidence['lock_handoff'] = owner.evaluate('navigator.locks.query()')
+            owner.evaluate('releaseLock()')
+        page, errors = open_page(context, url, before_start=handoff)
+        owner.close()
+        passed('delayed exclusive lock handoff waits before IndexedDB hydration')
         version = context.browser.version if context.browser else page.evaluate('navigator.userAgent')
         evidence['version'] = version
         evidence['launch_options'] = options(name)
         evidence['graphics'] = graphics(page)
         passed('export/catalog startup')
+        labels = state(page)['labels']
+        assert all(x['unknown'] and not x['reveal'] and x['status'] == 'Neu' for x in labels)
+        assert all(x['difficulty'] == 'Nicht eingestuft' for x in labels)
+        for part in ('difficulty', 'mode'):
+            page.mouse.move(*point(page, state(page)['labels'][0][part+'_center']))
+            page.wait_for_timeout(900)
+            page.screenshot(path=str(output/f'{name}-ke-{part}-tooltip.png'))
+            page.mouse.click(*point(page, state(page)['labels'][0][part+'_center']))
+            wait(page, 'picrossProbe.work')
+            assert state(page)['id'] == 'T-01'
+            control(page, name='nav-album')
+            wait(page, 'picrossProbe.album')
+        passed('KE neutral new labels and passive mode/difficulty click routes')
         control(page, text='Blatt 01')
         wait(page, 'picrossProbe.work')
         draw(page, (2,2), (8,2), retract=(5,2))
@@ -150,9 +186,16 @@ def exercise(pw, name, root, update, url, output, evidence):
         second = context.new_page(); second.goto(url)
         second.wait_for_function('document.getElementById("message").textContent.includes("anderen Tab")')
         assert not second.evaluate('window.picrossStorage.ready')
-        second.close(); page.bring_to_front()
+        assert not second.evaluate('!!picrossStorage.engine')
+        assert second.evaluate('testIdbOpens===0')
+        page.bring_to_front()
         passed('second writer blocked')
         page.reload(); wait(page, 'window.picrossProbe && picrossProbe.album'); saved(page)
+        # The rejected request must be gone, not start later when the owner reloads.
+        assert not second.evaluate('picrossStorage.ready || !!picrossStorage.engine')
+        assert second.evaluate('testIdbOpens===0')
+        assert second.locator('#message').inner_text().startswith('Start fehlgeschlagen:')
+        second.close()
         control(page, text='Blatt 01')
         for key in expected: assert state(page)[key] == expected[key], key
         passed('reload restores cells, complete history/redo and view')

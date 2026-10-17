@@ -34,7 +34,7 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
             write_json(project / f"data/{stem}.json", data)
             shutil.copyfile(project / "art/fixtures/t01.svg", project / f"art/{stem}.svg")
             registry["entries"].append(dict(id=identifier, key=stem, save_slot=stem, definition=f"data/{stem}.json",
-                reveal=f"art/{stem}.svg", visible=True, category_id="gebaeude-bauwerke" if index < 250 else "voegel"))
+                reveal=f"art/{stem}.svg", visible=True, difficulty=None, category_id="gebaeude-bauwerke" if index < 250 else "voegel"))
             if index % 2 == 0:
                 saved = deepcopy(old_save)
                 cells = [n if n > 0 else -1 for row in data["solution"] for n in row]
@@ -55,7 +55,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
     directory = output / "kat2"
     directory.mkdir()
     reports = []
-    for mode in ("regular", "restart", "large", "empty", "invalid", "adapter", "information", "kb", "kk"):
+    for mode in ("regular", "restart", "large", "empty", "invalid", "adapter", "information", "kb", "kk", "ke"):
         project = workspace / ("kat2-" + mode) / "game"
         copy_regression_game(root, project)
         saves = workspace / ("kat2-" + ("regular" if mode == "restart" else mode) + "-saves")
@@ -85,7 +85,10 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
             python_phase("kat2-adapter-register", lambda: registration(exported, checkout, apply=True))
             install_runtime_fixtures(root, project, append=True)
         else:
-            fixture(project, saves, "regular" if mode in ("restart", "information", "kb", "kk") else mode)
+            fixture(project, saves, "regular" if mode in ("restart", "information", "kb", "kk", "ke") else mode)
+        if mode == "ke":
+            # Fixed real high-resolution contour sample; no growing corpus copy.
+            shutil.copyfile(root/"game/art/content/yin_yang_001.png", project/"tests/fixtures/ke-reveal.png")
         env = environment.copy()
         env.update(P1_TEST_SAVE_ROOT=str(saves), KAT2_OUTPUT=str(directory), KAT2_MODE=mode)
         phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)

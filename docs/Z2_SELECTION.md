@@ -1,5 +1,16 @@
 # Z2: aktive Auswahl und native Integration
 
+## Implementierung auf dem Arbeitsbranch · KE / #233
+
+[Katalogdarstellung](CATALOG_PRESENTATION.md) ergänzt Papieretikett sowie eigene
+gezeichnete Modus-/Statussymbole und das Fragezeichen für Neu.
+Die eigenen deterministischen Konturen und Schraffuren entstehen in
+`game/ui/catalog_ink.gd`, ohne neue Bitmap-, Font- oder Fremdressourcen.
+[KE-Prüfzuordnung](KE_VERIFICATION.md); KE-R01 und KE-M01 separat offen.
+Vorhandene Fonts, Icons, Werkzeuge und deren Herkunft bleiben; die folgenden
+KK-Aussagen beschreiben die integrierte Ausgangsbasis. KE ändert weder Zellatlanten
+noch Hinweisgestaltung und führt keine neue Animation ein.
+
 ## Aktuelle Fortschreibung KK / #174
 
 Bakso Daging gilt zusätzlich für Kachel-Motivüberschriften/`???`, mit denselben

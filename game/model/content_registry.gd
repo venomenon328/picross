@@ -1,6 +1,7 @@
 extends RefCounted
 ## Bundled, generated data only. No save input or runtime directory discovery.
 const PATH: String = "res://data/registry.json"
+const Difficulty = preload("res://model/catalog_difficulty.gd")
 static var cached: Dictionary = {}
 static var load_error: String = ""
 
@@ -15,7 +16,7 @@ static func valid_category_id(value: Variant) -> bool:
 	return true
 
 static func validate(raw: Variant) -> String:
-	if not raw is Dictionary or raw.size() != 3 or raw.get("format") != "picross-runtime-registry-v2" or not raw.get("entries") is Array or not raw.get("categories") is Array:
+	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
 		return "Unsupported runtime registry format"
 	if raw.categories.size() > 256 or raw.entries.size() > 10000:
 		return "Registry count limit exceeded"
@@ -39,9 +40,12 @@ static func validate(raw: Variant) -> String:
 			return "Category order must be unique, ascending and within 1..10000"
 		previous_order = int(order)
 	var seen: Dictionary = {}
+	var current: bool = raw.format == "picross-runtime-registry-v3"
 	for item: Variant in raw.entries:
-		if not item is Dictionary or item.size() != 7 or not item.get("visible") is bool or not item.has("category_id"):
+		if not item is Dictionary or item.size() != (8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
 			return "Invalid registry entry fields"
+		if current and (not item.has("difficulty") or not Difficulty.valid(item.difficulty)):
+			return "Invalid catalog difficulty"
 		for field: String in ["id", "key", "save_slot", "definition", "reveal"]:
 			if not item.get(field) is String or item[field].is_empty():
 				return "Invalid registry entry " + field

@@ -1,5 +1,15 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+**KE / #233, Implementierungsvertrag vom 17.10.2026:**
+Die Runtimeprojektion ist `picross-runtime-registry-v3` gemäß
+[CATEGORIES](CATEGORIES.md): bisherige sieben Felder plus `difficulty` als null
+oder sechs typisierte Angaben. Der Loader behält den exakten v2-Vertrag.
+Registrierung, Update, explizite Projektion und Recovery verwenden dieselbe
+minimale kanonische Projektion. Keine Produktionsfreitexte gelangen in die Runtime.
+Exportmanifest-Versionen, Paket-/Integrationsbindungen und abgeschlossene
+Freigaben bleiben unverändert. Entfernte Produktionspakete werden nicht
+rekonstruiert. [KE-Nachweise](KE_VERIFICATION.md), separate KE-R01/KE-M01.
+
 KAT-1 ergänzt den verbindlichen [Kategorien-/Kompatibilitätsvertrag](CATEGORIES.md).
 Direkt-/Reparaturexporte mit Linienprofil verwenden v2, autorisierte manuelle Ableitungen v3,
 jeweils mit expliziter Kategorie und gehashtem Snapshot;
@@ -160,7 +170,8 @@ werden frisch geprüft und erst dann veröffentlicht. Bestehende Ziele sind Fehl
 
 [content/registry.json](../content/registry.json) ist autoritativ;
 [game/data/registry.json](../game/data/registry.json) ihre exakt kanonisch geprüfte
-Runtime-Projektion ohne Produktionsmetadaten, beide jetzt versioniert als v2.
+Runtime-Projektion v3 mit ausschließlich den typisierten KE-Katalogmetadaten;
+die Inhaltsregistry bleibt v2.
 Kategorien/Zuordnung folgen [KAT-1](CATEGORIES.md). Alle Produktions-IDs folgen
 lexikografisch, ohne reservierten Präfixbestand; auch null Einträge sind gültig.
 Die früheren F01…F09-Reservierungen sind durch #114 aufgehoben. Unbekannte IDs
@@ -252,6 +263,20 @@ nutzt `recover-registration` denselben expliziten Recoverybefehl; alle aktuellen
 Bytes müssen entweder dem alten oder neuen Stand entsprechen, und vorhandene
 neue Paketdateien müssen ihren Hashes entsprechen. Fremdänderungen blockieren
 vor jeder Mutation. Nur das neue Paket wird beim Rollback entfernt.
+
+KE-N1 erweitert ausschließlich die Journal-Kompatibilität: Registrierungsjournal
+v2 und Updatejournal v1 akzeptieren kanonisches Runtime-v2 (sieben Felder) sowie
+aktuelles v3, jeweils einheitlich in beiden Snapshots. Der alte autoritative Stand
+wird strikt einschließlich Schwierigkeit validiert; ein temporärer Prüfcheckout
+mit gebundenen Runtime-Dateien, aufbewahrten Manifesten und Notices prüft den
+gesamten v3-Zielstand vor der ersten Mutation. Kein Solver-/Exportreplay und keine
+Rekonstruktion gelöschter Produktion. Definition/Notice werden bei Updates exakt
+restauriert; Reveal, alte Pakete und fremde Dateien bleiben erhalten. Die Recovery
+schreibt direkt die kanonische v3-Zielprojektion. Nach eigenem Prozessabbruch ist
+nur genau diese zusätzliche Zwischenprojektion wiederaufnehmbar. Ein separates
+späteres `sync-runtime` gehört nicht zum erfolgreichen Rollback. Unbekannte,
+gemischte, nichtkanonische oder fremd veränderte Bytes blockieren mit erhaltenem
+Journal. Die ältere Registrierungsjournal-v1-Sperre bleibt ausdrücklich bestehen.
 
 Keine echten Saves werden gelesen, migriert oder gelöscht. Schema1 bleibt;
 ein Save der alten Runtime-Revision wird nach bestehendem Vertrag als inkompatibel
