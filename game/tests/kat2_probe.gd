@@ -47,7 +47,9 @@ func click(control: Control) -> void:
 	var point: Vector2 = control.get_global_rect().get_center()
 	if control is Card:
 		# Both title and footer can be clipped after a preserved scroll offset.
-		point = control.get_global_rect().intersection(app.album.scroll.get_global_rect()).get_center()
+		# The centre may be a recovery action; the visible inset belongs to the card.
+		var visible: Rect2 = control.get_global_rect().intersection(app.album.scroll.get_global_rect())
+		point = Vector2(visible.position.x+5*app.ui_scale,visible.get_center().y)
 	if control.get_window() != root: point += Vector2(control.get_window().position)
 	click_at(point)
 

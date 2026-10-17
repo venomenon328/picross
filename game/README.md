@@ -5,8 +5,8 @@ Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
 „Rätselkatalog“. Lange Namen nutzen zwei Zeilen, danach eine Auslassung. Darunter
 steht in „Alle Rätsel“ die Kategorie; bei Filterung bleibt dieser Platz reserviert.
 Neue Rätsel zeigen ein gezeichnetes Fragezeichen. Begonnene zeigen nur eigene
-Füllungen, auch falsche. X und unbekannte Zellen bleiben neutral; nach Undo mit
-verbleibender History bleibt die Vorschau leer, ohne Fragezeichen. Erst ein
+Füllungen, auch falsche. X und unbekannte Zellen bleiben neutral. Ein begonnener
+Stand ohne Füllzellen, etwa nach Undo, zeigt eine leere Vorschau ohne Fragezeichen. Erst ein
 gültiger Abschluss zeigt Motivname und farbiges Abschlussbild.
 
 Das Papieretikett unter dem Bild zeigt oben Größe und Modus (ein dunkler Stift
