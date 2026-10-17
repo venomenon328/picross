@@ -1,6 +1,6 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**KE / #233, freigegebenes Soll vom 17.10.2026, noch nicht implementiert:**
+**KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
 [Katalogdarstellung KE-D01–D05](CATALOG_PRESENTATION.md) ergänzt Papieretikett,
 Stift-/Statuspiktogramme und ein eigens gezeichnetes Graphitfragezeichen im
 Katalogbildraum. Metadaten bleiben in Plex, Motivüberschriften in Bakso; keine
