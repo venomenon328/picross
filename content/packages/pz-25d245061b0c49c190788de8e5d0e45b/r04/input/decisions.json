@@ -1,0 +1,30 @@
+{
+  "adapter_requirement": "Für den festen Mono-Editpfad wird bei Auftrag4 die externe ZA-1-v2-Autorisierung an das versiegelte r04-Paket und die dann tatsächliche Endabnahme gebunden. Keine Freigabe vorwegnehmen.",
+  "all_other_positions_protected": 1198,
+  "difficulty_change": "r03 R4/L5 entfällt: neue Hinweise mit full-line-mono vollständig zertifiziert. R04 L2 redaktionell geschätzt, BereichL2–L4, low.",
+  "final_editorial": "pending",
+  "fixed_changes": [
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 35,
+      "row": 9
+    },
+    {
+      "after": "ink",
+      "before": "empty",
+      "column": 36,
+      "row": 9
+    }
+  ],
+  "phase": "content_ready",
+  "profile": "paired-lines-mono",
+  "profile_reason": "Versionierter Paarvertrag erhalten, da Referenz paarzertifiziert ist. Neue eigene Linienbaseline solved; keine Paaroperation notwendig.",
+  "reason": "Explizit beauftragte feste Korrektur; genau ein Ergebnis, keine automatische Reparatur oder Variantenwahl.",
+  "reference": "paired/area-80",
+  "repair_attempts": 0,
+  "request": "approvals/edit-request.json",
+  "search": false,
+  "seed": null,
+  "selected": "fixed-import/fixed"
+}

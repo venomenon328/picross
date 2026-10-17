@@ -1,0 +1,26 @@
+{
+  "actor": "Eigentümer im aktuellen Chat",
+  "derived_from_reveal_sha256": "9b4fa04b16efebcd19d350e347d54537f992ea4e340766623aec05d5abe09dbe",
+  "evidence": "approvals/motif-evidence.md",
+  "file": "motif/MA-r01.png",
+  "parameters": {
+    "actual_crop": [
+      49,
+      27,
+      1417,
+      1053
+    ],
+    "fit": "exact",
+    "foreground_colors": 1,
+    "height": 30,
+    "method": "area",
+    "mode": "mono",
+    "width": 40
+  },
+  "revision": "r01",
+  "sha256": "ef408ac399ea684f6253912c32d88410a2adc8032784c9861854dd841125b94e",
+  "statement": "Ich gebe die Motivvorlage motif/MA-r01.png · MA-r01 (Paket r02) frei; Parameter: Vorgeschlagen: 40 × 30, monochrom, eine Vordergrundfarbe; Area, proportionaler Exact-Crop gemäß config/parameters.json. Motivfreigabe offen.. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "timestamp_basis": "recorded_at; message timestamp unavailable",
+  "timestamp_utc": "2026-10-16T23:59:15.737405+00:00",
+  "type": "human_motif_approval"
+}
