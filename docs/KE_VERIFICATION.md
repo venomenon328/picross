@@ -38,6 +38,14 @@ Die früheren lokalen d2c66ba-Belege bleiben historische Angaben; die neue Liefe
 beansprucht keine nachträgliche unabhängige Sichtung dieses alten Archivs. Neue
 technische Belege schließen weder KE-R01-Nachreview noch KE-R1-A02/KE-M01 selbst.
 
+Der Eigentümer hat die während der KE-N1-Prüfung gefundene Firefox-Startkorrektur
+zusätzlich freigegeben: Beim Reload konnte die sofortige Lockanfrage die noch
+belegte Sperre des vorherigen Dokuments als Zweittab ausgeben. Die begrenzt
+wartende exklusive Anfrage erhält den Schutz vor parallelem Speicherzugriff;
+abgebrochene Anfragen starten nicht nachträglich. Der
+[Webvertrag](WEB_HOSTING.md) und die echten Browserproben bilden diese Ergänzung
+ab. Fehlversuche des vorangehenden Stands bleiben im PR-Nachweis sichtbar.
+
 | Kriterien | Änderung und technische Probe |
 | --- | --- |
 | A01/A06 | 228–240 logische Pixel breite Karten mit festen Titel-/Kategorie-/Bild-/Etikett-/Fußbereichen in `catalog_card.gd`; `kat2_probe.gd` prüft alle drei gemeinsamen Grafikfälle, zusätzlich 1920×1080/UI125, tatsächliche Textbreiten, lange Texte, Filter/Seiten, UI-Rundlauf und gleiche Geometrie. |
