@@ -7,7 +7,7 @@ nicht in CI. Keine rätselspezifischen Unit-Tests oder Bestands-Replays hinzufü
 die unten historisch dokumentierten pauschalen RP-Paket-/CI-Prüfpflichten.
 Allgemeine Werkzeugtests mit festem synthetischem Testbestand bleiben erforderlich.
 
-**SD / [#235](https://github.com/venomenon328/picross/issues/235), SD-C1 technisch umgesetzt (17.10.2026):**
+**SD / [#235](https://github.com/venomenon328/picross/issues/235), SD-C1 integriert (18.10.2026):**
 [Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) ergänzt die instrumentierte
 Skala 1–5 und den ausdrücklich manuellen Bewertungsweg. [SD-A](SD_ANALYZER.md)
 liefert den separaten Analysator; [SD-B](SD_CALIBRATION.md) ergänzt die eingefrorene
@@ -15,7 +15,8 @@ Methode 0.3 für den ausdrücklichen Einzelaufruf. Aktuelle Profile und
 Produktionsverträge gelten weiter. Die Integration neuer Bewertungen erfolgt
 über [SD-C1](SD_CATALOG.md); ein SD-B-Rating allein ändert keine Produktionsfreigabe.
 Neue Registrierung und logisch geänderte Definitionen verlangen den extern vollständig
-geprüften 0.3-Input; die reale Bestandsbewertung/Übernahme bleibt SD-C2.
+geprüften 0.3-Input. SD-C2 liefert zunächst den geprüften Erstbericht und lesenden
+Plan; aktive Übernahme bleibt hinter separatem qualifiziertem Review/Folgeauftrag.
 
 [KAT-1](CATEGORIES.md) ergänzt den Produktionsfundus und ZA-1 um thematische Kategorien. Die Zuordnung steht spätestens vor dem kategorisierten Export fest und bleibt außerhalb von Raster-, Logik-, Proof- und Freigabeidentität. Arbeitsindex und Runtime-Registrierung bleiben getrennt.
 
