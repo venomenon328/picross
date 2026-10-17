@@ -50,7 +50,8 @@ func configure(next_payload: Dictionary, matrix: Array, colors: Array, bounds: R
 	area = bounds
 	art.commands.clear()
 	if artwork != null:
-		art.commands.append([artwork, artwork_rect(), Rect2(Vector2.ZERO, artwork.get_size()), Color.WHITE])
+		var display: Texture2D = display_texture(artwork_rect())
+		art.commands.append([display, artwork_rect(), Rect2(Vector2.ZERO, display.get_size()), Color.WHITE])
 	art.queue_redraw()
 
 func begin(origin: Rect2, commands: Array, ink_material: Material) -> void:

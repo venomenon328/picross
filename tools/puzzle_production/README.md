@@ -22,6 +22,15 @@ Identität, Slot, Kategorie und Reveal bleiben erhalten. Recovery nutzt weiterhi
 `recover-registration`; Details und Grenzen im ZA-1-Vertrag. `register` allein
 überschreibt weiterhin keine vorhandenen Inhalte.
 
+KE-N1: `recover-registration` übernimmt gültige alte Runtime-v2-Snapshots in
+Registrierungsjournal v2 bzw. Updatejournal v1 und stellt direkt einen vollständig
+geprüften v3-Checkout her. Beide Snapshots müssen kanonisch und formatgleich sein.
+Die gesamte Zielansicht wird vor Änderungen ohne Produktionsreplay geprüft;
+Wiederaufnahme erlaubt nur exakt gebundene alte/neue Bytes oder die eigene
+hergeleitete v3-Projektion. Fremde Änderungen erhalten alle Dateien samt Journal.
+Kein nachgeschobenes Sync, keine realen Saveänderungen; Journal v1 bleibt gesperrt.
+Feste Altformatregressionen: `tests/puzzle_production/test_ke_recovery.py`.
+
 Python **3.11+**, ausschließlich Standardbibliothek, ohne Installation von Paketen,
 Netzwerk-/Modellaufrufe oder P1-Abhängigkeit. Aus dem Repository-Root ausführen;
 unter Windows einen tatsächlichen Python-Interpreter statt eines Store-Alias nutzen.

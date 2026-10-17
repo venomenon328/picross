@@ -135,6 +135,15 @@ Teil dieser Identität. Verschiedene Installationen auf demselben Origin teilen
 den Speicher; unterschiedliche Origins/Profile sowie Windows bleiben getrennt.
 Ein Web Lock wird vor dem Laden des Dateisystems gehalten. Ein zweiter Tab
 startet nicht schreibend; nach Schließen der ersten Instanz kann neu geladen werden.
+Beim Start darf die exklusive Anfrage bis zu drei Sekunden auf die Freigabe des
+vorherigen Dokuments warten. Das berücksichtigt die verzögerte Sperrfreigabe beim
+Firefox-Reload. Ohne Erwerb wird die Anfrage abgebrochen und die Zweittabmeldung
+gezeigt; sie startet auch nach späterer Freigabe nicht im Hintergrund. Bis zum
+Erwerb erfolgt kein IndexedDB-/Enginezugriff. Eine gehaltene Sperre wird weder
+gestohlen noch vor dem Ende des besitzenden Dokuments freigegeben.
+Die Browserprobe prüft verzögerte Freigabe mit zwei echten Dokumenten, blockierte
+Zweittabs ohne Speicherzugriff und dauerhafte Entfernung abgebrochener Anfragen.
+Grundlage ist das [Abbruchsignal der Web Locks API](https://www.w3.org/TR/web-locks/#dom-lockoptions-signal).
 
 Bestätigte Aktionen schreiben sofort in den vorhandenen validierenden SaveStore.
 Eine serialisierte Synchronisation bestätigt erst nach dem echten IDBFS-Callback

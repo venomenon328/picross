@@ -46,6 +46,15 @@ vorhanden; Engine, Importressourcen und Pflichtselektion bleiben unverändert.
 
 ## Getrennte Gates
 
+KE-N1 / #233 ergänzt den gemeinsamen Reveal-Bildpfad: pro verdienter Anzeige
+auf das Anzeigemaß mit Lanczos verkleinerte Textur auch während der EA-Überblendung,
+im Endbild und bei Wiederöffnung. Die bisherige lineare Abschlussfilterung allein
+war bei starker Verkleinerung nicht ausreichend. Originale, Bildgeometrie, Timing,
+Save-/Abbruchverhalten bleiben gleich. `ke_graphics.gd` ergänzt native Vorher-/Nachher-
+Ausschnitte für ein festes hochauflösendes PNG und ein transparentes SVG in allen
+vier KE-Ansichten. Die bisherigen EA-Bewegungs-/Neustartprüfungen bleiben aktiv.
+Aktuelle Ergebnisbindung und getrennte KE-Abnahmen: [KE_VERIFICATION](KE_VERIFICATION.md).
+
 - **EA-T01:** technische Lieferung des Implementierers einschließlich aktueller CI,
   nativer Bewegung, Windows-Export, Browsern und getrenntem Selbstreview vor Übergabe.
 - **EA-R01:** unabhängiges technisches Review des gebundenen Heads **vor Merge**.

@@ -1,5 +1,19 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
+**KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
+[Katalogdarstellung KE-D01–D05](CATALOG_PRESENTATION.md) ergänzt Papieretikett,
+Stift-/Statuspiktogramme und ein eigens gezeichnetes Graphitfragezeichen im
+Katalogbildraum. Metadaten bleiben in Plex, Motivüberschriften in Bakso; keine
+neuen Fonts. Subtil unregelmäßige Konturen, zurückhaltende Schraffur, keine Animation.
+Gezielte Modus-/Schwierigkeits-Tooltips ergänzen den bestehenden Resettooltip;
+der Ganzkarten-Tooltip bleibt entfallen. Die nachfolgende KK-Beschreibung ist die
+integrierte Ausgangsbasis; Zell-/Hinweisrendering ist nicht Teil von KE.
+KE-N1: Nur die Schwierigkeitsziffer erhält den gedeckten Grün–Oliv/Ocker–Rost–Rot-
+Akzent; Name und „Nicht eingestuft“ bleiben dunkel. Lokale Polygonkantenglättung
+betrifft die Modusstifte und den Begonnen-Stift. Verdiente Katalog-/Abschlussbilder
+werden vor linearer Anzeige gezielt auf das Anzeigemaß verkleinert, ohne globale
+Glättung oder Änderung eigener Miniaturen.
+
 **KK / #174** erweitert die vorhandene Bakso-Rolle gezielt um Motivüberschriften
 und `???` in Katalogkarten. Feste zweizeilige Titel, begrenzte Metadaten, gleicher
 proportionaler Bildraum und feste Fußzeile ersetzen die inhaltsabhängigen KB-Höhen.

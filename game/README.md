@@ -2,10 +2,23 @@
 
 Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
 Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
-„Rätselkatalog“. Lange Namen nutzen zwei Zeilen, danach eine Auslassung. Größe,
-Mono/Farbe und Kategorie stehen darunter; unten links die Blattkennung, rechts
-„Neu“, „Begonnen“ oder „Gelöst“. Vorschau und Motiv passen proportional in denselben
-Bildraum.
+„Rätselkatalog“. Lange Namen nutzen zwei Zeilen, danach eine Auslassung. Darunter
+steht in „Alle Rätsel“ die Kategorie; bei Filterung bleibt dieser Platz reserviert.
+Neue Rätsel zeigen ein gezeichnetes Fragezeichen. Begonnene zeigen nur eigene
+Füllungen, auch falsche. X und unbekannte Zellen bleiben neutral. Ein begonnener
+Stand ohne Füllzellen, etwa nach Undo, zeigt eine leere Vorschau ohne Fragezeichen. Erst ein
+gültiger Abschluss zeigt Motivname und farbiges Abschlussbild.
+
+Das Papieretikett unter dem Bild zeigt oben Größe und Modus (ein dunkler Stift
+für Mono, drei Stifte für Farbe), unten Schwierigkeit und Status. Die Skala lautet
+„1 Sehr leicht“, „2 Leicht“, „3 Mittel“, „4 Schwer“, „5 Sehr schwer“; nur die Ziffer
+ist farbig. Schätzung, Unsicherheit und Spannweite erläutert der Tooltip in Worten.
+Ohne Einstufung steht neutral „Nicht eingestuft“. Verdiente Reveals und die kleinen
+Stiftsymbole sind lokal geglättet; der vollständige Bildraum bleibt erhalten.
+„Neu“, „Begonnen“ und „Fertig“ stehen jeweils neben einem eigenen Symbol.
+Die Fußzeile trägt nur „Blatt NN“. Modus und Schwierigkeit erklären sich beim
+Darüberfahren mit der Maus; ein Klick auf das Etikett öffnet die Karte.
+[KE-Vertrag und getrennte Abnahmen](../docs/KE_VERIFICATION.md).
 
 Die Karte öffnet oder setzt ihr Blatt fort; gelöste Blätter öffnen die Endansicht.
 Oben rechts steht bei bearbeiteten Blättern der Neustartpfeil mit „Rätsel zurücksetzen“.
@@ -13,8 +26,8 @@ Er verlangt Bestätigung; Abbrechen erhält den Stand. Bei gültigem leerem Stan
 er verborgen, bei Speicher-/Recoveryproblemen bleibt er erreichbar. Ungültige Saves
 sperren Öffnen und zeigen „Ungültig“. Speicherhinweise und „Backup übernehmen“ /
 „Backup erneuern“ stehen im Bildraum, bei langen Diagnosen dort scrollbar.
-Die Karte selbst hat keinen Tooltip; der Resettooltip und die übrigen
-UI100/125-skalierenden Buttontooltips bleiben. [KK-Prüfzuordnung](../docs/KK_VERIFICATION.md).
+Die Karte selbst hat keinen Tooltip; gezielte Modus-/Schwierigkeits- und
+Resettooltips skalieren bei UI100/125 mit.
 
 Zusätzlich gibt es den [WEB-1-Browserentwicklungsweg](../docs/WEB_HOSTING.md):
 statischer Export für Chromium/Firefox mit Maus und dauerhaftem Browserspeicher.
@@ -25,7 +38,7 @@ der verlinkten Anleitung. Persönliche Webprobe und Live-Deployment bleiben sepa
 
 Die Entwicklungsfassung enthält die [Kategorienprojektion nach KAT-1](../docs/CATEGORIES.md). Das Spiel startet im Rätselkatalog mit „Alle Rätsel“. Die scrollbare Kategorienauswahl enthält auch leere Kategorien; je Seite erscheinen höchstens 24 Karten. Eine Karte öffnet oder setzt genau ihr Blatt fort. Zurückkehren erhält Kategorie, Seite und Scrollposition; ein Neustart beginnt wieder bei „Alle Rätsel“, Seite 1. Einstellungen/Info und Beenden sind direkt erreichbar.
 
-Karten zeigen „Neu“, „Begonnen“ (auch mit ausschließlich Redohistorie) oder „Gelöst“. Die Vorschau zeigt nur eigene Füllungen, ohne Korrekturen; Name und Motivbild erscheinen erst nach gültigem Abschluss. Ein leerer automatisch angelegter Save bleibt „Neu“. Reset und Backupaktionen gehören zur jeweiligen Karte und verlangen weiterhin Bestätigung. Ein gültiger leerer Bestand und ein Katalogladefehler haben unterschiedliche Anzeigen. Kategorienänderungen verändern keine Rätseldefinition, Revision oder Spielstände.
+Karten zeigen „Neu“, „Begonnen“ (auch mit ausschließlich Redohistorie) oder „Fertig“. Begonnene Vorschauen zeigen nur eigene Füllungen, ohne Korrekturen; Name und Motivbild erscheinen erst nach gültigem Abschluss. Ein leerer automatisch angelegter Save bleibt „Neu“. Reset und Backupaktionen gehören zur jeweiligen Karte und verlangen weiterhin Bestätigung. Ein gültiger leerer Bestand und ein Katalogladefehler haben unterschiedliche Anzeigen. Kategorienänderungen verändern keine Rätseldefinition, Revision oder Spielstände.
 
 Der reguläre Spielbestand folgt `content/registry.json` und enthält ausschließlich
 freigegebene Workflow-Inhalte, aktuell elf Rätsel. Weitere Inhalte werden über den

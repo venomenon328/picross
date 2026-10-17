@@ -1,5 +1,13 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+**KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
+[Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt gezielt die nachfolgende
+integrierte KK-Metadaten-/Fußzeilenanordnung durch eine passive 2×2-Infobox und
+ergänzt das gezeichnete Fragezeichen ausschließlich für Neu. „Fertig“ ist nur
+Katalog-Anzeigetext. Statusermittlung, History/Redo, Fehler/Recovery, Reset,
+Save-Schema 1 und Spoilergrenze bleiben. Schwierigkeit verwendet die kompatible
+Runtimeprojektion v3 mit v2-Leser nach KE-D06, ohne Definitions-/Saveänderung.
+
 **KK / #174** führt KAT-2/KB mit festen gleichen Grid-Zellen fort. Einzige
 Kachelüberschrift ist das verdiente Motiv oder `???`, kleineres Bakso, maximal zwei
 Zeilen mit Auslassung. Metadaten, proportionale Vorschau und Fußzeile haben feste
