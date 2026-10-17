@@ -18,6 +18,18 @@ gehören nicht dauerhaft in den aktiven Tree, Builds oder neue CI-Artefakte.
 - Aktive Buch-/Font-/Atlasquellen, Rechte und die noch von Tests gelesenen Layoutinputs.
   Offene Designarbeit und die geschützte Eigentümerreferenz gemäß CI-Policy bleiben.
 
+### Freigegebener SD-Sollstand
+
+[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md), Ursprung
+[#235](https://github.com/venomenon328/picross/issues/235), ergänzt nach SD-C die
+dauerhaften Daten um kompakte aktive Bewertungen, Eingangsbindungen und den
+gebundenen Methoden-/Referenzstand außerhalb versiegelter Produktionsoriginale.
+Manuelle Neubewertung nutzt erhaltene Runtime-Logikeingänge; sie benötigt keine
+Wiederherstellung von Quellen, Proofs oder ZIPs und begründet keine allgemeine
+Produktions-Replaypflicht. Die neue Ablage ist noch nicht implementiert.
+Referenzen werden unabhängig synthetisch kuratiert; reale Katalogrätsel oder
+deren Kopien werden weder Kalibrierungskorpus noch automatischer Testbestand.
+
 ## Aus dem aktiven Tree entfernt
 
 Quelle vor dieser Bereinigung: `37f500d5e6599a6c8ff85c8ca8edb4d190474c5f`.

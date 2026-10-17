@@ -9,7 +9,7 @@ frühere Jobangaben sind abgelöst.
 Maßgeblich: [CI-Policy](../../docs/CI_POLICY.md) und
 [Regelwerk](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
 
-KAT-1 ergänzt [Kategorien und Zuordnung](../../docs/CATEGORIES.md): neue ZA-1-Exporte verlangen `--category-id` und `--categories`; Snapshot, Manifest v2, Zielregistry und Runtimeprojektion werden gemeinsam geprüft. `sync-runtime --checkout .` übernimmt geprüfte Metadaten in die Projektion, `check-registry --checkout .` prüft inklusive Paket-Replay. Alte Exporte bleiben prüfbar, benötigen zur neuen Registrierung aber einen kategorisierten Neu-Export.
+KAT-1 ergänzt [Kategorien und Zuordnung](../../docs/CATEGORIES.md): neue ZA-1-Exporte verlangen `--category-id` und `--categories`; Snapshot, Manifest v2, Zielregistry und Runtimeprojektion werden gemeinsam geprüft. `sync-runtime --checkout .` übernimmt geprüfte Metadaten in die Projektion. `check-registry --checkout .` prüft laufende Produktionspakete per Replay, abgeschlossene Produktion über die kompakte Integrationsbindung. Alte Exporte bleiben prüfbar, benötigen zur neuen Registrierung aber einen kategorisierten Neu-Export.
 
 ZA-1 ergänzt den allgemeinen Authoring-v2-Zieladapter und Datenregistrierung:
 [CLI, Schemas und Fehlerverhalten](../../docs/ZA1_ADAPTER.md),
@@ -315,6 +315,23 @@ Notwendigkeitsbeleg. Difficulty 0.2 meldet R4/L5 nur bei geprüfter Linienbaseli
 `stalled` und vollständigem Paarproof derselben Logik. Umfang, Zeit und
 redaktionelle Freigabe bleiben eigene Angaben; kein vollständiger R0–R3-Analysator.
 
+## Geplante wiederholbare Schwierigkeit (SD)
+
+Der freigegebene [SD-Vertrag](../../docs/PUZZLE_DIFFICULTY.md), Ursprung
+[#235](https://github.com/venomenon328/picross/issues/235), sieht eine getrennte
+Bewertungsspur mit instrumentierten R0–R3-Regeln und synchronen Wellen vor.
+Bestehende Proofverträge und der unabhängige R4-Notwendigkeitsbeleg bleiben
+unverändert. SD-B bindet feste Skalen- und Größenregeln an unabhängige synthetische
+Referenzen; der reale Katalog ist weder Kalibrierungskorpus noch Testbestand.
+Auch Kopien realer Rätsel dürfen keine automatisierten Bewertungsfälle werden.
+
+Erst SD-C führt den gemeinsamen manuellen Weg für ausgewählte Bestandsrätsel und
+neue Rätsel nach finaler Deduktionsprüfung ein: Bericht erzeugen, Bindungen prüfen,
+ausdrücklich beauftragt übernehmen. Passende Berichte sind wiederverwendbar.
+Die Bewertung läuft weder in CI noch beim Katalogstart. Methode 0.3, neue CLI und
+Speicherformate sind noch nicht implementiert; die hier dokumentierten Befehle
+und Authoring 0.5.0 behalten ihren aktuellen Vertrag.
+
 ## Linienverfahren und Ressourcen
 
 Solver: Vorwärts-/Rückwärtserreichbarkeit eines Zellautomaten aus Gap- und
@@ -566,3 +583,9 @@ python -m tools.puzzle_production.target_adapter retire-production --checkout . 
 Bestandsprüfungen lesen danach Runtimehashes und kompakte Integrationsdaten,
 keine Quellen, Proofs, ZIPs oder Produktionsreplays. Die Entwicklung neuer Rätsel
 verwendet weiterhin vollständige neue Eingänge/Freigaben und technische Prüfung.
+
+Nach Einführung von SD-C bleiben zusätzlich die kompakte aktive Bewertung,
+ihre Eingangsbindungen und der gebundene Methoden-/Referenzstand außerhalb
+versiegelter Produktion erhalten. Neue Bewertung nutzt dann Runtime-Logikeingänge
+nach SD-D09/D10; sie verlangt keinen allgemeinen Produktions-Replay und keine
+Wiederherstellung bereinigter Produktionspakete.

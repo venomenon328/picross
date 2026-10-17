@@ -1,12 +1,25 @@
 # Projektprofil: picross
 
-**KE / #233 (17.10.2026), Implementierung auf `feat/233-katalogetiketten`, Abnahmen getrennt offen:**
+**SD / #235 (17.10.2026), Spezifikation freigegeben; noch nicht implementiert:**
+[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) bindet die geplante wiederholbare
+Einstufung 1–5: instrumentierte Logik und Lösungsfluss, begrenzter Größenbeitrag,
+feste Grenzen anhand unabhängiger synthetischer Referenzen. Der aktuelle Katalog
+muss nicht alle Stufen enthalten und kalibriert keine Skalenenden. Analyse und
+Übernahme erfolgen ausdrücklich, außerhalb von CI und Runtime; neue Rätsel
+verwenden nach der Umstellung denselben Methodenstand. Automatisierte Tests
+dürfen weder den realen Katalog noch daraus kopierte oder abgeleitete Fälle nutzen.
+SD-A/SD-B/SD-C liefern Analyse, gebundene Methode und Katalog-/Integrationsweg.
+Beauftragt sind derzeit Issues und Dokumentation, keine Code-/Testimplementierung,
+reale Neueinstufung oder Merge. Aktuelle 0.1-/0.2-Datenverträge gelten bis SD-C.
+
+**KE / #233 (17.10.2026), mit PR #234 in `main` integriert:**
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](CATALOG_PRESENTATION.md)
 vollständig lesen. Papieretikett mit Größe, Moduspiktogramm, Schwierigkeit und
 Status; gezeichnetes Fragezeichen nur für Neu. KE ersetzt gezielt KK-Metadaten,
 Fußzeilenstatus und leere Neu-Vorschau, ergänzt gezielte Modus-/Schwierigkeits-
 Tooltips und eine minimale kompatible Runtimeprojektion der Schwierigkeit.
-KE-T01, KE-R01 und KE-M01 sind getrennte Gates vor Merge gemäß #233.
+KE-T01, KE-R01, KE-M01 und zugehörige Abnahmeentscheidungen bleiben in #233/PR #234
+dokumentiert; SD öffnet diese Lieferung nicht erneut.
 Der folgende KK-Abschnitt beschreibt die integrierte Ausgangsbasis; die historischen
 offenen KK-R01/KK-M01 in #174 werden durch KE weder erledigt noch erneut beauftragt.
 
@@ -70,8 +83,8 @@ Frühere Draft-/Mergegate-Meldungen zu #47/#55/#56/#62/#66 sind historische Lief
 Die dortigen Abnahmen bleiben an ihre jeweiligen Quellen gebunden.
 
 Der Katalog enthält ausschließlich registrierte Workflow-Inhalte aus
-`content/registry.json`, aktuell elf Rätsel einschließlich Warnemünde, Brandenburger Tor und
-Kölner Dom. [#114](https://github.com/venomenon328/picross/issues/114) ersetzt die
+`content/registry.json`; diese Registry führt den aktuellen Bestand.
+[#114](https://github.com/venomenon328/picross/issues/114) ersetzt die
 frühere aktive Reservierung der Prototypen F-01 bis F-09. Definitionen und Reveals
 werden nicht mehr mit dem Spieler ausgeliefert. Historische Nachweise bleiben
 commitgebunden; eingefrorene Save-Kompatibilitätsinputs liegen nur unter Tests.
@@ -84,7 +97,10 @@ Laufende Arbeitsstände und ZIPs der Rätselproduktion liegen in
 folgen [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), Abschnitten 6 und 8.
 Die Arbeitsablage ist keine Runtime-Registrierung. Nach Endabnahme und Main-Merge
 werden Produktionsdaten nach PUZZLE_AUTHORING §9 entfernt; kompakte Integrations-
-bindung und Runtime-Dateien genügen. Keine dauerhafte Wiederholbarkeitspflicht.
+bindung und Runtime-Dateien genügen für die abgeschlossene Produktion; keine
+dauerhafte Wiederholungspflicht für Bild-/Rasterproduktion oder alte Proofs.
+SD-C ergänzt künftig dauerhaft erhaltene kompakte Bewertungsdaten und Berichte
+für ausdrücklich beauftragte Neueinstufungen aus den vorhandenen Definitionen.
 
 [ZA-1](ZA1_ADAPTER.md) ermöglicht weitere freigegebene Workflow-Inhalte über eine
 zentrale Datenregistry mit expliziten Slots, einschließlich Mono/Farbe und Rechtecken.
@@ -123,6 +139,7 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Neue Rätsel konzipieren, gestalten, produzieren oder redaktionell abnehmen | [KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md) und deren Pflichtquellen |
 | Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
+| Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
 | CI, Prüfprogramme, Artefakte, Archivierung | [CI_POLICY](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md) |
 
 PERF-A/PERF-B sind historische Lieferberichte, keine aktuellen Hersteller- oder

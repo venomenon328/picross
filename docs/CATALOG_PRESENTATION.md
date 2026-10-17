@@ -1,6 +1,6 @@
 # Katalogetiketten und unbekannte Motive · KE
 
-Stand: 17.10.2026 · Spezifikation 1.1 · auf dem KE-Arbeitsbranch implementiert; getrennte Abnahmen offen
+Stand: 17.10.2026 · Spezifikation 1.2 · KE integriert; SD-C als Sollvertrag freigegeben, noch nicht implementiert
 
 Der Eigentümer hat diese Weiterentwicklung als Spezifikation freigegeben.
 [Paket #233](https://github.com/venomenon328/picross/issues/233) führt Umsetzung,
@@ -96,6 +96,28 @@ linienübergreifende Paarlinienlogik/R4. Er formuliert neutral aus typisierten
 Metadaten; keine freien Produktionsnotizen oder motivbezogenen Engpassbeschreibungen.
 Fehlende Informationen werden nicht erfunden. Keine Sterne, neue Solveranalyse,
 menschliche Kalibrierung oder Ableitung aus Format/Farbzahl.
+
+## SD · Freigegebene künftige Quelle der Schwierigkeit
+
+[Einheitliche Schwierigkeitsbewertung](PUZZLE_DIFFICULTY.md) löst mit der
+implementierten und abgenommenen SD-C-Umstellung ausschließlich die bisherige
+Beschränkung auf unverändert projizierte Produktionsbewertungen aus KE-D03/D06 ab.
+Bis dahin gelten deren Methoden, Werte und Runtime-v3-Darstellung unverändert;
+vorhandene Schätzungen sind keine bereits neu berechneten SD-Einstufungen.
+
+Die Anzeige übernimmt künftig die akzeptierte aktuelle Bewertung aus der
+getrennten Metadatenquelle gemäß [Kategorienvertrag](CATEGORIES.md). Skala,
+Bezeichnungen, Farbcode, gezielter Tooltip, neutrale fehlende Einstufung und
+Spoilergrenze bleiben erhalten. Der Tooltip ordnet die tatsächlich verwendete
+Methode und ihre Aussagegrenzen zu; wiederholbare Berechnung wird nicht mit
+menschlicher Kalibrierung gleichgesetzt. SD-C muss Methoden-/Versionsprüfung und
+Projektion gemeinsam mit Writer und Loader fortschreiben; diese Spezifikation
+fügt dem aktuellen Runtimeformat keine Felder oder Methoden hinzu.
+
+Logischer Anspruch, Lösungsfluss und begrenzter Größeneinfluss folgen dem
+SD-Vertrag. Die Oberfläche berechnet keinen Grad aus Größe, Farbe oder Spielstand
+und startet keinen Solver. Eine Methodenumstellung, ein neues Rätsel oder eine
+andere Katalogverteilung verändert bestehende Einstufungen nicht automatisch.
 
 ## KE-N1 · Lokale Bildglättung
 
