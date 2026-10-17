@@ -17,8 +17,11 @@ from .analysis_io import runtime_logic, check_target
 from .difficulty_rating import (METHOD_ID, RATING_FORMAT, frozen_method,
                                 logical_level, size_effect)
 
-FORMAT = "picross-catalog-difficulty-v1"
-CHECKED = "picross-checked-difficulty-v1"
+LEGACY_FORMAT = "picross-catalog-difficulty-v1"
+LEGACY_CHECKED = "picross-checked-difficulty-v1"
+FORMAT = "picross-catalog-difficulty-v2"
+CHECKED = "picross-checked-difficulty-v2"
+CONTEXT = "picross-difficulty-context-v1"
 LIMIT = 96 * 1024
 FIELDS = {"current_source", "logic_binding", "rating", "compact_analysis"}
 MODULES = ("catalog_rating.py", "catalog_analysis.py", "catalog_transaction.py", "catalog_integration.py")
@@ -87,6 +90,15 @@ def binding(value):
     exact_keys(value, {"analysis_hash", "matrix_hash"})
     for v in value.values(): sha(v)
     return value
+
+
+def mode(value):
+    require(value in ("mono", "color"), "Explicit production mode must be mono or color")
+    return value
+
+
+def fields(value):
+    return FIELDS | ({"production_mode"} if value["format"] in (FORMAT, CHECKED) else set())
 
 
 def definition(raw):
@@ -271,10 +283,15 @@ def _rating(rating, compact, identifier):
     require(digest(r) == digest(expected), "Inconsistent frozen rating result")
 
 
-def validate(value, *, active=True, definition_bytes=None):
+def validate(value, *, active=True, definition_bytes=None, production_mode=None):
     extras = {"rating_revision", "adoption", "record_hash"} if active else {"analysis_report_hash", "verification_hash", "tool", "checked_hash"}
-    exact_keys(value, {"format"} | FIELDS | extras)
-    require(value["format"] == (FORMAT if active else CHECKED), "Unknown catalog difficulty format")
+    require(isinstance(value, dict) and value.get("format") in
+            ((FORMAT, LEGACY_FORMAT) if active else (CHECKED, LEGACY_CHECKED)), "Unknown catalog difficulty format")
+    exact_keys(value, {"format"} | fields(value) | extras)
+    if "production_mode" in value:
+        mode(value["production_mode"])
+        if production_mode is not None:
+            require(value["production_mode"] == mode(production_mode), "Stale difficulty production mode; new analysis required")
     encoded(value)
     source(value["current_source"]); binding(value["logic_binding"])
     _compact(value["compact_analysis"])
@@ -296,6 +313,7 @@ def validate(value, *, active=True, definition_bytes=None):
     check_hash(value, "record_hash" if active else "checked_hash")
     if definition_bytes is not None:
         data, puzzle, current, logic = definition(definition_bytes)
+        require(value.get("production_mode") != "mono" or len(puzzle.colors) == 1, "Mono mode requires one foreground color")
         require(value["current_source"] == current and value["logic_binding"] == logic and
                 value["rating"]["source"]["engine_logic_hash"] == puzzle.logic_hash, "Stale difficulty source/logic/matrix binding")
         w = value["compact_analysis"]["metrics"]["workload"]
@@ -329,11 +347,20 @@ def import_bundle(input_path, bundle, *, budget=None):
     report = load_json(bundle / "report.json", 64 * 1024 * 1024)
     rating = load_json(bundle / "rating.json", 65536)
     _, _, current, logic = definition(input_path.read_bytes())
+    context_path = safe_external(bundle / "catalog-context.json")
+    context = {}
+    if context_path.exists():
+        c = bytes_json(read_file(context_path))
+        exact_keys(c, {"format", "production_mode", "source", "context_hash"})
+        require(c["format"] == CONTEXT and source(c["source"]) == current, "Wrong analysis mode context source")
+        check_hash(c, "context_hash")
+        context = {"production_mode": mode(c["production_mode"])}
     result = report["result"]
     compact = {k: result[k] for k in ("trace_hash", "status", "reason", "line_analysis_complete", "line_fixpoint_confirmed", "deduction_complete", "r4")}
     compact.update(result_hash=report["result_hash"], metrics_hash=digest(result["metrics"]),
                    metrics={k: v for k, v in result["metrics"].items() if k != "waves"})
-    value = hashed({"format": CHECKED, "current_source": current, "logic_binding": logic, "rating": rating,
+    value = hashed({"format": CHECKED if context else LEGACY_CHECKED, **context,
+                    "current_source": current, "logic_binding": logic, "rating": rating,
                     "compact_analysis": compact, "analysis_report_hash": digest({k: v for k,v in report.items() if k != "operation"}),
                     "verification_hash": digest(checked),
                     "tool": tool_identity()}, "checked_hash")
@@ -343,8 +370,9 @@ def import_bundle(input_path, bundle, *, budget=None):
     return value
 
 
-def rebind_checked(value, raw):
+def rebind_checked(value, raw, *, production_mode):
     validate(value, active=False)
+    require(value.get("production_mode") == mode(production_mode), "Rebind changes or lacks production mode; new analysis required")
     _, _, current, logic = definition(raw)
     require(value["current_source"]["id"] == current["id"] and value["logic_binding"] == logic, "Rebind changes logic or target matrix")
     new = deepcopy(value)
@@ -358,9 +386,10 @@ def active_record(checked, previous=None, *, report=None, kind="analysis"):
     require(checked["rating"]["result"]["status"] == "rated", "New integration requires a complete 0.3 rating")
     if previous is not None:
         validate(previous)
-        if all(previous[k] == checked[k] for k in FIELDS): return previous
-    value = {"format": FORMAT, "rating_revision": 1 if previous is None else previous["rating_revision"] + 1,
-             **{k: deepcopy(checked[k]) for k in FIELDS}, "adoption": {
+        if fields(previous) == fields(checked) and all(previous[k] == checked[k] for k in fields(checked)): return previous
+    value = {"format": FORMAT if checked["format"] == CHECKED else LEGACY_FORMAT,
+             "rating_revision": 1 if previous is None else previous["rating_revision"] + 1,
+             **{k: deepcopy(checked[k]) for k in fields(checked)}, "adoption": {
                  "kind": kind, "previous_record_hash": previous["record_hash"] if previous else None,
                  **{k: deepcopy(checked[k]) for k in ("analysis_report_hash", "verification_hash", "tool")}, "report": report}}
     return validate(hashed(value, "record_hash"))
@@ -368,18 +397,55 @@ def active_record(checked, previous=None, *, report=None, kind="analysis"):
 
 def checked_from_active(value):
     validate(value)
-    return validate(hashed({"format": CHECKED, **{k: deepcopy(value[k]) for k in FIELDS},
+    return validate(hashed({"format": CHECKED if value["format"] == FORMAT else LEGACY_CHECKED,
+        **{k: deepcopy(value[k]) for k in fields(value)},
         **{k: deepcopy(value["adoption"][k]) for k in ("analysis_report_hash", "verification_hash", "tool")}}, "checked_hash"), active=False)
+
+
+def source_paths(root, *registries):
+    """Validate the whole active namespace, including unregistered/alias paths.
+
+    Reports are a distinct namespace, never an alternative active source.
+    Empty canonical directories may remain after an interrupted rollback.
+    """
+    from .content_update import path_in
+    from .catalog_analysis import run_id
+    allowed = {e["id"] for registry in registries for e in registry["entries"]}
+    base = path_in(root, "content/difficulty")
+    if not base.exists(): return set()
+    require(base.is_dir(), "Difficulty namespace must be a directory")
+    found = set()
+    for child in base.iterdir():
+        directory = path_in(root, child.relative_to(root).as_posix())
+        require(directory.is_dir(), "Misplaced difficulty source: " + child.name)
+        if child.name == "reports":
+            for run in directory.iterdir():
+                run_id(run.name)
+                run = path_in(root, run.relative_to(root).as_posix())
+                require(run.is_dir(), "Difficulty report run must be a directory")
+                for report in run.iterdir():
+                    report = path_in(root, report.relative_to(root).as_posix())
+                    require(report.name in ("report.json", "report.md") and report.is_file(), "Misplaced difficulty report")
+            continue
+        identity(child.name)
+        for item in directory.iterdir():
+            require(child.name in allowed, "Unregistered difficulty source: " + child.name)
+            item = path_in(root, item.relative_to(root).as_posix())
+            require(item.name == "rating.json" and item.is_file(), "Misplaced difficulty source / path collision: " + str(item))
+            found.add(item.relative_to(root).as_posix())
+    return found
 
 
 def load_sources(root, registry):
     from .content_update import path_in
+    present = source_paths(root, registry)
     records = {}
     for entry in registry["entries"]:
         target = path_in(root, path(entry["id"]))
-        if target.exists():
+        if path(entry["id"]) in present:
             require(target.is_file(), "Difficulty source must be a regular file")
             raw = path_in(root, "game/" + entry["definition"]).read_bytes()
             require(hashlib.sha256(raw).hexdigest() == entry["production"]["definition_sha256"], "Definition differs from registry")
-            records[entry["id"]] = validate(bytes_json(read_file(target)), definition_bytes=raw)
+            records[entry["id"]] = validate(bytes_json(read_file(target)), definition_bytes=raw,
+                                            production_mode=entry["production"]["mode"])
     return records

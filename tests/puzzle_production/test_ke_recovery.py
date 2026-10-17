@@ -31,6 +31,19 @@ class LegacyRecoveryTests(unittest.TestCase):
                 target.unlink()
             self.assert_recovered(root,journal,self.snapshot(root))
 
+    def test_orphan_difficulty_blocks_legacy_recovery_before_mutation(self):
+        for kind in ('registration', 'update'):
+            root, journal = self.checkout(kind)
+            target = root / 'content/difficulty/pz-orphan/rating.json'
+            target.parent.mkdir(parents=True)
+            target.write_bytes(b'foreign orphan rating\n')
+            before = self.snapshot(root)
+            with self.subTest(kind=kind), self.assertRaisesRegex(InvalidInput, 'Unregistered difficulty'):
+                cr.recover(root)
+            self.assertEqual(before, self.snapshot(root))
+            target.unlink()
+            self.assert_recovered(root, journal, self.snapshot(root))
+
     def checkout(self, kind, early=False):
         temp = tempfile.TemporaryDirectory(); self.addCleanup(temp.cleanup)
         root = Path(temp.name)

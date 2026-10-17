@@ -12,12 +12,13 @@ from pathlib import Path
 import re
 
 from .authoring_package import require, sha
-from .contract import Aborted, InvalidInput, InvalidProof, canonical_bytes, digest, exact_keys, load_json
+from .contract import Aborted, InvalidInput, InvalidProof, canonical_bytes, digest, exact_keys, integer, load_json
 from . import catalog_rating as rating, catalog_transaction as tx, catalog_difficulty
 from .analysis_contract import AnalysisBudget
 from .difficulty_rating import METHOD_ID, frozen_method
 
-FORMAT = "picross-catalog-difficulty-report-v1"
+LEGACY_FORMAT = "picross-catalog-difficulty-report-v1"
+FORMAT = "picross-catalog-difficulty-report-v2"
 REPORT_LIMIT = 16 * 1024 * 1024
 
 
@@ -63,14 +64,19 @@ def candidate(design, matrix, logic, identifier, revision):
     return value
 
 
-def analyze_single(input_path, output, *, budget=None, verify_budget=None, proof=None, baseline=None):
+def analyze_single(input_path, output, *, production_mode, budget=None, verify_budget=None, proof=None, baseline=None):
     from .analysis_io import analyze_file
     input_path = safe_external(input_path)
     output = work_directory(output)
+    production_mode = rating.mode(production_mode)
+    _, puzzle, source, _ = rating.definition(input_path.read_bytes())
+    require(production_mode != "mono" or len(puzzle.colors) == 1, "Mono mode requires one foreground color")
     import_limits = verify_budget.limits() if verify_budget is not None else {}
     analyze_file(input_path, output, kind="runtime", method=METHOD_ID, budget=budget,
                  verify_budget=verify_budget, proof_path=safe_external(proof) if proof else None,
                  baseline_path=safe_external(baseline) if baseline else None)
+    write_new(output / "catalog-context.json", rating.encoded(rating.hashed({
+        "format": rating.CONTEXT, "production_mode": production_mode, "source": source}, "context_hash")))
     # Import independently verifies the actual finished bundle; ordinary
     # integration thereafter only checks its compact data and bindings.
     return rating.import_bundle(input_path, output, budget=AnalysisBudget(**import_limits))
@@ -84,9 +90,16 @@ def _distribution(rows, key):
 
 def validate_report(report):
     exact_keys(report, {"format", "run_id", "result", "result_hash", "operation"})
-    require(report["format"] == FORMAT and len(canonical_bytes(report)) + 1 <= REPORT_LIMIT, "Invalid difficulty report format/size")
+    require(report["format"] in (FORMAT, LEGACY_FORMAT) and len(canonical_bytes(report)) + 1 <= REPORT_LIMIT, "Invalid difficulty report format/size")
     run_id(report["run_id"])
-    r = exact_keys(report["result"], {"selection", "source_commit", "method_hash", "snapshot", "entries", "distribution"})
+    r = exact_keys(report["result"], {"selection", "source_commit", "method_hash", "snapshot", "entries", "distribution"} |
+                   ({"sources"} if report["format"] == FORMAT else set()))
+    if report["format"] == FORMAT:
+        from .authoring_package import relative
+        require(isinstance(r["sources"], dict) and len(r["sources"]) <= 70003, "Invalid report sources")
+        for name, value in r["sources"].items():
+            relative(name)
+            if value is not None: sha(value)
     require(r["selection"] in ("ids", "all") and isinstance(r["source_commit"], str) and
             re.fullmatch(r"[0-9a-f]{40}", r["source_commit"]), "Invalid report selection/commit")
     require(sha(r["method_hash"]) == digest(frozen_method()), "Wrong report method")
@@ -96,7 +109,13 @@ def validate_report(report):
     require(isinstance(rows, list) and len(rows) <= 10000, "Invalid report entries")
     ids = []
     for row in rows:
-        exact_keys(row, {"id", "current_source", "logic_binding", "old", "proposed", "status", "reason", "rating_hash", "checked_hash", "previous_record_hash"})
+        exact_keys(row, {"id", "current_source", "logic_binding", "old", "proposed", "status", "reason", "rating_hash", "checked_hash", "previous_record_hash"} |
+                   ({"previous_rating_revision"} if report["format"] == FORMAT else set()))
+        if report["format"] == FORMAT:
+            if row["previous_record_hash"] is None:
+                require(row["previous_rating_revision"] is None, "Unexpected previous rating revision")
+            else:
+                integer(row["previous_rating_revision"], 1, 1000000, "previous rating revision")
         ids.append(rating.identity(row["id"]))
         for k in ("old", "proposed"): catalog_difficulty.validate_projection(row[k])
         for k in ("rating_hash", "checked_hash", "previous_record_hash"):
@@ -168,19 +187,22 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
         row = {"id": identifier, "current_source": None, "logic_binding": None,
                "old": rating.project(prior) if prior else catalog_difficulty.project(e["production"]["difficulty"]),
                "proposed": None, "status": "invalid_input", "reason": None, "rating_hash": None, "checked_hash": None,
-               "previous_record_hash": prior["record_hash"] if prior else None}
+               "previous_record_hash": prior["record_hash"] if prior else None,
+               "previous_rating_revision": prior["rating_revision"] if prior else None}
         try:
             _, _, row["current_source"], row["logic_binding"] = rating.definition(raw)
             if checked_inputs is not None:
                 require(identifier in checked_inputs, "Missing checked input for selected ID")
                 value = checked_inputs[identifier]
                 value = load_json(safe_external(value), rating.LIMIT) if isinstance(value, Path) else value
-                rating.validate(value, active=False, definition_bytes=raw)
+                rating.validate(value, active=False, definition_bytes=raw, production_mode=e["production"]["mode"])
+                require(value.get("production_mode") == e["production"]["mode"], "Preview requires mode-bound analysis")
             else:
                 source = output / "inputs" / (identifier + ".json")
                 write_new(source, raw)
                 pair = (r4_inputs or {}).get(identifier, (None, None))
                 value = analyze_single(source, output / "bundles" / identifier,
+                    production_mode=e["production"]["mode"],
                     budget=AnalysisBudget(**(limits or {})), verify_budget=AnalysisBudget(**(verify_limits or {})), baseline=pair[0], proof=pair[1])
             write_new(output / "checked" / (identifier + ".json"), rating.encoded(value))
             result = value["rating"]["result"]
@@ -190,6 +212,7 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
             row.update(status="technical_error" if isinstance(exc, (OSError, Aborted)) else "invalid_input", reason=str(exc)[:2048] or type(exc).__name__)
         rows.append(row)
     result = {"selection": "all" if all_entries else "ids", "source_commit": source_commit, "method_hash": digest(frozen_method()),
+              "sources": source_hashes(snapshot),
               "snapshot": {n: hashlib.sha256(snapshot["texts"][n]).hexdigest() for n in (tx.REGISTRY, tx.RUNTIME, "content/categories.json")},
               "entries": rows, "distribution": {k: _distribution(rows, k) for k in ("old", "proposed")}}
     report = validate_report({"format": FORMAT, "run_id": run, "result": result, "result_hash": digest(result),
@@ -197,6 +220,44 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
     write_new(output / "report.json", canonical_bytes(report) + b"\n")
     write_new(output / "report.md", markdown(report).encode())
     return report
+
+
+def source_hashes(snapshot):
+    return {**snapshot["retained"], **{n: hashlib.sha256(raw).hexdigest() if raw is not None else None
+            for n, raw in snapshot["texts"].items() if n not in (tx.REGISTRY, tx.RUNTIME, "content/categories.json")}}
+
+
+def check_repeat(report, snapshot):
+    """Accept precisely the expected end state, not the original runtime bytes."""
+    r = report["result"]
+    for name in (tx.REGISTRY, "content/categories.json"):
+        require(hashlib.sha256(snapshot["texts"][name]).hexdigest() == r["snapshot"][name], "Checkout changed since preview")
+    current = source_hashes(snapshot)
+    modern = report["format"] == FORMAT
+    if modern:
+        require(set(current) == set(r["sources"]), "Checkout sources changed since preview")
+    # Restore only the selected pre-adoption projections in memory. Adoption
+    # intentionally changed those fields; all other runtime bytes must agree.
+    runtime = rating.bytes_json(snapshot["texts"][tx.RUNTIME], 8 * 1024 * 1024)
+    projections = {e["id"]: e for e in runtime["entries"]}
+    for row in r["entries"]:
+        name = rating.path(row["id"])
+        if row["status"] == "rated":
+            active = rating.validate(rating.bytes_json(snapshot["texts"][name]))
+            changed = current[name] != r["sources"][name] if modern else active["record_hash"] != row["previous_record_hash"]
+            if changed:
+                require(active["adoption"]["report"] == {"run_id": report["run_id"], "result_hash": report["result_hash"]} and
+                        active["adoption"]["previous_record_hash"] == row["previous_record_hash"] and
+                        (not modern or active["rating_revision"] == (row["previous_rating_revision"] or 0) + 1) and
+                        active["adoption"]["kind"] == "analysis" and
+                        snapshot["texts"][name] == rating.encoded(active) and
+                        rating.checked_from_active(active)["checked_hash"] == row["checked_hash"],
+                        "Active rating changed since preview/adoption")
+                if modern: current[name] = r["sources"][name]
+        projections[row["id"]]["difficulty"] = row["old"]
+    require((not modern or current == r["sources"]) and
+            hashlib.sha256(canonical_bytes(runtime) + b"\n").hexdigest() == r["snapshot"][tx.RUNTIME],
+            "Checkout sources/projection changed since preview")
 
 
 def adopt(root, workspace, *, apply=False, fail_step=None):
@@ -227,6 +288,7 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
         p = safe_external(workspace / "checked" / (row["id"] + ".json"))
         externals[p] = rating.read_file(p)
         checked = rating.validate(rating.bytes_json(externals[p]), active=False, definition_bytes=raw)
+        rating.validate(checked, active=False, production_mode=e["production"]["mode"])
         require(checked["checked_hash"] == row["checked_hash"] and checked["rating"]["rating_hash"] == row["rating_hash"] and
                 rating.project(checked) == row["proposed"], "Checked preview input changed")
         value = rating.active_record(checked, prior, report={"run_id": report["run_id"], "result_hash": report["result_hash"]})
@@ -240,10 +302,13 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
     durable = {prefix + "json": canonical_bytes(final) + b"\n", prefix + "md": markdown(final).encode()}
     existing = {n: tx.read(root, n) for n in durable}
     if same and existing == durable:
+        check_repeat(report, snapshot)
         return {"status": "no-op", "changes": [], "report_hash": report["result_hash"]}
     require(all(v is None for v in existing.values()), "Report run already exists; use a new run ID")
     require(all(hashlib.sha256(snapshot["texts"][n]).hexdigest() == h for n, h in report["result"]["snapshot"].items()),
             "Checkout changed since preview")
+    if report["format"] == FORMAT:
+        require(source_hashes(snapshot) == report["result"]["sources"], "Checkout sources changed since preview")
     changes.update(durable)
     journal = tx.prepare(root, snapshot, changes, operation="adoption", report_run=report["run_id"])
     require(all(safe_external(p).read_bytes() == b for p, b in externals.items()), "Preview inputs changed during planning")
@@ -272,13 +337,16 @@ def main(argv=None):
         p.add_argument("--input", type=Path, required=True)
         p.add_argument("--output", type=Path, required=True)
         if cmd == "analyze":
+            p.add_argument("--production-mode", choices=("mono", "color"), required=True)
             budgets(p)
             p.add_argument("--work-dir", type=Path, required=True)
             p.add_argument("--r4-baseline", type=Path); p.add_argument("--r4-proof", type=Path)
         elif cmd == "import":
             p.add_argument("--bundle", type=Path, required=True)
             budgets(p, ("",))
-        else: p.add_argument("--rating", type=Path, required=True)
+        else:
+            p.add_argument("--rating", type=Path, required=True)
+            p.add_argument("--production-mode", choices=("mono", "color"), required=True)
     for cmd in ("preview", "preview-checked"):
         p = sub.add_parser(cmd)
         p.add_argument("--checkout", type=Path, required=True)
@@ -301,13 +369,14 @@ def main(argv=None):
         elif args.command in ("analyze", "import", "rebind"):
             if args.command == "analyze":
                 result = analyze_single(args.input, args.work_dir, proof=args.r4_proof, baseline=args.r4_baseline,
+                                        production_mode=args.production_mode,
                                         budget=AnalysisBudget(**limits()), verify_budget=AnalysisBudget(**limits("verify_")))
             elif args.command == "import":
                 result = rating.import_bundle(safe_external(args.input), work_directory(args.bundle), budget=AnalysisBudget(**limits()))
             else:
                 value = load_json(safe_external(args.rating), rating.LIMIT)
-                if value.get("format") == rating.FORMAT: value = rating.checked_from_active(value)
-                result = rating.rebind_checked(value, safe_external(args.input).read_bytes())
+                if value.get("format") in (rating.FORMAT, rating.LEGACY_FORMAT): value = rating.checked_from_active(value)
+                result = rating.rebind_checked(value, safe_external(args.input).read_bytes(), production_mode=args.production_mode)
             write_new(work_directory(args.output), rating.encoded(result))
         elif args.command in ("preview", "preview-checked"):
             supplied = args.checked if args.command == "preview-checked" else args.r4
