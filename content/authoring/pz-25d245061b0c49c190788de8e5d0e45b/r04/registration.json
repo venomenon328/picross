@@ -1,0 +1,96 @@
+{
+  "category": {
+    "id": "voegel",
+    "name": "Vögel",
+    "order": 6
+  },
+  "changes": [
+    {
+      "operation": "add",
+      "path": "game/data/content/kolibri_001.json"
+    },
+    {
+      "operation": "add",
+      "path": "game/art/content/kolibri_001.png"
+    },
+    {
+      "operation": "add",
+      "path": "game/art/content/kolibri_001.txt"
+    },
+    {
+      "operation": "add",
+      "path": "content/packages/pz-25d245061b0c49c190788de8e5d0e45b/r04"
+    },
+    {
+      "operation": "replace",
+      "path": "content/registry.json"
+    },
+    {
+      "operation": "replace",
+      "path": "game/data/registry.json"
+    }
+  ],
+  "command": "target_adapter register",
+  "exit_code": 0,
+  "id": "pz-25d245061b0c49c190788de8e5d0e45b",
+  "new_entry": {
+    "category_id": "voegel",
+    "definition": "data/content/kolibri_001.json",
+    "id": "pz-25d245061b0c49c190788de8e5d0e45b",
+    "key": "pz-25d245061b0c49c190788de8e5d0e45b",
+    "production": {
+      "blockers": [],
+      "definition_sha256": "6c3525419f9ca193efd72bab11b9d6ca85fc7ba09507c65388d21921db291592",
+      "difficulty": {
+        "assessment_type": "editorial_estimate",
+        "bottleneck": "Alle70 Linien vor allen239 Baseline-Schritten unabhängig geprüft; mindestens6 produktive Linien vor Aufräumen bei<=24 offenen Zellen. Keine numerische Engstelle in diesem Verlauf. Kein R0–R3-Klassifikator.",
+        "checkpoints": "difficulty-checkpoints.json",
+        "confidence": "low",
+        "effort": {
+          "cells": 1200,
+          "empty": 839,
+          "filled": 361,
+          "human_active_minutes": null,
+          "pair_steps": 0,
+          "proof_steps": 239
+        },
+        "evidence": "fixed-import/fixed-assessment.json",
+        "human_calibration": false,
+        "level": "L2",
+        "logic_hash": "ba1f1c39408613bc74a211d09d341930ffc03ad2cb5d900288286d1e3a976a05",
+        "logical_demand": null,
+        "method": "picross-difficulty-0.2",
+        "plausible_range": [
+          "L2",
+          "L4"
+        ],
+        "playtest": "not_performed; optional",
+        "profile_hash": "87ce75a0b606403084b4ce7bd1592f32e447ad066e326759b0f1125fedbc1898",
+        "r4_required": false,
+        "rule_families": {
+          "R0": "Initial Zeile30 und Spalten37–40 leer. Danach keine gepackte Fülllinie: maximale Zeilenpackung30 < verbleibende Breite36, maximale Spaltenpackung21 < verbleibende Höhe29. Ohne ersten Füllanker kein R0-Füllfortschritt; L1 ausgeschlossen. Restleerfelder später direkt.",
+          "R1": "Geschätzt dominant: Überlappungen und Verlängerungen langer Körper-/Flügelblöcke. Zeile12 [22] in Breite40 erzwingt initial4 Zellen, Zeile13 [21] initial2. Die verlängerte Schnabelzeile und zwei neue Einser-Spalten ändern die Propagation. R0+R1-Suffizienz nicht validiert.",
+          "R2": "Mehrfachblockzuordnung an Federkeilen und Kopf kann kombinierte Anker benötigen; R2-Notwendigkeit und genaue Technikgrenzen nicht erschöpfend klassifiziert.",
+          "R3": "Vollständige Linienunterstützung separat unabhängig solved; keine R3-Notwendigkeit aus dem Profilnamen abgeleitet. Ohne schwächeren validierten Analysator bleibt L4 plausibel."
+        },
+        "time_estimate": null
+      },
+      "height": 30,
+      "mode": "mono",
+      "package": "content/packages/pz-25d245061b0c49c190788de8e5d0e45b/r04",
+      "package_sha256": "a006cac09912819338cf8b83b75fe5e8f4ce4f30647ecf206564546f5e89551e",
+      "reveal_sha256": "9b4fa04b16efebcd19d350e347d54537f992ea4e340766623aec05d5abe09dbe",
+      "revision": "r04",
+      "status": "registered",
+      "test_only": false,
+      "width": 40
+    },
+    "reveal": "art/content/kolibri_001.png",
+    "save_slot": "kolibri_001",
+    "visible": true
+  },
+  "registered": true,
+  "registry_sha256": "80fc88025a29e3fe89a5e1080a8b56ee564506203205368fdb38e6c0eedf6e5e",
+  "runtime_registry_sha256": "414e665720061039d161dfdc2fb499d0b85e178757a1a31dc92645a7dc53cb47",
+  "status": "registered"
+}
