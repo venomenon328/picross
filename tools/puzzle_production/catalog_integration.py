@@ -20,7 +20,7 @@ def _input(value):
     return rating.validate(deepcopy(value), active=False), None
 
 
-def _new_rating(raw, previous, checked, rebind, *, required):
+def _new_rating(raw, previous, checked, rebind, *, required, production_mode):
     external = None
     if checked is not None:
         value, external = _input(checked)
@@ -30,9 +30,10 @@ def _new_rating(raw, previous, checked, rebind, *, required):
         require(not required, "New integration requires a complete 0.3 rating")
         return None, None
     if rebind:
-        value = rating.rebind_checked(value, raw)
+        value = rating.rebind_checked(value, raw, production_mode=production_mode)
     else:
-        rating.validate(value, active=False, definition_bytes=raw)
+        rating.validate(value, active=False, definition_bytes=raw, production_mode=production_mode)
+    require(value.get("production_mode") == production_mode, "New integration requires mode-bound 0.3 analysis")
     active = rating.active_record(value, previous, kind="rebind" if rebind else "analysis")
     rating.validate(active, definition_bytes=raw)
     return active, external
@@ -79,7 +80,8 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         old_raw = snapshot["texts"]["game/" + existing["definition"]]
         old_def = rating.bytes_json(old_raw, 2 * 1024 * 1024)
         require(m["runtime_revision"] > old_def["revision"], "Update requires a higher runtime revision")
-        required = rating.definition(old_raw)[3] != rating.definition(raw)[3]
+        required = (rating.definition(old_raw)[3] != rating.definition(raw)[3] or
+                    existing["production"]["mode"] != entry["production"]["mode"])
         p = snapshot["texts"][rating.path(existing["id"])]
         previous = rating.validate(rating.bytes_json(p), definition_bytes=old_raw) if p is not None else None
         # A present rating may never silently disappear on a metadata update.
@@ -88,7 +90,8 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         required = True
     package = entry["production"]["package"]
     require(not tx.safe(root, package).exists(), "Update package revision already exists" if update else "Target already exists: " + package)
-    active, external = _new_rating(raw, previous, difficulty, rebind_difficulty, required=required)
+    active, external = _new_rating(raw, previous, difficulty, rebind_difficulty, required=required,
+                                   production_mode=entry["production"]["mode"])
     new = deepcopy(registry)
     if existing: new["entries"][new["entries"].index(existing)] = entry
     else: new["entries"].append(entry)

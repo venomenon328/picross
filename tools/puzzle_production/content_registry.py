@@ -270,8 +270,9 @@ def recover(root):
 
 
 def reject_unbound_ratings(root, *registries):
-    from .catalog_rating import path
+    from .catalog_rating import path, source_paths
     from .content_update import path_in
+    source_paths(root, *registries)
     for registry in registries:
         for entry in registry["entries"]:
             require(not path_in(root, path(entry["id"])).exists(),

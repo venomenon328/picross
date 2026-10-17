@@ -135,29 +135,29 @@ class CatalogTests(unittest.TestCase):
             later=rating.definition(canonical_bytes(final)+b'\n')
             self.assertEqual(first[3],later[3])
             source=self.root/(fixture+'.json');write_json(source,candidate)
-            checked=ca.analyze_single(source,self.root/(fixture+'-bundle'))
-            rebound=rating.rebind_checked(checked,canonical_bytes(final)+b'\n')
+            checked=ca.analyze_single(source,self.root/(fixture+'-bundle'),production_mode=design['mode'])
+            rebound=rating.rebind_checked(checked,canonical_bytes(final)+b'\n',production_mode=design['mode'])
             self.assertEqual(rebound['rating'],checked['rating'])
             self.assertEqual(rebound['current_source']['runtime_revision'],9)
             final['solution'][0][0]=999
-            with self.assertRaises(InvalidInput):rating.rebind_checked(checked,canonical_bytes(final)+b'\n')
+            with self.assertRaises(InvalidInput):rating.rebind_checked(checked,canonical_bytes(final)+b'\n',production_mode=design['mode'])
 
     def test_rebind_preserves_original_rating_source_and_no_op_revision(self):
         value=deepcopy(load_json(self.checkout/self.definition));value['revision']=2;value['reveal']['name']='New title'
-        rebound=rating.rebind_checked(self.checked,canonical_bytes(value)+b'\n')
+        rebound=rating.rebind_checked(self.checked,canonical_bytes(value)+b'\n',production_mode='mono')
         prior=load_json(self.checkout/self.rating_path)
         active=rating.active_record(rebound,prior,kind='rebind')
         self.assertEqual(active['rating_revision'],2)
         self.assertEqual(active['rating']['source'],prior['rating']['source'])
         self.assertEqual(rating.active_record(rebound,active),active)
         changed=deepcopy(rebound);changed['current_source']['id']='pz-other';changed['checked_hash']=digest({k:v for k,v in changed.items() if k!='checked_hash'})
-        with self.assertRaises(InvalidInput):rating.rebind_checked(changed,canonical_bytes(value)+b'\n')
+        with self.assertRaises(InvalidInput):rating.rebind_checked(changed,canonical_bytes(value)+b'\n',production_mode='mono')
         value['id']='pz-other'
-        with self.assertRaises(InvalidInput):rating.rebind_checked(self.checked,canonical_bytes(value)+b'\n')
+        with self.assertRaises(InvalidInput):rating.rebind_checked(self.checked,canonical_bytes(value)+b'\n',production_mode='mono')
 
     def test_full_import_rejects_corrupt_bundle_and_remapped_proof_mismatch(self):
         source=self.checkout/self.definition; bundle=self.root/'analysis'
-        ca.analyze_single(source,bundle)
+        ca.analyze_single(source,bundle,production_mode='mono')
         value=load_json(bundle/'rating.json');value['result']['level']=5;write_json(bundle/'rating.json',value)
         with self.assertRaises((InvalidInput,InvalidProof)):rating.import_bundle(source,bundle)
         from test_paired import MONO, wire
@@ -167,12 +167,12 @@ class CatalogTests(unittest.TestCase):
         proofdir=self.root/'proof';proofdir.mkdir()
         produce(puzzle,proofdir,'',configuration(puzzle,'paired-lines-mono'),Budget())
         with self.assertRaises((InvalidInput,InvalidProof)):
-            ca.analyze_single(source,self.root/'wrong-r4',baseline=proofdir/'baseline-proof.json',proof=proofdir/'proof.json')
+            ca.analyze_single(source,self.root/'wrong-r4',production_mode='mono',baseline=proofdir/'baseline-proof.json',proof=proofdir/'proof.json')
 
     def test_repeat_from_runtime_only_has_same_rating_identity(self):
         source=self.root/'runtime-only.json';source.write_bytes((self.checkout/self.definition).read_bytes())
-        first=ca.analyze_single(source,self.root/'one')
-        second=ca.analyze_single(source,self.root/'two')
+        first=ca.analyze_single(source,self.root/'one',production_mode='mono')
+        second=ca.analyze_single(source,self.root/'two',production_mode='mono')
         for field in rating.FIELDS:self.assertEqual(first[field],second[field],field)
         self.assertEqual(first['checked_hash'],second['checked_hash'])
         # Different clocks/work budgets are checked, but never become result identity.
@@ -193,7 +193,7 @@ class CatalogTests(unittest.TestCase):
                approval_path=approval,category_id='voegel',categories_path=self.checkout/'content/categories.json')
         color=difficulty_for_export(exported);identifier=color['current_source']['id']
         cr.registration(exported,self.checkout,apply=True,difficulty=color)
-        incomplete=ca.analyze_single(self.checkout/self.definition,self.root/'abort-bundle',budget=AnalysisBudget(max_waves=0))
+        incomplete=ca.analyze_single(self.checkout/self.definition,self.root/'abort-bundle',production_mode='mono',budget=AnalysisBudget(max_waves=0))
         before=snapshot(self.checkout)
         report=ca.preview(self.checkout,self.root/'multiple','multiple','c'*40,ids=[identifier,self.identifier],
                           checked_inputs={self.identifier:incomplete})
@@ -209,7 +209,7 @@ class CatalogTests(unittest.TestCase):
         source=self.root/'ambiguous.json';write_json(source,raw)
         for name,budget in [('stalled',None),('abort',AnalysisBudget(max_waves=0))]:
             with patch('tools.puzzle_production.solver.solve',side_effect=AssertionError('implicit R4')):
-                value=ca.analyze_single(source,self.root/name,budget=budget)
+                value=ca.analyze_single(source,self.root/name,production_mode='mono',budget=budget)
             self.assertEqual(value['rating']['result']['status'],'unrated')
             self.assertIsNone(value['rating']['result']['level'])
             with self.assertRaises(InvalidInput):rating.active_record(value)

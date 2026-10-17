@@ -242,7 +242,12 @@ unpassender Bewertungsnachweis wird nicht durch eine Schätzung oder 5 ersetzt.
 binden Formate und Befehle. `catalog_analysis candidate` verwendet vor der
 Endfreigabe dieselbe Farbabbildung wie der reguläre Export; `analyze`/`import`
 prüfen das vollständige Bundle. Nach Export bindet `rebind` bei identischer
-ID/Logik/Matrix die echten Definitionsbytes, ohne `rating.source` umzuschreiben.
+ID/Produktionsmodus/Logik/Matrix die echten Definitionsbytes, ohne `rating.source` umzuschreiben.
+Analyse und Standalone-Rebind verlangen den expliziten Produktionsmodus; neue
+checked-/aktive v2-Hüllen binden ihn getrennt vom eingefrorenen SD-B-Rating.
+Mono↔Einfarb-Color erfordert auch bei identischen numerischen Hinweisen eine neue
+Analyse. Alte v1-Hüllen bleiben lesbar und recoverbar, liefern aber keine erfundene
+Modusherkunft für eine Neubindung. Einzelheiten stehen im SD-C1-Vertrag.
 `plan`/`register` und `plan-update`/`update` erhalten den Input mit
 `--difficulty <checked.json>`. `--rebind-difficulty` erlaubt die ausdrückliche
 Neubindung im Integrationsschritt, bei Update auch aus dem bisherigen aktiven

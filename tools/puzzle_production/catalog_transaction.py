@@ -92,7 +92,8 @@ def projection(texts, registry):
         require(hashlib.sha256(raw).hexdigest() == e["production"]["definition_sha256"], "Wrong transaction definition binding")
         value = texts[rating.path(e["id"])]
         if value is not None:
-            records[e["id"]] = rating.validate(rating.bytes_json(value.encode()), definition_bytes=raw)
+            records[e["id"]] = rating.validate(rating.bytes_json(value.encode()), definition_bytes=raw,
+                                              production_mode=e["production"]["mode"])
     return canonical_bytes(project(registry, catalog, ratings=records)) + b"\n"
 
 
@@ -169,7 +170,8 @@ def _delta(j, before, after):
         new_def = rating.bytes_json(j["new"][n].encode(), 2 * 1024 * 1024)
         require(old_def["id"] == new_def["id"] == e["id"] and new_def["revision"] > old_def["revision"], "Invalid update revision")
         mutable |= {REGISTRY, n, notice_path(e), rating.path(e["id"])}
-        if rating.definition(j["old"][n].encode())[3] != rating.definition(j["new"][n].encode())[3]:
+        if (rating.definition(j["old"][n].encode())[3] != rating.definition(j["new"][n].encode())[3] or
+                a["production"]["mode"] != e["production"]["mode"]):
             require(j["new"][rating.path(e["id"])] is not None, "Changed logic requires difficulty 0.3")
         package = e["production"]["package"]
         require(package != a["production"]["package"], "Update reuses old package")
@@ -230,6 +232,11 @@ def validate_journal(root, j, *, before_write=False):
                 all(j["old"][n] is None for n in report_names(j["report_run"])), "Report is not a new adoption")
         require(all(hashlib.sha256(j["old"][n].encode()).hexdigest() == h for n,h in report["result"]["snapshot"].items()),
                 "Wrong report snapshot")
+        from .catalog_analysis import FORMAT as REPORT_FORMAT, source_hashes
+        if report["format"] == REPORT_FORMAT:
+            captured = {"retained": j["retained"], "texts": {n: j["old"][n].encode() if j["old"][n] is not None else None
+                        for n in text_names(before)}}
+            require(report["result"]["sources"] == source_hashes(captured), "Wrong report source snapshot")
         entries = {e["id"]: e for e in before["entries"]}
         rows = {r["id"]: r for r in report["result"]["entries"]}
         require(set(rows) <= set(entries) and (report["result"]["selection"] != "all" or set(rows) == set(entries)), "Wrong report selection")
@@ -244,6 +251,8 @@ def validate_journal(root, j, *, before_write=False):
                 continue
             require(row["previous_record_hash"] == (prior["record_hash"] if prior else None) and
                     row["old"] == (rating.project(prior) if prior else historical(entry["production"]["difficulty"])), "Wrong report old rating")
+            if report["format"] == REPORT_FORMAT:
+                require(row["previous_rating_revision"] == (prior["rating_revision"] if prior else None), "Wrong report old revision")
             if row["current_source"] is not None:
                 _, _, source, logic = rating.definition(j["old"]["game/" + entry["definition"]].encode())
                 require(row["current_source"] == source and row["logic_binding"] == logic, "Wrong report definition binding")
@@ -269,6 +278,8 @@ def validate_journal(root, j, *, before_write=False):
 
 
 def guard(root, j, *, old_only=False, journal_bytes=None):
+    registries = [rating.bytes_json(j[s][REGISTRY].encode(), 8 * 1024 * 1024) for s in ("old", "new")]
+    rating.source_paths(root, *registries)
     if journal_bytes is not None:
         require(read(root, LOCK) == journal_bytes, "Journal changed; preserve all transaction files")
     for n, old in j["old"].items():

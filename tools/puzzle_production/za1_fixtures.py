@@ -139,7 +139,8 @@ def difficulty_for_export(export_dir, *, paired=False):
     m = load_json(export_dir / "manifest.json")
     require(m.get("test_only") is True, "Difficulty fixture helper requires test_only")
     source = export_dir / m["definition"]
-    key = (file_hash(source), paired)
+    production_mode = load_json(export_dir / "inspection.json")["mode"]
+    key = (file_hash(source), paired, production_mode)
     if key not in _ratings:
         with tempfile.TemporaryDirectory(prefix="sd-c-synthetic-") as temporary:
             work = Path(temporary)
@@ -149,7 +150,7 @@ def difficulty_for_export(export_dir, *, paired=False):
                 cfg = configuration(puzzle, "paired-lines-color")
                 produce(puzzle, work, "", cfg, Budget())
                 baseline, proof = work / "baseline-proof.json", work / "proof.json"
-            _ratings[key] = analyze_single(source, work / "analysis", baseline=baseline, proof=proof)
+            _ratings[key] = analyze_single(source, work / "analysis", production_mode=production_mode, baseline=baseline, proof=proof)
     return deepcopy(_ratings[key])
 
 

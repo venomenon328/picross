@@ -446,12 +446,16 @@ Nach endgültiger Deduktionsprüfung, vor redaktioneller Endfreigabe:
 
 ```sh
 python -m tools.puzzle_production.catalog_analysis candidate --design <design.json> --matrix <matrix-array.json> --logic <logic.json> --puzzle-id <pz-ID> --runtime-revision 1 --output <work/provisional.json>
-python -m tools.puzzle_production.catalog_analysis analyze --input <work/provisional.json> --work-dir <work/full-bundle> --output <work/checked.json>
+python -m tools.puzzle_production.catalog_analysis analyze --input <work/provisional.json> --production-mode <mono-oder-color> --work-dir <work/full-bundle> --output <work/checked.json>
 ```
 
 `candidate` nutzt die validierte ZA-1-Farbabbildung; sein vorläufiger Reveal ist
 keine Freigabe. `analyze` ruft die eingefrorenen SD-A/SD-B-APIs auf und prüft das
-fertige Bundle vollständig. Schon vorhandene Bundles werden ausdrücklich importiert:
+fertige Bundle vollständig. Den Produktionsmodus ausdrücklich aus dem geprüften
+Design übernehmen: Schema 2 allein unterscheidet Mono und Einfarb-Color nicht.
+Der Wrapper bindet den Modus an die analysierten Definitionsbytes in
+`catalog-context.json`; das eingefrorene SD-B-Bundleformat bleibt unverändert.
+Schon vorhandene Bundles werden ausdrücklich importiert:
 
 ```sh
 python -m tools.puzzle_production.catalog_analysis import --input <runtime-or-provisional.json> --bundle <full-bundle> --output <checked.json>
@@ -471,19 +475,25 @@ im Bericht sind maßgeblich, nicht allein der Prozessstatus.
 Nach tatsächlicher Endfreigabe und unverändertem regulärem `target_adapter export`:
 
 ```sh
-python -m tools.puzzle_production.catalog_analysis rebind --input <export/runtime/data/content/stem.json> --rating <work/checked.json> --output <work/final-checked.json>
+python -m tools.puzzle_production.catalog_analysis rebind --input <export/runtime/data/content/stem.json> --production-mode <mono-oder-color> --rating <work/checked.json> --output <work/final-checked.json>
 python -m tools.puzzle_production.target_adapter plan --export <export> --checkout <checkout> --difficulty <work/final-checked.json>
 python -m tools.puzzle_production.target_adapter register --export <export> --checkout <checkout> --difficulty <work/final-checked.json>
 ```
 
-Rebind verlangt identische ID, kanonische Logik und Zielmatrix; ursprüngliches
+Rebind verlangt identische ID, Produktionsmodus, kanonische Logik und Zielmatrix; ursprüngliches
 `rating.source` bleibt erhalten. Alternativ führt `--rebind-difficulty` im Plan/
 Register/Update die ausdrücklich gewählte Neubindung durch. Neue Registrierung
 und logisch geänderte Definitionen brauchen vollständiges 0.3. Für einen
-Metadatenupdate mit vorhandener aktiver Bewertung genügt bei gleicher Logik/Matrix
+Metadatenupdate mit vorhandener aktiver Bewertung genügt bei gleichem Modus/Logik/Matrix
 `--rebind-difficulty`. Identische Legacy-Wiederholungen brauchen keine neue Analyse.
 `plan-update`/`update` behalten zusätzlich ihren Erwartungshash, neue Paket-/Runtime-
 Revision und vollständige ZA-1-Prüfung. Reine Bewertungsänderung benutzt sie nicht.
+
+Neue checked-/aktive Hüllen verwenden v2 mit separatem `production_mode`.
+Alte v1-Hüllen bleiben lesbar, aber ohne erfundene Modusherkunft: Rebind und neue
+Integration benötigen eine frische modegebundene Analyse. `import` kann ohne
+Kontextdatei nur checked-v1 liefern; es gibt keine nachträgliche Modusoption.
+Ein Moduswechsel verlangt auch bei gleichen numerischen Hinweisen eine neue Analyse.
 
 Ausdrücklich ausgewählte bestehende IDs werden in ein neues Arbeitsverzeichnis
 analysiert; `--id` darf wiederholt werden, `--all` wählt ausdrücklich alle:
@@ -509,6 +519,12 @@ python -m tools.puzzle_production.catalog_analysis adopt --checkout <checkout> -
 Erst `adopt` schreibt aktive Ratings und beide Dauerberichte. Unvollständige
 Versuche ersetzen keine gültigen aktiven Werte. Identische Übernahme ist No-op;
 alte Produktionsbelege, Definitionen, Revisionen, Kategorien und Saves bleiben.
+Report-v2 bindet zusätzlich alle gelesenen Quellen. `plan-adoption` und `adopt`
+prüfen vor einem No-op den erwarteten Übernahmezustand einschließlich dieser
+Quellen; nach zwischenzeitlicher Kategorie-/Registry-/Ratingänderung stoppen beide
+konkret ohne Mutation. Alte Report-v1-Journale und identische Wiederholungen bleiben
+unter ihren ursprünglichen Bindungen unterstützt; die zusätzliche vollständige
+Quellenbindung gilt für neue v2-Berichte.
 Der gemeinsame Lock schützt Register/Update/Sync/Adoption. Nach Unterbrechung:
 
 ```sh
@@ -520,6 +536,11 @@ her. Fremdänderungen erhalten Dateien und Journal; den Konflikt klären, nicht
 den Lock löschen oder durch `sync-runtime` umgehen. Exakte KE-Altjournale bleiben
 nur ohne ungebundene aktive Sidecars wiederaufnehmbar. Neue Formate und Grenzen
 stehen im SD-C1-Vertrag.
+
+Alle Quellen-/Recoverywege prüfen auch verwaiste oder falsch platzierte aktive
+Ratingdateien. Nur `content/difficulty/<registrierte-ID>/rating.json` ist aktiv;
+die erlaubten `reports/<run-id>/report.json|report.md` sind getrennt. Fremde und
+aliasartige Dateien bleiben bei Blockade erhalten, statt einen Legacyfallback auszulösen.
 
 ## Linienverfahren und Ressourcen
 
