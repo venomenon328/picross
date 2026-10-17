@@ -3,8 +3,9 @@
 Stand: 17.10.2026 · Version 1.0 · technische Konkretisierung von
 [SD-A/#236](https://github.com/venomenon328/picross/issues/236) und
 [SD-D03–D06](PUZZLE_DIFFICULTY.md). Vor der Regelimplementierung festgelegt.
-Dies ist der Analysator `picross-sd-analyzer-1`, Regelstand `sd-rules-1`;
-keine fertige Methode `picross-difficulty-0.3` und keine Katalogeinstufung.
+Dies ist der Analysator `picross-sd-analyzer-1`, Regelstand `sd-rules-1`.
+Sein v1-Bericht bleibt unkalibriert. [SD-B](SD_CALIBRATION.md) ergänzt separat
+`picross-difficulty-0.3` und dessen optionales `rating.json`, keine Katalogübernahme.
 
 ## Endliche Regelliste
 

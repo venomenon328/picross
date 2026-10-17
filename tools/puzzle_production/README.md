@@ -315,7 +315,7 @@ Notwendigkeitsbeleg. Difficulty 0.2 meldet R4/L5 nur bei geprüfter Linienbaseli
 `stalled` und vollständigem Paarproof derselben Logik. Umfang, Zeit und
 redaktionelle Freigabe bleiben eigene Angaben; kein vollständiger R0–R3-Analysator.
 
-## Instrumentierte Einzelanalyse (SD-A)
+## Instrumentierte Einzelanalyse (SD-A) und feste Bewertung (SD-B)
 
 Der freigegebene [SD-Vertrag](../../docs/PUZZLE_DIFFICULTY.md), Ursprung
 [#235](https://github.com/venomenon328/picross/issues/235), bindet die getrennte
@@ -328,9 +328,9 @@ Auch Kopien realer Rätsel dürfen keine automatisierten Bewertungsfälle werden
 Erst SD-C führt den gemeinsamen manuellen Weg für ausgewählte Bestandsrätsel und
 neue Rätsel nach finaler Deduktionsprüfung ein: Bericht erzeugen, Bindungen prüfen,
 ausdrücklich beauftragt übernehmen. Passende Berichte sind wiederverwendbar.
-Methode 0.3 und Katalogübernahme sind noch nicht implementiert; Authoring 0.5.0
-und die bisherigen Befehle behalten ihren Vertrag. SD-A ergänzt ausschließlich
-den folgenden ausdrücklich gestarteten Einzelbericht. Keine reale Analyse in CI,
+Die [Methode 0.3](../../docs/SD_CALIBRATION.md) ist als opt-in Einzelbewertung
+implementiert; die Katalogübernahme bleibt SD-C. Authoring 0.5.0 und die bisherigen
+Produktionsbefehle behalten ihren Vertrag. Keine reale Analyse in CI,
 gewöhnlichem Build, Registryprüfung oder Katalogstart.
 
 ```sh
@@ -339,6 +339,36 @@ python -m tools.puzzle_production check-analysis --input tests/puzzle_production
 python -m tools.puzzle_production analyze-difficulty --input tests/puzzle_production/fixtures/deductive.json --output-dir artifacts/sd-a-logic
 python -m unittest discover -s tests/puzzle_production -p 'test_analysis.py' -v
 ```
+
+Für den eingefrorenen Methodenstand **zusätzlich bei Erzeugung und Prüfung**:
+
+```sh
+python -m tools.puzzle_production analyze-difficulty --input tests/puzzle_production/fixtures/sd-runtime.json --input-kind runtime --method picross-difficulty-0.3 --output-dir artifacts/sd-b-example
+python -m tools.puzzle_production check-analysis --input tests/puzzle_production/fixtures/sd-runtime.json --bundle artifacts/sd-b-example --method picross-difficulty-0.3
+python -m unittest discover -s tests/puzzle_production -p 'test_difficulty_rating.py' -v
+```
+
+SD-B schreibt zusätzlich `rating.json` (`picross-difficulty-rating-v1`, maximal
+64 KiB). Es bindet den vollständigen festen Methodensatz, exakte Konfiguration,
+Referenzen, Kalibrierungsbelege und Quellmodule sowie geprüften v1-Ergebnishash und
+Quellidentität. Der Checker prüft zuerst das gesamte v1-Bundle unabhängig neu,
+danach sämtliche Ratingfelder gegen die eingefrorene Berechnung. Fehlende oder
+veränderte Bindungen sind Fehler, auch bei neu berechnetem Hash. Keine Ratingpfade
+aus Berichten werden geöffnet. API: `analyze_file(..., method="picross-difficulty-0.3")`
+und `check_bundle(..., method="picross-difficulty-0.3")`; die reinen mathematischen
+Reducer sind selbst keine Proofprüfer und erwarten bereits geprüfte Metriken.
+
+Logische Basis, Größenbeitrag und Endstufe werden getrennt berichtet. Ein gültiger
+Wert ist `instrumented`/`medium`, ohne menschliche Kalibrierung oder Lösungszeit.
+Abbruch, Widerspruch und unvollständige Deduktion liefern `unrated` mit null als
+Stufe. Vollständiger Paarproof ohne unabhängig bewiesene R4-Notwendigkeit genügt
+nicht. Nur geprüftes notwendiges R4 erhält 5 bei unvollständigem Linienverlauf.
+Die vorhandenen Exitcodes und getrennten R4-Dateien gelten weiter.
+
+Ohne `--method` bleiben Erzeugung und Prüfung exakt SD-A/v1. Sie behaupten keine
+Ratingprüfung, auch wenn daneben ein Rating liegt. Die historische v1-Erklärung
+„SD-B ausstehend“ bleibt zur exakten alten Ergebnisrekonstruktion erhalten;
+die neue CLI zeigt bei gewählter Methode die aktuelle Ratingerklärung.
 
 Der erste Eingang ist ein fester künstlicher 3×2-Balken, ohne Produktionspaket
 oder Revealdatei. Nur das **neue** Analyseverzeichnis wird geschrieben. Es enthält
@@ -361,7 +391,7 @@ Regeln, Wellen, Zähler/Nenner, Symmetrie und die Formate
 `picross-analysis-report-v1`. `result` mit `result_hash` ist deterministisch;
 Dateibindungen, `operation` mit Budgets/Verbrauch/Laufzeit und Prüfstatus sind
 getrennt. Kein Score: `method`, `level`, `confidence` und `estimated_minutes`
-bleiben null. Bei `stalled` ist der Linienfixpunkt geprüft, aber der Lösungsverlauf
+bleiben im v1-Bericht null. Bei `stalled` ist der Linienfixpunkt geprüft, aber der Lösungsverlauf
 unvollständig. Ein geprüfter Abbruchpräfix bleibt `aborted`.
 
 Budgets: `--seconds 120`, `--max-lines 100000`, `--max-rule-work 20000000`,
@@ -384,7 +414,9 @@ keine JSON-Abschlussausgabe. Fehler liefern auf stdout ein eigenes Fehlerobjekt.
 Optional bindet `--parameters <json>` genau `{"aggregation":null}` oder das
 im Vertrag definierte `sd-aggregation-1`-Objekt. Die angegebenen Engstellen- und
 Restaufräumkriterien erscheinen explizit im Trace; es gibt keine kalibrierten
-Defaults. SD-B legt später die verbindlichen Grenzen fest.
+Defaults. SD-B verwendet die Rohmetriken mit exakt `{"aggregation":null}` und
+seine eigene gebundene Bewertungsaggregation. Andere Parameter zusammen mit
+`--method picross-difficulty-0.3` werden vor dem Analyselauf abgewiesen.
 
 Optional und ausschließlich zusammen: `--r4-proof <proof-v3.json>` und
 `--r4-baseline <linienproof.json>`. Beide werden unverändert kopiert und mit dem
