@@ -1,4 +1,0 @@
-Keep every cell of rows 1-40 exactly. Remove bottom rows 41-45 only. No resampling, recoloring, mirroring or face edits. Preserve original detailed reveal bytes.
-
-Working mode: faithful
-Motif and gameplay review: open
