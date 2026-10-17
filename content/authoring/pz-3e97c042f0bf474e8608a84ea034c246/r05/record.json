@@ -1,7 +1,5 @@
 {
-  "blockers": [
-    "Human final editorial approval and its bound external ZA-1-v2 authorization for the exact fixed mono derivation are pending."
-  ],
+  "blockers": [],
   "category_id": "mythen-fantasie",
   "difficulty": {
     "assessment_type": "editorial_estimate",
@@ -39,7 +37,10 @@
     },
     "time_estimate": null
   },
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r05/approval.json",
+    "sha256": "3600b47bf58d5d974dbd98d0fb5d1c006500a8894d2d306888f7cf394604e565"
+  },
   "foreground_colors": 1,
   "format": "picross-authoring-record-v1",
   "handoff": {
@@ -47,9 +48,56 @@
     "sha256": "033b3de0e2645b32fbfbce6d681c1564bc17eeec8133fe50d7c37db15c186e78"
   },
   "height": 25,
-  "integration": null,
+  "integration": {
+    "approval_timestamp_basis": "Protokollierter UTC-Lesezeitpunkt; genauer UI-Sendezeitpunkt nicht verfügbar.",
+    "category_id": "mythen-fantasie",
+    "definition": {
+      "file": "game/data/content/yin_yang_001.json",
+      "sha256": "ac3c241cf208ae5f696a717bbd39cc3293f8396c4cb2bedc11efa8c17a6cf226"
+    },
+    "export_manifest": {
+      "file": "content/packages/pz-3e97c042f0bf474e8608a84ea034c246/r05/manifest.json",
+      "sha256": "7bccaeb26c95c4dea6d90ab53ce56ac1a0ee07a892c6bd485ffa97a761f20a3c"
+    },
+    "file_check": {
+      "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r05/integration-file-check.json",
+      "sha256": "886e9158835cff7efdf103deede810cf7dda46e540cb028cd726a858cf08fb13"
+    },
+    "inspection": {
+      "file": "content/packages/pz-3e97c042f0bf474e8608a84ea034c246/r05/inspection.json",
+      "sha256": "d1ee095adb8b554da81a9da55ef499b3cefdb205f0c529edead023db86d60bce"
+    },
+    "main_integrated": false,
+    "merge_authorization": {
+      "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r05/integration-request.md",
+      "sha256": "69dae1bffbf4a73e818f43042bd8b0c0c2fae37df81c9b4d273c1982f7c1d482"
+    },
+    "notice": {
+      "file": "game/art/content/yin_yang_001.txt",
+      "sha256": "5c45082ee4687f2bcef9641dfd07ba21cdab881ae02b1f5e9818bbfeefd527f0"
+    },
+    "plan": {
+      "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r05/integration-plan.json",
+      "sha256": "c52a2414f46fc682cbf261c08b21e1ece77cbb3ec73fe94c0c7d639683adb3fa"
+    },
+    "registered": true,
+    "registration": {
+      "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r05/integration-registration.json",
+      "sha256": "d6002ad0c6722882923f752c7104c1d5e8ffa9fd4d2aaee25b15fad989a5a8da"
+    },
+    "reveal": {
+      "file": "game/art/content/yin_yang_001.png",
+      "sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e"
+    },
+    "runtime_id": "pz-3e97c042f0bf474e8608a84ea034c246",
+    "runtime_revision": 1,
+    "save_slot": "yin_yang_001"
+  },
   "inventory_sha256": "c1b313a966ed95637812b23efef6ee4d932b7b3156659c593542103efff9af9e",
-  "manual_authorization": null,
+  "manual_authorization": {
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r05/manual-authorization.json",
+    "sha256": "b477dee4c1a6cf59368eba2cb7f66ed35e35475d9a7266a31c548c5c7ab85145"
+  },
   "mode": "mono",
   "motif": {
     "approval": "approvals/motif.json",
@@ -59,7 +107,7 @@
     "sha256": "4bbeb41207b1efbb56e92b4168e374f403d6a57141731f8d875d3320d1c77f46"
   },
   "motif_name": "Yin-Yang",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen; danach §9-Bereinigung prüfen und direkt mergen.",
   "package": {
     "bytes": 8591968,
     "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r05/package.zip",
@@ -84,12 +132,9 @@
       "sha256": "6f1af0fcf0e2fa7adf148428749ea6212d74d07b5c33dbd067d456d652a8511c"
     }
   },
-  "pending_approvals": [
-    "Final editorial acceptance of the pictured exact r05 matrix and reveal.",
-    "External ZA-1-v2 fixed-mono authorization bound to the actual final approval; no frame exception."
-  ],
+  "pending_approvals": [],
   "puzzle_id": "pz-3e97c042f0bf474e8608a84ea034c246",
-  "repo_commit": "f188ed2ebcb74a99d6f38f9a5ad59a27a2f97f07",
+  "repo_commit": "d0d57131ea74846be14756b78e5763a9ae13bb11",
   "reveal": {
     "approval": "approvals/reveal.json",
     "file": "reveal/A-r01.png",
@@ -97,7 +142,7 @@
     "sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e"
   },
   "revision": "r05",
-  "state": "content_ready",
-  "updated_at_utc": "2026-10-17T10:05:47.693686+00:00",
+  "state": "registered",
+  "updated_at_utc": "2026-10-17T10:17:24.961771+00:00",
   "width": 25
 }
