@@ -1,6 +1,6 @@
 # Katalogetiketten und unbekannte Motive · KE
 
-Stand: 17.10.2026 · Spezifikation 1.3 · KE integriert; SD-C1 technisch umgesetzt, separate Abnahme offen
+Stand: 18.10.2026 · Spezifikation 1.3 · KE/SD-C1 integriert; C2-Erstbericht vor Übernahme
 
 Der Eigentümer hat diese Weiterentwicklung als Spezifikation freigegeben.
 [Paket #233](https://github.com/venomenon328/picross/issues/233) führt Umsetzung,
@@ -100,8 +100,9 @@ menschliche Kalibrierung oder Ableitung aus Format/Farbzahl.
 ## SD · Aktuelle Quelle der Schwierigkeit
 
 [SD-C1](SD_CATALOG.md) ergänzt die separate aktuelle Bewertungsquelle zu KE-D03/D06.
-Die reale Erstbewertung/Übernahme bleibt SD-C2; vorhandene Schätzungen sind keine
-bereits neu berechneten SD-Einstufungen. Fehlende Sidecars erhalten die bisherigen
+SD-C1 ist nach qualifiziertem R2 mit PR #242 integriert. Der
+[SD-C2-Erstbericht](SD_CATALOG.md) liefert geprüfte Vorschläge vor Übernahme;
+aktive Werte bleiben historische Schätzungen. Fehlende Sidecars erhalten die bisherigen
 Werte, ungültige vorhandene blockieren die Projektion.
 
 Skala, Bezeichnungen, Farben, gezielter Tooltip, neutrale fehlende Einstufung

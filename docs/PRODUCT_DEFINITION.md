@@ -6,8 +6,11 @@ wiederholbaren Einstufung und begrenztem Größeneinfluss. Alle fünf Stufen sol
 fachlich erreichbar sein; der aktuelle Katalog muss sie nicht besetzen und setzt
 keine Skalenenden. [SD-A](SD_ANALYZER.md) liefert den separaten technischen
 Analysator; [SD-B](SD_CALIBRATION.md) bindet dessen katalogunabhängige Methode 0.3.
-Katalogübernahme und tatsächliche Bestandsbewertungen folgen erst in SD-C.
-Die heutigen Produktions-/Katalogdatenformate bleiben bis SD-C gültig.
+[SD-C1](SD_CATALOG.md) ist mit PR #242 integriert und ergänzt die kompatible
+Katalogquelle. SD-C2 liefert zunächst geprüfte Bestandsvorschläge und einen
+lesenden Übernahmeplan; vor `adopt` sind separates qualifiziertes Review und
+Folgeauftrag erforderlich. Aktive Werte und historische Produktionsbindungen
+bleiben in dieser Erstberichtslieferung unverändert.
 
 **KE / #233, mit PR #234 am 17.10.2026 integriert:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) bindet eine passive Papierinfobox
