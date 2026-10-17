@@ -315,11 +315,11 @@ Notwendigkeitsbeleg. Difficulty 0.2 meldet R4/L5 nur bei geprüfter Linienbaseli
 `stalled` und vollständigem Paarproof derselben Logik. Umfang, Zeit und
 redaktionelle Freigabe bleiben eigene Angaben; kein vollständiger R0–R3-Analysator.
 
-## Geplante wiederholbare Schwierigkeit (SD)
+## Instrumentierte Einzelanalyse (SD-A)
 
 Der freigegebene [SD-Vertrag](../../docs/PUZZLE_DIFFICULTY.md), Ursprung
-[#235](https://github.com/venomenon328/picross/issues/235), sieht eine getrennte
-Bewertungsspur mit instrumentierten R0–R3-Regeln und synchronen Wellen vor.
+[#235](https://github.com/venomenon328/picross/issues/235), bindet die getrennte
+Bewertungsspur mit instrumentierten R0–R3-Regeln und synchronen Wellen.
 Bestehende Proofverträge und der unabhängige R4-Notwendigkeitsbeleg bleiben
 unverändert. SD-B bindet feste Skalen- und Größenregeln an unabhängige synthetische
 Referenzen; der reale Katalog ist weder Kalibrierungskorpus noch Testbestand.
@@ -328,9 +328,77 @@ Auch Kopien realer Rätsel dürfen keine automatisierten Bewertungsfälle werden
 Erst SD-C führt den gemeinsamen manuellen Weg für ausgewählte Bestandsrätsel und
 neue Rätsel nach finaler Deduktionsprüfung ein: Bericht erzeugen, Bindungen prüfen,
 ausdrücklich beauftragt übernehmen. Passende Berichte sind wiederverwendbar.
-Die Bewertung läuft weder in CI noch beim Katalogstart. Methode 0.3, neue CLI und
-Speicherformate sind noch nicht implementiert; die hier dokumentierten Befehle
-und Authoring 0.5.0 behalten ihren aktuellen Vertrag.
+Methode 0.3 und Katalogübernahme sind noch nicht implementiert; Authoring 0.5.0
+und die bisherigen Befehle behalten ihren Vertrag. SD-A ergänzt ausschließlich
+den folgenden ausdrücklich gestarteten Einzelbericht. Keine reale Analyse in CI,
+gewöhnlichem Build, Registryprüfung oder Katalogstart.
+
+```sh
+python -m tools.puzzle_production analyze-difficulty --input tests/puzzle_production/fixtures/sd-runtime.json --input-kind runtime --output-dir artifacts/sd-a-example
+python -m tools.puzzle_production check-analysis --input tests/puzzle_production/fixtures/sd-runtime.json --bundle artifacts/sd-a-example
+python -m tools.puzzle_production analyze-difficulty --input tests/puzzle_production/fixtures/deductive.json --output-dir artifacts/sd-a-logic
+python -m unittest discover -s tests/puzzle_production -p 'test_analysis.py' -v
+```
+
+Der erste Eingang ist ein fester künstlicher 3×2-Balken, ohne Produktionspaket
+oder Revealdatei. Nur das **neue** Analyseverzeichnis wird geschrieben. Es enthält
+`input.json` (exakte Quellbytes), `logic.json` (eigener kanonischer Analyseinput),
+`trace.json` und `report.json`. Bestehende Ausgabeordner werden abgewiesen.
+Der lesende Checker vergleicht die aktuelle explizite Quelle mit der Kopie und
+prüft Dateihashes, Regelstärken, vollständige gleichzeitige Möglichkeiten,
+schwächere Fixpunkte, Endstatus und rekonstruierte Berichtsfelder.
+
+`--input-kind logic` (Standard) liest unveränderte Logik v1/v2. `runtime` liest
+ausschließlich die benannte Schema-2-Definition und normalisiert numerische
+Farben auf `c1`…`c8` unter Farbregeln; auch bei einer Farbe wird kein historischer
+Produktionsmodus behauptet. Die Sollmatrix wird erst nach der Ableitung geprüft.
+Analysehash, Engine-Logikhash und tatsächlicher Definitions-Dateihash bleiben
+getrennt. Kein Bestandscheck und keine Rekonstruktion alter Produktionspakete.
+
+Der vollständige [SD-A-Vertrag](../../docs/SD_ANALYZER.md) definiert die endlichen
+Regeln, Wellen, Zähler/Nenner, Symmetrie und die Formate
+`picross-analysis-input-v1`, `picross-analysis-trace-v1` sowie
+`picross-analysis-report-v1`. `result` mit `result_hash` ist deterministisch;
+Dateibindungen, `operation` mit Budgets/Verbrauch/Laufzeit und Prüfstatus sind
+getrennt. Kein Score: `method`, `level`, `confidence` und `estimated_minutes`
+bleiben null. Bei `stalled` ist der Linienfixpunkt geprüft, aber der Lösungsverlauf
+unvollständig. Ein geprüfter Abbruchpräfix bleibt `aborted`.
+
+Budgets: `--seconds 120`, `--max-lines 100000`, `--max-rule-work 20000000`,
+`--max-waves 80000`; eigene Prüfgrenzen `--verify-seconds 120`,
+`--verify-max-lines 100000`, `--verify-max-rule-work 20000000`.
+Der Checker verwendet seine eigenen `--seconds`/`--max-*`-Grenzen.
+Abbruch in einer Welle übernimmt keinen Teilfortschritt. Kann der gespeicherte
+Trace nicht fertig geprüft werden, entsteht kein erfolgreicher `report.json`.
+Teilartefakte können zur Diagnose bleiben; ein harter Prozessabbruch garantiert
+keine JSON-Abschlussausgabe. Fehler liefern auf stdout ein eigenes Fehlerobjekt.
+
+| Status / Exit | Bedeutung |
+| --- | --- |
+| `solved`, `stalled`, `contradiction` / 0 | Unabhängig geprüfter jeweiliger Linienstatus; nur solved ist vollständiger Linienverlauf. |
+| `invalid_input` / 2 | Ungültiger Eingang/Parameter oder vorhandenes Ausgabeziel. |
+| `invalid_analysis` / 3 | Falsche Spur, veraltete Bindung oder widersprüchlicher Bericht. |
+| `aborted` / 4 | Zeit-/Arbeits-/Wellen-/Speicherende oder Abbruch; keine Einstufung. |
+| `technical_error` / 5 | Datei-/interner Fehler, kein logisches Rätselurteil. |
+
+Optional bindet `--parameters <json>` genau `{"aggregation":null}` oder das
+im Vertrag definierte `sd-aggregation-1`-Objekt. Die angegebenen Engstellen- und
+Restaufräumkriterien erscheinen explizit im Trace; es gibt keine kalibrierten
+Defaults. SD-B legt später die verbindlichen Grenzen fest.
+
+Optional und ausschließlich zusammen: `--r4-proof <proof-v3.json>` und
+`--r4-baseline <linienproof.json>`. Beide werden unverändert kopiert und mit dem
+vorhandenen unabhängigen Verifier geprüft. Die Nachweise müssen exakt zur
+Engine-Logik passen; nach Runtime-Farbnormalisierung passen alte semantische IDs
+nicht automatisch. Nur eine bestätigte stalled-Linienbaseline und ein vollständiger
+Paarproof bei ebenso abgeschlossenem SD-Linienfixpunkt begründen R4. Seine Schritte
+bleiben außerhalb der Wellenzählung. `--max-pair-work` und `--max-pair-records`
+behalten die bestehenden Paarbudgets. Kein automatischer Paar-/Suchlauf.
+
+Python-API: `analysis.analyze(Puzzle, config, AnalysisBudget)` erzeugt eine noch
+ungeprüfte Spur; `analysis_verifier.verify_trace` beziehungsweise `verify_result`
+prüfen sie. `analysis_io.analyze_file` und `check_bundle` binden die gespeicherten
+Bytes. Vorhandene Proof-v1/v2/v3-Verifikation und `quality.assess()` bleiben erhalten.
 
 ## Linienverfahren und Ressourcen
 

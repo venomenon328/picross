@@ -4,8 +4,9 @@
 [Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) konkretisiert §3.2 mit einer
 wiederholbaren Einstufung und begrenztem Größeneinfluss. Alle fünf Stufen sollen
 fachlich erreichbar sein; der aktuelle Katalog muss sie nicht besetzen und setzt
-keine Skalenenden. Umsetzung und tatsächliche Bewertungen sind noch nicht
-beauftragt. Die heutigen Methoden und Datenformate bleiben bis SD-C gültig.
+keine Skalenenden. [SD-A](SD_ANALYZER.md) liefert den separaten technischen
+Analysator; Kalibrierung, Katalogübernahme und tatsächliche Bewertungen folgen
+erst in SD-B/SD-C. Die heutigen Methoden und Datenformate bleiben bis SD-C gültig.
 
 **KE / #233, mit PR #234 am 17.10.2026 integriert:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) bindet eine passive Papierinfobox
