@@ -150,7 +150,7 @@ func show_error(id: String, message: String) -> void:
 	feedback.show()
 
 static func progress(item: Session) -> String:
-	if item.completed: return "Gelöst"
+	if item.completed: return "Fertig"
 	if not item.player.history.is_empty() or item.player.cells.count(-1) != item.player.cells.size(): return "Begonnen"
 	return "Neu"
 
@@ -209,7 +209,7 @@ func _diagnose(card: Card, id: String) -> void:
 		message += ("\n" if not message.is_empty() else "") + "Speicherfehler: " + str(errors[id])
 	card.set_diagnosis(message, reset_allowed(items[id],state,str(errors[id])))
 	var action: String = "Öffnen gesperrt" if state == "error" else "Ansehen" if items[id].completed else "Fortsetzen" if progress(items[id]) == "Begonnen" else "Spielen"
-	card.accessibility_name = "%s · %s · %s · %s" % [card.caption.text,card.leaf.text,card.note.text,action]
+	card.accessibility_name = "%s · %s · %s · %s · %s · %s · %s · %s" % [card.caption.text,card.leaf.text,card.detail.text,card.dimensions.text,card.mode_tip.tooltip_text,card.difficulty.text,card.note.text,action]
 	card.reset.accessibility_name = "Rätsel zurücksetzen · " + card.leaf.text + " · " + card.note.text
 	if card.repair != null: card.repair.accessibility_name = card.repair.text + " · " + card.leaf.text + " · " + card.note.text
 
@@ -234,11 +234,12 @@ func _add_card(id: String) -> void:
 	column.add_child(card)
 	choices.append(card)
 	var leaf: String = item.neutral_title().split(" · ")[0]
-	var meta: String = "%d × %d · %s" % [item.player.width,item.player.height,"Mono" if item.definition.palette.size() == 1 else "Farbe"]
+	var meta: String = ""
 	if category_id.is_empty():
 		for category: Dictionary in categories:
-			if category.id == metadata.get(id, {}).get("category_id"): meta += "\n" + str(category.name)
+			if category.id == metadata.get(id, {}).get("category_id"): meta = str(category.name)
 	card.configure(item.album_title() if item.completed and statuses[id] != "error" else "???",meta,leaf)
+	card.set_metadata(item.player.width,item.player.height,item.definition.palette.size() > 1,metadata.get(id,{}).get("difficulty"))
 	var reset: BookButton = _button("",func() -> void: reset_requested.emit(id))
 	reset.action_id = "reset"
 	reset.name = "reset-" + id
@@ -273,7 +274,8 @@ func _layout_cards() -> void:
 	grid.add_theme_constant_override("v_separation", gap)
 	# Reserve the actual scrollbar width even before the first container sort.
 	var available: float = maxf(1, scroll.size.x - scroll.get_v_scroll_bar().get_combined_minimum_size().x - 2*ui_scale)
-	var capacity: int = maxi(1, floori((available + gap) / (220*ui_scale + gap)))
+	# KE: reserve readable full difficulty plus longest status at UI 100/125%.
+	var capacity: int = maxi(1, floori((available + gap) / (228*ui_scale + gap)))
 	grid.columns = maxi(1, mini(capacity, choices.size()))
 	var card_width: float = minf(240*ui_scale, floorf((available-(capacity-1)*gap)/capacity))
 	for node: Node in find_children("*", "Label", true, false):

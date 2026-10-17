@@ -1,6 +1,6 @@
 # Katalogetiketten und unbekannte Motive · KE
 
-Stand: 17.10.2026 · Spezifikation 1.0 · freigegebenes Soll, noch nicht implementiert
+Stand: 17.10.2026 · Spezifikation 1.1 · auf dem KE-Arbeitsbranch implementiert; getrennte Abnahmen offen
 
 Der Eigentümer hat diese Weiterentwicklung als Spezifikation freigegeben.
 [Paket #233](https://github.com/venomenon328/picross/issues/233) führt Umsetzung,
@@ -136,10 +136,10 @@ Accessibility-Umbau, keine Änderung der bestehenden Fokus-/Öffnungsbedienung.
 
 ## KE-D06 · Minimaler Metadatenvertrag
 
-`content/registry.json` enthält bereits `production.difficulty`; die aktuelle
-Runtimeprojektion v2 enthält diese Information noch nicht und validiert exakt
-sieben Eintragsfelder. Die Umsetzung erweitert Writer, Loader und Validator
-gemeinsam um minimale typisierte Katalogmetadaten. Benötigt werden die vorhandene
+`content/registry.json` enthält `production.difficulty`; die Runtimeprojektion v3
+übernimmt minimale typisierte Katalogmetadaten. Writer, Loader und Validator
+verwenden gemeinsam den in [CATEGORIES](CATEGORIES.md) festgelegten Vertrag.
+Alte v2-Einträge behalten exakt sieben Felder. Benötigt werden die vorhandene
 Stufe, Bewertungsart, Unsicherheit/plausible Spannweite und gegebenenfalls der
 Nachweis notwendiger Paarlinienlogik. Methoden müssen eindeutig interpretiert
 werden können. Ganze Produktionsobjekte, Freitexte, Motiverklärungen, Quellen,
@@ -171,3 +171,6 @@ Native Windows- und Chromium-/Firefoxprüfungen folgen P1 und
 [WEB-1](WEB_HOSTING.md). Technische Lieferung KE-T01, unabhängiges Review KE-R01
 und Eigentümerprobe KE-M01 sind getrennte Gates vor Merge; konkrete Szenarien,
 Verantwortung und Nachweise stehen im Issue/PR.
+
+Aktuelle technische Zuordnung und reproduzierbarer Windows-Prüfweg:
+[KE_VERIFICATION](KE_VERIFICATION.md). KE-R01 und KE-M01 bleiben eigenständig.

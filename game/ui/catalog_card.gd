@@ -3,6 +3,9 @@ extends "res://ui/book_button.gd"
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const MOTIF_FONT = preload("res://art/drawing/BaksoDaging-Regular.ttf")
+const Ink = preload("res://ui/catalog_ink.gd")
+const Tip = preload("res://ui/catalog_tip.gd")
+const Difficulty = preload("res://model/catalog_difficulty.gd")
 signal recovery_activated
 class CardLabel extends Label:
 	# Label otherwise offers its clipped text as a replacement tooltip.
@@ -19,6 +22,14 @@ var recovery: ScrollContainer
 var recovery_content: VBoxContainer
 var repair: Button
 var image_area: Rect2
+var label_area: Rect2
+var unknown: Ink
+var paper: Ink
+var mode_icon: Ink
+var status_icon: Ink
+var dimensions: Label
+var difficulty: Tip
+var mode_tip: Tip
 var recovery_armed: bool = false
 var recovery_press_position: Vector2 = Vector2.ZERO
 var recovery_press_scroll: int = 0
@@ -46,8 +57,21 @@ func configure(title: String, meta: String, number: String) -> void:
 	detail = label(meta, 14)
 	detail.max_lines_visible = 2
 	leaf = label(number, 15, false)
-	note = label("", 15, false)
-	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	paper = Ink.new()
+	paper.kind = "paper"
+	add_child(paper)
+	dimensions = label("", 14, false)
+	difficulty = Tip.new()
+	add_child(difficulty)
+	mode_tip = Tip.new()
+	add_child(mode_tip)
+	mode_icon = Ink.new()
+	mode_tip.add_child(mode_icon)
+	status_icon = Ink.new()
+	add_child(status_icon)
+	note = label("", 14, false)
+	unknown = Ink.new()
+	add_child(unknown)
 	preview = Miniature.new()
 	preview.draw_frame = false
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -110,12 +134,22 @@ func set_diagnosis(message: String, reset_allowed: bool) -> void:
 	recovery_armed = false
 	diagnosis.text = message
 	recovery.visible = not message.is_empty()
-	preview.visible = message.is_empty() and picture.payload.is_empty() and not disabled
+	unknown.visible = message.is_empty() and note.text == "Neu" and not disabled
+	preview.visible = message.is_empty() and picture.payload.is_empty() and not disabled and not unknown.visible
 	picture.visible = message.is_empty() and not picture.payload.is_empty()
+	status_icon.kind = note.text
+	status_icon.queue_redraw()
 	if reset != null:
 		reset.visible = reset_allowed
 		reset.focus_mode = Control.FOCUS_ALL if reset.visible else Control.FOCUS_NONE
 	layout_content()
+
+func set_metadata(width: int, height: int, colored: bool, assessment: Variant) -> void:
+	dimensions.text = "%d × %d" % [width, height]
+	mode_icon.kind = "color" if colored else "mono"
+	mode_tip.tooltip_text = "Farbiges Rätsel" if colored else "Monochromes Rätsel"
+	difficulty.text = Difficulty.label(assessment)
+	difficulty.tooltip_text = Difficulty.explanation(assessment)
 
 func layout_content() -> void:
 	if caption == null: return
@@ -123,11 +157,14 @@ func layout_content() -> void:
 	var inset: float = roundf(10*u)
 	var gap: float = roundf(8*u)
 	var hit: float = roundf(44*u)
-	for control: Label in [caption, detail, leaf, note]:
+	for control: Label in [caption, detail, leaf, note, dimensions]:
 		control.add_theme_font_size_override("font_size", roundi(float(control.get_meta("base_font"))*u))
+	difficulty.add_theme_font_size_override("font_size",roundi(14*u))
+	difficulty.ui_scale = u
+	mode_tip.ui_scale = u
 	var title_height: float = ceilf(caption.get_theme_font("font").get_height(roundi(20*u))*2)+caption.get_theme_constant("line_spacing")
 	var meta_height: float = ceilf(detail.get_theme_font("font").get_height(roundi(14*u))*2)+detail.get_theme_constant("line_spacing")
-	var footer_height: float = ceilf(note.get_theme_font("font").get_height(roundi(15*u)))
+	var footer_height: float = ceilf(leaf.get_theme_font("font").get_height(roundi(15*u)))
 	var width: float = size.x - 2*inset
 	caption.position = Vector2(inset, inset)
 	caption.custom_maximum_size = Vector2(maxf(1, width-hit-gap), title_height)
@@ -141,6 +178,8 @@ func layout_content() -> void:
 	detail.custom_maximum_size = Vector2(width, meta_height)
 	detail.size = detail.custom_maximum_size
 	image_area = Rect2(Vector2(inset, detail.position.y+meta_height+gap), Vector2(width, roundf(112*u)))
+	unknown.position = image_area.position
+	unknown.size = image_area.size
 	# The miniature's own regular draw/hit projection stays unchanged. Give it
 	# the proportional rectangle, centred in the shared bounded image area.
 	var fitted: Vector2 = Vector2(preview.width, preview.height)
@@ -158,12 +197,32 @@ func layout_content() -> void:
 		repair.ui_scale = u
 		repair.add_theme_font_size_override("font_size", roundi(14*u))
 		repair.custom_minimum_size = Vector2(0, hit)
-	var bottom: float = image_area.end.y+gap
+	# Fixed two-column label; widest German metadata fits at 228px/UI125.
+	var row_height: float = maxf(roundf(28*u),ceilf(difficulty.get_theme_font("font").get_height(roundi(14*u))))
+	label_area = Rect2(Vector2(inset,image_area.end.y+gap),Vector2(width,2*row_height+12*u))
+	paper.position = label_area.position
+	paper.size = label_area.size
+	var left: float = roundf(105*u)
+	var origin: Vector2 = label_area.position+Vector2(7,5)*u
+	dimensions.position = origin
+	dimensions.size = Vector2(left,row_height)
+	difficulty.position = origin+Vector2(0,row_height)
+	difficulty.size = Vector2(left,row_height)
+	mode_tip.position = origin+Vector2(left,0)
+	mode_tip.size = Vector2(width-left-14*u,row_height)
+	mode_icon.size = mode_tip.size
+	status_icon.position = origin+Vector2(left,row_height)
+	status_icon.size = Vector2(16*u,row_height)
+	note.position = status_icon.position+Vector2(18*u,0)
+	note.size = Vector2(width-left-32*u,row_height)
+	for control: Label in [dimensions,difficulty,note]: control.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	for drawing: Ink in [paper,mode_icon,status_icon,unknown]:
+		drawing.ui_scale = u
+		drawing.queue_redraw()
+	var bottom: float = label_area.end.y+gap
 	var leaf_width: float = ceilf(leaf.get_theme_font("font").get_string_size(leaf.text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(15*u)).x)
 	leaf.position = Vector2(inset,bottom)
 	leaf.size = Vector2(leaf_width,footer_height)
-	note.position = Vector2(inset+leaf_width+gap,bottom)
-	note.size = Vector2(maxf(1,width-leaf_width-gap),footer_height)
 	custom_minimum_size.y = bottom+footer_height+inset
 	preview.queue_redraw()
 	picture.queue_redraw()

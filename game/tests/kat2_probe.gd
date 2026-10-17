@@ -45,7 +45,7 @@ func click_at(point: Vector2, button: MouseButton = MOUSE_BUTTON_LEFT) -> void:
 
 func click(control: Control) -> void:
 	var point: Vector2 = control.get_global_rect().get_center()
-	if control is Card: point = control.leaf.get_global_rect().get_center()
+	if control is Card: point = control.caption.get_global_rect().get_center()
 	if control.get_window() != root: point += Vector2(control.get_window().position)
 	click_at(point)
 
@@ -107,7 +107,7 @@ func shot(name: String) -> void:
 	if not app.choices.is_empty(): regions["card"] = region(app.choices[0].get_parent())
 	else: regions["empty"] = region(app.album.empty_message, true)
 	if app.album.next_button.get_parent().visible: regions["page"] = region(app.album.page_label, true)
-	if mode in ["kb", "kk"]:
+	if mode in ["kb", "kk", "ke"]:
 		regions["layout"] = region(app.album if app.album.visible else app.work)
 		regions["title"] = region(app.title)
 	for card: Button in app.choices:
@@ -174,6 +174,8 @@ func run() -> void:
 		await compact_buttons()
 	elif mode == "kk":
 		await fixed_cards()
+	elif mode == "ke":
+		await catalog_labels()
 	elif mode == "adapter":
 		var id: String = "pz-test-direct-mono"
 		check(app.album.items.has(id), "registered KAT1 adapter content appears in All")
@@ -184,7 +186,7 @@ func run() -> void:
 		await shot("category-growth")
 	elif mode == "restart":
 		check(app.album.category_id.is_empty() and app.album.page_index == 0, "real process restart defaults to All page one")
-		check(app.album.notes[0].text == "Neu" and app.album.notes[1].text == "Begonnen" and app.album.notes[5].text == "Gelöst", "empty, redo-only and solved saves survive real process restart")
+		check(app.album.notes[0].text == "Neu" and app.album.notes[1].text == "Begonnen" and app.album.notes[5].text == "Fertig", "empty, redo-only and solved saves survive real process restart")
 		check(app.sessions[1].player.cursor == 0 and app.sessions[1].player.history.size() == 1, "redo history restored from disk")
 		await choose("gebaeude-bauwerke")
 		click(app.choices[0])
@@ -438,7 +440,7 @@ func regular() -> void:
 	check(app.store.write_slot(target, target.view_state).is_empty(), "valid earned save written")
 	await new_app()
 	await choose("voegel")
-	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
+	check(app.album.notes[0].text == "Fertig" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
 	check(app.album.reveals[0].artwork != null, "earned image loaded only for visible card")
 	check(app.choices[0].accessibility_name.contains("Ansehen"), "KB solved action views existing completion")
 	await shot("solved")
@@ -629,6 +631,84 @@ func card_geometry() -> Array:
 		result.append({"cell":card.get_parent().get_global_rect(),"card":card.get_global_rect(),"title":Rect2(card.caption.position,card.caption.size),"meta":Rect2(card.detail.position,card.detail.size),"image":card.image_area,"leaf":Rect2(card.leaf.position,card.leaf.size),"status":Rect2(card.note.position,card.note.size),"reset":Rect2(card.reset.position,card.reset.size)})
 	return result
 
+func catalog_labels() -> void:
+	# Fixed metadata examples, independent of the production inventory.
+	var levels: Array = [null,"L1","L2","L3","L4","L5"]
+	for index: int in range(app.sessions.size()):
+		var value: Variant = null
+		if levels[index] != null:
+			value = {"method":"picross-difficulty-0.1","level":levels[index],"assessment_type":"editorial_estimate","confidence":"low","plausible_range":["L1","L5"],"r4_required":false}
+		app.album.metadata[app.sessions[index].definition.id]["difficulty"] = value
+		for entry: Dictionary in Registry.cached.entries:
+			if entry.id == app.sessions[index].definition.id: entry.difficulty = value
+	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25],[1920,1080,1.25]]:
+		surface.size = Vector2i(spec[0],spec[1])
+		app.set_ui_scale(float(spec[2]))
+		app.album._render(0)
+		await frames()
+		var geometry: Array = card_geometry()
+		for card: Card in app.choices:
+			check(card.unknown.visible and not card.preview.visible and card.picture.artwork == null,"KE new uses common drawing and never loads reveal")
+			check(card.image_area.size.y == roundf(112*app.ui_scale),"KE preview retains full image height")
+			for label: Label in [card.dimensions,card.difficulty,card.note]:
+				var width: float = label.get_theme_font("font").get_string_size(label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,label.get_theme_font_size("font_size")).x
+				check(width <= label.size.x,"KE unabridged metadata fits: "+label.text)
+			check(card.difficulty.position.x+card.difficulty.size.x <= card.status_icon.position.x,"KE difficulty and status columns never overlap")
+			check(card.accessibility_name.contains(card.difficulty.text) and not card.accessibility_name.contains("Motiv"),"KE accessible metadata remains spoiler-free")
+			check(card.note.get_theme_font("font").get_string_size("Begonnen",HORIZONTAL_ALIGNMENT_LEFT,-1,card.note.get_theme_font_size("font_size")).x <= card.note.size.x,"KE longest status fits without clipping")
+		check(app.choices[1].difficulty.text == "≈ Sehr leicht" and app.choices[5].difficulty.text == "≈ Sehr schwer","KE synthetic estimates survive UI rebuilds")
+		await shot("labels-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
+		var first: Card = app.choices[0]
+		var unknown_pixels: PackedByteArray = await button_pixels(first.unknown)
+		first.preview.width = app.choices[1].preview.width
+		first.preview.height = app.choices[1].preview.height
+		first.layout_content()
+		check(unknown_pixels == await button_pixels(first.unknown),"KE unknown drawing is invariant under distinct puzzle dimensions")
+		# Unscored, estimated and instrumented R4 explanations at actual hover.
+		for value: Variant in [null,app.album.metadata["T-09"].difficulty,{"method":"picross-difficulty-0.2","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true}]:
+			first.set_metadata(20,15,false,value)
+			await hover(first.caption)
+			await hover(first.difficulty)
+			await create_timer(0.8).timeout
+			var tip: Control = first.difficulty.tooltip_ref.get_ref() if first.difficulty.tooltip_ref != null else null
+			check(tip != null and tip.is_visible_in_tree(),"KE native targeted difficulty tooltip visible")
+			check(first.difficulty.tooltip_text.contains("Paarlinienlogik") == (value != null and value.r4_required),"KE R4 explanation only with typed evidence")
+			app.set_ui_scale(1.0 if app.ui_scale == 1.25 else 1.25)
+			await frames()
+			check(tip == null or not is_instance_valid(tip) or not tip.is_visible_in_tree(),"KE UI change dismisses targeted popup")
+			app.set_ui_scale(float(spec[2]))
+			await frames()
+			first = app.choices[0]
+		check(card_geometry() == geometry,"KE metadata and UI roundtrip preserve all rectangles")
+		await hover(first.mode_tip)
+		await create_timer(0.8).timeout
+		check(first.mode_tip.tooltip_ref != null and first.mode_tip.tooltip_ref.get_ref() != null,"KE native mode tooltip")
+		for part: String in ["difficulty","mode_tip","paper"]:
+			click(app.choices[0].get(part))
+			await frames()
+			check(app.work.visible and app.session.definition.id == "T-01","KE passive label click opens owning card: "+part)
+			app.show_album()
+			await frames()
+	# Wrong own fill, X-only and redo-only are deliberately distinct from Neu.
+	var item: Session = app.sessions[0]
+	item.gesture.begin(item.player,Vector2i(0,0),1)
+	item.finish()
+	app.show_album()
+	await frames()
+	check(app.choices[0].note.text == "Begonnen" and not app.choices[0].unknown.visible and app.choices[0].preview.cells == item.player.cells and item.player.cells[0] != item.definition.solution[0][0],"KE wrong own fill stays uncorrected and hides question mark")
+	var filled: PackedByteArray = await button_pixels(app.choices[0].preview)
+	item.player.undo()
+	app.show_album()
+	await frames()
+	var empty: PackedByteArray = await button_pixels(app.choices[0].preview)
+	check(empty != filled and app.choices[0].note.text == "Begonnen" and not app.choices[0].unknown.visible,"KE undo leaves empty begun preview, never question mark")
+	item.gesture.begin(item.player,Vector2i(0,0),0)
+	item.finish()
+	app.show_album()
+	await frames()
+	check(empty == await button_pixels(app.choices[0].preview) and not app.choices[0].unknown.visible,"KE X-only preview is neutral like empty begun preview")
+	await shot("x-only")
+
 func fixed_cards() -> void:
 	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
 		surface.size = Vector2i(spec[0],spec[1])
@@ -644,7 +724,7 @@ func fixed_cards() -> void:
 			check(card.caption.max_lines_visible == 2 and card.caption.text_overrun_behavior == TextServer.OVERRUN_TRIM_ELLIPSIS,"KK two-line bounded ellipsis")
 			check(not card.reset.visible and card.reset.focus_mode == Control.FOCUS_NONE,"KK new reset invisible and unfocusable")
 			check(card.find_children("play-*","Button",true,false).is_empty(),"KK play control, hit and focus station absent")
-			check(card.leaf.get_global_rect().end.x < card.note.get_global_rect().position.x and card.leaf.position.y == card.note.position.y,"KK fixed one-line footer without overlap")
+			check(card.label_area.end.y < card.leaf.position.y and card.label_area.encloses(Rect2(card.note.position,card.note.size)),"KE label status and leaf-only footer without overlap")
 			check(card.image_area.encloses(Rect2(card.preview.position,card.preview.size)),"KK proportional own preview inside fixed area")
 			check(is_equal_approx(card.preview.size.x/card.preview.size.y,float(card.preview.width)/card.preview.height),"KK own preview preserves aspect")
 		await shot("new-%d" % spec[0])
@@ -941,7 +1021,7 @@ func compact_buttons() -> void:
 			check(reset.position == Vector2(card.size.x-roundf(10*u)-44*u,roundf(10*u)), "KK fixed top/right reset anchor")
 			check(card.focus_mode == Control.FOCUS_ALL and reset.focus_mode == Control.FOCUS_NONE and not reset.visible, "KB catalog focus preserved")
 			var labels: Array[Node] = card.find_children("*","Label",true,false)
-			check(not labels[0].text.contains("×") and labels[1].text.count("×") == 1, "KB dimensions exactly once")
+			check(not labels[0].text.contains("×") and card.dimensions.text.count("×") == 1 and not card.detail.text.contains("×"), "KB dimensions exactly once")
 			check(labels[0].get_global_rect().end.x <= reset.get_global_rect().position.x-7*u, "KB metadata does not enter actions")
 			interiors.append({"card":region(card),"meta":region(labels[1]),"reset":region(reset),"preview":region(app.album.previews[index]),"status":region(app.album.notes[index])})
 		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0, "KB no horizontal overflow")

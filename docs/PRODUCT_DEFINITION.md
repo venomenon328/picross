@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-**KE / #233, freigegebenes Soll vom 17.10.2026, noch nicht implementiert:**
+**KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) bindet eine passive Papierinfobox
 mit Größe, Mono-/Farbpiktogramm, vorhandener Schwierigkeit samt Schätzkennzeichnung
 und Status Neu/Begonnen/Fertig. Neue Rätsel zeigen ein gezeichnetes Fragezeichen;

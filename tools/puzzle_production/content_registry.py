@@ -10,6 +10,7 @@ import tempfile
 from .authoring_package import ID, STEM, REVISION, relative, require, sha, file_hash, file_table
 from .contract import canonical_bytes, exact_keys, load_json, integer
 from . import categories
+from . import catalog_difficulty
 import time
 import os
 
@@ -34,8 +35,9 @@ def atomic_bytes(path, data):
 
 
 def projection(registry, catalog):
-    return {"format": "picross-runtime-registry-v2", "categories": categories.ordered(catalog), "entries": [
-        {k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")}
+    return {"format": "picross-runtime-registry-v3", "categories": categories.ordered(catalog), "entries": [
+        {**{k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")},
+         "difficulty": catalog_difficulty.project(e["production"]["difficulty"])}
         for e in registry["entries"]]}
 
 
@@ -72,6 +74,7 @@ def validate(registry, catalog):
             integer(p[field],1,50,"index "+field)
         require(isinstance(p["revision"],str) and REVISION.fullmatch(p["revision"]) and
                 p["mode"] in ("mono","color") and isinstance(p["difficulty"],dict), "Invalid index metadata")
+        catalog_difficulty.project(p["difficulty"])
     require(registry["entries"] == sorted(registry["entries"], key=lambda e: e["id"]), "Registry entries must be sorted")
     return registry
 

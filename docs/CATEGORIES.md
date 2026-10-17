@@ -1,13 +1,9 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
-**KE / #233, freigegebenes Soll vom 17.10.2026, noch nicht implementiert:**
-[KE-D06](CATALOG_PRESENTATION.md) ergänzt künftig minimale typisierte
-Schwierigkeitsmetadaten aus `production.difficulty` in der Runtimeprojektion.
-Der nachfolgende v2-/Siebenfeldervertrag beschreibt weiterhin den Iststand.
-Writer/Loader/Validierung sind gemeinsam kompatibel fortzuschreiben; gültige
-Alteinträge ohne Einstufung bleiben ladbar. Exaktes Schema/Versionsverhalten im
-Implementierungs-PR hier dokumentieren. Kategorienquelle, Zuordnung, Definitionen,
-Saves und Freigabebindungen bleiben unverändert; keine Produktionsfreitexte im Spieler.
+**KE / #233, Implementierungsvertrag vom 17.10.2026:**
+[KE-D06](CATALOG_PRESENTATION.md) ergänzt minimale typisierte Schwierigkeit.
+Kategorienquelle, Zuordnung, Definitionen, Saves und Freigabebindungen bleiben
+unverändert. [Technische Nachweise](KE_VERIFICATION.md); KE-R01/KE-M01 separat.
 
 Stand 12.10.2026, [Issue #78](https://github.com/venomenon328/picross/issues/78).
 Die [Kategorienquelle](../content/categories.json) führt den initialen redaktionellen
@@ -41,9 +37,35 @@ Der prägende Hauptgegenstand entscheidet; Nebenobjekte erzeugen keine weitere
 Zuordnung. Die Gruppen sind keine biologische Taxonomie oder Essbarkeitsaussage.
 
 `game/data/registry.json` ist die kanonische UTF-8/LF-Projektion
-`picross-runtime-registry-v2`: exakt `format`, geordnete `categories` und `entries`.
-Einträge enthalten ID, Key, Save-Slot, Definition, Reveal, Sichtbarkeit und Kategorie.
-Produktionsbelege fehlen. Python prüft exakte Projektionsbytes; Godot prüft Format,
+`picross-runtime-registry-v3`: exakt `format`, geordnete `categories` und `entries`.
+Einträge enthalten exakt `id`, `key`, `save_slot`, `definition`, `reveal`, `visible`,
+`category_id` und `difficulty`. Produktionsbelege fehlen.
+
+`difficulty` ist `null` für eine fehlende Einstufung (leeres historisch gültiges
+Produktionsobjekt) oder ein Objekt mit exakt sechs Feldern:
+
+| Feld | Zulässige Werte |
+| --- | --- |
+| `method` | `picross-difficulty-0.1`, `picross-difficulty-0.2` |
+| `level` | `L1` bis `L5` |
+| `assessment_type` | `editorial_estimate`, `instrumented` |
+| `confidence` | `low`, `medium`, `high` |
+| `plausible_range` | Zwei Stufen, untere ≤ Einstufung ≤ obere |
+| `r4_required` | Boolean, aus vorhandener R4-Regelfamilie |
+
+Notwendiges R4 verlangt den vorhandenen 0.2-Vertrag: instrumentiert, L5,
+Spannweite L5–L5, Sicherheit medium. Der Writer prüft zusätzlich den vorhandenen
+logischen Anspruch `linienübergreifend / besonders hoher logischer Anspruch`.
+Produktionsregelfamilien, Engpässe und andere Freitexte werden nie exportiert.
+Ungültige vorhandene Angaben sind Fehler; keine Ableitung oder Neueinstufung.
+
+Der Loader liest weiterhin `picross-runtime-registry-v2` mit exakt den bisherigen
+sieben Feldern, ohne `difficulty`; Anzeige „Nicht eingestuft“. Ein achtes Feld
+ist unter v2 ungültig. Neue Writer erzeugen ausschließlich v3; unter v3 muss
+`difficulty` ausdrücklich vorhanden sein. Unbekannte Methoden, Typen, Felder
+und widersprüchliche Angaben verwerfen den gesamten Bestand.
+
+Python prüft exakte Projektionsbytes; Godot prüft Format,
 Grenzen, Felder, Kategorien und Referenzen vor Übernahme des gesamten Bestands.
 `entries()`, `categories()`, `by_id()`, `by_key()` und `catalog_ids()` liefern die
 Daten; `load_error` unterscheidet einen ungültigen Bestand von einem gültigen leeren.
