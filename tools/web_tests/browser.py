@@ -122,6 +122,19 @@ def exercise(pw, name, root, update, url, output, evidence):
         evidence['launch_options'] = options(name)
         evidence['graphics'] = graphics(page)
         passed('export/catalog startup')
+        labels = state(page)['labels']
+        assert all(x['unknown'] and not x['reveal'] and x['status'] == 'Neu' for x in labels)
+        assert all(x['difficulty'] == 'Nicht eingestuft' for x in labels)
+        for part in ('difficulty', 'mode'):
+            page.mouse.move(*point(page, state(page)['labels'][0][part+'_center']))
+            page.wait_for_timeout(900)
+            page.screenshot(path=str(output/f'{name}-ke-{part}-tooltip.png'))
+            page.mouse.click(*point(page, state(page)['labels'][0][part+'_center']))
+            wait(page, 'picrossProbe.work')
+            assert state(page)['id'] == 'T-01'
+            control(page, name='nav-album')
+            wait(page, 'picrossProbe.album')
+        passed('KE neutral new labels and passive mode/difficulty click routes')
         control(page, text='Blatt 01')
         wait(page, 'picrossProbe.work')
         draw(page, (2,2), (8,2), retract=(5,2))

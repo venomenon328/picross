@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**KE / #233, freigegebenes Soll vom 17.10.2026, noch nicht implementiert:**
+**KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) konkretisiert das kleine warme
 Papieretikett unter dem Bild, gezeichnete Modus-/Statussymbole und ein statisches
 Graphitfragezeichen für neue Rätsel. Kategoriezeile und alle Kartenbereiche bleiben

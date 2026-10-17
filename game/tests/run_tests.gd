@@ -36,6 +36,7 @@ func run() -> void:
 	print("PHASE kat1")
 	preload("res://tests/kat1_cases.gd").run(self)
 	preload("res://tests/kat2_cases.gd").run(self)
+	preload("res://tests/ke_cases.gd").run(self)
 	print("PHASE test_definition()")
 	test_definition()
 	print("PHASE test_gesture()")

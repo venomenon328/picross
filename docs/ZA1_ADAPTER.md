@@ -1,13 +1,14 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
-**KE / #233, freigegebenes Soll vom 17.10.2026, noch nicht implementiert:**
-[KE-D06](CATALOG_PRESENTATION.md) erlaubt ausschließlich die benötigten typisierten
-Schwierigkeits-/Unsicherheitsangaben als neue Katalogmetadaten in der Runtime.
-Die unten beschriebene v2-Projektion ohne Produktionsmetadaten ist der Iststand;
-kein Export ganzer Produktionsobjekte. Projektion, kanonische Prüfung sowie
-Registrierungs-/Update-/Recoverypfade gemeinsam kompatibel fortschreiben und das
-Schema hier dokumentieren. Paket-/Integrationsbindungen und abgeschlossene
-Freigaben bleiben erhalten; keine Reproduktion entfernter Produktionspakete.
+**KE / #233, Implementierungsvertrag vom 17.10.2026:**
+Die Runtimeprojektion ist `picross-runtime-registry-v3` gemäß
+[CATEGORIES](CATEGORIES.md): bisherige sieben Felder plus `difficulty` als null
+oder sechs typisierte Angaben. Der Loader behält den exakten v2-Vertrag.
+Registrierung, Update, explizite Projektion und Recovery verwenden dieselbe
+minimale kanonische Projektion. Keine Produktionsfreitexte gelangen in die Runtime.
+Exportmanifest-Versionen, Paket-/Integrationsbindungen und abgeschlossene
+Freigaben bleiben unverändert. Entfernte Produktionspakete werden nicht
+rekonstruiert. [KE-Nachweise](KE_VERIFICATION.md), separate KE-R01/KE-M01.
 
 KAT-1 ergänzt den verbindlichen [Kategorien-/Kompatibilitätsvertrag](CATEGORIES.md).
 Direkt-/Reparaturexporte mit Linienprofil verwenden v2, autorisierte manuelle Ableitungen v3,
@@ -169,7 +170,8 @@ werden frisch geprüft und erst dann veröffentlicht. Bestehende Ziele sind Fehl
 
 [content/registry.json](../content/registry.json) ist autoritativ;
 [game/data/registry.json](../game/data/registry.json) ihre exakt kanonisch geprüfte
-Runtime-Projektion ohne Produktionsmetadaten, beide jetzt versioniert als v2.
+Runtime-Projektion v3 mit ausschließlich den typisierten KE-Katalogmetadaten;
+die Inhaltsregistry bleibt v2.
 Kategorien/Zuordnung folgen [KAT-1](CATEGORIES.md). Alle Produktions-IDs folgen
 lexikografisch, ohne reservierten Präfixbestand; auch null Einträge sind gültig.
 Die früheren F01…F09-Reservierungen sind durch #114 aufgehoben. Unbekannte IDs
