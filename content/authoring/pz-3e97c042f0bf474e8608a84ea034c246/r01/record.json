@@ -1,0 +1,62 @@
+{
+  "blockers": [],
+  "category_id": "mythen-fantasie",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r01/handoff.json",
+    "sha256": "f5216b4eb40767b9f66d8282ee48961e4ef7beefd3f4c1cfadbb62422bc93db9"
+  },
+  "height": null,
+  "integration": null,
+  "inventory_sha256": "a8f5042e8fcc5d24ee2928548d2dcbce5b035ba784efa40dbb2fcf34d838ff0b",
+  "mode": "mono",
+  "motif_name": "Yin-Yang",
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "package": {
+    "bytes": 7182579,
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/r01/package.zip",
+    "sha256": "49a8330779c6f55e013f63268383a2e993d8c83a57f731fb7ab8cd2e93d3113e"
+  },
+  "puzzle_id": "pz-3e97c042f0bf474e8608a84ea034c246",
+  "repo_commit": "cd989dd2ac3c7a92a7535936231921c94fc37f54",
+  "reveal_options": [
+    {
+      "approval": null,
+      "bytes": 2416936,
+      "file": "reveal/A-r01.png",
+      "height": 1254,
+      "id": "A-r01",
+      "sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e",
+      "title": "Keramik in Indigo und Elfenbein",
+      "width": 1254
+    },
+    {
+      "approval": null,
+      "bytes": 2607975,
+      "file": "reveal/B-r01.png",
+      "height": 1254,
+      "id": "B-r01",
+      "sha256": "c2208b220bdfffdde5ef4caa7373f33bd339900fec2cd417cb2cff73bd1560d9",
+      "title": "Holzintarsie aus Nussbaum und Ahorn",
+      "width": 1254
+    },
+    {
+      "approval": null,
+      "bytes": 2315487,
+      "file": "reveal/C-r01.png",
+      "height": 1254,
+      "id": "C-r01",
+      "sha256": "d3765d1139ec00d66bf21bdd5568b09650e98ed2af884749571618b0aeceae4b",
+      "title": "Gouache in Petrol und Korallorange",
+      "width": 1254
+    }
+  ],
+  "revision": "r01",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-17T00:52:04.705393+00:00",
+  "width": 25
+}
