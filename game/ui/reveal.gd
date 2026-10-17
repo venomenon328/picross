@@ -1,14 +1,33 @@
 extends Control
 ## Completion gated artwork, independent of puzzle resolution.
 var artwork: Texture2D
+var filtered_artwork: Texture2D
+var filtered_size: Vector2i = Vector2i.ZERO
 var payload: Dictionary = {}:
 	set(value):
 		payload = value
 		artwork = null if value.is_empty() else load(value.image) as Texture2D
+		filtered_artwork = null
+		filtered_size = Vector2i.ZERO
+		texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 var paired: bool = true
 var fit_available: bool = false
 var solved: Array = []
 var palette: Array = []
+
+func display_texture(rect: Rect2) -> Texture2D:
+	if artwork == null: return null
+	var target := Vector2i(maxi(1,ceili(rect.size.x)),maxi(1,ceili(rect.size.y)))
+	if target.x >= artwork.get_width() and target.y >= artwork.get_height(): return artwork
+	if filtered_artwork == null or target != filtered_size:
+		# One bounded derived texture per earned view, at its actual pixel size.
+		# Integrate source detail before linear display; no global filter or blur.
+		var image: Image = artwork.get_image()
+		image.fix_alpha_edges()
+		image.resize(target.x,target.y,Image.INTERPOLATE_LANCZOS)
+		filtered_artwork = ImageTexture.create_from_image(image)
+		filtered_size = target
+	return filtered_artwork
 
 func panel_edge() -> float:
 	return minf((size.x - 32) / 2, size.y - 36) if paired else minf(size.x, size.y)
@@ -44,4 +63,4 @@ func _draw() -> void:
 							draw_rect(Rect2(offset + Vector2(x, y) * step, Vector2.ONE * step), Color(entry.color))
 		offset.x += edge + 32
 	if artwork != null:
-		draw_texture_rect(artwork, artwork_rect(), false)
+		draw_texture_rect(display_texture(artwork_rect()), artwork_rect(), false)

@@ -16,11 +16,16 @@ static func run(runner: SceneTree) -> void:
 		value.level = level
 		value.plausible_range = ["L1","L5"]
 		raw.entries[0].difficulty = value
-		runner.check(Registry.validate(raw).is_empty() and Difficulty.label(value) == "≈ " + Difficulty.LABELS[Difficulty.LEVELS.find(level)],"KE original level and visible editorial estimate " + level)
+		var expected: String = str(Difficulty.LEVELS.find(level)+1) + " " + Difficulty.LABELS[Difficulty.LEVELS.find(level)]
+		runner.check(Registry.validate(raw).is_empty() and Difficulty.label(value) == expected,"KE numbered original level " + level)
+		var measured: Dictionary = value.duplicate(true)
+		measured.assessment_type = "instrumented"
+		runner.check(Difficulty.label(measured) == expected and Difficulty.accent(measured) == Difficulty.accent(value),"KE same scale for both assessment types")
+		runner.check(Difficulty.explanation(value).contains(expected) and Difficulty.explanation(value).contains("Redaktionelle Schätzung"),"KE textual estimate retained in tooltip")
 	var value: Dictionary = assessment()
 	value.merge({"method":"picross-difficulty-0.2","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true},true)
 	raw.entries[0].difficulty = value
-	runner.check(Registry.validate(raw).is_empty() and Difficulty.label(value) == "Sehr schwer" and Difficulty.explanation(value).contains("Paarlinienlogik (R4)"),"KE instrumented necessary R4 without estimate")
+	runner.check(Registry.validate(raw).is_empty() and Difficulty.label(value) == "5 Sehr schwer" and Difficulty.explanation(value).contains("Paarlinienlogik (R4)"),"KE instrumented necessary R4 without estimate")
 	for attack: Dictionary in [{"method":"unknown"},{"level":"L6"},{"confidence":true},{"plausible_range":["L5","L1"]},{"r4_required":1},{"bottleneck":"SPOILER"},{"assessment_type":"editorial_estimate"}]:
 		var changed: Dictionary = value.duplicate(true)
 		changed.merge(attack,true)

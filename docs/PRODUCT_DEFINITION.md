@@ -2,11 +2,13 @@
 
 **KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) bindet eine passive Papierinfobox
-mit Größe, Mono-/Farbpiktogramm, vorhandener Schwierigkeit samt Schätzkennzeichnung
+mit Größe, Mono-/Farbpiktogramm, vorhandener Schwierigkeit als Zahl 1–5 plus Name
 und Status Neu/Begonnen/Fertig. Neue Rätsel zeigen ein gezeichnetes Fragezeichen;
 begonnene nur eigene Füllungen, fertige das verdiente farbige Reveal. Keine neue
 Schwierigkeitsbewertung, Progression oder Saveänderung. Dieser Sollvertrag ersetzt
 gezielt die nachfolgend beschriebene integrierte KK-Metadaten-/Fußzeilenanordnung.
+KE-N1 hält Schätzung und Unsicherheit im gezielten Texttooltip; fehlende Einstufung
+bleibt neutral. Verdiente Reveals und Stiftpiktogramme werden lokal geglättet.
 
 **KK / #174** führt den kompakten Katalog aus KB fort: Alle Karten und Grid-Zellen
 haben je Fenster/UI dieselben festen Bereiche. Einzige Überschrift ist das verdiente

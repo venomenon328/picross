@@ -7,6 +7,9 @@ Graphitfragezeichen für neue Rätsel. Kategoriezeile und alle Kartenbereiche bl
 fest reserviert; die Fußzeile trägt nur die Blattkennung. Gezielt abgelöst werden
 KK-Metadatenzeile, Fußzeilenstatus und leere Neu-Vorschau. Der folgende KK-Abschnitt
 beschreibt die integrierte Ausgangsbasis; übrige Gestaltungsverträge bleiben.
+KE-N1 ergänzt die Skala „1 Sehr leicht“ bis „5 Sehr schwer“ mit gedeckt farbiger
+Ziffer und dunklem Namen, ohne sichtbares Näherungszeichen. Bewertungshinweise
+stehen im Tooltip. Lokale Glättung erhält Bildraum, Zentrierung und Originalassets.
 
 **KK / #174** ersetzt die variablen KB-Kartenhöhen, zusätzliche Blattüberschrift,
 gestapelten Play-/Resetaktionen und den Kacheltooltip. Alle Karten haben dieselben

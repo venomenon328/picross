@@ -2,6 +2,7 @@ extends RefCounted
 ## Typed display metadata only; no production prose, inference or solver.
 const LEVELS: Array[String] = ["L1", "L2", "L3", "L4", "L5"]
 const LABELS: Array[String] = ["Sehr leicht", "Leicht", "Mittel", "Schwer", "Sehr schwer"]
+const COLORS: Array[Color] = [Color("52734e"), Color("74713e"), Color("997337"), Color("a36342"), Color("9b514b")]
 
 static func valid(value: Variant) -> bool:
 	if value == null: return true
@@ -17,13 +18,20 @@ static func valid(value: Variant) -> bool:
 
 static func label(value: Variant) -> String:
 	if value == null: return "Nicht eingestuft"
-	return ("≈ " if value.assessment_type == "editorial_estimate" else "") + LABELS[LEVELS.find(value.level)]
+	return level_label(value.level)
+
+static func level_label(level: String) -> String:
+	var index: int = LEVELS.find(level)
+	return str(index+1) + " " + LABELS[index]
+
+static func accent(value: Variant) -> Color:
+	return Color("343f42") if value == null else COLORS[LEVELS.find(value.level)]
 
 static func explanation(value: Variant) -> String:
 	if value == null: return "Für dieses Rätsel liegt keine Schwierigkeitseinstufung vor."
 	var method: String = "Redaktionelle Schätzung nach " + value.method + "." if value.assessment_type == "editorial_estimate" else "Instrumentierte Einstufung nach " + value.method + "."
 	var confidence: String = {"low":"gering", "medium":"mittel", "high":"hoch"}[value.confidence]
 	var span: Array = value.plausible_range
-	var result: String = method + "\nSicherheit: " + confidence + ". Plausible Spannweite: " + LABELS[LEVELS.find(span[0])] + " bis " + LABELS[LEVELS.find(span[1])] + "."
+	var result: String = label(value) + ". " + method + "\nSicherheit: " + confidence + ". Plausible Spannweite: " + level_label(span[0]) + " bis " + level_label(span[1]) + "."
 	if value.r4_required: result += "\nNotwendige Paarlinienlogik (R4): linienübergreifend, besonders hoher logischer Anspruch."
 	return result

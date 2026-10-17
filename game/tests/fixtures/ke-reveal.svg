@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+<!-- Original TEST ONLY curves, diagonals, fine detail and transparent margin. -->
+<rect x="32" y="32" width="1536" height="1136" rx="130" fill="#f8eed8"/>
+<path d="M100 100 L1490 1060 L180 1040 L1450 160" fill="none" stroke="#343f42" stroke-width="9"/>
+<path d="M100 800 C300 100 500 1100 800 400 S1300 100 1500 850" fill="none" stroke="#a36342" stroke-width="22"/>
+<circle cx="800" cy="600" r="300" fill="none" stroke="#52734e" stroke-width="8"/>
+<circle cx="800" cy="600" r="180" fill="#627f91"/>
+<path d="M700 520 L900 680 M710 510 L910 670 M720 500 L920 660" stroke="#f8eed8" stroke-width="3"/>
+</svg>

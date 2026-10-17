@@ -16,7 +16,7 @@ from .authoring_package import file_hash, file_table, relative, require, sha
 from .contract import canonical_bytes, exact_keys, integer, load_json
 from . import categories
 from .content_registry import (ROOT, REGISTRY, RUNTIME, atomic_bytes, check_checkout,
-                               export_entry, projection, validate)
+                               export_entry, projection, validate, recovery_projection, recovery_target)
 
 FORMAT = "picross-content-update-journal-v1"
 JOURNAL_LIMIT = 24 * 1024 * 1024
@@ -167,11 +167,11 @@ def recover_update(checkout):
     require(set(j["old"]) == set(j["new"]) == names and
             all(isinstance(v,str) for side in ("old","new") for v in j[side].values()),"Invalid update journal text targets")
     old_def,new_def = (json.loads(j[side][definition_name]) for side in ("old","new"))
+    runtime = recovery_projection(j, before, after, catalog)
     integer(old_def["revision"],1,1000000,"old runtime revision")
     integer(new_def["revision"],1,1000000,"new runtime revision")
     require(old_def["id"] == new_def["id"] == old["id"] and new_def["revision"] > old_def["revision"],"Invalid update revision delta")
     for side,registry in (("old",before),("new",after)):
-        require(j[side][RUNTIME].encode("utf-8") == canonical_bytes(projection(registry,catalog))+b"\n","Invalid update runtime projection")
         entry = old if side == "old" else new
         require(hashlib.sha256(j[side][definition_name].encode("utf-8")).hexdigest() == entry["production"]["definition_sha256"],"Invalid update definition backup")
     expected_package = "content/packages/"+new["id"]+"/"+new["production"]["revision"]
@@ -180,7 +180,10 @@ def recover_update(checkout):
     package_path = path_in(root,j["package"])
     for name in names:
         path = path_in(root,name)
-        require(path.is_file() and path.read_bytes() in (j["old"][name].encode("utf-8"),j["new"][name].encode("utf-8")),
+        allowed = [j[side][name].encode("utf-8") for side in ("old", "new")]
+        if name == RUNTIME:
+            allowed.append(runtime)
+        require(path.is_file() and path.read_bytes() in allowed,
                 "Update target changed; preserve journal for manual review")
     for name,value in j["files"].items(): relative(name);sha(value)
     require(j["files"].get("manifest.json") == new["production"]["package_sha256"],"Invalid update package binding")
@@ -200,9 +203,13 @@ def recover_update(checkout):
         present = file_table(package_path,time.monotonic()+300)
         require(all(name in j["files"] and file_hash(p) == j["files"][name] for name,p in present.items()),
                 "Update package changed; preserve journal for manual review")
+    retained = recovery_target(root, j, before, runtime)
+    require(not any(n == j["package"] or n.startswith(j["package"]+"/") for n in retained),
+            "Recovery package overlaps retained content")
     # Preflight completed before any rollback mutation. Only the new package is
     # removed; old packages, reveals and every user save remain untouched.
-    for name in (definition_name,notice_name,REGISTRY,RUNTIME): atomic_bytes(root/name,j["old"][name].encode("utf-8"))
+    for name in (definition_name,notice_name,REGISTRY,RUNTIME):
+        atomic_bytes(root/name, runtime if name == RUNTIME else j["old"][name].encode("utf-8"))
     if package_path.exists():
         require(package_path.resolve().is_relative_to(root/"content/packages") and not package_path.is_symlink(),"Unsafe update cleanup")
         shutil.rmtree(package_path)

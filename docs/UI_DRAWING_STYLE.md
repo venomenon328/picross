@@ -8,6 +8,11 @@ neuen Fonts. Subtil unregelmäßige Konturen, zurückhaltende Schraffur, keine A
 Gezielte Modus-/Schwierigkeits-Tooltips ergänzen den bestehenden Resettooltip;
 der Ganzkarten-Tooltip bleibt entfallen. Die nachfolgende KK-Beschreibung ist die
 integrierte Ausgangsbasis; Zell-/Hinweisrendering ist nicht Teil von KE.
+KE-N1: Nur die Schwierigkeitsziffer erhält den gedeckten Grün–Oliv/Ocker–Rost–Rot-
+Akzent; Name und „Nicht eingestuft“ bleiben dunkel. Lokale Polygonkantenglättung
+betrifft die Modusstifte und den Begonnen-Stift. Verdiente Katalog-/Abschlussbilder
+werden vor linearer Anzeige gezielt auf das Anzeigemaß verkleinert, ohne globale
+Glättung oder Änderung eigener Miniaturen.
 
 **KK / #174** erweitert die vorhandene Bakso-Rolle gezielt um Motivüberschriften
 und `???` in Katalogkarten. Feste zweizeilige Titel, begrenzte Metadaten, gleicher
