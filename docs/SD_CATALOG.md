@@ -21,7 +21,8 @@ Traversal, Windows-Aliase, Gerätepfade, Symlinks und Reparsepunkte sind verbote
 Aktive und geprüfte Einzeldateien: höchstens 96 KiB, enthaltenes SD-B-Rating
 höchstens 64 KiB. Bericht: höchstens 16 MiB und 10000 eindeutige, nach ID sortierte
 Einträge. Journal: höchstens 24 MiB. Grenzen stoppen vor Mutation; große Übernahmen
-können in ausdrücklich gewählte Teilmengen geteilt werden. Vollständige Bundles
+können ausdrücklich gewählte Teilmengen verwenden; auch dann muss die gesamte
+mitgebundene Projektionsquelle in das Journal passen. Vollständige Bundles
 liegen ausschließlich im ausdrücklich angegebenen Arbeitsverzeichnis außerhalb
 von `game/` und `content/difficulty/`.
 
@@ -80,8 +81,11 @@ gegebenenfalls beide R4-Proofs mit den vorhandenen eingefrorenen APIs.
 `verification_hash`, `tool`, `checked_hash`. Gemeinsame Felder folgen oben;
 `checked_hash` bindet das Objekt ohne dieses Feld. Auch ein vollständig geprüftes
 `unrated`-Ergebnis ist als Arbeitsinput erlaubt, niemals als aktive Bewertung.
-Die beiden Beleg-Hashes stammen aus dem tatsächlich gelesenen SD-A-Bericht und
-dem Ergebnis der vollständigen `check_bundle(..., method=...)`-Prüfung.
+Die beiden Beleg-Hashes stammen aus dem tatsächlich gelesenen SD-A-Bericht
+**ohne dessen `operation`** und dem Ergebnis der vollständigen
+`check_bundle(..., method=...)`-Prüfung. So gehen Ausführungszeiten und verbrauchte
+Budgets weder in `checked_hash` noch indirekt in die reproduzierbare
+Auswahlberichtidentität ein. Der volle operative Bericht bleibt im Arbeitsbundle.
 
 Der vorbereitende Adapter nimmt ausdrücklich Kandidatenmatrix, validiertes Design
 und normalisierte Logik entgegen. Er verwendet `target_adapter.definition` mit

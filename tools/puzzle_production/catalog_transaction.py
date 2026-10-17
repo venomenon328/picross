@@ -30,7 +30,13 @@ def safe(root, name):
 def read(root, name):
     path = safe(root, name)
     require(not path.exists() or path.is_file(), "Transaction target must be a file: " + name)
-    return path.read_bytes() if path.exists() else None
+    if not path.exists(): return None
+    limit = (LIMIT if name == LOCK else 131072 if name == categories.PATH else
+             rating.LIMIT if name.startswith("content/difficulty/pz-") else
+             16 * 1024 * 1024 if name.startswith("content/difficulty/reports/") else
+             8 * 1024 * 1024 if name in (REGISTRY,RUNTIME) else
+             2 * 1024 * 1024 if name.startswith("game/data/content/") else 64 * 1024 * 1024)
+    return rating.read_file(path, limit)
 
 
 def text_names(registry):
@@ -275,10 +281,11 @@ def guard(root, j, *, old_only=False, journal_bytes=None):
         current = read(root, n)
         require(current in [v.encode() if v is not None else None for v in allowed], "Transaction target changed; preserve journal: " + n)
     for n, h in j["retained"].items():
-        require(read(root, n) is not None and file_hash(safe(root, n)) == h, "Retained source changed; preserve journal: " + n)
+        p = safe(root, n)
+        require(p.is_file() and file_hash(p) == h, "Retained source changed; preserve journal: " + n)
     for n, h in j["additions"].items():
-        data = read(root, n)
-        require(data is None if old_only else data is None or hashlib.sha256(data).hexdigest() == h,
+        p = safe(root, n)
+        require(not p.exists() if old_only else not p.exists() or p.is_file() and file_hash(p) == h,
                 "Transaction package changed; preserve journal: " + n)
     # Unknown files in an added package belong to somebody else. Never rmtree.
     packages = set()  # roots derived below, not supplied by callers
@@ -336,7 +343,7 @@ def execute(root, j, additions=None, *, fail_step=None):
             if index == 0 and fail_step == "crash": raise InterruptedError("Injected registration interruption")
             if index == 0 and fail_step == "files": raise OSError("Injected registration interruption")
         if fail_step == "crash-package": raise InterruptedError("Injected update crash after package")
-        if j["operation"] in ("registration", "update"):
+        if j["operation"] == "registration":
             from .target_adapter import verify_export
             before, after = (rating.bytes_json(j[s][REGISTRY].encode(), 8 * 1024 * 1024) for s in ("old", "new"))
             package = _delta(j, before, after)
@@ -350,7 +357,7 @@ def execute(root, j, additions=None, *, fail_step=None):
                 raise InterruptedError("Injected transaction interruption: " + n)
             if fail_step == n or n == REGISTRY and fail_step == "index": raise OSError("Injected update failure: " + n)
         guard(root, j, journal_bytes=raw)
-        check_checkout(root, replay=j["operation"] in ("registration", "update"), pending_journal=raw)
+        check_checkout(root, replay=j["operation"] == "registration", pending_journal=raw)
         guard(root, j, journal_bytes=raw)
         require(all(read(root, n) == (v.encode() if v is not None else None) for n,v in j["new"].items()), "Publication changed before completion")
         require(lock.read_bytes() == raw, "Journal changed during publication")

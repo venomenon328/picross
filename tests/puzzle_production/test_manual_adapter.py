@@ -171,6 +171,11 @@ class ManualAdapterTests(unittest.TestCase):
                   "--save-slot", "manual_cli", "--category-id", "voegel", "--categories", str(checkout / "content/categories.json"), "--output-dir", str(out)]),
                  ("verify-export", ["--export", str(out)]), ("plan", ["--export", str(out), "--checkout", str(checkout)])]
         for command, args in calls:
+            if command == "plan":
+                from tools.puzzle_production.za1_fixtures import difficulty_for_export
+                checked = self.root / "checked.json"
+                write_json(checked,difficulty_for_export(out))
+                args += ["--difficulty",str(checked)]
             run = subprocess.run([sys.executable, "-B", "-m", "tools.puzzle_production.target_adapter", command, *args],
                                  cwd=ROOT, capture_output=True, text=True, timeout=60)
             self.assertEqual(run.returncode, 0, run.stdout + run.stderr)

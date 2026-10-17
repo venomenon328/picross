@@ -85,7 +85,7 @@ SD-C1 erweitert die enge Inhaltspfad-Positivliste ausschließlich um:
 - denselben Reportpfad mit `report.md`.
 
 Nur reguläre nicht ausführbare Dateien sind erlaubt; keine beliebigen Unterpfade,
-Endungen, Punktsegmente, Großschreibungsvarianten oder Links. Löschungen prüfen
+Endungen, Punktsegmente, Großschreibungsvarianten, Windows-Gerätenamen oder Links. Löschungen prüfen
 auch den alten Modus; Umbenennungen zählen als Löschung plus Neuanlage.
 Ein später reiner C2-Daten-PR wählt `content_only=true`: `docs` prüft ausschließlich
 Pfad-/Dateimodus, danach `ci-required`. Die konkrete Bewertungsprüfung bleibt im
