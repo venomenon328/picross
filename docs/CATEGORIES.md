@@ -1,9 +1,9 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
-**SD, freigegebener Sollvertrag vom 17.10.2026:**
-[Einheitliche Schwierigkeitsbewertung](PUZZLE_DIFFICULTY.md) ergänzt mit SD-C eine
-getrennte aktuelle Katalogbewertung. Bis zur implementierten und abgenommenen
-Umstellung gelten die folgenden Inhalts-v2-/Runtime-v3-Verträge unverändert.
+**SD-C1, technischer Vertrag vom 17.10.2026:**
+[Bewertungsquelle und Recovery](SD_CATALOG.md) ergänzen die getrennte aktuelle
+Katalogbewertung. Inhalts-v2, Runtime-v3 und der exakte Runtime-v2-Leser bleiben.
+Die reale Erstbewertung ist SD-C2; bisherige Katalogwerte bleiben unverändert.
 
 **KE / #233, Implementierungsvertrag vom 17.10.2026:**
 [KE-D06](CATALOG_PRESENTATION.md) ergänzt minimale typisierte Schwierigkeit.
@@ -51,7 +51,7 @@ Produktionsobjekt) oder ein Objekt mit exakt sechs Feldern:
 
 | Feld | Zulässige Werte |
 | --- | --- |
-| `method` | `picross-difficulty-0.1`, `picross-difficulty-0.2` |
+| `method` | `picross-difficulty-0.1`, `picross-difficulty-0.2`, `picross-difficulty-0.3` |
 | `level` | `L1` bis `L5` |
 | `assessment_type` | `editorial_estimate`, `instrumented` |
 | `confidence` | `low`, `medium`, `high` |
@@ -63,6 +63,10 @@ Spannweite L5–L5, Sicherheit medium. Der Writer prüft zusätzlich den vorhand
 logischen Anspruch `linienübergreifend / besonders hoher logischer Anspruch`.
 Produktionsregelfamilien, Engpässe und andere Freitexte werden nie exportiert.
 Ungültige vorhandene Angaben sind Fehler; keine Ableitung oder Neueinstufung.
+
+0.3 verlangt ausschließlich `instrumented`/`medium` und `[Lx,Lx]` für die
+projizierte Stufe. Notwendiges R4 verlangt L5. Diese Punktprojektion ist kein
+menschliches Unsicherheitsintervall; der methodenspezifische Tooltip erläutert dies.
 
 Der Loader liest weiterhin `picross-runtime-registry-v2` mit exakt den bisherigen
 sieben Feldern, ohne `difficulty`; Anzeige „Nicht eingestuft“. Ein achtes Feld
@@ -81,10 +85,10 @@ Raster/Hinweise, Logik-/Proofhashes, Assets, Runtime-Revision, Save-Schema 1,
 Appidentität und `user://p1/saves/` bleiben unverändert. Umbenennen erzeugt keine
 neue Rätselidentität; Entfernen einer referenzierten Kategorie ist ein Fehler.
 
-## SD · Freigegebene künftige Bewertungsmetadaten
+## SD · Aktuelle Bewertungsmetadaten
 
-SD-C muss die akzeptierte aktuelle Katalogbewertung in einer eigenen autoritativen
-Metadatenquelle mit gebundenen kompakten Berichten führen. Die bisherigen
+SD-C1 führt die akzeptierte aktuelle Katalogbewertung in einer eigenen autoritativen
+Metadatenquelle mit gebundenen kompakten Berichten. Die bisherigen
 `production.difficulty`-Werte bleiben historische Produktionsangaben; bestehende
 Paket-/Export-/Integrationsmanifeste werden nicht für eine Neubewertung umgeschrieben.
 Insbesondere bleibt der vollständige Eintragsvergleich kompakter Integrationsbelege
@@ -95,18 +99,20 @@ kanonischen Analyseinputhash sowie Methode, Parameter-/Werkzeugstand und Bericht
 Der Analysehash wird aus der aktuellen Hinweissemantik gebildet; historische
 Produktions-`logic_hash`-Werte werden wegen der damaligen Farbumabbildung nicht als
 identisch behauptet. Ratingdaten und erforderliche kompakte Berichte bleiben nach
-Produktionscleanup erhalten. Die konkreten Pfade und vollständigen Feld-/Format-
-verträge sind vor der SD-C-Umsetzung festzuschreiben. Dieser Sollvertrag
-aktiviert noch keine neuen Pfade oder Dateiformate.
+Produktionscleanup erhalten. Die vollständigen Pfad-/Feld-/Formatverträge stehen
+in [SD-C1](SD_CATALOG.md): `content/difficulty/<pz-ID>/rating.json` und kompakte
+Berichte unter `content/difficulty/reports/<run-id>/`. Fehlend erhält den Altwert;
+vorhanden ungültig stoppt ohne Fallback. Aktive Gültigkeit hängt nicht an
+Registrygesamt-, Git-HEAD- oder Produktionspakethashes.
 
 Die Runtime erhält weiterhin nur minimale typisierte, spoilerfreie Angaben aus
-einer ausdrücklich übernommenen Bewertung. SD-C muss Writer, Godot-Loader,
+einer ausdrücklich übernommenen Bewertung. SD-C1 führt Writer, Godot-Loader,
 Methoden-/Versionsprüfung, kanonische Projektion und sämtliche Registrierungs-,
-Update-/Recoverypfade gemeinsam fortschreiben. Bisher gültige v2-/v3-Daten und
-Altjournale brauchen ihren ausdrücklich geprüften Übergang; unbekannte, gemischte,
+Update-/Recoverypfade gemeinsam fort. Bisher gültige v2-/v3-Daten und
+exakte KE-Altjournale behalten ihren geprüften Übergang; unbekannte, gemischte,
 veraltete oder fremd veränderte Bindungen werden nicht still akzeptiert.
-Bis zu dieser Umstellung sind ausschließlich die oben benannten Methoden und
-exakten v2-/v3-Felder gültig. Dieses Dokument aktiviert keine neue Runtimeversion.
+Es gelten ausschließlich die oben benannten Methoden und exakten v2-/v3-Felder;
+es gibt keine neue Runtimeversion.
 
 Eine reine Neueinstufung ändert weder Definition, Hinweise, ID/Key, Save-Slot,
 Runtime-Revision noch Assets oder Saves. Die erste Bestandsübernahme und spätere

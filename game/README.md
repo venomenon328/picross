@@ -13,6 +13,9 @@ Das Papieretikett unter dem Bild zeigt oben Größe und Modus (ein dunkler Stift
 für Mono, drei Stifte für Farbe), unten Schwierigkeit und Status. Die Skala lautet
 „1 Sehr leicht“, „2 Leicht“, „3 Mittel“, „4 Schwer“, „5 Sehr schwer“; nur die Ziffer
 ist farbig. Schätzung, Unsicherheit und Spannweite erläutert der Tooltip in Worten.
+Bei Methode 0.3 erklärt er die modellbasierte Einstufung mit mittlerer Aussagekraft
+und fehlender menschlicher Kalibrierung. Ihre einzelne Modellstufe ist keine
+menschlich gemessene Unsicherheitsspanne; gegebenenfalls nennt er notwendige Paarlinienlogik.
 Ohne Einstufung steht neutral „Nicht eingestuft“. Verdiente Reveals und die kleinen
 Stiftsymbole sind lokal geglättet; der vollständige Bildraum bleibt erhalten.
 „Neu“, „Begonnen“ und „Fertig“ stehen jeweils neben einem eigenen Symbol.

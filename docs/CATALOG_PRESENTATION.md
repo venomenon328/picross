@@ -1,6 +1,6 @@
 # Katalogetiketten und unbekannte Motive · KE
 
-Stand: 17.10.2026 · Spezifikation 1.2 · KE integriert; SD-C als Sollvertrag freigegeben, noch nicht implementiert
+Stand: 17.10.2026 · Spezifikation 1.3 · KE integriert; SD-C1 technisch umgesetzt, separate Abnahme offen
 
 Der Eigentümer hat diese Weiterentwicklung als Spezifikation freigegeben.
 [Paket #233](https://github.com/venomenon328/picross/issues/233) führt Umsetzung,
@@ -97,27 +97,25 @@ Metadaten; keine freien Produktionsnotizen oder motivbezogenen Engpassbeschreibu
 Fehlende Informationen werden nicht erfunden. Keine Sterne, neue Solveranalyse,
 menschliche Kalibrierung oder Ableitung aus Format/Farbzahl.
 
-## SD · Freigegebene künftige Quelle der Schwierigkeit
+## SD · Aktuelle Quelle der Schwierigkeit
 
-[Einheitliche Schwierigkeitsbewertung](PUZZLE_DIFFICULTY.md) löst mit der
-implementierten und abgenommenen SD-C-Umstellung ausschließlich die bisherige
-Beschränkung auf unverändert projizierte Produktionsbewertungen aus KE-D03/D06 ab.
-Bis dahin gelten deren Methoden, Werte und Runtime-v3-Darstellung unverändert;
-vorhandene Schätzungen sind keine bereits neu berechneten SD-Einstufungen.
+[SD-C1](SD_CATALOG.md) ergänzt die separate aktuelle Bewertungsquelle zu KE-D03/D06.
+Die reale Erstbewertung/Übernahme bleibt SD-C2; vorhandene Schätzungen sind keine
+bereits neu berechneten SD-Einstufungen. Fehlende Sidecars erhalten die bisherigen
+Werte, ungültige vorhandene blockieren die Projektion.
 
-Die Anzeige übernimmt künftig die akzeptierte aktuelle Bewertung aus der
-getrennten Metadatenquelle gemäß [Kategorienvertrag](CATEGORIES.md). Skala,
-Bezeichnungen, Farbcode, gezielter Tooltip, neutrale fehlende Einstufung und
-Spoilergrenze bleiben erhalten. Der Tooltip ordnet die tatsächlich verwendete
-Methode und ihre Aussagegrenzen zu; wiederholbare Berechnung wird nicht mit
-menschlicher Kalibrierung gleichgesetzt. SD-C muss Methoden-/Versionsprüfung und
-Projektion gemeinsam mit Writer und Loader fortschreiben; diese Spezifikation
-fügt dem aktuellen Runtimeformat keine Felder oder Methoden hinzu.
+Skala, Bezeichnungen, Farben, gezielter Tooltip, neutrale fehlende Einstufung
+und Spoilergrenze bleiben. 0.3 ist ausschließlich instrumentiert mit mittlerer
+Aussagekraft; `[Lx,Lx]` ist die Punktprojektion der eingefrorenen Methode, kein
+menschliches Unsicherheitsintervall. Ihr Tooltip erklärt Modellschätzung,
+fehlende menschliche Kalibrierung und gegebenenfalls notwendiges R4. Historische
+0.1-/0.2-Spannen bleiben unverändert. Writer und Loader prüfen gemeinsam die
+sechs bestehenden Difficultyfelder; Runtime-v3 und exakter v2-Leser bleiben.
 
 Logischer Anspruch, Lösungsfluss und begrenzter Größeneinfluss folgen dem
-SD-Vertrag. Die Oberfläche berechnet keinen Grad aus Größe, Farbe oder Spielstand
-und startet keinen Solver. Eine Methodenumstellung, ein neues Rätsel oder eine
-andere Katalogverteilung verändert bestehende Einstufungen nicht automatisch.
+[SD-Vertrag](PUZZLE_DIFFICULTY.md). Die Oberfläche berechnet keinen Grad aus
+Größe, Farbe oder Spielstand und startet keinen Solver. Eine Methodenumstellung,
+ein neues Rätsel oder eine andere Verteilung verändert Altwerte nicht automatisch.
 
 ## KE-N1 · Lokale Bildglättung
 

@@ -325,12 +325,14 @@ unverändert. SD-B bindet feste Skalen- und Größenregeln an unabhängige synth
 Referenzen; der reale Katalog ist weder Kalibrierungskorpus noch Testbestand.
 Auch Kopien realer Rätsel dürfen keine automatisierten Bewertungsfälle werden.
 
-Erst SD-C führt den gemeinsamen manuellen Weg für ausgewählte Bestandsrätsel und
+SD-C1 führt den gemeinsamen manuellen Weg für ausgewählte Bestandsrätsel und
 neue Rätsel nach finaler Deduktionsprüfung ein: Bericht erzeugen, Bindungen prüfen,
 ausdrücklich beauftragt übernehmen. Passende Berichte sind wiederverwendbar.
 Die [Methode 0.3](../../docs/SD_CALIBRATION.md) ist als opt-in Einzelbewertung
-implementiert; die Katalogübernahme bleibt SD-C. Authoring 0.5.0 und die bisherigen
-Produktionsbefehle behalten ihren Vertrag. Keine reale Analyse in CI,
+implementiert; [SD-C1](../../docs/SD_CATALOG.md) liefert die technische Übernahme.
+Reale Bestandsbewertung/Übernahme bleibt der separate Auftrag SD-C2. Neue Registrierung
+und logikrelevante Updates verlangen zusätzlich den vollständig geprüften 0.3-Input.
+Authoring 0.5.0 und Produktionsfreigaben bleiben erhalten. Keine reale Analyse in CI,
 gewöhnlichem Build, Registryprüfung oder Katalogstart.
 
 ```sh
@@ -431,6 +433,114 @@ Python-API: `analysis.analyze(Puzzle, config, AnalysisBudget)` erzeugt eine noch
 ungeprüfte Spur; `analysis_verifier.verify_trace` beziehungsweise `verify_result`
 prüfen sie. `analysis_io.analyze_file` und `check_bundle` binden die gespeicherten
 Bytes. Vorhandene Proof-v1/v2/v3-Verifikation und `quality.assess()` bleiben erhalten.
+
+## SD-C1: Kandidat, geprüfter Input, Vorschau und Übernahme
+
+[Daten-/Recoveryvertrag](../../docs/SD_CATALOG.md). Keine dieser Operationen läuft
+automatisch bei Export, Registryprüfung, Build oder Spielstart. In C1 werden nur
+synthetische Fälle geprüft; der echte Erstlauf und seine Übernahme bleiben SD-C2.
+Alle Arbeits-/Ausgabepfade ausdrücklich wählen, außerhalb von `game/` und
+`content/difficulty/`; neue Ausgaben dürfen nicht bereits existieren.
+
+Nach endgültiger Deduktionsprüfung, vor redaktioneller Endfreigabe:
+
+```sh
+python -m tools.puzzle_production.catalog_analysis candidate --design <design.json> --matrix <matrix-array.json> --logic <logic.json> --puzzle-id <pz-ID> --runtime-revision 1 --output <work/provisional.json>
+python -m tools.puzzle_production.catalog_analysis analyze --input <work/provisional.json> --production-mode <mono-oder-color> --work-dir <work/full-bundle> --output <work/checked.json>
+```
+
+`candidate` nutzt die validierte ZA-1-Farbabbildung; sein vorläufiger Reveal ist
+keine Freigabe. `analyze` ruft die eingefrorenen SD-A/SD-B-APIs auf und prüft das
+fertige Bundle vollständig. Den Produktionsmodus ausdrücklich aus dem geprüften
+Design übernehmen: Schema 2 allein unterscheidet Mono und Einfarb-Color nicht.
+Der Wrapper bindet den Modus an die analysierten Definitionsbytes in
+`catalog-context.json`; das eingefrorene SD-B-Bundleformat bleibt unverändert.
+Schon vorhandene Bundles werden ausdrücklich importiert:
+
+```sh
+python -m tools.puzzle_production.catalog_analysis import --input <runtime-or-provisional.json> --bundle <full-bundle> --output <checked.json>
+```
+
+Nur passende ausdrücklich übergebene `--r4-baseline <file> --r4-proof <file>`
+ergänzen R4. Nach Farbremapping passen alte Produktionsproofs nicht automatisch.
+Ohne Notwendigkeitsbeleg bleibt ein Linienfixpunkt `unrated`; kein versteckter
+Paarlauf. `analyze`, `preview` und `import` bieten `--seconds` (120), `--max-lines`
+(100000), `--max-rule-work` (20000000), `--max-waves` (80000), `--max-pair-work`
+(20000000), `--max-pair-records` (250000). Analyse/Vorschau bieten dieselben
+`--verify-*`-Grenzen separat. Vorab festlegen; Budgets ändern keine Methodengrenze.
+Ein gültiger Bericht, auch `unrated`, beendet den Befehl mit 0; ungültige Daten
+mit 2, ein nicht als Bericht abgeschlossener Budgetabbruch mit 4. Status/Grund
+im Bericht sind maßgeblich, nicht allein der Prozessstatus.
+
+Nach tatsächlicher Endfreigabe und unverändertem regulärem `target_adapter export`:
+
+```sh
+python -m tools.puzzle_production.catalog_analysis rebind --input <export/runtime/data/content/stem.json> --production-mode <mono-oder-color> --rating <work/checked.json> --output <work/final-checked.json>
+python -m tools.puzzle_production.target_adapter plan --export <export> --checkout <checkout> --difficulty <work/final-checked.json>
+python -m tools.puzzle_production.target_adapter register --export <export> --checkout <checkout> --difficulty <work/final-checked.json>
+```
+
+Rebind verlangt identische ID, Produktionsmodus, kanonische Logik und Zielmatrix; ursprüngliches
+`rating.source` bleibt erhalten. Alternativ führt `--rebind-difficulty` im Plan/
+Register/Update die ausdrücklich gewählte Neubindung durch. Neue Registrierung
+und logisch geänderte Definitionen brauchen vollständiges 0.3. Für einen
+Metadatenupdate mit vorhandener aktiver Bewertung genügt bei gleichem Modus/Logik/Matrix
+`--rebind-difficulty`. Identische Legacy-Wiederholungen brauchen keine neue Analyse.
+`plan-update`/`update` behalten zusätzlich ihren Erwartungshash, neue Paket-/Runtime-
+Revision und vollständige ZA-1-Prüfung. Reine Bewertungsänderung benutzt sie nicht.
+
+Neue checked-/aktive Hüllen verwenden v2 mit separatem `production_mode`.
+Alte v1-Hüllen bleiben lesbar, aber ohne erfundene Modusherkunft: Rebind und neue
+Integration benötigen eine frische modegebundene Analyse. `import` kann ohne
+Kontextdatei nur checked-v1 liefern; es gibt keine nachträgliche Modusoption.
+Ein Moduswechsel verlangt auch bei gleichen numerischen Hinweisen eine neue Analyse.
+
+Ausdrücklich ausgewählte bestehende IDs werden in ein neues Arbeitsverzeichnis
+analysiert; `--id` darf wiederholt werden, `--all` wählt ausdrücklich alle:
+
+```sh
+python -m tools.puzzle_production.catalog_analysis preview --checkout <checkout> --id <pz-ID> --id <weitere-ID> --source-commit <volle-SHA> --run-id <run-id> --work-dir <work/preview>
+python -m tools.puzzle_production.catalog_analysis preview --checkout <checkout> --all --source-commit <volle-SHA> --run-id <anderer-run> --work-dir <work/all-preview>
+```
+
+Optional pro ID: `--r4 <pz-ID> <baseline.json> <proof.json>`. Vorab importierte
+Inputs verwenden stattdessen `preview-checked` mit denselben Auswahlargumenten
+und wiederholtem `--checked <pz-ID> <checked.json>`. Fehlende oder unvollständige
+Fälle bleiben mit Altwert, Status/Grund und Bindung sichtbar; keine ID entfällt.
+JSON und Markdown enthalten beobachtende Alt-/Neuverteilungen. `source-commit`
+ist ausdrücklich benannte Provenienz; die tatsächlichen Datei-/Ausgangshashes
+sichern die Übernahme, ohne Git oder Paketreplay im Analyzer vorauszusetzen.
+
+```sh
+python -m tools.puzzle_production.catalog_analysis plan-adoption --checkout <checkout> --work-dir <work/preview>
+python -m tools.puzzle_production.catalog_analysis adopt --checkout <checkout> --work-dir <work/preview>
+```
+
+Erst `adopt` schreibt aktive Ratings und beide Dauerberichte. Unvollständige
+Versuche ersetzen keine gültigen aktiven Werte. Identische Übernahme ist No-op;
+alte Produktionsbelege, Definitionen, Revisionen, Kategorien und Saves bleiben.
+Report-v2 bindet zusätzlich alle gelesenen Quellen. `plan-adoption` und `adopt`
+prüfen vor einem No-op den erwarteten Übernahmezustand einschließlich dieser
+Quellen; nach zwischenzeitlicher Kategorie-/Registry-/Ratingänderung stoppen beide
+konkret ohne Mutation. Alte Report-v1-Journale und identische Wiederholungen bleiben
+unter ihren ursprünglichen Bindungen unterstützt; die zusätzliche vollständige
+Quellenbindung gilt für neue v2-Berichte.
+Der gemeinsame Lock schützt Register/Update/Sync/Adoption. Nach Unterbrechung:
+
+```sh
+python -m tools.puzzle_production.target_adapter recover-registration --checkout <checkout>
+```
+
+Recovery prüft vollständig vor Mutation und stellt eine gültige Altprojektion
+her. Fremdänderungen erhalten Dateien und Journal; den Konflikt klären, nicht
+den Lock löschen oder durch `sync-runtime` umgehen. Exakte KE-Altjournale bleiben
+nur ohne ungebundene aktive Sidecars wiederaufnehmbar. Neue Formate und Grenzen
+stehen im SD-C1-Vertrag.
+
+Alle Quellen-/Recoverywege prüfen auch verwaiste oder falsch platzierte aktive
+Ratingdateien. Nur `content/difficulty/<registrierte-ID>/rating.json` ist aktiv;
+die erlaubten `reports/<run-id>/report.json|report.md` sind getrennt. Fremde und
+aliasartige Dateien bleiben bei Blockade erhalten, statt einen Legacyfallback auszulösen.
 
 ## Linienverfahren und Ressourcen
 
@@ -684,7 +794,7 @@ Bestandsprüfungen lesen danach Runtimehashes und kompakte Integrationsdaten,
 keine Quellen, Proofs, ZIPs oder Produktionsreplays. Die Entwicklung neuer Rätsel
 verwendet weiterhin vollständige neue Eingänge/Freigaben und technische Prüfung.
 
-Nach Einführung von SD-C bleiben zusätzlich die kompakte aktive Bewertung,
+Ab SD-C1 bleiben zusätzlich die kompakte aktive Bewertung,
 ihre Eingangsbindungen und der gebundene Methoden-/Referenzstand außerhalb
 versiegelter Produktion erhalten. Neue Bewertung nutzt dann Runtime-Logikeingänge
 nach SD-D09/D10; sie verlangt keinen allgemeinen Produktions-Replay und keine

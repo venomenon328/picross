@@ -1,4 +1,5 @@
 """KAT-1: real categorized export, compatibility and transaction failure paths."""
+from tools.puzzle_production.za1_fixtures import rated_registration
 from copy import deepcopy
 import json
 from pathlib import Path
@@ -48,16 +49,16 @@ class CategorizedAdapterTests(unittest.TestCase):
         write_json(self.catalog_path, self.catalog)
         registry.sync_runtime(self.checkout)
         before = self.snapshot(self.checkout)
-        plan = registry.registration(mono, self.checkout)
+        plan = rated_registration(mono, self.checkout)
         self.assertEqual(plan["category"], self.catalog["categories"][-1])
         self.assertEqual(before, self.snapshot(self.checkout))
         for out in (mono, color):
-            self.assertEqual(registry.registration(out, self.checkout, apply=True)["status"], "registered")
-            self.assertEqual(registry.registration(out, self.checkout, apply=True)["status"], "no-op")
+            self.assertEqual(rated_registration(out, self.checkout, apply=True)["status"], "registered")
+            self.assertEqual(rated_registration(out, self.checkout, apply=True)["status"], "no-op")
         checked = registry.check_checkout(self.checkout, replay=True)
         self.assertEqual({e["category_id"] for e in checked["entries"]
                           if e["id"] in ("pz-test-direct-mono", "pz-test-direct-color")}, {"voegel", "test-only-extra"})
-        self.assertEqual(load_json(self.checkout / registry.RUNTIME), registry.projection(checked, self.catalog))
+        self.assertEqual(load_json(self.checkout / registry.RUNTIME), registry.projection(checked, self.catalog, self.checkout))
         self.assertFalse(any(p.name == "categories.json" for p in (self.checkout / "game").rglob("*")))
 
     def test_missing_unknown_multiple_and_conflicting_export_category(self):
@@ -66,11 +67,11 @@ class CategorizedAdapterTests(unittest.TestCase):
                 self.export(str(i), category=category)
             self.assertFalse((self.root / str(i)).exists())
         out = self.export()
-        registry.registration(out, self.checkout, apply=True)
+        rated_registration(out, self.checkout, apply=True)
         other = self.export("other", category="wasserwelt")
         before = self.snapshot(self.checkout)
         with self.assertRaisesRegex(InvalidInput, "Occupied"):
-            registry.registration(other, self.checkout, apply=True)
+            rated_registration(other, self.checkout, apply=True)
         self.assertEqual(before, self.snapshot(self.checkout))
 
     def test_tampered_category_snapshot_and_reference_fail_before_mutation(self):
@@ -93,7 +94,7 @@ class CategorizedAdapterTests(unittest.TestCase):
             write_json(out / "manifest.json", m)
             before = self.snapshot(self.checkout)
             with self.subTest(attack=attack), self.assertRaises(InvalidInput):
-                registry.registration(out, self.checkout, apply=True)
+                rated_registration(out, self.checkout, apply=True)
             self.assertEqual(before, self.snapshot(self.checkout))
 
     def test_current_target_category_required_and_stale_projection_blocks(self):
@@ -102,21 +103,21 @@ class CategorizedAdapterTests(unittest.TestCase):
         write_json(self.catalog_path, self.catalog)
         before = self.snapshot(self.checkout)
         with self.assertRaisesRegex(InvalidInput, "stale"):
-            registry.registration(out, self.checkout, apply=True)
+            rated_registration(out, self.checkout, apply=True)
         self.assertEqual(before, self.snapshot(self.checkout))
         registry.sync_runtime(self.checkout)
         before = self.snapshot(self.checkout)
         with self.assertRaisesRegex(InvalidInput, "Unknown category"):
-            registry.registration(out, self.checkout, apply=True)
+            rated_registration(out, self.checkout, apply=True)
         self.assertEqual(before, self.snapshot(self.checkout))
 
     def test_direct_registry_edit_cannot_override_bound_category(self):
         out = self.export()
-        registry.registration(out, self.checkout, apply=True)
+        rated_registration(out, self.checkout, apply=True)
         raw = load_json(self.checkout / registry.REGISTRY)
         raw["entries"][-1]["category_id"] = "wasserwelt"
         write_json(self.checkout / registry.REGISTRY, raw)
-        write_json(self.checkout / registry.RUNTIME, registry.projection(raw, self.catalog))
+        write_json(self.checkout / registry.RUNTIME, registry.projection(raw, self.catalog, self.checkout))
         before = self.snapshot(self.checkout)
         for action in (lambda: registry.check_checkout(self.checkout), lambda: registry.sync_runtime(self.checkout)):
             with self.assertRaisesRegex(InvalidInput, "category differs"):
@@ -134,7 +135,7 @@ class CategorizedAdapterTests(unittest.TestCase):
         self.assertFalse(report["catalog_ready"] or report["category_ready"])
         checkout_before = self.snapshot(self.checkout)
         with self.assertRaisesRegex(InvalidInput, "legacy export"):
-            registry.registration(legacy, self.checkout, apply=True)
+            rated_registration(legacy, self.checkout, apply=True)
         self.assertEqual(checkout_before, self.snapshot(self.checkout))
         new = self.root / "new"
         adapter.export(legacy / "input", new, name="TEST ONLY", revision=m["runtime_revision"],
@@ -146,14 +147,14 @@ class CategorizedAdapterTests(unittest.TestCase):
             self.assertEqual((new / name).read_bytes(), (legacy / name).read_bytes())
         for field in ("handoff_sha256", "inventory_sha256", "approval_sha256", "selection"):
             self.assertEqual(current[field], m[field])
-        registry.registration(new, self.checkout, apply=True)
+        rated_registration(new, self.checkout, apply=True)
 
     def test_rollback_crash_recovery_and_old_journal_block(self):
         out = self.export()
         before = self.snapshot(self.checkout)
         for step in ("files", "index", "crash", "crash-index", "crash-runtime"):
             with self.subTest(step=step), self.assertRaises(OSError):
-                registry.registration(out, self.checkout, apply=True, fail_step=step)
+                rated_registration(out, self.checkout, apply=True, fail_step=step)
             if step.startswith("crash"):
                 with self.assertRaisesRegex(InvalidInput, "Interrupted"):
                     registry.check_checkout(self.checkout)
@@ -163,7 +164,7 @@ class CategorizedAdapterTests(unittest.TestCase):
         write_json(lock, {"format": "picross-registration-journal-v1", "old": "preserve historical bytes"})
         before = self.snapshot(self.checkout)
         for action in (lambda: registry.recover(self.checkout), lambda: registry.sync_runtime(self.checkout),
-                       lambda: registry.registration(out, self.checkout, apply=True)):
+                       lambda: rated_registration(out, self.checkout, apply=True)):
             with self.assertRaises(InvalidInput): action()
             self.assertEqual(self.snapshot(self.checkout), before)
 
@@ -184,15 +185,17 @@ class CategorizedAdapterTests(unittest.TestCase):
                 return result
             with self.subTest(trigger=trigger), patch.object(adapter, "verify_export", side_effect=change):
                 with self.assertRaisesRegex(InvalidInput, "changed"):
-                    registry.registration(out, self.checkout, apply=True)
+                    rated_registration(out, self.checkout, apply=True)
             self.assertEqual(categories.load(self.catalog_path)["categories"][0]["name"], "Concurrent edit")
             self.catalog_path.write_bytes(original)
+            if (self.checkout / "content/.registration-pending.json").exists():
+                registry.recover(self.checkout)
             self.assertEqual(self.snapshot(self.checkout), before)
         with self.assertRaises(InterruptedError):
-            registry.registration(out, self.checkout, apply=True, fail_step="crash-index")
+            rated_registration(out, self.checkout, apply=True, fail_step="crash-index")
         self.catalog_path.write_bytes(original + b" ")
         interrupted = self.snapshot(self.checkout)
-        with self.assertRaisesRegex(InvalidInput, "Categories changed"):
+        with self.assertRaisesRegex(InvalidInput, "target changed.*categories.json"):
             registry.recover(self.checkout)
         self.assertEqual(self.snapshot(self.checkout), interrupted)
         self.catalog_path.write_bytes(original)
@@ -220,7 +223,7 @@ class CategorizedAdapterTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(json.loads(result.stdout)["category_id"], "voegel")
 
-    def test_category_change_after_either_index_write_rolls_back_owned_bytes(self):
+    def test_category_change_after_either_index_write_preserves_journal_until_resolved(self):
         out = self.export()
         before = self.snapshot(self.checkout)
         original = self.catalog_path.read_bytes()
@@ -233,9 +236,13 @@ class CategorizedAdapterTests(unittest.TestCase):
                     triggered.append(True)
                     self.catalog_path.write_bytes(original + b" ")
             with self.subTest(index=index), patch.object(registry, "atomic_bytes", side_effect=change):
-                with self.assertRaisesRegex(InvalidInput, "Categories changed"):
-                    registry.registration(out, self.checkout, apply=True)
+                with self.assertRaisesRegex(InvalidInput, "target changed.*categories.json"):
+                    rated_registration(out, self.checkout, apply=True)
             self.assertTrue(triggered)
             self.assertEqual(self.catalog_path.read_bytes(), original + b" ")
+            interrupted = self.snapshot(self.checkout)
+            with self.assertRaises(InvalidInput): registry.recover(self.checkout)
+            self.assertEqual(self.snapshot(self.checkout), interrupted)
             self.catalog_path.write_bytes(original)
+            registry.recover(self.checkout)
             self.assertEqual(self.snapshot(self.checkout), before)

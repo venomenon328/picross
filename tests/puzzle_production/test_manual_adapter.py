@@ -13,7 +13,8 @@ from tools.puzzle_production.images import file_hash, logic_from_matrix
 from tools.puzzle_production.solver import solve
 from tools.puzzle_production.verifier import verify
 from tools.puzzle_production.target_adapter import export, inspect, verify_export, MANUAL_FORMAT
-from tools.puzzle_production.content_registry import registration, check_checkout
+from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.content_registry import check_checkout
 from tools.puzzle_production.za1_fixtures import FIXTURES, ROOT, approve, seal, isolated_checkout
 
 
@@ -170,6 +171,11 @@ class ManualAdapterTests(unittest.TestCase):
                   "--save-slot", "manual_cli", "--category-id", "voegel", "--categories", str(checkout / "content/categories.json"), "--output-dir", str(out)]),
                  ("verify-export", ["--export", str(out)]), ("plan", ["--export", str(out), "--checkout", str(checkout)])]
         for command, args in calls:
+            if command == "plan":
+                from tools.puzzle_production.za1_fixtures import difficulty_for_export
+                checked = self.root / "checked.json"
+                write_json(checked,difficulty_for_export(out))
+                args += ["--difficulty",str(checked)]
             run = subprocess.run([sys.executable, "-B", "-m", "tools.puzzle_production.target_adapter", command, *args],
                                  cwd=ROOT, capture_output=True, text=True, timeout=60)
             self.assertEqual(run.returncode, 0, run.stdout + run.stderr)

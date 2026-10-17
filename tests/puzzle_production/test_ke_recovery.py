@@ -15,6 +15,35 @@ LOCK = 'content/.registration-pending.json'
 
 
 class LegacyRecoveryTests(unittest.TestCase):
+    def test_unbound_difficulty_blocks_exact_legacy_journals_without_mutation(self):
+        from tools.puzzle_production.catalog_rating import path
+        for kind in ('registration', 'update'):
+            root, journal = self.checkout(kind)
+            for side in ('old', 'new'):
+                entries = json.loads(journal[side][cr.REGISTRY])['entries']
+                target = root/path(entries[-1]['id'])
+                target.parent.mkdir(parents=True,exist_ok=True)
+                target.write_bytes(b'foreign unbound difficulty\n')
+                before = self.snapshot(root)
+                with self.subTest(kind=kind,side=side), self.assertRaisesRegex(InvalidInput,'unbound|Unbound'):
+                    cr.recover(root)
+                self.assertEqual(before,self.snapshot(root))
+                target.unlink()
+            self.assert_recovered(root,journal,self.snapshot(root))
+
+    def test_orphan_difficulty_blocks_legacy_recovery_before_mutation(self):
+        for kind in ('registration', 'update'):
+            root, journal = self.checkout(kind)
+            target = root / 'content/difficulty/pz-orphan/rating.json'
+            target.parent.mkdir(parents=True)
+            target.write_bytes(b'foreign orphan rating\n')
+            before = self.snapshot(root)
+            with self.subTest(kind=kind), self.assertRaisesRegex(InvalidInput, 'Unregistered difficulty'):
+                cr.recover(root)
+            self.assertEqual(before, self.snapshot(root))
+            target.unlink()
+            self.assert_recovered(root, journal, self.snapshot(root))
+
     def checkout(self, kind, early=False):
         temp = tempfile.TemporaryDirectory(); self.addCleanup(temp.cleanup)
         root = Path(temp.name)
