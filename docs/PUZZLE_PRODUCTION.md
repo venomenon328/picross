@@ -7,13 +7,15 @@ nicht in CI. Keine rätselspezifischen Unit-Tests oder Bestands-Replays hinzufü
 die unten historisch dokumentierten pauschalen RP-Paket-/CI-Prüfpflichten.
 Allgemeine Werkzeugtests mit festem synthetischem Testbestand bleiben erforderlich.
 
-**SD / [#235](https://github.com/venomenon328/picross/issues/235), freigegebener Sollvertrag (17.10.2026):**
-[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) ergänzt künftig die instrumentierte
+**SD / [#235](https://github.com/venomenon328/picross/issues/235), SD-C1 technisch umgesetzt (17.10.2026):**
+[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) ergänzt die instrumentierte
 Skala 1–5 und den ausdrücklich manuellen Bewertungsweg. [SD-A](SD_ANALYZER.md)
 liefert den separaten Analysator; [SD-B](SD_CALIBRATION.md) ergänzt die eingefrorene
 Methode 0.3 für den ausdrücklichen Einzelaufruf. Aktuelle Profile und
 Produktionsverträge gelten weiter. Die Integration neuer Bewertungen erfolgt
-erst mit SD-C; ein SD-B-Rating allein ändert keine Produktionsfreigabe.
+über [SD-C1](SD_CATALOG.md); ein SD-B-Rating allein ändert keine Produktionsfreigabe.
+Neue Registrierung und logisch geänderte Definitionen verlangen den extern vollständig
+geprüften 0.3-Input; die reale Bestandsbewertung/Übernahme bleibt SD-C2.
 
 [KAT-1](CATEGORIES.md) ergänzt den Produktionsfundus und ZA-1 um thematische Kategorien. Die Zuordnung steht spätestens vor dem kategorisierten Export fest und bleibt außerhalb von Raster-, Logik-, Proof- und Freigabeidentität. Arbeitsindex und Runtime-Registrierung bleiben getrennt.
 
@@ -443,10 +445,10 @@ Abschlussbilds. Ein monochromes Rätsel darf gemäß
 Produktdefinition durch die kolorierte Enthüllung verständlicher werden; ein
 Farbrätsel soll bereits selbst als Bild erkennbar sein.
 
-Aktuelle Schwierigkeit folgt den Methoden 0.1/0.2 aus Authoring §5 einschließlich
-ihrer Schätzgrenzen. Der freigegebene [SD-Vertrag](PUZZLE_DIFFICULTY.md) sieht für
-neue Bewertungen nach SD-C geprüfte R0–R3-Regeln, synchrone Bewertungswellen,
-gemeinsam erfasste Fortschrittsmöglichkeiten und belegte Engstellen vor. Die
+Historische Produktionsbewertungen behalten 0.1/0.2 aus Authoring §5 einschließlich
+ihrer Schätzgrenzen. Neue Integrationen verwenden zusätzlich 0.3 nach
+[SD-C1](SD_CATALOG.md): geprüfte R0–R3-Regeln, synchrone Bewertungswellen,
+gemeinsam erfasste Fortschrittsmöglichkeiten und belegte Engstellen. Die
 eigene Bewertungsspur ersetzt keinen bestehenden Proof. R4-Notwendigkeit wird
 weiterhin nach §5.6 unabhängig belegt; auch anspruchsvolle reine Linienfälle
 können Stufe 5 erreichen. Alte Bewertungen behalten ihre Methodensemantik.
@@ -472,7 +474,7 @@ Nach bestätigter Main-Integration werden Produktionsunterlagen entfernt; benöt
 bleiben nur Runtime-Inhalte, Nutzungsgrundlage, Metadaten und kompakte Integrationsbindung.
 Reproduzierbarkeit während der Produktion ist keine lebenslange Aufbewahrungspflicht.
 
-Nach Einführung von SD-C bleiben außerdem die kompakte aktive Bewertung, ihre
+Ab SD-C1 bleiben außerdem die kompakte aktive Bewertung, ihre
 Eingangsbindungen und der gebundene Methoden-/Referenzstand erhalten. Diese liegen
 außerhalb versiegelter Produktionsoriginale und ermöglichen die beauftragte
 Neubewertung aus aktuellen Logikeingängen nach SD-D09/D10. Daraus entsteht keine

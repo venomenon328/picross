@@ -281,7 +281,11 @@ keine Grenzänderung. Keine reale Kataloganalyse wurde in SD-B durchgeführt.
 
 SD-B-T01 umfasst aktuelle Pflicht-CI gemäß vollständigem Diff sowie die hier
 gebundenen technischen Nachweise. Der getrennte Selbstreview ist Teil der
-Implementiererlieferung; **SD-B-R01 bleibt ein separates qualifiziertes Review
-vor Merge**. Aktuelle Head-/Basis-/Checkout-/Runbindungen und Akzeptanzstand
+Implementiererlieferung. **SD-B-R01 und SD-B-M01 sind abgeschlossen**; PR #241
+ist als `b625cc6af1342eafb2582beb9eec17991ea21a12` in main integriert.
+Die vollständige CI 39060755154 einschließlich Web/ci-required ist erfolgreich;
+eine damalige paketbezogene Web-Ausnahme wurde nicht benötigt und gilt nicht für SD-C.
+Head-/Basis-/Checkout-/Runbindungen und Akzeptanzstand
 stehen in [PR #241](https://github.com/venomenon328/picross/pull/241) und
-[#237](https://github.com/venomenon328/picross/issues/237). Kein Mergeauftrag.
+[#237](https://github.com/venomenon328/picross/issues/237). Der Methodenfreeze
+bleibt unverändert; [SD-C1](SD_CATALOG.md) verwendet neue Integrationsmodule.

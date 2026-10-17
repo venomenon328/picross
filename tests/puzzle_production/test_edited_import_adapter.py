@@ -10,7 +10,7 @@ from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import InvalidInput, InvalidProof, digest, load_json, write_json
 from tools.puzzle_production.images import file_hash, import_image, raster_image
 from tools.puzzle_production.target_adapter import export, inspect, verify_export
-from tools.puzzle_production.content_registry import registration
+from tools.puzzle_production.za1_fixtures import rated_registration as registration
 from tools.puzzle_production.za1_fixtures import FIXTURES, ROOT, approve, seal, isolated_checkout
 
 

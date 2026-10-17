@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from copy import deepcopy
 from pathlib import Path
-import shutil
 
 from PIL import Image
 
@@ -123,6 +122,49 @@ def isolated_checkout(root):
     return root
 
 
+_ratings = {}
+
+
+def difficulty_for_export(export_dir, *, paired=False):
+    """Explicit test-only analysis outside sealed exports; never a catalog tool.
+
+    Paired test callers must opt in. The proof uses remapped runtime colors,
+    not the old production proof. Cached only within this synthetic test process.
+    """
+    import tempfile
+    from .authoring_package import require
+    from .analysis_io import runtime_logic
+    from .catalog_analysis import analyze_single
+    from .certification import configuration, produce
+    m = load_json(export_dir / "manifest.json")
+    require(m.get("test_only") is True, "Difficulty fixture helper requires test_only")
+    source = export_dir / m["definition"]
+    production_mode = load_json(export_dir / "inspection.json")["mode"]
+    key = (file_hash(source), paired, production_mode)
+    if key not in _ratings:
+        with tempfile.TemporaryDirectory(prefix="sd-c-synthetic-") as temporary:
+            work = Path(temporary)
+            baseline = proof = None
+            if paired:
+                puzzle = runtime_logic(load_json(source))
+                cfg = configuration(puzzle, "paired-lines-color")
+                produce(puzzle, work, "", cfg, Budget())
+                baseline, proof = work / "baseline-proof.json", work / "proof.json"
+            _ratings[key] = analyze_single(source, work / "analysis", production_mode=production_mode, baseline=baseline, proof=proof)
+    return deepcopy(_ratings[key])
+
+
+def rated_registration(export_dir, checkout, *, paired=False, **kwargs):
+    """Synthetic harness convenience: explicitly supply an external 0.3 input."""
+    from .content_registry import registration
+    return registration(export_dir, checkout, difficulty=difficulty_for_export(export_dir, paired=paired), **kwargs)
+
+
+def rated_update(export_dir, checkout, expected, **kwargs):
+    from .content_update import update
+    return update(export_dir, checkout, expected, difficulty=difficulty_for_export(export_dir), **kwargs)
+
+
 def replay(output, checkout=None):
     from .target_adapter import export, inspect, open_package, verify_export
     from .content_registry import registration, check_checkout
@@ -143,7 +185,7 @@ def replay(output, checkout=None):
         export(package, dest, name="TEST ONLY " + stem, revision=1, stem=stem, save_slot="slot_"+stem, approval_path=approval,
                category_id="voegel" if "color" in stem else "gemuese-pilze-kraeuter",
                categories_path=checkout / "content/categories.json")
-        registration(dest, checkout, apply=True)
+        registration(dest, checkout, apply=True, difficulty=difficulty_for_export(dest))
         assert registration(dest, checkout, apply=True)["status"] == "no-op"
         reports.append(verify_export(dest)[1])
     check_checkout(checkout, replay=True)

@@ -7,8 +7,9 @@ import unittest
 
 from tools.puzzle_production.authoring_package import file_hash
 from tools.puzzle_production.contract import InvalidInput, load_json, write_json
-from tools.puzzle_production.content_registry import registration, check_checkout, recover
-from tools.puzzle_production.content_update import update
+from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.content_registry import check_checkout, recover
+from tools.puzzle_production.za1_fixtures import rated_update as update
 from tools.puzzle_production.target_adapter import export
 from tools.puzzle_production.za1_fixtures import make, seal, approve, isolated_checkout, ROOT
 
@@ -73,6 +74,34 @@ class UpdateTests(unittest.TestCase):
             update(self.second,self.checkout,self.expected,apply=True)
         self.assertEqual(update(self.second,self.checkout,file_hash(self.checkout/self.definition),apply=True)['status'],'no-op')
 
+    def test_changed_logic_requires_new_rating_and_metadata_rebind_preserves_original(self):
+        from tools.puzzle_production.content_update import update as actual_update
+        from tools.puzzle_production import catalog_rating
+        before = self.snapshot()
+        with self.assertRaisesRegex(InvalidInput,'complete 0.3'):
+            actual_update(self.second,self.checkout,self.expected,apply=True)
+        with self.assertRaisesRegex(InvalidInput,'Rebind changes'):
+            actual_update(self.second,self.checkout,self.expected,apply=True,rebind_difficulty=True)
+        self.assertEqual(before,self.snapshot())
+        metadata = self.make_export('metadata','pz-test-update','r03',2,5)
+        prior = load_json(self.checkout/catalog_rating.path('pz-test-update'))
+        actual_update(metadata,self.checkout,self.expected,apply=True,rebind_difficulty=True)
+        current = load_json(self.checkout/catalog_rating.path('pz-test-update'))
+        self.assertEqual(current['rating'],prior['rating'])
+        self.assertEqual(current['rating_revision'],prior['rating_revision']+1)
+        self.assertEqual(current['current_source']['runtime_revision'],2)
+        check_checkout(self.checkout)
+
+    def test_update_preserves_the_two_existing_export_checks_without_replaying_neighbors(self):
+        from unittest.mock import patch
+        from tools.puzzle_production import target_adapter
+        original=target_adapter.verify_export
+        with patch.object(target_adapter,'verify_export',wraps=original) as verify:
+            update(self.second,self.checkout,self.expected,apply=True)
+        self.assertEqual(verify.call_count,2)  # supplied export and independent staged export
+        self.assertEqual(verify.call_args_list[0].args[0],self.second)
+        self.assertTrue(all(not call.args[0].is_relative_to(self.checkout) for call in verify.call_args_list))
+
     def test_rejects_stale_revision_slot_category_reveal_and_occupied_package_without_writes(self):
         candidates=[(self.second,'0'*64,'Stale')]
         for revision in (1,):
@@ -136,7 +165,7 @@ class UpdateTests(unittest.TestCase):
         entry['production']['package_sha256']=file_hash(package/'manifest.json')
         write_json(self.checkout/'content/registry.json',registry)
         catalog=load_json(self.checkout/'content/categories.json')
-        write_json(self.checkout/'game/data/registry.json',projection(registry,catalog))
+        write_json(self.checkout/'game/data/registry.json',projection(registry,catalog,self.checkout))
         self.assertEqual(update(self.second,self.checkout,self.expected,apply=True)['status'],'updated')
         self.assertEqual(load_json(package/'manifest.json'),receipt)
 
@@ -149,6 +178,6 @@ class UpdateTests(unittest.TestCase):
         journal['old'][notice]='forged old rights notice\n'
         write_json(journal_path,journal)
         before=self.snapshot()
-        with self.assertRaisesRegex(InvalidInput,'notice backup'):
+        with self.assertRaisesRegex(InvalidInput,'target changed|notice'):
             recover(self.checkout)
         self.assertEqual(before,self.snapshot())

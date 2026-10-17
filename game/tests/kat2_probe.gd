@@ -644,7 +644,7 @@ func catalog_labels() -> void:
 	for index: int in range(app.sessions.size()):
 		var value: Variant = null
 		if levels[index] != null:
-			value = {"method":"picross-difficulty-0.1","level":levels[index],"assessment_type":"editorial_estimate","confidence":"low","plausible_range":["L1","L5"],"r4_required":false}
+			value = {"method":"picross-difficulty-0.3","level":levels[index],"assessment_type":"instrumented","confidence":"medium","plausible_range":[levels[index],levels[index]],"r4_required":false}
 		app.album.metadata[app.sessions[index].definition.id]["difficulty"] = value
 		for entry: Dictionary in Registry.cached.entries:
 			if entry.id == app.sessions[index].definition.id: entry.difficulty = value
@@ -672,7 +672,7 @@ func catalog_labels() -> void:
 		first.layout_content()
 		check(unknown_pixels == await button_pixels(first.unknown),"KE unknown drawing is invariant under distinct puzzle dimensions")
 		# Unscored, estimated and instrumented R4 explanations at actual hover.
-		for value: Variant in [null,app.album.metadata["T-09"].difficulty,{"method":"picross-difficulty-0.2","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true}]:
+		for value: Variant in [null,app.album.metadata["T-09"].difficulty,{"method":"picross-difficulty-0.1","level":"L5","assessment_type":"editorial_estimate","confidence":"low","plausible_range":["L1","L5"],"r4_required":false},{"method":"picross-difficulty-0.2","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true},{"method":"picross-difficulty-0.3","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true}]:
 			first.set_metadata(20,15,false,value)
 			await hover(first.caption)
 			await hover(first.difficulty)
@@ -680,6 +680,9 @@ func catalog_labels() -> void:
 			var tip: Control = first.difficulty.tooltip_ref.get_ref() if first.difficulty.tooltip_ref != null else null
 			check(tip != null and tip.is_visible_in_tree(),"KE native targeted difficulty tooltip visible")
 			check(first.difficulty.tooltip_text.contains("Paarlinienlogik") == (value != null and value.r4_required),"KE R4 explanation only with typed evidence")
+			if value != null and value.method == "picross-difficulty-0.3":
+				check(first.difficulty.tooltip_text.contains("nicht menschlich kalibriert"),"SD-C native tooltip exposes model uncertainty")
+				await shot("sd-tooltip-%d-ui%d-r4-%s" % [spec[0],roundi(float(spec[2])*100),str(value.r4_required)])
 			app.set_ui_scale(1.0 if app.ui_scale == 1.25 else 1.25)
 			await frames()
 			check(tip == null or not is_instance_valid(tip) or not tip.is_visible_in_tree(),"KE UI change dismisses targeted popup")

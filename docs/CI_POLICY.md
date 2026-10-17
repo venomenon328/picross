@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 17.10.2026 · Version 1.8 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70) und freigegebener [SD-Sollvertrag](PUZZLE_DIFFICULTY.md)
+Stand: 17.10.2026 · Version 1.9 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70) und freigegebener [SD-Sollvertrag](PUZZLE_DIFFICULTY.md)
 
 ## Geltung und Ablösung
 
@@ -57,7 +57,7 @@ Save- und PCK-Funktionstests nutzen feste technische Beispiele statt einer Schle
 Spiel-/Darstellungstests sind keine erneute Rätselzertifizierung und werden bei
 Inhaltserweiterungen nicht ergänzt.
 
-## SD · Manuelle Schwierigkeitsbewertung und geplante Datenintegration
+## SD · Manuelle Schwierigkeitsbewertung und Datenintegration
 
 Eigentümerentscheidung vom 17.10.2026:
 [SD](PUZZLE_DIFFICULTY.md) wird als ausdrücklich gestarteter Werkzeugprozess
@@ -78,15 +78,24 @@ bewusst veränderte Grenzen alle fünf Stufen besetzen. Seine spätere manuelle
 Auswertung ist eine Plausibilitätsbeobachtung. Ein unbelegtes Extrem oder eine
 verlangte Histogrammform ist kein Abnahmekriterium; unbesetzte Stufen sind zulässig.
 
-Für SD-C ist ein enger reiner Datenpfad für die neue Bewertungsquelle und die
-erforderlichen kompakten Berichte vorgesehen. Konkrete Pfade, Formate und
-Positivliste müssen zusammen mit der Implementierung festgeschrieben und mit
-synthetischen Auswahlfällen geprüft werden. Die unten dokumentierte heutige
-Positivliste wird durch diesen Sollvertrag nicht erweitert; `ci_scope.py` ist
-damit noch nicht geändert. Reine Ratingdaten sollen nach der Umstellung nur
-Pfad-/Dateimodusprüfung und `ci-required` auswählen. Konkrete Bewertungsprüfung
-bleibt im manuellen Auftrag. Code-/Werkzeug-/Loader-/CI-Änderungen unterliegen
-weiterhin den tatsächlich ausgewählten allgemeinen Pflichtprüfungen.
+SD-C1 erweitert die enge Inhaltspfad-Positivliste ausschließlich um:
+
+- `content/difficulty/pz-[a-z0-9][a-z0-9-]{0,59}/rating.json`
+- `content/difficulty/reports/[a-z][a-z0-9-]{0,63}/report.json`
+- denselben Reportpfad mit `report.md`.
+
+Nur reguläre nicht ausführbare Dateien sind erlaubt; keine beliebigen Unterpfade,
+Endungen, Punktsegmente, Großschreibungsvarianten, Windows-Gerätenamen oder Links. Löschungen prüfen
+auch den alten Modus; Umbenennungen zählen als Löschung plus Neuanlage.
+Ein später reiner C2-Daten-PR wählt `content_only=true`: `docs` prüft ausschließlich
+Pfad-/Dateimodus, danach `ci-required`. Die konkrete Bewertungsprüfung bleibt im
+manuellen Auftrag nach [SD-C1](SD_CATALOG.md), nicht in CI.
+
+Die C1-Code-/Loader-/CI-Änderung selbst wählt alle aktuellen Bereiche aus dem
+vollständigen Base-/Head-Diff: docs, production, product, preflight, web und
+ci-required; Product einschließlich integration/pilots/visual/perf_b. Die frühere
+SD-B-Web-Ausnahme gilt nicht. Synthetische Auswahl-/Modus-/Rename-/Löschungsgegenproben
+prüfen diese Trennung. Kein automatisierter Lauf analysiert reale Katalogrätsel.
 
 ## Auswahl nach vollständigem Änderungsumfang
 
