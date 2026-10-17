@@ -13,7 +13,8 @@ from tools.puzzle_production.images import file_hash, logic_from_matrix
 from tools.puzzle_production.solver import solve
 from tools.puzzle_production.verifier import verify
 from tools.puzzle_production.target_adapter import export, inspect, verify_export, MANUAL_FORMAT
-from tools.puzzle_production.content_registry import registration, check_checkout
+from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.content_registry import check_checkout
 from tools.puzzle_production.za1_fixtures import FIXTURES, ROOT, approve, seal, isolated_checkout
 
 

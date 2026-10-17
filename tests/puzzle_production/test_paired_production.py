@@ -12,7 +12,8 @@ from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import Budget, InvalidInput, InvalidProof, digest, load_json, validate_logic, write_json
 from tools.puzzle_production.images import import_image, inspect_candidate, file_hash, raster_image, logic_from_matrix
 from tools.puzzle_production.za1_fixtures import make, seal, approve, isolated_checkout, ROOT
-from tools.puzzle_production.content_registry import registration, check_checkout
+from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.content_registry import check_checkout
 from test_paired import MONO, COLOR, wire
 
 
@@ -96,9 +97,9 @@ class PairedProductionTests(unittest.TestCase):
         self.assertIn("paired_verifier.py", report["tool"]["modules"])
         checkout = isolated_checkout(self.root / (name + "-checkout"))
         before = (checkout / "content/registry.json").read_bytes()
-        self.assertEqual(registration(out, checkout)["status"], "planned")
+        self.assertEqual(registration(out, checkout, paired=True)["status"], "planned")
         self.assertEqual((checkout / "content/registry.json").read_bytes(), before)
-        self.assertEqual(registration(out, checkout, apply=True)["status"], "registered")
+        self.assertEqual(registration(out, checkout, paired=True, apply=True)["status"], "registered")
         check_checkout(checkout, replay=True)
         return out, report
 

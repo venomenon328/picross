@@ -10,6 +10,40 @@ from ci_scope import FLAGS, JOBS, apply_event_policy, classify, content_path, ev
 
 
 class SelectionTests(unittest.TestCase):
+    def test_difficulty_data_allowlist_is_exact_and_c1_keeps_full_ci(self):
+        allowed = ["content/difficulty/pz-test/rating.json", "content/difficulty/reports/first-run/report.json",
+                   "content/difficulty/reports/first-run/report.md"]
+        self.assertTrue(classify(allowed)["content_only"])
+        for path in ["content/difficulty/pz-test/rating.py", "content/difficulty/pz-test/report.json",
+                     "content/difficulty/reports/first-run/trace.json", "content/difficulty/reports/Upper/report.md",
+                     "content/difficulty/pz-Test/rating.json", "content/difficulty/pz-test/nested/rating.json",
+                     "content/difficulty/reports/../report.md", "content/difficulty/reports/a/report.gd",
+                     "content/difficulty/pz-test/rating.json/", "content/difficulty/pz-test/rating.json.py"]:
+            with self.subTest(path=path):
+                self.assertFalse(content_path(path))
+                self.assertFalse(classify(allowed + [path])["content_only"])
+        self.assertTrue(all(classify(allowed + ["tools/ci_scope.py"])["selected"].values()))
+
+    def test_difficulty_modes_deletions_and_renames_use_both_tree_paths(self):
+        from unittest.mock import patch
+        paths = ["content/difficulty/pz-a/rating.json", "content/difficulty/reports/one/report.md"]
+        modes = [("100644", "000000"), ("000000", "100644")]
+        def fake_git(*args):
+            if "--name-only" in args: return ("\0".join(paths) + "\0").encode()
+            if "--raw" in args:
+                return "".join(f":{old} {new} {'a'*40} {'b'*40} M\0{p}\0" for p,(old,new) in zip(paths,modes)).encode()
+            if args[0] == "rev-parse": return b"c"*40
+            if "--check" in args: return b""
+            raise AssertionError(args)
+        with patch("ci_scope.git", side_effect=fake_git):
+            self.assertTrue(make_plan("a"*40, "b"*40, "auto")["content_only"])
+            for mode in ("100755", "120000", "160000"):
+                for pair in ((mode,"000000"),("000000",mode)):
+                    modes[0] = pair
+                    with self.subTest(pair=pair), self.assertRaises(ValueError): make_plan("a"*40,"b"*40,"auto")
+            paths[0] = "tools/ci_scope.py"  # A rename cannot hide its executable/source side.
+            self.assertTrue(all(make_plan("a"*40,"b"*40,"auto")["selected"].values()))
+
     def test_puzzle_deliveries_select_no_test_suites_at_any_catalog_size(self):
         paths = ["content/registry.json", "game/data/registry.json", "content/authoring/index.json"]
         for i in range(500):

@@ -1,13 +1,14 @@
 # Rätselschwierigkeit und wiederholbare Katalogeinstufung · SD
 
-Stand: 17.10.2026 · Spezifikation 1.1 · SD-A/SD-B konkretisiert, SD-C Sollvertrag
+Stand: 17.10.2026 · Spezifikation 1.2 · SD-A/SD-B integriert, SD-C1 technisch umgesetzt
 
 Die Spezifikation einschließlich der katalogunabhängigen Referenzkalibrierung
 ist freigegeben. SD-A liefert den [technischen Analysator](SD_ANALYZER.md) mit
 eigener prüfbarer Spur und manueller Einzel-CLI. [SD-B](SD_CALIBRATION.md) ergänzt
-die eingefrorene Methode 0.3 mit eigenen geprüften Ratings. SD-C, reale
-Bewertungsdurchläufe und Merge bleiben nachgelagert. Die nachstehenden
-Katalog-/Integrationsfähigkeiten beschreiben weiterhin das Soll.
+die eingefrorene Methode 0.3 mit eigenen geprüften Ratings. [SD-C1](SD_CATALOG.md)
+liefert den technischen Bewertungs-/Integrationsweg samt synthetischen Nachweisen.
+Separates qualifiziertes C1-Review, reale Bewertungsdurchläufe/Übernahme (SD-C2)
+und Merge bleiben offen; #238/#235 werden dadurch nicht abgeschlossen.
 
 [Zielissue #235](https://github.com/venomenon328/picross/issues/235) führt den
 Gesamtumfang; [SD-A #236](https://github.com/venomenon328/picross/issues/236),
@@ -49,7 +50,7 @@ Zwangsverteilung oder automatische Streckung vorhandener Werte auf die Skala.
 `picross-difficulty-0.3` ist als eigenständige manuelle Bewertungsmethode in
 [SD-B](SD_CALIBRATION.md) vollständig festgelegt: Regelliste/Metriken aus SD-A,
 eigene Aggregation, Grenzwerte, Referenzen und exakte Konfigurations-/Quellbindung.
-Der Freeze gilt vor der Bestandsanwendung. Erst SD-C aktiviert die neue
+Der Freeze gilt vor der Bestandsanwendung. SD-C1 aktiviert die neue
 Katalogquelle und ihre Integration; der Einzelbericht allein übernimmt nichts.
 
 Die bisherigen Methoden 0.1 und 0.2 behalten ihre historische Bedeutung.

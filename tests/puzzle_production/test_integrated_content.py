@@ -1,4 +1,5 @@
 """Completed production must not be needed by later registration or metadata edits."""
+from tools.puzzle_production.za1_fixtures import rated_registration
 from copy import deepcopy
 import subprocess
 import unittest
@@ -16,7 +17,7 @@ class IntegratedContentTests(unittest.TestCase):
 
     def prepare(self):
         out = self.export()
-        registry.registration(out, self.checkout, apply=True)
+        rated_registration(out, self.checkout, apply=True)
         index = self.checkout / "content/authoring/index.json"
         index.parent.mkdir(parents=True)
         write_json(index, {"format": "picross-authoring-index-v1", "entries": []})
@@ -38,9 +39,9 @@ class IntegratedContentTests(unittest.TestCase):
         with patch("tools.puzzle_production.target_adapter.verify_export", side_effect=AssertionError("replay")):
             registry.check_checkout(self.checkout, replay=True)
             registry.sync_runtime(self.checkout)
-        self.assertEqual(registry.registration(out, self.checkout, apply=True)["status"], "no-op")
+        self.assertEqual(rated_registration(out, self.checkout, apply=True)["status"], "no-op")
         color = self.export("color", "direct-color", "voegel")
-        self.assertEqual(registry.registration(color, self.checkout, apply=True)["status"], "registered")
+        self.assertEqual(rated_registration(color, self.checkout, apply=True)["status"], "registered")
 
 
     def test_unmerged_bytes_block_before_deletion(self):
