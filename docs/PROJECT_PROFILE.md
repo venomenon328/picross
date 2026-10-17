@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**SD / #235 (17.10.2026), SD-A-Analysator; SD-B/SD-C noch ausstehend:**
+**SD / #235 (17.10.2026), SD-A-Analysator und SD-B-Methode; SD-C ausstehend:**
 [Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) bindet die geplante wiederholbare
 Einstufung 1–5: instrumentierte Logik und Lösungsfluss, begrenzter Größenbeitrag,
 feste Grenzen anhand unabhängiger synthetischer Referenzen. Der aktuelle Katalog
@@ -9,10 +9,12 @@ muss nicht alle Stufen enthalten und kalibriert keine Skalenenden. Analyse und
 verwenden nach der Umstellung denselben Methodenstand. Automatisierte Tests
 dürfen weder den realen Katalog noch daraus kopierte oder abgeleitete Fälle nutzen.
 SD-A/SD-B/SD-C liefern Analyse, gebundene Methode und Katalog-/Integrationsweg.
-[SD-A](SD_ANALYZER.md) liefert Regeln, synchrone Bewertungsspur und manuellen
-Einzelbericht ohne kalibrierte Stufe. Separates Review SD-A-R01 bleibt vor Merge
-erforderlich; technische Nachweise stehen im Implementierungs-PR zu #236.
-Reale Neueinstufung und Merge sind nicht beauftragt. Aktuelle 0.1-/0.2-Datenverträge gelten bis SD-C.
+[SD-A](SD_ANALYZER.md) liefert Regeln, synchrone Bewertungsspur und den unveränderten
+v1-Einzelbericht. [SD-B](SD_CALIBRATION.md) ergänzt opt-in die eingefrorene Methode
+0.3, unabhängige Referenzen und separat prüfbare Ratings. Technische Nachweise und
+Selbstreview stehen im PR zu #237; SD-B-R01 bleibt separat vor Merge erforderlich.
+Reale Neueinstufung und Merge sind nicht beauftragt. Aktuelle Katalog-/Produktions-
+Datenverträge 0.1/0.2 gelten bis SD-C; SD-B aktiviert keine Übernahme.
 
 **KE / #233 (17.10.2026), mit PR #234 in `main` integriert:**
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](CATALOG_PRESENTATION.md)
@@ -141,7 +143,7 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Neue Rätsel konzipieren, gestalten, produzieren oder redaktionell abnehmen | [KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md) und deren Pflichtquellen |
 | Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
-| Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
+| Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
 | CI, Prüfprogramme, Artefakte, Archivierung | [CI_POLICY](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md) |
 
 PERF-A/PERF-B sind historische Lieferberichte, keine aktuellen Hersteller- oder

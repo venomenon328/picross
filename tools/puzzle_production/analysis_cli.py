@@ -16,6 +16,7 @@ def main(argv=None):
     for name in ("analyze-difficulty", "check-analysis"):
         child = commands.add_parser(name)
         child.add_argument("--input", type=Path, required=True)
+        child.add_argument("--method", choices=("picross-difficulty-0.3",))
         child.add_argument("--seconds", type=float, default=120)
         child.add_argument("--max-lines", type=int, default=100000)
         child.add_argument("--max-rule-work", type=int, default=20000000)
@@ -38,7 +39,7 @@ def main(argv=None):
         budget = AnalysisBudget(args.seconds, args.max_lines, args.max_rule_work, args.max_waves,
                                 max_pair_work=args.max_pair_work, max_pair_records=args.max_pair_records)
         if args.command == "check-analysis":
-            result = check_bundle(args.input, args.bundle, budget)
+            result = check_bundle(args.input, args.bundle, budget, method=args.method)
             status = result["status"]
         else:
             verify_budget = AnalysisBudget(args.verify_seconds, args.verify_max_lines,
@@ -46,12 +47,18 @@ def main(argv=None):
             report = analyze_file(args.input, args.output_dir, kind=args.input_kind,
                 config=load_json(args.parameters, 4096) if args.parameters else None,
                 budget=budget, verify_budget=verify_budget,
-                proof_path=args.r4_proof, baseline_path=args.r4_baseline)
+                proof_path=args.r4_proof, baseline_path=args.r4_baseline, method=args.method)
             status = report["result"]["status"]
             result = {"format": report["format"], "status": status,
                       "result_hash": report["result_hash"], "report": str(args.output_dir / "report.json"),
                       "line_analysis_complete": report["result"]["line_analysis_complete"],
                       "level": None, "explanation": report["result"]["explanation"]}
+            if args.method is not None:
+                from .difficulty_rating import RATING_BYTE_LIMIT
+                rating = load_json(args.output_dir / "rating.json", RATING_BYTE_LIMIT)
+                result.update(method=args.method, rating=str(args.output_dir / "rating.json"),
+                              rating_hash=rating["rating_hash"], rating_status=rating["result"]["status"],
+                              level=rating["result"]["level"], explanation=rating["result"]["explanation"])
         code = 4 if status == "aborted" else 0
     except Exception as exc:
         status = ("invalid_input" if isinstance(exc, InvalidInput) else

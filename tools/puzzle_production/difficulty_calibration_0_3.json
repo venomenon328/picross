@@ -1,0 +1,600 @@
+{
+  "format": "picross-difficulty-calibration-v1",
+  "id": "sd-b-calibration-1",
+  "references_hash": "57cbee00fc9f91a7d75b2ca05f9d986c7a4d131fc3ed054e207ee9f40a67874f",
+  "results": [
+    {
+      "analysis_hash": "d38a4121e75140577d42b6dff4faff5b0daa56bb205ba70daa158d24111c7c7c",
+      "family_waves": {
+        "R0": 1,
+        "R1": 0,
+        "R2": 0,
+        "R3": 0
+      },
+      "id": "direct-50",
+      "metrics_hash": "02974f585170f7e56affd52a7c42a8405457115ad1e16f48081bfd2ff6cc8f16",
+      "rating_result": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Logische Basis 1; Größenbeitrag 0; Stufe 1. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+        "level": 1,
+        "logical_demand": null,
+        "logical_level": 1,
+        "profile": {
+          "bottleneck_phases": 0,
+          "bottleneck_waves": 0,
+          "cleanup_suffix_waves": 1,
+          "demand": [
+            0,
+            1
+          ],
+          "fluent_r1": false,
+          "highest_family": "R0",
+          "localized_combination": false,
+          "longest_bottleneck": 0,
+          "peak_strain": [
+            0,
+            1
+          ],
+          "recurrence_bonus": [
+            0,
+            1
+          ],
+          "simple_information_fraction": [
+            1,
+            1
+          ],
+          "strong_information_fraction": [
+            0,
+            1
+          ]
+        },
+        "r4_required": false,
+        "reason": null,
+        "size_adjustment": 0,
+        "size_pressure": [
+          1,
+          4
+        ],
+        "status": "rated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "verified_complete"
+        },
+        "workload": {
+          "cells": 2500,
+          "height": 50,
+          "width": 50
+        }
+      },
+      "trace_hash": "b5fc5fc46fa60d5411c625a42dccd7f9d3628773b0d721441bcafc5e5593e893"
+    },
+    {
+      "analysis_hash": "3d1e46cb2d8e69c3e8cf744e625b5039d8f1f22731ad60e3f9f099c8fd5227c0",
+      "family_waves": {
+        "R0": 3,
+        "R1": 1,
+        "R2": 0,
+        "R3": 0
+      },
+      "id": "fluid-r1",
+      "metrics_hash": "a2d6e6d73afd4eea397a8ed6c8aa284a3fd85dd71840ed1df8951d46cdc6d85d",
+      "rating_result": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Logische Basis 1; Größenbeitrag 0; Stufe 1. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+        "level": 1,
+        "logical_demand": null,
+        "logical_level": 1,
+        "profile": {
+          "bottleneck_phases": 0,
+          "bottleneck_waves": 0,
+          "cleanup_suffix_waves": 1,
+          "demand": [
+            0,
+            1
+          ],
+          "fluent_r1": true,
+          "highest_family": "R1",
+          "localized_combination": false,
+          "longest_bottleneck": 0,
+          "peak_strain": [
+            0,
+            1
+          ],
+          "recurrence_bonus": [
+            0,
+            1
+          ],
+          "simple_information_fraction": [
+            1,
+            1
+          ],
+          "strong_information_fraction": [
+            0,
+            1
+          ]
+        },
+        "r4_required": false,
+        "reason": null,
+        "size_adjustment": 0,
+        "size_pressure": [
+          0,
+          1
+        ],
+        "status": "rated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "verified_complete"
+        },
+        "workload": {
+          "cells": 25,
+          "height": 5,
+          "width": 5
+        }
+      },
+      "trace_hash": "62ff9ee16711730f50886f4f043b64e8eb7c1dd35a16aa9b853945227e2d8b6d"
+    },
+    {
+      "analysis_hash": "b7467119eca6dbae0c9ed528f689056e917cb1c7f47f141ed24226a568b0dc3c",
+      "family_waves": {
+        "R0": 2,
+        "R1": 2,
+        "R2": 1,
+        "R3": 0
+      },
+      "id": "local-combination",
+      "metrics_hash": "98dde7dc73d91c00eb5b2c7c0ff0abda9e61c4a158c90659474a37bce0577b0d",
+      "rating_result": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Logische Basis 2; Größenbeitrag 0; Stufe 2. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+        "level": 2,
+        "logical_demand": null,
+        "logical_level": 2,
+        "profile": {
+          "bottleneck_phases": 0,
+          "bottleneck_waves": 0,
+          "cleanup_suffix_waves": 0,
+          "demand": [
+            0,
+            1
+          ],
+          "fluent_r1": false,
+          "highest_family": "R2",
+          "localized_combination": true,
+          "longest_bottleneck": 0,
+          "peak_strain": [
+            0,
+            1
+          ],
+          "recurrence_bonus": [
+            0,
+            1
+          ],
+          "simple_information_fraction": [
+            13,
+            14
+          ],
+          "strong_information_fraction": [
+            1,
+            14
+          ]
+        },
+        "r4_required": false,
+        "reason": null,
+        "size_adjustment": 0,
+        "size_pressure": [
+          0,
+          1
+        ],
+        "status": "rated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "verified_complete"
+        },
+        "workload": {
+          "cells": 42,
+          "height": 6,
+          "width": 7
+        }
+      },
+      "trace_hash": "5f49f57a1c302fd4dc6e8e833d94cf6be93956629b8c2ae4e19456722bc030cc"
+    },
+    {
+      "analysis_hash": "fbf900f4b8904cb56160599982855df6506c745185f996e33c344da1dbb50101",
+      "family_waves": {
+        "R0": 3,
+        "R1": 2,
+        "R2": 2,
+        "R3": 0
+      },
+      "id": "sustained-combination",
+      "metrics_hash": "a174cd147b10f78fb4312aa7a84988c4bbba3058fb2be5aef959554c38b0df00",
+      "rating_result": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Logische Basis 3; Größenbeitrag 0; Stufe 3. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+        "level": 3,
+        "logical_demand": null,
+        "logical_level": 3,
+        "profile": {
+          "bottleneck_phases": 0,
+          "bottleneck_waves": 0,
+          "cleanup_suffix_waves": 0,
+          "demand": [
+            6,
+            77
+          ],
+          "fluent_r1": false,
+          "highest_family": "R2",
+          "localized_combination": false,
+          "longest_bottleneck": 0,
+          "peak_strain": [
+            6,
+            77
+          ],
+          "recurrence_bonus": [
+            0,
+            1
+          ],
+          "simple_information_fraction": [
+            13,
+            15
+          ],
+          "strong_information_fraction": [
+            2,
+            15
+          ]
+        },
+        "r4_required": false,
+        "reason": null,
+        "size_adjustment": 0,
+        "size_pressure": [
+          0,
+          1
+        ],
+        "status": "rated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "verified_complete"
+        },
+        "workload": {
+          "cells": 90,
+          "height": 9,
+          "width": 10
+        }
+      },
+      "trace_hash": "e52b2fee3ec123631d940925f340e165e7c34e7cd23b052c32a7fca5a0bbaba7"
+    },
+    {
+      "analysis_hash": "0b03c60d6e0814121f21d7145700c2acc1181c454ef80b3e656a4dff3ef060b3",
+      "family_waves": {
+        "R0": 5,
+        "R1": 4,
+        "R2": 8,
+        "R3": 0
+      },
+      "id": "repeated-narrow",
+      "metrics_hash": "ab1887e92f11254c34448c11119c70794ec11e1b1f4d7bd9148cbe5c5083df5b",
+      "rating_result": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Logische Basis 4; Größenbeitrag 0; Stufe 4. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+        "level": 4,
+        "logical_demand": null,
+        "logical_level": 4,
+        "profile": {
+          "bottleneck_phases": 3,
+          "bottleneck_waves": 4,
+          "cleanup_suffix_waves": 0,
+          "demand": [
+            893,
+            1008
+          ],
+          "fluent_r1": false,
+          "highest_family": "R2",
+          "localized_combination": false,
+          "longest_bottleneck": 2,
+          "peak_strain": [
+            44,
+            63
+          ],
+          "recurrence_bonus": [
+            3,
+            16
+          ],
+          "simple_information_fraction": [
+            2,
+            3
+          ],
+          "strong_information_fraction": [
+            1,
+            3
+          ]
+        },
+        "r4_required": false,
+        "reason": null,
+        "size_adjustment": 0,
+        "size_pressure": [
+          0,
+          1
+        ],
+        "status": "rated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "verified_complete"
+        },
+        "workload": {
+          "cells": 72,
+          "height": 8,
+          "width": 9
+        }
+      },
+      "trace_hash": "b6e5cd2e79d934121486360dfa102ca0628ce711cee220f5656b30dc87ff532c"
+    },
+    {
+      "analysis_hash": "4b210e36c361196c53dd6900a7b11df00cbcc9fbf3dc2a2aa818498bb9b1ccc6",
+      "family_waves": {
+        "R0": 2,
+        "R1": 3,
+        "R2": 3,
+        "R3": 0
+      },
+      "id": "color-combination",
+      "metrics_hash": "ee76965271e765c48fa4914823545904d9002805b8126c9409f30d157470d8bb",
+      "rating_result": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Logische Basis 3; Größenbeitrag 0; Stufe 3. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+        "level": 3,
+        "logical_demand": null,
+        "logical_level": 3,
+        "profile": {
+          "bottleneck_phases": 0,
+          "bottleneck_waves": 0,
+          "cleanup_suffix_waves": 0,
+          "demand": [
+            4,
+            81
+          ],
+          "fluent_r1": false,
+          "highest_family": "R2",
+          "localized_combination": false,
+          "longest_bottleneck": 0,
+          "peak_strain": [
+            4,
+            81
+          ],
+          "recurrence_bonus": [
+            0,
+            1
+          ],
+          "simple_information_fraction": [
+            37,
+            84
+          ],
+          "strong_information_fraction": [
+            47,
+            84
+          ]
+        },
+        "r4_required": false,
+        "reason": null,
+        "size_adjustment": 0,
+        "size_pressure": [
+          0,
+          1
+        ],
+        "status": "rated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "verified_complete"
+        },
+        "workload": {
+          "cells": 42,
+          "height": 6,
+          "width": 7
+        }
+      },
+      "trace_hash": "346296649e4eb6cb730eff9ed618761f253238335c5c8358ecf55b33915b270d"
+    },
+    {
+      "analysis_hash": "b4f0daf72b3cc1ae258d5253db368e5e9f231b2439128ce89daeaa747b9867b6",
+      "family_waves": {
+        "R0": 4,
+        "R1": 3,
+        "R2": 6,
+        "R3": 1
+      },
+      "id": "late-general-line",
+      "metrics_hash": "acfaee8f19e1fd7428334e057d0762f6d2f3c346a9f1f6f4c2a83a1d3b9a7f57",
+      "rating_result": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Logische Basis 5; Größenbeitrag 0; Stufe 5. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+        "level": 5,
+        "logical_demand": null,
+        "logical_level": 5,
+        "profile": {
+          "bottleneck_phases": 2,
+          "bottleneck_waves": 4,
+          "cleanup_suffix_waves": 0,
+          "demand": [
+            1,
+            1
+          ],
+          "fluent_r1": false,
+          "highest_family": "R3",
+          "localized_combination": false,
+          "longest_bottleneck": 3,
+          "peak_strain": [
+            52,
+            63
+          ],
+          "recurrence_bonus": [
+            7,
+            32
+          ],
+          "simple_information_fraction": [
+            5,
+            7
+          ],
+          "strong_information_fraction": [
+            2,
+            7
+          ]
+        },
+        "r4_required": false,
+        "reason": null,
+        "size_adjustment": 0,
+        "size_pressure": [
+          0,
+          1
+        ],
+        "status": "rated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "verified_complete"
+        },
+        "workload": {
+          "cells": 56,
+          "height": 7,
+          "width": 8
+        }
+      },
+      "trace_hash": "0f5c165b6c0495ba1c0d2d83f2c562e0d7b8d0e4331becec5038b1a967d4e0d7"
+    },
+    {
+      "analysis_hash": "2c3bf826a2ba33710a9bdad2738b54ac0600241c60afc8d29bf973f72b866748",
+      "family_waves": {
+        "R0": 1,
+        "R1": 0,
+        "R2": 0,
+        "R3": 0
+      },
+      "id": "required-pair",
+      "metrics_hash": "7b709b6c20a9a96a5fe8e19f5e4a22a4eb32df2294eb3068aa44dc9a7cc5a1e8",
+      "rating_result": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Logische Basis 5; Größenbeitrag 0; Stufe 5. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+        "level": 5,
+        "logical_demand": "linienübergreifend / besonders hoher logischer Anspruch",
+        "logical_level": 5,
+        "profile": null,
+        "r4_required": true,
+        "reason": null,
+        "size_adjustment": 0,
+        "size_pressure": [
+          0,
+          1
+        ],
+        "status": "rated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "verified_complete"
+        },
+        "workload": {
+          "cells": 16,
+          "height": 4,
+          "width": 4
+        }
+      },
+      "trace_hash": "0388ba576571346ee91afe2aad544887d0d4794002a7cc83a1033fb9cbf8c3b6"
+    },
+    {
+      "analysis_hash": "af8935618d1a102e73c549dd3d2aa45179f781fa249294e03ff3b895db4d8a6a",
+      "family_waves": {
+        "R0": 3,
+        "R1": 3,
+        "R2": 7,
+        "R3": 1
+      },
+      "id": "stalled-general",
+      "metrics_hash": "f729b57cb5211366e6371f9c5fbb8902d34e18e07b8cf38d540df024506be53e",
+      "rating_result": {
+        "assessment_type": null,
+        "confidence": null,
+        "estimated_minutes": null,
+        "explanation": "Keine Einstufung: analysis_incomplete.",
+        "level": null,
+        "logical_demand": null,
+        "logical_level": null,
+        "profile": null,
+        "r4_required": false,
+        "reason": "analysis_incomplete",
+        "size_adjustment": null,
+        "size_pressure": null,
+        "status": "unrated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "incomplete"
+        },
+        "workload": {
+          "cells": 56,
+          "height": 7,
+          "width": 8
+        }
+      },
+      "trace_hash": "9c79f2589034a781c60ea027a9c73a372bbe78b681a5848f3c789aef83d8ef44"
+    },
+    {
+      "analysis_hash": "aac585448f669a2dcb5c9ae6ce16d842302af93d90c0aa46b35c4597b2f06b96",
+      "family_waves": {
+        "R0": 0,
+        "R1": 1,
+        "R2": 3,
+        "R3": 0
+      },
+      "id": "color-pair",
+      "metrics_hash": "9ca483c518cc1f982f1bfa1f10ca8d8f7464a88b8fb9f4da7a80995c20dbb14b",
+      "rating_result": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Logische Basis 5; Größenbeitrag 0; Stufe 5. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+        "level": 5,
+        "logical_demand": "linienübergreifend / besonders hoher logischer Anspruch",
+        "logical_level": 5,
+        "profile": null,
+        "r4_required": true,
+        "reason": null,
+        "size_adjustment": 0,
+        "size_pressure": [
+          0,
+          1
+        ],
+        "status": "rated",
+        "uncertainty": {
+          "human_calibration": "not_performed",
+          "model": "rule_based_estimate",
+          "technical": "verified_complete"
+        },
+        "workload": {
+          "cells": 20,
+          "height": 4,
+          "width": 5
+        }
+      },
+      "trace_hash": "260050b24d99501e2e1afa880f4ac124ec77bc1b226504f9bdd2c29c542d8583"
+    }
+  ]
+}

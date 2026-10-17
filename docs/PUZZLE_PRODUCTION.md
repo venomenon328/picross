@@ -10,9 +10,10 @@ Allgemeine Werkzeugtests mit festem synthetischem Testbestand bleiben erforderli
 **SD / [#235](https://github.com/venomenon328/picross/issues/235), freigegebener Sollvertrag (17.10.2026):**
 [Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) ergänzt künftig die instrumentierte
 Skala 1–5 und den ausdrücklich manuellen Bewertungsweg. [SD-A](SD_ANALYZER.md)
-liefert den separaten Analysator ohne kalibrierte Stufe; SD-B/SD-C fehlen noch.
-Aktuelle Profile, Befehle und Produktionsverträge gelten
-weiter. Die gezielte Umstellung neuer Bewertungen erfolgt erst mit SD-C.
+liefert den separaten Analysator; [SD-B](SD_CALIBRATION.md) ergänzt die eingefrorene
+Methode 0.3 für den ausdrücklichen Einzelaufruf. Aktuelle Profile und
+Produktionsverträge gelten weiter. Die Integration neuer Bewertungen erfolgt
+erst mit SD-C; ein SD-B-Rating allein ändert keine Produktionsfreigabe.
 
 [KAT-1](CATEGORIES.md) ergänzt den Produktionsfundus und ZA-1 um thematische Kategorien. Die Zuordnung steht spätestens vor dem kategorisierten Export fest und bleibt außerhalb von Raster-, Logik-, Proof- und Freigabeidentität. Arbeitsindex und Runtime-Registrierung bleiben getrennt.
 

@@ -1,12 +1,13 @@
 # Rätselschwierigkeit und wiederholbare Katalogeinstufung · SD
 
-Stand: 17.10.2026 · Spezifikation 1.0 · freigegebener Sollvertrag
+Stand: 17.10.2026 · Spezifikation 1.1 · SD-A/SD-B konkretisiert, SD-C Sollvertrag
 
 Die Spezifikation einschließlich der katalogunabhängigen Referenzkalibrierung
 ist freigegeben. SD-A liefert den [technischen Analysator](SD_ANALYZER.md) mit
-eigener prüfbarer Spur und manueller Einzel-CLI. SD-B/SD-C, reale Bewertungsdurchläufe
-und Merge bleiben nachgelagert. Die nachstehenden Gesamtfähigkeiten beschreiben
-weiterhin das Soll; SD-A allein liefert keine kalibrierte Katalogeinstufung.
+eigener prüfbarer Spur und manueller Einzel-CLI. [SD-B](SD_CALIBRATION.md) ergänzt
+die eingefrorene Methode 0.3 mit eigenen geprüften Ratings. SD-C, reale
+Bewertungsdurchläufe und Merge bleiben nachgelagert. Die nachstehenden
+Katalog-/Integrationsfähigkeiten beschreiben weiterhin das Soll.
 
 [Zielissue #235](https://github.com/venomenon328/picross/issues/235) führt den
 Gesamtumfang; [SD-A #236](https://github.com/venomenon328/picross/issues/236),
@@ -45,10 +46,11 @@ Zwangsverteilung oder automatische Streckung vorhandener Werte auf die Skala.
 
 ## SD-D02 · Versionierung und gezielte Ablösung
 
-Vorgesehen ist `picross-difficulty-0.3` als neue Bewertungsmethode. Ihre genaue
-Regelliste, Metrikdefinitionen, Aggregation, Grenzwerte und Kalibrierungsgrundlage
-werden in SD-A/SD-B vollständig festgelegt und vor der Bestandsanwendung gebunden.
-Bis dahin bezeichnet 0.3 die geplante Methode, keine fertige Bewertungsfunktion.
+`picross-difficulty-0.3` ist als eigenständige manuelle Bewertungsmethode in
+[SD-B](SD_CALIBRATION.md) vollständig festgelegt: Regelliste/Metriken aus SD-A,
+eigene Aggregation, Grenzwerte, Referenzen und exakte Konfigurations-/Quellbindung.
+Der Freeze gilt vor der Bestandsanwendung. Erst SD-C aktiviert die neue
+Katalogquelle und ihre Integration; der Einzelbericht allein übernimmt nichts.
 
 Die bisherigen Methoden 0.1 und 0.2 behalten ihre historische Bedeutung.
 Insbesondere bleiben der bisherige R0–R3-Vertrag und die zusätzliche
@@ -166,10 +168,11 @@ Größe oder Eintragungsmenge allein begründen weder 4 noch 5. Die bereits hohe
 logische Anforderung muss den höheren Katalogwert tragen; bloße Ausdehnung,
 viele einfache Wiederholungen und lange offensichtliche Ketten genügen nicht.
 
-Form des begrenzten Beitrags und genaue Übergangsgrenzen sind Liefergegenstand
-von SD-B. Es wird kein unbegründetes Gewichtsverhältnis vorweg festgeschrieben.
-SD-B prüft außerdem, ob besonders flüssige einfache R1-Überlappungen bereits
-Stufe 1 verdienen. Das ist eine begrenzte bewusste Änderung gegenüber 0.1/0.2,
+Form, exakte rationale Grenzen und Gegenproben stehen in [SD-B](SD_CALIBRATION.md).
+Besonders flüssige R1-Fälle erhalten nach der dort begründeten Entscheidung 1:
+jede R1-Welle bietet mindestens die Hälfte der offenen Linien oder bestimmt
+mindestens die Hälfte der noch offenen Zellinformation. Sonstige R1-Fälle
+bleiben 2. Das ist eine begrenzte Änderung gegenüber 0.1/0.2,
 keine pauschale Gleichsetzung sämtlicher R1-Rätsel mit „Sehr leicht“.
 
 ## SD-D08 · Unabhängige Referenzen und feste Grenzen
