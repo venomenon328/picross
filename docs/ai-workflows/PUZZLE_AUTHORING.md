@@ -1,10 +1,16 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 14 · 15.10.2026**
+**Version 0.5.0 · Dokumentrevision 15 · 17.10.2026**
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
 Dokumentrevision, Datei-SHA-256 und Repositorycommit binden den verwendeten Snapshot.
+
+**SD / [#235](https://github.com/venomenon328/picross/issues/235), freigegeben, noch nicht implementiert:**
+Für Schwierigkeitsarbeit zusätzlich [Rätselschwierigkeit](../PUZZLE_DIFFICULTY.md)
+lesen. Die künftige Umstellung nach SD-C steht in §5.2; diese Dokumentfortschreibung
+führt keine neuen Befehle, Paketformate oder Bewertungen ein. Authoring 0.5.0 und
+die nachstehenden aktuellen 0.1-/0.2-Produktionsbindungen bleiben bis dahin wirksam.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
@@ -290,6 +296,8 @@ Materiell sind Änderungen an Identität, Pose, charakteristischen Proportionen,
 
 ## 5. Schwierigkeit L1–L5
 
+### 5.1 Derzeitige Methoden 0.1 und 0.2
+
 **Logische Schwierigkeit, Rastergröße, Bearbeitungsumfang und Lösungszeit getrennt angeben.** Große Matrizen oder viele Eingaben sind nicht automatisch schwierig. Sterne-/Fehlerbewertung im Spiel bleibt unabhängig.
 
 Für neue Paarprofilbewertungen `picross-difficulty-0.2` verwenden; reine Linienfälle
@@ -337,6 +345,29 @@ keine zusätzliche Stufe. Neue Bewertung unveränderter Hinweise braucht keine
 Bild-/Rasterproduktion; ein erstmals beanspruchter stärkerer Technikbedarf
 verlangt die dazugehörigen neuen Nachweise. Ein Abbruch oder bloß verwendeter
 Paarschritt belegt keine Notwendigkeit. Keine Aussage über sämtliche denkbaren Regeln.
+
+### 5.2 Freigegebener künftiger Standard SD
+
+Nach Einführung von SD-C ersetzt [SD](../PUZZLE_DIFFICULTY.md) die freie neue
+Schätzung durch den zentralen ausdrücklich manuellen Analyseweg nach finaler
+Deduktionsprüfung. Ein passend gebundener vollständiger Bericht wird bei der
+Integration wiederverwendet. Gleiche Methodenversion und Eingabe bestimmen
+dieselbe Bewertung für neue Rätsel und ausgewählte Bestandsrätsel. Abbruch oder fehlende
+Analyse darf nicht durch eine unbegründete Stufe oder ersatzweise 5 verdeckt werden.
+
+R0–R3-Instrumentierung, synchrone Wellen, Engstellen und begrenzter Größenbeitrag
+folgen dem eigenen Bewertungsvertrag; vollständige R0-Fälle bleiben auch groß
+sehr leicht. R4 behält seinen unabhängigen Baseline-/Paarbeleg. Zahlen und
+Übergänge werden vor Bestandsanwendung an unabhängigen synthetischen Referenzen
+gebunden. Der reale Katalog bestimmt keine Skalenenden, muss nicht alle Stufen
+besetzen und darf weder direkt noch als Kopie automatisierter Testbestand werden.
+
+Neue aktive Bewertungen liegen außerhalb versiegelter Originalpakete und ändern
+keine alten Schätzungen, Handoffs, Inventare oder Freigaben. Eine reine Neubewertung
+braucht keine neue Bild-/Rasterproduktion oder Motiv-/Endfreigabe. Ohne geänderte
+Logik lösen Titel, Kategorie oder Reveal keinen erneuten Analyselauf aus.
+Menschliches Probespielen bleibt optional; geprüfte synthetische Referenzen
+begründen keine Behauptung empirischer menschlicher Kalibrierung.
 
 ## 6. Dateien, Übergabe und Wiederaufnahme
 
@@ -497,6 +528,10 @@ auf `null` setzen; Reveal und Runtime-Inhalte bleiben erreichbar.
 
 Voraussetzungen: tatsächlicher Integrationsauftrag, unverändertes `content_ready`-Paket mit vollständigen Inhaltsgates und gesonderte menschliche Endfreigabe nach [ZA-1](../ZA1_ADAPTER.md). Die Freigabe bindet Originalhandoff, Inventar, Endkandidat, Matrix-/Logikhash und Abschlussbild; ein `pass`-Flag genügt nicht. Die Archivablage selbst erteilt keine Endabnahme. Probespielen bleibt optional.
 
+Nach Einführung von SD-C zusätzlich die nach §5.2 gebundene aktive Bewertung
+übernehmen beziehungsweise einen passenden Bericht wiederverwenden. Die aktuelle
+Paket-/Exportbindung wird dadurch nicht rückwirkend geändert.
+
 Paarprofilpakete verlangen die tatsächliche Regelwerksbindung 0.5.0, passende
 `candidate.certification` und Schwierigkeit 0.2 mit den gebundenen Nachweisen.
 ZA-1 erzeugt dafür `picross-target-inspection-v4` und `picross-target-export-v4`.
@@ -560,6 +595,11 @@ sind Arbeitsmaterial, kein dauerhaft wachsender Spiel- oder CI-Bestand.
    Nutzungshinweise/Lizenzen, ID/Runtime-Revision/Save-Slot, Kategorie und relevante
    Schwierigkeitsmetadaten. Der kleine Integrationsdatensatz bindet diese Daten,
    den ursprünglichen Exporthash und den bestätigten Main-Commit.
+   Nach Einführung von SD-C bleiben zusätzlich die kompakte aktive Bewertung,
+   ihre Eingangsbindungen und der gebundene Methoden-/Referenzstand außerhalb
+   versiegelter Produktion erhalten. SD-D09/D10 ermöglichen daraus die manuelle
+   Neubewertung; alte Produktionsdateien oder ein Produktions-Replay sind dafür
+   nicht allgemein vorgeschrieben.
 4. Entfernt werden Quellen-/Abstraktionsbilder, verworfene Varianten, Prompts,
    ZIPs, duplizierte Exporte, Proofs, Reparaturspuren, Galerien und Zwischenberichte.
    Keine Kopien in einem neuen Archivordner, in Builds oder CI-Artefakten aufheben.
