@@ -74,7 +74,7 @@ Einstufungen behalten ihren Vertrag. SD-A ergänzt R0–R3-Instrumentierung und
 eine eigene synchrone Bewertungsspur, ohne bestehende Proofverträge zu lockern.
 SD-B bindet feste Grenzen an unabhängige synthetische Referenzen, nicht an den
 realen Katalog. Stufe 5 bleibt auch mit reiner Linienlogik erreichbar.
-Die neue kalibrierte Methode ist noch nicht implementiert; der separate
+Die neue Methode ist separat in [SD-B](SD_CALIBRATION.md) gebunden; der
 [SD-A-Analysator](SD_ANALYZER.md) prüft optional ausdrücklich übergebene
 Baseline-/Paarproofs, zählt ihre Schritte aber nicht als Bewertungswellen.
 `assess` bleibt der nachstehend

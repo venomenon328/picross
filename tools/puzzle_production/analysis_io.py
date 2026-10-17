@@ -154,10 +154,14 @@ def check_r4(puzzle, trace, proof, baseline, proof_binding, baseline_binding, bu
 
 
 def analyze_file(input_path, output, *, kind="logic", config=None, budget=None,
-                 verify_budget=None, proof_path=None, baseline_path=None):
+                 verify_budget=None, proof_path=None, baseline_path=None, method=None):
     from .analysis import analyze
     from .analysis_verifier import verify_trace
     config = parameters(config)
+    rating_method = None
+    if method is not None:
+        from .difficulty_rating import require_method
+        rating_method = require_method(method, config)
     budget = budget if budget is not None else AnalysisBudget()
     verify_budget = verify_budget if verify_budget is not None else AnalysisBudget()
     if (proof_path is None) != (baseline_path is None):
@@ -198,6 +202,9 @@ def analyze_file(input_path, output, *, kind="logic", config=None, budget=None,
                       "analysis_usage": budget.usage(), "verification_usage": verify_budget.usage(),
                       "elapsed_seconds": time.monotonic() - started}}
     _write(output / "report.json", report)
+    if rating_method is not None:
+        from .difficulty_rating import write_rating
+        write_rating(output, report, rating_method)
     return report
 
 
@@ -224,7 +231,7 @@ def _check_operation(operation):
             integer(usage[field], 0, limits[bound], field, InvalidProof)
 
 
-def check_bundle(input_path, directory, budget=None):
+def check_bundle(input_path, directory, budget=None, *, method=None):
     from .analysis_verifier import verify_result
     budget = budget if budget is not None else AnalysisBudget()
     report_path = directory / "report.json"
@@ -265,7 +272,12 @@ def check_bundle(input_path, directory, budget=None):
         raise InvalidProof("Conflicting verification fields")
     if report["target_check"] != check_target(raw, kind, puzzle, trace):
         raise InvalidProof("Conflicting target binding")
+    rating_check = {}
+    if method is not None:
+        from .difficulty_rating import check_rating, require_method
+        rating_method = require_method(method, report["result"]["parameters"])
+        rating_check = check_rating(directory, report, rating_method)
     budget.check()
     return {"format": "picross-analysis-check-v1", **checked, "result_hash": report["result_hash"],
             "file_bindings_verified": True, "report_verified": True,
-            "operational_measurements_verified": False}
+            "operational_measurements_verified": False, **rating_check}
