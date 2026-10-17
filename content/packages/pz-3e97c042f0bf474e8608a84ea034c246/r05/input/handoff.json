@@ -1,0 +1,130 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        16,
+        15,
+        1231,
+        1230
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 25,
+      "method": "area",
+      "mode": "mono",
+      "width": 25
+    },
+    {
+      "actual_crop": [
+        16,
+        15,
+        1231,
+        1230
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 27,
+      "method": "area",
+      "mode": "mono",
+      "width": 27
+    },
+    {
+      "actual_crop": [
+        16,
+        15,
+        1231,
+        1230
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 30,
+      "method": "area",
+      "mode": "mono",
+      "width": 30
+    }
+  ],
+  "authorization": "Aktueller Korrekturauftrag innerhalb bestehender Produktions-/Repositoryablage-/bedingter Mergefreigabe. Keine Endabnahme, manuelle Zielautorisierung oder Registrierung behauptet.",
+  "blockers": [
+    "Human final editorial approval and its bound external ZA-1-v2 authorization for the exact fixed mono derivation are pending."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "final-import",
+    "certification": {
+      "max_pair_records": 250000,
+      "max_pair_work": 100000000,
+      "profile": "paired-lines-mono"
+    },
+    "derivation": "fixed_mono_manual_edits; original reference and full saved list in final-fixed-plan.json",
+    "logic_hash": "60294d0112654e1681af9e38fe63b4f06be6f8b01c0c3ddd92389ab7147579e1",
+    "matrix_hash": "0babea0a8926501b89d8b639d7ca340d221faf59c683a78146878cbbd58e5e3b",
+    "proof": "final-import/final-proof.json",
+    "source_type": "import",
+    "variant": "final",
+    "verification": "final-verifier.json"
+  },
+  "category_id": "mythen-fantasie",
+  "content_blockers": [],
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "difficulty.json",
+    "frame": "layout-check.json",
+    "logic": "final-verifier.json",
+    "motif": "approvals/motif.json",
+    "provenance": "final-origin-verification.json",
+    "reveal_approval": "approvals/reveal.json",
+    "reveal_consistency": "visual-review.json",
+    "visual": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "c1b313a966ed95637812b23efef6ee4d932b7b3156659c593542103efff9af9e"
+  },
+  "manual_edit_record": "final-fixed-plan.json",
+  "motif": {
+    "approval": "approvals/motif.json",
+    "derived_from_reveal_sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e",
+    "file": "motif/MA-r01.png",
+    "provenance": "motif/MA-r01.provenance.json",
+    "sha256": "4bbeb41207b1efbb56e92b4168e374f403d6a57141731f8d875d3320d1c77f46"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "final-origin-verification.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-3e97c042f0bf474e8608a84ea034c246",
+  "repair": null,
+  "repo_commit": "f188ed2ebcb74a99d6f38f9a5ad59a27a2f97f07",
+  "report": "report.md",
+  "reveal": {
+    "approval": "approvals/reveal.json",
+    "file": "reveal/A-r01.png",
+    "provenance": "reveal/A-r01.provenance.json",
+    "sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e"
+  },
+  "revision": "r05",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}

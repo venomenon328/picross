@@ -1,0 +1,14 @@
+{
+  "additional_successful_matrix_changes": 41,
+  "estimated_solve_minutes": null,
+  "fixed_form_hypotheses": 2,
+  "fresh_final_production_runs": 1,
+  "human_active_minutes": null,
+  "new_image_generation_calls": 0,
+  "playtest": "not_performed; optional",
+  "reference_rebindings": 1,
+  "rp5_proposals": 17,
+  "rp5_search_rounds": 1,
+  "rp5_started_candidates": 8,
+  "total_changes_from_original_area192": 49
+}
