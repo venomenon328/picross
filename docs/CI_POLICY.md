@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 14.10.2026 · Version 1.7 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63) und [#70](https://github.com/venomenon328/picross/issues/70)
+Stand: 17.10.2026 · Version 1.8 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70) und freigegebener [SD-Sollvertrag](PUZZLE_DIFFICULTY.md)
 
 ## Geltung und Ablösung
 
@@ -56,6 +56,37 @@ Save- und PCK-Funktionstests nutzen feste technische Beispiele statt einer Schle
 über jeden neuen Katalogeintrag. Bestehende Motive als feste Eingabe allgemeiner
 Spiel-/Darstellungstests sind keine erneute Rätselzertifizierung und werden bei
 Inhaltserweiterungen nicht ergänzt.
+
+## SD · Manuelle Schwierigkeitsbewertung und geplante Datenintegration
+
+Eigentümerentscheidung vom 17.10.2026:
+[SD](PUZZLE_DIFFICULTY.md) wird als ausdrücklich gestarteter Werkzeugprozess
+außerhalb der CI ausgeführt. Keine Bewertung bei Commit, Merge, Build,
+Spiel-/Katalogstart oder nach Zeitplan. Auch die erste Gesamteinstufung ist ein
+gesonderter manueller Inhaltsauftrag; sie erzeugt keinen dauerhaften Replayjob.
+
+Automatisierte SD-Regressionen verwenden ausschließlich feste synthetische
+technische Eingänge. Der aktuelle Rätselkatalog darf weder direkt noch als
+kopierter Snapshot oder zur Testgenerierung verwendet werden. Das gilt für
+Solver-/Bewertungsfälle, erwartete Stufen, Verteilungsprüfungen und
+Integrations-/Runtimeprüfungen; ein Umbenennen realer Rätsel macht sie nicht
+synthetisch. Vorhandene allgemeine technische Regressionen bleiben erhalten.
+
+SD-B bestimmt feste Schwellen anhand unabhängiger Referenzfälle. Der aktuelle
+Katalog darf weder die Skalenenden direkt kalibrieren noch durch Quantile oder
+bewusst veränderte Grenzen alle fünf Stufen besetzen. Seine spätere manuelle
+Auswertung ist eine Plausibilitätsbeobachtung. Ein unbelegtes Extrem oder eine
+verlangte Histogrammform ist kein Abnahmekriterium; unbesetzte Stufen sind zulässig.
+
+Für SD-C ist ein enger reiner Datenpfad für die neue Bewertungsquelle und die
+erforderlichen kompakten Berichte vorgesehen. Konkrete Pfade, Formate und
+Positivliste müssen zusammen mit der Implementierung festgeschrieben und mit
+synthetischen Auswahlfällen geprüft werden. Die unten dokumentierte heutige
+Positivliste wird durch diesen Sollvertrag nicht erweitert; `ci_scope.py` ist
+damit noch nicht geändert. Reine Ratingdaten sollen nach der Umstellung nur
+Pfad-/Dateimodusprüfung und `ci-required` auswählen. Konkrete Bewertungsprüfung
+bleibt im manuellen Auftrag. Code-/Werkzeug-/Loader-/CI-Änderungen unterliegen
+weiterhin den tatsächlich ausgewählten allgemeinen Pflichtprüfungen.
 
 ## Auswahl nach vollständigem Änderungsumfang
 

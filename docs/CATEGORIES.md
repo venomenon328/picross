@@ -1,5 +1,10 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
+**SD, freigegebener Sollvertrag vom 17.10.2026:**
+[Einheitliche Schwierigkeitsbewertung](PUZZLE_DIFFICULTY.md) ergänzt mit SD-C eine
+getrennte aktuelle Katalogbewertung. Bis zur implementierten und abgenommenen
+Umstellung gelten die folgenden Inhalts-v2-/Runtime-v3-Verträge unverändert.
+
 **KE / #233, Implementierungsvertrag vom 17.10.2026:**
 [KE-D06](CATALOG_PRESENTATION.md) ergänzt minimale typisierte Schwierigkeit.
 Kategorienquelle, Zuordnung, Definitionen, Saves und Freigabebindungen bleiben
@@ -75,6 +80,39 @@ Kategorie und Anzeigename gehören ausschließlich zum Katalog. Definitionen,
 Raster/Hinweise, Logik-/Proofhashes, Assets, Runtime-Revision, Save-Schema 1,
 Appidentität und `user://p1/saves/` bleiben unverändert. Umbenennen erzeugt keine
 neue Rätselidentität; Entfernen einer referenzierten Kategorie ist ein Fehler.
+
+## SD · Freigegebene künftige Bewertungsmetadaten
+
+SD-C muss die akzeptierte aktuelle Katalogbewertung in einer eigenen autoritativen
+Metadatenquelle mit gebundenen kompakten Berichten führen. Die bisherigen
+`production.difficulty`-Werte bleiben historische Produktionsangaben; bestehende
+Paket-/Export-/Integrationsmanifeste werden nicht für eine Neubewertung umgeschrieben.
+Insbesondere bleibt der vollständige Eintragsvergleich kompakter Integrationsbelege
+erhalten. Eine neue Ratingquelle darf diese Bindung nicht umgehen.
+
+Die Zuordnung bindet Rätsel-ID, tatsächlichen Definitionshash, einen eigenen
+kanonischen Analyseinputhash sowie Methode, Parameter-/Werkzeugstand und Bericht.
+Der Analysehash wird aus der aktuellen Hinweissemantik gebildet; historische
+Produktions-`logic_hash`-Werte werden wegen der damaligen Farbumabbildung nicht als
+identisch behauptet. Ratingdaten und erforderliche kompakte Berichte bleiben nach
+Produktionscleanup erhalten. Die konkreten Pfade und vollständigen Feld-/Format-
+verträge sind vor der SD-C-Umsetzung festzuschreiben. Dieser Sollvertrag
+aktiviert noch keine neuen Pfade oder Dateiformate.
+
+Die Runtime erhält weiterhin nur minimale typisierte, spoilerfreie Angaben aus
+einer ausdrücklich übernommenen Bewertung. SD-C muss Writer, Godot-Loader,
+Methoden-/Versionsprüfung, kanonische Projektion und sämtliche Registrierungs-,
+Update-/Recoverypfade gemeinsam fortschreiben. Bisher gültige v2-/v3-Daten und
+Altjournale brauchen ihren ausdrücklich geprüften Übergang; unbekannte, gemischte,
+veraltete oder fremd veränderte Bindungen werden nicht still akzeptiert.
+Bis zu dieser Umstellung sind ausschließlich die oben benannten Methoden und
+exakten v2-/v3-Felder gültig. Dieses Dokument aktiviert keine neue Runtimeversion.
+
+Eine reine Neueinstufung ändert weder Definition, Hinweise, ID/Key, Save-Slot,
+Runtime-Revision noch Assets oder Saves. Die erste Bestandsübernahme und spätere
+Neueinstufungen werden ausdrücklich ausgeführt; aus Katalogstart, Build oder
+Methodenänderung folgt kein Ratinglauf. Bewertungsmethode, Stufengrenzen und
+Übergangsverhalten stehen im [SD-Vertrag](PUZZLE_DIFFICULTY.md).
 
 ## Export und technische Übernahme
 
