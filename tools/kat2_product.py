@@ -86,6 +86,9 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
             install_runtime_fixtures(root, project, append=True)
         else:
             fixture(project, saves, "regular" if mode in ("restart", "information", "kb", "kk", "ke") else mode)
+        if mode == "ke":
+            # Fixed real high-resolution contour sample; no growing corpus copy.
+            shutil.copyfile(root/"game/art/content/yin_yang_001.png", project/"tests/fixtures/ke-reveal.png")
         env = environment.copy()
         env.update(P1_TEST_SAVE_ROOT=str(saves), KAT2_OUTPUT=str(directory), KAT2_MODE=mode)
         phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)

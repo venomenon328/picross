@@ -4,22 +4,50 @@ const Scribble = preload("res://ui/scribble.gd")
 const GRAPHITE = Color("655e51")
 var kind: String = "unknown"
 var ui_scale: float = 1.0
+var pencils: Array[Node2D] = []
+var pencil_index: int = 0
+
+class Pencil extends Node2D:
+	const SHAPE = [Vector2(-3,-11),Vector2(2.5,-10.5),Vector2(3,8),Vector2(0,14),Vector2(-3.5,8),Vector2(-3,-11)]
+	var body: Polygon2D
+	func _init() -> void:
+		body = Polygon2D.new()
+		body.polygon = PackedVector2Array(SHAPE.slice(0,-1))
+		body.antialiased = true
+		body.show_behind_parent = true
+		add_child(body)
+		var wood := Polygon2D.new()
+		wood.polygon = PackedVector2Array([Vector2(-3,8),Vector2(2.5,8),Vector2(0,14)])
+		wood.color = Color("d6bc8d")
+		wood.antialiased = true
+		wood.show_behind_parent = true
+		add_child(wood)
+	func _draw() -> void:
+		draw_polyline(PackedVector2Array(SHAPE),Color("655e51"),0.9,true)
+		draw_line(Vector2(-1,-8),Vector2(-1,7),Color("ead9ae"),0.8,true)
+		draw_line(Vector2(0,11),Vector2(0,14),Color("655e51"),1.5,true)
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
 
 func pencil(origin: Vector2, angle: float, color: Color, scale_value: float) -> void:
-	draw_set_transform(origin, angle, Vector2.ONE*scale_value)
-	var shape := PackedVector2Array([Vector2(-3,-11),Vector2(2.5,-10.5),Vector2(3,8),Vector2(0,14),Vector2(-3.5,8),Vector2(-3,-11)])
-	draw_colored_polygon(shape, color)
-	draw_polyline(shape, GRAPHITE, 0.9, true)
-	draw_line(Vector2(-1,-8),Vector2(-1,7),Color("ead9ae"),0.8,true)
-	draw_colored_polygon(PackedVector2Array([Vector2(-3,8),Vector2(2.5,8),Vector2(0,14)]),Color("d6bc8d"))
-	draw_line(Vector2(0,11),Vector2(0,14),GRAPHITE,1.5,true)
-	draw_set_transform(Vector2.ZERO)
+	if pencil_index == pencils.size():
+		var created := Pencil.new()
+		created.show_behind_parent = true
+		add_child(created)
+		pencils.append(created)
+	var drawing: Pencil = pencils[pencil_index]
+	pencil_index += 1
+	drawing.position = origin
+	drawing.rotation = angle
+	drawing.scale = Vector2.ONE*scale_value
+	drawing.body.color = color
+	drawing.show()
 
 func _draw() -> void:
+	pencil_index = 0
+	for drawing: Node2D in pencils: drawing.hide()
 	var u: float = ui_scale
 	var center: Vector2 = size/2
 	match kind:

@@ -264,6 +264,20 @@ Bytes müssen entweder dem alten oder neuen Stand entsprechen, und vorhandene
 neue Paketdateien müssen ihren Hashes entsprechen. Fremdänderungen blockieren
 vor jeder Mutation. Nur das neue Paket wird beim Rollback entfernt.
 
+KE-N1 erweitert ausschließlich die Journal-Kompatibilität: Registrierungsjournal
+v2 und Updatejournal v1 akzeptieren kanonisches Runtime-v2 (sieben Felder) sowie
+aktuelles v3, jeweils einheitlich in beiden Snapshots. Der alte autoritative Stand
+wird strikt einschließlich Schwierigkeit validiert; ein temporärer Prüfcheckout
+mit gebundenen Runtime-Dateien, aufbewahrten Manifesten und Notices prüft den
+gesamten v3-Zielstand vor der ersten Mutation. Kein Solver-/Exportreplay und keine
+Rekonstruktion gelöschter Produktion. Definition/Notice werden bei Updates exakt
+restauriert; Reveal, alte Pakete und fremde Dateien bleiben erhalten. Die Recovery
+schreibt direkt die kanonische v3-Zielprojektion. Nach eigenem Prozessabbruch ist
+nur genau diese zusätzliche Zwischenprojektion wiederaufnehmbar. Ein separates
+späteres `sync-runtime` gehört nicht zum erfolgreichen Rollback. Unbekannte,
+gemischte, nichtkanonische oder fremd veränderte Bytes blockieren mit erhaltenem
+Journal. Die ältere Registrierungsjournal-v1-Sperre bleibt ausdrücklich bestehen.
+
 Keine echten Saves werden gelesen, migriert oder gelöscht. Schema1 bleibt;
 ein Save der alten Runtime-Revision wird nach bestehendem Vertrag als inkompatibel
 abgewiesen und nicht auf neue Maße/Farben angewendet. Ein explizit vom Nutzer

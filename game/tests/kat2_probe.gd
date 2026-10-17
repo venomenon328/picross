@@ -17,6 +17,7 @@ var quit_slot_hashes: Dictionary = {}
 var kb_measurements: Array = []
 var kk_measurements: Array = []
 var kk_pointer_measurements: Array = []
+var ke_graphics_measurements: Array = []
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -180,6 +181,7 @@ func run() -> void:
 		await fixed_cards()
 	elif mode == "ke":
 		await catalog_labels()
+		await preload("res://tests/ke_graphics.gd").run(self)
 	elif mode == "adapter":
 		var id: String = "pz-test-direct-mono"
 		check(app.album.items.has(id), "registered KAT1 adapter content appears in All")
@@ -214,6 +216,7 @@ func run() -> void:
 
 func write_report() -> void:
 	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
+	report["ke_graphics_measurements"] = ke_graphics_measurements
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()
@@ -660,7 +663,7 @@ func catalog_labels() -> void:
 			check(card.difficulty.position.x+card.difficulty.size.x <= card.status_icon.position.x,"KE difficulty and status columns never overlap")
 			check(card.accessibility_name.contains(card.difficulty.text) and not card.accessibility_name.contains("Motiv"),"KE accessible metadata remains spoiler-free")
 			check(card.note.get_theme_font("font").get_string_size("Begonnen",HORIZONTAL_ALIGNMENT_LEFT,-1,card.note.get_theme_font_size("font_size")).x <= card.note.size.x,"KE longest status fits without clipping")
-		check(app.choices[1].difficulty.text == "≈ Sehr leicht" and app.choices[5].difficulty.text == "≈ Sehr schwer","KE synthetic estimates survive UI rebuilds")
+		check(app.choices[1].difficulty.text == "1 Sehr leicht" and app.choices[5].difficulty.text == "5 Sehr schwer","KE numbered scale survives UI rebuilds")
 		await shot("labels-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
 		var first: Card = app.choices[0]
 		var unknown_pixels: PackedByteArray = await button_pixels(first.unknown)

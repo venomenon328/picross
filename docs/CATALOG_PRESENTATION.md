@@ -51,7 +51,7 @@ Filter, Sortieroptionen oder Fortschrittsanzeigen.
 Die vorhandene kompakte Breite von ungefähr 220–240 logischen Pixeln ist die
 Ausgangsbasis; Bildhöhe bisher 112 × UI. Die Infobox darf die Vorschau nicht zum
 Briefmarkenbild verkleinern. Eine einmalig angepasste gemeinsame Kartenhöhe ist
-erlaubt. Kategorie, mehrzeiliger Titel, „≈ Sehr schwer“, „Nicht eingestuft“, Status,
+erlaubt. Kategorie, mehrzeiliger Titel, „5 Sehr schwer“, „Nicht eingestuft“, Status,
 Reset und Fehlertexte müssen bei UI 100/125 % ohne Überlappung und ohne
 zustandsabhängige Layoutsprünge funktionieren. Notwendige Metadaten bleiben
 lesbar; der bestehende Titelauslassungsvertrag bleibt davon unberührt.
@@ -78,20 +78,41 @@ Abschlussbild: Auch ein monochromes Rätsel erhält sein farbiges Reveal.
 
 | Vorhandene Stufe | Anzeige |
 | --- | --- |
-| L1 | Sehr leicht |
-| L2 | Leicht |
-| L3 | Mittel |
-| L4 | Schwer |
-| L5 | Sehr schwer |
+| L1 | 1 Sehr leicht |
+| L2 | 2 Leicht |
+| L3 | 3 Mittel |
+| L4 | 4 Schwer |
+| L5 | 5 Sehr schwer |
 | Keine Einstufung | Nicht eingestuft |
 
-Redaktionelle Schätzungen tragen sichtbar `≈`, beispielsweise „≈ Mittel“.
-Ein gezielter Tooltip erläutert die vorhandene Bewertungsart und Unsicherheit,
+KE-N1 ersetzt die frühere sichtbare Schätzkennzeichnung: Die kompakte Ziffer ist
+farbig akzentuiert, von gedecktem Grün über Oliv/Ocker und Rost zu gedecktem Rot;
+der vollständige Name bleibt in dunkler Plex-Schrift. Zahl und Name tragen die
+Bedeutung auch ohne Farbwahrnehmung. Redaktionelle und instrumentierte Werte
+verwenden dieselbe Skala ohne `≈`; fehlend bleibt neutral und erhält keine Null.
+Ein gezielter Tooltip nennt Zahl und Namen und erläutert in Worten die vorhandene Bewertungsart und Unsicherheit,
 die hinterlegte plausible Spannweite und gegebenenfalls notwendige
 linienübergreifende Paarlinienlogik/R4. Er formuliert neutral aus typisierten
 Metadaten; keine freien Produktionsnotizen oder motivbezogenen Engpassbeschreibungen.
 Fehlende Informationen werden nicht erfunden. Keine Sterne, neue Solveranalyse,
 menschliche Kalibrierung oder Ableitung aus Format/Farbzahl.
+
+## KE-N1 · Lokale Bildglättung
+
+Verdiente Reveals werden in Katalog und Abschluss mit Lanczos auf das tatsächliche
+Anzeigemaß verkleinert und dann linear gezeichnet. Dies glättet starke Verkleinerungen auch
+gegenüber der bisher schon linearen Abschlussanzeige. Vollständiger Bildausschnitt,
+Proportion, Zentrierung und bestehender Bildraum bleiben gleich. PNG-/SVG-Originale
+bleiben unverändert; abgeleitete Texturen entstehen erst nach der Spoilerfreigabe
+und werden mit dem jeweiligen Reveal freigegeben; je Anzeige bleibt nur die
+zuletzt benötigte Zieltextur erhalten. Keine globale Glättung, kein
+zusätzlicher persistenter Bildcache; eigene Füllminiaturen bleiben unverändert.
+
+Die vorhandenen Stiftgeometrien erhalten lokal geglättete Polygonkanten, einschließlich
+Holzspitze und gemeinsamem Begonnen-Stift. Dunkler Einzelstift samt Farbprobe und
+rot/blau/gelbe Dreiergruppe behalten Form, dünne Konturen und Schraffur. Technische
+Vorher-/Nachherbilder verwenden dieselben nativen Viewport-/UI-Maße; die persönliche
+Sichtabnahme bleibt separat. Die EA-Zeitfolge, Saves und Abbruchregeln ändern sich nicht.
 
 ## KE-D04 · Status und Vorschau
 

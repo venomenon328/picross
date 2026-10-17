@@ -149,6 +149,10 @@ func set_metadata(width: int, height: int, colored: bool, assessment: Variant) -
 	mode_icon.kind = "color" if colored else "mono"
 	mode_tip.tooltip_text = "Farbiges Rätsel" if colored else "Monochromes Rätsel"
 	difficulty.text = Difficulty.label(assessment)
+	difficulty.numbered = assessment != null
+	difficulty.number_accent = Difficulty.accent(assessment)
+	difficulty.add_theme_color_override("font_color",Color.TRANSPARENT if difficulty.numbered else Color("343f42"))
+	difficulty.queue_redraw()
 	difficulty.tooltip_text = Difficulty.explanation(assessment)
 
 func layout_content() -> void:

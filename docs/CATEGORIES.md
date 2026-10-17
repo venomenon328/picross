@@ -122,6 +122,16 @@ Ein Prozessabbruch blockiert weitere Arbeit bis zur expliziten Recovery.
 Recovery prüft Kategorienbytes, Indizes, Ziele und Hashes vollständig vor Mutation;
 fremde Änderungen erfordern Klärung, das Journal bleibt erhalten.
 
+KE-N1: Registrierungsjournal v2 und Updatejournal v1 dürfen einheitlich kanonische
+Runtime-v2-Snapshots mit sieben Feldern oder aktuelle v3-Snapshots enthalten.
+Gemischte, unbekannte und nichtkanonische Projektionen werden abgewiesen. Vor
+der ersten Checkoutänderung wird die gesamte alte Zielansicht mit ihrer aus
+Authoringdaten strikt abgeleiteten v3-Runtime geprüft. Erfolgreiche Recovery
+endet direkt in einem gültigen aktuellen Checkout; kein nachgeschobenes Sync.
+Bei Unterbrechung ist nur die exakt hergeleitete eigene v3-Zwischenprojektion
+zusätzlich zu den gebundenen alten/neuen Bytes zulässig. Fremde Bytes bleiben
+einschließlich Journal erhalten. Die Sperre für Registrierungsjournal v1 bleibt.
+
 ## Altformate und Umstellung
 
 Authoring-v2 und alte `picross-target-export-v1`-Exporte bleiben technisch prüfbar.

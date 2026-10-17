@@ -17,6 +17,27 @@ gehören nicht zur Änderung.
 
 ## Implementierung und feste Nachweise
 
+### KE-N1 nach Review 5558007171
+
+Startstand `d2c66baa60355d2e2a31f77b2952de7084ac885e`, Basis weiterhin
+`aa5cbeb3812f5fe1f7f5087beed38069240080e8`. Die Startprüfung umfasst aktuellen
+Issue-/PR-/Reviewzugriff, passende Branchidentität, GitHub-Schreib-/Artefaktzugriff,
+gebundene Editor-/Templatehashes und einen frischen isolierten nativen Windowsstart
+mit Godot 4.7.2, OpenGL und NVIDIA RTX 3070. Die Eigentümerbeauftragung hebt die
+frühere reine Vorbereitung für genau KE-N1 auf; Draft und Mergegrenze bleiben.
+
+| Nacharbeit | Implementierung und Regressionsnachweis |
+| --- | --- |
+| N1-01 / KE-R1-B01 | Beide Recoverypfade erkennen exakt kanonische v2/v3-Snapshots, prüfen den gesamten hergeleiteten v3-Zielcheckout vor Mutation und erlauben nur ihre eigene exakte Zwischenprojektion zur Wiederaufnahme. Feste kleine Altformatinputs prüfen frühe/fortgeschrittene Registrierung, echte Definition-/Notice-/Paketänderung, beide Wiederaufnahmen nach v3-Schreiben und mutationsfreie Ablehnung fremder/nichtkanonischer/gemischter Bytes. Vorhandene v3-Tests bleiben aktiv. |
+| N1-02 | Auf das tatsächliche Anzeigemaß mit Lanczos verkleinerte Texturen im gemeinsamen spoilergebundenen Revealpfad; anschließende lineare Anzeige in Katalog und Abschluss. Lokale Polygonkantenglättung für Modus-/Begonnen-Stifte. `ke_graphics.gd` vergleicht native Originalpixel gegen die bisherigen Filter und eingefrorene Stiftprimitive aus dem Starthead: PNG/SVG, alle vier Ansichten, Katalog, laufende EA-Phase, Endbild und Wiederöffnung; Geometrie, Originalhashes, Savebytes und Freigabe der Bildreferenzen werden geprüft. |
+| N1-03 | Exakte Zahl-Namen-Skala 1 Sehr leicht bis 5 Sehr schwer, farbige Ziffer und dunkler Name; neutral fehlend ohne Null. Beide Bewertungsarten gleich dargestellt; Worterklärung, Unsicherheit, Spannweite und R4 im Tooltip. Kern-/native Tests prüfen Zuordnung, Textbreiten, längsten Status, Accessibility und UI-Rundlauf. |
+| N1-04 / KE-R1-A01 | Finaler sauberer Windows-Quelllauf plus tatsächlich heruntergeladener CI-Spieler mit EXE-/PCK-Prüfung. Der PR liefert einen zugänglichen, revisionsgebundenen Download mit Manifest/Hashes, Logs, nativen Originalausschnitten und JSON-Berichten. Lokale Pfade allein gelten nicht als zugänglicher Nachweis. |
+| N1-05 | Normative Quellen, Recoveryanleitung, EA-Bildpfad und dieser Bericht sind konsistent nachgeführt. Finaler Voll-Diff, Selbstreview, CI-/Windowsbindung und Einzelantworten stehen im PR. |
+
+Die früheren lokalen d2c66ba-Belege bleiben historische Angaben; die neue Lieferung
+beansprucht keine nachträgliche unabhängige Sichtung dieses alten Archivs. Neue
+technische Belege schließen weder KE-R01-Nachreview noch KE-R1-A02/KE-M01 selbst.
+
 | Kriterien | Änderung und technische Probe |
 | --- | --- |
 | A01/A06 | 228–240 logische Pixel breite Karten mit festen Titel-/Kategorie-/Bild-/Etikett-/Fußbereichen in `catalog_card.gd`; `kat2_probe.gd` prüft alle drei gemeinsamen Grafikfälle, zusätzlich 1920×1080/UI125, tatsächliche Textbreiten, lange Texte, Filter/Seiten, UI-Rundlauf und gleiche Geometrie. |

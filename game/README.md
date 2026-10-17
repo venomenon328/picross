@@ -10,8 +10,11 @@ Stand ohne Füllzellen, etwa nach Undo, zeigt eine leere Vorschau ohne Fragezeic
 gültiger Abschluss zeigt Motivname und farbiges Abschlussbild.
 
 Das Papieretikett unter dem Bild zeigt oben Größe und Modus (ein dunkler Stift
-für Mono, drei Stifte für Farbe), unten Schwierigkeit und Status. „≈“ kennzeichnet
-eine redaktionelle Schätzung; ohne Einstufung steht „Nicht eingestuft“.
+für Mono, drei Stifte für Farbe), unten Schwierigkeit und Status. Die Skala lautet
+„1 Sehr leicht“, „2 Leicht“, „3 Mittel“, „4 Schwer“, „5 Sehr schwer“; nur die Ziffer
+ist farbig. Schätzung, Unsicherheit und Spannweite erläutert der Tooltip in Worten.
+Ohne Einstufung steht neutral „Nicht eingestuft“. Verdiente Reveals und die kleinen
+Stiftsymbole sind lokal geglättet; der vollständige Bildraum bleibt erhalten.
 „Neu“, „Begonnen“ und „Fertig“ stehen jeweils neben einem eigenen Symbol.
 Die Fußzeile trägt nur „Blatt NN“. Modus und Schwierigkeit erklären sich beim
 Darüberfahren mit der Maus; ein Klick auf das Etikett öffnet die Karte.
