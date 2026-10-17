@@ -1,5 +1,13 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**KE / #233, freigegebenes Soll vom 17.10.2026, noch nicht implementiert:**
+[Katalogdarstellung](CATALOG_PRESENTATION.md) konkretisiert das kleine warme
+Papieretikett unter dem Bild, gezeichnete Modus-/Statussymbole und ein statisches
+Graphitfragezeichen für neue Rätsel. Kategoriezeile und alle Kartenbereiche bleiben
+fest reserviert; die Fußzeile trägt nur die Blattkennung. Gezielt abgelöst werden
+KK-Metadatenzeile, Fußzeilenstatus und leere Neu-Vorschau. Der folgende KK-Abschnitt
+beschreibt die integrierte Ausgangsbasis; übrige Gestaltungsverträge bleiben.
+
 **KK / #174** ersetzt die variablen KB-Kartenhöhen, zusätzliche Blattüberschrift,
 gestapelten Play-/Resetaktionen und den Kacheltooltip. Alle Karten haben dieselben
 festen Titel-, Metadaten-, Bild- und Fußbereiche. Motivname erst nach gültigem

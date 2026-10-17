@@ -1,5 +1,11 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+**Vorbereitete Erweiterung, noch nicht im Spieler:**
+[KE / #233](../docs/CATALOG_PRESENTATION.md) spezifiziert Katalogetiketten,
+Schwierigkeitsanzeige und das gezeichnete Fragezeichen für neue Rätsel.
+Die folgende Bedienbeschreibung gilt für den aktuell implementierten KK-Stand;
+sie wird mit der KE-Implementierung angepasst.
+
 Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
 Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
 „Rätselkatalog“. Lange Namen nutzen zwei Zeilen, danach eine Auslassung. Größe,
