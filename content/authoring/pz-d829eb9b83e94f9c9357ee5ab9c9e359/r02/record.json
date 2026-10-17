@@ -1,0 +1,48 @@
+{
+  "blockers": [],
+  "category_id": "menschen-berufe",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-d829eb9b83e94f9c9357ee5ab9c9e359/r02/handoff.json",
+    "sha256": "8db5bc8a18907f2406c4012de9201c3eda685a3b8da869c0b9f108b4882fa87c"
+  },
+  "height": 42,
+  "integration": null,
+  "inventory_sha256": "523115981b8c8dfbd765dbd2f56090e749d42f0bf1319300b1fa6bb24d9769c6",
+  "mode": "color",
+  "motif": {
+    "bytes": 1310353,
+    "file": "motif/MA-r03.png",
+    "height": 1536,
+    "sha256": "1091629b51a115a8c8b35eb917b3ec69a37d7dae11b6a56ec5b115a2ee4cef3b",
+    "width": 1024
+  },
+  "motif_name": "Marie Curie",
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "package": {
+    "bytes": 5027668,
+    "file": "content/authoring/pz-d829eb9b83e94f9c9357ee5ab9c9e359/r02/package.zip",
+    "sha256": "9a5f309408f1bb70e37e2f576801647ed31c5116b30422342794389d62a07e83"
+  },
+  "proposed_parameters": "configuration.json",
+  "puzzle_id": "pz-d829eb9b83e94f9c9357ee5ab9c9e359",
+  "repo_commit": "b6c2d6a84ead757da15911550f53c64bfe90ccdd",
+  "requested_height": 40,
+  "requested_width": null,
+  "reveal": {
+    "bytes": 1817104,
+    "file": "reveal/B-r02.png",
+    "height": 1536,
+    "sha256": "6e512c35f31ac9f597da81313cf371addad71b5e03fd6f1a943b8ed43c6365fa",
+    "width": 1024
+  },
+  "reveal_approval": "reveal-approval.json",
+  "revision": "r02",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-17T10:32:53.138428+00:00",
+  "width": 28
+}
