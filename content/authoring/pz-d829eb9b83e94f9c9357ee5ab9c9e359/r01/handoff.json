@@ -1,0 +1,107 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1 samt Repositoryablage nach §6 und Merge des Ablage-PR nach erfolgreichen Pflichtprüfungen. Keine menschliche Bild-, Motiv- oder Endfreigabe vorhanden.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "menschen-berufe",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "4f2e9a132f4eedf6f2c51f11b3f623200147ff9bf4f6770bb25a7c9d843f8ce6"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-d829eb9b83e94f9c9357ee5ab9c9e359",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "d0d57131ea74846be14756b78e5763a9ae13bb11",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "fixed": false,
+    "foreground_colors": null,
+    "height": 40,
+    "mode": "color",
+    "width": null
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "bytes": 1899167,
+      "file": "reveal/A-r02.png",
+      "height": 1472,
+      "id": "A-r02",
+      "sha256": "2804bbeed2f1d0b374943ee992bbec50b30eb4bef3ba0088b1899d6f3b0697e1",
+      "title": "Frontales Porträt in Petrol",
+      "width": 1068
+    },
+    {
+      "approval": null,
+      "bytes": 1817104,
+      "file": "reveal/B-r02.png",
+      "height": 1536,
+      "id": "B-r02",
+      "sha256": "6e512c35f31ac9f597da81313cf371addad71b5e03fd6f1a943b8ed43c6365fa",
+      "title": "Dreiviertelporträt in Pflaume",
+      "width": 1024
+    },
+    {
+      "approval": null,
+      "bytes": 1825967,
+      "file": "reveal/C-r02.png",
+      "height": 1490,
+      "id": "C-r02",
+      "sha256": "7610f098734d50e6830413515b512f96c97f19805b41206b3c1586911738ac96",
+      "title": "Porträt mit Laborgefäß",
+      "width": 1055
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 14,
+    "file": "rulebook.md",
+    "sha256": "9558ab14e58ac640e2e693d697e55fe790fabd14f382280f5750bc9fe8cd4874",
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
