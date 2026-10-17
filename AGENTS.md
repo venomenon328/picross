@@ -10,8 +10,9 @@ Den beauftragten Arbeitsbranch verwenden, sonst den aktuellen `main`; geltende B
 
 Bei Schwierigkeitsanalyse, Kalibrierung oder Bewertungsmetadaten zusätzlich
 [SD: Rätselschwierigkeit](docs/PUZZLE_DIFFICULTY.md) vollständig lesen.
-SD / #235 ist als Spezifikation freigegeben; Umsetzung und Bestandsbewertung
-sind noch nicht beauftragt. Der echte Katalog ist weder Testbestand noch
+SD-A / #236 liefert den getrennten Analysator gemäß
+[technischem Vertrag](docs/SD_ANALYZER.md). SD-B/SD-C und Bestandsbewertung
+bleiben nachgelagert. Der echte Katalog ist weder Testbestand noch
 unmittelbare Kalibrierungsgrundlage für die Skalenenden.
 
 Bei Hinweisnavigation, Vollhinweis-Overlay oder Cursor-Linienhervorhebung zusätzlich [HN: Hinweisinteraktion](docs/CLUE_INTERACTION.md) vollständig lesen. HN / #192 ist implementiert; technische Nachweise und die getrennten Abnahmen HN-R01/HN-M01 stehen im Issue/PR.
