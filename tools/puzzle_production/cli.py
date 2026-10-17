@@ -19,6 +19,9 @@ EXIT = {"solved": 0, "stalled": 0, "contradiction": 0, "invalid_input": 2,
 
 def main(argv=None) -> int:
     actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] in ("analyze-difficulty", "check-analysis"):
+        from .analysis_cli import main as analysis_main
+        return analysis_main(actual)
     if actual and actual[0] == "assess":
         from .quality import main as quality_main
         return quality_main(actual)

@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**SD / #235 (17.10.2026), Spezifikation freigegeben; noch nicht implementiert:**
+**SD / #235 (17.10.2026), SD-A-Analysator; SD-B/SD-C noch ausstehend:**
 [Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) bindet die geplante wiederholbare
 Einstufung 1–5: instrumentierte Logik und Lösungsfluss, begrenzter Größenbeitrag,
 feste Grenzen anhand unabhängiger synthetischer Referenzen. Der aktuelle Katalog
@@ -9,8 +9,10 @@ muss nicht alle Stufen enthalten und kalibriert keine Skalenenden. Analyse und
 verwenden nach der Umstellung denselben Methodenstand. Automatisierte Tests
 dürfen weder den realen Katalog noch daraus kopierte oder abgeleitete Fälle nutzen.
 SD-A/SD-B/SD-C liefern Analyse, gebundene Methode und Katalog-/Integrationsweg.
-Beauftragt sind derzeit Issues und Dokumentation, keine Code-/Testimplementierung,
-reale Neueinstufung oder Merge. Aktuelle 0.1-/0.2-Datenverträge gelten bis SD-C.
+[SD-A](SD_ANALYZER.md) liefert Regeln, synchrone Bewertungsspur und manuellen
+Einzelbericht ohne kalibrierte Stufe. Separates Review SD-A-R01 bleibt vor Merge
+erforderlich; technische Nachweise stehen im Implementierungs-PR zu #236.
+Reale Neueinstufung und Merge sind nicht beauftragt. Aktuelle 0.1-/0.2-Datenverträge gelten bis SD-C.
 
 **KE / #233 (17.10.2026), mit PR #234 in `main` integriert:**
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](CATALOG_PRESENTATION.md)
