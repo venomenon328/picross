@@ -92,6 +92,16 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(current['current_source']['runtime_revision'],2)
         check_checkout(self.checkout)
 
+    def test_update_preserves_the_two_existing_export_checks_without_replaying_neighbors(self):
+        from unittest.mock import patch
+        from tools.puzzle_production import target_adapter
+        original=target_adapter.verify_export
+        with patch.object(target_adapter,'verify_export',wraps=original) as verify:
+            update(self.second,self.checkout,self.expected,apply=True)
+        self.assertEqual(verify.call_count,2)  # supplied export and independent staged export
+        self.assertEqual(verify.call_args_list[0].args[0],self.second)
+        self.assertTrue(all(not call.args[0].is_relative_to(self.checkout) for call in verify.call_args_list))
+
     def test_rejects_stale_revision_slot_category_reveal_and_occupied_package_without_writes(self):
         candidates=[(self.second,'0'*64,'Stale')]
         for revision in (1,):

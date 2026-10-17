@@ -50,6 +50,13 @@ def encoded(value):
     return raw
 
 
+def read_file(path, limit=LIMIT):
+    with path.open("rb") as stream:
+        raw = stream.read(limit + 1)
+    require(len(raw) <= limit, "Difficulty file exceeds resource limit")
+    return raw
+
+
 def hashed(value, field):
     return {**value, field: digest(value)}
 
@@ -200,9 +207,15 @@ def _compact(value):
         for n in m[k].values(): integer(n, 0, 8000000, k)
     require(sum(m["family_waves"].values()) == m["wave_count"] and
             m["highest_family_used"] == max((k for k, n in m["family_waves"].items() if n), default=None), "Wrong family summary")
+    for family, waves in m["family_waves"].items():
+        applications = m["family_line_applications"][family]
+        rules = [n for rule,n in m["rule_applications"].items() if rule.startswith(family + "-")]
+        require(waves <= applications <= waves * (w["width"] + w["height"]) and
+                applications <= sum(rules) <= applications * len(rules), "Contradictory family/rule frequencies")
     require(m["aggregation"] is None and m["cell_change_events"] == m["new_singletons"] + m["partial_change_events"] and
             m["unique_partial_cells"] <= m["unique_changed_cells"] <= m["cell_change_events"] and
-            m["removed_values"] <= w["cells"] * w["colors"], "Contradictory compact metrics")
+            m["new_singletons"] <= m["unique_changed_cells"] and
+            m["cell_change_events"] <= m["removed_values"] <= w["cells"] * w["colors"], "Contradictory compact metrics")
     for k, denominator in (("simple_fraction_all_cells", w["cells"]), ("simple_fraction_determined", m["new_singletons"]),
                            ("r0_fraction_all_cells", w["cells"])):
         fraction(m[k], reduced=False, undefined=True)
@@ -211,6 +224,8 @@ def _compact(value):
             m["r0_fraction_all_cells"][0] <= m["simple_fraction_all_cells"][0], "Contradictory simple counts")
     if value["status"] == "solved":
         require(m["new_singletons"] == w["cells"], "Incomplete solved metrics")
+    if value["status"] == "stalled":
+        require(m["new_singletons"] < w["cells"], "Completed stalled metrics")
 
 
 def _rating(rating, compact, identifier):
@@ -319,7 +334,8 @@ def import_bundle(input_path, bundle, *, budget=None):
     compact.update(result_hash=report["result_hash"], metrics_hash=digest(result["metrics"]),
                    metrics={k: v for k, v in result["metrics"].items() if k != "waves"})
     value = hashed({"format": CHECKED, "current_source": current, "logic_binding": logic, "rating": rating,
-                    "compact_analysis": compact, "analysis_report_hash": digest(report), "verification_hash": digest(checked),
+                    "compact_analysis": compact, "analysis_report_hash": digest({k: v for k,v in report.items() if k != "operation"}),
+                    "verification_hash": digest(checked),
                     "tool": tool_identity()}, "checked_hash")
     value = validate(value, active=False, definition_bytes=input_path.read_bytes())
     require(inputs == {"source": file_hash(input_path), "bundle": {n: file_hash(p) for n, p in file_table(bundle, time.monotonic() + 300).items()}},
@@ -365,5 +381,5 @@ def load_sources(root, registry):
             require(target.is_file(), "Difficulty source must be a regular file")
             raw = path_in(root, "game/" + entry["definition"]).read_bytes()
             require(hashlib.sha256(raw).hexdigest() == entry["production"]["definition_sha256"], "Definition differs from registry")
-            records[entry["id"]] = validate(bytes_json(target.read_bytes()), definition_bytes=raw)
+            records[entry["id"]] = validate(bytes_json(read_file(target)), definition_bytes=raw)
     return records

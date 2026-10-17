@@ -18,6 +18,7 @@ class SelectionTests(unittest.TestCase):
                      "content/difficulty/reports/first-run/trace.json", "content/difficulty/reports/Upper/report.md",
                      "content/difficulty/pz-Test/rating.json", "content/difficulty/pz-test/nested/rating.json",
                      "content/difficulty/reports/../report.md", "content/difficulty/reports/a/report.gd",
+                     "content/difficulty/reports/con/report.md", "content/difficulty/reports/lpt9/report.json",
                      "content/difficulty/pz-test/rating.json/", "content/difficulty/pz-test/rating.json.py"]:
             with self.subTest(path=path):
                 self.assertFalse(content_path(path))

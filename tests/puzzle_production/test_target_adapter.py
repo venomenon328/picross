@@ -275,11 +275,13 @@ class TargetTests(unittest.TestCase):
             with self.assertRaises(InterruptedError): registration(out, checkout, apply=True, fail_step=step)
             with self.assertRaisesRegex(InvalidInput, "Interrupted"): check_checkout(checkout)
             target = checkout / "game/data/content/pz-test-direct-mono.json"
-            saved = target.read_bytes()
+            saved = target.read_bytes() if target.exists() else None
+            target.parent.mkdir(parents=True,exist_ok=True)
             target.write_bytes(b"foreign modification")
             with self.assertRaisesRegex(InvalidInput,"changed"): recover(checkout)
             self.assertEqual(target.read_bytes(),b"foreign modification")
-            target.write_bytes(saved)
+            if saved is None: target.unlink()
+            else: target.write_bytes(saved)
             self.assertEqual(recover(checkout)["status"], "rolled-back")
             self.assertEqual((checkout / "content/registry.json").read_bytes(), before)
         plan = registration(out, checkout)
@@ -306,7 +308,7 @@ class TargetTests(unittest.TestCase):
         root = isolated_checkout(self.root / "checkout")
         existing = root / "game/data/content/Occupied.json"
         existing.parent.mkdir(); existing.write_bytes(b"foreign work")
-        with self.assertRaisesRegex(InvalidInput, "collid"): registration(out, root, apply=True)
+        with self.assertRaisesRegex(InvalidInput, "collid|collision"): registration(out, root, apply=True)
         self.assertEqual(existing.read_bytes(), b"foreign work")
         check_checkout(root)
 

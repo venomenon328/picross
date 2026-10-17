@@ -22,7 +22,9 @@ REPORT_LIMIT = 16 * 1024 * 1024
 
 
 def run_id(value):
+    from .authoring_package import relative
     require(isinstance(value, str) and re.fullmatch(r"[a-z][a-z0-9-]{0,63}", value), "Invalid difficulty run ID")
+    relative(value)
     return value
 
 
@@ -200,7 +202,7 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
 def adopt(root, workspace, *, apply=False, fail_step=None):
     root = root.resolve()
     workspace = work_directory(workspace, root)
-    report_bytes = safe_external(workspace / "report.json").read_bytes()
+    report_bytes = rating.read_file(safe_external(workspace / "report.json"), REPORT_LIMIT)
     report = validate_report(rating.bytes_json(report_bytes, REPORT_LIMIT))
     require(safe_external(workspace / "report.md").read_bytes() == markdown(report).encode(), "Preview Markdown differs")
     snapshot = tx.capture(root)
@@ -223,7 +225,7 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
             require((prior["record_hash"] if prior else None) == row["previous_record_hash"], "Active rating changed since preview")
             continue
         p = safe_external(workspace / "checked" / (row["id"] + ".json"))
-        externals[p] = p.read_bytes()
+        externals[p] = rating.read_file(p)
         checked = rating.validate(rating.bytes_json(externals[p]), active=False, definition_bytes=raw)
         require(checked["checked_hash"] == row["checked_hash"] and checked["rating"]["rating_hash"] == row["rating_hash"] and
                 rating.project(checked) == row["proposed"], "Checked preview input changed")

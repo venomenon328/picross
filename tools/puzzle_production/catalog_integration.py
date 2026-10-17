@@ -15,7 +15,7 @@ def _input(value):
     if isinstance(value, Path):
         absolute = value.absolute()
         path = tx.safe(Path(absolute.anchor), absolute.relative_to(absolute.anchor).as_posix())
-        raw = path.read_bytes()
+        raw = rating.read_file(path)
         return rating.validate(rating.bytes_json(raw), active=False), (path, raw)
     return rating.validate(deepcopy(value), active=False), None
 
@@ -67,7 +67,7 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         original = load_json(root / existing["production"]["package"] / "manifest.json")
         same = original["entry"] == entry if original.get("format") == INTEGRATED else existing == entry
         if same:
-            check_checkout(root, replay=True)
+            check_checkout(root, replay=not update and original.get("format") != INTEGRATED)
             require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
                     all(file_hash(tx.safe(root, name)) == h for name, h in snapshot["retained"].items()), "Checkout changed during planning")
             return {"status": "no-op", "registered": True, "id": entry["id"], "category": category, "changes": []}

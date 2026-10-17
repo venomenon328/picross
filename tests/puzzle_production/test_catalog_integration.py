@@ -110,6 +110,7 @@ class CatalogTests(unittest.TestCase):
                    lambda d:d['rating']['result']['uncertainty'].update(human_calibration='performed'),
                    lambda d:d['compact_analysis'].update(deduction_complete=False),
                    lambda d:d['compact_analysis']['metrics'].update(waves=[]),
+                   lambda d:d['compact_analysis']['metrics']['family_line_applications'].update(R0=0),
                    lambda d:d['compact_analysis']['metrics']['workload'].update(cells=True),
                    lambda d:d['rating']['source'].update(definition_id='pz-other'),
                    lambda d:d['rating']['method']['configuration'].update(unapproved=0)]
@@ -173,8 +174,16 @@ class CatalogTests(unittest.TestCase):
         first=ca.analyze_single(source,self.root/'one')
         second=ca.analyze_single(source,self.root/'two')
         for field in rating.FIELDS:self.assertEqual(first[field],second[field],field)
+        self.assertEqual(first['checked_hash'],second['checked_hash'])
+        # Different clocks/work budgets are checked, but never become result identity.
+        report=load_json(self.root/'two/report.json');report['operation']['elapsed_seconds']+=100
+        write_json(self.root/'two/report.json',report)
+        self.assertEqual(rating.import_bundle(source,self.root/'two')['checked_hash'],first['checked_hash'])
         active=rating.active_record(first)
         self.assertEqual(rating.active_record(second,active),active)
+        one=self.preview(run='repeat-one',checked=False)
+        two=self.preview(run='repeat-two',checked=False)
+        self.assertEqual(one['result_hash'],two['result_hash'])
 
     def test_explicit_multiple_ids_keeps_unrated_and_error_rows(self):
         # A second independent sealed synthetic package; no real catalog source.
@@ -288,6 +297,8 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(snapshot(self.checkout),before)
 
     def test_work_paths_and_sidecar_aliases_are_rejected(self):
+        for run in ('con','nul','com1','lpt9','../escape','Upper'):
+            with self.assertRaises(InvalidInput):ca.run_id(run)
         for path in (self.checkout/'game/work',self.checkout/'content/difficulty/work',self.root/'..'/'alias'):
             with self.assertRaises(InvalidInput):ca.work_directory(path,self.checkout)
         p=self.checkout/self.rating_path;renamed=p.with_name('Rating.json');p.rename(renamed)
