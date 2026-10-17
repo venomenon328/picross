@@ -1,10 +1,11 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
-Stand: 17.10.2026 · Vertrag 1.1 · SD-C-P01 und SD-C-R01/C1-N01 aus
+Stand: 18.10.2026 · Vertrag 1.1 · SD-C-P01 und SD-C-R01/C1-N01 aus
 [#238](https://github.com/venomenon328/picross/issues/238).
 Die folgenden Formate wurden vor der ersten Codeänderung festgelegt und werden
 von den neuen `catalog_*`-Modulen implementiert. [Befehlsanleitung](../tools/puzzle_production/README.md).
-SD-C1 liefert den technischen Weg; SD-C2 und reale Bewertungen bleiben separat.
+SD-C1 ist nach qualifiziertem R2 mit PR #242 integriert; SD-C2 liefert zunächst
+Erstbericht und lesenden Plan. Aktive Bestandsbewertungen bleiben unverändert.
 [SD](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md) und der eingefrorene
 [SD-B-Vertrag](SD_CALIBRATION.md) gelten unverändert.
 
@@ -241,12 +242,17 @@ vor Mutation. Historische Journale werden nicht um neue Felder ergänzt.
 
 ## Technische Abnahme
 
-Synthetische Prüfungen decken SD-C-A01–A04/A08–A10 sowie den technischen Anteil
-A07 ab. Keine echte Kataloganalyse, keine aktiven Bestands-Sidecars. Methodenquellen,
-Referenzen und Grenzen bleiben bytegleich. SD-C-T01 umfasst vollständige aktuelle
-CI, einschließlich Product/Preflight/Web, und getrennten Selbstreview. SD-C-R01
-für C1 bleibt ein separates qualifiziertes Review vor Merge. A05/A06, realer
-A07-Anteil und SD-C-K01 gehören zu C2; #238 und #235 bleiben offen.
+Synthetische C1-Prüfungen decken SD-C-A01–A04/A08–A10 sowie den technischen Anteil
+A07 ab. C1 enthielt keine echte Kataloganalyse und keine aktiven Bestands-Sidecars.
+Methodenquellen, Referenzen und Grenzen bleiben bytegleich. SD-C-T01/C1 und
+qualifiziertes SD-C-R01/C1 R2 sind erfüllt: PR #242 ist als
+`e93444e5db48e2138d15890e314c60ec4291fea3` integriert, finale C1-CI
+[39071026774](https://github.com/venomenon328/picross/actions/runs/39071026774)
+mit allen sechs damaligen Pflichtjobs erfolgreich. Die C2-Startlieferung umfasst
+ausschließlich Status-Markdown; gemäß vollständigem Diff/CI-Policy sind dafür
+`docs` und `ci-required` erforderlich, keine C1-Vollwiederholung.
+A05/A06 werden durch den C2-Erstbericht zur separaten Prüfung geliefert;
+realer A07-Anteil, SD-C-K01 und R01/C2 bleiben offen. #238 und #235 bleiben offen.
 
 | Akzeptanz | Fester technischer Nachweis |
 | --- | --- |
@@ -262,7 +268,45 @@ Mono↔Einfarb-Color, alte/geprüfte/aktive Rebindinputs und frische Analyse;
 verwaiste/falsch platzierte Sidecars einschließlich Recovery; echter No-op sowie
 Stale-Kategorie-/Quellenänderung bei Plan und Übernahme. Alle Eingänge sind synthetisch.
 
-Die Basisprüfung ergab `origin/main == b625cc6af1342eafb2582beb9eec17991ea21a12`;
-keine Abweichung seit SD-C-P01. Finale Head-/Test-Merge-/Runbindungen und der
-getrennte Selbstreview werden im C1-Draft-PR dokumentiert. SD-C-R01 wird dadurch
-nicht ersetzt; keine Wiedereröffnung historischer KE-/KAT-Gates, kein Mergeauftrag.
+Die historische C1-Basis war `b625cc6af1342eafb2582beb9eec17991ea21a12`.
+Finale Head-/Test-Merge-/Runbindungen und der getrennte Selbstreview stehen in
+[PR #242](https://github.com/venomenon328/picross/pull/242), qualifiziertes
+[R2](https://github.com/venomenon328/picross/pull/242#pullrequestreview-5560294023)
+bestätigt den C1-Abschluss. Keine Wiedereröffnung historischer KE-/KAT-Gates.
+
+## SD-C2 · Erstbericht vor Übernahme
+
+Am 18.10.2026 wurde gemäß #238/SD-C2-P01 einmalig `preview --all` mit Run-ID
+`sd-c2-first-20261018-a` ausgeführt. Quell- und Werkzeugcommit sind beide
+`e93444e5db48e2138d15890e314c60ec4291fea3`; nach Fetch keine Änderung seit P01.
+Alle 835 versionierten Dateien entsprachen vor dem Lauf ihren Git-Blobbytes.
+Methodenhash `8f7efa0d5ac76a1bd73fbae3618fec18dba28cf704887188eba2fcf020b9df79`
+und sämtliche Freezequellen/-referenzen sind unverändert.
+
+Alle 26 registrierten IDs haben `rated`, vollständige geprüfte Linienableitung
+und `confidence=medium`. Alt: 19 × L2, 7 × L3; Vorschlag: L1=0, L2=0,
+L3=17, L4=8, L5=1, offen=0. Sechs L4 beruhen unmittelbar auf R2/Enge;
+zwei auf logischer Basis 3 plus zulässigem Größenbeitrag 1. L5 beruht auf R3
+mit starker Enge, ohne R4. Kein Paar-/Suchlauf war erforderlich. Verteilung
+nur beobachtet; keine menschliche Kalibrierung oder Lösungszeitbehauptung.
+
+`plan-adoption` endete lesend als `planned-adoption`, `open_ids=[]`,
+`report_hash=51c785039579474658362c127112c70dea9079e5aeace473f646a6622f1fe37e`.
+Geplant sind 26 Sidecars, zwei Dauerberichte und `game/data/registry.json`.
+Nach Vorschau und Plan waren sämtliche versionierten Bytes unverändert;
+kein aktives Rating, Dauerbericht oder Journal wurde angelegt, keine Saves berührt.
+
+Die unveränderten JSON-/Markdownberichte, Einzelbelege, Plausibilitätsauswertung,
+Dateihashes und der konkrete Plan stehen im zugehörigen Draft-PR; der Belegindex
+ist über [#238](https://github.com/venomenon328/picross/issues/238) erreichbar.
+Vollständige Bundles/checked-Dateien bleiben bis zur Fortsetzung
+unter `E:/Zeuch/Coding/picross-sdc2-evidence/sd-c2-first-20261018-a` erhalten,
+außerhalb des Repositorys und gewöhnlicher CI-Artefakte. Previewberichte dürfen
+nicht vorab in die kanonischen Dauerpfade kopiert werden.
+
+**Endgrenze:** separater qualifizierter Reviewer für SD-C-R01/C2 vor `adopt`;
+Selbstreview und Bundleprüfung ersetzen dieses Gate nicht. Erst nach bestandenem
+Review und passendem Folgeauftrag folgt die kontrollierte Übernahme auf demselben
+Branch/PR, einschließlich echtem Wiederholungs-No-op, A07/K01 und finalem
+qualifiziertem Datenreview vor Merge. Diese Lieferung übernimmt keine Bewertung,
+korrigiert keinen Code und autorisiert keinen Merge. #238/#235 bleiben offen.
