@@ -1,0 +1,29 @@
+{
+  "additional_checks": "keine konkreten Befunde; keine Zusatzprobe erforderlich",
+  "authoring_index_unchanged": true,
+  "blockers": [],
+  "category_id": "mythen-fantasie",
+  "category_name": "Mythen & Fantasie",
+  "checked_at_utc": "2026-10-17T10:17:24.961771+00:00",
+  "existing_registry_entries_unchanged": true,
+  "existing_runtime_and_other_authoring_files_unchanged": 75,
+  "files": {
+    "game/art/content/yin_yang_001.png": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e",
+    "game/art/content/yin_yang_001.txt": "5c45082ee4687f2bcef9641dfd07ba21cdab881ae02b1f5e9818bbfeefd527f0",
+    "game/data/content/yin_yang_001.json": "ac3c241cf208ae5f696a717bbd39cc3293f8396c4cb2bedc11efa8c17a6cf226",
+    "game/data/registry.json": "fef0ead3be6b668ada56513ee8e2f15502dfdd4ce53fc96392590f9c52262257"
+  },
+  "format": "picross-content-integration-file-check-v1",
+  "matrix_equals_approved_selection": true,
+  "native_checks": "nicht erforderlich: reine Inhaltsintegration",
+  "package_copy_equals_export": true,
+  "puzzle_id": "pz-3e97c042f0bf474e8608a84ea034c246",
+  "registered": true,
+  "reveal_equals_approved_bytes": true,
+  "revision": "r05",
+  "runtime_equals_export": true,
+  "runtime_revision": 1,
+  "save_slot": "yin_yang_001",
+  "sealed_package_and_handoff_unchanged": true,
+  "source_commit": "d0d57131ea74846be14756b78e5763a9ae13bb11"
+}

@@ -1,0 +1,4 @@
+Yin-Yang: freigegebene MA-r01 und parameters.json; Kreis, Orientierung, beide geschlossenen Gegenpunkte und S-Grenze erhalten. Keine zusätzlichen Logikanker. Motivfreigabe approvals/motif.json.
+
+Working mode: faithful
+Motif and gameplay review: open

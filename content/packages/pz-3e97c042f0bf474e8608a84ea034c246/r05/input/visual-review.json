@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "details_negative_spaces": {
+      "reason": "Alle acht Nutzerkorrekturen bleiben erhalten; obere/untere Gegenpunkte geschlossen und getrennt. S-Grenze und eine weiße Keilöffnung zwischen oberer Kommaform und Kontur bleiben erhalten.",
+      "status": "erfüllt"
+    },
+    "palette_mono_readability": {
+      "reason": "Eine verwendete schwarze Vordergrundfarbe, Weiß ist Leer. Keine zusätzliche Farbe oder künstliche Einzelanker.",
+      "status": "erfüllt"
+    },
+    "recognition": {
+      "reason": "Kreisförmiges Taijitu, komplementäre Kommaformen und beide Gegenpunkte klar erkennbar.",
+      "status": "erfüllt"
+    },
+    "series_aesthetic": {
+      "reason": "Ruhige, klar zusammenhängende reduzierte Kontur; unverändertes detailliertes Indigo-/Elfenbein-Reveal bleibt nachvollziehbare Referenz.",
+      "status": "erfüllt"
+    },
+    "silhouette_proportions": {
+      "reason": "Äußere Zeilenextrema und Kreisorientierung bleiben gegenüber r04 unverändert. Bestehende rechte Linie bewusst kräftiger nach innen; sichtbarer Detailunterschied wird zur Endabnahme vorgelegt.",
+      "status": "erfüllt"
+    }
+  },
+  "deviation": "Rechte Kontur bis zu drei Zellen kräftig statt überwiegend einer.41 zusätzliche Konturzellen gegenüber r04,6,56% des Rasters. Menschliche Endabnahme offen.",
+  "evidence": [
+    "final-comparison.png",
+    "final-reveal-comparison.png"
+  ],
+  "review_type": "Separate visual self-review of actual r04/final matrix, marked41-cell diff, non-smoothed raster, original motif and approved reveal."
+}
