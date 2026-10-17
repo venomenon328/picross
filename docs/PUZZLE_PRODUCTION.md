@@ -7,6 +7,12 @@ nicht in CI. Keine rätselspezifischen Unit-Tests oder Bestands-Replays hinzufü
 die unten historisch dokumentierten pauschalen RP-Paket-/CI-Prüfpflichten.
 Allgemeine Werkzeugtests mit festem synthetischem Testbestand bleiben erforderlich.
 
+**SD / [#235](https://github.com/venomenon328/picross/issues/235), freigegebener Sollvertrag (17.10.2026):**
+[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) ergänzt künftig die instrumentierte
+Skala 1–5 und den ausdrücklich manuellen Bewertungsweg. SD-A/SD-B/SD-C sind noch
+nicht implementiert; aktuelle Profile, Befehle und Produktionsverträge gelten
+weiter. Die gezielte Umstellung neuer Bewertungen erfolgt erst mit SD-C.
+
 [KAT-1](CATEGORIES.md) ergänzt den Produktionsfundus und ZA-1 um thematische Kategorien. Die Zuordnung steht spätestens vor dem kategorisierten Export fest und bleibt außerhalb von Raster-, Logik-, Proof- und Freigabeidentität. Arbeitsindex und Runtime-Registrierung bleiben getrennt.
 
 Der [ZA-1-Zieladapter](ZA1_ADAPTER.md) verbindet Authoring-v2 mit regulärem Spiel
@@ -435,12 +441,23 @@ Abschlussbilds. Ein monochromes Rätsel darf gemäß
 Produktdefinition durch die kolorierte Enthüllung verständlicher werden; ein
 Farbrätsel soll bereits selbst als Bild erkennbar sein.
 
-Schwierigkeit ist zunächst eine versionierte Schätzung anhand tatsächlicher
-Ableitungen, Regelbedarf, Engstellen, angebotener Fortschritte und ihrer Verteilung.
-Rastergröße, Eintragungsumfang, Hinweislängen und Rechenlaufzeit werden separat
-berichtet. CPU-Zeit oder Schrittzahl allein ergeben keine menschliche Schwierigkeit.
-Reihenfolge/Strategie der Auswertung und Aggregation sind zu dokumentieren; keine
-verbindlichen Stern- oder Schwierigkeitsstufen und keine Spielerwertung entstehen.
+Aktuelle Schwierigkeit folgt den Methoden 0.1/0.2 aus Authoring §5 einschließlich
+ihrer Schätzgrenzen. Der freigegebene [SD-Vertrag](PUZZLE_DIFFICULTY.md) sieht für
+neue Bewertungen nach SD-C geprüfte R0–R3-Regeln, synchrone Bewertungswellen,
+gemeinsam erfasste Fortschrittsmöglichkeiten und belegte Engstellen vor. Die
+eigene Bewertungsspur ersetzt keinen bestehenden Proof. R4-Notwendigkeit wird
+weiterhin nach §5.6 unabhängig belegt; auch anspruchsvolle reine Linienfälle
+können Stufe 5 erreichen. Alte Bewertungen behalten ihre Methodensemantik.
+
+Logische Basis, begrenzter Größenbeitrag und Katalogstufe werden getrennt
+berichtet; CPU-Zeit, Farbzahl oder Eingabemenge allein begründen keinen hohen
+Grad. SD-B bindet feste Grenzen anhand unabhängiger synthetischer Referenzen.
+Der reale Katalog ist weder Kalibrierungskorpus noch automatischer Testbestand;
+er dient erst danach einer beauftragten manuellen Plausibilitätsprüfung.
+Synthetische Kalibrierung ist kein Nachweis menschlicher Lösungszeit oder
+empirisch validierter Schwierigkeit. Spielerwertung bleibt unabhängig;
+Probespielen bleibt optional. Neue Rätsel erhalten nach finaler Deduktionsprüfung
+denselben manuell gestarteten Analyseweg wie ausgewählte Bestandsrätsel.
 
 ## Historische Machbarkeitsphase
 
@@ -452,6 +469,12 @@ noch dauerhaft im aktiven Tree aufbewahrt. Aktuelle Registrierung folgt
 Nach bestätigter Main-Integration werden Produktionsunterlagen entfernt; benötigt
 bleiben nur Runtime-Inhalte, Nutzungsgrundlage, Metadaten und kompakte Integrationsbindung.
 Reproduzierbarkeit während der Produktion ist keine lebenslange Aufbewahrungspflicht.
+
+Nach Einführung von SD-C bleiben außerdem die kompakte aktive Bewertung, ihre
+Eingangsbindungen und der gebundene Methoden-/Referenzstand erhalten. Diese liegen
+außerhalb versiegelter Produktionsoriginale und ermöglichen die beauftragte
+Neubewertung aus aktuellen Logikeingängen nach SD-D09/D10. Daraus entsteht keine
+allgemeine Pflicht zum Produktions-Replay oder zur Wiederherstellung alter Pakete.
 
 Über das Paarlinienprofil hinausgehende Regeln, menschlich kalibrierte Schwierigkeit, öffentliche
 Editoren und Veröffentlichung bleiben gesonderte Folgeentscheidungen.

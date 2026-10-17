@@ -67,6 +67,16 @@ und höchstens W·H·K informative Schritte. Assessment höchstens 64 KiB.
 
 ## Schwierigkeit und Freigabe
 
+**Freigegebene Folgearbeit SD / [#235](https://github.com/venomenon328/picross/issues/235):**
+[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) führt nach SD-C eine neue aktive
+Bewertungsmethode ein. Die nachstehenden 0.2-/R4-Nachweise und historischen
+Einstufungen behalten ihren Vertrag. SD-A ergänzt R0–R3-Instrumentierung und
+eine eigene synchrone Bewertungsspur, ohne bestehende Proofverträge zu lockern.
+SD-B bindet feste Grenzen an unabhängige synthetische Referenzen, nicht an den
+realen Katalog. Stufe 5 bleibt auch mit reiner Linienlogik erreichbar.
+Die neue Methode ist noch nicht implementiert; `assess` bleibt der nachstehend
+beschriebene begrenzte Bericht, kein vollständiger R0–R3-Analysator.
+
 `picross-difficulty-0.2` ergänzt genau R4. Nur separat unabhängig geprüftes
 `full-line-* / stalled` plus vollständiger geprüfter Paarproof derselben Logik
 belegen Notwendigkeit: L5, `linienübergreifend / besonders hoher logischer Anspruch`.

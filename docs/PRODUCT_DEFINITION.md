@@ -1,6 +1,13 @@
 # Produktdefinition: picross
 
-**KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
+**SD / #235, freigegebener Sollvertrag vom 17.10.2026:**
+[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) konkretisiert §3.2 mit einer
+wiederholbaren Einstufung und begrenztem Größeneinfluss. Alle fünf Stufen sollen
+fachlich erreichbar sein; der aktuelle Katalog muss sie nicht besetzen und setzt
+keine Skalenenden. Umsetzung und tatsächliche Bewertungen sind noch nicht
+beauftragt. Die heutigen Methoden und Datenformate bleiben bis SD-C gültig.
+
+**KE / #233, mit PR #234 am 17.10.2026 integriert:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) bindet eine passive Papierinfobox
 mit Größe, Mono-/Farbpiktogramm, vorhandener Schwierigkeit als Zahl 1–5 plus Name
 und Status Neu/Begonnen/Fertig. Neue Rätsel zeigen ein gezeichnetes Fragezeichen;
@@ -88,6 +95,30 @@ werden dabei nicht stillschweigend auf eine geänderte Definition übertragen.
 Die Rätsel sollen eindeutig und vollständig deduktiv lösbar sein. Notwendiges Raten beziehungsweise das versuchsweise Durchspielen von Annahmen mit anschließendem Zurückspringen ist ausgeschlossen. Eindeutigkeit allein reicht nicht als Nachweis dieses Versprechens.
 
 Über einzelne Zeilen und Spalten hinausgehende Schlussfolgerungen sind erlaubt. Rastergröße, Bearbeitungsumfang und logischer Anspruch werden getrennt berichtet. Neben vollständiger Linienlogik ist gemäß #139/B-D01 das [Paarlinienprofil](PAIRED_LINES.md) mit unabhängiger Nachweisprüfung zugelassen: zwei beliebige Zeilen beziehungsweise Spalten gemeinsam mit den exakten Zweizellenbeziehungen ihrer Kreuzlinien. Notwendige Paarlinienlogik erhält unter `picross-difficulty-0.2` R4, L5 und die Kennzeichnung „linienübergreifend / besonders hoher logischer Anspruch“. Notwendigkeit verlangt einen separat unabhängig bestätigten unvollständigen Linienfixpunkt und den vollständigen stärkeren Nachweis. Keine L6-Stufe; alte 0.1-Bewertungen behalten ihre Bedeutung. Weitere Profile und menschliche Kalibrierung bleiben offen. Ein Profilstillstand beweist kein notwendiges Raten mit anderen Regeln; ein vollständig geprüfter zwingender Lösungsweg beweist zugleich Eindeutigkeit.
+
+Der freigegebene [SD-Vertrag](PUZZLE_DIFFICULTY.md) führt nach seiner Umsetzung
+eine nachvollziehbare, versionierte Bewertung für Bestands- und neue Rätsel ein.
+Die Namen bleiben **1 Sehr leicht, 2 Leicht, 3 Mittel, 4 Schwer, 5 Sehr schwer**.
+Der tatsächliche Technikbedarf, gleichzeitig verfügbare Fortschritte und relevante
+Engstellen bestimmen die logische Basis. Größe darf höchstens in die benachbarte
+höhere Stufe verschieben; große durchgehend unmittelbare Rätsel bleiben sehr
+leicht. Größe allein begründet keine Stufe 4 oder 5. Anspruchsvolle reine
+Linienlogik kann 5 erreichen; nachgewiesenes notwendiges R4 bleibt 5.
+
+Unabhängige synthetische Referenzen begründen feste Stufengrenzen und den genauen
+Größenbeitrag vor der ersten Bestandsbewertung. Heutige Extremwerte, Quantile
+oder eine gewünschte Katalogverteilung sind keine Kalibrierung; leere Stufen
+sind zulässig. Das Ergebnis ist zunächst eine instrumentierte modellbasierte
+Einschätzung, keine empirisch bestätigte menschliche Lösungszeit. Technik,
+Arbeitsumfang und Aussagegrenzen werden getrennt dokumentiert.
+
+Ein ausdrücklich gestarteter Prozess analysiert einzelne Rätsel oder einen
+gewählten Bestand und übernimmt gültige Ergebnisse innerhalb des erteilten
+Auftrags. Neue Rätsel durchlaufen vor ihrer Integration denselben Methodenstand.
+Es gibt keine Schwierigkeitsermittlung im Spieler oder in CI und keine neuen
+automatisierten Tests mit realen Katalogrätseln oder daraus abgeleiteten Kopien.
+Historische Freigaben bleiben erhalten; aktuelle Bewertungen erhalten eine eigene
+dauerhafte Quelle. Spielerwertung, Progression und Saves werden nicht verändert.
 
 Es gibt keine zusätzlichen redaktionell vorgegebenen Startfelder. Klassische und farbige Rätsel müssen aus ihren regulären Randhinweisen heraus lösbar sein. Unmittelbar aus diesen Hinweisen ableitbare Felder sind davon zu unterscheiden.
 
@@ -314,7 +345,7 @@ Die folgende Sammlung bewahrt sinnvolle Ansätze aus dem Gespräch, ohne sie zu 
 | Kennung | Offene Entscheidung |
 | --- | --- |
 | O-01 | Wahl zwischen thematischem Sammelalbum und Reisealbum; konkrete Kapitel, Layouts, Designsystem und Enthüllungsdetails auf Basis der bestätigten Album-/Illustrationsrichtung. |
-| O-02 | Linien-/Paarlinienprofil und Schwierigkeit 0.2/R4 sind in [Rätselproduktion](PUZZLE_PRODUCTION.md) festgelegt. Offen bleiben darüber hinausgehende Profile und menschliche Kalibrierung. |
+| O-02 | Linien-/Paarlinienprofil und Schwierigkeit 0.2/R4 sind in [Rätselproduktion](PUZZLE_PRODUCTION.md) festgelegt. [SD](PUZZLE_DIFFICULTY.md) entscheidet die wiederholbare Skala und ihre katalogunabhängige Referenzbasis; genaue Regeln, Zahlen und Größenformel sind Liefergegenstände von SD-A/SD-B. Darüber hinausgehende Deduktionsprofile und empirische menschliche Kalibrierung bleiben offen, ohne Pflichtgate für SD. |
 | O-03 | Exakte Startmenge, Größen- und Variantenverteilung; Auswahlkriterien und zulässige Ausnahmen bei winzigen Motiven. |
 | O-04 | Dateibasierte Produktion mit KI ausschließlich in ChatGPT/Codex, ohne direkte Modell-API, und die erste Vergleichs-/Pilotphase sind spezifiziert. Offen bleiben die nachzuweisende Ausbeute, der reale Kurationsaufwand, Rechte konkreter Quellen und der spätere Ausbau der Produktionsoberfläche. |
 | O-05 | Was als Fehler zählt; Behandlung falscher Leer-/Farbmarkierungen, Striche und Wiederholungen; Abgrenzung manueller Korrekturen zu Undo und mögliche Hypothesen. |

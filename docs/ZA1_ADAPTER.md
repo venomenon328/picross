@@ -1,5 +1,10 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+**SD, freigegebener Sollvertrag vom 17.10.2026:**
+[Einheitliche Schwierigkeitsbewertung](PUZZLE_DIFFICULTY.md) ergänzt den
+Integrationsweg mit SD-C. Die unten dokumentierten Export-, Registrierungs- und
+Recoverybefehle bleiben bis zur implementierten und abgenommenen Umstellung gültig.
+
 **KE / #233, Implementierungsvertrag vom 17.10.2026:**
 Die Runtimeprojektion ist `picross-runtime-registry-v3` gemäß
 [CATEGORIES](CATEGORIES.md): bisherige sieben Felder plus `difficulty` als null
@@ -222,6 +227,41 @@ python tools/p1_product.py --cache-dir <toolchain-cache> --output-dir <neuer-pro
 ```
 
 Referenzeingang und Beleggrenzen: [ZA1_VERIFICATION.md](ZA1_VERIFICATION.md).
+
+## SD · Freigegebene zusätzliche Bewertungsbindung
+
+Nach der SD-C-Umstellung muss jedes neue oder tatsächlich geänderte Rätsel vor
+seiner Integration mit derselben freigegebenen Methode wie der übrige bewertete
+Bestand analysiert sein. Ein ausdrücklich gestarteter Analyseaufruf erzeugt den
+Bericht für die endgültige Definition; eine passend gebundene Analyse darf
+wiederverwendet werden. Registrierung startet keine Analyse des übrigen Katalogs.
+Ein fehlender, abgebrochener oder nicht mehr zur Definition/Methode passender
+Bericht verhindert die neue Übernahme; er wird nicht durch eine Schätzung oder
+Stufe 5 ersetzt. Die vorhandenen technischen und redaktionellen Inhaltsgates
+bleiben unabhängig davon bestehen.
+
+Analyse, Plan und ausdrückliche Übernahme sind getrennte Schritte. SD-C muss
+ihre konkreten Befehle und den vollständigen Datenvertrag vor der Umsetzung
+festschreiben. Der folgende heutige `plan-update`-/`update`-Weg ist ausschließlich
+für Rasterersatz bestimmt; eine reine Schwierigkeitspflege verwendet ihn nicht
+und erhöht keine Runtime-Revision. Alte Saves werden dafür weder gelesen noch
+migriert oder zurückgesetzt.
+
+Die neue aktuelle Bewertung wird außerhalb der versiegelten Produktionsangaben
+geführt, gemäß [Kategorienvertrag](CATEGORIES.md) und
+[SD-Vertrag](PUZZLE_DIFFICULTY.md). Originalhandoffs, Freigaben, Exporthashes und
+kompakte Integrationsmanifeste bleiben unverändert. Definitionshash und eigener
+Analyseinputhash binden die neue Bewertung; ein historischer Logikhash wird nicht
+aus numerisch umbenannten Runtimefarben vorgetäuscht. Die neue Bewertungsquelle
+und erforderlichen kompakten Berichte bleiben nach Produktionscleanup erhalten;
+fehlende alte Produktionsdateien erzeugen keine Wiederherstellungspflicht.
+
+Registrierung, Inhaltsupdate, Metadatenübernahme, explizite Projektion und Recovery
+müssen denselben versionsbewussten Projektionsvertrag verwenden. SD-C muss gültige
+Altjournale, sichere Wiederaufnahme und die Ablehnung fremder Änderungen vor
+Mutation berücksichtigen. Bis zur SD-C-Umstellung bleiben die folgenden heutigen
+Methoden-/Export-/Journalverträge einschließlich zulässiger Produktionsschätzungen
+unverändert gültig; es gibt noch keinen neuen Ratingbefehl oder Metadatenpfad.
 
 ## Expliziter Ersatz eines registrierten Rasters (#144)
 
