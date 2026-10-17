@@ -3,9 +3,10 @@
 Stand: 17.10.2026 · Spezifikation 1.0 · freigegebener Sollvertrag
 
 Die Spezifikation einschließlich der katalogunabhängigen Referenzkalibrierung
-ist freigegeben. Beauftragt sind ihre Dokumentation und Entwicklungspakete;
-Implementierung, reale Bewertungsdurchläufe und Merge sind noch nicht beauftragt.
-Die nachstehenden Fähigkeiten beschreiben das Soll, keine bereits verfügbare CLI.
+ist freigegeben. SD-A liefert den [technischen Analysator](SD_ANALYZER.md) mit
+eigener prüfbarer Spur und manueller Einzel-CLI. SD-B/SD-C, reale Bewertungsdurchläufe
+und Merge bleiben nachgelagert. Die nachstehenden Gesamtfähigkeiten beschreiben
+weiterhin das Soll; SD-A allein liefert keine kalibrierte Katalogeinstufung.
 
 [Zielissue #235](https://github.com/venomenon328/picross/issues/235) führt den
 Gesamtumfang; [SD-A #236](https://github.com/venomenon328/picross/issues/236),

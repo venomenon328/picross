@@ -74,7 +74,10 @@ Einstufungen behalten ihren Vertrag. SD-A ergänzt R0–R3-Instrumentierung und
 eine eigene synchrone Bewertungsspur, ohne bestehende Proofverträge zu lockern.
 SD-B bindet feste Grenzen an unabhängige synthetische Referenzen, nicht an den
 realen Katalog. Stufe 5 bleibt auch mit reiner Linienlogik erreichbar.
-Die neue Methode ist noch nicht implementiert; `assess` bleibt der nachstehend
+Die neue kalibrierte Methode ist noch nicht implementiert; der separate
+[SD-A-Analysator](SD_ANALYZER.md) prüft optional ausdrücklich übergebene
+Baseline-/Paarproofs, zählt ihre Schritte aber nicht als Bewertungswellen.
+`assess` bleibt der nachstehend
 beschriebene begrenzte Bericht, kein vollständiger R0–R3-Analysator.
 
 `picross-difficulty-0.2` ergänzt genau R4. Nur separat unabhängig geprüftes
