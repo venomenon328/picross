@@ -71,6 +71,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
             write_json(categories_path, categories)
             # Regenerate the empty-of-new-content projection before normal registration.
             from tools.puzzle_production.content_registry import projection, registration
+            from tools.puzzle_production.za1_fixtures import difficulty_for_export
             from tools.puzzle_production.contract import write_json as write_canonical
             registry = json.loads((checkout / "content/registry.json").read_text(encoding="utf-8"))
             write_canonical(project / "data/registry.json", projection(registry, categories))
@@ -82,7 +83,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
             python_phase("kat2-adapter-export", lambda: export(package, exported, approval_path=approval,
                 name="TEST ONLY Motiv", revision=1, stem="kat2_adapter", save_slot="kat2_adapter",
                 category_id="test-only-kat2-extra", categories_path=categories_path))
-            python_phase("kat2-adapter-register", lambda: registration(exported, checkout, apply=True))
+            python_phase("kat2-adapter-register", lambda: registration(exported, checkout, apply=True, difficulty=difficulty_for_export(exported)))
             install_runtime_fixtures(root, project, append=True)
         else:
             fixture(project, saves, "regular" if mode in ("restart", "information", "kb", "kk", "ke") else mode)

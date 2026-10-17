@@ -13,7 +13,9 @@ Bei Schwierigkeitsanalyse, Kalibrierung oder Bewertungsmetadaten zusätzlich
 SD-A / #236 liefert den getrennten Analysator gemäß
 [technischem Vertrag](docs/SD_ANALYZER.md); zusätzlich den vollständigen
 [SD-B-Methodenvertrag](docs/SD_CALIBRATION.md) lesen. SD-B / #237 bindet
-`picross-difficulty-0.3`; SD-C und Bestandsbewertung bleiben nachgelagert.
+`picross-difficulty-0.3`; für Katalog-/Integrationsarbeit zusätzlich
+[SD-C1-Daten-/Recoveryvertrag](docs/SD_CATALOG.md) vollständig lesen.
+SD-C2/Bestandsbewertung bleiben nachgelagert.
 Der echte Katalog ist weder Testbestand noch
 unmittelbare Kalibrierungsgrundlage für die Skalenenden.
 

@@ -1,16 +1,17 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 15 · 17.10.2026**
+**Version 0.5.0 · Dokumentrevision 16 · 17.10.2026**
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
 Dokumentrevision, Datei-SHA-256 und Repositorycommit binden den verwendeten Snapshot.
 
-**SD / [#235](https://github.com/venomenon328/picross/issues/235), freigegeben, noch nicht implementiert:**
+**SD / [#235](https://github.com/venomenon328/picross/issues/235), SD-C1 technisch umgesetzt, separate Abnahme offen:**
 Für Schwierigkeitsarbeit zusätzlich [Rätselschwierigkeit](../PUZZLE_DIFFICULTY.md)
-lesen. Die künftige Umstellung nach SD-C steht in §5.2; diese Dokumentfortschreibung
-führt keine neuen Befehle, Paketformate oder Bewertungen ein. Authoring 0.5.0 und
-die nachstehenden aktuellen 0.1-/0.2-Produktionsbindungen bleiben bis dahin wirksam.
+und [SD-C1](../SD_CATALOG.md) vollständig lesen. §5.2/§8 binden den externen
+0.3-Input für neue Registrierung und logikrelevante Updates. Authoring 0.5.0,
+versiegelte Pakete und historische 0.1-/0.2-Produktionsbindungen bleiben erhalten.
+Reale Bestandsanalyse/Übernahme (SD-C2) ist ein gesonderter Auftrag.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
@@ -296,7 +297,7 @@ Materiell sind Änderungen an Identität, Pose, charakteristischen Proportionen,
 
 ## 5. Schwierigkeit L1–L5
 
-### 5.1 Derzeitige Methoden 0.1 und 0.2
+### 5.1 Historische Produktionsmethoden 0.1 und 0.2
 
 **Logische Schwierigkeit, Rastergröße, Bearbeitungsumfang und Lösungszeit getrennt angeben.** Große Matrizen oder viele Eingaben sind nicht automatisch schwierig. Sterne-/Fehlerbewertung im Spiel bleibt unabhängig.
 
@@ -346,14 +347,22 @@ Bild-/Rasterproduktion; ein erstmals beanspruchter stärkerer Technikbedarf
 verlangt die dazugehörigen neuen Nachweise. Ein Abbruch oder bloß verwendeter
 Paarschritt belegt keine Notwendigkeit. Keine Aussage über sämtliche denkbaren Regeln.
 
-### 5.2 Freigegebener künftiger Standard SD
+### 5.2 Aktueller zusätzlicher Integrationsstandard SD
 
-Nach Einführung von SD-C ersetzt [SD](../PUZZLE_DIFFICULTY.md) die freie neue
+Ab SD-C1 ersetzt [SD](../PUZZLE_DIFFICULTY.md) die freie neue
 Schätzung durch den zentralen ausdrücklich manuellen Analyseweg nach finaler
 Deduktionsprüfung. Ein passend gebundener vollständiger Bericht wird bei der
 Integration wiederverwendet. Gleiche Methodenversion und Eingabe bestimmen
 dieselbe Bewertung für neue Rätsel und ausgewählte Bestandsrätsel. Abbruch oder fehlende
 Analyse darf nicht durch eine unbegründete Stufe oder ersatzweise 5 verdeckt werden.
+
+Vor redaktioneller Endfreigabe erzeugt `catalog_analysis candidate` aus endgültiger
+Matrix, Design und normalisierter Logik einen ausdrücklich vorläufigen Schema-2-Input
+mit derselben Farbabbildung wie ZA-1. `analyze` beziehungsweise `import` prüft das
+volle Bundle; passende R4-Baseline-/Paarproofs ausdrücklich angeben, kein Routinepaarlauf.
+Nach Endfreigabe/Export bindet `rebind` die tatsächlichen Definitionsbytes bei
+identischer ID/Logik/Matrix; ursprüngliches `rating.source` bleibt erhalten.
+Befehle und Budgets: [Werkzeuganleitung](../../tools/puzzle_production/README.md).
 
 R0–R3-Instrumentierung, synchrone Wellen, Engstellen und begrenzter Größenbeitrag
 folgen dem eigenen Bewertungsvertrag; vollständige R0-Fälle bleiben auch groß
@@ -528,8 +537,8 @@ auf `null` setzen; Reveal und Runtime-Inhalte bleiben erreichbar.
 
 Voraussetzungen: tatsächlicher Integrationsauftrag, unverändertes `content_ready`-Paket mit vollständigen Inhaltsgates und gesonderte menschliche Endfreigabe nach [ZA-1](../ZA1_ADAPTER.md). Die Freigabe bindet Originalhandoff, Inventar, Endkandidat, Matrix-/Logikhash und Abschlussbild; ein `pass`-Flag genügt nicht. Die Archivablage selbst erteilt keine Endabnahme. Probespielen bleibt optional.
 
-Nach Einführung von SD-C zusätzlich die nach §5.2 gebundene aktive Bewertung
-übernehmen beziehungsweise einen passenden Bericht wiederverwenden. Die aktuelle
+Ab SD-C1 zusätzlich den nach §5.2 vollständig geprüften 0.3-Input übernehmen
+beziehungsweise passend neu binden. Die aktuelle
 Paket-/Exportbindung wird dadurch nicht rückwirkend geändert.
 
 Paarprofilpakete verlangen die tatsächliche Regelwerksbindung 0.5.0, passende
@@ -559,10 +568,12 @@ Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und da
 2. Vorliegende Produktionsbelege und echte Endfreigabe zuordnen. Kein zusätzliches routinemäßiges `inspect`: Der nachfolgende `export` prüft Eingang/Freigabe frisch und verifiziert seine geschriebenen Ausgaben selbst. Nur `technical=true` und `editorial_approved=true` erlauben den Export; Fehler stoppen. `inspect` separat nur zur Diagnose einer konkreten Lücke. Aktuelle Ergebnisse außen führen, versiegelte Originale nicht ändern.
 3. Produktions-ID unverändert als Runtime-ID verwenden. Motivname, kollisionsfreien Dateistamm/Save-Slot und numerische Runtime-Revision explizit wählen; bei neuen IDs gewöhnlich Revision 1. F01…F09 nicht umwidmen. ZA-1 unterstützt 1…50 pro Achse, Rechtecke, Mono und höchstens acht Vordergrundfarben; Paketrevision und Runtime-Revision bleiben getrennt.
 4. Kategorie-ID im äußeren Record und in der aktuellen Kategorienquelle abgleichen. `export` mit Paket, Endfreigabe, Name, Runtime-Revision, Stem, Slot sowie `--category-id <id> --categories content/categories.json` in ein neues temporäres Ziel ausführen. Erfolgsbericht und `inspection.json` binden; kein zusätzlicher Routineaufruf von `verify-export`. Ein bereits passend gebundener kategorisierter Export darf direkt dem Plan dienen. Kategorienlose Altexporte neu kategorisiert exportieren. Autorisierte manuelle Ableitungen benötigen weiterhin den gesonderten ZA-1-Vertrag samt tatsächlicher Autorisierung. Linienprofile verwenden Direkt-/Reparaturexport v2 beziehungsweise manuellen Export v3; Paarprofile verwenden auch bei manuellen Ableitungen Export v4. Keine automatische Ausnahme und keine manuelle Änderung der Exportversion. Das freigegebene Abschlussbild bleibt der bytegebundene Reveal. Matrix, Hinweise und Assets nicht manuell umschreiben.
-5. `plan --export <export> --checkout <arbeitscheckout>` ausführen, Kategorie-ID/aktuellen Anzeigenamen, konkrete Add-/Replace-Pfade und Registryänderungen auf Scope, Kollisionen und unveränderte Bestandsinhalte prüfen. Der Integrationsauftrag erlaubt anschließend `register` mit denselben Eingängen; keine zusätzliche routinemäßige Bestätigung verlangen. Ohne Auftrag beim Plan stoppen. Kein handgeschriebener Registryeintrag als Ersatz.
+5. `plan --export <export> --checkout <arbeitscheckout> --difficulty <checked.json>` ausführen, Kategorie-ID/aktuellen Anzeigenamen, konkrete Add-/Replace-Pfade und Registryänderungen auf Scope, Kollisionen und unveränderte Bestandsinhalte prüfen. Der Integrationsauftrag erlaubt anschließend `register` mit denselben Eingängen; keine zusätzliche routinemäßige Bestätigung verlangen. Ohne Auftrag beim Plan stoppen. Kein handgeschriebener Registryeintrag als Ersatz.
    Bei ausdrücklich beauftragtem Ersatz einer bestehenden Fassung stattdessen
    `plan-update` → `update` mit demselben Erwartungshash der bisherigen Definition
-   nach [ZA-1](../ZA1_ADAPTER.md) verwenden. Höhere Runtime-Revision, neue Paketrevision;
+   und `--difficulty <checked.json>` nach [ZA-1](../ZA1_ADAPTER.md) verwenden.
+   Nur bei gleicher ID/Logik/Matrix ist `--rebind-difficulty` ohne Analyse zulässig.
+   Höhere Runtime-Revision, neue Paketrevision;
    feste Identität/Slot/Kategorie und Revealbytes erhalten. Alte Saves bleiben
    unberührt und gelten bei anderer Runtime-Revision als inkompatibel.
 6. Tatsächliche Definition/Reveal/Nutzungshinweise, `content/registry.json`, deren Runtime-Projektion und die Prüfkopie unter `content/packages/…` kontrollieren, einschließlich Kategorienprojektion und eindeutiger Zuordnung im Katalog. Identischer Wiederholungsaufruf darf `no-op` sein; Konflikte nicht überschreiben. Bei offenem Registrierungsjournal nur den dokumentierten Recoverypfad verwenden.
@@ -595,7 +606,7 @@ sind Arbeitsmaterial, kein dauerhaft wachsender Spiel- oder CI-Bestand.
    Nutzungshinweise/Lizenzen, ID/Runtime-Revision/Save-Slot, Kategorie und relevante
    Schwierigkeitsmetadaten. Der kleine Integrationsdatensatz bindet diese Daten,
    den ursprünglichen Exporthash und den bestätigten Main-Commit.
-   Nach Einführung von SD-C bleiben zusätzlich die kompakte aktive Bewertung,
+   Ab SD-C1 bleiben zusätzlich die kompakte aktive Bewertung und kompakte Berichte,
    ihre Eingangsbindungen und der gebundene Methoden-/Referenzstand außerhalb
    versiegelter Produktion erhalten. SD-D09/D10 ermöglichen daraus die manuelle
    Neubewertung; alte Produktionsdateien oder ein Produktions-Replay sind dafür

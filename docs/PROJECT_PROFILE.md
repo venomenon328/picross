@@ -1,7 +1,7 @@
 # Projektprofil: picross
 
-**SD / #235 (17.10.2026), SD-A-Analysator und SD-B-Methode; SD-C ausstehend:**
-[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) bindet die geplante wiederholbare
+**SD / #235 (17.10.2026), SD-A/SD-B integriert; SD-C1 technisch umgesetzt, Abnahme offen:**
+[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) bindet die wiederholbare
 Einstufung 1–5: instrumentierte Logik und Lösungsfluss, begrenzter Größenbeitrag,
 feste Grenzen anhand unabhängiger synthetischer Referenzen. Der aktuelle Katalog
 muss nicht alle Stufen enthalten und kalibriert keine Skalenenden. Analyse und
@@ -11,10 +11,14 @@ dürfen weder den realen Katalog noch daraus kopierte oder abgeleitete Fälle nu
 SD-A/SD-B/SD-C liefern Analyse, gebundene Methode und Katalog-/Integrationsweg.
 [SD-A](SD_ANALYZER.md) liefert Regeln, synchrone Bewertungsspur und den unveränderten
 v1-Einzelbericht. [SD-B](SD_CALIBRATION.md) ergänzt opt-in die eingefrorene Methode
-0.3, unabhängige Referenzen und separat prüfbare Ratings. Technische Nachweise und
-Selbstreview stehen im PR zu #237; SD-B-R01 bleibt separat vor Merge erforderlich.
-Reale Neueinstufung und Merge sind nicht beauftragt. Aktuelle Katalog-/Produktions-
-Datenverträge 0.1/0.2 gelten bis SD-C; SD-B aktiviert keine Übernahme.
+0.3, unabhängige Referenzen und separat prüfbare Ratings. SD-B-R01/SD-B-M01 sind
+abgeschlossen; PR #241 ist als `b625cc6af1342eafb2582beb9eec17991ea21a12`
+integriert, einschließlich erfolgreicher vollständiger CI.
+[SD-C1](SD_CATALOG.md) ergänzt Sidecars, explizite Vorschau/Übernahme und
+gemeinsame Register-/Update-/Sync-/Recoverywege. Neue Registrierung oder geänderte
+Logik benötigt vollständig geprüftes 0.3; historische Produktionsbindungen bleiben.
+Reale Neueinstufung/Übernahme (SD-C2) und Merge sind hier nicht beauftragt.
+SD-C-R01/C1 bleibt separat offen; #238/#235 bleiben offen.
 
 **KE / #233 (17.10.2026), mit PR #234 in `main` integriert:**
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](CATALOG_PRESENTATION.md)
@@ -103,7 +107,7 @@ Die Arbeitsablage ist keine Runtime-Registrierung. Nach Endabnahme und Main-Merg
 werden Produktionsdaten nach PUZZLE_AUTHORING §9 entfernt; kompakte Integrations-
 bindung und Runtime-Dateien genügen für die abgeschlossene Produktion; keine
 dauerhafte Wiederholungspflicht für Bild-/Rasterproduktion oder alte Proofs.
-SD-C ergänzt künftig dauerhaft erhaltene kompakte Bewertungsdaten und Berichte
+SD-C1 ergänzt dauerhaft erhaltene kompakte Bewertungsdaten und Berichte
 für ausdrücklich beauftragte Neueinstufungen aus den vorhandenen Definitionen.
 
 [ZA-1](ZA1_ADAPTER.md) ermöglicht weitere freigegebene Workflow-Inhalte über eine
@@ -143,7 +147,7 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Neue Rätsel konzipieren, gestalten, produzieren oder redaktionell abnehmen | [KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md) und deren Pflichtquellen |
 | Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
-| Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
+| Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md), [SD-C1](SD_CATALOG.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
 | CI, Prüfprogramme, Artefakte, Archivierung | [CI_POLICY](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md) |
 
 PERF-A/PERF-B sind historische Lieferberichte, keine aktuellen Hersteller- oder

@@ -31,6 +31,10 @@ def content_path(path: str) -> bool:
         return True
     if re.fullmatch(r"game/art/content/[a-z][a-z0-9_-]{0,63}\.(png|svg|txt)", path):
         return True
+    if re.fullmatch(r"content/difficulty/pz-[a-z0-9][a-z0-9-]{0,59}/rating\.json", path):
+        return True
+    if re.fullmatch(r"content/difficulty/reports/[a-z][a-z0-9-]{0,63}/report\.(json|md)", path):
+        return True
     parts = PurePosixPath(path).parts
     return (len(parts) >= 5 and parts[:2] in (("content", "authoring"), ("content", "packages"))
             and re.fullmatch(r"pz-[a-z0-9][a-z0-9-]{0,59}", parts[2]) is not None

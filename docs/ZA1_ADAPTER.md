@@ -1,9 +1,11 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
-**SD, freigegebener Sollvertrag vom 17.10.2026:**
-[Einheitliche Schwierigkeitsbewertung](PUZZLE_DIFFICULTY.md) ergänzt den
-Integrationsweg mit SD-C. Die unten dokumentierten Export-, Registrierungs- und
-Recoverybefehle bleiben bis zur implementierten und abgenommenen Umstellung gültig.
+**SD-C1, technischer Vertrag vom 17.10.2026:**
+[Bewertungsquelle und Transaktionen](SD_CATALOG.md) ergänzen den
+Integrationsweg. Die unten dokumentierten Export-, Registrierungs- und
+Recoverybefehle verwenden gemeinsam die neue Quelle. Neue Registrierungen und
+logikrelevante Updates benötigen einen extern vollständig geprüften 0.3-Input.
+Export-/Inhaltsfreigaben bleiben; reale Bestandsübernahme bleibt SD-C2.
 
 **KE / #233, Implementierungsvertrag vom 17.10.2026:**
 Die Runtimeprojektion ist `picross-runtime-registry-v3` gemäß
@@ -191,7 +193,8 @@ samt Unsicherheit, Status und Blocker. Runtime lädt nur mitgelieferte Pfade.
 `plan` prüft sämtliche ID-/Slot-/Pfadkollisionen und zeigt Add-/Replace-Pfade
 samt Registry vorher/nachher. `register` ist die ausdrückliche Übernahme.
 Exklusives Journal; Runtime-Projektion wird zuletzt geschrieben. Normale Fehler
-rollen Dateien und Indizes zurück. Ein Prozesskill hinterlässt
+versuchen kontrollierten Rollback; Fremdänderungen erhalten Dateien und Journal.
+Ein Prozesskill hinterlässt
 `content/.registration-pending.json`; folgende Prüfungen/Registrierungen stoppen.
 
 ```sh
@@ -228,40 +231,39 @@ python tools/p1_product.py --cache-dir <toolchain-cache> --output-dir <neuer-pro
 
 Referenzeingang und Beleggrenzen: [ZA1_VERIFICATION.md](ZA1_VERIFICATION.md).
 
-## SD · Freigegebene zusätzliche Bewertungsbindung
+## SD · Zusätzliche Bewertungsbindung
 
-Nach der SD-C-Umstellung muss jedes neue oder tatsächlich geänderte Rätsel vor
-seiner Integration mit derselben freigegebenen Methode wie der übrige bewertete
-Bestand analysiert sein. Ein ausdrücklich gestarteter Analyseaufruf erzeugt den
-Bericht für die endgültige Definition; eine passend gebundene Analyse darf
-wiederverwendet werden. Registrierung startet keine Analyse des übrigen Katalogs.
-Ein fehlender, abgebrochener oder nicht mehr zur Definition/Methode passender
-Bericht verhindert die neue Übernahme; er wird nicht durch eine Schätzung oder
-Stufe 5 ersetzt. Die vorhandenen technischen und redaktionellen Inhaltsgates
-bleiben unabhängig davon bestehen.
+Ab SD-C1 braucht jedes neu registrierte oder logisch geänderte Rätsel einen
+vollständig geprüften 0.3-Input. Die vorhandenen technischen und redaktionellen
+Inhaltsgates bleiben unabhängig davon bestehen. Ein fehlender, abgebrochener oder
+unpassender Bewertungsnachweis wird nicht durch eine Schätzung oder 5 ersetzt.
 
-Analyse, Plan und ausdrückliche Übernahme sind getrennte Schritte. SD-C muss
-ihre konkreten Befehle und den vollständigen Datenvertrag vor der Umsetzung
-festschreiben. Der folgende heutige `plan-update`-/`update`-Weg ist ausschließlich
-für Rasterersatz bestimmt; eine reine Schwierigkeitspflege verwendet ihn nicht
-und erhöht keine Runtime-Revision. Alte Saves werden dafür weder gelesen noch
-migriert oder zurückgesetzt.
+[SD-C1](SD_CATALOG.md) und die [Werkzeuganleitung](../tools/puzzle_production/README.md)
+binden Formate und Befehle. `catalog_analysis candidate` verwendet vor der
+Endfreigabe dieselbe Farbabbildung wie der reguläre Export; `analyze`/`import`
+prüfen das vollständige Bundle. Nach Export bindet `rebind` bei identischer
+ID/Logik/Matrix die echten Definitionsbytes, ohne `rating.source` umzuschreiben.
+`plan`/`register` und `plan-update`/`update` erhalten den Input mit
+`--difficulty <checked.json>`. `--rebind-difficulty` erlaubt die ausdrückliche
+Neubindung im Integrationsschritt, bei Update auch aus dem bisherigen aktiven
+Rating. Registrierung startet keine Schwierigkeitsanalyse oder SD-Spurprüfung;
+die bestehenden obligatorischen ZA-1-Produktions-/Exportprüfungen bleiben vollständig.
 
-Die neue aktuelle Bewertung wird außerhalb der versiegelten Produktionsangaben
-geführt, gemäß [Kategorienvertrag](CATEGORIES.md) und
-[SD-Vertrag](PUZZLE_DIFFICULTY.md). Originalhandoffs, Freigaben, Exporthashes und
-kompakte Integrationsmanifeste bleiben unverändert. Definitionshash und eigener
-Analyseinputhash binden die neue Bewertung; ein historischer Logikhash wird nicht
-aus numerisch umbenannten Runtimefarben vorgetäuscht. Die neue Bewertungsquelle
-und erforderlichen kompakten Berichte bleiben nach Produktionscleanup erhalten;
-fehlende alte Produktionsdateien erzeugen keine Wiederherstellungspflicht.
+Reine Neubewertung verwendet `preview` beziehungsweise `preview-checked`, dann
+`plan-adoption` und `adopt` im Modul `catalog_analysis`. Sie ändert keine
+Definitionen, Revisionen, Saves, historischen Produktionsbewertungen, Originalhandoffs,
+Inventare oder Integrationsbelege. Fehlendes Sidecar erhält historische 0.1/0.2
+beziehungsweise null; vorhandene ungültige Daten blockieren ohne Fallback.
+Aktive Gültigkeit hängt nicht am gesamten Registry-, Git-HEAD- oder Pakethash.
+Produktionscleanup entfernt die kompakte Bewertung und Berichte nicht.
 
-Registrierung, Inhaltsupdate, Metadatenübernahme, explizite Projektion und Recovery
-müssen denselben versionsbewussten Projektionsvertrag verwenden. SD-C muss gültige
-Altjournale, sichere Wiederaufnahme und die Ablehnung fremder Änderungen vor
-Mutation berücksichtigen. Bis zur SD-C-Umstellung bleiben die folgenden heutigen
-Methoden-/Export-/Journalverträge einschließlich zulässiger Produktionsschätzungen
-unverändert gültig; es gibt noch keinen neuen Ratingbefehl oder Metadatenpfad.
+Register, Update, Übernahme, Sync und Recovery verwenden dieselbe Quellenpriorität.
+Neue Journale sind Registrierung v3, Update v2 und Bewertungsübernahme v1 unter
+dem bestehenden gemeinsamen Lock. Exakte KE-Altjournale bleiben ausschließlich
+ohne ungebundene aktive Sidecars wiederaufnehmbar; Journal-v1-Sperren bleiben.
+Fremdänderungen stoppen mit erhaltenen Dateien und Journal. Erfolgreiche Recovery
+hinterlässt unmittelbar einen gültigen aktuellen Checkout, ohne nachträgliches Sync.
+Identische Legacy-Wiederholungen bleiben ohne neue Bewertung No-op.
 
 ## Expliziter Ersatz eines registrierten Rasters (#144)
 
@@ -282,27 +284,27 @@ oder kompakte Integrationspaket wird unverändert behalten. Änderungen des
 Abschlussbilds oder der Identität sind außerhalb dieses begrenzten Updatepfads.
 
 ```sh
-python -m tools.puzzle_production.target_adapter plan-update --export <neuer-export> --checkout <checkout> --expected-definition-sha256 <Hash-der-bisherigen-Definition>
-python -m tools.puzzle_production.target_adapter update --export <neuer-export> --checkout <checkout> --expected-definition-sha256 <derselbe-Hash>
+python -m tools.puzzle_production.target_adapter plan-update --export <neuer-export> --checkout <checkout> --expected-definition-sha256 <Hash-der-bisherigen-Definition> --difficulty <checked.json>
+python -m tools.puzzle_production.target_adapter update --export <neuer-export> --checkout <checkout> --expected-definition-sha256 <derselbe-Hash> --difficulty <checked.json>
 ```
 
 API: `content_update.update(export_dir, checkout, expected_definition_sha256,
-apply=False|True)`. Der Plan ist lesend, nennt alle Add-/Replace-/Unchanged-Pfade,
-vorherige/neue Registry, Revisionen und den Hash des Updatemoduls. Der explizite
+apply=False|True, difficulty=Path(...), rebind_difficulty=False)`. Der Plan ist
+lesend, nennt alle geänderten Pfade, vorherige/neue Registry, Revisionen und das
+erhaltene alte Paket. Der explizite
 Erwartungshash verhindert ein Überschreiben eines inzwischen geänderten Rasters.
 Die aktuelle Registry und der neue Export werden vollständig geprüft. Frischer
 Staging-Replay, exakte Dateihashes und unveränderte Ausgangsbytes gehen der
 Publikation voraus. Die Runtimeprojektion wird zuletzt geschrieben.
 
-Das exklusive `content/.registration-pending.json` verwendet bei Updates
-`picross-content-update-journal-v1`: alte/neue UTF-8-Bytes der beiden Indizes,
-Definition und Nutzungshinweise, unveränderte Kategorienbytes, sicherer neuer
-Paketpfad und dessen vollständige Dateihashes. Höchstens24 MiB Journal, bestehende
-Paket-/Dateigrenzen unverändert. Normale Fehler rollen zurück. Nach Prozessabbruch
-nutzt `recover-registration` denselben expliziten Recoverybefehl; alle aktuellen
-Bytes müssen entweder dem alten oder neuen Stand entsprechen, und vorhandene
-neue Paketdateien müssen ihren Hashes entsprechen. Fremdänderungen blockieren
-vor jeder Mutation. Nur das neue Paket wird beim Rollback entfernt.
+Das exklusive `content/.registration-pending.json` verwendet bei neuen Updates
+`picross-content-update-journal-v2` nach [SD-C1](SD_CATALOG.md). Alte/neue
+UTF-8-Bytes einschließlich Sidecars/Abwesenheit, beide Indizes, Definitionen,
+Nutzungshinweise, Kategorien und alle gelesenen Bindungen sind gebunden.
+Höchstens 24 MiB Journal; bestehende Paket-/Dateigrenzen bleiben. Normale Fehler
+versuchen kontrollierten Rollback. `recover-registration` prüft nach Abbruch
+vollständig alte/neue Zustände und erwartet eigene Bytes. Fremdänderungen
+blockieren mit erhaltenen Dateien und Journal. Alte Pakete bleiben erhalten.
 
 KE-N1 erweitert ausschließlich die Journal-Kompatibilität: Registrierungsjournal
 v2 und Updatejournal v1 akzeptieren kanonisches Runtime-v2 (sieben Felder) sowie

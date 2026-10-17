@@ -4,19 +4,17 @@ Ordinary registration still rejects occupied IDs. No package code is executed,
 no old production package or user save is changed. A journal preserves exact
 text bytes and binds the new package for rollback after an interrupted update.
 """
-from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
 import shutil
-import tempfile
 import time
 
 from .authoring_package import file_hash, file_table, relative, require, sha
-from .contract import canonical_bytes, exact_keys, integer, load_json
+from .contract import exact_keys, integer, load_json
 from . import categories
-from .content_registry import (ROOT, REGISTRY, RUNTIME, atomic_bytes, check_checkout,
-                               export_entry, projection, validate, recovery_projection, recovery_target)
+from .content_registry import (REGISTRY, RUNTIME, atomic_bytes, check_checkout,
+                               validate, recovery_projection, recovery_target)
 
 FORMAT = "picross-content-update-journal-v1"
 JOURNAL_LIMIT = 24 * 1024 * 1024
@@ -46,105 +44,11 @@ def notice_path(entry):
     return "game/" + str(Path(entry["reveal"]).with_suffix(".txt")).replace("\\", "/")
 
 
-def update(export_dir, checkout, expected_definition_sha256, *, apply=False, fail_step=None):
-    from .target_adapter import verify_export, FORMAT as EXPORT_FORMAT, MANUAL_FORMAT, PAIRED_FORMAT
-    root = checkout.resolve()
-    sha(expected_definition_sha256)
-    catalog_bytes = categories.source_bytes(root / categories.PATH)
-    catalog = categories.load(root / categories.PATH)
-    registry = check_checkout(root)
-    m, report = verify_export(export_dir)
-    require(m["format"] in (EXPORT_FORMAT, MANUAL_FORMAT, PAIRED_FORMAT), "Update needs categorized export")
-    require(not m["test_only"] or root != ROOT.resolve(), "Test-only content cannot update the real catalog")
-    e = export_entry(export_dir, m, report, categories.lookup(catalog, m["category_id"]))
-    existing = next((v for v in registry["entries"] if v["id"] == e["id"]), None)
-    require(existing is not None, "Update requires an existing production ID")
-    definition_name = "game/" + existing["definition"]
-    definition_path = path_in(root, definition_name)
-    require(file_hash(definition_path) == expected_definition_sha256, "Stale expected definition hash")
-    require(all(e[k] == existing[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")),
-            "Raster update must retain identity, paths, visibility, category and save slot")
-    require(e["production"]["reveal_sha256"] == existing["production"]["reveal_sha256"],
-            "Raster update must retain the approved reveal bytes")
-    if e == existing:
-        require((root / e["production"]["package"] / "manifest.json").read_bytes() == (export_dir / "manifest.json").read_bytes(),
-                "Different repeated update input")
-        return {"status": "no-op", "registered": True, "id": e["id"], "changes": []}
-    before_definition = load_json(definition_path)
-    require(m["runtime_revision"] > before_definition["revision"], "Update requires a higher runtime revision")
-    package_name = e["production"]["package"]
-    package_path = path_in(root, package_name)
-    require(package_name != existing["production"]["package"] and not package_path.exists(), "Update package revision already exists")
-    notice_name = notice_path(e)
-    path_in(root, notice_name)
-    path_in(root, "game/" + existing["reveal"])
-    for name in (REGISTRY, RUNTIME, LOCK): path_in(root, name)
-    new = deepcopy(registry)
-    new["entries"][new["entries"].index(existing)] = e
-    validate(new, catalog)
-    old_bytes = {name: (root / name).read_bytes() for name in (REGISTRY, RUNTIME, definition_name, notice_name)}
-    new_bytes = {REGISTRY: canonical_bytes(new)+b"\n", RUNTIME: canonical_bytes(projection(new,catalog))+b"\n",
-                 definition_name: (export_dir / m["definition"]).read_bytes(),
-                 notice_name: (export_dir / ("runtime/"+notice_name.removeprefix("game/"))).read_bytes()}
-    require(hashlib.sha256(new_bytes[definition_name]).hexdigest() == m["files"][m["definition"]],
-            "Export definition changed during planning")
-    plan = {"status": "planned-update", "registered": False, "id": e["id"],
-            "expected_definition_sha256": expected_definition_sha256,
-            "previous_runtime_revision": before_definition["revision"], "runtime_revision": m["runtime_revision"],
-            "update_module_sha256": file_hash(Path(__file__)),
-            "changes": [{"path": package_name, "operation": "add"}] +
-                [{"path": name, "operation": "replace" if old_bytes[name] != data else "unchanged"}
-                 for name,data in new_bytes.items()], "before": registry, "after": new,
-            "old_package_retained": existing["production"]["package"], "user_saves_modified": False}
-    require(categories.source_bytes(root / categories.PATH) == catalog_bytes, "Categories changed during update planning")
-    if not apply: return plan
-    with tempfile.TemporaryDirectory(prefix="za1-update-",dir=root/"content") as temp:
-        stage = Path(temp)/"package"
-        shutil.copytree(export_dir,stage)
-        verify_export(stage)
-        files = {n:file_hash(p) for n,p in file_table(stage,time.monotonic()+300).items()}
-        require(files.get("manifest.json") == e["production"]["package_sha256"], "Export changed during update staging")
-        require(all((root/name).read_bytes() == data for name,data in old_bytes.items()) and
-                categories.source_bytes(root/categories.PATH) == catalog_bytes and not package_path.exists(),
-                "Checkout changed during update staging; retry")
-        journal = {"format":FORMAT,"package":package_name,"files":files,"categories":catalog_bytes.decode("utf-8"),
-                   "old":{n:b.decode("utf-8") for n,b in old_bytes.items()},
-                   "new":{n:b.decode("utf-8") for n,b in new_bytes.items()}}
-        raw = canonical_bytes(journal)+b"\n"
-        require(len(raw) <= JOURNAL_LIMIT,"Update journal exceeds resource limit")
-        lock = root/LOCK
-        with lock.open("xb") as stream:
-            stream.write(raw);stream.flush()
-            import os
-            os.fsync(stream.fileno())
-        try:
-            require(all((root/name).read_bytes() == data for name,data in old_bytes.items()) and
-                    categories.source_bytes(root/categories.PATH) == catalog_bytes,
-                    "Checkout changed before update; preserve journal")
-            package_path.mkdir(parents=True)
-            shutil.copytree(stage,package_path,dirs_exist_ok=True)
-            require({n:file_hash(p) for n,p in file_table(package_path,time.monotonic()+300).items()} == files,
-                    "Written update package differs")
-            if fail_step == "crash-package": raise InterruptedError("Injected update crash after package")
-            for name in (definition_name,notice_name,REGISTRY,RUNTIME):
-                require(categories.source_bytes(root/categories.PATH) == catalog_bytes,"Categories changed during update")
-                require((root/name).read_bytes() == old_bytes[name],"Update target changed during publication")
-                atomic_bytes(root/name,new_bytes[name])
-                if fail_step == "crash-"+name: raise InterruptedError("Injected update crash: "+name)
-                if fail_step == name: raise OSError("Injected update failure: "+name)
-            # Internal final binding check; do not re-certify unrelated puzzles.
-            lock.unlink()
-            try:
-                check_checkout(root)
-            except BaseException:
-                lock.write_bytes(raw)
-                raise
-        except InterruptedError:
-            raise
-        except BaseException:
-            recover_update(root)
-            raise
-    return {**plan,"status":"updated","registered":True}
+def update(export_dir, checkout, expected_definition_sha256, *, apply=False, fail_step=None,
+           difficulty=None, rebind_difficulty=False):
+    from .catalog_integration import integrate
+    return integrate(export_dir, checkout, expected_definition_sha256=expected_definition_sha256,
+                     apply=apply, fail_step=fail_step, difficulty=difficulty, rebind_difficulty=rebind_difficulty)
 
 
 def recover_update(checkout):
@@ -157,6 +61,8 @@ def recover_update(checkout):
     catalog = categories.load(root/categories.PATH)
     before = validate(json.loads(j["old"][REGISTRY]),catalog)
     after = validate(json.loads(j["new"][REGISTRY]),catalog)
+    from .content_registry import reject_unbound_ratings
+    reject_unbound_ratings(root, before, after)
     changed = [(a,b) for a,b in zip(before["entries"],after["entries"]) if a != b]
     require(len(before["entries"]) == len(after["entries"]) and len(changed) == 1,"Invalid update registry delta")
     old,new = changed[0]

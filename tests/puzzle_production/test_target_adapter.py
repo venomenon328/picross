@@ -15,7 +15,8 @@ from PIL import Image
 
 from tools.puzzle_production import authoring_package as boundary
 from tools.puzzle_production.authoring_package import open_package
-from tools.puzzle_production.content_registry import registration, check_checkout, projection, validate
+from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.content_registry import check_checkout, projection, validate
 from tools.puzzle_production.contract import InvalidInput, InvalidProof, Aborted, digest, load_json, write_json
 from tools.puzzle_production.images import file_hash
 from tools.puzzle_production.target_adapter import inspect, export, verify_export, validate_reveal

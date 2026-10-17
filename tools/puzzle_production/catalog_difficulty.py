@@ -32,3 +32,19 @@ def project(raw):
                 "Invalid necessary R4 assessment")
     return {**{k: raw[k] for k in ("method", "level", "assessment_type", "confidence")},
             "plausible_range": span.copy(), "r4_required": paired}
+
+
+def validate_projection(value):
+    """Exactly the six-field runtime contract, including the 0.3 point estimate."""
+    from .contract import exact_keys
+    if value is None: return None
+    exact_keys(value, {"method", "level", "assessment_type", "confidence", "plausible_range", "r4_required"})
+    require(type(value["r4_required"]) is bool and value["level"] in LEVELS, "Invalid runtime difficulty")
+    if value["method"] == "picross-difficulty-0.3":
+        require(value["assessment_type"] == "instrumented" and value["confidence"] == "medium" and
+                value["plausible_range"] == [value["level"], value["level"]] and
+                (not value["r4_required"] or value["level"] == "L5"), "Invalid 0.3 projection")
+    else:
+        project({**value, "rule_families": {"R4" if value["r4_required"] else "R0": "typed projection"},
+                 "logical_demand": "linienübergreifend / besonders hoher logischer Anspruch" if value["r4_required"] else None})
+    return value

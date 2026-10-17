@@ -515,6 +515,8 @@ def main(argv=None):
         p.add_argument("--export", type=Path, required=True)
         if cmd != "verify-export":
             p.add_argument("--checkout", type=Path, required=True)
+            p.add_argument("--difficulty", type=Path)
+            p.add_argument("--rebind-difficulty", action="store_true")
         if cmd in ("plan-update", "update"):
             p.add_argument("--expected-definition-sha256", required=True)
     for command in ("recover-registration", "sync-runtime", "check-registry"):
@@ -554,10 +556,12 @@ def main(argv=None):
         elif args.command in ("plan-update", "update"):
             from .content_update import update
             result = update(args.export, args.checkout, args.expected_definition_sha256,
-                            apply=args.command == "update")
+                            apply=args.command == "update", difficulty=args.difficulty,
+                            rebind_difficulty=args.rebind_difficulty)
         else:
             from .content_registry import registration
-            result = registration(args.export, args.checkout, apply=args.command == "register")
+            result = registration(args.export, args.checkout, apply=args.command == "register",
+                                  difficulty=args.difficulty, rebind_difficulty=args.rebind_difficulty)
         print(json.dumps(result, ensure_ascii=True, sort_keys=True))
         return 0
     except (InvalidInput, InvalidProof, Aborted, OSError, ValueError, KeyError, TypeError, StopIteration) as exc:
