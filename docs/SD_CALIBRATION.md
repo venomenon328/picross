@@ -151,9 +151,9 @@ sonst 0:
 2. L∈{3,4}, höchste Linienfamilie mindestens L−1, B≥1/2 und B+z≥3/4.
 
 Endstufe=L+A. Für L=1 und L=5 gilt immer A=0, ebenso für erforderliches R4.
-R2 kann durch Größe keine 5 erhalten. Eine 4/5 benötigt bereits ein starkes
-logisches Profil mit B≥1/2 sowie die entsprechende Technik; Umfang allein
-genügt nicht. An jeder Gleichheit gilt ausdrücklich der inklusive Vergleich
+R2 kann durch Größe keine 5 erhalten. Eine größenbedingte Anhebung auf 4/5
+benötigt bereits ein starkes logisches Profil mit B≥1/2 sowie die entsprechende
+Technik; Umfang allein genügt nicht. An jeder Gleichheit gilt ausdrücklich der inklusive Vergleich
 der Formeln. Es gibt keine kaufmännische Rundung, Interpolation oder Quantile.
 
 ## Parameterentscheidung und Alternativen

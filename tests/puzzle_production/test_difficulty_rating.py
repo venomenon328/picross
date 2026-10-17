@@ -13,7 +13,7 @@ import unittest
 from unittest.mock import patch
 
 from tools.puzzle_production.analysis import analyze
-from tools.puzzle_production.analysis_contract import AnalysisBudget, analysis_input, measurements, result_data
+from tools.puzzle_production.analysis_contract import AnalysisBudget, analysis_input, result_data
 from tools.puzzle_production.analysis_io import analyze_file, check_bundle
 from tools.puzzle_production.analysis_verifier import verify_trace
 from tools.puzzle_production.contract import Budget, InvalidInput, InvalidProof, digest, load_json, validate_logic, write_json
