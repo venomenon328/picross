@@ -11,8 +11,10 @@ Den beauftragten Arbeitsbranch verwenden, sonst den aktuellen `main`; geltende B
 Bei Schwierigkeitsanalyse, Kalibrierung oder Bewertungsmetadaten zusätzlich
 [SD: Rätselschwierigkeit](docs/PUZZLE_DIFFICULTY.md) vollständig lesen.
 SD-A / #236 liefert den getrennten Analysator gemäß
-[technischem Vertrag](docs/SD_ANALYZER.md). SD-B/SD-C und Bestandsbewertung
-bleiben nachgelagert. Der echte Katalog ist weder Testbestand noch
+[technischem Vertrag](docs/SD_ANALYZER.md); zusätzlich den vollständigen
+[SD-B-Methodenvertrag](docs/SD_CALIBRATION.md) lesen. SD-B / #237 bindet
+`picross-difficulty-0.3`; SD-C und Bestandsbewertung bleiben nachgelagert.
+Der echte Katalog ist weder Testbestand noch
 unmittelbare Kalibrierungsgrundlage für die Skalenenden.
 
 Bei Hinweisnavigation, Vollhinweis-Overlay oder Cursor-Linienhervorhebung zusätzlich [HN: Hinweisinteraktion](docs/CLUE_INTERACTION.md) vollständig lesen. HN / #192 ist implementiert; technische Nachweise und die getrennten Abnahmen HN-R01/HN-M01 stehen im Issue/PR.
