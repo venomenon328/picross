@@ -80,11 +80,13 @@ abgebrochen, fehlgeschlagen, unerwartet oder widersprüchlich scheitert.
 Der vollständige Auswahlbericht wird als Datei übertragen. Das Gate berechnet
 die Auswahl aus den gespeicherten Pfaden/Scope/Event erneut, prüft Gründe und
 Flags und vergleicht sie mit den tatsächlichen Scheduleroutputs. Head, Base,
-Checkout, Event, Run und Runversuch müssen zur aktuellen Gateausführung passen.
+Checkout, Event und Run müssen zur aktuellen Gateausführung passen; der
+Auswahlversuch ist zusätzlich als Joboutput gebunden und darf nicht nach dem
+Gateversuch liegen. GitHub darf bei einem Retry erfolgreiche Jobs desselben
+unveränderten Runs beibehalten. Andere Runs oder Quellstände sind ausgeschlossen.
 Doppelte JSON-Schlüssel werden abgewiesen. Der Ergebnisbericht enthält den
 vollständigen Auswahlbericht und jedes tatsächlich gemeldete Jobergebnis.
-Fehlt der Bericht oder seine Bindung, ist dies kein grüner Abschluss. Ein neuer
-Runversuch benötigt den gesamten Lauf einschließlich erneuter Auswahl.
+Fehlt der Bericht oder seine Bindung, ist dies kein grüner Abschluss.
 
 Auswahl/Ergebnis heißen `ci-selection-<head>-<attempt>` und
 `ci-result-<head>-<attempt>`. Browserbelege/Spieler heißen `picross-web-*`,

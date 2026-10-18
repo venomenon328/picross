@@ -32,6 +32,7 @@ jobs:
       perf_b: ${{ steps.scope.outputs.perf_b }}
       web: ${{ steps.scope.outputs.web }}
       delivery: ${{ steps.scope.outputs.delivery }}
+      selection_attempt: ${{ steps.scope.outputs.selection_attempt }}
     steps:
       - name: Checkout tested integration
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -120,7 +121,7 @@ jobs:
       - name: Download complete selection for the result gate
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
-          name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.docs.outputs.selection_attempt }}
           path: ${{ runner.temp }}/ci-selection
       - name: Require every selected job to have actually succeeded
         env:
@@ -136,7 +137,8 @@ jobs:
             {"source_head":"${{ github.event.pull_request.head.sha || github.sha }}",
             "base_commit":"${{ github.event.pull_request.base.sha || github.event.before || github.sha }}",
             "tested_checkout":"${{ github.sha }}", "event":"${{ github.event_name }}",
-            "run_id":"${{ github.run_id }}", "run_attempt":"${{ github.run_attempt }}"}
+            "run_id":"${{ github.run_id }}", "run_attempt":"${{ needs.docs.outputs.selection_attempt }}",
+            "gate_attempt":"${{ github.run_attempt }}"}
         run: >-
           python3 tools/ci_scope.py finish
           --plan-file "${{ runner.temp }}/ci-selection/ci-plan.json"

@@ -297,14 +297,21 @@ def validate_binding(plan: dict, binding: dict, outputs: dict) -> None:
             raise ValueError("Missing or mismatched selection binding: " + key)
     for key in ("source_head", "base_commit", "tested_checkout"):
         validate_sha(binding[key])
+    # GitHub can reuse successful jobs on a failed-job retry within this exact
+    # run. Bind to the producer's attempt, never to an artifact from another run.
+    if (not re.fullmatch(r"[1-9][0-9]*", binding["run_attempt"]) or
+            not re.fullmatch(r"[1-9][0-9]*", binding.get("gate_attempt", "")) or
+            int(binding["run_attempt"]) > int(binding["gate_attempt"])):
+        raise ValueError("Invalid selection/gate attempt ordering")
     if plan.get("comparison") != "exact-base-to-head-trees-no-renames":
         raise ValueError("Invalid comparison contract")
     expected_diff = ("tree-metadata-only; production evidence reviewed before delivery"
                      if plan["content_only"] else "full-whitespace-check")
     if plan.get("diff_check") != expected_diff:
         raise ValueError("Missing or inconsistent diff verification")
-    if set(outputs) != set(FLAGS) or any(
-            outputs[key] != str(plan["selected"][key]).lower() for key in FLAGS):
+    if (set(outputs) != set(FLAGS) | {"selection_attempt"} or
+            outputs["selection_attempt"] != binding["run_attempt"] or any(
+            outputs[key] != str(plan["selected"][key]).lower() for key in FLAGS)):
         raise ValueError("Selection artifact and scheduled job outputs disagree")
 
 
@@ -333,6 +340,7 @@ def main() -> int:
                 for key in FLAGS:
                     stream.write(f"{key}={str(result['selected'][key]).lower()}\n")
                 stream.write(f"content_only={str(result['content_only']).lower()}\n")
+                stream.write(f"selection_attempt={result['run_attempt']}\n")
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     plan = args.plan_file.read_text(encoding="utf-8") if args.plan_file else args.plan
@@ -345,6 +353,7 @@ def main() -> int:
               "selection": plan, "jobs": rows}
     if os.environ.get("GITHUB_REPOSITORY") and plan.get("run_id"):
         report["run_url"] = f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{plan['run_id']}"
+        report["gate_attempt"] = os.environ.get("GITHUB_RUN_ATTEMPT")
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

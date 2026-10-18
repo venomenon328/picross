@@ -242,9 +242,11 @@ an das Ergebnisgate übergeben. Joboutputs enthalten nur die Auswahlflags;
 Umgebungsvariablen enthalten nur die sechs Jobergebnisse, Auswahlflags und
 Quell-/Runbindung. Das Gate prüft die Auswahl erneut gegen die Pfadliste,
 vergleicht die Scheduleroutputs und verlangt dieselbe Head-/Base-/Checkout-/
-Run-/Attempt-/Eventbindung. Doppelte JSON-Schlüssel sind ungültig. Auswahl- und
-Ergebnisartefakte tragen den Runversuch; ein neuer Versuch benötigt deshalb
-einen vollständigen neuen Lauf einschließlich Auswahljob. Große Aufräum-PRs dürfen
+Run-/Eventbindung und die Versuchsbinding des Auswahljobs. Doppelte JSON-Schlüssel
+sind ungültig. Auswahl- und Ergebnisartefakte tragen ihren jeweiligen Runversuch.
+Bei einem Retry darf GitHub erfolgreiche Jobs desselben unveränderten Runs
+beibehalten; der Auswahlversuch darf nicht nach dem Gateversuch liegen.
+Andere Runs oder Quellstände sind nicht wiederverwendbar. Große Aufräum-PRs dürfen
 nicht an Betriebssystemgrenzen für Argumente/Umgebungsvariablen scheitern; die
 Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 

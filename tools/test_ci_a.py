@@ -3,7 +3,6 @@ from copy import deepcopy
 import json
 import os
 from pathlib import Path
-import re
 import subprocess
 import sys
 import tempfile
@@ -136,8 +135,15 @@ class AdversarialGateTests(unittest.TestCase):
                        run_id="123", run_attempt="2", event="pull_request")
         plan.update(binding, comparison="exact-base-to-head-trees-no-renames", diff_check="full-whitespace-check")
         outputs = {key: str(plan["selected"][key]).lower() for key in FLAGS}
+        outputs["selection_attempt"] = "2"
+        binding["gate_attempt"] = "2"
         validate_binding(plan, binding, outputs)
-        for key in binding:
+        binding["gate_attempt"] = "3"
+        validate_binding(plan, binding, outputs)  # same-run successful-job reuse
+        for attempt in ("1", "", "0", "wrong"):
+            with self.assertRaises(ValueError):
+                validate_binding(plan, {**binding, "gate_attempt": attempt}, outputs)
+        for key in set(binding) - {"gate_attempt"}:
             for value in (None, "wrong"):
                 changed = deepcopy(plan); changed[key] = value
                 with self.assertRaises(ValueError): validate_binding(changed, binding, outputs)
@@ -146,6 +152,8 @@ class AdversarialGateTests(unittest.TestCase):
             with self.assertRaises(ValueError): validate_binding(plan, binding, changed)
             changed[key] = "false" if outputs[key] == "true" else "true"
             with self.assertRaises(ValueError): validate_binding(plan, binding, changed)
+        with self.assertRaises(ValueError):
+            validate_binding(plan, binding, {**outputs, "selection_attempt": "1"})
 
 
 def run_blocks(source):
