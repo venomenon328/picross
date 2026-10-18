@@ -22,6 +22,11 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     control(page,text='Abbrechen',dialog=True)
     assert state(page, 'ending')['ending'] and state(page, 'slots')['slots'][2] == completed_slot
     page.reload(); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
+    labels = state(page, 'labels')['labels']
+    assert labels[0]['status'] == labels[0]['status_kind'] == 'Begonnen'
+    assert labels[2]['status'] == labels[2]['status_kind'] == 'Gelöst'
+    assert labels[2]['footer'] and labels[2]['reveal'] and not labels[2]['unknown']
+    page.screenshot(path=str(output/f'{name}-ku-solved-footer.png'))
     control(page,text='Blatt 03')
     assert state(page, 'ending')['ending'] and not state(page, 'ea_active')['ea_active'] and not state(page, 'ea_processing')['ea_processing']
     assert state(page, 'slots')['slots'][2] == completed_slot

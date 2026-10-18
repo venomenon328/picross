@@ -150,7 +150,7 @@ func show_error(id: String, message: String) -> void:
 	feedback.show()
 
 static func progress(item: Session) -> String:
-	if item.completed: return "Fertig"
+	if item.completed: return "Gelöst"
 	if not item.player.history.is_empty() or item.player.cells.count(-1) != item.player.cells.size(): return "Begonnen"
 	return "Neu"
 
@@ -274,10 +274,11 @@ func _layout_cards() -> void:
 	grid.add_theme_constant_override("v_separation", gap)
 	# Reserve the actual scrollbar width even before the first container sort.
 	var available: float = maxf(1, scroll.size.x - scroll.get_v_scroll_bar().get_combined_minimum_size().x - 2*ui_scale)
-	# KE: reserve readable full difficulty plus longest status at UI 100/125%.
-	var capacity: int = maxi(1, floori((available + gap) / (228*ui_scale + gap)))
+	# KU-A: choose columns from the complete measured single-line metadata.
+	var minimum_width: float = choices[0].minimum_card_width(ui_scale) if not choices.is_empty() else 280*ui_scale
+	var capacity: int = maxi(1, floori((available + gap) / (minimum_width + gap)))
 	grid.columns = maxi(1, mini(capacity, choices.size()))
-	var card_width: float = minf(240*ui_scale, floorf((available-(capacity-1)*gap)/capacity))
+	var card_width: float = minf(minimum_width+16*ui_scale, floorf((available-(capacity-1)*gap)/capacity))
 	for node: Node in find_children("*", "Label", true, false):
 		if node.has_meta("base_font"): node.add_theme_font_size_override("font_size", roundi(float(node.get_meta("base_font")) * ui_scale))
 	for node: Node in find_children("*", "Button", true, false):

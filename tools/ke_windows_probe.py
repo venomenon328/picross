@@ -14,7 +14,7 @@ import p1_preflight as tc
 import p1_product as product
 
 
-def main():
+def main(package="KE"):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--head", required=True)
     parser.add_argument("--run", help="Successful CI run; also downloads and starts its actual Windows player")
@@ -39,7 +39,7 @@ def main():
         tc.verify_sha256(args.engine, hashlib.sha256(bundle.read(args.engine.name)).hexdigest())
     phases = []
 
-    with tempfile.TemporaryDirectory(prefix="picross-ke-windows-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="picross-"+package.lower()+"-windows-") as temporary:
         workspace = Path(temporary)
         environment = tc.isolated_environment(workspace, "Windows")
 
@@ -71,10 +71,10 @@ def main():
                  for report in summary["reports"]],
         files=[dict(file=p.relative_to(out).as_posix(), bytes=p.stat().st_size, sha256=tc.sha256_file(p))
                for p in files], player=player,
-        independent_review="OPEN KE-R01", owner_acceptance="OPEN KE-M01")
+        package=package, independent_review="OPEN "+package+"-R01", owner_acceptance="OPEN "+package+"-M01")
     (out/"windows-binding.json").write_text(json.dumps(binding, ensure_ascii=False, indent=2)+"\n",
                                           encoding="utf-8", newline="\n")
-    print("KE_WINDOWS_OK", args.head, "CI player started" if player else "native source only; CI player pending")
+    print(package.replace("-","_")+"_WINDOWS_OK", args.head, "CI player started" if player else "native source only; CI player pending")
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ import zipfile
 
 import p1_preflight as tc
 import p1_product as product
+from native_results import read, validate_payload
 from vs2_windows_probe import extract, direct_start
 
 
@@ -38,27 +39,35 @@ def main():
     product_job = max((j for j in jobs if j["name"] == "product / product"), key=lambda j: j["id"])
     if product_job["conclusion"] != "success":
         raise ValueError("Product run has not succeeded")
+    attempt = str(product_job["run_attempt"])
     artifacts = json.loads(gh("api", f"{repo}/actions/runs/{args.run}/artifacts"))["artifacts"]
     bindings = []
     for kind in ("player", "technical"):
-        meta = next(a for a in artifacts if a["name"] == f"picross-p1-{kind}-{args.head}" and not a["expired"])
+        meta = next(a for a in artifacts if a["name"] == f"picross-p1-{kind}-{args.head}-{attempt}" and not a["expired"])
         archive = out / (kind+"-artifact.zip")
         archive.write_bytes(gh("api", f"{repo}/actions/artifacts/{meta['id']}/zip"))
         if meta["digest"] != "sha256:"+tc.sha256_file(archive): raise ValueError("Artifact digest mismatch")
         extract(archive, out/kind)
         bindings.append({key:meta[key] for key in ("id", "name", "digest", "size_in_bytes")})
+    # CI-C delivers independent groups; verify every original byte and report
+    # before using the export group's Windows player, including attempt binding.
+    native_result = read(out/"technical/native-result.json")
+    identity = native_result["identity"]
+    if (identity["source_commit"] != args.head or identity["source_tree_dirty"]
+            or str(identity["github_run_id"]) != args.run
+            or str(identity["github_run_attempt"]) != attempt):
+        raise ValueError("Unexpected native artifact identity/attempt")
+    verified = validate_payload(native_result, out/"technical", out/"player")
     inner = next((out/"player").glob("*.zip"))
     package = out/"package"
     extract(inner, package)
     report = json.loads((package/"product-report.json").read_text(encoding="utf-8"))
-    technical = json.loads((out/"technical/product-report.json").read_text(encoding="utf-8"))
+    technical = read(out/"technical/export/product-report.json")
     for key in ("source_commit", "source_tree_dirty", "base_commit", "tested_checkout_commit", "github_run_id", "export_files"):
         if report[key] != technical[key]: raise ValueError("Player/technical identity mismatch: "+key)
     if report["source_commit"] != args.head or report["source_tree_dirty"] or str(report["github_run_id"]) != args.run:
         raise ValueError("Unexpected source identity")
     for name, digest in report["export_files"].items(): tc.verify_sha256(package/name, digest)
-    for item in technical["selected_evidence"]["files"]:
-        tc.verify_sha256(out/"technical/selected"/item["file"], item["sha256"])
     asset = tc.EDITORS["Windows"]
     tc.verify_sha256(args.cache_dir/asset.name, asset.sha256)
     with zipfile.ZipFile(args.cache_dir/asset.name) as bundle:
@@ -87,7 +96,7 @@ def main():
     binding = dict(head=args.head, base=report["base_commit"], checkout=report["tested_checkout_commit"], run=args.run,
         platform=platform.platform(), product_job_id=product_job["id"], product_run_attempt=report["github_run_attempt"],
         artifacts=bindings, inner_zip_sha256=tc.sha256_file(inner), export_files=report["export_files"],
-        verified_technical_files=len(technical["selected_evidence"]["files"]), phases=phases, native_window=native_window,
+        verified_technical_files=verified["files"], native_groups=verified["groups"], phases=phases, native_window=native_window,
         native_pck=[json.loads(p.read_text(encoding="utf-8")) for p in sorted(native.glob("*.json"))],
         probe_sha256=tc.sha256_file(script), engine_sha256=tc.sha256_file(args.engine),
         independent_review="OPEN EA-R01", owner_acceptance="OPEN EA-M01")

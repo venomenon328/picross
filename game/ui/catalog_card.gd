@@ -28,7 +28,8 @@ var paper: Ink
 var mode_icon: Ink
 var status_icon: Ink
 var dimensions: Label
-var difficulty: Tip
+var difficulty: Label
+var difficulty_icon: Ink
 var mode_tip: Tip
 var recovery_armed: bool = false
 var recovery_press_position: Vector2 = Vector2.ZERO
@@ -61,8 +62,10 @@ func configure(title: String, meta: String, number: String) -> void:
 	paper.kind = "paper"
 	add_child(paper)
 	dimensions = label("", 14, false)
-	difficulty = Tip.new()
-	add_child(difficulty)
+	difficulty = label("", 14, false)
+	difficulty_icon = Ink.new()
+	difficulty_icon.kind = "difficulty"
+	add_child(difficulty_icon)
 	mode_tip = Tip.new()
 	add_child(mode_tip)
 	mode_icon = Ink.new()
@@ -148,12 +151,24 @@ func set_metadata(width: int, height: int, colored: bool, assessment: Variant) -
 	dimensions.text = "%d × %d" % [width, height]
 	mode_icon.kind = "color" if colored else "mono"
 	mode_tip.tooltip_text = "Farbiges Rätsel" if colored else "Monochromes Rätsel"
-	difficulty.text = Difficulty.label(assessment)
-	difficulty.numbered = assessment != null
-	difficulty.number_accent = Difficulty.accent(assessment)
-	difficulty.add_theme_color_override("font_color",Color.TRANSPARENT if difficulty.numbered else Color("343f42"))
-	difficulty.queue_redraw()
-	difficulty.tooltip_text = Difficulty.explanation(assessment)
+	difficulty.text = "Nicht eingestuft" if assessment == null else Difficulty.LABELS[Difficulty.LEVELS.find(assessment.level)]
+	difficulty_icon.ink_color = Color("85857f") if assessment == null else Difficulty.accent(assessment)
+	difficulty_icon.queue_redraw()
+	mode_icon.queue_redraw()
+
+func metadata_widths(u: float) -> Vector2:
+	var font: Font = dimensions.get_theme_font("font")
+	var pixels: int = roundi(14*u)
+	var longest: float = font.get_string_size("Nicht eingestuft",HORIZONTAL_ALIGNMENT_LEFT,-1,pixels).x
+	for value: String in Difficulty.LABELS:
+		longest = maxf(longest,font.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,pixels).x)
+	return Vector2(ceilf(font.get_string_size("50 × 50",HORIZONTAL_ALIGNMENT_LEFT,-1,pixels).x),ceilf(longest))
+
+func minimum_card_width(u: float) -> float:
+	# Insets, strip padding, two gaps, circle plus gap, and the visible mode
+	# drawing are reserved in addition to the measured, unabridged text.
+	var measured: Vector2 = metadata_widths(u)
+	return ceilf(20*u+14*u+measured.x+measured.y+20*u+20*u+34*u)
 
 func layout_content() -> void:
 	if caption == null: return
@@ -161,10 +176,8 @@ func layout_content() -> void:
 	var inset: float = roundf(10*u)
 	var gap: float = roundf(8*u)
 	var hit: float = roundf(44*u)
-	for control: Label in [caption, detail, leaf, note, dimensions]:
+	for control: Label in [caption, detail, leaf, note, dimensions, difficulty]:
 		control.add_theme_font_size_override("font_size", roundi(float(control.get_meta("base_font"))*u))
-	difficulty.add_theme_font_size_override("font_size",roundi(14*u))
-	difficulty.ui_scale = u
 	mode_tip.ui_scale = u
 	var title_height: float = ceilf(caption.get_theme_font("font").get_height(roundi(20*u))*2)+caption.get_theme_constant("line_spacing")
 	var meta_height: float = ceilf(detail.get_theme_font("font").get_height(roundi(14*u))*2)+detail.get_theme_constant("line_spacing")
@@ -201,32 +214,37 @@ func layout_content() -> void:
 		repair.ui_scale = u
 		repair.add_theme_font_size_override("font_size", roundi(14*u))
 		repair.custom_minimum_size = Vector2(0, hit)
-	# Fixed two-column label; widest German metadata fits at 228px/UI125.
-	var row_height: float = maxf(roundf(28*u),ceilf(difficulty.get_theme_font("font").get_height(roundi(14*u))))
-	label_area = Rect2(Vector2(inset,image_area.end.y+gap),Vector2(width,2*row_height+12*u))
+	# One passive strip, with identical reservations for every card and state.
+	var row_height: float = maxf(36*u,ceilf(difficulty.get_theme_font("font").get_height(roundi(14*u))))
+	label_area = Rect2(Vector2(inset,image_area.end.y+gap),Vector2(width,row_height+10*u))
 	paper.position = label_area.position
 	paper.size = label_area.size
-	var left: float = roundf(105*u)
+	var measured: Vector2 = metadata_widths(u)
 	var origin: Vector2 = label_area.position+Vector2(7,5)*u
 	dimensions.position = origin
-	dimensions.size = Vector2(left,row_height)
-	difficulty.position = origin+Vector2(0,row_height)
-	difficulty.size = Vector2(left,row_height)
-	mode_tip.position = origin+Vector2(left,0)
-	mode_tip.size = Vector2(width-left-14*u,row_height)
+	dimensions.size = Vector2(measured.x,row_height)
+	difficulty_icon.position = origin+Vector2(measured.x+10*u,0)
+	difficulty_icon.size = Vector2(14*u,row_height)
+	difficulty.position = difficulty_icon.position+Vector2(20*u,0)
+	difficulty.size = Vector2(measured.y,row_height)
+	mode_tip.position = Vector2(label_area.end.x-41*u,origin.y)
+	mode_tip.size = Vector2(34*u,row_height)
 	mode_icon.size = mode_tip.size
-	status_icon.position = origin+Vector2(left,row_height)
-	status_icon.size = Vector2(16*u,row_height)
-	note.position = status_icon.position+Vector2(18*u,0)
-	note.size = Vector2(width-left-32*u,row_height)
 	for control: Label in [dimensions,difficulty,note]: control.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	for drawing: Ink in [paper,mode_icon,status_icon,unknown]:
+	for drawing: Ink in [paper,mode_icon,status_icon,unknown,difficulty_icon]:
 		drawing.ui_scale = u
 		drawing.queue_redraw()
 	var bottom: float = label_area.end.y+gap
 	var leaf_width: float = ceilf(leaf.get_theme_font("font").get_string_size(leaf.text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(15*u)).x)
 	leaf.position = Vector2(inset,bottom)
 	leaf.size = Vector2(leaf_width,footer_height)
+	var status_width: float = 0
+	for value: String in ["Neu","Begonnen","Gelöst","Ungültig"]:
+		status_width = maxf(status_width,ceilf(note.get_theme_font("font").get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(14*u)).x))
+	note.position = Vector2(size.x-inset-status_width,bottom)
+	note.size = Vector2(status_width,footer_height)
+	status_icon.position = note.position-Vector2(20*u,0)
+	status_icon.size = Vector2(16*u,footer_height)
 	custom_minimum_size.y = bottom+footer_height+inset
 	preview.queue_redraw()
 	picture.queue_redraw()

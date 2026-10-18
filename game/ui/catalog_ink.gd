@@ -6,6 +6,7 @@ var kind: String = "unknown"
 var ui_scale: float = 1.0
 var pencils: Array[Node2D] = []
 var pencil_index: int = 0
+var ink_color: Color = Color("85857f")
 
 class Pencil extends Node2D:
 	const SHAPE = [Vector2(-3,-11),Vector2(2.5,-10.5),Vector2(3,8),Vector2(0,14),Vector2(-3.5,8),Vector2(-3,-11)]
@@ -57,16 +58,15 @@ func _draw() -> void:
 			for line: Dictionary in Scribble.outline_strokes(Rect2(Vector2.ONE*u,size-Vector2(3,4)*u),"catalog-label",0.7*u):
 				Scribble.paint(self,line,Color("a49478"))
 		"mono":
-			pencil(center+Vector2(-5,-1)*u,0.45,Color("46504c"),0.85*u)
-			draw_polyline(PackedVector2Array([center+Vector2(4,8)*u,center+Vector2(12,7)*u,center+Vector2(5,10)*u,center+Vector2(12,9)*u]),GRAPHITE,1.6*u,true)
+			mode_pencils(center, false)
 		"color":
-			pencil(center+Vector2(-7,-2)*u,0.45,Color("ac6250"),0.85*u)
-			pencil(center+Vector2(0,-3)*u,0.05,Color("627f91"),0.85*u)
-			pencil(center+Vector2(7,-1)*u,-0.4,Color("c2a451"),0.85*u)
+			mode_pencils(center, true)
+		"difficulty":
+			draw_circle(center,6*u,ink_color,true,-1,true)
 		"Neu":
 			draw_arc(center,5*u,0.3,TAU-0.15,19,GRAPHITE,1.3*u,true)
 		"Begonnen": pencil(center,0.5,Color("9b773b"),0.55*u)
-		"Fertig":
+		"Gelöst":
 			draw_polyline(PackedVector2Array([center+Vector2(-6,0)*u,center+Vector2(-2,5)*u,center+Vector2(1,1)*u,center+Vector2(7,-6)*u]),Color("557250"),2*u,true)
 		"Ungültig":
 			draw_line(center-Vector2(0,6)*u,center+Vector2(0,2)*u,Color("925348"),2*u,true)
@@ -86,3 +86,16 @@ func _draw() -> void:
 			draw_polyline(dot,GRAPHITE,1.2,true)
 			draw_line(Vector2(15,52),Vector2(20,49),Color("8e8574"),0.8,true)
 			draw_set_transform(Vector2.ZERO)
+
+func mode_pencils(center: Vector2, colored: bool) -> void:
+	var offsets: Array = [Vector2(-6,-1),Vector2(0,-2),Vector2(6,0)] if colored else [Vector2.ZERO]
+	var angles: Array = [0.45,0.05,-0.4] if colored else [0.45]
+	var colors: Array = [Color("ac6250"),Color("627f91"),Color("c2a451")] if colored else [Color("46504c")]
+	var bounds := Rect2(offsets[0]+Pencil.SHAPE[0].rotated(angles[0]),Vector2.ZERO)
+	for index: int in range(offsets.size()):
+		for point: Vector2 in Pencil.SHAPE:
+			bounds = bounds.expand(offsets[index]+point.rotated(angles[index]))
+	# Centre the actual transformed drawing, including the tip, not its origin.
+	var factor: float = 30.0/maxf(bounds.size.x,bounds.size.y)*ui_scale
+	for index: int in range(offsets.size()):
+		pencil(center+(offsets[index]-bounds.get_center())*factor,angles[index],colors[index],factor)

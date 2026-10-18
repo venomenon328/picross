@@ -1,6 +1,8 @@
 # Produktdefinition: picross
 
-**KU / #244, am 18.10.2026 als Spezifikation freigegeben; noch nicht implementiert:**
+**KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
+[aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
+Die Spezifikation wurde am 18.10.2026 freigegeben:
 [Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt in KU-A die bisherige
 zweizeilige Infobox durch einen gemeinsamen Papierstreifen: Größe links,
 gefüllter farbiger Kreis mit vollständigem Schwierigkeitsnamen in der Mitte,

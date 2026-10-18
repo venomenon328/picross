@@ -1,13 +1,14 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
-Stand: 18.10.2026 · Spezifikation 2.0 · KU als Sollstand freigegeben, noch nicht implementiert
+Stand: 18.10.2026 · Spezifikation 2.0 · KU-A im Implementierungspaket umgesetzt; KU-B offen
 
 Der Eigentümer hat die Katalogüberarbeitung am 18.10.2026 als Spezifikation
 freigegeben. [Gesamtissue #244](https://github.com/venomenon328/picross/issues/244)
 führt KU-A (Karten und Papierstreifen) und KU-B (Sortierung und Hinzugefügt-Metadaten),
 ihre Akzeptanz und getrennten technischen, Review- und Eigentümergates.
-Der Auftrag umfasst Spezifikation und Dokumentation; er startet keine
-Implementierung und erteilt keine Mergefreigabe.
+Die spätere KU-A-Implementierung folgt dem gesonderten Auftrag auf
+`feat/244-kataloggestaltung`. [Aktuelle Nachweise](KU_VERIFICATION.md) trennen
+technische Lieferung, unabhängigen Review und Eigentümerabnahme. Kein Mergeauftrag.
 
 ## Geltung und gezielte Ablösung
 
@@ -21,8 +22,8 @@ KU-B ergänzt die bisher fehlende Sortierung gemäß
 [Katalogsortierung](CATALOG_SORTING.md).
 
 Die Abschnittskennungen KE-D01–D06 bleiben als Verweisziele erhalten und führen
-nachfolgend den fortgeschriebenen Sollvertrag. Bis zur Umsetzung beschreibt die
-KE-Lieferung den tatsächlichen Spielerstand. Historische KE-/KK-/KB-/EA-Nachweise
+nachfolgend den fortgeschriebenen Vertrag. Die KU-A-Implementierung setzt die
+Kartenänderungen um; die Sortierung bleibt KU-B. Historische KE-/KK-/KB-/EA-Nachweise
 und damalige Abnahmeentscheidungen werden weder geändert noch erneut geöffnet.
 Gleiche Karten, Reservierung von Titel/Reset, Fehler-/Recoveryzugriff,
 Spoilergrenze, Öffnen über die Karte und lokale Revealglättung bleiben verbindlich.
