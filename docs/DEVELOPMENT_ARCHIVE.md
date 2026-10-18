@@ -26,7 +26,11 @@ dauerhaften Daten um kompakte aktive Bewertungen, Eingangsbindungen und den
 gebundenen Methoden-/Referenzstand außerhalb versiegelter Produktionsoriginale.
 Manuelle Neubewertung nutzt erhaltene Runtime-Logikeingänge; sie benötigt keine
 Wiederherstellung von Quellen, Proofs oder ZIPs und begründet keine allgemeine
-Produktions-Replaypflicht. Die neue Ablage ist noch nicht implementiert.
+Produktions-Replaypflicht. SD-C1 hat die Ablage mit PR #242 nach qualifiziertem
+R2 integriert. Die [SD-C2-Übernahme](SD_CATALOG.md) hat nach bestandenem
+Vor-Übernahme-Review 26 aktive Bestands-Sidecars und zwei kompakte Dauerberichte
+angelegt. Die Originalarbeitsbundles bleiben bis zur Reviewfortsetzung außerhalb
+des Repositorys erhalten; finales Datenreview und Merge bleiben offen.
 Referenzen werden unabhängig synthetisch kuratiert; reale Katalogrätsel oder
 deren Kopien werden weder Kalibrierungskorpus noch automatischer Testbestand.
 

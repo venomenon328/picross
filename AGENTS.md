@@ -15,7 +15,10 @@ SD-A / #236 liefert den getrennten Analysator gemäß
 [SD-B-Methodenvertrag](docs/SD_CALIBRATION.md) lesen. SD-B / #237 bindet
 `picross-difficulty-0.3`; für Katalog-/Integrationsarbeit zusätzlich
 [SD-C1-Daten-/Recoveryvertrag](docs/SD_CATALOG.md) vollständig lesen.
-SD-C2/Bestandsbewertung bleiben nachgelagert.
+SD-C1 ist nach qualifiziertem R2 mit PR #242 integriert. SD-C2 hat nach bestandenem
+Vor-Übernahme-Review gemäß #238/SD-C2-F01 die 26 Bewertungen kontrolliert übernommen;
+der identische zweite `adopt` war ein echter No-op. Separates qualifiziertes finales
+SD-C-R01/C2-Datenreview und Merge bleiben offen; PR #243 bleibt Draft.
 Der echte Katalog ist weder Testbestand noch
 unmittelbare Kalibrierungsgrundlage für die Skalenenden.
 
