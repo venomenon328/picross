@@ -298,6 +298,7 @@ class Execution(unittest.TestCase):
                     return original['builds']['builds'][path.name]['manifest']
                 with patch.dict(os.environ,{'GITHUB_RUN_ATTEMPT':'1'}), \
                      patch('web_tests.run_groups.validate',side_effect=build), \
+                     patch('web_tests.run_groups.platform.platform',return_value='synthetic runner'), \
                      patch('web_tests.run_groups.subprocess.run',side_effect=process):
                     with self.assertRaisesRegex(ValueError,'regular'): run(args,plan)
                 self.assertEqual(len(calls),2)
