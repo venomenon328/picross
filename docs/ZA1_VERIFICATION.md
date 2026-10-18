@@ -121,8 +121,9 @@ Vor Integration der am 18.10.2026 freigegebenen Pakete bleiben die ausführbaren
 Auswahlpflichten bestehen. [CI-A (#247)](https://github.com/venomenon328/picross/issues/247)
 trennt eng geprüfte reine Facharbeit von Runtime-/Adapter-/Exportwirkung sowie
 Browser von SSH; pauschale Verzeichnisnamen begründen keine Adapterausnahme.
-Erst [CI-C (#249)](https://github.com/venomenon328/picross/issues/249) liefert die
-eigenständige native Adapter-/Pilotgruppe. Gemeinsame Abhängigkeiten wählen mehrere
+[CI-C (#249)](CI_C_NATIVE_GROUPS.md) liefert die eigenständige native
+Adapter-/Pilotgruppe `--groups adapters` einschließlich der zuvor erspielten
+Pilotcaptures und des eigenen ZA-1-Exports/PCK-Audits. Gemeinsame Abhängigkeiten wählen mehrere
 oder alle aktuellen Bereiche einschließlich erforderlichem Preflight.
 
 Die aktiven synthetischen Adapter-, Neustart-, Slotisolations-, Pixel- und
