@@ -23,6 +23,7 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
     elif mode == "invalid":
         registry["entries"][0]["category_id"] = "missing-test-only-category"
     elif mode == "large":
+        registry['format'] = 'picross-runtime-registry-v4'
         source = json.loads((project / "data/fixtures/t01.json").read_text(encoding="utf-8"))
         old_save = json.loads((project / "tests/fixtures/runtime/t01.json").read_text(encoding="utf-8"))
         registry["entries"] = []
@@ -34,7 +35,9 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
             write_json(project / f"data/{stem}.json", data)
             shutil.copyfile(project / "art/fixtures/t01.svg", project / f"art/{stem}.svg")
             registry["entries"].append(dict(id=identifier, key=stem, save_slot=stem, definition=f"data/{stem}.json",
-                reveal=f"art/{stem}.svg", visible=True, difficulty=None, category_id="gebaeude-bauwerke" if index < 250 else "voegel"))
+                reveal=f"art/{stem}.svg", visible=True, difficulty=None,
+                added_at=None if index % 5 == 0 else f"2024-01-{index % 28 + 1:02d}T00:00:00Z",
+                category_id="gebaeude-bauwerke" if index < 250 else "voegel"))
             if index % 2 == 0:
                 saved = deepcopy(old_save)
                 cells = [n if n > 0 else -1 for row in data["solution"] for n in row]

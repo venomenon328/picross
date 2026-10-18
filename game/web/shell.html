@@ -48,7 +48,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) flush
 window.addEventListener('pagehide', flush);
 window.addEventListener('beforeunload', event => {
   flush();
-  if (window.picrossStorage.pending || window.picrossStorage.error) { event.preventDefault(); event.returnValue = ''; }
+  if (window.picrossStorage.pending || window.picrossStorage.error || window.picrossStorage.preferencePending || window.picrossStorage.preferenceError) { event.preventDefault(); event.returnValue = ''; }
 });
 async function withUserFsLock(task) {
   // A reloading Firefox document may release its lock after the next document

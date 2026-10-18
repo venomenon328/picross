@@ -1,6 +1,6 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
-Stand: 18.10.2026 · Spezifikation 1.0 · freigegebener Sollstand, nicht implementiert
+Stand: 18.10.2026 · Spezifikation 1.1 · KU-B im Implementierungspaket; Abnahmen separat
 
 Der Eigentümer hat die Katalogüberarbeitung als Spezifikation freigegeben.
 [KU / #244](https://github.com/venomenon328/picross/issues/244) führt
@@ -8,15 +8,18 @@ KU-A für die [Kartengestaltung](CATALOG_PRESENTATION.md) und KU-B für die hier
 beschriebene vollständige Sortierfunktion einschließlich Daten und Persistenz.
 Empfohlene Reihenfolge ist KU-A, danach KU-B; beide liefern jeweils ein selbständig
 abnehmbares Ergebnis in einem eigenen späteren Implementierungs-PR.
-Diese Spezifikation ist keine Implementierungsfreigabe, Startprüfung oder Abnahme.
+Die gesondert beauftragte Implementierung läuft auf `feat/244-katalogsortierung`.
+[Prüfzuordnung und offene Gates](KU_B_VERIFICATION.md) bleiben separat.
 
 ## Geltung und Ausgangsstand
 
-Geprüfte Ausgangsbasis ist `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a`.
-Der aktuelle Katalog übernimmt die kanonische Registryreihenfolge und bildet
+Historische Spezifikationsbasis ist `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a`.
+Die Implementierung basiert auf `main@04b77dc6c6487890e0de5a5711ed5e496ee0d4af`.
+Der damalige Katalog übernahm die kanonische Registryreihenfolge und bildete
 anschließend Seiten mit höchstens 24 Karten. Kategorie, Seite, Scrollposition
 und Auswahl sind nach [KAT-2](KAT2_VERIFICATION.md) sitzungsgebunden.
-Inhaltsregistry und Runtime führen derzeit kein Hinzugefügt-Datum.
+Der damalige Stand führte kein Hinzugefügt-Datum; KU-B ergänzt die unten
+festgelegten Sidecars und Runtime-v4.
 
 KU-B ergänzt gezielt diesen Ansichtsvertrag, eine eng begrenzte UI-Präferenz
 und eine versionierte Katalogmetadatenquelle. [Kategorien](CATEGORIES.md),
@@ -359,3 +362,23 @@ Filter, Sortierkriterium und Richtung ändern Seite/Scroll nur bei tatsächliche
 sortiert; nur der Primärschlüssel folgt der Richtung, Gleichstände stets der
 kanonischen Blattreihenfolge. Unbekannte Schwierigkeit/Zeit stehen immer hinten.
 Rückkehr, Skalierung und Resize erhalten Sitzungsauswahl, Seite, Scroll und ID.
+
+### Exakte Planzeilen und Folgepläne
+
+Eine Planzeile hat exakt `id,old,old_record,proposed,kind,reference_time,commit,evidence,reason`.
+`old_record` bewahrt die ursprünglichen kanonischen UTF-8-Bytes als String oder null;
+sein Hash muss zur Quellbindung passen. Bereits vorhandene Records bleiben
+bytegleich erhalten, einschließlich unbekannter Werte. Bei solchen Zeilen ist
+`evidence` null und die übrige Herkunft unverändert. Ein Folgeplan kann so neue
+fehlende IDs erfassen, ohne bestehende Datierungen neu zu erfinden.
+
+Ein Beleg hat exakt `key,kind,commit,path,content,sha256,reference_time,integration`.
+`checkout-runtime` hält die ursprüngliche Runtime für die No-op-Gegenprüfung.
+Gitbelege binden Registrybytes, Kategorien, Runtime, Produktionshashes und
+Integration über `kind,base_commit,merge_commit,pull_request,categories,runtime,bindings`.
+Der PR-Beleg enthält die gelesenen `number,url,state,mergedAt,mergeCommit,headRefOid,commits`;
+Merge-SHA und ausgewählter Commit müssen diesem gebundenen PR zugeordnet sein.
+Direkte Belege enthalten exakt `id,event,success,registered_at` mit
+`event=first-playable-registration` und `success=true`. Widersprüchliche direkte
+Zeitbelege ergeben begründetes unbekannt, keinen stillen Rückfall auf Git.
+Alle Ebenen werden vor Übernahme strukturell und gegen die Quellen geprüft.

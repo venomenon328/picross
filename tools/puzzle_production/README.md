@@ -799,3 +799,25 @@ ihre Eingangsbindungen und der gebundene Methoden-/Referenzstand außerhalb
 versiegelter Produktion erhalten. Neue Bewertung nutzt dann Runtime-Logikeingänge
 nach SD-D09/D10; sie verlangt keinen allgemeinen Produktions-Replay und keine
 Wiederherstellung bereinigter Produktionspakete.
+
+## KU-B: Hinzugefügt-Metadaten
+
+`catalog_added` validiert ID-gebundene Sidecars und dauerhafte Quellenbelege;
+Registryprojektion, Registrierung, Update, Sync, Bewertungsadoption und Recovery
+verwenden denselben Transaktionsweg. Neue Runtime ist v4; alte exakte v2/v3 bleiben
+lesbar. Der separate historische Nachtrag läuft ausdrücklich und ohne Analyse:
+
+```powershell
+python -m tools.puzzle_production.catalog_added_history plan --root . --run <run> --base <vollstaendiger-main-SHA> --repository venomenon328/picross --output <plan.json>
+python -m tools.puzzle_production.catalog_added_history adopt --root . --plan <plan.json>
+python -m tools.puzzle_production.catalog_added_history adopt --root . --plan <plan.json> --apply
+```
+
+Nur `plan` liest Git und optional eindeutig gebundene gemergte PR-Vorgeschichten.
+Direkte bereits geprüfte Erstregistrierungsbelege können mit `--direct-evidence`
+als JSON-Liste übergeben werden. `adopt` ohne `--apply` bleibt lesend; beide Wege
+prüfen vollständige Quellbindungen. Eine identische Übernahme ist ein echter
+Byte-/mtime-No-op. Bestehende Metadaten bleiben bei Folgeplänen erhalten, neue IDs
+oder geänderte Quellen verlangen einen neuen Plan. Fremde Bytes blockieren
+Recovery vor Mutation. Details: [KU-B-Vertrag](../../docs/CATALOG_SORTING.md),
+[Bestandsplan](../../docs/KU_B_BACKFILL.md).

@@ -2,8 +2,25 @@
 import json
 import shutil
 import tempfile
-from browser_actions import open_page, control, wait, draw, state, saved
+from browser_actions import open_page, control, wait, draw, state, saved, point, click
 from browser_runtime import options
+
+def choose_sort(page, index):
+    control(page, name='catalog-sort')
+    wait(page, 'picrossProbe.sort.menu.visible')
+    menu = state(page, 'sort')['sort']['menu']
+    x, y = menu['position']
+    height = menu['size'][1]
+    target = [x + menu['size'][0]/2, y + 4 + (index + .5)*(height-8)/4]
+    page.mouse.move(*point(page, target), steps=5)
+    wait(page, f'picrossProbe.sort.menu.focused === {index}')
+    click(page, point(page, target))
+    criterion = ('category', 'size', 'difficulty', 'added')[index]
+    wait(page, f"picrossProbe.sort.criterion === '{criterion}'")
+
+
+def preference_saved(page):
+    wait(page, '!picrossStorage.preferencePending && !picrossStorage.preferenceError')
 
 
 def exercise(pw, name, root, update, url, output, evidence, session):
@@ -31,6 +48,12 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     page, errors = open_page(context, url, before_start=handoff)
     owner.close()
     passed('delayed exclusive lock handoff waits before IndexedDB hydration')
+    choose_sort(page, 1)
+    control(page, name='catalog-direction')
+    wait(page, "picrossProbe.sort.direction === 'desc'")
+    preference_saved(page)
+    preference = state(page, 'sort')['sort']
+    pref_bytes = page.evaluate("picrossStorage.fs.readFile(picrossProbe.sort.path,{encoding:'utf8'})")
     control(page, text='Blatt 01')
     wait(page, 'picrossProbe.work')
     draw(page, (2,2), (8,2), retract=(5,2))
@@ -52,6 +75,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     page.bring_to_front()
     passed('second writer blocked')
     page.reload(); wait(page, 'window.picrossProbe && picrossProbe.album'); saved(page)
+    assert state(page, 'sort')['sort']['criterion'] == 'size' and state(page, 'sort')['sort']['direction'] == 'desc'
     # The rejected request must be gone, not start later when the owner reloads.
     assert not second.evaluate('picrossStorage.ready || !!picrossStorage.engine')
     assert second.evaluate('testIdbOpens===0')
@@ -63,6 +87,8 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     assert not errors, errors
     context.close()
     context = session.launch(1.25); page, errors = open_page(context, url)
+    assert state(page, 'sort')['sort']['criterion'] == 'size' and state(page, 'sort')['sort']['direction'] == 'desc'
+    assert page.evaluate("picrossStorage.fs.readFile(picrossProbe.sort.path,{encoding:'utf8'})") == pref_bytes
     assert page.evaluate('devicePixelRatio') == 1.25
     control(page, text='Blatt 01')
     for key in expected: assert state(page, key)[key] == expected[key], key
@@ -77,6 +103,21 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     shutil.copyfile(update/'index.html',root/'next.html')
     (root/'next.html').replace(root/'index.html')
     page.reload(); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
+    assert state(page, 'sort')['sort']['criterion'] == 'size' and state(page, 'sort')['sort']['direction'] == 'desc'
+    # Preference failure has its own channel; no puzzle-save acknowledgement.
+    page.evaluate('''() => { window.originalPreferenceTransaction = IDBDatabase.prototype.transaction;
+      IDBDatabase.prototype.transaction = function(...args) { if(args[1]==='readwrite') throw new DOMException('preference quota','QuotaExceededError'); return originalPreferenceTransaction.apply(this,args); }; }''')
+    choose_sort(page, 3)
+    wait(page, '!!picrossStorage.preferenceError')
+    assert not page.evaluate('!!picrossStorage.error')
+    page.screenshot(path=str(output/f'{name}-ku-b-preference-error.png'))
+    page.evaluate('() => { IDBDatabase.prototype.transaction = window.originalPreferenceTransaction; }')
+    control(page, text='Erneut versuchen'); preference_saved(page)
+    choose_sort(page, 0); choose_sort(page, 2); choose_sort(page, 1)
+    control(page, name='catalog-direction'); preference_saved(page)
+    page.reload(); wait(page,'window.picrossProbe && picrossProbe.album')
+    assert state(page, 'sort')['sort']['criterion'] == 'size' and state(page, 'sort')['sort']['direction'] == 'desc'
+    passed('KU-B preference reload, process restart, compatible export, isolated failure and latest-change retry')
     assert page.locator('body').get_attribute('data-build') == json.loads((update/'build-manifest.json').read_text())['build_id']
     control(page,text='Blatt 01')
     assert state(page, 'root')['root'] == identity

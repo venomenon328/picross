@@ -65,8 +65,8 @@ class DifficultyTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]/"tests/puzzle_production/fixtures/catalog"
         registry, catalog = load_json(root/"validation.json"), load_json(root/"categories.json")
         runtime = projection(registry, catalog)
-        self.assertEqual(runtime["format"], "picross-runtime-registry-v3")
-        self.assertTrue(all(len(e) == 8 and e["difficulty"] is None for e in runtime["entries"]))
+        self.assertEqual(runtime["format"], "picross-runtime-registry-v4")
+        self.assertTrue(all(len(e) == 9 and e["difficulty"] is None and e["added_at"] is None for e in runtime["entries"]))
         registry["entries"][0]["production"]["difficulty"] = assessment()
         validate(registry, catalog)
         self.assertEqual(projection(registry, catalog)["entries"][0]["difficulty"]["level"], "L3")

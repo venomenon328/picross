@@ -128,8 +128,8 @@ class Selection(unittest.TestCase):
             with self.assertRaises(ValueError): evaluate(plan,results)
 
     def test_every_existing_assertion_belongs_to_one_group(self):
-        self.assertEqual(len(expected('chromium', GROUPS)),25)
-        self.assertEqual(len(expected('firefox', GROUPS)),24)
+        self.assertEqual(len(expected('chromium', GROUPS)),27)
+        self.assertEqual(len(expected('firefox', GROUPS)),26)
         labels=[]
         for group in GROUPS[1:]:
             source=(ROOT/f'tools/web_tests/group_{group}.py').read_text(encoding='utf-8')
@@ -153,7 +153,7 @@ class EvidenceGate(unittest.TestCase):
 
     def test_full_coverage_and_same_run_retry(self):
         rows=validate_all(self.plan,self.root,self.outputs,'2')
-        self.assertEqual([r['scenarios'] for r in rows],[25,24])
+        self.assertEqual([r['scenarios'] for r in rows],[27,26])
         for key in self.outputs:
             outputs=dict(self.outputs);outputs[key]='2'
             with self.assertRaises(ValueError): validate_all(self.plan,self.root,outputs,'2')

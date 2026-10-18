@@ -18,7 +18,7 @@ static func run(t: SceneTree) -> void:
 	var app: Main = load("res://main.tscn").instantiate()
 	t.root.add_child(app)
 	await t.process_frame
-	click(t,app.choices[1])
+	click(t,app.choices[app.album.visible_ids.find("T-02")])
 	await t.process_frame
 	t.check(app.work.visible and app.session == app.sessions[1],"Z2-A01 album opens regular T-02")
 	t.check(app.theme.default_font.get_font_name() == "IBM Plex Sans" and app.TITLE_FONT.get_font_name() == "Fraunces","Z2-A01 bundled font families")
