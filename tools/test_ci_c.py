@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 from ci_scope import classify, apply_event_policy, evaluate, JOBS
 from native_contract import GROUPS, SCOPES, checks, coverage
-from native_results import bind_files, read, validate_all, validate_payload
+from native_results import bind_files, read, digest, validate_all, validate_payload
 from p1_product import parse_args
 from native_runner import requested
 
@@ -97,6 +97,12 @@ class NativeGate(unittest.TestCase):
         for name in checks('core'):
             report['checks'].append(dict(name=name,status='success',seconds=.1,
                 exit_code=23 if name=='expected-failure' else 0,expected_failure=name=='expected-failure'))
+            if name not in ('current-resource-hashes','verified-toolchain-assets','current-atlas-resources'):
+                log=self.root/'core/logs'/(name+'.log');log.parent.mkdir(parents=True,exist_ok=True)
+                log.write_bytes(b'synthetic process output')
+                report['checks'][-1]['log']=dict(file=log.name,retained_bytes=24,original_bytes=24,abbreviated=False,sha256=digest(log))
+        report['isolation']=dict(workspace='/tmp/core',project='/tmp/core/game',output='/tmp/output/core',
+            profiles={k:'/tmp/core/'+k for k in ('XDG_DATA_HOME','XDG_CONFIG_HOME','XDG_CACHE_HOME')})
         write(self.root/'core/product-report.json',report)
         self.result=dict(format='picross-native-result-v1',status='success',identity=identity,host='Linux',
                          groups=['core'],expected=coverage(['core']),selection_attempt='1',
@@ -168,8 +174,70 @@ class NativeGate(unittest.TestCase):
         self.assertEqual(run.returncode,1,run.stderr)
         self.assertIn('native_error',read(output))
 
+    def test_required_file_cannot_be_removed_from_both_manifest_and_payload(self):
+        # History's mandatory summary is a fixed technical name. Forging the
+        # producer's self-declared file list must not make it optional.
+        (self.root/'core').rename(self.root/'history')
+        report=read(self.root/'history/product-report.json')
+        report['native_group']='history'
+        report['checks']=[]
+        for name in checks('history'):
+            row=dict(name=name,status='success',seconds=.1,exit_code=0)
+            if name not in ('current-resource-hashes','verified-toolchain-assets','current-atlas-resources'):
+                log=self.root/'history/logs'/(name+'.log');log.write_bytes(b'synthetic process output')
+                row['log']=dict(file=log.name,retained_bytes=24,original_bytes=24,abbreviated=False,sha256=digest(log))
+            report['checks'].append(row)
+        for name,scope in report['scope'].items():
+            scope.update(enabled=name=='integration',status='success' if name=='integration' else 'not_applicable')
+        selected=self.root/'history/selected'
+        write(selected/'integration/summary.json',dict(synthetic=True))
+        report['selected_evidence']['files']=bind_files(selected)
+        write(self.root/'history/product-report.json',report)
+        self.result.update(groups=['history'],expected=coverage(['history']),
+                           results=[dict(group='history',status='success',exit_code=0)])
+        self.result['files']=bind_files(self.root,exclude={'native-result.json'})
+        validate_payload(self.result,self.root)
+        (selected/'integration/summary.json').unlink()
+        report['selected_evidence']['files']=[]
+        write(self.root/'history/product-report.json',report)
+        self.result['files']=bind_files(self.root,exclude={'native-result.json'})
+        with self.assertRaisesRegex(ValueError,'mandatory files'):
+            validate_payload(self.result,self.root)
+
+    def test_real_finish_accepts_native_bytes_and_rejects_wrong_producer(self):
+        from ci_scope import FLAGS
+        plan=deepcopy(self.plan)
+        plan.update(comparison='exact-base-to-head-trees-no-renames',diff_check='full-whitespace-check')
+        with tempfile.TemporaryDirectory() as temp:
+            outside=Path(temp);plan_file=outside/'plan.json';write(plan_file,plan)
+            output=outside/'result.json'
+            env={**os.environ,'GITHUB_ACTIONS':'true','GITHUB_RUN_ATTEMPT':'3','GITHUB_STEP_SUMMARY':'',
+                 'CI_BINDING':json.dumps({**{k:plan[k] for k in ('source_head','base_commit','tested_checkout','run_id','run_attempt','event')},'gate_attempt':'3'}),
+                 'CI_OUTPUTS':json.dumps({**{k:str(plan['selected'][k]).lower() for k in FLAGS},'selection_attempt':'1','native_groups':'core'}),
+                 'CI_RESULTS':json.dumps({j:{'result':'success' if plan['selected'][j] else 'skipped'} for j in JOBS})}
+            for attempt,expected in [('2',0),('1',1),('4',1)]:
+                env['CI_NATIVE_OUTPUTS']=json.dumps(dict(product_attempt=attempt))
+                run=subprocess.run([sys.executable,str(ROOT/'tools/ci_scope.py'),'finish','--plan-file',str(plan_file),
+                                    '--native-evidence',str(self.root),'--output',str(output)],capture_output=True,env=env)
+                self.assertEqual(run.returncode,expected,run.stderr)
+                self.assertEqual(read(output)['accepted'],expected==0)
+
 
 class Isolation(unittest.TestCase):
+    def test_missing_delivery_preserves_partial_failure_diagnostics(self):
+        from p1_evidence import Evidence
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t);evidence=Evidence(root,'Linux',dict(core=True))
+            missing=root/'missing.png';existing=root/'partial.json'
+            write(existing,dict(partial=True))
+            with self.assertRaises(Exception):evidence.retain_files([missing,existing])
+            evidence.retain_files([missing,existing],allow_partial=True)
+            evidence.finish(ValueError('missing mandatory image'))
+            report=read(root/'technical/product-report.json')
+            self.assertEqual(report['status'],'failure')
+            self.assertEqual(report['selected_evidence']['omitted'][0]['file'],'missing.png')
+            self.assertTrue((root/'technical/selected/partial.json').is_file())
+
     def test_actual_orchestrator_continues_after_failure_with_separate_process_outputs(self):
         import native_runner
         with tempfile.TemporaryDirectory() as t:
@@ -187,6 +255,18 @@ class Isolation(unittest.TestCase):
 
 
 class Pixels(unittest.TestCase):
+    def test_native_ke_images_are_required_but_not_python_crop_work(self):
+        from native_results import validate_catalog_images
+        entries=[dict(file='frame-card.png',source='frame.png',region=[1,2,7,8])]
+        costs=dict(status='success',input_frames=1,crops=1,entries=entries)
+        summary=dict(image_costs=costs,crops=entries,reports=[dict(captures=[dict(file='frame.png',regions=dict(card=[1,2,7,8]))])])
+        required={'kat2/frame-card.png','kat2/direct.png','kat2/report.json'}
+        validate_catalog_images(costs,summary,required,['kat2/direct.png'])
+        for direct in ([],['kat2/direct.png','kat2/unexpected.png']):
+            with self.assertRaises(ValueError):validate_catalog_images(costs,summary,required,direct)
+        changed=deepcopy(summary);changed['reports'][0]['captures'][0]['regions']['card'][0]=0
+        with self.assertRaises(ValueError):validate_catalog_images(costs,changed,required,['kat2/direct.png'])
+
     def test_lossless_crop_and_negative_rgba_alpha_dimension_controls(self):
         try:
             from PIL import Image

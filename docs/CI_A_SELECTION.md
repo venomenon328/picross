@@ -40,8 +40,9 @@ die Anforderungen, unbekannte Pfade bleiben konservativ vollständig.
 
 ## Manuelle Scopes
 
-Alle Scopes erweitern die automatische Auswahl. Die bisherigen nativen
-Untergruppen bleiben unverändert; ihre Entkopplung gehört zu CI-C.
+Alle Scopes erweitern die automatische Auswahl. [CI-C](CI_C_NATIVE_GROUPS.md)
+führt die native Auswahl mit sieben unabhängigen Gruppen fort. Die Tabelle
+bezeichnet die bisherigen manuellen Pflichten; CI-C erhält oder erweitert sie.
 
 | Scope | Zusätzlich angeforderte Bereiche |
 | --- | --- |
@@ -92,6 +93,9 @@ unveränderten Runs beibehalten. Andere Runs oder Quellstände sind ausgeschloss
 Doppelte JSON-Schlüssel werden abgewiesen. Der Ergebnisbericht enthält den
 vollständigen Auswahlbericht und jedes tatsächlich gemeldete Jobergebnis.
 Fehlt der Bericht oder seine Bindung, ist dies kein grüner Abschluss.
+
+CI-C ergänzt das native Gruppen-/Artefaktgate und `native_groups` als gebundenen
+Scheduleroutput. Die sechs Bereichsergebnisse und diese Retryregeln bleiben erhalten.
 
 Auswahl/Ergebnis heißen `ci-selection-<head>-<attempt>` und
 `ci-result-<head>-<attempt>`. Browserbelege/Spieler heißen `picross-web-*`,

@@ -431,8 +431,13 @@ def main(argv: list[str] | None = None) -> int:
             from product_fixtures import copy_regression_game, restore_player_catalog
             copy_regression_game(root, project)
             evidence.report["regression_catalog"] = "fixed test catalog; independent of authoring inventory"
-            evidence.report["perf_b_resources"] = perf_b_resources.verify_runtime()
+            evidence.report["perf_b_resources"] = python_phase("current-atlas-resources", perf_b_resources.verify_runtime)
             environment = toolchain.isolated_environment(workspace, host)
+            evidence.report['isolation'] = dict(workspace=str(workspace), project=str(project),
+                profiles={key:environment[key] for key in ('APPDATA','LOCALAPPDATA') if key in environment}
+                if host == 'Windows' else {key:environment[key] for key in ('XDG_DATA_HOME','XDG_CONFIG_HOME','XDG_CACHE_HOME')},
+                output=str(output))
+            evidence.flush()
 
             def phase(name: str, command: list[str], marker: str | None = None,
                       expected_failure: bool = False, validator=None,
@@ -527,7 +532,7 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_done("catalog")
             if args.completion:
                 evidence.scope_start("completion")
-                evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, phase, host)
+                evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
                 selected += ea_files
                 evidence.scope_done("completion")
             if args.pilots:
@@ -545,7 +550,7 @@ def main(argv: list[str] | None = None) -> int:
                 if vs2_result is None:
                     vs2_result = python_phase("current-vs2-complete", vs2_future.result)
                 evidence.report["visual"], visual_files = vs2_result
-                evidence.report["visual"]["pilot_native"] = "success" if args.pilots else "not selected; --no-pilots"
+                evidence.report["visual"]["pilot_native"] = "owned by the independent adapters group; see native-result.json"
                 selected += visual_files
                 evidence.scope_done("visual")
             if args.perf_b:
@@ -582,16 +587,16 @@ def main(argv: list[str] | None = None) -> int:
             if args.visual:
                 evidence.report["visual"]["vs2"]["hc92"]["retained_samples"] = python_phase(
                     "retained-hc92-font-samples", lambda: hc92_verify.verify_retained(evidence.technical / "selected/hc92-renders"))
-            required_ea = {str(p.relative_to(output)) for p in selected if p.parent.name == "ea"}
+            required_ea = {p.relative_to(output).as_posix() for p in selected if p.parent.name == "ea"}
             if not required_ea <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
                 raise toolchain.PreflightError("Required EA motion/native evidence missing from technical delivery")
-            required_kat2 = {str(p.relative_to(output)) for p in selected if p.parent.name == "kat2"}
+            required_kat2 = {p.relative_to(output).as_posix() for p in selected if p.parent.name == "kat2"}
             if not required_kat2 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
                 raise toolchain.PreflightError("Required KAT-2 evidence missing from technical delivery")
-            required_za1 = {str(p.relative_to(output)) for p in selected if p.parent.name == "za1"}
+            required_za1 = {p.relative_to(output).as_posix() for p in selected if p.parent.name == "za1"}
             if not required_za1 <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
                 raise toolchain.PreflightError("Required ZA-1 native evidence missing from technical delivery")
-            required_b = {str(p.relative_to(output)) for p in selected if p.parent.name == "perf-b"}
+            required_b = {p.relative_to(output).as_posix() for p in selected if p.parent.name == "perf-b"}
             retained_b = {p["file"] for p in evidence.report["selected_evidence"]["files"]}
             if not required_b <= retained_b:
                 raise toolchain.PreflightError("Required PERF-B native evidence missing from technical delivery")
@@ -624,7 +629,7 @@ def main(argv: list[str] | None = None) -> int:
             failed_phase = vs2_evidence.report["checks"][-1]["name"]
         failure_files, priority = native_failure_sources(
             output, failed_phase, getattr(exc, "p1_failure_images", ()))
-        evidence.retain_files(selected + failure_files, priority_sources=priority)
+        evidence.retain_files(selected + failure_files, priority_sources=priority, allow_partial=True)
         evidence.finish(exc)
         print(f"P1 PRODUCT FAIL: {exc}", file=sys.stderr, flush=True)
         return 1

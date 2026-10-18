@@ -373,7 +373,7 @@ def main() -> int:
     if os.environ.get("GITHUB_ACTIONS") == "true":
         validate_binding(plan, json.loads(os.environ.get("CI_BINDING", "{}"), object_pairs_hook=unique_object),
                          json.loads(os.environ.get("CI_OUTPUTS", "{}"), object_pairs_hook=unique_object))
-    report = {"format": "picross-ci-result-v3", "accepted": all(row["accepted"] for row in rows),
+    report = {"format": "picross-ci-result-v4", "accepted": all(row["accepted"] for row in rows),
               "selection": plan, "jobs": rows}
     if plan['selected']['product']:
         try:
@@ -409,6 +409,10 @@ def main() -> int:
             stream.write("## Required CI results\n\n| Job | Required | Result | Accepted |\n| --- | --- | --- | --- |\n")
             for row in rows:
                 stream.write(f"| {row['job']} | {row['required']} | {row['result']} | {row['accepted']} |\n")
+            if report.get('native_error'):
+                stream.write('\nNative evidence rejected: '+report['native_error']+'\n')
+            if report.get('native'):
+                stream.write('\nNative groups: '+', '.join(report['native']['groups'])+'; all required delivered bytes verified.\n')
             if report.get('browser_error'):
                 stream.write('\nBrowser evidence rejected: '+report['browser_error']+'\n')
             for browser in report.get('browsers', []):

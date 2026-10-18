@@ -76,11 +76,13 @@ def run(args):
     # overlapping the independent graphics process. No imported project, profile
     # or result is shared. Do not race two initial archive downloads.
     serial = [g for g in groups if g != 'graphics']
+    primed = False
     if serial:
         result['results'].append(execute(serial.pop(0)))
+        primed = result['results'][-1]['status'] == 'success'
         flush()
     with ThreadPoolExecutor(max_workers=1) as executor:
-        future = executor.submit(execute, 'graphics') if 'graphics' in groups and platform.system() == 'Linux' else None
+        future = executor.submit(execute, 'graphics') if 'graphics' in groups and platform.system() == 'Linux' and primed else None
         for group in serial:
             result['results'].append(execute(group))
             flush()
