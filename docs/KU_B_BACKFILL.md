@@ -1,6 +1,6 @@
 # KU-B: separater Bestandsnachtragsplan
 
-Basis: `04b77dc6c6487890e0de5a5711ed5e496ee0d4af`. Vollständiger nur lesender [Plan](ku-b/backfill-plan.json), SHA-256 `e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884`.
+Basis: `04b77dc6c6487890e0de5a5711ed5e496ee0d4af`. Vollständiger nur lesender [dauerhafter Plan](../content/added/reports/ku-b-initial.json), SHA-256 `e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884`.
 
 26 IDs, 26 rekonstruierte Git-Snapshotzeiten, keine unbekannten Werte. Jede Quelle ist ein gültiger sichtbarer Katalogstand in der eindeutig an einen gemergten PR gebundenen Vorgeschichte. Kein direkter UTC-Erstregistrierungsbeleg wurde in den geprüften Produktions-/Integrationsquellen gefunden. Commitzeiten werden nicht als tatsächliche Werkzeugausführungszeiten behauptet.
 
@@ -36,3 +36,10 @@ Der Plan bindet sämtliche aktuellen Quellen und enthält dauerhafte Registry-/K
 | `pz-eedd1fe72af54714908d5b5aff34` | 2026-10-13T11:20:24Z | `0f1b4bfaf04b8ac60406ce51dad5bda02424e56b` |
 
 Die spätere explizite Übernahme bewahrt exakt diese Planbytes als `content/added/reports/ku-b-initial.json`; der hier vorab versionierte Plan bleibt über diesen Commit separat prüfbar.
+
+Die getrennte Übernahme ist ausgeführt. Der vorausgehende Plancommit
+`dcc9006` enthält die unveränderten Planbytes separat unter
+`docs/ku-b/backfill-plan.json`. Die identische Wiederholung wurde ausgeführt:
+28 Dateien (26 ID-Records, Bericht und Runtime) blieben byte- und mtime-identisch;
+kein Journal wurde angelegt. Definitionen, Bewertungen, Produktionsbindungen und
+Spielstände gehören nicht zu den Schreibzielen.

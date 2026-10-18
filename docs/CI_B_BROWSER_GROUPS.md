@@ -165,3 +165,13 @@ bedingungen und den getrennten Selbstreview. Warteschlange, summierte Runnerzeit
 und parallele Wartezeit werden getrennt ausgewiesen. CI-B-R01 bleibt eine
 separate qualifizierte Prüfung vor Merge. Keine Produktabnahme, CI-C-Umsetzung,
 Merge- oder Livefreigabe durch diese technische Lieferung.
+
+## KU-B-Erweiterung des aktiven Inventars
+
+KU-B ergänzt `KU-B01` in `catalog` (vier Kriterien, beide Richtungen,
+Gleichstände, stabile Rückkehr-ID) und `KU-B02` in `persistence` (Präferenz über
+Reload, echten Prozessneustart, zweiten Export, isolierten IndexedDB-Fehler und
+Wiederholung mit letzter Auswahl). Pflichtbilder sind `ku-b-sorting.png` und
+`ku-b-preference-error.png`, jeweils für beide Browser. Damit enthält das aktuelle
+Inventar 27 Chromium- und 26 Firefox-Szenarien. Auswahl-/Workflowpolitik und der
+separat bekannte rote Main-Push-Befund werden hierdurch nicht repariert.

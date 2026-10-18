@@ -11,6 +11,7 @@ from .authoring_package import ID, STEM, REVISION, relative, require, sha, file_
 from .contract import canonical_bytes, exact_keys, load_json, integer
 from . import categories
 from . import catalog_difficulty
+from . import catalog_added
 import time
 import os
 
@@ -34,14 +35,17 @@ def atomic_bytes(path, data):
         temp.unlink(missing_ok=True)
 
 
-def projection(registry, catalog, root=None, *, ratings=None):
+def projection(registry, catalog, root=None, *, ratings=None, added=None, version=4):
     from . import catalog_rating
     if ratings is None:
         ratings = catalog_rating.load_sources(root, registry) if root is not None else {}
-    return {"format": "picross-runtime-registry-v3", "categories": categories.ordered(catalog), "entries": [
+    if added is None:
+        added = catalog_added.load_sources(root, registry) if root is not None else {}
+    return {"format": "picross-runtime-registry-v" + str(version), "categories": categories.ordered(catalog), "entries": [
         {**{k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")},
          "difficulty": catalog_rating.project(ratings[e["id"]]) if e["id"] in ratings else
-                       catalog_difficulty.project(e["production"]["difficulty"])}
+                       catalog_difficulty.project(e["production"]["difficulty"]),
+         **({"added_at": added[e["id"]]["added_at"] if e["id"] in added else None} if version == 4 else {})}
         for e in registry["entries"]]}
 
 
@@ -91,7 +95,14 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
     r = validate(load_json(root / REGISTRY), catalog)
     expected = projection(r, catalog, root)
     if check_projection:
-        require((root / RUNTIME).read_bytes() == canonical_bytes(expected)+b"\n", "Runtime registry is stale")
+        legacy = projection(r, catalog, root, version=3)
+        legacy2 = deepcopy(legacy)
+        legacy2["format"] = "picross-runtime-registry-v2"
+        for entry in legacy2["entries"]: del entry["difficulty"]
+        allowed = [canonical_bytes(expected)+b"\n"]
+        if not catalog_added.load_sources(root, r):
+            allowed += [canonical_bytes(v)+b"\n" for v in (legacy, legacy2)]
+        require((root / RUNTIME).read_bytes() in allowed, "Runtime registry is stale")
     for e in r["entries"]:
         p = e["production"]
         require(not p["test_only"] or root.resolve() != ROOT.resolve(), "Test-only content cannot enter the real catalog")
@@ -125,7 +136,7 @@ def sync_runtime(root):
     from . import catalog_transaction as tx
     root = root.resolve()
     snapshot = tx.capture(root, allow_stale=True)
-    check_checkout(root, replay=True, check_projection=False)
+    check_checkout(root, replay=False, check_projection=False)
     journal = tx.prepare(root, snapshot, {}, operation="sync")
     if journal["old"][RUNTIME] != journal["new"][RUNTIME]:
         tx.execute(root, journal)
@@ -156,7 +167,7 @@ def recovery_projection(journal, before, after, catalog):
     for side, registry in (("old", before), ("new", after)):
         require(journal[side][REGISTRY].encode() == canonical_bytes(registry)+b"\n",
                 "Noncanonical journal registry")
-        current = projection(registry, catalog)  # Also validates present difficulty.
+        current = projection(registry, catalog, version=3)  # Exact legacy journal projection.
         legacy = deepcopy(current)
         legacy["format"] = "picross-runtime-registry-v2"
         for entry in legacy["entries"]:
@@ -206,7 +217,7 @@ def recover(root):
     lock = path_in(root, "content/.registration-pending.json")
     j = load_json(lock, 24 * 1024 * 1024)
     from . import catalog_transaction as tx
-    if isinstance(j, dict) and j.get("format") in set(tx.FORMATS.values()):
+    if isinstance(j, dict) and j.get("format") in set(tx.FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
         return tx.recover(root)
     if isinstance(j, dict) and j.get("format") == "picross-content-update-journal-v1":
         from .content_update import recover_update
@@ -273,6 +284,8 @@ def reject_unbound_ratings(root, *registries):
     from .catalog_rating import path, source_paths
     from .content_update import path_in
     source_paths(root, *registries)
+    present, reports = catalog_added.source_paths(root, *registries)
+    require(not present and not reports, "Legacy journal has unbound added data")
     for registry in registries:
         for entry in registry["entries"]:
             require(not path_in(root, path(entry["id"])).exists(),

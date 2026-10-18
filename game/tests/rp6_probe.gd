@@ -30,10 +30,10 @@ func setup(viewport: Viewport) -> void:
 func select_pilot() -> void:
 	app.show_album()
 	await process_frame
-	app.album.ensure_control_visible(app.choices[pilot_index])
+	app.album.ensure_control_visible(app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))])
 	await process_frame
 	await process_frame
-	var box: Rect2 = app.choices[pilot_index].get_global_rect()
+	var box: Rect2 = app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].get_global_rect()
 	check(app.album.get_global_rect().encloses(box), "pilot album choice reachable")
 	check(box.size.y >= 44 * app.ui_scale, "choice respects minimum hit height")
 	click(box.get_center())
@@ -53,7 +53,7 @@ func partial() -> void:
 	check(app.mini.cells[0] == 1 and app.session.player.undo_used, "mouse redo")
 	check(app._flush_current(), "partial flush")
 	app.show_album()
-	check(app.album_previews[pilot_index].cells[0] == 1 and app.album_reveals[pilot_index].payload.is_empty() and not app.choices[pilot_index].caption.text.contains(app.session.definition.reveal.name), "album own wrong miniature and no spoiler/name")
+	check(app.album_previews[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].cells[0] == 1 and app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].payload.is_empty() and not app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].caption.text.contains(app.session.definition.reveal.name), "album own wrong miniature and no spoiler/name")
 
 func choose_color(color: int) -> void:
 	click(app.palette_row.get_child(color - 1).get_global_rect().get_center())
@@ -103,7 +103,7 @@ func finish() -> void:
 		check(app.completion_title.text == "TEST ONLY Muster 4" and app.reveal_view.payload.image == "res://art/fixtures/t04.svg", "retained T-04 name and SVG binding")
 	check(app.session.player.cells.count(-1) > 0, "unknown background allowed")
 	app.show_album()
-	check(app.album_reveals[pilot_index].visible and app.album_reveals[pilot_index].payload.definition_id == app.session.definition.id, "earned pilot artwork bound to its album slot")
+	check(app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].visible and app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].payload.definition_id == app.session.definition.id, "earned pilot artwork bound to its album slot")
 	if pilot_index == 2:
 		check(app.sessions[0].player.cells.count(-1) == 400 and app.sessions[1].player.cells.count(-1) == 1600 and app.sessions[3].player.cells.count(-1) == 2500, "isolated T04 leaves T01/T02/T06 cells unknown")
 
@@ -111,7 +111,7 @@ func restored() -> void:
 	check(app.session.completed and app.session.is_solution() and app.session.player.undo_used, "second restart restores completed pilot")
 	check(app.store.load_slot(app.session.definition).status == "loaded", "separate fixed slot loaded")
 	app.show_album()
-	check(app.album_reveals[pilot_index].payload == app.session.definition.reveal and app.choices[pilot_index].caption.text.contains(app.session.definition.reveal.name), "restored correct earned album asset and name")
+	check(app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].payload == app.session.definition.reveal and app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].caption.text.contains(app.session.definition.reveal.name), "restored correct earned album asset and name")
 	if pilot_index == 2:
 		var first: Dictionary = app.store.load_slot(app.sessions[0].definition)
 		var unknown: int = saved_unknown_count(first)

@@ -2,6 +2,8 @@
 GROUPS = ('regular', 'catalog', 'input', 'completion', 'persistence')
 BROWSERS = ('chromium', 'firefox')
 SCENARIOS = (
+    {'id': 'KU-B01', 'group': 'catalog', 'label': 'KU-B four criteria, both directions, canonical ties and stable return ID', 'browsers': ['chromium', 'firefox'], 'images': ['ku-b-sorting.png']},
+    {'id': 'KU-B02', 'group': 'persistence', 'label': 'KU-B preference reload, process restart, compatible export, isolated failure and latest-change retry', 'browsers': ['chromium', 'firefox'], 'images': ['ku-b-preference-error.png']},
     {'id': 'regular-start', 'group': 'regular', 'label': 'uninstrumented startup, WebGL2, offline and no errors', 'browsers': ['chromium', 'firefox'], 'images': ['regular-catalog.png']},
     {'id': 'B01', 'group': 'persistence', 'label': 'delayed exclusive lock handoff waits before IndexedDB hydration', 'browsers': ['chromium', 'firefox'], 'images': []},
     {'id': 'B02', 'group': 'catalog', 'label': 'export/catalog startup', 'browsers': ['chromium', 'firefox'], 'images': []},

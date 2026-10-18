@@ -12,6 +12,11 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     evidence['launch_options'] = options(name)
     evidence['graphics'] = graphics(page)
     passed('export/catalog startup')
+    from group_persistence import choose_sort
+    initial = state(page, 'sort')['sort']
+    assert initial['criterion'] == 'category' and initial['direction'] == 'asc'
+    assert initial['primary'] == sorted(initial['primary'])
+    choose_sort(page, 3)  # Unknown-date ties preserve the existing six slot-bound UI routes.
     evidence['catalog_geometry'] = []
     for width, height, scale in ((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25)):
         if state(page, 'ui_scale')['ui_scale'] != scale:
@@ -45,4 +50,29 @@ def exercise(pw, name, root, update, url, output, evidence, session):
         control(page, name='nav-album')
         wait(page, 'picrossProbe.album')
     passed('KU-A single-line metadata, footer, tooltip boundaries and passive click routes')
+    evidence['sorting'] = []
+    canonical_ids = [slot['definition_id'] for slot in state(page, 'slots')['slots']]
+    for index, criterion in enumerate(('category', 'size', 'difficulty', 'added')):
+        choose_sort(page, index)
+        expected_direction = 'desc' if criterion == 'added' else 'asc'
+        assert state(page, 'sort')['sort']['direction'] == expected_direction
+        for direction in (expected_direction, 'asc' if expected_direction == 'desc' else 'desc'):
+            current = state(page, 'sort')['sort']
+            if current['direction'] != direction:
+                control(page, name='catalog-direction')
+                wait(page, f"picrossProbe.sort.direction === '{direction}'")
+            current = state(page, 'sort')['sort']
+            keys = current['primary']
+            known = [x for x in keys if x is not None]
+            assert keys == sorted(known, reverse=direction == 'desc') + [None] * (len(keys)-len(known))
+            evidence['sorting'].append(current)
+            chosen = current['visible_ids'][0]
+            control(page, text='Blatt ' + str(canonical_ids.index(chosen)+1).zfill(2))
+            wait(page, 'picrossProbe.work')
+            assert state(page, 'id')['id'] == chosen
+            control(page, name='nav-album'); wait(page, 'picrossProbe.album')
+            returned = state(page, 'sort')['sort']
+            assert returned['criterion'] == criterion and returned['direction'] == direction and returned['selected'] == chosen
+    page.screenshot(path=str(output/f'{name}-ku-b-sorting.png'))
+    passed('KU-B four criteria, both directions, canonical ties and stable return ID')
     assert not errors, errors

@@ -73,8 +73,8 @@ class LegacyRecoveryTests(unittest.TestCase):
         self.assertFalse((root/LOCK).exists())
         self.assertEqual(cr.check_checkout(root), json.loads(journal['old'][cr.REGISTRY]))
         raw = json.loads((root/cr.RUNTIME).read_bytes())
-        self.assertEqual(raw['format'], 'picross-runtime-registry-v3')
-        self.assertTrue(all(len(e) == 8 and 'difficulty' in e for e in raw['entries']))
+        self.assertEqual(raw['format'], 'picross-runtime-registry-v4')
+        self.assertTrue(all(len(e) == 9 and 'difficulty' in e and e['added_at'] is None for e in raw['entries']))
         removed = journal.get('targets', [journal.get('package')])
         for name, data in before.items():
             if name == LOCK or name in journal['old'] or any(name == p or name.startswith(p+'/') for p in removed): continue
@@ -105,7 +105,7 @@ class LegacyRecoveryTests(unittest.TestCase):
             with self.subTest(kind=kind), patch.object(module, 'atomic_bytes', killed):
                 with self.assertRaises(InterruptedError): cr.recover(root)
             self.assertTrue((root/LOCK).exists())
-            self.assertEqual(json.loads((root/cr.RUNTIME).read_bytes())['format'], 'picross-runtime-registry-v3')
+            self.assertEqual(json.loads((root/cr.RUNTIME).read_bytes())['format'], 'picross-runtime-registry-v4')
             self.assert_recovered(root, journal, before)
 
     def test_rejects_versions_noncanonical_and_foreign_bytes_before_any_write(self):
