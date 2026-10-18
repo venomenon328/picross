@@ -12,6 +12,10 @@ class PicrossStorage {
     this.saved = 0;
     this.running = false;
     this.viewPending = false;
+    this.preferenceGeneration = 0;
+    this.preferenceSaved = 0;
+    this.preferenceRunning = false;
+    this.preferenceError = '';
     retry.onclick = () => { if (window.picrossLifecycle) window.picrossLifecycle(); this.changed(); };
   }
   attach(fs, godotFS, idbfs) {
@@ -38,6 +42,25 @@ class PicrossStorage {
     return true;
   }
   viewChanged() { this.viewPending = true; this.pending = true; this.render(); }
+  get preferencePending() { return this.preferenceSaved !== this.preferenceGeneration; }
+  preferenceChanged() {
+    this.preferenceGeneration++;
+    queueMicrotask(() => this.preferenceSync());
+  }
+  preferenceRetry() { if (this.preferencePending || this.preferenceError) this.preferenceSync(); }
+  preferenceSync() {
+    if (!this.ready || this.preferenceRunning || !this.preferencePending) return;
+    this.preferenceRunning = true;
+    const generation = this.preferenceGeneration;
+    this.fs.syncfs(false, error => {
+      this.preferenceRunning = false;
+      this.preferenceError = error ? 'Sortierung konnte nicht im Browser gespeichert werden. Erneut versuchen.' : '';
+      if (!error) {
+        this.preferenceSaved = generation;
+        if (this.preferencePending) this.preferenceSync();
+      }
+    });
+  }
   finished(slot, error) {
     if (error) this.localErrors[slot] = error;
     else delete this.localErrors[slot];

@@ -37,6 +37,7 @@ func run() -> void:
 	preload("res://tests/kat1_cases.gd").run(self)
 	preload("res://tests/kat2_cases.gd").run(self)
 	preload("res://tests/ke_cases.gd").run(self)
+	preload("res://tests/ku_b_cases.gd").run(self)
 	print("PHASE test_definition()")
 	test_definition()
 	print("PHASE test_gesture()")
@@ -250,6 +251,7 @@ func test_geometry() -> void:
 func test_scene() -> void:
 	var app: Main = load("res://main.tscn").instantiate()
 	root.add_child(app)
+	app.album.choose_sort("added") # Unknown-date ties: canonical slots for these assertions.
 	await process_frame
 	await process_frame
 	check(app.album.visible and not app.work.visible and app.reveal_view.payload.is_empty(), "scene starts in neutral album")

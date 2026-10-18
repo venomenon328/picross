@@ -6,6 +6,7 @@ const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const BookButton = preload("res://ui/book_button.gd")
 const Card = preload("res://ui/catalog_card.gd")
+const Preference = preload("res://model/catalog_preference.gd")
 const PAGE_SIZE: int = 24
 signal opened(id: String)
 signal reset_requested(id: String)
@@ -17,6 +18,10 @@ var page_index: int = 0
 var selected_id: String = ""
 var ui_scale: float = 1.0
 var category_choice: OptionButton
+var preference: Preference = Preference.new()
+var sort_choice: OptionButton
+var direction_button: Button
+var preference_feedback: Label
 var summary: Label
 var feedback: Label
 var empty_message: Label
@@ -36,6 +41,7 @@ var visible_ids: Array[String] = []
 var filtered_ids: Array[String] = []
 var items: Dictionary = {}
 var metadata: Dictionary = {}
+var ordinals: Dictionary = {}
 var categories: Array[Dictionary] = []
 var statuses: Dictionary = {}
 var errors: Dictionary = {}
@@ -46,19 +52,35 @@ var scroll_vertical: int:
 	set(value): scroll.scroll_vertical = value
 
 func _ready() -> void:
+	preference.load_selection()
 	add_theme_constant_override("separation", 10)
 	var top: HBoxContainer = HBoxContainer.new()
 	add_child(top)
 	var label: Label = _label("Kategorie", 16)
 	top.add_child(label)
 	category_choice = OptionButton.new()
+	category_choice.name = "catalog-category"
 	category_choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	category_choice.fit_to_longest_item = false
 	category_choice.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	category_choice.item_selected.connect(func(index: int) -> void: choose_category(str(category_choice.get_item_metadata(index))))
 	top.add_child(category_choice)
+	top.add_child(_label("Sortieren nach", 16))
+	sort_choice = OptionButton.new()
+	sort_choice.name = "catalog-sort"
+	for title: String in ["Kategorie", "Größe", "Schwierigkeit", "Hinzugefügt"]: sort_choice.add_item(title)
+	sort_choice.item_selected.connect(func(index: int) -> void: choose_sort(Preference.CRITERIA[index]))
+	top.add_child(sort_choice)
+	direction_button = _button("", reverse_sort)
+	direction_button.name = "catalog-direction"
+	top.add_child(direction_button)
 	top.add_child(_button("Einstellungen / Info", func() -> void: information_requested.emit()))
 	top.add_child(_button("Beenden", func() -> void: quit_requested.emit()))
+	var preference_row: HBoxContainer = HBoxContainer.new()
+	add_child(preference_row)
+	preference_feedback = _label("", 15)
+	preference_row.add_child(preference_feedback)
+	preference_row.add_child(_button("Erneut versuchen", _save_preference))
 	summary = _label("", 18)
 	add_child(summary)
 	feedback = _label("", 15)
@@ -102,9 +124,11 @@ func present(sessions: Array[Session], slot_status: Array[String], slot_errors: 
 	statuses.clear()
 	errors.clear()
 	metadata.clear()
+	ordinals.clear()
 	categories.clear()
 	if error.is_empty(): categories = Registry.categories()
 	for entry: Dictionary in Registry.entries() if error.is_empty() else []:
+		ordinals[entry.id] = ordinals.size()
 		metadata[entry.id] = entry
 	for index: int in range(sessions.size()):
 		var id: String = str(sessions[index].definition.id)
@@ -129,9 +153,69 @@ func _ids(category: String) -> Array[String]:
 	return result
 
 func choose_category(id: String) -> void:
+	if category_id == id: return
 	category_id = id
 	page_index = 0
 	_render(0)
+
+func choose_sort(criterion: String) -> void:
+	if not criterion in Preference.CRITERIA: return
+	if preference.criterion != criterion:
+		preference.criterion = criterion
+		preference.direction = "desc" if criterion == "added" else "asc"
+		page_index = 0
+		_render(0)
+	_save_preference()
+
+func reverse_sort() -> void:
+	preference.direction = "desc" if preference.direction == "asc" else "asc"
+	page_index = 0
+	_render(0)
+	_save_preference()
+
+func _save_preference() -> void:
+	preference.save_selection()
+	_preference_status()
+
+func _process(_delta: float) -> void:
+	_preference_status()
+
+func _preference_status() -> void:
+	if preference_feedback == null: return
+	var message: String = preference.error
+	if message.is_empty() and OS.has_feature("web"):
+		message = str(JavaScriptBridge.eval("window.picrossStorage.preferenceError || ''", true))
+	preference_feedback.text = message
+	preference_feedback.get_parent().visible = not message.is_empty()
+
+func _primary(id: String) -> Variant:
+	var entry: Dictionary = metadata.get(id, {})
+	match preference.criterion:
+		"size": return items[id].player.width * items[id].player.height
+		"difficulty":
+			var difficulty: Variant = entry.get("difficulty")
+			return difficulty.get("level") if difficulty is Dictionary else null
+		"added": return entry.get("added_at")
+		_:
+			for category: Dictionary in categories:
+				if category.id == entry.get("category_id"): return category.order
+	return null
+
+func _before(a: String, b: String) -> bool:
+	var av: Variant = _primary(a)
+	var bv: Variant = _primary(b)
+	if av == null and bv != null: return false
+	if bv == null and av != null: return true
+	if av == bv: return int(ordinals.get(a, 0)) < int(ordinals.get(b, 0))
+	return av < bv if preference.direction == "asc" else av > bv
+
+func _direction_description() -> String:
+	var ascending: bool = preference.direction == "asc"
+	match preference.criterion:
+		"size": return "Kleinste zuerst" if ascending else "Größte zuerst"
+		"difficulty": return "Sehr leichte zuerst" if ascending else "Sehr schwere zuerst"
+		"added": return "Älteste zuerst" if ascending else "Neueste zuerst"
+		_: return "Kategorienfolge" if ascending else "Umgekehrte Kategorienfolge"
 
 func turn_page(delta: int) -> void:
 	page_index = clampi(page_index + delta, 0, maxi(0, ceili(filtered_ids.size() / float(PAGE_SIZE)) - 1))
@@ -169,6 +253,13 @@ func _render(position: int) -> void:
 	repair_buttons.clear()
 	visible_ids.clear()
 	filtered_ids = _ids(category_id)
+	filtered_ids.sort_custom(_before)
+	sort_choice.select(Preference.CRITERIA.find(preference.criterion))
+	direction_button.text = "↑" if preference.direction == "asc" else "↓"
+	direction_button.tooltip_text = _direction_description()
+	direction_button.accessibility_name = "Sortierrichtung (%s): %s" % [sort_choice.text, direction_button.tooltip_text]
+	sort_choice.disabled = not load_error.is_empty()
+	direction_button.disabled = not load_error.is_empty()
 	var page_count: int = maxi(1, ceili(filtered_ids.size() / float(PAGE_SIZE)))
 	page_index = clampi(page_index, 0, page_count - 1)
 	var solved: int = 0
@@ -293,6 +384,9 @@ func _layout_cards() -> void:
 		card.size.x = card_width
 		card.layout_content()
 	category_choice.custom_minimum_size.y = 44 * ui_scale
+	sort_choice.custom_minimum_size = Vector2(160, 44) * ui_scale
+	sort_choice.add_theme_font_size_override("font_size", roundi(14 * ui_scale))
+	sort_choice.get_popup().prefer_native_menu = false
 	category_choice.get_popup().max_size = Vector2i(roundi(size.x), roundi(minf(480 * ui_scale, size.y * 0.8)))
 	category_choice.get_popup().prefer_native_menu = false
 

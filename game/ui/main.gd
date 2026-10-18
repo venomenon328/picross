@@ -627,10 +627,11 @@ func leave_app() -> void:
 			web_leaving = true
 			get_tree().paused = true
 			WebStorage.changed()
+			JavaScriptBridge.eval("window.picrossStorage.preferenceRetry()", true)
 			var deadline: int = Time.get_ticks_msec() + 15000
-			while JavaScriptBridge.eval("window.picrossStorage.pending", true):
-				if not str(JavaScriptBridge.eval("window.picrossStorage.error", true)).is_empty() or Time.get_ticks_msec() > deadline:
-					JavaScriptBridge.eval("window.picrossStorage.syncError = 'Beenden nicht möglich: Sicherung ausstehend. Erneut versuchen.'; window.picrossStorage.render()", true)
+			while JavaScriptBridge.eval("window.picrossStorage.pending || window.picrossStorage.preferencePending", true):
+				if not str(JavaScriptBridge.eval("window.picrossStorage.error || window.picrossStorage.preferenceError", true)).is_empty() or Time.get_ticks_msec() > deadline:
+					JavaScriptBridge.eval("if (!picrossStorage.preferenceError) { picrossStorage.syncError = 'Beenden nicht möglich: Sicherung ausstehend. Erneut versuchen.'; picrossStorage.render(); }", true)
 					get_tree().paused = false
 					web_leaving = false
 					return

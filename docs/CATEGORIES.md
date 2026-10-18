@@ -250,3 +250,15 @@ kompakten Integrationsbindungen benötigen keinen Paket-Replay. Historische Para
 oder Lieferstände erzeugen keine neuen Prüf-/Exportaufträge für Bestandsrätsel.
 
 Prüfwege und gebundene Testinputs: [KAT1_VERIFICATION](KAT1_VERIFICATION.md).
+
+## KU-B · Runtimeprojektion v4
+
+`picross-runtime-registry-v4` behält exakt die drei Top-Level-Felder
+`format,categories,entries` und die kanonische Registryreihenfolge. Ein Eintrag
+hat exakt die bisherigen acht v3-Felder plus `added_at` (striktes UTC/null gemäß
+[Hinzugefügt-Vertrag](CATALOG_SORTING.md)). Content-Registry-v2 bleibt unverändert.
+Runtime-v2 mit exakt sieben und v3 mit exakt acht Eintragsfeldern bleiben lesbar;
+ihr fehlendes Datum wird nur im Speicher als unbekannt behandelt. Fremdfelder,
+falsche Versionstypen und Datumstypen sind Fehler, keine implizite Migration.
+Der gemeinsame Projektor validiert alle Added-Quellen und schreibt künftig v4;
+Runtimeverbraucher analysieren keine Rätsel und lesen keine Herkunftsbelege.

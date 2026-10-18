@@ -39,19 +39,19 @@ func shot(stage: String) -> void:
 	check(is_equal_approx(cell.size.x,cell.size.y), "regular rectangular board has square cells")
 	var earned: bool = app.session.completed
 	if not earned:
-		check(app.session.reveal().is_empty() and app.album_reveals[pilot_index].payload.is_empty() and app.reveal_view.payload.is_empty(), "all unsolved reveal payloads absent")
+		check(app.session.reveal().is_empty() and app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].payload.is_empty() and app.reveal_view.payload.is_empty(), "all unsolved reveal payloads absent")
 		var artwork_pixels: int = 0
 		for y: int in range(image.get_height()):
 			for x: int in range(image.get_width()):
 				if image.get_pixel(x,y).is_equal_approx(Color8(76,145,93)): artwork_pixels += 1
 		check(artwork_pixels == 0, "native unsolved/partial pixels contain no artificial artwork")
 		if stage == "partial":
-			var preview: Control = app.album_previews[pilot_index]
+			var preview: Control = app.album_previews[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))]
 			var step: float = preview.image_rect().size.x/app.session.player.width
 			var point: Vector2i = Vector2i(preview.global_position + Vector2.ONE*step*0.5)
 			check(image.get_pixelv(point).is_equal_approx(Color(app.session.definition.palette[0].color)), "native own wrong album cell pixel retained")
 	else:
-		var reveal: Control = app.album_reveals[pilot_index] if app.album.visible else app.reveal_view
+		var reveal: Control = app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))] if app.album.visible else app.reveal_view
 		var art: Rect2 = reveal.artwork_rect()
 		check(is_equal_approx(art.size.x/art.size.y,ratio), "native reveal preserves rectangle aspect")
 		check(image.get_pixelv(Vector2i(reveal.global_position+art.get_center())).is_equal_approx(Color8(76,145,93)), "native earned artwork interior pixel")
@@ -70,7 +70,7 @@ func shot(stage: String) -> void:
 	check(image.save_png(output.path_join(context_file)) == OK, "local native context")
 	var area: Rect2
 	if earned:
-		var reveal: Control = app.album_reveals[pilot_index] if app.album.visible else app.reveal_view
+		var reveal: Control = app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))] if app.album.visible else app.reveal_view
 		area = Rect2(reveal.global_position+reveal.artwork_rect().position,reveal.artwork_rect().size)
 		if reveal.paired:
 			var grid: Rect2 = reveal.raster_rect()
@@ -78,7 +78,7 @@ func shot(stage: String) -> void:
 			check(image.get_region(Rect2i(reveal.global_position+grid.position,grid.size)).save_png(output.path_join(raster_file)) == OK,"native solved raster crop")
 			captures.append({"file":raster_file,"stage":stage,"crop":true,"ratio":ratio})
 	else:
-		var preview: Control = app.album_previews[pilot_index] if app.album.visible else app.mini
+		var preview: Control = app.album_previews[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))] if app.album.visible else app.mini
 		area = Rect2(preview.global_position+preview.image_rect().position,preview.image_rect().size)
 	check(image.get_region(Rect2i(area)).save_png(output.path_join(filename)) == OK,"native relevant crop")
 	captures.append({"file":filename,"context_file":context_file,"stage":stage,"completed":earned,"native_size":[surface.size.x,surface.size.y],"crop":true,"crop_rect":[area.position.x,area.position.y,area.size.x,area.size.y],"ratio":ratio})
@@ -127,7 +127,7 @@ func run() -> void:
 		await shot("completion")
 	elif stage == "read":
 		restored()
-		app.album.ensure_control_visible(app.choices[pilot_index])
+		app.album.ensure_control_visible(app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))])
 		await shot("album")
 	elif stage == "reset":
 		await reset_selected()

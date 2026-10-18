@@ -35,7 +35,17 @@ func _process(delta: float) -> void:
 	for item: Session in sessions:
 		slots.append(SaveStore.snapshot(item, item.view_state))
 	var origin: Vector2 = board.global_position + board.view.origin
+	var sort_popup: PopupMenu = album.sort_choice.get_popup()
 	var data: Dictionary = {"controls": controls, "labels":labels,"slots": slots, "slot_status": slot_status,
+		"sort": {"criterion": album.preference.criterion, "direction": album.preference.direction,
+			"direction_tooltip": album.direction_button.tooltip_text,
+			"direction_accessibility_name": album.direction_button.accessibility_name,
+			"menu": {"visible": sort_popup.visible, "position": [sort_popup.position.x, sort_popup.position.y],
+				"size": [sort_popup.size.x, sort_popup.size.y], "focused": sort_popup.get_focused_item()},
+			"ids": album.filtered_ids, "visible_ids": album.visible_ids, "page": album.page_index,
+			"scroll": album.scroll_vertical, "selected": album.selected_id,
+			"path": ProjectSettings.globalize_path(album.preference.path),
+			"primary": album.filtered_ids.map(func(id: String) -> Variant: return album._primary(id))},
 		"visible_popups":get_viewport().get_embedded_subwindows().filter(func(window: Window) -> bool: return window.visible).size(),
 		"ea_active": reveal_view.active, "ea_processing": reveal_view.is_processing(),
 		"ea_caption_alpha": completion_title.modulate.a, "ea_reset_disabled": completion_reset.disabled,

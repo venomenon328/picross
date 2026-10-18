@@ -371,3 +371,37 @@ tatsächlichen Endhead vor Merge. Der Selbstreview ersetzt dieses Gate nicht.
 Die bedingte Eigentümer-Mergefreigabe ist in #238 dokumentiert; dieser
 Implementierungsauftrag stoppt vor dem finalen Review und führt keinen Merge aus.
 #238/#235 bleiben offen; keine neuen Katalogtests oder CI-Änderungen.
+
+## KU-B · Gemeinsame Journale mit Hinzugefügt-Quellen
+
+Neue Journale heißen `picross-registration-journal-v4`,
+`picross-content-update-journal-v3` und `picross-catalog-metadata-journal-v1`.
+Letzteres trägt `adoption`, `sync` oder `added-adoption`; die ersten beiden
+behalten `registration` beziehungsweise `update`. Exakte Felder bleiben
+`format,operation,old,new,retained,additions,report_run`, maximal 24 MiB.
+`report_run` bezeichnet bei `added-adoption` den Added-Bericht, bei
+Schwierigkeitsadoption den bisherigen SD-Bericht; sonst null.
+
+Der gemeinsame Lock bleibt `content/.registration-pending.json`. `old/new`
+enthalten zusätzlich jede abgeleitete ID-Added-Datei (Text oder null); vorhandene
+Herkunftsberichte sind vollständig hashgebundene behaltene Quellen. Ein neuer
+Added-Bericht ist explizites Textziel nur seiner Adoption. Vollständige
+Namespacevalidierung, Quellensnapshot, Guard vor jedem Schreiben, fremde Bytes
+bewahren und Runtime als letzter Veröffentlichungs-/Recovery-Schritt bleiben
+Pflicht. Beide Zustände werden vor Mutation vollständig isoliert geprüft.
+
+Delta: Registrierung darf genau den neuen ID-Record ergänzen; Update, Sync und
+Schwierigkeitsadoption dürfen keinen Added-Record ändern. `added-adoption` darf
+nur die im vollständig gebundenen Plan benannten Added-Records, seinen neuen
+Bericht und Runtime ändern. Keine Definitionen/Ratings/Produktionsbindungen.
+Kein Journal und kein Rewrite bei byteidentischer Wiederholung.
+
+Bisherige registration-v3/update-v2/difficulty-adoption-v1-Journale werden mit
+ihrem ursprünglichen Zielumfang und ihrer v3-Projektion validiert; unbelegte
+Added-Quellen verhindern Recovery. Frühere registration-v2/update-v1 bleiben
+auf genau einheitliche v2- oder v3-Projektionen begrenzt; registration-v1 bleibt
+gesperrt. Die endgültige sichere Rückführung projiziert unmittelbar die aktuelle
+v4 mit unbekannten Daten, ohne anschließenden Sync. Ihr eigener abgeleiteter
+v4-Zwischenstand wird bei erneut unterbrochener Recovery akzeptiert, fremde
+Runtimebytes nicht. Historische Journale erhalten keine nachträglich erfundenen
+Metadaten oder Uhrzeiten.
