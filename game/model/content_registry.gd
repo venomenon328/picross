@@ -16,7 +16,7 @@ static func valid_category_id(value: Variant) -> bool:
 	return true
 
 static func validate(raw: Variant) -> String:
-	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
+	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
 		return "Unsupported runtime registry format"
 	if raw.categories.size() > 256 or raw.entries.size() > 10000:
 		return "Registry count limit exceeded"
@@ -40,10 +40,13 @@ static func validate(raw: Variant) -> String:
 			return "Category order must be unique, ascending and within 1..10000"
 		previous_order = int(order)
 	var seen: Dictionary = {}
-	var current: bool = raw.format == "picross-runtime-registry-v3"
+	var current: bool = raw.format != "picross-runtime-registry-v2"
+	var dated: bool = raw.format == "picross-runtime-registry-v4"
 	for item: Variant in raw.entries:
-		if not item is Dictionary or item.size() != (8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
+		if not item is Dictionary or item.size() != (9 if dated else 8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
 			return "Invalid registry entry fields"
+		if dated and (not item.has("added_at") or not valid_added(item.added_at)):
+			return "Invalid catalog added timestamp"
 		if current and (not item.has("difficulty") or not Difficulty.valid(item.difficulty)):
 			return "Invalid catalog difficulty"
 		for field: String in ["id", "key", "save_slot", "definition", "reveal"]:
@@ -66,6 +69,19 @@ static func validate(raw: Variant) -> String:
 			return "Missing or unknown category for " + str(item.id)
 	return ""
 
+static func valid_added(value: Variant) -> bool:
+	if value == null: return true
+	if not value is String or value.length() != 20: return false
+	var pattern: RegEx = RegEx.new()
+	pattern.compile("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")
+	if pattern.search(value) == null: return false
+	var year: int = int(value.substr(0, 4))
+	var month: int = int(value.substr(5, 2))
+	var day: int = int(value.substr(8, 2))
+	if year < 1 or month < 1 or month > 12: return false
+	var days: Array[int] = [31, 29 if year % 4 == 0 and (year % 100 != 0 or year % 400 == 0) else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+	return day >= 1 and day <= days[month - 1] and int(value.substr(11, 2)) < 24 and int(value.substr(14, 2)) < 60 and int(value.substr(17, 2)) < 60
+
 static func _load() -> Dictionary:
 	if not cached.is_empty():
 		return cached
@@ -73,12 +89,41 @@ static func _load() -> Dictionary:
 	if file == null or file.get_length() > 8388608:
 		load_error = "Missing or oversized runtime registry"
 		return {}
-	var raw: Variant = JSON.parse_string(file.get_as_text())
+	var text: String = file.get_as_text()
+	var raw: Variant = JSON.parse_string(text)
+	if not unique_keys(text):
+		load_error = "Duplicate runtime registry JSON key"
+		return {}
 	load_error = validate(raw)
 	if not load_error.is_empty():
 		return {}
 	cached = raw
 	return cached
+
+static func unique_keys(text: String) -> bool:
+	var objects: Array[Dictionary] = []
+	var index: int = 0
+	while index < text.length():
+		var letter: String = text[index]
+		if letter == "{": objects.append({})
+		elif letter == "}":
+			if objects.is_empty(): return false
+			objects.pop_back()
+		elif letter == '"':
+			var start: int = index
+			index += 1
+			while index < text.length() and text[index] != '"':
+				if text[index] == "\\": index += 1
+				index += 1
+			if index >= text.length(): return false
+			var after: int = index + 1
+			while after < text.length() and text[after] in " \r\n\t": after += 1
+			if after < text.length() and text[after] == ":":
+				var key: Variant = JSON.parse_string(text.substr(start, index - start + 1))
+				if not key is String or objects.is_empty() or objects[-1].has(key): return false
+				objects[-1][key] = true
+		index += 1
+	return objects.is_empty()
 
 static func entries() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []

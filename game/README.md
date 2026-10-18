@@ -43,6 +43,20 @@ der verlinkten Anleitung. Persönliche Webprobe und Live-Deployment bleiben sepa
 
 Die Entwicklungsfassung enthält die [Kategorienprojektion nach KAT-1](../docs/CATEGORIES.md). Das Spiel startet im Rätselkatalog mit „Alle Rätsel“. Die scrollbare Kategorienauswahl enthält auch leere Kategorien; je Seite erscheinen höchstens 24 Karten. Eine Karte öffnet oder setzt genau ihr Blatt fort. Zurückkehren erhält Kategorie, Seite und Scrollposition; ein Neustart beginnt wieder bei „Alle Rätsel“, Seite 1. Einstellungen/Info und Beenden sind direkt erreichbar.
 
+Direkt neben der Kategorie steht „Sortieren nach“: Kategorie, Größe,
+Schwierigkeit oder Hinzugefügt. Der Pfeil wechselt auf- und absteigend.
+Kategorie folgt der redaktionellen Reihenfolge, Größe der Zellanzahl. Bei einem
+neuen Kriterium beginnt die Richtung aufsteigend; „Hinzugefügt“ zeigt zuerst die
+neuesten Rätsel. Ohne Datum oder Einstufung steht ein Blatt immer hinten.
+Gleichstände behalten ihre feste Blattreihenfolge; Blattnummern ändern sich nicht.
+
+Die Sortierung bleibt lokal nach einem Neustart erhalten. Filter, Seite und
+Scrollposition gelten für die laufende Sitzung; die Rückkehr aus einem Rätsel
+behält sie. Ein tatsächlicher Filter- oder Sortierwechsel beginnt auf Seite 1.
+„Sortierung konnte nicht gespeichert werden“ betrifft nur diese Auswahl:
+„Erneut versuchen“ wiederholt die Speicherung, ohne Spielstände zurückzusetzen.
+Im Browser muss der Schreibvorgang bestätigt sein, bevor der Tab geschlossen wird.
+
 Karten zeigen „Neu“, „Begonnen“ (auch mit ausschließlich Redohistorie) oder „Gelöst“. Begonnene Vorschauen zeigen nur eigene Füllungen, ohne Korrekturen; Name und Motivbild erscheinen erst nach gültigem Abschluss. Ein leerer automatisch angelegter Save bleibt „Neu“. Reset und Backupaktionen gehören zur jeweiligen Karte und verlangen weiterhin Bestätigung. Ein gültiger leerer Bestand und ein Katalogladefehler haben unterschiedliche Anzeigen. Kategorienänderungen verändern keine Rätseldefinition, Revision oder Spielstände.
 
 Der reguläre Spielbestand folgt `content/registry.json` und enthält ausschließlich

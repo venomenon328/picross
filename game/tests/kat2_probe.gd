@@ -55,6 +55,9 @@ func click(control: Control) -> void:
 	click_at(point)
 
 func choose(id: String) -> void:
+	var unchanged: bool = app.album.category_id == id
+	var old_page: int = app.album.page_index
+	var old_scroll: int = app.album.scroll_vertical
 	click(app.album.category_choice)
 	# The offscreen SubViewport is not a Window: unlike the real player it
 	# gets no focus-out when an embedded popup opens. Deliver that native
@@ -95,7 +98,7 @@ func choose(id: String) -> void:
 		break
 	await frames()
 	check(not popup.visible, "category popup closes after real item click")
-	check(app.album.category_id == id and app.album.page_index == 0 and app.album.scroll_vertical == 0, "category resets page and scroll")
+	check(app.album.category_id == id and app.album.page_index == (old_page if unchanged else 0) and app.album.scroll_vertical == (old_scroll if unchanged else 0), "category resets page and scroll only on change")
 
 func shot(name: String) -> void:
 	await frames()
@@ -108,7 +111,7 @@ func shot(name: String) -> void:
 		if reveal.artwork != null: textures += 1
 	check(app.choices.size() <= 24 and textures <= 24 and app.album.grid.get_child_count() <= 24, "bounded cards and earned textures")
 	var regions: Dictionary = {"selector": region(app.album.category_choice), "count": region(app.album.summary, true)}
-	if name == "all-1280-ui125": regions["layout"] = region(app.album)
+	if name == "all-1280-ui125" or name.begins_with("sorting"): regions["layout"] = region(app.album)
 	if not app.choices.is_empty(): regions["card"] = region(app.choices[0].get_parent())
 	else: regions["empty"] = region(app.album.empty_message, true)
 	if app.album.next_button.get_parent().visible: regions["page"] = region(app.album.page_label, true)
@@ -140,6 +143,9 @@ func new_app() -> void:
 	var started: int = Time.get_ticks_usec()
 	app = load("res://main.tscn").instantiate()
 	surface.add_child(app)
+	# Existing KAT/KE scenarios bind their synthetic slots by canonical order.
+	# All their added dates are unknown; KU-B's large scenario tests real sorting.
+	if not mode in ["large", "adapter", "empty", "invalid"]: app.album.choose_sort("added")
 	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	await frames()
 	timings["startup_ms"] = (Time.get_ticks_usec() - started) / 1000.0
@@ -173,6 +179,7 @@ func run() -> void:
 		check(save_bytes().is_empty(), "empty/error path writes no saves")
 	elif mode == "large":
 		await large()
+		await sorting()
 	elif mode == "information":
 		await information_saves()
 	elif mode == "kb":
@@ -549,7 +556,86 @@ func regular() -> void:
 	await frames()
 	check(app.album.notes[0].text == "Begonnen", "redo-only slot prepared through pointer before process exit")
 
+func sorting() -> void:
+	await choose("")
+	var original: Dictionary = save_bytes()
+	for spec: Vector3i in [Vector3i(1280,720,125), Vector3i(1920,1080,100), Vector3i(2560,1440,125)]:
+		surface.size = Vector2i(spec.x, spec.y)
+		app.set_ui_scale(spec.z / 100.0)
+		await frames()
+		for control: Control in [app.album.category_choice, app.album.sort_choice, app.album.direction_button]:
+			check(Rect2(Vector2.ZERO, Vector2(surface.size)).encloses(control.get_global_rect()), "KU-B sort controls fit native viewport")
+		check(app.album.category_choice.get_global_rect().end.x <= app.album.sort_choice.get_global_rect().position.x and app.album.sort_choice.get_global_rect().end.x <= app.album.direction_button.get_global_rect().position.x, "KU-B adjacent sort controls do not overlap")
+		await sort_pointer(3)
+		check(app.album.preference.direction == "desc", "KU-B actual added menu defaults newest")
+		var ids: Array[String] = app.album.filtered_ids.duplicate()
+		check(ids.size() == 300 and app.album.visible_ids == ids.slice(0,24), "KU-B sorts all 300 before pagination")
+		var unknown: bool = false
+		for index: int in range(ids.size()):
+			var date: Variant = app.album.metadata[ids[index]].get("added_at")
+			if date == null: unknown = true
+			else: check(not unknown, "KU-B unknown date is always last")
+			if index > 0:
+				var prior: Variant = app.album.metadata[ids[index-1]].get("added_at")
+				if prior == date: check(Registry.ordinal(ids[index-1]) < Registry.ordinal(ids[index]), "KU-B date ties use canonical Blatt order")
+				elif prior != null and date != null: check(prior > date, "KU-B newest-first actual key order")
+		click(app.album.next_button)
+		await frames()
+		check(app.album.visible_ids == ids.slice(24,48), "KU-B page two belongs to full sorted result")
+		app.album.scroll_vertical = 80
+		await frames()
+		var position: int = app.album.scroll_vertical
+		var id: String = app.album.visible_ids[0]
+		app.album.ensure_control_visible(app.choices[0])
+		await frames()
+		position = app.album.scroll_vertical
+		click(app.choices[0])
+		await frames()
+		check(app.session.definition.id == id, "KU-B sorted card opens its stable ID")
+		app.show_album()
+		await frames()
+		check(app.album.page_index == 1 and app.album.scroll_vertical == position and app.album.selected_id == id and app.album.filtered_ids == ids, "KU-B sorted return retains page scroll selection and order")
+		click(app.album.direction_button)
+		await frames()
+		check(app.album.preference.direction == "asc" and app.album.page_index == 0 and app.album.scroll_vertical == 0, "KU-B pointer direction resets page and scroll")
+		await shot("sorting-%d-ui%d" % [spec.x, spec.z])
+		await sort_pointer(0)
+	check(save_bytes() == original, "KU-B browsing and preference writes never modify slots")
+	app.album.choose_sort("category")
+	if app.album.preference.direction != "asc": app.album.reverse_sort()
+
+func sort_pointer(index: int) -> void:
+	click(app.album.sort_choice)
+	surface.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_OUT)
+	await frames()
+	var popup: PopupMenu = app.album.sort_choice.get_popup()
+	check(popup.visible, "KU-B sort menu opens by mouse")
+	var hit: bool = false
+	for y: int in range(4, popup.size.y-4, 3):
+		var point: Vector2 = Vector2(popup.position) + Vector2(30,y)
+		var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+		motion.position = point
+		motion.global_position = point
+		motion.relative = Vector2(0,3)
+		motion.velocity = Vector2(0,240)
+		surface.push_input(motion, true)
+		if popup.get_focused_item() != index: continue
+		for down: bool in [true, false]:
+			var event: InputEventMouseButton = InputEventMouseButton.new()
+			event.position = point
+			event.global_position = point
+			event.button_index = MOUSE_BUTTON_LEFT
+			event.pressed = down
+			surface.push_input(event, true)
+		hit = true
+		break
+	await frames()
+	check(hit and not popup.visible and app.album.preference.criterion == app.album.Preference.CRITERIA[index], "KU-B criterion selected through actual pointer hit")
+
 func large() -> void:
+	# Equal areas recover the canonical ordering needed by the pre-existing
+	# page/reset assertions; sorting() separately covers editorial/default order.
+	app.album.choose_sort("size")
 	check(app.sessions.size() == 300 and app.album.categories.size() == 20, "300 synthetic sessions and twenty categories")
 	check(app.album.summary.text == "150 von 300 gelöst" and app.choices.size() == 24, "valid saved completions counted across all pages")
 	await shot("first-page")

@@ -46,7 +46,11 @@ func run() -> void:
 		app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 		app.set_tool("hand")
 	else:
-		if not require(app.album_previews[0].cells[10 * 20 + 10] == 1 and app.album_previews[1].cells[10 * 40 + 10] == 3 and app.album_reveals[0].payload.is_empty() and app.album_reveals[1].payload.is_empty(), "album previews restored without reveal spoilers"):
+		if not require(app.album.preference.criterion == "size" and app.album.preference.direction == "desc", "KU-B native process restart restores complete sort selection"):
+			return
+		var first_card: int = app.album.visible_ids.find(app.sessions[0].definition.id)
+		var second_card: int = app.album.visible_ids.find(app.sessions[1].definition.id)
+		if not require(first_card >= 0 and second_card >= 0 and app.album_previews[first_card].cells[10 * 20 + 10] == 1 and app.album_previews[second_card].cells[10 * 40 + 10] == 3 and app.album_reveals[first_card].payload.is_empty() and app.album_reveals[second_card].payload.is_empty(), "album previews restored by stable ID without reveal spoilers"):
 			return
 	app.select_puzzle(3)
 	app.set_ui_scale(1.25)
@@ -98,6 +102,10 @@ func run() -> void:
 		if not require(app.session.gesture.begin(app.session.player, Vector2i(27, 25), 2), "unfinished preview before close"):
 			return
 		if not require(app.session.player.cursor == 1 and app.session.player.history.size() == 2 and app.session.player.undo_used, "write phase history"):
+			return
+		app.album.choose_sort("size")
+		if app.album.preference.direction != "desc": app.album.reverse_sort()
+		if not require(app.album.preference.error.is_empty(), "KU-B native preference persisted before process exit"):
 			return
 		print("P1_ROUNDTRIP_WRITE_OK")
 		app.leave_app()

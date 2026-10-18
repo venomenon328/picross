@@ -662,3 +662,19 @@ Registry-/Runtime-/Paket-/Arbeitsbytes und den Arbeitsindex vor jeder Löschung.
 Neuere/unversionierte Arbeit und offene Registrierungsjournale blockieren. Der Befehl
 bereitet ausschließlich einen Git-Diff vor; Commit, PR und Merge folgen dem Workflow.
 Kein automatischer Nach-Merge-Job und kein wachsender CI-Testbestand.
+
+## KU-B · Erstregistrierung und kompatible Metadaten
+
+Die [Added-Quelle](CATALOG_SORTING.md) liegt außerhalb versiegelter Pakete.
+Ein nur lesender Registrierungsplan erzeugt keinen Zeitpunkt. Erst die mutierende
+Erstregistrierung erzeugt genau einmal UTC in ihrem Journal; der Zeitpunkt wird
+nur zusammen mit der erfolgreich spielbaren Registrierung dauerhaft. Rollback
+entfernt die eigene neue Quelle. Wiederholung, Update, Reveal-/Kategorieänderung,
+Sync und Recovery bewahren den vorhandenen Record bytegenau; ein alter fehlender
+oder null-Wert wird niemals durch die aktuelle Zeit ersetzt.
+
+Alle diese Wege verwenden den gemeinsamen [Transaktionsvertrag](SD_CATALOG.md).
+Neue Runtimeprojektionen sind v4; alte v2/v3 und ihre exakt abgegrenzten Journale
+bleiben nach den dortigen Kompatibilitätsregeln rückführbar. Keine Änderung an
+ID, Save-Slot, Rätseldefinition, Bewertung oder historischer Produktionsbindung
+allein zur Einführung von Hinzugefügt-Metadaten.

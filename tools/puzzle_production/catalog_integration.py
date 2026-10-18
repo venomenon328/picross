@@ -8,7 +8,7 @@ import time
 
 from .authoring_package import file_hash, file_table, require, sha
 from .contract import canonical_bytes, load_json
-from . import categories, catalog_rating as rating, catalog_transaction as tx
+from . import catalog_added as added, categories, catalog_rating as rating, catalog_transaction as tx
 
 
 def _input(value):
@@ -108,11 +108,29 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         require(file_hash(stage / "manifest.json") == entry["production"]["package_sha256"], "Export changed during staging")
         additions = {package + "/" + name: p for name, p in file_table(stage, time.monotonic() + 300).items()}
         if not existing: additions["game/" + entry["reveal"]] = stage / m["reveal"]
-        journal = tx.prepare(root, snapshot, changes, operation="update" if update else "registration", additions=additions)
+        # A read-only registration plan does not allocate its first timestamp.
+        if not existing and apply:
+            changes[added.path(entry["id"])] = added.encoded(added.registration(entry["id"]))
+        journal = tx.prepare(root, snapshot, changes, operation="update" if update else "registration", additions=additions) if existing or apply else None
+        if journal is None:
+            names = tx.text_names(registry) | tx.text_names(new)
+            old = {name: snapshot["texts"][name] if name in snapshot["texts"] else tx.read(root, name) for name in names}
+            require(all(old[name] is None for name in names - tx.text_names(registry)), "Registration plan target already exists")
+            require(all(not tx.safe(root, name).exists() for name in additions), "Registration plan addition already exists")
+            proposed = {name: value.decode() if value is not None else None for name, value in {**old, **changes}.items()}
+            proposed[tx.RUNTIME] = tx.projection(proposed, new).decode()
+            tx._stage_check(root, proposed, snapshot["retained"], additions)
+            require(all(tx.read(root, name) == value for name, value in old.items()) and
+                    all(file_hash(tx.safe(root, name)) == checksum for name, checksum in snapshot["retained"].items()), "Checkout changed during registration planning")
+            planned_changes = [{"path": name, "operation": "add" if old[name] is None else "replace"}
+                               for name in sorted(names) if old[name] != (proposed[name].encode() if proposed[name] is not None else None)]
+            planned_changes.append({"path": added.path(entry["id"]), "operation": "add-on-success"})
+        else:
+            planned_changes = [{"path": name, "operation": "add" if journal["old"][name] is None else "replace"}
+                               for name in sorted(journal["new"]) if journal["new"][name] != journal["old"][name]]
         plan = {"status": "planned-update" if update else "planned", "registered": False, "id": entry["id"], "category": category,
                 "before": registry, "after": new, "changes": [{"path": package, "operation": "add"}] +
-                [{"path": name, "operation": "add" if journal["old"][name] is None else "replace"}
-                 for name in sorted(journal["new"]) if journal["new"][name] != journal["old"][name]],
+                planned_changes,
                 "user_saves_modified": False}
         if update:
             plan.update(expected_definition_sha256=expected_definition_sha256, previous_runtime_revision=old_def["revision"],

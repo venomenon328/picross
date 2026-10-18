@@ -1,6 +1,6 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
-Stand: 18.10.2026 · Spezifikation 1.0 · freigegebener Sollstand, nicht implementiert
+Stand: 18.10.2026 · Spezifikation 1.1 · KU-B im Implementierungspaket; Abnahmen separat
 
 Der Eigentümer hat die Katalogüberarbeitung als Spezifikation freigegeben.
 [KU / #244](https://github.com/venomenon328/picross/issues/244) führt
@@ -8,15 +8,18 @@ KU-A für die [Kartengestaltung](CATALOG_PRESENTATION.md) und KU-B für die hier
 beschriebene vollständige Sortierfunktion einschließlich Daten und Persistenz.
 Empfohlene Reihenfolge ist KU-A, danach KU-B; beide liefern jeweils ein selbständig
 abnehmbares Ergebnis in einem eigenen späteren Implementierungs-PR.
-Diese Spezifikation ist keine Implementierungsfreigabe, Startprüfung oder Abnahme.
+Die gesondert beauftragte Implementierung läuft auf `feat/244-katalogsortierung`.
+[Prüfzuordnung und offene Gates](KU_B_VERIFICATION.md) bleiben separat.
 
 ## Geltung und Ausgangsstand
 
-Geprüfte Ausgangsbasis ist `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a`.
-Der aktuelle Katalog übernimmt die kanonische Registryreihenfolge und bildet
+Historische Spezifikationsbasis ist `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a`.
+Die Implementierung basiert auf `main@04b77dc6c6487890e0de5a5711ed5e496ee0d4af`.
+Der damalige Katalog übernahm die kanonische Registryreihenfolge und bildete
 anschließend Seiten mit höchstens 24 Karten. Kategorie, Seite, Scrollposition
 und Auswahl sind nach [KAT-2](KAT2_VERIFICATION.md) sitzungsgebunden.
-Inhaltsregistry und Runtime führen derzeit kein Hinzugefügt-Datum.
+Der damalige Stand führte kein Hinzugefügt-Datum; KU-B ergänzt die unten
+festgelegten Sidecars und Runtime-v4.
 
 KU-B ergänzt gezielt diesen Ansichtsvertrag, eine eng begrenzte UI-Präferenz
 und eine versionierte Katalogmetadatenquelle. [Kategorien](CATEGORIES.md),
@@ -271,3 +274,111 @@ Alle KU-B-Gates sind offen. KU-A kann vorher eigenständig abgenommen werden;
 seine technische oder persönliche Abnahme nimmt KU-B nicht vorweg. Der aktuelle
 Auftrag erzeugt ausschließlich Spezifikation und Issue-Pakete, keine Datenübernahme,
 Implementierung, Code-PR, neue Produktprüfung, Merge oder Produktveröffentlichung.
+
+## KU-B-P01 · Verbindliche Implementierungsverträge
+
+Vor der ersten KU-B-Produktcodeänderung festgelegt, Basis
+`04b77dc6c6487890e0de5a5711ed5e496ee0d4af`. Die folgenden konkreten Formate
+präzisieren A01–A10; die bestehenden Fachentscheidungen bleiben maßgeblich.
+
+### Autoritative Hinzugefügt-Daten und Herkunft
+
+Je registrierter ID ist `content/added/<id>.json` die einzige optionale Quelle.
+Format `picross-added-v1`, exakt `format,id,added_at,provenance`; UTF-8 ohne BOM,
+kanonisches JSON (sortierte Schlüssel, kompakte Separatoren) plus LF, höchstens
+64 KiB. ID-Grammatik und Bindung folgen der Content-Registry. `added_at` ist
+`null` oder ein wirklich existierender UTC-Kalenderzeitpunkt mit sekundengenauem
+Format `YYYY-MM-DDTHH:MM:SSZ`, Jahr 0001–9999, ohne Schaltsekunde/Offset/Bruchteil.
+Fehlende Datei bedeutet unbekannt; vorhandene ungültige Datei ist ein Fehler.
+
+`provenance` enthält exakt `kind,reference_time,commit,evidence,reason`.
+`kind` ist `registration`, `direct`, `git-snapshot` oder `unknown`.
+`reference_time` ist derselbe Zeitpunkt wie `added_at`; `unknown` verlangt null,
+alle anderen Arten einen Zeitpunkt. `commit` ist bei `git-snapshot` ein voller
+kleingeschriebener Git-SHA-1, ansonsten null oder ein solcher SHA. `reason` ist
+nichtleerer Text, höchstens 2048 Zeichen ohne Steuerzeichen. `evidence` ist bei
+`registration` null; sonst exakt `path,sha256`, gebunden an einen dauerhaften
+Nachtragsbericht unter `content/added/reports/<run>.json` (Run-Grammatik wie SD).
+Ein unbekannter Bestandswert erhält eine konkrete Quellen-/Mehrdeutigkeitsbegründung.
+
+Der gesamte Namespace wird geprüft: ausschließlich bekannte ID-Dateien und
+referenzierte Berichte, keine Fremd-IDs, Aliasnamen, Unterverzeichnisse, Links,
+Reparse-Points, doppelten JSON-Schlüssel, unbekannten Felder oder falschen Typen.
+Berichte sind höchstens 8 MiB; höchstens 10000 ID-Dateien. Produktionspakete und
+ihre Manifeste bleiben versiegelt und unverändert. Runtime enthält ausschließlich
+den Zeitpunkt oder null, niemals Herkunft oder Zugriff auf Git/GitHub.
+
+### Historischer Plan und explizite Übernahme
+
+Ein nur lesender Plan `picross-added-plan-v1` enthält exakt
+`format,run_id,base_commit,sources,evidence,entries`.
+`sources` bindet alle Registry-/Kategorie-/Runtime-/Definition-/Rating-/Added-
+Quellbytes und behaltenen Produktionsbindungen per SHA-256 (null bei Abwesenheit).
+`evidence` ist eine nach stabilen Kennungen geordnete Liste unveränderlicher
+Quellbelege mit Commit, Dateipfad, unveränderten UTF-8-Dateibytes und SHA-256;
+Gitbelege binden zusätzlich den nachweislichen Integrations-/PR-Zusammenhang und
+den Commitzeitpunkt. `entries` enthält in kanonischer ID-Reihenfolge exakt alle
+aktuellen IDs mit altem Wert/Recordhash, vorgeschlagenem Zeitpunkt, Herkunftsart,
+Referenzzeitpunkt, Quellcommit, Belegkennung und begründeter Quellenentscheidung.
+Keine Uhrzeit wird aus dem Planlauf abgeleitet.
+
+Quellenpriorität: eindeutiger direkter erfolgreicher Erstregistrierungsbeleg;
+sonst frühester nachweislich gültiger sichtbarer Katalogsnapshot aus integriertem
+Gitverlauf einschließlich eindeutig gebundener PR-Vorgeschichte; sonst null.
+Commitzeit ist ausdrücklich rekonstruierte Referenzzeit, keine behauptete
+Werkzeugausführungszeit. Fehlende/mehrdeutige Belege werden nie als heutige
+Registrierung ausgegeben. Nur der explizite redaktionelle Planbefehl liest Git.
+Allgemeine Tests verwenden ausschließlich synthetische Verläufe.
+
+Die getrennte Übernahme validiert Plan und vollständige Quellenbindung, schreibt
+seine unveränderten Bytes als dauerhaften Bericht und bindet dessen Hash in den
+ID-Records. Keine Analyse, Produktionsreplays oder Savezugriffe. Identische
+Wiederholung prüft die erwarteten Ergebnisbytes und rekonstruiert die gebundene
+Ausgangsprojektion im Speicher; sie schreibt weder Dateien noch Journal oder
+Zeitstempel. Abweichende Quellen/neue IDs verlangen einen neuen Plan.
+
+### Lokale UI-Präferenz
+
+Datei `user://p1/catalog-preference.json`, außerhalb `p1/saves`; höchstens 1024
+UTF-8-Bytes. Exakt `format,criterion,direction`, Format
+`picross-catalog-preference-v1`; Kriterien `category,size,difficulty,added`,
+Richtungen `asc,desc`. Fehlende/ungültige Datei einschließlich doppelter Schlüssel
+setzt das gesamte Paar auf Kategorie/aufsteigend, ohne Schreiben beim Lesen.
+Ein neuer gültiger Wert wird nativ über eine temporäre Schwesterdatei mit
+Flush und atomarem Rename publiziert; Fehler bewahrt die vorherige gültige Datei.
+Dieselbe erfolgreich gespeicherte Auswahl ist ein echter Schreib-No-op.
+
+Im Browser wird erst nach Hydration und exklusivem Web-Lock geladen. Ein eigener
+Präferenzstatus und eigener Wiederholungsweg verwenden dieselbe serialisierte
+IDBFS-Syncwarteschlange wie Spielstände; nur der echte Callback bestätigt
+Dauerhaftigkeit. Schnelle Änderungen werden generationsgebunden bis zum neuesten
+Wert gespeichert. Präferenzfehler überschreiben weder Slotfehler noch bestätigen
+sie Spielstandsänderungen. Die Auswahl wirkt sofort; ein nichtmodaler deutscher
+Hinweis mit erneutem Versuch bleibt erreichbar. Erneute gleiche Auswahl darf
+einen fehlgeschlagenen Versuch wiederholen. Beenden nutzt den bestehenden Syncweg.
+
+Filter, Sortierkriterium und Richtung ändern Seite/Scroll nur bei tatsächlicher
+Änderung auf null. Die vollständige gefilterte Menge wird vor der 24er-Paginierung
+sortiert; nur der Primärschlüssel folgt der Richtung, Gleichstände stets der
+kanonischen Blattreihenfolge. Unbekannte Schwierigkeit/Zeit stehen immer hinten.
+Rückkehr, Skalierung und Resize erhalten Sitzungsauswahl, Seite, Scroll und ID.
+
+### Exakte Planzeilen und Folgepläne
+
+Eine Planzeile hat exakt `id,old,old_record,proposed,kind,reference_time,commit,evidence,reason`.
+`old_record` bewahrt die ursprünglichen kanonischen UTF-8-Bytes als String oder null;
+sein Hash muss zur Quellbindung passen. Bereits vorhandene Records bleiben
+bytegleich erhalten, einschließlich unbekannter Werte. Bei solchen Zeilen ist
+`evidence` null und die übrige Herkunft unverändert. Ein Folgeplan kann so neue
+fehlende IDs erfassen, ohne bestehende Datierungen neu zu erfinden.
+
+Ein Beleg hat exakt `key,kind,commit,path,content,sha256,reference_time,integration`.
+`checkout-runtime` hält die ursprüngliche Runtime für die No-op-Gegenprüfung.
+Gitbelege binden Registrybytes, Kategorien, Runtime, Produktionshashes und
+Integration über `kind,base_commit,merge_commit,pull_request,categories,runtime,bindings`.
+Der PR-Beleg enthält die gelesenen `number,url,state,mergedAt,mergeCommit,headRefOid,commits`;
+Merge-SHA und ausgewählter Commit müssen diesem gebundenen PR zugeordnet sein.
+Direkte Belege enthalten exakt `id,event,success,registered_at` mit
+`event=first-playable-registration` und `success=true`. Widersprüchliche direkte
+Zeitbelege ergeben begründetes unbekannt, keinen stillen Rückfall auf Git.
+Alle Ebenen werden vor Übernahme strukturell und gegen die Quellen geprüft.

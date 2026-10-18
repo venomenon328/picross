@@ -128,7 +128,7 @@ func run() -> void:
 			app.album.ensure_control_visible(choice)
 			await process_frame
 			check(app.album.get_global_rect().encloses(choice.get_global_rect()), "all six choices reachable")
-		check(app.album_reveals[pilot_index].payload.is_empty(), "album no hidden reveal payload")
+		check(app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].payload.is_empty(), "album no hidden reveal payload")
 		await shot("album-partial-%d-ui%d" % [spec[0],spec[2]*100])
 	surface.size = Vector2i(1920,1080)
 	app.size = Vector2(surface.size)
@@ -152,7 +152,7 @@ func run() -> void:
 		app.open_puzzle()
 		await shot("completion-%d-ui%d" % [spec[0],spec[2]*100])
 		app.show_album()
-		app.album.ensure_control_visible(app.choices[pilot_index])
+		app.album.ensure_control_visible(app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))])
 		await shot("album-completed-%d-ui%d" % [spec[0],spec[2]*100])
 	write_report()
 	if failures == 0:
