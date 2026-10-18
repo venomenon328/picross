@@ -10,10 +10,12 @@ import time
 from playwright.sync_api import sync_playwright
 from serve import serve
 from browser_runtime import options, graphics
+import timing
 
 DIAGNOSTIC_OUTPUT = None
 
 
+@timing.measured('state')
 def state(page):
     return page.evaluate('window.picrossProbe')
 
@@ -22,6 +24,7 @@ def wait(page, expression):
     page.wait_for_function(expression, timeout=60000)
 
 
+@timing.measured('save_confirmation')
 def saved(page):
     wait(page, 'window.picrossStorage.ready && !picrossStorage.pending && !picrossStorage.error')
 
@@ -106,10 +109,13 @@ def open_page(context, url, before_start=None):
 
 
 def exercise(pw, name, root, update, url, output, evidence):
+    timing.CURRENT = timing.Meter()
     results = evidence['scenarios']
+    evidence['timings'] = []
     began = time.monotonic()
     def passed(label):
         results.append(label)
+        evidence['timings'].append(timing.CURRENT.checkpoint(label))
         evidence['elapsed_seconds'] = round(time.monotonic()-began, 2)
         print(name, 'PASS', label, flush=True)
     with tempfile.TemporaryDirectory(prefix='picross-web-profile-', ignore_cleanup_errors=True) as profile:
@@ -407,6 +413,7 @@ def exercise(pw, name, root, update, url, output, evidence):
 
 def main():
     global DIAGNOSTIC_OUTPUT
+    timing.install()
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True)
