@@ -111,20 +111,11 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
         reports.append(report)
     # Keep compact native images without repeating the large paper background.
     # Full framebuffer originals remain local; crops preserve exact native pixels.
-    from PIL import Image
-    crops = []
-    for report in reports:
-        for capture in report["captures"]:
-            path = directory / capture["file"]
-            context = path.with_name(path.stem + "-context.png")
-            path.rename(context)
-            with Image.open(context) as image:
-                regions = dict(capture["regions"])
-                for name, rectangle in regions.items():
-                    target = path.with_name(path.stem + "-" + name + ".png")
-                    image.crop(rectangle).save(target, optimize=True)
-                    crops.append(dict(file=target.name, source=capture["file"], region=rectangle))
+    from native_images import crop_native
+    import os
+    crops, image_costs = python_phase("kat2-image-processing", lambda: crop_native(
+        directory, reports, compare=os.environ.get("P1_COMPARE_NATIVE_PNG") == "1"))
     summary = dict(format="picross-kat2-product-v1", test_only=True, reports=reports,
-                   crops=crops, crop="Native control rectangles and one tight layout; no resizing. Full contexts remain local.")
+                   crops=crops, image_costs=image_costs, crop="Native control rectangles and one tight layout; no resizing. Full contexts remain local.")
     write_json(directory / "summary.json", summary)
     return summary, sorted(p for p in directory.iterdir() if not p.name.endswith("-context.png"))

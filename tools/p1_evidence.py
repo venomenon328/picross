@@ -64,6 +64,8 @@ def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[l
     """Rebuild partial evidence selection when run_visual did not return."""
     reports = sorted(output.glob("renders/*.json")) + sorted(output.glob("drawing-renders/*.json")) + sorted(output.glob("vs2-renders/*.json")) + sorted(output.glob("v1-renders/*.json")) + sorted(output.glob("v2-renders/*.json")) + sorted(output.glob("v3-renders/*.json"))
     reports += sorted(output.glob("perf-b/*.json"))
+    for area in ("kat2", "ea", "za1"):
+        reports += sorted(output.glob(area+"/*.json"))
     primary = ("render-report-" + phase[len("render-"):] + ".json" if phase.startswith("render-")
                else phase.removesuffix("-render") + "-renders.json" if phase.startswith("rp6-")
                else "z2-renders.json" if phase == "current-book-capture"
@@ -101,9 +103,9 @@ def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[l
 
 
 class Evidence:
-    def __init__(self, output: Path, host: str, scope: dict[str, bool]):
+    def __init__(self, output: Path, host: str, scope: dict[str, bool], technical: Path | None = None):
         self.output = output
-        self.technical = output / "technical"
+        self.technical = technical or output / "technical"
         self.logs = self.technical / "logs"
         self.logs.mkdir(parents=True, exist_ok=True)
         self.began = time.monotonic()
@@ -170,6 +172,7 @@ class Evidence:
 
     def retain_files(self, sources: list[Path], priority_sources=()) -> None:
         """Select native originals; never resize an image or replace an assertion."""
+        began = time.monotonic()
         selection_root = self.technical / "selected"
         if selection_root.exists():
             shutil.rmtree(selection_root)
@@ -180,7 +183,9 @@ class Evidence:
                 p not in priority, "failure" not in p.name, p.suffix == ".png",
                 p.stat().st_size if p.is_file() else 0, str(p))):
             if not path.is_file():
-                continue
+                raise toolchain.PreflightError("Missing selected evidence: " + str(path))
+            if path.stat().st_size == 0:
+                raise toolchain.PreflightError("Empty selected evidence: " + str(path))
             relative = path.relative_to(self.output)
             size = path.stat().st_size
             target = self.technical / "selected" / relative
@@ -188,10 +193,10 @@ class Evidence:
             shutil.copyfile(path, target)
             if path.suffix == ".png":
                 image_bytes += size
-            selected.append(dict(file=str(relative), bytes=size, sha256=toolchain.sha256_file(path),
+            selected.append(dict(file=relative.as_posix(), bytes=size, sha256=toolchain.sha256_file(path),
                                  failure_priority=path in priority, priority=path in priority))
         self.report["selected_evidence"] = dict(files=selected, omitted=omitted,
-                                                 image_bytes=image_bytes)
+                                                 image_bytes=image_bytes, selection_seconds=round(time.monotonic()-began, 6))
         self.flush()
 
     def measure_size(self, player: Path | None = None) -> dict:
