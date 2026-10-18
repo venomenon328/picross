@@ -1,22 +1,31 @@
-# Katalogetiketten und unbekannte Motive · KE
+# Katalogdarstellung und unbekannte Motive · KU
 
-Stand: 18.10.2026 · Spezifikation 1.3 · KE/SD-C1 integriert; C2 übernommen, finales Review offen
+Stand: 18.10.2026 · Spezifikation 2.0 · KU als Sollstand freigegeben, noch nicht implementiert
 
-Der Eigentümer hat diese Weiterentwicklung als Spezifikation freigegeben.
-[Paket #233](https://github.com/venomenon328/picross/issues/233) führt Umsetzung,
-Akzeptanz KE-A01–A08 und getrennte technische, Review- und Eigentümergates.
-Eine Spezifikationsfreigabe ist weder Implementierung noch Mergefreigabe.
+Der Eigentümer hat die Katalogüberarbeitung am 18.10.2026 als Spezifikation
+freigegeben. [Gesamtissue #244](https://github.com/venomenon328/picross/issues/244)
+führt KU-A (Karten und Papierstreifen) und KU-B (Sortierung und Hinzugefügt-Metadaten),
+ihre Akzeptanz und getrennten technischen, Review- und Eigentümergates.
+Der Auftrag umfasst Spezifikation und Dokumentation; er startet keine
+Implementierung und erteilt keine Mergefreigabe.
 
 ## Geltung und gezielte Ablösung
 
-Ausgangsbasis ist `main@aa5cbeb3812f5fe1f7f5087beed38069240080e8` mit KK
-aus [#174](https://github.com/venomenon328/picross/issues/174)/PR #176.
-KE ersetzt dessen kombinierte Größen-/Moduszeile, Status rechts in der Fußzeile
-und leere Bildfläche bei Neu. Der Verzicht auf Ganzkarten-Tooltips bleibt;
-gezielte Modus-/Schwierigkeits-Tooltips kommen hinzu. Gleiche Karten, Reservierung
-von Titel/Reset, Fehler-/Recoveryzugriff, Spoilergrenze und Öffnen über die Karte
-bleiben verbindlich. Historische KK-R01/KK-M01 sind durch KE nicht abgenommen;
-die einmalige Mergeausnahme für KK gilt nicht für KE.
+Ausgangsbasis ist `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a` mit
+integrierter KE-Katalogdarstellung aus
+[#233](https://github.com/venomenon328/picross/issues/233)/PR #234 und dem
+bestehenden SD-Bewertungsweg. KU-A löst gezielt die zweizeilige KE-Infobox,
+sichtbare Schwierigkeitsziffer, Monochrom-Farbprobe, Schwierigkeitstooltips und
+Statusdarstellung im Etikett einschließlich des sichtbaren Wortes „Fertig“ ab.
+KU-B ergänzt die bisher fehlende Sortierung gemäß
+[Katalogsortierung](CATALOG_SORTING.md).
+
+Die Abschnittskennungen KE-D01–D06 bleiben als Verweisziele erhalten und führen
+nachfolgend den fortgeschriebenen Sollvertrag. Bis zur Umsetzung beschreibt die
+KE-Lieferung den tatsächlichen Spielerstand. Historische KE-/KK-/KB-/EA-Nachweise
+und damalige Abnahmeentscheidungen werden weder geändert noch erneut geöffnet.
+Gleiche Karten, Reservierung von Titel/Reset, Fehler-/Recoveryzugriff,
+Spoilergrenze, Öffnen über die Karte und lokale Revealglättung bleiben verbindlich.
 
 [Produktdefinition](PRODUCT_DEFINITION.md), [Gestaltungskonzept](DESIGN_CONCEPT.md),
 [Zeichensprache](UI_DRAWING_STYLE.md), [Kategorien](CATEGORIES.md),
@@ -35,84 +44,112 @@ Größe. Reihenfolge von oben nach unten:
    und weiterhin reserviert.
 3. Fester proportionaler Bildraum für Fragezeichen, eigene Füllminiatur,
    verdientes Reveal oder bestehende Fehler-/Recoverydarstellung.
-4. Eine passive Infobox mit zwei Zeilen und zwei Spalten.
-5. Feste Fußzeile mit „Blatt NN“ links.
+4. Ein passiver Papierstreifen mit genau einer gemeinsamen Metadatenzeile.
+5. Feste Fußzeile mit „Blatt NN“ links und Statussymbol samt Statuswort rechts.
 
-| Infobox | Links | Rechts |
-| --- | --- | --- |
-| Oben | Breite × Höhe, etwa `20 × 15` | Gezeichnetes Moduspiktogramm |
-| Unten | Schwierigkeit als Text | Statussymbol und Statuswort |
+| Papierstreifen | Inhalt |
+| --- | --- |
+| Links | Breite × Höhe, etwa `20 × 15` |
+| Mitte | Gefüllter Schwierigkeitskreis und vollständige Bezeichnung |
+| Rechts | Gezeichnetes Mono-/Farbpiktogramm |
 
-Die bisherigen doppelten Größen-/Modusangaben und der Fußzeilenstatus entfallen.
-Das Etikett ist keine eigene Schaltfläche: Klick öffnet dieselbe Karte; Reset
-und Recoveryaktionen behalten ihre eigenen vorhandenen Aktionen. Keine neuen
-Filter, Sortieroptionen oder Fortschrittsanzeigen.
+Die drei Angaben stehen vertikal ausgewogen in derselben Zeile mit klaren
+Abständen; keine drei Einzelkästchen und keine zweite Metadatenzeile.
+Der Status steht ausschließlich in der Fußzeile. Größe und Modus werden nicht
+zusätzlich sichtbar an anderer Stelle derselben Karte wiederholt. Das Etikett bleibt
+passiv: Klick öffnet dieselbe Karte; Reset und Recoveryaktionen behalten ihre
+eigenen vorhandenen Aktionen. KU-A ergänzt keine Filter, Sortieroptionen oder
+Fortschrittsanzeigen; die separate KU-B-Sortierung verändert diese Kartenregel nicht.
 
-Die vorhandene kompakte Breite von ungefähr 220–240 logischen Pixeln ist die
-Ausgangsbasis; Bildhöhe bisher 112 × UI. Die Infobox darf die Vorschau nicht zum
-Briefmarkenbild verkleinern. Eine einmalig angepasste gemeinsame Kartenhöhe ist
-erlaubt. Kategorie, mehrzeiliger Titel, „5 Sehr schwer“, „Nicht eingestuft“, Status,
-Reset und Fehlertexte müssen bei UI 100/125 % ohne Überlappung und ohne
-zustandsabhängige Layoutsprünge funktionieren. Notwendige Metadaten bleiben
-lesbar; der bestehende Titelauslassungsvertrag bleibt davon unberührt.
+Die bisherige Kartenbreite von ungefähr 220–240 logischen Pixeln ist keine neue
+Breitengarantie. Etwa 260–280 logische Pixel für Karten, 28–32 für Moduspiktogramme
+und 12–14 für Schwierigkeitskreise dienen ausschließlich als Entwurfsstart bei
+UI 100 %, nicht als bereits gemessene Fit-Zusage oder starre Grenzwerte.
+Die gemeinsame Mindestbreite wird aus tatsächlichen Volltextmaßen, Symbolhüllen,
+Innenrändern und Abständen bestimmt. „Nicht eingestuft“, „Sehr leicht“ und
+„Sehr schwer“ müssen mit Größe und Modus bei UI 100/125 % vollständig und
+einzeilig lesbar bleiben. Keine kleinere Metadatenschrift, Abkürzung oder
+Auslassung als Ersatz für ausreichende Breite; bei Bedarf sinkt die Spaltenzahl.
+
+Bei gleichem Viewport und UI-Faktor bleiben alle Karten gleich groß, unabhängig
+von Text, Modus und Status. Der feste proportionale Bildraum behält ausreichend
+Platz; die bisherige Bildhöhe von 112 × UI darf nicht zur Unterbringung der
+Metadaten verkleinert werden. Eine gemeinsam angepasste Kartenhöhe ist erlaubt.
+Kategorie, mehrzeiliger Titel, Status, Reset und Fehlertexte funktionieren ohne
+Überlappung und ohne zustandsabhängige Layoutsprünge. Der bestehende
+Titelauslassungsvertrag bleibt von den vollständigen Metadaten getrennt.
 
 ## KE-D02 · Papieretikett und Moduspiktogramm
 
-Die Infobox wirkt wie ein kleines Inventaretikett des Rätselbuchs: warmes Papier,
-leicht dunkler als die Kartenfläche, dünne subtil unregelmäßige Kontur, höchstens
-ein sehr zurückhaltender Schatten. Kein schwerer Schmuckrahmen. Vorhandene
-lesbare Plex-Schrift für Metadaten; Charakter entsteht durch Kontur und Zeichnungen.
-Keine neue Schrift oder Änderung der vorhandenen Schriftdateien.
+Der gemeinsame Streifen wirkt wie ein ruhiges Papieretikett des Rätselbuchs:
+warmes Papier, leicht dunkler als die Kartenfläche, dünne subtil unregelmäßige
+Kontur, höchstens ein sehr zurückhaltender Schatten. Keine drei gerahmten
+Einzelfelder und kein schwerer Schmuckrahmen. Vorhandene lesbare Plex-Schrift
+für Metadaten; Charakter entsteht durch Kontur, Zeichnungen und klare Abstände.
+Keine neue Schrift oder Änderung der vorhandenen Schriftdateien. Streifen,
+Kreise und Stifte bleiben statisch.
 
 | Rätselmodus | Zeichnung | Erklärung im gezielten Tooltip |
 | --- | --- | --- |
-| Monochrom | Ein dunkler Stift mit dunkler Farbprobe | Monochromes Rätsel |
+| Monochrom | Ein einzelner dunkler Stift ohne Farbprobe | Monochromes Rätsel |
 | Farbe | Drei aufgefächerte Stifte in gedecktem Rot, Blau und Gelb | Farbiges Rätsel |
 
 Die Silhouette beziehungsweise Anzahl der Stifte unterscheidet die Modi auch ohne
 Farbwahrnehmung. Alle Farbrätsel verwenden dasselbe Symbol; keine tatsächliche
 Palette und keine Motivinformation. Der Modus beschreibt das Rätsel, nicht das
 Abschlussbild: Auch ein monochromes Rätsel erhält sein farbiges Reveal.
+Der Monostift wird nach Entfernung der Farbprobe im eigenen Symbolraum neu
+zentriert; der bisher für das Gekritzel vorgesehene Leerraum bleibt nicht bestehen.
+Beide Modussymbole werden gegenüber der KE-Ausgangsdarstellung größer und nach
+ihren tatsächlichen sichtbaren Hüllen ausgerichtet. Der Entwurfsstart von 28–32
+logischen Pixeln ist zusammen mit der Kartenzeile bei UI 100/125 % zu prüfen.
 
 ## KE-D03 · Schwierigkeit ohne neue Bewertung
 
-| Vorhandene Stufe | Anzeige |
-| --- | --- |
-| L1 | 1 Sehr leicht |
-| L2 | 2 Leicht |
-| L3 | 3 Mittel |
-| L4 | 4 Schwer |
-| L5 | 5 Sehr schwer |
-| Keine Einstufung | Nicht eingestuft |
+| Vorhandene Stufe | Sichtbare Bezeichnung | Gefüllter Kreis |
+| --- | --- | --- |
+| L1 | Sehr leicht | Gedecktes Grün, `#52734e` |
+| L2 | Leicht | Oliv, `#74713e` |
+| L3 | Mittel | Ocker, `#997337` |
+| L4 | Schwer | Rost, `#a36342` |
+| L5 | Sehr schwer | Gedecktes Rot, `#9b514b` |
+| Keine Einstufung | Nicht eingestuft | Neutralgrau, ohne Stufenzuordnung |
 
-KE-N1 ersetzt die frühere sichtbare Schätzkennzeichnung: Die kompakte Ziffer ist
-farbig akzentuiert, von gedecktem Grün über Oliv/Ocker und Rost zu gedecktem Rot;
-der vollständige Name bleibt in dunkler Plex-Schrift. Zahl und Name tragen die
-Bedeutung auch ohne Farbwahrnehmung. Redaktionelle und instrumentierte Werte
-verwenden dieselbe Skala ohne `≈`; fehlend bleibt neutral und erhält keine Null.
-Ein gezielter Tooltip nennt Zahl und Namen und erläutert in Worten die vorhandene Bewertungsart und Unsicherheit,
-die hinterlegte plausible Spannweite und gegebenenfalls notwendige
-linienübergreifende Paarlinienlogik/R4. Er formuliert neutral aus typisierten
-Metadaten; keine freien Produktionsnotizen oder motivbezogenen Engpassbeschreibungen.
-Fehlende Informationen werden nicht erfunden. Keine Sterne, neue Solveranalyse,
-menschliche Kalibrierung oder Ableitung aus Format/Farbzahl.
+KU-A ersetzt die farbig akzentuierte KE-N1-Ziffer durch einen gefüllten Kreis in
+derselben bestehenden Stufenfarbe. Der vollständige Name bleibt unmittelbar
+dahinter in dunkler Plex-Schrift und trägt die Bedeutung auch ohne
+Farbwahrnehmung. Kein sichtbarer Zahlenwert, keine Sterne und keine
+Schätzkennzeichnung `≈`. Alle Kreise haben dieselbe Größe; eine dezent gezeichnete
+Kontur darf die klar gefüllte Kreisform nicht auflösen. 12–14 logische Pixel sind
+der Entwurfsstart; Lesbarkeit und gemeinsame Zeilengeometrie bestimmen das Endmaß.
+
+„Nicht eingestuft“ bleibt neutral, erhält weder Null noch eine der fünf
+Stufenfarben und wird nicht als sehr leicht behandelt. Die genaue neutrale
+Graunuance folgt dem vorhandenen Papier-/Textkontrast. Redaktionelle und
+instrumentierte Werte verwenden dieselbe unveränderte Fünferskala.
+Über Kreis und Schwierigkeitstext erscheint kein Tooltip, einschließlich nativer
+Ersatztooltips. Die bisherigen Methoden-/Unsicherheitstexte werden dort nicht
+mehr angezeigt. Das entfernt nur die Erklärung aus der Katalogoberfläche;
+Bewertungsquelle, Metadaten und Aussagegrenzen bleiben unverändert.
+Keine neue Solveranalyse, menschliche Kalibrierung oder Ableitung aus Format,
+Farbzahl oder Spielstand; fehlende Informationen werden nicht erfunden.
 
 ## SD · Aktuelle Quelle der Schwierigkeit
 
-[SD-C1](SD_CATALOG.md) ergänzt die separate aktuelle Bewertungsquelle zu KE-D03/D06.
-SD-C1 ist nach qualifiziertem R2 mit PR #242 integriert. Die
-[SD-C2-Übernahme](SD_CATALOG.md) verwendet nach bestandenem Vor-Übernahme-Review
-26 aktive 0.3-Bewertungen; finales Datenreview und Merge bleiben offen.
-Historische Produktionsschätzungen bleiben erhalten. Fehlende Sidecars erhalten die bisherigen
-Werte, ungültige vorhandene blockieren die Projektion.
+[SD-C1 und SD-C2](SD_CATALOG.md) führen die bestehende separate aktuelle
+Bewertungsquelle zu KE-D03/D06 und den tatsächlichen Integrations-/Abnahmestand.
+Historische Produktionsschätzungen bleiben erhalten. Fehlende Sidecars erhalten
+die bisherigen Werte, ungültige vorhandene blockieren die Projektion.
 
-Skala, Bezeichnungen, Farben, gezielter Tooltip, neutrale fehlende Einstufung
-und Spoilergrenze bleiben. 0.3 ist ausschließlich instrumentiert mit mittlerer
+Skala, Bezeichnungen, Farben, neutrale fehlende Einstufung und Spoilergrenze
+bleiben. KU-A ersetzt ausschließlich Ziffer und Schwierigkeitstooltip gemäß
+KE-D03. 0.3 ist ausschließlich instrumentiert mit mittlerer
 Aussagekraft; `[Lx,Lx]` ist die Punktprojektion der eingefrorenen Methode, kein
-menschliches Unsicherheitsintervall. Ihr Tooltip erklärt Modellschätzung,
-fehlende menschliche Kalibrierung und gegebenenfalls notwendiges R4. Historische
-0.1-/0.2-Spannen bleiben unverändert. Writer und Loader prüfen gemeinsam die
-sechs bestehenden Difficultyfelder; Runtime-v3 und exakter v2-Leser bleiben.
+menschliches Unsicherheitsintervall. Die Entfernung des Tooltips ist keine
+menschliche Kalibrierung oder Neubewertung. Historische 0.1-/0.2-Spannen bleiben
+unverändert. Writer und Loader prüfen gemeinsam die sechs bestehenden
+Difficultyfelder. KU-A lässt Runtime-v3 und den exakten v2-Leser unverändert;
+die kompatible Versionierung für KU-B folgt [CATALOG_SORTING](CATALOG_SORTING.md).
 
 Logischer Anspruch, Lösungsfluss und begrenzter Größeneinfluss folgen dem
 [SD-Vertrag](PUZZLE_DIFFICULTY.md). Die Oberfläche berechnet keinen Grad aus
@@ -130,11 +167,13 @@ und werden mit dem jeweiligen Reveal freigegeben; je Anzeige bleibt nur die
 zuletzt benötigte Zieltextur erhalten. Keine globale Glättung, kein
 zusätzlicher persistenter Bildcache; eigene Füllminiaturen bleiben unverändert.
 
-Die vorhandenen Stiftgeometrien erhalten lokal geglättete Polygonkanten, einschließlich
-Holzspitze und gemeinsamem Begonnen-Stift. Dunkler Einzelstift samt Farbprobe und
-rot/blau/gelbe Dreiergruppe behalten Form, dünne Konturen und Schraffur. Technische
-Vorher-/Nachherbilder verwenden dieselben nativen Viewport-/UI-Maße; die persönliche
-Sichtabnahme bleibt separat. Die EA-Zeitfolge, Saves und Abbruchregeln ändern sich nicht.
+Die lokale Polygonkantenglättung einschließlich Holzspitze und gemeinsamem
+Begonnen-Stift bleibt. Historische KE-N1-Vorher-/Nachherbelege zeigen den damaligen
+Einzelstift samt Farbprobe und die Dreiergruppe; sie bleiben unverändert.
+Für KU-A gilt die neue größere, zentrierte Zeichnung ohne Monochrom-Farbprobe
+gemäß KE-D02. Technische Vergleichsbilder verwenden dieselben nativen
+Viewport-/UI-Maße; die persönliche Sichtabnahme bleibt separat. Die EA-Zeitfolge,
+Saves und Abbruchregeln ändern sich nicht.
 
 ## KE-D04 · Status und Vorschau
 
@@ -142,12 +181,15 @@ Sichtabnahme bleibt separat. Die EA-Zeitfolge, Saves und Abbruchregeln ändern s
 | --- | --- | --- |
 | Neu | Offener Kreis, neutral, „Neu“ | Gemeinsames gezeichnetes Fragezeichen |
 | Begonnen | Stift, gedecktes Ocker, „Begonnen“ | Ausschließlich eigene Füllzellen |
-| Abgeschlossen | Gezeichneter Haken, gedecktes Grün, „Fertig“ | Verdientes farbiges Reveal |
+| Abgeschlossen | Gezeichneter Haken, gedecktes Grün, „Gelöst“ | Verdientes farbiges Reveal |
 
-Symbol und Text erscheinen gemeinsam; Farbe allein trägt keine Bedeutung.
-„Fertig“ ersetzt ausschließlich die Kataloganzeige „Gelöst“. Die vorhandene
-Statusermittlung bleibt: gültiger Abschluss hat Vorrang; vorhandene History
-einschließlich Redo oder nicht unbekannte Zellwerte bedeuten Begonnen, sonst Neu.
+Symbol und Text erscheinen gemeinsam rechtsbündig in derselben festen Fußzeile
+wie „Blatt NN“ links; Farbe allein trägt keine Bedeutung. KU-A ersetzt das
+bisherige sichtbare Katalogwort „Fertig“ durch „Gelöst“. Dies ist eine
+Darstellungsänderung, keine Umbenennung des internen Statusmodells oder
+gespeicherter Werte. Die vorhandene Statusermittlung bleibt: gültiger Abschluss
+hat Vorrang; vorhandene History einschließlich Redo oder nicht unbekannte
+Zellwerte bedeuten Begonnen, sonst Neu.
 Keine Änderung an Abschluss, Save-Schema, History oder globaler Terminologie.
 
 Das Fragezeichen ist eine eigene Zeichnung in warmem Graphit mit leicht
@@ -171,10 +213,10 @@ vom Fragezeichen verdeckt. Kein neuer Statusautomat. Reset bleibt bei gültigem,
 fehlerfreiem Neu verborgen und in den bisher vorgesehenen Bearbeitungs-/Fehler-
 und Recoveryzuständen verfügbar; vorhandene Bestätigung und Ursprungsbindung bleiben.
 
-Kein Tooltip über der ganzen Karte, auch nicht als Ersatz für abgeschnittene
-Metadaten. Nur Modus und Schwierigkeit erhalten gezielte Erklärungen; der
-vorhandene Resettooltip bleibt. Bestehende zugängliche Beschriftungen führen
-Größe, Modus, Schwierigkeit und Status spoilerfrei mit. Kein umfangreicher
+Kein Tooltip über der ganzen Karte und kein Tooltip über der Schwierigkeit,
+auch nicht als nativer Ersatz für abgeschnittene Metadaten. Der gezielte
+Modustooltip und der vorhandene Resettooltip bleiben. Bestehende zugängliche
+Beschriftungen führen Größe, Modus, Schwierigkeit und Status spoilerfrei mit. Kein umfangreicher
 Accessibility-Umbau, keine Änderung der bestehenden Fokus-/Öffnungsbedienung.
 
 ## KE-D06 · Minimaler Metadatenvertrag
@@ -188,9 +230,10 @@ Nachweis notwendiger Paarlinienlogik. Methoden müssen eindeutig interpretiert
 werden können. Ganze Produktionsobjekte, Freitexte, Motiverklärungen, Quellen,
 Proofs oder Pakete dürfen nicht in den Spieler gelangen.
 
-Die konkrete Feld-/Versionsbenennung ist ein Implementierungsdetail und wird im
-gleichen PR in [CATEGORIES](CATEGORIES.md) und [ZA1_ADAPTER](ZA1_ADAPTER.md)
-verbindlich fortgeschrieben. Der bestehende v2-/Siebenfeldervertrag darf nicht
+KU-A verändert diese Datenverträge nicht. Die zusätzliche Hinzugefügt-Metadatenquelle
+und ihre kompatible Projektion gehören ausschließlich zu KU-B gemäß
+[Katalogsortierung](CATALOG_SORTING.md), [CATEGORIES](CATEGORIES.md) und
+[ZA1_ADAPTER](ZA1_ADAPTER.md). Der bestehende v2-/Siebenfeldervertrag darf nicht
 stillschweigend umgedeutet werden. Vorhandene gültige Runtimeeinträge ohne
 Schwierigkeit bleiben lesbar und zeigen „Nicht eingestuft“; ungültige vorhandene
 Metadaten sind ein Validierungsfehler und werden nicht stillschweigend weggelassen.
@@ -203,17 +246,26 @@ Die Metadatenergänzung benötigt keine erneute Rätselproduktion, Zertifizierun
 oder Paketfreigabe und darf keine Wiederherstellung gelöschter Produktionsdaten
 verlangen. Bestehende Inhalts-/Exportverträge werden nicht neu bewertet.
 
-## Prüfumfang und Übergabe
+## Pakete, Prüfumfang und Übergabe
 
-Ein Paket verbindet Projektion/Validierung, Gestaltung und Zustandsregressionen.
-Feste synthetische Daten decken KE-A01–A08 ab; keine Tests oder Replays pro echtem
-Produktionsrätsel. Geometrie und Darstellung werden in den drei gemeinsamen
-Konfigurationen der aktuellen CI-Policy und bei UI 100/125 % geprüft, einschließlich
-langer Texte, Filter/Seitenwechsel, Undo/Redo, Fehler/Recovery und Reset.
+| Paket | Eigenständiges Ergebnis | Grenze |
+| --- | --- | --- |
+| KU-A | Einzeiliger Papierstreifen, gefüllte Schwierigkeitskreise, größere Modussymbole und Statusfußzeile | Verwendet vorhandene Daten und Bewertungsstufen; keine Sortierung oder Datenmigration |
+| KU-B | Sortierauswahl mit Richtung sowie dauerhafte Hinzugefügt-Metadaten | Vertrag in [CATALOG_SORTING](CATALOG_SORTING.md); übernimmt keine Änderung von Rätsellogik, Bewertung oder Spielständen |
+
+Standard ist je Paket ein Implementierungs-PR. Die Spezifikationslieferung beginnt
+keines dieser Pakete. Paketakzeptanz, Reihenfolge, zuständige Akteure und getrennte
+technische, unabhängige Review- und Eigentümergates vor Merge stehen im Gesamtissue.
+Historische [KE-Prüfnachweise](KE_VERIFICATION.md) bleiben an ihre damalige Lieferung
+gebunden und sind keine Abnahme der neuen KU-Darstellung.
+
+Bei einer später beauftragten Umsetzung decken feste synthetische Daten alle
+fünf Stufen, fehlende Einstufung, beide Modi und die Status-/Fehlerzustände ab;
+keine Tests oder Replays pro echtem Produktionsrätsel. Geometrie und Darstellung
+folgen den drei gemeinsamen Konfigurationen der aktuellen CI-Policy sowie
+UI 100/125 %. Nachzuweisen sind die vollständige einzeilige Anzeige der längsten
+Metadaten, größere ausgerichtete Symbole, ausbleibende Schwierigkeitstooltips,
+erhaltene Modus-/Resettooltips und die Statusfußzeile. Filter-/Seitenwechsel,
+Undo/Redo, Fehler/Recovery, Reset und Spoilergrenzen bleiben relevante Regressionen.
 Native Windows- und Chromium-/Firefoxprüfungen folgen P1 und
-[WEB-1](WEB_HOSTING.md). Technische Lieferung KE-T01, unabhängiges Review KE-R01
-und Eigentümerprobe KE-M01 sind getrennte Gates vor Merge; konkrete Szenarien,
-Verantwortung und Nachweise stehen im Issue/PR.
-
-Aktuelle technische Zuordnung und reproduzierbarer Windows-Prüfweg:
-[KE_VERIFICATION](KE_VERIFICATION.md). KE-R01 und KE-M01 bleiben eigenständig.
+[WEB-1](WEB_HOSTING.md); KU-B ergänzt die eigenen Sortier-/Datennachweise.

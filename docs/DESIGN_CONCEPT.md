@@ -1,15 +1,37 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
-[Katalogdarstellung](CATALOG_PRESENTATION.md) konkretisiert das kleine warme
-Papieretikett unter dem Bild, gezeichnete Modus-/Statussymbole und ein statisches
+**KU / #244, am 18.10.2026 als Spezifikation freigegeben; noch nicht implementiert:**
+Der neue [Katalog-Sollvertrag](CATALOG_PRESENTATION.md) führt in KU-A einen ruhigen
+warmen Papierstreifen mit subtil unregelmäßiger Kontur und genau einer gemeinsamen
+Zeile ein: Größe links, gefüllter Farbkreis mit vollständigem Schwierigkeitsnamen
+mittig, größeres Moduspiktogramm rechts. Keine drei Einzelkästchen. Die bestehenden
+fünf gedeckten Stufenfarben bleiben, „Nicht eingestuft“ erhält einen neutralgrauen
+Kreis. Sichtbare Schwierigkeitsziffer und zugehöriger Tooltip entfallen. Ein
+zentrierter dunkler Monostift ohne Farbprobe steht den drei aufgefächerten
+Farbstiften gegenüber; der Modustooltip bleibt. Die Fußzeile zeigt „Blatt NN“ links
+und Statussymbol samt „Neu“, „Begonnen“ oder „Gelöst“ rechts.
+
+Größere Symbole und vollständige Namen bestimmen die gemeinsame Kartenmindestbreite
+bei UI 100/125 %; nötigenfalls stehen weniger Spalten nebeneinander. Ausreichender
+Bildraum, gleiche Karten, Titel-/Resetreservierung und spoilerfreie Zustände bleiben.
+260–280 logische Pixel Kartenbreite, 28–32 für Modussymbole und 12–14 für Kreise
+sind Entwurfsstarts, keine gemessenen Fitgarantien. KU-B ergänzt die
+[Sortierung](CATALOG_SORTING.md) neben dem Kategorienfilter im vorhandenen Buchstil.
+Paketgrenzen und spätere Abnahmen stehen im
+[Gesamtissue #244](https://github.com/venomenon328/picross/issues/244).
+Dieser freigegebene Sollstand ist noch keine Implementierung oder Bedienabnahme.
+
+**KE / #233, mit PR #234 integrierte Ausgangsbasis für KU:**
+Die damalige [Katalogdarstellung](CATALOG_PRESENTATION.md) konkretisierte das kleine
+warme Papieretikett unter dem Bild, gezeichnete Modus-/Statussymbole und ein statisches
 Graphitfragezeichen für neue Rätsel. Kategoriezeile und alle Kartenbereiche bleiben
-fest reserviert; die Fußzeile trägt nur die Blattkennung. Gezielt abgelöst werden
-KK-Metadatenzeile, Fußzeilenstatus und leere Neu-Vorschau. Der folgende KK-Abschnitt
-beschreibt die integrierte Ausgangsbasis; übrige Gestaltungsverträge bleiben.
-KE-N1 ergänzt die Skala „1 Sehr leicht“ bis „5 Sehr schwer“ mit gedeckt farbiger
-Ziffer und dunklem Namen, ohne sichtbares Näherungszeichen. Bewertungshinweise
-stehen im Tooltip. Lokale Glättung erhält Bildraum, Zentrierung und Originalassets.
+fest reserviert. Die damalige Fußzeile trug nur die Blattkennung; KE hatte
+KK-Metadatenzeile, Fußzeilenstatus und leere Neu-Vorschau ersetzt. KE-N1 ergänzte
+die Skala „1 Sehr leicht“ bis „5 Sehr schwer“ mit gedeckt farbiger Ziffer und
+dunklem Namen ohne Näherungszeichen sowie Bewertungshinweisen im Tooltip.
+KU-A löst diese Metadaten-/Statusanordnung, Ziffer und Schwierigkeitstooltip ab;
+historische Liefernachweise bleiben gebunden. Lokale Glättung, Bildraum,
+Zentrierung, Originalassets und übrige Gestaltungsverträge bleiben.
 
 **KK / #174** ersetzt die variablen KB-Kartenhöhen, zusätzliche Blattüberschrift,
 gestapelten Play-/Resetaktionen und den Kacheltooltip. Alle Karten haben dieselben
