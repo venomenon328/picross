@@ -37,9 +37,10 @@ Dateimodusschutz, Main-Abkürzung und konservative unbekannte Wirkung bleiben.
 | `tools/kat2_product.py`, `tools/native_images.py`, `game/tests/kat2_probe.gd` | catalog |
 | `tools/ea_product.py`, `game/tests/ea_probe.gd` | completion |
 | `tools/p14_integration.py`, `game/tests/p14_integration.gd` | history |
-| `catalog_ink.gd`, `catalog_tip.gd`, `catalog_difficulty.gd` unter `game/ui/` | core, catalog, export |
-| `catalog.gd`, `catalog_card.gd` unter `game/ui/` | core, catalog, completion, export; Karten öffnen und Reset berühren Abschluss |
-| `game/ui/completion.gd` | core, completion, graphics, export |
+| `catalog_ink.gd`, `catalog_tip.gd` unter `game/ui/` | core, catalog, adapters, graphics, export; RP6-/ZA-1-Kartencaptures und kompakter Album-Capture verwenden die Darstellung |
+| `catalog.gd`, `catalog_card.gd` unter `game/ui/` | core, catalog, completion, adapters, graphics, export; Karten öffnen, Reset, Pilot-/Adapter-Slotisolation und Album-Capture |
+| `game/model/catalog_difficulty.gd` | alle sieben Gruppen; Anzeige über `catalog_card.gd` und gemeinsame Registryvalidierung über `content_registry.gd` |
+| `game/ui/completion.gd` | core, catalog, completion, adapters, graphics, export; KAT-2/KE rendert die Abschlussansicht, RP6/ZA-1 prüfen echte Abschlüsse/Reveals |
 | `tools/za1_product.py` | adapters, export; gemeinsamer PCK-Auditor |
 | RP6-/ZA-1-Probes | adapters; `content_pack_probe.gd` zusätzlich export |
 | Exakt benannte native Render-/Atlasprüfer und aktive Renderer im Vertrag | core, graphics, export |
@@ -50,6 +51,22 @@ Gruppen. CI-A entscheidet weiterhin unabhängig über Browser, Fachtests, Prefli
 und Zustellung; deren eigene Abhängigkeiten bleiben erhalten. Ein reiner nativer
 Katalogharness benötigt keinen Browser-/SSH-Lauf. Runtime-Katalogänderungen behalten
 ihre CI-B-Browsergruppen. Kern-/Exportpflichten folgen der tatsächlichen Wirkung.
+
+Die UI-Zuordnung folgt den aktiven Aufrufern: `rp6_probe.gd` und `za1_probe.gd`
+öffnen Karten über die Hauptszene, prüfen Slotisolation und verdiente Reveals;
+`rp6_capture.gd` liefert auch Albumzustände. `capture.gd` rendert mit
+`capture_compact_layout()` den Katalog und mit `capture_h1()` verdiente Albumzustände.
+`ke_graphics.gd` wird vom KAT-2-Modus `ke` ausgeführt und prüft `Completion` direkt.
+History bleibt bei den fünf UI-Modulen ungewählt: die 500er-Route wählt ihre Session
+direkt und prüft Zell-/History-/Ansichtszustand, keine Karten-/Abschlussdarstellung.
+Ink/Tip wählen auch nicht allein die EA-Gruppe. Das Difficulty-Modul ist dagegen
+kein reiner Anzeigeleaf: `content_registry.gd.validate()` verwendet `Difficulty.valid()`
+für jeden v3-Eintrag. Registryladung, Definitionen/Slots und der native PCK-Audit
+betreffen deshalb auch History, Adapter, Grafik und Export. Die explizite Zuordnung
+aller sieben Gruppen ist hier begründet; der unbekannte Fallback ist kein Pfadnachweis.
+`test_ci_c.py` prüft die sechs realen Einzelpfade, den Difficulty-Import beider
+direkten Verbraucher, Mischdiffs, sichere Nichtauswahlen und manuelle Erweiterung
+über `ci_scope.classify()` einschließlich Schedulerflags und unveränderter Browserwahl.
 
 `native-core`, `native-history`, `native-catalog`, `native-completion`,
 `native-adapters`, `native-graphics`, `native-export` erweitern manuell um die

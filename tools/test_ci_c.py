@@ -10,7 +10,7 @@ import unittest
 from unittest.mock import patch
 
 from ci_scope import classify, apply_event_policy, evaluate, JOBS
-from native_contract import GROUPS, SCOPES, checks, coverage
+from native_contract import GROUPS, PATHS, SCOPES, checks, coverage
 from native_results import bind_files, read, digest, validate_all, validate_payload
 from p1_product import parse_args
 from native_runner import requested
@@ -30,8 +30,8 @@ class Selection(unittest.TestCase):
             ('tools/p14_integration.py',['history']),
             ('tools/za1_product.py',['adapters','export']),
             ('tools/perf_b_resources.py',['core','graphics','export']),
-            ('game/ui/catalog.gd',['core','catalog','completion','export']),
-            ('game/ui/completion.gd',['core','completion','graphics','export'])]:
+            ('game/ui/catalog.gd',['core','catalog','completion','adapters','graphics','export']),
+            ('game/ui/completion.gd',['core','catalog','completion','adapters','graphics','export'])]:
             with self.subTest(path=path):
                 self.assertEqual(classify([path])['native_groups'],groups)
         for path in ['game/ui/main.gd','game/model/save_store.gd','tools/product_fixtures.py',
@@ -40,6 +40,65 @@ class Selection(unittest.TestCase):
             self.assertEqual(classify([path])['native_groups'], list(GROUPS))
         self.assertEqual(classify(['tools/ea_product.py','tools/kat2_product.py'])['native_groups'],['catalog','completion'])
         self.assertEqual(classify(['tools/ea_product.py','docs/README.md'])['native_groups'],['completion'])
+
+    def test_catalog_and_completion_consumers_select_exact_native_and_browser_groups(self):
+        # Expectations follow the active probes, independently of PATHS:
+        # RP6/ZA-1 navigate cards and render album/reveal; compact capture renders
+        # the album; KAT-2 KE also instantiates Completion in ke_graphics.gd.
+        for path, native, browser in [
+            ('game/ui/catalog.gd', ['core','catalog','completion','adapters','graphics','export'],
+             ['regular','catalog','completion','persistence']),
+            ('game/ui/catalog_card.gd', ['core','catalog','completion','adapters','graphics','export'],
+             ['regular','catalog','completion','persistence']),
+            ('game/ui/catalog_ink.gd', ['core','catalog','adapters','graphics','export'],
+             ['regular','catalog']),
+            ('game/ui/catalog_tip.gd', ['core','catalog','adapters','graphics','export'],
+             ['regular','catalog']),
+            ('game/ui/completion.gd', ['core','catalog','completion','adapters','graphics','export'],
+             ['regular','completion']),
+        ]:
+            with self.subTest(path=path):
+                self.assertTrue((ROOT/path).is_file())
+                plan = classify([path])
+                self.assertEqual(plan['native_groups'], native)
+                self.assertEqual(plan['native_expected'], coverage(native))
+                self.assertEqual(plan['browser_groups'], browser)
+                self.assertEqual({job for job in JOBS if plan['selected'][job]},
+                                 {'docs','product','web'})
+                self.assertFalse(plan['selected']['integration'])
+                self.assertTrue(plan['selected']['pilots'])
+                self.assertTrue(plan['selected']['visual'])
+                self.assertTrue(plan['selected']['perf_b'])
+
+    def test_real_difficulty_path_includes_registry_consumers_and_no_ghost_entry(self):
+        path = 'game/model/catalog_difficulty.gd'
+        self.assertTrue((ROOT/path).is_file())
+        self.assertIn(path, PATHS)  # All groups here must be audited, not fallback.
+        self.assertNotIn('game/ui/catalog_difficulty.gd', PATHS)
+        for caller in ('game/ui/catalog_card.gd', 'game/model/content_registry.gd'):
+            self.assertIn('preload("res://model/catalog_difficulty.gd")',
+                          (ROOT/caller).read_text(encoding='utf-8'))
+        plan = classify([path])
+        self.assertEqual(plan['native_groups'], list(GROUPS))
+        self.assertEqual(plan['browser_groups'], ['regular','catalog'])
+        self.assertEqual({job for job in JOBS if plan['selected'][job]},
+                         {'docs','product','web'})
+        self.assertTrue(plan['selected']['integration'])
+
+    def test_runtime_leaf_mixed_diffs_union_and_manual_scope_only_widens(self):
+        paths = ['game/ui/catalog_ink.gd', 'game/ui/completion.gd']
+        plan = classify(paths)
+        self.assertEqual(plan['native_groups'],
+                         ['core','catalog','completion','adapters','graphics','export'])
+        self.assertEqual(plan['browser_groups'], ['regular','catalog','completion'])
+        self.assertFalse(plan['selected']['delivery'])
+        for extra in ('tools/p14_integration.py', 'game/model/catalog_difficulty.gd',
+                      'game/ui/main.gd', 'game/ui/new_catalog_leaf.gd'):
+            with self.subTest(extra=extra):
+                self.assertEqual(classify(paths+[extra])['native_groups'], list(GROUPS))
+        for scope in ('native-core', 'native-catalog', 'native-export'):
+            self.assertEqual(classify(paths, scope)['native_groups'], plan['native_groups'])
+        self.assertEqual(classify(paths, 'native-history')['native_groups'], list(GROUPS))
 
     def test_manual_only_widens_and_main_content_remain_short(self):
         for group in GROUPS:
