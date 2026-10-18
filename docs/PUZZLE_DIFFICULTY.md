@@ -1,6 +1,6 @@
 # Rätselschwierigkeit und wiederholbare Katalogeinstufung · SD
 
-Stand: 18.10.2026 · Spezifikation 1.2 · SD-A/SD-B/SD-C1 integriert, C2-Erstbericht vor Übernahme
+Stand: 18.10.2026 · Spezifikation 1.2 · SD-A/SD-B/SD-C1 integriert, C2 übernommen, finales Review offen
 
 Die Spezifikation einschließlich der katalogunabhängigen Referenzkalibrierung
 ist freigegeben. SD-A liefert den [technischen Analysator](SD_ANALYZER.md) mit
@@ -9,10 +9,11 @@ die eingefrorene Methode 0.3 mit eigenen geprüften Ratings. [SD-C1](SD_CATALOG.
 liefert den technischen Bewertungs-/Integrationsweg samt synthetischen Nachweisen.
 SD-C1 ist nach qualifiziertem R2 mit PR #242 als
 `e93444e5db48e2138d15890e314c60ec4291fea3` integriert. Der manuelle
-SD-C2-Erstlauf liefert 26 vollständig geprüfte Vorschläge und einen lesenden
-Übernahmeplan; [Belege und Gategrenze](SD_CATALOG.md) bleiben separat von
-aktiven Bewertungen. Qualifiziertes SD-C-R01/C2 vor Übernahme, beauftragtes
-`adopt`, realer A07-Anteil/K01, finales Datenreview und Merge bleiben offen;
+SD-C2-Erstlauf lieferte 26 vollständig geprüfte Vorschläge und einen lesenden
+Übernahmeplan. Nach bestandenem qualifiziertem Vor-Übernahme-Review wurden gemäß
+SD-C2-F01 alle 26 Bewertungen kontrolliert übernommen; der identische zweite
+`adopt` war ohne Byte-/Revisionsänderung No-op. [Belege und Gategrenze](SD_CATALOG.md)
+führen A07 real/K01; separates qualifiziertes finales Datenreview und Merge bleiben offen;
 #238/#235 werden dadurch nicht abgeschlossen.
 
 [Zielissue #235](https://github.com/venomenon328/picross/issues/235) führt den
