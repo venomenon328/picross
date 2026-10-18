@@ -116,10 +116,22 @@ python tools/p1_product.py --cache-dir <cache> --output-dir <neuer-produktpfad>
 python tools/p1_preflight.py --cache-dir <cache> --output-dir <neuer-preflightpfad>
 ```
 
-Produkt-/Harness-/CI-Änderungen wählen alle Jobs: `docs`, `production`, `product`
-mit Integration/Piloten/Visual/PERF-B, `preflight`, anschließend `ci-required`.
-Der Produktionsjob liefert nur den kompakten Replaybericht, keine redundanten
-Export-/Quellkopien. Bestehende Zeit-/Bytebudgets bleiben unverändert.
+Für aktuelle Änderungen ist die gestufte [CI-Policy](CI_POLICY.md) maßgeblich.
+Vor Integration der am 18.10.2026 freigegebenen Pakete bleiben die ausführbaren
+Auswahlpflichten bestehen. [CI-A (#247)](https://github.com/venomenon328/picross/issues/247)
+trennt eng geprüfte reine Facharbeit von Runtime-/Adapter-/Exportwirkung sowie
+Browser von SSH; pauschale Verzeichnisnamen begründen keine Adapterausnahme.
+Erst [CI-C (#249)](https://github.com/venomenon328/picross/issues/249) liefert die
+eigenständige native Adapter-/Pilotgruppe. Gemeinsame Abhängigkeiten wählen mehrere
+oder alle aktuellen Bereiche einschließlich erforderlichem Preflight.
+
+Die aktiven synthetischen Adapter-, Neustart-, Slotisolations-, Pixel- und
+PCK-Aussagen bleiben in ihrem relevanten Scope erhalten. Reine Inhalte behalten
+den kurzen Pfad. `ci-required` verlangt tatsächlichen Erfolg aller ausgewählten
+Bereiche und vollständige Pflichtbelege; ausgeschaltet bedeutet nicht bestanden.
+Der Produktionsjob liefert nur den kompakten technischen Adapterbericht, keine
+redundanten Export-/Quellkopien. Frühere feste CI-Zeit-/Bytebudgets sind durch die
+aktuelle Policy abgelöst; funktionale Ressourcen-/Fehlerverträge bleiben erhalten.
 
 Vor Merge: alle ausgewählten aktuellen Checks erfolgreich, vollständiger Diff
 und getrennter Selbstreview, danach unabhängiges technisches Review einschließlich

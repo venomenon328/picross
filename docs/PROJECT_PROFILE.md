@@ -1,5 +1,23 @@
 # Projektprofil: picross
 
+**CI / #246 (18.10.2026), Spezifikation freigegeben, noch nicht implementiert:**
+Die [CI-Policy](CI_POLICY.md) bindet die gestufte Straffung:
+[CI-A (#247)](https://github.com/venomenon328/picross/issues/247) wählt reine
+Facharbeit und die einzelne PR-Vorlage eng aus und entkoppelt Product, Browser und
+SSH/HTTP-Zustellung. Bis [CI-B (#248)](https://github.com/venomenon328/picross/issues/248)
+integriert ist, bleiben alle weiterhin ausgewählten Browserrouten vollständig.
+CI-B liefert regulären Start plus relevante unabhängige Browsergruppen in
+Chromium und Firefox auf getrennten Runnern.
+[CI-C (#249)](https://github.com/venomenon328/picross/issues/249) trennt native
+Prüfgruppen und beschleunigt nach Messung die verlustfreie Bildaufbereitung.
+CI-A kommt zuerst; CI-B vor CI-C ist empfohlen, keine technische Voraussetzung.
+Vor Integration des jeweiligen Pakets gelten die bestehenden ausführbaren
+Pflichtchecks weiter. Exakter Gesamtdiff, konservative gemeinsame/unbekannte
+Wirkung, nur erweiternde manuelle Auswahl, vollständiges `ci-required` und getrennte
+Produktgates bleiben. Keine festen Zeit-/Bytebudgets oder verkürzten Timeouts.
+Aktuelle Paketstände und T01/R01 vor Merge stehen in den Issues; diese Freigabe
+beauftragt weder Implementierung noch Merge.
+
 **KU / #244 (18.10.2026), Spezifikation freigegeben; Umsetzung offen:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) und
 [Katalogsortierung](CATALOG_SORTING.md) sind bei Katalog-/Metadatenarbeit
@@ -180,7 +198,7 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | Neue Rätsel konzipieren, gestalten, produzieren oder redaktionell abnehmen | [KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md) und deren Pflichtquellen |
 | Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
 | Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md), [SD-C1](SD_CATALOG.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
-| CI, Prüfprogramme, Artefakte, Archivierung | [CI_POLICY](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md) |
+| CI, Prüfprogramme, Artefakte, Archivierung | [CI_POLICY](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md); für CI-A/CI-B zusätzlich [Webvertrag](WEB_HOSTING.md), für CI-C [KAT-2](KAT2_VERIFICATION.md), [EA](EA_VERIFICATION.md) und [ZA-1](ZA1_VERIFICATION.md) |
 
 PERF-A/PERF-B sind historische Lieferberichte, keine aktuellen Hersteller- oder
 A/B-Vergleichsgates. #70/N70-HIST-01 entfernt deren Reproduktion; die sechs
@@ -293,7 +311,10 @@ $gameCache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
 python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-product
 ```
 
-Alle vier ergänzenden Bereiche sind lokal standardmäßig aktiv, CI übergibt jede Auswahl explizit.
+Bis CI-C sind alle vier ergänzenden Bereiche lokal standardmäßig aktiv; CI
+übergibt jede Auswahl explizit. Die freigegebene eigenständige Auswahl von Katalog,
+Abschluss und weiteren nativen Gruppen wird erst mit CI-C wirksam. Bis dahin
+bleiben die vorhandenen Schalter und Kopplungen die Ausführungsgrundlage.
 Der allgemeine Harness verwendet sechs feste synthetische Muster T-01/T-02/T-04/
 T-06/T-08/T-09, unabhängig vom Produktionsbestand. Der weiterhin `--pilots` genannte
 Bereich prüft vier dieser technischen Fälle; echte Rätsel werden nicht replayt.
