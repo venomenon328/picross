@@ -56,6 +56,15 @@ def point(page, position):
     return box['x']+position[0]*box['width']/dims[0], box['y']+position[1]*box['height']/dims[1]
 
 
+def click(page, position):
+    # Same genuine browser events, explicitly ordered. Playwright's convenience
+    # click dispatches move/down/up concurrently when no delay is specified.
+    # Keep each acknowledgement separate for the measured software-render route.
+    page.mouse.move(*position)
+    page.mouse.down()
+    page.mouse.up()
+
+
 def control(page, text=None, name=None, tooltip=None, dialog=None):
     page.wait_for_timeout(150)
     items = state(page, 'controls')['controls']
@@ -67,7 +76,7 @@ def control(page, text=None, name=None, tooltip=None, dialog=None):
     if len(found) != 1 and DIAGNOSTIC_OUTPUT:
         page.screenshot(path=str(DIAGNOSTIC_OUTPUT/'control-failure.png'))
     assert len(found) == 1, (text, name, tooltip, items)
-    page.mouse.click(*point(page, found[0]['center']))
+    click(page, point(page, found[0]['center']))
     page.wait_for_timeout(180)
 
 

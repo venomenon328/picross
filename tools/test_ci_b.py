@@ -262,6 +262,15 @@ class Execution(unittest.TestCase):
         self.assertEqual(page.keys,['cells','cursor'])
         with self.assertRaises(ValueError):actions.state(page)
 
+    def test_click_keeps_real_pointer_move_down_up_order(self):
+        import importlib
+        from unittest.mock import Mock, call
+        with patch.object(sys,'path',[str(ROOT/'tools/web_tests'),*sys.path]):
+            actions=importlib.import_module('browser_actions')
+        page=Mock()
+        actions.click(page,(80,90))
+        self.assertEqual(page.mouse.method_calls,[call.move(80,90),call.down(),call.up()])
+
     def test_each_selected_group_is_a_fresh_process_even_after_failure(self):
         for selected in GROUPS[1:]:
             plan=plan_for(['tools/web_tests/group_'+selected+'.py'])
