@@ -15,8 +15,8 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     evidence['catalog_geometry'] = []
     for width, height, scale in ((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25)):
         if state(page, 'ui_scale')['ui_scale'] != scale:
-            control(page, name='menu'); control(page, text='UI ')
-            control(page, name='nav-album')
+            control(page, text='Einstellungen / Info'); control(page, text='UI ')
+            control(page, name='nav-work')
         game_viewport(page,width,height)
         page.wait_for_timeout(200)
         labels = state(page, 'labels')['labels']
