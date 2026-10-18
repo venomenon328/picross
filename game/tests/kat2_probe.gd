@@ -192,7 +192,7 @@ func run() -> void:
 		await shot("category-growth")
 	elif mode == "restart":
 		check(app.album.category_id.is_empty() and app.album.page_index == 0, "real process restart defaults to All page one")
-		check(app.album.notes[0].text == "Neu" and app.album.notes[1].text == "Begonnen" and app.album.notes[5].text == "Fertig", "empty, redo-only and solved saves survive real process restart")
+		check(app.album.notes[0].text == "Neu" and app.album.notes[1].text == "Begonnen" and app.album.notes[5].text == "Gelöst", "empty, redo-only and solved saves survive real process restart")
 		check(app.sessions[1].player.cursor == 0 and app.sessions[1].player.history.size() == 1, "redo history restored from disk")
 		await choose("gebaeude-bauwerke")
 		click(app.choices[0])
@@ -447,7 +447,7 @@ func regular() -> void:
 	check(app.store.write_slot(target, target.view_state).is_empty(), "valid earned save written")
 	await new_app()
 	await choose("voegel")
-	check(app.album.notes[0].text == "Fertig" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
+	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
 	check(app.album.reveals[0].artwork != null, "earned image loaded only for visible card")
 	check(app.choices[0].accessibility_name.contains("Ansehen"), "KB solved action views existing completion")
 	await shot("solved")
@@ -632,6 +632,12 @@ func button_pixels(control: Control) -> PackedByteArray:
 	await RenderingServer.frame_post_draw
 	return surface.get_texture().get_image().get_region(Rect2i(control.get_global_rect())).get_data()
 
+func visible_popups() -> int:
+	var count: int = 0
+	for window: Window in surface.get_embedded_subwindows():
+		if window.visible: count += 1
+	return count
+
 func card_geometry() -> Array:
 	var result: Array = []
 	for card: Control in app.choices:
@@ -660,10 +666,24 @@ func catalog_labels() -> void:
 			for label: Label in [card.dimensions,card.difficulty,card.note]:
 				var width: float = label.get_theme_font("font").get_string_size(label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,label.get_theme_font_size("font_size")).x
 				check(width <= label.size.x,"KE unabridged metadata fits: "+label.text)
-			check(card.difficulty.position.x+card.difficulty.size.x <= card.status_icon.position.x,"KE difficulty and status columns never overlap")
+			check(card.difficulty.position.x+card.difficulty.size.x+9*app.ui_scale <= card.mode_tip.position.x,"KU-A single-line difficulty and mode never overlap")
+			check(card.dimensions.position.y == card.difficulty.position.y and card.mode_tip.position.y == card.dimensions.position.y,"KU-A metadata shares one row")
+			check(card.dimensions.position.x+card.dimensions.size.x < card.difficulty_icon.position.x and card.difficulty_icon.position.x+card.difficulty_icon.size.x < card.difficulty.position.x,"KU-A dimension, filled circle and text have distinct gaps")
+			check(card.note.position.y == card.leaf.position.y and card.status_icon.kind == card.note.text,"KU-A footer status drawing matches label")
+			check(card.size.x >= card.minimum_card_width(app.ui_scale),"KU-A measured common width is respected")
+			var marks := Rect2()
+			var first_point: bool = true
+			for pencil: Node2D in card.mode_icon.pencils:
+				if not pencil.visible: continue
+				for vertex: Vector2 in pencil.body.polygon:
+					var point: Vector2 = pencil.to_global(vertex)-card.mode_icon.global_position
+					if first_point: marks = Rect2(point,Vector2.ZERO); first_point = false
+					else: marks = marks.expand(point)
+			check(not first_point and marks.get_center().distance_to(card.mode_icon.size/2) < 0.1 and is_equal_approx(maxf(marks.size.x,marks.size.y),30*app.ui_scale),"KU-A actual pencil polygons are centred and enlarged to 30 logical pixels")
 			check(card.accessibility_name.contains(card.difficulty.text) and not card.accessibility_name.contains("Motiv"),"KE accessible metadata remains spoiler-free")
 			check(card.note.get_theme_font("font").get_string_size("Begonnen",HORIZONTAL_ALIGNMENT_LEFT,-1,card.note.get_theme_font_size("font_size")).x <= card.note.size.x,"KE longest status fits without clipping")
-		check(app.choices[1].difficulty.text == "1 Sehr leicht" and app.choices[5].difficulty.text == "5 Sehr schwer","KE numbered scale survives UI rebuilds")
+			kk_measurements.append({"ku_surface":spec,"card_width":card.size.x,"minimum_width":card.minimum_card_width(app.ui_scale),"metadata_widths":card.metadata_widths(app.ui_scale),"label":card.difficulty.text,"circle_color":card.difficulty_icon.ink_color.to_html(false),"strip":card.label_area,"footer_y":card.note.position.y})
+		check(app.choices[1].difficulty.text == "Sehr leicht" and app.choices[5].difficulty.text == "Sehr schwer","KU-A full scale without numbers survives UI rebuilds")
 		await shot("labels-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
 		var first: Card = app.choices[0]
 		var unknown_pixels: PackedByteArray = await button_pixels(first.unknown)
@@ -671,21 +691,24 @@ func catalog_labels() -> void:
 		first.preview.height = app.choices[1].preview.height
 		first.layout_content()
 		check(unknown_pixels == await button_pixels(first.unknown),"KE unknown drawing is invariant under distinct puzzle dimensions")
-		# Unscored, estimated and instrumented R4 explanations at actual hover.
+		# All assessment shapes use the same tooltip-free label, including native
+		# Label's fallback for clipped text. These mutations are synthetic only.
 		for value: Variant in [null,app.album.metadata["T-09"].difficulty,{"method":"picross-difficulty-0.1","level":"L5","assessment_type":"editorial_estimate","confidence":"low","plausible_range":["L1","L5"],"r4_required":false},{"method":"picross-difficulty-0.2","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true},{"method":"picross-difficulty-0.3","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true}]:
-			first.set_metadata(20,15,false,value)
+			first.set_metadata(50,50,false,value)
+			await frames()
+			await RenderingServer.frame_post_draw
+			var expected_color: Color = Color("85857f") if value == null else Color({"L1":"52734e","L2":"74713e","L3":"997337","L4":"a36342","L5":"9b514b"}[value.level])
+			var center_pixel: Color = surface.get_texture().get_image().get_pixelv(Vector2i(first.difficulty_icon.get_global_rect().get_center()))
+			check(center_pixel.is_equal_approx(expected_color),"KU-A filled circle has the prescribed native centre pixel")
 			await hover(first.caption)
-			await hover(first.difficulty)
-			await create_timer(0.8).timeout
-			var tip: Control = first.difficulty.tooltip_ref.get_ref() if first.difficulty.tooltip_ref != null else null
-			check(tip != null and tip.is_visible_in_tree(),"KE native targeted difficulty tooltip visible")
-			check(first.difficulty.tooltip_text.contains("Paarlinienlogik") == (value != null and value.r4_required),"KE R4 explanation only with typed evidence")
-			if value != null and value.method == "picross-difficulty-0.3":
-				check(first.difficulty.tooltip_text.contains("nicht menschlich kalibriert"),"SD-C native tooltip exposes model uncertainty")
-				await shot("sd-tooltip-%d-ui%d-r4-%s" % [spec[0],roundi(float(spec[2])*100),str(value.r4_required)])
+			for part: Control in [first.difficulty_icon,first.difficulty]:
+				await hover(part)
+				await create_timer(0.8).timeout
+				check(visible_popups() == 0 and first.difficulty.tooltip_text.is_empty() and first.difficulty.get_tooltip().is_empty() and first.tooltip_ref == null,"KU-A actual circle/text hover has no popup, including native fallback")
+			if value != null and value.method == "picross-difficulty-0.3" and value.r4_required:
+				await shot("no-tooltip-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
 			app.set_ui_scale(1.0 if app.ui_scale == 1.25 else 1.25)
 			await frames()
-			check(tip == null or not is_instance_valid(tip) or not tip.is_visible_in_tree(),"KE UI change dismisses targeted popup")
 			app.set_ui_scale(float(spec[2]))
 			await frames()
 			first = app.choices[0]
@@ -693,12 +716,23 @@ func catalog_labels() -> void:
 		await hover(first.mode_tip)
 		await create_timer(0.8).timeout
 		check(first.mode_tip.tooltip_ref != null and first.mode_tip.tooltip_ref.get_ref() != null,"KE native mode tooltip")
-		for part: String in ["difficulty","mode_tip","paper"]:
+		for part: String in ["dimensions","difficulty_icon","difficulty","mode_tip","paper","leaf","status_icon","note"]:
 			click(app.choices[0].get(part))
 			await frames()
 			check(app.work.visible and app.session.definition.id == "T-01","KE passive label click opens owning card: "+part)
 			app.show_album()
 			await frames()
+	# Cross actual column thresholds, rather than assuming the old 228px grid.
+	var previous_columns: int = 0
+	var transitions: int = 0
+	for width: int in range(1280,1921,16):
+		surface.size = Vector2i(width,1080)
+		await frames()
+		if previous_columns > 0 and app.album.grid.columns != previous_columns: transitions += 1
+		previous_columns = app.album.grid.columns
+		for card: Card in app.choices:
+			check(card.size == app.choices[0].size and card.size.x >= card.minimum_card_width(app.ui_scale),"KU-A column transition preserves shared measured geometry")
+	check(transitions > 0,"KU-A resize crosses a new column threshold")
 	# Wrong own fill, X-only and redo-only are deliberately distinct from Neu.
 	var item: Session = app.sessions[0]
 	item.gesture.begin(item.player,Vector2i(0,0),1)
@@ -734,7 +768,7 @@ func fixed_cards() -> void:
 			check(card.caption.max_lines_visible == 2 and card.caption.text_overrun_behavior == TextServer.OVERRUN_TRIM_ELLIPSIS,"KK two-line bounded ellipsis")
 			check(not card.reset.visible and card.reset.focus_mode == Control.FOCUS_NONE,"KK new reset invisible and unfocusable")
 			check(card.find_children("play-*","Button",true,false).is_empty(),"KK play control, hit and focus station absent")
-			check(card.label_area.end.y < card.leaf.position.y and card.label_area.encloses(Rect2(card.note.position,card.note.size)),"KE label status and leaf-only footer without overlap")
+			check(card.label_area.end.y < card.leaf.position.y and card.note.position.y == card.leaf.position.y and card.leaf.position.x+card.leaf.size.x < card.status_icon.position.x,"KU-A status and stable leaf share footer below metadata")
 			check(card.image_area.encloses(Rect2(card.preview.position,card.preview.size)),"KK proportional own preview inside fixed area")
 			check(is_equal_approx(card.preview.size.x/card.preview.size.y,float(card.preview.width)/card.preview.height),"KK own preview preserves aspect")
 		await shot("new-%d" % spec[0])
@@ -764,6 +798,13 @@ func fixed_cards() -> void:
 		app.show_album()
 		await frames()
 		check(card_geometry() == initial and app.choices[0].caption.text == item.definition.reveal.name,"KK completion adds earned title without moving following rows")
+		check(app.choices[0].note.text == "Gelöst" and app.choices[0].status_icon.kind == "Gelöst","KU-A validated completion selects the check-mark drawing")
+		var check_pixels: PackedByteArray = await button_pixels(app.choices[0].status_icon)
+		app.choices[0].status_icon.kind = "test-only-no-symbol"
+		app.choices[0].status_icon.queue_redraw()
+		check(check_pixels != await button_pixels(app.choices[0].status_icon),"KU-A solved check mark really contributes native pixels")
+		app.choices[0].status_icon.kind = "Gelöst"
+		app.choices[0].status_icon.queue_redraw()
 		await shot("solved-%d" % spec[0])
 		for aspect: Vector2i in [Vector2i(320,80),Vector2i(80,320)]:
 			var image: Image = Image.create(aspect.x,aspect.y,false,Image.FORMAT_RGBA8)
@@ -1025,7 +1066,7 @@ func compact_buttons() -> void:
 			var id: String = app.album.visible_ids[index]
 			var reset: Button = app.album.reset_buttons[id]
 			widths.append(card.size.x)
-			check(card.size.x/u >= 220 and card.size.x/u <= 240, "KB compact card target width")
+			check(card.size.x >= card.minimum_card_width(u) and card.size.x <= card.minimum_card_width(u)+16*u, "KU-A compact card follows measured metadata width")
 			check(card.get_global_rect().encloses(reset.get_global_rect()), "KB icons inside card")
 			check(reset.size.x >= 44*u and reset.size.y >= 44*u, "KB 44/55 pointer targets")
 			check(reset.position == Vector2(card.size.x-roundf(10*u)-44*u,roundf(10*u)), "KK fixed top/right reset anchor")
@@ -1039,7 +1080,7 @@ func compact_buttons() -> void:
 		kb_measurements.append({"surface":spec,"columns":app.album.grid.columns,"widths":widths,"interiors":interiors})
 		await shot("compact-%d-ui%d" % [spec[0],spec[2]*100])
 		await choose("voegel")
-		check(app.choices.size() == 1 and app.choices[0].size.x <= 240*u, "KB single filtered card stays compact")
+		check(app.choices.size() == 1 and app.choices[0].size.x <= app.choices[0].minimum_card_width(u)+16*u, "KU-A single filtered card stays at common compact width")
 		await choose("")
 	# Return to a normal frame and exercise real down/up actions independently.
 	surface.size = Vector2i(1920,1080)
