@@ -1,5 +1,26 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+**KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
+[Katalogsortierung](CATALOG_SORTING.md) ergänzt die erste Katalogaufnahme als
+separate ID-gebundene Metadatenquelle außerhalb historisch versiegelter Pakete.
+Erstregistrierung, Update, Sync, Bewertungsübernahme und Recovery müssen dieselbe
+versionierte Quellenprüfung und minimale UTC-Zeitpunkt-/null-Projektion verwenden.
+Bei der neuen Erstregistrierung wird UTC genau einmal im mutierenden
+Transaktionsplan fixiert; lesende Pläne erzeugen keinen endgültigen Zeitpunkt.
+Erfolgreiche Wiederholung, spätere Inhalts-/Metadatenänderung und Recovery
+erhalten den bestehenden Wert oder ausdrücklich unbekannten Altwert. Kein
+Vorwegnehmen des späteren main-Mergezeitpunkts und kein erneutes Datieren beim Export.
+
+Der ausdrücklich ausgeführte historische Backfill erhält Plan, kontrollierte
+Übernahme und dauerhaften Herkunftsbeleg je ID. Ein erster belegter gültiger
+sichtbarer Registry-Snapshot darf gemäß dem Sortiervertrag als rekonstruierter
+Referenzzeitpunkt dienen; Quellenlücken bleiben neutral dokumentiert.
+Definitionen, Rätsellogik, Schwierigkeit, Slots, Freigaben und historische
+Integrationsmanifeste bleiben unverändert. Neue Feld-/Datei-/Versionsverträge
+werden vor der ersten betroffenen KU-B-Codeänderung konsistent festgeschrieben;
+die folgenden exakten Altformate bleiben als solche lesbar. Der jetzige
+Spezifikationsauftrag führt weder Registrierung noch Übernahme aus.
+
 **SD-C1, technischer Vertrag vom 17.10.2026:**
 [Bewertungsquelle und Transaktionen](SD_CATALOG.md) ergänzen den
 Integrationsweg. Die unten dokumentierten Export-, Registrierungs- und

@@ -1,8 +1,19 @@
 # KE · Implementierung und technische Prüfbarkeit
 
+**Einordnung vom 18.10.2026:** Dieser Bericht bleibt der historischen KE-Lieferung
+aus #233/PR #234 zugeordnet. Deren tatsächlichen Integrations-/Abnahmestand führt
+[#233](https://github.com/venomenon328/picross/issues/233); frühere Draft-/Gateangaben
+unten sind damaliger Verlauf. Der neue freigegebene Sollstand KU / #244 steht
+in [Katalogdarstellung](CATALOG_PRESENTATION.md) und
+[Katalogsortierung](CATALOG_SORTING.md). Die alten Nachweise für zweizeiliges
+Etikett, farbige Ziffer, Farbprobe, Schwierigkeitspopup und „Fertig“ belegen nicht
+die neue Darstellung. KU-A/KU-B erhalten eigene aktuelle Nachweise und Gates;
+historische Prüfungen und offene Abnahmen werden nicht rückwirkend umgeschrieben.
+
 Stand: 17.10.2026 · Paket [#233](https://github.com/venomenon328/picross/issues/233),
 Draft-[PR #234](https://github.com/venomenon328/picross/pull/234) gegen `main`.
-Verbindliches Soll: [Katalogdarstellung](CATALOG_PRESENTATION.md).
+Historischer KE-Sollstand:
+[Katalogdarstellung am gelieferten KE-N1-Head](https://github.com/venomenon328/picross/blob/b76bac94db93a0be9034256f7b5e6dc857103d43/docs/CATALOG_PRESENTATION.md).
 
 ## Quellen und Befugnis
 
