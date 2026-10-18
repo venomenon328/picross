@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**SD / #235 (17.10.2026), SD-A/SD-B integriert; SD-C1 technisch umgesetzt, Abnahme offen:**
+**SD / #235 (18.10.2026), SD-A/SD-B/SD-C1 integriert; SD-C2 übernommen, finales Review offen:**
 [Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) bindet die wiederholbare
 Einstufung 1–5: instrumentierte Logik und Lösungsfluss, begrenzter Größenbeitrag,
 feste Grenzen anhand unabhängiger synthetischer Referenzen. Der aktuelle Katalog
@@ -17,8 +17,18 @@ integriert, einschließlich erfolgreicher vollständiger CI.
 [SD-C1](SD_CATALOG.md) ergänzt Sidecars, explizite Vorschau/Übernahme und
 gemeinsame Register-/Update-/Sync-/Recoverywege. Neue Registrierung oder geänderte
 Logik benötigt vollständig geprüftes 0.3; historische Produktionsbindungen bleiben.
-Reale Neueinstufung/Übernahme (SD-C2) und Merge sind hier nicht beauftragt.
-SD-C-R01/C1 bleibt separat offen; #238/#235 bleiben offen.
+SD-C1 ist nach qualifiziertem SD-C-R01/C1 R2 mit PR #242 als
+`e93444e5db48e2138d15890e314c60ec4291fea3` integriert; T01 und R01/C1 erfüllt.
+Der ausdrücklich gestartete SD-C2-Erstlauf an diesem Quell-/Werkzeugcommit
+lieferte 26 vollständig geprüfte Vorschläge: 17 × L3, 8 × L4, 1 × L5,
+keine offenen IDs. Nach bestandenem qualifiziertem Vor-Übernahme-Review hat
+SD-C2-F01 über den vorhandenen Transaktionsweg alle 26 Bewertungen übernommen.
+[C2-Belege und Gategrenze](SD_CATALOG.md) dokumentieren A07 real/K01:
+26 Sidecars, zwei Dauerberichte und ausschließlich die Runtime-Difficultyprojektion;
+historische Bindungen unverändert, identischer zweiter Aufruf ohne Byte-/Revisionsänderung.
+Separates qualifiziertes finales SD-C-R01/C2-Datenreview und Merge bleiben offen;
+aktuelle ausgewählte CI und getrennter Selbstreview werden im Draft-PR #243 gebunden.
+#238/#235 bleiben offen.
 
 **KE / #233 (17.10.2026), mit PR #234 in `main` integriert:**
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](CATALOG_PRESENTATION.md)
