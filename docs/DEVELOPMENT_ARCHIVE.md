@@ -50,8 +50,9 @@ instrumentierte Baseline bleibt an ihren PR-Commit/Run gebunden; sie ist kein
 neuer dauerhaft zu wiederholender Testpfad. Aktuelle Builddateien dürfen
 innerhalb desselben gebundenen Runs geteilt werden, Prüfergebnisse nicht.
 
-CI-C ordnet aktuelle native Checks und Pflichtartefakte unabhängig auswählbaren
-Gruppen zu. Bildaufbereitung wird gemessen und verlustfrei beschleunigt:
+[CI-C](CI_C_NATIVE_GROUPS.md) ordnet aktuelle native Checks und Pflichtartefakte
+unabhängig auswählbaren Gruppen zu. Das gebundene Inventar enthält nur aktive
+technische Dateinamen und Ergebnisfelder, keine Kopie historischer Bild-/Rätseldaten. Bildaufbereitung wird gemessen und verlustfrei beschleunigt:
 Dekodierte Pixel einschließlich Alpha, Maße, Ausschnitte und Pflichtbildmenge
 bleiben erhalten; PNG-Datei-Bytes dürfen sich ändern. Keine feste Zeit-/Bytegrenze,
 kein Weglassen angeforderter Belege und keine historische Replaypflicht.

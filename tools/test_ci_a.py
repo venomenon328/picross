@@ -136,6 +136,7 @@ class AdversarialGateTests(unittest.TestCase):
         plan.update(binding, comparison="exact-base-to-head-trees-no-renames", diff_check="full-whitespace-check")
         outputs = {key: str(plan["selected"][key]).lower() for key in FLAGS}
         outputs["selection_attempt"] = "2"
+        outputs["native_groups"] = ",".join(plan["native_groups"])
         binding["gate_attempt"] = "2"
         validate_binding(plan, binding, outputs)
         binding["gate_attempt"] = "3"

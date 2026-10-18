@@ -64,6 +64,8 @@ def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[l
     """Rebuild partial evidence selection when run_visual did not return."""
     reports = sorted(output.glob("renders/*.json")) + sorted(output.glob("drawing-renders/*.json")) + sorted(output.glob("vs2-renders/*.json")) + sorted(output.glob("v1-renders/*.json")) + sorted(output.glob("v2-renders/*.json")) + sorted(output.glob("v3-renders/*.json"))
     reports += sorted(output.glob("perf-b/*.json"))
+    for area in ("kat2", "ea", "za1"):
+        reports += sorted(output.glob(area+"/*.json"))
     primary = ("render-report-" + phase[len("render-"):] + ".json" if phase.startswith("render-")
                else phase.removesuffix("-render") + "-renders.json" if phase.startswith("rp6-")
                else "z2-renders.json" if phase == "current-book-capture"
@@ -97,13 +99,18 @@ def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[l
     oracle_inputs = {Path(path) for path in pixel_inputs} & bound
     priority = oracle_inputs or native_failures or phase_images
     partial = list(output.glob("renders/failure-*.png"))
+    # A failed crop/animation phase may have renamed its original frame before
+    # the compact summary exists. Keep these real inputs for diagnosis as well.
+    for area, prefix in (('kat2', 'kat2-'), ('ea', 'ea-'), ('za1', 'za1-')):
+        if phase.startswith(prefix):
+            partial += list(output.glob(area+'/*.png')) + list(output.glob(area+'/*.apng'))
     return list(set(reports) | bound | set(partial)), list(priority | set(partial))
 
 
 class Evidence:
-    def __init__(self, output: Path, host: str, scope: dict[str, bool]):
+    def __init__(self, output: Path, host: str, scope: dict[str, bool], technical: Path | None = None):
         self.output = output
-        self.technical = output / "technical"
+        self.technical = technical or output / "technical"
         self.logs = self.technical / "logs"
         self.logs.mkdir(parents=True, exist_ok=True)
         self.began = time.monotonic()
@@ -168,8 +175,9 @@ class Evidence:
         if missing:
             raise missing
 
-    def retain_files(self, sources: list[Path], priority_sources=()) -> None:
+    def retain_files(self, sources: list[Path], priority_sources=(), allow_partial=False) -> None:
         """Select native originals; never resize an image or replace an assertion."""
+        began = time.monotonic()
         selection_root = self.technical / "selected"
         if selection_root.exists():
             shutil.rmtree(selection_root)
@@ -179,8 +187,12 @@ class Evidence:
         for path in sorted(set(sources), key=lambda p: (
                 p not in priority, "failure" not in p.name, p.suffix == ".png",
                 p.stat().st_size if p.is_file() else 0, str(p))):
-            if not path.is_file():
-                continue
+            if not path.is_file() or path.stat().st_size == 0:
+                if allow_partial:
+                    omitted.append(dict(file=path.relative_to(self.output).as_posix(),
+                                        reason='missing/empty during failed run'))
+                    continue
+                raise toolchain.PreflightError("Missing/empty selected evidence: " + str(path))
             relative = path.relative_to(self.output)
             size = path.stat().st_size
             target = self.technical / "selected" / relative
@@ -188,10 +200,10 @@ class Evidence:
             shutil.copyfile(path, target)
             if path.suffix == ".png":
                 image_bytes += size
-            selected.append(dict(file=str(relative), bytes=size, sha256=toolchain.sha256_file(path),
+            selected.append(dict(file=relative.as_posix(), bytes=size, sha256=toolchain.sha256_file(path),
                                  failure_priority=path in priority, priority=path in priority))
         self.report["selected_evidence"] = dict(files=selected, omitted=omitted,
-                                                 image_bytes=image_bytes)
+                                                 image_bytes=image_bytes, selection_seconds=round(time.monotonic()-began, 6))
         self.flush()
 
     def measure_size(self, player: Path | None = None) -> dict:

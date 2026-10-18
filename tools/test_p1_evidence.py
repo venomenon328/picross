@@ -132,7 +132,7 @@ class CurrentProductEvidenceTests(unittest.TestCase):
             with patch("p1_product.source_identity", return_value=source), \
                     patch("p1_product.toolchain.request_json", side_effect=OSError("download unavailable")):
                 result = p1_product.main(["--cache-dir", str(Path(temporary) / "cache"),
-                    "--output-dir", str(output), "--no-integration", "--no-pilots", "--no-visual"])
+                    "--output-dir", str(output), "--native-group", "core"])
             self.assertEqual(result, 1)
             report = json.loads((output / "technical/product-report.json").read_text())
             self.assertEqual(report["status"], "failure")
