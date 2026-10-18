@@ -38,6 +38,8 @@ func _process(delta: float) -> void:
 	var sort_popup: PopupMenu = album.sort_choice.get_popup()
 	var data: Dictionary = {"controls": controls, "labels":labels,"slots": slots, "slot_status": slot_status,
 		"sort": {"criterion": album.preference.criterion, "direction": album.preference.direction,
+			"direction_tooltip": album.direction_button.tooltip_text,
+			"direction_accessibility_name": album.direction_button.accessibility_name,
 			"menu": {"visible": sort_popup.visible, "position": [sort_popup.position.x, sort_popup.position.y],
 				"size": [sort_popup.size.x, sort_popup.size.y], "focused": sort_popup.get_focused_item()},
 			"ids": album.filtered_ids, "visible_ids": album.visible_ids, "page": album.page_index,

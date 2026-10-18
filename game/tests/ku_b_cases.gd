@@ -108,5 +108,28 @@ static func run(runner: SceneTree) -> void:
 	runner.check(catalog.page_index == 1, "KU-B same criterion does not reset page")
 	catalog.choose_sort("category")
 	runner.check(catalog.page_index == 0, "KU-B changed criterion resets page")
+	_check_direction_labels(runner, catalog)
 	catalog.queue_free()
 	DirAccess.remove_absolute(path)
+
+static func _check_direction_labels(runner: SceneTree, catalog: Catalog) -> void:
+	# Fixed expectations independent of the production label mapping. Exercise the
+	# existing selection/pressed handlers, including the opposite default for added.
+	var cases: Array[Dictionary] = [
+		{"criterion": "category", "title": "Kategorie", "asc": "Kategorienfolge", "desc": "Umgekehrte Kategorienfolge"},
+		{"criterion": "size", "title": "Größe", "asc": "Kleinste zuerst", "desc": "Größte zuerst"},
+		{"criterion": "difficulty", "title": "Schwierigkeit", "asc": "Sehr leichte zuerst", "desc": "Sehr schwere zuerst"},
+		{"criterion": "added", "title": "Hinzugefügt", "asc": "Älteste zuerst", "desc": "Neueste zuerst"},
+	]
+	for index: int in range(cases.size()):
+		var expected: Dictionary = cases[index]
+		catalog.sort_choice.item_selected.emit(index)
+		var initial: String = "desc" if expected.criterion == "added" else "asc"
+		for step: int in range(3):
+			if step > 0: catalog.direction_button.pressed.emit()
+			var direction: String = initial if step != 1 else "asc" if initial == "desc" else "desc"
+			var context: String = "KU-B direction label " + expected.criterion + "/" + direction
+			runner.check(catalog.preference.criterion == expected.criterion and catalog.preference.direction == direction, context + " active pair")
+			runner.check(catalog.direction_button.tooltip_text == expected[direction], context + " tooltip describes active order")
+			runner.check(catalog.direction_button.accessibility_name == "Sortierrichtung (%s): %s" % [expected.title, expected[direction]], context + " accessible criterion and active order")
+			runner.check(catalog.direction_button.text == ("↑" if direction == "asc" else "↓"), context + " unchanged arrow")
