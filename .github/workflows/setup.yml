@@ -9,7 +9,7 @@ on:
       scope:
         description: Widen the changed-path selection
         type: choice
-        options: [auto, all, runtime, visual, perf-b, production, toolchain]
+        options: [auto, all, runtime, visual, perf-b, production, toolchain, browser-catalog, browser-input, browser-completion, browser-persistence]
         default: all
 
 permissions:
@@ -42,6 +42,7 @@ jobs:
           filter: blob:none
           sparse-checkout: |
             tools/ci_scope.py
+            tools/web_tests/contract.py
             .gitattributes
           sparse-checkout-cone-mode: false
       - name: Select required checks from the complete diff
@@ -99,6 +100,8 @@ jobs:
     needs: docs
     if: needs.docs.outputs.web == 'true'
     uses: ./.github/workflows/web.yml
+    with:
+      selection_attempt: ${{ needs.docs.outputs.selection_attempt }}
 
   delivery:
     needs: docs
@@ -115,7 +118,11 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-          sparse-checkout: tools/ci_scope.py
+          sparse-checkout: |
+            tools/ci_scope.py
+            tools/web_bundle.py
+            tools/web_tests/contract.py
+            tools/web_tests/results.py
           sparse-checkout-cone-mode: false
           filter: blob:none
       - name: Download complete selection for the result gate
@@ -123,7 +130,20 @@ jobs:
         with:
           name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.docs.outputs.selection_attempt }}
           path: ${{ runner.temp }}/ci-selection
+      - name: Download chromium evidence from its producer attempt
+        if: always() && needs.docs.outputs.web == 'true'
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: picross-web-chromium-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.web.outputs.chromium_attempt }}
+          path: ${{ runner.temp }}/web-evidence/chromium
+      - name: Download firefox evidence from its producer attempt
+        if: always() && needs.docs.outputs.web == 'true'
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: picross-web-firefox-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.web.outputs.firefox_attempt }}
+          path: ${{ runner.temp }}/web-evidence/firefox
       - name: Require every selected job to have actually succeeded
+        if: always()
         env:
           CI_RESULTS: >-
             {"docs":{"result":"${{ needs.docs.result }}"},
@@ -132,6 +152,7 @@ jobs:
             "preflight":{"result":"${{ needs.preflight.result }}"},
             "web":{"result":"${{ needs.web.result }}"},
             "delivery":{"result":"${{ needs.delivery.result }}"}}
+          CI_WEB_OUTPUTS: ${{ toJSON(needs.web.outputs) }}
           CI_OUTPUTS: ${{ toJSON(needs.docs.outputs) }}
           CI_BINDING: >-
             {"source_head":"${{ github.event.pull_request.head.sha || github.sha }}",
@@ -142,6 +163,7 @@ jobs:
         run: >-
           python3 tools/ci_scope.py finish
           --plan-file "${{ runner.temp }}/ci-selection/ci-plan.json"
+          --web-evidence "${{ runner.temp }}/web-evidence"
           --output "${{ runner.temp }}/ci-result.json"
       - name: Upload complete result and source binding
         if: always()
