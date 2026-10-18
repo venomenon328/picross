@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 18.10.2026 · Version 2.1 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
+Stand: 18.10.2026 · Version 2.2 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
 
 ## Geltung und Ablösung
 
@@ -30,8 +30,8 @@ Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 Eigentümerentscheidung vom 18.10.2026:
 [#246](https://github.com/venomenon328/picross/issues/246) ist als Spezifikation
 freigegeben. Ziel ist eine deutlich kürzere notwendige Wartezeit durch passende
-Prüfauswahl und schnellere Ausführung. **CI-A ist implementiert; CI-B und CI-C
-bleiben Sollstand. Keine Mergefreigabe.** Die folgenden Entscheidungen sind verbindlich;
+Prüfauswahl und schnellere Ausführung. **CI-A und CI-B sind implementiert;
+CI-C bleibt Sollstand. CI-B-T01/R01 und Merge bleiben separat im Paket-PR gebunden.** Die folgenden Entscheidungen sind verbindlich;
 sie erlauben vor Integration des jeweiligen Pakets kein Überspringen eines
 derzeit ausgewählten Pflichtchecks. Ausgangsbasis ist
 `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a`; konkrete Lieferstände und Messungen
@@ -81,7 +81,11 @@ einem Merge nicht; die PR-/Test-Merge-Bindung bleibt maßgeblich. Der bestehende
 Abbruch überholter PR-Läufe bleibt. Weder Nachtläufe noch neue geplante Automation,
 Caches für Ergebnisse, neue CI-Infrastruktur oder Live-Deployment gehören dazu.
 
-### Browsergruppen nach CI-B
+### Ausführbare Browsergruppen (CI-B)
+
+[CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) dokumentiert Inventar, genaue
+Abhängigkeiten, unabhängige Voraussetzungen, Runner und Fail-closed-Belegprüfung.
+Vor Integration von CI-B bleibt auf `main` die vollständige bisherige Route aktiv.
 
 Die logischen Gruppen sind unabhängig startbar; ihre Benennung legt keine
 bestimmte CLI oder Anzahl von Jobs fest:
@@ -250,8 +254,9 @@ Andere Runs oder Quellstände sind nicht wiederverwendbar. Große Aufräum-PRs d
 nicht an Betriebssystemgrenzen für Argumente/Umgebungsvariablen scheitern; die
 Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 
-Die Tabelle beschreibt die aktuelle Auswahl nach CI-A. Die nativen
-Untergruppen bleiben bis CI-C gekoppelt; Browserrouten bleiben bis CI-B vollständig.
+Die Tabelle beschreibt die Bereichsauswahl nach CI-A. Die nativen
+Untergruppen bleiben bis CI-C gekoppelt; CI-B wählt innerhalb von Web gemäß
+[Gruppenvertrag](CI_B_BROWSER_GROUPS.md).
 
 | Änderung | Automatischer Pflichtumfang im PR |
 | --- | --- |
@@ -269,7 +274,7 @@ Untergruppen bleiben bis CI-C gekoppelt; Browserrouten bleiben bis CI-B vollstä
 Product, `web` (Browser) und `delivery` (SSH/HTTP) sind unabhängig ausgewählt.
 Runtime-/Darstellungsänderungen wählen weiterhin Browser; native Ressourcenprüfer
 können allein Product benötigen. Gemeinsame Bündel-/Export-/Hostingdateien wählen
-Browser und Zustellung. Jede ausgewählte Browserroute bleibt bis CI-B vollständig.
+Browser und Zustellung. CI-B verlangt regulären Start und alle betroffenen Browsergruppen.
 Der reine Inhaltspfad bleibt ausgenommen.
 
 **Schlanker Inhaltspfad:** Ausschließlich `content/categories.json`,
@@ -318,10 +323,12 @@ der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erla
 
 Der Pflichtjob [Webprüfung](../.github/workflows/web.yml) läuft bei
 ausgewähltem Browserbedarf. Reine Inhalte wählen ihn
-weiterhin nicht; Main-Merges veröffentlichen nichts. Der Job exportiert den
-regulären Spieler und eine getrennte feste technische Testfassung, prüft echte
-Chromium-/Firefox-Ereignisse samt Browserpersistenz, regulärem Start und allen
-aktiven positiven/negativen Szenarien. Die [Zustellungsprüfung](../.github/workflows/delivery.yml)
+weiterhin nicht; Main-Merges veröffentlichen nichts. Ein Buildjob erzeugt den
+regulären Spieler und zwei eigenständige feste technische Exporte. Separate
+Chromium-/Firefox-Runner prüfen den regulären Start und die ausgewählten Gruppen
+samt allen zugeordneten positiven/negativen Szenarien und echter Browserpersistenz.
+Die vollständige Vereinigung ist im [CI-B-Inventar](CI_B_BROWSER_GROUPS.md) gebunden.
+Die [Zustellungsprüfung](../.github/workflows/delivery.yml)
 baut unabhängig nur den regulären Spieler und prüft Loopback-OpenSSH/HTTP.
 Sie installiert und startet keine Browser. Bei gemeinsamer Auswahl haben beide
 Jobs eigene Runner, Ausgaben und Artefaktnamen. `ci-required` verlangt den

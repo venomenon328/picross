@@ -44,6 +44,12 @@ Sie erklärt keine aktiven Tests allein wegen ihres historischen Namens für
 entbehrlich. Bis zur Integration des jeweiligen Pakets bleiben die ausführbaren
 Pflichtchecks maßgeblich.
 
+[CI-B](CI_B_BROWSER_GROUPS.md) hält das vollständige aktive Browserinventar,
+Gruppenvoraussetzungen und aktuelle Belegbindungen fest. Die serielle
+instrumentierte Baseline bleibt an ihren PR-Commit/Run gebunden; sie ist kein
+neuer dauerhaft zu wiederholender Testpfad. Aktuelle Builddateien dürfen
+innerhalb desselben gebundenen Runs geteilt werden, Prüfergebnisse nicht.
+
 CI-C ordnet aktuelle native Checks und Pflichtartefakte unabhängig auswählbaren
 Gruppen zu. Bildaufbereitung wird gemessen und verlustfrei beschleunigt:
 Dekodierte Pixel einschließlich Alpha, Maße, Ausschnitte und Pflichtbildmenge

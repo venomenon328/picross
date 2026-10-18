@@ -61,6 +61,11 @@ Preflight-, Browser- oder Zustellungsläufe.
 
 ## Ausführung und Ergebnisgate
 
+Die nachfolgende serielle Webausführung beschreibt den gebundenen CI-A-Lieferstand.
+[CI-B](CI_B_BROWSER_GROUPS.md) ersetzt sie durch unabhängige Gruppen, zwei
+Browserrunner und zusätzliche Szenarien-/Belegprüfung. CI-A-Auswahl, Zustellung
+und Quell-/Run-/Retrybindung bleiben erhalten.
+
 `web` und `delivery` hängen jeweils nur am Auswahl-/Dokumentjob. Web installiert
 Playwright mit Chromium/Firefox, baut den regulären Spieler und zwei echte
 technische Exporte und führt beide vorhandenen Start-/Browserrouten vollständig

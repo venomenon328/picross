@@ -195,7 +195,7 @@ class WorkflowExecutionTests(unittest.TestCase):
     def test_actual_workflow_commands_with_synthetic_tools_and_failure_propagation(self):
         # Execute the real shell blocks with journalled external tools. No engine,
         # browser, SSH server or network. The full CI separately runs real tools.
-        for kind in ("delivery", "web"):
+        for kind in ("delivery",):  # CI-B tests the new build/browser workflows separately.
             source = (ROOT / f".github/workflows/{kind}.yml").read_text()
             blocks = run_blocks(source)
             with tempfile.TemporaryDirectory() as temporary:
@@ -222,19 +222,10 @@ class WorkflowExecutionTests(unittest.TestCase):
                 self.assertEqual(execute(), 0)
                 calls = [json.loads(line) for line in journal.read_text().splitlines()]
                 builds = [c for c in calls if "tools/build_web_player.py" in c]
-                if kind == "delivery":
-                    self.assertEqual(len(builds), 1)
-                    self.assertNotIn("--test", builds[0])
-                    self.assertFalse(any(any(word in ' '.join(c) for word in ("playwright", "xvfb", "web-test", "smoke.py", "browser.py")) for c in calls))
-                    required = "ssh_reference.py"
-                else:
-                    self.assertEqual(len(builds), 3)
-                    self.assertEqual(sum("--test" in c for c in builds), 2)
-                    self.assertFalse(any("ssh" in ' '.join(c) for c in calls))
-                    for name in ("smoke.py", "browser.py"):
-                        self.assertEqual(sum(name in ' '.join(c) for c in calls), 1)
-                    self.assertTrue(any(c[-2:] == ["chromium", "firefox"] for c in calls))
-                    required = "browser.py"
+                self.assertEqual(len(builds), 1)
+                self.assertNotIn("--test", builds[0])
+                self.assertFalse(any(any(word in ' '.join(c) for word in ("playwright", "xvfb", "web-test", "smoke.py", "browser.py")) for c in calls))
+                required = "ssh_reference.py"
                 print("CI_A_EXECUTION_PROBE " + json.dumps({"route": kind, "commands": calls,
                     "real_external_tools": False, "build_count": len(builds)}, sort_keys=True), flush=True)
                 for failure in ("build_web_player.py", required):

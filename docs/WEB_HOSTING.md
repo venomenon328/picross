@@ -12,7 +12,7 @@ Technische Ergebnisse und Artefaktbindung stehen im zugehörigen Draft-PR.
 
 Die Eigentümerentscheidung vom 18.10.2026 in
 [CI-Policy](CI_POLICY.md) / [#246](https://github.com/venomenon328/picross/issues/246)
-ist ein gestufter Vertrag: **CI-A implementiert, CI-B offen; keine Livefreigabe**.
+ist ein gestufter Vertrag: **CI-A/CI-B implementiert; keine Livefreigabe**.
 Vor Integration des jeweiligen Pakets gelten die vorhandenen ausgewählten
 Pflichtchecks weiter.
 
@@ -27,14 +27,15 @@ jede weiterhin ausgewählte Browserroute vollständig, einschließlich reguläre
 Start und aller aktuellen positiven/negativen Szenarien beider Browser.
 
 [CI-A-Auswahl](CI_A_SELECTION.md) bindet die genaue Pfadzuordnung.
-`web.yml` führt unverändert drei Exporte und beide vollständigen Browserrouten aus;
-`delivery.yml` führt separat genau einen regulären Export und die bestehende
-SSH/HTTP-Referenz aus. Eigene Runner und `picross-web-*`/`picross-delivery-*`-
-Artefakte verhindern Vermischung. Beide sind eigenständige Pflichtresultate in
-`ci-required`; der Ergebnisbericht bindet Auswahl, Ausführung und Nichtzutreffen
-an Head, Base, Test-Merge, Run und Versuch.
+[CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) bindet das vollständige Inventar,
+Auswahl, unabhängige Voraussetzungen und das Ergebnisgate. `web.yml` baut drei
+Exporte einmal im selben Run; `web-browser.yml` führt Chromium und Firefox auf
+getrennten Runnern mit eigenen Profilen/Hosts aus. Das Gate kontrolliert konkrete
+Szenarien und Pflichtdateien samt Hashes. `delivery.yml` bleibt separat mit genau
+einem regulären Export und der bestehenden SSH/HTTP-Referenz ohne Browser.
 
-Erst nach [CI-B (#248)](https://github.com/venomenon328/picross/issues/248) gilt:
+Nach Integration von [CI-B (#248)](https://github.com/venomenon328/picross/issues/248)
+gilt die folgende Gruppenauswahl; die Vorgängerroute bleibt bis dahin auf `main`:
 
 | Unabhängig startbare Gruppe | Prüfzweck |
 | --- | --- |
