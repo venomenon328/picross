@@ -1,5 +1,12 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
+**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; Umsetzung offen:**
+[AT](REVEAL_TRANSPARENCY.md) ergänzt in AT-A die getrennte aktive Bildbindung und
+deren gemeinsamen Prüf-/Transaktionsweg; AT-B übernimmt danach freigegebene neue
+Bildfassungen des gebundenen Bestands. Historische Registry-/Paket-/Integrations-
+bindungen bleiben unverändert. Die Spezifikationsfreigabe startet keine
+Bildbearbeitung, Datenübernahme oder Implementierung.
+
 **KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt eine eigene autoritative,
 ID-gebundene Quelle für die erste Katalogaufnahme und deren minimale
@@ -262,3 +269,33 @@ ihr fehlendes Datum wird nur im Speicher als unbekannt behandelt. Fremdfelder,
 falsche Versionstypen und Datumstypen sind Fehler, keine implizite Migration.
 Der gemeinsame Projektor validiert alle Added-Quellen und schreibt künftig v4;
 Runtimeverbraucher analysieren keine Rätsel und lesen keine Herkunftsbelege.
+
+## AT · Aktive Bildquelle und exakte Kompatibilität
+
+Für den freigegebenen [AT-A-Sollstand](REVEAL_TRANSPARENCY.md) wird die aktuelle
+Bildfassung außerhalb historischer Produktions-/Integrationsbelege geführt.
+Unveränderte Originalbindungen und neue aktive Bildbindung bleiben separat
+prüfbar; der vollständige Eintragsvergleich kompakter Altmanifeste wird nicht
+gelockert. Die neue Quelle bindet tatsächliche Bildfreigabe, ID, Bildrevision und
+Alt-/Neuhashes. Fehlt die neue optionale Bildquelle, gilt die bisherige
+Originalbindung; eine vorhandene ungültige oder widersprüchliche Quelle stoppt
+ohne Fallback.
+Alle Quellen-/Registrierungs-/Update-/Sync-/Adopt-/Recoverywege prüfen denselben
+aktuellen Bildstand und erhalten die übrigen Metadaten bytegleich.
+
+Definition samt Runtime-Revision, Ressourcenpfade, ID/Key, Save-Slot, Kategorie,
+Sichtbarkeit, Reihenfolge, Rating und Hinzugefügt-Daten ändern sich durch ein
+reines Bildupdate nicht. Die Runtime erhält keine Produktionsfreitexte,
+Bildfreigaben oder Herkunftsprotokolle. Die Spoilergrenze bleibt auch beim Laden
+und Ableiten des aktuellen Reveals bestehen. Neu und Begonnen erhalten keine
+Motivvorschau aus dem neuen Bild.
+
+Exakte neue Quellen-/Datei-/Journalformate und der vollständige sichere
+Namensraum werden vor der ersten AT-A-Codeänderung gemeinsam mit
+[ZA-1](ZA1_ADAPTER.md) und [Transaktionen](SD_CATALOG.md) festgelegt. Inhalts-v2,
+Runtime-v2/v3/v4 und ihre abgegrenzten Journalaltformate behalten ihre exakten
+Felder und Leseregeln; keine stillen Fremdfelder. Eine bloße Bildänderung erzwingt
+keine neue Runtimeversion. Falls die technische Lösung tatsächlich zusätzliche
+Runtimefelder benötigt, muss AT-A die neue Version einschließlich Writer,
+Loader, Definitions-/Ressourcenprüfung und Recovery vorab gemeinsam festlegen.
+Die bisherige Projektion wird andernfalls unverändert weiterverwendet.

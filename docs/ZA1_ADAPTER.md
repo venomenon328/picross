@@ -1,5 +1,14 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; Umsetzung offen:**
+[AT](REVEAL_TRANSPARENCY.md) ergänzt nach gesonderter Beauftragung mit AT-A einen
+eng begrenzten Bildupdateweg; AT-B stellt anschließend den gebundenen Bestand um.
+Der aktive Bildhash und die neue tatsächliche Bildfreigabe werden außerhalb
+historischer Produktions-/Integrationsbelege gebunden. Die vorhandenen
+Export-/Rasterupdatebefehle werden dadurch noch nicht geändert oder freigegeben.
+Definitionen, Runtime-Revisionen, IDs, Ressourcenpfade, Slots, Kategorien, Ratings
+und Hinzugefügt-Daten bleiben beim Bildupdate unverändert.
+
 **KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt die erste Katalogaufnahme als
 separate ID-gebundene Metadatenquelle außerhalb historisch versiegelter Pakete.
@@ -309,6 +318,12 @@ gleich. Das neue Paket benötigt eine neue Paketrevision; das alte Produktions-
 oder kompakte Integrationspaket wird unverändert behalten. Änderungen des
 Abschlussbilds oder der Identität sind außerhalb dieses begrenzten Updatepfads.
 
+Der freigegebene [AT-Bildupdatevertrag](REVEAL_TRANSPARENCY.md) erweitert diesen
+Rasterupdateauftrag nicht. AT-A muss zusätzlich sicherstellen, dass spätere
+Rasterupdates eine bereits aktive separat freigegebene Bildfassung erhalten und
+deren Bindung über die gemeinsame Quellenprüfung kontrollieren. Die bisherigen
+Raster-/Revisionsregeln und unveränderten historischen Freigaben bleiben bestehen.
+
 ```sh
 python -m tools.puzzle_production.target_adapter plan-update --export <neuer-export> --checkout <checkout> --expected-definition-sha256 <Hash-der-bisherigen-Definition> --difficulty <checked.json>
 python -m tools.puzzle_production.target_adapter update --export <neuer-export> --checkout <checkout> --expected-definition-sha256 <derselbe-Hash> --difficulty <checked.json>
@@ -354,6 +369,55 @@ Gleicher Export mit aktuellem Erwartungshash darf `no-op` sein; der frühere Has
 bleibt nach erfolgreichem Update absichtlich veraltet. Allgemeine Regressionen
 verwenden ausschließlich synthetische Inputs in `test_content_update.py` und
 `game/tests/multicolor_cases.gd`; keine reale Rätselprüfung in CI.
+
+## AT · Getrennte Bildrevision und aktive Bindung
+
+Dieser Abschnitt beschreibt ausschließlich den noch zu implementierenden
+[AT-A-Sollstand](REVEAL_TRANSPARENCY.md). Neue reguläre Exporte verwenden weiterhin
+die tatsächlich freigegebenen Abschlussbildbytes; transparente PNGs behalten
+ihren Alphakanal. Für einen vorhandenen Eintrag ist weder `register` noch der
+oben begrenzte Rasterupdateweg ein Ersatz für den neuen Bildupdateweg.
+
+Eine Bildänderung erhält ihre eigene Revision und tatsächliche Freigabe mit
+unveränderlichem Alt-/Neubildbezug. Originalhandoffs, Inventare, Exportmanifeste,
+kompakte Integrationsbelege und deren ursprüngliche Bildhashes bleiben unverändert.
+Die aktuelle zulässige Bildfassung wird separat und eindeutig an die Rätsel-ID
+und ihre Herkunft gebunden. Der vollständige Eintragsvergleich alter kompakter
+Integrationsbelege bleibt erhalten; eine aktive Bildquelle darf ihn nicht durch
+gelockerte Vergleiche umgehen. Ein zulässiger Altstand ohne neue Bildquelle und
+eine vorhandene ungültige, veraltete oder widersprüchliche Quelle bleiben
+verschiedene Fälle.
+Ohne neue Bildquelle gilt die bisherige Originalbindung, bei ungültiger vorhandener
+Quelle wird vor Mutation gestoppt und nicht auf einen Altwert zurückgefallen.
+
+AT-A legt vor der ersten betroffenen Codeänderung exakte Pfade, Felder,
+Formatversionen, Grenzen und Journalübergänge in diesem Vertrag,
+[Kategorien/Projektion](CATEGORIES.md) und dem
+[gemeinsamen Transaktionsvertrag](SD_CATALOG.md) konsistent fest. Keine zusätzlichen
+Felder unter alten exakt definierten Formatnamen. Eine neue Runtimeversion ist
+nur bei einer tatsächlichen Schemaänderung erforderlich; dann gehören Writer,
+Loader und Definitions-/Ressourcenprüfung gemeinsam zum Paket. Andernfalls bleibt
+die bestehende Runtimeprojektion exakt erhalten. Historische Bildfreigaben werden
+nicht als Freigaben der neuen Bytes ausgegeben; alte Produktionspakete müssen
+für diese Bildänderung nicht wiederhergestellt werden.
+
+Der lesende Plan bindet den vollständigen relevanten Ausgangsstand und zeigt
+konkrete Bild-/Metadatenänderungen. Die ausdrückliche Übernahme ersetzt nur das
+gebundene Bild samt seiner neuen aktiven Bindung. Definitionen einschließlich
+Runtime-Revision, Raster, Hinweise, IDs/Keys, Pfade, Save-Slots, Kategorien,
+Schwierigkeiten und Hinzugefügt-Daten bleiben bytegleich. Der gemeinsame Lock,
+vorab vollständig geprüfte Alt-/Zielzustände, versionierter Binärersatz und
+kontrollierter Rollback schützen unterbrochene Übernahmen. Bei fremden Bytes
+bleiben Dateien und Journal erhalten; erfolgreiche Recovery endet unmittelbar
+in einem gültigen Checkout. Identische Wiederholung ist nur beim vollständig passenden eigenen
+Ergebnis ein echter No-op ohne Rewrite, neue Bildrevision oder Journal.
+
+Register, Rasterupdate, Quellenprüfung, Sync, Bewertungs-/Hinzugefügt-Übernahme,
+Produktionscleanup und Recovery müssen dieselbe aktive Bildbindung berücksichtigen
+und erhalten. Tests verwenden feste synthetische Bilder, Definitionen und Saves.
+Die tatsächliche Bestandsfreistellung, motivbezogene Behandlung szenischer Bilder,
+Bildfreigaben und neue Bild-/Rasterkonsistenzprüfung gehören anschließend zu AT-B.
+Dieser Spezifikationsstand liefert noch keinen ausführbaren zusätzlichen Befehl.
 
 ## Autorisierte manuelle Ableitungen
 

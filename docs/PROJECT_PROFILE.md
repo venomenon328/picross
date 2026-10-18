@@ -1,5 +1,32 @@
 # Projektprofil: picross
 
+**AT / #256 (19.10.2026), Spezifikation freigegeben; Implementierung nicht begonnen:**
+[Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ist bei Abschlussbildern,
+deren Katalogvorschau und Bildrevisionen samt den dort benannten Fachquellen
+vollständig zu lesen. Dasselbe freigegebene Bild lässt in beiden Ansichten den
+Papieruntergrund durch neutrale Außenflächen und echte Aussparungen durchscheinen.
+Helle Motivteile, Konturen und Komposition bleiben erhalten; Szenen benötigen
+eine tatsächlich vorgelegte transparente Gestaltung und neue Bildfreigabe.
+Kein Renderer-Weißfilter, keine Änderung von Fragezeichen, eigener Füllminiatur,
+Spoilergrenzen oder EA-Enthüllung.
+
+AT-A liefert den sicheren gemeinsamen Weg für reine Bildrevisionen samt
+Quellenbindung, versionierter binärer Ersetzung/Recovery, Produktionsstandard
+und synthetischen Regressionen. AT-B stellt anschließend den vollständig
+inventarisierten Startbestand mit konkreten Bildfreigaben kontrolliert um.
+Definitionsbytes, Puzzle-Runtime-Revision, IDs/Slots/Pfade, Spielstände,
+Schwierigkeits-/Hinzugefügt-Metadaten und ursprüngliche Freigabebelege bleiben
+erhalten. Aktive Bildrevisionen erhalten eine getrennte überprüfbare Bindung;
+spätere gemeinsame Operationen dürfen sie nicht verlieren.
+
+Standard ist ein Implementierungs-PR je separat beauftragtem und abgenommenem
+Paket im [Gesamtissue](https://github.com/venomenon328/picross/issues/256),
+AT-B nach integriertem AT-A. Technische Lieferung und qualifiziertes separates
+Review bleiben je Paket getrennt; tatsächliche Bildfreigabe und Inhaltsabnahme
+werden an die vorgelegten Dateien gebunden. Der aktuelle Auftrag umfasst nur
+Issue-/Dokumentarbeit, keine Implementierung, Bildbearbeitung, Übernahme oder
+Merge. Die gezielte AT-Ergänzung verändert keine historischen KE-/KU-Nachweise.
+
 **CI / #246 (18.10.2026), CI-A/CI-B integriert; CI-C implementiert, separate Abnahme offen:**
 Die [CI-Policy](CI_POLICY.md) bindet die gestufte Straffung:
 [CI-A (#247)](https://github.com/venomenon328/picross/issues/247) wählt reine

@@ -1,5 +1,14 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; noch nicht implementiert:**
+[AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
+für transparente Abschlussbilder und einen eigenen eng begrenzten Bildupdateweg.
+AT-B stellt danach den gebundenen Bestand mit tatsächlichen Bildfreigaben um.
+Die folgenden bestehenden Befehle erhalten durch diese Spezifikation keine
+zusätzliche Bildupdatefähigkeit; insbesondere bleibt `plan-update`/`update` auf
+den gesonderten Rasterersatz begrenzt. Keine Bildbearbeitung oder Datenübernahme
+durch den Spezifikationsauftrag.
+
 **Aktuelle Prüfregel (12.10.2026):** Konkrete Rätsel werden während ihrer Produktion
 und Integration geprüft, niemals routinemäßig in CI. Keine rätselspezifischen
 Unit-Tests anlegen. CI führt bei Werkzeugänderungen allgemeine Tests an festen
@@ -821,3 +830,32 @@ Byte-/mtime-No-op. Bestehende Metadaten bleiben bei Folgeplänen erhalten, neue 
 oder geänderte Quellen verlangen einen neuen Plan. Fremde Bytes blockieren
 Recovery vor Mutation. Details: [KU-B-Vertrag](../../docs/CATALOG_SORTING.md),
 [Bestandsplan](../../docs/KU_B_BACKFILL.md).
+
+## AT: Noch zu implementierender Bildupdateweg
+
+Der freigegebene [AT-A-Vertrag](../../docs/REVEAL_TRANSPARENCY.md) verlangt eine
+eigene Bildrevision mit neuer tatsächlicher Freigabe und nachvollziehbarer
+Alt-/Neuhashbindung außerhalb historischer Produktions-/Integrationsbelege.
+PNG-Alpha wird durch den bestehenden Revealexport bereits bytegleich erhalten;
+der Austausch eines registrierten Bilds benötigt dennoch den zusätzlichen
+abgesicherten Weg. Ein bloßes Überschreiben des PNGs oder nachträgliches
+Umschreiben seiner alten Freigabe-/Manifestbindung ist keine gültige Übernahme.
+
+AT-A legt vor der ersten betroffenen Codeänderung die exakten Eingänge, Pfade,
+Felder, Versionen, Grenzen und Befehle gemeinsam in
+[ZA-1](../../docs/ZA1_ADAPTER.md), [Projektion](../../docs/CATEGORIES.md) und dem
+[Transaktionsvertrag](../../docs/SD_CATALOG.md) fest. Erst die tatsächliche
+Implementierung ergänzt hier ausführbare Aufrufe. Lesender Plan, aktuelle
+Erwartungshashes, gemeinsame Quellenprüfung, versionierter Binärersatz,
+kontrollierter Rollback und echte Wiederholungs-No-ops gehören zusammen.
+Ein zulässiger Altstand ohne neue Bildquelle und eine vorhandene ungültige
+Bildquelle bleiben unterscheidbar; fremde Bytes werden einschließlich Journal
+erhalten.
+
+Reine Bildupdates erhalten Definitionen, Runtime-Revisionen, Raster/Hinweise,
+IDs/Keys, Ressourcenpfade, Slots, Kategorien, Ratings und Hinzugefügt-Daten
+bytegleich. Keine neue Analyse, Zertifizierung oder Wiederherstellung gelöschter
+Produktionspakete. Bestehende Register-/Rasterupdate-/Sync-/Adopt-/Cleanup-/
+Recoverywege müssen die aktive Bildbindung gemeinsam erhalten; alte exakte
+Formate werden nicht gelockert. Synthetische technische Regressionen gehören
+zu AT-A, konkrete Bestandsfreistellung, Bildabnahme und Motivprüfung zu AT-B.
