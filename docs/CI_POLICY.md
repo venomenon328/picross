@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 17.10.2026 · Version 1.9 · Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70) und freigegebener [SD-Sollvertrag](PUZZLE_DIFFICULTY.md)
+Stand: 18.10.2026 · Version 2.0 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
 
 ## Geltung und Ablösung
 
@@ -24,6 +24,136 @@ Der Abschlussstatus für Pull Requests heißt `ci-required` im Workflow
 Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 übersprungene erforderliche Jobs sind kein Pass. Nichtzutreffen wird mit
 Änderungsauswahl und Grund ausgewiesen. Es wurde kein Branchschutz verändert.
+
+## Freigegebene CI-Straffung
+
+Eigentümerentscheidung vom 18.10.2026:
+[#246](https://github.com/venomenon328/picross/issues/246) ist als Spezifikation
+freigegeben. Ziel ist eine deutlich kürzere notwendige Wartezeit durch passende
+Prüfauswahl und schnellere Ausführung. **Noch keine Implementierung oder
+Mergefreigabe.** Die folgenden Entscheidungen sind der verbindliche Sollvertrag;
+sie erlauben vor Integration des jeweiligen Pakets kein Überspringen eines
+derzeit ausgewählten Pflichtchecks. Ausgangsbasis ist
+`main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a`; konkrete Lieferstände und Messungen
+stehen in den Paket-Issues/PRs, nicht als laufende Chronik in dieser Policy.
+
+### Pakete und Wirksamkeit
+
+| Paket | Eigenständig abnehmbarer Umfang | Wirksamkeit |
+| --- | --- | --- |
+| [CI-A · Prüfbedarf auswählen (#247)](https://github.com/venomenon328/picross/issues/247) | Enge Fach-/Vorlagenzuordnung; Product, Browser und SSH/HTTP-Zustellung unabhängig auswählen und ausführen; vollständiges Ergebnisgate | Zuerst. Danach bleiben alle weiterhin ausgewählten Browserrouten bis CI-B vollständig. |
+| [CI-B · Webprüfungen aufteilen und beschleunigen (#248)](https://github.com/venomenon328/picross/issues/248) | Regulärer Start und unabhängige Browsergruppen; Chromium/Firefox auf getrennten Runnern; feine Messung und belegte Harnesskorrektur | Nach integrierter CI-A. Erst danach gilt die selektive Browser-Szenarienauswahl. |
+| [CI-C · Native Produktprüfung straffen (#249)](https://github.com/venomenon328/picross/issues/249) | Native Gruppen entkoppeln; Bildkosten messen und verlustfrei beschleunigen | Nach CI-A. CI-B davor ist empfohlen, keine technische Voraussetzung. Erst CI-C ersetzt die native Integrationskopplung. |
+
+Standard ist ein Implementierungs-PR je Paket einschließlich Tests und
+Dokumentationsfortschreibung. Ein reiner Spezifikations-PR ist eine getrennte
+Dokumentlieferung und nimmt kein Implementierungsgate ab. Technische Startprüfung
+und gegebenenfalls Modellauswahl gehören zur späteren Umsetzungsvorbereitung.
+
+### Gezielte Auswahl
+
+Productbedarf impliziert nach CI-A nicht pauschal Browserbedarf; Browserbedarf
+impliziert nicht pauschal eine SSH-Referenz. Grundlage sind geprüfte gemeinsame
+Abhängigkeiten und die Vereinigung aller geänderten Bereiche.
+
+| Änderungsbezug | Freigegebene Zuordnung |
+| --- | --- |
+| Geprüfte reine Analyse-/Solver-/Bewertungsmodule, fachliche Konfigurationen und synthetische Tests | Nach CI-A nur `docs` und `production`; keine pauschale Ausnahme für ganz `tools/puzzle_production/`. Gemeinsame Runtime-/Schema-/Export-/Harnesshelfer bleiben entsprechend breit. |
+| Ausschließlich vorhandene `.github/pull_request_template.md` | Nach CI-A Dokument-/Werkzeugtestpfad und `ci-required`; keine Ausnahme für andere `.github/`-Dateien oder Workflows. |
+| Browserrelevante Runtime-/Darstellungsänderung | Nach CI-A bis CI-B vollständige bisherige Browserroute; nach CI-B regulärer Start und sämtliche betroffenen Gruppen in beiden Browsern. |
+| Reine Deploy-/SSH-/HTTP-Zustellungsänderung | Nach CI-A eigenständig ausführbare Referenz mit benötigtem regulärem Bündel, ohne Browserinstallation/-start und ohne sachfremde technische Browserexporte. |
+| Gemeinsame UI-, Save-, Ressourcen-, Bündel-, Export-, Harness- oder Toolchainwirkung | Mehrere beziehungsweise alle betroffenen Bereiche; keine bloße Pfadnamensannahme. Insbesondere `game/ui/main.gd` ist keine reine Katalogausnahme. |
+| Unbekannte Wirkung oder gemischter Diff | Konservativ umfassende Prüfung beziehungsweise Vereinigung aller Pflichten. |
+
+Der vollständige exakte Base-/Head-Diff, Rename-/Löschungsseiten und der
+Inhalts-Dateimodusschutz bleiben erhalten. Keine Auswahl nur aus dem letzten
+Commit, kein neuer Base→Test-Merge-Vergleich und keine Wiederverwendung alter
+Prüfergebnisse. Manuelle Scopes erweitern ausschließlich. CI-A dokumentiert die
+Semantik aller vorhandenen Scopes ausdrücklich; das Entfernen der bisherigen
+Transitivität darf keine beabsichtigte manuelle Prüfung verlieren.
+`all` und `toolchain` umfassen auch die eigenständige Zustellung.
+
+Reine Inhalte und Dokumente behalten ihre bestehenden kurzen Pfade. Der
+automatische Main-Nachlauf wiederholt Product, Browser, SSH und Preflight nach
+einem Merge nicht; die PR-/Test-Merge-Bindung bleibt maßgeblich. Der bestehende
+Abbruch überholter PR-Läufe bleibt. Weder Nachtläufe noch neue geplante Automation,
+Caches für Ergebnisse, neue CI-Infrastruktur oder Live-Deployment gehören dazu.
+
+### Browsergruppen nach CI-B
+
+Die logischen Gruppen sind unabhängig startbar; ihre Benennung legt keine
+bestimmte CLI oder Anzahl von Jobs fest:
+
+| Gruppe | Erhaltene Aussage |
+| --- | --- |
+| Regulärer Start | Uninstrumentierter Spielerexport startet und erreicht den bestehenden Startzustand in Chromium und Firefox. |
+| Katalog/Darstellung | Aktuelle Katalog-, Metadaten- und Darstellungsfälle mit den geforderten Zustands-/Bildbelegen. |
+| Eingabe/Geometrie | Echte Zeigeraktionen, Gesten und relevante Fenster-/Zoom-/Geometriefälle einschließlich ausdrücklich browserspezifischer Gegenproben. |
+| Abschluss/Reset | Echte Abschlüsse, Animation/Abbruch, Bestätigung und Reset; keine Verkürzung des Produktvertrags. |
+| Persistenz/Lifecycle | Echte IndexedDB-Sicherung, Reload, Prozessneustart, Exportwechsel, Sperren, Fehler/Recovery, Revisionen, Offline- und Beenden-Verhalten. |
+
+Vor der Aufteilung wird jede aktive positive/negative Prüfaussage einschließlich
+technischer Startvoraussetzungen und Pflichtartefakte zugeordnet. Der vollständige
+Browserlauf ist die Vereinigung aller Gruppen; SSH gehört nur bei eigenem
+Änderungsbezug dazu. Jede ausgewählte Gruppe besitzt kontrollierte synthetische
+Voraussetzungen, ohne von einer vorherigen Gruppe abzuhängen. Vorbereiteter
+Speicher ersetzt keine zu prüfende echte Eingabe oder Persistenz.
+
+Chromium und Firefox laufen auf getrennten Runnern mit eigenen Profilen, Ports,
+veränderlichen Hosting-/Releaseverzeichnissen, Reports und Artefaktnamen, aus
+auf denselben geprüften Quellstand gebundenen Builds. Die Browser behalten ihre
+jeweils erforderlichen Szenarien. Reale Reloads, Browserprozess-Neustarts und zwei
+eigenständig erzeugte Exporte bleiben in den relevanten Fällen Pflicht. Ein
+umbenannter Export oder ein Starttest allein ersetzt diese Nachweise nicht.
+Der [Webvertrag](WEB_HOSTING.md) konkretisiert Isolation und Speichergrenzen.
+
+### Native Gruppen und Bildaufbereitung nach CI-C
+
+Kern/Save, History/500er-Route, Katalog, Abschluss, Adapter/Piloten, Grafik/Atlas
+und Export werden ausdrücklich zugeordnet. Der Gesamtlauf vereinigt alle aktiven
+Checks, Orakel und Belege. Katalog und Abschluss hängen nicht mehr allein am
+500er-Integrationsschalter; gemeinsame Abhängigkeiten wählen weiterhin mehrere
+oder alle Gruppen. Keine Entfernung allein wegen eines historischen Testnamens.
+
+Gruppen verwenden getrennte temporäre Projekte, Profilwurzeln und Ausgaben.
+Absichtlich gemeinsame Profile und die nötige Prozessreihenfolge innerhalb
+echter Neustart-/Save-/Reset-/Slotprüfungen bleiben erhalten. Eingabe und Fokus
+begrenzen Parallelität; unabhängige CLI-Schalter allein beweisen keine Isolation.
+
+Rendering, Lesen/Zuschneiden, PNG-Schreiben, Verpacken und Upload werden getrennt
+gemessen; Eingangsframes, Ausschnitte und tatsächlich gelieferte Dateien/Bytes
+werden gezählt. Schnellere Bildaufbereitung muss auf denselben nativen Frames
+identische dekodierte RGBA-Pixel einschließlich Alpha, Maße, Ausschnitte und
+Pflichtbildmenge liefern. Andere verlustfreie PNG-Datei-Bytes sind zulässig;
+Skalierung, Ersatzbilder oder fehlende Pflichtausschnitte sind es nicht.
+
+### Ergebnisgate, Messung und Abnahme
+
+`ci-required` bleibt der stabile Abschlussstatus. Auswahl und Berichte müssen
+erwartete/tatsächliche Bereiche, nach ihrer Einführung auch Gruppen und Szenarien
+je Browser, Quell-/Runbindung und Pflichtbelege vollständig zuordnen. Fehlende,
+leere, doppelte, falsche, fehlgeschlagene, abgebrochene oder unzulässig übersprungene
+Pflichtresultate sind kein Erfolg. Ein nicht erforderlicher Bereich wird als
+solcher begründet, nicht als erfolgreich ausgeführt ausgewiesen.
+
+Webmessungen trennen je Szenario Start/Navigation, Zustandsabfragen, Eingaben,
+Save/Bestätigung, Wartephasen und Screenshots. Native Messungen trennen die
+Bildphasen. Vergleichbare Produkt-/Fixture-/Toolchain- und Runnerbedingungen
+sowie Warm-/Kaltzustand werden genannt. Warteschlange, Jobdauer, summierte
+Rechenzeit und paralleler kritischer Pfad bleiben unterscheidbar. Ursachen und
+erreichte Verkürzungen müssen gemessen sein; theoretische Parallelitätsgewinne
+oder weniger Auswahlflags genügen nicht. Keine festen Minuten-/Bytebudgets
+und keine kürzeren Timeouts als Optimierungsersatz.
+
+Jedes Paket erhält eigenes CI-A-/CI-B-/CI-C-T01: tatsächliche ausgewählte
+technische Checks, gezielte Gegenproben, Quellen-/Runbindung und getrenntes
+Selbstreview durch den Implementierer. Das jeweilige R01 ist ein separater
+qualifizierter Review des finalen Heads. Beide Gates liegen vor Merge.
+Bestehende Windows-/Eigentümergates und aktuelle Spiel-/Speicherverträge bleiben
+eigenständig; ein reiner CI-Umbau erzeugt kein neues persönliches Probespielgate.
+Insbesondere bleiben die gezielten KU-Verhaltensnachweise aus
+[#244](https://github.com/venomenon328/picross/issues/244) in Windows, Chromium und
+Firefox erforderlich; bloßer Start genügt dafür nicht.
 
 ## Einmalige Inhaltsprüfung und feste Regressionen
 
@@ -111,6 +241,10 @@ Umgebungsvariablen enthalten nur die vier Jobergebnisse. Große Aufräum-PRs dü
 nicht an Betriebssystemgrenzen für Argumente/Umgebungsvariablen scheitern; die
 Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 
+Die folgende Tabelle und die Kopplungen beschreiben die ausführbare Ausgangsbasis
+vor CI-A/CI-B/CI-C. Sie bleiben bis zur Integration des jeweils zuständigen Pakets
+maßgeblich; die gestufte Ablösung steht im Abschnitt „Freigegebene CI-Straffung“.
+
 | Änderung | Automatischer Pflichtumfang im PR |
 | --- | --- |
 | Nur neue/geänderte Rätselpakete, Registry/Kategorien und einzelne Runtime-Inhalte | `docs`: Pfad-/Dateimodusprüfung; `ci-required`: Ergebnisgate. Keine Tests, Rekonstruktion, Bilder oder Exporte. |
@@ -121,9 +255,10 @@ Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 | Produktionswerkzeug-/Adaptercode, technische Fixtures oder Pilotprobes | Allgemeine Fachtests mit festen synthetischen Eingängen; ausgewählte allgemeine Spiel-/Pixel-/Exportregressionen. Keine echten Rätselreplays. |
 | CI/Harness/Toolchain oder nicht zugeordneter Codepfad | Alle aktuellen Bereiche einschließlich Preflight |
 
-Jede Product-Auswahl ergänzt auch den WEB-1-Export mit Browser-/Persistenz- und
-isolierter SSH-Referenzprüfung. Der reine Inhaltspfad bleibt davon ausgenommen.
-
+Bis CI-A ergänzt jede Product-Auswahl auch den WEB-1-Export mit Browser-/Persistenz-
+und isolierter SSH-Referenzprüfung. CI-A ersetzt diese pauschale Kopplung durch
+unabhängige Auswahl; jede dann noch erforderliche Browserroute bleibt bis CI-B
+vollständig. Der reine Inhaltspfad bleibt davon ausgenommen.
 
 **Schlanker Inhaltspfad:** Ausschließlich `content/categories.json`,
 `content/registry.json`, `content/authoring/index.json`/`README.md`,
@@ -163,12 +298,14 @@ werden gezielt negativ geprüft; es gibt keine zweite Paketinputliste.
 
 Auf `main` bleiben die bisher üblichen Integritätsprüfungen aktiv: Dokumente und
 bei relevanten Änderungen die Rätselproduktion. Product/Preflight werden nach
-einem Merge nicht nochmals automatisch wiederholt; ihre maßgebliche Bindung ist
+einem Merge nicht nochmals automatisch wiederholt; ebenso wenig der Browserlauf
+und nach CI-A die eigenständige SSH-Referenz. Ihre maßgebliche Bindung ist
 der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erlaubt.
 
 ## Aktuelle Produktregression
 
-WEB-1 ergänzt den Pflichtjob [Webprüfung](../.github/workflows/web.yml), wenn
+Ausführbare WEB-1-Ausgangsbasis bis zur Ablösung durch CI-A/CI-B:
+Der Pflichtjob [Webprüfung](../.github/workflows/web.yml) läuft, wenn
 der aktuelle Diff Produkt-/Exportprüfungen verlangt. Reine Inhalte wählen ihn
 weiterhin nicht; Main-Merges veröffentlichen nichts. Der Job exportiert den
 regulären Spieler und eine getrennte feste technische Testfassung, prüft echte
@@ -201,6 +338,8 @@ Produktionsbestand. Echte Inhalte werden nicht erneut zertifiziert und erhalten
 keine rätselspezifischen CI-Tests. Die einmalige Katalog-/PCK-Sichtung für #114
 ist ein PR-Liefernachweis, keine neue Testmatrix.
 
+Die folgenden nativen Schalter und ihre Kopplungen bleiben bis CI-C die
+Ausführungsgrundlage; CI-A darf vorher ganze sachfremde Productläufe vermeiden.
 `--integration` ergänzt die 500 Aktionen in fünf echten Prozessen plus Neustart
 und unabhängigem Python-Orakel. `--pilots` prüft die synthetischen Muster T04/T06/T08/T09 vollständig;
 T04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
@@ -245,6 +384,10 @@ mit Exit 4 scheitern. Erfolg, Recovery, Parserfehler oder andere Fehler werden
 nicht als erfolgreiche Gegenprobe akzeptiert. Kein weiteres RP3-Durchspiel.
 
 ## KAT-2 im Integrationspfad
+
+Bis CI-C ist dies die ausführbare Kopplung; danach wird die vollständige aktuelle
+Katalogprüfung eigenständig nach Änderungsbezug ausgewählt, ohne Verlust ihrer
+Neustart-, Last-, Eingabe-, Fehler- und nativen Bildbelege.
 
 `--integration` ergänzt die nativen Katalogprüfungen aus
 [tools/kat2_product.py](../tools/kat2_product.py): reguläre Hauptszene mit echten
@@ -332,7 +475,9 @@ und Eigentümerentscheidung reduziert. Kein Test gilt wegen seines alten Namens 
 obsolet; aktuelle Aufrufer und Verhalten sind maßgeblich.
 
 Die vollständigen aktuellen VS2-/V1-Geometriematrizen bleiben verlustfrei `.json.gz`;
-der bytegleiche Rückweg ist geprüft. Native Bilder bleiben unverändert. Eine
+der bytegleiche Rückweg ist geprüft. Native Bildinhalte bleiben unverändert;
+CI-C erlaubt verlustfreie Neucodierung bei nachgewiesener Pixel-/Alpha-, Maß- und
+Ausschnittgleichheit. Eine
 größere Lieferung ist ein zu erklärender Messwert, kein automatischer Fehler.
 
 Erfolgreiche Product-Läufe liefern das reguläre Windows-Spielerpaket und eine
@@ -405,7 +550,13 @@ VS2, Sidebar und PERF-A/B sind über PR #62/#66 integriert. Die alte offene
 Vollsichtnacharbeit ist kein aktueller CI-Auftrag. Ihre ursprünglichen Rätselzertifikate liegen in der Git-Historie; CI prüft sie nicht erneut. Weitere Quellenentscheidungen und
 Dateibindungen stehen im [Bestandsinventar](DEVELOPMENT_ARCHIVE.md).
 
-## Verifikation dieses Pakets
+## Verifikation der bestehenden Lieferung und der Folgepakete
+
+Die folgenden Nachweise gehören zur bestehenden #70-Lieferung, nicht zur noch
+unimplementierten CI-A-/CI-B-/CI-C-Spezifikation. Deren T01/R01 sind oben und in den
+Paket-Issues festgelegt. Der reine Spezifikationsdiff benötigt den aktuellen
+Dokument-/Werkzeugtestpfad, Dokumentvalidator, vollständigen Diffcheck und
+`ci-required`; maßgeblich bleibt die tatsächlich automatische Auswahl.
 
 Auswahltests umfassen reine Dokumentation, tatsächliche Daten-/Asset-/Pilotpfade,
 Renderer, gebundene Markdowninputs, unbekannten Code und echte Umbenennungen mit

@@ -34,6 +34,24 @@ des Repositorys erhalten; finales Datenreview und Merge bleiben offen.
 Referenzen werden unabhängig synthetisch kuratiert; reale Katalogrätsel oder
 deren Kopien werden weder Kalibrierungskorpus noch automatischer Testbestand.
 
+### Freigegebene CI-Straffung
+
+Die Entscheidung vom 18.10.2026 in [CI-Policy](CI_POLICY.md) /
+[#246](https://github.com/venomenon328/picross/issues/246) erlaubt gezielte Auswahl
+und schnellere Herstellung aktueller Nachweise in den gestuften Paketen CI-A,
+CI-B und [CI-C (#249)](https://github.com/venomenon328/picross/issues/249).
+Sie erklärt keine aktiven Tests allein wegen ihres historischen Namens für
+entbehrlich. Bis zur Integration des jeweiligen Pakets bleiben die ausführbaren
+Pflichtchecks maßgeblich.
+
+CI-C ordnet aktuelle native Checks und Pflichtartefakte unabhängig auswählbaren
+Gruppen zu. Bildaufbereitung wird gemessen und verlustfrei beschleunigt:
+Dekodierte Pixel einschließlich Alpha, Maße, Ausschnitte und Pflichtbildmenge
+bleiben erhalten; PNG-Datei-Bytes dürfen sich ändern. Keine feste Zeit-/Bytegrenze,
+kein Weglassen angeforderter Belege und keine historische Replaypflicht.
+Quellgebundene Referenzläufe und konkrete Vergleichsmessungen stehen in Issues/PRs;
+dieses Inventar sammelt keine neue Laufchronik.
+
 ## Aus dem aktiven Tree entfernt
 
 Quelle vor dieser Bereinigung: `37f500d5e6599a6c8ff85c8ca8edb4d190474c5f`.

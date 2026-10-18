@@ -18,14 +18,25 @@ Merge der KB-Arbeit durch EA. Ein Paket, keine neuen Assets oder Produktoptionen
 | EA-A07 | Keine Animation im Save, keine Timer je Zelle, keine dauerhafte Frameverarbeitung. Transiente Kommandos/Materialreferenz werden am Ende freigegeben; Artwork beim Verlassen. Regulärer Export-/PCK-Audit und PERF-B bleiben verpflichtend. |
 | EA-A08 | Vertragstexte und Spielanleitung aktualisiert; tatsächlicher Voll-Diff, getrenntes Selbstreview und aktuelle Head-/Basis-/Checkout-/Run-Bindung im Draft-PR. |
 
-`tools/ea_product.py` läuft im bestehenden `--integration`-Pfad des Produktharness.
-Er verwendet ausschließlich temporär erzeugte technische Fixtures aus dem festen
+Bis zur Integration von [CI-C (#249)](https://github.com/venomenon328/picross/issues/249)
+läuft `tools/ea_product.py` im bestehenden `--integration`-Pfad des Produktharness.
+Der am 18.10.2026 freigegebene Sollvertrag der [CI-Policy](CI_POLICY.md) ist noch
+nicht implementiert. CI-C trennt eine unabhängig auswählbare native Abschlussgruppe
+von der 500er-Route; gemeinsame Save-/UI-/Renderabhängigkeiten wählen weiterhin
+alle betroffenen Gruppen. Aktuelle Bewegung, sofortiger Commit/Save, echter
+Prozessneustart, Reset und Exportaussagen bleiben erhalten. Vor CI-C gelten die
+vorhandenen ausführbaren Auswahlpflichten weiter.
+
+Der Harness verwendet ausschließlich temporär erzeugte technische Fixtures aus dem festen
 Katalog und den kleinen Web-Fällen, keine rätselspezifische Produktionsrekonstruktion.
 Die technische Lieferung enthält JSON-Berichte, kompakte Phasen-/Endbilder und
 `ea/motion.apng` aus tatsächlichen nativen Frames mit gemessenen Zeitabständen.
 Keine künstlich interpolierte Vorschau. Vollständige lokale Frames bleiben lokal.
 `tools/web_tests/browser.py` prüft Chromium und Firefox mit echten Zeigerereignissen,
 Bestätigung, Abbruch, Reset, wiederholtem Lösen und dauerhaftem Browser-Neustart.
+Nach CI-A bleibt jede ausgewählte Browserroute bis CI-B vollständig; erst CI-B
+trennt Abschluss/Reset und Persistenz/Lifecycle nach dem [Webvertrag](WEB_HOSTING.md).
+Keine Verkürzung der Produktanimation oder Ersetzung echter Persistenz/Neustarts.
 
 Reproduktion: `python tools/p1_product.py --cache-dir <verifizierter-cache>
 --output-dir <leeres-ziel>` gemäß Projektprofil. Änderungen am Renderer aktivieren

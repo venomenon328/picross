@@ -8,6 +8,66 @@ P1 enthält kein Audio; der Webstart verwendet deshalb Godots Dummy-Audiotreiber
 und erzeugt keine unbenötigten Browser-Audiokontexte.
 Technische Ergebnisse und Artefaktbindung stehen im zugehörigen Draft-PR.
 
+## Freigegebene CI-Auswahl und Browsergruppen
+
+Die Eigentümerentscheidung vom 18.10.2026 in
+[CI-Policy](CI_POLICY.md) / [#246](https://github.com/venomenon328/picross/issues/246)
+ist ein gestufter Sollvertrag, **noch keine Implementierung oder Livefreigabe**.
+Vor Integration des jeweiligen Pakets gelten die vorhandenen ausgewählten
+Pflichtchecks weiter.
+
+[CI-A (#247)](https://github.com/venomenon328/picross/issues/247) ersetzt die
+pauschale Product→Browser→SSH-Kopplung durch Auswahl nach tatsächlichen
+Abhängigkeiten. Reine Fachwerkzeuge und die einzelne PR-Vorlage können Web
+vermeiden. Reine Deploy-/SSH-/HTTP-Arbeit erhält einen eigenständig ausführbaren
+Referenzpfad ohne Browserinstallation/-start oder unnötige technische Exporte;
+ein dafür benötigtes reguläres Bündel wird weiterhin tatsächlich gebaut.
+Gemeinsame Export-/Hostingverträge wählen beide Bereiche. Bis CI-B bleibt
+jede weiterhin ausgewählte Browserroute vollständig, einschließlich regulärem
+Start und aller aktuellen positiven/negativen Szenarien beider Browser.
+
+Erst nach [CI-B (#248)](https://github.com/venomenon328/picross/issues/248) gilt:
+
+| Unabhängig startbare Gruppe | Prüfzweck |
+| --- | --- |
+| Regulärer Start | Uninstrumentierter Spielerexport und vorhandener Startvertrag in beiden Browsern. |
+| Katalog/Darstellung | Aktuelle Katalog-/Metadatenzustände und geforderte Darstellungsbelege. |
+| Eingabe/Geometrie | Echte Zeiger-/Gestenereignisse und relevante Zoom-/Fensterfälle. |
+| Abschluss/Reset | Tatsächlicher Abschluss, Präsentation, Abbruch, Bestätigung und Reset. |
+| Persistenz/Lifecycle | Echte Sicherung, Reload, Prozessneustart, Exportwechsel, Sperren, Fehler/Recovery, Offline und Beenden. |
+
+Normale Runtime-/Darstellungsänderungen wählen regulären Start und die betroffenen
+Gruppen in Chromium und Firefox; gemeinsame UI-/Save-/Export-/Harnessabhängigkeiten
+wählen mehrere oder alle Gruppen. Insbesondere `game/ui/main.gd` ist keine
+Katalogausnahme. Unbekannte Wirkung wird umfassend geprüft, manuelle Auswahl
+erweitert ausschließlich. Vollständige Browserabdeckung ist die Vereinigung aller
+Gruppen; die unabhängige SSH-Referenz folgt ihrem eigenen Änderungsbezug.
+
+Vor der Trennung erhält jede aktive positive/negative Aussage einschließlich
+technischem Start und Pflichtbelegen eine eindeutige Zuordnung. Jede Gruppe
+richtet kontrollierte kleine synthetische Voraussetzungen selbst ein; sie hängt
+nicht vom Durchlaufen einer anderen Gruppe ab. Reale Zeigereingabe, bestätigte
+IndexedDB-Schreibstände, Reload und Neustart eines Browserprozesses bleiben dort
+erforderlich, wo diese Übergänge geprüft werden. Der Versionswechsel verwendet
+weiterhin zwei eigenständig erzeugte Exporte. Vorbefüllte Daten, ein anderer
+Identifikator desselben Builds oder alleiniger Start ersetzen diese Belege nicht.
+
+Chromium und Firefox laufen auf getrennten Runnern aus auf denselben geprüften
+Quellstand gebundenen Builds. Eigene Profile, Ports, veränderliche Hosting- und
+Releaseverzeichnisse, Reports und Artefaktnamen verhindern Überschneidungen:
+Die Referenz verändert unter anderem Einstieg, Releasezuordnung und Unterpfad.
+Beide Browser liefern ihre erforderlichen Szenarien; ausdrücklich browserspezifische
+Fälle wie die Chromium-DPI-Prüfung bleiben erkennbar. Das Ergebnisgate kontrolliert
+erwartete und tatsächlich gelieferte Gruppen, Szenarien und Belege je Browser;
+fehlende, leere, doppelte oder falsche Pflichtresultate sind kein Erfolg.
+
+Messungen trennen je Szenario Start/Navigation, Zustandsabfragen, Eingaben,
+Save/Bestätigung, Wartephasen und Screenshots. Optimierungen beheben gemessenen
+vermeidbaren Harnessaufwand; sie verkürzen weder Animationen noch Speicherzusagen.
+Vergleichsbedingungen und tatsächliche Wirkung werden im Paket-PR dokumentiert,
+ohne feste Laufzeit-/Bytebudgets. Windows-, Eigentümer- und Livegates bleiben
+getrennt; die KU-Verhaltensnachweise aus #244 werden nicht durch Startproben ersetzt.
+
 ## Build unter Windows/PowerShell
 
 Python 3.11+, Netzwerkzugriff auf die gebundenen offiziellen Godot-Archive und
