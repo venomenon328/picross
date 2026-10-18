@@ -209,6 +209,14 @@ func _before(a: String, b: String) -> bool:
 	if av == bv: return int(ordinals.get(a, 0)) < int(ordinals.get(b, 0))
 	return av < bv if preference.direction == "asc" else av > bv
 
+func _direction_description() -> String:
+	var ascending: bool = preference.direction == "asc"
+	match preference.criterion:
+		"size": return "Kleinste zuerst" if ascending else "Größte zuerst"
+		"difficulty": return "Sehr leichte zuerst" if ascending else "Sehr schwere zuerst"
+		"added": return "Älteste zuerst" if ascending else "Neueste zuerst"
+		_: return "Kategorienfolge" if ascending else "Umgekehrte Kategorienfolge"
+
 func turn_page(delta: int) -> void:
 	page_index = clampi(page_index + delta, 0, maxi(0, ceili(filtered_ids.size() / float(PAGE_SIZE)) - 1))
 	_render(0)
@@ -248,8 +256,8 @@ func _render(position: int) -> void:
 	filtered_ids.sort_custom(_before)
 	sort_choice.select(Preference.CRITERIA.find(preference.criterion))
 	direction_button.text = "↑" if preference.direction == "asc" else "↓"
-	direction_button.tooltip_text = "Aufsteigend" if preference.direction == "asc" else "Absteigend"
-	direction_button.accessibility_name = "Sortierrichtung: " + direction_button.tooltip_text
+	direction_button.tooltip_text = _direction_description()
+	direction_button.accessibility_name = "Sortierrichtung (%s): %s" % [sort_choice.text, direction_button.tooltip_text]
 	sort_choice.disabled = not load_error.is_empty()
 	direction_button.disabled = not load_error.is_empty()
 	var page_count: int = maxi(1, ceili(filtered_ids.size() / float(PAGE_SIZE)))

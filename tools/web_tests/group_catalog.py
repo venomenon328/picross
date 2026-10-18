@@ -52,6 +52,12 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     passed('KU-A single-line metadata, footer, tooltip boundaries and passive click routes')
     evidence['sorting'] = []
     canonical_ids = [slot['definition_id'] for slot in state(page, 'slots')['slots']]
+    direction_labels = (
+        ('Kategorie', 'Kategorienfolge', 'Umgekehrte Kategorienfolge'),
+        ('Größe', 'Kleinste zuerst', 'Größte zuerst'),
+        ('Schwierigkeit', 'Sehr leichte zuerst', 'Sehr schwere zuerst'),
+        ('Hinzugefügt', 'Älteste zuerst', 'Neueste zuerst'),
+    )
     for index, criterion in enumerate(('category', 'size', 'difficulty', 'added')):
         choose_sort(page, index)
         expected_direction = 'desc' if criterion == 'added' else 'asc'
@@ -62,6 +68,10 @@ def exercise(pw, name, root, update, url, output, evidence, session):
                 control(page, name='catalog-direction')
                 wait(page, f"picrossProbe.sort.direction === '{direction}'")
             current = state(page, 'sort')['sort']
+            title, ascending, descending = direction_labels[index]
+            meaning = ascending if direction == 'asc' else descending
+            assert current['direction_tooltip'] == meaning
+            assert current['direction_accessibility_name'] == f'Sortierrichtung ({title}): {meaning}'
             keys = current['primary']
             known = [x for x in keys if x is not None]
             assert keys == sorted(known, reverse=direction == 'desc') + [None] * (len(keys)-len(known))
@@ -73,6 +83,8 @@ def exercise(pw, name, root, update, url, output, evidence, session):
             control(page, name='nav-album'); wait(page, 'picrossProbe.album')
             returned = state(page, 'sort')['sort']
             assert returned['criterion'] == criterion and returned['direction'] == direction and returned['selected'] == chosen
+            assert returned['direction_tooltip'] == meaning
+            assert returned['direction_accessibility_name'] == current['direction_accessibility_name']
     page.screenshot(path=str(output/f'{name}-ku-b-sorting.png'))
     passed('KU-B four criteria, both directions, canonical ties and stable return ID')
     assert not errors, errors
