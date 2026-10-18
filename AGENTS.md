@@ -8,6 +8,14 @@ Vor auftragsbezogener Arbeit vollständig lesen:
 
 Den beauftragten Arbeitsbranch verwenden, sonst den aktuellen `main`; geltende Bereichs-/Override-Regeln prüfen. Neue Ideen setzen kein vorhandenes Issue voraus. Fehlende Pflichtquellen nicht durch Erinnerungen ersetzen.
 
+Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](docs/CATALOG_PRESENTATION.md)
+und [Katalogsortierung](docs/CATALOG_SORTING.md) vollständig lesen. KU / #244
+ist als Sollstand freigegeben, noch nicht implementiert: KU-A umfasst Papierstreifen,
+Schwierigkeitskreise, Stiftsymbole und Statusfußzeile; KU-B Sortierung und einmalige
+Hinzugefügt-Metadaten. Die dort benannte Ablösung alter KE-Anzeigen ist verbindlich;
+historische Liefernachweise bleiben an ihre damaligen Stände gebunden. Eine
+Spezifikationsfreigabe ist weder Implementierungsauftrag noch Mergefreigabe.
+
 Bei Schwierigkeitsanalyse, Kalibrierung oder Bewertungsmetadaten zusätzlich
 [SD: Rätselschwierigkeit](docs/PUZZLE_DIFFICULTY.md) vollständig lesen.
 SD-A / #236 liefert den getrennten Analysator gemäß

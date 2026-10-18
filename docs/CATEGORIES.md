@@ -1,5 +1,16 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
+**KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
+[Katalogsortierung](CATALOG_SORTING.md) ergänzt eine eigene autoritative,
+ID-gebundene Quelle für die erste Katalogaufnahme und deren minimale
+UTC-Zeitpunkt-/null-Projektion. Herkunftsbelege bleiben im Inhaltsbereich;
+historische Produktions-/Integrationsbindungen bleiben unverändert. Neue
+Formatversionen und der gemeinsame Writer-/Loader-/Validierungs-/Recoveryvertrag
+werden im KU-B-Paket vor der ersten betroffenen Codeänderung festgelegt.
+Die unten genannten exakten Inhalts-v2-/Runtime-v2/v3-Schemas sind der aktuelle
+Implementierungsstand und dürfen nicht still um zusätzliche Felder erweitert werden.
+KU-A verändert diese Datenverträge nicht.
+
 **SD-C1, technischer Vertrag vom 17.10.2026:**
 [Bewertungsquelle und Recovery](SD_CATALOG.md) ergänzen die getrennte aktuelle
 Katalogbewertung. Inhalts-v2, Runtime-v3 und der exakte Runtime-v2-Leser bleiben.
@@ -21,6 +32,22 @@ Ausgewogene Mengen sind ein Planungsziel ohne Quote. Die Katalogoberfläche aus 
 verwendet diese Projektion unverändert; [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
 
 ## Daten und Grenzen
+
+Für KU-B gelten ergänzend die Quellen-, Zeit- und Übernahmeregeln in
+[CATALOG_SORTING](CATALOG_SORTING.md): eine Erstregistrierung setzt ihren
+Zeitpunkt genau einmal im mutierenden Transaktionsplan; Wiederholung, spätere
+Änderung, Sync, Bewertungsübernahme, Cleanup und Recovery erhalten ihn.
+Ein lesender Plan erzeugt keinen endgültigen Zeitpunkt. Bestehende unbekannte
+Zeitpunkte bleiben null, bis eine ausdrücklich belegte Übernahme erfolgt.
+Die einmalige historische Ergänzung verwendet einen prüfbaren Plan und einen
+dauerhaften kompakten Herkunftsbeleg je ID; keine Datumsannahme aus Dateizeiten
+oder späteren Änderungen. Die zulässige Rekonstruktion aus der ersten belegten
+Katalogaufnahme ist ausdrücklich als solche gekennzeichnet.
+
+Eine ungültige vorhandene Quelle ist kein fehlender Wert. Alle gemeinsamen
+Projektions-/Transaktionswege prüfen dieselbe Quelle und erhalten gültige
+Altformate und historische Bindungen. Die gespeicherte Sortierauswahl ist eine
+separate lokale UI-Präferenz und kein Registry- oder Rätselsavefeld.
 
 `content/categories.json` ist die einzige autoritative Kategorienquelle:
 `picross-categories-v1`, exakt `format` und `categories`. Ein Eintrag enthält exakt
@@ -69,7 +96,10 @@ Ungültige vorhandene Angaben sind Fehler; keine Ableitung oder Neueinstufung.
 
 0.3 verlangt ausschließlich `instrumented`/`medium` und `[Lx,Lx]` für die
 projizierte Stufe. Notwendiges R4 verlangt L5. Diese Punktprojektion ist kein
-menschliches Unsicherheitsintervall; der methodenspezifische Tooltip erläutert dies.
+menschliches Unsicherheitsintervall. Die bisherige KE-Anzeige erläutert dies im
+methodenspezifischen Tooltip; KU-A entfernt diesen Schwierigkeitstooltip gemäß
+[Katalogdarstellung](CATALOG_PRESENTATION.md), ohne die Bewertungsdaten oder
+deren Bedeutung zu ändern.
 
 Der Loader liest weiterhin `picross-runtime-registry-v2` mit exakt den bisherigen
 sieben Feldern, ohne `difficulty`; Anzeige „Nicht eingestuft“. Ein achtes Feld

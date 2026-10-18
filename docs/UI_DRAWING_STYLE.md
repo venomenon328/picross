@@ -1,17 +1,41 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
-[Katalogdarstellung KE-D01–D05](CATALOG_PRESENTATION.md) ergänzt Papieretikett,
-Stift-/Statuspiktogramme und ein eigens gezeichnetes Graphitfragezeichen im
+**KU / #244, am 18.10.2026 als Spezifikation freigegeben; noch nicht implementiert:**
+[Katalogdarstellung](CATALOG_PRESENTATION.md) führt in KU-A die gezielte neue
+Zeichnung und Anordnung: ein gemeinsamer warmer Papierstreifen mit subtil
+unregelmäßiger Kontur, Größe links, gefüllter Schwierigkeitskreis und vollständiger
+dunkler Name mittig, größere Stifte rechts. Alle drei Angaben stehen in einer
+Zeile ohne Einzelkästchen. Kreise verwenden die fünf bestehenden Farben;
+fehlende Einstufung erscheint neutralgrau mit „Nicht eingestuft“. Die sichtbare
+Ziffer und sämtliche Schwierigkeitstooltips einschließlich nativer Ersatztooltips
+entfallen; Modus- und Resettooltip bleiben. Der dunkle Monostift wird ohne
+Farbprobe zentriert, das Farbsymbol bleibt eine aufgefächerte Dreiergruppe.
+
+Entwurfsstarts sind 28–32 logische Pixel für Modussymbole, 12–14 für Kreise und
+260–280 für die gemeinsame Kartenbreite. Tatsächliche Volltext-/Symbolmaße und
+Abstände bei UI 100/125 % bestimmen das Ergebnis; keine bereits gemessene
+Fitgarantie, keine Textkürzung oder Schriftverkleinerung als Breitenersatz.
+Der Status steht als Symbol mit „Neu“, „Begonnen“ oder „Gelöst“ rechts in der
+Fußzeile neben „Blatt NN“. Plex-/Bakso-Rollen, große proportionale Bildfläche,
+lokale Polygon-/Revealglättung, Spoiler-, Reset- und Recoverygrenzen bleiben.
+KU-B ergänzt die [Sortierbedienung](CATALOG_SORTING.md) neben dem Kategorienfilter.
+Statische Kreise und Stifte verändern weder Zell-/Hinweisrendering noch Animationen.
+Paketumfang und spätere Abnahmen stehen im
+[Gesamtissue #244](https://github.com/venomenon328/picross/issues/244).
+
+**KE / #233, mit PR #234 integrierte Ausgangsbasis für KU:**
+Die damalige [Katalogdarstellung KE-D01–D05](CATALOG_PRESENTATION.md) ergänzte
+Papieretikett, Stift-/Statuspiktogramme und ein eigens gezeichnetes Graphitfragezeichen im
 Katalogbildraum. Metadaten bleiben in Plex, Motivüberschriften in Bakso; keine
 neuen Fonts. Subtil unregelmäßige Konturen, zurückhaltende Schraffur, keine Animation.
-Gezielte Modus-/Schwierigkeits-Tooltips ergänzen den bestehenden Resettooltip;
-der Ganzkarten-Tooltip bleibt entfallen. Die nachfolgende KK-Beschreibung ist die
-integrierte Ausgangsbasis; Zell-/Hinweisrendering ist nicht Teil von KE.
-KE-N1: Nur die Schwierigkeitsziffer erhält den gedeckten Grün–Oliv/Ocker–Rost–Rot-
-Akzent; Name und „Nicht eingestuft“ bleiben dunkel. Lokale Polygonkantenglättung
-betrifft die Modusstifte und den Begonnen-Stift. Verdiente Katalog-/Abschlussbilder
-werden vor linearer Anzeige gezielt auf das Anzeigemaß verkleinert, ohne globale
+Gezielte Modus-/Schwierigkeits-Tooltips hatten den bestehenden Resettooltip ergänzt;
+der Ganzkarten-Tooltip blieb entfallen. KE-N1 akzentuierte nur die
+Schwierigkeitsziffer in gedecktem Grün–Oliv/Ocker–Rost–Rot; Name und
+„Nicht eingestuft“ blieben dunkel. KU-A ersetzt diese Ziffer, Schwierigkeitstooltips,
+Monochrom-Farbprobe und Metadaten-/Statusanordnung; historische KE-N1-Belege bleiben
+unverändert. Lokale Polygonkantenglättung bleibt für Modusstifte und Begonnen-Stift.
+Verdiente Katalog-/Abschlussbilder werden vor linearer Anzeige gezielt auf das
+Anzeigemaß verkleinert, ohne globale
 Glättung oder Änderung eigener Miniaturen.
 
 **KK / #174** erweitert die vorhandene Bakso-Rolle gezielt um Motivüberschriften

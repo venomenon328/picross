@@ -32,6 +32,12 @@ gelten außerhalb der hier ausdrücklich fortgeschriebenen Schwierigkeit weiter.
 
 ## SD-D01 · Ziel und Bedeutung der Skala
 
+**KU-A / #244, Darstellungsentscheidung vom 18.10.2026:** Der freigegebene
+Sollstand in [Katalogdarstellung](CATALOG_PRESENTATION.md) zeigt die vorhandene
+Stufe als gefüllten Farbkreis mit vollständigem Namen, ohne sichtbare Ziffer und
+ohne Schwierigkeitstooltip. Die numerische Fünferskala, vorhandene Metadaten,
+Methodenfreeze und fachliche Aussagegrenzen bleiben unverändert; Umsetzung offen.
+
 Jedes fertig eingestufte Rätsel erhält eine begründete, wiederholbare Schwierigkeit
 von 1 bis 5. Der logische Anspruch bestimmt die Bewertung; Größe darf einen
 begrenzten Zusatzbeitrag leisten. Arbeitsumfang und mögliche Lösungszeit bleiben
@@ -112,8 +118,10 @@ menschliche Lösungsstrategie. Höchste nötige Technik und ihre Häufigkeit zä
 R4 verlangt weiterhin die separat unabhängig bestätigte `full-line-*`-Baseline
 mit `stalled` und einen vollständigen unabhängig geprüften Paarproof derselben
 Logik. Bloße Profilwahl, einzelner Paarschritt, Suchurteil oder Baselineabbruch
-reichen nicht. Nachgewiesenes R4 bleibt Stufe 5 mit der bestehenden Kennzeichnung
-„linienübergreifend / besonders hoher logischer Anspruch“. Vollständig gelöste
+reichen nicht. Nachgewiesenes R4 bleibt Stufe 5 mit der fachlichen Kennzeichnung
+„linienübergreifend / besonders hoher logischer Anspruch“ in Bewertungsdaten und
+Berichten. KU-A löst deren bisherige Katalog-Tooltipanzeige ausdrücklich ab.
+Vollständig gelöste
 Linienfälle benötigen keinen zusätzlichen routinemäßigen Paar- oder Suchlauf.
 
 ## SD-D05 · Synchrone Bewertungswellen
