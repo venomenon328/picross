@@ -7,6 +7,8 @@ var ui_scale: float = 1.0
 var pencils: Array[Node2D] = []
 var pencil_index: int = 0
 var ink_color: Color = Color("85857f")
+# Status uses a fixed shared field; its ink sits just before right-aligned text.
+var trailing_text_width: float = -1
 
 class Pencil extends Node2D:
 	const SHAPE = [Vector2(-3,-11),Vector2(2.5,-10.5),Vector2(3,8),Vector2(0,14),Vector2(-3.5,8),Vector2(-3,-11)]
@@ -51,6 +53,7 @@ func _draw() -> void:
 	for drawing: Node2D in pencils: drawing.hide()
 	var u: float = ui_scale
 	var center: Vector2 = size/2
+	if trailing_text_width >= 0: center.x = size.x-8*u-trailing_text_width
 	match kind:
 		"paper":
 			draw_rect(Rect2(Vector2(1,2)*u,size-Vector2(2,3)*u),Color(0.3,0.24,0.15,0.07))
@@ -62,7 +65,13 @@ func _draw() -> void:
 		"color":
 			mode_pencils(center, true)
 		"difficulty":
-			draw_circle(center,6*u,ink_color,true,-1,true)
+			var contour := PackedVector2Array()
+			for index: int in range(24):
+				var radius: float = (6.1+0.18*sin(index*2.3))*u
+				contour.append(center+Vector2.from_angle(TAU*index/24.0)*radius)
+			draw_colored_polygon(contour,ink_color)
+			contour.append(contour[0])
+			draw_polyline(contour,ink_color,0.8*u,true)
 		"Neu":
 			draw_arc(center,5*u,0.3,TAU-0.15,19,GRAPHITE,1.3*u,true)
 		"Begonnen": pencil(center,0.5,Color("9b773b"),0.55*u)

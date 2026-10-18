@@ -73,6 +73,7 @@ static func run(runner: SceneTree) -> void:
 						var old := LegacyInk.new()
 						old.kind = kind
 						old.ui_scale = icon.ui_scale
+						old.trailing_text_width = icon.trailing_text_width
 						old.position = icon.position
 						old.size = icon.size
 						icon.get_parent().add_child(old)
