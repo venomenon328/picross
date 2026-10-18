@@ -12,7 +12,7 @@ Technische Ergebnisse und Artefaktbindung stehen im zugehörigen Draft-PR.
 
 Die Eigentümerentscheidung vom 18.10.2026 in
 [CI-Policy](CI_POLICY.md) / [#246](https://github.com/venomenon328/picross/issues/246)
-ist ein gestufter Sollvertrag, **noch keine Implementierung oder Livefreigabe**.
+ist ein gestufter Vertrag: **CI-A implementiert, CI-B offen; keine Livefreigabe**.
 Vor Integration des jeweiligen Pakets gelten die vorhandenen ausgewählten
 Pflichtchecks weiter.
 
@@ -25,6 +25,14 @@ ein dafür benötigtes reguläres Bündel wird weiterhin tatsächlich gebaut.
 Gemeinsame Export-/Hostingverträge wählen beide Bereiche. Bis CI-B bleibt
 jede weiterhin ausgewählte Browserroute vollständig, einschließlich regulärem
 Start und aller aktuellen positiven/negativen Szenarien beider Browser.
+
+[CI-A-Auswahl](CI_A_SELECTION.md) bindet die genaue Pfadzuordnung.
+`web.yml` führt unverändert drei Exporte und beide vollständigen Browserrouten aus;
+`delivery.yml` führt separat genau einen regulären Export und die bestehende
+SSH/HTTP-Referenz aus. Eigene Runner und `picross-web-*`/`picross-delivery-*`-
+Artefakte verhindern Vermischung. Beide sind eigenständige Pflichtresultate in
+`ci-required`; der Ergebnisbericht bindet Auswahl, Ausführung und Nichtzutreffen
+an Head, Base, Test-Merge, Run und Versuch.
 
 Erst nach [CI-B (#248)](https://github.com/venomenon328/picross/issues/248) gilt:
 
