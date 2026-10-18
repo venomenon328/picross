@@ -23,9 +23,13 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     assert state(page, 'ending')['ending'] and state(page, 'slots')['slots'][2] == completed_slot
     page.reload(); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
     labels = state(page, 'labels')['labels']
-    assert labels[0]['status'] == labels[0]['status_kind'] == 'Begonnen'
-    assert labels[2]['status'] == labels[2]['status_kind'] == 'Gelöst'
-    assert labels[2]['footer'] and labels[2]['reveal'] and not labels[2]['unknown']
+    # Display positions follow the remembered sort; status remains bound to IDs.
+    by_id = dict(zip(state(page, 'sort')['sort']['visible_ids'], labels, strict=True))
+    begun = by_id[state(page, 'slots')['slots'][0]['definition_id']]
+    solved = by_id[completed_slot['definition_id']]
+    assert begun['status'] == begun['status_kind'] == 'Begonnen'
+    assert solved['status'] == solved['status_kind'] == 'Gelöst'
+    assert solved['footer'] and solved['reveal'] and not solved['unknown']
     page.screenshot(path=str(output/f'{name}-ku-solved-footer.png'))
     control(page,text='Blatt 03')
     assert state(page, 'ending')['ending'] and not state(page, 'ea_active')['ea_active'] and not state(page, 'ea_processing')['ea_processing']
