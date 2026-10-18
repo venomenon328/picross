@@ -66,10 +66,21 @@ Saveprofile. Die 300 Runtimekopien dienen Last und Navigation; keine 300 echten
 Produktionen oder Solverläufe. Das zusätzliche Adapterpaket besitzt ausschließlich
 eine künstliche Testfreigabe. Nichts davon wird ins reguläre Spielerpaket kopiert.
 
-`--integration` führt KAT-2 zusammen mit der bisherigen 500er-Route aus.
+Bis zur Integration von [CI-C (#249)](https://github.com/venomenon328/picross/issues/249)
+führt `--integration` KAT-2 zusammen mit der bisherigen 500er-Route aus.
+Die am 18.10.2026 freigegebene [CI-Spezifikation](CI_POLICY.md) ist noch nicht
+implementiert und erlaubt bis dahin kein Überspringen ausgewählter Pflichtchecks.
+CI-C liefert eine eigenständig auswählbare Kataloggruppe mit sämtlichen aktuellen
+Eingabe-, Fehler-, Last-, Neustart-, Frame- und Exportaussagen. Katalogarbeit wählt
+die 500er-Route oder alle Adapter/Piloten danach nur bei tatsächlicher gemeinsamer
+Abhängigkeit. Die gezielte KAT-1-Adapterzuwachsprobe bleibt Teil ihres Vertrags.
+
 Save-/Recovery-, Pilot-, aktuelle Pixel-/PERF-B-, Ressourcen-, Export- und
-PCK-Prüfungen bleiben aktiv. Änderungen am Produktharness wählen im vollständigen
-Diff alle aktuellen Bereiche einschließlich Fachjobs und Preflight aus.
+PCK-Prüfungen bleiben im jeweils relevanten Scope erhalten. Der vollständige
+Base-/Head-Diff und gemeinsame/unbekannte Harnesswirkung bestimmen die Vereinigung
+nach CI-Policy; native Gruppenwahl gilt erst nach CI-C. Reale Prozessneustarts
+und absichtlich gemeinsame Profile innerhalb einer Prüffolge werden nicht durch
+vorbereitete Ersatzstände abgelöst.
 
 Die gezielte Nacharbeit zu [R1/B-01](https://github.com/venomenon328/picross/pull/81#issuecomment-6124420290)
 unterscheidet eine geöffnete Rätselansicht von Katalog und katalogseitiger Info.
@@ -99,8 +110,13 @@ nicht eine behauptete physische Monitorauflösung.
 Vollständige native Frames bleiben lokal. Der begrenzte technische Lieferumfang
 enthält unverkleinerte Ausschnitte der tatsächlichen Controlrechtecke, eine
 zusammenhängende enge Layoutansicht und deren Quellkoordinaten in `kat2/summary.json`.
-Die bisherigen Artefakt- und Laufzeitbudgets gelten unverändert. Pflichtnachweise
-werden auf tatsächliche Aufnahme in das technische Paket geprüft.
+Die aktuelle CI-Policy ersetzt frühere feste Artefakt-/Laufzeitbudgets.
+Pflichtnachweise werden auf tatsächliche Aufnahme in das technische Paket geprüft.
+CI-C misst Rendering, Lesen/Zuschneiden, PNG-Schreiben, Verpacken und Upload
+getrennt. Eine schnellere verlustfreie PNG-Ausgabe muss auf denselben nativen
+Frames identische dekodierte Pixel/Alpha, Maße, Ausschnittkoordinaten und
+Pflichtbildmenge belegen; andere PNG-Datei-Bytes sind zulässig. Vollständige
+Framekontexte bleiben lokal, geforderte Ausschnitte werden nicht ausgelassen.
 
 ## Stand und offene Gates
 
