@@ -1,0 +1,68 @@
+name: Isolated browser runner
+
+on:
+  workflow_call:
+    inputs:
+      browser:
+        type: string
+        required: true
+      selection_attempt:
+        type: string
+        required: true
+      build_attempt:
+        type: string
+        required: true
+    outputs:
+      attempt:
+        value: ${{ jobs.browser.outputs.attempt }}
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    outputs:
+      attempt: ${{ steps.producer.outputs.attempt }}
+    steps:
+      - name: Bind browser producer attempt
+        id: producer
+        run: echo "attempt=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Download bound selection
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ inputs.selection_attempt }}
+          path: ${{ runner.temp }}/ci-selection
+      - name: Download current sealed builds
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: ci-web-builds-${{ github.event.pull_request.head.sha || github.sha }}-${{ inputs.build_attempt }}
+          path: artifacts
+      - name: Install only this runner's browser
+        env:
+          BROWSER: ${{ inputs.browser }}
+        run: |
+          python3 -m venv "${{ runner.temp }}/web-venv"
+          "${{ runner.temp }}/web-venv/bin/pip" install playwright==1.58.0
+          "${{ runner.temp }}/web-venv/bin/playwright" install --with-deps "$BROWSER"
+      - name: Run selected independent groups
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          PICROSS_WEB_SOFTWARE: '1'
+          BROWSER: ${{ inputs.browser }}
+          BUILD_ATTEMPT: ${{ inputs.build_attempt }}
+          CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
+        run: |
+          xvfb-run -a "${{ runner.temp }}/web-venv/bin/python" tools/web_tests/run_groups.py run --plan "${{ runner.temp }}/ci-selection/ci-plan.json" --build-root artifacts --build-attempt "$BUILD_ATTEMPT" --browser "$BROWSER" --output artifacts/web-evidence
+      - name: Upload this browser's actual results and evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: picross-web-${{ inputs.browser }}-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          path: artifacts/web-evidence/
+          if-no-files-found: error
+          retention-days: 7

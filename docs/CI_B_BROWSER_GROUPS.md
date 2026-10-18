@@ -61,3 +61,107 @@ Prozessstart, Abfragen/übertragene Zustandsbytes, Eingaben, Savebestätigung,
 Warten, Viewport und Screenshot. Verschachtelte Zeiten werden nicht addiert.
 Die Produkt-/Fixture-/Timeoutverträge bleiben unverändert. Ein späterer
 Vergleich bindet Baseline und neuen Gruppenlauf an tatsächliche Runs/Jobs.
+
+## Unabhängige Ausführung und Auswahl
+
+`tools/web_tests/contract.py` ist das gemeinsame versionierte Inventar für
+Auswahl, Ausführung und Gate. `picross-ci-selection-v3` enthält zusätzlich
+`browser_groups` und `browser_expected` (Gruppen und Szenario-IDs je Browser).
+Die sechs CI-A-Bereichsergebnisse, der exakte Base-/Head-Treevergleich,
+Rename-/Löschungsseiten, Inhaltsmodusschutz und enge Fachauswahl bleiben erhalten.
+
+| Exakt geprüfte Abhängigkeit | Browsergruppen zusätzlich zu `regular` |
+| --- | --- |
+| `catalog_ink.gd`, `catalog_tip.gd`, `catalog_difficulty.gd` | `catalog`: reine Kartenzeichen-/Tooltip-/Etikettprojektion |
+| `catalog.gd`, `catalog_card.gd` | `catalog`, `completion`, `persistence`: Karten öffnen, Reset und Recoverybedienung |
+| `completion.gd` | `completion`: transiente Enthüllungsansicht |
+| `gesture_counter.gd`, `clue_overlay.gd`, `clue_layout.gd` | `input`: Zeiger-/Hinweisgeometrie und transiente Anzeige |
+| `gesture.gd`, `board.gd`, `full_view_board.gd`, `grid_view.gd` | `input`, `completion`, `persistence`: Eingaben erzeugen Abschlüsse und gespeicherte Zustände |
+| Einzelnes `group_catalog.py`, `group_input.py`, `group_completion.py`, `group_persistence.py` | Die benannte technische Gruppe |
+| Gemeinsame UI, Save/Session/Player, Webstorage, Ressourcen, Export, Fixtures, Browseraktionen, Probe, Toolchain oder unbekannte Wirkung | Alle Gruppen |
+
+Die Runtime-Namen oben meinen die exakten Pfade unter `game/ui/` beziehungsweise
+`game/model/` im ausführbaren Inventar. Neue Dateien erben keine Ausnahme.
+`game/ui/main.gd` ist ausdrücklich gemeinsam. Ein Mischdiff vereinigt die
+Pflichten aller Pfade. Die nach CI-A unabhängig bestimmte Zustellung bleibt
+unverändert; auch ein voller Browserlauf fordert sie nicht automatisch an.
+
+Die bisherigen manuellen Scopes behalten ihren vollständigen Browserbedarf.
+Zusätzlich erweitern `browser-catalog`, `browser-input`, `browser-completion`
+und `browser-persistence` um regulären Start plus die benannte Gruppe. Diese
+Scopes können niemals automatisch ausgewählte Gruppen oder andere Jobs entfernen.
+Automatische Main-Pushes wiederholen weiterhin keine Product-/Web-/Zustellungs-
+oder Preflightläufe. Die eigene CI-B-Implementierung wählt wegen des vollständigen
+Workflow-/Harnessdiffs alle bisherigen Bereiche, einschließlich nativer Untergruppen.
+
+Jede technische Gruppe startet einen eigenen CLI-Prozess mit leerem Profil,
+eigenem Loopbackport und kopiertem Hosting-/Releasebaum. `regular` verwendet den
+uninstrumentierten Export. `catalog` startet frisch und prüft alle neuen Labels
+und beide passiven Klickwege. `input` startet bei DPI125, richtet echte
+Strich-/Undozustände ein und prüft Abbruch, Geometrie, Hinweise und Farbrechteck.
+`completion` verändert einen fremden Slot durch echte Eingabe und prüft danach
+beide tatsächlichen Abschlüsse samt Reload und ursprungsgebundenem Reset.
+`persistence` erzeugt eigene echte Striche, Undo/Redo und einen abgeschlossenen
+Farbslot, bevor seine Fehler-/Recovery-/Reset-/Unterpfadprüfungen stattfinden.
+Kein Gruppenresultat oder vorbefüllter Save wird als Voraussetzung übernommen.
+
+Die absichtlich innerhalb von `persistence` geteilte Profil-/Originfolge bleibt:
+Lockhandoff → Eingaben/Undo → blockierter Zweittab → Reload → echter Prozessneustart
+bei DPI125 → echter zweiter Export → bestätigte und verlorene Schreibstände →
+Recovery/Revision/Reset → Unterpfad/Offline → Beenden/Reload → gesondertes Profil
+mit verweigertem IndexedDB. Sämtliche Assertions und unveränderten funktionalen
+Warte-/Animationszeiten bleiben erhalten. Gruppenfehler verhindern nicht den
+Start der anderen ausgewählten Gruppen; sie verhindern den Gesamterfolg.
+
+## Runner, Builds und Ergebnisgate
+
+`web.yml` baut drei echte Exporte in einem eigenen Buildjob. Jeder Build verwendet
+ein eigenes temporäres Projekt und den vorhandenen hashgeprüften Toolchainweg.
+`builds.json` bindet Head, Base, Test-Merge, Event, Run und Auswahlversuch sowie
+Buildversuch und die vollständigen Manifeste samt Manifest-SHA-256. Die beiden
+technischen Exporte müssen unterschiedliche Buildkennungen und Bauzeiten besitzen.
+Es werden aktuelle Builddateien desselben Runs übertragen, keine Prüfergebnisse
+gecacht. Beide Browser müssen exakt dieselbe Buildhülle verwenden.
+
+Die Jobs `chromium` und `firefox` rufen `web-browser.yml` auf getrennten
+Ubuntu-24.04-Runnern auf. Jeder installiert ausschließlich seinen Browser aus
+Playwright 1.58.0 und prüft nach dem Download sämtliche Bundlebytes erneut.
+Godot bleibt 4.7.2-stable; Mesa und die dokumentierte temporäre Firefoxoption
+bleiben unverändert. Der Buildjob und beide Browser melden ihre eigenen Versuche.
+
+`ci-required` verlangt weiterhin alle ausgewählten CI-A-Jobergebnisse und
+verifiziert zusätzlich beide tatsächlichen `web-result.json` gegen das neu
+berechnete Gruppen-/Szenarieninventar. Es prüft eindeutige vollständige Gruppen,
+Szenario-IDs, erfolgreiche Prozesse, Messbelege, WebGL-Daten, Originalberichte,
+Pflichtbilder und sämtliche gelieferten Dateihashes. Die Originalberichte müssen
+mit den aggregierten Ergebnissen und Buildmanifesten übereinstimmen. Fehlende,
+leere, doppelte, unerwartete, einseitige, abgebrochene, übersprungene oder
+fehlgeschlagene Pflichtresultate sind kein Erfolg. Ein grünes `web`-Jobergebnis
+allein genügt dem CLI-Gate ausdrücklich nicht.
+
+Downloads verwenden den vom Scheduler gemeldeten konkreten Producer-Versuch.
+Erfolgreiche Jobs dürfen beim Retry desselben unveränderten Runs erhalten bleiben:
+Auswahlversuch ≤ Buildversuch ≤ Browserversuch ≤ Gateversuch. Head/Base/Test-Merge,
+Event und Run müssen unverändert übereinstimmen. Keine Wildcardauswahl historischer
+Resultate. Artefakte heißen `ci-web-builds-<head>-<attempt>`,
+`picross-web-<browser>-<head>-<attempt>` und
+`picross-web-player-<head>-<attempt>`. Technische Dateien bleiben sieben Tage,
+der reguläre Spieler vierzehn Tage. Profile und veränderliche Hostingbäume werden
+nicht hochgeladen. SSH/HTTP und seine Artefakte bleiben vollständig eigenständig.
+
+## Nachweise und Abnahmegrenzen
+
+`test_ci_b.py` prüft die exakte Szenarienvereinigung, Pfadabhängigkeiten,
+Misch-/Main-/manuelle Auswahl, Prozessaufrufe nach injiziertem Gruppenfehler,
+fehlende/einseitige/doppelte/falsche Belege, Quell-/Run-/Versuchsbindungen,
+Exportidentität und den tatsächlichen Gate-CLI-Fehler bei nur grünem Webjob.
+Linux-CI führt zusätzlich die wirklichen Workflow-Shellblöcke mit synthetischen
+Außenwerkzeugen aus und verlangt die Weitergabe injizierter Exit-23-Fehler.
+Diese Gegenproben ersetzen keine echten Browserläufe.
+
+CI-B-T01 bindet im PR den vollständigen realen Lauf, repräsentative gezielte
+Läufe, Baseline-/Nachhermessung, tatsächliche Job-/Phasendauern, Cache-/Runner-
+bedingungen und den getrennten Selbstreview. Warteschlange, summierte Runnerzeit
+und parallele Wartezeit werden getrennt ausgewiesen. CI-B-R01 bleibt eine
+separate qualifizierte Prüfung vor Merge. Keine Produktabnahme, CI-C-Umsetzung,
+Merge- oder Livefreigabe durch diese technische Lieferung.
