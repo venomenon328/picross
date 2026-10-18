@@ -13,7 +13,19 @@ func _process(delta: float) -> void:
 	for card: Card in album.choices:
 		var difficulty_center: Vector2 = card.difficulty.get_global_rect().get_center()
 		var mode_center: Vector2 = card.mode_tip.get_global_rect().get_center()
+		var centers: Dictionary = {}
+		for part: String in ["dimensions","difficulty_icon","difficulty","mode_tip","paper","leaf","status_icon","note"]:
+			var center: Vector2 = card.get(part).get_global_rect().get_center()
+			centers[part] = [center.x,center.y]
+		var fits: bool = true
+		for label: Label in [card.dimensions,card.difficulty,card.note,card.leaf]:
+			fits = fits and label.get_theme_font("font").get_string_size(label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,label.get_theme_font_size("font_size")).x <= label.size.x
 		labels.append({"difficulty":card.difficulty.text,"status":card.note.text,
+			"centers":centers,"text_fits":fits,"status_kind":card.status_icon.kind,
+			"single_line":card.dimensions.position.y == card.difficulty.position.y and card.mode_tip.position.y == card.dimensions.position.y,
+			"footer":card.note.position.y == card.leaf.position.y and card.label_area.end.y < card.leaf.position.y,
+			"fallback_tip":card.difficulty.get_tooltip(),
+			"mode_popup":card.mode_tip.tooltip_ref != null and card.mode_tip.tooltip_ref.get_ref() != null and card.mode_tip.tooltip_ref.get_ref().is_visible_in_tree(),
 			"unknown":card.unknown.visible,"reveal":card.picture.artwork != null,
 			"size":[card.size.x,card.size.y],"dimensions":card.dimensions.text,
 			"difficulty_tip":card.difficulty.tooltip_text,"mode_tip":card.mode_tip.tooltip_text,
@@ -24,6 +36,7 @@ func _process(delta: float) -> void:
 		slots.append(SaveStore.snapshot(item, item.view_state))
 	var origin: Vector2 = board.global_position + board.view.origin
 	var data: Dictionary = {"controls": controls, "labels":labels,"slots": slots, "slot_status": slot_status,
+		"visible_popups":get_viewport().get_embedded_subwindows().filter(func(window: Window) -> bool: return window.visible).size(),
 		"ea_active": reveal_view.active, "ea_processing": reveal_view.is_processing(),
 		"ea_caption_alpha": completion_title.modulate.a, "ea_reset_disabled": completion_reset.disabled,
 		"ea_title": title.text, "ea_art": reveal_view.artwork != null,

@@ -22,7 +22,8 @@ Produktgates bleiben. Keine festen Zeit-/Bytebudgets oder verkürzten Timeouts.
 Aktuelle Paketstände und T01/R01 vor Merge stehen in den Issues; diese Freigabe
 beauftragt weder Implementierung noch Merge.
 
-**KU / #244 (18.10.2026), Spezifikation freigegeben; Umsetzung offen:**
+**KU / #244 (18.10.2026):** KU-A ist im vorliegenden Implementierungspaket
+umgesetzt; [Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
 [Katalogdarstellung](CATALOG_PRESENTATION.md) und
 [Katalogsortierung](CATALOG_SORTING.md) sind bei Katalog-/Metadatenarbeit
 vollständig zu lesen. KU-A ersetzt die zweizeilige KE-Infobox durch einen

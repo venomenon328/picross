@@ -1,6 +1,8 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**KU / #244, am 18.10.2026 als Spezifikation freigegeben; noch nicht implementiert:**
+**KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
+[aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
+Die Spezifikation wurde am 18.10.2026 freigegeben:
 [Katalogdarstellung](CATALOG_PRESENTATION.md) führt in KU-A die gezielte neue
 Zeichnung und Anordnung: ein gemeinsamer warmer Papierstreifen mit subtil
 unregelmäßiger Kontur, Größe links, gefüllter Schwierigkeitskreis und vollständiger

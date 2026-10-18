@@ -1,6 +1,8 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**KU / #244, am 18.10.2026 als Spezifikation freigegeben; noch nicht implementiert:**
+**KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
+[aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
+Die Spezifikation wurde am 18.10.2026 freigegeben:
 Der neue [Katalog-Sollvertrag](CATALOG_PRESENTATION.md) führt in KU-A einen ruhigen
 warmen Papierstreifen mit subtil unregelmäßiger Kontur und genau einer gemeinsamen
 Zeile ein: Größe links, gefüllter Farbkreis mit vollständigem Schwierigkeitsnamen
