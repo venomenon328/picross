@@ -217,12 +217,15 @@ class EvidenceGate(unittest.TestCase):
         self.assertIn('browser_error',read(output))
 
     def test_real_finish_cli_accepts_bound_pair_and_rejects_wrong_attempt(self):
+        # This case isolates browser evidence. CI-C additionally rejects a green
+        # Product job without its own actual native payload (test_ci_c).
+        self.plan.update(classify(['tools/web_tests/browser.py']))
         plan_file=self.root/'plan.json';write(plan_file,self.plan)
         output=self.root/'result.json'
         env={**os.environ,'GITHUB_ACTIONS':'true','GITHUB_RUN_ATTEMPT':'2','GITHUB_STEP_SUMMARY':'',
              'CI_BINDING':json.dumps({**binding(self.plan),'gate_attempt':'2'}),
-             'CI_OUTPUTS':json.dumps({**{key:'true' for key in FLAGS},'selection_attempt':'1'}),
-             'CI_RESULTS':json.dumps({job:{'result':'success'} for job in JOBS})}
+             'CI_OUTPUTS':json.dumps({**{key:str(self.plan['selected'][key]).lower() for key in FLAGS},'selection_attempt':'1','native_groups':''}),
+             'CI_RESULTS':json.dumps({job:{'result':'success' if self.plan['selected'][job] else 'skipped'} for job in JOBS})}
         for attempt,code in [('1',0),('2',1)]:
             env['CI_WEB_OUTPUTS']=json.dumps({**self.outputs,'firefox_attempt':attempt})
             result=subprocess.run([sys.executable,str(ROOT/'tools/ci_scope.py'),'finish',

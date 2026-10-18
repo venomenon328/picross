@@ -9,7 +9,7 @@ on:
       scope:
         description: Widen the changed-path selection
         type: choice
-        options: [auto, all, runtime, visual, perf-b, production, toolchain, browser-catalog, browser-input, browser-completion, browser-persistence]
+        options: [auto, all, runtime, visual, perf-b, production, toolchain, browser-catalog, browser-input, browser-completion, browser-persistence, native-core, native-history, native-catalog, native-completion, native-adapters, native-graphics, native-export]
         default: all
 
 permissions:
@@ -32,6 +32,7 @@ jobs:
       perf_b: ${{ steps.scope.outputs.perf_b }}
       web: ${{ steps.scope.outputs.web }}
       delivery: ${{ steps.scope.outputs.delivery }}
+      native_groups: ${{ steps.scope.outputs.native_groups }}
       selection_attempt: ${{ steps.scope.outputs.selection_attempt }}
     steps:
       - name: Checkout tested integration
@@ -42,6 +43,7 @@ jobs:
           filter: blob:none
           sparse-checkout: |
             tools/ci_scope.py
+            tools/native_contract.py
             tools/web_tests/contract.py
             .gitattributes
           sparse-checkout-cone-mode: false
@@ -81,10 +83,8 @@ jobs:
     if: needs.docs.outputs.product == 'true'
     uses: ./.github/workflows/p1-product.yml
     with:
-      integration: ${{ needs.docs.outputs.integration == 'true' }}
-      pilots: ${{ needs.docs.outputs.pilots == 'true' }}
-      visual: ${{ needs.docs.outputs.visual == 'true' }}
-      perf_b: ${{ needs.docs.outputs.perf_b == 'true' }}
+      groups: ${{ needs.docs.outputs.native_groups }}
+      selection_attempt: ${{ needs.docs.outputs.selection_attempt }}
 
   production:
     needs: docs
@@ -120,9 +120,12 @@ jobs:
           persist-credentials: false
           sparse-checkout: |
             tools/ci_scope.py
+            tools/native_contract.py
             tools/web_bundle.py
             tools/web_tests/contract.py
             tools/web_tests/results.py
+            tools/native_results.py
+            tools/native_artifacts.json
           sparse-checkout-cone-mode: false
           filter: blob:none
       - name: Download complete selection for the result gate
@@ -130,6 +133,18 @@ jobs:
         with:
           name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.docs.outputs.selection_attempt }}
           path: ${{ runner.temp }}/ci-selection
+      - name: Download native evidence from its producer attempt
+        if: always() && needs.docs.outputs.product == 'true'
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: picross-p1-technical-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.product.outputs.product_attempt }}
+          path: ${{ runner.temp }}/native-evidence
+      - name: Download required native player bytes
+        if: always() && contains(needs.docs.outputs.native_groups, 'export')
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: picross-p1-player-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.product.outputs.product_attempt }}
+          path: ${{ runner.temp }}/native-player
       - name: Download chromium evidence from its producer attempt
         if: always() && needs.docs.outputs.web == 'true'
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
@@ -152,6 +167,7 @@ jobs:
             "preflight":{"result":"${{ needs.preflight.result }}"},
             "web":{"result":"${{ needs.web.result }}"},
             "delivery":{"result":"${{ needs.delivery.result }}"}}
+          CI_NATIVE_OUTPUTS: ${{ toJSON(needs.product.outputs) }}
           CI_WEB_OUTPUTS: ${{ toJSON(needs.web.outputs) }}
           CI_OUTPUTS: ${{ toJSON(needs.docs.outputs) }}
           CI_BINDING: >-
@@ -163,6 +179,8 @@ jobs:
         run: >-
           python3 tools/ci_scope.py finish
           --plan-file "${{ runner.temp }}/ci-selection/ci-plan.json"
+          --native-evidence "${{ runner.temp }}/native-evidence"
+          --native-player "${{ runner.temp }}/native-player"
           --web-evidence "${{ runner.temp }}/web-evidence"
           --output "${{ runner.temp }}/ci-result.json"
       - name: Upload complete result and source binding

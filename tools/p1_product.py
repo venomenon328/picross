@@ -133,6 +133,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--process-timeout-seconds", type=int, default=300)
     parser.add_argument("--download-timeout-seconds", type=int, default=1200)
+    parser.add_argument("--native-group", choices=("core", "history", "catalog", "completion", "adapters", "graphics", "export"), help=argparse.SUPPRESS)
+    parser.add_argument("--technical-dir", type=Path, help=argparse.SUPPRESS)
+    parser.add_argument("--groups", help="Exact independent groups, comma separated; default all")
+    parser.add_argument("--compare-native-png", action="store_true", help="Compare old/new PNG encoders on the same real frames")
     for name, description in (
         ("integration", "500 actions and the independent cross-process restart oracle"),
         ("pilots", "four synthetic interaction cases across real processes"),
@@ -365,6 +369,18 @@ def player_guide(root: Path, source_commit: str) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    if args.native_group is None:
+        from native_runner import run
+        return run(args)
+    group = args.native_group
+    args.integration = group == "history"
+    args.pilots = group == "adapters"
+    args.visual = group == "graphics"
+    args.perf_b = group == "graphics"
+    args.core = group == "core"
+    args.catalog = group == "catalog"
+    args.completion = group == "completion"
+    args.export = group == "export"
     root = Path(__file__).resolve().parents[1]
     host = platform.system()
     if host not in toolchain.EDITORS or platform.machine().lower() not in {"amd64", "x86_64"}:
@@ -373,9 +389,10 @@ def main(argv: list[str] | None = None) -> int:
     if output.exists() and any(output.iterdir()):
         raise SystemExit("Output directory must be empty; preserve previous evidence in its own directory")
     output.mkdir(parents=True, exist_ok=True)
-    evidence = Evidence(output, host, dict(core=True, integration=args.integration,
+    evidence = Evidence(output, host, dict(core=args.core, integration=args.integration,
+                                          catalog=args.catalog, completion=args.completion,
                                           pilots=args.pilots, visual=args.visual,
-                                          perf_b=args.perf_b, export=True))
+                                          perf_b=args.perf_b, export=args.export), technical=args.technical_dir)
     selected = []
 
     def python_phase(name, action, reporter=evidence):
@@ -390,8 +407,9 @@ def main(argv: list[str] | None = None) -> int:
         return result
 
     try:
-        evidence.report.update(source_identity(root))
-        evidence.scope_start("core")
+        evidence.report.update(source_identity(root), native_group=group)
+        if args.core:
+            evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "game/project.godot")
         registry = json.loads((root / "content/registry.json").read_text(encoding="utf-8"))
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
@@ -424,6 +442,7 @@ def main(argv: list[str] | None = None) -> int:
                 try:
                     result = run_phase(name, command, environment if phase_env is None else phase_env,
                                        args.process_timeout_seconds, reporter.logs)
+                    result["required_marker"] = marker
                     if result["timed_out"]:
                         raise toolchain.PreflightError(f"{name} exceeded {args.process_timeout_seconds}s")
                     if expected_failure:
@@ -444,17 +463,18 @@ def main(argv: list[str] | None = None) -> int:
             phase("version", [engine, "--version"], toolchain.EXPECTED_VERSION)
             base = [engine, "--headless", "--path", str(project)]
             phase("import", base + ["--import"])
-            phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
-            phase("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
-            phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
-                  expected_failure=True)
-            environment["P1_TEST_SAVE_ROOT"] = str(workspace / "roundtrip-saves")
-            for stage in ("write", "read"):
-                phase("roundtrip-" + stage, base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--" + stage],
-                      "P1_ROUNDTRIP_" + stage.upper() + "_OK")
-            environment.pop("P1_TEST_SAVE_ROOT")
-            phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
-            evidence.scope_done("core")
+            if args.core:
+                phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
+                phase("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
+                phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
+                      expected_failure=True)
+                environment["P1_TEST_SAVE_ROOT"] = str(workspace / "roundtrip-saves")
+                for stage in ("write", "read"):
+                    phase("roundtrip-" + stage, base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--" + stage],
+                          "P1_ROUNDTRIP_" + stage.upper() + "_OK")
+                environment.pop("P1_TEST_SAVE_ROOT")
+                phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
+                evidence.scope_done("core")
             vs2_future = None
             vs2_result = None
             if args.visual:
@@ -499,29 +519,29 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_start("integration")
                 evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
                 selected += [output / "integration/summary.json"]
-                # Native popup/dialog tests must own the desktop: a concurrent
-                # capture window can close their popup on focus loss on Windows.
-                # Linux runs each native process on its own xvfb-run -a display.
-                if args.visual and host == "Windows":
-                    vs2_result = python_phase("current-vs2-complete", vs2_future.result)
+                evidence.scope_done("integration")
+            if args.catalog:
+                evidence.scope_start("catalog")
                 evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
                 selected += kat2_files
+                evidence.scope_done("catalog")
+            if args.completion:
+                evidence.scope_start("completion")
                 evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, phase, host)
                 selected += ea_files
-                evidence.scope_done("integration")
+                evidence.scope_done("completion")
             if args.pilots:
                 evidence.scope_start("pilots")
                 evidence.report["pilots"] = run_pilots(workspace, environment, base, phase)
                 evidence.report["za1"], za1_files = za1_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
                 selected += za1_files
+                selected += run_pilot_visual(output, workspace, project, engine, environment, phase, host)
                 evidence.scope_done("pilots")
             if args.visual:
                 evidence.scope_start("visual")
                 # Synthetic captures consume completed isolated saves. Other native checks
                 # run independently in the existing isolated worker, with separate
                 # profile/project/environment and no concurrent evidence writes.
-                if args.pilots:
-                    selected += run_pilot_visual(output, workspace, project, engine, environment, phase, host)
                 if vs2_result is None:
                     vs2_result = python_phase("current-vs2-complete", vs2_future.result)
                 evidence.report["visual"], visual_files = vs2_result
@@ -543,19 +563,20 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.report["perf_b_native"] = json.loads((b_output / "probe.json").read_text())
                 selected += [b_output / "probe.json", *b_output.glob("runtime-*.png")]
                 evidence.scope_done("perf_b")
-            evidence.scope_start("export")
-            if restore_player_catalog(root, project):
-                phase("player-content-import", base + ["--import"])
-            build = project / "build/windows"
-            build.mkdir(parents=True)
-            phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
-            evidence.report["content_pack"] = za1_product.audit_pack(root, engine, build / "picross-p1.exe", environment,
-                phase, sum(e["visible"] for e in registry["entries"]), "player-content-pck")
-            if host == "Windows":
-                phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
-                phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
-                      "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
-            evidence.scope_done("export")
+            if args.export:
+                evidence.scope_start("export")
+                if restore_player_catalog(root, project):
+                    phase("player-content-import", base + ["--import"])
+                build = project / "build/windows"
+                build.mkdir(parents=True)
+                phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
+                evidence.report["content_pack"] = za1_product.audit_pack(root, engine, build / "picross-p1.exe", environment,
+                    phase, sum(e["visible"] for e in registry["entries"]), "player-content-pck")
+                if host == "Windows":
+                    phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
+                    phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
+                          "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
+                evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
             evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2", "ea") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
             if args.visual:
@@ -581,16 +602,18 @@ def main(argv: list[str] | None = None) -> int:
                     raise toolchain.PreflightError("Targeted SL images missing from technical delivery")
             evidence.measure_size()
             evidence.finish()
-            package_began = time.monotonic()
-            archive, delivery = package_player(build, output, evidence.report, root)
-            delivery.update(packaging_seconds=round(time.monotonic() - package_began, 3),
-                            total_seconds=round(time.monotonic() - evidence.began, 3))
-            evidence.flush()
-            audit = evidence.technical / "player-audit.json"
-            audit.write_text(json.dumps(delivery, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-            sizes = evidence.measure_size(archive)
-            print("EVIDENCE_BYTES " + json.dumps(sizes, sort_keys=True), flush=True)
-            print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
+            archive = None
+            if args.export:
+                package_began = time.monotonic()
+                archive, delivery = package_player(build, output, evidence.report, root)
+                delivery.update(packaging_seconds=round(time.monotonic() - package_began, 3),
+                                total_seconds=round(time.monotonic() - evidence.began, 3))
+                evidence.flush()
+                audit = evidence.technical / "player-audit.json"
+                audit.write_text(json.dumps(delivery, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                sizes = evidence.measure_size(archive)
+                print("EVIDENCE_BYTES " + json.dumps(sizes, sort_keys=True), flush=True)
+                print(f"ARTIFACT {archive} sha256:{toolchain.sha256_file(archive)}", flush=True)
             print("P1 PRODUCT PASS", flush=True)
     except Exception as exc:
         failure_log = evidence.logs / "failure.log"

@@ -86,10 +86,13 @@ class SelectionTests(unittest.TestCase):
                     make_plan("a"*40, "b"*40, "auto")
 
     def test_catalog_native_route_and_harness_keep_required_checks(self):
-        for path in ("game/ui/catalog.gd", "game/tests/kat2_probe.gd"):
-            selected = classify([path])["selected"]
-            self.assertTrue(selected["product"] and selected["integration"] and selected["visual"] and selected["perf_b"])
-        self.assertTrue(all(classify(["tools/kat2_product.py"])["selected"].values()))
+        for path in ("game/ui/catalog.gd", "game/tests/kat2_probe.gd", "tools/kat2_product.py"):
+            plan = classify([path])
+            self.assertTrue(plan["selected"]["product"])
+            self.assertIn("catalog", plan["native_groups"])
+            self.assertNotIn("history", plan["native_groups"])
+            self.assertNotIn("adapters", plan["native_groups"])
+        self.assertEqual(classify(["tools/kat2_product.py"])["native_groups"], ["catalog"])
 
     def test_save_recovery_and_gameplay_keep_integration_without_manufacturer(self):
         for path in ("game/model/save_store.gd", "game/model/gesture.gd", "game/ui/main.gd"):
@@ -98,10 +101,13 @@ class SelectionTests(unittest.TestCase):
             self.assertFalse(value["production"] or value["preflight"])
 
     def test_runtime_resources_select_native_regression(self):
-        for path in ("game/ui/cell_atlas.gd", "game/art/cells/x-small.png", "tools/perf_b_resources.py", "tools/cell_atlas_reference.json", "game/tests/perf_b_cases.gd"):
+        for path in ("game/ui/cell_atlas.gd", "tools/perf_b_resources.py", "tools/cell_atlas_reference.json", "game/tests/perf_b_cases.gd"):
             value = classify([path])["selected"]
             self.assertTrue(value["visual"] and value["perf_b"] and value["product"])
             self.assertFalse(value["integration"] or value["preflight"])
+
+    def test_unknown_cell_resource_is_conservative(self):
+        self.assertTrue(classify(["game/art/cells/unknown.png"])["selected"]["integration"])
 
     def test_removed_legacy_game_paths_preserve_required_coverage(self):
         plan = classify(["prototypes/p1/model/save_store.gd", "docs/archived.md"])

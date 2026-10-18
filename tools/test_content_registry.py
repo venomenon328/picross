@@ -22,5 +22,6 @@ class RegistryTests(unittest.TestCase):
     def test_registry_and_new_harness_select_required_work(self):
         p = classify(["content/registry.json"])["selected"]
         self.assertFalse(any(p[k] for k in FLAGS))
-        p = classify(["tools/za1_product.py"])["selected"]
-        self.assertTrue(all(p[k] for k in FLAGS))
+        plan = classify(["tools/za1_product.py"])
+        self.assertEqual(plan["native_groups"], ["adapters", "export"])
+        self.assertTrue(plan["selected"]["product"] and plan["selected"]["pilots"])
