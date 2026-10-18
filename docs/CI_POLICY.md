@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 18.10.2026 · Version 2.2 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
+Stand: 18.10.2026 · Version 2.3 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
 
 ## Geltung und Ablösung
 
@@ -30,8 +30,8 @@ Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 Eigentümerentscheidung vom 18.10.2026:
 [#246](https://github.com/venomenon328/picross/issues/246) ist als Spezifikation
 freigegeben. Ziel ist eine deutlich kürzere notwendige Wartezeit durch passende
-Prüfauswahl und schnellere Ausführung. **CI-A und CI-B sind implementiert;
-CI-C bleibt Sollstand. CI-B-T01/R01 und Merge bleiben separat im Paket-PR gebunden.** Die folgenden Entscheidungen sind verbindlich;
+Prüfauswahl und schnellere Ausführung. **CI-A, CI-B und CI-C sind implementiert;
+CI-C-T01/R01 und Merge bleiben separat im Paket-PR gebunden.** Die folgenden Entscheidungen sind verbindlich;
 sie erlauben vor Integration des jeweiligen Pakets kein Überspringen eines
 derzeit ausgewählten Pflichtchecks. Ausgangsbasis ist
 `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a`; konkrete Lieferstände und Messungen
@@ -113,10 +113,11 @@ eigenständig erzeugte Exporte bleiben in den relevanten Fällen Pflicht. Ein
 umbenannter Export oder ein Starttest allein ersetzt diese Nachweise nicht.
 Der [Webvertrag](WEB_HOSTING.md) konkretisiert Isolation und Speichergrenzen.
 
-### Native Gruppen und Bildaufbereitung nach CI-C
+### Ausführbare native Gruppen und Bildaufbereitung (CI-C)
 
+[CI-C-Gruppenvertrag](CI_C_NATIVE_GROUPS.md) und das ausführbare Inventar ordnen
 Kern/Save, History/500er-Route, Katalog, Abschluss, Adapter/Piloten, Grafik/Atlas
-und Export werden ausdrücklich zugeordnet. Der Gesamtlauf vereinigt alle aktiven
+und Export ausdrücklich zu. Der Gesamtlauf vereinigt alle aktiven
 Checks, Orakel und Belege. Katalog und Abschluss hängen nicht mehr allein am
 500er-Integrationsschalter; gemeinsame Abhängigkeiten wählen weiterhin mehrere
 oder alle Gruppen. Keine Entfernung allein wegen eines historischen Testnamens.
@@ -254,9 +255,9 @@ Andere Runs oder Quellstände sind nicht wiederverwendbar. Große Aufräum-PRs d
 nicht an Betriebssystemgrenzen für Argumente/Umgebungsvariablen scheitern; die
 Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 
-Die Tabelle beschreibt die Bereichsauswahl nach CI-A. Die nativen
-Untergruppen bleiben bis CI-C gekoppelt; CI-B wählt innerhalb von Web gemäß
-[Gruppenvertrag](CI_B_BROWSER_GROUPS.md).
+Die Tabelle beschreibt die Bereichsauswahl nach CI-A. CI-C wählt native
+Gruppen gemäß [nativem Gruppenvertrag](CI_C_NATIVE_GROUPS.md); CI-B wählt innerhalb
+von Web gemäß [Browservertrag](CI_B_BROWSER_GROUPS.md).
 
 | Änderung | Automatischer Pflichtumfang im PR |
 | --- | --- |
@@ -360,16 +361,16 @@ Produktionsbestand. Echte Inhalte werden nicht erneut zertifiziert und erhalten
 keine rätselspezifischen CI-Tests. Die einmalige Katalog-/PCK-Sichtung für #114
 ist ein PR-Liefernachweis, keine neue Testmatrix.
 
-Die folgenden nativen Schalter und ihre Kopplungen bleiben bis CI-C die
-Ausführungsgrundlage; CI-A darf vorher ganze sachfremde Productläufe vermeiden.
-`--integration` ergänzt die 500 Aktionen in fünf echten Prozessen plus Neustart
-und unabhängigem Python-Orakel. `--pilots` prüft die synthetischen Muster T04/T06/T08/T09 vollständig;
+CI-C verwendet `--groups core,history,catalog,completion,adapters,graphics,export`;
+die Auswahl kann jede Gruppe unabhängig starten. Lokal ist die vollständige
+Vereinigung Standard, CI übergibt die exakte Auswahl ausdrücklich. `history`
+prüft 500 Aktionen in fünf echten Prozessen plus Neustart und unabhängigem
+Python-Orakel. `adapters` prüft die synthetischen Muster T04/T06/T08/T09 vollständig;
 T04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
-Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `--visual` ergänzt
-die aktuelle native Renderprüfung. Die jeweiligen `--no-*`-Schalter werden von
-CI ausdrücklich übergeben; lokal sind alle vier ergänzenden Bereiche aktiv.
-`--perf-b` prüft den regulären Atlasrenderer samt Cache-/Invalidierungslebenszyklus,
-auch ohne den allgemeinen Visualbereich. Aktuelle Darstellung, Texturen und ihre
+Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `graphics` enthält
+die aktuelle native Renderprüfung und den regulären Atlasrenderer samt Cache-/
+Invalidierungslebenszyklus. Die alten manuellen Flags bleiben ausschließlich als
+erweiternde Kompatibilitätsauswahl erhalten; Details im Gruppenvertrag. Aktuelle Darstellung, Texturen und ihre
 Referenz wählen PERF-B; CI/Harness/Toolchain wählen alle aktuellen Bereiche.
 
 `tools/perf_b_resources.py` prüft exakt sechs aktive PNGs samt Importdateien,
@@ -405,13 +406,11 @@ mit 399 unbekannten Zellen erkennen und genau an der Isolationsassertion
 mit Exit 4 scheitern. Erfolg, Recovery, Parserfehler oder andere Fehler werden
 nicht als erfolgreiche Gegenprobe akzeptiert. Kein weiteres RP3-Durchspiel.
 
-## KAT-2 im Integrationspfad
+## KAT-2 als unabhängige native Kataloggruppe
 
-Bis CI-C ist dies die ausführbare Kopplung; danach wird die vollständige aktuelle
-Katalogprüfung eigenständig nach Änderungsbezug ausgewählt, ohne Verlust ihrer
-Neustart-, Last-, Eingabe-, Fehler- und nativen Bildbelege.
-
-`--integration` ergänzt die nativen Katalogprüfungen aus
+`--groups catalog` führt die vollständige aktuelle Katalogprüfung unabhängig
+von History und Abschluss aus, mit sämtlichen Neustart-, Last-, Eingabe-, Fehler-
+und nativen Bildbelegen. Die Gruppe verwendet
 [tools/kat2_product.py](../tools/kat2_product.py): reguläre Hauptszene mit echten
 Pointerereignissen, gesonderter Prozessneustart, gültiger Leerbestand,
 ungültige Registry, isolierter KAT-1-Adapterzuwachs und synthetische 300 Einträge.
@@ -429,7 +428,7 @@ Slotisolation. Native Pixelprüfungen liefern kleine Originalausschnitte samt
 Koordinaten/Reports; vollständige Kontexte bleiben lokal. Der echte Windows-PCK
 wird für regulären und isolierten Katalog geprüft. Der feste synthetische Adapterdurchstich liefert
 nur den kompakten Bericht. Reine Inhalte wählen ausschließlich den schlanken
-Inhaltspfad; Änderungen am Produktharness wählen Integration und Preflight. Keine zusätzliche CI-Fallliste je Inhalt. [Prüfzuordnung](ZA1_VERIFICATION.md).
+Inhaltspfad; Änderungen am gemeinsamen Produktharness wählen alle nativen Gruppen und Preflight. Keine zusätzliche CI-Fallliste je Inhalt. [Prüfzuordnung](ZA1_VERIFICATION.md).
 
 Eigentümerfreigabe vom 14.10.2026 / #116: Die wiederholten Grafikmatrizen
 verwenden drei gemeinsame Konfigurationen: **1280×720/UI125, 1920×1080/UI100

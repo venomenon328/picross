@@ -9,6 +9,8 @@ SCOPES = dict(core=('core',), history=('integration',), catalog=('catalog',),
 CATALOG_MODES = ('regular', 'restart', 'large', 'empty', 'invalid', 'adapter', 'information', 'kb', 'kk', 'ke')
 # Exact paths only. Shared main/session/save/fixtures and unknown effects select all.
 PATHS = {
+    **{f'game/art/cells/{kind}-{size}.png{suffix}': ('core', 'graphics', 'export')
+       for kind in ('fill','x') for size in ('small','medium','large') for suffix in ('','.import')},
     **{f'game/ui/{name}.gd': ('core', 'catalog', 'export') for name in
        ('catalog_ink', 'catalog_tip', 'catalog_difficulty')},
     **{f'game/ui/{name}.gd': ('core', 'catalog', 'completion', 'export') for name in
@@ -57,13 +59,13 @@ def select_groups(reasons):
 
 
 def checks(group, host='Linux'):
-    common = ['current-resource-hashes', 'verified-toolchain-assets', 'version', 'import']
+    common = ['current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources', 'version', 'import']
     cases = {
         'core': ['tests', 'current-drawing-tests', 'expected-failure', 'roundtrip-write', 'roundtrip-read', 'controlled-start'],
         'history': [f'integration-{n+1:03d}-{n+100:03d}' for n in range(0, 500, 100)]+['integration-restart'],
         'catalog': [name for mode in CATALOG_MODES for name in ('kat2-'+mode+'-import', 'kat2-'+mode)]
                    + ['kat2-adapter-export', 'kat2-adapter-register', 'kat2-image-processing'],
-        'completion': ['ea-import', 'ea-native', 'ea-restart'],
+        'completion': ['ea-import', 'ea-native', 'ea-restart', 'ea-image-processing'],
         'adapters': [f'rp6-t{n:02d}-{s}' for n in (4,6,8,9) for s in ('partial','finish','read','render')]
                     + ['rp6-t04-foreign-slot-write', 'rp6-t04-foreign-slot-control', 'za1-test-only-registration',
                        'za1-import', 'za1-save-recovery', 'za1-seed-old-slots', 'za1-windows-export', 'za1-pck-resources']

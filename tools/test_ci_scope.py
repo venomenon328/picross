@@ -101,7 +101,7 @@ class SelectionTests(unittest.TestCase):
             self.assertFalse(value["production"] or value["preflight"])
 
     def test_runtime_resources_select_native_regression(self):
-        for path in ("game/ui/cell_atlas.gd", "tools/perf_b_resources.py", "tools/cell_atlas_reference.json", "game/tests/perf_b_cases.gd"):
+        for path in ("game/ui/cell_atlas.gd", "game/art/cells/x-small.png", "tools/perf_b_resources.py", "tools/cell_atlas_reference.json", "game/tests/perf_b_cases.gd"):
             value = classify([path])["selected"]
             self.assertTrue(value["visual"] and value["perf_b"] and value["product"])
             self.assertFalse(value["integration"] or value["preflight"])

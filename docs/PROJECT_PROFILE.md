@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**CI / #246 (18.10.2026), CI-A/CI-B implementiert; CI-C offen:**
+**CI / #246 (18.10.2026), CI-A/CI-B integriert; CI-C implementiert, separate Abnahme offen:**
 Die [CI-Policy](CI_POLICY.md) bindet die gestufte Straffung:
 [CI-A (#247)](https://github.com/venomenon328/picross/issues/247) wählt reine
 Facharbeit und die einzelne PR-Vorlage eng aus und entkoppelt Product, Browser und
@@ -13,7 +13,8 @@ unabhängige Browsergruppen, Chromium/Firefox auf getrennten Runnern und das
 Fail-closed-Gate für tatsächliche Szenarien/Belege. T01/R01 stehen im Paket-PR.
 [CI-C (#249)](https://github.com/venomenon328/picross/issues/249) trennt native
 Prüfgruppen und beschleunigt nach Messung die verlustfreie Bildaufbereitung.
-CI-A kommt zuerst; CI-B vor CI-C ist empfohlen, keine technische Voraussetzung.
+Der [native Gruppenvertrag](CI_C_NATIVE_GROUPS.md) bindet Inventar, Isolation,
+Bildmessung und vollständiges Artefaktgate. CI-C-R01 bleibt separat vor Merge.
 Vor Integration des jeweiligen Pakets gelten die bestehenden ausführbaren
 Pflichtchecks weiter. Exakter Gesamtdiff, konservative gemeinsame/unbekannte
 Wirkung, nur erweiternde manuelle Auswahl, vollständiges `ci-required` und getrennte
@@ -314,10 +315,10 @@ $gameCache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
 python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-product
 ```
 
-Bis CI-C sind alle vier ergänzenden Bereiche lokal standardmäßig aktiv; CI
-übergibt jede Auswahl explizit. Die freigegebene eigenständige Auswahl von Katalog,
-Abschluss und weiteren nativen Gruppen wird erst mit CI-C wirksam. Bis dahin
-bleiben die vorhandenen Schalter und Kopplungen die Ausführungsgrundlage.
+Lokal ist die Vereinigung aller sieben nativen Gruppen aktiv; CI übergibt
+`--groups` mit ihrer exakten Auswahl. `catalog` und `completion` benötigen keine
+500er-Route. Der [Gruppenvertrag](CI_C_NATIVE_GROUPS.md) beschreibt die konservative
+Pfadzuordnung und die ausschließlich erweiternde manuelle Kompatibilitätsauswahl.
 Der allgemeine Harness verwendet sechs feste synthetische Muster T-01/T-02/T-04/
 T-06/T-08/T-09, unabhängig vom Produktionsbestand. Der weiterhin `--pilots` genannte
 Bereich prüft vier dieser technischen Fälle; echte Rätsel werden nicht replayt.

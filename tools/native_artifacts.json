@@ -840,5 +840,304 @@
       "vs2-write.json"
     ],
     "export": []
-  }
+  },
+  "report_contracts": {
+    "kat2/adapter.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "adapter"
+      }
+    },
+    "kat2/empty.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "empty"
+      }
+    },
+    "kat2/information.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "information"
+      }
+    },
+    "kat2/invalid.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "invalid"
+      }
+    },
+    "kat2/kb.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "kb"
+      }
+    },
+    "kat2/ke.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "ke"
+      }
+    },
+    "kat2/kk.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "kk"
+      }
+    },
+    "kat2/large.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "large"
+      }
+    },
+    "kat2/regular.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "regular"
+      }
+    },
+    "kat2/restart.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "restart"
+      }
+    },
+    "ea/native.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "native"
+      }
+    },
+    "ea/restart.json": {
+      "failures": "empty-list",
+      "checks": "positive-int",
+      "mode": {
+        "equals": "restart"
+      }
+    },
+    "renders/rp6-t04-renders.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "renders/rp6-t06-renders.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "renders/rp6-t08-renders.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "renders/rp6-t09-renders.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-color-finish.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-color-oldreset.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-color-partial.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-color-read.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-color-reset.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-mono-finish.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-mono-partial.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-mono-read.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-mono-reset.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "za1/pz-test-direct-mono-seed.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "drawing-renders/zs2-after.json": {
+      "failures": "zero-int"
+    },
+    "hc92-renders/hc92-acceptance.json": {
+      "status": {
+        "equals": "success"
+      }
+    },
+    "hc92-renders/hc92-native.json": {
+      "failures": "zero-int"
+    },
+    "hf149/hf-native.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "hf149/hf-read.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "hf149/hf-write.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "hn192/hn-native.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "hs186/hs-acceptance.json": {
+      "status": {
+        "equals": "success"
+      }
+    },
+    "hs186/hs-native.json": {
+      "failures": "zero-int"
+    },
+    "perf-b/probe.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "renders/render-report-axis.json": {
+      "failed": "false"
+    },
+    "renders/render-report-cells-f1.json": {
+      "failed": "false"
+    },
+    "renders/render-report-cells-f2.json": {
+      "failed": "false"
+    },
+    "renders/render-report-h1.json": {
+      "failed": "false"
+    },
+    "renders/render-report-layout.json": {
+      "failed": "false"
+    },
+    "renders/z2-renders.json": {
+      "failed": "false"
+    },
+    "v1-renders/v1-focused.json.gz": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "v2-renders/v2-read.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "v2-renders/v2-write.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "v3-renders/v3-report.json": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "vs2-read.json": {
+      "failures": "zero-int"
+    },
+    "vs2-renders/vs2-matrix.json.gz": {
+      "failures": "zero-int",
+      "checks": "positive-int"
+    },
+    "vs2-write.json": {
+      "failures": "zero-int"
+    }
+  },
+  "catalog_direct_images": [
+    "kat2/ke-graphics-1280-ui125-Begonnen-after.png",
+    "kat2/ke-graphics-1280-ui125-Begonnen-before.png",
+    "kat2/ke-graphics-1280-ui125-color-after.png",
+    "kat2/ke-graphics-1280-ui125-color-before.png",
+    "kat2/ke-graphics-1280-ui125-mono-after.png",
+    "kat2/ke-graphics-1280-ui125-mono-before.png",
+    "kat2/ke-graphics-1280-ui125-png-catalog-after.png",
+    "kat2/ke-graphics-1280-ui125-png-catalog-before.png",
+    "kat2/ke-graphics-1280-ui125-png-end-after.png",
+    "kat2/ke-graphics-1280-ui125-png-end-before.png",
+    "kat2/ke-graphics-1280-ui125-png-motion-after.png",
+    "kat2/ke-graphics-1280-ui125-png-motion-before.png",
+    "kat2/ke-graphics-1280-ui125-svg-catalog-after.png",
+    "kat2/ke-graphics-1280-ui125-svg-catalog-before.png",
+    "kat2/ke-graphics-1280-ui125-svg-end-after.png",
+    "kat2/ke-graphics-1280-ui125-svg-end-before.png",
+    "kat2/ke-graphics-1280-ui125-svg-motion-after.png",
+    "kat2/ke-graphics-1280-ui125-svg-motion-before.png",
+    "kat2/ke-graphics-1920-ui100-Begonnen-after.png",
+    "kat2/ke-graphics-1920-ui100-Begonnen-before.png",
+    "kat2/ke-graphics-1920-ui100-color-after.png",
+    "kat2/ke-graphics-1920-ui100-color-before.png",
+    "kat2/ke-graphics-1920-ui100-mono-after.png",
+    "kat2/ke-graphics-1920-ui100-mono-before.png",
+    "kat2/ke-graphics-1920-ui100-png-catalog-after.png",
+    "kat2/ke-graphics-1920-ui100-png-catalog-before.png",
+    "kat2/ke-graphics-1920-ui100-png-end-after.png",
+    "kat2/ke-graphics-1920-ui100-png-end-before.png",
+    "kat2/ke-graphics-1920-ui100-png-motion-after.png",
+    "kat2/ke-graphics-1920-ui100-png-motion-before.png",
+    "kat2/ke-graphics-1920-ui100-svg-catalog-after.png",
+    "kat2/ke-graphics-1920-ui100-svg-catalog-before.png",
+    "kat2/ke-graphics-1920-ui100-svg-end-after.png",
+    "kat2/ke-graphics-1920-ui100-svg-end-before.png",
+    "kat2/ke-graphics-1920-ui100-svg-motion-after.png",
+    "kat2/ke-graphics-1920-ui100-svg-motion-before.png",
+    "kat2/ke-graphics-1920-ui125-Begonnen-after.png",
+    "kat2/ke-graphics-1920-ui125-Begonnen-before.png",
+    "kat2/ke-graphics-1920-ui125-color-after.png",
+    "kat2/ke-graphics-1920-ui125-color-before.png",
+    "kat2/ke-graphics-1920-ui125-mono-after.png",
+    "kat2/ke-graphics-1920-ui125-mono-before.png",
+    "kat2/ke-graphics-1920-ui125-png-catalog-after.png",
+    "kat2/ke-graphics-1920-ui125-png-catalog-before.png",
+    "kat2/ke-graphics-1920-ui125-png-end-after.png",
+    "kat2/ke-graphics-1920-ui125-png-end-before.png",
+    "kat2/ke-graphics-1920-ui125-png-motion-after.png",
+    "kat2/ke-graphics-1920-ui125-png-motion-before.png",
+    "kat2/ke-graphics-1920-ui125-svg-catalog-after.png",
+    "kat2/ke-graphics-1920-ui125-svg-catalog-before.png",
+    "kat2/ke-graphics-1920-ui125-svg-end-after.png",
+    "kat2/ke-graphics-1920-ui125-svg-end-before.png",
+    "kat2/ke-graphics-1920-ui125-svg-motion-after.png",
+    "kat2/ke-graphics-1920-ui125-svg-motion-before.png",
+    "kat2/ke-graphics-2560-ui125-Begonnen-after.png",
+    "kat2/ke-graphics-2560-ui125-Begonnen-before.png",
+    "kat2/ke-graphics-2560-ui125-color-after.png",
+    "kat2/ke-graphics-2560-ui125-color-before.png",
+    "kat2/ke-graphics-2560-ui125-mono-after.png",
+    "kat2/ke-graphics-2560-ui125-mono-before.png",
+    "kat2/ke-graphics-2560-ui125-png-catalog-after.png",
+    "kat2/ke-graphics-2560-ui125-png-catalog-before.png",
+    "kat2/ke-graphics-2560-ui125-png-end-after.png",
+    "kat2/ke-graphics-2560-ui125-png-end-before.png",
+    "kat2/ke-graphics-2560-ui125-png-motion-after.png",
+    "kat2/ke-graphics-2560-ui125-png-motion-before.png",
+    "kat2/ke-graphics-2560-ui125-svg-catalog-after.png",
+    "kat2/ke-graphics-2560-ui125-svg-catalog-before.png",
+    "kat2/ke-graphics-2560-ui125-svg-end-after.png",
+    "kat2/ke-graphics-2560-ui125-svg-end-before.png",
+    "kat2/ke-graphics-2560-ui125-svg-motion-after.png",
+    "kat2/ke-graphics-2560-ui125-svg-motion-before.png"
+  ]
 }

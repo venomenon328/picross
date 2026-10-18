@@ -7,7 +7,7 @@ from product_fixtures import copy_regression_game
 from p1_preflight import PreflightError
 
 
-def run(root, workspace, output, engine, environment, phase, host):
+def run(root, workspace, output, engine, environment, phase, python_phase, host):
     directory = output / "ea"
     directory.mkdir()
     project = workspace / "ea/game"
@@ -37,6 +37,10 @@ def run(root, workspace, output, engine, environment, phase, host):
         if report["failures"] or not report["checks"]:
             raise PreflightError("EA native assertions failed")
         reports.append(report)
+    return python_phase("ea-image-processing", lambda: prepare_images(directory, reports))
+
+
+def prepare_images(directory, reports):
     # Lossless animated PNG, actual native frames/timestamps; no interpolated art.
     from PIL import Image
     sequence = reports[0]["sequence"]

@@ -18,14 +18,12 @@ Merge der KB-Arbeit durch EA. Ein Paket, keine neuen Assets oder Produktoptionen
 | EA-A07 | Keine Animation im Save, keine Timer je Zelle, keine dauerhafte Frameverarbeitung. Transiente Kommandos/Materialreferenz werden am Ende freigegeben; Artwork beim Verlassen. Regulärer Export-/PCK-Audit und PERF-B bleiben verpflichtend. |
 | EA-A08 | Vertragstexte und Spielanleitung aktualisiert; tatsächlicher Voll-Diff, getrenntes Selbstreview und aktuelle Head-/Basis-/Checkout-/Run-Bindung im Draft-PR. |
 
-Bis zur Integration von [CI-C (#249)](https://github.com/venomenon328/picross/issues/249)
-läuft `tools/ea_product.py` im bestehenden `--integration`-Pfad des Produktharness.
-Der am 18.10.2026 freigegebene Sollvertrag der [CI-Policy](CI_POLICY.md) ist noch
-nicht implementiert. CI-C trennt eine unabhängig auswählbare native Abschlussgruppe
-von der 500er-Route; gemeinsame Save-/UI-/Renderabhängigkeiten wählen weiterhin
+[CI-C (#249)](CI_C_NATIVE_GROUPS.md) startet `tools/ea_product.py` über
+`--groups completion` als unabhängige native Abschlussgruppe.
+Die [CI-Policy](CI_POLICY.md) bestimmt die Auswahl getrennt von der 500er-Route; gemeinsame Save-/UI-/Renderabhängigkeiten wählen weiterhin
 alle betroffenen Gruppen. Aktuelle Bewegung, sofortiger Commit/Save, echter
-Prozessneustart, Reset und Exportaussagen bleiben erhalten. Vor CI-C gelten die
-vorhandenen ausführbaren Auswahlpflichten weiter.
+Prozessneustart, Reset und Exportaussagen bleiben erhalten. Der getrennte Import
+und die echte native/restart-Profilfolge bleiben unverändert verpflichtend.
 
 Der Harness verwendet ausschließlich temporär erzeugte technische Fixtures aus dem festen
 Katalog und den kleinen Web-Fällen, keine rätselspezifische Produktionsrekonstruktion.

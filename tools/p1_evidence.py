@@ -99,6 +99,11 @@ def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[l
     oracle_inputs = {Path(path) for path in pixel_inputs} & bound
     priority = oracle_inputs or native_failures or phase_images
     partial = list(output.glob("renders/failure-*.png"))
+    # A failed crop/animation phase may have renamed its original frame before
+    # the compact summary exists. Keep these real inputs for diagnosis as well.
+    for area, prefix in (('kat2', 'kat2-'), ('ea', 'ea-'), ('za1', 'za1-')):
+        if phase.startswith(prefix):
+            partial += list(output.glob(area+'/*.png')) + list(output.glob(area+'/*.apng'))
     return list(set(reports) | bound | set(partial)), list(priority | set(partial))
 
 
@@ -170,7 +175,7 @@ class Evidence:
         if missing:
             raise missing
 
-    def retain_files(self, sources: list[Path], priority_sources=()) -> None:
+    def retain_files(self, sources: list[Path], priority_sources=(), allow_partial=False) -> None:
         """Select native originals; never resize an image or replace an assertion."""
         began = time.monotonic()
         selection_root = self.technical / "selected"
@@ -182,10 +187,12 @@ class Evidence:
         for path in sorted(set(sources), key=lambda p: (
                 p not in priority, "failure" not in p.name, p.suffix == ".png",
                 p.stat().st_size if p.is_file() else 0, str(p))):
-            if not path.is_file():
-                raise toolchain.PreflightError("Missing selected evidence: " + str(path))
-            if path.stat().st_size == 0:
-                raise toolchain.PreflightError("Empty selected evidence: " + str(path))
+            if not path.is_file() or path.stat().st_size == 0:
+                if allow_partial:
+                    omitted.append(dict(file=path.relative_to(self.output).as_posix(),
+                                        reason='missing/empty during failed run'))
+                    continue
+                raise toolchain.PreflightError("Missing/empty selected evidence: " + str(path))
             relative = path.relative_to(self.output)
             size = path.stat().st_size
             target = self.technical / "selected" / relative

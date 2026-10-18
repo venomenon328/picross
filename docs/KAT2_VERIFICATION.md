@@ -66,11 +66,10 @@ Saveprofile. Die 300 Runtimekopien dienen Last und Navigation; keine 300 echten
 Produktionen oder Solverläufe. Das zusätzliche Adapterpaket besitzt ausschließlich
 eine künstliche Testfreigabe. Nichts davon wird ins reguläre Spielerpaket kopiert.
 
-Bis zur Integration von [CI-C (#249)](https://github.com/venomenon328/picross/issues/249)
-führt `--integration` KAT-2 zusammen mit der bisherigen 500er-Route aus.
-Die am 18.10.2026 freigegebene [CI-Spezifikation](CI_POLICY.md) ist noch nicht
-implementiert und erlaubt bis dahin kein Überspringen ausgewählter Pflichtchecks.
-CI-C liefert eine eigenständig auswählbare Kataloggruppe mit sämtlichen aktuellen
+[CI-C (#249)](CI_C_NATIVE_GROUPS.md) führt KAT-2 über `--groups catalog`
+unabhängig von der 500er-Route aus. Die [CI-Policy](CI_POLICY.md) und das
+Gruppeninventar bestimmen alle weiterhin verpflichtenden Nachweise.
+Die eigenständig auswählbare Kataloggruppe erhält sämtliche aktuellen
 Eingabe-, Fehler-, Last-, Neustart-, Frame- und Exportaussagen. Katalogarbeit wählt
 die 500er-Route oder alle Adapter/Piloten danach nur bei tatsächlicher gemeinsamer
 Abhängigkeit. Die gezielte KAT-1-Adapterzuwachsprobe bleibt Teil ihres Vertrags.
@@ -78,7 +77,7 @@ Abhängigkeit. Die gezielte KAT-1-Adapterzuwachsprobe bleibt Teil ihres Vertrags
 Save-/Recovery-, Pilot-, aktuelle Pixel-/PERF-B-, Ressourcen-, Export- und
 PCK-Prüfungen bleiben im jeweils relevanten Scope erhalten. Der vollständige
 Base-/Head-Diff und gemeinsame/unbekannte Harnesswirkung bestimmen die Vereinigung
-nach CI-Policy; native Gruppenwahl gilt erst nach CI-C. Reale Prozessneustarts
+nach CI-Policy und CI-C-Gruppenvertrag. Reale Prozessneustarts
 und absichtlich gemeinsame Profile innerhalb einer Prüffolge werden nicht durch
 vorbereitete Ersatzstände abgelöst.
 
