@@ -8,13 +8,16 @@ from browser_runtime import options
 def choose_sort(page, index):
     control(page, name='catalog-sort')
     wait(page, 'picrossProbe.sort.menu.visible')
-    menu = state(page, 'sort')['sort']['menu']
-    x, y = menu['position']
-    height = menu['size'][1]
-    target = [x + menu['size'][0]/2, y + 4 + (index + .5)*(height-8)/4]
-    page.mouse.move(*point(page, target), steps=5)
-    wait(page, f'picrossProbe.sort.menu.focused === {index}')
-    click(page, point(page, target))
+    # Real keyboard navigation avoids browser-specific mouse-motion coalescing
+    # inside Godot's embedded popup, while exercising its normal focus route.
+    for _ in range(5):
+        focused = state(page, 'sort')['sort']['menu']['focused']
+        if focused == index:
+            break
+        page.keyboard.press('ArrowDown')
+        wait(page, f'picrossProbe.sort.menu.focused !== {focused}')
+    assert state(page, 'sort')['sort']['menu']['focused'] == index
+    page.keyboard.press('Enter')
     criterion = ('category', 'size', 'difficulty', 'added')[index]
     wait(page, f"picrossProbe.sort.criterion === '{criterion}'")
 

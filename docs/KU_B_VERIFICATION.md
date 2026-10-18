@@ -11,7 +11,7 @@ wurde separat in `dcc9006` versioniert; [Bestandsnachtrag](KU_B_BACKFILL.md).
 | Kriterien | Implementierung und synthetische Nachweise |
 | --- | --- |
 | A01–A03 | Katalogsortierung über redaktionelle Kategorie, Zellanzahl, bestehende Stufe und UTC; Primärrichtung, kanonische Gleichstände, unbekannte Werte hinten. `ku_b_cases.gd`, native 300-Karten-Matrix und Browser `KU-B01`. |
-| A04 | Eigene atomare native Präferenz; echte Dateisystemfehler, Lesefallback, Wiederholung und getrennte Browser-Flushgenerationen. `ku_b_cases.gd`, Browser `KU-B02` einschließlich echtem Prozessneustart und IndexedDB-Fehler. |
+| A04 | Eigene atomare native Präferenz; echte Dateisystemfehler, Lesefallback, Wiederholung und getrennte Browser-Flushgenerationen. `ku_b_cases.gd`, nativer Zwei-Prozess-`p13_roundtrip.gd`, Browser `KU-B02` einschließlich echtem Prozessneustart und IndexedDB-Fehler. |
 | A05 | Gesamten Filter sortieren, dann 24 Karten; Rückkehr-/Seiten-/Scrollzustand und feste IDs. Bestehende KAT/KK-Reset-/Recoveryrouten bleiben erhalten; Adapter-/Saveprüfungen adressieren ihre ID unabhängig von Anzeigeindizes. |
 | A06–A07 | Gemeinsamer Projektor, neue und alte Journale, Namespace-/Quellen-/Fremdbyteguards, Registrierung ohne Planzeit, unveränderte Updates und Recovery direkt nach v4. `test_catalog_added`, bestehende Integrations-/Updatefälle und eingefrorene Legacy-Recoverybytes. |
 | A08–A09 | Getrennter expliziter Git-/PR-Plan, dauerhaft gebundene Quellen und tatsächliche Übernahme für alle 26 IDs. Identische Wiederholung: 28 Dateien byte-/mtimegleich, kein Journal. Kein Rätsel-/Bewertungs-/Produktionsreplay und keine Saveänderung. Synthetische Verläufe prüfen Quellenpriorität, Konflikt, unbekannt, Stale-Plan und No-op. |
@@ -40,7 +40,9 @@ uncommittetem Stand sind keine finale Head-Abnahme.
 
 ## Offene Gates
 
-KU-B-T01 bleibt bis zu den vollständig gebundenen finalen Prüfungen offen.
+Der aktuelle KU-B-T01-Status mit unveränderlichen Originalnachweisen steht im
+[Implementierungs-PR #255](https://github.com/venomenon328/picross/pull/255).
+Er wird erst nach den vollständig gebundenen finalen Prüfungen als erfüllt geführt.
 KU-B-R01 (separater qualifizierter Review) und KU-B-M01 (Eigentümerprobe) sind
 weiterhin getrennt vor Merge erforderlich. Kein Merge, Deployment oder Abschluss
 von Issue #244 durch diese Lieferung.
