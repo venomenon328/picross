@@ -1,5 +1,27 @@
 # Projektprofil: picross
 
+**KU / #244 (18.10.2026), Spezifikation freigegeben; Umsetzung offen:**
+[Katalogdarstellung](CATALOG_PRESENTATION.md) und
+[Katalogsortierung](CATALOG_SORTING.md) sind bei Katalog-/Metadatenarbeit
+vollständig zu lesen. KU-A ersetzt die zweizeilige KE-Infobox durch einen
+gemeinsamen Papierstreifen mit Größe, gefülltem Schwierigkeitskreis samt vollem
+Namen und größeren Modussymbolen; der einzelne Monostift verliert die Farbprobe.
+Schwierigkeitstooltips entfallen, Modus-/Resettooltips bleiben. Die Fußzeile zeigt
+Blattkennung links und Neu/Begonnen/Gelöst rechts. Gemeinsame Kartenbreite folgt
+den tatsächlichen vollständigen Text-/Symbolmaßen bei UI100/125, bei Bedarf mit
+weniger Spalten. KU-B ergänzt Kategorie-/Zellzahl-/Schwierigkeits-/Hinzugefügt-
+Sortierung, eigene gemerkte UI-Präferenz und den kompatiblen Metadatenweg für
+erste Katalogaufnahme samt belegter historischer Übernahme. Werte, IDs und
+Spielstände werden dadurch nicht neu bewertet oder migriert.
+
+KU-A und KU-B sind eigenständig abzunehmende Pakete im
+[Gesamtissue](https://github.com/venomenon328/picross/issues/244), Standard je
+ein Implementierungs-PR, KU-B nach KU-A. Technische Lieferung, separater Review
+und Eigentümerprobe sind je Paket vor Merge erforderlich. Der reine
+Spezifikationsauftrag ändert keinen Produktcode und startet keinen Backfill.
+Die folgenden KE-/KAT-Abschnitte beschreiben die integrierte Ausgangsbasis;
+ihre gezielt abgelösten Anzeige-/Sortierregeln gelten nicht als neuer KU-Sollstand.
+
 **SD / #235 (18.10.2026), SD-A/SD-B/SD-C1 integriert; SD-C2 übernommen, finales Review offen:**
 [Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) bindet die wiederholbare
 Einstufung 1–5: instrumentierte Logik und Lösungsfluss, begrenzter Größenbeitrag,

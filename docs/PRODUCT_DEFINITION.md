@@ -1,5 +1,23 @@
 # Produktdefinition: picross
 
+**KU / #244, am 18.10.2026 als Spezifikation freigegeben; noch nicht implementiert:**
+[Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt in KU-A die bisherige
+zweizeilige Infobox durch einen gemeinsamen Papierstreifen: Größe links,
+gefüllter farbiger Kreis mit vollständigem Schwierigkeitsnamen in der Mitte,
+größeres Mono-/Farbpiktogramm rechts. Die Fünferskala und vorhandenen Werte bleiben;
+die sichtbare Ziffer und Schwierigkeitstooltips entfallen. Fehlende Einstufung
+erscheint neutralgrau als „Nicht eingestuft“. Der Monostift steht ohne Farbprobe
+zentriert; das Farbsymbol behält drei Stifte. Die Fußzeile trägt „Blatt NN“ links
+und Statussymbol mit „Neu“, „Begonnen“ oder „Gelöst“ rechts. Dies ersetzt das
+bisherige sichtbare „Fertig“, ohne Statusmodell oder Saves zu ändern.
+[Katalogsortierung](CATALOG_SORTING.md) ergänzt in KU-B neben dem Kategorienfilter
+die Sortierung nach Kategorie, Größe, Schwierigkeit und Hinzugefügt-Datum samt
+Richtung. Karten bleiben gleich groß; vollständige Metadaten bei UI 100/125 %,
+Spoilergrenze, ausreichender Bildraum und vorhandene Bedien-/Recoverywege bleiben
+verbindlich. [Gesamtissue #244](https://github.com/venomenon328/picross/issues/244)
+führt die beiden eigenständigen Entwicklungspakete. Spezifikationsfreigabe startet
+weder Implementierung noch Merge.
+
 **SD / #235, freigegebener Sollvertrag vom 17.10.2026:**
 [Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) konkretisiert §3.2 mit einer
 wiederholbaren Einstufung und begrenztem Größeneinfluss. Alle fünf Stufen sollen
@@ -12,15 +30,18 @@ Folgeauftrag 26 Bewertungen kontrolliert übernommen; die Anzeige verwendet jetz
 17 × L3, 8 × L4 und 1 × L5 aus Methode 0.3. Historische Produktionsbindungen bleiben
 unverändert. Separates qualifiziertes finales Datenreview und Merge bleiben offen.
 
-**KE / #233, mit PR #234 am 17.10.2026 integriert:**
-[Katalogdarstellung](CATALOG_PRESENTATION.md) bindet eine passive Papierinfobox
+**KE / #233, mit PR #234 am 17.10.2026 integriert; Ausgangsstand für KU:**
+Die damalige [Katalogdarstellung](CATALOG_PRESENTATION.md) lieferte eine passive
+Papierinfobox
 mit Größe, Mono-/Farbpiktogramm, vorhandener Schwierigkeit als Zahl 1–5 plus Name
-und Status Neu/Begonnen/Fertig. Neue Rätsel zeigen ein gezeichnetes Fragezeichen;
-begonnene nur eigene Füllungen, fertige das verdiente farbige Reveal. Keine neue
-Schwierigkeitsbewertung, Progression oder Saveänderung. Dieser Sollvertrag ersetzt
-gezielt die nachfolgend beschriebene integrierte KK-Metadaten-/Fußzeilenanordnung.
-KE-N1 hält Schätzung und Unsicherheit im gezielten Texttooltip; fehlende Einstufung
-bleibt neutral. Verdiente Reveals und Stiftpiktogramme werden lokal geglättet.
+und Status Neu/Begonnen/Fertig. KU löst diese Anordnung, Ziffer und Katalogbezeichnung
+gezielt gemäß obigem Sollvertrag ab. Neue Rätsel zeigen weiterhin ein gezeichnetes
+Fragezeichen; begonnene nur eigene Füllungen, fertige das verdiente farbige Reveal. Keine neue
+Schwierigkeitsbewertung, Progression oder Saveänderung. KE hatte die nachfolgend
+beschriebene KK-Metadaten-/Fußzeilenanordnung ersetzt. KE-N1 zeigte Schätzung und
+Unsicherheit im gezielten Texttooltip; KU-A entfernt diesen Tooltip. Fehlende
+Einstufung bleibt neutral. Die lokale Glättung verdienter Reveals und
+Stiftpiktogramme bleibt. Historische KE-Liefernachweise werden nicht neu bewertet.
 
 **KK / #174** führt den kompakten Katalog aus KB fort: Alle Karten und Grid-Zellen
 haben je Fenster/UI dieselben festen Bereiche. Einzige Überschrift ist das verdiente

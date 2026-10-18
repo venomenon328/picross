@@ -1,5 +1,15 @@
 # KAT-2: Kategorienkatalog und Prüfzuordnung
 
+**KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
+[Katalogsortierung](CATALOG_SORTING.md) ergänzt die Bedienleiste und sortiert den
+vollständigen gefilterten Bestand vor der bestehenden Seiteneinteilung. Die
+letzte Sortierauswahl samt Richtung wird als eigene lokale UI-Präferenz gemerkt;
+Kategorie, Seite und Scrollposition bleiben Sitzungskontext. Blattnummer und
+Aktionen bleiben bei Ansichtswechseln an das gleiche Rätsel gebunden. Die unten
+beschriebenen KAT-2-Liefernachweise bleiben historische Basis; neue Sortier-,
+Neustart- und Datumsnachweise gehören zu KU-B. KU-A verändert zuvor die
+Kartenzeichnung gemäß [Katalogdarstellung](CATALOG_PRESENTATION.md).
+
 Implementierung zu [#79](https://github.com/venomenon328/picross/issues/79),
 auf `main@ca22f53caaacbae6883a6a2496d0d3e6e9381408` nach KAT-1/PR #80.
 PR #77 ist bei Arbeitsbeginn offen/Draft; Knoblauch ist nicht integriert.

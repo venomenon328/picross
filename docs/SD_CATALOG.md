@@ -1,5 +1,16 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
+**KU / #244, freigegebene Ergänzung vom 18.10.2026; Umsetzung offen:**
+[Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt mit KU-A ausschließlich
+sichtbare Schwierigkeitsziffern durch gefüllte Kreise und entfernt die bisherigen
+Schwierigkeitstooltips. Das löst die entsprechenden unten beschriebenen
+KE-/SD-C1-Anzeigepflichten ab, ohne Ratings, Aussagegrenzen oder die sechs
+Difficultyfelder zu ändern. KU-B ergänzt nach
+[Katalogsortierung](CATALOG_SORTING.md) eigene Hinzugefügt-Metadaten und eine
+gemeinsame kompatible Projektion/Recovery; die exakt dokumentierten v2/v3-
+Runtimeformate dürfen dafür nicht still umgedeutet werden. Keine neue
+Schwierigkeitsanalyse, Kalibrierung oder Bewertungsübernahme durch KU.
+
 Stand: 18.10.2026 · Vertrag 1.1 · SD-C-P01 und SD-C-R01/C1-N01 aus
 [#238](https://github.com/venomenon328/picross/issues/238).
 Die folgenden Formate wurden vor der ersten Codeänderung festgelegt und werden
@@ -138,8 +149,10 @@ werden weder ignoriert noch bereinigt. Ein wirklich fehlendes Sidecar bleibt zul
 
 Die Runtime bleibt v3 mit exakt sechs Difficultyfeldern. 0.3 verwendet L1…L5,
 `instrumented`, `medium`, das geprüfte R4-Flag und `[Lx,Lx]` als Punktprojektion.
-Der Tooltip erklärt Modellschätzung, mittlere Aussagekraft und fehlende menschliche
-Kalibrierung. Diese Spanne ist kein menschliches Unsicherheitsintervall. Runtime-v2
+Die bisherige KE-/SD-C1-Anzeige erläutert diese Angaben im Tooltip; die freigegebene
+KU-A-Darstellung entfernt diesen Tooltip. Modellschätzung, mittlere Aussagekraft
+und fehlende menschliche Kalibrierung bleiben fachlich unverändert. Diese Spanne
+ist kein menschliches Unsicherheitsintervall. Runtime-v2
 behält exakt sieben Eintragsfelder; 0.1/0.2 bleiben unverändert lesbar.
 
 Neue Registrierung und logikrelevante Definitionsänderung verlangen 0.3.
