@@ -190,13 +190,34 @@ class NativeGate(unittest.TestCase):
         for name,scope in report['scope'].items():
             scope.update(enabled=name=='integration',status='success' if name=='integration' else 'not_applicable')
         selected=self.root/'history/selected'
-        write(selected/'integration/summary.json',dict(synthetic=True))
+        summary=dict(actions=500,categories=dict(cell=500),final_cursor=1,final_history_size=2,
+                     final_cells_sha256='a'*64,negative_controls=[
+                         'tampered expected change failed at its action number','499-action trace rejected'],
+                     restart='synthetic separate-process fixture')
+        write(selected/'integration/summary.json',summary)
+        report['integration']=summary
         report['selected_evidence']['files']=bind_files(selected)
         write(self.root/'history/product-report.json',report)
         self.result.update(groups=['history'],expected=coverage(['history']),
                            results=[dict(group='history',status='success',exit_code=0)])
         self.result['files']=bind_files(self.root,exclude={'native-result.json'})
         validate_payload(self.result,self.root)
+        for field,value in [('actions',499),('negative_controls',[]),('final_cursor',2),('final_cells_sha256','bad')]:
+            changed={**summary,field:value}
+            write(selected/'integration/summary.json',changed)
+            report['integration']=changed
+            report['selected_evidence']['files']=bind_files(selected)
+            write(self.root/'history/product-report.json',report)
+            self.result['files']=bind_files(self.root,exclude={'native-result.json'})
+            with self.subTest(field=field),self.assertRaisesRegex(ValueError,'500-action'):
+                validate_payload(self.result,self.root)
+        write(selected/'integration/summary.json',summary)
+        report['integration']={**summary,'actions':499}
+        report['selected_evidence']['files']=bind_files(selected)
+        write(self.root/'history/product-report.json',report)
+        self.result['files']=bind_files(self.root,exclude={'native-result.json'})
+        with self.assertRaisesRegex(ValueError,'500-action'):validate_payload(self.result,self.root)
+        report['integration']=summary
         (selected/'integration/summary.json').unlink()
         report['selected_evidence']['files']=[]
         write(self.root/'history/product-report.json',report)

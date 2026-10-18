@@ -163,6 +163,19 @@ def validate_payload(result, root, player_root=None):
                             value == [] if rule == 'empty-list' else value is False)
                 if not accepted:
                     raise ValueError('Failed original native assertions: '+name+'/'+field)
+        if group == 'history':
+            summary = read(directory/'selected/integration/summary.json')
+            categories = summary.get('categories', {})
+            if (report.get('integration') != summary or summary.get('actions') != 500
+                    or not isinstance(categories, dict) or not categories
+                    or any(type(v) is not int or v <= 0 for v in categories.values())
+                    or sum(categories.values()) != 500
+                    or not 0 <= summary.get('final_cursor', -1) < summary.get('final_history_size', 0)
+                    or not re.fullmatch('[0-9a-f]{64}', summary.get('final_cells_sha256', ''))
+                    or summary.get('negative_controls') != [
+                        'tampered expected change failed at its action number', '499-action trace rejected']
+                    or not summary.get('restart')):
+                raise ValueError('Incomplete/inconsistent original 500-action history evidence')
         if group == 'catalog':
             costs = read(directory/'selected/kat2/image-costs.json')
             summary = read(directory/'selected/kat2/summary.json')

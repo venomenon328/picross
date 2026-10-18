@@ -123,6 +123,9 @@ verlangt die bisherigen Pflichtbilder auch dann, wenn ein Producer sie aus seine
 Selbstauskunft entfernt. Die fünf variablen EA-Phasenbilder werden aus den echten
 Sequenzzeitstempeln unabhängig neu bestimmt. Originale Fehler-/Checkfelder und
 KAT-/EA-Unterberichte müssen mit dem aggregierten Bericht übereinstimmen.
+Die originale History-Zusammenfassung muss 500 Aktionen, Kategoriengesamtzahl,
+verbleibenden Redo-Zweig, Zellhash, beide Negativkontrollen und Neustart ausweisen
+und mit dem Gruppenbericht übereinstimmen.
 
 `ci-required` lädt Technik und gegebenenfalls Spieler vom konkreten Product-
 Producer-Versuch herunter und prüft tatsächliche Datei-/SHA-/Größenbindungen,
