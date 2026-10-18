@@ -15,8 +15,9 @@ Methode 0.3 für den ausdrücklichen Einzelaufruf. Aktuelle Profile und
 Produktionsverträge gelten weiter. Die Integration neuer Bewertungen erfolgt
 über [SD-C1](SD_CATALOG.md); ein SD-B-Rating allein ändert keine Produktionsfreigabe.
 Neue Registrierung und logisch geänderte Definitionen verlangen den extern vollständig
-geprüften 0.3-Input. SD-C2 liefert zunächst den geprüften Erstbericht und lesenden
-Plan; aktive Übernahme bleibt hinter separatem qualifiziertem Review/Folgeauftrag.
+geprüften 0.3-Input. SD-C2 hat nach bestandenem Vor-Übernahme-Review gemäß SD-C2-F01
+26 Bewertungen kontrolliert übernommen, einschließlich echtem Wiederholungs-No-op.
+Separates qualifiziertes finales Datenreview und Merge bleiben offen.
 
 [KAT-1](CATEGORIES.md) ergänzt den Produktionsfundus und ZA-1 um thematische Kategorien. Die Zuordnung steht spätestens vor dem kategorisierten Export fest und bleibt außerhalb von Raster-, Logik-, Proof- und Freigabeidentität. Arbeitsindex und Runtime-Registrierung bleiben getrennt.
 

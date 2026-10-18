@@ -4,8 +4,9 @@ Stand: 18.10.2026 · Vertrag 1.1 · SD-C-P01 und SD-C-R01/C1-N01 aus
 [#238](https://github.com/venomenon328/picross/issues/238).
 Die folgenden Formate wurden vor der ersten Codeänderung festgelegt und werden
 von den neuen `catalog_*`-Modulen implementiert. [Befehlsanleitung](../tools/puzzle_production/README.md).
-SD-C1 ist nach qualifiziertem R2 mit PR #242 integriert; SD-C2 liefert zunächst
-Erstbericht und lesenden Plan. Aktive Bestandsbewertungen bleiben unverändert.
+SD-C1 ist nach qualifiziertem R2 mit PR #242 integriert. SD-C2 hat nach bestandenem
+Vor-Übernahme-Review gemäß SD-C2-F01 die 26 Bewertungen kontrolliert übernommen;
+separates qualifiziertes finales Datenreview und Merge bleiben offen.
 [SD](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md) und der eingefrorene
 [SD-B-Vertrag](SD_CALIBRATION.md) gelten unverändert.
 
@@ -248,11 +249,12 @@ Methodenquellen, Referenzen und Grenzen bleiben bytegleich. SD-C-T01/C1 und
 qualifiziertes SD-C-R01/C1 R2 sind erfüllt: PR #242 ist als
 `e93444e5db48e2138d15890e314c60ec4291fea3` integriert, finale C1-CI
 [39071026774](https://github.com/venomenon328/picross/actions/runs/39071026774)
-mit allen sechs damaligen Pflichtjobs erfolgreich. Die C2-Startlieferung umfasst
-ausschließlich Status-Markdown; gemäß vollständigem Diff/CI-Policy sind dafür
+mit allen sechs damaligen Pflichtjobs erfolgreich. Die C2-Lieferung umfasst
+Status-Markdown und die erlaubten Bewertungsdaten; gemäß vollständigem Diff/CI-Policy sind dafür
 `docs` und `ci-required` erforderlich, keine C1-Vollwiederholung.
-A05/A06 werden durch den C2-Erstbericht zur separaten Prüfung geliefert;
-realer A07-Anteil, SD-C-K01 und R01/C2 bleiben offen. #238 und #235 bleiben offen.
+A05/A06 haben das qualifizierte Vor-Übernahme-Review bestanden. A07 real und
+SD-C-K01 sind mit Übernahme/No-op technisch belegt; separates qualifiziertes finales
+R01/C2-Datenreview bleibt offen. #238 und #235 bleiben offen.
 
 | Akzeptanz | Fester technischer Nachweis |
 | --- | --- |
@@ -304,9 +306,55 @@ unter `E:/Zeuch/Coding/picross-sdc2-evidence/sd-c2-first-20261018-a` erhalten,
 außerhalb des Repositorys und gewöhnlicher CI-Artefakte. Previewberichte dürfen
 nicht vorab in die kanonischen Dauerpfade kopiert werden.
 
-**Endgrenze:** separater qualifizierter Reviewer für SD-C-R01/C2 vor `adopt`;
-Selbstreview und Bundleprüfung ersetzen dieses Gate nicht. Erst nach bestandenem
-Review und passendem Folgeauftrag folgt die kontrollierte Übernahme auf demselben
-Branch/PR, einschließlich echtem Wiederholungs-No-op, A07/K01 und finalem
-qualifiziertem Datenreview vor Merge. Diese Lieferung übernimmt keine Bewertung,
-korrigiert keinen Code und autorisiert keinen Merge. #238/#235 bleiben offen.
+Der beschriebene Erstbericht blieb bis zum separaten qualifizierten
+[Vor-Übernahme-Review SD-C-R01/C2 R1](https://github.com/venomenon328/picross/pull/243#pullrequestreview-5560549886)
+unverändert. Dieses Gate ist für Head `8ed57c6499a03d8cef05267ae6a6b93d4f27e185`
+bestanden; der Folgeauftrag SD-C2-F01 autorisiert die anschließende Übernahme.
+
+## SD-C2-F01 · Kontrollierte Übernahme, finales Datenreview offen
+
+Am 18.10.2026 wurden auf `chore/238-bestandsbewertung` / Draft-PR #243
+der bestehende Bericht und die 26 unveränderten checked-v2-Dateien verwendet.
+Starthead war `8ed57c6499a03d8cef05267ae6a6b93d4f27e185`, aktuelle Basis weiterhin
+`e93444e5db48e2138d15890e314c60ec4291fea3`. Vor Mutation wurden alle 835
+versionierten Dateien gegen Git-Blobbytes, sämtliche 210 Originalarbeitsdateien
+gegen Manifest und Sicherungs-ZIP sowie die veröffentlichten Report-/checked-Bytes
+gegen die lokalen Originale geprüft. Alle 130 Quellenbindungen, die drei
+Snapshotbindungen und der SD-B-Freeze passen weiterhin; keine erneute Gesamtanalyse.
+
+`plan-adoption` bestätigte lesend exakt den ursprünglichen Plan: 29 Pfade,
+`open_ids=[]`, unveränderter `report_hash`. Anschließend schrieb allein
+`catalog_analysis adopt` die 26 kanonischen aktiven v2-Sidecars mit
+`rating_revision=1`, die beiden Dauerberichte als `phase=adopted` und
+`game/data/registry.json`. Der [dauerhafte JSON-Bericht](../content/difficulty/reports/sd-c2-first-20261018-a/report.json)
+und seine [lesbare Ableitung](../content/difficulty/reports/sd-c2-first-20261018-a/report.md)
+behalten dieselbe Ergebnisidentität; nur die operative Phase wechselt.
+
+Der vollständige Dateivergleich unmittelbar nach Übernahme belegt genau diese
+29 Datenpfade: 28 Neuanlagen und eine Änderung. Alle übrigen 834 vorhandenen
+versionierten Dateien waren bytegleich zum Starthead. In der Runtime änderten
+sich ausschließlich die sechs Difficultyfelder je ID; Kategorien, IDs, Keys,
+Slots, Reihenfolge und übrige Eintragsfelder sind identisch. Definitionen samt
+Runtime-Revisionen, Hinweise, Assets, historische `production.difficulty` und
+kompakte Integrationsmanifeste bleiben bytegleich. Die anschließende
+Statusdokumentation ist davon getrennt im PR-Diff erkennbar; Saves wurden nicht benutzt.
+
+Der **identische zweite `adopt`-Aufruf** endete mit Exit 0 als `no-op`,
+`changes=[]` und demselben `report_hash`. Vollständiges Dateiinventar,
+SHA-256/Bytezahlen und Dateiänderungszeiten waren vor/nach diesem Aufruf identisch;
+sämtliche Bewertungsrevisionen bleiben 1. Alle 210 Originalarbeitsdateien bleiben
+unverändert. Kein Journal vor dem Lauf oder nach beiden abgeschlossenen Aufrufen;
+kein Recoveryaufruf nötig. Die vorhandene Transaktion prüft alten/neuen Zustand,
+publiziert Runtime zuletzt und entfernt den Lock erst nach Abschlussprüfung.
+Keine Fehlerinjektion am echten Bestand: die synthetischen C1-Recoverybelege bleiben
+unverändert maßgeblich, bei Abbruch gilt weiterhin der obige Recoveryvertrag.
+
+Aktiv sind 17 × L3, 8 × L4 und 1 × L5, alle `instrumented/medium`, keine offene ID.
+A07 real/SD-C-K01 sind damit technisch belegt. Ausführungs-/Hashbelege, Endhead,
+Basis, tatsächlicher Test-Merge, ausgewählte CI und getrennter Selbstreview stehen
+in [PR #243](https://github.com/venomenon328/picross/pull/243).
+**Endgrenze:** separates qualifiziertes finales SD-C-R01/C2-Datenreview am
+tatsächlichen Endhead vor Merge. Der Selbstreview ersetzt dieses Gate nicht.
+Die bedingte Eigentümer-Mergefreigabe ist in #238 dokumentiert; dieser
+Implementierungsauftrag stoppt vor dem finalen Review und führt keinen Merge aus.
+#238/#235 bleiben offen; keine neuen Katalogtests oder CI-Änderungen.

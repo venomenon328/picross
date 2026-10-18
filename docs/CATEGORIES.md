@@ -3,9 +3,10 @@
 **SD-C1, technischer Vertrag vom 17.10.2026:**
 [Bewertungsquelle und Recovery](SD_CATALOG.md) ergänzen die getrennte aktuelle
 Katalogbewertung. Inhalts-v2, Runtime-v3 und der exakte Runtime-v2-Leser bleiben.
-SD-C1 ist mit PR #242 integriert. SD-C2 liefert zunächst den geprüften
-[Erstbericht und lesenden Plan](SD_CATALOG.md); bisherige Katalogwerte bleiben
-bis zum separaten Vor-Übernahme-Review und beauftragten `adopt` unverändert.
+SD-C1 ist mit PR #242 integriert. SD-C2 hat nach bestandenem Vor-Übernahme-Review
+gemäß SD-C2-F01 die 26 geprüften Bewertungen und ausschließlich deren Difficultyfelder
+in der Runtime übernommen; [Belege und finales Reviewgate](SD_CATALOG.md).
+Historische Produktionswerte, Kategorien und Identitäten bleiben unverändert.
 
 **KE / #233, Implementierungsvertrag vom 17.10.2026:**
 [KE-D06](CATALOG_PRESENTATION.md) ergänzt minimale typisierte Schwierigkeit.

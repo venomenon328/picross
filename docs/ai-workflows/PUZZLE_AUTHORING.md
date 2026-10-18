@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 17 · 18.10.2026**
+**Version 0.5.0 · Dokumentrevision 18 · 18.10.2026**
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
@@ -11,8 +11,9 @@ Für Schwierigkeitsarbeit zusätzlich [Rätselschwierigkeit](../PUZZLE_DIFFICULT
 und [SD-C1](../SD_CATALOG.md) vollständig lesen. §5.2/§8 binden den externen
 0.3-Input für neue Registrierung und logikrelevante Updates. Authoring 0.5.0,
 versiegelte Pakete und historische 0.1-/0.2-Produktionsbindungen bleiben erhalten.
-SD-C2 liefert zunächst [Erstbericht und lesenden Plan](../SD_CATALOG.md).
-Vor aktiver Übernahme bleiben separates qualifiziertes Review und Folgeauftrag nötig.
+SD-C2 hat nach bestandenem Vor-Übernahme-Review gemäß SD-C2-F01 die
+[26 Bestandsbewertungen kontrolliert übernommen](../SD_CATALOG.md), einschließlich
+echtem Wiederholungs-No-op. Separates qualifiziertes finales Datenreview und Merge bleiben offen.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
