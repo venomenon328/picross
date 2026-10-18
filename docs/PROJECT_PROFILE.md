@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**CI / #246 (18.10.2026), CI-A implementiert; CI-B/CI-C offen:**
+**CI / #246 (18.10.2026), CI-A/CI-B implementiert; CI-C offen:**
 Die [CI-Policy](CI_POLICY.md) bindet die gestufte Straffung:
 [CI-A (#247)](https://github.com/venomenon328/picross/issues/247) wählt reine
 Facharbeit und die einzelne PR-Vorlage eng aus und entkoppelt Product, Browser und
@@ -8,8 +8,9 @@ SSH/HTTP-Zustellung. [Auswahl und Nachweisgrenzen](CI_A_SELECTION.md)
 beschreiben die Lieferung; CI-A-T01/R01 und Mergefreigabe stehen getrennt im Issue.
 Bis [CI-B (#248)](https://github.com/venomenon328/picross/issues/248)
 integriert ist, bleiben alle weiterhin ausgewählten Browserrouten vollständig.
-CI-B liefert regulären Start plus relevante unabhängige Browsergruppen in
-Chromium und Firefox auf getrennten Runnern.
+[CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) bindet regulären Start plus relevante
+unabhängige Browsergruppen, Chromium/Firefox auf getrennten Runnern und das
+Fail-closed-Gate für tatsächliche Szenarien/Belege. T01/R01 stehen im Paket-PR.
 [CI-C (#249)](https://github.com/venomenon328/picross/issues/249) trennt native
 Prüfgruppen und beschleunigt nach Messung die verlustfreie Bildaufbereitung.
 CI-A kommt zuerst; CI-B vor CI-C ist empfohlen, keine technische Voraussetzung.

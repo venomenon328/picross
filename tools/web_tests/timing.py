@@ -18,7 +18,7 @@ class Meter:
 
     @contextmanager
     def measure(self, category):
-        frame = [time.perf_counter(), 0.0]
+        frame = [time.perf_counter(), 0.0, category]
         self.stack.append(frame)
         try:
             yield
@@ -47,6 +47,12 @@ def measured(category):
     def decorate(function):
         @wraps(function)
         def run(*args, **kwargs):
+            # Attribute the actual Playwright roundtrip to the semantic caller,
+            # not just the Python wrapper overhead. Other nested times remain
+            # exclusive (never count the same interval twice).
+            if (CURRENT.stack and CURRENT.stack[-1][2] in ('state', 'save_confirmation')
+                    and category in ('query', 'wait')):
+                return function(*args, **kwargs)
             with CURRENT.measure(category):
                 result = function(*args, **kwargs)
             if category == 'state':

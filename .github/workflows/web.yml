@@ -1,15 +1,29 @@
-name: Web export and complete browser verification
+name: Selected independent browser groups
 
 on:
   workflow_call:
+    inputs:
+      selection_attempt:
+        type: string
+        required: true
+    outputs:
+      chromium_attempt:
+        value: ${{ jobs.chromium.outputs.attempt }}
+      firefox_attempt:
+        value: ${{ jobs.firefox.outputs.attempt }}
 
 permissions:
   contents: read
 
 jobs:
-  web:
+  build:
     runs-on: ubuntu-24.04
+    outputs:
+      attempt: ${{ steps.producer.outputs.attempt }}
     steps:
+      - name: Bind build producer attempt
+        id: producer
+        run: echo "attempt=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
@@ -17,40 +31,60 @@ jobs:
         with:
           path: ${{ runner.temp }}/p1-toolchain-cache
           key: ${{ runner.os }}-godot-4.7.2-cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4-f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011
-      - name: Isolated browser tooling
-        run: |
-          python3 -m venv "${{ runner.temp }}/web-venv"
-          "${{ runner.temp }}/web-venv/bin/pip" install playwright==1.58.0
-          "${{ runner.temp }}/web-venv/bin/playwright" install --with-deps chromium firefox
+      - name: Download bound selection
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ inputs.selection_attempt }}
+          path: ${{ runner.temp }}/ci-selection
       - name: Build regular player and separate fixed technical player
         run: |
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-player
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test --test
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test-update --test
-      - name: Actual Chromium and Firefox event and persistence routes
+      - name: Seal current builds and source binding
         env:
-          LIBGL_ALWAYS_SOFTWARE: '1'
-          PICROSS_WEB_SOFTWARE: '1'
+          CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: |
-          xvfb-run -a "${{ runner.temp }}/web-venv/bin/python" tools/web_tests/smoke.py --build artifacts/web-player --output artifacts/web-evidence
-          xvfb-run -a "${{ runner.temp }}/web-venv/bin/python" tools/web_tests/browser.py --build artifacts/web-test --update-build artifacts/web-test-update --output artifacts/web-evidence
+          python3 tools/web_tests/run_groups.py seal --plan "${{ runner.temp }}/ci-selection/ci-plan.json" --build-root artifacts
+      - name: Transfer verified builds within this run
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ci-web-builds-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          path: |
+            artifacts/builds.json
+            artifacts/web-player/
+            artifacts/web-test/
+            artifacts/web-test-update/
+          if-no-files-found: error
+          retention-days: 7
       - name: Upload regular static player
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: picross-web-player-${{ github.event.pull_request.head.sha || github.sha }}
+          name: picross-web-player-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
           path: artifacts/web-player/
           if-no-files-found: error
           retention-days: 14
-      - name: Upload actual diagnostics and evidence
+      - name: Upload build diagnostics
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: picross-web-evidence-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            artifacts/web-evidence/
-            artifacts/web-player-logs/
-            artifacts/web-test-logs/
-            artifacts/web-test/build-manifest.json
-            artifacts/web-test-update-logs/
-            artifacts/web-test-update/build-manifest.json
+          name: picross-web-build-logs-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          path: artifacts/*-logs/
           retention-days: 7
+
+  chromium:
+    needs: build
+    uses: ./.github/workflows/web-browser.yml
+    with:
+      browser: chromium
+      build_attempt: ${{ needs.build.outputs.attempt }}
+      selection_attempt: ${{ inputs.selection_attempt }}
+
+  firefox:
+    needs: build
+    uses: ./.github/workflows/web-browser.yml
+    with:
+      browser: firefox
+      build_attempt: ${{ needs.build.outputs.attempt }}
+      selection_attempt: ${{ inputs.selection_attempt }}

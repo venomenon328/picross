@@ -14,8 +14,9 @@ import re
 import subprocess
 import sys
 
+from web_tests.contract import select_groups, coverage
 
-FORMAT = "picross-ci-selection-v2"
+FORMAT = "picross-ci-selection-v3"
 JOBS = ("docs", "product", "production", "preflight", "web", "delivery")
 FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual", "perf_b", "web", "delivery")
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -36,7 +37,8 @@ ANALYSIS_PATHS = frozenset({
 )})
 DELIVERY_PATHS = frozenset({"tools/deploy_web.py", "tools/web_tests/ssh_reference.py"})
 BROWSER_PATHS = frozenset({"tools/web_tests/" + name for name in (
-    "browser.py", "browser_runtime.py", "smoke.py", "fixtures.py", "probe.gd",
+    "browser.py", "browser_actions.py", "browser_runtime.py", "smoke.py", "fixtures.py", "probe.gd",
+    "group_catalog.py", "group_input.py", "group_completion.py", "group_persistence.py", "timing.py",
 )})
 WEB_SHARED_PATHS = frozenset({
     "tools/build_web_player.py", "tools/web_bundle.py", "tools/test_web_delivery.py",
@@ -166,12 +168,15 @@ def classify(paths: list[str], force: str = "auto") -> dict:
         "production": ("production", "product", "pilots", "visual", "perf_b", "web", "delivery"),
         "perf-b": ("product", "visual", "perf_b", "web"),
         "toolchain": FLAGS,
+        **{"browser-"+g: ("web",) for g in ("catalog", "input", "completion", "persistence")},
     }
     if force not in forced:
         raise ValueError("Unknown requested scope: " + force)
     add(forced[force], "explicit scope: " + force)
     content_only = bool(paths) and all(content_path(path) for path in paths) and force == "auto"
-    return {"format": FORMAT, "content_only": content_only, "selected": {"docs": True, **selected},
+    browser_groups = select_groups(reasons["web"])
+    return {"browser_groups": browser_groups, "browser_expected": coverage(browser_groups),
+            "format": FORMAT, "content_only": content_only, "selected": {"docs": True, **selected},
             "reasons": {"docs": ["documents, tool contracts and full diff"], **reasons},
             "changed_paths": sorted(set(paths)), "requested_scope": force}
 
@@ -194,6 +199,8 @@ def apply_event_policy(plan: dict, event: str) -> dict:
         # checks. Product integration is established by the PR/test-merge run.
         for key in ("product", "preflight", "integration", "pilots", "visual", "perf_b", "web", "delivery"):
             plan["selected"][key] = False
+        plan["browser_groups"] = []
+        plan["browser_expected"] = {}
         plan["not_applicable_reason"] = "main integrity run; product and toolchain verification belong to the PR"
     return plan
 
@@ -260,7 +267,7 @@ def evaluate(plan: dict, results: dict) -> list[dict]:
         expected_plan = apply_event_policy(expected_plan, plan["event"])
     if expected_plan["content_only"] and plan.get("diff_check") == "tree-metadata-only; production evidence reviewed before delivery":
         expected_plan["reasons"]["docs"] = ["content-only: changed paths and regular file modes; no puzzle certification or test suite"]
-    for field in ("selected", "reasons", "content_only"):
+    for field in ("selected", "reasons", "content_only", "browser_groups", "browser_expected"):
         if plan.get(field) != expected_plan[field]:
             raise ValueError("Inconsistent selection field: " + field)
     if not isinstance(results, dict) or set(results) != set(JOBS):
@@ -326,6 +333,7 @@ def main() -> int:
     plan_parser.add_argument("--event", default=os.environ.get("GITHUB_EVENT_NAME", "local"))
     plan_parser.add_argument("--output", type=Path, required=True)
     finish = commands.add_parser("finish")
+    finish.add_argument("--web-evidence", type=Path)
     finish.add_argument("--plan", default=os.environ.get("CI_PLAN", ""))
     finish.add_argument("--plan-file", type=Path)
     finish.add_argument("--results", default=os.environ.get("CI_RESULTS", ""))
@@ -349,8 +357,19 @@ def main() -> int:
     if os.environ.get("GITHUB_ACTIONS") == "true":
         validate_binding(plan, json.loads(os.environ.get("CI_BINDING", "{}"), object_pairs_hook=unique_object),
                          json.loads(os.environ.get("CI_OUTPUTS", "{}"), object_pairs_hook=unique_object))
-    report = {"format": "picross-ci-result-v2", "accepted": all(row["accepted"] for row in rows),
+    report = {"format": "picross-ci-result-v3", "accepted": all(row["accepted"] for row in rows),
               "selection": plan, "jobs": rows}
+    if plan['selected']['web']:
+        try:
+            if not args.web_evidence:
+                raise ValueError('Selected web requires actual browser evidence')
+            from web_tests.results import validate_all
+            report['browsers'] = validate_all(plan, args.web_evidence,
+                json.loads(os.environ.get('CI_WEB_OUTPUTS', '{}'), object_pairs_hook=unique_object),
+                os.environ.get('GITHUB_RUN_ATTEMPT', plan.get('run_attempt')))
+        except (ValueError, OSError, KeyError, TypeError) as error:
+            report['accepted'] = False
+            report['browser_error'] = str(error)
     if os.environ.get("GITHUB_REPOSITORY") and plan.get("run_id"):
         report["run_url"] = f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{plan['run_id']}"
         report["gate_attempt"] = os.environ.get("GITHUB_RUN_ATTEMPT")
@@ -363,6 +382,11 @@ def main() -> int:
             stream.write("## Required CI results\n\n| Job | Required | Result | Accepted |\n| --- | --- | --- | --- |\n")
             for row in rows:
                 stream.write(f"| {row['job']} | {row['required']} | {row['result']} | {row['accepted']} |\n")
+            if report.get('browser_error'):
+                stream.write('\nBrowser evidence rejected: '+report['browser_error']+'\n')
+            for browser in report.get('browsers', []):
+                stream.write(f"\n{browser['browser']}: {browser['scenarios']} scenarios in "
+                             f"{', '.join(browser['groups'])}; producer attempt {browser['attempt']}.\n")
     return 0 if report["accepted"] else 1
 
 
