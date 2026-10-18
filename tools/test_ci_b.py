@@ -224,7 +224,7 @@ class EvidenceGate(unittest.TestCase):
         output=self.root/'result.json'
         env={**os.environ,'GITHUB_ACTIONS':'true','GITHUB_RUN_ATTEMPT':'2','GITHUB_STEP_SUMMARY':'',
              'CI_BINDING':json.dumps({**binding(self.plan),'gate_attempt':'2'}),
-             'CI_OUTPUTS':json.dumps({**{key:str(self.plan['selected'][key]).lower() for key in FLAGS},'selection_attempt':'1','native_groups':''}),
+             'CI_OUTPUTS':json.dumps({**{key:str(self.plan['selected'][key]).lower() for key in FLAGS},'selection_attempt':'1','native_groups':'[]'}),
              'CI_RESULTS':json.dumps({job:{'result':'success' if self.plan['selected'][job] else 'skipped'} for job in JOBS})}
         for attempt,code in [('1',0),('2',1)]:
             env['CI_WEB_OUTPUTS']=json.dumps({**self.outputs,'firefox_attempt':attempt})
