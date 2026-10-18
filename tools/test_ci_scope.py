@@ -124,7 +124,7 @@ class SelectionTests(unittest.TestCase):
 
     def test_production_reconstructs_inputs_and_exercises_pilots(self):
         for path in ["tools/puzzle_production/export.py", "examples/rp6/plan.json",
-                     "tests/puzzle_production/test_lines.py"]:
+                     "tests/puzzle_production/test_p1_export.py"]:
             with self.subTest(path=path):
                 value = classify([path])["selected"]
                 self.assertTrue(value["production"] and value["product"] and value["pilots"])
@@ -205,7 +205,7 @@ class RequiredGateTests(unittest.TestCase):
                 results["docs"]["result"] = status
                 run = subprocess.run([os.sys.executable, str(Path(__file__).with_name("ci_scope.py")), "finish",
                                       "--plan-file", str(path), "--results", json.dumps(results)],
-                                     capture_output=True, text=True, timeout=10)
+                                     capture_output=True, text=True, timeout=10, env={**os.environ, "GITHUB_ACTIONS": "false"})
                 self.assertEqual(run.returncode, expected, run.stderr)
                 self.assertEqual(json.loads(run.stdout)["accepted"], expected == 0)
             self.assertEqual(len(json.loads(path.read_text())["changed_paths"]), 5000)
@@ -255,7 +255,7 @@ class RequiredGateTests(unittest.TestCase):
         results["product"]["result"] = "failure"
         run = subprocess.run([os.sys.executable, str(Path(__file__).with_name("ci_scope.py")), "finish",
                               "--plan", json.dumps(plan), "--results", json.dumps(results)],
-                             capture_output=True, text=True, timeout=10)
+                             capture_output=True, text=True, timeout=10, env={**os.environ, "GITHUB_ACTIONS": "false"})
         self.assertEqual(run.returncode, 1)
         self.assertFalse(json.loads(run.stdout)["accepted"])
 
