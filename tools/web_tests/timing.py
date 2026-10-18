@@ -14,6 +14,7 @@ class Meter:
     def __init__(self):
         self.rows = defaultdict(lambda: dict(calls=0, seconds=0.0, bytes=0))
         self.stack = []
+        self.events = []
         self.started = time.perf_counter()
 
     @contextmanager
@@ -34,8 +35,9 @@ class Meter:
     def checkpoint(self, label):
         result = dict(scenario=label, seconds=round(time.perf_counter()-self.started, 6),
                       operations={k: {**v, 'seconds': round(v['seconds'], 6)}
-                                  for k, v in sorted(self.rows.items())})
+                                  for k, v in sorted(self.rows.items())}, events=self.events)
         self.rows.clear()
+        self.events = []
         self.started = time.perf_counter()
         return result
 
@@ -54,7 +56,12 @@ def measured(category):
                     and category in ('query', 'wait')):
                 return function(*args, **kwargs)
             with CURRENT.measure(category):
+                began = time.perf_counter() if category == 'input' else None
                 result = function(*args, **kwargs)
+                elapsed = time.perf_counter() - began if began is not None else None
+            if category == 'input':
+                CURRENT.events.append(dict(operation=function.__qualname__, seconds=round(elapsed, 6),
+                                           arguments=list(args[1:]), options=kwargs))
             if category == 'state':
                 CURRENT.rows[category]['bytes'] += len(json.dumps(result).encode('utf-8'))
             return result

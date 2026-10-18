@@ -1,5 +1,5 @@
 """Independent real-browser group; see the versioned scenario inventory."""
-from browser_actions import open_page, state, point, control, wait
+from browser_actions import open_page, state, point, control, wait, click
 from browser_runtime import options, graphics
 
 
@@ -19,7 +19,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
         page.mouse.move(*point(page, state(page, 'labels')['labels'][0][part+'_center']))
         page.wait_for_timeout(900)
         page.screenshot(path=str(output/f'{name}-ke-{part}-tooltip.png'))
-        page.mouse.click(*point(page, state(page, 'labels')['labels'][0][part+'_center']))
+        click(page, point(page, state(page, 'labels')['labels'][0][part+'_center']))
         wait(page, 'picrossProbe.work')
         assert state(page, 'id')['id'] == 'T-01'
         control(page, name='nav-album')
