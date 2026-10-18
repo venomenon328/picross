@@ -243,8 +243,10 @@ func layout_content() -> void:
 		status_width = maxf(status_width,ceilf(note.get_theme_font("font").get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(14*u)).x))
 	note.position = Vector2(size.x-inset-status_width,bottom)
 	note.size = Vector2(status_width,footer_height)
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	status_icon.position = note.position-Vector2(20*u,0)
-	status_icon.size = Vector2(16*u,footer_height)
+	status_icon.size = Vector2(status_width+16*u,footer_height)
+	status_icon.trailing_text_width = note.get_theme_font("font").get_string_size(note.text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(14*u)).x
 	custom_minimum_size.y = bottom+footer_height+inset
 	preview.queue_redraw()
 	picture.queue_redraw()

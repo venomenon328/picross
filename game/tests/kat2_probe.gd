@@ -670,6 +670,7 @@ func catalog_labels() -> void:
 			check(card.dimensions.position.y == card.difficulty.position.y and card.mode_tip.position.y == card.dimensions.position.y,"KU-A metadata shares one row")
 			check(card.dimensions.position.x+card.dimensions.size.x < card.difficulty_icon.position.x and card.difficulty_icon.position.x+card.difficulty_icon.size.x < card.difficulty.position.x,"KU-A dimension, filled circle and text have distinct gaps")
 			check(card.note.position.y == card.leaf.position.y and card.status_icon.kind == card.note.text,"KU-A footer status drawing matches label")
+			check(card.note.horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT and is_equal_approx(card.note.position.x+card.note.size.x,card.size.x-roundf(10*app.ui_scale)),"KU-A status group ends at the shared right inset")
 			check(card.size.x >= card.minimum_card_width(app.ui_scale),"KU-A measured common width is respected")
 			var marks := Rect2()
 			var first_point: bool = true
