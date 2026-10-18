@@ -307,7 +307,7 @@ def validate_journal(root, j, *, before_write=False):
         require(j["operation"] != "adoption", "Adoption requires a report")
     guard(root, j, old_only=before_write)
     # The rollback goal is checked in full before any real mutation. A sync may
-    # have started with a stale projection; recovery directly restores current v3.
+    # have started with a stale projection; recovery directly restores current v4.
     old = deepcopy(j["old"])
     old[RUNTIME] = projection(old, before).decode()
     _stage_check(root, old, j["retained"])

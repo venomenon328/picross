@@ -78,6 +78,31 @@ static func run(runner: SceneTree) -> void:
 		runner.check(catalog._primary(catalog.filtered_ids[i-1]) <= catalog._primary(catalog.filtered_ids[i]), "KU-B ascending area order")
 	catalog.choose_sort("difficulty")
 	runner.check(catalog.filtered_ids == canonical, "KU-B unknown difficulty preserves canonical order")
+	# Mixed levels use existing metadata only; null stays last in either direction.
+	for i: int in range(canonical.size()):
+		catalog.metadata[canonical[i]].difficulty = null if i == 0 else {"level": "L" + str(1 + i % 5)}
+	for direction: String in ["asc", "desc"]:
+		catalog.preference.direction = direction
+		var ordered: Array[String] = canonical.duplicate()
+		ordered.sort_custom(catalog._before)
+		runner.check(ordered[-1] == canonical[0], "KU-B unknown difficulty last " + direction)
+		for i: int in range(1, ordered.size() - 1):
+			var previous: String = catalog._primary(ordered[i-1])
+			var current: String = catalog._primary(ordered[i])
+			runner.check(previous <= current if direction == "asc" else previous >= current, "KU-B mixed L1-L5 primary direction")
+			if previous == current:
+				runner.check(canonical.find(ordered[i-1]) < canonical.find(ordered[i]), "KU-B level ties remain canonical")
+	# Equal area must not introduce width/height as an undocumented secondary key.
+	catalog.preference.criterion = "size"
+	var a: Variant = catalog.items[canonical[0]].player
+	var b: Variant = catalog.items[canonical[1]].player
+	var dimensions: Array[int] = [a.width, a.height, b.width, b.height]
+	a.width = 20; a.height = 30; b.width = 30; b.height = 20
+	for direction: String in ["asc", "desc"]:
+		catalog.preference.direction = direction
+		runner.check(catalog._before(canonical[0], canonical[1]) and not catalog._before(canonical[1], canonical[0]), "KU-B 20x30 and 30x20 tie canonically " + direction)
+	a.width = dimensions[0]; a.height = dimensions[1]; b.width = dimensions[2]; b.height = dimensions[3]
+	catalog.preference.criterion = "difficulty"
 	catalog.page_index = 1
 	catalog.choose_sort("difficulty")
 	runner.check(catalog.page_index == 1, "KU-B same criterion does not reset page")
