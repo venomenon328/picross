@@ -11,11 +11,15 @@ CATALOG_MODES = ('regular', 'restart', 'large', 'empty', 'invalid', 'adapter', '
 PATHS = {
     **{f'game/art/cells/{kind}-{size}.png{suffix}': ('core', 'graphics', 'export')
        for kind in ('fill','x') for size in ('small','medium','large') for suffix in ('','.import')},
-    **{f'game/ui/{name}.gd': ('core', 'catalog', 'export') for name in
-       ('catalog_ink', 'catalog_tip', 'catalog_difficulty')},
-    **{f'game/ui/{name}.gd': ('core', 'catalog', 'completion', 'export') for name in
+    # RP6/ZA-1 captures render cards; compact graphics also renders the album.
+    **{f'game/ui/{name}.gd': ('core', 'catalog', 'adapters', 'graphics', 'export') for name in
+       ('catalog_ink', 'catalog_tip')},
+    **{f'game/ui/{name}.gd': ('core', 'catalog', 'completion', 'adapters', 'graphics', 'export') for name in
        ('catalog', 'catalog_card')},
-    'game/ui/completion.gd': ('core', 'completion', 'graphics', 'export'),
+    # Besides card display, Difficulty.valid gates the shared runtime registry.
+    'game/model/catalog_difficulty.gd': GROUPS,
+    # KAT-2's ke_graphics and RP6/ZA-1 exercise the real completion view too.
+    'game/ui/completion.gd': ('core', 'catalog', 'completion', 'adapters', 'graphics', 'export'),
     'tools/kat2_product.py': ('catalog',),
     'tools/test_kat2_product.py': ('catalog',),
     'tools/native_images.py': ('catalog',),

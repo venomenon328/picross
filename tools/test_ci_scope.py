@@ -91,7 +91,11 @@ class SelectionTests(unittest.TestCase):
             self.assertTrue(plan["selected"]["product"])
             self.assertIn("catalog", plan["native_groups"])
             self.assertNotIn("history", plan["native_groups"])
-            self.assertNotIn("adapters", plan["native_groups"])
+            if path == "game/ui/catalog.gd":
+                self.assertIn("adapters", plan["native_groups"])
+                self.assertIn("graphics", plan["native_groups"])
+            else:
+                self.assertNotIn("adapters", plan["native_groups"])
         self.assertEqual(classify(["tools/kat2_product.py"])["native_groups"], ["catalog"])
 
     def test_save_recovery_and_gameplay_keep_integration_without_manufacturer(self):
