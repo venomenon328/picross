@@ -1,0 +1,45 @@
+name: Independent SSH and HTTP delivery verification
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  delivery:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/p1-toolchain-cache
+          key: ${{ runner.os }}-godot-4.7.2-cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4-f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011
+      - name: Isolated SSH tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-server
+      - name: Build only the required regular player
+        run: python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/delivery-player
+      - name: Real isolated SSH and static HTTP reference
+        run: python3 tools/web_tests/ssh_reference.py --build artifacts/delivery-player --output artifacts/delivery-evidence
+      - name: Upload regular static player
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: picross-delivery-player-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/delivery-player/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload actual diagnostics and evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: picross-delivery-evidence-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            artifacts/delivery-evidence/
+            artifacts/delivery-player-logs/
+            artifacts/delivery-player/build-manifest.json
+          if-no-files-found: error
+          retention-days: 7

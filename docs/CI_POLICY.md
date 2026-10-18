@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 18.10.2026 · Version 2.0 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
+Stand: 18.10.2026 · Version 2.1 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
 
 ## Geltung und Ablösung
 
@@ -30,8 +30,8 @@ Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 Eigentümerentscheidung vom 18.10.2026:
 [#246](https://github.com/venomenon328/picross/issues/246) ist als Spezifikation
 freigegeben. Ziel ist eine deutlich kürzere notwendige Wartezeit durch passende
-Prüfauswahl und schnellere Ausführung. **Noch keine Implementierung oder
-Mergefreigabe.** Die folgenden Entscheidungen sind der verbindliche Sollvertrag;
+Prüfauswahl und schnellere Ausführung. **CI-A ist implementiert; CI-B und CI-C
+bleiben Sollstand. Keine Mergefreigabe.** Die folgenden Entscheidungen sind verbindlich;
 sie erlauben vor Integration des jeweiligen Pakets kein Überspringen eines
 derzeit ausgewählten Pflichtchecks. Ausgangsbasis ist
 `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a`; konkrete Lieferstände und Messungen
@@ -52,16 +52,18 @@ und gegebenenfalls Modellauswahl gehören zur späteren Umsetzungsvorbereitung.
 
 ### Gezielte Auswahl
 
-Productbedarf impliziert nach CI-A nicht pauschal Browserbedarf; Browserbedarf
-impliziert nicht pauschal eine SSH-Referenz. Grundlage sind geprüfte gemeinsame
-Abhängigkeiten und die Vereinigung aller geänderten Bereiche.
+Productbedarf impliziert nicht pauschal Browserbedarf; Browserbedarf
+impliziert nicht pauschal eine SSH-Referenz. Die ausführbare Zuordnung samt
+Abhängigkeitsprüfung und manuellen Scopes steht in [CI-A-Auswahl](CI_A_SELECTION.md).
+Grundlage sind geprüfte gemeinsame Abhängigkeiten und die Vereinigung aller
+geänderten Bereiche.
 
 | Änderungsbezug | Freigegebene Zuordnung |
 | --- | --- |
-| Geprüfte reine Analyse-/Solver-/Bewertungsmodule, fachliche Konfigurationen und synthetische Tests | Nach CI-A nur `docs` und `production`; keine pauschale Ausnahme für ganz `tools/puzzle_production/`. Gemeinsame Runtime-/Schema-/Export-/Harnesshelfer bleiben entsprechend breit. |
-| Ausschließlich vorhandene `.github/pull_request_template.md` | Nach CI-A Dokument-/Werkzeugtestpfad und `ci-required`; keine Ausnahme für andere `.github/`-Dateien oder Workflows. |
-| Browserrelevante Runtime-/Darstellungsänderung | Nach CI-A bis CI-B vollständige bisherige Browserroute; nach CI-B regulärer Start und sämtliche betroffenen Gruppen in beiden Browsern. |
-| Reine Deploy-/SSH-/HTTP-Zustellungsänderung | Nach CI-A eigenständig ausführbare Referenz mit benötigtem regulärem Bündel, ohne Browserinstallation/-start und ohne sachfremde technische Browserexporte. |
+| Geprüfte reine Analyse-/Solver-/Bewertungsmodule, fachliche Konfigurationen und synthetische Tests | Nur `docs` und `production`; keine pauschale Ausnahme für ganz `tools/puzzle_production/`. Gemeinsame Runtime-/Schema-/Export-/Harnesshelfer bleiben entsprechend breit. |
+| Ausschließlich vorhandene `.github/pull_request_template.md` | Dokument-/Werkzeugtestpfad und `ci-required`; keine Ausnahme für andere `.github/`-Dateien oder Workflows. |
+| Browserrelevante Runtime-/Darstellungsänderung | Bis CI-B vollständige bisherige Browserroute; nach CI-B regulärer Start und sämtliche betroffenen Gruppen in beiden Browsern. |
+| Reine Deploy-/SSH-/HTTP-Zustellungsänderung | Eigenständig ausführbare Referenz mit benötigtem regulärem Bündel, ohne Browserinstallation/-start und ohne sachfremde technische Browserexporte. |
 | Gemeinsame UI-, Save-, Ressourcen-, Bündel-, Export-, Harness- oder Toolchainwirkung | Mehrere beziehungsweise alle betroffenen Bereiche; keine bloße Pfadnamensannahme. Insbesondere `game/ui/main.gd` ist keine reine Katalogausnahme. |
 | Unbekannte Wirkung oder gemischter Diff | Konservativ umfassende Prüfung beziehungsweise Vereinigung aller Pflichten. |
 
@@ -237,13 +239,19 @@ nicht versehentlich übersehen. Der tatsächliche Checkout bleibt der Test-Merge
 Auswahlbericht und Logs nennen Head, Basis, Checkout, Run und ausgewählte Pfade.
 Der vollständige Auswahlbericht wird als Datei über das Artefakt desselben Laufs
 an das Ergebnisgate übergeben. Joboutputs enthalten nur die Auswahlflags;
-Umgebungsvariablen enthalten nur die vier Jobergebnisse. Große Aufräum-PRs dürfen
+Umgebungsvariablen enthalten nur die sechs Jobergebnisse, Auswahlflags und
+Quell-/Runbindung. Das Gate prüft die Auswahl erneut gegen die Pfadliste,
+vergleicht die Scheduleroutputs und verlangt dieselbe Head-/Base-/Checkout-/
+Run-/Eventbindung und die Versuchsbinding des Auswahljobs. Doppelte JSON-Schlüssel
+sind ungültig. Auswahl- und Ergebnisartefakte tragen ihren jeweiligen Runversuch.
+Bei einem Retry darf GitHub erfolgreiche Jobs desselben unveränderten Runs
+beibehalten; der Auswahlversuch darf nicht nach dem Gateversuch liegen.
+Andere Runs oder Quellstände sind nicht wiederverwendbar. Große Aufräum-PRs dürfen
 nicht an Betriebssystemgrenzen für Argumente/Umgebungsvariablen scheitern; die
 Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 
-Die folgende Tabelle und die Kopplungen beschreiben die ausführbare Ausgangsbasis
-vor CI-A/CI-B/CI-C. Sie bleiben bis zur Integration des jeweils zuständigen Pakets
-maßgeblich; die gestufte Ablösung steht im Abschnitt „Freigegebene CI-Straffung“.
+Die Tabelle beschreibt die aktuelle Auswahl nach CI-A. Die nativen
+Untergruppen bleiben bis CI-C gekoppelt; Browserrouten bleiben bis CI-B vollständig.
 
 | Änderung | Automatischer Pflichtumfang im PR |
 | --- | --- |
@@ -252,13 +260,17 @@ maßgeblich; die gestufte Ablösung steht im Abschnitt „Freigegebene CI-Straff
 | Spielzustand, Eingabe, Save, History, Navigation | Aktuelle Kernregression, echte Prozess-Roundtrips, 500er-Route, aktuelle Pixelprüfungen und Spielerexport |
 | Reine Stiftzeichnung/Capture oder aktive Buchassets | Kernregression, aktuelle Pixelprüfungen, PERF-B und Spielerexport |
 | Reguläre Atlasanzeige/Cache/aktive Zelltexturen | Kernregression, aktuelle Pixelprüfungen, PERF-B und Export |
-| Produktionswerkzeug-/Adaptercode, technische Fixtures oder Pilotprobes | Allgemeine Fachtests mit festen synthetischen Eingängen; ausgewählte allgemeine Spiel-/Pixel-/Exportregressionen. Keine echten Rätselreplays. |
+| Geprüfte reine Analyse-/Solver-/Bewertungsdateien | `docs` und `production`; genaue Positivliste und Abhängigkeiten in CI-A-Auswahl. |
+| Einzelne `.github/pull_request_template.md` | Dokument-/Werkzeugtestpfad und `ci-required`. |
+| Reine Deploy-/SSH-Dateien | `docs` und eigenständige `delivery` mit regulärem Export. |
+| Produktionswerkzeug-/Adaptercode außerhalb der engen Positivliste, technische Fixtures oder Pilotprobes | Allgemeine Fachtests mit festen synthetischen Eingängen; ausgewählte allgemeine Spiel-/Pixel-/Exportregressionen. Keine echten Rätselreplays. |
 | CI/Harness/Toolchain oder nicht zugeordneter Codepfad | Alle aktuellen Bereiche einschließlich Preflight |
 
-Bis CI-A ergänzt jede Product-Auswahl auch den WEB-1-Export mit Browser-/Persistenz-
-und isolierter SSH-Referenzprüfung. CI-A ersetzt diese pauschale Kopplung durch
-unabhängige Auswahl; jede dann noch erforderliche Browserroute bleibt bis CI-B
-vollständig. Der reine Inhaltspfad bleibt davon ausgenommen.
+Product, `web` (Browser) und `delivery` (SSH/HTTP) sind unabhängig ausgewählt.
+Runtime-/Darstellungsänderungen wählen weiterhin Browser; native Ressourcenprüfer
+können allein Product benötigen. Gemeinsame Bündel-/Export-/Hostingdateien wählen
+Browser und Zustellung. Jede ausgewählte Browserroute bleibt bis CI-B vollständig.
+Der reine Inhaltspfad bleibt ausgenommen.
 
 **Schlanker Inhaltspfad:** Ausschließlich `content/categories.json`,
 `content/registry.json`, `content/authoring/index.json`/`README.md`,
@@ -299,19 +311,22 @@ werden gezielt negativ geprüft; es gibt keine zweite Paketinputliste.
 Auf `main` bleiben die bisher üblichen Integritätsprüfungen aktiv: Dokumente und
 bei relevanten Änderungen die Rätselproduktion. Product/Preflight werden nach
 einem Merge nicht nochmals automatisch wiederholt; ebenso wenig der Browserlauf
-und nach CI-A die eigenständige SSH-Referenz. Ihre maßgebliche Bindung ist
+und die eigenständige SSH-Referenz. Ihre maßgebliche Bindung ist
 der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erlaubt.
 
 ## Aktuelle Produktregression
 
-Ausführbare WEB-1-Ausgangsbasis bis zur Ablösung durch CI-A/CI-B:
-Der Pflichtjob [Webprüfung](../.github/workflows/web.yml) läuft, wenn
-der aktuelle Diff Produkt-/Exportprüfungen verlangt. Reine Inhalte wählen ihn
+Der Pflichtjob [Webprüfung](../.github/workflows/web.yml) läuft bei
+ausgewähltem Browserbedarf. Reine Inhalte wählen ihn
 weiterhin nicht; Main-Merges veröffentlichen nichts. Der Job exportiert den
 regulären Spieler und eine getrennte feste technische Testfassung, prüft echte
-Chromium-/Firefox-Ereignisse samt Browserpersistenz und eine isolierte Loopback-
-OpenSSH-/HTTP-Referenz. `ci-required` verlangt den tatsächlichen Erfolg dieses
-ausgewählten Jobs. Spielerdateien bleiben 14 Tage, kompakte Berichte/Bilder und
+Chromium-/Firefox-Ereignisse samt Browserpersistenz, regulärem Start und allen
+aktiven positiven/negativen Szenarien. Die [Zustellungsprüfung](../.github/workflows/delivery.yml)
+baut unabhängig nur den regulären Spieler und prüft Loopback-OpenSSH/HTTP.
+Sie installiert und startet keine Browser. Bei gemeinsamer Auswahl haben beide
+Jobs eigene Runner, Ausgaben und Artefaktnamen. `ci-required` verlangt den
+tatsächlichen Erfolg jedes ausgewählten Jobs, ohne Zustellung als Browsererfolg
+auszugeben. Spielerdateien bleiben 14 Tage, kompakte Berichte/Bilder und
 Fehlerlogs sieben Tage. Keine echten Saves, VPS-Zugangsdaten oder Testprofile im
 Artefakt. [WEB-1-Anleitung und Abnahmegrenzen](WEB_HOSTING.md).
 
@@ -552,8 +567,8 @@ Dateibindungen stehen im [Bestandsinventar](DEVELOPMENT_ARCHIVE.md).
 
 ## Verifikation der bestehenden Lieferung und der Folgepakete
 
-Die folgenden Nachweise gehören zur bestehenden #70-Lieferung, nicht zur noch
-unimplementierten CI-A-/CI-B-/CI-C-Spezifikation. Deren T01/R01 sind oben und in den
+Die folgenden Nachweise gehören zur bestehenden #70-Lieferung, nicht zur
+CI-A-/CI-B-/CI-C-Lieferung. Deren T01/R01 sind oben und in den
 Paket-Issues festgelegt. Der reine Spezifikationsdiff benötigt den aktuellen
 Dokument-/Werkzeugtestpfad, Dokumentvalidator, vollständigen Diffcheck und
 `ci-required`; maßgeblich bleibt die tatsächlich automatische Auswahl.
