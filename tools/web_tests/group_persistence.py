@@ -2,7 +2,7 @@
 import json
 import shutil
 import tempfile
-from browser_actions import open_page, control, wait, draw, state, saved, point, click
+from browser_actions import open_page, control, wait, draw, state, saved
 from browser_runtime import options
 
 def choose_sort(page, index):
@@ -108,6 +108,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     page.reload(); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
     assert state(page, 'sort')['sort']['criterion'] == 'size' and state(page, 'sort')['sort']['direction'] == 'desc'
     # Preference failure has its own channel; no puzzle-save acknowledgement.
+    assert not errors, errors
     page.evaluate('''() => { window.originalPreferenceTransaction = IDBDatabase.prototype.transaction;
       IDBDatabase.prototype.transaction = function(...args) { if(args[1]==='readwrite') throw new DOMException('preference quota','QuotaExceededError'); return originalPreferenceTransaction.apply(this,args); }; }''')
     choose_sort(page, 3)
@@ -116,6 +117,11 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     page.screenshot(path=str(output/f'{name}-ku-b-preference-error.png'))
     page.evaluate('() => { IDBDatabase.prototype.transaction = window.originalPreferenceTransaction; }')
     control(page, text='Erneut versuchen'); preference_saved(page)
+    # Godot's own autosync may hit the same deliberately failing transaction.
+    # Bind only this exact injected diagnostic; all unrelated errors still fail.
+    evidence['preference_failure_diagnostics'] = list(errors)
+    assert all(error == 'Failed to save IDB file system: preference quota' for error in errors), errors
+    errors.clear()
     choose_sort(page, 0); choose_sort(page, 2); choose_sort(page, 1)
     control(page, name='catalog-direction'); preference_saved(page)
     page.reload(); wait(page,'window.picrossProbe && picrossProbe.album')
