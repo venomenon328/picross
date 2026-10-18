@@ -8,6 +8,16 @@ Vor auftragsbezogener Arbeit vollständig lesen:
 
 Den beauftragten Arbeitsbranch verwenden, sonst den aktuellen `main`; geltende Bereichs-/Override-Regeln prüfen. Neue Ideen setzen kein vorhandenes Issue voraus. Fehlende Pflichtquellen nicht durch Erinnerungen ersetzen.
 
+Bei Abschlussbildern, deren Katalogvorschau oder Bildrevisionen zusätzlich
+[AT: Transparente Abschlussbilder](docs/REVEAL_TRANSPARENCY.md) und die dort
+benannten Produkt-/Produktions-/Integrationsquellen vollständig lesen.
+AT / #256 (19.10.2026) ist als Spezifikation freigegeben, noch nicht implementiert:
+AT-A schafft den sicheren gemeinsamen Bildrevisionsweg; AT-B stellt danach den
+gebundenen Bestand mit neuen Bildfreigaben um. Reine Bildänderungen erhalten
+Definitionsbytes, Puzzle-Revision, Identität, Spielstände und historische Belege.
+Szenen erhalten eine konkrete transparente Gestaltung, keinen pauschalen Verzicht.
+Die Freigabe beauftragt noch keine Implementierung, Bildübernahme oder Merge.
+
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](docs/CATALOG_PRESENTATION.md)
 und [Katalogsortierung](docs/CATALOG_SORTING.md) vollständig lesen. KU / #244
 ist als Sollstand freigegeben, noch nicht implementiert: KU-A umfasst Papierstreifen,

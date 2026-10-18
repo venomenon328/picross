@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 18.10.2026 · Version 2.3 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
+Stand: 19.10.2026 · Version 2.4 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116), [SD-Vertrag](PUZZLE_DIFFICULTY.md) und [AT-Spezifikation](REVEAL_TRANSPARENCY.md)
 
 ## Geltung und Ablösung
 
@@ -193,6 +193,39 @@ Save- und PCK-Funktionstests nutzen feste technische Beispiele statt einer Schle
 über jeden neuen Katalogeintrag. Bestehende Motive als feste Eingabe allgemeiner
 Spiel-/Darstellungstests sind keine erneute Rätselzertifizierung und werden bei
 Inhaltserweiterungen nicht ergänzt.
+
+## AT · Bildrevisionen und einmalige Bestandsumstellung
+
+Eigentümerentscheidung vom 19.10.2026:
+[AT / #256](https://github.com/venomenon328/picross/issues/256) und der
+[Transparenzvertrag](REVEAL_TRANSPARENCY.md) sind als Spezifikation freigegeben;
+Implementierung und Bildumstellung sind noch nicht begonnen. Die reine
+Spezifikationslieferung bleibt auf dem Dokument-/Werkzeugtestpfad mit
+Dokumentvalidator, vollständigem Diffcheck und `ci-required`.
+
+AT-A liefert den gemeinsamen Bildrevisions-/Transaktionsweg und feste
+synthetische Regressionen für Alpha-Erhalt, helle Motivteile, Aussparungen,
+Darstellung, unveränderte Saves/Definitionen und binäre Wiederherstellung.
+Register-/Update-/Sync-/Bewertungs-/Added-/Export-/Recoverywirkung wird anhand
+des tatsächlichen Gesamtdiffs ausgewählt; kein pauschaler Kurzpfad für
+Produktionswerkzeug- oder CI-Code. Bestehende Pflichtchecks und getrennte
+qualifizierte Paketreviews bleiben. AT ändert keine Plattformmatrix und
+überträgt keine früheren paketbezogenen Ausnahmen auf neue Lieferungen.
+
+AT-B inventarisiert und prüft den tatsächlichen Bildbestand im ausdrücklich
+beauftragten Inhaltsprozess außerhalb der CI. Neue Bildfreigabe, Motiv-/Raster-
+konsistenz, Kanten-/Kontextsichtung und kontrollierte Dateiübernahme sind
+Inhaltsnachweise, kein dauerhafter Katalog-Replay und kein obligatorischer
+vollständiger Spieldurchlauf pro Rätsel. Bei unveränderter Definition gibt es
+keine neue Logik-/Proof-/Schwierigkeitsproduktion allein wegen der Bildrevision.
+
+Ein ausschließlich aus zugelassenen Inhaltsdateien bestehender Bild-PR nutzt
+weiterhin die enge Pfad-/Dateimodusprüfung und `ci-required`. Falls AT-A neue
+Revisions-/Freigabenachweispfade benötigt, wird deren genaue enge Zuordnung mit
+der technischen Änderung festgelegt und synthetisch geprüft; diese Spezifikation
+erfindet keine bereits ausführbare Positivliste. Dokument-/Codebeimischungen
+folgen der bestehenden Vereinigung aller betroffenen Prüfbereiche. Die Anzahl
+allgemeiner Regressionen wächst nicht mit den umgestellten Katalogbildern.
 
 ## SD · Manuelle Schwierigkeitsbewertung und Datenintegration
 

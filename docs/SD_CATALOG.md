@@ -1,5 +1,13 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
+**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; Umsetzung offen:**
+[AT-A](REVEAL_TRANSPARENCY.md) ergänzt den gemeinsamen Quellen-/Transaktionsweg
+für getrennte aktive Bildfassungen und einen abgesicherten Binärersatz. Ratings,
+Bewertungsrevisionen, Hinzugefügt-Daten und historische Produktionsbindungen
+bleiben bei reinen Bildupdates unverändert. AT-B verwendet den erst noch zu
+implementierenden Weg für den gebundenen Bestand; diese Spezifikation führt
+keine Bild-/Bewertungsübernahme oder neue Analyse aus.
+
 **KU / #244, freigegebene Ergänzung vom 18.10.2026; Umsetzung offen:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt mit KU-A ausschließlich
 sichtbare Schwierigkeitsziffern durch gefüllte Kreise und entfernt die bisherigen
@@ -405,3 +413,46 @@ v4 mit unbekannten Daten, ohne anschließenden Sync. Ihr eigener abgeleiteter
 v4-Zwischenstand wird bei erneut unterbrochener Recovery akzeptiert, fremde
 Runtimebytes nicht. Historische Journale erhalten keine nachträglich erfundenen
 Metadaten oder Uhrzeiten.
+
+## AT · Gemeinsame Quellenprüfung und Binärersatz
+
+Der freigegebene [AT-A-Sollvertrag](REVEAL_TRANSPARENCY.md) ergänzt denselben
+exklusiven Lock und dieselbe gemeinsame Quellenprüfung um die aktive Bildbindung.
+Register, Rasterupdate, Sync, Bewertungs-/Hinzugefügt-Übernahme, Cleanup und
+Recovery müssen sie gleichermaßen prüfen und erhalten. Bildänderungen dürfen
+keine aktive Bewertung neu binden oder deren Revision erhöhen; Definitionsbytes,
+Logik/Matrix, Modus, Slots und Added-Records bleiben unverändert.
+
+Ein vorhandenes Reveal ist im bisherigen Journal eine unveränderte binäre
+`retained`-Quelle; `old/new` enthalten UTF-8-Text, `additions` nur Neuanlagen.
+AT-A darf einen PNG-Ersatz daher nicht in diese alten Bedeutungen einschmuggeln.
+Vor der ersten betroffenen Codeänderung sind die neuen exakten Feld-/Format-
+und Ressourcenverträge samt Binärbindung, sicherer Altbytesicherung, Staging,
+Publikation und Rollback gemeinsam mit [ZA-1](ZA1_ADAPTER.md) und
+[Projektion](CATEGORIES.md) festzulegen. Eine zweite unabhängige Schreibstrecke
+oder ein ungeschütztes Löschen und anschließendes Neuanlegen genügt nicht.
+
+Plan und Übernahme prüfen Alt-/Zielzustand samt tatsächlichen Bildbytes,
+Bildfreigaben, Quellen und unveränderten historischen Belegen vor Mutation.
+Fremde Änderungen und veraltete Erwartungen stoppen mit erhaltenen Dateien;
+dies gilt auch vor einem beanspruchten Wiederholungs-No-op. Nur der exakt
+gebundene bereits erreichte eigene Zielzustand darf als identische Wiederholung
+ohne Rewrite, Journal, Zeitstempeländerung oder neue Bildrevision bestätigt
+werden. Neue Quellen oder andere Bildbytes verlangen eine neue gebundene Planung.
+
+Recovery prüft vollständig, bevor sie eigene alte Bild-/Metadatenbytes
+wiederherstellt oder eigene Neuanlagen entfernt. Fremde Bytes und das Journal
+bleiben bei Konflikten erhalten; derselbe eigene Zwischenstand bleibt nach
+erneutem Abbruch wiederaufnehmbar. Erfolgreiche Recovery hinterlässt unmittelbar
+einen vollständig gültigen aktuellen Checkout, ohne nachträgliches Pflicht-Sync.
+Die Runtime wird bei einer notwendigen Projektionsänderung zuletzt publiziert.
+
+Die bisher unterstützten Journalaltformate behalten ihre exakten alten Felder
+und Quellbindungen; bereits gesperrte Formate bleiben gesperrt. Eine neue
+ungebundene aktive Bildquelle darf nicht durch Alt-Recovery ignoriert oder
+überschrieben werden. Kompatible Übergänge und
+gegebenenfalls konkrete Blockaden sind vorab abzugrenzen und mit synthetischen
+Altfällen zu prüfen; keine Umschreibung alter Journale oder Freigaben. Der
+Versionierungsbedarf einer Runtimeprojektion folgt allein ihrer tatsächlichen
+Schemaänderung, nicht der neuen Bildrevision. Die allgemeinen Regressionen
+verwenden ausschließlich feste synthetische Bilder, Rätsel und Speicherstände.

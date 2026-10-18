@@ -1,5 +1,14 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
+**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; noch nicht implementiert:**
+[Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) ergänzt echte Transparenz für
+neue Abschlussbilder und den eng begrenzten Austausch vorhandener Bildfassungen.
+AT-A liefert den Produktionsstandard, die getrennte aktive Bildbindung und den
+gemeinsamen abgesicherten Bildupdateweg; danach bearbeitet AT-B den gebundenen
+Bestand samt tatsächlichen Bildfreigaben. Historische Produktions- und
+Integrationsbelege bleiben unverändert. Die Spezifikationsfreigabe startet weder
+Bildbearbeitung noch Raster-/Logikproduktion oder Integration.
+
 **Prüfzuordnung für neue Arbeit (12.10.2026):** Sämtliche konkreten Rätselprüfungen
 finden einmalig je relevanter Revision während der Produktion/Integration statt,
 nicht in CI. Keine rätselspezifischen Unit-Tests oder Bestands-Replays hinzufügen.
@@ -351,6 +360,16 @@ Bei vollständigem Abschluss wird anschließend separat die Übereinstimmung mit
 dem beabsichtigten Raster geprüft. Geänderte Logikdaten machen
 einen alten Nachweis ungültig; reine Assetänderungen erhalten einen neuen
 Manifeststand und eine erneute Zuordnungs-/Motivprüfung.
+
+Für den freigegebenen [AT-Sollvertrag](REVEAL_TRANSPARENCY.md) werden ursprüngliche
+Bild-/Paket-/Integrationsbindungen dabei nicht rückwirkend umgeschrieben. Die
+neue Bildrevision, ihre tatsächliche Freigabe und der aktive Bildhash werden
+außerhalb der historischen Belege nachvollziehbar gebunden. Definition samt
+Runtime-Revision, Raster, Hinweise, Identität, Ressourcenpfade, Slots, Ratings und
+Hinzugefügt-Daten bleiben bei einem reinen Bildupdate unverändert. Dafür entsteht
+kein neuer Logik-, Proof- oder Schwierigkeitslauf. Der gegenwärtige Rasterupdateweg
+ist kein Bildupdateweg; die zusätzliche Technik und ihre synthetischen
+Regressionen gehören zu AT-A, die konkrete Motivbearbeitung und Bildabnahme zu AT-B.
 
 ### 5.5 Separate Eindeutigkeitsdiagnose (#139, Paket A)
 

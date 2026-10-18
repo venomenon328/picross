@@ -1,5 +1,11 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
+**AT · 19.10.2026, Spezifikation freigegeben; Implementierung nicht begonnen:**
+Der [Transparenzstandard](REVEAL_TRANSPARENCY.md) ergänzt die verdienten
+Katalogbilder. AT-A schafft den begrenzten Bildänderungsweg mit synthetischen
+Alpha-/Spielstandsnachweisen; AT-B überarbeitet danach die Bestandsbilder mit
+konkreter neuer Bildfreigabe. Kartenaufteilung und ungelöste Vorschauen bleiben erhalten.
+
 Stand: 18.10.2026 · Spezifikation 2.0 · KU-A im Implementierungspaket umgesetzt; KU-B offen
 
 Der Eigentümer hat die Katalogüberarbeitung am 18.10.2026 als Spezifikation
@@ -162,9 +168,9 @@ ein neues Rätsel oder eine andere Verteilung verändert Altwerte nicht automati
 Verdiente Reveals werden in Katalog und Abschluss mit Lanczos auf das tatsächliche
 Anzeigemaß verkleinert und dann linear gezeichnet. Dies glättet starke Verkleinerungen auch
 gegenüber der bisher schon linearen Abschlussanzeige. Vollständiger Bildausschnitt,
-Proportion, Zentrierung und bestehender Bildraum bleiben gleich. PNG-/SVG-Originale
-bleiben unverändert; abgeleitete Texturen entstehen erst nach der Spoilerfreigabe
-und werden mit dem jeweiligen Reveal freigegeben; je Anzeige bleibt nur die
+Proportion, Zentrierung und bestehender Bildraum bleiben gleich. Die Anzeige
+verändert die PNG-/SVG-Quelldatei nicht; abgeleitete Texturen entstehen erst nach
+der Spoilerfreigabe und werden mit dem jeweiligen Reveal freigegeben; je Anzeige bleibt nur die
 zuletzt benötigte Zieltextur erhalten. Keine globale Glättung, kein
 zusätzlicher persistenter Bildcache; eigene Füllminiaturen bleiben unverändert.
 
@@ -175,6 +181,31 @@ Für KU-A gilt die neue größere, zentrierte Zeichnung ohne Monochrom-Farbprobe
 gemäß KE-D02. Technische Vergleichsbilder verwenden dieselben nativen
 Viewport-/UI-Maße; die persönliche Sichtabnahme bleibt separat. Die EA-Zeitfolge,
 Saves und Abbruchregeln ändern sich nicht.
+
+## AT · Transparente verdiente Bilder
+
+Der freigegebene [AT-Standard](REVEAL_TRANSPARENCY.md) betrifft die Bilddatei des
+verdienten Reveals: neutrale Außenflächen und echte Aussparungen sind transparent,
+weiße oder helle Motivteile bleiben erhalten. Das bestehende Kartenpapier scheint
+durch; es wird keine zusätzliche weiße Bildfläche gezeichnet. Die Katalogkarte
+verwendet dasselbe freigegebene farbige Bild wie die Abschlussansicht.
+Bildraum, vollständiger Ausschnitt, Proportionen, Zentrierung und lokale
+Lanczos-/Linear-Glättung bleiben; ein dynamischer Weißfilter ist ausgeschlossen.
+
+AT-Bildrevisionen brauchen eine konkrete neue Bildfreigabe und den begrenzten
+Änderungsweg aus AT-A. Damit wird ausschließlich für diese Revisionen die frühere
+Vorgabe unveränderter Assets erweitert; historische Originale, Freigaben und
+Liefernachweise bleiben erhalten. Szenen behalten ihren Inhalt; ihre transparente
+Außengestaltung wird motivbezogen abgenommen. Weder pauschale Umfeldlöschung noch
+eine ungeprüfte Generalausnahme für vollflächige Szenen folgt aus AT.
+
+Alphakanten sind auf tatsächlichem Karten- und Buchpapier bei kleiner Vorschau,
+laufender Überblendung, Endbild und Wiederöffnung zu prüfen, einschließlich
+UI 100/125 %. Weiße oder dunkle Säume und verlorene helle Details sind Fehler.
+Allgemeine technische Prüfungen verwenden feste synthetische Bilder; die Sichtung
+konkreter Bestandsrevisionen bleibt eine getrennte redaktionelle Aufgabe.
+Fragezeichen, eigene Füllminiatur, Fehler-/Recoverydarstellung und Spoilergrenze
+folgen unverändert KE-D04/D05. EA-Timing, Speicherung und Reset ändern sich nicht.
 
 ## KE-D04 · Status und Vorschau
 
@@ -241,8 +272,10 @@ Metadaten sind ein Validierungsfehler und werden nicht stillschweigend weggelass
 Projektion und kanonische Byteprüfung bleiben deterministisch. Registrierungs-,
 Update- und Recoverypfade müssen dieselbe kompatible Projektion verwenden.
 
-Definitionen, Maße, Hinweise, IDs, Keys, Slots, Revisionen, Assets, Freigaben,
-Paket-/Integrationsbindungen, Save-Schema 1 und Speicherroot bleiben unverändert.
+Für die KU-Metadatenergänzung bleiben Definitionen, Maße, Hinweise, IDs, Keys,
+Slots, Revisionen, Assets, Freigaben, Paket-/Integrationsbindungen, Save-Schema 1
+und Speicherroot unverändert. Die gesondert freigegebenen AT-Bildrevisionen folgen
+ausschließlich dem oben verlinkten Bildänderungsvertrag.
 Die Metadatenergänzung benötigt keine erneute Rätselproduktion, Zertifizierung
 oder Paketfreigabe und darf keine Wiederherstellung gelöschter Produktionsdaten
 verlangen. Bestehende Inhalts-/Exportverträge werden nicht neu bewertet.
