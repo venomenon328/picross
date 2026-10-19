@@ -5,7 +5,7 @@
 		"t04": "2fbefe34f8d6db2548d9951e031c8e786a8cf6d009e28b7435fb6bceaa6e150f"
 	},
 	"display": "Windows",
-	"executable": "E:/Zeuch/Coding/picross-at-a/artifacts/at-a-final/windows-742f183/export-2/picross-at.exe",
+	"executable": "E:/Zeuch/Coding/picross-at-a/artifacts/at-a-final/windows-final/export-2/picross-at.exe",
 	"failures": [],
 	"format": "picross-at-windows-process-v1",
 	"image_pixel": [
@@ -14,9 +14,9 @@
 		0.20392157137394
 	],
 	"mode": "restart",
-	"pid": 41332,
-	"process_started_unix": 1792417068.402,
-	"profile": "E:/Zeuch/Coding/picross-at-a/artifacts/at-a-final/windows-742f183/shared-profile/appdata/Godot/app_userdata/picross · P1/p1/saves",
+	"pid": 27400,
+	"process_started_unix": 1792420888.557,
+	"profile": "E:/Zeuch/Coding/picross-at-a/artifacts/at-a-final/windows-final/shared-profile/appdata/Godot/app_userdata/picross · P1/p1/saves",
 	"registry_sha256": "9f5da8784f6d3ffccb5ada5776c9f1b426783a99925fcc8d5067389bd6bdc6e0",
 	"renderer": "NVIDIA GeForce RTX 3070",
 	"slot_hashes": {

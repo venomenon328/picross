@@ -38,9 +38,9 @@ gegen AT/P01-D01–D07, ZA-1, Kategorien, SD-C1, Soll-CLI und CI-Policy:
 | B-AT-SR01 · behoben | Snapshot und Journal leiteten Pfadmengen vor vollständiger Registryvalidierung ab. Falsche Objekttypen konnten interne Fehler auslösen. | Registry/Kategorien werden vor jeder Namespaceableitung validiert; Paketmanifest muss ein Objekt sein. Die Gegenprobe sperrt den Namespace-/Paketpfadzugriff und erwartet kontrolliertes `InvalidInput`; bestanden. |
 | B-AT-SR02 · behoben | Ein Speicherabbruch und unhashbare Elemente eines manipulierten Namespaceplans brauchten kontrollierte CLI-/Typgrenzen. | `MemoryError` ergibt `aborted`, `resource_limit`, Exit 4. Namespaceelemente werden vor Mengenbildung auf Strings geprüft. Beide gezielten Gegenproben bestanden. |
 | B-AT-SR03 · behoben | Die allgemeine Git-Textnormalisierung würde originale Windows-Logs beim Commit verändern. | Die Originalartefakte sind eng in `.gitattributes` von Textnormalisierung ausgenommen. Der Git-Index wird byteweise gegen die ursprünglichen Ausgaben geprüft. |
-| B-AT-SR04 · korrigiert, finale CI offen | Die Chromium-Abschlussmatrix suchte das Einstellungsmenü direkt im Endbild; dort gibt es nur Album und Reset. | Die Probe verwendet die tatsächliche Route Endbild → Album → Einstellungen → Album → gelöstes Blatt. Keine gesetzten Spielzustände oder Testschalter. |
-| B-AT-SR05 · korrigiert, finale CI offen | Eine Albumvergrößerung auf 2560 Pixel berechnete die Typografie des unsichtbaren Arbeitsrasters neu. Der gemessene Web-Aufruf blockierte rund 124 s und überschritt die unveränderte Resize-Grenze. | Album, Information und Endbild vermeiden das unsichtbare Rasterlayout. Beim Öffnen der Arbeit und vor Slot-Wiederherstellung wird die aktuelle Geometrie berechnet; Glyphen-/Fitregeln bleiben gleich. Native Gegenprobe: 81 AT-Prüfpunkte einschließlich versteckter Geometrie, unveränderter gewünschter Ansicht und korrektem Wiederöffnen; EA 2327 bestanden. |
-| B-AT-SR06 · behoben | Die Browser-Pixelprüfung vertraute bei Überblendbildern dem gemeldeten Alpha; ein fertiges Bild mit passender JSON-Behauptung konnte passieren. | Der unabhängige Decoder verlangt zusätzlich tatsächlich gemischte Originalpixel am opaken Motivteil. Eine manipulierte fertige PNG samt angepasstem JSON wird abgelehnt; positive und negative Werkzeugproben bestanden. |
+| B-AT-SR04 · behoben | Die Chromium-Abschlussmatrix suchte das Einstellungsmenü direkt im Endbild; dort gibt es nur Album und Reset. | Die Probe verwendet die tatsächliche Route Endbild → Album → Einstellungen → Album → gelöstes Blatt. Die vollständige fokussierte Dreiermatrix bestand; keine gesetzten Spielzustände oder Testschalter. |
+| B-AT-SR05 · behoben | Eine Albumvergrößerung auf 2560 Pixel berechnete die Typografie des unsichtbaren Arbeitsrasters neu. Der gemessene Web-Aufruf blockierte rund 124 s und überschritt die unveränderte Resize-Grenze. | Album, Information und Endbild vermeiden das unsichtbare Rasterlayout. Beim Öffnen der Arbeit und vor Slot-Wiederherstellung wird die aktuelle Geometrie berechnet; Glyphen-/Fitregeln bleiben gleich. Native Gegenprobe: 81 AT-Prüfpunkte einschließlich versteckter Geometrie, unveränderter gewünschter Ansicht und korrektem Wiederöffnen; EA 2327 bestanden. Die fokussierte Chromium-Katalog-/Abschlussmatrix bestand mit unveränderten Zeitgrenzen. |
+| B-AT-SR06 · behoben | Die Browser-Pixelprüfung vertraute bei Überblendbildern dem gemeldeten Alpha; ein fertiges Bild mit passender JSON-Behauptung konnte passieren. | Der unabhängige Decoder verlangt zusätzlich tatsächlich gemischte Originalpixel am opaken Motivteil. Eine manipulierte fertige PNG und eine unbemalte Papierfläche samt angepasstem JSON werden abgelehnt; positive und negative Werkzeugproben bestanden. Die verspätete Playwright-Aufnahme wird durch die unveränderten PNG-Bytes des tatsächlichen Chromium-Compositorframes ersetzt. |
 
 Eine zusätzlich geschlossene Nachweislücke betrifft gültige Runtime-v2/v3:
 echte Bildadoption, unterbrochene Adoption mit Recovery und anschließendes No-op
@@ -55,8 +55,10 @@ Prozessende erneut vergeben darf. Die sechs PNGs liegen unverändert bei.
 
 ## Urteil und Grenze
 
-**Prüfung/Abnahme offen.** Die vollständige CI-Abschlussprüfung und ihre
-Originalartefakte werden in [AT-A-T01](../../AT_A_VERIFICATION.md) gebunden.
+**Prüfung/Abnahme offen.** Die vollständige CI-Abschlussprüfung, ihr tatsächlicher
+Status und die Originalartefakte werden über [AT-A-T01](../../AT_A_VERIFICATION.md)
+im Draft-PR an den finalen Head gebunden. Die sechs eigenen Befunde sind
+korrigiert und gezielt gegengeprüft; die finale CI prüft ihre gemeinsame Integration.
 Das unabhängige qualifizierte AT-A-R01 bleibt ein eigenes verpflichtendes Gate
 vor Merge; dieser Selbstreview ersetzt es nicht. Merge, Deployment,
 Issue-Abschluss und AT-B sind nicht Teil dieses Auftrags.

@@ -2,7 +2,7 @@
 
 Die Dateien unter `windows/` sind unveränderte Originalausgaben des echten
 Windows-Durchstichs am sauberen Commit
-`742f1837cf3a5600e4160c54744b87dfa88dcba1`, Basis
+`714144eb097001e1b7d078fe318799e97d6fc459`, Basis
 `9cc58651518e3a28e97f46932d69554210b0abcb`.
 
 [Windows-Bindung](windows/windows-binding.json) enthält die beiden tatsächlichen
@@ -17,8 +17,12 @@ mit den getrennten Exportstarts. Keine vorgegebenen Spieler-Saves.
 [neues Endbild](windows/after-end.png) und sämtliche übrigen Bilder liegen als
 Original-PNGs vor. Es wurden weder Bilder skaliert noch Pixel retuschiert.
 Die beiden vollständigen Exportverzeichnisse und das gemeinsame isolierte
-Saveprofil bleiben lokal unter `artifacts/at-a-final/windows-742f183/` erhalten;
+Saveprofil bleiben lokal unter `artifacts/at-a-final/windows-final/` erhalten;
 EXE/PCK-Dateien werden nicht zusätzlich in den Quellbaum kopiert.
+Der vorherige Windowsnachweis zu `742f183` bleibt unverändert im Git-Stand
+`059d9f9` erhalten. Der neue Nachweis enthält auch die korrigierte Behandlung
+unsichtbarer Arbeitslayouts; spätere Änderungen betreffen Dokumente,
+Originalartefakte und die Browseraufnahme, nicht den Produkt-/Windowsprobecode. Die finale CI-Bindung steht im Draft-PR.
 
 Der [Windows-Startpreflight](windows-start-preflight.json) ist ein eigener
 Umgebungsnachweis vor Implementierung. Sein Originalarchiv unter
@@ -34,7 +38,8 @@ stehen in [AT-A-T01](../../AT_A_VERIFICATION.md).
 `native/` enthält die unveränderten 30 AT-PNGs, beide AT-Messberichte samt
 Fixtures, den vollständigen `native-result.json` und die ursprüngliche CI-Auswahl
 aus [Run 39261657542](https://github.com/venomenon328/picross/actions/runs/39261657542).
-Head/Basis sind wie oben; getesteter Integrationscommit ist
+Dieser frühere Linuxlauf bindet Head
+`742f1837cf3a5600e4160c54744b87dfa88dcba1` an dieselbe Basis; sein Integrationscommit ist
 `b28f5440f31c2ad79aef4c6e2104cf296b7b3d67`, Run-/Producer-Attempt jeweils 1.
 Alle sieben nativen Gruppen bestanden. Die heruntergeladenen Originale wurden
 zusätzlich unabhängig mit `at_evidence.native` geprüft: 30 Katalog- und 45

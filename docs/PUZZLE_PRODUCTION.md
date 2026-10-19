@@ -1,6 +1,6 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A implementiert, unabhängiges Review offen:**
 [Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) ergänzt echte Transparenz für
 neue Abschlussbilder und den eng begrenzten Austausch vorhandener Bildfassungen.
 AT-A liefert den Produktionsstandard, die getrennte aktive Bildbindung und den

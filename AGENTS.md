@@ -11,7 +11,7 @@ Den beauftragten Arbeitsbranch verwenden, sonst den aktuellen `main`; geltende B
 Bei Abschlussbildern, deren Katalogvorschau oder Bildrevisionen zusätzlich
 [AT: Transparente Abschlussbilder](docs/REVEAL_TRANSPARENCY.md) und die dort
 benannten Produkt-/Produktions-/Integrationsquellen vollständig lesen.
-AT / #256 (19.10.2026), Umsetzungsvorbereitung V3: AT-A ist in Umsetzung;
+AT / #256 (19.10.2026), Umsetzungsvorbereitung V3: AT-A ist implementiert; unabhängiges Review offen;
 AT-A schafft den sicheren gemeinsamen Bildrevisionsweg; AT-B stellt danach den
 gebundenen Bestand mit neuen Bildfreigaben um. Reine Bildänderungen erhalten
 Definitionsbytes, Puzzle-Revision, Identität, Spielstände und historische Belege.

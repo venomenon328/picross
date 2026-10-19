@@ -1,6 +1,6 @@
 # AT · Transparente Abschlussbilder
 
-Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **AT-A in Umsetzung; AT-B nicht beauftragt** ·
+Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **AT-A implementiert, unabhängiges Review offen; AT-B nicht beauftragt** ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).
 
 ## Auftrag, Quellen und Wirksamkeit
