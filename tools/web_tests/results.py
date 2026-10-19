@@ -4,7 +4,7 @@ import math
 from pathlib import Path
 import re
 
-from web_tests.contract import BROWSERS, expected
+from web_tests.contract import BROWSERS, expected, require_browser
 from web_bundle import digest, safe_name, validate_manifest
 
 BINDING = ('source_head', 'base_commit', 'tested_checkout', 'event', 'run_id', 'run_attempt')
@@ -51,6 +51,7 @@ def validate_builds(envelope, plan, gate_attempt):
 
 
 def validate_browser(report, plan, browser, producer_attempt, gate_attempt, root):
+    require_browser(browser)
     if report.get('format') != 'picross-browser-result-v1' or report.get('binding') != binding(plan):
         raise ValueError('Browser source/run/selection binding mismatch')
     if report.get('browser') != browser or report.get('attempt') != producer_attempt:
@@ -150,14 +151,11 @@ def validate_browser(report, plan, browser, producer_attempt, gate_attempt, root
 
 
 def validate_all(plan, root, outputs, gate_attempt):
-    if set(outputs) != {'chromium_attempt', 'firefox_attempt'}:
+    if set(outputs) != {browser+'_attempt' for browser in BROWSERS}:
         raise ValueError('Missing browser producer outputs')
-    reports, rows = [], []
+    rows = []
     for browser in BROWSERS:
         directory = root/browser
         report = read(directory/'web-result.json')
         rows.append(validate_browser(report, plan, browser, outputs[browser+'_attempt'], gate_attempt, directory))
-        reports.append(report)
-    if reports[0]['builds'] != reports[1]['builds']:
-        raise ValueError('Browsers did not use the same bound builds')
     return rows

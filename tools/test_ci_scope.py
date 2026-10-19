@@ -60,7 +60,7 @@ class SelectionTests(unittest.TestCase):
         for path in ["game/data/content/loader.gd", "game/art/content/importer.py",
                      "content/authoring/pz-a/r01/run.py", "content/packages/pz-a/r01/plugin.gd",
                      "content/.registration-pending.json", "game/art/book/paper.png",
-                     ".github/workflows/setup.yml", "unknown.json"]:
+                     ".github/workflows/ci-chromium.yml", "unknown.json"]:
             with self.subTest(path=path):
                 self.assertFalse(content_path(path))
                 plan = classify(["game/data/content/a.json", path])
@@ -203,7 +203,6 @@ class SelectionTests(unittest.TestCase):
                 os.chdir(old_cwd)
 
 
-
 class SchedulerTransportTests(unittest.TestCase):
     """Exercise the real GitHub output producer and fail-closed result evaluator."""
 
@@ -308,7 +307,7 @@ class SchedulerTransportTests(unittest.TestCase):
                     validate_binding(plan, binding, {**outputs, "native_groups": malformed})
             if force == "all":
                 self.assertEqual(plan["native_groups"], list(GROUPS))
-        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/setup.yml").read_text()
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/ci-chromium.yml").read_text()
         self.assertIn("join(fromJSON(needs.docs.outputs.native_groups), ',')", workflow)
         self.assertIn("contains(fromJSON(needs.docs.outputs.native_groups), 'export')", workflow)
         self.assertIn("needs.docs.outputs.product == 'true' && contains(", workflow)

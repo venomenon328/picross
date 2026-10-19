@@ -149,8 +149,8 @@ class DocumentationChecks(unittest.TestCase):
         self.assertIn("Missing required file: docs/PROJECT_PROFILE.md", check_tree(self.root))
 
     def test_ci_definition_is_required(self) -> None:
-        (self.root / ".github/workflows/setup.yml").unlink()
-        self.assertIn("Missing required file: .github/workflows/setup.yml", check_tree(self.root))
+        (self.root / ".github/workflows/ci-chromium.yml").unlink()
+        self.assertIn("Missing required file: .github/workflows/ci-chromium.yml", check_tree(self.root))
 
 
 if __name__ == "__main__":
