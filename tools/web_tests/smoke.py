@@ -1,32 +1,32 @@
-"""Start the uninstrumented regular export in both real browsers, online then offline."""
+"""Start the uninstrumented regular export in Chromium, online then offline."""
 import argparse
 import json
 from pathlib import Path
 import platform
 import tempfile
-from playwright.sync_api import sync_playwright
 from serve import serve
-from browser_runtime import options, graphics
+from browser_runtime import options, graphics, launch
 import timing
 from contract import BROWSERS
 
 
 def main():
-    timing.install()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--browser', choices=[*BROWSERS, 'both'], default='both')
+    parser.add_argument('--browser', choices=BROWSERS, default='chromium')
     args = parser.parse_args()
+    from playwright.sync_api import sync_playwright
+    timing.install()
     args.output.mkdir(parents=True, exist_ok=True)
     server, url = serve(args.build.resolve())
     report = {'os':platform.platform(), 'manifest':json.loads((args.build/'build-manifest.json').read_text()), 'results':[]}
     try:
         with sync_playwright() as pw:
-            for name in (BROWSERS if args.browser == 'both' else [args.browser]):
+            for name in [args.browser]:
                 timing.CURRENT = timing.Meter()
                 with tempfile.TemporaryDirectory(prefix='picross-player-', ignore_cleanup_errors=True) as profile:
-                    context = getattr(pw, name).launch_persistent_context(profile, **options(name), viewport={'width':1920,'height':1122})
+                    context = launch(pw, name, profile, viewport={'width':1920,'height':1122})
                     evidence = dict(browser=name, group='regular', scenarios=[], timings=[], status='failed', errors=[], launch_options=options(name))
                     report['results'].append(evidence)
                     try:

@@ -46,7 +46,7 @@ python -m unittest discover -s tools -p 'test_*.py' -v
 python tools/check_docs.py
 ```
 
-Die [CI](.github/workflows/setup.yml) ergänzt nach dem vollständigen Diff die
+Die [CI](.github/workflows/ci-chromium.yml) ergänzt nach dem vollständigen Diff die
 aktuellen Produkt-, Produktions- und Toolchainprüfungen. `ci-required` verlangt
 den tatsächlichen Erfolg aller ausgewählten Jobs am zugeordneten Head/Test-Merge.
 Native Renderprüfung und Windows-Spielerexport ersetzen keine persönliche Mausprobe.

@@ -1,4 +1,4 @@
-name: Isolated browser runner
+name: Isolated Chromium runner
 
 on:
   workflow_call:
@@ -25,6 +25,14 @@ jobs:
     outputs:
       attempt: ${{ steps.producer.outputs.attempt }}
     steps:
+      - name: Reject unsupported browser before installation
+        env:
+          BROWSER: ${{ inputs.browser }}
+        run: |
+          if [ "$BROWSER" != chromium ]; then
+            echo 'Unsupported CI browser; expected chromium' >&2
+            exit 1
+          fi
       - name: Bind browser producer attempt
         id: producer
         run: echo "attempt=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
@@ -47,7 +55,7 @@ jobs:
         run: |
           python3 -m venv "${{ runner.temp }}/web-venv"
           "${{ runner.temp }}/web-venv/bin/pip" install playwright==1.58.0
-          "${{ runner.temp }}/web-venv/bin/playwright" install --with-deps "$BROWSER"
+          "${{ runner.temp }}/web-venv/bin/playwright" install --with-deps chromium
       - name: Run selected independent groups
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
