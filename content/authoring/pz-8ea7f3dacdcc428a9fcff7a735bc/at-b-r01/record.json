@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "blumen-pflanzen",
   "motif_name": "Efeutute",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 35,
   "height": 35,
   "mode": "color",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/at-b-r01/approval.json",
+    "sha256": "170dea4ed6f78c21ae3a0950b1edaf1f51aaa8f05c3ceeb6ce5bd2f4725eeffe"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "b0d9cf6138ccbeed1fffe8fa567d202276c1831bf952786e4f0fd683d4c4b51f",
+    "active_record": "content/reveals/pz-8ea7f3dacdcc428a9fcff7a735bc.json",
+    "active_record_sha256": "dc7be1b184e50385cb48c40213eb36d84304472d594163c9205e031a72440e29",
+    "evidence": "docs/design/at_b_integration/audit-02.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/at-b-r01/package.zip",
     "bytes": 5893274,

@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "blumen-pflanzen",
   "motif_name": "Kaktus",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 15,
   "height": 22,
   "mode": "mono",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/at-b-r01/approval.json",
+    "sha256": "4cac9257cb58b37d3783679f218a46c4e2ee67e8d73f9f6074bcbb09b11da081"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "b0d9cf6138ccbeed1fffe8fa567d202276c1831bf952786e4f0fd683d4c4b51f",
+    "active_record": "content/reveals/pz-a358a1bf1b994efcbebeb55abf825789.json",
+    "active_record_sha256": "e923b2e421af952d1da6aebb671d7e216d33077532de5b150e9f8e4a3fded2ef",
+    "evidence": "docs/design/at_b_integration/audit-02.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/at-b-r01/package.zip",
     "bytes": 5069477,

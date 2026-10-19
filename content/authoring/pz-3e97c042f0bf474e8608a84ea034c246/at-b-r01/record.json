@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "mythen-fantasie",
   "motif_name": "Yin-Yang",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 25,
   "height": 25,
   "mode": "mono",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/at-b-r01/approval.json",
+    "sha256": "d62d8993785690f6d798e6d6c0e46ffac22494bcb5ba5f9612513967404dc243"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46",
+    "active_record": "content/reveals/pz-3e97c042f0bf474e8608a84ea034c246.json",
+    "active_record_sha256": "471e093beedd990ee4ca7d64801181cc791e72224a39fc57fbf5fe4fa8c12042",
+    "evidence": "docs/design/at_b_integration/audit-01.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/at-b-r01/package.zip",
     "bytes": 6129028,

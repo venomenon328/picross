@@ -1,0 +1,18 @@
+{
+  "id": "pz-3e97c042f0bf474e8608a84ea034c246",
+  "definition_sha256": "ac3c241cf208ae5f696a717bbd39cc3293f8396c4cb2bedc11efa8c17a6cf226",
+  "previous_reveal_sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e",
+  "reveal_sha256": "a3c192f26e416d4ce4fadf273239d181dda581cfc415bcd869ec1a65518b61fe",
+  "notice_sha256": "6f6ccc513b1f5ac9d3201b38e10c6592218cce272bb39be82e0d798becb0f678",
+  "test_only": false,
+  "format": "picross-reveal-approval-v1",
+  "image_revision": 1,
+  "actor": "Eigentümer im Codex-Chat",
+  "timestamp_utc": "2026-10-19T21:46:26Z",
+  "statement": "Die Eigentümerabnahme ist erteilt. Fahre fort. Bezug: gemeinsame Bild-/Endfreigabevorlage aller 26 IDs in PR #264, Head 2100f1a780fa64fe499111c4022ebed5fe7d83c7; Bildannahme, Motiv-/Rasterkonsistenz und finale redaktionelle Abnahme der hier gebundenen unveränderten Dateien.",
+  "checks": {
+    "reveal_approved": true,
+    "motif_raster_consistent": true,
+    "final_editorial_approved": true
+  }
+}

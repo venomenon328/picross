@@ -4,9 +4,10 @@
 [AT](REVEAL_TRANSPARENCY.md) ergänzt in AT-A die getrennte aktive Bildbindung und
 deren gemeinsamen Prüf-/Transaktionsweg; AT-B übernimmt danach freigegebene neue
 Bildfassungen des gebundenen Bestands. Historische Registry-/Paket-/Integrations-
-bindungen bleiben unverändert. Der aktuelle Auftrag umfasst ausschließlich
-[AT-B-V01](AT_B_VERIFICATION.md), die vollständige gebundene Bild-/Endfreigabevorlage.
-Stopp vor Eigentümerfreigabe und `catalog_reveal plan/adopt`; keine aktive Übernahme.
+bindungen bleiben unverändert. [AT-B-V01](AT_B_VERIFICATION.md) liefert die
+vollständige gebundene Bild-/Endfreigabevorlage. Nach
+[Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) ist AT-B-F01 mit kontrollierter
+Bildübernahme und AT-B-T01 beauftragt; finales separates Review und Merge bleiben offen.
 
 **KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt eine eigene autoritative,

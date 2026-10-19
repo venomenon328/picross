@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "gebaeude-bauwerke",
   "motif_name": "Brandenburger Tor",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 40,
   "height": 30,
   "mode": "mono",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/at-b-r01/approval.json",
+    "sha256": "4262f3532adc51dd0dc5ebcd7becf4eda55a018672c61b15ca8d34d88b1d3bc4"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46",
+    "active_record": "content/reveals/pz-2a8481f61e6443bda174bd3da67c.json",
+    "active_record_sha256": "ab8212839442c32682b416f095297ffa561adf902cdb52564d6e6ce5b816febc",
+    "evidence": "docs/design/at_b_integration/audit-01.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/at-b-r01/package.zip",
     "bytes": 5189028,

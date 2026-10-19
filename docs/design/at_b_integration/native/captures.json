@@ -1,0 +1,1773 @@
+{
+	"captures": [
+		{
+			"file": "catalog-pz-023b50b44d1c4698a6e17e65b6ea4337-ui100.png",
+			"ids": [
+				"pz-023b50b44d1c4698a6e17e65b6ea4337"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-20219e14dbe242689b9ef06297828f34-ui100.png",
+			"ids": [
+				"pz-20219e14dbe242689b9ef06297828f34"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-25d245061b0c49c190788de8e5d0e45b-ui100.png",
+			"ids": [
+				"pz-25d245061b0c49c190788de8e5d0e45b"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-2a8481f61e6443bda174bd3da67c-ui100.png",
+			"ids": [
+				"pz-2a8481f61e6443bda174bd3da67c"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-3a744ae1b7cb4d38b0ac29d030ef-ui100.png",
+			"ids": [
+				"pz-3a744ae1b7cb4d38b0ac29d030ef"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-3e97c042f0bf474e8608a84ea034c246-ui100.png",
+			"ids": [
+				"pz-3e97c042f0bf474e8608a84ea034c246"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-51405ea1ad194507a60c9b6701d802f0-ui100.png",
+			"ids": [
+				"pz-51405ea1ad194507a60c9b6701d802f0"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-5ad1e06e19ab475baebc582d4999daa5-ui100.png",
+			"ids": [
+				"pz-5ad1e06e19ab475baebc582d4999daa5"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-72561c715dd741f9b0082c7ad24802c1-ui100.png",
+			"ids": [
+				"pz-72561c715dd741f9b0082c7ad24802c1"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-72eb9b188896440c8a9a833e803835ec-ui100.png",
+			"ids": [
+				"pz-72eb9b188896440c8a9a833e803835ec"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-7ec3dcd94bf84e698691ef4b5839-ui100.png",
+			"ids": [
+				"pz-7ec3dcd94bf84e698691ef4b5839"
+			],
+			"target_rect": [
+				375.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-82758295d5d34284bbae2716f64f-ui100.png",
+			"ids": [
+				"pz-82758295d5d34284bbae2716f64f"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-8ea7f3dacdcc428a9fcff7a735bc-ui100.png",
+			"ids": [
+				"pz-8ea7f3dacdcc428a9fcff7a735bc"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-8ecddf77e80c4543bf4ec714fe3d-ui100.png",
+			"ids": [
+				"pz-8ecddf77e80c4543bf4ec714fe3d"
+			],
+			"target_rect": [
+				375.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui100.png",
+			"ids": [
+				"pz-985d36c1634644fbb2c8a0bf7de3aa9f"
+			],
+			"target_rect": [
+				660.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-9a79befc7a834e2d9d5896a477328962-ui100.png",
+			"ids": [
+				"pz-9a79befc7a834e2d9d5896a477328962"
+			],
+			"target_rect": [
+				375.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-a358a1bf1b994efcbebeb55abf825789-ui100.png",
+			"ids": [
+				"pz-a358a1bf1b994efcbebeb55abf825789"
+			],
+			"target_rect": [
+				375.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-ad7164c2302a42e5953f6779a1c7-ui100.png",
+			"ids": [
+				"pz-ad7164c2302a42e5953f6779a1c7"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-b3368aea28ac4a11bf09e0dc9c48-ui100.png",
+			"ids": [
+				"pz-b3368aea28ac4a11bf09e0dc9c48"
+			],
+			"target_rect": [
+				90.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-b5e2302bf71445c09caac76bbc2a7075-ui100.png",
+			"ids": [
+				"pz-b5e2302bf71445c09caac76bbc2a7075"
+			],
+			"target_rect": [
+				375.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-c71563f1b8c940de998afdd62f09-ui100.png",
+			"ids": [
+				"pz-c71563f1b8c940de998afdd62f09"
+			],
+			"target_rect": [
+				375.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-d7e68d1138a3448c8b2a4b07e8632350-ui100.png",
+			"ids": [
+				"pz-d7e68d1138a3448c8b2a4b07e8632350"
+			],
+			"target_rect": [
+				660.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui100.png",
+			"ids": [
+				"pz-d829eb9b83e94f9c9357ee5ab9c9e359"
+			],
+			"target_rect": [
+				375.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-dbbebc72556d4f0c9a37ab69275480e9-ui100.png",
+			"ids": [
+				"pz-dbbebc72556d4f0c9a37ab69275480e9"
+			],
+			"target_rect": [
+				660.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-e45e2e0d67a34f6aa8368f477454-ui100.png",
+			"ids": [
+				"pz-e45e2e0d67a34f6aa8368f477454"
+			],
+			"target_rect": [
+				660.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-eedd1fe72af54714908d5b5aff34-ui100.png",
+			"ids": [
+				"pz-eedd1fe72af54714908d5b5aff34"
+			],
+			"target_rect": [
+				660.0,
+				188.0,
+				273.0,
+				335.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-023b50b44d1c4698a6e17e65b6ea4337-ui100.png",
+			"ids": [
+				"pz-023b50b44d1c4698a6e17e65b6ea4337"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-20219e14dbe242689b9ef06297828f34-ui100.png",
+			"ids": [
+				"pz-20219e14dbe242689b9ef06297828f34"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-25d245061b0c49c190788de8e5d0e45b-ui100.png",
+			"ids": [
+				"pz-25d245061b0c49c190788de8e5d0e45b"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-2a8481f61e6443bda174bd3da67c-ui100.png",
+			"ids": [
+				"pz-2a8481f61e6443bda174bd3da67c"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-3a744ae1b7cb4d38b0ac29d030ef-ui100.png",
+			"ids": [
+				"pz-3a744ae1b7cb4d38b0ac29d030ef"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-3e97c042f0bf474e8608a84ea034c246-ui100.png",
+			"ids": [
+				"pz-3e97c042f0bf474e8608a84ea034c246"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-51405ea1ad194507a60c9b6701d802f0-ui100.png",
+			"ids": [
+				"pz-51405ea1ad194507a60c9b6701d802f0"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-5ad1e06e19ab475baebc582d4999daa5-ui100.png",
+			"ids": [
+				"pz-5ad1e06e19ab475baebc582d4999daa5"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-72561c715dd741f9b0082c7ad24802c1-ui100.png",
+			"ids": [
+				"pz-72561c715dd741f9b0082c7ad24802c1"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-72eb9b188896440c8a9a833e803835ec-ui100.png",
+			"ids": [
+				"pz-72eb9b188896440c8a9a833e803835ec"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-7ec3dcd94bf84e698691ef4b5839-ui100.png",
+			"ids": [
+				"pz-7ec3dcd94bf84e698691ef4b5839"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-82758295d5d34284bbae2716f64f-ui100.png",
+			"ids": [
+				"pz-82758295d5d34284bbae2716f64f"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-8ea7f3dacdcc428a9fcff7a735bc-ui100.png",
+			"ids": [
+				"pz-8ea7f3dacdcc428a9fcff7a735bc"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-8ecddf77e80c4543bf4ec714fe3d-ui100.png",
+			"ids": [
+				"pz-8ecddf77e80c4543bf4ec714fe3d"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui100.png",
+			"ids": [
+				"pz-985d36c1634644fbb2c8a0bf7de3aa9f"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-9a79befc7a834e2d9d5896a477328962-ui100.png",
+			"ids": [
+				"pz-9a79befc7a834e2d9d5896a477328962"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-a358a1bf1b994efcbebeb55abf825789-ui100.png",
+			"ids": [
+				"pz-a358a1bf1b994efcbebeb55abf825789"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-ad7164c2302a42e5953f6779a1c7-ui100.png",
+			"ids": [
+				"pz-ad7164c2302a42e5953f6779a1c7"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-b3368aea28ac4a11bf09e0dc9c48-ui100.png",
+			"ids": [
+				"pz-b3368aea28ac4a11bf09e0dc9c48"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-b5e2302bf71445c09caac76bbc2a7075-ui100.png",
+			"ids": [
+				"pz-b5e2302bf71445c09caac76bbc2a7075"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-c71563f1b8c940de998afdd62f09-ui100.png",
+			"ids": [
+				"pz-c71563f1b8c940de998afdd62f09"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-d7e68d1138a3448c8b2a4b07e8632350-ui100.png",
+			"ids": [
+				"pz-d7e68d1138a3448c8b2a4b07e8632350"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui100.png",
+			"ids": [
+				"pz-d829eb9b83e94f9c9357ee5ab9c9e359"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-dbbebc72556d4f0c9a37ab69275480e9-ui100.png",
+			"ids": [
+				"pz-dbbebc72556d4f0c9a37ab69275480e9"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-e45e2e0d67a34f6aa8368f477454-ui100.png",
+			"ids": [
+				"pz-e45e2e0d67a34f6aa8368f477454"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-eedd1fe72af54714908d5b5aff34-ui100.png",
+			"ids": [
+				"pz-eedd1fe72af54714908d5b5aff34"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-023b50b44d1c4698a6e17e65b6ea4337-ui125.png",
+			"ids": [
+				"pz-023b50b44d1c4698a6e17e65b6ea4337"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-20219e14dbe242689b9ef06297828f34-ui125.png",
+			"ids": [
+				"pz-20219e14dbe242689b9ef06297828f34"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-25d245061b0c49c190788de8e5d0e45b-ui125.png",
+			"ids": [
+				"pz-25d245061b0c49c190788de8e5d0e45b"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-2a8481f61e6443bda174bd3da67c-ui125.png",
+			"ids": [
+				"pz-2a8481f61e6443bda174bd3da67c"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-3a744ae1b7cb4d38b0ac29d030ef-ui125.png",
+			"ids": [
+				"pz-3a744ae1b7cb4d38b0ac29d030ef"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-3e97c042f0bf474e8608a84ea034c246-ui125.png",
+			"ids": [
+				"pz-3e97c042f0bf474e8608a84ea034c246"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-51405ea1ad194507a60c9b6701d802f0-ui125.png",
+			"ids": [
+				"pz-51405ea1ad194507a60c9b6701d802f0"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-5ad1e06e19ab475baebc582d4999daa5-ui125.png",
+			"ids": [
+				"pz-5ad1e06e19ab475baebc582d4999daa5"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-72561c715dd741f9b0082c7ad24802c1-ui125.png",
+			"ids": [
+				"pz-72561c715dd741f9b0082c7ad24802c1"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-72eb9b188896440c8a9a833e803835ec-ui125.png",
+			"ids": [
+				"pz-72eb9b188896440c8a9a833e803835ec"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-7ec3dcd94bf84e698691ef4b5839-ui125.png",
+			"ids": [
+				"pz-7ec3dcd94bf84e698691ef4b5839"
+			],
+			"target_rect": [
+				474.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-82758295d5d34284bbae2716f64f-ui125.png",
+			"ids": [
+				"pz-82758295d5d34284bbae2716f64f"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-8ea7f3dacdcc428a9fcff7a735bc-ui125.png",
+			"ids": [
+				"pz-8ea7f3dacdcc428a9fcff7a735bc"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-8ecddf77e80c4543bf4ec714fe3d-ui125.png",
+			"ids": [
+				"pz-8ecddf77e80c4543bf4ec714fe3d"
+			],
+			"target_rect": [
+				474.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui125.png",
+			"ids": [
+				"pz-985d36c1634644fbb2c8a0bf7de3aa9f"
+			],
+			"target_rect": [
+				836.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-9a79befc7a834e2d9d5896a477328962-ui125.png",
+			"ids": [
+				"pz-9a79befc7a834e2d9d5896a477328962"
+			],
+			"target_rect": [
+				474.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-a358a1bf1b994efcbebeb55abf825789-ui125.png",
+			"ids": [
+				"pz-a358a1bf1b994efcbebeb55abf825789"
+			],
+			"target_rect": [
+				474.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-ad7164c2302a42e5953f6779a1c7-ui125.png",
+			"ids": [
+				"pz-ad7164c2302a42e5953f6779a1c7"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-b3368aea28ac4a11bf09e0dc9c48-ui125.png",
+			"ids": [
+				"pz-b3368aea28ac4a11bf09e0dc9c48"
+			],
+			"target_rect": [
+				112.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-b5e2302bf71445c09caac76bbc2a7075-ui125.png",
+			"ids": [
+				"pz-b5e2302bf71445c09caac76bbc2a7075"
+			],
+			"target_rect": [
+				474.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-c71563f1b8c940de998afdd62f09-ui125.png",
+			"ids": [
+				"pz-c71563f1b8c940de998afdd62f09"
+			],
+			"target_rect": [
+				474.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-d7e68d1138a3448c8b2a4b07e8632350-ui125.png",
+			"ids": [
+				"pz-d7e68d1138a3448c8b2a4b07e8632350"
+			],
+			"target_rect": [
+				836.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui125.png",
+			"ids": [
+				"pz-d829eb9b83e94f9c9357ee5ab9c9e359"
+			],
+			"target_rect": [
+				474.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-dbbebc72556d4f0c9a37ab69275480e9-ui125.png",
+			"ids": [
+				"pz-dbbebc72556d4f0c9a37ab69275480e9"
+			],
+			"target_rect": [
+				836.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-e45e2e0d67a34f6aa8368f477454-ui125.png",
+			"ids": [
+				"pz-e45e2e0d67a34f6aa8368f477454"
+			],
+			"target_rect": [
+				836.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "catalog-pz-eedd1fe72af54714908d5b5aff34-ui125.png",
+			"ids": [
+				"pz-eedd1fe72af54714908d5b5aff34"
+			],
+			"target_rect": [
+				836.5,
+				231.0,
+				347.0,
+				420.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-023b50b44d1c4698a6e17e65b6ea4337-ui125.png",
+			"ids": [
+				"pz-023b50b44d1c4698a6e17e65b6ea4337"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-20219e14dbe242689b9ef06297828f34-ui125.png",
+			"ids": [
+				"pz-20219e14dbe242689b9ef06297828f34"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-25d245061b0c49c190788de8e5d0e45b-ui125.png",
+			"ids": [
+				"pz-25d245061b0c49c190788de8e5d0e45b"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-2a8481f61e6443bda174bd3da67c-ui125.png",
+			"ids": [
+				"pz-2a8481f61e6443bda174bd3da67c"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-3a744ae1b7cb4d38b0ac29d030ef-ui125.png",
+			"ids": [
+				"pz-3a744ae1b7cb4d38b0ac29d030ef"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-3e97c042f0bf474e8608a84ea034c246-ui125.png",
+			"ids": [
+				"pz-3e97c042f0bf474e8608a84ea034c246"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-51405ea1ad194507a60c9b6701d802f0-ui125.png",
+			"ids": [
+				"pz-51405ea1ad194507a60c9b6701d802f0"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-5ad1e06e19ab475baebc582d4999daa5-ui125.png",
+			"ids": [
+				"pz-5ad1e06e19ab475baebc582d4999daa5"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-72561c715dd741f9b0082c7ad24802c1-ui125.png",
+			"ids": [
+				"pz-72561c715dd741f9b0082c7ad24802c1"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-72eb9b188896440c8a9a833e803835ec-ui125.png",
+			"ids": [
+				"pz-72eb9b188896440c8a9a833e803835ec"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-7ec3dcd94bf84e698691ef4b5839-ui125.png",
+			"ids": [
+				"pz-7ec3dcd94bf84e698691ef4b5839"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-82758295d5d34284bbae2716f64f-ui125.png",
+			"ids": [
+				"pz-82758295d5d34284bbae2716f64f"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-8ea7f3dacdcc428a9fcff7a735bc-ui125.png",
+			"ids": [
+				"pz-8ea7f3dacdcc428a9fcff7a735bc"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-8ecddf77e80c4543bf4ec714fe3d-ui125.png",
+			"ids": [
+				"pz-8ecddf77e80c4543bf4ec714fe3d"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui125.png",
+			"ids": [
+				"pz-985d36c1634644fbb2c8a0bf7de3aa9f"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-9a79befc7a834e2d9d5896a477328962-ui125.png",
+			"ids": [
+				"pz-9a79befc7a834e2d9d5896a477328962"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-a358a1bf1b994efcbebeb55abf825789-ui125.png",
+			"ids": [
+				"pz-a358a1bf1b994efcbebeb55abf825789"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-ad7164c2302a42e5953f6779a1c7-ui125.png",
+			"ids": [
+				"pz-ad7164c2302a42e5953f6779a1c7"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-b3368aea28ac4a11bf09e0dc9c48-ui125.png",
+			"ids": [
+				"pz-b3368aea28ac4a11bf09e0dc9c48"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-b5e2302bf71445c09caac76bbc2a7075-ui125.png",
+			"ids": [
+				"pz-b5e2302bf71445c09caac76bbc2a7075"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-c71563f1b8c940de998afdd62f09-ui125.png",
+			"ids": [
+				"pz-c71563f1b8c940de998afdd62f09"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-d7e68d1138a3448c8b2a4b07e8632350-ui125.png",
+			"ids": [
+				"pz-d7e68d1138a3448c8b2a4b07e8632350"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui125.png",
+			"ids": [
+				"pz-d829eb9b83e94f9c9357ee5ab9c9e359"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-dbbebc72556d4f0c9a37ab69275480e9-ui125.png",
+			"ids": [
+				"pz-dbbebc72556d4f0c9a37ab69275480e9"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-e45e2e0d67a34f6aa8368f477454-ui125.png",
+			"ids": [
+				"pz-e45e2e0d67a34f6aa8368f477454"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"file": "completion-pz-eedd1fe72af54714908d5b5aff34-ui125.png",
+			"ids": [
+				"pz-eedd1fe72af54714908d5b5aff34"
+			],
+			"target_rect": [
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		}
+	],
+	"limitations": "Prepared isolated solved display states; no real saves, no solver, no playthrough, no lifecycle claim."
+}

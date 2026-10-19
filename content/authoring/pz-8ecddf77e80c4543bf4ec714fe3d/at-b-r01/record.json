@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "gebaeude-bauwerke",
   "motif_name": "Warnemünde",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 30,
   "height": 35,
   "mode": "color",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/at-b-r01/approval.json",
+    "sha256": "5b725c0c006fe0fa76f8327f6eb95d3e7edb3b5d3a9a91efe1d5fa04b8d18504"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "b0d9cf6138ccbeed1fffe8fa567d202276c1831bf952786e4f0fd683d4c4b51f",
+    "active_record": "content/reveals/pz-8ecddf77e80c4543bf4ec714fe3d.json",
+    "active_record_sha256": "3af9f7b9c97cc3098c295b04fd408d9f1142d683de83b40fc2d2234e4daed898",
+    "evidence": "docs/design/at_b_integration/audit-02.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/at-b-r01/package.zip",
     "bytes": 6897904,

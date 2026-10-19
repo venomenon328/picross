@@ -1,6 +1,6 @@
 # AT · Transparente Abschlussbilder
 
-Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **AT-A integriert; AT-B-V01 bis zur Freigabevorlage beauftragt** ·
+Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **AT-A integriert; AT-B-F01 nach Eigentümerabnahme beauftragt** ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).
 
 ## Auftrag, Quellen und Wirksamkeit
@@ -11,9 +11,11 @@ AT-A-R01 über PR #263 auf `a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9` integriert
 Umsetzungsvorbereitung V4 beauftragt ausschließlich AT-B-V01: alle 26 gebundenen
 Bestandsbilder, Einzelbelege, Authoringpakete und gemeinsame Bild-/Endfreigabevorlage
 im Draft-PR. [AT-B-V01-Bericht](AT_B_VERIFICATION.md) führt den aktuellen Stand.
-Der Auftrag stoppt **vor `catalog_reveal plan/adopt`**. Tatsächliche Eigentümerfreigaben,
-aktive Bildübernahme, Rasterproduktion, vollständiges AT-B-T01, separates AT-B-R01,
-Merge, Deployment und Issue-Abschluss sind damit nicht erteilt.
+Dieser V01-Haltepunkt wurde anschließend durch die tatsächliche
+[Eigentümerabnahme aller 26 Bilder](AT_B_OWNER_APPROVAL.md) erfüllt. AT-B-F01
+beauftragt jetzt die kontrollierte Übernahme über `catalog_reveal plan/adopt`
+und AT-B-T01. Rasterproduktion, echte Spielstände, Merge, Deployment und
+Issue-Abschluss bleiben ausgeschlossen; qualifiziertes separates AT-B-R01 offen.
 
 Historische Spezifikationsbasis ist
 `main@b019a32f8854070dfa3d7bb580fd35a3cd4a5686`; P01 synchronisiert den

@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "menschen-berufe",
   "motif_name": "Marie Curie",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 30,
   "height": 40,
   "mode": "color",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-d829eb9b83e94f9c9357ee5ab9c9e359/at-b-r01/approval.json",
+    "sha256": "ae4159ffafd176c7fafc909c85e15be393e8c4cb91dec49561f76a644b9aab40"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "8fea577fa64fb9be882e374e1828159d6e31129ce55c224aedea22a755ab30fa",
+    "active_record": "content/reveals/pz-d829eb9b83e94f9c9357ee5ab9c9e359.json",
+    "active_record_sha256": "d1fcbc30d1c1c9d0bbaeab372abf237897dbb53d449c00e3d9c459a7985f42d4",
+    "evidence": "docs/design/at_b_integration/audit-03.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-d829eb9b83e94f9c9357ee5ab9c9e359/at-b-r01/package.zip",
     "bytes": 4993695,

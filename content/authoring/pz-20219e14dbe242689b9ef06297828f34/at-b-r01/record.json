@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "musik-buehne",
   "motif_name": "Windspiel",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 14,
   "height": 30,
   "mode": "mono",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-20219e14dbe242689b9ef06297828f34/at-b-r01/approval.json",
+    "sha256": "6e4f38b53704bc49b6e4df6d366e590c02cc500d9a398c1e4ebc634967543e90"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46",
+    "active_record": "content/reveals/pz-20219e14dbe242689b9ef06297828f34.json",
+    "active_record_sha256": "d09a17f7c973d235d89c2985677a8be70fe20a105cc7cad5ef3c0f3fe3294972",
+    "evidence": "docs/design/at_b_integration/audit-01.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-20219e14dbe242689b9ef06297828f34/at-b-r01/package.zip",
     "bytes": 4434662,

@@ -9,9 +9,10 @@ Export-/Rasterupdatebefehle erhalten aktive Bildfassungen gemäß diesem Vertrag
 reine Bildrevisionen verwenden ausschließlich den eigenen `catalog_reveal`-Weg.
 Definitionen, Runtime-Revisionen, IDs, Ressourcenpfade, Slots, Kategorien, Ratings
 und Hinzugefügt-Daten bleiben beim Bildupdate unverändert.
-Aktuell liefert ausschließlich [AT-B-V01](AT_B_VERIFICATION.md) die gebundene
-Bild-/Endfreigabevorlage; vor Eigentümerfreigabe weder `catalog_reveal plan`
-noch `adopt`. Die frühe Bildphase ist keine ZA-1-Adapterabnahme.
+[AT-B-V01](AT_B_VERIFICATION.md) liefert die gebundene Bild-/Endfreigabevorlage.
+Die anschließende [Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01
+mit `catalog_reveal plan/adopt` und AT-B-T01. Diese reine Bildrevision
+ist keine erneute ZA-1-Adapterabnahme oder Rasterproduktion.
 
 **KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt die erste Katalogaufnahme als

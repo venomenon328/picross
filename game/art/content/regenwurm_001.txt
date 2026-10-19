@@ -1,3 +1,5 @@
 Production ID: pz-eedd1fe72af54714908d5b5aff34
 Artwork: OpenAI native image generation, commissioned by the user
 Usage basis: New AI-generated illustration on the explicit project commission; no external source assets or references supplied. No exclusivity claim.
+
+AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

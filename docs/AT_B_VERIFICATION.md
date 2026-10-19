@@ -1,4 +1,131 @@
-# AT-B: Gebundene Bestandsbilder – V01-Freigabevorlage
+# AT-B: Gebundene Bestandsbilder – Übernahme und AT-B-T01
+
+## Aktueller Stand: AT-B-F01 nach Eigentümerabnahme
+
+**Alle 26 Start-IDs haben eine neue freigegebene und auf dem Arbeitsbranch
+integrierte Bildrevision 1.** Die [gemeinsame Eigentümerabnahme](AT_B_OWNER_APPROVAL.md)
+bindet unverändert die am Head `2100f1a780fa64fe499111c4022ebed5fe7d83c7`
+vorgelegten Dateien. Keine offene oder ausgelassene Start-ID. Der ursprüngliche
+V01-Haltepunkt ist damit erfüllt; der folgende V01-Bericht bleibt als historischer
+Lieferstand erhalten. Seine damals offenen Freigaben und Übernahmeschritte
+werden durch diesen aktuellen Abschnitt fortgeschrieben.
+
+Basis bleibt `a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9`; Branch
+`chore/256-transparente-bestandsbilder`, [Draft-PR #264](https://github.com/venomenon328/picross/pull/264).
+Die Eigentümererklärung und der AT-B-F01-Folgeauftrag wurden vor dem ersten
+Plan im vollständigen aktuellen Body von [#256](https://github.com/venomenon328/picross/issues/256)
+gesichert. Die 26 separaten `approval.json` und aktiven AT-Records enthalten
+die tatsächlichen drei Zustimmungen. Der UTC-Wert ist ausdrücklich die Zeit
+der Protokollierung; ein ursprünglicher Nachrichtenzeitpunkt ist nicht verfügbar.
+
+### Kontrollierte Übernahme und identische Wiederholung
+
+Eingang und Planverzeichnisse lagen außerhalb des gesamten Checkouts und
+außerhalb voneinander. Drei lexikografische Teilmengen 9/9/8 halten die
+gemeinsamen Bildseiten jeweils unter 32 MiB; keine angehobene Grenze.
+Vor jeder Übernahme wurden IDs, Definition/Vorgänger/Neubild/Notice, echte
+Freigabe, Revision 0→1 und die exakte Schreibmenge gegen die versiegelte
+Vorlage geprüft. Die PNGs gelangten ausschließlich über den vorhandenen
+`catalog_reveal`-Weg an ihre bisherigen aktiven Pfade.
+
+| Block | IDs | Alte und neue PNG-Bytes | Planhash | Ergebnis |
+| --- | --- | --- | --- | --- |
+| 1 | 9 | 30.434.093 | `975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46` | 27 Ziele übernommen, unmittelbare Wiederholung No-op |
+| 2 | 9 | 33.337.064 | `b0d9cf6138ccbeed1fffe8fa567d202276c1831bf952786e4f0fd683d4c4b51f` | 27 Ziele übernommen, unmittelbare Wiederholung No-op |
+| 3 | 8 | 30.913.835 | `8fea577fa64fb9be882e374e1828159d6e31129ce55c224aedea22a755ab30fa` | 24 Ziele übernommen, unmittelbare Wiederholung No-op |
+
+[Block 1](design/at_b_integration/audit-01.json),
+[Block 2](design/at_b_integration/audit-02.json),
+[Block 3](design/at_b_integration/audit-03.json) sichern die tatsächlichen
+Schreibpfade. Je Block sind Plan, vollständige CLI-Ergebnisse für Plan/Adopt/No-op
+und geprüfte Zielhashes daneben abgelegt. Die Plan-JSONs sind Auditkopien;
+die externen ausführbaren Planverzeichnisse enthalten zusätzlich alte/neue PNGs.
+Deren identische Bytes bleiben in den versiegelten `at-b-r01`-Ablagen gesichert.
+Die Auditkopie allein ist kein erneut auszuführender CLI-Eingang.
+
+Jede Übernahme änderte exakt Bild, Notice und neuen AT-Record je ID. Alle anderen
+Dateien unter `content/` und `game/` blieben nach SHA-256, Größe und `mtime_ns`
+gleich. Unmittelbar danach erhielt der identische zweite `adopt` den vollständigen
+Dateisnapshot byte-, größen- und zeitstempelgleich; leere Änderungsliste,
+kein Journal/Lock und kein Recoverybedarf. Die drei neuen Pläne wurden jeweils
+erst nach dem vorigen abgeschlossenen Block erstellt.
+
+### Integrität und Authoringablage
+
+[Gemeinsame Dateikontrolle](design/at_b_integration/invariants.json): 78 aktive
+Ziele, alle 26 Bild-/Noticebytes exakt wie freigegeben, alle aktiven Records
+mit Bild-/Bindungsrevision 1 und exakter Freigabe. Die übrigen **321 geschützten
+Dateien** des 373-Dateien-Ausgangsinventars sind unverändert: Definitionen,
+Runtime-Revisionen, Registryprojektionen, Identitäten/Slots/Pfade, Ratings,
+Hinzugefügt-Metadaten und ursprüngliche Integrationsbelege. Die entfernten
+52 Positionen des Vergleichs sind ausschließlich PNG und ergänzte Notice je ID.
+Echte Spielstände wurden nicht geöffnet oder verändert; keine neue Logik-,
+Proof-, Schwierigkeits- oder Rasterproduktion.
+
+Alle 26 ZIPs, Inventare, Handoffs, ursprünglichen Freigabevorlagen und gebundenen
+Regelwerkskopien sind bytegleich zum vorgelegten V01-Stand. Die ZIPs wurden
+erneut gelesen und alle enthaltenen Einträge gegen ihre Einzeldateien geprüft.
+Nach Authoring §6.1 stehen die spätere Freigabe und Integration ausschließlich
+in separater `approval.json` und äußerem `record.json`. Dessen `registered`
+bezeichnet den Arbeitsbranch; keine neue ZA-1-Adapterzertifizierung oder
+Integration auf `main`. Das aktuelle Regelwerk führt Dokumentrevision 22,
+die versiegelten Pakete unverändert Revision 21.
+
+### Tatsächliche Katalog- und Abschlussansichten
+
+Die einmalige redaktionelle Integrationsprobe verwendet die tatsächliche
+unveränderte Anwendung mit den 26 übernommenen PNGs: Godot
+`4.7.2.stable.official.ed1daf0bf`, Windows/OpenGL3, 1920×1080, UI100 und UI125.
+Die offizielle Editor-ZIP wurde gegen SHA-256
+`731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953`
+geprüft. Eine frische externe Projektkopie wurde neu importiert; AppData,
+LocalAppData und Saveziel lagen ausschließlich im isolierten Prüfverzeichnis.
+
+Für die Sichtkontrolle wurden gelöste **Darstellungszustände vorbereitet**;
+dies ist kein Durchspielen, Solverlauf, Savewechsel- oder Lebenszyklusnachweis.
+Jede Karte wurde in ihrer echten Kategorie vollständig in den sichtbaren Bereich
+gescrollt. Je ID und Skalierung wurden Katalogkarte und tatsächliche
+Abschlussansicht aufgenommen: **104 originale Engine-PNGs**.
+[Aufnahmeinventar](design/at_b_integration/native/captures.json),
+[Datei-/Enginebindung](design/at_b_integration/native/bindings.json),
+[Sichtkontrolle je ID](design/at_b_integration/visual-review.json).
+Der separat abgelegte einmalige Aufnahmeskripttext ist kein neuer Test oder
+Bestands-Replay in CI. Ableitungen für die Sichtprüfung verändern keine Assets;
+die originalen vollständigen Frames bleiben erhalten.
+
+Alle 26 Motive wurden bei beiden Skalierungen visuell kontrolliert: tatsächliche
+Papierdurchsicht, Aussparungen, helle Motivteile, Konturen, Lesbarkeit und
+Szenenkomposition. Kein durch die Integration hinzugekommener deckender
+Bildkasten oder Motivbeschnitt festgestellt. Die bereits freigegebenen
+Texturunterschiede und teils leicht durchlässigen Motivpixel bleiben erhalten.
+Die technischen Hover-/EA-/Save-/Browserregressionen werden durch die aktuelle
+synthetische Pflicht-CI geprüft; die statischen nativen Aufnahmen behaupten
+diese Abläufe nicht.
+
+### Aktuelle Pflicht-CI, Selbstreview und verbleibendes Gate
+
+Der gesamte PR enthält weiterhin die gesondert autorisierte technische
+CI-Nacharbeit `2100f1a`. Daher wählt die unveränderte CI regulär **alle acht Jobs**,
+einschließlich sieben nativer Gruppen und fünf Chromiumgruppen mit 30 aktuellen
+Szenarien. Reine Inhaltsprüfung ist für diesen Gesamtdiff nicht anwendbar.
+Der finale PR-Abschlussnachweis bindet den tatsächlichen Integrationshead,
+Basis, Test-Merge, Run/Versuch und Auswahl-/Ergebnisartefakte. Der frühere grüne
+Run `39322268252` belegt ausschließlich den damaligen Vorlagenhead.
+Der aktuelle CI-Stand und das **getrennte Selbstreview AT-B-F01-SR01** stehen
+im PR; dieser Bericht behauptet keinen späteren Lauf vor dessen Abschluss.
+
+Das separate Vorlagenreview `AT-B-V01-R01 · R1` vom 19.10.2026 am Head
+`2100f1a` hatte keine blockierenden Befunde. Dessen A01 ist durch die tatsächliche
+Eigentümerabnahme erfüllt; A02 durch die hier belegte Übernahme samt AT-B-T01
+und dem aktuellen CI-/Selbstreviewabschluss. **A03 bleibt offen:** qualifiziertes
+separates finales AT-B-R01 am Integrationshead vor einer neuen Mergeentscheidung.
+PR #264 bleibt Draft, #256 offen. Kein Merge, Deployment, Cleanup oder Issue-Abschluss.
+
+## Historischer AT-B-V01-Lieferstand vor Eigentümerentscheidung
+
+Die folgenden Abschnitte dokumentieren den damaligen Vorlagenstand und seine
+damals offenen Gates. Maßgeblich für die erfolgte Freigabe und Übernahme ist
+der aktuelle AT-B-F01-/AT-B-T01-Abschnitt oben.
 
 ## Stand und Entscheidungsgrenze
 
