@@ -7,8 +7,10 @@ var checks := 0
 var failures: Array[String] = []
 var output: String
 var root: Window
+var process_started_unix: float
 
 func _ready() -> void:
+	process_started_unix=Time.get_unix_time_from_system()
 	root=get_tree().root
 	call_deferred("run")
 
@@ -83,7 +85,7 @@ func run() -> void:
 	var definitions: Dictionary = {}
 	for name: String in ["t01","t04"]: definitions[name]=FileAccess.get_sha256("res://data/fixtures/"+name+".json")
 	var report := {"format":"picross-at-windows-process-v1","test_only":true,"mode":mode,"checks":checks,"failures":failures,
-		"pid":OS.get_process_id(),"executable":OS.get_executable_path(),"profile":slot_root,"slots":slots(),"slot_hashes":hashes,
+		"pid":OS.get_process_id(),"process_started_unix":process_started_unix,"executable":OS.get_executable_path(),"profile":slot_root,"slots":slots(),"slot_hashes":hashes,
 		"definitions":definitions,"registry_sha256":FileAccess.get_sha256("res://data/registry.json"),
 		"image_pixel":[expected.r,expected.g,expected.b],"display":DisplayServer.get_name(),"renderer":RenderingServer.get_video_adapter_name()}
 	var file := FileAccess.open(output.path_join(mode+".json"),FileAccess.WRITE)
