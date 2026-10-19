@@ -65,6 +65,8 @@ def validate_manifest(manifest: dict, *, allow_test: bool = False) -> dict:
     allowed = {'entry.html', 'index.js', 'index.wasm', 'index.pck', 'storage.js', 'SPIELANLEITUNG.md',
                'index.audio.worklet.js', 'index.audio.position.worklet.js', 'index.icon.png', 'index.apple-touch-icon.png', 'index.png'}
     allowed.update('licenses/'+name for name in LICENSES | ADDITIONAL_LICENSES)
+    if manifest['kind'] == 'test':
+        allowed.add('at-fixture.json')
     for name, entry in files.items():
         if not safe_name(name) or (name != 'index.html' and (not name.startswith(prefix) or
                 name[len(prefix):] not in allowed)):

@@ -1,0 +1,1 @@
+{"elapsed_seconds":0.04363547999992079,"enforced_os_limit":{"bytes":1073741824,"kind":"RLIMIT_AS"},"exit_code":0,"peak_rss_bytes":21753856,"rss_measurement":"getrusage(RUSAGE_SELF).ru_maxrss KiB -> bytes"}

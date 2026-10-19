@@ -6,7 +6,7 @@ Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegel
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
 Dokumentrevision, Datei-SHA-256 und Repositorycommit binden den verwendeten Snapshot.
 
-**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; Umsetzung offen:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
 [AT](../REVEAL_TRANSPARENCY.md) ergänzt den transparenten Abschlussbildstandard
 und einen getrennten nachvollziehbaren Bildupdateweg. AT-A liefert dessen
 Technik und synthetische Regressionen; AT-B stellt danach den gebundenen Bestand
@@ -586,18 +586,20 @@ ohne Definitions-/Save-Revisionserhöhung. Der gemeinsame Quellen-/Recoveryweg
 muss auch bei späterer Registrierung oder Rasterarbeit eine bestehende aktive
 freigegebene Bildfassung erhalten und prüfen.
 
-AT-A-P01 schließt die noch nicht implementierten exakten
+Der integrierte AT-A-P01-Stand schließt die exakten
 [Quellen-/Freigabeverträge](../ZA1_ADAPTER.md),
 [Folgeoperationen](../CATEGORIES.md), [Journale/Recovery](../SD_CATALOG.md) und
-[Soll-CLI](../../tools/puzzle_production/README.md).
+[CLI](../../tools/puzzle_production/README.md).
 Die neue tatsächliche Bildfreigabe bindet ID, Bildrevision, damalige Definition,
 Vorgänger-/Neubildhash, vollständige Zielnotice, Akteur, UTC und Erklärung samt
 Bildannahme, Motiv-/Rasterkonsistenz und Endabnahme. Herkunft/Nutzungsgrundlage
 und alle bisherigen Noticebytes bleiben erhalten; nötige Attribution wird
 angehängt. Kein erfundenes Freigabeprotokoll und kein Ersatz durch die
 Spezifikationsfreigabe. Materielle Änderungen folgen weiter Abschnitt 4.4.
-Der dokumentierte eigene `catalog_reveal plan/adopt`-Weg wird erst nach AT-A
-ausführbar; P01 erzeugt keine Eingangs-/Bild-/Katalogdaten.
+Der eigene `catalog_reveal plan/adopt`-Weg gehört zur ausschließlichen
+[AT-A-Umsetzung](../AT_A_VERIFICATION.md); Abschlussnachweise und unabhängiges
+Review bleiben dort gebunden. Reale Eingangs-/Bild-/Katalogdaten werden erst
+im gesondert beauftragten AT-B übernommen.
 
 Ab SD-C1 zusätzlich den nach §5.2 vollständig geprüften 0.3-Input übernehmen
 beziehungsweise passend neu binden. Die aktuelle

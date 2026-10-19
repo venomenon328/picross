@@ -1,6 +1,6 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
-**AT · 19.10.2026, Spezifikation freigegeben; Implementierung nicht begonnen:**
+**AT · 19.10.2026, Umsetzungsvorbereitung V3; AT-A in Umsetzung:**
 Der [Transparenzstandard](REVEAL_TRANSPARENCY.md) ergänzt die verdienten
 Katalogbilder. AT-A schafft den begrenzten Bildänderungsweg mit synthetischen
 Alpha-/Spielstandsnachweisen; AT-B überarbeitet danach die Bestandsbilder mit

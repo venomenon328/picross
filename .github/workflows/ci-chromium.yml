@@ -126,6 +126,7 @@ jobs:
             tools/web_tests/results.py
             tools/native_results.py
             tools/native_artifacts.json
+            tools/at_evidence.py
           sparse-checkout-cone-mode: false
           filter: blob:none
       - name: Download complete selection for the result gate

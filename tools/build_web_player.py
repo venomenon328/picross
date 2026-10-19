@@ -33,7 +33,9 @@ def extract_web_templates(archive: Path, destination: Path) -> None:
         raise ValueError('Missing single-thread web templates')
 
 
-def build(cache: Path, output: Path, *, test: bool = False, development: bool = False) -> dict:
+def build(cache: Path, output: Path, *, test: bool = False, development: bool = False, test_reveal_revision: int = 1) -> dict:
+    if test_reveal_revision not in (1, 2) or test_reveal_revision != 1 and not test:
+        raise ValueError('Image revision is only supported by the isolated test player')
     root = Path(__file__).resolve().parents[1]
     # Deliberately do not trust the preflight source override: the actual tree is built.
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
@@ -62,6 +64,8 @@ def build(cache: Path, output: Path, *, test: bool = False, development: bool = 
             install_runtime_fixtures(root, project)
             from web_tests.fixtures import adapt
             adapt(project)
+            from at_fixtures import install
+            install(project, test_reveal_revision)
             preset = project/'export_presets.cfg'
             preset.write_text(preset.read_text(encoding='utf-8').replace('data/*.json,', 'data/fixtures/*.json,data/*.json,'), encoding='utf-8', newline='\n')
             shutil.copyfile(root/'tools/web_tests/probe.gd', project/'ui/web_probe.gd')
@@ -89,6 +93,8 @@ def build(cache: Path, output: Path, *, test: bool = False, development: bool = 
             require_clean_output(result, 'CONTENT_PACK_OK')
         version = output/'releases'/build_id
         version.mkdir(parents=True)
+        if test:
+            shutil.copyfile(project/'tests/at-fixture.json', version/'at-fixture.json')
         for path in exported.iterdir():
             if path.name != 'index.html':
                 shutil.copyfile(path, version/path.name)
@@ -116,9 +122,12 @@ def main() -> int:
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--test', action='store_true', help='Isolated technical fixture player; never deployable')
     parser.add_argument('--development', action='store_true', help='Explicitly label a dirty diagnostic build')
+    parser.add_argument('--test-reveal-revision', type=int, choices=(1, 2), default=1,
+                        help='Synthetic image bytes in the isolated test export')
     args = parser.parse_args()
     try:
-        manifest = build(args.cache_dir.resolve(), args.output_dir.resolve(), test=args.test, development=args.development)
+        manifest = build(args.cache_dir.resolve(), args.output_dir.resolve(), test=args.test, development=args.development,
+                         test_reveal_revision=args.test_reveal_revision)
         print('WEB BUILD', manifest['build_id'])
         return 0
     except (OSError, ValueError, RuntimeError, zipfile.BadZipFile) as error:

@@ -59,6 +59,8 @@ def content_path(path: str) -> bool:
         return True
     if re.fullmatch(r"content/difficulty/pz-[a-z0-9][a-z0-9-]{0,59}/rating\.json", path):
         return True
+    if re.fullmatch(r"content/reveals/pz-[a-z0-9][a-z0-9-]{0,59}\.json", path):
+        return True
     match = re.fullmatch(r"content/difficulty/reports/([a-z][a-z0-9-]{0,63})/report\.(json|md)", path)
     if match:
         return match[1] not in {"con", "prn", "aux", "nul", *(f"{p}{n}" for p in ("com", "lpt") for n in range(1, 10))}

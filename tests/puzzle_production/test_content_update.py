@@ -176,7 +176,8 @@ class UpdateTests(unittest.TestCase):
         journal=load_json(journal_path)
         notice='game/'+str(Path(self.entry['reveal']).with_suffix('.txt')).replace('\\','/')
         journal['old'][notice]='forged old rights notice\n'
-        write_json(journal_path,journal)
+        from tools.puzzle_production.catalog_publication import journal_bytes
+        journal_path.write_bytes(journal_bytes(journal))
         before=self.snapshot()
         with self.assertRaisesRegex(InvalidInput,'target changed|notice'):
             recover(self.checkout)

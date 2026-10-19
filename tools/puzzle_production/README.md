@@ -1,13 +1,13 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
-**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; noch nicht implementiert:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A implementiert, unabhängiges Review offen:**
 [AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
 für transparente Abschlussbilder und einen eigenen eng begrenzten Bildupdateweg.
 AT-B stellt danach den gebundenen Bestand mit tatsächlichen Bildfreigaben um.
-Die folgenden bestehenden Befehle erhalten durch diese Spezifikation keine
-zusätzliche Bildupdatefähigkeit; insbesondere bleibt `plan-update`/`update` auf
-den gesonderten Rasterersatz begrenzt. Keine Bildbearbeitung oder Datenübernahme
-durch den Spezifikationsauftrag.
+Reine Bildrevisionen verwenden den eigenen `catalog_reveal`-Weg; `plan-update`/
+`update` bleibt auf den gesonderten Rasterersatz begrenzt und erhält aktive
+Bildfassungen. Die technische AT-A-Lieferung übernimmt keine realen Bilder
+oder Metadaten.
 
 **Aktuelle Prüfregel (12.10.2026):** Konkrete Rätsel werden während ihrer Produktion
 und Integration geprüft, niemals routinemäßig in CI. Keine rätselspezifischen
@@ -844,8 +844,9 @@ Umschreiben seiner alten Freigabe-/Manifestbindung ist keine gültige Übernahme
 P01 legt vor der ersten betroffenen Codeänderung die exakten Eingänge, Pfade,
 Felder, Versionen, Grenzen und die nachfolgende Soll-Syntax gemeinsam in
 [ZA-1](../../docs/ZA1_ADAPTER.md), [Projektion](../../docs/CATEGORIES.md) und dem
-[Transaktionsvertrag](../../docs/SD_CATALOG.md) fest. Erst AT-A macht diese
-Soll-Aufrufe ausführbar. Lesender Plan, aktuelle
+[Transaktionsvertrag](../../docs/SD_CATALOG.md) fest. Die AT-A-Implementierung
+und ihr Prüfstand sind in [AT-A-T01](../../docs/AT_A_VERIFICATION.md) gebunden.
+Lesender Plan, aktuelle
 Erwartungshashes, gemeinsame Quellenprüfung, versionierter Binärersatz,
 kontrollierter Rollback und echte Wiederholungs-No-ops gehören zusammen.
 Ein zulässiger Altstand ohne neue Bildquelle und eine vorhandene ungültige
@@ -860,16 +861,16 @@ Recoverywege müssen die aktive Bildbindung gemeinsam erhalten; alte exakte
 Formate werden nicht gelockert. Synthetische technische Regressionen gehören
 zu AT-A, konkrete Bestandsfreistellung, Bildabnahme und Motivprüfung zu AT-B.
 
-### AT-P01-D04 · Vollständige Soll-CLI (noch nicht ausführbar)
+### AT-P01-D04 · CLI für Bildrevisionen
 
 Eigener Moduleinstieg `tools.puzzle_production.catalog_reveal`. Genau zwei
 Unterbefehle, keine automatische Bestandsauswahl, kein Force/Resume/Skip-Schalter:
 
 ```sh
-# SOLL-SYNTAX: erst nach AT-A ausführbar, jetzt nicht starten.
+# Nur explizit freigegebene Bildrevisionen; keine automatische Bestandsauswahl.
 python -m tools.puzzle_production.catalog_reveal plan --checkout <checkout> --id <pz-ID> [--id <weitere-ID>] --input <externe-anfrage.json> --output-dir <neuer-externer-planordner> [--seconds 300]
 python -m tools.puzzle_production.catalog_reveal adopt --checkout <checkout> --plan <planordner/plan.json> [--seconds 300]
-# Bestehender Einstieg; AT-fähige Recovery erst nach AT-A:
+# Gemeinsamer Recovery-Einstieg, einschließlich AT-Binärjournalen:
 python -m tools.puzzle_production.target_adapter recover-registration --checkout <checkout>
 ```
 

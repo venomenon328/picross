@@ -6,7 +6,7 @@ from pathlib import Path, PurePosixPath
 import re
 import zipfile
 
-from native_contract import GROUPS, SCOPES, WORKER_CHECKS, artifacts, checks, coverage
+from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, artifacts, checks, coverage
 
 
 def unique(pairs):
@@ -191,16 +191,20 @@ def validate_payload(result, root, player_root=None):
                         entry['actual']['size'] != [entry['region'][2]-entry['region'][0],entry['region'][3]-entry['region'][1]]):
                     raise ValueError('Native comparison dimensions/RGBA disagree')
             if summary['reports'] != [read(directory/'selected/kat2'/(mode+'.json')) for mode in
-                                      ('regular','restart','large','empty','invalid','adapter','information','kb','kk','ke')]:
+                                      CATALOG_MODES]:
                 raise ValueError('Catalog original reports disagree with summary')
             if report['kat2'] != summary:
                 raise ValueError('Catalog group/summary mismatch')
+            from at_evidence import native
+            native(directory/'selected/kat2', read(directory/'selected/kat2/at.json'), ('small','hover'))
         if group == 'completion':
             costs = read(directory/'selected/ea/image-costs.json')
             if report['ea']['image_costs'] != costs or costs['input_frames'] != len(sequence):
                 raise ValueError('EA image timing/sequence mismatch')
             if report['ea']['reports'] != [read(directory/'selected/ea'/(mode+'.json')) for mode in ('native','restart')]:
                 raise ValueError('EA group/original mismatch')
+            from at_evidence import native
+            native(directory/'selected/ea', read(directory/'selected/ea/native.json'), ('final','reopen','blend'))
     if 'export' in groups:
         if player_root is None:
             raise ValueError('Selected export requires delivered player bytes')

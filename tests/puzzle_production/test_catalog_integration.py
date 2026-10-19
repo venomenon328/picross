@@ -288,11 +288,10 @@ class CatalogTests(unittest.TestCase):
     def test_recovery_can_resume_its_own_interruption(self):
         self.legacy();self.preview();before=snapshot(self.checkout)
         with self.assertRaises(InterruptedError):ca.adopt(self.checkout,self.root/'test-run',apply=True,fail_step='crash-runtime')
-        real=cr.atomic_bytes
-        def killed(path,data):
-            real(path,data)
-            if path==self.checkout/cr.RUNTIME:raise InterruptedError('recovery killed')
-        with patch.object(cr,'atomic_bytes',side_effect=killed),self.assertRaises(InterruptedError):cr.recover(self.checkout)
+        from tools.puzzle_production import catalog_publication as publication
+        def killed(phase,name=None):
+            if phase=='R1-runtime':raise InterruptedError('recovery killed')
+        with patch.object(publication,'checkpoint',side_effect=killed),self.assertRaises(InterruptedError):cr.recover(self.checkout)
         cr.recover(self.checkout);cr.check_checkout(self.checkout)
         self.assertEqual(snapshot(self.checkout),before)
 

@@ -6,9 +6,10 @@ import shutil
 import tempfile
 import time
 
+from . import catalog_io
 from .authoring_package import file_hash, file_table, require, sha
 from .contract import canonical_bytes, load_json
-from . import catalog_added as added, categories, catalog_rating as rating, catalog_transaction as tx
+from . import catalog_added as added, categories, catalog_rating as rating, catalog_transaction as tx, reveal_source as reveal
 
 
 def _input(value):
@@ -44,7 +45,7 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     from .content_registry import ROOT, export_entry, check_checkout, validate
     from .content_update import notice_path
     from .target_adapter import verify_export, FORMAT, MANUAL_FORMAT, PAIRED_FORMAT
-    root = root.resolve()
+    root = catalog_io.external(root)
     update = expected_definition_sha256 is not None
     if update: sha(expected_definition_sha256)
     snapshot = tx.capture(root)
@@ -56,21 +57,24 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     category = categories.lookup(catalog, m["category_id"])
     entry = export_entry(export_dir, m, report, category)
     existing = next((e for e in registry["entries"] if e["id"].casefold() == entry["id"].casefold()), None)
+    active_reveal = reveal.load(root, existing, catalog) if existing else None
     n = "game/" + entry["definition"]
     if update:
         require(existing is not None, "Update requires an existing production ID")
         require(file_hash(tx.safe(root, "game/" + existing["definition"])) == expected_definition_sha256, "Stale expected definition hash")
         require(all(entry[k] == existing[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")),
                 "Raster update must retain identity, paths, visibility, category and save slot")
-        require(entry["production"]["reveal_sha256"] == existing["production"]["reveal_sha256"], "Raster update must retain the approved reveal bytes")
+        effective = reveal.resolve(root, existing, catalog)["effective_reveal_sha256"]
+        require(entry["production"]["reveal_sha256"] == effective, "Raster update must retain the approved reveal bytes")
     if existing is not None:
         from .integrated_content import FORMAT as INTEGRATED
         original = load_json(root / existing["production"]["package"] / "manifest.json")
-        same = original["entry"] == entry if original.get("format") == INTEGRATED else existing == entry
+        same = reveal.normalized(root, existing) == entry
         if same:
             check_checkout(root, replay=not update and original.get("format") != INTEGRATED)
             require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
-                    all(file_hash(tx.safe(root, name)) == h for name, h in snapshot["retained"].items()), "Checkout changed during planning")
+                    all(file_hash(tx.safe(root, name)) == h for name, h in snapshot["retained"].items()) and
+                    tx.namespaces(root,registry)==snapshot['namespaces'], "Checkout changed during planning")
             return {"status": "no-op", "registered": True, "id": entry["id"], "category": category, "changes": []}
         require(update, "Occupied production ID/revision: update is outside ZA-1")
     raw = (export_dir / m["definition"]).read_bytes()
@@ -89,7 +93,6 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     else:
         required = True
     package = entry["production"]["package"]
-    require(not tx.safe(root, package).exists(), "Update package revision already exists" if update else "Target already exists: " + package)
     active, external = _new_rating(raw, previous, difficulty, rebind_difficulty, required=required,
                                    production_mode=entry["production"]["mode"])
     new = deepcopy(registry)
@@ -101,12 +104,22 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     changes = {tx.REGISTRY: canonical_bytes(new) + b"\n", n: raw,
                notice: (export_dir / ("runtime/" + notice.removeprefix("game/"))).read_bytes(),
                rating.path(entry["id"]): rating.encoded(active) if active is not None else None}
+    if active_reveal:
+        rebound = reveal.rebind(active_reveal, entry, m["runtime_revision"], changes[notice], catalog)
+        changes[reveal.path(entry["id"])] = canonical_bytes(rebound) + b"\n"
+        changes[notice] = snapshot["texts"][notice]
     with tempfile.TemporaryDirectory(prefix="sd-c-integration-") as temp:
         stage = Path(temp) / "package"
         shutil.copytree(export_dir, stage)
         verify_export(stage)  # Preserve the existing independent staging replay.
         require(file_hash(stage / "manifest.json") == entry["production"]["package_sha256"], "Export changed during staging")
         additions = {package + "/" + name: p for name, p in file_table(stage, time.monotonic() + 300).items()}
+        target=tx.safe(root,package)
+        if target.exists():
+            parents={str(parent).replace('\\','/') for name in additions for parent in Path(name).parents}
+            require(target.is_dir() and all(tx.safe(root,p.relative_to(root).as_posix()).is_dir() and
+                    p.relative_to(root).as_posix() in parents for p in target.rglob('*')),
+                    'Update package revision already exists' if update else 'Target already exists: '+package)
         if not existing: additions["game/" + entry["reveal"]] = stage / m["reveal"]
         # A read-only registration plan does not allocate its first timestamp.
         if not existing and apply:

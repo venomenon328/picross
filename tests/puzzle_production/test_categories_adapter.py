@@ -227,15 +227,14 @@ class CategorizedAdapterTests(unittest.TestCase):
         out = self.export()
         before = self.snapshot(self.checkout)
         original = self.catalog_path.read_bytes()
-        atomic = registry.atomic_bytes
+        from tools.puzzle_production import catalog_publication as publication
         for index in (registry.REGISTRY, registry.RUNTIME):
             triggered = []
-            def change(path, data):
-                atomic(path, data)
-                if path == self.checkout / index and not triggered:
+            def change(phase, path=None):
+                if phase in ('P4','P5') and path == index and not triggered:
                     triggered.append(True)
                     self.catalog_path.write_bytes(original + b" ")
-            with self.subTest(index=index), patch.object(registry, "atomic_bytes", side_effect=change):
+            with self.subTest(index=index), patch.object(publication, "checkpoint", side_effect=change):
                 with self.assertRaisesRegex(InvalidInput, "target changed.*categories.json"):
                     rated_registration(out, self.checkout, apply=True)
             self.assertTrue(triggered)

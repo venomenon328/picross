@@ -34,11 +34,16 @@ jobs:
         with:
           name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ inputs.selection_attempt }}
           path: ${{ runner.temp }}/ci-selection
+      - name: Isolated image dependency for synthetic AT exports
+        run: |
+          python3 -m venv "${{ runner.temp }}/web-build-env"
+          "${{ runner.temp }}/web-build-env/bin/pip" install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+          echo "${{ runner.temp }}/web-build-env/bin" >> "$GITHUB_PATH"
       - name: Build regular player and separate fixed technical player
         run: |
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-player
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test --test
-          python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test-update --test
+          python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test-update --test --test-reveal-revision 2
       - name: Seal current builds and source binding
         env:
           CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}

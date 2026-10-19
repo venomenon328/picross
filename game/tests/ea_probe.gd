@@ -114,6 +114,7 @@ func run() -> void:
 			check(save_bytes() == bytes, "EA presentation never rewrites save/history")
 			measurements.append({"window":context,"duration_ms":Time.get_ticks_msec()-started,"source":str(app.reveal_view.source),"area":str(app.reveal_view.area),"art":str(app.reveal_view.artwork_rect())})
 			await frame("final-%d" % context[0])
+			var alpha_final := await preload("res://tests/at_alpha.gd").sample(self,app.reveal_view,"final-%d" % context[0])
 			click(app.completion_reset)
 			await frames()
 			check(app.reset_dialog.visible and app.reset_origin == "ending", "EA actual reset pointer opens bound dialog")
@@ -124,6 +125,17 @@ func run() -> void:
 			app.select_puzzle(2)
 			final_checks()
 			check(save_bytes() == bytes, "EA reopen does not persist presentation")
+			var alpha_reopen := await preload("res://tests/at_alpha.gd").sample(self,app.reveal_view,"reopen-%d" % context[0])
+			var alpha_last := prepare()
+			await frames()
+			finish_stroke(alpha_last)
+			app.reveal_view.set_process(false)
+			app.reveal_view.elapsed=1.625
+			app.reveal_view.apply_time()
+			await frames()
+			var alpha_blend := await preload("res://tests/at_alpha.gd").sample(self,app.reveal_view,"blend-%d" % context[0],0.5)
+			app.reveal_view.finish()
+			at_measurements.append({"window":context,"final":alpha_final,"reopen":alpha_reopen,"blend":alpha_blend})
 		for i: int in range(motion_images.size()):
 			check(motion_images[i].save_png(output.path_join(sequence[i].file)) == OK, "EA buffered actual motion frame")
 		motion_images.clear()
@@ -233,7 +245,7 @@ func run() -> void:
 		finish_stroke(last)
 		app.reveal_view.finish()
 		app.show_album()
-	var report := {"checks":checks,"failures":failures,"sequence":sequence,"measurements":measurements,"test_only":true,"mode":mode}
+	var report := {"checks":checks,"failures":failures,"sequence":sequence,"measurements":measurements,"at_measurements":at_measurements,"test_only":true,"mode":mode}
 	var file := FileAccess.open(output.path_join(mode+".json"),FileAccess.WRITE)
 	file.store_string(JSON.stringify(report,"\t")+"\n")
 	file.close()

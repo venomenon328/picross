@@ -316,7 +316,8 @@ func _activate_session(index: int) -> bool:
 	reveal_view.clear()
 	session = sessions[index]
 	board.session = session
-	_layout_book()
+	# Restoring slot-bound clue positions still needs the current work geometry.
+	_layout_book(true)
 	board.hover = Vector2i(-1, -1)
 	board.restore_view(session.view_state)
 	# A restored default view is not an edit merely because this slot was selected.
@@ -915,7 +916,7 @@ func _place(item: Control, box: Rect2) -> void:
 	item.position = box.position
 	item.size = box.size
 
-func _layout_book() -> void:
+func _layout_book(prepare_board: bool = false) -> void:
 	if laying_out or board == null or information == null or ui_scale_button == null:
 		return
 	if size.x < 1280 or size.y < 720:
@@ -943,8 +944,12 @@ func _layout_book() -> void:
 		top += 106*u
 		if work_repair_button.visible:
 			top += 50*u
-	_place(board,Rect2(o+Vector2(left,top),Vector2(rail-left-24*u,bottom-top-10*u)))
-	board._layout()
+	# Album, information and earned artwork need no hidden grid/font fit.
+	# Opening work or restoring a selected slot prepares the current geometry.
+	var layout_work: bool = work.visible or prepare_board
+	if layout_work:
+		_place(board,Rect2(o+Vector2(left,top),Vector2(rail-left-24*u,bottom-top-10*u)))
+		board._layout()
 	var mini_extent: float = (86.0 if compact or (bottom-rail_top)/u < 600 else 132.0)*u
 	var nav_x: float = w-(187.5 if compact else 150)
 	for i: int in range(3):
@@ -952,7 +957,7 @@ func _layout_book() -> void:
 	# SL-R01/B-01: follow the unchanged navigation at every breakpoint/UI scale.
 	# Cropped alpha envelopes and symmetric safe interiors share this content axis.
 	var axis: float = actions["menu"].get_rect().get_center().x
-	if session != null and board is FullViewBoard and board.layout_valid and mini_extent > 86*u:
+	if layout_work and session != null and board is FullViewBoard and board.layout_valid and mini_extent > 86*u:
 		var ink: Rect2 = board.composition_envelope()
 		ink.position += board.position
 		var left_room: float = maxf(0,ink.position.x-(o.x+w*0.03125))
@@ -1026,7 +1031,7 @@ func _layout_book() -> void:
 	surface.palette = surface.frame_rect(palette_row.get_rect(),"palette")
 	# Preserve the complete fit/hint budget. Only unused left paper absorbs the
 	# clearance required by the aligned sidebar; no cell, font or slot reduction.
-	if session != null and board is FullViewBoard and board.layout_valid:
+	if layout_work and session != null and board is FullViewBoard and board.layout_valid:
 		var occupied: Rect2 = board.composition_envelope()
 		occupied.position += board.position
 		var coordinate_text: String = "Zeile %d · Spalte %d" % [session.player.height,session.player.width]

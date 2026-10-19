@@ -18,6 +18,7 @@ var kb_measurements: Array = []
 var kk_measurements: Array = []
 var kk_pointer_measurements: Array = []
 var ke_graphics_measurements: Array = []
+var at_measurements: Array = []
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -189,6 +190,8 @@ func run() -> void:
 	elif mode == "ke":
 		await catalog_labels()
 		await preload("res://tests/ke_graphics.gd").run(self)
+	elif mode == "at":
+		await transparent_reveals()
 	elif mode == "adapter":
 		var id: String = "pz-test-direct-mono"
 		check(app.album.items.has(id), "registered KAT1 adapter content appears in All")
@@ -224,10 +227,52 @@ func run() -> void:
 func write_report() -> void:
 	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	report["ke_graphics_measurements"] = ke_graphics_measurements
+	report["at_measurements"] = at_measurements
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()
 	if failures.is_empty(): print("KAT2_PROBE_OK ", mode, " checks=", checks, " timings_ms=", timings)
+
+func transparent_reveals() -> void:
+	check(app.choices[0].picture.artwork == null and app.choices[2].picture.artwork == null, "AT fresh cards do not load new artwork")
+	app.select_puzzle(0)
+	await frames()
+	click_at(app.board.global_position+app.board.view.cell_rect(Vector2i(2,2)).get_center())
+	app.show_album()
+	await frames()
+	check(app.choices[0].picture.artwork == null and app.choices[0].note.text == "Begonnen", "AT begun card shows only own fill")
+	var item = app.sessions[2]
+	for y: int in range(item.player.height):
+		for x: int in range(item.player.width):
+			var value: int = item.definition.solution[y][x]
+			if value > 0:
+				item.gesture.begin(item.player,Vector2i(x,y),value)
+				item.finish()
+	check(item.completed and app.store.write_slot(item,item.view_state).is_empty(), "AT synthetic completion earned and saved")
+	app.show_album()
+	var hidden_board: Rect2 = app.board.get_rect()
+	var hidden_view: Dictionary = app.board.capture_view()
+	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
+		surface.size=Vector2i(spec[0],spec[1])
+		app.set_ui_scale(spec[2])
+		await frames()
+		check(app.board.get_rect() == hidden_board and app.board.capture_view() == hidden_view,"AT album resize leaves hidden work geometry and saved view unchanged")
+		var card = app.choices[2]
+		app.album.ensure_control_visible(card)
+		await frames()
+		var before := await preload("res://tests/at_alpha.gd").sample(self,card.picture,"catalog-%d" % spec[0])
+		var motion := InputEventMouseMotion.new()
+		motion.position=card.get_global_rect().get_center()
+		surface.push_input(motion,true)
+		await create_timer(0.6).timeout
+		var hover := await preload("res://tests/at_alpha.gd").sample(self,card.picture,"hover-%d" % spec[0])
+		check(card.is_hovered(), "AT actual card hover reached")
+		check(app.choices[0].picture.artwork == null and app.choices[1].picture.artwork == null,"AT begun/new remain spoiler-free alongside solved image")
+		at_measurements.append({"window":spec,"small":before,"hover":hover})
+	app.select_puzzle(0)
+	await frames()
+	check(app.work.visible and app.board.get_rect() != hidden_board and app.board.layout_valid,"AT opening begun work applies current viewport geometry")
+	check(app.board.capture_view() == hidden_view,"AT deferred layout preserves desired work state")
 
 func caption_button(parent: Node, caption: String) -> Button:
 	for node: Node in parent.find_children("*", "Button", true, false):
