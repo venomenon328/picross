@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-7ec3dcd94bf84e698691ef4b5839",
+  "revision": "at-b-r01",
+  "category_id": "gemuese-pilze-kraeuter",
+  "motif_name": "Erbse",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 24,
+  "height": 24,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/at-b-r01/package.zip",
+    "bytes": 3807431,
+    "sha256": "3d6b31489db415f1dc338dacdb0a3318aa1931235512071efb66553775b813af"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-7ec3dcd94bf84e698691ef4b5839/at-b-r01/handoff.json",
+    "sha256": "518c993fcee08322b403349b599da0b07ededde8c1254af65a6c6823a1431a5f"
+  },
+  "inventory_sha256": "fbe06a6eb671d98d5e0f36611a0cfc4fb7abbc3f4830ecbbfa376b697add3912"
+}

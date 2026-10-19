@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-25d245061b0c49c190788de8e5d0e45b",
+  "revision": "at-b-r01",
+  "category_id": "voegel",
+  "motif_name": "Kolibri",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 40,
+  "height": 30,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/at-b-r01/package.zip",
+    "bytes": 4414379,
+    "sha256": "ccef6b0c962fa90a9e3c945faa6d5f4d8c4d04e51f7bad895ab9320c59aee4d6"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-25d245061b0c49c190788de8e5d0e45b/at-b-r01/handoff.json",
+    "sha256": "38839ad288e458f90004275f2336a81d85c861b9192b68e307de3705175f88dc"
+  },
+  "inventory_sha256": "6bbf9208660a99f9a85b6661b535df9025fff5bb44280e2e2acf68457c239547"
+}

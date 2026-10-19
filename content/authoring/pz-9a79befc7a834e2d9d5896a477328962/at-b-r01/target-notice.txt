@@ -1,0 +1,5 @@
+Production ID: pz-9a79befc7a834e2d9d5896a477328962
+Artwork: Native image_gen-Generierung im Projektauftrag
+Usage basis: Native im Nutzerauftrag erzeugte Projektillustration ohne externe Bildreferenz oder übernommene Fremdassets; ursprüngliche PNG-Bytes erhalten. Keine Exklusivität zugesichert.
+
+AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

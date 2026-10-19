@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+  "revision": "at-b-r01",
+  "category_id": "insekten-kleine-tiere",
+  "motif_name": "Stirnlappenbasilisk",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 50,
+  "height": 25,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/at-b-r01/package.zip",
+    "bytes": 4502432,
+    "sha256": "bb18676c9be3b790c7df4b576e7403d74c90d8bf9243a18326bdcfe1be8d36d9"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/at-b-r01/handoff.json",
+    "sha256": "3beba6e83c55904bdea17cc9eb7bda8927cf6b6742bc961d25c3f402434c08ee"
+  },
+  "inventory_sha256": "ab5ae2f38d295d7b9a46094df7594d5f684528959c83129cef5ec1aab26f8753"
+}

@@ -1,11 +1,12 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A implementiert, unabhängiges Review offen:**
+**AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
 [AT](REVEAL_TRANSPARENCY.md) ergänzt in AT-A die getrennte aktive Bildbindung und
 deren gemeinsamen Prüf-/Transaktionsweg; AT-B übernimmt danach freigegebene neue
 Bildfassungen des gebundenen Bestands. Historische Registry-/Paket-/Integrations-
-bindungen bleiben unverändert. Der aktuelle Implementierungsauftrag umfasst
-den technischen Weg samt synthetischen Nachweisen, keine reale Datenübernahme.
+bindungen bleiben unverändert. Der aktuelle Auftrag umfasst ausschließlich
+[AT-B-V01](AT_B_VERIFICATION.md), die vollständige gebundene Bild-/Endfreigabevorlage.
+Stopp vor Eigentümerfreigabe und `catalog_reveal plan/adopt`; keine aktive Übernahme.
 
 **KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt eine eigene autoritative,

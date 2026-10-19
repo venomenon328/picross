@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+  "revision": "at-b-r01",
+  "category_id": "blumen-pflanzen",
+  "motif_name": "Efeutute",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 35,
+  "height": 35,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/at-b-r01/package.zip",
+    "bytes": 5893274,
+    "sha256": "d4f01d6cae5d25f066de8caa9c127e1a7350c2031593e0e784075073da76b5e4"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ea7f3dacdcc428a9fcff7a735bc/at-b-r01/handoff.json",
+    "sha256": "8b256f3d45b14d01fd3891aaa664cd31b71d90ada5515dc4afe8074b734957a4"
+  },
+  "inventory_sha256": "d0eebdb5f3b043dd74310fcbe2562ec238a5f75c6bd8e27e9acaaa07f6240a66"
+}

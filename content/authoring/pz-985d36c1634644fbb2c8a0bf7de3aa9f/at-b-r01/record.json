@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "revision": "at-b-r01",
+  "category_id": "gemuese-pilze-kraeuter",
+  "motif_name": "Ingwer",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 20,
+  "height": 25,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/at-b-r01/package.zip",
+    "bytes": 4915913,
+    "sha256": "ee42c2704a8913ace5eef290c37455cb4ff71ce949d436f1d5d14f6bbb0d2c4b"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-985d36c1634644fbb2c8a0bf7de3aa9f/at-b-r01/handoff.json",
+    "sha256": "974a5069e96d75384fdc9dcf3db13ef77d831f59cba0f22af0be7e2d7cf627cc"
+  },
+  "inventory_sha256": "2033a3e91f6030e041dc0f2482637056d18c9eaaea0b2201b3a1c0b11a7c0af6"
+}

@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-d829eb9b83e94f9c9357ee5ab9c9e359",
+  "revision": "at-b-r01",
+  "category_id": "menschen-berufe",
+  "motif_name": "Marie Curie",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 30,
+  "height": 40,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-d829eb9b83e94f9c9357ee5ab9c9e359/at-b-r01/package.zip",
+    "bytes": 4993695,
+    "sha256": "93c0fb3db18b51464d1e4be916663bb38950a3bc17442a3e44928c51a6ba7593"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-d829eb9b83e94f9c9357ee5ab9c9e359/at-b-r01/handoff.json",
+    "sha256": "39d83159244ff59fbaa92bcdfd7cd4da2119b7620f362920710813a55e307fed"
+  },
+  "inventory_sha256": "3ef64d147a60ec7a2afb061820528bb0792a1af43bab72af2df064b0b7f25f8e"
+}

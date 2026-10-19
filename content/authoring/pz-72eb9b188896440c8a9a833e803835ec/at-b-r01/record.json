@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "revision": "at-b-r01",
+  "category_id": "saeuger",
+  "motif_name": "Koboldmaki",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 26,
+  "height": 38,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/at-b-r01/package.zip",
+    "bytes": 5074155,
+    "sha256": "4cc97d9ecd574eb7faa5c31f76a23e3f8069caa8f315ccd96121c909bcae82ae"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-72eb9b188896440c8a9a833e803835ec/at-b-r01/handoff.json",
+    "sha256": "d93f542f5c2fd233fa1334877d2f28b531231e092ba81e0bd0e602e26b5f0a97"
+  },
+  "inventory_sha256": "82d8ecabf7fc8197add82102a1650317882c2c4d635665b85bb6a52a2d8301ff"
+}

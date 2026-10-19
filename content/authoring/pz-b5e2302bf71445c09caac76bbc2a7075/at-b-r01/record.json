@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "revision": "at-b-r01",
+  "category_id": "saeuger",
+  "motif_name": "Carabao – Kopf",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 40,
+  "height": 26,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/at-b-r01/package.zip",
+    "bytes": 6122163,
+    "sha256": "216c2b4dd817415f6478343dcf526d5804c4bf0a1a3cef4f2d19832feb145fdc"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-b5e2302bf71445c09caac76bbc2a7075/at-b-r01/handoff.json",
+    "sha256": "d76ab39a66ae4a1b32efb297895e4281b77a1a8554da78fcc508c0ebf9ece098"
+  },
+  "inventory_sha256": "a2ba0a0509d913969efffa22633b2ecbec0422a3c0826420b327bc7dbc517ab8"
+}

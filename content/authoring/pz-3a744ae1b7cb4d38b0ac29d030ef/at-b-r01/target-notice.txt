@@ -1,0 +1,5 @@
+Production ID: pz-3a744ae1b7cb4d38b0ac29d030ef
+Artwork: AI-generated at user request; no human visual author asserted
+Usage basis: Native generation expressly requested by the user for this project; no third-party reference asset supplied or used.
+
+AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

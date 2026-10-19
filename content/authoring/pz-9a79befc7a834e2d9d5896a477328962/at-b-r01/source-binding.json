@@ -1,0 +1,44 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-9a79befc7a834e2d9d5896a477328962",
+  "name": "Buntspecht",
+  "category_id": "voegel",
+  "save_slot": "buntspecht_001",
+  "runtime_revision": 1,
+  "definition_path": "game/data/content/buntspecht_001.json",
+  "definition_sha256": "1f222523cd4bdff6bfc5440922f61788b529a25a28f90689b6c9c64f3012fef3",
+  "original": {
+    "path": "game/art/content/buntspecht_001.png",
+    "bytes": 2426323,
+    "sha256": "a6fba345c136c8f55abeea23f31fb7f7b7cacd5588a16de3b9c74db10cf83d6c",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 1024,
+    "height": 1536,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572864
+  },
+  "notice_path": "game/art/content/buntspecht_001.txt",
+  "notice_sha256": "89f8c892d556599e3f48e97a7643b398e95619b04bf68f92d269eb0faf31cf30",
+  "physical_manifest": {
+    "path": "content/packages/pz-9a79befc7a834e2d9d5896a477328962/r05/manifest.json",
+    "sha256": "b057b9269fc705d0cc0ae9152149c8c55bccb73fde3c1f2e6d07627e11cd7ae6",
+    "bytes": 2819
+  },
+  "original_export_anchor": "1779e4aeeecce76f288a164d23605e9fcf724035f8fb2dd151e668682e1289f0",
+  "historical_production_revision": "r05",
+  "integrated_commit": "acfebcd1429fc9db6a9d48e1eb07f08143a13b50",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "bea98c7ec96a36c761bcc12eaa8ece6e76fbd930",
+  "frozen_sources": {
+    "content/added/pz-9a79befc7a834e2d9d5896a477328962.json": "933a7eb767fba44636ec5b6f5ca3bae78722dca22323a9cc398f1f1fd4bea5eb",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-9a79befc7a834e2d9d5896a477328962/rating.json": "752eb8224f0d1aa45a65e11f2e2686773564243e13956a10d9ab05f1e3f1af80",
+    "content/packages/pz-9a79befc7a834e2d9d5896a477328962/r05/manifest.json": "b057b9269fc705d0cc0ae9152149c8c55bccb73fde3c1f2e6d07627e11cd7ae6",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

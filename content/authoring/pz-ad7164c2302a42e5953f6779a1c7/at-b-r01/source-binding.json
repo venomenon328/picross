@@ -1,0 +1,44 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "name": "Glas Bier mit Schaumkrone",
+  "category_id": "suesses-getraenke",
+  "save_slot": "bierglas_001",
+  "runtime_revision": 1,
+  "definition_path": "game/data/content/bierglas_001.json",
+  "definition_sha256": "d7c7bb015690d099f321528469d85487bc72ea963e186838717bafc8ffe859a0",
+  "original": {
+    "path": "game/art/content/bierglas_001.png",
+    "bytes": 2101035,
+    "sha256": "54d053af4c1022dade010581b5b70823f4acc9a406057221ef638fc9f1a1c804",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 1254,
+    "height": 1254,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572516
+  },
+  "notice_path": "game/art/content/bierglas_001.txt",
+  "notice_sha256": "e46785ebabdb8221b911dedbdcb04656f5b52d99b5990d3433c204854264aec4",
+  "physical_manifest": {
+    "path": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/manifest.json",
+    "sha256": "aa608843ec320d2e8fbcc763ec2e2380c9696f36adc70af69dc7daca39ec4095",
+    "bytes": 3188
+  },
+  "original_export_anchor": "61444bab41a9fb953eed9e2488bdce0d4bbe11764a559a9d97cba395d9abb06e",
+  "historical_production_revision": "r03",
+  "integrated_commit": "37f500d5e6599a6c8ff85c8ca8edb4d190474c5f",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "5fa9a7545dcee0c9355907ca7de8f68c53544e5b",
+  "frozen_sources": {
+    "content/added/pz-ad7164c2302a42e5953f6779a1c7.json": "44fb8409c566b98ef408aee697df81839e8525964aead416f003307aa4501b0f",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-ad7164c2302a42e5953f6779a1c7/rating.json": "052346f15bfa832330887156b60108da41a9eb206cc20b9a56b8c628582c98d2",
+    "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/manifest.json": "aa608843ec320d2e8fbcc763ec2e2380c9696f36adc70af69dc7daca39ec4095",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "revision": "at-b-r01",
+  "category_id": "gebaeude-bauwerke",
+  "motif_name": "Warnemünde",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 30,
+  "height": 35,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/at-b-r01/package.zip",
+    "bytes": 6897904,
+    "sha256": "14817fbefad00dd9f5999ed133af66ade0ffb58c101868b763f55894c25fb6fe"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-8ecddf77e80c4543bf4ec714fe3d/at-b-r01/handoff.json",
+    "sha256": "7ce769e244fcd2da01c512a07e6551e18ed08788c655b574f3b61d5611cf5db1"
+  },
+  "inventory_sha256": "cc8994c3283a8c84f67d6f35f8433fdd5088f849b71657709b5abda05f050651"
+}

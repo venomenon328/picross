@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-eedd1fe72af54714908d5b5aff34",
+  "revision": "at-b-r01",
+  "category_id": "insekten-kleine-tiere",
+  "motif_name": "Regenwurm",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 25,
+  "height": 35,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/at-b-r01/package.zip",
+    "bytes": 3854683,
+    "sha256": "4991e759b454f47daa64350d933eadd61086806aa42fc8ab4163d7215a208bcf"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-eedd1fe72af54714908d5b5aff34/at-b-r01/handoff.json",
+    "sha256": "287aba7075850c54c13d0b9f97fc440fb00c04543f3a2a1955e1bbb6aeaff363"
+  },
+  "inventory_sha256": "8a1ddb34a6cb8d32e609b6d7c2f8474e428218e9247aa8467a6708d17c7bfa60"
+}

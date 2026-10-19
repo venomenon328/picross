@@ -1,0 +1,24 @@
+{
+  "format": "picross-at-b-approval-proposal-v1",
+  "id": "pz-c71563f1b8c940de998afdd62f09",
+  "package_revision": "at-b-r01",
+  "proposed_image_revision": 1,
+  "definition_sha256": "0c13e049c23fbc0a58b3251a5644950045101fc3d3bcf36b4d2e0cc8194190e6",
+  "previous_reveal_sha256": "9da4019b8755311b24338dcfdd76cf7e9d31e57081cd009cccc05a7c48c7ea2c",
+  "reveal_sha256": "1a66386a87d6303dbc68131170333d847496e18b48e6ba236f4577d2ddcebb24",
+  "notice_sha256": "cb456ab8e51823839afa87542fef502a1b8cd47dcd96fe1b3aa13d9687b27d22",
+  "notice_file": "target-notice.txt",
+  "notice_text": "Production ID: pz-c71563f1b8c940de998afdd62f09\nArtwork: OpenAI Imagegen in ChatGPT, AI-generated for this user request\nUsage basis: Neue KI-Illustration aus eigenem Motivbriefing im Nutzerauftrag; keine Fremdbilddatei oder Fremdasset übernommen. Keine exklusive urheberrechtliche Schutzfähigkeit behauptet. Keine katalogfähige Freigabe in dieser Phase.\n\nAT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.\n",
+  "actor": null,
+  "timestamp_utc": null,
+  "statement": null,
+  "checks": {
+    "reveal_approved": null,
+    "motif_raster_consistent": null,
+    "final_editorial_approved": null
+  },
+  "test_only": false,
+  "status": "pending",
+  "not_an_approval": true,
+  "not_a_catalog_reveal_request": true
+}

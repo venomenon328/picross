@@ -1,0 +1,44 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "name": "Hamburger",
+  "category_id": "gerichte-herzhaftes",
+  "save_slot": "hamburger_001",
+  "runtime_revision": 1,
+  "definition_path": "game/data/content/hamburger_001.json",
+  "definition_sha256": "5ce8a8f5dd6c7bb286120a79dc4cf6ff543e31530b058d0802cd0dd52ab48f23",
+  "original": {
+    "path": "game/art/content/hamburger_001.png",
+    "bytes": 2293113,
+    "sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 1254,
+    "height": 1254,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572516
+  },
+  "notice_path": "game/art/content/hamburger_001.txt",
+  "notice_sha256": "7ff34975780ac564b9292f44b61b03fc130dc88f05d23f47a8fcf15c465ed135",
+  "physical_manifest": {
+    "path": "content/packages/pz-b3368aea28ac4a11bf09e0dc9c48/r04/manifest.json",
+    "sha256": "1f90602b8cc7dd8774efbde16cebdd5e8d27ea0069a507f6c1bc7514776b1f82",
+    "bytes": 2983
+  },
+  "original_export_anchor": "ffffe9d58ece7241ca38234091eaca830e193eff8727e60816684ee07b491739",
+  "historical_production_revision": "r04",
+  "integrated_commit": "37f500d5e6599a6c8ff85c8ca8edb4d190474c5f",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "5b59a80b621841ab7898e7c41b9ced8492c4b7a5",
+  "frozen_sources": {
+    "content/added/pz-b3368aea28ac4a11bf09e0dc9c48.json": "8a0ff5bf67d1a6da3b866b5b5a49f82fe8384f1ee77b52f6ce4f2dcc5b9cb841",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-b3368aea28ac4a11bf09e0dc9c48/rating.json": "aad17358bb8022066232d54b1675f5c7bfb1b5a306fde3e0356f88d12660f20d",
+    "content/packages/pz-b3368aea28ac4a11bf09e0dc9c48/r04/manifest.json": "1f90602b8cc7dd8774efbde16cebdd5e8d27ea0069a507f6c1bc7514776b1f82",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

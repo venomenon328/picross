@@ -1,0 +1,44 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-3e97c042f0bf474e8608a84ea034c246",
+  "name": "Yin-Yang",
+  "category_id": "mythen-fantasie",
+  "save_slot": "yin_yang_001",
+  "runtime_revision": 1,
+  "definition_path": "game/data/content/yin_yang_001.json",
+  "definition_sha256": "ac3c241cf208ae5f696a717bbd39cc3293f8396c4cb2bedc11efa8c17a6cf226",
+  "original": {
+    "path": "game/art/content/yin_yang_001.png",
+    "bytes": 2416936,
+    "sha256": "d07fc024a822789a8c454f46c85f633da671ff21a537c6c30a77a2a997c5f63e",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 1254,
+    "height": 1254,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572516
+  },
+  "notice_path": "game/art/content/yin_yang_001.txt",
+  "notice_sha256": "5c45082ee4687f2bcef9641dfd07ba21cdab881ae02b1f5e9818bbfeefd527f0",
+  "physical_manifest": {
+    "path": "content/packages/pz-3e97c042f0bf474e8608a84ea034c246/r05/manifest.json",
+    "sha256": "041f4caa05d5df848f6e175d35030a383ea6dd8c70742cf0204824d8f09d6901",
+    "bytes": 2916
+  },
+  "original_export_anchor": "7bccaeb26c95c4dea6d90ab53ce56ac1a0ee07a892c6bd485ffa97a761f20a3c",
+  "historical_production_revision": "r05",
+  "integrated_commit": "552b157b9b1531b5d651819bb20f603002c34858",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "fe481ff844410b67e68b06cb406d7ce787d999e6",
+  "frozen_sources": {
+    "content/added/pz-3e97c042f0bf474e8608a84ea034c246.json": "b2ee89ecc2643bbceea12017bedc4b01ab03c2dd19837c2b57843fcd00697553",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-3e97c042f0bf474e8608a84ea034c246/rating.json": "4e1e7dde8d4a566505deece0a93f1f06516722d60c5ba71963fc4a55e482990a",
+    "content/packages/pz-3e97c042f0bf474e8608a84ea034c246/r05/manifest.json": "041f4caa05d5df848f6e175d35030a383ea6dd8c70742cf0204824d8f09d6901",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

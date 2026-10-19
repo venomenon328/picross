@@ -1,0 +1,73 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "at-b-r01",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "state": "reveal_review",
+  "category_id": "saeuger",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": 24,
+    "height": 36,
+    "mode": "mono",
+    "fixed": true
+  },
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 21,
+    "file": "rulebook.md",
+    "sha256": "3f17645abcec8031df4b3bc707d34ab556f600b981786f82b30aea48ec9f4c60"
+  },
+  "reveal": {
+    "file": "reveal.png",
+    "sha256": "1c047af76afe3862377047299624019487fc80ffbaa7bf8993f498b4b4120ee1",
+    "approval": null
+  },
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "authorization": "Issue #256 Umsetzungsvorbereitung V4 / AT-B-V01: Bildvorlage, sichere Authoringablage, Commit/Push/Draft-PR. Keine Bildfreigabe, aktive Übernahme, Rasterproduktion, Merge, Deployment oder Issue-Schließung.",
+  "approval_proposal": "approval-proposal.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "9db98f917f2887de5ab4353fe08df60a5e50bd618dad21690060031e9269278f"
+  }
+}

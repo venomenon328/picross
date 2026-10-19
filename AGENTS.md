@@ -11,13 +11,17 @@ Den beauftragten Arbeitsbranch verwenden, sonst den aktuellen `main`; geltende B
 Bei Abschlussbildern, deren Katalogvorschau oder Bildrevisionen zusätzlich
 [AT: Transparente Abschlussbilder](docs/REVEAL_TRANSPARENCY.md) und die dort
 benannten Produkt-/Produktions-/Integrationsquellen vollständig lesen.
-AT / #256 (19.10.2026), Umsetzungsvorbereitung V3: AT-A ist implementiert; unabhängiges Review offen;
+AT / #256 (19.10.2026), Umsetzungsvorbereitung V4: AT-A ist nach qualifiziertem
+AT-A-R01 über PR #263 auf `a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9` integriert;
 AT-A schafft den sicheren gemeinsamen Bildrevisionsweg; AT-B stellt danach den
 gebundenen Bestand mit neuen Bildfreigaben um. Reine Bildänderungen erhalten
 Definitionsbytes, Puzzle-Revision, Identität, Spielstände und historische Belege.
 Szenen erhalten eine konkrete transparente Gestaltung, keinen pauschalen Verzicht.
-Der aktuelle Auftrag umfasst ausschließlich AT-A auf `feat/256-bildrevisionen`,
-ohne reale Bild-/Metadatenübernahme, AT-B oder Merge.
+Der aktuelle Auftrag umfasst ausschließlich AT-B-V01 auf
+`chore/256-transparente-bestandsbilder`: den vollständigen gebundenen Bildsatz
+bis zur gemeinsamen Bild-/Endfreigabevorlage. [AT-B-Bericht](docs/AT_B_VERIFICATION.md).
+Stopp vor `catalog_reveal plan/adopt`; keine aktive Übernahme, Rasterproduktion,
+Merge, Deployment oder Issue-Schließung. Eigentümerfreigaben bleiben ausdrücklich offen.
 AT-A-P01 / Umsetzungsvorbereitung V2 ist mit PR #257 auf
 `9cc58651518e3a28e97f46932d69554210b0abcb` integriert und schließt die Verträge:
 [Daten/Freigabe](docs/ZA1_ADAPTER.md),
@@ -26,8 +30,8 @@ AT-A-P01 / Umsetzungsvorbereitung V2 ist mit PR #257 auf
 [CLI](tools/puzzle_production/README.md).
 Inhalts-v2, Runtime-v4 und Saves bleiben unverändert; technische Kernfragen aus
 AT §4.3 sind damit spezifiziert. [AT-A-T01](docs/AT_A_VERIFICATION.md) führt
-technische Nachweise und getrenntes Selbstreview; unabhängiges AT-A-R01,
-Merge, Deployment und Issue-Abschluss bleiben außerhalb dieses Auftrags.
+technische Nachweise und getrenntes Selbstreview des damaligen AT-A-Stands;
+der aktuelle AT-B-Auftrag ersetzt diese historischen Belege nicht.
 
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](docs/CATALOG_PRESENTATION.md)
 und [Katalogsortierung](docs/CATALOG_SORTING.md) vollständig lesen. KU / #244
