@@ -309,6 +309,11 @@ def unique_object(pairs):
     return result
 
 
+def native_groups_output(groups: list[str]) -> str:
+    """Unambiguous nonempty GitHub job output, including the empty selection."""
+    return json.dumps(groups, ensure_ascii=True, separators=(",", ":"))
+
+
 def validate_binding(plan: dict, binding: dict, outputs: dict) -> None:
     """Cross-check the artifact against this gate's event and scheduler outputs."""
     for key in ("source_head", "base_commit", "tested_checkout", "run_id", "run_attempt", "event"):
@@ -330,7 +335,7 @@ def validate_binding(plan: dict, binding: dict, outputs: dict) -> None:
         raise ValueError("Missing or inconsistent diff verification")
     if (set(outputs) != set(FLAGS) | {"selection_attempt", "native_groups"} or
             outputs["selection_attempt"] != binding["run_attempt"] or
-            outputs["native_groups"] != ",".join(plan["native_groups"]) or any(
+            outputs["native_groups"] != native_groups_output(plan["native_groups"]) or any(
             outputs[key] != str(plan["selected"][key]).lower() for key in FLAGS)):
         raise ValueError("Selection artifact and scheduled job outputs disagree")
 
@@ -363,7 +368,7 @@ def main() -> int:
                 for key in FLAGS:
                     stream.write(f"{key}={str(result['selected'][key]).lower()}\n")
                 stream.write(f"content_only={str(result['content_only']).lower()}\n")
-                stream.write("native_groups=" + ",".join(result["native_groups"]) + "\n")
+                stream.write("native_groups=" + native_groups_output(result["native_groups"]) + "\n")
                 stream.write(f"selection_attempt={result['run_attempt']}\n")
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
