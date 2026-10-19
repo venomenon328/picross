@@ -1,0 +1,155 @@
+{
+  "format": "picross-at-b-static-views-v1",
+  "candidate_sha256": "496479ab0cd2b214560f5f9f18ea6067ac21b91aab76af48874282aacd63af48",
+  "original_sha256": "b2d10a0490dbce384ab9fd5df94c523b901c3d79731931fbebe60d790be2519a",
+  "definition_sha256": "9021e828087d070457210b75dccdbf35fb01f2dde4be739eee3dd433ff29f831",
+  "paper_sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a",
+  "method": "Pillow 12.3.0 alpha composite; proportionally contained Lanczos; raster nearest, no matrix changes; no candidate pixel edit",
+  "contexts": [
+    {
+      "file": "catalog-ui100.jpg",
+      "ui_scale": 1,
+      "area": [
+        10,
+        30,
+        300,
+        112
+      ],
+      "image_rect": {
+        "x": 76,
+        "y": 30,
+        "width": 168,
+        "height": 112
+      },
+      "paper": "#fff8e8",
+      "source": "game/ui/catalog.gd:318; game/ui/catalog_card.gd:197",
+      "image_area_width_choice": 300,
+      "height_bound": true
+    },
+    {
+      "file": "completion-ui100.jpg",
+      "ui_scale": 1,
+      "viewport": [
+        1280,
+        720
+      ],
+      "area": [
+        100,
+        94,
+        1080,
+        450
+      ],
+      "image_rect": {
+        "x": 302,
+        "y": 94,
+        "width": 675,
+        "height": 450
+      },
+      "paper_path": "game/art/book/bp2-a-inventarband.png",
+      "paper_sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a",
+      "caption_height_reserved": 36,
+      "source": "game/ui/main.gd:_layout_completion; game/ui/completion.gd:contained",
+      "engine_measured": false
+    },
+    {
+      "file": "catalog-ui125.jpg",
+      "ui_scale": 1.25,
+      "area": [
+        12,
+        38,
+        375,
+        140
+      ],
+      "image_rect": {
+        "x": 94,
+        "y": 38,
+        "width": 210,
+        "height": 140
+      },
+      "paper": "#fff8e8",
+      "source": "game/ui/catalog.gd:318; game/ui/catalog_card.gd:197",
+      "image_area_width_choice": 375,
+      "height_bound": true
+    },
+    {
+      "file": "completion-ui125.jpg",
+      "ui_scale": 1.25,
+      "viewport": [
+        1280,
+        720
+      ],
+      "area": [
+        125.0,
+        117.5,
+        1030.0,
+        382.5
+      ],
+      "image_rect": {
+        "x": 353,
+        "y": 118,
+        "width": 574,
+        "height": 382
+      },
+      "paper_path": "game/art/book/bp2-a-inventarband.png",
+      "paper_sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a",
+      "caption_height_reserved": 45,
+      "source": "game/ui/main.gd:_layout_completion; game/ui/completion.gd:contained",
+      "engine_measured": false
+    }
+  ],
+  "edge_crops": [
+    {
+      "image": "original.png",
+      "x": 676,
+      "y": 62,
+      "width": 184,
+      "height": 184,
+      "display_scale": 2.0652173913043477
+    },
+    {
+      "image": "reveal.png",
+      "x": 676,
+      "y": 62,
+      "width": 184,
+      "height": 184,
+      "display_scale": 2.0652173913043477
+    },
+    {
+      "image": "original.png",
+      "x": 676,
+      "y": 574,
+      "width": 184,
+      "height": 184,
+      "display_scale": 2.0652173913043477
+    },
+    {
+      "image": "reveal.png",
+      "x": 676,
+      "y": 574,
+      "width": 184,
+      "height": 184,
+      "display_scale": 2.0652173913043477
+    },
+    {
+      "image": "original.png",
+      "x": 123,
+      "y": 840,
+      "width": 184,
+      "height": 184,
+      "display_scale": 2.0652173913043477
+    },
+    {
+      "image": "reveal.png",
+      "x": 123,
+      "y": 840,
+      "width": 184,
+      "height": 184,
+      "display_scale": 2.0652173913043477
+    }
+  ],
+  "limits": [
+    "Keine Engine-, Import-, Hover-, Fokus-, Spoiler-, Save- oder Überblendungsprüfung.",
+    "Katalog: 300*u breite Bildfläche als Layoutannahme; alle Motive passen proportional bei tatsächlicher Höhe 112*u.",
+    "Abschluss: 1280x720, ohne Statusmeldung, 36*u Pixel reservierte einzeilige Titelhöhe; keine gemessene Godot-Schriftmetrik."
+  ]
+}

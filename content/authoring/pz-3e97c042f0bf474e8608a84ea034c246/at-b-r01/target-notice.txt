@@ -1,0 +1,5 @@
+Production ID: pz-3e97c042f0bf474e8608a84ea034c246
+Artwork: OpenAI image generation via ChatGPT
+Usage basis: Auf Nutzerauftrag in ChatGPT neu KI-generierte Illustration eines traditionellen Yin-Yang-Symbols; keine externe Bildvorlage. Keine Exklusivitäts- oder urheberrechtliche Schutzbehauptung.
+
+AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

@@ -1,0 +1,3 @@
+Production ID: pz-82758295d5d34284bbae2716f64f
+Artwork: OpenAI native image generation in ChatGPT, commissioned by user
+Usage basis: Native AI-generated original from the user text brief; no external image, logo, branded chess design or third-party asset used. Intended use in the user project picross. No separate third-party license claimed.

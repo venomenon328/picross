@@ -1,0 +1,18 @@
+{
+  "calls": [
+    {
+      "round": 1,
+      "tool": "image_gen.imagegen",
+      "mode": "built-in edit",
+      "input_path": "game/art/content/knoblauch_001.png",
+      "input_sha256": "0a102f0e49cd93f9b2851d9e5d7ba82edb601102055322a1628e806d544a4674",
+      "transparent_background": true,
+      "prompt": "Use case: background-extraction. Edit target: the attached existing garlic illustration, not a reference for a new drawing. Remove only the uniform apricot background and the cast ground shadow to actual PNG transparency. Keep this exact garlic bulb: its creamy white papery skin, pink accents, brown contours, every root, the cut stalk, colors, texture, pose, proportions, position, framing and composition. Preserve opaque pale skin including highlights; do not turn pale object surfaces transparent. Carefully separate the gaps between the small roots. Preserve clean antialiased contour edges with no apricot matte or white halo. Do not redraw, reinterpret, recolor, crop, enlarge, or add anything. Return one transparent PNG retaining the original square canvas.",
+      "model": "not_exposed",
+      "seed": "not_exposed",
+      "quality": "not_exposed",
+      "output_hint": "Generated images are saved to C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455 as C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455\\exec-151c0b40-46dd-4f3d-86e3-e3dda37716d0.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "output_sha256": "0d6bf175396e5afae00269e667f8a0351513b5829aa6a8180526053b34c8ebdc"
+    }
+  ]
+}

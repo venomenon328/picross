@@ -1,0 +1,18 @@
+{
+  "calls": [
+    {
+      "round": 1,
+      "tool": "image_gen.imagegen",
+      "mode": "built-in edit",
+      "input_path": "game/art/content/hamburger_001.png",
+      "input_sha256": "aa87a8a391b2183d5d479efbb165f46e36ad6e3a73e2eaa0267c191379903074",
+      "transparent_background": true,
+      "prompt": "Use case: background-extraction. Edit the attached actual existing illustration. Remove only the neutral exterior background to actual PNG transparency and genuine background holes. Preserve the exact subject geometry, composition, pose, framing, proportions, colors, shading, every detail and original canvas aspect ratio; no new drawing, redesign, retouching, cropping, enlargement, additions or recoloring. Keep actual pale/white subject surfaces opaque. Fine clean antialiased edges without pale/color matte halo. Protect this exact hamburger with sesame bun, curled green lettuce, thick red tomato, beef patty, lower bun and all existing highlights. Remove only ivory exterior and genuine tiny exterior gaps between lettuce folds; no ingredient change, do not remove white sesame seeds.",
+      "model": "not_exposed",
+      "seed": "not_exposed",
+      "quality": "not_exposed",
+      "output_hint": "Generated images are saved to C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455 as C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455\\exec-d7189cf7-99cf-442e-9411-b54e6c1ad2b8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "output_sha256": "5260b0701ae62bb130cdd09c876ec5b5a83d956c65cc9e5546fb393251939517"
+    }
+  ]
+}

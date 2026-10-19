@@ -1,0 +1,18 @@
+{
+  "calls": [
+    {
+      "round": 1,
+      "tool": "image_gen.imagegen",
+      "mode": "built-in edit",
+      "input_path": "game/art/content/stirnlappenbasilisk_001.png",
+      "input_sha256": "9da4019b8755311b24338dcfdd76cf7e9d31e57081cd009cccc05a7c48c7ea2c",
+      "transparent_background": true,
+      "prompt": "Use case: background-extraction. Edit the attached actual existing illustration. Remove only the neutral exterior background to actual PNG transparency and genuine background holes. Preserve the exact subject geometry, composition, pose, framing, proportions, colors, shading, every detail and original canvas aspect ratio; no new drawing, redesign, retouching, cropping, enlargement, additions or recoloring. Keep actual pale/white subject surfaces opaque. Fine clean antialiased edges without pale/color matte halo. Protect exact green basilisk side view with head crest, tall dorsal sail, blue scale markings, pale belly, all legs and thin claws and the entire long curved tail through its fine tip. Remove only white exterior/ground shadow including gaps between toes, legs and tail loop. No change in pose or aspect ratio.",
+      "model": "not_exposed",
+      "seed": "not_exposed",
+      "quality": "not_exposed",
+      "output_hint": "Generated images are saved to C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455 as C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455\\exec-ba02df6a-fc54-432d-92fc-4e620a5386fd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "output_sha256": "1a66386a87d6303dbc68131170333d847496e18b48e6ba236f4577d2ddcebb24"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "format": "picross-at-b-approval-proposal-v1",
+  "id": "pz-82758295d5d34284bbae2716f64f",
+  "package_revision": "at-b-r01",
+  "proposed_image_revision": 1,
+  "definition_sha256": "ed95c0b9ded61132a972402ad3aa04e3c7204549f2337c0fd7941273ac5ad1f2",
+  "previous_reveal_sha256": "cc126391c1835f9eba7721d09bee3a3a86abfc0582785ddd75ceef170605ff89",
+  "reveal_sha256": "869792beac0b2bf7d6f64ad73453b75bfdb90641105ac21d37d6fcebf21cb93c",
+  "notice_sha256": "5004aff052e1b4d401a6aef7685c46667eabe8ddd1a67b16a1348f2aae6c5131",
+  "notice_file": "target-notice.txt",
+  "notice_text": "Production ID: pz-82758295d5d34284bbae2716f64f\nArtwork: OpenAI native image generation in ChatGPT, commissioned by user\nUsage basis: Native AI-generated original from the user text brief; no external image, logo, branded chess design or third-party asset used. Intended use in the user project picross. No separate third-party license claimed.\n\nAT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.\n",
+  "actor": null,
+  "timestamp_utc": null,
+  "statement": null,
+  "checks": {
+    "reveal_approved": null,
+    "motif_raster_consistent": null,
+    "final_editorial_approved": null
+  },
+  "test_only": false,
+  "status": "pending",
+  "not_an_approval": true,
+  "not_a_catalog_reveal_request": true
+}

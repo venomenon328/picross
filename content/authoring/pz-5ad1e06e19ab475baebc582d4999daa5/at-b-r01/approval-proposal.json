@@ -1,0 +1,24 @@
+{
+  "format": "picross-at-b-approval-proposal-v1",
+  "id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+  "package_revision": "at-b-r01",
+  "proposed_image_revision": 1,
+  "definition_sha256": "aed678373d87e89a2b00b15c27b38ba6a8321a5960f1cf03c7a989e54c54ff14",
+  "previous_reveal_sha256": "f6a7aa1b67e2a336b39f6a79fa638dad7a3ae57487e6ae975e1d28fa239f632d",
+  "reveal_sha256": "df663428366ba6a0802d28934bf1a0ee4dfb76ae32c9200e89057a7434dfb45b",
+  "notice_sha256": "bcbfc2d9664d044fd39ecef9611aeae4ddd0f4fcc3bde55a741002d73a340a71",
+  "notice_file": "target-notice.txt",
+  "notice_text": "Production ID: pz-5ad1e06e19ab475baebc582d4999daa5\nArtwork: OpenAI image generation, im Auftrag von Tobias Schröder\nUsage basis: Eigenständige beauftragte KI-Generierung für Picross; keine Fremdbilder oder Fremdassets eingebracht.\n\nAT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.\n",
+  "actor": null,
+  "timestamp_utc": null,
+  "statement": null,
+  "checks": {
+    "reveal_approved": null,
+    "motif_raster_consistent": null,
+    "final_editorial_approved": null
+  },
+  "test_only": false,
+  "status": "pending",
+  "not_an_approval": true,
+  "not_a_catalog_reveal_request": true
+}

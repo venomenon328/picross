@@ -1,0 +1,3 @@
+Production ID: pz-d7e68d1138a3448c8b2a4b07e8632350
+Artwork: ChatGPT native image generation
+Usage basis: Original user-requested native generation from text; no external input assets.

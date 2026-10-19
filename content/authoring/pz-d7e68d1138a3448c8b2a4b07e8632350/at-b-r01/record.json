@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "revision": "at-b-r01",
+  "category_id": "blumen-pflanzen",
+  "motif_name": "Rote Nelke",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 30,
+  "height": 32,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/at-b-r01/package.zip",
+    "bytes": 4625579,
+    "sha256": "3e36bd758f1347e186bebdb92c57b7a170f6199880d3b285c92ce0fd082d492e"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/at-b-r01/handoff.json",
+    "sha256": "e26e992eacf719b7a47b44d5b2b9ed40f7702fdce8bf728939987dddc130f3dc"
+  },
+  "inventory_sha256": "9bd7ddc2178d648440a6562e0f2fad0e9d6dd492da1d7bb2c8394770822e893e"
+}

@@ -1,0 +1,17 @@
+{
+  "decisions": [
+    {
+      "kind": "scope",
+      "text": "Außenfläche und Bodenschatten, Lücken zwischen Zehen, Beinen und Schwanz."
+    },
+    {
+      "kind": "protected_features",
+      "text": "Kopfhaube, Rücken-/Schwanzsegel, blaue Schuppenpunkte, heller Bauch, Krallen und gesamte Schwanzspitze."
+    },
+    {
+      "kind": "approval",
+      "status": "pending",
+      "text": "Eigentümer hat keine konkrete Bild-, Konsistenz- oder Endfreigabe erteilt."
+    }
+  ]
+}

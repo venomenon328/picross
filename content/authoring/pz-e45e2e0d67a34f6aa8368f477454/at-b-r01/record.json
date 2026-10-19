@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-e45e2e0d67a34f6aa8368f477454",
+  "revision": "at-b-r01",
+  "category_id": "gebaeude-bauwerke",
+  "motif_name": "Kölner Dom",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 30,
+  "height": 50,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/at-b-r01/package.zip",
+    "bytes": 7044169,
+    "sha256": "fb7f3ca02292802cadd3956c2bd7a40cf900460fc9a8b58d8bf1eb919dc508fe"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-e45e2e0d67a34f6aa8368f477454/at-b-r01/handoff.json",
+    "sha256": "1c81cf8659202cf12289264a6eaf6be91bf718d19fc5371f44f88cabc8e6e062"
+  },
+  "inventory_sha256": "c9e0b5450384090bc9cec382adfa798d364c5db2c8cdb28d1554745424eb78c9"
+}

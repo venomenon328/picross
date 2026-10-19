@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "revision": "at-b-r01",
+  "category_id": "saeuger",
+  "motif_name": "Giraffe",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 24,
+  "height": 36,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/at-b-r01/package.zip",
+    "bytes": 4636971,
+    "sha256": "004d168e14346a5a172c5684b6f464caea795d4ea89af08327bdc9859a84f6bc"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-dbbebc72556d4f0c9a37ab69275480e9/at-b-r01/handoff.json",
+    "sha256": "e6847533af8ad2a9f2726d3c6712f1fb83e3e9a4cc50db9189251940f73a48f2"
+  },
+  "inventory_sha256": "9db98f917f2887de5ab4353fe08df60a5e50bd618dad21690060031e9269278f"
+}

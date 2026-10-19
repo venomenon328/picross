@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "revision": "at-b-r01",
+  "category_id": "menschen-berufe",
+  "motif_name": "Ho Chi Minh",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 36,
+  "height": 48,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/at-b-r01/package.zip",
+    "bytes": 4846610,
+    "sha256": "aacc7afda6b6b16381ef71f27a1f8bbed1f5f56dc39fb31b39389ead61e8f04b"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/at-b-r01/handoff.json",
+    "sha256": "1069a4ac8bebb3ad4c3312b81ecfca06a09fa6f4cac991145291da97ee500680"
+  },
+  "inventory_sha256": "669814ab3e5cfe24e0e318b62d71bdf00113f4574ece2379e274a32d15ab42bf"
+}

@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-9a79befc7a834e2d9d5896a477328962",
+  "revision": "at-b-r01",
+  "category_id": "voegel",
+  "motif_name": "Buntspecht",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 23,
+  "height": 35,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-9a79befc7a834e2d9d5896a477328962/at-b-r01/package.zip",
+    "bytes": 6134642,
+    "sha256": "323da43eab1c6d2ede737164181882cf65d2c9199629200a068550e77c28a2f6"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-9a79befc7a834e2d9d5896a477328962/at-b-r01/handoff.json",
+    "sha256": "f2b19529fb71446863c143e862aefa46f01eace669feedfde9925de088303816"
+  },
+  "inventory_sha256": "58e73683b656e5ae53cfe556d405a666a4c0ec9a0d3f57bd58baf22eea307e55"
+}

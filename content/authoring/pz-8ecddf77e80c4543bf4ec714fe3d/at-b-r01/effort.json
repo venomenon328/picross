@@ -1,0 +1,9 @@
+{
+  "native_image_calls": 2,
+  "human_active_minutes": null,
+  "seed": "not_exposed",
+  "external_model_api_calls": 0,
+  "puzzle_production_runs": 0,
+  "plan_calls": 0,
+  "adopt_calls": 0
+}

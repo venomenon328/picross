@@ -1,0 +1,17 @@
+{
+  "decisions": [
+    {
+      "kind": "scope",
+      "text": "Neutrale Außenfläche zwischen/um Türme und echte Silhouettenlücken."
+    },
+    {
+      "kind": "protected_features",
+      "text": "Beide Turmkreuze, Fialen, Maßwerk, helles Mauerwerk, blaue Fenster und Portale in Frontalansicht."
+    },
+    {
+      "kind": "approval",
+      "status": "pending",
+      "text": "Eigentümer hat keine konkrete Bild-, Konsistenz- oder Endfreigabe erteilt."
+    }
+  ]
+}

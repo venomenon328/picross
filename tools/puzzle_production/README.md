@@ -1,6 +1,6 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A implementiert, unabhängiges Review offen:**
+**AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
 [AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
 für transparente Abschlussbilder und einen eigenen eng begrenzten Bildupdateweg.
 AT-B stellt danach den gebundenen Bestand mit tatsächlichen Bildfreigaben um.
@@ -8,6 +8,10 @@ Reine Bildrevisionen verwenden den eigenen `catalog_reveal`-Weg; `plan-update`/
 `update` bleibt auf den gesonderten Rasterersatz begrenzt und erhält aktive
 Bildfassungen. Die technische AT-A-Lieferung übernimmt keine realen Bilder
 oder Metadaten.
+Aktueller Auftrag: ausschließlich [AT-B-V01](../../docs/AT_B_VERIFICATION.md),
+vollständige Bild-/Endfreigabevorlage im frühen Authoringstatus `reveal_review`.
+Stopp vor Eigentümerfreigabe und `catalog_reveal plan/adopt`; kein produktiver
+Request oder Plan mit ausstehenden Zustimmungen.
 
 **Aktuelle Prüfregel (12.10.2026):** Konkrete Rätsel werden während ihrer Produktion
 und Integration geprüft, niemals routinemäßig in CI. Keine rätselspezifischen

@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-2a8481f61e6443bda174bd3da67c",
+  "revision": "at-b-r01",
+  "category_id": "gebaeude-bauwerke",
+  "motif_name": "Brandenburger Tor",
+  "state": "reveal_review",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 40,
+  "height": 30,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "integration": null,
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "package": {
+    "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/at-b-r01/package.zip",
+    "bytes": 5189028,
+    "sha256": "79f9dd3b2d0af3a8e09f9e20c9eaeef445ab7703744feef22feb5bf15672d4df"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-2a8481f61e6443bda174bd3da67c/at-b-r01/handoff.json",
+    "sha256": "0cdb28ccfa0b99de9ca4539046b04af49f8f354c803e428454be5c6bba30cc80"
+  },
+  "inventory_sha256": "5661dab3a87db69b81c5a47254daa491dedc75a15847a8cd750ce10684e20f4a"
+}
