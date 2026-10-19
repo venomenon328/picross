@@ -2,16 +2,23 @@
 
 ## Stand und Entscheidungsgrenze
 
-**V01-A06 noch offen – Pflicht-CI blockiert.**
+**V01-A06: aktuelle Pflicht-CI und getrenntes Selbstreview im PR-Abschlussnachweis.**
 [Run 39319698291, Versuch 2](https://github.com/venomenon328/picross/actions/runs/39319698291/attempts/2)
 auf Bildlieferhead `b5efb3dcff0a637b65cdef830a4aa3270908c7ce` scheitert wie Versuch 1
 am 90-Sekunden-Limit von `git diff --check` im partiellen Checkout, vor den Tests.
 `docs` und `ci-required` sind fehlgeschlagen; übrige Jobs übersprungen, kein
 CI-Auswahlbeleg erzeugt. Der lokale erfolgreiche Check ersetzt diese Pflicht-CI nicht.
 [Selbstreview AT-B-V01-SR01 R1 / B01](https://github.com/venomenon328/picross/pull/264#issuecomment-6276723787)
-bindet den Befund und die offene technische Nacharbeit. V4 erlaubt im V01-Diff
-keine Selector-/Harnessänderung. [Draft-PR #264](https://github.com/venomenon328/picross/pull/264)
-führt den jeweils neuesten Head und CI-Stand. Keine V01-Gesamterfüllung behauptet.
+bindet den ursprünglichen Befund. Der nachfolgende Dokumentationshead
+`c6e887c1f5ccf53038c6e21116c2cd5e1de1c810` scheiterte in
+[Run 39320576016 / Versuch 1](https://github.com/venomenon328/picross/actions/runs/39320576016)
+am selben Abrufproblem. Diese fehlgeschlagenen Runs bleiben fehlgeschlagen.
+V4 erlaubt allein keine Selector-/Harnessänderung; der Eigentümer hat danach
+ausdrücklich **„Separate CI-Nacharbeit erlauben“** erklärt. Die unten beschriebene
+eng begrenzte B01-Korrektur ist damit zusätzlich beauftragt und als eigener
+Nacharbeitscommit geliefert. [Draft-PR #264](https://github.com/venomenon328/picross/pull/264)
+führt den finalen Head, die aktuelle CI-Bindung und das getrennte Selbstreview.
+Erst deren erfolgreicher aktueller Nachweis erfüllt A06; lokale Tests allein nicht.
 
 **AT-B-V01 aus Issue #256 / Umsetzungsvorbereitung V4.** Alle 26 aktiven
 Bestandsmotive liegen als transparente native Bildrevisionen, Einzeldateien und
@@ -657,16 +664,47 @@ Textdateien sind LF-stabil gepackt, damit Git die Hashbindungen nicht verändert
 | AT-B-V01-A03 | Alle Einzeldateien, vollständige Vier-Hash-/Revisions-/Noticebindung, Vergleiche, Bestandsraster und Papierkontexte UI100/125 vorhanden. Statisch ist ausdrücklich von Runtime getrennt. |
 | AT-B-V01-A04 | Vollständiger unveränderter geschützter Dateibestand plus Git-Diff; keine aktive Bild-/Metadaten-/Saveänderung. |
 | AT-B-V01-A05 | 26 geschriebene ZIPs unabhängig geöffnet, Inhaltsmengen/Hashes/Handoffkopien geprüft; Prompts, Herkunft, Entscheidungen und Index gesichert. |
-| AT-B-V01-A06 | **Offen wegen B01:** Dokumentation, vollständiger Diff und getrenntes Selbstreview vorhanden; aktuelle erfolgreiche Pflicht-CI fehlt. Head/Basis/Test-Merge/Run/Versuch im PR-Nachweis. |
+| AT-B-V01-A06 | Dokumentation, vollständiger Diff, eigene B01-Nacharbeit und lokale Regressionen vorhanden; abschließender aktueller CI-/Selbstreviewnachweis mit Head/Basis/Test-Merge/Run/Versuch in Draft-PR #264. Nur ein dort tatsächlich erfolgreicher finaler Lauf erfüllt A06. |
 | AT-B-V01-A07 | Gemeinsame konkrete Freigabevorlage für alle 26 IDs; Draft/offenes Issue, ausdrücklicher Stopp vor Plan/Adopt. |
 
-Für den tatsächlichen Gesamtdiff werden ausschließlich reguläre Authoringdateien
-100644 samt Index und Markdownstatus-/Berichtspflege erwartet. Damit ist
-`content_only=false`; der bestehende Selektor wählt den kurzen Docs-/schnellen
-Werkzeugtestpfad und `ci-required`. Product, Production, Preflight, Web und Delivery
-sind für diesen Diff nicht ausgewählt, also keine ausgeführten Produktprüfungen.
-Die Auswahl wird am finalen PR-Lauf aus `ci-plan.json` und dem Ergebnisartefakt
-geprüft. Keine Selector-/Harness-/Workflowänderung und keine manuelle Abwahl.
+Der ursprüngliche Bild-/Dokumentdiff wählte ausschließlich Docs und Ergebnisgate.
+Die gesondert autorisierte Änderung an `tools/ci_scope.py` und dessen Regressionen
+wählt nach unveränderten Regeln **alle Pflichtbereiche**: Docs, Product (alle sieben
+nativen Gruppen), Production, Preflight, Web (alle fünf Chromiumgruppen) und
+Delivery sowie `ci-required`. `content_only=false`; keine manuelle Abwahl.
+Die tatsächliche Auswahl und Ergebnisbindung werden am finalen PR-Lauf anhand
+von `ci-plan.json` und dem Ergebnisartefakt kontrolliert. Allgemeine technische
+Regressionen sind keine Übernahme oder Nachproduktion der 26 Bestandsrätsel.
+
+### Gesonderte technische Nacharbeit B01
+
+Die ausdrückliche Auftragsergänzung vom 19.10.2026 ist im aktuellen Body von
+[#256](https://github.com/venomenon328/picross/issues/256) und in PR #264 gesichert.
+Sie betrifft ausschließlich die Verfügbarkeit der vollständigen Diff-Inhalte.
+Vor dem bisherigen vollständigen `git diff --check` sammelt der Fetchpfad aus
+rohen Tree-Metadaten die Blob-IDs beider Diffseiten. Umbenennungen zählen weiterhin
+als Löschung und Neuanlage; Gitlinks sind keine Blobs. Fehlende Objekte werden
+ohne implizite Einzelabrufe ermittelt und über einen gebündelten Git-Fetch per
+Standardeingabe geladen. Bereits vorhandene Objekte werden nicht erneut angefordert.
+Das entspricht dem [Git-Verfahren zum Abruf versprochener Objekte](https://github.com/git/git/blob/v2.51.0/promisor-remote.c)
+mit [deaktiviertem Lazy-Fetch bei der Existenzprüfung](https://git-scm.com/docs/git#Documentation/git.txt---no-lazy-fetch).
+
+Whitespace-Prüfung, 90-Sekunden-Prozessgrenze, Jobauswahl, Quellen-/Versuchsbindung
+und Ergebnisgate bleiben erhalten. Abruffehler brechen die Auswahl ab. Der reine
+Inhaltspfad erreicht den Blobabruf nicht und bleibt ausschließlich metadatenbasiert.
+Workflow, aktive Bilder, alle Authoringdateien und deren Hashbindungen sind von
+dieser Nacharbeit unverändert.
+
+Lokale Selektor-/Gate-Suite: **35 Tests bestanden**, einschließlich vier neuer
+Regressionen mit echten lokalen partiellen Git-Clones und ausschließlich festen
+synthetischen Dateien. Geprüft sind beide Diffseiten, Löschung, Umbenennung mit
+Leerzeichen, Binärdatei und 64 neue Texte in einem Abruf; unveränderte Dateien
+bleiben fehlend, der zweite Lauf benötigt keinen Blob-Fetch. Ein echter
+Whitespacefehler im Rootvergleich bleibt Exitcode 2 (leere und Null-Basis),
+fehlende Remoteobjekte bleiben fatal, reine Inhaltspakete bleiben ungeholt.
+Der erste lokale Implementierungsversuch scheiterte am noch unvollständigen
+Fetchaufruf; erst die korrigierte Variante bestand diese Proben. Kein früherer
+Fehllauf wird als Erfolg gezählt. Aktuelle Remoteergebnisse folgen im PR-Nachweis.
 
 Lokal bestanden: `git diff --cached --check`, Dokumentvalidator auf einer frischen
 vollständigen Kopie des Git-Index und Bytevergleich aller 729 neuen Authoringdateien
