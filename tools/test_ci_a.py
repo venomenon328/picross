@@ -10,7 +10,7 @@ import textwrap
 import unittest
 
 from ci_scope import (ANALYSIS_PATHS, FLAGS, JOBS, apply_event_policy, classify,
-                      evaluate, unique_object, validate_binding)
+                      evaluate, unique_object, validate_binding, native_groups_output)
 
 ROOT = Path(__file__).resolve().parents[1]
 # The exact 17 changed paths of #241, not a copy of its puzzle/calibration data.
@@ -93,7 +93,8 @@ class DependencyTests(unittest.TestCase):
             git("add", "."); git("commit", "-qm", "docs")
             plan_file = root / "plan.json"
             subprocess.run([sys.executable, str(ROOT / "tools/ci_scope.py"), "plan", "--base", base,
-                            "--head", git("rev-parse", "HEAD"), "--output", str(plan_file)],
+                            "--head", git("rev-parse", "HEAD"), "--event", "pull_request",
+                             "--output", str(plan_file)],
                            cwd=root, capture_output=True, check=True)
             plan = json.loads(plan_file.read_text())
             self.assertEqual(plan["changed_paths"], ["README.md", "tools/deploy_web.py"])
@@ -136,7 +137,7 @@ class AdversarialGateTests(unittest.TestCase):
         plan.update(binding, comparison="exact-base-to-head-trees-no-renames", diff_check="full-whitespace-check")
         outputs = {key: str(plan["selected"][key]).lower() for key in FLAGS}
         outputs["selection_attempt"] = "2"
-        outputs["native_groups"] = ",".join(plan["native_groups"])
+        outputs["native_groups"] = native_groups_output(plan["native_groups"])
         binding["gate_attempt"] = "2"
         validate_binding(plan, binding, outputs)
         binding["gate_attempt"] = "3"
