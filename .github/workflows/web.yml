@@ -9,8 +9,6 @@ on:
     outputs:
       chromium_attempt:
         value: ${{ jobs.chromium.outputs.attempt }}
-      firefox_attempt:
-        value: ${{ jobs.firefox.outputs.attempt }}
 
 permissions:
   contents: read
@@ -78,13 +76,5 @@ jobs:
     uses: ./.github/workflows/web-browser.yml
     with:
       browser: chromium
-      build_attempt: ${{ needs.build.outputs.attempt }}
-      selection_attempt: ${{ inputs.selection_attempt }}
-
-  firefox:
-    needs: build
-    uses: ./.github/workflows/web-browser.yml
-    with:
-      browser: firefox
       build_attempt: ${{ needs.build.outputs.attempt }}
       selection_attempt: ${{ inputs.selection_attempt }}

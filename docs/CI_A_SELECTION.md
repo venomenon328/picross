@@ -63,8 +63,13 @@ Preflight-, Browser- oder Zustellungsläufe.
 ## Ausführung und Ergebnisgate
 
 Die nachfolgende serielle Webausführung beschreibt den gebundenen CI-A-Lieferstand.
-[CI-B](CI_B_BROWSER_GROUPS.md) ersetzt sie durch unabhängige Gruppen, zwei
-Browserrunner und zusätzliche Szenarien-/Belegprüfung. CI-A-Auswahl, Zustellung
+[CI-B](CI_B_BROWSER_GROUPS.md) ersetzt sie durch unabhängige Gruppen und
+zusätzliche Szenarien-/Belegprüfung. Die Eigentümerentscheidung vom 19.10.2026
+in [#261](https://github.com/venomenon328/picross/issues/261) /
+[CI-Policy](CI_POLICY.md) beschränkt die aktuelle Browser-CI auf Chromium;
+alle bisherigen Chromium-Szenarien bleiben. Die nachfolgende Beschreibung
+beider Browser ist ausschließlich der historische CI-A-Lieferstand.
+CI-A-Auswahl, Zustellung
 und Quell-/Run-/Retrybindung bleiben erhalten.
 
 `web` und `delivery` hängen jeweils nur am Auswahl-/Dokumentjob. Web installiert

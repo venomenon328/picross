@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 18.10.2026 · Version 2.3 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
+Stand: 19.10.2026 · Version 2.4 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
 
 ## Geltung und Ablösung
 
@@ -25,6 +25,36 @@ Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 übersprungene erforderliche Jobs sind kein Pass. Nichtzutreffen wird mit
 Änderungsauswahl und Grund ausgewiesen. Es wurde kein Branchschutz verändert.
 
+## Chromium als einzige CI-Browserpflicht
+
+Eigentümerentscheidung vom 19.10.2026 in
+[#261](https://github.com/venomenon328/picross/issues/261): Firefox entfällt
+vollständig und dauerhaft aus automatisierter CI. Chromium behält sämtliche
+27 Szenarien in `regular`, `catalog`, `input`, `completion` und `persistence`,
+einschließlich KU-B, Live-DPI, echter IndexedDB-Sicherung, Reload, Prozessneustart,
+zweitem Export, Fehler-/Recoveryfällen und allen bisherigen Pflichtdateien.
+Diese Entscheidung ersetzt auch noch formulierte Firefox-CI-Pflichten in
+älteren Paket-/Prüfzuordnungen. Historische Nachweise behalten ihre damalige
+Commit-, Browser- und Runbindung; sie werden weder umgeschrieben noch als
+aktuelle Chromium-Nachweise ausgegeben. Spielverhalten, Browser-Saves, Windows,
+Godot und Deployment ändern sich dadurch nicht.
+
+`web-browser.yml` weist jeden Browserwert außer `chromium` im ersten Schritt
+vor Installation ab und installiert ausschließlich Chromium. `run_groups.py`,
+`browser.py` und `smoke.py` akzeptieren ebenfalls ausschließlich `chromium`;
+die direkten Runner-/Launchwege prüfen dieselbe Positivliste. Das Ergebnisgate
+verlangt nur `chromium_attempt` und Chromium-Artefakte, bleibt aber vollständig
+fail-closed für Gruppen, Szenarien, Quell-/Run-/Versuchsbindungen und Dateiinhalt.
+
+Vor Push muss die CI auch gegen alte PR-Workflows und historische Reruns
+abgesichert sein. Ein neuer Quellstand ersetzt deren ausführbare Definitionen
+nicht. Die vorübergehende repositoryweite Actions-Sperre und die drei einzeln
+deaktivierten Browser-/CI-Workflows bleiben bis zur verlässlich nachgewiesenen
+Absicherung bestehen; bloße Workflowdateiänderungen erlauben keine Reaktivierung.
+Der aktuelle Betriebszustand und der verbleibende Reaktivierungsblocker stehen
+in #261 und dessen Draft-PR. Keine historischen Runs zur Sperrprobe starten.
+Erst nach dieser Absicherung ausschließlich die neue Chromium-CI ausführen.
+
 ## Freigegebene CI-Straffung
 
 Eigentümerentscheidung vom 18.10.2026:
@@ -42,7 +72,7 @@ stehen in den Paket-Issues/PRs, nicht als laufende Chronik in dieser Policy.
 | Paket | Eigenständig abnehmbarer Umfang | Wirksamkeit |
 | --- | --- | --- |
 | [CI-A · Prüfbedarf auswählen (#247)](https://github.com/venomenon328/picross/issues/247) | Enge Fach-/Vorlagenzuordnung; Product, Browser und SSH/HTTP-Zustellung unabhängig auswählen und ausführen; vollständiges Ergebnisgate | Zuerst. Danach bleiben alle weiterhin ausgewählten Browserrouten bis CI-B vollständig. |
-| [CI-B · Webprüfungen aufteilen und beschleunigen (#248)](https://github.com/venomenon328/picross/issues/248) | Regulärer Start und unabhängige Browsergruppen; Chromium/Firefox auf getrennten Runnern; feine Messung und belegte Harnesskorrektur | Nach integrierter CI-A. Erst danach gilt die selektive Browser-Szenarienauswahl. |
+| [CI-B · Webprüfungen aufteilen und beschleunigen (#248)](https://github.com/venomenon328/picross/issues/248) | Regulärer Start und unabhängige Browsergruppen; Chromium auf eigenem Runner (Browserpflicht gemäß #261); feine Messung und belegte Harnesskorrektur | Nach integrierter CI-A. Erst danach gilt die selektive Browser-Szenarienauswahl. |
 | [CI-C · Native Produktprüfung straffen (#249)](https://github.com/venomenon328/picross/issues/249) | Native Gruppen entkoppeln; Bildkosten messen und verlustfrei beschleunigen | Nach CI-A. CI-B davor ist empfohlen, keine technische Voraussetzung. Erst CI-C ersetzt die native Integrationskopplung. |
 
 Standard ist ein Implementierungs-PR je Paket einschließlich Tests und
@@ -62,7 +92,7 @@ geänderten Bereiche.
 | --- | --- |
 | Geprüfte reine Analyse-/Solver-/Bewertungsmodule, fachliche Konfigurationen und synthetische Tests | Nur `docs` und `production`; keine pauschale Ausnahme für ganz `tools/puzzle_production/`. Gemeinsame Runtime-/Schema-/Export-/Harnesshelfer bleiben entsprechend breit. |
 | Ausschließlich vorhandene `.github/pull_request_template.md` | Dokument-/Werkzeugtestpfad und `ci-required`; keine Ausnahme für andere `.github/`-Dateien oder Workflows. |
-| Browserrelevante Runtime-/Darstellungsänderung | Bis CI-B vollständige bisherige Browserroute; nach CI-B regulärer Start und sämtliche betroffenen Gruppen in beiden Browsern. |
+| Browserrelevante Runtime-/Darstellungsänderung | Bis CI-B vollständige bisherige Browserroute; nach CI-B regulärer Start und sämtliche betroffenen Gruppen in Chromium. |
 | Reine Deploy-/SSH-/HTTP-Zustellungsänderung | Eigenständig ausführbare Referenz mit benötigtem regulärem Bündel, ohne Browserinstallation/-start und ohne sachfremde technische Browserexporte. |
 | Gemeinsame UI-, Save-, Ressourcen-, Bündel-, Export-, Harness- oder Toolchainwirkung | Mehrere beziehungsweise alle betroffenen Bereiche; keine bloße Pfadnamensannahme. Insbesondere `game/ui/main.gd` ist keine reine Katalogausnahme. |
 | Unbekannte Wirkung oder gemischter Diff | Konservativ umfassende Prüfung beziehungsweise Vereinigung aller Pflichten. |
@@ -92,7 +122,7 @@ bestimmte CLI oder Anzahl von Jobs fest:
 
 | Gruppe | Erhaltene Aussage |
 | --- | --- |
-| Regulärer Start | Uninstrumentierter Spielerexport startet und erreicht den bestehenden Startzustand in Chromium und Firefox. |
+| Regulärer Start | Uninstrumentierter Spielerexport startet und erreicht den bestehenden Startzustand in Chromium. |
 | Katalog/Darstellung | Aktuelle Katalog-, Metadaten- und Darstellungsfälle mit den geforderten Zustands-/Bildbelegen. |
 | Eingabe/Geometrie | Echte Zeigeraktionen, Gesten und relevante Fenster-/Zoom-/Geometriefälle einschließlich ausdrücklich browserspezifischer Gegenproben. |
 | Abschluss/Reset | Echte Abschlüsse, Animation/Abbruch, Bestätigung und Reset; keine Verkürzung des Produktvertrags. |
@@ -105,11 +135,11 @@ Browserlauf ist die Vereinigung aller Gruppen; SSH gehört nur bei eigenem
 Voraussetzungen, ohne von einer vorherigen Gruppe abzuhängen. Vorbereiteter
 Speicher ersetzt keine zu prüfende echte Eingabe oder Persistenz.
 
-Chromium und Firefox laufen auf getrennten Runnern mit eigenen Profilen, Ports,
-veränderlichen Hosting-/Releaseverzeichnissen, Reports und Artefaktnamen, aus
-auf denselben geprüften Quellstand gebundenen Builds. Die Browser behalten ihre
-jeweils erforderlichen Szenarien. Reale Reloads, Browserprozess-Neustarts und zwei
-eigenständig erzeugte Exporte bleiben in den relevanten Fällen Pflicht. Ein
+Chromium läuft auf einem eigenen Runner mit getrennten Profilen, Ports,
+veränderlichen Hosting-/Releaseverzeichnissen und Reports je Gruppe, aus
+auf denselben geprüften Quellstand gebundenen Builds. Sämtliche bisherigen
+Chromium-Szenarien bleiben erforderlich. Reale Reloads, Browserprozess-Neustarts
+und zwei eigenständig erzeugte Exporte bleiben in den relevanten Fällen Pflicht. Ein
 umbenannter Export oder ein Starttest allein ersetzt diese Nachweise nicht.
 Der [Webvertrag](WEB_HOSTING.md) konkretisiert Isolation und Speichergrenzen.
 
@@ -159,8 +189,9 @@ qualifizierter Review des finalen Heads. Beide Gates liegen vor Merge.
 Bestehende Windows-/Eigentümergates und aktuelle Spiel-/Speicherverträge bleiben
 eigenständig; ein reiner CI-Umbau erzeugt kein neues persönliches Probespielgate.
 Insbesondere bleiben die gezielten KU-Verhaltensnachweise aus
-[#244](https://github.com/venomenon328/picross/issues/244) in Windows, Chromium und
-Firefox erforderlich; bloßer Start genügt dafür nicht.
+[#244](https://github.com/venomenon328/picross/issues/244) in Windows und Chromium
+erforderlich; die frühere Firefox-CI-Pflicht entfällt gemäß #261. Bloßer Start
+genügt dafür nicht.
 
 ## Einmalige Inhaltsprüfung und feste Regressionen
 
@@ -325,8 +356,8 @@ der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erla
 Der Pflichtjob [Webprüfung](../.github/workflows/web.yml) läuft bei
 ausgewähltem Browserbedarf. Reine Inhalte wählen ihn
 weiterhin nicht; Main-Merges veröffentlichen nichts. Ein Buildjob erzeugt den
-regulären Spieler und zwei eigenständige feste technische Exporte. Separate
-Chromium-/Firefox-Runner prüfen den regulären Start und die ausgewählten Gruppen
+regulären Spieler und zwei eigenständige feste technische Exporte. Der eigene
+Chromium-Runner prüft den regulären Start und die ausgewählten Gruppen
 samt allen zugeordneten positiven/negativen Szenarien und echter Browserpersistenz.
 Die vollständige Vereinigung ist im [CI-B-Inventar](CI_B_BROWSER_GROUPS.md) gebunden.
 Die [Zustellungsprüfung](../.github/workflows/delivery.yml)
@@ -338,12 +369,10 @@ auszugeben. Spielerdateien bleiben 14 Tage, kompakte Berichte/Bilder und
 Fehlerlogs sieben Tage. Keine echten Saves, VPS-Zugangsdaten oder Testprofile im
 Artefakt. [WEB-1-Anleitung und Abnahmegrenzen](WEB_HOSTING.md).
 
-Der GPU-lose Linux-Webjob verwendet Mesa-Software-Rendering und aktiviert dafür
-`webgl.force-enabled` ausschließlich im temporären Firefox-Prüfprofil
-([Mozilla-Treiberhinweise](https://wiki.mozilla.org/Blocklisting/Blocked_Graphics_Drivers)).
-Browserberichte protokollieren Profiloptionen und den tatsächlich erzeugten
-WebGL-2-Kontext. Lokale Windows-Proben verwenden die Browserdefaults; der Spieler
-verlangt keine solche Voreinstellung und meldet fehlende WebGL-2-Unterstützung.
+Der GPU-lose Linux-Webjob verwendet weiterhin Mesa-Software-Rendering.
+Chromium-Berichte protokollieren Profiloptionen und den tatsächlich erzeugten
+WebGL-2-Kontext. Die frühere temporäre Firefox-Profiloption entfällt mit dessen
+CI-Runner. Der Spieler meldet weiterhin fehlende WebGL-2-Unterstützung.
 
 Der [Product-Harness](../tools/p1_product.py) prüft die unveränderten aktiven
 Ressourcenbindungen, importiert die temporäre reguläre
