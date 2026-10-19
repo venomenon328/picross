@@ -42,6 +42,17 @@ gegen AT/P01-D01–D07, ZA-1, Kategorien, SD-C1, Soll-CLI und CI-Policy:
 | B-AT-SR05 · behoben | Eine Albumvergrößerung auf 2560 Pixel berechnete die Typografie des unsichtbaren Arbeitsrasters neu. Der gemessene Web-Aufruf blockierte rund 124 s und überschritt die unveränderte Resize-Grenze. | Album, Information und Endbild vermeiden das unsichtbare Rasterlayout. Beim Öffnen der Arbeit und vor Slot-Wiederherstellung wird die aktuelle Geometrie berechnet; Glyphen-/Fitregeln bleiben gleich. Native Gegenprobe: 81 AT-Prüfpunkte einschließlich versteckter Geometrie, unveränderter gewünschter Ansicht und korrektem Wiederöffnen; EA 2327 bestanden. Die fokussierte Chromium-Katalog-/Abschlussmatrix bestand mit unveränderten Zeitgrenzen. |
 | B-AT-SR06 · behoben | Die Browser-Pixelprüfung vertraute bei Überblendbildern dem gemeldeten Alpha; ein fertiges Bild mit passender JSON-Behauptung konnte passieren. | Der unabhängige Decoder verlangt zusätzlich tatsächlich gemischte Originalpixel am opaken Motivteil. Eine manipulierte fertige PNG und eine unbemalte Papierfläche samt angepasstem JSON werden abgelehnt; positive und negative Werkzeugproben bestanden. Die read-only Probe erfasst nach `RenderingServer.frame_post_draw` genau einen tatsächlich gerenderten WebGL-Frame während der natürlichen Überblendung. Der Zeiger löst die Lösung aus; der Messschalter fordert nur den Readback an und setzt weder Animationszeit noch Spielerzustand. Der Originalausschnitt wird unverändert als PNG gesichert. |
 | B-AT-SR07 · behoben | Eine separat angebundene Chromium-Aufnahmesitzung lieferte zunächst CSS-Pixel, während Messpunkte Gerätepixel verwendeten. | Normale Seitenaufnahmen binden Viewport und Gerätemaßstab; der WebGL-Originalausschnitt bindet stattdessen seine tatsächlichen Framebuffer- und Cropkoordinaten mit Maßstab 1. Erzeuger und unabhängiger Decoder prüfen Abmessungen, tatsächliche Phase und komplette Dreiermatrix; falscher Maßstab und falsche Framebuffergröße werden abgelehnt. |
+| B-AT-SR08 · behoben | Die vollständige Core-Gruppe an `6206106`, Run 39276948640 / Attempt 2, fand eine nicht angepasste `_layout_book`-Overridesignatur in der früheren Zeichenstudie. Deren Preload erzeugte einen Enginefehler trotz anschließendem ZS2-Erfolgsmarker; das bestehende Gate lehnte den Lauf korrekt ab. | Die Studienmethode übernimmt und übergibt den optionalen `prepare_board`-Parameter. Die gesamte lokale Core-Gruppe besteht einschließlich 3526 ZS2-Prüfpunkten ohne Enginefehler, Save-Roundtrip und kontrolliertem Start. Die echte Studienoberfläche startet mit `ZS1_STUDY_OK` und schreibt eine eigene Zelle. Die finale CI prüft die Integration erneut. |
+
+Die [Originale zur Signaturkorrektur](study-signature/records.zip) binden die
+gezielte Windowsprüfung an `6206106` plus die exakt gehashte Korrektur. Die
+zusätzlich gestartete historische ZS1-Suite erwartet im heutigen festen
+Regressionskatalog eine nicht vorhandene Spalte 22. Sie meldet denselben
+Indexfehler und dieselbe Save-Annahme mit den unveränderten ursprünglichen
+Methoden aus Basis `9cc5865`; sie ist kein bestandener Nachweis und wurde nicht
+umgeschrieben. Originalausgaben und ausgeführte Kontrollskripte liegen bei.
+Die reguläre aktuelle ZS2-Pflichtprüfung und der tatsächliche Studienstart sind
+dagegen bestanden. Die Zeichenstudie ist vom normalen Spielerexport ausgeschlossen.
 
 Eine zusätzlich geschlossene Nachweislücke betrifft gültige Runtime-v2/v3:
 echte Bildadoption, unterbrochene Adoption mit Recovery und anschließendes No-op
@@ -58,7 +69,7 @@ Prozessende erneut vergeben darf. Die sechs PNGs liegen unverändert bei.
 
 **Prüfung/Abnahme offen.** Die vollständige CI-Abschlussprüfung, ihr tatsächlicher
 Status und die Originalartefakte werden über [AT-A-T01](../../AT_A_VERIFICATION.md)
-im Draft-PR an den finalen Head gebunden. Die sieben eigenen Befunde sind
+im Draft-PR an den finalen Head gebunden. Die acht eigenen Befunde sind
 korrigiert und gezielt gegengeprüft; die finale CI prüft ihre gemeinsame Integration.
 Das unabhängige qualifizierte AT-A-R01 bleibt ein eigenes verpflichtendes Gate
 vor Merge; dieser Selbstreview ersetzt es nicht. Merge, Deployment,

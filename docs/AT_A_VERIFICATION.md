@@ -56,7 +56,7 @@ Der grüne Docs-Lauf der P01-Basis ist kein AT-A-Produktnachweis.
 
 [Originalverzeichnis und Inventare](evidence/at-a/README.md) enthalten unveränderte
 Windows- und Linuxausgaben. Der abschließende saubere Windowsnachweis bindet
-`714144eb097001e1b7d078fe318799e97d6fc459`; der spätere Diff verändert dessen Produkt- und Windowsprobecode nicht. Die früheren Linuxnachweise binden Commit
+`714144eb097001e1b7d078fe318799e97d6fc459`; der spätere Diff verändert dessen regulären Spieler- und Windowsprobecode nicht. Die frühere Zeichenstudie erhält separat die passende Layout-Overridesignatur; sie ist vom Spielerexport ausgeschlossen. Die früheren Linuxnachweise binden Commit
 `742f1837cf3a5600e4160c54744b87dfa88dcba1` an Basis
 `9cc58651518e3a28e97f46932d69554210b0abcb`. Der Linuxlauf
 [39261657542, Attempt 1](https://github.com/venomenon328/picross/actions/runs/39261657542)
@@ -85,7 +85,7 @@ am sauberen Stand `5cb21694f8bb0f52077e0d5b17c151915679480a` bestätigt dieselbe
 nativen AT-Darstellungsfälle mit tatsächlichem NVIDIA-Treiber. 81 Katalog- und
 2327 Abschlussprüfpunkte sowie alle 75 unabhängigen Pixelmessungen bestanden.
 Ihre 30 AT-Originale, Messberichte, Logs und der ausgeführte Wrapper sind separat
-gesichert. Der Produkt-/Windowsprobecode bleibt danach unverändert.
+gesichert. Der reguläre Spieler-/Windowsprobecode bleibt danach unverändert.
 
 Die Entwicklungsläufe sind ausdrücklich keine Abschlussbindung an den späteren
 PR-Head. Bereits geprüft: Quellenlebenszyklus vor/nach Cleanup, Raster-Rebind,
@@ -108,7 +108,7 @@ kein Produktivserver und kein Deployment werden angesprochen.
 ## Getrenntes Selbstreview
 
 Der [getrennte Selbstreview](evidence/at-a/self-review.md) benennt Prüfumfang,
-konkrete Befunde B-AT-SR01–07 und deren Gegenproben. Er ergänzt
+konkrete Befunde B-AT-SR01–08 und deren Gegenproben. Er ergänzt
 frühe Registry-/Manifestvalidierung, kontrollierten Speicher-/Typabbruch und
 bytegenaue Git-Aufbewahrung der Originale, echte Abschlussnavigation und die
 Vermeidung unsichtbarer Rasterlayouts. Die zusätzliche positive Versionsprobe
