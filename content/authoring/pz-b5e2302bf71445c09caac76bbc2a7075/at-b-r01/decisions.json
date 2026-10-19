@@ -1,0 +1,17 @@
+{
+  "decisions": [
+    {
+      "kind": "scope",
+      "text": "Neutrale Außenfläche und freie Bereiche zwischen Hörnern."
+    },
+    {
+      "kind": "protected_features",
+      "text": "Aktueller Kopf aus r11, keine ältere Ganzkörperfassung; Hornbögen, Ohren, Augen, Maul und feine Haare."
+    },
+    {
+      "kind": "approval",
+      "status": "pending",
+      "text": "Eigentümer hat keine konkrete Bild-, Konsistenz- oder Endfreigabe erteilt."
+    }
+  ]
+}

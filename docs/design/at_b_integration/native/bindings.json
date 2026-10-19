@@ -1,0 +1,720 @@
+{
+  "engine": "D:\\AppData\\Local\\Temp\\picross-at-b-f01-gws9v3ee\\engine\\Godot_v4.7.2-stable_win64_console.exe",
+  "archive_sha256": "731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953",
+  "version": "4.7.2.stable.official.ed1daf0bf",
+  "project_source_head": "2100f1a780fa64fe499111c4022ebed5fe7d83c7",
+  "source_note": "Source head plus approved active image changes. game_files binds unchanged copied source/assets after import, excluding generated .uid and .import metadata. import_metadata separately preserves generated/rewritten import sidecars and original hashes where supplied.",
+  "game_files": {
+    "export_presets.cfg": "34b3125e1a9e3f7576f4b8a9a513ec41e1854b4188dfb7409f30f9811f248f7e",
+    "main.tscn": "2607c9dcc378f0a6c9f2ed195527adadc2f7d52e50988847071b40770e48ba0c",
+    "project.godot": "cd1a917360eddb036d317a29bec78b8cf54eff92b6eb5eb2f8cf7bc1b9dba8bc",
+    "README.md": "8260045a629b9bcff3d68ef51abd7d73ea99ea75092e940a113320f6cddc2a5d",
+    "data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49",
+    "full_view_study/catalog.gd": "82da9ba8f98c30f30d5fc83b4e7ba9d1a481dd8290ca44d718a39c276b226e37",
+    "full_view_study/catalog.json": "88a539c2383c32c1950a62d00bba05ad9c2eea2323508e9cb38db2f3376e0ddc",
+    "full_view_study/save_store.gd": "66381bfcac622212340000ef4dfc36aa8b9855d5a535e478caab1ee0bace3442",
+    "model/catalog_difficulty.gd": "c2fe181de4f2daf08ddbbfeae19348ab10c9179eb1530082c2d522c188aa133f",
+    "model/catalog_preference.gd": "8163543ea9d07dfc5127590889fa5a48a59214e010d78b1df09bd590f7a7f480",
+    "model/clue_completion.gd": "874cf7b849d3652bbafce9b45a331150450cc24d668488c4e25d83dc63634eda",
+    "model/content_registry.gd": "5abebbe127f4586af9ec72441ef42bda9cdcb0bcdec10adb4f5f4df2f06b5625",
+    "model/definition.gd": "c802b3452bd96a250561c05f83fb8243683e959eea80039f62d01f7f0fc8f354",
+    "model/gesture.gd": "1677342eeed02a1b9ddf1f4547d2e998d3949c299a71b3c3d5293bf978781801",
+    "model/player.gd": "659d52a100d81017bcbd2cf3e2b2323c16d69a4551b6cf60836bfe9b35b2a82b",
+    "model/save_store.gd": "e0b78ab7a8bf808756ceecb2755bf6bb536dedb5983953a6b938f2663d2cf713",
+    "model/session.gd": "dc1768a610cf4de0e89a0c0ecd4290e76e71b91b80e5b5c613761339ad9b5e71",
+    "model/web_storage.gd": "12fda08a95a0db5869a8fc33f02b18311bc9b1251b7a04649b9d8d43077ce9ef",
+    "study/board.gd": "485f1d66a24ac4e832f5429946c9f6181535230a789a2dce1b3af726ac41fa22",
+    "study/fonts.gd": "fdeb3c877e8d56a58b8444a27d2693acd7311270d5431a69f9aab99ac37bae9d",
+    "study/main.gd": "a95e65301571d08367b72f295a1dcf16ec295c77ad8a91e86d81549382a2de93",
+    "study/main.tscn": "c798b35c95cf8dcf5c795c6606e546e0185f5b0a8e2e6e7fdb81bc60b193abe4",
+    "study/marks.gd": "322d611d9106818bba180f58c20c4832458e33370454bb2ff516d561ec065388",
+    "study/numerals.gd": "22c77476e2073a9f1c9b3cd064944a3df61774ab4e4257a7296f3e93a1682ae8",
+    "study/samples.gd": "b625521ba868108cd414f4598f87985462795e43a762974fba4c360aebaadebe",
+    "tests/at_alpha.gd": "038853b6e975f2bad5d41fe7fbe94db23a127fb72181fa1617d2356c13efeb03",
+    "tests/at_pack.gd": "c4ec6cbd21bd99b959a23def8ba8bbde1a584fb22602b50dec574f730065827a",
+    "tests/capture.gd": "a62e90ae359e7e3d4cce2f9c2705a4140e4ed4e393e503a28fe2e102da58ecb8",
+    "tests/content_pack_probe.gd": "42960a4cdb399a5f7569315a9c326705ddaa32ee4e734c005eee7c7537cbcac4",
+    "tests/current_visual_cases.gd": "93582821a027cd4e576582ae617f477f8548580c5a9c9ee72b2f0f642e2de416",
+    "tests/ea_pack.gd": "a93187c269367c8595f06d4549d47c86727eb9115eca4e0649365e86cea99cf6",
+    "tests/ea_probe.gd": "e6f11f6a6dc98bcb57b488feec9f7f649498a15a0ff5908cfa7a607329205517",
+    "tests/g1_cases.gd": "a1e7ff41f30bd51637ee81fa86ffa8ca901bb34c0c822a823b01c148cffc7f58",
+    "tests/gp48_cases.gd": "faa63fe21979cbb7718852281275e7ed57bfa2b284f2e2d2709d5a5266513ed6",
+    "tests/h1_capture.gd": "d58f0b21fef823b2df3082dcdb7d32d4022535f8e19ac3846239ebf844b5caa8",
+    "tests/h1_cases.gd": "ac7d54ebf4ad9a613e3e17b3983f4e08623529e0634bd1c8c216cac975860bf9",
+    "tests/hc92_capture.gd": "d23541e95903ed6da72474abbca508ca317cea908b0bc41f295c46a1765fbc23",
+    "tests/hc92_metrics.gd": "1dd91170b0341e4810524039eac155d05759919dc24086e89284af6436670cfe",
+    "tests/hc92_pack.gd": "32f10c3b17f8c070b3a8e76c878d0798244ba814e81b4c3e62364d1de54ea591",
+    "tests/hf149_probe.gd": "1b1e06ca637d3c2b4f2a29b96ed4d3bfe3ae6e9b7abd5ba726540fcf6bd19766",
+    "tests/hn192_probe.gd": "41abf85c3268ff010fea3081a0121c1ff153c4ce536c0b4c71014f7f3b4a163b",
+    "tests/hs186_capture.gd": "3c144304621abc244754a6dc6a826c2fdecc57101a836bc96ad3cf07ffe7c933",
+    "tests/hs186_cases.gd": "132a780b23bb6ca9e7aa5b302d9946b0b1d775887050e38d11df9e61d1fcdf60",
+    "tests/kat1_cases.gd": "999df9d3c3d80417c9276c753fe914646aee9ef3d5cf8a12aa6ec91246617031",
+    "tests/kat1_save_seed.gd": "b5bc655c1582fe1ca46198067dd359c891cee15e005433e887f2ae1fd0f7a80c",
+    "tests/kat2_cases.gd": "2f21befaa37322924b6676c9b9ef9ddb9bf5dd77b74504031bed7b54e5839652",
+    "tests/kat2_probe.gd": "63317082bcdee89ce9ffe1aba7e85873441becc0fa9912f93e0efade66ed7902",
+    "tests/ke_cases.gd": "65a043d96cf09357f6794ea006a13d31011030face19ac28f3a839a6bdc55ab2",
+    "tests/ke_graphics.gd": "7e243243253d8e2081a83953138a62e80f852384285abb55b2ffe32543564301",
+    "tests/ku_b_cases.gd": "383b876ed499e37de312e3d169d846dd89e33fd778b9cde626990ea9dcd26b2a",
+    "tests/multicolor_cases.gd": "320884091c4d823e7eea565fc824abf351b3f36bb9ceb37e8455cf54d3f2d682",
+    "tests/p12_cases.gd": "792f57b58ea48b5864bd983404722b152d2932ed711e37110bbe0e1e1004f9d3",
+    "tests/p13_cases.gd": "14894a24e17ba62ecf1580391fa252d7a64867877d257609ef5e2fa83f6fa95e",
+    "tests/p13_roundtrip.gd": "901e11724e0688820f70fb70cac0ea2017ba49de68691ff38bf4ebf852561803",
+    "tests/p14_cases.gd": "2b0f9a6c687ad5c2925c7c1a7595a3f209f0e8d21c92406eb6a1f9cdf1d61174",
+    "tests/p14_integration.gd": "92d800f1c0accbccad15fa263df8d01b085a391e76d30c4ca91995276a86cc14",
+    "tests/p14_profile.gd": "b539a6a7f9a4df7cf0b8e2be7ff5484895ce211c2f023d83aaf88e694aaad7d6",
+    "tests/perf_b_cases.gd": "bf73fe9c759ca3ca5ac50bb1ce6a794051356229473711f03164fd05bd1ec16d",
+    "tests/perf_b_probe.gd": "c3e75b22bac1ee4735497f9d73629f26907c2ab8cec744df28fc3577d377ab25",
+    "tests/rp3_capture.gd": "cbc9829fa609321ab380318e1f6e6dcbdb3325fb014d3631f3b24259ff6663cf",
+    "tests/rp3_probe.gd": "c99b281b6454c74c65790b7fce97fa814e73d577fc4212d8eb952dee7eb9bc7a",
+    "tests/rp6_capture.gd": "0aa216100cfc912b84c8c546a179d4961aa23a187df37d72682d3418ef7ec2cb",
+    "tests/rp6_probe.gd": "9b7bde6f27e36723e01bb538b54383516565eae5a704ff54fff4f7771c3271c8",
+    "tests/run_tests.gd": "327a9b55e2cdcddc27283a8bb43310dfa43dfe5c70eccbd62d819c897dd9af20",
+    "tests/vs1_e1_cases.gd": "dee61588583cc7a0a7f6112a3dcc2058b8b72a017d20a156ebbdb5870456dffd",
+    "tests/vs2_gf1_tests.gd": "f1017e323827e93fbdc87c35b02c16055a61ae4cb299e11078acb9143275e973",
+    "tests/vs2_h1_cases.gd": "4d5b23430d3eb3403853ca640f7d5c74dc07f5c88fc5954641ccc82614d9b38a",
+    "tests/vs2_measurements.gd": "33c1ee3c8b7c3527f0985c4ac1d2d9670caa35078f39b24247e991d8371e58a6",
+    "tests/vs2_roundtrip.gd": "244676690b34672a845104b2b5512252d69bec112dfec421de1d999a6a1cf965",
+    "tests/vs2_scene.gd": "467bc1a2aec2e6b8431a7139c4704552444581fc56f667864d03168e63ef2eaa",
+    "tests/vs2_tests.gd": "92c5ebeef07c8c05c87a09db8ed026efc7356e5c8c0cf7aee8d99dd4eb783750",
+    "tests/vs2_v1_cases.gd": "98905204782095083089350e575295e3b7c35ac9300a4295f746a16ebdbb88c4",
+    "tests/vs2_v1_tests.gd": "0a8e2d4bc5b505243236e1ccf8d1a09313fe919623989fb15476e1efaadbb6ca",
+    "tests/vs2_v2_cases.gd": "a5fa1caa7a02d43145fc1c64dcee4b58eeea8915f443522903619793c3c11c9f",
+    "tests/vs2_v2_tests.gd": "e96887aef484b6572137e74399e12dc49bcd7767d5a84a832cc4c4f789652f8f",
+    "tests/vs2_v3_tests.gd": "9e3bb0b92f12b878c81e5a53131b24358a02e6acc8a91cf8bc0a287a63a294ac",
+    "tests/vs2_window.gd": "5c8a44ea6099fb75743bd8d55fa4cc0781ef281920e76f71a6e4d5ef9f33899e",
+    "tests/z2-demo.json": "39c745344e9ba79995a7d41ec1fc6745ef7927b80aa586036eaa0c5ce70a7703",
+    "tests/z2_capture.gd": "1010aa91838458e6178dc33810b864163f836e73dcb98c8b997283027bf9c9da",
+    "tests/z2_cases.gd": "8e296f390270b6ba18ffd0acd01f2709bd7af99d111186ed0b5042286eb820f1",
+    "tests/za1_probe.gd": "4854dd9aa60a4b2f42df7e1ff039730cda64044e2ee7ed754ce87797de3c6686",
+    "tests/za1_save_cases.gd": "a927a1f3d239616e7f17b77bd8bec0e8946e8f6efa55bac2226420729e6e0360",
+    "tests/zr_cases.gd": "433db9ab97125da7888eec85bfb5896b2d3291fe062286e89c9ee15849aa4847",
+    "tests/zr_windows_probe.gd": "9eb904499d2dd61ece043f0d7e572cc2a307c5f63785e6332e7e2b69fe04a84c",
+    "tests/zs1_capture.gd": "d15456f37eecb57194a720796ad87462b8291164cef6f36a36c345a126620ea5",
+    "tests/zs1_tests.gd": "57b34f9da81a3e353d0ad52fd238cfb3faec214f7285686318ed5b6111b362b5",
+    "tests/zs2_capture.gd": "1790e66ecd1e9c97b47c55e94b98d581aa904390a001ade8f436f16ec0c661ca",
+    "tests/zs2_numerals.gd": "aa9bbe0f7e2fe761860475ee2ec6c47e8936b42415788c131aea67f44ac80051",
+    "tests/zs2_rework_cases.gd": "bcd8aaf5136873a50029e99e480099f2417ad2c34b222b2a6379f34447fb33ab",
+    "tests/zs2_tests.gd": "890c1cf8eae24a23cef8dc52e29fec6d2963f15cce12833f5896c83714be15f9",
+    "tests/zv50_cases.gd": "654e6e2a0620eb06cd38d29d88f0c2bb378ce5b8b3cd1f9358a0abfdd2e59676",
+    "ui/atlas_marks.gd": "e1a15a6a9cc3041dd77ad5eb6194f1531719df9cdd5b4e239711f18c523ef39c",
+    "ui/atlas_mask.gdshader": "b27c6ffee9cce0296df633a349a1aa286975541ef801923710c465a8c6dd73b6",
+    "ui/board.gd": "b8d683298754f7500d29b9f95bd8202ddae5a183f00356379e30acd0d1b756c0",
+    "ui/book_button.gd": "ced024ed7763fa09389fe0b0c43b5ad236acef494d855e96b1226ccc8e2f6f8e",
+    "ui/book_surface.gd": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7",
+    "ui/book_tooltip.gd": "a3b4a50f6852e4a052e8370a65af4238d72ce071c41d37583545b927b63f22f8",
+    "ui/catalog.gd": "0cc68871d6d768d578c2b3b1eafc77ceefddfb7b9208d4499c363f040e2d4b11",
+    "ui/catalog_card.gd": "c3a32629ee80759a5972266e822fcb82c3e8bfb415dfdf61bef4a1b73a3bf196",
+    "ui/catalog_ink.gd": "6d71d747e1517c507d1043fb42b116dc3be926ff6f49311be8e85a8180dd76de",
+    "ui/catalog_tip.gd": "aca6878b0053479a494f2f8bec7d8b99222f71abe2e3a7711b8598cf13015cc2",
+    "ui/cell_atlas.gd": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d",
+    "ui/chalkboard_board.gd": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad",
+    "ui/clue_font.tres": "38cee56c272ba1d875528d844e4882231a92477de69f67c3a43058da4e5600c6",
+    "ui/clue_layout.gd": "960d29e4254cea067aafed888332cceb3d31b323b60d601c82b69b714a2c0b45",
+    "ui/clue_overlay.gd": "c3d6a5579c6412c1f5d57db105fffd4acef6b0dc29377a32e275af3e09e48be6",
+    "ui/clue_typography.gd": "8748fb0c0e7a489b4d0e742380360ee83f5718561ce5ac27ea33300e8e386b94",
+    "ui/completion.gd": "208d0996791ec23fa130e5d922ebccaffa46e11ca9154969471ed8c0fdcb72ea",
+    "ui/drawing_board.gd": "cf43e86369f3d12c6d592aea92c600940660c362f914ac1b232aba15e9364c0c",
+    "ui/drawing_font.gd": "7f32268ba4cac9a530fbe5a6d63f8a3c53c769fff281803f9fb104aabaed8cfc",
+    "ui/full_view_board.gd": "300bdecc108ecee7a18a47277a474b9131ca9d1d4a4cface8a64cbbdf3f523de",
+    "ui/gesture_counter.gd": "d27ac9a2178b2a457c875881c268caf22e661829385497c01598c37b0b082b4e",
+    "ui/grid_view.gd": "5b4c29e2e2c8291834d2169f9281d97bfeac212284fb85a817aae4bcdf25a946",
+    "ui/main.gd": "2419fc83faf8d475ffcd16ed1bee06f0d85f8c2ffe4d209a46ee8536df12ba33",
+    "ui/miniature.gd": "ec84abc6768176ea95a99d4266c90c633db0006978d340d125bc6eceb8e768bf",
+    "ui/pencil_marks.gd": "bec00db704685bea4028b23fba0f3374f659041154cba20f5a85c9f203846947",
+    "ui/reveal.gd": "03f14a741db55de0a9ca4582396830e43680f52b790cf1c2b50e9c3d8223c392",
+    "ui/scribble.gd": "74af9c0a6140644ae456a7f6d530dcb6c4ccb5fbc490af24615c8f3b796efbee",
+    "web/shell.html": "39f173da6a6452b1e0438dff4db5bb317f01330a8227b95225ae651c22c7478d",
+    "web/storage.js": "db90e35a60596dbfaab73a7f95b5c608f4cc6f0e21c95fb8ca9aabb0194fefc7",
+    "tests/fixtures/ke-reveal.svg": "c72845f41556f1ee77e124583880d53fa4986e18b31c281d9cc8891ee04b3be9",
+    "tests/fixtures/kat1/f01.json": "2341c850fd914dc5defab8c8181c20d34d3a4fefa6eefc2dc93fb7e24bbd43ab",
+    "tests/fixtures/kat1/f02.json": "11c6583356bdc4a03c9fbbd754d0d66f012619c848da54ad1cd2a80dfe92521e",
+    "tests/fixtures/kat1/provenance.json": "5d58555058002ed8e6b5707669a336bdcdd36c9af8d55ade920121fee9f20028",
+    "tests/fixtures/kat1/definitions/f01.json": "4cb13e7d2de777e463b75b60f6e336d4fcf1ae4cab3fb6dd6de2b7218a43954a",
+    "tests/fixtures/kat1/definitions/f02.json": "0c9884102866c16d73e8a27ffd7bdcd186a30cdfa3596bfae42bc800fb5794f7",
+    "study/fonts/BaksoDaging-Regular.ttf": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e",
+    "study/fonts/Chalkboard-Regular.ttf": "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d",
+    "study/fonts/NOTICES.md": "f5a66716a6f8077b231f02f1c7466380a3b25197226c5969d5b271d09662b62e",
+    "full_view_study/cases/vs01/definition.json": "9bf3f35847d8bb48705ba646f791aca2c620603377246a8550c3cef6d87921d4",
+    "full_view_study/cases/vs01/reveal.svg": "602b5fa22cec2255292e209afb0a64c1d696aa5cd711c9d4b21044263bf1b15a",
+    "full_view_study/cases/vs02/definition.json": "98dcfb6613e63b7ea620ec6c5b55e7c17e0beebaedb23e7a4456f35ab2ac714c",
+    "full_view_study/cases/vs02/reveal.png": "5017066bf077dbfede6009d160a6986218dfe4a5795a2027b9aeec0160b7d96b",
+    "full_view_study/cases/vs03/definition.json": "a77478dcc7f0234295b1aedf7efe01fa61aae89b25e638bd82f68cdd0964c447",
+    "full_view_study/cases/vs03/reveal.png": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+    "full_view_study/cases/vs04/definition.json": "ff8bdff7a01cd90e8b7e747bdfa7dfbe475ba088942f139fb2bd5c88e969ae67",
+    "full_view_study/cases/vs04/reveal.png": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+    "full_view_study/cases/vs05/definition.json": "d90809038f40b56368daca4d53462aa86a591284c3221b9b4be4f43747be66ae",
+    "full_view_study/cases/vs05/reveal.png": "d08850f3c7293aacf397e21e19390e2ff7dadb98d16fe55cca16addb1a96c8cc",
+    "full_view_study/cases/vs06/definition.json": "3d028440b7611ecaa49c5652267ba1e23ba4d4f06e6a26f15501d98e940c8b16",
+    "full_view_study/cases/vs06/reveal.png": "b418af1099308d9f9a9940f1a104dcbda496dada3ff7e3c976f243e2e4e70121",
+    "full_view_study/cases/vs07/definition.json": "de023a2a602e91f16d3059d45084787996577885290b0e45c8ee68750d510d7e",
+    "full_view_study/cases/vs07/reveal.png": "91304a15c6f2f6106b7169d224422da7c781cb630d7b6b1e727cf85fef47ec2d",
+    "full_view_study/cases/vs08/definition.json": "edd7f6a616fac2dd29150036a2cee105af0508aedb7e3d3e3351c6aa6f87f4df",
+    "full_view_study/cases/vs08/reveal.png": "50493120121531a15cdc6352a85efc2b08ac6b12793b22740f3fdfa468bf0562",
+    "full_view_study/cases/vs09/definition.json": "cb36a6b20d7ec024bea47370165bcee7662293663655cf4d18d288388608b560",
+    "full_view_study/cases/vs09/reveal.png": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+    "full_view_study/cases/vs10/definition.json": "2674efa16321ade17005abc9a50798c82574b3805feba4c36b1b4851f4899c7e",
+    "full_view_study/cases/vs10/reveal.png": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+    "data/content/bierglas_001.json": "d7c7bb015690d099f321528469d85487bc72ea963e186838717bafc8ffe859a0",
+    "data/content/brandenburger_tor_001.json": "9021e828087d070457210b75dccdbf35fb01f2dde4be739eee3dd433ff29f831",
+    "data/content/buntspecht_001.json": "1f222523cd4bdff6bfc5440922f61788b529a25a28f90689b6c9c64f3012fef3",
+    "data/content/carabao_kopf_001.json": "61c4a6d8e76237dbf5dafa7ec24693fe96a8ddc8680b5dc51b8513d4feeb53ff",
+    "data/content/efeutute_001.json": "b4bd247eeb6825c922a9d6d736e30e5ee043d9e04e7eef0531c064c04734a821",
+    "data/content/erbse_001.json": "f85c48639bfdff08bf36a087767c4fc6a67932da187ec708c1a61e184987f3c0",
+    "data/content/gecko_001.json": "aed678373d87e89a2b00b15c27b38ba6a8321a5960f1cf03c7a989e54c54ff14",
+    "data/content/giraffe_001.json": "90ac8dfd3a149ee8d82e0d86cb4e81902d978a3d96e73b1e8f667a71776c2f7b",
+    "data/content/hamburger_001.json": "5ce8a8f5dd6c7bb286120a79dc4cf6ff543e31530b058d0802cd0dd52ab48f23",
+    "data/content/ho_chi_minh_001.json": "3bcde54a01d96e81529e41ac358157523f0aa113b84c1c9fdc15d43002d19523",
+    "data/content/ingwer_001.json": "14dbbf1dc064d9674a96b964100267213bca3535ecf6e1bef9d083ce8ac6200f",
+    "data/content/japanische_teekanne_001.json": "05b8abcdfcfb478ca19538e2b8132a91ce364ffb52fa5699605f8a00741b253a",
+    "data/content/kaktus_001.json": "705a3cee777b1ab7a00e41b7d7fee5118906c1916bc4f3d55c97a1401e110938",
+    "data/content/knoblauch_001.json": "c5d5685f0bf4810ea2208aad43170fd9484fbb9c1d198f03edba07a9f858a63a",
+    "data/content/koboldmaki_001.json": "271b5a94009850972df72eaa81c0aefa26dbccd62c1389ea28413183c5159383",
+    "data/content/koelner_dom_001.json": "a21ecffd4b751ed71b97768eb8afa1f96331dc1fb193ccfdf85eeb7797314ef7",
+    "data/content/kolibri_001.json": "6c3525419f9ca193efd72bab11b9d6ca85fc7ba09507c65388d21921db291592",
+    "data/content/marie_curie_001.json": "8c37e04c51dfdc512d81a626148de77d051448ca9ffcd695ceb4858477bb0c42",
+    "data/content/pfirsich_001.json": "6f755f67359f46015b8bc2eee79849c87d2d46e3a041c91234b3fb09f4bfdd4b",
+    "data/content/regenwurm_001.json": "bfbb38c63bc7bd3e45f10b4ce052d5fb7db6a7304143b907dc7e3ecf538bf6ba",
+    "data/content/rote_nelke_001.json": "f54a0ec597198a25a77677d0cde321bea69ad1ecaff934ad0b9236edd82b2556",
+    "data/content/schachspringer_001.json": "ed95c0b9ded61132a972402ad3aa04e3c7204549f2337c0fd7941273ac5ad1f2",
+    "data/content/stirnlappenbasilisk_001.json": "0c13e049c23fbc0a58b3251a5644950045101fc3d3bcf36b4d2e0cc8194190e6",
+    "data/content/warnemuende_001.json": "885e498fdc6c9674b584b8c8cd1e35b7dc92a8ef1335e152bbff08f847b32937",
+    "data/content/windspiel_001.json": "c590aa9ba963a98f2c53819c9313925e4a3b54bcb7360ea41b86d39037351155",
+    "data/content/yin_yang_001.json": "ac3c241cf208ae5f696a717bbd39cc3293f8396c4cb2bedc11efa8c17a6cf226",
+    "art/book/bp2-a-inventarband.png": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a",
+    "art/book/erase.svg": "1cfa09e9c77f2e5ede83efec65409beb6a6e88fd9345739bc7da9d88c2fe4468",
+    "art/book/fill.svg": "212cb75f36b85126c1e26b3cac3b49d7bb38c671d5f9d6ea73af2b11cf290013",
+    "art/book/frame-palette.png": "9ac25082d5bba17f5ec6dfc847fe3882d41d398f019349bb3db3677af8b76e42",
+    "art/book/frame-preview.png": "9187f1b1796aa3d8ef0603e01f82fde347f40fdcb5d0e3c66cc22e42657f12dd",
+    "art/book/frame-tools.png": "d2155c30234045ec0e178322be5bdcd381c03516ca850e9152ebb64da557196d",
+    "art/book/frames.json": "0fcf84d17c01943cba6a86b342023b35926d05f862c8110cf6dcfd813234de3d",
+    "art/book/Fraunces-OFL.txt": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48",
+    "art/book/Fraunces.ttf": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb",
+    "art/book/help.svg": "0a2834ac56c5793fa5780ea54e2a85ab71f0d86e5e1564d7c03c97f0cc605894",
+    "art/book/icons.json": "375481714d83df76eea4443f6d5ae99c13dad5b87f32b98608fcb44894a9579d",
+    "art/book/KB-168-NOTICE.txt": "5a34a51eb0e99c969029cfeba719847344384441c6f83cbd82b5abd7ffece51b",
+    "art/book/manifest.json": "877401e47ad94abbb078fb3ca2165a67483ed8f6cbb1e6601e2c2bb2a2ae6ab7",
+    "art/book/menu.svg": "134be7b7194df4545113639ca2db5f26c7e7e4da874e7012a68c86c19b994a32",
+    "art/book/minus.svg": "a6314f946c3e8234258715c2fc28b56626cc6b14f59f23faaef625b5d0612efa",
+    "art/book/nav-album.svg": "8bc7b226378d58ef064f58667b22ea6ca2b0a4ddae08c7a2522a2247f4c0ee46",
+    "art/book/nav-information.svg": "38d7c1c70e996b6d16f73b2dead69cafb016b8f515b48eb11f1055fd51d1e660",
+    "art/book/nav-work.svg": "32a4a956c766f016ea2355ea03a8872306e7b83010d79e3f21f62736be185d3e",
+    "art/book/play.svg": "33f4c15c549acdcc13e872f1576ad5455e731ec647dea2b6b6739eaa8add0250",
+    "art/book/PlexSans-OFL.txt": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f",
+    "art/book/PlexSans.ttf": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3",
+    "art/book/plus.svg": "f486fdb694088960f9aa0d52749239652f965e8d38aa20d42bf5080964245a89",
+    "art/book/redo.svg": "850f07276d7d01879fbf7e7564ec5b0966ebdb7f88d3a2054ccabf2e913a54e6",
+    "art/book/reset.svg": "1b3413c0433e617a283876d5947e646ff0513889f7cdd8eae5f820d2768de89d",
+    "art/book/Sidebar-NOTICES.txt": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d",
+    "art/book/undo.svg": "12f0da538f19c23cab6b9c2969fb0a4978e77da2ce2186561e0432638d1ab3ee",
+    "art/cells/fill-large.png": "29ff8c8a7492d38155a58d5926ec9ec9b2c8e0e67652c1e2d614860e4d01d5f8",
+    "art/cells/fill-medium.png": "0f7223a09690d5985a2e6f79d1fec07eb152bde836f910f24c61b945511cf37d",
+    "art/cells/fill-small.png": "5e1dc76ef5eb9769dd61bf49ff6aba6e68ad99ccfd1247b69715404542ac595a",
+    "art/cells/x-large.png": "a8efa25ece483d2574dbd8d1cca627416f37b47b6ec39cb1d0cbe0c2853cff07",
+    "art/cells/x-medium.png": "0fb1e0797bc4b86fe120bab358fb3e309bf6a4c08baff0d61669952183c93bb9",
+    "art/cells/x-small.png": "4546d2c57eda98c21057a73668697224d16c066f159a83ed6364c3058112ecf8",
+    "art/content/bierglas_001.png": "d0f0bc903adee507fedb5dbbfcf1d9dba5475395661c52cde78aef77a982b609",
+    "art/content/bierglas_001.txt": "171e9f4bcbc88bd2e07666b1059dd4b561d104b10a481172c129371109ab5f81",
+    "art/content/brandenburger_tor_001.png": "496479ab0cd2b214560f5f9f18ea6067ac21b91aab76af48874282aacd63af48",
+    "art/content/brandenburger_tor_001.txt": "9635cf0e0aacf673bfeafc169abfcfa2e8599a44c4339db05e8e0ab4053bf6fc",
+    "art/content/buntspecht_001.png": "611cf52c2f087f8e1d18c7e79b23c4508a9e54e63d2669348750f0b22405caf8",
+    "art/content/buntspecht_001.txt": "1ce26fdc485edb609176de79440b4840dc5217d27fc915530e0faa0362bb754b",
+    "art/content/carabao_kopf_001.png": "9754af1c084e389f84b06690d6b6a286846fd1e7149e1a62b8ade7146c5c3a39",
+    "art/content/carabao_kopf_001.txt": "6335e00106a583ccc9b29d127b95da1487875cf0823db7795c941c5a7cdaa1e8",
+    "art/content/efeutute_001.png": "bed1a08639a5a3dc4308c5f804b8ff78174b1bf115c17347ba477b400257e313",
+    "art/content/efeutute_001.txt": "1af11873c5deb9540ac73ec0904db636bdce257d9fa0a0e2f69201e65f01b5a1",
+    "art/content/erbse_001.png": "f0765f22be4b3fd740d8dc40df0962df7a1e9c23de6ea9069db8f68163b836d8",
+    "art/content/erbse_001.txt": "3c100bb0e5505277357d7edbbb8f5626d7351cf99722a3e9865c22078ae8c7cb",
+    "art/content/gecko_001.png": "df663428366ba6a0802d28934bf1a0ee4dfb76ae32c9200e89057a7434dfb45b",
+    "art/content/gecko_001.txt": "bcbfc2d9664d044fd39ecef9611aeae4ddd0f4fcc3bde55a741002d73a340a71",
+    "art/content/giraffe_001.png": "1c047af76afe3862377047299624019487fc80ffbaa7bf8993f498b4b4120ee1",
+    "art/content/giraffe_001.txt": "b8f8a0c5d205d5571bc3bd4f2f16a543fb9997b4ee0e0559bc231a245b2acc7d",
+    "art/content/hamburger_001.png": "5260b0701ae62bb130cdd09c876ec5b5a83d956c65cc9e5546fb393251939517",
+    "art/content/hamburger_001.txt": "f4139f038dd14791a397e0e6a6cdcce416ab712beb844b3c0e6a3ff5dc487c42",
+    "art/content/ho_chi_minh_001.png": "1f5ba4ca6d8d366fa53bb98ada40d24466e90c5655b45a03c8f9a32f7f7fc8af",
+    "art/content/ho_chi_minh_001.txt": "b38fe5940cde8a119abf831aee8e8c8bd25b0658d435a326da20a7bc06384f8d",
+    "art/content/ingwer_001.png": "286186c60a9390c60cb829b119ea9fbf32abe5462bb7c58ac9a2e3872523431f",
+    "art/content/ingwer_001.txt": "08511a49a16946d8403416d659cace21ef8375b8ce656be8fb988b4e9aa51f57",
+    "art/content/japanische_teekanne_001.png": "53fe49d243f772215efe018bbd8c8d2376fa265c7be9f3b47452c08904e473b9",
+    "art/content/japanische_teekanne_001.txt": "45da036f2b454ba66496c799302505575bff3a204e068ef0390cf64f149a4596",
+    "art/content/kaktus_001.png": "21a88817c31f01fd2b62d2001faa07abeefb291737e72050937449b4f0bad139",
+    "art/content/kaktus_001.txt": "87b4bce89ba47e705206dec06d594b6d0cb8649fa1594a2b2a76cf83a5090922",
+    "art/content/knoblauch_001.png": "0d6bf175396e5afae00269e667f8a0351513b5829aa6a8180526053b34c8ebdc",
+    "art/content/knoblauch_001.txt": "634ac440b54cb9453f18c20c23774a3f7dc563461591f5c334da5158c76cc217",
+    "art/content/koboldmaki_001.png": "47712f05e7a2e3e0bbc7255f35af9d2407f52d50d0432ea4915be2370a9417ae",
+    "art/content/koboldmaki_001.txt": "fa42d59651cdb8de1ee8d64898ffc64e2a8bd5836a35b8df005500f7618b28a1",
+    "art/content/koelner_dom_001.png": "5b5b97ec7bdf1965d38f65fe70e5cd51396e7c99454ae1a1390095dfb46e738e",
+    "art/content/koelner_dom_001.txt": "5f4b68c6d0d2d14eee716d7fa34c58949bc87c678a94f72927c653ff569ddfbe",
+    "art/content/kolibri_001.png": "0afea62b0d1580edf84654ed327988383ab7ac4c872ae5f425e92f6a2907bb60",
+    "art/content/kolibri_001.txt": "48d3820757b68eee96884b5efb3b095928b2faaa99cbaab8ba265139cbb53852",
+    "art/content/marie_curie_001.png": "6e45b1af156ae97217989d0dca99da60891ac765b7819fa0aab5f430f2a4c75b",
+    "art/content/marie_curie_001.txt": "33e3d971444f75be2bc3ca5634b953633acaf7c01fd561aedb60c636dff38032",
+    "art/content/pfirsich_001.png": "3706d19818ea7a61cbfcb95402554113d247f1063a2e2ca83e0cf5fe0c2f3cbe",
+    "art/content/pfirsich_001.txt": "755a65b04b4851cd2bbcb650fd2be4fbdf24f0a12b72d940827de156961379d5",
+    "art/content/regenwurm_001.png": "7e2e4f65553be736d5ceb599d66a63f3f742d1f06feb07d76e4958c0330aa52c",
+    "art/content/regenwurm_001.txt": "00422523b3c3225b29ee8abe22041a1df5aa5acbd191481fe93db37434765b33",
+    "art/content/rote_nelke_001.png": "c30cc030c4b4621ccedb3a5fff9b00be1fc07a54f03b35cf3d4de0e494a29232",
+    "art/content/rote_nelke_001.txt": "1595a66efeef23e016740f5b2682f11ff15bd86a6f51718a113aaec7a719303d",
+    "art/content/schachspringer_001.png": "869792beac0b2bf7d6f64ad73453b75bfdb90641105ac21d37d6fcebf21cb93c",
+    "art/content/schachspringer_001.txt": "5004aff052e1b4d401a6aef7685c46667eabe8ddd1a67b16a1348f2aae6c5131",
+    "art/content/stirnlappenbasilisk_001.png": "1a66386a87d6303dbc68131170333d847496e18b48e6ba236f4577d2ddcebb24",
+    "art/content/stirnlappenbasilisk_001.txt": "cb456ab8e51823839afa87542fef502a1b8cd47dcd96fe1b3aa13d9687b27d22",
+    "art/content/warnemuende_001.png": "c8300e88d06a79457dbfcb40460521c7fd2cf4b9d2a8c1a2d2de6bfffde8231e",
+    "art/content/warnemuende_001.txt": "40814a994edc1403c266b73b50dd15330a54e34559195a82aa713af4fc6bf8cf",
+    "art/content/windspiel_001.png": "7eb95ed3144950bb3e9235cee17736fef6ed6a8505abddf615cccfb253e44a72",
+    "art/content/windspiel_001.txt": "e19ca36c8ca41e06de224655dd72e64ee11e87ec4bf33da47956ab4871d13145",
+    "art/content/yin_yang_001.png": "a3c192f26e416d4ce4fadf273239d181dda581cfc415bcd869ec1a65518b61fe",
+    "art/content/yin_yang_001.txt": "6f6ccc513b1f5ac9d3201b38e10c6592218cce272bb39be82e0d798becb0f678",
+    "art/drawing/Bakso-NOTICES.md": "37deab48d0390bbd34d5971cb5a43664e9578f8f0effa1066a94a3c96497e3e9",
+    "art/drawing/BaksoDaging-Regular.ttf": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e",
+    "art/drawing/Chalkboard-Regular.ttf": "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d",
+    "art/drawing/DelightCoffee-NOTICES.md": "b443284305899d2b14bcc4852cc088b883b4cb78ab2dc8b8f0c6856c108cc3e8",
+    "art/drawing/DelightCoffee-Regular.ttf": "4031afdb556558ffdecd48488fd1ae7eee857e804f4622ac5154cc7bb0c4cb23",
+    "art/drawing/NOTICES.md": "c126113cc639c597f5fefdb1cecb33e6666c0a4f814c416ecfb6d2ae84394862",
+    "art/drawing/delight-coffee/More Info.txt": "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0",
+    "art/drawing/delight-coffee/Read Me.pdf": "a57f6f06a94723d5e1b274a5dfbbd2ca0f4c660894dbefd0cae28037a9e6c405"
+  },
+  "captures": {
+    "catalog-pz-023b50b44d1c4698a6e17e65b6ea4337-ui100.png": "24a723552e1cc149c7b4d1d04b194d59b9b85222ccb9d9c20bb91d9b8632f1ae",
+    "catalog-pz-023b50b44d1c4698a6e17e65b6ea4337-ui125.png": "e78c4670e50bd45ac3e2e49c6a74e4de84f309ef59cfe683d13b0576ba9af891",
+    "catalog-pz-20219e14dbe242689b9ef06297828f34-ui100.png": "90c15cab9811cacedcedf8f5d9b4de100aed8246520175927fd14fc17e0ffc3d",
+    "catalog-pz-20219e14dbe242689b9ef06297828f34-ui125.png": "cb864a2d66572053b4a8189645766c7ca0c1c02db936900138b63220c4bf6d9b",
+    "catalog-pz-25d245061b0c49c190788de8e5d0e45b-ui100.png": "0d1966a36b765e92a8b1e3c5e64713764de953d63eb91e3b4520c5deba331c3c",
+    "catalog-pz-25d245061b0c49c190788de8e5d0e45b-ui125.png": "ac63ab35bdc78f21be6e3a0d9df64a1c0d6d3e3a9002b2546afdfa7bfbdf21ae",
+    "catalog-pz-2a8481f61e6443bda174bd3da67c-ui100.png": "a357ce72ff0e72d74b1e0fd5b0647fff63e8b5db42d200d5255b54049d947b0c",
+    "catalog-pz-2a8481f61e6443bda174bd3da67c-ui125.png": "9e4bd616a346c7b2530225c13ab80b7a5bc2e10c4a16fe1da502577a049fe822",
+    "catalog-pz-3a744ae1b7cb4d38b0ac29d030ef-ui100.png": "dc5a677d85979dcf17af5bee7038484e73e85845606c2a8f1efe407b0768fda4",
+    "catalog-pz-3a744ae1b7cb4d38b0ac29d030ef-ui125.png": "1bbc44df9c6fb3605a91b170a07062f0f7404b9bbae44ce394ebe3106847e329",
+    "catalog-pz-3e97c042f0bf474e8608a84ea034c246-ui100.png": "07b7f2f9691a5d2977e3aa7594186b210350dcb6f23264fb63c1c5e943f13c66",
+    "catalog-pz-3e97c042f0bf474e8608a84ea034c246-ui125.png": "cf9b85fe0c7fc19e4fe03a16716da47b84f884acbf1278992048954a953ddf65",
+    "catalog-pz-51405ea1ad194507a60c9b6701d802f0-ui100.png": "09592dcc498eadb76418c28eb4485be559436485935fd803d16351d5b60f8bff",
+    "catalog-pz-51405ea1ad194507a60c9b6701d802f0-ui125.png": "ec147a19d2dd11ed094b07dd2e2468eab0dbe649e734a34fce322eedb07876da",
+    "catalog-pz-5ad1e06e19ab475baebc582d4999daa5-ui100.png": "7105dba3013cd9fb77c16e24baf7691f46fd00b58ca284b5d095df2774859e9a",
+    "catalog-pz-5ad1e06e19ab475baebc582d4999daa5-ui125.png": "7dd34a150f4b8c2a6315ed845422edfc1533a1f03bd446cce612c060012cc517",
+    "catalog-pz-72561c715dd741f9b0082c7ad24802c1-ui100.png": "90ebca1f7a088ab49ee8ff63d5afe7b1462e0c81e7303fff690aa7013cf749a3",
+    "catalog-pz-72561c715dd741f9b0082c7ad24802c1-ui125.png": "332512f6428342abb72309569493c0244cafc45e271ee6a7e7377c5a33a99d24",
+    "catalog-pz-72eb9b188896440c8a9a833e803835ec-ui100.png": "de6ae76fef2d80bc0d2843088b18b601bfcdcd1314cb991e82705f52c2cddbfa",
+    "catalog-pz-72eb9b188896440c8a9a833e803835ec-ui125.png": "a866565985eb463c9e35c431d51b18a614c42b425bc2fbd3fc16efd0b3c43454",
+    "catalog-pz-7ec3dcd94bf84e698691ef4b5839-ui100.png": "dc5a677d85979dcf17af5bee7038484e73e85845606c2a8f1efe407b0768fda4",
+    "catalog-pz-7ec3dcd94bf84e698691ef4b5839-ui125.png": "1bbc44df9c6fb3605a91b170a07062f0f7404b9bbae44ce394ebe3106847e329",
+    "catalog-pz-82758295d5d34284bbae2716f64f-ui100.png": "c5791da01591a730df4e859273416574f198534964d0481c843f27326492c459",
+    "catalog-pz-82758295d5d34284bbae2716f64f-ui125.png": "ff07b2e863a8fc5cb32c600b2553a304938e1c3b290f5e0f03b8b6dada276c58",
+    "catalog-pz-8ea7f3dacdcc428a9fcff7a735bc-ui100.png": "7bf405c7eb5ced4489cdc6bd1a327feac338e0405a7d281c949dfd19d49bf9ca",
+    "catalog-pz-8ea7f3dacdcc428a9fcff7a735bc-ui125.png": "147df0181c6585e5ee9c3793423e150a511baaf17146e6e7d3974c6270643453",
+    "catalog-pz-8ecddf77e80c4543bf4ec714fe3d-ui100.png": "a357ce72ff0e72d74b1e0fd5b0647fff63e8b5db42d200d5255b54049d947b0c",
+    "catalog-pz-8ecddf77e80c4543bf4ec714fe3d-ui125.png": "9e4bd616a346c7b2530225c13ab80b7a5bc2e10c4a16fe1da502577a049fe822",
+    "catalog-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui100.png": "dc5a677d85979dcf17af5bee7038484e73e85845606c2a8f1efe407b0768fda4",
+    "catalog-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui125.png": "1bbc44df9c6fb3605a91b170a07062f0f7404b9bbae44ce394ebe3106847e329",
+    "catalog-pz-9a79befc7a834e2d9d5896a477328962-ui100.png": "0d1966a36b765e92a8b1e3c5e64713764de953d63eb91e3b4520c5deba331c3c",
+    "catalog-pz-9a79befc7a834e2d9d5896a477328962-ui125.png": "ac63ab35bdc78f21be6e3a0d9df64a1c0d6d3e3a9002b2546afdfa7bfbdf21ae",
+    "catalog-pz-a358a1bf1b994efcbebeb55abf825789-ui100.png": "7bf405c7eb5ced4489cdc6bd1a327feac338e0405a7d281c949dfd19d49bf9ca",
+    "catalog-pz-a358a1bf1b994efcbebeb55abf825789-ui125.png": "147df0181c6585e5ee9c3793423e150a511baaf17146e6e7d3974c6270643453",
+    "catalog-pz-ad7164c2302a42e5953f6779a1c7-ui100.png": "4aacc6d989be9f71ff592d94ab92066859688acc195f20db684d4661041b6fd2",
+    "catalog-pz-ad7164c2302a42e5953f6779a1c7-ui125.png": "56fb2653d495dd324f6e85bbb0718586091d76557eea2faac89e607d35f58aa3",
+    "catalog-pz-b3368aea28ac4a11bf09e0dc9c48-ui100.png": "3fc91056e73e6af053c76eaaddc5f2c27238720df5790832fbb94dfafc2c3271",
+    "catalog-pz-b3368aea28ac4a11bf09e0dc9c48-ui125.png": "9b283914a0d772ab3ee70e89b25513f9470a5b22f38afa290a7da91497cc203c",
+    "catalog-pz-b5e2302bf71445c09caac76bbc2a7075-ui100.png": "de6ae76fef2d80bc0d2843088b18b601bfcdcd1314cb991e82705f52c2cddbfa",
+    "catalog-pz-b5e2302bf71445c09caac76bbc2a7075-ui125.png": "a866565985eb463c9e35c431d51b18a614c42b425bc2fbd3fc16efd0b3c43454",
+    "catalog-pz-c71563f1b8c940de998afdd62f09-ui100.png": "7105dba3013cd9fb77c16e24baf7691f46fd00b58ca284b5d095df2774859e9a",
+    "catalog-pz-c71563f1b8c940de998afdd62f09-ui125.png": "7dd34a150f4b8c2a6315ed845422edfc1533a1f03bd446cce612c060012cc517",
+    "catalog-pz-d7e68d1138a3448c8b2a4b07e8632350-ui100.png": "7bf405c7eb5ced4489cdc6bd1a327feac338e0405a7d281c949dfd19d49bf9ca",
+    "catalog-pz-d7e68d1138a3448c8b2a4b07e8632350-ui125.png": "147df0181c6585e5ee9c3793423e150a511baaf17146e6e7d3974c6270643453",
+    "catalog-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui100.png": "24a723552e1cc149c7b4d1d04b194d59b9b85222ccb9d9c20bb91d9b8632f1ae",
+    "catalog-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui125.png": "e78c4670e50bd45ac3e2e49c6a74e4de84f309ef59cfe683d13b0576ba9af891",
+    "catalog-pz-dbbebc72556d4f0c9a37ab69275480e9-ui100.png": "de6ae76fef2d80bc0d2843088b18b601bfcdcd1314cb991e82705f52c2cddbfa",
+    "catalog-pz-dbbebc72556d4f0c9a37ab69275480e9-ui125.png": "a866565985eb463c9e35c431d51b18a614c42b425bc2fbd3fc16efd0b3c43454",
+    "catalog-pz-e45e2e0d67a34f6aa8368f477454-ui100.png": "a357ce72ff0e72d74b1e0fd5b0647fff63e8b5db42d200d5255b54049d947b0c",
+    "catalog-pz-e45e2e0d67a34f6aa8368f477454-ui125.png": "9e4bd616a346c7b2530225c13ab80b7a5bc2e10c4a16fe1da502577a049fe822",
+    "catalog-pz-eedd1fe72af54714908d5b5aff34-ui100.png": "7105dba3013cd9fb77c16e24baf7691f46fd00b58ca284b5d095df2774859e9a",
+    "catalog-pz-eedd1fe72af54714908d5b5aff34-ui125.png": "7dd34a150f4b8c2a6315ed845422edfc1533a1f03bd446cce612c060012cc517",
+    "completion-pz-023b50b44d1c4698a6e17e65b6ea4337-ui100.png": "6cf296ab102b62724c387f62bfae516eccbcabc80ca0cde83882e03b63023c5a",
+    "completion-pz-023b50b44d1c4698a6e17e65b6ea4337-ui125.png": "38629fb537ac20133c27b4eb738b448c45eea63c71763a70e4ae1c1bcdc3f597",
+    "completion-pz-20219e14dbe242689b9ef06297828f34-ui100.png": "315c1a43a04b6cda10603d43cf3ab271fc1dfb6d1395f35b7c89bf2aa26a422d",
+    "completion-pz-20219e14dbe242689b9ef06297828f34-ui125.png": "09ba971b0d8f2d0c2da99e5e0d8a686f6a9c15e4d0a37c4f066c391a313fd72f",
+    "completion-pz-25d245061b0c49c190788de8e5d0e45b-ui100.png": "b117150b0642ba87637d3e1d4152ed78536f0afc70ea602d33e7156f2fb21f45",
+    "completion-pz-25d245061b0c49c190788de8e5d0e45b-ui125.png": "53e824cdbac1254116019b48920a12b058b9e9eef524424b27668b30ae9d1632",
+    "completion-pz-2a8481f61e6443bda174bd3da67c-ui100.png": "37cdfd776a465c73304824908b6d02d00ba20625f201d29bceb50253c4e1b788",
+    "completion-pz-2a8481f61e6443bda174bd3da67c-ui125.png": "d3dceb70523492e112e25baa65d54df955793942add8c2cc809ce02a2e3af412",
+    "completion-pz-3a744ae1b7cb4d38b0ac29d030ef-ui100.png": "797c1d8666eb43e2550516354feaf52a99f82d4c06e0d86b02a79ce884f84790",
+    "completion-pz-3a744ae1b7cb4d38b0ac29d030ef-ui125.png": "18840a2ffb311b315aa37ed8a9c36f1a3280888d7170f96c38353a9b02156a20",
+    "completion-pz-3e97c042f0bf474e8608a84ea034c246-ui100.png": "91e093ae3a101ed34f12f7611ff721680b985014f1341ea2267df3aa450039bc",
+    "completion-pz-3e97c042f0bf474e8608a84ea034c246-ui125.png": "6c998ae6bb1b74b0eaf5ef5e2fe324df7ac651ef2c7e23f0f81c9300459740c8",
+    "completion-pz-51405ea1ad194507a60c9b6701d802f0-ui100.png": "5bf23eeebbce049b564dd76ec4a6196ada27fe746ddebf6ea5f75dd37d1ded48",
+    "completion-pz-51405ea1ad194507a60c9b6701d802f0-ui125.png": "72c1d2bc7286f3adc3414e35e2fd9f25c1eac043400fa97ae17049d9b0551407",
+    "completion-pz-5ad1e06e19ab475baebc582d4999daa5-ui100.png": "88a6e5e6636127b9baebf250e39c1ea9c335f28c26835c8ea229a5e678bbd0b3",
+    "completion-pz-5ad1e06e19ab475baebc582d4999daa5-ui125.png": "8b643266028666e8af34e71d48355ac8ea382b49badc647d84b2081e4171856d",
+    "completion-pz-72561c715dd741f9b0082c7ad24802c1-ui100.png": "2923acd2912a5d1322cc4af4c23b12d0ecfdb8e13ba7708898fb4e5c7ed71d8d",
+    "completion-pz-72561c715dd741f9b0082c7ad24802c1-ui125.png": "1b33550d60011c34ed156b53e416e5b31e49436f04ad66d324126bfcf7c1ae47",
+    "completion-pz-72eb9b188896440c8a9a833e803835ec-ui100.png": "167cf6e848cb5efa65c458f0a12e39c379bb87de779957f5e0f36d17be354384",
+    "completion-pz-72eb9b188896440c8a9a833e803835ec-ui125.png": "38173d38c65b36768fb03bf45f9984b2192f4c06b83d6e8e717839eefb23289d",
+    "completion-pz-7ec3dcd94bf84e698691ef4b5839-ui100.png": "27db0de5b2bbd78492a09330cd0a57a0668a28c623d9fb60efa5aa92716ece7b",
+    "completion-pz-7ec3dcd94bf84e698691ef4b5839-ui125.png": "9bc375479badd7e3d82fcf2562a59b75a1af46c704d04b0bb33f2d843f290b6f",
+    "completion-pz-82758295d5d34284bbae2716f64f-ui100.png": "29bad72414b7f84aae707c688fa2b56494869a580220c20d12560dd6c6bbb88b",
+    "completion-pz-82758295d5d34284bbae2716f64f-ui125.png": "e4b22d6a76efacc9764ff81c0154c91cf246a21208acbaca059e6847d78361ae",
+    "completion-pz-8ea7f3dacdcc428a9fcff7a735bc-ui100.png": "4a1706e3cc83679b1d5953519d1266c91f5c7fff1b50a9c4838bed652ce2ac5d",
+    "completion-pz-8ea7f3dacdcc428a9fcff7a735bc-ui125.png": "2e1939cbfb2c8fd280d7a8adf778c260cf054c195ade7bb8762ee3be20e7d7e1",
+    "completion-pz-8ecddf77e80c4543bf4ec714fe3d-ui100.png": "ab9a39ed8657da06ac152202ad5e942c4fb5d44575103e004220b257c3dfe78a",
+    "completion-pz-8ecddf77e80c4543bf4ec714fe3d-ui125.png": "c94729bbeea62b338797ea18f02dbb26ecaba8d4d6e912d5fcd82508893b14c7",
+    "completion-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui100.png": "55cabda6382750033bb14ad7552acee1caa9a8a880e5d28daaf60c716bcb1779",
+    "completion-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui125.png": "d4c4cd6892eecc75294abc9111e36bb97ba5dab86f32248a2eb3e2a3dd201fb9",
+    "completion-pz-9a79befc7a834e2d9d5896a477328962-ui100.png": "9ee7eb77cf806f567619464db92af6e86397c75655a0bc66532642c54003c32b",
+    "completion-pz-9a79befc7a834e2d9d5896a477328962-ui125.png": "23f417beb20b72fd22195d7e6eb574c7e32f4c4c7806c432ffd97843e5774b02",
+    "completion-pz-a358a1bf1b994efcbebeb55abf825789-ui100.png": "3d38bd6cc6f2154cdc5f10b544081671d11e7b6d8ee710c33f6aa78d138cda2a",
+    "completion-pz-a358a1bf1b994efcbebeb55abf825789-ui125.png": "5513cfd0a4c9c9db4df90f22e6044bb9139a50d367ae43de463b6121ea1c0db0",
+    "completion-pz-ad7164c2302a42e5953f6779a1c7-ui100.png": "a93bfb7ace1bac8ee840c6c5c4b4b85556bb90fda8c037514d8af73748777991",
+    "completion-pz-ad7164c2302a42e5953f6779a1c7-ui125.png": "3bb5433e0596df2c08efe0de35705cf124e7d9f477bb76511f22cf5921a94cc6",
+    "completion-pz-b3368aea28ac4a11bf09e0dc9c48-ui100.png": "d2aa8be8f009808f9ae9348aca557ad6006ec07e831b62ff09c9de4e0b3712f4",
+    "completion-pz-b3368aea28ac4a11bf09e0dc9c48-ui125.png": "fbeac5ca3d7f27467aecd53503619fe83a55644f9cfed1e0c94515755b229dc1",
+    "completion-pz-b5e2302bf71445c09caac76bbc2a7075-ui100.png": "54c983692f37fb109861465471f6515f949b2b587c20a40dd032a40897d74adc",
+    "completion-pz-b5e2302bf71445c09caac76bbc2a7075-ui125.png": "ebe15e9b4ed6f99a44c7e5158a55e11ddfac91ee72bc2cf4aca4dd893df98a11",
+    "completion-pz-c71563f1b8c940de998afdd62f09-ui100.png": "4edf661b28d9a31805e26113953876ff8b4a1fc2c0bd4ea45567ca70c89bc6c0",
+    "completion-pz-c71563f1b8c940de998afdd62f09-ui125.png": "e63e16387100d976f17f8ddc5622a855d8fdf094f163bb8e5fb859815f4764ad",
+    "completion-pz-d7e68d1138a3448c8b2a4b07e8632350-ui100.png": "ea10bd626abf48193e4d27f7832b4995ad1ea9e78e31b3cdebf68289e213d60c",
+    "completion-pz-d7e68d1138a3448c8b2a4b07e8632350-ui125.png": "a2912685c4e9d22e5178d99c3ce361d71925b934ccf7e68a802d9c00c8d88389",
+    "completion-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui100.png": "41740259d5dab4272af7bffd6af43b28193f9b1a618cb7fc8a5d841a085d0310",
+    "completion-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui125.png": "444885c6320674e65eab1d8ec48b0632df0f3913393669df7b264aaa462fc881",
+    "completion-pz-dbbebc72556d4f0c9a37ab69275480e9-ui100.png": "04c4a369bc489d8ce467edcf8beca17fe77b3d891630b419452e09efde30070a",
+    "completion-pz-dbbebc72556d4f0c9a37ab69275480e9-ui125.png": "435dd255c23d6d0736d66b916763e56aa1665685984740843f4b3595df7f5937",
+    "completion-pz-e45e2e0d67a34f6aa8368f477454-ui100.png": "3cc0f7ada52ffd609d0b9111b5d9a10dadc2ac1197218d73c1b6e61135f17a12",
+    "completion-pz-e45e2e0d67a34f6aa8368f477454-ui125.png": "6fa93b21739b3520602b1efaf0ddfa73ee021c6a5a581eb149c7546a8f0986cb",
+    "completion-pz-eedd1fe72af54714908d5b5aff34-ui100.png": "30a723159683a7120bb4472e1b73b66a2512ccc207b3db2d35e317b773306197",
+    "completion-pz-eedd1fe72af54714908d5b5aff34-ui125.png": "8adee40c95d951910572069e05f6e96e3a9ae162f640ae41e29d2dc6abf6ac9e"
+  },
+  "probe_sha256": "c0bf6c86ac33f31a9e845f86352f09166406c669672cecd8ed8940f75fb6d365",
+  "import_metadata": {
+    "tests/fixtures/ke-reveal.svg.import": {
+      "imported_sha256": "aa2d96cf9d91a81e8b4545023a9375633e1c4bd95f0150a748f050cd0a71bd60",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bt5u2gqsauikd\"\npath=\"res://.godot/imported/ke-reveal.svg-5370019b44b5089c6c80c7e03d6f5975.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://tests/fixtures/ke-reveal.svg\"\ndest_files=[\"res://.godot/imported/ke-reveal.svg-5370019b44b5089c6c80c7e03d6f5975.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "study/fonts/BaksoDaging-Regular.ttf.import": {
+      "imported_sha256": "011573329152e9ac44179ba15302fdfc77a68da029bc3bc18df36c6035e4bfae",
+      "imported_text": "[remap]\n\nimporter=\"font_data_dynamic\"\ntype=\"FontFile\"\nuid=\"uid://c0bnwe75uw5pj\"\npath=\"res://.godot/imported/BaksoDaging-Regular.ttf-8b6cbe54e2c801bfe5572402ae1b07a5.fontdata\"\n\n[deps]\n\nsource_file=\"res://study/fonts/BaksoDaging-Regular.ttf\"\ndest_files=[\"res://.godot/imported/BaksoDaging-Regular.ttf-8b6cbe54e2c801bfe5572402ae1b07a5.fontdata\"]\n\n[params]\n\nRendering=null\nantialiasing=1\ngenerate_mipmaps=false\ndisable_embedded_bitmaps=true\nmultichannel_signed_distance_field=false\nmsdf_pixel_range=8\nmsdf_size=48\nallow_system_fallback=true\nforce_autohinter=false\nmodulate_color_glyphs=false\nhinting=3\nsubpixel_positioning=4\nkeep_rounding_remainders=true\noversampling=0.0\nFallbacks=null\nfallbacks=[]\nCompress=null\ncompress=true\npreload=[]\nlanguage_support={}\nscript_support={}\nopentype_features={}\n",
+      "source_sha256": null
+    },
+    "study/fonts/Chalkboard-Regular.ttf.import": {
+      "imported_sha256": "d715e2f3cab0a62d2b97c6be4745f978077eb32037e9e713c02b50c5abee68d4",
+      "imported_text": "[remap]\n\nimporter=\"font_data_dynamic\"\ntype=\"FontFile\"\nuid=\"uid://b5omlycfvbffo\"\npath=\"res://.godot/imported/Chalkboard-Regular.ttf-106a4d8d5369162933b2104e0754f020.fontdata\"\n\n[deps]\n\nsource_file=\"res://study/fonts/Chalkboard-Regular.ttf\"\ndest_files=[\"res://.godot/imported/Chalkboard-Regular.ttf-106a4d8d5369162933b2104e0754f020.fontdata\"]\n\n[params]\n\nRendering=null\nantialiasing=1\ngenerate_mipmaps=false\ndisable_embedded_bitmaps=true\nmultichannel_signed_distance_field=false\nmsdf_pixel_range=8\nmsdf_size=48\nallow_system_fallback=true\nforce_autohinter=false\nmodulate_color_glyphs=false\nhinting=3\nsubpixel_positioning=4\nkeep_rounding_remainders=true\noversampling=0.0\nFallbacks=null\nfallbacks=[]\nCompress=null\ncompress=true\npreload=[]\nlanguage_support={}\nscript_support={}\nopentype_features={}\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs01/reveal.svg.import": {
+      "imported_sha256": "1243a60687cedce1c68de9d1c774dfe4bfff772de4dffb92d2398ccc04c48ddf",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dil6cdhk5hf4d\"\npath=\"res://.godot/imported/reveal.svg-5e546189848fd4b95c7854c0c42963c6.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs01/reveal.svg\"\ndest_files=[\"res://.godot/imported/reveal.svg-5e546189848fd4b95c7854c0c42963c6.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs02/reveal.png.import": {
+      "imported_sha256": "46ca5278b20e6e4d4c7d2da637681fdb001f4b6356a1dbe50e8f592fb8d74378",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bbxtb0d7jj14r\"\npath=\"res://.godot/imported/reveal.png-db541a6fe5e5c9260ae9fe5f5f2d982e.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs02/reveal.png\"\ndest_files=[\"res://.godot/imported/reveal.png-db541a6fe5e5c9260ae9fe5f5f2d982e.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs03/reveal.png.import": {
+      "imported_sha256": "08369bbd841593da944089a904aef703a2b31ba41d759b659895ab7647a26b45",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://cy4ilrvkng2r8\"\npath=\"res://.godot/imported/reveal.png-74fd980aea00e44d8a1091ce9140efab.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs03/reveal.png\"\ndest_files=[\"res://.godot/imported/reveal.png-74fd980aea00e44d8a1091ce9140efab.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs04/reveal.png.import": {
+      "imported_sha256": "b0457ae8c3535836976c07aa8b0e901e3b2516b0a227baee2028b6edcf0a2e78",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://brbf1o81pq8ix\"\npath=\"res://.godot/imported/reveal.png-80160b3668b68acfb6c0a0b620efbc88.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs04/reveal.png\"\ndest_files=[\"res://.godot/imported/reveal.png-80160b3668b68acfb6c0a0b620efbc88.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs05/reveal.png.import": {
+      "imported_sha256": "2b9a1b955e8b8896f33aebc1a53ae0be0b5d5f54032025947ee49d55f01ba508",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://chplkv3fajkwo\"\npath=\"res://.godot/imported/reveal.png-aac9f68d04d1426a5e3b7def8ebfc15c.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs05/reveal.png\"\ndest_files=[\"res://.godot/imported/reveal.png-aac9f68d04d1426a5e3b7def8ebfc15c.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs06/reveal.png.import": {
+      "imported_sha256": "03774faad2879de9f4a99436067800dfbff26978f51830c5d5d4942085bb4887",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bfhtlgeofwwd1\"\npath=\"res://.godot/imported/reveal.png-a39b1384b1c2b2f6eb488f5dd852ace3.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs06/reveal.png\"\ndest_files=[\"res://.godot/imported/reveal.png-a39b1384b1c2b2f6eb488f5dd852ace3.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs07/reveal.png.import": {
+      "imported_sha256": "cc8c5f2656722a08cbb2ae66c220e41770d6be53305b48e1755df3e10b0f947c",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://p302x4qncvx1\"\npath=\"res://.godot/imported/reveal.png-5d557d0f9373bdf1437942c813a8d3c1.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs07/reveal.png\"\ndest_files=[\"res://.godot/imported/reveal.png-5d557d0f9373bdf1437942c813a8d3c1.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs08/reveal.png.import": {
+      "imported_sha256": "35413806c38b32d00ccab600bf3542a82638ec4128f5be8461f93b031c9b956b",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dda8s0circkbp\"\npath=\"res://.godot/imported/reveal.png-0a380cd490944e23b0158879e84b9062.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs08/reveal.png\"\ndest_files=[\"res://.godot/imported/reveal.png-0a380cd490944e23b0158879e84b9062.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs09/reveal.png.import": {
+      "imported_sha256": "905a9a07ba8477b60efd9a370186bb0fbfb7833946129f4eae77fcf4d9b833d5",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://d05nf03v6l5dp\"\npath=\"res://.godot/imported/reveal.png-519815cf6d920543d85f74b86b55b5f1.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs09/reveal.png\"\ndest_files=[\"res://.godot/imported/reveal.png-519815cf6d920543d85f74b86b55b5f1.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "full_view_study/cases/vs10/reveal.png.import": {
+      "imported_sha256": "cd286ab2df63db2967bde2bde02c12b4039f0f98ae98044347b66dd52aa75365",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://da1e76ie77kqy\"\npath=\"res://.godot/imported/reveal.png-b9564c13f6020ab6df4a205e11a49c32.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://full_view_study/cases/vs10/reveal.png\"\ndest_files=[\"res://.godot/imported/reveal.png-b9564c13f6020ab6df4a205e11a49c32.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/book/bp2-a-inventarband.png.import": {
+      "imported_sha256": "8efd0d4710c1a1ae0085740423182603ced6cb4fcc0d7d75c0c805077fa172fe",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://c7hxnmh3hrpl7\"\npath=\"res://.godot/imported/bp2-a-inventarband.png-f75ee1db6efcec125643c1393b4648e8.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/bp2-a-inventarband.png\"\ndest_files=[\"res://.godot/imported/bp2-a-inventarband.png-f75ee1db6efcec125643c1393b4648e8.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/book/erase.svg.import": {
+      "imported_sha256": "b67f6ae5812f8635b2450ccc71c4502c4ba71bcf6ef5676bbe2bc9d3ce4e2572",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bqf7ekn72uacd\"\npath=\"res://.godot/imported/erase.svg-ea048f46e1c8b71dd2dd0273c24d5a8c.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/erase.svg\"\ndest_files=[\"res://.godot/imported/erase.svg-ea048f46e1c8b71dd2dd0273c24d5a8c.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/fill.svg.import": {
+      "imported_sha256": "46897c16efa58f01b068df0e5928b509cc2e5c58c91ea4e0d1f6013da7dc2ca4",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bhvthfqkj1yul\"\npath=\"res://.godot/imported/fill.svg-b056ef9492d47890fcfa6e819b2ff4b4.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/fill.svg\"\ndest_files=[\"res://.godot/imported/fill.svg-b056ef9492d47890fcfa6e819b2ff4b4.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/frame-palette.png.import": {
+      "imported_sha256": "0977b9fa05aea5251e4ed715f272627dfa652b0c79b575090aa78a78a4dcdeea",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dowt3d2f3kvt8\"\npath=\"res://.godot/imported/frame-palette.png-8809c341ec006cb3f5674bad249b5127.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/frame-palette.png\"\ndest_files=[\"res://.godot/imported/frame-palette.png-8809c341ec006cb3f5674bad249b5127.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=false\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": "0977b9fa05aea5251e4ed715f272627dfa652b0c79b575090aa78a78a4dcdeea"
+    },
+    "art/book/frame-preview.png.import": {
+      "imported_sha256": "7f8950cfdcebbb8f56ecd46e11772402f26adffc226a1f21aec5c0c8e1a8b8b7",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://b82jcilgp0145\"\npath=\"res://.godot/imported/frame-preview.png-63453e2080abfffd43c1d46f9ace1b47.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/frame-preview.png\"\ndest_files=[\"res://.godot/imported/frame-preview.png-63453e2080abfffd43c1d46f9ace1b47.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=false\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": "7f8950cfdcebbb8f56ecd46e11772402f26adffc226a1f21aec5c0c8e1a8b8b7"
+    },
+    "art/book/frame-tools.png.import": {
+      "imported_sha256": "d7081cbd7e5b9754f8cf9b8437bbaefdd6de1d5885dde05cd0e4b93f52ef055a",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://cek5s32t753qv\"\npath=\"res://.godot/imported/frame-tools.png-7e609e5d4443f388902a5234da2f921c.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/frame-tools.png\"\ndest_files=[\"res://.godot/imported/frame-tools.png-7e609e5d4443f388902a5234da2f921c.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=false\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": "d7081cbd7e5b9754f8cf9b8437bbaefdd6de1d5885dde05cd0e4b93f52ef055a"
+    },
+    "art/book/Fraunces.ttf.import": {
+      "imported_sha256": "a8a7fc803bb755a3b92d5393469246c37891828c420784893d15d057679d31f0",
+      "imported_text": "[remap]\n\nimporter=\"font_data_dynamic\"\ntype=\"FontFile\"\nuid=\"uid://m2qka5dfxkvx\"\npath=\"res://.godot/imported/Fraunces.ttf-57abfd36e263386a3f732601e951e2b9.fontdata\"\n\n[deps]\n\nsource_file=\"res://art/book/Fraunces.ttf\"\ndest_files=[\"res://.godot/imported/Fraunces.ttf-57abfd36e263386a3f732601e951e2b9.fontdata\"]\n\n[params]\n\nRendering=null\nantialiasing=1\ngenerate_mipmaps=false\ndisable_embedded_bitmaps=true\nmultichannel_signed_distance_field=false\nmsdf_pixel_range=8\nmsdf_size=48\nallow_system_fallback=true\nforce_autohinter=false\nmodulate_color_glyphs=false\nhinting=3\nsubpixel_positioning=4\nkeep_rounding_remainders=true\noversampling=0.0\nFallbacks=null\nfallbacks=[]\nCompress=null\ncompress=true\npreload=[]\nlanguage_support={}\nscript_support={}\nopentype_features={}\n",
+      "source_sha256": null
+    },
+    "art/book/help.svg.import": {
+      "imported_sha256": "60e9a79ee130ee3f1eb94c28a4361f315326b3dbeb27300ace8d57f63790dd6b",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://by3l2j3kgubyt\"\npath=\"res://.godot/imported/help.svg-925e0cdf571ef20f5c6a60b219003810.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/help.svg\"\ndest_files=[\"res://.godot/imported/help.svg-925e0cdf571ef20f5c6a60b219003810.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/menu.svg.import": {
+      "imported_sha256": "65ad10c7fbbe3e6c6ab5432fa1b0e2b3e3d495f0c2256debcd7482b0416f3465",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bfwfqrly5g2s3\"\npath=\"res://.godot/imported/menu.svg-f5d193fd6ddde66fd7b0f4c310a0d564.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/menu.svg\"\ndest_files=[\"res://.godot/imported/menu.svg-f5d193fd6ddde66fd7b0f4c310a0d564.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/minus.svg.import": {
+      "imported_sha256": "0e419a667d5faf49c0654b4ba5f792d73d7651e3af503517ff75730d993daf50",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://ca0o8mjr7xe88\"\npath=\"res://.godot/imported/minus.svg-130da5b7e3dc4d6c10fcad361bc44249.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/minus.svg\"\ndest_files=[\"res://.godot/imported/minus.svg-130da5b7e3dc4d6c10fcad361bc44249.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/nav-album.svg.import": {
+      "imported_sha256": "dc62aa52515350c2e6ce6cb07ffdc6e412401d4737c5dd6832759cacd1e4124f",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://ckf3ctae5x32u\"\npath=\"res://.godot/imported/nav-album.svg-f64664d8fd92e285a0fc31331e6bfb4d.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/nav-album.svg\"\ndest_files=[\"res://.godot/imported/nav-album.svg-f64664d8fd92e285a0fc31331e6bfb4d.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/nav-information.svg.import": {
+      "imported_sha256": "d77138c23c353b7c58ea051d3ada156065df7ae487ca716dc7be422045034031",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bg0j81xqqmgqs\"\npath=\"res://.godot/imported/nav-information.svg-be24b342adefac36a081c4bee2d97681.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/nav-information.svg\"\ndest_files=[\"res://.godot/imported/nav-information.svg-be24b342adefac36a081c4bee2d97681.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/nav-work.svg.import": {
+      "imported_sha256": "9b6cd4a85d69dcb39d07c13f30f2de96ce099cc971d7972258b1639778b90a22",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dm7tddnatlj44\"\npath=\"res://.godot/imported/nav-work.svg-95f493c838a795673523ff37c8a30646.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/nav-work.svg\"\ndest_files=[\"res://.godot/imported/nav-work.svg-95f493c838a795673523ff37c8a30646.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/play.svg.import": {
+      "imported_sha256": "c5d71e39ce97be5df3c760fd5f16dfea1262a090696cb06c399c86f1f644df10",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://depe7rlawd7di\"\npath=\"res://.godot/imported/play.svg-a6562100e1513b58970c666d3f0a7027.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/play.svg\"\ndest_files=[\"res://.godot/imported/play.svg-a6562100e1513b58970c666d3f0a7027.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/PlexSans.ttf.import": {
+      "imported_sha256": "07d70cb8f58ef3d586c37e610976e4b08300610b21048c69f29202664ca829ed",
+      "imported_text": "[remap]\n\nimporter=\"font_data_dynamic\"\ntype=\"FontFile\"\nuid=\"uid://c5nd2aqj616mu\"\npath=\"res://.godot/imported/PlexSans.ttf-e585d239650938c0719270a63d772850.fontdata\"\n\n[deps]\n\nsource_file=\"res://art/book/PlexSans.ttf\"\ndest_files=[\"res://.godot/imported/PlexSans.ttf-e585d239650938c0719270a63d772850.fontdata\"]\n\n[params]\n\nRendering=null\nantialiasing=1\ngenerate_mipmaps=false\ndisable_embedded_bitmaps=true\nmultichannel_signed_distance_field=false\nmsdf_pixel_range=8\nmsdf_size=48\nallow_system_fallback=true\nforce_autohinter=false\nmodulate_color_glyphs=false\nhinting=3\nsubpixel_positioning=4\nkeep_rounding_remainders=true\noversampling=0.0\nFallbacks=null\nfallbacks=[]\nCompress=null\ncompress=true\npreload=[]\nlanguage_support={}\nscript_support={}\nopentype_features={}\n",
+      "source_sha256": null
+    },
+    "art/book/plus.svg.import": {
+      "imported_sha256": "cdf879f692f901ed8ad6a912d505aa342c7f0b139325a2d3db184a504d2b13af",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://daiaxc7nm2hsw\"\npath=\"res://.godot/imported/plus.svg-370767f043c2a9d892a2e9d59ffe3c6c.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/plus.svg\"\ndest_files=[\"res://.godot/imported/plus.svg-370767f043c2a9d892a2e9d59ffe3c6c.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/redo.svg.import": {
+      "imported_sha256": "b36556b2fdf02b266672d8da0acfdcc15c3ae4ee154890f3a8a819d0ee5f916d",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://citefn2r0427t\"\npath=\"res://.godot/imported/redo.svg-6fd6f5fbbe079f6cfa7a05b9b13729b5.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/redo.svg\"\ndest_files=[\"res://.godot/imported/redo.svg-6fd6f5fbbe079f6cfa7a05b9b13729b5.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/reset.svg.import": {
+      "imported_sha256": "abd8bb1fb5c442b57c508948bc704c354a03763323274ca905558b2f7383f0b2",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://ojy4cvf0rhff\"\npath=\"res://.godot/imported/reset.svg-74198e5390080ced010c3d1a0743da44.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/reset.svg\"\ndest_files=[\"res://.godot/imported/reset.svg-74198e5390080ced010c3d1a0743da44.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/book/undo.svg.import": {
+      "imported_sha256": "5bbb20de4d619201cab85dea65b4c4812c4d00b805afa7ce9e01360b704952d6",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dsuf3evqyk151\"\npath=\"res://.godot/imported/undo.svg-447a8e9fad728fe4c5b9c726ec362a31.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/book/undo.svg\"\ndest_files=[\"res://.godot/imported/undo.svg-447a8e9fad728fe4c5b9c726ec362a31.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\nsvg/scale=1.0\neditor/scale_with_editor_scale=false\neditor/convert_colors_with_editor_theme=false\n",
+      "source_sha256": null
+    },
+    "art/cells/fill-large.png.import": {
+      "imported_sha256": "a36cebc3e5acb1e8f48d0afc9c6868cdcd21905871293a2af337874b3825dfe3",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dok6cgw3nfgrb\"\npath=\"res://.godot/imported/fill-large.png-330e07ff7bca3b8e0727200bb5cad534.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/cells/fill-large.png\"\ndest_files=[\"res://.godot/imported/fill-large.png-330e07ff7bca3b8e0727200bb5cad534.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=false\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": "11a231ece1c40419d53548cfe43f6c50f6892153fbe3fb3a9442e9cda170fbbe"
+    },
+    "art/cells/fill-medium.png.import": {
+      "imported_sha256": "7b4f6e09a06efb84d3c0c557acbdf3d55119ca7f8c7173481c115844cb306fe0",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://deuwxi6ohhe65\"\npath=\"res://.godot/imported/fill-medium.png-67a3728203827aa9c7772ce506cfd4eb.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/cells/fill-medium.png\"\ndest_files=[\"res://.godot/imported/fill-medium.png-67a3728203827aa9c7772ce506cfd4eb.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=false\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": "8b0c6487f7e93693cef2f4cbc1353546569d8d6809fbba14c041fc7c7d7c03a0"
+    },
+    "art/cells/fill-small.png.import": {
+      "imported_sha256": "f1cb1b3bad0e651587dac7e3e66464c34ddb4b834e43a05a00e688ccda8285c8",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bv5u5k2sepv0f\"\npath=\"res://.godot/imported/fill-small.png-0c0ad4ff8d28ae10574cad5f2e20bbde.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/cells/fill-small.png\"\ndest_files=[\"res://.godot/imported/fill-small.png-0c0ad4ff8d28ae10574cad5f2e20bbde.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=false\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": "794d2cdd301be9677b858b26376b8ad19a5477d0e0228684ff0158a610e992a6"
+    },
+    "art/cells/x-large.png.import": {
+      "imported_sha256": "3baa80f2b47f76496dfb31cd32058551f0f41e397fd28de2e9962aa26dc8a681",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://b3ve3l0puh1mc\"\npath=\"res://.godot/imported/x-large.png-e024cec27910fdae61e08da0c52cf939.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/cells/x-large.png\"\ndest_files=[\"res://.godot/imported/x-large.png-e024cec27910fdae61e08da0c52cf939.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=false\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": "dfb63e41d1e599aa4a348f739b215ece1865e3cbc0c5fd4b7f6aa9f6335001ff"
+    },
+    "art/cells/x-medium.png.import": {
+      "imported_sha256": "91998a39afda8616272c4893f833766b7e0642fd60aef5590ca969f9817f577a",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://djm3enddxq284\"\npath=\"res://.godot/imported/x-medium.png-836f6ba7f4a80e8d175b870b09f8360b.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/cells/x-medium.png\"\ndest_files=[\"res://.godot/imported/x-medium.png-836f6ba7f4a80e8d175b870b09f8360b.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=false\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": "a34ab033f89922d0252e1f7ddd3cb099e5bbc8c1ce3b816a0ecf7cbebbc7ee27"
+    },
+    "art/cells/x-small.png.import": {
+      "imported_sha256": "c6d233195e4387b4cd8c7cd90c9b579427315efab84bad8d5167917f8ad35bac",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://c1fm52yid5nso\"\npath=\"res://.godot/imported/x-small.png-721485fb535fcb8760babe4da57d0150.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/cells/x-small.png\"\ndest_files=[\"res://.godot/imported/x-small.png-721485fb535fcb8760babe4da57d0150.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=false\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": "41760004eb51656db7d5c937e3f1b0e6d1e27f324dafb9fee1b0e62d92aee14f"
+    },
+    "art/content/bierglas_001.png.import": {
+      "imported_sha256": "21c3fa77aeeacb34d3f359baa5ee045dd0b582bde8b3b3e3b75b4bd09df4fd6a",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://b4a2ikvh2ks5g\"\npath=\"res://.godot/imported/bierglas_001.png-ddb868d4edcae1c25fb2fc6968940e70.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/bierglas_001.png\"\ndest_files=[\"res://.godot/imported/bierglas_001.png-ddb868d4edcae1c25fb2fc6968940e70.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/brandenburger_tor_001.png.import": {
+      "imported_sha256": "5e57930c56a057160636ca9750f064f731437593c211e43fa6cec18c054f5d5e",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dpa453gjpmth2\"\npath=\"res://.godot/imported/brandenburger_tor_001.png-1d7872ce318dd24d5b4dff18b030f5ae.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/brandenburger_tor_001.png\"\ndest_files=[\"res://.godot/imported/brandenburger_tor_001.png-1d7872ce318dd24d5b4dff18b030f5ae.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/buntspecht_001.png.import": {
+      "imported_sha256": "ce7afeecb21b693f432f3db02136cdff69b52a4d180015ae012b1aebd879403a",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://xjqnl330xitu\"\npath=\"res://.godot/imported/buntspecht_001.png-8020be30aaed06b451cd3319c1991d8f.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/buntspecht_001.png\"\ndest_files=[\"res://.godot/imported/buntspecht_001.png-8020be30aaed06b451cd3319c1991d8f.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/carabao_kopf_001.png.import": {
+      "imported_sha256": "5a83ec7da5b0f94a5540b61aa80e3dd28a4c79ed538c21ab251070a997c34201",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://cr5atg366acqu\"\npath=\"res://.godot/imported/carabao_kopf_001.png-0df2de86f5151a5b1fff96f0a6e3a5d2.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/carabao_kopf_001.png\"\ndest_files=[\"res://.godot/imported/carabao_kopf_001.png-0df2de86f5151a5b1fff96f0a6e3a5d2.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/efeutute_001.png.import": {
+      "imported_sha256": "05bf7de401299d33cd9e1d75736ba325e69d73bb8dc9754e6a2a618527ca65d2",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://vgyowoglg6so\"\npath=\"res://.godot/imported/efeutute_001.png-4aa46d5a107e856f7f735581eb0f02ea.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/efeutute_001.png\"\ndest_files=[\"res://.godot/imported/efeutute_001.png-4aa46d5a107e856f7f735581eb0f02ea.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/erbse_001.png.import": {
+      "imported_sha256": "a1d82bff2f6e9b731b90543b1531e20d0e4f70e517317ccb3ff1489cd7f8fb8b",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dal86fhbbjkrf\"\npath=\"res://.godot/imported/erbse_001.png-d2a4b84b29133ab4e1ae8dac9cb2521c.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/erbse_001.png\"\ndest_files=[\"res://.godot/imported/erbse_001.png-d2a4b84b29133ab4e1ae8dac9cb2521c.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/gecko_001.png.import": {
+      "imported_sha256": "3275d36c6b3da3cad66fcf153e2e30c7ee3dd8a5424375a7a6b9630c5405aa72",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://d1upnnh4u3ei6\"\npath=\"res://.godot/imported/gecko_001.png-07a175dc2afe7336fbaf7809bc786801.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/gecko_001.png\"\ndest_files=[\"res://.godot/imported/gecko_001.png-07a175dc2afe7336fbaf7809bc786801.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/giraffe_001.png.import": {
+      "imported_sha256": "e81b51901ee91227546e5bf9c25a7fc71324616d44fe211d58ecefed45471306",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://u7jpyckk2kbi\"\npath=\"res://.godot/imported/giraffe_001.png-dcbed68881545ea4c864993f48df8b5c.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/giraffe_001.png\"\ndest_files=[\"res://.godot/imported/giraffe_001.png-dcbed68881545ea4c864993f48df8b5c.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/hamburger_001.png.import": {
+      "imported_sha256": "13e55e8069c708d9e7584219f419521f44b5b84f5ee92b993043cc60f2766634",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://47x8hioulb54\"\npath=\"res://.godot/imported/hamburger_001.png-e7f5d934c1213c9333c77127a38ec0da.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/hamburger_001.png\"\ndest_files=[\"res://.godot/imported/hamburger_001.png-e7f5d934c1213c9333c77127a38ec0da.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/ho_chi_minh_001.png.import": {
+      "imported_sha256": "401cd5fe8f84707c33e07fe870d07118813c8fe4e3e1f3c2823cdbbe7cf607a1",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dg0ba8v3s7k76\"\npath=\"res://.godot/imported/ho_chi_minh_001.png-9c2c84c09ff8c47ce81569186b2c2fd6.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/ho_chi_minh_001.png\"\ndest_files=[\"res://.godot/imported/ho_chi_minh_001.png-9c2c84c09ff8c47ce81569186b2c2fd6.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/ingwer_001.png.import": {
+      "imported_sha256": "1429194559ac212786ebe7d4249353bc2288be35f66bb44e6510de2998952cbb",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bk5eoiwu4i7ql\"\npath=\"res://.godot/imported/ingwer_001.png-f7ebb523ed52d620e5bcc003af41636b.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/ingwer_001.png\"\ndest_files=[\"res://.godot/imported/ingwer_001.png-f7ebb523ed52d620e5bcc003af41636b.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/japanische_teekanne_001.png.import": {
+      "imported_sha256": "83f5667c936450db3987e94d8176c3da82fe65125906f16ec0084e14bcfaaa71",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dwkno47aqf6fa\"\npath=\"res://.godot/imported/japanische_teekanne_001.png-a2972f22fd243966e5e81349e7abb4a5.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/japanische_teekanne_001.png\"\ndest_files=[\"res://.godot/imported/japanische_teekanne_001.png-a2972f22fd243966e5e81349e7abb4a5.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/kaktus_001.png.import": {
+      "imported_sha256": "6ce2f9d155c7aa2ac43ef68cacb974b2c104eadd9f374e770d25377ed7be8adc",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dr8tn3cm5iueu\"\npath=\"res://.godot/imported/kaktus_001.png-ccfecbaa8087442587a370c96f7f8e6f.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/kaktus_001.png\"\ndest_files=[\"res://.godot/imported/kaktus_001.png-ccfecbaa8087442587a370c96f7f8e6f.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/knoblauch_001.png.import": {
+      "imported_sha256": "16e765e73dfe84ac067291638e5d8777d5da30901fa6229b8d46b539914ee63d",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://d1bwnikrtx1qh\"\npath=\"res://.godot/imported/knoblauch_001.png-f0c46c2d071213f0da37d9ffcfbbb51c.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/knoblauch_001.png\"\ndest_files=[\"res://.godot/imported/knoblauch_001.png-f0c46c2d071213f0da37d9ffcfbbb51c.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/koboldmaki_001.png.import": {
+      "imported_sha256": "13f5aac0ec5e7f0b0d65d74ad92187cbcf940621e1bb9f31408b601b227d9d18",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://d0j20ybs7xcyr\"\npath=\"res://.godot/imported/koboldmaki_001.png-905b34c58731b25dcf060b5684536bbb.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/koboldmaki_001.png\"\ndest_files=[\"res://.godot/imported/koboldmaki_001.png-905b34c58731b25dcf060b5684536bbb.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/koelner_dom_001.png.import": {
+      "imported_sha256": "b73bdb331d3974ab988de658a781bab192f50aad96133ac92f84842ebd39c5e6",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bu81jpomxsjwj\"\npath=\"res://.godot/imported/koelner_dom_001.png-54238ad939accd3603d00748d06b63a4.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/koelner_dom_001.png\"\ndest_files=[\"res://.godot/imported/koelner_dom_001.png-54238ad939accd3603d00748d06b63a4.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/kolibri_001.png.import": {
+      "imported_sha256": "8f9fd07f8f5dd74c4dd92f77e2df61fce0d71826311799de3b7bd1ffe5563062",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dr8iy3o26rcmi\"\npath=\"res://.godot/imported/kolibri_001.png-5525ca25e1d9bfc79c01f89e8415dbca.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/kolibri_001.png\"\ndest_files=[\"res://.godot/imported/kolibri_001.png-5525ca25e1d9bfc79c01f89e8415dbca.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/marie_curie_001.png.import": {
+      "imported_sha256": "8588fe2653c1dfdad0580f02703aa4b6a124aa68db2c47942ba20f08f28ed6ef",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://djtwvfi84em1j\"\npath=\"res://.godot/imported/marie_curie_001.png-d74aff17564acab025d52e68ea2a62e4.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/marie_curie_001.png\"\ndest_files=[\"res://.godot/imported/marie_curie_001.png-d74aff17564acab025d52e68ea2a62e4.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/pfirsich_001.png.import": {
+      "imported_sha256": "cb9eb8bb9db9c44559dec7ad842830fea9d49fe82793a6418b0e60372839237a",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://dmw2rkry4gbu6\"\npath=\"res://.godot/imported/pfirsich_001.png-be6cb9e7e5cb41f858fb121bb7f1ffeb.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/pfirsich_001.png\"\ndest_files=[\"res://.godot/imported/pfirsich_001.png-be6cb9e7e5cb41f858fb121bb7f1ffeb.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/regenwurm_001.png.import": {
+      "imported_sha256": "9ddcce0810ca6907232a655a378af00a990ab93a542d6d73e9bc54f279be0ed7",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://csacwn7m1v3an\"\npath=\"res://.godot/imported/regenwurm_001.png-4acdd89270c7b0aacfe5fe76b236de64.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/regenwurm_001.png\"\ndest_files=[\"res://.godot/imported/regenwurm_001.png-4acdd89270c7b0aacfe5fe76b236de64.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/rote_nelke_001.png.import": {
+      "imported_sha256": "b1afc7699703d566614308e8e768612c6f46d54b125ac586999700d983f1d18d",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://cx6rt5lsbnxgl\"\npath=\"res://.godot/imported/rote_nelke_001.png-314615f7a840c4fce4cc0d0bf9ee1f09.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/rote_nelke_001.png\"\ndest_files=[\"res://.godot/imported/rote_nelke_001.png-314615f7a840c4fce4cc0d0bf9ee1f09.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/schachspringer_001.png.import": {
+      "imported_sha256": "11f427f6d52d43c382f596c1cbb2fc554f412ee8e644f9054415e690404256f5",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://pquw5a0kmtht\"\npath=\"res://.godot/imported/schachspringer_001.png-14991f5d8e597b067d8172196344a898.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/schachspringer_001.png\"\ndest_files=[\"res://.godot/imported/schachspringer_001.png-14991f5d8e597b067d8172196344a898.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/stirnlappenbasilisk_001.png.import": {
+      "imported_sha256": "15a773ba1ecef8de0876a747e8b3a7dd5749fe261534aa901414adfb380c7b6a",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bbaxbd4i87lxk\"\npath=\"res://.godot/imported/stirnlappenbasilisk_001.png-4021a71865c5d4c3750bc5f99fdf5bd0.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/stirnlappenbasilisk_001.png\"\ndest_files=[\"res://.godot/imported/stirnlappenbasilisk_001.png-4021a71865c5d4c3750bc5f99fdf5bd0.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/warnemuende_001.png.import": {
+      "imported_sha256": "dbdbb7f0377bb20c2708540344cacf6d69a8f063c611af38dc582fb3869f1d96",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://deqjctn7s5pk8\"\npath=\"res://.godot/imported/warnemuende_001.png-af72505374a60c419b2742e083b626dc.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/warnemuende_001.png\"\ndest_files=[\"res://.godot/imported/warnemuende_001.png-af72505374a60c419b2742e083b626dc.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/windspiel_001.png.import": {
+      "imported_sha256": "6cca325828e9815fe9f0859109a94d2ae7fbb8b118c282574f6916a71f1785b1",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://d1gc2aky0cyt7\"\npath=\"res://.godot/imported/windspiel_001.png-44226f8a9a597745266792f072f9f45e.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/windspiel_001.png\"\ndest_files=[\"res://.godot/imported/windspiel_001.png-44226f8a9a597745266792f072f9f45e.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/content/yin_yang_001.png.import": {
+      "imported_sha256": "a4173f8c4ba54f6d3c72c8e2e3f04b3552610a80914561885e0afaa9377bd81e",
+      "imported_text": "[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"\nuid=\"uid://bxkmqah6n5cse\"\npath=\"res://.godot/imported/yin_yang_001.png-949be0f6adc7046b5c72c10a527cb51b.ctex\"\nmetadata={\n\"vram_texture\": false\n}\n\n[deps]\n\nsource_file=\"res://art/content/yin_yang_001.png\"\ndest_files=[\"res://.godot/imported/yin_yang_001.png-949be0f6adc7046b5c72c10a527cb51b.ctex\"]\n\n[params]\n\ncompress/mode=0\ncompress/high_quality=false\ncompress/lossy_quality=0.7\ncompress/uastc_level=0\ncompress/rdo_quality_loss=0.0\ncompress/hdr_compression=1\ncompress/normal_map=0\ncompress/channel_pack=0\nmipmaps/generate=false\nmipmaps/limit=-1\nroughness/mode=0\nroughness/src_normal=\"\"\nprocess/channel_remap/red=0\nprocess/channel_remap/green=1\nprocess/channel_remap/blue=2\nprocess/channel_remap/alpha=3\nprocess/fix_alpha_border=true\nprocess/premult_alpha=false\nprocess/normal_map_invert_y=false\nprocess/hdr_as_srgb=false\nprocess/hdr_clamp_exposure=false\nprocess/size_limit=0\ndetect_3d/compress_to=1\n",
+      "source_sha256": null
+    },
+    "art/drawing/BaksoDaging-Regular.ttf.import": {
+      "imported_sha256": "d92267ac9f5762979d73989e613bc167668975dd7c8bc32302a2101a651cac08",
+      "imported_text": "[remap]\n\nimporter=\"font_data_dynamic\"\ntype=\"FontFile\"\nuid=\"uid://c1s0bpe0rh6t1\"\npath=\"res://.godot/imported/BaksoDaging-Regular.ttf-f38e17013265dd6630a63ae4cb9b29b8.fontdata\"\n\n[deps]\n\nsource_file=\"res://art/drawing/BaksoDaging-Regular.ttf\"\ndest_files=[\"res://.godot/imported/BaksoDaging-Regular.ttf-f38e17013265dd6630a63ae4cb9b29b8.fontdata\"]\n\n[params]\n\nRendering=null\nantialiasing=1\ngenerate_mipmaps=false\ndisable_embedded_bitmaps=true\nmultichannel_signed_distance_field=false\nmsdf_pixel_range=8\nmsdf_size=48\nallow_system_fallback=true\nforce_autohinter=false\nmodulate_color_glyphs=false\nhinting=3\nsubpixel_positioning=4\nkeep_rounding_remainders=true\noversampling=0.0\nFallbacks=null\nfallbacks=[]\nCompress=null\ncompress=true\npreload=[]\nlanguage_support={}\nscript_support={}\nopentype_features={}\n",
+      "source_sha256": null
+    },
+    "art/drawing/Chalkboard-Regular.ttf.import": {
+      "imported_sha256": "88dc86023056f2097e6950897a91961ae46a063845317e00608707a760a63fb1",
+      "imported_text": "[remap]\n\nimporter=\"font_data_dynamic\"\ntype=\"FontFile\"\nuid=\"uid://d33ol6b5t31dx\"\npath=\"res://.godot/imported/Chalkboard-Regular.ttf-7163b523e2fd8433d5fb24f7783de650.fontdata\"\n\n[deps]\n\nsource_file=\"res://art/drawing/Chalkboard-Regular.ttf\"\ndest_files=[\"res://.godot/imported/Chalkboard-Regular.ttf-7163b523e2fd8433d5fb24f7783de650.fontdata\"]\n\n[params]\n\nRendering=null\nantialiasing=1\ngenerate_mipmaps=false\ndisable_embedded_bitmaps=true\nmultichannel_signed_distance_field=false\nmsdf_pixel_range=8\nmsdf_size=48\nallow_system_fallback=true\nforce_autohinter=false\nmodulate_color_glyphs=false\nhinting=3\nsubpixel_positioning=4\nkeep_rounding_remainders=true\noversampling=0.0\nFallbacks=null\nfallbacks=[]\nCompress=null\ncompress=true\npreload=[]\nlanguage_support={}\nscript_support={}\nopentype_features={}\n",
+      "source_sha256": null
+    },
+    "art/drawing/DelightCoffee-Regular.ttf.import": {
+      "imported_sha256": "713bc4dde79b453141c1ca866ce78d533c30598bb1746430596c267833fd6a6b",
+      "imported_text": "[remap]\n\nimporter=\"font_data_dynamic\"\ntype=\"FontFile\"\nuid=\"uid://btfd2e3rodb22\"\npath=\"res://.godot/imported/DelightCoffee-Regular.ttf-12bd4cfecc449a59b3c259253510c943.fontdata\"\n\n[deps]\n\nsource_file=\"res://art/drawing/DelightCoffee-Regular.ttf\"\ndest_files=[\"res://.godot/imported/DelightCoffee-Regular.ttf-12bd4cfecc449a59b3c259253510c943.fontdata\"]\n\n[params]\n\nRendering=null\nantialiasing=1\ngenerate_mipmaps=false\ndisable_embedded_bitmaps=true\nmultichannel_signed_distance_field=false\nmsdf_pixel_range=8\nmsdf_size=48\nallow_system_fallback=true\nforce_autohinter=false\nmodulate_color_glyphs=false\nhinting=3\nsubpixel_positioning=4\nkeep_rounding_remainders=true\noversampling=0.0\nFallbacks=null\nfallbacks=[]\nCompress=null\ncompress=true\npreload=[]\nlanguage_support={}\nscript_support={}\nopentype_features={}\n",
+      "source_sha256": null
+    }
+  }
+}

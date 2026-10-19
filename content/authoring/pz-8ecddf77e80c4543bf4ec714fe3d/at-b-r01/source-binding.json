@@ -1,0 +1,45 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "name": "Warnemünde",
+  "category_id": "gebaeude-bauwerke",
+  "save_slot": "warnemuende_001",
+  "runtime_revision": 2,
+  "definition_path": "game/data/content/warnemuende_001.json",
+  "definition_sha256": "885e498fdc6c9674b584b8c8cd1e35b7dc92a8ef1335e152bbff08f847b32937",
+  "original": {
+    "path": "game/art/content/warnemuende_001.png",
+    "bytes": 1801920,
+    "sha256": "828ff4dec57c1269445bfdf0af4627d3acafbaa63155014cf68cfb5f89997f74",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 1086,
+    "height": 1448,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572528
+  },
+  "notice_path": "game/art/content/warnemuende_001.txt",
+  "notice_sha256": "cb501412641af808042b9fd60b1bccdbd17f4eaeb927878a90a730dc0078098a",
+  "physical_manifest": {
+    "path": "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r09/manifest.json",
+    "sha256": "a933d1d33141f03edf53bfe3c55461b671e91224682d70369aba5c922391b7e7",
+    "bytes": 2749
+  },
+  "original_export_anchor": "7422e24fde86d1614455834ad647beb0138ce784bc5fd30d829481be9030c23c",
+  "historical_production_revision": "r09",
+  "integrated_commit": "ca44317d33bf64a6d3eb63868658b3acbf35458e",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "1ce53f8887ccbb445d22cab41d478e8f400fdd14",
+  "frozen_sources": {
+    "content/added/pz-8ecddf77e80c4543bf4ec714fe3d.json": "3b1afbdca9655b270733c7fd3d3fb7014032cd8610dcd3f5aec3c6b6499a502c",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-8ecddf77e80c4543bf4ec714fe3d/rating.json": "908149f92a5b0479d350be5d83d734cbbced134cb96a71294f9312ce147a074b",
+    "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r05/manifest.json": "5614ccdbfbf16fa295745bad2f20183cb5f5b4d39b3ed384b93808e5e2deb511",
+    "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r09/manifest.json": "a933d1d33141f03edf53bfe3c55461b671e91224682d70369aba5c922391b7e7",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

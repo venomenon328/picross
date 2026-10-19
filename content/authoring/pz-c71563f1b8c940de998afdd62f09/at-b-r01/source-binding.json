@@ -1,0 +1,44 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-c71563f1b8c940de998afdd62f09",
+  "name": "Stirnlappenbasilisk",
+  "category_id": "insekten-kleine-tiere",
+  "save_slot": "stirnlappenbasilisk_001",
+  "runtime_revision": 1,
+  "definition_path": "game/data/content/stirnlappenbasilisk_001.json",
+  "definition_sha256": "0c13e049c23fbc0a58b3251a5644950045101fc3d3bcf36b4d2e0cc8194190e6",
+  "original": {
+    "path": "game/art/content/stirnlappenbasilisk_001.png",
+    "bytes": 2123818,
+    "sha256": "9da4019b8755311b24338dcfdd76cf7e9d31e57081cd009cccc05a7c48c7ea2c",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 1850,
+    "height": 850,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572500
+  },
+  "notice_path": "game/art/content/stirnlappenbasilisk_001.txt",
+  "notice_sha256": "0540fba8c3ce5b50d75f7d2cb3603a8d3b09aca25610838205ed1d9705273cba",
+  "physical_manifest": {
+    "path": "content/packages/pz-c71563f1b8c940de998afdd62f09/r05/manifest.json",
+    "sha256": "ac1819cb701e267a69f7ac449bb93b0afe4b1c6e2496e071bf4a449b9f7abe1c",
+    "bytes": 2994
+  },
+  "original_export_anchor": "84b3403511172e4a8df6e9f0ec518e9e205904a04d5d135c82bae3517d072eb6",
+  "historical_production_revision": "r05",
+  "integrated_commit": "37f500d5e6599a6c8ff85c8ca8edb4d190474c5f",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "54aa9902d9b6d044549de30b1ab862fe58db3091",
+  "frozen_sources": {
+    "content/added/pz-c71563f1b8c940de998afdd62f09.json": "d29befb1ad9a6be330074094d307a7658eca2f7db544c4b2721d1b498c9a3352",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-c71563f1b8c940de998afdd62f09/rating.json": "e7eae7bc202a79cfb2c87d9cf340ec1b022746d5a45e1a86749049a74347be3b",
+    "content/packages/pz-c71563f1b8c940de998afdd62f09/r05/manifest.json": "ac1819cb701e267a69f7ac449bb93b0afe4b1c6e2496e071bf4a449b9f7abe1c",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

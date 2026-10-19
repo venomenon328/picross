@@ -1,0 +1,5 @@
+Production ID: pz-b3368aea28ac4a11bf09e0dc9c48
+Artwork: ChatGPT native image generation, commissioned by user
+Usage basis: Für das eigene Picross-Projekt beauftragte KI-Erzeugung ohne Fremdbildreferenz; keine Marken-/Fremdassets. Keine Exklusivrechtsbehauptung.
+
+AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

@@ -1,0 +1,18 @@
+{
+  "calls": [
+    {
+      "round": 1,
+      "tool": "image_gen.imagegen",
+      "mode": "built-in edit",
+      "input_path": "game/art/content/rote_nelke_001.png",
+      "input_sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe",
+      "transparent_background": true,
+      "prompt": "Use case: background-extraction. Edit the attached actual existing illustration. Remove only the neutral exterior background to actual PNG transparency and genuine background holes. Preserve the exact subject geometry, composition, pose, framing, proportions, colors, shading, every detail and original canvas aspect ratio; no new drawing, redesign, retouching, cropping, enlargement, additions or recoloring. Keep actual pale/white subject surfaces opaque. Fine clean antialiased edges without pale/color matte halo. Protect the exact red carnation's finely serrated petals, pale pink petal highlights, green calyx, two long narrow leaves and cut stalk. Remove only ivory exterior including background between leaves. Do not clip red petal fringes.",
+      "model": "not_exposed",
+      "seed": "not_exposed",
+      "quality": "not_exposed",
+      "output_hint": "Generated images are saved to C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455 as C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455\\exec-5b0a2f93-5213-498e-9876-99efe99dd074.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "output_sha256": "c30cc030c4b4621ccedb3a5fff9b00be1fc07a54f03b35cf3d4de0e494a29232"
+    }
+  ]
+}

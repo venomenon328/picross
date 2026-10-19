@@ -1,0 +1,24 @@
+{
+  "format": "picross-at-b-approval-proposal-v1",
+  "id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+  "package_revision": "at-b-r01",
+  "proposed_image_revision": 1,
+  "definition_sha256": "61c4a6d8e76237dbf5dafa7ec24693fe96a8ddc8680b5dc51b8513d4feeb53ff",
+  "previous_reveal_sha256": "b382978fca16415070b83cf41e5a684ee26ac81e87a94ab4824d0f06b89db280",
+  "reveal_sha256": "9754af1c084e389f84b06690d6b6a286846fd1e7149e1a62b8ade7146c5c3a39",
+  "notice_sha256": "6335e00106a583ccc9b29d127b95da1487875cf0823db7795c941c5a7cdaa1e8",
+  "notice_file": "target-notice.txt",
+  "notice_text": "Production ID: pz-b5e2302bf71445c09caac76bbc2a7075\nArtwork: OpenAI ChatGPT native image generation, commissioned by Tobias\nUsage basis: Im Nutzerauftrag nativ erzeugte KI-Illustration ohne Fremdassets; keine Exklusivität oder urheberrechtliche Schutzfähigkeit behauptet.\n\nAT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.\n",
+  "actor": null,
+  "timestamp_utc": null,
+  "statement": null,
+  "checks": {
+    "reveal_approved": null,
+    "motif_raster_consistent": null,
+    "final_editorial_approved": null
+  },
+  "test_only": false,
+  "status": "pending",
+  "not_an_approval": true,
+  "not_a_catalog_reveal_request": true
+}

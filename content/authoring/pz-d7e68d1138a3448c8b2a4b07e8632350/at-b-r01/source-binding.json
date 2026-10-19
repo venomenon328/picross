@@ -1,0 +1,44 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "name": "Rote Nelke",
+  "category_id": "blumen-pflanzen",
+  "save_slot": "rote_nelke_001",
+  "runtime_revision": 1,
+  "definition_path": "game/data/content/rote_nelke_001.json",
+  "definition_sha256": "f54a0ec597198a25a77677d0cde321bea69ad1ecaff934ad0b9236edd82b2556",
+  "original": {
+    "path": "game/art/content/rote_nelke_001.png",
+    "bytes": 1888684,
+    "sha256": "b2aca07f471a9f49daac505166e2179e4589942ac3850b44345b80f9989e3ffe",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 1254,
+    "height": 1254,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572516
+  },
+  "notice_path": "game/art/content/rote_nelke_001.txt",
+  "notice_sha256": "7752e32add2d2f4cfd918d30708a0bb86d1c1a8b64c0ed36b1280ef3472d0c38",
+  "physical_manifest": {
+    "path": "content/packages/pz-d7e68d1138a3448c8b2a4b07e8632350/r06/manifest.json",
+    "sha256": "1137c8f3062dcbf7d414dc7252d681fd31c76bde18652065938ce2da243bef2d",
+    "bytes": 2225
+  },
+  "original_export_anchor": "1ab9cbf837088beb3300f79b1990e7a23e2798963b9d437f879ccb6d9153d0e5",
+  "historical_production_revision": "r06",
+  "integrated_commit": "c93b4075ae3df2ec8053d74182d310c129bf3e80",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "71c9d538b564f39c9a17d719b636e840e4b7aaca",
+  "frozen_sources": {
+    "content/added/pz-d7e68d1138a3448c8b2a4b07e8632350.json": "df1a31e65aed4068a6645ebd5a75c9103c0081b9d7122f88990e522a087f80ec",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-d7e68d1138a3448c8b2a4b07e8632350/rating.json": "99a1e94b0d088705632073495d3cb4691b50861e245befcec39e3a703041f05b",
+    "content/packages/pz-d7e68d1138a3448c8b2a4b07e8632350/r06/manifest.json": "1137c8f3062dcbf7d414dc7252d681fd31c76bde18652065938ce2da243bef2d",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

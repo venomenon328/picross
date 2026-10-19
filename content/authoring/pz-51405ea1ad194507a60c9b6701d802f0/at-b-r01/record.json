@@ -1,0 +1,39 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-51405ea1ad194507a60c9b6701d802f0",
+  "revision": "at-b-r01",
+  "category_id": "haushalt-alltag",
+  "motif_name": "Japanische Teekanne",
+  "state": "registered",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 30,
+  "height": 25,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/at-b-r01/approval.json",
+    "sha256": "52f170646e84891ea565aad9f6f3580b9c2e5e712d015d7531f8dd7996dfeb00"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46",
+    "active_record": "content/reveals/pz-51405ea1ad194507a60c9b6701d802f0.json",
+    "active_record_sha256": "20defa8b4d6393291680171fafc1bbe6d40935014f30ab9d6740308f8aee3cd1",
+    "evidence": "docs/design/at_b_integration/audit-01.json"
+  },
+  "blockers": [],
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
+  "package": {
+    "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/at-b-r01/package.zip",
+    "bytes": 5344721,
+    "sha256": "02af9da40c8650bf791fc3e7cf4c92d2b1fcb5b020c98b6116d9514766462d12"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-51405ea1ad194507a60c9b6701d802f0/at-b-r01/handoff.json",
+    "sha256": "63130356ca6213872ea4aaf8aef88581dd77d357e75c32d4130795b7656451e3"
+  },
+  "inventory_sha256": "f0d58c5aa9339b6ab18cc3a4270a6cca5ea1054aff0decb1c9b7097d674d44cb"
+}

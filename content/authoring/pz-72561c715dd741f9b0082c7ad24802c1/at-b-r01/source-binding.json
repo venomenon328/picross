@@ -1,0 +1,44 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-72561c715dd741f9b0082c7ad24802c1",
+  "name": "Pfirsich",
+  "category_id": "obst-nuesse",
+  "save_slot": "pfirsich_001",
+  "runtime_revision": 1,
+  "definition_path": "game/data/content/pfirsich_001.json",
+  "definition_sha256": "6f755f67359f46015b8bc2eee79849c87d2d46e3a041c91234b3fb09f4bfdd4b",
+  "original": {
+    "path": "game/art/content/pfirsich_001.png",
+    "bytes": 158362,
+    "sha256": "02805fd71b357341b2bd354d5ce9761b55a36cce3e90b6f36a4fc66e1fc1b4ab",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 368,
+    "height": 363,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 133584
+  },
+  "notice_path": "game/art/content/pfirsich_001.txt",
+  "notice_sha256": "77b7f9cbb3288a3ec6a7ee45d63e5f41d657d5225ff68791c1f2e34af71e9b4c",
+  "physical_manifest": {
+    "path": "content/packages/pz-72561c715dd741f9b0082c7ad24802c1/r03/manifest.json",
+    "sha256": "09f027cc929504356699e25776c016380ee6e0724bc4c3fea1f43f5d0e800750",
+    "bytes": 2554
+  },
+  "original_export_anchor": "0535e1b8264500386d484028a73d6296ee55319abe839080225234ae76f934c6",
+  "historical_production_revision": "r03",
+  "integrated_commit": "58c129b2dfe031796311b6d8e90a56f8f58438ae",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "e1fd54441ab35da36dc877bdd39ca19270240443",
+  "frozen_sources": {
+    "content/added/pz-72561c715dd741f9b0082c7ad24802c1.json": "f02dc346f000e150f11589c308d86596b8a3d476158a9f4005034aa4ef902487",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-72561c715dd741f9b0082c7ad24802c1/rating.json": "6d0844d0dccc6940980593ad30caa6b4a840e18d56d99d3d99aa4c5a019e848e",
+    "content/packages/pz-72561c715dd741f9b0082c7ad24802c1/r03/manifest.json": "09f027cc929504356699e25776c016380ee6e0724bc4c3fea1f43f5d0e800750",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

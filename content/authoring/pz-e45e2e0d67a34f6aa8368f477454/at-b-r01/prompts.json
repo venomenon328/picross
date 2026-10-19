@@ -1,0 +1,18 @@
+{
+  "calls": [
+    {
+      "round": 1,
+      "tool": "image_gen.imagegen",
+      "mode": "built-in edit",
+      "input_path": "game/art/content/koelner_dom_001.png",
+      "input_sha256": "8325ef5ee94d88312b968ad058f6cddcf35cda68946db7e9598a97f26ac17998",
+      "transparent_background": true,
+      "prompt": "Use case: background-extraction. Edit the attached actual existing illustration. Remove only the neutral exterior background to actual PNG transparency and genuine background holes. Preserve the exact subject geometry, composition, pose, framing, proportions, colors, shading, every detail and original canvas aspect ratio; no new drawing, redesign, retouching, cropping, enlargement, additions or recoloring. Keep actual pale/white subject surfaces opaque. Fine clean antialiased edges without pale/color matte halo. Protect the exact full frontal Cologne Cathedral: both tall spires with crosses and fine stone finials, all gothic tracery, dark blue windows, portals, pale sandstone highlights, base and perfect frontal composition. Remove ONLY exterior neutral white sky around and between spires and truly open exterior gaps in silhouette. Do not hollow out blue windows, carved pale stone or architectural surface details. Keep original portrait canvas.",
+      "model": "not_exposed",
+      "seed": "not_exposed",
+      "quality": "not_exposed",
+      "output_hint": "Generated images are saved to C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455 as C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455\\exec-eb34b9c2-834c-4ce4-abcd-a7c326820a8c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "output_sha256": "5b5b97ec7bdf1965d38f65fe70e5cd51396e7c99454ae1a1390095dfb46e738e"
+    }
+  ]
+}

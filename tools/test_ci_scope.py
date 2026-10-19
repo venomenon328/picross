@@ -229,6 +229,119 @@ class SelectionTests(unittest.TestCase):
                 os.chdir(old_cwd)
 
 
+class PartialCloneTests(unittest.TestCase):
+    """Real filtered Git transport with independent synthetic text/binary data."""
+
+    def setUp(self):
+        from unittest.mock import patch
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name)
+        self.source, self.clone = self.root / "source", self.root / "clone"
+        self.source.mkdir()
+        self.run_git(self.source, "init", "-q")
+        for key, value in (("user.name", "CI fixture"), ("user.email", "ci@example.invalid"),
+                           ("core.autocrlf", "false"), ("uploadpack.allowFilter", "true")):
+            self.run_git(self.source, "config", key, value)
+        self.cwd = Path.cwd()
+        self.addCleanup(os.chdir, self.cwd)
+        # Isolate the transport from machine-level conversion configuration.
+        env = patch.dict(os.environ, {"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "core.autocrlf",
+                                      "GIT_CONFIG_VALUE_0": "false"})
+        env.start()
+        self.addCleanup(env.stop)
+
+    def run_git(self, repo, *args, **kwargs):
+        return subprocess.check_output(["git", *args], cwd=repo, stderr=subprocess.DEVNULL,
+                                       timeout=20, **kwargs).decode().strip()
+
+    def write(self, name, data):
+        path = self.source / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+
+    def commit(self):
+        self.run_git(self.source, "add", "-A")
+        self.run_git(self.source, "commit", "-qm", "synthetic fixture")
+        return self.run_git(self.source, "rev-parse", "HEAD")
+
+    def start_clone(self):
+        self.run_git(self.root, "clone", "-q", "--filter=blob:none", "--no-checkout",
+                     self.source.as_uri(), str(self.clone))
+        self.assertEqual(self.run_git(self.clone, "config", "remote.origin.promisor"), "true")
+        os.chdir(self.clone)
+
+    def lookup(self, oid):
+        return self.run_git(self.clone, "--no-lazy-fetch", "cat-file", "--batch-check",
+                            input=(oid + "\n").encode())
+
+    def test_batches_both_sides_deleted_renamed_binary_and_many_added_blobs(self):
+        from unittest.mock import patch
+        import ci_scope
+        self.write("docs/change.md", b"before\n")
+        self.write("docs/deleted.md", b"deleted text\n")
+        self.write("docs/renamed old.md", b"renamed text\n")
+        self.write("unchanged.bin", b"\0unrelated corpus\n")
+        base = self.commit()
+        old = [self.run_git(self.source, "rev-parse", base + ":" + path) for path in
+               ("docs/change.md", "docs/deleted.md", "docs/renamed old.md")]
+        untouched = self.run_git(self.source, "rev-parse", base + ":unchanged.bin")
+        self.write("docs/change.md", b"after\n")
+        (self.source / "docs/deleted.md").unlink()
+        (self.source / "docs/renamed old.md").rename(self.source / "docs/renamed new.md")
+        self.write("binary.png", b"\0synthetic binary\n")
+        for i in range(64):
+            self.write(f"docs/added {i}.md", f"synthetic line {i}\n".encode())
+        head = self.commit()
+        self.start_clone()
+        self.assertTrue(all(self.lookup(oid).endswith(" missing") for oid in old))
+        with patch("ci_scope.git", wraps=ci_scope.git) as calls:
+            plan = make_plan(base, head, "auto", fetch=True)
+        batches = [c for c in calls.call_args_list if "--stdin" in c.args]
+        self.assertEqual(len(batches), 1)
+        self.assertGreater(len(batches[0].kwargs["input"].splitlines()), 64)
+        self.assertEqual(plan["diff_check"], "full-whitespace-check")
+        self.assertTrue(all(" blob " in self.lookup(oid) for oid in old))
+        self.assertTrue(self.lookup(untouched).endswith(" missing"))
+        with patch("ci_scope.git", wraps=ci_scope.git) as calls:
+            make_plan(base, head, "auto", fetch=True)
+        self.assertFalse(any("--stdin" in c.args for c in calls.call_args_list))
+
+    def test_whitespace_error_remains_fatal_and_no_base_checks_root(self):
+        self.write("docs/bad.md", b"trailing whitespace \n")
+        head = self.commit()
+        self.start_clone()
+        for base in ("", "0" * 40):
+            with self.subTest(base=base):
+                with self.assertRaises(subprocess.CalledProcessError) as failure:
+                    make_plan(base, head, "auto", fetch=True)
+                self.assertEqual(failure.exception.returncode, 2)
+                self.assertIn(b"trailing whitespace", failure.exception.output)
+
+    def test_content_only_never_fetches_blobs(self):
+        self.write("README.md", b"base\n")
+        base = self.commit()
+        path = "content/authoring/pz-synthetic/r01/package.zip"
+        self.write(path, b"\0synthetic content\n")
+        head = self.commit()
+        oid = self.run_git(self.source, "rev-parse", head + ":" + path)
+        self.start_clone()
+        plan = make_plan(base, head, "auto", fetch=True)
+        self.assertTrue(plan["content_only"])
+        self.assertTrue(self.lookup(oid).endswith(" missing"))
+
+    def test_missing_blob_remote_failure_is_fatal(self):
+        from ci_scope import fetch_diff_blobs
+        self.write("docs/base.md", b"base\n")
+        base = self.commit()
+        self.write("docs/new.md", b"new\n")
+        head = self.commit()
+        self.start_clone()
+        self.run_git(self.clone, "remote", "set-url", "origin", str(self.root / "absent"))
+        with self.assertRaises(subprocess.CalledProcessError):
+            fetch_diff_blobs(base, head)
+
+
 class SchedulerTransportTests(unittest.TestCase):
     """Exercise the real GitHub output producer and fail-closed result evaluator."""
 

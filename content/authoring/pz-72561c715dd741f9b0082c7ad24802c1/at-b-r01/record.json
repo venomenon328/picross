@@ -1,0 +1,39 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-72561c715dd741f9b0082c7ad24802c1",
+  "revision": "at-b-r01",
+  "category_id": "obst-nuesse",
+  "motif_name": "Pfirsich",
+  "state": "registered",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 32,
+  "height": 32,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/at-b-r01/approval.json",
+    "sha256": "179198c6dae87b0c742631f744262e77a2785dc97ba00007fcd6e200d935a2fc"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46",
+    "active_record": "content/reveals/pz-72561c715dd741f9b0082c7ad24802c1.json",
+    "active_record_sha256": "5951a4a351a0b3a1d494ca126dee294c7a08afbec5df046a7faf6f763057678a",
+    "evidence": "docs/design/at_b_integration/audit-01.json"
+  },
+  "blockers": [],
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
+  "package": {
+    "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/at-b-r01/package.zip",
+    "bytes": 2686902,
+    "sha256": "6ccc926520f08bb7239844de91ee903eb4d4c40e432517cc818f1e031883509c"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-72561c715dd741f9b0082c7ad24802c1/at-b-r01/handoff.json",
+    "sha256": "c901f0e5fd95f3a973adc4e1daecc06f30e18456fc49e42701bd8d73df1c372e"
+  },
+  "inventory_sha256": "75de25c627793bf8ee558edde75de83e7660184aec4628d05cca9fb31b181a77"
+}

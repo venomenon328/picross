@@ -1,0 +1,39 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "revision": "at-b-r01",
+  "category_id": "blumen-pflanzen",
+  "motif_name": "Rote Nelke",
+  "state": "registered",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 30,
+  "height": 32,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/at-b-r01/approval.json",
+    "sha256": "386cfff3d1fce357522437b0849581ac8ed751f288ea8c194c2d6b76e18777fc"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "8fea577fa64fb9be882e374e1828159d6e31129ce55c224aedea22a755ab30fa",
+    "active_record": "content/reveals/pz-d7e68d1138a3448c8b2a4b07e8632350.json",
+    "active_record_sha256": "394da0bd5c8675aadf990e39551376013ca7bf50d49c38b5de81adc342ac886a",
+    "evidence": "docs/design/at_b_integration/audit-03.json"
+  },
+  "blockers": [],
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
+  "package": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/at-b-r01/package.zip",
+    "bytes": 4625579,
+    "sha256": "3e36bd758f1347e186bebdb92c57b7a170f6199880d3b285c92ce0fd082d492e"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-d7e68d1138a3448c8b2a4b07e8632350/at-b-r01/handoff.json",
+    "sha256": "e26e992eacf719b7a47b44d5b2b9ed40f7702fdce8bf728939987dddc130f3dc"
+  },
+  "inventory_sha256": "9bd7ddc2178d648440a6562e0f2fad0e9d6dd492da1d7bb2c8394770822e893e"
+}

@@ -1,18 +1,26 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 20 · 19.10.2026**
+**Version 0.5.0 · Dokumentrevision 22 · 19.10.2026**
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
 Dokumentrevision, Datei-SHA-256 und Repositorycommit binden den verwendeten Snapshot.
 
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A integriert:**
 [AT](../REVEAL_TRANSPARENCY.md) ergänzt den transparenten Abschlussbildstandard
 und einen getrennten nachvollziehbaren Bildupdateweg. AT-A liefert dessen
 Technik und synthetische Regressionen; AT-B stellt danach den gebundenen Bestand
 mit tatsächlichen Bildfreigaben um. Version 0.5.0 bleibt erhalten; alte versiegelte
 Snapshots und ihre Freigaben werden nicht umgeschrieben. Diese Dokumentrevision
 startet keine Bildbearbeitung, Raster-/Logikproduktion oder Integration.
+Der getrennte [AT-B-V01-Auftrag](../AT_B_VERIFICATION.md) lieferte alle 26
+gebundenen Bilder in eigenen `at-b-r01`-Ablagen zunächst als `reveal_review`.
+Die anschließende [Eigentümerabnahme](../AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01
+mit kontrollierter Übernahme und AT-B-T01. Versiegelte ZIPs, Inventare und
+Handoffs behalten Dokumentrevision 21 und ihren damaligen Zustand. Die spätere
+Freigabe steht nach §6.1 separat; nur der äußere Record führt `registered`
+für den geprüften Arbeitsbranch. Paketrevision und aktive AT-Bildrevision 1
+sind verschieden; keine Rasterproduktion oder neue ZA-1-Adapterabnahme.
 
 **SD / [#235](https://github.com/venomenon328/picross/issues/235), SD-C1 nach R2 integriert:**
 Für Schwierigkeitsarbeit zusätzlich [Rätselschwierigkeit](../PUZZLE_DIFFICULTY.md)
@@ -597,9 +605,10 @@ und alle bisherigen Noticebytes bleiben erhalten; nötige Attribution wird
 angehängt. Kein erfundenes Freigabeprotokoll und kein Ersatz durch die
 Spezifikationsfreigabe. Materielle Änderungen folgen weiter Abschnitt 4.4.
 Der eigene `catalog_reveal plan/adopt`-Weg gehört zur ausschließlichen
-[AT-A-Umsetzung](../AT_A_VERIFICATION.md); Abschlussnachweise und unabhängiges
-Review bleiben dort gebunden. Reale Eingangs-/Bild-/Katalogdaten werden erst
-im gesondert beauftragten AT-B übernommen.
+[AT-A-Umsetzung](../AT_A_VERIFICATION.md), die nach qualifiziertem AT-A-R01
+über PR #263 integriert ist; historische Nachweise bleiben dort gebunden.
+AT-B-V01 endete vor Plan/Adopt. Die anschließende tatsächliche Eigentümerabnahme
+und der AT-B-F01-Übernahmeauftrag erlauben jetzt diese weiteren AT-B-Schritte.
 
 Ab SD-C1 zusätzlich den nach §5.2 vollständig geprüften 0.3-Input übernehmen
 beziehungsweise passend neu binden. Die aktuelle

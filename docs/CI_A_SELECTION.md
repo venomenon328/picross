@@ -62,6 +62,16 @@ Preflight-, Browser- oder Zustellungsläufe.
 
 ## Ausführung und Ergebnisgate
 
+Gesondert beauftragte Nacharbeit AT-B-V01-SR01-B01 / [#256](https://github.com/venomenon328/picross/issues/256):
+Der Fetchpfad stellt vor dem vollständigen Whitespacecheck fehlende Diff-Blobs
+beider exakten Vergleichsseiten gebündelt bereit. Die Existenzprüfung verwendet
+`git --no-lazy-fetch cat-file`; der Abruf lädt die fehlenden Objekt-IDs per
+Standardeingabe, einschließlich alter gelöschter/umbenannter Dateien. Ein Fehler
+bleibt fatal. Pfadklassifikation, vollständiger Diffcheck, Prozessgrenze und
+Ergebnisgate bleiben unverändert. Reine Inhaltslieferungen betreten diesen
+Blobpfad nicht. Synthetische partielle Cloneproben und die aktuelle Lieferbindung
+stehen im [AT-B-Bericht](AT_B_VERIFICATION.md#gesonderte-technische-nacharbeit-b01).
+
 Die nachfolgende serielle Webausführung beschreibt den gebundenen CI-A-Lieferstand.
 [CI-B](CI_B_BROWSER_GROUPS.md) ersetzt sie durch unabhängige Gruppen und
 zusätzliche Szenarien-/Belegprüfung. Die Eigentümerentscheidung vom 19.10.2026

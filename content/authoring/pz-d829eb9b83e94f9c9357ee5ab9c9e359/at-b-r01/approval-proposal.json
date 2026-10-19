@@ -1,0 +1,24 @@
+{
+  "format": "picross-at-b-approval-proposal-v1",
+  "id": "pz-d829eb9b83e94f9c9357ee5ab9c9e359",
+  "package_revision": "at-b-r01",
+  "proposed_image_revision": 1,
+  "definition_sha256": "8c37e04c51dfdc512d81a626148de77d051448ca9ffcd695ceb4858477bb0c42",
+  "previous_reveal_sha256": "6e512c35f31ac9f597da81313cf371addad71b5e03fd6f1a943b8ed43c6365fa",
+  "reveal_sha256": "6e45b1af156ae97217989d0dca99da60891ac765b7819fa0aab5f430f2a4c75b",
+  "notice_sha256": "33e3d971444f75be2bc3ca5634b953633acaf7c01fd561aedb60c636dff38032",
+  "notice_file": "target-notice.txt",
+  "notice_text": "Production ID: pz-d829eb9b83e94f9c9357ee5ab9c9e359\nArtwork: Native image generation/editing in the project conversation\nUsage basis: Neu generierter Projektinhalt aus textlicher Motivvorgabe, keine übernommenen Fremdassets; keine Exklusivitäts- oder Gemeinfreiheitszusage.\n\nAT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.\n",
+  "actor": null,
+  "timestamp_utc": null,
+  "statement": null,
+  "checks": {
+    "reveal_approved": null,
+    "motif_raster_consistent": null,
+    "final_editorial_approved": null
+  },
+  "test_only": false,
+  "status": "pending",
+  "not_an_approval": true,
+  "not_a_catalog_reveal_request": true
+}

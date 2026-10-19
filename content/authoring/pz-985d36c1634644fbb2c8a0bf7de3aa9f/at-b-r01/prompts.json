@@ -1,0 +1,18 @@
+{
+  "calls": [
+    {
+      "round": 1,
+      "tool": "image_gen.imagegen",
+      "mode": "built-in edit",
+      "input_path": "game/art/content/ingwer_001.png",
+      "input_sha256": "f67bb2fc2e200fb68acfb0c0324520249b532419047cd645c94ce326018a3471",
+      "transparent_background": true,
+      "prompt": "Use case: background-extraction. Edit the attached actual existing illustration. Remove only the neutral exterior background to actual PNG transparency and genuine background holes. Preserve the exact subject geometry, composition, pose, framing, proportions, colors, shading, every detail and original canvas aspect ratio; no new drawing, redesign, retouching, cropping, enlargement, additions or recoloring. Keep actual pale/white subject surfaces opaque. Fine clean antialiased edges without pale/color matte halo. Protect the exact diagonal branching ginger rhizome, cream-gold skin, all knuckles, fine rings, brown outlines, cut scars and highlights. Remove only ivory exterior; pale skin highlights are opaque material.",
+      "model": "not_exposed",
+      "seed": "not_exposed",
+      "quality": "not_exposed",
+      "output_hint": "Generated images are saved to C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455 as C:\\Users\\tobia\\.codex\\generated_images\\01a155b6-7cca-7662-b8da-71ea1b19a455\\exec-62da58d9-9582-4eef-a542-66ac8797b4d4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "output_sha256": "286186c60a9390c60cb829b119ea9fbf32abe5462bb7c58ac9a2e3872523431f"
+    }
+  ]
+}

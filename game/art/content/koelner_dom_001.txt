@@ -1,3 +1,5 @@
 Production ID: pz-e45e2e0d67a34f6aa8368f477454
 Artwork: OpenAI image generation in ChatGPT
 Usage basis: Neue KI-Illustration im ausdrücklichen Nutzerauftrag ohne Fremdassets oder Bildreferenzen. Keine Exklusivität oder konkrete Rechtegarantie behauptet.
+
+AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

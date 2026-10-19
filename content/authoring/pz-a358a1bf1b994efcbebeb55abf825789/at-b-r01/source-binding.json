@@ -1,0 +1,44 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-a358a1bf1b994efcbebeb55abf825789",
+  "name": "Kaktus",
+  "category_id": "blumen-pflanzen",
+  "save_slot": "kaktus_001",
+  "runtime_revision": 1,
+  "definition_path": "game/data/content/kaktus_001.json",
+  "definition_sha256": "705a3cee777b1ab7a00e41b7d7fee5118906c1916bc4f3d55c97a1401e110938",
+  "original": {
+    "path": "game/art/content/kaktus_001.png",
+    "bytes": 1936816,
+    "sha256": "0738b9ebabcbe20c3403f0654440ff08e1aed1a1caf626719613378d326d93f1",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 1086,
+    "height": 1448,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572528
+  },
+  "notice_path": "game/art/content/kaktus_001.txt",
+  "notice_sha256": "1ed955d15f47f446360cca60baf25b83c3522b61c4acdb4cdab4898d79d3a303",
+  "physical_manifest": {
+    "path": "content/packages/pz-a358a1bf1b994efcbebeb55abf825789/r03/manifest.json",
+    "sha256": "2ac1589c41b67693a594dc173a8d46b6fa51141f026551369350ffeafa9551c8",
+    "bytes": 2868
+  },
+  "original_export_anchor": "e42f2941902b02c7b01c32c767ccba090391276a1602a23e9801295867153e08",
+  "historical_production_revision": "r03",
+  "integrated_commit": "13f382daca3aca3f2b38e8640755c403705b0d8b",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "36267263387af2518e59277261d1d03974665fa9",
+  "frozen_sources": {
+    "content/added/pz-a358a1bf1b994efcbebeb55abf825789.json": "45dd95191a49b841634a02d7127862e9ca8560ca2a82a61b535e567fcad79db7",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-a358a1bf1b994efcbebeb55abf825789/rating.json": "45ca551045d0ba87226eefde1f00bb47dafa0c88d9cf5e5f826b870704d92bfa",
+    "content/packages/pz-a358a1bf1b994efcbebeb55abf825789/r03/manifest.json": "2ac1589c41b67693a594dc173a8d46b6fa51141f026551369350ffeafa9551c8",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

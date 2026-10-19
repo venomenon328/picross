@@ -1,0 +1,17 @@
+{
+  "decisions": [
+    {
+      "kind": "scope",
+      "text": "Neutrale Außenfläche zwischen den Verzweigungen und außen."
+    },
+    {
+      "kind": "protected_features",
+      "text": "Diagonale Form, sämtliche Knollen, helle Schale, Ringe, Schnittnarben und Konturen."
+    },
+    {
+      "kind": "approval",
+      "status": "pending",
+      "text": "Eigentümer hat keine konkrete Bild-, Konsistenz- oder Endfreigabe erteilt."
+    }
+  ]
+}
