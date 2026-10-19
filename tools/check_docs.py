@@ -27,7 +27,7 @@ REQUIRED = (
     "docs/DEV_RULES_ADOPTION.md", "docs/CHATGPT_PROJECT_INSTRUCTIONS.md",
     "docs/dev-rules/WORKFLOW.md", "docs/dev-rules/MODEL_SELECTION.md",
     "docs/dev-rules/MODEL_CATALOG.md", "docs/dev-rules/VERSION",
-    "docs/dev-rules/CHANGELOG.md", ".github/workflows/setup.yml",
+    "docs/dev-rules/CHANGELOG.md", ".github/workflows/ci-chromium.yml",
     "tools/check_docs.py", "tools/test_check_docs.py",
 )
 VERSION_RE = re.compile(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-rc\.[1-9]\d*)?")
