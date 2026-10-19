@@ -277,7 +277,7 @@ Ein Spezifikations-PR schließt das AT-Issue und die Umsetzungsgates nicht.
 
 | Paket | Ergebnis | Abhängigkeit und Grenze |
 | --- | --- | --- |
-| AT-A · Sicherer Bildrevisionsweg | Produktionsstandard, konkrete Daten-/Werkzeugverträge, gemeinsame Quellen-/Transaktionsintegration, Alpha-Erhalt und feste synthetische Regressionen einschließlich notwendiger Dokumentation/CI-Zuordnung. | Späterer Implementierungsauftrag. Kein Austausch realer Katalogbilder in diesem Paket. |
+| AT-A · Sicherer Bildrevisionsweg | Produktionsstandard, konkrete Daten-/Werkzeugverträge, gemeinsame Quellen-/Transaktionsintegration, Alpha-Erhalt und feste synthetische Regressionen einschließlich notwendiger Dokumentation/CI-Zuordnung. | Umsetzungsvorbereitung V3 beauftragt ausschließlich AT-A samt T01 und Draft-PR. Kein Austausch realer Katalogbilder; unabhängiges R01 und Merge bleiben separat. |
 | AT-B · Vorhandene Bilder umstellen | Vollständiger gebundener Startbestand, konkrete Freistellungen/Szenenlösungen, neue Bildfreigaben, Konsistenzkontrollen und kontrollierte Übernahme. | Integriertes AT-A und späterer Inhaltsauftrag. Technische Vertrags-/Recoveryfehler gehen in AT-A beziehungsweise benannte technische Nacharbeit zurück. |
 
 ### AT-A · Nachweise

@@ -179,6 +179,7 @@ def package(root, entry):
     prefix = entry["production"]["package"]
     raw = io.read(root, prefix + "/manifest.json", 8 * 1024 * 1024)
     manifest = io.json_bytes(raw, 8 * 1024 * 1024)
+    require(isinstance(manifest,dict), 'Invalid package manifest object')
     files = {}
     base = io.safe(root, prefix)
     for p in base.rglob("*"):

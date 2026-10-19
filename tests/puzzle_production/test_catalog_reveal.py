@@ -106,6 +106,27 @@ class RevealTests(unittest.TestCase):
         self.assertEqual(new['record_revision'], 2)
         with self.assertRaisesRegex(InvalidInput, 'Stale'): at.adopt(self.checkout, plan)
 
+    def test_image_adoption_and_recovery_do_not_upgrade_valid_v2_or_v3_runtime(self):
+        from tools.puzzle_production import catalog_added, catalog_publication as publication
+        original=self.checkout
+        for version in (2,3):
+            self.checkout=self.root/('runtime'+str(version));shutil.copytree(original,self.checkout)
+            (self.checkout/catalog_added.path(self.identifier)).unlink()
+            cr.sync_runtime(self.checkout)
+            captured=tx.capture(self.checkout)
+            texts={n:b.decode() if b is not None else None for n,b in captured['texts'].items()}
+            (self.checkout/tx.RUNTIME).write_bytes(tx.projection(texts,captured['registry'],version=version))
+            before=snapshot(self.checkout);plan=self.make_plan(version)
+            def interrupted(phase,name=None):
+                if phase=='P4':raise InterruptedError('TEST ONLY preserved runtime')
+            with patch.object(publication,'checkpoint',side_effect=interrupted),self.assertRaises(InterruptedError):at.adopt(self.checkout,plan)
+            cr.recover(self.checkout)
+            self.assertEqual({n:b for n,(b,_) in before.items()},{n:b for n,(b,_) in snapshot(self.checkout).items()})
+            at.adopt(self.checkout,plan);after=snapshot(self.checkout)
+            self.assertEqual(before[tx.RUNTIME],after[tx.RUNTIME])
+            self.assertEqual(at.adopt(self.checkout,plan)['status'],'no-op')
+            self.assertEqual(after,snapshot(self.checkout))
+
     def test_approval_notice_and_plan_tampering_rejected_without_mutation(self):
         request = self.request()
         value = load_json(request)
