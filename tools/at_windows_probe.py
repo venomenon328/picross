@@ -52,7 +52,12 @@ def run(cache, output, development=False):
         if report['failures'] or report['checks']<=0 or report['display']!='Windows': raise ValueError('Windows process assertions failed')
         for field in ('slots','slot_hashes','definitions','registry_sha256','profile'):
             if report[field]!=first[field]: raise ValueError('Image-only process switch changed '+field)
-    if len({r['pid'] for r in reports})!=3: raise ValueError('Three real processes required')
+    # Windows may immediately reuse a PID after the previous process exits.
+    # Bind the actual ID together with the start instant and the three launches.
+    if ([r['mode'] for r in reports]!=['before','after','restart'] or
+            any(type(r['pid']) is not int or r['pid']<=0 for r in reports) or
+            len({(r['pid'],r['process_started_unix']) for r in reports})!=3):
+        raise ValueError('Three real process instances required')
     if exports[0]['fixture']['definitions']!=exports[1]['fixture']['definitions'] or exports[0]['fixture']['registry_sha256']!=exports[1]['fixture']['registry_sha256']:
         raise ValueError('Export definition/runtime identity changed')
     if exports[0]['files']['picross-at.pck']['sha256']==exports[1]['files']['picross-at.pck']['sha256']: raise ValueError('Second PCK was not rebuilt')
