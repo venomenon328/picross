@@ -8,10 +8,11 @@ Reine Bildrevisionen verwenden den eigenen `catalog_reveal`-Weg; `plan-update`/
 `update` bleibt auf den gesonderten Rasterersatz begrenzt und erhält aktive
 Bildfassungen. Die technische AT-A-Lieferung übernimmt keine realen Bilder
 oder Metadaten.
-Aktueller Auftrag: ausschließlich [AT-B-V01](../../docs/AT_B_VERIFICATION.md),
-vollständige Bild-/Endfreigabevorlage im frühen Authoringstatus `reveal_review`.
-Stopp vor Eigentümerfreigabe und `catalog_reveal plan/adopt`; kein produktiver
-Request oder Plan mit ausstehenden Zustimmungen.
+[AT-B-V01](../../docs/AT_B_VERIFICATION.md) liefert die vollständige
+Bild-/Endfreigabevorlage im frühen Authoringstatus `reveal_review`.
+Die anschließende [Eigentümerabnahme](../../docs/AT_B_OWNER_APPROVAL.md) erlaubt
+AT-B-F01 mit kontrolliertem `catalog_reveal plan/adopt` und AT-B-T01.
+Kein produktiver Request oder Plan mit ausstehenden Zustimmungen.
 
 **Aktuelle Prüfregel (12.10.2026):** Konkrete Rätsel werden während ihrer Produktion
 und Integration geprüft, niemals routinemäßig in CI. Keine rätselspezifischen

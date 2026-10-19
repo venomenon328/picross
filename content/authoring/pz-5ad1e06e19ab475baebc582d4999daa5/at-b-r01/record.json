@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "insekten-kleine-tiere",
   "motif_name": "Gecko",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 32,
   "height": 12,
   "mode": "mono",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/at-b-r01/approval.json",
+    "sha256": "ea1fa301213f4a8898ef69496b1c5f2aa799d2c5751a8d33c7142a0c9a08895e"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46",
+    "active_record": "content/reveals/pz-5ad1e06e19ab475baebc582d4999daa5.json",
+    "active_record_sha256": "aba3dcc14f335ee360443be7e30050b9c7fb9cc298464042ea6d5ac605d45d25",
+    "evidence": "docs/design/at_b_integration/audit-01.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-5ad1e06e19ab475baebc582d4999daa5/at-b-r01/package.zip",
     "bytes": 4019031,

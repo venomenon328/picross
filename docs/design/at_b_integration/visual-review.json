@@ -1,0 +1,348 @@
+{
+  "format": "at-b-f01-editorial-visual-review-v1",
+  "reviewer": "Codex / implementation self-check, not independent AT-B-R01 and not a new owner approval",
+  "recorded_utc": "2026-10-19T22:06:44.985783+00:00",
+  "method": "All 104 native frames inspected via 16 derived labelled contact sheets (actual card rectangles; complete completion frames), with selected original frames opened at full context. Original PNG bytes remain unchanged.",
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "ui_scales": [
+    1,
+    1.25
+  ],
+  "limitations": "Prepared isolated completed display states; no playthrough, solver, actual user saves, hover animation or save migration claim. Owner approvals separately bound.",
+  "review_sheets_sha256": {
+    "catalog-ui100-00.jpg": "f03cbd677ca7b2bad74719163cc8d16d454b163373028e0412767732cd703514",
+    "catalog-ui100-08.jpg": "7bb08cff5fecbe61136aa693102a34ea1b96709942e463cf32e51b43d529e671",
+    "catalog-ui100-16.jpg": "e6860b89bc5536da82d5a508b60d207230637a5d1201e6ae6b4862f4077904a6",
+    "catalog-ui100-24.jpg": "1ad781e2948e402ee587c77713c350461aa44e9381c081aa4fb1926ec112e2e6",
+    "catalog-ui125-00.jpg": "17584ddf197ea277574a746736634552e94eac24f35336da6b50203225e6cc1d",
+    "catalog-ui125-08.jpg": "1ae3b455e66949195c8bd3efdedbf8751d7506c54863a995b801c08c2eef73de",
+    "catalog-ui125-16.jpg": "62a71aeba893a1776ba33072527a0827b7a6e7d0fb38de06ee41708fb28a5467",
+    "catalog-ui125-24.jpg": "6f197523a96b465d8885cd205013366ffcee93dbee89d760bad8451032d58e2e",
+    "completion-ui100-00.jpg": "6f3726bbed6b24929c8e9c69101f4e522267e21d437b7851ecba387ba27933e0",
+    "completion-ui100-08.jpg": "41cb3f80c2dffcab3c93bc40e1821ca6a19f4200d47a9518a559ac983eca77db",
+    "completion-ui100-16.jpg": "a8d49b6635dc0cf395dcc81724ba966a80a091946e6bf9859291d721c86684a3",
+    "completion-ui100-24.jpg": "89e3465f730363d8259c76e819f3beec7e878290a57901de47d607c8cd7f4854",
+    "completion-ui125-00.jpg": "ec1173451a12dfa650dfd76f1bf100c7de104e0640bf5e5942309d70310ef1b3",
+    "completion-ui125-08.jpg": "8e98a7b3906c30d03df35429420b24e9444003749b7ff0f381234838edce18fb",
+    "completion-ui125-16.jpg": "cb110f648928abc417084a120233bfacf047b1e3683dc7c2168d515d0ebf3787",
+    "completion-ui125-24.jpg": "62f8e7ae0376019da738683fa47c8d22e59c8799ada79294ba14340c1f00f76d"
+  },
+  "records": [
+    {
+      "id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+      "name": "Ho Chi Minh",
+      "result": "pass",
+      "observation": "Portraitkontur und helle Bart-/Haarteile erhalten; Papier außerhalb der Büste.",
+      "native_frames_sha256": {
+        "catalog-pz-023b50b44d1c4698a6e17e65b6ea4337-ui100.png": "24a723552e1cc149c7b4d1d04b194d59b9b85222ccb9d9c20bb91d9b8632f1ae",
+        "catalog-pz-023b50b44d1c4698a6e17e65b6ea4337-ui125.png": "e78c4670e50bd45ac3e2e49c6a74e4de84f309ef59cfe683d13b0576ba9af891",
+        "completion-pz-023b50b44d1c4698a6e17e65b6ea4337-ui100.png": "6cf296ab102b62724c387f62bfae516eccbcabc80ca0cde83882e03b63023c5a",
+        "completion-pz-023b50b44d1c4698a6e17e65b6ea4337-ui125.png": "38629fb537ac20133c27b4eb738b448c45eea63c71763a70e4ae1c1bcdc3f597"
+      }
+    },
+    {
+      "id": "pz-20219e14dbe242689b9ef06297828f34",
+      "name": "Windspiel",
+      "result": "pass",
+      "observation": "Papier zwischen Röhren und Aufhängung; Anhänger und feine Schnüre sichtbar.",
+      "native_frames_sha256": {
+        "catalog-pz-20219e14dbe242689b9ef06297828f34-ui100.png": "90c15cab9811cacedcedf8f5d9b4de100aed8246520175927fd14fc17e0ffc3d",
+        "catalog-pz-20219e14dbe242689b9ef06297828f34-ui125.png": "cb864a2d66572053b4a8189645766c7ca0c1c02db936900138b63220c4bf6d9b",
+        "completion-pz-20219e14dbe242689b9ef06297828f34-ui100.png": "315c1a43a04b6cda10603d43cf3ab271fc1dfb6d1395f35b7c89bf2aa26a422d",
+        "completion-pz-20219e14dbe242689b9ef06297828f34-ui125.png": "09ba971b0d8f2d0c2da99e5e0d8a686f6a9c15e4d0a37c4f066c391a313fd72f"
+      }
+    },
+    {
+      "id": "pz-25d245061b0c49c190788de8e5d0e45b",
+      "name": "Kolibri",
+      "result": "pass",
+      "observation": "Flügelfedern, Schnabel und helle Brust erhalten; Außenkontur frei.",
+      "native_frames_sha256": {
+        "catalog-pz-25d245061b0c49c190788de8e5d0e45b-ui100.png": "0d1966a36b765e92a8b1e3c5e64713764de953d63eb91e3b4520c5deba331c3c",
+        "catalog-pz-25d245061b0c49c190788de8e5d0e45b-ui125.png": "ac63ab35bdc78f21be6e3a0d9df64a1c0d6d3e3a9002b2546afdfa7bfbdf21ae",
+        "completion-pz-25d245061b0c49c190788de8e5d0e45b-ui100.png": "b117150b0642ba87637d3e1d4152ed78536f0afc70ea602d33e7156f2fb21f45",
+        "completion-pz-25d245061b0c49c190788de8e5d0e45b-ui125.png": "53e824cdbac1254116019b48920a12b058b9e9eef524424b27668b30ae9d1632"
+      }
+    },
+    {
+      "id": "pz-2a8481f61e6443bda174bd3da67c",
+      "name": "Brandenburger Tor",
+      "result": "pass",
+      "observation": "Papier zwischen Säulen; Architektur und Standfläche erhalten.",
+      "native_frames_sha256": {
+        "catalog-pz-2a8481f61e6443bda174bd3da67c-ui100.png": "a357ce72ff0e72d74b1e0fd5b0647fff63e8b5db42d200d5255b54049d947b0c",
+        "catalog-pz-2a8481f61e6443bda174bd3da67c-ui125.png": "9e4bd616a346c7b2530225c13ab80b7a5bc2e10c4a16fe1da502577a049fe822",
+        "completion-pz-2a8481f61e6443bda174bd3da67c-ui100.png": "37cdfd776a465c73304824908b6d02d00ba20625f201d29bceb50253c4e1b788",
+        "completion-pz-2a8481f61e6443bda174bd3da67c-ui125.png": "d3dceb70523492e112e25baa65d54df955793942add8c2cc809ce02a2e3af412"
+      }
+    },
+    {
+      "id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
+      "name": "Knoblauch",
+      "result": "pass",
+      "observation": "Helle Knolle und Wurzeln erhalten; Außenpapier ohne Bildkasten.",
+      "native_frames_sha256": {
+        "catalog-pz-3a744ae1b7cb4d38b0ac29d030ef-ui100.png": "dc5a677d85979dcf17af5bee7038484e73e85845606c2a8f1efe407b0768fda4",
+        "catalog-pz-3a744ae1b7cb4d38b0ac29d030ef-ui125.png": "1bbc44df9c6fb3605a91b170a07062f0f7404b9bbae44ce394ebe3106847e329",
+        "completion-pz-3a744ae1b7cb4d38b0ac29d030ef-ui100.png": "797c1d8666eb43e2550516354feaf52a99f82d4c06e0d86b02a79ce884f84790",
+        "completion-pz-3a744ae1b7cb4d38b0ac29d030ef-ui125.png": "18840a2ffb311b315aa37ed8a9c36f1a3280888d7170f96c38353a9b02156a20"
+      }
+    },
+    {
+      "id": "pz-3e97c042f0bf474e8608a84ea034c246",
+      "name": "Yin-Yang",
+      "result": "pass",
+      "observation": "Helle Symbolhälfte und Punkte bleiben Motiv; Außenkreis klar.",
+      "native_frames_sha256": {
+        "catalog-pz-3e97c042f0bf474e8608a84ea034c246-ui100.png": "07b7f2f9691a5d2977e3aa7594186b210350dcb6f23264fb63c1c5e943f13c66",
+        "catalog-pz-3e97c042f0bf474e8608a84ea034c246-ui125.png": "cf9b85fe0c7fc19e4fe03a16716da47b84f884acbf1278992048954a953ddf65",
+        "completion-pz-3e97c042f0bf474e8608a84ea034c246-ui100.png": "91e093ae3a101ed34f12f7611ff721680b985014f1341ea2267df3aa450039bc",
+        "completion-pz-3e97c042f0bf474e8608a84ea034c246-ui125.png": "6c998ae6bb1b74b0eaf5ef5e2fe324df7ac651ef2c7e23f0f81c9300459740c8"
+      }
+    },
+    {
+      "id": "pz-51405ea1ad194507a60c9b6701d802f0",
+      "name": "Japanische Teekanne",
+      "result": "pass",
+      "observation": "Papier im Henkel; Kanne und Randdetails erhalten.",
+      "native_frames_sha256": {
+        "catalog-pz-51405ea1ad194507a60c9b6701d802f0-ui100.png": "09592dcc498eadb76418c28eb4485be559436485935fd803d16351d5b60f8bff",
+        "catalog-pz-51405ea1ad194507a60c9b6701d802f0-ui125.png": "ec147a19d2dd11ed094b07dd2e2468eab0dbe649e734a34fce322eedb07876da",
+        "completion-pz-51405ea1ad194507a60c9b6701d802f0-ui100.png": "5bf23eeebbce049b564dd76ec4a6196ada27fe746ddebf6ea5f75dd37d1ded48",
+        "completion-pz-51405ea1ad194507a60c9b6701d802f0-ui125.png": "72c1d2bc7286f3adc3414e35e2fd9f25c1eac043400fa97ae17049d9b0551407"
+      }
+    },
+    {
+      "id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+      "name": "Gecko",
+      "result": "pass",
+      "observation": "Papier um Zehen und Schwanz; Zeichnung und Augen erhalten.",
+      "native_frames_sha256": {
+        "catalog-pz-5ad1e06e19ab475baebc582d4999daa5-ui100.png": "7105dba3013cd9fb77c16e24baf7691f46fd00b58ca284b5d095df2774859e9a",
+        "catalog-pz-5ad1e06e19ab475baebc582d4999daa5-ui125.png": "7dd34a150f4b8c2a6315ed845422edfc1533a1f03bd446cce612c060012cc517",
+        "completion-pz-5ad1e06e19ab475baebc582d4999daa5-ui100.png": "88a6e5e6636127b9baebf250e39c1ea9c335f28c26835c8ea229a5e678bbd0b3",
+        "completion-pz-5ad1e06e19ab475baebc582d4999daa5-ui125.png": "8b643266028666e8af34e71d48355ac8ea382b49badc647d84b2081e4171856d"
+      }
+    },
+    {
+      "id": "pz-72561c715dd741f9b0082c7ad24802c1",
+      "name": "Pfirsich",
+      "result": "pass",
+      "observation": "Fruchtfleisch, Schale und Kern vollständig; vergrößerte freigegebene Fassung unverändert.",
+      "native_frames_sha256": {
+        "catalog-pz-72561c715dd741f9b0082c7ad24802c1-ui100.png": "90ebca1f7a088ab49ee8ff63d5afe7b1462e0c81e7303fff690aa7013cf749a3",
+        "catalog-pz-72561c715dd741f9b0082c7ad24802c1-ui125.png": "332512f6428342abb72309569493c0244cafc45e271ee6a7e7377c5a33a99d24",
+        "completion-pz-72561c715dd741f9b0082c7ad24802c1-ui100.png": "2923acd2912a5d1322cc4af4c23b12d0ecfdb8e13ba7708898fb4e5c7ed71d8d",
+        "completion-pz-72561c715dd741f9b0082c7ad24802c1-ui125.png": "1b33550d60011c34ed156b53e416e5b31e49436f04ad66d324126bfcf7c1ae47"
+      }
+    },
+    {
+      "id": "pz-72eb9b188896440c8a9a833e803835ec",
+      "name": "Koboldmaki",
+      "result": "pass",
+      "observation": "Schwanz und Astkomposition erhalten; Papier in Zwischenräumen.",
+      "native_frames_sha256": {
+        "catalog-pz-72eb9b188896440c8a9a833e803835ec-ui100.png": "de6ae76fef2d80bc0d2843088b18b601bfcdcd1314cb991e82705f52c2cddbfa",
+        "catalog-pz-72eb9b188896440c8a9a833e803835ec-ui125.png": "a866565985eb463c9e35c431d51b18a614c42b425bc2fbd3fc16efd0b3c43454",
+        "completion-pz-72eb9b188896440c8a9a833e803835ec-ui100.png": "167cf6e848cb5efa65c458f0a12e39c379bb87de779957f5e0f36d17be354384",
+        "completion-pz-72eb9b188896440c8a9a833e803835ec-ui125.png": "38173d38c65b36768fb03bf45f9984b2192f4c06b83d6e8e717839eefb23289d"
+      }
+    },
+    {
+      "id": "pz-7ec3dcd94bf84e698691ef4b5839",
+      "name": "Erbse",
+      "result": "pass",
+      "observation": "Grüne Rundform und Glanzlichter erhalten; Außenpapier frei.",
+      "native_frames_sha256": {
+        "catalog-pz-7ec3dcd94bf84e698691ef4b5839-ui100.png": "dc5a677d85979dcf17af5bee7038484e73e85845606c2a8f1efe407b0768fda4",
+        "catalog-pz-7ec3dcd94bf84e698691ef4b5839-ui125.png": "1bbc44df9c6fb3605a91b170a07062f0f7404b9bbae44ce394ebe3106847e329",
+        "completion-pz-7ec3dcd94bf84e698691ef4b5839-ui100.png": "27db0de5b2bbd78492a09330cd0a57a0668a28c623d9fb60efa5aa92716ece7b",
+        "completion-pz-7ec3dcd94bf84e698691ef4b5839-ui125.png": "9bc375479badd7e3d82fcf2562a59b75a1af46c704d04b0bb33f2d843f290b6f"
+      }
+    },
+    {
+      "id": "pz-82758295d5d34284bbae2716f64f",
+      "name": "Schachspringer",
+      "result": "pass",
+      "observation": "Holzkontur, Mähne und Sockel vollständig; kein Bildkasten.",
+      "native_frames_sha256": {
+        "catalog-pz-82758295d5d34284bbae2716f64f-ui100.png": "c5791da01591a730df4e859273416574f198534964d0481c843f27326492c459",
+        "catalog-pz-82758295d5d34284bbae2716f64f-ui125.png": "ff07b2e863a8fc5cb32c600b2553a304938e1c3b290f5e0f03b8b6dada276c58",
+        "completion-pz-82758295d5d34284bbae2716f64f-ui100.png": "29bad72414b7f84aae707c688fa2b56494869a580220c20d12560dd6c6bbb88b",
+        "completion-pz-82758295d5d34284bbae2716f64f-ui125.png": "e4b22d6a76efacc9764ff81c0154c91cf246a21208acbaca059e6847d78361ae"
+      }
+    },
+    {
+      "id": "pz-8ea7f3dacdcc428a9fcff7a735bc",
+      "name": "Efeutute",
+      "result": "pass",
+      "observation": "Blattzwischenräume und Außenfläche durchsichtig; Topf erhalten.",
+      "native_frames_sha256": {
+        "catalog-pz-8ea7f3dacdcc428a9fcff7a735bc-ui100.png": "7bf405c7eb5ced4489cdc6bd1a327feac338e0405a7d281c949dfd19d49bf9ca",
+        "catalog-pz-8ea7f3dacdcc428a9fcff7a735bc-ui125.png": "147df0181c6585e5ee9c3793423e150a511baaf17146e6e7d3974c6270643453",
+        "completion-pz-8ea7f3dacdcc428a9fcff7a735bc-ui100.png": "4a1706e3cc83679b1d5953519d1266c91f5c7fff1b50a9c4838bed652ce2ac5d",
+        "completion-pz-8ea7f3dacdcc428a9fcff7a735bc-ui125.png": "2e1939cbfb2c8fd280d7a8adf778c260cf054c195ade7bb8762ee3be20e7d7e1"
+      }
+    },
+    {
+      "id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+      "name": "Warnemünde",
+      "result": "pass",
+      "observation": "Freigegebene Szenenvignette: Leuchtturm, Teepott, Sonne, Himmel und Platz erhalten; weicher Rand zum Papier.",
+      "native_frames_sha256": {
+        "catalog-pz-8ecddf77e80c4543bf4ec714fe3d-ui100.png": "a357ce72ff0e72d74b1e0fd5b0647fff63e8b5db42d200d5255b54049d947b0c",
+        "catalog-pz-8ecddf77e80c4543bf4ec714fe3d-ui125.png": "9e4bd616a346c7b2530225c13ab80b7a5bc2e10c4a16fe1da502577a049fe822",
+        "completion-pz-8ecddf77e80c4543bf4ec714fe3d-ui100.png": "ab9a39ed8657da06ac152202ad5e942c4fb5d44575103e004220b257c3dfe78a",
+        "completion-pz-8ecddf77e80c4543bf4ec714fe3d-ui125.png": "c94729bbeea62b338797ea18f02dbb26ecaba8d4d6e912d5fcd82508893b14c7"
+      }
+    },
+    {
+      "id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+      "name": "Ingwer",
+      "result": "pass",
+      "observation": "Verzweigte Wurzelkontur und helle Oberfläche erhalten.",
+      "native_frames_sha256": {
+        "catalog-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui100.png": "dc5a677d85979dcf17af5bee7038484e73e85845606c2a8f1efe407b0768fda4",
+        "catalog-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui125.png": "1bbc44df9c6fb3605a91b170a07062f0f7404b9bbae44ce394ebe3106847e329",
+        "completion-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui100.png": "55cabda6382750033bb14ad7552acee1caa9a8a880e5d28daaf60c716bcb1779",
+        "completion-pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui125.png": "d4c4cd6892eecc75294abc9111e36bb97ba5dab86f32248a2eb3e2a3dd201fb9"
+      }
+    },
+    {
+      "id": "pz-9a79befc7a834e2d9d5896a477328962",
+      "name": "Buntspecht",
+      "result": "pass",
+      "observation": "Weiße Gefiederteile und Stamm bleiben erhalten; Papier um die Silhouette.",
+      "native_frames_sha256": {
+        "catalog-pz-9a79befc7a834e2d9d5896a477328962-ui100.png": "0d1966a36b765e92a8b1e3c5e64713764de953d63eb91e3b4520c5deba331c3c",
+        "catalog-pz-9a79befc7a834e2d9d5896a477328962-ui125.png": "ac63ab35bdc78f21be6e3a0d9df64a1c0d6d3e3a9002b2546afdfa7bfbdf21ae",
+        "completion-pz-9a79befc7a834e2d9d5896a477328962-ui100.png": "9ee7eb77cf806f567619464db92af6e86397c75655a0bc66532642c54003c32b",
+        "completion-pz-9a79befc7a834e2d9d5896a477328962-ui125.png": "23f417beb20b72fd22195d7e6eb574c7e32f4c4c7806c432ffd97843e5774b02"
+      }
+    },
+    {
+      "id": "pz-a358a1bf1b994efcbebeb55abf825789",
+      "name": "Kaktus",
+      "result": "pass",
+      "observation": "Stacheln, Arme und Bodenrest sichtbar; Außenpapier frei.",
+      "native_frames_sha256": {
+        "catalog-pz-a358a1bf1b994efcbebeb55abf825789-ui100.png": "7bf405c7eb5ced4489cdc6bd1a327feac338e0405a7d281c949dfd19d49bf9ca",
+        "catalog-pz-a358a1bf1b994efcbebeb55abf825789-ui125.png": "147df0181c6585e5ee9c3793423e150a511baaf17146e6e7d3974c6270643453",
+        "completion-pz-a358a1bf1b994efcbebeb55abf825789-ui100.png": "3d38bd6cc6f2154cdc5f10b544081671d11e7b6d8ee710c33f6aa78d138cda2a",
+        "completion-pz-a358a1bf1b994efcbebeb55abf825789-ui125.png": "5513cfd0a4c9c9db4df90f22e6044bb9139a50d367ae43de463b6121ea1c0db0"
+      }
+    },
+    {
+      "id": "pz-ad7164c2302a42e5953f6779a1c7",
+      "name": "Glas Bier mit Schaumkrone",
+      "result": "pass",
+      "observation": "Heller Schaum und Glasreflexe erhalten; Papier durch Henkelöffnung.",
+      "native_frames_sha256": {
+        "catalog-pz-ad7164c2302a42e5953f6779a1c7-ui100.png": "4aacc6d989be9f71ff592d94ab92066859688acc195f20db684d4661041b6fd2",
+        "catalog-pz-ad7164c2302a42e5953f6779a1c7-ui125.png": "56fb2653d495dd324f6e85bbb0718586091d76557eea2faac89e607d35f58aa3",
+        "completion-pz-ad7164c2302a42e5953f6779a1c7-ui100.png": "a93bfb7ace1bac8ee840c6c5c4b4b85556bb90fda8c037514d8af73748777991",
+        "completion-pz-ad7164c2302a42e5953f6779a1c7-ui125.png": "3bb5433e0596df2c08efe0de35705cf124e7d9f477bb76511f22cf5921a94cc6"
+      }
+    },
+    {
+      "id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+      "name": "Hamburger",
+      "result": "pass",
+      "observation": "Brötchen, helle Sesamkörner und Füllung erhalten; Außenpapier frei.",
+      "native_frames_sha256": {
+        "catalog-pz-b3368aea28ac4a11bf09e0dc9c48-ui100.png": "3fc91056e73e6af053c76eaaddc5f2c27238720df5790832fbb94dfafc2c3271",
+        "catalog-pz-b3368aea28ac4a11bf09e0dc9c48-ui125.png": "9b283914a0d772ab3ee70e89b25513f9470a5b22f38afa290a7da91497cc203c",
+        "completion-pz-b3368aea28ac4a11bf09e0dc9c48-ui100.png": "d2aa8be8f009808f9ae9348aca557ad6006ec07e831b62ff09c9de4e0b3712f4",
+        "completion-pz-b3368aea28ac4a11bf09e0dc9c48-ui125.png": "fbeac5ca3d7f27467aecd53503619fe83a55644f9cfed1e0c94515755b229dc1"
+      }
+    },
+    {
+      "id": "pz-b5e2302bf71445c09caac76bbc2a7075",
+      "name": "Carabao – Kopf",
+      "result": "pass",
+      "observation": "Hörner, helle Stirnpartien und Ohren erhalten; Außenkontur frei.",
+      "native_frames_sha256": {
+        "catalog-pz-b5e2302bf71445c09caac76bbc2a7075-ui100.png": "de6ae76fef2d80bc0d2843088b18b601bfcdcd1314cb991e82705f52c2cddbfa",
+        "catalog-pz-b5e2302bf71445c09caac76bbc2a7075-ui125.png": "a866565985eb463c9e35c431d51b18a614c42b425bc2fbd3fc16efd0b3c43454",
+        "completion-pz-b5e2302bf71445c09caac76bbc2a7075-ui100.png": "54c983692f37fb109861465471f6515f949b2b587c20a40dd032a40897d74adc",
+        "completion-pz-b5e2302bf71445c09caac76bbc2a7075-ui125.png": "ebe15e9b4ed6f99a44c7e5158a55e11ddfac91ee72bc2cf4aca4dd893df98a11"
+      }
+    },
+    {
+      "id": "pz-c71563f1b8c940de998afdd62f09",
+      "name": "Stirnlappenbasilisk",
+      "result": "pass",
+      "observation": "Langer Schwanz, Füße und Rückenkamm vollständig; Papier in Zwischenräumen.",
+      "native_frames_sha256": {
+        "catalog-pz-c71563f1b8c940de998afdd62f09-ui100.png": "7105dba3013cd9fb77c16e24baf7691f46fd00b58ca284b5d095df2774859e9a",
+        "catalog-pz-c71563f1b8c940de998afdd62f09-ui125.png": "7dd34a150f4b8c2a6315ed845422edfc1533a1f03bd446cce612c060012cc517",
+        "completion-pz-c71563f1b8c940de998afdd62f09-ui100.png": "4edf661b28d9a31805e26113953876ff8b4a1fc2c0bd4ea45567ca70c89bc6c0",
+        "completion-pz-c71563f1b8c940de998afdd62f09-ui125.png": "e63e16387100d976f17f8ddc5622a855d8fdf094f163bb8e5fb859815f4764ad"
+      }
+    },
+    {
+      "id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+      "name": "Rote Nelke",
+      "result": "pass",
+      "observation": "Blütenkontur und Stiel vollständig; Außenpapier frei.",
+      "native_frames_sha256": {
+        "catalog-pz-d7e68d1138a3448c8b2a4b07e8632350-ui100.png": "7bf405c7eb5ced4489cdc6bd1a327feac338e0405a7d281c949dfd19d49bf9ca",
+        "catalog-pz-d7e68d1138a3448c8b2a4b07e8632350-ui125.png": "147df0181c6585e5ee9c3793423e150a511baaf17146e6e7d3974c6270643453",
+        "completion-pz-d7e68d1138a3448c8b2a4b07e8632350-ui100.png": "ea10bd626abf48193e4d27f7832b4995ad1ea9e78e31b3cdebf68289e213d60c",
+        "completion-pz-d7e68d1138a3448c8b2a4b07e8632350-ui125.png": "a2912685c4e9d22e5178d99c3ce361d71925b934ccf7e68a802d9c00c8d88389"
+      }
+    },
+    {
+      "id": "pz-d829eb9b83e94f9c9357ee5ab9c9e359",
+      "name": "Marie Curie",
+      "result": "pass",
+      "observation": "Portrait, Frisur und helle Hautpartien erhalten; Papier außerhalb der Büste.",
+      "native_frames_sha256": {
+        "catalog-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui100.png": "24a723552e1cc149c7b4d1d04b194d59b9b85222ccb9d9c20bb91d9b8632f1ae",
+        "catalog-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui125.png": "e78c4670e50bd45ac3e2e49c6a74e4de84f309ef59cfe683d13b0576ba9af891",
+        "completion-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui100.png": "41740259d5dab4272af7bffd6af43b28193f9b1a618cb7fc8a5d841a085d0310",
+        "completion-pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui125.png": "444885c6320674e65eab1d8ec48b0632df0f3913393669df7b264aaa462fc881"
+      }
+    },
+    {
+      "id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+      "name": "Giraffe",
+      "result": "pass",
+      "observation": "Beine, Hals und Schwanz vollständig; Papier zwischen Gliedmaßen.",
+      "native_frames_sha256": {
+        "catalog-pz-dbbebc72556d4f0c9a37ab69275480e9-ui100.png": "de6ae76fef2d80bc0d2843088b18b601bfcdcd1314cb991e82705f52c2cddbfa",
+        "catalog-pz-dbbebc72556d4f0c9a37ab69275480e9-ui125.png": "a866565985eb463c9e35c431d51b18a614c42b425bc2fbd3fc16efd0b3c43454",
+        "completion-pz-dbbebc72556d4f0c9a37ab69275480e9-ui100.png": "04c4a369bc489d8ce467edcf8beca17fe77b3d891630b419452e09efde30070a",
+        "completion-pz-dbbebc72556d4f0c9a37ab69275480e9-ui125.png": "435dd255c23d6d0736d66b916763e56aa1665685984740843f4b3595df7f5937"
+      }
+    },
+    {
+      "id": "pz-e45e2e0d67a34f6aa8368f477454",
+      "name": "Kölner Dom",
+      "result": "pass",
+      "observation": "Turmspitzen und Fassade vollständig; Außenpapier frei.",
+      "native_frames_sha256": {
+        "catalog-pz-e45e2e0d67a34f6aa8368f477454-ui100.png": "a357ce72ff0e72d74b1e0fd5b0647fff63e8b5db42d200d5255b54049d947b0c",
+        "catalog-pz-e45e2e0d67a34f6aa8368f477454-ui125.png": "9e4bd616a346c7b2530225c13ab80b7a5bc2e10c4a16fe1da502577a049fe822",
+        "completion-pz-e45e2e0d67a34f6aa8368f477454-ui100.png": "3cc0f7ada52ffd609d0b9111b5d9a10dadc2ac1197218d73c1b6e61135f17a12",
+        "completion-pz-e45e2e0d67a34f6aa8368f477454-ui125.png": "6fa93b21739b3520602b1efaf0ddfa73ee021c6a5a581eb149c7546a8f0986cb"
+      }
+    },
+    {
+      "id": "pz-eedd1fe72af54714908d5b5aff34",
+      "name": "Regenwurm",
+      "result": "pass",
+      "observation": "Segmentierung und S-Kontur erhalten; Außenpapier frei.",
+      "native_frames_sha256": {
+        "catalog-pz-eedd1fe72af54714908d5b5aff34-ui100.png": "7105dba3013cd9fb77c16e24baf7691f46fd00b58ca284b5d095df2774859e9a",
+        "catalog-pz-eedd1fe72af54714908d5b5aff34-ui125.png": "7dd34a150f4b8c2a6315ed845422edfc1533a1f03bd446cce612c060012cc517",
+        "completion-pz-eedd1fe72af54714908d5b5aff34-ui100.png": "30a723159683a7120bb4472e1b73b66a2512ccc207b3db2d35e317b773306197",
+        "completion-pz-eedd1fe72af54714908d5b5aff34-ui125.png": "8adee40c95d951910572069e05f6e96e3a9ae162f640ae41e29d2dc6abf6ac9e"
+      }
+    }
+  ],
+  "result": "pass"
+}

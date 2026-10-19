@@ -17,11 +17,12 @@ AT-A schafft den sicheren gemeinsamen Bildrevisionsweg; AT-B stellt danach den
 gebundenen Bestand mit neuen Bildfreigaben um. Reine Bildänderungen erhalten
 Definitionsbytes, Puzzle-Revision, Identität, Spielstände und historische Belege.
 Szenen erhalten eine konkrete transparente Gestaltung, keinen pauschalen Verzicht.
-Der aktuelle Auftrag umfasst ausschließlich AT-B-V01 auf
-`chore/256-transparente-bestandsbilder`: den vollständigen gebundenen Bildsatz
-bis zur gemeinsamen Bild-/Endfreigabevorlage. [AT-B-Bericht](docs/AT_B_VERIFICATION.md).
-Stopp vor `catalog_reveal plan/adopt`; keine aktive Übernahme, Rasterproduktion,
-Merge, Deployment oder Issue-Schließung. Eigentümerfreigaben bleiben ausdrücklich offen.
+AT-B-V01 liefert den vollständigen gebundenen Bildsatz in Draft-PR #264.
+Die anschließende [Eigentümerabnahme](docs/AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01
+auf `chore/256-transparente-bestandsbilder`: kontrolliertes `catalog_reveal plan/adopt`
+aller 26 freigegebenen Bilder und AT-B-T01. [AT-B-Bericht](docs/AT_B_VERIFICATION.md).
+Keine Rasterproduktion, echte Spielstände, Merge, Deployment oder Issue-Schließung.
+Das qualifizierte separate AT-B-R01 am Integrationshead bleibt offen.
 AT-A-P01 / Umsetzungsvorbereitung V2 ist mit PR #257 auf
 `9cc58651518e3a28e97f46932d69554210b0abcb` integriert und schließt die Verträge:
 [Daten/Freigabe](docs/ZA1_ADAPTER.md),

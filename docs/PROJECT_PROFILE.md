@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**AT / #256 (19.10.2026), Umsetzungsvorbereitung V4; AT-A integriert, AT-B-V01 beauftragt:**
+**AT / #256 (19.10.2026), Umsetzungsvorbereitung V4; AT-A integriert, AT-B-F01 nach Eigentümerabnahme beauftragt:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ist bei Abschlussbildern,
 deren Katalogvorschau und Bildrevisionen samt den dort benannten Fachquellen
 vollständig zu lesen. Dasselbe freigegebene Bild lässt in beiden Ansichten den
@@ -24,11 +24,13 @@ Paket im [Gesamtissue](https://github.com/venomenon328/picross/issues/256),
 AT-B nach integriertem AT-A. Technische Lieferung und qualifiziertes separates
 Review bleiben je Paket getrennt; tatsächliche Bildfreigabe und Inhaltsabnahme
 werden an die vorgelegten Dateien gebunden. Umsetzungsvorbereitung V4 beauftragt
-ausschließlich AT-B-V01 auf `chore/256-transparente-bestandsbilder`: den vollständigen
+zunächst AT-B-V01 auf `chore/256-transparente-bestandsbilder`: den vollständigen
 26er-Satz bis zur gemeinsamen Bild-/Endfreigabevorlage samt Authoringablage,
-Pflicht-CI, Selbstreview und Draft-PR. Stopp vor `catalog_reveal plan/adopt`.
-Aktive Bild-/Metadatenübernahme, Rasterproduktion, Merge, Deployment und
-Issue-Abschluss sind nicht beauftragt. Historische KE-/KU-Nachweise
+Pflicht-CI, Selbstreview und Draft-PR. Die anschließende
+[Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) beauftragt AT-B-F01: kontrollierte
+Bildübernahme und AT-B-T01. Rasterproduktion, echte Spielstände, Merge,
+Deployment und Issue-Abschluss bleiben ausgeschlossen; separates AT-B-R01 offen.
+Historische KE-/KU-Nachweise
 bleiben an ihren damaligen Stand gebunden.
 
 AT-A-P01 gemäß Umsetzungsvorbereitung V2 wurde mit PR #257 auf
@@ -44,8 +46,8 @@ Darstellung, Savewechsel und Transaktionen.
 P01-Selbstreview und fortgeschriebener Dokumentreview sind keine AT-A-R01-Abnahme.
 AT-A-R01 ist laut #256 qualifiziert abgeschlossen; PR #263 ist auf
 `a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9` integriert. Der
-[AT-B-V01-Bericht](AT_B_VERIFICATION.md) trennt aktuelle Vorlage und offene
-Eigentümerfreigaben von späterer Übernahme, AT-B-T01 und AT-B-R01.
+[AT-B-Bericht](AT_B_VERIFICATION.md) trennt historische Vorlage, tatsächliche
+Eigentümerabnahme und AT-B-F01/AT-B-T01 vom noch offenen finalen AT-B-R01.
 
 **Chromium-only CI / #261 (19.10.2026):** Der Eigentümer entfernt Firefox
 vollständig aus automatisierter CI. Sämtliche 27 Chromium-Szenarien, fünf Gruppen

@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "menschen-berufe",
   "motif_name": "Ho Chi Minh",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 36,
   "height": 48,
   "mode": "color",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/at-b-r01/approval.json",
+    "sha256": "0df87ace0f1812c2f40e774bede935dce59cf251c82ba659749a75f659f5895f"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46",
+    "active_record": "content/reveals/pz-023b50b44d1c4698a6e17e65b6ea4337.json",
+    "active_record_sha256": "51d4fb32ff2ab79bea34c4d2847533941f9e26f9a5dc4ddbf28a5d807db8cc06",
+    "evidence": "docs/design/at_b_integration/audit-01.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-023b50b44d1c4698a6e17e65b6ea4337/at-b-r01/package.zip",
     "bytes": 4846610,

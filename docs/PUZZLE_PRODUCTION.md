@@ -8,8 +8,10 @@ gemeinsamen abgesicherten Bildupdateweg; danach bearbeitet AT-B den gebundenen
 Bestand samt tatsächlichen Bildfreigaben. Historische Produktions- und
 Integrationsbelege bleiben unverändert. Die Spezifikationsfreigabe startet weder
 Bildbearbeitung noch Raster-/Logikproduktion oder Integration. Der gesonderte
-[AT-B-V01-Auftrag](AT_B_VERIFICATION.md) umfasst den vollständigen Bildsatz bis
-zur gemeinsamen Eigentümervorlage, mit Stopp vor `catalog_reveal plan/adopt`.
+[AT-B-V01-Auftrag](AT_B_VERIFICATION.md) lieferte den vollständigen Bildsatz bis
+zur gemeinsamen Eigentümervorlage. Die anschließende
+[Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01 mit kontrollierter
+Übernahme und AT-B-T01, ohne Raster-/Logikproduktion oder neue Analyse.
 
 **Prüfzuordnung für neue Arbeit (12.10.2026):** Sämtliche konkreten Rätselprüfungen
 finden einmalig je relevanter Revision während der Produktion/Integration statt,
@@ -379,8 +381,8 @@ AT-A-P01 schließt vor Codeänderungen den exakten
 [Journale/Recovery](SD_CATALOG.md) und die
 [CLI](../tools/puzzle_production/README.md). P01 ist über #257 integriert;
 die historische AT-A-Lieferung steht in [AT-A-T01](AT_A_VERIFICATION.md).
-AT-A ist nach qualifiziertem AT-A-R01 über PR #263 integriert. Reale
-Bildübernahmen bleiben außerhalb des aktuellen AT-B-V01-Auftrags.
+AT-A ist nach qualifiziertem AT-A-R01 über PR #263 integriert. Die reale
+Bildübernahme ist nach AT-B-V01 und Eigentümerabnahme gesondert als AT-B-F01 beauftragt.
 Die dauerhafte Quelle `content/reveals/<pz-ID>.json` enthält die kompakte
 ursprüngliche Herkunft sowie die vollständige Bild-/Freigabehistorie; nötige neue
 Attribution wird an die aktive Notice angehängt, ursprüngliche Notices bleiben

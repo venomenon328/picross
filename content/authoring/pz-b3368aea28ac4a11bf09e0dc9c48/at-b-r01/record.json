@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "gerichte-herzhaftes",
   "motif_name": "Hamburger",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 25,
   "height": 22,
   "mode": "mono",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/at-b-r01/approval.json",
+    "sha256": "17770a12d477ccf526935384a43f40ad141368b9772e48ec069ebb8e2e6c5c27"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "8fea577fa64fb9be882e374e1828159d6e31129ce55c224aedea22a755ab30fa",
+    "active_record": "content/reveals/pz-b3368aea28ac4a11bf09e0dc9c48.json",
+    "active_record_sha256": "aaf2d17e3a6d007f4ae675ca084ddfd2213e18971fcae0aad3b43beafddd17cc",
+    "evidence": "docs/design/at_b_integration/audit-03.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-b3368aea28ac4a11bf09e0dc9c48/at-b-r01/package.zip",
     "bytes": 6339235,

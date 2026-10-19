@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "gemuese-pilze-kraeuter",
   "motif_name": "Knoblauch",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 40,
   "height": 40,
   "mode": "mono",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/at-b-r01/approval.json",
+    "sha256": "6f3125a7f890bfe72a56ae96bbd98ed77e148389b17f5cfb1411693cdf25656e"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46",
+    "active_record": "content/reveals/pz-3a744ae1b7cb4d38b0ac29d030ef.json",
+    "active_record_sha256": "f9c887740278ffaf2e48f15b442c5974829ef157700f3d81a25e69f58147ce7c",
+    "evidence": "docs/design/at_b_integration/audit-01.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-3a744ae1b7cb4d38b0ac29d030ef/at-b-r01/package.zip",
     "bytes": 4981981,

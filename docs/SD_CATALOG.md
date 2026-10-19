@@ -4,10 +4,10 @@
 [AT-A](REVEAL_TRANSPARENCY.md) ergänzt den gemeinsamen Quellen-/Transaktionsweg
 für getrennte aktive Bildfassungen und einen abgesicherten Binärersatz. Ratings,
 Bewertungsrevisionen, Hinzugefügt-Daten und historische Produktionsbindungen
-bleiben bei reinen Bildupdates unverändert. Der aktuelle Auftrag umfasst nur
-[AT-B-V01](AT_B_VERIFICATION.md), die gebundene Bild-/Endfreigabevorlage.
-Stopp vor Eigentümerfreigabe und `catalog_reveal plan/adopt`; keine reale
-Bild-/Bewertungsübernahme oder neue Analyse.
+bleiben bei reinen Bildupdates unverändert. [AT-B-V01](AT_B_VERIFICATION.md)
+liefert die gebundene Bild-/Endfreigabevorlage. Die anschließende
+[Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01 mit kontrollierter
+Bildübernahme und AT-B-T01. Keine Bewertungsübernahme oder neue Analyse.
 
 **KU / #244, freigegebene Ergänzung vom 18.10.2026; Umsetzung offen:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt mit KU-A ausschließlich

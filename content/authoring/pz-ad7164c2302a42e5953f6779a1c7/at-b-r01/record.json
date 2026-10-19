@@ -4,16 +4,28 @@
   "revision": "at-b-r01",
   "category_id": "suesses-getraenke",
   "motif_name": "Glas Bier mit Schaumkrone",
-  "state": "reveal_review",
+  "state": "registered",
   "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
   "width": 25,
   "height": 30,
   "mode": "mono",
   "difficulty": null,
-  "final_editorial_approval": null,
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/at-b-r01/approval.json",
+    "sha256": "48a426776289e8bbbca0a9d804d199c07e583d2cd851a01e49e0546c6e26fd15"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "b0d9cf6138ccbeed1fffe8fa567d202276c1831bf952786e4f0fd683d4c4b51f",
+    "active_record": "content/reveals/pz-ad7164c2302a42e5953f6779a1c7.json",
+    "active_record_sha256": "71645fa479bcc46d018038401cdc9f892aef94100773e9a359f48081d88adbe7",
+    "evidence": "docs/design/at_b_integration/audit-02.json"
+  },
   "blockers": [],
-  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
   "package": {
     "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/at-b-r01/package.zip",
     "bytes": 5598334,
