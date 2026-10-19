@@ -3,6 +3,7 @@ import ast
 import importlib
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -19,6 +20,24 @@ REJECTED = ('firefox', 'webkit', 'both', '', 'Chromium', 'chromium firefox')
 
 
 class ChromiumBoundary(unittest.TestCase):
+    def test_migrated_workflow_chain_has_no_retired_or_missing_targets(self):
+        directory = ROOT/'.github/workflows'
+        retired = {'setup.yml', 'web.yml', 'web-browser.yml'}
+        self.assertFalse(retired & {path.name for path in directory.iterdir()})
+        edges = {}
+        for path in directory.glob('*.yml'):
+            targets = re.findall(r'uses: \./\.github/workflows/([^\s]+)', path.read_text())
+            for target in targets:
+                self.assertNotIn(target, retired, path)
+                self.assertTrue((directory/target).is_file(), (path, target))
+            edges[path.name] = targets
+        self.assertIn('web-chromium.yml', edges['ci-chromium.yml'])
+        self.assertEqual(edges['web-chromium.yml'], ['browser-chromium.yml'])
+        self.assertEqual(edges['browser-chromium.yml'], [])
+        source = (directory/'ci-chromium.yml').read_text()
+        self.assertIn('  pull_request:\n', source)
+        self.assertIn('  ci-required:\n', source)
+
     def test_all_cli_inputs_rejected_before_playwright_import_or_output(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -73,7 +92,7 @@ class ChromiumBoundary(unittest.TestCase):
     def test_workflows_have_no_firefox_and_validate_before_installation(self):
         for path in (ROOT/'.github/workflows').glob('*.yml'):
             self.assertNotIn('firefox', path.read_text().lower(), path)
-        workflow = (ROOT/'.github/workflows/web-browser.yml').read_text()
+        workflow = (ROOT/'.github/workflows/browser-chromium.yml').read_text()
         blocks = run_blocks(workflow)
         self.assertIn('if [ "$BROWSER" != chromium ]; then', blocks[0])
         self.assertIn('exit 1', blocks[0])
@@ -82,8 +101,8 @@ class ChromiumBoundary(unittest.TestCase):
         self.assertEqual(len(installs), 1)
         self.assertIn('playwright" install --with-deps chromium', installs[0])
         self.assertNotIn('install --with-deps "$BROWSER"', workflow)
-        web = (ROOT/'.github/workflows/web.yml').read_text()
-        self.assertEqual(web.count('uses: ./.github/workflows/web-browser.yml'), 1)
+        web = (ROOT/'.github/workflows/web-chromium.yml').read_text()
+        self.assertEqual(web.count('uses: ./.github/workflows/browser-chromium.yml'), 1)
         self.assertIn('browser: chromium', web)
 
     def test_actual_first_workflow_step_rejects_before_next_step(self):
@@ -94,7 +113,7 @@ class ChromiumBoundary(unittest.TestCase):
             bash = str(Path(git).resolve().parents[1]/'bin/bash.exe') if git else None
         if not bash or not Path(bash).is_file():
             self.skipTest('No local Bash; full workflow shell probe runs on Linux')
-        guard = run_blocks((ROOT/'.github/workflows/web-browser.yml').read_text())[0]
+        guard = run_blocks((ROOT/'.github/workflows/browser-chromium.yml').read_text())[0]
         for browser in ('chromium', *REJECTED):
             with self.subTest(browser=browser):
                 result = subprocess.run([bash, '--noprofile', '--norc', '-eo', 'pipefail', '-c',

@@ -1,4 +1,4 @@
-name: CI verification
+name: CI verification (Chromium)
 
 on:
   pull_request:
@@ -99,7 +99,7 @@ jobs:
   web:
     needs: docs
     if: needs.docs.outputs.web == 'true'
-    uses: ./.github/workflows/web.yml
+    uses: ./.github/workflows/web-chromium.yml
     with:
       selection_attempt: ${{ needs.docs.outputs.selection_attempt }}
 

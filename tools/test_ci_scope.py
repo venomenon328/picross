@@ -60,7 +60,7 @@ class SelectionTests(unittest.TestCase):
         for path in ["game/data/content/loader.gd", "game/art/content/importer.py",
                      "content/authoring/pz-a/r01/run.py", "content/packages/pz-a/r01/plugin.gd",
                      "content/.registration-pending.json", "game/art/book/paper.png",
-                     ".github/workflows/setup.yml", "unknown.json"]:
+                     ".github/workflows/ci-chromium.yml", "unknown.json"]:
             with self.subTest(path=path):
                 self.assertFalse(content_path(path))
                 plan = classify(["game/data/content/a.json", path])

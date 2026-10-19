@@ -17,8 +17,10 @@ historische Nachweise und die bestehenden Spiel-/Speicherverträge bleiben
 unverändert gebunden. Workflow und Browser-CLIs weisen andere Browserwerte vor
 Installation/Start ab. Das fail-closed-Gate verlangt nur Chromium-Belege und
 `chromium_attempt`; sämtliche Inhalts-/Quellen-/Run-/Retryprüfungen bleiben.
-Vor Reaktivierung müssen alte PR-Stände und historische Reruns gemäß
-[CI-Policy](CI_POLICY.md) verlässlich gesperrt sein.
+Vor Reaktivierung müssen aktuelle automatische Startpfade einschließlich alter
+offener PRs gemäß [CI-Policy](CI_POLICY.md) abgesichert sein. S3 nimmt historische
+Reruns aus dem Mergegate; sie werden nicht gestartet. Die drei alten Workflow-IDs
+bleiben deaktiviert, die Chromium-Kette verwendet neue Pfade/IDs.
 
 Die Eigentümerentscheidung vom 18.10.2026 in
 [CI-Policy](CI_POLICY.md) / [#246](https://github.com/venomenon328/picross/issues/246)
@@ -38,8 +40,8 @@ Start und aller aktuellen positiven/negativen Chromium-Szenarien.
 
 [CI-A-Auswahl](CI_A_SELECTION.md) bindet die genaue Pfadzuordnung.
 [CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) bindet das vollständige Inventar,
-Auswahl, unabhängige Voraussetzungen und das Ergebnisgate. `web.yml` baut drei
-Exporte einmal im selben Run; `web-browser.yml` führt Chromium auf einem
+Auswahl, unabhängige Voraussetzungen und das Ergebnisgate. `web-chromium.yml` baut drei
+Exporte einmal im selben Run; `browser-chromium.yml` führt Chromium auf einem
 eigenen Runner mit getrennten Profilen/Hosts je Gruppe aus. Das Gate kontrolliert
 konkrete Szenarien und Pflichtdateien samt Hashes. `delivery.yml` bleibt separat mit genau
 einem regulären Export und der bestehenden SSH/HTTP-Referenz ohne Browser.

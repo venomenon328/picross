@@ -1,4 +1,4 @@
-name: Isolated browser runner
+name: Isolated Chromium runner
 
 on:
   workflow_call:

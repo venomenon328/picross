@@ -46,7 +46,7 @@ class DependencyTests(unittest.TestCase):
     def test_template_exception_is_exact_and_union_preserves_obligations(self):
         template = ".github/pull_request_template.md"
         self.assertEqual(jobs([template]), {"docs"})
-        for path in (".github/other.md", ".github/workflows/web.yml", ".github/workflows/delivery.yml"):
+        for path in (".github/other.md", ".github/workflows/web-chromium.yml", ".github/workflows/delivery.yml"):
             self.assertEqual(jobs([path]), set(JOBS))
         self.assertEqual(jobs([template, "tools/deploy_web.py"]), {"docs", "delivery"})
         self.assertEqual(jobs(PR241 + ["tools/deploy_web.py"]), {"docs", "production", "delivery"})
@@ -183,10 +183,10 @@ def run_blocks(source):
 
 class WorkflowExecutionTests(unittest.TestCase):
     def test_scheduler_and_gate_have_both_independent_jobs(self):
-        source = (ROOT / ".github/workflows/setup.yml").read_text()
-        for job in ("web", "delivery"):
+        source = (ROOT / ".github/workflows/ci-chromium.yml").read_text()
+        for job, workflow in (("web", "web-chromium"), ("delivery", "delivery")):
             self.assertIn(f"  {job}:\n    needs: docs\n    if: needs.docs.outputs.{job} == 'true'\n"
-                          f"    uses: ./.github/workflows/{job}.yml", source)
+                          f"    uses: ./.github/workflows/{workflow}.yml", source)
             self.assertIn(f'"{job}":{{"result":"${{{{ needs.{job}.result }}}}"}}', source)
         self.assertIn("needs: [docs, product, production, preflight, web, delivery]", source)
         self.assertIn("CI_OUTPUTS: ${{ toJSON(needs.docs.outputs) }}", source)

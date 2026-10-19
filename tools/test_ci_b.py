@@ -353,7 +353,7 @@ class Execution(unittest.TestCase):
                 ''')
             for p in [bin_dir/n for n in ('python3','xvfb-run')]+[venv/n for n in ('pip','playwright','python')]:
                 p.write_text(stub);p.chmod(0o755)
-            for filename in ('web.yml','web-browser.yml'):
+            for filename in ('web-chromium.yml','browser-chromium.yml'):
                 blocks=run_blocks((ROOT/'.github/workflows'/filename).read_text())
                 for browser in BROWSERS:
                     journal=root/'commands.jsonl'
@@ -370,7 +370,7 @@ class Execution(unittest.TestCase):
                     self.assertEqual(execute(),0)
                     calls=[json.loads(line) for line in journal.read_text().splitlines()]
                     self.assertFalse(any('ssh' in ' '.join(c) for c in calls))
-                    if filename=='web.yml':
+                    if filename=='web-chromium.yml':
                         builds=[c for c in calls if 'tools/build_web_player.py' in c]
                         self.assertEqual(len(builds),3);self.assertEqual(sum('--test' in c for c in builds),2)
                         self.assertFalse(any('playwright' in ' '.join(c) for c in calls))
@@ -382,7 +382,7 @@ class Execution(unittest.TestCase):
                         failures=('playwright','run_groups.py run')
                     print('CI_B_EXECUTION_PROBE '+json.dumps({'workflow':filename,'browser':browser,'commands':calls}),flush=True)
                     for failure in failures:self.assertEqual(execute(failure),23)
-                    if filename == 'web-browser.yml':
+                    if filename == 'browser-chromium.yml':
                         for browser in ('firefox', 'webkit', 'both', '', 'Chromium', 'chromium firefox'):
                             with self.subTest(rejected_browser=browser):
                                 self.assertEqual(execute(), 1)
