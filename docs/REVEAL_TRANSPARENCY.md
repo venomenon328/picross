@@ -1,22 +1,24 @@
 # AT · Transparente Abschlussbilder
 
-Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **Spezifikation; Implementierung nicht begonnen** ·
+Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **AT-A in Umsetzung; AT-B nicht beauftragt** ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).
 
 ## Auftrag, Quellen und Wirksamkeit
 
 Der Eigentümer hat transparente Abschlussbilder einschließlich ihrer verdienten
-Katalogvorschau als Spezifikation freigegeben. Der aktuelle Auftrag umfasst Issues
-und dauerhafte Repository-Dokumentation, ausdrücklich noch keine Implementierung.
-AT-A und AT-B benötigen jeweils einen späteren Auftrag; auch Merge und Freigaben
-der erst noch zu erstellenden Bildbytes sind damit nicht erteilt.
+Katalogvorschau als Spezifikation freigegeben. Umsetzungsvorbereitung V3 beauftragt
+jetzt ausschließlich AT-A einschließlich [AT-A-T01](AT_A_VERIFICATION.md),
+getrenntem Selbstreview und Draft-PR. AT-B, reale Bildfreigaben/-übernahmen,
+unabhängiges AT-A-R01, Merge, Deployment und Issue-Abschluss bleiben separat.
 
 Historische Spezifikationsbasis ist
 `main@b019a32f8854070dfa3d7bb580fd35a3cd4a5686`; P01 synchronisiert den
 bestehenden Spezifikationsbranch mit
 `main@e454dd580fd1dd2690d952d8e8a9a2f8dc5e604c`, einschließlich integrierter
 Chromium-/CI-258-Regeln. Der technische Vertragsabschluss aus
-Umsetzungsvorbereitung V2 ist reine Dokumentfortschreibung in Draft-PR #257.
+Umsetzungsvorbereitung V2 wurde durch PR #257 als Dokumentfortschreibung auf
+`main@9cc58651518e3a28e97f46932d69554210b0abcb` integriert; dies ist die
+geprüfte Basis der AT-A-Implementierung.
 Das Issue führt aktuelle
 Paketaufträge, Lieferstände und Abnahmen. Dieser Vertrag führt die dauerhaften
 Entscheidungen. Er ergänzt gezielt [Produkt](PRODUCT_DEFINITION.md),

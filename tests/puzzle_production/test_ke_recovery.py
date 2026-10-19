@@ -15,6 +15,17 @@ LOCK = 'content/.registration-pending.json'
 
 
 class LegacyRecoveryTests(unittest.TestCase):
+    def test_active_at_source_blocks_frozen_registration_and_update(self):
+        from tools.puzzle_production.reveal_source import path
+        for kind in ('registration','update'):
+            root,journal=self.checkout(kind)
+            entry=json.loads(journal['old'][cr.REGISTRY])['entries'][0]
+            target=root/path(entry['id']);target.parent.mkdir(parents=True,exist_ok=True)
+            target.write_bytes(b'unbound AT source must survive\n')
+            before=self.snapshot(root)
+            with self.assertRaises(InvalidInput):cr.recover(root)
+            self.assertEqual(before,self.snapshot(root))
+
     def test_unbound_difficulty_blocks_exact_legacy_journals_without_mutation(self):
         from tools.puzzle_production.catalog_rating import path
         for kind in ('registration', 'update'):

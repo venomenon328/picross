@@ -1,6 +1,6 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
-**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; noch nicht implementiert:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
 [AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
 für transparente Abschlussbilder und einen eigenen eng begrenzten Bildupdateweg.
 AT-B stellt danach den gebundenen Bestand mit tatsächlichen Bildfreigaben um.
@@ -860,16 +860,16 @@ Recoverywege müssen die aktive Bildbindung gemeinsam erhalten; alte exakte
 Formate werden nicht gelockert. Synthetische technische Regressionen gehören
 zu AT-A, konkrete Bestandsfreistellung, Bildabnahme und Motivprüfung zu AT-B.
 
-### AT-P01-D04 · Vollständige Soll-CLI (noch nicht ausführbar)
+### AT-P01-D04 · CLI für Bildrevisionen
 
 Eigener Moduleinstieg `tools.puzzle_production.catalog_reveal`. Genau zwei
 Unterbefehle, keine automatische Bestandsauswahl, kein Force/Resume/Skip-Schalter:
 
 ```sh
-# SOLL-SYNTAX: erst nach AT-A ausführbar, jetzt nicht starten.
+# Nur explizit freigegebene Bildrevisionen; keine automatische Bestandsauswahl.
 python -m tools.puzzle_production.catalog_reveal plan --checkout <checkout> --id <pz-ID> [--id <weitere-ID>] --input <externe-anfrage.json> --output-dir <neuer-externer-planordner> [--seconds 300]
 python -m tools.puzzle_production.catalog_reveal adopt --checkout <checkout> --plan <planordner/plan.json> [--seconds 300]
-# Bestehender Einstieg; AT-fähige Recovery erst nach AT-A:
+# Gemeinsamer Recovery-Einstieg, einschließlich AT-Binärjournalen:
 python -m tools.puzzle_production.target_adapter recover-registration --checkout <checkout>
 ```
 

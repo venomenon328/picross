@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**AT · 19.10.2026, Spezifikation freigegeben; Implementierung nicht begonnen:**
+**AT · 19.10.2026, Umsetzungsvorbereitung V3; AT-A in Umsetzung:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) erweitern §4.3 um Motive
 auf dem vorhandenen Buch- und Kartenpapier. Der neue Standard gilt für künftige
 Abschlussbilder; Bestandsrevisionen folgen nach AT-A gesondert in AT-B mit

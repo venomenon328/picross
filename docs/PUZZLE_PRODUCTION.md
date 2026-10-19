@@ -1,6 +1,6 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; noch nicht implementiert:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
 [Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) ergänzt echte Transparenz für
 neue Abschlussbilder und den eng begrenzten Austausch vorhandener Bildfassungen.
 AT-A liefert den Produktionsstandard, die getrennte aktive Bildbindung und den
@@ -375,7 +375,9 @@ AT-A-P01 schließt vor Codeänderungen den exakten
 [Quellen-/Freigabevertrag](ZA1_ADAPTER.md), die
 [gemeinsame aktive Auflösung](CATEGORIES.md),
 [Journale/Recovery](SD_CATALOG.md) und die
-[Soll-CLI](../tools/puzzle_production/README.md). Diese sind noch nicht implementiert.
+[CLI](../tools/puzzle_production/README.md). P01 ist über #257 integriert;
+die ausschließliche AT-A-Umsetzung und ihre noch offenen Abschlussgates stehen in
+[AT-A-T01](AT_A_VERIFICATION.md). Reale Bildübernahmen bleiben AT-B.
 Die dauerhafte Quelle `content/reveals/<pz-ID>.json` enthält die kompakte
 ursprüngliche Herkunft sowie die vollständige Bild-/Freigabehistorie; nötige neue
 Attribution wird an die aktive Notice angehängt, ursprüngliche Notices bleiben
