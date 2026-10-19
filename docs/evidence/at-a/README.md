@@ -22,7 +22,9 @@ EXE/PCK-Dateien werden nicht zusätzlich in den Quellbaum kopiert.
 Der vorherige Windowsnachweis zu `742f183` bleibt unverändert im Git-Stand
 `059d9f9` erhalten. Der neue Nachweis enthält auch die korrigierte Behandlung
 unsichtbarer Arbeitslayouts; spätere Änderungen betreffen Dokumente,
-Originalartefakte und die Browseraufnahme, nicht den Produkt-/Windowsprobecode. Die finale CI-Bindung steht im Draft-PR.
+Originalartefakte, die Browseraufnahme und die passende Overridesignatur der
+vom Spielerexport ausgeschlossenen Zeichenstudie. Der reguläre Spieler- und
+Windowsprobecode bleibt gleich. Die finale CI-Bindung steht im Draft-PR.
 
 ### Native Windows-Dreiermatrix
 
@@ -36,8 +38,8 @@ Dateihashes und die unabhängige Pixelprüfung. Die echten Godot-Probes bestande
 Alle drei Fenster-/UI-Kombinationen liefen mit dem realen Windows-NVIDIA-Treiber.
 Die vollständigen lokalen Ausgaben einschließlich weiterer bestehender EA-Fälle
 bleiben unter `artifacts/at-a-final/windows-matrix-5cb2169/` erhalten; hier liegt
-die gezielte AT-Auswahl. Spätere Korrekturen am Browsernachweis verändern diesen
-Produkt-/Probe-/Fixturestand nicht.
+die gezielte AT-Auswahl. Spätere Korrekturen am Browsernachweis und an der
+ausgeschlossenen Zeichenstudie verändern diesen regulären Spieler-/Probe-/Fixturestand nicht.
 
 Der [Windows-Startpreflight](windows-start-preflight.json) ist ein eigener
 Umgebungsnachweis vor Implementierung. Sein Originalarchiv unter
