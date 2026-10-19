@@ -1,5 +1,12 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
+**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; Umsetzung offen:**
+[AT](REVEAL_TRANSPARENCY.md) ergänzt in AT-A die getrennte aktive Bildbindung und
+deren gemeinsamen Prüf-/Transaktionsweg; AT-B übernimmt danach freigegebene neue
+Bildfassungen des gebundenen Bestands. Historische Registry-/Paket-/Integrations-
+bindungen bleiben unverändert. Die Spezifikationsfreigabe startet keine
+Bildbearbeitung, Datenübernahme oder Implementierung.
+
 **KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt eine eigene autoritative,
 ID-gebundene Quelle für die erste Katalogaufnahme und deren minimale
@@ -262,3 +269,111 @@ ihr fehlendes Datum wird nur im Speicher als unbekannt behandelt. Fremdfelder,
 falsche Versionstypen und Datumstypen sind Fehler, keine implizite Migration.
 Der gemeinsame Projektor validiert alle Added-Quellen und schreibt künftig v4;
 Runtimeverbraucher analysieren keine Rätsel und lesen keine Herkunftsbelege.
+
+## AT · Aktive Bildquelle und exakte Kompatibilität
+
+Für den freigegebenen [AT-A-Sollstand](REVEAL_TRANSPARENCY.md) wird die aktuelle
+Bildfassung außerhalb historischer Produktions-/Integrationsbelege geführt.
+Unveränderte Originalbindungen und neue aktive Bildbindung bleiben separat
+prüfbar; der vollständige Eintragsvergleich kompakter Altmanifeste wird nicht
+gelockert. Die neue Quelle bindet tatsächliche Bildfreigabe, ID, Bildrevision und
+Alt-/Neuhashes. Fehlt die neue optionale Bildquelle, gilt die bisherige
+Originalbindung; eine vorhandene ungültige oder widersprüchliche Quelle stoppt
+ohne Fallback.
+Alle Quellen-/Registrierungs-/Update-/Sync-/Adopt-/Recoverywege prüfen denselben
+aktuellen Bildstand und erhalten die übrigen Metadaten bytegleich.
+
+Definition samt Runtime-Revision, Ressourcenpfade, ID/Key, Save-Slot, Kategorie,
+Sichtbarkeit, Reihenfolge, Rating und Hinzugefügt-Daten ändern sich durch ein
+reines Bildupdate nicht. Die Runtime erhält keine Produktionsfreitexte,
+Bildfreigaben oder Herkunftsprotokolle. Die Spoilergrenze bleibt auch beim Laden
+und Ableiten des aktuellen Reveals bestehen. Neu und Begonnen erhalten keine
+Motivvorschau aus dem neuen Bild.
+
+P01 schließt die Formate in [ZA-1](ZA1_ADAPTER.md),
+[Transaktionen](SD_CATALOG.md) und der [Soll-CLI](../tools/puzzle_production/README.md).
+Inhalts-v2, Runtime-v2/v3/v4 und abgegrenzte Altjournale behalten ihre exakten
+Felder/Leseregeln. Keine zusätzliche Runtimeversion oder neue Runtimefelder.
+Reine Bildadoption schreibt auch keine byteidentische Runtime neu.
+
+### AT-P01-D02 · Namensraum und eine gemeinsame Auflösung
+
+Der gesamte optionale Baum `content/reveals/` wird vor jeder Quellenprüfung
+inventarisiert. Er darf fehlen oder leer sein. Sonst sind ausschließlich reguläre,
+nicht ausführbare Dateien `<registrierte-kanonische-pz-ID>.json` erlaubt, maximal
+10000, je 1 MiB. Keine Unterverzeichnisse, weiteren Endungen, Aliasnamen,
+unregistrierten IDs, Großschreibungsvarianten, Punktsegmente, Symlinks, Junctions,
+Reparsepunkte oder Hardlinks mit mehreren Namen. Alle Pfadkomponenten sind vor
+Öffnen und erneut unmittelbar vor Mutation sicher zu prüfen; Pfad-/Dateiwechsel
+während des Lesens blockieren. Windows-Gerätenamen, abschließende Punkte/Leerzeichen,
+Laufwerke, UNC und casefold-Kollisionen sind verboten. Repositoryrelative Pfade
+haben `/` und höchstens 240 Zeichen; Registryressourcen dürfen nicht kollidieren.
+Aktive Transaktionstemporärdateien sind ausschließlich die streng abgeleitete
+Ausnahme aus [Recovery](SD_CATALOG.md), keine generelle Punktdateiausnahme.
+
+Die gemeinsame Auflösung liefert intern exakt
+`id,definition_sha256,runtime_revision,export_manifest_sha256,physical_manifest_sha256,historical_reveal_sha256,effective_reveal_sha256,historical_notice_sha256,effective_notice_sha256,record_hash`.
+`record_hash` ist null ausschließlich ohne Quelle; alle anderen Werte sind
+geprüfte Hashes beziehungsweise die registrierte ID/numerische Runtime-Revision.
+Das ist ein internes Prüfergebnis, kein zusätzliches persistiertes Runtimeformat.
+
+| Quelle/Zustand | Verbindliche Prüfung |
+| --- | --- |
+| Kein AT-Record | Vollständiger bisheriger Export-/Receipt-/Eintragsvergleich; Live-Bild und Live-Notice müssen den historischen Bindungen entsprechen. Kein Transparenzzwang für legitime alte Bytes. |
+| Gültiger Record | Gesamte Historie, Hashketten, Freigaben, Herkunft und Notice prüfen; letzte Bindung gegen aktuelle Definition, Identität und normalisierten Produktionseintrag vergleichen. Tatsächliches Live-Bild/Notice gegen effektive Bindung prüfen. Historischer Bildhash bleibt am Export/Receipt geprüft. |
+| Ungültiger oder fehlender erwarteter Record, fremde Namespaceeinträge | Gesamte Operation vor Mutation/No-op stoppen. Kein Fallback; erwartete Abwesenheit nur bei tatsächlich gültiger historischer Live-Bindung. |
+
+`content_registry.check_checkout` prüft weiterhin den tatsächlichen
+Manifestdateihash gegen die aktuelle Inhaltsregistry, Definitionsbytes sowie alle
+Identitäts-/Kategorie-/Produktionsfelder. `integrated_content.check` behält exakt
+seinen vollständigen Receipt-Eintragsvergleich: Nur der **physische** Pakethash
+wird beim Vergleich wie bisher durch den ursprünglichen Exporthash ersetzt.
+Der historische Noticehash muss dem Receipt und `origin`/passender Bindung
+entsprechen; bei vollem Export wird die darin enthaltene Notice geprüft.
+Nur der zusätzliche Live-Bild-/Noticevergleich verwendet die aktive Auflösung.
+Ein gültiger AT-Record legitimiert keine andere Abweichung im historischen Beleg.
+`verify-export` selbst bleibt ein vollständiger Prüfer des jeweils übergebenen
+unveränderten Exports; es ersetzt dessen Bild nicht heimlich aus dem Checkout.
+
+Die aktuelle AT-Bindung enthält **keinen physisch wechselnden Receipthash** und
+keinen Registry-/HEAD-Gesamthash. Cleanup darf deshalb den belegten Export durch
+den zulässigen kompakten Receipt ersetzen, ohne den Record zu ändern. Ein Plan
+bindet hingegen auch physische Quellen: Cleanup nach Planung macht ihn stale.
+
+### AT-P01 · Folgeoperationen, Snapshot und zulässige Deltas
+
+`T(R)`/`K(R)` bezeichnen die vollständigen Text-/Retainedmengen des
+[Transaktionsvertrags](SD_CATALOG.md). Jeder neue Plan/Snapshot bindet ihre
+Vereinigung plus sämtliche ausdrücklich erwarteten Zielabwesenheiten und das
+vollständige sichere Namespaceinventar; keine bloße Auswahl der geänderten ID.
+Definitionen, Bilddateien, Notice, physische Manifest-/Receiptbytes, Ratings,
+Added und ihre behaltenen Berichte sind damit auch für unabhängige IDs geschützt.
+
+| Operation | Alt-/Zielvertrag und ausdrücklich erlaubtes Delta |
+| --- | --- |
+| Neue Registrierung | Gültiger Altcheckout, genau eine neue Produktions-ID nach ZA-1 mit Bild aus freigegebenem Export, Rating und einmaligem Added; vorhandene AT-Records und Bilder unverändert. Neue ID hat zunächst keinen AT-Record, seine Abwesenheit ist gebunden. |
+| Historisch identische Registrierung | Vollständiger ursprünglicher Eingangsvergleich und gültiger aktiver Checkout; kein Delta und kein Journal. Nach Rasterupdate kein Wiederbeleben alter Produktion. |
+| Reine Bildadoption | Registry/Kategorien/Runtime/Definitionen/Ratings/Added/Produktionsbelege exakt gleich. Nur ausgewählte vorhandene Bilder, zugehörige AT-Records und gegebenenfalls angehängte Notices ändern sich. Vollständiger Zielcheckout vor Mutation geprüft. |
+| Rasterupdate | Genau eine neue Produktion/höhere Definition nach ZA-1; Bild und aktive Notice gleich. Nur dessen Registryeintrag, Definition, eigener SD-Record nach SD-C1, neues Paket und AT-Quellen-Rebind dürfen ändern; Added unverändert. Export enthält genau das aktive Bild, seine historische Exportnotice darf separat bleiben. |
+| Sync | Alle Quellen und AT unverändert; ausschließlich kanonische Runtime-v4 darf eine veraltete Projektion ersetzen. Ausgangsquellen einschließlich gültiger aktiver Bilder müssen vollständig geprüft sein. |
+| SD-Adoption | Bisheriger SD-Delta-/Berichtsvertrag; Definitionen, Bilder, AT und Added bleiben bytegleich. Neuer Plan bindet AT einschließlich erwarteter Abwesenheiten. |
+| Added-Adoption | Nur ausgewählte zulässige Added-Records, eigener Bericht und Runtime; Bilder, AT, Ratings und Definitionen bleiben bytegleich. Neuer Plan bindet AT. |
+| Prüfen/Export | Gemeinsame Auflösung vor Checkoutprüfung/Spielerexport; kein Quellenschreiben. Regulärer neuer Produktionsexport prüft weiter seine eigenen freigegebenen Eingänge, Rasterexport nach AT zusätzlich effektive Bildgleichheit vor Integration. |
+| Produktionscleanup | Bisheriges belegtes Paket-/Authoring-/Indexdelta; aktive Bildquelle, Bild, Notice, Runtime, Rating und Added unverändert, historischer Noticebezug separat erhalten. Kein AT-Rebind allein wegen physischem Receiptwechsel. |
+| Recovery | Exakte Journalgeneration und alle Quellen prüfen; nur gebundene eigene Alt-/Neu-/abgeleitete Zwischenstände, Rückführung unmittelbar in gültigen aktuellen Altcheckout. Kein Analyse-/Exportreplay und kein Pflicht-Sync danach. |
+
+Nach AT werden neue SD-Auswahlberichte als `picross-catalog-difficulty-report-v3`
+geschrieben: exakt die v2-Felder/Unterfelder und Regeln, aber `result.sources`
+um alle kanonischen AT-Pfade (Hash/null) erweitert; `snapshot` bleibt Registry,
+Kategorien, Runtime. Die Quellenhöchstzahl steigt für v3 von 70003 auf 80003.
+V1/v2 bleiben unverändert lesbar und wiederholbar ausschließlich ohne ungebundene
+AT-Quellen. Kein nachträgliches Ergänzen historischer Reports. Neue Added-Pläne
+verwenden `picross-added-plan-v2`: exakt v1-Felder und -Zeilen, `sources` erweitert
+um dieselben AT-Bindungen, maximal 80003 Pfade. Ihr Dauerbericht sind dieselben
+unveränderten Planbytes. Aktive Added-v1-Records und Rating-v1/v2-Hüllen ändern
+ihr Schema nicht. Alte Pläne/Reports bei vorhandenen AT-Daten stoppen vor
+Mutation/No-op; neue vollständige Planung ist erforderlich.
+Auch eine zwischenzeitliche Bildrevision ohne sichtbare Runtimeänderung macht
+einen neuen SD-/Added-/AT-Plan stale. Erfolgreiche Wiederholung darf nur ihre
+exakt gebundenen eigenen Zielbytes im Speicher auf den Ausgangssnapshot
+zurückführen; jede andere Quellenänderung blockiert.

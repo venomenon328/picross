@@ -1,10 +1,18 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 18 · 18.10.2026**
+**Version 0.5.0 · Dokumentrevision 20 · 19.10.2026**
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
 Dokumentrevision, Datei-SHA-256 und Repositorycommit binden den verwendeten Snapshot.
+
+**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; Umsetzung offen:**
+[AT](../REVEAL_TRANSPARENCY.md) ergänzt den transparenten Abschlussbildstandard
+und einen getrennten nachvollziehbaren Bildupdateweg. AT-A liefert dessen
+Technik und synthetische Regressionen; AT-B stellt danach den gebundenen Bestand
+mit tatsächlichen Bildfreigaben um. Version 0.5.0 bleibt erhalten; alte versiegelte
+Snapshots und ihre Freigaben werden nicht umgeschrieben. Diese Dokumentrevision
+startet keine Bildbearbeitung, Raster-/Logikproduktion oder Integration.
 
 **SD / [#235](https://github.com/venomenon328/picross/issues/235), SD-C1 nach R2 integriert:**
 Für Schwierigkeitsarbeit zusätzlich [Rätselschwierigkeit](../PUZZLE_DIFFICULTY.md)
@@ -73,6 +81,25 @@ Verbindliche Richtung: **Input → Abschlussbild → freigegebene Abstraktion �
 ### 2.3 Styleguide
 
 **Vorgeben:** ruhige, warme, handgezeichnete 2D-Illustration; klare Silhouette; klare, charaktervolle Proportionen; sauber geführte Konturen; zusammenhängende, ausreichend kräftige Farbflächen; charakteristische Innenräume; ruhiger Hintergrund. Das Abschlussbild MUSS eine ausgearbeitete farbige Illustration mit sauberer Binnenzeichnung, motivgerechten Oberflächendetails und zurückhaltender Schattierung sein. Detailliert bedeutet weder fotorealistisch noch überladen. Seine Hauptformen müssen später abstrahierbar bleiben; eine vergrößerte Zellgrafik oder bloß kolorierte Silhouette genügt nicht. Details müssen Erkennbarkeit oder Ausdruck unterstützen. Die gemeinsame Identität entsteht durch Form-, Kontur- und Flächenbehandlung, nicht durch eine für alle Motive identische Palette.
+
+**Transparenter Bildgrund nach [AT](../REVEAL_TRANSPARENCY.md):** Der freigegebene
+Sollstandard ersetzt neutrale weiße, cremefarbene oder andersfarbige Bildflächen
+um das Motiv durch echte PNG-Transparenz. Tatsächliche Aussparungen, etwa ein
+Henkelinnenraum, werden ebenso freigestellt. Weiße und helle Motivbestandteile,
+feine Konturen, charakteristische Details und Proportionen bleiben erhalten;
+keine globale Farb-/Helligkeitsschlüsselung. Saubere teiltransparente Randpixel
+dürfen keine hellen Säume auf dem Papiergrund erzeugen. Die Ausgabe bleibt eine
+ausgearbeitete farbige Illustration, auch bei monochromem Rätsel.
+
+Szenische Bilder werden motivbezogen behandelt: prägende Gegenstände, ihre
+Beziehungen und notwendige Umgebung bewahren, die transparente Außenfläche
+beziehungsweise Vignette bewusst gestalten und die konkrete Fassung vorlegen.
+Eine Szene ist keine pauschale Ausnahme für einen opaken Bildkasten; Himmel,
+Boden oder Nebenmotive werden zugleich nicht blind entfernt. Geänderte
+Kompositionen und materielle Motivänderungen benötigen die dazugehörige erneute
+Freigabe. Großansicht und tatsächliche Kataloggröße auf dem Papiergrund gemeinsam
+prüfen. Transparenz des Abschlussbilds ändert weder den Leerwert des Rasters
+noch weiße Vordergrundfarben einer Farbmatrix.
 
 **Vermeiden:** Fotorealismus/3D-Look als Stilgrundlage, Skizzenrauschen, ausgefranste Doppelkonturen, entscheidende Haarlinien, überladene Hintergründe, schwache Ton-in-Ton-Trennung, zufällige Kleinstflächen, anatomische Artefakte, Schrift/Wasserzeichen und Dekoration allein zum Füllen freier Zellen.
 
@@ -294,6 +321,17 @@ Referenz, Ergebnis und markierten Zell-Diff vergleichen. `found` allein genügt 
 | Abschlussbild geändert | Neue Bildrevision und menschliche Abschlussbildfreigabe; Ableitung, Motiv-/Rasterkonsistenz und Endabnahme erneut prüfen. Materielle Änderungen setzen abhängige Motivfreigaben zurück. Kein neuer Logiklauf allein für eine Bildänderung bei nachweislich unverändertem Raster/Logikeingang; nötige Rasteränderungen vollständig neu nachweisen |
 | Nur Schwierigkeit/Kategorie/Metadaten | Keine neue Bild-/Rasterproduktion und keine neue Bild-/Endfreigabe allein wegen Kategorieänderung. Metadaten bei versiegelten Paketen außen ergänzen, neue Exportbindung separat aufzeichnen. Bewertungs-/Metadatenrevision; unveränderte Matrix-/Nachweisbindung erhalten |
 | Erstmals Paarprofil bei unveränderter Matrix | Neue ausdrücklich profilierte Produktionsbindung, eigener Baseline-/Paarproof und Assessment; keine geänderten Rasterwerte oder umetikettierten Altproofs. Bereits versiegelte Originale erhalten; die neue Lieferung als neue Revision mit echter Regelwerksbindung 0.5.0 führen. Bildfreigaben nur bei unverändertem Gegenstand passend wiederverwenden; Endfreigabe muss das tatsächlich gelieferte Handoff/Inventar binden. |
+
+Eine reine Freistellung ist nach [AT](../REVEAL_TRANSPARENCY.md) eine neue
+Bildrevision mit tatsächlicher Abschlussbildfreigabe und erneut geprüfter
+Motiv-/Rasterkonsistenz sowie Endabnahme. Die Spezifikationsfreigabe nimmt die
+noch nicht erzeugten Bildbytes nicht ab. Originale Bildfreigaben, Handoffs,
+Inventare und Integrationsbelege bleiben unverändert; die neue aktive Bildfassung
+wird außen gebunden. Bei unveränderten Definitionen samt Runtime-Revision,
+Raster und Logikeingang entsteht allein daraus weder neue Rasterproduktion noch
+Logik-/Proof-/Schwierigkeitsanalyse. Identität, Ressourcenpfade, Slots, Rating
+und Hinzugefügt-Daten bleiben erhalten. Materielle Änderungen bleiben von den
+zusätzlichen Freigaben der obigen Tabelle erfasst.
 
 Materiell sind Änderungen an Identität, Pose, charakteristischen Proportionen, wichtigen Innenräumen, Gesichtszügen oder ausdrücklich geschützten Merkmalen. Eine einzelne Zelle kann materiell sein. Auch das Abschneiden ausschließlich leerer Außenlinien verändert das Rastermaß und benötigt neue Nachweise. Manuelle Ableitungen offen kennzeichnen, nicht als unveränderten Originalimport ausgeben.
 
@@ -539,6 +577,28 @@ auf `null` setzen; Reveal und Runtime-Inhalte bleiben erreichbar.
 
 Voraussetzungen: tatsächlicher Integrationsauftrag, unverändertes `content_ready`-Paket mit vollständigen Inhaltsgates und gesonderte menschliche Endfreigabe nach [ZA-1](../ZA1_ADAPTER.md). Die Freigabe bindet Originalhandoff, Inventar, Endkandidat, Matrix-/Logikhash und Abschlussbild; ein `pass`-Flag genügt nicht. Die Archivablage selbst erteilt keine Endabnahme. Probespielen bleibt optional.
 
+Dieser reguläre Export-/Registrierungsablauf wird durch
+[AT](../REVEAL_TRANSPARENCY.md) nicht zu einem Bildersatzbefehl. Bestandsbilder
+werden erst nach AT-A über dessen zusätzlichen eng begrenzten Bildupdateweg
+übernommen; `plan-update`/`update` bleiben Rasterersatz. Neue Bildfreigaben und
+aktive Bildhashes werden dabei außerhalb der unveränderten Altbelege geführt,
+ohne Definitions-/Save-Revisionserhöhung. Der gemeinsame Quellen-/Recoveryweg
+muss auch bei späterer Registrierung oder Rasterarbeit eine bestehende aktive
+freigegebene Bildfassung erhalten und prüfen.
+
+AT-A-P01 schließt die noch nicht implementierten exakten
+[Quellen-/Freigabeverträge](../ZA1_ADAPTER.md),
+[Folgeoperationen](../CATEGORIES.md), [Journale/Recovery](../SD_CATALOG.md) und
+[Soll-CLI](../../tools/puzzle_production/README.md).
+Die neue tatsächliche Bildfreigabe bindet ID, Bildrevision, damalige Definition,
+Vorgänger-/Neubildhash, vollständige Zielnotice, Akteur, UTC und Erklärung samt
+Bildannahme, Motiv-/Rasterkonsistenz und Endabnahme. Herkunft/Nutzungsgrundlage
+und alle bisherigen Noticebytes bleiben erhalten; nötige Attribution wird
+angehängt. Kein erfundenes Freigabeprotokoll und kein Ersatz durch die
+Spezifikationsfreigabe. Materielle Änderungen folgen weiter Abschnitt 4.4.
+Der dokumentierte eigene `catalog_reveal plan/adopt`-Weg wird erst nach AT-A
+ausführbar; P01 erzeugt keine Eingangs-/Bild-/Katalogdaten.
+
 Ab SD-C1 zusätzlich den nach §5.2 vollständig geprüften 0.3-Input übernehmen
 beziehungsweise passend neu binden. Die aktuelle
 Paket-/Exportbindung wird dadurch nicht rückwirkend geändert.
@@ -608,6 +668,10 @@ sind Arbeitsmaterial, kein dauerhaft wachsender Spiel- oder CI-Bestand.
    Nutzungshinweise/Lizenzen, ID/Runtime-Revision/Save-Slot, Kategorie und relevante
    Schwierigkeitsmetadaten. Der kleine Integrationsdatensatz bindet diese Daten,
    den ursprünglichen Exporthash und den bestätigten Main-Commit.
+   Nach AT-A bleiben zusätzlich die maßgebliche aktive Bildbindung und ihre
+   Herkunfts-/Freigabebelege erhalten. Cleanup darf weder die aktuelle Bildfassung
+   auf ihren historischen Vorgänger zurücksetzen noch alte Integrationsbelege
+   zur Behauptung einer nachträglichen Bildfreigabe umschreiben.
    Ab SD-C1 bleiben zusätzlich die kompakte aktive Bewertung und kompakte Berichte,
    ihre Eingangsbindungen und der gebundene Methoden-/Referenzstand außerhalb
    versiegelter Produktion erhalten. SD-D09/D10 ermöglichen daraus die manuelle
