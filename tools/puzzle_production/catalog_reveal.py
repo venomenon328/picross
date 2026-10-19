@@ -147,7 +147,8 @@ def validate_plan(value):
         if h is not None: sha(h)
     exact_keys(snap["namespaces"], {"reveals", "difficulty", "added", "packages"})
     for paths in snap["namespaces"].values():
-        require(isinstance(paths, list) and len(paths) <= 100000 and paths == sorted(set(paths)), "Invalid reveal namespace snapshot")
+        require(isinstance(paths, list) and len(paths) <= 100000 and all(isinstance(n,str) for n in paths) and
+                paths == sorted(set(paths)), "Invalid reveal namespace snapshot")
         for name in paths: relative(name)
     require(isinstance(value["entries"], list) and len(value["entries"]) == len(value["ids"]), "Invalid reveal entries")
     for identifier, row in zip(value["ids"], value["entries"]):
@@ -330,8 +331,8 @@ def main(argv=None):
         args = parser.parse_args(argv)
         answer = plan(args.checkout, args.id, args.input, args.output_dir, seconds=args.seconds) if args.command == "plan" else adopt(args.checkout, args.plan, seconds=args.seconds)
         code = 0
-    except (ValueError, OSError, Aborted, KeyboardInterrupt) as exc:
-        aborted = isinstance(exc, (Aborted, KeyboardInterrupt))
+    except (ValueError, OSError, Aborted, KeyboardInterrupt, MemoryError) as exc:
+        aborted = isinstance(exc, (Aborted, KeyboardInterrupt, MemoryError))
         message = str(exc)[:2048] or "Interrupted"
         error = ("interrupted" if isinstance(exc, KeyboardInterrupt) or message.startswith("interrupted:") else "resource_limit") if aborted else (
             "io_error" if isinstance(exc, OSError) else "stale" if "stale" in message.lower() else "conflict" if any(w in message.lower() for w in ("changed", "foreign", "collision")) else "invalid_input")

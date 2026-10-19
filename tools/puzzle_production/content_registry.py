@@ -214,6 +214,10 @@ def recovery_target(root, journal, registry, runtime):
 
 def recover(root):
     """Explicit rollback after process death; preflight every byte before mutation."""
+    with catalog_io.budget(300): return _recover(root)
+
+
+def _recover(root):
     root = catalog_io.external(root)
     from .content_update import path_in
     lock = path_in(root, "content/.registration-pending.json")

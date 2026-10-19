@@ -101,10 +101,10 @@ def capture(root, *, allow_stale=False):
     initial_namespaces = namespaces(root, registry)
     names = text_names(registry)
     texts = {n: read(root, n) for n in names}
-    retained = {n: file_hash(safe(root, n)) for n in retained_names(root, registry)}
+    retained = {n: io.file_hash(root, n) for n in retained_names(root, registry)}
     check_checkout(root, check_projection=not allow_stale)
     require(all(read(root, n) == b for n, b in texts.items()) and
-            all(file_hash(safe(root, n)) == h for n, h in retained.items()), "Checkout changed during snapshot")
+            all(io.file_hash(root, n) == h for n, h in retained.items()), "Checkout changed during snapshot")
     require(namespaces(root, registry) == initial_namespaces, 'Checkout namespace changed during snapshot')
     return {"registry": registry, "texts": texts, "retained": retained, "namespaces": initial_namespaces}
 
@@ -189,7 +189,7 @@ def _stage_check(root, texts, retained, additions=None, replacements=None, legac
             if name in texts:
                 data = texts[name].encode() if texts[name] is not None else None
             elif additions and name in additions:
-                data = additions[name].read_bytes()
+                data = io.read(additions[name].parent, additions[name].name, 64 * 1024 * 1024)
             elif replacements and name in replacements:
                 from .catalog_publication import decode_binary
                 data = decode_binary(replacements[name])
@@ -220,7 +220,7 @@ def prepare(root, snapshot, changes, *, operation, additions=None, report_run=No
          "old": {n: b.decode("utf-8") if b is not None else None for n, b in old.items()},
          "new": {n: b.decode("utf-8") if b is not None else None for n, b in new.items()},
          "retained": {n: h for n, h in snapshot["retained"].items() if n not in (replacements or {})},
-         "additions": {n: file_hash(p) for n, p in additions.items()}, "report_run": report_run, "replacements": replacements or {}}
+         "additions": {n: io.file_hash(p.parent, p.name) for n, p in additions.items()}, "report_run": report_run, "replacements": replacements or {}}
     if operation != "reveal-adoption": j["new"][RUNTIME] = projection(j["new"], after).decode()
     validate_journal(root, j, before_write=True)
     _stage_check(root, j["new"], j["retained"], additions, {n: pair["new"] for n, pair in j["replacements"].items()})
@@ -522,6 +522,10 @@ def execute(root, j, additions=None, *, fail_step=None):
 
 
 def recover(root):
+    with io.budget(300): return _recover(root)
+
+
+def _recover(root):
     from .content_registry import check_checkout
     root = catalog_io.external(root)
     raw = read(root, LOCK)
