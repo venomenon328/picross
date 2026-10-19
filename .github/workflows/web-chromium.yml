@@ -1,4 +1,4 @@
-name: Selected independent browser groups
+name: Selected Chromium groups
 
 on:
   workflow_call:
@@ -73,7 +73,7 @@ jobs:
 
   chromium:
     needs: build
-    uses: ./.github/workflows/web-browser.yml
+    uses: ./.github/workflows/browser-chromium.yml
     with:
       browser: chromium
       build_attempt: ${{ needs.build.outputs.attempt }}

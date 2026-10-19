@@ -4,8 +4,11 @@
 vollständig aus automatisierter CI. Sämtliche 27 Chromium-Szenarien, fünf Gruppen
 und deren Beleg-/Fehlerprüfungen bleiben erhalten. [CI-Policy](CI_POLICY.md)
 regelt Ablösung früherer Firefox-CI-Pflichten, historische Quellenbindung und
-das Sicherheitsgate für alte PRs/Reruns vor CI-Reaktivierung. Diese Entscheidung
-ändert weder Spielverhalten/Browser-Saves noch Windows, Godot oder Deployment.
+das S3-Sicherheitsgate für aktuelle automatische Startpfade vor CI-Reaktivierung.
+Die alten Workflow-IDs bleiben deaktiviert; die neue Chromium-Kette verwendet
+eigene Pfade/IDs. Historische Reruns sind kein Mergegate und werden nicht gestartet.
+Diese Entscheidung ändert weder Spielverhalten/Browser-Saves noch Windows,
+Godot oder Deployment.
 
 **CI / #246 (18.10.2026), CI-A/CI-B integriert; CI-C implementiert, separate Abnahme offen:**
 Die [CI-Policy](CI_POLICY.md) bindet die gestufte Straffung:

@@ -12,8 +12,10 @@ Firefox entfällt vollständig aus automatisierter CI. Die folgende aktuelle
 Matrix umfasst ausschließlich Chromium mit allen bisherigen 27 Szenarien.
 Historische CI-A-/CI-B-Messungen und Abnahmen behalten ihre damaligen Quellen
 und Browser; die geänderte Pflicht erklärt keinen alten Lauf rückwirkend für
-erfolgreich. Der sichere CI-Neustart einschließlich alter PRs und historischer
-Reruns folgt der [CI-Policy](CI_POLICY.md).
+erfolgreich. Der sichere CI-Neustart einschließlich aktueller automatischer
+Ereignisse auf alten offenen PRs folgt der [CI-Policy](CI_POLICY.md). S3 nimmt
+historische Reruns aus dem Mergegate; sie werden nicht gestartet. Die alte
+Workflowkette bleibt administrativ deaktiviert, Chromium erhält neue Pfade/IDs.
 
 ## Vollständige Zuordnung
 
@@ -127,7 +129,7 @@ Start der anderen ausgewählten Gruppen; sie verhindern den Gesamterfolg.
 
 ## Runner, Builds und Ergebnisgate
 
-`web.yml` baut drei echte Exporte in einem eigenen Buildjob. Jeder Build verwendet
+`web-chromium.yml` baut drei echte Exporte in einem eigenen Buildjob. Jeder Build verwendet
 ein eigenes temporäres Projekt und den vorhandenen hashgeprüften Toolchainweg.
 `builds.json` bindet Head, Base, Test-Merge, Event, Run und Auswahlversuch sowie
 Buildversuch und die vollständigen Manifeste samt Manifest-SHA-256. Die beiden
@@ -135,7 +137,7 @@ technischen Exporte müssen unterschiedliche Buildkennungen und Bauzeiten besitz
 Es werden aktuelle Builddateien desselben Runs übertragen, keine Prüfergebnisse
 gecacht. Alle Chromium-Gruppen verwenden dieselbe gebundene Buildhülle.
 
-Der Job `chromium` ruft `web-browser.yml` auf einem eigenen Ubuntu-24.04-Runner
+Der Job `chromium` ruft `browser-chromium.yml` auf einem eigenen Ubuntu-24.04-Runner
 auf. Dessen erster Schritt weist jeden Browserwert außer `chromium` vor jeglicher
 Installation ab. Playwright 1.58.0 installiert ausdrücklich nur Chromium;
 sämtliche Bundlebytes werden nach dem Download erneut geprüft. Auch

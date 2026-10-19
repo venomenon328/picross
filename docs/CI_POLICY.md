@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 19.10.2026 · Version 2.4 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
+Stand: 19.10.2026 · Version 2.5 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
 
 ## Geltung und Ablösung
 
@@ -20,7 +20,7 @@ Die sechs produktiven Atlanten und sämtliche aktiven Runtimeverträge bleiben.
 Es gibt keinen PERF-A-CI-Schalter und kein getarntes historisches Laufzeitbudget.
 
 Der Abschlussstatus für Pull Requests heißt `ci-required` im Workflow
-[CI verification](../.github/workflows/setup.yml). Er verlangt tatsächlichen
+[CI verification](../.github/workflows/ci-chromium.yml). Er verlangt tatsächlichen
 Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 übersprungene erforderliche Jobs sind kein Pass. Nichtzutreffen wird mit
 Änderungsauswahl und Grund ausgewiesen. Es wurde kein Branchschutz verändert.
@@ -39,21 +39,38 @@ Commit-, Browser- und Runbindung; sie werden weder umgeschrieben noch als
 aktuelle Chromium-Nachweise ausgegeben. Spielverhalten, Browser-Saves, Windows,
 Godot und Deployment ändern sich dadurch nicht.
 
-`web-browser.yml` weist jeden Browserwert außer `chromium` im ersten Schritt
+`browser-chromium.yml` weist jeden Browserwert außer `chromium` im ersten Schritt
 vor Installation ab und installiert ausschließlich Chromium. `run_groups.py`,
 `browser.py` und `smoke.py` akzeptieren ebenfalls ausschließlich `chromium`;
 die direkten Runner-/Launchwege prüfen dieselbe Positivliste. Das Ergebnisgate
 verlangt nur `chromium_attempt` und Chromium-Artefakte, bleibt aber vollständig
 fail-closed für Gruppen, Szenarien, Quell-/Run-/Versuchsbindungen und Dateiinhalt.
 
-Vor Push muss die CI auch gegen alte PR-Workflows und historische Reruns
-abgesichert sein. Ein neuer Quellstand ersetzt deren ausführbare Definitionen
-nicht. Die vorübergehende repositoryweite Actions-Sperre und die drei einzeln
-deaktivierten Browser-/CI-Workflows bleiben bis zur verlässlich nachgewiesenen
-Absicherung bestehen; bloße Workflowdateiänderungen erlauben keine Reaktivierung.
-Der aktuelle Betriebszustand und der verbleibende Reaktivierungsblocker stehen
-in #261 und dessen Draft-PR. Keine historischen Runs zur Sperrprobe starten.
-Erst nach dieser Absicherung ausschließlich die neue Chromium-CI ausführen.
+Eigentümerentscheidung S3 in #261 ersetzt die frühere historische Rerun-
+Garantiepflicht: Alte Runs und ihre theoretische Wiederholbarkeit sind kein
+Mergegate. Sie bleiben unverändert und werden nicht erneut gestartet.
+Firefox-Prozesse, neue Firefox-Jobs und die Reaktivierung der alten IDs bleiben
+ausnahmslos verboten. Vor Wiederfreigabe sind die aktuellen automatischen
+Startpfade einschließlich offener PRs zu prüfen; historische Rerun- oder
+Supportgarantien sind dafür nicht erforderlich.
+
+Die neue Kette verwendet eigene Dateipfade und GitHub-Workflow-IDs:
+`ci-chromium.yml` → `web-chromium.yml` → `browser-chromium.yml`.
+Die alten IDs `364105131` (`setup.yml`), `385932454` (`web.yml`) und
+`388435392` (`web-browser.yml`) bleiben administrativ `disabled_manually`.
+Die alten Dateien sind im neuen Tree entfernt; lokale Aufrufe und Pflichtdatei-
+prüfungen verwenden ausschließlich die neue Kette. Die übrigen aktiven
+Workflows dürfen weder Firefox installieren/starten noch alte Webketten aufrufen.
+Neue Änderungen an automatischen Startpfaden müssen diese Grenze erhalten.
+
+Nach Quellenprüfung und Zurücklesen der Sperren darf der autorisierte
+Administrator Actions kontrolliert wieder aktivieren. Der erste Vor-Merge-Lauf
+verwendet ein neues `pull_request`-Ereignis und dessen tatsächlichen Test-Merge;
+kein historischer Rerun und kein Dispatch einer noch nicht auf dem Defaultbranch
+registrierten Datei. Neue registrierte IDs, Ereignis, Head/Basis/Test-Merge und
+Originalbelege werden in #261/PR #262 dokumentiert. Fehlende Registrierung oder
+Ausführung ist ein technischer Blocker, kein Ersatz-Pass. `ci-required` und alle
+automatisch ausgewählten Pflichtchecks bleiben unverändert verbindlich.
 
 ## Freigegebene CI-Straffung
 
@@ -353,7 +370,7 @@ der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erla
 
 ## Aktuelle Produktregression
 
-Der Pflichtjob [Webprüfung](../.github/workflows/web.yml) läuft bei
+Der Pflichtjob [Webprüfung](../.github/workflows/web-chromium.yml) läuft bei
 ausgewähltem Browserbedarf. Reine Inhalte wählen ihn
 weiterhin nicht; Main-Merges veröffentlichen nichts. Ein Buildjob erzeugt den
 regulären Spieler und zwei eigenständige feste technische Exporte. Der eigene
