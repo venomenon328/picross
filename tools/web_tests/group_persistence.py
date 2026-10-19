@@ -3,7 +3,7 @@ import json
 import shutil
 import tempfile
 from browser_actions import open_page, control, wait, draw, state, saved
-from browser_runtime import options
+from browser_runtime import launch
 
 def choose_sort(page, index):
     control(page, name='catalog-sort')
@@ -223,7 +223,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     passed('own quit acknowledges durable sync, exits zero and reload restores saved state')
     context.close()
     with tempfile.TemporaryDirectory(prefix='picross-blocked-',ignore_cleanup_errors=True) as blocked_profile:
-        blocked = getattr(pw, name).launch_persistent_context(blocked_profile,**options(name))
+        blocked = launch(pw, name, blocked_profile)
         try:
             blocked.add_init_script("indexedDB.open = () => { throw new DOMException('blocked by test policy','SecurityError'); };")
             denied = blocked.pages[0]; denied.goto(url)
