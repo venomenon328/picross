@@ -841,11 +841,11 @@ der Austausch eines registrierten Bilds benötigt dennoch den zusätzlichen
 abgesicherten Weg. Ein bloßes Überschreiben des PNGs oder nachträgliches
 Umschreiben seiner alten Freigabe-/Manifestbindung ist keine gültige Übernahme.
 
-AT-A legt vor der ersten betroffenen Codeänderung die exakten Eingänge, Pfade,
-Felder, Versionen, Grenzen und Befehle gemeinsam in
+P01 legt vor der ersten betroffenen Codeänderung die exakten Eingänge, Pfade,
+Felder, Versionen, Grenzen und die nachfolgende Soll-Syntax gemeinsam in
 [ZA-1](../../docs/ZA1_ADAPTER.md), [Projektion](../../docs/CATEGORIES.md) und dem
-[Transaktionsvertrag](../../docs/SD_CATALOG.md) fest. Erst die tatsächliche
-Implementierung ergänzt hier ausführbare Aufrufe. Lesender Plan, aktuelle
+[Transaktionsvertrag](../../docs/SD_CATALOG.md) fest. Erst AT-A macht diese
+Soll-Aufrufe ausführbar. Lesender Plan, aktuelle
 Erwartungshashes, gemeinsame Quellenprüfung, versionierter Binärersatz,
 kontrollierter Rollback und echte Wiederholungs-No-ops gehören zusammen.
 Ein zulässiger Altstand ohne neue Bildquelle und eine vorhandene ungültige
@@ -859,3 +859,130 @@ Produktionspakete. Bestehende Register-/Rasterupdate-/Sync-/Adopt-/Cleanup-/
 Recoverywege müssen die aktive Bildbindung gemeinsam erhalten; alte exakte
 Formate werden nicht gelockert. Synthetische technische Regressionen gehören
 zu AT-A, konkrete Bestandsfreistellung, Bildabnahme und Motivprüfung zu AT-B.
+
+### AT-P01-D04 · Vollständige Soll-CLI (noch nicht ausführbar)
+
+Eigener Moduleinstieg `tools.puzzle_production.catalog_reveal`. Genau zwei
+Unterbefehle, keine automatische Bestandsauswahl, kein Force/Resume/Skip-Schalter:
+
+```sh
+# SOLL-SYNTAX: erst nach AT-A ausführbar, jetzt nicht starten.
+python -m tools.puzzle_production.catalog_reveal plan --checkout <checkout> --id <pz-ID> [--id <weitere-ID>] --input <externe-anfrage.json> --output-dir <neuer-externer-planordner> [--seconds 300]
+python -m tools.puzzle_production.catalog_reveal adopt --checkout <checkout> --plan <planordner/plan.json> [--seconds 300]
+# Bestehender Einstieg; AT-fähige Recovery erst nach AT-A:
+python -m tools.puzzle_production.target_adapter recover-registration --checkout <checkout>
+```
+
+`--checkout`, `--input`, `--output-dir`, `--plan` sind einzelne Pfadargumente,
+`--id` wiederholbar, mindestens einmal, eindeutig und kanonisch. Keine `--all`-
+Option oder implizite Auswahl. Anfrageliste und ID-Auswahl stimmen exakt überein;
+beide werden lexikografisch normalisiert, doppelte IDs bleiben Fehler.
+`--seconds` Ganzzahl 1…300, Default 300, kumulative monotone Deadline vom ersten
+Eingabelesen bis zur Abschlussprüfung; keine Identitätswirkung. Recoverybudget
+und Unterbrechungsregeln stehen im Transaktionsvertrag. Argparsefehler Exit 2.
+
+Alle Eingangsbilder liegen neben/unter der externen Anfragedatei; relative
+Pfade nach ZA-1, keine Links/Hardlinks/Reparsepunkte/Traversal oder Kollisionen.
+Die geprüften absoluten Ein-/Ausgabewurzeln müssen außerhalb des gesamten
+Checkouts liegen und dürfen einander nicht überdecken. Kein automatisches Laden
+von URLs/Git/Chats. `plan` erzeugt nur einen **neuen nicht vorhandenen** externen
+Ordner; ein vorhandener leerer Ordner ist ebenfalls Fehler. Darin exakt
+`plan.json`, `images/<pz-ID>.png|svg` (neu) und `previous/<pz-ID>.png|svg` (alt),
+je mit zur vorhandenen Revealendung passendem Suffix. Alte Live-Bildbytes werden
+für die unabhängige Altprüfung beim Wiederholungs-No-op ebenfalls extern gesichert.
+Bildbytes werden unverändert kopiert; keine Formatkonvertierung oder
+Bildbearbeitung. Keine zusätzlichen/aliasierenden Dateien. Fehler dürfen ein
+als unvollständig bezeichnetes externes Arbeitsverzeichnis hinterlassen; ohne
+vollständig geschriebenen und frisch geprüften Plan ist es kein `adopt`-Input.
+
+Inputformat `picross-reveal-request-v1`, exakt `format,entries`.
+1…10000 Zeilen, je exakt `id,image,approval,provenance,notice_append`.
+`image` ist der sichere relative Eingangsbildpfad; `approval` und `provenance`
+sind die vollständigen geschlossenen Objekte nach ZA-1, keine Dateiverweise.
+`notice_append` ist null für identische Notice oder nichtleerer UTF-8/LF-Text
+ohne BOM/NUL, endet LF; Zielnotice ist exakt alte Notice + LF + dieser Text.
+Das alte Präfix bleibt erhalten, Gesamtlimit 64 KiB. Freigabe bindet den Hash
+dieser vollständigen Zielnotice. Nur Bildrevisionen mit tatsächlich anderen
+Bildbytes sind planbar; bereits erreichter Stand wird durch denselben Plan
+wiederholt, nicht durch künstliche neue Revision einer identischen Datei.
+
+PNG/SVG-Grenzen bleiben: 32 MiB je Datei, 8192 je Achse, höchstens 8000000 Pixel,
+Detailauflösung mindestens zwei Pixel je aktueller Rasterzelle; lokales begrenztes
+SVG-Profil bis 10000 Elemente ohne externe Referenzen/Ausführung/Entities.
+Kein JPEG oder Endungswechsel am bestehenden Pfad. PNG wird vollständig geprüft,
+keine Animation/trunkierten Daten; vorhandene gültige Altformate bleiben erhalten.
+Transparenzqualität ist eine tatsächliche Bildentscheidung nach AT, kein
+automatisches Akzeptieren allein wegen eines Alphakanals.
+Anfrage maximal 8 MiB, Plan-JSON maximal 128 MiB, bis 10000 Zeilen;
+kopierte alte und neue Bilder zusammen maximal 96 MiB. JSON-/String-/Tiefen-/Hashregeln wie
+ZA-1, sämtliche Objektfelder exakt. Engeres Journal-/Zielrecordlimit gilt schon
+bei Planung: ein nicht journalisierbarer Mehrfachplan darf nicht erfolgreich
+ausgegeben werden. Zu große Anfragen ausdrücklich aufteilen, keine Teilübernahme.
+
+### Gespeicherter Plan und Ergebnis
+
+`picross-reveal-plan-v1` hat exakt
+`format,ids,snapshot,entries,writes,plan_hash`. Keine Zeit/Git-HEAD/absoluten
+Maschinenpfade im Identitätskern; `plan_hash=H(Plan ohne plan_hash)` nach ZA-1.
+Datei exakt kanonisches JSON plus LF. `ids` ist die eindeutige sortierte Auswahl.
+
+| Feld | Geschlossener Untervertrag |
+| --- | --- |
+| `snapshot` | Exakt `sources,namespaces`. `sources` ist die vollständige Pfad→Dateihash/null-Map aus T/K des Transaktionsvertrags, einschließlich erwarteter AT-/Rating-/Added-Abwesenheiten und erlaubter fehlender neuer Textziele; maximal 100000 Pfade. `namespaces` exakt `reveals,difficulty,added,packages`, jeweils lexikografisch sortierte Liste aller bei der Quellenprüfung relevanten regulären Dateipfade, ohne doppelte Pfade. Leere erlaubte Verzeichnisse haben keine Identitätswirkung. |
+| `entries[]` | Sortiert nach Auswahl, je exakt `id,old_image_revision,new_image_revision,binding_hash,old_reveal,new_reveal,old_record,new_record,old_notice,new_notice`. Altbildrevision 0 nur bei noch fehlendem Record, sonst letzte; neue genau +1. Bindung ist aktuelle geprüfte Bindung beziehungsweise neue erste Bindung aus Altproduktion. |
+| `old_reveal` | Exakt `file,sha256,bytes`, `file` genau `previous/<id>.<vorhandene-Endung>`, externe unveränderte Kopie der geprüften alten Live-Bildbytes, nicht null. |
+| `new_reveal` | Exakt `file,sha256,bytes`, `file` genau `images/<id>.<vorhandene-Endung>` im Planordner, Hash/Bytezahl der kopierten neuen Bytes. |
+| `old_record` | Null bei bisher fehlender Quelle, sonst exakt `text,sha256`, ursprünglicher vollständiger kanonischer UTF-8-Record samt LF und Dateihash. |
+| `new_record` | Exakt `text,sha256`, vollständige nach Appendregel hergeleitete neue Quelle, inklusive Freigabe/Herkunft/Historie; nicht null. |
+| `old_notice,new_notice` | Exakt `text,sha256` nach ZA-1; unveränderte Notice ist in beiden gleich. |
+| `writes[]` | Nur tatsächlich geänderte Ziele, lexikografisch nach Pfad; je exakt `path,kind,old_sha256,new_sha256,bytes`. `kind` ist `binary-replace`, `text-add` oder `text-replace`; `bytes` neue Dateibytes, positiver Integer. Althash nur bei Textneuanlage null. |
+
+`old/new_record.sha256` sind Dateihashes, `record_hash` innen ist der eigene
+kanonische Objekthash. Alle Inhalte/Hashes/Bytezahlen werden selbst berechnet und
+bei `adopt` neu geprüft. Schreibpfade werden **ausschließlich** aus geprüfter
+Registry/ID hergeleitet und gegen `writes` exakt verglichen. Keine Eingabepfade
+in den Checkout kopieren. Alt-/Neubildgrößen und Notice-/Recordgrößen folgen
+ihren strengeren Einzelgrenzen. Ganze Plandatei und Bildinventar werden beim
+Planabschluss frisch gelesen und unmittelbar vor sowie unter Lock erneut geprüft.
+
+`adopt` konsumiert genau diesen unveränderten gespeicherten Plan; keine neue
+Freigabe, ID-Auswahl oder Bilddateioption. Vollständige Quellen-/Namespacebindung
+erneut prüfen, Alt-/Zielzustand isoliert validieren, Journal nach SD_CATALOG
+erzeugen, gemeinsame Transaktion ausführen, abschließend den Zielcheckout prüfen.
+Geänderter Registry-/Kategorie-/Runtime-/Definitions-/Rating-/Added-/AT-/Bild-/
+Notice-/Produktionsstand einer beliebigen gebundenen ID ist stale. Keine neue
+Analyse, kein Produktionsreplay allein wegen des Bildwechsels.
+
+**Eigener No-op:** Alle `writes` müssen exakt ihre vollständigen eigenen Zielbytes
+besitzen, sämtliche übrigen Quellen und Inventare weiterhin passen. Hinzugekommene
+eigene AT-Recordpfade werden nur im rekonstruierten Namespaceinventar entfernt. Die
+gebundenen Alttexte/Bildhashes werden nur im Speicher eingesetzt und ergeben
+exakt den ursprünglichen Snapshot; der ursprüngliche Altcheckout wird ebenfalls
+isoliert geprüft. Planbilder, Freigaben, Historie, Zielrevisionen und Recordbytes
+müssen vollständig passen. Das Erreichen nur einer Teilmenge ist kein No-op.
+Bei offener Transaktion zuerst Recovery, niemals No-op am Lock vorbei.
+Erfolg vor Journalanlage, ohne Byte-/Revisions-/mtimeänderung oder Rewrite.
+Fehlendes Ziel, andere Freigabe, ähnliche Pixel oder inzwischen dritte Bildrevision
+blockieren als stale/conflict. Ein alter Plan nach Cleanup ist ebenfalls stale.
+
+Stdout ist genau ein JSON-Objekt `picross-reveal-result-v1`, exakt
+`format,status,plan_hash,ids,changes,error,recovery_required`.
+`status`: `planned,adopted,no-op,invalid_input,aborted`; `plan_hash` Hash oder
+null falls noch kein gültiger Plan ermittelt; `ids` geprüfte sortierte Auswahl
+oder leere Liste vor gültiger Auswahl; `changes` bei `planned/adopted` exakt
+`writes`, sonst `[]`. `error` null bei Erfolg, sonst exakt `code,message`:
+Code `invalid_input,stale,conflict,io_error,resource_limit,interrupted`, Nachricht
+1…2048 Zeichen, keine Secrets. `recovery_required` Boolean, true ausschließlich
+bei erhaltenem offenen Lock oder konkret blockierendem Journalstagingrest.
+Kein zusätzliches dauerhaftes Ergebnisformat: stdout darf extern protokolliert
+werden; die dauerhafte Freigabe-/Revisionshistorie steht im aktiven Record.
+
+| Exit | Ergebnis und Grenze |
+| --- | --- |
+| 0 | Nur `planned`, `adopted`, `no-op`; vollständige Prüfung erfolgreich. `planned` verändert keine Repositoryquelle. |
+| 2 | Ungültiger/blockierter Eingang, stale Plan, Fremdkonflikt oder gewöhnlicher Datei-/Schreibfehler. Nach Mutation nur mit erfolgreichem Rollback oder ausdrücklich erhaltenem Journal samt `recovery_required=true`. |
+| 4 | Zeit-/Speicher-/Signalabbruch; keine Erfolgsaussage. Journal-/Rollbackzustand nach Transaktionsvertrag. |
+
+Unbekannte Optionen sind Fehler; kein Exit 0 für Teiladoption. Harter Kill kann
+kein stdout garantieren. Der bestehende Recoveryeinstieg behält seine Ausgabe
+`rolled-back/registered=false` bei Erfolg und seine 0/2/4-Konvention.

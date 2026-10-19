@@ -426,11 +426,10 @@ Logik/Matrix, Modus, Slots und Added-Records bleiben unverändert.
 Ein vorhandenes Reveal ist im bisherigen Journal eine unveränderte binäre
 `retained`-Quelle; `old/new` enthalten UTF-8-Text, `additions` nur Neuanlagen.
 AT-A darf einen PNG-Ersatz daher nicht in diese alten Bedeutungen einschmuggeln.
-Vor der ersten betroffenen Codeänderung sind die neuen exakten Feld-/Format-
-und Ressourcenverträge samt Binärbindung, sicherer Altbytesicherung, Staging,
-Publikation und Rollback gemeinsam mit [ZA-1](ZA1_ADAPTER.md) und
-[Projektion](CATEGORIES.md) festzulegen. Eine zweite unabhängige Schreibstrecke
-oder ein ungeschütztes Löschen und anschließendes Neuanlegen genügt nicht.
+P01 schließt nachfolgend die exakten Feld-/Format-/Ressourcenverträge vor der
+Codeänderung. Datenbindung und Auflösung stehen in [ZA-1](ZA1_ADAPTER.md) und
+[Projektion](CATEGORIES.md). Alle neuen Formate bleiben **noch nicht implementierter
+Sollstand**. Keine zweite unabhängige Schreibstrecke oder Delete+Add am Bildpfad.
 
 Plan und Übernahme prüfen Alt-/Zielzustand samt tatsächlichen Bildbytes,
 Bildfreigaben, Quellen und unveränderten historischen Belegen vor Mutation.
@@ -456,3 +455,168 @@ Altfällen zu prüfen; keine Umschreibung alter Journale oder Freigaben. Der
 Versionierungsbedarf einer Runtimeprojektion folgt allein ihrer tatsächlichen
 Schemaänderung, nicht der neuen Bildrevision. Die allgemeinen Regressionen
 verwenden ausschließlich feste synthetische Bilder, Rätsel und Speicherstände.
+
+### AT-P01-D05 · Generationen und vollständige Mengen
+
+Gemeinsamer exklusiver Lock ist weiterhin `content/.registration-pending.json`.
+Alle gemeinsamen Einstiegspunkte prüfen außerdem Journalstagingreste unter
+`content/.registration-journal-*.tmp`: keine aktive Operation am Rest vorbei.
+Der gemeinsame Recoveryeinstieg behandelt ohne Lock ausschließlich einen
+vollständigen, strikt validierten Stagingrest mit unverändert gültigem Altcheckout
+als bereinigbar; Teilreste/mehrdeutige oder fremde Stände bewahrt er mit Exit 2.
+Alle neuen Journale haben exakt
+`format,operation,old,new,retained,additions,report_run,replacements`.
+Die sieben bisherigen Felder behalten ihre Bedeutung; `old/new` sind Maps aus
+repositoryrelativen Textpfaden auf vollständige UTF-8-Strings/null. Null bedeutet
+ausschließlich abwesende Datei, kein Löschauftrag für fremde Bytes.
+`retained/additions` sind Maps aus hergeleiteten Pfaden auf Dateihashes.
+
+| Format | Einzig erlaubte Operation(en) | `report_run` | Binärersatz |
+| --- | --- | --- | --- |
+| `picross-registration-journal-v5` | `registration` | null | `{}` |
+| `picross-content-update-journal-v4` | `update` | null | `{}` |
+| `picross-catalog-metadata-journal-v2` | `adoption,sync,added-adoption` | SD-/Added-Run-ID bei Adoption; sonst null | `{}` |
+| `picross-reveal-adoption-journal-v1` | `reveal-adoption` | null | Genau die geänderten ausgewählten vorhandenen Revealpfade |
+
+Für Registry R sei `T(R)` exakt Registry, Kategorien, Runtime und für **jede**
+registrierte ID deren Definition, Live-Notice, Ratingpfad, Addedpfad und
+`content/reveals/<id>.json`. Fehlende zulässige Sidecars werden null gebunden.
+`old/new` besitzen exakt dieselbe Schlüsselmenge `T(Ralt) ∪ T(Rneu) ∪ Q`.
+Q ist ausschließlich das Paar neuer SD-Berichtdateien bei `adoption`, der neue
+Added-Bericht bei `added-adoption`, sonst leer. Alle übrigen Definitionen,
+Sidecars und Notices sind unveränderte Textquellen; keine Duplikate in `retained`.
+Kategorien dürfen in diesen Operationen nicht geändert werden; Sync bindet ihren
+aktuellen Stand. Sämtliche Mengen werden aus den validierten Registryeinträgen
+und Berichtsverträgen hergeleitet, niemals frei aus dem Journal übernommen.
+
+`K(Ralt)` ist exakt die Menge aller Live-Reveals, aller regulären Dateien der
+aktuell gebundenen Produktionspakete (bei kompaktem Receipt nur `manifest.json`),
+aller vorhandenen zulässigen SD-Dauerberichte und referenzierten Added-Berichte.
+Paketdateien folgen dem sicheren vollständigen Paketbaum und seinem validierten
+Inventar. Damit sind auch bei Exportprüfung gelesene Originale gebunden;
+ungebundene/fremde Paketdateien blockieren. Neue Berichtziele stehen in Q mit
+`old=null`, vorhandene Berichte bleiben behaltene Quellen.
+`retained = K(Ralt) − keys(old) − keys(replacements)` exakt. Paketnotices sind
+historische Quellen, Live-Notices Textquellen.
+`additions` ist leer außer Registrierung/Update: exakt das vollständig geprüfte
+neue Paketinventar unter dem hergeleiteten neuen Paketpfad, bei Registrierung
+zusätzlich das neue Live-Bild. Keine Überschneidung mit Text/Retained/Replacement,
+keine belegten/aliasierenden Neuanlageziele. Neue AT-Dateien sind Textziele.
+Die Namespaceprüfung umfasst Alt-/Neuregistry und ausschließlich ihre im Journal
+gebundenen Zwischenstände. Geprüfte leere kanonische Elternordner sind zulässig.
+
+`replacements` ordnet dem hergeleiteten **vorhandenen** Live-Revealpfad exakt
+`old,new` zu. Jede Seite hat exakt `sha256,bytes,base64`: `bytes` Ganzzahl
+1…33554432, SHA-256 der vollständigen dekodierten Bytes, `base64` kanonisches
+RFC-4648-Standardalphabet mit notwendigem Padding, ohne Whitespace/Zeilenumbruch.
+Striktes Dekodieren und exaktes Rekodieren müssen denselben String ergeben.
+Vor Dekodierung Länge `4*ceil(bytes/3)` und Maximum 44739244 prüfen.
+Alt-/Neuhash sind verschieden und stimmen mit Vorgänger-/Zielrecord überein.
+Format/Maße werden nach Dekodierung mit dem bestehenden Revealprüfer validiert.
+Kein UTF-8-PNG und kein Delete+Add am belegten Bildpfad.
+
+Jede Generation prüft die vollständigen [Operationsdeltas](CATEGORIES.md):
+Registrierung genau eine ID; Update genau eine Produktion samt optionalem
+AT-Rebind; SD-/Added-Adoption nur eigene Records/Berichte/Runtime; Sync nur Runtime;
+Bildadoption nur ausgewählte Bilder/AT/Notice. Bei Bildadoption sind
+`additions={}`, Registry/Kategorien/Runtime/Definition/Rating/Added bytegleich.
+`replacements` enthält exakt das aus den geänderten Records hergeleitete Bilddelta.
+Unveränderte Texte werden gebunden, nie neu geschrieben. Neue Records müssen
+exakt der Append-/Rebindregel aus dem alten gültigen Record beziehungsweise der
+gültigen historischen Quelle entsprechen. Kein Löschen vorhandener AT-Records
+und keine Legitimation beliebiger Hüllen durch bloßes Neuberechnen ihrer Hashes.
+
+### Limits und gemeinsamer Dispatchreader
+
+Alte und neue nichtbinäre Journale bleiben höchstens **24 MiB** inklusive LF.
+Nur `picross-reveal-adoption-journal-v1` darf **128 MiB** inklusive LF haben.
+Beide Binärseiten zusammen höchstens 96 MiB dekodiert, jede höchstens 32 MiB;
+zusätzlich gilt das strengere tatsächliche 128-MiB-Limit nach Base64 und JSON.
+Ein Paar mit je 32 MiB passt grundsätzlich; bei zu großer zusammenhängender
+Mehrfachadoption vollständiger Abbruch vor Lock/Mutation, ausdrücklich neu teilen.
+Kein automatisches Vorziehen einzelner IDs, Kürzen der Historie oder Anheben
+historischer Limits.
+
+Dispatch prüft zuerst Dateityp und Größe (maximal 128 MiB), dann höchstens 4096
+Präfixbytes. Neue Journale haben ein kanonisches **Wirelayout mit `format` zuerst**,
+danach alle übrigen Schlüssel lexikografisch, kompakt, UTF-8 plus LF; ihr
+Dateihash bindet genau dieses Layout. Die normale Objektkanonisierung für
+Record-/Planhashes bleibt unverändert. Nur die exakte Bildkennung im Präfix
+erlaubt weiteres Lesen oberhalb 24 MiB. Alte Journale bis 24 MiB werden unter
+ihrem originalen Vertrag ohne neuen Präfixzwang gelesen. Gesamtes JSON danach
+begrenzt und mit Duplicate-/Typ-/Tiefenprüfung laden; gefälschter Präfix erlaubt
+keine andere Kennung oder Fremdschlüssel. Base64-Längen und Summen vor deren
+Dekodierung prüfen, Bilder einzeln begrenzt dekodieren/hashen; Zwischenpuffer
+maximal 1 MiB. Kein gleichzeitiges unbegrenztes Dekodieren sämtlicher Bilder.
+Neue AT-Texte maximal 1 MiB, SD-Berichte weiterhin 16 MiB; übrige Quelllimits
+unverändert. JSON-Tiefe höchstens 32; keine Fremdpfade aus dem Journal öffnen.
+
+### Alt-/Neu-Kompatibilitätsmatrix
+
+Jede Zeile behält ihre ursprünglichen vollständigen Schlüssel-/Pfad-/Delta-/
+Retainedregeln und Limits. `replacements` ist in Altformaten ein Fehler.
+Vor Mutation zusätzlich alle heutigen sicheren Namespaces prüfen. „Keine AT“
+heißt: keine ID-Datei und keine fremde Datei im ganzen neuen Namensraum;
+leerer kanonischer Ordner erlaubt.
+
+| Journal | Exakter historischer Umfang / Runtime-Snapshots | Zusätzliche Recoverybedingung |
+| --- | --- | --- |
+| Registrierung v1 | Weiter gesperrt | Journal/Dateien erhalten; alter Werkzeug-/Checkoutvertrag erforderlich. |
+| Registrierung v2 | Exakt `format,targets,files,old,new,categories`; Indizes in `old/new`, vier hergeleitete Ziele, unveränderte Kategoriebytes; einheitlich Runtime-v2 oder v3 | Keine ungebundenen Rating-, Added- oder AT-Quellen. |
+| Update v1 | Exakt `format,package,files,categories,old,new`; `old/new` genau Registry, Runtime, Definition, Notice der einen Update-ID; neue Paketdateien und behaltenes Bild/Altpaket; einheitlich v2 oder v3 | Keine ungebundenen Rating-, Added- oder AT-Quellen; feste Identität, höhere Runtime-Revision. |
+| Registrierung v3 / Update v2 / Difficulty-Adoption v1 | Exakt sieben Felder, damaliges T ohne Added/AT und damaliges Retained, v3 | Keine ungebundenen Added-/AT-Quellen. |
+| Registrierung v4 / Update v3 / Catalog-Metadata v1 | Exakt sieben Felder, T mit Added ohne AT, damaliges Retained, v4; v2/v3-Start nur ohne Added gemäß KU-B | Keine ungebundenen AT-Quellen. |
+| Registrierung v5 / Update v4 / Catalog-Metadata v2 | Exakt acht Felder, obiges T/K, `replacements={}`, neues Ziel v4 | Alle AT-/SD-/Added-Quellen gebunden; kompatibler v2/v3-Start weiterhin nur nach bestehender Added-Regel. |
+| Reveal-Adoption v1 | Exakt acht Felder, T/K plus Binärersatz; Alt-/Zielruntime bytegleich und bereits gültig v2/v3/v4 | Gesamter Alt-/Zielcheckout gültig; kein Projektionsupgrade durch Bildwechsel. |
+
+Alt-Recovery rekonstruiert aus damaligen Quellen direkt eine gültige aktuelle
+v4-Altprojektion mit unbekannten fehlenden Added-Werten, ohne erfundene Zeit.
+Nur gebundene Alt-/Neuruntime und exakt diese eigene abgeleitete v4 sind zulässige
+Zwischenstände. Bild-Recovery erhält die bereits gültige Runtime bytegleich.
+Sync-Recovery darf die aus vollständig validierten Quellen hergeleitete aktuelle
+v4 schreiben. Fremde Quellen sperren jede Generation vor Mutation und bleiben
+mit Journal erhalten. Historische Reports werden niemals nachträglich erweitert.
+
+### AT-P01-D06 · Phasen und temporäre Eigentümerschaft
+
+`J` ist der Dateihash des vollständigen Journals. Tempziele sind deterministisch
+hergeleitete Schwesterdateien `.registration-<J>-<n>.tmp`, n als dezimale
+nullbasierte Nummer im lexikografisch geordneten gesamten Schreibzielinventar.
+Keine frei wählbaren Temp-/Sicherungspfade. Exklusive Erstellung ohne Linkfolge,
+auf demselben Dateisystem wie Ziel, sichere Eltern vor jedem Öffnen prüfen.
+Vor Beginn müssen alle fehlen. Mit gültigem Journal sind nur vollständige
+erwartete Schreibbytes oder deren exakter Präfix als eigener unterbrochener
+Tempzustand erlaubt; andere Bytes/Links/Kollisionen blockieren mit Journal.
+Tempdateien ohne prüfbares Journal werden nie allein aufgrund ihres Namens gelöscht.
+
+| Phase | Aktion und Prüfung | Unterbrechung/Fehler und Recovery |
+| --- | --- | --- |
+| P0 | Plan/Eingänge, gesamte Quellenmenge/Namespaces und isolierte vollständige Alt-/Zielcheckouts prüfen. Exaktes No-op hier beenden; Journalgröße vorab berechnen. | Repositoryquellen unverändert. Ungültig/stale/Limit: kein Lock. |
+| P1 | Vollständiges Journal exklusiv als `content/.registration-journal-<J>.tmp` schreiben, flush/fsync, zurücklesen; atomar **ohne Ersetzen** unter Locknamen publizieren (Hardlink/no-replace), Verzeichniseintrag sichern, Staginglink entfernen. Nie einen halben Lock direkt schreiben. | Vor Lock keine aktive Mutation. Verwaistes vollständiges Stagingjournal nur nach Prüfung seines gesamten Altcheckouts und fehlendem Lock bereinigen; Teiljournal/anderer Lock/fremde Bytes bewahren und konkret blockieren. |
+| P2 | Dauerhafter Lock bytegleich; alle Ausgangsquellen und Abwesenheiten unter Lock erneut vergleichen. | Fremder Zustand: Lock behalten, keine aktive Mutation. Eigener gewöhnlicher Fehler darf kontrolliert zurückrollen. |
+| P3 | Register/Update: vollständige Paketneuanlagen sicher publizieren, notwendige ZA-1-Staging-/Paketprüfung erhalten. Bildadoption: in Pfadreihenfolge neue Binärbytes in sichere Tempdatei, flush/fsync, Rücklesen/Hash, Guard, atomar auf vorhandenes eigenes Altbild ersetzen. | Altbytes bereits vollständig im Journal. Kein gelöschter Bildpfad. Eigene Bild-/Paket-/Tempzwischenstände recoverbar. |
+| P4 | Nur geänderte Textziele in Pfadreihenfolge, Runtime ausgenommen; je Temp, flush/fsync, Rücklesen, Guard, atomar ersetzen oder neue Datei ohne Ersetzen publizieren. | Bild/Record dürfen unter Lock vorübergehend eigene unterschiedliche Phasen haben; reguläre Leser stoppen am Lock. |
+| P5 | Runtime nur bei Änderung zuletzt schreiben. Vollständigen Zielcheckout prüfen; alle Ziele exakt neu, Retained gleich, Additions vollständig. Guards vor jedem Schreiben, vor/nach Endprüfung und vor Lockentfernung. | Auch bei schon gültigem Ziel bleibt vor Lockentfernung Recovery ein Rollback, keine automatische Fortsetzung. |
+| P6 | Geprüfte eigene Temps entfernen, Verzeichniseinträge sichern; Lock erst nach vollständigem Erfolg entfernen und Entfernung sichern. | Danach abgeschlossene Adoption; Rücknahme braucht neuen Auftrag. Wiederholung desselben Plans ohne Journal. |
+| R0 | Journalgröße/Schema/Delta/Namespaces und sämtliche Text-/Binär-/Addition-/Retained-/Tempbytes vor Mutation prüfen; vollständigen gültigen alten Zielcheckout isoliert konstruieren. | Nur eigene Alt-/Neu-/erlaubte Projektionen zulässig; vorhandene Bilder dürfen nicht fehlen. Fremd-/Ressourcenfehler: keine Recoverymutation, Journal bleibt. |
+| R1 | Guards vor jedem Schritt; Binäraltbytes atomar zurück, geänderte Alttexte zurück, eigene neue Textziele nur bei altem null entfernen; nur hashgeprüfte eigene Paketdateien einzeln entfernen. Runtime als letzter Datenpfad nur bei nötiger Änderung zurück. | Erneuter Abbruch bleibt mit demselben Journal wiederholbar. Keine rekursive Löschung fremder Bäume. |
+| R2 | Vollständigen alten Checkout, exakte Altziele und fehlende eigene Additions prüfen; eigene Temps entfernen, zuletzt Lock entfernen. | Unmittelbar gültiger Checkout, kein Pflicht-Sync. Leere kanonische Ordner dürfen bleiben. |
+
+Guards prüfen auch Lockbytes und die erwartete aktuelle Phasenbelegung jedes
+Ziels; nicht bloß beliebige Alt-/Neu-Kombinationen. Recovery darf alle vollständig
+geprüften eigenen Kombinationen zurückführen. Binäraltbytes haben genau eine
+Sicherungsautorität im Journal. Rückführung verwendet dieselben sicheren Temp-
+und atomaren Schreibregeln; ihr eigener zulässiger Präfix bezieht sich auf die
+Altbytes. Gleiche Bytes werden auch bei Recovery nicht neu geschrieben.
+
+Datei- und Verzeichnisveröffentlichung werden mit den passenden dauerhaften
+OS-Aufrufen abgesichert; fehlt benötigte Atomizität/Dauerhaftigkeit, vor aktiver
+Mutation blockieren. Kein Versprechen gegen defekte Datenträger. Manuelle
+Paralleländerungen sind unzulässig; erkannte Rennen bewahren fremde Bytes.
+Gewöhnlicher Fehler nach P2 versucht denselben Recoveryweg; nach erfolgreicher
+Rückführung Exit 2 und gültiger Altcheckout. Ressourcen-/Signalende Exit 4;
+kontrollierter Rollback nur nach vollständiger Vorprüfung mit eigenem 300-s-Budget.
+Harter Kill garantiert kein JSON-Ergebnis. Ist Rückführung nicht sicher möglich,
+bleiben Journal und Dateien erhalten, `recovery_required=true`. Recovery selbst
+hat 300 s; erneutes Ressourcenende/Fremdbytes halten den Lock. Kein Erfolg für
+Teilpublikation oder gescheiterte Rückführung.

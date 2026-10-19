@@ -268,12 +268,30 @@ vollständiger Spieldurchlauf pro Rätsel. Bei unveränderter Definition gibt es
 keine neue Logik-/Proof-/Schwierigkeitsproduktion allein wegen der Bildrevision.
 
 Ein ausschließlich aus zugelassenen Inhaltsdateien bestehender Bild-PR nutzt
-weiterhin die enge Pfad-/Dateimodusprüfung und `ci-required`. Falls AT-A neue
-Revisions-/Freigabenachweispfade benötigt, wird deren genaue enge Zuordnung mit
-der technischen Änderung festgelegt und synthetisch geprüft; diese Spezifikation
-erfindet keine bereits ausführbare Positivliste. Dokument-/Codebeimischungen
+weiterhin die enge Pfad-/Dateimodusprüfung und `ci-required`. P01 legt die spätere
+Erweiterung exakt auf `content/reveals/pz-[a-z0-9][a-z0-9-]{0,59}.json` fest,
+ausschließlich kanonische registrierte IDs und regulärer nicht ausführbarer
+Dateimodus 100644. Kein weiterer AT-Unterpfad, Freitext-, Bildfreigabe-, Journal-
+oder Tempnamensraum. Alias-/Fremdpfad-/Modus-/Rename-/Löschungsgegenproben gehören
+zu AT-A; die Auswahl prüft beide Diffseiten. Registrierung und Datenvalidierung
+prüfen zusätzlich die tatsächliche ID-/Quellenbindung; der reine CI-Inhaltspfad
+behauptet keine Bild-/Freigabevalidierung. Neue SD-v3-/Added-v2-Berichte bleiben
+an den bestehenden engen Berichtpfaden. **P01 aktiviert diese Positivliste noch
+nicht im Code.** Dokument-/Codebeimischungen
 folgen der bestehenden Vereinigung aller betroffenen Prüfbereiche. Die Anzahl
 allgemeiner Regressionen wächst nicht mit den umgestellten Katalogbildern.
+
+AT-P01 verwendet allein Dokumentvalidator, vollständigen Diffcheck und den
+tatsächlich automatisch ausgewählten Docs-/Werkzeugpfad einschließlich
+`ci-required` auf aktuellem Head/Test-Merge. Keine Produkt-/Windows-/Browser-/
+Solver-/Bestandsläufe allein wegen dieses Dokumentabschlusses und keine manuelle
+Unterdrückung automatisch erforderlicher Jobs. Die integrierte Chromium-Kette
+und der Leergruppenfix aus #258/#259 bleiben vollständig wirksam; historische
+fehlgeschlagene Runs werden nicht rückwirkend zu Erfolgen. Die spätere
+[AT-Prüfzuordnung](REVEAL_TRANSPARENCY.md) bindet synthetische Quellen-/Recovery-
+fälle und tatsächliche native Windows-/Chromium-Darstellungs-/Savewechsel.
+Kein neues P01-Produktgate und kein AT-A-M01; T01 und separates R01 bleiben
+vor dem späteren Implementierungsmerge, konkrete Bestandsbildabnahmen in AT-B.
 
 ## SD · Manuelle Schwierigkeitsbewertung und Datenintegration
 

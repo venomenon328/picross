@@ -27,6 +27,19 @@ werden an die vorgelegten Dateien gebunden. Der aktuelle Auftrag umfasst nur
 Issue-/Dokumentarbeit, keine Implementierung, Bildbearbeitung, Übernahme oder
 Merge. Die gezielte AT-Ergänzung verändert keine historischen KE-/KU-Nachweise.
 
+AT-A-P01 gemäß Umsetzungsvorbereitung V2 schließt auf
+`chore/256-abschlussbildtransparenz` / Draft-PR #257 ausschließlich die technischen
+Sollverträge und synchronisiert die Spezifikation mit
+`main@e454dd580fd1dd2690d952d8e8a9a2f8dc5e604c`.
+[ZA-1](ZA1_ADAPTER.md), [Auflösung](CATEGORIES.md), [Transaktionen](SD_CATALOG.md)
+und [Soll-CLI](../tools/puzzle_production/README.md) enthalten exakte Quellen-,
+Plan-, Binärjournal- und Recoveryregeln; keine offene technische Kernfrage aus
+AT §4.3 und keine schon ausführbare neue CLI. Inhalts-v2/Runtime-v4/Save-Schema 1
+bleiben erhalten. P01 prüft nur den kurzen Docs-/Werkzeugpfad samt `ci-required`;
+Windows-/Chromium-Darstellungs-/Savewechsel bleiben spätere AT-A-T01-Nachweise.
+P01-Selbstreview und fortgeschriebener Dokumentreview sind keine AT-A-R01-Abnahme.
+AT-A/AT-B bleiben unbegonnen, #257 Draft und seine Integration separat freizugeben.
+
 **Chromium-only CI / #261 (19.10.2026):** Der Eigentümer entfernt Firefox
 vollständig aus automatisierter CI. Sämtliche 27 Chromium-Szenarien, fünf Gruppen
 und deren Beleg-/Fehlerprüfungen bleiben erhalten. [CI-Policy](CI_POLICY.md)

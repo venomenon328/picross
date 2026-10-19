@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 19 · 19.10.2026**
+**Version 0.5.0 · Dokumentrevision 20 · 19.10.2026**
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
@@ -585,6 +585,19 @@ aktive Bildhashes werden dabei außerhalb der unveränderten Altbelege geführt,
 ohne Definitions-/Save-Revisionserhöhung. Der gemeinsame Quellen-/Recoveryweg
 muss auch bei späterer Registrierung oder Rasterarbeit eine bestehende aktive
 freigegebene Bildfassung erhalten und prüfen.
+
+AT-A-P01 schließt die noch nicht implementierten exakten
+[Quellen-/Freigabeverträge](../ZA1_ADAPTER.md),
+[Folgeoperationen](../CATEGORIES.md), [Journale/Recovery](../SD_CATALOG.md) und
+[Soll-CLI](../../tools/puzzle_production/README.md).
+Die neue tatsächliche Bildfreigabe bindet ID, Bildrevision, damalige Definition,
+Vorgänger-/Neubildhash, vollständige Zielnotice, Akteur, UTC und Erklärung samt
+Bildannahme, Motiv-/Rasterkonsistenz und Endabnahme. Herkunft/Nutzungsgrundlage
+und alle bisherigen Noticebytes bleiben erhalten; nötige Attribution wird
+angehängt. Kein erfundenes Freigabeprotokoll und kein Ersatz durch die
+Spezifikationsfreigabe. Materielle Änderungen folgen weiter Abschnitt 4.4.
+Der dokumentierte eigene `catalog_reveal plan/adopt`-Weg wird erst nach AT-A
+ausführbar; P01 erzeugt keine Eingangs-/Bild-/Katalogdaten.
 
 Ab SD-C1 zusätzlich den nach §5.2 vollständig geprüften 0.3-Input übernehmen
 beziehungsweise passend neu binden. Die aktuelle
