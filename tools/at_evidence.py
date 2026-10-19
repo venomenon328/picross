@@ -88,6 +88,8 @@ def browser(directory, report, builds):
             require(list(actual)==sample['actual'],'browser pixels differ from original')
             expected=(255,255,255,255) if kind=='white' else (*color,80 if kind=='soft' else 255)
             require(source[3]==0 if kind in ('outside','hole') else tuple(source)==expected,'browser imported source')
+            if blend and kind=='ink':
+                require(all(color[i]+10<actual[i]<248 for i in range(3)), 'original browser frame is not an intermediate blend')
             if not blend:
                 if kind=='white': require(min(actual)>=246,'lost opaque white detail')
                 elif kind=='ink': require(max(abs(a-b) for a,b in zip(actual,color))<=10,'wrong export image')

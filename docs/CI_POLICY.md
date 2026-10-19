@@ -277,8 +277,8 @@ oder Tempnamensraum. Alias-/Fremdpfad-/Modus-/Rename-/Löschungsgegenproben geh�
 zu AT-A; die Auswahl prüft beide Diffseiten. Registrierung und Datenvalidierung
 prüfen zusätzlich die tatsächliche ID-/Quellenbindung; der reine CI-Inhaltspfad
 behauptet keine Bild-/Freigabevalidierung. Neue SD-v3-/Added-v2-Berichte bleiben
-an den bestehenden engen Berichtpfaden. **P01 aktiviert diese Positivliste noch
-nicht im Code.** Dokument-/Codebeimischungen
+an den bestehenden engen Berichtpfaden. P01 spezifizierte diese Positivliste;
+AT-A implementiert sie mit positiven und negativen Scopeproben. Dokument-/Codebeimischungen
 folgen der bestehenden Vereinigung aller betroffenen Prüfbereiche. Die Anzahl
 allgemeiner Regressionen wächst nicht mit den umgestellten Katalogbildern.
 

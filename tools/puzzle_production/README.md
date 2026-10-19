@@ -4,10 +4,10 @@
 [AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
 für transparente Abschlussbilder und einen eigenen eng begrenzten Bildupdateweg.
 AT-B stellt danach den gebundenen Bestand mit tatsächlichen Bildfreigaben um.
-Die folgenden bestehenden Befehle erhalten durch diese Spezifikation keine
-zusätzliche Bildupdatefähigkeit; insbesondere bleibt `plan-update`/`update` auf
-den gesonderten Rasterersatz begrenzt. Keine Bildbearbeitung oder Datenübernahme
-durch den Spezifikationsauftrag.
+Reine Bildrevisionen verwenden den eigenen `catalog_reveal`-Weg; `plan-update`/
+`update` bleibt auf den gesonderten Rasterersatz begrenzt und erhält aktive
+Bildfassungen. Die technische AT-A-Lieferung übernimmt keine realen Bilder
+oder Metadaten.
 
 **Aktuelle Prüfregel (12.10.2026):** Konkrete Rätsel werden während ihrer Produktion
 und Integration geprüft, niemals routinemäßig in CI. Keine rätselspezifischen

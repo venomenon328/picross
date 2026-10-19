@@ -250,10 +250,13 @@ func transparent_reveals() -> void:
 				item.finish()
 	check(item.completed and app.store.write_slot(item,item.view_state).is_empty(), "AT synthetic completion earned and saved")
 	app.show_album()
+	var hidden_board: Rect2 = app.board.get_rect()
+	var hidden_view: Dictionary = app.board.capture_view()
 	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
 		surface.size=Vector2i(spec[0],spec[1])
 		app.set_ui_scale(spec[2])
 		await frames()
+		check(app.board.get_rect() == hidden_board and app.board.capture_view() == hidden_view,"AT album resize leaves hidden work geometry and saved view unchanged")
 		var card = app.choices[2]
 		app.album.ensure_control_visible(card)
 		await frames()
@@ -266,6 +269,10 @@ func transparent_reveals() -> void:
 		check(card.is_hovered(), "AT actual card hover reached")
 		check(app.choices[0].picture.artwork == null and app.choices[1].picture.artwork == null,"AT begun/new remain spoiler-free alongside solved image")
 		at_measurements.append({"window":spec,"small":before,"hover":hover})
+	app.select_puzzle(0)
+	await frames()
+	check(app.work.visible and app.board.get_rect() != hidden_board and app.board.layout_valid,"AT opening begun work applies current viewport geometry")
+	check(app.board.capture_view() == hidden_view,"AT deferred layout preserves desired work state")
 
 func caption_button(parent: Node, caption: String) -> Button:
 	for node: Node in parent.find_children("*", "Button", true, false):

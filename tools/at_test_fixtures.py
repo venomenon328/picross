@@ -24,7 +24,8 @@ def browser_row(directory,row):
         rows=[];pixels=[]
         for i,(kind,source) in enumerate(SAMPLES.items()):
             if kind in ('soft','ink'):source=(*color,source[3])
-            actual=tuple(round(240*(1-source[3]/255)+source[c]*source[3]/255) for c in range(3))
+            alpha=source[3]/255*(.5 if blend else 1)
+            actual=tuple(round(240*(1-alpha)+source[c]*alpha) for c in range(3))
             rows.append(dict(kind=kind,source=list(source),point=[i,0],actual=list(actual)));pixels.append(actual)
         png(directory/name,pixels)
         return dict(file=name,rect=[0,0,5,1],revision=revision,opacity=.5 if blend else 1,samples=rows)

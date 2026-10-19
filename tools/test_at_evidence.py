@@ -41,6 +41,15 @@ class OriginalEvidenceTests(unittest.TestCase):
         png(self.root/item['file'],pixels);item['samples'][1]['actual']=[240/255]*3
         with self.assertRaisesRegex(ValueError,'composition'):gate.native(self.root,report,('small',))
 
+    def test_browser_rejects_finished_frame_reported_as_blend(self):
+        report={'group':'completion'};browser_row(self.root,report)
+        gate.browser(self.root,report,{})
+        item=report['at_completion'][0]['blend']
+        pixels=[s['actual'] for s in item['samples']]
+        pixels[4]=list(gate.SAMPLES['ink'][:3])
+        png(self.root/item['file'],pixels);item['samples'][4]['actual']=pixels[4]
+        with self.assertRaisesRegex(ValueError,'intermediate blend'):gate.browser(self.root,report,{})
+
     def test_browser_rejects_white_loss_and_unbound_export_or_save_changes(self):
         report={'group':'catalog'};browser_row(self.root,report)
         gate.browser(self.root,report,{})
