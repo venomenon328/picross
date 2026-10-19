@@ -371,6 +371,20 @@ kein neuer Logik-, Proof- oder Schwierigkeitslauf. Der gegenwärtige Rasterupdat
 ist kein Bildupdateweg; die zusätzliche Technik und ihre synthetischen
 Regressionen gehören zu AT-A, die konkrete Motivbearbeitung und Bildabnahme zu AT-B.
 
+AT-A-P01 schließt vor Codeänderungen den exakten
+[Quellen-/Freigabevertrag](ZA1_ADAPTER.md), die
+[gemeinsame aktive Auflösung](CATEGORIES.md),
+[Journale/Recovery](SD_CATALOG.md) und die
+[Soll-CLI](../tools/puzzle_production/README.md). Diese sind noch nicht implementiert.
+Die dauerhafte Quelle `content/reveals/<pz-ID>.json` enthält die kompakte
+ursprüngliche Herkunft sowie die vollständige Bild-/Freigabehistorie; nötige neue
+Attribution wird an die aktive Notice angehängt, ursprüngliche Notices bleiben
+historisch gebunden. Cleanup erhält Quelle und Live-Notice/Bild bytegleich;
+sein kompakter Receipt bindet weiter die historische Produktionsnotice.
+Rasterexports nach AT enthalten genau die bereits aktive Bildfassung; die neue
+Definitionsbindung wird getrennt und in derselben Transaktion fortgeführt.
+Keine zusätzliche Bildrevision oder Logikanalyse allein durch diese Neubindung.
+
 ### 5.5 Separate Eindeutigkeitsdiagnose (#139, Paket A)
 
 Die additive Diagnose untersucht ausschließlich validierte Logikeingänge v1/v2,

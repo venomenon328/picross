@@ -1,6 +1,6 @@
 # AT · Transparente Abschlussbilder
 
-Stand: 19.10.2026 · **Spezifikation freigegeben; Implementierung nicht begonnen** ·
+Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **Spezifikation; Implementierung nicht begonnen** ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).
 
 ## Auftrag, Quellen und Wirksamkeit
@@ -11,8 +11,13 @@ und dauerhafte Repository-Dokumentation, ausdrücklich noch keine Implementierun
 AT-A und AT-B benötigen jeweils einen späteren Auftrag; auch Merge und Freigaben
 der erst noch zu erstellenden Bildbytes sind damit nicht erteilt.
 
-Geprüfte Ausgangsbasis ist
-`main@b019a32f8854070dfa3d7bb580fd35a3cd4a5686`. Das Issue führt aktuelle
+Historische Spezifikationsbasis ist
+`main@b019a32f8854070dfa3d7bb580fd35a3cd4a5686`; P01 synchronisiert den
+bestehenden Spezifikationsbranch mit
+`main@e454dd580fd1dd2690d952d8e8a9a2f8dc5e604c`, einschließlich integrierter
+Chromium-/CI-258-Regeln. Der technische Vertragsabschluss aus
+Umsetzungsvorbereitung V2 ist reine Dokumentfortschreibung in Draft-PR #257.
+Das Issue führt aktuelle
 Paketaufträge, Lieferstände und Abnahmen. Dieser Vertrag führt die dauerhaften
 Entscheidungen. Er ergänzt gezielt [Produkt](PRODUCT_DEFINITION.md),
 [Design](DESIGN_CONCEPT.md), [Katalogdarstellung](CATALOG_PRESENTATION.md),
@@ -163,15 +168,104 @@ als No-op: keine Byte-, Revisions- oder Zeitstempeländerung, kein Rewrite und k
 neues Journal. Fehlende Dateien, ungeprüfte Metadaten oder ein lediglich ähnlich
 aussehendes Bild erfüllen diesen Zustand nicht.
 
-### 4.3 Konkretisierung vor Implementierung
+### 4.3 P01 · Abgeschlossener technischer Sollvertrag
 
-AT-A legt vor der ersten betroffenen Codeänderung konkrete Dateipfade, Feldmengen,
-Versionsnamen, aktive Quellenautorität, CLI-/Plan-/Ergebnisformat und den binären
-Journal-/Recoveryvertrag in den zuständigen Fachquellen fest. Sie müssen die hier
-freigegebenen Invarianten erfüllen. Hier wird weder eine noch nicht existierende
-CLI als ausführbar beschrieben noch ein Schema allein vorsorglich hochgezählt.
-Offene technische Kernfragen verhindern den Status „umsetzungsbereit“; sie
-berechtigen nicht zur stillen Änderung der freigegebenen Produkt-/Datengrenzen.
+P01-D01–D07 schließen die technischen Kernfragen vor AT-A-Codeänderungen.
+Die folgenden Formate/Befehle sind verbindlicher **Sollstand**, noch keine
+ausführbare Implementierung. Paketfolge und Produktentscheidungen bleiben gleich.
+
+| Entscheidung | Zuständige vollständige Konkretisierung |
+| --- | --- |
+| P01-D01 | [ZA-1, aktive Quelle und Freigabe](ZA1_ADAPTER.md#at-p01-d01--geschlossene-aktive-bildquelle): `content/reveals/<pz-ID>.json`, `picross-catalog-reveal-v1`, geschlossene Hülle, Herkunft/Notices/Freigaben, Hash-/Revisions-/Limitregeln. |
+| P01-D02 | [Kategorien, gemeinsame Auflösung](CATEGORIES.md#at-p01-d02--namensraum-und-eine-gemeinsame-auflösung): gesamter sicherer Namensraum, getrennte historische/aktive Bild-/Noticeprüfung, eine Auflösung in sämtlichen Folgeoperationen; Inhalts-v2/Runtime-v4/Saves unverändert. |
+| P01-D03 | [ZA-1, Rebind](ZA1_ADAPTER.md#at-p01-d03--rebind-und-erhaltene-herkunft): stabiler Exportanker, Cleanup ohne Revisionsänderung, historischer Register-No-op und späterer Rasterupdate mit aktivem Bild und separater append-only Definitionsbindung. |
+| P01-D04 | [Werkzeuganleitung, Soll-CLI und Plan](../tools/puzzle_production/README.md#at-p01-d04--vollständige-soll-cli-noch-nicht-ausführbar): eigener `catalog_reveal plan/adopt`, explizite IDs, geschlossene Anfrage/Plan/Ergebnisformate, vollständiger Snapshot, No-op/Exit/Größenregeln. |
+| P01-D05 | [Transaktionen, Generationen](SD_CATALOG.md#at-p01-d05--generationen-und-vollständige-mengen): registration-v5/update-v4/metadata-v2/reveal-adoption-v1, vollständige T/K-/Deltamengen, Base64-Binärersatz, begrenzter Reader, 24-/128-MiB-Grenzen und Altformatmatrix. |
+| P01-D06 | [Phasen und Recovery](SD_CATALOG.md#at-p01-d06--phasen-und-temporäre-eigentümerschaft): vollständiger dauerhafter Lock vor Mutation, P0–P6/R0–R2, Temp-/Fremdbytebesitz, wiederholbarer Rollback bis unmittelbar gültigem Checkout. |
+| P01-D07 | Nachfolgende konkrete Prüfzuordnung und [CI-Policy](CI_POLICY.md): feste synthetische Regressionen/Artefakte, native Windows-/Chromiumwege, enge spätere Inhalts-CI-Freigabe. |
+
+Neue SD-Berichte v3 und Added-Pläne v2 binden AT in ihren Snapshots, ohne alte
+Reports umzuschreiben. Ihre exakten Versionen und zulässigen gemeinsamen Deltas
+stehen in [Kategorien](CATEGORIES.md). Kein anderer Sidecar-/Runtime-/Savewechsel.
+Eine Bildadoption erhöht weder Difficulty- noch Puzzle-Revision und setzt kein
+neues Hinzugefügt-Datum. Die ursprüngliche Exportbindung bleibt auch beim
+Wechsel vom vollständigen Export zum kompakten Receipt stabil.
+
+P01 liefert Dokumentvalidator, vollständigen Diffcheck, kurzen tatsächlichen
+Docs-/Werkzeugpfad und `ci-required` am neuen Head/Test-Merge; Nachweise und die
+getrennten Dokumentprüfschritte stehen im PR. Der frühere fehlgeschlagene Run
+39173842929 und frühere Dokumentreview bleiben an ihren alten Head gebunden.
+P01-A01–A07 und deren aktueller Erfüllungsstand werden im Issue geführt.
+Integration von #257 und kurze Aktualitätsprüfung bleiben vor späterem
+AT-A-Implementierungsstart erforderlich. P01 selbst beginnt AT-A/AT-B nicht,
+erteilt keinen Merge und keine neue Bildfreigabe.
+
+### 4.4 Synthetisches vollständiges Datenbeispiel
+
+Das folgende **Dokumentbeispiel** baut eine vollständige erste AT-Hülle aus
+einem künstlichen gültigen normalisierten Herkunftseintrag vor Cleanup.
+`a…a`, `b…b`, `c…c`
+bezeichnen hier angenommene externe Blatt-/Altbild-/Neubild-Dateihashes;
+sie behaupten keine gelieferten Bilddateien oder realen Freigaben. Alle inneren
+Ketten-/Notice-/Recordhashes sind dagegen vollständig aus den gezeigten Werten
+berechenbar. Keine Repositorydatei wird durch das Beispiel geschrieben.
+`test_only=true` bindet ausschließlich synthetische Freigaben und ist im echten
+Katalog ausgeschlossen. Der vor Cleanup angelegte Record bleibt bei Cleanup
+bytegleich, weil der Exportanker derselbe ist; `receipt=null` bleibt unverändert.
+
+```python
+import hashlib, json
+def H(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'),
+        ensure_ascii=False, allow_nan=False).encode('utf-8')).hexdigest()
+def seal(value, key):
+    return dict(value, **{key: H(value)})
+notice = {'text': 'Synthetic author; test use only.\n',
+          'sha256': hashlib.sha256(b'Synthetic author; test use only.\n').hexdigest()}
+entry = {'id': 'pz-at-example', 'key': 'pz-at-example', 'save_slot': 'at_example',
+    'definition': 'data/content/at_example.json', 'reveal': 'art/content/at_example.png',
+    'visible': True, 'category_id': 'test', 'production': {
+        'package': 'content/packages/pz-at-example/r01', 'package_sha256': 'd'*64,
+        'revision': 'r01', 'width': 1, 'height': 1, 'mode': 'mono', 'difficulty': {},
+        'status': 'registered', 'blockers': [], 'test_only': True,
+        'definition_sha256': 'a'*64, 'reveal_sha256': 'b'*64}}
+binding = seal({'binding_revision': 1, 'runtime_revision': 1, 'entry': entry, 'notice': notice,
+    'previous_binding_hash': None}, 'binding_hash')
+approval = {'format': 'picross-reveal-approval-v1', 'id': 'pz-at-example',
+    'image_revision': 1, 'definition_sha256': 'a'*64,
+    'previous_reveal_sha256': 'b'*64, 'reveal_sha256': 'c'*64,
+    'notice_sha256': notice['sha256'], 'actor': 'Synthetic fixture',
+    'timestamp_utc': '2026-10-19T10:00:00Z', 'statement': 'Synthetic test decision.',
+    'checks': {'reveal_approved': True, 'motif_raster_consistent': True,
+               'final_editorial_approved': True}, 'test_only': True}
+image = seal({'image_revision': 1, 'binding_hash': binding['binding_hash'],
+    'previous_reveal_sha256': 'b'*64, 'reveal_sha256': 'c'*64, 'notice': notice,
+    'approval': approval, 'provenance': {'author': 'Synthetic author',
+        'usage_basis': 'Test use only', 'source': 'Independent synthetic fixture',
+        'changes': 'Transparent exterior and inner opening'}}, 'revision_hash')
+record = seal({'format': 'picross-catalog-reveal-v1', 'id': 'pz-at-example',
+    'record_revision': 1, 'identity': {'key': 'pz-at-example',
+        'save_slot': 'at_example', 'definition': 'game/data/content/at_example.json',
+        'reveal': 'game/art/content/at_example.png',
+        'notice': 'game/art/content/at_example.txt'},
+    'origin': {'entry': entry, 'runtime_revision': 1, 'notice': notice, 'receipt': None},
+    'bindings': [binding], 'revisions': [image],
+    'current': {'binding_revision': 1, 'image_revision': 1}}, 'record_hash')
+```
+
+Kontrollwerte dieses Beispiels: `binding_hash`
+`d5eacda804427375d6cf7636cfb11b567897671eaafd865d9c7ae3398db01c56`,
+`revision_hash` `6c220a066a9a0ba73f3de5b2063447b874964ee12d104a3da3d81f5d47822af2`,
+`record_hash` `ababd7c48d2439251e7d7c5ccc78018967b4fff60e0e8c5aed841e4fecbd18a1`.
+
+Bei zweiter Bildrevision bleibt `binding` gleich, der neue Vorgängerhash ist
+`c…c`, Bildrevision/Recordrevision werden 2. Bei anschließendem Rasterupdate
+mit weiterhin genau diesen aktiven Bildbytes wird stattdessen `bindings[1]`
+angehängt: neue Export-/Definitionsbytes und höhere Runtime-Revision,
+`previous_binding_hash=bindings[0].binding_hash`; `current.binding_revision=2`,
+Bildrevision bleibt 2, Recordrevision wird 3. Alte `origin/revisions` bleiben
+identisch. Eine erneute erste Adoption aus ihrem alten Plan ist nach diesen
+Folgeschritten stale; direkt nach ihrer eigenen Übernahme ist sie echter No-op.
 
 ## 5. Pakete und Abnahme
 
@@ -210,6 +304,41 @@ Pflichtchecks gemäß CI-Policy; AT verändert keine Plattform- oder Browsermatr
 und übernimmt keine frühere paketbezogene Ausnahme als allgemeine Freigabe.
 Ein bloßer Start ersetzt keinen betroffenen Darstellungs-/Persistenznachweis.
 AT-A-R01 ist ein separater qualifizierter Review des finalen Heads vor Merge.
+
+### P01-D07 · Konkrete spätere Fälle und Artefakte
+
+Die folgende Zuordnung ist AT-A-Lieferumfang, **durch P01 nicht ausgeführt**.
+Neue Tests sind allgemeine feste synthetische Fälle und lesen keine realen
+Katalogbilder, Definitionen oder daraus abgeleiteten Kopien.
+
+| Fälle | Anschlussstelle und erwartetes Ergebnis |
+| --- | --- |
+| AT-S01 Quellenlebenszyklus | Neuer `tests/puzzle_production/test_catalog_reveal.py`: erste/zweite Bildrevision jeweils vor/nach Cleanup, Noticeerweiterung, Quellenvalidierung. Erwartet exakt +1 Bild-/Recordrevision, unveränderte Definition/Runtime/Rating/Added/Originalbelege; Cleanup selbst ändert keinen AT-Record. |
+| AT-S02 Folgeoperationen | `test_catalog_integration.py`, `test_content_update.py`, `test_integrated_content.py`: historisches `register` nach AT echter No-op; Rasterexport mit exakt aktivem Bild erzeugt nur eigene neue Produktions-/SD-Bindung plus AT-Bindungsappend. Altes/anderes Bild wird vor Mutation abgewiesen; aktive Notice und Added bleiben gleich. |
+| AT-S03 Snapshot und No-op | `test_catalog_added.py`, `test_catalog_review.py`, `test_catalog_reveal.py`: SD-/Added-Adoption und Sync erhalten AT bytegleich. Ältere Pläne nach AT/Receipt-/Kategorie-/Registryänderung stoppen. Identischer AT-Plan unmittelbar nach eigener Adoption erhält sämtliche Bytes, Revisionen und Nanosekunden-mtimes; kein Lock/Temp/Rewrite. Fehlende/ähnliche/fremde Ziele sind kein No-op. |
+| AT-S04 Negative Daten | `test_catalog_reveal.py`: falsche ID/Definition/Revision, Freigabe-/Notice-/Herkunft-/Kettenhash, doppelte/fremde JSON-Schlüssel, falsche Typen/null/UTC, fehlende erwartete Quelle, Alias-/Zusatz-/Fremd-ID-Dateien, Symlink/Hardlink/Reparsepunkt, Grenzen unmittelbar unter/auf/über Limit. Erwartet 2 oder Ressourcenabbruch 4, nie Teilübernahme/Fallback. |
+| AT-S05 Journal und Unterbrechung | Neuer `tests/puzzle_production/test_reveal_recovery.py` plus `test_ke_recovery.py`: alle P0–P6/R0–R2-Grenzen, jedes Bild und Textziel einer Mehrfachadoption, Journalaufbau vor/nach Lock, Temp-Teilbytes, erneuter Kill während Recovery, eigenes Alt/Neu und fremde Quellen/Lock/Temps. Erwartet gültiger vollständig alter Checkout nach Recovery, fremde Daten und Journal bei Blockade unverändert. |
+| AT-S06 Versionen und Limits | `test_reveal_recovery.py`: jede unterstützte/gesperrte Zeile der Journalmatrix, alte Journale mit ungebundenem AT blockieren. Zwei 32-MiB-Bildseiten, falsche Base64-Länge/Padding/Hash, 24-/128-MiB-Grenzen und zu große Mehrfachpläne. Dispatch lädt/dekodiert keine unzulässigen Größen; keine alte Grenze wird angehoben. |
+| AT-N01 Darstellung | `tools/kat2_product.py` / `game/tests/kat2_probe.gd`, `tools/ea_product.py` / `game/tests/ea_probe.gd`: unabhängiges synthetisches Reveal mit hellem Motivteil, Innenaussparung und weichen Alphakanten durch tatsächliche Export-/Importkette. Kleine Karte samt Hover, EA-Überblendung, Endbild und Wiederöffnung zeigen Papierdurchsicht ohne Saum/Detailverlust. UI100/125 nach gemeinsamer Dreiermatrix, kein zusätzliches Vollkreuz. |
+| AT-N02 Windows/Savewechsel | Native Windows-Probe derselben gebundenen synthetischen EXE/PCK-Folge: begonnene und gelöste Saves vor Bildwechsel erzeugen, echten zweiten Export mit neuen Bildbytes bauen, unter demselben isolierten Profil neu starten. Zell-/History-/Status-/Definitionsrevisionen bleiben gleich; Neu/gesperrt laden/zeigen das Reveal nicht vorzeitig, Reset bleibt ausdrücklich. Start/Export allein genügt nicht. |
+| AT-W01 Chromium | `tools/web_tests/group_catalog.py`, `group_completion.py`, `group_persistence.py`, feste `fixtures.py` und `contract.py`: entsprechende Transparenz-/Hover-/Abschluss-/Wiederöffnungsfälle sowie begonnener/gelöster Save über zwei echte Exporte, Reload und Browserprozessneustart auf gleichem isolierten Origin/Profil. Keine vorzeitige Enthüllung, Revisionmigration oder Rückstufung. |
+| AT-C01 Auswahl | `tools/test_ci_scope.py`: kanonischer neuer AT-Inhaltspfad und regulärer 100644-Modus positiv; Großschreibung, Fremdendung/-unterpfad, ausführbar/Link/Submodul, Rename und Löschung negativ beziehungsweise beide Seiten geprüft. Werkzeug-/Test-/Harnessänderung wählt die tatsächliche Vereinigung der Pflichtbereiche. |
+
+AT-A-T01 bindet technische JSON-Berichte, erwartete/tatsächliche Bildregionen,
+unveränderte Saveinhalte vor/nach Wechsel und die beiden Export-/Assethashes an
+Head/Basis/Checkout und Run. Native Anschlussartefakte bleiben `kat2/summary.json`
+mit kleinen Originalausschnitten und `ea/*.json`, `ea/motion.apng`,
+`ea/final-*.png`; die Windows-Probe dokumentiert echte EXE/PCK-Hashes und
+Profil-/Prozessfolge. Chromium bindet Buildmanifeste, Gruppenberichte,
+Pflichtbilder und `web-result.json` über den bestehenden Resultprüfer.
+AT-A ergänzt dafür das feste Szenario-/Artefaktinventar gemeinsam mit den
+Harnessänderungen; kein bloßes neues Erfolgsflag ohne Datei-/Inhaltsprüfung.
+
+AT-A-T01 einschließlich getrenntem Selbstreview und qualifiziertes separates
+AT-A-R01 bleiben vor Implementierungsmerge. **Kein AT-A-M01 und kein neues
+P01-Produktgate.** Bildbytefreigaben, Motiv-/Rasterkonsistenz und Eigentümerabnahme
+des echten Bestands bleiben AT-B. Firefox wird gemäß integrierter #261-Policy
+nicht automatisiert gestartet; keine alten Workflows oder historischen Reruns.
 
 ### AT-B · Bestands- und Bildabnahme
 

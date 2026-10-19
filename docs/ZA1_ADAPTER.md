@@ -390,16 +390,13 @@ verschiedene Fälle.
 Ohne neue Bildquelle gilt die bisherige Originalbindung, bei ungültiger vorhandener
 Quelle wird vor Mutation gestoppt und nicht auf einen Altwert zurückgefallen.
 
-AT-A legt vor der ersten betroffenen Codeänderung exakte Pfade, Felder,
-Formatversionen, Grenzen und Journalübergänge in diesem Vertrag,
-[Kategorien/Projektion](CATEGORIES.md) und dem
-[gemeinsamen Transaktionsvertrag](SD_CATALOG.md) konsistent fest. Keine zusätzlichen
-Felder unter alten exakt definierten Formatnamen. Eine neue Runtimeversion ist
-nur bei einer tatsächlichen Schemaänderung erforderlich; dann gehören Writer,
-Loader und Definitions-/Ressourcenprüfung gemeinsam zum Paket. Andernfalls bleibt
-die bestehende Runtimeprojektion exakt erhalten. Historische Bildfreigaben werden
-nicht als Freigaben der neuen Bytes ausgegeben; alte Produktionspakete müssen
-für diese Bildänderung nicht wiederhergestellt werden.
+P01 schließt den nachfolgenden Datenvertrag vor der AT-A-Codeänderung.
+[Kategorien/Projektion](CATEGORIES.md) definiert die gemeinsame Auflösung,
+[Transaktionen](SD_CATALOG.md) Journal und Recovery. Inhaltsregistry-v2,
+Runtime-v4 mit ihren exakten v2/v3-Lesern und Save-Schema 1 bleiben erhalten;
+keine Runtime-v5. Alle neuen Formate sind **Sollstand, noch nicht implementiert**.
+Historische Freigaben werden nicht auf neue Bytes umgeschrieben; bereinigte
+Produktionspakete werden nicht rekonstruiert.
 
 Der lesende Plan bindet den vollständigen relevanten Ausgangsstand und zeigt
 konkrete Bild-/Metadatenänderungen. Die ausdrückliche Übernahme ersetzt nur das
@@ -418,6 +415,134 @@ und erhalten. Tests verwenden feste synthetische Bilder, Definitionen und Saves.
 Die tatsächliche Bestandsfreistellung, motivbezogene Behandlung szenischer Bilder,
 Bildfreigaben und neue Bild-/Rasterkonsistenzprüfung gehören anschließend zu AT-B.
 Dieser Spezifikationsstand liefert noch keinen ausführbaren zusätzlichen Befehl.
+
+### AT-P01-D01 · Geschlossene aktive Bildquelle
+
+Einzige optionale Autorität ist `content/reveals/<pz-ID>.json`, Format
+`picross-catalog-reveal-v1`. Alle hier aufgezählten Schlüssel sind Pflicht und
+exakt; zusätzliche/doppelte JSON-Schlüssel, NaN/Infinity, BOM, ungültiges UTF-8,
+Surrogate, falsche Typen und boolesche Ganzzahlen sind Fehler auf jeder Ebene.
+JSON-Tiefe höchstens 32, numerische Tokens höchstens 16 Zeichen, keine neuen
+Fließkommafelder. Unverändert eingebettete historische Difficultywerte behalten
+ihre bisher zulässigen endlichen Zahlentypen und werden nicht umgedeutet.
+`C(x)` bezeichnet die vorhandenen kanonischen JSON-UTF-8-Bytes mit sortierten
+Schlüsseln, kompakten Separatoren und `ensure_ascii=False`, ohne LF/BOM;
+`H(x)=SHA256(C(x))`. Dateihash ist dagegen SHA-256 aller tatsächlichen Bytes.
+Neue JSON-Dateien sind exakt `C(x)+LF`; JSON-Strings speichern Texte unverändert.
+Hashfelder enthalten 64 kleine Hexzeichen, nie null außer ausdrücklich unten.
+
+| Objekt | Exakte Felder und Typen |
+| --- | --- |
+| Bildquelle | `format,id,record_revision,identity,origin,bindings,revisions,current,record_hash` |
+| `identity` | `key,save_slot,definition,reveal,notice`: Strings; Key gleich ID, Slot nach ZA-1; Pfade repositoryrelativ, exakt aus dem registrierten Eintrag hergeleitet: `game/` + Definition/Reveal, Notice mit `.txt` statt Bildsuffix. |
+| `origin` | `entry,runtime_revision,notice,receipt`: unveränderliche kompakte Ausgangsbelege. `entry` ist der ursprüngliche vollständig validierte Inhalts-v2-Eintrag mit **Exportmanifesthash** in `production.package_sha256`; `runtime_revision` ist 1…1000000; `notice` folgt unten; `receipt` ist null vor Cleanup oder das vollständig geprüfte ursprüngliche `picross-integrated-content-v1`-Objekt. |
+| `bindings[]` | Je exakt `binding_revision,runtime_revision,entry,notice,previous_binding_hash,binding_hash`; Revisionen positive Ganzzahlen, lückenlos ab 1; `previous_binding_hash` nur bei 1 null, sonst Hash des Vorgängers. `entry` wie bei `origin`, jeweils mit ursprünglichem Exportmanifesthash dieser Produktion; `notice` ist die vollständig gebundene historische Exportnotice dieser Bindung. `binding_hash=H(Objekt ohne binding_hash)`. |
+| `revisions[]` | Je exakt `image_revision,binding_hash,previous_reveal_sha256,reveal_sha256,notice,approval,provenance,revision_hash`; Bildrevisionen lückenlos ab 1; `binding_hash` verweist auf eine vorhandene Bindung; `revision_hash=H(Objekt ohne revision_hash)`. |
+| `current` | Exakt `binding_revision,image_revision`; beide gleich letzter Listenrevision. |
+| `notice` | Exakt `text,sha256`; Text ist vollständiges UTF-8/LF-Notice ohne BOM/NUL, 1…65536 Dateibytes, endet LF; Hash bindet `text.encode('utf-8')`. |
+| `provenance` | Exakt `author,usage_basis,source,changes`; je nichtleerer String, 1…4096 Unicodezeichen, kein Randwhitespace, keine C0/C1-Steuerzeichen. `source` ist eine gespeicherte Herkunftsbeschreibung, kein automatisch zu öffnender Pfad/URL. |
+
+`entry` ist kein Erweiterungsobjekt: exakt
+`id,key,save_slot,definition,reveal,visible,category_id,production`;
+`production` exakt `package,package_sha256,revision,width,height,mode,difficulty,status,blockers,test_only,definition_sha256,reveal_sha256`.
+Typen, sichere Pfade und Limits folgen dem unveränderten Inhalts-v2-Vertrag.
+`difficulty` ist allein ein **unveränderter historischer Beleg** unter dessen
+bisheriger validierter Semantik, kein neues freies AT-Metadatenobjekt und keine
+aktive Bewertung. Es wird vollständig aus dem geprüften Original übernommen
+und bei Wiederverwendung bytekanonisch verglichen, niemals vom Bildupdateinput
+vorgegeben oder um neue Felder ergänzt. Ebenso folgt `receipt`, wenn vorhanden,
+exakt seinem vierfeldrigen Altvertrag; sein `entry` muss `origin.entry` gleichen,
+sein `notice_sha256` der ursprünglichen Notice. Seine kanonischen Bytes und der
+physisch aktuelle Receipthash werden getrennt geprüft. Ein vor Cleanup angelegtes
+`origin.receipt=null` bleibt auch danach null: `entry` und vollständige Notice
+halten den notwendigen kompakten Beleginhalt bereits selbständig fest.
+
+`origin.entry` ist bei erster Bildrevision die aktuelle Produktionsbindung,
+normalisiert ausschließlich am Pakethash: Exportmanifesthash bei vorhandenem
+Export, sonst `receipt.entry.production.package_sha256`. Die physische
+Manifestdatei muss gleichzeitig gegen den aktuellen Registryhash passen.
+`bindings[0].entry/runtime_revision/notice` gleichen `origin`. Identität und ID stimmen
+über alle Bindungen überein. Keine Bindung an Git-HEAD oder Registrygesamthash.
+Bei jeder Folgebindung ist die Runtime-Revision streng höher, die Paketrevision
+neu. Bildrevisionen referenzieren vorhandene Bindungen in nicht abnehmender
+Reihenfolge; die erste referenziert Bindung 1, jede neue die dann aktuelle.
+Alle historischen Notices der Bindungen bleiben erhalten und gegen ihre
+Produktionsbelege geprüft; die erste aktive Notice erhält bereits `origin.notice`
+vollständig als Präfix. Nach einem Quellen-Rebind darf eine neue Exportnotice
+keine bisherige aktive Attribution entfernen oder ihre Bedeutung ersetzen.
+
+`record_revision` ist 1…1000000 und genau
+`len(revisions)+len(bindings)-1`. `record_hash=H(Quelle ohne record_hash)`.
+Listen enthalten jeweils 1…256 Einträge; jede neue Revision/Bindung überschreitet
+weder Zähler noch Dateilimit. Quelle höchstens 1 MiB; bis 10000 registrierte
+ID-Dateien. Kein Abschneiden alter Historie zur Umgehung eines Limits.
+
+Erste Bildrevision: Vorgängerhash gleich `origin.entry.production.reveal_sha256`;
+weitere: gleich dem unmittelbar vorigen `reveal_sha256`. Neuer Bildhash muss
+verschieden sein; eine bloße Freigabe-/Noticeänderung ist kein Bildwechsel.
+Jede Revision bindet die **damals** aktuelle Definition über `binding_hash` und
+die Freigabe. Frühere Revisionen bleiben bei späterem Quellen-Rebind unverändert.
+Die effektive Notice ist die letzte `notice`, der effektive Bildhash der letzte
+`reveal_sha256`. Notice einer Folgerevision erhält alle bisherigen Noticebytes
+als Präfix; neue Attribution wird nur angehängt. Ohne Ergänzung bleibt sie exakt.
+
+### AT-P01 · Tatsächliche Freigabe
+
+`approval` enthält exakt `format,id,image_revision,definition_sha256,previous_reveal_sha256,reveal_sha256,notice_sha256,actor,timestamp_utc,statement,checks,test_only`.
+Format ist `picross-reveal-approval-v1`; ID/Bildrevision/Hashes stimmen mit Revision,
+damaliger Bindung und vollständiger Zielnotice überein. `actor` hat 1…128,
+`statement` 1…4096 Zeichen, beide nichtleer, ohne Randwhitespace/C0/C1.
+`timestamp_utc` ist ein existierender Zeitpunkt `YYYY-MM-DDTHH:MM:SSZ`, Jahr
+0001…9999, ohne Offset, Bruchteil oder Schaltsekunde. `checks` enthält exakt
+`reveal_approved,motif_raster_consistent,final_editorial_approved`, jeweils `true`;
+die tatsächliche Erklärung muss alle drei Entscheidungen für die gebundenen
+Bytes dokumentieren. `test_only` ist Boolean und stimmt mit der Produktion
+überein. Synthetische Freigaben dürfen nie im echten Checkout übernommen werden.
+Keine Softwareauthentifizierung des Akteurs und keine Freigabe durch Hash oder
+`true` allein. Materielle Motiv-/Rasteränderung ist außerhalb dieses reinen Wegs.
+
+### AT-P01-D03 · Rebind und erhaltene Herkunft
+
+Beim reinen Bildwechsel sind `origin,identity,bindings` exakt unverändert;
+genau eine Bildrevision wird angehängt, `current.image_revision` und
+`record_revision` steigen um 1, der Recordhash wird neu berechnet.
+Bei der ersten Revision wird die Hülle aus dem vollständig geprüften Altstand
+gebildet. Es gibt weder einen vorab leeren Record noch eine Bildrevision 0 darin.
+
+Späterer Rasterupdate darf ausschließlich **genau das effektive aktive Bild**
+exportieren. Sein Export, dessen echte Freigaben und SD-Eingang bleiben vollständig
+ZA-1-geprüft. Der Vergleich erfolgt gegen den aktiven Hash, nicht gegen den
+ursprünglichen `production.reveal_sha256`. Neue Paketrevision und höhere
+Runtime-Revision bleiben Pflicht; alte Pakete bleiben erhalten. Die neue
+Registryproduktion darf daher den schon aktiven Hash als ihren eigenen
+historischen Exportbildhash führen. Das ist keine Änderung des alten Belegs.
+
+In derselben Update-v4-Transaktion wird genau eine `bindings`-Zeile mit neuer
+Definition/Produktion und Vorgängerhash angehängt; `current.binding_revision`
+und `record_revision` steigen um 1. `origin`, alle Bildrevisionen und deren
+Freigaben, aktive Bild-/Noticebytes sowie Added bleiben bytegleich. Das neue
+Exportbild muss der letzten Bildrevision entsprechen. Die alte Bildfreigabe
+beansprucht weiterhin nur ihre damalige Definition; die neue Rasterfreigabe
+steht im neuen Export. Kein kombinierter Bild-/Rasterwechsel, kein Rebind aus
+einer bloß ähnlichen Definition. Ohne AT-Quelle gilt der bisherige Updatevertrag.
+
+Cleanup ändert ausschließlich seine bisher erlaubten Produktions-/Indexdaten.
+Der kompakte Receipt erhält die **historische Produktionsnotice**, nicht eine
+nach AT ergänzte Live-Notice. Manifest-/Receiptprüfung und aktiver Noticevergleich
+werden nach [Auflösung](CATEGORIES.md) getrennt. Alle AT-Bytes bleiben erhalten;
+ein anderer physischer Manifesthash ist kein Quellen-Rebind und keine Bildrevision.
+Vor/nach Cleanup liefert der stabile Exportanker denselben Wert. Erste und
+weitere Bildrevision funktionieren in beiden Zuständen ohne Produktionsrekonstruktion.
+Die Main-/Arbeitsbaumprüfung des Cleanup bleibt vollständig; sie prüft zusätzlich
+die aktive Quelle und Bild-/Noticebytes am ausdrücklich bestätigten integrierten
+Stand. Unveröffentlichte AT-Änderungen werden nicht als integriert ausgegeben.
+
+Historisch identisches `register` nach AT: den geprüften Eingang vollständig mit
+dem normalisierten aktuellen Produktionseintrag vergleichen, anschließend
+aktiven Checkout und vollständigen Snapshot erneut prüfen. Historisches Bild und
+Notice werden nur im Eingang geprüft, nie über Live-Bytes geschrieben. Ergebnis
+echter No-op vor Journalanlage, ohne neue SD-/Added-/AT-Revision. Eine frühere
+Produktion nach einem tatsächlichen Rasterupdate ist dagegen kein No-op.
 
 ## Autorisierte manuelle Ableitungen
 
