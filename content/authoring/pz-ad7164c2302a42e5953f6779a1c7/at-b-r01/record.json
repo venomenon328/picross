@@ -1,0 +1,39 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-ad7164c2302a42e5953f6779a1c7",
+  "revision": "at-b-r01",
+  "category_id": "suesses-getraenke",
+  "motif_name": "Glas Bier mit Schaumkrone",
+  "state": "registered",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 25,
+  "height": 30,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/at-b-r01/approval.json",
+    "sha256": "48a426776289e8bbbca0a9d804d199c07e583d2cd851a01e49e0546c6e26fd15"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "b0d9cf6138ccbeed1fffe8fa567d202276c1831bf952786e4f0fd683d4c4b51f",
+    "active_record": "content/reveals/pz-ad7164c2302a42e5953f6779a1c7.json",
+    "active_record_sha256": "71645fa479bcc46d018038401cdc9f892aef94100773e9a359f48081d88adbe7",
+    "evidence": "docs/design/at_b_integration/audit-02.json"
+  },
+  "blockers": [],
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
+  "package": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/at-b-r01/package.zip",
+    "bytes": 5598334,
+    "sha256": "fe054406f151ac1a989bd8b458d742ea855b8156c34811e225930f48d1ebbc97"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-ad7164c2302a42e5953f6779a1c7/at-b-r01/handoff.json",
+    "sha256": "d6c46388169ffa789d27bf8a861af9257c7940c5c70c39e801135893f8c9c231"
+  },
+  "inventory_sha256": "e7d891c69f6adc317cf715498544e6417d01bad610312baa9aed303f4b3df8b3"
+}

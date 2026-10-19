@@ -1,0 +1,39 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-c71563f1b8c940de998afdd62f09",
+  "revision": "at-b-r01",
+  "category_id": "insekten-kleine-tiere",
+  "motif_name": "Stirnlappenbasilisk",
+  "state": "registered",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 50,
+  "height": 25,
+  "mode": "color",
+  "difficulty": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/at-b-r01/approval.json",
+    "sha256": "742433552cb4deca9fdd4d982c44f626dbadf26a70c7cc310387635177e82494"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "8fea577fa64fb9be882e374e1828159d6e31129ce55c224aedea22a755ab30fa",
+    "active_record": "content/reveals/pz-c71563f1b8c940de998afdd62f09.json",
+    "active_record_sha256": "57b346a2a06450dfa7d4518afb9636e091008d2b746e0d734817356b66fd5483",
+    "evidence": "docs/design/at_b_integration/audit-03.json"
+  },
+  "blockers": [],
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
+  "package": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/at-b-r01/package.zip",
+    "bytes": 4502432,
+    "sha256": "bb18676c9be3b790c7df4b576e7403d74c90d8bf9243a18326bdcfe1be8d36d9"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-c71563f1b8c940de998afdd62f09/at-b-r01/handoff.json",
+    "sha256": "3beba6e83c55904bdea17cc9eb7bda8927cf6b6742bc961d25c3f402434c08ee"
+  },
+  "inventory_sha256": "ab5ae2f38d295d7b9a46094df7594d5f684528959c83129cef5ec1aab26f8753"
+}

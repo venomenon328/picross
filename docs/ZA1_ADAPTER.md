@@ -1,7 +1,7 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A implementiert, unabhängiges Review offen:**
-[AT](REVEAL_TRANSPARENCY.md) ergänzt mit dem beauftragten AT-A einen
+**AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
+[AT](REVEAL_TRANSPARENCY.md) liefert mit AT-A einen
 eng begrenzten Bildupdateweg; AT-B stellt anschließend den gebundenen Bestand um.
 Der aktive Bildhash und die neue tatsächliche Bildfreigabe werden außerhalb
 historischer Produktions-/Integrationsbelege gebunden. Die gemeinsamen
@@ -9,6 +9,10 @@ Export-/Rasterupdatebefehle erhalten aktive Bildfassungen gemäß diesem Vertrag
 reine Bildrevisionen verwenden ausschließlich den eigenen `catalog_reveal`-Weg.
 Definitionen, Runtime-Revisionen, IDs, Ressourcenpfade, Slots, Kategorien, Ratings
 und Hinzugefügt-Daten bleiben beim Bildupdate unverändert.
+[AT-B-V01](AT_B_VERIFICATION.md) liefert die gebundene Bild-/Endfreigabevorlage.
+Die anschließende [Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01
+mit `catalog_reveal plan/adopt` und AT-B-T01. Diese reine Bildrevision
+ist keine erneute ZA-1-Adapterabnahme oder Rasterproduktion.
 
 **KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt die erste Katalogaufnahme als

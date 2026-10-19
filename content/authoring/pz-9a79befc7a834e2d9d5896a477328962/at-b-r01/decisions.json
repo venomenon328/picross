@@ -1,0 +1,17 @@
+{
+  "decisions": [
+    {
+      "kind": "scope",
+      "text": "Außenfläche und echte Lücken zwischen Tier und Baum; Stamm vollständig behalten."
+    },
+    {
+      "kind": "protected_features",
+      "text": "Weißes Gefieder, Schnabel, schwarze und rote Zeichnung, beide Krallen, langer Schwanz, Rinde und ursprünglicher Stammanschnitt."
+    },
+    {
+      "kind": "approval",
+      "status": "pending",
+      "text": "Eigentümer hat keine konkrete Bild-, Konsistenz- oder Endfreigabe erteilt."
+    }
+  ]
+}

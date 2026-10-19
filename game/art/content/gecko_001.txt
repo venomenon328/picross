@@ -1,3 +1,5 @@
 Production ID: pz-5ad1e06e19ab475baebc582d4999daa5
 Artwork: OpenAI image generation, im Auftrag von Tobias Schröder
 Usage basis: Eigenständige beauftragte KI-Generierung für Picross; keine Fremdbilder oder Fremdassets eingebracht.
+
+AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

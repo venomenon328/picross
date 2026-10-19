@@ -1,0 +1,5 @@
+Production ID: pz-7ec3dcd94bf84e698691ef4b5839
+Artwork: OpenAI native image editing in ChatGPT, directed by assistant for Tobias
+Usage basis: Eigenes nativ generiertes A-r01, auf ausdrücklichen Nutzerauftrag nativ bearbeitet; keine Fremdreferenz hinzugefügt.
+
+AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

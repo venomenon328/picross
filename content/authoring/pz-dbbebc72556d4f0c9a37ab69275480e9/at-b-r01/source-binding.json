@@ -1,0 +1,44 @@
+{
+  "base_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "name": "Giraffe",
+  "category_id": "saeuger",
+  "save_slot": "giraffe_001",
+  "runtime_revision": 1,
+  "definition_path": "game/data/content/giraffe_001.json",
+  "definition_sha256": "90ac8dfd3a149ee8d82e0d86cb4e81902d978a3d96e73b1e8f667a71776c2f7b",
+  "original": {
+    "path": "game/art/content/giraffe_001.png",
+    "bytes": 1626739,
+    "sha256": "48c36159ee53d5dbcdc0e69b77f7dbdae62598dd31c517788f3f5f3da9f62c33",
+    "format": "PNG",
+    "mode": "RGB",
+    "width": 1024,
+    "height": 1536,
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572864
+  },
+  "notice_path": "game/art/content/giraffe_001.txt",
+  "notice_sha256": "560e3167d8cc3a10d8f0a7032d60773bdfa6348f3456f075e72688dcf117b84c",
+  "physical_manifest": {
+    "path": "content/packages/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/manifest.json",
+    "sha256": "068db143baba36aa89110bdb122b4788d1cb64e5bb38a2026265c67caa286be9",
+    "bytes": 2826
+  },
+  "original_export_anchor": "e960010195d836517b41c9a5443f5aa568e6f599bba3e5385a2637a7904c4f45",
+  "historical_production_revision": "r04",
+  "integrated_commit": "c187a6970bf17627df0d26bf26340044436fd89f",
+  "prior_approval_reference": "Unveränderter integrierter Receipt samt ursprünglichem Exportanker; keine neue oder rekonstruierte Altfreigabe.",
+  "active_at_image_revision": null,
+  "active_at_record_present": false,
+  "git_original_blob": "9bfb9067d117667525b6a296ce87924b60b5c204",
+  "frozen_sources": {
+    "content/added/pz-dbbebc72556d4f0c9a37ab69275480e9.json": "3628639888c7b44cc6ba26c2de0a526bd04bdf0a47cf709ce4693e301156d766",
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/difficulty/pz-dbbebc72556d4f0c9a37ab69275480e9/rating.json": "ab7bb936da7cbfcce7f89931bd1427bc7db3764dd52e9580a070148880661461",
+    "content/packages/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/manifest.json": "068db143baba36aa89110bdb122b4788d1cb64e5bb38a2026265c67caa286be9",
+    "content/registry.json": "ad20585d3b4c775d1b136cbd66cb585ceb722327f55a09db6f537ab6880c0764",
+    "game/data/registry.json": "2aae16d4a7312d201d2eb219565c10ad20c7dac47139dd1901488f8558ae3b49"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "decisions": [
+    {
+      "kind": "scope",
+      "text": "Neutrale Außenfläche und Blattzwischenräume."
+    },
+    {
+      "kind": "protected_features",
+      "text": "Gezähnte rote Blütenränder, helle Blütenreflexe, grüner Kelch, beide schmalen Blätter und Stiel."
+    },
+    {
+      "kind": "approval",
+      "status": "pending",
+      "text": "Eigentümer hat keine konkrete Bild-, Konsistenz- oder Endfreigabe erteilt."
+    }
+  ]
+}

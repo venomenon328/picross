@@ -1,0 +1,39 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-a358a1bf1b994efcbebeb55abf825789",
+  "revision": "at-b-r01",
+  "category_id": "blumen-pflanzen",
+  "motif_name": "Kaktus",
+  "state": "registered",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 15,
+  "height": 22,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/at-b-r01/approval.json",
+    "sha256": "4cac9257cb58b37d3783679f218a46c4e2ee67e8d73f9f6074bcbb09b11da081"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "b0d9cf6138ccbeed1fffe8fa567d202276c1831bf952786e4f0fd683d4c4b51f",
+    "active_record": "content/reveals/pz-a358a1bf1b994efcbebeb55abf825789.json",
+    "active_record_sha256": "e923b2e421af952d1da6aebb671d7e216d33077532de5b150e9f8e4a3fded2ef",
+    "evidence": "docs/design/at_b_integration/audit-02.json"
+  },
+  "blockers": [],
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
+  "package": {
+    "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/at-b-r01/package.zip",
+    "bytes": 5069477,
+    "sha256": "aed90c31ac91479b2db03749ee44fc31490a15e299b63ce11091c225e771021f"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-a358a1bf1b994efcbebeb55abf825789/at-b-r01/handoff.json",
+    "sha256": "120f8375171b268705c148ffb1beac58a219cdc0a1ae243d20c6b7150efbc415"
+  },
+  "inventory_sha256": "903e8f21bdda4832ad185e6f4232c19457d5369b80018204ecdba4d6ba1739ea"
+}

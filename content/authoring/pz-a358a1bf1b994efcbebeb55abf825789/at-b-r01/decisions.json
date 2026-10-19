@@ -1,0 +1,17 @@
+{
+  "decisions": [
+    {
+      "kind": "scope",
+      "text": "Neutrale Außenfläche; vorhandener Sand-/Steinhügel bleibt."
+    },
+    {
+      "kind": "protected_features",
+      "text": "Drei Arme, grüne Rippen, alle feinen Dornen und kleine Bodeninsel."
+    },
+    {
+      "kind": "approval",
+      "status": "pending",
+      "text": "Eigentümer hat keine konkrete Bild-, Konsistenz- oder Endfreigabe erteilt."
+    }
+  ]
+}

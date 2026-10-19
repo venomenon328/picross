@@ -1,0 +1,73 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "puzzle_id": "pz-82758295d5d34284bbae2716f64f",
+  "revision": "at-b-r01",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "state": "reveal_review",
+  "category_id": "sport-spiele",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": 24,
+    "height": 36,
+    "mode": "mono",
+    "fixed": true
+  },
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 21,
+    "file": "rulebook.md",
+    "sha256": "3f17645abcec8031df4b3bc707d34ab556f600b981786f82b30aea48ec9f4c60"
+  },
+  "reveal": {
+    "file": "reveal.png",
+    "sha256": "869792beac0b2bf7d6f64ad73453b75bfdb90641105ac21d37d6fcebf21cb93c",
+    "approval": null
+  },
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "Gemeinsame Eigentümerentscheidung über alle 26 dateigebundenen Bild-, Motiv-/Rasterkonsistenz- und Endfreigaben; Stopp vor catalog_reveal plan/adopt.",
+  "authorization": "Issue #256 Umsetzungsvorbereitung V4 / AT-B-V01: Bildvorlage, sichere Authoringablage, Commit/Push/Draft-PR. Keine Bildfreigabe, aktive Übernahme, Rasterproduktion, Merge, Deployment oder Issue-Schließung.",
+  "approval_proposal": "approval-proposal.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "b8cc6c0fa5d72aa017c359ffbfa1b2189a3ee71718478ee95555a28e8442ce3e"
+  }
+}

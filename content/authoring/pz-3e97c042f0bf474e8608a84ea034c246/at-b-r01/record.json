@@ -1,0 +1,39 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-3e97c042f0bf474e8608a84ea034c246",
+  "revision": "at-b-r01",
+  "category_id": "mythen-fantasie",
+  "motif_name": "Yin-Yang",
+  "state": "registered",
+  "repo_commit": "a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9",
+  "width": 25,
+  "height": 25,
+  "mode": "mono",
+  "difficulty": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/at-b-r01/approval.json",
+    "sha256": "d62d8993785690f6d798e6d6c0e46ffac22494bcb5ba5f9612513967404dc243"
+  },
+  "integration": {
+    "operation": "catalog_reveal adopt",
+    "scope": "working branch; not merged",
+    "branch": "chore/256-transparente-bestandsbilder",
+    "image_revision": 1,
+    "plan_hash": "975e9641ca79ba214edc2b157080792234f65ab235680a235bc9ddefede59e46",
+    "active_record": "content/reveals/pz-3e97c042f0bf474e8608a84ea034c246.json",
+    "active_record_sha256": "471e093beedd990ee4ca7d64801181cc791e72224a39fc57fbf5fe4fa8c12042",
+    "evidence": "docs/design/at_b_integration/audit-01.json"
+  },
+  "blockers": [],
+  "next_action": "Qualifiziertes separates finales AT-B-R01 am Integrationshead; Merge gesondert und nicht beauftragt.",
+  "package": {
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/at-b-r01/package.zip",
+    "bytes": 6129028,
+    "sha256": "dafc3a4804dd8c58f58eddcd75fbc475692f1d526c549a10d2e378499ffae527"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/at-b-r01/handoff.json",
+    "sha256": "6c50646ab946eea72094b481313992d538c48e53177f0027a670ad24e9c83c38"
+  },
+  "inventory_sha256": "5e2b1814572cecd52566a2111f5fa210ca6491e4bd73df068c1c0f6a922e2c6c"
+}

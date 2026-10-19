@@ -193,8 +193,48 @@ def classify(paths: list[str], force: str = "auto") -> dict:
             "changed_paths": sorted(set(paths)), "requested_scope": force}
 
 
-def git(*args: str) -> bytes:
-    return subprocess.check_output(["git", *args], timeout=90)
+def git(*args: str, input: bytes | None = None) -> bytes:
+    return subprocess.check_output(["git", *args], input=input, timeout=90)
+
+
+def fetch_diff_blobs(base: str, head: str) -> None:
+    """Batch the missing old/new blobs before checking a partial-clone diff.
+
+    Raw tree metadata does not open blobs. Object lookup explicitly disables
+    lazy fetching: otherwise hundreds of individual network round trips can
+    exhaust the diff's timeout before it has checked the complete change.
+    Content-only selection never calls this function.
+    """
+    if base and base != ZERO:
+        raw = git("diff", "--raw", "--no-renames", "--no-abbrev", "-z", base, head)
+    else:
+        raw = git("diff-tree", "--root", "-r", "-m", "--no-commit-id",
+                  "--no-renames", "--no-abbrev", "-z", head)
+    objects = set()
+    for header in raw.split(b"\0")[0:-1:2]:
+        old_mode, new_mode, old_oid, new_oid, _ = header.lstrip(b":").split()
+        for mode, oid in ((old_mode, old_oid), (new_mode, new_oid)):
+            if mode not in {b"000000", b"160000"}:  # Gitlinks are commits, not diff blobs.
+                objects.add(validate_sha(oid.decode("ascii")))
+    if not objects:
+        return
+    object_input = ("\n".join(sorted(objects)) + "\n").encode("ascii")
+    rows = git("--no-lazy-fetch", "cat-file", "--batch-check=%(objectname) %(objecttype)",
+               input=object_input).decode("ascii").splitlines()
+    missing = []
+    if len(rows) != len(objects):
+        raise ValueError("Incomplete diff object lookup")
+    for oid, row in zip(sorted(objects), rows):
+        if row == oid + " missing":
+            missing.append(oid)
+        elif row != oid + " blob":
+            raise ValueError("Invalid diff blob: " + row)
+    if missing:
+        # Stdin avoids command-line length limits. Fetch errors remain fatal;
+        # no refs, checkout, selection rules or whitespace checks are changed.
+        git("-c", "fetch.negotiationAlgorithm=noop", "fetch", "--no-tags",
+            "--no-write-fetch-head", "--recurse-submodules=no", "--filter=blob:none",
+            "--stdin", "origin", input=("\n".join(missing) + "\n").encode("ascii"))
 
 
 def validate_sha(value: str) -> str:
@@ -242,6 +282,8 @@ def make_plan(base: str, head: str, force: str, fetch: bool = False, event: str 
         plan["diff_check"] = "tree-metadata-only; production evidence reviewed before delivery"
     else:
         plan["content_only"] = False
+        if fetch:
+            fetch_diff_blobs(base, head)
         if base and base != ZERO:
             git("diff", "--check", base, head)
         else:

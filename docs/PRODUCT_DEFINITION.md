@@ -1,10 +1,13 @@
 # Produktdefinition: picross
 
-**AT · 19.10.2026, Umsetzungsvorbereitung V3; AT-A in Umsetzung:**
+**AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ergänzen den Bildstandard
 aus §3.3. AT-A schafft den begrenzten Bildänderungsweg und dessen technische
 Nachweise; anschließend überarbeitet AT-B die Bestandsbilder mit konkreter neuer
-Bildfreigabe. Die Spezifikationsfreigabe verändert noch keine Bilder oder Produktlogik.
+Bildfreigabe. Nach [AT-B-V01](AT_B_VERIFICATION.md) hat der Eigentümer die
+[26 gebundenen Bilder abgenommen](AT_B_OWNER_APPROVAL.md) und mit AT-B-F01
+deren kontrollierte Übernahme samt AT-B-T01 beauftragt. Die Spezifikationsfreigabe
+allein ersetzt weiterhin keine Bildfreigabe; separates finales Review und Merge bleiben offen.
 
 **KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
 [aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.

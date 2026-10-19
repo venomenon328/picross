@@ -1,0 +1,5 @@
+Production ID: pz-8ecddf77e80c4543bf4ec714fe3d
+Artwork: OpenAI native image generation via ChatGPT/Codex
+Usage basis: Vom Nutzer beauftragte Projektillustration; ausdrückliche Freigabe C-r02 vom 14.10.2026.
+
+AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

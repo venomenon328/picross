@@ -1,0 +1,24 @@
+{
+  "format": "picross-at-b-approval-proposal-v1",
+  "id": "pz-20219e14dbe242689b9ef06297828f34",
+  "package_revision": "at-b-r01",
+  "proposed_image_revision": 1,
+  "definition_sha256": "c590aa9ba963a98f2c53819c9313925e4a3b54bcb7360ea41b86d39037351155",
+  "previous_reveal_sha256": "82a90396033ea58038de07396a5d741e8edea745f711f91a07232ab912e2c278",
+  "reveal_sha256": "7eb95ed3144950bb3e9235cee17736fef6ed6a8505abddf615cccfb253e44a72",
+  "notice_sha256": "e19ca36c8ca41e06de224655dd72e64ee11e87ec4bf33da47956ab4871d13145",
+  "notice_file": "target-notice.txt",
+  "notice_text": "Production ID: pz-20219e14dbe242689b9ef06297828f34\nArtwork: OpenAI image_gen, auf Nutzerauftrag\nUsage basis: Neu generierter Projektinhalt ohne fremde Bildreferenz; freigegebenes C-r01 unverändert weiterverwendet.\n\nAT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.\n",
+  "actor": null,
+  "timestamp_utc": null,
+  "statement": null,
+  "checks": {
+    "reveal_approved": null,
+    "motif_raster_consistent": null,
+    "final_editorial_approved": null
+  },
+  "test_only": false,
+  "status": "pending",
+  "not_an_approval": true,
+  "not_a_catalog_reveal_request": true
+}

@@ -1,10 +1,14 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**AT · 19.10.2026, Umsetzungsvorbereitung V3; AT-A in Umsetzung:**
+**AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) erweitern §4.3 um Motive
 auf dem vorhandenen Buch- und Kartenpapier. Der neue Standard gilt für künftige
 Abschlussbilder; Bestandsrevisionen folgen nach AT-A gesondert in AT-B mit
-konkreter Bildfreigabe. Historische Gestaltungs- und Abnahmenachweise bleiben erhalten.
+konkreter Bildfreigabe. [AT-B-V01](AT_B_VERIFICATION.md) liefert den vollständigen
+Bestand mit Einzelansichten und ausdrücklich statischen Papierkompositionen.
+Die [Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) beauftragt nun AT-B-F01 mit
+kontrollierter Integration und tatsächlicher Katalog-/Abschlussprüfung.
+Historische Gestaltungs- und Abnahmenachweise bleiben erhalten.
 
 **KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
 [aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.

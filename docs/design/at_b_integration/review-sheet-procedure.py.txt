@@ -1,0 +1,23 @@
+import json
+from pathlib import Path
+from PIL import Image,ImageOps,ImageDraw,ImageFont
+R=Path.cwd(); O=R/'artifacts/at-b-f01'; D=R/'docs/design/at_b_integration/native'
+C=json.loads((O/'context.json').read_text(encoding='utf8')); captures=json.loads((D/'captures.json').read_text(encoding='utf8'))['captures']
+font=ImageFont.truetype('C:/Windows/Fonts/arial.ttf',19)
+for kind in ('catalog','completion'):
+    for ui in (100,125):
+        for start in range(0,26,8):
+            w,h=(350,470) if kind=='catalog' else (640,390)
+            cols=4 if kind=='catalog' else 2
+            page=Image.new('RGB',(cols*w,((min(8,26-start)+cols-1)//cols)*h),'#eeeeee'); draw=ImageDraw.Draw(page)
+            for i,row in enumerate(C['rows'][start:start+8]):
+                name=f"{kind}-{row['id']}-ui{ui}.png"; item=next(c for c in captures if c['file']==name)
+                im=Image.open(D/name).convert('RGB')
+                if kind=='catalog':
+                    x,y,cw,ch=item['target_rect']; im=im.crop((int(x),int(y),int(x+cw+1),int(y+ch+1)))
+                im.thumbnail((w-12,h-45),Image.Resampling.LANCZOS)
+                x=(i%cols)*w;y=(i//cols)*h
+                draw.text((x+5,y+5),f"{start+i+1:02} {row['name']} / UI{ui}",fill='black',font=font)
+                page.paste(im,(x+(w-im.width)//2,y+36))
+            page.save(O/f'{kind}-ui{ui}-{start:02}.jpg',quality=94)
+print('16 derived contact sheets; original PNGs untouched.')
