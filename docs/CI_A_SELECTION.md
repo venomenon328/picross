@@ -102,6 +102,17 @@ Fehlt der Bericht oder seine Bindung, ist dies kein grüner Abschluss.
 CI-C ergänzt das native Gruppen-/Artefaktgate und `native_groups` als gebundenen
 Scheduleroutput. Die sechs Bereichsergebnisse und diese Retryregeln bleiben erhalten.
 
+**CI-258 / #258 – kanonischer Transport:** Das Joboutput `native_groups` ist
+immer ein nichtleerer, kompakter JSON-Array-String; keine nativen Gruppen sind
+genau `[]`, eine Gruppe etwa `["catalog"]`. Der Auswahlbericht selbst behält
+sein Array. Das Ergebnisgate vergleicht den vollständigen Scheduleroutput
+bytegenau mit der kanonischen Serialisierung der gebundenen Auswahl. Fehlende
+Schlüssel (auch bei leerer Auswahl), falsche Typen, zusätzliche Felder,
+abweichende Reihenfolge und nichtkanonische Werte bleiben Fehler. Product
+erhält die bestehende CSV-Eingabe nach Dekodierung der JSON-Liste; die
+Exportpflicht wird aus ihrer tatsächlichen Mitgliedschaft bestimmt.
+
+
 Auswahl/Ergebnis heißen `ci-selection-<head>-<attempt>` und
 `ci-result-<head>-<attempt>`. Browserbelege/Spieler heißen `picross-web-*`,
 Zustellungsbelege/Spieler `picross-delivery-*`, jeweils mit Head im Namen.

@@ -32,6 +32,15 @@ Teilprüfungsmenge. Die sechs CI-A-Jobergebnisse und CI-B-Browserbelege bleiben 
 Der vollständige Base-/Head-Treevergleich, beide Rename-/Delete-Seiten, Inhalts-
 Dateimodusschutz, Main-Abkürzung und konservative unbekannte Wirkung bleiben.
 
+**CI-258 / #258:** Zwischen Docs-Producer und Scheduler/Gate ist `native_groups`
+ein kanonischer kompakter JSON-Array-String (`[]` bei keiner Auswahl),
+nicht mehr CSV beziehungsweise ein leerer Outputwert. Für den bestehenden
+Product-Workflow wird die Liste bei Übergabe zu CSV dekodiert/verbunden;
+die Entscheidung zum Spieler-/PCK-Download beruht auf Listenmitgliedschaft.
+Format der Selection-/Result-Artefakte bleibt v4 mit echtem JSON-Array.
+Fehlende beziehungsweise nichtkanonische Outputs werden auch bei
+leerem Array abgewiesen; die Quell-/Run-/Retryprüfung bleibt unverändert.
+
 | Geprüfte exakte Abhängigkeit | Native Gruppen |
 | --- | --- |
 | `tools/kat2_product.py`, `tools/native_images.py`, `game/tests/kat2_probe.gd` | catalog |

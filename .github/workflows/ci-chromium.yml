@@ -83,7 +83,7 @@ jobs:
     if: needs.docs.outputs.product == 'true'
     uses: ./.github/workflows/p1-product.yml
     with:
-      groups: ${{ needs.docs.outputs.native_groups }}
+      groups: ${{ join(fromJSON(needs.docs.outputs.native_groups), ',') }}
       selection_attempt: ${{ needs.docs.outputs.selection_attempt }}
 
   production:
@@ -140,7 +140,7 @@ jobs:
           name: picross-p1-technical-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.product.outputs.product_attempt }}
           path: ${{ runner.temp }}/native-evidence
       - name: Download required native player bytes
-        if: always() && contains(needs.docs.outputs.native_groups, 'export')
+        if: always() && needs.docs.outputs.product == 'true' && contains(fromJSON(needs.docs.outputs.native_groups), 'export')
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
           name: picross-p1-player-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.product.outputs.product_attempt }}
