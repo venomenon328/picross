@@ -1,14 +1,15 @@
-"""Explicit disposable browser profile for the GPU-less Linux CI runner."""
-import os
+"""Explicit disposable Chromium profile and guarded launch for CI."""
+from contract import require_browser
 
 
 def options(name):
-    result = {'headless': True}
-    if os.environ.get('PICROSS_WEB_SOFTWARE') == '1' and name == 'firefox':
-        # Mozilla blocks some software drivers by default. This is confined to
-        # the temporary reference profile, never a player/host requirement.
-        result['firefox_user_prefs'] = {'webgl.force-enabled': True}
-    return result
+    require_browser(name)
+    return {'headless': True}
+
+
+def launch(pw, name, profile, **kwargs):
+    require_browser(name)
+    return pw.chromium.launch_persistent_context(profile, **options(name), **kwargs)
 
 
 def graphics(page):

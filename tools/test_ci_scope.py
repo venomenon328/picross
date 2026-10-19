@@ -60,7 +60,7 @@ class SelectionTests(unittest.TestCase):
         for path in ["game/data/content/loader.gd", "game/art/content/importer.py",
                      "content/authoring/pz-a/r01/run.py", "content/packages/pz-a/r01/plugin.gd",
                      "content/.registration-pending.json", "game/art/book/paper.png",
-                     ".github/workflows/setup.yml", "unknown.json"]:
+                     ".github/workflows/ci-chromium.yml", "unknown.json"]:
             with self.subTest(path=path):
                 self.assertFalse(content_path(path))
                 plan = classify(["game/data/content/a.json", path])
@@ -201,6 +201,116 @@ class SelectionTests(unittest.TestCase):
                 self.assertTrue(plan["selected"]["integration"])
             finally:
                 os.chdir(old_cwd)
+
+
+class SchedulerTransportTests(unittest.TestCase):
+    """Exercise the real GitHub output producer and fail-closed result evaluator."""
+
+    def test_real_plan_output_and_finish_with_empty_native_selection(self):
+        script = str(Path(__file__).with_name("ci_scope.py"))
+        for filename, event in (
+            ("docs/AT_NOTE.md", "pull_request"),
+            ("content/authoring/pz-demo/r01/input.json", "pull_request"),
+            ("tools/puzzle_production/analysis.py", "pull_request"),
+            ("docs/AT_NOTE.md", "push"),
+        ):
+            with self.subTest(filename=filename, event=event), tempfile.TemporaryDirectory() as temporary:
+                repo = Path(temporary)
+                def git(*args):
+                    return subprocess.check_output(["git", *args], cwd=repo,
+                                                   stderr=subprocess.DEVNULL).decode().strip()
+                git("init", "-q")
+                git("config", "user.name", "CI fixture")
+                git("config", "user.email", "ci@example.invalid")
+                (repo / "README.md").write_text("before\n", encoding="utf-8")
+                git("add", ".")
+                git("commit", "-qm", "base")
+                base = git("rev-parse", "HEAD")
+                selected = repo / filename
+                selected.parent.mkdir(parents=True, exist_ok=True)
+                selected.write_text("fixture\n", encoding="utf-8")
+                git("add", ".")
+                git("commit", "-qm", "change")
+                head = git("rev-parse", "HEAD")
+                plan_path, outputs_path = repo / "plan.json", repo / "outputs"
+                env = {**os.environ, "GITHUB_OUTPUT": str(outputs_path),
+                       "GITHUB_RUN_ID": "456", "GITHUB_RUN_ATTEMPT": "1",
+                       "GITHUB_EVENT_NAME": event, "GITHUB_STEP_SUMMARY": ""}
+                plan_call = subprocess.run([os.sys.executable, script, "plan", "--base", base,
+                                            "--head", head, "--scope", "auto", "--event", event,
+                                            "--output", str(plan_path)], cwd=repo,
+                                           env=env, capture_output=True, text=True, timeout=20)
+                self.assertEqual(plan_call.returncode, 0, plan_call.stderr)
+                plan = json.loads(plan_path.read_text(encoding="utf-8"))
+                self.assertEqual(plan["native_groups"], [])
+                # Simulate the real scheduler discarding empty values, not a hand-built full dictionary.
+                emitted = dict(line.split("=", 1) for line in outputs_path.read_text().splitlines())
+                scheduled = {key: value for key, value in emitted.items()
+                             if key in (*FLAGS, "selection_attempt", "native_groups") and value != ""}
+                self.assertEqual(scheduled["native_groups"], "[]")
+                self.assertEqual(set(scheduled), set(FLAGS) | {"selection_attempt", "native_groups"})
+                self.assertEqual(scheduled["product"], "false")
+                binding = {key: plan[key] for key in ("source_head", "base_commit", "tested_checkout",
+                                                     "run_id", "run_attempt", "event")}
+                binding["gate_attempt"] = "1"
+                results = {job: {"result": "success" if plan["selected"][job] else "skipped"}
+                           for job in JOBS}
+                result_file = repo / "gate.json"
+                finish_env = {**env, "GITHUB_ACTIONS": "true",
+                              "CI_BINDING": json.dumps(binding),
+                              "CI_RESULTS": json.dumps(results)}
+                def finish(gate_outputs):
+                    return subprocess.run([os.sys.executable, script, "finish", "--plan-file",
+                                           str(plan_path), "--output", str(result_file)],
+                                          cwd=repo, env={**finish_env, "CI_OUTPUTS": json.dumps(gate_outputs)},
+                                          capture_output=True, text=True, timeout=20)
+                passed = finish(scheduled)
+                self.assertEqual(passed.returncode, 0, passed.stderr)
+                self.assertTrue(json.loads(result_file.read_text())["accepted"])
+                for invalid in (
+                    {key: val for key, val in scheduled.items() if key != "native_groups"},
+                    {**scheduled, "native_groups": ""},
+                    {**scheduled, "native_groups": " [] "},
+                    {**scheduled, "native_groups": '["core"]'},
+                    {**scheduled, "native_groups": None},
+                    {**scheduled, "unexpected": "false"},
+                ):
+                    with self.subTest(invalid=invalid):
+                        self.assertNotEqual(finish(invalid).returncode, 0)
+
+    def test_nonempty_group_order_and_workflow_consumers(self):
+        from ci_scope import native_groups_output, validate_binding
+        from native_contract import GROUPS
+        for paths, force in ( (["tools/kat2_product.py"], "auto"), ([], "all") ):
+            plan = apply_event_policy(classify(paths, force), "pull_request")
+            self.assertTrue(plan["native_groups"])
+            binding = dict(source_head="a" * 40, base_commit="b" * 40,
+                           tested_checkout="c" * 40, run_id="123", run_attempt="1",
+                           event="pull_request", gate_attempt="1")
+            plan.update({key: binding[key] for key in binding if key != "gate_attempt"},
+                        comparison="exact-base-to-head-trees-no-renames",
+                        diff_check="full-whitespace-check")
+            outputs = {key: str(plan["selected"][key]).lower() for key in FLAGS}
+            outputs.update(selection_attempt="1", native_groups=native_groups_output(plan["native_groups"]))
+            self.assertEqual(json.loads(outputs["native_groups"]), plan["native_groups"])
+            validate_binding(plan, binding, outputs)
+            for malformed in (
+                ",".join(plan["native_groups"]),
+                json.dumps(plan["native_groups"]),
+                json.dumps(list(reversed(plan["native_groups"])), separators=(",", ":")),
+                "[]",
+                '{"groups":[]}',
+            ):
+                if malformed == outputs["native_groups"]:
+                    continue
+                with self.subTest(malformed=malformed), self.assertRaises(ValueError):
+                    validate_binding(plan, binding, {**outputs, "native_groups": malformed})
+            if force == "all":
+                self.assertEqual(plan["native_groups"], list(GROUPS))
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/ci-chromium.yml").read_text()
+        self.assertIn("join(fromJSON(needs.docs.outputs.native_groups), ',')", workflow)
+        self.assertIn("contains(fromJSON(needs.docs.outputs.native_groups), 'export')", workflow)
+        self.assertIn("needs.docs.outputs.product == 'true' && contains(", workflow)
 
 
 class RequiredGateTests(unittest.TestCase):
