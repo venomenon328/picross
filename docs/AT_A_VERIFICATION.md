@@ -108,10 +108,12 @@ kein Produktivserver und kein Deployment werden angesprochen.
 ## Getrenntes Selbstreview
 
 Der [getrennte Selbstreview](evidence/at-a/self-review.md) benennt Prüfumfang,
-konkrete Befunde B-AT-SR01–08 und deren Gegenproben. Er ergänzt
+konkrete Befunde B-AT-SR01–09 und deren Gegenproben. Er ergänzt
 frühe Registry-/Manifestvalidierung, kontrollierten Speicher-/Typabbruch und
 bytegenaue Git-Aufbewahrung der Originale, echte Abschlussnavigation und die
-Vermeidung unsichtbarer Rasterlayouts. Die zusätzliche positive Versionsprobe
+Vermeidung unsichtbarer Rasterlayouts. Die aktuelle Zeichenaufnahme trennt zudem
+die echte Animationsuhr von der nachfolgenden Framebuffer-Auslesedauer; die
+210-ms-Grenze und unabhängige Pixelprüfung bleiben unverändert. Die zusätzliche positive Versionsprobe
 bestätigt Bildadoption, Recovery und No-op ohne Upgrade gültiger Runtime-v2/v3.
 Dieser Prüfschritt ist keine unabhängige AT-A-R01-Abnahme.
 

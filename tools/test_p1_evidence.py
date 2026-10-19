@@ -16,6 +16,35 @@ from p1_preflight import PreflightError
 
 
 class CurrentProductEvidenceTests(unittest.TestCase):
+    def test_motion_clock_excludes_readback_but_keeps_live_deadline(self):
+        motion = {"clock": "Time.get_ticks_usec observed by production animation",
+                  "timeline": [{"label": "parallel-commit-0", "after_commit_ms": 180,
+                                "frame_post_draw_ms": 200, "readback_finished_ms": 240,
+                                "active_effects": 20}]}
+        self.assertIs(p1_current_visual.verify_motion_clock(motion), motion["timeline"][0])
+        for change in ({"after_commit_ms": 210, "frame_post_draw_ms": 220},
+                       {"active_effects": 0}, {"after_commit_ms": float("nan")},
+                       {"frame_post_draw_ms": 170}, {"readback_finished_ms": 190},
+                       {"active_effects": True}, {"after_commit_ms": None}):
+            with self.subTest(change=change):
+                bad = json.loads(json.dumps(motion))
+                bad["timeline"][0].update(change)
+                with self.assertRaises(PreflightError):
+                    p1_current_visual.verify_motion_clock(bad)
+        motion["clock"] = "controlled clock"
+        with self.assertRaises(PreflightError):
+            p1_current_visual.verify_motion_clock(motion)
+
+    def test_motion_clock_rejects_stale_sample_from_previous_readback(self):
+        frame = {"label": "second-conversion-preview", "after_commit_ms": 30,
+                 "frame_post_draw_ms": 50, "readback_finished_ms": 100, "active_effects": 15}
+        motion = {"clock": "Time.get_ticks_usec observed by production animation",
+                  "timeline": [frame, dict(frame, label="parallel-commit-0",
+                                           after_commit_ms=90, frame_post_draw_ms=110,
+                                           readback_finished_ms=140)]}
+        with self.assertRaises(PreflightError):
+            p1_current_visual.verify_motion_clock(motion)
+
     def test_perf_b_failure_retains_declared_native_color_inputs(self):
         with tempfile.TemporaryDirectory() as temporary:
             output=Path(temporary)

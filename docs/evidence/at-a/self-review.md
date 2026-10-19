@@ -43,6 +43,7 @@ gegen AT/P01-D01–D07, ZA-1, Kategorien, SD-C1, Soll-CLI und CI-Policy:
 | B-AT-SR06 · behoben | Die Browser-Pixelprüfung vertraute bei Überblendbildern dem gemeldeten Alpha; ein fertiges Bild mit passender JSON-Behauptung konnte passieren. | Der unabhängige Decoder verlangt zusätzlich tatsächlich gemischte Originalpixel am opaken Motivteil. Eine manipulierte fertige PNG und eine unbemalte Papierfläche samt angepasstem JSON werden abgelehnt; positive und negative Werkzeugproben bestanden. Die read-only Probe erfasst nach `RenderingServer.frame_post_draw` genau einen tatsächlich gerenderten WebGL-Frame während der natürlichen Überblendung. Der Zeiger löst die Lösung aus; der Messschalter fordert nur den Readback an und setzt weder Animationszeit noch Spielerzustand. Der Originalausschnitt wird unverändert als PNG gesichert. |
 | B-AT-SR07 · behoben | Eine separat angebundene Chromium-Aufnahmesitzung lieferte zunächst CSS-Pixel, während Messpunkte Gerätepixel verwendeten. | Normale Seitenaufnahmen binden Viewport und Gerätemaßstab; der WebGL-Originalausschnitt bindet stattdessen seine tatsächlichen Framebuffer- und Cropkoordinaten mit Maßstab 1. Erzeuger und unabhängiger Decoder prüfen Abmessungen, tatsächliche Phase und komplette Dreiermatrix; falscher Maßstab und falsche Framebuffergröße werden abgelehnt. |
 | B-AT-SR08 · behoben | Die vollständige Core-Gruppe an `6206106`, Run 39276948640 / Attempt 2, fand eine nicht angepasste `_layout_book`-Overridesignatur in der früheren Zeichenstudie. Deren Preload erzeugte einen Enginefehler trotz anschließendem ZS2-Erfolgsmarker; das bestehende Gate lehnte den Lauf korrekt ab. | Die Studienmethode übernimmt und übergibt den optionalen `prepare_board`-Parameter. Die gesamte lokale Core-Gruppe besteht einschließlich 3526 ZS2-Prüfpunkten ohne Enginefehler, Save-Roundtrip und kontrolliertem Start. Die echte Studienoberfläche startet mit `ZS1_STUDY_OK` und schreibt eine eigene Zelle. Die finale CI prüft die Integration erneut. |
+| B-AT-SR09 · behoben | Run 39283078120 / Attempt 1 an `3c24c0e` scheiterte ausschließlich in der nativen Grafikgruppe: `parallel-commit-0` meldete 216,935 ms erst nach dem Framebuffer-Readback. Die unveränderten Originalpixel zeigen trotzdem noch laufende Zellanimationen. | Die aktuelle Aufnahme beobachtet dieselbe reale `Time.get_ticks_usec`-Uhr wie die Produktionsanimation und bindet den Frame an diese Stichprobe. Frameabschluss und Readbackende werden separat gemessen. Die unveränderte strikte 210-ms-Grenze, aktive Effekte und der Pixelunterschied zum Endbild bleiben erforderlich. Veraltete, ungeordnete, fehlende und nichtendliche Messwerte werden abgewiesen. Die vollständige aktuelle native Zeichenaufnahme und 211 Werkzeugtests bestanden. |
 
 Die [Originale zur Signaturkorrektur](study-signature/records.zip) binden die
 gezielte Windowsprüfung an `6206106` plus die exakt gehashte Korrektur. Die
@@ -53,6 +54,18 @@ Methoden aus Basis `9cc5865`; sie ist kein bestandener Nachweis und wurde nicht
 umgeschrieben. Originalausgaben und ausgeführte Kontrollskripte liegen bei.
 Die reguläre aktuelle ZS2-Pflichtprüfung und der tatsächliche Studienstart sind
 dagegen bestanden. Die Zeichenstudie ist vom normalen Spielerexport ausgeschlossen.
+
+Die [Originale zur Uhr-/Readbackkorrektur](motion-clock/records.zip) enthalten
+den fehlgeschlagenen CI-Auszug, die neue native Bewegungsfolge mit Quellhashes und
+die ausgeführte Verzögerungsgegenprobe. Letztere fügt ausschließlich im isolierten
+Messskript nach dem tatsächlichen Bildlesen 220 ms Verzögerung hinzu: echte
+Animationsstichprobe 29,435 ms, Frameabschluss 31,705 ms, Readbackende 257,197 ms.
+Originalpixel unterscheiden sich vom Endbild; die Produktionsuhr wird weder
+gesetzt noch angehalten. Ein tatsächlich verspäteter Animationsframe bleibt in
+den Negativtests abgelehnt. Regulärer Spieler, Renderer und Animationstiming
+bleiben unverändert. Das Archiv ist eine gezielte Originalauswahl; die vollständige
+Zeichenprüfung einschließlich aller Strich-/X-/Füll-/Wellenoracles liegt lokal
+unter `artifacts/at-a-final/motion-clock-fix/` und wird in der CI erneut ausgeführt.
 
 Eine zusätzlich geschlossene Nachweislücke betrifft gültige Runtime-v2/v3:
 echte Bildadoption, unterbrochene Adoption mit Recovery und anschließendes No-op
@@ -69,7 +82,7 @@ Prozessende erneut vergeben darf. Die sechs PNGs liegen unverändert bei.
 
 **Prüfung/Abnahme offen.** Die vollständige CI-Abschlussprüfung, ihr tatsächlicher
 Status und die Originalartefakte werden über [AT-A-T01](../../AT_A_VERIFICATION.md)
-im Draft-PR an den finalen Head gebunden. Die acht eigenen Befunde sind
+im Draft-PR an den finalen Head gebunden. Die neun eigenen Befunde sind
 korrigiert und gezielt gegengeprüft; die finale CI prüft ihre gemeinsame Integration.
 Das unabhängige qualifizierte AT-A-R01 bleibt ein eigenes verpflichtendes Gate
 vor Merge; dieser Selbstreview ersetzt es nicht. Merge, Deployment,
