@@ -333,7 +333,7 @@ def main(argv=None):
         code = 0
     except (ValueError, OSError, Aborted, KeyboardInterrupt, MemoryError) as exc:
         aborted = isinstance(exc, (Aborted, KeyboardInterrupt, MemoryError))
-        message = str(exc)[:2048] or "Interrupted"
+        message = str(exc)[:2048] or ("Memory allocation failed" if isinstance(exc,MemoryError) else "Interrupted")
         error = ("interrupted" if isinstance(exc, KeyboardInterrupt) or message.startswith("interrupted:") else "resource_limit") if aborted else (
             "io_error" if isinstance(exc, OSError) else "stale" if "stale" in message.lower() else "conflict" if any(w in message.lower() for w in ("changed", "foreign", "collision")) else "invalid_input")
         pending = bool(args and ((args.checkout / tx.LOCK).exists() or list((args.checkout / "content").glob(".registration-journal-*.tmp"))))

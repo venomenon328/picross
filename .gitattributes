@@ -1,3 +1,9 @@
 * text=auto eol=lf
+# AT-A original process/export logs and measurements retain their exact bytes.
+docs/evidence/at-a/windows/** -text
+docs/evidence/at-a/windows/logs/*.log binary
+docs/evidence/at-a/native/** -text
+docs/evidence/at-a/production/** -text
+docs/evidence/at-a/windows-start-preflight.json -text
 # Upstream notice is byte-bound (including CRLF/trailing spaces) by check_docs.
 "game/art/drawing/delight-coffee/More Info.txt" binary

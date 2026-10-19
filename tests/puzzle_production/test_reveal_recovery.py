@@ -298,6 +298,36 @@ del RevealTests  # Imported fixture owner is not a second discovered test suite.
 
 
 class PackageTemporaryTests(unittest.TestCase):
+    def test_cli_memory_abort_and_nested_plan_types_have_controlled_status(self):
+        import contextlib,io as streams,json
+        output=streams.StringIO()
+        with patch.object(at,'plan',side_effect=MemoryError),patch.object(at.signal,'signal'),contextlib.redirect_stdout(output):
+            code=at.main(['plan','--checkout','missing-test-checkout','--id','pz-test-at',
+                          '--input','request.json','--output-dir','new-output'])
+        result=json.loads(output.getvalue())
+        self.assertEqual(code,4);self.assertEqual(result['status'],'aborted')
+        self.assertEqual(result['error']['code'],'resource_limit');self.assertFalse(result['recovery_required'])
+        plan=dict(format=at.FORMAT,ids=['pz-test-at'],snapshot={'sources':{},
+                  'namespaces':{'reveals':[[]],'difficulty':[],'added':[],'packages':[]}},entries=[],writes=[])
+        plan['plan_hash']=at.digest(plan)
+        with self.assertRaises(InvalidInput):at.validate_plan(plan)
+
+    def test_invalid_registry_types_stop_before_namespace_or_package_access(self):
+        import tempfile,json
+        from tools.puzzle_production.za1_fixtures import isolated_checkout
+        with tempfile.TemporaryDirectory() as directory:
+            root=isolated_checkout(Path(directory)/'checkout')
+            catalog=(root/tx.categories.PATH).read_text(encoding='utf-8')
+            for bad in ([],{}, {'format':cr.FORMAT,'entries':[{'id':[]}]}):
+                (root/tx.REGISTRY).write_text(json.dumps(bad),encoding='utf-8')
+                with patch.object(tx,'namespaces',side_effect=AssertionError('Opened paths from invalid registry')):
+                    with self.assertRaises(InvalidInput):tx.capture(root)
+                texts={tx.REGISTRY:json.dumps(bad),tx.RUNTIME:'{}',tx.categories.PATH:catalog}
+                journal=dict(format=tx.FORMATS['sync'],operation='sync',old=texts,new=texts,
+                             retained={},additions={},replacements={},report_run=None)
+                with patch.object(source,'source_paths',side_effect=AssertionError('Opened invalid journal paths')):
+                    with self.assertRaises(InvalidInput):tx.validate_journal(root,journal)
+
     def test_real_kill_cannot_leave_unverifiable_package_prefix(self):
         import tempfile
         with tempfile.TemporaryDirectory() as directory:

@@ -91,13 +91,14 @@ def retained_names(root, registry, *, reports=None, previous=False, exclude=()):
 
 
 def capture(root, *, allow_stale=False):
-    from .content_registry import check_checkout
+    from .content_registry import check_checkout, validate
     root = catalog_io.external(root)
     from .catalog_publication import staging
     require(read(root, LOCK) is None and not staging(root), "Interrupted registration: recovery required")
     # Snapshot first, then validate it against the same checkout. No later read
     # may silently replace this starting point during expensive export checks.
     registry = rating.bytes_json(read(root, REGISTRY), 8 * 1024 * 1024)
+    validate(registry, io.json_bytes(read(root, categories.PATH), 131072))
     initial_namespaces = namespaces(root, registry)
     names = text_names(registry)
     texts = {n: read(root, n) for n in names}
@@ -321,6 +322,9 @@ def validate_journal(root, j, *, before_write=False):
     for side in ("old", "new"):
         for n in (REGISTRY, RUNTIME, categories.PATH): require(isinstance(j[side].get(n), str), "Missing journal source")
     before, after = (rating.bytes_json(j[s][REGISTRY].encode(), 8 * 1024 * 1024) for s in ("old", "new"))
+    from .content_registry import validate
+    for side, registry in (("old",before),("new",after)):
+        validate(registry, io.json_bytes(j[side][categories.PATH].encode(), 131072))
     names = text_names(before, legacy=legacy, previous=not current_generation) | text_names(after, legacy=legacy, previous=not current_generation) | report_names(j["report_run"], j["operation"])
     if not current_generation:
         require(not reveal.source_paths(root, before, after), "Legacy journal cannot bind reveal sources")
