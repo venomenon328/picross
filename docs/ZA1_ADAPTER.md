@@ -1,6 +1,6 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A implementiert, unabhängiges Review offen:**
 [AT](REVEAL_TRANSPARENCY.md) ergänzt mit dem beauftragten AT-A einen
 eng begrenzten Bildupdateweg; AT-B stellt anschließend den gebundenen Bestand um.
 Der aktive Bildhash und die neue tatsächliche Bildfreigabe werden außerhalb

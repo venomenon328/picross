@@ -1,6 +1,6 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A implementiert, unabhängiges Review offen:**
 [AT-A](REVEAL_TRANSPARENCY.md) ergänzt den gemeinsamen Quellen-/Transaktionsweg
 für getrennte aktive Bildfassungen und einen abgesicherten Binärersatz. Ratings,
 Bewertungsrevisionen, Hinzugefügt-Daten und historische Produktionsbindungen

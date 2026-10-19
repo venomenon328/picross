@@ -49,6 +49,9 @@ class OriginalEvidenceTests(unittest.TestCase):
         pixels[4]=list(gate.SAMPLES['ink'][:3])
         png(self.root/item['file'],pixels);item['samples'][4]['actual']=pixels[4]
         with self.assertRaisesRegex(ValueError,'intermediate blend'):gate.browser(self.root,report,{})
+        pixels[4]=[240]*3
+        png(self.root/item['file'],pixels);item['samples'][4]['actual']=pixels[4]
+        with self.assertRaisesRegex(ValueError,'no green artwork'):gate.browser(self.root,report,{})
 
     def test_browser_rejects_white_loss_and_unbound_export_or_save_changes(self):
         report={'group':'catalog'};browser_row(self.root,report)

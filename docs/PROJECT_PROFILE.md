@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**AT / #256 (19.10.2026), Umsetzungsvorbereitung V3; AT-A in Umsetzung:**
+**AT / #256 (19.10.2026), Umsetzungsvorbereitung V3; AT-A implementiert, unabhängiges Review offen:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ist bei Abschlussbildern,
 deren Katalogvorschau und Bildrevisionen samt den dort benannten Fachquellen
 vollständig zu lesen. Dasselbe freigegebene Bild lässt in beiden Ansichten den

@@ -1,4 +1,5 @@
 """AT observations from real exported players and genuine pointer input."""
+import base64
 import json
 from PIL import Image
 from browser_actions import state, point, control, wait, draw, saved, game_viewport
@@ -30,7 +31,18 @@ def capture(page, output, name, image, *, revision=1, opacity=1):
     assert samples['white']==[255]*4 and samples['soft']==color+[80] and samples['ink']==color+[255]
     assert samples['hole'][3]==samples['outside'][3]==0
     path=output/(name+'.png')
-    page.screenshot(path=str(path))
+    if opacity==1:
+        page.screenshot(path=str(path))
+    else:
+        # Capture the current compositor frame directly. Playwright's ordinary
+        # screenshot waits for animation frames; with software WebGL that can
+        # outlast the real transition. Preserve the returned PNG bytes exactly.
+        cdp=page.context.new_cdp_session(page)
+        try:
+            shot=cdp.send('Page.captureScreenshot',{'format':'png','fromSurface':True,'captureBeyondViewport':False})
+            path.write_bytes(base64.b64decode(shot['data'],validate=True))
+        finally:
+            cdp.detach()
     dpr=page.evaluate('devicePixelRatio')
     rows=[]
     with Image.open(path) as raw:
@@ -40,6 +52,7 @@ def capture(page, output, name, image, *, revision=1, opacity=1):
             pixel=[int(v*dpr) for v in location]; actual=list(rgb.getpixel(tuple(pixel)))
             if opacity!=1 and kind=='ink':
                 assert all(color[i]+10<actual[i]<248 for i in range(3)), (kind,actual,'not an intermediate blend')
+                assert actual[1]>actual[0]+5 and actual[1]>actual[2]+3, (kind,actual,'missing green artwork')
             if opacity==1:
                 if kind=='white': assert min(actual)>=246, (kind,actual)
                 if kind=='ink': assert max(abs(a-b) for a,b in zip(actual,color))<=10, (kind,actual)

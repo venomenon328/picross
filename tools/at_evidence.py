@@ -90,6 +90,7 @@ def browser(directory, report, builds):
             require(source[3]==0 if kind in ('outside','hole') else tuple(source)==expected,'browser imported source')
             if blend and kind=='ink':
                 require(all(color[i]+10<actual[i]<248 for i in range(3)), 'original browser frame is not an intermediate blend')
+                require(actual[1]>actual[0]+5 and actual[1]>actual[2]+3, 'original browser blend has no green artwork')
             if not blend:
                 if kind=='white': require(min(actual)>=246,'lost opaque white detail')
                 elif kind=='ink': require(max(abs(a-b) for a,b in zip(actual,color))<=10,'wrong export image')

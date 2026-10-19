@@ -1,6 +1,6 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A implementiert, unabhängiges Review offen:**
 [AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
 für transparente Abschlussbilder und einen eigenen eng begrenzten Bildupdateweg.
 AT-B stellt danach den gebundenen Bestand mit tatsächlichen Bildfreigaben um.
