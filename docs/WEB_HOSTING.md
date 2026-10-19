@@ -10,6 +10,16 @@ Technische Ergebnisse und Artefaktbindung stehen im zugehörigen Draft-PR.
 
 ## Freigegebene CI-Auswahl und Browsergruppen
 
+Eigentümerentscheidung vom 19.10.2026 / [#261](https://github.com/venomenon328/picross/issues/261):
+Automatisierte CI verwendet ausschließlich Chromium mit allen bisherigen
+27 Szenarien und fünf Gruppen. Frühere Firefox-CI-Pflichten entfallen;
+historische Nachweise und die bestehenden Spiel-/Speicherverträge bleiben
+unverändert gebunden. Workflow und Browser-CLIs weisen andere Browserwerte vor
+Installation/Start ab. Das fail-closed-Gate verlangt nur Chromium-Belege und
+`chromium_attempt`; sämtliche Inhalts-/Quellen-/Run-/Retryprüfungen bleiben.
+Vor Reaktivierung müssen alte PR-Stände und historische Reruns gemäß
+[CI-Policy](CI_POLICY.md) verlässlich gesperrt sein.
+
 Die Eigentümerentscheidung vom 18.10.2026 in
 [CI-Policy](CI_POLICY.md) / [#246](https://github.com/venomenon328/picross/issues/246)
 ist ein gestufter Vertrag: **CI-A/CI-B implementiert; keine Livefreigabe**.
@@ -24,14 +34,14 @@ Referenzpfad ohne Browserinstallation/-start oder unnötige technische Exporte;
 ein dafür benötigtes reguläres Bündel wird weiterhin tatsächlich gebaut.
 Gemeinsame Export-/Hostingverträge wählen beide Bereiche. Bis CI-B bleibt
 jede weiterhin ausgewählte Browserroute vollständig, einschließlich regulärem
-Start und aller aktuellen positiven/negativen Szenarien beider Browser.
+Start und aller aktuellen positiven/negativen Chromium-Szenarien.
 
 [CI-A-Auswahl](CI_A_SELECTION.md) bindet die genaue Pfadzuordnung.
 [CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) bindet das vollständige Inventar,
 Auswahl, unabhängige Voraussetzungen und das Ergebnisgate. `web.yml` baut drei
-Exporte einmal im selben Run; `web-browser.yml` führt Chromium und Firefox auf
-getrennten Runnern mit eigenen Profilen/Hosts aus. Das Gate kontrolliert konkrete
-Szenarien und Pflichtdateien samt Hashes. `delivery.yml` bleibt separat mit genau
+Exporte einmal im selben Run; `web-browser.yml` führt Chromium auf einem
+eigenen Runner mit getrennten Profilen/Hosts je Gruppe aus. Das Gate kontrolliert
+konkrete Szenarien und Pflichtdateien samt Hashes. `delivery.yml` bleibt separat mit genau
 einem regulären Export und der bestehenden SSH/HTTP-Referenz ohne Browser.
 
 Nach Integration von [CI-B (#248)](https://github.com/venomenon328/picross/issues/248)
@@ -39,14 +49,14 @@ gilt die folgende Gruppenauswahl; die Vorgängerroute bleibt bis dahin auf `main
 
 | Unabhängig startbare Gruppe | Prüfzweck |
 | --- | --- |
-| Regulärer Start | Uninstrumentierter Spielerexport und vorhandener Startvertrag in beiden Browsern. |
+| Regulärer Start | Uninstrumentierter Spielerexport und vorhandener Startvertrag in Chromium. |
 | Katalog/Darstellung | Aktuelle Katalog-/Metadatenzustände und geforderte Darstellungsbelege. |
 | Eingabe/Geometrie | Echte Zeiger-/Gestenereignisse und relevante Zoom-/Fensterfälle. |
 | Abschluss/Reset | Tatsächlicher Abschluss, Präsentation, Abbruch, Bestätigung und Reset. |
 | Persistenz/Lifecycle | Echte Sicherung, Reload, Prozessneustart, Exportwechsel, Sperren, Fehler/Recovery, Offline und Beenden. |
 
 Normale Runtime-/Darstellungsänderungen wählen regulären Start und die betroffenen
-Gruppen in Chromium und Firefox; gemeinsame UI-/Save-/Export-/Harnessabhängigkeiten
+Gruppen in Chromium; gemeinsame UI-/Save-/Export-/Harnessabhängigkeiten
 wählen mehrere oder alle Gruppen. Insbesondere `game/ui/main.gd` ist keine
 Katalogausnahme. Unbekannte Wirkung wird umfassend geprüft, manuelle Auswahl
 erweitert ausschließlich. Vollständige Browserabdeckung ist die Vereinigung aller
@@ -61,13 +71,11 @@ erforderlich, wo diese Übergänge geprüft werden. Der Versionswechsel verwende
 weiterhin zwei eigenständig erzeugte Exporte. Vorbefüllte Daten, ein anderer
 Identifikator desselben Builds oder alleiniger Start ersetzen diese Belege nicht.
 
-Chromium und Firefox laufen auf getrennten Runnern aus auf denselben geprüften
-Quellstand gebundenen Builds. Eigene Profile, Ports, veränderliche Hosting- und
-Releaseverzeichnisse, Reports und Artefaktnamen verhindern Überschneidungen:
+Chromium verwendet auf denselben geprüften Quellstand gebundene Builds.
+Eigene Profile, Ports, veränderliche Hosting- und Releaseverzeichnisse, Reports und Artefaktnamen verhindern Überschneidungen:
 Die Referenz verändert unter anderem Einstieg, Releasezuordnung und Unterpfad.
-Beide Browser liefern ihre erforderlichen Szenarien; ausdrücklich browserspezifische
-Fälle wie die Chromium-DPI-Prüfung bleiben erkennbar. Das Ergebnisgate kontrolliert
-erwartete und tatsächlich gelieferte Gruppen, Szenarien und Belege je Browser;
+Chromium liefert sämtliche bisherigen Szenarien einschließlich seiner
+Live-DPI-Prüfung. Das Ergebnisgate kontrolliert erwartete und tatsächlich gelieferte Gruppen, Szenarien und Belege je Browser;
 fehlende, leere, doppelte oder falsche Pflichtresultate sind kein Erfolg.
 
 Messungen trennen je Szenario Start/Navigation, Zustandsabfragen, Eingaben,

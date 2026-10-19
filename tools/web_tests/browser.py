@@ -8,9 +8,8 @@ import platform
 import shutil
 import tempfile
 import time
-from playwright.sync_api import sync_playwright
 import browser_actions
-from browser_runtime import options
+from browser_runtime import options, launch
 from contract import GROUPS, BROWSERS, expected
 from serve import serve
 import timing
@@ -23,8 +22,7 @@ class Session:
         self.began = time.monotonic()
 
     def launch(self, scale=1):
-        context = getattr(self.pw, self.browser).launch_persistent_context(
-            self.profile, **options(self.browser), viewport={'width':1920,'height':1122},
+        context = launch(self.pw, self.browser, self.profile, viewport={'width':1920,'height':1122},
             device_scale_factor=scale)
         self.contexts.append(context)
         return context
@@ -44,23 +42,24 @@ class Session:
 
 
 def main():
-    timing.install()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build', type=Path, required=True)
     parser.add_argument('--update-build', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--browser', choices=[*BROWSERS, 'both'], default='both')
+    parser.add_argument('--browser', choices=BROWSERS, default='chromium')
     parser.add_argument('--groups', default=','.join(GROUPS[1:]))
     args = parser.parse_args()
     groups = args.groups.split(',')
     if not groups or len(set(groups)) != len(groups) or any(g not in GROUPS[1:] for g in groups):
         parser.error('Expected unique technical groups')
+    from playwright.sync_api import sync_playwright
+    timing.install()
     args.output.mkdir(parents=True, exist_ok=True)
     report = dict(os=platform.platform(), manifest=json.loads((args.build/'build-manifest.json').read_text()),
                   update_manifest=json.loads((args.update_build/'build-manifest.json').read_text()), results=[])
     try:
         with sync_playwright() as pw:
-            for name in (BROWSERS if args.browser == 'both' else [args.browser]):
+            for name in [args.browser]:
                 for group in groups:
                     # Only persistence deliberately keeps its own profile/origin
                     # over genuine process restarts. Groups share no mutable host.

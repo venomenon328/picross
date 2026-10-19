@@ -5,18 +5,28 @@ Ausgangsbestand vor Aufteilung: `main@9ec73a5f35173d1f4f772feabba451c1d4ccd92a`.
 [CI-Policy](CI_POLICY.md) bestimmen B01–B08. Technische Abnahme und Messungen
 werden im Implementierungs-PR gebunden; CI-B-R01 bleibt separat vor Merge.
 
-## Vollständige Zuordnung vor Aufteilung
+## Aktuelle Browserpflicht
+
+Eigentümerentscheidung vom 19.10.2026 / [#261](https://github.com/venomenon328/picross/issues/261):
+Firefox entfällt vollständig aus automatisierter CI. Die folgende aktuelle
+Matrix umfasst ausschließlich Chromium mit allen bisherigen 27 Szenarien.
+Historische CI-A-/CI-B-Messungen und Abnahmen behalten ihre damaligen Quellen
+und Browser; die geänderte Pflicht erklärt keinen alten Lauf rückwirkend für
+erfolgreich. Der sichere CI-Neustart einschließlich alter PRs und historischer
+Reruns folgt der [CI-Policy](CI_POLICY.md).
+
+## Vollständige Zuordnung
 
 Die unveränderten Szenarionamen identifizieren die vorhandenen positiven und
-negativen Assertions. Beide Browser sind Pflicht; nur die Live-DPI-Probe nutzt
-Chromiums CDP. Hinzu kommt der reguläre uninstrumentierte Start je Browser.
+negativen Assertions. Chromium ist der einzige CI-Browser; die Live-DPI-Probe
+nutzt weiterhin CDP. Hinzu kommt der reguläre uninstrumentierte Start.
 
 | ID | Gruppe | Bestehende Aussage einschließlich Gegenproben |
 | --- | --- | --- |
 | regular-start | regular | Echter regulärer Export; Storage bereit und bestätigt, Startmeldung verborgen, keine technische Probe, tatsächlicher WebGL2-Kontext, offline nach Start, keine Konsolen-/Seitenfehler; reguläres Katalogbild. |
 | B01 | persistence | delayed exclusive lock handoff waits before IndexedDB hydration |
 | B02 | catalog | export/catalog startup |
-| B03 | catalog | KE neutral new labels and passive mode/difficulty click routes |
+| B03 | catalog | KU-A single-line metadata, footer, tooltip boundaries and passive click routes |
 | B04 | input | left/right elastic stroke, atomic undo and redo branch |
 | B05 | input | Escape/opposite-button/focus cancellation without phantom commit |
 | B06 | persistence | second writer blocked |
@@ -46,9 +56,11 @@ Speicheridentität, unveränderte Bytes bei Recovery-/Revisionsfehlern und echte
 Bestätigungsdialoge mit fremder Slotisolation. Keine künstliche Savevorbelegung
 ersetzt diese Benutzeraktionen.
 
-Pflichtbilder: je Browser `regular-catalog.png`, `ke-difficulty-tooltip.png`,
-`ke-mode-tooltip.png`, `mono.png`, `colour-row-clues.png`,
-`colour-column-clues.png` (jeweils mit Browserpräfix). Fehlerbilder bleiben
+Pflichtbilder: `regular-catalog.png`, `ku-no-difficulty-tooltip.png`,
+`ku-mode-tooltip.png`, `ku-1280-ui125.png`, `ku-1920-ui100.png`,
+`ku-2560-ui125.png`, `ku-solved-footer.png`, `mono.png`, `colour-row-clues.png`,
+`colour-column-clues.png` und die unten genannten KU-B-Bilder
+(jeweils mit Chromium-Präfix). Fehlerbilder bleiben
 zusätzliche Diagnose. Versions-/Launch-/WebGLdaten, Viewports, Lockhandoff und
 die eng erlaubten Engine-Exitdiagnosen gehören weiterhin zum Bericht.
 
@@ -65,7 +77,7 @@ Vergleich bindet Baseline und neuen Gruppenlauf an tatsächliche Runs/Jobs.
 ## Unabhängige Ausführung und Auswahl
 
 `tools/web_tests/contract.py` ist das gemeinsame versionierte Inventar für
-Auswahl, Ausführung und Gate. `picross-ci-selection-v3` enthält zusätzlich
+Auswahl, Ausführung und Gate. `picross-ci-selection-v4` enthält zusätzlich
 `browser_groups` und `browser_expected` (Gruppen und Szenario-IDs je Browser).
 Die sechs CI-A-Bereichsergebnisse, der exakte Base-/Head-Treevergleich,
 Rename-/Löschungsseiten, Inhaltsmodusschutz und enge Fachauswahl bleiben erhalten.
@@ -121,21 +133,24 @@ ein eigenes temporäres Projekt und den vorhandenen hashgeprüften Toolchainweg.
 Buildversuch und die vollständigen Manifeste samt Manifest-SHA-256. Die beiden
 technischen Exporte müssen unterschiedliche Buildkennungen und Bauzeiten besitzen.
 Es werden aktuelle Builddateien desselben Runs übertragen, keine Prüfergebnisse
-gecacht. Beide Browser müssen exakt dieselbe Buildhülle verwenden.
+gecacht. Alle Chromium-Gruppen verwenden dieselbe gebundene Buildhülle.
 
-Die Jobs `chromium` und `firefox` rufen `web-browser.yml` auf getrennten
-Ubuntu-24.04-Runnern auf. Jeder installiert ausschließlich seinen Browser aus
-Playwright 1.58.0 und prüft nach dem Download sämtliche Bundlebytes erneut.
-Godot bleibt 4.7.2-stable; Mesa und die dokumentierte temporäre Firefoxoption
-bleiben unverändert. Der Buildjob und beide Browser melden ihre eigenen Versuche.
+Der Job `chromium` ruft `web-browser.yml` auf einem eigenen Ubuntu-24.04-Runner
+auf. Dessen erster Schritt weist jeden Browserwert außer `chromium` vor jeglicher
+Installation ab. Playwright 1.58.0 installiert ausdrücklich nur Chromium;
+sämtliche Bundlebytes werden nach dem Download erneut geprüft. Auch
+`run_groups.py`, `browser.py`, `smoke.py` und der gemeinsame direkte Launchweg
+weisen unzulässige Browserwerte vor Browserstart ab. Godot bleibt 4.7.2-stable;
+Mesa bleibt erhalten, die Firefox-Profiloption entfällt. Buildjob und Chromium
+melden ihre eigenen Versuche; einziges Browseroutput ist `chromium_attempt`.
 
 `ci-required` verlangt weiterhin alle ausgewählten CI-A-Jobergebnisse und
-verifiziert zusätzlich beide tatsächlichen `web-result.json` gegen das neu
+verifiziert zusätzlich Chromiums tatsächliches `web-result.json` gegen das neu
 berechnete Gruppen-/Szenarieninventar. Es prüft eindeutige vollständige Gruppen,
 Szenario-IDs, erfolgreiche Prozesse, Messbelege, WebGL-Daten, Originalberichte,
 Pflichtbilder und sämtliche gelieferten Dateihashes. Die Originalberichte müssen
 mit den aggregierten Ergebnissen und Buildmanifesten übereinstimmen. Fehlende,
-leere, doppelte, unerwartete, einseitige, abgebrochene, übersprungene oder
+leere, doppelte, unerwartete, abgebrochene, übersprungene oder
 fehlgeschlagene Pflichtresultate sind kein Erfolg. Ein grünes `web`-Jobergebnis
 allein genügt dem CLI-Gate ausdrücklich nicht.
 
@@ -144,7 +159,7 @@ Erfolgreiche Jobs dürfen beim Retry desselben unveränderten Runs erhalten blei
 Auswahlversuch ≤ Buildversuch ≤ Browserversuch ≤ Gateversuch. Head/Base/Test-Merge,
 Event und Run müssen unverändert übereinstimmen. Keine Wildcardauswahl historischer
 Resultate. Artefakte heißen `ci-web-builds-<head>-<attempt>`,
-`picross-web-<browser>-<head>-<attempt>` und
+`picross-web-chromium-<head>-<attempt>` und
 `picross-web-player-<head>-<attempt>`. Technische Dateien bleiben sieben Tage,
 der reguläre Spieler vierzehn Tage. Profile und veränderliche Hostingbäume werden
 nicht hochgeladen. SSH/HTTP und seine Artefakte bleiben vollständig eigenständig.
@@ -153,11 +168,13 @@ nicht hochgeladen. SSH/HTTP und seine Artefakte bleiben vollständig eigenständ
 
 `test_ci_b.py` prüft die exakte Szenarienvereinigung, Pfadabhängigkeiten,
 Misch-/Main-/manuelle Auswahl, Prozessaufrufe nach injiziertem Gruppenfehler,
-fehlende/einseitige/doppelte/falsche Belege, Quell-/Run-/Versuchsbindungen,
+fehlende/doppelte/falsche Chromium-Belege, Quell-/Run-/Versuchsbindungen,
 Exportidentität und den tatsächlichen Gate-CLI-Fehler bei nur grünem Webjob.
 Linux-CI führt zusätzlich die wirklichen Workflow-Shellblöcke mit synthetischen
 Außenwerkzeugen aus und verlangt die Weitergabe injizierter Exit-23-Fehler.
-Diese Gegenproben ersetzen keine echten Browserläufe.
+`test_ci_chromium.py` prüft außerdem alle Browser-CLIs vor Playwright-Import,
+den direkten Launchschutz und den ersten Workflow-Schritt mit unerlaubten
+Browserwerten. Diese Gegenproben ersetzen keine echten Browserläufe.
 
 CI-B-T01 bindet im PR den vollständigen realen Lauf, repräsentative gezielte
 Läufe, Baseline-/Nachhermessung, tatsächliche Job-/Phasendauern, Cache-/Runner-
@@ -172,6 +189,7 @@ KU-B ergänzt `KU-B01` in `catalog` (vier Kriterien, beide Richtungen,
 Gleichstände, stabile Rückkehr-ID) und `KU-B02` in `persistence` (Präferenz über
 Reload, echten Prozessneustart, zweiten Export, isolierten IndexedDB-Fehler und
 Wiederholung mit letzter Auswahl). Pflichtbilder sind `ku-b-sorting.png` und
-`ku-b-preference-error.png`, jeweils für beide Browser. Damit enthält das aktuelle
-Inventar 27 Chromium- und 26 Firefox-Szenarien. Auswahl-/Workflowpolitik und der
+`ku-b-preference-error.png`, jeweils für Chromium. Damit enthält das aktuelle
+Inventar unverändert 27 Chromium-Szenarien. Die bisherigen 26 Firefox-Szenarien
+bleiben in ihren historischen Nachweisen gebunden. Die Auswahlpolitik und der
 separat bekannte rote Main-Push-Befund werden hierdurch nicht repariert.

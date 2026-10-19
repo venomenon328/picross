@@ -1,38 +1,44 @@
 """Versioned browser coverage inventory; imported by selection, runners and gate."""
 GROUPS = ('regular', 'catalog', 'input', 'completion', 'persistence')
-BROWSERS = ('chromium', 'firefox')
+BROWSERS = ('chromium',)
 SCENARIOS = (
-    {'id': 'KU-B01', 'group': 'catalog', 'label': 'KU-B four criteria, both directions, canonical ties and stable return ID', 'browsers': ['chromium', 'firefox'], 'images': ['ku-b-sorting.png']},
-    {'id': 'KU-B02', 'group': 'persistence', 'label': 'KU-B preference reload, process restart, compatible export, isolated failure and latest-change retry', 'browsers': ['chromium', 'firefox'], 'images': ['ku-b-preference-error.png']},
-    {'id': 'regular-start', 'group': 'regular', 'label': 'uninstrumented startup, WebGL2, offline and no errors', 'browsers': ['chromium', 'firefox'], 'images': ['regular-catalog.png']},
-    {'id': 'B01', 'group': 'persistence', 'label': 'delayed exclusive lock handoff waits before IndexedDB hydration', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B02', 'group': 'catalog', 'label': 'export/catalog startup', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B03', 'group': 'catalog', 'label': 'KU-A single-line metadata, footer, tooltip boundaries and passive click routes', 'browsers': ['chromium', 'firefox'], 'images': ['ku-no-difficulty-tooltip.png', 'ku-mode-tooltip.png', 'ku-1280-ui125.png', 'ku-1920-ui100.png', 'ku-2560-ui125.png']},
-    {'id': 'B04', 'group': 'input', 'label': 'left/right elastic stroke, atomic undo and redo branch', 'browsers': ['chromium', 'firefox'], 'images': ['mono.png']},
-    {'id': 'B05', 'group': 'input', 'label': 'Escape/opposite-button/focus cancellation without phantom commit', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B06', 'group': 'persistence', 'label': 'second writer blocked', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B07', 'group': 'persistence', 'label': 'reload restores cells, complete history/redo and view', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B08', 'group': 'persistence', 'label': 'real browser process restart at DPI125 restores history and redo works', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B09', 'group': 'persistence', 'label': 'second genuine compatible export retains IndexedDB identity and progress', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B10', 'group': 'input', 'label': 'UI125, 720p/1080p, wheel zoom, fullscreen fit and hit geometry', 'browsers': ['chromium', 'firefox'], 'images': []},
+    {'id': 'KU-B01', 'group': 'catalog', 'label': 'KU-B four criteria, both directions, canonical ties and stable return ID', 'browsers': ['chromium'], 'images': ['ku-b-sorting.png']},
+    {'id': 'KU-B02', 'group': 'persistence', 'label': 'KU-B preference reload, process restart, compatible export, isolated failure and latest-change retry', 'browsers': ['chromium'], 'images': ['ku-b-preference-error.png']},
+    {'id': 'regular-start', 'group': 'regular', 'label': 'uninstrumented startup, WebGL2, offline and no errors', 'browsers': ['chromium'], 'images': ['regular-catalog.png']},
+    {'id': 'B01', 'group': 'persistence', 'label': 'delayed exclusive lock handoff waits before IndexedDB hydration', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B02', 'group': 'catalog', 'label': 'export/catalog startup', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B03', 'group': 'catalog', 'label': 'KU-A single-line metadata, footer, tooltip boundaries and passive click routes', 'browsers': ['chromium'], 'images': ['ku-no-difficulty-tooltip.png', 'ku-mode-tooltip.png', 'ku-1280-ui125.png', 'ku-1920-ui100.png', 'ku-2560-ui125.png']},
+    {'id': 'B04', 'group': 'input', 'label': 'left/right elastic stroke, atomic undo and redo branch', 'browsers': ['chromium'], 'images': ['mono.png']},
+    {'id': 'B05', 'group': 'input', 'label': 'Escape/opposite-button/focus cancellation without phantom commit', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B06', 'group': 'persistence', 'label': 'second writer blocked', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B07', 'group': 'persistence', 'label': 'reload restores cells, complete history/redo and view', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B08', 'group': 'persistence', 'label': 'real browser process restart at DPI125 restores history and redo works', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B09', 'group': 'persistence', 'label': 'second genuine compatible export retains IndexedDB identity and progress', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B10', 'group': 'input', 'label': 'UI125, 720p/1080p, wheel zoom, fullscreen fit and hit geometry', 'browsers': ['chromium'], 'images': []},
     {'id': 'B11', 'group': 'input', 'label': 'live DPI change to 150 percent preserves hit geometry', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B12', 'group': 'input', 'label': 'left mouse moves long row/column clue windows and preserves cells', 'browsers': ['chromium', 'firefox'], 'images': ['colour-row-clues.png', 'colour-column-clues.png']},
-    {'id': 'B13', 'group': 'completion', 'label': 'EA completion, late caption, neutral heading, cancel, durable browser reload, origin-bound reset and repeated animation', 'browsers': ['chromium', 'firefox'], 'images': ['ku-solved-footer.png']},
-    {'id': 'B14', 'group': 'completion', 'label': 'mono and eight-colour completion through real mouse events', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B15', 'group': 'input', 'label': '50x30 rectangle, colour ID 8 and full-grid fit', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B16', 'group': 'persistence', 'label': 'actual IndexedDB write failure is visible; own quit stays open; retry commits', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B17', 'group': 'persistence', 'label': 'abrupt tab close loses unacknowledged edit but retains last acknowledged state', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B18', 'group': 'persistence', 'label': 'corrupt primary reload uses valid backup without silent overwrite', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B19', 'group': 'persistence', 'label': 'explicit backup confirmation repairs primary through existing validation', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B20', 'group': 'persistence', 'label': 'incompatible revisions rejected without migration or overwrite', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B21', 'group': 'persistence', 'label': 'confirmed reset and slot isolation', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B22', 'group': 'persistence', 'label': 'real subpath startup, stable saves and offline-after-load input', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B23', 'group': 'persistence', 'label': 'own quit acknowledges durable sync, exits zero and reload restores saved state', 'browsers': ['chromium', 'firefox'], 'images': []},
-    {'id': 'B24', 'group': 'persistence', 'label': 'blocked IndexedDB startup displays failure before gameplay', 'browsers': ['chromium', 'firefox'], 'images': []},
+    {'id': 'B12', 'group': 'input', 'label': 'left mouse moves long row/column clue windows and preserves cells', 'browsers': ['chromium'], 'images': ['colour-row-clues.png', 'colour-column-clues.png']},
+    {'id': 'B13', 'group': 'completion', 'label': 'EA completion, late caption, neutral heading, cancel, durable browser reload, origin-bound reset and repeated animation', 'browsers': ['chromium'], 'images': ['ku-solved-footer.png']},
+    {'id': 'B14', 'group': 'completion', 'label': 'mono and eight-colour completion through real mouse events', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B15', 'group': 'input', 'label': '50x30 rectangle, colour ID 8 and full-grid fit', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B16', 'group': 'persistence', 'label': 'actual IndexedDB write failure is visible; own quit stays open; retry commits', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B17', 'group': 'persistence', 'label': 'abrupt tab close loses unacknowledged edit but retains last acknowledged state', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B18', 'group': 'persistence', 'label': 'corrupt primary reload uses valid backup without silent overwrite', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B19', 'group': 'persistence', 'label': 'explicit backup confirmation repairs primary through existing validation', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B20', 'group': 'persistence', 'label': 'incompatible revisions rejected without migration or overwrite', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B21', 'group': 'persistence', 'label': 'confirmed reset and slot isolation', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B22', 'group': 'persistence', 'label': 'real subpath startup, stable saves and offline-after-load input', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B23', 'group': 'persistence', 'label': 'own quit acknowledges durable sync, exits zero and reload restores saved state', 'browsers': ['chromium'], 'images': []},
+    {'id': 'B24', 'group': 'persistence', 'label': 'blocked IndexedDB startup displays failure before gameplay', 'browsers': ['chromium'], 'images': []},
 )
 
 
+def require_browser(browser):
+    if browser not in BROWSERS:
+        raise ValueError('Unsupported CI browser; expected chromium')
+
+
 def expected(browser, groups):
+    require_browser(browser)
     return [row for row in SCENARIOS if browser in row['browsers'] and row['group'] in groups]
 
 

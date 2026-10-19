@@ -1,5 +1,12 @@
 # Projektprofil: picross
 
+**Chromium-only CI / #261 (19.10.2026):** Der Eigentümer entfernt Firefox
+vollständig aus automatisierter CI. Sämtliche 27 Chromium-Szenarien, fünf Gruppen
+und deren Beleg-/Fehlerprüfungen bleiben erhalten. [CI-Policy](CI_POLICY.md)
+regelt Ablösung früherer Firefox-CI-Pflichten, historische Quellenbindung und
+das Sicherheitsgate für alte PRs/Reruns vor CI-Reaktivierung. Diese Entscheidung
+ändert weder Spielverhalten/Browser-Saves noch Windows, Godot oder Deployment.
+
 **CI / #246 (18.10.2026), CI-A/CI-B integriert; CI-C implementiert, separate Abnahme offen:**
 Die [CI-Policy](CI_POLICY.md) bindet die gestufte Straffung:
 [CI-A (#247)](https://github.com/venomenon328/picross/issues/247) wählt reine
@@ -9,7 +16,7 @@ beschreiben die Lieferung; CI-A-T01/R01 und Mergefreigabe stehen getrennt im Iss
 Bis [CI-B (#248)](https://github.com/venomenon328/picross/issues/248)
 integriert ist, bleiben alle weiterhin ausgewählten Browserrouten vollständig.
 [CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) bindet regulären Start plus relevante
-unabhängige Browsergruppen, Chromium/Firefox auf getrennten Runnern und das
+unabhängige Browsergruppen, Chromium auf eigenem Runner und das
 Fail-closed-Gate für tatsächliche Szenarien/Belege. T01/R01 stehen im Paket-PR.
 [CI-C (#249)](https://github.com/venomenon328/picross/issues/249) trennt native
 Prüfgruppen und beschleunigt nach Messung die verlustfreie Bildaufbereitung.
@@ -117,7 +124,8 @@ Review und ZR-M01 verzichtet. Beide gelten damit nicht als durchgeführt;
 Pflicht-CI und technische native Windows-Probe bleiben erforderlich.
 
 **WEB-1 / #162:** Zusätzlich ist ein statischer Godot-Webentwicklungsweg für
-Desktop/Maus in Chromium und Firefox beauftragt. [Webanleitung und Grenzen](WEB_HOSTING.md)
+Desktop/Maus ursprünglich in Chromium und Firefox beauftragt; aktuelle
+CI-Pflicht ist ausschließlich Chromium gemäß #261. [Webanleitung und Grenzen](WEB_HOSTING.md)
 binden Browserpersistenz, getrennten Build, manuelles SSH-Deployment und isolierte
 Referenztests. Windows bleibt erhalten; keine endgültige Plattformmatrix oder
 Livefreigabe. Bei Web-/Hostingarbeit diese Anleitung zusätzlich vollständig lesen.
