@@ -2,6 +2,17 @@
 
 ## Stand und Entscheidungsgrenze
 
+**V01-A06 noch offen – Pflicht-CI blockiert.**
+[Run 39319698291, Versuch 2](https://github.com/venomenon328/picross/actions/runs/39319698291/attempts/2)
+auf Bildlieferhead `b5efb3dcff0a637b65cdef830a4aa3270908c7ce` scheitert wie Versuch 1
+am 90-Sekunden-Limit von `git diff --check` im partiellen Checkout, vor den Tests.
+`docs` und `ci-required` sind fehlgeschlagen; übrige Jobs übersprungen, kein
+CI-Auswahlbeleg erzeugt. Der lokale erfolgreiche Check ersetzt diese Pflicht-CI nicht.
+[Selbstreview AT-B-V01-SR01 R1 / B01](https://github.com/venomenon328/picross/pull/264#issuecomment-6276723787)
+bindet den Befund und die offene technische Nacharbeit. V4 erlaubt im V01-Diff
+keine Selector-/Harnessänderung. [Draft-PR #264](https://github.com/venomenon328/picross/pull/264)
+führt den jeweils neuesten Head und CI-Stand. Keine V01-Gesamterfüllung behauptet.
+
 **AT-B-V01 aus Issue #256 / Umsetzungsvorbereitung V4.** Alle 26 aktiven
 Bestandsmotive liegen als transparente native Bildrevisionen, Einzeldateien und
 gesicherte Authoringpakete zur gemeinsamen Bild-/Endfreigabe vor. Noch keine
@@ -646,7 +657,7 @@ Textdateien sind LF-stabil gepackt, damit Git die Hashbindungen nicht verändert
 | AT-B-V01-A03 | Alle Einzeldateien, vollständige Vier-Hash-/Revisions-/Noticebindung, Vergleiche, Bestandsraster und Papierkontexte UI100/125 vorhanden. Statisch ist ausdrücklich von Runtime getrennt. |
 | AT-B-V01-A04 | Vollständiger unveränderter geschützter Dateibestand plus Git-Diff; keine aktive Bild-/Metadaten-/Saveänderung. |
 | AT-B-V01-A05 | 26 geschriebene ZIPs unabhängig geöffnet, Inhaltsmengen/Hashes/Handoffkopien geprüft; Prompts, Herkunft, Entscheidungen und Index gesichert. |
-| AT-B-V01-A06 | Zusammenhängende Dokumentation, vollständiger Diff und getrenntes Selbstreview; finaler CI-Nachweis mit Head/Basis/Test-Merge/Run/Versuch im PR-Abschlussnachweis. |
+| AT-B-V01-A06 | **Offen wegen B01:** Dokumentation, vollständiger Diff und getrenntes Selbstreview vorhanden; aktuelle erfolgreiche Pflicht-CI fehlt. Head/Basis/Test-Merge/Run/Versuch im PR-Nachweis. |
 | AT-B-V01-A07 | Gemeinsame konkrete Freigabevorlage für alle 26 IDs; Draft/offenes Issue, ausdrücklicher Stopp vor Plan/Adopt. |
 
 Für den tatsächlichen Gesamtdiff werden ausschließlich reguläre Authoringdateien
