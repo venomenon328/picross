@@ -10,6 +10,7 @@ from pathlib import Path
 import shutil
 import time
 
+from . import catalog_io
 from .authoring_package import file_hash, file_table, relative, require, sha
 from .contract import exact_keys, integer, load_json
 from . import categories
@@ -23,21 +24,8 @@ LOCK = "content/.registration-pending.json"
 
 def path_in(root, name):
     """Reject aliases, reparse points and nonregular parent components on Windows too."""
-    current = root
-    parts = relative(name).split("/")
-    for i, part in enumerate(parts):
-        if current.exists():
-            matches = [p for p in current.iterdir() if p.name.casefold() == part.casefold()]
-            require(not matches or len(matches) == 1 and matches[0].name == part,
-                    "Update path case collision: " + name)
-        current /= part
-        require(not current.is_symlink(), "Unsafe update path: " + name)
-        if current.exists():
-            require(not (getattr(current.lstat(), "st_file_attributes", 0) & 1024), "Unsafe update path: " + name)
-        require(not current.exists() or (current.is_dir() if i < len(parts)-1 else
-                current.is_dir() or current.is_file()), "Unsafe update component: " + name)
-    require(current.resolve().is_relative_to(root), "Update path escapes checkout")
-    return current
+    from .catalog_io import safe
+    return safe(root, name)
 
 
 def notice_path(entry):
@@ -52,7 +40,7 @@ def update(export_dir, checkout, expected_definition_sha256, *, apply=False, fai
 
 
 def recover_update(checkout):
-    root = checkout.resolve()
+    root = catalog_io.external(checkout)
     lock = path_in(root,LOCK)
     j = exact_keys(load_json(lock,JOURNAL_LIMIT),{"format","package","files","categories","old","new"})
     require(j["format"] == FORMAT and isinstance(j["files"],dict) and isinstance(j["categories"],str) and

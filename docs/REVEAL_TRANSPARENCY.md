@@ -1,22 +1,24 @@
 # AT · Transparente Abschlussbilder
 
-Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **Spezifikation; Implementierung nicht begonnen** ·
+Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **AT-A implementiert, unabhängiges Review offen; AT-B nicht beauftragt** ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).
 
 ## Auftrag, Quellen und Wirksamkeit
 
 Der Eigentümer hat transparente Abschlussbilder einschließlich ihrer verdienten
-Katalogvorschau als Spezifikation freigegeben. Der aktuelle Auftrag umfasst Issues
-und dauerhafte Repository-Dokumentation, ausdrücklich noch keine Implementierung.
-AT-A und AT-B benötigen jeweils einen späteren Auftrag; auch Merge und Freigaben
-der erst noch zu erstellenden Bildbytes sind damit nicht erteilt.
+Katalogvorschau als Spezifikation freigegeben. Umsetzungsvorbereitung V3 beauftragt
+jetzt ausschließlich AT-A einschließlich [AT-A-T01](AT_A_VERIFICATION.md),
+getrenntem Selbstreview und Draft-PR. AT-B, reale Bildfreigaben/-übernahmen,
+unabhängiges AT-A-R01, Merge, Deployment und Issue-Abschluss bleiben separat.
 
 Historische Spezifikationsbasis ist
 `main@b019a32f8854070dfa3d7bb580fd35a3cd4a5686`; P01 synchronisiert den
 bestehenden Spezifikationsbranch mit
 `main@e454dd580fd1dd2690d952d8e8a9a2f8dc5e604c`, einschließlich integrierter
 Chromium-/CI-258-Regeln. Der technische Vertragsabschluss aus
-Umsetzungsvorbereitung V2 ist reine Dokumentfortschreibung in Draft-PR #257.
+Umsetzungsvorbereitung V2 wurde durch PR #257 als Dokumentfortschreibung auf
+`main@9cc58651518e3a28e97f46932d69554210b0abcb` integriert; dies ist die
+geprüfte Basis der AT-A-Implementierung.
 Das Issue führt aktuelle
 Paketaufträge, Lieferstände und Abnahmen. Dieser Vertrag führt die dauerhaften
 Entscheidungen. Er ergänzt gezielt [Produkt](PRODUCT_DEFINITION.md),
@@ -179,7 +181,7 @@ ausführbare Implementierung. Paketfolge und Produktentscheidungen bleiben gleic
 | P01-D01 | [ZA-1, aktive Quelle und Freigabe](ZA1_ADAPTER.md#at-p01-d01--geschlossene-aktive-bildquelle): `content/reveals/<pz-ID>.json`, `picross-catalog-reveal-v1`, geschlossene Hülle, Herkunft/Notices/Freigaben, Hash-/Revisions-/Limitregeln. |
 | P01-D02 | [Kategorien, gemeinsame Auflösung](CATEGORIES.md#at-p01-d02--namensraum-und-eine-gemeinsame-auflösung): gesamter sicherer Namensraum, getrennte historische/aktive Bild-/Noticeprüfung, eine Auflösung in sämtlichen Folgeoperationen; Inhalts-v2/Runtime-v4/Saves unverändert. |
 | P01-D03 | [ZA-1, Rebind](ZA1_ADAPTER.md#at-p01-d03--rebind-und-erhaltene-herkunft): stabiler Exportanker, Cleanup ohne Revisionsänderung, historischer Register-No-op und späterer Rasterupdate mit aktivem Bild und separater append-only Definitionsbindung. |
-| P01-D04 | [Werkzeuganleitung, Soll-CLI und Plan](../tools/puzzle_production/README.md#at-p01-d04--vollständige-soll-cli-noch-nicht-ausführbar): eigener `catalog_reveal plan/adopt`, explizite IDs, geschlossene Anfrage/Plan/Ergebnisformate, vollständiger Snapshot, No-op/Exit/Größenregeln. |
+| P01-D04 | [Werkzeuganleitung, CLI und Plan](../tools/puzzle_production/README.md#at-p01-d04--cli-für-bildrevisionen): eigener `catalog_reveal plan/adopt`, explizite IDs, geschlossene Anfrage/Plan/Ergebnisformate, vollständiger Snapshot, No-op/Exit/Größenregeln. |
 | P01-D05 | [Transaktionen, Generationen](SD_CATALOG.md#at-p01-d05--generationen-und-vollständige-mengen): registration-v5/update-v4/metadata-v2/reveal-adoption-v1, vollständige T/K-/Deltamengen, Base64-Binärersatz, begrenzter Reader, 24-/128-MiB-Grenzen und Altformatmatrix. |
 | P01-D06 | [Phasen und Recovery](SD_CATALOG.md#at-p01-d06--phasen-und-temporäre-eigentümerschaft): vollständiger dauerhafter Lock vor Mutation, P0–P6/R0–R2, Temp-/Fremdbytebesitz, wiederholbarer Rollback bis unmittelbar gültigem Checkout. |
 | P01-D07 | Nachfolgende konkrete Prüfzuordnung und [CI-Policy](CI_POLICY.md): feste synthetische Regressionen/Artefakte, native Windows-/Chromiumwege, enge spätere Inhalts-CI-Freigabe. |
@@ -275,7 +277,7 @@ Ein Spezifikations-PR schließt das AT-Issue und die Umsetzungsgates nicht.
 
 | Paket | Ergebnis | Abhängigkeit und Grenze |
 | --- | --- | --- |
-| AT-A · Sicherer Bildrevisionsweg | Produktionsstandard, konkrete Daten-/Werkzeugverträge, gemeinsame Quellen-/Transaktionsintegration, Alpha-Erhalt und feste synthetische Regressionen einschließlich notwendiger Dokumentation/CI-Zuordnung. | Späterer Implementierungsauftrag. Kein Austausch realer Katalogbilder in diesem Paket. |
+| AT-A · Sicherer Bildrevisionsweg | Produktionsstandard, konkrete Daten-/Werkzeugverträge, gemeinsame Quellen-/Transaktionsintegration, Alpha-Erhalt und feste synthetische Regressionen einschließlich notwendiger Dokumentation/CI-Zuordnung. | Umsetzungsvorbereitung V3 beauftragt ausschließlich AT-A samt T01 und Draft-PR. Kein Austausch realer Katalogbilder; unabhängiges R01 und Merge bleiben separat. |
 | AT-B · Vorhandene Bilder umstellen | Vollständiger gebundener Startbestand, konkrete Freistellungen/Szenenlösungen, neue Bildfreigaben, Konsistenzkontrollen und kontrollierte Übernahme. | Integriertes AT-A und späterer Inhaltsauftrag. Technische Vertrags-/Recoveryfehler gehen in AT-A beziehungsweise benannte technische Nacharbeit zurück. |
 
 ### AT-A · Nachweise

@@ -7,6 +7,7 @@ from pathlib import Path
 import shutil
 import tempfile
 
+from . import catalog_io
 from .authoring_package import ID, STEM, REVISION, relative, require, sha, file_hash, file_table
 from .contract import canonical_bytes, exact_keys, load_json, integer
 from . import categories
@@ -88,11 +89,13 @@ def validate(registry, catalog):
 
 
 def check_checkout(root, replay=False, *, check_projection=True, pending_journal=None):
+    from . import catalog_io as io, reveal_source as reveal
     lock = root / "content/.registration-pending.json"
     require(not lock.exists() or pending_journal is not None and lock.read_bytes() == pending_journal,
             "Interrupted registration: recovery required")
     catalog = categories.load(root / categories.PATH)
     r = validate(load_json(root / REGISTRY), catalog)
+    reveal.source_paths(root, r)
     expected = projection(r, catalog, root)
     if check_projection:
         legacy = projection(r, catalog, root, version=3)
@@ -107,9 +110,7 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
         p = e["production"]
         require(not p["test_only"] or root.resolve() != ROOT.resolve(), "Test-only content cannot enter the real catalog")
         package = root / p["package"]
-        require(file_hash(package / "manifest.json") == p["package_sha256"] and
-                file_hash(root / "game" / e["definition"]) == p["definition_sha256"] and
-                file_hash(root / "game" / e["reveal"]) == p["reveal_sha256"], "Registered content binding changed")
+        reveal.resolve(root, e, catalog)
         # Also enforce the category binding without the expensive production replay.
         m = load_json(package / "manifest.json")
         from . import integrated_content
@@ -126,15 +127,13 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
                     m["definition"] == "runtime/"+e["definition"] and m["reveal"] == "runtime/"+e["reveal"] and
                     report["package_revision"] == p["revision"] and
                     all(report[k] == p[k] for k in ("width","height","mode","difficulty")), "Registered package identity differs")
-        notice = str(Path(e["reveal"]).with_suffix(".txt")).replace("\\", "/")
-        require(file_hash(root / "game" / notice) == file_hash(package / "runtime" / notice), "Player notice differs")
     return r
 
 
 def sync_runtime(root):
     """Explicit guarded projection; no difficulty analysis or trace replay."""
     from . import catalog_transaction as tx
-    root = root.resolve()
+    root = catalog_io.external(root)
     snapshot = tx.capture(root, allow_stale=True)
     check_checkout(root, replay=False, check_projection=False)
     journal = tx.prepare(root, snapshot, {}, operation="sync")
@@ -183,7 +182,7 @@ def recovery_projection(journal, before, after, catalog):
 def recovery_target(root, journal, registry, runtime):
     """Validate the entire rollback view without writing into the checkout.
 
-    Only runtime bindings and retained manifests/notices are copied. No solver,
+    Runtime bindings and complete retained exports are copied. No solver,
     export reconstruction, historical production replay or user data is involved.
     """
     from .content_update import path_in, notice_path
@@ -197,7 +196,10 @@ def recovery_target(root, journal, registry, runtime):
         notice = notice_path(entry)
         names.update((manifest, "game/"+entry["definition"], "game/"+entry["reveal"], notice))
         if load_json(path_in(root, manifest)).get("format") != "picross-integrated-content-v1":
-            names.add(p["package"]+"/runtime/"+notice.removeprefix("game/"))
+            from . import reveal_source
+            # The frozen wire contract remains unchanged. Its retained package
+            # is validated in full, then copied for the shared AT-aware checker.
+            names.update(reveal_source.package(root, entry)[3])
     with tempfile.TemporaryDirectory(prefix="za1-recovery-check-") as directory:
         staged = Path(directory)
         for name in sorted(names):
@@ -212,12 +214,19 @@ def recovery_target(root, journal, registry, runtime):
 
 def recover(root):
     """Explicit rollback after process death; preflight every byte before mutation."""
-    root = root.resolve()
+    with catalog_io.budget(300): return _recover(root)
+
+
+def _recover(root):
+    root = catalog_io.external(root)
     from .content_update import path_in
     lock = path_in(root, "content/.registration-pending.json")
-    j = load_json(lock, 24 * 1024 * 1024)
     from . import catalog_transaction as tx
-    if isinstance(j, dict) and j.get("format") in set(tx.FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
+    from . import catalog_io as io
+    raw = tx.read(root, tx.LOCK)
+    if raw is None: return tx.recover(root)
+    j = io.json_bytes(raw, tx.REVEAL_LIMIT)
+    if isinstance(j, dict) and j.get("format") in set(tx.FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
         return tx.recover(root)
     if isinstance(j, dict) and j.get("format") == "picross-content-update-journal-v1":
         from .content_update import recover_update
@@ -281,6 +290,8 @@ def recover(root):
 
 
 def reject_unbound_ratings(root, *registries):
+    from . import reveal_source
+    require(not reveal_source.source_paths(root, *registries), "Legacy journal cannot bind reveal sources")
     from .catalog_rating import path, source_paths
     from .content_update import path_in
     source_paths(root, *registries)

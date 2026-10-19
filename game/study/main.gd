@@ -97,8 +97,8 @@ func update_variant() -> void:
 	_layout_book()
 	refresh()
 
-func _layout_book() -> void:
-	super._layout_book()
+func _layout_book(prepare_board: bool = false) -> void:
+	super._layout_book(prepare_board)
 	if font_button != null:
 		var material: Rect2 = surface.material_rect()
 		_place(font_button, Rect2(material.position + Vector2(material.size.x * 0.52, material.size.y * 0.039), Vector2(210 * ui_scale, 44 * ui_scale)))

@@ -2,6 +2,7 @@
 from __future__ import annotations
 from browser_runtime import graphics
 import timing
+import json
 
 DIAGNOSTIC_OUTPUT = None
 DIAGNOSTIC_EVIDENCE = None
@@ -15,7 +16,17 @@ def state(page, *keys):
 
 
 def wait(page, expression):
-    page.wait_for_function(expression, timeout=60000)
+    try:
+        page.wait_for_function(expression, timeout=60000, polling=100)
+    except Exception:
+        if DIAGNOSTIC_OUTPUT:
+            page.screenshot(path=str(DIAGNOSTIC_OUTPUT/'wait-failure.png'))
+        diagnostic=page.evaluate('''() => ({probe:window.picrossProbe,html:[innerWidth,innerHeight],
+          surface:[document.getElementById('surface').clientWidth,document.getElementById('surface').clientHeight]})''')
+        if DIAGNOSTIC_OUTPUT:
+            (DIAGNOSTIC_OUTPUT/'wait-failure.json').write_text(json.dumps(diagnostic,ensure_ascii=True),encoding='utf-8')
+        print('WAIT FAILURE',expression,json.dumps({k:v for k,v in diagnostic.items() if k!='probe'}),flush=True)
+        raise
 
 
 @timing.measured('save_confirmation')
@@ -101,6 +112,8 @@ def open_page(context, url, before_start=None):
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.on('console', lambda msg: errors.append(msg.text) if msg.type == 'error' else None)
+    if DIAGNOSTIC_EVIDENCE is not None:
+        DIAGNOSTIC_EVIDENCE.setdefault('console_errors',[]).append(errors)
     page.goto(url)
     if before_start:
         before_start(page)

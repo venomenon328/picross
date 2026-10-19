@@ -2,6 +2,9 @@
 GROUPS = ('regular', 'catalog', 'input', 'completion', 'persistence')
 BROWSERS = ('chromium',)
 SCENARIOS = (
+    {'id':'AT-W01-C','group':'catalog','label':'AT transparent catalog and real hover preserve white detail, holes and soft alpha','browsers':['chromium'],'images':[f'at-{kind}-{w}.png' for kind in ('card','hover') for w in (1280,1920,2560)]},
+    {'id':'AT-W01-E','group':'completion','label':'AT transparent transition, final image and reopening preserve earned saves','browsers':['chromium'],'images':[f'at-{kind}-{w}.png' for kind in ('final','reopen','blend') for w in (1280,1920,2560)]},
+    {'id':'AT-W01-P','group':'persistence','label':'AT two genuine image exports retain begun and solved saves across reload and browser restart','browsers':['chromium'],'images':[f'at-{kind}-update.png' for kind in ('before','after','restart')]},
     {'id': 'KU-B01', 'group': 'catalog', 'label': 'KU-B four criteria, both directions, canonical ties and stable return ID', 'browsers': ['chromium'], 'images': ['ku-b-sorting.png']},
     {'id': 'KU-B02', 'group': 'persistence', 'label': 'KU-B preference reload, process restart, compatible export, isolated failure and latest-change retry', 'browsers': ['chromium'], 'images': ['ku-b-preference-error.png']},
     {'id': 'regular-start', 'group': 'regular', 'label': 'uninstrumented startup, WebGL2, offline and no errors', 'browsers': ['chromium'], 'images': ['regular-catalog.png']},

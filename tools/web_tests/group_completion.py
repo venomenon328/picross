@@ -49,4 +49,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
         draw(page,(index,2))
     wait(page,'picrossProbe.ending && picrossProbe.completed'); saved(page)
     passed('mono and eight-colour completion through real mouse events')
+    from at_cases import completion
+    completion(page,name,output,evidence)
+    passed('AT transparent transition, final image and reopening preserve earned saves')
     assert not errors, errors

@@ -47,6 +47,9 @@ def envelope(plan, root):
         files = {n: record for n in ['index.html', *[prefix+n for n in (
             'entry.html','index.js','index.wasm','index.pck','storage.js','SPIELANLEITUNG.md')],
             *[prefix+'licenses/'+n for n in LICENSES]]}
+        if index:
+            from at_test_fixtures import fixture_record
+            files[prefix+'at-fixture.json']=fixture_record(index)
         manifest = dict(format='picross-web-v1', build_id=build, source_commit=plan['tested_checkout'],
                         engine='4.7.2-stable', built_at=f'2026-10-18T00:00:0{index}+00:00', kind=kind, files=files)
         path = root/'manifests'/(name+'.json')
@@ -69,6 +72,8 @@ def fixture(plan, browser, root):
         if group == 'catalog': row['version'] = 'synthetic test only'
         if group == 'input': row['viewports'] = [dict(viewport=size,fit=True,minimum=False) for size in [[1280,720],[1920,1080]]]
         if group == 'persistence': row.update(lock_handoff={'held':[{}],'pending':[{}]},exit_diagnostics=[])
+        from at_test_fixtures import browser_row
+        browser_row(root/group/group,row)
         report['groups'].append(row)
         report['phases'].append(dict(group=group, exit_code=0, seconds=1))
         raw = dict(results=[row], manifest=report['builds']['builds']['web-player' if group=='regular' else 'web-test']['manifest'])
@@ -78,7 +83,7 @@ def fixture(plan, browser, root):
             for suffix in scenario['images']:
                 path = root/group/(browser+'-'+suffix) if group=='regular' else root/group/group/(browser+'-'+suffix)
                 path.parent.mkdir(parents=True,exist_ok=True)
-                path.write_bytes(b'synthetic evidence, not a browser image')
+                if not path.exists(): path.write_bytes(b'synthetic evidence, not a browser image')
     report['files'] = {p.relative_to(root).as_posix(): file_record(p) for p in root.rglob('*') if p.is_file()}
     write(root/'web-result.json',report)
     return report
@@ -129,7 +134,7 @@ class Selection(unittest.TestCase):
             with self.assertRaises(ValueError): evaluate(plan,results)
 
     def test_every_existing_assertion_belongs_to_one_group(self):
-        self.assertEqual(len(expected('chromium', GROUPS)),27)
+        self.assertEqual(len(expected('chromium', GROUPS)),30)
         self.assertEqual(BROWSERS, ('chromium',))
         with self.assertRaises(ValueError): expected('firefox', GROUPS)
         labels=[]
@@ -141,7 +146,7 @@ class Selection(unittest.TestCase):
             labels.extend(found)
         self.assertEqual(len(labels),len(set(labels)))
         self.assertEqual({s['id'] for s in SCENARIOS},
-                         {'regular-start', 'KU-B01', 'KU-B02', *[f'B{i:02}' for i in range(1,25)]})
+                         {'regular-start', 'KU-B01', 'KU-B02', 'AT-W01-C', 'AT-W01-E', 'AT-W01-P', *[f'B{i:02}' for i in range(1,25)]})
         self.assertTrue(all(s['browsers']==['chromium'] for s in SCENARIOS))
 
 
@@ -157,7 +162,7 @@ class EvidenceGate(unittest.TestCase):
 
     def test_full_coverage_and_same_run_retry(self):
         rows=validate_all(self.plan,self.root,self.outputs,'2')
-        self.assertEqual([r['scenarios'] for r in rows],[27])
+        self.assertEqual([r['scenarios'] for r in rows],[30])
         for key in self.outputs:
             outputs=dict(self.outputs);outputs[key]='2'
             with self.assertRaises(ValueError): validate_all(self.plan,self.root,outputs,'2')
@@ -344,6 +349,7 @@ class Execution(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary);bin_dir=root/'bin';bin_dir.mkdir()
             venv=root/'web-venv/bin';venv.mkdir(parents=True)
+            build_venv=root/'web-build-env/bin';build_venv.mkdir(parents=True)
             stub='#!'+sys.executable+'\n'+textwrap.dedent('''\
                 import json, os, sys
                 from pathlib import Path
@@ -351,7 +357,7 @@ class Execution(unittest.TestCase):
                 with open(os.environ['JOURNAL'],'a') as out: out.write(json.dumps(args)+'\\n')
                 if os.environ.get('FAIL_COMMAND') and os.environ['FAIL_COMMAND'] in ' '.join(args): sys.exit(23)
                 ''')
-            for p in [bin_dir/n for n in ('python3','xvfb-run')]+[venv/n for n in ('pip','playwright','python')]:
+            for p in [bin_dir/n for n in ('python3','xvfb-run')]+[v/n for v in (venv,build_venv) for n in ('pip','playwright','python')]:
                 p.write_text(stub);p.chmod(0o755)
             for filename in ('web-chromium.yml','browser-chromium.yml'):
                 blocks=run_blocks((ROOT/'.github/workflows'/filename).read_text())
@@ -361,6 +367,7 @@ class Execution(unittest.TestCase):
                         journal.write_text('')
                         env={**os.environ,'PATH':str(bin_dir)+os.pathsep+os.environ['PATH'],
                              'JOURNAL':str(journal),'GITHUB_RUN_ATTEMPT':'2','GITHUB_OUTPUT':str(root/'output'),
+                             'GITHUB_PATH':str(root/'path'),
                              'BROWSER':browser,'BUILD_ATTEMPT':'1','FAIL_COMMAND':failure}
                         for block in blocks:
                             result=subprocess.run(['bash','--noprofile','--norc','-eo','pipefail','-c',
@@ -370,11 +377,12 @@ class Execution(unittest.TestCase):
                     self.assertEqual(execute(),0)
                     calls=[json.loads(line) for line in journal.read_text().splitlines()]
                     self.assertFalse(any('ssh' in ' '.join(c) for c in calls))
+                    self.assertTrue(any('tools/puzzle_production/requirements-image.txt' in c for c in calls))
                     if filename=='web-chromium.yml':
                         builds=[c for c in calls if 'tools/build_web_player.py' in c]
                         self.assertEqual(len(builds),3);self.assertEqual(sum('--test' in c for c in builds),2)
                         self.assertFalse(any('playwright' in ' '.join(c) for c in calls))
-                        failures=('build_web_player.py','run_groups.py seal')
+                        failures=('pip install --only-binary','build_web_player.py','run_groups.py seal')
                     else:
                         self.assertFalse(any('build_web_player.py' in ' '.join(c) for c in calls))
                         self.assertTrue(any(c[-2:]==['--with-deps',browser] for c in calls))

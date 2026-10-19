@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 import p1_preflight as toolchain
@@ -25,6 +26,27 @@ def pixel_oracle(renders: Path, inputs, action):
     except Exception as exc:
         exc.p1_failure_images = [renders / name for name in png_references(inputs)]
         raise
+
+
+def verify_motion_clock(motion: dict) -> dict:
+    """A real animation sample precedes frame completion and image readback."""
+    if motion.get("clock") != "Time.get_ticks_usec observed by production animation":
+        raise toolchain.PreflightError("Missing production animation clock binding")
+    previous = 0
+    for frame in motion["timeline"]:
+        if frame["label"] == "static-preview":
+            continue
+        values = [frame.get(key) for key in
+                  ("after_commit_ms", "frame_post_draw_ms", "readback_finished_ms")]
+        if (any(type(value) not in (int, float) or not math.isfinite(value) for value in values)
+                or not previous <= values[0] <= values[1] <= values[2]
+                or type(frame.get("active_effects")) is not int or frame["active_effects"] < 0):
+            raise toolchain.PreflightError("Invalid animation/frame/readback timing")
+        previous = values[2]
+    early = next(f for f in motion["timeline"] if f["label"] == "parallel-commit-0")
+    if not 0 < early["after_commit_ms"] < 210 or early["active_effects"] <= 0:
+        raise toolchain.PreflightError("Current animation missed live commit effect")
+    return early
 
 
 def verify_regular_motion(root: Path, renders: Path) -> dict:
@@ -57,10 +79,8 @@ def verify_regular_motion(root: Path, renders: Path) -> dict:
     for motion in current["frames"]:
         if not (motion["preview_static"] and motion["off_same_end"] and motion["second_gesture_ms"] < 210):
             raise toolchain.PreflightError("Current real-time animation failed")
-        early = next(f for f in motion["timeline"] if f["label"] == "parallel-commit-0")
+        early = verify_motion_clock(motion)
         final = next(f for f in motion["timeline"] if f["label"] == "settled")
-        if not 0 < early["after_commit_ms"] < 210:
-            raise toolchain.PreflightError("Current animation missed live commit effect")
         with Image.open(renders / early["file"]) as a, Image.open(renders / final["file"]) as b:
             if not ImageChops.difference(a.convert("RGB"), b.convert("RGB")).getbbox():
                 raise toolchain.PreflightError("Current live effect is invisible")

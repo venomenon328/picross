@@ -6,7 +6,7 @@ GROUPS = ('core', 'history', 'catalog', 'completion', 'adapters', 'graphics', 'e
 SCOPES = dict(core=('core',), history=('integration',), catalog=('catalog',),
               completion=('completion',), adapters=('pilots',),
               graphics=('visual', 'perf_b'), export=('export',))
-CATALOG_MODES = ('regular', 'restart', 'large', 'empty', 'invalid', 'adapter', 'information', 'kb', 'kk', 'ke')
+CATALOG_MODES = ('regular', 'restart', 'large', 'empty', 'invalid', 'adapter', 'information', 'kb', 'kk', 'ke', 'at')
 # Exact paths only. Shared main/session/save/fixtures and unknown effects select all.
 PATHS = {
     **{f'game/art/cells/{kind}-{size}.png{suffix}': ('core', 'graphics', 'export')

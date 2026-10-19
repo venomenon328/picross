@@ -1,7 +1,36 @@
 extends "res://ui/main.gd"
 ## Read-only observability in the separate technical export; never in player bundles.
 var probe_elapsed: float = 0.0
+var at_probe_images: Dictionary = {}
+var at_frame_key: String = ""
 const Card = preload("res://ui/catalog_card.gd")
+
+func _ready() -> void:
+	super._ready()
+	RenderingServer.frame_post_draw.connect(_capture_at_frame)
+
+func _capture_at_frame() -> void:
+	# Observe one already rendered frame per natural completion. No clock,
+	# animation, input or save state is changed. Only the technical export has this.
+	if reveal_view == null or not reveal_view.active or reveal_view.artwork == null:
+		return
+	var opacity: float = reveal_view.art.modulate.a
+	if opacity < 0.3 or opacity > 0.7 or reveal_view.artwork.get_size() != Vector2(256,256):
+		return
+	# Arming requests observation only; the player has no command/state hook.
+	if not JavaScriptBridge.eval("window.picrossAtCapture === true",true): return
+	var key: String = str(reveal_view.started_usec)
+	if key == at_frame_key: return
+	var observed: Dictionary = _probe_image(reveal_view)
+	var box := Rect2(Vector2(observed.rect[0],observed.rect[1]),Vector2(observed.rect[2],observed.rect[3]))
+	var bounds := Rect2i(Vector2i(box.position.floor()),Vector2i(box.end.ceil()-box.position.floor()))
+	var pixels: Image = get_viewport().get_texture().get_image()
+	if pixels == null or not Rect2i(Vector2i.ZERO,pixels.get_size()).encloses(bounds): return
+	var frame: Dictionary = {"key":key,"definition_id":session.definition.id,"opacity":opacity,
+		"framebuffer":[pixels.get_width(),pixels.get_height()],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],
+		"image":observed,"png":Marshalls.raw_to_base64(pixels.get_region(bounds).save_png_to_buffer())}
+	at_frame_key = key
+	JavaScriptBridge.eval("window.picrossAtFrame = " + JSON.stringify(frame),true)
 
 func _process(delta: float) -> void:
 	probe_elapsed += delta
@@ -27,6 +56,7 @@ func _process(delta: float) -> void:
 			"fallback_tip":card.difficulty.get_tooltip(),
 			"mode_popup":card.mode_tip.tooltip_ref != null and card.mode_tip.tooltip_ref.get_ref() != null and card.mode_tip.tooltip_ref.get_ref().is_visible_in_tree(),
 			"unknown":card.unknown.visible,"reveal":card.picture.artwork != null,
+			"at_image":_probe_image(card.picture),"hovered":card.is_hovered(),
 			"size":[card.size.x,card.size.y],"dimensions":card.dimensions.text,
 			"difficulty_tip":card.difficulty.tooltip_text,"mode_tip":card.mode_tip.tooltip_text,
 			"difficulty_center":[difficulty_center.x,difficulty_center.y],
@@ -50,6 +80,7 @@ func _process(delta: float) -> void:
 		"ea_active": reveal_view.active, "ea_processing": reveal_view.is_processing(),
 		"ea_caption_alpha": completion_title.modulate.a, "ea_reset_disabled": completion_reset.disabled,
 		"ea_title": title.text, "ea_art": reveal_view.artwork != null,
+		"at_image":_probe_image(reveal_view),"ea_alpha":reveal_view.art.modulate.a,
 		"album": album.visible, "work": work.visible, "ending": ending.visible, "information": information.visible,
 		"id": session.definition.id, "cells": session.player.cells, "history": session.player.history,
 		"cursor": session.player.cursor, "completed": session.completed, "view": board.capture_view(),
@@ -64,6 +95,23 @@ func _process(delta: float) -> void:
 		"row_area": _probe_rect(board.row_clue_area()), "column_area": _probe_rect(board.column_clue_area()),
 		"minimum": minimum_message.visible, "fit": board.view.viewport.encloses(board.view.bounds())}
 	JavaScriptBridge.eval("window.picrossProbe = " + JSON.stringify(data), true)
+
+func _probe_image(view: Control) -> Dictionary:
+	# Observation never loads an unrevealed texture and never changes the player.
+	if view.artwork == null: return {}
+	var box: Rect2 = view.artwork_rect()
+	box.position += view.global_position
+	var key: int = view.artwork.get_instance_id()
+	if not at_probe_images.has(key):
+		var imported: Image = view.artwork.get_image()
+		if imported.is_compressed(): imported.decompress()
+		var samples: Dictionary = {}
+		if imported.get_size() == Vector2i(256,256):
+			for entry: Array in [["outside",4,4],["white",76,76],["hole",154,154],["soft",16,128],["ink",128,64]]:
+				var color: Color = imported.get_pixel(entry[1],entry[2])
+				samples[entry[0]] = [roundi(color.r*255),roundi(color.g*255),roundi(color.b*255),roundi(color.a*255)]
+		at_probe_images[key]=samples
+	return {"rect":[box.position.x,box.position.y,box.size.x,box.size.y],"samples":at_probe_images[key]}
 
 func _probe_rect(rect: Rect2) -> Array[float]:
 	return [rect.position.x + board.global_position.x, rect.position.y + board.global_position.y, rect.size.x, rect.size.y]

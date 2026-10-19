@@ -16,6 +16,16 @@ Inventar vor Umstellung: `main@019b4dba98ef56c549ef5e7da10402dba0c9e93a`,
 | graphics | VS2 write/read, GF1, HF149 write/read/native, vollständige 96er-Matrix, V1-Fokus, V2 write/read, V3/Sidebar, HC92-, HS186-, HN192-Pixel-/Eingabenachweise; fünf kompakte Capturestufen, 17 Buchzustände, aktuelle ZS2-/ZS1-Bewegungsorakel. PERF-B echte Ressourcen/Cache/Alpha/Mutation/Invalidierung. Alle bisherigen ausgewählten Originalbilder und vollständigen komprimierten Geometrieberichte. |
 | export | Regulären Inhaltsbestand ausschließlich für Export übernehmen/importieren; echter Windows-Debugexport, separate EXE/Konsolenhilfe/PCK, externer nativer PCK-Audit, vollständiges Spieler-ZIP und Verpackungsprüfung. Windows zusätzlich headless und GUI-EXE-Start. |
 
+AT-A ergänzt den elften Katalogmodus `at`: drei Fenster-/UI-Kombinationen mit
+kleinem transparentem Bild und echtem Hover, zwölf unveränderte native Bild-/
+Papierausschnitte und `at.json`/`at-fixture.json`. Die Completion-Gruppe ergänzt
+drei Kombinationen für Endbild, Wiederöffnung und Überblendung, dazu 18 native
+Bild-/Papierausschnitte und die feste Fixturebindung. Das unabhängige Gate liest
+die Originalpixel und vergleicht sie mit importiertem RGBA und tatsächlichem
+Papierhintergrund. Bisherige Fälle und ihre Originalbelege bleiben Pflicht.
+Der gesonderte echte Windows-Export-/Savewechsel und die Abschlussbindung
+stehen in [AT-A-T01](AT_A_VERIFICATION.md).
+
 Jede Gruppe behält die hashgeprüfte Toolchain, aktive Buch-/Atlasressourcenprüfung
 und ihren eigenen isolierten Editorimport. Die genaue Pflichtdateimenge steht in
 [native_artifacts.json](../tools/native_artifacts.json), ausschließlich Dateinamen

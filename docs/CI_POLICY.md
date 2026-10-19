@@ -247,8 +247,9 @@ Inhaltserweiterungen nicht ergänzt.
 Eigentümerentscheidung vom 19.10.2026:
 [AT / #256](https://github.com/venomenon328/picross/issues/256) und der
 [Transparenzvertrag](REVEAL_TRANSPARENCY.md) sind als Spezifikation freigegeben;
-Implementierung und Bildumstellung sind noch nicht begonnen. Die reine
-Spezifikationslieferung bleibt auf dem Dokument-/Werkzeugtestpfad mit
+AT-A-P01 ist mit PR #257 integriert. Umsetzungsvorbereitung V3 beauftragt
+ausschließlich AT-A samt T01 und Draft-PR; AT-B bleibt unbegonnen. Die reine
+Spezifikationslieferung blieb auf dem Dokument-/Werkzeugtestpfad mit
 Dokumentvalidator, vollständigem Diffcheck und `ci-required`.
 
 AT-A liefert den gemeinsamen Bildrevisions-/Transaktionsweg und feste
@@ -276,8 +277,8 @@ oder Tempnamensraum. Alias-/Fremdpfad-/Modus-/Rename-/Löschungsgegenproben geh�
 zu AT-A; die Auswahl prüft beide Diffseiten. Registrierung und Datenvalidierung
 prüfen zusätzlich die tatsächliche ID-/Quellenbindung; der reine CI-Inhaltspfad
 behauptet keine Bild-/Freigabevalidierung. Neue SD-v3-/Added-v2-Berichte bleiben
-an den bestehenden engen Berichtpfaden. **P01 aktiviert diese Positivliste noch
-nicht im Code.** Dokument-/Codebeimischungen
+an den bestehenden engen Berichtpfaden. P01 spezifizierte diese Positivliste;
+AT-A implementiert sie mit positiven und negativen Scopeproben. Dokument-/Codebeimischungen
 folgen der bestehenden Vereinigung aller betroffenen Prüfbereiche. Die Anzahl
 allgemeiner Regressionen wächst nicht mit den umgestellten Katalogbildern.
 
