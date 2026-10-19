@@ -46,6 +46,8 @@ class OriginalEvidenceTests(unittest.TestCase):
         gate.browser(self.root,report,{})
         wrong_scale=deepcopy(report);wrong_scale['at_completion'][0]['blend']['pixel_ratio']=2
         with self.assertRaisesRegex(ValueError,'device pixel geometry'):gate.browser(self.root,wrong_scale,{})
+        wrong_frame=deepcopy(report);wrong_frame['at_completion'][0]['blend']['rendered_frame']['framebuffer'][0]=1000
+        with self.assertRaisesRegex(ValueError,'framebuffer matrix'):gate.browser(self.root,wrong_frame,{})
         item=report['at_completion'][0]['blend']
         pixels=[s['actual'] for s in item['samples']]
         pixels[4]=list(gate.SAMPLES['ink'][:3])

@@ -19,7 +19,7 @@ def png(path,pixels):
 
 
 def browser_row(directory,row):
-    def image(name,revision=1,blend=False):
+    def image(name,revision=1,blend=False,framebuffer=None):
         color=(56,132,90) if revision==1 else (174,85,52)
         rows=[];pixels=[]
         for i,(kind,source) in enumerate(SAMPLES.items()):
@@ -28,7 +28,9 @@ def browser_row(directory,row):
             actual=tuple(round(240*(1-alpha)+source[c]*alpha) for c in range(3))
             rows.append(dict(kind=kind,source=list(source),point=[i,0],actual=list(actual)));pixels.append(actual)
         png(directory/name,pixels)
-        return dict(file=name,rect=[0,0,5,1],revision=revision,opacity=.5 if blend else 1,samples=rows,viewport=[5,1],pixel_ratio=1)
+        result=dict(file=name,rect=[0,0,5,1],revision=revision,opacity=.5 if blend else 1,samples=rows,viewport=[5,1],pixel_ratio=1)
+        if blend:result['rendered_frame']=dict(key='123',definition_id='T-04',opacity=.5,bounds=[0,0,5,1],framebuffer=framebuffer)
+        return result
     group=row['group']
     if group in ('catalog','completion'):
         rows=[]
@@ -36,7 +38,7 @@ def browser_row(directory,row):
             values={}
             for kind in (('small','hover') if group=='catalog' else ('final','reopen','blend')):
                 name='card' if kind=='small' else kind
-                values[kind]=image(f'chromium-at-{name}-{window[0]}.png',blend=kind=='blend')
+                values[kind]=image(f'chromium-at-{name}-{window[0]}.png',blend=kind=='blend',framebuffer=window[:2])
             rows.append(dict(window=window,**values))
         row['at_'+group]=rows
     elif group=='persistence':
