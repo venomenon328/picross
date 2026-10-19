@@ -223,6 +223,19 @@ func hint_probe(axis: String) -> void:
 	await shot("hint-" + axis + "-tooltip")
 	app.board.clear_pointer_hover()
 
+func motion_frame(label: String, committed_at: int, observed_us: Array[int]) -> Dictionary:
+	# Readback can outlast the live effect. Bind pixels to the real clock used
+	# by production drawing, not to the later completion of get_image().
+	var frame_at: int = Time.get_ticks_usec()
+	var effects: int = app.board.effects.size()
+	var drawn_at: int = observed_us[0] if effects > 0 else frame_at
+	var picture: Image = surface.get_texture().get_image()
+	return {"image": picture, "measurement": {"label": label,
+		"after_commit_ms": float(drawn_at - committed_at) / 1000.0,
+		"frame_post_draw_ms": float(frame_at - committed_at) / 1000.0,
+		"readback_finished_ms": float(Time.get_ticks_usec() - committed_at) / 1000.0,
+		"active_effects": effects}}
+
 func movement() -> void:
 	surface.size = Vector2i(1920, 1080)
 	app.size = Vector2(surface.size)
@@ -231,6 +244,11 @@ func movement() -> void:
 	empty_sample()
 	await process_frame
 	var board = app.board
+	var original_clock: Callable = board.animation_clock
+	var observed_us: Array[int] = [0]
+	board.animation_clock = func() -> int:
+		observed_us[0] = Time.get_ticks_usec()
+		return observed_us[0]
 	var start: Vector2 = point(0, 0)
 	var end: Vector2 = point(19, 0)
 	mouse(start, MOUSE_BUTTON_LEFT, true)
@@ -245,7 +263,7 @@ func movement() -> void:
 	var images: Array[Image] = [preview_one]
 	var timeline: Array = [{"label": "static-preview", "after_commit_ms": -1}]
 	mouse(end, MOUSE_BUTTON_LEFT, false)
-	var committed_at: int = Time.get_ticks_usec()
+	var committed_at: int = int(board.effects[0].start)
 	check(board.effects.size() == 20, "20 effective changes on commit")
 	# Submit another gesture immediately, while all old effects are still active.
 	mouse(start, MOUSE_BUTTON_RIGHT, true)
@@ -254,18 +272,21 @@ func movement() -> void:
 	check(second_ms < 210 and board.effects.size() == 15, "second gesture before first effect ends")
 	await process_frame
 	await RenderingServer.frame_post_draw
-	images.append(surface.get_texture().get_image())
-	timeline.append({"label": "second-conversion-preview", "after_commit_ms": float(Time.get_ticks_usec() - committed_at) / 1000.0})
+	var sample: Dictionary = motion_frame("second-conversion-preview", committed_at, observed_us)
+	images.append(sample.image)
+	timeline.append(sample.measurement)
 	mouse(point(4, 0), MOUSE_BUTTON_RIGHT, false)
 	for i: int in range(6):
 		await process_frame
 		await RenderingServer.frame_post_draw
-		images.append(surface.get_texture().get_image())
-		timeline.append({"label": "parallel-commit-%d" % i, "after_commit_ms": float(Time.get_ticks_usec() - committed_at) / 1000.0})
+		sample = motion_frame("parallel-commit-%d" % i, committed_at, observed_us)
+		images.append(sample.image)
+		timeline.append(sample.measurement)
 	await create_timer(0.40).timeout
 	await RenderingServer.frame_post_draw
-	images.append(surface.get_texture().get_image())
-	timeline.append({"label": "settled", "after_commit_ms": float(Time.get_ticks_usec() - committed_at) / 1000.0})
+	sample = motion_frame("settled", committed_at, observed_us)
+	images.append(sample.image)
+	timeline.append(sample.measurement)
 	var final_cells: Array[int] = app.session.player.cells.duplicate()
 	board.set_animations(false)
 	empty_sample()
@@ -280,6 +301,7 @@ func movement() -> void:
 	check(final_cells == app.session.player.cells, "animations off same model end state")
 	check(images.back().get_data() == surface.get_texture().get_image().get_data(), "animations off pixel-identical final frame")
 	board.set_animations(true)
+	board.animation_clock = original_clock
 	for i: int in range(images.size()):
 		var filename: String = "zs1-motion-%d-%02d.png" % [variant, i]
 		# Small crop, native 1:1 pixels; absolute source bounds retained.
@@ -287,7 +309,8 @@ func movement() -> void:
 		images[i].get_region(crop).save_png(output.path_join(filename))
 		timeline[i]["file"] = filename
 		timeline[i]["crop"] = [crop.position.x, crop.position.y, crop.size.x, crop.size.y]
-	frames.append({"style": 2, "font_choice": variant, "second_gesture_ms": second_ms, "parallel_cells": 20, "preview_static": true, "off_same_end": true, "timeline": timeline})
+	frames.append({"style": 2, "font_choice": variant, "second_gesture_ms": second_ms, "parallel_cells": 20, "preview_static": true, "off_same_end": true, "timeline": timeline,
+		"clock": "Time.get_ticks_usec observed by production animation"})
 
 func load_probe() -> void:
 	app.select_puzzle(3)
