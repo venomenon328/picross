@@ -9,7 +9,8 @@ werden im Implementierungs-PR gebunden; CI-B-R01 bleibt separat vor Merge.
 
 Eigentümerentscheidung vom 19.10.2026 / [#261](https://github.com/venomenon328/picross/issues/261):
 Firefox entfällt vollständig aus automatisierter CI. Die folgende aktuelle
-Matrix umfasst ausschließlich Chromium mit allen bisherigen 27 Szenarien.
+Matrix umfasst ausschließlich Chromium mit allen bisherigen 27 Szenarien;
+AT-A ergänzt die drei unten gebundenen Fälle auf insgesamt 30.
 Historische CI-A-/CI-B-Messungen und Abnahmen behalten ihre damaligen Quellen
 und Browser; die geänderte Pflicht erklärt keinen alten Lauf rückwirkend für
 erfolgreich. Der sichere CI-Neustart einschließlich aktueller automatischer
@@ -192,6 +193,23 @@ Gleichstände, stabile Rückkehr-ID) und `KU-B02` in `persistence` (Präferenz �
 Reload, echten Prozessneustart, zweiten Export, isolierten IndexedDB-Fehler und
 Wiederholung mit letzter Auswahl). Pflichtbilder sind `ku-b-sorting.png` und
 `ku-b-preference-error.png`, jeweils für Chromium. Damit enthält das aktuelle
-Inventar unverändert 27 Chromium-Szenarien. Die bisherigen 26 Firefox-Szenarien
+KU-B-Inventar 27 Chromium-Szenarien. Die bisherigen 26 Firefox-Szenarien
 bleiben in ihren historischen Nachweisen gebunden. Die Auswahlpolitik und der
 separat bekannte rote Main-Push-Befund werden hierdurch nicht repariert.
+
+## AT-A-Erweiterung des aktiven Inventars
+
+`AT-W01-C` in `catalog` prüft kleine transparente Karte und Hover;
+`AT-W01-E` in `completion` prüft Überblendung, Endbild und Wiederöffnung.
+Beide verwenden die feste Matrix 1280×720/UI125, 1920×1080/UI100 und
+2560×1440/UI125. `AT-W01-P` in `persistence` bindet begonnene und gelöste Saves
+über zwei echte Bildexporte, Reload und Browserprozessneustart am gleichen
+isolierten Origin/Profil. Definitionen, Registry und Saves müssen gleich bleiben.
+
+Das Gate verlangt die 18 Originalbilder, die importierten RGBA-Proben sowie
+die exportgebundenen Fixturehashes und vergleicht die angegebenen Pixel mit den
+tatsächlichen PNGs. `tools/test_at_evidence.py` enthält davon getrennte
+synthetische Negativkontrollen. Die zusätzliche Bildabhängigkeit ist in beiden
+isolierten Web-Umgebungen über `requirements-image.txt` gepinnt. Die bestehende
+Timeout- und Szenarienpflicht bleibt erhalten. Aktuelle Originalnachweise und
+offene Abnahmen: [AT-A-T01](AT_A_VERIFICATION.md).
