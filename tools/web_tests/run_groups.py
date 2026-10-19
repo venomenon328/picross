@@ -12,7 +12,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ci_scope import evaluate, JOBS
 from web_bundle import validate, digest
-from web_tests.contract import BROWSERS
+from web_tests.contract import BROWSERS, require_browser
 from web_tests.results import (BUILDS, binding, file_record, read, validate_builds,
                                validate_browser)
 
@@ -45,6 +45,7 @@ def seal(root, plan):
 
 
 def run(args, plan):
+    require_browser(args.browser)
     build_root = args.build_root
     output = args.output
     output.mkdir(parents=True, exist_ok=True)

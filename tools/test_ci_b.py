@@ -123,13 +123,15 @@ class Selection(unittest.TestCase):
         original = plan_for()
         results = {job:{'result':'success'} for job in JOBS}
         for key,value in [('browser_groups',[]),('browser_expected',{}),
-                          ('browser_expected',{'chromium':original['browser_expected']['chromium']})]:
+                          ('browser_expected',{'firefox':original['browser_expected']['chromium']}),
+                          ('browser_expected',{'chromium':{'regular':['regular-start']}})]:
             plan=deepcopy(original);plan[key]=value
             with self.assertRaises(ValueError): evaluate(plan,results)
 
     def test_every_existing_assertion_belongs_to_one_group(self):
         self.assertEqual(len(expected('chromium', GROUPS)),27)
-        self.assertEqual(len(expected('firefox', GROUPS)),26)
+        self.assertEqual(BROWSERS, ('chromium',))
+        with self.assertRaises(ValueError): expected('firefox', GROUPS)
         labels=[]
         for group in GROUPS[1:]:
             source=(ROOT/f'tools/web_tests/group_{group}.py').read_text(encoding='utf-8')
@@ -138,7 +140,9 @@ class Selection(unittest.TestCase):
             self.assertEqual(set(found),{s['label'] for s in expected('chromium',[group])})
             labels.extend(found)
         self.assertEqual(len(labels),len(set(labels)))
-        self.assertEqual([s['id'] for s in SCENARIOS if s['browsers']==['chromium']],['B11'])
+        self.assertEqual({s['id'] for s in SCENARIOS},
+                         {'regular-start', 'KU-B01', 'KU-B02', *[f'B{i:02}' for i in range(1,25)]})
+        self.assertTrue(all(s['browsers']==['chromium'] for s in SCENARIOS))
 
 
 class EvidenceGate(unittest.TestCase):
@@ -153,10 +157,19 @@ class EvidenceGate(unittest.TestCase):
 
     def test_full_coverage_and_same_run_retry(self):
         rows=validate_all(self.plan,self.root,self.outputs,'2')
-        self.assertEqual([r['scenarios'] for r in rows],[27,26])
+        self.assertEqual([r['scenarios'] for r in rows],[27])
         for key in self.outputs:
             outputs=dict(self.outputs);outputs[key]='2'
             with self.assertRaises(ValueError): validate_all(self.plan,self.root,outputs,'2')
+
+    def test_only_chromium_attempt_is_required_and_unexpected_outputs_fail(self):
+        self.assertEqual(self.outputs, {'chromium_attempt':'1'})
+        self.assertFalse((self.root/'firefox').exists())
+        for outputs in ({}, {'firefox_attempt':'1'},
+                        {**self.outputs,'firefox_attempt':'1'},
+                        {'chromium_attempt':''}, {'chromium_attempt':None}):
+            with self.subTest(outputs=outputs), self.assertRaises(ValueError):
+                validate_all(self.plan,self.root,outputs,'2')
 
     def test_missing_empty_duplicate_wrong_or_unsuccessful_results(self):
         good=self.reports['chromium']
@@ -182,7 +195,7 @@ class EvidenceGate(unittest.TestCase):
         for key in binding(self.plan):
             candidate=deepcopy(good);candidate['binding'][key]='wrong'
             with self.assertRaises(ValueError): self.check(candidate)
-        path=self.root/'firefox/web-result.json';path.unlink()
+        path=self.root/'chromium/web-result.json';path.unlink()
         with self.assertRaises(OSError): validate_all(self.plan,self.root,self.outputs,'2')
 
     def test_files_raw_reports_and_export_identity(self):
@@ -216,7 +229,7 @@ class EvidenceGate(unittest.TestCase):
         self.assertFalse(read(output)['accepted'])
         self.assertIn('browser_error',read(output))
 
-    def test_real_finish_cli_accepts_bound_pair_and_rejects_wrong_attempt(self):
+    def test_real_finish_cli_accepts_only_complete_bound_chromium_evidence(self):
         # This case isolates browser evidence. CI-C additionally rejects a green
         # Product job without its own actual native payload (test_ci_c).
         self.plan.update(classify(['tools/web_tests/browser.py']))
@@ -227,12 +240,29 @@ class EvidenceGate(unittest.TestCase):
              'CI_OUTPUTS':json.dumps({**{key:str(self.plan['selected'][key]).lower() for key in FLAGS},'selection_attempt':'1','native_groups':'[]'}),
              'CI_RESULTS':json.dumps({job:{'result':'success' if self.plan['selected'][job] else 'skipped'} for job in JOBS})}
         for attempt,code in [('1',0),('2',1)]:
-            env['CI_WEB_OUTPUTS']=json.dumps({**self.outputs,'firefox_attempt':attempt})
+            env['CI_WEB_OUTPUTS']=json.dumps({'chromium_attempt':attempt})
             result=subprocess.run([sys.executable,str(ROOT/'tools/ci_scope.py'),'finish',
                 '--plan-file',str(plan_file),'--web-evidence',str(self.root),'--output',str(output)],
                 capture_output=True,env=env)
             self.assertEqual(result.returncode,code,result.stderr)
             self.assertEqual(read(output)['accepted'],code==0)
+        env['CI_WEB_OUTPUTS']=json.dumps(self.outputs)
+        path=self.root/'chromium/web-result.json'
+        good=read(path)
+        broken=[None, '', '{invalid json',
+                json.dumps({**good,'browser':'firefox'}),
+                json.dumps({**good,'status':'failed'}),
+                json.dumps({**good,'groups':[]})]
+        for payload in broken:
+            with self.subTest(payload=payload and payload[:80]):
+                if payload is None: path.unlink(missing_ok=True)
+                else: path.write_text(payload,encoding='utf-8')
+                result=subprocess.run([sys.executable,str(ROOT/'tools/ci_scope.py'),'finish',
+                    '--plan-file',str(plan_file),'--web-evidence',str(self.root),'--output',str(output)],
+                    capture_output=True,env=env)
+                self.assertEqual(result.returncode,1,result.stderr)
+                self.assertFalse(read(output)['accepted'])
+                self.assertIn('browser_error',read(output))
 
 
 class Execution(unittest.TestCase):
@@ -323,7 +353,7 @@ class Execution(unittest.TestCase):
                 ''')
             for p in [bin_dir/n for n in ('python3','xvfb-run')]+[venv/n for n in ('pip','playwright','python')]:
                 p.write_text(stub);p.chmod(0o755)
-            for filename in ('web.yml','web-browser.yml'):
+            for filename in ('web-chromium.yml','browser-chromium.yml'):
                 blocks=run_blocks((ROOT/'.github/workflows'/filename).read_text())
                 for browser in BROWSERS:
                     journal=root/'commands.jsonl'
@@ -340,7 +370,7 @@ class Execution(unittest.TestCase):
                     self.assertEqual(execute(),0)
                     calls=[json.loads(line) for line in journal.read_text().splitlines()]
                     self.assertFalse(any('ssh' in ' '.join(c) for c in calls))
-                    if filename=='web.yml':
+                    if filename=='web-chromium.yml':
                         builds=[c for c in calls if 'tools/build_web_player.py' in c]
                         self.assertEqual(len(builds),3);self.assertEqual(sum('--test' in c for c in builds),2)
                         self.assertFalse(any('playwright' in ' '.join(c) for c in calls))
@@ -352,6 +382,13 @@ class Execution(unittest.TestCase):
                         failures=('playwright','run_groups.py run')
                     print('CI_B_EXECUTION_PROBE '+json.dumps({'workflow':filename,'browser':browser,'commands':calls}),flush=True)
                     for failure in failures:self.assertEqual(execute(failure),23)
+                    if filename == 'browser-chromium.yml':
+                        for browser in ('firefox', 'webkit', 'both', '', 'Chromium', 'chromium firefox'):
+                            with self.subTest(rejected_browser=browser):
+                                self.assertEqual(execute(), 1)
+                                # The actual first step must stop before venv, pip,
+                                # Playwright installation or the runner command.
+                                self.assertEqual(journal.read_text(), '')
 
 
 if __name__ == '__main__':
