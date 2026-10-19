@@ -38,6 +38,8 @@ def capture(page, output, name, image, *, revision=1, opacity=1):
         for kind,(x,y) in POINTS.items():
             location=point(page,(rect[0]+(x+.5)/256*rect[2],rect[1]+(y+.5)/256*rect[3]))
             pixel=[int(v*dpr) for v in location]; actual=list(rgb.getpixel(tuple(pixel)))
+            if opacity!=1 and kind=='ink':
+                assert all(color[i]+10<actual[i]<248 for i in range(3)), (kind,actual,'not an intermediate blend')
             if opacity==1:
                 if kind=='white': assert min(actual)>=246, (kind,actual)
                 if kind=='ink': assert max(abs(a-b) for a,b in zip(actual,color))<=10, (kind,actual)
@@ -50,8 +52,11 @@ def capture(page, output, name, image, *, revision=1, opacity=1):
 def matrix(page, spec, *, catalog=False):
     width,height,scale=spec
     if state(page,'ui_scale')['ui_scale']!=scale:
-        control(page,text='Einstellungen / Info') if catalog else control(page,name='menu')
+        # The ending offers album/reset; settings are reached through the album.
+        if not catalog: control(page,name='nav-album')
+        control(page,text='Einstellungen / Info')
         control(page,text='UI ');control(page,name='nav-work')
+        if not catalog: control(page,text='Blatt 03')
     game_viewport(page,width,height)
     page.wait_for_timeout(250)
 

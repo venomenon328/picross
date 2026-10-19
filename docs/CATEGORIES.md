@@ -4,8 +4,8 @@
 [AT](REVEAL_TRANSPARENCY.md) ergänzt in AT-A die getrennte aktive Bildbindung und
 deren gemeinsamen Prüf-/Transaktionsweg; AT-B übernimmt danach freigegebene neue
 Bildfassungen des gebundenen Bestands. Historische Registry-/Paket-/Integrations-
-bindungen bleiben unverändert. Die Spezifikationsfreigabe startet keine
-Bildbearbeitung, Datenübernahme oder Implementierung.
+bindungen bleiben unverändert. Der aktuelle Implementierungsauftrag umfasst
+den technischen Weg samt synthetischen Nachweisen, keine reale Datenübernahme.
 
 **KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt eine eigene autoritative,

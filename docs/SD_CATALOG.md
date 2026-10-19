@@ -4,9 +4,9 @@
 [AT-A](REVEAL_TRANSPARENCY.md) ergänzt den gemeinsamen Quellen-/Transaktionsweg
 für getrennte aktive Bildfassungen und einen abgesicherten Binärersatz. Ratings,
 Bewertungsrevisionen, Hinzugefügt-Daten und historische Produktionsbindungen
-bleiben bei reinen Bildupdates unverändert. AT-B verwendet den erst noch zu
-implementierenden Weg für den gebundenen Bestand; diese Spezifikation führt
-keine Bild-/Bewertungsübernahme oder neue Analyse aus.
+bleiben bei reinen Bildupdates unverändert. AT-B verwendet den Weg erst nach
+Integration von AT-A und gesondertem Auftrag für den gebundenen Bestand.
+Diese Lieferung führt keine reale Bild-/Bewertungsübernahme oder neue Analyse aus.
 
 **KU / #244, freigegebene Ergänzung vom 18.10.2026; Umsetzung offen:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt mit KU-A ausschließlich

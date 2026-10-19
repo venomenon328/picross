@@ -1,11 +1,12 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
 **AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
-[AT](REVEAL_TRANSPARENCY.md) ergänzt nach gesonderter Beauftragung mit AT-A einen
+[AT](REVEAL_TRANSPARENCY.md) ergänzt mit dem beauftragten AT-A einen
 eng begrenzten Bildupdateweg; AT-B stellt anschließend den gebundenen Bestand um.
 Der aktive Bildhash und die neue tatsächliche Bildfreigabe werden außerhalb
-historischer Produktions-/Integrationsbelege gebunden. Die vorhandenen
-Export-/Rasterupdatebefehle werden dadurch noch nicht geändert oder freigegeben.
+historischer Produktions-/Integrationsbelege gebunden. Die gemeinsamen
+Export-/Rasterupdatebefehle erhalten aktive Bildfassungen gemäß diesem Vertrag;
+reine Bildrevisionen verwenden ausschließlich den eigenen `catalog_reveal`-Weg.
 Definitionen, Runtime-Revisionen, IDs, Ressourcenpfade, Slots, Kategorien, Ratings
 und Hinzugefügt-Daten bleiben beim Bildupdate unverändert.
 
