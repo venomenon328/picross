@@ -36,6 +36,9 @@ jobs:
           path: ${{ runner.temp }}/ci-selection
       - name: Build regular player and separate fixed technical player
         run: |
+          python3 -m venv "${{ runner.temp }}/web-build-env"
+          "${{ runner.temp }}/web-build-env/bin/pip" install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+          export PATH="${{ runner.temp }}/web-build-env/bin:$PATH"
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-player
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test --test
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test-update --test --test-reveal-revision 2

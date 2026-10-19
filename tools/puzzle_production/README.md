@@ -844,8 +844,9 @@ Umschreiben seiner alten Freigabe-/Manifestbindung ist keine gültige Übernahme
 P01 legt vor der ersten betroffenen Codeänderung die exakten Eingänge, Pfade,
 Felder, Versionen, Grenzen und die nachfolgende Soll-Syntax gemeinsam in
 [ZA-1](../../docs/ZA1_ADAPTER.md), [Projektion](../../docs/CATEGORIES.md) und dem
-[Transaktionsvertrag](../../docs/SD_CATALOG.md) fest. Erst AT-A macht diese
-Soll-Aufrufe ausführbar. Lesender Plan, aktuelle
+[Transaktionsvertrag](../../docs/SD_CATALOG.md) fest. Die AT-A-Implementierung
+und ihr Prüfstand sind in [AT-A-T01](../../docs/AT_A_VERIFICATION.md) gebunden.
+Lesender Plan, aktuelle
 Erwartungshashes, gemeinsame Quellenprüfung, versionierter Binärersatz,
 kontrollierter Rollback und echte Wiederholungs-No-ops gehören zusammen.
 Ein zulässiger Altstand ohne neue Bildquelle und eine vorhandene ungültige

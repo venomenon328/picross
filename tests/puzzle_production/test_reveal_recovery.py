@@ -35,7 +35,7 @@ class RecoveryTests(unittest.TestCase):
         import shutil
         original = {n:b for n,(b,_) in snapshot(self.checkout).items()}
         plan = self.make_plan(append='TEST ONLY attribution\n')
-        for phase in ('P0','journal-complete','P1','P2','temp-prefix','temp-complete','P3','P4','P6'):
+        for phase in ('P0','journal-complete','P1','P2','temp-prefix','temp-complete','P3','P4','P5','P6'):
             with self.subTest(phase=phase):
                 self.interrupt(phase, plan)
                 if phase != 'P0': cr.recover(self.checkout)
@@ -207,7 +207,7 @@ else: c.recover(Path(root))
         # The ordinary failure uses guarded recovery, restoring the old checkout.
         self.assertEqual({n:b for n,(b,_) in original.items()},{n:b for n,(b,_) in snapshot(self.checkout).items()})
 
-    def test_pre_at_registration_and_metadata_generations_keep_exact_wire_contracts(self):
+    def test_pre_at_registration_generations_keep_exact_wire_contracts(self):
         import shutil,json
         from tools.puzzle_production import catalog_added as added
         from tools.puzzle_production.za1_fixtures import isolated_checkout,difficulty_for_export
@@ -233,7 +233,47 @@ else: c.recover(Path(root))
             self.assertEqual(before,snapshot(root));foreign.unlink()
             cr.recover(root);self.assertEqual(cr.check_checkout(root)['entries'],[])
             self.assertEqual(json.loads((root/tx.RUNTIME).read_bytes())['format'],'picross-runtime-registry-v4')
-        # Legacy metadata v1 and current metadata v1/v2 are distinct dispatches.
+
+    def test_pre_at_update_generations_restore_exact_old_package_and_source(self):
+        import shutil,json
+        from tools.puzzle_production import catalog_added as added
+        from tools.puzzle_production.za1_fixtures import seal,approve
+        from tools.puzzle_production.target_adapter import export
+        from tools.puzzle_production.content_update import update
+        from tools.puzzle_production.contract import load_json,write_json
+        package=self.root/'updated-input';shutil.copytree(self.exported/'input',package)
+        handoff=load_json(package/'handoff.json');handoff['revision']='r02'
+        (package/'inventory.json').unlink();(package/'derivation.json').unlink(missing_ok=True)
+        seal(package,handoff);approval=self.root/'updated-approval.json';approve(package,approval)
+        exported=self.root/'updated-export'
+        export(package,exported,name='TEST ONLY',revision=2,stem='at_test',save_slot='at_test',approval_path=approval,
+               category_id=self.entry['category_id'],categories_path=self.checkout/'content/categories.json')
+        for format in (tx.LEGACY_FORMATS['update'],tx.PREVIOUS_FORMATS['update']):
+            root=self.root/format;shutil.copytree(self.checkout,root)
+            legacy=format==tx.LEGACY_FORMATS['update']
+            if legacy:(root/added.path(self.identifier)).unlink();cr.sync_runtime(root)
+            captured=tx.capture(root);old={n:b for n,(b,_) in snapshot(root).items()}
+            with self.assertRaises(InterruptedError):
+                update(exported,root,self.entry['production']['definition_sha256'],apply=True,rebind_difficulty=True,fail_step='crash-content/registry.json')
+            j=io.json_bytes((root/tx.LOCK).read_bytes(),pub.LIMIT);j['format']=format;j.pop('replacements')
+            j['retained']=tx.historical_snapshot(captured)['retained']
+            for side in ('old','new'):
+                j[side].pop(source.path(self.identifier))
+                if legacy:
+                    j[side].pop(added.path(self.identifier))
+                    j[side][tx.RUNTIME]=tx.projection(j[side],json.loads(j[side][tx.REGISTRY]),version=3).decode()
+            if legacy:(root/tx.RUNTIME).write_text(j['old'][tx.RUNTIME],encoding='utf-8',newline='\n')
+            (root/tx.LOCK).write_bytes(canonical_bytes(j)+b'\n')
+            foreign=root/source.path(self.identifier);foreign.parent.mkdir(exist_ok=True);foreign.write_bytes(b'foreign AT\n')
+            before=snapshot(root)
+            with self.subTest(format=format),self.assertRaises(ValueError):cr.recover(root)
+            self.assertEqual(before,snapshot(root));foreign.unlink()
+            cr.recover(root);cr.check_checkout(root)
+            self.assertEqual(old,{n:b for n,(b,_) in snapshot(root).items()})
+    def test_metadata_generations_keep_exact_wire_contracts(self):
+        import shutil,json
+        from tools.puzzle_production import catalog_added as added
+        # Legacy difficulty v1 and catalog metadata v1/v2 are distinct dispatches.
         for format in (tx.LEGACY_FORMATS['sync'],tx.PREVIOUS_FORMATS['sync'],tx.FORMATS['sync']):
             root=self.root/format;shutil.copytree(self.checkout,root)
             legacy=format==tx.LEGACY_FORMATS['sync']

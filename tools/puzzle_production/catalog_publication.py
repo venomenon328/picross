@@ -396,6 +396,12 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
             checkpoint("P5" if n == tx.RUNTIME else "P4", n)
             if fail_step == "crash-" + n or n == tx.REGISTRY and fail_step == "crash-index" or n == tx.RUNTIME and fail_step == "crash-runtime": raise InterruptedError("Injected transaction interruption: " + n)
             if fail_step == n or n == tx.REGISTRY and fail_step == "index": raise OSError("Injected update failure: " + n)
+        if tx.RUNTIME not in names:
+            # P5 still has a boundary when the projection is byte-identical.
+            # Keep interruption coverage without manufacturing a runtime write.
+            checkpoint("P5", tx.RUNTIME)
+            if fail_step in ("crash-"+tx.RUNTIME,"crash-runtime"): raise InterruptedError("Injected transaction interruption: "+tx.RUNTIME)
+            if fail_step == tx.RUNTIME: raise OSError("Injected update failure: "+tx.RUNTIME)
         guard_fn(); check_checkout(root, replay=j['operation']=='registration', pending_journal=raw); guard_fn()
         cleanup_temps(root, j, raw, guard_fn)
         checkpoint("P6"); guard_fn()

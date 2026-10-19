@@ -39,10 +39,6 @@ def game_viewport(page, width, height):
     # logical game area, not outer HTML viewport minus a guessed 42 pixels.
     page.set_viewport_size({'width':width, 'height':height+80})
     def settled():
-        # Request a real compositor frame after resizing the headless window.
-        # This observes the exported canvas; it changes no application state.
-        # The exact Godot/surface dimensions remain mandatory below.
-        page.screenshot()
         wait(page, f'''window.picrossProbe && innerWidth==={width} &&
           picrossProbe.viewport[0]===document.getElementById('surface').clientWidth &&
           picrossProbe.viewport[1]===document.getElementById('surface').clientHeight''')
