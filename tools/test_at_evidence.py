@@ -44,6 +44,8 @@ class OriginalEvidenceTests(unittest.TestCase):
     def test_browser_rejects_finished_frame_reported_as_blend(self):
         report={'group':'completion'};browser_row(self.root,report)
         gate.browser(self.root,report,{})
+        wrong_scale=deepcopy(report);wrong_scale['at_completion'][0]['blend']['pixel_ratio']=2
+        with self.assertRaisesRegex(ValueError,'device pixel geometry'):gate.browser(self.root,wrong_scale,{})
         item=report['at_completion'][0]['blend']
         pixels=[s['actual'] for s in item['samples']]
         pixels[4]=list(gate.SAMPLES['ink'][:3])

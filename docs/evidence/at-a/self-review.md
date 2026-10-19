@@ -41,6 +41,7 @@ gegen AT/P01-D01–D07, ZA-1, Kategorien, SD-C1, Soll-CLI und CI-Policy:
 | B-AT-SR04 · behoben | Die Chromium-Abschlussmatrix suchte das Einstellungsmenü direkt im Endbild; dort gibt es nur Album und Reset. | Die Probe verwendet die tatsächliche Route Endbild → Album → Einstellungen → Album → gelöstes Blatt. Die vollständige fokussierte Dreiermatrix bestand; keine gesetzten Spielzustände oder Testschalter. |
 | B-AT-SR05 · behoben | Eine Albumvergrößerung auf 2560 Pixel berechnete die Typografie des unsichtbaren Arbeitsrasters neu. Der gemessene Web-Aufruf blockierte rund 124 s und überschritt die unveränderte Resize-Grenze. | Album, Information und Endbild vermeiden das unsichtbare Rasterlayout. Beim Öffnen der Arbeit und vor Slot-Wiederherstellung wird die aktuelle Geometrie berechnet; Glyphen-/Fitregeln bleiben gleich. Native Gegenprobe: 81 AT-Prüfpunkte einschließlich versteckter Geometrie, unveränderter gewünschter Ansicht und korrektem Wiederöffnen; EA 2327 bestanden. Die fokussierte Chromium-Katalog-/Abschlussmatrix bestand mit unveränderten Zeitgrenzen. |
 | B-AT-SR06 · behoben | Die Browser-Pixelprüfung vertraute bei Überblendbildern dem gemeldeten Alpha; ein fertiges Bild mit passender JSON-Behauptung konnte passieren. | Der unabhängige Decoder verlangt zusätzlich tatsächlich gemischte Originalpixel am opaken Motivteil. Eine manipulierte fertige PNG und eine unbemalte Papierfläche samt angepasstem JSON werden abgelehnt; positive und negative Werkzeugproben bestanden. Die verspätete Playwright-Aufnahme wird durch die unveränderten PNG-Bytes des tatsächlichen Chromium-Compositorframes ersetzt. |
+| B-AT-SR07 · behoben | Eine separat angebundene Chromium-Aufnahmesitzung lieferte zunächst CSS-Pixel, während Messpunkte Gerätepixel verwendeten. | Die direkte Aufnahme fordert explizit den tatsächlichen Gerätemaßstab an. Erzeuger und unabhängiger Decoder prüfen PNG-Abmessungen gegen Viewport und Pixelverhältnis; die negative Maßstabsprobe wird abgelehnt. Die finale CI bindet diese Aufnahme an alle drei tatsächlichen Größenfälle. |
 
 Eine zusätzlich geschlossene Nachweislücke betrifft gültige Runtime-v2/v3:
 echte Bildadoption, unterbrochene Adoption mit Recovery und anschließendes No-op
@@ -57,7 +58,7 @@ Prozessende erneut vergeben darf. Die sechs PNGs liegen unverändert bei.
 
 **Prüfung/Abnahme offen.** Die vollständige CI-Abschlussprüfung, ihr tatsächlicher
 Status und die Originalartefakte werden über [AT-A-T01](../../AT_A_VERIFICATION.md)
-im Draft-PR an den finalen Head gebunden. Die sechs eigenen Befunde sind
+im Draft-PR an den finalen Head gebunden. Die sieben eigenen Befunde sind
 korrigiert und gezielt gegengeprüft; die finale CI prüft ihre gemeinsame Integration.
 Das unabhängige qualifizierte AT-A-R01 bleibt ein eigenes verpflichtendes Gate
 vor Merge; dieser Selbstreview ersetzt es nicht. Merge, Deployment,
