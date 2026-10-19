@@ -1,5 +1,11 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**AT · 19.10.2026, Spezifikation freigegeben; Implementierung nicht begonnen:**
+[Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) erweitern §4.3 um Motive
+auf dem vorhandenen Buch- und Kartenpapier. Der neue Standard gilt für künftige
+Abschlussbilder; Bestandsrevisionen folgen nach AT-A gesondert in AT-B mit
+konkreter Bildfreigabe. Historische Gestaltungs- und Abnahmenachweise bleiben erhalten.
+
 **KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
 [aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
 Die Spezifikation wurde am 18.10.2026 freigegeben:
@@ -33,7 +39,8 @@ die Skala „1 Sehr leicht“ bis „5 Sehr schwer“ mit gedeckt farbiger Ziffe
 dunklem Namen ohne Näherungszeichen sowie Bewertungshinweisen im Tooltip.
 KU-A löst diese Metadaten-/Statusanordnung, Ziffer und Schwierigkeitstooltip ab;
 historische Liefernachweise bleiben gebunden. Lokale Glättung, Bildraum,
-Zentrierung, Originalassets und übrige Gestaltungsverträge bleiben.
+Zentrierung, Originalassets und übrige Gestaltungsverträge bleiben im KE-/KU-Umfang.
+Die getrennten AT-Bildrevisionen folgen ausschließlich dem neuen AT-Vertrag.
 
 **KK / #174** ersetzt die variablen KB-Kartenhöhen, zusätzliche Blattüberschrift,
 gestapelten Play-/Resetaktionen und den Kacheltooltip. Alle Karten haben dieselben
@@ -263,6 +270,25 @@ Vorgeschlagen ist eine Unterscheidung zwischen vollständiger Sammlung und zusä
 ### 4.3 Motivtreue, detailliertere Enthüllung
 
 **Bestätigte Präzisierung:** Das Ergebnisbild darf sichtbar detaillierter als das Rätsel sein. Der Hauptgegenstand, wesentliche Formen, Bildaufbau und Proportionen müssen so zusammenpassen, dass das Raster sehr deutlich als Stilisierung des Bilds erkennbar ist. Feinere Konturen, Schattierungen, Oberflächen und kleinere passende Elemente sind erlaubt. Eine identische belegte Pixelmaske oder identische Auflösung ist ausdrücklich nicht erforderlich. Ein beliebiges neues Bild oder vollständig anderer Blickwinkel wäre weiterhin kein Ersatz.
+
+**AT · freigegebener Transparenzstandard:** Neutrale Außenflächen und echte
+Aussparungen des Motivs werden transparent. Das freigestellte Bild erscheint
+dadurch direkt auf dem vorhandenen Papier, ohne rechteckige weiße Bildfläche.
+Weiße Motivteile, Glanzlichter, feine Konturen und inhaltlich zur Szene gehörende
+Elemente bleiben erhalten. Weiche Alphakanten müssen auf dem tatsächlichen
+Papier bei kleiner Katalogdarstellung und großem Abschluss sauber aussehen;
+helle oder dunkle Säume, ausgefranste Kanten und verlorene Details erfüllen das
+Ziel nicht. Perspektive, Proportionen, Bildaufbau und Ausschnitt bleiben erhalten.
+
+Für szenische Bilder wird die transparente Außengestaltung motivbezogen
+ausgearbeitet und anhand der konkreten neuen Bildfassung freigegeben. AT ist
+keine pauschale Erlaubnis, das Umfeld zu löschen oder vollflächige Szenen ungeprüft
+vom Standard auszunehmen. Beide Oberflächen verwenden dieselbe freigegebene
+Bilddatei; vorhandener proportionaler Fit und lokale Glättung bleiben.
+Fragezeichen, eigene Füllminiatur, Spoilergrenze und EA-Zeitfolge ändern sich
+dadurch nicht. Die gezielte Ablösung älterer Vorgaben zum Erhalt der Assetbytes betrifft
+nur ausdrücklich freigegebene AT-Bildrevisionen; historische Originale und
+Belege werden nicht rückwirkend verändert. [Bild- und Änderungsvertrag](REVEAL_TRANSPARENCY.md).
 
 Die frühere P1.1-Prüfung auf identische Silhouetten war eine enge technische Fixture-Regel, nicht das allgemeine Qualitätsziel. #9 demonstriert die breitere Richtung am positiv bestätigten F-01-Segelboot und am eigenständig verfeinerten F-02-Leuchtturm. Beide verwenden ruhige Farbflächen, klare dunkle Konturen und motivbezogene Details. F-02 erhält passend zu seinem Raster Sonne, rechts stehenden Turm und Wasseraufbau, ergänzt um Architektur-, Oberflächen- und Wellendetails. Bloßes Vergrößern der gleichen Pixel oder Neufärben genügt nicht. Die Rätsel selbst werden nicht zur Illustration passend verändert.
 

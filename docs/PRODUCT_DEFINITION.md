@@ -1,5 +1,11 @@
 # Produktdefinition: picross
 
+**AT · 19.10.2026, Spezifikation freigegeben; Implementierung nicht begonnen:**
+[Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ergänzen den Bildstandard
+aus §3.3. AT-A schafft den begrenzten Bildänderungsweg und dessen technische
+Nachweise; anschließend überarbeitet AT-B die Bestandsbilder mit konkreter neuer
+Bildfreigabe. Die Spezifikationsfreigabe verändert noch keine Bilder oder Produktlogik.
+
 **KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
 [aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
 Die Spezifikation wurde am 18.10.2026 freigegeben:
@@ -157,6 +163,22 @@ Jedes reguläre Rätsel soll ein erkennbares Bild ergeben, gegebenenfalls stark 
 Ein monochromes Raster muss sein Motiv nicht bereits im uneingefärbten Ergebnis zweifelsfrei erkennen lassen. Eine kolorierte Abschlussansicht soll die Abstraktion zu einem klaren Motiv auflösen können. Das gelöste Raster und die Enthüllung sollen dabei nachvollziehbar zusammengehören. Farbige Rätsel sollen bereits selbst als Bild erkennbar sein.
 
 Gesammelt werden die erarbeiteten Bilder selbst, nicht davon unabhängige Belohnungsillustrationen. Bei monochromen Rätseln ist eine farbige Repräsentation des tatsächlichen Motivs vorgesehen; sie darf gegebenenfalls etwas höher aufgelöst sein, muss aber klar als Repräsentation des gelösten Rastermotivs erkennbar bleiben. Eine zusätzliche hochaufgelöste Fassung jedes Motivs ist damit nicht verpflichtend. EA / #170 bindet den Abschlussübergang: Arbeitsdarstellung ausblenden, eigene bestätigte Füllungen ohne Geometriesprung zentrieren und lückenlos darstellen, dann das vorhandene farbige Ergebnisbild, danach Motivname und Reset. Die 2,15 Sekunden lange Präsentation verzögert weder Abschluss noch Speicherung. Details im [Gestaltungskonzept](DESIGN_CONCEPT.md) und der [EA-Prüfzuordnung](EA_VERIFICATION.md).
+
+Der freigegebene [AT-Bildstandard](REVEAL_TRANSPARENCY.md) sieht transparente
+neutrale Flächen außerhalb des Motivs und in echten Aussparungen vor. Dadurch
+erscheint das Motiv auf dem vorhandenen Buch- beziehungsweise Kartenpapier.
+Weiße und helle Motivteile bleiben sichtbar; Konturen dürfen keine weißen oder
+dunklen Säume erhalten. Katalogvorschau und Abschluss verwenden dasselbe
+freigegebene farbige Bild, lediglich in unterschiedlichen Anzeigegrößen.
+Transparenz gehört zum Bildasset; ein dynamischer Weißfilter ist nicht vorgesehen.
+
+Bestandsänderungen erhalten Motiv, Perspektive, Proportionen und Bildausschnitt.
+Inhaltlich zur Szene gehörendes Umfeld wird nicht pauschal entfernt. Auch die
+transparente Außengestaltung einer Szene benötigt eine konkrete motivbezogene
+Bildfreigabe; eine ungeprüfte Ausnahme für vollflächige Bilder folgt daraus nicht.
+AT erlaubt ausschließlich gesondert freigegebene Bildrevisionen und bewahrt die
+historischen Original- und Freigabebindungen. Rätsellogik, Identität,
+Runtime-Revision und Spielstände bleiben von der Bildänderung unberührt.
 
 Vor Abschluss werden weder das fertige Lösungsbild noch der Motivname gezeigt. Während des Lösens ist jederzeit eine Miniatur des aktuellen eigenen Bearbeitungsstands sichtbar. Sie basiert nur auf den Eingaben des Spielers, einschließlich möglicher Fehler, nicht auf einer korrigierten oder vorweggenommenen Lösung. Darstellung und Platzierung werden im UI-Konzept ausgearbeitet.
 

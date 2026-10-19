@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 19.10.2026 · Version 2.5 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116) und [SD-Vertrag](PUZZLE_DIFFICULTY.md)
+Stand: 19.10.2026 · Version 2.6 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116), [SD-Vertrag](PUZZLE_DIFFICULTY.md) und [AT-Spezifikation](REVEAL_TRANSPARENCY.md)
 
 ## Geltung und Ablösung
 
@@ -241,6 +241,57 @@ Save- und PCK-Funktionstests nutzen feste technische Beispiele statt einer Schle
 über jeden neuen Katalogeintrag. Bestehende Motive als feste Eingabe allgemeiner
 Spiel-/Darstellungstests sind keine erneute Rätselzertifizierung und werden bei
 Inhaltserweiterungen nicht ergänzt.
+
+## AT · Bildrevisionen und einmalige Bestandsumstellung
+
+Eigentümerentscheidung vom 19.10.2026:
+[AT / #256](https://github.com/venomenon328/picross/issues/256) und der
+[Transparenzvertrag](REVEAL_TRANSPARENCY.md) sind als Spezifikation freigegeben;
+Implementierung und Bildumstellung sind noch nicht begonnen. Die reine
+Spezifikationslieferung bleibt auf dem Dokument-/Werkzeugtestpfad mit
+Dokumentvalidator, vollständigem Diffcheck und `ci-required`.
+
+AT-A liefert den gemeinsamen Bildrevisions-/Transaktionsweg und feste
+synthetische Regressionen für Alpha-Erhalt, helle Motivteile, Aussparungen,
+Darstellung, unveränderte Saves/Definitionen und binäre Wiederherstellung.
+Register-/Update-/Sync-/Bewertungs-/Added-/Export-/Recoverywirkung wird anhand
+des tatsächlichen Gesamtdiffs ausgewählt; kein pauschaler Kurzpfad für
+Produktionswerkzeug- oder CI-Code. Bestehende Pflichtchecks und getrennte
+qualifizierte Paketreviews bleiben. AT ändert keine Plattformmatrix und
+überträgt keine früheren paketbezogenen Ausnahmen auf neue Lieferungen.
+
+AT-B inventarisiert und prüft den tatsächlichen Bildbestand im ausdrücklich
+beauftragten Inhaltsprozess außerhalb der CI. Neue Bildfreigabe, Motiv-/Raster-
+konsistenz, Kanten-/Kontextsichtung und kontrollierte Dateiübernahme sind
+Inhaltsnachweise, kein dauerhafter Katalog-Replay und kein obligatorischer
+vollständiger Spieldurchlauf pro Rätsel. Bei unveränderter Definition gibt es
+keine neue Logik-/Proof-/Schwierigkeitsproduktion allein wegen der Bildrevision.
+
+Ein ausschließlich aus zugelassenen Inhaltsdateien bestehender Bild-PR nutzt
+weiterhin die enge Pfad-/Dateimodusprüfung und `ci-required`. P01 legt die spätere
+Erweiterung exakt auf `content/reveals/pz-[a-z0-9][a-z0-9-]{0,59}.json` fest,
+ausschließlich kanonische registrierte IDs und regulärer nicht ausführbarer
+Dateimodus 100644. Kein weiterer AT-Unterpfad, Freitext-, Bildfreigabe-, Journal-
+oder Tempnamensraum. Alias-/Fremdpfad-/Modus-/Rename-/Löschungsgegenproben gehören
+zu AT-A; die Auswahl prüft beide Diffseiten. Registrierung und Datenvalidierung
+prüfen zusätzlich die tatsächliche ID-/Quellenbindung; der reine CI-Inhaltspfad
+behauptet keine Bild-/Freigabevalidierung. Neue SD-v3-/Added-v2-Berichte bleiben
+an den bestehenden engen Berichtpfaden. **P01 aktiviert diese Positivliste noch
+nicht im Code.** Dokument-/Codebeimischungen
+folgen der bestehenden Vereinigung aller betroffenen Prüfbereiche. Die Anzahl
+allgemeiner Regressionen wächst nicht mit den umgestellten Katalogbildern.
+
+AT-P01 verwendet allein Dokumentvalidator, vollständigen Diffcheck und den
+tatsächlich automatisch ausgewählten Docs-/Werkzeugpfad einschließlich
+`ci-required` auf aktuellem Head/Test-Merge. Keine Produkt-/Windows-/Browser-/
+Solver-/Bestandsläufe allein wegen dieses Dokumentabschlusses und keine manuelle
+Unterdrückung automatisch erforderlicher Jobs. Die integrierte Chromium-Kette
+und der Leergruppenfix aus #258/#259 bleiben vollständig wirksam; historische
+fehlgeschlagene Runs werden nicht rückwirkend zu Erfolgen. Die spätere
+[AT-Prüfzuordnung](REVEAL_TRANSPARENCY.md) bindet synthetische Quellen-/Recovery-
+fälle und tatsächliche native Windows-/Chromium-Darstellungs-/Savewechsel.
+Kein neues P01-Produktgate und kein AT-A-M01; T01 und separates R01 bleiben
+vor dem späteren Implementierungsmerge, konkrete Bestandsbildabnahmen in AT-B.
 
 ## SD · Manuelle Schwierigkeitsbewertung und Datenintegration
 
