@@ -82,7 +82,17 @@ def browser(directory, report, builds):
         viewport=item['viewport'];ratio=item['pixel_ratio']
         require(type(ratio) in (int,float) and 0<ratio<=4 and len(viewport)==2 and
                 all(type(v) is int and v>0 for v in viewport),'browser screenshot geometry')
-        require(all(abs(size[i]-viewport[i]*ratio)<=1 for i in range(2)),'browser device pixel geometry')
+        if blend:
+            frame=item['rendered_frame'];bounds=frame['bounds'];surface=frame['framebuffer']
+            require(frame['definition_id']=='T-04' and type(frame['key']) is str and frame['key'].isdigit() and
+                    frame['opacity']==item['opacity'] and .3<=item['opacity']<=.7,'actual rendered transition binding')
+            require(len(bounds)==4 and all(type(v) is int for v in bounds) and len(surface)==2 and
+                    all(type(v) is int and v>0 for v in surface) and
+                    all(0<=bounds[i] and bounds[i+2]>0 and bounds[i]+bounds[i+2]<=surface[i] for i in range(2)),
+                    'rendered framebuffer crop')
+            require(list(size)==bounds[2:] and ratio==1,'browser device pixel geometry')
+        else:
+            require(all(abs(size[i]-viewport[i]*ratio)<=1 for i in range(2)),'browser device pixel geometry')
         require(item['revision']==revision and (0<item['opacity']<1 if blend else item['opacity']==1),'browser image phase/revision')
         require([s['kind'] for s in item['samples']]==list(SAMPLES),'browser pixel inventory')
         color=(56,132,90) if revision==1 else (174,85,52)
@@ -103,6 +113,7 @@ def browser(directory, report, builds):
     if group in ('catalog','completion'):
         rows=report['at_'+group];require([r['window'] for r in rows]==MATRIX,'browser AT matrix')
         for row in rows:
+            if group=='completion':require(row['blend']['rendered_frame']['framebuffer']==row['window'][:2], 'actual browser framebuffer matrix')
             for kind in (('small','hover') if group=='catalog' else ('final','reopen','blend')):
                 check_image(row[kind],blend=kind=='blend')
     elif group=='persistence':

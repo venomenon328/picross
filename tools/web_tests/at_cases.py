@@ -35,23 +35,20 @@ def capture(page, output, name, image, *, revision=1, opacity=1, frame=None):
         page.screenshot(path=str(path))
         dpr=page.evaluate('devicePixelRatio')
     else:
-        # Capture the current compositor frame directly. Playwright's ordinary
-        # screenshot waits for animation frames; with software WebGL that can
-        # outlast the real transition. Preserve the returned PNG bytes exactly.
-        cdp,dpr=frame
-        viewport=page.viewport_size
-        # A separately attached CDP session defaults to CSS-pixel capture. Ask
-        # for the actual device scale used by pointer/sample coordinates.
-        shot=cdp.send('Page.captureScreenshot',{'format':'png','fromSurface':True,'captureBeyondViewport':False,
-            'clip':dict(x=0,y=0,width=viewport['width'],height=viewport['height'],scale=dpr)})
-        path.write_bytes(base64.b64decode(shot['data'],validate=True))
+        # Original crop of the actual WebGL framebuffer, captured by the
+        # read-only export probe immediately after that frame was rendered.
+        raw=base64.b64decode(frame['png'],validate=True)
+        assert len(raw)<=32*1024*1024
+        path.write_bytes(raw);dpr=1
     viewport=[page.viewport_size[k] for k in ('width','height')]
     rows=[]
     with Image.open(path) as raw:
-        assert all(abs(raw.size[i]-viewport[i]*dpr)<=1 for i in range(2)), (raw.size,viewport,dpr)
+        expected=frame['bounds'][2:] if frame else [v*dpr for v in viewport]
+        assert all(abs(raw.size[i]-expected[i])<=1 for i in range(2)), (raw.size,expected)
         rgb=raw.convert('RGB')
         for kind,(x,y) in POINTS.items():
-            location=point(page,(rect[0]+(x+.5)/256*rect[2],rect[1]+(y+.5)/256*rect[3]))
+            position=(rect[0]+(x+.5)/256*rect[2],rect[1]+(y+.5)/256*rect[3])
+            location=[position[i]-frame['bounds'][i] for i in range(2)] if frame else point(page,position)
             pixel=[int(v*dpr) for v in location]; actual=list(rgb.getpixel(tuple(pixel)))
             if opacity!=1 and kind=='ink':
                 assert all(color[i]+10<actual[i]<248 for i in range(3)), (kind,actual,'not an intermediate blend')
@@ -62,7 +59,9 @@ def capture(page, output, name, image, *, revision=1, opacity=1, frame=None):
                 if kind in ('outside','hole'): assert min(actual)>170, (kind,actual)
                 if kind=='soft': assert all(color[i]+15<actual[i]<250 for i in range(3)), (kind,actual)
             rows.append(dict(kind=kind,point=pixel,actual=actual,source=samples[kind]))
-    return dict(file=path.name,rect=rect,samples=rows,revision=revision,opacity=opacity,viewport=viewport,pixel_ratio=dpr)
+    result=dict(file=path.name,rect=rect,samples=rows,revision=revision,opacity=opacity,viewport=viewport,pixel_ratio=dpr)
+    if frame:result['rendered_frame']={k:v for k,v in frame.items() if k not in ('png','image')}
+    return result
 
 
 def matrix(page, spec, *, catalog=False):
@@ -97,15 +96,6 @@ def catalog(page, name, output, evidence):
 
 
 def completion(page, name, output, evidence):
-    # Connect and read stable device geometry before the timed transition.
-    cdp=page.context.new_cdp_session(page)
-    try:
-        _completion(page,name,output,evidence,(cdp,page.evaluate('devicePixelRatio')))
-    finally:
-        cdp.detach()
-
-
-def _completion(page, name, output, evidence, frame):
     control(page,name='nav-album');control(page,text='Blatt 03')
     rows=[]
     for spec in MATRIX:
@@ -118,10 +108,16 @@ def _completion(page, name, output, evidence, frame):
         reopen=capture(page,output,f'{name}-at-reopen-{spec[0]}',state(page,'at_image')['at_image'])
         control(page,name='reset',tooltip='Rätsel zurücksetzen');control(page,text='Zurücksetzen',dialog=True)
         assert not state(page,'ea_art')['ea_art']
-        draw(page,(0,2),(4,2))
-        wait(page,'picrossProbe.ea_active && picrossProbe.ea_alpha > 0.15 && picrossProbe.ea_alpha < 0.85')
-        observed=state(page,'at_image','ea_alpha')
-        blend=capture(page,output,f'{name}-at-blend-{spec[0]}',observed['at_image'],opacity=observed['ea_alpha'],frame=frame)
+        previous=page.evaluate('window.picrossAtFrame?.key ?? null')
+        page.evaluate('window.picrossAtCapture = true')
+        try:
+            draw(page,(0,2),(4,2))
+            wait(page,'window.picrossAtFrame && picrossAtFrame.key !== '+json.dumps(previous))
+            frame=page.evaluate('window.picrossAtFrame')
+        finally:
+            page.evaluate('window.picrossAtCapture = false')
+        assert frame['definition_id']=='T-04' and frame['framebuffer']==list(spec[:2])
+        blend=capture(page,output,f'{name}-at-blend-{spec[0]}',frame['image'],opacity=frame['opacity'],frame=frame)
         wait(page,'picrossProbe.completed && !picrossProbe.ea_active');saved(page)
         rows.append(dict(window=list(spec),final=final,reopen=reopen,blend=blend))
     evidence['at_completion']=rows

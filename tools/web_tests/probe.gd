@@ -2,7 +2,35 @@ extends "res://ui/main.gd"
 ## Read-only observability in the separate technical export; never in player bundles.
 var probe_elapsed: float = 0.0
 var at_probe_images: Dictionary = {}
+var at_frame_key: String = ""
 const Card = preload("res://ui/catalog_card.gd")
+
+func _ready() -> void:
+	super._ready()
+	RenderingServer.frame_post_draw.connect(_capture_at_frame)
+
+func _capture_at_frame() -> void:
+	# Observe one already rendered frame per natural completion. No clock,
+	# animation, input or save state is changed. Only the technical export has this.
+	if reveal_view == null or not reveal_view.active or reveal_view.artwork == null:
+		return
+	var opacity: float = reveal_view.art.modulate.a
+	if opacity < 0.3 or opacity > 0.7 or reveal_view.artwork.get_size() != Vector2(256,256):
+		return
+	# Arming requests observation only; the player has no command/state hook.
+	if not JavaScriptBridge.eval("window.picrossAtCapture === true",true): return
+	var key: String = str(reveal_view.started_usec)
+	if key == at_frame_key: return
+	var observed: Dictionary = _probe_image(reveal_view)
+	var box := Rect2(Vector2(observed.rect[0],observed.rect[1]),Vector2(observed.rect[2],observed.rect[3]))
+	var bounds := Rect2i(Vector2i(box.position.floor()),Vector2i(box.end.ceil()-box.position.floor()))
+	var pixels: Image = get_viewport().get_texture().get_image()
+	if pixels == null or not Rect2i(Vector2i.ZERO,pixels.get_size()).encloses(bounds): return
+	var frame: Dictionary = {"key":key,"definition_id":session.definition.id,"opacity":opacity,
+		"framebuffer":[pixels.get_width(),pixels.get_height()],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],
+		"image":observed,"png":Marshalls.raw_to_base64(pixels.get_region(bounds).save_png_to_buffer())}
+	at_frame_key = key
+	JavaScriptBridge.eval("window.picrossAtFrame = " + JSON.stringify(frame),true)
 
 func _process(delta: float) -> void:
 	probe_elapsed += delta
