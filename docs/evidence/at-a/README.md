@@ -1,6 +1,6 @@
 # AT-A · Originalnachweise
 
-Die Dateien unter `windows/` sind unveränderte Originalausgaben des echten
+Die Dateien direkt unter `windows/` und `windows/logs/` sind unveränderte Originalausgaben des echten
 Windows-Durchstichs am sauberen Commit
 `714144eb097001e1b7d078fe318799e97d6fc459`, Basis
 `9cc58651518e3a28e97f46932d69554210b0abcb`.
@@ -23,6 +23,21 @@ Der vorherige Windowsnachweis zu `742f183` bleibt unverändert im Git-Stand
 `059d9f9` erhalten. Der neue Nachweis enthält auch die korrigierte Behandlung
 unsichtbarer Arbeitslayouts; spätere Änderungen betreffen Dokumente,
 Originalartefakte und die Browseraufnahme, nicht den Produkt-/Windowsprobecode. Die finale CI-Bindung steht im Draft-PR.
+
+### Native Windows-Dreiermatrix
+
+`windows/matrix/` sichert zusätzlich die 30 unveränderten AT-PNGs und Messberichte
+aus dem sauberen Stand `5cb21694f8bb0f52077e0d5b17c151915679480a`.
+[Matrixbindung, Fixture und ausgeführter Wrapper](windows/matrix/records.zip)
+liegen mit originalen CRLF-Bytes im ZIP und binden Quelle, Engine, Plattform,
+Dateihashes und die unabhängige Pixelprüfung. Die echten Godot-Probes bestanden
+81 Katalog- und 2327 Abschlussprüfpunkte; die unabhängige Auswertung bestätigte
+30 Katalog- und 45 Abschluss-/Überblend-/Wiederöffnungsmessungen.
+Alle drei Fenster-/UI-Kombinationen liefen mit dem realen Windows-NVIDIA-Treiber.
+Die vollständigen lokalen Ausgaben einschließlich weiterer bestehender EA-Fälle
+bleiben unter `artifacts/at-a-final/windows-matrix-5cb2169/` erhalten; hier liegt
+die gezielte AT-Auswahl. Spätere Korrekturen am Browsernachweis verändern diesen
+Produkt-/Probe-/Fixturestand nicht.
 
 Der [Windows-Startpreflight](windows-start-preflight.json) ist ein eigener
 Umgebungsnachweis vor Implementierung. Sein Originalarchiv unter

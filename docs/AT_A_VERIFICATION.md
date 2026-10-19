@@ -80,6 +80,13 @@ ausgegeben. Das Windows-Bild-/Saveexperiment wird mit
 `python tools/at_windows_probe.py --cache-dir <offizieller-cache> --output-dir <neuer-pfad>`
 in einem sauberen Checkout reproduziert.
 
+Die zusätzliche [Windows-Dreiermatrix](evidence/at-a/windows/matrix/records.zip)
+am sauberen Stand `5cb21694f8bb0f52077e0d5b17c151915679480a` bestätigt dieselben
+nativen AT-Darstellungsfälle mit tatsächlichem NVIDIA-Treiber. 81 Katalog- und
+2327 Abschlussprüfpunkte sowie alle 75 unabhängigen Pixelmessungen bestanden.
+Ihre 30 AT-Originale, Messberichte, Logs und der ausgeführte Wrapper sind separat
+gesichert. Der Produkt-/Windowsprobecode bleibt danach unverändert.
+
 Die Entwicklungsläufe sind ausdrücklich keine Abschlussbindung an den späteren
 PR-Head. Bereits geprüft: Quellenlebenszyklus vor/nach Cleanup, Raster-Rebind,
 echtes unverändertes No-op samt Nanosekunden-mtimes, SD-/Added-/Sync-Erhalt,
@@ -101,7 +108,7 @@ kein Produktivserver und kein Deployment werden angesprochen.
 ## Getrenntes Selbstreview
 
 Der [getrennte Selbstreview](evidence/at-a/self-review.md) benennt Prüfumfang,
-konkrete Befunde B-AT-SR01–06 und deren Gegenproben. Er ergänzt
+konkrete Befunde B-AT-SR01–07 und deren Gegenproben. Er ergänzt
 frühe Registry-/Manifestvalidierung, kontrollierten Speicher-/Typabbruch und
 bytegenaue Git-Aufbewahrung der Originale, echte Abschlussnavigation und die
 Vermeidung unsichtbarer Rasterlayouts. Die zusätzliche positive Versionsprobe

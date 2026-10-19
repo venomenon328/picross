@@ -28,7 +28,7 @@ def browser_row(directory,row):
             actual=tuple(round(240*(1-alpha)+source[c]*alpha) for c in range(3))
             rows.append(dict(kind=kind,source=list(source),point=[i,0],actual=list(actual)));pixels.append(actual)
         png(directory/name,pixels)
-        return dict(file=name,rect=[0,0,5,1],revision=revision,opacity=.5 if blend else 1,samples=rows)
+        return dict(file=name,rect=[0,0,5,1],revision=revision,opacity=.5 if blend else 1,samples=rows,viewport=[5,1],pixel_ratio=1)
     group=row['group']
     if group in ('catalog','completion'):
         rows=[]

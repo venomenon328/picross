@@ -79,6 +79,10 @@ def browser(directory, report, builds):
     def check_image(item, revision=1, blend=False):
         require(item['file'].startswith('chromium-at-') and '/' not in item['file'] and '\\' not in item['file'],'browser original name')
         size,pixel=png(directory/item['file'])
+        viewport=item['viewport'];ratio=item['pixel_ratio']
+        require(type(ratio) in (int,float) and 0<ratio<=4 and len(viewport)==2 and
+                all(type(v) is int and v>0 for v in viewport),'browser screenshot geometry')
+        require(all(abs(size[i]-viewport[i]*ratio)<=1 for i in range(2)),'browser device pixel geometry')
         require(item['revision']==revision and (0<item['opacity']<1 if blend else item['opacity']==1),'browser image phase/revision')
         require([s['kind'] for s in item['samples']]==list(SAMPLES),'browser pixel inventory')
         color=(56,132,90) if revision==1 else (174,85,52)

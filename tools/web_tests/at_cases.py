@@ -26,26 +26,29 @@ def no_spoilers(page):
             assert not label['reveal'] and not label['at_image'], identifier
 
 
-def capture(page, output, name, image, *, revision=1, opacity=1):
+def capture(page, output, name, image, *, revision=1, opacity=1, frame=None):
     rect=image['rect']; samples=image['samples']; color=COLORS[revision]
     assert samples['white']==[255]*4 and samples['soft']==color+[80] and samples['ink']==color+[255]
     assert samples['hole'][3]==samples['outside'][3]==0
     path=output/(name+'.png')
     if opacity==1:
         page.screenshot(path=str(path))
+        dpr=page.evaluate('devicePixelRatio')
     else:
         # Capture the current compositor frame directly. Playwright's ordinary
         # screenshot waits for animation frames; with software WebGL that can
         # outlast the real transition. Preserve the returned PNG bytes exactly.
-        cdp=page.context.new_cdp_session(page)
-        try:
-            shot=cdp.send('Page.captureScreenshot',{'format':'png','fromSurface':True,'captureBeyondViewport':False})
-            path.write_bytes(base64.b64decode(shot['data'],validate=True))
-        finally:
-            cdp.detach()
-    dpr=page.evaluate('devicePixelRatio')
+        cdp,dpr=frame
+        viewport=page.viewport_size
+        # A separately attached CDP session defaults to CSS-pixel capture. Ask
+        # for the actual device scale used by pointer/sample coordinates.
+        shot=cdp.send('Page.captureScreenshot',{'format':'png','fromSurface':True,'captureBeyondViewport':False,
+            'clip':dict(x=0,y=0,width=viewport['width'],height=viewport['height'],scale=dpr)})
+        path.write_bytes(base64.b64decode(shot['data'],validate=True))
+    viewport=[page.viewport_size[k] for k in ('width','height')]
     rows=[]
     with Image.open(path) as raw:
+        assert all(abs(raw.size[i]-viewport[i]*dpr)<=1 for i in range(2)), (raw.size,viewport,dpr)
         rgb=raw.convert('RGB')
         for kind,(x,y) in POINTS.items():
             location=point(page,(rect[0]+(x+.5)/256*rect[2],rect[1]+(y+.5)/256*rect[3]))
@@ -59,7 +62,7 @@ def capture(page, output, name, image, *, revision=1, opacity=1):
                 if kind in ('outside','hole'): assert min(actual)>170, (kind,actual)
                 if kind=='soft': assert all(color[i]+15<actual[i]<250 for i in range(3)), (kind,actual)
             rows.append(dict(kind=kind,point=pixel,actual=actual,source=samples[kind]))
-    return dict(file=path.name,rect=rect,samples=rows,revision=revision,opacity=opacity)
+    return dict(file=path.name,rect=rect,samples=rows,revision=revision,opacity=opacity,viewport=viewport,pixel_ratio=dpr)
 
 
 def matrix(page, spec, *, catalog=False):
@@ -94,6 +97,15 @@ def catalog(page, name, output, evidence):
 
 
 def completion(page, name, output, evidence):
+    # Connect and read stable device geometry before the timed transition.
+    cdp=page.context.new_cdp_session(page)
+    try:
+        _completion(page,name,output,evidence,(cdp,page.evaluate('devicePixelRatio')))
+    finally:
+        cdp.detach()
+
+
+def _completion(page, name, output, evidence, frame):
     control(page,name='nav-album');control(page,text='Blatt 03')
     rows=[]
     for spec in MATRIX:
@@ -109,7 +121,7 @@ def completion(page, name, output, evidence):
         draw(page,(0,2),(4,2))
         wait(page,'picrossProbe.ea_active && picrossProbe.ea_alpha > 0.15 && picrossProbe.ea_alpha < 0.85')
         observed=state(page,'at_image','ea_alpha')
-        blend=capture(page,output,f'{name}-at-blend-{spec[0]}',observed['at_image'],opacity=observed['ea_alpha'])
+        blend=capture(page,output,f'{name}-at-blend-{spec[0]}',observed['at_image'],opacity=observed['ea_alpha'],frame=frame)
         wait(page,'picrossProbe.completed && !picrossProbe.ea_active');saved(page)
         rows.append(dict(window=list(spec),final=final,reopen=reopen,blend=blend))
     evidence['at_completion']=rows
