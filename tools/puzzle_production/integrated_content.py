@@ -5,6 +5,7 @@ import re
 import shutil
 import subprocess
 
+from . import catalog_io
 from .authoring_package import require, file_hash, sha, file_table
 from .contract import exact_keys, load_json, write_json
 
@@ -21,14 +22,15 @@ def check(root, entry, receipt):
     original["production"]["package_sha256"] = receipt["entry"]["production"]["package_sha256"]
     sha(original["production"]["package_sha256"])
     require(receipt["entry"] == original, "Integrated receipt identity/category differs")
-    notice = (root / "game" / entry["reveal"]).with_suffix(".txt")
-    require(file_hash(notice) == sha(receipt["notice_sha256"]), "Player notice differs")
+    from . import categories, reveal_source
+    resolved = reveal_source.resolve(root, entry, categories.load(root / categories.PATH))
+    require(resolved["historical_notice_sha256"] == sha(receipt["notice_sha256"]), "Historical player notice differs")
 
 
 def retire(root, ids, integrated_commit):
     """Prepare a reviewable Git diff only after the exact inputs reached main."""
     from . import content_registry as registry
-    root = root.resolve()
+    root = catalog_io.external(root)
 
     def git(*args):
         result = subprocess.run(["git", *args], cwd=root, capture_output=True)
@@ -72,8 +74,15 @@ def retire(root, ids, integrated_commit):
                      (root/"game"/entry["reveal"]).with_suffix(".txt").relative_to(root).as_posix(), *files]:
             require((root/name).read_bytes() == git("show", integrated_commit+":"+name),
                     "Unmerged or modified production file: " + name)
+        from . import reveal_source, categories, catalog_io as io
+        reveal_path = reveal_source.path(id)
+        present = io.read(root, reveal_path, reveal_source.LIMIT, missing=True)
+        committed = subprocess.run(["git", "cat-file", "-e", integrated_commit + ":" + reveal_path], cwd=root, capture_output=True).returncode == 0
+        require((present is not None) == committed and (present is None or present == git("show", integrated_commit + ":" + reveal_path)),
+                "Unmerged reveal authority prevents retirement")
+        resolved = reveal_source.resolve(root, entry, categories.load(root / categories.PATH))
         receipt = {"format": FORMAT, "entry": deepcopy(entry), "integrated_commit": integrated_commit,
-                   "notice_sha256": file_hash((root/"game"/entry["reveal"]).with_suffix(".txt"))}
+                   "notice_sha256": resolved["historical_notice_sha256"]}
         plans.append((entry, package, authoring, receipt, len(files), sum(p.stat().st_size for p in files.values())))
     affected = [registry.REGISTRY, index_path.relative_to(root).as_posix()]
     for _, package, authoring, _, _, _ in plans:

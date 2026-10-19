@@ -1,6 +1,6 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
-**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; Umsetzung offen:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
 [AT-A](REVEAL_TRANSPARENCY.md) ergänzt den gemeinsamen Quellen-/Transaktionsweg
 für getrennte aktive Bildfassungen und einen abgesicherten Binärersatz. Ratings,
 Bewertungsrevisionen, Hinzugefügt-Daten und historische Produktionsbindungen
@@ -428,8 +428,9 @@ Ein vorhandenes Reveal ist im bisherigen Journal eine unveränderte binäre
 AT-A darf einen PNG-Ersatz daher nicht in diese alten Bedeutungen einschmuggeln.
 P01 schließt nachfolgend die exakten Feld-/Format-/Ressourcenverträge vor der
 Codeänderung. Datenbindung und Auflösung stehen in [ZA-1](ZA1_ADAPTER.md) und
-[Projektion](CATEGORIES.md). Alle neuen Formate bleiben **noch nicht implementierter
-Sollstand**. Keine zweite unabhängige Schreibstrecke oder Delete+Add am Bildpfad.
+[Projektion](CATEGORIES.md). [AT-A-T01](AT_A_VERIFICATION.md) führt Umsetzung und
+Prüfung dieser Formate. Keine zweite unabhängige Schreibstrecke oder Delete+Add
+am Bildpfad.
 
 Plan und Übernahme prüfen Alt-/Zielzustand samt tatsächlichen Bildbytes,
 Bildfreigaben, Quellen und unveränderten historischen Belegen vor Mutation.

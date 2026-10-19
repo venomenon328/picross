@@ -38,7 +38,7 @@ jobs:
         run: |
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-player
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test --test
-          python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test-update --test
+          python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-test-update --test --test-reveal-revision 2
       - name: Seal current builds and source binding
         env:
           CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}

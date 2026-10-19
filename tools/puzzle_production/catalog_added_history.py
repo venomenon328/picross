@@ -2,27 +2,31 @@
 from copy import deepcopy
 import hashlib
 
+from . import catalog_io
 from .authoring_package import require, sha, relative
 from .contract import exact_keys, canonical_bytes
 from . import catalog_added as added, catalog_rating as rating
 
-FORMAT = "picross-added-plan-v1"
+LEGACY_FORMAT = "picross-added-plan-v1"
+FORMAT = "picross-added-plan-v2"
 
 
 def hashed(raw):
     return hashlib.sha256(raw).hexdigest() if raw is not None else None
 
 
-def source_hashes(snapshot):
+def source_hashes(snapshot, plan_format=FORMAT):
+    from . import catalog_transaction as tx
+    if plan_format != FORMAT: snapshot = tx.historical_snapshot(snapshot)
     return {**snapshot["retained"], **{n: hashed(b) for n, b in snapshot["texts"].items()}}
 
 
 def validate_plan(plan):
     exact_keys(plan, {"format", "run_id", "base_commit", "sources", "evidence", "entries"})
-    require(plan["format"] == FORMAT and len(canonical_bytes(plan)) + 1 <= added.REPORT_LIMIT, "Invalid added plan format/size")
+    require(plan["format"] in (FORMAT, LEGACY_FORMAT) and len(canonical_bytes(plan)) + 1 <= added.REPORT_LIMIT, "Invalid added plan format/size")
     added.report_path(plan["run_id"])
     added.commit(plan["base_commit"])
-    require(isinstance(plan["sources"], dict) and len(plan["sources"]) <= 100003, "Invalid added source map")
+    require(isinstance(plan["sources"], dict) and len(plan["sources"]) <= (80003 if plan["format"] == FORMAT else 100003), "Invalid added source map")
     for n, h in plan["sources"].items():
         relative(n)
         if h is not None: sha(h)
@@ -134,7 +138,7 @@ def validate_delta(j, before):
             "Added plan catalog selection changed")
     captured = {"retained": j["retained"], "texts": {n: b.encode() if b is not None else None
                 for n, b in j["old"].items() if n != name}}
-    require(source_hashes(captured) == plan["sources"], "Added plan sources changed")
+    require(source_hashes(captured, plan["format"]) == plan["sources"], "Added plan sources changed")
     for row in plan["entries"]:
         n = added.path(row["id"])
         require(j["old"][n] == row["old_record"] and j["new"][n].encode() == added.encoded(record_for(plan, row["id"], raw)),
@@ -143,11 +147,12 @@ def validate_delta(j, before):
 
 def adopt(root, plan_path, *, apply=False, fail_step=None):
     from . import catalog_transaction as tx
-    root = root.resolve()
+    root = catalog_io.external(root)
     raw = rating.read_file(plan_path, added.REPORT_LIMIT)
     plan = validate_plan(rating.bytes_json(raw, added.REPORT_LIMIT))
     require(raw == canonical_bytes(plan) + b"\n", "Added plan must be canonical")
     snapshot = tx.capture(root)
+    if plan["format"] != FORMAT: tx.historical_snapshot(snapshot)
     require([e["id"] for e in snapshot["registry"]["entries"]] == [r["id"] for r in plan["entries"]], "Added catalog changed")
     name = added.report_path(plan["run_id"])
     changes = {added.path(r["id"]): added.encoded(record_for(plan, r["id"], raw)) for r in plan["entries"]}
@@ -161,9 +166,9 @@ def adopt(root, plan_path, *, apply=False, fail_step=None):
         e = next((e for e in plan["evidence"] if e["key"] == "checkout-runtime"), None)
         require(e is not None and e["sha256"] == plan["sources"][tx.RUNTIME], "Missing original runtime evidence")
         original["texts"][tx.RUNTIME] = e["content"].encode()
-        require(source_hashes(original) == plan["sources"], "Added sources changed since adoption")
+        require(source_hashes(original, plan["format"]) == plan["sources"], "Added sources changed since adoption")
         return {"status": "no-op", "changes": []}
-    require(source_hashes(snapshot) == plan["sources"], "Added sources changed since plan")
+    require(source_hashes(snapshot, plan["format"]) == plan["sources"], "Added sources changed since plan")
     if all(snapshot["texts"][n] == b for n, b in changes.items()):
         return {"status": "no-op", "changes": []}
     changes[name] = raw
@@ -185,7 +190,7 @@ def plan(root, run, base, *, repository=None, direct=()):
     from datetime import datetime, timezone
     from . import catalog_transaction as tx, content_registry as cr, categories
 
-    root = root.resolve()
+    root = catalog_io.external(root)
     snapshot = tx.capture(root)
     added.commit(base); added.report_path(run)
     existing = tx.read(root, added.report_path(run))

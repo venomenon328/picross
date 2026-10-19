@@ -11,6 +11,7 @@ import json
 from pathlib import Path
 import re
 
+from . import catalog_io
 from .authoring_package import require, sha
 from .contract import Aborted, InvalidInput, InvalidProof, canonical_bytes, digest, exact_keys, integer, load_json
 from . import catalog_rating as rating, catalog_transaction as tx, catalog_difficulty
@@ -18,7 +19,8 @@ from .analysis_contract import AnalysisBudget
 from .difficulty_rating import METHOD_ID, frozen_method
 
 LEGACY_FORMAT = "picross-catalog-difficulty-report-v1"
-FORMAT = "picross-catalog-difficulty-report-v2"
+PREVIOUS_FORMAT = "picross-catalog-difficulty-report-v2"
+FORMAT = "picross-catalog-difficulty-report-v3"
 REPORT_LIMIT = 16 * 1024 * 1024
 
 
@@ -90,13 +92,13 @@ def _distribution(rows, key):
 
 def validate_report(report):
     exact_keys(report, {"format", "run_id", "result", "result_hash", "operation"})
-    require(report["format"] in (FORMAT, LEGACY_FORMAT) and len(canonical_bytes(report)) + 1 <= REPORT_LIMIT, "Invalid difficulty report format/size")
+    require(report["format"] in (FORMAT, PREVIOUS_FORMAT, LEGACY_FORMAT) and len(canonical_bytes(report)) + 1 <= REPORT_LIMIT, "Invalid difficulty report format/size")
     run_id(report["run_id"])
     r = exact_keys(report["result"], {"selection", "source_commit", "method_hash", "snapshot", "entries", "distribution"} |
-                   ({"sources"} if report["format"] == FORMAT else set()))
-    if report["format"] == FORMAT:
+                   ({"sources"} if report["format"] in (FORMAT, PREVIOUS_FORMAT) else set()))
+    if report["format"] in (FORMAT, PREVIOUS_FORMAT):
         from .authoring_package import relative
-        require(isinstance(r["sources"], dict) and len(r["sources"]) <= 70003, "Invalid report sources")
+        require(isinstance(r["sources"], dict) and len(r["sources"]) <= (80003 if report["format"] == FORMAT else 70003), "Invalid report sources")
         for name, value in r["sources"].items():
             relative(name)
             if value is not None: sha(value)
@@ -110,8 +112,8 @@ def validate_report(report):
     ids = []
     for row in rows:
         exact_keys(row, {"id", "current_source", "logic_binding", "old", "proposed", "status", "reason", "rating_hash", "checked_hash", "previous_record_hash"} |
-                   ({"previous_rating_revision"} if report["format"] == FORMAT else set()))
-        if report["format"] == FORMAT:
+                   ({"previous_rating_revision"} if report["format"] in (FORMAT, PREVIOUS_FORMAT) else set()))
+        if report["format"] in (FORMAT, PREVIOUS_FORMAT):
             if row["previous_record_hash"] is None:
                 require(row["previous_rating_revision"] is None, "Unexpected previous rating revision")
             else:
@@ -166,7 +168,7 @@ def markdown(report):
 
 def preview(root, output, run, source_commit, *, ids=None, all_entries=False, checked_inputs=None,
             r4_inputs=None, limits=None, verify_limits=None):
-    root = root.resolve()
+    root = catalog_io.external(root)
     require(bool(ids) != bool(all_entries), "Choose explicit IDs or all")
     run_id(run)
     require(isinstance(source_commit, str) and re.fullmatch(r"[0-9a-f]{40}", source_commit), "Explicit source commit required")
@@ -222,7 +224,8 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
     return report
 
 
-def source_hashes(snapshot):
+def source_hashes(snapshot, report_format=FORMAT):
+    if report_format != FORMAT: snapshot = tx.historical_snapshot(snapshot)
     return {**snapshot["retained"], **{n: hashlib.sha256(raw).hexdigest() if raw is not None else None
             for n, raw in snapshot["texts"].items() if n not in (tx.REGISTRY, tx.RUNTIME, "content/categories.json")}}
 
@@ -232,8 +235,9 @@ def check_repeat(report, snapshot):
     r = report["result"]
     for name in (tx.REGISTRY, "content/categories.json"):
         require(hashlib.sha256(snapshot["texts"][name]).hexdigest() == r["snapshot"][name], "Checkout changed since preview")
-    current = source_hashes(snapshot)
-    modern = report["format"] == FORMAT
+    current = source_hashes(snapshot, report["format"])
+    for name in tx.report_names(report["run_id"]): current.pop(name, None)
+    modern = report["format"] in (FORMAT, PREVIOUS_FORMAT)
     if modern:
         require(set(current) == set(r["sources"]), "Checkout sources changed since preview")
     # Restore only the selected pre-adoption projections in memory. Adoption
@@ -261,12 +265,13 @@ def check_repeat(report, snapshot):
 
 
 def adopt(root, workspace, *, apply=False, fail_step=None):
-    root = root.resolve()
+    root = catalog_io.external(root)
     workspace = work_directory(workspace, root)
     report_bytes = rating.read_file(safe_external(workspace / "report.json"), REPORT_LIMIT)
     report = validate_report(rating.bytes_json(report_bytes, REPORT_LIMIT))
     require(safe_external(workspace / "report.md").read_bytes() == markdown(report).encode(), "Preview Markdown differs")
     snapshot = tx.capture(root)
+    if report["format"] != FORMAT: tx.historical_snapshot(snapshot)
     entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
     rows = report["result"]["entries"]
     if report["result"]["selection"] == "all": require(sorted(entries) == [r["id"] for r in rows], "Catalog selection changed")
@@ -307,8 +312,8 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
     require(all(v is None for v in existing.values()), "Report run already exists; use a new run ID")
     require(all(hashlib.sha256(snapshot["texts"][n]).hexdigest() == h for n, h in report["result"]["snapshot"].items()),
             "Checkout changed since preview")
-    if report["format"] == FORMAT:
-        require(source_hashes(snapshot) == report["result"]["sources"], "Checkout sources changed since preview")
+    if report["format"] in (FORMAT, PREVIOUS_FORMAT):
+        require(source_hashes(snapshot, report["format"]) == report["result"]["sources"], "Checkout sources changed since preview")
     changes.update(durable)
     journal = tx.prepare(root, snapshot, changes, operation="adoption", report_run=report["run_id"])
     require(all(safe_external(p).read_bytes() == b for p, b in externals.items()), "Preview inputs changed during planning")

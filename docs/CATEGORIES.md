@@ -1,6 +1,6 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
-**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; Umsetzung offen:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
 [AT](REVEAL_TRANSPARENCY.md) ergänzt in AT-A die getrennte aktive Bildbindung und
 deren gemeinsamen Prüf-/Transaktionsweg; AT-B übernimmt danach freigegebene neue
 Bildfassungen des gebundenen Bestands. Historische Registry-/Paket-/Integrations-

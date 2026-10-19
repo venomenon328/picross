@@ -87,4 +87,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
             assert returned['direction_accessibility_name'] == current['direction_accessibility_name']
     page.screenshot(path=str(output/f'{name}-ku-b-sorting.png'))
     passed('KU-B four criteria, both directions, canonical ties and stable return ID')
+    from at_cases import catalog
+    catalog(page,name,output,evidence)
+    passed('AT transparent catalog and real hover preserve white detail, holes and soft alpha')
     assert not errors, errors

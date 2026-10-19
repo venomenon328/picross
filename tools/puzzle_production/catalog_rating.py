@@ -402,7 +402,7 @@ def checked_from_active(value):
         **{k: deepcopy(value["adoption"][k]) for k in ("analysis_report_hash", "verification_hash", "tool")}}, "checked_hash"), active=False)
 
 
-def source_paths(root, *registries):
+def source_paths(root, *registries, temporary=()):
     """Validate the whole active namespace, including unregistered/alias paths.
 
     Reports are a distinct namespace, never an alternative active source.
@@ -416,6 +416,7 @@ def source_paths(root, *registries):
     require(base.is_dir(), "Difficulty namespace must be a directory")
     found = set()
     for child in base.iterdir():
+        if child.relative_to(root).as_posix() in temporary: continue
         directory = path_in(root, child.relative_to(root).as_posix())
         require(directory.is_dir(), "Misplaced difficulty source: " + child.name)
         if child.name == "reports":
@@ -424,11 +425,13 @@ def source_paths(root, *registries):
                 run = path_in(root, run.relative_to(root).as_posix())
                 require(run.is_dir(), "Difficulty report run must be a directory")
                 for report in run.iterdir():
+                    if report.relative_to(root).as_posix() in temporary: continue
                     report = path_in(root, report.relative_to(root).as_posix())
                     require(report.name in ("report.json", "report.md") and report.is_file(), "Misplaced difficulty report")
             continue
         identity(child.name)
         for item in directory.iterdir():
+            if item.relative_to(root).as_posix() in temporary: continue
             require(child.name in allowed, "Unregistered difficulty source: " + child.name)
             item = path_in(root, item.relative_to(root).as_posix())
             require(item.name == "rating.json" and item.is_file(), "Misplaced difficulty source / path collision: " + str(item))

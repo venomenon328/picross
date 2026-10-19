@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-**AT · 19.10.2026, Spezifikation freigegeben; Implementierung nicht begonnen:**
+**AT · 19.10.2026, Umsetzungsvorbereitung V3; AT-A in Umsetzung:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ergänzen den Bildstandard
 aus §3.3. AT-A schafft den begrenzten Bildänderungsweg und dessen technische
 Nachweise; anschließend überarbeitet AT-B die Bestandsbilder mit konkreter neuer

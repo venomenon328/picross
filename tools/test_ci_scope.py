@@ -10,6 +10,32 @@ from ci_scope import FLAGS, JOBS, apply_event_policy, classify, content_path, ev
 
 
 class SelectionTests(unittest.TestCase):
+    def test_at_reveal_paths_and_both_sides_of_git_modes(self):
+        from unittest.mock import patch
+        valid = 'content/reveals/pz-test.json'
+        self.assertTrue(classify([valid])['content_only'])
+        for path in ('content/reveals/PZ-test.json', 'content/reveals/pz-Test.json', 'content/reveals/pz-test.JSON',
+                     'content/reveals/pz-test/record.json', 'content/reveals/pz-test.json.py', 'content/reveals/../pz-test.json',
+                     'content/reveals/pz-test.json/', 'content/reveals/pz-.json', 'content/reveals/other.json'):
+            with self.subTest(path=path): self.assertFalse(content_path(path))
+        paths, modes = [valid], [('000000','100644')]
+        def fake_git(*args):
+            if '--name-only' in args: return ('\0'.join(paths)+'\0').encode()
+            if '--raw' in args: return ''.join(f":{a} {b} {'a'*40} {'b'*40} M\0{p}\0" for p,(a,b) in zip(paths,modes)).encode()
+            if args[0] == 'rev-parse': return b'c'*40
+            if '--check' in args: return b''
+            raise AssertionError(args)
+        with patch('ci_scope.git', side_effect=fake_git):
+            for pair in [('000000','100644'),('100644','000000'),('100644','100644')]:
+                modes[0] = pair; self.assertTrue(make_plan('a'*40,'b'*40,'auto')['content_only'])
+            for mode in ('100755','120000','160000'):
+                for pair in ((mode,'000000'),('000000',mode)):
+                    modes[0] = pair
+                    with self.subTest(pair=pair), self.assertRaises(ValueError): make_plan('a'*40,'b'*40,'auto')
+            paths[:] = [valid, 'tools/puzzle_production/catalog_reveal.py']; modes[:] = [('100644','000000'),('000000','100644')]
+            selected = make_plan('a'*40,'b'*40,'auto')['selected']
+            self.assertTrue(all(selected[k] for k in ('docs','production','product','web','delivery')))
+
     def test_difficulty_data_allowlist_is_exact_and_c1_keeps_full_ci(self):
         allowed = ["content/difficulty/pz-test/rating.json", "content/difficulty/reports/first-run/report.json",
                    "content/difficulty/reports/first-run/report.md"]

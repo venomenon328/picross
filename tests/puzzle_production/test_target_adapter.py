@@ -142,7 +142,8 @@ class TargetTests(unittest.TestCase):
         changed["entries"][-1]["save_slot"] = "con"
         journal["new"][REGISTRY] = json.dumps(changed)
         journal["new"][RUNTIME] = json.dumps(projection(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")))
-        write_json(lock, journal)
+        from tools.puzzle_production.catalog_publication import journal_bytes
+        lock.write_bytes(journal_bytes(journal))
         before = self.snapshot(checkout)
         with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
             recover(checkout)

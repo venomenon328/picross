@@ -1,6 +1,6 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
-**AT · Abschlussbildtransparenz, freigegebener Sollvertrag vom 19.10.2026; Umsetzung offen:**
+**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V3 vom 19.10.2026; AT-A in Umsetzung:**
 [AT](REVEAL_TRANSPARENCY.md) ergänzt nach gesonderter Beauftragung mit AT-A einen
 eng begrenzten Bildupdateweg; AT-B stellt anschließend den gebundenen Bestand um.
 Der aktive Bildhash und die neue tatsächliche Bildfreigabe werden außerhalb
@@ -394,7 +394,8 @@ P01 schließt den nachfolgenden Datenvertrag vor der AT-A-Codeänderung.
 [Kategorien/Projektion](CATEGORIES.md) definiert die gemeinsame Auflösung,
 [Transaktionen](SD_CATALOG.md) Journal und Recovery. Inhaltsregistry-v2,
 Runtime-v4 mit ihren exakten v2/v3-Lesern und Save-Schema 1 bleiben erhalten;
-keine Runtime-v5. Alle neuen Formate sind **Sollstand, noch nicht implementiert**.
+keine Runtime-v5. Die AT-A-Umsetzung und ihre technische Prüfung sind in
+[AT-A-T01](AT_A_VERIFICATION.md) getrennt vom unabhängigen Review dokumentiert.
 Historische Freigaben werden nicht auf neue Bytes umgeschrieben; bereinigte
 Produktionspakete werden nicht rekonstruiert.
 

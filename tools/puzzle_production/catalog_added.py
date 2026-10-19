@@ -73,7 +73,7 @@ def registration(identifier):
                            "evidence": None, "reason": "Successful first playable registration in the shared transaction."}}
 
 
-def source_paths(root, *registries, extra_reports=()):
+def source_paths(root, *registries, extra_reports=(), temporary=()):
     """Inspect the whole namespace, including aliases and Windows reparse points."""
     from .content_update import path_in
     allowed = {path(e["id"]) for r in registries for e in r["entries"]}
@@ -95,10 +95,12 @@ def source_paths(root, *registries, extra_reports=()):
         for p in directory.iterdir():
             name = p.relative_to(root).as_posix()
             path_in(root, name)
+            if name in temporary: continue
             if name == ROOT + "/reports":
                 require(p.is_dir(), "Added reports must be a directory")
                 for report in p.iterdir():
                     n = report.relative_to(root).as_posix()
+                    if n in temporary: continue
                     require(n in reports and path_in(root, n).is_file(), "Unknown added evidence file: " + n)
             else:
                 require(name in allowed and p.is_file(), "Unknown added source: " + name)

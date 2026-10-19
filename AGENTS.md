@@ -11,19 +11,23 @@ Den beauftragten Arbeitsbranch verwenden, sonst den aktuellen `main`; geltende B
 Bei Abschlussbildern, deren Katalogvorschau oder Bildrevisionen zusätzlich
 [AT: Transparente Abschlussbilder](docs/REVEAL_TRANSPARENCY.md) und die dort
 benannten Produkt-/Produktions-/Integrationsquellen vollständig lesen.
-AT / #256 (19.10.2026) ist als Spezifikation freigegeben, noch nicht implementiert:
+AT / #256 (19.10.2026), Umsetzungsvorbereitung V3: AT-A ist in Umsetzung;
 AT-A schafft den sicheren gemeinsamen Bildrevisionsweg; AT-B stellt danach den
 gebundenen Bestand mit neuen Bildfreigaben um. Reine Bildänderungen erhalten
 Definitionsbytes, Puzzle-Revision, Identität, Spielstände und historische Belege.
 Szenen erhalten eine konkrete transparente Gestaltung, keinen pauschalen Verzicht.
-Die Freigabe beauftragt noch keine Implementierung, Bildübernahme oder Merge.
-AT-A-P01 / Umsetzungsvorbereitung V2 schließt im bestehenden Spezifikations-PR
-#257 die exakten Sollverträge: [Daten/Freigabe](docs/ZA1_ADAPTER.md),
+Der aktuelle Auftrag umfasst ausschließlich AT-A auf `feat/256-bildrevisionen`,
+ohne reale Bild-/Metadatenübernahme, AT-B oder Merge.
+AT-A-P01 / Umsetzungsvorbereitung V2 ist mit PR #257 auf
+`9cc58651518e3a28e97f46932d69554210b0abcb` integriert und schließt die Verträge:
+[Daten/Freigabe](docs/ZA1_ADAPTER.md),
 [Auflösung/Folgeoperationen](docs/CATEGORIES.md),
 [Journal/Recovery](docs/SD_CATALOG.md) und
-[Soll-CLI](tools/puzzle_production/README.md). Sie sind noch nicht implementiert.
+[CLI](tools/puzzle_production/README.md).
 Inhalts-v2, Runtime-v4 und Saves bleiben unverändert; technische Kernfragen aus
-AT §4.3 sind damit spezifiziert. Integration und späterer AT-A-Auftrag bleiben separat.
+AT §4.3 sind damit spezifiziert. [AT-A-T01](docs/AT_A_VERIFICATION.md) führt
+technische Nachweise und getrenntes Selbstreview; unabhängiges AT-A-R01,
+Merge, Deployment und Issue-Abschluss bleiben außerhalb dieses Auftrags.
 
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](docs/CATALOG_PRESENTATION.md)
 und [Katalogsortierung](docs/CATALOG_SORTING.md) vollständig lesen. KU / #244

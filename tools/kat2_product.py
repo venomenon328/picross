@@ -58,7 +58,7 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
     directory = output / "kat2"
     directory.mkdir()
     reports = []
-    for mode in ("regular", "restart", "large", "empty", "invalid", "adapter", "information", "kb", "kk", "ke"):
+    for mode in ("regular", "restart", "large", "empty", "invalid", "adapter", "information", "kb", "kk", "ke", "at"):
         project = workspace / ("kat2-" + mode) / "game"
         copy_regression_game(root, project)
         saves = workspace / ("kat2-" + ("regular" if mode == "restart" else mode) + "-saves")
@@ -89,7 +89,13 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
             python_phase("kat2-adapter-register", lambda: registration(exported, checkout, apply=True, difficulty=difficulty_for_export(exported)))
             install_runtime_fixtures(root, project, append=True)
         else:
-            fixture(project, saves, "regular" if mode in ("restart", "information", "kb", "kk", "ke") else mode)
+            fixture(project, saves, "regular" if mode in ("restart", "information", "kb", "kk", "ke", "at") else mode)
+        if mode == 'at':
+            from web_tests.fixtures import adapt
+            from at_fixtures import install
+            adapt(project)
+            binding = install(project)
+            write_json(directory/'at-fixture.json',binding)
         if mode == "ke":
             # Fixed real high-resolution contour sample; no growing corpus copy.
             shutil.copyfile(root/"game/art/content/yin_yang_001.png", project/"tests/fixtures/ke-reveal.png")
