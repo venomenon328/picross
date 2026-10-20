@@ -1,0 +1,126 @@
+{
+  "candidate_comparison": [
+    {
+      "candidate_id": "63b6e96fd378df109f7f9801d4de69af64cc85f41fbcec8913893e1b9f493bc2",
+      "filled": 81,
+      "foreground_colors": 1,
+      "frame": {
+        "bottom": false,
+        "left": false,
+        "right": false,
+        "top": false
+      },
+      "frame_valid": false,
+      "logic_hash": "58abe3ead2c220a05ec170af5c164a19ac195e2735763b1bf2dd548451b7f8e6",
+      "matrix_hash": "7863334f9187f8ec229636fb384b9561044ec3871afe2d580a36e36ccc3453b9",
+      "reason": "Schlanke Sichel, Enden stark reduziert; keine belegte Außenkante. Randregel verfehlt.",
+      "status": "rejected",
+      "variant": "area-112",
+      "verification": "checks/area-112-verify.json"
+    },
+    {
+      "candidate_id": "eac673d3be54d92326e2655fb9bec938716b2941304b3bfda2bf764cdad32d10",
+      "filled": 87,
+      "foreground_colors": 1,
+      "frame": {
+        "bottom": false,
+        "left": false,
+        "right": false,
+        "top": false
+      },
+      "frame_valid": false,
+      "logic_hash": "2fa183b38013f2688659321eaa5021f28fad3f33f6c7ee70d80329dfa6e6044e",
+      "matrix_hash": "cdf411211bc097a92a1a3cdc5d203c317d3f92dbfd17c9eb65eeb605f32c8cb3",
+      "reason": "Ruhige Sichel mit etwas kräftigerem Rücken, aber keine belegte Außenkante. Randregel verfehlt.",
+      "status": "rejected",
+      "variant": "area-144",
+      "verification": "checks/area-144-verify.json"
+    },
+    {
+      "candidate_id": "28421086a368215b1cfdd2e01aa14fe1cc08831e98cf637179fee71bf3f2c3e2",
+      "filled": 92,
+      "foreground_colors": 1,
+      "frame": {
+        "bottom": true,
+        "left": false,
+        "right": false,
+        "top": false
+      },
+      "frame_valid": false,
+      "logic_hash": "9a1e5594865083e80889523f0f36575768a4e425f872c256498eba42f91d7592",
+      "matrix_hash": "adba80e10624fe26444ebaa0391cdd78ba60fc2a4b8e1c753727a1830e98ae94",
+      "reason": "Kräftiger Körper und unteres Ende; vertikaler Randkontakt allein genügt nicht. Randregel verfehlt.",
+      "status": "rejected",
+      "variant": "area-176",
+      "verification": "checks/area-176-verify.json"
+    },
+    {
+      "candidate_id": "d9562e4aebdcc9071e4aaebbb01555ae710955fcba6f3be360986ea34a6bac8e",
+      "filled": 100,
+      "foreground_colors": 1,
+      "frame": {
+        "bottom": true,
+        "left": true,
+        "right": false,
+        "top": true
+      },
+      "frame_valid": true,
+      "logic_hash": "203032e8fb1a18104e8d90eda0c88c41176568231501b073dc5be9812c943c32",
+      "matrix_hash": "55cd91a2cf9586656eb59c2afa333951d3ed696055cdb818d8d2a436c987d3a3",
+      "reason": "Zusammenhängende Sichel, integrierter kurzer Stiel und kompaktes Blütenende. Rechter Negativraum offen; natürliche Flächendeckung berührt links sowie oben/unten. Alle harten Kriterien erfüllt.",
+      "status": "selected",
+      "variant": "area-208",
+      "verification": "checks/area-208-verify.json"
+    }
+  ],
+  "criteria": {
+    "Erkennbarkeit": {
+      "reason": "Einzelne Banane als aufrechte, nach rechts offene Sichel klar erkennbar; A-r01 erläutert Farbe und Oberfläche.",
+      "status": "erfüllt"
+    },
+    "Palette beziehungsweise Mono-Lesbarkeit": {
+      "reason": "Genau ein tatsächlich verwendetes ink plus EMPTY. Keine zusätzlichen Farben oder unbenutzten Paletteinträge.",
+      "status": "erfüllt"
+    },
+    "Serienästhetik": {
+      "reason": "Unverändertes farbig detailliertes A-r01 im ruhigen Zeichenstil; Raster bleibt dessen nachvollziehbare Abstraktion.",
+      "status": "erfüllt"
+    },
+    "Silhouette/Proportionen": {
+      "reason": "Kräftiger linker Rücken und verjüngte Enden bleiben; die 12×20-Quantisierung zeigt einzelne Stufen an Stiel und linker Außenkurve.",
+      "status": "erfüllt"
+    },
+    "Wichtige Details und Negativräume": {
+      "reason": "Ein zusammenhängender Körper, kurzer oberer Stiel und kompaktes unteres Blütenende; rechter Negativraum offen, keine Innenlöcher oder Fremdzellen.",
+      "status": "erfüllt"
+    }
+  },
+  "detail_losses": [
+    "Farbe, Glanz, Schattierung, Rippen und Flecken bleiben ausschließlich im Abschlussbild.",
+    "Zellstufen reduzieren die weiche Kontur; keine materielle Pose- oder Proportionsänderung."
+  ],
+  "frame_contact": "Flächenmittelung der freigegebenen Quelle mit Schwelle208; keine angehängten Randpixel, kein Cropwechsel und keine Matrixedits.",
+  "native_test": "nicht erforderlich: reine Authoring-Inhaltsablage; statische Komposition ist keine Spielaufnahme.",
+  "observations": "Gemeinsame Endvorlage tatsächlich visuell geprüft: Hauptformen und Enden stimmig, klarer rechter Freiraum, Bild auf Papier groß/klein sauber. Grid und verlustfreie Kleinvorschau stimmen überein. Katalog-/Spielstart nicht ausgeführt.",
+  "paper_source": {
+    "crop": [
+      300,
+      200,
+      1900,
+      1200
+    ],
+    "file": "game/art/book/bp2-a-inventarband.png",
+    "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a"
+  },
+  "phase": "content_ready",
+  "repair_diff": [],
+  "reviewer": "Codex (redaktioneller Selbstreview, keine menschliche Endabnahme)",
+  "soft_exceptions": [],
+  "transparency": "A-r01 bytegleich; transparente Außenfläche und rechter Freiraum lassen echtes Papier durch. Groß/klein geprüft, keine neue Bildbearbeitung.",
+  "views": [
+    "candidate-comparison.png",
+    "final-raster.png",
+    "final-review.png"
+  ],
+  "visual_review_completed": true
+}

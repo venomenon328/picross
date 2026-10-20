@@ -1,0 +1,20 @@
+{
+  "actor": "Repositoryeigentümer (Nutzer dieses Auftrags)",
+  "format": "picross-editorial-approval-v1",
+  "handoff_sha256": "a5ef5873909940459e921e3aad5df1e1b57aed9c07e67d7c85aaf9953863e6eb",
+  "inventory_sha256": "c9f413f71cb206f7c14c67ef3bdc2d8b050e615b640b787f7cdf472bfe5881eb",
+  "puzzle_id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+  "revision": "r04",
+  "selection": {
+    "logic_hash": "203032e8fb1a18104e8d90eda0c88c41176568231501b073dc5be9812c943c32",
+    "matrix_hash": "55cd91a2cf9586656eb59c2afa333951d3ed696055cdb818d8d2a436c987d3a3",
+    "reveal": {
+      "file": "reveals/A-r01.png",
+      "sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8"
+    },
+    "variant": "area-208"
+  },
+  "statement": "Ich nehme das Rätselpaket content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/package.zip · r04, Revision r04, Inventar-SHA-256 c9f413f71cb206f7c14c67ef3bdc2d8b050e615b640b787f7cdf472bfe5881eb redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.",
+  "test_only": false,
+  "timestamp_utc": "2026-10-20T09:14:31Z"
+}
