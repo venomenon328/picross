@@ -70,6 +70,14 @@ static func run(runner: Object) -> void:
 		await key(runner,KEY_ESCAPE)
 		app.return_to_work()
 		await runner.frames()
+		app._popup_dialog(app.reset_dialog)
+		await runner.frames()
+		for action: Button in [app.reset_dialog.get_ok_button(),app.reset_dialog.get_cancel_button()]:
+			runner.check(action.size.x >= 44*app.ui_scale and action.size.y >= 44*app.ui_scale,"HZ-B native dialog actions retain full minimum hits")
+		await Capture.capture(runner,"b-dialog-%d"%spec[0],Rect2(Vector2(app.reset_dialog.position),Vector2(app.reset_dialog.size)))
+		runner.click(app.reset_dialog.get_cancel_button())
+		await runner.frames()
+		runner.check(not app.reset_dialog.visible,"HZ-B native enlarged dialog cancel route")
 		# Native-size contact sheet of the actual Button class and SVG resources.
 		var panel := Panel.new()
 		panel.position = Vector2(50,180)
@@ -98,8 +106,28 @@ static func run(runner: Object) -> void:
 			button.disabled = state == 2
 			panel.add_child(button)
 			if state == 3: button.grab_focus()
-			if state == 4: button.set_pressed_no_signal(true)
 		await Capture.capture(runner,"b-icons-%d"%spec[0],panel.get_global_rect())
+		var normal: Button = panel.get_child(23)
+		var pressed: Button = panel.get_child(27)
+		var motion := InputEventMouseMotion.new()
+		motion.position = normal.get_global_rect().get_center()
+		runner.surface.push_input(motion,true)
+		await runner.frames()
+		runner.check(normal.is_hovered(),"HZ-B actual pointer hover state")
+		await Capture.capture(runner,"b-hover-%d"%spec[0],panel.get_global_rect())
+		motion = InputEventMouseMotion.new()
+		motion.position = pressed.get_global_rect().get_center()
+		runner.surface.push_input(motion,true)
+		var down := InputEventMouseButton.new()
+		down.position = motion.position
+		down.button_index = MOUSE_BUTTON_LEFT
+		down.pressed = true
+		runner.surface.push_input(down,true)
+		await runner.frames()
+		runner.check(pressed.is_pressed(),"HZ-B actual held pointer state")
+		await Capture.capture(runner,"b-pressed-%d"%spec[0],panel.get_global_rect())
+		down.pressed = false
+		runner.surface.push_input(down,true)
 		panel.free()
 		app.show_album()
 		await runner.frames()
