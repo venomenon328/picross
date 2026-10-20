@@ -1,0 +1,54 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-505ecefc3dd64554a282e95b15883c60",
+  "revision": "r01",
+  "motif_name": "Essstäbchen",
+  "category_id": "haushalt-alltag",
+  "state": "reveal_review",
+  "repo_commit": "e9a957d1513c9c77281e738c4eb22b161bee2342",
+  "updated_at_utc": "2026-10-20T23:16:04Z",
+  "package": {
+    "file": "content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r01/package.zip",
+    "bytes": 2137929,
+    "sha256": "a59230fa90731869670b4c995435d0494d57aa98e57b6831c594ee66909d1201"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r01/handoff.json",
+    "sha256": "a9e9040ce8aa9b70c1c56a4388c80c526867cd91f52e7b1a2fc20cbb9b77541a"
+  },
+  "inventory_sha256": "b10fbf3fe5f960ca80f784906c5c41d32b1c0287a2bdf5ed1dd403bc2469382f",
+  "final_editorial_approval": null,
+  "width": null,
+  "height": null,
+  "mode": "mono",
+  "difficulty": null,
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "file": "reveals/A-r01.png",
+      "revision": "A-r01",
+      "sha256": "9974cf867dca29ce964c2e3583bcd7ecf866ff29a37fcb181acdba4a96bb79bd",
+      "title": "Bambus · nebeneinander",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "file": "reveals/B-r01.png",
+      "revision": "B-r01",
+      "sha256": "4964ac3987c6a4690e4ae4267a0f2b37116c861866599f0444bce3a41fddf3c1",
+      "title": "Roter Lack · gekreuzt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "file": "reveals/C-r01.png",
+      "revision": "C-r01",
+      "sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+      "title": "Walnussholz · versetztes Paar",
+      "approval": null
+    }
+  ],
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren: Mensch wählt und genehmigt reveals/A-r01.png, reveals/B-r01.png oder reveals/C-r01.png ausdrücklich. Erst danach Standardauftrag 2; keine Abstraktion oder Rasterproduktion vorwegnehmen.",
+  "integration": null
+}
