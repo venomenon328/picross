@@ -1,0 +1,130 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854"
+  },
+  "puzzle_id": "pz-505ecefc3dd64554a282e95b15883c60",
+  "revision": "r03",
+  "repo_commit": "18152d0d96d3d4a3270e72f97aac4c60200291b5",
+  "state": "blocked",
+  "category_id": "haushalt-alltag",
+  "brief": "brief.md",
+  "approved_parameters": [
+    {
+      "width": 25,
+      "height": 25,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        33,
+        38,
+        1232,
+        1218
+      ]
+    },
+    {
+      "width": 30,
+      "height": 30,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        33,
+        38,
+        1232,
+        1218
+      ]
+    },
+    {
+      "width": 35,
+      "height": 35,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        33,
+        38,
+        1232,
+        1218
+      ]
+    }
+  ],
+  "proposed_parameters": "parameters.json",
+  "reveal": {
+    "file": "reveals/C-r01.png",
+    "revision": "C-r01",
+    "sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/reveal-C-r01.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "4ab439436a923eb6c18dac5060d7e6cc99454d24b62a06c6f7a43bd156958582",
+    "derived_from_reveal_sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/motif-MA-r01.json"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": "qa/input-verification.json",
+  "repair": null,
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "201173cd09b3ec03aa0ab83b17bd43f247b3e3fc610a613e79cb4d647cfbae7c"
+  },
+  "difficulty": "difficulty-status.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "blocked",
+    "frame": "fail",
+    "visual": "blocked",
+    "difficulty": "blocked",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "blocked"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-C-r01.json",
+    "motif": "approvals/motif-MA-r01.json",
+    "provenance": "qa/input-verification.json",
+    "logic": "qa/verification-summary.json",
+    "frame": "qa/input-verification.json",
+    "visual": "qa/editorial-raster-review.json",
+    "difficulty": "difficulty-status.json",
+    "reveal_consistency": "qa/editorial-raster-review.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "B-PZ-01: Kein vollständig deduktiv zertifizierter Kandidat: alle sechs ursprünglichen Linienimporte stalled; Paarimporte ohne vollständigen Nachweis; zwei begrenzte Reparaturrunden ohne Fund.",
+    "B-PZ-02: 35x35 area-96 bewahrt zwei getrennte 8er-Komponenten, verletzt aber die Randregel; mehrere kräftigere Varianten haben punktweise diagonale Berührung des Zwischenraums. Keine Endauswahl erfüllt alle Inhaltsgates."
+  ],
+  "next_action": "Korrigieren oder Fehler beheben: neue Motivvorlage MA-r02 aus unverändertem C-r01 mit klarer getrennten, rastertauglicheren Konturen und ausreichendem Zwischenraum vorlegen; konkreten Korridor und neue Motivdatei erneut menschlich freigeben. Danach neuer Auftrag 3. Keine Endabnahme/Spielregistrierung des r03-Stands.",
+  "authorization": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nPaket: content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r02/package.zip · r02.\nIch gebe die Motivvorlage motifs/MA-r01.png · MA-r01 frei; Parameter: parameters.json: 25×25, 30×30 empfohlen oder 35×35; mono, genau 1 Vordergrundfarbe; area, contain, gebundener Crop; noch nicht freigegeben. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.\nFarbanzahl: 1 (Genau, ohne Leer).\nQuellbranch / Commit: f54727828b3e0af380a3887b822a965f38e1f822.\n\nRepositoryablage nach §6 ist beauftragt. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen.",
+  "codex_handoff": "CODEX_HANDOFF.txt",
+  "diagnostic_candidate": {
+    "bundle": "import-35",
+    "variant": "area-96",
+    "matrix_hash": "7a985dfa9c675b0dddce774b272a8c6f4cfff05fd8fcb17ea431bfb3c0a685fd",
+    "logic_hash": "ab4690031516869ae7fd89c11d6d1cd83e6ff8fa07db7fc402b80c6a474b3a05",
+    "note": "Diagnostic reference, explicitly not selected for final release."
+  }
+}
