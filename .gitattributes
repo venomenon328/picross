@@ -1,4 +1,7 @@
 * text=auto eol=lf
+# HZ-B native development originals retain their exact recorded bytes.
+docs/evidence/hz-b/windows-development/** -text
+docs/evidence/hz-b/windows-development/*.log binary
 # AT-A original process/export logs and measurements retain their exact bytes.
 docs/evidence/at-a/windows/** -text
 docs/evidence/at-a/windows/logs/*.log binary

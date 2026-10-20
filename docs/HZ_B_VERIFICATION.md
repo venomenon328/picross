@@ -55,6 +55,29 @@ stehen im technischen Katalogartefakt, ohne Skalierung oder Nachzeichnen.
 Die neue Ressourcenfamilie wird auch gegen den tatsächlich ausgelieferten PCK
 geladen; keine gepackte UI-/Iconressource wird im Test ersetzt.
 
+## Archivierte native Entwicklungsoriginale
+
+Der direkte Windows-Entwicklungslauf `hzb-1792524693` besteht 972 Prüfungen auf
+Godot `4.7.2.stable.official.ed1daf0bf`, NVIDIA RTX 3070. Er lief vor dem Commit;
+ein anschließender vollständiger Bytevergleich der geänderten Spielressourcen
+bindet sie an `40a865b1ab2fcfd7fa5373e8be4e185d1aad5f07`.
+[Bindung und Originalhashes](evidence/hz-b/windows-development/binding.json),
+[Originalbericht](evidence/hz-b/windows-development/hzb.json),
+[Prozesslog](evidence/hz-b/windows-development/run.log) und
+[temporärer Testeinstieg](evidence/hz-b/windows-development/temporary-runner.gd.gz)
+legen diese Grenze offen. Der Einstieg ergänzt ausschließlich einen direkten
+HZ-B-Aufruf im synthetischen KAT-2-Runner. Das ist **kein Ersatz** für den
+abschließenden sauberen Windows-/PCK-Lauf am gelieferten Head.
+
+| Native Größe | Kartenfokus | Popup | Familie / echter Druck | Checkboxen / Dialog |
+| --- | --- | --- | --- | --- |
+| 1280×720/UI125 | [Karte](evidence/hz-b/windows-development/hz-b-card-1280.png) | [Sortierung](evidence/hz-b/windows-development/hz-b-sort-1280.png) | [Icons](evidence/hz-b/windows-development/hz-b-icons-1280.png), [Druck](evidence/hz-b/windows-development/hz-b-pressed-1280.png) | [Einstellungen](evidence/hz-b/windows-development/hz-b-settings-1280.png), [Dialog](evidence/hz-b/windows-development/hz-b-dialog-1280.png) |
+| 1920×1080/UI100 | [Karte](evidence/hz-b/windows-development/hz-b-card-1920.png) | [Sortierung](evidence/hz-b/windows-development/hz-b-sort-1920.png) | [Icons](evidence/hz-b/windows-development/hz-b-icons-1920.png), [Druck](evidence/hz-b/windows-development/hz-b-pressed-1920.png) | [Einstellungen](evidence/hz-b/windows-development/hz-b-settings-1920.png), [Dialog](evidence/hz-b/windows-development/hz-b-dialog-1920.png) |
+| 2560×1440/UI125 | [Karte](evidence/hz-b/windows-development/hz-b-card-2560.png) | [Sortierung](evidence/hz-b/windows-development/hz-b-sort-2560.png) | [Icons](evidence/hz-b/windows-development/hz-b-icons-2560.png), [Druck](evidence/hz-b/windows-development/hz-b-pressed-2560.png) | [Einstellungen](evidence/hz-b/windows-development/hz-b-settings-2560.png), [Dialog](evidence/hz-b/windows-development/hz-b-dialog-2560.png) |
+
+Weitere originale Ansichtsmenü- und Hoverbilder liegen im selben Verzeichnis.
+Alle Bilder sind direkte native Ausschnitte ohne Skalierung oder Nachzeichnen.
+
 ## Getrennter Selbstreview und Grenzen
 
 Der Implementierer prüft nach den Entwicklungsläufen separat den vollständigen
