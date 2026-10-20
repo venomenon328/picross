@@ -1,0 +1,132 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        82,
+        40,
+        860,
+        1653
+      ],
+      "design": "designs/mono-13x25.json",
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 25,
+      "method": "area",
+      "mode": "mono",
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 13
+    },
+    {
+      "actual_crop": [
+        82,
+        40,
+        860,
+        1653
+      ],
+      "design": "designs/mono-14x27.json",
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 27,
+      "method": "area",
+      "mode": "mono",
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 14
+    }
+  ],
+  "blockers": [],
+  "category_id": "wasserwelt",
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "checked_file_in_package": "difficulty-checked.json",
+    "confidence": "medium",
+    "level": "L3",
+    "logical_level": 3,
+    "method": "picross-difficulty-0.3",
+    "rating_hash": "d9ad34e8098d9c0dcd4a9e28d476ec48ede5cc14d88e106ab38ccf1024001b33",
+    "size_adjustment": 0
+  },
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r03/handoff.json",
+    "sha256": "b73476217605f44bb61377a95fa26e8e05b3cdd159bf550fb89815c54c78bf63"
+  },
+  "height": 27,
+  "inspection": {
+    "blockers": [
+      "final_editorial: missing bound human final approval"
+    ],
+    "editorial_approved": false,
+    "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r03/inspection.json",
+    "note": "Inspektion des geschriebenen ZIPs; äußerer Beleg, damit Originalinventar und Paket unverändert bleiben.",
+    "sha256": "0f4eda29578f926d4ddf1bbb629e67a4bf029c28218bccc64af3653d40766979",
+    "technical": true
+  },
+  "integration": null,
+  "inventory_sha256": "a24fabcb9efcdf4e4aae22504dbceb14deffd2e75efda01cef22ae4d9bc4f281",
+  "mode": "mono",
+  "motif": {
+    "approval": "motif-approval-14x27.json",
+    "derived_from_reveal_sha256": "dac1d788f3f143d9dde976f7dc7b8fd02099eea872f759872b0ee58b1360937c",
+    "file": "motifs/MA-r01.png",
+    "provenance": "motifs/MA-r01.provenance.json",
+    "revision": "MA-r01",
+    "sha256": "4a74418d367e588d2e719cca18d68679142f2c5c042e3e0d3498179116c834b5"
+  },
+  "motif_name": "Seepferdchen",
+  "next_action": "4 Â· Abnehmen & ins Spiel integrieren: tatsÃ¤chliche menschliche Endabnahme fÃ¼r r03 binden; bis dahin keine Spielregistrierung.",
+  "package": {
+    "bytes": 11018320,
+    "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r03/package.zip",
+    "sha256": "f6bd6eeacf95048034629fe4411518b0268dd58d3a4fcd24dddf032c7bc353dd"
+  },
+  "previews": [
+    {
+      "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r03/final-reveal-comparison.png",
+      "original_in_package": "qa/final-reveal-comparison.png",
+      "purpose": "Dateigebundene sichtbare Endabnahmevorlage ohne ZIP-Extraktion.",
+      "sha256": "56e8c6b4d7a77bddb64ecd7213e72bdea9c765e9999729597fe774e5281469ba"
+    },
+    {
+      "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r03/repair-diff.png",
+      "original_in_package": "qa/repair-diff.png",
+      "purpose": "Dateigebundene sichtbare Endabnahmevorlage ohne ZIP-Extraktion.",
+      "sha256": "8dc0feb2303cef5d74f1641ec9a6ca6fafae9b24869913c343407a49ef246e28"
+    }
+  ],
+  "puzzle_id": "pz-7635c2e042e349fc90ad9ae55681de0f",
+  "repo_commit": "d8b3ccb8eb4b66982dea805c08c3b8ab6f095b8d",
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/B-r01.png",
+    "provenance": "reveals/B-r01.provenance.json",
+    "revision": "B-r01",
+    "sha256": "dac1d788f3f143d9dde976f7dc7b8fd02099eea872f759872b0ee58b1360937c"
+  },
+  "revision": "r03",
+  "selected_candidate": {
+    "bundle": "repair-r01",
+    "certification": {
+      "max_pair_records": 250000,
+      "max_pair_work": 20000000,
+      "profile": "paired-lines-mono"
+    },
+    "logic_hash": "227fd85ee4cf3203d5c9a85418571b18afc091d52609de52c71f7f48dafc83c7",
+    "matrix_hash": "de4a99fd1e4d1508933b7fa9fb0b405a867e833ebc60c91261b413180abfd728",
+    "parent_variant": "area-160",
+    "proof": "repair-r01/final-proof.json",
+    "repair_id": "55001dcabcdb6d91ac481de5e52c32c8b793872ab5feb6b3df1b393c5655d140",
+    "source_type": "repair",
+    "variant": "candidate-001",
+    "verification": "qa/repair-replay.json"
+  },
+  "state": "content_ready",
+  "updated_at_utc": "2026-10-20T12:54:33Z",
+  "width": 14
+}
