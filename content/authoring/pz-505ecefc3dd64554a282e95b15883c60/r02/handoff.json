@@ -1,0 +1,74 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854"
+  },
+  "puzzle_id": "pz-505ecefc3dd64554a282e95b15883c60",
+  "revision": "r02",
+  "repo_commit": "f76b13e3d8124991cf418c4ea6ad576810f7dc76",
+  "state": "motif_review",
+  "category_id": "haushalt-alltag",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "proposed_parameters": "parameters.json",
+  "reveal": {
+    "file": "reveals/C-r01.png",
+    "revision": "C-r01",
+    "sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/reveal-C-r01.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "4ab439436a923eb6c18dac5060d7e6cc99454d24b62a06c6f7a43bd156958582",
+    "derived_from_reveal_sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "d12f140a652fb87a986458e5b65f793543e279a3417d860d090115de20dc3043"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-C-r01.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren: tatsächliche menschliche Freigabe von motifs/MA-r01.png samt parameters.json abwarten; danach Standardauftrag 3 gemäß CODEX_HANDOFF.txt.",
+  "authorization": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch gebe das Abschlussbild C-r01 frei. Führe Standardauftrag 2 bis zur Motivvorlage samt Konfiguration und Codex-Übergabe aus.\nPaket: content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r01/package.zip · r01.\nRätselmodus (Abschlussbild immer farbig): monochrom.\nFarbanzahl: 1 (Genau, ohne Leer).\nRätsel-ID: pz-505ecefc3dd64554a282e95b15883c60\nQuellbranch / Commit: f76b13e3d8124991cf418c4ea6ad576810f7dc76.\n\nRepositoryablage nach §6 ist beauftragt. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen.",
+  "codex_handoff": "CODEX_HANDOFF.txt"
+}
