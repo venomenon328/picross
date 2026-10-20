@@ -116,6 +116,12 @@ unterschiedliche Flächen; der gedrückte Griff erhält zusätzlich stärkere Ko
 und Markierung. Auch die Pfeile unterscheiden ihre drei Zustände. Echte native
 Zeiger-/Druckereignisse und getrennte Originalaufnahmen prüfen die sichtbare
 Pixeländerung; der Ressourcentest prüft beide Pfeile in UI100/125.
+Die tatsächlichen PCK-Originale zeigten anschließend eine Überschneidung der
+zusätzlichen Zeilenkontur mit dem nativen Hakenbereich. Die unregelmäßige
+Hoverfläche bleibt erhalten, trägt dort aber keine zusätzliche Rahmenlinie.
+Der native Test fokussiert die erste Zeile per Tastatur und prüft deren
+reserviertes Markierungsbudget auf kollidierende Konturpixel; er schlug vor
+der Korrektur in allen drei Konfigurationen fehl.
 
 **HZ-B-R01** (separater qualifizierter Review) und **HZ-B-M01** (Eigentümerabnahme)
 bleiben vor Merge offen. Kein Merge, Deployment oder Issue-Abschluss.

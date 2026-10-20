@@ -43,6 +43,10 @@ static func run(runner: Object) -> void:
 		await runner.frames()
 		runner.check(choice.get_popup().visible,"HZ-B sort popup opened by pointer")
 		runner.check(choice.get_popup().get_theme_stylebox("panel").opaque_bounds,"HZ-B popup opaque through its outer padding")
+		for step: int in range(choice.item_count+1):
+			if choice.get_popup().get_focused_item() == 0: break
+			await key(runner,KEY_DOWN)
+		runner.check(choice.get_popup().get_focused_item() == 0,"HZ-B native keyboard highlights first row")
 		await Capture.capture(runner,"b-sort-%d"%spec[0],Rect2(Vector2(choice.get_popup().position),Vector2(choice.get_popup().size)))
 		var popup: PopupMenu = choice.get_popup()
 		var pixels: Image = runner.surface.get_texture().get_image()
@@ -50,6 +54,15 @@ static func run(runner: Object) -> void:
 			var pixel: Color = pixels.get_pixelv(popup.position+edge)
 			var paper := Color("fffaf0")
 			runner.check(absf(pixel.r-paper.r)+absf(pixel.g-paper.g)+absf(pixel.b-paper.b) < 0.012,"HZ-B native outer popup pixels are opaque paper")
+		var panel_style: StyleBox = popup.get_theme_stylebox("panel")
+		var marker_rect := Rect2i(Vector2(popup.position)+Vector2(panel_style.get_margin(SIDE_LEFT),panel_style.get_margin(SIDE_TOP)+3*app.ui_scale),
+			Vector2(22*app.ui_scale,popup.get_theme_font("font").get_height(popup.get_theme_font_size("font"))))
+		var brown_pixels := 0
+		for y: int in range(marker_rect.position.y,marker_rect.end.y):
+			for x: int in range(marker_rect.position.x,marker_rect.end.x):
+				var pixel: Color = pixels.get_pixel(x,y)
+				if pixel.r-pixel.g > 0.04 and pixel.g-pixel.b > 0.04: brown_pixels += 1
+		runner.check(brown_pixels == 0,"HZ-B hovered row adds no frame ink in native selection-marker budget")
 		await key(runner,KEY_ESCAPE)
 		runner.check(not choice.get_popup().visible,"HZ-B native Escape dismisses")
 		runner.click(choice)

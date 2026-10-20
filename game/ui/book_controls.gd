@@ -48,6 +48,9 @@ static func popup_theme(id: String, u: float, font: Font) -> Theme:
 	panel.set_content_margin_all(9*u)
 	result.set_stylebox("panel","PopupMenu",panel)
 	var hover = Paper.make(id+"/row",u,Color("e0ece6"))
+	# The native marker occupies the row's leading inset. Highlight its paper
+	# without drawing an extra contour through the checkmark's reserved space.
+	hover.ink = Color.TRANSPARENT
 	result.set_stylebox("hover","PopupMenu",hover)
 	for state: String in ["font_color","font_hover_color","font_accelerator_color"]:
 		result.set_color(state,"PopupMenu",INK)
