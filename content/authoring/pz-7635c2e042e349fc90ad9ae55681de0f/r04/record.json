@@ -51,7 +51,10 @@
     "rating_hash": "d9ad34e8098d9c0dcd4a9e28d476ec48ede5cc14d88e106ab38ccf1024001b33",
     "size_adjustment": 0
   },
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r04/approval.json",
+    "sha256": "66887b4705972bfcdba294d9f76650405345f3327ca01f6fb0fb3795f8feddc7"
+  },
   "format": "picross-authoring-record-v1",
   "handoff": {
     "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r04/handoff.json",
@@ -67,7 +70,15 @@
     "sha256": "a844f210965d21d899cbb748576967446da97125353dbae017a04e6ecb14ff21",
     "technical": true
   },
-  "integration": null,
+  "integration": {
+    "evidence": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r04/integration-evidence.json",
+    "export_manifest_sha256": "82ed8b442e9d1b84b21ec681a7bed5b4b304c812d95cad86f64209492fb5b88e",
+    "main_integrated": false,
+    "runtime_revision": 1,
+    "save_slot": "seepferdchen_001",
+    "sha256": "ddda3cea45a92bc27ff3985f7a12a930ad7116627c3dda79ccbb79a7577d06c0",
+    "status": "registered"
+  },
   "inventory_sha256": "698b6b777c54069edaa8123a880825a7d1769854ae3dad7cd731d90ba854796e",
   "mode": "mono",
   "motif": {
@@ -79,7 +90,7 @@
     "sha256": "4a74418d367e588d2e719cca18d68679142f2c5c042e3e0d3498179116c834b5"
   },
   "motif_name": "Seepferdchen",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren: tatsächliche menschliche Endabnahme für r04 binden; bis dahin keine Spielregistrierung.",
+  "next_action": "Nach Pflicht-CI/Selbstreview Integrations-PR mergen; tatsächlichen Main-Commit prüfen, dann separaten §9-Cleanup samt Pflicht-CI/Selbstreview und Merge.",
   "package": {
     "bytes": 11019063,
     "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r04/package.zip",
@@ -126,7 +137,7 @@
     "variant": "candidate-001",
     "verification": "qa/repair-replay.json"
   },
-  "state": "content_ready",
-  "updated_at_utc": "2026-10-20T12:57:54Z",
+  "state": "registered",
+  "updated_at_utc": "2026-10-20T14:38:22Z",
   "width": 14
 }

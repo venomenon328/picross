@@ -1,0 +1,40 @@
+{
+  "cells": 378,
+  "empty_columns": [
+    14
+  ],
+  "empty_rows": [],
+  "filled": 164,
+  "frame": {
+    "bottom": true,
+    "left": true,
+    "right": false,
+    "top": true
+  },
+  "height": 27,
+  "isolated_4_neighbors": [],
+  "paper_reference": {
+    "commit": "d8b3ccb8eb4b66982dea805c08c3b8ab6f095b8d",
+    "crop_proportions": [
+      0.22,
+      0.22,
+      0.58,
+      0.78
+    ],
+    "file": "game/art/book/bp2-a-inventarband.png",
+    "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a"
+  },
+  "reveal": {
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "mode": "RGBA",
+    "size": [
+      1024,
+      1536
+    ]
+  },
+  "used_foreground_colors": 1,
+  "width": 14
+}
