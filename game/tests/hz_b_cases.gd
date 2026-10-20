@@ -21,7 +21,7 @@ static func run(runner: Object) -> void:
 			runner.check(Paper.make("card/pz-test-other",u).contours(rect) != initial,"HZ-B different stable IDs vary")
 			for line: PackedVector2Array in initial:
 				for point: Vector2 in line:
-					runner.check(rect.grow(-1.5*u).has_point(point),"HZ-B stroke plus AA envelope within hit rectangle")
+					runner.check(rect.grow(-2*u).has_point(point),"HZ-B stroke plus AA envelope within hit rectangle")
 			var polygon := PackedVector2Array()
 			for line: PackedVector2Array in style.contours(rect,false): polygon.append_array(line.slice(0,24))
 			runner.check(not Geometry2D.triangulate_polygon(polygon).is_empty(),"HZ-B fill has no self-intersecting pen overruns")

@@ -62,11 +62,14 @@ Diff, die tatsächlichen Originalbilder bei UI-Größe, Ressourcen-/Exportbindun
 und die Erhaltungsgrenzen. Befunde und Abschluss werden im PR am geprüften Head
 festgehalten. Das bleibt ein Selbstreview und ersetzt **nicht HZ-B-R01**.
 
-Entwicklungsbefunde: Füllpolygone dürfen die offenen Strichüberstände nicht
+Entwicklungs- und Selbstreviewbefunde: Füllpolygone dürfen die offenen Strichüberstände nicht
 enthalten (sonst Selbstüberschneidungen); die zusätzliche Triangulationsprüfung
 deckt dies ab. Native Checkboxprüfungen scrollen bei kleiner Fensterhöhe vor
 dem echten Klick. Historische Unicode-Pfeilannahmen und die exakten CI-/Web-
-Inventare werden auf die neue aktive Familie angepasst.
+Inventare werden auf die neue aktive Familie angepasst. Der separate
+Hüllencheck begrenzt die maximale Biegung großer Controls auf 5 UI-Pixel bei
+7 UI-Pixeln Innenabstand; Eckversatz, stärkste Auswahlkontur und Antialiasing
+bleiben damit auch für andere stabile IDs innerhalb des Trefferrechtecks.
 
 **HZ-B-R01** (separater qualifizierter Review) und **HZ-B-M01** (Eigentümerabnahme)
 bleiben vor Merge offen. Kein Merge, Deployment oder Issue-Abschluss.
