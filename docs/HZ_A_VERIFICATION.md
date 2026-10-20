@@ -75,6 +75,56 @@ Prüfharness wählen alle sieben nativen und alle fünf Chromium-Gruppen.
 `docs`, `ci-required` und weitere tatsächlich ausgewählte Fach-/Toolchainjobs
 müssen erfolgreich sein; übersprungene Pflicht ist kein Erfolg.
 
+## Gebundener nativer Nachweis
+
+[Originalarchive und Inventare](evidence/hz-a/README.md) binden den sauberen
+Implementierungsstand `f78936bc7fc1b62b2fa31671ed0906ccf6c66f87`, Basis,
+tatsächlichen Test-Merge, CI-Produktlauf/-Versuch und Windows-Checkout. Die
+Original-EXE startet; das heruntergeladene PCK besteht 120 Prüfungen, die elf
+nativen Katalogmodi bestehen 6.409 Prüfungen. Alle 1.002 gelieferten nativen
+CI-Technikdateien wurden vor Nutzung geprüft. Die separaten geschützten
+Windows-Core-/Completion-/Graphics-Berichte behalten ihren Head `1c5d6f6`.
+
+Der abschließende Pflichtlauf und aktuelle Chromium-Belege werden am gelieferten
+Head in [Draft-PR #288](https://github.com/venomenon328/picross/pull/288) geführt.
+Eine spätere reine Beleg-/Dokumentergänzung benennt ihre abweichende Headbindung;
+ältere native Originale werden nicht als unter einem anderen Checkout erzeugt ausgegeben.
+
+## Getrenntes Selbstreview
+
+Nach der Implementierung wurden vollständiger Basis-/Head-Diff, aktive Textpfade,
+Ressourcen-/Exportweg und originale Prüfergebnisse in einem getrennten Prüfschritt
+nochmals betrachtet. Das ist ein Selbstreview des Implementierers, kein HZ-A-R01.
+
+- Schriftrollen: globale Controls und direkte Normaltextzeichnung verwenden die
+  private Tidy-Ressource. Bakso-/Fraunces-Überschriften, native Plex-Dialogtitel
+  und HC/HF/HN bleiben getrennt. Die ältere gepaarte Reveal-Studienbeschriftung
+  ist im regulären Katalog und Abschluss deaktiviert und wurde nicht umgebaut.
+- Originalbytes und lokale Zeichen: Tidy/Plex-Hashes, tatsächliche Shaping-RIDs,
+  positive Ellipsenpixel und die negative Bakso-Gegenprobe geprüft. Historische
+  Fonts, Lizenzen, Buch-/Iconressourcen und deren Quellen bleiben unverändert.
+- Layout: vollständige Dimensionen 1–50, Schwierigkeits-/Statuswerte, Labelränder,
+  Buttons, Help-Scroll, 128-Zeichen-Namen und 256 Kategorien geprüft. Bakso-
+  Kartentitel behalten auch ihre gemessene Zeilenhöhe bei UI100/125. Die native
+  Menü-/Tooltipstrecke bleibt für lange Kategorien vollständig bedienbar.
+- Erhaltungsgrenzen: kein Diff in Modellen, Runtime-/Autorendaten, Definitionen,
+  geschützten Hinweis-/Slot-/Fit-/Zellrenderpfaden oder bestehenden Bild-/Iconressourcen.
+  Im Vollansichtsboard ändert sich ausschließlich die normale Platzwarnung.
+  Reset-/Recoveryzielbindung und Sortierlogik sind unverändert; nur die native
+  Dialoggröße wird begrenzt. HZ-B wurde nicht vorgezogen.
+- Liefergrenze: neue Tidy-Quelle und Hinweis werden geprüft und mitgeliefert.
+  Vorherige Web-Bündel bleiben für ihren bestehenden Rollbackweg gültig.
+  Die PCK-Probe ersetzt keine gepackte Ressource; ihre externen synthetischen
+  Revealbilder passieren den unveränderten Definitionsvalidator.
+- Befunde aus der Prüfung wurden behoben: geerbte Ränder/Zeilenabstände der
+  Fraunces-Abschlussüberschrift (unverändertes EA-Orakel rot/grün), die Annahme
+  einer bestimmten Katalogspaltenzahl im AT-Browsertest (echtes Scrollen vor
+  unveränderten Pixelassertions) und fehlende externe Bilder im PCK-Testaufbau.
+
+Kein weiterer offener Codebefund aus diesem Selbstreview. Der endgültige
+technische Abschluss verlangt den im PR gebundenen erfolgreichen aktuellen
+Pflichtlauf. HZ-A-R01 und HZ-A-M01 bleiben unabhängig davon offen; kein Mergeurteil.
+
 ## Übergabe und offene Gates
 
 Vollständiger Diffcheck und davon getrenntes Selbstreview werden am gelieferten
