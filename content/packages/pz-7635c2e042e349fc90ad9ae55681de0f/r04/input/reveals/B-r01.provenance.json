@@ -1,0 +1,14 @@
+{
+  "author": "OpenAI image generation via ChatGPT",
+  "changes": "Keine; exakte freigegebene B-r01-Bytes aus r01 übernommen.",
+  "file": "reveals/B-r01.png",
+  "prior_generation": {
+    "commit": "d7abc35efec959a08822afa194d4e5553425efac",
+    "file_in_package": "generation.json",
+    "package": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r01/package.zip",
+    "repository": "venomenon328/picross"
+  },
+  "puzzle_id": "pz-7635c2e042e349fc90ad9ae55681de0f",
+  "sha256": "dac1d788f3f143d9dde976f7dc7b8fd02099eea872f759872b0ee58b1360937c",
+  "usage_basis": "Eigenständig im Nutzerauftrag mittels nativer ChatGPT-Bildgenerierung erzeugt; Nutzung im beauftragten Picross-Projekt, keine externen Bildreferenzen, keine Exklusivitätszusage."
+}

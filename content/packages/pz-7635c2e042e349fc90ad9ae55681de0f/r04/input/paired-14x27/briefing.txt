@@ -1,0 +1,4 @@
+Vorlagentreues rechtsgerichtetes Seepferdchen: Röhrenschnauze, Auge als Leeröffnung, Halsbogen, gerundeter Bauch, linke Rückenflosse, offener C-Schwanz. Panzerlinien/Farbe entfernt. Nativer MA-r01-Eingang, kein manuelles Zellraster. Eine Vordergrundfarbe ink; weiß bleibt Leer.
+
+Working mode: faithful
+Motif and gameplay review: open

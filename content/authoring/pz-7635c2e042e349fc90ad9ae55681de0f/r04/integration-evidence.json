@@ -1,0 +1,124 @@
+{
+  "added_at": "2026-10-20T14:33:52Z",
+  "approval": {
+    "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r04/approval.json",
+    "sha256": "66887b4705972bfcdba294d9f76650405345f3327ca01f6fb0fb3795f8feddc7",
+    "timestamp_basis": "Zeitpunkt der ersten protokollierten Entgegennahme in dieser Sitzung; exakter Nachrichtenzeitstempel nicht exponiert."
+  },
+  "category_id": "wasserwelt",
+  "checks": {
+    "all_28_existing_registry_entries_equal": true,
+    "all_28_existing_runtime_entries_equal": true,
+    "categories_equal": true,
+    "export_files_equal": true,
+    "fresh_plan_equal_original_plan": true,
+    "sealed_source_equal": true
+  },
+  "export": {
+    "catalog_ready": true,
+    "editorial_approved": true,
+    "format": "picross-target-export-v4",
+    "inspection": "content/packages/pz-7635c2e042e349fc90ad9ae55681de0f/r04/inspection.json",
+    "manifest": "content/packages/pz-7635c2e042e349fc90ad9ae55681de0f/r04/manifest.json",
+    "manifest_sha256": "82ed8b442e9d1b84b21ec681a7bed5b4b304c812d95cad86f64209492fb5b88e",
+    "technical": true
+  },
+  "files": {
+    "content/added/pz-7635c2e042e349fc90ad9ae55681de0f.json": "3f7465cf910b99e6f4eb61a8871e05d71c941b8d53eec2fc00914c5701c26c38",
+    "content/difficulty/pz-7635c2e042e349fc90ad9ae55681de0f/rating.json": "e747c74165121778aa28e9eb0108c8905155aef9ce5807a5df03a000feb0e890",
+    "game/art/content/seepferdchen_001.png": "dac1d788f3f143d9dde976f7dc7b8fd02099eea872f759872b0ee58b1360937c",
+    "game/art/content/seepferdchen_001.txt": "e8c4a50868147654635e7adbf988e03d87c4201c5437e2cbffc6b34bb891c0b8",
+    "game/data/content/seepferdchen_001.json": "5b082e81bb5f3da5f6d459eee804188fdefdb3c6c6878f76c93bf63c206047db"
+  },
+  "format": "picross-authoring-integration-evidence-v1",
+  "inventory_sha256": "698b6b777c54069edaa8123a880825a7d1769854ae3dad7cd731d90ba854796e",
+  "next_action": "Nach Pflicht-CI/Selbstreview Integrations-PR mergen; tatsächlichen Main-Commit prüfen, dann separaten §9-Cleanup samt Pflicht-CI/Selbstreview und Merge.",
+  "not_required": "Native Spiel-/Windows-/Browser-/PCK-/Saveproben: reine Inhaltsintegration nach PUZZLE_AUTHORING §8; kein Product-Harness/Build oder Bestandsreplay.",
+  "package_revision": "r04",
+  "package_sha256": "077bea532d922e6e1ff0474ae06c6bab6e81019a65b10f595840919c5dc54a3f",
+  "plan": {
+    "changes": [
+      {
+        "operation": "add",
+        "path": "content/packages/pz-7635c2e042e349fc90ad9ae55681de0f/r04"
+      },
+      {
+        "operation": "add",
+        "path": "content/difficulty/pz-7635c2e042e349fc90ad9ae55681de0f/rating.json"
+      },
+      {
+        "operation": "replace",
+        "path": "content/registry.json"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/seepferdchen_001.txt"
+      },
+      {
+        "operation": "add",
+        "path": "game/data/content/seepferdchen_001.json"
+      },
+      {
+        "operation": "replace",
+        "path": "game/data/registry.json"
+      },
+      {
+        "operation": "add-on-success",
+        "path": "content/added/pz-7635c2e042e349fc90ad9ae55681de0f.json"
+      }
+    ],
+    "new_ids": [
+      "pz-7635c2e042e349fc90ad9ae55681de0f"
+    ],
+    "preserved_entries": 28,
+    "status": "planned"
+  },
+  "prior_attempt": {
+    "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r04/integration-attempt.json",
+    "sha256": "725797faed66c26032856118f72edf8e6eb9d0e440cb0ac6c1025a8e3d65374f",
+    "superseded_by": "Successful documented recovery and registration in this evidence"
+  },
+  "puzzle_id": "pz-7635c2e042e349fc90ad9ae55681de0f",
+  "rating": {
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "level": "L3",
+    "method": "picross-difficulty-0.3",
+    "new_analysis": false,
+    "rating_hash": "d9ad34e8098d9c0dcd4a9e28d476ec48ede5cc14d88e106ab38ccf1024001b33",
+    "rebind": "ID/mono/logic/matrix unchanged; original rating and rating.source preserved exactly; only actual definition binding changed"
+  },
+  "recovery": {
+    "baseline_registry_runtime_categories_equal": true,
+    "elapsed_seconds": 97.31665330000033,
+    "ended_utc": "2026-10-20T14:32:30.142315+00:00",
+    "exit_code": 0,
+    "initial_journal_sha256": "9d39b35d5e3cd8f121c7132893be5ba44404df68a85a91ba08fd81b68b90cd8b",
+    "journal_exists": false,
+    "started_utc": "2026-10-20T14:30:52.825664+00:00",
+    "status": "rolled-back",
+    "tool_commit": "c83deab0d16d8ad864bbd680c862832b33b5a310"
+  },
+  "registration": {
+    "elapsed_seconds": 225.98253159999877,
+    "ended_utc": "2026-10-20T14:37:28.327706+00:00",
+    "exit_code": 0,
+    "journal_exists": false,
+    "open_journal": false,
+    "registered": true,
+    "started_utc": "2026-10-20T14:33:42.345173+00:00",
+    "status": "registered",
+    "tool_commit": "c83deab0d16d8ad864bbd680c862832b33b5a310",
+    "user_saves_modified": false
+  },
+  "runtime_revision": 1,
+  "save_slot": "seepferdchen_001",
+  "source_commit": "fee90adf71c7c3f82e01aa6425c6ec8799424773",
+  "tool_repair": {
+    "authorization": "Werkzeugnacharbeit und Fortsetzung beauftragen",
+    "budgets_changed": false,
+    "commit": "c83deab0d16d8ad864bbd680c862832b33b5a310",
+    "pr": "https://github.com/venomenon328/picross/pull/286",
+    "time_budget_seconds": 300
+  }
+}
