@@ -1,17 +1,17 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
-Stand: 20.10.2026 · Spezifikation 1.0 · **freigegeben, noch nicht implementiert**
+Stand: 20.10.2026 · Spezifikation 1.1 · **freigegeben, HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen**
 
 [Issue #284](https://github.com/venomenon328/picross/issues/284) führt die
 Entwicklungspakete HZ-A und HZ-B, ihre Akzeptanz und den aktuellen Lieferstatus.
 Der Eigentümer hat die besprochene Gestaltung und ihre Übernahme in Issues und
-Repository-Dokumente freigegeben. Dieser Dokumentstand erteilt keinen
-Implementierungs- oder Mergeauftrag.
+Repository-Dokumente freigegeben. Die beauftragte [HZ-A-Lieferung](HZ_A_VERIFICATION.md) setzt Schrift und Textlayout
+um; HZ-B und sämtliche separaten Abnahmen bleiben offen. Keine Mergefreigabe.
 
 ## 1. Ziel, Ausgangsstand und gezielte Ablösung
 
 Die normale Spieleroberfläche trägt die Handschrift des vorhandenen Rätselbuchs
-durchgängig: dieselbe Schrift wie „Rätselkatalog“, organischere kleine Rahmen,
+durchgängig: Tidy Hand für Standardtext, erhaltene Überschriften, organischere kleine Rahmen,
 vollständig gezeichnete Dropdowns und eine gemeinsame Piktogrammfamilie.
 Lesbarkeit, ruhige Anordnung und präzise Bedienung gehören zum Gestaltungsergebnis.
 Die Unregelmäßigkeit muss schon in tatsächlicher Einsatzgröße erkennbar sein.
@@ -24,11 +24,11 @@ sie sind keine gebundenen nativen Build-, DPI-, Eingabe- oder Abnahmenachweise.
 
 | Bestehender Vertrag | Gezielte HZ-Fortschreibung |
 | --- | --- |
-| [KB #168](https://github.com/venomenon328/picross/issues/168), KK und bisherige GD-/VS2-Schriftrollen | Bakso wird allgemeine UI-Schrift statt einer auf einzelne Titel begrenzten Rolle. Fraunces für übrige Überschriften und Plex für normalen UI-Text sind damit als zukünftige Rollen abgelöst. Originalfontbytes und historische Lieferbelege bleiben erhalten. |
-| [Katalogdarstellung](CATALOG_PRESENTATION.md) | Metadaten, Kategorie und Status erhalten Bakso; die äußere Kartenkontur wird organischer. Gemeinsamer Papierstreifen, vollständige Angaben, Kartenbereiche und Spoiler-/Reset-/Recoverygrenzen bleiben. |
+| [KB #168](https://github.com/venomenon328/picross/issues/168), KK und bisherige GD-/VS2-Schriftrollen | Tidy Hand ersetzt Plex für normalen Standardtext. Bestehende Überschriften in Bakso/Fraunces und native Dialogtitel behalten ihre bisherigen Ressourcen. Originalfontbytes und historische Lieferbelege bleiben erhalten. |
+| [Katalogdarstellung](CATALOG_PRESENTATION.md) | Metadaten, Kategorie und Status erhalten Tidy Hand; die äußere Kartenkontur wird organischer. Gemeinsamer Papierstreifen, vollständige Angaben, Kartenbereiche und Spoiler-/Reset-/Recoverygrenzen bleiben. |
 | [Katalogsortierung](CATALOG_SORTING.md) | Gezeichnete geschlossene und offene Auswahlen samt Richtungs-/Seitenpfeilen; sämtliche Sortierwerte, acht Kriterium-/Richtungspaare und Präferenzen behalten ihre Bedeutung. |
 | [Zeichensprache](UI_DRAWING_STYLE.md) | Stabile handgezeichnete Konturen werden gezielt für kleine Bedienelemente verstärkt. Daraus folgt keine globale Verstärkung von Raster-, Hinweis-, Zell- oder Miniaturstrichen. |
-| [HC/HF](CLUE_TYPOGRAPHY.md), [HN](CLUE_INTERACTION.md) | Hinweisziffern, ihre Marker und gebundene Zähler behalten ihre Spezialrolle. Nur die normale Überschrift des Vollhinweis-Overlays wechselt ebenfalls zu Bakso. |
+| [HC/HF](CLUE_TYPOGRAPHY.md), [HN](CLUE_INTERACTION.md) | Hinweisziffern, ihre Marker und gebundene Zähler behalten ihre Spezialrolle. Auch die bestehende Fraunces-Überschrift des Vollhinweis-Overlays bleibt unverändert. |
 | [SL #65](https://github.com/venomenon328/picross/issues/65) / [SL-Lieferung](SL65_IMPLEMENTATION.md) | Die drei großen Sidebarrahmen bleiben vorhandene echte gezeichnete Rasterassets einschließlich ihrer sicheren Innenflächen. Die Freigabe ersetzt sie weder durch Laufzeitgeometrie noch beauftragt sie neue Gruppenrahmen. |
 | [Z2-Ressourcenweg](Z2_SELECTION.md) | HZ-B darf die aktive Iconfamilie mit konsistent fortgeschriebenen Quellen, Provisionierung, Inventar und Export ändern. Historische BP-/SL-/KB-Belege werden nicht rückwirkend verändert. |
 
@@ -41,34 +41,42 @@ in [Projektprofil](PROJECT_PROFILE.md) und [CI-Policy](CI_POLICY.md).
 
 ## HZ-D01 · Schriftrollen
 
+**Eigentümerentscheidung HZ-A-FONT02 · 20.10.2026:** Nach dem begonnenen
+Bakso-Versuch wurde die Arbeit angehalten und Tidy Hand als Standardtext
+bereitgestellt. Überschriften und Hinweiszahlen sollen ausdrücklich unverändert
+bleiben. Diese Entscheidung ersetzt die Schriftwahl aus Version 1.0 und HZ-A-P01;
+HZ-B, Produktgrenzen und die getrennten Gates bleiben erhalten.
+
 | Rolle | Freigegebener Sollstand |
 | --- | --- |
-| Alle normalen Spielertexte und Überschriften | Vorhandenes unverändertes `game/art/drawing/BaksoDaging-Regular.ttf`, dieselbe Schrift wie „Rätselkatalog“. Dies umfasst Katalogtitel, Motivtitel/`???`, Kategorien, Größe, Schwierigkeit, Blatt-/Statuszeilen, Buttons, Auswahlen, geöffnete Menüs, Einstellungen/Info, Dialoge, Bedienhilfe, Tooltips und Warn-/Recoverytexte. Auch direkt gezeichnete Texte gehören dazu. |
-| Hierarchie und längere Texte | Rollenbezogene Größe, Abstände und Zeilenhöhe. Gemeinsame Schrift bedeutet keine einheitliche Schriftgröße; Haupttitel bleiben stärker gewichtet als Metadaten und Hilfetexte. Längere Absätze müssen ruhig lesbar bleiben. |
-| Vollhinweis-Überschrift | „Vollständiger Hinweis“ ebenfalls Bakso. Die bisherige kleine Größenrolle von 13 × UI ist ein Ausgangspunkt; tatsächliche neue Glyphenmaße und sichere Box bestimmen den passenden Fit. |
-| Hinweisziffern, ihre Marker und ausdrücklich an HC gebundene Zähler | Delight Coffee und die kontrolliert gebündelten Plex-Marker gemäß [HC](CLUE_TYPOGRAPHY.md). HZ ändert weder deren Schrift-/Slot-/Fitgeometrie noch Status, Zahlfarben oder C1-Kontur. |
-| Fehlende beziehungsweise fehlerhafte UI-Zeichen | Explizit kontrollierte lokale Darstellung nach HZ-D02; keine weitere allgemeine Textrolle und keine Systemfontsuche. |
+| Normale Spielertexte | Unverändertes `game/art/drawing/TidyHand.ttf` von Sean Johnson. Kategorien, Größe, Schwierigkeit, Blatt-/Statuszeilen, Textbuttons, Auswahlen, offene Menüzeilen, Einstellungen-/Infotexte, Dialoginhalt, Bedienhilfe, Tooltips und normale Warn-/Recoverytexte; auch direkte Textzeichnung. |
+| Bestehende Überschriften | Bakso für Katalog-/Arbeitsblatttitel und Kachel-Motivtitel/`???`; Fraunces 600 für bisherige übrige Überschriften einschließlich Abschlussbeschriftung und Information. Native Dialogtitel behalten ihren bisherigen Plex-Font. Die ursprünglichen Rollen, Größen und Fontbytes bleiben. |
+| Hierarchie und längere Texte | Rollenbezogene Größen, Abstände und Zeilenhöhe; Absätze bleiben ruhig lesbar. Tidy Hand ist keine Vereinheitlichung sämtlicher Überschriften. |
+| Vollhinweis-Überschrift | „Vollständiger Hinweis“ bleibt Fraunces 600 bei 13 × UI einschließlich bestehender Messung und sicherer Box. |
+| Hinweisziffern, ihre Marker und ausdrücklich an HC gebundene Zähler | Delight Coffee und die kontrolliert gebündelten Plex-Marker gemäß [HC](CLUE_TYPOGRAPHY.md). Schrift-/Slot-/Fitgeometrie, Status, Zahlfarben und C1-Kontur bleiben unverändert. |
+| Fehlende UI-Zeichen | Ausschließlich gebündeltes Plex als lokaler Fallback; keine Systemfontsuche und keine weitere allgemeine Textrolle. |
 
-Die Fontauswahl ist abgeschlossen. HZ verlangt weder eine neue Fontstudie noch
-einen neu gezeichneten Font. Original-TTFs und ihre Nutzungshinweise bleiben
-unverändert und werden korrekt mitgeliefert. Die Hauptschrift muss auch nach
-Ansichtswechsel, Dialogöffnung, Resize und UI100→125→100 dieselbe Rolle behalten.
+Die Fontauswahl ist abgeschlossen. Die bereitgestellte TTF bleibt byteidentisch;
+[Herkunft und Nutzungshinweis](../game/art/drawing/tidy-hand/NOTICE.txt) dokumentieren
+die Autorenaussage „This font is free for all use.“ auf der
+[Quellseite](https://www.dafont.com/de/tidy-hand.font). ZIP und TTF sind per SHA-256
+gebunden. Vorhandene Fontquellen/Nutzungshinweise bleiben erhalten und werden
+weiter mitgeliefert. Die Rollen bleiben nach Ansichtswechsel, Dialogöffnung,
+Resize und UI100→125→100 erhalten.
 
 ## HZ-D02 · Zeichenabdeckung und gemessenes Textlayout
 
-Die Bakso-Datei enthält nicht alle benötigten Zeichen. Am Ausgangsstand fehlen
-unter anderem `ß` und `·`; U+2026 (`…`) ist vorhanden, aber falsch gezeichnet.
-Der Kacheltitel verwendet dafür bereits eine besondere Auslassungsbehandlung.
-Eine gewöhnliche Missing-Glyph-Fallbackkette allein löst den U+2026-Fall nicht.
+Tidy Hand enthält `äöüÄÖÜß`, `·`, `%` und eine korrekte U+2026-Ellipse.
+Unter anderem `×`, `„`, `‚`, `–`, `−` und Funktionspfeile kommen aus dem
+kontrolliert gebündelten Plex. Die tatsächlichen Spielertexte werden inventarisiert;
+native Sichtung ergänzt die Zeichentabellenprüfung. Normale Zeichenketten,
+automatische Auslassung und Popup-/Tooltipdarstellung müssen übereinstimmen.
+Korrekte Bedeutung und Originalfontbytes bleiben erhalten; keine Kästchen oder
+Buchstaben anstelle von Auslassungspunkten.
 
-Die Umsetzung inventarisiert die tatsächlichen Spielertexte und verwendet
-einen kontrollierten mitgelieferten Fallback für fehlende Zeichen sowie eine
-explizite korrekte Darstellung für die fehlerhafte Ellipse. Normale Zeichenketten,
-native Titelauslassung und Popup-/Tooltipdarstellung müssen zusammenpassen.
-Korrekte Textbedeutung und Originalfontbytes bleiben erhalten; weder fehlende
-Kästchen noch Buchstaben anstelle von Auslassungspunkten sind zulässig.
-Zu prüfen sind insbesondere `äöüÄÖÜß`, `×`, `·`, `…`, `%` und tatsächlich verwendete
-Satz-/Zitatzeichen. Eine Prüfung der Zeichentabelle ersetzt keine native Sichtung.
+Die unveränderten Bakso-Kacheltitel behalten ihre bisherige besondere native
+Dreipunkt-Auslassung, weil Bakso U+2026 falsch zeichnet. Diese Ausnahme wird nicht
+auf den neuen Standardtext übertragen; dessen echte Tidy-Hand-Ellipse genügt.
 
 Textbreite, sichtbare Glyphenhülle einschließlich Fallback, Zeilenhöhe, Umbruch,
 Auslassung und Innenabstände werden mit den tatsächlich verwendeten Ressourcen
@@ -85,7 +93,7 @@ Lange gültige Kategorien und scrollende Listen bleiben über die vorhandenen
 Wege les- und auswählbar. HZ verschärft weder die 128-Zeichen-Namensgrenze noch
 die Grenze von 256 Kategorien aus [KAT-1](CATEGORIES.md). Kopfaktionen, Dialoge,
 Hilfetexte und randnahe Tooltips müssen in die unterstützten Fenster passen.
-Das Vollhinweis-Overlay misst Bakso-Überschrift und Delight-Token getrennt;
+Das Vollhinweis-Overlay misst seine unveränderte Fraunces-Überschrift und Delight-Token getrennt;
 Umbruch und Innenränder halten Texte, Rahmen und Trefferrechtecke auseinander.
 Diese UI-Textanpassung verändert keine Hinweis-/Rasterfitformel.
 
@@ -137,7 +145,7 @@ eine zusammengehörige Darstellung:
 | Bestandteil | Gestaltung und Verhalten |
 | --- | --- |
 | Feld und Popup-Außenrahmen | Warmes opakes Papier und unregelmäßige Kontur; darunterliegende Karten stören die Lesbarkeit des geöffneten Menüs nicht. |
-| Menüzeilen | Bakso, lesbare Abstände und sichere Text-/Markierungsbudgets auch für lange Werte. |
+| Menüzeilen | Tidy Hand, lesbare Abstände und sichere Text-/Markierungsbudgets auch für lange Werte. |
 | Aktuelle Auswahl | Gezeichneter Haken, sichtbar von der gerade angefahrenen Zeile unterschieden. |
 | Hover beziehungsweise vorhandener Fokus | Zurückhaltende unregelmäßige Hervorhebungsfläche, ohne Text oder Auswahlhaken zu verschlucken. |
 | Chevron, Markierungen und lange Listen | Zur Piktogrammfamilie passende Zeichen und benötigte Scrollbestandteile; vorhandene Auswahl- und Scrollwege bleiben vollständig nutzbar. |

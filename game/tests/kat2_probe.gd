@@ -187,6 +187,7 @@ func run() -> void:
 		await compact_buttons()
 	elif mode == "kk":
 		await fixed_cards()
+		await preload("res://tests/hz_native.gd").run(self)
 	elif mode == "ke":
 		await catalog_labels()
 		await preload("res://tests/ke_graphics.gd").run(self)

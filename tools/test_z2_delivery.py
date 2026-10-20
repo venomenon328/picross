@@ -10,6 +10,29 @@ import z2_resources
 
 
 class Z2DeliveryTests(unittest.TestCase):
+    def test_hz_rejects_changed_font_or_missing_permission(self):
+        manifest = z2_resources.verify()
+        self.assertEqual(manifest["hz_standard_text"]["sha256"],
+                         "9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6")
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            drawing = root / "game/art/drawing"
+            (drawing / "tidy-hand").mkdir(parents=True)
+            source = z2_resources.ROOT / "game/art/drawing"
+            font = drawing / "TidyHand.ttf"
+            notice = drawing / "tidy-hand/NOTICE.txt"
+            shutil.copyfile(source / "TidyHand.ttf", font)
+            shutil.copyfile(source / "tidy-hand/NOTICE.txt", notice)
+            with patch.object(z2_resources, "ROOT", root):
+                z2_resources.verify()
+                font.write_bytes(font.read_bytes() + b"changed")
+                with self.assertRaisesRegex(AssertionError, "original bytes"):
+                    z2_resources.verify()
+                shutil.copyfile(source / "TidyHand.ttf", font)
+                notice.write_text("No author permission", encoding="utf-8")
+                with self.assertRaises(AssertionError):
+                    z2_resources.verify()
+
     def test_resources_match_selected_hashes_and_utf8_labels(self):
         manifest = z2_resources.verify()
         self.assertEqual(manifest["source_commit"], "c3a5386580d7a0da29b927b41bd692f0cca59274")

@@ -213,3 +213,12 @@ synthetische Negativkontrollen. Die zusätzliche Bildabhängigkeit ist in beiden
 isolierten Web-Umgebungen über `requirements-image.txt` gepinnt. Die bestehende
 Timeout- und Szenarienpflicht bleibt erhalten. Aktuelle Originalnachweise und
 offene Abnahmen: [AT-A-T01](AT_A_VERIFICATION.md).
+
+## HZ-A-Erweiterung des aktiven Inventars
+
+`HZ-A-W01` ergänzt `catalog` um Tidy Hand mit lokalem Fallback, vollständig
+gemessene Metadaten, echte native Menüöffnung und vollständige scrollbare Hilfe
+bei 1280×720/UI125, 1920×1080/UI100 und 2560×1440/UI125. Sechs zusätzliche
+Originalbilder `hz-menu-<Breite>.png` und `hz-help-<Breite>.png` mit Chromium-
+Präfix sind Pflicht. Das Inventar enthält damit 31 Chromium-Szenarien.
+Bestehende Fälle und ihre Eingabe-/Save-/Pixelassertions bleiben erhalten.

@@ -1,4 +1,5 @@
 extends "res://ui/chalkboard_board.gd"
+const UiText = preload("res://ui/ui_text.gd")
 ## Regular full view: one selected renderer, no study lifecycle or persistence.
 const Typography = preload("res://ui/clue_typography.gd")
 var type_size: int = 1
@@ -275,8 +276,13 @@ func _draw() -> void:
 	if not layout_valid:
 		if marks != null:
 			marks.hide()
-		draw_string(BODY_FONT, Vector2(12, 36), "Zu wenig Platz für Raster und Hinweise.", HORIZONTAL_ALIGNMENT_LEFT, size.x-24, 18, INK)
-		draw_string(BODY_FONT, Vector2(12, 62), "Fenster vergrößern oder UI / Rätselansicht in Einstellungen ändern.", HORIZONTAL_ALIGNMENT_LEFT, size.x-24, 16, INK)
+		var font: Font = UiText.font()
+		var fs: int = roundi(16 * ui_scale)
+		var paragraph := TextParagraph.new()
+		paragraph.width = maxf(1, size.x - 24 * ui_scale)
+		paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+		paragraph.add_string("Zu wenig Platz für Raster und Hinweise.\nFenster vergrößern oder UI / Rätselansicht in Einstellungen ändern.", font, fs)
+		paragraph.draw(get_canvas_item(), Vector2.ONE * 12 * ui_scale, INK)
 		return
 	super._draw()
 	if marks != null:

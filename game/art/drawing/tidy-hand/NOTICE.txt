@@ -1,0 +1,24 @@
+Tidy Hand - Sean Johnson
+
+Source: https://www.dafont.com/de/tidy-hand.font
+Author's note on that page, checked 2026-10-20:
+"This font is free for all use."
+
+The owner supplied tidy_hand.zip and selected Tidy Hand for normal UI text
+on 2026-10-20 (HZ-A / issue #284). The archive contains only TidyHand.ttf;
+it does not contain a separate license file. This notice records provenance
+and the author's published usage permission; it is not an invented OFL license.
+
+Original font metadata:
+Family: Tidy Hand
+Author: Sean Johnson
+Version: Version 1.00 February 10, 2010
+Copyright: Sean Johnson 2010. All Rights Reserved.
+
+Archive SHA-256:
+b9896b4cb1a0e89706bb1df2a59935b68cf79d994f29cd5a959b9969acd68751
+Unmodified TidyHand.ttf SHA-256:
+9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6
+
+The bundled IBM Plex Sans supplies only missing characters. Existing Bakso,
+Fraunces, Delight Coffee and their notices retain their separate roles.

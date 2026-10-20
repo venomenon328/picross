@@ -1,9 +1,10 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
-**HZ · 20.10.2026, Spezifikation freigegeben; noch nicht implementiert:**
-[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet Bakso für sämtliche
-normalen Spielertexte einschließlich Warnungen und Vollhinweis-Überschrift,
-gemessene Textbudgets sowie organischere kleine Rahmen, offene Menüs und Icons.
+**HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet Tidy Hand für
+normale Spielertexte einschließlich Warnungen und gemessene Textbudgets;
+sämtliche Überschriften bleiben. HZ-B ergänzt organischere kleine Rahmen,
+offene Menüs und Icons.
 Delight-Zahlen, Hinweis-/Rasterfit, Eingabe, Saves und die großen SL-Rasterrahmen
 bleiben. HZ-A und HZ-B werden gesondert beauftragt und abgenommen.
 

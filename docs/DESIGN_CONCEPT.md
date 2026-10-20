@@ -1,11 +1,11 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**HZ · 20.10.2026, Spezifikation freigegeben; noch nicht implementiert:**
-[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) führt die vorhandene
-Bakso-Schrift in allen normalen UI-Texten und Überschriften fort. Kleine
+**HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02
+Tidy Hand für Standardtexte und erhält die bisherigen Überschriften. Kleine
 Karten-/Button-/Dropdownrahmen werden organischer; geöffnete Menüs, Markierungen
 und sämtliche Piktogramme erhalten dieselbe Handschrift. Die HZ-Schriftrollen
-ersetzen gezielt die frühere Fraunces-/Plex-Aufteilung. Hinweiszahlen und
+ersetzen gezielt Plex im Standardtext; Fraunces-/Bakso-Überschriften bleiben. Hinweiszahlen und
 Rastergeometrie behalten ihre eigenen Verträge; historische Belege bleiben.
 
 **AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
@@ -187,11 +187,10 @@ keine neue P1-Bedienabnahme.
 Die ZS-Folgearbeit aus Abschnitt 4.4 öffnete GD-03 für Hinweisziffern;
 [HC](CLUE_TYPOGRAPHY.md) bindet inzwischen deren Delight-Schrift und Geometrie.
 VS2-E2/V3 ergänzte Bakso für Arbeits-Blatttitel, KB für den Katalogtitel und KK
-für Kachel-Motivüberschriften/`???`. [HZ-D01/D02](HAND_DRAWN_UI.md) erweitert
-Bakso als freigegebenen, noch nicht implementierten Sollstand auf sämtliche
-normalen UI-Texte und Überschriften mit kontrollierten lokalen Fallbacks und
-gemessenen Textmaßen. Die bisherigen Fraunces-/Plex-Rollen sind für diesen
-Folgeschritt abgelöst. A-Arbeitsasset, Buchkomposition, N1 und C1 bleiben Grundlage.
+für Kachel-Motivüberschriften/`???`. [HZ-D01/D02](HAND_DRAWN_UI.md) ersetzt
+gemäß Eigentümerentscheidung HZ-A-FONT02 normale Plex-Texte durch Tidy Hand
+mit kontrollierten lokalen Fallbacks und gemessenen Textmaßen. Bestehende
+Überschriften und ihre Fraunces-/Bakso-Rollen bleiben unverändert. A-Arbeitsasset, Buchkomposition, N1 und C1 bleiben Grundlage.
 Die historische GD-/ZS-Auswahl und ihre Abnahmen behalten ihre Standbindung.
 
 ### BP-1R bis BP-3: Entwurfsverlauf und integrierte Grundlagen

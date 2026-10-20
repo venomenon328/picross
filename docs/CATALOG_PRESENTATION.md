@@ -1,8 +1,8 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
-**HZ · 20.10.2026, freigegebener nächster Stilstand; noch nicht implementiert:**
-[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert Bakso auf sämtliche
-Katalogtexte und ersetzt die bisherige zurückhaltende äußere Kartenkontur durch
+**HZ · 20.10.2026, freigegebener nächster Stilstand; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet Tidy Hand für normale
+Katalogtexte bei unveränderten Bakso-Überschriften und ersetzt die bisherige zurückhaltende äußere Kartenkontur durch
 deutlich organischere stabile Linien. Papierstreifen, vollständige Metadaten,
 gleiche Kartenbereiche, Bildraum und Bedien-/Spoilergrenzen bleiben verbindlich.
 HZ-A misst Schrift und Textlayout; HZ-B ergänzt Konturen, vollständige Menüs und Icons.
@@ -94,7 +94,7 @@ Kategorie, mehrzeiliger Titel, Status, Reset und Fehlertexte funktionieren ohne
 Überlappung und ohne zustandsabhängige Layoutsprünge. Der bestehende
 Titelauslassungsvertrag bleibt von den vollständigen Metadaten getrennt.
 
-HZ-D02/D03 ergänzt die gemessenen Bakso-Textmaße und die sichtbaren Hüllen der
+HZ-D02/D03 ergänzt die gemessenen Tidy-Hand-Textmaße und die sichtbaren Hüllen der
 neuen äußeren Kartenkontur einschließlich Überständen und Kantenglättung.
 Diese passen in dieselben sicheren Karten-/Trefferbudgets; Sortierung oder
 Neuaufbau verändert bei gleicher ID und Größe nicht die gezeichnete Grundform.
@@ -105,7 +105,7 @@ Der gemeinsame Streifen wirkt wie ein ruhiges Papieretikett des Rätselbuchs:
 warmes Papier, leicht dunkler als die Kartenfläche, dünne subtil unregelmäßige
 Kontur, höchstens ein sehr zurückhaltender Schatten. Keine drei gerahmten
 Einzelfelder und kein schwerer Schmuckrahmen. Als freigegebener HZ-Sollstand
-verwenden auch Metadaten die vorhandene Bakso-Schrift gemäß
+verwenden Metadaten Tidy Hand gemäß HZ-A-FONT02 und
 [HZ-D01/D02](HAND_DRAWN_UI.md), mit gemessenen Textmaßen und lokalen Fallbacks.
 Die bisherige Plex-Metadatenrolle ist damit abgelöst; Originalfontbytes bleiben.
 Charakter entsteht gemeinsam durch Schrift, Kontur, Zeichnungen und Abstände. Streifen,

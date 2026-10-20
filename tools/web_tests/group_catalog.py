@@ -90,4 +90,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     from at_cases import catalog
     catalog(page,name,output,evidence)
     passed('AT transparent catalog and real hover preserve white detail, holes and soft alpha')
+    from hz_cases import catalog as hz_catalog
+    hz_catalog(page,name,output,evidence)
+    passed('HZ Tidy Hand local fallback, complete metadata, native menus and scrollable help')
     assert not errors, errors

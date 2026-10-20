@@ -1,16 +1,18 @@
 # Projektprofil: picross
 
-**HZ / #284 (20.10.2026), Spezifikation freigegeben; noch nicht implementiert:**
+**HZ / #284 (20.10.2026), Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale
-Spieler-UI an Bakso Daging und stärker gezeichnete kleine Rahmen, vollständige
+Spieler-UI gemäß HZ-A-FONT02 an Tidy Hand als Standardtext (Überschriften
+unverändert) und stärker gezeichnete kleine Rahmen, vollständige
 Dropdowns und eine gemeinsame Piktogrammfamilie. HZ-A liefert Schriftrollen,
 lokale Zeichenbehandlung und gemessenes Textlayout; HZ-B danach Konturen,
 Menüs und Symbole. Delight-Hinweise samt gebundener Geometrie sowie die drei
 großen SL-Rasterrahmen bleiben. Beide Pakete erhalten eigene technische,
 separate Review- und persönliche Gates gemäß
 [Issue #284](https://github.com/venomenon328/picross/issues/284).
-Der Spezifikations-PR liefert ausschließlich Dokumente und den ausgewählten
-Dokument-/Werkzeugprüfpfad; keine Produktimplementierung oder Mergefreigabe.
+Die [HZ-A-Lieferung](HZ_A_VERIFICATION.md) enthält Schrift/Textlayout und die
+zugehörigen Prüfwege; technische Ergebnisse und offene Gates stehen im Paket-PR.
+Der frühere Spezifikations-PR bleibt ein reiner Dokumentnachweis.
 
 **AT / #256 (19.10.2026), Umsetzungsvorbereitung V4; AT-A integriert, AT-B-F01 nach Eigentümerabnahme beauftragt:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ist bei Abschlussbildern,
@@ -293,8 +295,9 @@ Quellen und damaligen Issues lesen; Erinnerungen ersetzen keinen Quellenzugriff.
 ## Aktuelle Spielverträge
 
 Für die normalen UI-Schriftrollen und kleinen Bedienelemente ist
-[HZ](HAND_DRAWN_UI.md) der freigegebene nächste Sollstand. Die Bakso-Ausweitung
-umfasst auch die Vollhinweis-Überschrift, nicht dessen Zahlen-/Slot-/Fitvertrag.
+[HZ](HAND_DRAWN_UI.md) der freigegebene nächste Sollstand. Tidy Hand ersetzt normalen
+Standardtext; Überschriften einschließlich Vollhinweis sowie Zahlen-/Slot-/Fitvertrag
+bleiben gemäß Eigentümerentscheidung HZ-A-FONT02 unverändert.
 
 [HC / #92](CLUE_TYPOGRAPHY.md) bindet Delight Coffee für Hinweisziffern samt
 gemeinsamer gemessener Schrift-/Slot-/Fit-/Draggeometrie und Exportnachweis.

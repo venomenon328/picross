@@ -2,13 +2,22 @@
 
 ## Freigegebener nächster Stilstand · HZ / #284
 
-[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 20.10.2026, ist
-spezifiziert und noch nicht implementiert. HZ-A erweitert das unveränderte Bakso
-auf normale UI-Texte und Überschriften mit kontrollierten lokalen Fallbacks.
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 20.10.2026:
+HZ-A ist implementiert, technische Gates stehen im Paket-PR; HZ-B bleibt offen.
+HZ-A verwendet gemäß HZ-A-FONT02 das
+unveränderte Tidy Hand für Standardtexte mit lokalen Fallbacks und erhält
+sämtliche bestehenden Überschriftrollen.
 HZ-B revidiert kleine Konturen, vollständige Dropdowns und die aktive Familie
-der 13 Icons samt weiterer Menü-/Seiten-/Checkboxzeichen. Die früheren
-Fontrollengrenzen und das unveränderte aktive Iconinventar der unten beschriebenen
+der 13 Icons samt weiterer Menü-/Seiten-/Checkboxzeichen. Die frühere Plex-Standardtextrolle
+und das unveränderte aktive Iconinventar der unten beschriebenen
 Lieferungen sind für diesen Folgeschritt ausdrücklich abgelöst.
+
+Die neue Schriftquelle ist separat in
+[Tidy Hand NOTICE](../game/art/drawing/tidy-hand/NOTICE.txt) gebunden.
+`tools/z2_resources.py verify` prüft ihre Originalbytes und den Nutzungshinweis
+zusätzlich zum unveränderten historischen Buchmanifest. Die Provisionierung der
+BP-Quellen ersetzt Tidy Hand nicht. Windows-/Web-Pakete liefern den neuen Hinweis
+mit; historische Font-/Lizenzdateien bleiben unverändert.
 
 Historische GD-/BP-/VS2-/SL-/KB-/KK-/KE-Auswahl- und Lieferbelege bleiben an ihren
 damaligen Stand gebunden. Originalfontbytes, Nutzungsnachweise, A-Komposition,
