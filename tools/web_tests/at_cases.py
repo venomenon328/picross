@@ -26,6 +26,25 @@ def no_spoilers(page):
             assert not label['reveal'] and not label['at_image'], identifier
 
 
+def show_card_image(page):
+    # Measured text may legitimately reduce the column count. Reach the
+    # earned image and its hover target through real scrolling before sampling
+    # every existing alpha point; never sample an offscreen card or crop it away.
+    for _ in range(20):
+        label = card(page)
+        x,y,w,h = state(page,'catalog_scroll')['catalog_scroll']
+        rect = label['at_image']['rect']
+        top = rect[1]
+        bottom = max(rect[1]+rect[3],label['centers']['paper'][1]+10)
+        if top >= y and bottom <= y+h:
+            return
+        delta = bottom-(y+h)+20 if bottom > y+h else top-y-20
+        page.mouse.move(*point(page,[x+w/2,y+h/2]))
+        page.mouse.wheel(0,delta)
+        page.wait_for_timeout(250)
+    raise AssertionError('Earned image and hover target did not become fully visible')
+
+
 def capture(page, output, name, image, *, revision=1, opacity=1, frame=None):
     rect=image['rect']; samples=image['samples']; color=COLORS[revision]
     assert samples['white']==[255]*4 and samples['soft']==color+[80] and samples['ink']==color+[255]
@@ -84,6 +103,7 @@ def catalog(page, name, output, evidence):
     rows=[]
     for spec in MATRIX:
         matrix(page,spec,catalog=True);no_spoilers(page)
+        show_card_image(page)
         label=card(page)
         # Move clear of the card, then exercise the real Godot hover route.
         page.mouse.move(3,3);page.wait_for_timeout(250)

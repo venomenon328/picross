@@ -222,3 +222,7 @@ bei 1280×720/UI125, 1920×1080/UI100 und 2560×1440/UI125. Sechs zusätzliche
 Originalbilder `hz-menu-<Breite>.png` und `hz-help-<Breite>.png` mit Chromium-
 Präfix sind Pflicht. Das Inventar enthält damit 31 Chromium-Szenarien.
 Bestehende Fälle und ihre Eingabe-/Save-/Pixelassertions bleiben erhalten.
+Die AT-Katalogprüfung scrollt die verdiente Bildkarte samt Hoverziel vor dem
+Pixelvergleich über echte Radereignisse vollständig in den sichtbaren Bereich.
+Damit hängt sie nicht von einer bestimmten Spaltenzahl ab; sämtliche bisherigen
+Weiß-, Loch-, Farb- und Alpha-Stichproben bleiben unverändert.
