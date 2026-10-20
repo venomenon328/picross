@@ -1,0 +1,17 @@
+# SEGA Game Gear · Endabnahmevorlage r05
+
+pz-9f7c59054ebb4f3f861e2bce3034320e · content_ready · 20.10.2026 · Authoring 0.5.0 / Dokumentrevision 22. Tool-/Quellcommit: 041ea7b455e132b5c1a637796062fc6405ca4c6e. Inventar-SHA-256: 1666ce874a2f9d23465206fc103a66132a4ad5348b771ed5af10f9ee8e27405c.
+
+A-r02 tatsächlich freigegeben; MA-r02 samt Korridor durch den aktuellen Nutzerauftrag freigegeben. Originale und Erklärungen unter approvals/. **Menschliche redaktionelle Endabnahme offen.**
+
+Gewählt: imports/48x22-negative-space, area-096. 48×22 = 1056 Zellen, 632 Schwarz / 424 Leer (59,85 %), monochrom, Wunsch und Ist genau eine Vordergrundfarbe (#000000, Hülle/D-Pad/Tasten). Exakter Crop [24,44,1752,836], ohne Streckung. 48×22 statt der empfohlenen 44×20 erhält Tastenringe und Steuerkreuz besser. Sechs unterschiedliche Matrizen; Entscheidungen in decisions.json. Schwelle 160 verschluckt Tastentrennungen, 44×20 stellt die rechten Tasten gröber dar. Zusatzhypothese für 96 vor den zwei Zusatzvarianten gespeichert.
+
+Ansichten im [Paket](package.zip): views/final-raster.png, views/final-grid.png, views/final-native.png, reveals/A-r02.png und views/final-comparison.png (direkter Groß-/Kleinvergleich auf Spielpapier). Alle fünf Gestaltungsachsen erfüllt; Lautsprecherschlitze vereinigen sich zur hellen Fläche, Tastenringe bleiben grob gestuft. Diese sichtbaren Detailverluste sind Teil der Vorlage. Einzelzelle Spalte 43/Zeile 11 gehört zur Tastenzeichnung; keine unmotivierten Logikpixel. Keine leeren Innenlinien, keine Belegungswarnung.
+
+Herkunft, Normalisierung, Matrix, deterministische Hinweise, alle geschriebenen Proofs und Endmatrixgleichheit für alle sechs Varianten in eigenem Prüfprozess bestätigt (checks/candidate-audit.json). Endkandidat: full-line-mono, vollständig unbekannter Start, kein Raten/Suche; unabhängiger DAG-Prüfer bestätigt solved und exakte Zielmatrix. Vollständige Deduktion beweist Eindeutigkeit. Produktmaße, Randformel und tatsächliche Einfarbzahl bestanden (checks/final-technical.json). Kein Paar-/Reparaturlauf nötig, 0 Zelländerungen.
+
+Aktuelle Schwierigkeit **L3 – Mittel**, picross-difficulty-0.3, instrumented/medium, Punktbereich L3–L3 (kein menschliches Unsicherheitsintervall). 12 Wellen: R0×4, R1×5, R2×3, R3×0; 9/22 starker Informationsanteil, Enge 220/6757, keine Engstellenwellen; logische Basis 3 + Größe 0. Vollständiges Bundle und geprüfter modegebundener Input unter analysis/. Keine menschliche Kalibrierung, Lösungszeit nicht geschätzt. difficulty.json enthält zusätzlich die weiterhin vom ZA-1-Handoff verlangte kompatible 0.1-Schätzung mit ihrer eigenen L2–L4-Unsicherheit; sie ersetzt nicht das aktuelle 0.3-Rating.
+
+Nutzungsgrundlage: im Nutzerauftrag erzeugte KI-Bildbytes, gespeicherte Herkunft/Prompts und Freigaben; keine externen Bildbytes ergänzt. Diese Phase: 0 Bildgenerierungen, sechs Importe / sechs unterschiedliche Raster (zwei reine UTF-8-Metadaten-Neuimporte, Matrix und Proof identisch), ein Schwierigkeitslauf; aktive Menschenzeit nicht erfasst. Probespiel optional, nicht durchgeführt. [ZA-1-Prüfung](inspection.json) auf dem endgültigen geschriebenen ZIP: technical=true; einziger Inhaltsblocker final_editorial. Kategorie im Record festgelegt, noch kein kategorisierter Export. Kein Export, keine Spielregistrierung oder Saves.
+
+Nächster erlaubter Schritt: **4 · Abnehmen & ins Spiel integrieren** nach tatsächlicher menschlicher Endfreigabe für dieses Handoff/Inventar und diese Auswahl. Ablagemerge ist keine Endabnahme und keine Spielintegration.
