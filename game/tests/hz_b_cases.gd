@@ -35,3 +35,10 @@ static func run(runner: Object) -> void:
 		runner.check(image.is_invisible() == (id == "check-empty"),"HZ-B only native unselected placeholder has no ink "+id)
 	runner.check(load("res://art/book/reset.svg").get_image().get_data() != load("res://art/book/undo.svg").get_image().get_data(),"HZ-B reset visually differs from undo")
 	runner.check(Controls.icon("checkbox-checked",1.0).get_image().get_data() != Controls.icon("checkbox-empty",1.0).get_image().get_data(),"HZ-B checkbox state has shape difference")
+	for u: float in [1.0,1.25]:
+		var popup: Theme = Controls.popup_theme("test",u,preload("res://ui/ui_text.gd").font())
+		for arrow: String in ["increment","decrement"]:
+			var normal: PackedByteArray = popup.get_icon(arrow,"VScrollBar").get_image().get_data()
+			var hover: PackedByteArray = popup.get_icon(arrow+"_highlight","VScrollBar").get_image().get_data()
+			var pressed: PackedByteArray = popup.get_icon(arrow+"_pressed","VScrollBar").get_image().get_data()
+			runner.check(normal != hover and hover != pressed and normal != pressed,"HZ-B scrollbar arrow states retain distinct actual pixels")
