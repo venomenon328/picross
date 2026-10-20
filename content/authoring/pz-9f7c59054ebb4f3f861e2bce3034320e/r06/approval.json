@@ -1,0 +1,20 @@
+{
+  "format": "picross-editorial-approval-v1",
+  "actor": "Nutzer / Repositoryeigentümer venomenon328",
+  "timestamp_utc": "2026-10-20T11:47:54Z",
+  "statement": "Ich nehme das Rätselpaket content/authoring/pz-9f7c59054ebb4f3f861e2bce3034320e/r06/package.zip · r06, Revision r06, Inventar-SHA-256 ccb160c49f35ee6073812592c5e00817c53bea20fe3348bc18519af7fb48516b redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\nQuellbranch / Commit: dbae2736dc5d2de4fe61e39fa72249c67940a32a.\n\nAblage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen. Nach tatsächlicher Main-Integration die Bereinigung gemäß §9 prüfen und direkt mergen.",
+  "puzzle_id": "pz-9f7c59054ebb4f3f861e2bce3034320e",
+  "revision": "r06",
+  "handoff_sha256": "7e4223fd3113cea0ebb35ad9b0344ea7305ffd9cdefc680d780794dc505be318",
+  "inventory_sha256": "ccb160c49f35ee6073812592c5e00817c53bea20fe3348bc18519af7fb48516b",
+  "selection": {
+    "variant": "fixed",
+    "matrix_hash": "a14a696f25ecddec80cfff866178b40b484852e445437cc44836c7886312d855",
+    "logic_hash": "95c09d3594480aa98b40f05d7695cbc88e10f7c8433b774a3f07f3e23a4f7404",
+    "reveal": {
+      "file": "reveals/A-r02.png",
+      "sha256": "e875ff4f7fd543a477e0269fe0d2ef0bd635fd3ac929e8363174edf47ec9ba4a"
+    }
+  },
+  "test_only": false
+}
