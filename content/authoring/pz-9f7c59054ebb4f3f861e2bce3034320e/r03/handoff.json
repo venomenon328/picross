@@ -1,0 +1,86 @@
+{
+  "approved_parameters": [],
+  "authorization": "Gezielte Korrektur des ausgewählten Abschlussbilds auf flache Oberkante ohne Schulterbuttons; fortgeltende Repositoryablage samt Merge nach erfolgreichen Pflichtprüfungen. Keine neue Bildfreigabe, Motivableitung, Rasterproduktion oder Registrierung.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "technik-erfindungen",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "f87c76e91d9934612dff38af41de9eda7742279b87290ce9cb495e73c7cf7605"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren: neue Abschlussbilddatei A-r02 ausdrücklich freigeben; danach neue Motivvorlage und Parameter daraus ableiten.",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [],
+  "puzzle_id": "pz-9f7c59054ebb4f3f861e2bce3034320e",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "7beffe2236e8f4bce88713f1b09ac77367d0090d",
+  "report": "report.md",
+  "requested_parameters": {
+    "dimensions_fixed": false,
+    "foreground_colors": 1,
+    "height": null,
+    "mode": "mono",
+    "width": null
+  },
+  "reveal": {
+    "approval": null,
+    "file": "reveals/A-r02.png",
+    "provenance": "reveals/A-r02.provenance.json",
+    "revision": "A-r02",
+    "sha256": "e875ff4f7fd543a477e0269fe0d2ef0bd635fd3ac929e8363174edf47ec9ba4a"
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "file": "reveals/A-r02.png",
+      "id": "A-r02",
+      "revision": "r02",
+      "sha256": "e875ff4f7fd543a477e0269fe0d2ef0bd635fd3ac929e8363174edf47ec9ba4a"
+    }
+  ],
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
