@@ -1,5 +1,19 @@
 """HZ-B genuine Chromium pointer, keyboard and resize events."""
-from browser_actions import control, wait, state, game_viewport, point
+from browser_actions import control, wait, state, game_viewport, point, click
+
+
+def select_view(page, index):
+    # Pointer-opened menus need not initially focus their checked row.
+    wait(page, 'picrossProbe.hz_b.view_popup')
+    for _ in range(3):
+        focused = state(page, 'hz_b')['hz_b']['view_focused']
+        if focused == index:
+            break
+        page.keyboard.press('ArrowDown')
+        wait(page, f'picrossProbe.hz_b.view_focused !== {focused}')
+    assert state(page, 'hz_b')['hz_b']['view_focused'] == index
+    page.keyboard.press('Enter')
+    wait(page, f'!picrossProbe.hz_b.view_popup && picrossProbe.hz_b.view_selected === {index}')
 
 
 def catalog(page, name, output, evidence):
@@ -20,7 +34,7 @@ def catalog(page, name, output, evidence):
         page.screenshot(path=str(output / f'{name}-hz-b-sort-{width}.png'))
         # Outside click must dismiss without activating the information button.
         item = next(c for c in state(page, 'controls')['controls'] if c['text'] == 'Einstellungen / Info')
-        page.mouse.click(*point(page, item['center']))
+        click(page, point(page, item['center']))
         wait(page, '!picrossProbe.sort.menu.visible')
         assert state(page, 'album')['album']
         control(page, name='catalog-category')
@@ -46,14 +60,9 @@ def catalog(page, name, output, evidence):
         assert state(page, 'hz_b')['hz_b']['view_checked']
         page.screenshot(path=str(output / f'{name}-hz-b-view-{width}.png'))
         old_view = state(page, 'hz_b')['hz_b']['view_selected']
-        page.keyboard.press('Home' if old_view else 'End')
-        page.keyboard.press('Enter')
-        wait(page, '!picrossProbe.hz_b.view_popup')
-        wait(page, f'picrossProbe.hz_b.view_selected === {1-old_view}')
+        select_view(page, 1-old_view)
         control(page, name='puzzle-view')
-        page.keyboard.press('Home' if not old_view else 'End')
-        page.keyboard.press('Enter')
-        wait(page, f'!picrossProbe.hz_b.view_popup && picrossProbe.hz_b.view_selected === {old_view}')
+        select_view(page, old_view)
         control(page, name='puzzle-view')
         page.keyboard.press('Escape')
         wait(page, '!picrossProbe.hz_b.view_popup')

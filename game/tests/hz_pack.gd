@@ -38,6 +38,18 @@ func frames() -> void:
 	await process_frame
 	await process_frame
 
+func click(control: Control) -> void:
+	var point: Vector2 = control.get_global_rect().get_center()
+	var motion := InputEventMouseMotion.new()
+	motion.position = point
+	root.push_input(motion,true)
+	for down: bool in [true,false]:
+		var event := InputEventMouseButton.new()
+		event.position = point
+		event.button_index = MOUSE_BUTTON_LEFT
+		event.pressed = down
+		root.push_input(event,true)
+
 func shot(name: String) -> void:
 	await frames()
 	await RenderingServer.frame_post_draw
@@ -82,7 +94,12 @@ func run() -> void:
 		await frames()
 		check(app.album.sort_choice.get_popup().get_theme_stylebox("panel").get_script().resource_path == "res://ui/book_style.gd","actual PCK HZ-B native popup paper")
 		await shot("controls-sort-%d" % spec[0])
-		app.album.sort_choice.get_popup().hide()
+		for control: Node in app.album.sort_choice.get_parent().get_children():
+			if control is Button and control.text == "Einstellungen / Info":
+				click(control)
+				break
+		await frames()
+		check(not app.album.sort_choice.get_popup().visible and app.album.visible and not app.information.visible,"actual PCK Window outside click closes without activating parent")
 		app.show_information("settings")
 		await shot("controls-settings-%d" % spec[0])
 		app.view_choice.show_popup()
