@@ -1,0 +1,47 @@
+{
+  "blockers": [],
+  "category_id": "technik-erfindungen",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-9f7c59054ebb4f3f861e2bce3034320e/r02/handoff.json",
+    "sha256": "c7f3d187a40ff6f7c79064ae120e26472fbc48802fd9888a7f96395ccb5c18d7"
+  },
+  "height": 20,
+  "integration": null,
+  "inventory_sha256": "7ff5a4cbd78f3858f6461f11f9af75aa47dc638ec95d2fc5a20420381c6266d7",
+  "mode": "mono",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "525b9fde7cddd7810b290fa612970b2b81b4c709f31c7fe43944d893a2e5d12f",
+    "file": "motifs/MA-r01.png",
+    "provenance": "motifs/MA-r01.provenance.json",
+    "revision": "MA-r01",
+    "sha256": "80ce8977fcb4ad9dcd549b20dbd586f29d0e3b5234874a174bbd7260abf380ab"
+  },
+  "motif_name": "SEGA Game Gear",
+  "next_action": "3 · Motiv freigeben & produzieren: MA-r01 samt parameter-corridor.json ausdrücklich freigeben; vorher keine Rasterproduktion.",
+  "package": {
+    "bytes": 2966244,
+    "file": "content/authoring/pz-9f7c59054ebb4f3f861e2bce3034320e/r02/package.zip",
+    "sha256": "1e071b8f449d8292543cec26a6a13fbf13ca5a06fa37016e7e629444fde5b168"
+  },
+  "proposed_parameters": "parameter-corridor.json",
+  "puzzle_id": "pz-9f7c59054ebb4f3f861e2bce3034320e",
+  "repo_commit": "e007ae76f59a5b1954da4fbb0b5d9950f2185e7e",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "reveals/A-r01.provenance.json",
+    "revision": "r01",
+    "sha256": "525b9fde7cddd7810b290fa612970b2b81b4c709f31c7fe43944d893a2e5d12f"
+  },
+  "revision": "r02",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-20T10:47:56Z",
+  "width": 44
+}
