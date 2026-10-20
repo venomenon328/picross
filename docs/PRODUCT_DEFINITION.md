@@ -1,5 +1,15 @@
 # Produktdefinition: picross
 
+**HZ · 20.10.2026, freigegebene Spezifikation; noch nicht implementiert:**
+Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil
+auf alle normalen Spielertexte, Rahmen der Rätselkarten und kleinen Buttons,
+geschlossene und geöffnete Dropdowns sowie alle Button-/Menüpiktogramme.
+Bakso Daging wird wie bei „Rätselkatalog“ die normale UI-Schrift einschließlich
+aller Überschriften; Lesbarkeit und Textlayout werden dazu passend gemessen.
+Hinweisziffern bleiben in Delight Coffee mit ihrer gebundenen Geometrie.
+[Issue #284](https://github.com/venomenon328/picross/issues/284) trennt HZ-A
+(Schrift/Textlayout) und HZ-B (Konturen/Menüs/Symbole) samt eigener Abnahme.
+
 **AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ergänzen den Bildstandard
 aus §3.3. AT-A schafft den begrenzten Bildänderungsweg und dessen technische
@@ -9,8 +19,10 @@ Bildfreigabe. Nach [AT-B-V01](AT_B_VERIFICATION.md) hat der Eigentümer die
 deren kontrollierte Übernahme samt AT-B-T01 beauftragt. Die Spezifikationsfreigabe
 allein ersetzt weiterhin keine Bildfreigabe; separates finales Review und Merge bleiben offen.
 
-**KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
-[aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
+**KU / #244, integrierte Ausgangsbasis für HZ:** KU-A und KU-B sind über
+PR #254/#255 integriert; [KU-A](KU_VERIFICATION.md) und
+[KU-B](KU_B_VERIFICATION.md) behalten ihre getrennten Nachweise.
+Die offenen persönlichen Abnahmen auf `main` stehen weiterhin im Issue.
 Die Spezifikation wurde am 18.10.2026 freigegeben:
 [Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt in KU-A die bisherige
 zweizeilige Infobox durch einen gemeinsamen Papierstreifen: Größe links,
@@ -265,6 +277,13 @@ Thematik, visuelle Identität und weit ausgearbeitete UI-Konzepte werden früh u
 Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlungen, Bearbeitung und Enthüllungen gestalterisch zusammenführen. Eine komplexe Geschichte ist nicht erforderlich. Eine zusätzliche Wirtschaftssimulation, Währungen oder ein Aufbauspiel folgen daraus nicht automatisch.
 
 Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Die Gestaltung geht in Richtung handgezeichneter 2D-Illustration mit klaren gezeichneten Konturen und ruhigen, nicht zu blassen Farbflächen. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
+
+Die Freigabe [HZ vom 20.10.2026](HAND_DRAWN_UI.md) überträgt die Handschrift
+durchgängig auf die Bedienelemente: Bakso für normale Texte und Überschriften,
+erkennbar unregelmäßige kleine Rahmen und gezeichnete offene Menüinhalte sowie
+Piktogramme. Die Form bleibt je Element stabil, das Layout geordnet und die
+Treffergeometrie präzise. Eine allgemeinere Schriftrolle verlangt passenden
+gemessenen Textfit; sie ersetzt nicht die spezialisierte Hinweisgeometrie.
 
 Priorität haben optisch kräftigere, kompakte und klar unterscheidbare Hinweisziffern
 sowie satte Füllflächen mit zurückhaltender, pro Zelle stabiler Strichtextur.

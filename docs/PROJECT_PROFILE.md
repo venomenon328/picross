@@ -1,5 +1,17 @@
 # Projektprofil: picross
 
+**HZ / #284 (20.10.2026), Spezifikation freigegeben; noch nicht implementiert:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale
+Spieler-UI an Bakso Daging und stärker gezeichnete kleine Rahmen, vollständige
+Dropdowns und eine gemeinsame Piktogrammfamilie. HZ-A liefert Schriftrollen,
+lokale Zeichenbehandlung und gemessenes Textlayout; HZ-B danach Konturen,
+Menüs und Symbole. Delight-Hinweise samt gebundener Geometrie sowie die drei
+großen SL-Rasterrahmen bleiben. Beide Pakete erhalten eigene technische,
+separate Review- und persönliche Gates gemäß
+[Issue #284](https://github.com/venomenon328/picross/issues/284).
+Der Spezifikations-PR liefert ausschließlich Dokumente und den ausgewählten
+Dokument-/Werkzeugprüfpfad; keine Produktimplementierung oder Mergefreigabe.
+
 **AT / #256 (19.10.2026), Umsetzungsvorbereitung V4; AT-A integriert, AT-B-F01 nach Eigentümerabnahme beauftragt:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ist bei Abschlussbildern,
 deren Katalogvorschau und Bildrevisionen samt den dort benannten Fachquellen
@@ -81,8 +93,10 @@ Produktgates bleiben. Keine festen Zeit-/Bytebudgets oder verkürzten Timeouts.
 Aktuelle Paketstände und T01/R01 vor Merge stehen in den Issues; diese Freigabe
 beauftragt weder Implementierung noch Merge.
 
-**KU / #244 (18.10.2026):** KU-A ist im vorliegenden Implementierungspaket
-umgesetzt; [Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
+**KU / #244, integrierte Ausgangsbasis für HZ:** KU-A und KU-B sind über
+PR #254/#255 integriert. [KU-A-Nachweise](KU_VERIFICATION.md),
+[KU-B-Nachweise](KU_B_VERIFICATION.md) und die getrennten offenen persönlichen
+Abnahmen bleiben an ihre jeweiligen Stände im Issue gebunden.
 [Katalogdarstellung](CATALOG_PRESENTATION.md) und
 [Katalogsortierung](CATALOG_SORTING.md) sind bei Katalog-/Metadatenarbeit
 vollständig zu lesen. KU-A ersetzt die zweizeilige KE-Infobox durch einen
@@ -96,11 +110,10 @@ Sortierung, eigene gemerkte UI-Präferenz und den kompatiblen Metadatenweg für
 erste Katalogaufnahme samt belegter historischer Übernahme. Werte, IDs und
 Spielstände werden dadurch nicht neu bewertet oder migriert.
 
-KU-A und KU-B sind eigenständig abzunehmende Pakete im
-[Gesamtissue](https://github.com/venomenon328/picross/issues/244), Standard je
-ein Implementierungs-PR, KU-B nach KU-A. Technische Lieferung, separater Review
-und Eigentümerprobe sind je Paket vor Merge erforderlich. Der reine
-Spezifikationsauftrag ändert keinen Produktcode und startet keinen Backfill.
+KU-A und KU-B wurden als eigene Pakete im
+[Gesamtissue](https://github.com/venomenon328/picross/issues/244) geliefert.
+Die dort auf `main` verlegten Eigentümerproben sind keine HZ-Abnahme;
+damalige Mergeausnahmen werden nicht auf HZ übertragen.
 Die folgenden KE-/KAT-Abschnitte beschreiben die integrierte Ausgangsbasis;
 ihre gezielt abgelösten Anzeige-/Sortierregeln gelten nicht als neuer KU-Sollstand.
 
@@ -258,6 +271,7 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | Spieltechnik und P1-Verträge | [P1](PROTOTYPE_P1.md), [Issue #5](https://github.com/venomenon328/picross/issues/5) samt Entscheidungen, [Preflight](P1_PREFLIGHT.md), [Spielanleitung](../game/README.md) |
 | Zellgesten, Cursorzähler oder deren Raster-/Fenstergrenzen | [ZR-Vertrag](CELL_DRAG.md), aktuelles [Paket #143](https://github.com/venomenon328/picross/issues/143), [Hinweisfont](CLUE_TYPOGRAPHY.md) |
 | Zeichensprache, statische Vorschau, Zellanimationen | [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), betroffene ZS-Verträge/-Nachweise |
+| UI-Schrift, kleine Rahmen, Dropdowns und Piktogramme | [HZ](HAND_DRAWN_UI.md), [Zeichensprache](UI_DRAWING_STYLE.md), [Z2-Ressourcenweg](Z2_SELECTION.md); bei Katalog-/Hinweisbezug zusätzlich die dort gerouteten Fachverträge |
 | Spriteherstellung, Zellrendering, Cache/Invalidierung, PERF-01 | [CELL_RENDERING](CELL_RENDERING.md), [PERF-A](PERF_A_IMPLEMENTATION.md), [PERF-B](PERF_B_IMPLEMENTATION.md) |
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Neue Rätsel konzipieren, gestalten, produzieren oder redaktionell abnehmen | [KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md) und deren Pflichtquellen |
@@ -277,6 +291,10 @@ Bei konkreter historischer Nacharbeit zusätzlich sämtliche dort gebundenen
 Quellen und damaligen Issues lesen; Erinnerungen ersetzen keinen Quellenzugriff.
 
 ## Aktuelle Spielverträge
+
+Für die normalen UI-Schriftrollen und kleinen Bedienelemente ist
+[HZ](HAND_DRAWN_UI.md) der freigegebene nächste Sollstand. Die Bakso-Ausweitung
+umfasst auch die Vollhinweis-Überschrift, nicht dessen Zahlen-/Slot-/Fitvertrag.
 
 [HC / #92](CLUE_TYPOGRAPHY.md) bindet Delight Coffee für Hinweisziffern samt
 gemeinsamer gemessener Schrift-/Slot-/Fit-/Draggeometrie und Exportnachweis.

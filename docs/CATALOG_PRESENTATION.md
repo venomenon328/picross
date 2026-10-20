@@ -1,24 +1,32 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
+**HZ · 20.10.2026, freigegebener nächster Stilstand; noch nicht implementiert:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert Bakso auf sämtliche
+Katalogtexte und ersetzt die bisherige zurückhaltende äußere Kartenkontur durch
+deutlich organischere stabile Linien. Papierstreifen, vollständige Metadaten,
+gleiche Kartenbereiche, Bildraum und Bedien-/Spoilergrenzen bleiben verbindlich.
+HZ-A misst Schrift und Textlayout; HZ-B ergänzt Konturen, vollständige Menüs und Icons.
+
 **AT · 19.10.2026, Umsetzungsvorbereitung V3; AT-A in Umsetzung:**
 Der [Transparenzstandard](REVEAL_TRANSPARENCY.md) ergänzt die verdienten
 Katalogbilder. AT-A schafft den begrenzten Bildänderungsweg mit synthetischen
 Alpha-/Spielstandsnachweisen; AT-B überarbeitet danach die Bestandsbilder mit
 konkreter neuer Bildfreigabe. Kartenaufteilung und ungelöste Vorschauen bleiben erhalten.
 
-Stand: 18.10.2026 · Spezifikation 2.0 · KU-A im Implementierungspaket umgesetzt; KU-B offen
+Stand: 20.10.2026 · Spezifikation 2.1 · KU-A/B integriert; HZ-Schrift-/Konturfortschreibung spezifiziert
 
 Der Eigentümer hat die Katalogüberarbeitung am 18.10.2026 als Spezifikation
 freigegeben. [Gesamtissue #244](https://github.com/venomenon328/picross/issues/244)
 führt KU-A (Karten und Papierstreifen) und KU-B (Sortierung und Hinzugefügt-Metadaten),
 ihre Akzeptanz und getrennten technischen, Review- und Eigentümergates.
-Die spätere KU-A-Implementierung folgt dem gesonderten Auftrag auf
-`feat/244-kataloggestaltung`. [Aktuelle Nachweise](KU_VERIFICATION.md) trennen
-technische Lieferung, unabhängigen Review und Eigentümerabnahme. Kein Mergeauftrag.
+KU-A ist über PR #254 und KU-B über PR #255 integriert.
+[KU-A](KU_VERIFICATION.md) und [KU-B](KU_B_VERIFICATION.md) trennen ihre
+technische Lieferung, Reviews und offenen persönlichen Abnahmen auf `main`.
+HZ übernimmt weder diese Abnahmen noch damalige Mergeausnahmen.
 
 ## Geltung und gezielte Ablösung
 
-Ausgangsbasis ist `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a` mit
+Historische KU-Spezifikationsbasis ist `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a` mit
 integrierter KE-Katalogdarstellung aus
 [#233](https://github.com/venomenon328/picross/issues/233)/PR #234 und dem
 bestehenden SD-Bewertungsweg. KU-A löst gezielt die zweizeilige KE-Infobox,
@@ -86,14 +94,21 @@ Kategorie, mehrzeiliger Titel, Status, Reset und Fehlertexte funktionieren ohne
 Überlappung und ohne zustandsabhängige Layoutsprünge. Der bestehende
 Titelauslassungsvertrag bleibt von den vollständigen Metadaten getrennt.
 
+HZ-D02/D03 ergänzt die gemessenen Bakso-Textmaße und die sichtbaren Hüllen der
+neuen äußeren Kartenkontur einschließlich Überständen und Kantenglättung.
+Diese passen in dieselben sicheren Karten-/Trefferbudgets; Sortierung oder
+Neuaufbau verändert bei gleicher ID und Größe nicht die gezeichnete Grundform.
+
 ## KE-D02 · Papieretikett und Moduspiktogramm
 
 Der gemeinsame Streifen wirkt wie ein ruhiges Papieretikett des Rätselbuchs:
 warmes Papier, leicht dunkler als die Kartenfläche, dünne subtil unregelmäßige
 Kontur, höchstens ein sehr zurückhaltender Schatten. Keine drei gerahmten
-Einzelfelder und kein schwerer Schmuckrahmen. Vorhandene lesbare Plex-Schrift
-für Metadaten; Charakter entsteht durch Kontur, Zeichnungen und klare Abstände.
-Keine neue Schrift oder Änderung der vorhandenen Schriftdateien. Streifen,
+Einzelfelder und kein schwerer Schmuckrahmen. Als freigegebener HZ-Sollstand
+verwenden auch Metadaten die vorhandene Bakso-Schrift gemäß
+[HZ-D01/D02](HAND_DRAWN_UI.md), mit gemessenen Textmaßen und lokalen Fallbacks.
+Die bisherige Plex-Metadatenrolle ist damit abgelöst; Originalfontbytes bleiben.
+Charakter entsteht gemeinsam durch Schrift, Kontur, Zeichnungen und Abstände. Streifen,
 Kreise und Stifte bleiben statisch.
 
 | Rätselmodus | Zeichnung | Erklärung im gezielten Tooltip |
@@ -124,7 +139,7 @@ logischen Pixeln ist zusammen mit der Kartenzeile bei UI 100/125 % zu prüfen.
 
 KU-A ersetzt die farbig akzentuierte KE-N1-Ziffer durch einen gefüllten Kreis in
 derselben bestehenden Stufenfarbe. Der vollständige Name bleibt unmittelbar
-dahinter in dunkler Plex-Schrift und trägt die Bedeutung auch ohne
+dahinter in dunkler UI-Schrift gemäß HZ-D01 und trägt die Bedeutung auch ohne
 Farbwahrnehmung. Kein sichtbarer Zahlenwert, keine Sterne und keine
 Schätzkennzeichnung `≈`. Alle Kreise haben dieselbe Größe; eine dezent gezeichnete
 Kontur darf die klar gefüllte Kreisform nicht auflösen. 12–14 logische Pixel sind
@@ -288,13 +303,15 @@ verlangen. Bestehende Inhalts-/Exportverträge werden nicht neu bewertet.
 | KU-B | Sortierauswahl mit Richtung sowie dauerhafte Hinzugefügt-Metadaten | Vertrag in [CATALOG_SORTING](CATALOG_SORTING.md); übernimmt keine Änderung von Rätsellogik, Bewertung oder Spielständen |
 
 Standard ist je Paket ein Implementierungs-PR. Die Spezifikationslieferung beginnt
-keines dieser Pakete. Paketakzeptanz, Reihenfolge, zuständige Akteure und getrennte
-technische, unabhängige Review- und Eigentümergates vor Merge stehen im Gesamtissue.
+keines dieser Pakete. KU-A/B sind inzwischen über PR #254/#255 integriert;
+Paketakzeptanz, technische Nachweise, Reviews und spätere Entscheidungen zu den
+persönlichen Abnahmen stehen im Gesamtissue. Die neue HZ-Lieferung besitzt eigene
+Gates gemäß [HAND_DRAWN_UI](HAND_DRAWN_UI.md).
 Historische [KE-Prüfnachweise](KE_VERIFICATION.md) bleiben an ihre damalige Lieferung
 gebunden und sind keine Abnahme der neuen KU-Darstellung.
 
-Bei einer später beauftragten Umsetzung decken feste synthetische Daten alle
-fünf Stufen, fehlende Einstufung, beide Modi und die Status-/Fehlerzustände ab;
+Die KU-Prüfzuordnung verlangt feste synthetische Fälle für alle
+fünf Stufen, fehlende Einstufung, beide Modi und die Status-/Fehlerzustände;
 keine Tests oder Replays pro echtem Produktionsrätsel. Geometrie und Darstellung
 folgen den drei gemeinsamen Konfigurationen der aktuellen CI-Policy sowie
 UI 100/125 %. Nachzuweisen sind die vollständige einzeilige Anzeige der längsten

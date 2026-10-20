@@ -1,5 +1,12 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+**Freigegebener nächster UI-Schritt; noch nicht umgesetzt:**
+[HZ](../docs/HAND_DRAWN_UI.md) plant dieselbe Bakso-Schrift wie „Rätselkatalog“
+für alle normalen UI-Texte und Überschriften, organischere kleine Rahmen,
+vollständig gezeichnete Dropdowns und eine einheitliche Piktogrammfamilie.
+Hinweiszahlen und ihre Geometrie bleiben. Die folgenden Bedienbeschreibungen
+beziehen sich auf die bereits integrierte Fassung; HZ-A/B sind separat offen.
+
 Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
 Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
 „Rätselkatalog“. Lange Namen nutzen zwei Zeilen, danach eine Auslassung. Darunter
@@ -227,7 +234,8 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   Spaltenhinweise, ohne kleinere Zellen dafür zu erzwingen. Passende Folgen haben
   keine Auslassungsmarker und lassen sich nicht in Leerraum verschieben.
 - Darüberfahren einer gekürzten Folge zeigt weiterhin den vollständigen farbigen
-  Hinweis mit Umbruch direkt über dem Arbeitsbild: kleine Fraunces-Überschrift,
+  Hinweis mit Umbruch direkt über dem Arbeitsbild: bisher kleine Fraunces-Überschrift
+  (Bakso im noch nicht umgesetzten HZ-Sollstand),
   gut lesbare Delight-Zahlen und ruhiges Papier mit gezeichnetem Rahmen.
   Die Overlaylesegröße folgt der UI-Skalierung unabhängig vom Rasterzoom. Das ist ein Zusatzweg; Anfang,
   Mitte und Ende bleiben auch durch Hinweis-Panning erreichbar. Eine separate
