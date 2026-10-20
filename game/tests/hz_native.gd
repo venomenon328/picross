@@ -66,6 +66,7 @@ static func run(runner: Object) -> void:
 		await runner.frames()
 		await runner.choose("hz-test-255")
 		runner.check(app.album.choices.is_empty(), "HZ last synthetic category reachable by real wheel and pointer")
+		await capture(runner,"selection-%d" % spec[0],app.album.category_choice.get_global_rect())
 		await runner.choose("")
 		app.show_information("help")
 		await runner.frames()
