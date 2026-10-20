@@ -80,7 +80,7 @@
     "sha256": "4a74418d367e588d2e719cca18d68679142f2c5c042e3e0d3498179116c834b5"
   },
   "motif_name": "Seepferdchen",
-  "next_action": "4 Â· Abnehmen & ins Spiel integrieren: tatsÃ¤chliche menschliche Endabnahme fÃ¼r r03 binden; bis dahin keine Spielregistrierung.",
+  "next_action": "Gespeicherte Arbeit fortsetzen: korrigierte Endabnahmevorlage r04 verwenden.",
   "package": {
     "bytes": 11018320,
     "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r03/package.zip",
@@ -126,7 +126,9 @@
     "variant": "candidate-001",
     "verification": "qa/repair-replay.json"
   },
-  "state": "content_ready",
+  "state": "superseded",
+  "superseded_by": "r04",
+  "superseded_reason": "SH-B01: Merkmalslisten in den zwei Motivfreigabeobjekten wurden beim Lesen ohne explizites UTF-8 doppelt dekodiert. Die unveränderte tatsächliche Erklärung und der korrekte Parameterkorridor waren erhalten; Merkmalslisten aus dieser ursprünglichen Quelle neu gebunden. Äußerer next_action-Text ebenfalls korrigiert.",
   "updated_at_utc": "2026-10-20T12:54:33Z",
   "width": 14
 }
