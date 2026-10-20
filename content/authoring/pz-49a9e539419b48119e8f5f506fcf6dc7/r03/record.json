@@ -1,0 +1,51 @@
+{
+  "blockers": [],
+  "category_id": "obst-nuesse",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r03/handoff.json",
+    "sha256": "42697defbe36ef4f96c8de8f99b0543af79489d9e1334644ae462ba47df695ff"
+  },
+  "height": 20,
+  "height_fixed": true,
+  "integration": null,
+  "inventory_sha256": "bd3d1c0728c1b85ba80db4a1fb85f6db281af3a56cf554d76f6d11f13f49ed1d",
+  "mode": "mono",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8",
+    "file": "motifs/MA-r04.png",
+    "provenance": "motifs/MA-r04.provenance.json",
+    "revision": "MA-r04",
+    "sha256": "94d74d326caeed8334f032966d4ca141f89b85954f67644364631fe58d561b45"
+  },
+  "motif_name": "Banane",
+  "next_action": "3 · Motiv freigeben & produzieren: MA-r04 samt empfohlenem12×20-Korridor ausdrücklich freigeben lassen; Höhe20 bleibt fest.",
+  "package": {
+    "bytes": 3044631,
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r03/package.zip",
+    "sha256": "6fe43989c9ccb3d7300af56e6359326a6117bc00d4fb26ae8bd441d793acdfde"
+  },
+  "proposed_parameters": "parameter-corridor.json",
+  "puzzle_id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+  "repo_commit": "5b371b711d5687ffba51f309c07ddecda585e2d3",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "reveals/A-r01.provenance.json",
+    "revision": "r01",
+    "sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8"
+  },
+  "revision": "r03",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-20T08:44:40Z",
+  "width": 12,
+  "width_fixed": false,
+  "width_recommended": 12,
+  "width_requested": null
+}
