@@ -1,0 +1,15 @@
+# Banane · Endabnahmevorlage r04
+
+pz-49a9e539419b48119e8f5f506fcf6dc7 · content_ready · 20.10.2026 · Regelwerk0.5.0/Revision22 · Toolcommit `dbab24504c299e10ebe4c8902e35fe073a6db050`. Inventarhash: siehe gebundene inventory-Datei in handoff.json (selbstreferenzfrei).
+
+[Abschlussbild A-r01](reveals/A-r01.png), [freigegebene MA-r04](motifs/MA-r04.png), [echtes Endraster](final-raster.png), [gemeinsame Vorlage](final-review.png), [vier Varianten](candidate-comparison.png). Bildfreigabe: [Originalbeleg](approvals/reveal-approval.json). Motivfreigabe: [tatsächlicher neuer Auftrag](approvals/motif-approval.json). Redaktionelle Endabnahme ausdrücklich **offen**.
+
+Gewählt **area-208**, 12×20=240Zellen, mono, ink #000000 plus EMPTY; gewünscht/verwendet genau1 Vordergrundfarbe.100 gefüllt,140 leer (41,67%). Eine zusammenhängende Sichel, keine isolierten Zellen/Innenleerlinien. Spalte12 ist eine zulässige leere Außenlinie. Alle5 Gestaltungsachsen erfüllt; Zellstufen und verlorene Oberflächendetails im [Sichtbericht](visual-review.json). Keine weichen Ausnahmen oder materiellen Motivänderungen. Schwellen112/144/176 logisch vollständig, aber Randregel verfehlt; keine Duplikate. Keine Reparatur nötig, Zell-Diff leer.
+
+[Technische Qualität](checks/technical-quality.json): Maße/Palette, Randregel links+oben/unten erfüllt. [Herkunftsrekonstruktion](checks/origin-verification.json): Original→Normalisierung→Matrix→Hinweise, vollständiges Manifest und Endmatrixgleichheit bestanden. [Frischer unabhängiger Proofcheck](checks/area-208-verify.json): full-line-mono, solved,94Schritte; alle240Zellen vom unbekannten Start zwingend bestimmt, damit eindeutig. Alle vier Proofs frisch geprüft. Kein zusätzlicher Paar-/Suchlauf nötig.
+
+**L3 – Mittel**, [Methode0.3](difficulty/checked.json), instrumented/medium; logische Basis3 + Größe0. [Geprüfte Analyse](difficulty/analysis/report.json):23Wellen (7R0/8R1/8R2), R2 erforderlich/ausreichend,65% starker Informationsanteil, Enge189/341,0Engstellenwellen. Punktprojektion L3–L3; keine menschlich kalibrierte Spannweite. [difficulty.json](difficulty.json) führt ausschließlich die noch vom ZA-1-Authoringformat verlangte Produktionskompatibilität0.1 auf Grundlage derselben geprüften Instrumentierung; maßgebliche neue Bewertung ist0.3. Keine erfundene neue Methode oder Werkzeugänderung. Lösungszeit: nicht geschätzt.
+
+[Nutzungsgrundlage](reveals/A-r01.provenance.json): im Nutzerauftrag neu erzeugte KI-Ausgabe ohne Fremdbild; Alpha und Originalbytes erhalten. [Aufwand](effort.json):1Produktionsdurchlauf/1Import/4Rasterkandidaten/0Reparaturen/0neue Bildaufrufe;7historische Bildaufrufe. Menschenzeit nicht erfasst, Probespiel optional/nicht durchgeführt. Zieladapter: inspect auf dem geschriebenen ZIP außerhalb des Pakets; Export/Registrierung nicht ausgeführt.
+
+Nächster Schritt: **4 · Abnehmen & ins Spiel integrieren**. Nutzer prüft tatsächliches Endraster und A-r01 und erteilt die separate dateigebundene Endabnahme. ZIP/Handoff/Inventar bleiben danach unverändert; Freigabe und Integration werden außen ergänzt.

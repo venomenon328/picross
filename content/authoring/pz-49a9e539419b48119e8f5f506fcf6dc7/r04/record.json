@@ -13,8 +13,9 @@
   "category_id": "obst-nuesse",
   "checks": {
     "content": "pass; Paketbelege und frischer ZIP-inspect",
-    "export": "not_performed; Standardauftrag4 offen",
-    "native": "nicht erforderlich: reine Authoring-Inhaltsablage"
+    "export": "pass; integration-inspection.json",
+    "native": "nicht erforderlich: reine Inhaltsintegration",
+    "registration": "pass; integration-report.json"
   },
   "difficulty": {
     "assessment_type": "instrumented",
@@ -30,7 +31,10 @@
     "size_adjustment": 0,
     "source_in_package": "difficulty/checked.json"
   },
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/approval.json",
+    "sha256": "995e696daf86d2fe19d14befd18c4e2a4cdb652b9db80f9556f8f7107a21b559"
+  },
   "foreground_colors": 1,
   "foreground_colors_exact": true,
   "format": "picross-authoring-record-v1",
@@ -46,7 +50,17 @@
     "sha256": "47f12d9d7b6496d88a7f3358e912558bd35edc391eca3b00a83769bb9563dfbe",
     "technical": true
   },
-  "integration": null,
+  "integration": {
+    "report": {
+      "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/integration-report.json",
+      "sha256": "bce4581081d2fb1ec41b965f271d89691ee55337200aa54892e5d838530987eb"
+    },
+    "runtime_id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+    "runtime_revision": 1,
+    "save_slot": "banane_001",
+    "source_commit": "ccc1a3905a00db7982668d32bae8347bec7bf394",
+    "status": "registered in checked work branch; main merge pending"
+  },
   "inventory_sha256": "c9f413f71cb206f7c14c67ef3bdc2d8b050e615b640b787f7cdf472bfe5881eb",
   "mode": "mono",
   "motif": {
@@ -58,7 +72,7 @@
     "sha256": "94d74d326caeed8334f032966d4ca141f89b85954f67644364631fe58d561b45"
   },
   "motif_name": "Banane",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Nach Pflicht-CI und Selbstreview Integrations-PR mergen, dann §9-Cleanup mit eigenem Merge.",
   "omissions": [
     {
       "file": "motifs/MA-r03.png",
@@ -73,9 +87,7 @@
       "reason": "Frühere Vergleichsansicht in r03; aktuelle Endvorlage ersetzt sie."
     }
   ],
-  "open_approvals": [
-    "final_editorial: tatsächliche menschliche Endabnahme des unveränderten r04-Pakets vor Standardauftrag4"
-  ],
+  "open_approvals": [],
   "package": {
     "bytes": 3150227,
     "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/package.zip",
@@ -103,7 +115,7 @@
     "revision": "r03",
     "sha256": "6fe43989c9ccb3d7300af56e6359326a6117bc00d4fb26ae8bd441d793acdfde"
   },
-  "state": "content_ready",
+  "state": "registered",
   "updated_at_utc": "2026-10-20T09:06:01Z",
   "width": 12,
   "width_fixed": false,

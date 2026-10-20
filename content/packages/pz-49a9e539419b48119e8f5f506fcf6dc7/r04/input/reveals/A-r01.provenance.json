@@ -1,0 +1,15 @@
+{
+  "author": "ChatGPT native image generation (image_gen.imagegen)",
+  "changes": "Originalbytes seit A-r01 unverändert.",
+  "file": "reveals/A-r01.png",
+  "prompt_file": "prompts/reveal-prompts-r01.json",
+  "puzzle_id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+  "sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8",
+  "source_package": {
+    "commit": "efc194c504133a73a7565944b199ac051b69e0da",
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r01/package.zip",
+    "inventory_sha256": "9122393948c735605a2a9ee3bafbf59b25684b703707a5d027f60049fabfe8e5",
+    "sha256": "b0314be86ddd69068223b93a33b2e72f24726d18719fb2b870d765f0741a8a0f"
+  },
+  "usage_basis": "Im ausdrücklichen Nutzerauftrag für das Picross-Projekt neu erzeugte KI-Ausgabe; keine externe Bildreferenz. Tatsächliche Freigabe separat gebunden."
+}
