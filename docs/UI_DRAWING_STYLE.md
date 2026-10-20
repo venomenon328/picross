@@ -1,10 +1,10 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**HZ · 20.10.2026, Spezifikation freigegeben; noch nicht implementiert:**
+**HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) ist der Detailvertrag für
-Bakso als normale UI-Schrift, organischere Karten-/Button-/Dropdownrahmen,
+Tidy Hand als normale UI-Schrift bei erhaltenen Überschriften, organischere Karten-/Button-/Dropdownrahmen,
 vollständig gezeichnete offene Menüs und die gesamte Piktogrammfamilie.
-Er ersetzt gezielt frühere Fraunces-/Plex-Rollen außerhalb der HC-Spezialrolle
+Er ersetzt gezielt Plex-Standardtexte gemäß HZ-A-FONT02
 und verstärkt kleine UI-Konturen. Raster, Zellen, Hinweise und die drei großen
 SL-Rasterrahmen behalten ihre Verträge; historische Auswahl-/Lieferbelege bleiben.
 
@@ -39,7 +39,8 @@ Paketumfang und spätere Abnahmen stehen im
 Die damalige [Katalogdarstellung KE-D01–D05](CATALOG_PRESENTATION.md) ergänzte
 Papieretikett, Stift-/Statuspiktogramme und ein eigens gezeichnetes Graphitfragezeichen im
 Katalogbildraum. KE verwendete Plex für Metadaten und Bakso für Motivüberschriften;
-HZ erweitert diese damalige Rollenverteilung ohne neue Fontdateien.
+HZ-A-FONT02 ersetzt Standardtexte durch die bereitgestellte Tidy-Hand-Datei
+und erhält die bestehenden Überschriftrollen.
 Subtil unregelmäßige Konturen, zurückhaltende Schraffur, keine Animation.
 Gezielte Modus-/Schwierigkeits-Tooltips hatten den bestehenden Resettooltip ergänzt;
 der Ganzkarten-Tooltip blieb entfallen. KE-N1 akzentuierte nur die
@@ -158,9 +159,9 @@ gezielte Untersuchung der Hinweisziffern geöffnet: Schriftform, Gewicht, optisc
 Schriftgrad und gegebenenfalls bewusst gewählte gemeinsame Slotmaße. Seit V3
 waren Bakso-Arbeitstitel, sonstige Fraunces-Überschriften und Plex-Sans-Bedientexte
 die UI-Grundlage. HZ-D01/D02 löst diese begrenzte Rollenverteilung für normale UI
-durch Bakso ab; die C1-Farbkontur bleibt. VS2-E1 erlaubte die begrenzte neue
-Flächenverteilung und Scribble-Fassung. HZ wählt keinen neuen Hintergrund,
-Font, Themen- oder Albumaufbau, sondern nutzt die vorhandene Bakso-Ressource breiter.
+durch Tidy Hand ab; die C1-Farbkontur bleibt. VS2-E1 erlaubte die begrenzte neue
+Flächenverteilung und Scribble-Fassung. HZ wählt keinen neuen Hintergrund, Themen- oder Albumaufbau; HZ-A-FONT02
+führt ausschließlich Tidy Hand für Standardtext ein und erhält Überschriften.
 
 Die Stiftfüllung ist gewählt. Der enge E2-Vergleich enthielt Bakso Daging Regular
 und Chalkboard Regular; E3 wählt **Chalkboard Regular**. Bakso Daging und Plex bleiben
@@ -193,8 +194,8 @@ CLOSED erhält zwei stabile handschriftliche Diagonalzüge mit 76 % über das ga
 Farb-IDs, Hinweisreihenfolge und Originalindex sowie die lösungsunabhängige H1/GP-48-
 Analyse einschließlich Vorschau bleiben unverändert. Alle Zustände müssen auf beiden
 Achsen, im kontinuierlichen Hinweisdrag und im vollständigen Tooltip funktionieren.
-HF / #149 verwendet dort eine kleinere UI-Überschrift, im freigegebenen
-HZ-Sollstand Bakso gemäß HZ-D01/D02, und unveränderte Delight-Zahlen auf ruhigem
+HF / #149 verwendet dort unverändert Fraunces 600 als kleinere UI-Überschrift
+(gemäß HZ-A-FONT02 erhalten) und unveränderte Delight-Zahlen auf ruhigem
 A-Papier mit wiederverwendetem SL-65-Bildrahmen.
 Gemeinsame gemessene Zahlen-/X-/C1-/AA-Hüllen und skalierte Innenränder verhindern Überlappung;
 Rahmenkanten werden gekachelt, nicht unnötig gedehnt.

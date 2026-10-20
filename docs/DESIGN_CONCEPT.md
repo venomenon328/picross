@@ -1,11 +1,11 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**HZ · 20.10.2026, Spezifikation freigegeben; noch nicht implementiert:**
-[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) führt die vorhandene
-Bakso-Schrift in allen normalen UI-Texten und Überschriften fort. Kleine
+**HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02
+Tidy Hand für Standardtexte und erhält die bisherigen Überschriften. Kleine
 Karten-/Button-/Dropdownrahmen werden organischer; geöffnete Menüs, Markierungen
 und sämtliche Piktogramme erhalten dieselbe Handschrift. Die HZ-Schriftrollen
-ersetzen gezielt die frühere Fraunces-/Plex-Aufteilung. Hinweiszahlen und
+ersetzen gezielt Plex im Standardtext; Fraunces-/Bakso-Überschriften bleiben. Hinweiszahlen und
 Rastergeometrie behalten ihre eigenen Verträge; historische Belege bleiben.
 
 **AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
@@ -187,11 +187,10 @@ keine neue P1-Bedienabnahme.
 Die ZS-Folgearbeit aus Abschnitt 4.4 öffnete GD-03 für Hinweisziffern;
 [HC](CLUE_TYPOGRAPHY.md) bindet inzwischen deren Delight-Schrift und Geometrie.
 VS2-E2/V3 ergänzte Bakso für Arbeits-Blatttitel, KB für den Katalogtitel und KK
-für Kachel-Motivüberschriften/`???`. [HZ-D01/D02](HAND_DRAWN_UI.md) erweitert
-Bakso als freigegebenen, noch nicht implementierten Sollstand auf sämtliche
-normalen UI-Texte und Überschriften mit kontrollierten lokalen Fallbacks und
-gemessenen Textmaßen. Die bisherigen Fraunces-/Plex-Rollen sind für diesen
-Folgeschritt abgelöst. A-Arbeitsasset, Buchkomposition, N1 und C1 bleiben Grundlage.
+für Kachel-Motivüberschriften/`???`. [HZ-D01/D02](HAND_DRAWN_UI.md) ersetzt
+gemäß Eigentümerentscheidung HZ-A-FONT02 normale Plex-Texte durch Tidy Hand
+mit kontrollierten lokalen Fallbacks und gemessenen Textmaßen. Bestehende
+Überschriften und ihre Fraunces-/Bakso-Rollen bleiben unverändert. A-Arbeitsasset, Buchkomposition, N1 und C1 bleiben Grundlage.
 Die historische GD-/ZS-Auswahl und ihre Abnahmen behalten ihre Standbindung.
 
 ### BP-1R bis BP-3: Entwurfsverlauf und integrierte Grundlagen
@@ -435,10 +434,10 @@ Spalte lässt sich nur für sich vertikal, jede konkrete Zeile nur für sich hor
 kontinuierlich ziehen und beim Loslassen in ganzen gemeinsamen Slots einrasten
 lassen, ohne X-/Y-Zuordnung oder Nachbarfolgen zu ändern. Der temporäre Versatz
 ist weder gespeicherte Leseposition noch Spielzustand.
-Der vollständige Hover-Tooltip ergänzt diese Navigation mit kleinerer UI-Überschrift
-(Bakso im freigegebenen HZ-Sollstand), unveränderten Delight-Zahlen und vorhandener
-warmer Papier-/Bildrahmung. HZ-D02 verlangt neu gemessene Textgrenzen für die
-Überschrift. Sie halten Überschrift, Zahlen und Rahmen getrennt; eine
+Der vollständige Hover-Tooltip ergänzt diese Navigation mit unveränderter kleiner
+Fraunces-Überschrift, Delight-Zahlen und vorhandener warmer Papier-/Bildrahmung.
+HZ-A-FONT02 erhält die getrennt gemessenen Textgrenzen von Überschrift und Zahlen.
+Sie halten Überschrift, Zahlen und Rahmen getrennt; eine
 separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze Linien,
 nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich
 Fehlern, niemals eine korrigierte Lösung. VS2 konkretisiert fitbegrenzten Zoom und

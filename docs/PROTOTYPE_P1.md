@@ -1,9 +1,10 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
-**HZ · 20.10.2026, Spezifikation freigegeben; noch nicht implementiert:**
-[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet Bakso für sämtliche
-normalen Spielertexte einschließlich Warnungen und Vollhinweis-Überschrift,
-gemessene Textbudgets sowie organischere kleine Rahmen, offene Menüs und Icons.
+**HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet Tidy Hand für
+normale Spielertexte einschließlich Warnungen und gemessene Textbudgets;
+sämtliche Überschriften bleiben. HZ-B ergänzt organischere kleine Rahmen,
+offene Menüs und Icons.
 Delight-Zahlen, Hinweis-/Rasterfit, Eingabe, Saves und die großen SL-Rasterrahmen
 bleiben. HZ-A und HZ-B werden gesondert beauftragt und abgenommen.
 
@@ -615,8 +616,8 @@ Appname/Speicherort, Saveformat und Rätseldaten bleiben erhalten. A-Papier,
 Montierungen, UI und Raster sind getrennt; C1 konturiert nur Hinweisfarben 2/4.
 Fraunces/Plex Sans sind gepinnt und offline gebündelt; VS2-V3 ergänzte das
 unveränderte Bakso für Arbeits-Blatttitel, KB für den Katalogtitel, KK für
-Kachel-Motivüberschriften/`???`. [HZ-D01/D02](HAND_DRAWN_UI.md) erweitert Bakso
-als freigegebenen, noch nicht implementierten Sollstand auf die normale UI;
+Kachel-Motivüberschriften/`???`. [HZ-D01/D02](HAND_DRAWN_UI.md) bindet gemäß
+HZ-A-FONT02 Tidy Hand für normale Texte bei unveränderten Überschriften;
 Zahlen-/Markerrollen folgen weiterhin HC. HZ-D03–D05 beschreibt kleine Rahmen,
 vollständige Dropdowns und die aktive Iconfamilie. Farbwahl aktiviert Füllen.
 Acht Arbeitsaktionen, eigene Miniatur, Koordinaten und aktive Farbe/Werkzeug bleiben

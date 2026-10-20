@@ -1,11 +1,11 @@
 # Produktdefinition: picross
 
-**HZ · 20.10.2026, freigegebene Spezifikation; noch nicht implementiert:**
+**HZ · 20.10.2026, freigegebene Spezifikation; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
 Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil
 auf alle normalen Spielertexte, Rahmen der Rätselkarten und kleinen Buttons,
 geschlossene und geöffnete Dropdowns sowie alle Button-/Menüpiktogramme.
-Bakso Daging wird wie bei „Rätselkatalog“ die normale UI-Schrift einschließlich
-aller Überschriften; Lesbarkeit und Textlayout werden dazu passend gemessen.
+Tidy Hand wird gemäß Eigentümerentscheidung HZ-A-FONT02 die normale UI-Schrift;
+Überschriften bleiben unverändert. Lesbarkeit und Textlayout werden passend gemessen.
 Hinweisziffern bleiben in Delight Coffee mit ihrer gebundenen Geometrie.
 [Issue #284](https://github.com/venomenon328/picross/issues/284) trennt HZ-A
 (Schrift/Textlayout) und HZ-B (Konturen/Menüs/Symbole) samt eigener Abnahme.
@@ -279,7 +279,8 @@ Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlu
 Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Die Gestaltung geht in Richtung handgezeichneter 2D-Illustration mit klaren gezeichneten Konturen und ruhigen, nicht zu blassen Farbflächen. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
 
 Die Freigabe [HZ vom 20.10.2026](HAND_DRAWN_UI.md) überträgt die Handschrift
-durchgängig auf die Bedienelemente: Bakso für normale Texte und Überschriften,
+durchgängig auf die Bedienelemente: gemäß HZ-A-FONT02 Tidy Hand für Standardtext
+bei unveränderten Überschriften,
 erkennbar unregelmäßige kleine Rahmen und gezeichnete offene Menüinhalte sowie
 Piktogramme. Die Form bleibt je Element stabil, das Layout geordnet und die
 Treffergeometrie präzise. Eine allgemeinere Schriftrolle verlangt passenden

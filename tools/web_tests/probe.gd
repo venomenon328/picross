@@ -48,7 +48,7 @@ func _process(delta: float) -> void:
 			centers[part] = [center.x,center.y]
 		var fits: bool = true
 		for label: Label in [card.dimensions,card.difficulty,card.note,card.leaf]:
-			fits = fits and label.get_theme_font("font").get_string_size(label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,label.get_theme_font_size("font_size")).x <= label.size.x
+			fits = fits and UiText.label_width(label,label.text,label.get_theme_font_size("font_size")) <= label.size.x
 		labels.append({"difficulty":card.difficulty.text,"status":card.note.text,
 			"centers":centers,"text_fits":fits,"status_kind":card.status_icon.kind,
 			"single_line":card.dimensions.position.y == card.difficulty.position.y and card.mode_tip.position.y == card.dimensions.position.y,
@@ -67,6 +67,18 @@ func _process(delta: float) -> void:
 	var origin: Vector2 = board.global_position + board.view.origin
 	var sort_popup: PopupMenu = album.sort_choice.get_popup()
 	var data: Dictionary = {"controls": controls, "labels":labels,"slots": slots, "slot_status": slot_status,
+		"catalog_scroll":[album.scroll.global_position.x,album.scroll.global_position.y,album.scroll.size.x,album.scroll.size.y],
+		"hz": {"standard":theme.default_font.get_font_name(),"heading":title.get_theme_font("font").get_font_name(),
+			"notice":FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"),
+			"local_only":not UiText.font().allow_system_fallback and not UiText.font().fallbacks[0].allow_system_fallback,
+			"menu": {"visible":album.category_choice.get_popup().visible,
+				"font":album.category_choice.get_popup().get_theme_font("font").get_font_name(),
+				"position":[album.category_choice.get_popup().position.x,album.category_choice.get_popup().position.y],
+				"size":[album.category_choice.get_popup().size.x,album.category_choice.get_popup().size.y]},
+			"help_scroll":info_scroll.scroll_vertical,
+			"help_rect":[info_scroll.global_position.x,info_scroll.global_position.y,info_scroll.size.x,info_scroll.size.y],
+			"help_fits":help_panel.size.y <= info_scroll.size.y,
+			"help_font":help_panel.get_child(1).get_theme_font("font").get_font_name()},
 		"sort": {"criterion": album.preference.criterion, "direction": album.preference.direction,
 			"direction_tooltip": album.direction_button.tooltip_text,
 			"direction_accessibility_name": album.direction_button.accessibility_name,

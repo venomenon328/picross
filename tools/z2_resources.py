@@ -74,6 +74,18 @@ def verify():
     for item in json.loads((SOURCE / "composition/inputs/fonts.json").read_text(encoding="utf-8")):
         assert hashlib.sha256((DEST / Path(item["file"]).name).read_bytes()).hexdigest() == item["sha256"]
     assert (DEST / "bp2-a-inventarband.png").read_bytes() == (SOURCE / "artwork/bp2-a-inventarband.png").read_bytes()
+    # HZ-A-FONT02 is a new owner-supplied source, not a rewritten BP-3 input.
+    # Provisioning the historical book assets must not replace this TTF.
+    tidy = ROOT / "game/art/drawing/TidyHand.ttf"
+    notice = ROOT / "game/art/drawing/tidy-hand/NOTICE.txt"
+    digest = "9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6"
+    assert hashlib.sha256(tidy.read_bytes()).hexdigest() == digest, "HZ Tidy Hand original bytes"
+    text = notice.read_text(encoding="utf-8")
+    assert digest in text and "https://www.dafont.com/de/tidy-hand.font" in text
+    assert '"This font is free for all use."' in text and "Sean Johnson" in text
+    manifest["hz_standard_text"] = dict(file="art/drawing/TidyHand.ttf", sha256=digest,
+        notice="art/drawing/tidy-hand/NOTICE.txt",
+        notice_sha256=hashlib.sha256(notice.read_bytes()).hexdigest())
     return manifest
 
 

@@ -38,6 +38,16 @@ func run() -> void:
 			if entry.file == name+".svg": bound = true
 		check(bound, "PCK icon bound to resource manifest "+name)
 	check(FileAccess.file_exists("res://art/book/KB-168-NOTICE.txt"), "PCK KB icon provenance notice")
+	# Actual exported font bytes/role, with controlled local fallbacks.
+	var ui_text = load("res://ui/ui_text.gd")
+	var normal: FontFile = ui_text.font()
+	check(normal.data == ui_text.SOURCE.data and not normal.allow_system_fallback, "PCK HZ original Tidy Hand/local role")
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(normal.data)
+	check(hash.finish().hex_encode() == "9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6", "PCK HZ Tidy Hand bytes")
+	check(normal.fallbacks.size() == 1 and normal.fallbacks[0].get_font_name() == "IBM Plex Sans" and not normal.fallbacks[0].allow_system_fallback, "PCK HZ bundled fallback")
+	check(FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"), "PCK HZ source and usage permission")
 	check(Registry.load_error.is_empty(), "PCK registry/category format invalid")
 	var categories: Array[Dictionary] = Registry.categories()
 	check(not categories.is_empty(), "PCK categories projection missing")

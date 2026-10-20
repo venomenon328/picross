@@ -1,11 +1,12 @@
 # picross: Spiel- und Entwicklungsanleitung
 
-**Freigegebener nächster UI-Schritt; noch nicht umgesetzt:**
-[HZ](../docs/HAND_DRAWN_UI.md) plant dieselbe Bakso-Schrift wie „Rätselkatalog“
-für alle normalen UI-Texte und Überschriften, organischere kleine Rahmen,
-vollständig gezeichnete Dropdowns und eine einheitliche Piktogrammfamilie.
-Hinweiszahlen und ihre Geometrie bleiben. Die folgenden Bedienbeschreibungen
-beziehen sich auf die bereits integrierte Fassung; HZ-A/B sind separat offen.
+**Schrift und Lesbarkeit (HZ-A):** Normale Texte, Auswahlen, Hilfen und Tooltips
+verwenden Tidy Hand. Bestehende Überschriften und Delight-Coffee-Hinweiszahlen
+bleiben unverändert. UI 100/125 % ändert Schrift und Textabstände gemeinsam;
+bei schmalen Fenstern darf „Sortieren nach“ innerhalb der Kopfzeile umbrechen.
+Lange Kategorien bleiben über vollständig umgebrochene Tooltips lesbar; die
+native Auswahlliste scrollt vertikal. [HZ](../docs/HAND_DRAWN_UI.md) bindet die Schriftrollen und Nachweise;
+neue Konturen, Dropdown-Grafik und Icons bleiben das separate Paket HZ-B.
 
 Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
 Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
@@ -234,8 +235,7 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   Spaltenhinweise, ohne kleinere Zellen dafür zu erzwingen. Passende Folgen haben
   keine Auslassungsmarker und lassen sich nicht in Leerraum verschieben.
 - Darüberfahren einer gekürzten Folge zeigt weiterhin den vollständigen farbigen
-  Hinweis mit Umbruch direkt über dem Arbeitsbild: bisher kleine Fraunces-Überschrift
-  (Bakso im noch nicht umgesetzten HZ-Sollstand),
+  Hinweis mit Umbruch direkt über dem Arbeitsbild: unverändert kleine Fraunces-Überschrift,
   gut lesbare Delight-Zahlen und ruhiges Papier mit gezeichnetem Rahmen.
   Die Overlaylesegröße folgt der UI-Skalierung unabhängig vom Rasterzoom. Das ist ein Zusatzweg; Anfang,
   Mitte und Ende bleiben auch durch Hinweis-Panning erreichbar. Eine separate
