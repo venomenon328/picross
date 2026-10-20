@@ -7,8 +7,20 @@ var failures: Array[String] = []
 var output: String
 
 class TechnicalMain extends Main:
+	var fixture_textures: Array[Texture2D] = []
 	func puzzle_definitions() -> Array[Dictionary]:
 		var input: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment("HZ_PACK_INPUT")))
+		# The regular export correctly excludes synthetic reveals. Supply only
+		# these external fixture images in the resource cache; never replace a
+		# packed UI/font/art resource or bypass Definition.validate().
+		for path: String in input.images:
+			assert(path.begins_with("res://art/fixtures/") and not ResourceLoader.exists(path))
+			var image := Image.new()
+			var error: Error = image.load_svg_from_string(input.images[path])
+			assert(error == OK)
+			var texture := ImageTexture.create_from_image(image)
+			texture.take_over_path(path)
+			fixture_textures.append(texture)
 		Registry.cached = input.registry
 		var result: Array[Dictionary] = []
 		for data: Dictionary in input.definitions: result.append(data)
@@ -38,7 +50,7 @@ func run() -> void:
 	root.add_child(app)
 	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	await frames()
-	check(app.catalog_error.is_empty() and app.sessions.size() == 6,"actual PCK loads only six external synthetic fixtures")
+	check(app.catalog_error.is_empty() and app.sessions.size() == 6,"actual PCK loads only six external synthetic fixtures: " + app.catalog_error)
 	check(Text.font().data == Text.SOURCE.data and not Text.font().allow_system_fallback,"actual PCK original Tidy bytes and local fallback")
 	check(FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"),"actual PCK includes author permission")
 	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25],[1920,1080,1.0]]:

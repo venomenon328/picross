@@ -60,7 +60,10 @@ semantik, Spoilern, Reset-/Recoveryzielen oder HC/HF/HN-Geometrie.
   konkreten CI-Artefaktdigests und sämtlichen nativen Pflichtdateien, startet die
   tatsächliche Windows-EXE ohne Testargumente und erfasst ausschließlich deren
   eigenes HWND. `hz_pack.gd` prüft Original-UI/-Fonts des heruntergeladenen PCK
-  mit sechs externen synthetischen Definitionen. Anschließend laufen sämtliche
+  mit sechs externen synthetischen Definitionen und ihren externen SVG-Testbildern.
+  Nur deren im regulären PCK fehlende `art/fixtures/`-Pfade werden im Resourcecache
+  belegt; der unveränderte Definitionsvalidator prüft sie vollständig. Keine
+  gepackte UI-, Font- oder Bildressource wird ersetzt. Anschließend laufen sämtliche
   KAT-2-Modi nativ mit isolierten Projekten und Profilen.
 - `test_z2_delivery.py`: positive Ressourcenprüfung und negative Gegenproben
   für veränderte TTF beziehungsweise fehlenden Nutzungshinweis.
