@@ -1,5 +1,21 @@
 # Z2: aktive Auswahl und native Integration
 
+## Freigegebener nächster Stilstand · HZ / #284
+
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 20.10.2026, ist
+spezifiziert und noch nicht implementiert. HZ-A erweitert das unveränderte Bakso
+auf normale UI-Texte und Überschriften mit kontrollierten lokalen Fallbacks.
+HZ-B revidiert kleine Konturen, vollständige Dropdowns und die aktive Familie
+der 13 Icons samt weiterer Menü-/Seiten-/Checkboxzeichen. Die früheren
+Fontrollengrenzen und das unveränderte aktive Iconinventar der unten beschriebenen
+Lieferungen sind für diesen Folgeschritt ausdrücklich abgelöst.
+
+Historische GD-/BP-/VS2-/SL-/KB-/KK-/KE-Auswahl- und Lieferbelege bleiben an ihren
+damaligen Stand gebunden. Originalfontbytes, Nutzungsnachweise, A-Komposition,
+C1, Hinweisgeometrie und die drei großen SL-Rasterrahmen bleiben erhalten.
+HZ-B führt neue aktive Iconquellen, Provisionierung, erzeugte SVGs, Manifest
+und Export gemeinsam fort; historische Originale werden nicht umetikettiert.
+
 ## Implementierung auf dem Arbeitsbranch · KE / #233
 
 [Katalogdarstellung](CATALOG_PRESENTATION.md) ergänzt Papieretikett sowie eigene
@@ -117,6 +133,12 @@ VS2-E1/N01 verdichtet die horizontale Weite künftig weiter bei gleichem Schrift
 18 × UI vertikal, gemeinsame Slotsemantik und die historische Bindung bleiben erhalten.
 
 ## Bereitstellung und Renderergrenzen
+
+Der folgende Quellenweg beschreibt die Z2-Herkunft. Für die spätere HZ-B-Lieferung
+gilt zusätzlich HZ-D05: aktive Quellen in `tools/z2_resources.py` und
+`tools/book_icons_kb.json`, erzeugte Icons und `game/art/book/manifest.json`
+werden konsistent fortgeschrieben und im tatsächlichen Spieler-/Webexport
+geprüft. Die alte BP-Quellenbindung wird dadurch nicht rückwirkend geändert.
 
 [Ressourcenmanifest](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/art/book/manifest.json) bindet alle lokalen
 Dateien. `python tools/z2_resources.py provision` lädt ausschließlich die
