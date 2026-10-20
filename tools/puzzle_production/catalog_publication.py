@@ -151,20 +151,28 @@ def durable_parents(root, name):
     return io.safe(root, name)
 
 
-def inventory(j, raw):
+def restore_runtime(j, registry):
+    from . import catalog_transaction as tx
+    return (j["old"][tx.RUNTIME] if j["operation"] == "reveal-adoption" else
+            tx.projection(j["old"], registry).decode())
+
+
+def inventory(j, raw, *, restore=None):
     names = sorted(set(j["additions"]) | set(j.get("replacements", {})) |
                    {n for n in j["old"] if j["old"][n] != j["new"][n]} |
                    {"game/data/registry.json"})
     # Runtime is only a write target if publication or recovery actually differs.
     from . import catalog_transaction as tx
-    before = io.json_bytes(j["old"][tx.REGISTRY].encode(), 8 * 1024 * 1024)
-    restore = j["old"][tx.RUNTIME] if j["operation"] == "reveal-adoption" else tx.projection(j["old"], before).decode()
+    if restore is None:
+        before = io.json_bytes(j["old"][tx.REGISTRY].encode(), 8 * 1024 * 1024)
+        restore = restore_runtime(j, before)
     if j["old"][tx.RUNTIME] == j["new"][tx.RUNTIME] == restore: names.remove(tx.RUNTIME)
-    return {n: (Path(n).parent / (".registration-" + io.checksum(raw) + "-" + str(i) + ".tmp")).as_posix()
+    journal_hash = io.checksum(raw)
+    return {n: (Path(n).parent / (".registration-" + journal_hash + "-" + str(i) + ".tmp")).as_posix()
             for i, n in enumerate(names)}
 
 
-def temp_candidates(j, name, additions=None):
+def temp_candidates(j, name, additions=None, *, restore=None):
     from . import catalog_transaction as tx
     if name in j.get("replacements", {}):
         for v in j['replacements'][name].values(): yield decode_binary(v)
@@ -172,21 +180,23 @@ def temp_candidates(j, name, additions=None):
     if name in j["old"]:
         values = [v.encode() for v in (j["old"][name], j["new"][name]) if v is not None]
         if name == tx.RUNTIME and j["operation"] != "reveal-adoption":
-            before = io.json_bytes(j["old"][tx.REGISTRY].encode(), 8 * 1024 * 1024)
-            values.append(tx.projection(j["old"], before))
+            if restore is None:
+                before = io.json_bytes(j["old"][tx.REGISTRY].encode(), 8 * 1024 * 1024)
+                restore = restore_runtime(j, before)
+            values.append(restore.encode())
         yield from values
     elif additions and name in additions:
         yield io.read(additions[name].parent, additions[name].name, 64 * 1024 * 1024)
 
 
-def check_temps(root, j, raw, *, additions=None):
-    temps = inventory(j, raw)
+def check_temps(root, j, raw, *, additions=None, temps=None, restore=None):
+    temps = inventory(j, raw, restore=restore) if temps is None else temps
     present = set()
     for name, temporary in temps.items():
         data = io.read(root, temporary, 64 * 1024 * 1024, missing=True)
         if data is None: continue
         if name in j.get('replacements',{}) or name in j['old'] or additions and name in additions:
-            require(any(candidate.startswith(data) for candidate in temp_candidates(j,name,additions)), "Foreign transaction temporary bytes: " + temporary)
+            require(any(candidate.startswith(data) for candidate in temp_candidates(j,name,additions,restore=restore)), "Foreign transaction temporary bytes: " + temporary)
         else:
             # Interrupted package additions have no backup bytes in the journal;
             # only complete, hash-bound temporaries are recoverable.
@@ -195,12 +205,26 @@ def check_temps(root, j, raw, *, additions=None):
     return present
 
 
-def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None):
+class _JournalView:
+    """Prepare only immutable journal data, never observations of the checkout."""
+
+    def __init__(self, j, raw):
+        from . import catalog_transaction as tx
+        self.j = deepcopy(j)
+        require(journal_bytes(self.j) == raw, "Journal view differs")
+        self.registries = [io.json_bytes(self.j[s][tx.REGISTRY].encode(), 8 * 1024 * 1024)
+                           for s in ("old", "new")]
+        self.restore = restore_runtime(self.j, self.registries[0])
+        self.temps = inventory(self.j, raw, restore=self.restore)
+
+
+def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _view=None):
     from . import catalog_transaction as tx, catalog_rating as rating, catalog_added as added
-    registries = [io.json_bytes(j[s][tx.REGISTRY].encode(), 8 * 1024 * 1024) for s in ("old", "new")]
     raw = journal_bytes(j) if raw is None else raw
+    view = _JournalView(j, raw) if _view is None else _view
+    j, registries = view.j, view.registries
     if not old_only: require(read_journal(root) == raw, "Journal changed; preserve all transaction files")
-    temps = check_temps(root, j, raw, additions=additions)
+    temps = check_temps(root, j, raw, additions=additions, temps=view.temps, restore=view.restore)
     require(not old_only or not temps, "Transaction temporary already exists")
     reveal.source_paths(root, *registries, temporary=temps)
     rating.source_paths(root, *registries, temporary=temps)
@@ -216,7 +240,7 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None):
         candidates = [old]
         if not old_only:
             candidates.append(j["new"][n])
-            if n == tx.RUNTIME and j["operation"] != "reveal-adoption": candidates.append(tx.projection(j["old"], registries[0]).decode())
+            if n == tx.RUNTIME and j["operation"] != "reveal-adoption": candidates.append(view.restore)
         require(current in [v.encode() if v is not None else None for v in candidates], "Transaction target changed; preserve journal: " + n)
         if expected is not None: require(io.checksum(current) == expected[n], "Transaction phase changed: " + n)
     for n, pair in j.get("replacements", {}).items():
@@ -323,8 +347,8 @@ def write(root, name, data, temporary, guard_fn, *, package_addition=False):
     rename(io.safe(root, temporary), target, replace=target.exists())
 
 
-def cleanup_temps(root, j, raw, guard_fn):
-    for temporary in sorted(check_temps(root, j, raw)):
+def cleanup_temps(root, j, raw, guard_fn, *, view):
+    for temporary in sorted(check_temps(root, j, raw, temps=view.temps, restore=view.restore)):
         guard_fn()
         target = io.safe(root, temporary)
         target.unlink(); sync_directory(target.parent)
@@ -341,7 +365,8 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
     additions = additions or {}
     tx.validate_journal(root, j, before_write=True)
     raw = journal_bytes(j)
-    temps = inventory(j, raw)
+    view = _JournalView(j, raw)
+    j, temps = view.j, view.temps
     require(not staging(root) and read_journal(root) is None, "Interrupted registration: recovery required")
     # Exercise the actual directory durability primitive before active mutation.
     for n in {tx.LOCK, *temps}:
@@ -364,7 +389,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
     expected = {n: io.checksum(v.encode() if v is not None else None) for n, v in j["old"].items()}
     expected.update({n: pair["old"]["sha256"] for n, pair in j["replacements"].items()})
     expected.update({n: None for n in j["additions"]})
-    guard_fn = lambda: guard(root, j, raw=raw, expected=expected, additions=additions)
+    guard_fn = lambda: guard(root, j, raw=raw, expected=expected, additions=additions, _view=view)
     # A failed P2 foreign-source guard preserves the published journal.
     guard_fn()
     try:
@@ -403,7 +428,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
             if fail_step in ("crash-"+tx.RUNTIME,"crash-runtime"): raise InterruptedError("Injected transaction interruption: "+tx.RUNTIME)
             if fail_step == tx.RUNTIME: raise OSError("Injected update failure: "+tx.RUNTIME)
         guard_fn(); check_checkout(root, replay=j['operation']=='registration', pending_journal=raw); guard_fn()
-        cleanup_temps(root, j, raw, guard_fn)
+        cleanup_temps(root, j, raw, guard_fn, view=view)
         checkpoint("P6"); guard_fn()
         io.safe(root, tx.LOCK).unlink(); sync_directory(root / "content")
     except InterruptedError:
@@ -436,25 +461,29 @@ def recover(root):
     j = io.json_bytes(raw, LIMIT)
     require(tx.modern(j) and raw == journal_bytes(j), "Noncanonical transaction journal")
     _, runtime = tx.validate_journal(root, j)
-    guard_fn = lambda: guard(root, j, raw=raw)
+    view = _JournalView(j, raw)
+    j = view.j
+    guard_fn = lambda: guard(root, j, raw=raw, _view=view)
     guard_fn(); checkpoint("R0")
-    cleanup_temps(root, j, raw, guard_fn)
-    temps = inventory(j, raw)
+    cleanup_temps(root, j, raw, guard_fn, view=view)
+    temps = view.temps
     for n, pair in sorted(j["replacements"].items()):
-        guard_fn()
         if io.file_hash(root, n, reveal.IMAGE_LIMIT) != pair["old"]["sha256"]:
+            guard_fn()
             write(root, n, decode_binary(pair["old"]), temps[n], guard_fn)
         checkpoint("R1-binary", n)
     for n in sorted(j["old"]):
         if n == tx.RUNTIME: continue
         data = j["old"][n].encode() if j["old"][n] is not None else None
-        guard_fn()
-        if tx.read(root, n) != data: write(root, n, data, temps[n], guard_fn)
+        if tx.read(root, n) != data:
+            guard_fn()
+            write(root, n, data, temps[n], guard_fn)
         checkpoint("R1-text", n)
     for n in sorted(j["additions"], reverse=True):
-        guard_fn()
         target = io.safe(root, n)
-        if target.exists(): target.unlink(); sync_directory(target.parent)
+        if target.exists():
+            guard_fn()
+            io.safe(root, n).unlink(); sync_directory(target.parent)
         checkpoint("R1-addition", n)
     guard_fn()
     if tx.read(root, tx.RUNTIME) != runtime.encode(): write(root, tx.RUNTIME, runtime.encode(), temps[tx.RUNTIME], guard_fn)
@@ -462,7 +491,7 @@ def recover(root):
     guard_fn(); check_checkout(root, pending_journal=raw); guard_fn()
     require(all(tx.read(root, n) == (v.encode() if v is not None else None) for n, v in {**j["old"], tx.RUNTIME: runtime}.items()) and
             all(not io.safe(root, n).exists() for n in j["additions"]), "Recovery goal differs")
-    cleanup_temps(root, j, raw, guard_fn)
+    cleanup_temps(root, j, raw, guard_fn, view=view)
     checkpoint("R2"); guard_fn()
     io.safe(root, tx.LOCK).unlink(); sync_directory(root / "content")
     return {"status": "rolled-back", "registered": False}
