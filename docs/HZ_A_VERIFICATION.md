@@ -24,6 +24,10 @@ Die normalen Controls, native Menüs und direkte Textzeichnung verwenden diese
 Ressource. Bestehende Überschriften einschließlich nativer Dialogtitel und
 Vollhinweis-Überschrift behalten ihre Ressourcen. Bakso-Motivtitel behalten ihren
 bisherigen Dreipunkt-Auslassungsweg.
+Auch die bisherigen Label-Innenränder und Zeilenabstände der Überschriften sind
+explizit erhalten. Insbesondere darf der Tidy-Zeilenabstand keinen mehrzeiligen
+Fraunces-Abschlusstitel und dadurch dessen reservierten Bildbereich verschieben.
+Die unveränderte EA-Pixelregression deckt diese Kopplung ab.
 
 Shaping, Fallback-RIDs, sichtbare Glyphenhüllen, Zeilenhöhen und Label-Innenränder
 bestimmen die Textbudgets. Die gemeinsame Kartenbreite berücksichtigt alle

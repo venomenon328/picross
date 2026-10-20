@@ -668,6 +668,10 @@ static func label(text: String, font_size: int) -> Label:
 		heading.base_font = TITLE_FONT
 		heading.variation_opentype = {"wght":600.0}
 		item.add_theme_font_override("font",heading)
+		# FONT02 preserves heading layout too. Normal-text padding/line spacing
+		# must not change a wrapped completion caption and its reserved image area.
+		item.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
+		item.add_theme_constant_override("line_spacing",3)
 	return item
 
 static func button(text: String, action: Callable) -> Button:

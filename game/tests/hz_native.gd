@@ -30,6 +30,8 @@ static func run(runner: Object) -> void:
 		await runner.frames()
 		runner.check(app.theme.default_font == Text.font(), "HZ standard text is Tidy Hand")
 		runner.check(app.title.get_theme_font("font") == app.WORK_TITLE_FONT, "HZ catalog heading retains original Bakso resource")
+		for heading: Label in [app.title,app.completion_title,app.help_panel.get_child(0),app.choices[0].caption]:
+			runner.check(heading.get_theme_stylebox("normal").get_minimum_size() == Vector2.ZERO and heading.get_theme_constant("line_spacing") == 3, "HZ heading padding and line spacing remain unchanged at both scales")
 		for card: Control in app.choices:
 			for label: Label in [card.dimensions,card.difficulty,card.leaf,card.note]:
 				runner.check(Text.label_width(label,label.text,label.get_theme_font_size("font_size")) <= label.size.x, "HZ complete metadata including style margins")
