@@ -1,0 +1,13 @@
+HZ-B / Issue #284 — hand-drawn control icon family
+
+Original local vector artwork created for picross, 2026-10-20.
+Editable source: tools/book_icons_hz.json.
+Reproducible SVG generator: tools/z2_resources.py.
+No system font, emoji, downloaded icon family or external image is used.
+The source contains asymmetric curves and sparse secondary pen strokes.
+The empty selection placeholder deliberately has no visible ink.
+
+This active family supersedes the shapes of the 13 BP/SL/KB icons and adds
+pagination, sorting, dropdown/scroll chevrons and checkbox/selection marks.
+BP-3 composition/inputs/icons.json and tools/book_icons_kb.json remain
+historical original sources; their notices and delivery evidence are retained.

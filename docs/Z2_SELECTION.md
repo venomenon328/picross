@@ -3,7 +3,9 @@
 ## Freigegebener nächster Stilstand · HZ / #284
 
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 20.10.2026:
-HZ-A ist implementiert, technische Gates stehen im Paket-PR; HZ-B bleibt offen.
+HZ-A ist integriert; HZ-B ist im Draft implementiert, technische Ergebnisse und
+offene getrennte Abnahmen stehen in [PR #289](https://github.com/venomenon328/picross/pull/289)
+und der [HZ-B-Lieferung](HZ_B_VERIFICATION.md).
 HZ-A verwendet gemäß HZ-A-FONT02 das
 unveränderte Tidy Hand für Standardtexte mit lokalen Fallbacks und erhält
 sämtliche bestehenden Überschriftrollen.
@@ -143,11 +145,14 @@ VS2-E1/N01 verdichtet die horizontale Weite künftig weiter bei gleichem Schrift
 
 ## Bereitstellung und Renderergrenzen
 
-Der folgende Quellenweg beschreibt die Z2-Herkunft. Für die spätere HZ-B-Lieferung
-gilt zusätzlich HZ-D05: aktive Quellen in `tools/z2_resources.py` und
-`tools/book_icons_kb.json`, erzeugte Icons und `game/art/book/manifest.json`
-werden konsistent fortgeschrieben und im tatsächlichen Spieler-/Webexport
-geprüft. Die alte BP-Quellenbindung wird dadurch nicht rückwirkend geändert.
+Der folgende Quellenweg beschreibt die Z2-Herkunft. Die aktive HZ-B-Familie
+liegt separat in [book_icons_hz.json](../tools/book_icons_hz.json):
+23 Ressourcen einschließlich der 13 bisherigen Bedeutungen sowie Pfeile,
+Chevrons, Auswahl- und Checkboxzeichen. `tools/z2_resources.py` erzeugt die
+SVGs und bindet Quellhash und Herkunft im aktiven Buchmanifest.
+`tools/book_icons_kb.json` und die BP-Iconquelle bleiben historische Originale.
+Die neue Bindung wird im tatsächlichen Spieler-/Webexport geprüft; sie
+ändert die alte BP-Quellenbindung nicht rückwirkend.
 
 [Ressourcenmanifest](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/art/book/manifest.json) bindet alle lokalen
 Dateien. `python tools/z2_resources.py provision` lädt ausschließlich die

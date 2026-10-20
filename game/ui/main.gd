@@ -14,6 +14,8 @@ const WebStorage = preload("res://model/web_storage.gd")
 var web_lifecycle_callback: JavaScriptObject
 var web_leaving: bool = false
 const BookButton = preload("res://ui/book_button.gd")
+const BookChoice = preload("res://ui/book_choice.gd")
+const BookControls = preload("res://ui/book_controls.gd")
 const BookSurface = preload("res://ui/book_surface.gd")
 const BODY_FONT = preload("res://art/book/PlexSans.ttf")
 const TITLE_FONT = preload("res://art/book/Fraunces.ttf")
@@ -187,6 +189,8 @@ func _build() -> void:
 	tooltip_paper.set_content_margin_all(4)
 	theme.set_stylebox("panel","TooltipPanel",tooltip_paper)
 	theme.set_color("font_color","TooltipLabel",Board.INK)
+	BookControls.styles(theme,"Button","dialog-button",1.0)
+	BookControls.checks(theme,1.0)
 	surface = BookSurface.new()
 	surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(surface)
@@ -276,6 +280,8 @@ func set_ui_scale(value: float) -> void:
 	_cancel_interaction()
 	ui_scale = value
 	theme.default_font_size = roundi(14 * value)
+	BookControls.styles(theme,"Button","dialog-button",value)
+	BookControls.checks(theme,value)
 	theme.set_stylebox("normal", "Label", UiText.label_style(value))
 	theme.set_constant("line_spacing", "Label", roundi(3 * value))
 	_scale_labels(self)
@@ -828,7 +834,7 @@ func _build_information() -> void:
 	ui_scale_button = _text_button("UI 100 %",func() -> void: set_ui_scale(1.25 if ui_scale == 1 else 1.0))
 	settings_panel.add_child(ui_scale_button)
 	settings_panel.add_child(label("Rätselansicht",20))
-	view_choice = OptionButton.new()
+	view_choice = BookChoice.new()
 	view_choice.name = "puzzle-view"
 	view_choice.add_item("Rasteransicht")
 	view_choice.add_item("Gesamtansicht mit allen Hinweisen")
@@ -865,12 +871,14 @@ func _build_information() -> void:
 
 func _text_button(caption: String, action: Callable) -> BookButton:
 	var item: BookButton = BookButton.new()
+	item.action_id = caption
 	item.text = caption
 	item.pressed.connect(action)
 	return item
 
 func _cancel_interaction() -> void:
 	BookButton.dismiss_all(get_tree())
+	BookChoice.dismiss_all(get_tree())
 	if board == null: return
 	if reveal_view != null and reveal_view.active: reveal_view.finish()
 	board.cancel_gesture()
@@ -1026,6 +1034,7 @@ func _layout_book(prepare_board: bool = false) -> void:
 	stress_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_place(stress_label,Rect2(o+Vector2(notice_left+warning_width+12*u,bottom-6*u),Vector2(notice_width-warning_width-12*u,24*u)))
 	album.ui_scale = u
+	view_choice.ui_scale = u
 	_place(album,Rect2(o+Vector2(90,100)*u,Vector2(w-180*u,h-155*u)))
 	album._layout_cards()
 	if ending != null and ending.visible: _layout_completion()

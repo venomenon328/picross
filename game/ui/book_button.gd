@@ -5,6 +5,7 @@ const PAPER = Color("fffaf0")
 const Scribble = preload("res://ui/scribble.gd")
 const BookTooltip = preload("res://ui/book_tooltip.gd")
 const UiText = preload("res://ui/ui_text.gd")
+const PaperStyle = preload("res://ui/book_style.gd")
 var action_id: String = ""
 var content_surface: bool = false
 var selected: bool = false:
@@ -72,13 +73,14 @@ func _draw() -> void:
 		body = Color("c5d6cd")
 	elif is_hovered():
 		body = Color("e0ece6")
-	draw_colored_polygon(points(box.grow(-1.5*u), 3*u), body)
 	if swatch.a > 0:
+		draw_colored_polygon(points(box.grow(-1.5*u), 3*u), body)
 		for line: Dictionary in swatch_strokes():
 			Scribble.paint(self,line,Color("68583f"))
 	else:
-		for line: Dictionary in Scribble.outline_strokes(box.grow(-2*u),"book-button/"+action_id,1.2*u):
-			Scribble.paint(self,line,Color("6d624d"))
+		var style = PaperStyle.make("button/"+action_id,u,body)
+		style.ink = PAPER if selected else Color("6d624d")
+		draw_style_box(style,box)
 	if swatch.a > 0:
 		draw_rect(box.grow(-5*u), swatch)
 		if selected:
@@ -88,6 +90,7 @@ func _draw() -> void:
 	elif image != null:
 		var ink: Color = PAPER if selected else (Color("757970") if disabled else INK)
 		var offset: Vector2 = (size-Vector2(26,26)*u)/2 + Vector2(0,u if is_pressed() else 0)
+		if not text.is_empty(): offset.x = 10*u
 		draw_texture_rect(image, Rect2(offset,Vector2(26,26)*u), false, ink)
 		if selected:
 			draw_line(Vector2(11*u,size.y-6*u),size-Vector2(11,6)*u,PAPER,2*u,true)
@@ -100,9 +103,17 @@ func _draw() -> void:
 		# Honour theme alpha, including the existing native contrast probe.
 		var ink: Color = get_theme_color("font_color")
 		if selected and ink.a > 0: ink = PAPER
-		draw_string(font,(size-bounds.size)/2-bounds.position,text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,ink)
+		var origin: Vector2 = (size-bounds.size)/2-bounds.position
+		if image != null: origin.x += 16*u
+		draw_string(font,origin,text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,ink)
 	if has_focus():
 		# Keep focus outside the unchanged swatch; light ink remains visible on
 		# selected dark paper and does not disappear into the selection colour.
 		var inset: float = 3*u if swatch.a > 0 else 5*u
-		draw_polyline(points(box.grow(-inset),2*u),PAPER if selected else INK,u,true)
+		if swatch.a > 0:
+			draw_polyline(points(box.grow(-inset),2*u),PAPER if selected else INK,u,true)
+		else:
+			var focus_style = PaperStyle.make("button/"+action_id,u,Color.TRANSPARENT)
+			focus_style.focus = true
+			focus_style.ink = PAPER if selected else INK
+			draw_style_box(focus_style,box)

@@ -56,6 +56,8 @@ func click(control: Control) -> void:
 	click_at(point)
 
 func choose(id: String) -> void:
+	# Let a preceding resize finish before opening the menu at its new bounds.
+	await frames()
 	var unchanged: bool = app.album.category_id == id
 	var old_page: int = app.album.page_index
 	var old_scroll: int = app.album.scroll_vertical
@@ -188,6 +190,7 @@ func run() -> void:
 	elif mode == "kk":
 		await fixed_cards()
 		await preload("res://tests/hz_native.gd").run(self)
+		await preload("res://tests/hz_b_native.gd").run(self)
 	elif mode == "ke":
 		await catalog_labels()
 		await preload("res://tests/ke_graphics.gd").run(self)

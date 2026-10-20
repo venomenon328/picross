@@ -67,6 +67,14 @@ func _process(delta: float) -> void:
 	var origin: Vector2 = board.global_position + board.view.origin
 	var sort_popup: PopupMenu = album.sort_choice.get_popup()
 	var data: Dictionary = {"controls": controls, "labels":labels,"slots": slots, "slot_status": slot_status,
+		"hz_b":{"view_popup":view_choice.get_popup().visible,"view_selected":view_choice.selected,
+			"view_focused":view_choice.get_popup().get_focused_item(),
+			"view_checked":view_choice.get_popup().is_item_checked(view_choice.selected),
+			"view_menu_position":[view_choice.get_popup().position.x,view_choice.get_popup().position.y],
+			"view_menu_size":[view_choice.get_popup().size.x,view_choice.get_popup().size.y],
+			"animations":animation_toggle.button_pressed,
+			"sort_icon":album.direction_button.image.resource_path,
+			"notice":FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt")},
 		"catalog_scroll":[album.scroll.global_position.x,album.scroll.global_position.y,album.scroll.size.x,album.scroll.size.y],
 		"hz": {"standard":theme.default_font.get_font_name(),"heading":title.get_theme_font("font").get_font_name(),
 			"notice":FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"),

@@ -1,0 +1,300 @@
+{
+  "format": "picross-hz-b-development-v1",
+  "test_only": true,
+  "source_equivalent_commit": "40a865b1ab2fcfd7fa5373e8be4e185d1aad5f07",
+  "base": "e9a957d1513c9c77281e738c4eb22b161bee2342",
+  "limitation": "Development run before commit; subsequent byte comparison binds changed game resources. Not the final clean-head Windows/PCK proof.",
+  "runner": "Temporary hzb branch in existing KAT-2 runner invokes hz_b_native directly on six synthetic fixtures. Exact temporary runner archived.",
+  "source_files": [
+    {
+      "file": "game/art/book/HZ-B-284-NOTICE.txt",
+      "sha256": "406139e9a2a92a33b9a88b3bf3ff95567c3f6fe30abf7bb4b216eaeacda503c7"
+    },
+    {
+      "file": "game/art/book/arrow-down.svg",
+      "sha256": "f6868d894d866440bd3fe64a0c5913c62952fb50f0db8fc2392332ccde131215"
+    },
+    {
+      "file": "game/art/book/arrow-left.svg",
+      "sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca"
+    },
+    {
+      "file": "game/art/book/arrow-right.svg",
+      "sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c"
+    },
+    {
+      "file": "game/art/book/arrow-up.svg",
+      "sha256": "4dab3c772d0024ff839b71ee95a3e282e354750ffe1271e5b40abc57423f93bb"
+    },
+    {
+      "file": "game/art/book/check-empty.svg",
+      "sha256": "5effbb3665f6354ebccc97e4b7fea39ebc683340a3a0244e95140d862370df6f"
+    },
+    {
+      "file": "game/art/book/check.svg",
+      "sha256": "fe8a40a258f556f8afd52840b7ca0ce12296bf83ee751f0bf3540deff52225f0"
+    },
+    {
+      "file": "game/art/book/checkbox-checked.svg",
+      "sha256": "9baa482570478e355e5aae74090e5e1163dedfba3f9c82153f2aaf0c0cbfc703"
+    },
+    {
+      "file": "game/art/book/checkbox-empty.svg",
+      "sha256": "216c631f76b4a499672da877807b249ae8ccd969a1b70194d3ea056ec8c52ec8"
+    },
+    {
+      "file": "game/art/book/chevron-down.svg",
+      "sha256": "7147bbc61e9eeb2b2a97c7d66d11768d56664bc186810ecc01691114b4f44fa2"
+    },
+    {
+      "file": "game/art/book/chevron-up.svg",
+      "sha256": "b08a67fe48933274bececb92819f32dc8aee5e3a7dfa59facc54d8e9f0896e65"
+    },
+    {
+      "file": "game/art/book/erase.svg",
+      "sha256": "96685a23e7a1b93964c6d87649a2e8c2c2399513b07afceed57951140467ddbd"
+    },
+    {
+      "file": "game/art/book/fill.svg",
+      "sha256": "1adb0f8deeec7913d541f8b5bd2de3e5494a39c1abf32e293a325445528df8c6"
+    },
+    {
+      "file": "game/art/book/help.svg",
+      "sha256": "085ffa6e6b32cf8fe39e88a3ced2d94fb8395e8be0d03ccc064d5d8f6ce5572a"
+    },
+    {
+      "file": "game/art/book/icons.json",
+      "sha256": "5599b1286710c005fa2148b97890102f04bcfd6db48bc3e588fa6638763f83c5"
+    },
+    {
+      "file": "game/art/book/manifest.json",
+      "sha256": "8c5c724647a5859e9b09da7fef5a11eada7d9b5b738e7b470a7e87eba4551913"
+    },
+    {
+      "file": "game/art/book/menu.svg",
+      "sha256": "1142024e816294593af1ef45cf5bc767a6188569c993b40604649d4416ed3576"
+    },
+    {
+      "file": "game/art/book/minus.svg",
+      "sha256": "f230479b7b56e4d31671955e504731d15115261068f46e4b699a15132dc8b6c4"
+    },
+    {
+      "file": "game/art/book/nav-album.svg",
+      "sha256": "e59589030c0436baa93786b05711552eb3d104e021cf9f30ebd2c107daa2b290"
+    },
+    {
+      "file": "game/art/book/nav-information.svg",
+      "sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c"
+    },
+    {
+      "file": "game/art/book/nav-work.svg",
+      "sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca"
+    },
+    {
+      "file": "game/art/book/play.svg",
+      "sha256": "d57c49d4aa6787dfaa9b5b80e264361da47c8d553def8bf923d891e374d685f4"
+    },
+    {
+      "file": "game/art/book/plus.svg",
+      "sha256": "78aad8146fe68d64f3033789e0f7240c6fd83738bd172bee900202b8b4c242f0"
+    },
+    {
+      "file": "game/art/book/redo.svg",
+      "sha256": "dda374601aba386dde33078f08fe8da1168c15b4137000cdb18792d3818063d4"
+    },
+    {
+      "file": "game/art/book/reset.svg",
+      "sha256": "ae593cdbb3f9601f91a5a37dc6b9fda1965e22965674626aeec7ec36cc381bdf"
+    },
+    {
+      "file": "game/art/book/undo.svg",
+      "sha256": "aa3746dce70beb30fe9f08ae04dc1f1742ce2ca841c8bfab79e42cf45859d9f2"
+    },
+    {
+      "file": "game/tests/content_pack_probe.gd",
+      "sha256": "ad19ef7265ecf95d78797eefe7ab55c1bf6533a8cc481b577d77a434074e9476"
+    },
+    {
+      "file": "game/tests/hz_b_cases.gd",
+      "sha256": "65a2789fe6503d0933699073bca1a6365b4e002d4c94e952aded367494316bed"
+    },
+    {
+      "file": "game/tests/hz_b_native.gd",
+      "sha256": "d954b1217289abec96c8bc1407abde616da42e7ad5b2e645ae7ce475928a57d3"
+    },
+    {
+      "file": "game/tests/hz_pack.gd",
+      "sha256": "dd51ee93b31f505252ebeef7a262996998127c91393bbe5471b6b79d41a0a47c"
+    },
+    {
+      "file": "game/tests/ku_b_cases.gd",
+      "sha256": "5153597539375e87de6c48aa53b51ed875200ece07ee2f3399009826c974ce5d"
+    },
+    {
+      "file": "game/tests/run_tests.gd",
+      "sha256": "12d0cb4e04a31beb35fe995c6fe2c2f733e97c116117cbccedb450dbe2de1f8e"
+    },
+    {
+      "file": "game/ui/book_button.gd",
+      "sha256": "1db4c3ededb5b6f24a6ab6adc44977674dc88e9e163dd5458358f28a6bf39a7d"
+    },
+    {
+      "file": "game/ui/book_choice.gd",
+      "sha256": "35ee7311101fa10db9bd670a250dbdab36d55cc99a4ad207d3f35cb87dafb438"
+    },
+    {
+      "file": "game/ui/book_controls.gd",
+      "sha256": "b45b3fd8982c4f3142ac1a494ff69aafcb6c1d2c14e05d1448ecaa13ddd90cb8"
+    },
+    {
+      "file": "game/ui/book_style.gd",
+      "sha256": "7f1aab0e3ee42b71e5f0997eb9e7b20d8cb6a8de759becf519f7908c4a16296a"
+    },
+    {
+      "file": "game/ui/catalog.gd",
+      "sha256": "ade8b1c3dd1b8517ffaeea72cbd4c1a58fc4eb993a95bfb2dea90523a1e0f5a3"
+    },
+    {
+      "file": "game/ui/main.gd",
+      "sha256": "44202070a09294e1284b3d020a5ef19cd6a548fd1e6cbff21cfbed96fea7c74e"
+    }
+  ],
+  "files": [
+    {
+      "file": "hz-b-card-1280.png",
+      "sha256": "14741f6693c25000cc6d7515b21e5e577360c1f1f00631f26ccd964f2b80b4b6",
+      "bytes": 41109
+    },
+    {
+      "file": "hz-b-card-1920.png",
+      "sha256": "21e24f11c2ec478afff7eb378f045183d32b687e18c5bd5f27c5a73f0da28ff5",
+      "bytes": 27963
+    },
+    {
+      "file": "hz-b-card-2560.png",
+      "sha256": "180539dc4f0b7debafa8ebbfb4c7482ce664a8807d3a2d6df5bcc62eb0b75c64",
+      "bytes": 38569
+    },
+    {
+      "file": "hz-b-dialog-1280.png",
+      "sha256": "e6f5c3bddefdb348550aec916d4eb23046237b1b5eebe285a16fff054c9dd583",
+      "bytes": 18893
+    },
+    {
+      "file": "hz-b-dialog-1920.png",
+      "sha256": "a00403c0975d8db4dd07041beff0a43bc96e447913e3669183154228a84ea52d",
+      "bytes": 14524
+    },
+    {
+      "file": "hz-b-dialog-2560.png",
+      "sha256": "32a4cdab97174bbd2f2e9969f0b29fb701d6553758db8f4f960502d6301ed8d3",
+      "bytes": 18292
+    },
+    {
+      "file": "hz-b-hover-1280.png",
+      "sha256": "ae9653f72638000bf48ca2b3c0986d24b893e58ebdce0feaaae8bc1dcdf7b656",
+      "bytes": 69533
+    },
+    {
+      "file": "hz-b-hover-1920.png",
+      "sha256": "aa000cc581483b04ea0955b57bdb2ec1fe92056b1736b4b5c3fb0ae64d66ec20",
+      "bytes": 45812
+    },
+    {
+      "file": "hz-b-hover-2560.png",
+      "sha256": "00e7c65e301be56893fdbc44459a183d744df7c64b30ccf16ce53f67a27f85da",
+      "bytes": 69553
+    },
+    {
+      "file": "hz-b-icons-1280.png",
+      "sha256": "c1379459665ae07f3c0d0524ac4d121e2add7defdf5c0fb080a4b9ce8383b170",
+      "bytes": 68023
+    },
+    {
+      "file": "hz-b-icons-1920.png",
+      "sha256": "6ce14b3d1b91c28a27fcd4f971105f4ef8ff14a26e603c1c6b82b4b1d9a92136",
+      "bytes": 44904
+    },
+    {
+      "file": "hz-b-icons-2560.png",
+      "sha256": "45265a0cea131e447dfb4fc5e12acc3e1582d50f349d22df2de393515245c9a5",
+      "bytes": 68058
+    },
+    {
+      "file": "hz-b-pressed-1280.png",
+      "sha256": "71154ac00e965cca86a79e9f02348e87282daec83383f43d742e3c30384aae20",
+      "bytes": 69337
+    },
+    {
+      "file": "hz-b-pressed-1920.png",
+      "sha256": "9e5e2e320df0740cc63206dd073cfe3f8ad497574744c04719bc32f868396390",
+      "bytes": 45604
+    },
+    {
+      "file": "hz-b-pressed-2560.png",
+      "sha256": "138b0e748c68d862a8a7fe5398df8a074d601b93708b023151126b81a60cd7f2",
+      "bytes": 69372
+    },
+    {
+      "file": "hz-b-settings-1280.png",
+      "sha256": "e3c6527e019651300b95321f310998fb4852afdb8c9927f4c31cfce679e090ff",
+      "bytes": 307665
+    },
+    {
+      "file": "hz-b-settings-1920.png",
+      "sha256": "5d2665d56cf59958ec53b9c10815a5f5d1ce202b2129e7fe19c6186b226cc734",
+      "bytes": 874946
+    },
+    {
+      "file": "hz-b-settings-2560.png",
+      "sha256": "ff7cf632c7f95ceab073d8118a34883d814d2b9b77c77d7be82d0f6640b6378e",
+      "bytes": 1667498
+    },
+    {
+      "file": "hz-b-sort-1280.png",
+      "sha256": "f82b9a7d2a9f19bc4e332b8d05fad9c4c9e7b61bc689e41156f1813b1d87bf11",
+      "bytes": 15204
+    },
+    {
+      "file": "hz-b-sort-1920.png",
+      "sha256": "95e76e18a82d7efb70a23f9a81b985371ea803cc369932fd3b248d8c22f4c9dc",
+      "bytes": 10345
+    },
+    {
+      "file": "hz-b-sort-2560.png",
+      "sha256": "3fb79a6c47c051e5a0ec9407d53bc23f0f09dabc3cbf0ed3081c466d281c4a8b",
+      "bytes": 15446
+    },
+    {
+      "file": "hz-b-view-1280.png",
+      "sha256": "a7acd1fb3b96ad5ec386b5090089442cb524dd25fdf2a56dfecbbfb8fb3db715",
+      "bytes": 23097
+    },
+    {
+      "file": "hz-b-view-1920.png",
+      "sha256": "828d508bc6a747e62baecb313864e527cceb4544d6c24e9b401b47bb331c7e3b",
+      "bytes": 22859
+    },
+    {
+      "file": "hz-b-view-2560.png",
+      "sha256": "a3603a945b6ac058d041522e672c99b4853c5c1e12e5fdc2125838f35af356e8",
+      "bytes": 40708
+    },
+    {
+      "file": "hzb.json",
+      "sha256": "f2def27be7dd46d1bba7b5f4bcc9aa38326596ca0a8cf57282e8ca1b8d3df06a",
+      "bytes": 403
+    },
+    {
+      "file": "run.log",
+      "sha256": "0ab6042257c74bd8e6cabfadde45efca2a9113831fa6cab6549fd35c696238a9",
+      "bytes": 240
+    },
+    {
+      "file": "temporary-runner.gd.gz",
+      "sha256": "81baf47cef307e5711c01e6bf6142456c6472ecaebd1d134eedbad3f6f0c9383",
+      "bytes": 20004,
+      "uncompressed_sha256": "4df67ffc76b20fe0f979933c858cfc5c2b043f5588f0db263af089bed7537899"
+    }
+  ]
+}
