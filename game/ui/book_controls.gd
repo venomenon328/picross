@@ -44,6 +44,7 @@ static func popup_theme(id: String, u: float, font: Font) -> Theme:
 	result.default_font = font
 	result.default_font_size = roundi(14*u)
 	var panel = Paper.make(id,u)
+	panel.opaque_bounds = true
 	panel.set_content_margin_all(9*u)
 	result.set_stylebox("panel","PopupMenu",panel)
 	var hover = Paper.make(id+"/row",u,Color("e0ece6"))

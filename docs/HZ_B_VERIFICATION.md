@@ -97,6 +97,10 @@ Auch native Bestätigungs-/Abbruchbuttons erhalten explizit die 44/55-Pixel-
 Mindesttrefferfläche; der Test klickt danach den unveränderten Abbruchweg.
 Hover und Gedrückt werden im Kontaktbogen durch echte Zeigerbewegung und
 gehaltene Maustaste erzeugt, nicht durch wirkungslose Toggle-Setter simuliert.
+Die Originalsichtung zeigte am äußeren Popup-Polster durchscheinende Reste
+des geschlossenen Felds. Der Popup-Panelstil füllt deshalb zusätzlich das
+gesamte native Rechteck opak; die unregelmäßige Kontur liegt darin. Die
+archivierten Entwicklungsbilder zeigen ausdrücklich noch den früheren Stand.
 
 **HZ-B-R01** (separater qualifizierter Review) und **HZ-B-M01** (Eigentümerabnahme)
 bleiben vor Merge offen. Kein Merge, Deployment oder Issue-Abschluss.

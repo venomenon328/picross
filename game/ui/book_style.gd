@@ -7,6 +7,7 @@ var paper: Color = Color("fffaf0")
 var ink: Color = Color("78674f")
 var selected: bool = false
 var focus: bool = false
+var opaque_bounds: bool = false
 
 static func make(id: String, scale: float, color: Color = Color("fffaf0")) -> StyleBox:
 	var result = load("res://ui/book_style.gd").new()
@@ -48,6 +49,8 @@ func contours(rect: Rect2, overrun: bool = true) -> Array:
 
 func _draw(canvas: RID, rect: Rect2) -> void:
 	var lines: Array = contours(rect)
+	if opaque_bounds:
+		RenderingServer.canvas_item_add_rect(canvas,rect,paper)
 	if paper.a > 0:
 		var polygon := PackedVector2Array()
 		for line: PackedVector2Array in contours(rect,false):
