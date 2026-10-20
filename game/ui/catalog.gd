@@ -18,6 +18,8 @@ var page_index: int = 0
 var selected_id: String = ""
 var ui_scale: float = 1.0
 var category_choice: OptionButton
+var sort_label: Label
+var category_tooltip_layout := Vector2.ZERO
 var preference: Preference = Preference.new()
 var sort_choice: OptionButton
 var direction_button: Button
@@ -65,7 +67,9 @@ func _ready() -> void:
 	category_choice.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	category_choice.item_selected.connect(func(index: int) -> void: choose_category(str(category_choice.get_item_metadata(index))))
 	top.add_child(category_choice)
-	top.add_child(_label("Sortieren nach", 16))
+	sort_label = _label("Sortieren nach", 16)
+	sort_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	top.add_child(sort_label)
 	sort_choice = OptionButton.new()
 	sort_choice.name = "catalog-sort"
 	for title: String in ["Kategorie", "Größe", "Schwierigkeit", "Hinzugefügt"]: sort_choice.add_item(title)
@@ -136,6 +140,7 @@ func present(sessions: Array[Session], slot_status: Array[String], slot_errors: 
 		statuses[id] = slot_status[index]
 		errors[id] = slot_errors[index]
 	category_choice.clear()
+	category_tooltip_layout = Vector2.ZERO
 	category_choice.add_item("Alle Rätsel (%d)" % items.size())
 	category_choice.set_item_metadata(0, "")
 	for category: Dictionary in categories:
@@ -377,18 +382,31 @@ func _layout_cards() -> void:
 			node.ui_scale = ui_scale
 			if node.content_surface: continue
 			node.add_theme_font_size_override("font_size", roundi(14*ui_scale))
-			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.image != null else Vector2(node.get_theme_font("font").get_multiline_string_size(node.text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(14*ui_scale)).x+24*ui_scale,44*ui_scale)
+			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.image != null else Vector2(Card.UiText.width(node.get_theme_font("font"),node.text,roundi(14*ui_scale))+24*ui_scale,44*ui_scale)
 	for card: Card in choices:
 		card.ui_scale = ui_scale
 		card.custom_minimum_size.x = card_width
 		card.size.x = card_width
 		card.layout_content()
 	category_choice.custom_minimum_size.y = 44 * ui_scale
+	# Wrap the two-word label at narrow widths; every action and the usual
+	# category names keep their budgets without adding another toolbar row.
+	sort_label.custom_minimum_size.x = Card.UiText.label_width(sort_label, "Sortieren" if size.x < 1100 * ui_scale else "Sortieren nach", roundi(16 * ui_scale))
 	sort_choice.custom_minimum_size = Vector2(160, 44) * ui_scale
 	sort_choice.add_theme_font_size_override("font_size", roundi(14 * ui_scale))
 	sort_choice.get_popup().prefer_native_menu = false
 	category_choice.get_popup().max_size = Vector2i(roundi(size.x), roundi(minf(480 * ui_scale, size.y * 0.8)))
 	category_choice.get_popup().prefer_native_menu = false
+	# PopupMenu scrolls vertically but clips overlong individual entries.
+	# Its existing tooltip route exposes the entire measured, wrapped label.
+	var tooltip_layout := Vector2(roundi(14 * ui_scale), minf(420 * ui_scale, size.x - 56 * ui_scale))
+	if category_tooltip_layout != tooltip_layout:
+		category_tooltip_layout = tooltip_layout
+		for index: int in range(category_choice.item_count):
+			var text: String = category_choice.get_item_text(index)
+			var full: String = Card.UiText.wrapped(text, int(tooltip_layout.x), tooltip_layout.y)
+			category_choice.get_popup().set_item_tooltip(index, full)
+	category_choice.tooltip_text = category_choice.get_popup().get_item_tooltip(category_choice.selected) if category_choice.selected >= 0 else ""
 
 func ensure_control_visible(control: Control) -> void:
 	scroll.ensure_control_visible(control)

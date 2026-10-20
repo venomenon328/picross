@@ -8,9 +8,9 @@ KU-A für die [Kartengestaltung](CATALOG_PRESENTATION.md) und KU-B für die hier
 beschriebene vollständige Sortierfunktion einschließlich Daten und Persistenz.
 KU-A und KU-B sind über ihre eigenen PRs #254/#255 integriert.
 [Prüfzuordnung](KU_B_VERIFICATION.md) und die offenen persönlichen KU-Abnahmen
-auf `main` bleiben separat im Issue gebunden. Der freigegebene nächste
-[HZ-Stilstand](HAND_DRAWN_UI.md) ist noch nicht implementiert und übernimmt keine
-historischen Mergeausnahmen.
+auf `main` bleiben separat im Issue gebunden. Vom freigegebenen
+[HZ-Stilstand](HAND_DRAWN_UI.md) ist HZ-A implementiert; technische Gates stehen
+im Paket-PR, HZ-B bleibt offen. Historische Mergeausnahmen werden nicht übernommen.
 
 ## Geltung und Ausgangsstand
 
@@ -35,7 +35,7 @@ Fortschrittsregeln oder Änderungen an Rätseldefinitionen und bestehenden Saves
 Direkt neben der Kategorienauswahl stehen ein Dropdown **„Sortieren nach“**
 und ein kompakter Richtungsumschalter. Beide verwenden die bestehende Buch-UI,
 lesbare Beschriftungen und ihre üblichen Hover-/Fokus-/Trefferflächen.
-HZ-D01/D04/D05 spezifiziert dafür Bakso, organische Rahmen und eine vollständige
+HZ-D01/D04/D05 spezifiziert dafür Tidy Hand gemäß HZ-A-FONT02, organische Rahmen und eine vollständige
 Gestaltung von geschlossenem Feld und geöffnetem Menü einschließlich Zeilen,
 Hover-/Auswahlmarkierung, Chevron und Scrollbestandteilen. Kategorieauswahl,
 Sortierung und Rätselansicht in Einstellungen teilen diese Darstellung.

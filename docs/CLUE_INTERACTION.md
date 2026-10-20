@@ -97,9 +97,9 @@ der Box. Bei Wechsel der Hinweisquelle folgt die Markierung der neuen Quelle.
 
 Das Overlay selbst wird nicht verschiebbar oder anheftbar. Bestehende Öffnungs-/
 Schließbedingungen, Delight-Zahlen, Papier, Rahmen, Umbruch und zoomunabhängige
-Lesegröße bleiben. Die kleinere Überschrift folgt dem freigegebenen, noch nicht
-implementierten [HZ-Sollstand](HAND_DRAWN_UI.md): Bakso statt Fraunces mit neu
-gemessenen Textgrenzen gemäß [HC/HF](CLUE_TYPOGRAPHY.md).
+Lesegröße bleiben. Die kleinere Fraunces-Überschrift und ihre gemessenen
+Textgrenzen gemäß [HC/HF](CLUE_TYPOGRAPHY.md) bleiben nach der
+Eigentümerentscheidung HZ-A-FONT02 im [HZ-Vertrag](HAND_DRAWN_UI.md) unverändert.
 Die Box darf die von ihr bedeckte
 Rasterfläche weiterhin abdecken; Bänder werden nicht über Text oder Rahmen gemalt.
 Die passende Markierung bleibt außerhalb dieser natürlichen Überdeckung sichtbar.

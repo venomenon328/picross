@@ -134,7 +134,7 @@ class Selection(unittest.TestCase):
             with self.assertRaises(ValueError): evaluate(plan,results)
 
     def test_every_existing_assertion_belongs_to_one_group(self):
-        self.assertEqual(len(expected('chromium', GROUPS)),30)
+        self.assertEqual(len(expected('chromium', GROUPS)),31)
         self.assertEqual(BROWSERS, ('chromium',))
         with self.assertRaises(ValueError): expected('firefox', GROUPS)
         labels=[]
@@ -146,7 +146,7 @@ class Selection(unittest.TestCase):
             labels.extend(found)
         self.assertEqual(len(labels),len(set(labels)))
         self.assertEqual({s['id'] for s in SCENARIOS},
-                         {'regular-start', 'KU-B01', 'KU-B02', 'AT-W01-C', 'AT-W01-E', 'AT-W01-P', *[f'B{i:02}' for i in range(1,25)]})
+                         {'regular-start', 'KU-B01', 'KU-B02', 'AT-W01-C', 'AT-W01-E', 'AT-W01-P', 'HZ-A-W01', *[f'B{i:02}' for i in range(1,25)]})
         self.assertTrue(all(s['browsers']==['chromium'] for s in SCENARIOS))
 
 
@@ -162,7 +162,7 @@ class EvidenceGate(unittest.TestCase):
 
     def test_full_coverage_and_same_run_retry(self):
         rows=validate_all(self.plan,self.root,self.outputs,'2')
-        self.assertEqual([r['scenarios'] for r in rows],[30])
+        self.assertEqual([r['scenarios'] for r in rows],[31])
         for key in self.outputs:
             outputs=dict(self.outputs);outputs[key]='2'
             with self.assertRaises(ValueError): validate_all(self.plan,self.root,outputs,'2')
