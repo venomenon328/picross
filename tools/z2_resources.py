@@ -1,4 +1,4 @@
-"""Reproduce the selected Z2 offline resources from the pinned BP-3 inputs."""
+"""Reproduce active book resources from pinned BP-3 inputs and the HZ-B icon source."""
 from pathlib import Path
 import argparse
 import hashlib
