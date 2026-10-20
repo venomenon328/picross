@@ -1,0 +1,15 @@
+{
+  "explanation": "Noch keine tatsächliche Endabnahme für r06. Bestehender expliziter v2-Autorisierungsweg benötigt deren echten Dateihash; kein erfundener Owner-/Freigabebeleg. Angeforderte Rasterkorrektur und ihre technische Prüfung sind abgeschlossen.",
+  "export_performed": false,
+  "format": "picross-editorial-fixed-mono-package-check-v1",
+  "full_ZA1_blocker": "Manual source requires explicit manual authorization",
+  "full_ZA1_inspection_completed": false,
+  "handoff_sha256": "7e4223fd3113cea0ebb35ad9b0344ea7305ffd9cdefc680d780794dc505be318",
+  "image_approvals_and_provenance_verified": true,
+  "inventory_sha256": "ccb160c49f35ee6073812592c5e00817c53bea20fe3348bc18519af7fb48516b",
+  "package_sha256": "5587930c65e5897aecc53484a8e3d1bb673b5deec092e0c0f08b38a6817d260d",
+  "registered": false,
+  "safe_written_zip_inventory_and_files_verified": true,
+  "technical_deduction_certified": true,
+  "technical_fixed_replay": "checks/manual-replay-final.json"
+}
