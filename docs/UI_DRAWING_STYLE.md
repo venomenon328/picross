@@ -1,7 +1,17 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
-[aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
+**HZ · 20.10.2026, Spezifikation freigegeben; noch nicht implementiert:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) ist der Detailvertrag für
+Bakso als normale UI-Schrift, organischere Karten-/Button-/Dropdownrahmen,
+vollständig gezeichnete offene Menüs und die gesamte Piktogrammfamilie.
+Er ersetzt gezielt frühere Fraunces-/Plex-Rollen außerhalb der HC-Spezialrolle
+und verstärkt kleine UI-Konturen. Raster, Zellen, Hinweise und die drei großen
+SL-Rasterrahmen behalten ihre Verträge; historische Auswahl-/Lieferbelege bleiben.
+
+**KU / #244, integrierte Ausgangsbasis für HZ:** KU-A und KU-B sind über
+PR #254/#255 integriert; [KU-A](KU_VERIFICATION.md) und
+[KU-B](KU_B_VERIFICATION.md) behalten ihre getrennten Nachweise.
+Die offenen persönlichen Abnahmen auf `main` stehen weiterhin im Issue.
 Die Spezifikation wurde am 18.10.2026 freigegeben:
 [Katalogdarstellung](CATALOG_PRESENTATION.md) führt in KU-A die gezielte neue
 Zeichnung und Anordnung: ein gemeinsamer warmer Papierstreifen mit subtil
@@ -18,7 +28,7 @@ Entwurfsstarts sind 28–32 logische Pixel für Modussymbole, 12–14 für Kreis
 Abstände bei UI 100/125 % bestimmen das Ergebnis; keine bereits gemessene
 Fitgarantie, keine Textkürzung oder Schriftverkleinerung als Breitenersatz.
 Der Status steht als Symbol mit „Neu“, „Begonnen“ oder „Gelöst“ rechts in der
-Fußzeile neben „Blatt NN“. Plex-/Bakso-Rollen, große proportionale Bildfläche,
+Fußzeile neben „Blatt NN“. Die Schriftrolle wird durch HZ erweitert; große proportionale Bildfläche,
 lokale Polygon-/Revealglättung, Spoiler-, Reset- und Recoverygrenzen bleiben.
 KU-B ergänzt die [Sortierbedienung](CATALOG_SORTING.md) neben dem Kategorienfilter.
 Statische Kreise und Stifte verändern weder Zell-/Hinweisrendering noch Animationen.
@@ -28,8 +38,9 @@ Paketumfang und spätere Abnahmen stehen im
 **KE / #233, mit PR #234 integrierte Ausgangsbasis für KU:**
 Die damalige [Katalogdarstellung KE-D01–D05](CATALOG_PRESENTATION.md) ergänzte
 Papieretikett, Stift-/Statuspiktogramme und ein eigens gezeichnetes Graphitfragezeichen im
-Katalogbildraum. Metadaten bleiben in Plex, Motivüberschriften in Bakso; keine
-neuen Fonts. Subtil unregelmäßige Konturen, zurückhaltende Schraffur, keine Animation.
+Katalogbildraum. KE verwendete Plex für Metadaten und Bakso für Motivüberschriften;
+HZ erweitert diese damalige Rollenverteilung ohne neue Fontdateien.
+Subtil unregelmäßige Konturen, zurückhaltende Schraffur, keine Animation.
 Gezielte Modus-/Schwierigkeits-Tooltips hatten den bestehenden Resettooltip ergänzt;
 der Ganzkarten-Tooltip blieb entfallen. KE-N1 akzentuierte nur die
 Schwierigkeitsziffer in gedecktem Grün–Oliv/Ocker–Rost–Rot; Name und
@@ -44,16 +55,18 @@ Glättung oder Änderung eigener Miniaturen.
 und `???` in Katalogkarten. Feste zweizeilige Titel, begrenzte Metadaten, gleicher
 proportionaler Bildraum und feste Fußzeile ersetzen die inhaltsabhängigen KB-Höhen.
 Öffnen erfolgt über die Karte, Reset allein oben rechts mit reservierter Fläche,
-10 × UI Innenrand und unverändertem BookButton/reset.svg. Treffer bleiben 44/55 px.
+10 × UI Innenrand und dem gemeinsamen BookButton/reset.svg. Treffer bleiben 44/55 px.
 Speicherdiagnose und Backupaktionen nutzen bei Bedarf den festen Bildraum.
 Der Kacheltooltip entfällt, auch bei gekürzten Labels; Resettooltip und übrige
-Tooltips bleiben. Keine Font-/Assetbytes oder Zell-/Hinweisänderung.
+Tooltips bleiben. KK änderte keine Font-/Assetbytes oder Zell-/Hinweisgestaltung;
+HZ-B revidiert anschließend gezielt die aktive Iconfamilie, nicht die Originalfonts.
 [Prüfzuordnung](KK_VERIFICATION.md).
 
 **Aktive Hinweisgeometrie HC / #92:** [CLUE_TYPOGRAPHY](CLUE_TYPOGRAPHY.md)
 ersetzt ausschließlich ältere Chalkboard-/24/18-Aussagen für reguläre Hinweise.
 Delight Coffee, zellabhängiger Schriftgrad und gemessene gemeinsame Slots gelten
-einschließlich Fit, G/V, Drag/Snap und Status. Übrige Fonts und C1 bleiben.
+einschließlich Fit, G/V, Drag/Snap und Status. Normale UI-Fontrollen folgen HZ;
+C1 und die spezialisierte Zahlen-/Markerrolle bleiben.
 
 ## Zellrendering-Vertrag · PERF
 
@@ -143,9 +156,11 @@ oder mathematischen Rätseldaten für die spätere Umsetzung.
 Die gewählte A-Buchkomposition bleibt Grundlage. GD-03/GP-03 wurden für die
 gezielte Untersuchung der Hinweisziffern geöffnet: Schriftform, Gewicht, optischer
 Schriftgrad und gegebenenfalls bewusst gewählte gemeinsame Slotmaße. Seit V3
-Bakso-Arbeitstitel, sonstige Fraunces-Überschriften und Plex-Sans-Bedientexte und die C1-Farbkontur bleiben Grundlage. VS2-E1 erlaubt die
-begrenzte neue Flächenverteilung und Scribble-Fassung, keine allgemeine Hintergrund-,
-Schrift-, Themen- oder Albumneuauswahl.
+waren Bakso-Arbeitstitel, sonstige Fraunces-Überschriften und Plex-Sans-Bedientexte
+die UI-Grundlage. HZ-D01/D02 löst diese begrenzte Rollenverteilung für normale UI
+durch Bakso ab; die C1-Farbkontur bleibt. VS2-E1 erlaubte die begrenzte neue
+Flächenverteilung und Scribble-Fassung. HZ wählt keinen neuen Hintergrund,
+Font, Themen- oder Albumaufbau, sondern nutzt die vorhandene Bakso-Ressource breiter.
 
 Die Stiftfüllung ist gewählt. Der enge E2-Vergleich enthielt Bakso Daging Regular
 und Chalkboard Regular; E3 wählt **Chalkboard Regular**. Bakso Daging und Plex bleiben
@@ -178,8 +193,9 @@ CLOSED erhält zwei stabile handschriftliche Diagonalzüge mit 76 % über das ga
 Farb-IDs, Hinweisreihenfolge und Originalindex sowie die lösungsunabhängige H1/GP-48-
 Analyse einschließlich Vorschau bleiben unverändert. Alle Zustände müssen auf beiden
 Achsen, im kontinuierlichen Hinweisdrag und im vollständigen Tooltip funktionieren.
-HF / #149 verwendet dort die vorhandene kleinere Fraunces-Überschrift und
-Delight-Zahlen auf ruhigem A-Papier mit wiederverwendetem SL-65-Bildrahmen.
+HF / #149 verwendet dort eine kleinere UI-Überschrift, im freigegebenen
+HZ-Sollstand Bakso gemäß HZ-D01/D02, und unveränderte Delight-Zahlen auf ruhigem
+A-Papier mit wiederverwendetem SL-65-Bildrahmen.
 Gemeinsame gemessene Zahlen-/X-/C1-/AA-Hüllen und skalierte Innenränder verhindern Überlappung;
 Rahmenkanten werden gekachelt, nicht unnötig gedehnt.
 Helle Rätselfarben bleiben durch C1 erkennbar; Statuswechsel verändern weder Slot
@@ -485,7 +501,8 @@ Miniatur samt Fassung und Farbauswahl erhalten dieselbe zurückhaltende Scribble
 Miniaturfüllungen bleiben vereinfachte ruhige Farbformen, keine dominante Mikroschraffur.
 Palettenfarb-IDs und Originalfarbflächen bleiben eindeutig; Auswahl, Hover und Fokus
 müssen erkennbar sein, ohne neue Rätselfarben vorzutäuschen. Die optische Strichkante
-verkleinert oder verzerrt keine Hitbox. Fraunces/Plex und das A-Hintergrundbild bleiben.
+verkleinert oder verzerrt keine Hitbox. Die normale UI-Schriftrolle folgt inzwischen
+dem freigegebenen HZ-Sollstand; das A-Hintergrundbild bleibt.
 „Kleine Vorschau“ bezeichnet hier die Miniatur; die statische Zielvorschau im Raster
 bleibt ebenfalls stilistisch konsistent, aber ohne neu eingeführte Bewegung.
 
@@ -548,7 +565,11 @@ V3-01–07 ist umgesetzt auf Basis des vorbereiteten kombinierten V1/V2-Heads
 [V3-Prüfplan](../examples/vs2/v3-plan.json) wurde vor Vergleichen in `502883c`
 versioniert. [Umsetzung und Prüfzuordnung](VS2_V3_IMPLEMENTATION.md).
 
-| Regel | Aktueller verbindlicher Umfang |
+Die folgende Tabelle erhält den damaligen V3-Umfang. Insbesondere V3-07 ist für
+die aktuellen Schriftrollen durch HC/KB/KK und den freigegebenen HZ-Sollstand
+fortgeschrieben; HZ behauptet keine rückwirkende V3-Lieferung.
+
+| Regel | Damaliger verbindlicher V3-Umfang |
 | --- | --- |
 | V3-01 | Rasterlinien etwas stärker handgezeichnet als V2, stabil je Linie. Tatsächliche Abweichung, Strichbreite und AA bleiben im vorhandenen Rahmenbudget; keine weitere Fitverkleinerung. Kleine Zellen vereinfachen; Rahmen, Fünfergruppen und Zelltreffer bleiben eindeutig. |
 | V3-02 | Drei organische helle Stiftzüge variieren in Lage, Enden, Neigung, Abständen und Krümmung stabil je Zelle. Satte Originalfarbe und Trennung bleiben. Zielvorschau, wartende Ziele und letzter Animationsdurchgang teilen dieselbe Endtextur. Unter 18px oder bei Einpassen ruhige vereinfachte Fläche. X, 210/120-ms-Timing, Startabstände und History bleiben. |

@@ -16,7 +16,9 @@ Fonts und übrige HC-/HF-Verträge bleiben.
 
 [Issue #92](https://github.com/venomenon328/picross/issues/92) ersetzt für aktive
 Hinweise Chalkboard und feste 24/18-Slots. Historische ZS1-/VS2-Lieferberichte
-behalten ihre Bindung. Bakso, Fraunces und Plex behalten ihre übrigen UI-Rollen.
+behalten ihre Bindung. Die übrigen UI-Rollen werden durch den freigegebenen,
+noch nicht implementierten [HZ-Sollstand](HAND_DRAWN_UI.md) auf Bakso erweitert;
+die hier gebundene Zahlen-/Marker- und Zählergeometrie bleibt unverändert.
 
 ## Schrift und Rechtequelle
 
@@ -112,14 +114,18 @@ nicht. Commit, Push und Draft-PR sind beauftragt; kein Merge oder Release.
 ## HF · vollständiges Hinweis-Overlay (#149)
 
 Die nichtmodale Ergänzung zeigt ausschließlich bei echtem Überlauf die ganze Folge.
-„Vollständiger Hinweis“ verwendet die vorhandene Fraunces 600 bei 13 × UI;
+„Vollständiger Hinweis“ verwendet nach HZ-D01/D02 die normale Bakso-Schrift.
+Diese freigegebene Rolle ist noch nicht implementiert; bisher gilt Fraunces 600
+bei 13 × UI. Der kleine Schriftgrad ist für HZ ein Ausgangspunkt, keine
+Fitgarantie: neue Glyphenmaße, Umbruch und sichere Box werden getrennt geprüft;
 Delight-Zahlen behalten ihre vom Rasterzoom unabhängige Overlaylesegröße.
 Dieselbe baselinebezogene Zahlen-/X-Hülle einschließlich C1/AA bestimmt Innenränder,
 Zeilenhöhen, Tokenumbruch und den sichtbaren Abstand zur kleineren Überschrift.
 Die inhaltsabhängige Box bleibt im geschützten Board-/Papierbereich. Das ruhige
 Papier ist ein Ausschnitt des vorhandenen A-Arbeitsassets; der unveränderte
 SL-65-Vorschaurahmen wird mit festen Ecken und gekachelten Kanten wiederverwendet.
-Dessen sichere Innenfläche bleibt frei. Keine neue Bild- oder Fontauswahl.
+Dessen sichere Innenfläche bleibt frei. Die HZ-Umstellung nutzt die vorhandene
+Bakso-Ressource; keine neue Bild-/Fontauswahl oder Hinweisgeometrie.
 Layout-/Kapazitäts-/Blattwechsel prüfen Quelle und Trefferrechteck auch unter
 ruhender Maus neu; Boxklicks werden konsumiert. Vollständige Folgen öffnen keine
 Box und bieten keine wirkungslose Navigation. [Prüfzuordnung](HF149_VERIFICATION.md).

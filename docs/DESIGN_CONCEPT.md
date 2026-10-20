@@ -1,5 +1,13 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**HZ · 20.10.2026, Spezifikation freigegeben; noch nicht implementiert:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) führt die vorhandene
+Bakso-Schrift in allen normalen UI-Texten und Überschriften fort. Kleine
+Karten-/Button-/Dropdownrahmen werden organischer; geöffnete Menüs, Markierungen
+und sämtliche Piktogramme erhalten dieselbe Handschrift. Die HZ-Schriftrollen
+ersetzen gezielt die frühere Fraunces-/Plex-Aufteilung. Hinweiszahlen und
+Rastergeometrie behalten ihre eigenen Verträge; historische Belege bleiben.
+
 **AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) erweitern §4.3 um Motive
 auf dem vorhandenen Buch- und Kartenpapier. Der neue Standard gilt für künftige
@@ -10,8 +18,10 @@ Die [Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) beauftragt nun AT-B-F01 mit
 kontrollierter Integration und tatsächlicher Katalog-/Abschlussprüfung.
 Historische Gestaltungs- und Abnahmenachweise bleiben erhalten.
 
-**KU / #244:** KU-A ist im vorliegenden Implementierungspaket umgesetzt;
-[aktuelle Nachweise und getrennte Gates](KU_VERIFICATION.md). KU-B bleibt offen.
+**KU / #244, integrierte Ausgangsbasis für HZ:** KU-A und KU-B sind über
+PR #254/#255 integriert; [KU-A](KU_VERIFICATION.md) und
+[KU-B](KU_B_VERIFICATION.md) behalten ihre getrennten Nachweise.
+Die offenen persönlichen Abnahmen auf `main` stehen weiterhin im Issue.
 Die Spezifikation wurde am 18.10.2026 freigegeben:
 Der neue [Katalog-Sollvertrag](CATALOG_PRESENTATION.md) führt in KU-A einen ruhigen
 warmen Papierstreifen mit subtil unregelmäßiger Kontur und genau einer gemeinsamen
@@ -31,7 +41,8 @@ sind Entwurfsstarts, keine gemessenen Fitgarantien. KU-B ergänzt die
 [Sortierung](CATALOG_SORTING.md) neben dem Kategorienfilter im vorhandenen Buchstil.
 Paketgrenzen und spätere Abnahmen stehen im
 [Gesamtissue #244](https://github.com/venomenon328/picross/issues/244).
-Dieser freigegebene Sollstand ist noch keine Implementierung oder Bedienabnahme.
+Die damalige Spezifikationsfreigabe war keine Implementierungs- oder Bedienabnahme;
+HZ benötigt eigene Nachweise und übernimmt keine früheren Mergeausnahmen.
 
 **KE / #233, mit PR #234 integrierte Ausgangsbasis für KU:**
 Die damalige [Katalogdarstellung](CATALOG_PRESENTATION.md) konkretisierte das kleine
@@ -57,7 +68,7 @@ und ihre Textaktionen bleiben im Bildraum erreichbar. Eigene Vorschau/Reveal pas
 proportional. Responsive kompakte Breiten, BookButtons, Originalpalette und
 2×3-Werkzeuge bleiben. [Aktuelle Prüfzuordnung](KK_VERIFICATION.md).
 
-KAT-2 (#79) ergänzt den Entwicklungsstart als warmes Kartenraster auf dem vorhandenen Buch. Oberhalb stehen eine scrollbare Kategorienauswahl einschließlich leerer Gruppen und „x von y gelöst“. Native Controls, vorhandene lokale Schriften und klare Hover-/Fokus-/Auswahlrahmen bleiben maßgeblich. Höchstens 24 Karten teilen sich eine Seite; Spaltenzahl und Scrollfläche richten sich nach Fenster und UI-Skalierung. Jede Karte trägt die stabile Blattkennung, Größe, Mono/Farbe und Status, in „Alle Rätsel“ zusätzlich die Kategorie. Eigene ungelöste Füllungen bleiben unkorrigiert; Motivname und proportionales Reveal erscheinen erst nach gültigem Abschluss. Die bisherige zusätzliche globale Auswahlvorschau entfällt. [Nachweise und offene KAT2-M01-Abnahme](KAT2_VERIFICATION.md).
+KAT-2 (#79) ergänzt den Entwicklungsstart als warmes Kartenraster auf dem vorhandenen Buch. Oberhalb stehen eine scrollbare Kategorienauswahl einschließlich leerer Gruppen und „x von y gelöst“. Die vorhandenen Godot-Controls behalten ihre Bediensemantik; Schrift, Konturen und auch geöffnete Listen folgen als neuer Sollstand [HZ](HAND_DRAWN_UI.md). Hover, Fokus und Auswahl bleiben erkennbar. Höchstens 24 Karten teilen sich eine Seite; Spaltenzahl und Scrollfläche richten sich nach Fenster und UI-Skalierung. Jede Karte trägt die stabile Blattkennung, Größe, Mono/Farbe und Status, in „Alle Rätsel“ zusätzlich die Kategorie. Eigene ungelöste Füllungen bleiben unkorrigiert; Motivname und proportionales Reveal erscheinen erst nach gültigem Abschluss. Die bisherige zusätzliche globale Auswahlvorschau entfällt. [Nachweise und offene KAT2-M01-Abnahme](KAT2_VERIFICATION.md).
 
 ## Aktueller Entwicklungsstand
 
@@ -156,7 +167,7 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 ## 4. Visuelle Ausarbeitung
 
 Für #23 gilt die [aktive Auswahl GD-01 bis GD-05](Z2_SELECTION.md): A-Inventarband,
-gemeinsame BP-3-Montierungen, Fraunces/Plex Sans, feste C1-Kontur und eine echte
+gemeinsame BP-3-Montierungen, die damaligen Fraunces-/Plex-Rollen, feste C1-Kontur und eine echte
 native N1-Informationsseite. Diese konkrete Arbeitsansicht ersetzt die historische
 BP-3-Empfehlung B, nicht die noch offene gesamte Themen-/Kapitelentscheidung.
 Raster und UI werden getrennt auf unverzerrtem A-Papier gezeichnet. N1 nutzt
@@ -173,14 +184,15 @@ für diesen Merge auf. RP-3 ist nach eigenem technischem/visuellem Review R2
 Die [RP-4-Sichtprüfung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP4_VERIFICATION.md) bewertet neue Produktionsraster,
 keine neue P1-Bedienabnahme.
 
-Die neue ZS-Folgearbeit aus Abschnitt 4.4 öffnet GD-03 ausschließlich für die
-Gestaltung der Hinweisziffern. VS2-E2/V3 ergänzt Bakso für Arbeits-Blatttitel, KB für den Katalogtitel, KK für Kachel-Motivüberschriften/`???`;
-Fraunces bleibt für sonstige Überschriften, Plex Sans für übrige UI,
-A-Arbeitsasset, Buchkomposition, N1 und die C1-Farb-/Kontursemantik bleiben die
-Grundlage. Konkrete abweichende Ziffern-, Schriftgrad- oder Slotwerte werden
-erst im nativen Vergleich begründet gewählt; eine Änderung dieser Werte ist
-kein Selbstzweck. Die historischen GD-Auswahl- und Abnahmenachweise bleiben
-an ihren jeweiligen Stand gebunden.
+Die ZS-Folgearbeit aus Abschnitt 4.4 öffnete GD-03 für Hinweisziffern;
+[HC](CLUE_TYPOGRAPHY.md) bindet inzwischen deren Delight-Schrift und Geometrie.
+VS2-E2/V3 ergänzte Bakso für Arbeits-Blatttitel, KB für den Katalogtitel und KK
+für Kachel-Motivüberschriften/`???`. [HZ-D01/D02](HAND_DRAWN_UI.md) erweitert
+Bakso als freigegebenen, noch nicht implementierten Sollstand auf sämtliche
+normalen UI-Texte und Überschriften mit kontrollierten lokalen Fallbacks und
+gemessenen Textmaßen. Die bisherigen Fraunces-/Plex-Rollen sind für diesen
+Folgeschritt abgelöst. A-Arbeitsasset, Buchkomposition, N1 und C1 bleiben Grundlage.
+Die historische GD-/ZS-Auswahl und ihre Abnahmen behalten ihre Standbindung.
 
 ### BP-1R bis BP-3: Entwurfsverlauf und integrierte Grundlagen
 
@@ -423,7 +435,10 @@ Spalte lässt sich nur für sich vertikal, jede konkrete Zeile nur für sich hor
 kontinuierlich ziehen und beim Loslassen in ganzen gemeinsamen Slots einrasten
 lassen, ohne X-/Y-Zuordnung oder Nachbarfolgen zu ändern. Der temporäre Versatz
 ist weder gespeicherte Leseposition noch Spielzustand.
-Der vollständige Hover-Tooltip ergänzt diese Navigation mit kleinerer Fraunces-Überschrift, Delight-Zahlen und vorhandener warmer Papier-/Bildrahmung. Gemessene Textgrenzen halten Überschrift, Zahlen und Rahmen getrennt; eine
+Der vollständige Hover-Tooltip ergänzt diese Navigation mit kleinerer UI-Überschrift
+(Bakso im freigegebenen HZ-Sollstand), unveränderten Delight-Zahlen und vorhandener
+warmer Papier-/Bildrahmung. HZ-D02 verlangt neu gemessene Textgrenzen für die
+Überschrift. Sie halten Überschrift, Zahlen und Rahmen getrennt; eine
 separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze Linien,
 nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich
 Fehlern, niemals eine korrigierte Lösung. VS2 konkretisiert fitbegrenzten Zoom und
