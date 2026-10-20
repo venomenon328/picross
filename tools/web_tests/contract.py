@@ -2,6 +2,7 @@
 GROUPS = ('regular', 'catalog', 'input', 'completion', 'persistence')
 BROWSERS = ('chromium',)
 SCENARIOS = (
+    {'id':'HZ-A-W01','group':'catalog','label':'HZ Tidy Hand local fallback, complete metadata, native menus and scrollable help','browsers':['chromium'],'images':[f'hz-{kind}-{w}.png' for kind in ('menu','help') for w in (1280,1920,2560)]},
     {'id':'AT-W01-C','group':'catalog','label':'AT transparent catalog and real hover preserve white detail, holes and soft alpha','browsers':['chromium'],'images':[f'at-{kind}-{w}.png' for kind in ('card','hover') for w in (1280,1920,2560)]},
     {'id':'AT-W01-E','group':'completion','label':'AT transparent transition, final image and reopening preserve earned saves','browsers':['chromium'],'images':[f'at-{kind}-{w}.png' for kind in ('final','reopen','blend') for w in (1280,1920,2560)]},
     {'id':'AT-W01-P','group':'persistence','label':'AT two genuine image exports retain begun and solved saves across reload and browser restart','browsers':['chromium'],'images':[f'at-{kind}-update.png' for kind in ('before','after','restart')]},

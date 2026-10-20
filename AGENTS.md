@@ -36,8 +36,9 @@ der aktuelle AT-B-Auftrag ersetzt diese historischen Belege nicht.
 
 Bei UI-Schrift, kleinen Rahmen, Dropdowns oder Piktogrammen zusätzlich
 [HZ: Handgezeichnete Bedienoberfläche](docs/HAND_DRAWN_UI.md) vollständig lesen.
-HZ / #284 (20.10.2026) ist als Spezifikation freigegeben, noch nicht implementiert:
-HZ-A umfasst Bakso als normale UI-Schrift samt Zeichenbehandlung und Textlayout;
+HZ / #284 (20.10.2026) ist als Spezifikation freigegeben, HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:
+HZ-A umfasst gemäß HZ-A-FONT02 Tidy Hand als Standardtext samt Zeichenbehandlung
+und Textlayout; Überschriften und Delight-Hinweiszahlen bleiben unverändert;
 HZ-B danach organische Konturen, vollständige Menüs und die gesamte Symbolfamilie.
 Hinweisziffern/-geometrie und die drei großen SL-Rasterrahmen behalten ihre Verträge.
 Spezifikationspflege beauftragt keinen Produktcode oder Merge.

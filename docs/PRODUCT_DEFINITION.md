@@ -1,11 +1,11 @@
 # Produktdefinition: picross
 
-**HZ · 20.10.2026, freigegebene Spezifikation; noch nicht implementiert:**
+**HZ · 20.10.2026, freigegebene Spezifikation; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
 Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil
 auf alle normalen Spielertexte, Rahmen der Rätselkarten und kleinen Buttons,
 geschlossene und geöffnete Dropdowns sowie alle Button-/Menüpiktogramme.
-Bakso Daging wird wie bei „Rätselkatalog“ die normale UI-Schrift einschließlich
-aller Überschriften; Lesbarkeit und Textlayout werden dazu passend gemessen.
+Tidy Hand wird gemäß Eigentümerentscheidung HZ-A-FONT02 die normale UI-Schrift;
+Überschriften bleiben unverändert. Lesbarkeit und Textlayout werden passend gemessen.
 Hinweisziffern bleiben in Delight Coffee mit ihrer gebundenen Geometrie.
 [Issue #284](https://github.com/venomenon328/picross/issues/284) trennt HZ-A
 (Schrift/Textlayout) und HZ-B (Konturen/Menüs/Symbole) samt eigener Abnahme.

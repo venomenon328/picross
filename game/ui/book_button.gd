@@ -4,6 +4,7 @@ const INK = Color("293e3d")
 const PAPER = Color("fffaf0")
 const Scribble = preload("res://ui/scribble.gd")
 const BookTooltip = preload("res://ui/book_tooltip.gd")
+const UiText = preload("res://ui/ui_text.gd")
 var action_id: String = ""
 var content_surface: bool = false
 var selected: bool = false:
@@ -95,11 +96,11 @@ func _draw() -> void:
 	if not text.is_empty():
 		var font: Font = get_theme_font("font")
 		var fs: int = get_theme_font_size("font_size")
-		var extent: Vector2 = font.get_multiline_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs)
+		var bounds: Rect2 = UiText.ink(font, text, fs)
 		# Honour theme alpha, including the existing native contrast probe.
 		var ink: Color = get_theme_color("font_color")
 		if selected and ink.a > 0: ink = PAPER
-		draw_multiline_string(font,Vector2((size.x-extent.x)/2,(size.y-extent.y)/2+font.get_ascent(fs)),text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,-1,ink)
+		draw_string(font,(size-bounds.size)/2-bounds.position,text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,ink)
 	if has_focus():
 		# Keep focus outside the unchanged swatch; light ink remains visible on
 		# selected dark paper and does not disappear into the selection colour.

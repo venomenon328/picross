@@ -157,12 +157,11 @@ func set_metadata(width: int, height: int, colored: bool, assessment: Variant) -
 	mode_icon.queue_redraw()
 
 func metadata_widths(u: float) -> Vector2:
-	var font: Font = dimensions.get_theme_font("font")
 	var pixels: int = roundi(14*u)
-	var longest: float = font.get_string_size("Nicht eingestuft",HORIZONTAL_ALIGNMENT_LEFT,-1,pixels).x
+	var longest: float = UiText.label_width(difficulty, "Nicht eingestuft", pixels)
 	for value: String in Difficulty.LABELS:
-		longest = maxf(longest,font.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,pixels).x)
-	return Vector2(ceilf(font.get_string_size("50 × 50",HORIZONTAL_ALIGNMENT_LEFT,-1,pixels).x),ceilf(longest))
+		longest = maxf(longest, UiText.label_width(difficulty, value, pixels))
+	return Vector2(UiText.dimensions_width(pixels) + dimensions.get_theme_stylebox("normal").get_minimum_size().x, ceilf(longest))
 
 func minimum_card_width(u: float) -> float:
 	# Insets, strip padding, two gaps, circle plus gap, and the visible mode
@@ -179,9 +178,9 @@ func layout_content() -> void:
 	for control: Label in [caption, detail, leaf, note, dimensions, difficulty]:
 		control.add_theme_font_size_override("font_size", roundi(float(control.get_meta("base_font"))*u))
 	mode_tip.ui_scale = u
-	var title_height: float = ceilf(caption.get_theme_font("font").get_height(roundi(20*u))*2)+caption.get_theme_constant("line_spacing")
-	var meta_height: float = ceilf(detail.get_theme_font("font").get_height(roundi(14*u))*2)+detail.get_theme_constant("line_spacing")
-	var footer_height: float = ceilf(leaf.get_theme_font("font").get_height(roundi(15*u)))
+	var title_height: float = UiText.label_height(caption, roundi(20*u), 2)
+	var meta_height: float = UiText.label_height(detail, roundi(14*u), 2)
+	var footer_height: float = UiText.label_height(leaf, roundi(15*u))
 	var width: float = size.x - 2*inset
 	caption.position = Vector2(inset, inset)
 	caption.custom_maximum_size = Vector2(maxf(1, width-hit-gap), title_height)
@@ -215,7 +214,7 @@ func layout_content() -> void:
 		repair.add_theme_font_size_override("font_size", roundi(14*u))
 		repair.custom_minimum_size = Vector2(0, hit)
 	# One passive strip, with identical reservations for every card and state.
-	var row_height: float = maxf(36*u,ceilf(difficulty.get_theme_font("font").get_height(roundi(14*u))))
+	var row_height: float = maxf(36*u,UiText.label_height(difficulty, roundi(14*u)))
 	label_area = Rect2(Vector2(inset,image_area.end.y+gap),Vector2(width,row_height+10*u))
 	paper.position = label_area.position
 	paper.size = label_area.size
@@ -235,18 +234,18 @@ func layout_content() -> void:
 		drawing.ui_scale = u
 		drawing.queue_redraw()
 	var bottom: float = label_area.end.y+gap
-	var leaf_width: float = ceilf(leaf.get_theme_font("font").get_string_size(leaf.text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(15*u)).x)
+	var leaf_width: float = UiText.label_width(leaf, leaf.text, roundi(15*u))
 	leaf.position = Vector2(inset,bottom)
 	leaf.size = Vector2(leaf_width,footer_height)
 	var status_width: float = 0
 	for value: String in ["Neu","Begonnen","Gelöst","Ungültig"]:
-		status_width = maxf(status_width,ceilf(note.get_theme_font("font").get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(14*u)).x))
+		status_width = maxf(status_width,UiText.label_width(note, value, roundi(14*u)))
 	note.position = Vector2(size.x-inset-status_width,bottom)
 	note.size = Vector2(status_width,footer_height)
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	status_icon.position = note.position-Vector2(20*u,0)
 	status_icon.size = Vector2(status_width+16*u,footer_height)
-	status_icon.trailing_text_width = note.get_theme_font("font").get_string_size(note.text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(14*u)).x
+	status_icon.trailing_text_width = UiText.label_width(note, note.text, roundi(14*u))
 	custom_minimum_size.y = bottom+footer_height+inset
 	preview.queue_redraw()
 	picture.queue_redraw()

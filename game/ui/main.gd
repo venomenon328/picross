@@ -18,6 +18,7 @@ const BookSurface = preload("res://ui/book_surface.gd")
 const BODY_FONT = preload("res://art/book/PlexSans.ttf")
 const TITLE_FONT = preload("res://art/book/Fraunces.ttf")
 const WORK_TITLE_FONT = preload("res://art/drawing/BaksoDaging-Regular.ttf")
+const UiText = preload("res://ui/ui_text.gd")
 const TOOL_IDS: Array[String] = ["fill","erase","undo","redo","minus","plus"]
 var tools_scroll: ScrollContainer
 var tools_column: GridContainer
@@ -158,8 +159,11 @@ func _ready() -> void:
 
 func _build() -> void:
 	theme = Theme.new()
-	theme.default_font = BODY_FONT
+	theme.default_font = UiText.font()
 	theme.default_font_size = 14
+	theme.set_font("title_font", "Window", BODY_FONT)
+	theme.set_stylebox("normal", "Label", UiText.label_style())
+	theme.set_constant("line_spacing", "Label", 3)
 	theme.set_color("font_color", "Label", Board.INK)
 	for type_name: String in ["Button", "CheckBox"]:
 		for color_name: String in ["font_color", "font_focus_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
@@ -209,6 +213,7 @@ func _build() -> void:
 	album.information_requested.connect(show_information.bind("settings"))
 	album.quit_requested.connect(leave_app)
 	reset_dialog = ConfirmationDialog.new()
+	reset_dialog.dialog_autowrap = true
 	reset_dialog.title = "Arbeitsstand zurücksetzen?"
 	reset_dialog.dialog_text = "Nur das ausgewählte Blatt wird vollständig zurückgesetzt."
 	reset_dialog.confirmed.connect(_reset_selected)
@@ -217,6 +222,7 @@ func _build() -> void:
 	reset_dialog.get_ok_button().text = "Zurücksetzen"
 	reset_dialog.get_cancel_button().text = "Abbrechen"
 	repair_dialog = ConfirmationDialog.new()
+	repair_dialog.dialog_autowrap = true
 	repair_dialog.title = "Backup übernehmen?"
 	repair_dialog.dialog_text = "Der beschädigte Primärstand dieses Blatts wird durch das gültige Backup ersetzt."
 	repair_dialog.confirmed.connect(_repair_selected)
@@ -270,6 +276,8 @@ func set_ui_scale(value: float) -> void:
 	_cancel_interaction()
 	ui_scale = value
 	theme.default_font_size = roundi(14 * value)
+	theme.set_stylebox("normal", "Label", UiText.label_style(value))
+	theme.set_constant("line_spacing", "Label", roundi(3 * value))
 	_scale_labels(self)
 	board.ui_scale = value
 	ui_scale_button.text = "UI %d %%" % roundi(ui_scale * 100)
@@ -279,7 +287,7 @@ func set_ui_scale(value: float) -> void:
 func _scale_labels(node: Node) -> void:
 	if node is Label:
 		if not node.has_meta("base_font"):
-			node.set_meta("base_font", node.get_theme_font_size("font_size"))
+			node.set_meta("base_font", node.get_theme_font_size("font_size") if node.has_theme_font_size_override("font_size") else 14)
 		node.add_theme_font_size_override("font_size", roundi(float(node.get_meta("base_font")) * ui_scale))
 	for child: Node in node.get_children():
 		_scale_labels(child)
@@ -546,7 +554,7 @@ func _ask_reset_id(id: String, origin: String = "album") -> void:
 	reset_id = id
 	reset_origin = origin
 	reset_dialog.dialog_text = sessions[int(session_indices[id])].album_title() + " vollständig zurücksetzen? Nur dieses Blatt wird verändert."
-	reset_dialog.popup_centered()
+	_popup_dialog(reset_dialog)
 
 func _reset_selected() -> void:
 	# The dialog owns the stable ID; a filter/page/selection change cannot retarget it.
@@ -591,7 +599,13 @@ func _ask_repair_id(id: String) -> void:
 	repair_dialog.title = "Backup erneuern?" if renew else "Backup übernehmen?"
 	repair_dialog.dialog_text = sessions[index].album_title() + "\n" + ("Das beschädigte Backup wird aus dem gültigen Primärstand neu erstellt." if renew else "Der beschädigte oder fehlende Primärstand wird durch das gültige Backup ersetzt.")
 	repair_dialog.get_ok_button().text = "Erneuern" if renew else "Übernehmen"
-	repair_dialog.popup_centered()
+	_popup_dialog(repair_dialog)
+
+func _popup_dialog(dialog: AcceptDialog) -> void:
+	# Long valid motif names and recovery messages wrap inside the supported
+	# client. Native buttons, modal input and the bound target ID stay intact.
+	dialog.size = Vector2i(mini(roundi(640 * ui_scale), roundi(size.x - 80 * ui_scale)), 0)
+	dialog.popup_centered()
 
 func _repair_selected() -> void:
 	var id: String = repair_id if not repair_id.is_empty() else (str(session.definition.id) if session != null else "")
@@ -647,6 +661,7 @@ func _web_lifecycle(_arguments: Array) -> void:
 static func label(text: String, font_size: int) -> Label:
 	var item: Label = Label.new()
 	item.text = text
+	item.set_meta("base_font", font_size)
 	item.add_theme_font_size_override("font_size", font_size)
 	if font_size >= 26:
 		var heading: FontVariation = FontVariation.new()

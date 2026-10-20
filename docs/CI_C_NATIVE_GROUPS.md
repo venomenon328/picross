@@ -180,6 +180,13 @@ sie nicht zu den bisherigen Pflicht- oder konkreten Fehlerbildern gehören.
 
 ## Abnahme
 
+HZ-A ergänzt den bestehenden `kk`-Modus um lokale Tidy-Hand-Zeichen-/Ellipsen-
+und Layoutprüfungen, vollständige Größenangaben, 128 Zeichen lange Kategorien,
+256 auswählbare Kategorien, Hilfe und native Dialoge. Die drei HZ-Fenster-/UI-
+Kombinationen liefern zusätzlich 15 unveränderte native `hz-*.png`-Ausschnitte
+beziehungsweise Kontextbilder; sie stehen im verpflichtenden Direktbildinventar.
+Bestehende KAT-/KE-/AT-Prüfungen und ihre Bilder bleiben erhalten.
+
 CI-C-T01 bindet technische Ergebnisse, Messungen, finalen Head/Base/Test-Merge/Run
 und getrennten vollständigen Selbstreview im Draft-PR. CI-C-R01 bleibt ein separater
 qualifizierter Review vor Merge. Bestehende Windows-/Eigentümergates bleiben separat.
