@@ -1,0 +1,99 @@
+{
+  "added": {
+    "added_at": "2026-10-20T09:15:33Z",
+    "file": "content/added/pz-49a9e539419b48119e8f5f506fcf6dc7.json",
+    "sha256": "aeb369fe5b3f44fcbb5c9b3dcc3d6c4d6265e4f3c91e3256e1ffcc2a2173c786"
+  },
+  "approval": {
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/approval.json",
+    "sha256": "995e696daf86d2fe19d14befd18c4e2a4cdb652b9db80f9556f8f7107a21b559"
+  },
+  "base_commit": "ccc1a3905a00db7982668d32bae8347bec7bf394",
+  "category_id": "obst-nuesse",
+  "deployment": false,
+  "difficulty": {
+    "analysis_reused": true,
+    "final_checked_hash": "78b9c9dc330a3f0534de73f62481f8fb9bb5c2c5eab1526da6b388cb3859930e",
+    "level": "L3",
+    "method": "picross-difficulty-0.3",
+    "rating_source_preserved": true,
+    "record_hash": "fe0779cf9c2227a640b90f59b2878c6c56ad4f7ddebd768339e38441535bee60"
+  },
+  "export_format": "picross-target-export-v2",
+  "export_inspection": {
+    "catalog_ready": true,
+    "editorial_approved": true,
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/integration-inspection.json",
+    "sha256": "f92f85866cf331b5b741435a4ce31ca83a4f2940bb3d872749b9c6f3825a71cb",
+    "technical": true
+  },
+  "export_manifest_sha256": "ace2e52b324b6777ae108ef550cab092c2231daba46487a2157e0f91fe992076",
+  "extra_probes": null,
+  "file_checks": {
+    "copied_export_exact": true,
+    "copied_export_files": 60,
+    "definition": {
+      "file": "game/data/content/banane_001.json",
+      "sha256": "9469e7af01face9b7db111a2c82603fe9c846891c88ac8a03325d9bd7ac6cf82"
+    },
+    "no_pending_journal": true,
+    "notice": {
+      "file": "game/art/content/banane_001.txt",
+      "sha256": "f0bf031adf97f38c7eaa682bf29be07eed8ec7d3aa6bdd21d5aa65868b32e27c"
+    },
+    "original_authoring_bytes_preserved": true,
+    "previous_content_entries_preserved": 26,
+    "previous_runtime_entries_preserved": 26,
+    "registry_entries": 27,
+    "reveal": {
+      "file": "game/art/content/banane_001.png",
+      "sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8"
+    }
+  },
+  "id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+  "native_checks": "nicht erforderlich: reine Inhaltsintegration",
+  "package_sha256": "47f987d717e657ef5aeb3dcf29763c00ee75405f055ec53f0b722129cef075ec",
+  "registration": {
+    "category": {
+      "id": "obst-nuesse",
+      "name": "Obst & Nüsse",
+      "order": 1
+    },
+    "changes": [
+      {
+        "operation": "add",
+        "path": "content/packages/pz-49a9e539419b48119e8f5f506fcf6dc7/r04"
+      },
+      {
+        "operation": "add",
+        "path": "content/added/pz-49a9e539419b48119e8f5f506fcf6dc7.json"
+      },
+      {
+        "operation": "add",
+        "path": "content/difficulty/pz-49a9e539419b48119e8f5f506fcf6dc7/rating.json"
+      },
+      {
+        "operation": "replace",
+        "path": "content/registry.json"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/banane_001.txt"
+      },
+      {
+        "operation": "add",
+        "path": "game/data/content/banane_001.json"
+      },
+      {
+        "operation": "replace",
+        "path": "game/data/registry.json"
+      }
+    ],
+    "registered": true,
+    "status": "registered",
+    "user_saves_modified": false
+  },
+  "runtime_revision": 1,
+  "save_slot": "banane_001",
+  "status": "registered"
+}
