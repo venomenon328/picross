@@ -57,6 +57,8 @@ def content_path(path: str) -> bool:
         return True
     if re.fullmatch(r"game/art/content/[a-z][a-z0-9_-]{0,63}\.(png|svg|txt)", path):
         return True
+    if re.fullmatch(r"content/added/pz-[a-z0-9][a-z0-9-]{0,59}\.json", path):
+        return True
     if re.fullmatch(r"content/difficulty/pz-[a-z0-9][a-z0-9-]{0,59}/rating\.json", path):
         return True
     if re.fullmatch(r"content/reveals/pz-[a-z0-9][a-z0-9-]{0,59}\.json", path):

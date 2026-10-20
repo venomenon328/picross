@@ -10,6 +10,34 @@ from ci_scope import FLAGS, JOBS, apply_event_policy, classify, content_path, ev
 
 
 class SelectionTests(unittest.TestCase):
+    def test_added_data_path_and_both_tree_modes_are_exact(self):
+        from unittest.mock import patch
+        valid = "content/added/pz-synthetic.json"
+        self.assertTrue(classify([valid])["content_only"])
+        for path in ("content/added/PZ-synthetic.json", "content/added/pz-Synthetic.json",
+                     "content/added/pz-synthetic.JSON", "content/added/pz-synthetic.json.py",
+                     "content/added/pz-synthetic/rating.json", "content/added/../pz-synthetic.json",
+                     "content/added/pz-synthetic.json/", "content/added/pz-.json", "content/added/other.json"):
+            with self.subTest(path=path): self.assertFalse(content_path(path))
+        modes = [("000000", "100644")]
+        def fake_git(*args):
+            if "--name-only" in args: return (valid + "\0").encode()
+            if "--raw" in args:
+                old, new = modes[0]
+                return f":{old} {new} {'a'*40} {'b'*40} M\0{valid}\0".encode()
+            if args[0] == "rev-parse": return b"c"*40
+            raise AssertionError("Content shortcut must not read blobs: " + repr(args))
+        with patch("ci_scope.git", side_effect=fake_git):
+            for pair in (("000000", "100644"), ("100644", "000000"), ("100644", "100644")):
+                modes[0] = pair
+                self.assertTrue(make_plan("a"*40, "b"*40, "auto")["content_only"])
+            for mode in ("100755", "120000", "160000"):
+                for pair in ((mode, "000000"), ("000000", mode)):
+                    modes[0] = pair
+                    with self.subTest(pair=pair), self.assertRaises(ValueError):
+                        make_plan("a"*40, "b"*40, "auto")
+        self.assertTrue(all(classify([valid, "tools/ci_scope.py"])["selected"].values()))
+
     def test_at_reveal_paths_and_both_sides_of_git_modes(self):
         from unittest.mock import patch
         valid = 'content/reveals/pz-test.json'
