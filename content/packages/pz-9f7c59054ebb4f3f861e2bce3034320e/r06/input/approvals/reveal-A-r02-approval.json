@@ -1,0 +1,18 @@
+{
+  "actor": "Tobias Schröder (Repositoryeigentümer / Nutzer)",
+  "evidence": "approvals/reveal-A-r02-evidence.md",
+  "file": "reveals/A-r02.png",
+  "package_revision": "r03",
+  "puzzle_id": "pz-9f7c59054ebb4f3f861e2bce3034320e",
+  "revision": "A-r02",
+  "sha256": "e875ff4f7fd543a477e0269fe0d2ef0bd635fd3ac929e8363174edf47ec9ba4a",
+  "source_package": {
+    "commit": "dccb1722c871a2a19525312a13510172fd3856db",
+    "file": "content/authoring/pz-9f7c59054ebb4f3f861e2bce3034320e/r03/package.zip",
+    "inventory_sha256": "f87c76e91d9934612dff38af41de9eda7742279b87290ce9cb495e73c7cf7605",
+    "sha256": "f27db648f20661f1019dc5ffb26e8aed741c317c27abedef86eb464a0cd3ee00"
+  },
+  "statement": "Ich gebe das Abschlussbild reveals/A-r02.png · A-r02 (Paket r03) frei. Führe Standardauftrag 2 bis zur Motivvorlage samt Konfiguration und Codex-Übergabe aus.",
+  "timestamp_utc": "2026-10-20T11:02:19Z",
+  "type": "human_reveal_approval"
+}
