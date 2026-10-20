@@ -38,7 +38,8 @@ class Z2DeliveryTests(unittest.TestCase):
         self.assertEqual(manifest["source_commit"], "c3a5386580d7a0da29b927b41bd692f0cca59274")
         icons = json.loads((z2_resources.DEST / "icons.json").read_text(encoding="utf-8"))
         source = json.loads((z2_resources.SOURCE / "composition/inputs/icons.json").read_text(encoding="utf-8"))
-        self.assertEqual(icons["fill"], source["fill"])
+        self.assertEqual(icons["fill"][:2], source["fill"][:2])
+        self.assertNotEqual(icons["fill"][2], source["fill"][2])
         self.assertEqual(icons["fill"][0], "Füllen")
         self.assertTrue({"Fraunces-OFL.txt", "PlexSans-OFL.txt", "Fraunces.ttf", "PlexSans.ttf"}
                         <= {entry["file"] for entry in manifest["files"]})
@@ -51,6 +52,14 @@ class Z2DeliveryTests(unittest.TestCase):
                 before = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in destination.iterdir() if p.is_file()}
                 z2_resources.provision()
                 z2_resources.verify()
+                binding = destination / "manifest.json"
+                original = binding.read_bytes()
+                manifest = json.loads(original)
+                manifest["hz_icon_source"]["sha256"] = "0" * 64
+                binding.write_text(json.dumps(manifest), encoding="utf-8")
+                with self.assertRaisesRegex(AssertionError, "HZ icon source"):
+                    z2_resources.verify()
+                binding.write_bytes(original)
                 self.assertEqual(before, {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in destination.iterdir() if p.is_file()})
                 self.assertNotEqual((destination / "reset.svg").read_bytes(), (destination / "undo.svg").read_bytes())
                 (destination / "play.svg").write_text("corrupted", encoding="utf-8")

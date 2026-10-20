@@ -93,4 +93,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     from hz_cases import catalog as hz_catalog
     hz_catalog(page,name,output,evidence)
     passed('HZ Tidy Hand local fallback, complete metadata, native menus and scrollable help')
+    from hz_b_cases import catalog as hz_b_catalog
+    hz_b_catalog(page, name, output, evidence)
+    passed('HZ-B paper controls, native popup dismissal, keyboard selection and checkbox input')
     assert not errors, errors

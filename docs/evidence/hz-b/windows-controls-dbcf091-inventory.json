@@ -1,0 +1,318 @@
+{
+  "producer_head": "dbcf091ef050630003ef8f82307c4e865515897c",
+  "archive": "windows-controls-dbcf091.zip",
+  "bytes": 16752641,
+  "sha256": "fd1243b91926073297e337172e27cda2f75b0227f1d0bbf355385810a01f9e2b",
+  "files": [
+    {
+      "file": "source-native/kat2/adapter.json",
+      "bytes": 1556,
+      "sha256": "7453076b78972086512df798212c49d8deeecd21512d7e705bf75b1e794e1583"
+    },
+    {
+      "file": "source-native/kat2/at-fixture.json",
+      "bytes": 906,
+      "sha256": "10b53e721ebeb2de024bd4f62ae02263044c719a8a2ee254b06af653f2528671"
+    },
+    {
+      "file": "source-native/kat2/at.json",
+      "bytes": 15487,
+      "sha256": "091f7460f6eba7097eb0b7b0fe39227b5c8d615819a49abf3bd6d1d356c1cd60"
+    },
+    {
+      "file": "source-native/kat2/empty.json",
+      "bytes": 890,
+      "sha256": "f9109d89d06e543116d27576bfcece3c4a4cebc92f28fc1c2d4617fd07744598"
+    },
+    {
+      "file": "source-native/kat2/hz-b-card-1280.png",
+      "bytes": 41109,
+      "sha256": "14741f6693c25000cc6d7515b21e5e577360c1f1f00631f26ccd964f2b80b4b6"
+    },
+    {
+      "file": "source-native/kat2/hz-b-card-1920.png",
+      "bytes": 27963,
+      "sha256": "21e24f11c2ec478afff7eb378f045183d32b687e18c5bd5f27c5a73f0da28ff5"
+    },
+    {
+      "file": "source-native/kat2/hz-b-card-2560.png",
+      "bytes": 38569,
+      "sha256": "180539dc4f0b7debafa8ebbfb4c7482ce664a8807d3a2d6df5bcc62eb0b75c64"
+    },
+    {
+      "file": "source-native/kat2/hz-b-dialog-1280.png",
+      "bytes": 34361,
+      "sha256": "e9d26dacdf6835c40dcdb109cd3df4a1d150b72de6b7b4c7502e724c2d9b1613"
+    },
+    {
+      "file": "source-native/kat2/hz-b-dialog-1920.png",
+      "bytes": 28104,
+      "sha256": "4ab5fc1c2e38f958291dc209c3376fac5351938efdf833d0dea0c1505d0af860"
+    },
+    {
+      "file": "source-native/kat2/hz-b-dialog-2560.png",
+      "bytes": 34683,
+      "sha256": "b8382a613c49c71eeb69193f8cb6855081a027bbb52321f280f846951dcc9157"
+    },
+    {
+      "file": "source-native/kat2/hz-b-hover-1280.png",
+      "bytes": 74488,
+      "sha256": "b78963f637750b171879f5b8d4697cf34da5e992d4518f627955fcd702eea97e"
+    },
+    {
+      "file": "source-native/kat2/hz-b-hover-1920.png",
+      "bytes": 47604,
+      "sha256": "128e0557db41638b4d7a0612254d2d96913837d33270858d468fbd32b46cc1fa"
+    },
+    {
+      "file": "source-native/kat2/hz-b-hover-2560.png",
+      "bytes": 72701,
+      "sha256": "07d2d9614b4ddb625d73f48bb0be9d0aed4a5fcf86e5a4381d7c7a80b94bba13"
+    },
+    {
+      "file": "source-native/kat2/hz-b-icons-1280.png",
+      "bytes": 72962,
+      "sha256": "1c9cdccbd2f560b8cc75a5b66a63788ad4d77c5f28410a2d52badbaff6c34285"
+    },
+    {
+      "file": "source-native/kat2/hz-b-icons-1920.png",
+      "bytes": 46720,
+      "sha256": "127de52e640111742227d216426599e36324440e290cff00d63dbd7dacd8100f"
+    },
+    {
+      "file": "source-native/kat2/hz-b-icons-2560.png",
+      "bytes": 71208,
+      "sha256": "48c63b5a04f7941d9e35f04447945a24c4f972e6890227fc7dd42b3b965d9795"
+    },
+    {
+      "file": "source-native/kat2/hz-b-pressed-1280.png",
+      "bytes": 74286,
+      "sha256": "68e3af1ccb89b901d92806652deefd38d4f114a98a8d39a1b42d7c9a7e3a0cca"
+    },
+    {
+      "file": "source-native/kat2/hz-b-pressed-1920.png",
+      "bytes": 47401,
+      "sha256": "15b4be9ab33cb52191ad5ab1716c8b68f2fffe8b66ea99a02227ec436cda8f79"
+    },
+    {
+      "file": "source-native/kat2/hz-b-pressed-2560.png",
+      "bytes": 72523,
+      "sha256": "ae07714572c000bbeadb702da519f7d0f8c482b0fa2f2840dce00f65f25ad6ee"
+    },
+    {
+      "file": "source-native/kat2/hz-b-scroll-hover-1280.png",
+      "bytes": 72873,
+      "sha256": "aa2a6736d9f7bc83c16f294abaf87e94953053b983384256be8b7d5bb775b922"
+    },
+    {
+      "file": "source-native/kat2/hz-b-scroll-hover-1920.png",
+      "bytes": 46599,
+      "sha256": "59ceda2316508aea639c6667a80a6075c5157c1740d037c694d1ca61f10062f7"
+    },
+    {
+      "file": "source-native/kat2/hz-b-scroll-hover-2560.png",
+      "bytes": 71129,
+      "sha256": "ea177326b247d8d05e5a00b736bd555ce9637f9fc787277d4b17c7a422f86732"
+    },
+    {
+      "file": "source-native/kat2/hz-b-scroll-pressed-1280.png",
+      "bytes": 73124,
+      "sha256": "7464c7d68828a5385cbfcf21b23e10063f8aa7687d147706502276bb2296f89b"
+    },
+    {
+      "file": "source-native/kat2/hz-b-scroll-pressed-1920.png",
+      "bytes": 46848,
+      "sha256": "f4214287a8ae7af5f121740f987e3674359cc40099c80e80e1380698a4106ff6"
+    },
+    {
+      "file": "source-native/kat2/hz-b-scroll-pressed-2560.png",
+      "bytes": 71394,
+      "sha256": "9c690f58d4185fd22aed38925a4e2e05e4ae618f7eef7c5a0daec853a8e9e658"
+    },
+    {
+      "file": "source-native/kat2/hz-b-settings-1280.png",
+      "bytes": 307665,
+      "sha256": "e3c6527e019651300b95321f310998fb4852afdb8c9927f4c31cfce679e090ff"
+    },
+    {
+      "file": "source-native/kat2/hz-b-settings-1920.png",
+      "bytes": 874946,
+      "sha256": "5d2665d56cf59958ec53b9c10815a5f5d1ce202b2129e7fe19c6186b226cc734"
+    },
+    {
+      "file": "source-native/kat2/hz-b-settings-2560.png",
+      "bytes": 1667498,
+      "sha256": "ff7cf632c7f95ceab073d8118a34883d814d2b9b77c77d7be82d0f6640b6378e"
+    },
+    {
+      "file": "source-native/kat2/hz-b-sort-1280.png",
+      "bytes": 12982,
+      "sha256": "2ebaa66ce5d88d7fb15ca6507de6323c8dfb91ad193216355c6e03c897d5203d"
+    },
+    {
+      "file": "source-native/kat2/hz-b-sort-1920.png",
+      "bytes": 9147,
+      "sha256": "9e7c410cd9874bbdfe132d3d8a61d6e7602745a5ca0add6b9daf85ff272a9c70"
+    },
+    {
+      "file": "source-native/kat2/hz-b-sort-2560.png",
+      "bytes": 12982,
+      "sha256": "2ebaa66ce5d88d7fb15ca6507de6323c8dfb91ad193216355c6e03c897d5203d"
+    },
+    {
+      "file": "source-native/kat2/hz-b-view-1280.png",
+      "bytes": 12790,
+      "sha256": "42be29b4dc99a4b4b3ed23932e2da86f7f466125ab4b9812942424912aea115a"
+    },
+    {
+      "file": "source-native/kat2/hz-b-view-1920.png",
+      "bytes": 10828,
+      "sha256": "65b22866adef2cf8552a9f03fcd5e29344b38264f203c4280a68ca0e66f610cb"
+    },
+    {
+      "file": "source-native/kat2/hz-b-view-2560.png",
+      "bytes": 14619,
+      "sha256": "360cb11707c535dab95a7ce91ad983555db9b0c76c79d5beb3c647bf6fe7598c"
+    },
+    {
+      "file": "source-native/kat2/hz-catalog-1280.png",
+      "bytes": 303706,
+      "sha256": "ff023afaec0dc32737d8a79c8657bec897ac5e803e12d6f3f5337c4272821e9b"
+    },
+    {
+      "file": "source-native/kat2/hz-catalog-1920.png",
+      "bytes": 1013865,
+      "sha256": "b6bff764553b650f76a03af828693e8e2a0ed0b151471db1dbfe868f1e5e95a7"
+    },
+    {
+      "file": "source-native/kat2/hz-catalog-2560.png",
+      "bytes": 1679779,
+      "sha256": "e09a905b533176060a90450b669e6c5d915f20db72d2d2599f51f9400da3653e"
+    },
+    {
+      "file": "source-native/kat2/hz-category-tooltip-1280.png",
+      "bytes": 632767,
+      "sha256": "8ec66edeb6cbc59787f1c697717d7a124374f4a63b37343992e876930c73e9ec"
+    },
+    {
+      "file": "source-native/kat2/hz-category-tooltip-1920.png",
+      "bytes": 1601420,
+      "sha256": "7c5fab44822ac11cd51f6268807a8973680437369d3583d2205e34fa54e56b13"
+    },
+    {
+      "file": "source-native/kat2/hz-category-tooltip-2560.png",
+      "bytes": 2549659,
+      "sha256": "df1046102ec54ea1499bf048ab3ad244e9f4bde9dbb9cbc86205eeec7f18b47a"
+    },
+    {
+      "file": "source-native/kat2/hz-dialog-1280.png",
+      "bytes": 34683,
+      "sha256": "b8382a613c49c71eeb69193f8cb6855081a027bbb52321f280f846951dcc9157"
+    },
+    {
+      "file": "source-native/kat2/hz-dialog-1920.png",
+      "bytes": 28104,
+      "sha256": "4ab5fc1c2e38f958291dc209c3376fac5351938efdf833d0dea0c1505d0af860"
+    },
+    {
+      "file": "source-native/kat2/hz-dialog-2560.png",
+      "bytes": 34683,
+      "sha256": "b8382a613c49c71eeb69193f8cb6855081a027bbb52321f280f846951dcc9157"
+    },
+    {
+      "file": "source-native/kat2/hz-help-1280.png",
+      "bytes": 536430,
+      "sha256": "9834e7af3c0aa1f2f7691ce040d529ac22b8097cba0d681416cb94b1002d8b58"
+    },
+    {
+      "file": "source-native/kat2/hz-help-1920.png",
+      "bytes": 1480421,
+      "sha256": "03b094829237f65009c18400a62cdd49e609c970c577161281e2d8333ff5999e"
+    },
+    {
+      "file": "source-native/kat2/hz-help-2560.png",
+      "bytes": 2514521,
+      "sha256": "b35407857f67b9a08af097f1d079baadc1d3c8c20d8c10968e6698941630ddda"
+    },
+    {
+      "file": "source-native/kat2/hz-menu-1280.png",
+      "bytes": 59031,
+      "sha256": "57368ea2a4a1ee47e7fecb701d9173b85d9816ee207e1682e2dcc1f40386c33e"
+    },
+    {
+      "file": "source-native/kat2/hz-menu-1920.png",
+      "bytes": 67844,
+      "sha256": "edf9022efba6987b643546dc20d630ea1556998879848d0e2ca4234d38d8c57a"
+    },
+    {
+      "file": "source-native/kat2/hz-menu-2560.png",
+      "bytes": 88555,
+      "sha256": "955e27ff12e27d1b46b5056193bcef2d21cfd263ba5a5ebed52e469c7dc0f07e"
+    },
+    {
+      "file": "source-native/kat2/hz-selection-1280.png",
+      "bytes": 11966,
+      "sha256": "085046fc2c111ee0de03aa7660206a372065938704ef517b5758b8a682cc9ea5"
+    },
+    {
+      "file": "source-native/kat2/hz-selection-1920.png",
+      "bytes": 26191,
+      "sha256": "9315b5a4a680f6b8ed5d9a5b32fa7439b1c1a149a6886bb078703f822f85ff0f"
+    },
+    {
+      "file": "source-native/kat2/hz-selection-2560.png",
+      "bytes": 35336,
+      "sha256": "fd9da3f06db03084b344e4166f3a210f17cd6c1af2289dd1c3d1c590a679aa95"
+    },
+    {
+      "file": "source-native/kat2/image-costs.json",
+      "bytes": 82582,
+      "sha256": "05464ec999997527a52639bd81704e46fa6e96c1c8bee65b87811d67b6a0d18d"
+    },
+    {
+      "file": "source-native/kat2/information.json",
+      "bytes": 697,
+      "sha256": "0c862b3962034d1366b99c795e9e49caa9ebe09c827855147945de6682a6f9bf"
+    },
+    {
+      "file": "source-native/kat2/invalid.json",
+      "bytes": 894,
+      "sha256": "bcbbb7d78090d51273d221ef52467d245dffd26b9dfdcc079d06d9ab0136b9c9"
+    },
+    {
+      "file": "source-native/kat2/kb.json",
+      "bytes": 10685,
+      "sha256": "a5e286de9c8d10f804e9710222ff06c04af25d1853f62ef70ef9a94383375525"
+    },
+    {
+      "file": "source-native/kat2/ke.json",
+      "bytes": 30559,
+      "sha256": "30c228bf473a52a7af873eb092d33f0ecf5755b8fa75fbe54f3313df5681ed0d"
+    },
+    {
+      "file": "source-native/kat2/kk.json",
+      "bytes": 47282,
+      "sha256": "8b3e268d51bc563a406713cacf91b274cb8185878885ea87498e27b8cdce2140"
+    },
+    {
+      "file": "source-native/kat2/large.json",
+      "bytes": 7202,
+      "sha256": "460da0caae111ce4439d1d306d0361611ee9bd03c1ea7427c312c0ae15612c93"
+    },
+    {
+      "file": "source-native/kat2/regular.json",
+      "bytes": 7460,
+      "sha256": "51f889f0f81154bd5992f5735a085b00d615637af824fc6399356e5d2e11d6fd"
+    },
+    {
+      "file": "source-native/kat2/restart.json",
+      "bytes": 405,
+      "sha256": "654b0abbbcc692b584d9500e400ca8b5d08635f0818642d289c75a5684c38e10"
+    },
+    {
+      "file": "source-native/kat2/summary.json",
+      "bytes": 199206,
+      "sha256": "338dd615be5e898b8e4ea9006433b419928f7cbdee8108736242c0df6fcc4d3b"
+    }
+  ]
+}

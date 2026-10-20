@@ -2,6 +2,12 @@
   "source_commit": "c3a5386580d7a0da29b927b41bd692f0cca59274",
   "sidebar_source": "SL-65; frames.json",
   "kb_icon_source": "tools/book_icons_kb.json; KB-168-NOTICE.txt",
+  "hz_icon_source": {
+    "file": "tools/book_icons_hz.json",
+    "sha256": "db148c0c2eb97f58908bb789d96ec397ec008ce667d8efcf28fc217ffb178bd6",
+    "generator": "tools/z2_resources.py",
+    "notice": "HZ-B-284-NOTICE.txt"
+  },
   "files": [
     {
       "file": "Fraunces-OFL.txt",
@@ -10,6 +16,10 @@
     {
       "file": "Fraunces.ttf",
       "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb"
+    },
+    {
+      "file": "HZ-B-284-NOTICE.txt",
+      "sha256": "406139e9a2a92a33b9a88b3bf3ff95567c3f6fe30abf7bb4b216eaeacda503c7"
     },
     {
       "file": "KB-168-NOTICE.txt",
@@ -28,16 +38,56 @@
       "sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d"
     },
     {
+      "file": "arrow-down.svg",
+      "sha256": "f6868d894d866440bd3fe64a0c5913c62952fb50f0db8fc2392332ccde131215"
+    },
+    {
+      "file": "arrow-left.svg",
+      "sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca"
+    },
+    {
+      "file": "arrow-right.svg",
+      "sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c"
+    },
+    {
+      "file": "arrow-up.svg",
+      "sha256": "4dab3c772d0024ff839b71ee95a3e282e354750ffe1271e5b40abc57423f93bb"
+    },
+    {
       "file": "bp2-a-inventarband.png",
       "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a"
     },
     {
+      "file": "check-empty.svg",
+      "sha256": "5effbb3665f6354ebccc97e4b7fea39ebc683340a3a0244e95140d862370df6f"
+    },
+    {
+      "file": "check.svg",
+      "sha256": "fe8a40a258f556f8afd52840b7ca0ce12296bf83ee751f0bf3540deff52225f0"
+    },
+    {
+      "file": "checkbox-checked.svg",
+      "sha256": "9baa482570478e355e5aae74090e5e1163dedfba3f9c82153f2aaf0c0cbfc703"
+    },
+    {
+      "file": "checkbox-empty.svg",
+      "sha256": "216c631f76b4a499672da877807b249ae8ccd969a1b70194d3ea056ec8c52ec8"
+    },
+    {
+      "file": "chevron-down.svg",
+      "sha256": "7147bbc61e9eeb2b2a97c7d66d11768d56664bc186810ecc01691114b4f44fa2"
+    },
+    {
+      "file": "chevron-up.svg",
+      "sha256": "b08a67fe48933274bececb92819f32dc8aee5e3a7dfa59facc54d8e9f0896e65"
+    },
+    {
       "file": "erase.svg",
-      "sha256": "1cfa09e9c77f2e5ede83efec65409beb6a6e88fd9345739bc7da9d88c2fe4468"
+      "sha256": "96685a23e7a1b93964c6d87649a2e8c2c2399513b07afceed57951140467ddbd"
     },
     {
       "file": "fill.svg",
-      "sha256": "212cb75f36b85126c1e26b3cac3b49d7bb38c671d5f9d6ea73af2b11cf290013"
+      "sha256": "1adb0f8deeec7913d541f8b5bd2de3e5494a39c1abf32e293a325445528df8c6"
     },
     {
       "file": "frame-palette.png",
@@ -57,51 +107,51 @@
     },
     {
       "file": "help.svg",
-      "sha256": "0a2834ac56c5793fa5780ea54e2a85ab71f0d86e5e1564d7c03c97f0cc605894"
+      "sha256": "085ffa6e6b32cf8fe39e88a3ced2d94fb8395e8be0d03ccc064d5d8f6ce5572a"
     },
     {
       "file": "icons.json",
-      "sha256": "375481714d83df76eea4443f6d5ae99c13dad5b87f32b98608fcb44894a9579d"
+      "sha256": "5599b1286710c005fa2148b97890102f04bcfd6db48bc3e588fa6638763f83c5"
     },
     {
       "file": "menu.svg",
-      "sha256": "134be7b7194df4545113639ca2db5f26c7e7e4da874e7012a68c86c19b994a32"
+      "sha256": "1142024e816294593af1ef45cf5bc767a6188569c993b40604649d4416ed3576"
     },
     {
       "file": "minus.svg",
-      "sha256": "a6314f946c3e8234258715c2fc28b56626cc6b14f59f23faaef625b5d0612efa"
+      "sha256": "f230479b7b56e4d31671955e504731d15115261068f46e4b699a15132dc8b6c4"
     },
     {
       "file": "nav-album.svg",
-      "sha256": "8bc7b226378d58ef064f58667b22ea6ca2b0a4ddae08c7a2522a2247f4c0ee46"
+      "sha256": "e59589030c0436baa93786b05711552eb3d104e021cf9f30ebd2c107daa2b290"
     },
     {
       "file": "nav-information.svg",
-      "sha256": "38d7c1c70e996b6d16f73b2dead69cafb016b8f515b48eb11f1055fd51d1e660"
+      "sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c"
     },
     {
       "file": "nav-work.svg",
-      "sha256": "32a4a956c766f016ea2355ea03a8872306e7b83010d79e3f21f62736be185d3e"
+      "sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca"
     },
     {
       "file": "play.svg",
-      "sha256": "33f4c15c549acdcc13e872f1576ad5455e731ec647dea2b6b6739eaa8add0250"
+      "sha256": "d57c49d4aa6787dfaa9b5b80e264361da47c8d553def8bf923d891e374d685f4"
     },
     {
       "file": "plus.svg",
-      "sha256": "f486fdb694088960f9aa0d52749239652f965e8d38aa20d42bf5080964245a89"
+      "sha256": "78aad8146fe68d64f3033789e0f7240c6fd83738bd172bee900202b8b4c242f0"
     },
     {
       "file": "redo.svg",
-      "sha256": "850f07276d7d01879fbf7e7564ec5b0966ebdb7f88d3a2054ccabf2e913a54e6"
+      "sha256": "dda374601aba386dde33078f08fe8da1168c15b4137000cdb18792d3818063d4"
     },
     {
       "file": "reset.svg",
-      "sha256": "1b3413c0433e617a283876d5947e646ff0513889f7cdd8eae5f820d2768de89d"
+      "sha256": "ae593cdbb3f9601f91a5a37dc6b9fda1965e22965674626aeec7ec36cc381bdf"
     },
     {
       "file": "undo.svg",
-      "sha256": "12f0da538f19c23cab6b9c2969fb0a4978e77da2ce2186561e0432638d1ab3ee"
+      "sha256": "aa3746dce70beb30fe9f08ae04dc1f1742ce2ca841c8bfab79e42cf45859d9f2"
     }
   ]
 }

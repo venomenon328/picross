@@ -39,6 +39,7 @@ func run() -> void:
 	preload("res://tests/ke_cases.gd").run(self)
 	preload("res://tests/ku_b_cases.gd").run(self)
 	preload("res://tests/hz_cases.gd").run(self)
+	preload("res://tests/hz_b_cases.gd").run(self)
 	print("PHASE test_definition()")
 	test_definition()
 	print("PHASE test_gesture()")

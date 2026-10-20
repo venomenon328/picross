@@ -1,4 +1,4 @@
-"""HZ-A: bind current CI bytes, real Windows start and isolated synthetic GUI routes."""
+"""HZ-B: bind current CI bytes, real Windows start and isolated synthetic GUI routes."""
 import argparse
 import hashlib
 import json
@@ -98,6 +98,16 @@ def main():
             "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--script", str(script), "--", "--p1-capture"], env, 180, logs)
         product.require_clean_output(result, "HZ_PACK_OK")
         phases.append({k:v for k,v in result.items() if k != "output"})
+        restart = out/"native-restart"
+        restart.mkdir()
+        restart_env = tc.isolated_environment(out/"pack-restart-profile", "Windows")
+        restart_env.update(HZ_PACK_INPUT=str(inputs), HZ_PACK_OUTPUT=str(restart))
+        result = product.run_phase("hz-pack-restart", [str(args.engine), "--main-pack", str(package/"picross-p1.pck"),
+            "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--script", str(script), "--", "--p1-capture"], restart_env, 180, logs)
+        product.require_clean_output(result, "HZ_PACK_OK")
+        phases.append({k:v for k,v in result.items() if k != "output"})
+        if read(native/"pack.json")["contour_hashes"] != read(restart/"pack.json")["contour_hashes"]:
+            raise ValueError("HZ-B contour bytes changed across actual PCK process restart")
     source_output = out/"source-native"
     source_output.mkdir()
     with tempfile.TemporaryDirectory(prefix="picross-hz-source-") as temporary:
@@ -116,12 +126,13 @@ def main():
         platform=platform.platform(), product_job_id=product_job["id"], product_run_attempt=report["github_run_attempt"],
         artifacts=bindings, inner_zip_sha256=tc.sha256_file(inner), export_files=report["export_files"],
         verified_technical_files=verified["files"], native_groups=verified["groups"], phases=phases, native_window=native_window,
-        native_pck=read(native/"pack.json"), local_source=source,
+        native_pck=read(native/"pack.json"), native_pck_restart=read(restart/"pack.json"), local_source=source,
         source_reports=[{k:r[k] for k in ("mode","checks","failures","display_server","adapter")} for r in summary["reports"]],
         source_files=[dict(file=p.relative_to(out).as_posix(),sha256=tc.sha256_file(p)) for p in files],
         pck_files=[dict(file=p.relative_to(out).as_posix(),sha256=tc.sha256_file(p)) for p in native.iterdir() if p.is_file()],
+        restart_files=[dict(file=p.relative_to(out).as_posix(),sha256=tc.sha256_file(p)) for p in restart.iterdir() if p.is_file()],
         probe_sha256=tc.sha256_file(script), engine_sha256=tc.sha256_file(args.engine),
-        independent_review="OPEN HZ-A-R01", owner_acceptance="OPEN HZ-A-M01")
+        independent_review="OPEN HZ-B-R01", owner_acceptance="OPEN HZ-B-M01")
     (out/"windows-binding.json").write_text(json.dumps(binding, ensure_ascii=False, indent=2)+"\n", encoding="utf-8", newline="\n")
     print("HZ_WINDOWS_OK", args.head)
 

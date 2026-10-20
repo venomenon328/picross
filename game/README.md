@@ -5,8 +5,14 @@ verwenden Tidy Hand. Bestehende Überschriften und Delight-Coffee-Hinweiszahlen
 bleiben unverändert. UI 100/125 % ändert Schrift und Textabstände gemeinsam;
 bei schmalen Fenstern darf „Sortieren nach“ innerhalb der Kopfzeile umbrechen.
 Lange Kategorien bleiben über vollständig umgebrochene Tooltips lesbar; die
-native Auswahlliste scrollt vertikal. [HZ](../docs/HAND_DRAWN_UI.md) bindet die Schriftrollen und Nachweise;
-neue Konturen, Dropdown-Grafik und Icons bleiben das separate Paket HZ-B.
+native Auswahlliste scrollt vertikal. [HZ](../docs/HAND_DRAWN_UI.md) bindet die Schriftrollen und Nachweise.
+
+**Rahmen, Menüs und Symbole (HZ-B):** Karten und kleine Papierbuttons haben
+ruhende handgezeichnete Konturen. Dropdowns öffnen auf opakem Papier; ein Haken
+markiert die aktuelle Auswahl unabhängig von der angefahrenen Zeile.
+Pfeile, Werkzeuge und Checkboxen gehören zur selben gezeichneten Familie.
+Maus, Tastatur, Fokus und Scrollen bleiben wie gewohnt bedienbar.
+[HZ-B-Lieferung und Prüfstand](../docs/HZ_B_VERIFICATION.md).
 
 Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
 Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
