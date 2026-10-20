@@ -1,4 +1,0 @@
-Nutzerkorrektur: obere Kante glatt; zwei möglichst runde rechte Aktionstasten. 12 erhöhte Topzellen entfernt und beide Tasten mit gleichen Kreisformen gestaltet. Keine Suche, genau eine feste Auswahl.
-
-Working mode: faithful
-Motif and gameplay review: open
