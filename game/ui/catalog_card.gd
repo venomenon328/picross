@@ -51,6 +51,8 @@ func configure(title: String, meta: String, number: String) -> void:
 	tooltip_text = ""
 	caption = label(title, 20)
 	caption.add_theme_font_override("font", MOTIF_FONT)
+	caption.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
+	caption.add_theme_constant_override("line_spacing",3)
 	caption.max_lines_visible = 2
 	# Original Bakso's U+2026 glyph is a letter. An unsupported noncharacter
 	# selects Godot's native three-period ellipsis fallback, preserving bytes.
