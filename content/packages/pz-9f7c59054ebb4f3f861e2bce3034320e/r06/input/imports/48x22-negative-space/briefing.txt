@@ -1,0 +1,4 @@
+Freigegebene MA-r02 und parameter-corridor.json aus r04; flache Oberkante ohne Schulterbuttons, frontale Hülle, Display, linkes D-Pad, genau zwei diagonale Aktionstasten, Starttaste und Lautsprecherregion erhalten. Genau eine Vordergrundfarbe.
+
+Working mode: faithful
+Motif and gameplay review: open

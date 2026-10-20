@@ -1,7 +1,5 @@
 {
-  "blockers": [
-    "final_editorial: tatsächliche Endabnahme der r06-Auswahl offen; anschließend externe ZA-1-v2-Dateibindung erforderlich."
-  ],
+  "blockers": [],
   "candidate": {
     "bundle": "fixed/import-separated",
     "certification": null,
@@ -29,7 +27,10 @@
   },
   "dimensions_approximate": true,
   "dimensions_fixed": false,
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-9f7c59054ebb4f3f861e2bce3034320e/r06/approval.json",
+    "sha256": "bbd2372e8a048ca7933785fb49e2b9247f012d57c6037a6eb1d24db833fdb3fc"
+  },
   "fixed_edits_replayed": true,
   "foreground_colors": 1,
   "format": "picross-authoring-record-v1",
@@ -39,11 +40,20 @@
   },
   "height": 22,
   "inspection": {
-    "file": "content/authoring/pz-9f7c59054ebb4f3f861e2bce3034320e/r06/inspection.json",
-    "full_ZA1_inspection_completed": false,
-    "sha256": "66a41c0f06aaf76ac1185ee4efbbcbbcbc89af24f900cdccca4950104aca9944"
+    "file": "content/packages/pz-9f7c59054ebb4f3f861e2bce3034320e/r06/inspection.json",
+    "sha256": "43976ad464ccfb70269723d97b522f497a8ca6d2aab7062186d5503310551579",
+    "full_ZA1_inspection_completed": true
   },
-  "integration": null,
+  "integration": {
+    "export_manifest_sha256": "8ab3dc4377d6f6dfa34eead6909739baad780fefd03f3a0b2a975b442fc4dc39",
+    "inspection_sha256": "43976ad464ccfb70269723d97b522f497a8ca6d2aab7062186d5503310551579",
+    "runtime_id": "pz-9f7c59054ebb4f3f861e2bce3034320e",
+    "runtime_revision": 1,
+    "save_slot": "sega_game_gear_001",
+    "package": "content/packages/pz-9f7c59054ebb4f3f861e2bce3034320e/r06",
+    "registration": "content/authoring/pz-9f7c59054ebb4f3f861e2bce3034320e/r06/registration.json",
+    "checks": "content/authoring/pz-9f7c59054ebb4f3f861e2bce3034320e/r06/integration-check.json"
+  },
   "inventory_sha256": "ccb160c49f35ee6073812592c5e00817c53bea20fe3348bc18519af7fb48516b",
   "manual_edit_record": "fixed/plan-separated.json",
   "mode": "mono",
@@ -56,7 +66,7 @@
     "sha256": "cfec097e9d7550b4a4788e30534e527b1afa0e5d3e013717182ece2220fc12f9"
   },
   "motif_name": "SEGA Game Gear",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren: tatsächliche Endabnahme r06; danach externe v2-Autorisierung mit echtem Endfreigabehash bilden.",
+  "next_action": "Integrations-PR nach Pflichtchecks mergen; anschließend §9-Bereinigung.",
   "package": {
     "bytes": 6427333,
     "file": "content/authoring/pz-9f7c59054ebb4f3f861e2bce3034320e/r06/package.zip",
@@ -64,7 +74,7 @@
   },
   "protected_cells": 1004,
   "puzzle_id": "pz-9f7c59054ebb4f3f861e2bce3034320e",
-  "repo_commit": "f0869f914be031317bfda4ca711088911af0b1df",
+  "repo_commit": "dbae2736dc5d2de4fe61e39fa72249c67940a32a",
   "reveal": {
     "approval": "approvals/reveal-A-r02-approval.json",
     "file": "reveals/A-r02.png",
@@ -73,7 +83,7 @@
     "sha256": "e875ff4f7fd543a477e0269fe0d2ef0bd635fd3ac929e8363174edf47ec9ba4a"
   },
   "revision": "r06",
-  "state": "blocked",
+  "state": "registered",
   "technical_deduction_certified": true,
   "width": 48
 }

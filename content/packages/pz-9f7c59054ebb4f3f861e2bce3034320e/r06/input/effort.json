@@ -1,0 +1,12 @@
+{
+  "difficulty_analysis_runs": 2,
+  "estimated_solving_minutes": null,
+  "fixed_imports": 2,
+  "human_active_minutes": null,
+  "image_generation_calls_this_phase": 0,
+  "paired_runs": 0,
+  "repair_search_runs": 0,
+  "selected_changed_cells": 52,
+  "solver_candidate_imports": 2,
+  "visual_geometry_options": 3
+}
