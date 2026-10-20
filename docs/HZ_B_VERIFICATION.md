@@ -4,7 +4,7 @@ Implementierung zu [#284](https://github.com/venomenon328/picross/issues/284),
 ausschließlich HZ-B-A01–A06 nach HZ-B-P01 und
 [HZ-D03–D06](HAND_DRAWN_UI.md). Basis:
 `e9a957d1513c9c77281e738c4eb22b161bee2342`; Arbeitsbranch
-`feat/284-handgezeichnete-controls`. Stand: 20.10.2026.
+`feat/284-handgezeichnete-controls`. Stand: 21.10.2026.
 
 ## Lieferung
 
@@ -54,6 +54,33 @@ Die drei Bildkonfigurationen sind 1280×720/UI125, 1920×1080/UI100 und
 stehen im technischen Katalogartefakt, ohne Skalierung oder Nachzeichnen.
 Die neue Ressourcenfamilie wird auch gegen den tatsächlich ausgelieferten PCK
 geladen; keine gepackte UI-/Iconressource wird im Test ersetzt.
+
+## Gebundene Windows-/PCK-Abschlussbelege
+
+[Originalarchive, SHA-256-Inventare und Producerbindung](evidence/hz-b/README.md)
+erhalten den sauberen Runtime-Head
+`dbcf091ef050630003ef8f82307c4e865515897c` auf der oben genannten Basis.
+Der tatsächliche Windows-Spieler startet aus dem heruntergeladenen CI-Paket;
+der PCK-Lauf und sein separater Prozessneustart bestehen jeweils
+192 Prüfungen. Alle drei Konturhashes bleiben über den Neustart gleich.
+Elf native Katalogmodi bestehen zusammen 7417 Prüfungen,
+darunter 3194 im KK-/HZ-Pfad.
+
+Alle 30 aktuellen HZ-B-Controloriginale und sämtliche PCK-Ansichten beider
+Prozesse bleiben unverändert archiviert. Die Sichtprüfung erfolgt an den
+Originalbildern in tatsächlicher UI-Größe. Die abschließende Pflicht-CI und
+Chromium-Bindung des Lieferheads stehen im PR; dieser nachgelagerte
+Dokumentationsstand ändert keine Runtime- oder Testressource.
+
+Der erste Product-Versuch von CI 39496177761 verpasste bei der bestehenden
+Echtzeit-Schraffuraufnahme das Messfenster 105–184 ms: Aufnahmen bei 88,502 und
+184,741 ms. Der Fehlversuch bleibt im PR dokumentiert; Renderer, Timing und
+Prüfschwelle wurden nicht geändert. Der erfolgreiche Produzentenversuch der
+Windows-Archive ist ausdrücklich in ihrer Bindung angegeben.
+Ein erster lokaler Windowslauf verfehlte einmal die bestehende Reset-Tooltip-
+Prüfung bei 1280×720. Der vollständige unveränderte Wiederholungslauf bestand;
+Erstbericht, Log und Originalbilder bleiben im gesonderten Tooltiparchiv erhalten.
+Eine konkrete Ursache dieses Einzelausfalls wird nicht als bewiesen behauptet.
 
 ## Archivierte native Entwicklungsoriginale
 
