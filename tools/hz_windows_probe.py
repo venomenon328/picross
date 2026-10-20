@@ -90,8 +90,9 @@ def main():
         copy_regression_game(root, project)
         registry = json.loads((project/"data/registry.json").read_text(encoding="utf-8"))
         definitions = [json.loads((project/e["definition"]).read_text(encoding="utf-8")) for e in registry["entries"]]
+        images = {"res://"+e["reveal"]:(project/e["reveal"]).read_text(encoding="utf-8") for e in registry["entries"]}
         inputs = native/"synthetic-input.json"
-        inputs.write_text(json.dumps(dict(registry=registry,definitions=definitions)), encoding="utf-8")
+        inputs.write_text(json.dumps(dict(registry=registry,definitions=definitions,images=images)), encoding="utf-8")
         env["HZ_PACK_INPUT"] = str(inputs)
         result = product.run_phase("hz-pack", [str(args.engine), "--main-pack", str(package/"picross-p1.pck"),
             "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--script", str(script), "--", "--p1-capture"], env, 180, logs)
