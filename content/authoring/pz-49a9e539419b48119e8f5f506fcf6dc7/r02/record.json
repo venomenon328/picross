@@ -1,0 +1,47 @@
+{
+  "blockers": [],
+  "category_id": "obst-nuesse",
+  "difficulty": null,
+  "dimensions_approximate": false,
+  "dimensions_fixed": true,
+  "final_editorial_approval": null,
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r02/handoff.json",
+    "sha256": "4805f4d9b63f4daa22878ffffe6c3f27bda942898b588f40b0cf4c61c44621c0"
+  },
+  "height": 20,
+  "integration": null,
+  "inventory_sha256": "48a371e3acf4fb371fa092a523a46166c162bce70a305ea9f74a9d21531f347e",
+  "mode": "mono",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8",
+    "file": "motifs/MA-r02.png",
+    "provenance": "motifs/MA-r02.provenance.json",
+    "revision": "MA-r02",
+    "sha256": "96eb5dd7428ddfce15cf4cee900cecb809a6ae2e5c94e38426e514dacda94f8c"
+  },
+  "motif_name": "Banane",
+  "next_action": "3 · Motiv freigeben & produzieren: MA-r02 und parameter-corridor.json ausdrücklich durch den Nutzer freigeben lassen; erst danach Rasterproduktion.",
+  "package": {
+    "bytes": 2697184,
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r02/package.zip",
+    "sha256": "3d4dcd52530075df00697a6f5d8bb8b55257017b21fde1dd61a63712c11870ad"
+  },
+  "proposed_parameters": "parameter-corridor.json",
+  "puzzle_id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+  "repo_commit": "efc194c504133a73a7565944b199ac051b69e0da",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "reveals/A-r01.provenance.json",
+    "revision": "r01",
+    "sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8"
+  },
+  "revision": "r02",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-20T08:32:52Z",
+  "width": 15
+}
