@@ -132,4 +132,4 @@ static func _check_direction_labels(runner: SceneTree, catalog: Catalog) -> void
 			runner.check(catalog.preference.criterion == expected.criterion and catalog.preference.direction == direction, context + " active pair")
 			runner.check(catalog.direction_button.tooltip_text == expected[direction], context + " tooltip describes active order")
 			runner.check(catalog.direction_button.accessibility_name == "Sortierrichtung (%s): %s" % [expected.title, expected[direction]], context + " accessible criterion and active order")
-			runner.check(catalog.direction_button.text == ("↑" if direction == "asc" else "↓"), context + " unchanged arrow")
+			runner.check(catalog.direction_button.text.is_empty() and catalog.direction_button.image.resource_path == ("res://art/book/arrow-up.svg" if direction == "asc" else "res://art/book/arrow-down.svg"), context + " HZ-B icon retains arrow meaning")

@@ -5,6 +5,8 @@ const Session = preload("res://model/session.gd")
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const BookButton = preload("res://ui/book_button.gd")
+const BookChoice = preload("res://ui/book_choice.gd")
+const PaperStyle = preload("res://ui/book_style.gd")
 const Card = preload("res://ui/catalog_card.gd")
 const Preference = preload("res://model/catalog_preference.gd")
 const PAGE_SIZE: int = 24
@@ -22,7 +24,7 @@ var sort_label: Label
 var category_tooltip_layout := Vector2.ZERO
 var preference: Preference = Preference.new()
 var sort_choice: OptionButton
-var direction_button: Button
+var direction_button: BookButton
 var preference_feedback: Label
 var summary: Label
 var feedback: Label
@@ -30,8 +32,8 @@ var empty_message: Label
 var all_button: Button
 var scroll: ScrollContainer
 var grid: GridContainer
-var previous_button: Button
-var next_button: Button
+var previous_button: BookButton
+var next_button: BookButton
 var page_label: Label
 var choices: Array[Button] = []
 var previews: Array[Miniature] = []
@@ -60,7 +62,7 @@ func _ready() -> void:
 	add_child(top)
 	var label: Label = _label("Kategorie", 16)
 	top.add_child(label)
-	category_choice = OptionButton.new()
+	category_choice = BookChoice.new()
 	category_choice.name = "catalog-category"
 	category_choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	category_choice.fit_to_longest_item = false
@@ -70,13 +72,14 @@ func _ready() -> void:
 	sort_label = _label("Sortieren nach", 16)
 	sort_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	top.add_child(sort_label)
-	sort_choice = OptionButton.new()
+	sort_choice = BookChoice.new()
 	sort_choice.name = "catalog-sort"
 	for title: String in ["Kategorie", "Größe", "Schwierigkeit", "Hinzugefügt"]: sort_choice.add_item(title)
 	sort_choice.item_selected.connect(func(index: int) -> void: choose_sort(Preference.CRITERIA[index]))
 	top.add_child(sort_choice)
 	direction_button = _button("", reverse_sort)
 	direction_button.name = "catalog-direction"
+	direction_button.action_id = "catalog-direction"
 	top.add_child(direction_button)
 	top.add_child(_button("Einstellungen / Info", func() -> void: information_requested.emit()))
 	top.add_child(_button("Beenden", func() -> void: quit_requested.emit()))
@@ -111,11 +114,13 @@ func _ready() -> void:
 	var pager: HBoxContainer = HBoxContainer.new()
 	pager.alignment = BoxContainer.ALIGNMENT_CENTER
 	add_child(pager)
-	previous_button = _button("← Zurück", turn_page.bind(-1))
+	previous_button = _button("Zurück", turn_page.bind(-1))
+	previous_button.image = preload("res://art/book/arrow-left.svg")
 	pager.add_child(previous_button)
 	page_label = _label("", 16)
 	pager.add_child(page_label)
-	next_button = _button("Weiter →", turn_page.bind(1))
+	next_button = _button("Weiter", turn_page.bind(1))
+	next_button.image = preload("res://art/book/arrow-right.svg")
 	pager.add_child(next_button)
 	resized.connect(_layout_cards)
 	scroll.resized.connect(_layout_cards)
@@ -245,6 +250,7 @@ static func progress(item: Session) -> String:
 
 func _render(position: int) -> void:
 	BookButton.dismiss_all(get_tree())
+	BookChoice.dismiss_all(get_tree())
 	generation += 1
 	for child: Node in grid.get_children():
 		# Synchronous release bounds live cards AND reveal textures during page turns.
@@ -260,7 +266,7 @@ func _render(position: int) -> void:
 	filtered_ids = _ids(category_id)
 	filtered_ids.sort_custom(_before)
 	sort_choice.select(Preference.CRITERIA.find(preference.criterion))
-	direction_button.text = "↑" if preference.direction == "asc" else "↓"
+	direction_button.image = load("res://art/book/arrow-up.svg" if preference.direction == "asc" else "res://art/book/arrow-down.svg")
 	direction_button.tooltip_text = _direction_description()
 	direction_button.accessibility_name = "Sortierrichtung (%s): %s" % [sort_choice.text, direction_button.tooltip_text]
 	sort_choice.disabled = not load_error.is_empty()
@@ -315,16 +321,19 @@ func _add_card(id: String) -> void:
 	var column: VBoxContainer = VBoxContainer.new()
 	grid.add_child(column)
 	var card: Card = Card.new()
+	card.action_id = id
 	card.content_surface = true
 	card.focus_mode = Control.FOCUS_ALL
 	card.pressed.connect(func() -> void: opened.emit(id))
 	card.recovery_activated.connect(func() -> void: opened.emit(id))
 	for state: String in ["normal", "hover", "pressed", "focus", "disabled"]:
-		var paper: StyleBoxFlat = StyleBoxFlat.new()
-		paper.bg_color = Color("fff8e8") if state == "normal" else Color("e0e9d9")
-		if state == "disabled": paper.bg_color = Color("eadbd1")
-		paper.border_color = Color("376a60") if id == selected_id or state == "focus" else Color("ac9369")
-		paper.set_border_width_all(3 if id == selected_id or state == "focus" else 1)
+		var paper = PaperStyle.make("card/"+id,ui_scale,Color("fff8e8") if state == "normal" else Color("c5d6cd") if state == "pressed" else Color("e0e9d9"))
+		if state == "disabled": paper.paper = Color("eadbd1")
+		paper.selected = id == selected_id
+		if state == "focus":
+			paper.focus = true
+			paper.paper = Color.TRANSPARENT
+			paper.ink = BookButton.INK
 		card.add_theme_stylebox_override(state, paper)
 	card.disabled = statuses[id] == "error"
 	column.add_child(card)
@@ -382,13 +391,17 @@ func _layout_cards() -> void:
 			node.ui_scale = ui_scale
 			if node.content_surface: continue
 			node.add_theme_font_size_override("font_size", roundi(14*ui_scale))
-			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.image != null else Vector2(Card.UiText.width(node.get_theme_font("font"),node.text,roundi(14*ui_scale))+24*ui_scale,44*ui_scale)
+			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.text.is_empty() else Vector2(Card.UiText.width(node.get_theme_font("font"),node.text,roundi(14*ui_scale))+(56 if node.image != null else 24)*ui_scale,44*ui_scale)
 	for card: Card in choices:
 		card.ui_scale = ui_scale
+		for state: String in ["normal","hover","pressed","disabled","focus"]:
+			card.get_theme_stylebox(state).ui_scale = ui_scale
 		card.custom_minimum_size.x = card_width
 		card.size.x = card_width
 		card.layout_content()
 	category_choice.custom_minimum_size.y = 44 * ui_scale
+	category_choice.ui_scale = ui_scale
+	sort_choice.ui_scale = ui_scale
 	# Wrap the two-word label at narrow widths; every action and the usual
 	# category names keep their budgets without adding another toolbar row.
 	sort_label.custom_minimum_size.x = Card.UiText.label_width(sort_label, "Sortieren" if size.x < 1100 * ui_scale else "Sortieren nach", roundi(16 * ui_scale))
@@ -428,6 +441,7 @@ static func _label(text: String, font_size: int) -> Label:
 static func _button(text: String, action: Callable) -> BookButton:
 	var result: BookButton = BookButton.new()
 	result.text = text
+	result.action_id = text
 	result.focus_mode = Control.FOCUS_ALL
 	result.pressed.connect(action)
 	return result

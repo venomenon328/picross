@@ -5,6 +5,7 @@ const Text = preload("res://ui/ui_text.gd")
 var checks := 0
 var failures: Array[String] = []
 var output: String
+var contour_hashes: Dictionary = {}
 
 class TechnicalMain extends Main:
 	var fixture_textures: Array[Texture2D] = []
@@ -53,6 +54,12 @@ func run() -> void:
 	check(app.catalog_error.is_empty() and app.sessions.size() == 6,"actual PCK loads only six external synthetic fixtures: " + app.catalog_error)
 	check(Text.font().data == Text.SOURCE.data and not Text.font().allow_system_fallback,"actual PCK original Tidy bytes and local fallback")
 	check(FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"),"actual PCK includes author permission")
+	var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
+	check(icons.size() == 23 and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"),"actual PCK complete HZ-B family/provenance")
+	for id: String in icons:
+		var texture: Texture2D = load("res://art/book/"+id+".svg")
+		check(texture != null and texture.get_size() == Vector2(26,26),"actual PCK imported icon "+id)
+		check(texture.get_image().is_invisible() == (id == "check-empty"),"actual PCK visible ink "+id)
 	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25],[1920,1080,1.0]]:
 		root.size = Vector2i(spec[0],spec[1])
 		app.set_ui_scale(spec[2])
@@ -62,6 +69,26 @@ func run() -> void:
 			for label: Label in [card.dimensions,card.difficulty,card.leaf,card.note]:
 				check(Text.label_width(label,label.text,label.get_theme_font_size("font_size")) <= label.size.x,"actual PCK full metadata")
 		await shot("catalog-%d" % spec[0])
+		var contours: Array = app.choices[0].get_theme_stylebox("normal").contours(Rect2(Vector2.ZERO,app.choices[0].size))
+		var hash := HashingContext.new()
+		hash.start(HashingContext.HASH_SHA256)
+		hash.update(var_to_bytes(contours))
+		var fingerprint: String = hash.finish().hex_encode()
+		var key: String = "%s/%s" % [spec[0],spec[2]]
+		if contour_hashes.has(key): check(contour_hashes[key] == fingerprint,"actual PCK scale roundtrip contour bytes")
+		contour_hashes[key] = fingerprint
+		check(app.choices[0].get_theme_stylebox("normal").get_script().resource_path == "res://ui/book_style.gd","actual PCK uses HZ-B card contours")
+		app.album.sort_choice.show_popup()
+		await frames()
+		check(app.album.sort_choice.get_popup().get_theme_stylebox("panel").get_script().resource_path == "res://ui/book_style.gd","actual PCK HZ-B native popup paper")
+		await shot("controls-sort-%d" % spec[0])
+		app.album.sort_choice.get_popup().hide()
+		app.show_information("settings")
+		await shot("controls-settings-%d" % spec[0])
+		app.view_choice.show_popup()
+		await shot("controls-view-%d" % spec[0])
+		app.view_choice.get_popup().hide()
+		app.return_to_work()
 		app.select_puzzle(0)
 		await frames()
 		check(app.board.clue_font().data == app.FullViewBoard.Typography.SOURCE.data,"actual PCK original Delight clue bytes")
@@ -85,7 +112,7 @@ func run() -> void:
 	panel.add_child(sample)
 	app.add_child(panel)
 	await shot("glyphs")
-	var report := {"test_only":true,"checks":checks,"failures":failures,"display":DisplayServer.get_name(),"renderer":RenderingServer.get_video_adapter_name(),"engine":Engine.get_version_info()}
+	var report := {"test_only":true,"package":"HZ-B","contour_hashes":contour_hashes,"checks":checks,"failures":failures,"display":DisplayServer.get_name(),"renderer":RenderingServer.get_video_adapter_name(),"engine":Engine.get_version_info()}
 	var file := FileAccess.open(output.path_join("pack.json"),FileAccess.WRITE)
 	file.store_string(JSON.stringify(report,"\t")+"\n")
 	file.close()
