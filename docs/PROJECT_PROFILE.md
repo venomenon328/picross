@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**HZ / #284 (20.10.2026), HZ-A integriert; HZ-B im Draft, Abschlussprüfung und getrennte Abnahmen offen:**
+**HZ / #284 (20.10.2026), HZ-A integriert; HZ-B implementiert im Draft, getrennte Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale
 Spieler-UI gemäß HZ-A-FONT02 an Tidy Hand als Standardtext (Überschriften
 unverändert) und stärker gezeichnete kleine Rahmen, vollständige
@@ -15,7 +15,8 @@ zugehörigen Prüfwege; technische Ergebnisse und offene Gates stehen im Paket-P
 Der frühere Spezifikations-PR bleibt ein reiner Dokumentnachweis.
 Die [HZ-B-Lieferung](HZ_B_VERIFICATION.md) führt Konturen, native Menüs und
 die vollständige Piktogrammfamilie in [Draft-PR #289](https://github.com/venomenon328/picross/pull/289).
-HZ-B-R01 und HZ-B-M01 bleiben separat vor Merge erforderlich.
+Gebundene Windows-/PCK-Originale liegen im Lieferbericht; der finale CI-/Chromium-
+und Selbstreviewstand steht im PR. HZ-B-R01 und HZ-B-M01 bleiben separat vor Merge erforderlich.
 
 **AT / #256 (19.10.2026), Umsetzungsvorbereitung V4; AT-A integriert, AT-B-F01 nach Eigentümerabnahme beauftragt:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ist bei Abschlussbildern,
