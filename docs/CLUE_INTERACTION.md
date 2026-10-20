@@ -96,8 +96,11 @@ Hinweisgeste werden gemeinsam ausgewertet; kein zufälliger Bezug auf Zellen hin
 der Box. Bei Wechsel der Hinweisquelle folgt die Markierung der neuen Quelle.
 
 Das Overlay selbst wird nicht verschiebbar oder anheftbar. Bestehende Öffnungs-/
-Schließbedingungen, kleinere Fraunces-Überschrift, Delight-Zahlen, Papier, Rahmen,
-Umbruch und zoomunabhängige Lesegröße bleiben. Die Box darf die von ihr bedeckte
+Schließbedingungen, Delight-Zahlen, Papier, Rahmen, Umbruch und zoomunabhängige
+Lesegröße bleiben. Die kleinere Überschrift folgt dem freigegebenen, noch nicht
+implementierten [HZ-Sollstand](HAND_DRAWN_UI.md): Bakso statt Fraunces mit neu
+gemessenen Textgrenzen gemäß [HC/HF](CLUE_TYPOGRAPHY.md).
+Die Box darf die von ihr bedeckte
 Rasterfläche weiterhin abdecken; Bänder werden nicht über Text oder Rahmen gemalt.
 Die passende Markierung bleibt außerhalb dieser natürlichen Überdeckung sichtbar.
 

@@ -1,6 +1,19 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
-**KE / #233, Implementierung vom 17.10.2026 auf dem Arbeitsbranch; Abnahmen getrennt offen:**
+**HZ · 20.10.2026, Spezifikation freigegeben; noch nicht implementiert:**
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet Bakso für sämtliche
+normalen Spielertexte einschließlich Warnungen und Vollhinweis-Überschrift,
+gemessene Textbudgets sowie organischere kleine Rahmen, offene Menüs und Icons.
+Delight-Zahlen, Hinweis-/Rasterfit, Eingabe, Saves und die großen SL-Rasterrahmen
+bleiben. HZ-A und HZ-B werden gesondert beauftragt und abgenommen.
+
+**Katalogausgangsbasis für HZ:** KU-A/PR #254 und KU-B/PR #255 sind integriert.
+[Katalogdarstellung](CATALOG_PRESENTATION.md) und
+[Katalogsortierung](CATALOG_SORTING.md) lösen die nachfolgende KE-Anordnung ab
+und binden die aktuelle Runtimeprojektion v4 samt exakten Altlesern.
+Persönliche KU-Abnahmen auf `main` bleiben im Issue #244 offen.
+
+**Historischer KE-Stand vom 17.10.2026 / #233:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt gezielt die nachfolgende
 integrierte KK-Metadaten-/Fußzeilenanordnung durch eine passive 2×2-Infobox und
 ergänzt das gezeichnete Fragezeichen ausschließlich für Neu. „Fertig“ ist nur
@@ -366,8 +379,15 @@ Während einer Zellgeste ist Hinweisnavigation gesperrt. Freigabe, Escape und
 Fokusverlust beenden sie; falsche Tastenfreigabe nicht. Hinweis-Panning verändert
 weder Zellen/Preview, History/Undo-Metadatum oder Abschluss noch Rasterzentrum,
 Rasterzoom oder Miniaturrahmen. Darüberfahren einer gekürzten Folge zeigt weiterhin
-die vollständige farbige Folge als umbrechendes Overlay im Arbeitsbild. HF / #149 vermisst Fraunces-Überschrift und Delight-Zahlen getrennt, nutzt vorhandenes Papier und gezeichnete Bildrahmen, hält sämtliche Texte innerhalb der sicheren Fläche und aktualisiert Hover-/Trefferrechtecke auch ohne neue Mausbewegung. Die Overlaylesegröße folgt UI100/125 unabhängig vom Rasterzoom; sichtbare Boxklicks lösen keine Zellaktion aus. Dieser ist
-Ergänzung, nicht der einzige Zugriff; es gibt keinen eigenen Hinweisbildschirm oder
+die vollständige farbige Folge als umbrechendes Overlay im Arbeitsbild. HF / #149
+vermisst UI-Überschrift und Delight-Zahlen getrennt. Der freigegebene HZ-Sollstand
+wechselt die Überschrift von Fraunces zu Bakso und prüft ihre Textgrenzen neu;
+die Hinweiszahlen behalten ihre Geometrie. Vorhandenes Papier und gezeichnete
+Bildrahmen halten sämtliche Texte innerhalb der sicheren Fläche; Hover-/
+Trefferrechtecke aktualisieren sich auch ohne neue Mausbewegung. Die
+Overlaylesegröße folgt UI100/125 unabhängig vom Rasterzoom; sichtbare Boxklicks
+lösen keine Zellaktion aus. Das Overlay ergänzt die direkte Hinweisnavigation;
+es gibt keinen eigenen Hinweisbildschirm oder
 modalen Ersatzdialog. Keine automatische Fehler-/Erfüllungsmarkierung durch
 Lösungsvergleich. Manuelles Hinweisabhaken ist nicht erforderlich.
 
@@ -593,8 +613,12 @@ Schritts. Rätselproduktion/Solver und Verbundraster bleiben getrennte Risikostr
 I-01 bis I-05 gemäß [GD-01 bis GD-05](Z2_SELECTION.md). Der reguläre Kern,
 Appname/Speicherort, Saveformat und Rätseldaten bleiben erhalten. A-Papier,
 Montierungen, UI und Raster sind getrennt; C1 konturiert nur Hinweisfarben 2/4.
-Fraunces/Plex Sans sind gepinnt und offline gebündelt; VS2-V3 ergänzt das
-unveränderte Bakso für Arbeits-Blatttitel, KB für den Katalogtitel, KK für Kachel-Motivüberschriften/`???`. Farbwahl aktiviert Füllen.
+Fraunces/Plex Sans sind gepinnt und offline gebündelt; VS2-V3 ergänzte das
+unveränderte Bakso für Arbeits-Blatttitel, KB für den Katalogtitel, KK für
+Kachel-Motivüberschriften/`???`. [HZ-D01/D02](HAND_DRAWN_UI.md) erweitert Bakso
+als freigegebenen, noch nicht implementierten Sollstand auf die normale UI;
+Zahlen-/Markerrollen folgen weiterhin HC. HZ-D03–D05 beschreibt kleine Rahmen,
+vollständige Dropdowns und die aktive Iconfamilie. Farbwahl aktiviert Füllen.
 Acht Arbeitsaktionen, eigene Miniatur, Koordinaten und aktive Farbe/Werkzeug bleiben
 auf der Arbeitsseite, Trefferflächen mindestens 44/55 px bei UI 100/125 %.
 VS2-V3 ordnet die acht Aktionen senkrecht rechts unter Miniatur/Palette an;

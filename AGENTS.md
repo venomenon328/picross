@@ -34,11 +34,20 @@ AT §4.3 sind damit spezifiziert. [AT-A-T01](docs/AT_A_VERIFICATION.md) führt
 technische Nachweise und getrenntes Selbstreview des damaligen AT-A-Stands;
 der aktuelle AT-B-Auftrag ersetzt diese historischen Belege nicht.
 
+Bei UI-Schrift, kleinen Rahmen, Dropdowns oder Piktogrammen zusätzlich
+[HZ: Handgezeichnete Bedienoberfläche](docs/HAND_DRAWN_UI.md) vollständig lesen.
+HZ / #284 (20.10.2026) ist als Spezifikation freigegeben, noch nicht implementiert:
+HZ-A umfasst Bakso als normale UI-Schrift samt Zeichenbehandlung und Textlayout;
+HZ-B danach organische Konturen, vollständige Menüs und die gesamte Symbolfamilie.
+Hinweisziffern/-geometrie und die drei großen SL-Rasterrahmen behalten ihre Verträge.
+Spezifikationspflege beauftragt keinen Produktcode oder Merge.
+
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](docs/CATALOG_PRESENTATION.md)
 und [Katalogsortierung](docs/CATALOG_SORTING.md) vollständig lesen. KU / #244
-ist als Sollstand freigegeben, noch nicht implementiert: KU-A umfasst Papierstreifen,
-Schwierigkeitskreise, Stiftsymbole und Statusfußzeile; KU-B Sortierung und einmalige
-Hinzugefügt-Metadaten. Die dort benannte Ablösung alter KE-Anzeigen ist verbindlich;
+ist mit KU-A/PR #254 und KU-B/PR #255 integriert: Papierstreifen,
+Schwierigkeitskreise, Stiftsymbole, Statusfußzeile, Sortierung und einmalige
+Hinzugefügt-Metadaten. Die offenen persönlichen KU-Abnahmen bleiben in #244;
+HZ nimmt sie nicht ab. Die Ablösung alter KE-Anzeigen ist verbindlich;
 historische Liefernachweise bleiben an ihre damaligen Stände gebunden. Eine
 Spezifikationsfreigabe ist weder Implementierungsauftrag noch Mergefreigabe.
 

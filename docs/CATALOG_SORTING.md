@@ -1,15 +1,16 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
-Stand: 18.10.2026 · Spezifikation 1.1 · KU-B im Implementierungspaket; Abnahmen separat
+Stand: 20.10.2026 · Spezifikation 1.2 · KU-B integriert; HZ-Menügestaltung spezifiziert
 
 Der Eigentümer hat die Katalogüberarbeitung als Spezifikation freigegeben.
 [KU / #244](https://github.com/venomenon328/picross/issues/244) führt
 KU-A für die [Kartengestaltung](CATALOG_PRESENTATION.md) und KU-B für die hier
 beschriebene vollständige Sortierfunktion einschließlich Daten und Persistenz.
-Empfohlene Reihenfolge ist KU-A, danach KU-B; beide liefern jeweils ein selbständig
-abnehmbares Ergebnis in einem eigenen späteren Implementierungs-PR.
-Die gesondert beauftragte Implementierung läuft auf `feat/244-katalogsortierung`.
-[Prüfzuordnung und offene Gates](KU_B_VERIFICATION.md) bleiben separat.
+KU-A und KU-B sind über ihre eigenen PRs #254/#255 integriert.
+[Prüfzuordnung](KU_B_VERIFICATION.md) und die offenen persönlichen KU-Abnahmen
+auf `main` bleiben separat im Issue gebunden. Der freigegebene nächste
+[HZ-Stilstand](HAND_DRAWN_UI.md) ist noch nicht implementiert und übernimmt keine
+historischen Mergeausnahmen.
 
 ## Geltung und Ausgangsstand
 
@@ -34,6 +35,12 @@ Fortschrittsregeln oder Änderungen an Rätseldefinitionen und bestehenden Saves
 Direkt neben der Kategorienauswahl stehen ein Dropdown **„Sortieren nach“**
 und ein kompakter Richtungsumschalter. Beide verwenden die bestehende Buch-UI,
 lesbare Beschriftungen und ihre üblichen Hover-/Fokus-/Trefferflächen.
+HZ-D01/D04/D05 spezifiziert dafür Bakso, organische Rahmen und eine vollständige
+Gestaltung von geschlossenem Feld und geöffnetem Menü einschließlich Zeilen,
+Hover-/Auswahlmarkierung, Chevron und Scrollbestandteilen. Kategorieauswahl,
+Sortierung und Rätselansicht in Einstellungen teilen diese Darstellung.
+Richtungsumschalter und Seitenpfeile gehören zur gezeichneten Piktogrammfamilie;
+die nachfolgende Auswahl-/Sortier-/Persistenzsemantik bleibt unverändert.
 Kategorie, Sortierung, Einstellungen/Info und Beenden bleiben in den gemeinsamen
 Fenster-/UI-Konfigurationen erreichbar. Das Bedienpaar erscheint erst mit der
 vollständigen KU-B-Funktion, ohne funktionslose Voraboption in KU-A.
@@ -258,6 +265,10 @@ Darstellung/Bedienung und Browserpersistenz folgen der aktuellen CI-Policy mit
 den gemeinsamen Konfigurationen 1280×720/UI125, 1920×1080/UI100 und
 2560×1440/UI125; keine historische Prüfmatrix neu eröffnen.
 
+Die folgende ursprüngliche KU-B-Gatezuordnung bleibt zur Einordnung erhalten;
+die tatsächlichen Ergebnisse und späteren paketbezogenen Mergeentscheidungen
+stehen in #244/PR #255. Die aktuelle CI-Policy ersetzt ältere Firefox-CI-Pflichten.
+
 - **KU-B-T01:** Implementierer liefert A01–A10 samt aktueller ausgewählter
   Pflicht-CI, nativen Windows- und Chromium-/Firefoxnachweisen, tatsächlichem
   Bestandsbericht und getrenntem Selbstreview vor Übergabe/Implementierungsmerge.
@@ -270,10 +281,11 @@ den gemeinsamen Konfigurationen 1280×720/UI125, 1920×1080/UI100 und
   Reset-/Recoveryproben ausschließlich mit isolierten Testständen. Tatsächliche
   Fenster-/UI-/Windows-Skalierung und Einzelergebnisse dokumentieren.
 
-Alle KU-B-Gates sind offen. KU-A kann vorher eigenständig abgenommen werden;
-seine technische oder persönliche Abnahme nimmt KU-B nicht vorweg. Der aktuelle
-Auftrag erzeugt ausschließlich Spezifikation und Issue-Pakete, keine Datenübernahme,
-Implementierung, Code-PR, neue Produktprüfung, Merge oder Produktveröffentlichung.
+KU-A und KU-B sind inzwischen über PR #254/#255 integriert. Die persönlichen
+KU-Abnahmen wurden gemäß [Issue #244](https://github.com/venomenon328/picross/issues/244)
+auf `main` verlegt und bleiben dort offen; frühere Ausnahmen bleiben paketgebunden.
+Die neue HZ-Spezifikation ersetzt diese Nachweise nicht. Ihr aktueller Auftrag
+liefert ausschließlich Issue und Dokumente, keine weitere Produktimplementierung.
 
 ## KU-B-P01 · Verbindliche Implementierungsverträge
 
