@@ -50,7 +50,7 @@ Dieses Dokument behauptet keinen Erfolg für noch laufende Prüfungen.
 | Pflicht-CI | Auswahl durch `ci_scope.py` aus vollständigem Basis-/Head-Diff; abschließendes `ci-required` mit nativen und Chromium-Originalbelegen |
 
 Die drei Bildkonfigurationen sind 1280×720/UI125, 1920×1080/UI100 und
-2560×1440/UI125. Die nativen Originalausschnitte `hz-b-{card,sort,settings,view,dialog,icons,hover,pressed}-*.png`
+2560×1440/UI125. Die nativen Originalausschnitte `hz-b-{card,sort,settings,view,dialog,icons,hover,pressed,scroll-hover,scroll-pressed}-*.png`
 stehen im technischen Katalogartefakt, ohne Skalierung oder Nachzeichnen.
 Die neue Ressourcenfamilie wird auch gegen den tatsächlich ausgelieferten PCK
 geladen; keine gepackte UI-/Iconressource wird im Test ersetzt.
@@ -110,6 +110,12 @@ Der zusätzliche SubViewport-Test prüft den Eingabeschutz und liefert die dort
 fehlende native Fensterschließbenachrichtigung ausdrücklich separat.
 Der KAT-2-Auswahlhelfer wartet nach einer vorausgehenden Größenänderung auf das
 fertige Layout, bevor er das Menü an seiner neuen Position öffnet.
+Der abschließende Zustandsvergleich fand außerdem identische Scrollbalken-
+Darstellungen für Normal, Hover und Gedrückt. Die drei Zustände besitzen jetzt
+unterschiedliche Flächen; der gedrückte Griff erhält zusätzlich stärkere Kontur
+und Markierung. Auch die Pfeile unterscheiden ihre drei Zustände. Echte native
+Zeiger-/Druckereignisse und getrennte Originalaufnahmen prüfen die sichtbare
+Pixeländerung; der Ressourcentest prüft beide Pfeile in UI100/125.
 
 **HZ-B-R01** (separater qualifizierter Review) und **HZ-B-M01** (Eigentümerabnahme)
 bleiben vor Merge offen. Kein Merge, Deployment oder Issue-Abschluss.

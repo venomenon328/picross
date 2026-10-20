@@ -103,7 +103,7 @@ static func run(runner: Object) -> void:
 		# Native-size contact sheet of the actual Button class and SVG resources.
 		var panel := Panel.new()
 		panel.position = Vector2(50,180)
-		panel.size = Vector2(12*56,3*60)*app.ui_scale
+		panel.size = Vector2(13*56,3*60)*app.ui_scale
 		panel.add_theme_stylebox_override("panel",Paper.make("test-sheet",app.ui_scale))
 		app.add_child(panel)
 		var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
@@ -128,6 +128,12 @@ static func run(runner: Object) -> void:
 			button.disabled = state == 2
 			panel.add_child(button)
 			if state == 3: button.grab_focus()
+		var bar := VScrollBar.new()
+		bar.theme = preload("res://ui/book_controls.gd").popup_theme("test-scroll",app.ui_scale,app.theme.default_font)
+		bar.position = Vector2(675,8)*app.ui_scale
+		bar.size = Vector2(28,160)*app.ui_scale
+		bar.page = 25
+		panel.add_child(bar)
 		await Capture.capture(runner,"b-icons-%d"%spec[0],panel.get_global_rect())
 		var normal: Button = panel.get_child(23)
 		var pressed: Button = panel.get_child(27)
@@ -148,6 +154,25 @@ static func run(runner: Object) -> void:
 		await runner.frames()
 		runner.check(pressed.is_pressed(),"HZ-B actual held pointer state")
 		await Capture.capture(runner,"b-pressed-%d"%spec[0],panel.get_global_rect())
+		down.pressed = false
+		runner.surface.push_input(down,true)
+		await runner.frames()
+		var bar_rect := Rect2i(bar.get_global_rect())
+		var normal_pixels: PackedByteArray = runner.surface.get_texture().get_image().get_region(bar_rect).get_data()
+		motion = InputEventMouseMotion.new()
+		motion.position = bar.global_position + Vector2(bar.size.x/2,
+			bar.get_theme_icon("decrement").get_height()+bar.get_theme_stylebox("scroll").get_margin(SIDE_TOP)+bar.get_theme_stylebox("grabber").get_minimum_size().y/2)
+		runner.surface.push_input(motion,true)
+		await Capture.capture(runner,"b-scroll-hover-%d"%spec[0],panel.get_global_rect())
+		var hover_pixels: PackedByteArray = runner.surface.get_texture().get_image().get_region(bar_rect).get_data()
+		runner.check(hover_pixels != normal_pixels,"HZ-B native scrollbar pointer hover visibly differs")
+		down = InputEventMouseButton.new()
+		down.position = motion.position
+		down.button_index = MOUSE_BUTTON_LEFT
+		down.pressed = true
+		runner.surface.push_input(down,true)
+		await Capture.capture(runner,"b-scroll-pressed-%d"%spec[0],panel.get_global_rect())
+		runner.check(runner.surface.get_texture().get_image().get_region(bar_rect).get_data() != hover_pixels,"HZ-B native held scrollbar visibly differs from hover")
 		down.pressed = false
 		runner.surface.push_input(down,true)
 		panel.free()
