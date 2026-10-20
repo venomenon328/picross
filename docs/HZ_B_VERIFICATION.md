@@ -101,6 +101,15 @@ Die Originalsichtung zeigte am äußeren Popup-Polster durchscheinende Reste
 des geschlossenen Felds. Der Popup-Panelstil füllt deshalb zusätzlich das
 gesamte native Rechteck opak; die unregelmäßige Kontur liegt darin. Die
 archivierten Entwicklungsbilder zeigen ausdrücklich noch den früheren Stand.
+Der folgende Chromiumlauf fand einen durchgereichten Außenklick beim nativen,
+eingebetteten Popup. `BookChoice` verbraucht ausschließlich dieses Ereignis im
+Eltern-Viewport während das Popup noch sichtbar ist; der native Menüpfad bleibt
+zuständig für Auswahl, Scrollen und Schließen. Chromium und der echte Windows-
+PCK-Window prüfen das Schließen ohne Aktivierung der darunterliegenden Aktion.
+Der zusätzliche SubViewport-Test prüft den Eingabeschutz und liefert die dort
+fehlende native Fensterschließbenachrichtigung ausdrücklich separat.
+Der KAT-2-Auswahlhelfer wartet nach einer vorausgehenden Größenänderung auf das
+fertige Layout, bevor er das Menü an seiner neuen Position öffnet.
 
 **HZ-B-R01** (separater qualifizierter Review) und **HZ-B-M01** (Eigentümerabnahme)
 bleiben vor Merge offen. Kein Merge, Deployment oder Issue-Abschluss.

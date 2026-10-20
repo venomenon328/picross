@@ -17,6 +17,15 @@ func _ready() -> void:
 		if not is_visible_in_tree(): get_popup().hide())
 	get_viewport().size_changed.connect(func() -> void: get_popup().hide())
 
+func _input(event: InputEvent) -> void:
+	# Embedded PopupMenu closes on focus loss, deferred by Godot. The same
+	# outside press can reach its parent before that close is applied.
+	# Consume only that parent event; native popup selection/closing stays native.
+	var popup := get_popup()
+	if popup.visible and event is InputEventMouseButton:
+		if not Rect2(Vector2(popup.position),Vector2(popup.size)).has_point(event.position):
+			get_viewport().set_input_as_handled()
+
 func _style() -> void:
 	theme = Theme.new()
 	Controls.styles(theme,"OptionButton",str(name),ui_scale)

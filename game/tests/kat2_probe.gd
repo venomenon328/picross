@@ -56,6 +56,8 @@ func click(control: Control) -> void:
 	click_at(point)
 
 func choose(id: String) -> void:
+	# Let a preceding resize finish before opening the menu at its new bounds.
+	await frames()
 	var unchanged: bool = app.album.category_id == id
 	var old_page: int = app.album.page_index
 	var old_scroll: int = app.album.scroll_vertical

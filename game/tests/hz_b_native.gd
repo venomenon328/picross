@@ -53,6 +53,21 @@ static func run(runner: Object) -> void:
 		await key(runner,KEY_ESCAPE)
 		runner.check(not choice.get_popup().visible,"HZ-B native Escape dismisses")
 		runner.click(choice)
+		runner.surface.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_OUT)
+		await runner.frames()
+		for control: Node in choice.get_parent().get_children():
+			if control is Button and control.text == "Einstellungen / Info":
+				runner.click(control)
+				break
+		# An offscreen SubViewport has no parent Window focus-in/close request.
+		# Check the input guard before delivering that native close notification.
+		runner.check(app.album.visible and not app.information.visible,"HZ-B outside press does not activate underlying action")
+		choice.get_popup().notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+		await runner.frames()
+		runner.check(not choice.get_popup().visible and app.album.visible and not app.information.visible,"HZ-B outside click dismisses without activating underlying action")
+		app.show_album()
+		await runner.frames()
+		runner.click(choice)
 		await runner.frames()
 		app.show_information("settings")
 		await runner.frames()
