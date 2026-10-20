@@ -1,0 +1,116 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 2 bis Motivvorlage/Konfiguration/Codex-Übergabe und Repositoryablage mit Ablagemerge nach Pflichtprüfungen. Keine Motivfreigabe oder Rasterproduktion vorweggenommen.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "wasserwelt",
+  "codex_handoff": "CODEX_HANDOFF.md",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": "reveal-approval.json"
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "7b67579a87c5e97a36c87b02e369e9f1323ca9827f181a04ac6620f4bfc6d7b0"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "dac1d788f3f143d9dde976f7dc7b8fd02099eea872f759872b0ee58b1360937c",
+    "file": "motifs/MA-r01.png",
+    "provenance": "motifs/MA-r01.provenance.json",
+    "revision": "MA-r01",
+    "sha256": "4a74418d367e588d2e719cca18d68679142f2c5c042e3e0d3498179116c834b5"
+  },
+  "next_action": "3 · Motiv freigeben & produzieren: tatsächliche Nutzerfreigabe für motifs/MA-r01.png samt vorgeschlagenem Parameterkorridor binden; danach Standardauftrag 3 gemäß CODEX_HANDOFF.md.",
+  "origin_verification": null,
+  "parameter_corridor": "parameter-corridor.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        82,
+        40,
+        860,
+        1653
+      ],
+      "design": "designs/mono-13x25.json",
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 25,
+      "method": "area",
+      "mode": "mono",
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 13
+    },
+    {
+      "actual_crop": [
+        82,
+        40,
+        860,
+        1653
+      ],
+      "design": "designs/mono-14x27.json",
+      "fit": "contain",
+      "foreground_colors": 1,
+      "height": 27,
+      "method": "area",
+      "mode": "mono",
+      "thresholds": [
+        128,
+        160
+      ],
+      "width": 14
+    }
+  ],
+  "puzzle_id": "pz-7635c2e042e349fc90ad9ae55681de0f",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "d7abc35efec959a08822afa194d4e5553425efac",
+  "report": "report.md",
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/B-r01.png",
+    "provenance": "reveals/B-r01.provenance.json",
+    "revision": "B-r01",
+    "sha256": "dac1d788f3f143d9dde976f7dc7b8fd02099eea872f759872b0ee58b1360937c"
+  },
+  "revision": "r02",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "motif_review"
+}
