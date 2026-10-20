@@ -20,6 +20,10 @@ static func icon(id: String, scale: float, disabled: bool = false) -> Texture2D:
 	return textures[key]
 
 static func styles(target: Theme, type: String, id: String, u: float) -> void:
+	if type == "Button":
+		# AcceptDialog reapplies these when laying out its native buttons.
+		target.set_constant("buttons_min_width","AcceptDialog",roundi(44*u))
+		target.set_constant("buttons_min_height","AcceptDialog",roundi(44*u))
 	for state: String in ["normal","hover","pressed","hover_pressed","disabled","focus"]:
 		var color: Color = Color("e9e2d4") if state == "disabled" else Color("c5d6cd") if state in ["pressed","hover_pressed"] else Color("e0ece6") if state == "hover" else Color("fffaf0")
 		var style = Paper.make(id,u,color)

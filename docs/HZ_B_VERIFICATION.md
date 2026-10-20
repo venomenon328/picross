@@ -50,7 +50,7 @@ Dieses Dokument behauptet keinen Erfolg für noch laufende Prüfungen.
 | Pflicht-CI | Auswahl durch `ci_scope.py` aus vollständigem Basis-/Head-Diff; abschließendes `ci-required` mit nativen und Chromium-Originalbelegen |
 
 Die drei Bildkonfigurationen sind 1280×720/UI125, 1920×1080/UI100 und
-2560×1440/UI125. Die nativen Originalausschnitte `hz-b-{card,sort,settings,view,icons}-*.png`
+2560×1440/UI125. Die nativen Originalausschnitte `hz-b-{card,sort,settings,view,dialog,icons,hover,pressed}-*.png`
 stehen im technischen Katalogartefakt, ohne Skalierung oder Nachzeichnen.
 Die neue Ressourcenfamilie wird auch gegen den tatsächlich ausgelieferten PCK
 geladen; keine gepackte UI-/Iconressource wird im Test ersetzt.
@@ -70,6 +70,10 @@ Inventare werden auf die neue aktive Familie angepasst. Der separate
 Hüllencheck begrenzt die maximale Biegung großer Controls auf 5 UI-Pixel bei
 7 UI-Pixeln Innenabstand; Eckversatz, stärkste Auswahlkontur und Antialiasing
 bleiben damit auch für andere stabile IDs innerhalb des Trefferrechtecks.
+Auch native Bestätigungs-/Abbruchbuttons erhalten explizit die 44/55-Pixel-
+Mindesttrefferfläche; der Test klickt danach den unveränderten Abbruchweg.
+Hover und Gedrückt werden im Kontaktbogen durch echte Zeigerbewegung und
+gehaltene Maustaste erzeugt, nicht durch wirkungslose Toggle-Setter simuliert.
 
 **HZ-B-R01** (separater qualifizierter Review) und **HZ-B-M01** (Eigentümerabnahme)
 bleiben vor Merge offen. Kein Merge, Deployment oder Issue-Abschluss.
