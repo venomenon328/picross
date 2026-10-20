@@ -1,0 +1,49 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-505ecefc3dd64554a282e95b15883c60",
+  "revision": "r04",
+  "motif_name": "Essstäbchen",
+  "category_id": "haushalt-alltag",
+  "state": "motif_review",
+  "repo_commit": "f7196e2213e042c0d224248780260b3c218e9395",
+  "updated_at_utc": "2026-10-20T23:54:49Z",
+  "package": {
+    "file": "content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r04/package.zip",
+    "bytes": 1216428,
+    "sha256": "bd1572bd1dd4af1ee26e3dc529835ce789573854ff1faa0125be88981abfcf71"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r04/handoff.json",
+    "sha256": "8b0b44d313090736ed16d7a3376ca3ef9e2e15faee4b90d93b12ce6e11b29e83"
+  },
+  "inventory_sha256": "501b3d3217a9c0c9f5d235c9d617aec26f51b374e19b6a712418c7b3454bba46",
+  "final_editorial_approval": null,
+  "width": 30,
+  "height": 30,
+  "maximum_dimensions": {
+    "width": 30,
+    "height": 30
+  },
+  "dimensions_approximate": true,
+  "mode": "mono",
+  "foreground_colors": 1,
+  "actual_foreground_colors": null,
+  "difficulty": null,
+  "reveal": {
+    "file": "reveals/C-r01.png",
+    "revision": "C-r01",
+    "sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/reveal-C-r01.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r02.png",
+    "revision": "MA-r02",
+    "sha256": "e0747033ee06b3231b3a5af5fddcccb3cc34094f4feb1aa50f091d6cf98ff8e0",
+    "derived_from_reveal_sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": null
+  },
+  "proposed_parameters": "parameters.json",
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren: konkrete motifs/MA-r02.png · MA-r02 samt parameters.json (maximal 30 je Achse; 30x30 empfohlen, 25x25 Alternative; mono genau 1, area, contain, Crop [30,42,1239,1219]) menschlich freigeben. Erst danach neue Rasterproduktion.",
+  "integration": null
+}
