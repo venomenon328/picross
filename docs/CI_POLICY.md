@@ -379,7 +379,8 @@ Browser und Zustellung. CI-B verlangt regulären Start und alle betroffenen Brow
 Der reine Inhaltspfad bleibt ausgenommen.
 
 **Schlanker Inhaltspfad:** Ausschließlich `content/categories.json`,
-`content/registry.json`, `content/authoring/index.json`/`README.md`,
+`content/registry.json`, kanonische `content/added/<pz-ID>.json`,
+`content/authoring/index.json`/`README.md`,
 `content/authoring/<pz-ID>/<Revision>/…`, `content/packages/<pz-ID>/<Revision>/…`,
 `game/data/registry.json`, `game/data/content/<stem>.json` und
 `game/art/content/<stem>.png|svg|txt` gemäß der engen Positivliste in `ci_scope.py`.
