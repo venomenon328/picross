@@ -1,0 +1,40 @@
+{
+  "actor": "Tobias Schröder (Nutzer)",
+  "derived_from_reveal_sha256": "dac1d788f3f143d9dde976f7dc7b8fd02099eea872f759872b0ee58b1360937c",
+  "evidence": "motif-approval-evidence.md",
+  "file": "motifs/MA-r01.png",
+  "parameters": {
+    "actual_crop": [
+      82,
+      40,
+      860,
+      1653
+    ],
+    "design": "designs/mono-14x27.json",
+    "fit": "contain",
+    "foreground_colors": 1,
+    "height": 27,
+    "method": "area",
+    "mode": "mono",
+    "thresholds": [
+      128,
+      160
+    ],
+    "width": 14
+  },
+  "preserve": [
+    "rechte Blickrichtung und Seitenprofil",
+    "lange leicht abwärts gerichtete Röhrenschnauze und Auge",
+    "gebogener Hals und gerundeter Bauch",
+    "linke Rückenflosse",
+    "verjüngter offener C-förmiger Greifschwanz",
+    "vollständige Figur ohne Anschnitt"
+  ],
+  "revision": "MA-r01",
+  "sha256": "4a74418d367e588d2e719cca18d68679142f2c5c042e3e0d3498179116c834b5",
+  "source_commit": "d8b3ccb8eb4b66982dea805c08c3b8ab6f095b8d",
+  "statement": "Ich gebe die Motivvorlage motifs/MA-r01.png · MA-r01 frei; Parameter: 13×25 empfohlen oder 14×27; mono, genau 1 Vordergrundfarbe; area, contain; Crop [82,40,860,1653]; Schwellen 128/160; siehe parameter-corridor.json. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "timestamp_basis": "Aufzeichnung der tatsächlichen Erklärung in dieser Sitzung; exakter Nachrichtenzeitstempel nicht exponiert.",
+  "timestamp_utc": "2026-10-20T12:48:26Z",
+  "type": "human_motif_approval"
+}

@@ -39,9 +39,7 @@
       "width": 14
     }
   ],
-  "blockers": [
-    "Feste katalogweite 300-s-Grenze im bestehenden Publikations-/Recoveryweg erreicht. Journal und eigene Teilpaketdateien erhalten; kein Merge, kein §9-Cleanup. Werkzeugnacharbeit erfordert gesonderten Auftrag nach PUZZLE_AUTHORING §1.5."
-  ],
+  "blockers": [],
   "category_id": "wasserwelt",
   "difficulty": {
     "assessment_type": "instrumented",
@@ -73,11 +71,13 @@
     "technical": true
   },
   "integration": {
-    "evidence": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r04/integration-attempt.json",
+    "evidence": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r04/integration-evidence.json",
+    "export_manifest_sha256": "82ed8b442e9d1b84b21ec681a7bed5b4b304c812d95cad86f64209492fb5b88e",
     "main_integrated": false,
-    "registered": false,
-    "sha256": "725797faed66c26032856118f72edf8e6eb9d0e440cb0ac6c1025a8e3d65374f",
-    "status": "blocked"
+    "runtime_revision": 1,
+    "save_slot": "seepferdchen_001",
+    "sha256": "ddda3cea45a92bc27ff3985f7a12a930ad7116627c3dda79ccbb79a7577d06c0",
+    "status": "registered"
   },
   "inventory_sha256": "698b6b777c54069edaa8123a880825a7d1769854ae3dad7cd731d90ba854796e",
   "mode": "mono",
@@ -90,7 +90,7 @@
     "sha256": "4a74418d367e588d2e719cca18d68679142f2c5c042e3e0d3498179116c834b5"
   },
   "motif_name": "Seepferdchen",
-  "next_action": "Korrigieren oder Fehler beheben: gesondert beauftragte Werkzeugnacharbeit; danach dokumentierte Recovery abschließen und Integration/Merge/§9 fortsetzen.",
+  "next_action": "Nach Pflicht-CI/Selbstreview Integrations-PR mergen; tatsächlichen Main-Commit prüfen, dann separaten §9-Cleanup samt Pflicht-CI/Selbstreview und Merge.",
   "package": {
     "bytes": 11019063,
     "file": "content/authoring/pz-7635c2e042e349fc90ad9ae55681de0f/r04/package.zip",
@@ -137,7 +137,7 @@
     "variant": "candidate-001",
     "verification": "qa/repair-replay.json"
   },
-  "state": "blocked",
-  "updated_at_utc": "2026-10-20T13:24:10Z",
+  "state": "registered",
+  "updated_at_utc": "2026-10-20T14:38:22Z",
   "width": 14
 }
