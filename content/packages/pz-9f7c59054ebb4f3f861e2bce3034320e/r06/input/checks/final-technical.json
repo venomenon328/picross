@@ -1,0 +1,25 @@
+{
+  "cells": 1056,
+  "current_difficulty": "analysis-final/checked.json",
+  "deduction": "solved; complete independent verification and exact singleton matrix identity",
+  "empty": 450,
+  "filled": 606,
+  "foreground_colors": 1,
+  "frame": {
+    "bottom": true,
+    "left": true,
+    "right": true,
+    "top": false
+  },
+  "frame_valid": true,
+  "gate_limit": "Technical deduction, origin and fixed replay passed; full ZA-1 authorization/export after actual final approval only.",
+  "height": 22,
+  "logic_hash": "95c09d3594480aa98b40f05d7695cbc88e10f7c8433b774a3f07f3e23a4f7404",
+  "manual_replay": "checks/manual-replay-final.json",
+  "matrix_hash": "a14a696f25ecddec80cfff866178b40b484852e445437cc44836c7886312d855",
+  "proof_profile": "full-line-mono",
+  "scope": "Exactly 52 planned fixed edits; every other 1004 cell protected.",
+  "status": "pass",
+  "uniqueness": "Follows from complete deduction; no search.",
+  "width": 48
+}
