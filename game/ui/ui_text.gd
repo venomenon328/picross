@@ -16,7 +16,7 @@ static func font() -> FontFile:
 
 static func ink(typeface: Font, text: String, fs: int) -> Rect2:
 	# Measure the shaped glyphs' actual RIDs: a primary-RID character lookup
-	# misses ß, middle dots, arrows, kerning and every other local fallback.
+	# misses fallback arrows/punctuation, kerning and shaped glyph offsets.
 	var line := TextLine.new()
 	line.add_string(text, typeface, fs)
 	var ts: TextServer = TextServerManager.get_primary_interface()

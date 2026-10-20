@@ -279,7 +279,8 @@ Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlu
 Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Die Gestaltung geht in Richtung handgezeichneter 2D-Illustration mit klaren gezeichneten Konturen und ruhigen, nicht zu blassen Farbflächen. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
 
 Die Freigabe [HZ vom 20.10.2026](HAND_DRAWN_UI.md) überträgt die Handschrift
-durchgängig auf die Bedienelemente: Bakso für normale Texte und Überschriften,
+durchgängig auf die Bedienelemente: gemäß HZ-A-FONT02 Tidy Hand für Standardtext
+bei unveränderten Überschriften,
 erkennbar unregelmäßige kleine Rahmen und gezeichnete offene Menüinhalte sowie
 Piktogramme. Die Form bleibt je Element stabil, das Layout geordnet und die
 Treffergeometrie präzise. Eine allgemeinere Schriftrolle verlangt passenden

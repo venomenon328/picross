@@ -434,10 +434,10 @@ Spalte lässt sich nur für sich vertikal, jede konkrete Zeile nur für sich hor
 kontinuierlich ziehen und beim Loslassen in ganzen gemeinsamen Slots einrasten
 lassen, ohne X-/Y-Zuordnung oder Nachbarfolgen zu ändern. Der temporäre Versatz
 ist weder gespeicherte Leseposition noch Spielzustand.
-Der vollständige Hover-Tooltip ergänzt diese Navigation mit kleinerer UI-Überschrift
-(Bakso im freigegebenen HZ-Sollstand), unveränderten Delight-Zahlen und vorhandener
-warmer Papier-/Bildrahmung. HZ-D02 verlangt neu gemessene Textgrenzen für die
-Überschrift. Sie halten Überschrift, Zahlen und Rahmen getrennt; eine
+Der vollständige Hover-Tooltip ergänzt diese Navigation mit unveränderter kleiner
+Fraunces-Überschrift, Delight-Zahlen und vorhandener warmer Papier-/Bildrahmung.
+HZ-A-FONT02 erhält die getrennt gemessenen Textgrenzen von Überschrift und Zahlen.
+Sie halten Überschrift, Zahlen und Rahmen getrennt; eine
 separate Hinweisansicht bleibt ausgeschlossen. Hinweise beziehen sich auf ganze Linien,
 nicht nur den Rasterausschnitt. Die Miniatur zeigt eigene Eingaben einschließlich
 Fehlern, niemals eine korrigierte Lösung. VS2 konkretisiert fitbegrenzten Zoom und

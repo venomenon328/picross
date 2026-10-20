@@ -46,7 +46,8 @@ semantik, Spoilern, Reset-/Recoveryzielen oder HC/HF/HN-Geometrie.
 - `hz_native.gd` im bestehenden KAT-2-Modus `kk`: drei Pflichtkonfigurationen,
   vollständige Kartenmetadaten, 256 synthetische Kategorien mit langen Namen,
   echtes Scrollen/Anklicken, Tooltips, Hilfe, native Dialoge und unveränderte Saves.
-  15 zusätzliche Originalbilder stehen im verpflichtenden nativen Inventar.
+  18 zusätzliche Originalbilder einschließlich der gekürzten nativen Auswahl
+  stehen im verpflichtenden nativen Inventar.
 - `HZ-A-W01`: echte Chromium-Menü-/Hilfebedienung und gemessene Metadaten in
   denselben drei Konfigurationen; sechs zusätzliche Pflichtbilder. Alle bisherigen
   Browserfälle bleiben erhalten, insgesamt 31 Szenarien in fünf Gruppen.

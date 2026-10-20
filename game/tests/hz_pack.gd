@@ -62,6 +62,10 @@ func run() -> void:
 	# A synthetic glyph sheet supplements real controls; no generated font art.
 	var panel := PanelContainer.new()
 	panel.position = Vector2(100,200)
+	var paper := StyleBoxFlat.new()
+	paper.bg_color = Color("fffaf0")
+	paper.set_content_margin_all(16)
+	panel.add_theme_stylebox_override("panel",paper)
 	var sample := Label.new()
 	sample.text = "Tidy Hand · Größe Straße ÄÖÜ äöü ß\n× · … % „Anführungen“ – − ← → ↑ ↓\nNicht eingestuft · Sehr leicht · Sehr schwer\n20 × 20 · 40 × 40 · 50 × 50"
 	sample.add_theme_font_override("font",Text.font())

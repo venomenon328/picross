@@ -183,7 +183,7 @@ sie nicht zu den bisherigen Pflicht- oder konkreten Fehlerbildern gehören.
 HZ-A ergänzt den bestehenden `kk`-Modus um lokale Tidy-Hand-Zeichen-/Ellipsen-
 und Layoutprüfungen, vollständige Größenangaben, 128 Zeichen lange Kategorien,
 256 auswählbare Kategorien, Hilfe und native Dialoge. Die drei HZ-Fenster-/UI-
-Kombinationen liefern zusätzlich 15 unveränderte native `hz-*.png`-Ausschnitte
+Kombinationen liefern zusätzlich 18 unveränderte native `hz-*.png`-Ausschnitte
 beziehungsweise Kontextbilder; sie stehen im verpflichtenden Direktbildinventar.
 Bestehende KAT-/KE-/AT-Prüfungen und ihre Bilder bleiben erhalten.
 
