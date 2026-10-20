@@ -1,0 +1,156 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        24,
+        48,
+        1751,
+        833
+      ],
+      "alpha_below": 32,
+      "approval": "approvals/motif-MA-r02-approval.json",
+      "background": "#ffffff",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 20,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "threshold_range": [
+        96,
+        208
+      ],
+      "width": 44
+    },
+    {
+      "actual_crop": [
+        24,
+        44,
+        1752,
+        836
+      ],
+      "alpha_below": 32,
+      "approval": "approvals/motif-MA-r02-approval.json",
+      "background": "#ffffff",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "threshold_range": [
+        96,
+        208
+      ],
+      "width": 48
+    }
+  ],
+  "authorization": "Tatsächlicher Nutzerauftrag: Standardauftrag 3 vollständig bis Endabnahmevorlage; Repositoryablage nach §6 und Ablagemerge nach erfolgreichen Pflichtchecks. Keine menschliche Endabnahme erklärt; keine Spielregistrierung im Auftrag 3.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "imports/48x22-negative-space",
+    "certification": null,
+    "logic_hash": "23f8c540c2e10a17eb38907b7cfd69d36b666a93a82f88c8708a438dc1b34340",
+    "matrix_hash": "0b7c89521f06a408111320734244b26448381cbd803777a968ecf4b6cda7878e",
+    "proof": "imports/48x22-negative-space/area-096-proof.json",
+    "source_type": "import",
+    "variant": "area-096",
+    "verification": "checks/candidate-audit.json"
+  },
+  "category_id": "technik-erfindungen",
+  "current_difficulty": {
+    "file": "analysis/checked.json",
+    "level": "L3",
+    "method": "picross-difficulty-0.3",
+    "rating_hash": "60028d4566268cc52d2a8aa35ef8570d085fc179aefb200cfe30fe0845a31908"
+  },
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "final_editorial_approval": null,
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "analysis/checked.json",
+    "frame": "checks/final-technical.json",
+    "logic": "checks/candidate-audit.json",
+    "motif": "approvals/motif-MA-r02-approval.json",
+    "provenance": "source-verification.json",
+    "reveal_approval": "approvals/reveal-A-r02-approval.json",
+    "reveal_consistency": "checks/visual-review.json",
+    "visual": "checks/visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "1666ce874a2f9d23465206fc103a66132a4ad5348b771ed5af10f9ee8e27405c"
+  },
+  "motif": {
+    "approval": "approvals/motif-MA-r02-approval.json",
+    "derived_from_reveal_sha256": "e875ff4f7fd543a477e0269fe0d2ef0bd635fd3ac929e8363174edf47ec9ba4a",
+    "file": "motifs/MA-r02.png",
+    "provenance": "motifs/MA-r02.provenance.json",
+    "revision": "MA-r02",
+    "sha256": "cfec097e9d7550b4a4788e30534e527b1afa0e5d3e013717182ece2220fc12f9"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren: tatsächliche menschliche Endabnahme für unverändertes r05 samt Auswahl erforderlich.",
+  "origin_verification": "checks/candidate-audit.json",
+  "parameter_corridor": {
+    "approval": "approvals/motif-MA-r02-approval.json",
+    "file": "parameter-corridor.json",
+    "sha256": "746916370df947c98c41991d2a1d82d20b84aacbc375c56733a14235ae5f241f",
+    "status": "approved_by_current_user_statement"
+  },
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-9f7c59054ebb4f3f861e2bce3034320e",
+  "repair": null,
+  "repo_commit": "041ea7b455e132b5c1a637796062fc6405ca4c6e",
+  "report": "report.md",
+  "requested_parameters": {
+    "color_count_exact": true,
+    "dimensions_fixed": false,
+    "foreground_colors": 1,
+    "height": null,
+    "mode": "mono",
+    "width": null
+  },
+  "reveal": {
+    "approval": "approvals/reveal-A-r02-approval.json",
+    "file": "reveals/A-r02.png",
+    "provenance": "reveals/A-r02.provenance.json",
+    "revision": "A-r02",
+    "sha256": "e875ff4f7fd543a477e0269fe0d2ef0bd635fd3ac929e8363174edf47ec9ba4a"
+  },
+  "revision": "r05",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}
