@@ -1,0 +1,111 @@
+{
+  "blockers": [],
+  "candidate": {
+    "bundle": "production",
+    "certification": null,
+    "logic_hash": "203032e8fb1a18104e8d90eda0c88c41176568231501b073dc5be9812c943c32",
+    "matrix_hash": "55cd91a2cf9586656eb59c2afa333951d3ed696055cdb818d8d2a436c987d3a3",
+    "proof": "production/area-208-proof.json",
+    "source_type": "import",
+    "variant": "area-208",
+    "verification": "checks/area-208-verify.json"
+  },
+  "category_id": "obst-nuesse",
+  "checks": {
+    "content": "pass; Paketbelege und frischer ZIP-inspect",
+    "export": "not_performed; Standardauftrag4 offen",
+    "native": "nicht erforderlich: reine Authoring-Inhaltsablage"
+  },
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "checked_hash": "4a0ee6dffcb0f787562c5e7b281513420443573652f1e9b1178f623673e85235",
+    "confidence": "medium",
+    "level": "L3",
+    "logical_level": 3,
+    "method": "picross-difficulty-0.3",
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "size_adjustment": 0,
+    "source_in_package": "difficulty/checked.json"
+  },
+  "final_editorial_approval": null,
+  "foreground_colors": 1,
+  "foreground_colors_exact": true,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/handoff.json",
+    "sha256": "a5ef5873909940459e921e3aad5df1e1b57aed9c07e67d7c85aaf9953863e6eb"
+  },
+  "height": 20,
+  "height_fixed": true,
+  "inspection": {
+    "editorial_approved": false,
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/inspection.json",
+    "sha256": "47f12d9d7b6496d88a7f3358e912558bd35edc391eca3b00a83769bb9563dfbe",
+    "technical": true
+  },
+  "integration": null,
+  "inventory_sha256": "c9f413f71cb206f7c14c67ef3bdc2d8b050e615b640b787f7cdf472bfe5881eb",
+  "mode": "mono",
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8",
+    "file": "motifs/MA-r04.png",
+    "provenance": "motifs/MA-r04.provenance.json",
+    "revision": "MA-r04",
+    "sha256": "94d74d326caeed8334f032966d4ca141f89b85954f67644364631fe58d561b45"
+  },
+  "motif_name": "Banane",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "omissions": [
+    {
+      "file": "motifs/MA-r03.png",
+      "reason": "Verworfene ungebundene Bildvariante; Original in r03 am Quellcommit erhalten."
+    },
+    {
+      "file": "prompts/narrow-MA-r03.json",
+      "reason": "Prompt nur der verworfenen MA-r03; Original in r03 erhalten."
+    },
+    {
+      "file": "comparison.png",
+      "reason": "Frühere Vergleichsansicht in r03; aktuelle Endvorlage ersetzt sie."
+    }
+  ],
+  "open_approvals": [
+    "final_editorial: tatsächliche menschliche Endabnahme des unveränderten r04-Pakets vor Standardauftrag4"
+  ],
+  "package": {
+    "bytes": 3150227,
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/package.zip",
+    "sha256": "47f987d717e657ef5aeb3dcf29763c00ee75405f055ec53f0b722129cef075ec"
+  },
+  "preview": {
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/final-review.png",
+    "package_member": "final-review.png",
+    "sha256": "4e98580c0a9cafc12d279dd616c8fb4e632d4d1f6f8cb9ee776cfaf21be3ffb8"
+  },
+  "puzzle_id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+  "repo_commit": "dbab24504c299e10ebe4c8902e35fe073a6db050",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "reveals/A-r01.provenance.json",
+    "revision": "r01",
+    "sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8"
+  },
+  "revision": "r04",
+  "source_package": {
+    "bytes": 3044631,
+    "commit": "dbab24504c299e10ebe4c8902e35fe073a6db050",
+    "file": "content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/r03/package.zip",
+    "revision": "r03",
+    "sha256": "6fe43989c9ccb3d7300af56e6359326a6117bc00d4fb26ae8bd441d793acdfde"
+  },
+  "state": "content_ready",
+  "updated_at_utc": "2026-10-20T09:06:01Z",
+  "width": 12,
+  "width_fixed": false,
+  "width_recommended": 12
+}

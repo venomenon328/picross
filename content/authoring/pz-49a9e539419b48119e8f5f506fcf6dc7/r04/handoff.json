@@ -1,0 +1,230 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        1,
+        2,
+        970,
+        1617
+      ],
+      "allowed_changes": [
+        "Nach Motivfreigabe erste vier Kandidaten bei 12×20 nur über Area-Schwellen unterscheiden",
+        "Visuell plausible lokale Quantisierung/Reparatur innerhalb der Motivfreigabe nach §4.4 mit vollständiger neuer Prüfung"
+      ],
+      "alpha_below": 32,
+      "approval": "approvals/motif-approval.json",
+      "background": "#ffffff",
+      "color_count_exact": true,
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 20,
+      "height_fixed_by_user": true,
+      "invariants": [
+        "Eine einzelne geschlossene Banane als zusammenhängende gefüllte Sichel",
+        "Aufrechte Krümmung mit Öffnung nach rechts und konvexer Außenkante links",
+        "Hauptproportionen und Dickenverlauf aus A-r01",
+        "Integrierter kurzer oberer Stiel und kompaktes unteres Blütenende",
+        "Zusammenhängender Negativraum rechts; keine Innenstreifen, zusätzlichen Löcher oder Fremdobjekte"
+      ],
+      "method": "area",
+      "mode": "mono",
+      "not_allowed": [
+        "Höhenänderung über 20 hinaus",
+        "Strecken, Spiegeln, andere Pose, neue Motivteile oder anderer Crop ohne erneute Vorlage",
+        "Zusatzpixel oder Rahmen nur zur Logik-/Randregel"
+      ],
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "recommended_width": 12,
+      "source_corridor": "parameter-corridor.json",
+      "status": "approved_by_user",
+      "threshold_range": [
+        96,
+        224
+      ],
+      "thresholds": [
+        112,
+        144,
+        176,
+        208
+      ],
+      "width": 12,
+      "width_fixed_by_user": false
+    }
+  ],
+  "authorization": "Standardauftrag3 samt Repositoryablage und Ablagemerge nach erfolgreichen Pflichtprüfungen; keine Spielregistrierung oder Endabnahme.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "production",
+    "certification": null,
+    "logic_hash": "203032e8fb1a18104e8d90eda0c88c41176568231501b073dc5be9812c943c32",
+    "matrix_hash": "55cd91a2cf9586656eb59c2afa333951d3ed696055cdb818d8d2a436c987d3a3",
+    "proof": "production/area-208-proof.json",
+    "source_type": "import",
+    "variant": "area-208",
+    "verification": "checks/area-208-verify.json"
+  },
+  "category_id": "obst-nuesse",
+  "comparison": "final-review.png",
+  "current_difficulty": {
+    "file": "difficulty/checked.json",
+    "level": "L3",
+    "method": "picross-difficulty-0.3",
+    "sha256": "50e2b78b7d9fa4642d1a94e84b9e5c882a847c1b728004d55d03b2e02b599eba"
+  },
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "final_editorial_approval": null,
+  "final_raster": "final-raster.png",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "difficulty/checked.json",
+    "frame": "checks/technical-quality.json",
+    "logic": "checks/area-208-verify.json",
+    "motif": "approvals/motif-approval.json",
+    "provenance": "checks/origin-verification.json",
+    "reveal_approval": "approvals/reveal-approval.json",
+    "reveal_consistency": "visual-review.json",
+    "visual": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "c9f413f71cb206f7c14c67ef3bdc2d8b050e615b640b787f7cdf472bfe5881eb"
+  },
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8",
+    "file": "motifs/MA-r04.png",
+    "provenance": "motifs/MA-r04.provenance.json",
+    "revision": "MA-r04",
+    "sha256": "94d74d326caeed8334f032966d4ca141f89b85954f67644364631fe58d561b45"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "checks/origin-verification.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        1,
+        2,
+        970,
+        1617
+      ],
+      "allowed_changes": [
+        "Nach Motivfreigabe erste vier Kandidaten bei 12×20 nur über Area-Schwellen unterscheiden",
+        "Visuell plausible lokale Quantisierung/Reparatur innerhalb der Motivfreigabe nach §4.4 mit vollständiger neuer Prüfung"
+      ],
+      "alpha_below": 32,
+      "approval": null,
+      "background": "#ffffff",
+      "color_count_exact": true,
+      "configuration_comparison": [
+        {
+          "assessment": "Zu schmal für diese Proportionen ohne zusätzliche Vereinfachung; nicht empfohlen.",
+          "height": 20,
+          "width": 11
+        },
+        {
+          "assessment": "Empfohlen: schmale proportionale Bildfläche und kleine gleichmäßige Ränder.",
+          "height": 20,
+          "width": 12
+        },
+        {
+          "assessment": "Mehr seitlicher Außenraum als nötig; gegenüber 12 kein Motivgewinn.",
+          "height": 20,
+          "width": 13
+        }
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 20,
+      "height_fixed_by_user": true,
+      "invariants": [
+        "Eine einzelne geschlossene Banane als zusammenhängende gefüllte Sichel",
+        "Aufrechte Krümmung mit Öffnung nach rechts und konvexer Außenkante links",
+        "Hauptproportionen und Dickenverlauf aus A-r01",
+        "Integrierter kurzer oberer Stiel und kompaktes unteres Blütenende",
+        "Zusammenhängender Negativraum rechts; keine Innenstreifen, zusätzlichen Löcher oder Fremdobjekte"
+      ],
+      "method": "area",
+      "mode": "mono",
+      "not_allowed": [
+        "Höhenänderung über 20 hinaus",
+        "Strecken, Spiegeln, andere Pose, neue Motivteile oder anderer Crop ohne erneute Vorlage",
+        "Zusatzpixel oder Rahmen nur zur Logik-/Randregel"
+      ],
+      "note": "Nutzerbreite 15 ausdrücklich aufgehoben; 12 ist eine KI-Empfehlung, keine vorgetäuschte feste Nutzervorgabe. Die Motivfreigabe bindet später den tatsächlichen Produktionskorridor. Crop entfernt nur schmale transparente Außenstreifen für exakt 3:5. Keine Matrix-/Rand-/Lösbarkeitsbehauptung.",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#000000"
+        }
+      ],
+      "recommended_width": 12,
+      "status": "proposed_pending_motif_approval",
+      "threshold_range": [
+        96,
+        224
+      ],
+      "thresholds": [
+        112,
+        144,
+        176,
+        208
+      ],
+      "width": 12,
+      "width_fixed_by_user": false
+    }
+  ],
+  "puzzle_id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+  "repair": null,
+  "repo_commit": "dbab24504c299e10ebe4c8902e35fe073a6db050",
+  "report": "report.md",
+  "requested_parameters": {
+    "color_count_exact": true,
+    "foreground_colors": 1,
+    "height": 20,
+    "height_fixed": true,
+    "mode": "mono",
+    "previous_width": 15,
+    "width": null,
+    "width_fixed": false
+  },
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "reveals/A-r01.provenance.json",
+    "revision": "r01",
+    "sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8"
+  },
+  "revision": "r04",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "content_ready",
+  "width_change_request": "width-change-request.md"
+}
