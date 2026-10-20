@@ -99,6 +99,64 @@ class CatalogTests(unittest.TestCase):
             cr.sync_runtime(checkout)
             cr.check_checkout(checkout)
 
+    def test_prepared_journal_bounds_repeated_projection_and_preserves_live_guards(self):
+        from tools.puzzle_production import catalog_publication as pub, catalog_io as io
+        checkout = isolated_checkout(self.root/'prepared')
+        with self.assertRaises(InterruptedError):
+            cr.registration(self.exported, checkout, apply=True, difficulty=self.checked, fail_step='crash-runtime')
+        raw = (checkout/tx.LOCK).read_bytes()
+        journal = io.json_bytes(raw, pub.NORMAL_LIMIT)
+        tx.validate_journal(checkout, journal)
+        with patch.object(tx, 'projection', wraps=tx.projection) as projection, \
+                patch.object(io, 'checksum', wraps=io.checksum) as checksum:
+            view = pub._JournalView(journal, raw)
+            for _ in range(5): pub.guard(checkout, journal, raw=raw, _view=view)
+            self.assertEqual(projection.call_count, 1)
+            self.assertEqual(sum(c.args[0] is raw for c in checksum.call_args_list), 1)
+        self.assertGreater(len(view.temps), 10)
+        names = sorted(set(journal['additions']) | {n for n in journal['old'] if journal['old'][n] != journal['new'][n]} | {tx.RUNTIME})
+        self.assertEqual(view.temps, {n:(Path(n).parent/('.registration-'+hashlib.sha256(raw).hexdigest()+'-'+str(i)+'.tmp')).as_posix()
+                                      for i,n in enumerate(names)})
+        # The prepared view must never reuse a previous observation of live bytes.
+        targets = [tx.LOCK, self.definition, self.rating_path, next(iter(journal['additions']))]
+        for name in targets:
+            path = checkout/name; before = path.read_bytes(); path.write_bytes(b'FOREIGN DATA')
+            changed = snapshot(checkout)
+            with self.subTest(name=name), self.assertRaises(ValueError):
+                pub.guard(checkout, journal, raw=raw, _view=view)
+            self.assertEqual(changed, snapshot(checkout)); path.write_bytes(before)
+        temporary = checkout/next(iter(view.temps.values()))
+        temporary.write_bytes(b'FOREIGN TEMP')
+        with self.assertRaises(ValueError): pub.guard(checkout, journal, raw=raw, _view=view)
+        temporary.unlink()
+        foreign = checkout/'content/difficulty/pz-foreign/rating.json'
+        foreign.parent.mkdir(); foreign.write_bytes(b'FOREIGN NAMESPACE')
+        with self.assertRaises(ValueError): pub.guard(checkout, journal, raw=raw, _view=view)
+        foreign.unlink(); foreign.parent.rmdir()
+        cr.recover(checkout)
+        self.assertEqual(cr.check_checkout(checkout)['entries'], [])
+
+    def test_recovery_rechecks_foreign_source_after_unchanged_target(self):
+        from tools.puzzle_production import catalog_publication as pub
+        # A sync journal has many unchanged targets. It must still check all live
+        # sources before the next write, even after passing an unchanged target.
+        (self.checkout/cr.RUNTIME).write_bytes(b'stale projection\n')
+        captured = tx.capture(self.checkout, allow_stale=True)
+        journal = tx.prepare(self.checkout, captured, {}, operation='sync')
+        with self.assertRaises(InterruptedError): tx.execute(self.checkout, journal, fail_step='crash-runtime')
+        target = self.checkout/next(iter(journal['retained']))
+        original = target.read_bytes(); changed = []
+        def inject(phase, name=None):
+            if phase == 'R1-text' and not changed:
+                target.write_bytes(b'FOREIGN RETAINED SOURCE')
+                changed.append(snapshot(self.checkout))
+        with patch.object(pub, 'checkpoint', side_effect=inject), self.assertRaises(ValueError):
+            cr.recover(self.checkout)
+        self.assertEqual(snapshot(self.checkout), changed[0])
+        target.write_bytes(original)
+        cr.recover(self.checkout)
+        cr.check_checkout(self.checkout)
+
     def test_nested_schema_types_hashes_and_source_attacks(self):
         original = load_json(self.checkout/self.rating_path)
         attacks = [lambda d: d.update(extra=1), lambda d:d.update(rating_revision=True),
