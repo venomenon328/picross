@@ -29,8 +29,9 @@ func run() -> void:
 	# Fixed shared KB resources, independent of the growing puzzle catalog.
 	var book_manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/manifest.json"))
 	var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
-	check(icons.size() == 13 and icons.has("play") and icons.has("reset"), "PCK active KB icon inventory")
-	for name: String in ["play","reset"]:
+	check(icons.size() == 23 and icons.has("checkbox-checked") and icons.has("reset"), "PCK active HZ-B icon inventory")
+	check(book_manifest.has("hz_icon_source") and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"), "PCK HZ-B provenance")
+	for name: String in icons:
 		var texture: Texture2D = load("res://art/book/"+name+".svg")
 		check(texture != null and texture.get_size() == Vector2(26,26), "PCK imported KB icon available "+name)
 		var bound: bool = false
