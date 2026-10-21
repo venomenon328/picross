@@ -1,0 +1,27 @@
+{
+  "author": "ChatGPT / native image_gen",
+  "changes": [
+    "Samen, Blütchen und Spiralmuster in ruhige braune Mitte zusammengefasst",
+    "Mehrlagiger Blütenkranz in größere klar getrennte Blütenformen vereinfacht",
+    "Feine Blattzähne und Adernetze auf breite Blattkontur und eine zentrale Ader reduziert",
+    "Textur und starke Schattierung entfernt; geringe native Tonvariation bleibt und wird erst beim Import auf die Palette abgebildet",
+    "Stängel und Blattstiele zu kräftigen dunkelgrünen Strukturen zusammengefasst"
+  ],
+  "derived_from": {
+    "file": "reveals/A-r01.png",
+    "sha256": "952719722a6fc542b025441a90ab3e876a2a38dbcd8313060e0c1a57db074ebd"
+  },
+  "file": "motifs/MA-r01.png",
+  "invariants": [
+    "Nahezu frontaler runder Blütenkopf im oberen Bildteil",
+    "Goldgelber Strahlenkranz und große braune Blütenmitte",
+    "Aufrechter sanft gebogener Stängel",
+    "Genau zwei breite herzförmige Blätter, links höher als rechts",
+    "Gleiche Blattansätze, Neigungen und wesentliche Kopf-/Stängel-/Blattproportionen",
+    "Offene Zwischenräume zwischen Blüte, Blättern und Stängel; vollständige äußere Silhouette"
+  ],
+  "prompt_file": "prompts.json",
+  "puzzle_id": "pz-a13368590b744814915eb722f5b2c5f2",
+  "sha256": "2c887ce736816c26103afbdbf1354ea0cf26dc9d96ae0c18c6f061e58006a025",
+  "usage_basis": "Beauftragte native KI-Neuschöpfung für dieses Projekt ohne fremde Bildvorlage; native vorlagentreue Abstraktion aus dem freigegebenen A-r01. Keine Exklusivität behauptet."
+}
