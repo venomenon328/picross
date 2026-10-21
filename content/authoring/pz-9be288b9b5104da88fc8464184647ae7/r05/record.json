@@ -1,7 +1,15 @@
 {
+  "acceptance": {
+    "covers_new_manual_raster_file": "raster.png",
+    "evidence": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r05/approval.json",
+    "inventory_bound": true,
+    "motif_revision": "MR-r03",
+    "motif_sha256": "6bd85acf6148f1eb7853a84f8a2a2db54baf6e2d33cc310cd98afbd25b4e1cf0",
+    "note": "Actual editorial acceptance of the exact package includes the presented raster. The adapter cannot consume this late acceptance without a separately supported contract. Historical sealed gates remain unchanged.",
+    "timestamp_basis": "UTC recording time; exact message receipt time is not exposed."
+  },
   "blockers": [
-    "motif: tatsächliche Annahme der korrigierten manuellen Datei MR-r03 offen",
-    "final_editorial: tatsächliche Endabnahme offen"
+    "ZA-1 has no supported authorization route for this sealed monochrome manual redraw with late motif acceptance."
   ],
   "category_id": "technik-erfindungen",
   "difficulty": {
@@ -11,7 +19,10 @@
     "method": "picross-difficulty-0.3",
     "r4_required": true
   },
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r05/approval.json",
+    "sha256": "4342ffe1a627dc0fd58cb91df95fdb5ea6203a6422439bd1cb95b35b5055b709"
+  },
   "foreground_colors": 1,
   "format": "picross-authoring-record-v1",
   "handoff": {
@@ -20,6 +31,10 @@
   },
   "height": 40,
   "integration": null,
+  "integration_blocker": {
+    "file": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r05/integration-blocker.json",
+    "sha256": "b067da6b2e8b4adf7eaba0c61c91ffc6a962fc54c9a686bfc3f74bca987abcee"
+  },
   "inventory_sha256": "efc7dd55420faa16f7ccbefb1d1b1ab384029416cd3d28dc4bb8ca792927cd5b",
   "mode": "mono",
   "motif": {
@@ -31,7 +46,7 @@
     "sha256": "6bd85acf6148f1eb7853a84f8a2a2db54baf6e2d33cc310cd98afbd25b4e1cf0"
   },
   "motif_name": "Game Boy",
-  "next_action": "Gespeicherte Arbeit fortsetzen",
+  "next_action": "Korrigieren oder Fehler beheben",
   "package": {
     "bytes": 3452550,
     "file": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r05/package.zip",
@@ -51,7 +66,7 @@
     "sha256": "8dd70cb680ca3ee6993d1ddc15be11965e94ccbb271157938de21d987b13352c"
   },
   "revision": "r05",
-  "state": "raster_review",
-  "updated_at_utc": "2026-10-21T22:16:30Z",
+  "state": "editorially_approved",
+  "updated_at_utc": "2026-10-21T22:25:03Z",
   "width": 26
 }
