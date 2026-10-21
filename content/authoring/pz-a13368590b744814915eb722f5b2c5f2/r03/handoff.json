@@ -1,0 +1,175 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        41,
+        3,
+        1144,
+        1358
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 40,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    }
+  ],
+  "authorization": "Standardauftrag 3 mit tatsächlicher MA-r01-/Parameterfreigabe; §6-Repositoryablage samt Merge nach Pflichtprüfungen. Endabnahmevorlage, keine Spielregistrierung vor echter Endabnahme.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "imports/color-32x40-4colors",
+    "certification": null,
+    "logic_hash": "9f8b88f70dcba533280505904dce9d05e18df0338cb70c97b1185e1acb9469ec",
+    "matrix_hash": "4110b158404a58ebf6717d553c5f10ed8d719d54a6204e87455e547769dce858",
+    "proof": "imports/color-32x40-4colors/area-proof.json",
+    "source_type": "import",
+    "variant": "area",
+    "verification": "review/final-proof-verification.json"
+  },
+  "category_id": "blumen-pflanzen",
+  "codex_handoff": "codex-handoff.md",
+  "current_difficulty": "analysis/checked.json",
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "final_editorial_approval": null,
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "analysis/checked.json",
+    "frame": "review/raster-statistics.json",
+    "logic": "review/final-proof-verification.json",
+    "motif": "approvals/motif-approval.json",
+    "provenance": "review/provenance-verification.json",
+    "reveal_approval": "approvals/reveal-approval.json",
+    "reveal_consistency": "review/visual-review.json",
+    "visual": "review/visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "ee0a90de625f6a04e73cb45502eee8a57edded5e32ef5b4e43c2a8d07f974dcf"
+  },
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "952719722a6fc542b025441a90ab3e876a2a38dbcd8313060e0c1a57db074ebd",
+    "file": "motifs/MA-r01.png",
+    "provenance": "provenance/motif.json",
+    "revision": "MA-r01",
+    "sha256": "2c887ce736816c26103afbdbf1354ea0cf26dc9d96ae0c18c6f061e58006a025"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "review/provenance-verification.json",
+  "parameter_corridor": "parameters.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        41,
+        3,
+        1144,
+        1358
+      ],
+      "alpha_below": 128,
+      "file": "configs/color-32x40-4colors.json",
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 40,
+      "hypothesis": "Mehr Auflösung für Blütenkranz und Blattzwischenräume; getrennte Blattfläche/Stängelstruktur",
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    },
+    {
+      "actual_crop": [
+        41,
+        3,
+        1144,
+        1358
+      ],
+      "alpha_below": 128,
+      "file": "configs/color-28x35-4colors.json",
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 35,
+      "hypothesis": "Kompaktere Darstellung mit weniger Eingaben; getrennte Blattfläche/Stängelstruktur",
+      "method": "area",
+      "mode": "color",
+      "width": 28
+    },
+    {
+      "actual_crop": [
+        41,
+        3,
+        1144,
+        1358
+      ],
+      "alpha_below": 128,
+      "file": "configs/color-32x40-3colors.json",
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 40,
+      "hypothesis": "Mehr Auflösung für Blütenkranz und Blattzwischenräume; zwei Grüntöne zu einem gemeinsamen Grün zusammenführen",
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    },
+    {
+      "actual_crop": [
+        41,
+        3,
+        1144,
+        1358
+      ],
+      "alpha_below": 128,
+      "file": "configs/color-28x35-3colors.json",
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 35,
+      "hypothesis": "Kompaktere Darstellung mit weniger Eingaben; zwei Grüntöne zu einem gemeinsamen Grün zusammenführen",
+      "method": "area",
+      "mode": "color",
+      "width": 28
+    }
+  ],
+  "puzzle_id": "pz-a13368590b744814915eb722f5b2c5f2",
+  "repair": null,
+  "repo_commit": "c941f95b4aecd0f14ff93209fa1900147c87b011",
+  "report": "report.md",
+  "requested_parameters": {
+    "foreground_colors": null,
+    "height": null,
+    "mode": "color",
+    "width": null
+  },
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "provenance/reveal.json",
+    "revision": "A-r01",
+    "sha256": "952719722a6fc542b025441a90ab3e876a2a38dbcd8313060e0c1a57db074ebd"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}
