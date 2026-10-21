@@ -1,0 +1,79 @@
+{
+  "format": "picross-authoring-storage-check-v1",
+  "puzzle_id": "pz-505ecefc3dd64554a282e95b15883c60",
+  "revision": "r08",
+  "state": "raster_review",
+  "source_commit": "0a7904fb40f3d6461d92589ea6a4c90378e5dadd",
+  "package_sha256": "e8daa34a9ee36aad0728efb307fe8d0d7a90a8af4855fca008b0b3026fd3093d",
+  "handoff_sha256": "9522747e0d8bbcb3000051f8ff822d176edbf56d9a076b33e887c6ab60bdff6c",
+  "inventory_sha256": "80f3313b497da6fade64c08d2a4650993e783c2af453bda7467b3208d6ac0ad1",
+  "files_verified": 146,
+  "zip_crc_safe_paths_inventory_and_bindings": "pass",
+  "written_archive_equals_verified_staging": true,
+  "rp3_complete_manifest_sets": [
+    "candidate-imports/K-A/",
+    "candidate-imports/K-B/",
+    "candidate-imports/K-C/",
+    "import-30/"
+  ],
+  "preserved_r07_files": [
+    "approvals/MA-r02-request.md",
+    "approvals/MA-r03-owner-message.md",
+    "approvals/MA-r03-request.md",
+    "approvals/motif-MA-r02.json",
+    "approvals/motif-MA-r03.json",
+    "approvals/motif-owner-message.md",
+    "approvals/owner-message.md",
+    "approvals/reveal-C-r01.json",
+    "designs/mono-25.json",
+    "designs/mono-30.json",
+    "motifs/MA-r01.png",
+    "motifs/MA-r01.provenance.json",
+    "motifs/MA-r02-attempt-1.png",
+    "motifs/MA-r02.png",
+    "motifs/MA-r02.provenance.json",
+    "motifs/MA-r03-attempt-1.png",
+    "motifs/MA-r03.png",
+    "motifs/MA-r03.provenance.json",
+    "reveals/C-r01.png",
+    "reveals/C-r01.provenance.json",
+    "parameters.json",
+    "rulebook.md",
+    "prompts.json"
+  ],
+  "actual_motif_approval": "MA-r03 bound; no new owner end approval",
+  "diagonal_pose": "preserved per explicit user reply",
+  "candidates": {
+    "K-B": {
+      "edits": 32,
+      "filled": 138,
+      "matrix_hash": "ce8743857397fb8a220811ce7822ba6823f3831386f34aa36e0b630920cf8d38",
+      "logic_hash": "2e2d7db60f75c54308b1628f695fd982bf71780fef9bbe8dad28d59a9df7478f",
+      "unique": true,
+      "sat_results": {
+        "g4": "unsat",
+        "m22": "unknown"
+      },
+      "full_deduction": false,
+      "open_cells": 796
+    },
+    "K-C": {
+      "edits": 33,
+      "filled": 139,
+      "matrix_hash": "5ea83d070d6743d963f47b0f25288cab927b2120cb9420f97a7c7f537150aa39",
+      "logic_hash": "6b41826b57dc73cfdd59c839fa5d51ea56a338ce6b3baca006b6d7c18d34c72d",
+      "unique": true,
+      "sat_results": {
+        "g4": "unsat",
+        "m22": "unsat"
+      },
+      "full_deduction": false,
+      "open_cells": 789
+    }
+  },
+  "full_deduction": false,
+  "repair_history": "r07 at source_commit retains two intended RP5 rounds (3 actual attempts), all replayed and stalled. r08 provides explicitly requested fixed raster corrections, exhaustive SAT uniqueness diagnosis and newly verified full-line/paired-line fixed points. No claim that further corrections cannot succeed.",
+  "target_adapter": "not_applicable: raster_review, not content_ready; no full deduction or exact final acceptance",
+  "self_review": "Separate archive/metadata/binding/static visual review; not an independent human review or editorial acceptance. Fresh project proof/source and CNF reconstruction reports included.",
+  "merge_scope": "Only authoring storage/index; no runtime integration, tool/code, cleanup or deployment."
+}
