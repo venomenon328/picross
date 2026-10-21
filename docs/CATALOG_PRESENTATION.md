@@ -1,14 +1,5 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
-**HZ-C-Implementierungsstand · 21.10.2026:** [Lieferung und Prüfzuordnung](HZ_C_VERIFICATION.md)
-setzt HZ-D07 auf `fix/294-tidy-typografie` um. Gemeinsame kleine Größe ist 15
-bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19. Private gemessene
-Zeilenmetriken und stabile Grundlinien erhalten Originalfontbytes und übrige
-Textrollen. Die folgenden früheren Angaben „noch nicht implementiert“ und
-„separater Implementierungsauftrag erforderlich“ sind durch den ausdrücklichen
-HZ-C-Auftrag und diese Lieferung fortgeschrieben. Technischer Abschluss und
-Originalbelege stehen im Paket-PR; R01/M01 bleiben getrennt vor Merge offen.
-
 **HZ · 21.10.2026, HZ-A/B integriert; HZ-C / #294 implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet Tidy Hand für normale
 Katalogtexte bei unveränderten Bakso-Überschriften und organischeren stabilen
@@ -24,7 +15,7 @@ Katalogbilder. AT-A schafft den begrenzten Bildänderungsweg mit synthetischen
 Alpha-/Spielstandsnachweisen; AT-B überarbeitet danach die Bestandsbilder mit
 konkreter neuer Bildfreigabe. Kartenaufteilung und ungelöste Vorschauen bleiben erhalten.
 
-Stand: 21.10.2026 · Spezifikation 2.2 · KU-A/B und HZ-A/B integriert; HZ-C spezifiziert
+Stand: 21.10.2026 · Spezifikation 2.2 · KU-A/B und HZ-A/B integriert; HZ-C implementiert, Abnahmen offen
 
 Der Eigentümer hat die Katalogüberarbeitung am 18.10.2026 als Spezifikation
 freigegeben. [Gesamtissue #244](https://github.com/venomenon328/picross/issues/244)
@@ -117,12 +108,10 @@ als gemeinsame Fußzeile betrachtet. Die Kategorie behält ihre feste Position i
 reservierten, bis zu zweizeiligen Bereich; ein- und zweizeilige Namen werden
 nicht jeweils neu darin zentriert.
 
-Korrigierte kleine Größe 14 wird mit 15 bei UI100 unter gleichen Bedingungen
-verglichen; 15 ist der bevorzugte Vergleichswert, noch kein festes Endmaß.
-Die gemeinsame Größenentscheidung umfasst Kategorie, Größe, Schwierigkeit und
-Status. Wird vergrößert, erhält der Kategoriename dieselbe kleine Schriftgröße
-wie der Status. „Blatt NN“ ist am geprüften HZ-C-Ausgangsstand bereits 15 und
-wird nicht automatisch erneut vergrößert. Textmaße und gemeinsame Kartenmaße
+Der [direkte Vergleich](HZ_C_VERIFICATION.md) der korrigierten kleinen Größen
+14/15 unter gleichen Bedingungen begründet die Wahl 15 bei UI100 und 19 bei
+UI125 für Kategorie, Größe, Schwierigkeit und Status. „Blatt NN“ bleibt 15/19.
+Die separate Eigentümersichtabnahme M01 bleibt offen. Textmaße und gemeinsame Kartenmaße
 werden zusammen angepasst; die oben genannten Volltext-/Bildraumgrenzen bleiben.
 
 ## KE-D02 · Papieretikett und Moduspiktogramm
@@ -332,7 +321,7 @@ Standard ist je Paket ein Implementierungs-PR. Die Spezifikationslieferung begin
 keines dieser Pakete. KU-A/B sind inzwischen über PR #254/#255 integriert;
 Paketakzeptanz, technische Nachweise, Reviews und spätere Entscheidungen zu den
 persönlichen Abnahmen stehen im Gesamtissue. HZ-A/B sind in #284 abgeschlossen;
-das noch nicht implementierte Folgepaket HZ-C / #294 besitzt eigene Gates gemäß
+das in Draft-PR #296 implementierte Folgepaket HZ-C / #294 besitzt eigene Gates gemäß
 [HAND_DRAWN_UI](HAND_DRAWN_UI.md).
 Historische [KE-Prüfnachweise](KE_VERIFICATION.md) bleiben an ihre damalige Lieferung
 gebunden und sind keine Abnahme der neuen KU-Darstellung.

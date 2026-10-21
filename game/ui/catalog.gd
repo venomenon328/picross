@@ -392,7 +392,7 @@ func _layout_cards() -> void:
 			if node.content_surface: continue
 			node.add_theme_font_override("font", Card.UiText.small_font(Card.UiText.small_size(ui_scale)))
 			node.add_theme_font_size_override("font_size", Card.UiText.small_size(ui_scale))
-			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.text.is_empty() else Vector2(Card.UiText.width(node.get_theme_font("font"),node.text,Card.UiText.small_size(ui_scale))+(56 if node.image != null else 24)*ui_scale,44*ui_scale)
+			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.text.is_empty() else Vector2(maxf(44*ui_scale,Card.UiText.width(node.get_theme_font("font"),node.text,Card.UiText.small_size(ui_scale))+(56 if node.image != null else 16)*ui_scale),44*ui_scale)
 	for card: Card in choices:
 		card.ui_scale = ui_scale
 		for state: String in ["normal","hover","pressed","disabled","focus"]:
@@ -406,7 +406,9 @@ func _layout_cards() -> void:
 	# Wrap the two-word label at narrow widths; every action and the usual
 	# category names keep their budgets without adding another toolbar row.
 	sort_label.custom_minimum_size.x = Card.UiText.label_width(sort_label, "Sortieren" if size.x < 1100 * ui_scale else "Sortieren nach", roundi(16 * ui_scale))
-	sort_choice.custom_minimum_size = Vector2(160, 44) * ui_scale
+	# Native OptionButton measures every item, style padding and its arrow.
+	# Keep that complete budget instead of a second fixed-width reservation.
+	sort_choice.custom_minimum_size = Vector2(44, 44) * ui_scale
 	sort_choice.add_theme_font_size_override("font_size", Card.UiText.small_size(ui_scale))
 	sort_choice.get_popup().prefer_native_menu = false
 	category_choice.get_popup().max_size = Vector2i(roundi(size.x), roundi(minf(480 * ui_scale, size.y * 0.8)))

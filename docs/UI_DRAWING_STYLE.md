@@ -1,14 +1,5 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**HZ-C-Implementierungsstand · 21.10.2026:** [Lieferung und Prüfzuordnung](HZ_C_VERIFICATION.md)
-setzt HZ-D07 auf `fix/294-tidy-typografie` um. Gemeinsame kleine Größe ist 15
-bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19. Private gemessene
-Zeilenmetriken und stabile Grundlinien erhalten Originalfontbytes und übrige
-Textrollen. Die folgenden früheren Angaben „noch nicht implementiert“ und
-„separater Implementierungsauftrag erforderlich“ sind durch den ausdrücklichen
-HZ-C-Auftrag und diese Lieferung fortgeschrieben. Technischer Abschluss und
-Originalbelege stehen im Paket-PR; R01/M01 bleiben getrennt vor Merge offen.
-
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) ist der Detailvertrag für
 Tidy Hand als normale UI-Schrift bei erhaltenen Überschriften, organischere Karten-/Button-/Dropdownrahmen,
@@ -21,7 +12,9 @@ und [PR #289](https://github.com/venomenon328/picross/pull/289) integriert und i
 geschlossenen [Issue #284](https://github.com/venomenon328/picross/issues/284)
 abgenommen. [HZ-C / #294](https://github.com/venomenon328/picross/issues/294)
 ergänzt die am 21.10.2026 freigegebene optische Ausrichtung und den begrenzten
-Größenvergleich gemäß HZ-D07; diese Spezifikation ist noch nicht implementiert.
+Größenvergleich gemäß HZ-D07. Die [Implementierung](HZ_C_VERIFICATION.md)
+wählt nach dem korrigierten 14/15-Vergleich die kleine Rolle 15/19 bei UI100/125;
+Blattkennungen bleiben 15/19. R01/M01 bleiben vor Merge offen.
 
 **KU / #244, integrierte Ausgangsbasis für HZ:** KU-A und KU-B sind über
 PR #254/#255 integriert; [KU-A](KU_VERIFICATION.md) und

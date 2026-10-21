@@ -1,15 +1,6 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
-**HZ-C-Implementierungsstand · 21.10.2026:** [Lieferung und Prüfzuordnung](HZ_C_VERIFICATION.md)
-setzt HZ-D07 auf `fix/294-tidy-typografie` um. Gemeinsame kleine Größe ist 15
-bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19. Private gemessene
-Zeilenmetriken und stabile Grundlinien erhalten Originalfontbytes und übrige
-Textrollen. Die folgenden früheren Angaben „noch nicht implementiert“ und
-„separater Implementierungsauftrag erforderlich“ sind durch den ausdrücklichen
-HZ-C-Auftrag und diese Lieferung fortgeschrieben. Technischer Abschluss und
-Originalbelege stehen im Paket-PR; R01/M01 bleiben getrennt vor Merge offen.
-
-Stand: 21.10.2026 · Spezifikation 1.3 · KU-B und HZ-A/B integriert; HZ-C spezifiziert
+Stand: 21.10.2026 · Spezifikation 1.3 · KU-B und HZ-A/B integriert; HZ-C implementiert, Abnahmen offen
 
 Der Eigentümer hat die Katalogüberarbeitung als Spezifikation freigegeben.
 [KU / #244](https://github.com/venomenon328/picross/issues/244) führt
@@ -20,7 +11,8 @@ KU-A und KU-B sind über ihre eigenen PRs #254/#255 integriert.
 auf `main` bleiben separat im Issue gebunden. Der [HZ-Stilstand](HAND_DRAWN_UI.md)
 aus HZ-A/B ist über PR #288/#289 integriert und in #284 abgenommen.
 HZ-C / [#294](https://github.com/venomenon328/picross/issues/294) ist als
-Typografie-Nachbesserung freigegeben, noch nicht implementiert. Historische
+Typografie-Nachbesserung in [Draft-PR #296](https://github.com/venomenon328/picross/pull/296)
+implementiert; R01/M01 bleiben vor Merge offen. Historische
 Abnahmen oder Mergeausnahmen erfüllen seine eigenen Gates nicht.
 
 ## Geltung und Ausgangsstand
@@ -59,8 +51,9 @@ vollständigen KU-B-Funktion, ohne funktionslose Voraboption in KU-A.
 [HZ-D07](HAND_DRAWN_UI.md) ergänzt optische vertikale Ausrichtung mit stabiler
 Grundlinie je Rolle/Größenstufe für alle drei Dropdownarten, geschlossen wie
 geöffnet. Wechselnde Werte werden nicht wortabhängig nachzentriert. Korrigierte
-14/15 werden gemeinsam mit den kleinen Katalogtexten verglichen; 15 bei UI100
-ist bevorzugter Vergleichswert, kein bereits festgelegtes Endmaß. Menüzeilen,
+14/15 wurden gemeinsam mit den kleinen Katalogtexten unter gleichen Bedingungen
+verglichen. Die [begründete Implementiererwahl](HZ_C_VERIFICATION.md) ist 15 bei
+UI100 und 19 bei UI125; M01 bleibt offen. Menüzeilen,
 Symbole, Markierungen und Innenränder erhalten dazu passende sichere Budgets.
 Lange gültige Kategorien und vorhandene Auswahl-, Fokus-, Tastatur-, Scroll-
 und Schließwege bleiben erhalten. Die Größenentscheidung ändert weder Optionen
