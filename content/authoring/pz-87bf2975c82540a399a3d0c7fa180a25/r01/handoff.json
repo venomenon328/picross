@@ -1,0 +1,101 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1 einschließlich Repositoryablage nach §6, Commit/Push, Draft-PR und Merge nach erfolgreichen Pflichtprüfungen. Keine Bild-, Motiv- oder Endfreigabe, Rasterproduktion, Spielintegration, Release oder Deployment.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "mythen-fantasie",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "cce065146d2a8c32ba0015aea189a48e3ca7885cbf19ddf9a0c81f0a63cc5c53"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren: ausdrückliche Auswahl/Freigabe von A-r01, B-r01 oder C-r01 abwarten; anschließend Konfigurationsvergleich und Motivvorlage. Noch keine Rasterproduktion.",
+  "open_items": [
+    "Menschliche Abschlussbildfreigabe ausstehend.",
+    "Nutzungsgrundlage der konkreten Nutzerreferenz vor Katalogfreigabe klären."
+  ],
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-87bf2975c82540a399a3d0c7fa180a25",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "eed5ba4eaa06b51a92c7b05fa141704fcbaabd5e",
+  "report": "report.md",
+  "requested_parameters": {
+    "dimensions_fixed": false,
+    "foreground_colors": 1,
+    "height": null,
+    "mode": "mono",
+    "width": null
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "file": "reveals/A-r01.png",
+      "id": "A-r01",
+      "sha256": "3ce9799443da21c46dc63754670f3fb89ec3822ca267c26c27d1e4cb4ce3387e",
+      "title": "Safran / Terrakotta"
+    },
+    {
+      "approval": null,
+      "file": "reveals/B-r01.png",
+      "id": "B-r01",
+      "sha256": "f043d2732a15bc96f20956ba079adcf7c058791e68bc12b5c41e061ff49786e2",
+      "title": "Zinnoberrot / Gold"
+    },
+    {
+      "approval": null,
+      "file": "reveals/C-r01.png",
+      "id": "C-r01",
+      "sha256": "0340e148a152ba924feff1799d529b00e15b46a3f69e6f47c3871eaddc27e0e1",
+      "title": "Türkis / Jade / Gold"
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
