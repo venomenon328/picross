@@ -269,9 +269,10 @@ Kategorie-, Filter- und Statuswechseln.
 
 ### Größenvergleich und betroffene Rollen
 
-Die korrigierte bestehende kleine Größe **14** wird direkt mit **15 bei UI100**
-verglichen; beide folgen der vorhandenen UI-Skalierung. **15 ist der bevorzugte
-erste Vergleichswert, kein bereits gemessenes oder abgenommenes Endmaß.**
+Für den freigegebenen Vergleichsrahmen galt: Die korrigierte kleine Größe **14**
+wird direkt mit **15 bei UI100** verglichen; beide folgen der vorhandenen
+UI-Skalierung. **15 war der bevorzugte erste Vergleichswert, kein bereits
+gemessenes oder abgenommenes Endmaß.**
 Korrekt ausgerichtete 14 bleibt zulässig, wenn der Vergleich ausreichende
 Lesbarkeit und stimmige Hierarchie zeigt. Wahl, Begründung und Originalbelege
 sind in der [HZ-C-Lieferung](HZ_C_VERIFICATION.md) dokumentiert: gemeinsame

@@ -115,6 +115,31 @@ bewahren insbesondere den direkten korrigierten 14/15-Vergleich in Windows und
 Chromium einschließlich ganzer geöffneter Vergleichsmenüs. SHA-256-Bindungen
 und die tatsächlichen temporären Einstiege legen ihre Quellen-/Gategrenzen offen.
 
+### Tatsächlich ausgeführter Runtime-Abschluss
+
+Der saubere Runtime-Head `5075e1bf883e18e24b9802118047a110ea2bf7f0` ist in
+[CI 39578546117, Attempt 1](https://github.com/venomenon328/picross/actions/runs/39578546117)
+vollständig erfolgreich: sechs Bereiche, sieben native und fünf Chromium-Gruppen;
+`ci-required` akzeptiert 1.053 native Dateien und alle 33 Chromium-Szenarien.
+Der tatsächliche Integrationscheckout
+`46b56de206e2cd63e38eeb41814da1c79a915ab8` besitzt denselben Dateibaum.
+Der Kernlauf bestand 17.247 Prüfungen ohne Fehler.
+
+Der echte Windows-Lauf verwendet die unveränderten CI-EXE-/PCK-Originale:
+eigener HWND-Start ohne Testargumente, Client 1920×1080, DPI 96, Exit 0;
+316 PCK-Prüfungen und 316 im getrennten Prozessneustart, jeweils ohne Fehler.
+Alle elf nativen Katalogmodi bestehen 7.719 Prüfungen, darunter KK/HZ 3.496.
+Renderer ist NVIDIA GeForce RTX 3070; sämtliche 1.053 CI-Technikdateien wurden
+vor Verwendung erneut validiert. Die vollständigen 73 Chromium-Dateien sind
+ebenfalls erneut gegen das Browsergate geprüft.
+
+[Originalarchive, Inventare und genaue Bindungen](evidence/hz-c/README.md)
+erhalten diese tatsächlichen Identitäten. Der anschließende reine Dokument-/
+Archivcommit ändert keine Laufzeit-, Test- oder Werkzeugdatei; seine eigene
+Pflicht-CI und der getrennte vollständige Selbstreview werden im PR gebunden.
+Die Windows-Nachweise werden mit unveränderten relevanten Voraussetzungen
+gemäß WORKFLOW §8 wiederverwendet, ohne ihre Quellidentität umzubenennen.
+
 ## Erhaltung und offene Gates
 
 Keine Änderung an Fontbytes, Fremdassets, Rätseln, Reveals, Bewertungen,

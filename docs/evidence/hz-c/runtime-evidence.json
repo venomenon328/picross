@@ -1,0 +1,163 @@
+{
+  "runtime_head": "5075e1bf883e18e24b9802118047a110ea2bf7f0",
+  "base": "02b7fcd53b4eef8c94f873314848806eefc265cc",
+  "checkout": "46b56de206e2cd63e38eeb41814da1c79a915ab8",
+  "run": "39578546117",
+  "product_job_id": 119151110652,
+  "native_checks": 7719,
+  "native_reports": [
+    {
+      "mode": "regular",
+      "checks": 288,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "restart",
+      "checks": 9,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "large",
+      "checks": 2265,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "empty",
+      "checks": 8,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "invalid",
+      "checks": 8,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "adapter",
+      "checks": 43,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "information",
+      "checks": 93,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "kb",
+      "checks": 364,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "kk",
+      "checks": 3496,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "ke",
+      "checks": 1064,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    },
+    {
+      "mode": "at",
+      "checks": 81,
+      "failures": [],
+      "display_server": "Windows",
+      "adapter": "NVIDIA GeForce RTX 3070"
+    }
+  ],
+  "pck_checks": 316,
+  "restart_checks": 316,
+  "verified_native_files": 1053,
+  "groups": [
+    "core",
+    "history",
+    "catalog",
+    "completion",
+    "adapters",
+    "graphics",
+    "export"
+  ],
+  "browser": {
+    "browser": "chromium",
+    "attempt": "1",
+    "groups": [
+      "regular",
+      "catalog",
+      "input",
+      "completion",
+      "persistence"
+    ],
+    "scenarios": 33,
+    "status": "passed"
+  },
+  "browser_files": 73,
+  "archives": [
+    {
+      "archive": "windows-pck-5075e1b.zip",
+      "bytes": 39238660,
+      "sha256": "9a6ba01daf1eab31832034b13f3d4f0f9fc522f490fbfdb06ebac1300d58a15d"
+    },
+    {
+      "archive": "windows-pck-restart-5075e1b.zip",
+      "bytes": 38061931,
+      "sha256": "7751f020cbe63f591a2acbb5281004674d77e142105a8475b90e25d33137eea8"
+    },
+    {
+      "archive": "windows-controls-5075e1b.zip",
+      "bytes": 17420813,
+      "sha256": "6ea3df7016276bcad5fee5e3ae107520cfbcb94a464853605bc9c8652f973863"
+    },
+    {
+      "archive": "chromium-controls-5075e1b.zip",
+      "bytes": 24350684,
+      "sha256": "7555f53533fe2475969b22485e98face70b650d9110d48dcf09685d4b7b2ac93"
+    }
+  ],
+  "ci_result_artifact": {
+    "id": 12338075595,
+    "name": "ci-result-5075e1bf883e18e24b9802118047a110ea2bf7f0-1",
+    "size_in_bytes": 3588,
+    "digest": "sha256:ff79127620a344a65f29eaf6badc18ca7459071ebc1d5ffc69af883c47b65ee4"
+  },
+  "ci_original_archives": {
+    "selection-artifact.zip": {
+      "bytes": 3001,
+      "sha256": "d36464ff62607cc824bff893777f92a426c6e17fdb19c92200cf23fe60483df7"
+    },
+    "result-artifact.zip": {
+      "bytes": 3588,
+      "sha256": "ff79127620a344a65f29eaf6badc18ca7459071ebc1d5ffc69af883c47b65ee4"
+    }
+  },
+  "source_tree_binding": {
+    "source_head": "5075e1bf883e18e24b9802118047a110ea2bf7f0",
+    "base_commit": "02b7fcd53b4eef8c94f873314848806eefc265cc",
+    "tested_checkout": "46b56de206e2cd63e38eeb41814da1c79a915ab8",
+    "event": "pull_request",
+    "run_id": "39578546117",
+    "run_attempt": "1",
+    "trees": {
+      "5075e1bf883e18e24b9802118047a110ea2bf7f0": "6c548d55d3ffa3c93008d0f4a3bc183747a7eccc",
+      "46b56de206e2cd63e38eeb41814da1c79a915ab8": "6c548d55d3ffa3c93008d0f4a3bc183747a7eccc"
+    }
+  }
+}
