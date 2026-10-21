@@ -43,6 +43,12 @@ aus. Diese Variante ändert weder Glyphenform noch Zeichenbreiten oder
 Originalfontbytes. Die Referenz hängt nicht vom angezeigten Wort ab.
 Die normale Tidy-Hand-Instanz samt Hilfe-/Dialog-/Tooltipmetriken bleibt erhalten.
 
+Die Chromium-Sichtung fand bei einer zunächst verwendeten Resource-Kopie
+beschädigte Glyphen: bereits gefüllte Atlastexturen wurden zwischen Varianten
+geteilt. Frische FontFile-Instanzen aus den Originalbytes beseitigen diesen
+Fehler; getrennte Font-RIDs und unveränderte Original-Glyphenbitmaps werden
+zusätzlich geprüft. Der korrigierte Chromium-Direktvergleich wird neu erzeugt.
+
 Direkte Papierbuttontexte verwenden dieselbe feste native Referenzgrundlinie;
 die tatsächliche Worthülle bestimmt weiterhin ihre horizontale Ausrichtung.
 Labels erhalten symmetrisches, aus den tatsächlichen Akzent-/Unterlängen-/
@@ -88,6 +94,11 @@ verbindlich erweiterten Beleginventar. Es wird weder skaliert noch nachgezeichne
 Die Windows-/Chromium-Belege des finalen technischen Stands sowie der getrennte
 vollständige Selbstreview werden im PR mit Originalhashes gebunden. Der
 Selbstreview erfüllt ausdrücklich nicht HZ-C-R01.
+
+Die [dauerhaft archivierten Entwicklungsoriginale](evidence/hz-c/README.md)
+bewahren insbesondere den direkten korrigierten 14/15-Vergleich in Windows und
+Chromium einschließlich ganzer geöffneter Vergleichsmenüs. SHA-256-Bindungen
+und die tatsächlichen temporären Einstiege legen ihre Quellen-/Gategrenzen offen.
 
 ## Erhaltung und offene Gates
 

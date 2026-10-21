@@ -1,0 +1,15 @@
+{
+  "browser": "145.0.7632.6",
+  "images": {
+    "chromium-comparison-1280.png": "9ef4780a8abdac0bacf68420cd2eba1b9cabc58ef8120dd7eb400c1f84fb3505",
+    "chromium-menu-14-1280.png": "5db4b9abc6dc97c40119a58b28cc614c0a92d0871708550084a60baa2cf2447f",
+    "chromium-menu-15-1280.png": "a0fba24cbee5cfe3daa580db7e32ad024c8565431725327d0f7bb36e642934c2",
+    "chromium-comparison-1920.png": "b3010bb1f01931061e9fbc3df42cc91c23865401b9cbfba424cac3315e7cf712",
+    "chromium-menu-14-1920.png": "770c7f7d82784107aea47c327b530033b61f7f1471021a705edd350280fe7f21",
+    "chromium-menu-15-1920.png": "de1cc9e97781168d9f2ffb5f1babb3003a70afdb44a15251822b6d2d8e0becfe",
+    "chromium-comparison-2560.png": "9ef4780a8abdac0bacf68420cd2eba1b9cabc58ef8120dd7eb400c1f84fb3505",
+    "chromium-menu-14-2560.png": "0301c0468466ca2f33ebf7d054990befc6a6763a51a165e1697d76dff834ba74",
+    "chromium-menu-15-2560.png": "d939c17d0f76b86964d1d72c5e43d80b458998adf6164fdd6a154cd98f5f6c04"
+  },
+  "errors": []
+}
