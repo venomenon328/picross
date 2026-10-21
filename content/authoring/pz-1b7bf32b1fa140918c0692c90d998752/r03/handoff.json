@@ -1,0 +1,168 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        17,
+        15,
+        1108,
+        1419
+      ],
+      "alpha_below": 96,
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 40,
+      "method": "area",
+      "mode": "color",
+      "width": 31
+    }
+  ],
+  "authorization": "Standardauftrag 3 vollständig bis Endabnahmevorlage; §6-Repositoryablage samt PR/Merge nach Pflichtchecks. Keine Endabnahme erteilt.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "imports/31x40-alpha96",
+    "certification": null,
+    "logic_hash": "bbfbb9ce71a69ac520d9c2cf4273f89312ff20e73fe54812d47454c46367c633",
+    "matrix_hash": "a5b6af64177e7e10b3d79059d8c2e47d080d0f279340ba2d8c4184e7c77471d0",
+    "proof": "imports/31x40-alpha96/area-proof.json",
+    "source_type": "import",
+    "variant": "area",
+    "verification": "imports/31x40-alpha96-verification.json"
+  },
+  "category_id": "mythen-fantasie",
+  "codex_handoff": "codex-handoff.md",
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "analysis/checked.json",
+    "frame": "quality.json",
+    "logic": "imports/31x40-alpha96-verification.json",
+    "motif": "approvals/motif-approval.json",
+    "provenance": "origin-checks.json",
+    "reveal_approval": "approvals/reveal-approval.json",
+    "reveal_consistency": "quality.json",
+    "visual": "quality.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "e474b9d3518732fd62ed2d5258e321d1f323a508be5fa1bf4bcc00fb1b59dafd"
+  },
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c",
+    "file": "motifs/MA-r01.png",
+    "provenance": "provenance/motif.json",
+    "revision": "MA-r01",
+    "sha256": "7235993e90f2c04c99e4c24eb89103f437cf9921eecfc2daad44afcc96e2052c"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "origin-checks.json",
+  "parameter_corridor": "parameters.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        17,
+        15,
+        1108,
+        1419
+      ],
+      "alpha_below": 128,
+      "file": "configs/color-31x40-alpha128.json",
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 40,
+      "hypothesis": "Empfohlene kompakte Darstellung mit konservativer Alpha-Abdeckung",
+      "method": "area",
+      "mode": "color",
+      "width": 31
+    },
+    {
+      "actual_crop": [
+        17,
+        15,
+        1108,
+        1419
+      ],
+      "alpha_below": 96,
+      "file": "configs/color-31x40-alpha96.json",
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 40,
+      "hypothesis": "Empfohlene kompakte Darstellung mit feinerer Alpha-Abdeckung",
+      "method": "area",
+      "mode": "color",
+      "width": 31
+    },
+    {
+      "actual_crop": [
+        17,
+        15,
+        1108,
+        1419
+      ],
+      "alpha_below": 128,
+      "file": "configs/color-33x42-alpha128.json",
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 42,
+      "hypothesis": "Mehr Raum für Augen, Klauen und Stacheltrennung mit konservativer Alpha-Abdeckung",
+      "method": "area",
+      "mode": "color",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        17,
+        15,
+        1108,
+        1419
+      ],
+      "alpha_below": 96,
+      "file": "configs/color-33x42-alpha96.json",
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 42,
+      "hypothesis": "Mehr Raum für Augen, Klauen und Stacheltrennung mit feinerer Alpha-Abdeckung",
+      "method": "area",
+      "mode": "color",
+      "width": 33
+    }
+  ],
+  "puzzle_id": "pz-1b7bf32b1fa140918c0692c90d998752",
+  "repair": null,
+  "repo_commit": "b903f91472a1d8d00f34f37aee9202529b431d9d",
+  "report": "report.md",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "provenance/reveal.json",
+    "revision": "A-r01",
+    "sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}
