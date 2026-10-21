@@ -2,7 +2,7 @@
 	"adapter": "NVIDIA GeForce RTX 3070",
 	"at_measurements": [],
 	"captures": [],
-	"checks": 283,
+	"checks": 299,
 	"display_server": "Windows",
 	"failures": [],
 	"format": "picross-kat2-native-v1",
@@ -168,6 +168,6 @@
 	"quit_slot_hashes": {},
 	"test_only": true,
 	"timings_ms": {
-		"startup_ms": 975.775
+		"startup_ms": 1102.436
 	}
 }

@@ -1,11 +1,11 @@
 {
   "purpose": "HZ-C development originals: native component comparison/routes and isolated Chromium static comparison; final CI/Windows gates remain separate",
-  "starting_commit": "8ef380d41341064f713ea26e7d1ed499d2f6badf",
+  "starting_commit": "b00b5116dfef97151dbe84857f79eea568451860",
   "source_tree_dirty": true,
   "source_files": {
     "game/ui/atlas_marks.gd": "e1a15a6a9cc3041dd77ad5eb6194f1531719df9cdd5b4e239711f18c523ef39c",
     "game/ui/board.gd": "b8d683298754f7500d29b9f95bd8202ddae5a183f00356379e30acd0d1b756c0",
-    "game/ui/book_button.gd": "ab61022d5bc570d005f4a67e9bfb5ecbafd55c81d47865b07b39006f7d2ed8cf",
+    "game/ui/book_button.gd": "a0e767b5efb5ca86d3e2cbf82ae21cf11b7ce5c99494723950b237600bb0adf9",
     "game/ui/book_choice.gd": "a8d7541acf35b51b3bbad9044e71febb0874b0674060e9751ae02ecc47b112f1",
     "game/ui/book_controls.gd": "6220d4687a0f93f201297f244b274c9c23e34f582ac6ed79d614299d5d10a062",
     "game/ui/book_style.gd": "08cf9ba620da29d3c7dac300288394c9b464dd0f24441a7062f67e6efe40e82c",
@@ -36,72 +36,72 @@
   "sample_sha256": "1344c6f82c89d91e0ec936644f8c605f3cfd4203a7fdd9e2cf23674d97d73041",
   "native_active_test_files": {
     "hz_c_cases.gd": "d4d200b64cc6634b18c0c5fbcb89d6a47f4a30681f71eb44a61f309e49bb15b8",
-    "hz_c_native.gd": "5cb31ba4d7a7ab0870b2f69cd447c0cfb35fa171ba3c40a41dac945ede5ebacf",
+    "hz_c_native.gd": "ff348d38424bb740ea100339a88ea304e10ade83d37faeb73b7b22e7b6a421c1",
     "hz_c_sample.gd": "1344c6f82c89d91e0ec936644f8c605f3cfd4203a7fdd9e2cf23674d97d73041",
     "hz_cases.gd": "ae61af70446de1730a7c251005c46bd43812b5c2ad7c0434402a5ebeb4ad0828"
   },
   "native_temporary_runner": "native-temporary-runner.gd.gz",
-  "native_checks": 283,
+  "native_checks": 299,
   "files": {
     "chromium-build-binding.json": {
-      "sha256": "52791634d0d556fc13d637c991fcaad62d9e7cdb76a5644a10a2a562ac3cf910",
+      "sha256": "2c0ecf75d209ffd89a2bef7d0cd2b55d302ba24c6be29dee48b92db43ad74f84",
       "bytes": 5261
     },
     "chromium-build-binding.json.gz": {
-      "sha256": "8cf452b62fa4b9af74c748ecd4ae38de690841400514fc0b12150dae0fce7b63",
-      "bytes": 2733
+      "sha256": "f070f01985e29d35128294ea480187b217a4499517ac9e24ec6a4cbd2abbf3e8",
+      "bytes": 2732
     },
     "chromium-build.py.gz": {
-      "sha256": "42aba0e7d7d36177f1d9ae6ac959285a01d8f959b446c322e6cc8906328f1319",
-      "bytes": 1649
+      "sha256": "23656e05a697e868db689fe74cac50a8946f286ed704ea166fa91c29eda9aa80",
+      "bytes": 1648
     },
     "chromium-capture.py.gz": {
-      "sha256": "599937494d9659b9db6c719a36ef2d8903a9d1b39cbd419cb27fa8cf171c3241",
+      "sha256": "1e5ae84acea742e44febb6f78bb3dc52ab0bcbf44028f6530b2cc872ee06b2cd",
       "bytes": 954
     },
     "chromium-comparison-1280.png": {
-      "sha256": "9ef4780a8abdac0bacf68420cd2eba1b9cabc58ef8120dd7eb400c1f84fb3505",
-      "bytes": 65426
+      "sha256": "7903e7c75bf94a3f4e4afc3f4a102fc53c25d22c2a6f47405ee6a70a983237d7",
+      "bytes": 65190
     },
     "chromium-comparison-1920.png": {
-      "sha256": "b3010bb1f01931061e9fbc3df42cc91c23865401b9cbfba424cac3315e7cf712",
-      "bytes": 45935
+      "sha256": "d2ac716cfc787f5041ee60d611990cc27a97caf0392b0e35bcc97a1ab24c69b5",
+      "bytes": 45777
     },
     "chromium-comparison-2560.png": {
-      "sha256": "9ef4780a8abdac0bacf68420cd2eba1b9cabc58ef8120dd7eb400c1f84fb3505",
-      "bytes": 65426
+      "sha256": "7903e7c75bf94a3f4e4afc3f4a102fc53c25d22c2a6f47405ee6a70a983237d7",
+      "bytes": 65190
     },
     "chromium-menu-14-1280.png": {
-      "sha256": "5db4b9abc6dc97c40119a58b28cc614c0a92d0871708550084a60baa2cf2447f",
-      "bytes": 76909
+      "sha256": "fa379200bf991bb09ff8bd0296e1f935c1b9eadf6cafc6113d6a8f57c0c7e632",
+      "bytes": 76912
     },
     "chromium-menu-14-1920.png": {
-      "sha256": "770c7f7d82784107aea47c327b530033b61f7f1471021a705edd350280fe7f21",
-      "bytes": 63894
+      "sha256": "94e80b5b9b1e0f348bf84bbbb3bc8e5b4b504b548e0847e867409f2d1aadb3da",
+      "bytes": 63697
     },
     "chromium-menu-14-2560.png": {
-      "sha256": "0301c0468466ca2f33ebf7d054990befc6a6763a51a165e1697d76dff834ba74",
+      "sha256": "7d0576155a352bb4454e80dcb76c2670d892ae10e831b07f78a1293b402a3d32",
       "bytes": 90690
     },
     "chromium-menu-15-1280.png": {
-      "sha256": "a0fba24cbee5cfe3daa580db7e32ad024c8565431725327d0f7bb36e642934c2",
-      "bytes": 77444
+      "sha256": "8213ac86cc6afe032a0cf2c5dccf810dd0b8d98f3a00d4de6836d3794a021576",
+      "bytes": 77141
     },
     "chromium-menu-15-1920.png": {
-      "sha256": "de1cc9e97781168d9f2ffb5f1babb3003a70afdb44a15251822b6d2d8e0becfe",
-      "bytes": 63764
+      "sha256": "c7bb155c54b59b68acc1de02e4575ff4027a9949e28967a1b7fef0f4e50bdfaf",
+      "bytes": 63730
     },
     "chromium-menu-15-2560.png": {
-      "sha256": "d939c17d0f76b86964d1d72c5e43d80b458998adf6164fdd6a154cd98f5f6c04",
-      "bytes": 91322
+      "sha256": "cb69616353ded9f2e6743e3a475e7a31405f84764db04162b425b1ffefdf45a4",
+      "bytes": 91022
     },
     "chromium-report.json": {
-      "sha256": "84d49266c45f4917c700abf1ef4df6d623efe2f2ec7ea233bc196795063c56a6",
+      "sha256": "328fe8c02bf87e4c4e78b08dcfacb08e9a08e36326f271868c2db2f159e72a01",
       "bytes": 984
     },
     "chromium-report.json.gz": {
-      "sha256": "6fc678114669f79fb0922e518b6c70e024d4bbe588735c0034302e1e928d888b",
-      "bytes": 473
+      "sha256": "509a9e63ecf0740d0f52245e2f0de51b114c5dab54eeb1cb5cecccbeb8444cf9",
+      "bytes": 476
     },
     "chromium-temporary-entry.gd.gz": {
       "sha256": "9ac0f8bec8537ef3e3dbdcf3a2c7b50914dc6d248fc8c8a53b5cd3e5f0e15055",
@@ -132,16 +132,16 @@
       "bytes": 13922
     },
     "hz-c-comparison-1280.png": {
-      "sha256": "592961b694371f84580fe3fb2dfb8d6994d72bd331e23e6d799b3154c2728f09",
-      "bytes": 76790
+      "sha256": "47b1f5c86b1068454f3837763f7fcc1b3e9c4f4ecc439511f8c7231a216abc7a",
+      "bytes": 76441
     },
     "hz-c-comparison-1920.png": {
-      "sha256": "c8a26f868f260a2b24cd410e9ad3207ed243c8dd4a3a37fa252179f0a2079e42",
-      "bytes": 55429
+      "sha256": "ba05790791eb355af76169c941fb51a83a7bf0db396a354f2d7cd2186560bfa4",
+      "bytes": 55168
     },
     "hz-c-comparison-2560.png": {
-      "sha256": "6c963c81c5e1fbde8393f8e9b68749b95bf3ab854ad5a2de7e3822e41d99878c",
-      "bytes": 76810
+      "sha256": "5284a5ef3e5401a735ae5a06c76c4479f59e036b89a171515405bafd474a82ca",
+      "bytes": 76459
     },
     "hz-c-status-begonnen-1280.png": {
       "sha256": "6781262ba5426ea3a2730c0b4093ada5485e14b8870d5c7a8f4fedfdcd014e4b",
@@ -192,34 +192,69 @@
       "bytes": 14755
     },
     "native-report.json": {
-      "sha256": "f2a3e757d9f65d61c91ad8c6d158f1a947db874cdf7a273b9bad0f649ebb7fc5",
-      "bytes": 4003
+      "sha256": "a4c4699d4757a277a581fba583bc1cfd9d310bb442e01e133775199a7f7b086d",
+      "bytes": 4004
     },
     "native-run.log": {
-      "sha256": "ed371a8ee7464bbecb92a30b12ac86cfbf610ab4de68a81774fa236858b14296",
-      "bytes": 234
+      "sha256": "8d9c9042304420c4971e3abe25c676bcaddfb5b97bb67e580a92afeec54a3d4a",
+      "bytes": 235
     },
     "native-run.log.gz": {
-      "sha256": "7bf0856b113cceec61b1fa5db03a78cccae776e53511269115c9cca1d472113a",
-      "bytes": 222
+      "sha256": "f33dc48005b0f5e61db0da74e23d1204d715592150402c0d571b9b3cdee35e08",
+      "bytes": 223
     },
     "native-temporary-runner.gd.gz": {
       "sha256": "f391226033a0b0d7c0f4e0428c30cb6019ce08a127c5d027bef139160d8994e5",
       "bytes": 20018
+    },
+    "negative-word-book-button.gd.gz": {
+      "sha256": "d5efff52ace1a960d6f2dc0a819bc4cce68e8434e126b786534db25f0f2adf1c",
+      "bytes": 1934
+    },
+    "negative-word-report.json.gz": {
+      "sha256": "f93558437ab3ebf3b2d8d3ec424fa20b8ad3b5343dfdfca1544ec57669935e55",
+      "bytes": 772
+    },
+    "negative-word-run.log.gz": {
+      "sha256": "5901a6463b74883ae0745dab886f2106a7fa4d3da5f9b7f298a825c7ec787136",
+      "bytes": 263
     }
   },
   "original_serializations": {
     "chromium-build-binding.json.gz": {
-      "original_sha256": "33e46723c850d3a3a1d33c8ebc0dbd90024c18bbb26467c9a81c45e1a47e0e7a",
+      "original_sha256": "36499f2946b20b4b5552e94b3c574931be2c8523ff1633183ab885d37d103f58",
       "original_bytes": 5309
     },
     "chromium-report.json.gz": {
-      "original_sha256": "b605db00ece7614beac07acdd59eb2a98910ba81db92647da591a8e978b923c2",
+      "original_sha256": "fa45f29fa4dbacd09b4c3197343f4dcb6c60b7e282692f9e3b29944362291480",
       "original_bytes": 999
     },
     "native-run.log.gz": {
-      "original_sha256": "ba5363f4723a5e626e2dd75d653722cdbd3c05ae66e1da8a21a22df95b7962aa",
-      "original_bytes": 238
+      "original_sha256": "bcd87a82b9da4aa3fa049295f28150e051fc003065533ad520a0f7ca1a993938",
+      "original_bytes": 239
     }
+  },
+  "negative_control": {
+    "injection": "old word-dependent vertical centring in BookButton only",
+    "expected_exit": 4,
+    "failures": [
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Begonnen",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Größe × … ←",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Begonnen",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Größe × … ←",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Begonnen",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Größe × … ←",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Begonnen",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Größe × … ←"
+    ]
+  },
+  "native_input_files": {
+    "data/registry.json": "fbf37243fd35450d9657bc8ba3c564a5dc0f6ee868eb9176aefd84cccf280f14",
+    "data/fixtures/t01.json": "37d2de4005c110fcd70e2a1db0dcecfe1d6d702361192b4333be09f4cb183a76",
+    "data/fixtures/t02.json": "bcf03260fed25970c3624822e8c9b0990a5d752e7c10004e52604958ca3e58b0",
+    "data/fixtures/t04.json": "09bf6a99dc4ec9e94ff94355856b23cb3db74a9dfd5bedec22fe0e8ae02a8574",
+    "data/fixtures/t06.json": "81205d53b4f38a90613212e50e8e9daacf7a85f48af6aab1c91ede318f79b236",
+    "data/fixtures/t08.json": "b3f6430be737497e24b4a476295fcea9993201478709fd9f3544ef53c0954064",
+    "data/fixtures/t09.json": "a5314587a33398d8c0f20fec459d408d71d5a7f9be7355d721b09dd295e66a6d"
   }
 }
