@@ -1,0 +1,4 @@
+Technical replay of the eight exactly recorded positions in plans/fixed-color.json; preserve every other cell.
+
+Working mode: faithful
+Motif and gameplay review: open

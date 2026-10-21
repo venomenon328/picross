@@ -1,0 +1,4 @@
+Preserve broad arch, open center and two foot clouds (left larger). Six spectral ribbons plus opaque white cloud color. Reduced alternative merges only blue/violet. No new motif or decorative pixels.
+
+Working mode: faithful
+Motif and gameplay review: open
