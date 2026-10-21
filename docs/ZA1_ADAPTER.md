@@ -834,6 +834,60 @@ und die Exportversionen v3 beziehungsweise v4 bei Paarprofilen bleiben erhalten;
 die Autorisierungsversion v5 ist keine neue Exportversion. Allgemeine Prüfungen
 in `test_stalled_color_adapter.py` verwenden ausschließlich synthetische Raster.
 
+### Angenommene monochrome Pixelvorlage aus einem manuellen Entwurf (v6)
+
+Der Eigentümerauftrag vom 22.10.2026 ergänzt ausdrücklich den fehlenden Weg für
+einen versiegelten manuellen monochromen Neuentwurf. Die nachträgliche Annahme
+der konkreten Pixeldatei ersetzt keine historische Freigabe und schreibt keine
+Originalbytes um. V1–v5 behalten ihre Grenzen. Kein Editsuchlauf und keine
+Randregel-Ausnahme: Geprüft wird die tatsächlich neu angenommene Pixelvorlage,
+nicht ein behaupteter unveränderter Import einer älteren Motivdatei.
+
+`picross-manual-authorization-v6` hat exakt `format`, `puzzle_id`, `revision`,
+`original_zip_sha256`, `handoff_sha256`, `inventory_sha256`, `selection`,
+`accepted_motif`, `historical_reveal`, `superseded_content_blockers`, `owner_override`.
+Die gemeinsamen Identitäts-/Datei-/Auswahlbindungen folgen v3. `accepted_motif`
+enthält exakt `file,sha256,derived_from_reveal_sha256,revision,parameters`; die
+Parameter müssen im ursprünglichen `proposed_parameters` liegen. Eingang:
+`state=raster_review`, `candidate.source_type=manual`, `repair=null`, keine
+anderen manuellen Ableitungsmarker, `motif=pending`, `motif.approval=null`,
+`approved_parameters=[]`. Alle anderen sieben Inhaltsgates bleiben unverändert
+Pflicht. Die ursprüngliche Blockerliste wird exakt extern gebunden.
+
+`historical_reveal` enthält genau `prefix,approval,provenance`. Die beiden
+Dateireferenzen sind `{file,sha256}` auf inventarisierte unveränderte Originale.
+Der sichere relative Präfix bildet deren historische relative Pfade auf die
+aktuelle Paketablage ab: `prefix + '/' + original_file` muss exakt dem aktuellen
+Revealpfad entsprechen; ebenso werden Freigabe-, Provenienz- und Belegpfad
+zugeordnet. Ursprüngliche Akteur-/UTC-/Erklärung-/Revisionsfelder, ID, Bildhash,
+Autor und Nutzungsgrundlage werden geprüft. Keine beliebigen Pfadaliase, keine
+neue Bildfreigabe aus einem Spezifikationsauftrag. Nutzungsnachweise führen den
+aufgelösten aktuellen Bildpfad; historische Quelldateien bleiben bytegleich.
+
+`picross-owner-override-v6` enthält exakt die gemeinsamen Autorisierungsfelder
+ohne `format,original_zip_sha256,owner_override`, zusätzlich `format,actor,
+statement,timestamp_utc,package_sha256,approval_sha256,permissions`.
+`permissions` ist exakt `{accepted_mono_pixel_source:true,
+late_motif_acceptance:true,historical_reveal_binding:true}`. Die tatsächliche
+Paketabnahme und der gesonderte Werkzeugauftrag müssen vorliegen; Software
+prüft Bindungen, authentifiziert keinen menschlichen Akteur.
+
+Der vollständige RP-3-Import wird frisch rekonstruiert und unabhängig vollständig
+zertifiziert, einschließlich Paarbaseline, Assessment und exakter Endmatrix.
+Seine Originalquelle muss exakt die angenommene Datei sein: RGB-PNG mit einer
+Bildposition je Zelle, vollem Crop, `fit=exact` und genau den aus Endmatrix und
+Palette gerenderten Pixelwerten. Die Pixelvorlage ist damit offen die neue
+Quelle; historische Bauteilrezepte sind redaktionelle Herkunftsbelege, keine
+ausführbaren Programme oder behauptete RP-5-Replays. Maße, Parameter, Herkunft,
+Rechte, Randregel, Schwierigkeit und echte Endfreigabe bleiben Pflicht.
+
+CLI bleibt `--manual-authorization`, Export v3 beziehungsweise v4 bei Paarprofilen.
+Autorisierung, Eigentümererklärung und alle benutzten Originaldateien werden
+offline mitgeliefert und bei Exportprüfung/Plan/Register erneut geprüft. Der
+Bericht nennt historische Phase/Motivgate, externe Motivannahme und aufgelöste
+historische Bildbindung. Allgemeine Regressionen verwenden ausschließlich
+synthetische Pixelvorlagen; reale Pakete bleiben außerhalb von Tests und CI.
+
 ## Abgeschlossene Produktion (14.10.2026, #116)
 
 Nach nachgewiesener Endabnahme und Main-Integration ersetzt `retire-production`
