@@ -44,8 +44,12 @@
   "native_checks": 283,
   "files": {
     "chromium-build-binding.json": {
-      "sha256": "33e46723c850d3a3a1d33c8ebc0dbd90024c18bbb26467c9a81c45e1a47e0e7a",
-      "bytes": 5309
+      "sha256": "52791634d0d556fc13d637c991fcaad62d9e7cdb76a5644a10a2a562ac3cf910",
+      "bytes": 5261
+    },
+    "chromium-build-binding.json.gz": {
+      "sha256": "8cf452b62fa4b9af74c748ecd4ae38de690841400514fc0b12150dae0fce7b63",
+      "bytes": 2733
     },
     "chromium-build.py.gz": {
       "sha256": "42aba0e7d7d36177f1d9ae6ac959285a01d8f959b446c322e6cc8906328f1319",
@@ -92,8 +96,12 @@
       "bytes": 91322
     },
     "chromium-report.json": {
-      "sha256": "b605db00ece7614beac07acdd59eb2a98910ba81db92647da591a8e978b923c2",
-      "bytes": 999
+      "sha256": "84d49266c45f4917c700abf1ef4df6d623efe2f2ec7ea233bc196795063c56a6",
+      "bytes": 984
+    },
+    "chromium-report.json.gz": {
+      "sha256": "6fc678114669f79fb0922e518b6c70e024d4bbe588735c0034302e1e928d888b",
+      "bytes": 473
     },
     "chromium-temporary-entry.gd.gz": {
       "sha256": "9ac0f8bec8537ef3e3dbdcf3a2c7b50914dc6d248fc8c8a53b5cd3e5f0e15055",
@@ -188,12 +196,30 @@
       "bytes": 4003
     },
     "native-run.log": {
-      "sha256": "ba5363f4723a5e626e2dd75d653722cdbd3c05ae66e1da8a21a22df95b7962aa",
-      "bytes": 238
+      "sha256": "ed371a8ee7464bbecb92a30b12ac86cfbf610ab4de68a81774fa236858b14296",
+      "bytes": 234
+    },
+    "native-run.log.gz": {
+      "sha256": "7bf0856b113cceec61b1fa5db03a78cccae776e53511269115c9cca1d472113a",
+      "bytes": 222
     },
     "native-temporary-runner.gd.gz": {
       "sha256": "f391226033a0b0d7c0f4e0428c30cb6019ce08a127c5d027bef139160d8994e5",
       "bytes": 20018
+    }
+  },
+  "original_serializations": {
+    "chromium-build-binding.json.gz": {
+      "original_sha256": "33e46723c850d3a3a1d33c8ebc0dbd90024c18bbb26467c9a81c45e1a47e0e7a",
+      "original_bytes": 5309
+    },
+    "chromium-report.json.gz": {
+      "original_sha256": "b605db00ece7614beac07acdd59eb2a98910ba81db92647da591a8e978b923c2",
+      "original_bytes": 999
+    },
+    "native-run.log.gz": {
+      "original_sha256": "ba5363f4723a5e626e2dd75d653722cdbd3c05ae66e1da8a21a22df95b7962aa",
+      "original_bytes": 238
     }
   }
 }
