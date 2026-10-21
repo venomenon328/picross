@@ -1,0 +1,29 @@
+{
+  "approval": null,
+  "author": "OpenAI native image generation directed by ChatGPT",
+  "changes": [
+    "Pinseltextur, Konturen und räumliche Schattierung entfernt.",
+    "Wolken zu wenigen großen zusammenhängenden weißen Lappen vereinfacht.",
+    "Farben kräftiger und Flächen ruhiger; sechs Bandrollen erhalten.",
+    "Mehr transparenter Außenabstand; hierfür expliziter Importcrop vorgeschlagen."
+  ],
+  "derived_from": {
+    "file": "reveals/A-r01.png",
+    "sha256": "68943d92c0e4bc8ace14708b1a6f6dcfb46fb7d437bf9f4bcca8c91bc132d88c"
+  },
+  "file": "motifs/MA-r01.png",
+  "invariants": [
+    "Ein einzelner breiter, zusammenhängender Regenbogen in Frontansicht.",
+    "Sechs durchgehende Farbbänder, außen nach innen Rot, Orange, Gelb, Grün, Blau, Violett; bei ausdrücklich mitfreigegebener 6-Farben-Variante nur Blau/Violett zusammenlegen.",
+    "Offene Bogenmitte und transparenter Außenraum bleiben leer; kein Hintergrundkasten.",
+    "Zwei helle Wolken an den Bogenfüßen; links etwas breiter/größer, rechts kleiner.",
+    "Bogenproportionen, Zuordnung beider Füße und relative Wolkenpositionen bleiben erkennbar.",
+    "Abschlussbild A-r01 bleibt farbig, detailliert und bytegleich."
+  ],
+  "prompt_file": "prompts.json",
+  "puzzle_id": "pz-dad34b8331914c909e8ded79491dac94",
+  "selected_call": "MA-r01",
+  "sha256": "3ac159441bdcaa3e790ef4c880f3bbd49a960c44b28b345b940baca617e55313",
+  "usage_basis": "AI-generated original on the user’s request for use in venomenon328/picross; no third-party attribution identified. No assertion of exclusive copyright.",
+  "working_mode": "faithful"
+}

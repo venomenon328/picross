@@ -1,0 +1,10 @@
+Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.
+
+Ich gebe das Abschlussbild A-r01 frei. Führe Standardauftrag 2 bis zur Motivvorlage samt Konfiguration und Codex-Übergabe aus.
+Paket: content/authoring/pz-dad34b8331914c909e8ded79491dac94/r01/package.zip · r01.
+Rasterbreite × Rasterhöhe: offen × 30 Zellen (ungefähr).
+Rätselmodus (Abschlussbild immer farbig): farbig.
+Rätsel-ID: pz-dad34b8331914c909e8ded79491dac94
+Quellbranch / Commit: main / 4ea4a6bd0cdb864f8e1bd6666f32720246e4a2e3.
+
+Repositoryablage nach §6 ist beauftragt. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen.

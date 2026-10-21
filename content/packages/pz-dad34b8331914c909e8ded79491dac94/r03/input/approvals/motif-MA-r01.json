@@ -1,0 +1,249 @@
+{
+  "actor": "Nutzer / Repositoryeigentümer, ausdrückliche Chatfreigabe",
+  "approved_corridor": [
+    {
+      "actual_crop": [
+        55,
+        68,
+        1531,
+        933
+      ],
+      "alpha_below": 128,
+      "background": "#26343c",
+      "design": "configuration/preferred-50x30-7.json",
+      "fit": "contain",
+      "foreground_colors": 7,
+      "height": 30,
+      "id": "preferred-50x30-7",
+      "method": "area",
+      "mode": "color",
+      "palette": [
+        {
+          "id": "red",
+          "rgb": "#f01217"
+        },
+        {
+          "id": "orange",
+          "rgb": "#fd8501"
+        },
+        {
+          "id": "yellow",
+          "rgb": "#fde904"
+        },
+        {
+          "id": "green",
+          "rgb": "#25b436"
+        },
+        {
+          "id": "blue",
+          "rgb": "#0082fd"
+        },
+        {
+          "id": "violet",
+          "rgb": "#9341ee"
+        },
+        {
+          "id": "cloud",
+          "rgb": "#ffffff"
+        }
+      ],
+      "width": 50
+    },
+    {
+      "actual_crop": [
+        55,
+        68,
+        1531,
+        933
+      ],
+      "alpha_below": 128,
+      "background": "#26343c",
+      "design": "configuration/compact-48x29-7.json",
+      "fit": "contain",
+      "foreground_colors": 7,
+      "height": 29,
+      "id": "compact-48x29-7",
+      "method": "area",
+      "mode": "color",
+      "palette": [
+        {
+          "id": "red",
+          "rgb": "#f01217"
+        },
+        {
+          "id": "orange",
+          "rgb": "#fd8501"
+        },
+        {
+          "id": "yellow",
+          "rgb": "#fde904"
+        },
+        {
+          "id": "green",
+          "rgb": "#25b436"
+        },
+        {
+          "id": "blue",
+          "rgb": "#0082fd"
+        },
+        {
+          "id": "violet",
+          "rgb": "#9341ee"
+        },
+        {
+          "id": "cloud",
+          "rgb": "#ffffff"
+        }
+      ],
+      "width": 48
+    },
+    {
+      "actual_crop": [
+        55,
+        68,
+        1531,
+        933
+      ],
+      "alpha_below": 128,
+      "background": "#26343c",
+      "design": "configuration/reduced-50x30-6.json",
+      "fit": "contain",
+      "foreground_colors": 6,
+      "height": 30,
+      "id": "reduced-50x30-6",
+      "method": "area",
+      "mode": "color",
+      "palette": [
+        {
+          "id": "red",
+          "rgb": "#f01217"
+        },
+        {
+          "id": "orange",
+          "rgb": "#fd8501"
+        },
+        {
+          "id": "yellow",
+          "rgb": "#fde904"
+        },
+        {
+          "id": "green",
+          "rgb": "#25b436"
+        },
+        {
+          "id": "cloud",
+          "rgb": "#ffffff"
+        },
+        {
+          "id": "blue_violet",
+          "rgb": "#4a62f6"
+        }
+      ],
+      "width": 50
+    },
+    {
+      "actual_crop": [
+        55,
+        68,
+        1531,
+        933
+      ],
+      "alpha_below": 128,
+      "background": "#26343c",
+      "design": "configuration/compact-reduced-48x29-6.json",
+      "fit": "contain",
+      "foreground_colors": 6,
+      "height": 29,
+      "id": "compact-reduced-48x29-6",
+      "method": "area",
+      "mode": "color",
+      "palette": [
+        {
+          "id": "red",
+          "rgb": "#f01217"
+        },
+        {
+          "id": "orange",
+          "rgb": "#fd8501"
+        },
+        {
+          "id": "yellow",
+          "rgb": "#fde904"
+        },
+        {
+          "id": "green",
+          "rgb": "#25b436"
+        },
+        {
+          "id": "cloud",
+          "rgb": "#ffffff"
+        },
+        {
+          "id": "blue_violet",
+          "rgb": "#4a62f6"
+        }
+      ],
+      "width": 48
+    }
+  ],
+  "corridor_sha256": "b3950d86f032882b1bef14932f23216bc2d2364877151f379ca4145daf549752",
+  "derived_from_reveal_sha256": "68943d92c0e4bc8ace14708b1a6f6dcfb46fb7d437bf9f4bcca8c91bc132d88c",
+  "evidence": "approvals/motif-user-statement.txt",
+  "file": "motifs/MA-r01.png",
+  "parameters": {
+    "actual_crop": [
+      55,
+      68,
+      1531,
+      933
+    ],
+    "alpha_below": 128,
+    "background": "#26343c",
+    "design": "configuration/preferred-50x30-7.json",
+    "fit": "contain",
+    "foreground_colors": 7,
+    "height": 30,
+    "id": "preferred-50x30-7",
+    "method": "area",
+    "mode": "color",
+    "palette": [
+      {
+        "id": "red",
+        "rgb": "#f01217"
+      },
+      {
+        "id": "orange",
+        "rgb": "#fd8501"
+      },
+      {
+        "id": "yellow",
+        "rgb": "#fde904"
+      },
+      {
+        "id": "green",
+        "rgb": "#25b436"
+      },
+      {
+        "id": "blue",
+        "rgb": "#0082fd"
+      },
+      {
+        "id": "violet",
+        "rgb": "#9341ee"
+      },
+      {
+        "id": "cloud",
+        "rgb": "#ffffff"
+      }
+    ],
+    "width": 50
+  },
+  "puzzle_id": "pz-dad34b8331914c909e8ded79491dac94",
+  "revision": "MA-r01",
+  "sha256": "3ac159441bdcaa3e790ef4c880f3bbd49a960c44b28b345b940baca617e55313",
+  "source_commit": "5d7affcb6f5c7f79597da0a214159495a264f8eb",
+  "statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nPaket: content/authoring/pz-dad34b8331914c909e8ded79491dac94/r02/package.zip · r02.\nIch gebe die Motivvorlage motifs/MA-r01.png · MA-r01 frei; Parameter: configuration/corridor.json: empfohlen 50×30/7 Farben; zugelassen zur Freigabe 50×30 oder 48×29, jeweils 7 oder 6 Farben; bei 6 nur Blau/Violett zusammenlegen; area, contain, Crop [55,68,1531,933]. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.\nQuellbranch / Commit: main / 5d7affcb6f5c7f79597da0a214159495a264f8eb.\n\nRepositoryablage nach §6 ist beauftragt. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen.",
+  "timestamp_basis": "Aufzeichnungszeit im beauftragten Turn; genauer Nachrichtensendezeitpunkt nicht exponiert",
+  "timestamp_utc": "2026-10-21T16:06:09.918798+00:00",
+  "type": "human_motif_approval"
+}
