@@ -1,0 +1,4 @@
+Third and final size hypothesis after two unsuccessful repairs: lower admitted 28/29 grid phase, thresholds96/112, preserve separate upper shapes and full main curves. No expanded corridor, no stretching.
+
+Working mode: faithful
+Motif and gameplay review: open
