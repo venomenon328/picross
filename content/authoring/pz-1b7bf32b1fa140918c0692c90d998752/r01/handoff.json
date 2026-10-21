@@ -1,0 +1,144 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1 samt Repositoryablage nach §6; Ablage-PR nach Pflichtprüfungen mergen. Keine Bild-/Motiv-/Endfreigabe.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "mythen-fantasie",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "458a8337ac1195ef320d5b5dbbc3db5915153bdc92427dd1bfec5d79e4a41a36"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-1b7bf32b1fa140918c0692c90d998752",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "0297f539e702a2632aec3b07c86c265e8a9695d7",
+  "report": "report.md",
+  "requested_parameters": {
+    "foreground_colors": null,
+    "height": null,
+    "mode": null,
+    "width": null
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "alpha_bbox": [
+        0,
+        17,
+        1108,
+        1419
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "approval": null,
+      "bytes": 1661548,
+      "file": "reveals/A-r01.png",
+      "height": 1419,
+      "id": "A-r01",
+      "opaque_pixels": 1023,
+      "partial_alpha_pixels": 651129,
+      "sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c",
+      "status": "offered",
+      "transparent_pixels": 920100,
+      "width": 1108
+    },
+    {
+      "alpha_bbox": [
+        0,
+        0,
+        1535,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "approval": null,
+      "bytes": 2611315,
+      "file": "reveals/B-r01.png",
+      "height": 1024,
+      "id": "B-r01",
+      "opaque_pixels": 0,
+      "partial_alpha_pixels": 707834,
+      "sha256": "6d7a23abf9a2e1463abaac5372e8807d53f026afceb262bc910ef0940bbf378d",
+      "status": "offered",
+      "transparent_pixels": 865030,
+      "width": 1536
+    },
+    {
+      "alpha_bbox": [
+        0,
+        7,
+        1228,
+        1281
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "approval": null,
+      "bytes": 1713474,
+      "file": "reveals/C-r01.png",
+      "height": 1281,
+      "id": "C-r01",
+      "opaque_pixels": 452,
+      "partial_alpha_pixels": 732047,
+      "sha256": "a6a90a14864e8960f0e1c80714eb8ad03810306b9e4db6d38ea67f7221751846",
+      "status": "offered",
+      "transparent_pixels": 840569,
+      "width": 1228
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
