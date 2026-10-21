@@ -1,0 +1,101 @@
+{
+  "blockers": [],
+  "category_id": "mythen-fantasie",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r01/handoff.json",
+    "sha256": "a931ff4c1c3f379595dd82f6ddc45b559113b8c512dda54ca8819f998bb1ac03"
+  },
+  "height": null,
+  "integration": null,
+  "inventory_sha256": "458a8337ac1195ef320d5b5dbbc3db5915153bdc92427dd1bfec5d79e4a41a36",
+  "mode": null,
+  "motif_approval": null,
+  "motif_name": "Chupacabra",
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "package": {
+    "bytes": 5947382,
+    "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r01/package.zip",
+    "sha256": "e99cac40627e2360bb42ab9c078a480625f783d7a84dd1aba2a261d9b0d29fa8"
+  },
+  "puzzle_id": "pz-1b7bf32b1fa140918c0692c90d998752",
+  "repo_commit": "0297f539e702a2632aec3b07c86c265e8a9695d7",
+  "reveal_approval": null,
+  "reveal_options": [
+    {
+      "alpha_bbox": [
+        0,
+        17,
+        1108,
+        1419
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "approval": null,
+      "bytes": 1661548,
+      "file": "reveals/A-r01.png",
+      "height": 1419,
+      "id": "A-r01",
+      "opaque_pixels": 1023,
+      "partial_alpha_pixels": 651129,
+      "sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c",
+      "status": "offered",
+      "transparent_pixels": 920100,
+      "width": 1108
+    },
+    {
+      "alpha_bbox": [
+        0,
+        0,
+        1535,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "approval": null,
+      "bytes": 2611315,
+      "file": "reveals/B-r01.png",
+      "height": 1024,
+      "id": "B-r01",
+      "opaque_pixels": 0,
+      "partial_alpha_pixels": 707834,
+      "sha256": "6d7a23abf9a2e1463abaac5372e8807d53f026afceb262bc910ef0940bbf378d",
+      "status": "offered",
+      "transparent_pixels": 865030,
+      "width": 1536
+    },
+    {
+      "alpha_bbox": [
+        0,
+        7,
+        1228,
+        1281
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "approval": null,
+      "bytes": 1713474,
+      "file": "reveals/C-r01.png",
+      "height": 1281,
+      "id": "C-r01",
+      "opaque_pixels": 452,
+      "partial_alpha_pixels": 732047,
+      "sha256": "a6a90a14864e8960f0e1c80714eb8ad03810306b9e4db6d38ea67f7221751846",
+      "status": "offered",
+      "transparent_pixels": 840569,
+      "width": 1228
+    }
+  ],
+  "revision": "r01",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-21T16:52:02.250433+00:00",
+  "width": null
+}
