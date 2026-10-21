@@ -1,22 +1,24 @@
 # Projektprofil: picross
 
-**HZ / #284 (20.10.2026), HZ-A integriert; HZ-B implementiert im Draft, getrennte Abnahmen offen:**
+**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C / #294 spezifiziert, noch nicht implementiert:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale
 Spieler-UI gemäß HZ-A-FONT02 an Tidy Hand als Standardtext (Überschriften
 unverändert) und stärker gezeichnete kleine Rahmen, vollständige
-Dropdowns und eine gemeinsame Piktogrammfamilie. HZ-A liefert Schriftrollen,
-lokale Zeichenbehandlung und gemessenes Textlayout; HZ-B danach Konturen,
-Menüs und Symbole. Delight-Hinweise samt gebundener Geometrie sowie die drei
-großen SL-Rasterrahmen bleiben. Beide Pakete erhalten eigene technische,
-separate Review- und persönliche Gates gemäß
-[Issue #284](https://github.com/venomenon328/picross/issues/284).
-Die [HZ-A-Lieferung](HZ_A_VERIFICATION.md) enthält Schrift/Textlayout und die
-zugehörigen Prüfwege; technische Ergebnisse und offene Gates stehen im Paket-PR.
-Der frühere Spezifikations-PR bleibt ein reiner Dokumentnachweis.
-Die [HZ-B-Lieferung](HZ_B_VERIFICATION.md) führt Konturen, native Menüs und
-die vollständige Piktogrammfamilie in [Draft-PR #289](https://github.com/venomenon328/picross/pull/289).
-Gebundene Windows-/PCK-Originale liegen im Lieferbericht; der finale CI-/Chromium-
-und Selbstreviewstand steht im PR. HZ-B-R01 und HZ-B-M01 bleiben separat vor Merge erforderlich.
+Dropdowns und eine gemeinsame Piktogrammfamilie. [HZ-A](HZ_A_VERIFICATION.md)
+und [HZ-B](HZ_B_VERIFICATION.md) sind über PR #288/#289 integriert; ihre
+erfüllten technischen, separaten Review- und persönlichen Gates stehen im
+abgeschlossenen [Issue #284](https://github.com/venomenon328/picross/issues/284).
+Historische Lieferberichte bleiben an ihre jeweiligen Heads gebunden.
+
+Das Folgepaket [HZ-C / #294](https://github.com/venomenon328/picross/issues/294)
+führt optische Textausrichtung, stabile Grundlinien und die gemeinsame kleine
+Schriftrolle gemäß HZ-D07 zusammen. Korrigierte 14/15 werden direkt verglichen;
+15 bei UI100 ist der bevorzugte Vergleichswert, noch kein festes Endmaß.
+Kategorien sind ausdrücklich eingeschlossen. Delight-Hinweise samt Geometrie,
+Überschriften, Originalfontbytes und die drei großen SL-Rasterrahmen bleiben.
+HZ-C erhält eigene T01/R01/M01-Gates; HZ-A/B nehmen diese nicht vorweg.
+Der aktuelle Auftrag liefert nur Issue und Spezifikationsdokumente. Technische
+Startprüfung, Ausführungswahl und Implementierung folgen einem gesonderten Auftrag.
 
 **AT / #256 (19.10.2026), Umsetzungsvorbereitung V4; AT-A integriert, AT-B-F01 nach Eigentümerabnahme beauftragt:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ist bei Abschlussbildern,
@@ -299,7 +301,8 @@ Quellen und damaligen Issues lesen; Erinnerungen ersetzen keinen Quellenzugriff.
 ## Aktuelle Spielverträge
 
 Für die normalen UI-Schriftrollen und kleinen Bedienelemente ist
-[HZ](HAND_DRAWN_UI.md) der freigegebene nächste Sollstand. Tidy Hand ersetzt normalen
+[HZ](HAND_DRAWN_UI.md) der maßgebliche Vertrag: HZ-A/B sind integriert,
+HZ-D07 ist der freigegebene nächste Typografieschritt HZ-C. Tidy Hand bleibt
 Standardtext; Überschriften einschließlich Vollhinweis sowie Zahlen-/Slot-/Fitvertrag
 bleiben gemäß Eigentümerentscheidung HZ-A-FONT02 unverändert.
 

@@ -1,11 +1,13 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
-**HZ · 20.10.2026, freigegebener nächster Stilstand; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
+**HZ · 21.10.2026, HZ-A/B integriert; HZ-C / #294 freigegeben, noch nicht implementiert:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet Tidy Hand für normale
-Katalogtexte bei unveränderten Bakso-Überschriften und ersetzt die bisherige zurückhaltende äußere Kartenkontur durch
-deutlich organischere stabile Linien. Papierstreifen, vollständige Metadaten,
-gleiche Kartenbereiche, Bildraum und Bedien-/Spoilergrenzen bleiben verbindlich.
-HZ-A misst Schrift und Textlayout; HZ-B ergänzt Konturen, vollständige Menüs und Icons.
+Katalogtexte bei unveränderten Bakso-Überschriften und organischeren stabilen
+Kartenkonturen. HZ-A/B sind über PR #288/#289 integriert und in #284 abgenommen.
+HZ-D07 ergänzt optische Ausrichtung, stabile Grundlinien und den begründeten
+Vergleich der korrigierten kleinen Schriftgröße 14/15 einschließlich Kategorien.
+Papierstreifen, vollständige Metadaten, gleiche Kartenbereiche, Bildraum und
+Bedien-/Spoilergrenzen bleiben verbindlich.
 
 **AT · 19.10.2026, Umsetzungsvorbereitung V3; AT-A in Umsetzung:**
 Der [Transparenzstandard](REVEAL_TRANSPARENCY.md) ergänzt die verdienten
@@ -13,7 +15,7 @@ Katalogbilder. AT-A schafft den begrenzten Bildänderungsweg mit synthetischen
 Alpha-/Spielstandsnachweisen; AT-B überarbeitet danach die Bestandsbilder mit
 konkreter neuer Bildfreigabe. Kartenaufteilung und ungelöste Vorschauen bleiben erhalten.
 
-Stand: 20.10.2026 · Spezifikation 2.1 · KU-A/B integriert; HZ-Schrift-/Konturfortschreibung spezifiziert
+Stand: 21.10.2026 · Spezifikation 2.2 · KU-A/B und HZ-A/B integriert; HZ-C spezifiziert
 
 Der Eigentümer hat die Katalogüberarbeitung am 18.10.2026 als Spezifikation
 freigegeben. [Gesamtissue #244](https://github.com/venomenon328/picross/issues/244)
@@ -98,6 +100,21 @@ HZ-D02/D03 ergänzt die gemessenen Tidy-Hand-Textmaße und die sichtbaren Hülle
 neuen äußeren Kartenkontur einschließlich Überständen und Kantenglättung.
 Diese passen in dieselben sicheren Karten-/Trefferbudgets; Sortierung oder
 Neuaufbau verändert bei gleicher ID und Größe nicht die gezeichnete Grundform.
+
+[HZ-D07](HAND_DRAWN_UI.md) präzisiert die optische Textausrichtung: stabile
+Grundlinien pro Rolle/Größenstufe, keine wortabhängigen Höhenwechsel zwischen
+„Neu“, „Begonnen“ und „Gelöst“. Blattkennung, Statuswort und Statussymbol werden
+als gemeinsame Fußzeile betrachtet. Die Kategorie behält ihre feste Position im
+reservierten, bis zu zweizeiligen Bereich; ein- und zweizeilige Namen werden
+nicht jeweils neu darin zentriert.
+
+Korrigierte kleine Größe 14 wird mit 15 bei UI100 unter gleichen Bedingungen
+verglichen; 15 ist der bevorzugte Vergleichswert, noch kein festes Endmaß.
+Die gemeinsame Größenentscheidung umfasst Kategorie, Größe, Schwierigkeit und
+Status. Wird vergrößert, erhält der Kategoriename dieselbe kleine Schriftgröße
+wie der Status. „Blatt NN“ ist am geprüften HZ-C-Ausgangsstand bereits 15 und
+wird nicht automatisch erneut vergrößert. Textmaße und gemeinsame Kartenmaße
+werden zusammen angepasst; die oben genannten Volltext-/Bildraumgrenzen bleiben.
 
 ## KE-D02 · Papieretikett und Moduspiktogramm
 
@@ -305,8 +322,9 @@ verlangen. Bestehende Inhalts-/Exportverträge werden nicht neu bewertet.
 Standard ist je Paket ein Implementierungs-PR. Die Spezifikationslieferung beginnt
 keines dieser Pakete. KU-A/B sind inzwischen über PR #254/#255 integriert;
 Paketakzeptanz, technische Nachweise, Reviews und spätere Entscheidungen zu den
-persönlichen Abnahmen stehen im Gesamtissue. Die neue HZ-Lieferung besitzt eigene
-Gates gemäß [HAND_DRAWN_UI](HAND_DRAWN_UI.md).
+persönlichen Abnahmen stehen im Gesamtissue. HZ-A/B sind in #284 abgeschlossen;
+das noch nicht implementierte Folgepaket HZ-C / #294 besitzt eigene Gates gemäß
+[HAND_DRAWN_UI](HAND_DRAWN_UI.md).
 Historische [KE-Prüfnachweise](KE_VERIFICATION.md) bleiben an ihre damalige Lieferung
 gebunden und sind keine Abnahme der neuen KU-Darstellung.
 
