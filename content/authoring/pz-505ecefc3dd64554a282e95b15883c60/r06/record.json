@@ -1,0 +1,49 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-505ecefc3dd64554a282e95b15883c60",
+  "revision": "r06",
+  "motif_name": "Essstäbchen",
+  "category_id": "haushalt-alltag",
+  "state": "motif_review",
+  "repo_commit": "1e0f346b5bfbd10de23114c3d21b9eddad55f644",
+  "updated_at_utc": "2026-10-21T12:07:48.004316Z",
+  "package": {
+    "file": "content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r06/package.zip",
+    "bytes": 1484609,
+    "sha256": "192e946d1cefbda091c6de3109d1b7f2f27e2a66a61fe48a0704af9d4e38b56b"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r06/handoff.json",
+    "sha256": "3f44935b88c82191107b933a61a51629d17f451c54b7e27c0cf4d37d33c2192f"
+  },
+  "inventory_sha256": "13e4d4e411e9a3b42ada461d857a647e6b7c70122a94cf9f3ddc88cb6a0a9e91",
+  "final_editorial_approval": null,
+  "width": 30,
+  "height": 30,
+  "maximum_dimensions": {
+    "width": 30,
+    "height": 30
+  },
+  "dimensions_approximate": true,
+  "mode": "mono",
+  "foreground_colors": 1,
+  "actual_foreground_colors": null,
+  "difficulty": null,
+  "reveal": {
+    "file": "reveals/C-r01.png",
+    "revision": "C-r01",
+    "sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/reveal-C-r01.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r03.png",
+    "revision": "MA-r03",
+    "sha256": "92580a2ba51531ede2c5ff9a217d9534484b7e48bc916ad67efd18483cdf9fa8",
+    "derived_from_reveal_sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": null
+  },
+  "proposed_parameters": "parameters.json",
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren: konkrete motifs/MA-r03.png · MA-r03 samt parameters.json (maximal 30 je Achse; 30x30 empfohlen, 25x25 Alternative; mono genau 1, area, contain, Crop [23,42,1240,1221], Schwellen 160/224) menschlich freigeben. Grenzen im Bildvergleich/Report beachten; erst danach neue Rasterproduktion.",
+  "integration": null
+}
