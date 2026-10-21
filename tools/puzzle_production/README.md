@@ -329,6 +329,16 @@ Notwendigkeitsbeleg. Difficulty 0.2 meldet R4/L5 nur bei geprüfter Linienbaseli
 `stalled` und vollständigem Paarproof derselben Logik. Umfang, Zeit und
 redaktionelle Freigabe bleiben eigene Angaben; kein vollständiger R0–R3-Analysator.
 
+ZA-1 ergänzt mit `picross-manual-authorization-v6` die ausdrücklich angenommene
+monochrome Pixelvorlage aus einem versiegelten manuellen Neuentwurf. Die separate
+Eigentümererklärung bindet Originalpaket, Motivannahme, Parameter und Endabnahme;
+eine eng geprüfte Präfixbindung erhält historische Revealfreigabe und Provenienz.
+Der vollständige RP-3-Pixelimport wird frisch unabhängig zertifiziert, ohne alte
+Gates oder Dateien umzuschreiben. V1–v5, Randregel und Inhaltsgates bleiben erhalten.
+Schema und Grenzen stehen in [ZA-1](../../docs/ZA1_ADAPTER.md); CLI weiterhin
+`--manual-authorization`, Export v3/v4. Synthetische Regressionen prüfen diesen
+Weg; reale Rätsel bleiben reine Produktionsinputs.
+
 ## Instrumentierte Einzelanalyse (SD-A) und feste Bewertung (SD-B)
 
 Der freigegebene [SD-Vertrag](../../docs/PUZZLE_DIFFICULTY.md), Ursprung

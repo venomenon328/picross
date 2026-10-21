@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 22 · 19.10.2026**
+**Version 0.5.0 · Dokumentrevision 23 · 22.10.2026**
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
@@ -621,7 +621,7 @@ Diese Exportversion ist von den Versionen menschlicher Änderungsautorisierungen
 zu unterscheiden; sie erteilt selbst keine Ausnahme oder Freigabe.
 
 Manuelle Ableitungen benötigen den passenden externen ZA-1-Autorisierungsvertrag
-(v1–v5) und die tatsächliche Erklärung für die konkrete Auswahl. Originalhandoff,
+(v1–v6) und die tatsächliche Erklärung für die konkrete Auswahl. Originalhandoff,
 Inventar und ursprüngliche Freigaben unverändert lassen; feste Edits, Schutzmasken,
 Herkunft und Endproof frisch prüfen. Historische `blocked`-/`raster_review`-Eingänge,
 späte Motivannahme oder eine Randregel-Ausnahme sind ausschließlich unter den
@@ -634,6 +634,14 @@ autorisierte feste Farbkorrektur aus einem unabhängig bestätigten ursprünglic
 Originalbasis wird nicht als vollständig gelöst umetikettiert; v1–v4 behalten
 ihre bisherigen Anforderungen. Ein neuer Metadatenstand kann die tatsächliche
 Endabnahme aufnehmen, ohne versiegelte frühere Originale zu verändern.
+
+ZA-1-v6 ergänzt die ausdrücklich nachträglich angenommene monochrome
+Pixelvorlage eines manuellen Neuentwurfs. Der separate Eigentümerauftrag bindet
+Originalpaket, konkrete Motivdatei, vorgeschlagene Parameter und Endabnahme.
+Historische Revealbelege werden nur über ihren geprüften Ablagepräfix aufgelöst;
+ihre Originalbytes bleiben erhalten. Vollständiger RP-3-Pixelimport und
+unabhängiger Endproof sind Pflicht, alle anderen Inhaltsgates und die Randregel
+bleiben bestehen. Keine Umdeutung zu einem Import aus einer älteren Motivdatei.
 
 Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und dann:
 
