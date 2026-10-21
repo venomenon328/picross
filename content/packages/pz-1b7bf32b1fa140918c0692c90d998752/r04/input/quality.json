@@ -1,0 +1,61 @@
+{
+  "changed_positions": [
+    {
+      "after": "red",
+      "before": "olive",
+      "column": 11,
+      "row": 8
+    }
+  ],
+  "color_counts": {
+    "empty": 689,
+    "forest": 51,
+    "ochre": 118,
+    "olive": 380,
+    "red": 2
+  },
+  "criteria": {
+    "details_negative_spaces": "erfüllt: zweites Auge an Position der Motivvorlage wiederhergestellt, vorhandenes Auge und sämtliche Leerzellen erhalten",
+    "palette_legibility": "erfüllt: vier unveränderte Farben, Rot nun zweimal als Augenzelle",
+    "recognition": "erfüllt: Chupacabra mit zwei getrennten roten Augenmarken",
+    "series_style": "erfüllt: unveränderte Hauptformen und originales A-r01/MA-r01",
+    "silhouette_proportions": "erfüllt: unverändert zu r03"
+  },
+  "evidence": [
+    "eyes-comparison.png",
+    "final-grid.png",
+    "final-nearest.png",
+    "final-comparison.png",
+    "cell-diff.png"
+  ],
+  "eyes": [
+    {
+      "color": "red",
+      "column": 8,
+      "row": 8
+    },
+    {
+      "color": "red",
+      "column": 11,
+      "row": 8
+    }
+  ],
+  "foreground_colors_requested": 4,
+  "foreground_colors_used": 4,
+  "frame": {
+    "bottom": false,
+    "left": true,
+    "right": true,
+    "top": true
+  },
+  "frame_valid": true,
+  "height": 40,
+  "minor_details": "Feine Fangzähne, Finger-/Krallenglieder weiterhin abstrahiert; keine weitere Änderung beauftragt.",
+  "playtest": "not_performed; optional",
+  "preserved_cells": 1239,
+  "puzzle_id": "pz-1b7bf32b1fa140918c0692c90d998752",
+  "revision": "r04",
+  "solve_minutes": null,
+  "warnings": "Drei isolierte Konturspitzen und letzte Leerzeile bleiben wie r03 motivbezogen erhalten; rote Augenzellen sind funktionale Details.",
+  "width": 31
+}
