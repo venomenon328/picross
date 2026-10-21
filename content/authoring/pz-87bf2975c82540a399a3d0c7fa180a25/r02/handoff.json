@@ -1,0 +1,87 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 2 bis Motivvorlage, Konfiguration und Codex-Übergabe; Repositoryablage samt Commit/Push und bedingtem Ablagemerge nach Pflichtprüfungen. Keine Motiv-/Endfreigabe und keine Rasterproduktion oder Spielregistrierung.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "mythen-fantasie",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": [
+      "approvals/reveal-A-r01.json",
+      "approvals/user-statement.txt"
+    ]
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "c8ad25917d4c1bfc95b2d383058c40130adec5baa1f8a549fae1bd12cfc69d67"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "3ce9799443da21c46dc63754670f3fb89ec3822ca267c26c27d1e4cb4ce3387e",
+    "file": "motifs/MA-r01.png",
+    "provenance": "motifs/MA-r01.provenance.json",
+    "sha256": "48dcb9d42f579288f057f29e94c8f278a05d4f0dd312b86507103256294e3f17"
+  },
+  "next_action": "3 · Motiv freigeben & produzieren: tatsächliche Freigabe von motifs/MA-r01.png samt configuration.json und Invarianten abwarten; erst danach Standardauftrag 3.",
+  "open_items": [
+    "Motivdatei und Parameterkorridor noch nicht freigegeben.",
+    "Konkrete Referenznutzungsgrundlage vor Katalogfreigabe klären."
+  ],
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": "configuration.json",
+  "puzzle_id": "pz-87bf2975c82540a399a3d0c7fa180a25",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "4ef5c39e5a27b1e3d649c545f1e7025a0fdbe262",
+  "report": "report.md",
+  "requested_parameters": {
+    "foreground_colors": 1,
+    "foreground_count_exact": true,
+    "height": null,
+    "mode": "mono",
+    "width": null
+  },
+  "reveal": {
+    "approval": "approvals/reveal-A-r01.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "reveals/A-r01.provenance.json",
+    "sha256": "3ce9799443da21c46dc63754670f3fb89ec3822ca267c26c27d1e4cb4ce3387e"
+  },
+  "revision": "r02",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "motif_review"
+}
