@@ -1,0 +1,28 @@
+{
+  "authorization_request": "edits/owner-request.json",
+  "changes": [
+    {
+      "after": "red",
+      "before": "olive",
+      "column": 11,
+      "row": 8
+    }
+  ],
+  "final_editorial_approval": null,
+  "historical_r03_candidates": "Die vier Erstimporte, ihre Prüfungen/Ablehnungen und ursprüngliche SD-Analyse bleiben im unveränderten r03 am genannten Commit. Im aktuellen Paket sind nur der erforderliche vollständig gebundene Elternimport und das neue Kindbundle enthalten.",
+  "pair_profile": "nicht erforderlich: vollständige Linienlösung",
+  "puzzle_id": "pz-1b7bf32b1fa140918c0692c90d998752",
+  "raster_variants": 1,
+  "reason": "Zweites Auge durch genau eine feste Farbkorrektur; ansonsten bleibt das vom Nutzer als gut bezeichnete Raster vollständig erhalten.",
+  "repair_search_rounds": 0,
+  "revision": "r04",
+  "search": false,
+  "selected": "imports/second-eye/area-candidate.json",
+  "source_revision": {
+    "commit": "6ae7725ad481a2556fcfeb1e0e974e5c3430ef51",
+    "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r03/package.zip",
+    "inventory_sha256": "e474b9d3518732fd62ed2d5258e321d1f323a508be5fa1bf4bcc00fb1b59dafd",
+    "revision": "r03",
+    "zip_sha256": "32cb98292cd77ef989a30f554158ea584f788afeb9aa365da3194fda14814a75"
+  }
+}

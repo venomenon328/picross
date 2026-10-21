@@ -1,7 +1,5 @@
 {
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
+  "blockers": [],
   "candidate": {
     "bundle": "imports/second-eye",
     "certification": null,
@@ -20,7 +18,10 @@
     "level": "L3",
     "method": "picross-difficulty-0.3"
   },
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/approval.json",
+    "sha256": "eaacc3fa327cd5cdf3347c306dcb0a521b92a413165bca2f83ab217eaf35fe46"
+  },
   "foreground_colors": 4,
   "format": "picross-authoring-record-v1",
   "handoff": {
@@ -29,11 +30,41 @@
   },
   "height": 40,
   "inspection": {
-    "note": "Keine vollständige Adapter-inspect-Freigabe vor echter Endabnahme behauptet.",
-    "status": "pending_final_editorial_and_v4_authorization",
-    "technical_checks": "origin-checks.json"
+    "status": "pass",
+    "file": "content/packages/pz-1b7bf32b1fa140918c0692c90d998752/r04/inspection.json",
+    "sha256": "a6636526c9e3eb07877a3cc904bf880ac63fde6bc3abae62102caacca250c1f2"
   },
-  "integration": null,
+  "integration": {
+    "status": "registered_on_workbranch",
+    "source_commit": "ac59c0da10738bff71ac0a31c444788c6b8693eb",
+    "runtime": {
+      "id": "pz-1b7bf32b1fa140918c0692c90d998752",
+      "revision": 1,
+      "save_slot": "chupacabra_001",
+      "category_id": "mythen-fantasie",
+      "definition_sha256": "7c697f5015681b6e31c9873a93f053b19bdad9a9704c55a7ff6602007a817451",
+      "reveal_sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c",
+      "notice_sha256": "31c15b84644934e1d5e0b4c9fe20930f6787af614917303b58c72d996927dae5",
+      "difficulty": {
+        "assessment_type": "instrumented",
+        "confidence": "medium",
+        "level": "L3",
+        "method": "picross-difficulty-0.3",
+        "plausible_range": [
+          "L3",
+          "L3"
+        ],
+        "r4_required": false
+      },
+      "added_at": "2026-10-21T18:02:28Z"
+    },
+    "checks": {
+      "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/integration-checks.json",
+      "sha256": "6229dd34457197fdcc3b2e7490915b9b881b9858ed50c3155be1f6c9eed052b1"
+    },
+    "export_manifest_sha256": "7bf3c499574eca79192826c40c6ac40f75bd85297f26282afd8b8ac6204f8401",
+    "difficulty_input_sha256": "aeb8408b0d730b3485c3866e5ba92b3f0cdb86b4c14fc966bacb06dc92980ca0"
+  },
   "inventory_sha256": "e0c6a28d0a353267e63750d709422a00f94969d2f1a80688d604dce280653f0f",
   "mode": "color",
   "motif": {
@@ -45,7 +76,7 @@
     "sha256": "7235993e90f2c04c99e4c24eb89103f437cf9921eecfc2daad44afcc96e2052c"
   },
   "motif_name": "Chupacabra",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Integrationsmerge, danach Produktionsbereinigung nach Abschnitt 9",
   "package": {
     "bytes": 5266601,
     "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/package.zip",
@@ -106,11 +137,11 @@
     "mode": "color",
     "width": 31
   },
-  "state": "raster_review",
+  "state": "registered",
   "technical_production_check": {
     "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/origin-checks.json",
     "sha256": "5b17819e7eeccead82756a22d7de7679284d14a02d9410b3918a680e31359493"
   },
-  "updated_at_utc": "2026-10-21T17:52:11.125693+00:00",
+  "updated_at_utc": "2026-10-21T18:07:43.628113+00:00",
   "width": 31
 }
