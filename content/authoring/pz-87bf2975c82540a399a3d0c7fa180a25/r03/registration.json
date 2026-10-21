@@ -1,0 +1,43 @@
+{
+  "category": {
+    "id": "mythen-fantasie",
+    "name": "Mythen & Fantasie",
+    "order": 20
+  },
+  "changes": [
+    {
+      "operation": "add",
+      "path": "content/packages/pz-87bf2975c82540a399a3d0c7fa180a25/r03"
+    },
+    {
+      "operation": "add",
+      "path": "content/added/pz-87bf2975c82540a399a3d0c7fa180a25.json"
+    },
+    {
+      "operation": "add",
+      "path": "content/difficulty/pz-87bf2975c82540a399a3d0c7fa180a25/rating.json"
+    },
+    {
+      "operation": "replace",
+      "path": "content/registry.json"
+    },
+    {
+      "operation": "add",
+      "path": "game/art/content/om_001.txt"
+    },
+    {
+      "operation": "add",
+      "path": "game/data/content/om_001.json"
+    },
+    {
+      "operation": "replace",
+      "path": "game/data/registry.json"
+    }
+  ],
+  "id": "pz-87bf2975c82540a399a3d0c7fa180a25",
+  "registered": true,
+  "status": "registered",
+  "user_saves_modified": false,
+  "existing_entries_unchanged": 29,
+  "runtime_reveal_addition": "game/art/content/om_001.png"
+}

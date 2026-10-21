@@ -1,0 +1,24 @@
+{
+  "motif_MA_r01": {
+    "input": "reveals/A-r01.png",
+    "input_sha256": "3ce9799443da21c46dc63754670f3fb89ec3822ca267c26c27d1e4cb4ce3387e",
+    "model": "not_exposed",
+    "output_dimensions_actual": [
+      1254,
+      1254
+    ],
+    "output_dimensions_requested": "not_exposed",
+    "prompt": "Use case: precise-object-edit. Asset: simplified monochrome motif source illustration for a future nonogram. Edit target is the approved full-color Om reveal A-r01, attached from its saved bytes. Derive a clean monochrome abstraction from THIS EXACT IMAGE, preserving its identity, upright orientation, proportions, placement and the defining outer/inner contours: two left lobes and their central junction, large right loop and its open inner space, the separate upper crescent, and the separate diamond above it. Keep the same relative sizes and the gaps between the main body, crescent and diamond. Do not substitute a different font or a different Om glyph.\nRemove every orange/gold surface detail, brush texture, highlight and shading. Make each existing broad glyph stroke a completely filled, uniform near-black ink shape (#202020), including the crescent and diamond. Smooth, confident continuous curves and clean substantial shapes suitable for later reduction around 30 by 30 cells. No internal contour stripes or fine decorative details; no double outlines. No new objects, borders, labels, text, grid, pixels or tile pattern. This is still a continuous illustration, NOT a cell matrix or puzzle.\nGenuinely transparent background, transparent interior spaces and gaps; opaque ink interiors with clean antialiased boundaries. Complete glyph comfortably within the canvas, modest even transparent margin, no clipped tips. No shape redesign or change of pose. Output one standalone PNG.",
+    "seed": "not_exposed",
+    "tool": "image_gen.imagegen",
+    "transparent_background": true
+  },
+  "reveal_A": {
+    "input": "source/reference.png",
+    "model": "not_exposed",
+    "prompt": "Use case: stylized-concept. Asset type: full-color finished reveal illustration for a nonogram collection. Reference image is /workspace/scratch/28a9d81d8cb3/upload/Om_symbol.png. Create ONE standalone Om symbol based faithfully on that reference, upright front-facing, preserving the exact recognizable Devanagari Om calligraphic structure, all major lobes, the large curved bowl on the right, the sweeping lower left curve, upper left lobe, connection at center, the separate crescent above and the diamond-shaped dot above it. Preserve their relative position, shape, proportions and clear negative spaces. Do not mirror, rotate, reletter, add strokes, or add extra symbols. Refine the red flat shape into a warm quiet hand-painted 2D illustration with confidently drawn clean dark contours, substantial rich colored shapes, subtle hand-painted internal surface details and restrained shading. Detailed finished artwork, not flat vector silhouette or pixel art, not photorealistic and not 3D. Transparent background including all empty holes and gaps; no paper rectangle, scenery, props, framing, text, labels or watermark. Center the entire symbol large with modest even margin and nothing cut off. The shape must remain clearly legible at thumbnail size. Warm saffron-orange and terracotta painted pigment, nuanced golden lit edges, a few quiet brush marks along the broad strokes, dark reddish brown contour. Restrained matte finish.",
+    "seed": "not_exposed",
+    "tool": "image_gen.imagegen",
+    "transparent_background": true
+  }
+}
