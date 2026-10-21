@@ -1,0 +1,116 @@
+{
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "candidate": {
+    "bundle": "imports/second-eye",
+    "certification": null,
+    "logic_hash": "29196b3c9364ea89a2ecef8ecfa48fda4e79e11cefc6c7a687673898b9d551ee",
+    "matrix_hash": "7dbdbf74ae0ad5d8ff887d268eac1282a9ca37f2886f27ba82fdf5bcff4d1a1a",
+    "proof": "imports/second-eye/area-proof.json",
+    "source_type": "manual",
+    "variant": "area",
+    "verification": "edits/second-eye-verification.json"
+  },
+  "category_id": "mythen-fantasie",
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "evidence": "analysis/checked.json",
+    "level": "L3",
+    "method": "picross-difficulty-0.3"
+  },
+  "final_editorial_approval": null,
+  "foreground_colors": 4,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/handoff.json",
+    "sha256": "4dba67492ccdcc3f7ff4827d2440f267ea1c6818b469d6b59243057fb11bf466"
+  },
+  "height": 40,
+  "inspection": {
+    "note": "Keine vollständige Adapter-inspect-Freigabe vor echter Endabnahme behauptet.",
+    "status": "pending_final_editorial_and_v4_authorization",
+    "technical_checks": "origin-checks.json"
+  },
+  "integration": null,
+  "inventory_sha256": "e0c6a28d0a353267e63750d709422a00f94969d2f1a80688d604dce280653f0f",
+  "mode": "color",
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c",
+    "file": "motifs/MA-r01.png",
+    "provenance": "provenance/motif.json",
+    "revision": "MA-r01",
+    "sha256": "7235993e90f2c04c99e4c24eb89103f437cf9921eecfc2daad44afcc96e2052c"
+  },
+  "motif_name": "Chupacabra",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "package": {
+    "bytes": 5266601,
+    "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/package.zip",
+    "sha256": "c60e1bc430186689ce76cbde16d30e8cd6ddee721c0f70e8675dae5b6bed7144"
+  },
+  "parameter_corridor": {
+    "file": "parameters.json",
+    "revision": "r02",
+    "sha256": "152fb964ea76f57b1f5b3cca523a7b36ef1f76b154e667dfeee0e7469e5fe293"
+  },
+  "parameters_status": "approved",
+  "previous_revision": {
+    "record": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r03/record.json",
+    "repo_commit": "6ae7725ad481a2556fcfeb1e0e974e5c3430ef51",
+    "revision": "r03"
+  },
+  "puzzle_id": "pz-1b7bf32b1fa140918c0692c90d998752",
+  "repo_commit": "6ae7725ad481a2556fcfeb1e0e974e5c3430ef51",
+  "required_integration_authorization": "picross-manual-authorization-v4",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "provenance/reveal.json",
+    "revision": "A-r01",
+    "sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c"
+  },
+  "review_files": [
+    {
+      "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/report.md",
+      "sha256": "2a94e4c79134322919c35585aba9448e57f2b449f2b6d57a79310e94ff74b8a6"
+    },
+    {
+      "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/eyes-comparison.png",
+      "sha256": "acb7cd17c9b47c5f8610d2fa2309dcee5f2ae23464521d364c2591976175d1fc"
+    },
+    {
+      "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/final-comparison.png",
+      "sha256": "36657597da902e2364931669bc6b66e01dc2710f227b66dec32bafc2a22b192d"
+    },
+    {
+      "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/final-grid.png",
+      "sha256": "fd5806991a45497907c08dc7d413ca5b227600d992efb4bde97dbf2c653ec1a5"
+    }
+  ],
+  "revision": "r04",
+  "selected_parameters": {
+    "actual_crop": [
+      17,
+      15,
+      1108,
+      1419
+    ],
+    "alpha_below": 96,
+    "fit": "contain",
+    "foreground_colors": 4,
+    "height": 40,
+    "method": "area",
+    "mode": "color",
+    "width": 31
+  },
+  "state": "raster_review",
+  "technical_production_check": {
+    "file": "content/authoring/pz-1b7bf32b1fa140918c0692c90d998752/r04/origin-checks.json",
+    "sha256": "5b17819e7eeccead82756a22d7de7679284d14a02d9410b3918a680e31359493"
+  },
+  "updated_at_utc": "2026-10-21T17:52:11.125693+00:00",
+  "width": 31
+}
