@@ -1,18 +1,30 @@
 # Z2: aktive Auswahl und native Integration
 
-## Freigegebener nächster Stilstand · HZ / #284
+## Integrierter HZ-Stil und freigegebene Typografie-Nachbesserung
 
-[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 20.10.2026:
-HZ-A ist integriert; HZ-B ist im Draft implementiert, technische Ergebnisse und
-offene getrennte Abnahmen stehen in [PR #289](https://github.com/venomenon328/picross/pull/289)
-und der [HZ-B-Lieferung](HZ_B_VERIFICATION.md).
+[Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 21.10.2026:
+HZ-A und HZ-B sind über [PR #288](https://github.com/venomenon328/picross/pull/288)
+und [PR #289](https://github.com/venomenon328/picross/pull/289) integriert und im
+geschlossenen [Issue #284](https://github.com/venomenon328/picross/issues/284)
+abgenommen. Die [HZ-B-Lieferung](HZ_B_VERIFICATION.md) bleibt an ihren damaligen
+Prüfstand gebunden.
 HZ-A verwendet gemäß HZ-A-FONT02 das
 unveränderte Tidy Hand für Standardtexte mit lokalen Fallbacks und erhält
 sämtliche bestehenden Überschriftrollen.
-HZ-B revidiert kleine Konturen, vollständige Dropdowns und die aktive Familie
-der 13 Icons samt weiterer Menü-/Seiten-/Checkboxzeichen. Die frühere Plex-Standardtextrolle
+HZ-B hat kleine Konturen, vollständige Dropdowns und die aktive Familie
+der 13 Icons samt weiterer Menü-/Seiten-/Checkboxzeichen revidiert.
+Die frühere Plex-Standardtextrolle
 und das unveränderte aktive Iconinventar der unten beschriebenen
-Lieferungen sind für diesen Folgeschritt ausdrücklich abgelöst.
+Lieferungen sind durch HZ-A/B ausdrücklich abgelöst.
+
+[HZ-C / #294](https://github.com/venomenon328/picross/issues/294) ist seit
+21.10.2026 als Spezifikation freigegeben, noch nicht implementiert.
+[HZ-D07](HAND_DRAWN_UI.md) bindet die optische Textausrichtung mit stabilen
+Grundlinien und den Vergleich der korrigierten kleinen Größen 14/15; 15 ist
+der bevorzugte erste Vergleichswert, kein festes Endmaß. Eine Größenanhebung
+bezieht die Kategorienamen konsistent ein. HZ-C ändert weder Originalfontbytes
+und lokale Fallbackquellen noch aktive Icons, deren Provisionierung oder
+historische Quellenbelege; es führt keine globale neue Schriftrolle ein.
 
 Die neue Schriftquelle ist separat in
 [Tidy Hand NOTICE](../game/art/drawing/tidy-hand/NOTICE.txt) gebunden.

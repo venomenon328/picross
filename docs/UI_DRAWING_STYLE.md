@@ -1,12 +1,18 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
+**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C spezifiziert, noch nicht implementiert:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) ist der Detailvertrag für
 Tidy Hand als normale UI-Schrift bei erhaltenen Überschriften, organischere Karten-/Button-/Dropdownrahmen,
 vollständig gezeichnete offene Menüs und die gesamte Piktogrammfamilie.
 Er ersetzt gezielt Plex-Standardtexte gemäß HZ-A-FONT02
 und verstärkt kleine UI-Konturen. Raster, Zellen, Hinweise und die drei großen
 SL-Rasterrahmen behalten ihre Verträge; historische Auswahl-/Lieferbelege bleiben.
+HZ-A/B sind über [PR #288](https://github.com/venomenon328/picross/pull/288)
+und [PR #289](https://github.com/venomenon328/picross/pull/289) integriert und im
+geschlossenen [Issue #284](https://github.com/venomenon328/picross/issues/284)
+abgenommen. [HZ-C / #294](https://github.com/venomenon328/picross/issues/294)
+ergänzt die am 21.10.2026 freigegebene optische Ausrichtung und den begrenzten
+Größenvergleich gemäß HZ-D07; diese Spezifikation ist noch nicht implementiert.
 
 **KU / #244, integrierte Ausgangsbasis für HZ:** KU-A und KU-B sind über
 PR #254/#255 integriert; [KU-A](KU_VERIFICATION.md) und
@@ -59,8 +65,9 @@ proportionaler Bildraum und feste Fußzeile ersetzen die inhaltsabhängigen KB-H
 10 × UI Innenrand und dem gemeinsamen BookButton/reset.svg. Treffer bleiben 44/55 px.
 Speicherdiagnose und Backupaktionen nutzen bei Bedarf den festen Bildraum.
 Der Kacheltooltip entfällt, auch bei gekürzten Labels; Resettooltip und übrige
-Tooltips bleiben. KK änderte keine Font-/Assetbytes oder Zell-/Hinweisgestaltung;
-HZ-B revidiert anschließend gezielt die aktive Iconfamilie, nicht die Originalfonts.
+Tooltips bleiben. KK änderte keine Font-/Assetbytes oder Zell-/Hinweisgestaltung.
+Die anschließende HZ-B-Lieferung hat gezielt die aktive Iconfamilie revidiert,
+nicht die Originalfonts.
 [Prüfzuordnung](KK_VERIFICATION.md).
 
 **Aktive Hinweisgeometrie HC / #92:** [CLUE_TYPOGRAPHY](CLUE_TYPOGRAPHY.md)
@@ -162,6 +169,14 @@ die UI-Grundlage. HZ-D01/D02 löst diese begrenzte Rollenverteilung für normale
 durch Tidy Hand ab; die C1-Farbkontur bleibt. VS2-E1 erlaubte die begrenzte neue
 Flächenverteilung und Scribble-Fassung. HZ wählt keinen neuen Hintergrund, Themen- oder Albumaufbau; HZ-A-FONT02
 führt ausschließlich Tidy Hand für Standardtext ein und erhält Überschriften.
+
+[HZ-D07](HAND_DRAWN_UI.md) ergänzt als freigegebener Sollstand optisch ausgewogene
+kleine Texte mit stabilen Grundlinien pro Rolle und Größenstufe. Sichtbare
+Glyphengrenzen einschließlich Fallback bestimmen weiterhin sichere Textbudgets;
+sie begründen kein wortabhängiges vertikales Nachzentrieren. Der Vergleich
+korrigierter Größen 14/15 und die konsistente Einbeziehung der Kategorienamen
+betreffen die dort benannten Rollen. Keine globale Schrift-, Kontur- oder
+Iconänderung und keine Änderung der Hinweis-/Zellgeometrie folgt daraus.
 
 Die Stiftfüllung ist gewählt. Der enge E2-Vergleich enthielt Bakso Daging Regular
 und Chalkboard Regular; E3 wählt **Chalkboard Regular**. Bakso Daging und Plex bleiben

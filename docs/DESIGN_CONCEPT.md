@@ -1,12 +1,18 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
+**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C spezifiziert, noch nicht implementiert:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02
 Tidy Hand für Standardtexte und erhält die bisherigen Überschriften. Kleine
-Karten-/Button-/Dropdownrahmen werden organischer; geöffnete Menüs, Markierungen
-und sämtliche Piktogramme erhalten dieselbe Handschrift. Die HZ-Schriftrollen
+Karten-/Button-/Dropdownrahmen, geöffnete Menüs, Markierungen
+und sämtliche Piktogramme tragen dieselbe Handschrift. Die HZ-Schriftrollen
 ersetzen gezielt Plex im Standardtext; Fraunces-/Bakso-Überschriften bleiben. Hinweiszahlen und
 Rastergeometrie behalten ihre eigenen Verträge; historische Belege bleiben.
+HZ-A/B sind über [PR #288](https://github.com/venomenon328/picross/pull/288)
+und [PR #289](https://github.com/venomenon328/picross/pull/289) integriert und im
+geschlossenen [Issue #284](https://github.com/venomenon328/picross/issues/284)
+abgenommen. [HZ-C / #294](https://github.com/venomenon328/picross/issues/294)
+führt die am 21.10.2026 freigegebene Nachbesserung kleiner Texte gemäß HZ-D07;
+deren Umsetzung und eigene Abnahmen stehen noch aus.
 
 **AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) erweitern §4.3 um Motive
@@ -192,6 +198,16 @@ gemäß Eigentümerentscheidung HZ-A-FONT02 normale Plex-Texte durch Tidy Hand
 mit kontrollierten lokalen Fallbacks und gemessenen Textmaßen. Bestehende
 Überschriften und ihre Fraunces-/Bakso-Rollen bleiben unverändert. A-Arbeitsasset, Buchkomposition, N1 und C1 bleiben Grundlage.
 Die historische GD-/ZS-Auswahl und ihre Abnahmen behalten ihre Standbindung.
+
+Der neue Sollstand [HZ-D07](HAND_DRAWN_UI.md) führt optische Ausrichtung,
+Größenvergleich und passende Layoutmaße zusammen. Korrigierte Darstellungen mit
+Größe 14 und 15 bei UI100 werden direkt verglichen; 15 ist der bevorzugte erste
+Vergleichswert, kein bereits gemessenes oder abgenommenes Endmaß. Bei einer
+Vergrößerung erhalten die Kategorienamen dieselbe kleine Textgröße.
+Stabile Grundlinien, die gemeinsame
+Statuszeile mit Symbol und Blattkennung sowie vollständige Text- und Bildbereiche
+bestimmen die Gestaltung; ein Wortwechsel darf keinen vertikalen Sprung erzeugen.
+Der begrenzte Rollenumfang und die Prüfung bei UI100/125 stehen in HZ-D07.
 
 ### BP-1R bis BP-3: Entwurfsverlauf und integrierte Grundlagen
 

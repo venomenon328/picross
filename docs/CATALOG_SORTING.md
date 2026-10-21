@@ -1,6 +1,6 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
-Stand: 20.10.2026 · Spezifikation 1.2 · KU-B integriert; HZ-Menügestaltung spezifiziert
+Stand: 21.10.2026 · Spezifikation 1.3 · KU-B und HZ-A/B integriert; HZ-C spezifiziert
 
 Der Eigentümer hat die Katalogüberarbeitung als Spezifikation freigegeben.
 [KU / #244](https://github.com/venomenon328/picross/issues/244) führt
@@ -8,9 +8,11 @@ KU-A für die [Kartengestaltung](CATALOG_PRESENTATION.md) und KU-B für die hier
 beschriebene vollständige Sortierfunktion einschließlich Daten und Persistenz.
 KU-A und KU-B sind über ihre eigenen PRs #254/#255 integriert.
 [Prüfzuordnung](KU_B_VERIFICATION.md) und die offenen persönlichen KU-Abnahmen
-auf `main` bleiben separat im Issue gebunden. Vom freigegebenen
-[HZ-Stilstand](HAND_DRAWN_UI.md) ist HZ-A implementiert; technische Gates stehen
-im Paket-PR, HZ-B bleibt offen. Historische Mergeausnahmen werden nicht übernommen.
+auf `main` bleiben separat im Issue gebunden. Der [HZ-Stilstand](HAND_DRAWN_UI.md)
+aus HZ-A/B ist über PR #288/#289 integriert und in #284 abgenommen.
+HZ-C / [#294](https://github.com/venomenon328/picross/issues/294) ist als
+Typografie-Nachbesserung freigegeben, noch nicht implementiert. Historische
+Abnahmen oder Mergeausnahmen erfüllen seine eigenen Gates nicht.
 
 ## Geltung und Ausgangsstand
 
@@ -44,6 +46,16 @@ die nachfolgende Auswahl-/Sortier-/Persistenzsemantik bleibt unverändert.
 Kategorie, Sortierung, Einstellungen/Info und Beenden bleiben in den gemeinsamen
 Fenster-/UI-Konfigurationen erreichbar. Das Bedienpaar erscheint erst mit der
 vollständigen KU-B-Funktion, ohne funktionslose Voraboption in KU-A.
+
+[HZ-D07](HAND_DRAWN_UI.md) ergänzt optische vertikale Ausrichtung mit stabiler
+Grundlinie je Rolle/Größenstufe für alle drei Dropdownarten, geschlossen wie
+geöffnet. Wechselnde Werte werden nicht wortabhängig nachzentriert. Korrigierte
+14/15 werden gemeinsam mit den kleinen Katalogtexten verglichen; 15 bei UI100
+ist bevorzugter Vergleichswert, kein bereits festgelegtes Endmaß. Menüzeilen,
+Symbole, Markierungen und Innenränder erhalten dazu passende sichere Budgets.
+Lange gültige Kategorien und vorhandene Auswahl-, Fokus-, Tastatur-, Scroll-
+und Schließwege bleiben erhalten. Die Größenentscheidung ändert weder Optionen
+noch Sortierreihenfolge, Präferenzen oder Datenformate.
 
 | Auswahl | Primärer Sortierwert | Anfangsrichtung bei neu gewähltem Kriterium |
 | --- | --- | --- |
@@ -284,8 +296,9 @@ stehen in #244/PR #255. Die aktuelle CI-Policy ersetzt ältere Firefox-CI-Pflich
 KU-A und KU-B sind inzwischen über PR #254/#255 integriert. Die persönlichen
 KU-Abnahmen wurden gemäß [Issue #244](https://github.com/venomenon328/picross/issues/244)
 auf `main` verlegt und bleiben dort offen; frühere Ausnahmen bleiben paketgebunden.
-Die neue HZ-Spezifikation ersetzt diese Nachweise nicht. Ihr aktueller Auftrag
-liefert ausschließlich Issue und Dokumente, keine weitere Produktimplementierung.
+HZ-A/B sind inzwischen separat abgeschlossen. Die HZ-C-Spezifikation ersetzt
+weder diese noch die KU-Nachweise. Ihr aktueller Auftrag liefert ausschließlich
+Issue und Dokumente, keine weitere Produktimplementierung.
 
 ## KU-B-P01 · Verbindliche Implementierungsverträge
 
