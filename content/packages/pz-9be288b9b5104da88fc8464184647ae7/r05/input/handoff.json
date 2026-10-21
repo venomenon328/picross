@@ -1,0 +1,109 @@
+{
+  "approved_parameters": [],
+  "authorization": "Fortgeltender Produktions-/Ablageauftrag samt bedingtem Ablagemerge; aktueller Nutzerauftrag nur zur Entfernung der weißen Außenzellen unten rechts. Keine Endabnahme und keine Spielregistrierung.",
+  "blockers": [
+    "motif: tatsächliche Annahme der korrigierten manuellen Datei MR-r03 offen",
+    "final_editorial: tatsächliche Endabnahme offen"
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "production",
+    "certification": {
+      "max_pair_records": 250000,
+      "max_pair_work": 20000000,
+      "profile": "paired-lines-mono"
+    },
+    "logic_hash": "0d150ed557946636c8498fa3517f3ab0de0ae9760ecef29801e6007f6fc544cc",
+    "matrix_hash": "c17281567879d0bea3e1ea45689c81d6030c3434c09131ee374eb8d640b0a846",
+    "proof": "production/area-128-proof.json",
+    "source_type": "manual",
+    "variant": "area-128",
+    "verification": "fresh-assessment.json"
+  },
+  "current_difficulty": "checked.json",
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "checked.json",
+    "frame": "geometry-checks.json",
+    "logic": "fresh-assessment.json",
+    "provenance": "geometry-checks.json",
+    "reveal_approval": "reference/approvals/reveal-approval.json",
+    "reveal_consistency": "visual-review.json",
+    "visual": "visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pending",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "efc7dd55420faa16f7ccbefb1d1b1ab384029416cd3d28dc4bb8ca792927cd5b"
+  },
+  "manual_redraw": {
+    "features": "features.json",
+    "matrix": "matrix.json",
+    "original_motif_approval_not_extended": true,
+    "recipe": "redraw-recipe.json",
+    "request": "correction.json"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "8dd70cb680ca3ee6993d1ddc15be11965e94ccbb271157938de21d987b13352c",
+    "file": "raster.png",
+    "provenance": "provenance.json",
+    "revision": "MR-r03",
+    "sha256": "6bd85acf6148f1eb7853a84f8a2a2db54baf6e2d33cc310cd98afbd25b4e1cf0"
+  },
+  "next_action": "Gespeicherte Arbeit fortsetzen",
+  "origin_verification": "origin-verification.json",
+  "parameter_corridor": "parameters.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        26,
+        40
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 40,
+      "method": "area",
+      "mode": "mono",
+      "width": 26
+    }
+  ],
+  "puzzle_id": "pz-9be288b9b5104da88fc8464184647ae7",
+  "repair": null,
+  "repo_commit": "3f2b64689a8f3ae44e2c3d4a7ae1e3e927ff2e7b",
+  "report": "report.md",
+  "reveal": {
+    "file": "reference/reveals/A-r01.png",
+    "historical_approval": "reference/approvals/reveal-approval.json",
+    "revision": "A-r01",
+    "sha256": "8dd70cb680ca3ee6993d1ddc15be11965e94ccbb271157938de21d987b13352c"
+  },
+  "revision": "r05",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854",
+    "version": "0.5.0"
+  },
+  "state": "raster_review"
+}
