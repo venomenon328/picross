@@ -1,0 +1,4 @@
+Motivvorlage MA-r01 vorlagentreu rasterisieren; rote Augen, Stacheln, Arm-/Beinräume und Schwanzöffnung bewahren. Parameter sind vorgeschlagen, noch nicht menschlich freigegeben.
+
+Working mode: faithful
+Motif and gameplay review: open

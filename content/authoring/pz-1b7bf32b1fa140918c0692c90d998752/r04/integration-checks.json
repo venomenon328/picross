@@ -1,0 +1,93 @@
+{
+  "format": "picross-content-integration-checks-v1",
+  "puzzle_id": "pz-1b7bf32b1fa140918c0692c90d998752",
+  "revision": "r04",
+  "source_commit": "ac59c0da10738bff71ac0a31c444788c6b8693eb",
+  "checked_at_utc": "2026-10-21T18:07:43.628113+00:00",
+  "export": {
+    "manifest_sha256": "7bf3c499574eca79192826c40c6ac40f75bd85297f26282afd8b8ac6204f8401",
+    "inspection_sha256": "a6636526c9e3eb07877a3cc904bf880ac63fde6bc3abae62102caacca250c1f2",
+    "technical": true,
+    "editorial_approved": true,
+    "catalog_ready": true
+  },
+  "approval_sha256": "eaacc3fa327cd5cdf3347c306dcb0a521b92a413165bca2f83ab217eaf35fe46",
+  "manual_authorization_sha256": "9861194fc52c8350ff2d1e0fdfca6ee39df543d01744b90c46abe88ed0ee7b86",
+  "package_sha256": "c60e1bc430186689ce76cbde16d30e8cd6ddee721c0f70e8675dae5b6bed7144",
+  "inventory_sha256": "e0c6a28d0a353267e63750d709422a00f94969d2f1a80688d604dce280653f0f",
+  "registration": {
+    "plan_status": "planned",
+    "status": "registered",
+    "changes": [
+      {
+        "operation": "add",
+        "path": "content/packages/pz-1b7bf32b1fa140918c0692c90d998752/r04"
+      },
+      {
+        "operation": "add",
+        "path": "content/added/pz-1b7bf32b1fa140918c0692c90d998752.json"
+      },
+      {
+        "operation": "add",
+        "path": "content/difficulty/pz-1b7bf32b1fa140918c0692c90d998752/rating.json"
+      },
+      {
+        "operation": "replace",
+        "path": "content/registry.json"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/chupacabra_001.txt"
+      },
+      {
+        "operation": "add",
+        "path": "game/data/content/chupacabra_001.json"
+      },
+      {
+        "operation": "replace",
+        "path": "game/data/registry.json"
+      }
+    ],
+    "user_saves_modified": false
+  },
+  "runtime": {
+    "id": "pz-1b7bf32b1fa140918c0692c90d998752",
+    "revision": 1,
+    "save_slot": "chupacabra_001",
+    "category_id": "mythen-fantasie",
+    "definition_sha256": "7c697f5015681b6e31c9873a93f053b19bdad9a9704c55a7ff6602007a817451",
+    "reveal_sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c",
+    "notice_sha256": "31c15b84644934e1d5e0b4c9fe20930f6787af614917303b58c72d996927dae5",
+    "difficulty": {
+      "assessment_type": "instrumented",
+      "confidence": "medium",
+      "level": "L3",
+      "method": "picross-difficulty-0.3",
+      "plausible_range": [
+        "L3",
+        "L3"
+      ],
+      "r4_required": false
+    },
+    "added_at": "2026-10-21T18:02:28Z"
+  },
+  "checks": {
+    "export_copy_and_runtime_bytes": "pass",
+    "matrix_and_two_red_eyes": "pass",
+    "original_zip_handoff_inventory": "pass",
+    "existing_entries_and_metadata_unchanged": "pass",
+    "categories_unchanged": "pass",
+    "difficulty_rebind_without_analysis": "pass"
+  },
+  "registry_hashes": {
+    "content/registry.json": {
+      "before": "a4611ccea31eab1bd89ec6b7252344e91f1ce5b595f66fdae6d6f71f9d3ee3a0",
+      "after": "09afc539d8c805250a6c825b18a4b8be9981dcf2c261c0b34b490e4449772857"
+    },
+    "game/data/registry.json": {
+      "before": "3c73948097a1930ab7f29033b98973cc7e72f69c0a941421f283542dd624a533",
+      "after": "24471abd7d6613b7778d2ca2c70eaaeb20c142e7431c28db4ca97e1ffd51e94d"
+    }
+  },
+  "native_checks": "nicht erforderlich: reine Inhaltsintegration"
+}
