@@ -187,6 +187,13 @@ Kombinationen liefern zusätzlich 18 unveränderte native `hz-*.png`-Ausschnitte
 beziehungsweise Kontextbilder; sie stehen im verpflichtenden Direktbildinventar.
 Bestehende KAT-/KE-/AT-Prüfungen und ihre Bilder bleiben erhalten.
 
+HZ-C erweitert denselben `kk`-Modus um stabile rollenbezogene Grundlinien,
+unveränderte Anfangsglyphenpixel bei Wort-/Fallbackwechsel, feste Kategorie-
+und Fußbereiche sowie den korrigierten Größenvergleich 14/15. Die 21 zusätzlichen
+Originalausschnitte `hz-c-*.png` und die Messwerte in `hzc_measurements` gehören
+zum selben verpflichtenden Direktbild-/Berichtsweg; Auswahl und bestehende
+Pflichten bleiben unverändert. [HZ-C-Prüfzuordnung](HZ_C_VERIFICATION.md).
+
 CI-C-T01 bindet technische Ergebnisse, Messungen, finalen Head/Base/Test-Merge/Run
 und getrennten vollständigen Selbstreview im Draft-PR. CI-C-R01 bleibt ein separater
 qualifizierter Review vor Merge. Bestehende Windows-/Eigentümergates bleiben separat.

@@ -34,6 +34,7 @@ var mode_tip: Tip
 var recovery_armed: bool = false
 var recovery_press_position: Vector2 = Vector2.ZERO
 var recovery_press_scroll: int = 0
+var small_text_size: int = UiText.SMALL_SIZE
 
 func _make_custom_tooltip(_for_text: String) -> Object:
 	# BookButton's custom factory also runs for empty native tooltip text.
@@ -57,14 +58,14 @@ func configure(title: String, meta: String, number: String) -> void:
 	# Original Bakso's U+2026 glyph is a letter. An unsupported noncharacter
 	# selects Godot's native three-period ellipsis fallback, preserving bytes.
 	caption.ellipsis_char = "\uFFFF"
-	detail = label(meta, 14)
+	detail = label(meta, small_text_size)
 	detail.max_lines_visible = 2
 	leaf = label(number, 15, false)
 	paper = Ink.new()
 	paper.kind = "paper"
 	add_child(paper)
-	dimensions = label("", 14, false)
-	difficulty = label("", 14, false)
+	dimensions = label("", small_text_size, false)
+	difficulty = label("", small_text_size, false)
 	difficulty_icon = Ink.new()
 	difficulty_icon.kind = "difficulty"
 	add_child(difficulty_icon)
@@ -74,7 +75,7 @@ func configure(title: String, meta: String, number: String) -> void:
 	mode_tip.add_child(mode_icon)
 	status_icon = Ink.new()
 	add_child(status_icon)
-	note = label("", 14, false)
+	note = label("", small_text_size, false)
 	unknown = Ink.new()
 	add_child(unknown)
 	preview = Miniature.new()
@@ -159,11 +160,15 @@ func set_metadata(width: int, height: int, colored: bool, assessment: Variant) -
 	mode_icon.queue_redraw()
 
 func metadata_widths(u: float) -> Vector2:
-	var pixels: int = roundi(14*u)
-	var longest: float = UiText.label_width(difficulty, "Nicht eingestuft", pixels)
+	var pixels: int = roundi(small_text_size*u)
+	# New cards are measured before their first scaled layout. Derive the
+	# requested role's padding here instead of reading a stale UI100 override.
+	var margins: float = UiText.label_style(u).get_minimum_size().x
+	var font: Font = UiText.small_font(pixels)
+	var longest: float = UiText.width(font, "Nicht eingestuft", pixels) + margins
 	for value: String in Difficulty.LABELS:
-		longest = maxf(longest, UiText.label_width(difficulty, value, pixels))
-	return Vector2(UiText.dimensions_width(pixels) + dimensions.get_theme_stylebox("normal").get_minimum_size().x, ceilf(longest))
+		longest = maxf(longest, UiText.width(font, value, pixels) + margins)
+	return Vector2(UiText.dimensions_width(pixels) + margins, ceilf(longest))
 
 func minimum_card_width(u: float) -> float:
 	# Insets, strip padding, two gaps, circle plus gap, and the visible mode
@@ -179,10 +184,13 @@ func layout_content() -> void:
 	var hit: float = roundf(44*u)
 	for control: Label in [caption, detail, leaf, note, dimensions, difficulty]:
 		control.add_theme_font_size_override("font_size", roundi(float(control.get_meta("base_font"))*u))
+	for control: Label in [detail, note, dimensions, difficulty]:
+		UiText.small_label(control, roundi(small_text_size*u), u)
+	UiText.small_label(leaf, roundi(15*u), u)
 	mode_tip.ui_scale = u
 	var title_height: float = UiText.label_height(caption, roundi(20*u), 2)
-	var meta_height: float = UiText.label_height(detail, roundi(14*u), 2)
-	var footer_height: float = UiText.label_height(leaf, roundi(15*u))
+	var meta_height: float = UiText.label_height(detail, roundi(small_text_size*u), 2)
+	var footer_height: float = maxf(UiText.label_height(leaf, roundi(15*u)), UiText.label_height(note, roundi(small_text_size*u)))
 	var width: float = size.x - 2*inset
 	caption.position = Vector2(inset, inset)
 	caption.custom_maximum_size = Vector2(maxf(1, width-hit-gap), title_height)
@@ -213,10 +221,11 @@ func layout_content() -> void:
 	recovery_content.add_theme_constant_override("separation", roundi(6*u))
 	if repair != null:
 		repair.ui_scale = u
-		repair.add_theme_font_size_override("font_size", roundi(14*u))
+		repair.add_theme_font_override("font", UiText.small_font(UiText.small_size(u)))
+		repair.add_theme_font_size_override("font_size", UiText.small_size(u))
 		repair.custom_minimum_size = Vector2(0, hit)
 	# One passive strip, with identical reservations for every card and state.
-	var row_height: float = maxf(36*u,UiText.label_height(difficulty, roundi(14*u)))
+	var row_height: float = maxf(36*u,UiText.label_height(difficulty, roundi(small_text_size*u)))
 	label_area = Rect2(Vector2(inset,image_area.end.y+gap),Vector2(width,row_height+10*u))
 	paper.position = label_area.position
 	paper.size = label_area.size
@@ -231,7 +240,7 @@ func layout_content() -> void:
 	mode_tip.position = Vector2(label_area.end.x-41*u,origin.y)
 	mode_tip.size = Vector2(34*u,row_height)
 	mode_icon.size = mode_tip.size
-	for control: Label in [dimensions,difficulty,note]: control.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	for control: Label in [dimensions,difficulty,note,leaf]: control.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	for drawing: Ink in [paper,mode_icon,status_icon,unknown,difficulty_icon]:
 		drawing.ui_scale = u
 		drawing.queue_redraw()
@@ -241,13 +250,13 @@ func layout_content() -> void:
 	leaf.size = Vector2(leaf_width,footer_height)
 	var status_width: float = 0
 	for value: String in ["Neu","Begonnen","Gelöst","Ungültig"]:
-		status_width = maxf(status_width,UiText.label_width(note, value, roundi(14*u)))
+		status_width = maxf(status_width,UiText.label_width(note, value, roundi(small_text_size*u)))
 	note.position = Vector2(size.x-inset-status_width,bottom)
 	note.size = Vector2(status_width,footer_height)
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	status_icon.position = note.position-Vector2(20*u,0)
 	status_icon.size = Vector2(status_width+16*u,footer_height)
-	status_icon.trailing_text_width = UiText.label_width(note, note.text, roundi(14*u))
+	status_icon.trailing_text_width = UiText.label_width(note, note.text, roundi(small_text_size*u))
 	custom_minimum_size.y = bottom+footer_height+inset
 	preview.queue_redraw()
 	picture.queue_redraw()

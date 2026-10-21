@@ -2,6 +2,7 @@
 GROUPS = ('regular', 'catalog', 'input', 'completion', 'persistence')
 BROWSERS = ('chromium',)
 SCENARIOS = (
+    {'id':'HZ-C-W01','group':'catalog','label':'HZ-C stable small typography, complete metadata and all three native dropdowns','browsers':['chromium'],'images':[f'hz-c-{kind}-{w}.png' for kind in ('catalog','category','sort','settings','view') for w in (1280,1920,2560)]},
     {'id':'HZ-B-W01','group':'catalog','label':'HZ-B paper controls, native popup dismissal, keyboard selection and checkbox input','browsers':['chromium'],'images':[f'hz-b-{kind}-{w}.png' for kind in ('sort','settings','view') for w in (1280,1920,2560)]},
     {'id':'HZ-A-W01','group':'catalog','label':'HZ Tidy Hand local fallback, complete metadata, native menus and scrollable help','browsers':['chromium'],'images':[f'hz-{kind}-{w}.png' for kind in ('menu','help') for w in (1280,1920,2560)]},
     {'id':'AT-W01-C','group':'catalog','label':'AT transparent catalog and real hover preserve white detail, holes and soft alpha','browsers':['chromium'],'images':[f'at-{kind}-{w}.png' for kind in ('card','hover') for w in (1280,1920,2560)]},

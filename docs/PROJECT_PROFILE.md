@@ -1,6 +1,15 @@
 # Projektprofil: picross
 
-**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C / #294 spezifiziert, noch nicht implementiert:**
+**HZ-C-Implementierungsstand · 21.10.2026:** [Lieferung und Prüfzuordnung](HZ_C_VERIFICATION.md)
+setzt HZ-D07 auf `fix/294-tidy-typografie` um. Gemeinsame kleine Größe ist 15
+bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19. Private gemessene
+Zeilenmetriken und stabile Grundlinien erhalten Originalfontbytes und übrige
+Textrollen. Die folgenden früheren Angaben „noch nicht implementiert“ und
+„separater Implementierungsauftrag erforderlich“ sind durch den ausdrücklichen
+HZ-C-Auftrag und diese Lieferung fortgeschrieben. Technischer Abschluss und
+Originalbelege stehen im Paket-PR; R01/M01 bleiben getrennt vor Merge offen.
+
+**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C / #294 implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale
 Spieler-UI gemäß HZ-A-FONT02 an Tidy Hand als Standardtext (Überschriften
 unverändert) und stärker gezeichnete kleine Rahmen, vollständige
