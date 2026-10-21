@@ -1,0 +1,144 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 1 samt Repositoryablage nach §6 und Ablage-PR-Merge nach Pflichtchecks; keine Bild-/Motiv-/Endfreigabe.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "blumen-pflanzen",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "a5f2d28267f93b7d903e0ff4f5e6729a1d52f524b88a8c56851924db916d5dea"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-a13368590b744814915eb722f5b2c5f2",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "0da2ccb11eac94b0df3e4283f746a7e9e6fb1850",
+  "report": "report.md",
+  "requested_parameters": {
+    "foreground_colors": null,
+    "height": null,
+    "mode": "color",
+    "width": null
+  },
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "alpha_bbox": [
+        0,
+        1,
+        1132,
+        1358
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "approval": null,
+      "bytes": 1979782,
+      "file": "reveals/A-r01.png",
+      "height": 1358,
+      "id": "A-r01",
+      "opaque_pixels": 549,
+      "partial_alpha_pixels": 783188,
+      "sha256": "952719722a6fc542b025441a90ab3e876a2a38dbcd8313060e0c1a57db074ebd",
+      "status": "offered",
+      "transparent_pixels": 788827,
+      "width": 1158
+    },
+    {
+      "alpha_bbox": [
+        0,
+        0,
+        1297,
+        1212
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "approval": null,
+      "bytes": 2068835,
+      "file": "reveals/B-r01.png",
+      "height": 1212,
+      "id": "B-r01",
+      "opaque_pixels": 781,
+      "partial_alpha_pixels": 793886,
+      "sha256": "49a7282f2e22b8a1a47fdeefd66713b44ef97588e1a2ae51e1bff9b1295167a7",
+      "status": "offered",
+      "transparent_pixels": 777297,
+      "width": 1297
+    },
+    {
+      "alpha_bbox": [
+        0,
+        12,
+        1244,
+        1242
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "approval": null,
+      "bytes": 2544543,
+      "file": "reveals/C-r01.png",
+      "height": 1254,
+      "id": "C-r01",
+      "opaque_pixels": 786,
+      "partial_alpha_pixels": 1060725,
+      "sha256": "5318fd793fe570a0ff87e85295bb6b48dad992bc9735faccc591b05594bf26e5",
+      "status": "offered",
+      "transparent_pixels": 511005,
+      "width": 1254
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "584dc24baeb2794b492c50d8e3de192552768e638ab297e9262ce5c3388badb5",
+    "version": "0.5.0"
+  },
+  "state": "reveal_review"
+}
