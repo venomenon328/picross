@@ -1,0 +1,57 @@
+{
+  "blockers": [
+    "motif: tatsächliche Annahme der neuen manuellen Motiv-/Rasterdatei MR-r02 offen",
+    "final_editorial: tatsächliche Endabnahme offen"
+  ],
+  "category_id": "technik-erfindungen",
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "level": "L5",
+    "method": "picross-difficulty-0.3",
+    "r4_required": true
+  },
+  "final_editorial_approval": null,
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r04/handoff.json",
+    "sha256": "bd3cef4d3bb1aeb64f13ebbbbc3b6b5ea8368339b93d7572d640b0e811d18040"
+  },
+  "height": 40,
+  "integration": null,
+  "inventory_sha256": "cd46d4f10e7f06b35458aee43ff2a5d0fee7f73840ae26ef683dc1d342d9ead3",
+  "mode": "mono",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "8dd70cb680ca3ee6993d1ddc15be11965e94ccbb271157938de21d987b13352c",
+    "file": "f07/raster.png",
+    "provenance": "provenance.json",
+    "revision": "MR-r02",
+    "sha256": "13d55630cd53f2cb8182f953f6beadbf4cb373438d8d4dd77ab401a39fa1606f"
+  },
+  "motif_name": "Game Boy",
+  "next_action": "Gespeicherte Arbeit fortsetzen",
+  "package": {
+    "bytes": 3584459,
+    "file": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r04/package.zip",
+    "sha256": "da1635128363058e31923039e1429e13b3ec44f70c85428a361f5124f7690c3c"
+  },
+  "puzzle_id": "pz-9be288b9b5104da88fc8464184647ae7",
+  "raster_preview": {
+    "file": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r04/raster-preview.png",
+    "package_file": "raster-preview.png",
+    "sha256": "43037fac62928c950182c2df2e184b86b4ec1838d971619cdaccc5ce91dca129"
+  },
+  "repo_commit": "eb2f6d28bf49fae4f9ada7e95a707efd15bd4349",
+  "reveal": {
+    "file": "reference/reveals/A-r01.png",
+    "historical_approval": "reference/approvals/reveal-approval.json",
+    "revision": "A-r01",
+    "sha256": "8dd70cb680ca3ee6993d1ddc15be11965e94ccbb271157938de21d987b13352c"
+  },
+  "revision": "r04",
+  "state": "raster_review",
+  "updated_at_utc": "2026-10-21T22:05:45Z",
+  "width": 26
+}
