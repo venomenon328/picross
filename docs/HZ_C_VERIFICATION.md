@@ -51,6 +51,9 @@ zusätzlich geprüft. Der korrigierte Chromium-Direktvergleich wird neu erzeugt.
 
 Direkte Papierbuttontexte verwenden dieselbe feste native Referenzgrundlinie;
 die tatsächliche Worthülle bestimmt weiterhin ihre horizontale Ausrichtung.
+Ganzzahlige horizontale Textursprünge erhalten zusätzlich das native
+Anfangsglyphenraster beim Wortwechsel. Eine echte Gegenprobe mit der alten
+vertikalen Wortzentrierung wird von acht Pixelprüfungen zurückgewiesen.
 Labels erhalten symmetrisches, aus den tatsächlichen Akzent-/Unterlängen-/
 Fallbackhüllen bestimmtes Sicherheitspolster. Es erhält den optischen
 Mittelpunkt und verhindert, dass der Grundlinienausgleich Unterlängen abschneidet.

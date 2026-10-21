@@ -73,6 +73,35 @@ static func run(runner: Object) -> void:
 			if prefix.is_empty(): prefix = pixels
 			runner.check(pixels == prefix,"HZ-C actual first-glyph raster baseline stable: "+word)
 		label.free()
+		var button := Sample.ButtonInk.new()
+		button.position = Vector2(40,80)
+		button.size = Vector2(400,44)*app.ui_scale
+		button.ui_scale = app.ui_scale
+		var button_font: Font = Text.small_font(Text.small_size(app.ui_scale))
+		button.add_theme_font_override("font",button_font)
+		button.add_theme_font_size_override("font_size",Text.small_size(app.ui_scale))
+		app.add_child(button)
+		var first_span := Vector2i(-1,-1)
+		for word: String in ["H Neu","H Begonnen","H Gelöst","H Größe × … ←"]:
+			button.text = word
+			button.queue_redraw()
+			await runner.frames()
+			await RenderingServer.frame_post_draw
+			var fs: int = Text.small_size(app.ui_scale)
+			var word_ink: Rect2 = Text.ink(button_font,word,fs)
+			var first_ink: Rect2 = Text.ink(button_font,"H",fs)
+			var start_x: int = roundi(button.global_position.x+roundf((button.size.x-word_ink.size.x)/2-word_ink.position.x)+first_ink.position.x)
+			var pixels: Image = runner.surface.get_texture().get_image()
+			var span := Vector2i(-1,-1)
+			for y: int in range(roundi(7*app.ui_scale),roundi(button.size.y-7*app.ui_scale)):
+				for x: int in range(start_x,start_x+roundi(first_ink.size.x)):
+					var pixel: Color = pixels.get_pixel(x,roundi(button.global_position.y)+y)
+					if pixel.r < 0.4 and pixel.g < 0.4 and pixel.b < 0.4:
+						if span.x < 0: span.x = y
+						span.y = y
+			if first_span.x < 0: first_span = span
+			runner.check(span.x >= 0 and span == first_span,"HZ-C direct BookButton first-glyph pixel baseline stable: "+word)
+		button.free()
 		for choice: OptionButton in [app.album.category_choice,app.album.sort_choice]:
 			runner.check(choice.get_theme_font_size("font_size") == Text.small_size(app.ui_scale),"HZ-C closed native choice size")
 			runner.click(choice)

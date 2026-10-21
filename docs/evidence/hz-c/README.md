@@ -6,8 +6,8 @@ neun Chromium-Originale aus einem isolierten statischen Komponentenexport.
 Der direkte SHA-256-Vergleich bindet sämtliche verwendeten UI-Dateien und das
 Vergleichsskript an die Lieferung. Keine Bildskalierung oder Nachzeichnung.
 
-Die Quellen waren beim Entwicklungslauf auf `8ef380d41341064f713ea26e7d1ed499d2f6badf`
-mit der explizit hashgebundenen anschließenden Font-Cachekorrektur verändert.
+Die Quellen waren beim Entwicklungslauf auf `b00b5116dfef97151dbe84857f79eea568451860`
+mit der explizit hashgebundenen anschließenden ganzzahligen Papierbutton-Textursprungs verändert.
 Dies ist keine Behauptung eines sauberen Produktlaufs dieses alten Heads.
 Der temporäre native Einstieg führt ausschließlich den HZ-C-Pfad aus; sein
 Original und der Chromium-Einstieg samt Build-/Aufnahmeskripten sind komprimiert
@@ -37,3 +37,10 @@ Der tatsächliche abschließende CI-/Windows-/PCK-Lauf wird im
 eigenen sauberen Head, Basis, Checkout, Run/Attempt und Originalartefakten
 gebunden. Diese Entwicklungsoriginale ersetzen ihn nicht. HZ-C-R01 und
 HZ-C-M01 bleiben getrennt vor Merge erforderlich.
+
+Die gezielte Gegenprobe stellt ausschließlich die alte wortabhängige vertikale
+Papierbuttonzentrierung wieder her. Sie scheitert mit dem erwarteten Exit 4 an
+acht der neuen Anfangsglyphenprüfungen. Mutierter temporärer Quelltext,
+Originalbericht und Log sind komprimiert erhalten; die Produktdatei bleibt
+unverändert. CRLF-Originalserialisierungen sind ebenfalls als `.gz` erhalten;
+die danebenstehenden JSON-/Logtexte sind LF-Leseprojektionen.
