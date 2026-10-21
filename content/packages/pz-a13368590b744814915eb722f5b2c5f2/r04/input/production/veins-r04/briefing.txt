@@ -1,0 +1,4 @@
+Nur 27 bereits gefüllte Blattgrün-Zellen werden zur Erhaltung der in MA-r01 vorhandenen Hauptadern dunkelgrün. Alle übrigen Zellen, insbesondere alle Leerzellen, Blütenkopf und Füllmaske, bleiben geschützt.
+
+Working mode: faithful
+Motif and gameplay review: open
