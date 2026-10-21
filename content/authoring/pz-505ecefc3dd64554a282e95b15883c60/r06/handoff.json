@@ -1,0 +1,74 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854"
+  },
+  "puzzle_id": "pz-505ecefc3dd64554a282e95b15883c60",
+  "revision": "r06",
+  "repo_commit": "1e0f346b5bfbd10de23114c3d21b9eddad55f644",
+  "state": "motif_review",
+  "category_id": "haushalt-alltag",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "proposed_parameters": "parameters.json",
+  "reveal": {
+    "file": "reveals/C-r01.png",
+    "revision": "C-r01",
+    "sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/reveal-C-r01.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r03.png",
+    "revision": "MA-r03",
+    "sha256": "92580a2ba51531ede2c5ff9a217d9534484b7e48bc916ad67efd18483cdf9fa8",
+    "derived_from_reveal_sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "13e4d4e411e9a3b42ada461d857a647e6b7c70122a94cf9f3ddc88cb6a0a9e91"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-C-r01.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren: konkrete motifs/MA-r03.png · MA-r03 samt parameters.json (maximal 30 je Achse; 30x30 empfohlen, 25x25 Alternative; mono genau 1, area, contain, Crop [23,42,1240,1221], Schwellen 160/224) menschlich freigeben. Grenzen im Bildvergleich/Report beachten; erst danach neue Rasterproduktion.",
+  "authorization": "Überarbeite die Motivabstraktion.\nBestehende Repositoryablage-/Mergebeauftragung gilt fort.",
+  "codex_handoff": "CODEX_HANDOFF.txt"
+}
