@@ -1,12 +1,18 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
-Stand: 20.10.2026 · Spezifikation 1.1 · **freigegeben, HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen**
+Stand: 21.10.2026 · Spezifikation 1.2 · **HZ-A/B integriert und abgenommen; HZ-C freigegeben, noch nicht implementiert**
 
-[Issue #284](https://github.com/venomenon328/picross/issues/284) führt die
-Entwicklungspakete HZ-A und HZ-B, ihre Akzeptanz und den aktuellen Lieferstatus.
-Der Eigentümer hat die besprochene Gestaltung und ihre Übernahme in Issues und
-Repository-Dokumente freigegeben. Die beauftragte [HZ-A-Lieferung](HZ_A_VERIFICATION.md) setzt Schrift und Textlayout
-um; HZ-B und sämtliche separaten Abnahmen bleiben offen. Keine Mergefreigabe.
+[Issue #284](https://github.com/venomenon328/picross/issues/284) dokumentiert den
+Abschluss von HZ-A und HZ-B einschließlich ihrer erfüllten T01/R01/M01-Gates.
+Die [HZ-A-Lieferung](HZ_A_VERIFICATION.md) ist über PR #288, die
+[HZ-B-Lieferung](HZ_B_VERIFICATION.md) über PR #289 integriert. Ihre historischen
+Nachweise bleiben an die damaligen Heads gebunden.
+
+Der Eigentümer hat am 21.10.2026 die besprochene Typografie-Nachbesserung und ihre
+Übernahme in Issues und Repository-Dokumente freigegeben.
+[Folgeissue #294](https://github.com/venomenon328/picross/issues/294) führt dafür
+das zusammenhängende Paket HZ-C gemäß HZ-D07. Der aktuelle Auftrag liefert die
+Spezifikation, keine Produktimplementierung oder Mergefreigabe.
 
 ## 1. Ziel, Ausgangsstand und gezielte Ablösung
 
@@ -16,7 +22,7 @@ vollständig gezeichnete Dropdowns und eine gemeinsame Piktogrammfamilie.
 Lesbarkeit, ruhige Anordnung und präzise Bedienung gehören zum Gestaltungsergebnis.
 Die Unregelmäßigkeit muss schon in tatsächlicher Einsatzgröße erkennbar sein.
 
-Geprüfte Ausgangsbasis ist
+Historische Ausgangsbasis der HZ-A/B-Spezifikation ist
 `main@fee90adf71c7c3f82e01aa6425c6ec8799424773`. Dort sind KB/KK sowie KU-A
 (PR #254) und KU-B (PR #255) integriert. Die Eigentümerscreenshots vom
 20.10.2026 und die Komponentenskizze im Chat erläutern den Gestaltungswunsch;
@@ -185,8 +191,9 @@ oder nur umgefärbte geometrische Standardfamilie.
 
 Eigene konsistente lokale SVG-/Zeichnungsressourcen sind zulässig. Die aktive
 Quellen-/Provisionierungsstrecke aus [Z2](Z2_SELECTION.md), einschließlich
-`tools/z2_resources.py`, `tools/book_icons_kb.json`, der erzeugten SVGs und
-`game/art/book/manifest.json`, wird gemeinsam fortgeschrieben. Ein bloßes
+`tools/z2_resources.py`, der HZ-B-Quelle `tools/book_icons_hz.json`, der erzeugten
+SVGs und `game/art/book/manifest.json`, wird gemeinsam fortgeschrieben.
+`tools/book_icons_kb.json` bleibt historische Quelle. Ein bloßes
 Überschreiben generierter Dateien erfüllt den Liefervertrag nicht. Historische
 BP-/SL-/KB-Originale und ihre Hashnachweise bleiben an den damaligen Stand gebunden;
 neue aktive Quellen erhalten nachvollziehbare Herkunft. Reguläres Spiel,
@@ -222,23 +229,96 @@ CI-Optimierung, Hintergrund-/Themenauswahl, Engine-, Plattform- oder Bedienfunkt
 Normale Warntexte innerhalb des Boards gehören trotzdem zur neuen Schriftrolle;
 ihre Schriftanpassung ist keine Freigabe einer Rasteränderung.
 
+## HZ-D07 · Optische Textausrichtung und kleine Schriftgröße
+
+**Eigentümerentscheidung · 21.10.2026:** Nach der Tidy-Hand-Umstellung wirken
+kleine Texte insbesondere in Dropdowns und im Rätselstatus zu hoch angeordnet.
+Optisch ausgewogene vertikale Ausrichtung und eine ruhig lesbare kleine
+Textrolle werden gemeinsam nachgebessert. Geprüfte Spezifikationsbasis ist
+`main@1260578fde94fc7bee14efe4b6636061d36238c7` mit integriertem HZ-A/B.
+Der Eigentümerscreenshot ist Gestaltungsfeedback ohne verifizierte Build-/DPI-
+Bindung. Schrift-/Zeilenmetriken sind ein Untersuchungsansatz, noch keine
+nachgewiesene Ursache und keine Begründung für einen ungeprüften globalen Versatz.
+
+### Ausrichtung und stabile Grundlinien
+
+Sichtbare Buchstaben, Symbole und die umgebende Zeile bzw. Controlfläche müssen
+optisch ausgewogen zusammenstehen. Die bloße Zentrierung einer Control- oder
+Zeilenbox genügt nicht als Nachweis. Am geprüften Stand sind Status-, Größen-
+und Schwierigkeitslabels bereits vertikal zentriert; native Dropdowns und direkt
+gezeichnete Textbuttons verwenden weitere Textpfade. Die spätere Umsetzung
+untersucht deren tatsächlich verwendete Metriken, Innenränder und Textzeichnung.
+
+Die Ausrichtung verwendet stabile Grundlinien pro Textrolle, Größenstufe und
+Control. Kein individuelles vertikales Nachzentrieren jeder Zeichenkette anhand
+ihrer äußersten Buchstaben: „Neu“, „Begonnen“, „Gelöst“ und wechselnde
+Dropdownwerte dürfen nicht in der Höhe springen. Die tatsächlichen Glyphenhüllen
+einschließlich lokaler Fallbacks bleiben gemäß HZ-D02 für vollständige Darstellung,
+sichere Budgets und Clipping maßgeblich. Ein rollenbezogener optischer Ausgleich
+ist zulässig; seine konkrete technische Form wird erst in HZ-C festgelegt.
+
+Die Kartenfußzeile wird als Einheit aus Blattkennung, Statuswort und Statussymbol
+ausgerichtet. Kategorien behalten ihre feste Position im reservierten, bis zu
+zweizeiligen Bereich. Ein- und zweizeilige Namen werden nicht jeweils neu in
+diesem Bereich zentriert. Gleichbleibende Kartenbereiche verhindern Sprünge bei
+Kategorie-, Filter- und Statuswechseln.
+
+### Größenvergleich und betroffene Rollen
+
+Die korrigierte bestehende kleine Größe **14** wird direkt mit **15 bei UI100**
+verglichen; beide folgen der vorhandenen UI-Skalierung. **15 ist der bevorzugte
+erste Vergleichswert, kein bereits gemessenes oder abgenommenes Endmaß.**
+Korrekt ausgerichtete 14 bleibt zulässig, wenn der Vergleich ausreichende
+Lesbarkeit und stimmige Hierarchie zeigt. Wahl, Begründung und Originalbelege
+werden in der späteren Lieferung dokumentiert. Keine automatische Erhöhung auf 16.
+
+| Bereich | Verbindliche gemeinsame Betrachtung |
+| --- | --- |
+| Dropdowns | Kategorienauswahl, „Sortieren nach“ und Rätselansicht in Einstellungen; geschlossenes Feld und offene Menüzeilen einschließlich ihrer Symbole/Markierungen. |
+| Katalogkarten | Kategorienamen, Größe, vollständiger Schwierigkeitsname und Status als kleine Textrolle. Bei Vergrößerung erhalten insbesondere Kategorie und Status dieselbe kleine Schriftgröße. |
+| Fußzeile | „Blatt NN“ ist am geprüften Stand bereits 15; keine automatische zweite Vergrößerung. Blattkennung, Statuswort und Symbol müssen zusammenpassen. |
+| Kleine Textbuttons | Betroffene vorhandene kleine Tidy-Hand-Textbuttons in dieselbe Größenentscheidung und Ausrichtungsprüfung einbeziehen; keine neue globale Fließtextrolle. |
+
+Eine Vergrößerung betrifft nicht pauschal Hilfe, Dialoginhalte, Tooltips oder
+alle normalen Tidy-Hand-Texte. Überschriften und Hinweisziffern bleiben gemäß
+HZ-D01 unverändert. Änderungen an gemeinsamen Texthelfern müssen trotzdem die
+sichere Darstellung ihrer übrigen Verwendungen erhalten.
+
+Text-/Symbolmaße, Zeilenhöhen, Innenränder und Karten-/Popupbudgets werden gemeinsam
+angepasst. Vollständige Pflichtmetadaten, lange gültige Kategorien, lokale
+Fallbackzeichen, Umlaute und Unterlängen müssen passen. Die feste Kategoriefläche,
+Titel-/Resetreserve und ausreichender proportionaler Bildraum bleiben; dessen
+bisherige Höhe von 112 × UI wird nicht zugunsten größerer Schrift verkleinert.
+Bei Bedarf werden Karten gemeinsam größer oder weniger Spalten gezeigt.
+Native Auswahl-/Fokus-/Scroll-/Schließwege und Mindesttrefferflächen bleiben
+gemäß HZ-D03/D04 erhalten. HZ-C verändert weder Originalfontbytes noch die
+Gestaltungsregeln der HZ-B-Konturen, Iconquellen oder Produkt-/Datenverträge
+aus HZ-D06.
+
 ## 2. Entwicklungspakete und Nachweise
 
-| Paket | Eigenständig abnehmbares Ergebnis | Reihenfolge |
+| Paket | Eigenständig abnehmbares Ergebnis | Status und Abhängigkeit |
 | --- | --- | --- |
-| HZ-A · Schrift und Textlayout | HZ-D01/D02 vollständig, einschließlich aller normalen Textpfade, kontrollierter Zeichenbehandlung, gemessenem Layout, Ressourcen-/Exportnachweis und nachgeführter Anleitung | Auf aktuellem `main` mit dieser Spezifikation; gesonderter Implementierungsauftrag erforderlich. |
-| HZ-B · Gezeichnete Controls und Symbole | HZ-D03/D04/D05 vollständig auf den HZ-A-Textmaßen; sämtliche Konturen, geöffneten Menüs, Zustände und Piktogramme im regulären Spiel | Nach integriertem, separat abgenommenem HZ-A; gesonderter Implementierungsauftrag erforderlich. |
+| HZ-A · Schrift und Textlayout | HZ-D01/D02 vollständig, einschließlich aller normalen Textpfade, kontrollierter Zeichenbehandlung, gemessenem Layout, Ressourcen-/Exportnachweis und nachgeführter Anleitung | Integriert über PR #288 und separat abgenommen; Abschluss in #284. |
+| HZ-B · Gezeichnete Controls und Symbole | HZ-D03/D04/D05 vollständig auf den HZ-A-Textmaßen; sämtliche Konturen, geöffneten Menüs, Zustände und Piktogramme im regulären Spiel | Nach HZ-A über PR #289 integriert und separat abgenommen; #284 abgeschlossen. |
+| HZ-C · Optische Textausrichtung und kleine Schriftrolle | HZ-D07 vollständig: stabile Grundlinien, begründeter Vergleich 14/15, Kategorien und offene/geschlossene Dropdowns, passende gemeinsame Text-/Symbol-/Layoutmaße | #294: Spezifikation freigegeben, noch nicht implementiert. Auf integriertem HZ-A/B; gesonderter Implementierungsauftrag erforderlich. |
 
-HZ-D06 gilt für beide. Ein Implementierungs-PR je Paket enthält notwendige
-Regressionen und Dokumentation. HZ-A ist mit der neuen Schrift benutzbar, aber
-kein Gesamtabschluss des Zeichenstils. Bis HZ-B noch als Textglyphen dargestellte
-Funktionspfeile bleiben aus einer geprüften lokalen Quelle lesbar. HZ-B hält
-Rahmen, Menüs und Icons zusammen, weil ihre Strichhüllen, Innenabstände und
-Zustände gemeinsam abgenommen werden. Eine zusätzliche breite Assetstudie oder
-eine ausgelagerte spätere Test-/Dokumentphase ist nicht erforderlich.
+HZ-D06 gilt für alle Pakete. Ein Implementierungs-PR je Paket enthält notwendige
+Regressionen und Dokumentation. HZ-B hielt Rahmen, Menüs und Icons zusammen,
+weil ihre Strichhüllen, Innenabstände und Zustände gemeinsam abgenommen werden.
+HZ-C hält Ausrichtung, Schriftgröße und davon abhängige Layoutmaße zusammen;
+eine Trennung in Größenänderung und spätere Ausrichtung würde unvollständige
+Zwischenstände erzeugen. Keine zusätzliche breite Assetstudie oder ausgelagerte
+spätere Test-/Dokumentphase.
 
 Die Paketkriterien HZ-A-A01–A05 und HZ-B-A01–A06 stehen vollständig im
-[Issue](https://github.com/venomenon328/picross/issues/284). Für beide Pakete gilt:
+[abgeschlossenen Issue #284](https://github.com/venomenon328/picross/issues/284).
+HZ-C-A01–A06 stehen vollständig im
+[Folgeissue #294](https://github.com/venomenon328/picross/issues/294): belegte
+Ursache, stabile optische Ausrichtung, begründeter Größenvergleich, vollständiges
+Layout, Zustands-/Bedienregressionen und gebundene Liefernachweise.
+Die bereits erfüllten A/B-Gates bleiben historisch gebunden. HZ-C besitzt eigene
+Gates; frühere Abnahmen oder Mergeausnahmen erfüllen sie nicht:
 
 | Gate | Akteur, Nachweis und Zeitpunkt |
 | --- | --- |
@@ -246,6 +326,9 @@ Die Paketkriterien HZ-A-A01–A05 und HZ-B-A01–A06 stehen vollständig im
 | HZ-A-R01 / HZ-B-R01 | Separater qualifizierter Review vor Implementierungsmerge am finalen Head: tatsächlicher Diff, Kriterien, aktive Ressourcen und technische/visuelle Originalbelege. Selbstreview ersetzt diesen Review nicht. |
 | HZ-A-M01 | Eigentümer vor HZ-A-Merge am gebundenen Build: normale Texte, Sonderzeichen/Auslassung, Hierarchie, lange Werte, Dialoge und Tooltips bei UI100/125 beurteilen. |
 | HZ-B-M01 | Eigentümer vor HZ-B-Merge am gebundenen Build: Konturen, offene/geschlossene Menüs, Piktogramme und Zustände in Einsatzgröße sowie Katalog-/Menü-/Werkzeugbedienung beurteilen. |
+| HZ-C-T01 | Implementierer vor Übergabe und Merge: HZ-C-A01–A06, gezielte synthetische Text-/Layout-/Zustandsregressionen, tatsächliche native Windows-/Chromium-Nachweise, ausgewählte Pflicht-CI, vollständiger Diff und getrenntes Selbstreview am konkreten Head. |
+| HZ-C-R01 | Separater qualifizierter Review vor Implementierungsmerge am finalen Head: tatsächlicher Diff, Kriterien und technische/visuelle Originalbelege. Selbstreview oder Spezifikationsreview ersetzt dieses Gate nicht. |
+| HZ-C-M01 | Eigentümer vor HZ-C-Merge am gebundenen Build: optische Ausrichtung, begründete kleine Schriftgröße, Kategorien, Statusfußzeile, Metadaten und offene/geschlossene Dropdowns bei UI100/125 beurteilen. |
 
 Die aktuelle [CI-Policy](CI_POLICY.md) bestimmt anhand des vollständigen
 Basis-/Head-Diffs sämtliche erforderlichen Jobs. `docs`, `ci-required` und alle
@@ -253,6 +336,9 @@ ausgewählten Bereiche müssen tatsächlich erfolgreich sein. Gemeinsamer UI-/
 Ressourcenbezug kann mehrere Bereiche auswählen; die Paketnamen sind keine
 Ausnahme. Die Darstellungsbasis sind **1280×720/UI125, 1920×1080/UI100 und
 2560×1440/UI125**, ergänzt nur um konkret nötige Text-/Popup-/Zustandsgrenzen.
+HZ-C vergleicht die korrigierten 14/15 unter gleichen Bedingungen und prüft
+UI100→125→100, Resize sowie Auswahl-/Status-/Ansichtswechsel; keine neue
+vollständige Kreuzmatrix.
 Prüfungen verwenden isolierte synthetische Eingänge und Speicherprofile, keine
 echten Saves oder Bestandsproduktion. Head, Basis, tatsächlicher Checkout,
 Run/Attempt und Originalartefakte werden im Paket-PR gebunden. Historische

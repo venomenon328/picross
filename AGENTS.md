@@ -36,10 +36,14 @@ der aktuelle AT-B-Auftrag ersetzt diese historischen Belege nicht.
 
 Bei UI-Schrift, kleinen Rahmen, Dropdowns oder Piktogrammen zusätzlich
 [HZ: Handgezeichnete Bedienoberfläche](docs/HAND_DRAWN_UI.md) vollständig lesen.
-HZ / #284 (20.10.2026) ist als Spezifikation freigegeben, HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:
-HZ-A umfasst gemäß HZ-A-FONT02 Tidy Hand als Standardtext samt Zeichenbehandlung
-und Textlayout; Überschriften und Delight-Hinweiszahlen bleiben unverändert;
-HZ-B danach organische Konturen, vollständige Menüs und die gesamte Symbolfamilie.
+HZ-A/B sind über PR #288/#289 integriert und in #284 separat abgenommen.
+HZ-C / [#294](https://github.com/venomenon328/picross/issues/294) ist seit
+21.10.2026 als Spezifikation freigegeben, noch nicht implementiert:
+HZ-D07 bindet optische Textausrichtung mit stabilen Grundlinien und den Vergleich
+der korrigierten kleinen Schriftgröße 14/15 einschließlich Kategorienamen.
+15 bei UI100 ist der bevorzugte Vergleichswert, kein festgelegtes Endmaß.
+Tidy Hand samt lokalen Fallbacks, bisherige Überschriften und die HZ-B-Konturen,
+Menüs und Symbolfamilie bleiben Grundlage.
 Hinweisziffern/-geometrie und die drei großen SL-Rasterrahmen behalten ihre Verträge.
 Spezifikationspflege beauftragt keinen Produktcode oder Merge.
 

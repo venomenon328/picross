@@ -1,14 +1,19 @@
 # Produktdefinition: picross
 
-**HZ · 20.10.2026, freigegebene Spezifikation; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
+**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C spezifiziert, noch nicht implementiert:**
 Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil
 auf alle normalen Spielertexte, Rahmen der Rätselkarten und kleinen Buttons,
 geschlossene und geöffnete Dropdowns sowie alle Button-/Menüpiktogramme.
-Tidy Hand wird gemäß Eigentümerentscheidung HZ-A-FONT02 die normale UI-Schrift;
+Tidy Hand ist gemäß Eigentümerentscheidung HZ-A-FONT02 die normale UI-Schrift;
 Überschriften bleiben unverändert. Lesbarkeit und Textlayout werden passend gemessen.
 Hinweisziffern bleiben in Delight Coffee mit ihrer gebundenen Geometrie.
-[Issue #284](https://github.com/venomenon328/picross/issues/284) trennt HZ-A
-(Schrift/Textlayout) und HZ-B (Konturen/Menüs/Symbole) samt eigener Abnahme.
+HZ-A und HZ-B sind über [PR #288](https://github.com/venomenon328/picross/pull/288)
+und [PR #289](https://github.com/venomenon328/picross/pull/289) integriert;
+ihre Abnahmen und der Abschluss stehen im geschlossenen
+[Issue #284](https://github.com/venomenon328/picross/issues/284).
+[HZ-C / #294](https://github.com/venomenon328/picross/issues/294) führt die am
+21.10.2026 freigegebene Typografie-Nachbesserung gemäß HZ-D07 als eigenes Paket.
+Diese Spezifikationsfreigabe beauftragt noch keine Produktimplementierung.
 
 **AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ergänzen den Bildstandard
@@ -285,6 +290,13 @@ erkennbar unregelmäßige kleine Rahmen und gezeichnete offene Menüinhalte sowi
 Piktogramme. Die Form bleibt je Element stabil, das Layout geordnet und die
 Treffergeometrie präzise. Eine allgemeinere Schriftrolle verlangt passenden
 gemessenen Textfit; sie ersetzt nicht die spezialisierte Hinweisgeometrie.
+
+Der freigegebene Folgeauftrag [HZ-D07](HAND_DRAWN_UI.md) präzisiert für die
+betroffenen kleinen Tidy-Hand-Texte eine optisch ausgewogene Ausrichtung mit
+stabilen Grundlinien. Eine behutsame gemeinsame Größenanhebung wird anhand
+vergleichbarer Darstellungen entschieden; Kategorienamen werden dabei konsistent
+einbezogen. Dies ist keine globale Vergrößerung sämtlicher Texte oder Änderung
+der Schriftquellen, Überschriften und Hinweiszahlen.
 
 Priorität haben optisch kräftigere, kompakte und klar unterscheidbare Hinweisziffern
 sowie satte Füllflächen mit zurückhaltender, pro Zelle stabiler Strichtextur.
