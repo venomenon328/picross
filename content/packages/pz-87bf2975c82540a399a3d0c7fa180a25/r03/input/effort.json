@@ -1,0 +1,17 @@
+{
+  "phase": "standardauftrag_3",
+  "image_calls_this_phase": 0,
+  "historical_image_calls_phase_1": 3,
+  "historical_abstraction_calls": 1,
+  "new_matrix_variants": 14,
+  "import_image_invocations": 14,
+  "paired_variant_attempts": 11,
+  "normalized_r4_solve_invocations": 1,
+  "repair_attempts": 2,
+  "repair_evaluated_candidates": 112,
+  "repair_proposals": 1536,
+  "selected_cell_edits": 0,
+  "human_active_minutes": null,
+  "model": "not_exposed",
+  "playtest": "not_performed; optional"
+}
