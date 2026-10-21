@@ -38,10 +38,12 @@ Bei UI-Schrift, kleinen Rahmen, Dropdowns oder Piktogrammen zusätzlich
 [HZ: Handgezeichnete Bedienoberfläche](docs/HAND_DRAWN_UI.md) vollständig lesen.
 HZ-A/B sind über PR #288/#289 integriert und in #284 separat abgenommen.
 HZ-C / [#294](https://github.com/venomenon328/picross/issues/294) ist seit
-21.10.2026 als Spezifikation freigegeben, noch nicht implementiert:
-HZ-D07 bindet optische Textausrichtung mit stabilen Grundlinien und den Vergleich
-der korrigierten kleinen Schriftgröße 14/15 einschließlich Kategorienamen.
-15 bei UI100 ist der bevorzugte Vergleichswert, kein festgelegtes Endmaß.
+21.10.2026 auf `fix/294-tidy-typografie` implementiert; technische Lieferung in
+[Draft-PR #296](https://github.com/venomenon328/picross/pull/296).
+[HZ-C-Prüfzuordnung](docs/HZ_C_VERIFICATION.md) bindet Ursache, stabile Grundlinien
+und den korrigierten Vergleich 14/15 einschließlich Kategorienamen. Gewählte
+kleine Rolle ist 15 bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19.
+HZ-C-R01 und HZ-C-M01 bleiben getrennt vor Merge offen.
 Tidy Hand samt lokalen Fallbacks, bisherige Überschriften und die HZ-B-Konturen,
 Menüs und Symbolfamilie bleiben Grundlage.
 Hinweisziffern/-geometrie und die drei großen SL-Rasterrahmen behalten ihre Verträge.

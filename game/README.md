@@ -1,5 +1,11 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+**Kleine Texte und Ausrichtung (HZ-C):** Kategorien, Kartenmetadaten, Status,
+Auswahllisten und kleine Papiertextbuttons verwenden eine gemeinsame etwas
+größere Textrolle. Beim Wechsel von Werten bleibt die Grundlinie ruhig;
+„Blatt NN“ behält seine bisherige Größe. UI100/125 skaliert die zugehörigen
+Abstände und Textbudgets gemeinsam. [HZ-C-Prüfstand](../docs/HZ_C_VERIFICATION.md).
+
 **Schrift und Lesbarkeit (HZ-A):** Normale Texte, Auswahlen, Hilfen und Tooltips
 verwenden Tidy Hand. Bestehende Überschriften und Delight-Coffee-Hinweiszahlen
 bleiben unverändert. UI 100/125 % ändert Schrift und Textabstände gemeinsam;

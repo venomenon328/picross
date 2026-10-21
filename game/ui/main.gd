@@ -1035,7 +1035,10 @@ func _layout_book(prepare_board: bool = false) -> void:
 	_place(stress_label,Rect2(o+Vector2(notice_left+warning_width+12*u,bottom-6*u),Vector2(notice_width-warning_width-12*u,24*u)))
 	album.ui_scale = u
 	view_choice.ui_scale = u
-	_place(album,Rect2(o+Vector2(90,100)*u,Vector2(w-180*u,h-155*u)))
+	# The narrow UI125 toolbar needs the measured 15/19 text and native arrows.
+	# Use more of the existing safe paper width; preserve the vertical budget.
+	var catalog_inset: float = 64 if w/u < 1100 else 90
+	_place(album,Rect2(o+Vector2(catalog_inset,100)*u,Vector2(w-2*catalog_inset*u,h-155*u)))
 	album._layout_cards()
 	if ending != null and ending.visible: _layout_completion()
 	_place(information,Rect2(Vector2.ZERO,size))
@@ -1049,6 +1052,9 @@ func _layout_book(prepare_board: bool = false) -> void:
 		item.custom_minimum_size.y = hit
 		if item is BookButton:
 			item.ui_scale = u
+			if not item.text.is_empty():
+				item.add_theme_font_override("font", UiText.small_font(UiText.small_size(u)))
+				item.add_theme_font_size_override("font_size", UiText.small_size(u))
 			item.queue_redraw()
 	# Local error card stays reachable on a blocked work->information transition.
 	_place(status_label,Rect2(o+Vector2(180,h-104 if information.visible else 85),Vector2(w-660 if information.visible else w-550,70*u)))

@@ -4,6 +4,61 @@ const SOURCE = preload("res://art/drawing/TidyHand.ttf")
 const FALLBACK = preload("res://art/book/PlexSans.ttf")
 static var normal: FontFile
 static var dimension_widths: Dictionary = {}
+const SMALL_SIZE = 15
+# The upright body, without accents/descenders, defines the optical centre.
+# Actual strings (including fallback ink) still determine clipping and fit.
+const BODY_SAMPLE = "Hhx"
+static var small_fonts: Dictionary = {}
+
+static func small_size(u: float) -> int:
+	return roundi(SMALL_SIZE * u)
+
+static func line_baseline(typeface: Font, fs: int, height: float) -> float:
+	var line := TextLine.new()
+	line.add_string(BODY_SAMPLE, typeface, fs)
+	return floorf((height - line.get_size().y) / 2.0) + line.get_line_ascent()
+
+static func small_font(fs: int) -> FontVariation:
+	if not small_fonts.has(fs):
+		# Resource.duplicate() also copies already populated glyph-atlas caches.
+		# Their shared textures can be overwritten by subsequent glyph uploads
+		# in another size variant (visible in the Web comparison). Start with
+		# the original bytes and fresh caches instead.
+		var base := FontFile.new()
+		base.data = SOURCE.data
+		base.allow_system_fallback = false
+		base.fallbacks = font().fallbacks
+		# A fallback character previously increased native ascent by 2–3 px.
+		# Reserve that same safe envelope for every value in this role. Mutate
+		# only this private in-memory size cache, never original font bytes or
+		# normal/help/heading resources.
+		var envelope := TextLine.new()
+		envelope.add_string("Hhx Ägß × „‚–−←→↑↓", font(), fs)
+		base.set_cache_ascent(0, fs, envelope.get_line_ascent())
+		base.set_cache_descent(0, fs, envelope.get_line_descent())
+		var body: Rect2 = ink(base, BODY_SAMPLE, fs)
+		var native_center: float = line_baseline(base, fs, 44.0) + body.get_center().y
+		var variation := FontVariation.new()
+		variation.base_font = base
+		# FontVariation offsets glyph ink, including local fallback, without
+		# altering advances or line metrics. One correction per size, never word.
+		variation.baseline_offset = roundf(22.0 - native_center) / base.get_height(fs)
+		small_fonts[fs] = variation
+	return small_fonts[fs]
+
+static func small_label(label: Label, fs: int, u: float = 1.0) -> void:
+	label.add_theme_font_override("font", small_font(fs))
+	label.add_theme_font_size_override("font_size", fs)
+	var line := TextLine.new()
+	line.add_string(BODY_SAMPLE, small_font(fs), fs)
+	var envelope: Rect2 = ink(small_font(fs), "Ägß × „‚–−←→↑↓", fs)
+	var padding: float = ceilf(maxf(0, maxf(-envelope.position.y-line.get_line_ascent(), envelope.end.y-line.get_line_descent()))) + 1
+	var style: StyleBox = label_style(u)
+	# Symmetric safety padding preserves the optical centre. Category is top
+	# aligned within a fixed two-line reservation; status remains centred.
+	style.content_margin_top = padding
+	style.content_margin_bottom = padding
+	label.add_theme_stylebox_override("normal", style)
 
 static func font() -> FontFile:
 	if normal == null:

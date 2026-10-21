@@ -1,4 +1,4 @@
-"""HZ-B: bind current CI bytes, real Windows start and isolated synthetic GUI routes."""
+"""HZ-C: bind current CI bytes, real Windows start and isolated synthetic GUI routes."""
 import argparse
 import hashlib
 import json
@@ -132,7 +132,7 @@ def main():
         pck_files=[dict(file=p.relative_to(out).as_posix(),sha256=tc.sha256_file(p)) for p in native.iterdir() if p.is_file()],
         restart_files=[dict(file=p.relative_to(out).as_posix(),sha256=tc.sha256_file(p)) for p in restart.iterdir() if p.is_file()],
         probe_sha256=tc.sha256_file(script), engine_sha256=tc.sha256_file(args.engine),
-        independent_review="OPEN HZ-B-R01", owner_acceptance="OPEN HZ-B-M01")
+        independent_review="OPEN HZ-C-R01", owner_acceptance="OPEN HZ-C-M01")
     (out/"windows-binding.json").write_text(json.dumps(binding, ensure_ascii=False, indent=2)+"\n", encoding="utf-8", newline="\n")
     print("HZ_WINDOWS_OK", args.head)
 

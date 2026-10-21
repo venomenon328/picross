@@ -1,6 +1,6 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
-Stand: 21.10.2026 · Spezifikation 1.2 · **HZ-A/B integriert und abgenommen; HZ-C freigegeben, noch nicht implementiert**
+Stand: 21.10.2026 · Spezifikation 1.2 · **HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen**
 
 [Issue #284](https://github.com/venomenon328/picross/issues/284) dokumentiert den
 Abschluss von HZ-A und HZ-B einschließlich ihrer erfüllten T01/R01/M01-Gates.
@@ -11,8 +11,10 @@ Nachweise bleiben an die damaligen Heads gebunden.
 Der Eigentümer hat am 21.10.2026 die besprochene Typografie-Nachbesserung und ihre
 Übernahme in Issues und Repository-Dokumente freigegeben.
 [Folgeissue #294](https://github.com/venomenon328/picross/issues/294) führt dafür
-das zusammenhängende Paket HZ-C gemäß HZ-D07. Der aktuelle Auftrag liefert die
-Spezifikation, keine Produktimplementierung oder Mergefreigabe.
+das zusammenhängende Paket HZ-C gemäß HZ-D07. Der anschließende ausdrückliche
+Implementierungsauftrag liefert [HZ-C](HZ_C_VERIFICATION.md) in
+[Draft-PR #296](https://github.com/venomenon328/picross/pull/296). R01/M01 und
+eine spätere Mergefreigabe bleiben getrennt offen.
 
 ## 1. Ziel, Ausgangsstand und gezielte Ablösung
 
@@ -255,7 +257,9 @@ ihrer äußersten Buchstaben: „Neu“, „Begonnen“, „Gelöst“ und wechs
 Dropdownwerte dürfen nicht in der Höhe springen. Die tatsächlichen Glyphenhüllen
 einschließlich lokaler Fallbacks bleiben gemäß HZ-D02 für vollständige Darstellung,
 sichere Budgets und Clipping maßgeblich. Ein rollenbezogener optischer Ausgleich
-ist zulässig; seine konkrete technische Form wird erst in HZ-C festgelegt.
+ist zulässig. Die [HZ-C-Lieferung](HZ_C_VERIFICATION.md) belegt die Ursache
+und verwendet private gemessene Zeilenmetriken sowie feste Referenzgrundlinien;
+Originalfontbytes und übrige Textrollen bleiben erhalten.
 
 Die Kartenfußzeile wird als Einheit aus Blattkennung, Statuswort und Statussymbol
 ausgerichtet. Kategorien behalten ihre feste Position im reservierten, bis zu
@@ -265,12 +269,15 @@ Kategorie-, Filter- und Statuswechseln.
 
 ### Größenvergleich und betroffene Rollen
 
-Die korrigierte bestehende kleine Größe **14** wird direkt mit **15 bei UI100**
-verglichen; beide folgen der vorhandenen UI-Skalierung. **15 ist der bevorzugte
-erste Vergleichswert, kein bereits gemessenes oder abgenommenes Endmaß.**
+Für den freigegebenen Vergleichsrahmen galt: Die korrigierte kleine Größe **14**
+wird direkt mit **15 bei UI100** verglichen; beide folgen der vorhandenen
+UI-Skalierung. **15 war der bevorzugte erste Vergleichswert, kein bereits
+gemessenes oder abgenommenes Endmaß.**
 Korrekt ausgerichtete 14 bleibt zulässig, wenn der Vergleich ausreichende
 Lesbarkeit und stimmige Hierarchie zeigt. Wahl, Begründung und Originalbelege
-werden in der späteren Lieferung dokumentiert. Keine automatische Erhöhung auf 16.
+sind in der [HZ-C-Lieferung](HZ_C_VERIFICATION.md) dokumentiert: gemeinsame
+kleine Größe 15 bei UI100 und 19 bei UI125, Blattkennungen unverändert 15/19.
+Der Vergleichsrahmen bleibt nachvollziehbar; M01 ist noch offen. Keine automatische Erhöhung auf 16.
 
 | Bereich | Verbindliche gemeinsame Betrachtung |
 | --- | --- |
@@ -301,7 +308,7 @@ aus HZ-D06.
 | --- | --- | --- |
 | HZ-A · Schrift und Textlayout | HZ-D01/D02 vollständig, einschließlich aller normalen Textpfade, kontrollierter Zeichenbehandlung, gemessenem Layout, Ressourcen-/Exportnachweis und nachgeführter Anleitung | Integriert über PR #288 und separat abgenommen; Abschluss in #284. |
 | HZ-B · Gezeichnete Controls und Symbole | HZ-D03/D04/D05 vollständig auf den HZ-A-Textmaßen; sämtliche Konturen, geöffneten Menüs, Zustände und Piktogramme im regulären Spiel | Nach HZ-A über PR #289 integriert und separat abgenommen; #284 abgeschlossen. |
-| HZ-C · Optische Textausrichtung und kleine Schriftrolle | HZ-D07 vollständig: stabile Grundlinien, begründeter Vergleich 14/15, Kategorien und offene/geschlossene Dropdowns, passende gemeinsame Text-/Symbol-/Layoutmaße | #294: Spezifikation freigegeben, noch nicht implementiert. Auf integriertem HZ-A/B; gesonderter Implementierungsauftrag erforderlich. |
+| HZ-C · Optische Textausrichtung und kleine Schriftrolle | HZ-D07 vollständig: stabile Grundlinien, begründeter Vergleich 14/15, Kategorien und offene/geschlossene Dropdowns, passende gemeinsame Text-/Symbol-/Layoutmaße | #294: Auf integriertem HZ-A/B in Draft-PR #296 implementiert; [Prüfzuordnung](HZ_C_VERIFICATION.md). R01/M01 bleiben vor Merge offen. |
 
 HZ-D06 gilt für alle Pakete. Ein Implementierungs-PR je Paket enthält notwendige
 Regressionen und Dokumentation. HZ-B hielt Rahmen, Menüs und Icons zusammen,
