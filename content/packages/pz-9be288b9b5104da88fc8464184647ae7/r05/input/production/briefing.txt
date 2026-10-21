@@ -1,0 +1,4 @@
+r05: exakt acht ausserhalb der unteren rechten Kontur liegende Leerzellen schwarz gefuellt; keine weiteren Matrixaenderungen.
+
+Working mode: faithful
+Motif and gameplay review: open
