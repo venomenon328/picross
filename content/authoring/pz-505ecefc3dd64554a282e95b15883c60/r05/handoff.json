@@ -1,0 +1,117 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 22,
+    "file": "rulebook.md",
+    "sha256": "56b72172665ccedec2e990045ceffc5cba80c2d8ff368b5dd1a72e99842f9854"
+  },
+  "puzzle_id": "pz-505ecefc3dd64554a282e95b15883c60",
+  "revision": "r05",
+  "repo_commit": "a96910592838f63f0f4a6a78807f091872bcdded",
+  "state": "blocked",
+  "category_id": "haushalt-alltag",
+  "brief": "brief.md",
+  "approved_parameters": [
+    {
+      "width": 25,
+      "height": 25,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        30,
+        42,
+        1239,
+        1219
+      ]
+    },
+    {
+      "width": 30,
+      "height": 30,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        30,
+        42,
+        1239,
+        1219
+      ]
+    }
+  ],
+  "proposed_parameters": "parameters.json",
+  "reveal": {
+    "file": "reveals/C-r01.png",
+    "revision": "C-r01",
+    "sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/reveal-C-r01.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r02.png",
+    "revision": "MA-r02",
+    "sha256": "e0747033ee06b3231b3a5af5fddcccb3cc34094f4feb1aa50f091d6cf98ff8e0",
+    "derived_from_reveal_sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/motif-MA-r02.json"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": "qa/input-verification.json",
+  "repair": null,
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "e518ef4e7d9e2b022674c026de3fbdb6d0782da7dcd5ba309f43344bc927ac36"
+  },
+  "difficulty": "difficulty-status.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "blocked",
+    "frame": "fail",
+    "visual": "blocked",
+    "difficulty": "blocked",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "blocked"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-C-r01.json",
+    "motif": "approvals/motif-MA-r02.json",
+    "provenance": "qa/input-verification.json",
+    "logic": "qa/verification-summary.json",
+    "frame": "qa/input-verification.json",
+    "visual": "qa/editorial-raster-review.json",
+    "difficulty": "difficulty-status.json",
+    "reveal_consistency": "qa/editorial-raster-review.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "B-PZ-05-01: Kein vollständiger Deduktionsnachweis: alle vier Direktimporte mit full-line-mono und paired-lines-mono unabhängig bestätigt stalled; zwei begrenzte RP5-Runden ohne zertifizierten Fund.",
+    "B-PZ-05-02: Alle vier unveränderten Direktimporte verletzen die Randregel: links belegt, aber weder obere noch untere Kante belegt. Keine Endauswahl.",
+    "B-PZ-05-03: 25x25 area-160 ist nachweislich mehrdeutig: zwei verschiedene unabhängig überprüfte Lösungen derselben Hinweise. Dieser Befund gilt für genau diese unveränderte Logik, nicht automatisch für andere Raster oder Reparaturen."
+  ],
+  "next_action": "Korrigieren oder Fehler beheben: geänderte Motivabstraktion MA-r03 mit rastertauglicheren, zusammenhängenderen Kontur-/Spitzenformen und motivgerechtem Randkontakt bei maximal 30 je Achse vorlegen und erneut menschlich freigeben. C-r01 bleibt unverändert. Alternativ eine konkrete größere lokale Formkorrektur gesondert autorisieren. Keine weitere Routine-Reparatur oder Endabnahme des r05-Stands.",
+  "authorization": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nPaket: content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r04/package.zip · r04.\nIch gebe die Motivvorlage motifs/MA-r02.png · MA-r02 frei; Parameter: Maximal 30 je Achse; 30×30 empfohlen, alternativ 25×25; mono, genau 1 Vordergrundfarbe; area, contain; Crop [30,42,1239,1219]; Freigabe offen.. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.\nFarbanzahl: 1 (Genau, ohne Leer).\nQuellbranch / Commit: 1260578fde94fc7bee14efe4b6636061d36238c7.\n\nRepositoryablage nach §6 ist beauftragt. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen.",
+  "codex_handoff": "CODEX_HANDOFF.txt",
+  "diagnostic_candidate": {
+    "bundle": "import-30",
+    "variant": "area-160",
+    "matrix_hash": "5f2efbb6f468db537dcb5514e40707524580dc21cdcd4b25be16fafa1e5448f7",
+    "logic_hash": "75aa85f717431f34760b377b779dd7c7ea0b90d6346afa82ed0e068caa5e3c96",
+    "note": "Static diagnostic comparison, not selected for release."
+  }
+}

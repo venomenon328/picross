@@ -1,0 +1,54 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-505ecefc3dd64554a282e95b15883c60",
+  "revision": "r05",
+  "motif_name": "Essstäbchen",
+  "category_id": "haushalt-alltag",
+  "state": "blocked",
+  "repo_commit": "a96910592838f63f0f4a6a78807f091872bcdded",
+  "updated_at_utc": "2026-10-21T11:50:00Z",
+  "package": {
+    "file": "content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r05/package.zip",
+    "bytes": 2504733,
+    "sha256": "e7e38dddd966730f284fbf945a5248b8aaaaac66beabb2a93fbba148996409dc"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-505ecefc3dd64554a282e95b15883c60/r05/handoff.json",
+    "sha256": "8e16cda5894b67ac3175b9a601f1f74365f42acfc0aa0e668cba0002af03d2c5"
+  },
+  "inventory_sha256": "e518ef4e7d9e2b022674c026de3fbdb6d0782da7dcd5ba309f43344bc927ac36",
+  "final_editorial_approval": null,
+  "width": 30,
+  "height": 30,
+  "maximum_dimensions": {
+    "width": 30,
+    "height": 30
+  },
+  "dimensions_approximate": true,
+  "mode": "mono",
+  "foreground_colors": 1,
+  "actual_foreground_colors": 1,
+  "difficulty": null,
+  "reveal": {
+    "file": "reveals/C-r01.png",
+    "revision": "C-r01",
+    "sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/reveal-C-r01.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r02.png",
+    "revision": "MA-r02",
+    "sha256": "e0747033ee06b3231b3a5af5fddcccb3cc34094f4feb1aa50f091d6cf98ff8e0",
+    "derived_from_reveal_sha256": "83da51829f69b43ed80f43b505d705eb617accc502d34079a3d4a69c75f78804",
+    "approval": "approvals/motif-MA-r02.json"
+  },
+  "proposed_parameters": "parameters.json",
+  "blockers": [
+    "B-PZ-05-01: Kein vollständiger Deduktionsnachweis: alle vier Direktimporte mit full-line-mono und paired-lines-mono unabhängig bestätigt stalled; zwei begrenzte RP5-Runden ohne zertifizierten Fund.",
+    "B-PZ-05-02: Alle vier unveränderten Direktimporte verletzen die Randregel: links belegt, aber weder obere noch untere Kante belegt. Keine Endauswahl.",
+    "B-PZ-05-03: 25x25 area-160 ist nachweislich mehrdeutig: zwei verschiedene unabhängig überprüfte Lösungen derselben Hinweise. Dieser Befund gilt für genau diese unveränderte Logik, nicht automatisch für andere Raster oder Reparaturen."
+  ],
+  "next_action": "Korrigieren oder Fehler beheben: geänderte Motivabstraktion MA-r03 mit rastertauglicheren, zusammenhängenderen Kontur-/Spitzenformen und motivgerechtem Randkontakt bei maximal 30 je Achse vorlegen und erneut menschlich freigeben. C-r01 bleibt unverändert. Alternativ eine konkrete größere lokale Formkorrektur gesondert autorisieren. Keine weitere Routine-Reparatur oder Endabnahme des r05-Stands.",
+  "integration": null,
+  "diagnostic_dimensions_only": true
+}
