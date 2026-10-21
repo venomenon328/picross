@@ -20,7 +20,14 @@ static func line_baseline(typeface: Font, fs: int, height: float) -> float:
 
 static func small_font(fs: int) -> FontVariation:
 	if not small_fonts.has(fs):
-		var base: FontFile = font().duplicate()
+		# Resource.duplicate() also copies already populated glyph-atlas caches.
+		# Their shared textures can be overwritten by subsequent glyph uploads
+		# in another size variant (visible in the Web comparison). Start with
+		# the original bytes and fresh caches instead.
+		var base := FontFile.new()
+		base.data = SOURCE.data
+		base.allow_system_fallback = false
+		base.fallbacks = font().fallbacks
 		# A fallback character previously increased native ascent by 2–3 px.
 		# Reserve that same safe envelope for every value in this role. Mutate
 		# only this private in-memory size cache, never original font bytes or

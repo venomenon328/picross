@@ -1,0 +1,199 @@
+{
+  "purpose": "HZ-C development originals: native component comparison/routes and isolated Chromium static comparison; final CI/Windows gates remain separate",
+  "starting_commit": "8ef380d41341064f713ea26e7d1ed499d2f6badf",
+  "source_tree_dirty": true,
+  "source_files": {
+    "game/ui/atlas_marks.gd": "e1a15a6a9cc3041dd77ad5eb6194f1531719df9cdd5b4e239711f18c523ef39c",
+    "game/ui/board.gd": "b8d683298754f7500d29b9f95bd8202ddae5a183f00356379e30acd0d1b756c0",
+    "game/ui/book_button.gd": "ab61022d5bc570d005f4a67e9bfb5ecbafd55c81d47865b07b39006f7d2ed8cf",
+    "game/ui/book_choice.gd": "a8d7541acf35b51b3bbad9044e71febb0874b0674060e9751ae02ecc47b112f1",
+    "game/ui/book_controls.gd": "6220d4687a0f93f201297f244b274c9c23e34f582ac6ed79d614299d5d10a062",
+    "game/ui/book_style.gd": "08cf9ba620da29d3c7dac300288394c9b464dd0f24441a7062f67e6efe40e82c",
+    "game/ui/book_surface.gd": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7",
+    "game/ui/book_tooltip.gd": "7abea08121abf45db2d1c7a8d1bc14a77d53ac81eddd12fadbb79f4fd7eb08a7",
+    "game/ui/catalog.gd": "45d957e41511898ab56af2b59c136644a97b7d71873183b75777ccf6eee19934",
+    "game/ui/catalog_card.gd": "65225ca987afb1a86b92985623b7de43e872eef0a72697797db418dd117c6d98",
+    "game/ui/catalog_ink.gd": "6d71d747e1517c507d1043fb42b116dc3be926ff6f49311be8e85a8180dd76de",
+    "game/ui/catalog_tip.gd": "aca6878b0053479a494f2f8bec7d8b99222f71abe2e3a7711b8598cf13015cc2",
+    "game/ui/cell_atlas.gd": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d",
+    "game/ui/chalkboard_board.gd": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad",
+    "game/ui/clue_layout.gd": "960d29e4254cea067aafed888332cceb3d31b323b60d601c82b69b714a2c0b45",
+    "game/ui/clue_overlay.gd": "c3d6a5579c6412c1f5d57db105fffd4acef6b0dc29377a32e275af3e09e48be6",
+    "game/ui/clue_typography.gd": "8748fb0c0e7a489b4d0e742380360ee83f5718561ce5ac27ea33300e8e386b94",
+    "game/ui/completion.gd": "208d0996791ec23fa130e5d922ebccaffa46e11ca9154969471ed8c0fdcb72ea",
+    "game/ui/drawing_board.gd": "cf43e86369f3d12c6d592aea92c600940660c362f914ac1b232aba15e9364c0c",
+    "game/ui/drawing_font.gd": "7f32268ba4cac9a530fbe5a6d63f8a3c53c769fff281803f9fb104aabaed8cfc",
+    "game/ui/full_view_board.gd": "9da341007baffb7a3cfde9a66dce91f620dd119a9b3f7d398c28a9c034b9b097",
+    "game/ui/gesture_counter.gd": "d27ac9a2178b2a457c875881c268caf22e661829385497c01598c37b0b082b4e",
+    "game/ui/grid_view.gd": "5b4c29e2e2c8291834d2169f9281d97bfeac212284fb85a817aae4bcdf25a946",
+    "game/ui/main.gd": "2f50ef80dcdc6e8f17f28138c04236bfa2c688d44187ea08c7b2d8f62fbe9ee0",
+    "game/ui/miniature.gd": "ec84abc6768176ea95a99d4266c90c633db0006978d340d125bc6eceb8e768bf",
+    "game/ui/pencil_marks.gd": "bec00db704685bea4028b23fba0f3374f659041154cba20f5a85c9f203846947",
+    "game/ui/reveal.gd": "03f14a741db55de0a9ca4582396830e43680f52b790cf1c2b50e9c3d8223c392",
+    "game/ui/scribble.gd": "74af9c0a6140644ae456a7f6d530dcb6c4ccb5fbc490af24615c8f3b796efbee",
+    "game/ui/ui_text.gd": "31ab9b6193f1154c6a8327093faba221790e0ac68a9720e52585beac0c49d2d5"
+  },
+  "sample_sha256": "1344c6f82c89d91e0ec936644f8c605f3cfd4203a7fdd9e2cf23674d97d73041",
+  "native_active_test_files": {
+    "hz_c_cases.gd": "d4d200b64cc6634b18c0c5fbcb89d6a47f4a30681f71eb44a61f309e49bb15b8",
+    "hz_c_native.gd": "5cb31ba4d7a7ab0870b2f69cd447c0cfb35fa171ba3c40a41dac945ede5ebacf",
+    "hz_c_sample.gd": "1344c6f82c89d91e0ec936644f8c605f3cfd4203a7fdd9e2cf23674d97d73041",
+    "hz_cases.gd": "ae61af70446de1730a7c251005c46bd43812b5c2ad7c0434402a5ebeb4ad0828"
+  },
+  "native_temporary_runner": "native-temporary-runner.gd.gz",
+  "native_checks": 283,
+  "files": {
+    "chromium-build-binding.json": {
+      "sha256": "33e46723c850d3a3a1d33c8ebc0dbd90024c18bbb26467c9a81c45e1a47e0e7a",
+      "bytes": 5309
+    },
+    "chromium-build.py.gz": {
+      "sha256": "42aba0e7d7d36177f1d9ae6ac959285a01d8f959b446c322e6cc8906328f1319",
+      "bytes": 1649
+    },
+    "chromium-capture.py.gz": {
+      "sha256": "599937494d9659b9db6c719a36ef2d8903a9d1b39cbd419cb27fa8cf171c3241",
+      "bytes": 954
+    },
+    "chromium-comparison-1280.png": {
+      "sha256": "9ef4780a8abdac0bacf68420cd2eba1b9cabc58ef8120dd7eb400c1f84fb3505",
+      "bytes": 65426
+    },
+    "chromium-comparison-1920.png": {
+      "sha256": "b3010bb1f01931061e9fbc3df42cc91c23865401b9cbfba424cac3315e7cf712",
+      "bytes": 45935
+    },
+    "chromium-comparison-2560.png": {
+      "sha256": "9ef4780a8abdac0bacf68420cd2eba1b9cabc58ef8120dd7eb400c1f84fb3505",
+      "bytes": 65426
+    },
+    "chromium-menu-14-1280.png": {
+      "sha256": "5db4b9abc6dc97c40119a58b28cc614c0a92d0871708550084a60baa2cf2447f",
+      "bytes": 76909
+    },
+    "chromium-menu-14-1920.png": {
+      "sha256": "770c7f7d82784107aea47c327b530033b61f7f1471021a705edd350280fe7f21",
+      "bytes": 63894
+    },
+    "chromium-menu-14-2560.png": {
+      "sha256": "0301c0468466ca2f33ebf7d054990befc6a6763a51a165e1697d76dff834ba74",
+      "bytes": 90690
+    },
+    "chromium-menu-15-1280.png": {
+      "sha256": "a0fba24cbee5cfe3daa580db7e32ad024c8565431725327d0f7bb36e642934c2",
+      "bytes": 77444
+    },
+    "chromium-menu-15-1920.png": {
+      "sha256": "de1cc9e97781168d9f2ffb5f1babb3003a70afdb44a15251822b6d2d8e0becfe",
+      "bytes": 63764
+    },
+    "chromium-menu-15-2560.png": {
+      "sha256": "d939c17d0f76b86964d1d72c5e43d80b458998adf6164fdd6a154cd98f5f6c04",
+      "bytes": 91322
+    },
+    "chromium-report.json": {
+      "sha256": "b605db00ece7614beac07acdd59eb2a98910ba81db92647da591a8e978b923c2",
+      "bytes": 999
+    },
+    "chromium-temporary-entry.gd.gz": {
+      "sha256": "9ac0f8bec8537ef3e3dbdcf3a2c7b50914dc6d248fc8c8a53b5cd3e5f0e15055",
+      "bytes": 625
+    },
+    "hz-c-catalog-category-1280.png": {
+      "sha256": "7251274ed3ca40d275345f7232f4d66e603dd4a56bf3ef0e05ec4fa3cf8d56a6",
+      "bytes": 47573
+    },
+    "hz-c-catalog-category-1920.png": {
+      "sha256": "14acfc25f0192c65edc50f34e3e9cd4197d3aaeaa0ef34ddabfbc65913e47076",
+      "bytes": 58888
+    },
+    "hz-c-catalog-category-2560.png": {
+      "sha256": "830ce0eed196259d19fc68bc65f6538a3eab2e728987eda9ce6349b76125c4f4",
+      "bytes": 81431
+    },
+    "hz-c-catalog-sort-1280.png": {
+      "sha256": "a390bca567ac03064dadf0a10abaf4f6b5ee39fa9cf52bdc1d74a83a3aa8976d",
+      "bytes": 13922
+    },
+    "hz-c-catalog-sort-1920.png": {
+      "sha256": "af28c8668470b5a61d692a07016fd895b89908921b6b69f24b6e631f9cc34111",
+      "bytes": 9383
+    },
+    "hz-c-catalog-sort-2560.png": {
+      "sha256": "a390bca567ac03064dadf0a10abaf4f6b5ee39fa9cf52bdc1d74a83a3aa8976d",
+      "bytes": 13922
+    },
+    "hz-c-comparison-1280.png": {
+      "sha256": "592961b694371f84580fe3fb2dfb8d6994d72bd331e23e6d799b3154c2728f09",
+      "bytes": 76790
+    },
+    "hz-c-comparison-1920.png": {
+      "sha256": "c8a26f868f260a2b24cd410e9ad3207ed243c8dd4a3a37fa252179f0a2079e42",
+      "bytes": 55429
+    },
+    "hz-c-comparison-2560.png": {
+      "sha256": "6c963c81c5e1fbde8393f8e9b68749b95bf3ab854ad5a2de7e3822e41d99878c",
+      "bytes": 76810
+    },
+    "hz-c-status-begonnen-1280.png": {
+      "sha256": "6781262ba5426ea3a2730c0b4093ada5485e14b8870d5c7a8f4fedfdcd014e4b",
+      "bytes": 45057
+    },
+    "hz-c-status-begonnen-1920.png": {
+      "sha256": "e25057f444d1928111f07a3c233e06c9e228dfd9cea5745384bf33304ed25feb",
+      "bytes": 28133
+    },
+    "hz-c-status-begonnen-2560.png": {
+      "sha256": "9fc3a07ae48ad90d3bb0835d2b4a5c03f95a64cfb3a4ec137b6ea64ad566c434",
+      "bytes": 38085
+    },
+    "hz-c-status-gelost-1280.png": {
+      "sha256": "3155f0819dbed3f842de804d8c8f51d7203c06bde2c44ec20f0dcfdf0b3ea187",
+      "bytes": 44757
+    },
+    "hz-c-status-gelost-1920.png": {
+      "sha256": "5e30fae8775266d78da9dba3bda9e236dceba2a37e7704df0ceb527ca1a110b7",
+      "bytes": 28409
+    },
+    "hz-c-status-gelost-2560.png": {
+      "sha256": "2d40a387eb8ad7825f9f3e62ff08cdb74387f04297326333db94fc4da47ad156",
+      "bytes": 37522
+    },
+    "hz-c-status-neu-1280.png": {
+      "sha256": "5ac679674b1bab7ac5f7336ab37a37ec6a5b05976f8796a2ff2f5c9a15b6987a",
+      "bytes": 40751
+    },
+    "hz-c-status-neu-1920.png": {
+      "sha256": "23aaae8dfc31c5a6999fbb533376a3f89755a336d0b7eefbcd394a30f4f03464",
+      "bytes": 25364
+    },
+    "hz-c-status-neu-2560.png": {
+      "sha256": "8b1466ba7f1d18143dc800e11f189feab58a6e52dd94cf1a619f16ad740537d7",
+      "bytes": 33305
+    },
+    "hz-c-view-1280.png": {
+      "sha256": "d961f54db01495b41d0c2e355cd62b705288de721a3a25df2218a5edafba10b7",
+      "bytes": 12904
+    },
+    "hz-c-view-1920.png": {
+      "sha256": "b56b5cd7f2779c7eadeef4ec653cceb14ec3a0665cb374d6b91d33673e4a4dfc",
+      "bytes": 11378
+    },
+    "hz-c-view-2560.png": {
+      "sha256": "de04945b1c4e70cde4baea94d2bab82a7aa0116380b406ce0018c45edb1aaa40",
+      "bytes": 14755
+    },
+    "native-report.json": {
+      "sha256": "f2a3e757d9f65d61c91ad8c6d158f1a947db874cdf7a273b9bad0f649ebb7fc5",
+      "bytes": 4003
+    },
+    "native-run.log": {
+      "sha256": "ba5363f4723a5e626e2dd75d653722cdbd3c05ae66e1da8a21a22df95b7962aa",
+      "bytes": 238
+    },
+    "native-temporary-runner.gd.gz": {
+      "sha256": "f391226033a0b0d7c0f4e0428c30cb6019ce08a127c5d027bef139160d8994e5",
+      "bytes": 20018
+    }
+  }
+}
