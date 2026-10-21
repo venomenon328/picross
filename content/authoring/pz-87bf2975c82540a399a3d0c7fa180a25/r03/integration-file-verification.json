@@ -1,0 +1,26 @@
+{
+  "format": "picross-integration-file-verification-v1",
+  "puzzle_id": "pz-87bf2975c82540a399a3d0c7fa180a25",
+  "package_revision": "r03",
+  "runtime_revision": 1,
+  "base_commit": "39b1640cb7f4daac3cba3344d6aef482b487a0c6",
+  "checked_at_utc": "2026-10-21T15:26:10.415318Z",
+  "status": "pass",
+  "package_files_verified": 51,
+  "export_manifest_sha256": "cda2f0c76c663eee1d5d7164806a7a10d25d2f9102920e467177515b46ca980c",
+  "files": {
+    "game/data/content/om_001.json": "2021497d6e79578feca61b836986280a54f33e7a91eac06dfe6c970567068912",
+    "game/art/content/om_001.png": "3ce9799443da21c46dc63754670f3fb89ec3822ca267c26c27d1e4cb4ce3387e",
+    "game/art/content/om_001.txt": "fd93c6f43e52b9b707e7c534e303c9b9c36250b79dc295a6d163bb2546c3975a",
+    "content/difficulty/pz-87bf2975c82540a399a3d0c7fa180a25/rating.json": "d4c47a1ec805003320ee0cf06267c260d078f7821de2ecc78181d638f28a40a4",
+    "content/added/pz-87bf2975c82540a399a3d0c7fa180a25.json": "ed42bf8eeb4f55b532e5ea5b31f71aad5a557a09b804370810d564e64ebd906b",
+    "game/data/registry.json": "b4411ecfee212cfac4f3f49c12ee653148769be04c0004bf83a59f3ec4e7501b",
+    "content/registry.json": "9e465e8aa0deee9880ce8960c12a6e0f9328851fca84e4736e00546d88b99135"
+  },
+  "unchanged_existing_content_entries": 29,
+  "unchanged_existing_runtime_entries": 29,
+  "category_id": "mythen-fantasie",
+  "native_checks": "nicht erforderlich: reine Inhaltsintegration",
+  "new_analysis": "nicht erforderlich: geprüfte 0.3-Analyse bei identischer Logik/Matrix neu gebunden",
+  "user_saves_modified": false
+}

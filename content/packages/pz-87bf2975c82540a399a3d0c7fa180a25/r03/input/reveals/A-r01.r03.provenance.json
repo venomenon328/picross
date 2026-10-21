@@ -1,0 +1,12 @@
+{
+  "author": "OpenAI-Bildgenerierung im Nutzerauftrag",
+  "file": "reveals/A-r01.png",
+  "input": "source/reference.png",
+  "prompt_file": "prompts.json",
+  "puzzle_id": "pz-87bf2975c82540a399a3d0c7fa180a25",
+  "reference_sha256": "fe8a562508c88f9a11db997c9248a4e5336586e5726b48ad868864118fd6c35f",
+  "sha256": "3ce9799443da21c46dc63754670f3fb89ec3822ca267c26c27d1e4cb4ce3387e",
+  "usage_basis": "Die ursprüngliche Referenz ist laut tatsächlicher Nutzererklärung eine eigene Vorlage (approvals/reference-usage.json). Ausdrücklich beauftragte KI-Bearbeitung, Rätselproduktion und Repositoryablage; keine fremde Lizenz behauptet.",
+  "usage_evidence": "approvals/reference-usage.json",
+  "previous_provenance": "reveals/A-r01.provenance.json"
+}
