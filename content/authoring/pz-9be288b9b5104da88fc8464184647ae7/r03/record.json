@@ -1,0 +1,58 @@
+{
+  "approval_note": "Tatsächliche Motivfreigabe im Paket; Endabnahme offen. Kein content_ready.",
+  "blockers": [
+    "logic: kein vollständig zertifiziertes Endraster; 26x43-Direktimporte nachweislich mehrdeutig",
+    "visual: Lautsprecher und kleine Bedienteile benötigen ruhigere Abstraktion"
+  ],
+  "category_id": "technik-erfindungen",
+  "diagnostic_dimensions": [
+    26,
+    43
+  ],
+  "diagnostic_reference": {
+    "bundle": "import-26x43",
+    "logic_hash": "422d90f4625b9af7ed28dcbbbab121e1162f819e69335e6d8078f71251304003",
+    "matrix_hash": "7887d918053fd7084f0d519204c96f1eddcd211a4a8ff2c85a6c59a24e5bbee1",
+    "variant": "area-128"
+  },
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "foreground_colors": 1,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r03/handoff.json",
+    "sha256": "26c175ed8e46af3a9d0b0213f4c0ed53904b8c87f8579e48707935e4678e26f3"
+  },
+  "height": null,
+  "integration": null,
+  "inventory_sha256": "b659a0ecb3579153df14e7c2c10f1cdcaf3e8c0c17204dc838c549e7768d3476",
+  "mode": "mono",
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "8dd70cb680ca3ee6993d1ddc15be11965e94ccbb271157938de21d987b13352c",
+    "file": "motifs/MA-r01.png",
+    "provenance": "provenance/motif.json",
+    "revision": "MA-r01",
+    "sha256": "3322e54295f8046b6d45dab597b0d5e096d1555b1f773210aa454082e5e79b0a"
+  },
+  "motif_name": "Game Boy",
+  "next_action": "Korrigieren oder Fehler beheben",
+  "package": {
+    "bytes": 11448688,
+    "file": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r03/package.zip",
+    "sha256": "3278a4fb669775ead81af60c110434cd20106585285e256f0bf4bbc45f08499a"
+  },
+  "puzzle_id": "pz-9be288b9b5104da88fc8464184647ae7",
+  "repo_commit": "afeb38387d51021b1e175b0cc72e2220abd3288e",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "provenance/reveal.json",
+    "revision": "A-r01",
+    "sha256": "8dd70cb680ca3ee6993d1ddc15be11965e94ccbb271157938de21d987b13352c"
+  },
+  "revision": "r03",
+  "state": "blocked",
+  "updated_at_utc": "2026-10-21T21:44:38Z",
+  "width": null
+}
