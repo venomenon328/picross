@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C / #294 spezifiziert, noch nicht implementiert:**
+**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C / #294 implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale
 Spieler-UI gemäß HZ-A-FONT02 an Tidy Hand als Standardtext (Überschriften
 unverändert) und stärker gezeichnete kleine Rahmen, vollständige
@@ -12,13 +12,14 @@ Historische Lieferberichte bleiben an ihre jeweiligen Heads gebunden.
 
 Das Folgepaket [HZ-C / #294](https://github.com/venomenon328/picross/issues/294)
 führt optische Textausrichtung, stabile Grundlinien und die gemeinsame kleine
-Schriftrolle gemäß HZ-D07 zusammen. Korrigierte 14/15 werden direkt verglichen;
-15 bei UI100 ist der bevorzugte Vergleichswert, noch kein festes Endmaß.
-Kategorien sind ausdrücklich eingeschlossen. Delight-Hinweise samt Geometrie,
+Schriftrolle gemäß HZ-D07 zusammen. Die [Lieferung](HZ_C_VERIFICATION.md)
+begründet nach direktem Vergleich der korrigierten 14/15 die Wahl 15 bei UI100
+und 19 bei UI125 einschließlich Kategorien; Blattkennungen bleiben 15/19. Delight-Hinweise samt Geometrie,
 Überschriften, Originalfontbytes und die drei großen SL-Rasterrahmen bleiben.
 HZ-C erhält eigene T01/R01/M01-Gates; HZ-A/B nehmen diese nicht vorweg.
-Der aktuelle Auftrag liefert nur Issue und Spezifikationsdokumente. Technische
-Startprüfung, Ausführungswahl und Implementierung folgen einem gesonderten Auftrag.
+Der ausdrückliche Implementierungsauftrag liefert das Gesamtpaket in
+[Draft-PR #296](https://github.com/venomenon328/picross/pull/296).
+Technischer Abschluss und Originalbelege sind dort gebunden; R01/M01 bleiben offen.
 
 **AT / #256 (19.10.2026), Umsetzungsvorbereitung V4; AT-A integriert, AT-B-F01 nach Eigentümerabnahme beauftragt:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ist bei Abschlussbildern,

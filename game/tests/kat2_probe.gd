@@ -19,6 +19,7 @@ var kk_measurements: Array = []
 var kk_pointer_measurements: Array = []
 var ke_graphics_measurements: Array = []
 var at_measurements: Array = []
+var hzc_measurements: Array = []
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -191,6 +192,7 @@ func run() -> void:
 		await fixed_cards()
 		await preload("res://tests/hz_native.gd").run(self)
 		await preload("res://tests/hz_b_native.gd").run(self)
+		await preload("res://tests/hz_c_native.gd").run(self)
 	elif mode == "ke":
 		await catalog_labels()
 		await preload("res://tests/ke_graphics.gd").run(self)
@@ -232,6 +234,7 @@ func write_report() -> void:
 	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	report["ke_graphics_measurements"] = ke_graphics_measurements
 	report["at_measurements"] = at_measurements
+	report["hzc_measurements"] = hzc_measurements
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()

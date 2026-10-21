@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C spezifiziert, noch nicht implementiert:**
+**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil
 auf alle normalen Spielertexte, Rahmen der Rätselkarten und kleinen Buttons,
 geschlossene und geöffnete Dropdowns sowie alle Button-/Menüpiktogramme.
@@ -13,7 +13,9 @@ ihre Abnahmen und der Abschluss stehen im geschlossenen
 [Issue #284](https://github.com/venomenon328/picross/issues/284).
 [HZ-C / #294](https://github.com/venomenon328/picross/issues/294) führt die am
 21.10.2026 freigegebene Typografie-Nachbesserung gemäß HZ-D07 als eigenes Paket.
-Diese Spezifikationsfreigabe beauftragt noch keine Produktimplementierung.
+Die [Implementierung](HZ_C_VERIFICATION.md) liefert stabile Grundlinien und
+die nach korrigiertem 14/15-Vergleich gewählte kleine Größe 15/19 bei UI100/125.
+Blattkennungen bleiben 15/19; R01/M01 sind vor Merge weiterhin offen.
 
 **AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ergänzen den Bildstandard

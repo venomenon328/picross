@@ -1,0 +1,11 @@
+{
+  "head": "f0338f983facf529bd0c54a70dfb0b522bcf03bf",
+  "base": "02b7fcd53b4eef8c94f873314848806eefc265cc",
+  "checkout": "cd19355a9de6f09b492264b779ce797e49c067bc",
+  "run": "39574622734",
+  "attempt": "1",
+  "artifact_id": 12333899147,
+  "artifact_digest": "11080165e2796f92981d2e2e06749d81295fc8d4c833ff4bf3df2dde786a4177",
+  "archive_sha256": "e1a48e8c35ceb38a49faaa08521e38dd5e67cb01eccad49da127e39001b6e395",
+  "result": "FAILED initial long category fits selector; retained unchanged original diagnostic, not technical success"
+}

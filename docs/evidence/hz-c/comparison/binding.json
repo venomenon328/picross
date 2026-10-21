@@ -1,0 +1,261 @@
+{
+  "purpose": "HZ-C development originals: native component comparison/routes and isolated Chromium static comparison; final CI/Windows gates remain separate",
+  "starting_commit": "f0338f983facf529bd0c54a70dfb0b522bcf03bf",
+  "source_tree_dirty": true,
+  "source_files": {
+    "game/ui/atlas_marks.gd": "e1a15a6a9cc3041dd77ad5eb6194f1531719df9cdd5b4e239711f18c523ef39c",
+    "game/ui/board.gd": "b8d683298754f7500d29b9f95bd8202ddae5a183f00356379e30acd0d1b756c0",
+    "game/ui/book_button.gd": "a0e767b5efb5ca86d3e2cbf82ae21cf11b7ce5c99494723950b237600bb0adf9",
+    "game/ui/book_choice.gd": "a8d7541acf35b51b3bbad9044e71febb0874b0674060e9751ae02ecc47b112f1",
+    "game/ui/book_controls.gd": "cf02cf5dbed491c4307041d0306d5476d5f7085096f6752a9ef30779f517a49c",
+    "game/ui/book_style.gd": "08cf9ba620da29d3c7dac300288394c9b464dd0f24441a7062f67e6efe40e82c",
+    "game/ui/book_surface.gd": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7",
+    "game/ui/book_tooltip.gd": "7abea08121abf45db2d1c7a8d1bc14a77d53ac81eddd12fadbb79f4fd7eb08a7",
+    "game/ui/catalog.gd": "2a1fc694eb4a151fab6e9d7afb3776b45ffc9e949e9be39b754fd8e3ecc715f9",
+    "game/ui/catalog_card.gd": "65225ca987afb1a86b92985623b7de43e872eef0a72697797db418dd117c6d98",
+    "game/ui/catalog_ink.gd": "6d71d747e1517c507d1043fb42b116dc3be926ff6f49311be8e85a8180dd76de",
+    "game/ui/catalog_tip.gd": "aca6878b0053479a494f2f8bec7d8b99222f71abe2e3a7711b8598cf13015cc2",
+    "game/ui/cell_atlas.gd": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d",
+    "game/ui/chalkboard_board.gd": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad",
+    "game/ui/clue_layout.gd": "960d29e4254cea067aafed888332cceb3d31b323b60d601c82b69b714a2c0b45",
+    "game/ui/clue_overlay.gd": "c3d6a5579c6412c1f5d57db105fffd4acef6b0dc29377a32e275af3e09e48be6",
+    "game/ui/clue_typography.gd": "8748fb0c0e7a489b4d0e742380360ee83f5718561ce5ac27ea33300e8e386b94",
+    "game/ui/completion.gd": "208d0996791ec23fa130e5d922ebccaffa46e11ca9154969471ed8c0fdcb72ea",
+    "game/ui/drawing_board.gd": "cf43e86369f3d12c6d592aea92c600940660c362f914ac1b232aba15e9364c0c",
+    "game/ui/drawing_font.gd": "7f32268ba4cac9a530fbe5a6d63f8a3c53c769fff281803f9fb104aabaed8cfc",
+    "game/ui/full_view_board.gd": "9da341007baffb7a3cfde9a66dce91f620dd119a9b3f7d398c28a9c034b9b097",
+    "game/ui/gesture_counter.gd": "d27ac9a2178b2a457c875881c268caf22e661829385497c01598c37b0b082b4e",
+    "game/ui/grid_view.gd": "5b4c29e2e2c8291834d2169f9281d97bfeac212284fb85a817aae4bcdf25a946",
+    "game/ui/main.gd": "a4e1620d5f81ca6c4005b7370c8bb69c13565d1832586355dbb2b14fd3ede6bc",
+    "game/ui/miniature.gd": "ec84abc6768176ea95a99d4266c90c633db0006978d340d125bc6eceb8e768bf",
+    "game/ui/pencil_marks.gd": "bec00db704685bea4028b23fba0f3374f659041154cba20f5a85c9f203846947",
+    "game/ui/reveal.gd": "03f14a741db55de0a9ca4582396830e43680f52b790cf1c2b50e9c3d8223c392",
+    "game/ui/scribble.gd": "74af9c0a6140644ae456a7f6d530dcb6c4ccb5fbc490af24615c8f3b796efbee",
+    "game/ui/ui_text.gd": "31ab9b6193f1154c6a8327093faba221790e0ac68a9720e52585beac0c49d2d5"
+  },
+  "sample_sha256": "1344c6f82c89d91e0ec936644f8c605f3cfd4203a7fdd9e2cf23674d97d73041",
+  "native_active_test_files": {
+    "hz_c_cases.gd": "d4d200b64cc6634b18c0c5fbcb89d6a47f4a30681f71eb44a61f309e49bb15b8",
+    "hz_c_native.gd": "484efeba53d45a91cf529f78300e10c70a6cb5278f708cd7263a515532cfec02",
+    "hz_c_sample.gd": "1344c6f82c89d91e0ec936644f8c605f3cfd4203a7fdd9e2cf23674d97d73041",
+    "hz_cases.gd": "ae61af70446de1730a7c251005c46bd43812b5c2ad7c0434402a5ebeb4ad0828"
+  },
+  "native_temporary_runner": "native-temporary-runner.gd.gz",
+  "native_checks": 303,
+  "files": {
+    "chromium-build-binding.json": {
+      "sha256": "1edcf7ddba5a65ab8246d55355c224aceea9ec821a3fb066060614c8d376bcd1",
+      "bytes": 5261
+    },
+    "chromium-build-binding.json.gz": {
+      "sha256": "27a03caf86d8567370447192f03daaab929b45f69886609de0c51175bfc277c0",
+      "bytes": 2738
+    },
+    "chromium-build.py.gz": {
+      "sha256": "f3af0f69dcf71462a370c16a0ddd44f555c1929aee257b99a08fe49f150b855f",
+      "bytes": 1649
+    },
+    "chromium-capture.py.gz": {
+      "sha256": "a395bdb06cc5ef50bfc704071e8c752d2f151e39618572e666c2d3adc0090069",
+      "bytes": 953
+    },
+    "chromium-comparison-1280.png": {
+      "sha256": "7903e7c75bf94a3f4e4afc3f4a102fc53c25d22c2a6f47405ee6a70a983237d7",
+      "bytes": 65190
+    },
+    "chromium-comparison-1920.png": {
+      "sha256": "d2ac716cfc787f5041ee60d611990cc27a97caf0392b0e35bcc97a1ab24c69b5",
+      "bytes": 45777
+    },
+    "chromium-comparison-2560.png": {
+      "sha256": "7903e7c75bf94a3f4e4afc3f4a102fc53c25d22c2a6f47405ee6a70a983237d7",
+      "bytes": 65190
+    },
+    "chromium-menu-14-1280.png": {
+      "sha256": "fa379200bf991bb09ff8bd0296e1f935c1b9eadf6cafc6113d6a8f57c0c7e632",
+      "bytes": 76912
+    },
+    "chromium-menu-14-1920.png": {
+      "sha256": "94e80b5b9b1e0f348bf84bbbb3bc8e5b4b504b548e0847e867409f2d1aadb3da",
+      "bytes": 63697
+    },
+    "chromium-menu-14-2560.png": {
+      "sha256": "7d0576155a352bb4454e80dcb76c2670d892ae10e831b07f78a1293b402a3d32",
+      "bytes": 90690
+    },
+    "chromium-menu-15-1280.png": {
+      "sha256": "8213ac86cc6afe032a0cf2c5dccf810dd0b8d98f3a00d4de6836d3794a021576",
+      "bytes": 77141
+    },
+    "chromium-menu-15-1920.png": {
+      "sha256": "c7bb155c54b59b68acc1de02e4575ff4027a9949e28967a1b7fef0f4e50bdfaf",
+      "bytes": 63730
+    },
+    "chromium-menu-15-2560.png": {
+      "sha256": "cb69616353ded9f2e6743e3a475e7a31405f84764db04162b425b1ffefdf45a4",
+      "bytes": 91022
+    },
+    "chromium-report.json": {
+      "sha256": "328fe8c02bf87e4c4e78b08dcfacb08e9a08e36326f271868c2db2f159e72a01",
+      "bytes": 984
+    },
+    "chromium-report.json.gz": {
+      "sha256": "509a9e63ecf0740d0f52245e2f0de51b114c5dab54eeb1cb5cecccbeb8444cf9",
+      "bytes": 476
+    },
+    "chromium-temporary-entry.gd.gz": {
+      "sha256": "9ac0f8bec8537ef3e3dbdcf3a2c7b50914dc6d248fc8c8a53b5cd3e5f0e15055",
+      "bytes": 625
+    },
+    "hz-c-catalog-category-1280.png": {
+      "sha256": "fddc35705573c641db0684b4b9b14ac74a0259eec085f65fa322524e6b2e4e9a",
+      "bytes": 47576
+    },
+    "hz-c-catalog-category-1920.png": {
+      "sha256": "1290c418412147571ed6650a5d7bf64146f2f5907f62099ead09078fcd14b5fe",
+      "bytes": 59015
+    },
+    "hz-c-catalog-category-2560.png": {
+      "sha256": "e5360bcf7d048addf903809b7921d1b92a6ccdd15cf2858a8eb8d633554847e5",
+      "bytes": 81657
+    },
+    "hz-c-catalog-sort-1280.png": {
+      "sha256": "a390bca567ac03064dadf0a10abaf4f6b5ee39fa9cf52bdc1d74a83a3aa8976d",
+      "bytes": 13922
+    },
+    "hz-c-catalog-sort-1920.png": {
+      "sha256": "af28c8668470b5a61d692a07016fd895b89908921b6b69f24b6e631f9cc34111",
+      "bytes": 9383
+    },
+    "hz-c-catalog-sort-2560.png": {
+      "sha256": "a390bca567ac03064dadf0a10abaf4f6b5ee39fa9cf52bdc1d74a83a3aa8976d",
+      "bytes": 13922
+    },
+    "hz-c-comparison-1280.png": {
+      "sha256": "47b1f5c86b1068454f3837763f7fcc1b3e9c4f4ecc439511f8c7231a216abc7a",
+      "bytes": 76441
+    },
+    "hz-c-comparison-1920.png": {
+      "sha256": "ba05790791eb355af76169c941fb51a83a7bf0db396a354f2d7cd2186560bfa4",
+      "bytes": 55168
+    },
+    "hz-c-comparison-2560.png": {
+      "sha256": "5284a5ef3e5401a735ae5a06c76c4479f59e036b89a171515405bafd474a82ca",
+      "bytes": 76459
+    },
+    "hz-c-status-begonnen-1280.png": {
+      "sha256": "064657a215cbc26baaaf5ec2dfbf53aff233a73fdefab9631571bb35e32a608f",
+      "bytes": 44995
+    },
+    "hz-c-status-begonnen-1920.png": {
+      "sha256": "e25057f444d1928111f07a3c233e06c9e228dfd9cea5745384bf33304ed25feb",
+      "bytes": 28133
+    },
+    "hz-c-status-begonnen-2560.png": {
+      "sha256": "9fc3a07ae48ad90d3bb0835d2b4a5c03f95a64cfb3a4ec137b6ea64ad566c434",
+      "bytes": 38085
+    },
+    "hz-c-status-gelost-1280.png": {
+      "sha256": "39c754b47431837161cded67754231ba97a3308a9acceb877985f660ef70aa35",
+      "bytes": 44702
+    },
+    "hz-c-status-gelost-1920.png": {
+      "sha256": "5e30fae8775266d78da9dba3bda9e236dceba2a37e7704df0ceb527ca1a110b7",
+      "bytes": 28409
+    },
+    "hz-c-status-gelost-2560.png": {
+      "sha256": "2d40a387eb8ad7825f9f3e62ff08cdb74387f04297326333db94fc4da47ad156",
+      "bytes": 37522
+    },
+    "hz-c-status-neu-1280.png": {
+      "sha256": "56d0aa187c890df21bc86bbc62f99e33b7b47571d9601b0c99a525fd288f1bb9",
+      "bytes": 40687
+    },
+    "hz-c-status-neu-1920.png": {
+      "sha256": "23aaae8dfc31c5a6999fbb533376a3f89755a336d0b7eefbcd394a30f4f03464",
+      "bytes": 25364
+    },
+    "hz-c-status-neu-2560.png": {
+      "sha256": "8b1466ba7f1d18143dc800e11f189feab58a6e52dd94cf1a619f16ad740537d7",
+      "bytes": 33305
+    },
+    "hz-c-view-1280.png": {
+      "sha256": "d961f54db01495b41d0c2e355cd62b705288de721a3a25df2218a5edafba10b7",
+      "bytes": 12904
+    },
+    "hz-c-view-1920.png": {
+      "sha256": "b56b5cd7f2779c7eadeef4ec653cceb14ec3a0665cb374d6b91d33673e4a4dfc",
+      "bytes": 11378
+    },
+    "hz-c-view-2560.png": {
+      "sha256": "de04945b1c4e70cde4baea94d2bab82a7aa0116380b406ce0018c45edb1aaa40",
+      "bytes": 14755
+    },
+    "native-report.json": {
+      "sha256": "e8db0fdfccb2e70f0bb0f696a549e12f53d69286bc68b2128406537b1153094e",
+      "bytes": 4004
+    },
+    "native-run.log": {
+      "sha256": "221fae6ae4f57d9bc2bd7272e34f66ec523f576d289be23105fb0158feee8533",
+      "bytes": 235
+    },
+    "native-run.log.gz": {
+      "sha256": "33a026f8c9e56fec2d245839e6e8664402a5ccfea2f507b4e639928e9425085c",
+      "bytes": 223
+    },
+    "native-temporary-runner.gd.gz": {
+      "sha256": "f391226033a0b0d7c0f4e0428c30cb6019ce08a127c5d027bef139160d8994e5",
+      "bytes": 20018
+    },
+    "negative-word-book-button.gd.gz": {
+      "sha256": "412f3d5c2790d350784b760145b6faf47583fb6674dcc388ea161aef51a6cc7a",
+      "bytes": 1941
+    },
+    "negative-word-report.json.gz": {
+      "sha256": "817bf37d78069f919bf14e9e27a793ee19414d403bfa8dee06632e26f3f979d1",
+      "bytes": 773
+    },
+    "negative-word-run.log.gz": {
+      "sha256": "5901a6463b74883ae0745dab886f2106a7fa4d3da5f9b7f298a825c7ec787136",
+      "bytes": 263
+    }
+  },
+  "original_serializations": {
+    "chromium-build-binding.json.gz": {
+      "original_sha256": "bac4b77b3c5e5b82b59ee5dab13e11a81a591263df0e33f013942b8788081715",
+      "original_bytes": 5309
+    },
+    "chromium-report.json.gz": {
+      "original_sha256": "fa45f29fa4dbacd09b4c3197343f4dcb6c60b7e282692f9e3b29944362291480",
+      "original_bytes": 999
+    },
+    "native-run.log.gz": {
+      "original_sha256": "99e81c8b15e316e977b8f4b14194aa178b8b15042d1c051fcb831d3c57d7c746",
+      "original_bytes": 239
+    }
+  },
+  "negative_control": {
+    "injection": "old word-dependent vertical centring in BookButton only",
+    "expected_exit": 4,
+    "failures": [
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Begonnen",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Größe × … ←",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Begonnen",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Größe × … ←",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Begonnen",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Größe × … ←",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Begonnen",
+      "HZ-C direct BookButton first-glyph pixel baseline stable: H Größe × … ←"
+    ]
+  },
+  "native_input_files": {
+    "data/registry.json": "fbf37243fd35450d9657bc8ba3c564a5dc0f6ee868eb9176aefd84cccf280f14",
+    "data/fixtures/t01.json": "37d2de4005c110fcd70e2a1db0dcecfe1d6d702361192b4333be09f4cb183a76",
+    "data/fixtures/t02.json": "bcf03260fed25970c3624822e8c9b0990a5d752e7c10004e52604958ca3e58b0",
+    "data/fixtures/t04.json": "09bf6a99dc4ec9e94ff94355856b23cb3db74a9dfd5bedec22fe0e8ae02a8574",
+    "data/fixtures/t06.json": "81205d53b4f38a90613212e50e8e9daacf7a85f48af6aab1c91ede318f79b236",
+    "data/fixtures/t08.json": "b3f6430be737497e24b4a476295fcea9993201478709fd9f3544ef53c0954064",
+    "data/fixtures/t09.json": "a5314587a33398d8c0f20fec459d408d71d5a7f9be7355d721b09dd295e66a6d"
+  },
+  "uncommitted_changes": "Measured closed-control margins, toolbar/button budgets, narrow safe catalog inset and full native category budget regression; exact used source hashes below"
+}

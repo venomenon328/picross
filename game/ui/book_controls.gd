@@ -1,6 +1,7 @@
 extends RefCounted
 ## Theme resources only: native controls retain all input and selection behavior.
 const Paper = preload("res://ui/book_style.gd")
+const Text = preload("res://ui/ui_text.gd")
 const INK = Color("293e3d")
 static var textures: Dictionary = {}
 
@@ -32,7 +33,9 @@ static func styles(target: Theme, type: String, id: String, u: float) -> void:
 			style.paper = Color.TRANSPARENT
 			style.ink = INK
 		style.content_margin_left = 10*u
-		style.content_margin_right = (34 if type == "OptionButton" else 10)*u
+		# OptionButton itself reserves its arrow and h_separation in addition to
+		# the style margins. Reserving the arrow twice crowds long categories.
+		style.content_margin_right = 10*u
 		style.content_margin_top = 5*u
 		style.content_margin_bottom = 5*u
 		target.set_stylebox(state,type,style)
@@ -42,7 +45,7 @@ static func styles(target: Theme, type: String, id: String, u: float) -> void:
 static func popup_theme(id: String, u: float, font: Font) -> Theme:
 	var result := Theme.new()
 	result.default_font = font
-	result.default_font_size = roundi(14*u)
+	result.default_font_size = Text.small_size(u)
 	var panel = Paper.make(id,u)
 	panel.opaque_bounds = true
 	panel.set_content_margin_all(9*u)

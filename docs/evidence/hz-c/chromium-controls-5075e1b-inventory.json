@@ -1,0 +1,191 @@
+{
+  "format": "picross-hz-c-original-archive-v1",
+  "runtime_head": "5075e1bf883e18e24b9802118047a110ea2bf7f0",
+  "run": "39578546117",
+  "producer_attempt": "1",
+  "archive": "chromium-controls-5075e1b.zip",
+  "bytes": 24350684,
+  "sha256": "7555f53533fe2475969b22485e98face70b650d9110d48dcf09685d4b7b2ac93",
+  "files": [
+    {
+      "file": "catalog/browser-report.json",
+      "bytes": 275765,
+      "sha256": "d507621de15c72e0907c6b9169784708c02adf0b08256d876ac696fa88daaca6"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-catalog-1280.png",
+      "bytes": 744428,
+      "sha256": "7bd849ecb859e47ce7c6491f64c76f4c09483bd5438d4301469d606f6ab146c3"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-catalog-1920.png",
+      "bytes": 1509282,
+      "sha256": "832b2febaa0caa1135e4a90189c755b01b6d6f798fa839910aa4e57de89417a2"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-catalog-2560.png",
+      "bytes": 2442540,
+      "sha256": "79472c5be40b36fa6365caf5b52b11c44aff940678dcff54f1f3e6aa383d9604"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-category-1280.png",
+      "bytes": 758070,
+      "sha256": "30297ecbacf23d05b64d732e643ad22510be8c7fa0587cdd99178379237fd5af"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-category-1920.png",
+      "bytes": 1402433,
+      "sha256": "9d33b66b5b0946fa5e030cf8cd5af2de8f31de6aed056b851c589054a616b315"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-category-2560.png",
+      "bytes": 2245277,
+      "sha256": "d4783dec44a11b9fd11994773424ffbf75bf2e67b329b2ba8af16109b690d63c"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-settings-1280.png",
+      "bytes": 927958,
+      "sha256": "18debe3ab7a35d8c617693c96536283cee22e96b72cda09d2223f77d32d580cc"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-settings-1920.png",
+      "bytes": 1742205,
+      "sha256": "d035c268af895e1bc2afe7ade705dadb7930cf6e2432da6911de859e3bbed83b"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-settings-2560.png",
+      "bytes": 2744959,
+      "sha256": "fcff2477c3e302daecb80f3ab7e56453368b4613105a02145a49df4068ef5487"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-sort-1280.png",
+      "bytes": 747647,
+      "sha256": "51dc65e533fe3f889dc5f39dd31466f6512a53000b781fe466c7e7fa4b2649ab"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-sort-1920.png",
+      "bytes": 1510677,
+      "sha256": "f7f77f33256b6166cee1b56659379b4e56b9ee231d9c35b1beb2c1e679817ae8"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-sort-2560.png",
+      "bytes": 2444766,
+      "sha256": "a5fc53e6517b4f6990fc04880d0ac7ffe49fb0d3b0ad164b57bebed519b5eba2"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-view-1280.png",
+      "bytes": 833649,
+      "sha256": "f6291f7fac4e5d769427a2cd4729a2a6ab638547ac36e88a4088f784a1461c11"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-view-1920.png",
+      "bytes": 1655491,
+      "sha256": "6cd7166d51bb0fb0d87ff10e5e99099a1a1e94332aec4a053d281dd84c8b9ee9"
+    },
+    {
+      "file": "catalog/catalog/chromium-hz-c-view-2560.png",
+      "bytes": 2613456,
+      "sha256": "db432a82c8867c927c17b4f9a9df54ef1e0b24f70c42e0c982270a6511772eab"
+    },
+    {
+      "file": "catalog/execution.log",
+      "bytes": 705,
+      "sha256": "3a0e4278e67418b9e62d434d033a1789b3c8fbb8214b1aa11783e23f9c514981"
+    },
+    {
+      "file": "completion/browser-report.json",
+      "bytes": 77459,
+      "sha256": "414063b2f4c4946fef1837eccb1a76537a423de3a3927ae2bff8b7352a08344e"
+    },
+    {
+      "file": "completion/execution.log",
+      "bytes": 346,
+      "sha256": "21172055f9407915c2f4ad2282742bb5535a0b855e3338a0476402489df46455"
+    },
+    {
+      "file": "input/browser-report.json",
+      "bytes": 37659,
+      "sha256": "bab97faee4cd0fb53e26c614713920573b02ce4b40a902a30759a7a34a960910"
+    },
+    {
+      "file": "input/execution.log",
+      "bytes": 494,
+      "sha256": "30d51399f8620ab44adc5f8f4e14a129c06533c48a071ab3bc70552d6b2d6498"
+    },
+    {
+      "file": "manifests/web-player.json",
+      "bytes": 5357,
+      "sha256": "0a272bdd6dabc0952fe54eac264003cbe8bf8249bf359db0256c0fc7704cee8b"
+    },
+    {
+      "file": "manifests/web-test-update.json",
+      "bytes": 5510,
+      "sha256": "a92b926dc8ce7c4b30e45cb19396d7927c6225218c9f0dab5db1eb2630d2ac5b"
+    },
+    {
+      "file": "manifests/web-test.json",
+      "bytes": 5510,
+      "sha256": "d35d93c9cb0abf8d9285ebba7692efa4815cb7af39ea77892724087b59006de7"
+    },
+    {
+      "file": "persistence/browser-report.json",
+      "bytes": 358926,
+      "sha256": "890c68da1ad8b7796b5e0bc623ccc7b17af2308d531b9caa4d9bdd3e6e86b8cd"
+    },
+    {
+      "file": "persistence/execution.log",
+      "bytes": 1562,
+      "sha256": "a948a87ce2fc2b0f7402bd5492c44eca4ea54756cd2192352ea967e9e4208760"
+    },
+    {
+      "file": "regular/execution.log",
+      "bytes": 21,
+      "sha256": "d6721c82916bf17ea51e85daa0d47512749c87dce7e3fb762145df77aea16aaf"
+    },
+    {
+      "file": "regular/regular-report.json",
+      "bytes": 7074,
+      "sha256": "14b9e75a9d2d28b357683416663db7974155b6e3d770adb0dcffa683df272f3d"
+    },
+    {
+      "file": "web-result.json",
+      "bytes": 738568,
+      "sha256": "67ab78006a63a7fc71f08c15a2b6d5d2dac5936499ef6a232b1b2b70812459ce"
+    }
+  ],
+  "original_artifact": {
+    "id": 12336722116,
+    "node_id": "MDg6QXJ0aWZhY3QxMjMzNjcyMjExNg==",
+    "name": "picross-web-chromium-5075e1bf883e18e24b9802118047a110ea2bf7f0-1",
+    "size_in_bytes": 104825264,
+    "url": "https://api.github.com/repos/venomenon328/picross/actions/artifacts/12336722116",
+    "archive_download_url": "https://api.github.com/repos/venomenon328/picross/actions/artifacts/12336722116/zip",
+    "expired": false,
+    "digest": "sha256:a343bd0d0e7e05bf6c1fd84b61e7eb50c3e0b691e293be98a8db16f0ca4d3fba",
+    "created_at": "2026-10-21T10:06:44Z",
+    "updated_at": "2026-10-21T10:06:44Z",
+    "expires_at": "2026-10-28T10:06:41Z",
+    "workflow_run": {
+      "id": 39578546117,
+      "repository_id": 1381196633,
+      "head_repository_id": 1381196633,
+      "head_branch": "fix/294-tidy-typografie",
+      "head_sha": "5075e1bf883e18e24b9802118047a110ea2bf7f0"
+    }
+  },
+  "full_original_archive_sha256": "a343bd0d0e7e05bf6c1fd84b61e7eb50c3e0b691e293be98a8db16f0ca4d3fba",
+  "complete_original_validation": {
+    "browser": "chromium",
+    "attempt": "1",
+    "groups": [
+      "regular",
+      "catalog",
+      "input",
+      "completion",
+      "persistence"
+    ],
+    "scenarios": 33,
+    "status": "passed"
+  },
+  "complete_original_files": 73
+}

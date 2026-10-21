@@ -50,6 +50,10 @@ func _process(delta: float) -> void:
 		for label: Label in [card.dimensions,card.difficulty,card.note,card.leaf]:
 			fits = fits and UiText.label_width(label,label.text,label.get_theme_font_size("font_size")) <= label.size.x
 		labels.append({"difficulty":card.difficulty.text,"status":card.note.text,
+			"hzc_sizes":[card.detail.get_theme_font_size("font_size"),card.dimensions.get_theme_font_size("font_size"),card.difficulty.get_theme_font_size("font_size"),card.note.get_theme_font_size("font_size"),card.leaf.get_theme_font_size("font_size")],
+			"hzc_category_y":card.detail.position.y,
+			"hzc_body_center":UiText.line_baseline(card.note.get_theme_font("font"),card.note.get_theme_font_size("font_size"),card.note.size.y)+UiText.ink(card.note.get_theme_font("font"),UiText.BODY_SAMPLE,card.note.get_theme_font_size("font_size")).get_center().y,
+			"hzc_footer_height":card.note.size.y,
 			"centers":centers,"text_fits":fits,"status_kind":card.status_icon.kind,
 			"single_line":card.dimensions.position.y == card.difficulty.position.y and card.mode_tip.position.y == card.dimensions.position.y,
 			"footer":card.note.position.y == card.leaf.position.y and card.label_area.end.y < card.leaf.position.y,
@@ -67,6 +71,11 @@ func _process(delta: float) -> void:
 	var origin: Vector2 = board.global_position + board.view.origin
 	var sort_popup: PopupMenu = album.sort_choice.get_popup()
 	var data: Dictionary = {"controls": controls, "labels":labels,"slots": slots, "slot_status": slot_status,
+		"hz_c":{"small_size":UiText.small_size(ui_scale),
+			"category_size":album.category_choice.get_theme_font_size("font_size"),"category_popup_size":album.category_choice.get_popup().get_theme_font_size("font_size"),
+			"sort_size":album.sort_choice.get_theme_font_size("font_size"),"sort_popup_size":sort_popup.get_theme_font_size("font_size"),
+			"view_size":view_choice.get_theme_font_size("font_size"),"view_popup_size":view_choice.get_popup().get_theme_font_size("font_size"),
+			"normal_size":theme.default_font_size},
 		"hz_b":{"view_popup":view_choice.get_popup().visible,"view_selected":view_choice.selected,
 			"view_focused":view_choice.get_popup().get_focused_item(),
 			"view_checked":view_choice.get_popup().is_item_checked(view_choice.selected),

@@ -78,6 +78,8 @@ func run() -> void:
 		await frames()
 		check(app.theme.default_font.get_font_name() == "Tidy Hand" and app.title.get_theme_font("font") == app.WORK_TITLE_FONT,"actual PCK normal and heading roles across scale roundtrip")
 		for card: Control in app.choices:
+			for label: Label in [card.detail,card.dimensions,card.difficulty,card.note,card.leaf]:
+				check(label.get_theme_font_size("font_size") == Text.small_size(app.ui_scale),"HZ-C actual PCK shared small role and unchanged Blatt 15")
 			for label: Label in [card.dimensions,card.difficulty,card.leaf,card.note]:
 				check(Text.label_width(label,label.text,label.get_theme_font_size("font_size")) <= label.size.x,"actual PCK full metadata")
 		await shot("catalog-%d" % spec[0])
@@ -94,6 +96,7 @@ func run() -> void:
 		await frames()
 		check(app.album.sort_choice.get_popup().get_theme_stylebox("panel").get_script().resource_path == "res://ui/book_style.gd","actual PCK HZ-B native popup paper")
 		await shot("controls-sort-%d" % spec[0])
+		check(app.album.sort_choice.get_theme_font_size("font_size") == Text.small_size(app.ui_scale) and app.album.sort_choice.get_popup().get_theme_font_size("font_size") == Text.small_size(app.ui_scale),"HZ-C actual PCK closed and open choice use measured small role")
 		for control: Node in app.album.sort_choice.get_parent().get_children():
 			if control is Button and control.text == "Einstellungen / Info":
 				click(control)
@@ -129,7 +132,7 @@ func run() -> void:
 	panel.add_child(sample)
 	app.add_child(panel)
 	await shot("glyphs")
-	var report := {"test_only":true,"package":"HZ-B","contour_hashes":contour_hashes,"checks":checks,"failures":failures,"display":DisplayServer.get_name(),"renderer":RenderingServer.get_video_adapter_name(),"engine":Engine.get_version_info()}
+	var report := {"test_only":true,"package":"HZ-C","contour_hashes":contour_hashes,"checks":checks,"failures":failures,"display":DisplayServer.get_name(),"renderer":RenderingServer.get_video_adapter_name(),"engine":Engine.get_version_info()}
 	var file := FileAccess.open(output.path_join("pack.json"),FileAccess.WRITE)
 	file.store_string(JSON.stringify(report,"\t")+"\n")
 	file.close()
