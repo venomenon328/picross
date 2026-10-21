@@ -1,0 +1,27 @@
+{
+  "assessment_type": "instrumented",
+  "confidence": "medium",
+  "current_integration_rating": {
+    "confidence": "medium",
+    "evidence": "checked.json",
+    "level": "L5",
+    "logical_level": 5,
+    "method": "picross-difficulty-0.3",
+    "size_adjustment": 0
+  },
+  "evidence": "production/area-128-assessment.json",
+  "human_calibration": "not_performed",
+  "level": "L5",
+  "logic_hash": "0d150ed557946636c8498fa3517f3ab0de0ae9760ecef29801e6007f6fc544cc",
+  "logical_demand": "linienübergreifend / besonders hoher logischer Anspruch",
+  "method": "picross-difficulty-0.2",
+  "plausible_range": [
+    "L5",
+    "L5"
+  ],
+  "profile_hash": "87ce75a0b606403084b4ce7bd1592f32e447ad066e326759b0f1125fedbc1898",
+  "rule_families": {
+    "R4": "Frischer full-line-mono-Fixpunkt mit 21 offenen Zellen; vollständiger paired-lines-mono-Nachweis derselben Logik."
+  },
+  "time_estimate": null
+}

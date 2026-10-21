@@ -1,0 +1,12 @@
+{
+  "alternatives": "Keine neuen Motiv- oder Rastervarianten nötig bei dieser exakten lokalen Korrektur.",
+  "reason": "Exakt die acht beauftragten weißen Außenzellen gefüllt, alle 1032 anderen Zellen unverändert.",
+  "rp5": "Nicht erforderlich: explizite redaktionelle Korrektur, vollständiger Deduktionsnachweis ohne weitere Reparatur.",
+  "selected": "raster.png",
+  "source": {
+    "file": "content/authoring/pz-9be288b9b5104da88fc8464184647ae7/r04/package.zip",
+    "repo_commit": "3f2b64689a8f3ae44e2c3d4a7ae1e3e927ff2e7b",
+    "revision": "r04",
+    "sha256": "da1635128363058e31923039e1429e13b3ec44f70c85428a361f5124f7690c3c"
+  }
+}
