@@ -1,14 +1,5 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**HZ-C-Implementierungsstand · 21.10.2026:** [Lieferung und Prüfzuordnung](HZ_C_VERIFICATION.md)
-setzt HZ-D07 auf `fix/294-tidy-typografie` um. Gemeinsame kleine Größe ist 15
-bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19. Private gemessene
-Zeilenmetriken und stabile Grundlinien erhalten Originalfontbytes und übrige
-Textrollen. Die folgenden früheren Angaben „noch nicht implementiert“ und
-„separater Implementierungsauftrag erforderlich“ sind durch den ausdrücklichen
-HZ-C-Auftrag und diese Lieferung fortgeschrieben. Technischer Abschluss und
-Originalbelege stehen im Paket-PR; R01/M01 bleiben getrennt vor Merge offen.
-
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02
 Tidy Hand für Standardtexte und erhält die bisherigen Überschriften. Kleine
@@ -21,7 +12,8 @@ und [PR #289](https://github.com/venomenon328/picross/pull/289) integriert und i
 geschlossenen [Issue #284](https://github.com/venomenon328/picross/issues/284)
 abgenommen. [HZ-C / #294](https://github.com/venomenon328/picross/issues/294)
 führt die am 21.10.2026 freigegebene Nachbesserung kleiner Texte gemäß HZ-D07;
-deren Umsetzung und eigene Abnahmen stehen noch aus.
+die [Implementierung](HZ_C_VERIFICATION.md) ist in Draft-PR #296 geliefert.
+Separate Review- und Eigentümerabnahmen stehen vor Merge noch aus.
 
 **AT · 19.10.2026, Umsetzungsvorbereitung V4; AT-A integriert:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) erweitern §4.3 um Motive
@@ -208,11 +200,11 @@ mit kontrollierten lokalen Fallbacks und gemessenen Textmaßen. Bestehende
 Überschriften und ihre Fraunces-/Bakso-Rollen bleiben unverändert. A-Arbeitsasset, Buchkomposition, N1 und C1 bleiben Grundlage.
 Die historische GD-/ZS-Auswahl und ihre Abnahmen behalten ihre Standbindung.
 
-Der neue Sollstand [HZ-D07](HAND_DRAWN_UI.md) führt optische Ausrichtung,
-Größenvergleich und passende Layoutmaße zusammen. Korrigierte Darstellungen mit
-Größe 14 und 15 bei UI100 werden direkt verglichen; 15 ist der bevorzugte erste
-Vergleichswert, kein bereits gemessenes oder abgenommenes Endmaß. Bei einer
-Vergrößerung erhalten die Kategorienamen dieselbe kleine Textgröße.
+Der Stand [HZ-D07](HAND_DRAWN_UI.md) führt optische Ausrichtung, Größenvergleich
+und passende Layoutmaße zusammen. Der direkte korrigierte 14/15-Vergleich
+begründet die gemeinsame kleine Größe 15 bei UI100 und 19 bei UI125,
+einschließlich Kategorien und Status; Blattkennungen bleiben unverändert 15/19.
+Diese Implementiererwahl ersetzt nicht die Eigentümersichtabnahme HZ-C-M01.
 Stabile Grundlinien, die gemeinsame
 Statuszeile mit Symbol und Blattkennung sowie vollständige Text- und Bildbereiche
 bestimmen die Gestaltung; ein Wortwechsel darf keinen vertikalen Sprung erzeugen.

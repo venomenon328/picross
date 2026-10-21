@@ -1,14 +1,5 @@
 # Z2: aktive Auswahl und native Integration
 
-**HZ-C-Implementierungsstand · 21.10.2026:** [Lieferung und Prüfzuordnung](HZ_C_VERIFICATION.md)
-setzt HZ-D07 auf `fix/294-tidy-typografie` um. Gemeinsame kleine Größe ist 15
-bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19. Private gemessene
-Zeilenmetriken und stabile Grundlinien erhalten Originalfontbytes und übrige
-Textrollen. Die folgenden früheren Angaben „noch nicht implementiert“ und
-„separater Implementierungsauftrag erforderlich“ sind durch den ausdrücklichen
-HZ-C-Auftrag und diese Lieferung fortgeschrieben. Technischer Abschluss und
-Originalbelege stehen im Paket-PR; R01/M01 bleiben getrennt vor Merge offen.
-
 ## Integrierter HZ-Stil und freigegebene Typografie-Nachbesserung
 
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 21.10.2026:
@@ -27,11 +18,11 @@ und das unveränderte aktive Iconinventar der unten beschriebenen
 Lieferungen sind durch HZ-A/B ausdrücklich abgelöst.
 
 [HZ-C / #294](https://github.com/venomenon328/picross/issues/294) ist seit
-21.10.2026 als Spezifikation freigegeben, noch nicht implementiert.
-[HZ-D07](HAND_DRAWN_UI.md) bindet die optische Textausrichtung mit stabilen
-Grundlinien und den Vergleich der korrigierten kleinen Größen 14/15; 15 ist
-der bevorzugte erste Vergleichswert, kein festes Endmaß. Eine Größenanhebung
-bezieht die Kategorienamen konsistent ein. HZ-C ändert weder Originalfontbytes
+21.10.2026 in [Draft-PR #296](https://github.com/venomenon328/picross/pull/296)
+implementiert; R01/M01 bleiben vor Merge offen. [HZ-D07](HAND_DRAWN_UI.md)
+bindet die optische Textausrichtung mit stabilen Grundlinien. Die
+[Lieferung](HZ_C_VERIFICATION.md) wählt nach dem korrigierten 14/15-Vergleich
+15/19 bei UI100/125 einschließlich Kategorien; Blattkennungen bleiben 15/19. HZ-C ändert weder Originalfontbytes
 und lokale Fallbackquellen noch aktive Icons, deren Provisionierung oder
 historische Quellenbelege; es führt keine globale neue Schriftrolle ein.
 

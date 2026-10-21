@@ -47,7 +47,7 @@ Die Chromium-Sichtung fand bei einer zunächst verwendeten Resource-Kopie
 beschädigte Glyphen: bereits gefüllte Atlastexturen wurden zwischen Varianten
 geteilt. Frische FontFile-Instanzen aus den Originalbytes beseitigen diesen
 Fehler; getrennte Font-RIDs und unveränderte Original-Glyphenbitmaps werden
-zusätzlich geprüft. Der korrigierte Chromium-Direktvergleich wird neu erzeugt.
+zusätzlich geprüft. Der korrigierte Chromium-Direktvergleich liegt in den gebundenen Originalen vor.
 
 Direkte Papierbuttontexte verwenden dieselbe feste native Referenzgrundlinie;
 die tatsächliche Worthülle bestimmt weiterhin ihre horizontale Ausrichtung.
@@ -58,6 +58,18 @@ Labels erhalten symmetrisches, aus den tatsächlichen Akzent-/Unterlängen-/
 Fallbackhüllen bestimmtes Sicherheitspolster. Es erhält den optischen
 Mittelpunkt und verhindert, dass der Grundlinienausgleich Unterlängen abschneidet.
 Native Felder und Popupzeilen behalten ihre passenden eigenen Innenabstände.
+
+Der erste vollständige CI-Lauf am Zwischenhead `f0338f9` fand zusätzlich eine
+zu schmale Kategorienauswahl bei 1280×720/UI125. Der native Pfeil kam zur
+bereits dafür vergrößerten rechten Styleboxreserve hinzu; größere Textbuttons
+verbrauchten weiteren Kopfplatz. Der erste Korrekturschritt bestand zwar das
+alte Zeichenbreitenorakel, zeigte im Originalframe aber weiterhin eine Ellipse.
+Die Lieferung verwendet deshalb einfache gemessene Innenränder, die native
+Sortierfeldmindestbreite, sichere Textbuttonränder und bei engem UI125 mehr
+der vorhandenen sicheren Papierbreite (64 statt 90 logische Seitenabstände).
+Die vertikalen Karten-/Bildbudgets bleiben erhalten. Ein zusätzlicher nativer
+Ein-Element-Vergleich prüft den vollständigen üblichen Kategorienamen samt
+Pfeil und Rändern; das bisherige Orakel bleibt unverändert erhalten.
 
 ## Größenentscheidung und Layout · A02–A04
 

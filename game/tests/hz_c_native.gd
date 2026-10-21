@@ -29,6 +29,15 @@ static func run(runner: Object) -> void:
 		runner.surface.size = Vector2i(spec[0],spec[1])
 		app.set_ui_scale(spec[2])
 		await runner.frames()
+		# The old string-width-minus-32 oracle misses the native arrow budget.
+		# Ask an identical one-item native control for the complete minimum.
+		var full_category := Sample.Choice.new()
+		full_category.ui_scale = app.ui_scale
+		full_category.add_item("Gemüse, Pilze & Kräuter (1)")
+		full_category.hide()
+		app.add_child(full_category)
+		runner.check(app.album.category_choice.size.x >= full_category.get_minimum_size().x,"HZ-C closed category fits full usual name including native arrow and margins: %s >= %s at %s" % [app.album.category_choice.size.x,full_category.get_minimum_size().x,spec])
+		full_category.free()
 		var card = app.choices[0]
 		var geometry: Array = [card.detail.position,card.image_area,card.label_area,card.leaf.get_rect(),card.note.get_rect()]
 		var old_note: String = card.note.text

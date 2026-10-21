@@ -6,8 +6,9 @@ neun Chromium-Originale aus einem isolierten statischen Komponentenexport.
 Der direkte SHA-256-Vergleich bindet sämtliche verwendeten UI-Dateien und das
 Vergleichsskript an die Lieferung. Keine Bildskalierung oder Nachzeichnung.
 
-Die Quellen waren beim Entwicklungslauf auf `b00b5116dfef97151dbe84857f79eea568451860`
-mit der explizit hashgebundenen anschließenden ganzzahligen Papierbutton-Textursprungs verändert.
+Die Quellen waren beim Entwicklungslauf auf `f0338f983facf529bd0c54a70dfb0b522bcf03bf`
+mit den explizit hashgebundenen anschließenden Korrekturen an geschlossenen
+Controlrändern, Kopf-/Textbuttonbudgets und engem Katalogseitenabstand verändert.
 Dies ist keine Behauptung eines sauberen Produktlaufs dieses alten Heads.
 Der temporäre native Einstieg führt ausschließlich den HZ-C-Pfad aus; sein
 Original und der Chromium-Einstieg samt Build-/Aufnahmeskripten sind komprimiert
@@ -44,3 +45,8 @@ acht der neuen Anfangsglyphenprüfungen. Mutierter temporärer Quelltext,
 Originalbericht und Log sind komprimiert erhalten; die Produktdatei bleibt
 unverändert. CRLF-Originalserialisierungen sind ebenfalls als `.gz` erhalten;
 die danebenstehenden JSON-/Logtexte sind LF-Leseprojektionen.
+
+Der [erste CI-Katalogbefund](failure-f0338f9.json) bleibt mit unverändertem
+[Bericht, Prozesslog und Originalframe](failure-f0338f9.zip) erhalten.
+Dieser Zwischenstand scheiterte am langen Kategorienamen bei UI125 und ist
+kein erfolgreicher HZ-C-T01-Nachweis. Die endgültigen Produktbelege sind separat.

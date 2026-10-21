@@ -33,7 +33,9 @@ static func styles(target: Theme, type: String, id: String, u: float) -> void:
 			style.paper = Color.TRANSPARENT
 			style.ink = INK
 		style.content_margin_left = 10*u
-		style.content_margin_right = (34 if type == "OptionButton" else 10)*u
+		# OptionButton itself reserves its arrow and h_separation in addition to
+		# the style margins. Reserving the arrow twice crowds long categories.
+		style.content_margin_right = 10*u
 		style.content_margin_top = 5*u
 		style.content_margin_bottom = 5*u
 		target.set_stylebox(state,type,style)
