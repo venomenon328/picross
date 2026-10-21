@@ -1,6 +1,15 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
-Stand: 21.10.2026 · Spezifikation 1.2 · **HZ-A/B integriert und abgenommen; HZ-C freigegeben, noch nicht implementiert**
+**HZ-C-Implementierungsstand · 21.10.2026:** [Lieferung und Prüfzuordnung](HZ_C_VERIFICATION.md)
+setzt HZ-D07 auf `fix/294-tidy-typografie` um. Gemeinsame kleine Größe ist 15
+bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19. Private gemessene
+Zeilenmetriken und stabile Grundlinien erhalten Originalfontbytes und übrige
+Textrollen. Die folgenden früheren Angaben „noch nicht implementiert“ und
+„separater Implementierungsauftrag erforderlich“ sind durch den ausdrücklichen
+HZ-C-Auftrag und diese Lieferung fortgeschrieben. Technischer Abschluss und
+Originalbelege stehen im Paket-PR; R01/M01 bleiben getrennt vor Merge offen.
+
+Stand: 21.10.2026 · Spezifikation 1.2 · **HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen**
 
 [Issue #284](https://github.com/venomenon328/picross/issues/284) dokumentiert den
 Abschluss von HZ-A und HZ-B einschließlich ihrer erfüllten T01/R01/M01-Gates.

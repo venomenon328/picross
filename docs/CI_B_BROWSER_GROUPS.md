@@ -226,3 +226,14 @@ Die AT-Katalogprüfung scrollt die verdiente Bildkarte samt Hoverziel vor dem
 Pixelvergleich über echte Radereignisse vollständig in den sichtbaren Bereich.
 Damit hängt sie nicht von einer bestimmten Spaltenzahl ab; sämtliche bisherigen
 Weiß-, Loch-, Farb- und Alpha-Stichproben bleiben unverändert.
+
+## HZ-C-Erweiterung des aktiven Inventars
+
+Auf HZ-A und HZ-B ergänzt `HZ-C-W01` in `catalog` die gemeinsame kleine
+Schriftgröße, vollständige Metadaten, feste Kategorie-/Fußbereiche, alle drei
+Dropdownarten offen/geschlossen und den UI-Rückwechsel. Echte Chromium-
+Maus-/Tastatureingaben und unveränderte Zell-/History-/Abschlusswerte gehören
+dazu. Die Beobachtungsprobe erhält keine Zustandssetter. Die 15 Originalbilder
+`hz-c-{catalog,category,sort,settings,view}-{1280,1920,2560}.png` mit Chromium-
+Präfix sind Pflicht; insgesamt sind es nun 33 Szenarien. Bestehende Auswahl,
+Szenarien und Belegprüfungen bleiben. [HZ-C-Prüfzuordnung](HZ_C_VERIFICATION.md).

@@ -28,11 +28,17 @@ func _input(event: InputEvent) -> void:
 
 func _style() -> void:
 	theme = Theme.new()
+	var fs: int = Text.small_size(ui_scale)
+	theme.set_font("font", "OptionButton", Text.small_font(fs))
+	theme.set_font_size("font_size", "OptionButton", fs)
+	# A caller's inherited old font-size override must not outlive a UI change.
+	add_theme_font_override("font", Text.small_font(fs))
+	add_theme_font_size_override("font_size", fs)
 	Controls.styles(theme,"OptionButton",str(name),ui_scale)
 	theme.set_icon("arrow","OptionButton",Controls.icon("chevron-down",ui_scale))
 	theme.set_constant("modulate_arrow","OptionButton",0)
 	theme.set_constant("arrow_margin","OptionButton",roundi(10*ui_scale))
-	get_popup().theme = Controls.popup_theme(str(name),ui_scale,Text.font())
+	get_popup().theme = Controls.popup_theme(str(name),ui_scale,Text.small_font(fs))
 	get_popup().prefer_native_menu = false
 
 static func dismiss_all(tree: SceneTree) -> void:

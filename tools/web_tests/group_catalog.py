@@ -96,4 +96,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     from hz_b_cases import catalog as hz_b_catalog
     hz_b_catalog(page, name, output, evidence)
     passed('HZ-B paper controls, native popup dismissal, keyboard selection and checkbox input')
+    from hz_c_cases import catalog as hz_c_catalog
+    hz_c_catalog(page, name, output, evidence)
+    passed('HZ-C stable small typography, complete metadata and all three native dropdowns')
     assert not errors, errors

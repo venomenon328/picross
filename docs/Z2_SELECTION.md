@@ -1,5 +1,14 @@
 # Z2: aktive Auswahl und native Integration
 
+**HZ-C-Implementierungsstand · 21.10.2026:** [Lieferung und Prüfzuordnung](HZ_C_VERIFICATION.md)
+setzt HZ-D07 auf `fix/294-tidy-typografie` um. Gemeinsame kleine Größe ist 15
+bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19. Private gemessene
+Zeilenmetriken und stabile Grundlinien erhalten Originalfontbytes und übrige
+Textrollen. Die folgenden früheren Angaben „noch nicht implementiert“ und
+„separater Implementierungsauftrag erforderlich“ sind durch den ausdrücklichen
+HZ-C-Auftrag und diese Lieferung fortgeschrieben. Technischer Abschluss und
+Originalbelege stehen im Paket-PR; R01/M01 bleiben getrennt vor Merge offen.
+
 ## Integrierter HZ-Stil und freigegebene Typografie-Nachbesserung
 
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 21.10.2026:

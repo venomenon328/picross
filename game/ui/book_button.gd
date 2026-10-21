@@ -103,7 +103,7 @@ func _draw() -> void:
 		# Honour theme alpha, including the existing native contrast probe.
 		var ink: Color = get_theme_color("font_color")
 		if selected and ink.a > 0: ink = PAPER
-		var origin: Vector2 = (size-bounds.size)/2-bounds.position
+		var origin: Vector2 = Vector2((size.x-bounds.size.x)/2-bounds.position.x, UiText.line_baseline(font, fs, size.y))
 		if image != null: origin.x += 16*u
 		draw_string(font,origin,text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,ink)
 	if has_focus():
