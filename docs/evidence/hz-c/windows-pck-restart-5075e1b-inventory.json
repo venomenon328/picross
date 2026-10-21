@@ -1,0 +1,111 @@
+{
+  "format": "picross-hz-c-original-archive-v1",
+  "runtime_head": "5075e1bf883e18e24b9802118047a110ea2bf7f0",
+  "run": "39578546117",
+  "producer_attempt": "1",
+  "archive": "windows-pck-restart-5075e1b.zip",
+  "bytes": 38061931,
+  "sha256": "7751f020cbe63f591a2acbb5281004674d77e142105a8475b90e25d33137eea8",
+  "files": [
+    {
+      "file": "native-restart/catalog-1280.png",
+      "bytes": 807092,
+      "sha256": "237427cf70b144184e7bdf8529eee4e212f2549c3bc44b3fab5367c6f8009575"
+    },
+    {
+      "file": "native-restart/catalog-1920.png",
+      "bytes": 1651562,
+      "sha256": "fae69519bab3e3cc73fc6216c8348c1cb3a02638cd045a086cb5bd730646c1ba"
+    },
+    {
+      "file": "native-restart/catalog-2560.png",
+      "bytes": 2714783,
+      "sha256": "1f5129671ca73bdf707257f7d9e7481515c2c989d9292ea762d4c96d84b2c1f7"
+    },
+    {
+      "file": "native-restart/controls-settings-1280.png",
+      "bytes": 1017661,
+      "sha256": "2e552dd3e6735decb594c6f084a143a86df26a3017fb866a551147687dd3e8c6"
+    },
+    {
+      "file": "native-restart/controls-settings-1920.png",
+      "bytes": 1926977,
+      "sha256": "cc3bfbcff44b44452ba37270b76b7571e2146bec3174d6832b88865a3a7d56d3"
+    },
+    {
+      "file": "native-restart/controls-settings-2560.png",
+      "bytes": 3076609,
+      "sha256": "3df7508148626d3aa5a400539675ca0e305809d9158a6179ed3263e37bed8a05"
+    },
+    {
+      "file": "native-restart/controls-sort-1280.png",
+      "bytes": 811330,
+      "sha256": "c3d7add1ea086f8c4b3d5837f706db7fa2f515b5e9e741dfa10930c8c35fc8c6"
+    },
+    {
+      "file": "native-restart/controls-sort-1920.png",
+      "bytes": 1654480,
+      "sha256": "1aca52c1508f23e5eef69ad4ce7a57b514a4f64667359ad1c647272579c7be47"
+    },
+    {
+      "file": "native-restart/controls-sort-2560.png",
+      "bytes": 2716963,
+      "sha256": "caa5f692ccd161f222b8448f5460c9b602b9e8b8588911c5f497c66aedd34727"
+    },
+    {
+      "file": "native-restart/controls-view-1280.png",
+      "bytes": 915552,
+      "sha256": "8fe9efaa576153e86e2ec66dd5f66e11d7ee183d5624ad092cef38daa37d32b0"
+    },
+    {
+      "file": "native-restart/controls-view-1920.png",
+      "bytes": 1830048,
+      "sha256": "cb18ebf0c9354db6bdf4406008e0b21c8044376375f10add9e8b2e4393625795"
+    },
+    {
+      "file": "native-restart/controls-view-2560.png",
+      "bytes": 2933125,
+      "sha256": "c99b878f864ec12f19c0407644d4ed1d01b39e26962ba4f7b8c8e1cbd8cd15c8"
+    },
+    {
+      "file": "native-restart/glyphs.png",
+      "bytes": 1671228,
+      "sha256": "7c6320dba66b7e676eaab2bf95d56d7b38a4bdc5943448e86b47b5addc5939a4"
+    },
+    {
+      "file": "native-restart/help-1280.png",
+      "bytes": 1196328,
+      "sha256": "a8fa54a306cf29853ae7284c9c25699b506df13467dda994b381f791cbcc7d98"
+    },
+    {
+      "file": "native-restart/help-1920.png",
+      "bytes": 2512418,
+      "sha256": "bf19240427a0d8bdb317021fe84f7250dcd2a0644864866d8724c49b40114879"
+    },
+    {
+      "file": "native-restart/help-2560.png",
+      "bytes": 3926428,
+      "sha256": "1ca29bd9abb578099181d7224526e25779d03ba38d5e04eec6d8984ed13b0c55"
+    },
+    {
+      "file": "native-restart/pack.json",
+      "bytes": 642,
+      "sha256": "6edf0ee58f880a3bf284b50fb481f75500dd7436b10076d690c024338eec486a"
+    },
+    {
+      "file": "native-restart/work-1280.png",
+      "bytes": 1120411,
+      "sha256": "d86ce3fc305e1b3820afbbfcc0372a81e57429a4bccc08b6fba4996f3bf423f7"
+    },
+    {
+      "file": "native-restart/work-1920.png",
+      "bytes": 2162432,
+      "sha256": "2d026345e069701a9a7ee5a30389b0af28d2b0e313de0ba198614fb9342d4062"
+    },
+    {
+      "file": "native-restart/work-2560.png",
+      "bytes": 3450841,
+      "sha256": "28932c1e271df571233c50b5d5d2db2aeb379c9b667f2449456402a81afcbd1a"
+    }
+  ]
+}
