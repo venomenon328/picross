@@ -1,3 +1,0 @@
-Production ID: pz-bd2783fcd3eb428c933d15259961cfcd
-Artwork: OpenAI image generation; supplied historical authoring record
-Usage basis: User-selected AI-generated illustration; supplied package declares no copied third-party image asset. No exclusive-rights claim.
