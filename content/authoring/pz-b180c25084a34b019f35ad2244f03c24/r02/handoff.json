@@ -1,0 +1,74 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "puzzle_id": "pz-b180c25084a34b019f35ad2244f03c24",
+  "revision": "r02",
+  "repo_commit": "68fd36e5cd6642d3f75ee22ebb695b91ba56cec0",
+  "state": "motif_review",
+  "category_id": "menschen-berufe",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "proposed_parameters": "parameters.json",
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "61ba88451c3987ee8300b1f7cced2adf69336fa0a1a8dd6e8858a864fd3527b1",
+    "derived_from_reveal_sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "b126c6ddb9e94ed1ddddb7c9c49e69c942deaf988c675279a18f675a5f6d11fe"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "codex_handoff": "CODEX_HANDOFF.md",
+  "authorization": "Standardauftrag 2 samt Repositoryablage und Ablagemerge nach erfolgreichen Pflichtchecks. A-r01 tatsächlich freigegeben. Keine Motivfreigabe, Rasterproduktion oder Spielintegration erteilt."
+}

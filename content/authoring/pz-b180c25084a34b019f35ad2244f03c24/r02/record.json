@@ -1,0 +1,48 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b180c25084a34b019f35ad2244f03c24",
+  "revision": "r02",
+  "motif_name": "José Rizal",
+  "state": "motif_review",
+  "category_id": "menschen-berufe",
+  "repo_commit": "68fd36e5cd6642d3f75ee22ebb695b91ba56cec0",
+  "updated_at_utc": "2026-10-22T22:15:03.181295Z",
+  "package": {
+    "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r02/package.zip",
+    "bytes": 4144027,
+    "sha256": "0c4ce4b3e07a554dc60f6dc2306bf2c6eb002ca067bf938d5c31cf137c6fd7ba"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r02/handoff.json",
+    "sha256": "dd75b22b9ab49d1dc9811160187d4c860ed2f271de1688ed85207f23f356fca9"
+  },
+  "inventory_sha256": "b126c6ddb9e94ed1ddddb7c9c49e69c942deaf988c675279a18f675a5f6d11fe",
+  "reveal_approval": {
+    "file": "approvals/reveal-A-r01.json",
+    "sha256": "65953a8d14c4e60e3dc8200b7517cba02b5a8149067a0a952a8685b055d90f8c",
+    "scope": "inside_package"
+  },
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "61ba88451c3987ee8300b1f7cced2adf69336fa0a1a8dd6e8858a864fd3527b1",
+    "derived_from_reveal_sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "width": 44,
+  "height": 48,
+  "mode": "color",
+  "proposed_color_count": 4,
+  "parameters_status": "proposed_pending_human_motif_approval",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "integration": null
+}
