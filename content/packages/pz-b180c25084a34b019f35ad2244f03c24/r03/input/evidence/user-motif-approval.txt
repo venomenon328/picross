@@ -1,7 +1,0 @@
-Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.
-
-Paket: content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r02/package.zip · r02.
-Ich gebe die Motivvorlage motifs/MA-r01.png · MA-r01 frei; Parameter: 40×44, 42×46 oder 44×48; farbig; 4 Vordergrundfarben plus Leer; area/contain; Crop und Palette gemäß parameters.json; alpha_below 96 oder 192. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.
-Quellbranch / Commit: main / 5805bfa237383c9fd9368cecce4b51da137e6e0d.
-
-Repositoryablage nach §6 ist beauftragt. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen.
