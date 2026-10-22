@@ -1,4 +1,0 @@
-Vorlagentreuer José-Rizal-Dreiviertelkopf gemäß freizugebendem MA-r01 und parameters.json. Gesicht, Stirnlocke, Schnurrbart, Kragen und Binder erhalten. Vier Vordergrundfarben plus Leer. Erst nach tatsächlicher Motivfreigabe importieren.
-
-Working mode: faithful
-Motif and gameplay review: open
