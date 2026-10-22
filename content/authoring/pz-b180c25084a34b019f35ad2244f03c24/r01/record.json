@@ -1,0 +1,88 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b180c25084a34b019f35ad2244f03c24",
+  "revision": "r01",
+  "motif_name": "José Rizal",
+  "category_id": "menschen-berufe",
+  "state": "reveal_review",
+  "package": {
+    "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r01/package.zip",
+    "bytes": 6985854,
+    "sha256": "97e9f23a3c293f96f407c67d540c42a85b5297054b55f5c4dc242b51fa7f1299"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r01/handoff.json",
+    "sha256": "7b7ea1f204c20b6d44d3c102786543075ee30658c04d08ed6851b9691195a6ec"
+  },
+  "inventory_sha256": "c6a35a8a0fa602384ee69182c12cfa10537186a96eb8b45c1f33efbbfebdaf06",
+  "reveal_approval": null,
+  "final_editorial_approval": null,
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Dreiviertelporträt",
+      "file": "reveals/A-r01.png",
+      "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+      "bytes": 2017899,
+      "width": 1199,
+      "height": 1312,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 660429,
+      "partial_alpha_pixels": 912577,
+      "opaque_pixels": 82,
+      "prompt": "prompts/A-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "title": "Frontalporträt",
+      "file": "reveals/B-r01.png",
+      "sha256": "04ba1a7dcf6a5a6e551d085aaf39e3985b0c20ec48142d3d09edce0fe77b109d",
+      "bytes": 2116861,
+      "width": 1145,
+      "height": 1374,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 561575,
+      "partial_alpha_pixels": 1011513,
+      "opaque_pixels": 142,
+      "prompt": "prompts/B-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "title": "Seitenprofil",
+      "file": "reveals/C-r01.png",
+      "sha256": "6fc1168fb34d7545c5c95ed6784e19b70d6da51c337b911170e4f68871f35b37",
+      "bytes": 2079821,
+      "width": 1199,
+      "height": 1312,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 630193,
+      "partial_alpha_pixels": 942796,
+      "opaque_pixels": 99,
+      "prompt": "prompts/C-r01.txt",
+      "approval": null
+    }
+  ],
+  "width": null,
+  "height": null,
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "integration": null,
+  "repo_commit": "4ec552e67dc9114a6eef80588d777cc6119b5bc0",
+  "updated_at_utc": "2026-10-22T22:00:53.906000Z"
+}
