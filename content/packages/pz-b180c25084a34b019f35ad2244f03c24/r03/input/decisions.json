@@ -1,0 +1,215 @@
+{
+  "selected_reveal": "A-r01",
+  "reveal_approval": "approvals/reveal-A-r01.json",
+  "previous_revision": {
+    "commit": "68fd36e5cd6642d3f75ee22ebb695b91ba56cec0",
+    "record": {
+      "format": "picross-authoring-record-v1",
+      "puzzle_id": "pz-b180c25084a34b019f35ad2244f03c24",
+      "revision": "r01",
+      "motif_name": "José Rizal",
+      "category_id": "menschen-berufe",
+      "state": "reveal_review",
+      "package": {
+        "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r01/package.zip",
+        "bytes": 6985854,
+        "sha256": "97e9f23a3c293f96f407c67d540c42a85b5297054b55f5c4dc242b51fa7f1299"
+      },
+      "handoff": {
+        "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r01/handoff.json",
+        "sha256": "7b7ea1f204c20b6d44d3c102786543075ee30658c04d08ed6851b9691195a6ec"
+      },
+      "inventory_sha256": "c6a35a8a0fa602384ee69182c12cfa10537186a96eb8b45c1f33efbbfebdaf06",
+      "reveal_approval": null,
+      "final_editorial_approval": null,
+      "reveal_options": [
+        {
+          "id": "A-r01",
+          "title": "Dreiviertelporträt",
+          "file": "reveals/A-r01.png",
+          "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+          "bytes": 2017899,
+          "width": 1199,
+          "height": 1312,
+          "mode": "RGBA",
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "transparent_pixels": 660429,
+          "partial_alpha_pixels": 912577,
+          "opaque_pixels": 82,
+          "prompt": "prompts/A-r01.txt",
+          "approval": null
+        },
+        {
+          "id": "B-r01",
+          "title": "Frontalporträt",
+          "file": "reveals/B-r01.png",
+          "sha256": "04ba1a7dcf6a5a6e551d085aaf39e3985b0c20ec48142d3d09edce0fe77b109d",
+          "bytes": 2116861,
+          "width": 1145,
+          "height": 1374,
+          "mode": "RGBA",
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "transparent_pixels": 561575,
+          "partial_alpha_pixels": 1011513,
+          "opaque_pixels": 142,
+          "prompt": "prompts/B-r01.txt",
+          "approval": null
+        },
+        {
+          "id": "C-r01",
+          "title": "Seitenprofil",
+          "file": "reveals/C-r01.png",
+          "sha256": "6fc1168fb34d7545c5c95ed6784e19b70d6da51c337b911170e4f68871f35b37",
+          "bytes": 2079821,
+          "width": 1199,
+          "height": 1312,
+          "mode": "RGBA",
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "transparent_pixels": 630193,
+          "partial_alpha_pixels": 942796,
+          "opaque_pixels": 99,
+          "prompt": "prompts/C-r01.txt",
+          "approval": null
+        }
+      ],
+      "width": null,
+      "height": null,
+      "mode": "color",
+      "difficulty": null,
+      "blockers": [],
+      "next_action": "2 · Bild freigeben & abstrahieren",
+      "integration": null,
+      "repo_commit": "4ec552e67dc9114a6eef80588d777cc6119b5bc0",
+      "updated_at_utc": "2026-10-22T22:00:53.906000Z"
+    },
+    "options": [
+      {
+        "id": "A-r01",
+        "title": "Dreiviertelporträt",
+        "file": "reveals/A-r01.png",
+        "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+        "bytes": 2017899,
+        "width": 1199,
+        "height": 1312,
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 660429,
+        "partial_alpha_pixels": 912577,
+        "opaque_pixels": 82,
+        "prompt": "prompts/A-r01.txt",
+        "approval": null
+      },
+      {
+        "id": "B-r01",
+        "title": "Frontalporträt",
+        "file": "reveals/B-r01.png",
+        "sha256": "04ba1a7dcf6a5a6e551d085aaf39e3985b0c20ec48142d3d09edce0fe77b109d",
+        "bytes": 2116861,
+        "width": 1145,
+        "height": 1374,
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 561575,
+        "partial_alpha_pixels": 1011513,
+        "opaque_pixels": 142,
+        "prompt": "prompts/B-r01.txt",
+        "approval": null
+      },
+      {
+        "id": "C-r01",
+        "title": "Seitenprofil",
+        "file": "reveals/C-r01.png",
+        "sha256": "6fc1168fb34d7545c5c95ed6784e19b70d6da51c337b911170e4f68871f35b37",
+        "bytes": 2079821,
+        "width": 1199,
+        "height": 1312,
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 630193,
+        "partial_alpha_pixels": 942796,
+        "opaque_pixels": 99,
+        "prompt": "prompts/C-r01.txt",
+        "approval": null
+      }
+    ]
+  },
+  "omissions": [
+    {
+      "files": [
+        "reveals/B-r01.png",
+        "reveals/C-r01.png",
+        "prompts/B-r01.txt",
+        "prompts/C-r01.txt",
+        "review/paper-comparison.png"
+      ],
+      "reason": "Nach Wahl von A nur in der unveränderten r01-Repositoryrevision belassen; keine früheren ZIPs in r02 eingebettet."
+    }
+  ],
+  "abstraction": "MA-r01",
+  "parameters": "parameters.json",
+  "production_designs": [
+    "config/design-44x48-alpha96.json",
+    "config/design-44x48-alpha192.json",
+    "config/design-42x46-alpha96.json",
+    "config/design-42x46-alpha192.json"
+  ],
+  "detail_losses": [
+    "Haarsträhnen in wenige Großformen vereinigt",
+    "Haut-/Stofftextur entfernt",
+    "feine Licht-/Schattierungsabstufungen vereinfacht",
+    "Knopf-/Nahtdetails reduziert",
+    "blaue Anzugzwischenwerte fallen im vorgeschlagenen Vierfarbraster zu einer dunklen Fläche zusammen"
+  ],
+  "kept_invariants": [
+    "Dreiviertelkopf nach links mit unveränderter Blickrichtung und beiden sichtbaren Augen",
+    "Seitenscheitel und geschwungene Stirnlocke, schlanke Kopf-/Nasen-/Kinnproportionen",
+    "schmaler Schnurrbart, kein Bart hinzugefügt",
+    "hoher heller Hemdkragen und brauner Binder",
+    "dunkler Anzug und ursprüngliche Schulter-/Brustbildkomposition",
+    "transparente Außenfläche; keine motivfremden Rahmenpunkte oder Dekoration"
+  ],
+  "human_motif_approval": "approvals/motif-MA-r01.json",
+  "final_editorial_approval": null,
+  "production": "evidence/candidate-comparison.json",
+  "selected_candidate": "area-44x48-a96",
+  "repair_rounds": 0,
+  "repair_reason": "Kein Reparaturbedarf bei geeignetem vollständig zertifiziertem Direktimport.",
+  "transparency_and_edge_note": "a96 erhält natürliche Konturabdeckung, einschließlich einzelner hellerer area-Randzellen. a192 verletzt seitliche Randbelegung und wird ohne Ausnahme verworfen.",
+  "api_attempts": [
+    {
+      "operation": "origin inspection helper setup",
+      "outcome": "ModuleNotFoundError: contracts (incorrect module name)",
+      "correction": "Vor Rekonstruktion auf vorhandenes Modul contract korrigiert; keine Datenmutation/kein fehlgeschlagener Solverlauf."
+    }
+  ],
+  "r03_omissions": [
+    {
+      "file": "review/reveal-motif-comparison.png",
+      "sha256": "c111d2d8ee5b1e302838cc45799e22e1dff33e17faf3a94c97563ae8a4c60300",
+      "reason": "Ungebundener historischer Phasen-2-Vergleich; Original unter main@5805bfa237383c9fd9368cecce4b51da137e6e0d/content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r02/package.zip erhalten. Neuer Endvergleich und r03-Sichtbericht ersetzen ihn."
+    },
+    {
+      "file": "review/visual-review.json",
+      "sha256": "3b0e1c3ed2f193ac156b849f3dc32c53e36ead222670f79786a2977b1415dbee",
+      "reason": "Ungebundener historischer Phasen-2-Vergleich; Original unter main@5805bfa237383c9fd9368cecce4b51da137e6e0d/content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r02/package.zip erhalten. Neuer Endvergleich und r03-Sichtbericht ersetzen ihn."
+    }
+  ]
+}
