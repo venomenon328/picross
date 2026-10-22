@@ -1,0 +1,20 @@
+{
+  "format": "picross-editorial-approval-v1",
+  "actor": "Repositoryeigentümer / Nutzer in diesem Chat",
+  "timestamp_utc": "2026-10-22T22:35:12.142445Z",
+  "statement": "Ich nehme das Rätselpaket content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r03/package.zip · r03, Revision r03, Inventar-SHA-256 cd7989a62fc4157e0f73d6211c42b39b0f66a2563d259ed8e55db6b787f3a8a8 redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.",
+  "puzzle_id": "pz-b180c25084a34b019f35ad2244f03c24",
+  "revision": "r03",
+  "handoff_sha256": "f63370448f59306a09c5147a18e957035649f74293cfe8a2b2af23f1dd7d2a0f",
+  "inventory_sha256": "cd7989a62fc4157e0f73d6211c42b39b0f66a2563d259ed8e55db6b787f3a8a8",
+  "selection": {
+    "variant": "area-44x48-a96",
+    "matrix_hash": "b0c40a3ac16b278d362b7f05828155e5d691c57eb411ecbd8e1dca2251afcfd0",
+    "logic_hash": "5ae3571e4d6537e83fc8f4fc41672d4cb6adcaf27d33bdca0a424cec945a130e",
+    "reveal": {
+      "file": "reveals/A-r01.png",
+      "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d"
+    }
+  },
+  "test_only": false
+}
