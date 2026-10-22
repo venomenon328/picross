@@ -1,0 +1,80 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b180c25084a34b019f35ad2244f03c24",
+  "revision": "r03",
+  "motif_name": "José Rizal",
+  "category_id": "menschen-berufe",
+  "state": "content_ready",
+  "repo_commit": "5805bfa237383c9fd9368cecce4b51da137e6e0d",
+  "updated_at_utc": "2026-10-22T22:28:21.922550Z",
+  "package": {
+    "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r03/package.zip",
+    "bytes": 11360345,
+    "sha256": "e441b2dbc08fde1f890ad1cbd52e7a09d033b6500ceb4c649876de6f1420f5e9"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r03/handoff.json",
+    "sha256": "f63370448f59306a09c5147a18e957035649f74293cfe8a2b2af23f1dd7d2a0f"
+  },
+  "inventory_sha256": "cd7989a62fc4157e0f73d6211c42b39b0f66a2563d259ed8e55db6b787f3a8a8",
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "61ba88451c3987ee8300b1f7cced2adf69336fa0a1a8dd6e8858a864fd3527b1",
+    "derived_from_reveal_sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+    "approval": "approvals/motif-MA-r01.json",
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "reveal_approval": {
+    "file": "approvals/reveal-A-r01.json",
+    "sha256": "65953a8d14c4e60e3dc8200b7517cba02b5a8149067a0a952a8685b055d90f8c",
+    "scope": "inside_package"
+  },
+  "motif_approval": {
+    "file": "approvals/motif-MA-r01.json",
+    "sha256": "249859bbe219c6a44f0a4edb4e2877553e3de6e43c9ab82e469d594ba23b0c5f",
+    "scope": "inside_package"
+  },
+  "width": 44,
+  "height": 48,
+  "mode": "color",
+  "foreground_colors": 4,
+  "candidate": {
+    "source_type": "import",
+    "bundle": "imports/44x48-alpha96",
+    "variant": "area-44x48-a96",
+    "proof": "imports/44x48-alpha96/area-44x48-a96-proof.json",
+    "verification": "evidence/44x48-alpha96-proof-verified.json",
+    "certification": null,
+    "matrix_hash": "b0c40a3ac16b278d362b7f05828155e5d691c57eb411ecbd8e1dca2251afcfd0",
+    "logic_hash": "5ae3571e4d6537e83fc8f4fc41672d4cb6adcaf27d33bdca0a424cec945a130e"
+  },
+  "difficulty": {
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "logical_level": 3,
+    "size_adjustment": 0,
+    "evidence": "analysis/checked.json",
+    "scope": "inside_package"
+  },
+  "final_editorial_approval": null,
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "integration": null,
+  "inspection": {
+    "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r03/inspection.json",
+    "sha256": "1fa399397d3d9a3d46d7b646b935a64dae1410755992ab5a93b4976400710b73",
+    "technical": true,
+    "editorial_approved": false
+  },
+  "authorization": "Standardauftrag 3 einschließlich Repositoryablage und bedingtem Ablagemerge; Endabnahme und Spielregistrierung offen."
+}
