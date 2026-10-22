@@ -1,0 +1,50 @@
+{
+  "accepted_loss": [
+    "helle/dunkle Federabstufungen",
+    "gelbe und rosafarbene Farbgebung im Mono",
+    "feine Oberflächentextur von Augenring, Beinen und Küstenfels"
+  ],
+  "derivation": "Gezielte digitale monochrome Tonwert- und Konturvereinfachung aus genau A-r01; keine nachgenerierte andere Pose.",
+  "derived_motif": {
+    "alpha": "RGBA, transparente negative Flächen",
+    "file": "motifs/MA-r01.png",
+    "sha256": "3510c97274f4cb2d2025d1c52e95239b61a12ccd2e6a90d3d97f9ab9c3a112d0",
+    "size_px": [
+      1536,
+      1024
+    ]
+  },
+  "format": "picross-motif-derivation-notes-v1",
+  "generated_edit_unused": "Zusätzlicher nativer Bildgenerierungsversuch erzeugte eine abweichende Fotokomposition und wurde als Motivvorlage verworfen.",
+  "not_a_solution_matrix": true,
+  "preserved": [
+    "Silhouette/Pose",
+    "Kopf-Brustlinie",
+    "Schnabelkontur",
+    "Auge",
+    "Flügellage",
+    "Tail/Flügelspiegel",
+    "Beine und Felskontakt"
+  ],
+  "software": {
+    "NumPy": "installed (version not needed for runtime)",
+    "OpenCV": "4.13.0",
+    "Pillow": "12.3.0"
+  },
+  "source_reveal": {
+    "alpha": "RGBA unverändert",
+    "file": "reveals/A-r01.png",
+    "sha256": "03211f56cc6070575b4c9be740eb739a039891664f00ed711c74a2ffad6d68c0",
+    "size_px": [
+      1536,
+      1024
+    ]
+  },
+  "steps": [
+    "RGBA-Bild in derselben Pixelgeometrie eingelesen; Silhouette nur aus Originalalpha (>112) ermittelt und kleine Lücken geschlossen.",
+    "Originalfarbflächen per leichter Gauss-Glättung und Luma-Schwelle 185 in dunkle grafitfarbene Flächen bzw. ausgesparte lichte Motivbereiche überführt.",
+    "Äußere Originalkontur mit morphologischem Gradienten geschützt; zwei rosa Beine anhand ihrer ursprünglichen Farbregionen vor ungewollter Löschung erhalten.",
+    "Küstenfels grafisch als Kontur plus gezielte dunkle Brüche belassen, anstatt den unteren Bildbereich vollständig zu schwärzen.",
+    "Kleine Störkomponenten verworfen, Alphakanten minimal geglättet; PNG mit einem einzigen deckenden Farbsatz und transparenten Aussparungen exportiert."
+  ]
+}

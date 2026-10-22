@@ -1,0 +1,13 @@
+# Silbermöwe · r04 · Endabnahmevorlage
+
+22.10.2026 · **content_ready; menschliche Endabnahme offen** · Authoring 0.5.0 / Dokumentrevision23 · Werkzeug `026b5568643e1bd80281720dddd87b682fc7d4df`. ID `pz-bd2783fcd3eb428c933d15259961cfcd`. Inventarhash steht im äußeren Record und im Handoff, ohne Selbstreferenz.
+
+**Ergebnis:** 42×32 = 1.344 Zellen, monochrom, exakt eine Vordergrundfarbe `ink`/#272524 plus Leer; 401 gefüllt, 943 leer (29,84%). Endmatrix entspricht allen r03-Zellwerten. Abschlussbild A-r01 und Motiv MA-r01 bytegleich; tatsächliche Freigaben und Herkunft in `approvals/`, `origin/` und den Provenienzdateien.
+
+**Nachweise:** RP-3-Direktimport `production/selected:a241`, vollständige `full-line-mono`-Deduktion vom unbekannten Start, 229 Schritte; unabhängiger frischer Projektverifier, vollständiger Herkunftsreplay und exakte Endmatrixgleichheit. `audit/origin-verification.json`, `audit/independent-verification.json`. Randformel erfüllt: links/oben/unten belegt, rechts leer. Vier Ausgangskandidaten plus zwei begründete Samplingtests; Auswahl/Ablehnung in `decisions.json`. Keine Reparatur nötig, keine manuellen Zelländerungen, kein Paar-/Suchlauf.
+
+**Schwierigkeit:** aktuelle vollständig geprüfte SD-Methode0.3: **L4 · Schwer**, Basis4 + Größe0, instrumentiert/medium, 43 synchrone Wellen (13×R0,14×R1,16×R2), sechs Engstellenwellen, längste Folge2. Kein R3/R4 nötig. `analysis/checked.json` und vollständiges Bundle. Separate historische0.1-Adaptermetadaten in `difficulty.json`; keine menschliche Kalibrierung und keine Lösungszeitschätzung. Probespiel optional/nicht durchgeführt.
+
+**Sichtvorlage:** `presentation/final-comparison.png`, `final-grid.png`, `reveal-paper.png`; Originalraster `production/selected/a241-raster.png`. Silhouette, Flügel, helle Brust, Beine und Fels bleiben. **Sichtbare Grenzen:** Auge nur angedeutet; naturkundlich detaillierter Revealstil. Ein isoliertes Konturfeld und vier leere rechte Außenspalten sind motivbedingt erhalten. Keine Material-/Kompositionsänderung. Statische Papier-/Alphaprüfung, kein nativer Screenshot.
+
+**Rechte/Aufwand:** historische KI-Illustration und dokumentierte digitale Ableitung, keine neu eingeführten Fremdassets. Originalprompt/verborgene Einstellungen `not_exposed`. Keine neue Bildgenerierung, sechs kanonische Importe; aktive Menschenzeit nicht erfasst. Repositoryablage samt bedingtem Merge beauftragt. Kein Zieladapterexport/keine Registrierung ohne r04-Endfreigabe; abschließendes ZIP-Inspect liegt außen im Record. Nächster Schritt: tatsächliche redaktionelle Abnahme dieses r04-Inventars und Auftrag4. r03-Annahme wird nicht als r04-Endfreigabe ausgegeben.
