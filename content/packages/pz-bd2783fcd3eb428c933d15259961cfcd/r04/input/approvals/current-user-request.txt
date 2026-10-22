@@ -1,0 +1,8 @@
+Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.
+
+Paket: e:/Downloads/pz-bd2783fcd3eb428c933d15259961cfcd_r03_offline-production-transfer.zip · r03.
+Ich gebe die Motivvorlage r03/package.zip → motifs/MA-r01.png · MA-r01 frei; Parameter: Breite 40–44, Höhe 30–34, Seitenverhältnis 1,25–1,4; monochrom, eine Vordergrundfarbe. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.
+Farbanzahl: 1 (Genau, ohne Leer).
+Quellbranch / Commit: ⟨Quellbranch / Commit⟩.
+
+Repositoryablage nach §6 ist beauftragt. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen.
