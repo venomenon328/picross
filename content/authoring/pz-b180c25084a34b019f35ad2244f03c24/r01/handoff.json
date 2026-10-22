@@ -1,0 +1,132 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-b180c25084a34b019f35ad2244f03c24",
+  "revision": "r01",
+  "repo_commit": "4ec552e67dc9114a6eef80588d777cc6119b5bc0",
+  "state": "reveal_review",
+  "category_id": "menschen-berufe",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": null,
+    "height": null,
+    "mode": "color",
+    "color_count": null
+  },
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Dreiviertelporträt",
+      "file": "reveals/A-r01.png",
+      "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+      "bytes": 2017899,
+      "width": 1199,
+      "height": 1312,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 660429,
+      "partial_alpha_pixels": 912577,
+      "opaque_pixels": 82,
+      "prompt": "prompts/A-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "title": "Frontalporträt",
+      "file": "reveals/B-r01.png",
+      "sha256": "04ba1a7dcf6a5a6e551d085aaf39e3985b0c20ec48142d3d09edce0fe77b109d",
+      "bytes": 2116861,
+      "width": 1145,
+      "height": 1374,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 561575,
+      "partial_alpha_pixels": 1011513,
+      "opaque_pixels": 142,
+      "prompt": "prompts/B-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "title": "Seitenprofil",
+      "file": "reveals/C-r01.png",
+      "sha256": "6fc1168fb34d7545c5c95ed6784e19b70d6da51c337b911170e4f68871f35b37",
+      "bytes": 2079821,
+      "width": 1199,
+      "height": 1312,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 630193,
+      "partial_alpha_pixels": 942796,
+      "opaque_pixels": 99,
+      "prompt": "prompts/C-r01.txt",
+      "approval": null
+    }
+  ],
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "c6a35a8a0fa602384ee69182c12cfa10537186a96eb8b45c1f33efbbfebdaf06"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "authorization": "Standardauftrag 1 samt Repositoryablage nach §6, Commit/Push und PR; Ablagemerge nach erfolgreichen Pflichtprüfungen ausdrücklich beauftragt. Keine Inhaltsfreigabe erteilt."
+}
