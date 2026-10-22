@@ -1,0 +1,90 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "revision": "r01",
+  "motif_name": "Webcam",
+  "category_id": "technik-erfindungen",
+  "state": "reveal_review",
+  "package": {
+    "file": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r01/package.zip",
+    "bytes": 5581284,
+    "sha256": "bc98d1fbac162c088eb9138a9e1a4616c2f3ecb0739bb7f0404499a20833845d"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r01/handoff.json",
+    "sha256": "094ff4429a5541bdf26557061b3a2049bc4b93f57b5df6c26a24a91225aca518"
+  },
+  "inventory_sha256": "642bf9853308158a14e7f8ac2b88b5a26b4a523dc71232f31d26999e61850fe6",
+  "reveal_approval": null,
+  "final_editorial_approval": null,
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Türkis · frontal",
+      "file": "reveals/A-r01.png",
+      "sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8",
+      "bytes": 1667919,
+      "width": 1619,
+      "height": 971,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 612538,
+      "partial_alpha_pixels": 958177,
+      "opaque_pixels": 1334,
+      "prompt": "prompts/A-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "title": "Creme/Kupfer · rechtsseitig",
+      "file": "reveals/B-r01.png",
+      "sha256": "5e30e15d2279b326f44f131cf7daa21811d2c80f97a6d9864a3d879e18f74936",
+      "bytes": 2021582,
+      "width": 1619,
+      "height": 971,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 563440,
+      "partial_alpha_pixels": 1007503,
+      "opaque_pixels": 1106,
+      "prompt": "prompts/B-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "title": "Gelb · linksseitig",
+      "file": "reveals/C-r01.png",
+      "sha256": "f463f428e6f6d5f588900bdb8f5874ad877301a5ae7c63723c46c490241d19ab",
+      "bytes": 1444507,
+      "width": 1619,
+      "height": 971,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 828588,
+      "partial_alpha_pixels": 742372,
+      "opaque_pixels": 1089,
+      "prompt": "prompts/C-r01.txt",
+      "approval": null
+    }
+  ],
+  "width": 25,
+  "height": 15,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "integration": null,
+  "repo_commit": "a5b20fb6f44c743e9337e8596ebeced604750fb8",
+  "updated_at_utc": "2026-10-22T22:53:36.571663Z"
+}
