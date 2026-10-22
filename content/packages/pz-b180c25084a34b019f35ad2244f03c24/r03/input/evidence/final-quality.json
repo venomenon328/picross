@@ -1,0 +1,417 @@
+{
+  "puzzle_id": "pz-b180c25084a34b019f35ad2244f03c24",
+  "revision": "r03",
+  "variant": "area-44x48-a96",
+  "candidate_id": "287e9f3ea892328d5a9c9c2905258c2af0d0c71ff0fdd749c1f283a9947aec2c",
+  "matrix_hash": "b0c40a3ac16b278d362b7f05828155e5d691c57eb411ecbd8e1dca2251afcfd0",
+  "logic_hash": "5ae3571e4d6537e83fc8f4fc41672d4cb6adcaf27d33bdca0a424cec945a130e",
+  "metrics": {
+    "width": 44,
+    "height": 48,
+    "cells": 2112,
+    "counts": {
+      "empty": 920,
+      "skin": 273,
+      "ink": 740,
+      "shade": 148,
+      "ivory": 31
+    },
+    "foreground_colors": 4,
+    "filled": 1192,
+    "fill_fraction": [
+      1192,
+      2112
+    ],
+    "edges": {
+      "left": true,
+      "right": true,
+      "top": true,
+      "bottom": false
+    },
+    "frame_valid": true,
+    "same_color_isolated_cells": [
+      {
+        "row": 1,
+        "column": 23,
+        "value": "skin"
+      },
+      {
+        "row": 1,
+        "column": 27,
+        "value": "shade"
+      },
+      {
+        "row": 1,
+        "column": 28,
+        "value": "skin"
+      },
+      {
+        "row": 2,
+        "column": 17,
+        "value": "skin"
+      },
+      {
+        "row": 3,
+        "column": 16,
+        "value": "shade"
+      },
+      {
+        "row": 3,
+        "column": 30,
+        "value": "shade"
+      },
+      {
+        "row": 4,
+        "column": 15,
+        "value": "skin"
+      },
+      {
+        "row": 4,
+        "column": 33,
+        "value": "shade"
+      },
+      {
+        "row": 6,
+        "column": 35,
+        "value": "skin"
+      },
+      {
+        "row": 8,
+        "column": 20,
+        "value": "shade"
+      },
+      {
+        "row": 10,
+        "column": 28,
+        "value": "shade"
+      },
+      {
+        "row": 11,
+        "column": 29,
+        "value": "shade"
+      },
+      {
+        "row": 12,
+        "column": 14,
+        "value": "skin"
+      },
+      {
+        "row": 12,
+        "column": 18,
+        "value": "ink"
+      },
+      {
+        "row": 12,
+        "column": 36,
+        "value": "shade"
+      },
+      {
+        "row": 13,
+        "column": 16,
+        "value": "ink"
+      },
+      {
+        "row": 13,
+        "column": 23,
+        "value": "ink"
+      },
+      {
+        "row": 14,
+        "column": 23,
+        "value": "shade"
+      },
+      {
+        "row": 15,
+        "column": 32,
+        "value": "skin"
+      },
+      {
+        "row": 17,
+        "column": 14,
+        "value": "ivory"
+      },
+      {
+        "row": 18,
+        "column": 15,
+        "value": "shade"
+      },
+      {
+        "row": 19,
+        "column": 17,
+        "value": "shade"
+      },
+      {
+        "row": 19,
+        "column": 18,
+        "value": "ink"
+      },
+      {
+        "row": 19,
+        "column": 20,
+        "value": "ink"
+      },
+      {
+        "row": 20,
+        "column": 17,
+        "value": "ink"
+      },
+      {
+        "row": 20,
+        "column": 22,
+        "value": "ink"
+      },
+      {
+        "row": 20,
+        "column": 31,
+        "value": "ink"
+      },
+      {
+        "row": 21,
+        "column": 17,
+        "value": "shade"
+      },
+      {
+        "row": 21,
+        "column": 18,
+        "value": "skin"
+      },
+      {
+        "row": 23,
+        "column": 28,
+        "value": "shade"
+      },
+      {
+        "row": 24,
+        "column": 16,
+        "value": "shade"
+      },
+      {
+        "row": 26,
+        "column": 17,
+        "value": "shade"
+      },
+      {
+        "row": 26,
+        "column": 31,
+        "value": "shade"
+      },
+      {
+        "row": 27,
+        "column": 18,
+        "value": "shade"
+      },
+      {
+        "row": 27,
+        "column": 30,
+        "value": "shade"
+      },
+      {
+        "row": 28,
+        "column": 11,
+        "value": "shade"
+      },
+      {
+        "row": 28,
+        "column": 19,
+        "value": "shade"
+      },
+      {
+        "row": 29,
+        "column": 9,
+        "value": "shade"
+      },
+      {
+        "row": 29,
+        "column": 20,
+        "value": "shade"
+      },
+      {
+        "row": 29,
+        "column": 29,
+        "value": "skin"
+      },
+      {
+        "row": 30,
+        "column": 7,
+        "value": "shade"
+      },
+      {
+        "row": 30,
+        "column": 35,
+        "value": "skin"
+      },
+      {
+        "row": 31,
+        "column": 5,
+        "value": "shade"
+      },
+      {
+        "row": 31,
+        "column": 37,
+        "value": "skin"
+      },
+      {
+        "row": 32,
+        "column": 2,
+        "value": "skin"
+      },
+      {
+        "row": 32,
+        "column": 3,
+        "value": "shade"
+      },
+      {
+        "row": 32,
+        "column": 39,
+        "value": "skin"
+      },
+      {
+        "row": 33,
+        "column": 1,
+        "value": "skin"
+      },
+      {
+        "row": 33,
+        "column": 28,
+        "value": "ivory"
+      },
+      {
+        "row": 33,
+        "column": 29,
+        "value": "shade"
+      },
+      {
+        "row": 33,
+        "column": 41,
+        "value": "shade"
+      },
+      {
+        "row": 34,
+        "column": 24,
+        "value": "skin"
+      },
+      {
+        "row": 34,
+        "column": 28,
+        "value": "skin"
+      },
+      {
+        "row": 35,
+        "column": 2,
+        "value": "shade"
+      },
+      {
+        "row": 35,
+        "column": 43,
+        "value": "shade"
+      },
+      {
+        "row": 37,
+        "column": 3,
+        "value": "skin"
+      },
+      {
+        "row": 38,
+        "column": 4,
+        "value": "shade"
+      },
+      {
+        "row": 41,
+        "column": 6,
+        "value": "skin"
+      },
+      {
+        "row": 41,
+        "column": 43,
+        "value": "skin"
+      },
+      {
+        "row": 42,
+        "column": 7,
+        "value": "shade"
+      },
+      {
+        "row": 44,
+        "column": 9,
+        "value": "shade"
+      },
+      {
+        "row": 44,
+        "column": 41,
+        "value": "shade"
+      },
+      {
+        "row": 45,
+        "column": 11,
+        "value": "shade"
+      },
+      {
+        "row": 45,
+        "column": 40,
+        "value": "skin"
+      },
+      {
+        "row": 46,
+        "column": 13,
+        "value": "skin"
+      },
+      {
+        "row": 46,
+        "column": 14,
+        "value": "shade"
+      },
+      {
+        "row": 46,
+        "column": 37,
+        "value": "shade"
+      },
+      {
+        "row": 46,
+        "column": 38,
+        "value": "skin"
+      }
+    ],
+    "foreground_isolated_cells": [],
+    "foreground_component_sizes": [
+      1192
+    ],
+    "empty_rows": [
+      48
+    ],
+    "empty_columns": [],
+    "empty_internal_rows": [],
+    "empty_internal_columns": []
+  },
+  "product_dimensions_pass": true,
+  "color_request": 4,
+  "actual_foreground_colors": 4,
+  "palette_roles": [
+    {
+      "id": "ink",
+      "rgb": "#253044",
+      "role": "Haare, Schnurrbart, Augen/Konturen und zusammengefasster dunkler Anzug"
+    },
+    {
+      "id": "skin",
+      "rgb": "#d69a68",
+      "role": "Hauptfläche von Gesicht und Hals"
+    },
+    {
+      "id": "shade",
+      "rgb": "#87583d",
+      "role": "Nase/Ohr/Wange/Hals modellieren und Binder farblich trennen"
+    },
+    {
+      "id": "ivory",
+      "rgb": "#f5ead4",
+      "role": "hoher Hemdkragen und kleine helle Augenbereiche"
+    }
+  ],
+  "hints": "Deterministisch aus exakter Matrix; RP-3-Rekonstruktion und unabhängiger Proof bestätigen gemeinsam Farbkontakt und Pflichtabstand.",
+  "reconstruction": "evidence/origin-verification.json",
+  "independent_proof": "evidence/44x48-alpha96-proof-verified.json",
+  "final_matrix_equal": true,
+  "repair_changes": [],
+  "human_playtest": "not_performed; optional",
+  "estimated_minutes": null
+}

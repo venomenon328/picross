@@ -1,0 +1,54 @@
+{
+  "actor": "Codex / visueller Selbstreview, keine menschliche Endabnahme",
+  "timestamp_utc": "2026-10-22T22:27:30.666499Z",
+  "images": [
+    "review/candidates.png",
+    "review/final-comparison.png",
+    "final/raster.png",
+    "final/raster-large.png",
+    "final/raster-grid.png"
+  ],
+  "checks": {
+    "recognizability": {
+      "status": "erfüllt",
+      "reason": "Farbiges männliches Dreiviertelporträt nach links mit beiden Augen, Seitenscheitel und geschwungener Stirnlocke."
+    },
+    "silhouette_proportions": {
+      "status": "erfüllt",
+      "reason": "Schlanker Kopf/Nase/Kinn und breite Brustbildschultern bleiben der Motivvorlage zugeordnet; contain ohne Strecken."
+    },
+    "important_details_negative_spaces": {
+      "status": "erfüllt",
+      "reason": "Beide Augen als dunkle Formen, schmaler Schnurrbart, abgesetzte Nase/Ohrschatten, hoher heller Kragen und brauner Binder. Feine Augenlichter und Anzugnähte fallen bei Rasterung weg."
+    },
+    "palette_readability": {
+      "status": "erfüllt",
+      "reason": "Vier klar getrennte Helligkeitsrollen: dunkle Haar-/Anzugform, Haut, braune Modellierung/Binder und heller Kragen. Keine zusätzliche Farbe oder unbenutzter Eintrag."
+    },
+    "series_aesthetic": {
+      "status": "erfüllt",
+      "reason": "Ruhige zusammenhängende Farbflächen; detailreiches farbiges Original bleibt als Belohnungsbild unverändert."
+    },
+    "reveal_consistency": {
+      "status": "erfüllt",
+      "reason": "Blick, Pose, Haarform, Nase/Kinn, Schnurrbart, Kragen/Binder und Brustbild sind konsistent. Keine Bildanpassung an Solvererfolg."
+    },
+    "transparency": {
+      "status": "erfüllt",
+      "reason": "Originales freigegebenes RGBA-PNG unverändert; sichtbare Außenfreiflächen in großer/kleiner statischer Montage auf gebundenem Buchpapier, helle Kragenteile erhalten. Keine opake Bildbox."
+    }
+  },
+  "soft_exceptions": [
+    {
+      "kind": "single_color_cells",
+      "reason": "Kleine Farbinseln an Augen/Nase/Kragen und antialiasingbedingt hellere Konturzellen stammen direkt aus freigegebener Vorlage und area/contain. Keine frei hinzugefügten Logikanker; alle Vordergrundzellen gehören zur zusammenhängenden Motivform."
+    },
+    {
+      "kind": "outer_empty_row",
+      "reason": "Letzte Leerzeile durch contain-Quantisierung; keine leere Innenzeile/-spalte. Randregel verlangt nicht alle vier Kanten."
+    }
+  ],
+  "color_vision_simulation": "nicht durchgeführt; kleine Darstellung und Helligkeitsrollen tatsächlich visuell geprüft",
+  "native_tests": "nicht erforderlich: reine Inhaltsproduktion und Repositoryablage",
+  "final_editorial_approval": "pending"
+}

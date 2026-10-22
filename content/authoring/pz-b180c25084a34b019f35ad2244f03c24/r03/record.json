@@ -4,7 +4,7 @@
   "revision": "r03",
   "motif_name": "José Rizal",
   "category_id": "menschen-berufe",
-  "state": "content_ready",
+  "state": "registered",
   "repo_commit": "5805bfa237383c9fd9368cecce4b51da137e6e0d",
   "updated_at_utc": "2026-10-22T22:28:21.922550Z",
   "package": {
@@ -64,12 +64,24 @@
     "evidence": "analysis/checked.json",
     "scope": "inside_package"
   },
-  "final_editorial_approval": null,
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
-  "integration": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r03/approval.json",
+    "sha256": "1453d1455c3d49a4d4b19ca50abcb46c87cfe621857dc6100dea3e2df41b3398"
+  },
+  "blockers": [],
+  "next_action": "Nach Main-Merge Produktionsabschluss nach §9",
+  "integration": {
+    "runtime_id": "pz-b180c25084a34b019f35ad2244f03c24",
+    "runtime_revision": 1,
+    "save_slot": "jose_rizal_001",
+    "category_id": "menschen-berufe",
+    "export_manifest_sha256": "a142fecf65551d96ec549eff7571dc32a2371e4d2497a1ef9ca9189bca0f81a2",
+    "definition_sha256": "2006da0fe28a5cd75cb116b9b9a768cad0d690932e55ca76a81156703004778d",
+    "reveal_sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+    "notice_sha256": "a529a375b50607c7e88252d817763e0df40d0ed7547ad3262c545867f7b777ef",
+    "difficulty": "content/difficulty/pz-b180c25084a34b019f35ad2244f03c24/rating.json",
+    "verification": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r03/integration-verification.json"
+  },
   "inspection": {
     "file": "content/authoring/pz-b180c25084a34b019f35ad2244f03c24/r03/inspection.json",
     "sha256": "1fa399397d3d9a3d46d7b646b935a64dae1410755992ab5a93b4976400710b73",

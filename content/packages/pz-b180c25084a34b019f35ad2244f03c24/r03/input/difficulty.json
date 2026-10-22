@@ -1,0 +1,34 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "level": "L3",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "confidence": "low",
+  "logic_hash": "5ae3571e4d6537e83fc8f4fc41672d4cb6adcaf27d33bdca0a424cec945a130e",
+  "evidence": "analysis/checked.json",
+  "rule_families": {
+    "R0": "Leer-/Restbelegung nach vollständigen Farbblöcken liefert einfache Aufräumanteile. Die aktuelle SD-Spur enthält 5 R0-Wellen.",
+    "R1": "Überlappungen und Verlängerungen langer Haar-/Anzugflächen; die aktuelle SD-Spur enthält 5 R1-Wellen.",
+    "R2": "Kombination mehrerer kurzer Farbblöcke an Gesicht, Kragen und Binder. Die frische SD-Instrumentierung löst vollständig mit 5 R2-Wellen ohne R3.",
+    "R3": "full-line-color zertifiziert allgemeine Linienunterstützung. Kein notwendiges R3 behauptet; die separate SD-Spur löst ohne R3."
+  },
+  "bottleneck": "Keine Engstellen unter der aktuellen SD-Methode; historische 0.1-Form ist eine gesonderte vorsichtige redaktionelle Schätzung.",
+  "current_integration_rating": {
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "logical_level": 3,
+    "size_adjustment": 0,
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "human_calibration": "not_performed"
+  },
+  "note": "0.1 ist die vom unveränderten ZA-1-Eingangsvertrag erwartete historische Produktionsmetadatenform. Maßgebliche aktuelle Einstufung ist die vollständig geprüfte separate 0.3-Hülle analysis/checked.json; kein Umetikettieren der Methoden.",
+  "time_estimate": null
+}

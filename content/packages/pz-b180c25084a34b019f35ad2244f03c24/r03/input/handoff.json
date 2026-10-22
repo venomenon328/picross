@@ -1,0 +1,287 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "puzzle_id": "pz-b180c25084a34b019f35ad2244f03c24",
+  "revision": "r03",
+  "repo_commit": "5805bfa237383c9fd9368cecce4b51da137e6e0d",
+  "state": "content_ready",
+  "category_id": "menschen-berufe",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "brief": "brief.md",
+  "approved_parameters": [
+    {
+      "width": 40,
+      "height": 44,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        0,
+        16,
+        1199,
+        1312
+      ],
+      "alpha_below": 96,
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253044"
+        },
+        {
+          "id": "ivory",
+          "rgb": "#f5ead4"
+        },
+        {
+          "id": "shade",
+          "rgb": "#87583d"
+        },
+        {
+          "id": "skin",
+          "rgb": "#d69a68"
+        }
+      ],
+      "background": "#ffffff"
+    },
+    {
+      "width": 40,
+      "height": 44,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        0,
+        16,
+        1199,
+        1312
+      ],
+      "alpha_below": 192,
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253044"
+        },
+        {
+          "id": "ivory",
+          "rgb": "#f5ead4"
+        },
+        {
+          "id": "shade",
+          "rgb": "#87583d"
+        },
+        {
+          "id": "skin",
+          "rgb": "#d69a68"
+        }
+      ],
+      "background": "#ffffff"
+    },
+    {
+      "width": 42,
+      "height": 46,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        0,
+        16,
+        1199,
+        1312
+      ],
+      "alpha_below": 96,
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253044"
+        },
+        {
+          "id": "ivory",
+          "rgb": "#f5ead4"
+        },
+        {
+          "id": "shade",
+          "rgb": "#87583d"
+        },
+        {
+          "id": "skin",
+          "rgb": "#d69a68"
+        }
+      ],
+      "background": "#ffffff"
+    },
+    {
+      "width": 42,
+      "height": 46,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        0,
+        16,
+        1199,
+        1312
+      ],
+      "alpha_below": 192,
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253044"
+        },
+        {
+          "id": "ivory",
+          "rgb": "#f5ead4"
+        },
+        {
+          "id": "shade",
+          "rgb": "#87583d"
+        },
+        {
+          "id": "skin",
+          "rgb": "#d69a68"
+        }
+      ],
+      "background": "#ffffff"
+    },
+    {
+      "width": 44,
+      "height": 48,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        0,
+        16,
+        1199,
+        1312
+      ],
+      "alpha_below": 96,
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253044"
+        },
+        {
+          "id": "ivory",
+          "rgb": "#f5ead4"
+        },
+        {
+          "id": "shade",
+          "rgb": "#87583d"
+        },
+        {
+          "id": "skin",
+          "rgb": "#d69a68"
+        }
+      ],
+      "background": "#ffffff"
+    },
+    {
+      "width": 44,
+      "height": 48,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        0,
+        16,
+        1199,
+        1312
+      ],
+      "alpha_below": 192,
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#253044"
+        },
+        {
+          "id": "ivory",
+          "rgb": "#f5ead4"
+        },
+        {
+          "id": "shade",
+          "rgb": "#87583d"
+        },
+        {
+          "id": "skin",
+          "rgb": "#d69a68"
+        }
+      ],
+      "background": "#ffffff"
+    }
+  ],
+  "proposed_parameters": "parameters.json",
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "61ba88451c3987ee8300b1f7cced2adf69336fa0a1a8dd6e8858a864fd3527b1",
+    "derived_from_reveal_sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+    "approval": "approvals/motif-MA-r01.json",
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "imports/44x48-alpha96",
+    "variant": "area-44x48-a96",
+    "proof": "imports/44x48-alpha96/area-44x48-a96-proof.json",
+    "verification": "evidence/44x48-alpha96-proof-verified.json",
+    "certification": null,
+    "matrix_hash": "b0c40a3ac16b278d362b7f05828155e5d691c57eb411ecbd8e1dca2251afcfd0",
+    "logic_hash": "5ae3571e4d6537e83fc8f4fc41672d4cb6adcaf27d33bdca0a424cec945a130e"
+  },
+  "origin_verification": "evidence/origin-verification.json",
+  "repair": null,
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "cd7989a62fc4157e0f73d6211c42b39b0f66a2563d259ed8e55db6b787f3a8a8"
+  },
+  "difficulty": "difficulty.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json",
+    "motif": "approvals/motif-MA-r01.json",
+    "provenance": "evidence/origin-verification.json",
+    "logic": "evidence/44x48-alpha96-proof-verified.json",
+    "frame": "evidence/final-quality.json",
+    "visual": "review/visual-review-r03.json",
+    "difficulty": "analysis/checked.json",
+    "reveal_consistency": "review/visual-review-r03.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "codex_handoff": "CODEX_HANDOFF.md",
+  "authorization": "Tatsächlicher Nutzerauftrag: Standardauftrag 3 vollständig bis zur Endabnahmevorlage, Repositoryablage §6 und Ablage-/Integrations-PR nach Pflichtprüfungen mergen. Keine erteilte menschliche Endabnahme oder Spielregistrierung.",
+  "difficulty_checked": "analysis/checked.json",
+  "final_editorial_approval": null
+}
