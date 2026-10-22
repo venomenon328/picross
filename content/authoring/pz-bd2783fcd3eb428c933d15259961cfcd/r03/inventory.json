@@ -1,0 +1,235 @@
+{
+  "entries": {
+    "approvals/motif-MA-r01.json": {
+      "bytes": 1738,
+      "sha256": "d10b28864ad1f25a7a8f1eaa1f459693186ec96d7e1a0abe8e5510a2e16ad607"
+    },
+    "approvals/reveal-A-r01.json": {
+      "bytes": 815,
+      "sha256": "839e1980e628dfc8f7f8584deb47a773f272946fe7c23e83b0428febd3f0a1e8"
+    },
+    "audit/REPRODUCTION.txt": {
+      "bytes": 688,
+      "sha256": "08ff5b862655f918fcbdf4db20034b14aedd7447f7fe5a6387713c51971288be"
+    },
+    "audit/local-code/mono_solver.py": {
+      "bytes": 3933,
+      "sha256": "66745519dfb90c68e78b2b0750269897c652d4cddde56d24ff8b9f3d722f6e11"
+    },
+    "audit/local-code/verify_trace.py": {
+      "bytes": 3800,
+      "sha256": "0d6aa982b051fdb2b8cc60c5e67ca687be8272231bf6a54579b454f134176fae"
+    },
+    "audit/local-review.json": {
+      "bytes": 3938,
+      "sha256": "a0493dafadc1f2bee76a8299021d61e6629e0a539177522c14a5bf2e3f76ccfb"
+    },
+    "audit/review.md": {
+      "bytes": 1580,
+      "sha256": "9853d7dd331f7643bd300619981235e193adaabb6d5ae7ceb6a863411411275a"
+    },
+    "brief.md": {
+      "bytes": 1867,
+      "sha256": "b100442cb2610ab65368a54fcdbbce281dd5d523f2e8dcad60436f273e749d35"
+    },
+    "decisions.json": {
+      "bytes": 2995,
+      "sha256": "d455ea85440ec6bbfce768209c9dfa8a95d22620f33015855f8b8f18e8927533"
+    },
+    "derivation.json": {
+      "bytes": 1122,
+      "sha256": "cfa24407c858b3f37f6434652527750d746a4537a1a33aeda5917f0effc52547"
+    },
+    "effort.json": {
+      "bytes": 419,
+      "sha256": "6f170d637f419f67a7fe910ec9e95e7615d7b9bee2dc106359878c53aa0e03b1"
+    },
+    "motif-derivation.json": {
+      "bytes": 2101,
+      "sha256": "e97f898730ca4f75bc8c5eddd85b1863720f579b798408609424d4adbf686ab7"
+    },
+    "motifs/MA-r01.png": {
+      "bytes": 48787,
+      "sha256": "3510c97274f4cb2d2025d1c52e95239b61a12ccd2e6a90d3d97f9ab9c3a112d0"
+    },
+    "origin/r01-handoff.json": {
+      "bytes": 3133,
+      "sha256": "caf27d50d0ed089d3658acf2aba16e5a0ade4f9b28f0524ae233ca4677517cd4"
+    },
+    "origin/r01-inventory.json": {
+      "bytes": 1042,
+      "sha256": "7af528d590f3badb21b1a45fc7625eeec13c85f4096de06f01f8c4fa53254c3a"
+    },
+    "origin/r02-approval.json": {
+      "bytes": 815,
+      "sha256": "839e1980e628dfc8f7f8584deb47a773f272946fe7c23e83b0428febd3f0a1e8"
+    },
+    "origin/r02-derivation.json": {
+      "bytes": 1387,
+      "sha256": "a933d722dadc09c3ad3b11eb0049d98857b09fb66b00aa6a81ccaa489b9a06f2"
+    },
+    "origin/r02-handoff.json": {
+      "bytes": 2452,
+      "sha256": "dfc06e2bd6c5c6732b80378d3abbb7feec5a7e79b59ba79e79ec3d47f512d07d"
+    },
+    "origin/r02-inventory.json": {
+      "bytes": 1882,
+      "sha256": "e3406041912da34bd899ee00e827650ed5c4c18157d39d370347e122bb2c34fd"
+    },
+    "parameters.json": {
+      "bytes": 2471,
+      "sha256": "8e888233045581ede6a35ca67c9b49159bb9b5b4ad2ffd35737284e09b30ae24"
+    },
+    "preflight/area-40x30-compact/assessment.json": {
+      "bytes": 1025,
+      "sha256": "74ffb20f09ae28ff74fe7bf6cedf278c0593bb44fcb24f96ce8c1e607600f470"
+    },
+    "preflight/area-40x30-compact/design.json": {
+      "bytes": 904,
+      "sha256": "d7e358ac13f33d315c77453c6dcc62f2c91a4bc77a9b07333cf3b347a2b3f0cb"
+    },
+    "preflight/area-40x30-compact/independent-verification.json": {
+      "bytes": 387,
+      "sha256": "c552c101accc2276240859f38ca8af285ce05a5de9000bf2526c2ef2c878fa15"
+    },
+    "preflight/area-40x30-compact/logic.json": {
+      "bytes": 10272,
+      "sha256": "4d60852d50bc872ec1678a5f3eed591f58a3a77c2c0ea13d39b6d51d6d0540c0"
+    },
+    "preflight/area-40x30-compact/matrix.json": {
+      "bytes": 29033,
+      "sha256": "412c8caf0ad592e14928cf454963dc95a62e7eb0277f60293d031d8387d25fa1"
+    },
+    "preflight/area-40x30-compact/raster-20x.png": {
+      "bytes": 3285,
+      "sha256": "1af3a5fb157069d59c559f1539258bfb02e9a06ddff3f4f657d953250fb51f3a"
+    },
+    "preflight/area-40x30-compact/raster.png": {
+      "bytes": 300,
+      "sha256": "769560e3d2a269f999c174999ca00da6fe2b44bb7ce3d02193d6b01771cf5132"
+    },
+    "preflight/area-40x30-compact/trace.json": {
+      "bytes": 102413,
+      "sha256": "f04ad7e3e29935f87d5d7b37cc73d4d95315aa982add061b46d69d1ab6a453ac"
+    },
+    "preflight/area-42x32-detail-low/assessment.json": {
+      "bytes": 1043,
+      "sha256": "4377da95be7edf6826ad01e4fea00287e1689241e34c9a5ca11b6e920fad58c2"
+    },
+    "preflight/area-42x32-detail-low/design.json": {
+      "bytes": 904,
+      "sha256": "4fcf98c5e2b254a2be1de83b87d14420bce56d83efdb8e80a0c172096f86476e"
+    },
+    "preflight/area-42x32-detail-low/logic.json": {
+      "bytes": 11482,
+      "sha256": "ce91f9daf494582aa0852c3685936d8fdd4187177c1ac7f7d5dfb59f86dc99be"
+    },
+    "preflight/area-42x32-detail-low/matrix.json": {
+      "bytes": 32505,
+      "sha256": "014d01eb07b6a6a598861e3b6f104f54b1e047b4eedd13ee598001c67f454709"
+    },
+    "preflight/area-42x32-detail-low/raster-20x.png": {
+      "bytes": 3583,
+      "sha256": "48028b9c8928d252377820af2846022469aa6bbb0e9609500bfcc030b1dbe595"
+    },
+    "preflight/area-42x32-detail-low/raster.png": {
+      "bytes": 329,
+      "sha256": "5ccc1f009bbf5b677d61054102c8840645f91df1792f4b03fb82a0f01e46415a"
+    },
+    "preflight/area-42x32-detail-low/trace.json": {
+      "bytes": 96576,
+      "sha256": "e02fd877be9f4d8e6074fc215aeb5e8d08851e16191ef5f18865766e1c99bbed"
+    },
+    "preflight/area-42x32-selected/assessment.json": {
+      "bytes": 1058,
+      "sha256": "f389b4f92a2b853073b3367eba57ac9508b08288cdb0338bd4acb43ebd0aebff"
+    },
+    "preflight/area-42x32-selected/design.json": {
+      "bytes": 904,
+      "sha256": "7927609edd1f9fe943ba6798176a1b159ccab759153f319277be0c1fbc23a59e"
+    },
+    "preflight/area-42x32-selected/independent-verification.json": {
+      "bytes": 387,
+      "sha256": "b92466aa3b7da0847646c17eeef942b0230a990804ea0274016a9753fca0f9a5"
+    },
+    "preflight/area-42x32-selected/logic.json": {
+      "bytes": 10996,
+      "sha256": "09fa0188deca00e30b676ddc8e306ae048fbe7c7d5907fb416baf216be92cc19"
+    },
+    "preflight/area-42x32-selected/matrix.json": {
+      "bytes": 32447,
+      "sha256": "643498b0b79b2c3bc4e78bd50ec0dfaaf5991946a7dafa9e8991105f3641151a"
+    },
+    "preflight/area-42x32-selected/raster-20x.png": {
+      "bytes": 3590,
+      "sha256": "f7d612dfca5cf5f81123d582cd0b7aa4cb210462761af2218241df61811052a0"
+    },
+    "preflight/area-42x32-selected/raster.png": {
+      "bytes": 327,
+      "sha256": "9cf1197eaba0a843644f682562e016bc7b52b669f5a69c79f18e7d7a6d5320f0"
+    },
+    "preflight/area-42x32-selected/trace.json": {
+      "bytes": 113205,
+      "sha256": "8da204fb2eb6ad617a00305680a57799724fa0e0361efad21875c9d7f8113df5"
+    },
+    "preflight/area-44x34-detailed/assessment.json": {
+      "bytes": 1044,
+      "sha256": "df73ee74c331b42aa8d00d77eff83fc571f033c74667bcf5cf56f2f70d90e8f2"
+    },
+    "preflight/area-44x34-detailed/design.json": {
+      "bytes": 904,
+      "sha256": "9e7171a224818d67f27f96346ce17c02c425b236dcba9c097f6c56741b71e7b7"
+    },
+    "preflight/area-44x34-detailed/independent-verification.json": {
+      "bytes": 387,
+      "sha256": "85b543eb50d176ddc894cbcc3b8cfd69b8e0aa579451ce9528b74c48ac173028"
+    },
+    "preflight/area-44x34-detailed/logic.json": {
+      "bytes": 11835,
+      "sha256": "3d81b8142717183231e6aeea9f33c512105cd720cac68bf2c9d61914188fbed3"
+    },
+    "preflight/area-44x34-detailed/matrix.json": {
+      "bytes": 36087,
+      "sha256": "1f4e43880a20b2f2a8ec828db6cfb94618067110d1369eb2196008dc28860f64"
+    },
+    "preflight/area-44x34-detailed/raster-20x.png": {
+      "bytes": 3789,
+      "sha256": "0721437b0fbf7fb2fcd173a67b785ee205bab709b04bd66c91f237ae98ef7028"
+    },
+    "preflight/area-44x34-detailed/raster.png": {
+      "bytes": 344,
+      "sha256": "a3d865cd737a49cc933c80d7256a34e10e5b55de3d78020a46fda93b975c089f"
+    },
+    "preflight/area-44x34-detailed/trace.json": {
+      "bytes": 126620,
+      "sha256": "5efd87a76e9c1246d27b0bb2616485343c4bb89224213c879728ff814720452e"
+    },
+    "presentation/ENDABNAHMEVORLAGE.md": {
+      "bytes": 3865,
+      "sha256": "75f404e2fea47c87ba28de2c42ea3b1cc48bda3cef215aacc62593e7d49e7555"
+    },
+    "presentation/compare.png": {
+      "bytes": 149621,
+      "sha256": "90ebddbffd0189e6b62e548f3b3aab9a06c150377157eef314266a24760d64db"
+    },
+    "presentation/selected-42x32.png": {
+      "bytes": 327,
+      "sha256": "9cf1197eaba0a843644f682562e016bc7b52b669f5a69c79f18e7d7a6d5320f0"
+    },
+    "presentation/selected-raster.png": {
+      "bytes": 3590,
+      "sha256": "f7d612dfca5cf5f81123d582cd0b7aa4cb210462761af2218241df61811052a0"
+    },
+    "reveals/A-r01.png": {
+      "bytes": 1829533,
+      "sha256": "03211f56cc6070575b4c9be740eb739a039891664f00ed711c74a2ffad6d68c0"
+    }
+  },
+  "excluded_self_references": [
+    "inventory.json",
+    "handoff.json"
+  ],
+  "format": "picross-authoring-file-inventory-v1",
+  "puzzle_id": "pz-bd2783fcd3eb428c933d15259961cfcd",
+  "revision": "r03"
+}
