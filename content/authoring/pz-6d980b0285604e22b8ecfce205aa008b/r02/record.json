@@ -1,0 +1,42 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "revision": "r02",
+  "motif_name": "Webcam",
+  "category_id": "technik-erfindungen",
+  "state": "blocked",
+  "package": {
+    "file": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r02/package.zip",
+    "bytes": 1588462,
+    "sha256": "799a4643d039a8c8042417505a2f9fca5f14ed9b5414e3703cc87184431f2aa1"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r02/handoff.json",
+    "sha256": "051df266b67cecee68bdf9c2748c18160173b9f568525434c47235ea7a253434"
+  },
+  "inventory_sha256": "8c022d5174513838944fa693ab9109b618ddc397fcace102b3a33d33c98793c9",
+  "reveal_approval": {
+    "file": "approvals/reveal-A-r01.json",
+    "sha256": "9db30773b3f6577fdc643913fcbd4ea8ceb9a5be8b496d1450ef965c327d9215"
+  },
+  "final_editorial_approval": null,
+  "width": 25,
+  "height": 15,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [
+    {
+      "id": "IMG-02",
+      "phase": "motif_derivation",
+      "status": "blocked",
+      "reason": "Native Bildbearbeitung: HTTP 400, Unknown parameter: 'reasoning'. Drei Versuche, keine Bilddatei.",
+      "evidence": "generation-error.json"
+    }
+  ],
+  "next_action": "Korrigieren oder Fehler beheben",
+  "integration": null,
+  "repo_commit": "fa9e0c1ec6d021788be63497ee7bb5c129b04510",
+  "updated_at_utc": "2026-10-22T23:06:42.368694Z"
+}
