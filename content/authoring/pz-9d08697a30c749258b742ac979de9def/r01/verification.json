@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-early-verification-v1",
+  "puzzle_id": "pz-9d08697a30c749258b742ac979de9def",
+  "revision": "r01",
+  "timestamp_utc": "2026-10-23T21:09:38.928850Z",
+  "package": {
+    "file": "content/authoring/pz-9d08697a30c749258b742ac979de9def/r01/package.zip",
+    "bytes": 9396204,
+    "sha256": "2a5335dbe9dcfd112088313a9bf87c416f2fce04a4095fbb6d124dba0403dfb2"
+  },
+  "handoff_sha256": "437c8fe5b3498413a98fb90c1f66f44db8809be6794451912307f75f31d76d8a",
+  "inventory_sha256": "c5664ec28f6f7bba1d426fab18a8fc1fbd694d13bcc2f9343399dce766d06cb6",
+  "zip_file_count": 18,
+  "zip_safe_and_crc": "pass",
+  "inventory_exact_file_set_sizes_hashes": "pass",
+  "handoff_copy_byte_identity": "pass",
+  "rulebook_snapshot": "pass",
+  "three_pngs_and_alpha": "pass",
+  "all_human_approvals_pending": "pass",
+  "index_preserves_all_previous_entries": "pass",
+  "id_runtime_collision": "pass",
+  "offered_repository_png_copies_byte_identity": "pass",
+  "visual_review": "visual-review.json and visual-review.png in ZIP; static review only",
+  "za1_inspect": "not_applicable: early reveal_review",
+  "logic_difficulty_runtime_tests": "not_applicable: no raster or integration",
+  "ci": "pending; final current-head evidence recorded in PR"
+}
