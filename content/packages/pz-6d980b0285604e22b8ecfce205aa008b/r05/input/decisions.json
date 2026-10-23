@@ -1,0 +1,76 @@
+{
+  "selected_reveal": "A-r01",
+  "selected_motif": "MA-r01",
+  "motif_approval": "approvals/motif-MA-r01.json",
+  "candidate_decisions": [
+    {
+      "bundle": "imports/webcam-25x15-crop1",
+      "candidate_id": "e916c877e986f09274977a249e41f1ca451f179e3050d5a14c7159dc66bea392",
+      "matrix_hash": "eaf1836a54a11c4ebeee4b5d49feba1c6a1ad4904781dc565f03fd6e42a7361a",
+      "decision": "rejected",
+      "reason": "Zertifiziert, aber kleinere/ungleichmäßige Linsenzeichnung und seitliche Leerränder; 375 Zellen genügen für die grobe Kamera, weniger Reserve für die geschützte Öffnung."
+    },
+    {
+      "bundle": "imports/webcam-25x15-crop2",
+      "candidate_id": "781fbb1e756192461e87ba1f7acbb1a393e41ecc48a8661eab24660cff43c595",
+      "matrix_hash": "6ae7af3d8101e3842cd9cd7e316cd282ec00c81e109c14fe722dc1e479c85729",
+      "decision": "rejected",
+      "reason": "Zertifiziert; kompakte Form, aber blaue Quantisierung durch fast die ganze obere Innenkante konkurriert mit dem zentralen Glasring."
+    },
+    {
+      "bundle": "imports/webcam-30x18-crop1",
+      "candidate_id": "a612da67ecf9a7846826a78b0ef06ed0b4412bbc3b6320b212e310770ceee9d9",
+      "matrix_hash": "ce9aea8b7117c6157671e011b9f2de6cdb3fa77c849b3cc96798bfaea68750cd",
+      "decision": "rejected",
+      "reason": "Zertifiziert; mehr Detail, jedoch asymmetrischer Außenrand, zwei leere untere Reihen und weniger ausgeglichene Linsenzeichnung als Crop 2."
+    },
+    {
+      "bundle": "imports/webcam-30x18-crop2",
+      "candidate_id": "db098806f1cf1dbbab5b2e99f8f4a02e963422a76ba480fbadd0351daaf07f7e",
+      "matrix_hash": "47ed2cc6a07f3f9d4978e3db998522d10308d1943b1331291eba134c052cd6dd",
+      "decision": "selected",
+      "reason": "Gewählt: klarste zentrale Linsenfassung, zusammenhängende Front und breite sichtbare Klemmöffnung; symmetrischere Kontur, keine leere Außenspalte. Liegt in freigegebener Alternative 30×18."
+    }
+  ],
+  "duplicate_matrices": [],
+  "profile": "full-line-color",
+  "paired_or_uniqueness_search": "not_required: all four full-line proofs are complete",
+  "repair": {
+    "rounds": 0,
+    "changes": 0,
+    "reason": "Visuell tragfähiger Direktimport ist vollständig zertifiziert; nach §4.4 keine Reparatur erforderlich."
+  },
+  "historical_unselected_images": [
+    {
+      "id": "B-r01",
+      "sha256": "5e30e15d2279b326f44f131cf7daa21811d2c80f97a6d9864a3d879e18f74936",
+      "file_in_original_package": "reveals/B-r01.png",
+      "reason": "Nutzer hat A-r01 freigegeben; Alternative nicht gewählt."
+    },
+    {
+      "id": "C-r01",
+      "sha256": "f463f428e6f6d5f588900bdb8f5874ad877301a5ae7c63723c46c490241d19ab",
+      "file_in_original_package": "reveals/C-r01.png",
+      "reason": "Nutzer hat A-r01 freigegeben; Alternative nicht gewählt."
+    }
+  ],
+  "prior_revision": {
+    "commit": "923144beca670a9f51324af7ef0c04a1f5ffb846",
+    "path": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r04/package.zip",
+    "sha256": "f90852aa44fd7d5a3833e96b38d2d5100e0e6e1d25dfd42fb0854d1f3e4a5dfe"
+  },
+  "omitted_inherited_unbound_files": [
+    "CODEX_HANDOFF.md",
+    "evidence/generation-error-r02.json",
+    "evidence/generation-error-r03.json",
+    "evidence/native-edit-request-r03.json",
+    "evidence/user-resume-request.txt",
+    "prompts/MA-r01-resume-r03.txt",
+    "prompts/MA-r01.txt",
+    "review/design-validation.json",
+    "review/image-checks.json",
+    "review/paper-comparison.png",
+    "review/visual-review.json"
+  ],
+  "omission_reason": "Überholte frühe Phasenberichte/Fehler und doppelte Papiermontage bleiben unverändert im exakt gebundenen r04; keine manifestgebundenen RP-3-Dateien entfernt."
+}

@@ -1,0 +1,108 @@
+{
+  "type": "human_motif_approval",
+  "actor": "Tobias SchrÃ¶der / RepositoryeigentÃ¼mer",
+  "timestamp_utc": "2026-10-23T08:29:22.288866Z",
+  "timestamp_basis": "Erfassungszeit der tatsÃ¤chlichen Chatfreigabe nach verfÃ¼gbarer r04-QuellenprÃ¼fung; genauer Nachrichtenzeitstempel nicht offengelegt.",
+  "statement": "Ich gebe die Motivvorlage motifs/MA-r01.png Â· MA-r01 frei; Parameter: parameters-proposal.json: 25Ã—15 empfohlen, alternativ 30Ã—18; farbig, vier Farben; area/contain; zwei konkret gebundene Crops und vier Importdesigns.",
+  "revision": "MA-r01",
+  "file": "motifs/MA-r01.png",
+  "sha256": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157",
+  "derived_from_reveal_sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8",
+  "puzzle_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "parameters": {
+    "width": 30,
+    "height": 18,
+    "mode": "color",
+    "foreground_colors": 4,
+    "method": "area",
+    "fit": "contain",
+    "actual_crop": [
+      39,
+      46,
+      1579,
+      920
+    ]
+  },
+  "original_package": {
+    "commit": "923144beca670a9f51324af7ef0c04a1f5ffb846",
+    "file": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r04/package.zip",
+    "sha256": "f90852aa44fd7d5a3833e96b38d2d5100e0e6e1d25dfd42fb0854d1f3e4a5dfe",
+    "handoff_sha256": "9c9bbc681da222441e1ad8e08ea42e64de080363ad9a08c7b14d77ecf5967b6d",
+    "inventory_sha256": "2ca22366873b1410a154d795141b1a2cd46d8cf1bce94edee654ea836ecd831d"
+  },
+  "evidence": "evidence/user-production-request.txt",
+  "approved_corridor": {
+    "file": "parameters-proposal.json",
+    "sha256": "866aac9c281f00bc3a1681d90955ed836f8628e224ad040f692cde50b931921d",
+    "corridor": {
+      "status": "proposed_not_approved",
+      "motif_file": "motifs/MA-r01.png",
+      "motif_sha256": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157",
+      "dimensions": [
+        [
+          25,
+          15
+        ],
+        [
+          30,
+          18
+        ]
+      ],
+      "recommended_dimensions": [
+        25,
+        15
+      ],
+      "mode": "color",
+      "foreground_color_count": 4,
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#28343d"
+        },
+        {
+          "id": "teal",
+          "rgb": "#169ba7"
+        },
+        {
+          "id": "slate",
+          "rgb": "#71818c"
+        },
+        {
+          "id": "blue",
+          "rgb": "#397ab5"
+        }
+      ],
+      "method": "area",
+      "fit": "contain",
+      "crops": [
+        [
+          2,
+          44,
+          1587,
+          952
+        ],
+        [
+          39,
+          46,
+          1579,
+          920
+        ]
+      ],
+      "crop_notes": [
+        "Gesamte nicht vollstÃƒÂ¤ndig transparente Alpha-Bounding-Box; alle nichttransparenten Pixel bleiben im Crop.",
+        "Engere sichtbare Alpha-Bounding-Box ab 16/255; entfernt ausschlieÃƒÅ¸lich nahezu transparente AuÃƒÅ¸enartefakte, keine sichtbaren Bauteile."
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "designs": [
+        "designs/webcam-25x15-crop1.json",
+        "designs/webcam-25x15-crop2.json",
+        "designs/webcam-30x18-crop1.json",
+        "designs/webcam-30x18-crop2.json"
+      ],
+      "allowed_changes": "Nur enthaltene Designs, diskrete Palettenzuordnung und spÃƒÂ¤ter motivgeschÃƒÂ¼tzte Reparatur nach Regelwerk. Andere MaÃƒÅ¸e/Crops/Palette oder materielle MotivÃƒÂ¤nderung brauchen neue Freigabe.",
+      "raster_status": "not_produced"
+    }
+  },
+  "parameters_note": "Technisch ausgewähltes Mitglied des tatsächlich freigegebenen vollständigen Korridors, keine zusätzliche menschliche Auswahl behauptet."
+}

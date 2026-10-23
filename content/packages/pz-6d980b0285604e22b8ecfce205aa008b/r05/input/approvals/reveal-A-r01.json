@@ -1,0 +1,19 @@
+{
+  "type": "human_reveal_approval",
+  "actor": "Tobias Schröder / Repositoryeigentümer",
+  "timestamp_utc": "2026-10-22T23:06:42.368694Z",
+  "timestamp_basis": "Zeitpunkt der Erfassung der tatsächlich im Chat erteilten Freigabe; genauer Nachrichtenzeitstempel nicht offengelegt.",
+  "statement": "Ich gebe das Abschlussbild A-r01 frei.",
+  "revision": "A-r01",
+  "file": "reveals/A-r01.png",
+  "sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8",
+  "puzzle_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "evidence": "evidence/user-reveal-approval.txt",
+  "original_package": {
+    "commit": "fa9e0c1ec6d021788be63497ee7bb5c129b04510",
+    "file": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r01/package.zip",
+    "sha256": "bc98d1fbac162c088eb9138a9e1a4616c2f3ecb0739bb7f0404499a20833845d",
+    "handoff_sha256": "094ff4429a5541bdf26557061b3a2049bc4b93f57b5df6c26a24a91225aca518",
+    "inventory_sha256": "642bf9853308158a14e7f8ac2b88b5a26b4a523dc71232f31d26999e61850fe6"
+  }
+}
