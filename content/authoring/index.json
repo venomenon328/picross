@@ -159,6 +159,11 @@
       "puzzle_id": "pz-e2e5092925ce4821a9219be7816b5931",
       "revision": "r02",
       "record": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r02/record.json"
+    },
+    {
+      "puzzle_id": "pz-e2e5092925ce4821a9219be7816b5931",
+      "revision": "r03",
+      "record": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r03/record.json"
     }
   ],
   "format": "picross-authoring-index-v1"
