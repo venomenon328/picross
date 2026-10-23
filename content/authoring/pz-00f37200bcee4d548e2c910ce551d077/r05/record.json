@@ -1,0 +1,84 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "revision": "r05",
+  "motif_name": "Drachenfrucht",
+  "category_id": "obst-nuesse",
+  "state": "content_ready",
+  "package": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/package.zip",
+    "bytes": 6496893,
+    "sha256": "7bf28b49167b9727a61060dcdfd9041b43383bc78df5f90627a92a4a7c88f6ff"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/handoff.json",
+    "sha256": "f315c25e6d0c59f3b0650929da75ce7053b9ee65871fc14451f3a7d0a4ba7e57"
+  },
+  "inventory_sha256": "b9d1afdcd8edd4e968a0e8c2d3f4c8d9ca0699bef63d737485bb74dcf4ec9975",
+  "final_editorial_approval": null,
+  "reveal": {
+    "file": "reveals/B-r01.png",
+    "sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070",
+    "revision": "B-r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "reveals/B-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MC-r01.png",
+    "sha256": "6d8ab1271f79dd82ee90ecf00f0202300b2109d729101f006c92000f1ebe493e",
+    "revision": "MC-r01",
+    "derived_from_reveal_sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070",
+    "approval": "approvals/motif-22x24-c4.json",
+    "provenance": "motifs/MC-r01.provenance.json",
+    "invariants": [
+      "eine einzelne längs aufgeschnittene Drachenfruchthälfte, keine zweite Frucht",
+      "Diagonale mit Krone oben links und gerundetem Ende unten rechts",
+      "große länglich ovale helle Schnittfläche vorn rechts",
+      "sichtbare pinke Schale links und unten mit gebogenen grünen Schuppenspitzen",
+      "sechs große räumlich getrennte dunkle Kernformen; relative Verteilung erhalten",
+      "wichtige Außenzwischenräume zwischen den Schuppenspitzen; keine künstlichen Rahmen oder Randanker"
+    ]
+  },
+  "visual_acceptance": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/visual-acceptance.json",
+    "sha256": "3a02fcda3d8cfb902f89d24bb6b1df40a54c347c9c95fa70cc0ace1037a5ebfc"
+  },
+  "repair_authorization": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/repair-authorization.json",
+    "sha256": "47cb508b5e8faa9bb01fbba6f3bdf86efc7eaae95ef0c69941229b756199fadc"
+  },
+  "width": 22,
+  "height": 24,
+  "dimensions_role": "final_candidate_pending_editorial_approval",
+  "mode": "color",
+  "foreground_colors": 4,
+  "difficulty": {
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "file": "analysis/checked.json"
+  },
+  "blockers": [],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "integration": null,
+  "repo_commit": "b308aa6057c82ee1c807b7b51a57a294c5c53c64",
+  "updated_at_utc": "2026-10-23T20:47:46.184073+00:00",
+  "verification": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/verification.json"
+  },
+  "inspection": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/inspection.json"
+  },
+  "supersedes": {
+    "revision": "r04",
+    "scope": "current production status only; historical original preserved"
+  },
+  "omissions": [
+    "Unselected historical import/repair bundles remain in r04 at the bound source commit; no old ZIPs embedded. Entire selected reference/repair/analysis chain retained."
+  ]
+}
