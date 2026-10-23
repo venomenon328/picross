@@ -1,0 +1,14 @@
+{
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "file": "reveals/B-r01.png",
+  "sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070",
+  "author": "OpenAI image generation in ChatGPT, im Auftrag von Tobias Schröder",
+  "usage_basis": "Nutzerbeauftragte Neugenerierung ohne fremde Bildvorlage. Freigabe in approvals/reveal-approval.json.",
+  "prompt_file": "prompts/B-r01.txt",
+  "source_package": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r01/package.zip",
+    "sha256": "f53d911c2b7ba9d17173c8e04b29ac8bc0f8aa8d4aeaed18dcf28cf374dbbfcb",
+    "commit": "ec23f093f1d610f4f01bbd98d4691afde22872b6"
+  },
+  "changes": "Keine; bytegleiche Übernahme des freigegebenen B-r01."
+}
