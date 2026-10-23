@@ -1,0 +1,113 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-e2e5092925ce4821a9219be7816b5931",
+  "revision": "r02",
+  "motif_name": "Tomate",
+  "category_id": "gemuese-pilze-kraeuter",
+  "state": "motif_review",
+  "package": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r02/package.zip",
+    "bytes": 3592069,
+    "sha256": "13be5f6219a386f1a95399b507476c0c15688f875fda62d0bd7df304d2fae1b3"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r02/handoff.json",
+    "sha256": "d06463bc8d90040a8f1ee5875413e3e32c0b94500bb264da404d72d43bff8fd9"
+  },
+  "inventory_sha256": "facec79188a74a0bbf3e631e6cf5cdf8a1743f7d1b79c56186d328d5a0cb1c9b",
+  "reveal_approval": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r02/package.zip",
+    "member": "approvals/reveal-approval.json",
+    "sha256": "7d4c77754eaf8ef9ebdcdc58be1b0c8b3f8057c28086784831b93690b6b40488"
+  },
+  "motif_approval": null,
+  "final_editorial_approval": null,
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+    "revision": "A-r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "e6fdefa4a047f8282f918f45bd5b5dd311e7f97cf487090b32394bf89c0f564a",
+    "revision": "MA-r01",
+    "derived_from_reveal_sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "requested_width": 15,
+  "requested_height": 15,
+  "width": 15,
+  "height": 15,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "color",
+  "foreground_color_count_recommended": 3,
+  "foreground_color_count_actual": null,
+  "proposed_parameters": [
+    {
+      "width": 15,
+      "height": 15,
+      "mode": "color",
+      "color_count": 3,
+      "method": "area",
+      "fit": "exact",
+      "crop": [
+        35,
+        35,
+        1221,
+        1221
+      ]
+    },
+    {
+      "width": 15,
+      "height": 15,
+      "mode": "color",
+      "color_count": 2,
+      "method": "area",
+      "fit": "exact",
+      "crop": [
+        35,
+        35,
+        1221,
+        1221
+      ]
+    },
+    {
+      "width": 16,
+      "height": 16,
+      "mode": "color",
+      "color_count": 3,
+      "method": "area",
+      "fit": "exact",
+      "crop": [
+        35,
+        35,
+        1221,
+        1221
+      ]
+    },
+    {
+      "width": 16,
+      "height": 16,
+      "mode": "color",
+      "color_count": 2,
+      "method": "area",
+      "fit": "exact",
+      "crop": [
+        35,
+        35,
+        1221,
+        1221
+      ]
+    }
+  ],
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "integration": null,
+  "repo_commit": "ad265183803deef3d6a84571dc898653a8b982c9",
+  "updated_at_utc": "2026-10-23T19:07:16Z"
+}
