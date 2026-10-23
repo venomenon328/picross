@@ -1,0 +1,24 @@
+{
+  "format": "picross-authoring-visual-acceptance-v1",
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "source_revision": "r04",
+  "actor": "Tobias Schröder",
+  "timestamp_utc": "2026-10-23T20:43:54.197893+00:00",
+  "timestamp_basis": "Protokollierungszeitpunkt; genaue Nachrichtenzeit nicht exponiert.",
+  "statement": "22x24-c4 ist aus meiner Sicht in Ordnung.",
+  "source_commit": "b308aa6057c82ee1c807b7b51a57a294c5c53c64",
+  "source_package": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r04/package.zip",
+    "sha256": "47842dc1f95f93f8b8d6a8f0969a5b4f5d7a7785fc5297ad511dfc9a17b6c098",
+    "inventory_sha256": "348a91237b649a6da6a026497680891af025b59249cdfd622200de5487063934"
+  },
+  "selection": {
+    "configuration": "22x24-c4",
+    "variant": "area-128",
+    "candidate_id": "811137bbec97aaff4cc6545ba350f6c1712c8851cfda0a91b02ab45eaa2b9d92",
+    "matrix_hash": "a220dcd8adf6f717442d33b0bbb651a35058fcb7ec699b575ec346a282097967",
+    "logic_hash": "f86894ee5331c20ef8171b6aefd657c337885316ba4a3c6bdfbca6ab65c6789b"
+  },
+  "scope": "Visual acceptance of exactly the unchanged 22x24-c4 raster. Does not approve future edits, certify deduction or grant final editorial approval/registration.",
+  "accepted_deviation": "The specific displayed arrangement with five dark seed cells and green mixed seed cells is accepted visually by the owner. No broader invariant waiver for other matrices."
+}
