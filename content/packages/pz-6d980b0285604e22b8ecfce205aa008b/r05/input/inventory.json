@@ -1,0 +1,446 @@
+{
+  "format": "picross-authoring-file-inventory-v1",
+  "puzzle_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "revision": "r05",
+  "excludes": [
+    "inventory.json",
+    "handoff.json"
+  ],
+  "files": [
+    {
+      "path": "analysis/checked.json",
+      "sha256": "79401629792136104ff84510092abb5ae3d84d6dc19339151cd266999a1e932d",
+      "bytes": 5646
+    },
+    {
+      "path": "analysis/final-matrix.json",
+      "sha256": "790a77d87497dd365a4db185daa1e49cec77f36dddb603591a296af8b286a752",
+      "bytes": 3938
+    },
+    {
+      "path": "analysis/full/catalog-context.json",
+      "sha256": "219625cd83bb2f382d57cbe4d01dde60f17020c5b7ab3dfcf0776f84578b7653",
+      "bytes": 313
+    },
+    {
+      "path": "analysis/full/input.json",
+      "sha256": "f2f6665845e970442f17b8c945a19a83502b031212b40eba2b0d5e546efcc5c5",
+      "bytes": 7205
+    },
+    {
+      "path": "analysis/full/logic.json",
+      "sha256": "32f9aaf23e6bf470797a767c5849ece53c7050c48585f8fbdfca93e4980b65e9",
+      "bytes": 6656
+    },
+    {
+      "path": "analysis/full/rating.json",
+      "sha256": "0360482c9b37d87ef8095fadd0c06de89f7a85316e6e13365970035ea85b2992",
+      "bytes": 3389
+    },
+    {
+      "path": "analysis/full/report.json",
+      "sha256": "b946627a30bd9d0ad6631aa7888a4d0c040313cadfed29b026a07830287f9992",
+      "bytes": 9117
+    },
+    {
+      "path": "analysis/full/trace.json",
+      "sha256": "1ed365d57f60adf8ec89b5e443f37c0ef779a638c3eb606b49b5dc60abc068f7",
+      "bytes": 66227
+    },
+    {
+      "path": "analysis/provisional.json",
+      "sha256": "f2f6665845e970442f17b8c945a19a83502b031212b40eba2b0d5e546efcc5c5",
+      "bytes": 7205
+    },
+    {
+      "path": "approvals/motif-MA-r01.json",
+      "sha256": "c78ab9844d7e6f26854bec43ee8f8a1301913343e02a5396ad0ea8d97542e8cc",
+      "bytes": 3712
+    },
+    {
+      "path": "approvals/reveal-A-r01.json",
+      "sha256": "9db30773b3f6577fdc643913fcbd4ea8ceb9a5be8b496d1450ef965c327d9215",
+      "bytes": 1017
+    },
+    {
+      "path": "brief.md",
+      "sha256": "733f03540aca8a1ab7bf1dd2f12fd6865cd26b6e773f0d6a78b7e422de937416",
+      "bytes": 1004
+    },
+    {
+      "path": "CODEX_HANDOFF.md",
+      "sha256": "1c5fb347617097cc49277248b5c5f6b0e66fb54feb6711f4f15e96a6705195b9",
+      "bytes": 1467
+    },
+    {
+      "path": "decisions.json",
+      "sha256": "751f4f6b831fc491c3bb3d7a3385f13b111bf29e41d39a96447f40a600c35fd8",
+      "bytes": 3668
+    },
+    {
+      "path": "designs/webcam-25x15-crop1.json",
+      "sha256": "101647fdff42912728818f06b9410bd4962acc85d63224416dfaee64234d866d",
+      "bytes": 1064
+    },
+    {
+      "path": "designs/webcam-25x15-crop2.json",
+      "sha256": "e9be58227003dd752384b0130225765b5e901dd1ce1ab90f880e49442af7971d",
+      "bytes": 1065
+    },
+    {
+      "path": "designs/webcam-30x18-crop1.json",
+      "sha256": "3371a4e4a94c93e660fd3d988eda4ee5144e3ce152812da3c20496ab4a73310d",
+      "bytes": 1064
+    },
+    {
+      "path": "designs/webcam-30x18-crop2.json",
+      "sha256": "b3e76be03098ed78514c259d6a6e4358f669657f78f0200e03f30274ade2bcd1",
+      "bytes": 1065
+    },
+    {
+      "path": "difficulty.json",
+      "sha256": "7cca939cbfa2289f539f4bd25421bd660dec5ab1e23175b4bdb5a4745b8a7774",
+      "bytes": 1473
+    },
+    {
+      "path": "effort.json",
+      "sha256": "0ecc6709f7f1e8a45f531d973a89e5e016d59943d759e5462abb6d7eac51c6c1",
+      "bytes": 629
+    },
+    {
+      "path": "evidence/native-edit-request-r04.json",
+      "sha256": "87e41697009a1ab4fc0a586dbb3ee7af146149f41875e052b91c6179607de1db",
+      "bytes": 596
+    },
+    {
+      "path": "evidence/user-production-request.txt",
+      "sha256": "d45c1d49f563d4c73c970eb3e1ced2d0535d5fa5924156dc555b8f9917f90a37",
+      "bytes": 646
+    },
+    {
+      "path": "evidence/user-resume-request-r04.txt",
+      "sha256": "274c061ac18673c4559ab60804ca61f2146eaad1322c21e3c59c76c633f3b1eb",
+      "bytes": 251
+    },
+    {
+      "path": "evidence/user-reveal-approval.txt",
+      "sha256": "5b5cee786f7283a15db2827f493798c33ddc5905f35db0466c11e00ce49f8ee3",
+      "bytes": 636
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/area-128-candidate.json",
+      "sha256": "f90cd164d5df779c9d942eea44546744cfe6cf6e03689a31d085a7982b862b69",
+      "bytes": 4125
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/area-128-logic.json",
+      "sha256": "8b3c1605170fe7f089cebff51f56e6771fb4861b6ec84241a34819494515ffc7",
+      "bytes": 5344
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/area-128-proof.json",
+      "sha256": "e5c181f99b43b7263985e7d56ce9c150bdd360c7a6f35f3386a5fea9638b7ca8",
+      "bytes": 52833
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/area-128-raster.png",
+      "sha256": "06cad9951702afb8d79d22f05c5ee817fb648c12a5d9fd218bc3134bd2dc3d80",
+      "bytes": 317
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/area-128-result.json",
+      "sha256": "8467dd73b9ea5553b9d61fc11ce8cc3260ef035f29ca19230ae5d0e4037fd8b1",
+      "bytes": 413
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/briefing.txt",
+      "sha256": "0c654ad1c76cdbf3868dd11870a87cd89bf24f6f9d796dd96893529602a1da78",
+      "bytes": 297
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/design.json",
+      "sha256": "b63529e5d2ff59d183f1846935e555d15b8bc612a76ca28b63148175e6332bbe",
+      "bytes": 836
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/index.html",
+      "sha256": "6af6adb9581b238278d00867abf60680a8300105528a1989bcd2d3e7b87ae826",
+      "bytes": 7338
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/manifest.json",
+      "sha256": "9e5c9643b5dc2eea8ad5efe6b0215bf73916a037c66a0d6f4dfdca9887ae4f43",
+      "bytes": 2969
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/normalized.png",
+      "sha256": "611e29231cb85c5f1c7c7108d58b50c47056158e8dcfc55ef88877426f9672e9",
+      "bytes": 833717
+    },
+    {
+      "path": "imports/webcam-25x15-crop1/original.png",
+      "sha256": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157",
+      "bytes": 1026016
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/area-128-candidate.json",
+      "sha256": "219b76325ac93ccf882e8cf77f528eef0e3bcc70350e28930f10ac80c912fcbb",
+      "bytes": 4124
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/area-128-logic.json",
+      "sha256": "64886cc1102778379a89252b627e15a8af76f6869be74791a8f4a40119947c02",
+      "bytes": 6364
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/area-128-proof.json",
+      "sha256": "9800189df07a76e5d81ce1d2c2b057a3780a347bee47926706c0237a76bd076e",
+      "bytes": 47806
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/area-128-raster.png",
+      "sha256": "e9c21714b1ad335032f114e3af20626014dd1af80cdfc01e81b66d8c304a0380",
+      "bytes": 329
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/area-128-result.json",
+      "sha256": "b1a16385a04604459d4330522bf08215670a296f4dc4240491ceaefc25c8f691",
+      "bytes": 412
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/briefing.txt",
+      "sha256": "0c654ad1c76cdbf3868dd11870a87cd89bf24f6f9d796dd96893529602a1da78",
+      "bytes": 297
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/design.json",
+      "sha256": "41d675d12056e99b04e148600898d2ecde0b194b28a88843dcb93dfd83e3dd88",
+      "bytes": 837
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/index.html",
+      "sha256": "d179f53874d22db3c22617112525a877c032409c25e6253b88724dfc995d9401",
+      "bytes": 7596
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/manifest.json",
+      "sha256": "2b346a130d6f4fc28aeaf3d9a07fc4ba359b5cbc825c9a7440f1b74db4390048",
+      "bytes": 2969
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/normalized.png",
+      "sha256": "611e29231cb85c5f1c7c7108d58b50c47056158e8dcfc55ef88877426f9672e9",
+      "bytes": 833717
+    },
+    {
+      "path": "imports/webcam-25x15-crop2/original.png",
+      "sha256": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157",
+      "bytes": 1026016
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/area-128-candidate.json",
+      "sha256": "ec00894857ba9e384265e89b39b134784de0dffbdf3873ba24afa88959106bb2",
+      "bytes": 5323
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/area-128-logic.json",
+      "sha256": "5ac5b7bbe65c0d80d3d9f54f572507da78df3162f21d8316cf1a1d2934ae969f",
+      "bytes": 6408
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/area-128-proof.json",
+      "sha256": "e9c55e54b029e292cf905dffd170796f2cb2ccf858848520890a252bf3cb72e1",
+      "bytes": 75849
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/area-128-raster.png",
+      "sha256": "03373ff6ca48e9bcb3ac31da3e3a2403cf4595d2efb88bd79dfe0b8eee33553a",
+      "bytes": 368
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/area-128-result.json",
+      "sha256": "9d681fa9479c6d621ecc4c54f674d4d402665d42185a85839b23e4269c9f1279",
+      "bytes": 413
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/briefing.txt",
+      "sha256": "0c654ad1c76cdbf3868dd11870a87cd89bf24f6f9d796dd96893529602a1da78",
+      "bytes": 297
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/design.json",
+      "sha256": "9281827e30ec3c733f8bab933acd7e8486becb08b4e9dbf8a73b48913e7ac52d",
+      "bytes": 836
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/index.html",
+      "sha256": "edd3b9e0958e3a7e1212ae072bfa4ccd951794b11e100bde563e72b792d3a95a",
+      "bytes": 7841
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/manifest.json",
+      "sha256": "c4df7375feccb5917cab12166515faba3a4e9b7436da5367ba188de2addbd62d",
+      "bytes": 2969
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/normalized.png",
+      "sha256": "611e29231cb85c5f1c7c7108d58b50c47056158e8dcfc55ef88877426f9672e9",
+      "bytes": 833717
+    },
+    {
+      "path": "imports/webcam-30x18-crop1/original.png",
+      "sha256": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157",
+      "bytes": 1026016
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/area-128-candidate.json",
+      "sha256": "4051b5ec909be25f7ea83a378b959c5caefa1a469412ba6b050fd32875c9e19c",
+      "bytes": 5303
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/area-128-logic.json",
+      "sha256": "fbda3a0e4db34ba98a0468aca84151b8f4d05ce6c976ad19d9db8cb173c3d25b",
+      "bytes": 7106
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/area-128-proof.json",
+      "sha256": "4117bcd582fb7a5363453429382c69b73794bd65c4f3b49d6907d0b2633f0392",
+      "bytes": 70284
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/area-128-raster.png",
+      "sha256": "9d6ec589b4dd751032dadc7604954a13503daeb622dc40aad89cadecc226dabb",
+      "bytes": 345
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/area-128-result.json",
+      "sha256": "b826a540d61c42c9a9e5b74be3c6ef0f9293af53069896b5b736cb70a033d14e",
+      "bytes": 413
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/briefing.txt",
+      "sha256": "0c654ad1c76cdbf3868dd11870a87cd89bf24f6f9d796dd96893529602a1da78",
+      "bytes": 297
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/design.json",
+      "sha256": "0cf2bf8005b8ae4b95608b8b4a93c8526dd94b08cc74405573cd62de17838798",
+      "bytes": 837
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/index.html",
+      "sha256": "6e8a84c083b6c93c01d7cb01fda5c2c425e2b0253093c86f3f3963b5e8a7b25b",
+      "bytes": 8009
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/manifest.json",
+      "sha256": "a520cf2693cf1940439c8674db13245eebdac5347f39125e9b7adcd6fa19c760",
+      "bytes": 2970
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/normalized.png",
+      "sha256": "611e29231cb85c5f1c7c7108d58b50c47056158e8dcfc55ef88877426f9672e9",
+      "bytes": 833717
+    },
+    {
+      "path": "imports/webcam-30x18-crop2/original.png",
+      "sha256": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157",
+      "bytes": 1026016
+    },
+    {
+      "path": "motifs/MA-r01.png",
+      "sha256": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157",
+      "bytes": 1026016
+    },
+    {
+      "path": "motifs/MA-r01.provenance.json",
+      "sha256": "dbc2f520bb25e60e4d26c759f91f808b92d1663514b1fb2fa48badfddf3c472b",
+      "bytes": 761
+    },
+    {
+      "path": "parameters-proposal.json",
+      "sha256": "866aac9c281f00bc3a1681d90955ed836f8628e224ad040f692cde50b931921d",
+      "bytes": 4621
+    },
+    {
+      "path": "production-plan.json",
+      "sha256": "2f38872cbc8e07ad5ee51de4dab111cc3d2f06cb9ab4c524465a3dd0701490d4",
+      "bytes": 866
+    },
+    {
+      "path": "prompts/A-r01.txt",
+      "sha256": "30e7af0ea6188b16a193876be402780702e7b8621e7a2e8bdb52d03bd23d2e04",
+      "bytes": 1509
+    },
+    {
+      "path": "prompts/MA-r01-resume-r04.txt",
+      "sha256": "f28829c1100f8821d7f4d07f4e1e9380478dd93a942c3baf9ba1fbfbd2004a4f",
+      "bytes": 1232
+    },
+    {
+      "path": "report.md",
+      "sha256": "13450d8e805752fdc70692ac6da977e6419d48f05961ac4c01b4c6059585adba",
+      "bytes": 3473
+    },
+    {
+      "path": "reveals/A-r01.png",
+      "sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8",
+      "bytes": 1667919
+    },
+    {
+      "path": "reveals/A-r01.provenance.json",
+      "sha256": "6ae74a3a990d6abd3b831a46d7e7c69ea41e8bcfabe996d5fffa9cbfc18819f5",
+      "bytes": 546
+    },
+    {
+      "path": "review/candidate-comparison.png",
+      "sha256": "a5cccf53f146a2a0eaefc0a7449066fdd17190f52136347a74e7479bde50ea24",
+      "bytes": 12160
+    },
+    {
+      "path": "review/candidate-verification.json",
+      "sha256": "1136510756519700e93d2432233616d618f956490e410aa0c59ff3962a87bf0a",
+      "bytes": 15137
+    },
+    {
+      "path": "review/final-comparison.png",
+      "sha256": "9556de67fa6d8a31cdfde0c925ea436c7a2af7fc94ee7334e1d4f04ea23ddaee",
+      "bytes": 702559
+    },
+    {
+      "path": "review/final-grid.png",
+      "sha256": "93d9efd87c0aa852410b20a7e51154f6525cb7294a1d0b748acfec5babb04a35",
+      "bytes": 3673
+    },
+    {
+      "path": "review/final-raster-large.png",
+      "sha256": "4b4591d3bdf99c9684613c7be48b924113e97dfaf944ddab08952f4ce2e93d0f",
+      "bytes": 3137
+    },
+    {
+      "path": "review/final-raster.png",
+      "sha256": "9d6ec589b4dd751032dadc7604954a13503daeb622dc40aad89cadecc226dabb",
+      "bytes": 345
+    },
+    {
+      "path": "review/image-bindings.json",
+      "sha256": "86b68f86dd797d46352b966b331ab52bddc80483386cd71edc475ffc8d474d30",
+      "bytes": 863
+    },
+    {
+      "path": "review/visual-review.json",
+      "sha256": "b340f17d07b0becc3bd5fb4ba1a6068359467b48fe3ad563b4f7e05349360a6d",
+      "bytes": 3328
+    },
+    {
+      "path": "rulebook.md",
+      "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8",
+      "bytes": 74056
+    },
+    {
+      "path": "sources.json",
+      "sha256": "6af1753d567e4b823fa30d1211fac814b1316253a398afdc8c6a79e0a2881869",
+      "bytes": 8109
+    }
+  ]
+}
