@@ -1,0 +1,28 @@
+{
+  "format": "picross-authoring-early-verification-v1",
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "revision": "r03",
+  "timestamp_utc": "2026-10-23T20:05:41.269489Z",
+  "package": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r03/package.zip",
+    "bytes": 3939701,
+    "sha256": "828ba375b73c7c0108deefd06fb3d357b54c181fe62fdc51f98a0ac470261dc6"
+  },
+  "inventory_sha256": "4015a8bd5b3e1a1a7362c1c8ab47a58c86e5cc6431cbf1baba33cf3c4bd0c4d4",
+  "handoff_sha256": "bd0102623e33f7a8ad72756e74c9c1850babe31c56dda6d16e228ef78c2dcbf9",
+  "zip_file_count": 25,
+  "zip_safe_crc_file_set_sizes_hashes": "pass",
+  "handoff_and_approval_byte_copies": "pass",
+  "rulebook_snapshot": "pass",
+  "B_r01_approval_and_native_color_derivation": "pass",
+  "explicit_color_request_and_supersession_recorded": "pass",
+  "four_distinct_dimension_palette_designs": "pass; static fields and proportional crops only; no import",
+  "palette_roles_and_3_4_color_comparison": "pass; no actual matrix color count claimed",
+  "new_motif_and_parameters_approval_pending": "pass",
+  "r01_r02_and_previous_index_entries_preserved": "pass",
+  "json_utf8_lf": "pass",
+  "visual_review": "Originale und statische große/kleine Papiermontage selbst geprüft; kein Rastertest.",
+  "za1_inspect": "not_applicable: early motif_review, not content_ready",
+  "raster_logic_difficulty_runtime": "not_applicable: await human MC-r01/parameter approval",
+  "ci": "pending; actual evidence will be recorded in PR"
+}

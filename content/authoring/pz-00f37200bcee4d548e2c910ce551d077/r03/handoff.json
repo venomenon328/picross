@@ -1,0 +1,103 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "revision": "r03",
+  "repo_commit": "d75bcfa2fc9b522f274afbf1664a4dc6f67b1f8a",
+  "state": "motif_review",
+  "category_id": "obst-nuesse",
+  "brief": "brief.md",
+  "requested_parameters": {
+    "width": 20,
+    "height": 20,
+    "approximate": true,
+    "mode": "color",
+    "foreground_colors": null
+  },
+  "approved_parameters": [],
+  "proposed_parameters": "parameters.json",
+  "reveal": {
+    "file": "reveals/B-r01.png",
+    "sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070",
+    "revision": "B-r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "reveals/B-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MC-r01.png",
+    "sha256": "6d8ab1271f79dd82ee90ecf00f0202300b2109d729101f006c92000f1ebe493e",
+    "revision": "MC-r01",
+    "derived_from_reveal_sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070",
+    "approval": null,
+    "provenance": "motifs/MC-r01.provenance.json",
+    "invariants": [
+      "eine einzelne längs aufgeschnittene Drachenfruchthälfte, keine zweite Frucht",
+      "Diagonale mit Krone oben links und gerundetem Ende unten rechts",
+      "große länglich ovale helle Schnittfläche vorn rechts",
+      "sichtbare pinke Schale links und unten mit gebogenen grünen Schuppenspitzen",
+      "sechs große räumlich getrennte dunkle Kernformen; relative Verteilung erhalten",
+      "wichtige Außenzwischenräume zwischen den Schuppenspitzen; keine künstlichen Rahmen oder Randanker"
+    ]
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "4015a8bd5b3e1a1a7362c1c8ab47a58c86e5cc6431cbf1baba33cf3c4bd0c4d4"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "codex_handoff": "codex-handoff.md",
+  "authorization": "Standardauftrag 2 als farbige Evaluation einschließlich Repositoryablage, PR und bedingtem Ablagemerge. B-r01 freigegeben; MC-r01/Korridor und Rasterproduktion noch offen.",
+  "request_update": "request-update.md",
+  "mode": "color",
+  "mode_decision": {
+    "effective_mode": "color",
+    "overridden_template_field": "monochrom",
+    "reason": "Der ausdrückliche einleitende Änderungswunsch zu einem farbigen Rätsel ersetzt das übernommene Formularfeld monochrom.",
+    "evidence": "request-update.md"
+  },
+  "supersedes": {
+    "revision": "r02",
+    "reason": "Expliziter Wechsel zur farbigen Evaluation; keine alte Motivfreigabe."
+  }
+}
