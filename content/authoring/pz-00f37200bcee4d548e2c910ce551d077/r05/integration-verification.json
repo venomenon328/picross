@@ -1,0 +1,96 @@
+{
+  "source_commit": "d675b20cd6c367e5e98a493096c53f18e49324a9",
+  "verified_at_utc": "2026-10-23T21:10:34.157266+00:00",
+  "rulebook": "0.5.0 / document revision 23",
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "package_revision": "r05",
+  "original_zip_sha256": "7bf28b49167b9727a61060dcdfd9041b43383bc78df5f90627a92a4a7c88f6ff",
+  "inventory_sha256": "b9d1afdcd8edd4e968a0e8c2d3f4c8d9ca0699bef63d737485bb74dcf4ec9975",
+  "approval_sha256": "c20402be9e5b8dd563bf36bbd2e4b38f4d9eeb1af4679ef0d327615c3bb14a65",
+  "export_manifest_sha256": "213971f8fee6e228a974c1e9131c72f65dfbdca45d2bf3e41be95ae29b800dbb",
+  "inspection": "content/packages/pz-00f37200bcee4d548e2c910ce551d077/r05/inspection.json",
+  "registration": {
+    "category": {
+      "id": "obst-nuesse",
+      "name": "Obst & Nüsse",
+      "order": 1
+    },
+    "changes": [
+      {
+        "operation": "add",
+        "path": "content/packages/pz-00f37200bcee4d548e2c910ce551d077/r05"
+      },
+      {
+        "operation": "add",
+        "path": "content/added/pz-00f37200bcee4d548e2c910ce551d077.json"
+      },
+      {
+        "operation": "add",
+        "path": "content/difficulty/pz-00f37200bcee4d548e2c910ce551d077/rating.json"
+      },
+      {
+        "operation": "replace",
+        "path": "content/registry.json"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/drachenfrucht_001.txt"
+      },
+      {
+        "operation": "add",
+        "path": "game/data/content/drachenfrucht_001.json"
+      },
+      {
+        "operation": "replace",
+        "path": "game/data/registry.json"
+      }
+    ],
+    "id": "pz-00f37200bcee4d548e2c910ce551d077",
+    "registered": true,
+    "status": "registered",
+    "user_saves_modified": false
+  },
+  "runtime": {
+    "revision": 1,
+    "save_slot": "drachenfrucht_001",
+    "category_id": "obst-nuesse",
+    "definition": {
+      "file": "game/data/content/drachenfrucht_001.json",
+      "sha256": "16a02e1c6236eec15e8dd9ecb1d5ab9617ae2276d9990888028d42af90d14897"
+    },
+    "reveal": {
+      "file": "game/art/content/drachenfrucht_001.png",
+      "sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070"
+    },
+    "notice": {
+      "file": "game/art/content/drachenfrucht_001.txt",
+      "sha256": "5e83fa4c8469d77519bb9520f017b2bb6438ad8201b6b3d0c48df765cc0dd13a"
+    }
+  },
+  "difficulty": {
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "confidence": "medium",
+    "file": "content/difficulty/pz-00f37200bcee4d548e2c910ce551d077/rating.json",
+    "sha256": "1996934d9b1c38ae5d1953569f3711368e81397ea1bc3df457986e78d9004818",
+    "rebind_without_new_analysis": true
+  },
+  "checks": {
+    "export_self_verification": "pass",
+    "adapter_registration": "pass",
+    "written_export_files_hashes": "pass",
+    "runtime_definition_reveal_notice_bytes": "pass",
+    "all_previous_registry_entries_unchanged": 38,
+    "all_previous_runtime_entries_unchanged": 38,
+    "sealed_original_unchanged": "pass",
+    "no_pending_journal": "pass",
+    "native_product_browser_tests": "nicht erforderlich: reine Inhaltsintegration"
+  },
+  "retry": {
+    "first_attempt": "resource_limit: catalog time budget exhausted",
+    "automatic_rollback": "successful; baseline restored and journal absent",
+    "explicit_recovery_after_rollback": "no journal/staging remained; no mutation",
+    "successful_attempt_worktree": "D:/pzi",
+    "time_budget_and_checks": "unchanged"
+  }
+}

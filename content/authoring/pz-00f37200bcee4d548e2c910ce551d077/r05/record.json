@@ -4,7 +4,7 @@
   "revision": "r05",
   "motif_name": "Drachenfrucht",
   "category_id": "obst-nuesse",
-  "state": "content_ready",
+  "state": "registered",
   "package": {
     "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/package.zip",
     "bytes": 6496893,
@@ -15,7 +15,10 @@
     "sha256": "f315c25e6d0c59f3b0650929da75ce7053b9ee65871fc14451f3a7d0a4ba7e57"
   },
   "inventory_sha256": "b9d1afdcd8edd4e968a0e8c2d3f4c8d9ca0699bef63d737485bb74dcf4ec9975",
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/approval.json",
+    "sha256": "c20402be9e5b8dd563bf36bbd2e4b38f4d9eeb1af4679ef0d327615c3bb14a65"
+  },
   "reveal": {
     "file": "reveals/B-r01.png",
     "sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070",
@@ -49,7 +52,7 @@
   },
   "width": 22,
   "height": 24,
-  "dimensions_role": "final_candidate_pending_editorial_approval",
+  "dimensions_role": "final_editorially_approved",
   "mode": "color",
   "foreground_colors": 4,
   "difficulty": {
@@ -64,15 +67,23 @@
     "file": "analysis/checked.json"
   },
   "blockers": [],
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
-  "integration": null,
-  "repo_commit": "b308aa6057c82ee1c807b7b51a57a294c5c53c64",
-  "updated_at_utc": "2026-10-23T20:47:46.184073+00:00",
+  "next_action": "Merge nach Pflichtchecks; danach §9-Bereinigung",
+  "integration": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/integration-verification.json",
+    "sha256": "6703f39556eb0429bc28daa4915bc1d8c994885e086baf7c160f1e0c709a3699",
+    "export": "content/packages/pz-00f37200bcee4d548e2c910ce551d077/r05/manifest.json",
+    "export_sha256": "213971f8fee6e228a974c1e9131c72f65dfbdca45d2bf3e41be95ae29b800dbb",
+    "runtime_revision": 1,
+    "save_slot": "drachenfrucht_001",
+    "status": "registered; main merge pending"
+  },
+  "repo_commit": "d675b20cd6c367e5e98a493096c53f18e49324a9",
+  "updated_at_utc": "2026-10-23T21:10:34.157266+00:00",
   "verification": {
     "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/verification.json"
   },
   "inspection": {
-    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/inspection.json"
+    "file": "content/packages/pz-00f37200bcee4d548e2c910ce551d077/r05/inspection.json"
   },
   "supersedes": {
     "revision": "r04",
