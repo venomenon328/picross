@@ -1,0 +1,43 @@
+{
+  "method": "picross-difficulty-0.2",
+  "level": "L3",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "assessment_type": "editorial_estimate",
+  "confidence": "low",
+  "logic_hash": "f0cab92695dbee52b7335038bfdda5ddd0731e12dac03c67ba7ff57466dc104f",
+  "profile_hash": "9dfe08bdb9738dc64d778149490cc3dd43815aee68900291d2e84a3f9ef55727",
+  "evidence": "repair/final-assessment.json",
+  "r4_required": false,
+  "rule_families": {
+    "R0": "Direkte Voll-/Restbelegung und abschließendes Aufräumen liefern einfache Anteile. Nicht allein ausreichend.",
+    "R1": "Überlappung und Verlängerung der großen Schalen-/Fleischflächen liefern einfache Anker.",
+    "R2": "Mehrere kurze Farbblöcke und Kern-/Schuppenteile kombinieren. Die separate vollständig geprüfte 0.3-Spur benötigt R2 und bewertet die Endfassung L3 ohne Größenanhebung. Unter dem bestehenden 0.2-Produktionsvertrag bleibt diese Datei eine vorsichtige redaktionelle Schätzung.",
+    "R3": "Vollständige Linienunterstützung ist zertifiziert; die geprüfte 0.3-Spur löst ohne R3. Keine R3-Notwendigkeit aus dem Profilnamen abgeleitet."
+  },
+  "current_integration_rating": {
+    "file": "analysis/checked.json",
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "logical_level": 3,
+    "size_adjustment": 0,
+    "human_calibration": "not_performed"
+  },
+  "note": "0.2 ist die separate von ZA-1 verlangte Produktionsmetadatenform; maßgebliche aktuelle Bewertung ist die unabhängig vollständig geprüfte 0.3-Hülle. Keine Umetikettierung der Methoden.",
+  "time_estimate": null,
+  "workload": {
+    "cream": 138,
+    "dark": 5,
+    "empty": 174,
+    "green": 84,
+    "pink": 127
+  }
+}
