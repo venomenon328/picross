@@ -1,0 +1,82 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "revision": "r04",
+  "repo_commit": "bbcb47222be2a2e33f2f881dfe3f750c7a7549eb",
+  "state": "motif_review",
+  "category_id": "technik-erfindungen",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": 25,
+    "height": 15,
+    "approximate": true,
+    "fixed": false,
+    "mode": "color",
+    "color_count": null
+  },
+  "proposed_parameters": "parameters-proposal.json",
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157",
+    "derived_from_reveal_sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8",
+    "provenance": "motifs/MA-r01.provenance.json",
+    "approval": null,
+    "revision": "MA-r01"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "2ca22366873b1410a154d795141b1a2cd46d8cf1bce94edee654ea836ecd831d"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "authorization": "Gespeicherter tatsächlicher Standardauftrag 2 samt §6-Repositoryablage und Merge nach erfolgreichen Pflichtprüfungen; aktuelle Wiederaufnahme. A-r01 gültig freigegeben. Keine Motiv-/Endfreigabe erteilt, keine Rasterproduktion oder Spielintegration."
+}
