@@ -16,7 +16,7 @@
   },
   "inventory_sha256": "12354bac04df1e21882b2f7356c0674e21c500a4e792b44aad8b5aaa440f2072",
   "reveal_approval": {
-    "file": "approval.json",
+    "file": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/approval.json",
     "sha256": "ab9901afe0d7cb7902decafd44b2f9a9ed43161ac8f388e0047136de86b65855"
   },
   "final_editorial_approval": null,
@@ -27,7 +27,7 @@
       "file": "reveals/A-r01.png",
       "sha256": "05264b9ec2743a1812b52e6c11a2e61928a1ca810deca6b51ce15b5e69d29acf",
       "approval": {
-        "file": "approval.json",
+        "file": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/approval.json",
         "sha256": "ab9901afe0d7cb7902decafd44b2f9a9ed43161ac8f388e0047136de86b65855"
       }
     }
@@ -58,5 +58,5 @@
     "base_branch": "main",
     "base_commit": "1c5f40a7b48bbde0b4bfadbce34dd8fc57e791b1"
   },
-  "updated_at_utc": "2026-10-23T09:13:34Z"
+  "updated_at_utc": "2026-10-23T09:19:10Z"
 }
