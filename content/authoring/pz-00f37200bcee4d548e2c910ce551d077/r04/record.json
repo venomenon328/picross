@@ -1,0 +1,68 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "revision": "r04",
+  "motif_name": "Drachenfrucht",
+  "category_id": "obst-nuesse",
+  "state": "blocked",
+  "package": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r04/package.zip",
+    "bytes": 16910051,
+    "sha256": "47842dc1f95f93f8b8d6a8f0969a5b4f5d7a7785fc5297ad511dfc9a17b6c098"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r04/handoff.json",
+    "sha256": "7ddc7205a72d9c3920e10deb96686e640c4737fcbade46cf500cd8fffb4a2a8b"
+  },
+  "inventory_sha256": "348a91237b649a6da6a026497680891af025b59249cdfd622200de5487063934",
+  "final_editorial_approval": null,
+  "reveal": {
+    "file": "reveals/B-r01.png",
+    "sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070",
+    "revision": "B-r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "reveals/B-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MC-r01.png",
+    "sha256": "6d8ab1271f79dd82ee90ecf00f0202300b2109d729101f006c92000f1ebe493e",
+    "revision": "MC-r01",
+    "derived_from_reveal_sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070",
+    "approval": "approvals/motif-22x24-c4.json",
+    "provenance": "motifs/MC-r01.provenance.json",
+    "invariants": [
+      "eine einzelne längs aufgeschnittene Drachenfruchthälfte, keine zweite Frucht",
+      "Diagonale mit Krone oben links und gerundetem Ende unten rechts",
+      "große länglich ovale helle Schnittfläche vorn rechts",
+      "sichtbare pinke Schale links und unten mit gebogenen grünen Schuppenspitzen",
+      "sechs große räumlich getrennte dunkle Kernformen; relative Verteilung erhalten",
+      "wichtige Außenzwischenräume zwischen den Schuppenspitzen; keine künstlichen Rahmen oder Randanker"
+    ]
+  },
+  "motif_approval": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r04/motif-approval.json",
+    "sha256": "ce5331b8abeb7f2b1656e5690022b5265f9429acb26e167d0c86857cc7307558"
+  },
+  "width": 22,
+  "height": 24,
+  "dimensions_role": "diagnostic_reference_only_not_final",
+  "mode": "color",
+  "foreground_colors": 4,
+  "difficulty": null,
+  "blockers": [
+    "visual: protected six dark seed shapes lost in all four direct imports",
+    "logic: visual best 22x24-c4 stalled under line and paired profiles; both bounded repairs aborted without accepted result"
+  ],
+  "next_action": "Korrigieren oder Fehler beheben",
+  "integration": null,
+  "repo_commit": "983e511bfdd2b99f8c5eeceabeb5819a8172a00b",
+  "updated_at_utc": "2026-10-23T20:23:33.562896+00:00",
+  "verification": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r04/verification.json"
+  },
+  "report": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r04/report.md",
+  "preview": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r04/candidates.png",
+  "omissions": [
+    "No old ZIP embedded; prior r03 bytes remain on main. No final difficulty, export or content_ready inspection because no accepted final candidate."
+  ]
+}
