@@ -1,0 +1,62 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-4ec5ac61e2c447bd98c8508a993cbd32",
+  "revision": "r02",
+  "motif_name": "Senf",
+  "category_id": "gerichte-herzhaftes",
+  "state": "motif_review",
+  "package": {
+    "file": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/package.zip",
+    "bytes": 2795924,
+    "sha256": "7b29216142b47f1f54d5e9a82a923b2b844ed0556198271d6a8dc00ec97f2c87"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/handoff.json",
+    "sha256": "cdce54a1dac36b43dc8ab2ded99fa9366345e67251c7ac34d7d3452e28ff4ab2"
+  },
+  "inventory_sha256": "12354bac04df1e21882b2f7356c0674e21c500a4e792b44aad8b5aaa440f2072",
+  "reveal_approval": {
+    "file": "approval.json",
+    "sha256": "ab9901afe0d7cb7902decafd44b2f9a9ed43161ac8f388e0047136de86b65855"
+  },
+  "final_editorial_approval": null,
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Glas · traditionell",
+      "file": "reveals/A-r01.png",
+      "sha256": "05264b9ec2743a1812b52e6c11a2e61928a1ca810deca6b51ce15b5e69d29acf",
+      "approval": {
+        "file": "approval.json",
+        "sha256": "ab9901afe0d7cb7902decafd44b2f9a9ed43161ac8f388e0047136de86b65855"
+      }
+    }
+  ],
+  "reveal": {
+    "id": "A-r01",
+    "file": "reveals/A-r01.png",
+    "sha256": "05264b9ec2743a1812b52e6c11a2e61928a1ca810deca6b51ce15b5e69d29acf"
+  },
+  "motif": {
+    "file": "motif/r02.png",
+    "sha256": "83b1bb4990e0c0e09a973d3c814f6682895d7be8ca7b9792e97f4da4f5807fd4",
+    "derived_from_reveal_sha256": "05264b9ec2743a1812b52e6c11a2e61928a1ca810deca6b51ce15b5e69d29acf",
+    "approval": null
+  },
+  "width": 15,
+  "height": 15,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "integration": null,
+  "repo_commit": "1c5f40a7b48bbde0b4bfadbce34dd8fc57e791b1",
+  "storage": {
+    "branch": "chore/senf-r02-authoring",
+    "base_branch": "main",
+    "base_commit": "1c5f40a7b48bbde0b4bfadbce34dd8fc57e791b1"
+  },
+  "updated_at_utc": "2026-10-23T09:13:34Z"
+}
