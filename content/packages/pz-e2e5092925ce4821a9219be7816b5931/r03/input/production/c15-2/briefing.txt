@@ -1,0 +1,4 @@
+Human-approved MA-r01 from A-r01; approval and full 15/16, 2/3-color corridor recorded before import in approvals/motif-approval.json. Preserve round fruit, elevated three-quarter view, star calyx and thick left-curved stem. No source, crop or palette change outside approved corridor.
+
+Working mode: faithful
+Motif and gameplay review: open

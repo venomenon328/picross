@@ -1,0 +1,43 @@
+{
+  "format": "picross-production-provenance-check-v1",
+  "source_commit": "ee338d34833dbf86fe74a5326b9e04cb2f873746",
+  "input_package": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r02/package.zip",
+    "sha256": "13be5f6219a386f1a95399b507476c0c15688f875fda62d0bd7df304d2fae1b3",
+    "handoff_sha256": "d06463bc8d90040a8f1ee5875413e3e32c0b94500bb264da404d72d43bff8fd9",
+    "inventory_sha256": "facec79188a74a0bbf3e631e6cf5cdf8a1743f7d1b79c56186d328d5a0cb1c9b",
+    "files": 26,
+    "safe_zip_crc_hashes_verified": true
+  },
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+    "revision": "A-r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "e6fdefa4a047f8282f918f45bd5b5dd311e7f97cf487090b32394bf89c0f564a",
+    "revision": "MA-r01",
+    "derived_from_reveal_sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "motif_approval": "approvals/motif-approval.json",
+  "checks": {
+    "reveal_matches_original_r01_bytes": true,
+    "motif_matches_approved_r02_bytes": true,
+    "derivation_provenance_and_reveal_approval_checked": true,
+    "four_designs_inside_approved_corridor": true,
+    "four_original_source_copies_equal_motif": true,
+    "original_normalization_matrix_clues_reconstructed_in_fresh_process": true,
+    "independent_written_proofs_checked": true,
+    "selected_enddomains_equal_matrix": true
+  },
+  "candidate_evidence": "audit/candidates.json",
+  "source_type": "import",
+  "manual_edits": 0,
+  "repairs": 0,
+  "original_design_change": "Nur historische Briefing-Metadaten von vorgeschlagen auf tatsächlich freigegeben präzisiert, vor Import. Bildbytes, Maße, Paletten, Alpha, Crop, Fit und Verfahren unverändert."
+}
