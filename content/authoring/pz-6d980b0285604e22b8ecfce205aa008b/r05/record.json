@@ -1,0 +1,61 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "revision": "r05",
+  "motif_name": "Webcam",
+  "category_id": "technik-erfindungen",
+  "state": "content_ready",
+  "package": {
+    "file": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r05/package.zip",
+    "bytes": 9752135,
+    "sha256": "3dc41502b86cebf5da8f6e2f225a469203adba73d3970e2376fc877ecae95893"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r05/handoff.json",
+    "bytes": 4170,
+    "sha256": "4d60b9cfa4a4e9139a72ac98458aa577e8d3d6529fe410c14e9932bd33631221"
+  },
+  "inventory_sha256": "3a4adca5773d96d54a41c558a014b5d28680e1e6a9c25ef60a9365ca8c742611",
+  "final_editorial_approval": null,
+  "width": 30,
+  "height": 18,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "color",
+  "foreground_colors": 4,
+  "difficulty": {
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "logical_level": 3,
+    "size_adjustment": 0,
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "evidence_in_package": "analysis/checked.json"
+  },
+  "blockers": [
+    "Menschliche Endabnahme der gebundenen r05-Auswahl offen; Auftrag 3 ist vollständig, Spielintegration gehört zu Auftrag 4."
+  ],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "integration": null,
+  "repo_commit": "923144beca670a9f51324af7ef0c04a1f5ffb846",
+  "previous_revision": "r04",
+  "verification": {
+    "inspection": {
+      "file": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r05/inspection.json",
+      "bytes": 3924,
+      "sha256": "0b11e65cd57f713feb000e8f03f7b2bb52b6a66f74fefb78d2ab5a9b653b8dc3"
+    },
+    "technical": true,
+    "editorial_approved": false,
+    "missing_final_approval_only": true,
+    "safe_zip_inventory_and_copy_verified": true,
+    "original_reveal_approval_and_r01_bytes_verified": true,
+    "original_r01_r04_unchanged": true
+  },
+  "updated_at_utc": "2026-10-23T08:40:14.151443Z",
+  "authorization": "Standardauftrag 3, tatsächliche MA-r01-Freigabe samt Korridor und §6-Ablage/Merge nach erfolgreichen Pflichtchecks; keine menschliche Endabnahme behauptet."
+}
