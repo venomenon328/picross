@@ -1,0 +1,134 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-4ec5ac61e2c447bd98c8508a993cbd32",
+  "revision": "r01",
+  "repo_commit": "37add66684d0fd7ef7b9027f4f01412b3a1ea08c",
+  "state": "reveal_review",
+  "category_id": "gerichte-herzhaftes",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": 15,
+    "height": 15,
+    "approximate": true,
+    "fixed": false,
+    "mode": "color",
+    "color_count": null
+  },
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Glas · traditionell",
+      "file": "reveals/A-r01.png",
+      "sha256": "05264b9ec2743a1812b52e6c11a2e61928a1ca810deca6b51ce15b5e69d29acf",
+      "bytes": 1873342,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 694529,
+      "partial_alpha_pixels": 876867,
+      "opaque_pixels": 1120,
+      "prompt": "prompts/A-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "title": "Quetschflasche · ikonisch",
+      "file": "reveals/B-r01.png",
+      "sha256": "ef740555e0af7cbde01f0d2834d3029bec3b3ff767d3936e017158ad3d22558a",
+      "bytes": 1047373,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 967280,
+      "partial_alpha_pixels": 604022,
+      "opaque_pixels": 1214,
+      "prompt": "prompts/B-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "title": "Steinguttopf · mit Löffel",
+      "file": "reveals/C-r01.png",
+      "sha256": "1fab0994c2845b22b46547cc0c6e515f2b2992b12b6bf4e377d9b0bfff209b10",
+      "bytes": 1701305,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 798770,
+      "partial_alpha_pixels": 772808,
+      "opaque_pixels": 938,
+      "prompt": "prompts/C-r01.txt",
+      "approval": null
+    }
+  ],
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "4c03994e9d010fb3a0695fe524bae29293b6a179680f2abf0f5b1da807d1d31c"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "authorization": "Standardauftrag 1 samt Repositoryablage nach §6, Commit/Push und PR; Ablagemerge nach erfolgreichen Pflichtprüfungen ausdrücklich beauftragt. Keine Inhaltsfreigabe erteilt."
+}
