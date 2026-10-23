@@ -1,3 +1,0 @@
-Production ID: pz-00f37200bcee4d548e2c910ce551d077
-Artwork: OpenAI image generation in ChatGPT, im Auftrag von Tobias Schröder
-Usage basis: Nutzerbeauftragte Neugenerierung ohne fremde Bildvorlage. Freigabe in approvals/reveal-approval.json.
