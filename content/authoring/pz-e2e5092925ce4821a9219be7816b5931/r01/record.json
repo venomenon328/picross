@@ -1,0 +1,144 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-e2e5092925ce4821a9219be7816b5931",
+  "revision": "r01",
+  "motif_name": "Tomate",
+  "category_id": "gemuese-pilze-kraeuter",
+  "state": "reveal_review",
+  "package": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r01/package.zip",
+    "bytes": 5853276,
+    "sha256": "107d714d4b31bcf03c05254951547ed24701c36e8c38faee44820501b6452d95"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r01/handoff.json",
+    "sha256": "0316e8ef87e672f6cc4551c8e828ce1fd836b1f16fe1395436a4edd7909851fb"
+  },
+  "inventory_sha256": "2b8b9ee1c4c254f58224c7df2eaefa4db86284d71fc73d0914ad7ae600fac5df",
+  "reveal_approval": null,
+  "final_editorial_approval": null,
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Runde Tomate",
+      "file": "reveals/A-r01.png",
+      "sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+      "bytes": 2020576,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 560180,
+      "partial_alpha_pixels": 1011645,
+      "opaque_pixels": 691,
+      "alpha_bbox": [
+        36,
+        26,
+        1224,
+        1222
+      ],
+      "visible_alpha_bbox_128": [
+        41,
+        32,
+        1220,
+        1217
+      ],
+      "prompt": "prompts/A-r01.txt",
+      "approval": null,
+      "invariants": [
+        "einzelne reife annähernd runde rote Tomate",
+        "kompakter grüner sternförmiger Kelch",
+        "kurzer nach links gebogener Stiel",
+        "leicht erhöhte Dreiviertelansicht"
+      ]
+    },
+    {
+      "id": "B-r01",
+      "title": "Gerippte Fleischtomate",
+      "file": "reveals/B-r01.png",
+      "sha256": "d242aa5c0234e918960db3b744dd69bb8ef31e77602e55430aadab63f1c7f6e2",
+      "bytes": 1664777,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 726782,
+      "partial_alpha_pixels": 845059,
+      "opaque_pixels": 675,
+      "alpha_bbox": [
+        0,
+        17,
+        1235,
+        1254
+      ],
+      "visible_alpha_bbox_128": [
+        29,
+        142,
+        1229,
+        1118
+      ],
+      "prompt": "prompts/B-r01.txt",
+      "approval": null,
+      "invariants": [
+        "einzelne breite leicht abgeflachte rote Fleischtomate",
+        "mehrere breite Rippen und ruhige Täler",
+        "kompakter grüner Kelch und kurzer leicht rechtsgeneigter Stiel",
+        "leicht erhöhte Vorderansicht"
+      ]
+    },
+    {
+      "id": "C-r01",
+      "title": "Romatomate",
+      "file": "reveals/C-r01.png",
+      "sha256": "8b85e9498c9ae45b938c38d4660a0ea0d26278efdef37f95214ba55e1551042e",
+      "bytes": 1362412,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 823619,
+      "partial_alpha_pixels": 748388,
+      "opaque_pixels": 509,
+      "alpha_bbox": [
+        0,
+        15,
+        1234,
+        1254
+      ],
+      "visible_alpha_bbox_128": [
+        158,
+        18,
+        1121,
+        1236
+      ],
+      "prompt": "prompts/C-r01.txt",
+      "approval": null,
+      "invariants": [
+        "einzelne länglich ovale rote Romatomate",
+        "diagonale Lage mit Kelch oben links und abgerundetem Fruchtende unten rechts",
+        "grüner Kelch und kurzer Stiel",
+        "volle unbeschnittene Dreiviertel-Seitenansicht"
+      ]
+    }
+  ],
+  "width": 15,
+  "height": 15,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "color",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "integration": null,
+  "repo_commit": "53427be9a8abde4f21466fe16505ef3c6ad30339",
+  "updated_at_utc": "2026-10-23T18:51:31.085654Z"
+}
