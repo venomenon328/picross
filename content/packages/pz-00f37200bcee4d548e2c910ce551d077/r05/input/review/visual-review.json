@@ -1,0 +1,48 @@
+{
+  "format": "picross-authoring-raster-visual-review-v1",
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "revision": "r05",
+  "reviewer": "Codex; separate visuelle Selbstprüfung, keine menschliche Endabnahme",
+  "timestamp_utc": "2026-10-23T20:47:46.184073+00:00",
+  "criteria": {
+    "recognizability": {
+      "status": "erfüllt",
+      "reason": "Einzelne diagonal dargestellte pink-grüne Fruchthälfte mit großer heller Schnittfläche bleibt deutlich erkennbar."
+    },
+    "silhouette_proportions": {
+      "status": "erfüllt",
+      "reason": "22×24 und freigegebener proportionaler Crop bleiben unverändert; eine zusätzliche grüne Zelle schließt die lokale linke Flanke."
+    },
+    "details_negative_spaces": {
+      "status": "erfüllt",
+      "reason": "Die konkrete Kernabstraktion mit fünf dunklen Zellen und grün gemischten Kernzellen wurde vom Eigentümer an r04/22x24-c4 visuell angenommen. Alle Zellen außerhalb der vier genehmigten Flankenpositionen sind unverändert; keine weitere Kerngestaltung behauptet."
+    },
+    "palette_or_mono_readability": {
+      "status": "erfüllt",
+      "reason": "Vier tatsächlich verwendete Vordergrundfarben. Creme bleibt gefülltes Fruchtfleisch, Pink Schale, Grün Spitzen und angenommene Mischzellen, Dunkel die vorhandenen Kernzellen."
+    },
+    "series_aesthetic": {
+      "status": "erfüllt",
+      "reason": "Ruhige kräftige Farbflächen, klare Fruchtsilhouette; der einzige neue grüne Pixel setzt die vorhandene Flanke fort."
+    }
+  },
+  "views": [
+    "final-raster.png",
+    "final-grid.png",
+    "final-grid-diff.png",
+    "final-comparison.png",
+    "repair/view.png"
+  ],
+  "human_reference_acceptance": "approvals/r04-visual-acceptance.json",
+  "repair_authorization": "approvals/r05-repair-authorization.json",
+  "actual_change": {
+    "column": 3,
+    "row": 7,
+    "before": "empty",
+    "after": "green"
+  },
+  "protected_cells_unchanged": 527,
+  "accepted_visual_deviation": "Die damalige Forderung nach sechs dunklen Kernformen ist ausschließlich für die ausdrücklich angenommene r04-Fassung durch die tatsächliche Eigentümerbewertung ersetzt. Die Kernzellen dieser Fassung bleiben in r05 byte-/wertgleich; keine Generalfreigabe anderer Bilder oder Raster.",
+  "reveal_consistency": "erfüllt auf Basis der konkreten Eigentümerannahme; B-r01 unverändert; neue Endabnahme für r05 weiterhin offen.",
+  "soft_warnings": "Dunkle Einzelzellen sind die angenommene Kernabstraktion. Keine leeren Innenlinien; Belegung 354/528 ≈67,0 Prozent. Keine Randanker oder neue Farbe."
+}

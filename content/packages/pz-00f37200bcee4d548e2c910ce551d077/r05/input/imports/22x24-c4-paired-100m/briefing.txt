@@ -1,0 +1,4 @@
+Farbiger Direktimport der einzelnen diagonalen Drachenfruchthälfte. 4 Vordergrundfarben plus Leer; sechs getrennte Kernformen, pinke Schale und grüne Spitzen erhalten. Creme ist Vordergrund und erhält eine zusammenhängende gefüllte Schnittfläche. Vor Produktion konkrete Motiv-/Korridorfreigabe abwarten. Keine Streckung, Rotation, neue Objekte oder Randpixel.
+
+Working mode: faithful
+Motif and gameplay review: open
