@@ -1,0 +1,87 @@
+{
+  "format": "picross-production-visual-review-v1",
+  "reviewer": "Codex, redaktionelle Eigenprüfung; keine menschliche Endabnahme",
+  "timestamp_utc": "2026-10-23T19:22:53Z",
+  "evidence": [
+    "qa/candidates.png",
+    "qa/final-comparison.png",
+    "final/raster-15x15.png",
+    "final/raster-nearest.png",
+    "final/raster-grid.png"
+  ],
+  "kind": "static_matrix_and_paper_comparison",
+  "runtime_rendered": false,
+  "selected": "c15-2",
+  "checks": {
+    "recognizability": {
+      "status": "erfüllt",
+      "reason": "Einzelne runde rote Tomate mit grünem Kelch bleibt in Quelle, Vorlage und Zweifarbraster unmittelbar erkennbar."
+    },
+    "silhouette_proportions": {
+      "status": "erfüllt",
+      "reason": "Breite runde Frucht mit leichten Schultern und aufgesetztem Kelch bewahrt Bildaufbau und erhöhten Blick; Stielkrümmung und Blattspitzen sind bei 15 Zellen stark abstrahiert, keine neue Pose."
+    },
+    "details_negative_spaces": {
+      "status": "erfüllt",
+      "reason": "Grüner Hauptkelch mit oberen, seitlichen und vorderen Ausläufern, freie Außenfläche und Rundform bleiben. Diagonal anschließende grüne Spitze bei Zeile 3/Spalte 5 wird als Blattspitze akzeptiert; die zwei roten Farbeingrenzungen sind Fruchtflächen zwischen/um Kelchblätter, keine Zusatzpunkte."
+    },
+    "palette_readability": {
+      "status": "erfüllt",
+      "reason": "Tatsächlich 138 rote und 22 grüne Zellen plus 65 Leer. Schattenverlust ist die ausdrücklich freigegebene Zweifarbalternative. In Kleindarstellung klare Frucht-/Kelchbereiche; in Graustufen geringere Binnenkontraste, Silhouette erkennbar. Keine Farbsinnsimulation behauptet."
+    },
+    "series_aesthetic": {
+      "status": "erfüllt",
+      "reason": "Ruhige zusammenhängende diskrete Flächen; handgezeichnetes detailliertes Reveal bytegleich. Keine Dekoration, Rauschpixel oder Logikanker hinzugefügt."
+    }
+  },
+  "reveal_and_motif": {
+    "recognizability": "erfüllt: identische runde rote Tomate mit grünem Kelch",
+    "silhouette_proportions": "erfüllt: erhöhte Ansicht, annähernd runde Frucht und Stiel-/Kelchaufbau bleiben",
+    "details_negative_spaces": "erfüllt: freie transparente Außenfläche; Quelle behält Hauttextur, Adern und Glanz, Vorlage reduziert diese wie freigegeben",
+    "palette_readability": "erfüllt: kräftige Rot-/Grünflächen, aktuelle Rasterpalette bewusst auf zwei reduziert",
+    "series_aesthetic": "erfüllt: ruhige warme handgezeichnete Quelle unverändert"
+  },
+  "transparency": {
+    "status": "erfüllt",
+    "reason": "Bytegleiche A-r01/MA-r01 besitzen echte Außenalphaflächen. Große und 112/140-px-Ansichten auf originalem Projektpapier selbst gesichtet; kein störender Bildkasten oder heller Saum. Rasterleer bleibt davon unabhängig."
+  },
+  "soft_findings": {
+    "filled_fraction": [
+      160,
+      225
+    ],
+    "outside_15_to_85_percent": false,
+    "empty_interior_rows": [],
+    "empty_interior_columns": [],
+    "empty_outer_row": 1,
+    "outer_row_decision": "Unverändert bewahren; Randregel erfüllt über links/rechts und unten. Nicht nachträglich abschneiden.",
+    "same_color_singletons": [
+      {
+        "row": 3,
+        "column": 5,
+        "color": "green"
+      },
+      {
+        "row": 3,
+        "column": 6,
+        "color": "red"
+      },
+      {
+        "row": 3,
+        "column": 11,
+        "color": "red"
+      }
+    ],
+    "decision": "Keine isolierten Motivobjekte: diagonale Blattspitze und Fruchtzwischenräume, siehe Detailprüfung."
+  },
+  "color_vision_simulation": {
+    "status": "not_performed",
+    "reason": "Graustufensichtung ist nur eine Kontrastkontrolle, keine Farbsinnsimulation oder Barrierefreiheitsabnahme."
+  },
+  "detail_losses": [
+    "Schattenmodellierung entfällt bei der genehmigten Zweifarbwahl.",
+    "Blattadern, Oberflächenstruktur und Glanz nur im unveränderten Reveal.",
+    "Stielkurve und kleine Kelchspitzen bei 15×15 stark quantisiert."
+  ],
+  "final_human_editorial_approval": null
+}

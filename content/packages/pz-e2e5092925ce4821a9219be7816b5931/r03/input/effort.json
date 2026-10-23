@@ -1,0 +1,17 @@
+{
+  "format": "picross-authoring-effort-v1",
+  "generation_calls_phase_1": 3,
+  "image_edit_calls_phase_2": 1,
+  "image_calls_phase_3": 0,
+  "raster_candidates": 4,
+  "import_attempts": 4,
+  "repair_attempts": 0,
+  "revision_rounds_this_phase": 0,
+  "sd_analysis_runs": 1,
+  "ai_work_rounds_this_phase": 1,
+  "active_human_minutes": null,
+  "active_human_minutes_status": "nicht erfasst",
+  "solve_time_minutes": null,
+  "playtest": "not_performed; optional",
+  "tooling_note": "Python 3.13.14, separate venv, Pillow exakt 12.3.0; keine Werkzeugänderung oder Modell-API."
+}

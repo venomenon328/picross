@@ -1,0 +1,80 @@
+{
+  "format": "picross-authoring-decisions-v1",
+  "puzzle_id": "pz-e2e5092925ce4821a9219be7816b5931",
+  "revision": "r03",
+  "prior_revision": {
+    "commit": "ee338d34833dbf86fe74a5326b9e04cb2f873746",
+    "package": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r02/package.zip",
+    "decision_member": "decisions.json"
+  },
+  "discarded_reveals": [
+    {
+      "id": "B-r01",
+      "sha256": "d242aa5c0234e918960db3b744dd69bb8ef31e77602e55430aadab63f1c7f6e2",
+      "reason": "Nutzer hat A-r01 ausgewählt; in r02 nicht benötigt.",
+      "repo_commit": "ad265183803deef3d6a84571dc898653a8b982c9",
+      "package": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r01/package.zip",
+      "member": "reveals/B-r01.png"
+    },
+    {
+      "id": "C-r01",
+      "sha256": "8b85e9498c9ae45b938c38d4660a0ea0d26278efdef37f95214ba55e1551042e",
+      "reason": "Nutzer hat A-r01 ausgewählt; in r02 nicht benötigt.",
+      "repo_commit": "ad265183803deef3d6a84571dc898653a8b982c9",
+      "package": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r01/package.zip",
+      "member": "reveals/C-r01.png"
+    }
+  ],
+  "entries": [
+    {
+      "id": "P3-D01",
+      "decision": "Tatsächliche Motivfreigabe vor Import protokolliert; A-r01 und MA-r01 bytegleich.",
+      "evidence": "approvals/motif-approval.json"
+    },
+    {
+      "id": "P3-D02",
+      "decision": "Vier gezielte Importe, zwei Größen und zwei Paletten; keine wirkungslosen Farbthresholdvarianten.",
+      "evidence": "production-plan.json"
+    },
+    {
+      "id": "P3-D03",
+      "selected": "c15-2",
+      "variant": "area-128",
+      "reason": "15×15/2 Farben zeigt die klare runde rote Frucht und den kräftigen grünen Kelch ohne die verstreuten dunklen Farbflecken der Dreifarbimporte. Die Schattenmodellierung wird wie im freigegebenen reduzierten Vergleich bewusst entfernt. 15×15 bewahrt den bevorzugten kompakten Umfang; 16×16 bringt keinen wesentlichen Identitätsgewinn. Nicht nach erstem Solvererfolg gewählt: alle vier zertifiziert und visuell verglichen.",
+      "rejections": {
+        "c15-3": "Schattenfarbe wird an Misch-/Alphakanten nahe dem Kelch und im Fruchtkörper als fleckige Binnenzeichnung quantisiert; ruhige Zweifarbfläche ist bei dieser Größe überzeugender.",
+        "c16-3": "Gleiche störende Dunkelrotinseln, zusätzlich 31 Zellen ohne klareren Motivkern.",
+        "c16-2": "Erkennbar und zertifiziert, aber kleiner grüner Ausläufer und breitere Treppenkontur ohne ausreichenden Gewinn gegenüber c15-2."
+      },
+      "repair": {
+        "status": "not_required",
+        "rounds": 0,
+        "reason": "Visuell geeigneter Direktimport bereits vollständig zertifiziert. Keine Logikreparatur, keine manuelle Matrixänderung, kein Zusatzfarb-/Randanker."
+      },
+      "profile_escalation": {
+        "status": "not_required",
+        "reason": "Alle vier full-line-color vollständig solved; kein stalled-Kandidat und kein Anlass für Paar- oder Suchlauf."
+      }
+    },
+    {
+      "id": "P3-D04",
+      "decision": "SD-0.3 vollständig geprüft: L3, Basis 3, Größe 0, R2; keine menschliche Kalibrierung/Zeitschätzung.",
+      "evidence": "analysis/checked.json"
+    },
+    {
+      "id": "P3-D05",
+      "decision": "content_ready zur menschlichen Endabnahme. Nur Ablagemerge beauftragt; keine Registrierung in Standardauftrag 3.",
+      "evidence": "final-acceptance.md"
+    }
+  ],
+  "attempts": {
+    "image_calls_this_phase": 0,
+    "raster_candidates": 4,
+    "import_attempts": 4,
+    "repair_attempts": 0,
+    "paired_runs": 0,
+    "uniqueness_searches": 0,
+    "sd_candidate": 1,
+    "sd_analysis": 1
+  }
+}
