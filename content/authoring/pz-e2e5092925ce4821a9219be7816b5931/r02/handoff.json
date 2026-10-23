@@ -1,0 +1,144 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-e2e5092925ce4821a9219be7816b5931",
+  "revision": "r02",
+  "repo_commit": "ad265183803deef3d6a84571dc898653a8b982c9",
+  "state": "motif_review",
+  "category_id": "gemuese-pilze-kraeuter",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "proposed_parameters": [
+    {
+      "width": 15,
+      "height": 15,
+      "mode": "color",
+      "color_count": 3,
+      "method": "area",
+      "fit": "exact",
+      "crop": [
+        35,
+        35,
+        1221,
+        1221
+      ]
+    },
+    {
+      "width": 15,
+      "height": 15,
+      "mode": "color",
+      "color_count": 2,
+      "method": "area",
+      "fit": "exact",
+      "crop": [
+        35,
+        35,
+        1221,
+        1221
+      ]
+    },
+    {
+      "width": 16,
+      "height": 16,
+      "mode": "color",
+      "color_count": 3,
+      "method": "area",
+      "fit": "exact",
+      "crop": [
+        35,
+        35,
+        1221,
+        1221
+      ]
+    },
+    {
+      "width": 16,
+      "height": 16,
+      "mode": "color",
+      "color_count": 2,
+      "method": "area",
+      "fit": "exact",
+      "crop": [
+        35,
+        35,
+        1221,
+        1221
+      ]
+    }
+  ],
+  "configuration": "configuration.json",
+  "requested_parameters": {
+    "width": 15,
+    "height": 15,
+    "approximate": true,
+    "fixed": false,
+    "mode": "color",
+    "color_count": null
+  },
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+    "revision": "A-r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "e6fdefa4a047f8282f918f45bd5b5dd311e7f97cf487090b32394bf89c0f564a",
+    "revision": "MA-r01",
+    "derived_from_reveal_sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "facec79188a74a0bbf3e631e6cf5cdf8a1743f7d1b79c56186d328d5a0cb1c9b"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": [
+      "approvals/reveal-approval.json",
+      "approvals/reveal-evidence.md"
+    ]
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "authorization": "Standardauftrag 2 bis Motivvorlage/Konfiguration/Codex-Übergabe einschließlich §6-Repositoryablage und Ablagemerge nach erfolgreichen Pflichtchecks. Tatsächliche A-r01-Freigabe liegt vor; Motivfreigabe/Produktion/Endabnahme nicht erfunden."
+}
