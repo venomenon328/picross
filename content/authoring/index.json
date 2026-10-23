@@ -144,6 +144,11 @@
       "puzzle_id": "pz-4ec5ac61e2c447bd98c8508a993cbd32",
       "revision": "r02",
       "record": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/record.json"
+    },
+    {
+      "puzzle_id": "pz-4ec5ac61e2c447bd98c8508a993cbd32",
+      "revision": "r03",
+      "record": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/record.json"
     }
   ],
   "format": "picross-authoring-index-v1"

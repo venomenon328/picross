@@ -1,0 +1,3 @@
+Ich gebe die Motivvorlage r02 · motif/r02.png · SHA-256 83b1bb4990e0c0e09a973d3c814f6682895d7be8ca7b9792e97f4da4f5807fd4 frei; Parameter: Empfehlung: 15×15, farbig, 4 Farben (Senfgold, Dunkelgrün, Warmbraun, Creme). Alternative: 3 Farben, Etikett als Negativfläche.. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.
+
+Repositoryablage nach §6 ist beauftragt. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen.
