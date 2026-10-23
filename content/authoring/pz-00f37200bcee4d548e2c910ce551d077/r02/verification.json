@@ -1,0 +1,28 @@
+{
+  "format": "picross-authoring-early-verification-v1",
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "revision": "r02",
+  "timestamp_utc": "2026-10-23T19:54:13.688149Z",
+  "package": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r02/package.zip",
+    "bytes": 3677351,
+    "sha256": "790e50b1f0272ee5611a88d1b24f4bdf1b3b1b17918c221bb396ecb2e3450b0b"
+  },
+  "inventory_sha256": "eab40cb13651f4f2b160428c4f13ddea3b7d404a5a6c16eda7eecd3e183b12af",
+  "handoff_sha256": "5d0be33c6500f3ede0c707cddec20a4ed4419b9945126a852568b1a679c40d6d",
+  "zip_file_count": 22,
+  "zip_safe_crc_file_set_sizes_hashes": "pass",
+  "handoff_copy_byte_identity": "pass",
+  "rulebook_snapshot": "pass",
+  "native_images_original_bytes_and_derivation": "pass",
+  "actual_B_r01_approval_bound": "pass",
+  "motif_and_parameter_approvals_remain_open": "pass",
+  "proportional_design_schemas_and_four_candidate_plan": "pass (static configuration only; no import)",
+  "all_r01_bytes_preserved": "pass",
+  "index_previous_entries_preserved": "pass",
+  "json_utf8_lf": "pass",
+  "visual_review": "Originale und comparison.png als statische Papiermontage selbst geprüft; kein Rastertest.",
+  "za1_inspect": "not_applicable: motif_review is not a content_ready ZA-1 input",
+  "raster_logic_difficulty_runtime": "not_applicable: production awaits human motif/parameter approval",
+  "ci": "pending; actual evidence will be bound in PR"
+}
