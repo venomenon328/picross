@@ -1,0 +1,100 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-4ec5ac61e2c447bd98c8508a993cbd32",
+  "revision": "r02",
+  "repo_commit": "1c5f40a7b48bbde0b4bfadbce34dd8fc57e791b1",
+  "state": "motif_review",
+  "category_id": "gerichte-herzhaftes",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": 15,
+    "height": 15,
+    "approximate": true,
+    "fixed": false,
+    "mode": "color",
+    "color_count": null
+  },
+  "proposed_parameter_corridor": {
+    "recommended": {
+      "width": 15,
+      "height": 15,
+      "mode": "color",
+      "foreground_color_count": 4,
+      "palette_roles": [
+        "Senfgold — Senf",
+        "Dunkelgrün — Deckel",
+        "Warmbraun — Kontur/Löffel",
+        "Creme — Etikett"
+      ]
+    },
+    "alternative": {
+      "width": 15,
+      "height": 15,
+      "mode": "color",
+      "foreground_color_count": 3,
+      "change": "Etikett als Leer-/Negativfläche; geringere Etikettbetonung"
+    }
+  },
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "revision": "A-r01",
+    "sha256": "05264b9ec2743a1812b52e6c11a2e61928a1ca810deca6b51ce15b5e69d29acf",
+    "approval": {
+      "file": "approval.json",
+      "sha256": "ab9901afe0d7cb7902decafd44b2f9a9ed43161ac8f388e0047136de86b65855"
+    }
+  },
+  "motif": {
+    "file": "motif/r02.png",
+    "sha256": "83b1bb4990e0c0e09a973d3c814f6682895d7be8ca7b9792e97f4da4f5807fd4",
+    "derived_from_reveal_sha256": "05264b9ec2743a1812b52e6c11a2e61928a1ca810deca6b51ce15b5e69d29acf",
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "12354bac04df1e21882b2f7356c0674e21c500a4e792b44aad8b5aaa440f2072"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "authorization": "Standardauftrag 2 nach ausdrücklicher Freigabe A-r01; Repositoryablage nach §6 und Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen."
+}
