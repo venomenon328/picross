@@ -1,0 +1,17 @@
+# Webcam · Endabnahmevorlage r05 · 23.10.2026
+
+`pz-6d980b0285604e22b8ecfce205aa008b` · **content_ready** · Authoring 0.5.0 / Dok.-Rev. 23. Werkzeugcommit `923144beca670a9f51324af7ef0c04a1f5ffb846`. Inventarhash: `handoff.json` → `inventory.sha256` (keine zyklische Selbstbindung im Bericht).
+
+**Freigaben:** A-r01 tatsächlich freigegeben, [Originalbeleg](approvals/reveal-A-r01.json); MA-r01 samt vollständigem Korridor tatsächlich freigegeben, [Chatbeleg](approvals/motif-MA-r01.json). Menschliche Endabnahme **offen**.
+
+**Auswahl:** `webcam-30x18-crop2 / area-128`, 540 Zellen, 361 gefüllt / 179 leer (66,85 %). [Vier-Kandidaten-Vergleich](review/candidate-comparison.png), [echtes Endraster mit Gitter](review/final-grid.png), [Kleinvorschau 1 px/Zelle](review/final-raster.png), [Raster/Motiv/Abschlussbild](review/final-comparison.png). 30×18 war ausdrücklich erlaubt und erhält Linse/Öffnung klarer als 25×15; Crop 1 hat weniger ausgeglichene Ränder. Alle vier Matrizen verschieden und zertifiziert; [Auswahlgründe](decisions.json).
+
+**Palette:** Wunsch und Ist exakt vier Vordergrundfarben: ink `#28343d` (Front/Kern, 163), teal `#169ba7` (Fassung, 72), slate `#71818c` (Mechanik/Linsenfassung, 104), blue `#397ab5` (Glasring, 22). Leer zählt nicht.
+
+**Pflichtprüfungen:** Maße/Palette gültig; Randregel links/rechts/oben erfüllt, unten leer. Quelle → Normalisierung → Matrix → Hinweise rekonstruiert; `full-line-color` vollständig vom unbekannten Start ohne Suche, geschriebene Proofs in frischem unabhängigen Prüferprozess bestätigt, Endmatrix exakt. [Vier technische Einzelbelege](review/candidate-verification.json), [Bild-/Freigabebindungen](review/image-bindings.json). Alle visuellen Kriterien erfüllt; grobe gestufte Linsenform, kleine Konturfarbflecken und leere äußere Reihe 18 bleiben bewusst sichtbare Abstraktionsfolgen. Keine leeren Innenlinien oder isolierten freien Vordergrundpixel; [Sichtprüfung samt Grenzen](review/visual-review.json). Kein Reparaturbedarf, 0 Runden / 0 Zelländerungen; Paar-/Suchdiagnose entfällt wegen vollständiger Liniennachweise.
+
+**Schwierigkeit:** aktuelle Methode **picross-difficulty-0.3: L3 – Mittel**, instrumented/medium, Modellpunkt L3–L3; höchste nötige Familie R2, 10 synchrone Wellen (4 R0 / 4 R1 / 2 R2), keine definierte Engstelle, logische Basis 3 + Größe 0. [Vollständig geprüfter Input](analysis/checked.json), [Rating](analysis/full/rating.json), [Spurbericht](analysis/full/report.json). Modellbasiert, nicht menschlich kalibriert; Lösungszeit nicht geschätzt. Separate 0.1/low-Kompatibilitätsschätzung L3/L2–L4 in [difficulty.json](difficulty.json) ersetzt 0.3 nicht.
+
+**Herkunft und Aufwand:** eigene im Nutzerauftrag erzeugte KI-Illustration, ursprüngliche Nutzungsgrundlage und tatsächliche Prompts erhalten; [Quellen/Toolhashes](sources.json). Diese Phase: 4 Importe, 4 frische Rekonstruktionen, 1 vollständig geprüfte 0.3-Analyse, keine Bildaufrufe; aktive Menschenzeit nicht erfasst.
+
+**Zielstatus:** geschriebenes ZIP wird außen mit ZA-1 inspiziert; allein fehlende Endabnahme darf offen bleiben. Kein Export, keine Registrierung, kein nativer Spiel-/Windows-/Browser-/PCK-Lauf: reine Produktion/Authoringablage. Inhalts-CI verlangt nur Pfad-/Modusprüfung und ci-required. Nächster Schritt: **4 · Abnehmen & ins Spiel integrieren**, nach tatsächlicher menschlicher Freigabe dieser Auswahl und unveränderten Handoff-/Inventarbindung.
