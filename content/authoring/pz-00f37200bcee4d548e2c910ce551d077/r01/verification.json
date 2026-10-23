@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-early-verification-v1",
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "revision": "r01",
+  "timestamp_utc": "2026-10-23T19:41:05.433441Z",
+  "package": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r01/package.zip",
+    "bytes": 7373323,
+    "sha256": "f53d911c2b7ba9d17173c8e04b29ac8bc0f8aa8d4aeaed18dcf28cf374dbbfcb"
+  },
+  "handoff_sha256": "48113b725be78b9528d87cf06bb879a3f8960bd1dbb30ebc66611739d89135b3",
+  "inventory_sha256": "3610f5e244e8b79cc927119d8dc70c8a2d410a29af942625f8b89f7b8b5ea87d",
+  "zip_file_count": 18,
+  "zip_safe_and_crc": "pass",
+  "inventory_exact_file_set_sizes_hashes": "pass",
+  "handoff_copy_byte_identity": "pass",
+  "rulebook_snapshot": "pass",
+  "json_utf8_lf": "pass",
+  "three_pngs_and_alpha": "pass",
+  "all_human_approvals_pending": "pass",
+  "index_preserves_all_previous_entries": "pass",
+  "id_runtime_collision": "pass",
+  "visual_review": "visual-review.json and visual-review.png in package; static paper compositing only",
+  "za1_inspect": "not_applicable: early reveal_review is not a ZA-1 production input",
+  "logic_difficulty_runtime_tests": "not_applicable: no raster or integration in Standardauftrag 1",
+  "ci": "pending; actual CI evidence will be recorded in PR"
+}
