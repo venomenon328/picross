@@ -1,3 +1,0 @@
-Production ID: pz-e2e5092925ce4821a9219be7816b5931
-Artwork: OpenAI image generation in ChatGPT, auf Nutzerauftrag
-Usage basis: Für dieses Picross-Projekt eigens nativ erzeugte Illustration ohne übernommene Fremdreferenz; keine zusätzlichen Fremdlizenzen bekannt.
