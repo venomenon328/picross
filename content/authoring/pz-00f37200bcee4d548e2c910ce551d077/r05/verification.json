@@ -1,0 +1,56 @@
+{
+  "format": "picross-authoring-package-verification-v1",
+  "puzzle_id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "revision": "r05",
+  "source_commit": "b308aa6057c82ee1c807b7b51a57a294c5c53c64",
+  "package": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/package.zip",
+    "bytes": 6496893,
+    "sha256": "7bf28b49167b9727a61060dcdfd9041b43383bc78df5f90627a92a4a7c88f6ff"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-00f37200bcee4d548e2c910ce551d077/r05/handoff.json",
+    "sha256": "f315c25e6d0c59f3b0650929da75ce7053b9ee65871fc14451f3a7d0a4ba7e57"
+  },
+  "inventory_sha256": "b9d1afdcd8edd4e968a0e8c2d3f4c8d9ca0699bef63d737485bb74dcf4ec9975",
+  "zip_safe_open": true,
+  "zip_crc": true,
+  "zip_file_set_exact": true,
+  "all_inventory_bytes_hashes_verified": true,
+  "outer_handoff_byte_equal": true,
+  "files": 84,
+  "repair_fresh_replay": "pass; all reference/candidate/final proof and matrix bindings reconstructed in separate process",
+  "actual_changes": [
+    {
+      "after": "green",
+      "before": "empty",
+      "x": 2,
+      "y": 6
+    }
+  ],
+  "line_baseline": "solved, independently confirmed",
+  "paired_proof": "solved, independently confirmed; R4 not required",
+  "difficulty": "picross-difficulty-0.3 fully checked; L3, medium; no human calibration",
+  "final_editorial": "pending; neither previous visual acceptance nor repair permission grants final editorial approval",
+  "target_inspection": {
+    "file": "inspection.json",
+    "sha256": "910a575099ad6a2da7f0e7907d93af39bd5aeeb0c521a3dc4de6a82305f55bd2",
+    "technical": true,
+    "editorial_approved": false,
+    "blockers": [
+      "final_editorial: missing bound human final approval"
+    ]
+  },
+  "ci": "Final head/run and separate self-review are recorded in the delivery PR.",
+  "local_packaging_correction": "R4 rule-family key removed before first delivery; r4_required remains false; see inventoried review/packaging-checks.json.",
+  "separate_file_review": {
+    "status": "pass",
+    "files": 84,
+    "safe_paths_modes": true,
+    "all_inventory_manifest_hashes": true,
+    "exact_one_authorized_change": true,
+    "original_user_visual_acceptance_bound": true,
+    "endmatrix_equal": true,
+    "all_prior_index_entries_retained": true
+  }
+}
