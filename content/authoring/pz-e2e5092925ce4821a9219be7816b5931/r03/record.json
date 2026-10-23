@@ -1,0 +1,104 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-e2e5092925ce4821a9219be7816b5931",
+  "revision": "r03",
+  "motif_name": "Tomate",
+  "category_id": "gemuese-pilze-kraeuter",
+  "state": "content_ready",
+  "package": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r03/package.zip",
+    "bytes": 10285301,
+    "sha256": "da3eb28a5a132aa73302e4dc26aa986d20b4ece139f13f01b6eaaacd769c6d1d"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r03/handoff.json",
+    "sha256": "639bd0fa4a9966b81c5ce3b792864fcb6c8491c810b3bfb3fb29f53024443268"
+  },
+  "inventory_sha256": "22a08a0bbb523a82c08d68cd373245a530d1b020e8a4e43a06df849249191691",
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+    "revision": "A-r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "e6fdefa4a047f8282f918f45bd5b5dd311e7f97cf487090b32394bf89c0f564a",
+    "revision": "MA-r01",
+    "derived_from_reveal_sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+    "approval": "approvals/motif-approval.json",
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "final_editorial_approval": null,
+  "approval": null,
+  "width": 15,
+  "height": 15,
+  "mode": "color",
+  "foreground_color_count_actual": 2,
+  "foreground_color_count_requested": null,
+  "foreground_color_corridor": [
+    2,
+    3
+  ],
+  "candidate": {
+    "source_type": "import",
+    "bundle": "production/c15-2",
+    "configuration": "c15-2",
+    "variant": "area-128",
+    "proof": "production/c15-2/area-128-proof.json",
+    "verification": "audit/candidates.json",
+    "certification": null,
+    "matrix_hash": "5e45adb3106553fe6c2ff9eaf8cf2500e58b6f7b2709c1f6fbe3870e8d667a0e",
+    "logic_hash": "fc72651e06bc18d9082c12827c7702a710e5bab68c7269510723bd5aaa8dbd67",
+    "candidate_id": "116dad30100cf026309b9e76a7a87222b9023b002e6f69a5cf51769a40578f6d"
+  },
+  "difficulty": {
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "logical_level": 3,
+    "size_adjustment": 0,
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "checked_hash": "674bd6e48a85ec269ca6d1454ab1b4a80b203aca9d145d612afb914a84fb3ece",
+    "file": "analysis/checked.json"
+  },
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "integration": null,
+  "repo_commit": "ee338d34833dbf86fe74a5326b9e04cb2f873746",
+  "updated_at_utc": "2026-10-23T19:22:53Z",
+  "verification": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r03/inspection.json",
+    "sha256": "ce9e2aace5b4dafe0a0c2f206f439cf34e58797af92345628f17cc1398d3ef3e",
+    "technical": true,
+    "editorial_approved": false,
+    "registered": false,
+    "sole_blocker": "final_editorial: missing bound human final approval",
+    "zip_members": 91,
+    "crc_paths_hashes_inventory_handoff_verified": true
+  },
+  "packaging": {
+    "files": 91,
+    "complete_rp3_bundles": 4,
+    "no_nested_archives": true,
+    "unbound_omissions": [
+      "qa/comparison.png from r02: superseded by current complete final comparison"
+    ],
+    "historical_source": {
+      "commit": "ee338d34833dbf86fe74a5326b9e04cb2f873746",
+      "package": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r02/package.zip",
+      "sha256": "13be5f6219a386f1a95399b507476c0c15688f875fda62d0bd7df304d2fae1b3"
+    }
+  },
+  "reveal_approval": {
+    "member": "approvals/reveal-approval.json",
+    "sha256": "7d4c77754eaf8ef9ebdcdc58be1b0c8b3f8057c28086784831b93690b6b40488"
+  },
+  "motif_approval": {
+    "member": "approvals/motif-approval.json",
+    "sha256": "0777f8effc45961cdd8a0c2b0653c144bf0c91f4c7ea8909c0d0cde78260f1a1"
+  }
+}
