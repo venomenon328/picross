@@ -1,9 +1,0 @@
-Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.
-
-Paket: webcam_r04_motivvorlage.zip · r04.
-Ich gebe die Motivvorlage motifs/MA-r01.png · MA-r01 frei; Parameter: parameters-proposal.json: 25×15 empfohlen, alternativ 30×18; farbig, vier Farben; area/contain; zwei konkret gebundene Crops und vier Importdesigns. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.
-Quellbranch / Commit: ⟨Quellbranch / Commit⟩.
-
-Repositoryablage nach §6 ist beauftragt. Ablage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen.
-
-Wiederaufnahme: Bitte prüfe erneut, es sollte jetzt im main sein.
