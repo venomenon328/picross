@@ -1,0 +1,21 @@
+{
+  "format": "picross-reveal-approval-v1",
+  "puzzle_id": "pz-4ec5ac61e2c447bd98c8508a993cbd32",
+  "approved_image": {
+    "id": "A-r01",
+    "revision": "r01",
+    "file": "reveals/A-r01.png",
+    "sha256": "05264b9ec2743a1812b52e6c11a2e61928a1ca810deca6b51ce15b5e69d29acf"
+  },
+  "actor": "venomenon328",
+  "approved_at_utc": "2026-10-23T09:13:34Z",
+  "statement": "Ich gebe das Abschlussbild A-r01 frei.",
+  "preserve": [
+    "klassisches, bauchiges klares Senfglas",
+    "dunkelgrüner Schraubdeckel",
+    "goldgelber Senf",
+    "holzener Löffel mit Senfklecks",
+    "warme handgezeichnete, sauber konturierte 2D-Illustration"
+  ],
+  "scope": "Freigabe ausschließlich für das Abschlussbild A-r01. Keine Motivvorlage, Zellmatrix oder Rasterproduktion freigegeben."
+}
