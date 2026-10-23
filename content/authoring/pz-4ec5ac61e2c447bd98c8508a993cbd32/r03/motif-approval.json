@@ -1,0 +1,34 @@
+{
+  "actor": "venomenon328",
+  "allowed_alternative": {
+    "foreground_colors": 3,
+    "height": 15,
+    "label": "empty",
+    "mode": "color",
+    "width": 15
+  },
+  "crop_scope": "Nur transparente Außenränder, keine Motivteile abschneiden; beide Zuschnitte im Design dokumentiert.",
+  "derived_from_reveal_sha256": "05264b9ec2743a1812b52e6c11a2e61928a1ca810deca6b51ce15b5e69d29acf",
+  "evidence": "motif-approval-evidence.txt",
+  "file": "motif/r02.png",
+  "parameters": {
+    "foreground_colors": 4,
+    "height": 15,
+    "method": "area",
+    "mode": "color",
+    "width": 15
+  },
+  "preserve": [
+    "bauchiges Senfglas",
+    "dunkelgrüner Schraubdeckel",
+    "goldgelber Senf",
+    "blankes Etikett",
+    "rechter Holzlöffel mit Senfklecks"
+  ],
+  "revision": "r02",
+  "sha256": "83b1bb4990e0c0e09a973d3c814f6682895d7be8ca7b9792e97f4da4f5807fd4",
+  "statement": "Ich gebe die Motivvorlage r02 · motif/r02.png · SHA-256 83b1bb4990e0c0e09a973d3c814f6682895d7be8ca7b9792e97f4da4f5807fd4 frei; Parameter: Empfehlung: 15×15, farbig, 4 Farben (Senfgold, Dunkelgrün, Warmbraun, Creme). Alternative: 3 Farben, Etikett als Negativfläche.. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "timestamp_basis": "recording time; actual message did not expose its timestamp",
+  "timestamp_utc": "2026-10-23T09:34:02Z",
+  "type": "human_motif_approval"
+}
