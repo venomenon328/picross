@@ -4,7 +4,7 @@
   "revision": "r03",
   "motif_name": "Tomate",
   "category_id": "gemuese-pilze-kraeuter",
-  "state": "content_ready",
+  "state": "registered",
   "package": {
     "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r03/package.zip",
     "bytes": 10285301,
@@ -30,8 +30,14 @@
     "approval": "approvals/motif-approval.json",
     "provenance": "motifs/MA-r01.provenance.json"
   },
-  "final_editorial_approval": null,
-  "approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r03/approval.json",
+    "sha256": "b5566cdc7280fef9edb5a9531c48f2b8b81d9db5127a4b6f11898239b0f0d861"
+  },
+  "approval": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r03/approval.json",
+    "sha256": "b5566cdc7280fef9edb5a9531c48f2b8b81d9db5127a4b6f11898239b0f0d861"
+  },
   "width": 15,
   "height": 15,
   "mode": "color",
@@ -63,13 +69,21 @@
     "checked_hash": "674bd6e48a85ec269ca6d1454ab1b4a80b203aca9d145d612afb914a84fb3ece",
     "file": "analysis/checked.json"
   },
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
-  "integration": null,
+  "blockers": [],
+  "next_action": "Integration nach Pflichtchecks mergen; danach §9-Bereinigung",
+  "integration": {
+    "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r03/integration.json",
+    "sha256": "2b0774f578c268c8b3c9a0e2c6d2686a9bbcc66f195a52115cf25e515209d425",
+    "status": "registered",
+    "runtime_id": "pz-e2e5092925ce4821a9219be7816b5931",
+    "runtime_revision": 1,
+    "save_slot": "tomate_001",
+    "export_manifest_sha256": "f717aa4ff3d15559685c68a45731f5ac5a0e7887edc76f5df496f8858d871177",
+    "definition_sha256": "d79ede152529b7977b826391ed373ab6fa9c39c4217a3b38a1800c00db5f1d7a",
+    "main_integration": null
+  },
   "repo_commit": "ee338d34833dbf86fe74a5326b9e04cb2f873746",
-  "updated_at_utc": "2026-10-23T19:22:53Z",
+  "updated_at_utc": "2026-10-23T19:37:51Z",
   "verification": {
     "file": "content/authoring/pz-e2e5092925ce4821a9219be7816b5931/r03/inspection.json",
     "sha256": "ce9e2aace5b4dafe0a0c2f206f439cf34e58797af92345628f17cc1398d3ef3e",
