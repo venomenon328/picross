@@ -1,0 +1,11 @@
+{
+  "file": "reveals/A-r01.png",
+  "sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8",
+  "author": "Native KI-Bildgenerierung in ChatGPT",
+  "usage_basis": "Im ausdrücklichen Nutzerauftrag neu erzeugte Illustration; keine importierten Fremdassets.",
+  "working_mode": "free",
+  "external_image_input": null,
+  "puzzle_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "source_package": "content/authoring/pz-6d980b0285604e22b8ecfce205aa008b/r01/package.zip",
+  "source_commit": "fa9e0c1ec6d021788be63497ee7bb5c129b04510"
+}

@@ -1,0 +1,21 @@
+{
+  "source_revision": "r04",
+  "source_commit": "923144beca670a9f51324af7ef0c04a1f5ffb846",
+  "source_zip_sha256": "f90852aa44fd7d5a3833e96b38d2d5100e0e6e1d25dfd42fb0854d1f3e4a5dfe",
+  "all_34_source_zip_members_and_hashes_verified": true,
+  "unchanged_images": {
+    "reveals/A-r01.png": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8",
+    "motifs/MA-r01.png": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157"
+  },
+  "reveal_approval_unchanged": "9db30773b3f6577fdc643913fcbd4ea8ceb9a5be8b496d1450ef965c327d9215",
+  "motif_approval": "approvals/motif-MA-r01.json",
+  "images_original_size": [
+    1619,
+    971
+  ],
+  "alpha_outer_0_0": 0,
+  "alpha_clamp_800_710": 0,
+  "edit_request": "evidence/native-edit-request-r04.json",
+  "native_prompt": "prompts/MA-r01-resume-r04.txt",
+  "rulebook_snapshot_equal_current": true
+}

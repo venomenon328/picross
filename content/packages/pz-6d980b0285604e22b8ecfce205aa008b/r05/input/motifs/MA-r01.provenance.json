@@ -1,0 +1,19 @@
+{
+  "puzzle_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "file": "motifs/MA-r01.png",
+  "revision": "MA-r01",
+  "sha256": "3d346ec40b4bb7942346135be46f09e0661e500455444e13dbf4092a20a06157",
+  "author": "Native KI-Bildbearbeitung in ChatGPT",
+  "usage_basis": "Im ausdrücklichen Nutzerauftrag aus dem freigegebenen eigenen Abschlussbild abgeleitet; keine importierten Fremdassets.",
+  "working_mode": "faithful",
+  "derived_from": {
+    "file": "reveals/A-r01.png",
+    "revision": "A-r01",
+    "sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8"
+  },
+  "prompt": "prompts/MA-r01-resume-r04.txt",
+  "operations": [
+    "Native vereinfachende Bildbearbeitung; Originalbytes separat und unverändert erhalten."
+  ],
+  "approval": null
+}
