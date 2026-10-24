@@ -1,0 +1,53 @@
+{
+  "blockers": [],
+  "category_id": "mythen-fantasie",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r01/handoff.json",
+    "sha256": "3f19a6c02696fc3a505066a4754176057c148de41fef7c220ef0cf9faba05385"
+  },
+  "height": 20,
+  "integration": null,
+  "inventory_sha256": "27e6596db31c65f9253d7054a0c35a9973fbbbcd3cd1ed80a8e5a519f19c0f44",
+  "mode": "mono",
+  "motif_name": "Pentagramm",
+  "next_action": "2 · Bild freigeben & abstrahieren: tatsächliche menschliche Bildauswahl/-freigabe, dann Abstraktion gemäß §2.4 und §3.",
+  "package": {
+    "bytes": 5505804,
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r01/package.zip",
+    "sha256": "85e60ea774143a31a65de172e0c33167d38d6d1ca54091cf9e94812134ed8e8b"
+  },
+  "puzzle_id": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+  "repo_commit": "49f99cdad933d4ba8f802ad0595e54c538819c9e",
+  "reveal_options": [
+    {
+      "approval": null,
+      "description": "Kupferstern ohne Kreis",
+      "file": "reveals/A-r01.png",
+      "id": "A-r01",
+      "sha256": "66ae6d4e4c093c4297b452d575911391faf3d100c79c9c66ec26941129df1426"
+    },
+    {
+      "approval": null,
+      "description": "Violettes Holz im Walnussreif",
+      "file": "reveals/B-r01.png",
+      "id": "B-r01",
+      "sha256": "b111b5f3695163bb8af20ad676ada35c30776a4334df7ee3682fb43152a4041a"
+    },
+    {
+      "approval": null,
+      "description": "Patiniertes Messing im Metallreif",
+      "file": "reveals/C-r01.png",
+      "id": "C-r01",
+      "sha256": "329b2d0f9a21738dc650409301d34a45267ef3348be776c90ced55e0c316071f"
+    }
+  ],
+  "revision": "r01",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-24T17:48:42.604003+00:00",
+  "width": null
+}
