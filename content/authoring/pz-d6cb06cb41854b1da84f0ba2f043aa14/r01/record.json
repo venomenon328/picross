@@ -1,0 +1,89 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-d6cb06cb41854b1da84f0ba2f043aa14",
+  "revision": "r01",
+  "repo_commit": "dbd728639071c43487395217bad95e51288b4dbb",
+  "state": "reveal_review",
+  "category_id": "gebaeude-bauwerke",
+  "motif_name": "Jinja",
+  "package": {
+    "file": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r01/package.zip",
+    "bytes": 12127690,
+    "sha256": "313f5686f7289ef1f13b245f7e86e1ba8b6d4b739e242b245bc04171265c3bc3"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r01/handoff.json",
+    "sha256": "6475fbd2a9565a72ddd2c2d4e81d1e2a1b2f037b082e5a8fbcfad8f545d3239f"
+  },
+  "inventory_sha256": "4b1a42cb3824884922b6a4ac8ace6297f2f339b3e6b96c92b29a4e185f213cc1",
+  "final_editorial_approval": null,
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Zinnoberroter Schrein · frontal",
+      "file": "reveals/A-r01.png",
+      "sha256": "0154da8f3bbb63fb10b71b2181abd7e420204bfb548e643b2304341a10af661d",
+      "bytes": 2595936,
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "transparent_pixels": 509027,
+      "partial_alpha_pixels": 1063837,
+      "opaque_pixels": 0,
+      "prompt": "prompts/A-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "B-r02",
+      "title": "Holzschrein · Dreiviertelansicht",
+      "file": "reveals/B-r02.png",
+      "sha256": "ad8f34c435c6f677e478185958003ada50aae03d5341572840233ffbbbd7de82",
+      "bytes": 2185195,
+      "width": 1312,
+      "height": 1199,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 584288,
+      "partial_alpha_pixels": 988016,
+      "opaque_pixels": 784,
+      "prompt": "prompts/B-r02.txt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "title": "Reetdachschrein · gekreuzte Dachhölzer",
+      "file": "reveals/C-r01.png",
+      "sha256": "4e385c77dc9c4bf651d2aae71734bf12ae37373d3d48f0b9b821b293a9429160",
+      "bytes": 2470729,
+      "width": 1224,
+      "height": 1285,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 541720,
+      "partial_alpha_pixels": 1030699,
+      "opaque_pixels": 421,
+      "prompt": "prompts/C-r01.txt",
+      "approval": null
+    }
+  ],
+  "width": null,
+  "height": 15,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "integration": null,
+  "updated_at_utc": "2026-10-24T09:30:58Z"
+}
