@@ -1,0 +1,155 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-9c86e226930e4fc194dc18bae08762df",
+  "revision": "r01",
+  "repo_commit": "31955e88925c4633a839321ccfe3b0000095b215",
+  "state": "reveal_review",
+  "category_id": "mythen-fantasie",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": null,
+    "height": 20,
+    "approximate": true,
+    "fixed": false,
+    "mode": "mono",
+    "color_count": 1,
+    "color_count_exact": true,
+    "color_count_source": "monochrome mode; no separate numeric user request"
+  },
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Messing · ohne Kreis",
+      "file": "reveals/A-r01.png",
+      "sha256": "709b23ac5277fa3379724b619532a699fd418e997d854689be841eb3a841e66b",
+      "bytes": 1335646,
+      "width": 1310,
+      "height": 1200,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1092018,
+      "partial_alpha_pixels": 478989,
+      "opaque_pixels": 993,
+      "visible_bbox_alpha_gt127": [
+        33,
+        5,
+        1279,
+        1197
+      ],
+      "prompt": "prompts/A-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "title": "Kupfer · im Bronzering",
+      "file": "reveals/B-r01.png",
+      "sha256": "b3d865c5ab48d9e358138553814f43b2a388ae80dc374410934dd3981e2437ff",
+      "bytes": 1970715,
+      "width": 1278,
+      "height": 1230,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 886015,
+      "partial_alpha_pixels": 684278,
+      "opaque_pixels": 1647,
+      "visible_bbox_alpha_gt127": [
+        52,
+        7,
+        1224,
+        1202
+      ],
+      "prompt": "prompts/B-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "title": "Violettes Holz · im Holzring",
+      "file": "reveals/C-r01.png",
+      "sha256": "d92b7aa4df967a5bcb18852216b366a096e291966d6ea2c7f45a9b6c0a7ad455",
+      "bytes": 1898783,
+      "width": 1285,
+      "height": 1224,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 824128,
+      "partial_alpha_pixels": 746443,
+      "opaque_pixels": 2269,
+      "visible_bbox_alpha_gt127": [
+        56,
+        9,
+        1228,
+        1213
+      ],
+      "prompt": "prompts/C-r01.txt",
+      "approval": null
+    }
+  ],
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "5e879ff541013fad6cb5c3ab96f9079158fb452bff6f3f4cf868e8b84ed37be4"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "provenance": "provenance.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "authorization": "Standardauftrag 1 mit Repositoryablage nach §6 und Ablagemerge nach erfolgreichen Pflichtprüfungen ausdrücklich beauftragt; keine Bild-/Motiv-/Endfreigabe erteilt."
+}
