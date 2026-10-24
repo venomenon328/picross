@@ -1,0 +1,40 @@
+{
+  "bundle": "imports/22x17",
+  "variant": "area-176",
+  "candidate_id": "73b6e0392ca0822b8a4d0c489afb89919c423d4e8d5d59f12abde85575e2c90e",
+  "matrix_hash": "56c23ab3650c2978e7362a719a5d7b7bcc7c775e8baa16ce08e9aef707453041",
+  "logic_hash": "cc8099a270da83a8b38d850f365f4d53b3376462402712497331e4bdef979e40",
+  "verification": {
+    "status": "solved",
+    "proof_verified": true,
+    "certified": true,
+    "logic_hash": "cc8099a270da83a8b38d850f365f4d53b3376462402712497331e4bdef979e40",
+    "profile": {
+      "id": "full-line-mono",
+      "version": 1,
+      "start": "unknown",
+      "deduction": "all-line-supported-values",
+      "search": false
+    },
+    "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+    "steps": 42,
+    "line_evaluations": 81
+  },
+  "original_source_matches_approved_motif": true,
+  "source_normalization_matrix_clues_raster_and_manifest_reconstructed": true,
+  "end_matrix_equal": true,
+  "foreground_colors_used": 1,
+  "filled_cells": 149,
+  "empty_cells": 225,
+  "cells": 374,
+  "isolated_4_neighbor_cells_0_based": [],
+  "empty_inner_rows_1_based": [],
+  "empty_inner_columns_1_based": [],
+  "frame": {
+    "left": true,
+    "right": true,
+    "top": true,
+    "bottom": false
+  },
+  "frame_valid": true
+}
