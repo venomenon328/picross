@@ -1,0 +1,24 @@
+{
+  "puzzle_id": "pz-9d08697a30c749258b742ac979de9def",
+  "file": "motifs/MA-r02.png",
+  "sha256": "ae1ca12459c6297c6e349a21af18314dc74ce53cf2195cbcc27bf4a449003341",
+  "author": "OpenAI image generation in ChatGPT, directed by the user",
+  "usage_basis": "AI-generated derivative of the exact user-approved A-r01 from this production. Original source and attribution retained.",
+  "derived_from": {
+    "file": "reveals/A-r01.png",
+    "sha256": "b51083a47a82936189f9b991d2462940c39c78293e6721bc1411dcf1067c8e8e"
+  },
+  "prompt_file": "prompts/MA-r02.txt",
+  "input": "reveals/A-r01.png",
+  "generation": {
+    "tool": "image_gen.imagegen",
+    "transparent_background": false,
+    "model": "not_exposed",
+    "seed": "not_exposed"
+  },
+  "additional_edit_input": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "ddcbe8c580619b9de867218f471e59e69c694021545b171368bf8f6f34e33c7f"
+  },
+  "changes": "New high-resolution monochrome derivative; original generated PNG bytes retained without retouching or rasterization."
+}

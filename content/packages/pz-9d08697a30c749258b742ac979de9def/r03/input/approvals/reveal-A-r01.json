@@ -1,0 +1,28 @@
+{
+  "type": "human_reveal_approval",
+  "puzzle_id": "pz-9d08697a30c749258b742ac979de9def",
+  "revision": "A-r01",
+  "file": "reveals/A-r01.png",
+  "sha256": "b51083a47a82936189f9b991d2462940c39c78293e6721bc1411dcf1067c8e8e",
+  "actor": "Nutzer / Repository-Eigentümer",
+  "timestamp_utc": "2026-10-24T00:20:11.757581Z",
+  "timestamp_basis": "Time of recording the explicit statement in the current task; exact message-send timestamp was not exposed.",
+  "statement": "Ich gebe das Abschlussbild A-r01 frei.",
+  "evidence": "user-request.txt",
+  "source_package": {
+    "commit": "c37387c1a1dfcb774c44f651868be8cf0852bcf1",
+    "file": "content/authoring/pz-9d08697a30c749258b742ac979de9def/r01/package.zip",
+    "sha256": "2a5335dbe9dcfd112088313a9bf87c416f2fce04a4095fbb6d124dba0403dfb2",
+    "inventory_sha256": "c5664ec28f6f7bba1d426fab18a8fc1fbd694d13bcc2f9343399dce766d06cb6",
+    "handoff_sha256": "437c8fe5b3498413a98fb90c1f66f44db8809be6794451912307f75f31d76d8a"
+  },
+  "invariants": [
+    "zwei vollständige hohe Türme mit abgestuften Kronen und langen Spitzen",
+    "horizontale Skybridge mit diagonalen Stützbeinen etwa auf halber Turmhöhe",
+    "klarer freier Zwischenraum oberhalb und unterhalb der Brücke",
+    "gerippte silberne Fassaden mit zylindrischen Vorbauten",
+    "nahezu frontale symmetrische Anordnung zweier gleich dominanter Türme",
+    "kühles silbernes Tragwerk und türkisblaues Glas mit warmen Lichtkanten",
+    "gemeinsamer kompakter Sockel"
+  ]
+}
