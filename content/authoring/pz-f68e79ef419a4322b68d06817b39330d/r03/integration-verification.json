@@ -1,0 +1,108 @@
+{
+  "source_commit": "6585525b854781141b210de49d794370b116c954",
+  "puzzle_id": "pz-f68e79ef419a4322b68d06817b39330d",
+  "package_revision": "r03",
+  "runtime_revision": 1,
+  "save_slot": "torii_001",
+  "category_id": "gebaeude-bauwerke",
+  "approval_sha256": "07466409f3121ad2b916c76537d5fc8daeea8e97753a3c430b52406bd910fe75",
+  "original_zip_sha256": "66c8163af3f66f460353d945fd8992b099ce076b3d7135e426030c14d124d2b2",
+  "export_manifest_sha256": "f94f835d43f28e34f8e66f143df8f0b3b02cd0a64cf601d1e6bebd24f3f6a31c",
+  "definition_sha256": "1b5ab3b03fdbc0673b6cb86b61d3d32a676361f0efa73f87b04734c85f6d71ad",
+  "reveal_sha256": "3f68fdcfee77d780c4fd6de4693795fc680b86b98bbb201c54045a0e151dd167",
+  "notice_sha256": "6a73c278f2483e4d29c8ead18e74f4b8f386886de8ef0ece967b6b5866c072c6",
+  "checked_difficulty_sha256": "2d994483cca5894ea96c3a15c37f16bff65c2e0abf669135e04657e11232ac2e",
+  "rating_hash": "a9d2251ac2b1ba358c2419a8f87d3c1c493ac6e073277d235de819c73ffdc741",
+  "existing_registry_entries_unchanged": 41,
+  "existing_runtime_entries_unchanged": 41,
+  "categories_unchanged": true,
+  "definition_matrix_and_clues_equal_approved_production": true,
+  "reveal_bytes_unchanged": true,
+  "written_export_file_hashes_valid": 46,
+  "historical_authoring_zip_and_handoff_unchanged": true,
+  "plan": {
+    "status": "planned",
+    "category": {
+      "id": "gebaeude-bauwerke",
+      "name": "Gebäude & Bauwerke",
+      "order": 11
+    },
+    "changes": [
+      {
+        "operation": "add",
+        "path": "content/packages/pz-f68e79ef419a4322b68d06817b39330d/r03"
+      },
+      {
+        "operation": "add",
+        "path": "content/difficulty/pz-f68e79ef419a4322b68d06817b39330d/rating.json"
+      },
+      {
+        "operation": "replace",
+        "path": "content/registry.json"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/torii_001.txt"
+      },
+      {
+        "operation": "add",
+        "path": "game/data/content/torii_001.json"
+      },
+      {
+        "operation": "replace",
+        "path": "game/data/registry.json"
+      },
+      {
+        "operation": "add-on-success",
+        "path": "content/added/pz-f68e79ef419a4322b68d06817b39330d.json"
+      }
+    ],
+    "source_report_sha256": "b7d14145f075eca216f0d8d8d4e08e33518c1eb90ef7ec3c48cfbc604fa973b8"
+  },
+  "registration": {
+    "category": {
+      "id": "gebaeude-bauwerke",
+      "name": "Gebäude & Bauwerke",
+      "order": 11
+    },
+    "changes": [
+      {
+        "operation": "add",
+        "path": "content/packages/pz-f68e79ef419a4322b68d06817b39330d/r03"
+      },
+      {
+        "operation": "add",
+        "path": "content/added/pz-f68e79ef419a4322b68d06817b39330d.json"
+      },
+      {
+        "operation": "add",
+        "path": "content/difficulty/pz-f68e79ef419a4322b68d06817b39330d/rating.json"
+      },
+      {
+        "operation": "replace",
+        "path": "content/registry.json"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/torii_001.txt"
+      },
+      {
+        "operation": "add",
+        "path": "game/data/content/torii_001.json"
+      },
+      {
+        "operation": "replace",
+        "path": "game/data/registry.json"
+      }
+    ],
+    "id": "pz-f68e79ef419a4322b68d06817b39330d",
+    "registered": true,
+    "status": "registered",
+    "user_saves_modified": false
+  },
+  "no_pending_journal": true,
+  "added_at": "2026-10-24T12:38:01Z",
+  "native_checks": "nicht erforderlich: reine Inhaltsintegration",
+  "solver_or_analysis_rerun": "Kein zusätzlicher Solver-/Analyse-/inspect-/verify-export-/check-registry-/sync-runtime-/Registerwiederholungslauf. Obligatorische interne Adapterprüfungen bei Export/Plan/Register ausgeführt.",
+  "user_saves_modified": false
+}
