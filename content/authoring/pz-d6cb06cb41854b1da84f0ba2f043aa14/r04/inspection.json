@@ -1,0 +1,46 @@
+{
+  "format": "picross-production-package-check-v1",
+  "scope": "pre-final-acceptance technical production verification; separate from ZA-1 export authorization",
+  "package": {
+    "file": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r04/package.zip",
+    "bytes": 7578683,
+    "sha256": "dc3dd9a92209491ab481fc2edba74ec1a12af4f7ba740350d71aa94627ad5096"
+  },
+  "handoff_sha256": "98eec68aef22cdde2825158c5797bf94e718a7e2f433d4fd042445ca2340adbb",
+  "inventory_sha256": "889d19a7df3395d2382de2c5dc6b6b79322c7e347cf9013f448179a4d9f77f2f",
+  "files": 66,
+  "safe_zip_crc_inventory_file_set_and_all_hashes": true,
+  "historical_reference_and_images_byte_identical": true,
+  "fixed_replay_verified": true,
+  "exact_changed_cells": 4,
+  "all_other_cells_preserved": 1346,
+  "full_line_color": {
+    "status": "solved",
+    "proof_verified": true,
+    "certified": true,
+    "logic_hash": "d602eaf8dac3a14e8dc609930d1553745a697f9f9734c10fbc9a2111878709be",
+    "profile": {
+      "id": "full-line-color",
+      "version": 1,
+      "start": "unknown",
+      "deduction": "all-line-supported-values",
+      "search": false
+    },
+    "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+    "steps": 126,
+    "line_evaluations": 201
+  },
+  "final_domains_equal_matrix": true,
+  "difficulty_full_bundle_reverified": true,
+  "difficulty_level": "L3",
+  "method": "picross-difficulty-0.3",
+  "target_adapter": {
+    "status": "pending_human_final_approval",
+    "result": "blocked",
+    "actual_error": "Manual source requires explicit manual authorization",
+    "reason": "Der v4-Export-Autorisierungsvertrag bindet den tatsächlichen Endfreigabehash; keine Endabnahme oder Ersatzautorisierung vorweggenommen.",
+    "technical_adapter_pass_claimed": false
+  },
+  "human_final_approval": false,
+  "registered": false
+}
