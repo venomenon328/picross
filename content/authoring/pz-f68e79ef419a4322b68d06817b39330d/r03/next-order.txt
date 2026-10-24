@@ -1,0 +1,13 @@
+Endabnahme-/Auftragsvorlage – erst durch tatsächliches Absenden als Nutzerauftrag erteilt:
+
+Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.
+Ich nehme das Torii-Endraster 22×17 / area-176 mit genau einer Vordergrundfarbe plus Leer und dem unveränderten Abschlussbild A-r01 redaktionell ab und gebe das folgende unveränderte Paket zur Spielintegration frei.
+Paket: content/authoring/pz-f68e79ef419a4322b68d06817b39330d/r03/package.zip · r03.
+ZIP-SHA-256: 66c8163af3f66f460353d945fd8992b099ce076b3d7135e426030c14d124d2b2
+Handoff-SHA-256: 91585d2984902e495162501196366afc307f1e01b6fcb2703ee98d8e2cbb90a3
+Inventar-SHA-256: 64791cbf47c162adc78b38599d01ce178b2e7907d522daa583e67692aaeb1dde
+Matrixhash: 56c23ab3650c2978e7362a719a5d7b7bcc7c775e8baa16ce08e9aef707453041
+Logikhash: cc8099a270da83a8b38d850f365f4d53b3376462402712497331e4bdef979e40
+Abschlussbild: reveals/A-r01.png · A-r01 · 3f68fdcfee77d780c4fd6de4693795fc680b86b98bbb201c54045a0e151dd167
+Führe Standardauftrag 4 vollständig aus. Nutze die geprüfte aktuelle Schwierigkeit 0.3, Kategorie gebaeude-bauwerke und erhalte die stabile Rätsel-ID pz-f68e79ef419a4322b68d06817b39330d.
+Repositoryablage und Spielintegration sind beauftragt. Integrations-PR nach erfolgreichen Pflichtprüfungen mergen; anschließend den eng begrenzten Abschluss-Cleanup gemäß §9 prüfen und mergen. Kein Deployment.
