@@ -1,0 +1,191 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-d6cb06cb41854b1da84f0ba2f043aa14",
+  "revision": "r04",
+  "repo_commit": "ca7c6cccf9975ef324db51711f18e31a41863792",
+  "state": "raster_review",
+  "category_id": "gebaeude-bauwerke",
+  "brief": "brief.md",
+  "approved_parameters": [
+    {
+      "width": 42,
+      "height": 28,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        14,
+        12,
+        1521,
+        1008
+      ]
+    },
+    {
+      "width": 45,
+      "height": 30,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        14,
+        12,
+        1521,
+        1008
+      ]
+    },
+    {
+      "width": 48,
+      "height": 32,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        14,
+        12,
+        1521,
+        1008
+      ]
+    }
+  ],
+  "proposed_parameters": [
+    {
+      "width": 42,
+      "height": 28,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        14,
+        12,
+        1521,
+        1008
+      ]
+    },
+    {
+      "width": 45,
+      "height": 30,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        14,
+        12,
+        1521,
+        1008
+      ]
+    },
+    {
+      "width": 48,
+      "height": 32,
+      "mode": "color",
+      "foreground_colors": 4,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        14,
+        12,
+        1521,
+        1008
+      ]
+    }
+  ],
+  "configuration": "configuration-approved.json",
+  "invariants": "invariants.md",
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "0154da8f3bbb63fb10b71b2181abd7e420204bfb548e643b2304341a10af661d",
+    "revision": "A-r01",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "b8510b323cd6324545b11bbc4136d524d37808d78036d1118630eed92b4de7d3",
+    "revision": "MA-r01",
+    "derived_from_reveal_sha256": "0154da8f3bbb63fb10b71b2181abd7e420204bfb548e643b2304341a10af661d",
+    "approval": "approvals/motif-MA-r01.json",
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "source_type": "manual",
+    "bundle": "production/fixed-r04",
+    "variant": "area",
+    "proof": "production/fixed-r04/area-proof.json",
+    "verification": "evidence/fresh-derivation-verification.json",
+    "certification": null,
+    "matrix_hash": "262142595574e65d0468f79d4fbf66753789867c3333bdc19a66e2bb3a94bbb6",
+    "logic_hash": "d602eaf8dac3a14e8dc609930d1553745a697f9f9734c10fbc9a2111878709be"
+  },
+  "origin_verification": "evidence/fresh-derivation-verification.json",
+  "repair": {
+    "type": "fixed_color_editorial_redraw",
+    "reference": "production/c45-mag128",
+    "reference_variant": "area",
+    "plan": "fixed-plan.json",
+    "record": "fixed-record.json",
+    "replay": "evidence/fresh-derivation-verification.json"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "889d19a7df3395d2382de2c5dc6b6b79322c7e347cf9013f448179a4d9f77f2f"
+  },
+  "difficulty": "difficulty.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "blocked"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json",
+    "motif": "approvals/motif-MA-r01.json",
+    "provenance": "evidence/fresh-derivation-verification.json",
+    "logic": "evidence/fresh-derivation-verification.json",
+    "frame": "quality.json",
+    "visual": "visual-review.json",
+    "difficulty": "analysis/checked.json",
+    "reveal_consistency": "visual-review.json",
+    "final_editorial": "report.md",
+    "target_export": "report.md"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "final_editorial: bound human final approval pending; external ZA-1-v4 authorization is completed only afterwards"
+  ],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "authorization": "Standardauftrag 3 samt exakt vier zusätzlich autorisierten festen Farbkorrekturen; Repositoryablage und bedingter Ablagemerge beauftragt. Keine menschliche Endabnahme oder Spielregistrierung vorweggenommen.",
+  "previous_package": {
+    "file": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r03/package.zip",
+    "sha256": "5d9a9e5b9ecc65b8634e15b90f76f1efa8751c8f7c6a083845e72804c57fe80a",
+    "inventory_sha256": "513fee46ddcc87f63ec844d38a22d81fe16f639526e8a6eef6e170e6701e1f6b",
+    "commit": "ca7c6cccf9975ef324db51711f18e31a41863792"
+  },
+  "final_editorial_approval": null,
+  "visual_review": "visual-review.json",
+  "current_difficulty": "analysis/checked.json",
+  "content_blockers": [],
+  "fixed_color_production_authorization": "approvals/fixed-color-production.json"
+}

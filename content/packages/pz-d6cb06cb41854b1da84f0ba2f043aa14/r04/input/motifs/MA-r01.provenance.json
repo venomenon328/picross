@@ -1,0 +1,19 @@
+{
+  "puzzle_id": "pz-d6cb06cb41854b1da84f0ba2f043aa14",
+  "file": "motifs/MA-r01.png",
+  "sha256": "b8510b323cd6324545b11bbc4136d524d37808d78036d1118630eed92b4de7d3",
+  "author": "OpenAI / native ChatGPT image generation",
+  "usage_basis": "Vorlagentreue Abstraktion aus dem ausdrücklich freigegebenen projektbezogenen KI-Abschlussbild; keine Fremdassets verwendet.",
+  "derived_from": {
+    "file": "reveals/A-r01.png",
+    "sha256": "0154da8f3bbb63fb10b71b2181abd7e420204bfb548e643b2304341a10af661d"
+  },
+  "prompt_file": "prompts/MA-r01.txt",
+  "input": "reveals/A-r01.png",
+  "settings": {
+    "transparent_background": true,
+    "model": "not_exposed",
+    "quality": "not_exposed",
+    "seed": "not_exposed"
+  }
+}
