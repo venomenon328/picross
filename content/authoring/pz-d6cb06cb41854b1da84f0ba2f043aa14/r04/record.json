@@ -3,8 +3,8 @@
   "puzzle_id": "pz-d6cb06cb41854b1da84f0ba2f043aa14",
   "revision": "r04",
   "repo_commit": "ca7c6cccf9975ef324db51711f18e31a41863792",
-  "state": "raster_review",
-  "phase_result": "Standardauftrag 3 / autorisierte feste Farbkorrektur bis Endabnahmevorlage abgeschlossen",
+  "state": "registered",
+  "phase_result": "Standardauftrag 4 / Export und Registrierung geprüft; Main-Merge noch ausstehend",
   "category_id": "gebaeude-bauwerke",
   "motif_name": "Jinja",
   "package": {
@@ -17,7 +17,10 @@
     "sha256": "98eec68aef22cdde2825158c5797bf94e718a7e2f433d4fd042445ca2340adbb"
   },
   "inventory_sha256": "889d19a7df3395d2382de2c5dc6b6b79322c7e347cf9013f448179a4d9f77f2f",
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r04/approval.json",
+    "sha256": "2a3673f8bfad2a6c6826515b8bd08754ccbc14173ad4a3ebaf8ab5e8a10aff24"
+  },
   "width": 45,
   "height": 30,
   "mode": "color",
@@ -35,12 +38,24 @@
     ],
     "evidence": "analysis/checked.json"
   },
-  "blockers": [
-    "final_editorial: bound human final approval pending; external ZA-1-v4 authorization is completed only afterwards"
-  ],
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
-  "integration": null,
-  "updated_at_utc": "2026-10-24T11:14:36Z",
+  "blockers": [],
+  "next_action": "Merge freigeben",
+  "integration": {
+    "export_manifest_sha256": "d8b1bac6fc9d6c2ce80cf1890c514e0f002034f837c67b3c530c2d37dce312d5",
+    "registration": "registration.json",
+    "review": "integration-review.json",
+    "runtime": {
+      "id": "pz-d6cb06cb41854b1da84f0ba2f043aa14",
+      "revision": 1,
+      "save_slot": "jinja_001",
+      "category_id": "gebaeude-bauwerke",
+      "definition": "game/data/content/jinja_001.json",
+      "definition_sha256": "199cd5da7524731358cccbb798f18d1af1696dd7b83266399dc45af998232f11",
+      "reveal_sha256": "0154da8f3bbb63fb10b71b2181abd7e420204bfb548e643b2304341a10af661d",
+      "notice_sha256": "1a31e358b7cf5b13cb8a4b8a5ee5eaba78d353b4e6ff27ff8841209c83aa01d7"
+    }
+  },
+  "updated_at_utc": "2026-10-24T11:38:38+00:00",
   "production_inspection": {
     "file": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r04/inspection.json",
     "sha256": "ba94e93b8e41268e6f28a311ed759f1f5a42360d4ee52befb691eddb169fe5a0"

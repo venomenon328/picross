@@ -1,0 +1,13 @@
+{
+  "native_image_generation_calls_this_revision": 0,
+  "native_image_edit_calls_this_revision": 0,
+  "new_import_attempts": 1,
+  "historical_import_attempts": 12,
+  "fixed_color_edit_positions": 4,
+  "rp5_search_rounds": 0,
+  "human_active_minutes": null,
+  "playtest": "not_performed; optional",
+  "solve_time_minutes": null,
+  "fresh_production_verification": "evidence/fresh-derivation-verification.json",
+  "analysis": "analysis/checked.json"
+}
