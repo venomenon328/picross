@@ -1,0 +1,67 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-f68e79ef419a4322b68d06817b39330d",
+  "revision": "r02",
+  "repo_commit": "ddd88aca4d91541c9f7cc8be5c285590a6b83ffe",
+  "state": "motif_review",
+  "category_id": "gebaeude-bauwerke",
+  "motif_name": "Torii",
+  "package": {
+    "file": "content/authoring/pz-f68e79ef419a4322b68d06817b39330d/r02/package.zip",
+    "sha256": "e645c12e92f249b3b81b9b5799e180e9f599c88be0f460cd6c4c594177f051a5",
+    "bytes": 3066148
+  },
+  "handoff": {
+    "file": "content/authoring/pz-f68e79ef419a4322b68d06817b39330d/r02/handoff.json",
+    "sha256": "9d9b531287433237fcf27afb3604bc3e088d2d4eeebe1c6cf5fac9e09d1aa27e"
+  },
+  "inventory_sha256": "92430009edbf580bcf3fc15c12cecc1bd630b250589a52354e61e104813449cc",
+  "reveal_approval": {
+    "file": "content/authoring/pz-f68e79ef419a4322b68d06817b39330d/r02/reveal-approval.json",
+    "sha256": "2b81baab6940e00a259c67ed93dabe759befc65053e94fb091a41c2f1b1b5b35"
+  },
+  "final_editorial_approval": null,
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "revision": "A-r01",
+    "sha256": "3f68fdcfee77d780c4fd6de4693795fc680b86b98bbb201c54045a0e151dd167",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "revision": "MA-r01",
+    "sha256": "115823534358406cd1426e8c1c08d7c28b75a08e3a6b5624242ef73b7774762d",
+    "derived_from_reveal_sha256": "3f68fdcfee77d780c4fd6de4693795fc680b86b98bbb201c54045a0e151dd167",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "width": 20,
+  "height": 15,
+  "requested_width": null,
+  "requested_height": 15,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "mono",
+  "foreground_colors": 1,
+  "parameter_status": "proposed; motif approval pending",
+  "proposed_parameters": [
+    {
+      "width": 20,
+      "height": 15,
+      "mode": "mono",
+      "foreground_colors": 1
+    },
+    {
+      "width": 22,
+      "height": 17,
+      "mode": "mono",
+      "foreground_colors": 1
+    }
+  ],
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "integration": null,
+  "updated_at_utc": "2026-10-24T11:58:19Z"
+}
