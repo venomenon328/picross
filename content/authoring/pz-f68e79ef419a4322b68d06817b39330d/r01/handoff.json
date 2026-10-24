@@ -1,0 +1,153 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-f68e79ef419a4322b68d06817b39330d",
+  "revision": "r01",
+  "repo_commit": "11d78e66ecc6a0e6530aa27a78a9c4fcda2df560",
+  "state": "reveal_review",
+  "category_id": "gebaeude-bauwerke",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": null,
+    "height": 15,
+    "approximate": true,
+    "fixed": false,
+    "mode": "mono",
+    "color_count": 1,
+    "color_count_exact": true
+  },
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Rotes Torii · frontal",
+      "file": "reveals/A-r01.png",
+      "sha256": "3f68fdcfee77d780c4fd6de4693795fc680b86b98bbb201c54045a0e151dd167",
+      "bytes": 918609,
+      "width": 1402,
+      "height": 1122,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1064753,
+      "partial_alpha_pixels": 506511,
+      "opaque_pixels": 1780,
+      "visible_bbox_alpha_gt127": [
+        30,
+        58,
+        1373,
+        1082
+      ],
+      "prompt": "prompts/A-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "title": "Naturholz-Torii · gerader oberer Balken",
+      "file": "reveals/B-r01.png",
+      "sha256": "ca5237cad99c14463326f44380c62d2dd4cb276b54e12d3215ae8d4572a4baed",
+      "bytes": 1018029,
+      "width": 1374,
+      "height": 1145,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1084038,
+      "partial_alpha_pixels": 488393,
+      "opaque_pixels": 799,
+      "visible_bbox_alpha_gt127": [
+        26,
+        75,
+        1350,
+        1078
+      ],
+      "prompt": "prompts/B-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "title": "Rotes Torii · leichte Dreiviertelansicht",
+      "file": "reveals/C-r01.png",
+      "sha256": "b9f50ac5e5b7dbc71d91318675bdd4b0e2e395d9d9c01cf0b4b657624b539da4",
+      "bytes": 1030332,
+      "width": 1343,
+      "height": 1171,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1038463,
+      "partial_alpha_pixels": 533649,
+      "opaque_pixels": 541,
+      "visible_bbox_alpha_gt127": [
+        51,
+        43,
+        1306,
+        1122
+      ],
+      "prompt": "prompts/C-r01.txt",
+      "approval": null
+    }
+  ],
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "5cf98f9836e7d78ff2fc7d81ab59f108807f896034004e3bec0b708baaf8493b"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "authorization": "Standardauftrag 1 mit Repositoryablage nach §6, Commit/Push und PR; Ablagemerge nach erfolgreichen Pflichtprüfungen ausdrücklich beauftragt. Keine Abschlussbild-, Motiv- oder Endfreigabe erteilt."
+}
