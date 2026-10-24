@@ -1,0 +1,48 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-d6cb06cb41854b1da84f0ba2f043aa14",
+  "revision": "r04",
+  "repo_commit": "ca7c6cccf9975ef324db51711f18e31a41863792",
+  "state": "raster_review",
+  "phase_result": "Standardauftrag 3 / autorisierte feste Farbkorrektur bis Endabnahmevorlage abgeschlossen",
+  "category_id": "gebaeude-bauwerke",
+  "motif_name": "Jinja",
+  "package": {
+    "file": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r04/package.zip",
+    "bytes": 7578683,
+    "sha256": "dc3dd9a92209491ab481fc2edba74ec1a12af4f7ba740350d71aa94627ad5096"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r04/handoff.json",
+    "sha256": "98eec68aef22cdde2825158c5797bf94e718a7e2f433d4fd042445ca2340adbb"
+  },
+  "inventory_sha256": "889d19a7df3395d2382de2c5dc6b6b79322c7e347cf9013f448179a4d9f77f2f",
+  "final_editorial_approval": null,
+  "width": 45,
+  "height": 30,
+  "mode": "color",
+  "foreground_colors": 4,
+  "difficulty": {
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "logical_level": 3,
+    "size_adjustment": 0,
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "evidence": "analysis/checked.json"
+  },
+  "blockers": [
+    "final_editorial: bound human final approval pending; external ZA-1-v4 authorization is completed only afterwards"
+  ],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "integration": null,
+  "updated_at_utc": "2026-10-24T11:14:36Z",
+  "production_inspection": {
+    "file": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r04/inspection.json",
+    "sha256": "ba94e93b8e41268e6f28a311ed759f1f5a42360d4ee52befb691eddb169fe5a0"
+  }
+}
