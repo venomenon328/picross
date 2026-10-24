@@ -1,0 +1,36 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "confidence": "low",
+  "level": "L3",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "logic_hash": "cc8099a270da83a8b38d850f365f4d53b3376462402712497331e4bdef979e40",
+  "rule_families": {
+    "R0": "Leerlinie sowie Restleerbelegung bereits abgeschlossener Runs liefern direkte Anteile.",
+    "R1": "Lange horizontale Balken und vertikale Pfosten erlauben Überlappung und Verlängerung.",
+    "R2": "Kurze Bogenenden, Pfostenstufen und obere Zwischenräume brauchen kombinierte Zuordnungen; geschätzte Produktionsstufe L3.",
+    "R3": "Allgemeine Linienunterstützung zertifiziert; keine Notwendigkeit aus dem Profilnamen abgeleitet."
+  },
+  "evidence": "analysis/checked.json",
+  "time_estimate": null,
+  "note": "Separate vorsichtige 0.1-Begleitschätzung für den unveränderten ZA-1-Produktionsvertrag. Aktuelle verbindliche Bewertung ist die frisch vollständig geprüfte Methode 0.3; keine Umetikettierung der Instrumentierung.",
+  "current_integration_rating": {
+    "file": "analysis/checked.json",
+    "method": "picross-difficulty-0.3",
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "level": "L3",
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "logical_level": 3,
+    "size_adjustment": 0,
+    "highest_family": "R2",
+    "bottleneck_waves": 0,
+    "human_calibration": "not_performed"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "type": "human_motif_approval",
+  "puzzle_id": "pz-f68e79ef419a4322b68d06817b39330d",
+  "actor": "Tobias (Nutzer)",
+  "timestamp_utc": "2026-10-24T12:14:33Z",
+  "timestamp_basis": "recorded_at_utc; exact user-message timestamp not exposed",
+  "statement": "Ich gebe die Motivvorlage motifs/MA-r01.png · MA-r01 · Freigabe offen frei; Parameter: Genau 20×15 oder 22×17; monochrom; eine Vordergrundfarbe plus Leer; Crop/Fit und Invarianten gemäß Paket.",
+  "revision": "MA-r01",
+  "file": "motifs/MA-r01.png",
+  "sha256": "115823534358406cd1426e8c1c08d7c28b75a08e3a6b5624242ef73b7774762d",
+  "derived_from_reveal_sha256": "3f68fdcfee77d780c4fd6de4693795fc680b86b98bbb201c54045a0e151dd167",
+  "evidence": "evidence/auftrag3.md",
+  "parameters": {
+    "width": 22,
+    "height": 17,
+    "mode": "mono",
+    "foreground_colors": 1,
+    "method": "area",
+    "fit": "contain",
+    "actual_crop": [
+      33,
+      65,
+      1369,
+      1073
+    ]
+  },
+  "allowed_parameters": [
+    {
+      "width": 20,
+      "height": 15,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        33,
+        65,
+        1369,
+        1073
+      ]
+    },
+    {
+      "width": 22,
+      "height": 17,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        33,
+        65,
+        1369,
+        1073
+      ]
+    }
+  ],
+  "selection_note": "Die Erklärung genehmigt beide vollständigen Maßpaare; für den ausgewählten 22x17-Kandidaten konkretisiert, keine zusätzliche Freigabe erfunden.",
+  "invariants_file": "invariants.md",
+  "source": {
+    "commit": "1e33db01318ceae77db916aa7e8c1d8b67d095dc",
+    "package": "content/authoring/pz-f68e79ef419a4322b68d06817b39330d/r02/package.zip",
+    "package_sha256": "e645c12e92f249b3b81b9b5799e180e9f599c88be0f460cd6c4c594177f051a5"
+  }
+}
