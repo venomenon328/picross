@@ -1,0 +1,107 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-9c86e226930e4fc194dc18bae08762df",
+  "revision": "r01",
+  "repo_commit": "31955e88925c4633a839321ccfe3b0000095b215",
+  "state": "reveal_review",
+  "category_id": "mythen-fantasie",
+  "motif_name": "Pentagramm",
+  "package": {
+    "file": "content/authoring/pz-9c86e226930e4fc194dc18bae08762df/r01/package.zip",
+    "bytes": 5517854,
+    "sha256": "caadb48a7319aa8c8db7cf7c7b1c4febac4790e5e63c8997cb523f036b7ddade"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-9c86e226930e4fc194dc18bae08762df/r01/handoff.json",
+    "sha256": "7895c9639999a2a4b2d271fd9921f3f4d279b6294b33ebb9b7253b4ba20d5999"
+  },
+  "inventory_sha256": "5e879ff541013fad6cb5c3ab96f9079158fb452bff6f3f4cf868e8b84ed37be4",
+  "final_editorial_approval": null,
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Messing · ohne Kreis",
+      "file": "reveals/A-r01.png",
+      "sha256": "709b23ac5277fa3379724b619532a699fd418e997d854689be841eb3a841e66b",
+      "bytes": 1335646,
+      "width": 1310,
+      "height": 1200,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1092018,
+      "partial_alpha_pixels": 478989,
+      "opaque_pixels": 993,
+      "visible_bbox_alpha_gt127": [
+        33,
+        5,
+        1279,
+        1197
+      ],
+      "prompt": "prompts/A-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "title": "Kupfer · im Bronzering",
+      "file": "reveals/B-r01.png",
+      "sha256": "b3d865c5ab48d9e358138553814f43b2a388ae80dc374410934dd3981e2437ff",
+      "bytes": 1970715,
+      "width": 1278,
+      "height": 1230,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 886015,
+      "partial_alpha_pixels": 684278,
+      "opaque_pixels": 1647,
+      "visible_bbox_alpha_gt127": [
+        52,
+        7,
+        1224,
+        1202
+      ],
+      "prompt": "prompts/B-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "title": "Violettes Holz · im Holzring",
+      "file": "reveals/C-r01.png",
+      "sha256": "d92b7aa4df967a5bcb18852216b366a096e291966d6ea2c7f45a9b6c0a7ad455",
+      "bytes": 1898783,
+      "width": 1285,
+      "height": 1224,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 824128,
+      "partial_alpha_pixels": 746443,
+      "opaque_pixels": 2269,
+      "visible_bbox_alpha_gt127": [
+        56,
+        9,
+        1228,
+        1213
+      ],
+      "prompt": "prompts/C-r01.txt",
+      "approval": null
+    }
+  ],
+  "width": null,
+  "height": 20,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "mono",
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "integration": null,
+  "updated_at_utc": "2026-10-24T12:49:29Z"
+}
