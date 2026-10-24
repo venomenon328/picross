@@ -1,0 +1,152 @@
+{
+  "blockers": [],
+  "category_id": "mythen-fantasie",
+  "difficulty": null,
+  "dimensions_approximate": false,
+  "dimensions_fixed": true,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r05/handoff.json",
+    "sha256": "d4da02dc0ac589008ae5297f3ca7a9b80263b71e7eaef3ad931fa355b5f586d2"
+  },
+  "height": 22,
+  "integration": null,
+  "inventory_sha256": "f6175ab126e7880b977551da42b3d84239337d818ef2f78d099897238e63f732",
+  "mode": "mono",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d",
+    "file": "motifs/MA-r03.png",
+    "revision": "MA-r03",
+    "sha256": "94a8e110819f145d8e9a11350ff32cea4dfad9198d3f372472c444f749c87a6e"
+  },
+  "motif_file": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r05/MA-r03.png",
+    "sha256": "94a8e110819f145d8e9a11350ff32cea4dfad9198d3f372472c444f749c87a6e",
+    "zip_member": "motifs/MA-r03.png"
+  },
+  "motif_name": "Pentagramm",
+  "next_action": "3 · Motiv freigeben & produzieren: tatsächliche MA-r03-Freigabe einschließlich22×22/area/exact/Crop erforderlich.",
+  "package": {
+    "bytes": 3856845,
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r05/package.zip",
+    "sha256": "7242771bfa7024651ab992e074158891358b381c1275b95e9a6bb57454576c70"
+  },
+  "parameter_corridor": "configuration/proposal.json",
+  "previous_revision": {
+    "commit": "346fe214dcd563ed47150aa4af79611e2f25ec3a",
+    "handoff": {
+      "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r04/handoff.json",
+      "sha256": "7b0bc3553016396a199d0348a0514dee43a02bd3b82a0faf95c07931450074a1"
+    },
+    "inventory_sha256": "1beca6cbd485bc5f6892566f07c58b9aef15cf7e899092b06eb661562d5cc5fc",
+    "package": {
+      "bytes": 16494746,
+      "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r04/package.zip",
+      "sha256": "8d60fc8ac38eedea32c222ba088abc40bc7668526a0c2f025a82db6ba111154f"
+    },
+    "preservation": "All published r01-r04 originals remain unchanged; their production evidence is referenced, not nested in this image-phase ZIP.",
+    "revision": "r04"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 128,
+      "design": "configuration/design-22x22-a128.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 128,
+      "variant": "area-128",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 128,
+      "design": "configuration/design-22x22-a128.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 160,
+      "variant": "area-160",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 96,
+      "design": "configuration/design-22x22-a96.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 128,
+      "variant": "area-128",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 96,
+      "design": "configuration/design-22x22-a96.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 160,
+      "variant": "area-160",
+      "width": 22
+    }
+  ],
+  "puzzle_id": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+  "repo_commit": "346fe214dcd563ed47150aa4af79611e2f25ec3a",
+  "reveal": {
+    "approval": "approvals/reveal-B-r02.json",
+    "file": "reveals/B-r02.png",
+    "sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d"
+  },
+  "review": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r05/review.png",
+    "sha256": "5a75ac9dd60a2312f62b763f60683cbb4a0a5ce16e7b70c3055244a51f75a08f",
+    "zip_member": "review/reveal-motifs.png"
+  },
+  "revision": "r05",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-24T20:30:40.519996+00:00",
+  "verification": {
+    "design_schema": "pass; no rasterization",
+    "entries": 32,
+    "file_sizes_and_sha256": "pass",
+    "image_checks": "review/image-checks.json",
+    "outer_handoff_and_image_copies": "pass",
+    "safe_complete_file_set": "pass",
+    "target_inspection": "not_applicable: motif_review",
+    "zip_crc": "pass"
+  },
+  "width": 22
+}
