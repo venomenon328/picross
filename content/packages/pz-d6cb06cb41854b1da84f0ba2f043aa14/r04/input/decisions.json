@@ -1,0 +1,45 @@
+{
+  "selected": {
+    "bundle": "production/fixed-r04",
+    "variant": "area",
+    "candidate_id": "2e335a33ce5fc7588e643686bdc15d10bc3f635c6e256e64eebaa55aa89f42b2",
+    "matrix_hash": "262142595574e65d0468f79d4fbf66753789867c3333bdc19a66e2bb3a94bbb6",
+    "logic_hash": "d602eaf8dac3a14e8dc609930d1553745a697f9f9734c10fbc9a2111878709be",
+    "source_type": "manual",
+    "reason": "45×30 erfüllt Parameter, Rahmen und vollständige Linienlogik; exakt vier autorisierte Farbkorrekturen stellen die helle Shide-Vierergruppe wieder her."
+  },
+  "reference": {
+    "bundle": "production/c45-mag128",
+    "variant": "area",
+    "reason": "Unveränderter vollständig zertifizierter Direktimport aus MA-r01."
+  },
+  "historical_candidates": {
+    "revision": "r03",
+    "commit": "ca7c6cccf9975ef324db51711f18e31a41863792",
+    "package": "content/authoring/pz-d6cb06cb41854b1da84f0ba2f043aa14/r03/package.zip",
+    "zip_sha256": "5d9a9e5b9ecc65b8634e15b90f76f1efa8751c8f7c6a083845e72804c57fe80a",
+    "inventory_sha256": "513fee46ddcc87f63ec844d38a22d81fe16f639526e8a6eef6e170e6701e1f6b",
+    "attempts": 12,
+    "rounds": 2,
+    "disposition": "Alle vollständigen Versuche und Ablehnungen bleiben unverändert in r03. 42×28/48×32 scheiterten zusätzlich an der Randregel; kein Randpixel ergänzt."
+  },
+  "fixed_correction": {
+    "plan": "fixed-plan.json",
+    "record": "fixed-record.json",
+    "authorization": "approvals/fixed-color-production.json",
+    "changed_positions": 4,
+    "all_other_positions_preserved": 1346,
+    "search": false,
+    "seed": null
+  },
+  "rp5": {
+    "rounds": 0,
+    "reason": "Keine notwendige Logikreparatur: Referenz und feste korrigierte Endmatrix vollständig mit full-line-color gelöst. Die konkreten Gestaltungsänderungen wurden gesondert autorisiert."
+  },
+  "paired_profile": {
+    "run": false,
+    "reason": "Vollständige unabhängig bestätigte Linienlogik genügt; kein Routinepaar- oder Suchlauf."
+  },
+  "final_acceptance": "pending; production authorization is not final acceptance",
+  "adapter_phase": "ZA-1-v4 verlangt raster_review und gesonderte externe Autorisierung mit echtem Endfreigabehash. Diese entsteht erst nach tatsächlicher Endabnahme, ohne versiegeltes r04 zu ändern."
+}
