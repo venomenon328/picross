@@ -1,0 +1,18 @@
+{
+  "file": "reveals/A-r01.png",
+  "sha256": "3f68fdcfee77d780c4fd6de4693795fc680b86b98bbb201c54045a0e151dd167",
+  "author": "OpenAI / native ChatGPT image generation",
+  "usage_basis": "Projektbezogen aus dem Nutzerauftrag erzeugt; keine Fremdassets oder externen Referenzbilder.",
+  "prompt": "prompts/A-r01.txt",
+  "source": {
+    "commit": "ddd88aca4d91541c9f7cc8be5c285590a6b83ffe",
+    "package": "content/authoring/pz-f68e79ef419a4322b68d06817b39330d/r01/package.zip",
+    "sha256": "ef5ebd0ba3728866114e76238050ce37c37f1ced8753da469d4aa7a3d9c5079b"
+  },
+  "puzzle_id": "pz-f68e79ef419a4322b68d06817b39330d",
+  "prompt_file": "prompts/A-r01.txt",
+  "original_provenance": {
+    "file": "reveals/A-r01.provenance.json",
+    "sha256": "f3b89f6baa44d6d4bf4a35b30ef188f24cd213da0cc43f5eeb90b1060adf0ece"
+  }
+}
