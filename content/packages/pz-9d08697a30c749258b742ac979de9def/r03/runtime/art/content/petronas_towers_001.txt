@@ -1,0 +1,3 @@
+Production ID: pz-9d08697a30c749258b742ac979de9def
+Artwork: OpenAI image generation in ChatGPT, directed by user
+Usage basis: New AI-generated illustration created for the user in this task; no uploaded or copied third-party image assets. No exclusivity or special clearance asserted.
