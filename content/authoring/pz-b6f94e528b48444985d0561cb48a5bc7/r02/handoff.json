@@ -1,0 +1,84 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+  "revision": "r02",
+  "repo_commit": "96c6795cdbd7143b42d0c9a51ce460c0895af374",
+  "state": "motif_review",
+  "category_id": "mythen-fantasie",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "proposed_parameters": "configuration.json",
+  "requested_parameters": {
+    "width": null,
+    "height": 15,
+    "approximate": true,
+    "mode": "mono",
+    "foreground_colors": 1,
+    "foreground_color_requirement": "exact; EMPTY excluded"
+  },
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "3873e7b3732f3379de3e3f1038e5668ba86df90c2fdc9958b4a16063b4090368",
+    "derived_from_reveal_sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "9940ffcd6fc3b72756af16dac28b3a7d06c48334a40d776a27d98f6f5528f320"
+  },
+  "provenance": "provenance.json",
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "codex_handoff": "codex-handoff.md",
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json",
+    "provenance": "provenance.json"
+  },
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pass",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "authorization": "Standardauftrag 2 bis Motivvorlage, Konfiguration und Codex-Übergabe; Repositoryablage und Ablagemerge nach Pflichtchecks. Keine Motivfreigabe oder Rasterproduktion durch diesen Auftrag."
+}
