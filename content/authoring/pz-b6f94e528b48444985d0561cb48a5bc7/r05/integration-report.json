@@ -1,0 +1,117 @@
+{
+  "type": "authoring_integration_file_verification",
+  "status": "pass",
+  "source_commit": "90ea80db6676ae75d371017248949621f9633dac",
+  "source_package": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/package.zip",
+    "bytes": 2052817,
+    "sha256": "f56b170d2a8a515004c7a4cc8946505bd1a5204211b31dedfad27d2c720e5d18"
+  },
+  "inventory_sha256": "e960e88f88464daa468019bafdd28f5f34fdbb488cae9f0387dc148484390d0d",
+  "approval": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/approval.json",
+    "sha256": "f72096a32e8458871731d3a3064256d4c42477a4ec746dea1d7e8e0138c0d936"
+  },
+  "approval_evidence": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/editorial-acceptance.md",
+    "sha256": "2663c2421bcacb0e14f4313e10e2ef0e67ae9a745ac478fff7526e103c2d57b3",
+    "timestamp_basis": "Aufzeichnungszeit der tatsächlich vorliegenden Endabnahme; Nachrichten-Sendezeitpunkt nicht exponiert."
+  },
+  "runtime_identity": {
+    "id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+    "name": "Ankh",
+    "runtime_revision": 1,
+    "stem": "ankh_001",
+    "save_slot": "ankh_001",
+    "category_id": "mythen-fantasie"
+  },
+  "export": {
+    "manifest": "content/packages/pz-b6f94e528b48444985d0561cb48a5bc7/r05/manifest.json",
+    "sha256": "2e6489d7bd4c1889a60af3190a93e36c5fc1d897b3419d010c54867f8451747f",
+    "inspection": "content/packages/pz-b6f94e528b48444985d0561cb48a5bc7/r05/inspection.json",
+    "inspection_sha256": "7001bb987ac80eaa8557d6b00f04bc7e35390ec74c82f2c707232b9ee666a858",
+    "technical": true,
+    "editorial_approved": true,
+    "catalog_ready": true
+  },
+  "registration": {
+    "status": "registered",
+    "category": {
+      "id": "mythen-fantasie",
+      "name": "Mythen & Fantasie",
+      "order": 20
+    },
+    "changes": [
+      {
+        "operation": "add",
+        "path": "content/packages/pz-b6f94e528b48444985d0561cb48a5bc7/r05"
+      },
+      {
+        "operation": "add",
+        "path": "content/added/pz-b6f94e528b48444985d0561cb48a5bc7.json"
+      },
+      {
+        "operation": "add",
+        "path": "content/difficulty/pz-b6f94e528b48444985d0561cb48a5bc7/rating.json"
+      },
+      {
+        "operation": "replace",
+        "path": "content/registry.json"
+      },
+      {
+        "operation": "add",
+        "path": "game/art/content/ankh_001.txt"
+      },
+      {
+        "operation": "add",
+        "path": "game/data/content/ankh_001.json"
+      },
+      {
+        "operation": "replace",
+        "path": "game/data/registry.json"
+      }
+    ],
+    "registered": true,
+    "user_saves_modified": false,
+    "plan_status": "planned",
+    "old_count": 44,
+    "new_count": 45,
+    "all_44_existing_entries_and_runtime_projections_unchanged": true
+  },
+  "runtime_files": {
+    "game/data/content/ankh_001.json": {
+      "sha256": "4313e75f67f9644c98986a2c2298b4400ab0ab27a9a7005a32254be99a2116fb",
+      "bytes": 1565
+    },
+    "game/art/content/ankh_001.png": {
+      "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+      "bytes": 1869133
+    },
+    "game/art/content/ankh_001.txt": {
+      "sha256": "38df5afd4ba8cb2dd9860f440debf06007b4320a33a2894ddeddf9047402f919",
+      "bytes": 305
+    }
+  },
+  "all_export_files_identical_to_registration": 42,
+  "active_difficulty": {
+    "file": "content/difficulty/pz-b6f94e528b48444985d0561cb48a5bc7/rating.json",
+    "sha256": "a2f7706496238da61544d1911d8de351935b2fa2e9dc238206b8d7cc2f713c64",
+    "level": "L3",
+    "method": "picross-difficulty-0.3",
+    "rating_revision": 1,
+    "original_rating_unchanged": true,
+    "definition_rebound": true
+  },
+  "added": {
+    "file": "content/added/pz-b6f94e528b48444985d0561cb48a5bc7.json",
+    "sha256": "c8e68b819f4e3c4d2d25b00a47e149505f9458e73f4b0e5e9758637083fbfae9",
+    "added_at": "2026-10-25T13:45:50Z",
+    "actual_first_registration": true
+  },
+  "source_zip_and_handoff_unchanged": true,
+  "journal_absent_after_success": true,
+  "native_game_tests": "not_required: pure content integration under Authoring §8.7",
+  "extra_probe": "not_required: no concrete finding",
+  "registered_checkout_only": "Main integration pending authorized merge and CI",
+  "checked_utc": "2026-10-25T13:49:12.457877+00:00"
+}
