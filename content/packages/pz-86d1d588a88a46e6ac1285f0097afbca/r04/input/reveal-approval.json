@@ -1,0 +1,27 @@
+{
+  "type": "human_reveal_approval",
+  "actor": "Tobias (Nutzer)",
+  "timestamp_utc": "2026-10-25T10:16:40.739894Z",
+  "timestamp_basis": "Aufzeichnung der tatsächlich im Chat vorliegenden Nutzererklärung; kein behaupteter exakter Nachrichten-Sendezeitpunkt.",
+  "statement": "Ich gebe das Abschlussbild A-r01 frei. Führe Standardauftrag 2 bis zur Motivvorlage samt Konfiguration und Codex-Übergabe aus.",
+  "puzzle_id": "pz-86d1d588a88a46e6ac1285f0097afbca",
+  "revision": "A-r01",
+  "file": "reveals/A-r01.png",
+  "sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb",
+  "evidence": "evidence/user-request.md",
+  "invariants": [
+    "Genau zwei steinartig gestaltete Hände, linke Hand größer/höher, rechte Hand kleiner/tiefer.",
+    "Je vier Finger und Daumen als zusammengehörige Hand erkennbar.",
+    "Nahezu frontale leicht erhöhte Perspektive, Lage und Abstand der Hände und gemeinsamer geschwungener goldener Steg.",
+    "Goldene Brücke zusammenhängend; deutlicher Freiraum unter dem mittleren Brückenteil.",
+    "Kleine verbundene Vegetations-/Felsbasis; keine fremden Objekte oder veränderte Kameraposition."
+  ],
+  "source_package": {
+    "file": "content/authoring/pz-86d1d588a88a46e6ac1285f0097afbca/r01/package.zip",
+    "revision": "r01",
+    "sha256": "b27e6eca62e17a66f8f53f676e9945e1902f1288c1fa63f57c8948facb42041d",
+    "inventory_sha256": "b24407cda9bac769fd488911f35a8efe2f9da43b8b9743073b42bd1f151f2c69",
+    "handoff_sha256": "7f66a2d62cbebe54c5fb87a0025c04257eff966b74fd3c1fef2e86dd9eea1bad",
+    "repo_commit": "71533b6d063c0841fe6386d8807bf89b8c754b95"
+  }
+}

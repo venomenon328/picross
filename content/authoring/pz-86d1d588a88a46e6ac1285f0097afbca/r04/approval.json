@@ -1,0 +1,20 @@
+{
+  "actor": "Tobias (Nutzer)",
+  "format": "picross-editorial-approval-v1",
+  "handoff_sha256": "7f562d902a7d00fb0f33d9d51e4d4ad519eba29cd180f72bb662e9953ccc63b4",
+  "inventory_sha256": "5b20657ee436337678769e65e296f899bad261a5c05a765ffa409f0d0c683ff6",
+  "puzzle_id": "pz-86d1d588a88a46e6ac1285f0097afbca",
+  "revision": "r04",
+  "selection": {
+    "logic_hash": "b28bbdb3b1bf35bed29a2682f61973d30e134eb5e4a746b6fed0417515df6ee5",
+    "matrix_hash": "7d3773858252934c9b3337f81da1641890fa2d2bc90bae85961753972a9edabf",
+    "reveal": {
+      "file": "reveals/A-r01.png",
+      "sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb"
+    },
+    "variant": "area"
+  },
+  "statement": "Ich nehme das Rätselpaket content/authoring/pz-86d1d588a88a46e6ac1285f0097afbca/r04/package.zip · r04, Revision r04, Inventar-SHA-256 5b20657ee436337678769e65e296f899bad261a5c05a765ffa409f0d0c683ff6 redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.",
+  "test_only": false,
+  "timestamp_utc": "2026-10-25T11:46:16.016823+00:00"
+}

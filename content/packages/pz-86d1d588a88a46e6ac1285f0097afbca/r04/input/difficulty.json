@@ -1,0 +1,44 @@
+{
+  "assessment_type": "editorial_estimate",
+  "confidence": "low",
+  "current_integration_rating": {
+    "assessment_type": "instrumented",
+    "bottleneck_waves": 0,
+    "confidence": "medium",
+    "file": "analysis/checked.json",
+    "highest_family": "R2",
+    "human_calibration": "not_performed",
+    "level": "L3",
+    "logical_level": 3,
+    "method": "picross-difficulty-0.3",
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "size_adjustment": 0
+  },
+  "evidence": "analysis/checked.json",
+  "level": "L3",
+  "logic_hash": "b28bbdb3b1bf35bed29a2682f61973d30e134eb5e4a746b6fed0417515df6ee5",
+  "method": "picross-difficulty-0.1",
+  "note": "Separate vorsichtige 0.1-Begleitschätzung für den unveränderten ZA-1-Produktionsvertrag. Maßgebliche aktuelle Bewertung: vollständig geprüfte Methode 0.3, L3/medium; keine Umetikettierung.",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "rule_families": {
+    "R0": "Leere Außenzeile und Restleerfelder liefern direkte Anteile.",
+    "R1": "Überlappung und Verlängerung der Brücke sowie größere Stein-/Vegetationsflächen liefern einfache Fortschritte.",
+    "R2": "Gemeinsame Farblogik und kombinierte Zuordnung an Finger-/Daumen-/Felskanten tragen den geschätzten mittleren Anspruch.",
+    "R3": "Das Zertifizierungsprofil beweist keine R3-Notwendigkeit; die getrennte 0.3-Analyse löst ohne R3."
+  },
+  "time_estimate": null,
+  "workload": {
+    "cells": 800,
+    "empty": 341,
+    "filled": 459,
+    "foreground_colors": 5,
+    "proof_steps": 112,
+    "total_clues": 459
+  }
+}

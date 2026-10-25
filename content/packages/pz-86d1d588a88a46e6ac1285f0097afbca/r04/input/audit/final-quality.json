@@ -1,0 +1,88 @@
+{
+  "candidate": "imports/40x20-5c-clear/area-candidate.json",
+  "colorvision_simulation": "nicht durchgeführt; tatsächliche Farb-/Kleinansicht bewertet.",
+  "criteria": {
+    "details_negative_spaces": {
+      "reason": "Neutrale Fingerseiten und Daumen-/Handflächenverlauf betonen die Handform. Zentrale Öffnung erhalten. Einzelne Fingergelenke und Geländerlücken bleiben durch 40x20 zusammengefasst; keine behauptete detailgetreue Fünffinger-Anatomie auf Zellmaß.",
+      "status": "erfüllt"
+    },
+    "palette": {
+      "reason": "Fünfte Farbe hat eine tragende Rolle als neutraler mittlerer Stein-/Konturton. Dunkleres Grün konkurriert weniger mit grauen Handkonturen. Sechste graue Zwischenstufe wurde wegen geringerem zusätzlichen Formnutzen und unruhigerer Tonaufteilung verworfen.",
+      "status": "erfüllt"
+    },
+    "recognizability": {
+      "reason": "Beide steinernen Hände sind durch eigene neutrale Haupt-/Schattenflächen wesentlich deutlicher vom Grün abgesetzt als in r03. Der goldene Steg verbindet beide.",
+      "status": "erfüllt"
+    },
+    "reveal_consistency": {
+      "reason": "Die neutraleren Hände nähern die Rasterfarbrollen dem freigegebenen Abschlussbild an. Gleiche Brückenkurve und Hauptbeziehungen.",
+      "status": "erfüllt"
+    },
+    "series_style": {
+      "reason": "Ruhige flächige Abstraktion, keine neue Kameraposition oder veränderte Handpose. Detailliertes farbiges Reveal unverändert.",
+      "status": "erfüllt"
+    },
+    "silhouette_proportions": {
+      "reason": "Größere/höhere linke, kleinere/tiefere rechte Hand, Abstand und Perspektive unverändert; belegte/leere Silhouette bei 40x20 exakt gleich r03.",
+      "status": "erfüllt"
+    }
+  },
+  "evidence": [
+    "audit/hands-candidate-comparison.png",
+    "audit/hands-palette-comparison.png",
+    "audit/final-comparison.png",
+    "final-grid.png",
+    "final-raster.png",
+    "final-raster-large.png"
+  ],
+  "format": "picross-editorial-quality-review-v1",
+  "human_final_approval": "pending",
+  "matrix_hash": "7d3773858252934c9b3337f81da1641890fa2d2bc90bae85961753972a9edabf",
+  "metrics": {
+    "cells": 800,
+    "counts": {
+      "charcoal": 4,
+      "empty": 341,
+      "gold": 51,
+      "green": 137,
+      "shadow": 178,
+      "stone": 89
+    },
+    "empty_columns": [],
+    "empty_rows": [
+      20
+    ],
+    "foreground_colors": 5,
+    "frame": {
+      "bottom": false,
+      "left": true,
+      "right": true,
+      "top": true,
+      "valid": true
+    },
+    "height": 20,
+    "isolated_foreground_positions": [],
+    "occupancy_fraction": [
+      459,
+      800
+    ],
+    "width": 40
+  },
+  "native_game_probe": "nicht erforderlich: reine Inhaltsproduktion; statische Ansichten sind keine nativen Spielbelege.",
+  "palette_roles": {
+    "charcoal": "Dunkelste strukturelle Hand-/Felskanten; keine dekorativen Einzelzellen.",
+    "gold": "Zusammenhängender goldener Brückensteg.",
+    "green": "Dunkleres gesättigtes Vegetationsgrün, farblich von neutralen Handkonturen getrennt.",
+    "shadow": "Zusätzlicher neutraler Steinschatten: Fingerseiten, Daumen und Handflächenkonturen; verhindert grüne Ersatzkonturen.",
+    "stone": "Helle Hauptflächen der beiden Hände und Felsen."
+  },
+  "reveal_sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb",
+  "reviewer": "Codex, redaktionelle Selbstprüfung",
+  "soft_exceptions": [
+    "Untere Außenzeile bleibt leer; links/rechts/oben erfüllen die Randregel.",
+    "Kleine Farbwechsel liegen an Konturen und Felskanten; keine isolierten Vordergrundzellen.",
+    "Feinste Fingergelenke und Geländerstäbe sind weiterhin abstrahiert."
+  ],
+  "source_sha256": "b9f71249b6b282592436cd2b0661fe18c188fd313817692279c2ac706b137311",
+  "timestamp_utc": "2026-10-25T11:37:16.369406+00:00"
+}
