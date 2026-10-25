@@ -16,7 +16,7 @@ static func valid_category_id(value: Variant) -> bool:
 	return true
 
 static func validate(raw: Variant) -> String:
-	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
+	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
 		return "Unsupported runtime registry format"
 	if raw.categories.size() > 256 or raw.entries.size() > 10000:
 		return "Registry count limit exceeded"
@@ -41,13 +41,14 @@ static func validate(raw: Variant) -> String:
 		previous_order = int(order)
 	var seen: Dictionary = {}
 	var current: bool = raw.format != "picross-runtime-registry-v2"
-	var dated: bool = raw.format == "picross-runtime-registry-v4"
+	var dated: bool = raw.format in ["picross-runtime-registry-v4", "picross-runtime-registry-v5"]
+	var version: int = 5 if raw.format == "picross-runtime-registry-v5" else 4
 	for item: Variant in raw.entries:
 		if not item is Dictionary or item.size() != (9 if dated else 8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
 			return "Invalid registry entry fields"
 		if dated and (not item.has("added_at") or not valid_added(item.added_at)):
 			return "Invalid catalog added timestamp"
-		if current and (not item.has("difficulty") or not Difficulty.valid(item.difficulty)):
+		if current and (not item.has("difficulty") or not Difficulty.valid(item.difficulty, version)):
 			return "Invalid catalog difficulty"
 		for field: String in ["id", "key", "save_slot", "definition", "reveal"]:
 			if not item.get(field) is String or item[field].is_empty():

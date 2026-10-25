@@ -155,6 +155,8 @@ class AddedTests(unittest.TestCase):
         journal = tx.prepare(self.checkout, snapshot_before, {}, operation='sync')
         journal['format'] = tx.LEGACY_FORMATS['sync']
         journal.pop('replacements')
+        from tools.puzzle_production import catalog_method
+        for side in ('old', 'new'): journal[side].pop(catalog_method.PATH)
         from tools.puzzle_production import reveal_source
         journal['old'].pop(reveal_source.path(self.identifier)); journal['new'].pop(reveal_source.path(self.identifier))
         journal['retained'] = tx.historical_snapshot(snapshot_before)['retained']

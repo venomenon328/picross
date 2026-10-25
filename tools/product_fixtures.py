@@ -95,7 +95,7 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
     if append:
         current = json.loads((project / "data/registry.json").read_text(encoding="utf-8"))
         catalog["categories"] = current["categories"]
-        if current['format'] == 'picross-runtime-registry-v4':
+        if current['format'] in ('picross-runtime-registry-v4', 'picross-runtime-registry-v5'):
             catalog['format'] = current['format']
             for entry in catalog['entries']: entry['added_at'] = None
         catalog["entries"] += current["entries"]

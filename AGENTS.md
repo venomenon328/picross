@@ -83,6 +83,8 @@ getrennte Validierung und den eigenständigen eingefrorenen 0.4-Bewertungsweg.
 Denkanspruch, Suchaufwand und Bearbeitungsumfang ergeben eine feste Fünferskala.
 SD2-C / #405 bindet vor Integrationscode den vollständigen
 [Integrationsvertrag](docs/SD2_INTEGRATION.md) (bei SD2-Integration vollständig lesen).
+[SD2-C-T01](docs/SD2_C_VERIFICATION.md) bindet die technische Implementierung auf
+`feat/405-sd2-integration`; separates SD2-C-R01 und Merge bleiben offen.
 0.4 ist noch nicht aktiviert. Beide Freezes und aktive Werte
 bleiben bis zum gesonderten Auftrag erhalten. Keine Katalogquantile, echten
 Katalogtests, automatische Neubewertung oder Implementierung aus Spezifikationsfreigabe.
