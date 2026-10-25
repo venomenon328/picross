@@ -1,6 +1,6 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-**SD2 · 25.10.2026, C-Integration implementiert; separate Abnahme offen:**
+**SD2 · 26.10.2026, C-Integration nach separatem R01 über PR #410 integriert:**
 [Der neue Schwierigkeitsvertrag](PUZZLE_DIFFICULTY_V2.md) trennt Denkanspruch,
 Suchaufwand und Bearbeitungsumfang. Die geplante Methode 0.4 ersetzt erst nach
 gesonderter geprüfter Aktivierung den Produktionsstandard 0.3. Neue und bestehende
@@ -10,7 +10,8 @@ Spezifikationspflege. Der [C-Integrationsvertrag](SD2_INTEGRATION.md) und die
 [CLI-Anleitung](../tools/puzzle_production/README.md) regeln explizite Methodenwahl,
 Import, Vorschau, Plan, Übernahme und Aktivierung. [C-T01](SD2_C_VERIFICATION.md)
 prüft ausschließlich synthetische Fälle; ursprüngliche Inhaltsfreigaben bleiben
-erhalten. D führt die gesondert beauftragte tatsächliche Umstellung aus.
+erhalten. [D-V01](SD2_D_VERIFICATION.md) liefert zunächst ausschließlich
+Bestandsanalyse, Vergleich und Übernahmevorschau; keine Übernahme/Aktivierung.
 
 **AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A integriert:**
 [Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) ergänzt echte Transparenz für

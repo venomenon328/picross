@@ -15,7 +15,9 @@ Suchaufwand und Bearbeitungsumfang, breite unabhängige Referenzen und getrennte
 Validierung. SD2 ersetzt für die geplante Methode 0.4 die konkrete Bewertung aus
 SD-D01/D04–D08; der begrenzte Umfangsbeitrag und die übrigen Schutz-/Integrations-
 grenzen bleiben. 0.3-Freeze, alte Formate und aktuelle Ratings werden nicht
-umgeschrieben. Noch keine Implementierung, echte Neubewertung oder Aktivierung.
+umgeschrieben. A/B/C sind über PR #408/#409/#410 integriert.
+[D-V01](SD2_D_VERIFICATION.md) liefert die gesondert beauftragte echte Analyse
+und Vergleichsvorschau; aktive Bewertungen und Produktionsdefault bleiben 0.3.
 
 [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md) und [SD-C1](SD_CATALOG.md)
 führen die exakten bestehenden Analyse-, Methoden- und Datenverträge.

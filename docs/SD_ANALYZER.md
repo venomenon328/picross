@@ -7,7 +7,9 @@ unverändert gültig. SD2-A (#403) liefert neue Regeln, Formate und unabhängige
 im [separaten Analysevertrag](SD2_ANALYZER.md) und ist nach separatem R01 über
 PR #408 auf `c7c6156ac27dc033036443bc06ef398bbf94f32f` integriert;
 keine Umdeutung alter R1/R2-Belege. [SD2-B](SD2_CALIBRATION.md) ergänzt den
-eigenständigen inaktiven 0.4-Freeze; B-R01 und Merge bleiben offen.
+eigenständigen inaktiven 0.4-Freeze und ist nach separatem R01 über PR #409
+integriert. C/PR #410 ergänzt die gemeinsame Integration;
+[D-V01](SD2_D_VERIFICATION.md) liefert den gesondert beauftragten Bestandsvergleich.
 
 Stand: 17.10.2026 · Version 1.0 · technische Konkretisierung von
 [SD-A/#236](https://github.com/venomenon328/picross/issues/236) und
