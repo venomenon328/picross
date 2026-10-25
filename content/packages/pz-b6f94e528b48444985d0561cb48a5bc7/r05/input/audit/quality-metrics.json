@@ -1,0 +1,41 @@
+{
+  "width": 10,
+  "height": 15,
+  "cells": 150,
+  "foreground_colors_requested": 1,
+  "foreground_colors_used": 1,
+  "foreground_ids": [
+    "ink"
+  ],
+  "filled": 46,
+  "empty": 104,
+  "boundary": {
+    "left": true,
+    "right": true,
+    "top": true,
+    "bottom": false
+  },
+  "boundary_valid": true,
+  "shaft_width": 2,
+  "foot_width": 4,
+  "mirror_symmetric_every_row": true,
+  "loop_mirror_symmetric": true,
+  "empty_rows_1_based": [
+    15
+  ],
+  "empty_internal_rows": [],
+  "empty_columns": [],
+  "row_clues": 18,
+  "column_clues": 20,
+  "proof_steps": 38,
+  "matrix_hash": "1bc4d5319c5dc5cdbcbc5a2a1ca7f2072500f79e8ba61e611a31e1a9a86dee37",
+  "logic_hash": "fd42c89a220e4161fa8e3b889bc7e0292f8745e39e47df311bab8891f984e906",
+  "matrix_and_proof_identical_to_r04": true,
+  "thresholds_reconstructed_as_identical": [
+    96,
+    112,
+    128,
+    160,
+    176
+  ]
+}
