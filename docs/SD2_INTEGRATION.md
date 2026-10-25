@@ -107,7 +107,12 @@ alle Bytes/Revisionen/mtime, ohne nachträglich ein Rating zu verlangen.
 ## C-V01-03 · Auswahlbericht und Runtime
 
 Neue Auswahlberichte verwenden `picross-catalog-difficulty-report-v4`.
-Äußere Felder und Zeilen entsprechen exakt v3. `result` ergänzt genau `method`
+Äußere Felder entsprechen exakt v3. Jede Zeile ergänzt genau `assessment`:
+bei vollständig bewerteter 0.4 das unveränderte B-Assessment mit drei Beiträgen,
+Score, Stufe, Grenzen und Signalen; sonst null. Der Report prüft dessen geschlossene
+Felder und eingefrorene Arithmetik; Übernahme bindet es zusätzlich exakt an das
+Checked-Ergebnis. Markdown nennt Alt-/Neumethode und enthält die Teilwerte.
+`result` ergänzt genau `method`
 zu `selection,source_commit,method_hash,snapshot,sources,entries,distribution`.
 Pro Bericht genau eine Zielmethode 0.3 oder 0.4 samt geprüftem Freeze; `old` darf
 alle vier unterstützten Methoden/null enthalten, `proposed` nur die Zielmethode.
