@@ -70,12 +70,17 @@ Die am 25.10.2026 freigegebene Folgespezifikation
 [SD2: Menschennähere Schwierigkeit](docs/PUZZLE_DIFFICULTY_V2.md) / #402 ist
 ebenfalls vollständig zu lesen. SD2-A/B/C/D (#403–#406) trennen neue Regeln und
 Messprofile, Referenzkalibrierung, kompatible Integration und Bestandsumstellung.
-SD2-A liefert in Draft-PR #408 den separat versionierten
+SD2-A ist nach separatem R01 über PR #408 auf
+`c7c6156ac27dc033036443bc06ef398bbf94f32f` integriert und liefert den separat versionierten
 [technischen Vertrag](docs/SD2_ANALYZER.md) (bei SD2-Analyse vollständig lesen),
-Analysator/Prüfer, drei Rohprofile und eigene CLI. [Nachweise](docs/SD2_A_VERIFICATION.md);
-qualifiziertes separates SD2-A-R01 und Merge bleiben offen.
+Analysator/Prüfer, drei Rohprofile und eigene CLI. [Nachweise](docs/SD2_A_VERIFICATION.md)
+bleiben an den historischen A-Lieferhead gebunden.
+SD2-B liefert in Draft-PR #409 den [Bewertungsvertrag](docs/SD2_CALIBRATION.md)
+(bei SD2-Bewertung vollständig lesen), 36 neue synthetische Referenzen,
+getrennte Validierung und den eigenständigen eingefrorenen 0.4-Bewertungsweg.
+[SD2-B-T01](docs/SD2_B_VERIFICATION.md); separates SD2-B-R01 und Merge bleiben offen.
 Denkanspruch, Suchaufwand und Bearbeitungsumfang ergeben eine feste Fünferskala.
-0.4 ist geplant, nicht implementiert oder aktiviert. 0.3-Freeze und aktive Werte
+0.4 ist eigenständig implementiert, nicht gemeinsam integriert oder aktiviert. 0.3-Freeze und aktive Werte
 bleiben bis zum gesonderten Auftrag erhalten. Keine Katalogquantile, echten
 Katalogtests, automatische Neubewertung oder Implementierung aus Spezifikationsfreigabe.
 

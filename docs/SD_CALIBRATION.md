@@ -2,9 +2,10 @@
 
 **SD2 · 25.10.2026:** [Die neue Spezifikation](PUZZLE_DIFFICULTY_V2.md) / #402
 verlangt breite unabhängige Referenzen, getrennte Validierungsfälle und drei
-Teilwerte für eine neue Methode. SD2-B (#404) liefert deren numerischen Vertrag
-und Freeze. Die hier beschriebene Methode 0.3 samt gebundenen Quelldateien,
-Referenzen, Formeln und Hashes bleibt unverändert aktiv; 0.4 ist nur geplant.
+Teilwerte für eine neue Methode. SD2-B (#404) liefert den separaten
+[numerischen Vertrag und Freeze](SD2_CALIBRATION.md) in Draft-PR #409.
+Die hier beschriebene Methode 0.3 samt gebundenen Quelldateien,
+Referenzen, Formeln und Hashes bleibt unverändert aktiv; 0.4 bleibt inaktiv.
 Keine stillschweigende Nachkalibrierung oder Neubewertung durch diese Freigabe.
 
 Stand: 17.10.2026 · Vertrag 1.0 · eingefrorener Methodensatz zu SD-B/#237
