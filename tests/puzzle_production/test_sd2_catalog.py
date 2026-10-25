@@ -13,7 +13,7 @@ from tools.puzzle_production import catalog_analysis as ca, catalog_rating as ra
 from tools.puzzle_production import catalog_method as method, sd2_catalog_rating as sd2
 from tools.puzzle_production import catalog_transaction as tx, catalog_publication as publication
 from tools.puzzle_production import content_registry as cr, catalog_difficulty as display
-from tools.puzzle_production.contract import InvalidInput, canonical_bytes, digest, load_json, write_json
+from tools.puzzle_production.contract import Aborted, InvalidInput, canonical_bytes, digest, load_json, write_json
 from tools.puzzle_production.sd2_contract import AnalysisBudget
 from tools.puzzle_production.za1_fixtures import isolated_checkout, FIXTURES, ROOT
 
@@ -332,11 +332,12 @@ class CatalogTests(unittest.TestCase):
         invalid = stamps(self.checkout)
         with self.assertRaises(ValueError): tx.capture(self.checkout)
         self.assertEqual(stamps(self.checkout), invalid); alias.unlink()
-        for raw in (b'{"format":1,"format":2}', b'NaN', b' '*(method.LIMIT+1), b'{}'):
+        for raw, error in ((b'{"format":1,"format":2}', ValueError), (b'NaN', ValueError),
+                           (b' '*(method.LIMIT+1), Aborted), (b'{}', ValueError)):
             path = self.checkout/method.PATH; path.write_bytes(raw)
             invalid = stamps(self.checkout)
             for action in (lambda: cr.check_checkout(self.checkout),lambda: cr.sync_runtime(self.checkout),lambda: cr.registration(self.exported,self.checkout,apply=True)):
-                with self.assertRaises(ValueError): action()
+                with self.assertRaises(error): action()
                 self.assertEqual(stamps(self.checkout), invalid)
             path.unlink()
         self.assertEqual(fixtures.snapshot(self.checkout), before)
