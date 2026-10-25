@@ -1,13 +1,17 @@
 # SD2: Menschennähere Schwierigkeit und feste Skala 1–5
 
-Stand: 25.10.2026 · Spezifikation 1.0 · SD2-A implementiert, Abnahme offen
+Stand: 25.10.2026 · Spezifikation 1.0 · SD2-A integriert, SD2-B technisch geliefert
 
 [Gesamtissue #402](https://github.com/venomenon328/picross/issues/402) führt die
 Methodenrevision nach Eigentümerfreigabe vom 25.10.2026. Der anschließende
 ausdrückliche SD2-A-Auftrag liefert [technische Verträge](SD2_ANALYZER.md),
-neue Regeln und drei Rohprofile in [Draft-PR #408](https://github.com/venomenon328/picross/pull/408).
-[Technische Nachweise](SD2_A_VERIFICATION.md), separates Review und Merge sind
-getrennte Gates. Keine reale Analyse, Bewertungsübernahme oder Aktivierung.
+neue Regeln und drei Rohprofile über [PR #408](https://github.com/venomenon328/picross/pull/408),
+nach separatem R01 integriert auf `c7c6156ac27dc033036443bc06ef398bbf94f32f`.
+[A-Nachweise](SD2_A_VERIFICATION.md) behalten ihre historische Headbindung.
+Der ausdrückliche B-Auftrag liefert [Referenzen, Zahlenvertrag und Freeze](SD2_CALIBRATION.md)
+in [Draft-PR #409](https://github.com/venomenon328/picross/pull/409).
+[SD2-B-T01](SD2_B_VERIFICATION.md), separates B-R01 und Merge bleiben getrennte Gates.
+Keine reale Analyse, Bewertungsübernahme oder Aktivierung.
 
 ## 1. Ausgangslage und gezielte Ablösung
 
@@ -31,8 +35,9 @@ SD / #235 ist mit SD-A/B/C1/C2 und PR #240–#243 abgeschlossen. Historische
 Lieferberichte mit damals offenen Gates werden dadurch nicht erneut geöffnet.
 `picross-difficulty-0.3` bleibt bis zur gesonderten Umstellung aktiv und behält
 seine exakten Regel-, Quellen-, Referenz-, Formel-, Hash- und Formatbindungen.
-Zielkennung der neuen Methode ist **`picross-difficulty-0.4`**; sie ist hier
-geplant, noch nicht implementiert, kalibriert, eingefroren oder aktiviert.
+Kennung der neuen Methode ist **`picross-difficulty-0.4`**; SD2-B liefert sie
+eigenständig implementiert, synthetisch kalibriert und eingefroren. Gemeinsame
+Integration und Aktivierung sind weiterhin nicht erfolgt.
 
 Diese Spezifikation ersetzt für die neue Methode gezielt die in
 [SD-D01/D04–D08](PUZZLE_DIFFICULTY.md) beschriebene konkrete Technik-/Fluss-
@@ -260,8 +265,8 @@ Ein Implementierungs-PR je Paket; SD2-D trennt Vor-Übernahme- und finales Revie
 innerhalb desselben Datenpakets. Kein zusätzliches Issue allein für Tests oder
 Dokumentation. Exakte Regeln/Formate und numerische Parameter sind sequenzielle
 Liefergegenstände A/B/C, keine heute als abgeschlossen behaupteten Entscheidungen.
-SD2-A ist separat beauftragt und in Draft-PR #408 implementiert; seine unabhängige
-Abnahme bleibt offen. B/C/D sind noch nicht gestartet. Dieser Fachvertrag allein
+SD2-A ist nach unabhängiger Abnahme über PR #408 integriert. B ist in Draft-PR #409
+technisch geliefert; B-R01 und Merge bleiben offen. C/D sind noch nicht gestartet. Dieser Fachvertrag allein
 ist keine technische Startfreigabe und keine Modell-/Eigenumsetzungsempfehlung.
 
 Jedes Paket erhält technische T01-Nachweise, getrenntes Selbstreview und ein

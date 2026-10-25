@@ -126,26 +126,32 @@ damalige Mergeausnahmen werden nicht auf HZ übertragen.
 Die folgenden KE-/KAT-Abschnitte beschreiben die integrierte Ausgangsbasis;
 ihre gezielt abgelösten Anzeige-/Sortierregeln gelten nicht als neuer KU-Sollstand.
 
-**SD2 / #402 · 25.10.2026, SD2-A implementiert, separate Abnahme offen:**
+**SD2 / #402 · 25.10.2026, SD2-A integriert, SD2-B technisch geliefert:**
 [Menschennähere Schwierigkeit](PUZZLE_DIFFICULTY_V2.md) führt den neuen Sollvertrag:
 Denkanspruch, Suchaufwand und Bearbeitungsumfang, menschennähere Basistechniken,
 fein abgestufte interne Bewertung mit festen Grenzen und unabhängiger breiter
 Referenz-/Validierungsbasis. Die sichtbare Skala 1–5 bleibt; keine Quoten,
 Zeitprognosen oder neuen UI-Funktionen. SD2-A/B/C/D (#403–#406) liefern sequenziell
 Analyse, eingefrorene Methode, kompatible Integration und tatsächliche Umstellung.
-SD2-A liefert in [Draft-PR #408](https://github.com/venomenon328/picross/pull/408)
+SD2-A liefert über [PR #408](https://github.com/venomenon328/picross/pull/408)
 den vor Code versionierten [Analysevertrag](SD2_ANALYZER.md), neue Regeln,
 unabhängige Spurprüfung, drei Rohprofile und eigene CLI. Bei SD2-Analyse ist
 dieser Vertrag zusätzlich vollständig zu lesen. [SD2-A-T01](SD2_A_VERIFICATION.md)
-bindet die technischen Nachweise; separates R01 und Merge bleiben offen.
-Kalibrierte Gewichte/Endnote, Methodenfreeze 0.4, gemeinsame Integration und
-Aktivierung sind weiterhin B/C/D vorbehalten und nicht implementiert.
+bindet die historischen technischen Nachweise. Nach separatem R01 integriert
+auf `c7c6156ac27dc033036443bc06ef398bbf94f32f`.
+SD2-B liefert in [Draft-PR #409](https://github.com/venomenon328/picross/pull/409)
+36 unabhängige synthetische Referenzen, getrennte Validierung, den
+[numerischen/technischen Vertrag](SD2_CALIBRATION.md) und den eigenständigen
+0.4-Freeze. Bei SD2-Bewertung diesen Vertrag vollständig lesen.
+[SD2-B-T01](SD2_B_VERIFICATION.md) bindet technische Nachweise und Selbstreview;
+SD2-B-R01 und Merge bleiben offen. Gemeinsame Integration und Aktivierung
+bleiben den noch nicht implementierten C/D-Paketen vorbehalten.
 
 **Aktive SD-Basis / #235:** SD-A/B/C1/C2 sind mit PR #240–#243 abgeschlossen;
 letzter Merge `72ba39391833f6fd834d0a6afaf881c86c7bdc3a` nach finalem C2-Review.
 [SD](PUZZLE_DIFFICULTY.md), [Analysator](SD_ANALYZER.md),
 [0.3-Freeze](SD_CALIBRATION.md) und [Daten-/Recoveryvertrag](SD_CATALOG.md)
-bleiben aktiv. Geplante 0.4 wird separat versioniert; historische Quellen,
+bleiben aktiv. 0.4 ist separat eingefroren und weiterhin inaktiv; historische Quellen,
 Bewertungen und Freigaben werden nicht umgeschrieben. Der echte Katalog dient
 nur einer ausdrücklich beauftragten manuellen Plausibilitätsprüfung und Übernahme,
 nicht der Kalibrierung von Skalenenden oder automatisierten Tests. Keine

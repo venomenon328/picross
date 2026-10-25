@@ -489,8 +489,46 @@ Lösungsverlauf. Proxys sind keine gemessenen menschlichen Zeiten oder Klickzahl
 
 Auch vollständige SD2-A-Berichte enthalten keine Endnote oder aktive Bewertung;
 `method`, `level`, `confidence`, `estimated_minutes` bleiben null. Alte Aufrufe
-und der vollständige 0.3-Freeze bleiben erhalten. Kalibrierung, Integration und
-Aktivierung folgen separat. [Prüfzuordnung](../../docs/SD2_A_VERIFICATION.md).
+und der vollständige 0.3-Freeze bleiben erhalten. A ist nach separatem Review
+über PR #408 integriert. [Historische Prüfzuordnung](../../docs/SD2_A_VERIFICATION.md).
+
+## SD2-B: Eigenständige Bewertung 0.4
+
+Der [B-Vertrag](../../docs/SD2_CALIBRATION.md) bindet vorab festgelegte unabhängige
+synthetische Referenzen, getrennte Validierung, genaue rationale Arithmetik und
+den eingefrorenen Methodensatz. Der folgende Weg bewertet nur den ausdrücklich
+übergebenen Input. 0.3 bleibt aktiv; gemeinsame Integration und reale Umstellung
+gehören ausschließlich zu SD2-C/D.
+
+```sh
+python -m tools.puzzle_production.sd2_rating_cli analyze --input tests/puzzle_production/fixtures/sd-runtime.json --input-kind runtime --output-dir artifacts/sd2-rating-example
+python -m tools.puzzle_production.sd2_rating_cli check --input tests/puzzle_production/fixtures/sd-runtime.json --bundle artifacts/sd2-rating-example
+python -m tools.puzzle_production.sd2_rating_cli rate --input tests/puzzle_production/fixtures/sd-runtime.json --analysis-bundle artifacts/sd2-example --output-dir artifacts/sd2-rated-raw
+python -m unittest discover -s tests/puzzle_production -p 'test_sd2_rating.py' -v
+```
+
+Das Balkenbeispiel demonstriert nur die CLI, nicht den neuen B-Referenzsatz.
+Die Hülle enthält exakt `analysis/` (unverändertes A-v1-Rohbundle),
+`rating.json` und den deterministischen `report.md`. `rate` kopiert ein vorhandenes
+A-Bundle bytegetreu und prüft es frisch; `check` rekonstruiert Rohprofile,
+R4-Notwendigkeit und Bewertung unabhängig von gespeicherten Ergebnissen.
+Jeder Einstieg prüft den vollständigen Methoden-/Quellenfreeze.
+
+Alle drei Beiträge, Score, Stufe, Wert ohne Umfang und exakte Grenzabstände
+bleiben sichtbar. Zahlen sind gekürzte `[Zähler,Nenner]`; Gleichheit gehört zur
+höheren Stufe. Ohne vollständigen Liniennachweis oder separat nachgewiesenes
+notwendiges R4 bleibt die Bewertung leer. R4 verwendet einen festen L5-Anker und
+kennzeichnet Linienprofile als Präfixe. Keine menschlichen Minuten; bewertete
+Fälle sind Modellschätzungen höchstens mittlerer Aussagekraft.
+
+Analyse- und Prüfgrenzen entsprechen den oben aufgeführten A-Budgets;
+`analyze` hat ein getrenntes Verifikationsbudget. Exit 0 heißt vollständig
+geprüft, auch wenn stalled/contradiction keine Note erlauben. Exit 2/3/4/5
+bezeichnen Eingabe-/Beleg-/Abbruch-/Technikfehler. Ein verifizierter abgebrochener
+Präfix bleibt unrated und liefert Exit 4; Prüfabbrüche schreiben kein Rating.
+Ausgabeordner müssen neu sein. Explizites R4 erfordert beide `--r4-proof` und
+`--r4-baseline`; kein automatischer Paarlauf. [SD2-B-T01](../../docs/SD2_B_VERIFICATION.md)
+bindet Lieferung/Selbstreview; separates B-R01 und Merge bleiben offen.
 
 ## SD-C1: Kandidat, geprüfter Input, Vorschau und Übernahme
 

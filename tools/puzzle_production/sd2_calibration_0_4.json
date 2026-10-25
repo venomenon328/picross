@@ -1,0 +1,1584 @@
+{
+  "all_expectations_met": true,
+  "all_orders_met": true,
+  "cases": [
+    {
+      "analysis_result_hash": "e5d9bd7a0b8fcacc171cd1bd777988b67016ad20fe777227776cfc876f8322ab",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": null,
+          "distance_upper": [
+            1,
+            1
+          ],
+          "lower": null,
+          "nearest_distance": [
+            1,
+            1
+          ],
+          "upper": [
+            1,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            0,
+            1
+          ],
+          "search": [
+            0,
+            1
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 1,
+        "level_without_workload": 1,
+        "score": [
+          0,
+          1
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": true,
+          "highest_family": "E0",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            0,
+            1
+          ],
+          "raw_workload": [
+            1,
+            64
+          ],
+          "spans": 50,
+          "workload_ceiling": 3,
+          "workload_guard": "fluent"
+        },
+        "without_workload": [
+          0,
+          1
+        ]
+      },
+      "expected_level": 1,
+      "final_matrix_hash": "55f5e8e2e0d903afebdd98d2159ff6cbdf2ce1c1ec6e6f9ad7d2c4a8a5c7d153",
+      "group": "full-50",
+      "id": "full-50",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "12779b3d3cc4db3230f50b5551f122346d228a1d294e30b450a74732226f1a58",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "cdda0dd6eebbbe985d925d97939ae5efaecd43a7c7b020d5e358a2be06e44ea7"
+    },
+    {
+      "analysis_result_hash": "a640da88ef52c0513c3812d659999bfa32721a041e4090d2de0bbca7771aa416",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": null,
+          "distance_upper": [
+            1,
+            1
+          ],
+          "lower": null,
+          "nearest_distance": [
+            1,
+            1
+          ],
+          "upper": [
+            1,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            0,
+            1
+          ],
+          "search": [
+            0,
+            1
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 1,
+        "level_without_workload": 1,
+        "score": [
+          0,
+          1
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": true,
+          "highest_family": "E0",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            0,
+            1
+          ],
+          "raw_workload": [
+            0,
+            1
+          ],
+          "spans": 30,
+          "workload_ceiling": 3,
+          "workload_guard": "fluent"
+        },
+        "without_workload": [
+          0,
+          1
+        ]
+      },
+      "expected_level": 1,
+      "final_matrix_hash": "a7169c47abb353b3991f9ca89d0daf47947e9f20d0ea8c31751c5d87e360acbe",
+      "group": "bands-40",
+      "id": "bands-40",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "234b3c625ce861b5ba3b7c510a0e1a84c85cc17b0cf1cfb380a8583278e3d89a",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "d3d76e268a6dc963052781fc15e24f63117043fd696c83b54809f0de1695a193"
+    },
+    {
+      "analysis_result_hash": "0ecbc9c590fb70b5c89e572ae6e2393cc34b217cfa0662572d63185a773cb39d",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": null,
+          "distance_upper": [
+            1,
+            1
+          ],
+          "lower": null,
+          "nearest_distance": [
+            1,
+            1
+          ],
+          "upper": [
+            1,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            0,
+            1
+          ],
+          "search": [
+            0,
+            1
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 1,
+        "level_without_workload": 1,
+        "score": [
+          0,
+          1
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": true,
+          "highest_family": "E0",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            0,
+            1
+          ],
+          "raw_workload": [
+            1,
+            4
+          ],
+          "spans": 775,
+          "workload_ceiling": 3,
+          "workload_guard": "fluent"
+        },
+        "without_workload": [
+          0,
+          1
+        ]
+      },
+      "expected_level": 1,
+      "final_matrix_hash": "b472685e59b5b2c559e738cd4c0fbea2f7f8e84bf216fe3e1b7c0eb5284d3b8d",
+      "group": "packed-colors",
+      "id": "packed-colors",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "c3a1d033ad752f8fd25632584014575660e5f95f87021c188bc8c75a13f045a8",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "3d5715088e0aec912fbaf4d7ebf2586424fd22805e45e8b8e0ec7048b474ef05"
+    },
+    {
+      "analysis_result_hash": "07bea37835da57d39ae10aaf143d2ffb0a4457a912126f817f7ce8be49ddc616",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": null,
+          "distance_upper": [
+            3,
+            4
+          ],
+          "lower": null,
+          "nearest_distance": [
+            3,
+            4
+          ],
+          "upper": [
+            1,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            1,
+            4
+          ],
+          "search": [
+            0,
+            1
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 1,
+        "level_without_workload": 1,
+        "score": [
+          1,
+          4
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": true,
+          "highest_family": "E1",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            0,
+            1
+          ],
+          "raw_workload": [
+            0,
+            1
+          ],
+          "spans": 28,
+          "workload_ceiling": 3,
+          "workload_guard": "fluent"
+        },
+        "without_workload": [
+          1,
+          4
+        ]
+      },
+      "expected_level": 1,
+      "final_matrix_hash": "5b248f3738facddbbc22dbb5df4b587c973530cbf2407b7b1f6166935eff7a4c",
+      "group": "s40401-3",
+      "id": "s40401-3",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "1d71865bd4cc3d87ab5fc6f88170a9f8e815219e37200c5a6fefc7c9c084a42b",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "c221d1a79d261fdd74722adb67c405b85a5ee870d5b9bd5d498aa784d7ac5927"
+    },
+    {
+      "analysis_result_hash": "87fe67993b1fbfc52434637f46bde2982e8c1fcd5ede1acbc7df1bac200aef07",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": null,
+          "distance_upper": [
+            11,
+            16
+          ],
+          "lower": null,
+          "nearest_distance": [
+            11,
+            16
+          ],
+          "upper": [
+            1,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            1,
+            4
+          ],
+          "search": [
+            1,
+            16
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 1,
+        "level_without_workload": 1,
+        "score": [
+          5,
+          16
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": true,
+          "highest_family": "E1",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            1,
+            16
+          ],
+          "raw_workload": [
+            1,
+            80
+          ],
+          "spans": 48,
+          "workload_ceiling": 3,
+          "workload_guard": "fluent"
+        },
+        "without_workload": [
+          5,
+          16
+        ]
+      },
+      "expected_level": 1,
+      "final_matrix_hash": "59ac83f5bcecaea472a6b081df12b908bea6cdb2d4924051600cdf3872b93cde",
+      "group": "s40401-1080",
+      "id": "s40401-1080",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "67525c1f937408d2f7f86e3af6d4f6e3773845c194443d53feb2a75be0369467",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "5622aa1491f11dbb75e78a67b792e31a7a4e2455a115a9b9ef54e8b042b640d5"
+    },
+    {
+      "analysis_result_hash": "fe0b3bbea55079b2965347b89b29b8954763629ab2ad47316bafb8dbe74c766a",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            4,
+            9
+          ],
+          "distance_upper": [
+            5,
+            9
+          ],
+          "lower": [
+            1,
+            1
+          ],
+          "nearest_distance": [
+            4,
+            9
+          ],
+          "upper": [
+            2,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            1,
+            1
+          ],
+          "search": [
+            4,
+            9
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 2,
+        "level_without_workload": 2,
+        "score": [
+          13,
+          9
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": false,
+          "highest_family": "E1",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            4,
+            9
+          ],
+          "raw_workload": [
+            0,
+            1
+          ],
+          "spans": 30,
+          "workload_ceiling": 3,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          13,
+          9
+        ]
+      },
+      "expected_level": 2,
+      "final_matrix_hash": "98380410fb411d1c5f9c9fe3e8e800b544c5fee1a578c9b3e56aa80c5827650e",
+      "group": "s40401-10",
+      "id": "s40401-10",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "88474382605872760677312c7b1c57f528a020e2a870c6605eff9de19f9d3caa",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "fa73e7ef1f8a48d0dba7689689dac2d8b5ebd2201a7912b97192f51c8e8a5ff5"
+    },
+    {
+      "analysis_result_hash": "1cc6c9dd8116ac4defd0f10ff844f283703b72fc0abd5caab7702b43de3336af",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            509,
+            1440
+          ],
+          "distance_upper": [
+            931,
+            1440
+          ],
+          "lower": [
+            1,
+            1
+          ],
+          "nearest_distance": [
+            509,
+            1440
+          ],
+          "upper": [
+            2,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            1,
+            1
+          ],
+          "search": [
+            25,
+            72
+          ],
+          "workload": [
+            1,
+            160
+          ]
+        },
+        "level": 2,
+        "level_without_workload": 2,
+        "score": [
+          1949,
+          1440
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": false,
+          "highest_family": "E1",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            25,
+            72
+          ],
+          "raw_workload": [
+            1,
+            160
+          ],
+          "spans": 44,
+          "workload_ceiling": 3,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          97,
+          72
+        ]
+      },
+      "expected_level": 2,
+      "final_matrix_hash": "0d53dab579c92cce31970eb7dbc14307a074cb7cd8a13353af4f7a05373901a5",
+      "group": "s40401-44",
+      "id": "s40401-44",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "5ce96c143b03756151808742fe36c27c656597b172f46beecfff5a8b2a9315c0",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "2a6217c649ba612c01efc609f45369677ba12142ffc48bb4bc936b70b0354350"
+    },
+    {
+      "analysis_result_hash": "e15edc356df56d4266bc104d1c70b4aeea3cc015c37ac49caf208c64fb8ca353",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            20623,
+            45760
+          ],
+          "distance_upper": [
+            25137,
+            45760
+          ],
+          "lower": [
+            1,
+            1
+          ],
+          "nearest_distance": [
+            20623,
+            45760
+          ],
+          "upper": [
+            2,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            1,
+            1
+          ],
+          "search": [
+            64,
+            143
+          ],
+          "workload": [
+            1,
+            320
+          ]
+        },
+        "level": 2,
+        "level_without_workload": 2,
+        "score": [
+          66383,
+          45760
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": false,
+          "highest_family": "E1",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            64,
+            143
+          ],
+          "raw_workload": [
+            1,
+            320
+          ],
+          "spans": 42,
+          "workload_ceiling": 3,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          207,
+          143
+        ]
+      },
+      "expected_level": 2,
+      "final_matrix_hash": "2ab8b7282fdcd499c2290c29b14ba55e622cf8380a022e10cabefe7325fe979e",
+      "group": "s40401-98",
+      "id": "s40401-98",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "2185917868a17e8c37a2bf16f1410a24067c000dbe75729296843376e42fbdbd",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "2f64ffa03fbd1430896f63cd9c74d6303fce818d0ec780e5620ac0ca68bffda7"
+    },
+    {
+      "analysis_result_hash": "7d406e678ec74931c8919d0a5cf2edd62f01081024578bb344e25365498940a4",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            453,
+            3520
+          ],
+          "distance_upper": [
+            3067,
+            3520
+          ],
+          "lower": [
+            2,
+            1
+          ],
+          "nearest_distance": [
+            453,
+            3520
+          ],
+          "upper": [
+            3,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            1,
+            1
+          ],
+          "search": [
+            777,
+            704
+          ],
+          "workload": [
+            1,
+            40
+          ]
+        },
+        "level": 3,
+        "level_without_workload": 3,
+        "score": [
+          7493,
+          3520
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": false,
+          "highest_family": "E1",
+          "longest_narrow_run": 2,
+          "narrow_waves": 5,
+          "peak_search": [
+            645,
+            704
+          ],
+          "raw_workload": [
+            1,
+            40
+          ],
+          "spans": 56,
+          "workload_ceiling": 3,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          1481,
+          704
+        ]
+      },
+      "expected_level": 3,
+      "final_matrix_hash": "63ff861b9f87275c633f7c222f65ec6b4c95c9da9fa956f2a90e50c580da48a9",
+      "group": "s40401-526",
+      "id": "s40401-526",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "cd456321a08d6f69e817d96f91a6ca534e34dc06ee65df192c1960bb951a52f6",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "6dde53f2441577a698377fd37f9b868c6db69639df1802e5c7f4c8a53312aa79"
+    },
+    {
+      "analysis_result_hash": "c3f2ff27feb8fcfbb95d0e34da3069d5d5e3d113f09b93e2e89b600c9eeaadce",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            1409,
+            10976
+          ],
+          "distance_upper": [
+            9567,
+            10976
+          ],
+          "lower": [
+            2,
+            1
+          ],
+          "nearest_distance": [
+            1409,
+            10976
+          ],
+          "upper": [
+            3,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            1,
+            1
+          ],
+          "search": [
+            12385,
+            10976
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 3,
+        "level_without_workload": 3,
+        "score": [
+          23361,
+          10976
+        ],
+        "signals": {
+          "context": [
+            0,
+            1
+          ],
+          "fluent": false,
+          "highest_family": "E1",
+          "longest_narrow_run": 3,
+          "narrow_waves": 4,
+          "peak_search": [
+            312,
+            343
+          ],
+          "raw_workload": [
+            0,
+            1
+          ],
+          "spans": 39,
+          "workload_ceiling": 3,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          23361,
+          10976
+        ]
+      },
+      "expected_level": 3,
+      "final_matrix_hash": "3ab9d157f10b793d0662d2189878e3e390c26c15da4f28e2597f789dad68fcd6",
+      "group": "s40401-1111",
+      "id": "s40401-1111",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "009c08f29404a3c6396f3a61aab9e8175889d450d1fb781bb6b2f298b4190bed",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "7fcdca319ed02e6784bc84eddb45728cc5715b867866d5caa77ace83840d8f73"
+    },
+    {
+      "analysis_result_hash": "91565ebbec10aa20f55f9938bf9363e3b4ae7354f9889f478bc3cae25f873fb9",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            17,
+            120
+          ],
+          "distance_upper": [
+            103,
+            120
+          ],
+          "lower": [
+            2,
+            1
+          ],
+          "nearest_distance": [
+            17,
+            120
+          ],
+          "upper": [
+            3,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            21,
+            10
+          ],
+          "search": [
+            1,
+            24
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 3,
+        "level_without_workload": 3,
+        "score": [
+          257,
+          120
+        ],
+        "signals": {
+          "context": [
+            2,
+            5
+          ],
+          "fluent": false,
+          "highest_family": "E2",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            1,
+            24
+          ],
+          "raw_workload": [
+            0,
+            1
+          ],
+          "spans": 27,
+          "workload_ceiling": 3,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          257,
+          120
+        ]
+      },
+      "expected_level": 3,
+      "final_matrix_hash": "bc6f6dc575cdbfe1cba1d9971a169da30ecad6e75be07e3d70e3c4f29550e075",
+      "group": "s40401-6",
+      "id": "s40401-6",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "84e10157e8192e2d2f39c6ed5e3dcdbe0d976706b1dd7cbacf4f37a0618abc2b",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "74caef247c329918b005da8e1ca74084cd5e84a1d3cdc199bc6313617d645706"
+    },
+    {
+      "analysis_result_hash": "026780d38c200d5777c1e9aac0f81322e03414859206dc527d9bb7d095571dd4",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            21,
+            88
+          ],
+          "distance_upper": [
+            67,
+            88
+          ],
+          "lower": [
+            2,
+            1
+          ],
+          "nearest_distance": [
+            21,
+            88
+          ],
+          "upper": [
+            3,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            91,
+            44
+          ],
+          "search": [
+            15,
+            88
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 3,
+        "level_without_workload": 3,
+        "score": [
+          197,
+          88
+        ],
+        "signals": {
+          "context": [
+            3,
+            11
+          ],
+          "fluent": false,
+          "highest_family": "E2",
+          "longest_narrow_run": 0,
+          "narrow_waves": 0,
+          "peak_search": [
+            15,
+            88
+          ],
+          "raw_workload": [
+            0,
+            1
+          ],
+          "spans": 33,
+          "workload_ceiling": 3,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          197,
+          88
+        ]
+      },
+      "expected_level": 3,
+      "final_matrix_hash": "17a0be812484d0b6a941347296f64c94b576ea5015ad403b4ada843784a1a7c7",
+      "group": "s40401-1574",
+      "id": "s40401-1574",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "b98514790855cb81d432f253156f23b5da69291f756be9c2f6791001d1ccf7fb",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "2cb5535af89f62e025aed2ad817246048b52d68dcdd7aee533c1940e1af3a597"
+    },
+    {
+      "analysis_result_hash": "3a1555e9e491c6b9c06afb159dc38b17cdc889124bb4fef8359aba2480caca62",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            4929,
+            19720
+          ],
+          "distance_upper": [
+            14791,
+            19720
+          ],
+          "lower": [
+            3,
+            1
+          ],
+          "nearest_distance": [
+            4929,
+            19720
+          ],
+          "upper": [
+            4,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            41,
+            20
+          ],
+          "search": [
+            2317,
+            1972
+          ],
+          "workload": [
+            1,
+            40
+          ]
+        },
+        "level": 4,
+        "level_without_workload": 4,
+        "score": [
+          64089,
+          19720
+        ],
+        "signals": {
+          "context": [
+            1,
+            5
+          ],
+          "fluent": false,
+          "highest_family": "E2",
+          "longest_narrow_run": 18,
+          "narrow_waves": 20,
+          "peak_search": [
+            456,
+            493
+          ],
+          "raw_workload": [
+            1,
+            40
+          ],
+          "spans": 56,
+          "workload_ceiling": 4,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          15899,
+          4930
+        ]
+      },
+      "expected_level": 4,
+      "final_matrix_hash": "7d84fb4af6653e9218ba5d89b83566b4797ee558e1a86725d0fd612a0d7f946e",
+      "group": "s40401-1495",
+      "id": "s40401-1495",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "01fa0f4d4dbb7283d1e3b8aff679ca1a86da23982297de47631761bee766c10d",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "59629df8525f98459b2398d0af3dbd7804e5ae37d6e2fb359d2c7a7d25ccd1db"
+    },
+    {
+      "analysis_result_hash": "b6cf582c98c1fda162aedb24fb016e3097fc2093f3c04b88a32d88b1431f8c52",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            82083,
+            241072
+          ],
+          "distance_upper": [
+            158989,
+            241072
+          ],
+          "lower": [
+            3,
+            1
+          ],
+          "nearest_distance": [
+            82083,
+            241072
+          ],
+          "upper": [
+            4,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            109,
+            52
+          ],
+          "search": [
+            5479,
+            4636
+          ],
+          "workload": [
+            1,
+            16
+          ]
+        },
+        "level": 4,
+        "level_without_workload": 4,
+        "score": [
+          805299,
+          241072
+        ],
+        "signals": {
+          "context": [
+            5,
+            13
+          ],
+          "fluent": false,
+          "highest_family": "E2",
+          "longest_narrow_run": 5,
+          "narrow_waves": 7,
+          "peak_search": [
+            1080,
+            1159
+          ],
+          "raw_workload": [
+            1,
+            16
+          ],
+          "spans": 80,
+          "workload_ceiling": 4,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          98779,
+          30134
+        ]
+      },
+      "expected_level": 4,
+      "final_matrix_hash": "e5075b9d7b935a6f9a9bc08d5fa6b7ffd6082b8498b4bd7b4465c57b5ad3380c",
+      "group": "s40401-2093",
+      "id": "s40401-2093",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "ae5ce50d3206ebefec158fbf6f1a58bdbd4025fdc7366c214b83b3deecc6eef6",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "040ba1dda5cb9d613322baf19201d5238bd86505f1cac759f22c70f69739ca87"
+    },
+    {
+      "analysis_result_hash": "999b6e67f77ef8ce9f931215b90177e1754c4ff8e13c7af5f0a30c2d3f8c2e21",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            1727,
+            7520
+          ],
+          "distance_upper": [
+            5793,
+            7520
+          ],
+          "lower": [
+            3,
+            1
+          ],
+          "nearest_distance": [
+            1727,
+            7520
+          ],
+          "upper": [
+            4,
+            1
+          ]
+        },
+        "contributions": {
+          "demand": [
+            21,
+            10
+          ],
+          "search": [
+            4177,
+            3760
+          ],
+          "workload": [
+            3,
+            160
+          ]
+        },
+        "level": 4,
+        "level_without_workload": 4,
+        "score": [
+          24287,
+          7520
+        ],
+        "signals": {
+          "context": [
+            2,
+            5
+          ],
+          "fluent": false,
+          "highest_family": "E2",
+          "longest_narrow_run": 2,
+          "narrow_waves": 6,
+          "peak_search": [
+            217,
+            235
+          ],
+          "raw_workload": [
+            3,
+            160
+          ],
+          "spans": 52,
+          "workload_ceiling": 4,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          12073,
+          3760
+        ]
+      },
+      "expected_level": 4,
+      "final_matrix_hash": "7f9ef0d438e01a6cce350a1700ffafc12b8adc1d70ff4db887091261b85e3ba6",
+      "group": "s40401-888",
+      "id": "s40401-888",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "6f9ee0d08a75e08d45eb131e31a7d6e16c247394872f94bdfed7e69b4ce2dcb7",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "52c9917c8479b65586f0eea89828dc0df443844ce5ae682ab9ba7e549454fce1"
+    },
+    {
+      "analysis_result_hash": "04bfed06d7f9a73956aa76e4921703e43e4a078c2c7a94494eb4d5268327fb41",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            1,
+            2
+          ],
+          "distance_upper": null,
+          "lower": [
+            4,
+            1
+          ],
+          "nearest_distance": [
+            1,
+            2
+          ],
+          "upper": null
+        },
+        "contributions": {
+          "demand": [
+            9,
+            2
+          ],
+          "search": [
+            0,
+            1
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 5,
+        "level_without_workload": 5,
+        "score": [
+          9,
+          2
+        ],
+        "signals": {
+          "line_profiles_are_prefix": true,
+          "r4_required": true,
+          "search_and_workload": "fixed_anchor_not_full_pair_measurement"
+        },
+        "without_workload": [
+          9,
+          2
+        ]
+      },
+      "expected_level": 5,
+      "final_matrix_hash": "37cae542bb280af10a35fd0193f63fbd6f59da0444343396b6ef48aa2ddafaf4",
+      "group": "s40405-65",
+      "id": "s40405-65",
+      "matches_expectation": true,
+      "profile_scope": "line_prefix",
+      "profiles_hash": "40c1bd4b3500d749f74247f9abf9656d0cb2c5ed72af7a416f75d44aac41f139",
+      "proof_hashes": {
+        "baseline": "1c26fe8fd260f1309bc51191a8352e5db6135bba0e9e2ee46155dc5bb56246f9",
+        "pair": "2c5eb9d20731ee88db928037ddf5d40ef6b4c267cbf3816b738dd92e1d6b1300"
+      },
+      "reason": "required_r4",
+      "trace_hash": "3f134d460a09c97d2c8cacf4a27e05d865bf8606c5430451ae1bb2d80a65cf95"
+    },
+    {
+      "analysis_result_hash": "121889680ff5bb0dc584e3e8ae12a98630b6fbf19ca74af31b566234d67cee54",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            1,
+            2
+          ],
+          "distance_upper": null,
+          "lower": [
+            4,
+            1
+          ],
+          "nearest_distance": [
+            1,
+            2
+          ],
+          "upper": null
+        },
+        "contributions": {
+          "demand": [
+            9,
+            2
+          ],
+          "search": [
+            0,
+            1
+          ],
+          "workload": [
+            0,
+            1
+          ]
+        },
+        "level": 5,
+        "level_without_workload": 5,
+        "score": [
+          9,
+          2
+        ],
+        "signals": {
+          "line_profiles_are_prefix": true,
+          "r4_required": true,
+          "search_and_workload": "fixed_anchor_not_full_pair_measurement"
+        },
+        "without_workload": [
+          9,
+          2
+        ]
+      },
+      "expected_level": 5,
+      "final_matrix_hash": "5862eb47485b92841bca8f258a6880815c4507d5ad6397e2d4e59425668ae154",
+      "group": "s40405-79",
+      "id": "s40405-79",
+      "matches_expectation": true,
+      "profile_scope": "line_prefix",
+      "profiles_hash": "c85980073f622b4c9e8829d490e0eb54af512b9fac5078ad049afdc3497e839c",
+      "proof_hashes": {
+        "baseline": "ce2a61859b72f03e5b78a52d23bd7bbe5349964d41fbd75cdc8b31677c70392f",
+        "pair": "0022874054c9b02c5729a33328a7800f047acf359bee94fb990b74b55fee29cb"
+      },
+      "reason": "required_r4",
+      "trace_hash": "d4a3ef5e564c4be323d2588ad646172ea81ab374d9186c38f8a9405ca324c928"
+    },
+    {
+      "analysis_result_hash": "cd2bda66db3ecf3453da3c02d356361759d06805be2cf994308a9536ebfc6fc7",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            161,
+            520
+          ],
+          "distance_upper": null,
+          "lower": [
+            4,
+            1
+          ],
+          "nearest_distance": [
+            161,
+            520
+          ],
+          "upper": null
+        },
+        "contributions": {
+          "demand": [
+            37,
+            12
+          ],
+          "search": [
+            367,
+            312
+          ],
+          "workload": [
+            1,
+            20
+          ]
+        },
+        "level": 5,
+        "level_without_workload": 5,
+        "score": [
+          2241,
+          520
+        ],
+        "signals": {
+          "context": [
+            1,
+            3
+          ],
+          "fluent": false,
+          "highest_family": "E3",
+          "longest_narrow_run": 8,
+          "narrow_waves": 18,
+          "peak_search": [
+            289,
+            312
+          ],
+          "raw_workload": [
+            1,
+            20
+          ],
+          "spans": 72,
+          "workload_ceiling": 5,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          443,
+          104
+        ]
+      },
+      "expected_level": 5,
+      "final_matrix_hash": "18ef730ff70cba98f854876e9984a252e65f6c3455d9de3b75a7a89d3e86751d",
+      "group": "s40405-230",
+      "id": "s40405-230",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "3887fa98efccae2574841e29a514d4b58f8c9a46b70511d3a76acbf9666fecbc",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "4ec2479b2e78760a1e581fc3924a66839584f96a106175e614c1e0d4be7e9cc8"
+    },
+    {
+      "analysis_result_hash": "fbb30e1a3d2dd0701979818472c15639cdfabd18ddb5176d70cc9b6b9d9287c1",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            12471,
+            48256
+          ],
+          "distance_upper": null,
+          "lower": [
+            4,
+            1
+          ],
+          "nearest_distance": [
+            12471,
+            48256
+          ],
+          "upper": null
+        },
+        "contributions": {
+          "demand": [
+            199,
+            64
+          ],
+          "search": [
+            1721,
+            1508
+          ],
+          "workload": [
+            1,
+            128
+          ]
+        },
+        "level": 5,
+        "level_without_workload": 5,
+        "score": [
+          205495,
+          48256
+        ],
+        "signals": {
+          "context": [
+            7,
+            16
+          ],
+          "fluent": false,
+          "highest_family": "E3",
+          "longest_narrow_run": 4,
+          "narrow_waves": 7,
+          "peak_search": [
+            336,
+            377
+          ],
+          "raw_workload": [
+            1,
+            128
+          ],
+          "spans": 45,
+          "workload_ceiling": 5,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          102559,
+          24128
+        ]
+      },
+      "expected_level": 5,
+      "final_matrix_hash": "0e2a484a94674391d4ee2164f36352d7a7f8448e347eab85fc2b812f8e186956",
+      "group": "s40405-3463",
+      "id": "s40405-3463",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "49a1104ff00a310c68df01e934a32d5fcc8669f8797946b42406fc6e6e4e7e34",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "6e1cab43c84f81b771fb8113354330cce2d9616f54d3b00e2beb8b59388df8c6"
+    },
+    {
+      "analysis_result_hash": "f73f59cdb51af61af55a6025829fb763e069d7dee0179d966c82d0f5366e8ad6",
+      "assessment": {
+        "boundaries": {
+          "distance_lower": [
+            297,
+            1360
+          ],
+          "distance_upper": null,
+          "lower": [
+            4,
+            1
+          ],
+          "nearest_distance": [
+            297,
+            1360
+          ],
+          "upper": null
+        },
+        "contributions": {
+          "demand": [
+            61,
+            20
+          ],
+          "search": [
+            393,
+            340
+          ],
+          "workload": [
+            1,
+            80
+          ]
+        },
+        "level": 5,
+        "level_without_workload": 5,
+        "score": [
+          5737,
+          1360
+        ],
+        "signals": {
+          "context": [
+            1,
+            5
+          ],
+          "fluent": false,
+          "highest_family": "E3",
+          "longest_narrow_run": 6,
+          "narrow_waves": 8,
+          "peak_search": [
+            77,
+            85
+          ],
+          "raw_workload": [
+            1,
+            80
+          ],
+          "spans": 48,
+          "workload_ceiling": 5,
+          "workload_guard": "none"
+        },
+        "without_workload": [
+          143,
+          34
+        ]
+      },
+      "expected_level": 5,
+      "final_matrix_hash": "9703f521713e6cfd0d2e2a67e9c894384744730ddf6bd185111875f0cdd3c186",
+      "group": "s40405-5280",
+      "id": "s40405-5280",
+      "matches_expectation": true,
+      "profile_scope": "complete_line",
+      "profiles_hash": "711b2d648b82971db8e6f2477114f49864afe257e6ddf84b7f49807dd4d9bcc4",
+      "proof_hashes": null,
+      "reason": "complete_line",
+      "trace_hash": "5afc0f33f2d1b208a15dbec81e8c7a7656f15a35701c45483b1615ba614a436c"
+    }
+  ],
+  "format": "picross-sd2-evidence-v1",
+  "human_data": null,
+  "orders": [
+    {
+      "lower": "full-50",
+      "reason": "Gro\u00dfes direktes Ausf\u00fcllen ist leichter als ein kleiner eingeschr\u00e4nkter E1-Verlauf.",
+      "satisfied": true,
+      "upper": "s40401-10"
+    },
+    {
+      "lower": "s40401-10",
+      "reason": "Anhaltend enger Suchverlauf erh\u00f6ht den Anspruch bei gleicher E1-Familie.",
+      "satisfied": true,
+      "upper": "s40401-526"
+    },
+    {
+      "lower": "s40401-1574",
+      "reason": "Enger wiederholter Kombinationseinsatz ist anspruchsvoller als breite gemeinsame Zuordnung.",
+      "satisfied": true,
+      "upper": "s40401-1495"
+    }
+  ],
+  "reference_hash": "fb98b7c619f9933d111ad5f988579f38ae4fb72dd016a871d8fbb65b46a98456",
+  "split": "calibration"
+}

@@ -30,8 +30,8 @@ Der bewiesene Endstand stimmt jeweils mit der konstruierten Matrix überein.
 Die Erwartungen sind technische, begründete Modellanker, keine menschlichen
 Messungen. Ihre Begründungen und Vergleichsordnungen sind vor der ersten
 Scoreberechnung festgelegt. Numerischer Vertrag, Alternativenvergleich,
-Implementierung und Freeze folgen als weitere versionierte Schritte desselben
-Pakets. Dieser erste Stand behauptet ausdrücklich noch keinen Methodenfreeze.
+Implementierung und Freeze wurden als weitere versionierte Schritte desselben
+Pakets geliefert. Der erste Referenzcommit behauptete noch keinen Methodenfreeze.
 
 ## 2. Vorab gebundene Abdeckung und Gruppentrennung
 
@@ -72,7 +72,7 @@ Formelgrenzen isolieren und niemals diese Rätselbelege ersetzen.
 
 ## 3. Chronologie und Aussagegrenzen
 
-Die Referenzfestlegung wird vor dem numerischen Vertragsauftakt committed.
+Die Referenzfestlegung wurde vor dem numerischen Vertragsauftakt committed.
 Validierungsrohprofile wurden ausschließlich für die Kuratierung betrachtet;
 sie werden nicht zur Parameterwahl oder Alternativenauswahl verwendet.
 Nach Vertrags-/Implementierungsabschluss werden ihre Bewertungen separat geöffnet.
@@ -81,8 +81,8 @@ kennzeichnen und einen neuen unabhängigen Validierungssatz binden.
 
 Menschliche Vergleichsdaten liegen nicht vor. Deshalb höchstens mittlere
 Aussagekraft, keine Lösungsminuten und keine behauptete empirische Kalibrierung.
-SD2-B-T01 und getrennter Selbstreview werden in
-`docs/SD2_B_VERIFICATION.md` und dem Implementierungs-PR gebunden; das separate
+SD2-B-T01 und getrennter Selbstreview werden in der
+[Prüfzuordnung](SD2_B_VERIFICATION.md) und dem Implementierungs-PR gebunden; das separate
 SD2-B-R01 und Merge bleiben nachgelagerte Gates. #405/#406 bleiben außerhalb.
 
 ## 4. Untersuchung und Wahl vor Implementierung
@@ -198,13 +198,19 @@ Auch `rating.json` bleibt als Zusatz in einem A-Bundle unzulässig.
 kanonischen UTF-8-JSON-Bytes von result nach bestehendem `canonical_bytes`.
 `analysis_files` bindet jede Datei einschließlich A-`report.json` nach
 Roh-SHA-256 und Bytelänge; es ist keine semantische Ergebnisidentität.
-`result` besitzt exakt Format `picross-sd2-rating-v1`, Methode, Methodenhash,
-A-Ergebnishash, Status (`rated`/`unrated`), Grund, Profilumfang
-(`complete_line`/`line_prefix`/`incomplete`), Bewertung, Aussagekraft,
-`estimated_minutes=null` und Erklärung. Die Bewertung enthält die drei
-Beiträge, Score, Stufe, Grenznähe, Basis ohne Umfang sowie die ausgewählten
-diagnostischen Merkmale gemäß Abschnitt 5. Bei `unrated` ist Bewertung `null`
-und Aussagekraft `null`; bei `rated` stets `medium` und Modellschätzung.
+`result` besitzt exakt `format=picross-sd2-rating-v1`, `method`, `method_hash`,
+`analysis_result_hash`, `status` (`rated`/`unrated`), `reason`, `profile_scope`
+(`complete_line`/`line_prefix`/`incomplete`), `assessment`, `confidence`,
+`estimated_minutes=null` und `explanation`. `assessment` besitzt exakt
+`contributions` (demand/search/workload), `score`, `level`, `boundaries`
+(lower/upper/distance_lower/distance_upper/nearest_distance), `without_workload`,
+`level_without_workload` und `signals`. Die Liniensignale heißen highest_family,
+fluent, context, peak_search, narrow_waves, longest_narrow_run, spans,
+raw_workload, workload_guard (`fluent`/`upper_boundary`/`none`), workload_ceiling.
+R4-Signale heißen r4_required=true, line_profiles_are_prefix=true,
+search_and_workload=`fixed_anchor_not_full_pair_measurement`.
+Bei `unrated` sind assessment/confidence `null`; bei `rated` ist confidence
+stets `medium` und die Erklärung bezeichnet eine Modellschätzung.
 Der deterministische UTF-8-Markdownbericht wird aus diesem Ergebnis erzeugt
 und beim Prüfen bytegenau rekonstruiert. Laufzeiten stehen ausschließlich im
 A-Operationsbericht und ändern keinen B-Ergebnishash.
@@ -219,7 +225,7 @@ Teilwerten noch Status, Aussagekraft, Freigabefeldern oder `deduction_complete`.
 Die reine interne Formel ist kein Prüf-/Freigabeeinstieg.
 
 Dateien: B-JSON und jeder A-Prüfinput höchstens 64 MiB (A-Eingabe weiter
-1 MiB), Markdown höchstens 1 MiB; streng gültiges UTF-8-JSON ohne BOM,
+2 MiB), Markdown höchstens 1 MiB; streng gültiges UTF-8-JSON ohne BOM,
 doppelte Schlüssel, nichtendliche Zahlen, Zusatzfelder oder Links. Eine Ausgabe
 muss ein neues Verzeichnis sein; Fehler dürfen unvollständige Diagnoseartefakte
 zurücklassen, aber niemals einen scheinbar gültigen Bewertungsbericht.
@@ -251,12 +257,22 @@ Kataloglesen, Aktivieren oder Übernehmen.
 
 ## 7. Freeze und getrennte Validierung
 
-Nach Implementierung werden alle 36 Referenzen erneut vollständig analysiert,
+Nach Implementierung wurden alle 36 Referenzen erneut vollständig analysiert,
 unabhängig geprüft und bewertet. Die ersten 20 ergeben die feste
-Kalibrierungsevidenz, die übrigen 16 eine separate Validierungsevidenz.
-Die unveränderten Erwartungen werden sichtbar daneben gestellt; jede vorab
-gebundene Vergleichsordnung muss erfüllt sein. Erst dann wird der komplette
-Methodensatz `picross-difficulty-0.4` eingefroren.
+[Kalibrierungsevidenz](../tools/puzzle_production/sd2_calibration_0_4.json),
+die übrigen 16 eine [separate Validierung](../tools/puzzle_production/sd2_validation_0_4.json).
+Alle 20/20 und 16/16 unveränderten Erwartungen sowie alle 3/3 und 2/2
+Vergleichsordnungen sind erfüllt. Keine Nachjustierung anhand der Validierung,
+keine Umetikettierung, kein Austausch eines Falls. Jede Stufe ist in beiden
+Splits durch mindestens zwei unabhängige vollständige Muster vertreten.
+
+Validierungsscores: L1 0–0,325; L2 1,3267…–1,4213…;
+L3 2,1700…–2,3116…; L4 3,3261…–3,3322…;
+linienlogisches L5 4,1613…–4,2030…; notwendiges R4 4,5.
+Die gewählten Schwellen trennen die begründeten Muster auch im zurückgehaltenen
+Satz; daraus folgt keine Genauigkeitsquote für beliebige Rätsel oder Menschen.
+Binnengewichte für Kontext und Umfang sind vorsichtige Modellentscheidungen,
+keine aus diesen Daten eindeutig identifizierbaren menschlichen Koeffizienten.
 
 Der neue Manifestvertrag `picross-sd2-method-v1` bindet A-Regeln/Analysator/
 Rohmetrik, Formelversion, Parameter/Schwellen, die kanonischen Hashes des
@@ -268,3 +284,9 @@ des 0.3-Manifests. Keine Neuversiegelung von 0.3. Die Evidenz speichert nur
 Formelergebnisse und geprüfte Analyse-/Spur-/Proofidentitäten, keinen rekursiven
 B-Methodenhash. Eine spätere Änderung verlangt eine neue Methodenidentität;
 dieses B-Paket schaltet die eingefrorene Methode weiterhin nicht aktiv.
+
+Eingefrorener [Methodensatz](../tools/puzzle_production/sd2_method_0_4.json):
+`db882ea14b17de725bf75e64904579cc7790c875d557f036fdd89586f303a97c`.
+Er bindet 27 Python-Quellen und sieben kanonische JSON-Artefakte einschließlich
+des unveränderten 0.3-Manifests samt Referenzen/Kalibrierung. Der B-Hash gehört
+zur Standalone-Methode, nicht zu einer aktiven Katalogrevision.
