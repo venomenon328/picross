@@ -1,0 +1,152 @@
+{
+  "actor": "Tobias Schröder (Nutzer)",
+  "derived_from_reveal_sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d",
+  "evidence": "approvals/production-r06-instruction.md",
+  "file": "motifs/MA-r03.png",
+  "parameters": {
+    "actual_crop": [
+      18,
+      22,
+      1234,
+      1238
+    ],
+    "allowed_dimensions": [
+      [
+        22,
+        22
+      ]
+    ],
+    "alpha_below_range": [
+      96,
+      160
+    ],
+    "background": "#ffffff",
+    "crop": [
+      18,
+      22,
+      1234,
+      1238
+    ],
+    "crop_policy": "Square1216Ã—1216 crop enclosing the full alpha>=96 motif bounds [18,32,1234,1228]; only neutral/very low-alpha exterior margins removed. Original image bytes unchanged; no stretching.",
+    "duplicate_policy": "Compare exact dimensions, palette and cells after approval; document any duplicates and replace only under a targeted hypothesis, at most six candidates per round.",
+    "fit": "exact",
+    "foreground_colors": 1,
+    "height": 22,
+    "initial_candidates": [
+      {
+        "actual_crop": [
+          18,
+          22,
+          1234,
+          1238
+        ],
+        "alpha_below": 128,
+        "design": "configuration/design-22x22-a128.json",
+        "fit": "exact",
+        "foreground_colors": 1,
+        "height": 22,
+        "method": "area",
+        "mode": "mono",
+        "threshold": 128,
+        "variant": "area-128",
+        "width": 22
+      },
+      {
+        "actual_crop": [
+          18,
+          22,
+          1234,
+          1238
+        ],
+        "alpha_below": 128,
+        "design": "configuration/design-22x22-a128.json",
+        "fit": "exact",
+        "foreground_colors": 1,
+        "height": 22,
+        "method": "area",
+        "mode": "mono",
+        "threshold": 160,
+        "variant": "area-160",
+        "width": 22
+      },
+      {
+        "actual_crop": [
+          18,
+          22,
+          1234,
+          1238
+        ],
+        "alpha_below": 96,
+        "design": "configuration/design-22x22-a96.json",
+        "fit": "exact",
+        "foreground_colors": 1,
+        "height": 22,
+        "method": "area",
+        "mode": "mono",
+        "threshold": 128,
+        "variant": "area-128",
+        "width": 22
+      },
+      {
+        "actual_crop": [
+          18,
+          22,
+          1234,
+          1238
+        ],
+        "alpha_below": 96,
+        "design": "configuration/design-22x22-a96.json",
+        "fit": "exact",
+        "foreground_colors": 1,
+        "height": 22,
+        "method": "area",
+        "mode": "mono",
+        "threshold": 160,
+        "variant": "area-160",
+        "width": 22
+      }
+    ],
+    "method": "area",
+    "mode": "mono",
+    "not_authorized": [
+      "raster production before actual new MA-r03 approval",
+      "other dimensions or second foreground color without decision",
+      "changes to the approved B-r02 reveal",
+      "artificial border, noise anchors or filling a protected opening"
+    ],
+    "palette": [
+      {
+        "id": "ink",
+        "rgb": "#111111"
+      }
+    ],
+    "preferred_dimensions": [
+      22,
+      22
+    ],
+    "protected_features": [
+      "one star point down, two upper points and horizontal crossbar below center",
+      "circular stronger hoop and five crossing star bands",
+      "all five tips solidly connected to hoop",
+      "central pentagon and all five enlarged triangular apertures",
+      "five large spaces between star and hoop",
+      "front view, centered square composition"
+    ],
+    "source": "motifs/MA-r03.png",
+    "source_sha256": "94a8e110819f145d8e9a11350ff32cea4dfad9198d3f372472c444f749c87a6e",
+    "status": "approved by explicit current user instruction",
+    "threshold_range": [
+      112,
+      176
+    ],
+    "width": 22
+  },
+  "revision": "MA-r03",
+  "sha256": "94a8e110819f145d8e9a11350ff32cea4dfad9198d3f372472c444f749c87a6e",
+  "source_commit": "70d8900f7d9ba376eb9a45db86bca10b72815a6e",
+  "source_package_sha256": "7242771bfa7024651ab992e074158891358b381c1275b95e9a6bb57454576c70",
+  "statement": "Ich gebe die Motivvorlage motifs/MA-r03.png · MA-r03 frei; Parameter: 22×22; mono; genau 1 Vordergrundfarbe; area; exact; Crop [18,22,1234,1238]; Schwelle 112–176; Alpha 96–160; configuration/proposal.json. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "timestamp_basis": "Recorded while processing the explicit current instruction; exact message event time is not exposed.",
+  "timestamp_utc": "2026-10-25T00:32:21.336988+00:00",
+  "type": "human_motif_approval"
+}

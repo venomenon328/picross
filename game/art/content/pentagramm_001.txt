@@ -1,0 +1,3 @@
+Production ID: pz-1e9cdac1f83a49d5982f93ded09e58de
+Artwork: OpenAI image generation, directed in ChatGPT by Codex
+Usage basis: Native project-commissioned image edit; no third-party source assets; no exclusive-rights claim
