@@ -1,0 +1,206 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 22,
+      "method": "area",
+      "mode": "color",
+      "width": 44
+    },
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 6,
+      "height": 22,
+      "method": "area",
+      "mode": "color",
+      "width": 44
+    },
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 20,
+      "method": "area",
+      "mode": "color",
+      "width": 40
+    },
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 6,
+      "height": 20,
+      "method": "area",
+      "mode": "color",
+      "width": 40
+    }
+  ],
+  "authorization": "Tatsächlicher Folgeauftrag für prägnantere Hände und nötigenfalls zusätzliche Rasterfarben. §6-Ablage-/Mergeauftrag aus der bestehenden Sitzung gilt fort. Keine Spielregistrierung ohne spätere Endabnahme.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "imports/40x20-5c-clear",
+    "certification": null,
+    "logic_hash": "b28bbdb3b1bf35bed29a2682f61973d30e134eb5e4a746b6fed0417515df6ee5",
+    "matrix_hash": "7d3773858252934c9b3337f81da1641890fa2d2bc90bae85961753972a9edabf",
+    "proof": "imports/40x20-5c-clear/area-proof.json",
+    "source_type": "import",
+    "variant": "area",
+    "verification": "audit/hands-verify-40x20-5c-clear.json"
+  },
+  "category_id": "gebaeude-bauwerke",
+  "codex_handoff": "CODEX_HANDOFF.md",
+  "configuration": "configuration.json",
+  "current_difficulty": "analysis/checked.json",
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "final_editorial_approval": null,
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "analysis/checked.json",
+    "frame": "audit/technical-checks.json",
+    "logic": "audit/hands-verify-40x20-5c-clear.json",
+    "motif": "motif-approval.json",
+    "provenance": "audit/hands-verify-40x20-5c-clear.json",
+    "reveal_approval": "reveal-approval.json",
+    "reveal_consistency": "audit/final-quality.json",
+    "visual": "audit/final-quality.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "5b20657ee436337678769e65e296f899bad261a5c05a765ffa409f0d0c683ff6"
+  },
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb",
+    "file": "motifs/MA-r01.png",
+    "id": "MA-r01",
+    "provenance": "motifs/MA-r01.provenance.json",
+    "sha256": "b9f71249b6b282592436cd2b0661fe18c188fd313817692279c2ac706b137311"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "audit/hands-verify-40x20-5c-clear.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 22,
+      "method": "area",
+      "mode": "color",
+      "width": 44
+    },
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 6,
+      "height": 22,
+      "method": "area",
+      "mode": "color",
+      "width": 44
+    },
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 20,
+      "method": "area",
+      "mode": "color",
+      "width": 40
+    },
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 6,
+      "height": 20,
+      "method": "area",
+      "mode": "color",
+      "width": 40
+    }
+  ],
+  "puzzle_id": "pz-86d1d588a88a46e6ac1285f0097afbca",
+  "repair": null,
+  "repo_commit": "bdf0080316296f5187767465cde62ec7aa722323",
+  "report": "report.md",
+  "requested_parameters": {
+    "approximate": true,
+    "foreground_colors": null,
+    "height": 30,
+    "mode": "color",
+    "width": 40
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "id": "A-r01",
+    "provenance": "reveals/A-r01.provenance.json",
+    "sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb"
+  },
+  "revision": "r04",
+  "rulebook": {
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}
