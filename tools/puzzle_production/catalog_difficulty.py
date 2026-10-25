@@ -34,13 +34,13 @@ def project(raw):
             "plausible_range": span.copy(), "r4_required": paired}
 
 
-def validate_projection(value):
+def validate_projection(value, *, version=4):
     """Exactly the six-field runtime contract, including the 0.3 point estimate."""
     from .contract import exact_keys
     if value is None: return None
     exact_keys(value, {"method", "level", "assessment_type", "confidence", "plausible_range", "r4_required"})
     require(type(value["r4_required"]) is bool and value["level"] in LEVELS, "Invalid runtime difficulty")
-    if value["method"] == "picross-difficulty-0.3":
+    if value["method"] == "picross-difficulty-0.3" or version == 5 and value["method"] == "picross-difficulty-0.4":
         require(value["assessment_type"] == "instrumented" and value["confidence"] == "medium" and
                 value["plausible_range"] == [value["level"], value["level"]] and
                 (not value["r4_required"] or value["level"] == "L5"), "Invalid 0.3 projection")

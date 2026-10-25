@@ -150,6 +150,8 @@ Der vor Code festgelegte [SD2-C-Integrationsvertrag](SD2_INTEGRATION.md) ist bei
 Integrationsarbeit vollständig zu lesen. Er ergänzt die alten Quellen-/Runtime-/
 Journalverträge explizit versioniert. Tatsächliche Bestandsumstellung und Aktivierung
 bleiben #406 vorbehalten; C prüft ausschließlich synthetische Fälle.
+[SD2-C-T01](SD2_C_VERIFICATION.md) ordnet die technische Implementierung und
+den getrennten Selbstreview zu; qualifiziertes SD2-C-R01 und Merge bleiben offen.
 
 **Aktive SD-Basis / #235:** SD-A/B/C1/C2 sind mit PR #240–#243 abgeschlossen;
 letzter Merge `72ba39391833f6fd834d0a6afaf881c86c7bdc3a` nach finalem C2-Review.

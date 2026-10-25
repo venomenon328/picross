@@ -788,7 +788,7 @@ func catalog_labels() -> void:
 	for index: int in range(app.sessions.size()):
 		var value: Variant = null
 		if levels[index] != null:
-			value = {"method":"picross-difficulty-0.3","level":levels[index],"assessment_type":"instrumented","confidence":"medium","plausible_range":[levels[index],levels[index]],"r4_required":false}
+			value = {"method":"picross-difficulty-0.4" if index % 2 else "picross-difficulty-0.3","level":levels[index],"assessment_type":"instrumented","confidence":"medium","plausible_range":[levels[index],levels[index]],"r4_required":index == 5}
 		app.album.metadata[app.sessions[index].definition.id]["difficulty"] = value
 		for entry: Dictionary in Registry.cached.entries:
 			if entry.id == app.sessions[index].definition.id: entry.difficulty = value

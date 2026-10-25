@@ -12,7 +12,8 @@ from . import catalog_io as io, reveal_source as reveal, catalog_transaction as 
 from . import catalog_publication as publication, categories
 
 REQUEST = "picross-reveal-request-v1"
-FORMAT = "picross-reveal-plan-v1"
+LEGACY_FORMAT = "picross-reveal-plan-v1"
+FORMAT = "picross-reveal-plan-v2"
 RESULT = "picross-reveal-result-v1"
 PLAN_LIMIT = 128 * 1024 * 1024
 
@@ -21,7 +22,8 @@ def text_record(raw):
     return {"text": raw.decode("utf-8"), "sha256": io.checksum(raw)} if raw is not None else None
 
 
-def source_hashes(snapshot):
+def source_hashes(snapshot, plan_format=FORMAT):
+    if plan_format == LEGACY_FORMAT: snapshot = tx.pre_sd2_snapshot(snapshot)
     return {**snapshot["retained"], **{n: io.checksum(v) for n, v in snapshot["texts"].items()}}
 
 
@@ -62,7 +64,7 @@ def changes(old, new, replacements):
     return result
 
 
-def build(root, ids, requests, input_dir):
+def build(root, ids, requests, input_dir, *, plan_format=FORMAT):
     snapshot = tx.capture(root)
     entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
     require(set(ids) <= set(entries), "Unknown reveal ID")
@@ -92,14 +94,15 @@ def build(root, ids, requests, input_dir):
                      "new_reveal": {"file": new_file, "sha256": io.checksum(image), "bytes": len(image)},
                      "old_record": text_record(old_record), "new_record": text_record(new_record),
                      "old_notice": text_record(snapshot["texts"][notice_path]), "new_notice": text_record(writes[notice_path])})
-    journal = tx.prepare(root, snapshot, writes, operation="reveal-adoption", replacements=replacements)
-    sources = source_hashes(snapshot)
+    journal = tx.prepare(root, snapshot, writes, operation="reveal-adoption", replacements=replacements,
+                         generation="at" if plan_format == LEGACY_FORMAT else "sd2")
+    sources = source_hashes(snapshot, plan_format)
     require(len(sources) <= 100000, "Too many reveal plan sources")
-    plan = {"format": FORMAT, "ids": ids, "snapshot": {"sources": sources, "namespaces": snapshot["namespaces"]},
+    plan = {"format": plan_format, "ids": ids, "snapshot": {"sources": sources, "namespaces": snapshot["namespaces"]},
             "entries": rows, "writes": changes(journal["old"], journal["new"], replacements)}
     plan["plan_hash"] = digest(plan)
     if len(canonical_bytes(plan)) + 1 > PLAN_LIMIT: raise Aborted("resource_limit: reveal plan exceeds 128 MiB")
-    require(source_hashes(tx.capture(root)) == sources and tx.namespaces(root, snapshot["registry"]) == snapshot["namespaces"], "Checkout changed during reveal planning")
+    require(source_hashes(tx.capture(root), plan_format) == sources and tx.namespaces(root, snapshot["registry"]) == snapshot["namespaces"], "Checkout changed during reveal planning")
     return plan, journal, files
 
 
@@ -138,7 +141,7 @@ def plan(root, ids, input_path, output, *, seconds=300):
 
 def validate_plan(value):
     exact_keys(value, {"format", "ids", "snapshot", "entries", "writes", "plan_hash"})
-    require(value["format"] == FORMAT and value["ids"] == selection(value["ids"]), "Invalid reveal plan")
+    require(value["format"] in (FORMAT, LEGACY_FORMAT) and value["ids"] == selection(value["ids"]), "Invalid reveal plan")
     require(sha(value["plan_hash"]) == digest({k: v for k, v in value.items() if k != "plan_hash"}), "Wrong reveal plan hash")
     snap = exact_keys(value["snapshot"], {"sources", "namespaces"})
     require(isinstance(snap["sources"], dict) and len(snap["sources"]) <= 100000, "Invalid reveal source map")
@@ -248,7 +251,7 @@ def adopt(root, path, *, seconds=300, fail_step=None):
         entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
         require(set(value["ids"]) <= set(entries), "Stale reveal selection")
         old_texts = deepcopy(snapshot["texts"])
-        original_hashes = source_hashes(snapshot)
+        original_hashes = source_hashes(snapshot, value["format"])
         target = True
         requests = {}
         for row in value["entries"]:
@@ -277,7 +280,7 @@ def adopt(root, path, *, seconds=300, fail_step=None):
         # A mixture is never a repetition. With no lock it is also not a valid
         # old checkout, so compare all selected targets to the complete old view.
         if not target:
-            require(source_hashes(snapshot) == original_hashes, "Partial reveal target is not a no-op")
+            require(source_hashes(snapshot, value["format"]) == original_hashes, "Partial reveal target is not a no-op")
         with tempfile.TemporaryDirectory(prefix="at-old-check-") as directory:
             stage = Path(directory)
             old_images = {"game/" + entries[row["id"]]["reveal"]: row["old_reveal"]["file"] for row in value["entries"]}
@@ -286,7 +289,7 @@ def adopt(root, path, *, seconds=300, fail_step=None):
                         if name in old_images else tx.read(root, name))
                 if data is not None:
                     p = stage / name; p.parent.mkdir(parents=True, exist_ok=True); p.write_bytes(data)
-            reconstructed, journal, _ = build(stage, value["ids"], requests, path.parent)
+            reconstructed, journal, _ = build(stage, value["ids"], requests, path.parent, plan_format=value["format"])
             require(reconstructed == value, "Reveal plan differs from independently derived operations")
             # Bind source-root policy explicitly; temporary validation never
             # authorizes synthetic approvals in the real catalog.

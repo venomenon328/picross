@@ -111,7 +111,9 @@ class CatalogTests(unittest.TestCase):
                 patch.object(io, 'checksum', wraps=io.checksum) as checksum:
             view = pub._JournalView(journal, raw)
             for _ in range(5): pub.guard(checkout, journal, raw=raw, _view=view)
-            self.assertEqual(projection.call_count, 1)
+            # C journals retain the already validated old runtime bytes exactly.
+            self.assertEqual(projection.call_count, 0)
+            self.assertEqual(view.restore, journal['old'][tx.RUNTIME])
             self.assertEqual(sum(c.args[0] is raw for c in checksum.call_args_list), 1)
         self.assertGreater(len(view.temps), 10)
         names = sorted(set(journal['additions']) | {n for n in journal['old'] if journal['old'][n] != journal['new'][n]} | {tx.RUNTIME})

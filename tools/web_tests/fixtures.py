@@ -15,6 +15,17 @@ def hints(line):
 
 
 def adapt(project):
+    # Fixed display metadata only: no analysis, production activation or catalog input.
+    path = project/'data/registry.json'
+    registry = json.loads(path.read_text(encoding='utf-8'))
+    registry['format'] = 'picross-runtime-registry-v5'
+    for index, entry in enumerate(registry['entries']):
+        entry['added_at'] = None
+        entry['difficulty'] = None if index == 0 else dict(
+            method='picross-difficulty-0.4' if index % 2 else 'picross-difficulty-0.3',
+            level=f'L{index}', assessment_type='instrumented', confidence='medium',
+            plausible_range=[f'L{index}', f'L{index}'], r4_required=index == 5)
+    path.write_text(json.dumps(registry)+'\n', encoding='utf-8', newline='\n')
     # Fixed long column; the rectangle below supplies the overflowing row.
     path = project/'data/fixtures/t02.json'
     data = json.loads(path.read_text(encoding='utf-8'))

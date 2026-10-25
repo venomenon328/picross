@@ -98,31 +98,46 @@ def mode(value):
 
 
 def fields(value):
-    return FIELDS | ({"production_mode"} if value["format"] in (FORMAT, CHECKED) else set())
+    return FIELDS | ({"production_mode"} if value["format"] not in (LEGACY_FORMAT, LEGACY_CHECKED) else set())
 
 
-def definition(raw):
+def method(value):
+    from .sd2_catalog_rating import FORMAT as SD2, CHECKED as SD2_CHECKED
+    from .catalog_method import NEW
+    return NEW if value["format"] in (SD2, SD2_CHECKED) else METHOD_ID
+
+
+def definition(raw, *, method=METHOD_ID):
     data = bytes_json(raw, 2 * 1024 * 1024)
     puzzle = runtime_logic(data)
     identity(data["id"])
     # Pure matrix/clue consistency; unknown domains supply no deduction claims.
     check_target(data, "runtime", puzzle, {"status": "stalled", "final_domains": puzzle.unknown_grid()})
+    from .catalog_method import METHODS, NEW
+    require(method in METHODS, "Unsupported difficulty method")
+    normalized = analysis_input(puzzle)
+    if method == NEW:
+        from .sd2_contract import analysis_input as sd2_input
+        normalized = sd2_input(puzzle)
     return (data, puzzle,
             {"id": data["id"], "runtime_revision": data["revision"],
              "definition_sha256": hashlib.sha256(raw).hexdigest()},
-            {"analysis_hash": digest(analysis_input(puzzle)), "matrix_hash": digest(data["solution"])})
+            {"analysis_hash": digest(normalized), "matrix_hash": digest(data["solution"])})
 
 
-def tool_identity():
-    return {"id": "picross-catalog-difficulty", "version": 1,
-            "modules": {n: hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest() for n in MODULES}}
+def tool_identity(*, version=1):
+    from .sd2_catalog_rating import MODULES as SD2_MODULES
+    return {"id": "picross-catalog-difficulty", "version": version,
+            "modules": {n: hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
+                        for n in (MODULES if version == 1 else SD2_MODULES)}}
 
 
-def tool(value):
+def tool(value, *, version=1):
     exact_keys(value, {"id", "version", "modules"})
     require(value["id"] == "picross-catalog-difficulty", "Unknown catalog rating tool")
-    integer(value["version"], 1, 1, "catalog rating tool version")
-    exact_keys(value["modules"], set(MODULES))
+    from .sd2_catalog_rating import MODULES as SD2_MODULES
+    integer(value["version"], version, version, "catalog rating tool version")
+    exact_keys(value["modules"], set(MODULES if version == 1 else SD2_MODULES))
     for v in value["modules"].values(): sha(v)
 
 
@@ -284,6 +299,9 @@ def _rating(rating, compact, identifier):
 
 
 def validate(value, *, active=True, definition_bytes=None, production_mode=None):
+    from . import sd2_catalog_rating as sd2
+    if isinstance(value, dict) and value.get("format") in (sd2.FORMAT, sd2.CHECKED):
+        return sd2.validate(value, active=active, definition_bytes=definition_bytes, production_mode=production_mode)
     extras = {"rating_revision", "adoption", "record_hash"} if active else {"analysis_report_hash", "verification_hash", "tool", "checked_hash"}
     require(isinstance(value, dict) and value.get("format") in
             ((FORMAT, LEGACY_FORMAT) if active else (CHECKED, LEGACY_CHECKED)), "Unknown catalog difficulty format")
@@ -330,6 +348,8 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
 
 
 def project(value):
+    from . import sd2_catalog_rating as sd2
+    if value["format"] in (sd2.FORMAT, sd2.CHECKED): return sd2.project(value)
     r = value["rating"]["result"]
     require(r["status"] == "rated", "Cannot project incomplete rating")
     level = "L" + str(r["level"])
@@ -342,6 +362,12 @@ def import_bundle(input_path, bundle, *, budget=None):
     from .catalog_analysis import safe_external
     from .authoring_package import file_table, file_hash
     input_path, bundle = safe_external(input_path), safe_external(bundle)
+    context_path = safe_external(bundle / "catalog-context.json")
+    if context_path.exists():
+        from . import sd2_catalog_rating as sd2
+        context = bytes_json(read_file(context_path))
+        if isinstance(context, dict) and context.get("format") == sd2.CONTEXT:
+            return sd2.import_bundle(input_path, bundle, budget=budget)
     inputs = {"source": file_hash(input_path), "bundle": {n: file_hash(p) for n, p in file_table(bundle, time.monotonic() + 300).items()}}
     checked = check_bundle(input_path, bundle, budget, method=METHOD_ID)
     report = load_json(bundle / "report.json", 64 * 1024 * 1024)
@@ -373,7 +399,7 @@ def import_bundle(input_path, bundle, *, budget=None):
 def rebind_checked(value, raw, *, production_mode):
     validate(value, active=False)
     require(value.get("production_mode") == mode(production_mode), "Rebind changes or lacks production mode; new analysis required")
-    _, _, current, logic = definition(raw)
+    _, _, current, logic = definition(raw, method=method(value))
     require(value["current_source"]["id"] == current["id"] and value["logic_binding"] == logic, "Rebind changes logic or target matrix")
     new = deepcopy(value)
     new["current_source"] = current
@@ -382,12 +408,13 @@ def rebind_checked(value, raw, *, production_mode):
 
 
 def active_record(checked, previous=None, *, report=None, kind="analysis"):
+    from . import sd2_catalog_rating as sd2
     validate(checked, active=False)
-    require(checked["rating"]["result"]["status"] == "rated", "New integration requires a complete 0.3 rating")
+    require(checked["rating"]["result"]["status"] == "rated", "New integration requires a complete rating")
     if previous is not None:
         validate(previous)
         if fields(previous) == fields(checked) and all(previous[k] == checked[k] for k in fields(checked)): return previous
-    value = {"format": FORMAT if checked["format"] == CHECKED else LEGACY_FORMAT,
+    value = {"format": sd2.FORMAT if checked["format"] == sd2.CHECKED else FORMAT if checked["format"] == CHECKED else LEGACY_FORMAT,
              "rating_revision": 1 if previous is None else previous["rating_revision"] + 1,
              **{k: deepcopy(checked[k]) for k in fields(checked)}, "adoption": {
                  "kind": kind, "previous_record_hash": previous["record_hash"] if previous else None,
@@ -396,8 +423,9 @@ def active_record(checked, previous=None, *, report=None, kind="analysis"):
 
 
 def checked_from_active(value):
+    from . import sd2_catalog_rating as sd2
     validate(value)
-    return validate(hashed({"format": CHECKED if value["format"] == FORMAT else LEGACY_CHECKED,
+    return validate(hashed({"format": sd2.CHECKED if value["format"] == sd2.FORMAT else CHECKED if value["format"] == FORMAT else LEGACY_CHECKED,
         **{k: deepcopy(value[k]) for k in fields(value)},
         **{k: deepcopy(value["adoption"][k]) for k in ("analysis_report_hash", "verification_hash", "tool")}}, "checked_hash"), active=False)
 

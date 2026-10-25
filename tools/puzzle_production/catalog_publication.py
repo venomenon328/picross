@@ -17,6 +17,7 @@ from .contract import canonical_bytes, exact_keys, integer, Aborted
 from . import catalog_io as io, reveal_source as reveal
 
 PREFIX = b'{"format":"picross-reveal-adoption-journal-v1",'
+PREFIXES = (PREFIX, b'{"format":"picross-reveal-adoption-journal-v2",')
 NORMAL_LIMIT = 24 * 1024 * 1024
 LIMIT = 128 * 1024 * 1024
 
@@ -34,13 +35,13 @@ def read_journal(root, name="content/.registration-pending.json"):
     size = p.stat().st_size
     if size > LIMIT: raise Aborted("resource_limit: journal exceeds 128 MiB")
     with p.open("rb") as stream: prefix = stream.read(4096)
-    require(size <= NORMAL_LIMIT or prefix.startswith(PREFIX), "Only reveal journals may exceed 24 MiB")
-    return io.read(root, name, LIMIT if prefix.startswith(PREFIX) else NORMAL_LIMIT)
+    require(size <= NORMAL_LIMIT or prefix.startswith(PREFIXES), "Only reveal journals may exceed 24 MiB")
+    return io.read(root, name, LIMIT if prefix.startswith(PREFIXES) else NORMAL_LIMIT)
 
 
 def journal_bytes(j):
     raw = b'{"format":' + canonical_bytes(j["format"]) + b"," + canonical_bytes({k: v for k, v in j.items() if k != "format"})[1:] + b"\n"
-    limit = LIMIT if j["format"] == "picross-reveal-adoption-journal-v1" else NORMAL_LIMIT
+    limit = LIMIT if j["format"] in ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2") else NORMAL_LIMIT
     if len(raw) > limit: raise Aborted("resource_limit: transaction journal exceeds byte limit")
     return raw
 
@@ -153,8 +154,7 @@ def durable_parents(root, name):
 
 def restore_runtime(j, registry):
     from . import catalog_transaction as tx
-    return (j["old"][tx.RUNTIME] if j["operation"] == "reveal-adoption" else
-            tx.projection(j["old"], registry).decode())
+    return tx.restore_runtime(j, registry)
 
 
 def inventory(j, raw, *, restore=None):
@@ -220,6 +220,9 @@ class _JournalView:
 
 def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _view=None):
     from . import catalog_transaction as tx, catalog_rating as rating, catalog_added as added
+    from . import catalog_method
+    default = catalog_method.load(root)
+    require(tx.sd2(j) or default is None, "Legacy journal cannot bind production default")
     raw = journal_bytes(j) if raw is None else raw
     view = _JournalView(j, raw) if _view is None else _view
     j, registries = view.j, view.registries
