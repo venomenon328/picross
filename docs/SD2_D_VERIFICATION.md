@@ -1,5 +1,10 @@
 # SD2-D-V01 · Gebundener Bestandsvergleich und Übernahmevorschau
 
+Historischer V01-Lieferstand. [SD2-D-OM01](SD2_D_OM_FOLLOWUP.md) dokumentiert
+die spätere Eigentümerabnahme der 44 Vorschläge, den ausdrücklichen Verzicht
+auf VR01 und den neuen erfolgreichen Om-Nachweis samt vollständiger Vorschau.
+Die nachfolgenden V01-Aussagen bleiben an ihren damaligen Stand gebunden.
+
 Stand: 26.10.2026. Auftrag [#406, Umsetzungsvorbereitung V1](https://github.com/venomenon328/picross/issues/406),
 ausdrücklich ausgeführt **nur bis SD2-D-V01** auf
 `chore/406-sd2-bestandsumstellung`, Ziel `main`.
