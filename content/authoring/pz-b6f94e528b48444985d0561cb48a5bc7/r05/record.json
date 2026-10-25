@@ -4,7 +4,7 @@
   "revision": "r05",
   "motif_name": "Ankh",
   "category_id": "mythen-fantasie",
-  "state": "content_ready",
+  "state": "registered",
   "package": {
     "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/package.zip",
     "bytes": 2052817,
@@ -45,7 +45,15 @@
       ]
     }
   ],
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/approval.json",
+    "sha256": "f72096a32e8458871731d3a3064256d4c42477a4ec746dea1d7e8e0138c0d936",
+    "evidence": {
+      "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/editorial-acceptance.md",
+      "sha256": "2663c2421bcacb0e14f4313e10e2ef0e67ae9a745ac478fff7526e103c2d57b3",
+      "timestamp_basis": "Aufzeichnungszeit der tatsächlich vorliegenden Endabnahme; Nachrichten-Sendezeitpunkt nicht exponiert."
+    }
+  },
   "end_approval_template": {
     "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/end-approval-template.json",
     "sha256": "49a4b68defc746412fa79c90f3f2bb24b9914797096db0598e7cdd93ccaa7131",
@@ -70,19 +78,39 @@
     "confidence": "medium"
   },
   "blockers": [],
-  "open_gates": [
-    "final_editorial: separate actual human approval before export/integration"
-  ],
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
-  "integration": null,
+  "open_gates": [],
+  "next_action": "Gespeicherte Arbeit fortsetzen",
+  "integration": {
+    "registered": true,
+    "runtime_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+    "runtime_revision": 1,
+    "save_slot": "ankh_001",
+    "category_id": "mythen-fantasie",
+    "export_manifest_sha256": "2e6489d7bd4c1889a60af3190a93e36c5fc1d897b3419d010c54867f8451747f",
+    "report": {
+      "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/integration-report.json",
+      "sha256": "603401fb990b22febfd3956585b28d6346f584f388728a5f2f677e2fea91ec7d"
+    },
+    "main_integration": "pending merge",
+    "source_commit": "90ea80db6676ae75d371017248949621f9633dac"
+  },
   "repo_commit": "47a862b7f4ed4e7ab47bbc7a183b8f994c03477b",
-  "updated_at_utc": "2026-10-25T12:54:42.064156+00:00",
+  "updated_at_utc": "2026-10-25T13:49:12.467221+00:00",
   "source_package": {
     "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r04/package.zip",
     "bytes": 2851773,
     "sha256": "aa5b267ba70a8917b66d4441bf22d10332b0ef6a2ea31068e19d6a123855972c"
   },
   "verification": {
+    "file": "content/packages/pz-b6f94e528b48444985d0561cb48a5bc7/r05/inspection.json",
+    "sha256": "7001bb987ac80eaa8557d6b00f04bc7e35390ec74c82f2c707232b9ee666a858",
+    "technical": true,
+    "editorial_approved": true,
+    "catalog_ready": true,
+    "registered_checkout": true,
+    "blockers": []
+  },
+  "production_verification_before_end_approval": {
     "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/inspection.json",
     "sha256": "598696a6496a22706b11feb644e8cc8e12c0ed32c236293cc2a670da3fe72e44",
     "technical": true,

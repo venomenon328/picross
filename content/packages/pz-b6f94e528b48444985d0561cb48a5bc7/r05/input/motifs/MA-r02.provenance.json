@@ -1,0 +1,15 @@
+{
+  "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+  "file": "motifs/MA-r02.png",
+  "sha256": "641b5788d17b55c55264afe7886e07c5bc35c8170ed51834a6af798b5cbeef7e",
+  "author": "Codex; beauftragte deterministische manuelle Rasterkorrektur",
+  "usage_basis": "Projektinternes Raster aus dem freigegebenen Motiv und dem ausdrücklichen Korrekturauftrag; keine fremden Bildbytes.",
+  "derived_from": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360"
+  },
+  "source_matrix": "reference/r03-matrix.json",
+  "recipe": "editorial/derivation.json",
+  "approval": "approvals/motif-MA-r02.json",
+  "historical_origin": "Manuelle Verdopplung der Mittelspalte von r03, erstmals als konkrete Pixeldatei in r04 vorgelegt; tatsächliche Annahme jetzt in approvals/motif-MA-r02.json."
+}

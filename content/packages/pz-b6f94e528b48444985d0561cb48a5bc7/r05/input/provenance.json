@@ -1,0 +1,35 @@
+{
+  "sources": [
+    {
+      "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+      "file": "reveals/A-r01.png",
+      "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+      "author": "ChatGPT image_gen.imagegen, beauftragte native Bildgenerierung/-bearbeitung",
+      "usage_basis": "Auftragsbezogene KI-Erzeugung für das Picross-Projekt; keine fremden Bildbytes oder direkte Modell-API. Keine Exklusivitäts-/Schutzfähigkeitsbehauptung.",
+      "prompt_file": "prompts/A-r01.txt"
+    },
+    {
+      "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+      "file": "motifs/MA-r02.png",
+      "sha256": "641b5788d17b55c55264afe7886e07c5bc35c8170ed51834a6af798b5cbeef7e",
+      "author": "Codex; beauftragte deterministische manuelle Rasterkorrektur",
+      "usage_basis": "Projektinternes Raster aus dem freigegebenen Motiv und dem ausdrücklichen Korrekturauftrag; keine fremden Bildbytes.",
+      "derived_from": {
+        "file": "reveals/A-r01.png",
+        "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360"
+      },
+      "source_matrix": "reference/r03-matrix.json",
+      "recipe": "editorial/derivation.json",
+      "approval": "approvals/motif-MA-r02.json",
+      "historical_origin": "Manuelle Verdopplung der Mittelspalte von r03, erstmals als konkrete Pixeldatei in r04 vorgelegt; tatsächliche Annahme jetzt in approvals/motif-MA-r02.json."
+    }
+  ],
+  "source_package": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r04/package.zip",
+    "bytes": 2851773,
+    "sha256": "aa5b267ba70a8917b66d4441bf22d10332b0ef6a2ea31068e19d6a123855972c"
+  },
+  "historical_recipe": "editorial/derivation.json",
+  "current_approval": "approvals/motif-MA-r02.json",
+  "current_production": "Direct RP-3 import from newly accepted exact pixel source MA-r02; no claim of unchanged import from MA-r01."
+}

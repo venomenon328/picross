@@ -1,0 +1,35 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "confidence": "low",
+  "level": "L3",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "logic_hash": "fd42c89a220e4161fa8e3b889bc7e0292f8745e39e47df311bab8891f984e906",
+  "evidence": "analysis/checked.json",
+  "rule_families": {
+    "R0": "Volle Querbalkenzeile, untere Leerzeile und Restleerbelegung liefern direkte Schritte.",
+    "R1": "Überlappungen und einzelne Anker an Schlaufe und Schaft liefern einfache Fortschritte.",
+    "R2": "Geschätzter Hauptbedarf: kombinierte Blockzuordnungen; die getrennte geprüfte aktuelle SD-Spur bestätigt vier R2-Wellen.",
+    "R3": "Full-line-mono vollständig zertifiziert; aktuelle SD-Spur löst ohne R3. Profilname allein belegt keine Techniknotwendigkeit."
+  },
+  "current_integration_rating": {
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "logical_level": 3,
+    "size_adjustment": 0,
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "highest_family": "R2",
+    "bottleneck_waves": 0,
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "human_calibration": "not_performed"
+  },
+  "time_estimate": null,
+  "note": "Separater vom ZA-1-Vertrag verlangter 0.1-Begleitdatensatz; maßgebliche aktuelle Bewertung in unverändert vollständig geprüftem 0.3-Bundle, kein Umetikettieren."
+}
