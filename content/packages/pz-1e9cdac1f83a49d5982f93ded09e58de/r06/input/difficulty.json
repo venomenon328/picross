@@ -1,0 +1,36 @@
+{
+  "assessment_type": "editorial_estimate",
+  "confidence": "low",
+  "current_integration_rating": {
+    "assessment_type": "instrumented",
+    "bottleneck_waves": 4,
+    "confidence": "medium",
+    "file": "analysis/checked.json",
+    "highest_family": "R2",
+    "human_calibration": "not_performed",
+    "level": "L4",
+    "logical_level": 4,
+    "method": "picross-difficulty-0.3",
+    "plausible_range": [
+      "L4",
+      "L4"
+    ],
+    "size_adjustment": 0
+  },
+  "evidence": "analysis/checked.json",
+  "level": "L4",
+  "logic_hash": "275b15c4f5f4325d4607314ee67c2562215fb95552c249a8745dc28766dc4cf1",
+  "method": "picross-difficulty-0.1",
+  "note": "Separate vorsichtige0.1-Begleitschätzung für den unveränderten ZA-1-Produktionsvertrag. Maßgebliche aktuelle Bewertung ist die vollständig geprüfte Methode0.3: L4, instrumented/medium, Größenbeitrag0. Keine Umetikettierung der Instrumentierung.",
+  "plausible_range": [
+    "L3",
+    "L5"
+  ],
+  "rule_families": {
+    "R0": "Vollständiger Querbalken und späteres Restaufräumen liefern unmittelbare Schlüsse; allein nicht ausreichend.",
+    "R1": "Überlappung und eindeutig zugeordnete Anker verbinden Reif und Sternstege; allein nicht ausreichend.",
+    "R2": "Mehrfachblockzuordnung und wiederholt enge Fortschritte prägen die vorsichtige historische Begleitschätzung. Die separate0.3-Spur benötigt13 R2-Wellen mit4 Engstellenwellen.",
+    "R3": "Allgemeine vollständige Linienunterstützung ist zertifiziert; die getrennte0.3-Spur löst vollständig ohne R3. Keine R3-Notwendigkeit aus dem Profilnamen abgeleitet."
+  },
+  "time_estimate": null
+}
