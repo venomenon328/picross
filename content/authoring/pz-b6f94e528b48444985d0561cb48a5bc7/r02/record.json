@@ -1,0 +1,63 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+  "revision": "r02",
+  "motif_name": "Ankh",
+  "category_id": "mythen-fantasie",
+  "state": "motif_review",
+  "package": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r02/package.zip",
+    "bytes": 2943252,
+    "sha256": "dd024b5484886115ade7dbdb5a5409bf759f762c7058685c95e21dbff5ee5388"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r02/handoff.json",
+    "sha256": "4ab895ff83c78501c83ab8d8b66c1c92d4cf79b43159e6d446b969997af02b31"
+  },
+  "inventory_sha256": "9940ffcd6fc3b72756af16dac28b3a7d06c48334a40d776a27d98f6f5528f320",
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "reveal_approval": {
+    "file": "approvals/reveal-A-r01.json",
+    "sha256": "d4bae379f8fc5cff49f66f94df76247559fa6efe97a1a3b3ccf1f13f185621c5",
+    "location": "inside package.zip"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "3873e7b3732f3379de3e3f1038e5668ba86df90c2fdc9958b4a16063b4090368",
+    "derived_from_reveal_sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": null,
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "proposed_parameters": {
+    "file": "configuration.json",
+    "sha256": "bcf345595449f5b5db23a4c1975a1bf64d49f8912ed93ffedf0fd4a13ec9554f",
+    "location": "inside package.zip"
+  },
+  "approved_parameters": [],
+  "final_editorial_approval": null,
+  "width": 9,
+  "height": 15,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "mono",
+  "foreground_colors_requested": 1,
+  "difficulty": null,
+  "blockers": [],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "integration": null,
+  "repo_commit": "96c6795cdbd7143b42d0c9a51ce460c0895af374",
+  "updated_at_utc": "2026-10-25T12:17:12.623103Z",
+  "source_package": {
+    "revision": "r01",
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r01/package.zip",
+    "sha256": "ba93b107ad2fe5cc735c222f2d086554f4aa9593fb00ed22de60848c227a0c37",
+    "handoff_sha256": "ec50fa79981399cb696d7cf128308f8e164f90ab2339ae88ec49707f480c3346",
+    "inventory_sha256": "16513ce4717a21b7d0745bcf1e17d9b8fdf63e6dec5628034a5e68f189c7ec60",
+    "repo_commit": "96c6795cdbd7143b42d0c9a51ce460c0895af374"
+  }
+}
