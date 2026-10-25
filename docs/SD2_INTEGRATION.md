@@ -74,6 +74,8 @@ frisch unabhängig geprüfte solved-Paar-/stalled-Basisbelege beim Import.
 Die B-Bewertung wird strukturell und arithmetisch gegen ihren eingefrorenen
 Vertrag geprüft: exakte Ergebnis-/Assessment-/Signalobjekte, reduzierte rationale
 Zahlen, Beiträge, Score, Grenzen/Abstände, Stufe ohne Umfang und Umfangsbremse.
+Neue rationale Zähler liegen in 0..10^100, Nenner in 1..10^100; Boolwerte
+sind ausgeschlossen. Diese begrenzte Ganzzahlarithmetik verändert keine Note.
 Vollständige Linienfälle nutzen die gespeicherten B-Signale, R4 den festen Anker.
 Diese Datenprüfung ist ausdrücklich kein erneuter Beweis der Deduktion.
 Nur der explizite Import prüft das komplette externe A-/B-Bündel frisch.
@@ -142,14 +144,17 @@ Runtime-/Saveinformation und keine automatische Bestandsneubewertung.
 exakten Zielmethodenhash und neuen externen Ausgabepfad. Es erzeugt
 `picross-difficulty-activation-plan-v1` mit exakt
 `format,expected,target,sources,result_hash`.
-`expected` enthält `method,method_hash,record_hash` (null bei fehlender Quelle),
+`expected` enthält `method,method_hash,record_hash,revision` (null und Revision 0
+bei fehlender Quelle, sonst die vorhandene Revision 1..1000000),
 `target` enthält `method,method_hash`, `sources` alle T/K-Dateihashes oder null.
 `result_hash` bindet alle übrigen Felder. Limit 16 MiB/80004 Quellen.
 Gleiche Ausgangs-/Zielmethode ist kein neuer Aktivierungsplan.
 `catalog_method adopt --plan ...` prüft beide Freezes, vollständige Quellen,
 Erwartung und Planhash vor Mutation; ausschließlich der Standardrecord ändert
 sich. Wiederholung desselben Plans akzeptiert genau seine eigene Recordrevision,
-Vorgängerbindung und sonst identische Quellen, ohne Rewrite/Lock/mtime-Änderung.
+Vorgängerbindung, exakt `expected.revision + 1` und sonst identische Quellen,
+ohne Rewrite/Lock/mtime-Änderung. Damit genügt ein neu versiegelter Record mit
+beliebiger höherer Revision auch bei gleichem Planhash nicht als Wiederholung.
 Fremde Änderung oder zwischenzeitliche andere Aktivierung macht den Plan stale.
 
 Neue Registrierung und echte Logik-/Modusänderung benötigen die aktive Methode.
