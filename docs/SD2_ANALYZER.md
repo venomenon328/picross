@@ -202,6 +202,10 @@ werden begrenzt innerhalb der Schleifen gezählt; eine lokale Linie hat höchste
 Byte-/Wellen-/Arbeitsende verwirft die gesamte begonnene Welle. Profilberechnung
 und Bundleprüfung haben eigene vorab festgelegte Prüfbudgets; Abbruch erzeugt
 keinen erfolgreichen Bericht. Betriebsabbrüche sind keine logischen Eigenschaften.
+Die jeweilige SD2-Deadline beginnt beim ersten Arbeitsschritt (`check`) dieses
+Budgets, nicht bei seiner Konfiguration. Analysezeit verbraucht deshalb keine
+Prüfzeit. Nach dem Start läuft die Deadline durchgehend; Spur, R4 und Profile
+teilen dasselbe Prüfbudget, ohne Neustart zwischen diesen Phasen.
 
 Unabhängiger Prüfer importiert keinen Erzeuger/Analyzer. Eigene Intervallmengen
 statt Startlisten, eigene simultane E2-Elimination und unabhängiger E3-DAG;
@@ -215,7 +219,7 @@ Neue Module `sd2_analysis`, `sd2_rules`, `sd2_verifier`, `sd2_contract`,
 analysis_contract-Budget/atomare Mergehelfer, analysis_io-Eingangsadapter/R4,
 solver.line_support ausschließlich E3 und verifier.justified_support im Prüfer.
 
-Geplante, erst mit Implementierung verfügbare Aufrufe:
+Eigenständige Aufrufe des implementierten SD2-A-Pfads:
 
 ```sh
 python -m tools.puzzle_production.sd2_cli analyze --input <logic.json> --output-dir <neu>
