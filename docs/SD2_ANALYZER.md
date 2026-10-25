@@ -109,7 +109,8 @@ Für eine einmal zusammengeführte Änderung seien a,b Domaingrößen vorher/nac
 
 `state` hat exakt `open_lines,solved_lines,open_cells,local_candidates,
 geometric_candidates,placement_freedom,ambiguous_required_cells,
-unique_owner_required_cells,restricted_cells,color_options`.
+unique_owner_required_cells,restricted_cells,color_options,open_blocks,
+open_short_blocks,undetermined_blocks,undetermined_short_blocks,open_hint_colors`.
 Alle Kandidaten-/Besitzerwerte beziehen sich auf offene Linien im Vorzustand.
 G/L wie §2, jeweils vor E2. `placement_freedom` ist Summe max(0,|L(i)|−1)
 geteilt durch Summe max(0,|G(i)|−1), bei Nenner 0 null. Besitzer einer Pflichtzelle
@@ -118,6 +119,11 @@ eindeutig. `restricted_cells` zählt eingeschränkte Positionen in offenen Linie
 `color_options`=Summe der erlaubten Vordergrundwerte in offenen Rasterzellen
 geteilt durch O·K, bei O=0 null. Diese Werte sind Zustandsindizien, keine neue
 Ableitungsregel und kein globaler Lösungsmengen- oder menschlicher Zeitmesser.
+`open_blocks/open_short_blocks` zählen Hinweise in offenen Linien, kurze mit
+Länge≤2. `undetermined_blocks/undetermined_short_blocks` zählen davon diejenigen
+mit mehr als einem lokalen Start. `open_hint_colors` zählt verschiedene Farben
+in Hinweisen offener Linien. Damit bleibt kurze/farbige Hinweisstruktur auch am
+jeweiligen Zustand sichtbar, getrennt von statischen Summen über alle Linien.
 
 Strichproxy: maximal zusammenhängende neue Singletonpositionen derselben Farbe
 je Zeile und separat je Spalte; `fill_spans`=Minimum der beiden Abschnittszahlen.
