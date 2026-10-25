@@ -1,11 +1,13 @@
 # SD2: Menschennähere Schwierigkeit und feste Skala 1–5
 
-Stand: 25.10.2026 · Spezifikation 1.0 · fachlich freigegeben, nicht implementiert
+Stand: 25.10.2026 · Spezifikation 1.0 · SD2-A implementiert, Abnahme offen
 
 [Gesamtissue #402](https://github.com/venomenon328/picross/issues/402) führt die
-Methodenrevision nach Eigentümerfreigabe vom 25.10.2026. Der aktuelle Auftrag
-umfasst Spezifikation, Issues und Repository-Dokumentation. Er startet weder
-Implementierung noch reale Analyse, Bewertungsübernahme, Aktivierung oder Merge.
+Methodenrevision nach Eigentümerfreigabe vom 25.10.2026. Der anschließende
+ausdrückliche SD2-A-Auftrag liefert [technische Verträge](SD2_ANALYZER.md),
+neue Regeln und drei Rohprofile in [Draft-PR #408](https://github.com/venomenon328/picross/pull/408).
+[Technische Nachweise](SD2_A_VERIFICATION.md), separates Review und Merge sind
+getrennte Gates. Keine reale Analyse, Bewertungsübernahme oder Aktivierung.
 
 ## 1. Ausgangslage und gezielte Ablösung
 
@@ -258,8 +260,9 @@ Ein Implementierungs-PR je Paket; SD2-D trennt Vor-Übernahme- und finales Revie
 innerhalb desselben Datenpakets. Kein zusätzliches Issue allein für Tests oder
 Dokumentation. Exakte Regeln/Formate und numerische Parameter sind sequenzielle
 Liefergegenstände A/B/C, keine heute als abgeschlossen behaupteten Entscheidungen.
-Die Pakete sind fachlich spezifiziert, aber noch nicht gestartet; dies ist keine
-technische Startfreigabe und keine Modell-/Eigenumsetzungsempfehlung.
+SD2-A ist separat beauftragt und in Draft-PR #408 implementiert; seine unabhängige
+Abnahme bleibt offen. B/C/D sind noch nicht gestartet. Dieser Fachvertrag allein
+ist keine technische Startfreigabe und keine Modell-/Eigenumsetzungsempfehlung.
 
 Jedes Paket erhält technische T01-Nachweise, getrenntes Selbstreview und ein
 qualifiziertes separates R01 am konkreten Head vor Merge. Die Issue-Bodies

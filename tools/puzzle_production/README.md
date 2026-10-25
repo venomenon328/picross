@@ -458,6 +458,40 @@ ungeprüfte Spur; `analysis_verifier.verify_trace` beziehungsweise `verify_resul
 prüfen sie. `analysis_io.analyze_file` und `check_bundle` binden die gespeicherten
 Bytes. Vorhandene Proof-v1/v2/v3-Verifikation und `quality.assess()` bleiben erhalten.
 
+## SD2-A: Separater Analyseweg
+
+Der [technische Vertrag 1.0](../../docs/SD2_ANALYZER.md) wurde vor Code versioniert.
+Der eigene Analysator und unabhängige Prüfer verwenden E0–E3 und liefern getrennte
+Rohprofile für Denkanspruch, Suchaufwand und Bearbeitungsumfang. Die eigene CLI
+ist ohne Pillow oder Engine ausführbar:
+
+```sh
+python -m tools.puzzle_production.sd2_cli analyze --input tests/puzzle_production/fixtures/sd-runtime.json --input-kind runtime --output-dir artifacts/sd2-example
+python -m tools.puzzle_production.sd2_cli check --input tests/puzzle_production/fixtures/sd-runtime.json --bundle artifacts/sd2-example
+python -m unittest discover -s tests/puzzle_production -p 'test_sd2_analysis.py' -v
+```
+
+Das Beispiel ist ein fester synthetischer Balken. Ohne `--input-kind runtime`
+werden Logikdateien v1/v2 gelesen. Ausgabeordner müssen neu sein. Das Bundle
+enthält `input.json`, `logic.json`, `trace.json`, `report.json`; optional die
+beiden expliziten `--r4-proof`/`--r4-baseline`-Dateien. Der Checker ist lesend,
+prüft die ganze Spur und rekonstruiert sämtliche Profile. Keine Registry wird
+gelesen. Alle Dateiformate besitzen eigene `picross-sd2-*-v1`-Kennungen.
+
+`--seconds 120 --max-lines 100000 --max-rule-work 20000000 --max-waves 80000`
+sowie `--max-pair-work 20000000 --max-pair-records 250000` begrenzen den Lauf.
+Analyze hat eigene `--verify-seconds`, `--verify-max-lines`,
+`--verify-max-rule-work` mit denselben Defaults. Unterbrochene Wellen werden
+verworfen; Prüfabbruch schreibt keinen Erfolgsbericht. Exit 0 bestätigt den
+jeweiligen Status solved/stalled/contradiction, 2 ungültigen Input, 3 ungültige
+Analyse, 4 Abbruch und 5 technischen Fehler. Ein Fixpunkt ist kein vollständiger
+Lösungsverlauf. Proxys sind keine gemessenen menschlichen Zeiten oder Klickzahlen.
+
+Auch vollständige SD2-A-Berichte enthalten keine Endnote oder aktive Bewertung;
+`method`, `level`, `confidence`, `estimated_minutes` bleiben null. Alte Aufrufe
+und der vollständige 0.3-Freeze bleiben erhalten. Kalibrierung, Integration und
+Aktivierung folgen separat. [Prüfzuordnung](../../docs/SD2_A_VERIFICATION.md).
+
 ## SD-C1: Kandidat, geprüfter Input, Vorschau und Übernahme
 
 [Daten-/Recoveryvertrag](../../docs/SD_CATALOG.md). Keine dieser Operationen läuft
