@@ -1,0 +1,155 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+  "revision": "r03",
+  "repo_commit": "0c06d28d00dfb93df8f1aac40591be5a61afa8e8",
+  "state": "content_ready",
+  "category_id": "mythen-fantasie",
+  "brief": "brief.md",
+  "approved_parameters": [
+    {
+      "width": 9,
+      "height": 15,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        55,
+        22,
+        969,
+        1482
+      ],
+      "threshold_range": [
+        96,
+        176
+      ],
+      "alpha_below": 128
+    },
+    {
+      "width": 10,
+      "height": 15,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        55,
+        22,
+        969,
+        1482
+      ],
+      "threshold_range": [
+        96,
+        176
+      ],
+      "alpha_below": 128
+    },
+    {
+      "width": 11,
+      "height": 17,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        55,
+        22,
+        969,
+        1482
+      ],
+      "threshold_range": [
+        96,
+        176
+      ],
+      "alpha_below": 128
+    }
+  ],
+  "proposed_parameters": "configuration.json",
+  "requested_parameters": {
+    "width": null,
+    "height": 15,
+    "approximate": true,
+    "mode": "mono",
+    "foreground_colors": 1,
+    "foreground_color_requirement": "exact; EMPTY excluded"
+  },
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "3873e7b3732f3379de3e3f1038e5668ba86df90c2fdc9958b4a16063b4090368",
+    "derived_from_reveal_sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": "approvals/motif-MA-r01.json",
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "imports/9x15",
+    "variant": "area-160",
+    "proof": "imports/9x15/area-160-proof.json",
+    "verification": "audit/independent-verification.json",
+    "certification": null,
+    "matrix_hash": "ae2140e5a64624956867cb3a8b59a596912108c44d466d1a8aa3e17a82ab0344",
+    "logic_hash": "52f4c8acf32008c8ec8db86662d832a975aa54c653d5a9d6f7a1b8452f803935"
+  },
+  "origin_verification": "audit/origin-verification.json",
+  "repair": null,
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "fabc532505a246819f783cf9a93550a6e92bfac3312cac2e3506ac355987a93c"
+  },
+  "provenance": "provenance.json",
+  "difficulty": "difficulty.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "codex_handoff": "codex-handoff.md",
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-A-r01.json",
+    "motif": "approvals/motif-MA-r01.json",
+    "provenance": "provenance.json",
+    "logic": "audit/independent-verification.json",
+    "frame": "audit/quality-metrics.json",
+    "visual": "audit/final-visual-review.json",
+    "difficulty": "difficulty.json",
+    "reveal_consistency": "audit/final-visual-review.json"
+  },
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "authorization": "Standardauftrag 3 vollständig bis Endabnahmevorlage; Repositoryablage und Ablage-PR-Merge nach Pflichtchecks. Keine Endabnahme oder Spielregistrierung.",
+  "analysis": {
+    "checked": "analysis/checked.json",
+    "bundle": "analysis/bundle",
+    "provisional": "analysis/provisional.json",
+    "method": "picross-difficulty-0.3"
+  },
+  "final_editorial_approval": null,
+  "test_only": false
+}
