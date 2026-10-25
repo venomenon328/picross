@@ -66,18 +66,25 @@ Zusätzliche spezifische Belege:
 ## 3. Ausführung und Integrationsbindung
 
 Lokale Adaptertests: Python 3.13.14, isoliertes Pillow exakt 12.3.0 unter Windows.
-Der isolierte Godot-4.7.2-Regressionslauf mit festen Testressourcen bestand mit
+Der isolierte Godot-4.7.2-Regressionslauf des Implementierungsstands mit festen Testressourcen bestand mit
 **17310 Prüfungen, 0 Fehlern**, einschließlich neuer C-Fälle. Keine echten Saves.
-Gezielte alte Metadata-/Legacy-Recoverytests bestanden. Entwicklungsfehler in
+Die vier gezielten Durchstiche für Logikupdate, CLI, AT/Cleanup und Altjournal-
+Abgrenzung bestanden gemeinsam (771,456 s); die zusätzliche Added-Übernahme mit
+0.4 und aktivierter synthetischer Vorgabe separat (124,028 s). R4-Prefixabgrenzung
+bestand ebenfalls (11,965 s). Gezielte alte Metadata-/Legacy-Recoverytests und
+die beiden Selbstreview-Gegenproben bestanden. Entwicklungsfehler in
 Testaufbau beziehungsweise alten Projektionsannahmen wurden sichtbar behoben;
 frühere fehlgeschlagene Zwischenläufe gelten nicht als Abschlussnachweis.
 
-Der Implementierungs-PR bindet den endgültigen vollständigen Head, Basis,
+Der [Implementierungs-PR #410](https://github.com/venomenon328/picross/pull/410)
+bindet den endgültigen vollständigen Head, Basis,
 Checkout/Test-Merge, CI-Run/Attempt, tatsächliche Jobauswahl und Resultate.
 Die erforderliche vollständige Auswahl ist docs, production, product mit
 `core,history,catalog,completion,adapters,graphics,export`, web mit allen fünf
-Chromiumgruppen, delivery und ci-required. Preflight folgt ausschließlich dem
-tatsächlichen Diffselektor; kein Firefox und keine Selektorverkürzung. Aktuelle
+Chromiumgruppen, delivery und ci-required. Der tatsächliche Diffselektor wählt
+zusätzlich Preflight wegen `tools/product_fixtures.py` und
+`tools/test_catalog_difficulty.py` über seine unveränderte konservative Regel
+für unklassifizierte Werkzeugpfade; kein Firefox und keine Selektorverkürzung. Aktuelle
 Remote-CI ist der Abschlussnachweis, nicht ein historischer A-/B-Lauf.
 
 Die lokale Dokumentprüfung verwendet einen sauberen Snapshot der gelieferten
@@ -88,10 +95,18 @@ den sauberen tatsächlichen Integrationscheckout.
 
 ## 4. Getrennter Selbstreview und Gates
 
-Nach Implementierung wird der gesamte tatsächliche Diff gegen C01–C06,
+Nach Implementierung wurde der gesamte tatsächliche Diff von der oben genannten
+Basis zu `b7fff7357e9ed3b23b50c2ee79e6f3d7153f73f1` gegen C01–C06,
 Altversionsmatrix, Methodenfreezes und vollständige Quellen-/Recoverybindung in
-einem getrennten Prüfschritt gelesen. Der PR bindet Ergebnis, behobene Befunde
-und Nachprüfung an den finalen Head. Dies ist ein Selbstreview des Implementierers.
+einem getrennten Prüfschritt gelesen; anschließend die folgenden Korrekturen
+nachgeprüft. 35 geschützte Dateien (27 Pythonquellen, sieben gebundene JSON-
+Artefakte und 0.4-Manifest) sind bytegleich zur Basis. Der PR bindet den Abschluss
+zusätzlich an finalen Head und aktuelle CI. Dies ist ein Selbstreview des Implementierers.
+
+| Befund | Korrektur und Gegenprobe |
+| --- | --- |
+| B-SD2-C-01, behoben | Die neuen eigenständigen Projektionsvalidatoren akzeptierten bei unbekanntem Versionsparameter weiterhin Altwerte/null, obwohl die Registryprüfung schon geschlossen war. Python und Godot prüfen nun zuerst die exakte Versionsmenge; negative Proben einschließlich null decken den Fall ab. |
+| B-SD2-C-02, behoben | Der gemeinsame Analyse-/Rebind-Einstieg las die Definition vor seiner JSON-Grenzprüfung vollständig. Er verwendet nun auch dort den vorhandenen begrenzten 2-MiB-Reader; übergroße Definition stoppt vor Anlage eines Analyseverzeichnisses. |
 
 - **A-SD2-C-R01:** Qualifizierter separater Review am finalen Head durch einen
   gesonderten Reviewlauf bleibt vor Merge offen.
@@ -100,4 +115,6 @@ und Nachprüfung an den finalen Head. Dies ist ein Selbstreview des Implementier
 - Tatsächliche Analyse, Übernahme und Aktivierung bleiben #406. Menschliche
   Vergleichslösungen sind freiwillig; kein neues persönliches Gameplaygate.
 
-Urteil bis zur abschließenden CI-/Selbstreviewbindung im PR: **Review unvollständig**.
+Nach der Nachprüfung bestehen keine offenen blockierenden Selbstreviewbefunde.
+Urteil: **separate Abnahme offen**. Der aktuelle technische Abschlussnachweis
+bleibt an die tatsächlich abgeschlossene finale CI im PR gebunden.

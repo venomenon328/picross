@@ -16,6 +16,8 @@ static func run(runner: SceneTree) -> void:
 		mixed.entries[index]["added_at"] = null
 		mixed.entries[index]["difficulty"] = null if index == 0 else rating("L%d" % index,"picross-difficulty-0.4" if index % 2 else "picross-difficulty-0.3")
 	runner.check(Registry.validate(mixed).is_empty(), "SD2-C runtime v5 mixed 0.3/0.4/null validates")
+	for version: int in [1,6]:
+		runner.check(not Difficulty.valid(null,version), "SD2-C unknown projection version fails even for null")
 	for level: String in Difficulty.LEVELS:
 		var value: Dictionary = rating(level)
 		runner.check(Difficulty.valid(value,5), "SD2-C all five levels and necessary R4")
