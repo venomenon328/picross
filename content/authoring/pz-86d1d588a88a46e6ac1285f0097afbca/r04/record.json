@@ -79,14 +79,29 @@
     "method": "picross-difficulty-0.3"
   },
   "dimensions_approximate": true,
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-86d1d588a88a46e6ac1285f0097afbca/r04/approval.json",
+    "sha256": "1d7fcda10ef9920bfa6bd6959d6ed86a3bec1f6e36d11eb2d69722ad8752dead"
+  },
   "format": "picross-authoring-record-v1",
   "handoff": {
     "file": "content/authoring/pz-86d1d588a88a46e6ac1285f0097afbca/r04/handoff.json",
     "sha256": "7f562d902a7d00fb0f33d9d51e4d4ad519eba29cd180f72bb662e9953ccc63b4"
   },
   "height": 20,
-  "integration": null,
+  "integration": {
+    "evidence": {
+      "file": "content/authoring/pz-86d1d588a88a46e6ac1285f0097afbca/r04/integration.json",
+      "sha256": "15d6b5bb0b3ca1b381cf4e07a0c86725f4170dda6194cf7ba5b4bca8e6446fdb"
+    },
+    "main_merge_pending": true,
+    "manifest": "content/packages/pz-86d1d588a88a46e6ac1285f0097afbca/r04/manifest.json",
+    "manifest_sha256": "d0a74ca3ad9d341629fb4f6ae67a8025a274091bc2493a8110d54fe367bc236d",
+    "registered": true,
+    "runtime_id": "pz-86d1d588a88a46e6ac1285f0097afbca",
+    "runtime_revision": 1,
+    "save_slot": "cau_vang_001"
+  },
   "inventory_sha256": "5b20657ee436337678769e65e296f899bad261a5c05a765ffa409f0d0c683ff6",
   "mode": "color",
   "motif": {
@@ -103,7 +118,7 @@
     "sha256": "1b56ddaf1f13366f792e924f17b01fe09c49e4974388de74c39ca4c785ff54f0"
   },
   "motif_name": "Cầu Vàng",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Integrations-PR nach Pflichtchecks mergen; danach §9-Bereinigung",
   "omissions": "Frühere r03-Import-/Analysebundles und überholte Vorschauen nur im unveränderten gebundenen Vorgänger. Alle sechs neuen RP-3-Bündel vollständig; keine alten ZIPs eingebettet.",
   "package": {
     "bytes": 16932389,
@@ -133,7 +148,7 @@
     "sha256": "a7d9ce61710821c360a4d0923b1a69db80a6abf9bcd31c9c32f83568ffeba30d"
   },
   "revision": "r04",
-  "state": "content_ready",
+  "state": "registered",
   "updated_at_utc": "2026-10-25T11:37:16.369406+00:00",
   "verification": {
     "editorial_approved": false,
