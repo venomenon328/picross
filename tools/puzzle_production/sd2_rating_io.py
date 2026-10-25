@@ -72,7 +72,9 @@ def analyze_and_rate(input_path, output, *, kind="logic", budget=None, verify_bu
                      proof_path=None, baseline_path=None):
     budget = budget if budget is not None else AnalysisBudget()
     verify_budget = verify_budget if verify_budget is not None else AnalysisBudget()
-    frozen_method(verify_budget)
+    # Identity files are statically bounded. Starting this clock here would
+    # incorrectly charge the following analysis time to the separate verifier.
+    frozen_method()
     _new_output(output)
     analyze_file(input_path, output / "analysis", kind=kind, budget=budget,
                  verify_budget=verify_budget, proof_path=proof_path, baseline_path=baseline_path)

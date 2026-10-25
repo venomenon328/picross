@@ -244,9 +244,16 @@ Alle Befehle erlauben `--seconds` (120), `--max-lines` (100000),
 Bei `analyze` begrenzt ein eigener Analysator diese Budgets; die getrennte
 Verifikation erhält `--verify-seconds` (120), `--verify-max-lines` (100000),
 `--verify-max-rule-work` (20000000) und dieselben Paar-/Wellengrenzen.
-`rate/check` verwenden alle Grenzen für die frische Verifikation. Frist beginnt
-beim ersten tatsächlichen Check; keine Erhöhung oder Wiederholung nach Abbruch.
-Syntaxfehler sind argparse-Exit 2, sonst eine JSON-Zeile auf stdout:
+`rate/check` verwenden alle Grenzen für die frische Verifikation. Bei `analyze`
+erfolgt die auf die fest gebundenen Dateien begrenzte Freeze-Identitätskontrolle
+vorab, ohne die Verifikationsuhr zu starten. Erst die tatsächliche Spurprüfung
+startet deren Frist; Analysezeit verbraucht kein Verifikationsbudget. Keine
+Erhöhung oder Wiederholung nach Abbruch.
+Syntaxfehler sind argparse-Exit 2, sonst eine JSON-Zeile auf stdout. Erfolgreiche
+CLI-Ausgaben verwenden die eigene Kennung `picross-sd2-rating-cli-v1`, sämtliche
+result-Felder außer dessen Format und zusätzlich command, result_hash und level.
+Diese Zusammenfassung ist kein gespeichertes Rating- oder Bundleformat.
+Exitcodes:
 0 = vollständig geprüft (auch ausdrücklich unrated/stalled/contradiction),
 2 = ungültige Eingabe/Methode/Pfad, 3 = ungültige Belege/Bundle/Ergebnis,
 4 = Abbruch/Budget/Speicher/Interrupt, 5 = technischer Fehler.
@@ -286,7 +293,11 @@ B-Methodenhash. Eine spätere Änderung verlangt eine neue Methodenidentität;
 dieses B-Paket schaltet die eingefrorene Methode weiterhin nicht aktiv.
 
 Eingefrorener [Methodensatz](../tools/puzzle_production/sd2_method_0_4.json):
-`db882ea14b17de725bf75e64904579cc7790c875d557f036fdd89586f303a97c`.
+`5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf`.
 Er bindet 27 Python-Quellen und sieben kanonische JSON-Artefakte einschließlich
 des unveränderten 0.3-Manifests samt Referenzen/Kalibrierung. Der B-Hash gehört
 zur Standalone-Methode, nicht zu einer aktiven Katalogrevision.
+Der vorläufige technische Stand `26bfedb` wurde im getrennten Selbstreview
+wegen des Startzeitpunkts der Verifikationsfrist und der CLI-Kennung korrigiert.
+Die neue Quellbindung ersetzt dessen noch nicht abgenommene B-Identität;
+Referenzen, Formelparameter, Vergleich und beide Evidenzdateien sind unverändert.

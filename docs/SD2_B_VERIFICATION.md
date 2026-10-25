@@ -23,7 +23,7 @@ Der alte A-Arbeitsbranch blieb erhalten. Unversionierte fremde Dateien unter
 | Zahlen- und Technikvertrag vor Bewertungscode | `99411e3`: exakte Formel, zehn Kalibrierungsvergleiche, eigene B-Hülle/CLI/Prüf-/Hash-/Fehlerverträge |
 | Implementation und unabhängige Reproduktion | Neue isolierte B-Module; sämtliche A- und 13 gebundenen 0.3-Quelldateien unverändert |
 | Getrennte Validierung | 16/16 Erwartungen und 2/2 Vergleichsordnungen erfüllt, keine Nachjustierung oder Umetikettierung |
-| Freeze | `db882ea14b17de725bf75e64904579cc7790c875d557f036fdd89586f303a97c`, 27 Quellen / sieben JSON-Artefakte |
+| Freeze nach Selbstreviewkorrektur | `5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf`, 27 Quellen / sieben JSON-Artefakte |
 
 Der Referenzhash bleibt
 `fb98b7c619f9933d111ad5f988579f38ae4fb72dd016a871d8fbb65b46a98456`.
@@ -63,10 +63,22 @@ als Beweisersatz; vorhandene A-Verifier-Regressionen sichern die Trennung.
 ## 3. Laufnachweise und CI-Bindung
 
 Lokal: Python 3.13.14 unter Windows; ausschließlich synthetische Tooltests und
-temporäre Verzeichnisse. Der erste gezielte B-Lauf bestand mit 19/19 Tests
-(51,494 s); nach ergänzten Fehler-/Datei-/Runtime-/R4-Proben bestand der
-vollständige B-Lauf mit **23/23 Tests (57,033 s)**. Alle aufgeführten negativen
-Proben erreichten ihre erwartete Ablehnung. Vollständige CI folgt der tatsächlichen Base-/Head-Auswahl.
+temporäre Verzeichnisse. Zwischenläufe bestanden mit 19/19 (51,494 s) und
+23/23 Tests (57,033 s). Der getrennte Selbstreview ergänzte einen zunächst
+rot reproduzierten Deadlinefehler; nach Korrektur bestand der vollständige
+B-Lauf mit **24/24 Tests (72,465 s)**. Alle aufgeführten negativen Proben
+erreichten ihre erwartete Ablehnung. Herkunftsprüfung regenerierte zusätzlich
+alle 33 ausgewählten Zufallsmatrizen aus den vier Seeds ohne Solver oder
+Scoreauswahl und bestätigte identische Bytes/Logik. 24 geschützte A-/0.3-Dateien
+wurden bytegenau gegen die Basis verglichen, einschließlich aller 13
+0.3-Quellen und alter Methoden-/Referenz-/Kalibrierungsdateien.
+
+Die tatsächliche vollständige Diffauswahl verlangt docs, production, product
+mit allen sieben nativen Gruppen, web mit allen fünf Chromium-Gruppen,
+delivery und ci-required. Preflight ist durch diesen Diff nicht ausgewählt;
+dies ist kein ausgeführter Preflight-Pass. Der erste CI-Docsjob des
+Zwischenstands `26bfedb` bestand einschließlich Werkzeugtests und Validator;
+maßgeblich für die Lieferung bleibt der neue finale Run im PR.
 Es gibt keine Änderung am Selektor und keine pauschale SD2-Ausnahme.
 
 Der [Implementierungs-PR #409](https://github.com/venomenon328/picross/pull/409)
@@ -77,12 +89,26 @@ Technische Laufzeiten messen keine menschliche Lösungsgeschwindigkeit.
 
 ## 4. Getrennter Selbstreview und offene Gates
 
-Nach Implementation wird der vollständige Base-/Head-Diff in einem getrennten
-Prüfschritt gegen B01–B06 und die aufgeführten Fach-/Dateiverträge gelesen.
-Der PR bindet diesen Selbstreview an den endgültigen Head und protokolliert
-eventuelle Korrekturen sowie den anschließenden CI-Stand. Die großen JSON-Dateien
-werden vollständig geparst und semantisch samt Herkunft, Gruppen, Formeln,
-Erwartungen, Belegen und Hashbindungen geprüft; keine bloße Diffstat-Abnahme.
+Nach Implementation wurde der vollständige Diff von
+`c7c6156ac27dc033036443bc06ef398bbf94f32f` zu
+`26bfedb052fa47d26333634850c36a2a5b3ffb2a` in einem getrennten Prüfschritt
+gegen B01–B06 und die Fach-/Dateiverträge gelesen; anschließend die nachfolgenden
+Korrekturen nochmals geprüft. Der PR bindet den abgeschlossenen Selbstreview
+zusätzlich an den endgültigen Head und dessen CI. Die großen JSON-Dateien wurden
+vollständig geparst und semantisch samt Herkunft, Gruppen, Formeln, Erwartungen,
+Belegen und Hashbindungen geprüft. Referenzen und Vergleich sind seit ihren
+jeweiligen Vorabcommits unverändert, auch nach der technischen Nacharbeit.
+
+| Befund | Auslöser / Korrektur / Verifikation |
+| --- | --- |
+| B-SD2-B-01, behoben | Freezeprüfung startete bei analyze die getrennte Verifikationsuhr vor der Analyse und verkürzte dadurch die verfügbare Prüfzeit. Vorab-Identitätsprüfung startet diese Uhr jetzt nicht. Neue gezielte Gegenprobe war zuerst rot und ist nach Korrektur grün; voller B-Lauf 24/24. |
+| B-SD2-B-02, behoben | Die CLI-Zusammenfassung überschrieb implizit das Bundleformat mit dem Ergebnisformat und fügte dort zusätzliche Felder hinzu. Eigene explizite Kennung picross-sd2-rating-cli-v1 und command trennen die Ausgabe vom geschlossenen Dateivertrag; analyze/rate/check und Formatassertion erfolgreich. |
+
+Diese technischen Korrekturen ändern keine Formel, Parameter oder
+Kalibrierungs-/Validierungsergebnisse. Der vorläufige B-Hash aus `26bfedb`
+ist durch die oben gebundene finale Quellidentität ersetzt; kein aktiver oder
+abgenommener Methodenbestand wurde umgeschrieben. Nach Nachprüfung keine
+offenen blockierenden Selbstreviewbefunde. Urteil: **separate Abnahme offen**.
 
 - **A-SD2-B-R01:** Qualifizierter separater Review des finalen Heads durch einen
   anderen Reviewlauf vor Merge. Selbstreview ersetzt diesen nicht.
