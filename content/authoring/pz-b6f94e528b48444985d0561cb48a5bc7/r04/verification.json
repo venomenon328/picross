@@ -1,0 +1,40 @@
+{
+  "format": "picross-editorial-correction-check-v1",
+  "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+  "revision": "r04",
+  "source_commit": "a8a8cc46228b1554469319ddab8eddb67c9e65b1",
+  "zip_sha256": "aa5b267ba70a8917b66d4441bf22d10332b0ef6a2ea31068e19d6a123855972c",
+  "handoff_sha256": "47cbc34f1578ce0299b76f238ef5a6708d5e118b4097692c327a4c09c2bba9c3",
+  "inventory_sha256": "c082b1a6053420a047eb1a90c4144c0e1ba3127de5533a4a7b836a74afb75701",
+  "files_verified": 54,
+  "package_inventory_valid": true,
+  "fixed_column_recipe_replayed": true,
+  "old_cells_preserved_in_order": true,
+  "new_pixel_source_import_reconstructed": true,
+  "exact_source_pixels_verified": true,
+  "endmatrix_equal": true,
+  "mirror_symmetric_every_row": true,
+  "shaft_width": 2,
+  "foot_width": 4,
+  "fresh_independent_proof": {
+    "status": "solved",
+    "proof_verified": true,
+    "certified": true,
+    "logic_hash": "fd42c89a220e4161fa8e3b889bc7e0292f8745e39e47df311bab8891f984e906",
+    "profile": {
+      "id": "full-line-mono",
+      "version": 1,
+      "start": "unknown",
+      "deduction": "all-line-supported-values",
+      "search": false
+    },
+    "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+    "steps": 38,
+    "line_evaluations": 63
+  },
+  "reveal_approval_preserved": true,
+  "new_motif_approval": false,
+  "final_editorial_approval": false,
+  "full_target_adapter_inspection": "not_claimed; new manual source and human acceptance pending",
+  "status": "correction_technically_verified_for_review"
+}
