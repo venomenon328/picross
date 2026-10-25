@@ -1,8 +1,0 @@
-{
-  "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
-  "file": "reveals/A-r01.png",
-  "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
-  "author": "ChatGPT image_gen.imagegen, beauftragte native Bildgenerierung/-bearbeitung",
-  "usage_basis": "Auftragsbezogene KI-Erzeugung für das Picross-Projekt; keine fremden Bildbytes oder direkte Modell-API. Keine Exklusivitäts-/Schutzfähigkeitsbehauptung.",
-  "prompt_file": "prompts/A-r01.txt"
-}
