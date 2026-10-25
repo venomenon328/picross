@@ -3,8 +3,9 @@
 **SD2 · 25.10.2026:** [Der freigegebene neue Sollvertrag](PUZZLE_DIFFICULTY_V2.md)
 beauftragt als Spezifikation getrennte menschennähere Regeln und drei Rohprofile
 für die geplante Methode 0.4. Dieser vollständige 0.3-Analysatorvertrag bleibt
-unverändert gültig. SD2-A (#403) muss neue Regeln, Formate und unabhängige Prüfung
-separat versionieren; keine Umdeutung alter R1/R2-Belege. Noch keine Implementierung.
+unverändert gültig. SD2-A (#403) liefert neue Regeln, Formate und unabhängige Prüfung
+im [separaten Analysevertrag](SD2_ANALYZER.md) und Draft-PR #408;
+keine Umdeutung alter R1/R2-Belege. Separate Abnahme und Merge bleiben offen.
 
 Stand: 17.10.2026 · Version 1.0 · technische Konkretisierung von
 [SD-A/#236](https://github.com/venomenon328/picross/issues/236) und
