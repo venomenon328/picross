@@ -1,0 +1,147 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+  "revision": "r03",
+  "motif_name": "Ankh",
+  "category_id": "mythen-fantasie",
+  "state": "content_ready",
+  "package": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r03/package.zip",
+    "bytes": 6298512,
+    "sha256": "81d60393042ede75d9b6038d325b4ffbe003226e49e245febcc5098e14f7c31e"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r03/handoff.json",
+    "sha256": "6dd2dfa77e9a7bd2e69ace57f223c4bbd45af435c84c5d2b1960c6e2abd5a00e"
+  },
+  "inventory_sha256": "fabc532505a246819f783cf9a93550a6e92bfac3312cac2e3506ac355987a93c",
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r01.png",
+    "sha256": "3873e7b3732f3379de3e3f1038e5668ba86df90c2fdc9958b4a16063b4090368",
+    "derived_from_reveal_sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": "approvals/motif-MA-r01.json",
+    "provenance": "motifs/MA-r01.provenance.json"
+  },
+  "approved_parameters": [
+    {
+      "width": 9,
+      "height": 15,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        55,
+        22,
+        969,
+        1482
+      ],
+      "threshold_range": [
+        96,
+        176
+      ],
+      "alpha_below": 128
+    },
+    {
+      "width": 10,
+      "height": 15,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        55,
+        22,
+        969,
+        1482
+      ],
+      "threshold_range": [
+        96,
+        176
+      ],
+      "alpha_below": 128
+    },
+    {
+      "width": 11,
+      "height": 17,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "contain",
+      "actual_crop": [
+        55,
+        22,
+        969,
+        1482
+      ],
+      "threshold_range": [
+        96,
+        176
+      ],
+      "alpha_below": 128
+    }
+  ],
+  "final_editorial_approval": null,
+  "end_approval_template": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r03/end-approval-template.json",
+    "sha256": "41ca7da10866ae397d2e150d31391d6bf877c6eb065a46678a29cae09bd391c1",
+    "status": "template_only; actor/timestamp/statement null, no approval"
+  },
+  "width": 9,
+  "height": 15,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "mode": "mono",
+  "foreground_colors_requested": 1,
+  "foreground_colors_used": 1,
+  "difficulty": {
+    "checked": "analysis/checked.json",
+    "bundle": "analysis/bundle",
+    "provisional": "analysis/provisional.json",
+    "method": "picross-difficulty-0.3",
+    "level": "L3",
+    "confidence": "medium"
+  },
+  "blockers": [],
+  "open_gates": [
+    "final_editorial: separate actual human approval required before export/integration"
+  ],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "integration": null,
+  "repo_commit": "0c06d28d00dfb93df8f1aac40591be5a61afa8e8",
+  "updated_at_utc": "2026-10-25T12:26:54.091902+00:00",
+  "source_package": {
+    "status": "pass",
+    "source_commit": "0c06d28d00dfb93df8f1aac40591be5a61afa8e8",
+    "zip": {
+      "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r02/package.zip",
+      "bytes": 2943252,
+      "sha256": "dd024b5484886115ade7dbdb5a5409bf759f762c7058685c95e21dbff5ee5388"
+    },
+    "handoff": {
+      "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r02/handoff.json",
+      "sha256": "4ab895ff83c78501c83ab8d8b66c1c92d4cf79b43159e6d446b969997af02b31"
+    },
+    "inventory_sha256": "9940ffcd6fc3b72756af16dac28b3a7d06c48334a40d776a27d98f6f5528f320",
+    "files_verified": 20,
+    "handoff_copy_equal": true,
+    "rulebook_matches_current": true
+  },
+  "verification": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r03/inspection.json",
+    "sha256": "302a6224a595160b2dcc5870b4b464738c9b67052e364316b6dd00cebdeedb03",
+    "technical": true,
+    "editorial_approved": false,
+    "registered": false,
+    "blockers": [
+      "final_editorial: missing bound human final approval"
+    ],
+    "checked_zip_sha256": "81d60393042ede75d9b6038d325b4ffbe003226e49e245febcc5098e14f7c31e"
+  }
+}
