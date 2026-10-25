@@ -1,0 +1,96 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+  "revision": "r05",
+  "motif_name": "Ankh",
+  "category_id": "mythen-fantasie",
+  "state": "content_ready",
+  "package": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/package.zip",
+    "bytes": 2052817,
+    "sha256": "f56b170d2a8a515004c7a4cc8946505bd1a5204211b31dedfad27d2c720e5d18"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/handoff.json",
+    "sha256": "081aef7ce1a978b20d3c007fb77a7d04e25b336d04d3ede74311b3e860618617"
+  },
+  "inventory_sha256": "e960e88f88464daa468019bafdd28f5f34fdbb488cae9f0387dc148484390d0d",
+  "reveal": {
+    "file": "reveals/A-r01.png",
+    "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": "approvals/reveal-A-r01.json",
+    "provenance": "reveals/A-r01.provenance.json"
+  },
+  "motif": {
+    "file": "motifs/MA-r02.png",
+    "revision": "MA-r02",
+    "sha256": "641b5788d17b55c55264afe7886e07c5bc35c8170ed51834a6af798b5cbeef7e",
+    "derived_from_reveal_sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+    "approval": "approvals/motif-MA-r02.json",
+    "provenance": "motifs/MA-r02.provenance.json"
+  },
+  "approved_parameters": [
+    {
+      "width": 10,
+      "height": 15,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "fit": "exact",
+      "actual_crop": [
+        0,
+        0,
+        10,
+        15
+      ]
+    }
+  ],
+  "final_editorial_approval": null,
+  "end_approval_template": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/end-approval-template.json",
+    "sha256": "49a4b68defc746412fa79c90f3f2bb24b9914797096db0598e7cdd93ccaa7131",
+    "status": "template_only; actor/timestamp/statement null, no approval"
+  },
+  "width": 10,
+  "height": 15,
+  "dimensions_approximate": false,
+  "dimensions_fixed": true,
+  "mode": "mono",
+  "foreground_colors_requested": 1,
+  "foreground_colors_used": 1,
+  "difficulty": {
+    "checked": "analysis/checked.json",
+    "bundle": "analysis/bundle",
+    "provisional": "analysis/provisional.json",
+    "method": "picross-difficulty-0.3",
+    "reused_from": "r04",
+    "reuse_evidence": "audit/difficulty-reuse.json",
+    "level": "L3",
+    "assessment_type": "instrumented",
+    "confidence": "medium"
+  },
+  "blockers": [],
+  "open_gates": [
+    "final_editorial: separate actual human approval before export/integration"
+  ],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "integration": null,
+  "repo_commit": "47a862b7f4ed4e7ab47bbc7a183b8f994c03477b",
+  "updated_at_utc": "2026-10-25T12:54:42.064156+00:00",
+  "source_package": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r04/package.zip",
+    "bytes": 2851773,
+    "sha256": "aa5b267ba70a8917b66d4441bf22d10332b0ef6a2ea31068e19d6a123855972c"
+  },
+  "verification": {
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r05/inspection.json",
+    "sha256": "598696a6496a22706b11feb644e8cc8e12c0ed32c236293cc2a670da3fe72e44",
+    "technical": true,
+    "editorial_approved": false,
+    "registered": false,
+    "blockers": [
+      "final_editorial: missing bound human final approval"
+    ],
+    "checked_zip_sha256": "f56b170d2a8a515004c7a4cc8946505bd1a5204211b31dedfad27d2c720e5d18"
+  }
+}
