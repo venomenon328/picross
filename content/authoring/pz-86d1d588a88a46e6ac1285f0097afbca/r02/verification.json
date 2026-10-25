@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-early-package-verification-v1",
+  "puzzle_id": "pz-86d1d588a88a46e6ac1285f0097afbca",
+  "revision": "r02",
+  "timestamp_utc": "2026-10-25T10:17:55.569575Z",
+  "package_sha256": "33c798b0973087eaf4aed881feb2bc6c553d10d6356ebe3aea4b921e12878690",
+  "inventory_sha256": "b33697cdcf5fda185fe19b5b2ad00b922ed636b8e9d6121ed86c452ec0481a49",
+  "file_count": 26,
+  "checks": {
+    "safe_zip_crc_modes_paths": "pass",
+    "full_inventory_sizes_hashes": "pass",
+    "byte_equal_handoff_copy": "pass",
+    "unchanged_rulebook_snapshot": "pass",
+    "unchanged_approved_reveal": "pass",
+    "actual_reveal_approval_binding": "pass",
+    "motif_derivation_provenance": "pass",
+    "png_decode_and_alpha": "pass",
+    "four_design_schemas_and_corridor": "pass",
+    "no_fabricated_motif_approval_or_raster": "pass",
+    "no_embedded_old_zip": "pass",
+    "index_append_only": "pass",
+    "all_r01_files_unchanged": "pass",
+    "runtime_registry_unchanged": "pass",
+    "diff_whitespace": "pass"
+  },
+  "scope": "Frühe Motivphase; Bild-/Datei-/Designprüfung ohne Rasterisierung, Solver oder ZA-1-Zertifizierung."
+}
