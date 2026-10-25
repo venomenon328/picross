@@ -247,6 +247,9 @@ report_verified=true,operational_measurements_verified=false.
 | A04 | Wiederholung, Achsentausch, beide Spiegelungen, Farb-ID-Bijektion; sämtliche skalaren Profile invariant, Achsenmaße transformieren; Teilfarbereignisse und Positionsvereinigung getrennt. |
 | A05 | Unveränderte bestehende Analyse-/Ratingtests, Referenz-/Freezeprüfung aller 13 Quellen, alte CLI mit/ohne Methode; neue Formate werden vom alten Integrationsweg nicht als Rating akzeptiert. |
 
-SD2-A-T01 und getrennter Selbstreview gehören zur Lieferung. Qualifiziertes
-separates SD2-A-R01 am finalen Head und ausdrückliche Mergefreigabe bleiben offen.
+SD2-A-T01 und getrennter Selbstreview sind historisch an den A-Lieferhead gebunden.
+Nach qualifiziertem separatem SD2-A-R01 ist PR #408 auf
+`c7c6156ac27dc033036443bc06ef398bbf94f32f` integriert.
+Der [eigenständige B-Vertrag](SD2_CALIBRATION.md) ergänzt eine neue Hülle;
+dieser A-v1-Rohvertrag und seine geschlossene Dateimenge bleiben unverändert.
 CI wird aus dem vollständigen Diff ermittelt, ohne Änderung des Selektors.
