@@ -92,7 +92,7 @@
   "integration": {
     "evidence": {
       "file": "content/authoring/pz-86d1d588a88a46e6ac1285f0097afbca/r04/integration.json",
-      "sha256": "15d6b5bb0b3ca1b381cf4e07a0c86725f4170dda6194cf7ba5b4bca8e6446fdb"
+      "sha256": "b968524ff9f2a2859dce5d26253559c03bfb030f7589c63e9ced18212d61f9f0"
     },
     "main_merge_pending": true,
     "manifest": "content/packages/pz-86d1d588a88a46e6ac1285f0097afbca/r04/manifest.json",
