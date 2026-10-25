@@ -1,3 +1,0 @@
-Production ID: pz-86d1d588a88a46e6ac1285f0097afbca
-Artwork: ChatGPT image_gen.imagegen, im beauftragten Standardauftrag 1 erzeugt
-Usage basis: Auftragsbezogene KI-Bilderstellung für dieses Projekt; keine fremden Bildbytes verwendet. Herkunft und bisherige Bytes unverändert erhalten.
