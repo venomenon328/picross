@@ -492,6 +492,70 @@ Auch vollständige SD2-A-Berichte enthalten keine Endnote oder aktive Bewertung;
 und der vollständige 0.3-Freeze bleiben erhalten. A ist nach separatem Review
 über PR #408 integriert. [Historische Prüfzuordnung](../../docs/SD2_A_VERIFICATION.md).
 
+## SD2-C: gemeinsamer Integrationsvertrag
+
+[SD2-C-V01](../../docs/SD2_INTEGRATION.md) bindet vor Code die neuen Checked-/
+Rating-/Kontext-/Reportformate, Runtime-v5 und Journalgenerationen. Die bisherigen
+0.3-Formate und eigenständigen A-/B-CLIs bleiben geschlossen. Der reale
+Produktionsdefault bleibt 0.3. Neue `--method`-Auswahl und explizites
+`catalog_method plan/adopt` folgen diesem Vertrag.
+[SD2-C-T01](../../docs/SD2_C_VERIFICATION.md) ordnet die synthetischen Nachweise zu.
+
+Einzelanalyse und frischer Import verwenden eine ausdrücklich übergebene
+Definition. Das neue äußere Arbeitsverzeichnis enthält `catalog-context.json`
+und das unveränderte geschlossene B-Bundle in `rating/`. Aktive Ratingquellen
+enthalten keine vollständigen Spuren; das Arbeitsbundle bleibt der vollständige
+externe Analysebeleg. Beispiel mit dem festen technischen Input:
+
+```sh
+python -m tools.puzzle_production.catalog_analysis analyze --method picross-difficulty-0.4 --production-mode mono --input tests/puzzle_production/fixtures/sd-runtime.json --work-dir artifacts/sd2-c-single --output artifacts/sd2-c-checked.json
+python -m tools.puzzle_production.catalog_analysis import --input tests/puzzle_production/fixtures/sd-runtime.json --bundle artifacts/sd2-c-single --output artifacts/sd2-c-imported.json
+```
+
+Für eine freigegebene neue Produktion bleibt der vorbereitende Weg
+`candidate --design ... --matrix ... --logic ... --puzzle-id ... --runtime-revision ... --output ...`,
+danach `analyze` oder `import`, abschließend
+`rebind --input <fertige-Definition> --rating <checked.json> --production-mode mono|color --output <neue-checked.json>`.
+Die geprüfte Datei geht als `--difficulty` an `target_adapter plan/register/update`.
+Register/Update verlangen für neue oder tatsächlich geänderte Logik genau die
+aktive Produktionsmethode; ohne Defaultdatei ist dies **0.3**. Ein 0.4-Checked-
+Ergebnis aktiviert die Methode nicht. Einfarb-Color bleibt explizit Color.
+Metadaten-Rebind erhält den ursprünglichen Analysebeleg einschließlich seiner
+Methode, sofern Logik, Matrix und Produktionsmodus gleich bleiben. Ursprüngliche
+Authoringbewertungen und Freigaben werden nicht ersetzt.
+
+Auswahl und Übernahme sind getrennt. Die folgenden Aufrufe setzen einen
+**isolierten synthetischen Checkout** und passende gebundene Dateien voraus;
+sie sind kein Auftrag zur Ausführung am echten Bestand:
+
+```sh
+python -m tools.puzzle_production.catalog_analysis preview-checked --method picross-difficulty-0.4 --checkout /tmp/sd2-c-checkout --id pz-sd-synthetic --checked pz-sd-synthetic /tmp/checked.json --work-dir /tmp/sd2-c-preview --run-id synthetic-c --source-commit 0000000000000000000000000000000000000000
+python -m tools.puzzle_production.catalog_analysis plan-adoption --checkout /tmp/sd2-c-checkout --work-dir /tmp/sd2-c-preview
+python -m tools.puzzle_production.catalog_analysis adopt --checkout /tmp/sd2-c-checkout --work-dir /tmp/sd2-c-preview
+```
+
+`preview` analysiert nur die explizite Auswahl; `preview-checked` konsumiert
+vorhandene geprüfte Ergebnisse. `--all` ersetzt die ID-Auswahl für einen ausdrücklich
+beauftragten Gesamtlauf. Ohne `--method` bleibt auch hier 0.3. JSON/Markdown nennen
+Alt-/Neumethode, Stufe, vollständiges 0.4-Assessment und offene Fälle. Unvollständige
+Versuche erhalten keine Ersatzstufe und verdrängen keinen aktiven Altwert.
+Plan/Adopt prüfen vollständige Quellen einschließlich Standarddatei; gleiche
+Übernahme ist nur bei exakt passendem Zielzustand ein byte-/mtimegleicher No-op.
+
+Explizite Aktivierung ist ein eigener Plan ohne Rating-/Runtimeänderung:
+
+```sh
+python -m tools.puzzle_production.catalog_method plan --checkout /tmp/sd2-c-checkout --expected-method picross-difficulty-0.3 --target-method picross-difficulty-0.4 --target-method-hash 5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf --output /tmp/sd2-c-activation.json
+python -m tools.puzzle_production.catalog_method adopt --checkout /tmp/sd2-c-checkout --plan /tmp/sd2-c-activation.json
+```
+
+Der Plan bindet vollständige Quellen, erwartete Vorgängerrevision und beide
+Methodenfreezes. `adopt` ändert ausschließlich `content/difficulty-method.json`
+über das gemeinsame Journal. Nach Unterbrechung zuerst `content_registry recover`;
+fremde Bytes bleiben mit offenem Journal erhalten. Exitcodes 0/2/4 bedeuten
+Erfolg/Vertragsfehler/Abbruch. C aktiviert ausschließlich synthetische Checkouts.
+Die echte Aktivierung, Analyse und Umstellung bleiben #406.
+
 ## SD2-B: Eigenständige Bewertung 0.4
 
 Der [B-Vertrag](../../docs/SD2_CALIBRATION.md) bindet vorab festgelegte unabhängige

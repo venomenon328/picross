@@ -209,7 +209,7 @@ else: c.recover(Path(root))
 
     def test_pre_at_registration_generations_keep_exact_wire_contracts(self):
         import shutil,json
-        from tools.puzzle_production import catalog_added as added
+        from tools.puzzle_production import catalog_added as added, catalog_method as method
         from tools.puzzle_production.za1_fixtures import isolated_checkout,difficulty_for_export
         empty=isolated_checkout(self.root/'registration')
         with self.assertRaises(InterruptedError):cr.registration(self.exported,empty,apply=True,difficulty=difficulty_for_export(self.exported),fail_step='crash-index')
@@ -219,13 +219,13 @@ else: c.recover(Path(root))
             j['format']=format;j.pop('replacements')
             legacy=format==tx.LEGACY_FORMATS['registration']
             for side in ('old','new'):
+                j[side].pop(method.PATH)
                 j[side].pop(source.path(self.identifier))
                 if legacy:j[side].pop(added.path(self.identifier))
                 registry=json.loads(j[side][tx.REGISTRY])
                 j[side][tx.RUNTIME]=tx.projection(j[side],registry,version=3 if legacy else 4).decode()
-            if legacy:
-                (root/added.path(self.identifier)).unlink(missing_ok=True)
-                (root/tx.RUNTIME).write_text(j['old'][tx.RUNTIME],encoding='utf-8',newline='\n')
+            if legacy:(root/added.path(self.identifier)).unlink(missing_ok=True)
+            (root/tx.RUNTIME).write_text(j['old'][tx.RUNTIME],encoding='utf-8',newline='\n')
             (root/tx.LOCK).write_bytes(canonical_bytes(j)+b'\n')
             foreign=root/source.path(self.identifier);foreign.parent.mkdir(exist_ok=True);foreign.write_bytes(b'foreign AT\n')
             before=snapshot(root)
@@ -252,17 +252,21 @@ else: c.recover(Path(root))
             root=self.root/format;shutil.copytree(self.checkout,root)
             legacy=format==tx.LEGACY_FORMATS['update']
             if legacy:(root/added.path(self.identifier)).unlink();cr.sync_runtime(root)
+            from tools.puzzle_production import catalog_method as method
+            registry=cr.check_checkout(root)
+            write_json(root/tx.RUNTIME,cr.projection(registry,load_json(root/tx.categories.PATH),root,version=4))
             captured=tx.capture(root);old={n:b for n,(b,_) in snapshot(root).items()}
             with self.assertRaises(InterruptedError):
                 update(exported,root,self.entry['production']['definition_sha256'],apply=True,rebind_difficulty=True,fail_step='crash-content/registry.json')
             j=io.json_bytes((root/tx.LOCK).read_bytes(),pub.LIMIT);j['format']=format;j.pop('replacements')
             j['retained']=tx.historical_snapshot(captured)['retained']
             for side in ('old','new'):
+                j[side].pop(method.PATH)
                 j[side].pop(source.path(self.identifier))
                 if legacy:
                     j[side].pop(added.path(self.identifier))
-                    j[side][tx.RUNTIME]=tx.projection(j[side],json.loads(j[side][tx.REGISTRY]),version=3).decode()
-            if legacy:(root/tx.RUNTIME).write_text(j['old'][tx.RUNTIME],encoding='utf-8',newline='\n')
+                j[side][tx.RUNTIME]=tx.projection(j[side],json.loads(j[side][tx.REGISTRY]),version=3 if legacy else 4).decode()
+            (root/tx.RUNTIME).write_text(j['old'][tx.RUNTIME],encoding='utf-8',newline='\n')
             (root/tx.LOCK).write_bytes(canonical_bytes(j)+b'\n')
             foreign=root/source.path(self.identifier);foreign.parent.mkdir(exist_ok=True);foreign.write_bytes(b'foreign AT\n')
             before=snapshot(root)
@@ -272,26 +276,31 @@ else: c.recover(Path(root))
             self.assertEqual(old,{n:b for n,(b,_) in snapshot(root).items()})
     def test_metadata_generations_keep_exact_wire_contracts(self):
         import shutil,json
-        from tools.puzzle_production import catalog_added as added
-        # Legacy difficulty v1 and catalog metadata v1/v2 are distinct dispatches.
-        for format in (tx.LEGACY_FORMATS['sync'],tx.PREVIOUS_FORMATS['sync'],tx.FORMATS['sync']):
+        from tools.puzzle_production import catalog_added as added, catalog_method as method
+        # Four closed generations, including the unchanged AT contract.
+        for format in (tx.LEGACY_FORMATS['sync'],tx.PREVIOUS_FORMATS['sync'],tx.AT_FORMATS['sync'],tx.FORMATS['sync']):
             root=self.root/format;shutil.copytree(self.checkout,root)
             legacy=format==tx.LEGACY_FORMATS['sync']
             if legacy:(root/added.path(self.identifier)).unlink();cr.sync_runtime(root)
             captured=tx.capture(root);j=tx.prepare(root,captured,{},operation='sync')
             j['format']=format
             if format!=tx.FORMATS['sync']:
+                for side in ('old','new'):
+                    j[side].pop(method.PATH)
+                    j[side][tx.RUNTIME]=tx.projection(j[side],captured['registry'],version=4).decode()
+            if format not in (tx.FORMATS['sync'],tx.AT_FORMATS['sync']):
                 j.pop('replacements');j['retained']=tx.historical_snapshot(captured)['retained']
                 for side in ('old','new'):
                     j[side].pop(source.path(self.identifier))
                     if legacy:
                         j[side].pop(added.path(self.identifier))
                         j[side][tx.RUNTIME]=tx.projection(j[side],captured['registry'],version=3).decode()
-                if legacy:(root/tx.RUNTIME).write_text(j['old'][tx.RUNTIME],encoding='utf-8',newline='\n')
+            (root/tx.RUNTIME).write_text(j['old'][tx.RUNTIME],encoding='utf-8',newline='\n')
             raw=pub.journal_bytes(j) if tx.modern(j) else canonical_bytes(j)+b'\n'
             (root/tx.LOCK).write_bytes(raw)
             cr.recover(root);cr.check_checkout(root)
-            self.assertEqual(json.loads((root/tx.RUNTIME).read_bytes())['format'],'picross-runtime-registry-v4')
+            self.assertEqual(json.loads((root/tx.RUNTIME).read_bytes())['format'],
+                             'picross-runtime-registry-v5' if tx.sd2(j) else 'picross-runtime-registry-v4')
 
 
 del RevealTests  # Imported fixture owner is not a second discovered test suite.

@@ -9,7 +9,7 @@ import time
 from . import catalog_io
 from .authoring_package import file_hash, file_table, require, sha
 from .contract import canonical_bytes, load_json
-from . import catalog_added as added, categories, catalog_rating as rating, catalog_transaction as tx, reveal_source as reveal
+from . import catalog_added as added, categories, catalog_rating as rating, catalog_transaction as tx, reveal_source as reveal, catalog_method
 
 
 def _input(value):
@@ -21,20 +21,21 @@ def _input(value):
     return rating.validate(deepcopy(value), active=False), None
 
 
-def _new_rating(raw, previous, checked, rebind, *, required, production_mode):
+def _new_rating(raw, previous, checked, rebind, *, required, production_mode, active_method, new_logic):
     external = None
     if checked is not None:
         value, external = _input(checked)
     elif previous is not None and rebind:
         value = rating.checked_from_active(previous)
     else:
-        require(not required, "New integration requires a complete 0.3 rating")
+        require(not required, "New integration requires a complete " + active_method.removeprefix("picross-difficulty-") + " rating")
         return None, None
     if rebind:
         value = rating.rebind_checked(value, raw, production_mode=production_mode)
     else:
         rating.validate(value, active=False, definition_bytes=raw, production_mode=production_mode)
-    require(value.get("production_mode") == production_mode, "New integration requires mode-bound 0.3 analysis")
+    require(value.get("production_mode") == production_mode, "New integration requires mode-bound analysis")
+    require(not new_logic or rating.method(value) == active_method, "New logic requires the active production method")
     active = rating.active_record(value, previous, kind="rebind" if rebind else "analysis")
     rating.validate(active, definition_bytes=raw)
     return active, external
@@ -84,17 +85,18 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         old_raw = snapshot["texts"]["game/" + existing["definition"]]
         old_def = rating.bytes_json(old_raw, 2 * 1024 * 1024)
         require(m["runtime_revision"] > old_def["revision"], "Update requires a higher runtime revision")
-        required = (rating.definition(old_raw)[3] != rating.definition(raw)[3] or
+        new_logic = (rating.definition(old_raw)[3] != rating.definition(raw)[3] or
                     existing["production"]["mode"] != entry["production"]["mode"])
         p = snapshot["texts"][rating.path(existing["id"])]
         previous = rating.validate(rating.bytes_json(p), definition_bytes=old_raw) if p is not None else None
         # A present rating may never silently disappear on a metadata update.
-        required = required or previous is not None
+        required = new_logic or previous is not None
     else:
-        required = True
+        required = new_logic = True
     package = entry["production"]["package"]
     active, external = _new_rating(raw, previous, difficulty, rebind_difficulty, required=required,
-                                   production_mode=entry["production"]["mode"])
+                                   production_mode=entry["production"]["mode"], new_logic=new_logic,
+                                   active_method=catalog_method.current(catalog_method.from_bytes(snapshot["texts"][catalog_method.PATH]))["method"])
     new = deepcopy(registry)
     if existing: new["entries"][new["entries"].index(existing)] = entry
     else: new["entries"].append(entry)

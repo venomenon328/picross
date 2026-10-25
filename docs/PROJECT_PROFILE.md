@@ -126,7 +126,7 @@ damalige Mergeausnahmen werden nicht auf HZ übertragen.
 Die folgenden KE-/KAT-Abschnitte beschreiben die integrierte Ausgangsbasis;
 ihre gezielt abgelösten Anzeige-/Sortierregeln gelten nicht als neuer KU-Sollstand.
 
-**SD2 / #402 · 25.10.2026, SD2-A integriert, SD2-B technisch geliefert:**
+**SD2 / #402 · 25.10.2026, SD2-A/B integriert; SD2-C beauftragt:**
 [Menschennähere Schwierigkeit](PUZZLE_DIFFICULTY_V2.md) führt den neuen Sollvertrag:
 Denkanspruch, Suchaufwand und Bearbeitungsumfang, menschennähere Basistechniken,
 fein abgestufte interne Bewertung mit festen Grenzen und unabhängiger breiter
@@ -139,13 +139,19 @@ unabhängige Spurprüfung, drei Rohprofile und eigene CLI. Bei SD2-Analyse ist
 dieser Vertrag zusätzlich vollständig zu lesen. [SD2-A-T01](SD2_A_VERIFICATION.md)
 bindet die historischen technischen Nachweise. Nach separatem R01 integriert
 auf `c7c6156ac27dc033036443bc06ef398bbf94f32f`.
-SD2-B liefert in [Draft-PR #409](https://github.com/venomenon328/picross/pull/409)
+SD2-B liefert über [PR #409](https://github.com/venomenon328/picross/pull/409)
 36 unabhängige synthetische Referenzen, getrennte Validierung, den
 [numerischen/technischen Vertrag](SD2_CALIBRATION.md) und den eigenständigen
 0.4-Freeze. Bei SD2-Bewertung diesen Vertrag vollständig lesen.
 [SD2-B-T01](SD2_B_VERIFICATION.md) bindet technische Nachweise und Selbstreview;
-SD2-B-R01 und Merge bleiben offen. Gemeinsame Integration und Aktivierung
-bleiben den noch nicht implementierten C/D-Paketen vorbehalten.
+SD2-B ist nach separatem R01 auf `0ae6535073fb808af44dcf3e12130a33ba49cdbc`
+integriert. Die B-Nachweise behalten ihre historische Headbindung.
+Der vor Code festgelegte [SD2-C-Integrationsvertrag](SD2_INTEGRATION.md) ist bei
+Integrationsarbeit vollständig zu lesen. Er ergänzt die alten Quellen-/Runtime-/
+Journalverträge explizit versioniert. Tatsächliche Bestandsumstellung und Aktivierung
+bleiben #406 vorbehalten; C prüft ausschließlich synthetische Fälle.
+[SD2-C-T01](SD2_C_VERIFICATION.md) ordnet die technische Implementierung und
+den getrennten Selbstreview zu; qualifiziertes SD2-C-R01 und Merge bleiben offen.
 
 **Aktive SD-Basis / #235:** SD-A/B/C1/C2 sind mit PR #240–#243 abgeschlossen;
 letzter Merge `72ba39391833f6fd834d0a6afaf881c86c7bdc3a` nach finalem C2-Review.

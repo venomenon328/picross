@@ -110,7 +110,10 @@ class AddedTests(unittest.TestCase):
         self.assertFalse((self.checkout / added.path(self.identifier)).exists())
         self.assertFalse((self.checkout / tx.LOCK).exists())
         cr.check_checkout(self.checkout)
-        # Recovery is current v4 immediately, so the v3-bound old plan is stale.
+        # A C rollback restores the valid v3 bytes exactly. An explicit later
+        # sync upgrades to v5 and then makes that v3-bound plan stale.
+        self.assertEqual(snapshot(self.checkout), before)
+        cr.sync_runtime(self.checkout)
         with self.assertRaisesRegex(ValueError, 'sources changed'):
             history.adopt(self.checkout, path, apply=True)
         self.assertTrue(all((self.checkout/n).read_bytes() == b for n,b in before.items() if n != cr.RUNTIME))
@@ -155,6 +158,8 @@ class AddedTests(unittest.TestCase):
         journal = tx.prepare(self.checkout, snapshot_before, {}, operation='sync')
         journal['format'] = tx.LEGACY_FORMATS['sync']
         journal.pop('replacements')
+        from tools.puzzle_production import catalog_method
+        for side in ('old', 'new'): journal[side].pop(catalog_method.PATH)
         from tools.puzzle_production import reveal_source
         journal['old'].pop(reveal_source.path(self.identifier)); journal['new'].pop(reveal_source.path(self.identifier))
         journal['retained'] = tx.historical_snapshot(snapshot_before)['retained']

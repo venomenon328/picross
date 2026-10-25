@@ -26,7 +26,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
         page.wait_for_timeout(200)
         labels = state(page, 'labels')['labels']
         assert all(x['unknown'] and not x['reveal'] and x['status'] == 'Neu' for x in labels)
-        assert all(x['difficulty'] == 'Nicht eingestuft' for x in labels)
+        assert [x['difficulty'] for x in labels] == ['Nicht eingestuft','Sehr leicht','Leicht','Mittel','Schwer','Sehr schwer']
         assert all(x['text_fits'] and x['single_line'] and x['footer'] and x['status_kind'] == x['status'] for x in labels)
         assert all(x['size'] == labels[0]['size'] for x in labels)
         evidence['catalog_geometry'].append(dict(viewport=[width,height],ui_scale=scale,labels=labels))
