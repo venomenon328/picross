@@ -42,13 +42,16 @@ def retire(root, ids, integrated_commit):
     # The workflow refreshes origin/main before this command. A local draft is insufficient.
     require(subprocess.run(["git", "merge-base", "--is-ancestor", integrated_commit, "origin/main"],
                            cwd=root, capture_output=True).returncode == 0, "Integration is not on origin/main")
-    current = registry.check_checkout(root)
+    from . import catalog_transaction as tx
+    snapshot = tx.capture(root)
+    current = snapshot['registry']
     original = json.loads(git("show", integrated_commit + ":" + registry.REGISTRY))
     old_entries = {e["id"]: e for e in original["entries"]}
     by_id = {e["id"]: e for e in current["entries"]}
     require(ids and len(ids) == len(set(ids)) and set(ids) <= by_id.keys(), "Unknown/duplicate production IDs")
     index_path = root / "content/authoring/index.json"
-    index = load_json(index_path)
+    index_bytes = catalog_io.read(root, 'content/authoring/index.json', 8 * 1024 * 1024)
+    index = catalog_io.json_bytes(index_bytes, 8 * 1024 * 1024)
     original_index = json.loads(git("show", integrated_commit+":content/authoring/index.json"))
     require([e for e in index["entries"] if e["puzzle_id"] in ids] ==
             [e for e in original_index["entries"] if e["puzzle_id"] in ids], "Unmerged authoring index changes")
@@ -90,6 +93,10 @@ def retire(root, ids, integrated_commit):
     require(subprocess.run(["git", "diff", "--cached", "--quiet", "--", *affected],
                            cwd=root, capture_output=True).returncode == 0,
             "Staged production changes must be resolved before retirement")
+    require(all(tx.read(root, name) == raw for name, raw in snapshot['texts'].items()) and
+            all(file_hash(tx.safe(root, name)) == checksum for name, checksum in snapshot['retained'].items()) and
+            tx.namespaces(root, current) == snapshot['namespaces'] and index_path.read_bytes() == index_bytes,
+            "Checkout sources changed during retirement planning")
     for entry, package, authoring, receipt, _, _ in plans:
         # Runtime files and projection are never rewritten. Git retains the prior production.
         shutil.rmtree(package)

@@ -36,18 +36,21 @@ def atomic_bytes(path, data):
         temp.unlink(missing_ok=True)
 
 
-def projection(registry, catalog, root=None, *, ratings=None, added=None, version=4):
+def projection(registry, catalog, root=None, *, ratings=None, added=None, version=5):
     from . import catalog_rating
     if ratings is None:
         ratings = catalog_rating.load_sources(root, registry) if root is not None else {}
     if added is None:
         added = catalog_added.load_sources(root, registry) if root is not None else {}
-    return {"format": "picross-runtime-registry-v" + str(version), "categories": categories.ordered(catalog), "entries": [
+    require(type(version) is int and version in (3, 4, 5), "Unsupported projection version")
+    result = {"format": "picross-runtime-registry-v" + str(version), "categories": categories.ordered(catalog), "entries": [
         {**{k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")},
          "difficulty": catalog_rating.project(ratings[e["id"]]) if e["id"] in ratings else
                        catalog_difficulty.project(e["production"]["difficulty"]),
-         **({"added_at": added[e["id"]]["added_at"] if e["id"] in added else None} if version == 4 else {})}
+         **({"added_at": added[e["id"]]["added_at"] if e["id"] in added else None} if version >= 4 else {})}
         for e in registry["entries"]]}
+    for entry in result["entries"]: catalog_difficulty.validate_projection(entry["difficulty"], version=version)
+    return result
 
 
 def validate(registry, catalog):
@@ -95,16 +98,23 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
             "Interrupted registration: recovery required")
     catalog = categories.load(root / categories.PATH)
     r = validate(load_json(root / REGISTRY), catalog)
+    from . import catalog_method
+    catalog_method.load(root)
     reveal.source_paths(root, r)
     expected = projection(r, catalog, root)
     if check_projection:
-        legacy = projection(r, catalog, root, version=3)
-        legacy2 = deepcopy(legacy)
-        legacy2["format"] = "picross-runtime-registry-v2"
-        for entry in legacy2["entries"]: del entry["difficulty"]
         allowed = [canonical_bytes(expected)+b"\n"]
-        if not catalog_added.load_sources(root, r):
-            allowed += [canonical_bytes(v)+b"\n" for v in (legacy, legacy2)]
+        has_sd2 = any(e["difficulty"] and e["difficulty"]["method"] == catalog_method.NEW for e in expected["entries"])
+        if not has_sd2:
+            older = deepcopy(expected); older["format"] = "picross-runtime-registry-v4"
+            allowed.append(canonical_bytes(older) + b"\n")
+            if not catalog_added.load_sources(root, r):
+                older["format"] = "picross-runtime-registry-v3"
+                for e in older["entries"]: del e["added_at"]
+                allowed.append(canonical_bytes(older) + b"\n")
+                older["format"] = "picross-runtime-registry-v2"
+                for e in older["entries"]: del e["difficulty"]
+                allowed.append(canonical_bytes(older) + b"\n")
         require((root / RUNTIME).read_bytes() in allowed, "Runtime registry is stale")
     for e in r["entries"]:
         p = e["production"]
@@ -176,7 +186,7 @@ def recovery_projection(journal, before, after, catalog):
                 "Invalid journal projections")
         versions.append(json.loads(raw)["format"])
     require(versions[0] == versions[1], "Mixed journal projection versions")
-    return canonical_bytes(projection(before, catalog))+b"\n"
+    return canonical_bytes(projection(before, catalog, version=4))+b"\n"
 
 
 def recovery_target(root, journal, registry, runtime):
@@ -226,7 +236,7 @@ def _recover(root):
     raw = tx.read(root, tx.LOCK)
     if raw is None: return tx.recover(root)
     j = io.json_bytes(raw, tx.REVEAL_LIMIT)
-    if isinstance(j, dict) and j.get("format") in set(tx.FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
+    if isinstance(j, dict) and j.get("format") in set(tx.FORMATS.values()) | set(tx.AT_FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
         return tx.recover(root)
     if isinstance(j, dict) and j.get("format") == "picross-content-update-journal-v1":
         from .content_update import recover_update
@@ -290,6 +300,8 @@ def _recover(root):
 
 
 def reject_unbound_ratings(root, *registries):
+    from . import catalog_method
+    require(catalog_method.load(root) is None, "Legacy journal cannot bind production default")
     from . import reveal_source
     require(not reveal_source.source_paths(root, *registries), "Legacy journal cannot bind reveal sources")
     from .catalog_rating import path, source_paths
