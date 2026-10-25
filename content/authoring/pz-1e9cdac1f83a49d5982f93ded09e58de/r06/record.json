@@ -1,0 +1,200 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 128,
+      "design": "configuration/design-22x22-a128.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 128,
+      "variant": "area-128",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 128,
+      "design": "configuration/design-22x22-a128.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 160,
+      "variant": "area-160",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 96,
+      "design": "configuration/design-22x22-a96.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 128,
+      "variant": "area-128",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 96,
+      "design": "configuration/design-22x22-a96.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 160,
+      "variant": "area-160",
+      "width": 22
+    }
+  ],
+  "blockers": [],
+  "candidate": {
+    "bundle": "imports/a96",
+    "certification": null,
+    "logic_hash": "275b15c4f5f4325d4607314ee67c2562215fb95552c249a8745dc28766dc4cf1",
+    "matrix_hash": "27235c31d631e2e68bfaf60f09dab2c7075576fa8a5d1576130efb204ca65385",
+    "proof": "imports/a96/area-160-proof.json",
+    "source_type": "import",
+    "variant": "area-160",
+    "verification": "review/origin-verification.json"
+  },
+  "category_id": "mythen-fantasie",
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "file": "analysis/checked.json",
+    "level": "L4",
+    "logical_level": 4,
+    "method": "picross-difficulty-0.3",
+    "plausible_range": [
+      "L4",
+      "L4"
+    ],
+    "r4_required": false,
+    "size_adjustment": 0
+  },
+  "dimensions_approximate": false,
+  "dimensions_fixed": true,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/handoff.json",
+    "sha256": "acc7642a75655bffd4dc1b9404b3cbc27c5e0bc46ca26dbc0dfa77a68ce55915"
+  },
+  "height": 22,
+  "integration": null,
+  "inventory_sha256": "7f860fa08d7fc87ba91444e21ce1dd566e7be2c0f497f878b86c0e662e8a2c79",
+  "mode": "mono",
+  "motif": {
+    "approval": "approvals/motif-MA-r03.json",
+    "derived_from_reveal_sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d",
+    "file": "motifs/MA-r03.png",
+    "revision": "MA-r03",
+    "sha256": "94a8e110819f145d8e9a11350ff32cea4dfad9198d3f372472c444f749c87a6e"
+  },
+  "motif_name": "Pentagramm",
+  "next_action": "4 Â· Abnehmen & ins Spiel integrieren: tatsÃ¤chliche menschliche Endabnahme dieses r06-Pakets erforderlich.",
+  "package": {
+    "bytes": 6835291,
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/package.zip",
+    "sha256": "672c8f797bbb8f3baf6999b773ac1b9a0ab28d4aea3b8a2f558d2c495ba54940"
+  },
+  "parameter_corridor": "configuration/proposal.json",
+  "previous_revision": {
+    "commit": "70d8900f7d9ba376eb9a45db86bca10b72815a6e",
+    "handoff": {
+      "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r05/handoff.json",
+      "sha256": "d4da02dc0ac589008ae5297f3ca7a9b80263b71e7eaef3ad931fa355b5f586d2"
+    },
+    "inventory_sha256": "f6175ab126e7880b977551da42b3d84239337d818ef2f78d099897238e63f732",
+    "package": {
+      "bytes": 3856845,
+      "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r05/package.zip",
+      "sha256": "7242771bfa7024651ab992e074158891358b381c1275b95e9a6bb57454576c70"
+    },
+    "preservation": "All published r01-r05 originals remain unchanged; no nested archive.",
+    "revision": "r05"
+  },
+  "puzzle_id": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+  "raster": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/raster.png",
+    "sha256": "eb796f8d2539a294e04bc68f92733645289783f54ba8506d348dfde8fd06ecf1",
+    "zip_member": "imports/a96/area-160-raster.png"
+  },
+  "repo_commit": "70d8900f7d9ba376eb9a45db86bca10b72815a6e",
+  "reveal": {
+    "approval": "approvals/reveal-B-r02.json",
+    "file": "reveals/B-r02.png",
+    "sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d"
+  },
+  "review": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/review.png",
+    "sha256": "4b11a0f1cc153a0c2e39b2623f1b98235b4abeb74122b58b5ede501ff92ebe79",
+    "zip_member": "review/final-comparison.png"
+  },
+  "revision": "r06",
+  "selected_parameters": {
+    "actual_crop": [
+      18,
+      22,
+      1234,
+      1238
+    ],
+    "alpha_below": 96,
+    "fit": "exact",
+    "foreground_colors": 1,
+    "height": 22,
+    "method": "area",
+    "mode": "mono",
+    "threshold": 160,
+    "width": 22
+  },
+  "state": "content_ready",
+  "target_inspection": {
+    "blockers": [
+      "final_editorial: missing bound human final approval"
+    ],
+    "editorial_approved": false,
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/inspection.json",
+    "registered": false,
+    "sha256": "5654a8b04126c5fe124ecd4334b941974f7362da8123d4f9462d0e20ac85f5fb",
+    "technical": true
+  },
+  "updated_at_utc": "2026-10-25T00:35:36.336918+00:00",
+  "verification": {
+    "difficulty": "analysis/checked.json",
+    "entries": 85,
+    "file_sizes_and_sha256": "pass",
+    "quality": "review/quality.json",
+    "safe_complete_file_set": "pass",
+    "source_and_proof": "review/origin-verification.json",
+    "zip_crc": "pass"
+  },
+  "width": 22
+}

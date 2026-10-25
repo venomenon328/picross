@@ -1,0 +1,257 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 128,
+      "design": "configuration/design-22x22-a128.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 128,
+      "variant": "area-128",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 128,
+      "design": "configuration/design-22x22-a128.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 160,
+      "variant": "area-160",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 96,
+      "design": "configuration/design-22x22-a96.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 128,
+      "variant": "area-128",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 96,
+      "design": "configuration/design-22x22-a96.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 160,
+      "variant": "area-160",
+      "width": 22
+    }
+  ],
+  "authorization": "Standardauftrag3 mit tatsächlicher MA-r03-Freigabe und22×22-Korridor; vollständige Produktion bis Endabnahmevorlage, §6-Ablage und bedingter Ablagemerge. Keine Endabnahme oder Spielregistrierung vorweggenommen.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "imports/a96",
+    "certification": null,
+    "logic_hash": "275b15c4f5f4325d4607314ee67c2562215fb95552c249a8745dc28766dc4cf1",
+    "matrix_hash": "27235c31d631e2e68bfaf60f09dab2c7075576fa8a5d1576130efb204ca65385",
+    "proof": "imports/a96/area-160-proof.json",
+    "source_type": "import",
+    "variant": "area-160",
+    "verification": "review/origin-verification.json"
+  },
+  "category_id": "mythen-fantasie",
+  "codex_handoff": "CODEX_HANDOFF.md",
+  "current_difficulty": {
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "file": "analysis/checked.json",
+    "level": "L4",
+    "method": "picross-difficulty-0.3"
+  },
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "final_editorial_approval": null,
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "analysis/checked.json",
+    "frame": "review/quality.json",
+    "logic": "review/origin-verification.json",
+    "motif": "approvals/motif-MA-r03.json",
+    "provenance": "review/origin-verification.json",
+    "reveal_approval": "approvals/reveal-B-r02.json",
+    "reveal_consistency": "review/quality.json",
+    "visual": "review/quality.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "7f860fa08d7fc87ba91444e21ce1dd566e7be2c0f497f878b86c0e662e8a2c79"
+  },
+  "motif": {
+    "approval": "approvals/motif-MA-r03.json",
+    "derived_from_reveal_sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d",
+    "file": "motifs/MA-r03.png",
+    "revision": "MA-r03",
+    "sha256": "94a8e110819f145d8e9a11350ff32cea4dfad9198d3f372472c444f749c87a6e"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren: tatsächliche menschliche Endabnahme dieses r06-Pakets erforderlich.",
+  "origin_verification": "review/origin-verification.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameter_corridor": "configuration/proposal.json",
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 128,
+      "design": "configuration/design-22x22-a128.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 128,
+      "variant": "area-128",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 128,
+      "design": "configuration/design-22x22-a128.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 160,
+      "variant": "area-160",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 96,
+      "design": "configuration/design-22x22-a96.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 128,
+      "variant": "area-128",
+      "width": 22
+    },
+    {
+      "actual_crop": [
+        18,
+        22,
+        1234,
+        1238
+      ],
+      "alpha_below": 96,
+      "design": "configuration/design-22x22-a96.json",
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 22,
+      "method": "area",
+      "mode": "mono",
+      "threshold": 160,
+      "variant": "area-160",
+      "width": 22
+    }
+  ],
+  "puzzle_id": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+  "repair": null,
+  "repo_commit": "70d8900f7d9ba376eb9a45db86bca10b72815a6e",
+  "report": "report.md",
+  "requested_parameters": {
+    "color_count": "exact",
+    "dimensions": "fixed_for_new_proposal",
+    "foreground_colors": 1,
+    "height": 22,
+    "mode": "mono",
+    "width": 22
+  },
+  "reveal": {
+    "approval": "approvals/reveal-B-r02.json",
+    "file": "reveals/B-r02.png",
+    "sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d"
+  },
+  "revision": "r06",
+  "revision_context": {
+    "commit": "70d8900f7d9ba376eb9a45db86bca10b72815a6e",
+    "handoff": {
+      "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r05/handoff.json",
+      "sha256": "d4da02dc0ac589008ae5297f3ca7a9b80263b71e7eaef3ad931fa355b5f586d2"
+    },
+    "inventory_sha256": "f6175ab126e7880b977551da42b3d84239337d818ef2f78d099897238e63f732",
+    "package": {
+      "bytes": 3856845,
+      "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r05/package.zip",
+      "sha256": "7242771bfa7024651ab992e074158891358b381c1275b95e9a6bb57454576c70"
+    },
+    "preservation": "All published r01-r05 originals remain unchanged; no nested archive.",
+    "revision": "r05"
+  },
+  "rulebook": {
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}
