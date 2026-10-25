@@ -1,0 +1,107 @@
+{
+  "analysis_parameters": {
+    "profile": "sd2-raw-profiles-1"
+  },
+  "analyzer": "picross-sd2-analyzer-1",
+  "artifacts": {
+    "difficulty_calibration_0_3.json": "771a8d57da90b62ca0a299ff60ee62c8a80a45338d44cbda41392e50b39cd6ff",
+    "difficulty_method_0_3.json": "8f7efa0d5ac76a1bd73fbae3618fec18dba28cf704887188eba2fcf020b9df79",
+    "difficulty_references_0_3.json": "57cbee00fc9f91a7d75b2ca05f9d986c7a4d131fc3ed054e207ee9f40a67874f",
+    "sd2_calibration_0_4.json": "aec88f502c2ebdb5d637bacee29913b18ee870e80ea2ff799c2d56bee6c14a38",
+    "sd2_comparison_0_4.json": "0e67ea45325db06067b84d1a59a8400d810607fa76e8989dae8af1fe1dcccedd",
+    "sd2_references_0_4.json": "fb98b7c619f9933d111ad5f988579f38ae4fb72dd016a871d8fbb65b46a98456",
+    "sd2_validation_0_4.json": "20258fe072222d9389921b0b7172345035e80400c9da17fa4cf8c1c7b366c3e2"
+  },
+  "confidence_ceiling": "medium",
+  "configuration": {
+    "context_offset": 3,
+    "context_weight": [
+      1,
+      4
+    ],
+    "fluent_demand": [
+      1,
+      4
+    ],
+    "fluent_gain": [
+      1,
+      2
+    ],
+    "fluent_offer": [
+      1,
+      2
+    ],
+    "narrow_gain": [
+      1,
+      4
+    ],
+    "narrow_offer": [
+      1,
+      4
+    ],
+    "r4_demand": [
+      9,
+      2
+    ],
+    "recurrence_cap": 4,
+    "recurrence_weight": [
+      1,
+      32
+    ],
+    "thresholds": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "work_boundary_fraction": [
+      1,
+      2
+    ],
+    "work_cap": [
+      1,
+      4
+    ],
+    "work_divisor": 640,
+    "work_high_search": [
+      3,
+      4
+    ],
+    "work_neutral_spans": 40
+  },
+  "format": "picross-sd2-method-v1",
+  "formula": "sd2-rating-formula-1",
+  "human_data": null,
+  "id": "picross-difficulty-0.4",
+  "implementation": {
+    "__init__.py": "dd0e71d7ffc7b40e412dacfe08e854870229155b1fb023f68f2753687634d882",
+    "analysis.py": "fbfaeaa8f3e9b85d4ee50c30236072a80f056bca7b9809cc92a8c607bfe23394",
+    "analysis_cli.py": "ffebfee44638706a406239883a5e25d5b18e9f6756900502eb24af1f97ef9ad4",
+    "analysis_contract.py": "f78e2da6396bf19f2faa18975d9f8109a9994b7eeaa0d515ef8e980fc2d6f795",
+    "analysis_io.py": "c4d24577262b3a2065c568f92150c06546d7fb4e25d45815d7917243516e3270",
+    "analysis_rules.py": "a0b362e760630721d53c0092ab319ff0d3f2f3238f3e85cad1348d110df1939a",
+    "analysis_verifier.py": "39386d4a6e599cf7e65c34924be75b97c0688b758b7354c0df3da4f16e4bcf70",
+    "certification.py": "c570827bc7273dc41133c01a21a4d61291cda68257c0aa83f0c86556599cf1dd",
+    "contract.py": "5e9459d65cffab98b63435b51ed4b704d9a55596accd595bf0be1edf553e51f8",
+    "difficulty_identity.py": "e54ff7a845d23f714063c76f4bdd97c058c924629360011c84a5671f5b32e2de",
+    "difficulty_rating.py": "d423d86e005f463ce0cc911034b0ccbfabc4a4c2633b50a95d71ef3ecf040fba",
+    "paired_solver.py": "72e5c16656c038b591bd3f6f07b27ecceb9bade84f53db559941e4992a61c811",
+    "paired_verifier.py": "05460f0b312549ecea5d71462bb3d7354743b70c57d111082eff238b9e01b428",
+    "sd2_analysis.py": "98346cf97b715808efad039b7ee7afab1b4d78c74c4b5d54bfeaa45d9d5368e8",
+    "sd2_cli.py": "4596a827ff16b36d418806970f8974c4cbe8772caf1eef293ada0cd9faa5f261",
+    "sd2_contract.py": "8628fe4aed40567a24646865ab63c337cbcb8ab90c6eae6cd73a7690600edf38",
+    "sd2_io.py": "e916d105c63d2313cf3e28de8a9dfd956b012efa1e4012d64c422682416f9c24",
+    "sd2_profiles.py": "2e043fdb16f9fb4652c323cfa7494949f2dcbdc8339b1046e76314c5d3b3813c",
+    "sd2_rating.py": "cb30c6fd58c66b56b48c3741985fa2c52a797c62c0df5646469315e8e9397831",
+    "sd2_rating_cli.py": "8c1ebd01de47d5569e4de9eeaed21a98d5d2a46d0b18387d2c842269891617b8",
+    "sd2_rating_freeze.py": "5c7682f2783d9e83e8ca8065bcf8539405c1a6fd5f69785f7d8ea2193b9f6b56",
+    "sd2_rating_io.py": "8d9f90c53df02cbcef61d95a7bb6a6063458ee937517de5f7b45598db3dafaf6",
+    "sd2_reference_checks.py": "7141afd2b03fa4db1f44c90e5980f93d5d8ba76f9148bdcd41fa4ff812797199",
+    "sd2_rules.py": "345095b5419161eb9cef1d798a079a945201562d0a6b5df5e4577015205022da",
+    "sd2_verifier.py": "7afdd52a6e8a38ede26735685680c599750d5abcb0908c75ecbab90641a6a3e7",
+    "solver.py": "02f663a9eeaf5e1a7b237d652cdd45f0efdcba07af214b5bbbee47c1803d4fed",
+    "verifier.py": "f489b139fdd78f89cd933e1810274774d2ae1fb080cebd6538755996540a1112"
+  },
+  "legacy_method_hash": "8f7efa0d5ac76a1bd73fbae3618fec18dba28cf704887188eba2fcf020b9df79",
+  "rules": "sd2-rules-1"
+}
