@@ -75,12 +75,15 @@ SD2-A ist nach separatem R01 über PR #408 auf
 [technischen Vertrag](docs/SD2_ANALYZER.md) (bei SD2-Analyse vollständig lesen),
 Analysator/Prüfer, drei Rohprofile und eigene CLI. [Nachweise](docs/SD2_A_VERIFICATION.md)
 bleiben an den historischen A-Lieferhead gebunden.
-SD2-B liefert in Draft-PR #409 den [Bewertungsvertrag](docs/SD2_CALIBRATION.md)
+SD2-B ist nach separatem R01 über PR #409 auf
+`0ae6535073fb808af44dcf3e12130a33ba49cdbc` integriert und liefert den [Bewertungsvertrag](docs/SD2_CALIBRATION.md)
 (bei SD2-Bewertung vollständig lesen), 36 neue synthetische Referenzen,
 getrennte Validierung und den eigenständigen eingefrorenen 0.4-Bewertungsweg.
-[SD2-B-T01](docs/SD2_B_VERIFICATION.md); separates SD2-B-R01 und Merge bleiben offen.
+[SD2-B-T01](docs/SD2_B_VERIFICATION.md) bleibt an den historischen B-Head gebunden.
 Denkanspruch, Suchaufwand und Bearbeitungsumfang ergeben eine feste Fünferskala.
-0.4 ist eigenständig implementiert, nicht gemeinsam integriert oder aktiviert. 0.3-Freeze und aktive Werte
+SD2-C / #405 bindet vor Integrationscode den vollständigen
+[Integrationsvertrag](docs/SD2_INTEGRATION.md) (bei SD2-Integration vollständig lesen).
+0.4 ist noch nicht aktiviert. Beide Freezes und aktive Werte
 bleiben bis zum gesonderten Auftrag erhalten. Keine Katalogquantile, echten
 Katalogtests, automatische Neubewertung oder Implementierung aus Spezifikationsfreigabe.
 

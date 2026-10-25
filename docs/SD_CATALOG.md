@@ -1,11 +1,13 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
 **SD2 · 25.10.2026:** [SD2-D05/D06](PUZZLE_DIFFICULTY_V2.md) spezifizieren den
-künftigen gemeinsamen 0.4-Integrations-/Aktivierungsweg in SD2-C (#405) und die
+gemeinsamen 0.4-Integrations-/Aktivierungsweg in SD2-C (#405) und die
 gesonderte Bestandsumstellung SD2-D (#406). Aktive Quelle und Produktionsstandard
 bleiben bis dahin 0.3. Alte Schemas, Freeze, Journale, AT-/Added-Bindungen und
 historische Nachweise bleiben erhalten; neue exakte Format-/Dispatchverträge
-sind vor der jeweils betroffenen Codeänderung zu ergänzen. Noch keine Umsetzung.
+stehen vor der betroffenen Codeänderung vollständig in
+[SD2-C-V01](SD2_INTEGRATION.md). Dessen neue Generationen ergänzen diesen
+geschlossenen Altvertrag; der reale Default bleibt 0.3.
 SD-C2 selbst ist mit PR #243 abgeschlossen; nachfolgende offene C2-Gates sind
 historische Lieferstände und werden durch SD2 nicht erneut geöffnet.
 

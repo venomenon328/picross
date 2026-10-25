@@ -1,6 +1,6 @@
 # SD2: Menschennähere Schwierigkeit und feste Skala 1–5
 
-Stand: 25.10.2026 · Spezifikation 1.0 · SD2-A integriert, SD2-B technisch geliefert
+Stand: 25.10.2026 · Spezifikation 1.0 · SD2-A/B integriert, SD2-C beauftragt
 
 [Gesamtissue #402](https://github.com/venomenon328/picross/issues/402) führt die
 Methodenrevision nach Eigentümerfreigabe vom 25.10.2026. Der anschließende
@@ -9,8 +9,11 @@ neue Regeln und drei Rohprofile über [PR #408](https://github.com/venomenon328/
 nach separatem R01 integriert auf `c7c6156ac27dc033036443bc06ef398bbf94f32f`.
 [A-Nachweise](SD2_A_VERIFICATION.md) behalten ihre historische Headbindung.
 Der ausdrückliche B-Auftrag liefert [Referenzen, Zahlenvertrag und Freeze](SD2_CALIBRATION.md)
-in [Draft-PR #409](https://github.com/venomenon328/picross/pull/409).
-[SD2-B-T01](SD2_B_VERIFICATION.md), separates B-R01 und Merge bleiben getrennte Gates.
+über [PR #409](https://github.com/venomenon328/picross/pull/409), nach separatem R01
+integriert auf `0ae6535073fb808af44dcf3e12130a33ba49cdbc`.
+[SD2-B-T01](SD2_B_VERIFICATION.md) bleibt historisch headgebunden.
+[SD2-C-V01](SD2_INTEGRATION.md) schließt vor Code die gemeinsamen Formate,
+Quellen-/Methodenwahl, Runtimezulassung und Transaktions-/Aktivierungsregeln.
 Keine reale Analyse, Bewertungsübernahme oder Aktivierung.
 
 ## 1. Ausgangslage und gezielte Ablösung
