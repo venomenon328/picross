@@ -59,18 +59,21 @@ historische Liefernachweise bleiben an ihre damaligen Stände gebunden. Eine
 Spezifikationsfreigabe ist weder Implementierungsauftrag noch Mergefreigabe.
 
 Bei Schwierigkeitsanalyse, Kalibrierung oder Bewertungsmetadaten zusätzlich
-[SD: Rätselschwierigkeit](docs/PUZZLE_DIFFICULTY.md) vollständig lesen.
-SD-A / #236 liefert den getrennten Analysator gemäß
-[technischem Vertrag](docs/SD_ANALYZER.md); zusätzlich den vollständigen
-[SD-B-Methodenvertrag](docs/SD_CALIBRATION.md) lesen. SD-B / #237 bindet
-`picross-difficulty-0.3`; für Katalog-/Integrationsarbeit zusätzlich
+[SD: Rätselschwierigkeit](docs/PUZZLE_DIFFICULTY.md),
+[SD-A-Analysator](docs/SD_ANALYZER.md),
+[SD-B-Methodenvertrag](docs/SD_CALIBRATION.md) und
 [SD-C1-Daten-/Recoveryvertrag](docs/SD_CATALOG.md) vollständig lesen.
-SD-C1 ist nach qualifiziertem R2 mit PR #242 integriert. SD-C2 hat nach bestandenem
-Vor-Übernahme-Review gemäß #238/SD-C2-F01 die 26 Bewertungen kontrolliert übernommen;
-der identische zweite `adopt` war ein echter No-op. Separates qualifiziertes finales
-SD-C-R01/C2-Datenreview und Merge bleiben offen; PR #243 bleibt Draft.
-Der echte Katalog ist weder Testbestand noch
-unmittelbare Kalibrierungsgrundlage für die Skalenenden.
+SD / #235 ist mit PR #240–#243 einschließlich C2 abgeschlossen; aktive Methode
+bleibt `picross-difficulty-0.3`. Frühere offene SD-Gates sind historische Stände.
+
+Die am 25.10.2026 freigegebene Folgespezifikation
+[SD2: Menschennähere Schwierigkeit](docs/PUZZLE_DIFFICULTY_V2.md) / #402 ist
+ebenfalls vollständig zu lesen. SD2-A/B/C/D (#403–#406) trennen neue Regeln und
+Messprofile, Referenzkalibrierung, kompatible Integration und Bestandsumstellung.
+Denkanspruch, Suchaufwand und Bearbeitungsumfang ergeben eine feste Fünferskala.
+0.4 ist geplant, nicht implementiert oder aktiviert. 0.3-Freeze und aktive Werte
+bleiben bis zum gesonderten Auftrag erhalten. Keine Katalogquantile, echten
+Katalogtests, automatische Neubewertung oder Implementierung aus Spezifikationsfreigabe.
 
 Bei Hinweisnavigation, Vollhinweis-Overlay oder Cursor-Linienhervorhebung zusätzlich [HN: Hinweisinteraktion](docs/CLUE_INTERACTION.md) vollständig lesen. HN / #192 ist implementiert; technische Nachweise und die getrennten Abnahmen HN-R01/HN-M01 stehen im Issue/PR.
 

@@ -1,5 +1,12 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
+**SD2 · 25.10.2026:** [SD2-D05](PUZZLE_DIFFICULTY_V2.md) verlangt künftig die
+gemeinsame kompatible Projektion der geplanten Methode 0.4. Die folgenden exakten
+aktiven Schemas erlauben 0.4 noch nicht. SD2-C (#405) spezifiziert vor Code die
+Versionen, Quellenpriorität und Alt-/Neuübergänge; keine zusätzlichen Rohprofile,
+Scores oder Freitexte im Spieler. Kategorien, Identitäten, Added und AT bleiben
+bei einer reinen späteren Neueinstufung unverändert. Aktive Methode bleibt 0.3.
+
 **AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
 [AT](REVEAL_TRANSPARENCY.md) ergänzt in AT-A die getrennte aktive Bildbindung und
 deren gemeinsamen Prüf-/Transaktionsweg; AT-B übernimmt danach freigegebene neue
