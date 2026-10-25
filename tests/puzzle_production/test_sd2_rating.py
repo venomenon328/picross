@@ -421,6 +421,8 @@ class BundleTests(unittest.TestCase):
         run = self.cli("analyze", "--input", self.source, "--output-dir", self.root / "cli")
         self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
         self.assertEqual(json.loads(run.stdout)["level"], 2)
+        self.assertEqual(json.loads(run.stdout)["format"], "picross-sd2-rating-cli-v1")
+        self.assertEqual(json.loads(run.stdout)["command"], "analyze")
         checked = self.cli("check", "--input", self.source, "--bundle", self.root / "cli")
         self.assertEqual(checked.returncode, 0, checked.stdout + checked.stderr)
         copied = self.cli("rate", "--input", self.source, "--analysis-bundle", self.root / "cli" / "analysis",
@@ -463,6 +465,15 @@ class BundleTests(unittest.TestCase):
         budget = AnalysisBudget(seconds=5)
         budget.deadline = -1  # A/B deadline begins at first check, not construction.
         budget.check()
+
+    def test_analysis_does_not_spend_the_separate_verification_deadline(self):
+        verify_budget = AnalysisBudget()
+        def inspect_start(*args, **kwargs):
+            self.assertFalse(verify_budget.started, "Analysis time must not consume the verification deadline")
+            return analyze(*args, **kwargs)
+        with patch("tools.puzzle_production.sd2_analysis.analyze", side_effect=inspect_start):
+            analyze_and_rate(self.source, self.root / "separate-clocks", verify_budget=verify_budget)
+        self.assertTrue(verify_budget.started)
 
     def test_links_rejected_without_reading_target(self):
         from tools.puzzle_production import sd2_io

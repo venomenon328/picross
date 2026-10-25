@@ -51,7 +51,8 @@ def main(argv=None):
                 budget=budget, verify_budget=verify_budget,
                 proof_path=args.r4_proof, baseline_path=args.r4_baseline)
         result = report["result"]
-        result = {"format": report["format"], "result_hash": report["result_hash"], **result,
+        result = {**result, "format": "picross-sd2-rating-cli-v1", "command": args.command,
+                  "result_hash": report["result_hash"],
                   "level": None if result["assessment"] is None else result["assessment"]["level"]}
         code = 4 if result["reason"] in ("analysis_aborted", "time_limit", "work_limit", "rule_work_limit",
                   "wave_limit", "trace_byte_limit", "cancelled", "memory_limit") else 0
