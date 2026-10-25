@@ -1,0 +1,21 @@
+{
+  "candidate_comparison": "review/candidate-comparison.json",
+  "difficulty": "analysis/checked.json",
+  "final_editorial_approval": null,
+  "motif_approval": "approvals/motif-MA-r03.json",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "parent_commit": "70d8900f7d9ba376eb9a45db86bca10b72815a6e",
+  "parent_package_sha256": "7242771bfa7024651ab992e074158891358b381c1275b95e9a6bb57454576c70",
+  "parent_revision": "r05",
+  "profile": "full-line-mono",
+  "raster_edits": [],
+  "reason": "Einziger vollständig zertifizierter Direktimport; nach Vergleich aller vier Parameterwege auch visuell geeignet, alle geschützten Öffnungen erhalten.",
+  "repair": "Nicht erforderlich: geeigneter Direktimport vollständig nachgewiesen.",
+  "selected": {
+    "bundle": "imports/a96",
+    "candidate_id": "ea717f9177930d79b164b5aa953c7e6cf10f3bc9f0f3d4eb843edcbad8836d4d",
+    "logic_hash": "275b15c4f5f4325d4607314ee67c2562215fb95552c249a8745dc28766dc4cf1",
+    "matrix_hash": "27235c31d631e2e68bfaf60f09dab2c7075576fa8a5d1576130efb204ca65385",
+    "variant": "area-160"
+  }
+}

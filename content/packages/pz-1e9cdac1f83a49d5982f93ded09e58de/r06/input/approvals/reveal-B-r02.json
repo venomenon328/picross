@@ -1,0 +1,28 @@
+{
+  "actor": "Tobias Schröder (Nutzer)",
+  "evidence": "approvals/user-instruction.md",
+  "file": "reveals/B-r02.png",
+  "preserve": [
+    "violette Holzstege im Walnussreif",
+    "frontales kreisförmiges Motiv",
+    "eine Sternspitze nach unten und zwei obere Spitzen",
+    "fünf gekreuzte Stege, zentrale Fünfecköffnung und charakteristische Dreiecksöffnungen"
+  ],
+  "revision": "B-r02",
+  "sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d",
+  "source_commit": "14b09b9228a221d22667f918e307961c5f2cd04f",
+  "source_handoff": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r02/handoff.json",
+    "sha256": "962cc827bdcd0207eabcea330d78de26dd2aee84af6fbcc08c02aa9717655a05"
+  },
+  "source_inventory_sha256": "2a94bf2c13a5a9e89c2c1dfd750bd1aa6a0cb07afdc2d4ae9e108a55f87bb6fc",
+  "source_package": {
+    "bytes": 6916941,
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r02/package.zip",
+    "sha256": "38f8247a5ecd3978947b6f402d9b5ca88184bc9530524a4119c393ed9401d9d0"
+  },
+  "statement": "Ich gebe das Abschlussbild B-r02 frei.",
+  "timestamp_basis": "Record created while processing the current explicit instruction; exact message event timestamp is not exposed.",
+  "timestamp_utc": "2026-10-24T19:44:36.218677+00:00",
+  "type": "human_reveal_approval"
+}
