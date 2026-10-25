@@ -458,6 +458,14 @@ ungeprüfte Spur; `analysis_verifier.verify_trace` beziehungsweise `verify_resul
 prüfen sie. `analysis_io.analyze_file` und `check_bundle` binden die gespeicherten
 Bytes. Vorhandene Proof-v1/v2/v3-Verifikation und `quality.assess()` bleiben erhalten.
 
+## SD2-A: Separater Analyseweg
+
+Der [technische Vertrag 1.0](../../docs/SD2_ANALYZER.md) legt vor Code die neuen
+E0–E3-Regeln, drei Rohprofile, eigenen Formate und CLI fest. Die Implementierung
+folgt im selben Paket #403. Die dort zunächst geplanten `sd2_cli analyze/check`
+erzeugen keine Endnote oder aktive Bewertung. Alte Aufrufe und der vollständige
+0.3-Freeze bleiben erhalten; Kalibrierung/Integration/Aktivierung folgen separat.
+
 ## SD-C1: Kandidat, geprüfter Input, Vorschau und Übernahme
 
 [Daten-/Recoveryvertrag](../../docs/SD_CATALOG.md). Keine dieser Operationen läuft
