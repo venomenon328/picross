@@ -1,0 +1,20 @@
+{
+  "format": "picross-editorial-approval-v1",
+  "actor": "Tobias Schröder (Nutzer)",
+  "timestamp_utc": "2026-10-25T00:52:47.533347+00:00",
+  "statement": "Ich nehme das Rätselpaket content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/package.zip · r06, Revision r06, Inventar-SHA-256 7f860fa08d7fc87ba91444e21ce1dd566e7be2c0f497f878b86c0e662e8a2c79 redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\nQuellbranch / Commit: main / 9783bd47d7ca18e3b9749ef6e9f8d15fc40f7a3e.\n\nAblage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen. Nach tatsächlicher Main-Integration die Bereinigung gemäß §9 prüfen und direkt mergen.",
+  "puzzle_id": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+  "revision": "r06",
+  "handoff_sha256": "acc7642a75655bffd4dc1b9404b3cbc27c5e0bc46ca26dbc0dfa77a68ce55915",
+  "inventory_sha256": "7f860fa08d7fc87ba91444e21ce1dd566e7be2c0f497f878b86c0e662e8a2c79",
+  "selection": {
+    "variant": "area-160",
+    "matrix_hash": "27235c31d631e2e68bfaf60f09dab2c7075576fa8a5d1576130efb204ca65385",
+    "logic_hash": "275b15c4f5f4325d4607314ee67c2562215fb95552c249a8745dc28766dc4cf1",
+    "reveal": {
+      "file": "reveals/B-r02.png",
+      "sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d"
+    }
+  },
+  "test_only": false
+}

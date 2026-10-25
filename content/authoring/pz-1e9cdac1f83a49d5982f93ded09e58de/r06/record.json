@@ -101,14 +101,22 @@
   },
   "dimensions_approximate": false,
   "dimensions_fixed": true,
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/approval.json",
+    "sha256": "a648839a42a88e6a822e078478456c57c48de296ecdf4fa179f5231ee658726f"
+  },
   "format": "picross-authoring-record-v1",
   "handoff": {
     "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/handoff.json",
     "sha256": "acc7642a75655bffd4dc1b9404b3cbc27c5e0bc46ca26dbc0dfa77a68ce55915"
   },
   "height": 22,
-  "integration": null,
+  "integration": {
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/integration-evidence.json",
+    "sha256": "26c794c0dc7771c4526f6b84fe5d407a6ffce0b3db33000b44fb3a4798c764c6",
+    "runtime_revision": 1,
+    "save_slot": "pentagramm_001"
+  },
   "inventory_sha256": "7f860fa08d7fc87ba91444e21ce1dd566e7be2c0f497f878b86c0e662e8a2c79",
   "mode": "mono",
   "motif": {
@@ -119,7 +127,7 @@
     "sha256": "94a8e110819f145d8e9a11350ff32cea4dfad9198d3f372472c444f749c87a6e"
   },
   "motif_name": "Pentagramm",
-  "next_action": "4 Â· Abnehmen & ins Spiel integrieren: tatsÃ¤chliche menschliche Endabnahme dieses r06-Pakets erforderlich.",
+  "next_action": "Integrations-PR prüfen und mergen; danach Produktionsbereinigung gemäß §9.",
   "package": {
     "bytes": 6835291,
     "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/package.zip",
@@ -175,18 +183,16 @@
     "threshold": 160,
     "width": 22
   },
-  "state": "content_ready",
+  "state": "registered",
   "target_inspection": {
-    "blockers": [
-      "final_editorial: missing bound human final approval"
-    ],
-    "editorial_approved": false,
-    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/inspection.json",
+    "file": "content/authoring/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/integration-inspection.json",
+    "sha256": "0a1ccd20f234f70a804b8d1969d9de95fa7dc5c4fcd8da14b72feb132995b20f",
+    "technical": true,
+    "editorial_approved": true,
     "registered": false,
-    "sha256": "5654a8b04126c5fe124ecd4334b941974f7362da8123d4f9462d0e20ac85f5fb",
-    "technical": true
+    "blockers": []
   },
-  "updated_at_utc": "2026-10-25T00:35:36.336918+00:00",
+  "updated_at_utc": "2026-10-25T00:59:31.002528+00:00",
   "verification": {
     "difficulty": "analysis/checked.json",
     "entries": 85,
