@@ -1,6 +1,6 @@
 # SD2: Menschennähere Schwierigkeit und feste Skala 1–5
 
-Stand: 26.10.2026 · Spezifikation 1.0 · SD2-A/B/C integriert, D bis V01 beauftragt
+Stand: 26.10.2026 · Spezifikation 1.0 · SD2-A/B/C integriert, D mit V01 und OM01
 
 [Gesamtissue #402](https://github.com/venomenon328/picross/issues/402) führt die
 Methodenrevision nach Eigentümerfreigabe vom 25.10.2026. Der anschließende
@@ -18,8 +18,12 @@ C ist nach separatem R01 über [PR #410](https://github.com/venomenon328/picross
 auf `4e23e644f3457362e02b75f78fdb575a99265494` integriert; die dortige
 Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate gilt nur für #410.
 Der gesonderte Auftrag [SD2-D-V01](SD2_D_VERIFICATION.md) liefert die gebundene
-reale Analyse und Vorschau. Keine Bewertungsübernahme oder Aktivierung;
-separates Vor-Übernahme-Review und Folgeauftrag bleiben offen.
+reale Analyse und Vorschau. Der Folgeauftrag [SD2-D-OM01](SD2_D_OM_FOLLOWUP.md)
+klärt Om und ergänzt den vollständigen Plan mit 45 gültigen Vorschlägen.
+Die 44 bisherigen Vorschläge sind abgenommen. Der Eigentümer hat ausdrücklich
+auf separates SD2-D-VR01 verzichtet; es wurde nicht durchgeführt. Diese
+auftragsspezifische Ausnahme ersetzt nur dieses Gate, nicht finales R01 oder
+Mergefreigabe. OM01 enthält keine Bewertungsübernahme oder Aktivierung.
 
 ## 1. Ausgangslage und gezielte Ablösung
 
@@ -243,7 +247,8 @@ Erst nach abgenommenen SD2-A/B/C und gesondertem Ausführungsauftrag:
    Grenznähe, Aussagegrenzen und konkreten offenen Fällen liefern.
 3. Relationen innerhalb/zwischen Größen-, Modus- und Hinweisgruppen prüfen;
    Auffälligkeiten begründen. Separates qualifiziertes Vor-Übernahme-Review des
-   vollständigen gebundenen Berichts/Plans. Bei Methodenproblemen stoppen,
+   vollständigen gebundenen Berichts/Plans (für #406 durch die oben dokumentierte
+   Eigentümerentscheidung erlassen). Bei Methodenproblemen stoppen,
    nicht Noten, Raster oder Schwellen im Datenpaket passend machen.
 4. Mit passendem Übernahmeauftrag aktuelle geprüfte Ergebnisse kontrolliert
    übernehmen und den Standard für neue Produktion ausdrücklich aktivieren.
@@ -274,8 +279,9 @@ innerhalb desselben Datenpakets. Kein zusätzliches Issue allein für Tests oder
 Dokumentation. Exakte Regeln/Formate und numerische Parameter sind sequenzielle
 Liefergegenstände A/B/C und in deren Detailverträgen geschlossen.
 SD2-A/B/C sind nach separaten Reviews über PR #408/#409/#410 integriert.
-D liefert zunächst ausschließlich V01; VR01, Übernahme/Aktivierung, finales
-R01 und Merge bleiben getrennte spätere Schritte. Dieser Fachvertrag allein
+D liefert V01 und den begrenzten Om-Folgeauftrag OM01. VR01 ist durch die
+Eigentümerentscheidung erlassen; Übernahme/Aktivierung, finales R01 und Merge
+bleiben getrennte spätere Schritte. Dieser Fachvertrag allein
 ist keine technische Startfreigabe und keine Modell-/Eigenumsetzungsempfehlung.
 
 Jedes Paket erhält technische T01-Nachweise, getrenntes Selbstreview und ein

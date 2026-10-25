@@ -88,8 +88,12 @@ SD2-C ist nach separatem R01 über PR #410 auf
 `4e23e644f3457362e02b75f78fdb575a99265494` integriert; die dortige
 Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate gilt nur für #410.
 [SD2-D-V01](docs/SD2_D_VERIFICATION.md) / #406 liefert die gebundene Bestandsanalyse,
-den Vergleich und die technische Übernahmevorschau. Separates SD2-D-VR01 und
-ein Folgeauftrag vor Übernahme/Aktivierung bleiben offen; keine Teilübernahmefreigabe.
+den Vergleich und die technische Übernahmevorschau. Der Folgeauftrag
+[SD2-D-OM01](docs/SD2_D_OM_FOLLOWUP.md) klärt Om mit einem frischen R4-Nachweis:
+45 gültige Vorschläge, keine offenen IDs. Die 44 bisherigen Vorschläge sind
+abgenommen; der Eigentümer verzichtet ausdrücklich auf separates SD2-D-VR01.
+Das ist keine bestandene Zweitprüfung und erfasst weder finales R01 noch Merge.
+OM01 führt keine Übernahme/Aktivierung aus; keine Teilübernahmefreigabe.
 0.4 ist noch nicht aktiviert. Beide Freezes und aktive Werte
 bleiben bis zum gesonderten Auftrag erhalten. Keine Katalogquantile, echten
 Katalogtests, automatische Neubewertung oder Implementierung aus Spezifikationsfreigabe.
