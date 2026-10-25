@@ -48,17 +48,15 @@ verbindlich. [Gesamtissue #244](https://github.com/venomenon328/picross/issues/2
 führt die beiden eigenständigen Entwicklungspakete. Spezifikationsfreigabe startet
 weder Implementierung noch Merge.
 
-**SD / #235, freigegebener Sollvertrag vom 17.10.2026:**
-[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) konkretisiert §3.2 mit einer
-wiederholbaren Einstufung und begrenztem Größeneinfluss. Alle fünf Stufen sollen
-fachlich erreichbar sein; der aktuelle Katalog muss sie nicht besetzen und setzt
-keine Skalenenden. [SD-A](SD_ANALYZER.md) liefert den separaten technischen
-Analysator; [SD-B](SD_CALIBRATION.md) bindet dessen katalogunabhängige Methode 0.3.
-[SD-C1](SD_CATALOG.md) ist mit PR #242 integriert und ergänzt die kompatible
-Katalogquelle. SD-C2 hat nach bestandenem qualifiziertem Vor-Übernahme-Review und
-Folgeauftrag 26 Bewertungen kontrolliert übernommen; die Anzeige verwendet jetzt
-17 × L3, 8 × L4 und 1 × L5 aus Methode 0.3. Historische Produktionsbindungen bleiben
-unverändert. Separates qualifiziertes finales Datenreview und Merge bleiben offen.
+**SD2 / #402 · freigegebener Sollvertrag vom 25.10.2026:**
+[Menschennähere Schwierigkeit](PUZZLE_DIFFICULTY_V2.md) ergänzt §3.2 um die
+getrennten Profile Denkanspruch, Suchaufwand und Bearbeitungsumfang, überarbeitete
+einfache Regeln sowie breitere unabhängige Referenzen und zurückgehaltene
+Validierungsfälle. Die feste sichtbare Fünferskala bleibt. Die neue Methode 0.4
+ist geplant; Spezifikation/Issues sind kein Implementierungs-/Übernahmeauftrag.
+SD / #235 ist einschließlich C2 mit PR #240–#243 abgeschlossen. Bis zur
+gesonderten Umstellung bleibt die gebundene Methode 0.3 aktiv; ihre Nachweise,
+historischen Produktionswerte und bestehenden Spielstände bleiben erhalten.
 
 **KE / #233, mit PR #234 am 17.10.2026 integriert; Ausgangsstand für KU:**
 Die damalige [Katalogdarstellung](CATALOG_PRESENTATION.md) lieferte eine passive
@@ -152,29 +150,40 @@ Die Rätsel sollen eindeutig und vollständig deduktiv lösbar sein. Notwendiges
 
 Über einzelne Zeilen und Spalten hinausgehende Schlussfolgerungen sind erlaubt. Rastergröße, Bearbeitungsumfang und logischer Anspruch werden getrennt berichtet. Neben vollständiger Linienlogik ist gemäß #139/B-D01 das [Paarlinienprofil](PAIRED_LINES.md) mit unabhängiger Nachweisprüfung zugelassen: zwei beliebige Zeilen beziehungsweise Spalten gemeinsam mit den exakten Zweizellenbeziehungen ihrer Kreuzlinien. Notwendige Paarlinienlogik erhält unter `picross-difficulty-0.2` R4, L5 und die Kennzeichnung „linienübergreifend / besonders hoher logischer Anspruch“. Notwendigkeit verlangt einen separat unabhängig bestätigten unvollständigen Linienfixpunkt und den vollständigen stärkeren Nachweis. Keine L6-Stufe; alte 0.1-Bewertungen behalten ihre Bedeutung. Weitere Profile und menschliche Kalibrierung bleiben offen. Ein Profilstillstand beweist kein notwendiges Raten mit anderen Regeln; ein vollständig geprüfter zwingender Lösungsweg beweist zugleich Eindeutigkeit.
 
-Der freigegebene [SD-Vertrag](PUZZLE_DIFFICULTY.md) führt nach seiner Umsetzung
-eine nachvollziehbare, versionierte Bewertung für Bestands- und neue Rätsel ein.
-Die Namen bleiben **1 Sehr leicht, 2 Leicht, 3 Mittel, 4 Schwer, 5 Sehr schwer**.
-Der tatsächliche Technikbedarf, gleichzeitig verfügbare Fortschritte und relevante
-Engstellen bestimmen die logische Basis. Größe darf höchstens in die benachbarte
-höhere Stufe verschieben; große durchgehend unmittelbare Rätsel bleiben sehr
-leicht. Größe allein begründet keine Stufe 4 oder 5. Anspruchsvolle reine
-Linienlogik kann 5 erreichen; nachgewiesenes notwendiges R4 bleibt 5.
+Die aktive [SD-Methode 0.3](PUZZLE_DIFFICULTY.md) bleibt bis zur kontrollierten
+Umstellung unverändert. Für die neue Methode gilt der freigegebene
+[SD2-Sollvertrag](PUZZLE_DIFFICULTY_V2.md): **Denkanspruch, Suchaufwand und
+Bearbeitungsumfang** werden intern getrennt erfasst und ergeben eine einzige
+sichtbare Stufe **1 Sehr leicht / 2 Leicht / 3 Mittel / 4 Schwer / 5 Sehr schwer**.
+Denkanspruch dominiert; die Suche nach nutzbarem Fortschritt und der Umfang
+tragen nachvollziehbar bei. Lange Lösungszeit allein ist kein hoher logischer
+Anspruch. Gewöhnliche sicher eingeschränkte Überlappungen und eindeutige
+Verlängerungen müssen als einfache Techniken abgebildet werden.
 
-Unabhängige synthetische Referenzen begründen feste Stufengrenzen und den genauen
-Größenbeitrag vor der ersten Bestandsbewertung. Heutige Extremwerte, Quantile
-oder eine gewünschte Katalogverteilung sind keine Kalibrierung; leere Stufen
-sind zulässig. Das Ergebnis ist zunächst eine instrumentierte modellbasierte
-Einschätzung, keine empirisch bestätigte menschliche Lösungszeit. Technik,
-Arbeitsumfang und Aussagegrenzen werden getrennt dokumentiert.
+Anspruchsvolle Spitzen, wiederholte Engstellen, kleinteilige Entscheidungen und
+Hinweis-/Farbstruktur werden im tatsächlichen Lösungsverlauf berücksichtigt.
+Viele kleine Zahlen und zusätzliche Farben sind keine pauschalen Strafpunkte.
+Der reine Umfang erhöht gegenüber Denkanspruch und Suche höchstens um eine
+Nachbarstufe; er begründet allein keine 4/5. Durchgehend unmittelbare/flüssige
+Rätsel bleiben auch groß 1. Sehr anspruchsvolle reine Linienlogik kann 5 erreichen;
+separat nachgewiesenes notwendiges R4 bleibt 5. Keine Pflicht zu menschlichen
+Vergleichslösungen je Rätsel und keine neue Zeit-, Sterne- oder Progressionswertung.
+
+Eine breitere unabhängige synthetische Referenzbasis und ein vorab getrennter
+Validierungssatz begründen fein abgestufte interne Werte und feste Stufengrenzen.
+Gewichte und exakte Regeln werden im jeweiligen Entwicklungspaket nachweisbar
+festgelegt; sie sind noch nicht implementiert. Alle fünf Stufen müssen sinnvoll
+erreichbar sein, der echte Bestand muss sie nicht besetzen. Keine Quoten,
+Katalogextrema oder Quantile. Ohne passende menschliche Daten bleibt es eine
+instrumentierte Modellschätzung, keine empirisch bestätigte Lösungszeit.
 
 Ein ausdrücklich gestarteter Prozess analysiert einzelne Rätsel oder einen
-gewählten Bestand und übernimmt gültige Ergebnisse innerhalb des erteilten
-Auftrags. Neue Rätsel durchlaufen vor ihrer Integration denselben Methodenstand.
-Es gibt keine Schwierigkeitsermittlung im Spieler oder in CI und keine neuen
-automatisierten Tests mit realen Katalogrätseln oder daraus abgeleiteten Kopien.
-Historische Freigaben bleiben erhalten; aktuelle Bewertungen erhalten eine eigene
-dauerhafte Quelle. Spielerwertung, Progression und Saves werden nicht verändert.
+gewählten Bestand; Vorschau, kontrollierte Übernahme und Aktivierung des neuen
+Produktionsstandards bleiben getrennt. Neue Rätsel verwenden nach Aktivierung
+denselben eingefrorenen Methodenstand. Keine Bewertung in Runtime, Build oder
+CI und keine automatisierten Tests mit echten Katalogrätseln oder abgeleiteten
+Kopien. Historische Freigaben bleiben erhalten; reine Neueinstufung verändert
+weder Definitionen, IDs, Puzzle-Revisionen, Slots, Assets noch Spielstände.
 
 Es gibt keine zusätzlichen redaktionell vorgegebenen Startfelder. Klassische und farbige Rätsel müssen aus ihren regulären Randhinweisen heraus lösbar sein. Unmittelbar aus diesen Hinweisen ableitbare Felder sind davon zu unterscheiden.
 

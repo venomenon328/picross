@@ -1,5 +1,14 @@
 # Aktuelle CI-Policy
 
+**SD2 · 25.10.2026:** [Der freigegebene Sollvertrag](PUZZLE_DIFFICULTY_V2.md)
+ändert keine automatische Prüfauswahl. Referenz-/Validierungssätze und allgemeine
+Regressionen bleiben unabhängig synthetisch; echte Katalogfälle, daraus kopierte
+oder abgeleitete Fälle und Bestandsverteilungen werden keine CI-Tests. Der reale
+0.4-Vergleich, Übernahme und Aktivierung gehören ausschließlich zum gesonderten
+manuellen Inhaltsauftrag SD2-D. Reine Spezifikationspflege nutzt Docs/Werkzeugtests,
+Dokumentvalidator, Diffcheck und `ci-required`; spätere A/B/C/D-Diffs folgen der
+vollständigen bestehenden Auswahl, ohne pauschale SD2-Ausnahme.
+
 Stand: 19.10.2026 · Version 2.6 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116), [SD-Vertrag](PUZZLE_DIFFICULTY.md) und [AT-Spezifikation](REVEAL_TRANSPARENCY.md)
 
 ## Geltung und Ablösung
