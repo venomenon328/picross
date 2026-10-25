@@ -341,6 +341,29 @@ class CatalogTests(unittest.TestCase):
             path.unlink()
         self.assertEqual(fixtures.snapshot(self.checkout), before)
 
+    def test_added_history_adoption_binds_sd2_and_default(self):
+        from tools.puzzle_production import catalog_added as added, catalog_added_history as history
+        self.preview(); ca.adopt(self.checkout,self.root/'sd2-test',apply=True)
+        (self.checkout/added.path(self.identifier)).unlink()
+        cr.sync_runtime(self.checkout)
+        self.activate()
+        def git(*args):
+            return subprocess.check_output(['git','-C',str(self.checkout),*args],stderr=subprocess.DEVNULL).decode().strip()
+        git('init','-q'); git('add','.')
+        git('-c','user.name=Synthetic SD2-C','-c','user.email=sd2-c@example.invalid','commit','-qm','synthetic visible catalog')
+        value = history.plan(self.checkout,'sd2-added',git('rev-parse','HEAD'))
+        self.assertEqual(value['format'],history.FORMAT)
+        self.assertIn(method.PATH,value['sources'])
+        path = self.root/'added-plan.json'; write_json(path,value)
+        preserved = {n:(self.checkout/n).read_bytes() for n in (self.rating_path,method.PATH,self.definition)}
+        history.adopt(self.checkout,path,apply=True)
+        after = stamps(self.checkout)
+        self.assertEqual(history.adopt(self.checkout,path,apply=True)['status'],'no-op')
+        self.assertEqual(stamps(self.checkout),after)
+        for name, raw in preserved.items(): self.assertEqual((self.checkout/name).read_bytes(),raw,name)
+        self.assertEqual(load_json(self.checkout/cr.RUNTIME)['entries'][0]['added_at'],
+                         load_json(self.checkout/added.path(self.identifier))['added_at'])
+
 
 class UpdateTests(unittest.TestCase):
     from tests.puzzle_production import test_content_update as update_fixture
@@ -387,6 +410,14 @@ class UpdateTests(unittest.TestCase):
 
 
 class ProjectionTests(unittest.TestCase):
+    def test_oversized_definition_stops_before_analysis_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); source = root/'oversized.json'
+            source.write_bytes(b' ' * (2 * 1024 * 1024 + 1))
+            with self.assertRaises(ValueError):
+                ca.analyze_single(source,root/'output',production_mode='mono',method=method.NEW)
+            self.assertFalse((root/'output').exists())
+
     def test_required_r4_import_and_unproved_prefix_stay_distinct(self):
         from tests.puzzle_production.test_paired import MONO, wire
         from tools.puzzle_production.contract import Budget, validate_logic
@@ -434,6 +465,8 @@ class ProjectionTests(unittest.TestCase):
                 else:
                     with self.assertRaises(ValueError): display.validate_projection(value, version=5)
         self.assertIsNone(display.validate_projection(None, version=5))
+        for version in (1, 6, True, 5.0, '5'):
+            with self.assertRaises(ValueError): display.validate_projection(None, version=version)
 
     def test_both_method_hashes_remain_pinned(self):
         self.assertEqual(method.method_hash(method.OLD), '8f7efa0d5ac76a1bd73fbae3618fec18dba28cf704887188eba2fcf020b9df79')

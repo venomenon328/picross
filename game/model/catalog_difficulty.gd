@@ -5,6 +5,7 @@ const LABELS: Array[String] = ["Sehr leicht", "Leicht", "Mittel", "Schwer", "Seh
 const COLORS: Array[Color] = [Color("52734e"), Color("74713e"), Color("997337"), Color("a36342"), Color("9b514b")]
 
 static func valid(value: Variant, version: int = 4) -> bool:
+	if not version in [2,3,4,5]: return false
 	if value == null: return true
 	if not value is Dictionary or value.size() != 6: return false
 	var methods: Array[String] = ["picross-difficulty-0.1", "picross-difficulty-0.2", "picross-difficulty-0.3"]

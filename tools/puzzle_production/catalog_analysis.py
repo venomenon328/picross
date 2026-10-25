@@ -77,7 +77,7 @@ def analyze_single(input_path, output, *, production_mode, budget=None, verify_b
     output = work_directory(output)
     production_mode = rating.mode(production_mode)
     catalog_method.method_hash(method)
-    _, puzzle, source, _ = rating.definition(input_path.read_bytes())
+    _, puzzle, source, _ = rating.definition(rating.read_file(input_path, 2 * 1024 * 1024))
     require(production_mode != "mono" or len(puzzle.colors) == 1, "Mono mode requires one foreground color")
     import_limits = verify_budget.limits() if verify_budget is not None else {}
     if method == catalog_method.NEW:
@@ -431,7 +431,7 @@ def main(argv=None):
                 value = load_json(safe_external(args.rating), rating.LIMIT)
                 from .sd2_catalog_rating import FORMAT as SD2_FORMAT
                 if value.get("format") in (rating.FORMAT, rating.LEGACY_FORMAT, SD2_FORMAT): value = rating.checked_from_active(value)
-                result = rating.rebind_checked(value, safe_external(args.input).read_bytes(), production_mode=args.production_mode)
+                result = rating.rebind_checked(value, rating.read_file(safe_external(args.input), 2 * 1024 * 1024), production_mode=args.production_mode)
             write_new(work_directory(args.output), rating.encoded(result))
         elif args.command in ("preview", "preview-checked"):
             supplied = args.checked if args.command == "preview-checked" else args.r4

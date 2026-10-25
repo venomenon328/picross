@@ -37,6 +37,7 @@ def project(raw):
 def validate_projection(value, *, version=4):
     """Exactly the six-field runtime contract, including the 0.3 point estimate."""
     from .contract import exact_keys
+    require(type(version) is int and version in (2, 3, 4, 5), "Unsupported runtime difficulty version")
     if value is None: return None
     exact_keys(value, {"method", "level", "assessment_type", "confidence", "plausible_range", "r4_required"})
     require(type(value["r4_required"]) is bool and value["level"] in LEVELS, "Invalid runtime difficulty")
