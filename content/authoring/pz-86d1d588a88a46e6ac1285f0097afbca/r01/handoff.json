@@ -1,0 +1,152 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "575a7625e24023578611773cd2f0b7163a1d5967967ac0d02b8b50e6013e19f8"
+  },
+  "puzzle_id": "pz-86d1d588a88a46e6ac1285f0097afbca",
+  "revision": "r01",
+  "repo_commit": "86a4d158b39dd8ae44b70ce493c7574b85a5b2c5",
+  "state": "reveal_review",
+  "category_id": "gebaeude-bauwerke",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "requested_parameters": {
+    "width": 40,
+    "height": 30,
+    "approximate": true,
+    "fixed": false,
+    "mode": "color",
+    "color_count": null
+  },
+  "reveal": {
+    "file": null,
+    "sha256": null,
+    "approval": null
+  },
+  "reveal_options": [
+    {
+      "id": "A-r01",
+      "title": "Ausgewogene Seitenansicht",
+      "file": "reveals/A-r01.png",
+      "sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb",
+      "bytes": 2022326,
+      "width": 1448,
+      "height": 1086,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 814940,
+      "partial_alpha_pixels": 757307,
+      "opaque_pixels": 281,
+      "significant_alpha_bbox": [
+        13,
+        173,
+        1428,
+        919
+      ],
+      "prompt": "prompts/A-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "B-r01",
+      "title": "Nahe Dreiviertelansicht",
+      "file": "reveals/B-r01.png",
+      "sha256": "19cf0858906f08257db2ecc0ff6893ad7a893735fa2fb9dbf0e749a34db27908",
+      "bytes": 2603001,
+      "width": 1448,
+      "height": 1086,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 613028,
+      "partial_alpha_pixels": 959391,
+      "opaque_pixels": 109,
+      "significant_alpha_bbox": [
+        13,
+        68,
+        1434,
+        1043
+      ],
+      "prompt": "prompts/B-r01.txt",
+      "approval": null
+    },
+    {
+      "id": "C-r01",
+      "title": "Erhöhter Blick auf die Gehfläche",
+      "file": "reveals/C-r01.png",
+      "sha256": "267a7af60803e2826006048a88b5c472a15ac96d88fa8d18a561bb87b2fab612",
+      "bytes": 2435802,
+      "width": 1448,
+      "height": 1086,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 727316,
+      "partial_alpha_pixels": 844817,
+      "opaque_pixels": 395,
+      "significant_alpha_bbox": [
+        32,
+        60,
+        1435,
+        1036
+      ],
+      "prompt": "prompts/C-r01.txt",
+      "approval": null
+    }
+  ],
+  "motif": {
+    "file": null,
+    "sha256": null,
+    "derived_from_reveal_sha256": null,
+    "approval": null
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "b24407cda9bac769fd488911f35a8efe2f9da43b8b9743073b42bd1f151f2c69"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "gates": {
+    "reveal_approval": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pending",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "authorization": "Standardauftrag 1 samt Repositoryablage nach §6, Commit/Push und PR; Ablagemerge nach erfolgreichen Pflichtprüfungen ausdrücklich beauftragt. Keine Inhaltsfreigabe erteilt."
+}
