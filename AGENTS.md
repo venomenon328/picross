@@ -83,8 +83,13 @@ getrennte Validierung und den eigenständigen eingefrorenen 0.4-Bewertungsweg.
 Denkanspruch, Suchaufwand und Bearbeitungsumfang ergeben eine feste Fünferskala.
 SD2-C / #405 bindet vor Integrationscode den vollständigen
 [Integrationsvertrag](docs/SD2_INTEGRATION.md) (bei SD2-Integration vollständig lesen).
-[SD2-C-T01](docs/SD2_C_VERIFICATION.md) bindet die technische Implementierung auf
-`feat/405-sd2-integration`; separates SD2-C-R01 und Merge bleiben offen.
+[SD2-C-T01](docs/SD2_C_VERIFICATION.md) bleibt am historischen Lieferstand gebunden.
+SD2-C ist nach separatem R01 über PR #410 auf
+`4e23e644f3457362e02b75f78fdb575a99265494` integriert; die dortige
+Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate gilt nur für #410.
+[SD2-D-V01](docs/SD2_D_VERIFICATION.md) / #406 liefert die gebundene Bestandsanalyse,
+den Vergleich und die technische Übernahmevorschau. Separates SD2-D-VR01 und
+ein Folgeauftrag vor Übernahme/Aktivierung bleiben offen; keine Teilübernahmefreigabe.
 0.4 ist noch nicht aktiviert. Beide Freezes und aktive Werte
 bleiben bis zum gesonderten Auftrag erhalten. Keine Katalogquantile, echten
 Katalogtests, automatische Neubewertung oder Implementierung aus Spezifikationsfreigabe.

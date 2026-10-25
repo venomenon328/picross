@@ -126,7 +126,7 @@ damalige Mergeausnahmen werden nicht auf HZ übertragen.
 Die folgenden KE-/KAT-Abschnitte beschreiben die integrierte Ausgangsbasis;
 ihre gezielt abgelösten Anzeige-/Sortierregeln gelten nicht als neuer KU-Sollstand.
 
-**SD2 / #402 · 25.10.2026, SD2-A/B integriert; SD2-C beauftragt:**
+**SD2 / #402 · 26.10.2026, SD2-A/B/C integriert; D bis V01 beauftragt:**
 [Menschennähere Schwierigkeit](PUZZLE_DIFFICULTY_V2.md) führt den neuen Sollvertrag:
 Denkanspruch, Suchaufwand und Bearbeitungsumfang, menschennähere Basistechniken,
 fein abgestufte interne Bewertung mit festen Grenzen und unabhängiger breiter
@@ -150,8 +150,14 @@ Der vor Code festgelegte [SD2-C-Integrationsvertrag](SD2_INTEGRATION.md) ist bei
 Integrationsarbeit vollständig zu lesen. Er ergänzt die alten Quellen-/Runtime-/
 Journalverträge explizit versioniert. Tatsächliche Bestandsumstellung und Aktivierung
 bleiben #406 vorbehalten; C prüft ausschließlich synthetische Fälle.
-[SD2-C-T01](SD2_C_VERIFICATION.md) ordnet die technische Implementierung und
-den getrennten Selbstreview zu; qualifiziertes SD2-C-R01 und Merge bleiben offen.
+[SD2-C-T01](SD2_C_VERIFICATION.md) behält seine historische Headbindung.
+C ist nach separatem R01 über [PR #410](https://github.com/venomenon328/picross/pull/410)
+auf `4e23e644f3457362e02b75f78fdb575a99265494` integriert. Die dortige
+[Eigentümerausnahme](https://github.com/venomenon328/picross/pull/410#issuecomment-6404111838)
+zum fehlenden Gesamt-CI-/Chromium-Gate gilt ausschließlich für #410.
+[SD2-D-V01](SD2_D_VERIFICATION.md) bindet den tatsächlichen Bestandslauf,
+Vergleich und Planungsstand; Übernahme, Aktivierung, VR01 und Merge sind nicht
+Teil dieser Lieferung. Default und aktive Ratings bleiben 0.3.
 
 **Aktive SD-Basis / #235:** SD-A/B/C1/C2 sind mit PR #240–#243 abgeschlossen;
 letzter Merge `72ba39391833f6fd834d0a6afaf881c86c7bdc3a` nach finalem C2-Review.

@@ -500,6 +500,9 @@ Rating-/Kontext-/Reportformate, Runtime-v5 und Journalgenerationen. Die bisherig
 Produktionsdefault bleibt 0.3. Neue `--method`-Auswahl und explizites
 `catalog_method plan/adopt` folgen diesem Vertrag.
 [SD2-C-T01](../../docs/SD2_C_VERIFICATION.md) ordnet die synthetischen Nachweise zu.
+C ist nach separatem R01 über PR #410 integriert;
+[D-V01](../../docs/SD2_D_VERIFICATION.md) liefert den gesondert beauftragten
+Bestandsvergleich und Planungsstand ohne Übernahme/Aktivierung.
 
 Einzelanalyse und frischer Import verwenden eine ausdrücklich übergebene
 Definition. Das neue äußere Arbeitsverzeichnis enthält `catalog-context.json`
@@ -592,7 +595,8 @@ bezeichnen Eingabe-/Beleg-/Abbruch-/Technikfehler. Ein verifizierter abgebrochen
 Präfix bleibt unrated und liefert Exit 4; Prüfabbrüche schreiben kein Rating.
 Ausgabeordner müssen neu sein. Explizites R4 erfordert beide `--r4-proof` und
 `--r4-baseline`; kein automatischer Paarlauf. [SD2-B-T01](../../docs/SD2_B_VERIFICATION.md)
-bindet Lieferung/Selbstreview; separates B-R01 und Merge bleiben offen.
+bindet den historischen Lieferstand/Selbstreview; B ist nach separatem R01
+über PR #409 integriert.
 
 ## SD-C1: Kandidat, geprüfter Input, Vorschau und Übernahme
 
