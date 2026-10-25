@@ -233,11 +233,16 @@ class ReviewTests(unittest.TestCase):
         _, checked = self.register()
         (self.root / rating.path('pz-review')).unlink()
         cr.sync_runtime(self.root)
+        runtime = load_json(self.root / cr.RUNTIME)
+        runtime['format'] = 'picross-runtime-registry-v4'
+        write_json(self.root / cr.RUNTIME, runtime)
         work = self.home / 'legacy-preview'
         report = ca.preview(self.root, work, 'legacy', 'a' * 40, ids=['pz-review'], checked_inputs={'pz-review': checked})
         report['format'] = ca.LEGACY_FORMAT
         report['result'].pop('sources')
-        for row in report['result']['entries']: row.pop('previous_rating_revision')
+        report['result'].pop('method')
+        for row in report['result']['entries']:
+            row.pop('previous_rating_revision'); row.pop('assessment')
         report['result_hash'] = digest(report['result'])
         write_json(work / 'report.json', report)
         (work / 'report.md').write_bytes(ca.markdown(report).encode())

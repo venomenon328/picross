@@ -107,6 +107,7 @@ zusätzlich an finalen Head und aktuelle CI. Dies ist ein Selbstreview des Imple
 | --- | --- |
 | B-SD2-C-01, behoben | Die neuen eigenständigen Projektionsvalidatoren akzeptierten bei unbekanntem Versionsparameter weiterhin Altwerte/null, obwohl die Registryprüfung schon geschlossen war. Python und Godot prüfen nun zuerst die exakte Versionsmenge; negative Proben einschließlich null decken den Fall ab. |
 | B-SD2-C-02, behoben | Der gemeinsame Analyse-/Rebind-Einstieg las die Definition vor seiner JSON-Grenzprüfung vollständig. Er verwendet nun auch dort den vorhandenen begrenzten 2-MiB-Reader; übergroße Definition stoppt vor Anlage eines Analyseverzeichnisses. |
+| B-SD2-C-03, behoben | Der erste CI-Zwischenlauf zeigte zwei überholte Testaufbauten: Eine aktuelle Added-Recovery wurde noch mit automatischem v4-Upgrade erwartet, und der Legacy-Reporttest etikettierte neue Felder/Runtimebytes als v1 um. Der Added-Test prüft jetzt exakte Wiederherstellung und anschließende Stale-Ablehnung nach explizitem Sync; der Legacy-Test verwendet die echte alte Feldmenge und Runtime-v4. Beide gezielten Regressionen bestanden nach Korrektur (2/2, 81,898 s); kein Reader wurde aufgeweicht. |
 
 - **A-SD2-C-R01:** Qualifizierter separater Review am finalen Head durch einen
   gesonderten Reviewlauf bleibt vor Merge offen.

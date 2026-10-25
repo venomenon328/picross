@@ -110,7 +110,10 @@ class AddedTests(unittest.TestCase):
         self.assertFalse((self.checkout / added.path(self.identifier)).exists())
         self.assertFalse((self.checkout / tx.LOCK).exists())
         cr.check_checkout(self.checkout)
-        # Recovery is current v4 immediately, so the v3-bound old plan is stale.
+        # A C rollback restores the valid v3 bytes exactly. An explicit later
+        # sync upgrades to v5 and then makes that v3-bound plan stale.
+        self.assertEqual(snapshot(self.checkout), before)
+        cr.sync_runtime(self.checkout)
         with self.assertRaisesRegex(ValueError, 'sources changed'):
             history.adopt(self.checkout, path, apply=True)
         self.assertTrue(all((self.checkout/n).read_bytes() == b for n,b in before.items() if n != cr.RUNTIME))
