@@ -1,0 +1,145 @@
+{
+  "actual_foreground_colors": 5,
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 22,
+      "method": "area",
+      "mode": "color",
+      "width": 44
+    },
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 6,
+      "height": 22,
+      "method": "area",
+      "mode": "color",
+      "width": 44
+    },
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 20,
+      "method": "area",
+      "mode": "color",
+      "width": 40
+    },
+    {
+      "actual_crop": [
+        16,
+        83,
+        1692,
+        896
+      ],
+      "fit": "contain",
+      "foreground_colors": 6,
+      "height": 20,
+      "method": "area",
+      "mode": "color",
+      "width": 40
+    }
+  ],
+  "blockers": [],
+  "candidate": {
+    "bundle": "imports/40x20-5c-clear",
+    "certification": null,
+    "logic_hash": "b28bbdb3b1bf35bed29a2682f61973d30e134eb5e4a746b6fed0417515df6ee5",
+    "matrix_hash": "7d3773858252934c9b3337f81da1641890fa2d2bc90bae85961753972a9edabf",
+    "proof": "imports/40x20-5c-clear/area-proof.json",
+    "source_type": "import",
+    "variant": "area",
+    "verification": "audit/hands-verify-40x20-5c-clear.json"
+  },
+  "category_id": "gebaeude-bauwerke",
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "file": "analysis/checked.json",
+    "inside_package": true,
+    "level": "L3",
+    "method": "picross-difficulty-0.3"
+  },
+  "dimensions_approximate": true,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-86d1d588a88a46e6ac1285f0097afbca/r04/handoff.json",
+    "sha256": "7f562d902a7d00fb0f33d9d51e4d4ad519eba29cd180f72bb662e9953ccc63b4"
+  },
+  "height": 20,
+  "integration": null,
+  "inventory_sha256": "5b20657ee436337678769e65e296f899bad261a5c05a765ffa409f0d0c683ff6",
+  "mode": "color",
+  "motif": {
+    "approval": "motif-approval.json",
+    "derived_from_reveal_sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb",
+    "file": "motifs/MA-r01.png",
+    "id": "MA-r01",
+    "provenance": "motifs/MA-r01.provenance.json",
+    "sha256": "b9f71249b6b282592436cd2b0661fe18c188fd313817692279c2ac706b137311"
+  },
+  "motif_approval": {
+    "file": "motif-approval.json",
+    "inside_package": true,
+    "sha256": "1b56ddaf1f13366f792e924f17b01fe09c49e4974388de74c39ca4c785ff54f0"
+  },
+  "motif_name": "Cầu Vàng",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "omissions": "Frühere r03-Import-/Analysebundles und überholte Vorschauen nur im unveränderten gebundenen Vorgänger. Alle sechs neuen RP-3-Bündel vollständig; keine alten ZIPs eingebettet.",
+  "package": {
+    "bytes": 16932389,
+    "file": "content/authoring/pz-86d1d588a88a46e6ac1285f0097afbca/r04/package.zip",
+    "sha256": "d8740cf562199c584a50676059ed935018cba791f2006aba791093b838a3aa43"
+  },
+  "previous_revision": "r03",
+  "puzzle_id": "pz-86d1d588a88a46e6ac1285f0097afbca",
+  "repo_commit": "bdf0080316296f5187767465cde62ec7aa722323",
+  "requested_parameters": {
+    "approximate": true,
+    "foreground_colors": null,
+    "height": 30,
+    "mode": "color",
+    "width": 40
+  },
+  "reveal": {
+    "approval": "reveal-approval.json",
+    "file": "reveals/A-r01.png",
+    "id": "A-r01",
+    "provenance": "reveals/A-r01.provenance.json",
+    "sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb"
+  },
+  "reveal_approval": {
+    "file": "reveal-approval.json",
+    "inside_package": true,
+    "sha256": "a7d9ce61710821c360a4d0923b1a69db80a6abf9bcd31c9c32f83568ffeba30d"
+  },
+  "revision": "r04",
+  "state": "content_ready",
+  "updated_at_utc": "2026-10-25T11:37:16.369406+00:00",
+  "verification": {
+    "editorial_approved": false,
+    "file": "content/authoring/pz-86d1d588a88a46e6ac1285f0097afbca/r04/verification.json",
+    "sha256": "cad219396d36440f2ee8d960d71763705eaeb9f999aa4b416d593ef1604e7c28",
+    "technical": true
+  },
+  "width": 40
+}
