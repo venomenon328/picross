@@ -1,0 +1,28 @@
+{
+  "format": "picross-image-approval-v1",
+  "type": "human_reveal_approval",
+  "evidence": "evidence/user-request.md",
+  "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+  "revision": "A-r01",
+  "file": "reveals/A-r01.png",
+  "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+  "actor": "Tobias (Nutzer)",
+  "timestamp_utc": "2026-10-25T12:17:12.623103Z",
+  "timestamp_basis": "Aufzeichnungszeit der tatsächlich vorliegenden Freigabe; Nachrichten-Sendezeitpunkt nicht exponiert.",
+  "statement": "Ich gebe das Abschlussbild A-r01 frei. Führe Standardauftrag 2 bis zur Motivvorlage samt Konfiguration und Codex-Übergabe aus.",
+  "source_package": {
+    "revision": "r01",
+    "file": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/r01/package.zip",
+    "sha256": "ba93b107ad2fe5cc735c222f2d086554f4aa9593fb00ed22de60848c227a0c37",
+    "handoff_sha256": "ec50fa79981399cb696d7cf128308f8e164f90ab2339ae88ec49707f480c3346",
+    "inventory_sha256": "16513ce4717a21b7d0745bcf1e17d9b8fdf63e6dec5628034a5e68f189c7ec60",
+    "repo_commit": "96c6795cdbd7143b42d0c9a51ce460c0895af374"
+  },
+  "preserve": [
+    "aufrechte Frontansicht",
+    "hohe tropfenförmige geschlossene Schlaufe mit offenem Innenraum",
+    "breiter leicht hochgezogener Querbalken",
+    "langer durchgehender Schaft mit ausgestelltem flachem Fuß",
+    "kein Motivwechsel, keine Spiegelung oder Drehung"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "type": "editorial_self_review",
+  "views": [
+    "final/acceptance.png",
+    "final/raster-native.png",
+    "final/raster-grid.png"
+  ],
+  "criteria": {
+    "recognizability": {
+      "status": "erfüllt",
+      "reason": "Aufrechtes Ankh mit hoher Schlaufe, breiten Querarmen und langem Schaft erkennbar."
+    },
+    "silhouette_proportions": {
+      "status": "erfüllt",
+      "reason": "Exakt angenommene MA-r02-Pixel: 2-Zellen-Schaft, 4-Zellen-Fuß; keine weitere Formänderung."
+    },
+    "details_negative_space": {
+      "status": "erfüllt",
+      "reason": "Schlaufe jeder Zeile spiegelbildlich; Innenraum sichtbar frei. Stufige Diagonalen mit Eckkontakten und letzte Leerzeile wie in der konkret freigegebenen MA-r02 erhalten."
+    },
+    "palette_mono_readability": {
+      "status": "erfüllt",
+      "reason": "Genau eine verwendete Vordergrundfarbe ink #111111 plus Leer; keine zusätzlichen Farbflächen oder Textur."
+    },
+    "series_aesthetic": {
+      "status": "erfüllt",
+      "reason": "Ruhiges Monoraster; detailreiches farbiges A-r01 ist unverändert und auf warmem Papier ohne opaken Bildkasten dargestellt."
+    },
+    "reveal_consistency": {
+      "status": "erfüllt",
+      "reason": "Hauptmotiv, Frontansicht, Schlaufe/Querarme/Schaft/Fuß entsprechen der angenommenen Abstraktion; Gold-/Materialdetails bleiben im freigegebenen Reveal."
+    }
+  },
+  "motif_approval": "approvals/motif-MA-r02.json",
+  "reveal_approval": "approvals/reveal-A-r01.json",
+  "soft_exceptions": [
+    "Leere unterste Zeile 15 aus ausdrücklich angenommener Pixelvorlage erhalten; keine leere Innenlinie.",
+    "Schlaufenrundung enthält diagonale Eckkontakte wie konkret angenommen; keine Rasterkorrektur nur für einen technischen Zusammenhang."
+  ],
+  "human_final_editorial": "pending",
+  "native_game_test": "not_required: production-only, no runtime integration"
+}
