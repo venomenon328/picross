@@ -83,7 +83,10 @@ Menschliche Vergleichsdaten liegen nicht vor. Deshalb höchstens mittlere
 Aussagekraft, keine Lösungsminuten und keine behauptete empirische Kalibrierung.
 SD2-B-T01 und getrennter Selbstreview werden in der
 [Prüfzuordnung](SD2_B_VERIFICATION.md) und dem Implementierungs-PR gebunden; das separate
-SD2-B-R01 und Merge bleiben nachgelagerte Gates. #405/#406 bleiben außerhalb.
+SD2-B-R01 und Merge sind mit PR #409 auf
+`0ae6535073fb808af44dcf3e12130a33ba49cdbc` abgeschlossen. Die B-Nachweise
+bleiben an ihren historischen Lieferhead gebunden. #405/#406 bleiben außerhalb
+des B-Pakets; [SD2-C-V01](SD2_INTEGRATION.md) spezifiziert die gemeinsame Integration.
 
 ## 4. Untersuchung und Wahl vor Implementierung
 

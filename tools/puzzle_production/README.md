@@ -492,6 +492,15 @@ Auch vollständige SD2-A-Berichte enthalten keine Endnote oder aktive Bewertung;
 und der vollständige 0.3-Freeze bleiben erhalten. A ist nach separatem Review
 über PR #408 integriert. [Historische Prüfzuordnung](../../docs/SD2_A_VERIFICATION.md).
 
+## SD2-C: gemeinsamer Integrationsvertrag
+
+[SD2-C-V01](../../docs/SD2_INTEGRATION.md) bindet vor Code die neuen Checked-/
+Rating-/Kontext-/Reportformate, Runtime-v5 und Journalgenerationen. Die bisherigen
+0.3-Formate und eigenständigen A-/B-CLIs bleiben geschlossen. Der reale
+Produktionsdefault bleibt 0.3. Neue `--method`-Auswahl und explizites
+`catalog_method plan/adopt` folgen diesem Vertrag; tatsächliche Ausführungs-
+nachweise und CLI-Beispiele werden mit der Implementierung ergänzt.
+
 ## SD2-B: Eigenständige Bewertung 0.4
 
 Der [B-Vertrag](../../docs/SD2_CALIBRATION.md) bindet vorab festgelegte unabhängige

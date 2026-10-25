@@ -7,6 +7,9 @@ aktuelle Registrierungs-/Produktionsstandard bleibt 0.3. Neue Methode und drei
 Teilprofile ändern keine Definition, Identität, Freigabe, AT-/Added-Quelle oder
 Saves. Kein Solverlauf aus Register/Sync/Recovery und kein stilles Erweitern der
 heutigen geschlossenen Schemas; die vollständigen Altwege bleiben erhalten.
+[SD2-C-V01](SD2_INTEGRATION.md) bindet vor Code die neuen Hüllen,
+Produktions-/Rebindregeln und gemeinsamen Journalgenerationen. Dieser Zusatz
+ersetzt gezielt die nachfolgenden ausschließlichen 0.3-/Runtime-v4-Schreibregeln.
 
 **AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
 [AT](REVEAL_TRANSPARENCY.md) liefert mit AT-A einen

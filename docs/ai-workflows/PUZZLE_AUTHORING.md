@@ -1,5 +1,13 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
+**SD2-C-V01 · 25.10.2026:** Der vor Code versionierte
+[Integrationsvertrag](../SD2_INTEGRATION.md) ergänzt den Schwierigkeitsweg um
+explizite Methodenwahl und neue geschlossene Hüllen. Beide Freezes bleiben;
+der reale Produktionsdefault bleibt 0.3. Vorläufiger Kandidat, explizite
+Analyse/Import, Metadaten-Rebind auf den fertigen Export und kontrollierte
+Registrierung bleiben getrennte Schritte. Aktivierung und echte
+Bestandsumstellung sind in diesem C-Auftrag ausgeschlossen.
+
 **Version 0.5.0 · Dokumentrevision 23 · 22.10.2026**
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
