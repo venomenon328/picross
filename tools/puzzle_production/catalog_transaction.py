@@ -369,6 +369,12 @@ def validate_journal(root, j, *, before_write=False):
     names = text_names(before, legacy=legacy, previous=not current_generation, sd2=new_generation) | text_names(after, legacy=legacy, previous=not current_generation, sd2=new_generation) | report_names(j["report_run"], j["operation"])
     if not new_generation:
         require(catalog_method.load(root) is None, "Legacy journal cannot bind production default")
+        # Old sync permits opaque stale bytes, but must never downgrade the
+        # recognized C authority under that exception.
+        try: old_runtime = io.json_bytes(j["old"][RUNTIME].encode(), 8 * 1024 * 1024)
+        except ValueError: old_runtime = None
+        require(not isinstance(old_runtime, dict) or old_runtime.get("format") != "picross-runtime-registry-v5",
+                "Legacy journal cannot bind runtime v5")
     if not current_generation:
         require(not reveal.source_paths(root, before, after), "Legacy journal cannot bind reveal sources")
     else:
