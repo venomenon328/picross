@@ -410,6 +410,24 @@ class UpdateTests(unittest.TestCase):
 
 
 class ProjectionTests(unittest.TestCase):
+    def test_old_sync_rejects_v5_but_retains_opaque_stale_recovery(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = isolated_checkout(Path(directory)/'checkout')
+            cr.sync_runtime(root)
+            snapshot = tx.capture(root)
+            current = tx.prepare(root,snapshot,{},operation='sync')
+            for formats in (tx.AT_FORMATS,tx.PREVIOUS_FORMATS,tx.LEGACY_FORMATS):
+                old = deepcopy(current); old['format'] = formats['sync']
+                for side in ('old','new'): old[side].pop(method.PATH)
+                if formats != tx.AT_FORMATS: old.pop('replacements')
+                old['new'][tx.RUNTIME] = tx.projection(old['new'],snapshot['registry'],version=3 if formats == tx.LEGACY_FORMATS else 4).decode()
+                (root/tx.RUNTIME).write_text(old['old'][tx.RUNTIME],encoding='utf-8',newline='\n')
+                with self.subTest(format=old['format']), self.assertRaisesRegex(ValueError,'runtime v5'):
+                    tx.validate_journal(root,old,before_write=True)
+                old['old'][tx.RUNTIME] = 'opaque stale projection\n'
+                (root/tx.RUNTIME).write_bytes(old['old'][tx.RUNTIME].encode())
+                tx.validate_journal(root,old,before_write=True)
+
     def test_oversized_definition_stops_before_analysis_output(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); source = root/'oversized.json'
