@@ -1,0 +1,49 @@
+{
+  "format": "picross-authoring-integration-evidence-v1",
+  "puzzle_id": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+  "revision": "r06",
+  "source_commit": "9783bd47d7ca18e3b9749ef6e9f8d15fc40f7a3e",
+  "timestamp_utc": "2026-10-25T00:55:43.877365+00:00",
+  "approval_sha256": "3d48c68fbf3b20351d6d07556913c97c29c175ce6fe8efdaf949caa91350eb61",
+  "export_manifest_sha256": "b4affaf110aac7dff944496cd263733a7af2b17e8b8fb5b311e5645480d82a04",
+  "checked_difficulty_hash": "6e21ef72d58ef219e183dbcf7f94ac08c88c3d3f9c9c2aeddaeb624faa724e05",
+  "registered": true,
+  "runtime_revision": 1,
+  "save_slot": "pentagramm_001",
+  "category": {
+    "id": "mythen-fantasie",
+    "name": "Mythen & Fantasie",
+    "order": 20
+  },
+  "files": {
+    "game/data/content/pentagramm_001.json": "913b58b617b2cc5ee77473285107b08e353b258eab0f2911c402f27af3eb5691",
+    "game/art/content/pentagramm_001.png": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d",
+    "game/art/content/pentagramm_001.txt": "4d2c5ed5d9c1c4549fe0f0f04af89fd001a56b7e75b6d70295b1151ba3f9a713"
+  },
+  "unchanged_existing_registry_entries": 42,
+  "export_file_copies": "byte_equal",
+  "runtime_projection": {
+    "added_at": "2026-10-25T00:53:15Z",
+    "category_id": "mythen-fantasie",
+    "definition": "data/content/pentagramm_001.json",
+    "difficulty": {
+      "assessment_type": "instrumented",
+      "confidence": "medium",
+      "level": "L4",
+      "method": "picross-difficulty-0.3",
+      "plausible_range": [
+        "L4",
+        "L4"
+      ],
+      "r4_required": false
+    },
+    "id": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+    "key": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+    "reveal": "art/content/pentagramm_001.png",
+    "save_slot": "pentagramm_001",
+    "visible": true
+  },
+  "native_tests": "nicht erforderlich: reine Inhaltsintegration",
+  "user_saves_modified": false,
+  "state_scope": "registered in this working branch; main merge and subsequent cleanup pending"
+}
