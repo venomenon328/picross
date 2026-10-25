@@ -1,34 +1,29 @@
 # Rätselschwierigkeit und wiederholbare Katalogeinstufung · SD
 
-Stand: 18.10.2026 · Spezifikation 1.2 · SD-A/SD-B/SD-C1 integriert, C2 übernommen, finales Review offen
+Stand: 25.10.2026 · Spezifikation 1.3 · aktive Methode 0.3, SD2 separat freigegeben
 
-Die Spezifikation einschließlich der katalogunabhängigen Referenzkalibrierung
-ist freigegeben. SD-A liefert den [technischen Analysator](SD_ANALYZER.md) mit
-eigener prüfbarer Spur und manueller Einzel-CLI. [SD-B](SD_CALIBRATION.md) ergänzt
-die eingefrorene Methode 0.3 mit eigenen geprüften Ratings. [SD-C1](SD_CATALOG.md)
-liefert den technischen Bewertungs-/Integrationsweg samt synthetischen Nachweisen.
-SD-C1 ist nach qualifiziertem R2 mit PR #242 als
-`e93444e5db48e2138d15890e314c60ec4291fea3` integriert. Der manuelle
-SD-C2-Erstlauf lieferte 26 vollständig geprüfte Vorschläge und einen lesenden
-Übernahmeplan. Nach bestandenem qualifiziertem Vor-Übernahme-Review wurden gemäß
-SD-C2-F01 alle 26 Bewertungen kontrolliert übernommen; der identische zweite
-`adopt` war ohne Byte-/Revisionsänderung No-op. [Belege und Gategrenze](SD_CATALOG.md)
-führen A07 real/K01; separates qualifiziertes finales Datenreview und Merge bleiben offen;
-#238/#235 werden dadurch nicht abgeschlossen.
+**Aktiver Stand:** SD / [#235](https://github.com/venomenon328/picross/issues/235)
+ist mit SD-A/B/C1/C2 und PR #240–#243 abgeschlossen. Die ursprüngliche
+26er-Übernahme ist nach qualifiziertem finalem Review mit PR #243 als
+`72ba39391833f6fd834d0a6afaf881c86c7bdc3a` integriert. Frühere offene Gates in
+Lieferberichten sind historische Stände. Die folgenden SD-D01–D15 beschreiben
+den weiterhin aktiven Vertrag von `picross-difficulty-0.3`.
 
-[Zielissue #235](https://github.com/venomenon328/picross/issues/235) führt den
-Gesamtumfang; [SD-A #236](https://github.com/venomenon328/picross/issues/236),
-[SD-B #237](https://github.com/venomenon328/picross/issues/237) und
-[SD-C #238](https://github.com/venomenon328/picross/issues/238) die Entwicklungspakete.
-Die Eigentümerklarstellung vom 17.10.2026 zu unabhängigen Skalenenden und
-zulässigen unbesetzten Stufen ist in SD-D01/SD-D08 verbindlich übernommen.
+**Freigegebene Folgearbeit:** [SD2 / #402](PUZZLE_DIFFICULTY_V2.md) präzisiert
+den neuen Sollvertrag für menschennähere Basistechniken, Denkanspruch,
+Suchaufwand und Bearbeitungsumfang, breite unabhängige Referenzen und getrennte
+Validierung. SD2 ersetzt für die geplante Methode 0.4 die konkrete Bewertung aus
+SD-D01/D04–D08; der begrenzte Umfangsbeitrag und die übrigen Schutz-/Integrations-
+grenzen bleiben. 0.3-Freeze, alte Formate und aktuelle Ratings werden nicht
+umgeschrieben. Noch keine Implementierung, echte Neubewertung oder Aktivierung.
 
-Grundlage ist `main@d98c0066394c414b86f745c63fbfec2813ad3331`.
+[SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md) und [SD-C1](SD_CATALOG.md)
+führen die exakten bestehenden Analyse-, Methoden- und Datenverträge.
 [Produktdefinition](PRODUCT_DEFINITION.md), [Rätselproduktion](PUZZLE_PRODUCTION.md),
 [Paarlinienvertrag](PAIRED_LINES.md), [Authoring](ai-workflows/PUZZLE_AUTHORING.md),
 [ZA-1](ZA1_ADAPTER.md), [Kategorien](CATEGORIES.md),
 [Katalogdarstellung](CATALOG_PRESENTATION.md) und [CI-Policy](CI_POLICY.md)
-gelten außerhalb der hier ausdrücklich fortgeschriebenen Schwierigkeit weiter.
+gelten außerhalb der gezielt fortgeschriebenen Schwierigkeit weiter.
 
 ## SD-D01 · Ziel und Bedeutung der Skala
 

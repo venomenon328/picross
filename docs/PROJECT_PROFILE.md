@@ -126,35 +126,24 @@ damalige Mergeausnahmen werden nicht auf HZ übertragen.
 Die folgenden KE-/KAT-Abschnitte beschreiben die integrierte Ausgangsbasis;
 ihre gezielt abgelösten Anzeige-/Sortierregeln gelten nicht als neuer KU-Sollstand.
 
-**SD / #235 (18.10.2026), SD-A/SD-B/SD-C1 integriert; SD-C2 übernommen, finales Review offen:**
-[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) bindet die wiederholbare
-Einstufung 1–5: instrumentierte Logik und Lösungsfluss, begrenzter Größenbeitrag,
-feste Grenzen anhand unabhängiger synthetischer Referenzen. Der aktuelle Katalog
-muss nicht alle Stufen enthalten und kalibriert keine Skalenenden. Analyse und
-Übernahme erfolgen ausdrücklich, außerhalb von CI und Runtime; neue Rätsel
-verwenden nach der Umstellung denselben Methodenstand. Automatisierte Tests
-dürfen weder den realen Katalog noch daraus kopierte oder abgeleitete Fälle nutzen.
-SD-A/SD-B/SD-C liefern Analyse, gebundene Methode und Katalog-/Integrationsweg.
-[SD-A](SD_ANALYZER.md) liefert Regeln, synchrone Bewertungsspur und den unveränderten
-v1-Einzelbericht. [SD-B](SD_CALIBRATION.md) ergänzt opt-in die eingefrorene Methode
-0.3, unabhängige Referenzen und separat prüfbare Ratings. SD-B-R01/SD-B-M01 sind
-abgeschlossen; PR #241 ist als `b625cc6af1342eafb2582beb9eec17991ea21a12`
-integriert, einschließlich erfolgreicher vollständiger CI.
-[SD-C1](SD_CATALOG.md) ergänzt Sidecars, explizite Vorschau/Übernahme und
-gemeinsame Register-/Update-/Sync-/Recoverywege. Neue Registrierung oder geänderte
-Logik benötigt vollständig geprüftes 0.3; historische Produktionsbindungen bleiben.
-SD-C1 ist nach qualifiziertem SD-C-R01/C1 R2 mit PR #242 als
-`e93444e5db48e2138d15890e314c60ec4291fea3` integriert; T01 und R01/C1 erfüllt.
-Der ausdrücklich gestartete SD-C2-Erstlauf an diesem Quell-/Werkzeugcommit
-lieferte 26 vollständig geprüfte Vorschläge: 17 × L3, 8 × L4, 1 × L5,
-keine offenen IDs. Nach bestandenem qualifiziertem Vor-Übernahme-Review hat
-SD-C2-F01 über den vorhandenen Transaktionsweg alle 26 Bewertungen übernommen.
-[C2-Belege und Gategrenze](SD_CATALOG.md) dokumentieren A07 real/K01:
-26 Sidecars, zwei Dauerberichte und ausschließlich die Runtime-Difficultyprojektion;
-historische Bindungen unverändert, identischer zweiter Aufruf ohne Byte-/Revisionsänderung.
-Separates qualifiziertes finales SD-C-R01/C2-Datenreview und Merge bleiben offen;
-aktuelle ausgewählte CI und getrennter Selbstreview werden im Draft-PR #243 gebunden.
-#238/#235 bleiben offen.
+**SD2 / #402 · 25.10.2026, Spezifikation freigegeben, Umsetzung nicht beauftragt:**
+[Menschennähere Schwierigkeit](PUZZLE_DIFFICULTY_V2.md) führt den neuen Sollvertrag:
+Denkanspruch, Suchaufwand und Bearbeitungsumfang, menschennähere Basistechniken,
+fein abgestufte interne Bewertung mit festen Grenzen und unabhängiger breiter
+Referenz-/Validierungsbasis. Die sichtbare Skala 1–5 bleibt; keine Quoten,
+Zeitprognosen oder neuen UI-Funktionen. SD2-A/B/C/D (#403–#406) liefern sequenziell
+Analyse, eingefrorene Methode, kompatible Integration und tatsächliche Umstellung.
+Regeln, Gewichte, Formate und Aktivierung sind noch nicht implementiert.
+
+**Aktive SD-Basis / #235:** SD-A/B/C1/C2 sind mit PR #240–#243 abgeschlossen;
+letzter Merge `72ba39391833f6fd834d0a6afaf881c86c7bdc3a` nach finalem C2-Review.
+[SD](PUZZLE_DIFFICULTY.md), [Analysator](SD_ANALYZER.md),
+[0.3-Freeze](SD_CALIBRATION.md) und [Daten-/Recoveryvertrag](SD_CATALOG.md)
+bleiben aktiv. Geplante 0.4 wird separat versioniert; historische Quellen,
+Bewertungen und Freigaben werden nicht umgeschrieben. Der echte Katalog dient
+nur einer ausdrücklich beauftragten manuellen Plausibilitätsprüfung und Übernahme,
+nicht der Kalibrierung von Skalenenden oder automatisierten Tests. Keine
+Analyse/Aktivierung durch CI, Runtime, Build oder bloße Methodeninstallation.
 
 **KE / #233 (17.10.2026), mit PR #234 in `main` integriert:**
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](CATALOG_PRESENTATION.md)
@@ -285,7 +274,7 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Neue Rätsel konzipieren, gestalten, produzieren oder redaktionell abnehmen | [KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md) und deren Pflichtquellen |
 | Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
-| Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md), [SD-C1](SD_CATALOG.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
+| Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD2-Sollvertrag](PUZZLE_DIFFICULTY_V2.md), [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md), [SD-C1](SD_CATALOG.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
 | CI, Prüfprogramme, Artefakte, Archivierung | [CI_POLICY](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md); für CI-A/CI-B zusätzlich [Webvertrag](WEB_HOSTING.md), für CI-C [KAT-2](KAT2_VERIFICATION.md), [EA](EA_VERIFICATION.md) und [ZA-1](ZA1_VERIFICATION.md) |
 
 PERF-A/PERF-B sind historische Lieferberichte, keine aktuellen Hersteller- oder
