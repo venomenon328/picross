@@ -52,7 +52,9 @@ Lieferberichte mit damals offenen Gates werden dadurch nicht erneut geöffnet.
 seine exakten Regel-, Quellen-, Referenz-, Formel-, Hash- und Formatbindungen.
 Kennung der neuen Methode ist **`picross-difficulty-0.4`**; SD2-B liefert sie
 eigenständig implementiert, synthetisch kalibriert und eingefroren. Die gemeinsame
-Integration ist geliefert; die Aktivierung ist weiterhin nicht erfolgt.
+Integration ist geliefert; SD2-D-F01/T01 hat nach vollständiger Übernahme der
+45 geprüften Bewertungen den Produktionsstandard 0.4 auf dem Arbeitsbranch
+ausdrücklich aktiviert. Finales R01 und Main-Merge bleiben getrennt offen.
 
 Diese Spezifikation ersetzt für die neue Methode gezielt die in
 [SD-D01/D04–D08](PUZZLE_DIFFICULTY.md) beschriebene konkrete Technik-/Fluss-
