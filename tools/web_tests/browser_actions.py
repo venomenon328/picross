@@ -61,10 +61,25 @@ def game_viewport(page, width, height):
         raise
 
 
+def points(page, positions, *, cells=False):
+    # One read-only geometry snapshot, rather than a locator roundtrip and a
+    # separate probe query for every point. DOM bounds and Godot coordinates
+    # still come from the actual current canvas after resize/DPI changes.
+    return page.evaluate('''({positions, cells}) => {
+      const box = document.querySelector('canvas').getBoundingClientRect();
+      const probe = window.picrossProbe;
+      if (!(box.width > 0 && box.height > 0 && probe.canvas[0] > 0 && probe.canvas[1] > 0))
+        throw new Error('Canvas has no visible geometry');
+      return positions.map(point => {
+        const position = cells ? point.map((v, i) => probe.origin[i] + (v + .5) * probe.cell_size) : point;
+        return [box.x + position[0] * box.width / probe.canvas[0],
+                box.y + position[1] * box.height / probe.canvas[1]];
+      });
+    }''', dict(positions=positions, cells=cells))
+
+
 def point(page, position):
-    box = page.locator('canvas').bounding_box()
-    dims = state(page, 'canvas')['canvas']
-    return box['x']+position[0]*box['width']/dims[0], box['y']+position[1]*box['height']/dims[1]
+    return points(page, [position])[0]
 
 
 def click(page, position):
@@ -92,8 +107,7 @@ def control(page, text=None, name=None, tooltip=None, dialog=None):
 
 
 def cell(page, x, y):
-    data = state(page, 'origin', 'cell_size')
-    return point(page, [data['origin'][0]+(x+.5)*data['cell_size'], data['origin'][1]+(y+.5)*data['cell_size']])
+    return points(page, [[x, y]], cells=True)[0]
 
 
 def draw(page, start, end=None, button='left', retract=None):
