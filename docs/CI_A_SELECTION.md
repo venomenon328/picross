@@ -3,8 +3,8 @@
 ## Aktuelle Ergänzung: CI2-B / #414
 
 A ist nach separatem R01 über PR #419 auf
-`94e3ea7d9674babbdcd6bde6251e233191fd096f` integriert. B ergänzt auf
-`chore/414-ci2-b-fachtests` / Draft-PR #420 den vierteiligen Fachumfang:
+`94e3ea7d9674babbdcd6bde6251e233191fd096f` integriert. B ist nach separatem R01 über PR #420 auf `dd56d310` integriert und liefert
+den vierteiligen Fachumfang:
 `solver`, `images`, `adapter`, `catalog`. [CI2-B-T01](CI2_B_VERIFICATION.md)
 bindet Zuordnung, Fixtureänderungen, Leserabgleich und tatsächliche Messungen.
 Die nachfolgenden A-Lieferangaben behalten ihren historischen Bezug.
@@ -35,13 +35,23 @@ falsch gebunden, abgebrochen oder fehlgeschlagen scheitert. Keine alten Ergebnis
 aus anderen Runs. Der Main-Nachlauf bleibt kurz; `production_groups=[]`.
 Keine neue Testverwaltung, kein weiterer Job und kein neuer Artefaktweg.
 
+## Aktueller Browserumfang: CI2-C / #415
+
+[CI2-C](CI_B_BROWSER_GROUPS.md) ersetzt die nachfolgenden historischen A-Angaben
+zu drei Pflichtbauten und 33 Fällen: `short` und Browseralias `all` wählen neun
+Kernfälle und zwei Exporte; `regular` nur einen Export. Der getrennte ausdrückliche
+Browserwert `export` wählt regular-start/E01 mit drei echten Exporten. Allgemeine
+Scopes bleiben browserfrei. Auswahl-/Ergebnisschema v6 und Originaleventschutz
+bleiben, Build-/Browserbelege verwenden v2. [C-T01](CI2_C_VERIFICATION.md) bindet
+Messungen und Abnahmen; CI2-C-R01 bleibt separat vor Merge offen.
+
 ## Integrierte A-Lieferung / #413
 
 [CI2](CI_SLIMMING.md) und [Issue #413](https://github.com/venomenon328/picross/issues/413)
 binden die Umsetzung auf `chore/413-ci2-a-auswahl`, Basis
 `main@7b7ea9ce6b5dc2e3ea024207a605cce31847f66b`. T01, finaler Head,
-PR-Test-Merge, Run, Zeiten und getrennter Selbstreview stehen im Draft-PR.
-Separates qualifiziertes R01 bleibt vor Merge erforderlich.
+PR-Test-Merge, Run, Zeiten und Selbstreview stehen im integrierten PR #419.
+Das separate A-R01 wurde vor dessen Merge erfüllt; die Angaben bleiben historisch.
 
 Automatische PR-/Push-Ereignisse und alle allgemeinen manuellen Scopes sind
 browserfrei. Das gilt auch für unbekannte/gemeinsame Pfade, Runtime, Toolchain,

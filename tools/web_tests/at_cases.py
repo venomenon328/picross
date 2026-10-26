@@ -1,4 +1,5 @@
 """AT observations from real exported players and genuine pointer input."""
+import timing
 import base64
 import json
 from PIL import Image
@@ -6,7 +7,7 @@ from browser_actions import state, point, control, wait, draw, saved, game_viewp
 
 POINTS={'outside':(4,4),'white':(76,76),'hole':(154,154),'soft':(16,128),'ink':(128,64)}
 COLORS={1:[56,132,90],2:[174,85,52]}
-MATRIX=((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25))
+MATRIX=((1920,1080,1.0),)
 
 
 def fixture(root):
@@ -58,7 +59,9 @@ def capture(page, output, name, image, *, revision=1, opacity=1, frame=None):
         # read-only export probe immediately after that frame was rendered.
         raw=base64.b64decode(frame['png'],validate=True)
         assert len(raw)<=32*1024*1024
-        path.write_bytes(raw);dpr=1
+        with timing.CURRENT.measure('image_write'):
+            path.write_bytes(raw)
+        dpr=1
     viewport=[page.viewport_size[k] for k in ('width','height')]
     rows=[]
     with Image.open(path) as raw:
@@ -113,31 +116,3 @@ def catalog(page, name, output, evidence):
         hover=capture(page,output,f'{name}-at-hover-{spec[0]}',card(page)['at_image'])
         rows.append(dict(window=list(spec),small=small,hover=hover))
     evidence['at_catalog']=rows
-
-
-def completion(page, name, output, evidence):
-    control(page,name='nav-album');control(page,text='Blatt 03')
-    rows=[]
-    for spec in MATRIX:
-        matrix(page,spec)
-        wait(page,'picrossProbe.ending && !picrossProbe.ea_active')
-        final=capture(page,output,f'{name}-at-final-{spec[0]}',state(page,'at_image')['at_image'])
-        original=state(page,'slots')['slots']
-        control(page,name='nav-album');no_spoilers(page);control(page,text='Blatt 03')
-        assert state(page,'slots')['slots']==original
-        reopen=capture(page,output,f'{name}-at-reopen-{spec[0]}',state(page,'at_image')['at_image'])
-        control(page,name='reset',tooltip='Rätsel zurücksetzen');control(page,text='Zurücksetzen',dialog=True)
-        assert not state(page,'ea_art')['ea_art']
-        previous=page.evaluate('window.picrossAtFrame?.key ?? null')
-        page.evaluate('window.picrossAtCapture = true')
-        try:
-            draw(page,(0,2),(4,2))
-            wait(page,'window.picrossAtFrame && picrossAtFrame.key !== '+json.dumps(previous))
-            frame=page.evaluate('window.picrossAtFrame')
-        finally:
-            page.evaluate('window.picrossAtCapture = false')
-        assert frame['definition_id']=='T-04' and frame['framebuffer']==list(spec[:2])
-        blend=capture(page,output,f'{name}-at-blend-{spec[0]}',frame['image'],opacity=frame['opacity'],frame=frame)
-        wait(page,'picrossProbe.completed && !picrossProbe.ea_active');saved(page)
-        rows.append(dict(window=list(spec),final=final,reopen=reopen,blend=blend))
-    evidence['at_completion']=rows

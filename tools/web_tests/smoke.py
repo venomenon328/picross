@@ -55,6 +55,7 @@ def main():
                         raise
                     finally:
                         context.close()
+                        evidence['timings'].append(timing.CURRENT.checkpoint('teardown-or-failure'))
     finally:
         server.shutdown()
         server.server_close()

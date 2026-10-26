@@ -3,7 +3,7 @@ import hashlib
 import json
 import struct
 import zlib
-from at_evidence import MATRIX,SAMPLES
+from at_evidence import BROWSER_MATRIX,SAMPLES
 
 
 def fixture(revision):
@@ -34,14 +34,14 @@ def browser_row(directory,row):
     group=row['group']
     if group in ('catalog','completion'):
         rows=[]
-        for window in MATRIX:
+        for window in BROWSER_MATRIX:
             values={}
             for kind in (('small','hover') if group=='catalog' else ('final','reopen','blend')):
                 name='card' if kind=='small' else kind
                 values[kind]=image(f'chromium-at-{name}-{window[0]}.png',blend=kind=='blend',framebuffer=window[:2])
             rows.append(dict(window=window,**values))
         row['at_'+group]=rows
-    elif group=='persistence':
+    elif group=='export':
         slots=[dict(definition_id='T-01',history=[{}],completed=False),dict(definition_id='T-04',history=[{}],completed=True)]
         row['at_update']=dict(first=fixture(1),second=fixture(2),slots_before=slots,slots_after=slots,
             before=image('chromium-at-before-update.png'),after=image('chromium-at-after-update.png',2),restart=image('chromium-at-restart-update.png',2))
