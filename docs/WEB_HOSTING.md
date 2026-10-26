@@ -8,76 +8,43 @@ P1 enthält kein Audio; der Webstart verwendet deshalb Godots Dummy-Audiotreiber
 und erzeugt keine unbenötigten Browser-Audiokontexte.
 Technische Ergebnisse und Artefaktbindung stehen im zugehörigen Draft-PR.
 
-## Freigegebene CI-Auswahl und Browsergruppen
+## Aktuelle CI-Auswahl und kurzer Browserauftrag
 
-Der freigegebene [CI2-Sollvertrag vom 26.10.2026](CI_SLIMMING.md),
-[Gesamtissue #412](https://github.com/venomenon328/picross/issues/412), ersetzt
-die automatische Browserpflicht, impliziten Browserrechte manueller Scopes und
-die ungekürzte bisherige Fall-/Bildmatrix. CI2-A ist auf dem #413-Arbeitsbranch
-implementiert; Auswahl und explizite
-Dispatchinputs stehen in [CI_A_SELECTION](CI_A_SELECTION.md). CI2-C bleibt
-unbegonnen. Am historischen Ausgangsstand `main@967314538df376a281020fb4c34f93f370a491df`
-besteht die bisherige Chromiumroute weiter. Dieser Abschnitt dokumentiert das
-freigegebene Ziel, keinen bereits verfügbaren kurzen CLI-Weg oder Laufzeitnachweis.
+CI2-A/B sind über PR #419/#420 integriert. CI2-C / #415 implementiert auf
+`chore/415-ci2-c-chromium` den kurzen Umfang aus [CI2](CI_SLIMMING.md).
+[Browserinventar](CI_B_BROWSER_GROUPS.md) bindet neun Kernfälle, zwölf Originalbilder,
+begrenzten Zusatzumfang und tatsächlichen Exportbedarf; [T01](CI2_C_VERIFICATION.md)
+führt Messungen und verbleibende Abnahmen. Separates R01 bleibt vor Merge offen.
 
-[CI2-A / #413](https://github.com/venomenon328/picross/issues/413) entfernt
-Browserinstallation und Browserstart aus automatischen PR-/Push-Ereignissen.
-`all`, `toolchain`, `runtime`, `visual`, `perf-b`, `production`, gemeinsame
-Komponenten und unbekannte Pfade sind kein impliziter Browserauftrag. Nur ein
-ausdrücklicher manueller Auftrag mit Quellstand und Prüfumfang startet Chromium;
-auch wiederverwendbare Unterworkflows verlangen ihn. Kein Zeitplan oder
-automatischer Nachlauf ergänzt die Browserprüfung. Firefox bleibt aus CI
-ausgeschlossen; die bestehende Webentwicklungsfassung und ihre Spiel-/
-Speicherverträge werden dadurch nicht geändert.
+Automatische PR-/Push-Ereignisse und allgemeine Scopes bleiben browserfrei.
+Der ausdrückliche Aufruf auf einem gebundenen Arbeitsbranch lautet:
 
-[CI2-C / #415](https://github.com/venomenon328/picross/issues/415) ersetzt die
-33 bisherigen Szenarien durch ungefähr 8–10 aktuelle Kernfälle:
+```sh
+gh workflow run ci-chromium.yml --ref <arbeitsbranch> -f scope=auto -f browser_scope=short
+```
 
-| Prüfzweck im kurzen Umfang | Erhaltener Nachweis |
-| --- | --- |
-| Regulärer Start | Echter uninstrumentierter Spielerexport und Browserstart. |
-| Katalog und Sortierung | Aktuelle Auswahl-/Sortierwege und repräsentative Bedien-/Darstellungszustände. |
-| Eingabe und Geometrie | Echte Bearbeitung mit Undo/Redo sowie relevanter Resize-/DPI-Wechsel. |
-| Abschluss und Reset | Kleiner echter Abschluss mit bestehender Präsentation, Bestätigung und Reset. |
-| Persistenz und Wiederaufnahme | Bestätigte IndexedDB-Sicherung, Reload und echter Browserprozessneustart. |
-| Sperre und Speicherfehler | Zweittab/Sperre sowie sichtbarer Schreibfehler und erfolgreicher Retry. |
+Der Dispatch prüft seinen tatsächlichen Quellhead; PR-Test-Merge und Basis werden
+separat nachgewiesen. `short` (auch Browseralias `all`) führt nur die Kernfälle aus;
+Einzelgruppen `regular`, `catalog`, `input`, `completion`, `persistence` bleiben
+möglich. `regular` baut einen uninstrumentierten Export, technische Kerngruppen
+zusätzlich einen festen synthetischen Export. Kein Browserwert wird automatisch
+gewählt. Firefox bleibt aus CI ausgeschlossen.
 
-KU-/AT-/HZ-Schichten werden zu aktueller Katalog-/Bedienprüfung zusammengeführt.
-Ein normaler Viewport wird ausführlich geprüft; weitere Größen benötigen eine
-konkrete Geometrieaussage. Seltene aktuelle Varianten werden möglichst günstig
-unterhalb des Browsers abgesichert. Kleine synthetische Voraussetzungen dürfen
-teure Vorbereitungsdurchspiele ersetzen; Zustandssetter ersetzen keine geprüften
-Benutzer-/Speicherübergänge. Zusätzliche Browserprofile verlangen eine ausdrückliche
-Auswahl mit konkretem Zweck und begrenztem Fall-/Zeitumfang. Kein Default ergänzt
-die alte Vollmatrix.
+Nur `browser_scope=export` fordert das gesonderte begrenzte Kompatibilitätsprofil
+regular-start/E01 an, mit zwei eigenständigen technischen Exporten zusätzlich zum
+Spielerexport. Keine implizite Ergänzung durch `short`, `all`, `toolchain` oder
+Dateipfade. Dieses Profil benötigt einen eigenen konkreten Auftrag. Ziel unter
+zehn Minuten; kurzer Kernumfang einschließlich Build höchstens acht Minuten.
 
-Der kurze Chromiumlauf einschließlich benötigtem Build soll höchstens acht
-Minuten dauern, typischerweise fünf bis acht. Ein zusätzlich angefordertes Profil
-bleibt unter zehn Minuten. Nur benötigte Builds werden erzeugt; ein angeforderter
-Exportwechsel verwendet weiterhin zwei eigenständig erzeugte Exporte. Eine neue
-Kennung desselben Builds ersetzt diesen Nachweis nicht. Optimierungen verkürzen
-weder Produktanimationen noch funktionale Speicherzusagen; Überschreitungen
-bleiben sichtbare Optimierungsbefunde.
-
-Auswahl, Producer und Gate werden gemeinsam auf den neuen Umfang umgestellt.
-Das Gate unterscheidet nicht angefordert, Erfolg, fehlend, übersprungen,
-fehlgeschlagen und abgebrochen. Nur angeforderte Browserprüfung verlangt passende
-Resultate. Für tatsächlich gewählte Fälle bleiben vollständige Originalberichte,
-Pflichtdateien samt Hashes und die Quell-/Run-/Versuchsbindung verbindlich.
-Fehlende, leere, doppelte, falsche oder übersprungene Pflichtresultate sind kein
-Erfolg. Isolierte Profile und veränderliche Hostingbäume verhindern gegenseitige
-Beeinflussung. Ein noch ausgewählter Altjob wird durch Überspringen nicht
-rückwirkend erfolgreich.
-
-Native Prüfung, Fachtests, Toolchain und SSH/HTTP folgen unabhängig ihrem
-tatsächlichen Änderungsbezug. Der Zustellungsweg erhält sein benötigtes reguläres
-Bündel und die bestehende SSH/HTTP-Referenz ohne Browserauftrag. Messungen trennen
-Aufbau, Szenarien/Phasen, Jobdauer, kritischen Pfad und summierte Rechenzeit.
-Die [CI-A-Auswahl](CI_A_SELECTION.md) und der
-[CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) halten die ausführbare Ausgangsbasis
-und ihre Quellenbindungen fest; alte Logs dienen als Baseline, ohne alte Voll-
-oder Browserläufe neu zu reproduzieren. Historische Abnahmen bleiben gebunden.
-Windows-, Eigentümer-, Merge- und Livefreigaben bleiben getrennt.
+Echter Input, natürliche Produktanimation, bestätigter IDBFS-Sync, Reload,
+Browserprozessneustart, Sperren und Fehlergrenzen bleiben für die jeweils benannten
+Aussagen verbindlich. Günstige Mechanismusprüfungen ersetzen die alten vollständigen
+Browservarianten; sie werden nicht als Browsernachweise ausgegeben. Native Prüfungen,
+Fachtests und SSH/HTTP bleiben unabhängig nach Diff ausgewählt. Originalinput-,
+Quell-/Run-/Versuchsbindung und Fail-closed-Gate folgen [CI-A](CI_A_SELECTION.md).
+Ein fehlender oder übersprungener Pflichtjob bleibt offen. Historische Belege
+sind ausschließlich Baseline, keine aktuellen Erfolge. Persönliche Produktabnahme,
+Merge, Deployment und Release bleiben getrennt.
 
 ## Build unter Windows/PowerShell
 

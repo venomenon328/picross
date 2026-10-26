@@ -95,7 +95,11 @@ class DependencyTests(unittest.TestCase):
             subprocess.run([sys.executable, str(ROOT / "tools/ci_scope.py"), "plan", "--base", base,
                             "--head", git("rev-parse", "HEAD"), "--event", "pull_request",
                              "--output", str(plan_file)],
-                           cwd=root, capture_output=True, check=True)
+                           cwd=root, capture_output=True, check=True,
+                           # This synthetic repository has no real workflow event.
+                           # Inheriting an explicit parent dispatch would correctly
+                           # fail the production original-input guard.
+                           env={k: v for k, v in os.environ.items() if not k.startswith('GITHUB_')})
             plan = json.loads(plan_file.read_text())
             self.assertEqual(plan["changed_paths"], ["README.md", "tools/deploy_web.py"])
             self.assertTrue(plan["selected"]["delivery"])
