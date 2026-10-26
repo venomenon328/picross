@@ -53,9 +53,10 @@ Der Zielordner muss neu sein. Die vorhandenen Originaldateien werden geprüft,
 nicht neu gerendert. Python 3.11 oder neuer und die Standardbibliothek reichen
 für diese drei historischen Verifikationen; Bildgenerierung, Browser und neue
 Fontdownloads sind dafür nicht erforderlich. Die ursprünglichen vollständigen
-Testdateien liegen ebenfalls in diesem Checkout. Im aktuellen Standardlauf
-bleiben ihre kleinen Geometrie-, Navigations-, Alpha- und Korruptionsprüfungen
-aktiv; die drei umfassenden Paketprüfungen entfallen.
+Testdateien liegen ebenfalls in diesem Checkout. CI2-B entfernt nach aktuellem Leserabgleich auch die 13 ausschließlich historischen
+Hilfstests und ihre drei Hersteller aus dem aktiven Standardlauf. Aktive
+Buch-/Font-/Lizenzdaten bleiben unabhängig über `tools/z2_resources.py` geprüft.
+Die damaligen vollständigen Prüfergebnisse bleiben an ihre Quellen gebunden.
 
 Ein erfolgreicher historischer Lauf belegt diesen alten Lieferstand. Er ersetzt
 keine Prüfung oder Abnahme der aktuellen Spielfassung. Die bisherigen Review-

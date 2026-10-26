@@ -23,37 +23,62 @@ def snapshot(root):
 
 
 class ReviewTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        temporary = tempfile.TemporaryDirectory(); cls.addClassCleanup(temporary.cleanup)
+        cls.fixture_home = Path(temporary.name)
+        builder = cls(); builder.home = cls.fixture_home
+        builder.root = isolated_checkout(builder.home / 'checkout')
+        cls.fixture_checked = {}
+        for mode in ('mono', 'color'):
+            for revision in (1, 2):
+                cls.build_export(builder, mode, revision)
+            exported = builder.home / (mode + '-export-1')
+            checked = difficulty_for_export(exported)
+            base = isolated_checkout(builder.home / ('registered-' + mode))
+            cr.registration(exported, base, apply=True, difficulty=checked)
+            shutil.copytree(base, builder.home / ('full-' + mode))
+            from tests.puzzle_production.catalog_fixtures import compact
+            compact(base,['pz-review'])
+            cls.fixture_checked[mode] = checked
+
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         self.home = Path(temporary.name)
         self.root = isolated_checkout(self.home / 'checkout')
+        self.exports = {}
 
-    def exported(self, mode, revision):
+    def build_export(self, mode, revision):
         package = make(self.home / f'{mode}-{revision}', 'pz-review', 4, 3, mode, colors=1)
         handoff = load_json(package / 'handoff.json')
         handoff['revision'] = f'r{revision}'
         seal(package, handoff)
-        approval = self.home / f'approval-{revision}.json'
+        approval = self.home / f'{mode}-approval-{revision}.json'
         approve(package, approval)
-        result = self.home / f'export-{revision}'
+        result = self.home / f'{mode}-export-{revision}'
         export(package, result, name='TEST ONLY', revision=revision, stem='review', save_slot='review',
                approval_path=approval, category_id='voegel', categories_path=self.root / 'content/categories.json')
         return result
 
-    def register(self):
-        exported = self.exported('mono', 1)
-        checked = difficulty_for_export(exported)
-        cr.registration(exported, self.root, apply=True, difficulty=checked)
-        return exported, checked
+    def exported(self, mode, revision):
+        key = (mode, revision)
+        if key not in self.exports:
+            target = self.home / f'{mode}-export-{revision}'
+            shutil.copytree(self.fixture_home / target.name, target)
+            self.exports[key] = target
+        return self.exports[key]
+
+    def register(self, mode='mono', *, full=False):
+        # This is a prerequisite, not the transition asserted by these regressions.
+        shutil.copytree(self.fixture_home / (('full-' if full else 'registered-') + mode), self.root, dirs_exist_ok=True)
+        return self.exported(mode, 1), deepcopy(self.fixture_checked[mode])
 
     def test_r1_01_mode_change_cannot_rebind_active_rating(self):
         for old_mode, new_mode in (('mono', 'color'), ('color', 'mono')):
             self.setUp()
             with self.subTest(old=old_mode, new=new_mode):
-                first = self.exported(old_mode, 1)
-                checked = difficulty_for_export(first)
-                cr.registration(first, self.root, apply=True, difficulty=checked)
+                first, checked = self.register(old_mode)
                 second = self.exported(new_mode, 2)
                 old = self.root / 'game/data/content/review.json'
                 new = second / load_json(second / 'manifest.json')['definition']
@@ -198,7 +223,9 @@ class ReviewTests(unittest.TestCase):
             rating.rebind_checked(old_import, raw, production_mode='color')
 
     def test_repeated_adoption_after_valid_registry_sync_is_stale(self):
-        _, checked = self.register()
+        # A receipt intentionally binds the complete original registry entry.
+        # This case asserts a permitted registry edit against a full export.
+        _, checked = self.register(full=True)
         work = self.home / 'preview'
         ca.preview(self.root, work, 'review', 'a' * 40, ids=['pz-review'], checked_inputs={'pz-review': checked})
         ca.adopt(self.root, work, apply=True)

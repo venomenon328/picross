@@ -224,7 +224,7 @@ class EvidenceGate(unittest.TestCase):
         write(self.root/'event.json', {'inputs': {'scope':'auto', 'browser_scope':'all'}})
         env={**os.environ,'GITHUB_EVENT_PATH':str(self.root/'event.json'),'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_ACTIONS':'true','GITHUB_RUN_ATTEMPT':'2','GITHUB_STEP_SUMMARY':'',
              'CI_BINDING':json.dumps({**binding(self.plan),'gate_attempt':'2'}),
-             'CI_OUTPUTS':json.dumps({**{key:str(self.plan['selected'][key]).lower() for key in FLAGS},'selection_attempt':'1','native_groups':'[]','browser_request':request_output(self.plan['browser_request'])}),
+             'CI_OUTPUTS':json.dumps({**{key:str(self.plan['selected'][key]).lower() for key in FLAGS},'selection_attempt':'1','native_groups':'[]','production_groups':'[]','browser_request':request_output(self.plan['browser_request'])}),
              'CI_RESULTS':json.dumps({job:{'result':'success' if self.plan['selected'][job] else 'skipped'} for job in JOBS})}
         for attempt,code in [('1',0),('2',1)]:
             env['CI_WEB_OUTPUTS']=json.dumps({'chromium_attempt':attempt})
