@@ -131,9 +131,11 @@ inklusive Setup/Upload/Cleanup. Die Summe paralleler Gruppen ist keine Walltime.
 Alte Katalogaufbereitung: 55 native Eingangsframes, 239 Pythoncrops,
 99.957.791 Eingangsbytes, 54.708.255 Cropbytes; Decode 2,545 s, Crop 0,013 s,
 PNG-Schreiben 3,309 s. Direkte native Bilder sind darin zusätzlich, nicht als
-Pythoncrops mitgezählt. Alte vollständig erzeugte Dateimengen und separat
-instrumentierte Projektkopierzeiten sind nicht überliefert und werden nicht
-erfunden. Prozesszahl wird aus gebundenen Phasenlogs, Rendering aus tatsächlichen
+Pythoncrops mitgezählt. Aus 55 Kontexten und 392 gelieferten Bildern ergeben sich
+447 unterschiedliche Katalog-PNGs vor Verpackung; wiederholtes Überschreiben
+desselben Namens ist darin nicht gezählt. Vollständige erzeugte Mengen aller
+Gruppen und separat instrumentierte Projektkopierzeiten sind nicht überliefert
+und werden nicht erfunden. Prozesszahl wird aus gebundenen Phasenlogs, Rendering aus tatsächlichen
 OpenGL-Prozesslogs ermittelt, einschließlich Grafikworker.
 
 ## D-Ausführung und Messgrenzen
@@ -158,6 +160,28 @@ Die finale Quellen-/CI-Bindung und Messung wird im Draft-PR nach den erfolgreich
 Pflichtjobs mit Head, Basis, Test-Merge, Run/Versuch und Originalartefakten ergänzt.
 Dieser Bericht erklärt keine noch laufenden oder fehlgeschlagenen Jobs zum Erfolg.
 
+Lokaler Historyvorlauf `native-dev2`: 22,153 s einschließlich frischer Vorbereitung,
+beide Spielprozesse und Rohbeleggate erfolgreich. Katalogvorlauf `catalog-dev3`:
+325,482 s Gruppenzeit / 328,515 s Gesamtharness, 16 Prozesse (Version, vier
+Importe, elf Spiele); Import 29,094 s, Renderprozesse zusammen 235,244 s,
+Setup 1,397 s. Elf vollständig geprüfte Kopien von 543 Dateien/33.377.307 Bytes
+benötigten 27,905 s. 221 erzeugte Dateien/205 PNGs gegenüber 167 gelieferten
+Dateien/152 PNGs; 53 Eingangsframes und 53 Crops. Diese Entwicklungsstände
+waren noch nicht der finale saubere Lieferhead und ersetzen dessen CI nicht.
+
+Dieser Katalogvorlauf zeigte trotz weniger Bildern eine Bytezunahme durch zu
+großzügige Albumrechtecke (140.659.455 gelieferte Bytes). Der Lieferstand begrenzt
+den gemeinsamen Ausschnitt deshalb auf Titel, Auswahl, Zähler, repräsentative
+Karte und gegebenenfalls Seitenanzeige; keine ungenutzte Albumfläche. Die finale
+CI misst die Wirkung. Kein Pixelresize oder Qualitätsverlust wird dafür eingeführt.
+
+Werkzeugvorlauf: 225 Tests in 63,826 s erfolgreich, drei Linuxprüfungen lokal
+übersprungen; nach zusätzlicher Schedulergegenprobe 19 gezielte Gate-/Isolations-
+und Pixeltests in 3,288 s erfolgreich. Der Dokumentcheck des gesamten lokalen
+Arbeitsverzeichnisses traf ignorierte Laufbelege und Windows-Zeilenenden und war
+kein Erfolg. Am sauberen Git-Quellarchiv von `79e57f4` bestehen Dokumentcheck und
+Diff-Whitespaceprüfung; die finale Linux-Docs-CI prüft den tatsächlichen Lieferstand.
+
 Jeder neue Gruppenbericht enthält `work_measurements`: Prozessrollen und
 kumulierte Prozesszeiten, Renderprozesse/-zeiten, Setup sowie erzeugte und
 selektiert gelieferte Dateien/PNGs/Bytes. Erzeugt zählt vorhandene Dateien im
@@ -175,11 +199,19 @@ Produktionszeitbefund ist eigenständig und wird durch D nicht abgenommen.
 
 ## Getrennter vollständiger Selbstreview und Übergabe
 
-Der vollständige Diff gegen die genannte Mainbasis wird nach technischen
-Korrekturen separat geprüft: Historyzustand/Ansicht/Fremdslots, echte Prozessfolge,
-aktuelle Grafik-/Katalogaussagen, Producer-/Inventar-/Gategleichheit, Isolation,
-Messgrenzen, Quell-/Run-/Versuchsbindung und aktuelle Dokumente. Selbstreview
-und unabhängiges CI2-D-R01 bleiben getrennte Arbeitsschritte. Der abschließende
-PR bindet das Ergebnis dieses Selbstreviews an seinen konkreten Lieferhead.
+Nach der Umsetzung wurde der vollständige Diff der 30 Dateien gegen die genannte
+Mainbasis separat gelesen und gegen #416/V1 geprüft: Historyzustand/Ansicht/
+Fremdslots, echte Prozessfolge, aktuelle Grafik-/Katalogaussagen, Producer-/Inventar-/
+Gategleichheit, Isolation, Messgrenzen, Quell-/Run-/Versuchsbindung und Dokumente.
+Der Review korrigierte eine versehentlich mitumbenannte Atlas-Auswahl (`large`
+bleibt Ressourcenname), entfernte einen verbliebenen wirkungslosen KE-Vergleichszweig
+und begrenzte die zu großen Katalogcrops. Zusätzliche neu gehashte Rohbelegmutationen
+und der Linux-Parallelitätsgegenbeleg bestehen. Kein Produktcode, historischer
+C-T01-Beleg, zentraler Workflow oder fremder Dateibestand ist geändert.
+
+Keine offenen Codebefunde dieses Selbstreviews; native Korrekturläufe und finale
+Pflicht-CI bleiben bis zu ihren tatsächlichen Ergebnissen offen. Der abschließende
+PR bindet den erneuten Abgleich sämtlicher späterer Änderungen und Originalbelege
+an seinen konkreten Lieferhead. Selbstreview ist keine unabhängige Zweitprüfung.
 
 CI2-D-R01 bleibt vor Merge offen. Kein Merge, Deployment, Release oder Issueabschluss.
