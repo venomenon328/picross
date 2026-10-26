@@ -5,8 +5,10 @@ Stand: 26.10.2026 · freigegebener Sollvertrag · [Gesamtissue #412](https://git
 ## Status und Geltung
 
 Der Eigentümer hat die analysierte Lösung als Spezifikation freigegeben und die
-500-Aktionen-Historyroute zusätzlich als unnötig verworfen. Beauftragt sind jetzt
-Issues und dauerhafte Dokumentation; keine Implementierung, Datenlöschung oder Merge.
+500-Aktionen-Historyroute zusätzlich als unnötig verworfen. CI2-A ist separat auf
+`chore/413-ci2-a-auswahl` beauftragt und implementiert;
+[Auswahlvertrag](CI_A_SELECTION.md), T01/Selbstreview im Draft-PR und separates
+R01 vor Merge. B/C/D/E bleiben unbegonnen; kein Datenabbau, Merge oder Deployment.
 Ausgang ist `main@967314538df376a281020fb4c34f93f370a491df`.
 
 Dieser Vertrag ersetzt für die benannten Folgepakete die bisherigen automatischen
@@ -15,7 +17,8 @@ Fall-/Bildmengen und den generellen Verzicht auf Laufzeitziele. Er ersetzt keine
 Spiel-, Speicher-, Rechte- oder Freigabeanforderung. Historische Messungen und
 Abnahmen behalten ihren damaligen Quellenbezug.
 
-Die ausführbare CI ist durch diese Dokumentlieferung noch unverändert. Keine neue
+Die Auswahl-/Aufruf-/Gateänderung von A ist auf dem Arbeitsbranch verfügbar.
+Innere Test-/Bildmengen bleiben bis zu B/C/D unverändert. Keine neue
 kurze CLI, erfolgreiche Kürzung oder Bereinigung behaupten. Auswahl, Producer und
 Gate werden jeweils gemeinsam im zuständigen Paket umgestellt; ein übersprungener
 noch ausgewählter Altjob wird dadurch nicht rückwirkend erfolgreich. Alte Browser-,
@@ -201,7 +204,8 @@ bereinigte Arbeitsdaten und aktuelle Statusverweise; keine Paketchronik in Einst
 | [CI2-D #416](https://github.com/venomenon328/picross/issues/416) | native Kürzung einschließlich History | A |
 | [CI2-E #417](https://github.com/venomenon328/picross/issues/417) | Bestandsbereinigung, Bildabschluss und Metadatenkontrolle | A |
 
-Alle Pakete sind unbegonnen; Umsetzung benötigt den späteren konkreten Auftrag.
+A ist auf seinem Arbeitsbranch implementiert, separates R01 bleibt vor Merge.
+B/C/D/E sind unbegonnen; Umsetzung benötigt ihren eigenen konkreten Auftrag.
 Nach A sind B/C/D/E unabhängig integrierbar; gemeinsame Gate-/Auswahländerungen
 gegen den jeweils aktuellen Stand nachführen. Standard ist ein Implementierungs-PR
 je Paket. T01 enthält tatsächliche gezielte Positiv-/Negativnachweise, gemessene

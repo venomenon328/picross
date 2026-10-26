@@ -14,14 +14,16 @@ import re
 import subprocess
 import sys
 
-from web_tests.contract import select_groups, coverage
+from web_tests.contract import (coverage, browser_request, requested_groups,
+                                validate_request, BROWSER_SCOPES)
 import native_contract
 
-FORMAT = "picross-ci-selection-v4"
+FORMAT = "picross-ci-selection-v5"
 JOBS = ("docs", "product", "production", "preflight", "web", "delivery")
 FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual", "perf_b", "web", "delivery")
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 ZERO = "0" * 40
+INERT_SNAPSHOT = '7b7ea9ce6b5dc2e3ea024207a605cce31847f66b'
 
 # Audited computation-only modules and their fixed synthetic tests. Importing a
 # common schema does not exempt that schema: contract, catalog, export, fixtures
@@ -32,9 +34,16 @@ ANALYSIS_PATHS = frozenset({
         "analysis_rules.py", "analysis_verifier.py", "solver.py", "paired_solver.py",
         "difficulty_identity.py", "difficulty_rating.py", "difficulty_method_0_3.json",
         "difficulty_calibration_0_3.json", "difficulty_references_0_3.json",
+        "sd2_analysis.py", "sd2_cli.py", "sd2_contract.py", "sd2_io.py",
+        "sd2_profiles.py", "sd2_rules.py", "sd2_verifier.py", "sd2_rating.py",
+        "sd2_rating_cli.py", "sd2_rating_freeze.py", "sd2_rating_identity.py",
+        "sd2_rating_io.py", "sd2_reference_checks.py", "sd2_method_0_4.json",
+        "sd2_references_0_4.json", "sd2_calibration_0_4.json",
+        "sd2_validation_0_4.json", "sd2_comparison_0_4.json",
     )
 } | {"tests/puzzle_production/" + name for name in (
     "test_analysis.py", "test_difficulty_rating.py", "test_lines.py", "test_color_lines.py",
+    "test_sd2_analysis.py", "test_sd2_rating.py",
 )})
 DELIVERY_PATHS = frozenset({"tools/deploy_web.py", "tools/web_tests/ssh_reference.py"})
 BROWSER_PATHS = frozenset({"tools/web_tests/" + name for name in (
@@ -75,18 +84,54 @@ def content_path(path: str) -> bool:
             {".json", ".png", ".jpg", ".jpeg", ".svg", ".txt", ".md", ".html", ".zip"})
 
 
-def classify(paths: list[str], force: str = "auto") -> dict:
+def inert_path(path: str) -> bool:
+    """Audited evidence formats in the six reader-free CI2-E classes only.
+
+    This predicate alone grants no exception: make_plan also requires an
+    existing regular old side and regular/deleted new side in tree metadata.
+    New files, executable modes, links and code never inherit this shortcut.
+    """
+    return (re.fullmatch(r"(?:docs/evidence/(?:hz-a|hz-b|hz-c|at-a)/|"
+                         r"docs/design/at_b_integration/|"
+                         r"content/authoring/pz-[a-z0-9][a-z0-9-]{0,59}/at-b-r01/)"
+                         r"[a-zA-Z0-9_ /.-]+\.(?:gz|jpg|json|log|md|png|txt|zip)", path) is not None
+            and all(part not in {'.', '..'} and not part.startswith('.') for part in path.split('/')))
+
+
+def approved_inert_paths(fetch: bool) -> set[str]:
+    """Bind the exception to the audited tree, without a growing file manifest.
+
+    Trees and commit metadata suffice; no evidence blobs are read or fetched.
+    New names in these directories do not silently become approved evidence.
+    """
+    if fetch:
+        git('fetch', '--filter=blob:none', '--no-tags', '--depth=1', 'origin', INERT_SNAPSHOT)
+    paths = git('ls-tree', '-rz', '--name-only', INERT_SNAPSHOT, '--',
+                'docs/evidence', 'docs/design/at_b_integration', 'content/authoring')
+    return {p for p in paths.decode('utf-8').split('\0') if inert_path(p)}
+
+
+def classify(paths: list[str], force: str = "auto", browser_scope: str = "none",
+             inert_paths: list[str] | None = None) -> dict:
+    request = browser_request(browser_scope)
+    inert_paths = sorted(inert_paths or [])
+    if len(set(inert_paths)) != len(inert_paths) or any(p not in paths or not inert_path(p) for p in inert_paths):
+        raise ValueError('Invalid inert metadata selection')
     selected = {key: False for key in FLAGS}
     reasons = {key: [] for key in FLAGS}
 
     def add(keys, reason):
         for key in keys:
+            if key == 'web':
+                continue  # No path or general scope can authorize a browser.
             selected[key] = True
             if reason not in reasons[key]:
                 reasons[key].append(reason)
 
     for path in sorted(set(paths)):
         original = path
+        if path in inert_paths:
+            continue
         if content_path(path):
             continue
         # Both sides of the one-time project rename retain their obligations.
@@ -128,7 +173,7 @@ def classify(paths: list[str], force: str = "auto") -> dict:
         ):
             continue
         if path.startswith(".github/") or path in {
-            "tools/ci_scope.py", "tools/test_ci_scope.py",
+            "tools/ci_scope.py", "tools/test_ci_scope.py", "tools/test_ci2_a.py",
             "tools/p1_product.py", "tools/test_p1_product.py",
             "tools/p1_preflight.py", "tools/test_p1_preflight.py",
             "tools/za1_product.py",
@@ -177,18 +222,20 @@ def classify(paths: list[str], force: str = "auto") -> dict:
         "perf-b": ("product", "visual", "perf_b", "web"),
         "toolchain": FLAGS,
         **{"native-"+g: ("product",) for g in native_contract.GROUPS},
-        **{"browser-"+g: ("web",) for g in ("catalog", "input", "completion", "persistence")},
     }
     if force not in forced:
         raise ValueError("Unknown requested scope: " + force)
     add(forced[force], "explicit scope: " + force)
-    content_only = bool(paths) and all(content_path(path) for path in paths) and force == "auto"
+    content_only = bool(paths) and all(content_path(path) for path in paths) and force == "auto" and request is None
     native_groups = native_contract.select_groups(reasons["product"])
     for flag, group in (("integration", "history"), ("pilots", "adapters"), ("visual", "graphics"), ("perf_b", "graphics")):
         selected[flag] = group in native_groups
         reasons[flag] = reasons["product"] if selected[flag] else []
-    browser_groups = select_groups(reasons["web"])
+    browser_groups = requested_groups(request)
+    selected['web'] = bool(browser_groups)
+    reasons['web'] = ['explicit browser scope: ' + browser_scope] if request else []
     return {"native_groups": native_groups, "native_expected": native_contract.coverage(native_groups),
+            "browser_request": request, "inert_paths": inert_paths,
             "browser_groups": browser_groups, "browser_expected": coverage(browser_groups),
             "format": FORMAT, "content_only": content_only, "selected": {"docs": True, **selected},
             "reasons": {"docs": ["documents, tool contracts and full diff"], **reasons},
@@ -199,7 +246,7 @@ def git(*args: str, input: bytes | None = None) -> bytes:
     return subprocess.check_output(["git", *args], input=input, timeout=90)
 
 
-def fetch_diff_blobs(base: str, head: str) -> None:
+def fetch_diff_blobs(base: str, head: str, excluded: list[str] | None = None) -> None:
     """Batch the missing old/new blobs before checking a partial-clone diff.
 
     Raw tree metadata does not open blobs. Object lookup explicitly disables
@@ -213,7 +260,10 @@ def fetch_diff_blobs(base: str, head: str) -> None:
         raw = git("diff-tree", "--root", "-r", "-m", "--no-commit-id",
                   "--no-renames", "--no-abbrev", "-z", head)
     objects = set()
-    for header in raw.split(b"\0")[0:-1:2]:
+    entries = raw.split(b"\0")
+    for header, path in zip(entries[0::2], entries[1::2]):
+        if path.decode('utf-8') in (excluded or []):
+            continue
         old_mode, new_mode, old_oid, new_oid, _ = header.lstrip(b":").split()
         for mode, oid in ((old_mode, old_oid), (new_mode, new_oid)):
             if mode not in {b"000000", b"160000"}:  # Gitlinks are commits, not diff blobs.
@@ -249,19 +299,20 @@ def apply_event_policy(plan: dict, event: str) -> dict:
     plan["event"] = event
     plan["not_applicable_reason"] = "not applicable to the complete changed path set"
     if event == "push":
-        # Preserve the existing main-push contract: docs plus changed production
-        # checks. Product integration is established by the PR/test-merge run.
-        for key in ("product", "preflight", "integration", "pilots", "visual", "perf_b", "web", "delivery"):
+        # Automatic main integration repeats only the short integrity path.
+        # Deliberate manual scopes on main are unaffected by this event rule.
+        for key in FLAGS:
             plan["selected"][key] = False
         plan["native_groups"] = []
         plan["native_expected"] = {}
         plan["browser_groups"] = []
         plan["browser_expected"] = {}
-        plan["not_applicable_reason"] = "main integrity run; product and toolchain verification belong to the PR"
+        plan["not_applicable_reason"] = "automatic main integrity run; full suites belong to PR or explicit dispatch"
     return plan
 
 
-def make_plan(base: str, head: str, force: str, fetch: bool = False, event: str = "local") -> dict:
+def make_plan(base: str, head: str, force: str, fetch: bool = False, event: str = "local",
+              browser_scope: str = "none") -> dict:
     head = validate_sha(head)
     if base and base != ZERO:
         validate_sha(base)
@@ -272,7 +323,22 @@ def make_plan(base: str, head: str, force: str, fetch: bool = False, event: str 
         paths = git("ls-tree", "-rz", "--name-only", head).decode("utf-8").split("\0")
     else:
         paths = git("diff", "--no-renames", "--name-only", "-z", base, head).decode("utf-8").split("\0")
-    plan = apply_event_policy(classify([path for path in paths if path], force), event)
+    paths = [path for path in paths if path]
+    inert = []
+    if base and base != ZERO and any(inert_path(p) for p in paths):
+        raw = git('diff', '--raw', '--no-renames', '--no-abbrev', '-z', base, head).decode().split('\0')
+        for header, path in zip(raw[0::2], raw[1::2]):
+            old_mode, new_mode = header.lstrip(':').split()[:2]
+            if inert_path(path) and (old_mode not in {'000000', '100644'} or new_mode not in {'000000', '100644'}):
+                raise ValueError('Inert evidence requires regular non-executable files: ' + path)
+            if inert_path(path) and old_mode == '100644' and new_mode in {'100644', '000000'}:
+                inert.append(path)
+        if inert:
+            approved = approved_inert_paths(fetch)
+            inert = [p for p in inert if p in approved]
+    if event not in {'workflow_dispatch', 'local'} and browser_scope != 'none':
+        raise ValueError('Browser request requires workflow_dispatch')
+    plan = apply_event_policy(classify(paths, force, browser_scope, inert), event)
     if plan["content_only"] and base and base != ZERO:
         # Tree metadata only: do not fetch/open ZIPs, images, proofs or the corpus.
         raw = git("diff", "--raw", "--no-renames", "--no-abbrev", "-z", base, head).decode().split("\0")
@@ -285,12 +351,22 @@ def make_plan(base: str, head: str, force: str, fetch: bool = False, event: str 
     else:
         plan["content_only"] = False
         if fetch:
-            fetch_diff_blobs(base, head)
+            fetch_diff_blobs(base, head, inert)
+        # The same inert paths are omitted from blob fetching and whitespace
+        # checks. Every active rename side and text/code path remains checked.
         if base and base != ZERO:
-            git("diff", "--check", base, head)
+            if inert:
+                active = [p for p in paths if p not in inert]
+                # Bound argv size even for large cleanup/mixed diffs. Each path
+                # remains literal and is checked against the same exact trees.
+                for start in range(0, len(active), 20):
+                    git('diff', '--no-renames', '--check', base, head, '--',
+                        *[':(top,literal)' + p for p in active[start:start+20]])
+            else:
+                git("diff", "--no-renames", "--check", base, head)
         else:
             git("show", "--format=", "--check", head)
-        plan["diff_check"] = "full-whitespace-check"
+        plan["diff_check"] = "active-whitespace-check; inert-tree-metadata" if inert else "full-whitespace-check"
     plan.update({"source_head": head, "base_commit": base or None,
                  "tested_checkout": git("rev-parse", "HEAD").decode().strip(),
                  "comparison": "exact-base-to-head-trees-no-renames",
@@ -318,14 +394,18 @@ def evaluate(plan: dict, results: dict) -> list[dict]:
         raise ValueError("Missing or invalid changed paths")
     if paths != sorted(set(paths)) or plan.get("requested_scope") is None:
         raise ValueError("Duplicate paths or missing requested scope")
-    expected_plan = classify(paths, plan["requested_scope"])
+    request = plan.get('browser_request')
+    scope = request.get('scope') if isinstance(request, dict) else 'none'
+    expected_plan = classify(paths, plan["requested_scope"], scope, plan.get('inert_paths'))
     if "event" in plan:
         if plan["event"] not in {"push", "pull_request", "workflow_dispatch", "local"}:
             raise ValueError("Unknown selection event")
         expected_plan = apply_event_policy(expected_plan, plan["event"])
+        if plan['event'] not in {'workflow_dispatch', 'local'} and request is not None:
+            raise ValueError('Automatic event cannot authorize browser work')
     if expected_plan["content_only"] and plan.get("diff_check") == "tree-metadata-only; production evidence reviewed before delivery":
         expected_plan["reasons"]["docs"] = ["content-only: changed paths and regular file modes; no puzzle certification or test suite"]
-    for field in ("selected", "reasons", "content_only", "browser_groups", "browser_expected", "native_groups", "native_expected"):
+    for field in ("selected", "reasons", "content_only", "browser_groups", "browser_expected", "native_groups", "native_expected", "browser_request", "inert_paths"):
         if plan.get(field) != expected_plan[field]:
             raise ValueError("Inconsistent selection field: " + field)
     if not isinstance(results, dict) or set(results) != set(JOBS):
@@ -342,6 +422,7 @@ def evaluate(plan: dict, results: dict) -> list[dict]:
         rows.append({"job": job, "required": required, "result": actual,
                      "accepted": actual == expected,
                      "reason": plan.get("reasons", {}).get(job, []) if required else
+                     ['not requested'] if job == 'web' and not required else
                      [plan.get("not_applicable_reason", "not applicable to the complete changed path set")]})
     return rows
 
@@ -376,14 +457,27 @@ def validate_binding(plan: dict, binding: dict, outputs: dict) -> None:
     if plan.get("comparison") != "exact-base-to-head-trees-no-renames":
         raise ValueError("Invalid comparison contract")
     expected_diff = ("tree-metadata-only; production evidence reviewed before delivery"
-                     if plan["content_only"] else "full-whitespace-check")
+                     if plan["content_only"] else "active-whitespace-check; inert-tree-metadata" if plan['inert_paths'] else "full-whitespace-check")
     if plan.get("diff_check") != expected_diff:
         raise ValueError("Missing or inconsistent diff verification")
-    if (set(outputs) != set(FLAGS) | {"selection_attempt", "native_groups"} or
+    if (set(outputs) != set(FLAGS) | {"selection_attempt", "native_groups", "browser_request"} or
+            outputs['browser_request'] != request_output(plan['browser_request']) or
             outputs["selection_attempt"] != binding["run_attempt"] or
             outputs["native_groups"] != native_groups_output(plan["native_groups"]) or any(
             outputs[key] != str(plan["selected"][key]).lower() for key in FLAGS)):
         raise ValueError("Selection artifact and scheduled job outputs disagree")
+
+
+def request_output(request):
+    return json.dumps(request, ensure_ascii=True, separators=(',', ':'))
+
+
+def validate_original_event(plan):
+    """Read the runner's original webhook, never a downloaded plan's inputs."""
+    event = os.environ['GITHUB_EVENT_NAME']
+    payload = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text(encoding='utf-8'),
+                         object_pairs_hook=unique_object)
+    validate_request(plan, event, payload)
 
 
 def main() -> int:
@@ -393,6 +487,7 @@ def main() -> int:
     plan_parser.add_argument("--base", default="")
     plan_parser.add_argument("--head", required=True)
     plan_parser.add_argument("--scope", default="auto")
+    plan_parser.add_argument('--browser-scope', choices=BROWSER_SCOPES, default='none')
     plan_parser.add_argument("--fetch", action="store_true")
     plan_parser.add_argument("--event", default=os.environ.get("GITHUB_EVENT_NAME", "local"))
     plan_parser.add_argument("--output", type=Path, required=True)
@@ -406,7 +501,9 @@ def main() -> int:
     finish.add_argument("--output", type=Path)
     args = parser.parse_args()
     if args.command == "plan":
-        result = make_plan(args.base, args.head, args.scope, args.fetch, args.event)
+        if os.environ.get('GITHUB_ACTIONS') == 'true':
+            validate_original_event({'browser_request': browser_request(args.browser_scope), 'requested_scope': args.scope})
+        result = make_plan(args.base, args.head, args.scope, args.fetch, args.event, args.browser_scope)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         if os.environ.get("GITHUB_OUTPUT"):
@@ -415,6 +512,7 @@ def main() -> int:
                     stream.write(f"{key}={str(result['selected'][key]).lower()}\n")
                 stream.write(f"content_only={str(result['content_only']).lower()}\n")
                 stream.write("native_groups=" + native_groups_output(result["native_groups"]) + "\n")
+                stream.write('browser_request=' + request_output(result['browser_request']) + '\n')
                 stream.write(f"selection_attempt={result['run_attempt']}\n")
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
@@ -422,9 +520,11 @@ def main() -> int:
     plan = json.loads(plan, object_pairs_hook=unique_object)
     rows = evaluate(plan, json.loads(args.results, object_pairs_hook=unique_object))
     if os.environ.get("GITHUB_ACTIONS") == "true":
+        validate_original_event(plan)
         validate_binding(plan, json.loads(os.environ.get("CI_BINDING", "{}"), object_pairs_hook=unique_object),
                          json.loads(os.environ.get("CI_OUTPUTS", "{}"), object_pairs_hook=unique_object))
-    report = {"format": "picross-ci-result-v4", "accepted": all(row["accepted"] for row in rows),
+    report = {"format": "picross-ci-result-v5", "accepted": all(row["accepted"] for row in rows),
+              'browser_status': 'requested' if plan['browser_request'] else 'not requested',
               "selection": plan, "jobs": rows}
     if plan['selected']['product']:
         try:
