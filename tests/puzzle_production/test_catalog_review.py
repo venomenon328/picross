@@ -37,6 +37,7 @@ class ReviewTests(unittest.TestCase):
             checked = difficulty_for_export(exported)
             base = isolated_checkout(builder.home / ('registered-' + mode))
             cr.registration(exported, base, apply=True, difficulty=checked)
+            shutil.copytree(base, builder.home / ('full-' + mode))
             from tests.puzzle_production.catalog_fixtures import compact
             compact(base,['pz-review'])
             cls.fixture_checked[mode] = checked
@@ -68,9 +69,9 @@ class ReviewTests(unittest.TestCase):
             self.exports[key] = target
         return self.exports[key]
 
-    def register(self, mode='mono'):
+    def register(self, mode='mono', *, full=False):
         # This is a prerequisite, not the transition asserted by these regressions.
-        shutil.copytree(self.fixture_home / ('registered-' + mode), self.root, dirs_exist_ok=True)
+        shutil.copytree(self.fixture_home / (('full-' if full else 'registered-') + mode), self.root, dirs_exist_ok=True)
         return self.exported(mode, 1), deepcopy(self.fixture_checked[mode])
 
     def test_r1_01_mode_change_cannot_rebind_active_rating(self):
@@ -222,7 +223,9 @@ class ReviewTests(unittest.TestCase):
             rating.rebind_checked(old_import, raw, production_mode='color')
 
     def test_repeated_adoption_after_valid_registry_sync_is_stale(self):
-        _, checked = self.register()
+        # A receipt intentionally binds the complete original registry entry.
+        # This case asserts a permitted registry edit against a full export.
+        _, checked = self.register(full=True)
         work = self.home / 'preview'
         ca.preview(self.root, work, 'review', 'a' * 40, ids=['pz-review'], checked_inputs={'pz-review': checked})
         ca.adopt(self.root, work, apply=True)

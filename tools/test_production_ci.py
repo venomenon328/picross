@@ -128,6 +128,27 @@ class SelectionTests(unittest.TestCase):
 
 
 class EvidenceTests(unittest.TestCase):
+    def test_relative_output_becomes_absolute_for_checkout_replay(self):
+        import os
+        import production_ci
+        from types import SimpleNamespace
+        # Exercise the orchestration boundary without producing a full catalog.
+        # The actual four-package replay remains mandatory in adapter CI.
+        with tempfile.TemporaryDirectory(dir=Path.cwd()) as temporary:
+            relative = Path(temporary).relative_to(Path.cwd()) / 'output'
+            with patch.object(production_ci, 'binding', return_value={}), \
+                 patch.object(production_ci, 'run_tests', return_value={'accepted': True}) as tests, \
+                 patch.object(production_ci.subprocess, 'run', return_value=SimpleNamespace(returncode=0)) as process, \
+                 patch.dict(os.environ, {'GITHUB_ACTIONS': '', 'GITHUB_STEP_SUMMARY': ''}):
+                report = production_ci.run(['adapter'], relative)
+            self.assertTrue(report['accepted'])
+            output = tests.call_args.args[1]
+            self.assertTrue(output.is_absolute())
+            command = process.call_args.args[0]
+            self.assertEqual(command[2], 'tools.puzzle_production.za1_fixtures')
+            self.assertEqual(Path(command[-1]), output / 'za1-replay')
+            self.assertTrue((output / 'production-result.json').is_file())
+
     def test_selected_tests_integrations_bytes_and_attempts_are_required(self):
         plan=plan_for(['tools/ci_scope.py'])
         with tempfile.TemporaryDirectory() as temporary:

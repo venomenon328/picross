@@ -59,7 +59,7 @@ Tage. Mutable synthetische ZA-1-Checkouts werden nicht hochgeladen.
 | Interne Exportprüfungen | Die bereits notwendige echte Happy-Path-Integration kontrolliert Eingangs- und unabhängigen Stagingcheck. Keine zusätzliche Vollproduktion allein für Aufrufzahlen. |
 | Technische Fehlerphasen | Sämtliche Veröffentlichungs-/Recoveryphasen einschließlich Binärersatz, Lock, Temps, Fremdbytes und wiederholter Unterbrechung einmal am gemeinsamen Kern in `test_reveal_recovery`. Pro Rastereinstieg bleibt ein echter gewöhnlicher Rollback und ein echter Abbruch nach Runtimepublikation; Paketneuanlagen-/Fremdquellenschutz bleiben separat. |
 | `test_sd2_catalog` | `UpdateTests` übernimmt ausdrücklich den neuen isolierten Klassenaufbau; derselbe echte gemischte 0.3-/0.4-Update-/Aktivierungs-/Recoveryfall bleibt mit kleineren Quellen erhalten. `CatalogTests` kopiert für Metadatenfälle einen gültigen kompakten Grundstand; der echte Cleanupfall erhält weiterhin eine eigene Kopie der vollständigen Export-/Registrierungsbasis. |
-| `test_catalog_review` | Vier unveränderliche Exporte für zwei Modi/Revisionen und zwei echte Registrierungsgrundstände einmal pro Klasse. Jede Testinstanz bekommt eigene Quellen-/Export-/Checkoutwurzeln; alle Mode-/Rebind-/Stale-/Namespace-/No-op-/Altformatgegenproben bleiben. |
+| `test_catalog_review` | Vier unveränderliche Exporte für zwei Modi/Revisionen und zwei echte Registrierungsgrundstände einmal pro Klasse. Jede Testinstanz bekommt eigene Quellen-/Export-/Checkoutwurzeln; die beabsichtigte Registryänderung verwendet eine vollständige Exportbasis, die übrigen Metadatenfälle kompakte Receipts. Alle Mode-/Rebind-/Stale-/Namespace-/No-op-/Altformatgegenproben bleiben. |
 | Journal-/Limit-/Dispatchdaten | Drei lokale Binär-/Dispatchprüfungen in eigener `JournalTests`-Klasse ohne Export-/Registrierungsvoraussetzung. Kleine feste Registryeinträge genügen; echte 32-MiB-Bildseiten und sämtliche Readerlimits bleiben. |
 | Technischer Recoverygrundstand | Geprüfte synthetische kompakte Receipts reduzieren die mitgebundene Produktionsdateimenge auch im Mehr-ID-Fall und beim unabhängigen Updatenachbarn. Echte Export-/Register-/Bildintegration bleibt bei den fachlichen Einstiegen. Altjournale behalten ihre geschlossenen Generationen und synthetischen Eingänge. |
 
@@ -95,12 +95,13 @@ Ein konsolidierter Fall hat dort ausdrücklich eine andere Test-ID; Parallelitä
 Runner, Cache, Suitezeit, Jobdauer und kritischer CI-Pfad werden unterschieden.
 Keine ungemessene Erreichung des Fünf-/Zehnminutenziels.
 
-Lokaler schneller Werkzeuglauf: 219 Tests in 42,742 Sekunden erfolgreich;
+Früher lokaler schneller Werkzeuglauf: 219 Tests in 42,742 Sekunden erfolgreich;
 drei plattformbedingte Proben übersprungen. Der echte Linux-PR-Lauf liefert ihre
-maßgebliche Ausführung und die finalen Pflichtresultate. Die sechs neuen
+maßgebliche Ausführung und die finalen Pflichtresultate. Die sieben neuen
 Werkzeugtests prüfen Auswahl/Importzuordnung, kanonischen Transport,
 unvollständige/gefälschte Ergebnis-/Quellen-/Versuchsbindung, Dateiintegrität und
-die tatsächliche Unittest-Zeitgrenze mit Aufbau/Cleanup. Dokumentvalidator,
+die tatsächliche Unittest-Zeitgrenze mit Aufbau/Cleanup sowie absolute Pfade
+für den vierteiligen ZA-1-Durchstich. Dokumentvalidator,
 vollständiger Diffcheck, zusätzliche gezielte Reihenfolge-/Isolationsproben und
 finale CI-Ergebnisse werden im PR zugeordnet. Kein zweiter ritualisierter Vollauf.
 

@@ -24,6 +24,8 @@ def binding():
 
 
 def run(groups, directory):
+    # The existing ZA-1 replay binds absolute checkout/source roots.
+    directory = directory.absolute()
     directory.mkdir(parents=True, exist_ok=False)
     report = {'format': 'picross-production-result-v1', 'groups': groups,
               'expected': contract.coverage(groups), 'binding': binding(),
