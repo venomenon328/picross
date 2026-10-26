@@ -1,5 +1,41 @@
 # CI-A: Ausführbare Prüfauswahl
 
+## Vorrangiger Sollvertrag: CI2-A / #413
+
+Der freigegebene [CI2-Vertrag vom 26.10.2026](CI_SLIMMING.md),
+[Gesamtissue #412](https://github.com/venomenon328/picross/issues/412), ersetzt
+die nachfolgenden überholten Auswahlpflichten.
+[CI2-A / #413](https://github.com/venomenon328/picross/issues/413) setzt diese
+Änderung später um; diese Dokumentlieferung ändert noch keine ausführbare CI.
+Ausgang ist `main@967314538df376a281020fb4c34f93f370a491df`.
+
+Automatische PR-/Push-Ereignisse installieren und starten künftig keinen Browser.
+Auch `all`, `toolchain`, `runtime`, `visual`, `perf-b`, `production`, gemeinsame
+Komponenten und unbekannte Pfade sind kein impliziter Browserauftrag. Chromium
+verlangt einen ausdrücklichen manuellen Auftrag mit Quellstand und Prüfumfang,
+auch beim Aufruf wiederverwendbarer Unterworkflows. Zeitpläne oder automatische
+Nachläufe ergänzen ihn nicht. Native Prüfung, Fachtests, Toolchain und SSH/HTTP
+folgen weiterhin unabhängig ihrem tatsächlichen Änderungsbezug; der reguläre
+Main-Nachlauf wiederholt die teure PR-Fachsuite nicht automatisch.
+
+Auswahl, Scheduler und Gate unterscheiden nicht angefordert, Erfolg, fehlend,
+übersprungen, fehlgeschlagen und abgebrochen. Nur tatsächlich angeforderte
+Browserprüfung verlangt passende Resultate und Dateien. Ausgewählte fehlende
+Pflichtresultate bleiben Fehler. Vollständiger Diff einschließlich Rename/Delete,
+Inhalts-Dateimodusschutz und Quell-/Run-/Versuchsbindung bleiben erhalten; neue
+Auswahl, Producer und Gate werden zusammen umgestellt. Enge SD2-Zuordnung,
+inerte Belegklassen und die Ablösung der PR-411-Ausnahme stehen in CI2 §1.
+
+## Gebundener CI-A-Ausgangsstand
+
+Alle folgenden Abschnitte dokumentieren den bisherigen Liefervertrag und seine
+Ergänzungen. Automatische oder implizite Browserpflichten, breite manuelle Scopes
+und vollständige Wiederholungspflichten daraus gelten nicht als CI2-Ziel.
+Historische Ergebnisse behalten ihre Quellenbindung; alte Voll-/Browserläufe
+müssen nicht erneut als Baseline erzeugt werden. Die bisherige Implementierung
+bleibt bis zur jeweiligen Umstellung unverändert; ein noch ausgewählter Altjob
+wird durch Überspringen nicht nachträglich erfolgreich.
+
 Lieferung für [#247](https://github.com/venomenon328/picross/issues/247), gemäß
 [CI-Policy](CI_POLICY.md). Ausgangsbasis der Umsetzung ist
 `df6405fe17c4fe15600e141700ad210d58586e7c`, identisch zur Vorbereitung CI-A/V1.

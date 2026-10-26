@@ -29,12 +29,21 @@ Wiederherstellung von Quellen, Proofs oder ZIPs und begründet keine allgemeine
 Produktions-Replaypflicht. SD-C1 hat die Ablage mit PR #242 nach qualifiziertem
 R2 integriert. Die [SD-C2-Übernahme](SD_CATALOG.md) hat nach bestandenem
 Vor-Übernahme-Review 26 aktive Bestands-Sidecars und zwei kompakte Dauerberichte
-angelegt. Die Originalarbeitsbundles bleiben bis zur Reviewfortsetzung außerhalb
-des Repositorys erhalten; finales Datenreview und Merge bleiben offen.
+angelegt und ist über [PR #243](https://github.com/venomenon328/picross/pull/243)
+auf `main` integriert. Frühere offene Review-/Mergeangaben beschreiben den
+damaligen Lieferstand; sie begründen keine neue Aufbewahrungs- oder Replaypflicht.
 Referenzen werden unabhängig synthetisch kuratiert; reale Katalogrätsel oder
 deren Kopien werden weder Kalibrierungskorpus noch automatischer Testbestand.
 
 ### Freigegebene CI-Straffung
+
+Die neue Eigentümerentscheidung vom 26.10.2026 in
+[CI2: CI und Repository verschlanken](CI_SLIMMING.md) /
+[#412](https://github.com/venomenon328/picross/issues/412) löst die folgenden
+früheren Vollinventarpflichten und den Verzicht auf feste Laufzeit-/Volumengrenzen
+gezielt ab. Sie ist eine Spezifikationsfreigabe; die ausführbaren Checks werden
+erst durch die getrennten Umsetzungspakete geändert. Historische Prüfergebnisse
+behalten ihre damalige Bindung und werden nicht umgeschrieben.
 
 Die Entscheidung vom 18.10.2026 in [CI-Policy](CI_POLICY.md) /
 [#246](https://github.com/venomenon328/picross/issues/246) erlaubt gezielte Auswahl
@@ -44,20 +53,68 @@ Sie erklärt keine aktiven Tests allein wegen ihres historischen Namens für
 entbehrlich. Bis zur Integration des jeweiligen Pakets bleiben die ausführbaren
 Pflichtchecks maßgeblich.
 
-[CI-B](CI_B_BROWSER_GROUPS.md) hält das vollständige aktive Browserinventar,
-Gruppenvoraussetzungen und aktuelle Belegbindungen fest. Die serielle
+[CI-B](CI_B_BROWSER_GROUPS.md) hält das bisherige Browserinventar,
+Gruppenvoraussetzungen und Belegbindungen fest. Die serielle
 instrumentierte Baseline bleibt an ihren PR-Commit/Run gebunden; sie ist kein
 neuer dauerhaft zu wiederholender Testpfad. Aktuelle Builddateien dürfen
 innerhalb desselben gebundenen Runs geteilt werden, Prüfergebnisse nicht.
 
-[CI-C](CI_C_NATIVE_GROUPS.md) ordnet aktuelle native Checks und Pflichtartefakte
-unabhängig auswählbaren Gruppen zu. Das gebundene Inventar enthält nur aktive
-technische Dateinamen und Ergebnisfelder, keine Kopie historischer Bild-/Rätseldaten. Bildaufbereitung wird gemessen und verlustfrei beschleunigt:
-Dekodierte Pixel einschließlich Alpha, Maße, Ausschnitte und Pflichtbildmenge
-bleiben erhalten; PNG-Datei-Bytes dürfen sich ändern. Keine feste Zeit-/Bytegrenze,
-kein Weglassen angeforderter Belege und keine historische Replaypflicht.
+[CI-C](CI_C_NATIVE_GROUPS.md) ordnet die bisherigen nativen Checks und Pflichtartefakte
+unabhängig auswählbaren Gruppen zu. Das gebundene Inventar enthält technische
+Dateinamen und Ergebnisfelder, keine Kopie historischer Bild-/Rätseldaten.
+Die frühere Pflicht zur vollständigen Bildmenge und der frühere Verzicht auf
+Zeit-/Bytegrenzen gelten nicht als Vorgabe für CI2. Dessen gekürzter Sollumfang
+und Budgets sind maßgeblich; bestehende erfolgreiche Nachweise werden dadurch
+weder nachträglich erweitert noch abgewertet. Keine historische Replaypflicht.
 Quellgebundene Referenzläufe und konkrete Vergleichsmessungen stehen in Issues/PRs;
 dieses Inventar sammelt keine neue Laufchronik.
+
+## Freigegebene Folgebereinigung vom 26.10.2026
+
+Der folgende [CI2-E-Umfang / #417](https://github.com/venomenon328/picross/issues/417)
+ist spezifiziert, **noch nicht bereinigt**. Ausgang ist
+[`main@967314538df376a281020fb4c34f93f370a491df`](https://github.com/venomenon328/picross/tree/967314538df376a281020fb4c34f93f370a491df).
+Die Zahlen summieren Datei-Bytes des aktiven Trees, nicht die Größe der Git-Historie.
+
+| Abgeschlossene Arbeits-/Nachweisdaten | Dateien | MiB |
+| --- | ---: | ---: |
+| `content/authoring/*/at-b-r01/` | 755 | 258,067 |
+| `docs/design/at_b_integration/` | 145 | 224,541 |
+| `docs/evidence/hz-c/` | 60 | 115,948 |
+| `docs/evidence/hz-b/` | 44 | 114,109 |
+| `docs/evidence/hz-a/` | 7 | 59,642 |
+| `docs/evidence/at-a/` | 145 | 25,960 |
+| **Kandidatenumfang** | **1.156** | **798,267** |
+
+Die sechs Klassen enthalten zusammen 837.043.724 Bytes. Vor der späteren Entfernung
+sind tatsächliche Main-Integration, aktuelle Leser, offene Nacharbeit derselben IDs
+und Rechtebindungen zu prüfen. Verbleibende Dokumentlinks erhalten gebundene
+historische Commit-/PR-Verweise. Kompakte aktive Verträge und nötige Abschlussverweise
+bleiben; keine Kopie in einem neuen Archiv, Spielerbuild oder CI-Artefakt.
+Die nachträglichen AT-B-Bildrevisionen schließen nach
+[Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung)
+auch dann ab, wenn die ursprüngliche Rasterproduktion bereits einen kompakten
+Integrationsdatensatz hat. Bestehende versiegelte Integrationsbelege bleiben erhalten.
+
+Erhalten bleiben aktive Runtime-, Reveal-, Rechte-, Registry- und Schwierigkeitsdaten,
+synthetische Fachinputs sowie tatsächlich gelesene technische Ressourcen. Dazu gehören
+`docs/evidence/kk/native-crops.json`, aktive Buch-/Font-/Atlasquellen und benötigte
+Layoutinputs. Offene Senf-/Level-1-1-Arbeit, Pentagramm und offene Designarbeit gehören
+nicht zu diesem Umfang. Ein historischer Pfadname oder eine Dateiendung genügt
+nicht als Löschgrund.
+
+Abnahme: ausgewiesener Tree-Rückgang von ungefähr 798 MiB, bereinigte Authoringindizes,
+unveränderte aktive Inhalte und erhaltene Rechte; nötige Restdaten und andere
+Abweichungen vom Kandidatenumfang werden konkret begründet. Die Git-Historie bleibt
+unangetastet. Die aktuelle Spezifikationspflege führt keine Löschung und keinen
+Cleanup-Merge aus und erweitert keine frühere Mergefreigabe auf CI2-Codepakete.
+
+Der nach CI2 vorgesehene schnelle Check überwacht Pfade, Datei-/Bytezuwachs und
+unzulässige Ablageklassen aus verfügbaren Metadaten. Er lädt keine historischen
+Nutzdaten zum Messen nach und startet keine Produktion, Engine oder Browserprüfung.
+Kein zusätzlicher CI-Job, Archivkatalog oder laufender Lieferbericht. Aktuelle
+Autorität sind Fachverträge und neue Entscheidungen; alte Lieferstatus und Urteile
+bleiben an ihren damaligen Stand gebunden und werden nicht erneut Pflicht.
 
 ## Aus dem aktiven Tree entfernt
 

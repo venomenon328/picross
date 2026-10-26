@@ -1,10 +1,67 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
+## Vorrangiger Sollvertrag: CI2-D / #416
+
+Der freigegebene [CI2-Vertrag vom 26.10.2026](CI_SLIMMING.md),
+[Gesamtissue #412](https://github.com/venomenon328/picross/issues/412), ersetzt
+die nachfolgenden ungekürzten History-/Bild-/Prozesspflichten.
+[CI2-D / #416](https://github.com/venomenon328/picross/issues/416) ist das
+zugehörige, noch nicht begonnene Umsetzungspaket nach
+[CI2-A / #413](https://github.com/venomenon328/picross/issues/413).
+Diese Dokumentlieferung verändert keine ausführbare Route am Ausgangsstand
+`main@967314538df376a281020fb4c34f93f370a491df`.
+
+Die neue Historyroute umfasst insgesamt höchstens 20 semantische Benutzerkommandos,
+höchstens sechs neue wirksame History-Transaktionen und genau zwei tatsächliche
+Spielprozesse zum Schreiben und frischen Laden/Redo im selben isolierten
+synthetischen Profil. Werkzeug-/Farbwahl, Blattwahl, Navigation, Undo/Redo und
+reguläres Beenden zählen mit; ein zusammenhängender Down/Move/Up-Strich zählt
+als ein Kommando. Passive Assertions und Prozessstarts zählen nicht. Versteckte
+Setup-Bearbeitungen, Mengenauffüllung oder Wiederholungen je Region/Fenstergröße
+sind ausgeschlossen. Die 500er-Route entfällt aus Standard, `history`, `runtime`,
+`all`, `--integration` und gewöhnlichen manuellen Vollläufen; sie wird nicht
+automatisch als Stressroute weitergeführt.
+
+Atomarer Strich, exakte Vor-/Nachwerte, Undo/Redo und Redo-Verzweigung, History
+ohne Navigationsmutation, Zustand/Ansicht/Undo-Merkmal nach echtem Neustart,
+tatsächlicher Redo und fremde Slotbytes bleiben geschützt. Das unabhängige
+Python-Orakel importiert keine produktive Historylogik; zwei billige Gegenproben
+weisen manipulierte Zelländerung und unvollständige Spur ohne weitere
+Spielprozesse ab. Producer, Trace, Zusammenfassung und Gate binden die kurze
+Folge; 500 Aktionen, mehr als 500 geänderte Zellen, fünf 100er-Segmente und das
+künstliche 560px-Board sind keine zukünftige Pflicht.
+
+Abgeschlossene HZ-C-14/15-Vergleiche und 36 HC92-before-Bilder entfallen;
+aktuelle Schrift-/Layoutzusagen bleiben geprüft. Animationen erhalten relevante
+Anfangs-/Zwischen-/Endzustände und einen echten Bewegungsnachweis. Katalogmodi
+und wiederholte Importe werden konsolidiert; eine verifizierte unveränderliche
+Importbasis darf geteilt/kopiert werden, veränderliche Daten bleiben isoliert.
+Lastmatrizen mit 256 Kategorien, 128 Zeichen oder 300 Einträgen werden nur gezielt
+gewählt. Untersuchungsziel sind mindestens 50 % weniger routinemäßige Bildbelege
+gegenüber 858 festen PNGs; erzeugte und gelieferte Mengen werden getrennt gemessen.
+CI2 §6 ersetzt den pauschalen Verzicht auf Laufzeitziele: übliche Standard-CI
+möglichst unter fünf Minuten, aufwendigere relevante Integration unter zehn.
+
+Auswahl, Producer und Gate werden zusammen auf das begrenzte Inventar umgestellt.
+Tatsächlich gewählte native Gruppen behalten vollständige Ergebnisse, echte
+Originalbelege und Quell-/Run-/Versuchs-/Dateibindungen; fehlende oder übersprungene
+Pflichtresultate scheitern weiterhin. Native Scopes begründen nach CI2-A keinen
+impliziten Browserauftrag. Alte Logs sind die Baseline; die 500er- oder volle
+Vergleichsmatrix wird dafür nicht erneut ausgeführt.
+
+## Gebundener CI-C-Ausgangsstand
+
+Alle folgenden Mengen, Prozessfolgen, Pflichtdateien und Abnahmeformulierungen
+dokumentieren den bisherigen Lieferstand und seine Erweiterungen. Ihre
+Quellenbindungen bleiben erhalten; sie erzwingen keine Fortführung der alten
+Mengen unter CI2. Die bisherige Implementierung bleibt bis zur Umstellung aktiv,
+und ein noch ausgewähltes fehlendes Altresultat wird dadurch nicht erfolgreich.
+
 Inventar vor Umstellung: `main@019b4dba98ef56c549ef5e7da10402dba0c9e93a`,
 [Issue #249](https://github.com/venomenon328/picross/issues/249), CI-C/V1.
 [CI-Policy](CI_POLICY.md) bestimmt Auswahl und Abnahme. Keine Produktänderung.
 
-## Vollständige Zuordnung
+## Bisherige vollständige Zuordnung
 
 | Gruppe | Erhaltene ausführbare Aussagen und Pflichtbelege |
 | --- | --- |
