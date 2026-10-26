@@ -924,6 +924,12 @@ Neuere/unversionierte Arbeit und offene Registrierungsjournale blockieren. Der B
 bereitet ausschließlich einen Git-Diff vor; Commit, PR und Merge folgen dem Workflow.
 Kein automatischer Nach-Merge-Job und kein wachsender CI-Testbestand.
 
+Die freigegebene [CI2-Spezifikation](CI_SLIMMING.md) ergänzt den eigenständigen
+[Abschluss späterer Bildrevisionen](ai-workflows/PUZZLE_AUTHORING.md#abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026)
+auch bei bereits vorhandenem `picross-integrated-content-v1`-Datensatz. Das ist ein
+noch umzusetzender Abschlussweg, keine bereits verfügbare Erweiterung des obigen
+Befehls; Receiptformat, aktive Bildbindungen und ursprüngliche Belege bleiben erhalten.
+
 ## KU-B · Erstregistrierung und kompatible Metadaten
 
 Die [Added-Quelle](CATALOG_SORTING.md) liegt außerhalb versiegelter Pakete.

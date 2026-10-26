@@ -1,24 +1,99 @@
 # Aktuelle CI-Policy
 
-**Auftragsspezifische Ausführungssperre #406 / PR #411 · 26.10.2026:** Der
-Eigentümer untersagt den Web-Job für diesen Auftrag. Ausschließlich bei
-`pull_request.number == 411` sperrt der Scheduler diesen Job trotz automatischer
-Auswahl. Andere PRs und alle übrigen Jobs behalten ihre Bedingungen. Selektor,
-Browserumfang und `ci-required` bleiben unverändert: ausgewähltes, übersprungenes
-Web ist ein fehlender Pflichtnachweis und ergibt keinen vollständigen CI-Pass.
-Diese Sperre erteilt weder eine Mergefreigabe noch eine Ausnahme vom finalen
-Gesamtgate. [F01/T01](SD2_D_ADOPTION.md) bindet tatsächliche Ausführung und Lücke.
+Stand: 26.10.2026 · Version 3.0 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
 
-**SD2 · 25.10.2026:** [Der freigegebene Sollvertrag](PUZZLE_DIFFICULTY_V2.md)
-ändert keine automatische Prüfauswahl. Referenz-/Validierungssätze und allgemeine
-Regressionen bleiben unabhängig synthetisch; echte Katalogfälle, daraus kopierte
-oder abgeleitete Fälle und Bestandsverteilungen werden keine CI-Tests. Der reale
-0.4-Vergleich, Übernahme und Aktivierung gehören ausschließlich zum gesonderten
-manuellen Inhaltsauftrag SD2-D. Reine Spezifikationspflege nutzt Docs/Werkzeugtests,
-Dokumentvalidator, Diffcheck und `ci-required`; spätere A/B/C/D-Diffs folgen der
-vollständigen bestehenden Auswahl, ohne pauschale SD2-Ausnahme.
+## Freigegebener CI2-Sollvertrag
 
-Stand: 19.10.2026 · Version 2.6 · CI-Spezifikation [#246](https://github.com/venomenon328/picross/issues/246), bestehende Aufträge [#63](https://github.com/venomenon328/picross/issues/63), [#70](https://github.com/venomenon328/picross/issues/70), [#116](https://github.com/venomenon328/picross/issues/116), [SD-Vertrag](PUZZLE_DIFFICULTY.md) und [AT-Spezifikation](REVEAL_TRANSPARENCY.md)
+[CI_SLIMMING](CI_SLIMMING.md) ist vollständig zu lesen und hat für die dort
+benannten Änderungen Vorrang vor den älteren Umfangsvorgaben dieser Policy und
+der verlinkten Prüfverträge. Beauftragt sind jetzt Issues und Dokumentation;
+Implementierung, Datenlöschung und Merge sind damit nicht beauftragt.
+Die ausführbare CI ist durch diese Spezifikationslieferung noch unverändert.
+
+- **Auswahl / CI2-A [#413](https://github.com/venomenon328/picross/issues/413):**
+  Automatische PR-/Push-Läufe installieren und starten keinen Browser. Auch
+  `all`, `toolchain`, `runtime`, `visual`, `perf-b`, `production`, gemeinsame
+  Komponenten und unbekannte Pfade erteilen keinen impliziten Browserauftrag.
+  Chromium verlangt einen ausdrücklichen manuellen Auftrag mit Quellstand und
+  Prüfumfang, auch bei wiederverwendbaren Unterworkflows. Kein Zeitplan oder
+  automatischer Nachlauf ergänzt ihn. Native Prüfung, Fachtests, Toolchain und
+  SSH/HTTP bleiben unabhängig nach tatsächlicher Wirkung ausgewählt. Der
+  Main-Nachlauf wiederholt die teure PR-Fachsuite nicht automatisch; kurze
+  Integritätschecks bleiben. Die PR411-Sonderbedingung samt Sondertest entfällt.
+- **Fachtests / CI2-B [#414](https://github.com/venomenon328/picross/issues/414):**
+  Kleine fachliche Gruppen, isolierte vorbereitete Fixtures und repräsentative
+  Integrationen ersetzen wiederholte vollständige Produktionsketten. Gemeinsame
+  Fehlergrenzen einmal am zuständigen Mechanismus prüfen. Die 19 benannten
+  historischen Hilfstests samt ungenutzten Helfern werden nach Leserabgleich
+  stillgelegt; keine pauschale Halbierungsquote. Günstige unabhängige Orakel und
+  aktuelle Integritäts-/Kompatibilitätsgarantien bleiben erhalten.
+- **Chromium / CI2-C [#415](https://github.com/venomenon328/picross/issues/415):**
+  Der ausdrückliche kurze Lauf umfasst ungefähr 8–10 aktuelle Kernfälle anstelle
+  des 33er-Bestands. Echte Eingabe, bestätigte IndexedDB-Sicherung, Reload und
+  Prozessneustart bleiben für ihre Aussagen erforderlich. Zusätzliche begrenzte
+  Profile benötigen eigenen Auftrag; keine automatisch angehängte Vollmatrix.
+  Ein angeforderter Exportwechsel benötigt weiterhin zwei echte Exporte.
+  Firefox bleibt vollständig aus CI ausgeschlossen.
+- **Native Prüfung / CI2-D [#416](https://github.com/venomenon328/picross/issues/416):**
+  Die 500er-Route entfällt aus Standard, `history`, `runtime`, `all`,
+  `--integration` und gewöhnlichen manuellen Vollumfängen. Ersatz: höchstens
+  20 semantische Benutzerkommandos insgesamt, höchstens sechs neue wirksame
+  History-Transaktionen und genau zwei echte Spielprozesse. Zählweise und
+  erhaltene Save-/Undo-/Redo-/Isolationsaussagen stehen in CI2 §4. Kein
+  routinemäßiger Ersatz-Stresstest. Historische Vergleichsgalerien, dichte
+  Bildfolgen und Lastmatrizen werden dort gezielt gekürzt; mindestens 50 %
+  weniger routinemäßige Bildbelege gegenüber 858 PNGs sind Untersuchungsziel,
+  keine vorweggenommene Messung oder bloße Dateinamenquote.
+- **Bestand / CI2-E [#417](https://github.com/venomenon328/picross/issues/417):**
+  Das [Bestandsinventar](DEVELOPMENT_ARCHIVE.md) bindet sechs Bereinigungsklassen
+  mit 1.156 Dateien / 798,27 MiB. Aktive Quellen, Rechte, kompakte Bindungen und
+  offene Produktionen bleiben erhalten. Große abgeschlossene Laufbelege gehören
+  grundsätzlich in zeitlich begrenzte CI-Artefakte. Ein leichter Metadatencheck
+  im bestehenden Docs-Pfad verhindert neue unzulässige Ablageklassen; kein neuer
+  CI-Job, historischer Blobdownload oder wachsendes Archivmanifest.
+
+Die Laufzeitziele aus CI2 §6 ersetzen den allgemeinen Budgetverzicht:
+Docs/Werkzeuge unter einer Minute, übliche Standard-CI möglichst unter fünf,
+aufwendigere relevante Integration unter zehn, kurzer Chromiumlauf einschließlich
+benötigtem Build höchstens acht Minuten; zusätzliche ausdrücklich gewählte
+Browserprofile unter zehn Minuten je begrenztem Profil. Überschreitungen bleiben
+sichtbare Optimierungsbefunde. Abbruchgrenzen beenden Hänger als Fehler und
+ersetzen keine Optimierung oder funktionale Speicher-/Animationszusage.
+
+Auswahl, Scheduler, Producer und Gate werden im jeweiligen Paket gemeinsam
+umgestellt. Nicht angefordert, Erfolg, fehlend, übersprungen, fehlgeschlagen und
+abgebrochen bleiben unterscheidbar; angeforderte Prüfungen verlangen passende
+Resultate und Belege. Exakter Gesamtdiff, Rename-/Löschungsseiten, Datei-/
+Quell-/Runbindung, unabhängige Verifikation und isolierte Testdaten bleiben.
+Neue teure Tests benötigen aktuellen Zweck, passende günstige Ebene und
+Kostenbegründung; neue Module eine passende Auswahlzuordnung. Historische
+Lieferberichte behalten ihren damaligen Stand, Produktabnahmen bleiben separat.
+
+## Ausführbare Ausgangsbasis und historische Bindungen
+
+Die folgenden Abschnitte dokumentieren die bestehenden Mechanismen aus
+#70/#116/#246/#261 und ihre fachlichen Grenzen am oben genannten Ausgangsstand.
+Ihre automatischen/impliziten Browserpflichten, ungekürzten Altfall-/Bildmengen,
+500er-Vorgaben und der generelle Verzicht auf Laufzeitziele sind durch CI2 als
+Sollvertrag gezielt abgelöst. Bis zur Implementierung bleiben die tatsächlichen
+Auswahl-/Gatebedingungen unverändert; ein übersprungener noch ausgewählter Job
+wird dadurch nicht erfolgreich. Alte Browser-/500er-/Vergleichsrouten müssen
+für die Dokumentlieferung nicht erneut als Baseline reproduziert werden.
+Der reine Dokumentdiff nutzt den bestehenden Docs-/Werkzeugpfad und `ci-required`.
+
+Die auftragsspezifische Websperre für #406 / PR #411 ist Teil dieser ausführbaren
+Ausgangsbasis: Der Scheduler überspringt nur bei `pull_request.number == 411`
+den weiterhin ausgewählten Job. [F01/T01](SD2_D_ADOPTION.md) bindet die tatsächliche
+Ausführung und Nachweislücke. PR #411 ist inzwischen integriert; fehlender
+Web-/Gesamt-CI-Nachweis wird nicht rückwirkend zum Pass. CI2-A ersetzt die
+Sonderbedingung durch die allgemeine ausdrückliche Browserauswahl.
+
+Die [SD2-Bestandsbewertung](PUZZLE_DIFFICULTY_V2.md) bleibt ein manueller
+Inhaltsauftrag außerhalb der CI; Methode 0.4 und alle 45 Ratings sind mit PR #411 integriert.
+Referenz-/Validierungssätze und allgemeine Regressionen bleiben unabhängig
+synthetisch. Echte Katalogfälle, abgeleitete Fälle und Bestandsverteilungen
+werden keine Tests. CI2-A ergänzt die exakt geprüfte enge SD2-Fachauswahl;
+Katalog-/Schema-/Export-/Transaktionscode erbt keine pauschale `sd2*`-Ausnahme.
 
 ## Geltung und Ablösung
 
@@ -43,14 +118,15 @@ Erfolg aller ausgewählten Bereiche. Fehler, Abbruch, fehlende Auswahl und
 übersprungene erforderliche Jobs sind kein Pass. Nichtzutreffen wird mit
 Änderungsauswahl und Grund ausgewiesen. Es wurde kein Branchschutz verändert.
 
-## Chromium als einzige CI-Browserpflicht
+## Browserkette der ausführbaren Ausgangsbasis
 
 Eigentümerentscheidung vom 19.10.2026 in
 [#261](https://github.com/venomenon328/picross/issues/261): Firefox entfällt
-vollständig und dauerhaft aus automatisierter CI. Chromium behält sämtliche
-27 Szenarien in `regular`, `catalog`, `input`, `completion` und `persistence`,
+vollständig und dauerhaft aus automatisierter CI. Die damalige Verpflichtung auf
+sämtliche 27 Szenarien (inzwischen 33) in `regular`, `catalog`, `input`, `completion` und `persistence`,
 einschließlich KU-B, Live-DPI, echter IndexedDB-Sicherung, Reload, Prozessneustart,
-zweitem Export, Fehler-/Recoveryfällen und allen bisherigen Pflichtdateien.
+zweitem Export, Fehler-/Recoveryfällen und allen bisherigen Pflichtdateien
+beschreibt die bisherige Basis; CI2-A/C ersetzen automatische Auswahl und Vollmenge.
 Diese Entscheidung ersetzt auch noch formulierte Firefox-CI-Pflichten in
 älteren Paket-/Prüfzuordnungen. Historische Nachweise behalten ihre damalige
 Commit-, Browser- und Runbindung; sie werden weder umgeschrieben noch als
@@ -64,7 +140,8 @@ die direkten Runner-/Launchwege prüfen dieselbe Positivliste. Das Ergebnisgate
 verlangt nur `chromium_attempt` und Chromium-Artefakte, bleibt aber vollständig
 fail-closed für Gruppen, Szenarien, Quell-/Run-/Versuchsbindungen und Dateiinhalt.
 
-Eigentümerentscheidung S3 in #261 ersetzt die frühere historische Rerun-
+Die folgenden Einführungs-/Wiederaktivierungsregeln dokumentieren #261 und
+erteilen keinen neuen Aktivierungsauftrag. Eigentümerentscheidung S3 in #261 ersetzt die frühere historische Rerun-
 Garantiepflicht: Alte Runs und ihre theoretische Wiederholbarkeit sind kein
 Mergegate. Sie bleiben unverändert und werden nicht erneut gestartet.
 Firefox-Prozesse, neue Firefox-Jobs und die Reaktivierung der alten IDs bleiben
@@ -90,15 +167,16 @@ Originalbelege werden in #261/PR #262 dokumentiert. Fehlende Registrierung oder
 Ausführung ist ein technischer Blocker, kein Ersatz-Pass. `ci-required` und alle
 automatisch ausgewählten Pflichtchecks bleiben unverändert verbindlich.
 
-## Freigegebene CI-Straffung
+## Ausgangsverträge CI-A/CI-B/CI-C
 
 Eigentümerentscheidung vom 18.10.2026:
 [#246](https://github.com/venomenon328/picross/issues/246) ist als Spezifikation
-freigegeben. Ziel ist eine deutlich kürzere notwendige Wartezeit durch passende
-Prüfauswahl und schnellere Ausführung. **CI-A, CI-B und CI-C sind implementiert;
-CI-C-T01/R01 und Merge bleiben separat im Paket-PR gebunden.** Die folgenden Entscheidungen sind verbindlich;
-sie erlauben vor Integration des jeweiligen Pakets kein Überspringen eines
-derzeit ausgewählten Pflichtchecks. Ausgangsbasis ist
+freigegeben. Ziel war eine kürzere notwendige Wartezeit durch passende
+Prüfauswahl und schnellere Ausführung. CI-A, CI-B und CI-C sind implementiert;
+Liefer-/Reviewnachweise bleiben im jeweiligen Paket-PR gebunden. Die folgende
+Paketzuordnung dokumentiert diesen Vorgänger von CI2. Dessen gezielte Ablösungen
+stehen oben; fehlende ausgewählte Nachweise bleiben weiterhin kein Pass.
+Die damalige Ausgangsbasis ist
 `main@72ba39391833f6fd834d0a6afaf881c86c7bdc3a`; konkrete Lieferstände und Messungen
 stehen in den Paket-Issues/PRs, nicht als laufende Chronik in dieser Policy.
 
@@ -123,7 +201,7 @@ Abhängigkeitsprüfung und manuellen Scopes steht in [CI-A-Auswahl](CI_A_SELECTI
 Grundlage sind geprüfte gemeinsame Abhängigkeiten und die Vereinigung aller
 geänderten Bereiche.
 
-| Änderungsbezug | Freigegebene Zuordnung |
+| Änderungsbezug | Zuordnung der ausführbaren Ausgangsbasis vor CI2-A |
 | --- | --- |
 | Geprüfte reine Analyse-/Solver-/Bewertungsmodule, fachliche Konfigurationen und synthetische Tests | Nur `docs` und `production`; keine pauschale Ausnahme für ganz `tools/puzzle_production/`. Gemeinsame Runtime-/Schema-/Export-/Harnesshelfer bleiben entsprechend breit. |
 | Ausschließlich vorhandene `.github/pull_request_template.md` | Dokument-/Werkzeugtestpfad und `ci-required`; keine Ausnahme für andere `.github/`-Dateien oder Workflows. |
@@ -135,7 +213,9 @@ geänderten Bereiche.
 Der vollständige exakte Base-/Head-Diff, Rename-/Löschungsseiten und der
 Inhalts-Dateimodusschutz bleiben erhalten. Keine Auswahl nur aus dem letzten
 Commit, kein neuer Base→Test-Merge-Vergleich und keine Wiederverwendung alter
-Prüfergebnisse. Manuelle Scopes erweitern ausschließlich. CI-A dokumentiert die
+Prüfergebnisse. Am Ausgangsstand erweitern manuelle Scopes ausschließlich. CI2-A
+entfernt dabei jedes implizite Browserrecht; auch ein Vollscope ersetzt keinen
+ausdrücklichen Browserauftrag. CI-A dokumentiert die
 Semantik aller vorhandenen Scopes ausdrücklich; das Entfernen der bisherigen
 Transitivität darf keine beabsichtigte manuelle Prüfung verlieren.
 `all` und `toolchain` umfassen auch die eigenständige Zustellung.
@@ -148,9 +228,10 @@ Caches für Ergebnisse, neue CI-Infrastruktur oder Live-Deployment gehören dazu
 
 ### Ausführbare Browsergruppen (CI-B)
 
-[CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) dokumentiert Inventar, genaue
+[CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) dokumentiert das bestehende Inventar,
 Abhängigkeiten, unabhängige Voraussetzungen, Runner und Fail-closed-Belegprüfung.
-Vor Integration von CI-B bleibt auf `main` die vollständige bisherige Route aktiv.
+CI2-A/C ersetzen Auswahl und Umfang; die folgenden Gruppen beschreiben die
+ausführbare Ausgangsbasis, keine neue Verpflichtung auf deren volle Fallmenge.
 
 Die logischen Gruppen sind unabhängig startbar; ihre Benennung legt keine
 bestimmte CLI oder Anzahl von Jobs fest:
@@ -172,8 +253,9 @@ Speicher ersetzt keine zu prüfende echte Eingabe oder Persistenz.
 
 Chromium läuft auf einem eigenen Runner mit getrennten Profilen, Ports,
 veränderlichen Hosting-/Releaseverzeichnissen und Reports je Gruppe, aus
-auf denselben geprüften Quellstand gebundenen Builds. Sämtliche bisherigen
-Chromium-Szenarien bleiben erforderlich. Reale Reloads, Browserprozess-Neustarts
+auf denselben geprüften Quellstand gebundenen Builds. Das unveränderte Gate
+verlangt noch die bisher ausgewählten Szenarien; CI2-C definiert die kleinere
+künftige Fallmenge. Reale Reloads, Browserprozess-Neustarts
 und zwei eigenständig erzeugte Exporte bleiben in den relevanten Fällen Pflicht. Ein
 umbenannter Export oder ein Starttest allein ersetzt diese Nachweise nicht.
 Der [Webvertrag](WEB_HOSTING.md) konkretisiert Isolation und Speichergrenzen.
@@ -181,11 +263,13 @@ Der [Webvertrag](WEB_HOSTING.md) konkretisiert Isolation und Speichergrenzen.
 ### Ausführbare native Gruppen und Bildaufbereitung (CI-C)
 
 [CI-C-Gruppenvertrag](CI_C_NATIVE_GROUPS.md) und das ausführbare Inventar ordnen
-Kern/Save, History/500er-Route, Katalog, Abschluss, Adapter/Piloten, Grafik/Atlas
+Kern/Save, bisherige History/500er-Route, Katalog, Abschluss, Adapter/Piloten, Grafik/Atlas
 und Export ausdrücklich zu. Der Gesamtlauf vereinigt alle aktiven
 Checks, Orakel und Belege. Katalog und Abschluss hängen nicht mehr allein am
 500er-Integrationsschalter; gemeinsame Abhängigkeiten wählen weiterhin mehrere
-oder alle Gruppen. Keine Entfernung allein wegen eines historischen Testnamens.
+oder alle Gruppen. CI2-D ersetzt die 500er-Route durch den oben gebundenen kurzen
+20/6/2-Vertrag und kürzt die benannten Bildmengen. Keine Entfernung allein wegen
+eines historischen Testnamens.
 
 Gruppen verwenden getrennte temporäre Projekte, Profilwurzeln und Ausgaben.
 Absichtlich gemeinsame Profile und die nötige Prozessreihenfolge innerhalb
@@ -196,7 +280,9 @@ Rendering, Lesen/Zuschneiden, PNG-Schreiben, Verpacken und Upload werden getrenn
 gemessen; Eingangsframes, Ausschnitte und tatsächlich gelieferte Dateien/Bytes
 werden gezählt. Schnellere Bildaufbereitung muss auf denselben nativen Frames
 identische dekodierte RGBA-Pixel einschließlich Alpha, Maße, Ausschnitte und
-Pflichtbildmenge liefern. Andere verlustfreie PNG-Datei-Bytes sind zulässig;
+damals ausgewählte Pflichtbildmenge liefern. CI2-D erlaubt die ausdrücklich
+benannte Umfangskürzung; für weiterhin verlangte Bilder gelten dieselben
+Integritätsanforderungen. Andere verlustfreie PNG-Datei-Bytes sind zulässig;
 Skalierung, Ersatzbilder oder fehlende Pflichtausschnitte sind es nicht.
 
 ### Ergebnisgate, Messung und Abnahme
@@ -214,8 +300,8 @@ Bildphasen. Vergleichbare Produkt-/Fixture-/Toolchain- und Runnerbedingungen
 sowie Warm-/Kaltzustand werden genannt. Warteschlange, Jobdauer, summierte
 Rechenzeit und paralleler kritischer Pfad bleiben unterscheidbar. Ursachen und
 erreichte Verkürzungen müssen gemessen sein; theoretische Parallelitätsgewinne
-oder weniger Auswahlflags genügen nicht. Keine festen Minuten-/Bytebudgets
-und keine kürzeren Timeouts als Optimierungsersatz.
+oder weniger Auswahlflags genügen nicht. CI2 §6 ersetzt den bisherigen generellen
+Verzicht auf Laufzeitziele. Timeouts sind weiterhin kein Optimierungsersatz.
 
 Jedes Paket erhält eigenes CI-A-/CI-B-/CI-C-T01: tatsächliche ausgewählte
 technische Checks, gezielte Gegenproben, Quellen-/Runbindung und getrenntes
@@ -223,10 +309,11 @@ Selbstreview durch den Implementierer. Das jeweilige R01 ist ein separater
 qualifizierter Review des finalen Heads. Beide Gates liegen vor Merge.
 Bestehende Windows-/Eigentümergates und aktuelle Spiel-/Speicherverträge bleiben
 eigenständig; ein reiner CI-Umbau erzeugt kein neues persönliches Probespielgate.
-Insbesondere bleiben die gezielten KU-Verhaltensnachweise aus
-[#244](https://github.com/venomenon328/picross/issues/244) in Windows und Chromium
-erforderlich; die frühere Firefox-CI-Pflicht entfällt gemäß #261. Bloßer Start
-genügt dafür nicht.
+Die aktuellen KU-Verhaltensaussagen aus
+[#244](https://github.com/venomenon328/picross/issues/244) bleiben erhalten;
+CI2-C/D konsolidieren ihre Browser-/Nativfälle mit den aktuellen AT-/HZ-Schichten.
+Historische Liefer-/Eigentümernachweise werden nicht neu verlangt. Die frühere
+Firefox-CI-Pflicht entfällt gemäß #261; bloßer Start ersetzt keine Verhaltensprüfung.
 
 ## Einmalige Inhaltsprüfung und feste Regressionen
 
@@ -265,8 +352,11 @@ Inhaltserweiterungen nicht ergänzt.
 Eigentümerentscheidung vom 19.10.2026:
 [AT / #256](https://github.com/venomenon328/picross/issues/256) und der
 [Transparenzvertrag](REVEAL_TRANSPARENCY.md) sind als Spezifikation freigegeben;
-AT-A-P01 ist mit PR #257 integriert. Umsetzungsvorbereitung V3 beauftragt
-ausschließlich AT-A samt T01 und Draft-PR; AT-B bleibt unbegonnen. Die reine
+AT-A-P01 ist mit PR #257 integriert. AT-A und AT-B sind am 19.10.2026 mit
+[PR #263](https://github.com/venomenon328/picross/pull/263) (`a0cb25e`) und
+[PR #264](https://github.com/venomenon328/picross/pull/264) (`8dac7a6`) integriert.
+Die folgenden P01-/Umsetzungshinweise behalten ihren damaligen Quellenbezug;
+sie beauftragen keine erneute Lieferung. Die reine
 Spezifikationslieferung blieb auf dem Dokument-/Werkzeugtestpfad mit
 Dokumentvalidator, vollständigem Diffcheck und `ci-required`.
 
@@ -346,10 +436,11 @@ Ein später reiner C2-Daten-PR wählt `content_only=true`: `docs` prüft ausschl
 Pfad-/Dateimodus, danach `ci-required`. Die konkrete Bewertungsprüfung bleibt im
 manuellen Auftrag nach [SD-C1](SD_CATALOG.md), nicht in CI.
 
-Die C1-Code-/Loader-/CI-Änderung selbst wählt alle aktuellen Bereiche aus dem
+Die damalige C1-Code-/Loader-/CI-Änderung wählte alle Bereiche aus dem
 vollständigen Base-/Head-Diff: docs, production, product, preflight, web und
-ci-required; Product einschließlich integration/pilots/visual/perf_b. Die frühere
-SD-B-Web-Ausnahme gilt nicht. Synthetische Auswahl-/Modus-/Rename-/Löschungsgegenproben
+ci-required; Product einschließlich integration/pilots/visual/perf_b. Für künftige
+Änderungen gilt der gezielte CI2-Sollvertrag samt ausdrücklichem Browserauftrag,
+keine Übertragung der alten SD-B-Web-Ausnahme. Synthetische Auswahl-/Modus-/Rename-/Löschungsgegenproben
 prüfen diese Trennung. Kein automatisierter Lauf analysiert reale Katalogrätsel.
 
 ## Auswahl nach vollständigem Änderungsumfang
@@ -373,9 +464,11 @@ Andere Runs oder Quellstände sind nicht wiederverwendbar. Große Aufräum-PRs d
 nicht an Betriebssystemgrenzen für Argumente/Umgebungsvariablen scheitern; die
 Pfadliste und die erforderlichen Prüfungen werden dafür nicht gekürzt.
 
-Die Tabelle beschreibt die Bereichsauswahl nach CI-A. CI-C wählt native
+Die Tabelle beschreibt die ausführbare Bereichsauswahl vor CI2-A. CI-C wählt native
 Gruppen gemäß [nativem Gruppenvertrag](CI_C_NATIVE_GROUPS.md); CI-B wählt innerhalb
-von Web gemäß [Browservertrag](CI_B_BROWSER_GROUPS.md).
+von Web gemäß [Browservertrag](CI_B_BROWSER_GROUPS.md). Die automatischen
+Browser-/500er-Pflichten und der Main-Nachlauf werden erst mit den zugehörigen
+CI2-Paketen technisch umgestellt; sie sind nicht der freigegebene neue Sollumfang.
 
 | Änderung | Automatischer Pflichtumfang im PR |
 | --- | --- |
@@ -391,7 +484,7 @@ von Web gemäß [Browservertrag](CI_B_BROWSER_GROUPS.md).
 | CI/Harness/Toolchain oder nicht zugeordneter Codepfad | Alle aktuellen Bereiche einschließlich Preflight |
 
 Product, `web` (Browser) und `delivery` (SSH/HTTP) sind unabhängig ausgewählt.
-Runtime-/Darstellungsänderungen wählen weiterhin Browser; native Ressourcenprüfer
+Am Ausgangsstand wählen Runtime-/Darstellungsänderungen noch Browser; native Ressourcenprüfer
 können allein Product benötigen. Gemeinsame Bündel-/Export-/Hostingdateien wählen
 Browser und Zustellung. CI-B verlangt regulären Start und alle betroffenen Browsergruppen.
 Der reine Inhaltspfad bleibt ausgenommen.
@@ -433,16 +526,19 @@ oder nicht nachgeführte verschobene Inputs lassen diesen Pflichtjob und damit
 `ci-required` scheitern. Löschung/Umbenennung jedes tatsächlichen Markdownextras
 werden gezielt negativ geprüft; es gibt keine zweite Paketinputliste.
 
-Auf `main` bleiben die bisher üblichen Integritätsprüfungen aktiv: Dokumente und
+Am ausführbaren Ausgangsstand bleiben auf `main` die bisherigen Integritätsprüfungen aktiv: Dokumente und
 bei relevanten Änderungen die Rätselproduktion. Product/Preflight werden nach
 einem Merge nicht nochmals automatisch wiederholt; ebenso wenig der Browserlauf
 und die eigenständige SSH-Referenz. Ihre maßgebliche Bindung ist
-der PR-/Test-Merge-Lauf. Direkte Änderungen an `main` sind weiterhin nicht erlaubt.
+der PR-/Test-Merge-Lauf. CI2-A beendet zusätzlich die automatische Wiederholung
+der teuren PR-Fachsuite; kurze Integritätsprüfungen bleiben. Direkte Änderungen
+an `main` sind weiterhin nicht erlaubt.
 
-## Aktuelle Produktregression
+## Produktregression der ausführbaren Ausgangsbasis
 
-Der Pflichtjob [Webprüfung](../.github/workflows/web-chromium.yml) läuft bei
-ausgewähltem Browserbedarf. Reine Inhalte wählen ihn
+Der bestehende Job [Webprüfung](../.github/workflows/web-chromium.yml) läuft noch
+bei ausgewähltem Browserbedarf. CI2-A/C ersetzen dies durch den ausdrücklich
+angeforderten kurzen Umfang. Reine Inhalte wählen ihn
 weiterhin nicht; Main-Merges veröffentlichen nichts. Ein Buildjob erzeugt den
 regulären Spieler und zwei eigenständige feste technische Exporte. Der eigene
 Chromium-Runner prüft den regulären Start und die ausgewählten Gruppen
@@ -481,8 +577,11 @@ ist ein PR-Liefernachweis, keine neue Testmatrix.
 CI-C verwendet `--groups core,history,catalog,completion,adapters,graphics,export`;
 die Auswahl kann jede Gruppe unabhängig starten. Lokal ist die vollständige
 Vereinigung Standard, CI übergibt die exakte Auswahl ausdrücklich. `history`
-prüft 500 Aktionen in fünf echten Prozessen plus Neustart und unabhängigem
-Python-Orakel. `adapters` prüft die synthetischen Muster T04/T06/T08/T09 vollständig;
+prüft am Ausgangsstand noch 500 Aktionen in fünf echten Prozessen plus Neustart
+und unabhängigem Python-Orakel. CI2-D ersetzt diesen Umfang durch höchstens
+20 Benutzerkommandos / sechs neue wirksame History-Transaktionen / genau zwei
+Spielprozesse; die alte Route ist keine neue Lieferpflicht.
+`adapters` prüft die synthetischen Muster T04/T06/T08/T09 vollständig;
 T04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
 Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `graphics` enthält
 die aktuelle native Renderprüfung und den regulären Atlasrenderer samt Cache-/
@@ -525,6 +624,10 @@ nicht als erfolgreiche Gegenprobe akzeptiert. Kein weiteres RP3-Durchspiel.
 
 ## KAT-2 als unabhängige native Kataloggruppe
 
+Die folgende Last-/Bildmenge ist ausführbare Ausgangsbasis. CI2-D verwendet
+repräsentative Beschriftungen und mehrere Katalogseiten; 256 Kategorien,
+128-Zeichen-Beschriftungen und 300 Einträge werden nur gezielt geprüft.
+
 `--groups catalog` führt die vollständige aktuelle Katalogprüfung unabhängig
 von History und Abschluss aus, mit sämtlichen Neustart-, Last-, Eingabe-, Fehler-
 und nativen Bildbelegen. Die Gruppe verwendet
@@ -535,9 +638,15 @@ Jede Instanz nutzt ein temporäres Projekt und Saveprofil. Kataloglast ist keine
 300-fache Produktions-/Solverprüfung. Der Produktharness bindet alle Berichte
 und die kleinen nativen Originalausschnitte an Head/Basis/Checkout; vollständige
 Framekontexte bleiben lokal. Pflichtausschnitte dürfen nicht still aus der
-begrenzten Lieferung fallen. Größen und Laufzeiten werden ohne feste Optimierungsbudgets gemessen. [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
+begrenzten Lieferung fallen. Größen und Laufzeiten werden gemessen; die neuen
+Ziele stehen in CI2 §6. [KAT-2-Prüfzuordnung](KAT2_VERIFICATION.md).
 
 ## Native Renderabdeckung und Speicherung
+
+Die folgenden Mengen und Matrizen beschreiben die bisherige ausführbare Basis.
+CI2-D kürzt sie gezielt nach aktuellem Zweck, einschließlich abgeschlossener
+HZ-C-/HC92-Vergleiche und dichter Animationsfolgen. Die ausgewählten aktuellen
+Prüfaussagen, Originalpixel und Quellenbindungen bleiben verbindlich.
 
 ZA-1 ergänzt im ausgewählten Pilotenpfad vier temporär registrierte künstliche
 Authoring-Pakete und zehn echte Prozesse für Mono/Farbe, Rechtecke, Neustarts und
@@ -596,9 +705,11 @@ Die früheren 30-/75-MB-Grenzen aus PERF-B-E1 sind durch #116 aufgehoben.
 
 ## Artefakte und Laufzeiten
 
-Eigentümerentscheidung vom 14.10.2026 / #116: Laufzeit und Artefaktvolumen möglichst
-klein halten, **ohne feste CI-Joblaufzeit- oder Artefaktgrößenbudgets**. Die Workflows
-setzen keine projektspezifischen `timeout-minutes`; Anbietergrenzen gelten weiterhin.
+CI2 §6 ersetzt den allgemeinen Verzicht auf CI-Laufzeitziele aus der
+Eigentümerentscheidung vom 14.10.2026 / #116. Die oben benannten Zielkorridore,
+Messungen und Abbruchgrenzen sind freigegebener Sollvertrag. Am ausführbaren
+Ausgangsstand setzen die Workflows noch keine projektspezifischen
+`timeout-minutes`; diese Dokumentlieferung ändert das nicht.
 Es gibt kein 30-/75-MB-Erfolgsgate und keine bytebedingte Auslassung angeforderter
 Nachweise. Reports messen Phasen und tatsächlich gelieferte Bytes. Beibehalten:
 gezielte Auswahl kompakter Originalbilder, verlustfreie JSON-Kompression und kurze
@@ -608,11 +719,12 @@ oder obsoleten Ownerhilfen in Spielerpaketen.
 Prozess-/Netzwerk-Abbruchschutz und explizite funktionale Solver-/Import-/Reparatur-
 Ressourcenverträge sind Schutz vor Hängern bzw. Teil des getesteten Fehlerverhaltens,
 keine CI-Optimierungsziele. Diese werden nicht stillschweigend als Tests entfernt.
-Der Umfang bestehender Prüfbereiche wird erst nach verständlicher Kosten-/Zweckliste
-und Eigentümerentscheidung reduziert. Kein Test gilt wegen seines alten Namens als
+Die Kosten-/Zweckanalyse und Eigentümerentscheidung für die in CI2 benannten
+Kürzungen liegen vor; Umsetzung folgt den jeweiligen Paketaufträgen. Weitere
+Kürzungen benötigen eine entsprechende Begründung. Kein Test gilt wegen seines alten Namens als
 obsolet; aktuelle Aufrufer und Verhalten sind maßgeblich.
 
-Die vollständigen aktuellen VS2-/V1-Geometriematrizen bleiben verlustfrei `.json.gz`;
+Die am Ausgangsstand vollständigen VS2-/V1-Geometriematrizen liegen verlustfrei `.json.gz`;
 der bytegleiche Rückweg ist geprüft. Native Bildinhalte bleiben unverändert;
 CI-C erlaubt verlustfreie Neucodierung bei nachgewiesener Pixel-/Alpha-, Maß- und
 Ausschnittgleichheit. Eine
@@ -670,7 +782,9 @@ Das [BP-Archiv](design/book_inventory/ARCHIVE.md) bindet die 136 entfernten alte
 Dateien mit 161.102.998 Bytes an unveränderliche Git-Objekte. Aktive Ressourcen, Fonts/Lizenzen und noch verwendete technische Testinputs bleiben.
 Abgeschlossene RP-/VS-Produktionsquellen liegen ausschließlich in der Git-Historie.
 Die drei großen Paketrekonstruktionen entfallen aus `unittest discover -s tools`;
-die 13 günstigen BP-Hilfsregressionen bleiben. Keine Historienumschreibung.
+die 13 günstigen BP-Hilfsregressionen sind am Ausgangsstand noch vorhanden.
+CI2-B sieht ihre Stilllegung samt ausschließlich dafür verwendeten Helfern nach
+aktuellem Leserabgleich vor. Keine Historienumschreibung.
 
 [#61](https://github.com/venomenon328/picross/issues/61) benötigt weiterhin die
 Originalreferenz `regular-F-01-G-ui100.png` aus Run `37948444207`, Artefakt
@@ -691,8 +805,8 @@ Dateibindungen stehen im [Bestandsinventar](DEVELOPMENT_ARCHIVE.md).
 ## Verifikation der bestehenden Lieferung und der Folgepakete
 
 Die folgenden Nachweise gehören zur bestehenden #70-Lieferung, nicht zur
-CI-A-/CI-B-/CI-C-Lieferung. Deren T01/R01 sind oben und in den
-Paket-Issues festgelegt. Der reine Spezifikationsdiff benötigt den aktuellen
+CI-A-/CI-B-/CI-C- oder CI2-Lieferung. Aktuelle CI2-T01/R01 und Paketabhängigkeiten
+stehen in CI_SLIMMING §7 und #413–#417. Der reine Spezifikationsdiff benötigt den aktuellen
 Dokument-/Werkzeugtestpfad, Dokumentvalidator, vollständigen Diffcheck und
 `ci-required`; maßgeblich bleibt die tatsächlich automatische Auswahl.
 

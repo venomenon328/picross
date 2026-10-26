@@ -1,27 +1,49 @@
 # Projektprofil: picross
 
-**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C / #294 implementiert, Abnahmen offen:**
+**CI2 · 26.10.2026, Spezifikation freigegeben; Umsetzung unbegonnen:**
+[Kurze CI und begrenzter aktiver Bestand](CI_SLIMMING.md) ist der maßgebliche
+Sollvertrag für [#412](https://github.com/venomenon328/picross/issues/412) und
+die Folgepakete #413–#417. Beauftragt sind Issues und dauerhafte Dokumentation;
+ausführbare CI, Tests und Datenbestand sind dadurch noch nicht geändert.
+Ausgang ist `main@967314538df376a281020fb4c34f93f370a491df`.
+Die [CI-Policy](CI_POLICY.md) trennt diesen Sollvertrag von der ausführbaren
+Ausgangsbasis; das [Bestandsinventar](DEVELOPMENT_ARCHIVE.md) bindet die
+konkreten Bereinigungsklassen und erhaltenen aktiven Quellen.
+
+Chromium läuft künftig ausschließlich auf ausdrücklichen manuellen Auftrag,
+auch nicht implizit durch `all`, `toolchain` oder gemeinsame Änderungen.
+Der kurze Browserumfang umfasst ungefähr 8–10 Kernfälle; der native Historyweg
+höchstens 20 Benutzerkommandos, höchstens sechs neue wirksame Transaktionen und
+genau zwei echte Spielprozesse. Die 500er-Route entfällt aus den aktiven Standard-
+und gewöhnlichen manuellen Vollumfängen. Kleine Fachtests, repräsentative
+Integrationen, gezielte Bildbelege, Laufzeitziele und begrenzte Ablagen ersetzen
+die in CI_SLIMMING ausdrücklich abgelösten Altpflichten. Quellenbindung,
+Fail-closed-Gate und aktuelle Produkt-/Speicherverträge bleiben erhalten.
+Keine erfolgte Beschleunigung oder Bereinigung aus dieser Dokumentlieferung ableiten.
+
+**HZ · HZ-A/B am 20.10.2026, HZ-C am 21.10.2026 integriert:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale
 Spieler-UI gemäß HZ-A-FONT02 an Tidy Hand als Standardtext (Überschriften
 unverändert) und stärker gezeichnete kleine Rahmen, vollständige
 Dropdowns und eine gemeinsame Piktogrammfamilie. [HZ-A](HZ_A_VERIFICATION.md)
-und [HZ-B](HZ_B_VERIFICATION.md) sind über PR #288/#289 integriert; ihre
-erfüllten technischen, separaten Review- und persönlichen Gates stehen im
-abgeschlossenen [Issue #284](https://github.com/venomenon328/picross/issues/284).
-Historische Lieferberichte bleiben an ihre jeweiligen Heads gebunden.
+und [HZ-B](HZ_B_VERIFICATION.md) sind über
+[PR #288](https://github.com/venomenon328/picross/pull/288) (`e9a957d`) und
+[PR #289](https://github.com/venomenon328/picross/pull/289) (`18152d0`) integriert.
+Ihre Abnahmen stehen im abgeschlossenen
+[Issue #284](https://github.com/venomenon328/picross/issues/284).
 
-Das Folgepaket [HZ-C / #294](https://github.com/venomenon328/picross/issues/294)
+Das integrierte [HZ-C / #294](https://github.com/venomenon328/picross/issues/294)
 führt optische Textausrichtung, stabile Grundlinien und die gemeinsame kleine
 Schriftrolle gemäß HZ-D07 zusammen. Die [Lieferung](HZ_C_VERIFICATION.md)
 begründet nach direktem Vergleich der korrigierten 14/15 die Wahl 15 bei UI100
 und 19 bei UI125 einschließlich Kategorien; Blattkennungen bleiben 15/19. Delight-Hinweise samt Geometrie,
 Überschriften, Originalfontbytes und die drei großen SL-Rasterrahmen bleiben.
-HZ-C erhält eigene T01/R01/M01-Gates; HZ-A/B nehmen diese nicht vorweg.
-Der ausdrückliche Implementierungsauftrag liefert das Gesamtpaket in
-[Draft-PR #296](https://github.com/venomenon328/picross/pull/296).
-Technischer Abschluss und Originalbelege sind dort gebunden; R01/M01 bleiben offen.
+HZ-C ist mit [PR #296](https://github.com/venomenon328/picross/pull/296)
+auf `a969105` integriert. Die paketbezogenen Liefer-/Review-/Eigentümernachweise
+bleiben an ihre jeweiligen Quellen gebunden; CI2 schreibt sie nicht um und
+verlangt keine neue historische 14/15-Vergleichsgalerie.
 
-**AT / #256 (19.10.2026), Umsetzungsvorbereitung V4; AT-A integriert, AT-B-F01 nach Eigentümerabnahme beauftragt:**
+**AT / #256 · AT-A und AT-B am 19.10.2026 integriert:**
 [Transparente Abschlussbilder](REVEAL_TRANSPARENCY.md) ist bei Abschlussbildern,
 deren Katalogvorschau und Bildrevisionen samt den dort benannten Fachquellen
 vollständig zu lesen. Dasselbe freigegebene Bild lässt in beiden Ansichten den
@@ -40,67 +62,32 @@ Schwierigkeits-/Hinzugefügt-Metadaten und ursprüngliche Freigabebelege bleiben
 erhalten. Aktive Bildrevisionen erhalten eine getrennte überprüfbare Bindung;
 spätere gemeinsame Operationen dürfen sie nicht verlieren.
 
-Standard ist ein Implementierungs-PR je separat beauftragtem und abgenommenem
-Paket im [Gesamtissue](https://github.com/venomenon328/picross/issues/256),
-AT-B nach integriertem AT-A. Technische Lieferung und qualifiziertes separates
-Review bleiben je Paket getrennt; tatsächliche Bildfreigabe und Inhaltsabnahme
-werden an die vorgelegten Dateien gebunden. Umsetzungsvorbereitung V4 beauftragt
-zunächst AT-B-V01 auf `chore/256-transparente-bestandsbilder`: den vollständigen
-26er-Satz bis zur gemeinsamen Bild-/Endfreigabevorlage samt Authoringablage,
-Pflicht-CI, Selbstreview und Draft-PR. Die anschließende
-[Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) beauftragt AT-B-F01: kontrollierte
-Bildübernahme und AT-B-T01. Rasterproduktion, echte Spielstände, Merge,
-Deployment und Issue-Abschluss bleiben ausgeschlossen; separates AT-B-R01 offen.
-Historische KE-/KU-Nachweise
-bleiben an ihren damaligen Stand gebunden.
+AT-A ist mit [PR #263](https://github.com/venomenon328/picross/pull/263)
+auf `a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9`, AT-B mit
+[PR #264](https://github.com/venomenon328/picross/pull/264) auf `8dac7a6`
+integriert. [Gesamtissue](https://github.com/venomenon328/picross/issues/256),
+[AT-A-Nachweise](AT_A_VERIFICATION.md), [AT-B-Bericht](AT_B_VERIFICATION.md)
+und [Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) binden die damaligen Lieferungen,
+Reviews und konkreten Bildfreigaben. Sie sind keine offenen Implementierungsaufträge
+und keine neue CI-Matrix pro Bestandsbild. Historische KE-/KU-Nachweise behalten
+ebenfalls ihren Quellenbezug.
 
-AT-A-P01 gemäß Umsetzungsvorbereitung V2 wurde mit PR #257 auf
-`main@9cc58651518e3a28e97f46932d69554210b0abcb` integriert. Diese Basis trägt die
-technischen Verträge und die bereits integrierten Chromium-/CI-258-Regeln.
 [ZA-1](ZA1_ADAPTER.md), [Auflösung](CATEGORIES.md), [Transaktionen](SD_CATALOG.md)
 und [CLI](../tools/puzzle_production/README.md) enthalten exakte Quellen-,
-Plan-, Binärjournal- und Recoveryregeln; keine offene technische Kernfrage aus
-AT §4.3. Inhalts-v2/Runtime-v4/Save-Schema 1 bleiben erhalten. P01 prüfte nur den
-kurzen Docs-/Werkzeugpfad samt `ci-required`; die integrierte AT-A-Umsetzung hat
-eigene [AT-A-T01-Nachweise](AT_A_VERIFICATION.md) für Windows, Chromium,
-Darstellung, Savewechsel und Transaktionen.
-P01-Selbstreview und fortgeschriebener Dokumentreview sind keine AT-A-R01-Abnahme.
-AT-A-R01 ist laut #256 qualifiziert abgeschlossen; PR #263 ist auf
-`a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9` integriert. Der
-[AT-B-Bericht](AT_B_VERIFICATION.md) trennt historische Vorlage, tatsächliche
-Eigentümerabnahme und AT-B-F01/AT-B-T01 vom noch offenen finalen AT-B-R01.
+Plan-, Binärjournal- und Recoveryregeln. AT ließ Inhalts-v2 und Save-Schema 1
+unverändert; die aktuelle Runtime-/Bewertungsversion folgt dem unten genannten
+integrierten SD2-Vertrag.
 
-**Chromium-only CI / #261 (19.10.2026):** Der Eigentümer entfernt Firefox
-vollständig aus automatisierter CI. Sämtliche 27 Chromium-Szenarien, fünf Gruppen
-und deren Beleg-/Fehlerprüfungen bleiben erhalten. [CI-Policy](CI_POLICY.md)
-regelt Ablösung früherer Firefox-CI-Pflichten, historische Quellenbindung und
-das S3-Sicherheitsgate für aktuelle automatische Startpfade vor CI-Reaktivierung.
-Die alten Workflow-IDs bleiben deaktiviert; die neue Chromium-Kette verwendet
-eigene Pfade/IDs. Historische Reruns sind kein Mergegate und werden nicht gestartet.
-Diese Entscheidung ändert weder Spielverhalten/Browser-Saves noch Windows,
-Godot oder Deployment.
-
-**CI / #246 (18.10.2026), CI-A/CI-B integriert; CI-C implementiert, separate Abnahme offen:**
-Die [CI-Policy](CI_POLICY.md) bindet die gestufte Straffung:
-[CI-A (#247)](https://github.com/venomenon328/picross/issues/247) wählt reine
-Facharbeit und die einzelne PR-Vorlage eng aus und entkoppelt Product, Browser und
-SSH/HTTP-Zustellung. [Auswahl und Nachweisgrenzen](CI_A_SELECTION.md)
-beschreiben die Lieferung; CI-A-T01/R01 und Mergefreigabe stehen getrennt im Issue.
-Bis [CI-B (#248)](https://github.com/venomenon328/picross/issues/248)
-integriert ist, bleiben alle weiterhin ausgewählten Browserrouten vollständig.
-[CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) bindet regulären Start plus relevante
-unabhängige Browsergruppen, Chromium auf eigenem Runner und das
-Fail-closed-Gate für tatsächliche Szenarien/Belege. T01/R01 stehen im Paket-PR.
-[CI-C (#249)](https://github.com/venomenon328/picross/issues/249) trennt native
-Prüfgruppen und beschleunigt nach Messung die verlustfreie Bildaufbereitung.
-Der [native Gruppenvertrag](CI_C_NATIVE_GROUPS.md) bindet Inventar, Isolation,
-Bildmessung und vollständiges Artefaktgate. CI-C-R01 bleibt separat vor Merge.
-Vor Integration des jeweiligen Pakets gelten die bestehenden ausführbaren
-Pflichtchecks weiter. Exakter Gesamtdiff, konservative gemeinsame/unbekannte
-Wirkung, nur erweiternde manuelle Auswahl, vollständiges `ci-required` und getrennte
-Produktgates bleiben. Keine festen Zeit-/Bytebudgets oder verkürzten Timeouts.
-Aktuelle Paketstände und T01/R01 vor Merge stehen in den Issues; diese Freigabe
-beauftragt weder Implementierung noch Merge.
+**Ausführbare CI-Ausgangsbasis aus #246/#261:**
+[CI-A-Auswahl](CI_A_SELECTION.md), [CI-B-Browsergruppen](CI_B_BROWSER_GROUPS.md)
+und [CI-C-Nativgruppen](CI_C_NATIVE_GROUPS.md) beschreiben die bestehenden
+Mechanismen und gebundenen Nachweise. Ihre automatischen/impliziten Browserrechte,
+ungekürzten Altfall-/Bildmengen, 500er-Route und der allgemeine Budgetverzicht
+sind durch CI2 als Sollvertrag gezielt abgelöst. Bis zur jeweiligen Umsetzung
+werden ausgewählte fehlende oder übersprungene Jobs nicht zu Erfolgen umgedeutet.
+Die Entfernung von Firefox aus CI gemäß #261, die Sperre alter Workflow-IDs,
+exakte Diff-/Quellenbindung, isolierte Prüfdaten und getrennte Produktgates bleiben.
+Historische Reruns sind kein Mergegate und werden nicht neu beauftragt.
 
 **KU / #244, integrierte Ausgangsbasis für HZ:** KU-A und KU-B sind über
 PR #254/#255 integriert. [KU-A-Nachweise](KU_VERIFICATION.md),
@@ -126,7 +113,7 @@ damalige Mergeausnahmen werden nicht auf HZ übertragen.
 Die folgenden KE-/KAT-Abschnitte beschreiben die integrierte Ausgangsbasis;
 ihre gezielt abgelösten Anzeige-/Sortierregeln gelten nicht als neuer KU-Sollstand.
 
-**SD2 / #402 · 26.10.2026, SD2-A/B/C integriert; D bis F01/T01 auf dem Arbeitsbranch:**
+**SD2 / #402 · SD2-A/B/C/D integriert; aktive Methode 0.4 für alle 45 Inhalte:**
 [Menschennähere Schwierigkeit](PUZZLE_DIFFICULTY_V2.md) führt den neuen Sollvertrag:
 Denkanspruch, Suchaufwand und Bearbeitungsumfang, menschennähere Basistechniken,
 fein abgestufte interne Bewertung mit festen Grenzen und unabhängiger breiter
@@ -160,11 +147,14 @@ Vergleich und Planungsstand. [SD2-D-OM01](SD2_D_OM_FOLLOWUP.md) ergänzt den
 frischen Om-Nachweis und die vollständige Vorschau mit 45 gültigen Ratings.
 Alle 45 Vorschläge einschließlich Om sind abgenommen. Der ausdrückliche
 Eigentümerverzicht auf separates SD2-D-VR01 gilt nur für diesen Auftrag;
-es wurde nicht durchgeführt. Der Folgeauftrag [F01/T01](SD2_D_ADOPTION.md)
-übernimmt alle 45 Ratings und aktiviert 0.4 auf dem Arbeitsbranch, jeweils mit
-unmittelbarem echtem No-op. Runtime-v5, Ratingrevisionen 2, Defaultrevision 1.
-Der Web-Job bleibt für PR #411 auf Nutzeranweisung gesperrt; die dadurch fehlende
-Gesamt-CI, finales R01 und Merge bleiben getrennt offen.
+es wurde nicht durchgeführt. [F01/T01](SD2_D_ADOPTION.md) bindet die Übernahme
+aller 45 Ratings und Aktivierung von 0.4, jeweils mit unmittelbarem echtem No-op.
+SD2-D ist am 26.10.2026 mit [PR #411](https://github.com/venomenon328/picross/pull/411)
+auf `967314538df376a281020fb4c34f93f370a491df` integriert: Runtime-v5,
+Ratingrevisionen 2, Defaultrevision 1. Der damalige fehlende Web-/Gesamt-CI-Nachweis
+bleibt als solcher an den Auftrag gebunden; Integration macht ihn nicht nachträglich
+grün. Aktuelle Review-/Mergeentscheidungen stehen im PR, nicht in einer weiterhin
+offenen Arbeitsbranch-Anweisung dieses Profils.
 
 **Historische SD-Basis / #235:** SD-A/B/C1/C2 sind mit PR #240–#243 abgeschlossen;
 letzter Merge `72ba39391833f6fd834d0a6afaf881c86c7bdc3a` nach finalem C2-Review.
@@ -218,8 +208,9 @@ Review und ZR-M01 verzichtet. Beide gelten damit nicht als durchgeführt;
 Pflicht-CI und technische native Windows-Probe bleiben erforderlich.
 
 **WEB-1 / #162:** Zusätzlich ist ein statischer Godot-Webentwicklungsweg für
-Desktop/Maus ursprünglich in Chromium und Firefox beauftragt; aktuelle
-CI-Pflicht ist ausschließlich Chromium gemäß #261. [Webanleitung und Grenzen](WEB_HOSTING.md)
+Desktop/Maus ursprünglich in Chromium und Firefox beauftragt. Firefox ist gemäß
+#261 aus CI entfernt; CI2 verlangt Chromium ausschließlich bei ausdrücklichem
+Auftrag und mit dem dort begrenzten Umfang. [Webanleitung und Grenzen](WEB_HOSTING.md)
 binden Browserpersistenz, getrennten Build, manuelles SSH-Deployment und isolierte
 Referenztests. Windows bleibt erhalten; keine endgültige Plattformmatrix oder
 Livefreigabe. Bei Web-/Hostingarbeit diese Anleitung zusätzlich vollständig lesen.
@@ -306,7 +297,7 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 | Neue Rätsel konzipieren, gestalten, produzieren oder redaktionell abnehmen | [KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md) und deren Pflichtquellen |
 | Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
 | Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD2-Sollvertrag](PUZZLE_DIFFICULTY_V2.md), [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md), [SD-C1](SD_CATALOG.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
-| CI, Prüfprogramme, Artefakte, Archivierung | [CI_POLICY](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md); für CI-A/CI-B zusätzlich [Webvertrag](WEB_HOSTING.md), für CI-C [KAT-2](KAT2_VERIFICATION.md), [EA](EA_VERIFICATION.md) und [ZA-1](ZA1_VERIFICATION.md) |
+| CI, Prüfprogramme, Artefakte, Archivierung, Bestandsbereinigung oder neue Tests | [CI2-Sollvertrag](CI_SLIMMING.md), [CI-Policy und ausführbare Ausgangsbasis](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md); bei Browserarbeit zusätzlich [Webvertrag](WEB_HOSTING.md), bei nativer Arbeit die betroffenen [KAT-2](KAT2_VERIFICATION.md)-, [EA](EA_VERIFICATION.md)- und [ZA-1](ZA1_VERIFICATION.md)-Verträge |
 
 PERF-A/PERF-B sind historische Lieferberichte, keine aktuellen Hersteller- oder
 A/B-Vergleichsgates. #70/N70-HIST-01 entfernt deren Reproduktion; die sechs
@@ -314,16 +305,16 @@ aktiven Zellatlanten, Import-/Shader-/Rendererverträge und native PERF-B-/PCK-
 Prüfungen bleiben unabhängig über `tools/cell_atlas_reference.json` gebunden.
 
 Historische Nachweise führen ihren damaligen Test-/Abnahmestand. Aktuelle
-Fachentscheidungen stehen in den verlinkten Verträgen; Auswahl und Aufbewahrung in der
-CI-Policy ersetzen deren ältere pauschalen Sechs-Job-/Vollrenderpflichten.
+Fachentscheidungen stehen in den verlinkten Verträgen; CI2 und CI-Policy ersetzen
+die dort ausdrücklich benannten älteren Auswahl-/Vollumfangs-/Budgetpflichten.
 Bei konkreter historischer Nacharbeit zusätzlich sämtliche dort gebundenen
 Quellen und damaligen Issues lesen; Erinnerungen ersetzen keinen Quellenzugriff.
 
 ## Aktuelle Spielverträge
 
 Für die normalen UI-Schriftrollen und kleinen Bedienelemente ist
-[HZ](HAND_DRAWN_UI.md) der maßgebliche Vertrag: HZ-A/B sind integriert,
-HZ-D07 ist der freigegebene nächste Typografieschritt HZ-C. Tidy Hand bleibt
+[HZ](HAND_DRAWN_UI.md) der maßgebliche Vertrag: HZ-A/B und der Typografieschritt
+HZ-C gemäß HZ-D07 sind integriert. Tidy Hand bleibt
 Standardtext; Überschriften einschließlich Vollhinweis sowie Zahlen-/Slot-/Fitvertrag
 bleiben gemäß Eigentümerentscheidung HZ-A-FONT02 unverändert.
 
@@ -397,7 +388,7 @@ verwenden feste synthetische Inputs für Solver, unabhängigen Verifier, Import,
 Reparatur, Export, Registrierung und abgeschlossene Integrationsbindungen.
 Der Spieler benötigt weder Python noch Produktionspakete. Aktuelle Befehle und
 Formate stehen in der [Werkzeuganleitung](../tools/puzzle_production/README.md)
-und [ZA-1](ZA1_ADAPTER.md). CI-Auswahl und Nachweise regelt ausschließlich die Policy.
+und [ZA-1](ZA1_ADAPTER.md). CI-Auswahl und Nachweise regeln CI2 und CI-Policy.
 
 ```sh
 python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
@@ -407,7 +398,8 @@ python3 -m tools.puzzle_production.benchmark --output-dir artifacts/puzzle-produ
 Abgeschlossene RP1–RP6-Korpusproduktionen, Codec-/Reparaturstudien und damalige
 Abnahmen sind [historische Quellen](DEVELOPMENT_ARCHIVE.md). Sie sind keine
 aktuellen Start-, Replay- oder CI-Pflichten. Allgemeine Code- und Sicherheits-
-regressionen bleiben bis zu einer gesonderten Umfangsentscheidung aktiv.
+regressionen bleiben aktiv; CI2-B grenzt die freigegebene Verschlankung und
+Stilllegung historischer Hilfsfunktionen nach aktuellem Leserabgleich ab.
 
 ## Toolchain, Product und Betriebswirkung
 
@@ -425,16 +417,21 @@ $gameCache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
 python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-product
 ```
 
-Lokal ist die Vereinigung aller sieben nativen Gruppen aktiv; CI übergibt
-`--groups` mit ihrer exakten Auswahl. `catalog` und `completion` benötigen keine
-500er-Route. Der [Gruppenvertrag](CI_C_NATIVE_GROUPS.md) beschreibt die konservative
-Pfadzuordnung und die ausschließlich erweiternde manuelle Kompatibilitätsauswahl.
+Am ausführbaren Ausgangsstand ist lokal die Vereinigung aller sieben nativen
+Gruppen aktiv; CI übergibt `--groups` mit ihrer exakten Auswahl.
+Der [Gruppenvertrag](CI_C_NATIVE_GROUPS.md) beschreibt diese Auswahl.
+CI2-D ersetzt die bisherige 500er-Route auch in `history`, `runtime`, `all`,
+`--integration` und gewöhnlichen manuellen Vollumfängen durch den kurzen
+20/6/2-Vertrag. Diese Dokumentlieferung führt keinen neuen CLI-Schalter ein.
 Der allgemeine Harness verwendet sechs feste synthetische Muster T-01/T-02/T-04/
 T-06/T-08/T-09, unabhängig vom Produktionsbestand. Der weiterhin `--pilots` genannte
 Bereich prüft vier dieser technischen Fälle; echte Rätsel werden nicht replayt.
 Spielerexport und tatsächlicher PCK-Inhalt sind zusätzlich zu Tests zu kontrollieren.
-Laufzeiten und Artefaktgrößen werden ohne feste CI-Optimierungsbudgets gemessen. Historische Studien-/Vergleichspakete entstehen im Standardpfad
-nicht neu. Notwendige Referenzen, Quellen, Lizenzen und Prüfinputs bleiben erhalten.
+Laufzeiten und Artefaktgrößen werden gemessen; die Laufzeitziele und
+Abbruchgrenzen richten sich nach CI2 §6. Der frühere allgemeine Verzicht auf
+Laufzeitbudgets ist abgelöst, Zielerreichung erst nach tatsächlichem Lauf belegt.
+Historische Studien-/Vergleichspakete entstehen im Standardpfad nicht neu.
+Notwendige Referenzen, Quellen, Lizenzen und Prüfinputs bleiben erhalten.
 
 Keine Laufzeitdienste eingerichtet. Nur isolierte temporäre Prüfdaten, keine
 echten Spielstände, privaten Daten oder Secrets. Öffentliche gebundene
