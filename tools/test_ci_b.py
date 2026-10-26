@@ -370,7 +370,10 @@ class Execution(unittest.TestCase):
                     else:
                         self.assertFalse(any('build_web_player.py' in ' '.join(c) for c in calls))
                         self.assertTrue(any(c[-2:]==['--with-deps',browser] for c in calls))
-                        self.assertTrue(any('run_groups.py' in ' '.join(c) and c[c.index('--browser')+1]==browser for c in calls))
+                        self.assertTrue(any('run_groups.py' in ' '.join(c) and '--browser' in c
+                                            and c[c.index('--browser')+1]==browser for c in calls))
+                        self.assertTrue(any('run_groups.py' in ' '.join(c) and 'check' in c
+                                            and '--browser' not in c for c in calls))
                         failures=('playwright','run_groups.py run')
                     print('CI_B_EXECUTION_PROBE '+json.dumps({'workflow':filename,'browser':browser,'commands':calls}),flush=True)
                     for failure in failures:self.assertEqual(execute(failure),23)
