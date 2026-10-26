@@ -26,6 +26,8 @@ class UpdateTests(unittest.TestCase):
         registration(first,checkout,apply=True)
         other=builder.make_export('other','pz-test-other','r01',1,1)
         registration(other,checkout,apply=True)
+        from tests.puzzle_production.catalog_fixtures import compact
+        compact(checkout,['pz-test-other'])
         builder.make_export('second','pz-test-update','r02',2,8)
         cls.fixture_entry=next(e for e in check_checkout(checkout)['entries'] if e['id']=='pz-test-update')
 
@@ -161,7 +163,7 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(before,self.snapshot())
         check_checkout(self.checkout)
 
-    def test_crash_recovery_preflights_then_restores_every_phase(self):
+    def test_crash_recovery_restores_updated_definition_and_indices(self):
         before=self.snapshot()
         with self.assertRaises(InterruptedError):
             update(self.second,self.checkout,self.expected,apply=True,fail_step='crash-game/data/registry.json')

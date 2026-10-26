@@ -37,6 +37,8 @@ class ReviewTests(unittest.TestCase):
             checked = difficulty_for_export(exported)
             base = isolated_checkout(builder.home / ('registered-' + mode))
             cr.registration(exported, base, apply=True, difficulty=checked)
+            from tests.puzzle_production.catalog_fixtures import compact
+            compact(base,['pz-review'])
             cls.fixture_checked[mode] = checked
 
     def setUp(self):

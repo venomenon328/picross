@@ -1,7 +1,6 @@
 """Measured unittest execution for CI2-B; fixtures and cleanups count as work."""
 import contextlib
 import functools
-import io
 import json
 import platform
 from pathlib import Path
@@ -123,11 +122,16 @@ def run_tests(groups, directory):
         expected = contract.expected_tests(ROOT, groups)
         modules = [name for g in groups for name in contract.MODULES[g]]
         loader = unittest.TestLoader()
-        tests = list(flatten(loader.loadTestsFromNames(modules)))
+        tests = []; imports = []
+        for module in modules:
+            at = time.perf_counter()
+            tests.extend(flatten(loader.loadTestsFromName(module)))
+            imports.append({'kind': 'module-load', 'owner': module, 'seconds': time.perf_counter() - at})
         actual = [t.id() for t in tests]
         if loader.errors or sorted(actual) != sorted(expected):
             raise ValueError('Actual discovery differs from assigned tests: ' + str(loader.errors))
         suite = MeasuredSuite(tests)
+        suite.fixtures.extend(imports)
         with (directory / 'tests.log').open('w', encoding='utf-8', newline='\n') as stream:
             result = unittest.TextTestRunner(stream=stream, verbosity=2, resultclass=MeasuredResult).run(suite)
     elapsed = time.perf_counter() - suite_started
@@ -149,5 +153,5 @@ def run_tests(groups, directory):
               'environment': {'platform': platform.platform(), 'python': sys.version,
                               'pillow': __import__('PIL').__version__,
                               'cache': 'fresh process; existing synthetic rating-input cache; fresh isolated fixture roots'}}
-    (directory / 'tests.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+    (directory / 'tests.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8', newline='\n')
     return report

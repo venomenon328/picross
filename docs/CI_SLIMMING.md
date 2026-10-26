@@ -5,11 +5,12 @@ Stand: 26.10.2026 · freigegebener Sollvertrag · [Gesamtissue #412](https://git
 ## Status und Geltung
 
 Der Eigentümer hat die analysierte Lösung als Spezifikation freigegeben und die
-500-Aktionen-Historyroute zusätzlich als unnötig verworfen. CI2-A ist separat auf
-`chore/413-ci2-a-auswahl` beauftragt und implementiert;
-[Auswahlvertrag](CI_A_SELECTION.md), T01/Selbstreview im Draft-PR und separates
-R01 vor Merge. B/C/D/E bleiben unbegonnen; kein Datenabbau, Merge oder Deployment.
-Ausgang ist `main@967314538df376a281020fb4c34f93f370a491df`.
+500-Aktionen-Historyroute zusätzlich als unnötig verworfen. CI2-A ist nach
+separatem R01 über PR #419 auf `94e3ea7d9674babbdcd6bde6251e233191fd096f`
+integriert. CI2-B ist auf `chore/414-ci2-b-fachtests` implementiert;
+[Auswahlvertrag](CI_A_SELECTION.md), [T01](CI2_B_VERIFICATION.md) und Draft-PR #420
+binden die Lieferung. Separates CI2-B-R01 vor Merge bleibt offen.
+C/D/E und großer Datenabbau bleiben unbegonnen; kein Merge oder Deployment.
 
 Dieser Vertrag ersetzt für die benannten Folgepakete die bisherigen automatischen
 Chromiumpflichten, impliziten Browserrechte manueller Scopes, ungekürzten historischen
@@ -17,8 +18,9 @@ Fall-/Bildmengen und den generellen Verzicht auf Laufzeitziele. Er ersetzt keine
 Spiel-, Speicher-, Rechte- oder Freigabeanforderung. Historische Messungen und
 Abnahmen behalten ihren damaligen Quellenbezug.
 
-Die Auswahl-/Aufruf-/Gateänderung von A ist auf dem Arbeitsbranch verfügbar.
-Innere Test-/Bildmengen bleiben bis zu B/C/D unverändert. Keine neue
+Die Auswahl-/Aufruf-/Gateänderung von A ist integriert. B führt auf seinem
+Arbeitsbranch Fachgruppen, gemessene isolierte Fixtures und die benannten
+historischen Helferstilllegungen ein; Bild-/Nativeumfänge bleiben bis C/D unverändert. Keine neue
 kurze CLI, erfolgreiche Kürzung oder Bereinigung behaupten. Auswahl, Producer und
 Gate werden jeweils gemeinsam im zuständigen Paket umgestellt; ein übersprungener
 noch ausgewählter Altjob wird dadurch nicht rückwirkend erfolgreich. Alte Browser-,
@@ -204,8 +206,9 @@ bereinigte Arbeitsdaten und aktuelle Statusverweise; keine Paketchronik in Einst
 | [CI2-D #416](https://github.com/venomenon328/picross/issues/416) | native Kürzung einschließlich History | A |
 | [CI2-E #417](https://github.com/venomenon328/picross/issues/417) | Bestandsbereinigung, Bildabschluss und Metadatenkontrolle | A |
 
-A ist auf seinem Arbeitsbranch implementiert, separates R01 bleibt vor Merge.
-B/C/D/E sind unbegonnen; Umsetzung benötigt ihren eigenen konkreten Auftrag.
+A ist nach separatem R01 integriert. B ist in Draft-PR #420 implementiert;
+separates B-R01 bleibt vor Merge. C/D/E sind unbegonnen und benötigen ihren
+eigenen konkreten Auftrag.
 Nach A sind B/C/D/E unabhängig integrierbar; gemeinsame Gate-/Auswahländerungen
 gegen den jeweils aktuellen Stand nachführen. Standard ist ein Implementierungs-PR
 je Paket. T01 enthält tatsächliche gezielte Positiv-/Negativnachweise, gemessene

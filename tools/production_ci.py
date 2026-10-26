@@ -19,7 +19,8 @@ def binding():
             'tested_checkout': git('rev-parse', 'HEAD'),
             'run_id': os.environ.get('GITHUB_RUN_ID'),
             'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
-            'selection_attempt': os.environ.get('CI_SELECTION_ATTEMPT')}
+            'selection_attempt': os.environ.get('CI_SELECTION_ATTEMPT'),
+            'git_status': git('status', '--porcelain')}
 
 
 def run(groups, directory):
@@ -27,6 +28,8 @@ def run(groups, directory):
     report = {'format': 'picross-production-result-v1', 'groups': groups,
               'expected': contract.coverage(groups), 'binding': binding(),
               'accepted': False, 'integrations': []}
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and report['binding']['git_status']:
+        raise ValueError('CI Fachtests require clean tested sources')
     started = time.perf_counter()
     try:
         tests = run_tests(groups, directory)
@@ -45,7 +48,9 @@ def run(groups, directory):
                 result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, timeout=600)
             report['integrations'].append({'name': name, 'group': group, 'exit_code': result.returncode,
                                            'seconds': time.perf_counter() - at})
-        report['accepted'] = tests['accepted'] and all(r['exit_code'] == 0 for r in report['integrations'])
+        current = binding()
+        report['source_unchanged'] = current == report['binding']
+        report['accepted'] = tests['accepted'] and report['source_unchanged'] and all(r['exit_code'] == 0 for r in report['integrations'])
     except Exception as error:
         report['error'] = str(error)
         raise
@@ -55,7 +60,7 @@ def run(groups, directory):
         # delivered. The synthetic mutable ZA checkout is never an artifact.
         from production_results import files
         report['files'] = files(directory)
-        (directory / 'production-result.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+        (directory / 'production-result.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8', newline='\n')
         if os.environ.get('GITHUB_STEP_SUMMARY'):
             with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
                 summary.write('## Fachtests including setup and cleanup\n\n')

@@ -29,7 +29,13 @@ def fixture(plan, directory):
     groups = plan['production_groups']
     expected = contract.expected_tests(ROOT, groups)
     rows = [dict(id=name, group=group, status='success', seconds=0) for name, group in expected.items()]
-    tests = dict(format='picross-production-tests-v1', accepted=True, groups=groups, tests=rows, fixtures=[],
+    owners = {(module,kind) for module in {name.split('.')[0] for name in expected}
+              for kind in ('module-load','module-setup','module-teardown')}
+    owners |= {(owner,kind) for owner in {name.rsplit('.',1)[0] for name in expected}
+               for kind in ('class-setup','class-teardown')}
+    module_groups = {name.split('.')[0]:group for name,group in expected.items()}
+    fixtures = [dict(owner=owner,kind=kind,group=module_groups[owner.split('.')[0]],seconds=0) for owner,kind in sorted(owners)]
+    tests = dict(format='picross-production-tests-v1', accepted=True, groups=groups, tests=rows, fixtures=fixtures,
                  group_times={g:dict(tests=sum(r['group']==g for r in rows), test_seconds=0,fixture_seconds=0,seconds=0) for g in groups},
                  top10=sorted(rows,key=lambda r:r['id'])[:10], seconds=0)
     write(directory/'tests.json', tests)
@@ -37,13 +43,23 @@ def fixture(plan, directory):
     integrations=[]
     if 'solver' in groups:
         integrations.append(dict(name='references',group='solver',exit_code=0,seconds=0))
-        write(directory/'references/benchmark.json',dict(accepted=True, source_head=plan['source_head'],
-            base_commit=plan['base_commit'], checkout_commit=plan['tested_checkout'],
-            cases=[dict(name=name,accepted=True) for name in contract.REFERENCES]))
+        cases=[]
         for case in contract.REFERENCES:
+            status='stalled' if 'sparse' in case else 'solved'
+            result=dict(status=status,proof_verified=True,certified=status=='solved',logic_hash='a'*64,
+                        profile_hash='b'*64,profile={'synthetic':True})
+            metric=dict(exit_code=0,peak_rss_bytes=1)
             for name in ('logic.json','proof.json','result.json','fresh-verification.json','solve-metrics.json',
                          'verify-metrics.json','solve.log','verify.log'):
-                write(directory/'references'/case/name, {'synthetic':True})
+                write(directory/'references'/case/name, result if name in ('result.json','fresh-verification.json') else
+                      metric if name.endswith('-metrics.json') else {'synthetic':True})
+            from production_results import checksum
+            cases.append(dict(name=case,accepted=True,result=result,fresh_verification=result,
+                              proof_sha256=checksum(directory/'references'/case/'proof.json'),
+                              processes=[dict(mode=mode,**metric) for mode in ('solve','verify')],
+                              logic_hash='a'*64,profile_hash='b'*64,profile={'synthetic':True}))
+        write(directory/'references/benchmark.json',dict(accepted=True, source_head=plan['source_head'],
+            base_commit=plan['base_commit'], checkout_commit=plan['tested_checkout'],cases=cases))
         write(directory/'references.log',{'synthetic':True})
     if 'adapter' in groups:
         integrations.append(dict(name='za1-replay',group='adapter',exit_code=0,seconds=0))
@@ -51,8 +67,8 @@ def fixture(plan, directory):
             for name in ('direct-color','direct-mono','repair-color','repair-mono')]))
         write(directory/'za1-replay.log', {'synthetic':True})
     binding={k:plan[k] for k in ('source_head','base_commit','tested_checkout','run_id','run_attempt')}
-    report=dict(format='picross-production-result-v1',accepted=True,tests_accepted=True,groups=groups,
-                expected=contract.coverage(groups),binding={**binding,'selection_attempt':plan['run_attempt']},
+    report=dict(format='picross-production-result-v1',accepted=True,tests_accepted=True,source_unchanged=True,groups=groups,
+                expected=contract.coverage(groups),binding={**binding,'selection_attempt':plan['run_attempt'],'git_status':''},
                 integrations=integrations,seconds=0,files=files(directory))
     write(directory/'production-result.json', report)
     return report
@@ -127,6 +143,20 @@ class EvidenceTests(unittest.TestCase):
             write(directory/'production-result.json',report)
             for bad in ({},{'production_attempt':''},{'production_attempt':'2'},{'production_attempt':'1','other':'1'}):
                 with self.assertRaises(ValueError):validate_all(plan,directory,bad,'2')
+            reference=directory/'references/benchmark.json'
+            original=json.loads(reference.read_text(encoding='utf-8'))
+            for change in ('missing-process','failed-process','false-proof'):
+                changed=deepcopy(original)
+                case=changed['cases'][0]
+                if change=='missing-process':case['processes'].pop()
+                elif change=='failed-process':case['processes'][0]['exit_code']=1
+                else:case['fresh_verification']['proof_verified']=False
+                write(reference,changed)
+                # Even recomputing the enclosing file manifest cannot turn
+                # missing/unsuccessful integration evidence into a pass.
+                write(directory/'production-result.json',{**report,'files':files(directory)})
+                with self.assertRaises(ValueError):validate_all(plan,directory,outputs,'2')
+            write(reference,original);write(directory/'production-result.json',report)
             (directory/'tests.log').write_bytes(b'changed')
             with self.assertRaises(ValueError):validate_all(plan,directory,outputs,'2')
 
@@ -139,6 +169,7 @@ class EvidenceTests(unittest.TestCase):
             attacks=[lambda r:r['tests'].pop(),lambda r:r['tests'].append(r['tests'][0]),
                      lambda r:r['tests'][0].update(id='unknown'),lambda r:r['tests'][0].update(status='failure'),
                      lambda r:r['tests'][0].update(status='skipped'),lambda r:r['tests'][0].update(seconds=True),
+                     lambda r:r['fixtures'].pop(),lambda r:r['fixtures'].append(r['fixtures'][0]),
                      lambda r:r['group_times']['solver'].update(fixture_seconds=1)]
             for attack in attacks:
                 changed=deepcopy(original);attack(changed)
