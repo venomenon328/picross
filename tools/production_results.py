@@ -27,13 +27,13 @@ def checksum(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def files(root):
+def files(root, *, staging=False):
     if root.is_symlink() or any(p.is_symlink() for p in root.rglob('*')):
         raise ValueError('Linked production evidence')
     return [{'file': p.relative_to(root).as_posix(), 'bytes': p.stat().st_size, 'sha256': checksum(p)}
             for p in sorted(root.rglob('*')) if p.is_file()
-            and p.name != 'production-result.json'
-            and (not p.is_relative_to(root / 'za1-replay') or p == root / 'za1-replay/replay.json')]
+            and p != root / 'production-result.json'
+            and (not staging or not p.is_relative_to(root / 'za1-replay') or p == root / 'za1-replay/replay.json')]
 
 
 def seconds(value):

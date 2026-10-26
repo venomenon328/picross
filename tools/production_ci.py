@@ -59,7 +59,7 @@ def run(groups, directory):
         # Only compact reports/logs and independently required proof inputs are
         # delivered. The synthetic mutable ZA checkout is never an artifact.
         from production_results import files
-        report['files'] = files(directory)
+        report['files'] = files(directory, staging=True)
         (directory / 'production-result.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8', newline='\n')
         if os.environ.get('GITHUB_STEP_SUMMARY'):
             with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
