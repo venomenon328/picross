@@ -16,10 +16,10 @@ Automatische CI und allgemeine Scopes bleiben browserfrei. Nur der registrierte
 | ID | Gruppe | Tatsächlich geprüfter Übergang |
 | --- | --- | --- |
 | regular-start | regular | Uninstrumentierter Spielerstart, WebGL2, Storage, offline nach Start, keine Fehler |
-| C01 | catalog | Metadaten/Tidy-Hand-Rollen, Kategorie-/Sortier-/Ansichtsmenü, Sortierung/Richtung, stabile Öffnungs-ID, transparentes verdientes Bild samt Hover |
+| C01 | catalog | Metadaten/Tidy-Hand-Rollen, Kategorie-/Sortier-/Ansichtsmenü, Sortierung/Richtung, stabile Öffnungs-ID |
 | C02 | input | Echter elastischer Strich, Rechtsstrich, atomarer Undo/Redo, Escape ohne Phantomcommit |
 | C03 | input | UI100→125→100, 720p/1080p, Live-DPI150 und tatsächlicher Zelltreffer mit Undo |
-| C04 | completion | 5×5-Lösung durch einen Strich, natürliche Überblendung, Endbild/Wiederöffnung, Resetabbruch und bestätigter Reset mit fremden Savebytes |
+| C04 | completion | 5×5-Lösung durch einen Strich, natürliche Überblendung, Endbild/Wiederöffnung, verdientes Katalogbild samt Hover, Resetabbruch und bestätigter Reset mit fremden Savebytes |
 | C05 | persistence | Echter Sperrhandoff vor Hydration und abgewiesener Zweittab ohne IDB-Zugriff |
 | C06 | persistence | Bestätigter IDBFS-Sync und Reload mit Zellen, History, Redo, Ansicht und Sortierpräferenz |
 | C07 | persistence | Echter zweiter Browserprozess im gleichen Profil, DPI125, geladener Stand und wirksamer Redo |

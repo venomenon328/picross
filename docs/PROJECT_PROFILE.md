@@ -10,7 +10,7 @@ und [C-T01](CI2_C_VERIFICATION.md) führen die C-Lieferung auf
 `chore/415-ci2-c-chromium`; separates C-R01 vor Merge bleibt offen.
 D/E und großer Datenabbau bleiben unbegonnen. Kein Merge oder Deployment.
 
-Chromium läuft künftig ausschließlich auf ausdrücklichen manuellen Auftrag,
+Chromium läuft ausschließlich auf ausdrücklichen manuellen Auftrag,
 auch nicht implizit durch `all`, `toolchain` oder gemeinsame Änderungen.
 Der kurze Browserumfang umfasst ungefähr 8–10 Kernfälle; der native Historyweg
 höchstens 20 Benutzerkommandos, höchstens sechs neue wirksame Transaktionen und
@@ -19,7 +19,8 @@ und gewöhnlichen manuellen Vollumfängen. Kleine Fachtests, repräsentative
 Integrationen, gezielte Bildbelege, Laufzeitziele und begrenzte Ablagen ersetzen
 die in CI_SLIMMING ausdrücklich abgelösten Altpflichten. Quellenbindung,
 Fail-closed-Gate und aktuelle Produkt-/Speicherverträge bleiben erhalten.
-Keine erfolgte Beschleunigung oder Bereinigung aus dieser Dokumentlieferung ableiten.
+Gemessene Browserbeschleunigung folgt C-T01; native Kürzung und Bereinigung
+bleiben den noch offenen Paketen vorbehalten.
 
 **HZ · HZ-A/B am 20.10.2026, HZ-C am 21.10.2026 integriert:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale

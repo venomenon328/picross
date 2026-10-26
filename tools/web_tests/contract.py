@@ -49,10 +49,10 @@ def validate_request(plan, event, payload):
 
 SCENARIOS = (
     {'id': 'regular-start', 'group': 'regular', 'label': 'uninstrumented startup, WebGL2, offline and no errors', 'browsers': ['chromium'], 'images': ['regular-catalog.png']},
-    {'id': 'C01', 'group': 'catalog', 'label': 'current catalog, sorting and paper controls', 'browsers': ['chromium'], 'images': ['catalog.png', 'category.png', 'sort.png', 'view.png', 'at-card-1920.png', 'at-hover-1920.png']},
+    {'id': 'C01', 'group': 'catalog', 'label': 'current catalog, sorting and paper controls', 'browsers': ['chromium'], 'images': ['catalog.png', 'category.png', 'sort.png', 'view.png']},
     {'id': 'C02', 'group': 'input', 'label': 'real elastic edit, atomic undo, redo and cancellation', 'browsers': ['chromium'], 'images': ['input.png']},
     {'id': 'C03', 'group': 'input', 'label': 'resize and live DPI preserve fit and hit geometry', 'browsers': ['chromium'], 'images': []},
-    {'id': 'C04', 'group': 'completion', 'label': 'small real completion, transparent reveal and confirmed isolated reset', 'browsers': ['chromium'], 'images': ['at-final-1920.png', 'at-reopen-1920.png', 'at-blend-1920.png']},
+    {'id': 'C04', 'group': 'completion', 'label': 'small real completion, transparent reveal and confirmed isolated reset', 'browsers': ['chromium'], 'images': ['at-final-1920.png', 'at-reopen-1920.png', 'at-blend-1920.png', 'at-card-1920.png', 'at-hover-1920.png']},
     {'id': 'C05', 'group': 'persistence', 'label': 'exclusive handoff and rejected second tab never hydrate early', 'browsers': ['chromium'], 'images': []},
     {'id': 'C06', 'group': 'persistence', 'label': 'acknowledged IndexedDB reload restores history, redo and preference', 'browsers': ['chromium'], 'images': []},
     {'id': 'C07', 'group': 'persistence', 'label': 'fresh browser process restores state and performs real redo', 'browsers': ['chromium'], 'images': []},

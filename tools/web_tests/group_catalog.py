@@ -3,7 +3,6 @@ from browser_actions import open_page, state, point, control, wait, click
 from group_persistence import choose_sort
 from hz_c_cases import typography
 from hz_b_cases import select_view
-from at_cases import catalog
 
 
 def exercise(pw, name, root, update, url, output, evidence, session):
@@ -62,6 +61,5 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     for a, b in zip(before, after, strict=True):
         for key in ('definition_id', 'definition_revision', 'cells', 'history', 'cursor', 'completed'):
             assert a[key] == b[key], key
-    catalog(page, name, output, evidence)
     assert not errors, errors
     passed('current catalog, sorting and paper controls')

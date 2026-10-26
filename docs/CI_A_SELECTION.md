@@ -3,8 +3,8 @@
 ## Aktuelle Ergänzung: CI2-B / #414
 
 A ist nach separatem R01 über PR #419 auf
-`94e3ea7d9674babbdcd6bde6251e233191fd096f` integriert. B ist nach separatem R01 über PR #420 auf `dd56d310` integriert und liefert
-den vierteiligen Fachumfang:
+`94e3ea7d9674babbdcd6bde6251e233191fd096f` integriert. B ist nach separatem R01
+über PR #420 auf `dd56d310` integriert und liefert den vierteiligen Fachumfang:
 `solver`, `images`, `adapter`, `catalog`. [CI2-B-T01](CI2_B_VERIFICATION.md)
 bindet Zuordnung, Fixtureänderungen, Leserabgleich und tatsächliche Messungen.
 Die nachfolgenden A-Lieferangaben behalten ihren historischen Bezug.

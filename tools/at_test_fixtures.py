@@ -33,6 +33,10 @@ def browser_row(directory,row):
         return result
     group=row['group']
     if group in ('catalog','completion'):
+        if group=='completion':
+            catalog={'group':'catalog'}
+            browser_row(directory,catalog)
+            row['at_catalog']=catalog['at_catalog']
         rows=[]
         for window in BROWSER_MATRIX:
             values={}

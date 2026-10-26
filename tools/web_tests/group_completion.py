@@ -1,6 +1,6 @@
 """One tiny actual solve, natural reveal, reopening and isolated reset."""
 from browser_actions import open_page, control, wait, draw, state, saved
-from at_cases import capture, no_spoilers
+from at_cases import capture, no_spoilers, catalog
 
 
 def exercise(pw, name, root, update, url, output, evidence, session):
@@ -29,6 +29,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     control(page, text='Abbrechen', dialog=True)
     assert state(page, 'slots')['slots'][2] == solved and state(page, 'ending')['ending']
     control(page, name='nav-album'); no_spoilers(page)
+    catalog(page, name, output, evidence)
     data = state(page, 'sort', 'labels')
     label = data['labels'][data['sort']['visible_ids'].index('T-04')]
     assert label['status'] == label['status_kind'] == 'Gelöst' and label['reveal'] and not label['unknown']
