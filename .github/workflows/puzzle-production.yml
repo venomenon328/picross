@@ -12,6 +12,13 @@ on:
     outputs:
       production_attempt:
         value: ${{ jobs.puzzle-production.outputs.production_attempt }}
+  workflow_dispatch:
+    inputs:
+      groups:
+        description: Explicit Fachgruppen (solver, images, adapter, catalog)
+        type: string
+        required: true
+        default: solver,images,adapter,catalog
 
 permissions:
   contents: read
@@ -44,7 +51,7 @@ jobs:
       - name: Selected Fachtests with measured fixtures and assigned integrations
         env:
           PRODUCTION_GROUPS: ${{ inputs.groups }}
-          CI_SELECTION_ATTEMPT: ${{ inputs.selection_attempt }}
+          CI_SELECTION_ATTEMPT: ${{ inputs.selection_attempt || github.run_attempt }}
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: python3 tools/production_ci.py --groups "$PRODUCTION_GROUPS" --output-dir artifacts/puzzle-production

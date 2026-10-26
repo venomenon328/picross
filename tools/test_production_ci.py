@@ -157,6 +157,10 @@ class EvidenceTests(unittest.TestCase):
                 write(directory/'production-result.json',{**report,'files':files(directory)})
                 with self.assertRaises(ValueError):validate_all(plan,directory,outputs,'2')
             write(reference,original);write(directory/'production-result.json',report)
+            for name in ('za1-replay/unbound.txt','references/production-result.json'):
+                target=directory/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(b'unbound')
+                with self.assertRaises(ValueError):validate_all(plan,directory,outputs,'2')
+                target.unlink()
             (directory/'tests.log').write_bytes(b'changed')
             with self.assertRaises(ValueError):validate_all(plan,directory,outputs,'2')
 
