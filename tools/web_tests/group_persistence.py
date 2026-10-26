@@ -97,7 +97,8 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     control(page, name='menu'); control(page, text='Beenden')
     assert page.locator('#retry').is_visible() and not page.locator('#message').is_visible()
     page.screenshot(path=str(output/f'{name}-storage-error.png'))
-    page.evaluate('IDBDatabase.prototype.transaction = window.originalTransaction')
+    # Return undefined: Playwright invokes a function-valued expression result.
+    page.evaluate('() => { IDBDatabase.prototype.transaction = window.originalTransaction; }')
     page.locator('#retry').click(); saved(page)
     evidence['failure_diagnostics'] = list(errors)
     assert all(error == 'Failed to save IDB file system: test quota' for error in errors), errors
