@@ -194,6 +194,25 @@ oder Runnerlast zurückgeführt; deren Anteile sind nicht isoliert bestimmt.
 Image `20261012.334.1`, Godot und Cache-HIT entsprechen der Baseline. Der
 Zeitbefund erteilt keinen Gateverzicht und wird im finalen PR fortgeschrieben.
 
+### Ergebnisgate-Nacharbeit nach erfolgreichem nativen Lauf
+
+[Run 40395051186, Versuch 1](https://github.com/venomenon328/picross/actions/runs/40395051186)
+auf `134929d1d7a205374a7df42d2e6e5758408c1dce` besteht alle sieben nativen
+Gruppen (902,626 s) sowie docs, production, preflight und delivery. Das Gesamtgate
+ist trotzdem **fehlgeschlagen**: Im sparsamen Checkout von `ci-required` fehlte
+`tools/p14_integration.py`, das beim erneuten Lesen der Historyoriginale benötigt
+wird. Die Workflow-Dateiliste enthält diese neue Abhängigkeit jetzt ausdrücklich.
+Eine Regression kopiert nur die tatsächlich dort genannten Pfade und prüft
+gültige Historybelege in einem isolierten Pythonprozess. Entfernen des Prüfers
+reproduziert denselben Importfehler. Der vollständige Entwicklungscheckout kann
+die fehlende Abhängigkeit damit nicht mehr verdecken.
+
+Die Originalartefakte dieses Zwischenstands bestehen die lokale erneute Prüfung
+aller 612 gebundenen Dateien einschließlich Player, vollständiger History und
+aktueller AT-Pixelbelege. Das ersetzt den fehlgeschlagenen CI-Job nicht. Neuer
+Head und sämtliche erneut ausgewählten Pflichtjobs bleiben bis zum abschließenden
+PR-Nachweis offen; D-O01 bleibt bei 15:03 Minuten sichtbar.
+
 Lokaler Historyvorlauf `native-dev2`: 22,153 s einschließlich frischer Vorbereitung,
 beide Spielprozesse und Rohbeleggate erfolgreich. Katalogvorlauf `catalog-dev3`:
 325,482 s Gruppenzeit / 328,515 s Gesamtharness, 16 Prozesse (Version, vier
@@ -233,7 +252,7 @@ Produktionszeitbefund ist eigenständig und wird durch D nicht abgenommen.
 
 ## Getrennter vollständiger Selbstreview und Übergabe
 
-Nach der Umsetzung wurde der vollständige Diff der 30 Dateien gegen die genannte
+Nach der Umsetzung wurde der vollständige Diff der zunächst 30 Dateien gegen die genannte
 Mainbasis separat gelesen und gegen #416/V1 geprüft: Historyzustand/Ansicht/
 Fremdslots, echte Prozessfolge, aktuelle Grafik-/Katalogaussagen, Producer-/Inventar-/
 Gategleichheit, Isolation, Messgrenzen, Quell-/Run-/Versuchsbindung und Dokumente.
@@ -241,7 +260,10 @@ Der Review korrigierte eine versehentlich mitumbenannte Atlas-Auswahl (`large`
 bleibt Ressourcenname), entfernte einen verbliebenen wirkungslosen KE-Vergleichszweig
 und begrenzte die zu großen Katalogcrops. Zusätzliche neu gehashte Rohbelegmutationen
 und der Linux-Parallelitätsgegenbeleg bestehen. Kein Produktcode, historischer
-C-T01-Beleg, zentraler Workflow oder fremder Dateibestand ist geändert.
+C-T01-Beleg, zentraler Entwicklungsworkflow oder fremder Dateibestand ist geändert.
+Die anschließende Ergebnisgate-Nacharbeit ergänzt ausschließlich die fehlende
+lokale CI-Checkoutabhängigkeit, ihre isolierte Regression und diesen Fehlerbeleg;
+auch dieser vollständige Nacharbeitsdiff wurde separat geprüft.
 
 Keine offenen Codebefunde dieses Selbstreviews; native Korrekturläufe und finale
 Pflicht-CI bleiben bis zu ihren tatsächlichen Ergebnissen offen. Der abschließende

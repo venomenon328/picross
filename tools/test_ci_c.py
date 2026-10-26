@@ -3,6 +3,7 @@ from copy import deepcopy
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -258,6 +259,29 @@ class NativeGate(unittest.TestCase):
                            results=[dict(group='history',status='success',exit_code=0)])
         self.result['files']=bind_files(self.root,exclude={'native-result.json'})
         validate_payload(self.result,self.root)
+        # Reproduce ci-required's actual sparse file boundary in an isolated
+        # interpreter, so the full development checkout cannot hide imports.
+        self.save()
+        workflow=(ROOT/'.github/workflows/ci-chromium.yml').read_text()
+        sparse=workflow.split('  ci-required:',1)[1].split('sparse-checkout: |',1)[1].split('sparse-checkout-cone-mode:',1)[0]
+        with tempfile.TemporaryDirectory() as temp:
+            checkout=Path(temp)
+            for pattern in sparse.splitlines():
+                for source in ROOT.glob(pattern.strip()) if pattern.strip() else []:
+                    target=checkout/source.relative_to(ROOT)
+                    target.parent.mkdir(parents=True,exist_ok=True)
+                    shutil.copyfile(source,target)
+            command=[sys.executable,'-I','-c',
+                     'import sys; from pathlib import Path; sys.path.insert(0,sys.argv[1]); '
+                     'from native_results import read,validate_payload; '
+                     'root=Path(sys.argv[2]); validate_payload(read(root/"native-result.json"),root)',
+                     str(checkout/'tools'),str(self.root)]
+            positive=subprocess.run(command,cwd=checkout,capture_output=True)
+            self.assertEqual(positive.returncode,0,positive.stderr)
+            (checkout/'tools/p14_integration.py').unlink()
+            negative=subprocess.run(command,cwd=checkout,capture_output=True)
+            self.assertNotEqual(negative.returncode,0)
+            self.assertIn(b"No module named 'p14_integration'",negative.stderr)
         # Even rehashed, self-consistent manifests cannot disguise corrupt raw
         # state, a shortened trace or a changed persisted view from the oracle.
         report_path=self.root/'history/product-report.json'
