@@ -124,6 +124,8 @@ else: c.recover(Path(root))
         export(FIXTURES/'direct-color',exported,name='TEST ONLY',revision=1,stem='at_color',save_slot='at_color',
                approval_path=approval,category_id='voegel',categories_path=self.checkout/'content/categories.json')
         cr.registration(exported,self.checkout,apply=True,difficulty=difficulty_for_export(exported))
+        from tests.puzzle_production.catalog_fixtures import compact
+        compact(self.checkout,['pz-test-direct-color'])
         first=self.request(1,'TEST ONLY first attribution\n')
         self.identifier='pz-test-direct-color'
         second=self.request(2,'TEST ONLY second attribution\n')

@@ -20,8 +20,9 @@ Abnahmen behalten ihren damaligen Quellenbezug.
 
 Die Auswahl-/Aufruf-/Gateänderung von A ist integriert. B führt auf seinem
 Arbeitsbranch Fachgruppen, gemessene isolierte Fixtures und die benannten
-historischen Helferstilllegungen ein; Bild-/Nativeumfänge bleiben bis C/D unverändert. Keine neue
-kurze CLI, erfolgreiche Kürzung oder Bereinigung behaupten. Auswahl, Producer und
+historischen Helferstilllegungen ein; Bild-/Nativeumfänge bleiben bis C/D unverändert.
+Die kurze Produkt-CLI bleibt C/D vorbehalten; gemessene Kürzung und Zielerreichung
+werden ausschließlich mit tatsächlichen Läufen belegt. Auswahl, Producer und
 Gate werden jeweils gemeinsam im zuständigen Paket umgestellt; ein übersprungener
 noch ausgewählter Altjob wird dadurch nicht rückwirkend erfolgreich. Alte Browser-,
 500er- und Vergleichsrouten müssen nicht als neue Baseline reproduziert werden.

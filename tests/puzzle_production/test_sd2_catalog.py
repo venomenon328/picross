@@ -32,6 +32,12 @@ class CatalogTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         fixtures.CatalogTests.setUpClass.__func__(cls)
+        # Most cases assert metadata/transaction behavior, not production replay.
+        # Keep an immutable full source solely for the actual retirement case.
+        cls.full_base = cls.home / 'full-base'
+        shutil.copytree(cls.base, cls.full_base)
+        from tests.puzzle_production.catalog_fixtures import compact
+        compact(cls.base, [cls.identifier])
         cls.sd2_checked = ca.analyze_single(cls.base / cls.definition, cls.home / 'sd2-analysis',
             production_mode='mono', method=method.NEW)
 
@@ -293,6 +299,7 @@ class CatalogTests(unittest.TestCase):
     def test_at_added_and_cleanup_preserve_mixed_authorities_without_analysis(self):
         from tests.puzzle_production import test_catalog_reveal as reveal_fixture
         from tools.puzzle_production import catalog_reveal as reveal, reveal_source, catalog_added, integrated_content
+        shutil.copytree(self.full_base, self.checkout, dirs_exist_ok=True)
         # The same synthetic image request exercises the shared production path.
         self.request = lambda variant=1, append=None: reveal_fixture.RevealTests.request(self, variant, append)
         first = reveal_fixture.RevealTests.make_plan(self)
