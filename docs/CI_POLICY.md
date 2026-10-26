@@ -1,6 +1,6 @@
 # Aktuelle CI-Policy
 
-Stand: 26.10.2026 · Version 3.2 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
+Stand: 26.10.2026 · Version 3.3 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
 
 ## Freigegebener CI2-Sollvertrag
 
@@ -9,9 +9,11 @@ benannten Änderungen Vorrang vor den älteren Umfangsvorgaben dieser Policy und
 der verlinkten Prüfverträge. CI2-A ist nach separatem R01 über PR #419 integriert.
 B ist nach separatem R01 über PR #420 auf `dd56d310` integriert.
 [Aktuelle Auswahl](CI_A_SELECTION.md) und [B-T01](CI2_B_VERIFICATION.md)
-binden die Fachgruppen; CI2-B-O01 bleibt offen. C ist auf
-`chore/415-ci2-c-chromium` implementiert: [Browservertrag](CI_B_BROWSER_GROUPS.md),
-[C-T01](CI2_C_VERIFICATION.md), separates C-R01 vor Merge offen. D/E unbegonnen.
+binden die Fachgruppen; CI2-B-O01 bleibt offen. C ist nach separatem R01 über
+PR #421 auf `8e5e99647596bc3ef9d7bd22bd746b73fbb424d5` integriert:
+[Browservertrag](CI_B_BROWSER_GROUPS.md), [C-T01](CI2_C_VERIFICATION.md).
+D ist auf `chore/416-ci2-d-native` implementiert: [D-T01](CI2_D_VERIFICATION.md),
+separates D-R01 vor Merge offen. E bleibt unbegonnen.
 Kein Merge, Deployment oder großer Datenabbau.
 
 - **Auswahl / CI2-A [#413](https://github.com/venomenon328/picross/issues/413):**
@@ -83,7 +85,8 @@ Die folgenden Abschnitte dokumentieren die bestehenden Mechanismen aus
 Ihre automatischen/impliziten Browserpflichten, ungekürzten Altfall-/Bildmengen,
 500er-Vorgaben und der generelle Verzicht auf Laufzeitziele sind durch CI2 als
 Sollvertrag gezielt abgelöst. Die ausführbaren Auswahl-/Gatebedingungen sind durch
-CI2-A gemäß CI_A_SELECTION abgelöst; innere Testumfänge bleiben bis B/C/D unverändert.
+CI2-A gemäß CI_A_SELECTION abgelöst; innere Testumfänge folgen nun B/C/D.
+Abweichende alte Mengen in diesem historischen Abschnitt sind keine aktive Pflicht.
 Ein übersprungener noch ausgewählter Job
 wird dadurch nicht erfolgreich. Alte Browser-/500er-/Vergleichsrouten müssen
 für die Dokumentlieferung nicht erneut als Baseline reproduziert werden.
@@ -271,10 +274,10 @@ Der [Webvertrag](WEB_HOSTING.md) konkretisiert Isolation und Speichergrenzen.
 ### Ausführbare native Gruppen und Bildaufbereitung (CI-C)
 
 [CI-C-Gruppenvertrag](CI_C_NATIVE_GROUPS.md) und das ausführbare Inventar ordnen
-Kern/Save, bisherige History/500er-Route, Katalog, Abschluss, Adapter/Piloten, Grafik/Atlas
+Kern/Save, kurze Historyroute, Katalog, Abschluss, Adapter/Piloten, Grafik/Atlas
 und Export ausdrücklich zu. Der Gesamtlauf vereinigt alle aktiven
 Checks, Orakel und Belege. Katalog und Abschluss hängen nicht mehr allein am
-500er-Integrationsschalter; gemeinsame Abhängigkeiten wählen weiterhin mehrere
+History-Integrationsschalter; gemeinsame Abhängigkeiten wählen weiterhin mehrere
 oder alle Gruppen. CI2-D ersetzt die 500er-Route durch den oben gebundenen kurzen
 20/6/2-Vertrag und kürzt die benannten Bildmengen. Keine Entfernung allein wegen
 eines historischen Testnamens.
@@ -585,10 +588,10 @@ ist ein PR-Liefernachweis, keine neue Testmatrix.
 CI-C verwendet `--groups core,history,catalog,completion,adapters,graphics,export`;
 die Auswahl kann jede Gruppe unabhängig starten. Lokal ist die vollständige
 Vereinigung Standard, CI übergibt die exakte Auswahl ausdrücklich. `history`
-prüft am Ausgangsstand noch 500 Aktionen in fünf echten Prozessen plus Neustart
-und unabhängigem Python-Orakel. CI2-D ersetzt diesen Umfang durch höchstens
-20 Benutzerkommandos / sechs neue wirksame History-Transaktionen / genau zwei
-Spielprozesse; die alte Route ist keine neue Lieferpflicht.
+prüft 17 semantische Benutzerkommandos, vier neue wirksame Transaktionen und
+genau zwei Spielprozesse mit unabhängigem Python-Orakel. Das Gate wiederholt
+vollständigen Trace-/Save-/Ansichtsabgleich und die beiden Gegenproben aus den
+gebundenen Originaldateien; eine positive Zusammenfassung allein reicht nicht.
 `adapters` prüft die synthetischen Muster T04/T06/T08/T09 vollständig;
 T04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
 Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `graphics` enthält
@@ -632,18 +635,21 @@ nicht als erfolgreiche Gegenprobe akzeptiert. Kein weiteres RP3-Durchspiel.
 
 ## KAT-2 als unabhängige native Kataloggruppe
 
-Die folgende Last-/Bildmenge ist ausführbare Ausgangsbasis. CI2-D verwendet
-repräsentative Beschriftungen und mehrere Katalogseiten; 256 Kategorien,
-128-Zeichen-Beschriftungen und 300 Einträge werden nur gezielt geprüft.
+CI2-D verwendet repräsentative lange Beschriftungen und 54 synthetische Einträge
+über mehrere Katalogseiten. Die früheren 256 Kategorien, 128-Zeichen-
+Beschriftungen und 300 Einträge werden nicht mehr im Standard erzeugt.
+Elf isolierte Projektkopien übernehmen dieselbe unveränderte, dateiweise
+hashgeprüfte Importbasis; nur neue Bilddaten in pages/adapter/at werden zusätzlich
+importiert. Import-/Kopierzeiten und Mengen stehen im gebundenen Bericht.
 
 `--groups catalog` führt die vollständige aktuelle Katalogprüfung unabhängig
-von History und Abschluss aus, mit sämtlichen Neustart-, Last-, Eingabe-, Fehler-
+von History und Abschluss aus, mit aktuellen Neustart-, Seiten-, Eingabe-, Fehler-
 und nativen Bildbelegen. Die Gruppe verwendet
 [tools/kat2_product.py](../tools/kat2_product.py): reguläre Hauptszene mit echten
 Pointerereignissen, gesonderter Prozessneustart, gültiger Leerbestand,
-ungültige Registry, isolierter KAT-1-Adapterzuwachs und synthetische 300 Einträge.
-Jede Instanz nutzt ein temporäres Projekt und Saveprofil. Kataloglast ist keine
-300-fache Produktions-/Solverprüfung. Der Produktharness bindet alle Berichte
+ungültige Registry, isolierter KAT-1-Adapterzuwachs und synthetische 54 Einträge.
+Jede Instanz nutzt ein temporäres Projekt und Saveprofil; restart teilt absichtlich
+das regular-Profil. Die Seitenprüfung ist keine Produktions-/Solverprüfung. Der Produktharness bindet alle Berichte
 und die kleinen nativen Originalausschnitte an Head/Basis/Checkout; vollständige
 Framekontexte bleiben lokal. Pflichtausschnitte dürfen nicht still aus der
 begrenzten Lieferung fallen. Größen und Laufzeiten werden gemessen; die neuen

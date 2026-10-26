@@ -61,7 +61,7 @@ def check_phases(report, expected, directory):
         if row.get('exit_code') != expected_exit or bool(row.get('expected_failure')) != negative:
             raise ValueError('Incorrect native process outcome')
         python_checks = {'current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources', 'kat2-adapter-export',
-                         'kat2-adapter-register', 'kat2-image-processing', 'ea-image-processing', 'za1-test-only-registration',
+                         'kat2-adapter-register', 'kat2-imported-base-copies', 'kat2-image-processing', 'ea-image-processing', 'za1-test-only-registration',
                          'current-vs2-complete', 'retained-hc92-font-samples', 'current-drawing-pixel-oracles'}
         if ('log' in row) != (row['name'] not in python_checks):
             raise ValueError('Missing/unexpected native process log')
@@ -165,18 +165,23 @@ def validate_payload(result, root, player_root=None):
                     raise ValueError('Failed original native assertions: '+name+'/'+field)
         if group == 'history':
             summary = read(directory/'selected/integration/summary.json')
-            categories = summary.get('categories', {})
-            if (report.get('integration') != summary or summary.get('actions') != 500
-                    or not isinstance(categories, dict) or not categories
-                    or any(type(v) is not int or v <= 0 for v in categories.values())
-                    or sum(categories.values()) != 500
-                    or not 0 <= summary.get('final_cursor', -1) < summary.get('final_history_size', 0)
-                    or not re.fullmatch('[0-9a-f]{64}', summary.get('final_cells_sha256', ''))
-                    or summary.get('negative_controls') != [
-                        'tampered expected change failed at its action number', '499-action trace rejected']
-                    or not summary.get('restart')):
-                raise ValueError('Incomplete/inconsistent original 500-action history evidence')
+            from p14_integration import verify_evidence
+            try:
+                actual = verify_evidence(directory/'selected/integration')
+                if report.get('integration') != summary or summary != actual:
+                    raise AssertionError('summary disagrees with complete native evidence')
+            except (AssertionError, KeyError, TypeError) as error:
+                raise ValueError('Incomplete/inconsistent bounded native history evidence: '+str(error)) from error
         if group == 'catalog':
+            reuse = read(directory/'selected/kat2/import-copies.json')
+            copies = reuse['copies']
+            if (reuse.get('base_unchanged') is not True or len(copies) != len(CATALOG_MODES)
+                    or not re.fullmatch('[0-9a-f]{64}', reuse['base_sha256'])
+                    or len({r['project'] for r in copies}) != len(CATALOG_MODES)
+                    or any(r['base_sha256'] != reuse['base_sha256'] or r['files'] != reuse['base_files']
+                           or r['bytes'] != reuse['base_bytes'] or r['seconds'] < 0
+                           or not r['project'].replace('\\','/').startswith(workspace+'/kat2-') for r in copies)):
+                raise ValueError('Incomplete/changed/shared catalog imported base copies')
             costs = read(directory/'selected/kat2/image-costs.json')
             summary = read(directory/'selected/kat2/summary.json')
             validate_catalog_images(costs, summary, required,
