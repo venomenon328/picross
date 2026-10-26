@@ -59,7 +59,7 @@ func run() -> void:
 			"pid":OS.get_process_id(),"engine":Engine.get_version_info()}))
 		output.flush()
 	output.close()
-	print("P1_INTEGRATION_", "WRITE" if stage == "writer" else "READ", "_OK")
+	print("CI2_D_HISTORY_", stage.to_upper(), "_OK")
 
 func perform(action: Dictionary) -> void:
 	match str(action.kind):
