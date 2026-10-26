@@ -3,7 +3,7 @@ import timing
 import base64
 import json
 from PIL import Image
-from browser_actions import state, point, control, wait, draw, saved, game_viewport
+from browser_actions import state, point
 
 POINTS={'outside':(4,4),'white':(76,76),'hole':(154,154),'soft':(16,128),'ink':(128,64)}
 COLORS={1:[56,132,90],2:[174,85,52]}
@@ -84,18 +84,6 @@ def capture(page, output, name, image, *, revision=1, opacity=1, frame=None):
     result=dict(file=path.name,rect=rect,samples=rows,revision=revision,opacity=opacity,viewport=viewport,pixel_ratio=dpr)
     if frame:result['rendered_frame']={k:v for k,v in frame.items() if k not in ('png','image')}
     return result
-
-
-def matrix(page, spec, *, catalog=False):
-    width,height,scale=spec
-    if state(page,'ui_scale')['ui_scale']!=scale:
-        # The ending offers album/reset; settings are reached through the album.
-        if not catalog: control(page,name='nav-album')
-        control(page,text='Einstellungen / Info')
-        control(page,text='UI ');control(page,name='nav-work')
-        if not catalog: control(page,text='Blatt 03')
-    game_viewport(page,width,height)
-    page.wait_for_timeout(250)
 
 
 def catalog(page, name, output, evidence):
