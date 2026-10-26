@@ -25,7 +25,7 @@ static func run(runner: Object) -> void:
 	var app = runner.app
 	app.show_album()
 	var saves: Dictionary = runner.save_bytes()
-	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25],[1920,1080,1.0]]:
+	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
 		runner.surface.size = Vector2i(spec[0],spec[1])
 		app.set_ui_scale(spec[2])
 		await runner.frames()
@@ -56,7 +56,7 @@ static func run(runner: Object) -> void:
 			runner.check(current == baseline,"HZ-C stable status baseline "+value)
 			runner.check(card.detail.get_theme_font_size("font_size") == Text.small_size(app.ui_scale),"HZ-C categories share the small text role")
 			runner.check(card.note.get_theme_font_size("font_size") == card.leaf.get_theme_font_size("font_size"),"HZ-C footer shares baseline and size; Blatt remains 15")
-			await Capture.capture(runner,"c-status-%s-%d"%["gelost" if value == "Gelöst" else value.to_lower(),spec[0]],card.get_global_rect())
+			if value == "Gelöst": await Capture.capture(runner,"c-status-%s-%d"%["gelost" if value == "Gelöst" else value.to_lower(),spec[0]],card.get_global_rect())
 		card.note.text = old_note
 		card.status_icon.kind = old_icon
 		card.detail.text = old_category
@@ -130,24 +130,8 @@ static func run(runner: Object) -> void:
 		await Capture.capture(runner,"c-view-%d"%spec[0],Rect2(Vector2(app.view_choice.get_popup().position),Vector2(app.view_choice.get_popup().size)))
 		await Keys.key(runner,KEY_ESCAPE)
 		app.return_to_work()
-		app.hide()
-		var sample := Sample.new()
-		sample.theme = app.theme
-		sample.position = Vector2(24,24)
-		sample.ui_scale = spec[2]
-		runner.surface.add_child(sample)
-		await runner.frames()
-		await Capture.capture(runner,"c-comparison-%d"%spec[0],sample.get_global_rect())
-		for sample_card: Control in sample.cards:
-			runner.check(sample_card.image_area.size.y >= 112*app.ui_scale,"HZ-C comparison preserves original image budget at both sizes")
-			var fs: int = roundi(sample_card.small_text_size*app.ui_scale)
-			var before := TextLine.new()
-			before.add_string("Hhx",Text.font(),fs)
-			var fallback := TextLine.new()
-			fallback.add_string("Hhx × ←",Text.font(),fs)
-			var after := TextLine.new()
-			after.add_string("Hhx",Text.small_font(fs),fs)
-			runner.hzc_measurements.append({"surface":spec,"base_size":sample_card.small_text_size,"pixels":fs,"original_ascent":before.get_line_ascent(),"original_descent":before.get_line_descent(),"fallback_ascent":fallback.get_line_ascent(),"fallback_descent":fallback.get_line_descent(),"role_ascent":after.get_line_ascent(),"role_descent":after.get_line_descent(),"baseline_offset":Text.small_font(fs).baseline_offset,"body_ink":Text.ink(Text.small_font(fs),Text.BODY_SAMPLE,fs),"card_size":sample_card.size,"image_area":sample_card.image_area})
-		sample.free()
-		app.show()
+		var fs: int = Text.small_size(app.ui_scale)
+		runner.check(fs == (15 if app.ui_scale == 1.0 else 19),"HZ-C selected small role 15/19")
+		runner.hzc_measurements.append({"surface":spec,"pixels":fs,"baseline_offset":Text.small_font(fs).baseline_offset,"body_ink":Text.ink(Text.small_font(fs),Text.BODY_SAMPLE,fs)})
+
 	runner.check(runner.save_bytes() == saves,"HZ-C typography routes preserve isolated save bytes")

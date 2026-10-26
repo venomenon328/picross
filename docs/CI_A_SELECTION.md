@@ -43,7 +43,7 @@ Kernfälle und zwei Exporte; `regular` nur einen Export. Der getrennte ausdrück
 Browserwert `export` wählt regular-start/E01 mit drei echten Exporten. Allgemeine
 Scopes bleiben browserfrei. Auswahl-/Ergebnisschema v6 und Originaleventschutz
 bleiben, Build-/Browserbelege verwenden v2. [C-T01](CI2_C_VERIFICATION.md) bindet
-Messungen und Abnahmen; CI2-C-R01 bleibt separat vor Merge offen.
+Messungen; C ist nach separatem R01 über PR #421 auf `8e5e9964` integriert.
 
 ## Integrierte A-Lieferung / #413
 

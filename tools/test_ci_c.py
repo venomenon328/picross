@@ -3,6 +3,7 @@ from copy import deepcopy
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -249,11 +250,8 @@ class NativeGate(unittest.TestCase):
         for name,scope in report['scope'].items():
             scope.update(enabled=name=='integration',status='success' if name=='integration' else 'not_applicable')
         selected=self.root/'history/selected'
-        summary=dict(actions=500,categories=dict(cell=500),final_cursor=1,final_history_size=2,
-                     final_cells_sha256='a'*64,negative_controls=[
-                         'tampered expected change failed at its action number','499-action trace rejected'],
-                     restart='synthetic separate-process fixture')
-        write(selected/'integration/summary.json',summary)
+        from test_p14_integration import evidence_fixture
+        summary = evidence_fixture(selected/'integration')
         report['integration']=summary
         report['selected_evidence']['files']=bind_files(selected)
         write(self.root/'history/product-report.json',report)
@@ -261,21 +259,63 @@ class NativeGate(unittest.TestCase):
                            results=[dict(group='history',status='success',exit_code=0)])
         self.result['files']=bind_files(self.root,exclude={'native-result.json'})
         validate_payload(self.result,self.root)
-        for field,value in [('actions',499),('negative_controls',[]),('final_cursor',2),('final_cells_sha256','bad')]:
+        # Reproduce ci-required's actual sparse file boundary in an isolated
+        # interpreter, so the full development checkout cannot hide imports.
+        self.save()
+        workflow=(ROOT/'.github/workflows/ci-chromium.yml').read_text()
+        sparse=workflow.split('  ci-required:',1)[1].split('sparse-checkout: |',1)[1].split('sparse-checkout-cone-mode:',1)[0]
+        with tempfile.TemporaryDirectory() as temp:
+            checkout=Path(temp)
+            for pattern in sparse.splitlines():
+                for source in ROOT.glob(pattern.strip()) if pattern.strip() else []:
+                    target=checkout/source.relative_to(ROOT)
+                    target.parent.mkdir(parents=True,exist_ok=True)
+                    shutil.copyfile(source,target)
+            command=[sys.executable,'-I','-c',
+                     'import sys; from pathlib import Path; sys.path.insert(0,sys.argv[1]); '
+                     'from native_results import read,validate_payload; '
+                     'root=Path(sys.argv[2]); validate_payload(read(root/"native-result.json"),root)',
+                     str(checkout/'tools'),str(self.root)]
+            positive=subprocess.run(command,cwd=checkout,capture_output=True)
+            self.assertEqual(positive.returncode,0,positive.stderr)
+            (checkout/'tools/p14_integration.py').unlink()
+            negative=subprocess.run(command,cwd=checkout,capture_output=True)
+            self.assertNotEqual(negative.returncode,0)
+            self.assertIn(b"No module named 'p14_integration'",negative.stderr)
+        # Even rehashed, self-consistent manifests cannot disguise corrupt raw
+        # state, a shortened trace or a changed persisted view from the oracle.
+        report_path=self.root/'history/product-report.json'
+        for filename,mutation in (
+            ('trace.jsonl', lambda rows: [{**r,'cells':[0]+r['cells'][1:]} if i==2 else r for i,r in enumerate(rows)]),
+            ('trace.jsonl', lambda rows: rows[:-1]),
+            ('writer-save.json', lambda saved: {**saved,'view':{}}),
+        ):
+            path=selected/'integration'/filename
+            original=path.read_bytes()
+            data=[json.loads(line) for line in original.splitlines()] if filename.endswith('jsonl') else json.loads(original)
+            changed=mutation(data)
+            path.write_text(''.join(json.dumps(r)+'\n' for r in changed) if filename.endswith('jsonl') else json.dumps(changed),encoding='utf-8')
+            report['selected_evidence']['files']=bind_files(selected)
+            write(report_path,report)
+            self.result['files']=bind_files(self.root,exclude={'native-result.json'})
+            with self.subTest(raw=filename),self.assertRaisesRegex(ValueError,'bounded native history'):
+                validate_payload(self.result,self.root)
+            path.write_bytes(original)
+        for field,value in [('actions',16),('processes',1),('effective_transactions',7),('negative_controls',[])]:
             changed={**summary,field:value}
             write(selected/'integration/summary.json',changed)
             report['integration']=changed
             report['selected_evidence']['files']=bind_files(selected)
             write(self.root/'history/product-report.json',report)
             self.result['files']=bind_files(self.root,exclude={'native-result.json'})
-            with self.subTest(field=field),self.assertRaisesRegex(ValueError,'500-action'):
+            with self.subTest(field=field),self.assertRaisesRegex(ValueError,'bounded native history'):
                 validate_payload(self.result,self.root)
         write(selected/'integration/summary.json',summary)
-        report['integration']={**summary,'actions':499}
+        report['integration']={**summary,'actions':16}
         report['selected_evidence']['files']=bind_files(selected)
         write(self.root/'history/product-report.json',report)
         self.result['files']=bind_files(self.root,exclude={'native-result.json'})
-        with self.assertRaisesRegex(ValueError,'500-action'):validate_payload(self.result,self.root)
+        with self.assertRaisesRegex(ValueError,'bounded native history'):validate_payload(self.result,self.root)
         report['integration']=summary
         (selected/'integration/summary.json').unlink()
         report['selected_evidence']['files']=[]
@@ -305,6 +345,28 @@ class NativeGate(unittest.TestCase):
 
 
 class Isolation(unittest.TestCase):
+    def test_linux_parallel_groups_are_primed_isolated_and_awaited(self):
+        import native_runner
+        import threading
+        with tempfile.TemporaryDirectory() as t:
+            started={g:threading.Event() for g in ('catalog','graphics')}
+            finished=[]
+            def process(command,**kwargs):
+                group=command[command.index('--native-group')+1]
+                if group in started:
+                    self.assertIn('core',finished)
+                    started[group].set()
+                    self.assertTrue(started['graphics' if group=='catalog' else 'catalog'].wait(5))
+                finished.append(group)
+                return subprocess.CompletedProcess(command,0)
+            args=parse_args(['--cache-dir',t+'/cache','--output-dir',t+'/output','--groups','core,catalog,graphics'])
+            with patch('native_runner.subprocess.run',side_effect=process),patch('native_runner.source_identity',return_value={'github_run_attempt':'1'}),patch('native_runner.platform.system',return_value='Linux'),patch('native_results.validate_payload'):
+                self.assertEqual(native_runner.run(args),0)
+            result=read(Path(t)/'output/technical/native-result.json')
+            self.assertEqual(finished[0],'core')
+            self.assertEqual(set(finished),{'core','catalog','graphics'})
+            self.assertEqual([r['group'] for r in result['results']],['core','catalog','graphics'])
+
     def test_missing_delivery_preserves_partial_failure_diagnostics(self):
         from p1_evidence import Evidence
         with tempfile.TemporaryDirectory() as t:

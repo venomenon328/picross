@@ -305,7 +305,7 @@ Linux benötigt für die OpenGL-Prüfung Xvfb/Mesa. Preset und Appname bleiben
 Im vorhandenen Harness sind `--integration`, `--pilots`, `--visual` und `--perf-b` lokal an.
 Die jeweiligen `--no-*`-Formen schalten sie ausdrücklich aus; CI wählt gemäß
 [CI-Policy](../docs/CI_POLICY.md) nach vollständigem Änderungsumfang. Die vorhandene
-Integration prüft weiterhin 500 Aktionen plus Neustart. Der `--pilots`-Bereich prüft vier synthetische Muster in echten
+Integration prüft 17 Kommandos und einen echten Neustart in zwei Spielprozessen. Der `--pilots`-Bereich prüft vier synthetische Muster in echten
 Prozessen als feste Funktionsregression; der Fachlauf zertifiziert keine
 Bestandsrätsel erneut. Reine Rätselergänzungen starten keinen dieser Tests.
 Visual prüft aktuelle Pixel-/Animationsverträge, PERF-B den regulären Renderer
@@ -315,8 +315,8 @@ A/B-Vergleichsprogramme sind gemäß #70/N70-HIST-01 archiviert; sie sind kein
 aktueller Prüfweg.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
-**CI2-D / [#416](https://github.com/venomenon328/picross/issues/416), freigegebener
-Sollstand vom 26.10.2026, noch nicht implementiert:** Der
+**CI2-D / [#416](https://github.com/venomenon328/picross/issues/416), implementiert
+am 26.10.2026:** Der
 [CI2-Vertrag](../docs/CI_SLIMMING.md) ersetzt die 500-Aktionen-Pflicht durch eine
 kurze deterministische History-Regression. Sie umfasst insgesamt höchstens
 **20 semantische Befehle** einschließlich Blattwahl, Werkzeug-/Farbwahl,
@@ -335,13 +335,14 @@ verkürzten Traces bleiben erhalten; dafür entstehen keine weiteren Spielprozes
 Die genaue Zählung und Abgrenzung stehen in [P1 §8.1](../docs/PROTOTYPE_P1.md).
 Mit CI2-D entfällt der alte Durchlauf auch aus `all`, `runtime`, `history`,
 `--integration` und normalen manuellen Läufen; er wird nicht bloß in einen
-manuellen Voll- oder Stresstest verlagert. Diese neue Route ist noch kein
-verfügbarer CLI-Weg. Frühere #12-Nachweise und gemessene Berichte bleiben
+manuellen Voll- oder Stresstest verlagert. `--groups history` wählt die kurze Route;
+[T01 und Messung](../docs/CI2_D_VERIFICATION.md) binden ihre Nachweise.
+Frühere #12-Nachweise und gemessene Berichte bleiben
 unverändert an ihre jeweiligen Commits gebunden.
 
 `technical/` enthält kompakte commitgebundene Ergebnisse, Logs und notwendige
-native Bilder/Fehlerdiagnostik. Größen werden gemessen; für die künftige Kürzung
-gelten der CI2-Umfang und seine Laufzeitziele.
+native Bilder/Fehlerdiagnostik. Erzeugte und gelieferte Mengen sowie Prozess-,
+Import- und Renderzeiten werden getrennt gemessen; es gelten die CI2-Laufzeitziele.
 Das reguläre Product-CI-ZIP enthält Spielanleitung, Commit-/Hashbericht und
 notwendige Lizenzen. Historische Produktionshilfen werden nicht ausgeliefert.
 Technische Motivspoiler sind separat.

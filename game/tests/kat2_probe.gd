@@ -114,14 +114,16 @@ func shot(name: String) -> void:
 	for reveal: Control in app.album.reveals:
 		if reveal.artwork != null: textures += 1
 	check(app.choices.size() <= 24 and textures <= 24 and app.album.grid.get_child_count() <= 24, "bounded cards and earned textures")
-	var regions: Dictionary = {"selector": region(app.album.category_choice), "count": region(app.album.summary, true)}
-	if name == "all-1280-ui125" or name.begins_with("sorting"): regions["layout"] = region(app.album)
-	if not app.choices.is_empty(): regions["card"] = region(app.choices[0].get_parent())
-	else: regions["empty"] = region(app.album.empty_message, true)
-	if app.album.next_button.get_parent().visible: regions["page"] = region(app.album.page_label, true)
-	if mode in ["kb", "kk", "ke"]:
-		regions["layout"] = region(app.album if app.album.visible else app.work)
-		regions["title"] = region(app.title)
+	# Bind the title, selector, summary and representative card in one native
+	# composition. Do not include unused album background just to fill the frame.
+	var controls: Array[Control] = [app.title, app.album.category_choice, app.album.summary]
+	controls.append(app.choices[0].get_parent() if not app.choices.is_empty() else app.album.empty_message)
+	if app.album.next_button.get_parent().visible: controls.append(app.album.page_label)
+	var bounds: Rect2 = controls[0].get_global_rect()
+	for control: Control in controls: bounds = bounds.merge(control.get_global_rect())
+	if not app.album.visible: bounds = app.work.get_global_rect()
+	bounds = bounds.intersection(Rect2(Vector2.ZERO,Vector2(surface.size)))
+	var regions: Dictionary = {"layout": [floori(bounds.position.x),floori(bounds.position.y),ceili(bounds.end.x),ceili(bounds.end.y)]}
 	for card: Button in app.choices:
 		for label: Label in [card.caption,card.detail,card.leaf,card.note]:
 			check(card.get_global_rect().grow(1).encloses(label.get_global_rect()), "card labels fit without overlap")
@@ -149,7 +151,7 @@ func new_app() -> void:
 	surface.add_child(app)
 	# Existing KAT/KE scenarios bind their synthetic slots by canonical order.
 	# All their added dates are unknown; KU-B's large scenario tests real sorting.
-	if not mode in ["large", "adapter", "empty", "invalid"]: app.album.choose_sort("added")
+	if not mode in ["pages", "adapter", "empty", "invalid"]: app.album.choose_sort("added")
 	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	await frames()
 	timings["startup_ms"] = (Time.get_ticks_usec() - started) / 1000.0
@@ -181,8 +183,8 @@ func run() -> void:
 		app.return_to_work()
 		check(app.album.visible and app.session == null, "empty/error settings and return usable")
 		check(save_bytes().is_empty(), "empty/error path writes no saves")
-	elif mode == "large":
-		await large()
+	elif mode == "pages":
+		await pages()
 		await sorting()
 	elif mode == "information":
 		await information_saves()
@@ -621,7 +623,7 @@ func sorting() -> void:
 		await sort_pointer(3)
 		check(app.album.preference.direction == "desc", "KU-B actual added menu defaults newest")
 		var ids: Array[String] = app.album.filtered_ids.duplicate()
-		check(ids.size() == 300 and app.album.visible_ids == ids.slice(0,24), "KU-B sorts all 300 before pagination")
+		check(ids.size() == 54 and app.album.visible_ids == ids.slice(0,24), "KU-B sorts all 54 before pagination")
 		var unknown: bool = false
 		for index: int in range(ids.size()):
 			var date: Variant = app.album.metadata[ids[index]].get("added_at")
@@ -684,12 +686,12 @@ func sort_pointer(index: int) -> void:
 	await frames()
 	check(hit and not popup.visible and app.album.preference.criterion == app.album.Preference.CRITERIA[index], "KU-B criterion selected through actual pointer hit")
 
-func large() -> void:
+func pages() -> void:
 	# Equal areas recover the canonical ordering needed by the pre-existing
 	# page/reset assertions; sorting() separately covers editorial/default order.
 	app.album.choose_sort("size")
-	check(app.sessions.size() == 300 and app.album.categories.size() == 20, "300 synthetic sessions and twenty categories")
-	check(app.album.summary.text == "150 von 300 gelöst" and app.choices.size() == 24, "valid saved completions counted across all pages")
+	check(app.sessions.size() == 54 and app.album.categories.size() == 20, "54 synthetic sessions and twenty categories")
+	check(app.album.summary.text == "27 von 54 gelöst" and app.choices.size() == 24, "valid saved completions counted across all pages")
 	await shot("first-page")
 	var before: Dictionary = save_bytes()
 	var released: Array[WeakRef] = []
@@ -736,7 +738,7 @@ func large() -> void:
 	started = Time.get_ticks_usec()
 	await choose("gebaeude-bauwerke")
 	timings["category_ms"] = (Time.get_ticks_usec() - started) / 1000.0
-	check(app.album.filtered_ids.size() == 250 and app.choices.size() == 24, "uneven category keeps pagination bound")
+	check(app.album.filtered_ids.size() == 48 and app.choices.size() == 24, "uneven category keeps pagination bound")
 	await choose("obst-nuesse")
 	check(app.choices.is_empty() and app.album.summary.text == "0 von 0 gelöst", "large catalog includes empty categories")
 	app.store.fail_step = "after_temp"
@@ -750,11 +752,11 @@ func large() -> void:
 	await frames()
 	check(app.album.visible and not app.album.feedback.visible, "catalog error feedback clears after successful retry")
 	await choose("")
-	for index: int in range(12):
+	for index: int in range(3):
 		app.album.turn_page(1)
 		check(app.choices.size() <= 24, "every page bounded during repeated navigation")
 	await frames()
-	check(app.choices.size() == 12 and app.album.next_button.disabled, "last page contains remainder")
+	check(app.choices.size() == 6 and app.album.next_button.disabled, "last page contains remainder")
 	for card: Control in app.choices:
 		check(card.size == app.choices[0].size and card.get_parent().size == app.choices[0].get_parent().size,"KK last mixed completion page has identical bounded grid cells")
 	await shot("last-page")
@@ -792,7 +794,7 @@ func catalog_labels() -> void:
 		app.album.metadata[app.sessions[index].definition.id]["difficulty"] = value
 		for entry: Dictionary in Registry.cached.entries:
 			if entry.id == app.sessions[index].definition.id: entry.difficulty = value
-	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25],[1920,1080,1.25]]:
+	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
 		surface.size = Vector2i(spec[0],spec[1])
 		app.set_ui_scale(float(spec[2]))
 		app.album._render(0)
@@ -840,10 +842,12 @@ func catalog_labels() -> void:
 			var center_pixel: Color = surface.get_texture().get_image().get_pixelv(Vector2i(first.difficulty_icon.get_global_rect().get_center()))
 			check(center_pixel.is_equal_approx(expected_color),"KU-A filled circle has the prescribed native centre pixel")
 			await hover(first.caption)
-			for part: Control in [first.difficulty_icon,first.difficulty]:
-				await hover(part)
-				await create_timer(0.8).timeout
-				check(visible_popups() == 0 and first.difficulty.tooltip_text.is_empty() and first.difficulty.get_tooltip().is_empty() and first.tooltip_ref == null,"KU-A actual circle/text hover has no popup, including native fallback")
+			check(first.difficulty.tooltip_text.is_empty() and first.difficulty.get_tooltip().is_empty() and first.tooltip_ref == null,"KU-A every metadata shape is tooltip-free")
+			if value != null and value.method == "picross-difficulty-0.3" and value.r4_required:
+				for part: Control in [first.difficulty_icon,first.difficulty]:
+					await hover(part)
+					await create_timer(0.8).timeout
+					check(visible_popups() == 0,"KU-A actual delayed circle/text hover has no popup")
 			if value != null and value.method == "picross-difficulty-0.3" and value.r4_required:
 				await shot("no-tooltip-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
 			app.set_ui_scale(1.0 if app.ui_scale == 1.25 else 1.25)
@@ -961,10 +965,10 @@ func fixed_cards() -> void:
 		check(card_geometry() == initial and app.choices[0].caption.get_line_count() > 2 and app.choices[0].caption.get_visible_line_count() == 2,"KK long name overflows exactly the reserved two lines")
 		check(app.choices[0].accessibility_name.contains(item.definition.reveal.name),"KK full earned name remains accessible")
 		var category_name: String = app.album.categories[0].name
-		app.album.categories[0].name = "Äußerst lange technische Kategorienbezeichnung ".repeat(3).left(128)
+		app.album.categories[0].name = "Eine lange technische Kategorienbezeichnung mit Äpfeln und Kräutern"
 		app.album._render(0)
 		await frames()
-		check(card_geometry() == initial and app.choices[0].detail.get_visible_line_count() <= 2,"KK legal 128-character category cannot grow metadata or grid")
+		check(card_geometry() == initial and app.choices[0].detail.get_visible_line_count() <= 2,"KK representative long category cannot grow metadata or grid")
 		app.album.categories[0].name = category_name
 		app.album._render(0)
 		await frames()

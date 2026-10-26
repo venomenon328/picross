@@ -181,7 +181,7 @@ class SelectionTests(unittest.TestCase):
         self.assertTrue(selection["product"] and selection["visual"])
         self.assertFalse(selection["pilots"] or selection["production"] or selection["integration"])
 
-    def test_state_and_navigation_keep_500_action_route(self):
+    def test_state_and_navigation_keep_bounded_history_route(self):
         for path in ["game/model/player.gd", "game/ui/board.gd"]:
             with self.subTest(path=path):
                 self.assertTrue(classify([path])["selected"]["integration"])

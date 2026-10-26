@@ -6,7 +6,7 @@ GROUPS = ('core', 'history', 'catalog', 'completion', 'adapters', 'graphics', 'e
 SCOPES = dict(core=('core',), history=('integration',), catalog=('catalog',),
               completion=('completion',), adapters=('pilots',),
               graphics=('visual', 'perf_b'), export=('export',))
-CATALOG_MODES = ('regular', 'restart', 'large', 'empty', 'invalid', 'adapter', 'information', 'kb', 'kk', 'ke', 'at')
+CATALOG_MODES = ('regular', 'restart', 'pages', 'empty', 'invalid', 'adapter', 'information', 'kb', 'kk', 'ke', 'at')
 # Exact paths only. Shared main/session/save/fixtures and unknown effects select all.
 PATHS = {
     **{f'game/art/cells/{kind}-{size}.png{suffix}': ('core', 'graphics', 'export')
@@ -25,6 +25,7 @@ PATHS = {
     'tools/native_images.py': ('catalog',),
     'tools/ea_product.py': ('completion',),
     'tools/p14_integration.py': ('history',),
+    'tools/native_metrics.py': GROUPS,
     'game/tests/p14_integration.gd': ('history',),
     'tools/za1_product.py': ('adapters', 'export'),
     'game/tests/kat2_probe.gd': ('catalog',),
@@ -66,8 +67,8 @@ def checks(group, host='Linux'):
     common = ['current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources', 'version', 'import']
     cases = {
         'core': ['tests', 'current-drawing-tests', 'expected-failure', 'roundtrip-write', 'roundtrip-read', 'controlled-start'],
-        'history': [f'integration-{n+1:03d}-{n+100:03d}' for n in range(0, 500, 100)]+['integration-restart'],
-        'catalog': [name for mode in CATALOG_MODES for name in ('kat2-'+mode+'-import', 'kat2-'+mode)]
+        'history': ['integration-writer', 'integration-reader'],
+        'catalog': ['kat2-'+mode for mode in CATALOG_MODES]+['kat2-pages-import','kat2-adapter-import','kat2-at-import','kat2-imported-base-copies']
                    + ['kat2-adapter-export', 'kat2-adapter-register', 'kat2-image-processing'],
         'completion': ['ea-import', 'ea-native', 'ea-restart', 'ea-image-processing'],
         'adapters': [f'rp6-t{n:02d}-{s}' for n in (4,6,8,9) for s in ('partial','finish','read','render')]

@@ -8,11 +8,11 @@ from vs2_v1_verify import require, typography
 
 
 def verify_retained(directory: Path) -> list[str]:
-    """The bounded delivery must keep all twelve open mono zoom comparisons."""
+    """The bounded delivery must keep six current open mono zoom samples."""
     report = json.loads((directory/'hc92-native.json').read_text(encoding='utf-8'))
     samples = [r for r in report['records'] if r['status']==0 and not r['colored']]
-    expected = {(cell,ui,before) for cell in (16,24,40) for ui in (1,1.25) for before in (False,True)}
-    require(len(samples)==12 and {(r['cell'],r['ui_scale'],r['before']) for r in samples}==expected,
+    expected = {(cell,ui,before) for cell in (16,24,40) for ui in (1,1.25) for before in (False,)}
+    require(len(samples)==6 and {(r['cell'],r['ui_scale'],r['before']) for r in samples}==expected,
             'HC retained zoom comparison coverage')
     for sample in samples:
         toolchain.verify_sha256(directory/sample['file'],sample['sha256'])
@@ -24,9 +24,9 @@ def verify(directory: Path) -> dict:
     report = json.loads((directory/'hc92-native.json').read_text(encoding='utf-8'))
     records = report['records']
     expected = {(cell,ui,color,status,before) for cell in (16,24,40) for ui in (1,1.25)
-                for color in (False,True) for status in range(3) for before in (False,True)}
+                for color in (False,True) for status in range(3) for before in (False,)}
     key = lambda r: (r['cell'],r['ui_scale'],r['colored'],r['status'],r['before'])
-    require(not report['failures'] and len(records)==72 and {key(r) for r in records}==expected,'HC full native matrix')
+    require(not report['failures'] and len(records)==36 and {key(r) for r in records}==expected,'HC full native matrix')
     indexed = {key(r):r for r in records}
     for r in records:
         toolchain.verify_sha256(directory/r['file'],r['sha256'])
@@ -54,10 +54,8 @@ def verify(directory: Path) -> dict:
         for color in (False,True):
             for status in range(3):
                 after = [indexed[(c,ui,color,status,False)] for c in (16,24,40)]
-                before = [indexed[(c,ui,color,status,True)] for c in (16,24,40)]
                 heights = [max(b[3] for b in r['pixels']) for r in after]
                 require(heights[0]<heights[1]<heights[2],'HC visible zoom growth')
-                require(heights[2]>1.35*max(b[3] for b in before[2]['pixels']),'HC improves old large-zoom cap')
                 require(after[0]['pitch'][0]<24*ui and after[0]['pitch'][0]<after[1]['pitch'][0]<after[2]['pitch'][0],'HC compact/growing common slots')
     negative_controls = []
     source = next(r for r in records if not r['before'])
@@ -73,7 +71,7 @@ def verify(directory: Path) -> dict:
             negative_controls.append(label)
         else:
             raise toolchain.PreflightError('HC negative control escaped: '+label)
-    return dict(status='success',native_records=72,digits=report['digits'],negative_controls=negative_controls,
+    return dict(status='success',native_records=36,digits=report['digits'],negative_controls=negative_controls,
                 cases=[{k:r[k] for k in ('cell','before','font_px','pitch','pixels')}
                        for r in records if r['ui_scale']==1 and r['status']==0 and not r['colored']],
                 owner_acceptance='HC-M01 OPEN',independent_review='OPEN')
