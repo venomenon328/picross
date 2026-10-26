@@ -3,7 +3,7 @@ import timing
 import base64
 import json
 from PIL import Image
-from browser_actions import state, point
+from browser_actions import state, point, points
 
 POINTS={'outside':(4,4),'white':(76,76),'hole':(154,154),'soft':(16,128),'ink':(128,64)}
 COLORS={1:[56,132,90],2:[174,85,52]}
@@ -63,14 +63,15 @@ def capture(page, output, name, image, *, revision=1, opacity=1, frame=None):
             path.write_bytes(raw)
         dpr=1
     viewport=[page.viewport_size[k] for k in ('width','height')]
+    positions=[(rect[0]+(x+.5)/256*rect[2],rect[1]+(y+.5)/256*rect[3]) for x,y in POINTS.values()]
+    locations=([[position[i]-frame['bounds'][i] for i in range(2)] for position in positions]
+               if frame else points(page, positions))
     rows=[]
     with Image.open(path) as raw:
         expected=frame['bounds'][2:] if frame else [v*dpr for v in viewport]
         assert all(abs(raw.size[i]-expected[i])<=1 for i in range(2)), (raw.size,expected)
         rgb=raw.convert('RGB')
-        for kind,(x,y) in POINTS.items():
-            position=(rect[0]+(x+.5)/256*rect[2],rect[1]+(y+.5)/256*rect[3])
-            location=[position[i]-frame['bounds'][i] for i in range(2)] if frame else point(page,position)
+        for (kind,_),location in zip(POINTS.items(),locations,strict=True):
             pixel=[int(v*dpr) for v in location]; actual=list(rgb.getpixel(tuple(pixel)))
             if opacity!=1 and kind=='ink':
                 assert all(color[i]+10<actual[i]<248 for i in range(3)), (kind,actual,'not an intermediate blend')

@@ -223,6 +223,26 @@ keine zehn Starts. Aktuell sind es sechs Starts und sechs Schließungen.
   Browserstart. Die vorhandene Release-Metadatenabfrage unterstützt bereits
   `GITHUB_TOKEN`; der Webbuild erhält nun den kurzlebigen Workflowtoken mit
   unveränderten `contents: read`-Rechten. Hash-/Releaseprüfung bleibt erhalten.
+- [Run 40362312688](https://github.com/venomenon328/picross/actions/runs/40362312688)
+  auf `e4c36ef7f8da4d590e3abc730f7347f7fecd745b` bestand alle neun Fälle,
+  zwölf Originalbilder und das Gate, überschritt jedoch mit Build 2:28 plus
+  Chromium 6:55 = **9:23** das Zeitziel. Damit war T01 nicht abgeschlossen.
+  Kritischer Browserpfad mit 2 s Zwischenqueue: 9:25; Initialqueue 6 s,
+  docs 47 s und anschließend 3 s Buildqueue sind getrennt. Cache-Restore 42 s
+  statt 9 s; tatsächliche Bauten 60 s. Browser-Setup 43 s, Ausführung mit
+  Pixelgate 369 s und Upload/Cleanup 3 s. Alle Gruppen waren langsamer:
+  14,934 / 46,959 / 64,390 / 107,944 / 120,163 s. Die Operationsmengen waren
+  identisch zur obigen Messung, die Laufzeiten jedoch höher.
+  [Originale](https://github.com/venomenon328/picross/actions/runs/40362312688/artifacts/12669916372)
+  bleiben als Gegenbeleg erhalten.
+  Die Auswertung zeigte zusätzlich wiederholte Locator-/Probe-Abfragen derselben
+  Canvas-Geometrie, allein fünf pro Bildstichprobe. Die Nacharbeit liest echte
+  DOM-Grenzen und Godot-Koordinaten in einem gemeinsamen lesenden Aufruf;
+  die fünf Bildpunkte verwenden jeweils denselben Geometriestand. Zellkoordinaten
+  kommen ebenfalls aus einem aktuellen gemeinsamen Snapshot. Kein Zustand wird
+  gesetzt, keine Eingabe zusammengezogen und kein Speicher-/Animationswarten
+  verkürzt. Die abschließende frische Messung dieses Deltas wird im PR gebunden;
+  bis zu ihrem Erfolg einschließlich Acht-Minuten-Ziel bleibt der Zeitbefund offen.
 
 ## T01
 
@@ -265,7 +285,8 @@ Berichtcommit erhält einen frischen ausdrücklichen kurzen Dispatch und die
 vollständige automatische PR-Pflicht-CI. Deren konkrete Head-/Test-Merge-/Runbindung
 steht im [Draft-PR #421](https://github.com/venomenon328/picross/pull/421), damit
 der Bericht seinen eigenen Commit nicht zirkulär referenzieren muss. T01 darf
-erst nach beiden erfolgreichen finalen Gates als vollständig übergeben gelten.
+erst nach beiden erfolgreichen finalen Gates und einer finalen Messung innerhalb
+des Acht-Minuten-Ziels als vollständig übergeben gelten.
 
 ## Getrennter Selbstreview und Abnahme
 
@@ -275,9 +296,13 @@ Ausführung, Einzel-/Gesamtprofile, benötigte Bauten, Originalevent und Quellen
 Versuchsbindung, Gategegenproben, Fehler-/Retrypfad, Originalbilder und Messzahlen
 sowie sämtliche geänderten Einstiegstexte. Codebasis ist `310725d4`; der
 abschließende Delta ergänzt diesen Bericht, den lesenden Workflowtoken und
-entfernt den nach Leserabgleich unbenutzten alten AT-Matrixhelfer.
+entfernt den nach Leserabgleich unbenutzten alten AT-Matrixhelfer. Nach der
+9:23-Gegenmessung wurden die gebündelten lesenden Geometrieabfragen separat
+gegen die bisherigen DOM-/Godot-Koordinatenformeln geprüft; tatsächliche
+Resize-/DPI-Zelltreffer und Originalbildpixel bleiben die ausführenden Gegenproben.
 
-Ergebnis: keine offenen fachlichen/codebezogenen Befunde in diesem Diff.
+Ergebnis: keine offenen fachlichen/codebezogenen Befunde in diesem Diff;
+der Zeitbefund aus 9:23 benötigt die oben verlangte finale erfolgreiche Messung.
 Die neun Fälle sind tatsächliche Übergänge; keine 33er-Vereinigung unter neuen
 Namen. C04 verwendet seinen eigenen kleinen Abschluss zusätzlich für Karte/Hover.
 Spielcode, Animationstempo, Save-/Hostingverträge, native Matrix und reale Inhalte
