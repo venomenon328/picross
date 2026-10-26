@@ -944,8 +944,10 @@ RP5-Korpus, seine Suchpläne und der separate Replayjob werden nicht benötigt.
 RP3-Demo, RP4-Vergleichskorpus, RP5-Korpusreplay, RP6-Sechserpilot und VS1-Produktion
 werden im aktuellen Checkout nicht neu aufgebaut. Für historische Untersuchungen
 steht der [damalige vollständige Stand](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/tools/puzzle_production/README.md)
-zur Verfügung. Die kleinen `rp4.inspect_trial`-/`rp5.unpack_archive`-Hilfen bleiben
-vorerst für bestehende synthetische Tests; ihre alten Produktions-CLIs entfallen.
+zur Verfügung. CI2-B entfernt nach aktuellem Leserabgleich die ausschließlich historisch
+verwendeten `rp4.inspect_trial`-/`rp5.unpack_archive`-Hilfen samt sechs Tests.
+RP6/`export_p1`, aktuelle Größen-/Codecgrenzen und die aktive Archiveingangsprüfung
+in `authoring_package.open_package()` bleiben erhalten.
 
 Nach endgültiger Integration auf main:
 

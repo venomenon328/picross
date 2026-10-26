@@ -71,7 +71,7 @@ danach BP-1R-Faktoren 1 / 0,75 / 0,5 für die Kontrollansichten, Offset null.
 Die unveränderten UI-PNGs werden ohne Skalierung per Source-over aufgesetzt.
 Kein Schärfe-/Detailgewinn durch die Ausgabe in 2560×1440 behauptet.
 
-Der enge [Dateihelfer](../../../../tools/book_inventory/artwork.py) erzeugt nur
+Der enge [Dateihelfer](https://github.com/venomenon328/picross/blob/94e3ea7d9674babbdcd6bde6251e233191fd096f/tools/book_inventory/artwork.py) erzeugt nur
 Ausgaben, Ausschnitte, Kontrollmontagen, Hashmanifest und ZIP. Er generiert keine
 Illustration und verändert keine Produktionsvorlage. Alle Prüfungen funktionieren
 mit Python-Standardbibliothek; Bildgenerierung findet niemals in CI statt.

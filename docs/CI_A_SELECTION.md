@@ -1,6 +1,41 @@
 # CI-A: Ausführbare Prüfauswahl
 
-## Aktuelle Umsetzung: CI2-A / #413
+## Aktuelle Ergänzung: CI2-B / #414
+
+A ist nach separatem R01 über PR #419 auf
+`94e3ea7d9674babbdcd6bde6251e233191fd096f` integriert. B ergänzt auf
+`chore/414-ci2-b-fachtests` / Draft-PR #420 den vierteiligen Fachumfang:
+`solver`, `images`, `adapter`, `catalog`. [CI2-B-T01](CI2_B_VERIFICATION.md)
+bindet Zuordnung, Fixtureänderungen, Leserabgleich und tatsächliche Messungen.
+Die nachfolgenden A-Lieferangaben behalten ihren historischen Bezug.
+
+`production_contract.py` ordnet jedes aktive Fachtestmodul genau einer Gruppe zu.
+Eine geprüfte transitive Konsumentenzuordnung berücksichtigt auch Funktionsimporte,
+CLI-Module und testübergreifend benutzte Fixtures. Der schnelle Werkzeugpfad
+weist unzugeordnete Module und abweichende aktuelle Importe ab. Unbekannte Quellen
+und gemeinsame Änderungen bleiben konservativ; es gibt keine Präfixausnahme.
+Die sechs unabhängigen Solver-/Verifier-Referenzen gehören zu `solver`, der feste
+synthetische ZA-1-Durchstich zu `adapter`. Die native/Preflight-/Zustellungsauswahl
+aus A wird dadurch nicht unterdrückt. Kein Kataloglauf oder Browserauftrag.
+
+Auswahl und Ergebnis heißen jetzt `picross-ci-selection-v6` beziehungsweise
+`picross-ci-result-v6`. `production_groups` ist wie `native_groups` ein zwingender
+kanonischer JSON-Array-String im Scheduler; keine Gruppe ist exakt `[]`.
+Der Bericht bindet außerdem `production_expected`. Der wiederverwendbare
+Fachworkflow erhält Gruppen und Auswahlversuch ausdrücklich. Sein Runner führt
+genau diese Tests und Integrationen aus; neue/fehlende Module, abweichende
+Discovery, übersprungene Tests oder fehlgeschlagener Aufbau sind kein Erfolg.
+
+Das bestehende `ci-required` lädt `puzzle-production-<head>-<producer-attempt>`.
+Originalberichte, Test-IDs aus den aktuellen Quelldeklarationen, Gruppen,
+Integrationsergebnisse, nichtleere Logs/Proofs und Datei-/Bytehashes müssen passen.
+Head, Basis, Checkout, Run und Auswahlversuch stimmen überein;
+Auswahlversuch ≤ Fachversuch ≤ Gateversuch. Fehlend, leer, doppelt, unbekannt,
+falsch gebunden, abgebrochen oder fehlgeschlagen scheitert. Keine alten Ergebnisse
+aus anderen Runs. Der Main-Nachlauf bleibt kurz; `production_groups=[]`.
+Keine neue Testverwaltung, kein weiterer Job und kein neuer Artefaktweg.
+
+## Integrierte A-Lieferung / #413
 
 [CI2](CI_SLIMMING.md) und [Issue #413](https://github.com/venomenon328/picross/issues/413)
 binden die Umsetzung auf `chore/413-ci2-a-auswahl`, Basis

@@ -294,7 +294,7 @@ class NativeGate(unittest.TestCase):
             write(outside/'event.json', {})
             env={**os.environ,'GITHUB_EVENT_PATH':str(outside/'event.json'),'GITHUB_EVENT_NAME':'pull_request','GITHUB_ACTIONS':'true','GITHUB_RUN_ATTEMPT':'3','GITHUB_STEP_SUMMARY':'',
                  'CI_BINDING':json.dumps({**{k:plan[k] for k in ('source_head','base_commit','tested_checkout','run_id','run_attempt','event')},'gate_attempt':'3'}),
-                 'CI_OUTPUTS':json.dumps({**{k:str(plan['selected'][k]).lower() for k in FLAGS},'selection_attempt':'1','native_groups':'["core"]','browser_request':'null'}),
+                 'CI_OUTPUTS':json.dumps({**{k:str(plan['selected'][k]).lower() for k in FLAGS},'selection_attempt':'1','native_groups':'["core"]','production_groups':'[]','browser_request':'null'}),
                  'CI_RESULTS':json.dumps({j:{'result':'success' if plan['selected'][j] else 'skipped'} for j in JOBS})}
             for attempt,expected in [('2',0),('1',1),('4',1)]:
                 env['CI_NATIVE_OUTPUTS']=json.dumps(dict(product_attempt=attempt))
