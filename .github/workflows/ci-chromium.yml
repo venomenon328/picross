@@ -98,7 +98,8 @@ jobs:
 
   web:
     needs: docs
-    if: needs.docs.outputs.web == 'true'
+    # #406 owner instruction: no Web job for PR #411. ci-required still reports the missing evidence.
+    if: needs.docs.outputs.web == 'true' && github.event.pull_request.number != 411
     uses: ./.github/workflows/web-chromium.yml
     with:
       selection_attempt: ${{ needs.docs.outputs.selection_attempt }}

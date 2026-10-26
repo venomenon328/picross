@@ -1,5 +1,9 @@
 # SD2-D-OM01 · Om klären, Eigentümerabnahme und VR01-Ausnahme
 
+Historischer OM01-Lieferstand. Anschließend sind alle 45 Vorschläge akzeptiert;
+[F01/T01](SD2_D_ADOPTION.md) bindet den folgenden Übernahme-/Aktivierungsauftrag.
+Die nachfolgenden Aussagen bleiben an OM01 vor dieser Umstellung gebunden.
+
 Stand: 26.10.2026. Folgeauftrag zu [#406](https://github.com/venomenon328/picross/issues/406)
 und [Draft-PR #411](https://github.com/venomenon328/picross/pull/411) auf
 `chore/406-sd2-bestandsumstellung`, Ziel `main`.

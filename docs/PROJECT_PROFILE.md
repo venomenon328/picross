@@ -126,7 +126,7 @@ damalige Mergeausnahmen werden nicht auf HZ übertragen.
 Die folgenden KE-/KAT-Abschnitte beschreiben die integrierte Ausgangsbasis;
 ihre gezielt abgelösten Anzeige-/Sortierregeln gelten nicht als neuer KU-Sollstand.
 
-**SD2 / #402 · 26.10.2026, SD2-A/B/C integriert; D mit V01 und OM01:**
+**SD2 / #402 · 26.10.2026, SD2-A/B/C integriert; D bis F01/T01 auf dem Arbeitsbranch:**
 [Menschennähere Schwierigkeit](PUZZLE_DIFFICULTY_V2.md) führt den neuen Sollvertrag:
 Denkanspruch, Suchaufwand und Bearbeitungsumfang, menschennähere Basistechniken,
 fein abgestufte interne Bewertung mit festen Grenzen und unabhängiger breiter
@@ -158,16 +158,19 @@ zum fehlenden Gesamt-CI-/Chromium-Gate gilt ausschließlich für #410.
 [SD2-D-V01](SD2_D_VERIFICATION.md) bindet den tatsächlichen Bestandslauf,
 Vergleich und Planungsstand. [SD2-D-OM01](SD2_D_OM_FOLLOWUP.md) ergänzt den
 frischen Om-Nachweis und die vollständige Vorschau mit 45 gültigen Ratings.
-Die 44 bisherigen Vorschläge sind abgenommen. Der ausdrückliche
+Alle 45 Vorschläge einschließlich Om sind abgenommen. Der ausdrückliche
 Eigentümerverzicht auf separates SD2-D-VR01 gilt nur für diesen Auftrag;
-es wurde nicht durchgeführt. Übernahme, Aktivierung, finales R01 und Merge
-sind nicht Teil von OM01. Default und aktive Ratings bleiben 0.3.
+es wurde nicht durchgeführt. Der Folgeauftrag [F01/T01](SD2_D_ADOPTION.md)
+übernimmt alle 45 Ratings und aktiviert 0.4 auf dem Arbeitsbranch, jeweils mit
+unmittelbarem echtem No-op. Runtime-v5, Ratingrevisionen 2, Defaultrevision 1.
+Der Web-Job bleibt für PR #411 auf Nutzeranweisung gesperrt; die dadurch fehlende
+Gesamt-CI, finales R01 und Merge bleiben getrennt offen.
 
-**Aktive SD-Basis / #235:** SD-A/B/C1/C2 sind mit PR #240–#243 abgeschlossen;
+**Historische SD-Basis / #235:** SD-A/B/C1/C2 sind mit PR #240–#243 abgeschlossen;
 letzter Merge `72ba39391833f6fd834d0a6afaf881c86c7bdc3a` nach finalem C2-Review.
 [SD](PUZZLE_DIFFICULTY.md), [Analysator](SD_ANALYZER.md),
 [0.3-Freeze](SD_CALIBRATION.md) und [Daten-/Recoveryvertrag](SD_CATALOG.md)
-bleiben aktiv. 0.4 ist separat eingefroren und weiterhin inaktiv; historische Quellen,
+bleiben als Altverträge gültig. 0.4 ist separat eingefroren und durch D aktiviert; historische Quellen,
 Bewertungen und Freigaben werden nicht umgeschrieben. Der echte Katalog dient
 nur einer ausdrücklich beauftragten manuellen Plausibilitätsprüfung und Übernahme,
 nicht der Kalibrierung von Skalenenden oder automatisierten Tests. Keine
