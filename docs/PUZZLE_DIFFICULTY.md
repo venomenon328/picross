@@ -1,21 +1,25 @@
 # Rätselschwierigkeit und wiederholbare Katalogeinstufung · SD
 
-Stand: 25.10.2026 · Spezifikation 1.3 · aktive Methode 0.3, SD2 separat freigegeben
+Stand: 26.10.2026 · Spezifikation 1.3 · 0.3-Altvertrag, aktive Methode 0.4 nach SD2-D
 
-**Aktiver Stand:** SD / [#235](https://github.com/venomenon328/picross/issues/235)
+**Historische Basis:** SD / [#235](https://github.com/venomenon328/picross/issues/235)
 ist mit SD-A/B/C1/C2 und PR #240–#243 abgeschlossen. Die ursprüngliche
 26er-Übernahme ist nach qualifiziertem finalem Review mit PR #243 als
 `72ba39391833f6fd834d0a6afaf881c86c7bdc3a` integriert. Frühere offene Gates in
 Lieferberichten sind historische Stände. Die folgenden SD-D01–D15 beschreiben
-den weiterhin aktiven Vertrag von `picross-difficulty-0.3`.
+den weiterhin gültigen Altvertrag von `picross-difficulty-0.3`.
 
 **Freigegebene Folgearbeit:** [SD2 / #402](PUZZLE_DIFFICULTY_V2.md) präzisiert
 den neuen Sollvertrag für menschennähere Basistechniken, Denkanspruch,
 Suchaufwand und Bearbeitungsumfang, breite unabhängige Referenzen und getrennte
-Validierung. SD2 ersetzt für die geplante Methode 0.4 die konkrete Bewertung aus
+Validierung. SD2 ersetzt für Methode 0.4 die konkrete Bewertung aus
 SD-D01/D04–D08; der begrenzte Umfangsbeitrag und die übrigen Schutz-/Integrations-
-grenzen bleiben. 0.3-Freeze, alte Formate und aktuelle Ratings werden nicht
-umgeschrieben. Noch keine Implementierung, echte Neubewertung oder Aktivierung.
+grenzen bleiben. 0.3-Freeze, alte Formate und historische Ratings werden nicht
+umgeschrieben. A/B/C sind über PR #408/#409/#410 integriert.
+[D-V01](SD2_D_VERIFICATION.md) liefert die gesondert beauftragte echte Analyse
+und Vergleichsvorschau; [D-F01/T01](SD2_D_ADOPTION.md) übernimmt nach Abnahme
+aller 45 Vorschläge die aktiven Bewertungen und aktiviert den Produktionsdefault
+0.4 auf dem Arbeitsbranch. Finales Review und Merge bleiben offen.
 
 [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md) und [SD-C1](SD_CATALOG.md)
 führen die exakten bestehenden Analyse-, Methoden- und Datenverträge.

@@ -63,8 +63,8 @@ Bei Schwierigkeitsanalyse, Kalibrierung oder Bewertungsmetadaten zusätzlich
 [SD-A-Analysator](docs/SD_ANALYZER.md),
 [SD-B-Methodenvertrag](docs/SD_CALIBRATION.md) und
 [SD-C1-Daten-/Recoveryvertrag](docs/SD_CATALOG.md) vollständig lesen.
-SD / #235 ist mit PR #240–#243 einschließlich C2 abgeschlossen; aktive Methode
-bleibt `picross-difficulty-0.3`. Frühere offene SD-Gates sind historische Stände.
+SD / #235 ist mit PR #240–#243 einschließlich C2 abgeschlossen; dessen Methode
+`picross-difficulty-0.3` bleibt unverändert lesbar. Frühere offene SD-Gates sind historische Stände.
 
 Die am 25.10.2026 freigegebene Folgespezifikation
 [SD2: Menschennähere Schwierigkeit](docs/PUZZLE_DIFFICULTY_V2.md) / #402 ist
@@ -83,10 +83,22 @@ getrennte Validierung und den eigenständigen eingefrorenen 0.4-Bewertungsweg.
 Denkanspruch, Suchaufwand und Bearbeitungsumfang ergeben eine feste Fünferskala.
 SD2-C / #405 bindet vor Integrationscode den vollständigen
 [Integrationsvertrag](docs/SD2_INTEGRATION.md) (bei SD2-Integration vollständig lesen).
-[SD2-C-T01](docs/SD2_C_VERIFICATION.md) bindet die technische Implementierung auf
-`feat/405-sd2-integration`; separates SD2-C-R01 und Merge bleiben offen.
-0.4 ist noch nicht aktiviert. Beide Freezes und aktive Werte
-bleiben bis zum gesonderten Auftrag erhalten. Keine Katalogquantile, echten
+[SD2-C-T01](docs/SD2_C_VERIFICATION.md) bleibt am historischen Lieferstand gebunden.
+SD2-C ist nach separatem R01 über PR #410 auf
+`4e23e644f3457362e02b75f78fdb575a99265494` integriert; die dortige
+Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate gilt nur für #410.
+[SD2-D-V01](docs/SD2_D_VERIFICATION.md) / #406 liefert die gebundene Bestandsanalyse,
+den Vergleich und die technische Übernahmevorschau. Der Folgeauftrag
+[SD2-D-OM01](docs/SD2_D_OM_FOLLOWUP.md) klärt Om mit einem frischen R4-Nachweis:
+45 gültige Vorschläge, keine offenen IDs. Alle 45 Vorschläge sind inzwischen
+abgenommen; der Eigentümer verzichtet ausdrücklich auf separates SD2-D-VR01.
+Das ist keine bestandene Zweitprüfung und erfasst weder finales R01 noch Merge.
+Der Folgeauftrag [SD2-D-F01/T01](docs/SD2_D_ADOPTION.md) übernimmt den vollständigen
+Bestand und aktiviert 0.4 ausdrücklich; beide unmittelbaren Wiederholungen sind
+echte No-ops. Aktive Ratings und Produktionsstandard sind auf diesem Branch 0.4.
+Beide Freezes und historische Quellen bleiben erhalten. Der Web-Job ist für
+PR #411 auf Nutzeranweisung gesperrt; das fehlende Gesamt-CI-Gate und finales R01
+bleiben offen. Keine Katalogquantile, echten
 Katalogtests, automatische Neubewertung oder Implementierung aus Spezifikationsfreigabe.
 
 Bei Hinweisnavigation, Vollhinweis-Overlay oder Cursor-Linienhervorhebung zusätzlich [HN: Hinweisinteraktion](docs/CLUE_INTERACTION.md) vollständig lesen. HN / #192 ist implementiert; technische Nachweise und die getrennten Abnahmen HN-R01/HN-M01 stehen im Issue/PR.

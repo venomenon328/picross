@@ -497,9 +497,13 @@ und der vollständige 0.3-Freeze bleiben erhalten. A ist nach separatem Review
 [SD2-C-V01](../../docs/SD2_INTEGRATION.md) bindet vor Code die neuen Checked-/
 Rating-/Kontext-/Reportformate, Runtime-v5 und Journalgenerationen. Die bisherigen
 0.3-Formate und eigenständigen A-/B-CLIs bleiben geschlossen. Der reale
-Produktionsdefault bleibt 0.3. Neue `--method`-Auswahl und explizites
+Produktionsdefault ist nach [D-F01/T01](../../docs/SD2_D_ADOPTION.md)
+auf dem Arbeitsbranch 0.4. Neue `--method`-Auswahl und explizites
 `catalog_method plan/adopt` folgen diesem Vertrag.
 [SD2-C-T01](../../docs/SD2_C_VERIFICATION.md) ordnet die synthetischen Nachweise zu.
+C ist nach separatem R01 über PR #410 integriert;
+[D-V01](../../docs/SD2_D_VERIFICATION.md) liefert den gesondert beauftragten
+Bestandsvergleich und Planungsstand vor der anschließenden F01-Übernahme/Aktivierung.
 
 Einzelanalyse und frischer Import verwenden eine ausdrücklich übergebene
 Definition. Das neue äußere Arbeitsverzeichnis enthält `catalog-context.json`
@@ -592,7 +596,8 @@ bezeichnen Eingabe-/Beleg-/Abbruch-/Technikfehler. Ein verifizierter abgebrochen
 Präfix bleibt unrated und liefert Exit 4; Prüfabbrüche schreiben kein Rating.
 Ausgabeordner müssen neu sein. Explizites R4 erfordert beide `--r4-proof` und
 `--r4-baseline`; kein automatischer Paarlauf. [SD2-B-T01](../../docs/SD2_B_VERIFICATION.md)
-bindet Lieferung/Selbstreview; separates B-R01 und Merge bleiben offen.
+bindet den historischen Lieferstand/Selbstreview; B ist nach separatem R01
+über PR #409 integriert.
 
 ## SD-C1: Kandidat, geprüfter Input, Vorschau und Übernahme
 

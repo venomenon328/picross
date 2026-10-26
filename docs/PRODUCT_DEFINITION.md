@@ -53,9 +53,11 @@ weder Implementierung noch Merge.
 getrennten Profile Denkanspruch, Suchaufwand und Bearbeitungsumfang, überarbeitete
 einfache Regeln sowie breitere unabhängige Referenzen und zurückgehaltene
 Validierungsfälle. Die feste sichtbare Fünferskala bleibt. Die neue Methode 0.4
-ist geplant; Spezifikation/Issues sind kein Implementierungs-/Übernahmeauftrag.
-SD / #235 ist einschließlich C2 mit PR #240–#243 abgeschlossen. Bis zur
-gesonderten Umstellung bleibt die gebundene Methode 0.3 aktiv; ihre Nachweise,
+ist über SD2-A/B/C implementiert und integriert; [D-V01](SD2_D_VERIFICATION.md)
+liefert den gesondert beauftragten Bestandsvergleich. [D-F01/T01](SD2_D_ADOPTION.md)
+übernimmt nach Abnahme alle 45 Ratings und aktiviert 0.4 auf dem Arbeitsbranch.
+SD / #235 ist einschließlich C2 mit PR #240–#243 abgeschlossen. Die gebundene
+Methode 0.3 bleibt als Altweg unverändert lesbar; ihre Nachweise,
 historischen Produktionswerte und bestehenden Spielstände bleiben erhalten.
 
 **KE / #233, mit PR #234 am 17.10.2026 integriert; Ausgangsstand für KU:**
@@ -172,7 +174,7 @@ Vergleichslösungen je Rätsel und keine neue Zeit-, Sterne- oder Progressionswe
 Eine breitere unabhängige synthetische Referenzbasis und ein vorab getrennter
 Validierungssatz begründen fein abgestufte interne Werte und feste Stufengrenzen.
 Gewichte und exakte Regeln werden im jeweiligen Entwicklungspaket nachweisbar
-festgelegt; sie sind noch nicht implementiert. Alle fünf Stufen müssen sinnvoll
+festgelegt und in SD2-A/B implementiert. Alle fünf Stufen müssen sinnvoll
 erreichbar sein, der echte Bestand muss sie nicht besetzen. Keine Quoten,
 Katalogextrema oder Quantile. Ohne passende menschliche Daten bleibt es eine
 instrumentierte Modellschätzung, keine empirisch bestätigte Lösungszeit.

@@ -1,6 +1,6 @@
 # SD2: Menschennähere Schwierigkeit und feste Skala 1–5
 
-Stand: 25.10.2026 · Spezifikation 1.0 · SD2-A/B integriert, SD2-C beauftragt
+Stand: 26.10.2026 · Spezifikation 1.0 · SD2-A/B/C integriert, D bis F01/T01 auf dem Arbeitsbranch
 
 [Gesamtissue #402](https://github.com/venomenon328/picross/issues/402) führt die
 Methodenrevision nach Eigentümerfreigabe vom 25.10.2026. Der anschließende
@@ -14,7 +14,19 @@ integriert auf `0ae6535073fb808af44dcf3e12130a33ba49cdbc`.
 [SD2-B-T01](SD2_B_VERIFICATION.md) bleibt historisch headgebunden.
 [SD2-C-V01](SD2_INTEGRATION.md) schließt vor Code die gemeinsamen Formate,
 Quellen-/Methodenwahl, Runtimezulassung und Transaktions-/Aktivierungsregeln.
-Keine reale Analyse, Bewertungsübernahme oder Aktivierung.
+C ist nach separatem R01 über [PR #410](https://github.com/venomenon328/picross/pull/410)
+auf `4e23e644f3457362e02b75f78fdb575a99265494` integriert; die dortige
+Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate gilt nur für #410.
+Der gesonderte Auftrag [SD2-D-V01](SD2_D_VERIFICATION.md) liefert die gebundene
+reale Analyse und Vorschau. Der Folgeauftrag [SD2-D-OM01](SD2_D_OM_FOLLOWUP.md)
+klärt Om und ergänzt den vollständigen Plan mit 45 gültigen Vorschlägen.
+Alle 45 Vorschläge einschließlich Om sind abgenommen. Der Eigentümer hat ausdrücklich
+auf separates SD2-D-VR01 verzichtet; es wurde nicht durchgeführt. Diese
+auftragsspezifische Ausnahme ersetzt nur dieses Gate, nicht finales R01 oder
+Mergefreigabe. Der anschließende [F01/T01-Auftrag](SD2_D_ADOPTION.md) übernimmt
+alle 45 Ratings und aktiviert 0.4, jeweils mit echtem Wiederholungs-No-op.
+Die Web-Sperre gilt ausschließlich für PR #411 und lässt das Gesamt-CI-Gate
+sichtbar unerfüllt; finales R01 und Merge bleiben offen.
 
 ## 1. Ausgangslage und gezielte Ablösung
 
@@ -39,8 +51,10 @@ Lieferberichte mit damals offenen Gates werden dadurch nicht erneut geöffnet.
 `picross-difficulty-0.3` bleibt bis zur gesonderten Umstellung aktiv und behält
 seine exakten Regel-, Quellen-, Referenz-, Formel-, Hash- und Formatbindungen.
 Kennung der neuen Methode ist **`picross-difficulty-0.4`**; SD2-B liefert sie
-eigenständig implementiert, synthetisch kalibriert und eingefroren. Gemeinsame
-Integration und Aktivierung sind weiterhin nicht erfolgt.
+eigenständig implementiert, synthetisch kalibriert und eingefroren. Die gemeinsame
+Integration ist geliefert; SD2-D-F01/T01 hat nach vollständiger Übernahme der
+45 geprüften Bewertungen den Produktionsstandard 0.4 auf dem Arbeitsbranch
+ausdrücklich aktiviert. Finales R01 und Main-Merge bleiben getrennt offen.
 
 Diese Spezifikation ersetzt für die neue Methode gezielt die in
 [SD-D01/D04–D08](PUZZLE_DIFFICULTY.md) beschriebene konkrete Technik-/Fluss-
@@ -238,7 +252,8 @@ Erst nach abgenommenen SD2-A/B/C und gesondertem Ausführungsauftrag:
    Grenznähe, Aussagegrenzen und konkreten offenen Fällen liefern.
 3. Relationen innerhalb/zwischen Größen-, Modus- und Hinweisgruppen prüfen;
    Auffälligkeiten begründen. Separates qualifiziertes Vor-Übernahme-Review des
-   vollständigen gebundenen Berichts/Plans. Bei Methodenproblemen stoppen,
+   vollständigen gebundenen Berichts/Plans (für #406 durch die oben dokumentierte
+   Eigentümerentscheidung erlassen). Bei Methodenproblemen stoppen,
    nicht Noten, Raster oder Schwellen im Datenpaket passend machen.
 4. Mit passendem Übernahmeauftrag aktuelle geprüfte Ergebnisse kontrolliert
    übernehmen und den Standard für neue Produktion ausdrücklich aktivieren.
@@ -267,9 +282,12 @@ C-Fälle. Kein Zeitplan, Nachtlauf, CI-Rating oder Solver im Spieler.
 Ein Implementierungs-PR je Paket; SD2-D trennt Vor-Übernahme- und finales Review
 innerhalb desselben Datenpakets. Kein zusätzliches Issue allein für Tests oder
 Dokumentation. Exakte Regeln/Formate und numerische Parameter sind sequenzielle
-Liefergegenstände A/B/C, keine heute als abgeschlossen behaupteten Entscheidungen.
-SD2-A ist nach unabhängiger Abnahme über PR #408 integriert. B ist in Draft-PR #409
-technisch geliefert; B-R01 und Merge bleiben offen. C/D sind noch nicht gestartet. Dieser Fachvertrag allein
+Liefergegenstände A/B/C und in deren Detailverträgen geschlossen.
+SD2-A/B/C sind nach separaten Reviews über PR #408/#409/#410 integriert.
+D liefert V01, den begrenzten Om-Folgeauftrag OM01 und nach vollständiger
+Vorschlagsabnahme F01/T01 mit Übernahme/Aktivierung. VR01 ist durch die
+Eigentümerentscheidung erlassen; finales R01 und Merge bleiben offen.
+Dieser Fachvertrag allein
 ist keine technische Startfreigabe und keine Modell-/Eigenumsetzungsempfehlung.
 
 Jedes Paket erhält technische T01-Nachweise, getrenntes Selbstreview und ein
