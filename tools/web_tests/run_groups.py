@@ -10,7 +10,7 @@ import sys
 import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from ci_scope import evaluate, JOBS
+from ci_scope import evaluate, JOBS, validate_original_event
 from web_bundle import validate, digest
 from web_tests.contract import BROWSERS, require_browser
 from web_tests.results import (BUILDS, binding, file_record, read, validate_builds,
@@ -24,6 +24,9 @@ def write(path, data):
 def check_current(plan):
     # Do not trust an arbitrary downloaded plan, even before the final gate.
     evaluate(plan, {job: {'result': 'success' if plan['selected'][job] else 'skipped'} for job in JOBS})
+    validate_original_event(plan)
+    if not plan['browser_request']:
+        raise ValueError('Browser work was not explicitly requested')
     checkout = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
     if checkout != plan['tested_checkout']:
         raise ValueError('Runner checkout differs from selected test merge')
@@ -107,7 +110,7 @@ def run(args, plan):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['seal', 'run'])
+    parser.add_argument('command', choices=['check', 'seal', 'run'])
     parser.add_argument('--plan', type=Path, required=True)
     parser.add_argument('--build-root', type=Path, required=True)
     parser.add_argument('--output', type=Path)
@@ -116,6 +119,8 @@ def main():
     args = parser.parse_args()
     plan = read(args.plan)
     check_current(plan)
+    if args.command == 'check':
+        return
     if args.command == 'seal':
         seal(args.build_root, plan)
     else:

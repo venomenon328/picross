@@ -1,6 +1,39 @@
 """Versioned browser coverage inventory; imported by selection, runners and gate."""
 GROUPS = ('regular', 'catalog', 'input', 'completion', 'persistence')
 BROWSERS = ('chromium',)
+BROWSER_SCOPES = ('none', 'regular', 'catalog', 'input', 'completion', 'persistence', 'all')
+
+
+def browser_request(scope):
+    """Canonical opt-in, independent of every changed path and general scope."""
+    if scope not in BROWSER_SCOPES:
+        raise ValueError('Unknown explicit browser scope')
+    return None if scope == 'none' else {'browser': 'chromium', 'scope': scope}
+
+
+def requested_groups(request):
+    if request is None:
+        return []
+    scope = request.get('scope') if isinstance(request, dict) else None
+    if scope == 'none' or request != browser_request(scope):
+        raise ValueError('Invalid canonical browser request')
+    return list(GROUPS) if scope == 'all' else ['regular'] + ([] if scope == 'regular' else [scope])
+
+
+def original_request(event, payload):
+    """Only the original dispatch inputs can authorize browser work."""
+    inputs = (payload.get('inputs') or {}) if event == 'workflow_dispatch' else {}
+    return browser_request(inputs.get('browser_scope', 'none'))
+
+
+def validate_request(plan, event, payload):
+    if plan.get('browser_request') != original_request(event, payload):
+        raise ValueError('Browser request differs from original event inputs')
+    if event != 'workflow_dispatch' and plan.get('browser_request') is not None:
+        raise ValueError('Browser request requires workflow_dispatch')
+    if event == 'workflow_dispatch' and plan.get('requested_scope') != (payload.get('inputs') or {}).get('scope', 'auto'):
+        raise ValueError('General scope differs from original dispatch inputs')
+
 SCENARIOS = (
     {'id':'HZ-C-W01','group':'catalog','label':'HZ-C stable small typography, complete metadata and all three native dropdowns','browsers':['chromium'],'images':[f'hz-c-{kind}-{w}.png' for kind in ('catalog','category','sort','settings','view') for w in (1280,1920,2560)]},
     {'id':'HZ-B-W01','group':'catalog','label':'HZ-B paper controls, native popup dismissal, keyboard selection and checkbox input','browsers':['chromium'],'images':[f'hz-b-{kind}-{w}.png' for kind in ('sort','settings','view') for w in (1280,1920,2560)]},
@@ -46,36 +79,6 @@ def require_browser(browser):
 def expected(browser, groups):
     require_browser(browser)
     return [row for row in SCENARIOS if browser in row['browsers'] and row['group'] in groups]
-
-
-def select_groups(web_reasons):
-    """Exact audited leaf dependencies; anything else conservatively selects all.
-
-    Catalog controls are also exercised by completion/reset and recovery. Input
-    actions feed completion and persistence. Save/session/main/export are shared.
-    """
-    selected = {'regular'} if web_reasons else set()
-    for reason in web_reasons:
-        if reason in {'explicit scope: browser-'+g for g in GROUPS[1:]}:
-            selected.add(reason.removeprefix('explicit scope: browser-'))
-        elif reason in {'tools/web_tests/group_'+g+'.py' for g in GROUPS[1:]}:
-            selected.add(reason.removeprefix('tools/web_tests/group_').removesuffix('.py'))
-        elif reason in {'game/ui/catalog_ink.gd', 'game/ui/catalog_tip.gd',
-                      'game/model/catalog_difficulty.gd'}:
-            selected.update(('catalog',))
-        elif reason in {'game/ui/catalog.gd', 'game/ui/catalog_card.gd'}:
-            selected.update(('catalog', 'completion', 'persistence'))
-        elif reason in {'game/ui/completion.gd'}:
-            selected.update(('completion',))
-        elif reason in {'game/ui/gesture_counter.gd', 'game/ui/clue_overlay.gd',
-                        'game/ui/clue_layout.gd'}:
-            selected.update(('input',))
-        elif reason in {'game/model/gesture.gd', 'game/ui/full_view_board.gd',
-                        'game/ui/board.gd', 'game/ui/grid_view.gd'}:
-            selected.update(('input', 'completion', 'persistence'))
-        else:
-            selected.update(GROUPS)
-    return [group for group in GROUPS if group in selected]
 
 
 def coverage(groups):

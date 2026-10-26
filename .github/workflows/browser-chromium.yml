@@ -6,6 +6,12 @@ on:
       browser:
         type: string
         required: true
+      browser_request:
+        type: string
+        required: true
+      browser_scope:
+        type: string
+        required: true
       selection_attempt:
         type: string
         required: true
@@ -33,6 +39,20 @@ jobs:
             echo 'Unsupported CI browser; expected chromium' >&2
             exit 1
           fi
+      - name: Require original explicit browser request before setup
+        env:
+          EVENT: ${{ github.event_name }}
+          ORIGINAL_SCOPE: ${{ github.event.inputs.browser_scope }}
+          BROWSER_SCOPE: ${{ inputs.browser_scope }}
+          BROWSER_REQUEST: ${{ inputs.browser_request }}
+        run: |
+          [ "$EVENT" = workflow_dispatch ] && [ "$ORIGINAL_SCOPE" = "$BROWSER_SCOPE" ] || exit 1
+          case "$BROWSER_SCOPE" in
+            regular|catalog|input|completion|persistence|all) ;;
+            *) echo 'Missing or invalid explicit browser scope' >&2; exit 1 ;;
+          esac
+          expected='{"browser":"chromium","scope":"'"$BROWSER_SCOPE"'"}'
+          [ "$BROWSER_REQUEST" = "$expected" ] || exit 1
       - name: Bind browser producer attempt
         id: producer
         run: echo "attempt=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
@@ -44,6 +64,11 @@ jobs:
         with:
           name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ inputs.selection_attempt }}
           path: ${{ runner.temp }}/ci-selection
+      - name: Validate selected request against original event and checkout
+        env:
+          CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
+        run: python3 tools/web_tests/run_groups.py check --plan "${{ runner.temp }}/ci-selection/ci-plan.json" --build-root artifacts
       - name: Download current sealed builds
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
