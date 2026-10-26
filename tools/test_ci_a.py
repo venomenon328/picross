@@ -40,42 +40,42 @@ class DependencyTests(unittest.TestCase):
         for name in ("contract.py", "__init__.py", "p1_export.py", "content_registry.py",
                      "catalog_rating.py", "catalog_difficulty.py", "za1_fixtures.py",
                      "analysis_new.py", "difficulty_method_0_4.json"):
-            self.assertTrue({"product", "web", "delivery", "production"} <=
+            self.assertTrue({"product", "delivery", "production"} <=
                             jobs(["tools/puzzle_production/" + name]))
 
     def test_template_exception_is_exact_and_union_preserves_obligations(self):
         template = ".github/pull_request_template.md"
         self.assertEqual(jobs([template]), {"docs"})
         for path in (".github/other.md", ".github/workflows/web-chromium.yml", ".github/workflows/delivery.yml"):
-            self.assertEqual(jobs([path]), set(JOBS))
+            self.assertEqual(jobs([path]), (set(JOBS) - {"web"}))
         self.assertEqual(jobs([template, "tools/deploy_web.py"]), {"docs", "delivery"})
         self.assertEqual(jobs(PR241 + ["tools/deploy_web.py"]), {"docs", "production", "delivery"})
-        self.assertEqual(jobs(PR241 + ["unknown.py"]), set(JOBS))
+        self.assertEqual(jobs(PR241 + ["unknown.py"]), (set(JOBS) - {"web"}))
 
     def test_browser_delivery_native_and_shared_dependencies(self):
         for path in ("tools/deploy_web.py", "tools/web_tests/ssh_reference.py"):
             self.assertEqual(jobs([path]), {"docs", "delivery"})
         for path in ("tools/web_tests/browser.py", "tools/web_tests/smoke.py"):
-            self.assertEqual(jobs([path]), {"docs", "web"})
+            self.assertEqual(jobs([path]), {"docs"})
         self.assertEqual(jobs(["tools/perf_b_resources.py"]), {"docs", "product"})
         for path in ("game/ui/main.gd", "game/model/save_store.gd"):
-            self.assertEqual(jobs([path]), {"docs", "product", "web"})
+            self.assertEqual(jobs([path]), {"docs", "product"})
         for path in ("tools/build_web_player.py", "tools/web_bundle.py", "tools/web_tests/serve.py"):
-            self.assertEqual(jobs([path]), {"docs", "web", "delivery"})
+            self.assertEqual(jobs([path]), {"docs", "delivery"})
         for path in ("game/export_presets.cfg", "game/project.godot", "game/web/shell.html"):
-            self.assertTrue({"product", "web", "delivery"} <= jobs([path]))
+            self.assertTrue({"product", "delivery"} <= jobs([path]))
 
     def test_manual_scopes_and_main_contract(self):
         expected = {
-            "auto": {"docs"}, "all": set(JOBS), "toolchain": set(JOBS),
-            "runtime": {"docs", "product", "web"}, "visual": {"docs", "product", "web"},
-            "perf-b": {"docs", "product", "web"},
-            "production": {"docs", "production", "product", "web", "delivery"},
+            "auto": {"docs"}, "all": (set(JOBS) - {"web"}), "toolchain": (set(JOBS) - {"web"}),
+            "runtime": {"docs", "product"}, "visual": {"docs", "product"},
+            "perf-b": {"docs", "product"},
+            "production": {"docs", "production", "product", "delivery"},
         }
         for scope, selected in expected.items():
             self.assertEqual(jobs([], scope), selected)
             self.assertEqual(jobs(["tools/deploy_web.py"], scope), selected | {"delivery"})
-        self.assertEqual(jobs(["tools/ci_scope.py"], event="push"), {"docs", "production"})
+        self.assertEqual(jobs(["tools/ci_scope.py"], event="push"), {"docs"})
         self.assertEqual(jobs(["tools/deploy_web.py"], event="push"), {"docs"})
 
     def test_real_rename_delete_and_full_diff_not_last_commit(self):
@@ -137,6 +137,7 @@ class AdversarialGateTests(unittest.TestCase):
         plan.update(binding, comparison="exact-base-to-head-trees-no-renames", diff_check="full-whitespace-check")
         outputs = {key: str(plan["selected"][key]).lower() for key in FLAGS}
         outputs["selection_attempt"] = "2"
+        outputs["browser_request"] = "null"
         outputs["native_groups"] = native_groups_output(plan["native_groups"])
         binding["gate_attempt"] = "2"
         validate_binding(plan, binding, outputs)
@@ -188,7 +189,7 @@ class WorkflowExecutionTests(unittest.TestCase):
         for job, workflow in (("web", "web-chromium"), ("delivery", "delivery")):
             condition = f"needs.docs.outputs.{job} == 'true'"
             if job == "web":
-                condition += " && github.event.pull_request.number != 411"
+                condition += " && github.event_name == 'workflow_dispatch' && inputs.browser_scope != 'none'"
             section = source.split(f"  {job}:\n", 1)[1].split("\n\n", 1)[0]
             self.assertIn("    needs: docs\n", section)
             self.assertIn(f"    if: {condition}\n    uses: ./.github/workflows/{workflow}.yml", section)
@@ -196,17 +197,6 @@ class WorkflowExecutionTests(unittest.TestCase):
         self.assertIn("needs: [docs, product, production, preflight, web, delivery]", source)
         self.assertIn("CI_OUTPUTS: ${{ toJSON(needs.docs.outputs) }}", source)
         self.assertIn("CI_BINDING:", source)
-
-    def test_pr411_web_omission_keeps_required_gate_incomplete(self):
-        plan = classify(["content/difficulty-method.json"])
-        self.assertTrue(plan["selected"]["web"])
-        results = {job: {"result": "success" if plan["selected"][job] else "skipped"}
-                   for job in JOBS}
-        self.assertTrue(all(row["accepted"] for row in evaluate(plan, results)))
-        results["web"]["result"] = "skipped"
-        rows = evaluate(plan, results)
-        self.assertFalse(next(row["accepted"] for row in rows if row["job"] == "web"))
-        self.assertFalse(all(row["accepted"] for row in rows))
 
     @unittest.skipUnless(sys.platform == "linux", "Executes the Linux workflow shell on its actual platform")
     def test_actual_workflow_commands_with_synthetic_tools_and_failure_propagation(self):

@@ -7,7 +7,7 @@ import re
 from web_tests.contract import BROWSERS, expected, require_browser
 from web_bundle import digest, safe_name, validate_manifest
 
-BINDING = ('source_head', 'base_commit', 'tested_checkout', 'event', 'run_id', 'run_attempt')
+BINDING = ('source_head', 'base_commit', 'tested_checkout', 'event', 'run_id', 'run_attempt', 'browser_request')
 BUILDS = ('web-player', 'web-test', 'web-test-update')
 
 

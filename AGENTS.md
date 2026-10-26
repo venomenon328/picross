@@ -13,8 +13,11 @@ Bei CI, Tests, Prüfartefakten, Bestandsbereinigung oder Produktionsabschluss zu
 [CI-Policy](docs/CI_POLICY.md) und [Bestandsinventar](docs/DEVELOPMENT_ARCHIVE.md)
 vollständig lesen. CI2 / [#412](https://github.com/venomenon328/picross/issues/412)
 ist am 26.10.2026 als Spezifikation freigegeben; beauftragt sind Issues und Dokumentation.
-CI2-A–E (#413–#417) sind unbegonnen. Keine Implementierung, Datenlöschung oder Merge
-aus dieser Freigabe ableiten; die ausführbare CI bleibt vor ihrer Umsetzung unverändert.
+CI2-A / #413 ist auf `chore/413-ci2-a-auswahl` implementiert;
+[Auswahlvertrag](docs/CI_A_SELECTION.md), T01/Selbstreview im Draft-PR, separates R01 vor Merge.
+CI2-B–E (#414–#417) sind unbegonnen. Keine weitere Implementierung, Datenlöschung
+oder Merge aus der Spezifikationsfreigabe ableiten; ihre inneren Umfänge bleiben bis
+zum jeweiligen Auftrag unverändert.
 Der künftige Umfang verlangt Chromium ausschließlich auf ausdrücklichen Auftrag und
 ersetzt die 500er-Historyroute durch höchstens 20 semantische Benutzerkommandos,
 höchstens sechs neue wirksame History-Transaktionen und genau zwei echte Spielprozesse.

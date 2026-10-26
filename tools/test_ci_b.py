@@ -12,7 +12,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from ci_scope import classify, apply_event_policy, evaluate, JOBS, FLAGS
+from ci_scope import request_output, classify, apply_event_policy, evaluate, JOBS, FLAGS
 from web_bundle import LICENSES
 from web_tests.contract import BROWSERS, GROUPS, SCENARIOS, expected
 from web_tests.results import (BUILDS, binding, file_record, read, validate_all,
@@ -29,8 +29,8 @@ def write(path, data):
     path.write_text(json.dumps(data)+'\n', encoding='utf-8')
 
 
-def plan_for(paths=None, force='auto'):
-    plan = apply_event_policy(classify(paths or ['tools/ci_scope.py'], force), 'pull_request')
+def plan_for(paths=None, force='auto', browser_scope='all'):
+    plan = apply_event_policy(classify(paths or ['tools/ci_scope.py'], force, browser_scope), 'workflow_dispatch')
     plan.update(source_head='a'*40, base_commit='b'*40, tested_checkout='c'*40,
                 run_id='123', run_attempt='1', comparison='exact-base-to-head-trees-no-renames',
                 diff_check='full-whitespace-check')
@@ -90,39 +90,20 @@ def fixture(plan, browser, root):
 
 
 class Selection(unittest.TestCase):
-    def test_audited_leaf_and_shared_dependencies(self):
-        examples = {
-            'game/ui/catalog_ink.gd': ['regular','catalog'],
-            'game/ui/catalog_tip.gd': ['regular','catalog'],
-            'game/ui/catalog_card.gd': ['regular','catalog','completion','persistence'],
-            'game/ui/gesture_counter.gd': ['regular','input'],
-            'game/ui/completion.gd': ['regular','completion'],
-            'game/ui/board.gd': ['regular','input','completion','persistence'],
-            'tools/web_tests/group_persistence.py': ['regular','persistence'],
-        }
-        for path, groups in examples.items():
-            with self.subTest(path=path):
-                self.assertTrue((ROOT/path).is_file())
-                plan = classify([path])
-                self.assertEqual(plan['browser_groups'], groups)
-                self.assertFalse(plan['selected']['delivery'])
-        for path in ['game/ui/main.gd','game/model/save_store.gd','game/model/session.gd',
-                     'game/web/storage.js','tools/web_tests/browser_actions.py',
-                     'tools/web_tests/probe.gd','tools/build_web_player.py','unknown.py']:
-            self.assertEqual(classify([path])['browser_groups'],list(GROUPS),path)
+    def test_explicit_scope_is_exact_even_for_shared_runtime_and_toolchain(self):
+        for path in ['game/ui/catalog_ink.gd', 'game/ui/main.gd', 'unknown.py',
+                     'tools/web_tests/group_persistence.py', 'tools/ci_scope.py']:
+            self.assertEqual(classify([path])['browser_groups'], [])
+            for scope in GROUPS:
+                groups = ['regular'] if scope == 'regular' else ['regular', scope]
+                self.assertEqual(classify([path], browser_scope=scope)['browser_groups'], groups)
+                self.assertEqual(classify([path], browser_scope='all')['browser_groups'], list(GROUPS))
 
-    def test_union_manual_scopes_never_narrow_and_main_stays_short(self):
-        paths=['game/ui/catalog_ink.gd','game/ui/completion.gd']
-        self.assertEqual(classify(paths)['browser_groups'],['regular','catalog','completion'])
-        for group in GROUPS[1:]:
-            self.assertEqual(classify([], 'browser-'+group)['browser_groups'],['regular',group])
-            self.assertEqual(classify(['game/ui/main.gd'], 'browser-'+group)['browser_groups'],list(GROUPS))
-            self.assertTrue(classify(['tools/deploy_web.py'], 'browser-'+group)['selected']['delivery'])
+    def test_general_scopes_are_browser_free_and_main_stays_short(self):
         for scope in ['all','toolchain','runtime','visual','perf-b','production']:
-            self.assertEqual(classify([],scope)['browser_groups'],list(GROUPS))
-        for path in ['docs/WEB_HOSTING.md','tools/deploy_web.py','tools/puzzle_production/analysis.py']:
-            self.assertEqual(classify([path])['browser_groups'],[])
-        self.assertEqual(apply_event_policy(classify(['unknown.py']), 'push')['browser_expected'],{})
+            self.assertEqual(classify([], scope)['browser_groups'], [])
+            self.assertEqual(classify(['unknown.py'], scope)['browser_expected'], {})
+        self.assertEqual(apply_event_policy(classify(['unknown.py']), 'push')['browser_expected'], {})
 
     def test_selection_cannot_drop_expected_browser_or_group(self):
         original = plan_for()
@@ -237,12 +218,13 @@ class EvidenceGate(unittest.TestCase):
     def test_real_finish_cli_accepts_only_complete_bound_chromium_evidence(self):
         # This case isolates browser evidence. CI-C additionally rejects a green
         # Product job without its own actual native payload (test_ci_c).
-        self.plan.update(classify(['tools/web_tests/browser.py']))
+        self.plan.update(classify(['tools/web_tests/browser.py'], browser_scope='all'))
         plan_file=self.root/'plan.json';write(plan_file,self.plan)
         output=self.root/'result.json'
-        env={**os.environ,'GITHUB_ACTIONS':'true','GITHUB_RUN_ATTEMPT':'2','GITHUB_STEP_SUMMARY':'',
+        write(self.root/'event.json', {'inputs': {'scope':'auto', 'browser_scope':'all'}})
+        env={**os.environ,'GITHUB_EVENT_PATH':str(self.root/'event.json'),'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_ACTIONS':'true','GITHUB_RUN_ATTEMPT':'2','GITHUB_STEP_SUMMARY':'',
              'CI_BINDING':json.dumps({**binding(self.plan),'gate_attempt':'2'}),
-             'CI_OUTPUTS':json.dumps({**{key:str(self.plan['selected'][key]).lower() for key in FLAGS},'selection_attempt':'1','native_groups':'[]'}),
+             'CI_OUTPUTS':json.dumps({**{key:str(self.plan['selected'][key]).lower() for key in FLAGS},'selection_attempt':'1','native_groups':'[]','browser_request':request_output(self.plan['browser_request'])}),
              'CI_RESULTS':json.dumps({job:{'result':'success' if self.plan['selected'][job] else 'skipped'} for job in JOBS})}
         for attempt,code in [('1',0),('2',1)]:
             env['CI_WEB_OUTPUTS']=json.dumps({'chromium_attempt':attempt})
@@ -311,7 +293,7 @@ class Execution(unittest.TestCase):
 
     def test_each_selected_group_is_a_fresh_process_even_after_failure(self):
         for selected in GROUPS[1:]:
-            plan=plan_for(['tools/web_tests/group_'+selected+'.py'])
+            plan=plan_for(['tools/web_tests/group_'+selected+'.py'], browser_scope=selected)
             with tempfile.TemporaryDirectory() as temporary:
                 root=Path(temporary)
                 source=root/'source'
@@ -368,6 +350,8 @@ class Execution(unittest.TestCase):
                         env={**os.environ,'PATH':str(bin_dir)+os.pathsep+os.environ['PATH'],
                              'JOURNAL':str(journal),'GITHUB_RUN_ATTEMPT':'2','GITHUB_OUTPUT':str(root/'output'),
                              'GITHUB_PATH':str(root/'path'),
+                             'EVENT':'workflow_dispatch','ORIGINAL_SCOPE':'all','BROWSER_SCOPE':'all',
+                             'BROWSER_REQUEST':request_output({'browser':'chromium','scope':'all'}),
                              'BROWSER':browser,'BUILD_ATTEMPT':'1','FAIL_COMMAND':failure}
                         for block in blocks:
                             result=subprocess.run(['bash','--noprofile','--norc','-eo','pipefail','-c',

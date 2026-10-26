@@ -9,14 +9,19 @@ on:
       scope:
         description: Widen the changed-path selection
         type: choice
-        options: [auto, all, runtime, visual, perf-b, production, toolchain, browser-catalog, browser-input, browser-completion, browser-persistence, native-core, native-history, native-catalog, native-completion, native-adapters, native-graphics, native-export]
-        default: all
+        options: [auto, all, runtime, visual, perf-b, production, toolchain, native-core, native-history, native-catalog, native-completion, native-adapters, native-graphics, native-export]
+        default: auto
+      browser_scope:
+        description: Explicit Chromium scope (each technical group includes regular startup; A retains all three exports)
+        type: choice
+        options: [none, regular, catalog, input, completion, persistence, all]
+        default: none
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event_name }}-${{ github.ref }}-${{ inputs.scope || 'auto' }}-${{ inputs.browser_scope || 'none' }}
   cancel-in-progress: true
 
 jobs:
@@ -33,6 +38,7 @@ jobs:
       web: ${{ steps.scope.outputs.web }}
       delivery: ${{ steps.scope.outputs.delivery }}
       native_groups: ${{ steps.scope.outputs.native_groups }}
+      browser_request: ${{ steps.scope.outputs.browser_request }}
       selection_attempt: ${{ steps.scope.outputs.selection_attempt }}
     steps:
       - name: Checkout tested integration
@@ -53,9 +59,11 @@ jobs:
           CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
           CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           CI_SCOPE: ${{ inputs.scope || 'auto' }}
+          CI_BROWSER_SCOPE: ${{ inputs.browser_scope || 'none' }}
         run: >-
           python3 tools/ci_scope.py plan --fetch
           --base "$CI_BASE" --head "$CI_HEAD" --scope "$CI_SCOPE"
+          --browser-scope "$CI_BROWSER_SCOPE"
           --output "${{ runner.temp }}/ci-plan.json"
       - name: Materialize sources for code and documentation checks
         if: steps.scope.outputs.content_only != 'true'
@@ -98,11 +106,12 @@ jobs:
 
   web:
     needs: docs
-    # #406 owner instruction: no Web job for PR #411. ci-required still reports the missing evidence.
-    if: needs.docs.outputs.web == 'true' && github.event.pull_request.number != 411
+    if: needs.docs.outputs.web == 'true' && github.event_name == 'workflow_dispatch' && inputs.browser_scope != 'none'
     uses: ./.github/workflows/web-chromium.yml
     with:
       selection_attempt: ${{ needs.docs.outputs.selection_attempt }}
+      browser_request: ${{ needs.docs.outputs.browser_request }}
+      browser_scope: ${{ inputs.browser_scope }}
 
   delivery:
     needs: docs

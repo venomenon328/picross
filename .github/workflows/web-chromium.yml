@@ -3,6 +3,12 @@ name: Selected Chromium groups
 on:
   workflow_call:
     inputs:
+      browser_request:
+        type: string
+        required: true
+      browser_scope:
+        type: string
+        required: true
       selection_attempt:
         type: string
         required: true
@@ -19,6 +25,20 @@ jobs:
     outputs:
       attempt: ${{ steps.producer.outputs.attempt }}
     steps:
+      - name: Require original explicit browser request before setup
+        env:
+          EVENT: ${{ github.event_name }}
+          ORIGINAL_SCOPE: ${{ github.event.inputs.browser_scope }}
+          BROWSER_SCOPE: ${{ inputs.browser_scope }}
+          BROWSER_REQUEST: ${{ inputs.browser_request }}
+        run: |
+          [ "$EVENT" = workflow_dispatch ] && [ "$ORIGINAL_SCOPE" = "$BROWSER_SCOPE" ] || exit 1
+          case "$BROWSER_SCOPE" in
+            regular|catalog|input|completion|persistence|all) ;;
+            *) echo 'Missing or invalid explicit browser scope' >&2; exit 1 ;;
+          esac
+          expected='{"browser":"chromium","scope":"'"$BROWSER_SCOPE"'"}'
+          [ "$BROWSER_REQUEST" = "$expected" ] || exit 1
       - name: Bind build producer attempt
         id: producer
         run: echo "attempt=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
@@ -34,6 +54,11 @@ jobs:
         with:
           name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ inputs.selection_attempt }}
           path: ${{ runner.temp }}/ci-selection
+      - name: Validate selected request against original event and checkout
+        env:
+          CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
+        run: python3 tools/web_tests/run_groups.py check --plan "${{ runner.temp }}/ci-selection/ci-plan.json" --build-root artifacts
       - name: Isolated image dependency for synthetic AT exports
         run: |
           python3 -m venv "${{ runner.temp }}/web-build-env"
@@ -81,5 +106,7 @@ jobs:
     uses: ./.github/workflows/browser-chromium.yml
     with:
       browser: chromium
+      browser_request: ${{ inputs.browser_request }}
+      browser_scope: ${{ inputs.browser_scope }}
       build_attempt: ${{ needs.build.outputs.attempt }}
       selection_attempt: ${{ inputs.selection_attempt }}
