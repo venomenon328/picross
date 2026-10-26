@@ -12,7 +12,8 @@ Bei CI, Tests, Prüfartefakten, Bestandsbereinigung oder Produktionsabschluss zu
 [CI2: Kurze CI und begrenzter aktiver Bestand](docs/CI_SLIMMING.md),
 [CI-Policy](docs/CI_POLICY.md) und [Bestandsinventar](docs/DEVELOPMENT_ARCHIVE.md)
 vollständig lesen. CI2 / [#412](https://github.com/venomenon328/picross/issues/412)
-ist am 26.10.2026 als Spezifikation freigegeben; beauftragt sind Issues und Dokumentation.
+ist am 26.10.2026 als Spezifikation freigegeben; die beauftragten Umsetzungspakete
+und ihre aktuellen Nachweise stehen nachfolgend.
 CI2-A / #413 ist nach separatem R01 über PR #419 auf
 `94e3ea7d9674babbdcd6bde6251e233191fd096f` integriert.
 CI2-B ist nach separatem R01 über PR #420 auf
