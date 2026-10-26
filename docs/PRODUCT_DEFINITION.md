@@ -54,9 +54,10 @@ getrennten Profile Denkanspruch, Suchaufwand und Bearbeitungsumfang, überarbeit
 einfache Regeln sowie breitere unabhängige Referenzen und zurückgehaltene
 Validierungsfälle. Die feste sichtbare Fünferskala bleibt. Die neue Methode 0.4
 ist über SD2-A/B/C implementiert und integriert; [D-V01](SD2_D_VERIFICATION.md)
-liefert den gesondert beauftragten Bestandsvergleich ohne Übernahme/Aktivierung.
-SD / #235 ist einschließlich C2 mit PR #240–#243 abgeschlossen. Bis zur
-gesonderten Umstellung bleibt die gebundene Methode 0.3 aktiv; ihre Nachweise,
+liefert den gesondert beauftragten Bestandsvergleich. [D-F01/T01](SD2_D_ADOPTION.md)
+übernimmt nach Abnahme alle 45 Ratings und aktiviert 0.4 auf dem Arbeitsbranch.
+SD / #235 ist einschließlich C2 mit PR #240–#243 abgeschlossen. Die gebundene
+Methode 0.3 bleibt als Altweg unverändert lesbar; ihre Nachweise,
 historischen Produktionswerte und bestehenden Spielstände bleiben erhalten.
 
 **KE / #233, mit PR #234 am 17.10.2026 integriert; Ausgangsstand für KU:**

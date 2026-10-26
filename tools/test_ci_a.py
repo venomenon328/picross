@@ -186,12 +186,27 @@ class WorkflowExecutionTests(unittest.TestCase):
     def test_scheduler_and_gate_have_both_independent_jobs(self):
         source = (ROOT / ".github/workflows/ci-chromium.yml").read_text()
         for job, workflow in (("web", "web-chromium"), ("delivery", "delivery")):
-            self.assertIn(f"  {job}:\n    needs: docs\n    if: needs.docs.outputs.{job} == 'true'\n"
-                          f"    uses: ./.github/workflows/{workflow}.yml", source)
+            condition = f"needs.docs.outputs.{job} == 'true'"
+            if job == "web":
+                condition += " && github.event.pull_request.number != 411"
+            section = source.split(f"  {job}:\n", 1)[1].split("\n\n", 1)[0]
+            self.assertIn("    needs: docs\n", section)
+            self.assertIn(f"    if: {condition}\n    uses: ./.github/workflows/{workflow}.yml", section)
             self.assertIn(f'"{job}":{{"result":"${{{{ needs.{job}.result }}}}"}}', source)
         self.assertIn("needs: [docs, product, production, preflight, web, delivery]", source)
         self.assertIn("CI_OUTPUTS: ${{ toJSON(needs.docs.outputs) }}", source)
         self.assertIn("CI_BINDING:", source)
+
+    def test_pr411_web_omission_keeps_required_gate_incomplete(self):
+        plan = classify(["content/difficulty-method.json"])
+        self.assertTrue(plan["selected"]["web"])
+        results = {job: {"result": "success" if plan["selected"][job] else "skipped"}
+                   for job in JOBS}
+        self.assertTrue(all(row["accepted"] for row in evaluate(plan, results)))
+        results["web"]["result"] = "skipped"
+        rows = evaluate(plan, results)
+        self.assertFalse(next(row["accepted"] for row in rows if row["job"] == "web"))
+        self.assertFalse(all(row["accepted"] for row in rows))
 
     @unittest.skipUnless(sys.platform == "linux", "Executes the Linux workflow shell on its actual platform")
     def test_actual_workflow_commands_with_synthetic_tools_and_failure_propagation(self):

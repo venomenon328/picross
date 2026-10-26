@@ -5,7 +5,9 @@ gemeinsame kompatible Projektion der Methode 0.4. Die folgenden exakten
 alten Schemas erlauben 0.4 nicht. [SD2-C-V01](SD2_INTEGRATION.md) spezifiziert
 vor Code Runtime-v5, Quellenpriorität und Alt-/Neuübergänge; keine zusätzlichen Rohprofile,
 Scores oder Freitexte im Spieler. Kategorien, Identitäten, Added und AT bleiben
-bei einer reinen späteren Neueinstufung unverändert. Aktive Methode bleibt 0.3.
+bei einer reinen späteren Neueinstufung unverändert. [D-F01/T01](SD2_D_ADOPTION.md)
+übernimmt nach Eigentümerabnahme 45 Ratings auf 0.4 und projiziert Runtime-v5;
+dieser Zusatz ändert keine historischen Runtime-v2/v3/v4-Formate.
 
 **AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
 [AT](REVEAL_TRANSPARENCY.md) ergänzt in AT-A die getrennte aktive Bildbindung und

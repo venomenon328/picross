@@ -1,6 +1,6 @@
 # SD2: Menschennähere Schwierigkeit und feste Skala 1–5
 
-Stand: 26.10.2026 · Spezifikation 1.0 · SD2-A/B/C integriert, D mit V01 und OM01
+Stand: 26.10.2026 · Spezifikation 1.0 · SD2-A/B/C integriert, D bis F01/T01 auf dem Arbeitsbranch
 
 [Gesamtissue #402](https://github.com/venomenon328/picross/issues/402) führt die
 Methodenrevision nach Eigentümerfreigabe vom 25.10.2026. Der anschließende
@@ -20,10 +20,13 @@ Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate gilt nur für #410.
 Der gesonderte Auftrag [SD2-D-V01](SD2_D_VERIFICATION.md) liefert die gebundene
 reale Analyse und Vorschau. Der Folgeauftrag [SD2-D-OM01](SD2_D_OM_FOLLOWUP.md)
 klärt Om und ergänzt den vollständigen Plan mit 45 gültigen Vorschlägen.
-Die 44 bisherigen Vorschläge sind abgenommen. Der Eigentümer hat ausdrücklich
+Alle 45 Vorschläge einschließlich Om sind abgenommen. Der Eigentümer hat ausdrücklich
 auf separates SD2-D-VR01 verzichtet; es wurde nicht durchgeführt. Diese
 auftragsspezifische Ausnahme ersetzt nur dieses Gate, nicht finales R01 oder
-Mergefreigabe. OM01 enthält keine Bewertungsübernahme oder Aktivierung.
+Mergefreigabe. Der anschließende [F01/T01-Auftrag](SD2_D_ADOPTION.md) übernimmt
+alle 45 Ratings und aktiviert 0.4, jeweils mit echtem Wiederholungs-No-op.
+Die Web-Sperre gilt ausschließlich für PR #411 und lässt das Gesamt-CI-Gate
+sichtbar unerfüllt; finales R01 und Merge bleiben offen.
 
 ## 1. Ausgangslage und gezielte Ablösung
 
@@ -279,9 +282,10 @@ innerhalb desselben Datenpakets. Kein zusätzliches Issue allein für Tests oder
 Dokumentation. Exakte Regeln/Formate und numerische Parameter sind sequenzielle
 Liefergegenstände A/B/C und in deren Detailverträgen geschlossen.
 SD2-A/B/C sind nach separaten Reviews über PR #408/#409/#410 integriert.
-D liefert V01 und den begrenzten Om-Folgeauftrag OM01. VR01 ist durch die
-Eigentümerentscheidung erlassen; Übernahme/Aktivierung, finales R01 und Merge
-bleiben getrennte spätere Schritte. Dieser Fachvertrag allein
+D liefert V01, den begrenzten Om-Folgeauftrag OM01 und nach vollständiger
+Vorschlagsabnahme F01/T01 mit Übernahme/Aktivierung. VR01 ist durch die
+Eigentümerentscheidung erlassen; finales R01 und Merge bleiben offen.
+Dieser Fachvertrag allein
 ist keine technische Startfreigabe und keine Modell-/Eigenumsetzungsempfehlung.
 
 Jedes Paket erhält technische T01-Nachweise, getrenntes Selbstreview und ein

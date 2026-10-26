@@ -2,16 +2,17 @@
 
 **SD2 · 26.10.2026, C-Integration nach separatem R01 über PR #410 integriert:**
 [Der neue Schwierigkeitsvertrag](PUZZLE_DIFFICULTY_V2.md) trennt Denkanspruch,
-Suchaufwand und Bearbeitungsumfang. Die geplante Methode 0.4 ersetzt erst nach
-gesonderter geprüfter Aktivierung den Produktionsstandard 0.3. Neue und bestehende
-Rätsel verwenden dann denselben Freeze; unveränderte gültige Analysen werden
+Suchaufwand und Bearbeitungsumfang. [D-F01/T01](SD2_D_ADOPTION.md) übernimmt
+die 45 abgenommenen Vorschläge und aktiviert auf dem Arbeitsbranch den
+Produktionsstandard 0.4. Neue und umgestellte bestehende
+Rätsel verwenden denselben Freeze; unveränderte gültige Analysen werden
 wiederverwendet. Keine Bild-/Rasterproduktion oder Neubewertung durch diese
 Spezifikationspflege. Der [C-Integrationsvertrag](SD2_INTEGRATION.md) und die
 [CLI-Anleitung](../tools/puzzle_production/README.md) regeln explizite Methodenwahl,
 Import, Vorschau, Plan, Übernahme und Aktivierung. [C-T01](SD2_C_VERIFICATION.md)
 prüft ausschließlich synthetische Fälle; ursprüngliche Inhaltsfreigaben bleiben
-erhalten. [D-V01](SD2_D_VERIFICATION.md) liefert zunächst ausschließlich
-Bestandsanalyse, Vergleich und Übernahmevorschau; keine Übernahme/Aktivierung.
+erhalten. [D-V01](SD2_D_VERIFICATION.md) bleibt der historische Bericht zu
+Bestandsanalyse, Vergleich und Übernahmevorschau vor F01.
 
 **AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A integriert:**
 [Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) ergänzt echte Transparenz für
