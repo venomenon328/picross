@@ -1,15 +1,17 @@
 # Aktuelle CI-Policy
 
-Stand: 26.10.2026 · Version 3.1 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
+Stand: 26.10.2026 · Version 3.2 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
 
 ## Freigegebener CI2-Sollvertrag
 
 [CI_SLIMMING](CI_SLIMMING.md) ist vollständig zu lesen und hat für die dort
 benannten Änderungen Vorrang vor den älteren Umfangsvorgaben dieser Policy und
-der verlinkten Prüfverträge. CI2-A ist auf `chore/413-ci2-a-auswahl` implementiert;
-[aktuelle Auswahl und Aufrufgrenzen](CI_A_SELECTION.md) gelten für diesen Branch.
-T01 und getrenntes Selbstreview stehen im Draft-PR; separates R01 bleibt vor Merge.
-CI2-B/C/D/E sind weiterhin unbegonnen. Kein Merge, Deployment oder Datenabbau.
+der verlinkten Prüfverträge. CI2-A ist nach separatem R01 über PR #419 integriert.
+[Aktuelle Auswahl und Aufrufgrenzen](CI_A_SELECTION.md) enthalten auf dem B-Branch
+zusätzlich Fachgruppen, gemessene Ausführung und Fachbelege im Ergebnisgate.
+[CI2-B-T01](CI2_B_VERIFICATION.md), Selbstreview und Draft-PR #420 binden die
+Lieferung; separates B-R01 bleibt vor Merge. C/D/E sind unbegonnen.
+Kein Merge, Deployment oder großer Datenabbau.
 
 - **Auswahl / CI2-A [#413](https://github.com/venomenon328/picross/issues/413):**
   Automatische PR-/Push-Läufe installieren und starten keinen Browser. Auch

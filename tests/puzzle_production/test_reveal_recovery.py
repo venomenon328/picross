@@ -24,20 +24,10 @@ class RecoveryTests(unittest.TestCase):
         # Technical publication/recovery boundaries need a valid bound catalog,
         # not all historical production files at every guard. Real full-export
         # integration remains in RevealTests and the adapter group.
-        import shutil
-        from tools.puzzle_production.integrated_content import FORMAT
-        from tools.puzzle_production.authoring_package import file_hash
-        from tools.puzzle_production.contract import load_json,write_json
         from tests.puzzle_production.test_catalog_reveal import RevealTests as Fixture
+        from tests.puzzle_production.catalog_fixtures import compact
         Fixture.setUpClass.__func__(cls)
-        registry=cr.check_checkout(cls.base)
-        entry=registry['entries'][0]
-        package=cls.base/entry['production']['package']
-        notice=(cls.base/'game'/entry['reveal']).with_suffix('.txt')
-        receipt={'format':FORMAT,'entry':deepcopy(entry),'integrated_commit':'a'*40,'notice_sha256':file_hash(notice)}
-        shutil.rmtree(package);package.mkdir();write_json(package/'manifest.json',receipt)
-        entry['production']['package_sha256']=file_hash(package/'manifest.json')
-        write_json(cls.base/cr.REGISTRY,registry)
+        compact(cls.base,[cls.identifier])
         cls.entry=cr.check_checkout(cls.base)['entries'][0]
     tearDownClass = classmethod(RevealTests.tearDownClass.__func__)
     setUp = RevealTests.setUp

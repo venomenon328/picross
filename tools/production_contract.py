@@ -73,7 +73,7 @@ def audited_consumers(root):
     production = root / 'tools/puzzle_production'
     tests = root / 'tests/puzzle_production'
     files = {p.stem: p for p in production.glob('*.py')}
-    files.update({p.stem: p for p in tests.glob('test_*.py')})
+    files.update({p.stem: p for p in tests.glob('*.py') if p.stem != '__init__'})
     edges = {}
     for module, path in files.items():
         deps = set()
@@ -108,7 +108,9 @@ def audited_consumers(root):
 
 
 # Filled from the reviewed import graph; the fast tool audit rejects drift.
-SOURCE_GROUPS = {'tests/puzzle_production/test_accepted_raster_adapter.py': ('adapter',),
+SOURCE_GROUPS = {'tests/puzzle_production/catalog_fixtures.py': ('catalog',),
+ 'tests/puzzle_production/oracle.py': ('solver',),
+ 'tests/puzzle_production/test_accepted_raster_adapter.py': ('adapter',),
  'tests/puzzle_production/test_analysis.py': ('solver',),
  'tests/puzzle_production/test_approved_color_adapter.py': ('images', 'adapter'),
  'tests/puzzle_production/test_benchmark.py': ('solver',),
