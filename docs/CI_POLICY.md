@@ -1,5 +1,14 @@
 # Aktuelle CI-Policy
 
+**Auftragsspezifische Ausführungssperre #406 / PR #411 · 26.10.2026:** Der
+Eigentümer untersagt den Web-Job für diesen Auftrag. Ausschließlich bei
+`pull_request.number == 411` sperrt der Scheduler diesen Job trotz automatischer
+Auswahl. Andere PRs und alle übrigen Jobs behalten ihre Bedingungen. Selektor,
+Browserumfang und `ci-required` bleiben unverändert: ausgewähltes, übersprungenes
+Web ist ein fehlender Pflichtnachweis und ergibt keinen vollständigen CI-Pass.
+Diese Sperre erteilt weder eine Mergefreigabe noch eine Ausnahme vom finalen
+Gesamtgate. [F01/T01](SD2_D_ADOPTION.md) bindet tatsächliche Ausführung und Lücke.
+
 **SD2 · 25.10.2026:** [Der freigegebene Sollvertrag](PUZZLE_DIFFICULTY_V2.md)
 ändert keine automatische Prüfauswahl. Referenz-/Validierungssätze und allgemeine
 Regressionen bleiben unabhängig synthetisch; echte Katalogfälle, daraus kopierte

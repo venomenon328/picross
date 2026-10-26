@@ -3,7 +3,8 @@
 **SD2 · 25.10.2026:** [Die neue Schwierigkeitsspezifikation](PUZZLE_DIFFICULTY_V2.md)
 führt einen gesonderten kompatiblen 0.4-Weg ein, dessen technische Lieferung
 SD2-C (#405) und tatsächliche Aktivierung SD2-D (#406) vorbehalten sind. Der
-aktuelle Registrierungs-/Produktionsstandard bleibt 0.3. Neue Methode und drei
+Registrierungs-/Produktionsstandard ist nach [D-F01/T01](SD2_D_ADOPTION.md)
+auf dem Arbeitsbranch ausdrücklich 0.4. Neue Methode und drei
 Teilprofile ändern keine Definition, Identität, Freigabe, AT-/Added-Quelle oder
 Saves. Kein Solverlauf aus Register/Sync/Recovery und kein stilles Erweitern der
 heutigen geschlossenen Schemas; die vollständigen Altwege bleiben erhalten.

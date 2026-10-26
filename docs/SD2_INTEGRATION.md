@@ -1,6 +1,12 @@
 # SD2-C · Kompatible Integration und expliziter Produktionsstandard
 
-Stand: 25.10.2026 · SD2-C-V01 · Vertrag vor Implementierung.
+Vertragsstand: 25.10.2026 · SD2-C-V01 · vor Implementierung festgelegt.
+Status 26.10.2026: C nach separatem R01 über PR #410 auf
+`4e23e644f3457362e02b75f78fdb575a99265494` integriert.
+[D-V01](SD2_D_VERIFICATION.md) führt den gesonderten Bestandsvergleich;
+[D-F01/T01](SD2_D_ADOPTION.md) übernimmt nach Eigentümerabnahme alle 45 Ratings
+und aktiviert 0.4 auf dem Arbeitsbranch. Die folgende Ausgangsbindung und
+der [C-T01-Bericht](SD2_C_VERIFICATION.md) bleiben historisch.
 [Issue #405](https://github.com/venomenon328/picross/issues/405), einschließlich
 Umsetzungsvorbereitung V1, beauftragt dieses Paket auf
 `main@0ae6535073fb808af44dcf3e12130a33ba49cdbc`.
@@ -167,7 +173,8 @@ Reine Metadatenänderung darf die gültige bisherige Methode rebindend erhalten.
 Explizite Katalogbewertung darf unabhängig vom Produktionsdefault beide Methoden
 vorbereiten/übernehmen. Bloßes Lesen, Sync, Cleanup, Recovery, Build, Start oder
 CI aktiviert nichts. C prüft Aktivierung ausschließlich in synthetischen
-Checkouts; der reale Default bleibt durch Abwesenheit der Datei **0.3**.
+Checkouts; C selbst beließ den realen Default durch Abwesenheit der Datei bei
+**0.3**. Die anschließende reale Aktivierung gehört ausschließlich D-F01/T01.
 
 ## C-V01-05 · Gemeinsame Transaktion und Altjournalmatrix
 
@@ -243,4 +250,6 @@ Chromiumgruppen, delivery und ci-required; Preflight nur nach tatsächlicher
 Auswahl. Kein Firefox, keine Verkürzung der Selektoren. Lokale Adaptertests
 verwenden isoliert Python 3.11+ und exakt Pillow 12.3.0. T01 dokumentiert Head,
 Basis, CI-Test-Merge, Run/Jobs und einen getrennten Selbstreview. Das separate
-qualifizierte SD2-C-R01 bleibt vor Merge offen. Kein Merge, Deployment oder #406.
+qualifizierte SD2-C-R01 war ein eigenes Gate vor Merge und ist über PR #410
+abgeschlossen. Die dortige Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate
+gilt nur für #410. C beauftragte weder Deployment noch #406.
