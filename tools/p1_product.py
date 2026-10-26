@@ -165,9 +165,9 @@ def run_integration(output: Path, workspace: Path, environment: dict, base: list
     environment.update(P1_TEST_SAVE_ROOT=str(saves), P1_INTEGRATION_PLAN=str(plan_path),
                        P1_INTEGRATION_TRACE=str(trace))
     try:
-        for stage, flag, marker in (("writer", "write", "WRITE"), ("reader", "read", "READ")):
+        for stage, flag in (("writer", "write"), ("reader", "read")):
             phase("integration-"+stage, base + ["--script", "res://tests/p14_integration.gd", "--", "--"+flag],
-                  "P1_INTEGRATION_"+marker+"_OK")
+                  "CI2_D_HISTORY_"+stage.upper()+"_OK")
             shutil.copyfile(saves/"t06.json", directory/(stage+"-save.json"))
             foreign[stage] = foreign_hashes()
         (directory/"foreign-slots.json").write_text(json.dumps(foreign)+"\n", encoding="utf-8")
