@@ -1,11 +1,56 @@
 # CI-B: Browserinventar und Ausführungsvertrag
 
+## Vorrangiger Sollvertrag: CI2-A und CI2-C
+
+Der freigegebene [CI2-Vertrag vom 26.10.2026](CI_SLIMMING.md),
+[Gesamtissue #412](https://github.com/venomenon328/picross/issues/412), ersetzt
+die automatische Browserpflicht und die ungekürzte Fall-/Bildmatrix dieses
+Dokuments. [CI2-A / #413](https://github.com/venomenon328/picross/issues/413)
+liefert den ausdrücklichen Browserauftrag;
+[CI2-C / #415](https://github.com/venomenon328/picross/issues/415) liefert den
+kleinen Chromiumumfang. Beides ist freigegeben, noch nicht implementiert.
+Die ausführbare Ausgangsbasis bleibt `main@967314538df376a281020fb4c34f93f370a491df`.
+
+Automatische PR-/Push-Ereignisse und allgemeine manuelle Scopes starten keinen
+Browser. Ein ausdrücklich angeforderter Chromiumlauf bindet Quellstand und
+Umfang. Der kurze Umfang ersetzt die 33 Szenarien durch ungefähr 8–10 aktuelle
+Kernfälle: regulärer Start, Katalog/Sortierung, echte Bearbeitung/Undo/Redo,
+relevanter Resize-/DPI-Wechsel, kleiner Abschluss/Reset, bestätigte Sicherung mit
+Reload und Prozessneustart, Zweittab/Sperre sowie Schreibfehler/Retry.
+KU-/AT-/HZ-Katalogschichten werden konsolidiert; zusätzliche Viewports und
+Bildserien benötigen eine tatsächliche Geometrieaussage. Seltene aktuelle Fälle
+werden möglichst auf einer günstigeren Ebene geprüft.
+
+Der kurze Lauf einschließlich benötigtem Build soll höchstens acht Minuten dauern
+(typisch fünf bis acht); ein ausdrücklich gewähltes zusätzliches Browserprofil
+bleibt unter zehn Minuten und hat einen konkreten Zweck und begrenzten Umfang.
+Kein Default hängt die alte Vollmatrix an. Nur benötigte Builds werden erzeugt;
+ein angeforderter Exportwechsel verlangt weiterhin zwei echte Exporte. Echte
+Eingaben, bestätigte IndexedDB-Sicherung, Reload und Prozessneustart bleiben für
+ihre jeweiligen Aussagen erforderlich. Firefox bleibt aus CI ausgeschlossen.
+
+Das neue gewählte Inventar bindet Auswahl, Producer und Gate gemeinsam. Für seine
+Pflichtresultate bleiben eindeutige Vollständigkeit, Originalberichte, Dateihashes
+und Quell-/Run-/Versuchsbindung verbindlich; fehlend, falsch oder übersprungen ist
+kein Erfolg. Nicht angeforderte Browserprüfung benötigt keine Browserbelege.
+Laufzeitziele ersetzen weder funktionale Speicher-/Animationszusagen noch die
+gemessene Wirkung. Alte Logs dienen als Baseline, ohne die alte Vollroute erneut
+zu starten.
+
+## Gebundener CI-B-Ausgangsstand
+
+Alle folgenden Fall-/Bildlisten, Auswahlregeln und Abnahmeformulierungen
+dokumentieren den bisherigen Lieferstand und seine Erweiterungen. Sie sind
+keine Pflicht, diese Mengen unter CI2 fortzuführen. Die bisherige ausführbare
+Route und ihr Gate bleiben bis zur zusammenhängenden Umstellung unverändert;
+historische Messungen und Abnahmen behalten ihren geprüften Stand.
+
 Ausgangsbestand vor Aufteilung: `main@9ec73a5f35173d1f4f772feabba451c1d4ccd92a`.
 [Issue #248](https://github.com/venomenon328/picross/issues/248) und
 [CI-Policy](CI_POLICY.md) bestimmen B01–B08. Technische Abnahme und Messungen
 werden im Implementierungs-PR gebunden; CI-B-R01 bleibt separat vor Merge.
 
-## Aktuelle Browserpflicht
+## Browserpflicht der gebundenen Ausgangsbasis
 
 Eigentümerentscheidung vom 19.10.2026 / [#261](https://github.com/venomenon328/picross/issues/261):
 Firefox entfällt vollständig aus automatisierter CI. Die folgende aktuelle
@@ -18,7 +63,7 @@ Ereignisse auf alten offenen PRs folgt der [CI-Policy](CI_POLICY.md). S3 nimmt
 historische Reruns aus dem Mergegate; sie werden nicht gestartet. Die alte
 Workflowkette bleibt administrativ deaktiviert, Chromium erhält neue Pfade/IDs.
 
-## Vollständige Zuordnung
+## Bisherige vollständige Zuordnung
 
 Die unveränderten Szenarionamen identifizieren die vorhandenen positiven und
 negativen Assertions. Chromium ist der einzige CI-Browser; die Live-DPI-Probe
@@ -186,7 +231,7 @@ und parallele Wartezeit werden getrennt ausgewiesen. CI-B-R01 bleibt eine
 separate qualifizierte Prüfung vor Merge. Keine Produktabnahme, CI-C-Umsetzung,
 Merge- oder Livefreigabe durch diese technische Lieferung.
 
-## KU-B-Erweiterung des aktiven Inventars
+## KU-B-Erweiterung der Ausgangsbasis
 
 KU-B ergänzt `KU-B01` in `catalog` (vier Kriterien, beide Richtungen,
 Gleichstände, stabile Rückkehr-ID) und `KU-B02` in `persistence` (Präferenz über
@@ -197,7 +242,7 @@ KU-B-Inventar 27 Chromium-Szenarien. Die bisherigen 26 Firefox-Szenarien
 bleiben in ihren historischen Nachweisen gebunden. Die Auswahlpolitik und der
 separat bekannte rote Main-Push-Befund werden hierdurch nicht repariert.
 
-## AT-A-Erweiterung des aktiven Inventars
+## AT-A-Erweiterung der Ausgangsbasis
 
 `AT-W01-C` in `catalog` prüft kleine transparente Karte und Hover;
 `AT-W01-E` in `completion` prüft Überblendung, Endbild und Wiederöffnung.
@@ -214,7 +259,7 @@ isolierten Web-Umgebungen über `requirements-image.txt` gepinnt. Die bestehende
 Timeout- und Szenarienpflicht bleibt erhalten. Aktuelle Originalnachweise und
 offene Abnahmen: [AT-A-T01](AT_A_VERIFICATION.md).
 
-## HZ-A-Erweiterung des aktiven Inventars
+## HZ-A-Erweiterung der Ausgangsbasis
 
 `HZ-A-W01` ergänzt `catalog` um Tidy Hand mit lokalem Fallback, vollständig
 gemessene Metadaten, echte native Menüöffnung und vollständige scrollbare Hilfe
@@ -227,7 +272,7 @@ Pixelvergleich über echte Radereignisse vollständig in den sichtbaren Bereich.
 Damit hängt sie nicht von einer bestimmten Spaltenzahl ab; sämtliche bisherigen
 Weiß-, Loch-, Farb- und Alpha-Stichproben bleiben unverändert.
 
-## HZ-C-Erweiterung des aktiven Inventars
+## HZ-C-Erweiterung der Ausgangsbasis
 
 Auf HZ-A und HZ-B ergänzt `HZ-C-W01` in `catalog` die gemeinsame kleine
 Schriftgröße, vollständige Metadaten, feste Kategorie-/Fußbereiche, alle drei

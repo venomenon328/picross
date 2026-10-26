@@ -516,6 +516,13 @@ Studien und aller früheren Lieferprüfungen ab; die fachlichen Verträge dieser
 Spezifikation bleiben bestehen. Aktuelle Regression, technische Abnahme und
 historische Nachweise werden getrennt ausgewiesen.
 
+**CI2-D / [#416](https://github.com/venomenon328/picross/issues/416), freigegebener
+Sollvertrag vom 26.10.2026:** [CI2-D](CI_SLIMMING.md) ersetzt die fortlaufende
+500-Aktionen-Pflicht durch die kompakte History-Integration in §8.1. Die Umsetzung
+ist separat; die vorhandene `--integration`-Route führt bis dahin weiterhin die
+bisherigen 500 Aktionen aus. Die Spezifikationsänderung ist kein neuer Mess- oder
+Ausführungsnachweis. Historische #12-/PR-#16-Abnahmen bleiben an ihren Stand gebunden.
+
 Die folgenden Bestandteile existieren aus #8; #9 erweitert deren tatsächlichen Prüfumfang. `godot` bezeichnet den gebundenen Standard-Editor, unter Windows dessen Konsolenprogramm. Vollständig isolierter Prüfweg in der [Anleitung](../game/README.md).
 
 ```sh
@@ -551,6 +558,37 @@ optionale Route wird als nicht zutreffend ausgewiesen, nicht als ausgeführt.
 | A-06 | Unkorrigierte eigene Miniatur, keine frühen Motivdaten, richtiger Abschluss mit unbekanntem Hintergrund, kein Abschluss bei Zusatz-/Fehl-/Falschfüllung oder leerer Motivzelle. Detailliertere Ressourcen ändern die Abschlusslogik nicht. |
 | A-07 | Import, begrenzter Start/Exit und Windows-Export; vollständige Artefakte/Logs einem konkreten Stand zugeordnet. |
 
+**Kompakte History-Integration nach CI2-D (freigegeben, noch umzusetzen):**
+Eine kurze deterministische Folge in einem isolierten synthetischen Profil
+ersetzt den bisherigen 500-Aktionen-Durchlauf. Für diese Prüfung gelten insgesamt
+höchstens **20 semantische Befehle**, höchstens **6 neu erzeugte wirksame
+History-Transaktionen** und exakt **2 tatsächliche Spielprozesse**: ein schreibender
+Prozess und ein frischer Prozess zum Laden und Weiterführen. Die Befehlsgrenze
+umfasst beide Prozesse einschließlich Blattwahl, Werkzeug-/Farbwahl, Navigation,
+Undo/Redo und regulärem Beenden. Eine zusammenhängende Mausgeste zählt als ein
+Befehl; ihre Down-/Move-/Up-Ereignisse sind keine zusätzlichen Befehle. Undo/Redo
+zählen als Befehle, erzeugen aber keine neue History-Transaktion. Reine
+Beobachtungen und Prozessstarts zählen nicht als Befehle; Wiederholungsschleifen
+oder versteckte zusätzliche Spielaktionen sind unzulässig.
+
+Die kleine Folge erhält dieselben relevanten Zustandszusagen: atomarer Strich und
+exakte Vor-/Nachwerte, Undo/Redo, Abschneiden des Redo-Zweigs durch eine neue
+wirksame Bearbeitung, dauerhaftes `undo_used`, Navigation ohne Zell-/Historymutation,
+gesicherte Ansicht sowie Fortsetzung mit vorhandenem Redo nach dem echten Neustart.
+Ein unabhängiges Python-Orakel vergleicht Zellen, History einschließlich Cursor
+und Redo-Zweig, Metadaten und Ansicht mit dem erwarteten Zustand; fremde
+synthetische Slots bleiben byteidentisch. Manipulierte und verkürzte Traces müssen
+als billige Orakel-Gegenproben scheitern, ohne weitere Spielprozesse zu starten.
+Die Auswahl einzelner kurzer Gesten und Navigationsschritte muss diese Zusagen
+erfüllen; künstliche Hinweisüberläufe, zehn wiederholte Regionen oder fünf
+100-Aktionen-Segmente sind keine neue Pflicht.
+
+Mit Umsetzung von CI2-D entfällt der alte 500-Aktionen-Pfad aus allen regulären
+Standard-, `all`-, `runtime`-, `history`- und `--integration`-Wegen sowie aus normalen
+manuellen Läufen. Er wird nicht automatisch in einen manuellen Voll- oder
+Stresstest verschoben. Weitere Einzelheiten und die Paketgrenzen stehen im
+[CI2-Sollvertrag](CI_SLIMMING.md). Historische Berichte bleiben unverändert.
+
 Bestehende Dokumentprüfung zusätzlich: `python3 -m unittest discover -s tools -p 'test_*.py' -v`, `python3 tools/check_docs.py`, vollständiger `git diff --check`. Headless-Prüfungen sind kein Beleg für Lesbarkeit, echte Maussignale oder Windows-Grafikverhalten. Zeichnungs-/Layoutregressionen auch mit tatsächlichen Renderbildern prüfen.
 
 ### 8.2 Manuelle Prüfungen am gelieferten Commit/Artefakt
@@ -563,7 +601,7 @@ Bestehende Dokumentprüfung zusätzlich: `python3 -m unittest discover -s tools 
 | M-04 | Mit #11 Teilstand schließen, neu starten und samt Historie/Ansicht fortsetzen. | Eigentümer |
 | M-05 | Durch D-06 nicht anwendbar: Tastatur/Controller außerhalb P1. | Kein P1-Gate |
 | M-06 | 1080p-Startziel beziehungsweise arbeitsbereichbegrenzter Fallback, 1080p/1440p und logische Referenzflächen; tatsächliche Skalierung erfassen. Keine verdeckten Elemente, aufgezwungenen Riesenraster oder verschmolzenen Füll-/Fünferlinien. | Eigentümer |
-| M-07 | 50×50 auf der Referenzhardware: keine verlorenen/falschen Aktionen oder wahrnehmbaren Hänger. Im integrierten Paket 500 reproduzierbare Zell-/Navigationsaktionen gegen Sollzustand; Messung und Beobachtung getrennt. | Implementierer / Eigentümer |
+| M-07 | 50×50 auf der Referenzhardware: keine verlorenen/falschen Aktionen oder wahrnehmbaren Hänger. Technische Zustandsregression nach dem freigegebenen kompakten CI2-D-Vertrag in §8.1; dessen Umsetzung ist separat. Messung und persönliche Bedienbeobachtung bleiben getrennt. | Implementierer / Eigentümer |
 
 Protokoll: tatsächliche Commit-/Artefaktkennung, Betriebssystem, verwendete Eingaben, Fenster-/Bildschirmgröße, reale Skalierung, Szenario und Ergebnis. Hardware-/Skalierungswerte nicht erfinden und keine pauschale FPS-Zusage aus der Referenz ableiten.
 

@@ -302,10 +302,10 @@ er zusätzlich die exportierte Fassung headless und mit nativer Oberfläche.
 Linux benötigt für die OpenGL-Prüfung Xvfb/Mesa. Preset und Appname bleiben
 `P1 Windows x86_64` und `picross · P1`, ebenso Schema 1 und Speicherort.
 
-`--integration`, `--pilots`, `--visual` und `--perf-b` sind lokal an.
+Im vorhandenen Harness sind `--integration`, `--pilots`, `--visual` und `--perf-b` lokal an.
 Die jeweiligen `--no-*`-Formen schalten sie ausdrücklich aus; CI wählt gemäß
-[CI-Policy](../docs/CI_POLICY.md) nach vollständigem Änderungsumfang. Integration
-prüft 500 Aktionen plus Neustart. Der `--pilots`-Bereich prüft vier synthetische Muster in echten
+[CI-Policy](../docs/CI_POLICY.md) nach vollständigem Änderungsumfang. Die vorhandene
+Integration prüft weiterhin 500 Aktionen plus Neustart. Der `--pilots`-Bereich prüft vier synthetische Muster in echten
 Prozessen als feste Funktionsregression; der Fachlauf zertifiziert keine
 Bestandsrätsel erneut. Reine Rätselergänzungen starten keinen dieser Tests.
 Visual prüft aktuelle Pixel-/Animationsverträge, PERF-B den regulären Renderer
@@ -315,8 +315,33 @@ A/B-Vergleichsprogramme sind gemäß #70/N70-HIST-01 archiviert; sie sind kein
 aktueller Prüfweg.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
+**CI2-D / [#416](https://github.com/venomenon328/picross/issues/416), freigegebener
+Sollstand vom 26.10.2026, noch nicht implementiert:** Der
+[CI2-Vertrag](../docs/CI_SLIMMING.md) ersetzt die 500-Aktionen-Pflicht durch eine
+kurze deterministische History-Regression. Sie umfasst insgesamt höchstens
+**20 semantische Befehle** einschließlich Blattwahl, Werkzeug-/Farbwahl,
+Navigation, Undo/Redo und regulärem Beenden, höchstens **6 neue wirksame
+History-Transaktionen** und exakt **2 tatsächliche Spielprozesse** für Schreiben
+und frisches Laden/Fortsetzen. Eine Mausgeste zählt als ein Befehl, Undo/Redo
+zählen als Befehle ohne neue History-Transaktion. Prozessstarts und reine
+Beobachtungen zählen nicht; versteckte Aktionen oder Wiederholungsschleifen
+vergrößern den Umfang nicht stillschweigend.
+
+Atomarer Strich, exakte Zustände, Undo/Redo-Verzweigung und dauerhaftes `undo_used`,
+Navigation ohne Zell-/Historymutation, gespeicherte Ansicht, Redo nach dem echten
+Neustart und byteidentische fremde synthetische Slots bleiben nachzuweisen.
+Ein unabhängiges Python-Orakel und billige Gegenproben mit manipulierten oder
+verkürzten Traces bleiben erhalten; dafür entstehen keine weiteren Spielprozesse.
+Die genaue Zählung und Abgrenzung stehen in [P1 §8.1](../docs/PROTOTYPE_P1.md).
+Mit CI2-D entfällt der alte Durchlauf auch aus `all`, `runtime`, `history`,
+`--integration` und normalen manuellen Läufen; er wird nicht bloß in einen
+manuellen Voll- oder Stresstest verlagert. Diese neue Route ist noch kein
+verfügbarer CLI-Weg. Frühere #12-Nachweise und gemessene Berichte bleiben
+unverändert an ihre jeweiligen Commits gebunden.
+
 `technical/` enthält kompakte commitgebundene Ergebnisse, Logs und notwendige
-native Bilder/Fehlerdiagnostik. Größen werden gemessen, ohne feste Bytegrenzen.
+native Bilder/Fehlerdiagnostik. Größen werden gemessen; für die künftige Kürzung
+gelten der CI2-Umfang und seine Laufzeitziele.
 Das reguläre Product-CI-ZIP enthält Spielanleitung, Commit-/Hashbericht und
 notwendige Lizenzen. Historische Produktionshilfen werden nicht ausgeliefert.
 Technische Motivspoiler sind separat.

@@ -1,7 +1,19 @@
 # AT · Transparente Abschlussbilder
 
-Stand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 · **AT-A integriert; AT-B-F01 nach Eigentümerabnahme beauftragt** ·
+Vertragsstand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).
+
+**Statusfortschreibung 26.10.2026:** AT-A ist über
+[PR #263](https://github.com/venomenon328/picross/pull/263) auf
+`a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9`, AT-B mit allen 26 freigegebenen
+Bildrevisionen über [PR #264](https://github.com/venomenon328/picross/pull/264) auf
+`8dac7a69d360550b0b23a202dced72698babd572` in `main` integriert.
+Die folgenden Vorbereitungs-/Lieferstatus, insbesondere „AT-B-F01 beauftragt“
+und „AT-B-R01 offen“, beschreiben frühere Stände und erteilen keinen erneuten
+Arbeitsauftrag. Historische Nachweise und ihre damaligen Urteile bleiben gebunden.
+Der noch auszuführende Abschluss der Bildarbeitsdaten folgt
+[CI2](CI_SLIMMING.md) und [Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung);
+diese Statuspflege führt weder Bereinigung noch Implementierung oder Merge aus.
 
 ## Auftrag, Quellen und Wirksamkeit
 

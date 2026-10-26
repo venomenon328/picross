@@ -8,46 +8,51 @@ Vor auftragsbezogener Arbeit vollständig lesen:
 
 Den beauftragten Arbeitsbranch verwenden, sonst den aktuellen `main`; geltende Bereichs-/Override-Regeln prüfen. Neue Ideen setzen kein vorhandenes Issue voraus. Fehlende Pflichtquellen nicht durch Erinnerungen ersetzen.
 
+Bei CI, Tests, Prüfartefakten, Bestandsbereinigung oder Produktionsabschluss zusätzlich
+[CI2: Kurze CI und begrenzter aktiver Bestand](docs/CI_SLIMMING.md),
+[CI-Policy](docs/CI_POLICY.md) und [Bestandsinventar](docs/DEVELOPMENT_ARCHIVE.md)
+vollständig lesen. CI2 / [#412](https://github.com/venomenon328/picross/issues/412)
+ist am 26.10.2026 als Spezifikation freigegeben; beauftragt sind Issues und Dokumentation.
+CI2-A–E (#413–#417) sind unbegonnen. Keine Implementierung, Datenlöschung oder Merge
+aus dieser Freigabe ableiten; die ausführbare CI bleibt vor ihrer Umsetzung unverändert.
+Der künftige Umfang verlangt Chromium ausschließlich auf ausdrücklichen Auftrag und
+ersetzt die 500er-Historyroute durch höchstens 20 semantische Benutzerkommandos,
+höchstens sechs neue wirksame History-Transaktionen und genau zwei echte Spielprozesse.
+Die Laufzeitziele (Docs unter einer Minute, Standard möglichst unter fünf Minuten,
+relevante Integration unter zehn Minuten, kurzer Chromiumlauf höchstens acht Minuten)
+und die Regeln für
+begrenzte Artefaktaufbewahrung, Arbeitsabschluss und neuen Dateibestand folgen CI2.
+Sie sind Sollvorgaben, keine bereits gemessene Wirkung oder neue Ausnahme vom Ergebnisgate.
+
 Bei Abschlussbildern, deren Katalogvorschau oder Bildrevisionen zusätzlich
 [AT: Transparente Abschlussbilder](docs/REVEAL_TRANSPARENCY.md) und die dort
 benannten Produkt-/Produktions-/Integrationsquellen vollständig lesen.
-AT / #256 (19.10.2026), Umsetzungsvorbereitung V4: AT-A ist nach qualifiziertem
-AT-A-R01 über PR #263 auf `a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9` integriert;
-AT-A schafft den sicheren gemeinsamen Bildrevisionsweg; AT-B stellt danach den
-gebundenen Bestand mit neuen Bildfreigaben um. Reine Bildänderungen erhalten
-Definitionsbytes, Puzzle-Revision, Identität, Spielstände und historische Belege.
+AT-A und AT-B sind seit 19.10.2026 über
+[PR #263](https://github.com/venomenon328/picross/pull/263) und
+[PR #264](https://github.com/venomenon328/picross/pull/264) auf `main` integriert;
+alle 26 gebundenen Bestandsbilder wurden mit tatsächlichen Bildfreigaben umgestellt.
+Reine Bildänderungen erhalten Definitionsbytes, Puzzle-Revision, Identität,
+Spielstände und historische Belege. Die technischen Quellen bleiben
+[Daten/Freigabe](docs/ZA1_ADAPTER.md), [Auflösung/Folgeoperationen](docs/CATEGORIES.md),
+[Journal/Recovery](docs/SD_CATALOG.md) und [CLI](tools/puzzle_production/README.md).
 Szenen erhalten eine konkrete transparente Gestaltung, keinen pauschalen Verzicht.
-AT-B-V01 liefert den vollständigen gebundenen Bildsatz in Draft-PR #264.
-Die anschließende [Eigentümerabnahme](docs/AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01
-auf `chore/256-transparente-bestandsbilder`: kontrolliertes `catalog_reveal plan/adopt`
-aller 26 freigegebenen Bilder und AT-B-T01. [AT-B-Bericht](docs/AT_B_VERIFICATION.md).
-Keine Rasterproduktion, echte Spielstände, Merge, Deployment oder Issue-Schließung.
-Das qualifizierte separate AT-B-R01 am Integrationshead bleibt offen.
-AT-A-P01 / Umsetzungsvorbereitung V2 ist mit PR #257 auf
-`9cc58651518e3a28e97f46932d69554210b0abcb` integriert und schließt die Verträge:
-[Daten/Freigabe](docs/ZA1_ADAPTER.md),
-[Auflösung/Folgeoperationen](docs/CATEGORIES.md),
-[Journal/Recovery](docs/SD_CATALOG.md) und
-[CLI](tools/puzzle_production/README.md).
-Inhalts-v2, Runtime-v4 und Saves bleiben unverändert; technische Kernfragen aus
-AT §4.3 sind damit spezifiziert. [AT-A-T01](docs/AT_A_VERIFICATION.md) führt
-technische Nachweise und getrenntes Selbstreview des damaligen AT-A-Stands;
-der aktuelle AT-B-Auftrag ersetzt diese historischen Belege nicht.
+[AT-A-T01](docs/AT_A_VERIFICATION.md), [AT-B-Bericht](docs/AT_B_VERIFICATION.md)
+und [Eigentümerabnahme](docs/AT_B_OWNER_APPROVAL.md) bleiben historische Quellen.
+Der spätere Bildarbeitsabschluss folgt [Authoring §9](docs/ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung)
+und CI2; frühere offene Lieferstatus erteilen keinen erneuten Auftrag.
 
 Bei UI-Schrift, kleinen Rahmen, Dropdowns oder Piktogrammen zusätzlich
 [HZ: Handgezeichnete Bedienoberfläche](docs/HAND_DRAWN_UI.md) vollständig lesen.
-HZ-A/B sind über PR #288/#289 integriert und in #284 separat abgenommen.
-HZ-C / [#294](https://github.com/venomenon328/picross/issues/294) ist seit
-21.10.2026 auf `fix/294-tidy-typografie` implementiert; technische Lieferung in
-[Draft-PR #296](https://github.com/venomenon328/picross/pull/296).
-[HZ-C-Prüfzuordnung](docs/HZ_C_VERIFICATION.md) bindet Ursache, stabile Grundlinien
-und den korrigierten Vergleich 14/15 einschließlich Kategorienamen. Gewählte
-kleine Rolle ist 15 bei UI100 und 19 bei UI125; Blattkennungen bleiben 15/19.
-HZ-C-R01 und HZ-C-M01 bleiben getrennt vor Merge offen.
+HZ-A/B sind seit 20.10.2026 über
+[PR #288](https://github.com/venomenon328/picross/pull/288) /
+[PR #289](https://github.com/venomenon328/picross/pull/289), HZ-C seit 21.10.2026
+über [PR #296](https://github.com/venomenon328/picross/pull/296) auf `main` integriert.
+Die gewählte kleine Rolle bleibt 15 bei UI100 und 19 bei UI125; Blattkennungen 15/19.
 Tidy Hand samt lokalen Fallbacks, bisherige Überschriften und die HZ-B-Konturen,
-Menüs und Symbolfamilie bleiben Grundlage.
-Hinweisziffern/-geometrie und die drei großen SL-Rasterrahmen behalten ihre Verträge.
-Spezifikationspflege beauftragt keinen Produktcode oder Merge.
+Menüs und Symbolfamilie bleiben Grundlage. Hinweisziffern/-geometrie und die drei
+großen SL-Rasterrahmen behalten ihre Verträge. Die [HZ-C-Prüfzuordnung](docs/HZ_C_VERIFICATION.md)
+ist ein historischer Liefernachweis; der abgeschlossene Vergleich 14/15 wird durch
+CI2 nicht erneut Pflicht. Spezifikationspflege beauftragt keinen Produktcode oder Merge.
 
 Bei Katalog-/Metadatenarbeit zusätzlich [Katalogdarstellung](docs/CATALOG_PRESENTATION.md)
 und [Katalogsortierung](docs/CATALOG_SORTING.md) vollständig lesen. KU / #244
@@ -68,38 +73,22 @@ SD / #235 ist mit PR #240–#243 einschließlich C2 abgeschlossen; dessen Method
 
 Die am 25.10.2026 freigegebene Folgespezifikation
 [SD2: Menschennähere Schwierigkeit](docs/PUZZLE_DIFFICULTY_V2.md) / #402 ist
-ebenfalls vollständig zu lesen. SD2-A/B/C/D (#403–#406) trennen neue Regeln und
-Messprofile, Referenzkalibrierung, kompatible Integration und Bestandsumstellung.
-SD2-A ist nach separatem R01 über PR #408 auf
-`c7c6156ac27dc033036443bc06ef398bbf94f32f` integriert und liefert den separat versionierten
-[technischen Vertrag](docs/SD2_ANALYZER.md) (bei SD2-Analyse vollständig lesen),
-Analysator/Prüfer, drei Rohprofile und eigene CLI. [Nachweise](docs/SD2_A_VERIFICATION.md)
-bleiben an den historischen A-Lieferhead gebunden.
-SD2-B ist nach separatem R01 über PR #409 auf
-`0ae6535073fb808af44dcf3e12130a33ba49cdbc` integriert und liefert den [Bewertungsvertrag](docs/SD2_CALIBRATION.md)
-(bei SD2-Bewertung vollständig lesen), 36 neue synthetische Referenzen,
-getrennte Validierung und den eigenständigen eingefrorenen 0.4-Bewertungsweg.
-[SD2-B-T01](docs/SD2_B_VERIFICATION.md) bleibt an den historischen B-Head gebunden.
+ebenfalls vollständig zu lesen. Zusätzlich je Auftrag vollständig lesen:
+[Analysatorvertrag](docs/SD2_ANALYZER.md) bei SD2-Analyse,
+[Bewertungsvertrag](docs/SD2_CALIBRATION.md) bei SD2-Bewertung und
+[Integrationsvertrag](docs/SD2_INTEGRATION.md) bei SD2-Integration.
+SD2-A/B/C/D (#403–#406) sind über PR #408–#411 integriert. SD2-D ist seit
+26.10.2026 über [PR #411](https://github.com/venomenon328/picross/pull/411) auf
+`967314538df376a281020fb4c34f93f370a491df` Teil von `main`:
+alle 45 abgenommenen Vorschläge sind übernommen, aktive Ratings und Produktionsstandard
+sind 0.4. Beide Freezes und historische Quellen bleiben erhalten.
 Denkanspruch, Suchaufwand und Bearbeitungsumfang ergeben eine feste Fünferskala.
-SD2-C / #405 bindet vor Integrationscode den vollständigen
-[Integrationsvertrag](docs/SD2_INTEGRATION.md) (bei SD2-Integration vollständig lesen).
-[SD2-C-T01](docs/SD2_C_VERIFICATION.md) bleibt am historischen Lieferstand gebunden.
-SD2-C ist nach separatem R01 über PR #410 auf
-`4e23e644f3457362e02b75f78fdb575a99265494` integriert; die dortige
-Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate gilt nur für #410.
-[SD2-D-V01](docs/SD2_D_VERIFICATION.md) / #406 liefert die gebundene Bestandsanalyse,
-den Vergleich und die technische Übernahmevorschau. Der Folgeauftrag
-[SD2-D-OM01](docs/SD2_D_OM_FOLLOWUP.md) klärt Om mit einem frischen R4-Nachweis:
-45 gültige Vorschläge, keine offenen IDs. Alle 45 Vorschläge sind inzwischen
-abgenommen; der Eigentümer verzichtet ausdrücklich auf separates SD2-D-VR01.
-Das ist keine bestandene Zweitprüfung und erfasst weder finales R01 noch Merge.
-Der Folgeauftrag [SD2-D-F01/T01](docs/SD2_D_ADOPTION.md) übernimmt den vollständigen
-Bestand und aktiviert 0.4 ausdrücklich; beide unmittelbaren Wiederholungen sind
-echte No-ops. Aktive Ratings und Produktionsstandard sind auf diesem Branch 0.4.
-Beide Freezes und historische Quellen bleiben erhalten. Der Web-Job ist für
-PR #411 auf Nutzeranweisung gesperrt; das fehlende Gesamt-CI-Gate und finales R01
-bleiben offen. Keine Katalogquantile, echten
-Katalogtests, automatische Neubewertung oder Implementierung aus Spezifikationsfreigabe.
+[SD2-D-F01/T01](docs/SD2_D_ADOPTION.md) und die A/B/C-Lieferberichte bleiben an ihre
+damaligen Stände gebunden. Die Chromium-/Gesamt-CI-Ausnahmen für PR #410/#411 sind
+historische Einzelentscheidungen, kein neuer pauschaler Erfolgsverzicht und keine
+nachträgliche Behauptung eines vollständigen CI-Passes. Keine Katalogquantile,
+echten Katalogtests oder automatische Neubewertung; Spezifikationsfreigabe allein
+beauftragt keine Implementierung.
 
 Bei Hinweisnavigation, Vollhinweis-Overlay oder Cursor-Linienhervorhebung zusätzlich [HN: Hinweisinteraktion](docs/CLUE_INTERACTION.md) vollständig lesen. HN / #192 ist implementiert; technische Nachweise und die getrennten Abnahmen HN-R01/HN-M01 stehen im Issue/PR.
 

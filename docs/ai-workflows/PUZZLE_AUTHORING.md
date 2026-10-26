@@ -726,3 +726,35 @@ Spätere echte Rätseländerungen sind ein neuer Produktionsauftrag. Fehlende al
 Arbeitsdateien sind kein Defekt und rechtfertigen keine Wiederherstellungspflicht.
 Neue Exporte werden weiterhin vollständig geprüft; Bestandsregistrierung und
 Kategorienpflege verwenden nach Abschluss nur noch die kompakte Integrationsbindung.
+
+### Abschluss nachträglicher Bildrevisionen · CI2 vom 26.10.2026
+
+Die freigegebene [CI2-Spezifikation](../CI_SLIMMING.md) /
+[CI2-E / #417](https://github.com/venomenon328/picross/issues/417) ergänzt den Abschlussvertrag
+für spätere Abschlussbilder bereits integrierter Rätsel. Eine bereits bereinigte
+Rasterproduktion befreit spätere Bildarbeit nicht von ihrem eigenen Abschluss und
+verlangt keine erneute Rasterproduktion. Diese Ergänzung ist ein Sollvertrag;
+eine passende CLI-Erweiterung ist damit noch nicht implementiert.
+
+1. Für die abzuschließende Bildrevision tatsächliche Bildfreigaben, aktive Bildbindung
+   und enthaltenen Main-Commit prüfen; offene neuere Arbeit derselben ID erhalten.
+2. Nach abgeschlossener Integration die zugehörigen Bildarbeitsrevisionen einschließlich
+   Quellen, Prompts, Varianten, ZIP-/Rohkopien und erledigter Authoringindexeinträge entfernen.
+   Gebundene historische Verweise ersetzen dauerhafte Kopien der Arbeits- und Reviewdaten.
+3. Aktuelle Bilddatei, Nutzungshinweise, Herkunfts-/Freigabemetadaten und aktive Bildrevision
+   bleiben erhalten. Definitionsbytes, Runtime-Revision, Save-Slot, Registrierung und aktive
+   Bewertungen bleiben unverändert. Ein bereits versiegelter ursprünglicher Integrationsbeleg
+   wird weder neu erzeugt noch zur nachträglichen Bildfreigabe umgeschrieben.
+4. Der künftige Abschlussweg muss vorhandene `picross-integrated-content-v1`-Datensätze
+   ausdrücklich unterstützen. Der gegenwärtige `retire-production`-Pfad bricht dort mit
+   `Production already retired` ab. Erneute Rasterproduktion, Wiederherstellung alter Pakete
+   oder Umgehung der Bindungsprüfungen sind keine Ersatzlösung. Die konkrete CLI wird erst
+   mit ihrer Implementierung dokumentiert.
+5. Abnahme verwendet einen begrenzten Datei-/Referenzvergleich und den unveränderten
+   aktiven Datenbestand. Kein Solver-, Bild-, Katalog- oder Spielerreplay allein für
+   diese Bereinigung; aktive Leser und Rechtebindungen bleiben vorher geprüft.
+
+Die frühere eng begrenzte Freigabe zum Nachintegrations-Cleanup einschließlich Merge
+in Schritt 5 bleibt bestehen. Der aktuelle CI2-Spezifikationsauftrag führt selbst
+weder Cleanup noch Implementierung oder Merge aus. Er erweitert die frühere Freigabe
+nicht auf Werkzeug-/CI-Codepakete; deren Umsetzung und Merge benötigen ihren eigenen Auftrag.

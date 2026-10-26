@@ -10,82 +10,72 @@ Technische Ergebnisse und Artefaktbindung stehen im zugehörigen Draft-PR.
 
 ## Freigegebene CI-Auswahl und Browsergruppen
 
-Eigentümerentscheidung vom 19.10.2026 / [#261](https://github.com/venomenon328/picross/issues/261):
-Automatisierte CI verwendet ausschließlich Chromium mit allen bisherigen
-27 Szenarien und fünf Gruppen. Frühere Firefox-CI-Pflichten entfallen;
-historische Nachweise und die bestehenden Spiel-/Speicherverträge bleiben
-unverändert gebunden. Workflow und Browser-CLIs weisen andere Browserwerte vor
-Installation/Start ab. Das fail-closed-Gate verlangt nur Chromium-Belege und
-`chromium_attempt`; sämtliche Inhalts-/Quellen-/Run-/Retryprüfungen bleiben.
-Vor Reaktivierung müssen aktuelle automatische Startpfade einschließlich alter
-offener PRs gemäß [CI-Policy](CI_POLICY.md) abgesichert sein. S3 nimmt historische
-Reruns aus dem Mergegate; sie werden nicht gestartet. Die drei alten Workflow-IDs
-bleiben deaktiviert, die Chromium-Kette verwendet neue Pfade/IDs.
+Der freigegebene [CI2-Sollvertrag vom 26.10.2026](CI_SLIMMING.md),
+[Gesamtissue #412](https://github.com/venomenon328/picross/issues/412), ersetzt
+die automatische Browserpflicht, impliziten Browserrechte manueller Scopes und
+die ungekürzte bisherige Fall-/Bildmatrix. Die Änderung ist noch nicht
+implementiert: Am Ausgangsstand `main@967314538df376a281020fb4c34f93f370a491df`
+besteht die bisherige Chromiumroute weiter. Dieser Abschnitt dokumentiert das
+freigegebene Ziel, keinen bereits verfügbaren kurzen CLI-Weg oder Laufzeitnachweis.
 
-Die Eigentümerentscheidung vom 18.10.2026 in
-[CI-Policy](CI_POLICY.md) / [#246](https://github.com/venomenon328/picross/issues/246)
-ist ein gestufter Vertrag: **CI-A/CI-B implementiert; keine Livefreigabe**.
-Vor Integration des jeweiligen Pakets gelten die vorhandenen ausgewählten
-Pflichtchecks weiter.
+[CI2-A / #413](https://github.com/venomenon328/picross/issues/413) entfernt
+Browserinstallation und Browserstart aus automatischen PR-/Push-Ereignissen.
+`all`, `toolchain`, `runtime`, `visual`, `perf-b`, `production`, gemeinsame
+Komponenten und unbekannte Pfade sind kein impliziter Browserauftrag. Nur ein
+ausdrücklicher manueller Auftrag mit Quellstand und Prüfumfang startet Chromium;
+auch wiederverwendbare Unterworkflows verlangen ihn. Kein Zeitplan oder
+automatischer Nachlauf ergänzt die Browserprüfung. Firefox bleibt aus CI
+ausgeschlossen; die bestehende Webentwicklungsfassung und ihre Spiel-/
+Speicherverträge werden dadurch nicht geändert.
 
-[CI-A (#247)](https://github.com/venomenon328/picross/issues/247) ersetzt die
-pauschale Product→Browser→SSH-Kopplung durch Auswahl nach tatsächlichen
-Abhängigkeiten. Reine Fachwerkzeuge und die einzelne PR-Vorlage können Web
-vermeiden. Reine Deploy-/SSH-/HTTP-Arbeit erhält einen eigenständig ausführbaren
-Referenzpfad ohne Browserinstallation/-start oder unnötige technische Exporte;
-ein dafür benötigtes reguläres Bündel wird weiterhin tatsächlich gebaut.
-Gemeinsame Export-/Hostingverträge wählen beide Bereiche. Bis CI-B bleibt
-jede weiterhin ausgewählte Browserroute vollständig, einschließlich regulärem
-Start und aller aktuellen positiven/negativen Chromium-Szenarien.
+[CI2-C / #415](https://github.com/venomenon328/picross/issues/415) ersetzt die
+33 bisherigen Szenarien durch ungefähr 8–10 aktuelle Kernfälle:
 
-[CI-A-Auswahl](CI_A_SELECTION.md) bindet die genaue Pfadzuordnung.
-[CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) bindet das vollständige Inventar,
-Auswahl, unabhängige Voraussetzungen und das Ergebnisgate. `web-chromium.yml` baut drei
-Exporte einmal im selben Run; `browser-chromium.yml` führt Chromium auf einem
-eigenen Runner mit getrennten Profilen/Hosts je Gruppe aus. Das Gate kontrolliert
-konkrete Szenarien und Pflichtdateien samt Hashes. `delivery.yml` bleibt separat mit genau
-einem regulären Export und der bestehenden SSH/HTTP-Referenz ohne Browser.
-
-Nach Integration von [CI-B (#248)](https://github.com/venomenon328/picross/issues/248)
-gilt die folgende Gruppenauswahl; die Vorgängerroute bleibt bis dahin auf `main`:
-
-| Unabhängig startbare Gruppe | Prüfzweck |
+| Prüfzweck im kurzen Umfang | Erhaltener Nachweis |
 | --- | --- |
-| Regulärer Start | Uninstrumentierter Spielerexport und vorhandener Startvertrag in Chromium. |
-| Katalog/Darstellung | Aktuelle Katalog-/Metadatenzustände und geforderte Darstellungsbelege. |
-| Eingabe/Geometrie | Echte Zeiger-/Gestenereignisse und relevante Zoom-/Fensterfälle. |
-| Abschluss/Reset | Tatsächlicher Abschluss, Präsentation, Abbruch, Bestätigung und Reset. |
-| Persistenz/Lifecycle | Echte Sicherung, Reload, Prozessneustart, Exportwechsel, Sperren, Fehler/Recovery, Offline und Beenden. |
+| Regulärer Start | Echter uninstrumentierter Spielerexport und Browserstart. |
+| Katalog und Sortierung | Aktuelle Auswahl-/Sortierwege und repräsentative Bedien-/Darstellungszustände. |
+| Eingabe und Geometrie | Echte Bearbeitung mit Undo/Redo sowie relevanter Resize-/DPI-Wechsel. |
+| Abschluss und Reset | Kleiner echter Abschluss mit bestehender Präsentation, Bestätigung und Reset. |
+| Persistenz und Wiederaufnahme | Bestätigte IndexedDB-Sicherung, Reload und echter Browserprozessneustart. |
+| Sperre und Speicherfehler | Zweittab/Sperre sowie sichtbarer Schreibfehler und erfolgreicher Retry. |
 
-Normale Runtime-/Darstellungsänderungen wählen regulären Start und die betroffenen
-Gruppen in Chromium; gemeinsame UI-/Save-/Export-/Harnessabhängigkeiten
-wählen mehrere oder alle Gruppen. Insbesondere `game/ui/main.gd` ist keine
-Katalogausnahme. Unbekannte Wirkung wird umfassend geprüft, manuelle Auswahl
-erweitert ausschließlich. Vollständige Browserabdeckung ist die Vereinigung aller
-Gruppen; die unabhängige SSH-Referenz folgt ihrem eigenen Änderungsbezug.
+KU-/AT-/HZ-Schichten werden zu aktueller Katalog-/Bedienprüfung zusammengeführt.
+Ein normaler Viewport wird ausführlich geprüft; weitere Größen benötigen eine
+konkrete Geometrieaussage. Seltene aktuelle Varianten werden möglichst günstig
+unterhalb des Browsers abgesichert. Kleine synthetische Voraussetzungen dürfen
+teure Vorbereitungsdurchspiele ersetzen; Zustandssetter ersetzen keine geprüften
+Benutzer-/Speicherübergänge. Zusätzliche Browserprofile verlangen eine ausdrückliche
+Auswahl mit konkretem Zweck und begrenztem Fall-/Zeitumfang. Kein Default ergänzt
+die alte Vollmatrix.
 
-Vor der Trennung erhält jede aktive positive/negative Aussage einschließlich
-technischem Start und Pflichtbelegen eine eindeutige Zuordnung. Jede Gruppe
-richtet kontrollierte kleine synthetische Voraussetzungen selbst ein; sie hängt
-nicht vom Durchlaufen einer anderen Gruppe ab. Reale Zeigereingabe, bestätigte
-IndexedDB-Schreibstände, Reload und Neustart eines Browserprozesses bleiben dort
-erforderlich, wo diese Übergänge geprüft werden. Der Versionswechsel verwendet
-weiterhin zwei eigenständig erzeugte Exporte. Vorbefüllte Daten, ein anderer
-Identifikator desselben Builds oder alleiniger Start ersetzen diese Belege nicht.
+Der kurze Chromiumlauf einschließlich benötigtem Build soll höchstens acht
+Minuten dauern, typischerweise fünf bis acht. Ein zusätzlich angefordertes Profil
+bleibt unter zehn Minuten. Nur benötigte Builds werden erzeugt; ein angeforderter
+Exportwechsel verwendet weiterhin zwei eigenständig erzeugte Exporte. Eine neue
+Kennung desselben Builds ersetzt diesen Nachweis nicht. Optimierungen verkürzen
+weder Produktanimationen noch funktionale Speicherzusagen; Überschreitungen
+bleiben sichtbare Optimierungsbefunde.
 
-Chromium verwendet auf denselben geprüften Quellstand gebundene Builds.
-Eigene Profile, Ports, veränderliche Hosting- und Releaseverzeichnisse, Reports und Artefaktnamen verhindern Überschneidungen:
-Die Referenz verändert unter anderem Einstieg, Releasezuordnung und Unterpfad.
-Chromium liefert sämtliche bisherigen Szenarien einschließlich seiner
-Live-DPI-Prüfung. Das Ergebnisgate kontrolliert erwartete und tatsächlich gelieferte Gruppen, Szenarien und Belege je Browser;
-fehlende, leere, doppelte oder falsche Pflichtresultate sind kein Erfolg.
+Auswahl, Producer und Gate werden gemeinsam auf den neuen Umfang umgestellt.
+Das Gate unterscheidet nicht angefordert, Erfolg, fehlend, übersprungen,
+fehlgeschlagen und abgebrochen. Nur angeforderte Browserprüfung verlangt passende
+Resultate. Für tatsächlich gewählte Fälle bleiben vollständige Originalberichte,
+Pflichtdateien samt Hashes und die Quell-/Run-/Versuchsbindung verbindlich.
+Fehlende, leere, doppelte, falsche oder übersprungene Pflichtresultate sind kein
+Erfolg. Isolierte Profile und veränderliche Hostingbäume verhindern gegenseitige
+Beeinflussung. Ein noch ausgewählter Altjob wird durch Überspringen nicht
+rückwirkend erfolgreich.
 
-Messungen trennen je Szenario Start/Navigation, Zustandsabfragen, Eingaben,
-Save/Bestätigung, Wartephasen und Screenshots. Optimierungen beheben gemessenen
-vermeidbaren Harnessaufwand; sie verkürzen weder Animationen noch Speicherzusagen.
-Vergleichsbedingungen und tatsächliche Wirkung werden im Paket-PR dokumentiert,
-ohne feste Laufzeit-/Bytebudgets. Windows-, Eigentümer- und Livegates bleiben
-getrennt; die KU-Verhaltensnachweise aus #244 werden nicht durch Startproben ersetzt.
+Native Prüfung, Fachtests, Toolchain und SSH/HTTP folgen unabhängig ihrem
+tatsächlichen Änderungsbezug. Der Zustellungsweg erhält sein benötigtes reguläres
+Bündel und die bestehende SSH/HTTP-Referenz ohne Browserauftrag. Messungen trennen
+Aufbau, Szenarien/Phasen, Jobdauer, kritischen Pfad und summierte Rechenzeit.
+Die [CI-A-Auswahl](CI_A_SELECTION.md) und der
+[CI-B-Gruppenvertrag](CI_B_BROWSER_GROUPS.md) halten die ausführbare Ausgangsbasis
+und ihre Quellenbindungen fest; alte Logs dienen als Baseline, ohne alte Voll-
+oder Browserläufe neu zu reproduzieren. Historische Abnahmen bleiben gebunden.
+Windows-, Eigentümer-, Merge- und Livefreigaben bleiben getrennt.
 
 ## Build unter Windows/PowerShell
 
