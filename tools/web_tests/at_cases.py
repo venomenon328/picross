@@ -1,12 +1,13 @@
 """AT observations from real exported players and genuine pointer input."""
+import timing
 import base64
 import json
 from PIL import Image
-from browser_actions import state, point, control, wait, draw, saved, game_viewport
+from browser_actions import state, point, points
 
 POINTS={'outside':(4,4),'white':(76,76),'hole':(154,154),'soft':(16,128),'ink':(128,64)}
 COLORS={1:[56,132,90],2:[174,85,52]}
-MATRIX=((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25))
+MATRIX=((1920,1080,1.0),)
 
 
 def fixture(root):
@@ -58,16 +59,19 @@ def capture(page, output, name, image, *, revision=1, opacity=1, frame=None):
         # read-only export probe immediately after that frame was rendered.
         raw=base64.b64decode(frame['png'],validate=True)
         assert len(raw)<=32*1024*1024
-        path.write_bytes(raw);dpr=1
+        with timing.CURRENT.measure('image_write'):
+            path.write_bytes(raw)
+        dpr=1
     viewport=[page.viewport_size[k] for k in ('width','height')]
+    positions=[(rect[0]+(x+.5)/256*rect[2],rect[1]+(y+.5)/256*rect[3]) for x,y in POINTS.values()]
+    locations=([[position[i]-frame['bounds'][i] for i in range(2)] for position in positions]
+               if frame else points(page, positions))
     rows=[]
     with Image.open(path) as raw:
         expected=frame['bounds'][2:] if frame else [v*dpr for v in viewport]
         assert all(abs(raw.size[i]-expected[i])<=1 for i in range(2)), (raw.size,expected)
         rgb=raw.convert('RGB')
-        for kind,(x,y) in POINTS.items():
-            position=(rect[0]+(x+.5)/256*rect[2],rect[1]+(y+.5)/256*rect[3])
-            location=[position[i]-frame['bounds'][i] for i in range(2)] if frame else point(page,position)
+        for (kind,_),location in zip(POINTS.items(),locations,strict=True):
             pixel=[int(v*dpr) for v in location]; actual=list(rgb.getpixel(tuple(pixel)))
             if opacity!=1 and kind=='ink':
                 assert all(color[i]+10<actual[i]<248 for i in range(3)), (kind,actual,'not an intermediate blend')
@@ -83,26 +87,13 @@ def capture(page, output, name, image, *, revision=1, opacity=1, frame=None):
     return result
 
 
-def matrix(page, spec, *, catalog=False):
-    width,height,scale=spec
-    if state(page,'ui_scale')['ui_scale']!=scale:
-        # The ending offers album/reset; settings are reached through the album.
-        if not catalog: control(page,name='nav-album')
-        control(page,text='Einstellungen / Info')
-        control(page,text='UI ');control(page,name='nav-work')
-        if not catalog: control(page,text='Blatt 03')
-    game_viewport(page,width,height)
-    page.wait_for_timeout(250)
-
-
 def catalog(page, name, output, evidence):
-    control(page,text='Blatt 01');draw(page,(2,2));saved(page)
-    control(page,name='nav-album');control(page,text='Blatt 03')
-    draw(page,(0,2),(4,2));wait(page,'picrossProbe.completed && !picrossProbe.ea_active');saved(page)
-    control(page,name='nav-album')
+    # Reuse the genuinely completed tiny puzzle from C04. No second solve or
+    # synthetic setter just to prepare the earned catalog/hover observation.
     rows=[]
     for spec in MATRIX:
-        matrix(page,spec,catalog=True);no_spoilers(page)
+        assert state(page,'viewport','ui_scale') == {'viewport':list(spec[:2]),'ui_scale':spec[2]}
+        no_spoilers(page)
         show_card_image(page)
         label=card(page)
         # Move clear of the card, then exercise the real Godot hover route.
@@ -113,31 +104,3 @@ def catalog(page, name, output, evidence):
         hover=capture(page,output,f'{name}-at-hover-{spec[0]}',card(page)['at_image'])
         rows.append(dict(window=list(spec),small=small,hover=hover))
     evidence['at_catalog']=rows
-
-
-def completion(page, name, output, evidence):
-    control(page,name='nav-album');control(page,text='Blatt 03')
-    rows=[]
-    for spec in MATRIX:
-        matrix(page,spec)
-        wait(page,'picrossProbe.ending && !picrossProbe.ea_active')
-        final=capture(page,output,f'{name}-at-final-{spec[0]}',state(page,'at_image')['at_image'])
-        original=state(page,'slots')['slots']
-        control(page,name='nav-album');no_spoilers(page);control(page,text='Blatt 03')
-        assert state(page,'slots')['slots']==original
-        reopen=capture(page,output,f'{name}-at-reopen-{spec[0]}',state(page,'at_image')['at_image'])
-        control(page,name='reset',tooltip='Rätsel zurücksetzen');control(page,text='Zurücksetzen',dialog=True)
-        assert not state(page,'ea_art')['ea_art']
-        previous=page.evaluate('window.picrossAtFrame?.key ?? null')
-        page.evaluate('window.picrossAtCapture = true')
-        try:
-            draw(page,(0,2),(4,2))
-            wait(page,'window.picrossAtFrame && picrossAtFrame.key !== '+json.dumps(previous))
-            frame=page.evaluate('window.picrossAtFrame')
-        finally:
-            page.evaluate('window.picrossAtCapture = false')
-        assert frame['definition_id']=='T-04' and frame['framebuffer']==list(spec[:2])
-        blend=capture(page,output,f'{name}-at-blend-{spec[0]}',frame['image'],opacity=frame['opacity'],frame=frame)
-        wait(page,'picrossProbe.completed && !picrossProbe.ea_active');saved(page)
-        rows.append(dict(window=list(spec),final=final,reopen=reopen,blend=blend))
-    evidence['at_completion']=rows

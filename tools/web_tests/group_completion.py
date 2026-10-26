@@ -1,55 +1,47 @@
-"""Independent real-browser group; see the versioned scenario inventory."""
-from browser_actions import open_page, control, wait, draw, state, saved, game_viewport
+"""One tiny actual solve, natural reveal, reopening and isolated reset."""
+from browser_actions import open_page, control, wait, draw, state, saved
+from at_cases import capture, no_spoilers, catalog
 
 
 def exercise(pw, name, root, update, url, output, evidence, session):
     passed = session.passed
-    context = session.launch(1.25)
+    context = session.launch()
     page, errors = open_page(context, url)
-    control(page, text='Blatt 01')
-    control(page, name='menu'); control(page, text='UI ')
-    control(page, name='nav-work')
-    draw(page, (2,2))
+    control(page, text='Blatt 01'); draw(page, (2,2)); saved(page)
+    foreign = page.evaluate("picrossStorage.fs.readFile(picrossProbe.root+'/t01.json',{encoding:'utf8'})")
+    control(page, name='nav-album'); control(page, text='Blatt 03')
+    # Arm only a read-only framebuffer observation. The actual gesture and
+    # production clock still perform the complete 2.15-second transition.
+    page.evaluate('window.picrossAtCapture = true')
+    try:
+        draw(page, (0,2), (4,2))
+        wait(page, 'window.picrossAtFrame && picrossProbe.completed')
+        frame = page.evaluate('window.picrossAtFrame')
+    finally:
+        page.evaluate('window.picrossAtCapture = false')
+    blend = capture(page, output, f'{name}-at-blend-1920', frame['image'], opacity=frame['opacity'], frame=frame)
+    wait(page, 'picrossProbe.ending && !picrossProbe.ea_active && !picrossProbe.ea_processing && picrossProbe.ea_caption_alpha === 1')
+    assert state(page, 'ea_title')['ea_title'].startswith('Blatt 03')
     saved(page)
-    game_viewport(page,1920,1080)
-    control(page,name='nav-album'); control(page,text='Blatt 03')
-    draw(page,(0,2),(4,2)); wait(page,'picrossProbe.ending && picrossProbe.completed')
-    wait(page,'!picrossProbe.ea_active && !picrossProbe.ea_processing && picrossProbe.ea_caption_alpha===1')
-    assert state(page, 'ea_title')['ea_title'].startswith('Blatt 03') and state(page, 'ea_art')['ea_art']
-    saved(page)
-    completed_slot = state(page, 'slots')['slots'][2]
-    control(page,name='reset',tooltip='Rätsel zurücksetzen')
-    control(page,text='Abbrechen',dialog=True)
-    assert state(page, 'ending')['ending'] and state(page, 'slots')['slots'][2] == completed_slot
-    page.reload(); wait(page,'window.picrossProbe && picrossProbe.album'); saved(page)
-    labels = state(page, 'labels')['labels']
-    # Display positions follow the remembered sort; status remains bound to IDs.
-    by_id = dict(zip(state(page, 'sort')['sort']['visible_ids'], labels, strict=True))
-    begun = by_id[state(page, 'slots')['slots'][0]['definition_id']]
-    solved = by_id[completed_slot['definition_id']]
-    assert begun['status'] == begun['status_kind'] == 'Begonnen'
-    assert solved['status'] == solved['status_kind'] == 'Gelöst'
-    assert solved['footer'] and solved['reveal'] and not solved['unknown']
-    page.screenshot(path=str(output/f'{name}-ku-solved-footer.png'))
-    control(page,text='Blatt 03')
-    assert state(page, 'ending')['ending'] and not state(page, 'ea_active')['ea_active'] and not state(page, 'ea_processing')['ea_processing']
-    assert state(page, 'slots')['slots'][2] == completed_slot
-    foreign_slot = state(page, 'slots')['slots'][0]
-    control(page,name='reset',tooltip='Rätsel zurücksetzen')
-    control(page,text='Zurücksetzen',dialog=True); saved(page)
-    assert state(page, 'work')['work'] and not state(page, 'completed')['completed'] and not state(page, 'ea_art')['ea_art']
-    assert state(page, 'slots')['slots'][2]['history'] == [] and state(page, 'slots')['slots'][0] == foreign_slot
-    draw(page,(0,2),(4,2)); wait(page,'picrossProbe.ending && picrossProbe.completed')
-    assert state(page, 'ea_active')['ea_active']
-    passed('EA completion, late caption, neutral heading, cancel, durable browser reload, origin-bound reset and repeated animation')
-    control(page,name='nav-album')
-    control(page,text='Blatt 05')
-    for index in range(8):
-        control(page,name=f'color-{index+1}')
-        draw(page,(index,2))
-    wait(page,'picrossProbe.ending && picrossProbe.completed'); saved(page)
-    passed('mono and eight-colour completion through real mouse events')
-    from at_cases import completion
-    completion(page,name,output,evidence)
-    passed('AT transparent transition, final image and reopening preserve earned saves')
+    solved = state(page, 'slots')['slots'][2]
+    final = capture(page, output, f'{name}-at-final-1920', state(page, 'at_image')['at_image'])
+    control(page, name='reset', tooltip='Rätsel zurücksetzen')
+    control(page, text='Abbrechen', dialog=True)
+    assert state(page, 'slots')['slots'][2] == solved and state(page, 'ending')['ending']
+    control(page, name='nav-album'); no_spoilers(page)
+    catalog(page, name, output, evidence)
+    data = state(page, 'sort', 'labels')
+    label = data['labels'][data['sort']['visible_ids'].index('T-04')]
+    assert label['status'] == label['status_kind'] == 'Gelöst' and label['reveal'] and not label['unknown']
+    control(page, text='Blatt 03')
+    assert not state(page, 'ea_active')['ea_active'] and state(page, 'slots')['slots'][2] == solved
+    reopen = capture(page, output, f'{name}-at-reopen-1920', state(page, 'at_image')['at_image'])
+    control(page, name='reset', tooltip='Rätsel zurücksetzen')
+    control(page, text='Zurücksetzen', dialog=True); saved(page)
+    data = state(page, 'slots', 'work', 'ea_art', 'completed')
+    assert data['work'] and not data['completed'] and not data['ea_art']
+    assert data['slots'][2]['history'] == [] and set(data['slots'][2]['cells']) == {-1}
+    assert page.evaluate("picrossStorage.fs.readFile(picrossProbe.root+'/t01.json',{encoding:'utf8'})") == foreign
+    evidence['at_completion'] = [dict(window=[1920,1080,1.0], final=final, reopen=reopen, blend=blend)]
     assert not errors, errors
+    passed('small real completion, transparent reveal and confirmed isolated reset')

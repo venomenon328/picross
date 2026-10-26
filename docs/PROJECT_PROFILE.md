@@ -1,19 +1,16 @@
 # Projektprofil: picross
 
-**CI2 · 26.10.2026, A integriert; B implementiert; C/D/E unbegonnen:**
+**CI2 · 26.10.2026, A/B integriert; C implementiert; D/E unbegonnen:**
 [Kurze CI und begrenzter aktiver Bestand](CI_SLIMMING.md) bindet #412–#417.
-CI2-A ist nach separatem R01 über PR #419 auf
-`94e3ea7d9674babbdcd6bde6251e233191fd096f` integriert.
-[Auswahl und Aufrufgrenzen](CI_A_SELECTION.md) umfassen auf dem B-Branch zusätzlich
-vier Fachgruppen und tatsächliche Fachbelege im Ergebnisgate.
-[CI2-B-T01](CI2_B_VERIFICATION.md) und Draft-PR #420 binden Umsetzung,
-Messungen und getrenntes Selbstreview; separates CI2-B-R01 vor Merge offen.
-C/D/E und großer Datenabbau bleiben unbegonnen; kein Merge oder Deployment.
-Die [CI-Policy](CI_POLICY.md) trennt diesen Sollvertrag von der ausführbaren
-Ausgangsbasis; das [Bestandsinventar](DEVELOPMENT_ARCHIVE.md) bindet die
-konkreten Bereinigungsklassen und erhaltenen aktiven Quellen.
+CI2-A/B sind nach ihren separaten Reviews über PR #419/#420 integriert;
+Basis für C ist `dd56d310d942eee47448df4cdcca5e4af4a49b00`.
+[Auswahl](CI_A_SELECTION.md) und [B-T01](CI2_B_VERIFICATION.md) bleiben gebunden,
+CI2-B-O01 bleibt im Gesamtvorhaben offen. [Browserumfang](CI_B_BROWSER_GROUPS.md)
+und [C-T01](CI2_C_VERIFICATION.md) führen die C-Lieferung auf
+`chore/415-ci2-c-chromium`; separates C-R01 vor Merge bleibt offen.
+D/E und großer Datenabbau bleiben unbegonnen. Kein Merge oder Deployment.
 
-Chromium läuft künftig ausschließlich auf ausdrücklichen manuellen Auftrag,
+Chromium läuft ausschließlich auf ausdrücklichen manuellen Auftrag,
 auch nicht implizit durch `all`, `toolchain` oder gemeinsame Änderungen.
 Der kurze Browserumfang umfasst ungefähr 8–10 Kernfälle; der native Historyweg
 höchstens 20 Benutzerkommandos, höchstens sechs neue wirksame Transaktionen und
@@ -22,7 +19,8 @@ und gewöhnlichen manuellen Vollumfängen. Kleine Fachtests, repräsentative
 Integrationen, gezielte Bildbelege, Laufzeitziele und begrenzte Ablagen ersetzen
 die in CI_SLIMMING ausdrücklich abgelösten Altpflichten. Quellenbindung,
 Fail-closed-Gate und aktuelle Produkt-/Speicherverträge bleiben erhalten.
-Keine erfolgte Beschleunigung oder Bereinigung aus dieser Dokumentlieferung ableiten.
+Gemessene Browserbeschleunigung folgt C-T01; native Kürzung und Bereinigung
+bleiben den noch offenen Paketen vorbehalten.
 
 **HZ · HZ-A/B am 20.10.2026, HZ-C am 21.10.2026 integriert:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale

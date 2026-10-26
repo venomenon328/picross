@@ -64,7 +64,7 @@ class OriginalEvidenceTests(unittest.TestCase):
         pixels=[s['actual'] for s in item['samples']];pixels[1]=[240]*3
         png(self.root/item['file'],pixels);item['samples'][1]['actual']=[240]*3
         with self.assertRaisesRegex(ValueError,'white'):gate.browser(self.root,report,{})
-        report={'group':'persistence'};browser_row(self.root,report)
+        report={'group':'export'};browser_row(self.root,report)
         builds={name:{'manifest':{'build_id':str(i),'files':{f'releases/{i}/at-fixture.json':fixture_record(i)}}}
                 for i,name in enumerate(('web-test','web-test-update'),1)}
         gate.browser(self.root,report,builds)

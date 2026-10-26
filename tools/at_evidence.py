@@ -5,6 +5,7 @@ import struct
 import zlib
 
 MATRIX = [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]
+BROWSER_MATRIX = [[1920,1080,1.0]]
 SAMPLES = {'outside': (0,0,0,0), 'white': (255,255,255,255),
            'hole': (0,0,0,0), 'soft': (56,132,90,80), 'ink': (56,132,90,255)}
 
@@ -111,12 +112,14 @@ def browser(directory, report, builds):
                 elif kind in ('outside','hole'): require(min(actual)>170,'opaque exterior/hole')
                 else: require(all(color[i]+15<actual[i]<250 for i in range(3)),'lost soft alpha')
     if group in ('catalog','completion'):
-        rows=report['at_'+group];require([r['window'] for r in rows]==MATRIX,'browser AT matrix')
+        if group=='completion':
+            browser(directory, {**report, 'group':'catalog'}, builds)
+        rows=report['at_'+group];require([r['window'] for r in rows]==BROWSER_MATRIX,'browser AT matrix')
         for row in rows:
             if group=='completion':require(row['blend']['rendered_frame']['framebuffer']==row['window'][:2], 'actual browser framebuffer matrix')
             for kind in (('small','hover') if group=='catalog' else ('final','reopen','blend')):
                 check_image(row[kind],blend=kind=='blend')
-    elif group=='persistence':
+    elif group=='export':
         value=report['at_update'];first=value['first'];second=value['second']
         require(first['image_revision']==1 and second['image_revision']==2 and first['image_sha256']!=second['image_sha256'],'two distinct synthetic image revisions')
         require(first['definitions']==second['definitions'] and first['registry_sha256']==second['registry_sha256'],'image-only export identity')

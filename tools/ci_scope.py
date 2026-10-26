@@ -49,7 +49,8 @@ ANALYSIS_PATHS = frozenset({
 DELIVERY_PATHS = frozenset({"tools/deploy_web.py", "tools/web_tests/ssh_reference.py"})
 BROWSER_PATHS = frozenset({"tools/web_tests/" + name for name in (
     "browser.py", "browser_actions.py", "browser_runtime.py", "smoke.py", "fixtures.py", "probe.gd",
-    "group_catalog.py", "group_input.py", "group_completion.py", "group_persistence.py", "timing.py",
+    "group_catalog.py", "group_input.py", "group_completion.py", "group_persistence.py", "group_export.py", "timing.py",
+    "hz_c_cases.py", "hz_b_cases.py", "at_cases.py", "storage_contract.cjs",
 )})
 WEB_SHARED_PATHS = frozenset({
     "tools/build_web_player.py", "tools/web_bundle.py", "tools/test_web_delivery.py",

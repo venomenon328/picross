@@ -25,6 +25,7 @@ class Session:
         context = launch(self.pw, self.browser, self.profile, viewport={'width':1920,'height':1122},
             device_scale_factor=scale)
         self.contexts.append(context)
+        context.on('close', lambda: self.contexts.remove(context) if context in self.contexts else None)
         return context
 
     def passed(self, label):
@@ -37,26 +38,28 @@ class Session:
         print(self.browser, self.evidence['group'], 'PASS', matches[0]['id'], label, flush=True)
 
     def close(self):
-        for context in reversed(self.contexts):
+        for context in reversed(self.contexts[:]):
             context.close()
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build', type=Path, required=True)
-    parser.add_argument('--update-build', type=Path, required=True)
+    parser.add_argument('--update-build', type=Path, required=False)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--browser', choices=BROWSERS, default='chromium')
-    parser.add_argument('--groups', default=','.join(GROUPS[1:]))
+    parser.add_argument('--groups', required=True)
     args = parser.parse_args()
     groups = args.groups.split(',')
     if not groups or len(set(groups)) != len(groups) or any(g not in GROUPS[1:] for g in groups):
         parser.error('Expected unique technical groups')
+    if ('export' in groups) != (args.update_build is not None):
+        parser.error('Only the explicit export group requires --update-build')
     from playwright.sync_api import sync_playwright
     timing.install()
     args.output.mkdir(parents=True, exist_ok=True)
     report = dict(os=platform.platform(), manifest=json.loads((args.build/'build-manifest.json').read_text()),
-                  update_manifest=json.loads((args.update_build/'build-manifest.json').read_text()), results=[])
+                  update_manifest=json.loads((args.update_build/'build-manifest.json').read_text()) if args.update_build else None, results=[])
     try:
         with sync_playwright() as pw:
             for name in [args.browser]:

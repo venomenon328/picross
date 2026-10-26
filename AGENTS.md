@@ -15,12 +15,15 @@ vollständig lesen. CI2 / [#412](https://github.com/venomenon328/picross/issues/
 ist am 26.10.2026 als Spezifikation freigegeben; beauftragt sind Issues und Dokumentation.
 CI2-A / #413 ist nach separatem R01 über PR #419 auf
 `94e3ea7d9674babbdcd6bde6251e233191fd096f` integriert.
-[Auswahlvertrag](docs/CI_A_SELECTION.md) und
-[CI2-B-T01](docs/CI2_B_VERIFICATION.md) beschreiben die auf
-`chore/414-ci2-b-fachtests` implementierten Fachgruppen, isolierten Fixtures und
-historischen Helfer; Lieferung in Draft-PR #420, separates CI2-B-R01 vor Merge.
-C/D/E (#415–#417) bleiben unbegonnen. Keine Datenlöschung außerhalb der B-Helfer,
-weitere Implementierung oder Merge aus der Spezifikationsfreigabe ableiten.
+CI2-B ist nach separatem R01 über PR #420 auf
+`dd56d310d942eee47448df4cdcca5e4af4a49b00` integriert.
+[Auswahlvertrag](docs/CI_A_SELECTION.md) und [B-T01](docs/CI2_B_VERIFICATION.md)
+bleiben gebunden; CI2-B-O01 bleibt im Gesamtvorhaben offen.
+CI2-C / #415 ist auf `chore/415-ci2-c-chromium` implementiert;
+[Browservertrag](docs/CI_B_BROWSER_GROUPS.md) und [C-T01](docs/CI2_C_VERIFICATION.md)
+führen Umfang und tatsächliche Nachweise. Separates CI2-C-R01 vor Merge offen.
+D/E (#416/#417) bleiben unbegonnen. Keine weitere Implementierung, Bestandslöschung
+oder Merge aus der Spezifikationsfreigabe ableiten.
 Der künftige Umfang verlangt Chromium ausschließlich auf ausdrücklichen Auftrag und
 ersetzt die 500er-Historyroute durch höchstens 20 semantische Benutzerkommandos,
 höchstens sechs neue wirksame History-Transaktionen und genau zwei echte Spielprozesse.

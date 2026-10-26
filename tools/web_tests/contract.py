@@ -1,7 +1,9 @@
 """Versioned browser coverage inventory; imported by selection, runners and gate."""
-GROUPS = ('regular', 'catalog', 'input', 'completion', 'persistence')
+CORE_GROUPS = ('regular', 'catalog', 'input', 'completion', 'persistence')
+# Export compatibility is a separately requested, bounded profile, never in all.
+GROUPS = (*CORE_GROUPS, 'export')
 BROWSERS = ('chromium',)
-BROWSER_SCOPES = ('none', 'regular', 'catalog', 'input', 'completion', 'persistence', 'all')
+BROWSER_SCOPES = ('none', *GROUPS, 'short', 'all')
 
 
 def browser_request(scope):
@@ -17,7 +19,18 @@ def requested_groups(request):
     scope = request.get('scope') if isinstance(request, dict) else None
     if scope == 'none' or request != browser_request(scope):
         raise ValueError('Invalid canonical browser request')
-    return list(GROUPS) if scope == 'all' else ['regular'] + ([] if scope == 'regular' else [scope])
+    return list(CORE_GROUPS) if scope in ('short', 'all') else ['regular'] + ([] if scope == 'regular' else [scope])
+
+
+def required_builds(groups):
+    if not groups or len(set(groups)) != len(groups) or any(g not in GROUPS for g in groups):
+        raise ValueError('Expected nonempty unique browser groups')
+    names = ['web-player'] if 'regular' in groups else []
+    if any(g != 'regular' for g in groups):
+        names.append('web-test')
+    if 'export' in groups:
+        names.append('web-test-update')
+    return tuple(names)
 
 
 def original_request(event, payload):
@@ -35,39 +48,16 @@ def validate_request(plan, event, payload):
         raise ValueError('General scope differs from original dispatch inputs')
 
 SCENARIOS = (
-    {'id':'HZ-C-W01','group':'catalog','label':'HZ-C stable small typography, complete metadata and all three native dropdowns','browsers':['chromium'],'images':[f'hz-c-{kind}-{w}.png' for kind in ('catalog','category','sort','settings','view') for w in (1280,1920,2560)]},
-    {'id':'HZ-B-W01','group':'catalog','label':'HZ-B paper controls, native popup dismissal, keyboard selection and checkbox input','browsers':['chromium'],'images':[f'hz-b-{kind}-{w}.png' for kind in ('sort','settings','view') for w in (1280,1920,2560)]},
-    {'id':'HZ-A-W01','group':'catalog','label':'HZ Tidy Hand local fallback, complete metadata, native menus and scrollable help','browsers':['chromium'],'images':[f'hz-{kind}-{w}.png' for kind in ('menu','help') for w in (1280,1920,2560)]},
-    {'id':'AT-W01-C','group':'catalog','label':'AT transparent catalog and real hover preserve white detail, holes and soft alpha','browsers':['chromium'],'images':[f'at-{kind}-{w}.png' for kind in ('card','hover') for w in (1280,1920,2560)]},
-    {'id':'AT-W01-E','group':'completion','label':'AT transparent transition, final image and reopening preserve earned saves','browsers':['chromium'],'images':[f'at-{kind}-{w}.png' for kind in ('final','reopen','blend') for w in (1280,1920,2560)]},
-    {'id':'AT-W01-P','group':'persistence','label':'AT two genuine image exports retain begun and solved saves across reload and browser restart','browsers':['chromium'],'images':[f'at-{kind}-update.png' for kind in ('before','after','restart')]},
-    {'id': 'KU-B01', 'group': 'catalog', 'label': 'KU-B four criteria, both directions, canonical ties and stable return ID', 'browsers': ['chromium'], 'images': ['ku-b-sorting.png']},
-    {'id': 'KU-B02', 'group': 'persistence', 'label': 'KU-B preference reload, process restart, compatible export, isolated failure and latest-change retry', 'browsers': ['chromium'], 'images': ['ku-b-preference-error.png']},
     {'id': 'regular-start', 'group': 'regular', 'label': 'uninstrumented startup, WebGL2, offline and no errors', 'browsers': ['chromium'], 'images': ['regular-catalog.png']},
-    {'id': 'B01', 'group': 'persistence', 'label': 'delayed exclusive lock handoff waits before IndexedDB hydration', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B02', 'group': 'catalog', 'label': 'export/catalog startup', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B03', 'group': 'catalog', 'label': 'KU-A single-line metadata, footer, tooltip boundaries and passive click routes', 'browsers': ['chromium'], 'images': ['ku-no-difficulty-tooltip.png', 'ku-mode-tooltip.png', 'ku-1280-ui125.png', 'ku-1920-ui100.png', 'ku-2560-ui125.png']},
-    {'id': 'B04', 'group': 'input', 'label': 'left/right elastic stroke, atomic undo and redo branch', 'browsers': ['chromium'], 'images': ['mono.png']},
-    {'id': 'B05', 'group': 'input', 'label': 'Escape/opposite-button/focus cancellation without phantom commit', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B06', 'group': 'persistence', 'label': 'second writer blocked', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B07', 'group': 'persistence', 'label': 'reload restores cells, complete history/redo and view', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B08', 'group': 'persistence', 'label': 'real browser process restart at DPI125 restores history and redo works', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B09', 'group': 'persistence', 'label': 'second genuine compatible export retains IndexedDB identity and progress', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B10', 'group': 'input', 'label': 'UI125, 720p/1080p, wheel zoom, fullscreen fit and hit geometry', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B11', 'group': 'input', 'label': 'live DPI change to 150 percent preserves hit geometry', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B12', 'group': 'input', 'label': 'left mouse moves long row/column clue windows and preserves cells', 'browsers': ['chromium'], 'images': ['colour-row-clues.png', 'colour-column-clues.png']},
-    {'id': 'B13', 'group': 'completion', 'label': 'EA completion, late caption, neutral heading, cancel, durable browser reload, origin-bound reset and repeated animation', 'browsers': ['chromium'], 'images': ['ku-solved-footer.png']},
-    {'id': 'B14', 'group': 'completion', 'label': 'mono and eight-colour completion through real mouse events', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B15', 'group': 'input', 'label': '50x30 rectangle, colour ID 8 and full-grid fit', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B16', 'group': 'persistence', 'label': 'actual IndexedDB write failure is visible; own quit stays open; retry commits', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B17', 'group': 'persistence', 'label': 'abrupt tab close loses unacknowledged edit but retains last acknowledged state', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B18', 'group': 'persistence', 'label': 'corrupt primary reload uses valid backup without silent overwrite', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B19', 'group': 'persistence', 'label': 'explicit backup confirmation repairs primary through existing validation', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B20', 'group': 'persistence', 'label': 'incompatible revisions rejected without migration or overwrite', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B21', 'group': 'persistence', 'label': 'confirmed reset and slot isolation', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B22', 'group': 'persistence', 'label': 'real subpath startup, stable saves and offline-after-load input', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B23', 'group': 'persistence', 'label': 'own quit acknowledges durable sync, exits zero and reload restores saved state', 'browsers': ['chromium'], 'images': []},
-    {'id': 'B24', 'group': 'persistence', 'label': 'blocked IndexedDB startup displays failure before gameplay', 'browsers': ['chromium'], 'images': []},
+    {'id': 'C01', 'group': 'catalog', 'label': 'current catalog, sorting and paper controls', 'browsers': ['chromium'], 'images': ['catalog.png', 'category.png', 'sort.png', 'view.png']},
+    {'id': 'C02', 'group': 'input', 'label': 'real elastic edit, atomic undo, redo and cancellation', 'browsers': ['chromium'], 'images': ['input.png']},
+    {'id': 'C03', 'group': 'input', 'label': 'resize and live DPI preserve fit and hit geometry', 'browsers': ['chromium'], 'images': []},
+    {'id': 'C04', 'group': 'completion', 'label': 'small real completion, transparent reveal and confirmed isolated reset', 'browsers': ['chromium'], 'images': ['at-final-1920.png', 'at-reopen-1920.png', 'at-blend-1920.png', 'at-card-1920.png', 'at-hover-1920.png']},
+    {'id': 'C05', 'group': 'persistence', 'label': 'exclusive handoff and rejected second tab never hydrate early', 'browsers': ['chromium'], 'images': []},
+    {'id': 'C06', 'group': 'persistence', 'label': 'acknowledged IndexedDB reload restores history, redo and preference', 'browsers': ['chromium'], 'images': []},
+    {'id': 'C07', 'group': 'persistence', 'label': 'fresh browser process restores state and performs real redo', 'browsers': ['chromium'], 'images': []},
+    {'id': 'C08', 'group': 'persistence', 'label': 'actual IndexedDB failure blocks quit and retry survives reload', 'browsers': ['chromium'], 'images': ['storage-error.png']},
+    {'id': 'E01', 'group': 'export', 'label': 'two genuine image exports preserve begun and solved saves', 'browsers': ['chromium'], 'images': ['at-before-update.png', 'at-after-update.png', 'at-restart-update.png']},
 )
 
 

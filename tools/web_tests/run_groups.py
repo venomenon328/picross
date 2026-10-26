@@ -12,8 +12,8 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ci_scope import evaluate, JOBS, validate_original_event
 from web_bundle import validate, digest
-from web_tests.contract import BROWSERS, require_browser
-from web_tests.results import (BUILDS, binding, file_record, read, validate_builds,
+from web_tests.contract import BROWSERS, require_browser, required_builds
+from web_tests.results import (binding, file_record, read, validate_builds,
                                validate_browser)
 
 
@@ -37,9 +37,9 @@ def check_current(plan):
 
 
 def seal(root, plan):
-    envelope = dict(format='picross-web-builds-v1', binding=binding(plan),
+    envelope = dict(format='picross-web-builds-v2', binding=binding(plan),
                     attempt=os.environ['GITHUB_RUN_ATTEMPT'], builds={})
-    for name in BUILDS:
+    for name in required_builds(plan['browser_groups']):
         manifest = validate(root/name, allow_test=name != 'web-player')
         envelope['builds'][name] = dict(manifest=manifest,
                                         manifest_sha256=digest(root/name/'build-manifest.json'))
@@ -56,14 +56,14 @@ def run(args, plan):
     validate_builds(envelope, plan, os.environ['GITHUB_RUN_ATTEMPT'])
     if envelope['attempt'] != args.build_attempt:
         raise ValueError('Downloaded build attempt differs from scheduler')
-    for name in BUILDS:
+    for name in required_builds(plan['browser_groups']):
         if (validate(build_root/name, allow_test=name != 'web-player') != envelope['builds'][name]['manifest']
                 or digest(build_root/name/'build-manifest.json') != envelope['builds'][name]['manifest_sha256']):
             raise ValueError('Downloaded bundle differs from sealed build')
     (output/'manifests').mkdir(exist_ok=True)
-    for name in BUILDS:
+    for name in required_builds(plan['browser_groups']):
         shutil.copyfile(build_root/name/'build-manifest.json', output/'manifests'/(name+'.json'))
-    report = dict(format='picross-browser-result-v1', binding=binding(plan),
+    report = dict(format='picross-browser-result-v2', binding=binding(plan),
                   attempt=os.environ['GITHUB_RUN_ATTEMPT'], browser=args.browser,
                   expected=plan['browser_expected'][args.browser], status='failed',
                   builds=envelope, groups=[], files={}, phases=[],
@@ -81,11 +81,17 @@ def run(args, plan):
                        '--browser', args.browser, '--output', str(directory),
                        '--build', str(build_root/('web-player' if group == 'regular' else 'web-test'))]
             if group != 'regular':
-                command += ['--update-build', str(build_root/'web-test-update'), '--groups', group]
+                command += ['--groups', group]
+            if group == 'export':
+                command += ['--update-build', str(build_root/'web-test-update')]
             began = time.monotonic()
             # Execute each selection from scratch even after another group fails.
             with (directory/'execution.log').open('w', encoding='utf-8') as stream:
-                result = subprocess.run(command, stdout=stream, stderr=subprocess.STDOUT)
+                try:
+                    result = subprocess.run(command, stdout=stream, stderr=subprocess.STDOUT, timeout=360)
+                except subprocess.TimeoutExpired:
+                    stream.write('Group exceeded bounded 360-second execution limit\n')
+                    result = subprocess.CompletedProcess(command, 124)
             report['phases'].append(dict(group=group, seconds=round(time.monotonic()-began, 6), exit_code=result.returncode))
             raw = directory/('regular-report.json' if group == 'regular' else 'browser-report.json')
             if raw.is_file():
