@@ -44,7 +44,7 @@ def run(args):
     result = dict(format='picross-native-result-v1', status='running', identity=identity,
                   selection_attempt=os.environ.get('CI_SELECTION_ATTEMPT', identity['github_run_attempt']),
                   groups=groups, expected=coverage(groups), started_at=now(), results=[],
-                  host=platform.system(), overlap='graphics on isolated Xvfb; other groups serial'
+                  host=platform.system(), overlap='catalog and graphics on isolated Xvfb; remaining groups serial'
                   if platform.system() == 'Linux' else 'serial; native windows own focus')
     began = time.monotonic()
     path = technical / 'native-result.json'
@@ -73,21 +73,22 @@ def run(args):
                     seconds=round(time.monotonic()-start, 6))
 
     # Prime only the verified download cache via the first real group before
-    # overlapping the independent graphics process. No imported project, profile
+    # overlapping independent catalog and graphics processes. No imported project, profile
     # or result is shared. Do not race two initial archive downloads.
-    serial = [g for g in groups if g != 'graphics']
+    parallel = [g for g in ('catalog','graphics') if g in groups and platform.system() == 'Linux']
+    serial = [g for g in groups if g not in parallel]
     primed = False
     if serial:
         result['results'].append(execute(serial.pop(0)))
         primed = result['results'][-1]['status'] == 'success'
         flush()
-    with ThreadPoolExecutor(max_workers=1) as executor:
-        future = executor.submit(execute, 'graphics') if 'graphics' in groups and platform.system() == 'Linux' and primed else None
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        futures = {g:executor.submit(execute,g) for g in parallel} if primed else {}
         for group in serial:
             result['results'].append(execute(group))
             flush()
-        if 'graphics' in groups:
-            result['results'].append(future.result() if future else execute('graphics'))
+        for group in parallel:
+            result['results'].append(futures[group].result() if group in futures else execute(group))
             flush()
     result['results'].sort(key=lambda r: GROUPS.index(r['group']))
     result.update(status='success' if all(r['status'] == 'success' for r in result['results']) else 'failure',

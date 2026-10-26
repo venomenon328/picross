@@ -68,7 +68,7 @@ func run() -> void:
 		for ui: float in [1,1.25]:
 			for colored: bool in [false,true]:
 				for status: int in range(3):
-					for legacy: bool in [true,false]:
+					for legacy: bool in [false]:
 						board.cell = cell
 						board.ui_scale = ui
 						board.colored = colored

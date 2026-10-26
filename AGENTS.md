@@ -19,12 +19,15 @@ CI2-B ist nach separatem R01 über PR #420 auf
 `dd56d310d942eee47448df4cdcca5e4af4a49b00` integriert.
 [Auswahlvertrag](docs/CI_A_SELECTION.md) und [B-T01](docs/CI2_B_VERIFICATION.md)
 bleiben gebunden; CI2-B-O01 bleibt im Gesamtvorhaben offen.
-CI2-C / #415 ist auf `chore/415-ci2-c-chromium` implementiert;
+CI2-C / #415 ist nach separatem R01 über PR #421 auf
+`8e5e99647596bc3ef9d7bd22bd746b73fbb424d5` integriert.
 [Browservertrag](docs/CI_B_BROWSER_GROUPS.md) und [C-T01](docs/CI2_C_VERIFICATION.md)
-führen Umfang und tatsächliche Nachweise. Separates CI2-C-R01 vor Merge offen.
-D/E (#416/#417) bleiben unbegonnen. Keine weitere Implementierung, Bestandslöschung
-oder Merge aus der Spezifikationsfreigabe ableiten.
-Der künftige Umfang verlangt Chromium ausschließlich auf ausdrücklichen Auftrag und
+bleiben an ihre Lieferung gebunden. CI2-D / #416 ist auf
+`chore/416-ci2-d-native` implementiert; [D-T01](docs/CI2_D_VERIFICATION.md)
+bindet den kurzen Historyweg, native Bildkürzung und tatsächliche Messungen.
+Separates CI2-D-R01 bleibt vor Merge offen. CI2-E / #417 bleibt unbegonnen.
+Keine Bestandslöschung oder Merge aus der Spezifikationsfreigabe ableiten.
+Der aktuelle Umfang verlangt Chromium ausschließlich auf ausdrücklichen Auftrag und
 ersetzt die 500er-Historyroute durch höchstens 20 semantische Benutzerkommandos,
 höchstens sechs neue wirksame History-Transaktionen und genau zwei echte Spielprozesse.
 Die Laufzeitziele (Docs unter einer Minute, Standard möglichst unter fünf Minuten,

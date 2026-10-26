@@ -10,9 +10,12 @@ separatem R01 über PR #419 auf `94e3ea7d9674babbdcd6bde6251e233191fd096f`
 integriert. CI2-B ist nach separatem R01 über PR #420 auf
 `dd56d310d942eee47448df4cdcca5e4af4a49b00` integriert;
 [B-T01](CI2_B_VERIFICATION.md) bleibt historisch gebunden, B-O01 offen.
-CI2-C ist auf `chore/415-ci2-c-chromium` implementiert; [C-T01](CI2_C_VERIFICATION.md)
-führt tatsächliche Nachweise, separates C-R01 bleibt vor Merge offen.
-D/E und großer Datenabbau bleiben unbegonnen; kein Merge oder Deployment.
+CI2-C ist nach separatem R01 über PR #421 auf
+`8e5e99647596bc3ef9d7bd22bd746b73fbb424d5` integriert; [C-T01](CI2_C_VERIFICATION.md)
+bleibt an seinen Lieferstand gebunden. D ist auf `chore/416-ci2-d-native`
+implementiert; [D-T01](CI2_D_VERIFICATION.md) führt die tatsächlichen Nachweise
+und Messungen. Separates D-R01 bleibt vor Merge offen. E und großer Datenabbau
+bleiben unbegonnen; kein Merge oder Deployment.
 
 Dieser Vertrag ersetzt für die benannten Folgepakete die bisherigen automatischen
 Chromiumpflichten, impliziten Browserrechte manueller Scopes, ungekürzten historischen

@@ -518,10 +518,10 @@ historische Nachweise werden getrennt ausgewiesen.
 
 **CI2-D / [#416](https://github.com/venomenon328/picross/issues/416), freigegebener
 Sollvertrag vom 26.10.2026:** [CI2-D](CI_SLIMMING.md) ersetzt die fortlaufende
-500-Aktionen-Pflicht durch die kompakte History-Integration in §8.1. Die Umsetzung
-ist separat; die vorhandene `--integration`-Route führt bis dahin weiterhin die
-bisherigen 500 Aktionen aus. Die Spezifikationsänderung ist kein neuer Mess- oder
-Ausführungsnachweis. Historische #12-/PR-#16-Abnahmen bleiben an ihren Stand gebunden.
+500-Aktionen-Pflicht durch die kompakte History-Integration in §8.1.
+`--integration` und `--groups history` führen jetzt 17 Kommandos, vier neue
+Transaktionen und zwei echte Spielprozesse aus. [D-T01](CI2_D_VERIFICATION.md)
+bindet tatsächliche Ausführung und Messung. Historische #12-/PR-#16-Abnahmen bleiben an ihren Stand gebunden.
 
 Die folgenden Bestandteile existieren aus #8; #9 erweitert deren tatsächlichen Prüfumfang. `godot` bezeichnet den gebundenen Standard-Editor, unter Windows dessen Konsolenprogramm. Vollständig isolierter Prüfweg in der [Anleitung](../game/README.md).
 
@@ -558,7 +558,7 @@ optionale Route wird als nicht zutreffend ausgewiesen, nicht als ausgeführt.
 | A-06 | Unkorrigierte eigene Miniatur, keine frühen Motivdaten, richtiger Abschluss mit unbekanntem Hintergrund, kein Abschluss bei Zusatz-/Fehl-/Falschfüllung oder leerer Motivzelle. Detailliertere Ressourcen ändern die Abschlusslogik nicht. |
 | A-07 | Import, begrenzter Start/Exit und Windows-Export; vollständige Artefakte/Logs einem konkreten Stand zugeordnet. |
 
-**Kompakte History-Integration nach CI2-D (freigegeben, noch umzusetzen):**
+**Kompakte History-Integration nach CI2-D (implementiert):**
 Eine kurze deterministische Folge in einem isolierten synthetischen Profil
 ersetzt den bisherigen 500-Aktionen-Durchlauf. Für diese Prüfung gelten insgesamt
 höchstens **20 semantische Befehle**, höchstens **6 neu erzeugte wirksame
@@ -601,7 +601,7 @@ Bestehende Dokumentprüfung zusätzlich: `python3 -m unittest discover -s tools 
 | M-04 | Mit #11 Teilstand schließen, neu starten und samt Historie/Ansicht fortsetzen. | Eigentümer |
 | M-05 | Durch D-06 nicht anwendbar: Tastatur/Controller außerhalb P1. | Kein P1-Gate |
 | M-06 | 1080p-Startziel beziehungsweise arbeitsbereichbegrenzter Fallback, 1080p/1440p und logische Referenzflächen; tatsächliche Skalierung erfassen. Keine verdeckten Elemente, aufgezwungenen Riesenraster oder verschmolzenen Füll-/Fünferlinien. | Eigentümer |
-| M-07 | 50×50 auf der Referenzhardware: keine verlorenen/falschen Aktionen oder wahrnehmbaren Hänger. Technische Zustandsregression nach dem freigegebenen kompakten CI2-D-Vertrag in §8.1; dessen Umsetzung ist separat. Messung und persönliche Bedienbeobachtung bleiben getrennt. | Implementierer / Eigentümer |
+| M-07 | 50×50 auf der Referenzhardware: keine verlorenen/falschen Aktionen oder wahrnehmbaren Hänger. Technische Zustandsregression nach dem freigegebenen kompakten CI2-D-Vertrag in §8.1; dessen tatsächliche Nachweise stehen in D-T01. Messung und persönliche Bedienbeobachtung bleiben getrennt. | Implementierer / Eigentümer |
 
 Protokoll: tatsächliche Commit-/Artefaktkennung, Betriebssystem, verwendete Eingaben, Fenster-/Bildschirmgröße, reale Skalierung, Szenario und Ergebnis. Hardware-/Skalierungswerte nicht erfinden und keine pauschale FPS-Zusage aus der Referenz ableiten.
 
