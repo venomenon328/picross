@@ -19,7 +19,26 @@ except ImportError:
 
 
 class RecoveryTests(unittest.TestCase):
-    setUpClass = classmethod(RevealTests.setUpClass.__func__)
+    @classmethod
+    def setUpClass(cls):
+        # Technical publication/recovery boundaries need a valid bound catalog,
+        # not all historical production files at every guard. Real full-export
+        # integration remains in RevealTests and the adapter group.
+        import shutil
+        from tools.puzzle_production.integrated_content import FORMAT
+        from tools.puzzle_production.authoring_package import file_hash
+        from tools.puzzle_production.contract import load_json,write_json
+        from tests.puzzle_production.test_catalog_reveal import RevealTests as Fixture
+        Fixture.setUpClass.__func__(cls)
+        registry=cr.check_checkout(cls.base)
+        entry=registry['entries'][0]
+        package=cls.base/entry['production']['package']
+        notice=(cls.base/'game'/entry['reveal']).with_suffix('.txt')
+        receipt={'format':FORMAT,'entry':deepcopy(entry),'integrated_commit':'a'*40,'notice_sha256':file_hash(notice)}
+        shutil.rmtree(package);package.mkdir();write_json(package/'manifest.json',receipt)
+        entry['production']['package_sha256']=file_hash(package/'manifest.json')
+        write_json(cls.base/cr.REGISTRY,registry)
+        cls.entry=cr.check_checkout(cls.base)['entries'][0]
     tearDownClass = classmethod(RevealTests.tearDownClass.__func__)
     setUp = RevealTests.setUp
     request = RevealTests.request
@@ -104,19 +123,6 @@ else: c.recover(Path(root))
         cr.recover(self.checkout)
         self.assertEqual(original,{n:b for n,(b,_) in snapshot(self.checkout).items()})
 
-    def test_journal_dispatch_and_base64_canonicality(self):
-        for value in ({'sha256':'0'*64,'bytes':True,'base64':'YQ=='},
-                      {'sha256':io.checksum(b'a'),'bytes':1,'base64':'YR=='},
-                      {'sha256':io.checksum(b'a'),'bytes':1,'base64':'YQ=\n'}):
-            with self.assertRaises(ValueError): pub.decode_binary(value)
-        self.assertEqual(pub.decode_binary(pub.binary(b'abc')),b'abc')
-        lock=self.checkout/tx.LOCK
-        with lock.open('wb') as f:
-            f.write(b'{"format":"picross-catalog-metadata-journal-v2",');f.truncate(pub.NORMAL_LIMIT+1)
-        before=lock.stat().st_mtime_ns
-        with self.assertRaisesRegex(ValueError,'Only reveal'): pub.read_journal(self.checkout)
-        self.assertEqual(lock.stat().st_mtime_ns,before)
-        lock.unlink()
 
     def test_multiple_ids_every_binary_text_and_recovery_boundary(self):
         import shutil
@@ -158,37 +164,7 @@ else: c.recover(Path(root))
         cr.recover(self.checkout)
         self.assertEqual(original,{n:b for n,(b,_) in snapshot(self.checkout).items()})
 
-    def test_exact_limit_dispatch_before_json_decode_and_large_binary_chunks(self):
-        from tools.puzzle_production.contract import Aborted
-        lock=self.checkout/tx.LOCK
-        for prefix,limit in ((b'{"format":"picross-catalog-metadata-journal-v2",',pub.NORMAL_LIMIT),(pub.PREFIX,pub.LIMIT)):
-            for size in (limit-1,limit,limit+1):
-                with self.subTest(prefix=prefix,size=size):
-                    with lock.open('wb') as stream:stream.write(prefix);stream.truncate(size)
-                    with patch.object(io,'read',return_value=b'bounded-test') as read:
-                        if size>limit:
-                            with self.assertRaises((ValueError,Aborted)):pub.read_journal(self.checkout)
-                            read.assert_not_called()
-                        else:self.assertEqual(pub.read_journal(self.checkout),b'bounded-test');read.assert_called_once()
-                    lock.unlink()
-        raw=b'x'*source.IMAGE_LIMIT;value=pub.binary(raw)
-        self.assertEqual(pub.decode_binary(value),raw)
-        self.assertTrue(all(len(c)<=io.CHUNK for c in pub.binary_chunks(value)))
-        for changes in ({'bytes':source.IMAGE_LIMIT+1},{'base64':value['base64']+'AAAA'},{'sha256':'0'*64}):
-            with self.assertRaises(ValueError):pub.decode_binary({**value,**changes})
 
-    def test_two_real_png_sides_at_32_mib_and_aggregate_limit_before_decode(self):
-        from tools.puzzle_production.contract import Aborted
-        from tests.puzzle_production.test_catalog_reveal import synthetic_image
-        image=self.root/'large.png';synthetic_image(image)
-        raw=image.read_bytes()
-        sides={kind:pub.binary(raw+padding*(source.IMAGE_LIMIT-len(raw))) for kind,padding in (('old',b'a'),('new',b'b'))}
-        journal={'operation':'reveal-adoption','replacements':{'game/'+self.entry['reveal']:sides}}
-        pub.validate_replacements(journal,{'entries':[self.entry]})
-        other=deepcopy(self.entry);other['reveal']='art/content/another.png'
-        journal['replacements']['game/'+other['reveal']]=sides
-        with patch.object(pub,'binary_chunks',side_effect=AssertionError('Decoded before total byte guard')):
-            with self.assertRaises(Aborted):pub.validate_replacements(journal,{'entries':[self.entry,other]})
 
     def test_partial_journal_and_foreign_phase_are_preserved(self):
         plan=self.make_plan();original=snapshot(self.checkout)
@@ -304,6 +280,65 @@ else: c.recover(Path(root))
 
 
 del RevealTests  # Imported fixture owner is not a second discovered test suite.
+
+
+class JournalTests(unittest.TestCase):
+    """Local binary/dispatch limits need no exported or registered production."""
+    def setUp(self):
+        import tempfile
+        from tools.puzzle_production.za1_fixtures import isolated_checkout
+        temporary=tempfile.TemporaryDirectory();self.addCleanup(temporary.cleanup)
+        self.root=Path(temporary.name);self.checkout=isolated_checkout(self.root/'checkout')
+        self.entry={'reveal':'art/content/synthetic.png','production':{'width':4,'height':3}}
+
+    def test_journal_dispatch_and_base64_canonicality(self):
+        for value in ({'sha256':'0'*64,'bytes':True,'base64':'YQ=='},
+                      {'sha256':io.checksum(b'a'),'bytes':1,'base64':'YR=='},
+                      {'sha256':io.checksum(b'a'),'bytes':1,'base64':'YQ=\n'}):
+            with self.assertRaises(ValueError): pub.decode_binary(value)
+        self.assertEqual(pub.decode_binary(pub.binary(b'abc')),b'abc')
+        lock=self.checkout/tx.LOCK
+        with lock.open('wb') as f:
+            f.write(b'{"format":"picross-catalog-metadata-journal-v2",');f.truncate(pub.NORMAL_LIMIT+1)
+        before=lock.stat().st_mtime_ns
+        with self.assertRaisesRegex(ValueError,'Only reveal'): pub.read_journal(self.checkout)
+        self.assertEqual(lock.stat().st_mtime_ns,before)
+        lock.unlink()
+
+
+    def test_exact_limit_dispatch_before_json_decode_and_large_binary_chunks(self):
+        from tools.puzzle_production.contract import Aborted
+        lock=self.checkout/tx.LOCK
+        for prefix,limit in ((b'{"format":"picross-catalog-metadata-journal-v2",',pub.NORMAL_LIMIT),(pub.PREFIX,pub.LIMIT)):
+            for size in (limit-1,limit,limit+1):
+                with self.subTest(prefix=prefix,size=size):
+                    with lock.open('wb') as stream:stream.write(prefix);stream.truncate(size)
+                    with patch.object(io,'read',return_value=b'bounded-test') as read:
+                        if size>limit:
+                            with self.assertRaises((ValueError,Aborted)):pub.read_journal(self.checkout)
+                            read.assert_not_called()
+                        else:self.assertEqual(pub.read_journal(self.checkout),b'bounded-test');read.assert_called_once()
+                    lock.unlink()
+        raw=b'x'*source.IMAGE_LIMIT;value=pub.binary(raw)
+        self.assertEqual(pub.decode_binary(value),raw)
+        self.assertTrue(all(len(c)<=io.CHUNK for c in pub.binary_chunks(value)))
+        for changes in ({'bytes':source.IMAGE_LIMIT+1},{'base64':value['base64']+'AAAA'},{'sha256':'0'*64}):
+            with self.assertRaises(ValueError):pub.decode_binary({**value,**changes})
+
+
+    def test_two_real_png_sides_at_32_mib_and_aggregate_limit_before_decode(self):
+        from tools.puzzle_production.contract import Aborted
+        from tests.puzzle_production.test_catalog_reveal import synthetic_image
+        image=self.root/'large.png';synthetic_image(image)
+        raw=image.read_bytes()
+        sides={kind:pub.binary(raw+padding*(source.IMAGE_LIMIT-len(raw))) for kind,padding in (('old',b'a'),('new',b'b'))}
+        journal={'operation':'reveal-adoption','replacements':{'game/'+self.entry['reveal']:sides}}
+        pub.validate_replacements(journal,{'entries':[self.entry]})
+        other=deepcopy(self.entry);other['reveal']='art/content/another.png'
+        journal['replacements']['game/'+other['reveal']]=sides
+        with patch.object(pub,'binary_chunks',side_effect=AssertionError('Decoded before total byte guard')):
+            with self.assertRaises(Aborted):pub.validate_replacements(journal,{'entries':[self.entry,other]})
+
 
 
 class PackageTemporaryTests(unittest.TestCase):

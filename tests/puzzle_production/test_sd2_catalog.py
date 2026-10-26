@@ -368,6 +368,7 @@ class CatalogTests(unittest.TestCase):
 
 class UpdateTests(unittest.TestCase):
     from tests.puzzle_production import test_content_update as update_fixture
+    setUpClass = classmethod(update_fixture.UpdateTests.setUpClass.__func__)
     setUp = update_fixture.UpdateTests.setUp
     make_export = update_fixture.UpdateTests.make_export
     snapshot = update_fixture.UpdateTests.snapshot

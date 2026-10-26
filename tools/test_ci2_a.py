@@ -99,6 +99,7 @@ class ExplicitRequest(unittest.TestCase):
                 write(root/'plan.json', candidate)
                 scheduler = {**{k:str(candidate['selected'][k]).lower() for k in FLAGS},
                              'native_groups':'[]', 'selection_attempt':'1',
+                             'production_groups':'[]',
                              'browser_request':request_output(candidate['browser_request'])}
                 binding = {k:candidate[k] for k in ('source_head','base_commit','tested_checkout','event','run_id','run_attempt')}
                 env = {**os.environ, 'GITHUB_ACTIONS':'true', 'GITHUB_EVENT_NAME':'workflow_dispatch',

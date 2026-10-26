@@ -17,8 +17,9 @@ import sys
 from web_tests.contract import (coverage, browser_request, requested_groups,
                                 validate_request, BROWSER_SCOPES)
 import native_contract
+import production_contract
 
-FORMAT = "picross-ci-selection-v5"
+FORMAT = "picross-ci-selection-v6"
 JOBS = ("docs", "product", "production", "preflight", "web", "delivery")
 FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual", "perf_b", "web", "delivery")
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -232,9 +233,11 @@ def classify(paths: list[str], force: str = "auto", browser_scope: str = "none",
         selected[flag] = group in native_groups
         reasons[flag] = reasons["product"] if selected[flag] else []
     browser_groups = requested_groups(request)
+    production_groups = production_contract.select_groups(reasons['production'])
     selected['web'] = bool(browser_groups)
     reasons['web'] = ['explicit browser scope: ' + browser_scope] if request else []
     return {"native_groups": native_groups, "native_expected": native_contract.coverage(native_groups),
+            "production_groups": production_groups, "production_expected": production_contract.coverage(production_groups),
             "browser_request": request, "inert_paths": inert_paths,
             "browser_groups": browser_groups, "browser_expected": coverage(browser_groups),
             "format": FORMAT, "content_only": content_only, "selected": {"docs": True, **selected},
@@ -305,6 +308,8 @@ def apply_event_policy(plan: dict, event: str) -> dict:
             plan["selected"][key] = False
         plan["native_groups"] = []
         plan["native_expected"] = {}
+        plan['production_groups'] = []
+        plan['production_expected'] = {}
         plan["browser_groups"] = []
         plan["browser_expected"] = {}
         plan["not_applicable_reason"] = "automatic main integrity run; full suites belong to PR or explicit dispatch"
@@ -405,7 +410,7 @@ def evaluate(plan: dict, results: dict) -> list[dict]:
             raise ValueError('Automatic event cannot authorize browser work')
     if expected_plan["content_only"] and plan.get("diff_check") == "tree-metadata-only; production evidence reviewed before delivery":
         expected_plan["reasons"]["docs"] = ["content-only: changed paths and regular file modes; no puzzle certification or test suite"]
-    for field in ("selected", "reasons", "content_only", "browser_groups", "browser_expected", "native_groups", "native_expected", "browser_request", "inert_paths"):
+    for field in ("selected", "reasons", "content_only", "browser_groups", "browser_expected", "native_groups", "native_expected", "production_groups", "production_expected", "browser_request", "inert_paths"):
         if plan.get(field) != expected_plan[field]:
             raise ValueError("Inconsistent selection field: " + field)
     if not isinstance(results, dict) or set(results) != set(JOBS):
@@ -460,12 +465,14 @@ def validate_binding(plan: dict, binding: dict, outputs: dict) -> None:
                      if plan["content_only"] else "active-whitespace-check; inert-tree-metadata" if plan['inert_paths'] else "full-whitespace-check")
     if plan.get("diff_check") != expected_diff:
         raise ValueError("Missing or inconsistent diff verification")
-    if (set(outputs) != set(FLAGS) | {"selection_attempt", "native_groups", "browser_request"} or
+    if (set(outputs) != set(FLAGS) | {"selection_attempt", "native_groups", "production_groups", "browser_request"} or
             outputs['browser_request'] != request_output(plan['browser_request']) or
             outputs["selection_attempt"] != binding["run_attempt"] or
             outputs["native_groups"] != native_groups_output(plan["native_groups"]) or any(
             outputs[key] != str(plan["selected"][key]).lower() for key in FLAGS)):
         raise ValueError("Selection artifact and scheduled job outputs disagree")
+    if outputs['production_groups'] != production_contract.output(plan['production_groups']):
+        raise ValueError('Selection artifact and scheduled production groups disagree')
 
 
 def request_output(request):
@@ -495,6 +502,7 @@ def main() -> int:
     finish.add_argument("--web-evidence", type=Path)
     finish.add_argument("--native-evidence", type=Path)
     finish.add_argument("--native-player", type=Path)
+    finish.add_argument('--production-evidence', type=Path)
     finish.add_argument("--plan", default=os.environ.get("CI_PLAN", ""))
     finish.add_argument("--plan-file", type=Path)
     finish.add_argument("--results", default=os.environ.get("CI_RESULTS", ""))
@@ -512,6 +520,7 @@ def main() -> int:
                     stream.write(f"{key}={str(result['selected'][key]).lower()}\n")
                 stream.write(f"content_only={str(result['content_only']).lower()}\n")
                 stream.write("native_groups=" + native_groups_output(result["native_groups"]) + "\n")
+                stream.write('production_groups=' + production_contract.output(result['production_groups']) + '\n')
                 stream.write('browser_request=' + request_output(result['browser_request']) + '\n')
                 stream.write(f"selection_attempt={result['run_attempt']}\n")
         print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -523,9 +532,20 @@ def main() -> int:
         validate_original_event(plan)
         validate_binding(plan, json.loads(os.environ.get("CI_BINDING", "{}"), object_pairs_hook=unique_object),
                          json.loads(os.environ.get("CI_OUTPUTS", "{}"), object_pairs_hook=unique_object))
-    report = {"format": "picross-ci-result-v5", "accepted": all(row["accepted"] for row in rows),
+    report = {"format": "picross-ci-result-v6", "accepted": all(row["accepted"] for row in rows),
               'browser_status': 'requested' if plan['browser_request'] else 'not requested',
               "selection": plan, "jobs": rows}
+    if plan['selected']['production']:
+        try:
+            if not args.production_evidence:
+                raise ValueError('Selected production requires actual Fachtest evidence')
+            from production_results import validate_all
+            report['production'] = validate_all(plan, args.production_evidence,
+                json.loads(os.environ.get('CI_PRODUCTION_OUTPUTS', '{}'), object_pairs_hook=unique_object),
+                os.environ.get('GITHUB_RUN_ATTEMPT', plan.get('run_attempt')))
+        except (ValueError, OSError, KeyError, TypeError) as error:
+            report['accepted'] = False
+            report['production_error'] = str(error)
     if plan['selected']['product']:
         try:
             if not args.native_evidence:
@@ -562,6 +582,11 @@ def main() -> int:
                 stream.write(f"| {row['job']} | {row['required']} | {row['result']} | {row['accepted']} |\n")
             if report.get('native_error'):
                 stream.write('\nNative evidence rejected: '+report['native_error']+'\n')
+            if report.get('production_error'):
+                stream.write('\nFachtest evidence rejected: '+report['production_error']+'\n')
+            if report.get('production'):
+                stream.write('\nFachtest groups: '+', '.join(report['production']['groups'])+
+                             '; all selected tests, integrations and delivered bytes verified.\n')
             if report.get('native'):
                 stream.write('\nNative groups: '+', '.join(report['native']['groups'])+'; all required delivered bytes verified.\n')
             if report.get('browser_error'):

@@ -38,6 +38,7 @@ jobs:
       web: ${{ steps.scope.outputs.web }}
       delivery: ${{ steps.scope.outputs.delivery }}
       native_groups: ${{ steps.scope.outputs.native_groups }}
+      production_groups: ${{ steps.scope.outputs.production_groups }}
       browser_request: ${{ steps.scope.outputs.browser_request }}
       selection_attempt: ${{ steps.scope.outputs.selection_attempt }}
     steps:
@@ -50,6 +51,7 @@ jobs:
           sparse-checkout: |
             tools/ci_scope.py
             tools/native_contract.py
+            tools/production_contract.py
             tools/web_tests/contract.py
             .gitattributes
           sparse-checkout-cone-mode: false
@@ -98,6 +100,9 @@ jobs:
     needs: docs
     if: needs.docs.outputs.production == 'true'
     uses: ./.github/workflows/puzzle-production.yml
+    with:
+      groups: ${{ join(fromJSON(needs.docs.outputs.production_groups), ',') }}
+      selection_attempt: ${{ needs.docs.outputs.selection_attempt }}
 
   preflight:
     needs: docs
@@ -131,6 +136,9 @@ jobs:
           sparse-checkout: |
             tools/ci_scope.py
             tools/native_contract.py
+            tools/production_contract.py
+            tools/production_results.py
+            tests/puzzle_production/test_*.py
             tools/web_bundle.py
             tools/web_tests/contract.py
             tools/web_tests/results.py
@@ -150,6 +158,12 @@ jobs:
         with:
           name: picross-p1-technical-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.product.outputs.product_attempt }}
           path: ${{ runner.temp }}/native-evidence
+      - name: Download Fachtest evidence from its producer attempt
+        if: always() && needs.docs.outputs.production == 'true'
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: puzzle-production-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.production.outputs.production_attempt }}
+          path: ${{ runner.temp }}/production-evidence
       - name: Download required native player bytes
         if: always() && needs.docs.outputs.product == 'true' && contains(fromJSON(needs.docs.outputs.native_groups), 'export')
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
@@ -173,6 +187,7 @@ jobs:
             "web":{"result":"${{ needs.web.result }}"},
             "delivery":{"result":"${{ needs.delivery.result }}"}}
           CI_NATIVE_OUTPUTS: ${{ toJSON(needs.product.outputs) }}
+          CI_PRODUCTION_OUTPUTS: ${{ toJSON(needs.production.outputs) }}
           CI_WEB_OUTPUTS: ${{ toJSON(needs.web.outputs) }}
           CI_OUTPUTS: ${{ toJSON(needs.docs.outputs) }}
           CI_BINDING: >-
@@ -186,6 +201,7 @@ jobs:
           --plan-file "${{ runner.temp }}/ci-selection/ci-plan.json"
           --native-evidence "${{ runner.temp }}/native-evidence"
           --native-player "${{ runner.temp }}/native-player"
+          --production-evidence "${{ runner.temp }}/production-evidence"
           --web-evidence "${{ runner.temp }}/web-evidence"
           --output "${{ runner.temp }}/ci-result.json"
       - name: Upload complete result and source binding

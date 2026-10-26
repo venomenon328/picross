@@ -7,7 +7,7 @@ werden im eigenen Draft-PR gebunden. Keine alten BP-1R-Läufe als BP-2-Nachweis.
 
 ## Dateiprüfung
 
-Der [enge Prüfer](../../../../tools/book_inventory/artwork.py) wird durch die
+Der [enge Prüfer](https://github.com/venomenon328/picross/blob/94e3ea7d9674babbdcd6bde6251e233191fd096f/tools/book_inventory/artwork.py) wird durch die
 bestehende unittest-Entdeckung ausgeführt. Nur Python-Standardbibliothek, kein
 Netzwerk oder Bildgenerierungsdienst. Geprüft werden tatsächliche Datei-/PNG-Bytes:
 

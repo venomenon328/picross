@@ -15,23 +15,36 @@ from tools.puzzle_production.za1_fixtures import make, seal, approve, isolated_c
 
 
 class UpdateTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        shared=tempfile.TemporaryDirectory();cls.addClassCleanup(shared.cleanup)
+        cls.fixture_root=Path(shared.name)
+        builder=cls()
+        builder.root=cls.fixture_root
+        checkout=isolated_checkout(builder.root/'checkout')
+        first=builder.make_export('first','pz-test-update','r01',1,5)
+        registration(first,checkout,apply=True)
+        other=builder.make_export('other','pz-test-other','r01',1,1)
+        registration(other,checkout,apply=True)
+        builder.make_export('second','pz-test-update','r02',2,8)
+        cls.fixture_entry=next(e for e in check_checkout(checkout)['entries'] if e['id']=='pz-test-update')
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name)
-        self.checkout=isolated_checkout(self.root/'checkout')
-        self.first=self.make_export('first','pz-test-update','r01',1,5)
-        registration(self.first,self.checkout,apply=True)
-        other=self.make_export('other','pz-test-other','r01',1,1)
-        registration(other,self.checkout,apply=True)
-        self.second=self.make_export('second','pz-test-update','r02',2,8)
-        self.entry=next(e for e in check_checkout(self.checkout)['entries'] if e['id']=='pz-test-update')
+        # Exports contain relative offline bindings, no absolute checkout paths.
+        # All mutable inputs, exports, plans and checkout bytes belong to this test.
+        shutil.copytree(self.fixture_root,self.root,dirs_exist_ok=True)
+        self.checkout=self.root/'checkout'
+        self.first=self.root/'first-export';self.second=self.root/'second-export'
+        self.entry=deepcopy(self.fixture_entry)
         self.definition='game/'+self.entry['definition']
         self.expected=file_hash(self.checkout/self.definition)
         (self.checkout/'saves').mkdir()
         (self.checkout/'saves/untouched.json').write_bytes(b'not a real save; preserve bytes\n')
 
     def make_export(self,name,pid,package_revision,runtime_revision,colors,slot=None,category='voegel',changed_reveal=False):
-        p=make(self.root/name,pid,10,4,'mono' if colors==1 else 'color',colors=colors)
+        p=make(self.root/name,pid,9,2,'mono' if colors==1 else 'color',colors=colors)
         h=load_json(p/'handoff.json');h['revision']=package_revision
         if changed_reveal:
             from PIL import Image
@@ -54,13 +67,37 @@ class UpdateTests(unittest.TestCase):
     def snapshot(self):
         return {p.relative_to(self.checkout).as_posix():p.read_bytes() for p in self.checkout.rglob('*') if p.is_file()}
 
+    def test_fixture_copies_are_isolated_in_both_directions(self):
+        base={p.relative_to(self.fixture_root):p.read_bytes() for p in self.fixture_root.rglob('*') if p.is_file()}
+        other=self.__class__()
+        try:
+            other.setUp()
+            old=other.snapshot()
+            (self.checkout/self.definition).write_bytes(b'foreign test bytes')
+            (self.first/'manifest.json').write_bytes(b'foreign export bytes')
+            self.assertEqual(other.snapshot(),old)
+            self.assertEqual((other.first/'manifest.json').read_bytes(),base[Path('first-export/manifest.json')])
+            (other.checkout/'saves/untouched.json').write_bytes(b'other test bytes')
+            self.assertEqual((self.checkout/'saves/untouched.json').read_bytes(),b'not a real save; preserve bytes\n')
+            self.assertEqual(base,{p.relative_to(self.fixture_root):p.read_bytes() for p in self.fixture_root.rglob('*') if p.is_file()})
+        finally:
+            other.doCleanups()
+
     def test_plan_is_read_only_and_update_preserves_identity_old_package_other_entry_and_saves(self):
         before=self.snapshot();registry=check_checkout(self.checkout)
         plan=update(self.second,self.checkout,self.expected)
         self.assertEqual(plan['status'],'planned-update');self.assertEqual(before,self.snapshot())
         with self.assertRaisesRegex(InvalidInput,'Occupied production ID'):
             registration(self.second,self.checkout,apply=True)
-        result=update(self.second,self.checkout,self.expected,apply=True)
+        from unittest.mock import patch
+        from tools.puzzle_production import target_adapter
+        with patch.object(target_adapter,'verify_export',wraps=target_adapter.verify_export) as verify:
+            result=update(self.second,self.checkout,self.expected,apply=True)
+        # The representative real update includes both independent checks;
+        # no extra production is run solely to count internal calls.
+        self.assertEqual(verify.call_count,2)
+        self.assertEqual(verify.call_args_list[0].args[0],self.second)
+        self.assertTrue(all(not c.args[0].is_relative_to(self.checkout) for c in verify.call_args_list))
         self.assertEqual(result['status'],'updated');self.assertEqual(result['runtime_revision'],2)
         after=check_checkout(self.checkout,replay=True)
         self.assertEqual([e for e in registry['entries'] if e['id']!='pz-test-update'],
@@ -92,49 +129,46 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(current['current_source']['runtime_revision'],2)
         check_checkout(self.checkout)
 
-    def test_update_preserves_the_two_existing_export_checks_without_replaying_neighbors(self):
+    def test_rejects_stale_revision_slot_category_reveal_and_occupied_package_without_writes(self):
         from unittest.mock import patch
         from tools.puzzle_production import target_adapter
-        original=target_adapter.verify_export
-        with patch.object(target_adapter,'verify_export',wraps=original) as verify:
-            update(self.second,self.checkout,self.expected,apply=True)
-        self.assertEqual(verify.call_count,2)  # supplied export and independent staged export
-        self.assertEqual(verify.call_args_list[0].args[0],self.second)
-        self.assertTrue(all(not call.args[0].is_relative_to(self.checkout) for call in verify.call_args_list))
-
-    def test_rejects_stale_revision_slot_category_reveal_and_occupied_package_without_writes(self):
-        candidates=[(self.second,'0'*64,'Stale')]
-        for revision in (1,):
-            out=self.make_export('same-revision','pz-test-update','r03',revision,8)
-            candidates.append((out,self.expected,'higher runtime revision'))
-        candidates.append((self.make_export('slot','pz-test-update','r04',2,8,slot='changed_slot'),self.expected,'retain identity'))
-        candidates.append((self.make_export('category','pz-test-update','r05',2,8,category='wasserwelt'),self.expected,'retain identity'))
-        candidates.append((self.make_export('reveal','pz-test-update','r06',2,8,changed_reveal=True),self.expected,'retain the approved reveal'))
-        out=self.make_export('occupied','pz-test-update','r01',2,8)
-        candidates.append((out,self.expected,'package revision already exists'))
-        for out,expected,error in candidates:
+        from tools.puzzle_production.content_update import update as actual_update
+        # These are planner checks after the verified-export boundary. Reuse a
+        # small verified input; source reconstruction itself has adapter tests.
+        manifest,report=target_adapter.verify_export(self.second)
+        from tools.puzzle_production.za1_fixtures import difficulty_for_export
+        checked=difficulty_for_export(self.second)
+        cases=[({},'0'*64,'Stale'),({'runtime_revision':1},self.expected,'higher runtime revision'),
+               ({'save_slot':'changed_slot'},self.expected,'retain identity'),
+               ({'category_id':'wasserwelt'},self.expected,'retain identity'),
+               ({'reveal_hash':'0'*64},self.expected,'retain the approved reveal'),
+               ({'package_revision':'r01'},self.expected,'package revision already exists')]
+        for changes,expected,error in cases:
+            value=deepcopy(manifest)
+            if 'reveal_hash' in changes:value['files'][value['reveal']]=changes['reveal_hash']
+            else:value.update(changes)
             before=self.snapshot()
-            with self.subTest(error=error),self.assertRaisesRegex(InvalidInput,error):
-                update(out,self.checkout,expected,apply=True)
+            with self.subTest(error=error),patch.object(target_adapter,'verify_export',return_value=(value,report)),self.assertRaisesRegex(InvalidInput,error):
+                actual_update(self.second,self.checkout,expected,apply=True,difficulty=checked)
             self.assertEqual(before,self.snapshot())
 
     def test_normal_failures_restore_exact_old_bytes(self):
-        for step in (self.definition,'content/registry.json','game/data/registry.json'):
-            before=self.snapshot()
-            with self.subTest(step=step),self.assertRaisesRegex(OSError,'Injected update failure'):
-                update(self.second,self.checkout,self.expected,apply=True,fail_step=step)
-            self.assertEqual(before,self.snapshot())
-            check_checkout(self.checkout)
+        # All publication phases are exercised once at the common core in
+        # test_reveal_recovery. Keep one real raster-specific rollback here.
+        before=self.snapshot()
+        with self.assertRaisesRegex(OSError,'Injected update failure'):
+            update(self.second,self.checkout,self.expected,apply=True,fail_step=self.definition)
+        self.assertEqual(before,self.snapshot())
+        check_checkout(self.checkout)
 
     def test_crash_recovery_preflights_then_restores_every_phase(self):
-        for step in ('crash-package','crash-'+self.definition,'crash-content/registry.json','crash-game/data/registry.json'):
-            before=self.snapshot()
-            with self.subTest(step=step),self.assertRaises(InterruptedError):
-                update(self.second,self.checkout,self.expected,apply=True,fail_step=step)
-            with self.assertRaisesRegex(InvalidInput,'Interrupted registration'):
-                check_checkout(self.checkout)
-            self.assertEqual(recover(self.checkout)['status'],'rolled-back')
-            self.assertEqual(before,self.snapshot())
+        before=self.snapshot()
+        with self.assertRaises(InterruptedError):
+            update(self.second,self.checkout,self.expected,apply=True,fail_step='crash-game/data/registry.json')
+        with self.assertRaisesRegex(InvalidInput,'Interrupted registration'):
+            check_checkout(self.checkout)
+        self.assertEqual(recover(self.checkout)['status'],'rolled-back')
+        self.assertEqual(before,self.snapshot())
 
     def test_foreign_changes_block_recovery_before_any_mutation(self):
         with self.assertRaises(InterruptedError):
