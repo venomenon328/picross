@@ -7,10 +7,11 @@ Stand: 26.10.2026 · Version 3.2 · [CI2-Spezifikation #412](https://github.com/
 [CI_SLIMMING](CI_SLIMMING.md) ist vollständig zu lesen und hat für die dort
 benannten Änderungen Vorrang vor den älteren Umfangsvorgaben dieser Policy und
 der verlinkten Prüfverträge. CI2-A ist nach separatem R01 über PR #419 integriert.
-[Aktuelle Auswahl und Aufrufgrenzen](CI_A_SELECTION.md) enthalten auf dem B-Branch
-zusätzlich Fachgruppen, gemessene Ausführung und Fachbelege im Ergebnisgate.
-[CI2-B-T01](CI2_B_VERIFICATION.md), Selbstreview und Draft-PR #420 binden die
-Lieferung; separates B-R01 bleibt vor Merge. C/D/E sind unbegonnen.
+B ist nach separatem R01 über PR #420 auf `dd56d310` integriert.
+[Aktuelle Auswahl](CI_A_SELECTION.md) und [B-T01](CI2_B_VERIFICATION.md)
+binden die Fachgruppen; CI2-B-O01 bleibt offen. C ist auf
+`chore/415-ci2-c-chromium` implementiert: [Browservertrag](CI_B_BROWSER_GROUPS.md),
+[C-T01](CI2_C_VERIFICATION.md), separates C-R01 vor Merge offen. D/E unbegonnen.
 Kein Merge, Deployment oder großer Datenabbau.
 
 - **Auswahl / CI2-A [#413](https://github.com/venomenon328/picross/issues/413):**

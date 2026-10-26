@@ -59,7 +59,7 @@ class ExplicitRequest(unittest.TestCase):
             prefix = workflow.split('      - name: Bind')[0]
             guards = run_blocks(prefix)
             self.assertIn('ORIGINAL_SCOPE: ${{ github.event.inputs.browser_scope }}', prefix)
-            for scope in (*GROUPS, 'all'):
+            for scope in (*GROUPS, 'short', 'all'):
                 env = {**os.environ, 'BROWSER': 'chromium', 'EVENT':'workflow_dispatch',
                        'ORIGINAL_SCOPE':scope, 'BROWSER_SCOPE':scope,
                        'BROWSER_REQUEST':request_output(browser_request(scope))}

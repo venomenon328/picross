@@ -4,11 +4,10 @@ import math
 from pathlib import Path
 import re
 
-from web_tests.contract import BROWSERS, expected, require_browser
+from web_tests.contract import BROWSERS, expected, require_browser, required_builds
 from web_bundle import digest, safe_name, validate_manifest
 
 BINDING = ('source_head', 'base_commit', 'tested_checkout', 'event', 'run_id', 'run_attempt', 'browser_request')
-BUILDS = ('web-player', 'web-test', 'web-test-update')
 
 
 def read(path):
@@ -31,11 +30,11 @@ def file_record(path):
 
 
 def validate_builds(envelope, plan, gate_attempt):
-    if envelope.get('format') != 'picross-web-builds-v1' or envelope.get('binding') != binding(plan):
+    if envelope.get('format') != 'picross-web-builds-v2' or envelope.get('binding') != binding(plan):
         raise ValueError('Build source/run binding mismatch')
     attempt(envelope.get('attempt'), plan['run_attempt'], gate_attempt)
-    if set(envelope.get('builds', {})) != set(BUILDS):
-        raise ValueError('Three genuine exports required')
+    if set(envelope.get('builds', {})) != set(required_builds(plan['browser_groups'])):
+        raise ValueError('Build inventory differs from the requested profile')
     for name, entry in envelope['builds'].items():
         manifest = validate_manifest(entry['manifest'], allow_test=name != 'web-player')
         if manifest['source_commit'] != plan['tested_checkout']:
@@ -44,6 +43,8 @@ def validate_builds(envelope, plan, gate_attempt):
             raise ValueError('Wrong regular/technical build kind')
         if not re.fullmatch('[0-9a-f]{64}', entry.get('manifest_sha256', '')):
             raise ValueError('Missing manifest digest')
+    if 'export' not in plan['browser_groups']:
+        return
     first = envelope['builds']['web-test']['manifest']
     second = envelope['builds']['web-test-update']['manifest']
     if first['build_id'] == second['build_id'] or first['built_at'] == second['built_at']:
@@ -52,7 +53,7 @@ def validate_builds(envelope, plan, gate_attempt):
 
 def validate_browser(report, plan, browser, producer_attempt, gate_attempt, root):
     require_browser(browser)
-    if report.get('format') != 'picross-browser-result-v1' or report.get('binding') != binding(plan):
+    if report.get('format') != 'picross-browser-result-v2' or report.get('binding') != binding(plan):
         raise ValueError('Browser source/run/selection binding mismatch')
     if report.get('browser') != browser or report.get('attempt') != producer_attempt:
         raise ValueError('Wrong browser or producer attempt')
@@ -73,7 +74,7 @@ def validate_browser(report, plan, browser, producer_attempt, gate_attempt, root
         raise ValueError('Missing or unsuccessful group process')
     seen = set()
     required_files = set()
-    for name in BUILDS:
+    for name in required_builds(groups):
         relative = 'manifests/'+name+'.json'
         required_files.add(relative)
         if (read(root/relative) != report['builds']['builds'][name]['manifest']
@@ -104,9 +105,14 @@ def validate_browser(report, plan, browser, producer_attempt, gate_attempt, root
                 raise ValueError('Missing viewport/fit evidence')
         if group == 'persistence':
             handoff = row.get('lock_handoff')
-            if (not isinstance(handoff, dict) or not handoff.get('held') or not handoff.get('pending')
-                    or not isinstance(row.get('exit_diagnostics'), list)):
-                raise ValueError('Missing lock-handoff/exit evidence')
+            if not isinstance(handoff, dict) or not handoff.get('held') or not handoff.get('pending'):
+                raise ValueError('Missing lock-handoff evidence')
+        if group == 'input' and row.get('dpi') != 1.5:
+            raise ValueError('Missing live DPI evidence')
+        if group == 'persistence':
+            for key in ('reload', 'restart', 'retry'):
+                if not isinstance(row.get(key), dict) or not row[key].get('history'):
+                    raise ValueError('Missing actual persistence transition: '+key)
         timed = [t['scenario'] for t in row['timings'] if t['scenario'] != 'teardown-or-failure']
         if len(timed) != len(set(timed)) or set(timed) != set(ids):
             raise ValueError('Timing/scenario coverage mismatch')
@@ -125,15 +131,21 @@ def validate_browser(report, plan, browser, producer_attempt, gate_attempt, root
                     raise ValueError('Invalid operation measurement')
         raw = f'{group}/' + ('regular-report.json' if group == 'regular' else 'browser-report.json')
         required_files.add(raw)
+        log = f'{group}/execution.log'
+        required_files.add(log)
+        execution = (root/log).read_text(encoding='utf-8')
+        markers = re.findall(r'^'+re.escape(browser+' '+group)+r' PASS (\S+) ', execution, re.M) if group != 'regular' else re.findall(r'^PLAYER PASS '+re.escape(browser)+r'$', execution, re.M)
+        if (markers != ids if group != 'regular' else len(markers) != 1):
+            raise ValueError('Execution log does not confirm unique actual cases')
         original = read(root/raw)
         if original.get('results') != [row]:
             raise ValueError('Raw execution report differs from result')
         build_name = 'web-player' if group == 'regular' else 'web-test'
         if original.get('manifest') != report['builds']['builds'][build_name]['manifest']:
             raise ValueError('Raw report uses wrong build')
-        if group != 'regular' and original.get('update_manifest') != report['builds']['builds']['web-test-update']['manifest']:
+        if group != 'regular' and original.get('update_manifest') != (report['builds']['builds']['web-test-update']['manifest'] if group == 'export' else None):
             raise ValueError('Raw report uses wrong update build')
-        if group in ('catalog','completion','persistence'):
+        if group in ('catalog','completion','export'):
             from at_evidence import browser as validate_at
             validate_at(root/group/group,row,report['builds']['builds'])
         for scenario in expected(browser, [group]):

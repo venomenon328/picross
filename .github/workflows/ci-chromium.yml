@@ -12,9 +12,9 @@ on:
         options: [auto, all, runtime, visual, perf-b, production, toolchain, native-core, native-history, native-catalog, native-completion, native-adapters, native-graphics, native-export]
         default: auto
       browser_scope:
-        description: Explicit Chromium scope (each technical group includes regular startup; A retains all three exports)
+        description: Explicit Chromium profile (short/all = nine core cases; export is separate)
         type: choice
-        options: [none, regular, catalog, input, completion, persistence, all]
+        options: [none, short, regular, catalog, input, completion, persistence, export, all]
         default: none
 
 permissions:

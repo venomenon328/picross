@@ -28,6 +28,7 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-24.04
+    timeout-minutes: 7
     outputs:
       attempt: ${{ steps.producer.outputs.attempt }}
     steps:
@@ -48,7 +49,7 @@ jobs:
         run: |
           [ "$EVENT" = workflow_dispatch ] && [ "$ORIGINAL_SCOPE" = "$BROWSER_SCOPE" ] || exit 1
           case "$BROWSER_SCOPE" in
-            regular|catalog|input|completion|persistence|all) ;;
+            regular|catalog|input|completion|persistence|export|short|all) ;;
             *) echo 'Missing or invalid explicit browser scope' >&2; exit 1 ;;
           esac
           expected='{"browser":"chromium","scope":"'"$BROWSER_SCOPE"'"}'

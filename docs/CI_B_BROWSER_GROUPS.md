@@ -1,42 +1,72 @@
 # CI-B: Browserinventar und Ausführungsvertrag
 
-## Vorrangiger Sollvertrag: CI2-A und CI2-C
+## Aktuelle Umsetzung: CI2-C / #415
 
-Der freigegebene [CI2-Vertrag vom 26.10.2026](CI_SLIMMING.md),
-[Gesamtissue #412](https://github.com/venomenon328/picross/issues/412), ersetzt
-die automatische Browserpflicht und die ungekürzte Fall-/Bildmatrix dieses
-Dokuments. [CI2-A / #413](https://github.com/venomenon328/picross/issues/413)
-liefert den ausdrücklichen Browserauftrag;
-[CI2-C / #415](https://github.com/venomenon328/picross/issues/415) liefert den
-kleinen Chromiumumfang. A ist auf dem #413-Arbeitsbranch implementiert (Details in
-[CI_A_SELECTION](CI_A_SELECTION.md)); C ist weiterhin unbegonnen.
-Die ausführbare Ausgangsbasis bleibt `main@967314538df376a281020fb4c34f93f370a491df`.
+CI2-A und CI2-B sind über PR #419/#420 in `main` integriert; Basis dieses Pakets
+ist `dd56d310d942eee47448df4cdcca5e4af4a49b00`. CI2-C ist auf
+`chore/415-ci2-c-chromium` implementiert. [T01 und Messbericht](CI2_C_VERIFICATION.md)
+binden die tatsächlichen Prüfungen; separates CI2-C-R01 bleibt vor Merge offen.
+Native Umfänge und Bestandsbereinigung bleiben CI2-D/E.
 
-Automatische PR-/Push-Ereignisse und allgemeine manuelle Scopes starten keinen
-Browser. Ein ausdrücklich angeforderter Chromiumlauf bindet Quellstand und
-Umfang. Der kurze Umfang ersetzt die 33 Szenarien durch ungefähr 8–10 aktuelle
-Kernfälle: regulärer Start, Katalog/Sortierung, echte Bearbeitung/Undo/Redo,
-relevanter Resize-/DPI-Wechsel, kleiner Abschluss/Reset, bestätigte Sicherung mit
-Reload und Prozessneustart, Zweittab/Sperre sowie Schreibfehler/Retry.
-KU-/AT-/HZ-Katalogschichten werden konsolidiert; zusätzliche Viewports und
-Bildserien benötigen eine tatsächliche Geometrieaussage. Seltene aktuelle Fälle
-werden möglichst auf einer günstigeren Ebene geprüft.
+Automatische CI und allgemeine Scopes bleiben browserfrei. Nur der registrierte
+`ci-chromium.yml`-Dispatch mit explizitem `browser_scope` startet Chromium.
+`short` und der kompatible Browserwert `all` wählen genau neun Kernfälle;
+`all` im allgemeinen `scope` bleibt browserfrei. Keine automatische Zusatzmatrix.
 
-Der kurze Lauf einschließlich benötigtem Build soll höchstens acht Minuten dauern
-(typisch fünf bis acht); ein ausdrücklich gewähltes zusätzliches Browserprofil
-bleibt unter zehn Minuten und hat einen konkreten Zweck und begrenzten Umfang.
-Kein Default hängt die alte Vollmatrix an. Nur benötigte Builds werden erzeugt;
-ein angeforderter Exportwechsel verlangt weiterhin zwei echte Exporte. Echte
-Eingaben, bestätigte IndexedDB-Sicherung, Reload und Prozessneustart bleiben für
-ihre jeweiligen Aussagen erforderlich. Firefox bleibt aus CI ausgeschlossen.
+| ID | Gruppe | Tatsächlich geprüfter Übergang |
+| --- | --- | --- |
+| regular-start | regular | Uninstrumentierter Spielerstart, WebGL2, Storage, offline nach Start, keine Fehler |
+| C01 | catalog | Metadaten/Tidy-Hand-Rollen, Kategorie-/Sortier-/Ansichtsmenü, Sortierung/Richtung, stabile Öffnungs-ID, transparentes verdientes Bild samt Hover |
+| C02 | input | Echter elastischer Strich, Rechtsstrich, atomarer Undo/Redo, Escape ohne Phantomcommit |
+| C03 | input | UI100→125→100, 720p/1080p, Live-DPI150 und tatsächlicher Zelltreffer mit Undo |
+| C04 | completion | 5×5-Lösung durch einen Strich, natürliche Überblendung, Endbild/Wiederöffnung, Resetabbruch und bestätigter Reset mit fremden Savebytes |
+| C05 | persistence | Echter Sperrhandoff vor Hydration und abgewiesener Zweittab ohne IDB-Zugriff |
+| C06 | persistence | Bestätigter IDBFS-Sync und Reload mit Zellen, History, Redo, Ansicht und Sortierpräferenz |
+| C07 | persistence | Echter zweiter Browserprozess im gleichen Profil, DPI125, geladener Stand und wirksamer Redo |
+| C08 | persistence | Fehler an der tatsächlichen IDB-Transaktionsgrenze, blockiertes Beenden, sichtbarer Retry und erneuter Reload |
 
-Das neue gewählte Inventar bindet Auswahl, Producer und Gate gemeinsam. Für seine
-Pflichtresultate bleiben eindeutige Vollständigkeit, Originalberichte, Dateihashes
-und Quell-/Run-/Versuchsbindung verbindlich; fehlend, falsch oder übersprungen ist
-kein Erfolg. Nicht angeforderte Browserprüfung benötigt keine Browserbelege.
-Laufzeitziele ersetzen weder funktionale Speicher-/Animationszusagen noch die
-gemessene Wirkung. Alte Logs dienen als Baseline, ohne die alte Vollroute erneut
-zu starten.
+Der normale Viewport 1920×1080/UI100 trägt die ausführliche Katalog-/Bildprüfung.
+Weitere Größen stehen ausschließlich in C03. Der HZ-Rückwechsel liefert
+Zustandsmessungen, keine wiederholte Fünfergalerie. Es entstehen zwölf
+Erfolgs-PNGs (eins davon ein beobachteter echter Übergangsframe), ohne Überschreiben.
+Keine großen Vorbereitungsdurchspiele; sämtliche Zustandsübergänge oben verwenden
+Browserinput, keine Probe-Setter. Produktanimationen bleiben unverändert.
+
+`browser_scope=regular` benötigt nur `web-player`; jede technische Kerngruppe
+zusätzlich `web-test`. Der kurze Gesamtumfang baut somit zwei Exporte.
+`browser_scope=export` ist ein **separates** Profil für Export-/Bildkompatibilität:
+regular-start plus E01, zwei Fälle, drei Exporte einschließlich eigenständigem
+`web-test-update` mit zweiter Bildrevision. E01 prüft begonnenen und gelösten
+Stand über Reload und echten Prozessneustart am selben Origin. Unterschiedliche
+Build-IDs/Bauzeiten und exportgebundene Bildbytes sind Pflicht; kein Alias.
+Dieses Profil wird von `short`/`all` und Dateipfaden niemals ergänzt. Es benötigt
+einen eigenen konkreten Auftrag; Ziel unter zehn Minuten einschließlich Build.
+
+Build-/Browserberichte heißen `picross-web-builds-v2` und
+`picross-browser-result-v2`; Auswahl-/Gesamtergebnis bleiben im v6-Schema.
+Das Gate prüft exakt benötigte Exporte, Originalberichte, eindeutige Szenarien,
+Ausführungslog, endliche Phasen-/Operationsmessungen, Pflichtdateien und Hashes.
+Leere/fehlende/doppelte/fehlgeschlagene Ausführung scheitert. Originalinput-,
+Head-/Base-/Checkout-/Run-/Versuchsbindung und Wiederholungsregeln aus A/B bleiben.
+Browserkürzung ändert `at_evidence.MATRIX` für native Prüfungen nicht;
+`BROWSER_MATRIX` ist getrennt. Die Originalpixelprüfung bleibt erhalten.
+
+Seltene Varianten bleiben auf ihrer günstigsten passenden Ebene: Savevalidierung,
+Recovery/Revision und Slotisolation in den bestehenden nativen Savefällen;
+Sortierschlüssel/Gleichstände/Präferenzen in `game/tests/ku_b_cases.gd`;
+Glyphen-/Popup-/Geometriegrenzen in HZ-/VS2-Fällen. Der schnelle Node-Test der
+unveränderten `game/web/storage.js` prüft serialisierte echte Bridgecallbacks
+gegen synthetische FS-Antworten, fehlende Persistenzfähigkeit, Generationen,
+Ansichtspending, Fehler/Retry und getrennte Präferenz-/Savefehler. Das sind keine
+IndexedDB-Nachweise; diese liefern C06–C08. Node kommt vom vorhandenen Runner,
+keine npm-Pakete, kein neuer Job. Native History-/Bildmengen werden hier nicht gekürzt.
+
+Build und Browser haben Hängergrenzen von vier beziehungsweise sieben Minuten;
+ein Gruppenprozess endet spätestens nach 360 Sekunden als Fehler. Diese Grenzen
+behaupten keine Zielerreichung: der kurze Lauf einschließlich benötigtem Build
+muss anhand tatsächlicher Jobzeiten höchstens acht Minuten erreichen. Queue,
+Runner/Cache, Gruppen-/Operationszeiten sowie erzeugte/gelieferte Bilder werden
+im T01 getrennt ausgewiesen. Originale dienen als Baseline; kein historischer Vollrerun.
 
 ## Gebundener CI-B-Ausgangsstand
 

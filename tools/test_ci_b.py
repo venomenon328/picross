@@ -14,8 +14,8 @@ from unittest.mock import patch
 
 from ci_scope import request_output, classify, apply_event_policy, evaluate, JOBS, FLAGS
 from web_bundle import LICENSES
-from web_tests.contract import BROWSERS, GROUPS, SCENARIOS, expected
-from web_tests.results import (BUILDS, binding, file_record, read, validate_all,
+from web_tests.contract import BROWSERS, GROUPS, CORE_GROUPS, SCENARIOS, expected, required_builds
+from web_tests.results import (binding, file_record, read, validate_all,
                                validate_browser, validate_builds)
 from web_tests.run_groups import run
 from web_tests import timing
@@ -38,8 +38,8 @@ def plan_for(paths=None, force='auto', browser_scope='all'):
 
 
 def envelope(plan, root):
-    result = dict(format='picross-web-builds-v1', binding=binding(plan), attempt='1', builds={})
-    for index, name in enumerate(BUILDS):
+    result = dict(format='picross-web-builds-v2', binding=binding(plan), attempt='1', builds={})
+    for index, name in enumerate(required_builds(plan['browser_groups'])):
         kind = 'player' if index == 0 else 'test'
         build = plan['tested_checkout']+'-'+kind+'-2026101800000'+str(index)
         prefix = 'releases/'+build+'/'
@@ -59,7 +59,7 @@ def envelope(plan, root):
 
 
 def fixture(plan, browser, root):
-    report = dict(format='picross-browser-result-v1', binding=binding(plan), attempt='1', browser=browser,
+    report = dict(format='picross-browser-result-v2', binding=binding(plan), attempt='1', browser=browser,
                   expected=plan['browser_expected'][browser], status='passed',
                   builds=envelope(plan, root), groups=[], files={}, phases=[])
     for group in plan['browser_groups']:
@@ -71,14 +71,16 @@ def fixture(plan, browser, root):
         if group == 'regular': row['errors'] = []
         if group == 'catalog': row['version'] = 'synthetic test only'
         if group == 'input': row['viewports'] = [dict(viewport=size,fit=True,minimum=False) for size in [[1280,720],[1920,1080]]]
-        if group == 'persistence': row.update(lock_handoff={'held':[{}],'pending':[{}]},exit_diagnostics=[])
+        if group == 'persistence': row.update(lock_handoff={'held':[{}],'pending':[{}]}, **{key: {'history':[{}]} for key in ('reload','restart','retry')})
+        if group == 'input': row['dpi'] = 1.5
         from at_test_fixtures import browser_row
         browser_row(root/group/group,row)
         report['groups'].append(row)
         report['phases'].append(dict(group=group, exit_code=0, seconds=1))
         raw = dict(results=[row], manifest=report['builds']['builds']['web-player' if group=='regular' else 'web-test']['manifest'])
-        if group != 'regular': raw['update_manifest'] = report['builds']['builds']['web-test-update']['manifest']
+        if group != 'regular': raw['update_manifest'] = report['builds']['builds']['web-test-update']['manifest'] if group == 'export' else None
         write(root/group/('regular-report.json' if group=='regular' else 'browser-report.json'), raw)
+        (root/group/'execution.log').write_text('PLAYER PASS chromium\n' if group == 'regular' else ''.join(f'{browser} {group} PASS {key} synthetic assertion\n' for key in ids))
         for scenario in expected(browser,[group]):
             for suffix in scenario['images']:
                 path = root/group/(browser+'-'+suffix) if group=='regular' else root/group/group/(browser+'-'+suffix)
@@ -97,7 +99,7 @@ class Selection(unittest.TestCase):
             for scope in GROUPS:
                 groups = ['regular'] if scope == 'regular' else ['regular', scope]
                 self.assertEqual(classify([path], browser_scope=scope)['browser_groups'], groups)
-                self.assertEqual(classify([path], browser_scope='all')['browser_groups'], list(GROUPS))
+                self.assertEqual(classify([path], browser_scope='all')['browser_groups'], list(CORE_GROUPS))
 
     def test_general_scopes_are_browser_free_and_main_stays_short(self):
         for scope in ['all','toolchain','runtime','visual','perf-b','production']:
@@ -115,7 +117,7 @@ class Selection(unittest.TestCase):
             with self.assertRaises(ValueError): evaluate(plan,results)
 
     def test_every_existing_assertion_belongs_to_one_group(self):
-        self.assertEqual(len(expected('chromium', GROUPS)),33)
+        self.assertEqual(len(expected('chromium', CORE_GROUPS)),9)
         self.assertEqual(BROWSERS, ('chromium',))
         with self.assertRaises(ValueError): expected('firefox', GROUPS)
         labels=[]
@@ -127,7 +129,7 @@ class Selection(unittest.TestCase):
             labels.extend(found)
         self.assertEqual(len(labels),len(set(labels)))
         self.assertEqual({s['id'] for s in SCENARIOS},
-                         {'regular-start', 'KU-B01', 'KU-B02', 'AT-W01-C', 'AT-W01-E', 'AT-W01-P', 'HZ-A-W01', 'HZ-B-W01', 'HZ-C-W01', *[f'B{i:02}' for i in range(1,25)]})
+                         {'regular-start', 'E01', *[f'C{i:02}' for i in range(1,9)]})
         self.assertTrue(all(s['browsers']==['chromium'] for s in SCENARIOS))
 
 
@@ -143,7 +145,7 @@ class EvidenceGate(unittest.TestCase):
 
     def test_full_coverage_and_same_run_retry(self):
         rows=validate_all(self.plan,self.root,self.outputs,'2')
-        self.assertEqual([r['scenarios'] for r in rows],[33])
+        self.assertEqual([r['scenarios'] for r in rows],[9])
         for key in self.outputs:
             outputs=dict(self.outputs);outputs[key]='2'
             with self.assertRaises(ValueError): validate_all(self.plan,self.root,outputs,'2')
@@ -170,7 +172,7 @@ class EvidenceGate(unittest.TestCase):
                    lambda r:r['groups'][1].update(graphics={}),
                    lambda r:r['groups'][2].update(viewports=[]),
                    lambda r:r['groups'][4].pop('lock_handoff'),
-                   lambda r:r['groups'][4].pop('exit_diagnostics'),
+                   lambda r:r['groups'][4].pop('retry'),
                    lambda r:r['groups'][1].update(timings=[]),lambda r:r.update(files={})]
         for status in ['failed','failure','cancelled','skipped','',None]:
             mutations.extend([lambda r,s=status:r.update(status=s),
@@ -192,7 +194,7 @@ class EvidenceGate(unittest.TestCase):
             image.write_bytes(value)
             with self.assertRaises(ValueError): self.check(good)
         image.write_bytes(original)
-        candidate=deepcopy(good);candidate['groups'][1]['scenarios'].reverse()
+        candidate=deepcopy(good);candidate['groups'][1]['scenarios'].append('C02')
         with self.assertRaises(ValueError): self.check(candidate)  # raw report differs
         candidate=deepcopy(good)
         candidate['builds']['builds']['web-test-update']=deepcopy(candidate['builds']['builds']['web-test'])
@@ -299,7 +301,7 @@ class Execution(unittest.TestCase):
                 source=root/'source'
                 original=fixture(plan,'chromium',source)
                 builds=root/'builds'
-                for name in BUILDS:
+                for name in required_builds(plan['browser_groups']):
                     write(builds/name/'build-manifest.json',original['builds']['builds'][name]['manifest'])
                 write(builds/'builds.json',original['builds'])
                 args=SimpleNamespace(build_root=builds, output=root/'out', browser='chromium', build_attempt='1')
@@ -322,7 +324,7 @@ class Execution(unittest.TestCase):
                      patch('web_tests.run_groups.subprocess.run',side_effect=process):
                     with self.assertRaisesRegex(ValueError,'regular'): run(args,plan)
                 self.assertEqual(len(calls),2)
-                self.assertIn('--groups',calls[1]);self.assertEqual(calls[1][-1],selected)
+                self.assertIn('--groups',calls[1]);self.assertEqual(calls[1][calls[1].index('--groups')+1],selected)
                 self.assertNotEqual(calls[0][calls[0].index('--output')+1],calls[1][calls[1].index('--output')+1])
                 self.assertEqual(read(args.output/'web-result.json')['status'],'failed')
 
@@ -364,7 +366,7 @@ class Execution(unittest.TestCase):
                     self.assertTrue(any('tools/puzzle_production/requirements-image.txt' in c for c in calls))
                     if filename=='web-chromium.yml':
                         builds=[c for c in calls if 'tools/build_web_player.py' in c]
-                        self.assertEqual(len(builds),3);self.assertEqual(sum('--test' in c for c in builds),2)
+                        self.assertEqual(len(builds),2);self.assertEqual(sum('--test' in c for c in builds),1)
                         self.assertFalse(any('playwright' in ' '.join(c) for c in calls))
                         failures=('pip install --only-binary','build_web_player.py','run_groups.py seal')
                     else:
