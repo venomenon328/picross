@@ -81,6 +81,8 @@ class ExplicitRequest(unittest.TestCase):
         self.assertIn('default: none', source)
         self.assertIn('ci-${{ github.event_name }}-${{ github.ref }}-', source)
         self.assertIn('browser_request: ${{ needs.docs.outputs.browser_request }}', source)
+        download = source.split('      - name: Download chromium evidence', 1)[1].split('        uses:', 1)[0]
+        self.assertIn("github.event_name == 'workflow_dispatch' && inputs.browser_scope != 'none'", download)
         for filename in ('web-chromium.yml', 'browser-chromium.yml'):
             source = (ROOT/'.github/workflows'/filename).read_text()
             self.assertIn('run_groups.py check', source)

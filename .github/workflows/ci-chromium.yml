@@ -157,7 +157,7 @@ jobs:
           name: picross-p1-player-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.product.outputs.product_attempt }}
           path: ${{ runner.temp }}/native-player
       - name: Download chromium evidence from its producer attempt
-        if: always() && needs.docs.outputs.web == 'true'
+        if: always() && needs.docs.outputs.web == 'true' && github.event_name == 'workflow_dispatch' && inputs.browser_scope != 'none'
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
           name: picross-web-chromium-${{ github.event.pull_request.head.sha || github.sha }}-${{ needs.web.outputs.chromium_attempt }}
