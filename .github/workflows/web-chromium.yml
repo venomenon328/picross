@@ -68,6 +68,7 @@ jobs:
       - name: Build only exports required by the explicit profile
         env:
           BROWSER_SCOPE: ${{ inputs.browser_scope }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           python3 tools/build_web_player.py --cache-dir "${{ runner.temp }}/p1-toolchain-cache" --output-dir artifacts/web-player
           if [ "$BROWSER_SCOPE" != regular ]; then
