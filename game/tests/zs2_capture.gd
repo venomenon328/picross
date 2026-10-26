@@ -101,11 +101,13 @@ func rework_motion(marker: String = "x") -> void:
 			# Three actual rendered instants; no dense readback/PNG sequence.
 			# The first atlas frame can still be empty just after commit. Sample
 			# within each visible stroke phase, then the settled frame.
-			var target_ms: int = [40,115,230][i]
+			var target_ms: int = [30,105,230][i]
 			while Time.get_ticks_usec()-began < target_ms*1000:
 				await process_frame
 			app.board.marks.queue_redraw()
-			await process_frame
+			# The loop resumed in process_frame already. Capture that frame's
+			# completed draw; waiting for another frame can skip a whole stroke
+			# on software renderers. The production clock remains untouched.
 			await RenderingServer.frame_post_draw
 			pictures.append(surface.get_texture().get_image())
 			live.append({"file": prefix + "-live-%02d.png" % i, "elapsed_ms": float(rendered[0] - began) / 1000.0})

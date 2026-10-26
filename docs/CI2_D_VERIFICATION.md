@@ -160,6 +160,40 @@ Die finale Quellen-/CI-Bindung und Messung wird im Draft-PR nach den erfolgreich
 Pflichtjobs mit Head, Basis, Test-Merge, Run/Versuch und Originalartefakten ergänzt.
 Dieser Bericht erklärt keine noch laufenden oder fehlgeschlagenen Jobs zum Erfolg.
 
+### Erster PR-Lauf und gezielte Nacharbeit
+
+[Run 40391825490, Versuch 1](https://github.com/venomenon328/picross/actions/runs/40391825490)
+auf Head `c86cffad7146dda708c2c2b01c9b83689a8e81dc`, Test-Merge
+`780c553e3cc6225f103337403188dab08301d892`, ist **kein T01-Erfolg**: sechs native
+Gruppen bestanden, graphics scheiterte an `Real-time capture missed an X stroke`.
+Die tatsächlichen 24px-X-Frames lagen bei 126,880 / 219,851 / 219,851 ms, der
+frühe 12px-Füllframe bei 114,222 ms. Die Erfassung wartete nach Erreichen des
+Zielzeitpunkts nochmals auf `process_frame`. Diese zusätzliche volle Framewartezeit
+ist entfernt; die aktuelle Zeichnung wird direkt bei `frame_post_draw` gelesen.
+Die Aufnahmezielpunkte lauten jetzt 30/105/230 ms. Produktionsuhr, Dauer und
+strenge Pixel-/Zeitfenster bleiben unverändert; keine Verlangsamung der Animation.
+Der gezielte native Windows-Korrekturlauf `animation-dev5` mit frisch importiertem
+isoliertem Projekt besteht einschließlich aller unabhängigen Bewegungs-/Pixelorakel.
+
+[Originaldiagnose 12685152418](https://github.com/venomenon328/picross/actions/runs/40391825490/artifacts/12685152418),
+ZIP-SHA256 `95e01025ac2915e7b8ba0a9813dc7fe492fc04bba53a83b53c7a819e5bc2836e`,
+217.699.962 Bytes. Quellen und Originalfehler selbst nachgelesen. History bestand
+mit 17/4/2 und 23,240 s; catalog mit 152 gelieferten/205 erzeugten PNGs und
+533,292 s. Die begrenzten Katalogausschnitte liefern 65.553.562 Bytes gegenüber
+94.379.560 in der Baseline (−30,5 %); 53 Crops, Decode 4,570 s,
+PNG-Schreiben 5,071 s. Dieser Teilbefund macht die fehlgeschlagene Gesamtheit
+nicht erfolgreich.
+
+**CI2-D-O01: Zeitbefund offen bis zur finalen Gegenmessung.** Dieser fehlgeschlagene
+native Lauf benötigte 897,570 s, gegenüber historisch 847,739 s; das Ziel unter
+zehn Minuten ist verfehlt. Bereits die vor Überlappung ausgeführte unveränderte
+Kernsuite war langsamer: `run_tests.gd` 59,578 statt 31,219 s und `zs2_tests.gd`
+35,757 statt 19,094 s. Dieselben beiden Quellen sind zwischen Baseline und D
+unverändert. Die gesamte Verlangsamung wird damit nicht pauschal auf Parallelität
+oder Runnerlast zurückgeführt; deren Anteile sind nicht isoliert bestimmt.
+Image `20261012.334.1`, Godot und Cache-HIT entsprechen der Baseline. Der
+Zeitbefund erteilt keinen Gateverzicht und wird im finalen PR fortgeschrieben.
+
 Lokaler Historyvorlauf `native-dev2`: 22,153 s einschließlich frischer Vorbereitung,
 beide Spielprozesse und Rohbeleggate erfolgreich. Katalogvorlauf `catalog-dev3`:
 325,482 s Gruppenzeit / 328,515 s Gesamtharness, 16 Prozesse (Version, vier
