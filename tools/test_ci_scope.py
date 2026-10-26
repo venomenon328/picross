@@ -460,6 +460,7 @@ class SchedulerTransportTests(unittest.TestCase):
     """Exercise the real GitHub output producer and fail-closed result evaluator."""
 
     def test_real_plan_output_and_finish_with_empty_native_selection(self):
+        from test_production_ci import fixture
         script = str(Path(__file__).with_name("ci_scope.py"))
         for filename, event in (
             ("docs/AT_NOTE.md", "pull_request"),
@@ -500,9 +501,9 @@ class SchedulerTransportTests(unittest.TestCase):
                 # Simulate the real scheduler discarding empty values, not a hand-built full dictionary.
                 emitted = dict(line.split("=", 1) for line in outputs_path.read_text().splitlines())
                 scheduled = {key: value for key, value in emitted.items()
-                             if key in (*FLAGS, "selection_attempt", "native_groups", "browser_request") and value != ""}
+                             if key in (*FLAGS, "selection_attempt", "native_groups", "production_groups", "browser_request") and value != ""}
                 self.assertEqual(scheduled["native_groups"], "[]")
-                self.assertEqual(set(scheduled), set(FLAGS) | {"selection_attempt", "native_groups", "browser_request"})
+                self.assertEqual(set(scheduled), set(FLAGS) | {"selection_attempt", "native_groups", "production_groups", "browser_request"})
                 self.assertEqual(scheduled["product"], "false")
                 binding = {key: plan[key] for key in ("source_head", "base_commit", "tested_checkout",
                                                      "run_id", "run_attempt", "event")}
@@ -511,11 +512,13 @@ class SchedulerTransportTests(unittest.TestCase):
                            for job in JOBS}
                 result_file = repo / "gate.json"
                 finish_env = {**env, "GITHUB_ACTIONS": "true",
+                              'CI_PRODUCTION_OUTPUTS':'{"production_attempt":"1"}',
                               "CI_BINDING": json.dumps(binding),
                               "CI_RESULTS": json.dumps(results)}
+                if plan['selected']['production']:fixture(plan,repo/'evidence')
                 def finish(gate_outputs):
                     return subprocess.run([os.sys.executable, script, "finish", "--plan-file",
-                                           str(plan_path), "--output", str(result_file)],
+                                           str(plan_path), '--production-evidence',str(repo/'evidence'), "--output", str(result_file)],
                                           cwd=repo, env={**finish_env, "CI_OUTPUTS": json.dumps(gate_outputs)},
                                           capture_output=True, text=True, timeout=20)
                 passed = finish(scheduled)
@@ -546,6 +549,8 @@ class SchedulerTransportTests(unittest.TestCase):
                         diff_check="full-whitespace-check")
             outputs = {key: str(plan["selected"][key]).lower() for key in FLAGS}
             outputs.update(browser_request="null", selection_attempt="1", native_groups=native_groups_output(plan["native_groups"]))
+            from production_contract import output
+            outputs['production_groups'] = output(plan['production_groups'])
             self.assertEqual(json.loads(outputs["native_groups"]), plan["native_groups"])
             validate_binding(plan, binding, outputs)
             for malformed in (

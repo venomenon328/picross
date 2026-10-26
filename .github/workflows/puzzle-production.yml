@@ -2,7 +2,16 @@ name: Puzzle production verification
 
 on:
   workflow_call:
-  workflow_dispatch:
+    inputs:
+      groups:
+        type: string
+        required: true
+      selection_attempt:
+        type: string
+        required: true
+    outputs:
+      production_attempt:
+        value: ${{ jobs.puzzle-production.outputs.production_attempt }}
 
 permissions:
   contents: read
@@ -14,7 +23,12 @@ concurrency:
 jobs:
   puzzle-production:
     runs-on: ubuntu-24.04
+    outputs:
+      production_attempt: ${{ steps.attempt.outputs.value }}
     steps:
+      - name: Bind producer attempt
+        id: attempt
+        run: echo "value=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -27,25 +41,24 @@ jobs:
           python3 -m venv "${{ runner.temp }}/rp3-image-env"
           "${{ runner.temp }}/rp3-image-env/bin/python" -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
           echo "${{ runner.temp }}/rp3-image-env/bin" >> "$GITHUB_PATH"
-      - name: Independent oracles and proof rejection tests
-        shell: bash
-        run: |
-          mkdir -p artifacts/puzzle-production
-          python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v 2>&1 | tee artifacts/puzzle-production/tests.log
-      - name: Isolated reference runs and fresh verification
+      - name: Selected Fachtests with measured fixtures and assigned integrations
         env:
+          PRODUCTION_GROUPS: ${{ inputs.groups }}
+          CI_SELECTION_ATTEMPT: ${{ inputs.selection_attempt }}
           RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
-        run: python3 -m tools.puzzle_production.benchmark --output-dir artifacts/puzzle-production
-      - name: ZA-1 isolated authoring export and registration replay
-        run: |
-          python3 -m tools.puzzle_production.za1_fixtures --output-dir "${{ runner.temp }}/za1-replay"
-          cp "${{ runner.temp }}/za1-replay/replay.json" artifacts/puzzle-production/za1-replay.json
+        run: python3 tools/production_ci.py --groups "$PRODUCTION_GROUPS" --output-dir artifacts/puzzle-production
       - name: Upload reports, proofs and measurements
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: puzzle-production-${{ github.event.pull_request.head.sha || github.sha }}
-          path: artifacts/puzzle-production/
+          name: puzzle-production-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          path: |
+            artifacts/puzzle-production/production-result.json
+            artifacts/puzzle-production/tests.json
+            artifacts/puzzle-production/tests.log
+            artifacts/puzzle-production/*.log
+            artifacts/puzzle-production/references/
+            artifacts/puzzle-production/za1-replay/replay.json
           if-no-files-found: error
           retention-days: 7

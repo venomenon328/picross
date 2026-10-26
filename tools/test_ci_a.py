@@ -139,6 +139,8 @@ class AdversarialGateTests(unittest.TestCase):
         outputs["selection_attempt"] = "2"
         outputs["browser_request"] = "null"
         outputs["native_groups"] = native_groups_output(plan["native_groups"])
+        from production_contract import output
+        outputs['production_groups'] = output(plan['production_groups'])
         binding["gate_attempt"] = "2"
         validate_binding(plan, binding, outputs)
         binding["gate_attempt"] = "3"

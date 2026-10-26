@@ -25,7 +25,7 @@ Original-Fixtures, Proofs, Ergebnisbilder und Produktverträge werden nicht ver�
 
 ## Automatisierter Dateinachweis
 
-Der bestehende [Vorlagenhelfer](../../../../tools/book_inventory/production.py)
+Der bestehende [Vorlagenhelfer](https://github.com/venomenon328/picross/blob/94e3ea7d9674babbdcd6bde6251e233191fd096f/tools/book_inventory/production.py)
 wurde fortgeschrieben, keine zweite Pipeline angelegt. Seine Tests werden vom
 unveränderten `docs`-Workflow entdeckt. `verify` verwendet nur die Standardbibliothek.
 
