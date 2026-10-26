@@ -1,15 +1,14 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
-## Vorrangiger Sollvertrag: CI2-D / #416
+## Aktuelle Umsetzung: CI2-D / #416
 
 Der freigegebene [CI2-Vertrag vom 26.10.2026](CI_SLIMMING.md),
 [Gesamtissue #412](https://github.com/venomenon328/picross/issues/412), ersetzt
 die nachfolgenden ungekürzten History-/Bild-/Prozesspflichten.
-[CI2-D / #416](https://github.com/venomenon328/picross/issues/416) ist das
-zugehörige, noch nicht begonnene Umsetzungspaket nach
-[CI2-A / #413](https://github.com/venomenon328/picross/issues/413).
-Diese Dokumentlieferung verändert keine ausführbare Route am Ausgangsstand
-`main@967314538df376a281020fb4c34f93f370a491df`.
+[CI2-D / #416](https://github.com/venomenon328/picross/issues/416) ist auf
+`chore/416-ci2-d-native` von `main@8e5e99647596bc3ef9d7bd22bd746b73fbb424d5`
+implementiert. [T01, Messungen und Selbstreview](CI2_D_VERIFICATION.md) binden
+die tatsächlichen Prüfungen. Separates D-R01 bleibt vor Merge offen.
 
 Die neue Historyroute umfasst insgesamt höchstens 20 semantische Benutzerkommandos,
 höchstens sechs neue wirksame History-Transaktionen und genau zwei tatsächliche
@@ -29,7 +28,7 @@ Python-Orakel importiert keine produktive Historylogik; zwei billige Gegenproben
 weisen manipulierte Zelländerung und unvollständige Spur ohne weitere
 Spielprozesse ab. Producer, Trace, Zusammenfassung und Gate binden die kurze
 Folge; 500 Aktionen, mehr als 500 geänderte Zellen, fünf 100er-Segmente und das
-künstliche 560px-Board sind keine zukünftige Pflicht.
+künstliche 560px-Board sind keine aktive Pflicht.
 
 Abgeschlossene HZ-C-14/15-Vergleiche und 36 HC92-before-Bilder entfallen;
 aktuelle Schrift-/Layoutzusagen bleiben geprüft. Animationen erhalten relevante
@@ -49,13 +48,30 @@ Pflichtresultate scheitern weiterhin. Native Scopes begründen nach CI2-A keinen
 impliziten Browserauftrag. Alte Logs sind die Baseline; die 500er- oder volle
 Vergleichsmatrix wird dafür nicht erneut ausgeführt.
 
+Die feste aktuelle Lieferung umfasst 423 PNGs: 152 catalog, 240 graphics,
+22 completion, neun adapters (zuvor 858). Die Dateien werden tatsächlich nicht
+mehr erzeugt, wenn ihr Fall entfällt; Layoutbelege bündeln zuvor überlappende
+Ausschnitte. ZS2 liefert 42 statt 201 kontrollierter/Echtzeitframes; drei echte
+Bewegungsframes je Variante behalten die zeit-/pixelbezogenen Gegenorakel.
+HC92 liefert 36 aktuelle Bilder, HZ-C die gewählten 15/19-Grundlinien ohne
+14/15-Galerie; KE liefert 27 aktuelle Bilder ohne Legacy-Zeichner.
+
+Der feste Historyplan enthält 17 Kommandos und vier neue Transaktionen. Das
+Gate liest alle sechs Originaldateien (Plan, Trace, beide Saves, Fremdslot-Hashes,
+Summary) und rekonstruiert Zellen, vollständige History, Cursor und Ansicht.
+Katalogkopien sind vor jeder Mutation bytegleich zur verifizierten Importbasis;
+elf Projekte bleiben getrennt, nur regular/restart teilen ihr Testprofil.
+Unter Linux überlappen catalog und graphics mit den übrigen seriellen Gruppen
+auf eigenen Xvfb-Displays, nach Cachevorbereitung durch die erste serielle Gruppe.
+Unter Windows bleiben native Fenster wegen Fokus vollständig seriell.
+
 ## Gebundener CI-C-Ausgangsstand
 
 Alle folgenden Mengen, Prozessfolgen, Pflichtdateien und Abnahmeformulierungen
 dokumentieren den bisherigen Lieferstand und seine Erweiterungen. Ihre
 Quellenbindungen bleiben erhalten; sie erzwingen keine Fortführung der alten
-Mengen unter CI2. Die bisherige Implementierung bleibt bis zur Umstellung aktiv,
-und ein noch ausgewähltes fehlendes Altresultat wird dadurch nicht erfolgreich.
+Mengen unter CI2. Für aktuelle Producer, Inventar und Gate gelten die oben
+beschriebenen D-Umfänge; tatsächlich ausgewählte fehlende Resultate scheitern.
 
 Inventar vor Umstellung: `main@019b4dba98ef56c549ef5e7da10402dba0c9e93a`,
 [Issue #249](https://github.com/venomenon328/picross/issues/249), CI-C/V1.

@@ -3,10 +3,11 @@
 ## Aktuelle Umsetzung: CI2-C / #415
 
 CI2-A und CI2-B sind über PR #419/#420 in `main` integriert; Basis dieses Pakets
-ist `dd56d310d942eee47448df4cdcca5e4af4a49b00`. CI2-C ist auf
-`chore/415-ci2-c-chromium` implementiert. [T01 und Messbericht](CI2_C_VERIFICATION.md)
-binden die tatsächlichen Prüfungen; separates CI2-C-R01 bleibt vor Merge offen.
-Native Umfänge und Bestandsbereinigung bleiben CI2-D/E.
+ist `dd56d310d942eee47448df4cdcca5e4af4a49b00`. CI2-C ist nach separatem R01 über PR #421 auf
+`8e5e99647596bc3ef9d7bd22bd746b73fbb424d5` integriert.
+[T01 und Messbericht](CI2_C_VERIFICATION.md) bleiben an den damaligen Lieferhead
+gebunden. Native Umfänge folgen [CI2-D](CI2_D_VERIFICATION.md), Bestandsbereinigung
+bleibt CI2-E.
 
 Automatische CI und allgemeine Scopes bleiben browserfrei. Nur der registrierte
 `ci-chromium.yml`-Dispatch mit explizitem `browser_scope` startet Chromium.

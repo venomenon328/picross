@@ -102,6 +102,8 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
     if len(output) > 4000:
         print(f"[{name}: console tail only; diagnostic log retained separately]", flush=True)
     return dict(name=name, exit_code=exit_code, output=output,
+                process_role='import' if '--import' in command else 'export' if '--export-debug' in command else 'version' if '--version' in command else 'game',
+                rendered='--headless' not in command and '--version' not in command,
                 seconds=round(time.monotonic() - started, 3), timed_out=timed_out,
                 log=bound_log(path))
 
@@ -138,7 +140,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--groups", help="Exact independent groups, comma separated; default all")
     parser.add_argument("--compare-native-png", action="store_true", help="Compare old/new PNG encoders on the same real frames")
     for name, description in (
-        ("integration", "500 actions and the independent cross-process restart oracle"),
+        ("integration", "bounded native history and the independent two-process restart oracle"),
         ("pilots", "four synthetic interaction cases across real processes"),
         ("visual", "current compact native pixel and animation checks"),
         ("perf-b", "regular atlas renderer and cache lifecycle regression"),
@@ -152,37 +154,28 @@ def run_integration(output: Path, workspace: Path, environment: dict, base: list
     directory = output / "integration"
     directory.mkdir()
     plan_path, trace = directory / "plan.json", directory / "trace.jsonl"
-    expected = directory / "expected-restart.json"
-    plan = p14_integration.write_plan(plan_path)
-    environment.update(P1_TEST_SAVE_ROOT=str(workspace / "integration-saves"),
-                       P1_INTEGRATION_PLAN=str(plan_path), P1_INTEGRATION_TRACE=str(trace),
-                       P1_INTEGRATION_EXPECTED=str(expected))
+    p14_integration.write_plan(plan_path)
+    saves = workspace / "integration-saves"
+    saves.mkdir()
+    for name, data in p14_integration.FOREIGN.items():
+        (saves/name).write_bytes(data)
+    def foreign_hashes():
+        return {name: toolchain.sha256_file(saves/name) for name in p14_integration.FOREIGN}
+    foreign = dict(before=foreign_hashes())
+    environment.update(P1_TEST_SAVE_ROOT=str(saves), P1_INTEGRATION_PLAN=str(plan_path),
+                       P1_INTEGRATION_TRACE=str(trace))
     try:
-        for start in range(0, 500, 100):
-            environment.update(P1_INTEGRATION_START=str(start), P1_INTEGRATION_COUNT="100")
-            phase(f"integration-{start + 1:03d}-{start + 100:03d}",
-                  base + ["--script", "res://tests/p14_integration.gd", "--", "--write"],
-                  "P1_INTEGRATION_WRITE_OK")
-        oracle = p14_integration.validate_trace(plan, trace)
-        final = json.loads((directory / "trace.jsonl.final.json").read_text(encoding="utf-8"))
-        for key in ("cells", "history", "cursor", "undo_used"):
-            if final[key] != oracle[key]:
-                raise toolchain.PreflightError(f"Integration final {key} differs from independent oracle")
-        if oracle["cursor"] >= len(oracle["history"]):
-            raise toolchain.PreflightError("Integration ended without required redo branch")
-        expected.write_text(json.dumps({**oracle, "view": final["view"],
-            "row_reads": final["row_reads"], "column_reads": final["column_reads"]},
-            ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-        phase("integration-restart", base + ["--script", "res://tests/p14_integration.gd", "--", "--read"],
-              "P1_INTEGRATION_READ_OK")
-        p14_integration.verify_navigation(plan, trace)
-        p14_integration.verify_negative_controls(plan, trace)
-        summary = p14_integration.summarize(plan, trace, final, host)
-        (directory / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        for stage, flag in (("writer", "write"), ("reader", "read")):
+            phase("integration-"+stage, base + ["--script", "res://tests/p14_integration.gd", "--", "--"+flag],
+                  "CI2_D_HISTORY_"+stage.upper()+"_OK")
+            shutil.copyfile(saves/"t06.json", directory/(stage+"-save.json"))
+            foreign[stage] = foreign_hashes()
+        (directory/"foreign-slots.json").write_text(json.dumps(foreign)+"\n", encoding="utf-8")
+        summary = p14_integration.verify_evidence(directory)
+        (directory/"summary.json").write_text(json.dumps(summary, indent=2)+"\n", encoding="utf-8")
         return summary
     finally:
-        for key in ("P1_TEST_SAVE_ROOT", "P1_INTEGRATION_PLAN", "P1_INTEGRATION_TRACE",
-                    "P1_INTEGRATION_EXPECTED", "P1_INTEGRATION_START", "P1_INTEGRATION_COUNT"):
+        for key in ("P1_TEST_SAVE_ROOT", "P1_INTEGRATION_PLAN", "P1_INTEGRATION_TRACE"):
             environment.pop(key, None)
 
 
@@ -424,6 +417,7 @@ def main(argv: list[str] | None = None) -> int:
                     for asset in (editor, toolchain.TEMPLATES)}
         evidence.report["assets"] = python_phase("verified-toolchain-assets", assets)
         with tempfile.TemporaryDirectory(prefix="picross-p1-product-") as temporary, ThreadPoolExecutor(max_workers=1) as executor:
+            setup_started = time.monotonic()
             workspace = Path(temporary).resolve()
             engine = str(toolchain.extract_editor(args.cache_dir.resolve() / editor.name, workspace / "engine", host))
             toolchain.extract_windows_templates(args.cache_dir.resolve() / toolchain.TEMPLATES.name,
@@ -466,8 +460,11 @@ def main(argv: list[str] | None = None) -> int:
                     raise
                 reporter.complete(record, result)
 
+            evidence.report['setup_seconds'] = round(time.monotonic()-setup_started,6)
             phase("version", [engine, "--version"], toolchain.EXPECTED_VERSION)
             base = [engine, "--headless", "--path", str(project)]
+            if args.catalog:
+                shutil.copyfile(root/"game/art/content/yin_yang_001.png", project/"tests/fixtures/ke-reveal.png")
             phase("import", base + ["--import"])
             if args.core:
                 phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
@@ -524,11 +521,11 @@ def main(argv: list[str] | None = None) -> int:
             if args.integration:
                 evidence.scope_start("integration")
                 evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
-                selected += [output / "integration/summary.json"]
+                selected += sorted((output / "integration").iterdir())
                 evidence.scope_done("integration")
             if args.catalog:
                 evidence.scope_start("catalog")
-                evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
+                evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host, project)
                 selected += kat2_files
                 evidence.scope_done("catalog")
             if args.completion:
@@ -606,6 +603,8 @@ def main(argv: list[str] | None = None) -> int:
                 retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}
                 if required_images != retained_images:
                     raise toolchain.PreflightError("Targeted SL images missing from technical delivery")
+            from native_metrics import measure
+            evidence.report['work_measurements'] = measure(output, evidence.technical, evidence.report)
             evidence.measure_size()
             evidence.finish()
             archive = None

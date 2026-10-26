@@ -10,9 +10,15 @@ separatem R01 über PR #419 auf `94e3ea7d9674babbdcd6bde6251e233191fd096f`
 integriert. CI2-B ist nach separatem R01 über PR #420 auf
 `dd56d310d942eee47448df4cdcca5e4af4a49b00` integriert;
 [B-T01](CI2_B_VERIFICATION.md) bleibt historisch gebunden, B-O01 offen.
-CI2-C ist auf `chore/415-ci2-c-chromium` implementiert; [C-T01](CI2_C_VERIFICATION.md)
-führt tatsächliche Nachweise, separates C-R01 bleibt vor Merge offen.
-D/E und großer Datenabbau bleiben unbegonnen; kein Merge oder Deployment.
+CI2-C ist nach separatem R01 über PR #421 auf
+`8e5e99647596bc3ef9d7bd22bd746b73fbb424d5` integriert; [C-T01](CI2_C_VERIFICATION.md)
+bleibt an seinen Lieferstand gebunden. CI2-D wurde in
+[PR #422](https://github.com/venomenon328/picross/pull/422) technisch geliefert;
+[D-T01](CI2_D_VERIFICATION.md) und das
+[separate R01](https://github.com/venomenon328/picross/pull/422#pullrequestreview-5659522486)
+bleiben an ihre geprüften Commits gebunden. Der Laufzeitbefund CI2-D-O01 ist
+weiterhin offen. CI2-E und der große Datenabbau sind unbegonnen;
+aus CI2 folgt keine zusätzliche Deployment- oder Releasefreigabe.
 
 Dieser Vertrag ersetzt für die benannten Folgepakete die bisherigen automatischen
 Chromiumpflichten, impliziten Browserrechte manueller Scopes, ungekürzten historischen
@@ -210,9 +216,12 @@ bereinigte Arbeitsdaten und aktuelle Statusverweise; keine Paketchronik in Einst
 | [CI2-D #416](https://github.com/venomenon328/picross/issues/416) | native Kürzung einschließlich History | A |
 | [CI2-E #417](https://github.com/venomenon328/picross/issues/417) | Bestandsbereinigung, Bildabschluss und Metadatenkontrolle | A |
 
-A/B sind nach separaten R01 integriert. C ist implementiert; C-T01 bindet
-die Nachweise und offenes separates C-R01. D/E sind unbegonnen und benötigen
-ihren eigenen konkreten Auftrag.
+CI2-A/B/C sind nach separaten R01 auf `main` integriert; ihre T01-/R01-
+Nachweise bleiben an die damaligen Liefercommits gebunden. Die CI2-D-Lieferung,
+D-T01 und das separate R01 stehen in
+[PR #422](https://github.com/venomenon328/picross/pull/422); dessen aktueller
+Integrationsstand ist im PR maßgeblich. CI2-D-O01 (Laufzeit) bleibt offen.
+CI2-E ist unbegonnen und benötigt einen eigenen konkreten Auftrag.
 Nach A sind B/C/D/E unabhängig integrierbar; gemeinsame Gate-/Auswahländerungen
 gegen den jeweils aktuellen Stand nachführen. Standard ist ein Implementierungs-PR
 je Paket. T01 enthält tatsächliche gezielte Positiv-/Negativnachweise, gemessene

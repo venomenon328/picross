@@ -70,7 +70,7 @@ func rework_motion(marker: String = "x") -> void:
 		mouse(point(1, 1), button, false)
 		app.board.clear_pointer_hover()
 		var controlled: Array = []
-		var times: Array = [0, 30, 75, 105, 150, 180, 210] if marker == "x" else [0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 209, 210]
+		var times: Array = [0, 105, 210] if marker == "x" else [0, 75, 105, 150, 210]
 		for elapsed: int in times:
 			probe_time = 1000000 + elapsed * 1000
 			app.board.marks.queue_redraw()
@@ -97,9 +97,17 @@ func rework_motion(marker: String = "x") -> void:
 		app.board.clear_pointer_hover()
 		var live: Array = []
 		var pictures: Array[Image] = []
-		for i: int in range(22):
+		for i: int in range(3):
+			# Three actual rendered instants; no dense readback/PNG sequence.
+			# The first atlas frame can still be empty just after commit. Sample
+			# within each visible stroke phase, then the settled frame.
+			var target_ms: int = [30,105,230][i]
+			while Time.get_ticks_usec()-began < target_ms*1000:
+				await process_frame
 			app.board.marks.queue_redraw()
-			await process_frame
+			# The loop resumed in process_frame already. Capture that frame's
+			# completed draw; waiting for another frame can skip a whole stroke
+			# on software renderers. The production clock remains untouched.
 			await RenderingServer.frame_post_draw
 			pictures.append(surface.get_texture().get_image())
 			live.append({"file": prefix + "-live-%02d.png" % i, "elapsed_ms": float(rendered[0] - began) / 1000.0})

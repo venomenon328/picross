@@ -1,273 +1,165 @@
-"""Deterministic P1.4 input plan and an independent, contract-level oracle.
+"""CI2-D: bounded native history and independent contract-level replay.
 
-The oracle deliberately does not import or translate the Godot Gesture/Player code.
-It applies the documented start-cell modes to integer coordinates and compares a
-trace emitted by the running scene after each completed UI action.
+No product history implementation is imported. Every semantic command, including
+selection, tool/color changes and quit, is in the fixed two-process plan.
 """
-from __future__ import annotations
-
-import json
-import hashlib
-import os
-import platform
-import tempfile
+from copy import deepcopy
 from collections import Counter
+import hashlib
+import json
 from pathlib import Path
 
-REGIONS = ((2, 2), (14, 2), (26, 2), (38, 2), (2, 18),
-           (14, 18), (26, 18), (38, 18), (2, 34), (14, 34))
 WIDTH = HEIGHT = 50
+FOREIGN = {'t09.json': b'foreign damaged primary\n', 't09.bak': b'foreign damaged backup\n',
+           'unregistered.json': b'foreign unregistered slot\n'}
+NEGATIVES = ['changed cell rejected', 'incomplete trace rejected']
 
 
-def build_plan() -> list[dict]:
-    """Ten 50-action visits: 41 edits, 6 navigation actions, 3 history actions.
-
-    The final visit replaces its last edit with Undo, preserving a real Redo
-    branch for the independent process restart.
-    """
-    result: list[dict] = []
-    for region, (bx, by) in enumerate(REGIONS):
-        block: list[dict] = [{"kind": "mini", "point": [min(bx + 4, 46), min(by + 4, 46)]}]
-        for j in range(33):
-            block.append(_edit(bx, by, j))
-        block += [
-            {"kind": "pan", "delta": [-60 if bx < 19 else 60, -40 if by < 19 else 40]},
-            {"kind": "zoom", "direction": 1},
-            {"kind": "zoom", "direction": -1},
-            {"kind": "hint", "axis": "row", "index": 41, "slots": 1.2 if region==0 or region%2 else -1.2},
-            {"kind": "hint", "axis": "column", "index": 17, "slots": 1.2 if region==0 or region%2 else -1.2},
-            {"kind": "undo"}, {"kind": "redo"}, {"kind": "undo"},
-            {"kind": "cell", "start": [bx, by + 6], "end": [bx, by + 6],
-             "button": "right", "tool": "fill", "color": 1, "purpose": "redo branch"},
-        ]
-        for j in range(33, 40):
-            block.append(_edit(bx, by, j))
-        if region == len(REGIONS) - 1:
-            block[-1] = {"kind": "undo", "purpose": "restart redo"}
-        assert len(block) == 50
-        for item in block:
-            result.append({"number": len(result) + 1, "region": region + 1, **item})
-    assert len(result) == 500
-    return result
+def build_plan():
+    writer = [dict(kind='select', index=3), dict(kind='color', value=2),
+              dict(kind='cell', start=[2, 2], end=[5, 2], button='left'),
+              dict(kind='cell', start=[6, 2], end=[9, 2], button='right'),
+              dict(kind='tool', value='erase'),
+              dict(kind='cell', start=[2, 2], end=[3, 2], button='left'),
+              dict(kind='tool', value='fill'), dict(kind='undo'), dict(kind='redo'), dict(kind='undo'),
+              dict(kind='cell', start=[10, 3], end=[12, 3], button='left'),
+              dict(kind='zoom', direction=-1), dict(kind='undo'), dict(kind='quit')]
+    reader = [dict(kind='select', index=3), dict(kind='redo'), dict(kind='quit')]
+    return [dict(number=i+1, process=process, **action) for i, (process, action) in
+            enumerate([('writer', a) for a in writer]+[('reader', a) for a in reader])]
 
 
-def _edit(bx: int, by: int, j: int) -> dict:
-    x, y = bx + j % 8, by + j // 8
-    if j == 30:
-        return {"kind": "cell", "start": [bx, by], "end": [bx, by],
-                "button": "left", "tool": "erase", "color": 1, "purpose": "eraser"}
-    if j == 31:
-        x, y = bx + 1, by
-    if j == 32:
-        x, y = bx + 2, by
-    pattern = j % 5
-    button = "right" if pattern in (1, 3) or j == 32 else "left"
-    dx, dy = (4, 0) if pattern in (0, 2, 3) else (0, 7 if pattern == 4 else 3)
-    if j >= 30:
-        dx, dy = 0, 0
-    end = [x + dx, y + dy]
-    action = {"kind": "cell", "start": [x, y], "end": end,
-              "button": button, "tool": "fill", "color": 1 + (j // 10) % 4,
-              "purpose": ("elastic" if pattern == 2 and j < 30 else "stroke")}
-    if pattern == 2 and j < 30:
-        action["via"] = [x + 4, y]
-        action["end"] = [x + 2, y]
-    return action
-
-
-class Oracle:
-    def __init__(self) -> None:
-        self.cells = [-1] * (WIDTH * HEIGHT)
-        self.history: list[list[dict]] = []
-        self.cursor = 0
-        self.undo_used = False
-
-    def step(self, action: dict) -> list[dict]:
-        kind = action["kind"]
-        if kind == "undo":
-            if not self.cursor:
-                raise AssertionError(f"action {action['number']}: empty Undo")
-            self.cursor -= 1
-            changes = [{"index": c["index"], "before": c["after"], "after": c["before"]}
-                       for c in self.history[self.cursor]]
-            self.undo_used = True
-        elif kind == "redo":
-            if self.cursor == len(self.history):
-                raise AssertionError(f"action {action['number']}: empty Redo")
-            changes = self.history[self.cursor]
-            self.cursor += 1
-        elif kind == "cell":
-            sx, sy = action["start"]
-            ex, ey = action["end"]
-            assert sx == ex or sy == ey
-            start = self.cells[sy * WIDTH + sx]
-            button = action["button"]
-            erase = action["tool"] == "erase" and button == "left"
-            target = -1 if erase else (0 if button == "right" else action["color"])
-            remove_fill = target > 0 and start > 0
-            remove_empty = target == 0 and start == 0
-            if remove_fill or remove_empty:
-                target = -1
-            changes = []
-            for y in range(min(sy, ey), max(sy, ey) + 1):
-                for x in range(min(sx, ex), max(sx, ex) + 1):
-                    index = y * WIDTH + x
-                    before = self.cells[index]
-                    eligible = (erase and before != -1 or remove_fill and before > 0
-                                or remove_empty and before == 0 or not (erase or remove_fill or remove_empty)
-                                and (before == -1 or (start == 0 and before == 0) if target > 0
-                                     else before == -1 or (start > 0 and before > 0)))
-                    if eligible and before != target:
-                        changes.append({"index": index, "before": before, "after": target})
-            if not changes:
-                raise AssertionError(f"action {action['number']}: ineffective cell gesture: {action}")
-            self.history = self.history[:self.cursor] + [changes]
-            self.cursor += 1
-        else:
-            changes = []
-        for change in changes:
-            index = change["index"]
-            if self.cells[index] != change["before"]:
-                raise AssertionError(f"action {action['number']}: oracle precondition at {index}")
-            self.cells[index] = change["after"]
-        return changes
-
-
-def validate_trace(plan: list[dict], trace_path: Path, expected_override: dict | None = None) -> dict:
-    actual = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines()]
-    if len(actual) != len(plan):
-        raise AssertionError(f"incomplete trace: expected {len(plan)} actions, got {len(actual)}")
-    oracle = Oracle()
-    categories = Counter()
-    for action, observed in zip(plan, actual, strict=True):
-        n = action["number"]
-        expected_changes = oracle.step(action)
-        if expected_override and n in expected_override:
-            expected_changes = expected_override[n]
-        expected = {"number": n, "kind": action["kind"], "changes": expected_changes,
-                    "cursor": oracle.cursor, "history_size": len(oracle.history),
-                    "undo_used": oracle.undo_used,
-                    "history_tail": oracle.history[-1] if oracle.history else [],
-                    "redo_next": oracle.history[oracle.cursor] if oracle.cursor < len(oracle.history) else []}
-        for key, value in expected.items():
-            if observed.get(key) != value:
-                raise AssertionError(f"action {n} {action}: {key} expected {value!r}, got {observed.get(key)!r}")
-        categories[action["kind"]] += 1
-    return {"actions": len(plan), "categories": dict(categories), "cells": oracle.cells,
-            "history": oracle.history, "cursor": oracle.cursor, "undo_used": oracle.undo_used}
-
-
-def write_plan(path: Path) -> list[dict]:
+def write_plan(path):
     plan = build_plan()
-    path.write_text(json.dumps(plan, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(plan)+'\n', encoding='utf-8')
     return plan
 
 
-def verify_navigation(plan: list[dict], trace_path: Path) -> None:
-    """Check valid views, navigational isolation, and individual clue identities."""
-    trace = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines()]
-    assert len(trace) == 500
-    previous = None
-    visited_regions = set()
-    for action, item in zip(plan, trace, strict=True):
-        n = action["number"]
-        view = item["view"]
-        x, y = view["center"]
-        zoom = view["cell_size"]
-        left, top, width, height = view["viewport"]
-        if not (x == WIDTH/2 and y == HEIGHT/2 and 4 < zoom <= view["fit_ceiling"] + .001 and
-                0 <= left < left + width <= 1600 and 0 <= top < top + height <= 900):
-            raise AssertionError(f"action {n}: invalid view {view}")
-        if action["kind"] == "mini":
-            visited_regions.add(action["region"])
-            if (x,y)!=(WIDTH/2,HEIGHT/2):
-                raise AssertionError(f"action {n}: passive miniature moved full grid")
+class Oracle:
+    def __init__(self):
+        self.cells = [-1]*(WIDTH*HEIGHT)
+        self.history = []
+        self.cursor = 0
+        self.undo_used = False
+        self.color, self.tool, self.transactions = 1, 'fill', 0
+
+    def state(self):
+        return deepcopy(dict(cells=self.cells, history=self.history, cursor=self.cursor, undo_used=self.undo_used))
+
+    def step(self, action):
+        kind = action['kind']
+        changes = []
+        if kind == 'color':
+            self.color, self.tool = action['value'], 'fill'
+        elif kind == 'tool':
+            self.tool = action['value']
+        elif kind == 'undo':
+            if not self.cursor:
+                raise AssertionError('empty Undo')
+            self.cursor -= 1
+            changes = [dict(index=c['index'], before=c['after'], after=c['before'])
+                       for c in self.history[self.cursor]]
+            self.undo_used = True
+        elif kind == 'redo':
+            if self.cursor >= len(self.history):
+                raise AssertionError('empty Redo')
+            changes = self.history[self.cursor]
+            self.cursor += 1
+        elif kind == 'cell':
+            sx, sy = action['start']
+            ex, ey = action['end']
+            assert sy == ey  # The bounded plan uses horizontal strokes only.
+            target = -1 if self.tool == 'erase' else 0 if action['button'] == 'right' else self.color
+            for x in range(sx, ex+1):
+                index = sy*WIDTH+x
+                before = self.cells[index]
+                if before != target:
+                    changes.append(dict(index=index, before=before, after=target))
+            assert changes, 'ineffective edit'
+            self.history = self.history[:self.cursor]+[deepcopy(changes)]
+            self.cursor += 1
+            self.transactions += 1
+        for change in changes:
+            assert self.cells[change['index']] == change['before']
+            self.cells[change['index']] = change['after']
+        return changes
+
+
+def read_trace(path):
+    return [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines()]
+
+
+def validate_trace(plan, trace_path):
+    if plan != build_plan():
+        raise AssertionError('history requires the complete fixed two-process plan')
+    actual = read_trace(trace_path)
+    if len(actual) != len(plan):
+        raise AssertionError('incomplete trace')
+    pids = [{r['pid'] for r in actual if r['action']['process'] == stage} for stage in ('writer','reader')]
+    assert all(len(ids) == 1 for ids in pids) and pids[0] != pids[1], 'two distinct native processes'
+    oracle, previous = Oracle(), None
+    states = {}
+    for action, observed in zip(plan, actual, strict=True):
+        changes = oracle.step(action)
+        expected = dict(action=action, changes=changes, **oracle.state())
+        for key, value in expected.items():
+            if observed.get(key) != value:
+                raise AssertionError(f"action {action['number']}: {key} differs from independent oracle")
+        assert 4 < observed['actual_cell'] <= observed['fit_ceiling']+.001, 'bounded native geometry'
+        view = observed['view']
+        assert view['active_color'] == oracle.color and view['tool'] == oracle.tool, 'tool/color state'
+        assert view['center'] == [25, 25] and 4 < view['zoom'] <= 72, 'bounded full view'
+        assert len(view['row_clue_reads']) == HEIGHT and len(view['column_clue_reads']) == WIDTH
         if previous:
-            if action["kind"] in {"pan","mini"}:
-                if view != previous["view"]:
-                    raise AssertionError(f"action {n}: forbidden navigation changed view")
-            if action["kind"] == "zoom":
+            prior = previous['view']
+            if action['kind'] == 'zoom':
                 steps = (12,14,16,18,20,22,24,26,28,30,32,34,36,40,44,48,54,60,66,72)
-                before = previous["view"]["cell_size"]
-                choices = [v for v in steps if v>before] if action["direction"]>0 else [v for v in steps if v<before]
-                wanted = (min(choices) if action["direction"]>0 else max(choices)) if choices else before
-                expected_zoom = min(wanted,view["fit_ceiling"])
-                if abs(zoom-expected_zoom)>.001:
-                    raise AssertionError(f"action {n}: bounded zoom expected {expected_zoom}, got {zoom}")
-            rows_before, cols_before = previous["row_reads"], previous["column_reads"]
-            rows, cols = item["row_reads"], item["column_reads"]
-            if action["kind"] == "hint":
-                axis, index = action["axis"], action["index"]
-                current, old = (rows, rows_before) if axis == "row" else (cols, cols_before)
-                other, old_other = (cols, cols_before) if axis == "row" else (rows, rows_before)
-                if other != old_other or any(current[i] != old[i] for i in range(HEIGHT) if i != index):
-                    raise AssertionError(f"action {n}: clue drag altered a neighbour or opposite axis")
-                read = current[index]
-                if read == old[index] or read.get("anchor") != "middle" or not (0 <= read["start"] < read["end"] <= WIDTH):
-                    raise AssertionError(f"action {n}: wrong semantic target read {old[index]} -> {read}")
-            elif rows != rows_before or cols != cols_before:
-                raise AssertionError(f"action {n}: non-clue action changed semantic clue reads")
-        previous = item
-    if len(visited_regions) != 10:
-        raise AssertionError(f"only {len(visited_regions)} of 10 distant regions visited")
+                lower = [n for n in steps if n < previous['actual_cell']]
+                assert lower and view['zoom'] == max(lower) and not view['overview'], 'effective navigation'
+            else:
+                allowed = {'active_color','tool'} if action['kind'] in ('tool','color') else set()
+                assert {k:v for k,v in view.items() if k not in allowed} == {k:v for k,v in prior.items() if k not in allowed}, 'saved view/restart changed'
+        if action['kind'] == 'quit':
+            states[action['process']] = dict(**oracle.state(), view=view)
+        previous = observed
+    assert 0 < oracle.transactions <= 6 and len(plan) <= 20
+    assert states['writer']['cursor'] < len(states['writer']['history']), 'open redo at quit'
+    assert states['reader']['cursor'] == len(states['reader']['history']), 'real restart redo'
+    return states
 
 
-def verify_negative_controls(plan: list[dict], trace_path: Path) -> None:
-    first_change = next(a["number"] for a in plan if a["kind"] == "cell")
-    try:
-        validate_trace(plan, trace_path, {first_change: []})
-    except AssertionError as exc:
-        if f"action {first_change}" not in str(exc):
-            raise
-    else:
-        raise AssertionError("tampered expectation unexpectedly passed")
-    with tempfile.TemporaryDirectory(prefix="p14-negative-") as directory:
-        incomplete = Path(directory) / "incomplete.jsonl"
-        lines = trace_path.read_text(encoding="utf-8").splitlines()
-        incomplete.write_text("\n".join(lines[:-1]) + "\n", encoding="utf-8")
-        try:
-            validate_trace(plan, incomplete)
-        except AssertionError as exc:
-            if "incomplete trace" not in str(exc):
-                raise
-        else:
-            raise AssertionError("incomplete trace unexpectedly passed")
+def negative_controls(plan, trace_path):
+    """Tamper only evidence bytes; never launch another game process."""
+    import tempfile
+    rows = read_trace(trace_path)
+    with tempfile.TemporaryDirectory(prefix='ci2-d-negative-') as temporary:
+        path = Path(temporary)/'trace.jsonl'
+        changed = deepcopy(rows)
+        changed[2]['cells'][102] = 0
+        for bad, expected in ((changed, 'action 3'), (rows[:-1], 'incomplete trace')):
+            path.write_text(''.join(json.dumps(r)+'\n' for r in bad), encoding='utf-8')
+            try:
+                validate_trace(plan, path)
+            except AssertionError as error:
+                if expected not in str(error):
+                    raise
+            else:
+                raise AssertionError('negative control unexpectedly accepted')
+    return NEGATIVES
 
 
-def _stats(values: list[int]) -> dict:
-    ordered = sorted(values)
-    return {"count": len(values), "median_us": ordered[len(ordered) // 2],
-            "p95_us": ordered[min(len(ordered) - 1, int(len(ordered) * .95))],
-            "max_us": ordered[-1]}
-
-
-def summarize(plan: list[dict], trace_path: Path, final: dict, host: str) -> dict:
-    trace = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines()]
-    by_kind = {kind: _stats([r["dispatch_us"] for r in trace if r["kind"] == kind])
-               for kind in sorted({r["kind"] for r in trace})}
-    frame_by_kind = {kind: _stats([r["frame_wait_us"] for r in trace if r["kind"] == kind])
-                     for kind in by_kind}
-    oracle = Oracle()
-    for action in plan:
-        oracle.step(action)
-    return {"schema": 1, "plan": "ten deterministic 50-action regions; no random seed",
-            "actions": len(plan), "categories": dict(Counter(a["kind"] for a in plan)),
-            "region_origins": REGIONS, "unique_changed_cells": len({c["index"] for r in trace for c in r["changes"]}),
-            "final_non_unknown_cells": sum(v != -1 for v in oracle.cells),
-            "final_cursor": oracle.cursor, "final_history_size": len(oracle.history),
-            "final_cells_sha256": hashlib.sha256(json.dumps(oracle.cells, separators=(",", ":")).encode()).hexdigest(),
-            "host": {"os": host, "platform": platform.platform(), "machine": platform.machine(),
-                     "processor": platform.processor() or os.environ.get("PROCESSOR_IDENTIFIER", "unavailable")},
-            "engine": final["engine"], "renderer": final["renderer"],
-            "logical_window": final["logical_window"], "ui_scale": final["ui_scale"],
-            "board_component": final["board_component"],
-            "work_zoom_range": "normal desired zoom steps; actual bounded by full-grid fit in an explicit overflow component",
-            "save_profile": "P1_TEST_SAVE_ROOT isolated per product run; normal SaveStore writes enabled",
-            "input_cadence": "synthetic viewport Down/Move/Up for Board, local Miniature._gui_input for miniature, button signals for Undo/Redo; one rendered process frame between completed actions",
-            "warmup": "scene creation plus four frames before action 1, excluded from action timing",
-            "measurement_boundary": "dispatch_us sums synchronous event/command calls including normal save I/O; frame_wait_us is separate scheduled frame time; trace/assertion writing excluded; neither is physical input latency",
-            "dispatch_by_category_us": by_kind, "frame_wait_by_category_us": frame_by_kind,
-            "dispatch_outliers": [{"number": r["number"], "kind": r["kind"], "dispatch_us": r["dispatch_us"]}
-                                  for r in sorted(trace, key=lambda r: r["dispatch_us"], reverse=True)[:10]],
-            "negative_controls": ["tampered expected change failed at its action number", "499-action trace rejected"],
-            "restart": "real separate Godot process; full oracle cells/history/cursor/redo and recorded view/semantic reads checked"}
+def verify_evidence(directory):
+    plan = json.loads((directory/'plan.json').read_text(encoding='utf-8'))
+    states = validate_trace(plan, directory/'trace.jsonl')
+    for stage, expected in states.items():
+        saved = json.loads((directory/(stage+'-save.json')).read_text(encoding='utf-8'))
+        for key, value in expected.items():
+            assert saved[key] == value, 'actual saved '+stage+' '+key
+    foreign = json.loads((directory/'foreign-slots.json').read_text(encoding='utf-8'))
+    hashes = {name: hashlib.sha256(value).hexdigest() for name,value in FOREIGN.items()}
+    assert foreign == {stage:hashes for stage in ('before','writer','reader')}, 'foreign slot bytes changed'
+    return dict(schema=2, actions=len(plan), processes=2, effective_transactions=4,
+                categories=dict(Counter(a['kind'] for a in plan)),
+                writer_cursor=states['writer']['cursor'], history_size=len(states['writer']['history']),
+                reader_cursor=states['reader']['cursor'], negative_controls=negative_controls(plan,directory/'trace.jsonl'),
+                full_state_and_saved_view=True, foreign_slots_unchanged=len(hashes))

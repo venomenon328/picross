@@ -143,6 +143,7 @@ jobs:
             tools/web_tests/contract.py
             tools/web_tests/results.py
             tools/native_results.py
+            tools/p14_integration.py
             tools/native_artifacts.json
             tools/at_evidence.py
           sparse-checkout-cone-mode: false

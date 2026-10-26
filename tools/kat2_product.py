@@ -5,7 +5,7 @@ from pathlib import Path
 import shutil
 
 import p1_preflight as toolchain
-from product_fixtures import copy_regression_game, install_runtime_fixtures
+from product_fixtures import install_runtime_fixtures
 
 
 def write_json(path, value):
@@ -14,7 +14,7 @@ def write_json(path, value):
 
 
 def fixture(project: Path, saves: Path, mode: str) -> dict:
-    """Synthetic load only: no 300 solver/production runs and no real approvals."""
+    """Synthetic load only: no real catalog or solver/production runs and no real approvals."""
     registry_path = project / "data/registry.json"
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
     if mode == "empty":
@@ -22,12 +22,12 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
         registry["categories"] = []
     elif mode == "invalid":
         registry["entries"][0]["category_id"] = "missing-test-only-category"
-    elif mode == "large":
+    elif mode == "pages":
         registry['format'] = 'picross-runtime-registry-v4'
         source = json.loads((project / "data/fixtures/t01.json").read_text(encoding="utf-8"))
         old_save = json.loads((project / "tests/fixtures/runtime/t01.json").read_text(encoding="utf-8"))
         registry["entries"] = []
-        for index in range(300):
+        for index in range(54):
             identifier, stem = f"pz-test-kat2-{index:03d}", f"kat2_{index:03d}"
             data = deepcopy(source)
             data.update(id=identifier, test_only=True)
@@ -37,7 +37,7 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
             registry["entries"].append(dict(id=identifier, key=stem, save_slot=stem, definition=f"data/{stem}.json",
                 reveal=f"art/{stem}.svg", visible=True, difficulty=None,
                 added_at=None if index % 5 == 0 else f"2024-01-{index % 28 + 1:02d}T00:00:00Z",
-                category_id="gebaeude-bauwerke" if index < 250 else "voegel"))
+                category_id="gebaeude-bauwerke" if index < 48 else "voegel"))
             if index % 2 == 0:
                 saved = deepcopy(old_save)
                 cells = [n if n > 0 else -1 for row in data["solution"] for n in row]
@@ -54,13 +54,28 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
     return marker
 
 
-def run(root, workspace, output, engine, environment, phase, python_phase, host):
+def run(root, workspace, output, engine, environment, phase, python_phase, host, imported_base):
     directory = output / "kat2"
     directory.mkdir()
     reports = []
-    for mode in ("regular", "restart", "large", "empty", "invalid", "adapter", "information", "kb", "kk", "ke", "at"):
+    import time
+    from native_contract import CATALOG_MODES
+    from native_results import bind_files
+    began = time.monotonic()
+    base_inventory = bind_files(imported_base)
+    import hashlib
+    base_hash = hashlib.sha256(json.dumps(base_inventory,sort_keys=True).encode()).hexdigest()
+    copies = []
+    def copy_base(project):
+        start = time.monotonic()
+        shutil.copytree(imported_base, project)
+        if bind_files(project) != base_inventory:
+            raise toolchain.PreflightError("Imported base copy differs")
+        copies.append(dict(project=str(project), base_sha256=base_hash, seconds=time.monotonic()-start,
+                           files=len(base_inventory), bytes=sum(r['bytes'] for r in base_inventory)))
+    for mode in CATALOG_MODES:
         project = workspace / ("kat2-" + mode) / "game"
-        copy_regression_game(root, project)
+        copy_base(project)
         saves = workspace / ("kat2-" + ("regular" if mode == "restart" else mode) + "-saves")
         saves.mkdir(exist_ok=mode == "restart")
         if mode == "adapter":
@@ -96,12 +111,10 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
             adapt(project)
             binding = install(project)
             write_json(directory/'at-fixture.json',binding)
-        if mode == "ke":
-            # Fixed real high-resolution contour sample; no growing corpus copy.
-            shutil.copyfile(root/"game/art/content/yin_yang_001.png", project/"tests/fixtures/ke-reveal.png")
         env = environment.copy()
         env.update(P1_TEST_SAVE_ROOT=str(saves), KAT2_OUTPUT=str(directory), KAT2_MODE=mode)
-        phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
+        if mode in ("pages", "adapter", "at"):
+            phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
         command = [engine, "--path", str(project), "--rendering-driver", "opengl3", "--audio-driver", "Dummy",
                    "--script", "res://tests/kat2_probe.gd", "--", "--p1-capture"]
         if host == "Linux":
@@ -118,6 +131,14 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
             report["regular_quit"] = "success; process exit 0 and all slot bytes unchanged"
             write_json(directory / (mode + ".json"), report)
         reports.append(report)
+    def verified_copies():
+        if bind_files(imported_base) != base_inventory:
+            raise toolchain.PreflightError("Immutable imported base changed")
+        return dict(format="picross-native-import-copies-v1", base_sha256=base_hash, base_files=len(base_inventory),
+                    base_bytes=sum(r['bytes'] for r in base_inventory), copies=copies,
+                    base_unchanged=True, elapsed_seconds=time.monotonic()-began)
+    reuse = python_phase("kat2-imported-base-copies", verified_copies)
+    write_json(directory/"import-copies.json", reuse)
     # Keep compact native images without repeating the large paper background.
     # Full framebuffer originals remain local; crops preserve exact native pixels.
     from native_images import crop_native

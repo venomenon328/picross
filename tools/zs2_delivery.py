@@ -236,7 +236,7 @@ def verify_x_sizes(renders, records):
                 return p.convert('RGB')
         blank=read(record['blank'])
         images={f['elapsed_ms']:read(f['file']) for f in record['controlled']}
-        if list(images)!=[0,30,75,105,150,180,210]:raise toolchain.PreflightError("Incomplete X timeline")
+        if list(images)!=[0,105,210]:raise toolchain.PreflightError("Incomplete X timeline")
         fractions=x_order(images,blank,size)
         fade={ms:Image.blend(blank,images[210],ms/210) for ms in images}
         reverse=dict(images);reverse[105]=images[105].copy()
@@ -246,7 +246,7 @@ def verify_x_sizes(renders, records):
             except toolchain.PreflightError:pass
             else:raise toolchain.PreflightError('ZS2 negative control accepted '+label)
         live=record['live']
-        if len(live)<8 or any(a['elapsed_ms']>b['elapsed_ms'] for a,b in zip(live,live[1:])):
+        if len(live)!=3 or any(a['elapsed_ms']>b['elapsed_ms'] for a,b in zip(live,live[1:])):
             raise toolchain.PreflightError("Invalid real-time X frames")
         early=[f for f in live if 0<f['elapsed_ms']<105]
         second=[f for f in live if 105<f['elapsed_ms']<210]
@@ -297,12 +297,12 @@ def verify_fill_sizes(renders, records, *, atlas_frames=False):
                 return picture.convert('RGB')
         blank = read(record['blank'])
         images = {f['elapsed_ms']: read(f['file']) for f in record['controlled']}
-        if list(images) != [0,15,30,45,60,75,90,105,120,135,150,165,180,195,209,210]:
+        if list(images) != [0,75,105,150,210]:
             raise toolchain.PreflightError("Incomplete hatching timeline")
         progress = zs_hatching.check_hatching(images, blank, size, atlas_frames=atlas_frames)
         rejected = zs_hatching.negative_controls(images, blank, size, atlas_frames=atlas_frames)
         live = record['live']
-        if len(live) < 8 or any(a['elapsed_ms'] > b['elapsed_ms'] for a,b in zip(live,live[1:])):
+        if len(live) != 3 or any(a['elapsed_ms'] > b['elapsed_ms'] for a,b in zip(live,live[1:])):
             raise toolchain.PreflightError("Invalid real-time hatch clock")
         for low, high in [(0,105),(105,184)]:
             if not any(low < f['elapsed_ms'] < high and
