@@ -8,7 +8,8 @@ die automatische Browserpflicht und die ungekürzte Fall-/Bildmatrix dieses
 Dokuments. [CI2-A / #413](https://github.com/venomenon328/picross/issues/413)
 liefert den ausdrücklichen Browserauftrag;
 [CI2-C / #415](https://github.com/venomenon328/picross/issues/415) liefert den
-kleinen Chromiumumfang. Beides ist freigegeben, noch nicht implementiert.
+kleinen Chromiumumfang. A ist auf dem #413-Arbeitsbranch implementiert (Details in
+[CI_A_SELECTION](CI_A_SELECTION.md)); C ist weiterhin unbegonnen.
 Die ausführbare Ausgangsbasis bleibt `main@967314538df376a281020fb4c34f93f370a491df`.
 
 Automatische PR-/Push-Ereignisse und allgemeine manuelle Scopes starten keinen

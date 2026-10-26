@@ -1,30 +1,98 @@
 # CI-A: Ausführbare Prüfauswahl
 
-## Vorrangiger Sollvertrag: CI2-A / #413
+## Aktuelle Umsetzung: CI2-A / #413
 
-Der freigegebene [CI2-Vertrag vom 26.10.2026](CI_SLIMMING.md),
-[Gesamtissue #412](https://github.com/venomenon328/picross/issues/412), ersetzt
-die nachfolgenden überholten Auswahlpflichten.
-[CI2-A / #413](https://github.com/venomenon328/picross/issues/413) setzt diese
-Änderung später um; diese Dokumentlieferung ändert noch keine ausführbare CI.
-Ausgang ist `main@967314538df376a281020fb4c34f93f370a491df`.
+[CI2](CI_SLIMMING.md) und [Issue #413](https://github.com/venomenon328/picross/issues/413)
+binden die Umsetzung auf `chore/413-ci2-a-auswahl`, Basis
+`main@7b7ea9ce6b5dc2e3ea024207a605cce31847f66b`. T01, finaler Head,
+PR-Test-Merge, Run, Zeiten und getrennter Selbstreview stehen im Draft-PR.
+Separates qualifiziertes R01 bleibt vor Merge erforderlich.
 
-Automatische PR-/Push-Ereignisse installieren und starten künftig keinen Browser.
-Auch `all`, `toolchain`, `runtime`, `visual`, `perf-b`, `production`, gemeinsame
-Komponenten und unbekannte Pfade sind kein impliziter Browserauftrag. Chromium
-verlangt einen ausdrücklichen manuellen Auftrag mit Quellstand und Prüfumfang,
-auch beim Aufruf wiederverwendbarer Unterworkflows. Zeitpläne oder automatische
-Nachläufe ergänzen ihn nicht. Native Prüfung, Fachtests, Toolchain und SSH/HTTP
-folgen weiterhin unabhängig ihrem tatsächlichen Änderungsbezug; der reguläre
-Main-Nachlauf wiederholt die teure PR-Fachsuite nicht automatisch.
+Automatische PR-/Push-Ereignisse und alle allgemeinen manuellen Scopes sind
+browserfrei. Das gilt auch für unbekannte/gemeinsame Pfade, Runtime, Toolchain,
+`all`, `production`, `visual` und `perf-b`. Die automatische Main-Pushroute
+führt nur den kurzen Docs-/Integritätsweg aus. Eine bewusste manuelle Fachprüfung
+auf Main bleibt möglich; die Ausnahme hängt am Ereignis, nicht am Branchnamen.
+Native Gruppen, Fachsuite, Preflight und Zustellung behalten für PR/Dispatch ihre
+bisherigen voneinander unabhängigen Auswahlpflichten. Der reine Inhaltspfad bleibt.
 
-Auswahl, Scheduler und Gate unterscheiden nicht angefordert, Erfolg, fehlend,
-übersprungen, fehlgeschlagen und abgebrochen. Nur tatsächlich angeforderte
-Browserprüfung verlangt passende Resultate und Dateien. Ausgewählte fehlende
-Pflichtresultate bleiben Fehler. Vollständiger Diff einschließlich Rename/Delete,
-Inhalts-Dateimodusschutz und Quell-/Run-/Versuchsbindung bleiben erhalten; neue
-Auswahl, Producer und Gate werden zusammen umgestellt. Enge SD2-Zuordnung,
-inerte Belegklassen und die Ablösung der PR-411-Ausnahme stehen in CI2 §1.
+### Ausdrücklicher Browserauftrag
+
+Der registrierte Einstieg ist `ci-chromium.yml` / `workflow_dispatch`:
+
+| Input | Default | Bedeutung |
+| --- | --- | --- |
+| `scope` | `auto` | Allgemeine Nichtbrowserauswahl; nur Erweiterung des tatsächlichen Diffs. |
+| `browser_scope` | `none` | Eigenständige explizite Auswahl: `regular`, `catalog`, `input`, `completion`, `persistence` oder `all`. |
+
+Jede technische Einzelgruppe enthält `regular` als Voraussetzung. `all` im
+Browserinput wählt alle fünf Gruppen. Ein leerer Dispatchdiff mit `scope=auto`
+und allein gewähltem Browserumfang startet nur Auswahl/Gate und genau diese
+Browserroute. Änderungen oder zusätzlich gewählte allgemeine Scopes behalten
+ihre Nichtbrowserpflichten; sie erweitern niemals den Browserteilumfang.
+Die alten `browser-*`-Werte des allgemeinen Scopeinputs sind entfernt.
+
+`picross-ci-selection-v5` enthält den kanonischen `browser_request`: `null`
+oder `{"browser":"chromium","scope":"<Umfang>"}`. Derselbe kompakte JSON-String
+ist ein zwingender Scheduleroutput. Der Plan prüft den Auftrag vor Git-Fetches,
+das Gate unabhängig gegen `GITHUB_EVENT_PATH` und `GITHUB_EVENT_NAME`, also die
+ursprünglichen Dispatchinputs des Runners. Ein selbstkonsistent umgeschriebener
+Plan/Scheduler oder ein allein gesetztes `web=true` genügt nicht. Auch der
+allgemeine Dispatchscope wird gegen die ursprünglichen Inputs geprüft.
+
+Beide wiederverwendbaren Workflows erhalten `browser_request` und `browser_scope`
+ausdrücklich. Shellguards prüfen vor Checkout/Cache/Build bzw. Browserinstallation
+Ereignis, ursprünglichen Browserinput, gültigen Umfang und kanonischen Auftrag.
+Ein zusätzlicher CLI-Check prüft den heruntergeladenen Plan, tatsächlichen Checkout
+und Quell-/Runbindung vor Abhängigkeiten/Build. Build- und Browserbelege binden
+auch den Auftrag. Erfolgreiche Wiederholungen desselben Runs behalten die vorhandene
+Reihenfolge Auswahlversuch ≤ Buildversuch ≤ Browserversuch ≤ Gateversuch.
+Dispatch-Branchcommits werden nicht als PR-Test-Merge-Prüfung ausgegeben.
+Die Concurrencygruppe trennt Ereignis und beide Scopes am selben Ref; automatische
+Runs brechen dadurch keinen manuellen Browserlauf ab.
+
+Ohne Auftrag sind Browsergruppen/-erwartungen leer; Scheduler und Gate laden
+keine Browserartefakte und starten keinen Unterworkflow. Das Ergebnis lautet
+`not requested`; ein unerwartet erfolgreicher Browserjob scheitert trotzdem.
+Mit Auftrag müssen Job, Gruppen/Szenarien und Originalbelege vollständig passen.
+Fehlend, übersprungen, abgebrochen, fehlgeschlagen oder falsch gebunden ist kein
+Erfolg. Die PR411-Sonderbedingung und ihr spezifischer Test sind entfernt.
+Die bisherigen 33 Szenarien, Bildpflichten und **drei echten Exporte auch bei
+Einzelgruppen** bleiben in A erhalten. Erst CI2-C kürzt diese innere Route.
+CI2-B/D/E, native Historykürzung und Bestandslöschung sind nicht Teil von A.
+
+### Enge Fachauswahl und inerte Belege
+
+Die exakt 20 SD2-Pfade aus CI2 §1 ergänzen `ANALYSIS_PATHS`: 13 Rechen-/CLI-/
+Prüfmodule, fünf eingefrorene JSON-Dateien, zwei synthetische Tests. Der aktuelle
+Leserabgleich zeigt explizite Analyse-/Bewertungseinstiege und Katalogadapter als
+Konsumenten; Engine/Browser importieren diese Module nicht. Gemeinsamer Vertrag,
+Katalogmethodik/-analyse/-bewertung, Registry, Exporte, Transaktionen und Fixtures
+bleiben außerhalb. Neue `sd2*`-Namen erben keine Ausnahme. Keine echten Katalogtests.
+
+Die sechs bestätigten inerten Klassen aus [dem Inventar](DEVELOPMENT_ARCHIVE.md)
+werden eng anhand von Pfad, bekanntem Datenformat und Git-Metadaten zugeordnet.
+Die genehmigten Namen stammen ausschließlich aus dem unveränderlichen Tree
+`7b7ea9ce6b5dc2e3ea024207a605cce31847f66b`; es gibt kein wachsendes Archivmanifest.
+Nur dort vorhandene Dateien mit altem Modus `100644` und neuem Modus `100644`
+oder `000000` erhalten den Metadatenweg. Neue Namen, Code, benachbarte Bereiche
+und aktive Inputs wie `docs/evidence/kk/native-crops.json` bleiben außerhalb.
+Ausführbare Dateien, Symlinks und Gitlinks in den Belegformatpfaden werden auf
+beiden Diffseiten abgewiesen.
+
+`fetch_diff_blobs()` lädt für diese geänderten/gelöschten Belege weder alte noch
+neue Blobs; der genehmigte Tree wird ausschließlich als Metadaten gelesen/geholt.
+`git diff --check` prüft alle verbleibenden aktiven Pfade wortgetreu in begrenzten
+Argumentblöcken gegen dieselben exakten Base-/Head-Trees. Reine Inhaltslieferungen
+behalten ihren bisherigen Metadatenweg. Rename bleibt Delete plus Add: eine aktive
+Seite verliert weder Auswahl noch Whitespaceprüfung. Neue Belegnamen erhalten
+keine Snapshotausnahme. Der Docsjob materialisiert weiterhin seine vollständigen
+aktuellen Quellen; A behauptet keinen allgemeinen Checkout-/Bestandsabbau.
+
+Neue Module und neue Dateibereiche müssen im Review eine passende Fachzuordnung
+mitliefern; unbekannte Wirkung bleibt konservativ bei allen Nichtbrowserbereichen.
+Die gezielten Tests verwenden vorhandene Unittest-, temporäre Git-/Partial-Clone-,
+CLI- und Shellproben; keine zusätzliche schwere Testverwaltung oder Browserproduktion.
 
 ## Gebundener CI-A-Ausgangsstand
 

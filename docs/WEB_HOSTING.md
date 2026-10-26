@@ -13,8 +13,10 @@ Technische Ergebnisse und Artefaktbindung stehen im zugehörigen Draft-PR.
 Der freigegebene [CI2-Sollvertrag vom 26.10.2026](CI_SLIMMING.md),
 [Gesamtissue #412](https://github.com/venomenon328/picross/issues/412), ersetzt
 die automatische Browserpflicht, impliziten Browserrechte manueller Scopes und
-die ungekürzte bisherige Fall-/Bildmatrix. Die Änderung ist noch nicht
-implementiert: Am Ausgangsstand `main@967314538df376a281020fb4c34f93f370a491df`
+die ungekürzte bisherige Fall-/Bildmatrix. CI2-A ist auf dem #413-Arbeitsbranch
+implementiert; Auswahl und explizite
+Dispatchinputs stehen in [CI_A_SELECTION](CI_A_SELECTION.md). CI2-C bleibt
+unbegonnen. Am historischen Ausgangsstand `main@967314538df376a281020fb4c34f93f370a491df`
 besteht die bisherige Chromiumroute weiter. Dieser Abschnitt dokumentiert das
 freigegebene Ziel, keinen bereits verfügbaren kurzen CLI-Weg oder Laufzeitnachweis.
 

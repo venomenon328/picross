@@ -36,7 +36,7 @@ class SelectionTests(unittest.TestCase):
                     modes[0] = pair
                     with self.subTest(pair=pair), self.assertRaises(ValueError):
                         make_plan("a"*40, "b"*40, "auto")
-        self.assertTrue(all(classify([valid, "tools/ci_scope.py"])["selected"].values()))
+        self.assertTrue(all(v for k, v in classify([valid, "tools/ci_scope.py"])["selected"].items() if k != "web"))
 
     def test_at_reveal_paths_and_both_sides_of_git_modes(self):
         from unittest.mock import patch
@@ -62,7 +62,7 @@ class SelectionTests(unittest.TestCase):
                     with self.subTest(pair=pair), self.assertRaises(ValueError): make_plan('a'*40,'b'*40,'auto')
             paths[:] = [valid, 'tools/puzzle_production/catalog_reveal.py']; modes[:] = [('100644','000000'),('000000','100644')]
             selected = make_plan('a'*40,'b'*40,'auto')['selected']
-            self.assertTrue(all(selected[k] for k in ('docs','production','product','web','delivery')))
+            self.assertTrue(all(selected[k] for k in ('docs','production','product','delivery')))
 
     def test_difficulty_data_allowlist_is_exact_and_c1_keeps_full_ci(self):
         allowed = ["content/difficulty/pz-test/rating.json", "content/difficulty/reports/first-run/report.json",
@@ -77,7 +77,7 @@ class SelectionTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertFalse(content_path(path))
                 self.assertFalse(classify(allowed + [path])["content_only"])
-        self.assertTrue(all(classify(allowed + ["tools/ci_scope.py"])["selected"].values()))
+        self.assertTrue(all(v for k, v in classify(allowed + ["tools/ci_scope.py"])["selected"].items() if k != "web"))
 
     def test_difficulty_modes_deletions_and_renames_use_both_tree_paths(self):
         from unittest.mock import patch
@@ -97,7 +97,7 @@ class SelectionTests(unittest.TestCase):
                     modes[0] = pair
                     with self.subTest(pair=pair), self.assertRaises(ValueError): make_plan("a"*40,"b"*40,"auto")
             paths[0] = "tools/ci_scope.py"  # A rename cannot hide its executable/source side.
-            self.assertTrue(all(make_plan("a"*40,"b"*40,"auto")["selected"].values()))
+            self.assertTrue(all(v for k, v in make_plan("a"*40,"b"*40,"auto")["selected"].items() if k != "web"))
 
     def test_puzzle_deliveries_select_no_test_suites_at_any_catalog_size(self):
         paths = ["content/registry.json", "game/data/registry.json", "content/authoring/index.json"]
@@ -213,18 +213,18 @@ class SelectionTests(unittest.TestCase):
     def test_unknown_paths_and_ci_changes_fail_toward_full_coverage(self):
         for path in ["unknown/new_runtime.py", ".github/workflows/p1-product.yml"]:
             with self.subTest(path=path):
-                self.assertTrue(all(classify([path])["selected"].values()))
+                self.assertTrue(all(v for k, v in classify([path])["selected"].items() if k != "web"))
 
     def test_manual_scope_only_widens_actual_changed_paths(self):
         plan = classify(["tools/puzzle_production/core.py"], force="visual")
         self.assertTrue(plan["selected"]["production"] and plan["selected"]["visual"])
-        self.assertTrue(all(classify([], force="all")["selected"].values()))
+        self.assertTrue(all(v for k, v in classify([], force="all")["selected"].items() if k != "web"))
         with self.assertRaises(ValueError):
             classify([], force="none")
 
     def test_main_push_preserves_integrity_checks_without_repeating_product(self):
         plan = apply_event_policy(classify(["tools/puzzle_production/core.py"]), "push")
-        self.assertTrue(plan["selected"]["docs"] and plan["selected"]["production"])
+        self.assertTrue(plan["selected"]["docs"] and not plan["selected"]["production"])
         self.assertFalse(plan["selected"]["product"] or plan["selected"]["preflight"])
         pr = apply_event_policy(classify(["tools/puzzle_production/core.py"]), "pull_request")
         self.assertTrue(pr["selected"]["product"] and pr["selected"]["pilots"])
@@ -369,6 +369,92 @@ class PartialCloneTests(unittest.TestCase):
         with self.assertRaises(subprocess.CalledProcessError):
             fetch_diff_blobs(base, head)
 
+    def test_inert_classes_change_delete_without_old_or_new_blob_downloads(self):
+        from unittest.mock import patch
+        classes = ['content/authoring/pz-fixture/at-b-r01/', 'docs/design/at_b_integration/',
+                   *['docs/evidence/'+name+'/' for name in ('hz-a','hz-b','hz-c','at-a')]]
+        paths = [prefix+'sample.png' for prefix in classes]
+        for i, path in enumerate(paths): self.write(path, f'old {i}\0evidence'.encode())
+        base = self.commit()
+        old = [self.run_git(self.source, 'rev-parse', base+':'+p) for p in paths]
+        for i, path in enumerate(paths):
+            if i % 2: (self.source/path).unlink()
+            else: self.write(path, f'new {i}\0evidence'.encode())
+        head = self.commit()
+        new = [self.run_git(self.source, 'rev-parse', head+':'+p) for p in paths[::2]]
+        self.start_clone()
+        with patch('ci_scope.INERT_SNAPSHOT', base):
+            plan = make_plan(base, head, 'auto', fetch=True)
+        self.assertEqual(plan['inert_paths'], sorted(paths))
+        self.assertFalse(any(plan['selected'][k] for k in FLAGS))
+        self.assertEqual(plan['diff_check'], 'active-whitespace-check; inert-tree-metadata')
+        self.assertTrue(all(self.lookup(oid).endswith(' missing') for oid in old+new))
+        self.assertTrue(all(row['accepted'] for row in evaluate(plan,
+                        {j:{'result':'success' if j == 'docs' else 'skipped'} for j in JOBS})))
+
+    def test_inert_mixed_diff_keeps_code_whitespace_and_active_rename_sides(self):
+        from unittest.mock import patch
+        inert = 'docs/evidence/hz-c/sample.json'
+        self.write(inert, b'inert historical bytes \n')
+        self.write('tools/active.py', b'old = 1\n')
+        base = self.commit()
+        old = self.run_git(self.source, 'rev-parse', base+':'+inert)
+        (self.source/inert).unlink()
+        self.write('tools/active.py', b'new = 1 \n')
+        head = self.commit()
+        self.start_clone()
+        with patch('ci_scope.INERT_SNAPSHOT', base), self.assertRaises(subprocess.CalledProcessError):
+            make_plan(base, head, 'auto', fetch=True)
+        self.assertTrue(self.lookup(old).endswith(' missing'))
+        # Move an existing inert source into active code: the new side must be
+        # fetched/checked even when it shares the old evidence object's bytes.
+        (self.source/'tools/active.py').write_bytes(b'new = 1\n')
+        (self.source/'tools/moved.py').write_bytes(b'inert historical bytes \n')
+        head = self.commit()
+        with patch('ci_scope.INERT_SNAPSHOT', base), self.assertRaises(subprocess.CalledProcessError):
+            make_plan(base, head, 'auto', fetch=True)
+        # Active -> inert is an addition, never a metadata-only approved file.
+        (self.source/'tools/moved.py').unlink()
+        self.write('docs/evidence/hz-c/new.json', b'new data \n')
+        head = self.commit()
+        with patch('ci_scope.INERT_SNAPSHOT', base), self.assertRaises(subprocess.CalledProcessError):
+            make_plan(base, head, 'auto', fetch=True)
+
+    def test_inert_exception_has_snapshot_name_and_mode_boundaries(self):
+        from unittest.mock import patch
+        inert = 'docs/evidence/hz-a/known.json'
+        self.write(inert, b'known\n')
+        approved = self.commit()
+        self.write('docs/evidence/hz-a/new.json', b'new\n')
+        base = self.commit()
+        self.write('docs/evidence/hz-a/new.json', b'changed\n')
+        head = self.commit()
+        self.start_clone()
+        with patch('ci_scope.INERT_SNAPSHOT', approved):
+            plan = make_plan(base, head, 'auto', fetch=True)
+        self.assertEqual(plan['inert_paths'], [])
+        self.assertTrue(plan['selected']['product'])
+        self.run_git(self.source, 'update-index', '--chmod=+x', inert)
+        self.run_git(self.source, 'commit', '-qm', 'executable evidence rejected')
+        head = self.run_git(self.source, 'rev-parse', 'HEAD')
+        with patch('ci_scope.INERT_SNAPSHOT', approved), self.assertRaises(ValueError):
+            make_plan(base, head, 'auto', fetch=True)
+
+    def test_inert_link_gitlink_modes_and_active_boundary_paths(self):
+        from unittest.mock import patch
+        path = 'docs/evidence/hz-a/known.json'
+        for mode in ('100755', '120000', '160000'):
+            for old, new in ((mode, '000000'), ('100644', mode)):
+                def fake_git(*args):
+                    if '--name-only' in args: return (path+'\0').encode()
+                    if '--raw' in args: return f':{old} {new} {"a"*40} {"b"*40} M\0{path}\0'.encode()
+                    raise AssertionError(args)
+                with patch('ci_scope.git', side_effect=fake_git), self.assertRaises(ValueError):
+                    make_plan('a'*40, 'b'*40, 'auto')
+        for active in ('docs/evidence/kk/native-crops.json', 'docs/evidence/hz-a-new/file.png',
+                       'docs/evidence/hz-a/run.py', 'docs/design/at_b_integration/new.gd'):
+            self.assertTrue(classify([active])['selected']['product'])
+
 
 class SchedulerTransportTests(unittest.TestCase):
     """Exercise the real GitHub output producer and fail-closed result evaluator."""
@@ -400,7 +486,8 @@ class SchedulerTransportTests(unittest.TestCase):
                 git("commit", "-qm", "change")
                 head = git("rev-parse", "HEAD")
                 plan_path, outputs_path = repo / "plan.json", repo / "outputs"
-                env = {**os.environ, "GITHUB_OUTPUT": str(outputs_path),
+                (repo / "event.json").write_text("{}")
+                env = {**os.environ, "GITHUB_EVENT_PATH": str(repo / "event.json"), "GITHUB_OUTPUT": str(outputs_path),
                        "GITHUB_RUN_ID": "456", "GITHUB_RUN_ATTEMPT": "1",
                        "GITHUB_EVENT_NAME": event, "GITHUB_STEP_SUMMARY": ""}
                 plan_call = subprocess.run([os.sys.executable, script, "plan", "--base", base,
@@ -413,9 +500,9 @@ class SchedulerTransportTests(unittest.TestCase):
                 # Simulate the real scheduler discarding empty values, not a hand-built full dictionary.
                 emitted = dict(line.split("=", 1) for line in outputs_path.read_text().splitlines())
                 scheduled = {key: value for key, value in emitted.items()
-                             if key in (*FLAGS, "selection_attempt", "native_groups") and value != ""}
+                             if key in (*FLAGS, "selection_attempt", "native_groups", "browser_request") and value != ""}
                 self.assertEqual(scheduled["native_groups"], "[]")
-                self.assertEqual(set(scheduled), set(FLAGS) | {"selection_attempt", "native_groups"})
+                self.assertEqual(set(scheduled), set(FLAGS) | {"selection_attempt", "native_groups", "browser_request"})
                 self.assertEqual(scheduled["product"], "false")
                 binding = {key: plan[key] for key in ("source_head", "base_commit", "tested_checkout",
                                                      "run_id", "run_attempt", "event")}
@@ -458,7 +545,7 @@ class SchedulerTransportTests(unittest.TestCase):
                         comparison="exact-base-to-head-trees-no-renames",
                         diff_check="full-whitespace-check")
             outputs = {key: str(plan["selected"][key]).lower() for key in FLAGS}
-            outputs.update(selection_attempt="1", native_groups=native_groups_output(plan["native_groups"]))
+            outputs.update(browser_request="null", selection_attempt="1", native_groups=native_groups_output(plan["native_groups"]))
             self.assertEqual(json.loads(outputs["native_groups"]), plan["native_groups"])
             validate_binding(plan, binding, outputs)
             for malformed in (
@@ -514,10 +601,12 @@ class RequiredGateTests(unittest.TestCase):
 
     def test_failure_cancel_skipped_missing_required_job_never_turn_green(self):
         plan = classify([], force="all")
-        for job in JOBS:
+        baseline = {key: {"result": "success" if plan['selected'][key] else "skipped"} for key in JOBS}
+        self.assertTrue(all(row['accepted'] for row in evaluate(plan, baseline)))
+        for job in (j for j in JOBS if j != "web"):
             for outcome in ["failure", "cancelled", "skipped", "missing"]:
                 with self.subTest(job=job, outcome=outcome):
-                    results = {key: {"result": "success"} for key in JOBS}
+                    results = {key: dict(value) for key, value in baseline.items()}
                     results[job]["result"] = outcome
                     self.assertFalse(all(row["accepted"] for row in evaluate(plan, results)))
 
@@ -538,7 +627,7 @@ class RequiredGateTests(unittest.TestCase):
 
     def test_cli_returns_nonzero_for_failed_required_job(self):
         plan = classify([], force="all")
-        results = {key: {"result": "success"} for key in JOBS}
+        results = {key: {"result": "success" if plan['selected'][key] else "skipped"} for key in JOBS}
         results["product"]["result"] = "failure"
         run = subprocess.run([os.sys.executable, str(Path(__file__).with_name("ci_scope.py")), "finish",
                               "--plan", json.dumps(plan), "--results", json.dumps(results)],

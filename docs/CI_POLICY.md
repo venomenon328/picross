@@ -1,14 +1,15 @@
 # Aktuelle CI-Policy
 
-Stand: 26.10.2026 · Version 3.0 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
+Stand: 26.10.2026 · Version 3.1 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
 
 ## Freigegebener CI2-Sollvertrag
 
 [CI_SLIMMING](CI_SLIMMING.md) ist vollständig zu lesen und hat für die dort
 benannten Änderungen Vorrang vor den älteren Umfangsvorgaben dieser Policy und
-der verlinkten Prüfverträge. Beauftragt sind jetzt Issues und Dokumentation;
-Implementierung, Datenlöschung und Merge sind damit nicht beauftragt.
-Die ausführbare CI ist durch diese Spezifikationslieferung noch unverändert.
+der verlinkten Prüfverträge. CI2-A ist auf `chore/413-ci2-a-auswahl` implementiert;
+[aktuelle Auswahl und Aufrufgrenzen](CI_A_SELECTION.md) gelten für diesen Branch.
+T01 und getrenntes Selbstreview stehen im Draft-PR; separates R01 bleibt vor Merge.
+CI2-B/C/D/E sind weiterhin unbegonnen. Kein Merge, Deployment oder Datenabbau.
 
 - **Auswahl / CI2-A [#413](https://github.com/venomenon328/picross/issues/413):**
   Automatische PR-/Push-Läufe installieren und starten keinen Browser. Auch
@@ -19,7 +20,9 @@ Die ausführbare CI ist durch diese Spezifikationslieferung noch unverändert.
   automatischer Nachlauf ergänzt ihn. Native Prüfung, Fachtests, Toolchain und
   SSH/HTTP bleiben unabhängig nach tatsächlicher Wirkung ausgewählt. Der
   Main-Nachlauf wiederholt die teure PR-Fachsuite nicht automatisch; kurze
-  Integritätschecks bleiben. Die PR411-Sonderbedingung samt Sondertest entfällt.
+  Integritätschecks bleiben. Die PR411-Sonderbedingung samt Sondertest ist entfernt.
+  Neue Module und Dateibereiche müssen im Review ihre Fachzuordnung mitliefern;
+  unbekannte Wirkung wählt konservativ alle Nichtbrowserbereiche.
 - **Fachtests / CI2-B [#414](https://github.com/venomenon328/picross/issues/414):**
   Kleine fachliche Gruppen, isolierte vorbereitete Fixtures und repräsentative
   Integrationen ersetzen wiederholte vollständige Produktionsketten. Gemeinsame
@@ -60,8 +63,9 @@ Browserprofile unter zehn Minuten je begrenztem Profil. Überschreitungen bleibe
 sichtbare Optimierungsbefunde. Abbruchgrenzen beenden Hänger als Fehler und
 ersetzen keine Optimierung oder funktionale Speicher-/Animationszusage.
 
-Auswahl, Scheduler, Producer und Gate werden im jeweiligen Paket gemeinsam
-umgestellt. Nicht angefordert, Erfolg, fehlend, übersprungen, fehlgeschlagen und
+CI2-A stellt Auswahl, Scheduler, Aufrufgrenzen und Gate gemeinsam um.
+Weitere Producer-/Umfangskürzungen bleiben in ihren jeweiligen Folgepaketen.
+Nicht angefordert, Erfolg, fehlend, übersprungen, fehlgeschlagen und
 abgebrochen bleiben unterscheidbar; angeforderte Prüfungen verlangen passende
 Resultate und Belege. Exakter Gesamtdiff, Rename-/Löschungsseiten, Datei-/
 Quell-/Runbindung, unabhängige Verifikation und isolierte Testdaten bleiben.
@@ -75,18 +79,19 @@ Die folgenden Abschnitte dokumentieren die bestehenden Mechanismen aus
 #70/#116/#246/#261 und ihre fachlichen Grenzen am oben genannten Ausgangsstand.
 Ihre automatischen/impliziten Browserpflichten, ungekürzten Altfall-/Bildmengen,
 500er-Vorgaben und der generelle Verzicht auf Laufzeitziele sind durch CI2 als
-Sollvertrag gezielt abgelöst. Bis zur Implementierung bleiben die tatsächlichen
-Auswahl-/Gatebedingungen unverändert; ein übersprungener noch ausgewählter Job
+Sollvertrag gezielt abgelöst. Die ausführbaren Auswahl-/Gatebedingungen sind durch
+CI2-A gemäß CI_A_SELECTION abgelöst; innere Testumfänge bleiben bis B/C/D unverändert.
+Ein übersprungener noch ausgewählter Job
 wird dadurch nicht erfolgreich. Alte Browser-/500er-/Vergleichsrouten müssen
 für die Dokumentlieferung nicht erneut als Baseline reproduziert werden.
 Der reine Dokumentdiff nutzt den bestehenden Docs-/Werkzeugpfad und `ci-required`.
 
-Die auftragsspezifische Websperre für #406 / PR #411 ist Teil dieser ausführbaren
-Ausgangsbasis: Der Scheduler überspringt nur bei `pull_request.number == 411`
+Die auftragsspezifische Websperre für #406 / PR #411 war Teil der Ausgangsbasis:
+Der Scheduler übersprang nur bei `pull_request.number == 411`
 den weiterhin ausgewählten Job. [F01/T01](SD2_D_ADOPTION.md) bindet die tatsächliche
 Ausführung und Nachweislücke. PR #411 ist inzwischen integriert; fehlender
-Web-/Gesamt-CI-Nachweis wird nicht rückwirkend zum Pass. CI2-A ersetzt die
-Sonderbedingung durch die allgemeine ausdrückliche Browserauswahl.
+Web-/Gesamt-CI-Nachweis wird nicht rückwirkend zum Pass. CI2-A hat die
+Sonderbedingung durch die allgemeine ausdrückliche Browserauswahl ersetzt.
 
 Die [SD2-Bestandsbewertung](PUZZLE_DIFFICULTY_V2.md) bleibt ein manueller
 Inhaltsauftrag außerhalb der CI; Methode 0.4 und alle 45 Ratings sind mit PR #411 integriert.
