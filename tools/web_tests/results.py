@@ -145,7 +145,7 @@ def validate_browser(report, plan, browser, producer_attempt, gate_attempt, root
             raise ValueError('Raw report uses wrong build')
         if group != 'regular' and original.get('update_manifest') != (report['builds']['builds']['web-test-update']['manifest'] if group == 'export' else None):
             raise ValueError('Raw report uses wrong update build')
-        if group in ('catalog','completion','export'):
+        if group in ('completion','export'):
             from at_evidence import browser as validate_at
             validate_at(root/group/group,row,report['builds']['builds'])
         for scenario in expected(browser, [group]):

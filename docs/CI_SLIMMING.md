@@ -20,9 +20,11 @@ Fall-/Bildmengen und den generellen Verzicht auf Laufzeitziele. Er ersetzt keine
 Spiel-, Speicher-, Rechte- oder Freigabeanforderung. Historische Messungen und
 Abnahmen behalten ihren damaligen Quellenbezug.
 
-Die Auswahl-/Aufruf-/Gateänderung von A ist integriert. B liefert integrierte Fachgruppen, gemessene isolierte Fixtures und die benannten
-historischen Helferstilllegungen ein; Bild-/Nativeumfänge bleiben bis C/D unverändert.
-Die kurze Produkt-CLI bleibt C/D vorbehalten; gemessene Kürzung und Zielerreichung
+Die Auswahl-/Aufruf-/Gateänderung von A ist integriert. B liefert integrierte
+Fachgruppen, gemessene isolierte Fixtures und die benannten historischen
+Helferstilllegungen. C begrenzt Browserfälle, Bilder und Exportbedarf;
+Nativeumfänge und die kurze native Produkt-CLI bleiben D vorbehalten.
+Gemessene Kürzung und Zielerreichung
 werden ausschließlich mit tatsächlichen Läufen belegt. Auswahl, Producer und
 Gate werden jeweils gemeinsam im zuständigen Paket umgestellt; ein übersprungener
 noch ausgewählter Altjob wird dadurch nicht rückwirkend erfolgreich. Alte Browser-,

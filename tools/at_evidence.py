@@ -112,6 +112,8 @@ def browser(directory, report, builds):
                 elif kind in ('outside','hole'): require(min(actual)>170,'opaque exterior/hole')
                 else: require(all(color[i]+15<actual[i]<250 for i in range(3)),'lost soft alpha')
     if group in ('catalog','completion'):
+        if group=='completion':
+            browser(directory, {**report, 'group':'catalog'}, builds)
         rows=report['at_'+group];require([r['window'] for r in rows]==BROWSER_MATRIX,'browser AT matrix')
         for row in rows:
             if group=='completion':require(row['blend']['rendered_frame']['framebuffer']==row['window'][:2], 'actual browser framebuffer matrix')

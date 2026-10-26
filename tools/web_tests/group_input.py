@@ -30,12 +30,10 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     evidence['viewports'] = []
     evidence['typography'] = []
     for width, height, scale in ((1280,720,1.25),(1920,1080,1.0)):
-        control(page, name='nav-album')
-        control(page, text='Einstellungen / Info'); control(page, text='UI ')
-        control(page, name='nav-work'); wait(page, 'picrossProbe.album')
+        control(page, name='menu'); control(page, text='UI ')
+        control(page, name='nav-work'); wait(page, 'picrossProbe.work')
         game_viewport(page, width, height)
         evidence['typography'].append(typography(page, scale))
-        control(page, text='Blatt 01'); wait(page, 'picrossProbe.work')
         data = state(page, 'viewport', 'fit', 'minimum')
         assert data['fit'] and not data['minimum']
         evidence['viewports'].append(data)

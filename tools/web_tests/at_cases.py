@@ -99,13 +99,12 @@ def matrix(page, spec, *, catalog=False):
 
 
 def catalog(page, name, output, evidence):
-    control(page,text='Blatt 01');draw(page,(2,2));saved(page)
-    control(page,name='nav-album');control(page,text='Blatt 03')
-    draw(page,(0,2),(4,2));wait(page,'picrossProbe.completed && !picrossProbe.ea_active');saved(page)
-    control(page,name='nav-album')
+    # Reuse the genuinely completed tiny puzzle from C04. No second solve or
+    # synthetic setter just to prepare the earned catalog/hover observation.
     rows=[]
     for spec in MATRIX:
-        matrix(page,spec,catalog=True);no_spoilers(page)
+        assert state(page,'viewport','ui_scale') == {'viewport':list(spec[:2]),'ui_scale':spec[2]}
+        no_spoilers(page)
         show_card_image(page)
         label=card(page)
         # Move clear of the card, then exercise the real Godot hover route.
