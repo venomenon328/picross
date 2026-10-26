@@ -55,7 +55,6 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     page.screenshot(path=str(output/f'{name}-view.png'))
     selected = state(page, 'hz_b')['hz_b']['view_selected']
     select_view(page, 1-selected)
-    control(page, name='puzzle-view'); select_view(page, selected)
     control(page, name='nav-work'); wait(page, 'picrossProbe.album')
     after = state(page, 'slots')['slots']
     for a, b in zip(before, after, strict=True):
