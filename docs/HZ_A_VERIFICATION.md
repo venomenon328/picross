@@ -1,5 +1,9 @@
 # HZ-A · Schrift und Textlayout
 
+Historische Lieferung: CI2-E entfernt die abgeschlossenen Arbeits-/Laufdaten aus
+dem aktiven Tree. Die folgenden Archivlinks binden den vollständigen Stand vor
+der Bereinigung; damalige Ergebnisse und offene Gates bleiben unverändert.
+
 Auftrag: [#284](https://github.com/venomenon328/picross/issues/284), ausschließlich
 HZ-A-A01–A05 und HZ-A-T01. Arbeitsbranch `feat/284-ui-schrift`, Ziel `main`,
 Ausgangsbasis `862d2e5a939af81f0462536aa930d86eb7fffffb`.
@@ -77,7 +81,7 @@ müssen erfolgreich sein; übersprungene Pflicht ist kein Erfolg.
 
 ## Gebundener nativer Nachweis
 
-[Originalarchive und Inventare](evidence/hz-a/README.md) binden den sauberen
+[Originalarchive und Inventare](https://github.com/venomenon328/picross/blob/8c31a69916941aed60ecd7e4d35a8d0d00637bf9/docs/evidence/hz-a/README.md) binden den sauberen
 Implementierungsstand `f78936bc7fc1b62b2fa31671ed0906ccf6c66f87`, Basis,
 tatsächlichen Test-Merge, CI-Produktlauf/-Versuch und Windows-Checkout. Die
 Original-EXE startet; das heruntergeladene PCK besteht 120 Prüfungen, die elf

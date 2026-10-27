@@ -182,6 +182,113 @@ class RevealTests(unittest.TestCase):
         self.assertEqual(old['origin'],new['origin'])
         self.assertEqual(cr.registration(self.exported,self.checkout,apply=True)['status'],'no-op')
 
+    def retirement_fixture(self, compact=True):
+        from tools.puzzle_production.integrated_content import retire
+        if compact:
+            retire(self.checkout, [self.identifier], self.integrated_commit())
+        at.adopt(self.checkout, self.make_plan(append='TEST ONLY retained rights\n'))
+        directory = 'content/authoring/' + self.identifier + '/image-r01'
+        active = source.path(self.identifier)
+        authority = load_json(self.checkout/active)
+        approval = directory + '/approval.json'
+        write_json(self.checkout/approval, authority['revisions'][-1]['approval'])
+        write_json(self.checkout/directory/'record.json', {
+            'format': 'picross-authoring-record-v1', 'puzzle_id': self.identifier,
+            'revision': 'image-r01', 'state': 'registered', 'blockers': [],
+            'integration': {'operation': 'catalog_reveal adopt', 'image_revision': 1,
+                            'active_record': active, 'active_record_sha256': io.file_hash(self.checkout, active)},
+            'final_editorial_approval': {'file': approval, 'sha256': io.file_hash(self.checkout, approval)}})
+        (self.checkout/directory/'package.zip').write_bytes(b'TEST ONLY opaque package; never reconstructed\n')
+        newer = 'content/authoring/' + self.identifier + '/image-r02'
+        write_json(self.checkout/newer/'record.json', {'state': 'reveal_review', 'test_only': True})
+        write_json(self.checkout/'content/authoring/index.json', {'format': 'picross-authoring-index-v1', 'entries': [
+            {'puzzle_id': self.identifier, 'revision': rev, 'record': 'content/authoring/'+self.identifier+'/'+rev+'/record.json'}
+            for rev in ('image-r01', 'image-r02')]})
+        return directory, self.integrated_commit()
+
+    def test_revision_retirement_preserves_active_bytes_sibling_and_exact_noop(self):
+        from tools.puzzle_production.reveal_retirement import retire
+        directory, commit = self.retirement_fixture()
+        # Open sibling edits, including a new untracked file, stay untouched.
+        sibling = self.checkout/directory.replace('image-r01', 'image-r02')
+        (sibling/'open.txt').write_bytes(b'TEST ONLY newer work\n')
+        before = snapshot(self.checkout)
+        with patch('tools.puzzle_production.target_adapter.verify_export', side_effect=AssertionError('production replay')):
+            result = retire(self.checkout, [(self.identifier, 'image-r01')], commit)
+            self.assertEqual(result['status'], 'reveal_production_retired')
+            self.assertEqual(result['removed_files'], 3)
+            self.assertEqual(result['removed_bytes'], sum(len(v[0]) for n,v in before.items() if n.startswith(directory+'/')))
+            after = snapshot(self.checkout)
+            self.assertEqual({n:v for n,v in before.items() if not n.startswith(directory+'/') and n != 'content/authoring/index.json'},
+                             {n:v for n,v in after.items() if n != 'content/authoring/index.json'})
+            self.assertEqual([r['revision'] for r in load_json(self.checkout/'content/authoring/index.json')['entries']], ['image-r02'])
+            self.assertEqual(retire(self.checkout, [(self.identifier, 'image-r01')], commit)['status'], 'no-op')
+            self.assertEqual(after, snapshot(self.checkout))
+            cr.check_checkout(self.checkout)
+
+    def test_revision_retirement_also_leaves_full_original_package_unchanged(self):
+        from tools.puzzle_production.reveal_retirement import retire
+        directory, commit = self.retirement_fixture(compact=False)
+        before = snapshot(self.checkout)
+        retire(self.checkout, [(self.identifier, 'image-r01')], commit)
+        after = snapshot(self.checkout)
+        self.assertEqual({n:v for n,v in before.items() if n.startswith('content/packages/')},
+                         {n:v for n,v in after.items() if n.startswith('content/packages/')})
+
+    def test_revision_retirement_rejects_foreign_stale_partial_and_unmerged_sources_before_mutation(self):
+        from tools.puzzle_production.reveal_retirement import retire
+        directory, commit = self.retirement_fixture()
+        baseline = self.checkout
+        cases = ('added', 'modified', 'missing', 'missing-directory', 'index', 'duplicate-index', 'staged-index',
+                 'staged-active', 'invalid-active', 'missing-active', 'journal', 'unmerged', 'open-revision',
+                 'duplicate-selection', 'path-escape', 'wrong-approval', 'stale-binding', 'hardlink', 'mixed-batch',
+                 'empty-directory', 'invalid-binding')
+        for case in cases:
+            with self.subTest(case=case):
+                self.checkout = self.root/('negative-'+case); shutil.copytree(baseline, self.checkout)
+                selected = [(self.identifier, 'image-r01')]
+                index_path = self.checkout/'content/authoring/index.json'
+                target = self.checkout/directory/'package.zip'
+                current_commit = commit
+                if case == 'added': (target.parent/'foreign.txt').write_text('foreign', encoding='utf-8')
+                elif case == 'empty-directory': (target.parent/'foreign-empty').mkdir()
+                elif case == 'modified': target.write_bytes(b'foreign')
+                elif case == 'missing': target.unlink()
+                elif case == 'missing-directory':
+                    self.assertTrue(target.parent.resolve().is_relative_to(self.checkout.resolve()))
+                    shutil.rmtree(target.parent)
+                elif case in ('index', 'duplicate-index'):
+                    value = load_json(index_path)
+                    if case == 'index': value['entries'].pop(0)
+                    else: value['entries'].append(value['entries'][0])
+                    write_json(index_path, value)
+                elif case in ('staged-index', 'staged-active'):
+                    path = index_path if case == 'staged-index' else self.checkout/source.path(self.identifier)
+                    original = path.read_bytes(); path.write_bytes(original + b'\n')
+                    subprocess.check_call(['git','add',str(path)], cwd=self.checkout, stdout=subprocess.DEVNULL)
+                    path.write_bytes(original)
+                elif case == 'invalid-active': (self.checkout/source.path(self.identifier)).write_bytes(b'{}\n')
+                elif case == 'missing-active': (self.checkout/source.path(self.identifier)).unlink()
+                elif case == 'journal': (self.checkout/tx.LOCK).write_bytes(b'{}\n')
+                elif case == 'unmerged': subprocess.check_call(['git','update-ref','refs/remotes/origin/main',commit+'^'],cwd=self.checkout)
+                elif case == 'open-revision': selected = [(self.identifier, 'image-r02')]
+                elif case == 'duplicate-selection': selected *= 2
+                elif case == 'path-escape': selected = [(self.identifier, '../image-r01')]
+                elif case in ('wrong-approval', 'stale-binding', 'invalid-binding'):
+                    record = load_json(target.parent/'record.json')
+                    if case == 'wrong-approval': record['final_editorial_approval']['sha256'] = '0'*64
+                    elif case == 'stale-binding': record['integration']['active_record_sha256'] = '0'*64
+                    else: record['integration'] = None
+                    write_json(target.parent/'record.json', record)
+                    current_commit = self.integrated_commit()
+                elif case == 'hardlink': (target.parent/'foreign.txt').hardlink_to(target)
+                elif case == 'mixed-batch': selected.append((self.identifier, 'image-r02'))
+                before = snapshot(self.checkout)
+                with self.assertRaises(ValueError): retire(self.checkout, selected, current_commit)
+                self.assertEqual(before, snapshot(self.checkout))
+                if case == 'empty-directory': self.assertTrue((target.parent/'foreign-empty').is_dir())
+        self.checkout = baseline
+
     def test_cleanup_after_revision_keeps_record_bytes_and_stales_saved_plan(self):
         from tools.puzzle_production.integrated_content import retire
         first=self.make_plan(append='TEST ONLY new attribution\n');at.adopt(self.checkout,first)

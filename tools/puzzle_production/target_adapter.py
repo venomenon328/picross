@@ -550,9 +550,16 @@ def main(argv=None):
     p.add_argument("--checkout", type=Path, required=True)
     p.add_argument("--integrated-commit", required=True)
     p.add_argument("--puzzle-id", action="append", required=True)
+    p = sub.add_parser("retire-reveal-production")
+    p.add_argument("--checkout", type=Path, required=True)
+    p.add_argument("--integrated-commit", required=True)
+    p.add_argument("--authoring-revision", nargs=2, metavar=("ID", "REVISION"), action="append", required=True)
     args = parser.parse_args(argv)
     try:
-        if args.command == "retire-production":
+        if args.command == "retire-reveal-production":
+            from .reveal_retirement import retire
+            result = retire(args.checkout, args.authoring_revision, args.integrated_commit)
+        elif args.command == "retire-production":
             from .integrated_content import retire
             result = retire(args.checkout, args.puzzle_id, args.integrated_commit)
         elif args.command == "inspect":

@@ -961,6 +961,28 @@ Bestandsprüfungen lesen danach Runtimehashes und kompakte Integrationsdaten,
 keine Quellen, Proofs, ZIPs oder Produktionsreplays. Die Entwicklung neuer Rätsel
 verwendet weiterhin vollständige neue Eingänge/Freigaben und technische Prüfung.
 
+Nachträgliche integrierte Bildarbeit besitzt einen eigenen revisionsgenauen Abschluss:
+
+```sh
+python -m tools.puzzle_production.target_adapter retire-reveal-production --checkout . --integrated-commit <main-SHA> --authoring-revision <pz-ID> <Authoringrevision>
+```
+
+Vorher `origin/main` aktualisieren. `--authoring-revision ID REVISION` ist wiederholbar;
+alle ausgewählten Revisionen werden vor der ersten Löschung geprüft. Der enthaltene
+Main-Stand muss den registrierten Authoringrecord, die finale Freigabe und exakt die
+aktuelle Bildquelle binden. Ungültige Quellen, offene Journale, fremde Dateien,
+Index-/Stagingkonflikte und unvollständige Entfernung blockieren. Nur der ausgewählte
+Revisionsordner und dessen Indexzeile entfallen; andere, auch offene Revisionen bleiben.
+Originalpaket beziehungsweise `picross-integrated-content-v1`, aktuelle Bildrecords,
+Freigaben, Herkunft, Notices, Runtime und Ratings werden nicht geschrieben.
+Erneuter Aufruf nach vollständiger Entfernung mit demselben Main-Beleg ist ein No-op
+einschließlich mtimes. Kleine historische Index-/Record-/Freigabedaten und Git-Objekt-IDs
+genügen; historische ZIP-Blobs werden nicht aus Git geladen oder rekonstruiert.
+Vorhandene lokale Arbeitsdateien werden zum Bytevergleich gehasht. Der Befehl erstellt nur
+einen prüfbaren Arbeitsbaumdiff. Fehler während einer tatsächlichen Dateisystemoperation
+sind kein erfolgreicher Abschluss; eine Teilentfernung blockiert den nächsten Aufruf
+und muss anhand des Git-Diffs geklärt werden. Kein automatisches Wiederherstellen.
+
 Ab SD-C1 bleiben zusätzlich die kompakte aktive Bewertung,
 ihre Eingangsbindungen und der gebundene Methoden-/Referenzstand außerhalb
 versiegelter Produktion erhalten. Neue Bewertung nutzt dann Runtime-Logikeingänge

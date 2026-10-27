@@ -1,3 +1,0 @@
-Production ID: pz-8ea7f3dacdcc428a9fcff7a735bc
-Artwork: ChatGPT mit image_gen.imagegen
-Usage basis: Native OpenAI-Bildgenerierung im ausdrücklichen Nutzerauftrag, keine fremden Bildreferenzen. Keine Exklusivität oder Schutzfähigkeit zugesichert.

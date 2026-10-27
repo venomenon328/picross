@@ -733,8 +733,8 @@ Die freigegebene [CI2-Spezifikation](../CI_SLIMMING.md) /
 [CI2-E / #417](https://github.com/venomenon328/picross/issues/417) ergänzt den Abschlussvertrag
 für spätere Abschlussbilder bereits integrierter Rätsel. Eine bereits bereinigte
 Rasterproduktion befreit spätere Bildarbeit nicht von ihrem eigenen Abschluss und
-verlangt keine erneute Rasterproduktion. Diese Ergänzung ist ein Sollvertrag;
-eine passende CLI-Erweiterung ist damit noch nicht implementiert.
+verlangt keine erneute Rasterproduktion. CI2-E implementiert dafür den eigenen
+revisionsgenauen Abschlussweg; [T01](../CI2_E_VERIFICATION.md) bindet die Lieferung.
 
 1. Für die abzuschließende Bildrevision tatsächliche Bildfreigaben, aktive Bildbindung
    und enthaltenen Main-Commit prüfen; offene neuere Arbeit derselben ID erhalten.
@@ -745,16 +745,27 @@ eine passende CLI-Erweiterung ist damit noch nicht implementiert.
    bleiben erhalten. Definitionsbytes, Runtime-Revision, Save-Slot, Registrierung und aktive
    Bewertungen bleiben unverändert. Ein bereits versiegelter ursprünglicher Integrationsbeleg
    wird weder neu erzeugt noch zur nachträglichen Bildfreigabe umgeschrieben.
-4. Der künftige Abschlussweg muss vorhandene `picross-integrated-content-v1`-Datensätze
-   ausdrücklich unterstützen. Der gegenwärtige `retire-production`-Pfad bricht dort mit
-   `Production already retired` ab. Erneute Rasterproduktion, Wiederherstellung alter Pakete
-   oder Umgehung der Bindungsprüfungen sind keine Ersatzlösung. Die konkrete CLI wird erst
-   mit ihrer Implementierung dokumentiert.
+4. `retire-reveal-production` unterstützt vorhandene `picross-integrated-content-v1`-
+   Datensätze und belässt auch vollständige ursprüngliche Pakete unverändert:
+
+   ```sh
+   python -m tools.puzzle_production.target_adapter retire-reveal-production --checkout . --integrated-commit <vollstaendige-main-SHA> --authoring-revision <pz-ID> <Authoringrevision>
+   ```
+
+   `--authoring-revision ID REVISION` ist für jede abzuschließende Revision ausdrücklich
+   zu wiederholen. Kein impliziter ID-Gesamtabbau. Zuvor `origin/main` aktualisieren.
+   Der enthaltene Main-Stand muss Record, finale Freigabe und exakt aktuelle Bildquelle
+   binden; offene Journale, fremde Bytes, Teilentfernung und betroffene Indexänderungen
+   blockieren vor Löschung. Neuere/offene Geschwisterrevisionen bleiben unangetastet.
+   Wiederholung mit demselben Main-Beleg nach vollständiger Entfernung ist ein echter
+   No-op, auch ohne alte Pakete. `retire-production` bleibt der ursprüngliche Raster-
+   Abschlussweg; kein Solver, keine Rekonstruktion oder Änderung alter Receipts.
 5. Abnahme verwendet einen begrenzten Datei-/Referenzvergleich und den unveränderten
    aktiven Datenbestand. Kein Solver-, Bild-, Katalog- oder Spielerreplay allein für
    diese Bereinigung; aktive Leser und Rechtebindungen bleiben vorher geprüft.
 
 Die frühere eng begrenzte Freigabe zum Nachintegrations-Cleanup einschließlich Merge
-in Schritt 5 bleibt bestehen. Der aktuelle CI2-Spezifikationsauftrag führt selbst
-weder Cleanup noch Implementierung oder Merge aus. Er erweitert die frühere Freigabe
-nicht auf Werkzeug-/CI-Codepakete; deren Umsetzung und Merge benötigen ihren eigenen Auftrag.
+in Schritt 5 bleibt bestehen. Die damalige CI2-Spezifikationsfreigabe allein
+beauftragte keine Implementierung oder Löschung. Der eigene CI2-E-Auftrag umfasst
+Umsetzung und Draft-PR, keinen Merge. Werkzeug-/CI-Codepakete erben keine frühere
+Cleanup-Mergefreigabe.
