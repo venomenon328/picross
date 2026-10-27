@@ -147,6 +147,7 @@ class AddedTests(unittest.TestCase):
         (self.checkout/cr.REGISTRY).write_bytes(canonical_bytes(registry)+b'\n')
         categories = load_json(self.checkout/'content/categories.json')
         (self.checkout/cr.RUNTIME).write_bytes(canonical_bytes(cr.projection(registry,categories,self.checkout))+b'\n')
+        cr.check_checkout(self.checkout)  # Hidden is valid, not a broken receipt.
         self.git('checkout','--orphan','hidden-only'); self.git('add','.'); self.git('commit','-m','hidden catalog')
         unknown = history.plan(self.checkout,'hidden',self.git('rev-parse','HEAD'))
         self.assertIsNone(unknown['entries'][0]['proposed'])

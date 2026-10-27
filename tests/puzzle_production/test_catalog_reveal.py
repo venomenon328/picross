@@ -38,14 +38,13 @@ class RevealTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.shared = tempfile.TemporaryDirectory(); cls.home = Path(cls.shared.name)
-        cls.base = isolated_checkout(cls.home/'base')
-        approval = cls.home/'approval.json'; approve(FIXTURES/'direct-mono', approval)
+        from tests.puzzle_production.catalog_fixtures import registered
+        registered(cls.home, stem='at_test', save_slot='at_test')
+        cls.base = cls.home/'base'
         cls.exported = cls.home/'export'
-        export(FIXTURES/'direct-mono', cls.exported, name='TEST ONLY', revision=1, stem='at_test', save_slot='at_test',
-               approval_path=approval, category_id='voegel', categories_path=cls.base/'content/categories.json')
-        cr.registration(cls.exported, cls.base, apply=True, difficulty=difficulty_for_export(cls.exported))
         cls.entry = cr.check_checkout(cls.base)['entries'][0]
         cls.identifier = cls.entry['id']
+        cls.full_base = cls.home/'full-base'
 
     @classmethod
     def tearDownClass(cls): cls.shared.cleanup()
@@ -53,7 +52,16 @@ class RevealTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name); self.checkout = self.root/'checkout'
-        shutil.copytree(self.base, self.checkout)
+        # Full sources remain at the actual export/cleanup/rebind boundaries.
+        full = self._testMethodName.startswith('test_revision_retirement_') or self._testMethodName in {
+            'test_first_second_revision_readonly_plan_historical_noop_and_mtimes',
+            'test_first_after_cleanup_and_later_revision_keep_receipt_and_export_anchor',
+            'test_revision_retirement_also_leaves_full_original_package_unchanged',
+            'test_cleanup_after_revision_keeps_record_bytes_and_stales_saved_plan',
+            'test_raster_rebind_retains_active_image_notice_approvals_and_added',
+            'test_full_snapshot_binds_unselected_package_files_and_absence',
+        }
+        shutil.copytree(self.full_base if full else self.base, self.checkout)
 
     def request(self, variant=1, append=None):
         self.entry = next(e for e in cr.check_checkout(self.checkout)['entries'] if e['id'] == self.identifier)
@@ -425,6 +433,22 @@ class RevealTests(unittest.TestCase):
 
     def test_linked_checkout_root_is_not_silently_resolved(self):
         import os
+        names = self.root/'case-probe'; names.mkdir()
+        (names/'source').write_bytes(b'original')
+        self.assertEqual(io.read(names, 'source', 32), b'original')
+        with self.assertRaisesRegex(ValueError, 'case collision'): io.safe(names, 'Source')
+        if os.name != 'nt':
+            for error in (PermissionError('TEST ONLY denied'), OSError('TEST ONLY enumeration failed')):
+                with patch.object(os, 'listdir', side_effect=error):
+                    with self.assertRaises(type(error)): io.safe(names, 'source')
+            # A previous successful read cannot hide a new casefold collision.
+            (names/'SOURCE').write_bytes(b'foreign')
+            with self.assertRaisesRegex(ValueError, 'case collision'): io.read(names, 'source', 32)
+            (names/'SOURCE').unlink()
+        (names/'source').write_bytes(b'changed')
+        self.assertEqual(io.read(names, 'source', 32), b'changed')
+        self.assertEqual(io.safe(names, 'missing/leaf'), names/'missing/leaf')
+        with self.assertRaises(ValueError): io.safe(names/'source', 'child')
         alias=self.root/'linked-checkout'
         if os.name=='nt':
             result=subprocess.run(['cmd','/c','mklink','/J',str(alias),str(self.checkout)],capture_output=True,text=True)

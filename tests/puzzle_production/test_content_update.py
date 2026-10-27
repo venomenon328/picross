@@ -84,6 +84,32 @@ class UpdateTests(unittest.TestCase):
             self.assertEqual(base,{p.relative_to(self.fixture_root):p.read_bytes() for p in self.fixture_root.rglob('*') if p.is_file()})
         finally:
             other.doCleanups()
+        # All three shared full/compact prerequisites have two-way isolation,
+        # including their in-memory checked input. A prior successful validation
+        # must not legitimize a later foreign receipt in either consumer.
+        from tests.puzzle_production.catalog_fixtures import registered, _registered
+        for stem, slot, revision in (('sd_test', 'sd_test', 1), ('at_test', 'at_test', 1),
+                                     ('pz-test-direct-mono', 'slot_pz-test-direct-mono', 7)):
+            one, two = self.root/(stem+'-one'), self.root/(stem+'-two')
+            checked = registered(one, stem=stem, save_slot=slot, revision=revision)
+            registered(two, stem=stem, save_slot=slot, revision=revision)
+            template = _registered[(stem, slot, revision)]
+            def contents(root):
+                return {p.relative_to(root): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            pristine = {name: raw for name, raw, _ in template[1]}; second = contents(two)
+            check_checkout(one/'base'); check_checkout(two/'base')
+            receipt = next((one/'base/content/packages').rglob('manifest.json'))
+            receipt.write_bytes(b'FOREIGN RECEIPT')
+            checked['current_source']['id'] = 'pz-foreign'
+            with self.assertRaises(ValueError): check_checkout(one/'base')
+            self.assertEqual(contents(two), second)
+            (two/'export/manifest.json').write_bytes(b'FOREIGN EXPORT')
+            self.assertEqual((one/'export/manifest.json').read_bytes(), pristine[Path('export/manifest.json')])
+            third = self.root/(stem+'-three')
+            fresh = registered(third, stem=stem, save_slot=slot, revision=revision)
+            self.assertNotEqual(fresh['current_source']['id'], checked['current_source']['id'])
+            self.assertEqual(contents(third), pristine)
+            self.assertEqual(_registered[(stem, slot, revision)], template)
 
     def test_plan_is_read_only_and_update_preserves_identity_old_package_other_entry_and_saves(self):
         before=self.snapshot();registry=check_checkout(self.checkout)

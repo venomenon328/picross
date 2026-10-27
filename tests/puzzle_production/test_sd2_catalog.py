@@ -34,10 +34,7 @@ class CatalogTests(unittest.TestCase):
         fixtures.CatalogTests.setUpClass.__func__(cls)
         # Most cases assert metadata/transaction behavior, not production replay.
         # Keep an immutable full source solely for the actual retirement case.
-        cls.full_base = cls.home / 'full-base'
-        shutil.copytree(cls.base, cls.full_base)
-        from tests.puzzle_production.catalog_fixtures import compact
-        compact(cls.base, [cls.identifier])
+        # The common fixture already keeps both full and compact prerequisites.
         cls.sd2_checked = ca.analyze_single(cls.base / cls.definition, cls.home / 'sd2-analysis',
             production_mode='mono', method=method.NEW)
 
@@ -376,9 +373,16 @@ class CatalogTests(unittest.TestCase):
 class UpdateTests(unittest.TestCase):
     from tests.puzzle_production import test_content_update as update_fixture
     setUpClass = classmethod(update_fixture.UpdateTests.setUpClass.__func__)
-    setUp = update_fixture.UpdateTests.setUp
     make_export = update_fixture.UpdateTests.make_export
     snapshot = update_fixture.UpdateTests.snapshot
+
+    def setUp(self):
+        self.update_fixture.UpdateTests.setUp(self)
+        # This mixed-method case also supports an already integrated old source.
+        # The actual metadata/logic updates, new exports, staging and rollback
+        # remain real; full old-package retention is covered by UpdateTests.
+        from tests.puzzle_production.catalog_fixtures import compact
+        compact(self.checkout, ['pz-test-update'])
 
     def test_historical_metadata_rebind_then_new_logic_mixed_catalog_and_recovery(self):
         from tools.puzzle_production.content_update import update

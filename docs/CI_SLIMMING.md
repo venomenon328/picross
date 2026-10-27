@@ -18,12 +18,13 @@ bleibt an seinen Lieferstand gebunden. CI2-D ist nach separatem R01 über
 [D-T01](CI2_D_VERIFICATION.md) und das
 [separate R01](https://github.com/venomenon328/picross/pull/422#pullrequestreview-5659522486)
 bleiben an ihre geprüften Commits gebunden. Der Laufzeitbefund CI2-D-O01 ist
-weiterhin offen. CI2-E ist auf `chore/417-ci2-e-cleanup` in
-[Draft-PR #423](https://github.com/venomenon328/picross/pull/423) implementiert;
-der große Datenabbau ist auf diesem Branch ausgeführt, nicht auf `main` integriert.
-[E-T01](CI2_E_VERIFICATION.md) bindet die Lieferung und die Nacharbeit zu B-01/B-02
-aus dem [durchgeführten ersten E-R01](https://github.com/venomenon328/picross/pull/423#pullrequestreview-5661141319).
-Ein erneutes separates qualifiziertes Review des korrigierten Heads bleibt vor Merge
+weiterhin offen. CI2-E einschließlich Datenabbau ist nach
+[finalem separatem E-R01](https://github.com/venomenon328/picross/pull/423#pullrequestreview-5665843085)
+über [PR #423](https://github.com/venomenon328/picross/pull/423) auf
+`53f9c1f6d87d752e6b0f3152985fd0a83de2278b` integriert.
+[E-T01](CI2_E_VERIFICATION.md) und frühere Reviewstände bleiben historisch gebunden.
+CI2-F / #424 optimiert ausschließlich die Katalog-Fachprüfung gemäß
+[F-T01](CI2_F_VERIFICATION.md); separates qualifiziertes F-R01 bleibt vor Merge
 erforderlich. Aus CI2 folgt keine zusätzliche Merge-, Deployment- oder Releasefreigabe.
 
 Dieser Vertrag ersetzt für die benannten Folgepakete die bisherigen automatischen
@@ -226,11 +227,14 @@ CI2-A/B/C/D sind nach separaten R01 auf `main` integriert; ihre T01-/R01-
 Nachweise bleiben an die damaligen Liefercommits gebunden. D ist über
 [PR #422](https://github.com/venomenon328/picross/pull/422) auf
 `8c31a69916941aed60ecd7e4d35a8d0d00637bf9` integriert. CI2-D-O01 (Laufzeit) bleibt offen.
-CI2-E einschließlich Bestandsabbau ist auf `chore/417-ci2-e-cleanup` /
-[Draft-PR #423](https://github.com/venomenon328/picross/pull/423) geliefert.
-Das erste E-R01 verlangt die Nacharbeit B-01/B-02; [E-T01](CI2_E_VERIFICATION.md)
-bindet deren technische Nachweise. Die erneute separate qualifizierte Prüfung des
-korrigierten Heads bleibt vor Merge erforderlich; E ist noch nicht auf `main` integriert.
+CI2-E einschließlich Bestandsabbau ist nach finalem separatem R01 über
+[PR #423](https://github.com/venomenon328/picross/pull/423) auf
+`53f9c1f6d87d752e6b0f3152985fd0a83de2278b` integriert.
+[E-T01](CI2_E_VERIFICATION.md) und die früheren E-Reviewstände behalten ihre
+damaligen Bindungen. CI2-F / #424 ist das abgegrenzte Folgepaket zur
+Kataloglaufzeit (höchstens 400 s statt 833,015 s); B-/E-O01 und D-O01 bleiben
+Gesamtziele. [F-T01](CI2_F_VERIFICATION.md) und separates qualifiziertes F-R01
+binden die neue Lieferung; kein Mergeauftrag.
 Nach A sind B/C/D/E unabhängig integrierbar; gemeinsame Gate-/Auswahländerungen
 gegen den jeweils aktuellen Stand nachführen. Standard ist ein Implementierungs-PR
 je Paket. T01 enthält tatsächliche gezielte Positiv-/Negativnachweise, gemessene

@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**CI2 · 27.10.2026, A/B/C/D integriert; E implementiert, R01 offen:**
+**CI2 · 27.10.2026, A/B/C/D/E integriert; F in Umsetzung:**
 [Kurze CI und begrenzter aktiver Bestand](CI_SLIMMING.md) bindet #412–#417.
 CI2-A/B sind nach ihren separaten Reviews über PR #419/#420 integriert;
 Basis für C ist `dd56d310d942eee47448df4cdcca5e4af4a49b00`.
@@ -10,9 +10,13 @@ und [C-T01](CI2_C_VERIFICATION.md) bleiben historisch gebunden; C ist nach
 separatem R01 über PR #421 auf `8e5e99647596bc3ef9d7bd22bd746b73fbb424d5`
 integriert. D ist nach separatem R01 über PR #422 auf
 `8c31a69916941aed60ecd7e4d35a8d0d00637bf9` integriert; [D-T01](CI2_D_VERIFICATION.md)
-bleibt historisch gebunden. E ist auf `chore/417-ci2-e-cleanup` implementiert;
+bleibt historisch gebunden. E ist nach separatem finalem R01 über PR #423 auf
+`53f9c1f6d87d752e6b0f3152985fd0a83de2278b` integriert;
 [E-T01](CI2_E_VERIFICATION.md) weist den tatsächlichen Datenabbau nach.
-Unabhängiges E-R01 bleibt vor Merge offen. Kein Merge oder Deployment.
+Die E-Protokolle behalten ihre historischen Lieferbindungen.
+CI2-F / #424 liefert die messwertbasierte Katalogoptimierung gemäß
+[F-T01](CI2_F_VERIFICATION.md); separates qualifiziertes F-R01 bleibt vor Merge
+erforderlich. Die allgemeinen B-/E- und nativen D-Laufzeitziele bleiben offen.
 
 Chromium läuft ausschließlich auf ausdrücklichen manuellen Auftrag,
 auch nicht implizit durch `all`, `toolchain` oder gemeinsame Änderungen.
